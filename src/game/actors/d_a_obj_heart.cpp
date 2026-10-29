@@ -11,93 +11,69 @@
  * (0x020bc618), then a D2 the cartridge has no home for (manifest: deadstrip);
  * the same pragma lays .text down in source order, so this file is ROM-ascending.
  *
- * leftovers:
- * - ModelAnim::SetAnim and dCcAc_c::Init take Fix12<int> by value, so their
- *   calls stay mangled spellings inside InitResources.
- * - func_ov002_020bc664 keeps its address name as a member; the cartridge
- *   records no name for it.
+ * UpdateModelMatrix is a coined name; the cartridge records no name for it.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daObjHeart_c_AssetId {
-    ASSET_OBJ_HEART_BMD = 0x0470,
-    ASSET_OBJ_HEART_WAIT_BCA = 0x0471
-};
+enum daObjHeart_c_AssetId { ASSET_OBJ_HEART_BMD = 0x0470, ASSET_OBJ_HEART_WAIT_BCA = 0x0471 };
 
 #pragma defer_codegen off
 
-#include "decl_common.h"
+#include "common.h"
 #include "daObjHeart_c.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* The model handle constructs through func_02017acc and destroys through
  * func_02017ab4; the animation handle constructs through
  * SharedFilePtr::Construct and destroys through SharedFilePtr_Destruct_Anim.
  * The manifest aliases those undefined members onto the ROM symbols. */
 struct HeartModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     HeartModelFilePtr(u32 fileID);
     ~HeartModelFilePtr();
 };
 
 struct HeartAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
-
     HeartAnimationFilePtr(u32 fileID);
     ~HeartAnimationFilePtr();
 };
 
-extern "C" HeartModelFilePtr data_ov002_0210e104;
-extern "C" HeartAnimationFilePtr data_ov002_0210e0fc;
+extern HeartModelFilePtr data_ov002_0210e104;
+extern HeartAnimationFilePtr data_ov002_0210e0fc;
 
-extern "C" {
-void Matrix4x3_FromRotationY(void *m, int angleY);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
-
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-    ModelAnim *self, BCA_File *file, int flags, int speed, unsigned short start);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    dCcAc_c *self, dActor_c *actor, int radius, int height,
-    unsigned int flags, unsigned int vuln);
-}
+/* local extern: no shared header declares it. */
+extern "C" int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
 
 // @symbol _ZN12daObjHeart_cD1Ev
 // @symbol _ZN12daObjHeart_cD0Ev
-daObjHeart_c::~daObjHeart_c()
-{
-}
+daObjHeart_c::~daObjHeart_c() {}
 
-// @symbol _ZN12daObjHeart_c19func_ov002_020bc664Ev
-void daObjHeart_c::func_ov002_020bc664()
-{
-    Matrix4x3_FromRotationY(&mModelAnim.mat4x3, mAngleY);
-    mModelAnim.mat4x3.m[9] = mPosX >> 3;
-    mModelAnim.mat4x3.m[10] = mPosY >> 3;
-    mModelAnim.mat4x3.m[11] = mPosZ >> 3;
+// @symbol _ZN12daObjHeart_c17UpdateModelMatrixEv
+void daObjHeart_c::UpdateModelMatrix() {
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    mAnmModel.mat4x3.m[9] = mPosX >> 3;
+    mAnmModel.mat4x3.m[10] = mPosY >> 3;
+    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
 // @symbol _ZN12daObjHeart_c16CleanupResourcesEv
-s32 daObjHeart_c::CleanupResources()
-{
+s32 daObjHeart_c::CleanupResources() {
     data_ov002_0210e104.Release();
     data_ov002_0210e0fc.Release();
     return 1;
 }
 
 // @symbol _ZN12daObjHeart_c6RenderEv
-s32 daObjHeart_c::Render()
-{
-    mModelAnim.Render(0);
+s32 daObjHeart_c::Render() {
+    mAnmModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN12daObjHeart_c8BehaviorEv
-s32 daObjHeart_c::Behavior()
-{
+s32 daObjHeart_c::Behavior() {
     s32 spin = 0x1000;
     DecIfAbove0_Byte(&mHealTimer);
 
@@ -130,31 +106,26 @@ s32 daObjHeart_c::Behavior()
     if (mHealTimer > 0x2d)
         spin = 0x8000;
     Math_Function_0203b14c(&mAnimSpeed, spin, 0x400, 0x2000, 0x80);
-    mModelAnim.speed = mAnimSpeed;
-    mModelAnim.Advance();
+    mAnmModel.speed = mAnimSpeed;
+    mAnmModel.Advance();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
 }
 
 // @symbol _ZN12daObjHeart_c13InitResourcesEv
-s32 daObjHeart_c::InitResources()
-{
-    mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov002_0210e104), 1, -1);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, (BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov002_0210e0fc),
-        0, 0x1000, 0);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &mdCcAc_c, this, 0x3c000, 0x78000, 0x100002, 0x8000);
+s32 daObjHeart_c::InitResources() {
+    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210e104), 1, -1);
+    mAnmModel.SetAnim((BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov002_0210e0fc), 0, 0x1000, 0);
+    mdCcAc_c.Init(this, 0x3c000, 0x78000, 0x100002, 0x8000);
     mAnimSpeed = 0x1000;
-    func_ov002_020bc664();
+    UpdateModelMatrix();
     return 1;
 }
 
 // @symbol daObjHeart_c_classInit
 /* Reconstructed source-style name; historical alias HealingHeart_Spawn. */
-extern "C" daObjHeart_c *daObjHeart_c_classInit(void)
-{
+extern "C" daObjHeart_c *daObjHeart_c_classInit(void) {
     return new daObjHeart_c();
 }
 

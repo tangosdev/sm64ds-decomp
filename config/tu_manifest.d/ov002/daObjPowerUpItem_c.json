@@ -802,40 +802,40 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@922",
+      "from": "@906",
       "to": "@592",
-      "evidence": "mwcc numbers this PMF descriptor @905 per TU and other modules already define a global @905, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this PMF descriptor @905 per TU and other modules already define a global @905, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@924",
+      "from": "@908",
       "to": "@904",
-      "evidence": "mwcc numbers this PMF descriptor @907 per TU and other modules already define a global @907, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this PMF descriptor @907 per TU and other modules already define a global @907, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@926",
+      "from": "@910",
       "to": "@591",
-      "evidence": "mwcc numbers this PMF descriptor @909 per TU and other modules already define a global @909, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this PMF descriptor @909 per TU and other modules already define a global @909, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@928",
+      "from": "@912",
       "to": "@590",
-      "evidence": "mwcc numbers this PMF descriptor @911 per TU and other modules already define a global @911, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this PMF descriptor @911 per TU and other modules already define a global @911, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@930",
+      "from": "@914",
       "to": "@21",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now"
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@932",
+      "from": "@916",
       "to": "@589",
-      "evidence": "mwcc numbers this PMF descriptor @915 per TU and other modules already define a global @915, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this PMF descriptor @915 per TU and other modules already define a global @915, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     }
   ],
   "notes": [
     "Cartridge RTTI name is daObjPowerUpItem_c (_ZTS18daObjPowerUpItem_c). The licensed run is the one .text span 0x020b9148..0x020b9e64 (19 functions); the last is the registry factory daObjPowerUpItem_c_classInit (0x020b9e0c), folded in the 0930c classInit tail pass.",
     "The destructor is declared in the header and defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
-    "classInit tail fold (0930c): folded the registry factory daObjPowerUpItem_c_classInit (0x020b9e0c..0x020b9e64) into this promoted TU and widened the complete delinks.txt claim to 0x020b9148..0x020b9e64. The loose source hand-called fBase_c::operator new(972), dActor_c's base constructor, stored _ZTV18daObjPowerUpItem_c, then constructed the two Model members, the dExtShadowModel_c, the dCcAc_c and the dBgCh_Actr. daObjPowerUpItem_c declares no constructor, so the implicit one emits that sequence and the factory is `return new daObjPowerUpItem_c();`. Under `#pragma defer_codegen off` it is written at the end of the file.",
+    "classInit tail fold (0930c): folded the registry factory daObjPowerUpItem_c_classInit (0x020b9e0c..0x020b9e64) into this promoted TU and widened the complete delinks.txt claim to 0x020b9148..0x020b9e64. The loose source hand-called fBase_c::operator new(972), dActor_c's base constructor, stored _ZTV18daObjPowerUpItem_c, then constructed the two dExtSimpleModel_c members, the dExtShadowModel_c, the dCcAc_c and the dBgCh_Actr. daObjPowerUpItem_c declares no constructor, so the implicit one emits that sequence and the factory is `return new daObjPowerUpItem_c();`. Under `#pragma defer_codegen off` it is written at the end of the file.",
     "Folded __sinit_ov002_021014e4 into this TU. The handwritten shard copied six 8-byte PMF descriptor records into the FlowerEntry state table data_ov002_021097bc; defining the table at file scope with member-function pointers emits the same 0xa4-byte initializer and the six descriptors. The three state names are padded char slots (s_openName, s_closeName, s_openWaitName) exactly as dPathLiftActor_c's state names, and the POWER_UP_ITEM registry profile is defined alongside. mwcc numbered the descriptors @905,@907,@909,@911,@913,@915 in emitted order; every one collides with a global @NNN on main, so all six are renamed through defined_symbol_renames to @592,@904,@591,@590,@932,@589. No new data was added.",
     "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link builds ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the owned ranges identical."
   ],
@@ -1212,28 +1212,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,

@@ -416,11 +416,12 @@ def _as_the_build_links_it(obj, name):
     array. Isolation subtracts that preamble.
 
     Without this the gate reads the raw addend and resolves to whatever happens to
-    sit there. Observed: `_ZN10ModelAnim2D0Ev`'s secondary vptr store carries
-    addend 44, and `_ZTV10ModelAnim2` (0x0208e9b4) + 44 lands on `_ZTI8dFader_c`
+    sit there. Observed: `_ZN15dExtAnm2Model_cD0Ev`'s secondary vptr store carries
+    addend 44, and `_ZTV15dExtAnm2Model_c` (0x0208e9b4) + 44 lands on `_ZTI8dFader_c`
     (0x0208e9e0) -- an unrelated class's typeinfo, reported as WRONG-DEST on a file
     whose linked bytes are exactly right. Isolation turns 8 -> 0 and 44 -> 36, which
-    is `_ZTV10ModelAnim2` itself and `VTable_Animation_ModelAnim2Thunk` (0x0208e9d8).
+    is `_ZTV15dExtAnm2Model_c` itself and `VTable_dExtFrameCtrl_c_dExtAnm2Model_cThunk`
+    (0x0208e9d8).
 
     Multiple inheritance is what made this visible: the single-inheritance addend of
     8 resolves to a word still inside the same vtable symbol, so it never looked

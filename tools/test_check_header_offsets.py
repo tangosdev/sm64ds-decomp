@@ -1179,6 +1179,9 @@ class AllocationMethodTests(unittest.TestCase):
             "    const Vector3 &Pos() const {\n"
             "        return *reinterpret_cast<const Vector3 *>(&mPosX);\n    }")
 
+    def test_an_inline_constructor_with_mem_initializers_preserves_fields(self):
+        self._assert_checked("    Widget() : mA(0), mB(Make(1, 2)) {}")
+
     def test_a_named_allman_method_also_preserves_fields(self):
         self._assert_checked(
             "    int Value() const\n    {\n        return 0;\n    }")

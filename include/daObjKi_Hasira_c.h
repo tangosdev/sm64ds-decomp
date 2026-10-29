@@ -36,11 +36,11 @@ struct Player;
 struct daObjKi_Hasira_c : dBgActor_c {
     /* dBgActor_c ends at 0x31e (its own sizeof rounds 0x31e up to 0x320);
        the first two fields live in the base's tail padding. */
-    u8  mState;             /* 0x31e -- 0 wait for a player, 1 turn to face, 2 fall */
-    u8  mTurnTimer;         /* 0x31f -- frames spent turning before the fall */
-    s16 mFallSpeed;         /* 0x320 -- added to mAngleX each falling frame */
-    s16 mFallAccel;         /* 0x322 -- grows by 4 each falling frame */
-    Player *mTarget;        /* 0x324 -- ClosestPlayer, cached while waiting */
+    u8 mState;       /* 0x31e -- 0 wait for a player, 1 turn to face, 2 fall */
+    u8 mTurnTimer;   /* 0x31f -- frames spent turning before the fall */
+    s16 mFallSpeed;  /* 0x320 -- added to mAngleX each falling frame */
+    s16 mFallAccel;  /* 0x322 -- grows by 4 each falling frame */
+    Player *mTarget; /* 0x324 -- ClosestPlayer, cached while waiting */
 
     /* MEASURED -- DEFINED INLINE, EMPTY, AND DECLARED FIRST. The destructor is
        the key function, so the TU that defines it emits _ZTV16daObjKi_Hasira_c,
@@ -53,14 +53,14 @@ struct daObjKi_Hasira_c : dBgActor_c {
        the ov022 dBgActor_c leaves daObjFl_Ring_c and daObjFl_Block_c. The
        brace stays on the signature line -- tools/check_header_offsets.py
        recognises an inline body only when the signature line carries it. */
-    virtual ~daObjKi_Hasira_c() {}   /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjKi_Hasira_c() {} /* slots 16 (D1), 17 (D0) */
 
-    virtual s32 InitResources();     /* slot  0 */
-    virtual s32 CleanupResources();  /* slot  3 */
-    virtual s32 Behavior();          /* slot  6 */
-    virtual s32 Render();            /* slot  9 */
+    virtual s32 InitResources();    /* slot  0 */
+    virtual s32 CleanupResources(); /* slot  3 */
+    virtual s32 Behavior();         /* slot  6 */
+    virtual s32 Render();           /* slot  9 */
 
-    void func_ov016_02112a9c();
+    void UpdateModelMatrix();
 };
 
 #ifndef SM64DS_PLATFORM_PC

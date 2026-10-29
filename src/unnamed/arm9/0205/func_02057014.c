@@ -1,6 +1,3 @@
-// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm. Nintendo shipped this as an
-// assembly primitive, so there is no original C to recover and no match to chase. Counts as
-// done under the asm-primitive policy - see notes/arm9-endgame.md.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match. This is NitroSDK OS_UnLockCartridge,
 // the misspelled-name compatibility thunk for OS_UnlockCartridge (= func_02057178, matched
 // at src/unnamed/arm9/0205/func_02057178.c). Nintendo's own SDK source writes it as assembly:

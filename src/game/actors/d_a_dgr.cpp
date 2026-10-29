@@ -9,13 +9,13 @@
  *
  * common.h is included before daDgr_c.h. Matrix4x3 has two 0x30-byte
  * spellings and whichever a TU sees first wins; the nested one scalarizes
- * the twelve-word copy in func_ov025_021112e0. mwccarm emits one .text
+ * the twelve-word copy in UpdateClsnMatrix. mwccarm emits one .text
  * section per function, in reverse source order, so the factory is first.
  * D1 at 0x021111a0 and D0 at 0x021111e4 come from the inline destructor in
  * daDgr_c.h. An out-of-line body would emit D2, which this cartridge does
  * not have.
  *
- * deslop leftovers:
+ * Kept shapes (each alternative was measured against the ROM):
  * - Behavior: `mAngleX = (s16)(mAngleX + mAngleXSpeed)` size-DIFF
  *   0x3ec->0x3e8. The halfword is updated through an s16*.
  * - Behavior: `speedDivisor = -speedDivisor` size-DIFF 0x3ec->0x3e4, and
@@ -33,31 +33,28 @@
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daDgr_c_AssetId {
-    ASSET_DONGURU_BMD = 0x02da,
-    ASSET_DONGURU_KCL = 0x02db
-};
+enum daDgr_c_AssetId { ASSET_DONGURU_BMD = 0x02da, ASSET_DONGURU_KCL = 0x02db };
 
 #include "common.h"
 #include "daDgr_c.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
+#include "math/CalcLib.h"
 
 /* POD position. Vector3's destructor is not in Behavior's bytes. */
-typedef struct { s32 x, y, z; } Vec3;
+typedef struct {
+    s32 x, y, z;
+} Vec3;
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct DgrModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     DgrModelFilePtr(u32 fileID);
     ~DgrModelFilePtr();
 };
 
 struct DgrCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     DgrCollisionFilePtr(u32 fileID);
     ~DgrCollisionFilePtr();
 };
@@ -78,44 +75,35 @@ enum {
     kGrindWindow = 0x320
 };
 
-extern "C" {
-extern void Matrix4x3_FromRotationX(void *mat, int angleX);
 extern DgrModelFilePtr data_ov025_02113a68;
 extern DgrCollisionFilePtr data_ov025_02113a60;
 extern s16 data_02082214[];
 extern CLPS_Block data_ov025_02112c28;
 
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(daDgr_c *self, s32 a, s32 b);
-void func_02012694(s32 soundId, void *pos);
-void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(daDgr_c *self, Vec3 *pos, s32 magnitude);
-u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32 slot, u32 effect, s32 x, s32 y, s32 z, const void *dir, void *callback);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 &mat, Fix12i scale,
-    short angY, CLPS_Block &clps);
+/* local extern: arm9 C helpers with no shared header yet. */
+extern "C" {
+void Matrix4x3_FromRotationX(void *mat, int angleX);
+void func_02012694(unsigned int, const Vector3 *);
 void func_020393d4(int *collider, int callback);
-int Vec3_Dist(void *a, void *b);
 }
 
 // @symbol daDgr_c_classInit
-extern "C" daDgr_c *daDgr_c_classInit()
-{
+extern "C" daDgr_c *daDgr_c_classInit() {
     return new daDgr_c();
 }
 
 // @symbol _ZN7daDgr_c13InitResourcesEv
-s32 daDgr_c::InitResources()
-{
-    func_ov025_02111344();
-    func_ov025_021112e0();
+s32 daDgr_c::InitResources() {
+    UpdateModelMatrix();
+    UpdateClsnMatrix();
     {
-        BMD_File *bmd = (BMD_File *)Model::LoadFile(data_ov025_02113a68);
+        BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov025_02113a68);
         mModel.SetFile(bmd, 1, -1);
     }
     {
         KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113a60);
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
+        ((dBgW_KcMbg *)(&mMeshCollider))
+            ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
     }
     func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
     mAngleY = 0;
@@ -130,8 +118,7 @@ s32 daDgr_c::InitResources()
 }
 
 // @symbol _ZN7daDgr_c8BehaviorEv
-s32 daDgr_c::Behavior()
-{
+s32 daDgr_c::Behavior() {
     s32 loc[6];
     s32 speedDivisor;
     s32 rollFrames;
@@ -142,11 +129,11 @@ s32 daDgr_c::Behavior()
             mPhaseTimer = 0;
         } else {
             mPhaseTimer++;
-            unk_0ac = 0;
+            mSpeedZ = 0;
             mAngleXSpeed = 0;
-            func_ov025_02111344();
-            if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
-                func_ov025_021112e0();
+            UpdateModelMatrix();
+            if (IsClsnInRange(0, 0))
+                UpdateClsnMatrix();
             return 1;
         }
     }
@@ -180,20 +167,20 @@ s32 daDgr_c::Behavior()
 
     if (mPhaseTimer < rollFrames) {
         if (mRollDir == 0) {
-            unk_0ac = kRollZStep / speedDivisor;
+            mSpeedZ = kRollZStep / speedDivisor;
             mAngleXSpeed = (s16)(kRollAngleStep / speedDivisor);
         } else {
-            unk_0ac = (-kRollZStep) / speedDivisor;
+            mSpeedZ = (-kRollZStep) / speedDivisor;
             mAngleXSpeed = (s16)((-kRollAngleStep) / speedDivisor);
         }
 
         {
             s16 *angleX = &mAngleX;
-            mPosZ = mPosZ + unk_0ac;
+            mPosZ = mPosZ + mSpeedZ;
             *angleX = (s16)(*angleX + mAngleXSpeed);
             if ((mAngleX & kGrindAngleMask) < kGrindWindow) {
                 if (mAngleXSpeed != 0)
-                    func_02012694(kGrindSound, &mCamSpacePosX);
+                    func_02012694(kGrindSound, &mCamSpacePos);
             }
         }
 
@@ -212,7 +199,7 @@ s32 daDgr_c::Behavior()
             loc[3] = mPosX;
             loc[4] = mPosY;
             loc[5] = mPosZ;
-            _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, (Vec3 *)&loc[3], kQuakeMagnitude);
+            Earthquake(*(const Vector3 *)&loc[3], kQuakeMagnitude);
         }
 
         loc[0] = mPosX;
@@ -226,8 +213,9 @@ s32 daDgr_c::Behavior()
             loc[1] = mBasePosY - kDustDrop;
             along = data_02082214[((u16)mAngleY >> 4) * 2];
             loc[2] = along * kDustReach + mPosZ;
-            mDustParticle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                mDustParticle1, kDustEffect, loc[0], loc[1], loc[2], (void *)0, (void *)0);
+            mDustParticle1 = Particle::System::New(mDustParticle1, kDustEffect, loc[0], loc[1],
+                                                   loc[2], (const Vector3_16f *)((void *)0),
+                                                   (Particle::Callback *)((void *)0));
         }
         {
             s32 along;
@@ -236,29 +224,28 @@ s32 daDgr_c::Behavior()
             loc[0] = mPosX - across * kDustReach;
             along = data_02082214[((u16)mAngleY >> 4) * 2];
             loc[2] = mPosZ - along * kDustReach;
-            mDustParticle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                mDustParticle2, kDustEffect, loc[0], loc[1], loc[2], (void *)0, (void *)0);
+            mDustParticle2 = Particle::System::New(mDustParticle2, kDustEffect, loc[0], loc[1],
+                                                   loc[2], (const Vector3_16f *)((void *)0),
+                                                   (Particle::Callback *)((void *)0));
         }
     }
 
-    func_ov025_02111344();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) || func_ov025_0211123c())
-        func_ov025_021112e0();
+    UpdateModelMatrix();
+    if (IsClsnInRange(0, 0) || EnableClsnNearEgg())
+        UpdateClsnMatrix();
 
     mPhaseTimer++;
     return 1;
 }
 
 // @symbol _ZN7daDgr_c6RenderEv
-s32 daDgr_c::Render()
-{
+s32 daDgr_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN7daDgr_c16CleanupResourcesEv
-s32 daDgr_c::CleanupResources()
-{
+s32 daDgr_c::CleanupResources() {
     data_ov025_02113a68.Release();
     data_ov025_02113a60.Release();
     if (mMeshCollider.IsEnabled())
@@ -266,20 +253,18 @@ s32 daDgr_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daDgr_c19func_ov025_02111344Ev
-/* Model matrix: X rotation, then translation at 1/8 of the actor position. */
-void daDgr_c::func_ov025_02111344()
-{
+// @symbol _ZN7daDgr_c17UpdateModelMatrixEv
+/* dExtSimpleModel_c matrix: X rotation, then translation at 1/8 of the actor position. */
+void daDgr_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationX(&mModel.mat4x3, mAngleX);
     mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = mPosY >> 3;
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN7daDgr_c19func_ov025_021112e0Ev
+// @symbol _ZN7daDgr_c16UpdateClsnMatrixEv
 /* Collision matrix. Flat Matrix4x3, copied whole, then translation in full units. */
-void daDgr_c::func_ov025_021112e0()
-{
+void daDgr_c::UpdateClsnMatrix() {
     mClsnMat = mModel.mat4x3;
     mClsnMat.m[9] = mPosX;
     mClsnMat.m[10] = mPosY;
@@ -287,11 +272,10 @@ void daDgr_c::func_ov025_021112e0()
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-// @symbol _ZN7daDgr_c19func_ov025_0211123cEv
+// @symbol _ZN7daDgr_c17EnableClsnNearEggEv
 /* Yoshi egg within eight clip-radii: turn the mesh collider on.
  * aimPos is volatile and unused. Its stores, and ~Vector3, are in the bytes. */
-int daDgr_c::func_ov025_0211123c()
-{
+int daDgr_c::EnableClsnNearEgg() {
     dActor_c *egg = ClosestWithActorID(kYoshiEggActorID);
     if (egg != 0) {
         volatile struct Vector3 aimPos;
@@ -299,7 +283,7 @@ int daDgr_c::func_ov025_0211123c()
         aimPos.y = mPosY;
         aimPos.z = mPosZ;
         aimPos.y += OnAimedAtWithEgg();
-        if (Vec3_Dist(&mPosX, &egg->mPosX) < (mClipRadius << 3)) {
+        if (Vec3_Dist(&mPos, &egg->mPos) < (mClipRadius << 3)) {
             if (!mMeshCollider.IsEnabled()) {
                 mMeshCollider.Enable(this);
                 return 1;

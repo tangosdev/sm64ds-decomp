@@ -5,7 +5,7 @@
 
 /* Lethal Lava Land's block that floats on the lava (registry profile
  * FL_BLOCK): a dBgActor_c that sinks while the player stands on it and rises
- * back to its spawn height once it is left alone. Model at 0xd4, moving mesh
+ * back to its spawn height once it is left alone. dExtSimpleModel_c at 0xd4, moving mesh
  * collider at 0x124, clsn matrix at 0x2ec, all inherited. Layout evidence:
  * notes/platform-provenance.md.
  *
@@ -23,10 +23,10 @@
 struct daObjFl_Block_c : dBgActor_c {
     /* dBgActor_c ends at 0x31e (its own sizeof rounds 0x31e up to 0x320);
        these two bytes are the base's tail padding, unused here. */
-    u8  pad_31e[0x2];
-    s32 mMaxPosY;           /* 0x320 -- spawn height; InitResources copies mPosY */
-    u8  mHadClsn;           /* 0x324 -- set by the collision callback
-                               func_ov022_0211191c when actor 0xbf (the
+    u8 pad_31e[0x2];
+    s32 mMaxPosY; /* 0x320 -- spawn height; InitResources copies mPosY */
+    u8 mHadClsn;  /* 0x324 -- set by the collision callback
+                               OnStoodOn when actor 0xbf (the
                                player) touches the block; Behavior clears it */
 
     /* MEASURED -- DEFINED INLINE, EMPTY, AND DECLARED FIRST. This is the key
@@ -43,12 +43,15 @@ struct daObjFl_Block_c : dBgActor_c {
        this class has no home for. The brace stays on the signature line --
        tools/check_header_offsets.py recognises an inline body only when the
        signature line carries it. */
-    virtual ~daObjFl_Block_c() {}    /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjFl_Block_c() {} /* slots 16 (D1), 17 (D0) */
 
-    virtual s32 InitResources();     /* slot  0 */
-    virtual s32 CleanupResources();  /* slot  3 */
-    virtual s32 Behavior();          /* slot  6 */
-    virtual s32 Render();            /* slot  9 */
+    virtual s32 InitResources();    /* slot  0 */
+    virtual s32 CleanupResources(); /* slot  3 */
+    virtual s32 Behavior();         /* slot  6 */
+    virtual s32 Render();           /* slot  9 */
+
+    void OnStoodOn(dActor_c *);
+    static void StoodOnCallback(dBgW *, daObjFl_Block_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

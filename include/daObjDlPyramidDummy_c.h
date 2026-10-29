@@ -4,8 +4,6 @@
 #include "dActor_c.h"
 #include "dCcAc_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* daObjDlPyramidDummy_c is the cartridge's RTTI name for this class
  * (_ZTS21daObjDlPyramidDummy_c; the project called it PyramidTag before the
  * rename). The ROM records a single dActor_c base at offset zero; its vtable is
@@ -27,15 +25,6 @@ struct daObjDlPyramidDummy_c : dActor_c {
     virtual ~daObjDlPyramidDummy_c();
     virtual s32 InitResources();  /* slot 0 */
     virtual s32 Behavior();       /* slot 6 */
-
-    /* Leaf adapter until fBase_c::operator new(size_t) lands.
-       `return new daObjDlPyramidDummy_c` then routes through the retail
-       allocator, which is what the cartridge's factory at 0x0211183c calls.
-       Without this the spelling resolves to the global _Znwm, which the ROM
-       does not carry. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

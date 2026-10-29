@@ -50,7 +50,7 @@
  *          at 0x60 against it and calls slot 31 when it drops under.
  *   0x330  mLinkedStarID, unique ID of a linked POWER_STAR (actor 0xb2). On
  *          actorID 0x53 (FALL_BLOCK_LLL) with mSuppressed set, Behavior calls
- *          daObjFallBlock_c_FindLinkedStar to fill it (when 0) or daObjFallBlock_c_PollLinkedStar to
+ *          FindLinkedStar to fill it (when 0) or PollLinkedStar to
  *          poll it (when set).
  *   0x334  mShakeX, the shake step added to mAngleX each frame in case 2.
  *   0x336  mTiltVelZ, added to mAngleZ (0x90) each frame in case 2, not mAngleY.
@@ -61,7 +61,7 @@
  *   0x33f  the respawn delay. While it runs the collider is disabled and Behavior
  *          returns early.
  *   0x340  this block's "ready" flag, and the one the group walk tests.
- *   0x341  grouping latch. daObjFallBlock_c_LinkGroup returns early once this is set.
+ *   0x341  grouping latch. LinkGroup returns early once this is set.
  *   0x342  suppresses Render as well as Behavior, for actor id 0x53.
  *   0x344  mPrevInGroup, pointer to a same-id neighbour behind this block
  *          (angle diff >= 0x4000). Zero means this block is the head of the
@@ -80,25 +80,32 @@
 
 #include "dBgActor_c.h"
 
+struct dBgW;
+/* {model, collision, CLPS}: each leaf's own file handles. */
+struct ResourceDescriptor;
+
 struct daObjFallBlock_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
-    Vector3 mRestPos;                   /* 0x320 */
-    s32  mKillY;                        /* 0x32c */
-    s32  mLinkedStarID;                 /* 0x330 -- POWER_STAR uniqueID */
-    s16  mShakeX;                       /* 0x334 */
-    s16  mTiltVelZ;                     /* 0x336 */
-    s16  mBobPhase;                     /* 0x338 */
-    u16  mStateTimer;                   /* 0x33a */
-    u8   mState;                        /* 0x33c */
-    u8   pad_33d[0x1];
-    u8   mShakeRequested;               /* 0x33e */
-    u8   mRespawnDelay;                 /* 0x33f */
-    u8   mReady;                        /* 0x340 */
-    u8   unk_341;                       /* 0x341 -- grouping latch, written by daObjFallBlock_c_LinkGroup */
-    u8   mSuppressed;                   /* 0x342 */
-    u8   pad_343[0x1];
-    daObjFallBlock_c *mPrevInGroup;     /* 0x344 */
-    daObjFallBlock_c *mNextInGroup;     /* 0x348 */
+    Vector3 mRestPos;  /* 0x320 */
+    s32 mKillY;        /* 0x32c */
+    s32 mLinkedStarID; /* 0x330 -- POWER_STAR uniqueID */
+    s16 mShakeX;       /* 0x334 */
+    s16 mTiltVelZ;     /* 0x336 */
+    s16 mBobPhase;     /* 0x338 */
+    u16 mStateTimer;   /* 0x33a */
+    u8 mState;         /* 0x33c */
+    u8 pad_33d[0x1];
+    u8 mShakeRequested; /* 0x33e */
+    u8 mRespawnDelay;   /* 0x33f */
+    u8 mReady;          /* 0x340 */
+    /* LinkGroup returns at once while this is set and sets
+       it after linking mPrevInGroup/mNextInGroup, so the group is linked
+       once. Was unk_341. */
+    u8 mGroupLinked; /* 0x341 */
+    u8 mSuppressed;  /* 0x342 */
+    u8 pad_343[0x1];
+    daObjFallBlock_c *mPrevInGroup; /* 0x344 */
+    daObjFallBlock_c *mNextInGroup; /* 0x348 */
 
     /* --- vtable --- */
     /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
@@ -140,13 +147,13 @@ struct daObjFallBlock_c : dBgActor_c {
        function it is bound to. objisolate.py reduces the object back to that
        one 0xc0 .text before eligible.py and rombuild.py judge it -- checked,
        not assumed: build_pin.verify returns True either way. */
-    virtual void Kill();                /* slot 31 */
+    virtual void Kill(); /* slot 31 */
 
     /* Slot 6, this class's own override -- the whole fall-block state
        machine. Not marked `virtual` here: fBase_c already declares it
        virtual, and the override keyword isn't required to re-add it. */
-    s32 Behavior();                     /* slot  6 */
-    s32 Render();                       /* slot  9 */
+    s32 Behavior();                               /* slot  6 */
+    s32 Render();                                 /* slot  9 */
     virtual void OnHitByMegaChar(Player &player); /* slot 27 */
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
@@ -161,8 +168,21 @@ struct daObjFallBlock_c : dBgActor_c {
        pure-specifier is only valid on a declaration carrying the keyword, and a
        pure virtual has no body to emit, so it can never become the key function:
        whichever virtual was first and non-inline before is still first now. */
-    virtual s32 InitResources() = 0;        /* slot  0 */
-    virtual s32 CleanupResources() = 0;     /* slot  3 */
+    virtual s32 InitResources() = 0;    /* slot  0 */
+    virtual s32 CleanupResources() = 0; /* slot  3 */
+
+    /* The shared bodies the four leaves' InitResources and
+       CleanupResources call with their own descriptor. */
+    s32 InitResourcesFrom(ResourceDescriptor *);
+    s32 CleanupResourcesFrom(ResourceDescriptor *);
+
+    void LinkGroup();
+    void PollLinkedStar();
+    void FindLinkedStar();
+    void ResetMotion();
+    void ApplyModelXyz();
+    int RequestShake(dActor_c *);
+    static int StoodOnCallback(dBgW *, daObjFallBlock_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -176,26 +196,26 @@ typedef char daObjFallBlock_c_size_must_be_0x34c[sizeof(daObjFallBlock_c) == 0x3
    inherit dBgActor_c's fields from and so spells the layout flat. Same arrangement
    as include/dBgActor_c.h. */
 struct daObjFallBlock_c {
-    u8  pad_000[0x320];
-    s32 mRestPosX;          /* 0x320 */
-    s32 mRestPosY;          /* 0x324 */
-    s32 mRestPosZ;          /* 0x328 */
-    s32 mKillY;             /* 0x32c */
-    s32 mLinkedStarID;      /* 0x330 -- POWER_STAR uniqueID */
-    s16 mShakeX;            /* 0x334 */
-    s16 mTiltVelZ;          /* 0x336 */
-    s16 mBobPhase;          /* 0x338 */
-    u16 mStateTimer;        /* 0x33a */
-    u8  mState;             /* 0x33c */
-    u8  pad_33d[0x1];
-    u8  mShakeRequested;    /* 0x33e */
-    u8  mRespawnDelay;      /* 0x33f */
-    u8  mReady;             /* 0x340 */
-    u8  unk_341;            /* 0x341 */
-    u8  mSuppressed;        /* 0x342 */
-    u8  pad_343[0x1];
-    struct daObjFallBlock_c *mPrevInGroup;      /* 0x344 */
-    struct daObjFallBlock_c *mNextInGroup;      /* 0x348 */
+    u8 pad_000[0x320];
+    s32 mRestPosX;     /* 0x320 */
+    s32 mRestPosY;     /* 0x324 */
+    s32 mRestPosZ;     /* 0x328 */
+    s32 mKillY;        /* 0x32c */
+    s32 mLinkedStarID; /* 0x330 -- POWER_STAR uniqueID */
+    s16 mShakeX;       /* 0x334 */
+    s16 mTiltVelZ;     /* 0x336 */
+    s16 mBobPhase;     /* 0x338 */
+    u16 mStateTimer;   /* 0x33a */
+    u8 mState;         /* 0x33c */
+    u8 pad_33d[0x1];
+    u8 mShakeRequested; /* 0x33e */
+    u8 mRespawnDelay;   /* 0x33f */
+    u8 mReady;          /* 0x340 */
+    u8 mGroupLinked;    /* 0x341 */
+    u8 mSuppressed;     /* 0x342 */
+    u8 pad_343[0x1];
+    struct daObjFallBlock_c *mPrevInGroup; /* 0x344 */
+    struct daObjFallBlock_c *mNextInGroup; /* 0x348 */
 };
 
 #endif /* __cplusplus */

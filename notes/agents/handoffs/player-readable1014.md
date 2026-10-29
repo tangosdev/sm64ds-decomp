@@ -36,7 +36,7 @@ scope instead of repeating superseded migration counts.
 
 No new semantic state, animation or field names are asserted. All 71 typed
 address-named state objects have the three PMF records populated by
-`src/unnamed/ov002/__sinit_ov002_021019d0.c`. The script actor's type follows its
+`src/game/player/Player.cpp` (`__sinit_ov002_021019d0`). The script actor's type follows its
 Spawn producer and dActor position/angle accesses; its slot stays unnamed.
 The original physical Player file boundary remains an inference.
 

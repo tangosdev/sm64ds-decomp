@@ -59,33 +59,33 @@
 #include "dCcAcPos_c.h"
 
 struct daObjCloset_c : dActor_c {
-    u8  pad_0d0[0x4];
+    u8 pad_0d0[0x4];
     /* Five attached cylinders, laid out left to right in front of the cupboard:
        Behavior places mColliders[j] at 100 * (2 - j) units along the actor's
        facing normal, so they span two units either side of it. Named by the
        _ZN10dCcAcPos_cC1Ev / _ZN10dCcAcPos_cD1Ev pair the factory and the
        destructor run over the array -- relocations the ROM build checks. */
-    dCcAcPos_c mColliders[5];  /* 0x0d4 */
+    dCcAcPos_c mColliders[5]; /* 0x0d4 */
     /* The Player currently being talked to, or null. Behavior only ever fills
        it from dActor_c::FindWithID(mColliders[i].otherOwner) after checking that
        actor's actorID is 0xbf, and only when Player::StartTalk accepts; it
        clears it again when the talk ends. */
-    Player *mTalkingPlayer;    /* 0x214 */
+    Player *mTalkingPlayer; /* 0x214 */
     /* Latch so the "menu" / "saving" jingle plays once per talk rather than
        once per frame: set the frame func_02012790 is called, cleared with
        mTalkingPlayer. */
-    u8  mSoundStarted;         /* 0x218 */
-    u8  pad_219[0x1];
+    u8 mSoundStarted; /* 0x218 */
+    u8 pad_219[0x1];
     /* Seeded 0xb09 when the talk starts and re-checked before every branch of
        the talk state machine, so a message put up by something else does not
        drive this actor's menu. */
-    u16 mMessageID;            /* 0x21a */
+    u16 mMessageID; /* 0x21a */
 
     /* --- vtable. Only the slots the ROM table actually overrides. --- */
-    virtual ~daObjCloset_c();        /* slots 16 (D1), 17 (D0) */
-    virtual s32 InitResources();       /* slot  0 */
-    virtual s32 CleanupResources();    /* slot  3 */
-    virtual s32 Behavior();            /* slot  6 */
+    virtual ~daObjCloset_c();       /* slots 16 (D1), 17 (D0) */
+    virtual s32 InitResources();    /* slot  0 */
+    virtual s32 CleanupResources(); /* slot  3 */
+    virtual s32 Behavior();         /* slot  6 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

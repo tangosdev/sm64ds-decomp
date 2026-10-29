@@ -1,7 +1,7 @@
 #ifndef DMGJUMP3DMARIO_C_H
 #define DMGJUMP3DMARIO_C_H
 
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 
 /* dMgJump3DMario_c -- one of the three Marios in Bounce and Pounce (MG_JUMP)
  * and its sequel (MG_JUMP2), ov006.
@@ -14,7 +14,7 @@
  *
  * There is no factory: the owning scenes hold `dMgJump3DMario_c mPlayers[3]`
  * (dScMgJump_c +0x506c, dScMgJump2_c +0x500c) and array-construct it. The base
- * ctor fixes the 0x4c split (it builds ModelAnim at +0x4c next); the array
+ * ctor fixes the 0x4c split (it builds dExtAnmModel_c at +0x4c next); the array
  * helpers fix sizeof at 0xb8.
  *
  * Field names are proven by this TU's own uses; the virtual names stay
@@ -123,7 +123,7 @@ struct dMgJump3DMario_c : dMg3DHeyhoObjAdapter_c {
     void EnterRespawn(); /* 0x020c8768 */
     int LoadResources(); /* 0x020c87d0 */
 
-    ModelAnim mModelAnim; /* 0x4c */
+    dExtAnmModel_c mAnmModel; /* 0x4c */
     u8 unk_0b0[0x08];     /* 0xb0 -- untouched by every member; proven only by sizeof */
 };
 

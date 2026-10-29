@@ -4,8 +4,6 @@
 #include "types.h"
 #include "daObjGuragura_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Lethal Lava Land's tilting slab. No fields of its own: the
  * factory allocates 0x350, which daObjGuragura_c fills. Overrides
@@ -20,10 +18,6 @@ struct daObjFl_Gura_c : daObjGuragura_c {
     virtual ~daObjFl_Gura_c() {}
     virtual s32 CleanupResources(); /* slot 3 */
     virtual s32 InitResources();    /* slot 0 */
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj(size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

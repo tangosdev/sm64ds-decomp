@@ -59,7 +59,7 @@ Private extracted ROM inputs and compiler binaries are local junctions to the
 original checkout and are not committed.
 
 - Final source: `python tools/source_style.py --base origin/main --json build/asset-init-source-style.json` exited 0 using clang-format 19.1.7, base `2d6b09828568f5b18aa529aed0cf0f707d4a57dc`: two files, zero findings, zero formatting deferrals.
-- Final source: `python tools/prepush_linkcheck.py --files src/runtime/filesystem/InitializeAssetHandleTable.c src/func_0201a2f8.c --json build/asset-init-handoff-linkcheck.json` exited 0: both complete functions VERIFIED, zero blind relocations and zero differences (0x194 bytes total).
+- Final source: `python tools/prepush_linkcheck.py --files src/runtime/filesystem/InitializeAssetHandleTable.c src/func_0201a2f8.cpp --json build/asset-init-handoff-linkcheck.json` exited 0: both complete functions VERIFIED, zero blind relocations and zero differences (0x194 bytes total).
 - Previous source head `ff908b234ea3e70a1234e9991ce44dc9a0a99051`: `python tools/prepush_linkcheck.py --range origin/main..HEAD` exited 0; both functions VERIFIED. Artifact: `build/asset-init-readability-committed-linkcheck.json`.
 - Readability source before the whitespace-only correction: `python tools/check_decl_agreement.py --changed origin/main` exited 0; no new disagreements or local copies of header declarations.
 - Move/rename source: `python tools/port_refcheck.py` exited 0; all 247 references resolve. No path or linkage changes followed that check.

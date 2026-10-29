@@ -13,15 +13,13 @@
  * include/daObjC0Water_c.h emits the retail D1/D0 pair first and emits no
  * D2 body.
  *
- * deslop leftovers:
- * - TextureTransformer::SetFile / dBgW_KcMbg::SetFile 6az: InitResources
- *   passes Fix12<int> by value; the header method form size-DIFFs.
+ * Notes:
+ * - dBgW_KcMbg::SetFile is a header member call; its scale is Fix12i, a
+ *   plain s32 (notes/mwccarm-codegen.md 6az).
  * - Sound::PlayLong / Sound::PlaySecretSound come from Sound.h, which now
  *   declares both. The ROM mangle is RK7Vector3 (const Vector3 &); a pointer
  *   argument is byte-identical, so this caller alone does not prove the
  *   reference spelling -- the header's definition-side reading does.
- *   SharedFilePtr.h has no fields: Prepare reads the BMD at
- *   data_ov012_021124d0 +4.
  * - data_ov012_02111c24 / 02111c90 BTA / CLPS handles; this TU consumes
  *   them, overlay .data owns them. The 021124c8 / 021124d0 KCL / BMD
  *   handles are defined at the end of this file.
@@ -33,7 +31,7 @@
  */
 
 /* daObjC0Water_c.h FIRST: it pulls in dBgActor_c.h, which must reach
-   common.h ahead of Model.h or the wrong Matrix4x3 spelling wins. */
+   common.h ahead of dExtSimpleModel_c.h or the wrong Matrix4x3 spelling wins. */
 #include "daObjC0Water_c.h"
 #include "SharedFilePtr.h"
 #include "dMap_c.h"
@@ -48,34 +46,22 @@ struct CLPS_Block;
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct C0WaterModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     C0WaterModelFilePtr(u32 fileID);
     ~C0WaterModelFilePtr();
 };
 
 struct C0WaterCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     C0WaterCollisionFilePtr(u32 fileID);
     ~C0WaterCollisionFilePtr();
 };
 
-extern "C" {
-void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
-    TextureTransformer *self, BTA_File *file, int flags, int speed, u32 startFrame);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale, s16 angY,
-    CLPS_Block *clps);
-
 /* Defined at the end of this file so the constructors do not enter .text. */
-extern C0WaterModelFilePtr     data_ov012_021124d0;
+extern C0WaterModelFilePtr data_ov012_021124d0;
 extern C0WaterCollisionFilePtr data_ov012_021124c8;
-extern BTA_File      data_ov012_02111c24;
-extern CLPS_Block    data_ov012_02111c90;
-extern int           data_0209caa0[];
-extern int           data_0209f32c;
-}
+extern BTA_File data_ov012_02111c24;
+extern CLPS_Block data_ov012_02111c90;
+extern int data_0209caa0[];
+extern int data_0209f32c;
 
 // @symbol daObjC0Water_c_classInit
 /* Reconstructed source-style name; exact original SM64DS spelling is not
@@ -84,33 +70,24 @@ extern int           data_0209f32c;
  * Every instruction the cartridge has here falls out of the one `new`.
  * 832 = 0x340 is the class's own size, loaded into fBase_c's size_t
  * operator new; dBgActor_c's C2, this class's vptr store, and
- * TextureTransformer C1 on the member at 0x320 are the implicit
+ * dExtAnmTexSRT_c C1 on the member at 0x320 are the implicit
  * constructor. The null check is the one `new` itself emits. Declaring a
  * constructor of our own would emit a `bl` the factory does not have. */
-extern "C" daObjC0Water_c *daObjC0Water_c_classInit()
-{
+extern "C" daObjC0Water_c *daObjC0Water_c_classInit() {
     return new daObjC0Water_c();
 }
 
 // @symbol _ZN14daObjC0Water_c13InitResourcesEv
-int daObjC0Water_c::InitResources()
-{
-    Model::LoadFile(data_ov012_021124d0);
+int daObjC0Water_c::InitResources() {
+    dExtSimpleModel_c::LoadFile(data_ov012_021124d0);
     dBgW_Kc::LoadFile(data_ov012_021124c8);
-    /* SharedFilePtr.h has no fields; +4 is the loaded file pointer. */
-    mModel.SetFile(*(BMD_File **)((char *)&data_ov012_021124d0 + 4), 1, 0x14);
-    TextureTransformer::Prepare(**(BMD_File **)((char *)&data_ov012_021124d0 + 4),
-                                data_ov012_02111c24);
-    /* 6az: header SetFile takes Fix12<int> by value. */
-    _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
-        &mTextureTransformer, &data_ov012_02111c24, 0, 0x1000, 0);
+    mModel.SetFile((BMD_File *)data_ov012_021124d0.filePtr, 1, 0x14);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov012_021124d0.filePtr, data_ov012_02111c24);
+    mTextureTransformer.SetFile(data_ov012_02111c24, 0, 0x1000, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    /* 6az: header SetFile takes Fix12<int> by value. */
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider,
-        *(KCL_File **)((char *)&data_ov012_021124c8 + 4),
-        &mClsnMat, 0x1000, mAngleY, &data_ov012_02111c90);
+    mMeshCollider.SetFile((KCL_File *)data_ov012_021124c8.filePtr, mClsnMat, 0x1000, mAngleY,
+                          data_ov012_02111c90);
     mMeshCollider.Enable(this);
     mLoweredY = mPosY - 0x4b0000;
     if (data_0209caa0[2] & 0x80000) {
@@ -120,8 +97,7 @@ int daObjC0Water_c::InitResources()
 }
 
 // @symbol _ZN14daObjC0Water_c8BehaviorEv
-int daObjC0Water_c::Behavior()
-{
+int daObjC0Water_c::Behavior() {
     if (mWasJustDrained != 0)
         Sound::PlaySecretSound(this, &mSoundTimer);
     if (mPosY <= mLoweredY) {
@@ -144,16 +120,14 @@ int daObjC0Water_c::Behavior()
 }
 
 // @symbol _ZN14daObjC0Water_c6RenderEv
-int daObjC0Water_c::Render()
-{
+int daObjC0Water_c::Render() {
     mTextureTransformer.Update(mModel.data);
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN14daObjC0Water_c16CleanupResourcesEv
-int daObjC0Water_c::CleanupResources()
-{
+int daObjC0Water_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
@@ -166,5 +140,5 @@ int daObjC0Water_c::CleanupResources()
  * __sinit_d_a_obj_c0_water.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
 // @symbol __sinit_d_a_obj_c0_water.cpp
-C0WaterModelFilePtr     data_ov012_021124d0(1451);
+C0WaterModelFilePtr data_ov012_021124d0(1451);
 C0WaterCollisionFilePtr data_ov012_021124c8(1452);

@@ -20,11 +20,6 @@
 extern "C" {
 #endif
 
-extern void _ZN7Message11PrepareTalkEv(void);
-extern void _ZN7Message13DisplaySavingEt(unsigned short);
-extern void _ZN7Message15ResetAllGlobalsEv(void);
-extern void _ZN7Message21DisplaySaveStatusTextEt(u16);
-extern void _ZN7Message30DisplayCourseNameForStarSelectEj(u32);
 
 
 #ifdef __cplusplus

@@ -3,8 +3,6 @@
 
 #include "dBgActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* daObjIceBoard_c -- Cool Cool Mountain's shatterable ice sheet (profile
  * ICE_BOARD, actor 295, ov018).
  *
@@ -19,7 +17,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  *   size  0x320             daObjIceBoard_c_classInit's own literal, which is
  *                           also dBgActor_c's own size: this class adds no
  *                           fields, and the destructor confirms it -- it
- *                           destroys only the inherited dBgW_KcMbg and Model
+ *                           destroys only the inherited dBgW_KcMbg and dExtSimpleModel_c
  *                           before chaining to dActor_c.
  * The coined `IceSheet` spelling this class used to carry is gone; the ROM's
  * own type string is where the class name now comes from.
@@ -32,22 +30,15 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * without a separate leaf D2 body; out of line mwccarm emits D0 ahead of D1
  * and adds the D2 the ROM never carried. */
 struct daObjIceBoard_c : dBgActor_c {
-    virtual int InitResources();                  /* slot  0 */
-    virtual int CleanupResources();               /* slot  3 */
-    virtual int Behavior();                       /* slot  6 */
-    virtual int Render();                         /* slot  9 */
-    virtual void OnGroundPounded(dActor_c &other);/* slot 21 */
-    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
-    virtual void Kill();                          /* slot 31 */
+    virtual int InitResources();                   /* slot  0 */
+    virtual int CleanupResources();                /* slot  3 */
+    virtual int Behavior();                        /* slot  6 */
+    virtual int Render();                          /* slot  9 */
+    virtual void OnGroundPounded(dActor_c &other); /* slot 21 */
+    virtual void OnHitByMegaChar(Player &player);  /* slot 27 */
+    virtual void Kill();                           /* slot 31 */
 
-    /* Leaf size_t operator new. A plain `new daObjIceBoard_c` without this
-       relocates to the global `_Znwm`; this routes the factory through
-       fBase_c::operator new, the call this TU's classInit actually makes. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
-
-    virtual ~daObjIceBoard_c() {}                 /* slots 16, 17 */
+    virtual ~daObjIceBoard_c() {} /* slots 16, 17 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

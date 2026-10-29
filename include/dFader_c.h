@@ -62,6 +62,10 @@
 #ifdef __cplusplus
 extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 
+namespace Memory {
+void operator_delete2(void *);
+}
+
 struct dFader_c {
     Fix12i currInterp;  /* 0x04 -- current fade level, 0..0x1000 */
     Fix12i speed;       /* 0x08 -- per-frame delta; sign selects the target */
@@ -76,11 +80,13 @@ struct dFader_c {
        Memory::operator_delete2 (0x0203cbcc). Keeping that class delete path
        inline makes mwcc emit the ROM's direct call instead of global
        `_ZdlPv`; it adds neither object state nor a vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 
     /* Pure, all eight: the corresponding words in data_0208eafc are null. */
     virtual void AdvanceFade() = 0;                  /* slot 2 */
-    virtual int  SetBackwardTime(u32 frames) = 0;    /* slot 3 */
+    virtual int SetBackwardTime(u32 frames, u32) = 0; /* slot 3 */
     virtual int  SetForwardTime(u32 frames) = 0;     /* slot 4 */
     virtual int  IsAtStart() = 0;                    /* slot 5 */
     virtual int  IsAtEnd() = 0;                      /* slot 6 */

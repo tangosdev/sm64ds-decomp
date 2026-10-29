@@ -17,7 +17,7 @@
  * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daDsnBase_c, which derives
  * from dBgActor_c, and the difference is in the bytes rather than only in the RTTI:
  * its destructor stores THREE vptrs -- its own, daDsnBase_c's, then dBgActor_c's --
- * and destroys daDsnBase_c's dExtShadowModel_c at 0x338 and TextureSequence at 0x324
+ * and destroys daDsnBase_c's dExtShadowModel_c at 0x338 and dExtAnmTexPat_c at 0x324
  * between the second and the third. A one-level chain emits two vptr stores and
  * neither member call.
  *
@@ -50,7 +50,7 @@
  *   0x3a2  the trigger flag. Behavior clears it, InitResources zeroes it.
  *
  * WHAT THIS HEADER USED TO SAY, AND WHY MOST OF IT WAS THE BASE'S. The generated
- * body had nine fields over `u8 pad_000[0xd4]`. `Model mModel` at 0xd4 and a
+ * body had nine fields over `u8 pad_000[0xd4]`. `dExtSimpleModel_c mModel` at 0xd4 and a
  * `u8 mMovingMeshCollider` marker at 0x124 are dBgActor_c's, twice removed --
  * dBgActor_c calls the second one mMeshCollider. `s32 mFileTable` at 0x320,
  * `u8 mTextureSequence` at 0x324 and `u8 mShadowModel` at 0x338 are
@@ -58,7 +58,7 @@
  * both factories construct them and both destructors destroy them.
  *
  * AND `s32 unk_32c` WAS INSIDE ONE OF THEM. 0x32c is 0x324 + 8, which is
- * dExtFrameCtrl_c::currFrame reached through the TextureSequence -- Behavior treats it
+ * dExtFrameCtrl_c::currFrame reached through the dExtAnmTexPat_c -- Behavior treats it
  * as a 20.12 countdown, shifting right by 12 to read it and left by 12 to write
  * it, in the same function that calls dExtFrameCtrl_c::Advance on the same sub-object.
  * It is spelled through the member now, so nothing describes those four bytes
@@ -80,24 +80,27 @@
 #include "daDsnBase_c.h"
 
 struct daDsn_c : daDsnBase_c {
-    /* UNOBSERVED, not inherited. daDsnBase_c's own methods stop at 0x360 and
-       nothing in the tree reads 0x360..0x398 on either leaf. daDkk_c allocates
-       0x3a0, so the span exists there too -- see include/daDsnBase_c.h. */
-    u8  pad_360[0x38];
+    /* Not inherited: daDsnBase_c declares nothing past 0x360. Its methods do
+       reach into this span on both leaves, though, through d_a_dsn_base.cpp's
+       file-local DsnCycle view: the shadow matrix at 0x360 and the rise and
+       ground heights at 0x390/0x394, which daDkk_c.h names mShadowMtx, mRiseY
+       and mGroundY. d_a_dsn.cpp itself touches none of it, so it stays a pad
+       here -- see include/daDsnBase_c.h. */
+    u8 pad_360[0x38];
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
-    s32 mState;             /* 0x398 */
-    u8  pad_39c[0x2];
-    u8  mRetrigger;         /* 0x39e */
-    u8  pad_39f[0x1];
-    u16 mHoldTimer;         /* 0x3a0 */
-    u8  mTriggered;         /* 0x3a2 */
+    s32 mState; /* 0x398 */
+    u8 pad_39c[0x2];
+    u8 mRetrigger; /* 0x39e */
+    u8 pad_39f[0x1];
+    u16 mHoldTimer; /* 0x3a0 */
+    u8 mTriggered;  /* 0x3a2 */
 
     /* --- vtable --- */
     /* Slots 16 (D1) and 17 (D0), defined in the class body, the way the sibling
        leaf daDkk_c.h does it. EMPTY, BUT NOT INERT: the 0x60-byte D1 stores this
        class's vptr, then daDsnBase_c's (inlined -- its destructor is in its
-       class body too), destroying dExtShadowModel_c@0x338 and TextureSequence@0x324,
-       then dBgActor_c's, destroying dBgW_KcMbg@0x124 and Model@0xd4, before
+       class body too), destroying dExtShadowModel_c@0x338 and dExtAnmTexPat_c@0x324,
+       then dBgActor_c's, destroying dBgW_KcMbg@0x124 and dExtSimpleModel_c@0xd4, before
        chaining to dActor_c::~dActor_c.
 
        In-class is load-bearing twice. It moves the ABI key function down to
@@ -108,14 +111,14 @@ struct daDsn_c : daDsnBase_c {
     virtual ~daDsn_c() {}
 
     /* The two the base declares `= 0`; this class supplies both. */
-    int Behavior();                    /* slot  6 */
-    int InitResources();               /* slot  0 */
+    int Behavior();      /* slot  6 */
+    int InitResources(); /* slot  0 */
 
     /* Slots 3 and 9 are daDsnBase_c's and are declared there -- see the note
        above. This class inherits both words. */
 
     virtual void OnHitByMegaChar(Player &player); /* slot 27 */
-    virtual int  OnAimedAtWithEgg();              /* slot 29 */
+    virtual int OnAimedAtWithEgg();               /* slot 29 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

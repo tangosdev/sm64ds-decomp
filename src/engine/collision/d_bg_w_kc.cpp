@@ -14,11 +14,19 @@
  */
 #include "dBgW_Kc.h"
 #include "dBgW.h"
+#include "dBgPc.h"
 
 extern "C" {
 /* Shared base init, defined in its own TU (src/engine/collision/d_bg_w.cpp). */
 void func_02039624(dBgW *self);
 }
+
+/* The surface record the ITCM DetectClsn overrides (d_bg_w_kc_itcm.cpp)
+   fill per triangle. A namespace-scope dBgPc, so mwcc emits
+   __sinit_d_bg_w_kc.cpp to construct it and register ~dBgPc() (was the
+   handwritten __sinit_02074fe4). The ITCM half reaches it by this
+   address name. */
+dBgPc data_020a0cec;
 
 // @symbol _ZN7dBgW_KcC1Ev
 // @symbol _ZN7dBgW_KcC2Ev
@@ -33,13 +41,13 @@ dBgW_Kc::~dBgW_Kc() {}
 
 // @symbol func_020397dc
 /* True when a divisor is too close to zero to divide by (|value| <= 8). */
-extern "C" int func_020397dc(int value) {
+extern "C" bool func_020397dc(int value) {
     return value <= 8 && value >= -8;
 }
 
 // @symbol func_020397b8
 /* True when a face normal's y lies strictly inside the wall band. */
-extern "C" int func_020397b8(int normalY) {
+extern "C" bool func_020397b8(int normalY) {
     return normalY < 0x600 && normalY > -0xccc;
 }
 
@@ -61,7 +69,7 @@ void dBgW_Kc::UpdateFileOffsets(KCL_File &file) {
     file.positions = (s32(*)[3])((char *)&file + (int)file.positions);
     file.normals = (s16(*)[3])((char *)&file + (int)file.normals);
     file.tris = (KCL_Tri *)((char *)&file + (int)file.tris);
-    file.unk_0c = (char *)&file + (int)file.unk_0c;
+    file.octree = (char *)&file + (int)file.octree;
 }
 
 // @symbol _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block
@@ -69,18 +77,18 @@ void dBgW_Kc::SetFile(KCL_File *file, CLPS_Block &clpsBlock) {
     func_02039624(this);
     kclFile = file;
     clps = clpsBlock;
-    unk_28 = 0;
-    unk_2c = 0x1000;
-    unk_30 = 0;
-    unk_34 = 0;
-    unk_35 = 0;
-    unk_38 = 0x1000;
-    unk_3c = 0;
-    unk_40 = 0;
-    unk_44 = -0x1000;
-    unk_48 = 2;
-    unk_4c = 1;
-    unk_4d = 0;
+    upAxis.x = 0;
+    upAxis.y = 0x1000;
+    upAxis.z = 0;
+    shallowOnly = false;
+    depthByDir = false;
+    depthDir.x = 0x1000;
+    depthDir.y = 0;
+    depthDir.z = 0;
+    depthDirMinDot = -0x1000;
+    edgeToleranceShift = 2;
+    edgeContacts = true;
+    tolerantWallEdges = false;
 }
 
 // @symbol func_020396dc

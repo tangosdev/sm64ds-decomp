@@ -3,82 +3,68 @@
  * Whomp's Fortress pole billboard.
  *
  * Scenery model on a pole. Direct base is dActor_c; the owned
- * member is Model at 0xd4, which closes the class on the factory's
+ * member is dExtSimpleModel_c at 0xd4, which closes the class on the factory's
  * literal 0x124.
  *
  * daObjBkBillboard_c_classInit is reconstructed (RTTI
  * daObjBkBillboard_c, BK_BILLBOARD registry). Retail does not store
  * that spelling.
  *
- * deslop
- * Leftover: g_profile_BK_BILLBOARD lives outside this TU (S14).
- * Leftover: func_ov015_02111214 keeps its C-ABI cartridge name; it is
- *   not a vtable slot.
- * Leftover: pad_0d0[4] is unread in this TU. dActor_c is 0xd0 and
- *   Model needs no more than 4-byte alignment, so those four bytes
+ * Notes:
+ * - g_profile_BK_BILLBOARD lives outside this TU (S14).
+ * - pad_0d0[4] is unread in this TU. dActor_c is 0xd0 and
+ *   dExtSimpleModel_c needs no more than 4-byte alignment, so those four bytes
  *   are an unknown field, not alignment of mModel.
- * Leftover: inline destructor (out-of-line emits D0 before D1).
+ * - Inline destructor (out-of-line emits D0 before D1).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_bk_billboard_AssetId {
-    ASSET_BK_BILLBORD_BMD = 0x0588
-};
+enum d_a_obj_bk_billboard_AssetId { ASSET_BK_BILLBORD_BMD = 0x0588 };
 
 #include "daObjBkBillboard_c.h"
 #include "SharedFilePtr.h"
+#include "math/MtxStack.h"
 
-/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
- * constructor and destructor are the ROM veneers, aliased in the manifest. */
+/* The constructor and destructor are the ROM veneers, aliased in the
+ * manifest. */
 struct BkBillboardModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     BkBillboardModelFilePtr(u32 fileID);
     ~BkBillboardModelFilePtr();
 };
 
-extern "C" {
-extern void Matrix4x3_FromRotationY(void *, int);
 extern BkBillboardModelFilePtr gBkBillbordModelFile;
-void func_ov015_02111214(daObjBkBillboard_c *t);
-}
 
 // @symbol daObjBkBillboard_c_classInit
-extern "C" daObjBkBillboard_c *daObjBkBillboard_c_classInit()
-{
+extern "C" daObjBkBillboard_c *daObjBkBillboard_c_classInit() {
     return new daObjBkBillboard_c();
 }
 
 // @symbol _ZN18daObjBkBillboard_c13InitResourcesEv
-s32 daObjBkBillboard_c::InitResources()
-{
-    void *file = Model::LoadFile(gBkBillbordModelFile);
+s32 daObjBkBillboard_c::InitResources() {
+    void *file = dExtSimpleModel_c::LoadFile(gBkBillbordModelFile);
     mModel.SetFile((BMD_File *)file, 1, -1);
-    func_ov015_02111214(this);
+    UpdateModelMatrix();
     return 1;
 }
 
 // @symbol _ZN18daObjBkBillboard_c6RenderEv
-s32 daObjBkBillboard_c::Render()
-{
+s32 daObjBkBillboard_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN18daObjBkBillboard_c16CleanupResourcesEv
-s32 daObjBkBillboard_c::CleanupResources()
-{
+s32 daObjBkBillboard_c::CleanupResources() {
     gBkBillbordModelFile.Release();
     return 1;
 }
 
-// @symbol func_ov015_02111214
-extern "C" void func_ov015_02111214(daObjBkBillboard_c *t)
-{
-    Matrix4x3_FromRotationY(&t->mModel.mat4x3, t->mAngleY);
-    t->mModel.mat4x3.t.x = t->mPosX >> 3;
-    t->mModel.mat4x3.t.y = t->mPosY >> 3;
-    t->mModel.mat4x3.t.z = t->mPosZ >> 3;
+// @symbol _ZN18daObjBkBillboard_c17UpdateModelMatrixEv
+void daObjBkBillboard_c::UpdateModelMatrix() {
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    mModel.mat4x3.t.x = mPosX >> 3;
+    mModel.mat4x3.t.y = mPosY >> 3;
+    mModel.mat4x3.t.z = mPosZ >> 3;
 }
 
 // @symbol _ZN18daObjBkBillboard_cD1Ev

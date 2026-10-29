@@ -31,25 +31,21 @@
 #include "dClipper.h"
 #include "math/Matrix.h"
 #include "dBgCh_Gnd.h"
+#include "math/CalcLib.h"
 
 extern "C" {
+/* local extern: no header in include/ declares these (dClipper.h only
+ * mentions the clipper instance, Player.h only the water height). */
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern Matrix4x3 data_0209b41c;
-extern void MulVec3Mat4x3(
-    Vector3 *vector, Matrix4x3 *matrix, Vector3 *result);
 extern s32 data_0209f32c;
-extern u32 _ZN8Particle6System9NewRippleE5Fix12IiES2_S2_(
-    Fix12i x, Fix12i y, Fix12i z);
-extern void func_0204dab4(void* system, void* records, int count,
-                                u32 mask, void* callback);
+void MulVec3Mat4x3(Vector3 *vector, Matrix4x3 *matrix, Vector3 *result);
+void func_0204dab4(void *system, void *records, int count, u32 mask, void *callback);
 /* This initializer's 0xc-byte layout is evidenced, but its original class
  * name is not. Keep that single unresolved ABI boundary explicit. */
-extern void func_0204dc84(char* record);
-extern int func_02037e38(unsigned int *p);
-extern u8 DecIfAbove0_Byte(u8* value);
-extern void func_02049d60(
-    Particle::Manager *manager, Particle::System *system);
+void func_0204dc84(char *record);
+void func_02049d60(Particle::Manager *manager, Particle::System *system);
 }
 
 // @symbol _ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE
@@ -129,8 +125,7 @@ int dPa_c::level_c::splashCallback_c::OnUpdate(
 
         if (particle->velocityAsr3.y < 0 && (y << 3) < data_0209f32c) {
             particle->age = particle->lifetime;
-            _ZN8Particle6System9NewRippleE5Fix12IiES2_S2_(
-                x << 3, data_0209f32c + 0x3000, z << 3);
+            Particle::System::NewRipple(x << 3, data_0209f32c + 0x3000, z << 3);
         }
         particle = particle->next;
     }
@@ -151,8 +146,7 @@ int dPa_c::level_c::bubbleCallback_c::OnUpdate(
 
         if ((y << 3) > data_0209f32c) {
             particle->age = particle->lifetime;
-            _ZN8Particle6System9NewRippleE5Fix12IiES2_S2_(
-                x << 3, data_0209f32c + 0x3000, z << 3);
+            Particle::System::NewRipple(x << 3, data_0209f32c + 0x3000, z << 3);
         }
         particle = particle->next;
     }
@@ -196,7 +190,7 @@ void dPa_c::level_c::checkYoganCallback_c::SpawnParticles(
         v.y = vy;
         v.z = sz << 3;
         rg.SetObjAndPos(v, 0);
-        if (rg.DetectClsn() == 0 || func_02037e38((u32 *)&rg.surface) != 1) {
+        if (rg.DetectClsn() == 0 || rg.surface.clps.GetSurfaceType() != 1) {
             particle->age = particle->lifetime;
         } else {
             particle->offsetAsr3.y =
@@ -218,24 +212,24 @@ int dPa_c::level_c::checkYoganCallback_c::OnUpdate(Particle::System& system,
 // @symbol _ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev
 dPa_c::level_c::edStarKiraCallback_c::edStarKiraCallback_c()
 {
-    char* record = (char*)trackingRecords;
+    trackingRecordStorage_c *record = trackingRecords;
     int i = 0;
     do {
-        func_0204dc84(record);
+        func_0204dc84((char *)record);
         ++i;
-        record += 0xc;
+        ++record;
     } while (i < 0x40);
 
     unk308 = 0x1000;
     unk30c = 0x200;
 }
 
-extern "C" {
-void func_02022260(int *p0, short *p1, short *p2, int *p3) {
-    *p1 = (short)(p0[0] >> 9);
-    *p2 = (short)(p0[1] >> 9);
-    *p3 = 0xfff;
-}
+/* The projection func_0204dab4 runs for each tracked particle in place of
+ * its default func_0204dcc0: the record's 2D point and its 20.12 scale. */
+extern "C" void func_02022260(int *position, short *screenX, short *screenY, int *scale) {
+    *screenX = position[0] >> 9;
+    *screenY = position[1] >> 9;
+    *scale = 0xfff;
 }
 
 // @symbol _ZN5dPa_c7level_c20edStarKiraCallback_c14SpawnParticlesERN8Particle6SystemE
@@ -301,8 +295,7 @@ int dPa_c::level_c::checkWaterRippleCallback_c::OnUpdate(
 
         if (particle->velocityAsr3.y < 0 && (y << 3) < data_0209f32c) {
             particle->age = particle->lifetime;
-            _ZN8Particle6System9NewRippleE5Fix12IiES2_S2_(
-                x << 3, data_0209f32c + 0x3000, z << 3);
+            Particle::System::NewRipple(x << 3, data_0209f32c + 0x3000, z << 3);
         }
         particle = particle->next;
     }

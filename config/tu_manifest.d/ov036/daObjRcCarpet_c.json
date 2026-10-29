@@ -55,14 +55,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov036_0211224c",
+      "symbol": "_ZN15daObjRcCarpet_c19UpdateClsnTransformEv",
       "address": "0x0211224c",
       "size": "0x00000074",
       "legacy_source": "src/func_ov036_0211224c.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov036_021122c0",
+      "symbol": "_ZN15daObjRcCarpet_c20UpdateModelTransformEv",
       "address": "0x021122c0",
       "size": "0x00000058",
       "legacy_source": "src/func_ov036_021122c0.cpp",
@@ -881,7 +881,8 @@
     "The base class is now the ROM-proven dPathLiftActor_c identity. The compiler naturally emits daObjRcCarpet_c RTTI with its base relocation to ov002:0x0210af0c; no RTTI or lifecycle data is hand-authored.",
     "daObjRcCarpet_c_classInit and g_profile_RC_CARPET are reconstructed source-style names: SM64DS proves the RTTI class, RC_CARPET registry ID, descriptor/factory relationship, allocation size, and vtable identity; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were daObjRcCarpet_c_classInit and g_profile_RC_CARPET.",
     "The three ov036 resource handles at 0x021141a4 (model, file 1687), 0x0211419c (animation, file 1689) and 0x021141ac (collision, file 1688) are file-scope objects in this TU. mwcc emits __sinit_d_a_obj_rc_carpet.cpp, the ctor word, and the three registration nodes. The handwritten src/__sinit_ov036_02112944.c is retired. The vtable partition is unchanged.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+    "ACTOR CLEANUP (1028). func_ov036_021122c0 is daObjRcCarpet_c::UpdateModelTransform and func_ov036_0211224c is daObjRcCarpet_c::UpdateClsnTransform, both byte-identical. The dead hold_d_a_obj_rc_carpet declaration and the stale Fix12<int> wall notes are gone (Fix12i is a plain s32); SetFile is a plain member call on mMeshCollider. The three @NNN renames were re-keyed by __sinit relocation-site order."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1102,28 +1103,8 @@
         "errors": []
       },
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -1133,7 +1114,25 @@
       "linkerOutput": null
     }
   },
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new daObjRcCarpet_c() instantiates the class, so mwccarm emits the dBgActor_c base-object destructor helper. The cartridge has dBgActor_c D1/D0 only (ov002 0x020ee42c, 0x020ee464), no D2; no configured ROM symbol and no inbound relocation once the licensed function set is retained (same row as ov100/daObjPathLift_c)."
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new daObjRcCarpet_c() instantiates the class, so mwccarm emits the inline dPathLiftActor_c base-object destructor helper. The cartridge has dPathLiftActor_c D0/D1 only (ov002 0x020ef320, 0x020ef390), no D2; no configured ROM symbol and no inbound relocation once the licensed function set is retained (same row as ov100/daObjPathLift_c)."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3 four-byte inline destructor, emitted as vague linkage once return new daObjRcCarpet_c() instantiates dPathLiftActor_c, whose Vector3 mInitialPos the D2 helper tears down. The cartridge owns the body at arm9:0x020072c0, so this copy is a duplicate that production isolation discards (same row as ov100/daObjPathLift_c)."
+    }
+  ],
   "externalized_output": [
     {
       "symbol": "_ZTI7fBase_c",
@@ -1415,14 +1414,14 @@
           },
           {
             "ordinal": 2,
-            "symbol": "func_ov036_0211224c",
+            "symbol": "_ZN15daObjRcCarpet_c19UpdateClsnTransformEv",
             "identical": true,
             "relocCount": 1,
             "differences": []
           },
           {
             "ordinal": 3,
-            "symbol": "func_ov036_021122c0",
+            "symbol": "_ZN15daObjRcCarpet_c20UpdateModelTransformEv",
             "identical": true,
             "relocCount": 1,
             "differences": []
@@ -1592,12 +1591,12 @@
             "size": "0x00000084"
           },
           {
-            "symbol": "func_ov036_0211224c",
+            "symbol": "_ZN15daObjRcCarpet_c19UpdateClsnTransformEv",
             "section": ".text",
             "size": "0x00000074"
           },
           {
-            "symbol": "func_ov036_021122c0",
+            "symbol": "_ZN15daObjRcCarpet_c20UpdateModelTransformEv",
             "section": ".text",
             "size": "0x00000058"
           },
@@ -1680,8 +1679,8 @@
           "$d",
           "$d",
           "$d",
-          "func_ov036_0211224c",
-          "func_ov036_021122c0"
+          "_ZN15daObjRcCarpet_c19UpdateClsnTransformEv",
+          "_ZN15daObjRcCarpet_c20UpdateModelTransformEv"
         ],
         "liveSections": [
           {
@@ -1951,14 +1950,14 @@
           },
           {
             "ordinal": 2,
-            "symbol": "func_ov036_0211224c",
+            "symbol": "_ZN15daObjRcCarpet_c19UpdateClsnTransformEv",
             "identical": true,
             "relocCount": 1,
             "differences": []
           },
           {
             "ordinal": 3,
-            "symbol": "func_ov036_021122c0",
+            "symbol": "_ZN15daObjRcCarpet_c20UpdateModelTransformEv",
             "identical": true,
             "relocCount": 1,
             "differences": []
@@ -2128,12 +2127,12 @@
             "size": "0x00000084"
           },
           {
-            "symbol": "func_ov036_0211224c",
+            "symbol": "_ZN15daObjRcCarpet_c19UpdateClsnTransformEv",
             "section": ".text",
             "size": "0x00000074"
           },
           {
-            "symbol": "func_ov036_021122c0",
+            "symbol": "_ZN15daObjRcCarpet_c20UpdateModelTransformEv",
             "section": ".text",
             "size": "0x00000058"
           },
@@ -2216,8 +2215,8 @@
           "$d",
           "$d",
           "$d",
-          "func_ov036_0211224c",
-          "func_ov036_021122c0"
+          "_ZN15daObjRcCarpet_c19UpdateClsnTransformEv",
+          "_ZN15daObjRcCarpet_c20UpdateModelTransformEv"
         ],
         "liveSections": [
           {
@@ -2451,19 +2450,19 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@467",
+      "from": "@435",
       "to": "@453",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     },
     {
-      "from": "@468",
+      "from": "@436",
       "to": "@454",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     },
     {
-      "from": "@469",
+      "from": "@437",
       "to": "@455",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     }
   ]
 }

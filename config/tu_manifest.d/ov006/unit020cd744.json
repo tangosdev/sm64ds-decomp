@@ -4,19 +4,37 @@
   "source": "src/minigames/unit020cd744.cpp",
   "promoted_source": "src/minigames/unit020cd744.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "Lower edge 0x020cd744: the previous linker unit (tu_map) is the promoted dMgTrmpln2Mario_c TU, whose .text ends exactly there.",
     "Upper edge 0x020d1018: the next function is _ZN12dScMgAmida_cD1Ev, the first member of the promoted dScMgAmida_c TU, enrolled at src/_ZN12dScMgAmida_cD1Ev.cpp; tu_map ends this unit there.",
     "59 functions, contiguous, every one a one-function shard that byte-matched on its own (TrmpLine_Draw last, 2026-10-02); no gaps inside 0x020cd744..0x020d1018.",
-    "Data is not exclusive to this unit: the run reads the Mario TU's globals at 0x021405a8..0x021405b4 and the score words 0x02140818/0x02140828/0x02140830 that d_s_mg_trampoline2 also uses, plus its own bss 0x02140808..0x0214095c and the four 0x32c-byte slots at 0x02140990 (function-local statics with guard words and Vector3 destructor nodes), the texture handles 0x02140814/0x02140844, and rodata/data words in 0x0212e060..0x0212e0f0 and 0x0213b2f4..0x0213b414. Shared globals do not move the .text edge, so the unit is folded text only.",
-    "No RTTI, vtable or sinit record separates this run into smaller units, so interior boundaries are unproven and it is folded as the whole tu_map unit, text only."
+    "Data is not exclusive to this unit: the run reads the Mario TU's globals at 0x021405a8..0x021405b4, and d_s_mg_trampoline2 reads three of this unit's counters (sTrmpItemsHit, sTrmpItemsActive, sTrmp2Score). rodata/data words in 0x0212e060..0x0212e0f0 and 0x0213b2f4..0x0213b414 stay ROM-owned. Shared globals do not move the .text edge.",
+    "No RTTI, vtable or sinit record separates this run into smaller units, so interior boundaries are unproven and it is folded as the whole tu_map unit.",
+    "static initializer: __sinit_ov006_0212fc7c (.init 0x0212fc7c..0x0212fd48, .ctor word 0x0213357c) builds sTrmpLines with __cxa_vec_ctor(_ZN8TrmpLineC1Ev, _ZN8TrmpLineD1Ev), registers 0x020d0fe4 (this unit's __arraydtor, between TrmpLine_Create and D1) for it, and constructs the three ring model handles TrmpItem_Load and TrmpItem_LoadAll read. Only this unit reads any of them. ov006 .init follows .text TU order: the previous initializer (0x0212f6b4) builds the Trampoline Mario model and animation handles of d_mg_trmpln2_mario, the TU just before this one, and the next (0x0212fd48) builds dScMgBomroom_c's state tables.",
+    "bss 0x02140808..0x02141640, one contiguous run sorted by size as mwcc lays out one TU: 4-byte objects (nine function-local guards and seven file globals) to 0x02140848, the three 8-byte ring handles to 0x02140860, the 12-byte function-local Vector3s and destructor-registration nodes to 0x02140968, two 0x14-byte tables to 0x02140990, then sTrmpLines (0xcb0) to 0x02141640, where d_s_mg_amida's sAmidaLaneTargets starts. sTrmp2MarioPtrs is read only by d_mg_trmpln2_mario, but it sits inside this size-sorted run, so this unit defines it."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020cd744",
       "end": "0x020d1018"
+    },
+    {
+      "name": ".init",
+      "start": "0x0212fc7c",
+      "end": "0x0212fd48"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x0213357c",
+      "end": "0x02133580"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02140808",
+      "end": "0x02141640"
     }
   ],
   "functions": [
@@ -413,21 +431,21 @@
       "ordinal": 55
     },
     {
-      "symbol": "TrmpLine_CleanupAll",
+      "symbol": "__arraydtor$2193",
       "address": "0x020d0fe4",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020d0fe4.c",
       "ordinal": 56
     },
     {
-      "symbol": "TrmpLine_Destroy",
+      "symbol": "_ZN8TrmpLineD1Ev",
       "address": "0x020d1008",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020d1008.c",
       "ordinal": 57
     },
     {
-      "symbol": "TrmpLine_Reset",
+      "symbol": "_ZN8TrmpLineC1Ev",
       "address": "0x020d100c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020d100c.c",
@@ -435,10 +453,320 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "_ZGVsUnitY$230",
+      "address": "0x02140808",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of TrmpItem_MotionSpinSway's function-local `static Vector3 sUnitY`; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "_ZGVsUnitZ$318",
+      "address": "0x0214080c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of TrmpItem_MotionSpin's function-local `static Vector3 sUnitZ`; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "_ZGVsUnitZ$234",
+      "address": "0x02140810",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of TrmpItem_MotionSpinSway's function-local `static Vector3 sUnitZ`; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "sTrmpLinePlttAddr",
+      "address": "0x02140814",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "VRAM palette address TrmpLine_LoadTextures stores and TrmpLine_Draw programs into REG_TEXPLTT_BASE"
+    },
+    {
+      "symbol": "sTrmpItemsHit",
+      "address": "0x02140818",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "count of items hit, capped at 9999 by TrmpItem_UpdateWithJumper and cleared by TrmpItem_HideAll; d_s_mg_trampoline2 reads it"
+    },
+    {
+      "symbol": "_ZGVsUnitY$934",
+      "address": "0x0214081c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of TrmpItem_Init's function-local `static Vector3 sUnitY`; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "_ZGVsUnitY$158",
+      "address": "0x02140820",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of TrmpItem_MotionSpinHover's function-local `static Vector3 sUnitY`; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "_ZGVsUnitY$314",
+      "address": "0x02140824",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of TrmpItem_MotionSpin's function-local `static Vector3 sUnitY`; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "sTrmpItemsActive",
+      "address": "0x02140828",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "count of items still shown, raised by TrmpItem_StartAppear and lowered by TrmpItem_GrowScale; d_s_mg_trampoline2 reads it"
+    },
+    {
+      "symbol": "sTrmpItems",
+      "address": "0x0214082c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "the item array TrmpItem_LoadAll stores and every TrmpItem_*All walker strides by 0x1d0"
+    },
+    {
+      "symbol": "sTrmp2Score",
+      "address": "0x02140830",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "running score TrmpItem_UpdateWithJumper raises (capped at 999999) and TrmpItem_HideAll clears; d_s_mg_trampoline2 reads it"
+    },
+    {
+      "symbol": "_ZGVsUnitY$203",
+      "address": "0x02140834",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of TrmpItem_MotionSpinDrift's function-local `static Vector3 sUnitY`; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "sTrmpItemCount",
+      "address": "0x02140838",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "the item count TrmpItem_LoadAll stores and the walkers loop to"
+    },
+    {
+      "symbol": "_ZGVsUnitZ$207",
+      "address": "0x0214083c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of TrmpItem_MotionSpinDrift's function-local `static Vector3 sUnitZ`; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "_ZGVsUnitZ$162",
+      "address": "0x02140840",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of TrmpItem_MotionSpinHover's function-local `static Vector3 sUnitZ`; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "sTrmpLineTexAddr",
+      "address": "0x02140844",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "VRAM texture address TrmpLine_LoadTextures stores and TrmpLine_Draw programs into REG_TEXIMAGE_PARAM"
+    },
+    {
+      "symbol": "sTrmpItemRingCModelFile",
+      "address": "0x02140848",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "ring model handle, file 0x21c; constructed third"
+    },
+    {
+      "symbol": "sTrmpItemRingAModelFile",
+      "address": "0x02140850",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "ring model handle, file 0x21a; the static initializer constructs it through func_02017acc and registers func_02017ab4"
+    },
+    {
+      "symbol": "sTrmpItemRingBModelFile",
+      "address": "0x02140858",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "ring model handle, file 0x21b; constructed second"
+    },
+    {
+      "symbol": "sUnitY$230",
+      "address": "0x02140860",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "TrmpItem_MotionSpinSway's function-local `static Vector3 sUnitY(0, 0x1000, 0)`; retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "@236",
+      "address": "0x0214086c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_MotionSpinHover; it is the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "@237",
+      "address": "0x02140878",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_MotionSpinSway; it is the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sUnitZ$162",
+      "address": "0x02140884",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "TrmpItem_MotionSpinHover's function-local `static Vector3 sUnitZ(0, 0, 0x1000)`; retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "sUnitZ$234",
+      "address": "0x02140890",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "TrmpItem_MotionSpinSway's function-local `static Vector3 sUnitZ(0, 0, 0x1000)`; retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "@817",
+      "address": "0x0214089c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_Init; it is the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sUnitY$934",
+      "address": "0x021408a8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "TrmpItem_Init's function-local `static Vector3 sUnitY(0, 0x1000, 0)`; retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "@238",
+      "address": "0x021408b4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_MotionSpinDrift; it is the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sUnitY$203",
+      "address": "0x021408c0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "TrmpItem_MotionSpinDrift's function-local `static Vector3 sUnitY(0, 0x1000, 0)`; retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "@2175",
+      "address": "0x021408cc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node the static initializer passes for sTrmpLines (its __arraydtor)"
+    },
+    {
+      "symbol": "@239",
+      "address": "0x021408d8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_MotionSpinDrift; it is the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sUnitZ$207",
+      "address": "0x021408e4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "TrmpItem_MotionSpinDrift's function-local `static Vector3 sUnitZ(0, 0, 0x1000)`; retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "@316",
+      "address": "0x021408f0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_MotionSpin; it is the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sUnitY$314",
+      "address": "0x021408fc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "TrmpItem_MotionSpin's function-local `static Vector3 sUnitY(0, 0x1000, 0)`; retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "@320",
+      "address": "0x02140908",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_MotionSpin; it is the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sUnitZ$318",
+      "address": "0x02140914",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "TrmpItem_MotionSpin's function-local `static Vector3 sUnitZ(0, 0, 0x1000)`; retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "@235",
+      "address": "0x02140920",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_MotionSpinHover; it is the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "@2174",
+      "address": "0x0214092c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node the static initializer passes for sTrmpItemRingAModelFile"
+    },
+    {
+      "symbol": "sUnitY$158",
+      "address": "0x02140938",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "TrmpItem_MotionSpinHover's function-local `static Vector3 sUnitY(0, 0x1000, 0)`; retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
+      "symbol": "@2173",
+      "address": "0x02140944",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node the static initializer passes for sTrmpItemRingBModelFile"
+    },
+    {
+      "symbol": "@2171",
+      "address": "0x02140950",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node the static initializer passes for sTrmpItemRingCModelFile"
+    },
+    {
+      "symbol": "@240",
+      "address": "0x0214095c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_MotionSpinSway; it is the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sTrmp2MarioPtrs",
+      "address": "0x02140968",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five-word table only d_mg_trmpln2_mario reads; it sits between this unit's 12-byte and 0x14-byte objects, inside the size-sorted .bss run, so this unit defines it"
+    },
+    {
+      "symbol": "sTrmpJumpers",
+      "address": "0x0214097c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "the five jumper slots TrmpLine_PushJumper and TrmpLine_Build test against the lines; d_mg_trmpln2_mario fills them"
+    },
+    {
+      "symbol": "sTrmpLines",
+      "address": "0x02140990",
+      "size": "0xcb0",
+      "binding": "STB_GLOBAL",
+      "evidence": "the four 0x32c-byte TrmpLine slots (4 x 0x32c = 0xcb0); the static initializer builds them with __cxa_vec_ctor(C1, D1) and registers __arraydtor for them. Interior labels data_ov006_02140cae/cb4/cb6, data_ov006_02140d80, sTrmpStartLinePoints, data_ov006_02141402 and sTrmpStartLine fall inside it"
+    }
+  ],
   "notes": [
-    "Text-only fold of the whole 0x020cd744..0x020d1018 linker unit; data and bss stay in the ROM image.",
-    "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy. TrmpLine_Build's frame needs a second four-byte type with a declared destructor (Spare4, local to its namespace block), whose empty destructor is emitted with vague linkage and deadstripped."
+    "Fold of the whole 0x020cd744..0x020d1018 linker unit with its static initializer, ctor word and .bss; rodata and data stay in the ROM image.",
+    "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy. TrmpLine_Build's frame needs a second four-byte type with a declared destructor (Spare4, local to its namespace block), whose empty destructor is emitted with vague linkage and deadstripped.",
+    "2026-10-27 static-initializer fold: the nine hand-built function-local unit vectors (guard test, three stores, __register_global_object with ~Vector3, guard set) in TrmpItem_MotionSpinHover, _MotionSpinDrift, _MotionSpinSway, _MotionSpin and TrmpItem_Init are now `static Vector3 sUnitY(0, 0x1000, 0)` / `sUnitZ(0, 0, 0x1000)`. The file defines its globals, `TrmpLine sTrmpLines[4]` (mwcc emits the __arraydtor that was TrmpLine_CleanupAll) and the three ring handles as `TrmpItemRingModelFile`, a local SharedFilePtr wrapper whose constructor and destructor alias func_02017acc and func_02017ab4 (the daObj1UpLogo_c shape). mwcc emits __sinit_unit020cd744.cpp byte- and relocation-identical to the retired src/unnamed/ov006/__sinit_ov006_0212fc7c.c. TrmpLine's constructor and destructor are defined inline in this file: mwcc emits used inline bodies at the end of the object, after the initializer and __arraydtor, which is the ROM order (__arraydtor 0x020d0fe4, D1 0x020d1008, C1 0x020d100c). Out-of-line bodies came first and also emitted C2/D2, which no longer need deadstrip rows. Every compiled guard, storage and node name was paired with its ROM address through the object's relocation at the same offset as the retail reference. symbols.txt carries the compiled names; the twelve nodes whose @N is already taken elsewhere are renamed to free same-length numbers (defined_symbol_renames)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -458,18 +786,354 @@
         "_ZN9s020d01e06Spare4D1Ev"
       ],
       "droppedSections": [
-        11,
-        99
+        26,
+        135
       ],
       "data": [],
-      "dataExternalized": []
+      "dataExternalized": [],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov006-unit020cd744/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020cd744",
+        "end": "0x020d1018",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020cd744",
+          "end": "0x020d1018",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x0212fc7c",
+          "end": "0x0212fd48",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x0213357c",
+          "end": "0x02133580",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02140808",
+          "end": "0x02141640",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 105
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              160
+            ],
+            "desired": [
+              160
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              158
+            ],
+            "desired": [
+              158
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              92,
+              93,
+              94,
+              150,
+              151,
+              152,
+              153,
+              154,
+              155,
+              156,
+              157
+            ],
+            "desired": [
+              39,
+              59,
+              42,
+              5,
+              10,
+              92,
+              18,
+              56,
+              9,
+              8,
+              7,
+              29,
+              6,
+              32,
+              21,
+              11,
+              157,
+              153,
+              155,
+              41,
+              22,
+              43,
+              23,
+              44,
+              93,
+              94,
+              30,
+              31,
+              150,
+              33,
+              34,
+              57,
+              58,
+              60,
+              61,
+              19,
+              152,
+              20,
+              154,
+              156,
+              40,
+              12,
+              13,
+              151
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                92,
+                93,
+                94,
+                150,
+                151,
+                152,
+                153,
+                154,
+                155,
+                156,
+                157
+              ],
+              "desired": [
+                39,
+                59,
+                42,
+                5,
+                10,
+                92,
+                18,
+                56,
+                9,
+                8,
+                7,
+                29,
+                6,
+                32,
+                21,
+                11,
+                157,
+                153,
+                155,
+                41,
+                22,
+                43,
+                23,
+                44,
+                93,
+                94,
+                30,
+                31,
+                150,
+                33,
+                34,
+                57,
+                58,
+                60,
+                61,
+                19,
+                152,
+                20,
+                154,
+                156,
+                40,
+                12,
+                13,
+                151
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                92,
+                93,
+                94,
+                150,
+                151,
+                152,
+                153,
+                154,
+                155,
+                156,
+                157
+              ]
+            }
+          ],
+          "symbolIndices": 44,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -484,6 +1148,527 @@
       "symbol": "_ZN9s020d01e06Spare4D1Ev",
       "disposition": "deadstrip",
       "reason": "TrmpLine_Build reserves one of its two never-written stack slots through a local four-byte type with a declared empty destructor (Spare4 in its namespace block), so mwccarm emits a 4-byte vague-linkage D1 for it beside the licensed text. The cartridge has no copy and no relocation references it."
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_unit020cd744.cpp",
+      "address": "0x0212fc7c",
+      "size": "0xcc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov006_0212fc7c (0xcc: __cxa_vec_ctor over sTrmpLines, its __arraydtor registration, then the three ring model handles) and carries the same twenty relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_unit020cd744.cpp",
+      "address": "0x0213357c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the direct retail reference in this initializer and in the five functions with function-local Vector3 statics"
+    },
+    {
+      "symbol": "_ZN21TrmpItemRingModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the ring-model wrapper constructor exact PC24 relocation (the daObj1UpLogo_c OneUpLogoModelFile shape)"
+    },
+    {
+      "symbol": "_ZN21TrmpItemRingModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the ring-model wrapper destructor exact ABS32 relocation"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@161",
+      "to": "@235",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @161, and ov016 already defines @161; @235 is unused fleet-wide and the same length, configured at 0x02140920. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@165",
+      "to": "@236",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @165, and ov018 already defines @165; @236 is unused fleet-wide and the same length, configured at 0x0214086c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@206",
+      "to": "@238",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @206, and ov081 already defines @206; @238 is unused fleet-wide and the same length, configured at 0x021408b4. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@210",
+      "to": "@239",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @210, and ov094 already defines @210; @239 is unused fleet-wide and the same length, configured at 0x021408d8. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@233",
+      "to": "@240",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @233, and ov070 already defines @233; @240 is unused fleet-wide and the same length, configured at 0x0214095c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@317",
+      "to": "@316",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @317, and ov004 already defines @317; @316 is unused fleet-wide and the same length, configured at 0x021408f0. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@321",
+      "to": "@320",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @321, and ov004 already defines @321; @320 is unused fleet-wide and the same length, configured at 0x02140908. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@937",
+      "to": "@817",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @937, and ov098 already defines @937; @817 is unused fleet-wide and the same length, configured at 0x0214089c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@2194",
+      "to": "@2175",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2194, and ov066 already defines @2194; @2175 is unused fleet-wide and the same length, configured at 0x021408cc. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@2205",
+      "to": "@2174",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2205, and @2205 is the compiled name another manifest renames away (ov006/dScMgLuigi_c), so it is kept off for clarity; @2174 is unused fleet-wide and the same length, configured at 0x0214092c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@2206",
+      "to": "@2173",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2206, and ov006 already defines @2206; @2173 is unused fleet-wide and the same length, configured at 0x02140944. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    },
+    {
+      "from": "@2207",
+      "to": "@2171",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2207, and @2207 is the compiled name another manifest renames away (ov006/dScMgLuigi_c), so it is kept off for clarity; @2171 is unused fleet-wide and the same length, configured at 0x02140950. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_unit020cd744.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_unit020cd744.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "__arraydtor$2193",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local array destructor thunk for sTrmpLines; it is a configured initializer relocation destination at 0x020d0fe4"
+    },
+    {
+      "symbol": "_ZGVsUnitY$230",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140808, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "_ZGVsUnitZ$318",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x0214080c, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "_ZGVsUnitZ$234",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140810, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "_ZGVsUnitY$934",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x0214081c, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "_ZGVsUnitY$158",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140820, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "_ZGVsUnitY$314",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140824, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "_ZGVsUnitY$203",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140834, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "_ZGVsUnitZ$207",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x0214083c, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "_ZGVsUnitZ$162",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140840, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "sUnitY$230",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140860, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@236",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x0214086c, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@237",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140878, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "sUnitZ$162",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140884, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "sUnitZ$234",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140890, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@817",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x0214089c, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "sUnitY$934",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408a8, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@238",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408b4, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "sUnitY$203",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408c0, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@2175",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408cc, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@239",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408d8, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "sUnitZ$207",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408e4, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@316",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408f0, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "sUnitY$314",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408fc, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@320",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140908, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "sUnitZ$318",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140914, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@235",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140920, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@2174",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x0214092c, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "sUnitY$158",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140938, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@2173",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140944, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@2171",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140950, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@240",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x0214095c, and changing the ELF binding preserves storage, relocations and bytes"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x0212fc9c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__cxa_vec_ctor",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020733a8"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fcac",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fcb8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fcc8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fcd4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fce4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fcf0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd00",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8TrmpLineD1Ev",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d1008"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sTrmpLines",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140990"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8TrmpLineC1Ev",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d100c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__arraydtor$2193",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d0fe4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@2175",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021408cc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sTrmpItemRingAModelFile",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140850"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@2174",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0214092c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sTrmpItemRingBModelFile",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140858"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@2173",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140944"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sTrmpItemRingCModelFile",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140848"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212fd44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@2171",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140950"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x0213357c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_unit020cd744.cpp",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212fc7c"
     }
   ]
 }

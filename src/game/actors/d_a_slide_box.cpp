@@ -6,7 +6,7 @@
  * ship's angles, slides by the sine of the pitch, and steps out from
  * the landing spot by the sine and cosine of the ship's yaw. The deck
  * normal then rebuilds mVertSpeed from the horizontal velocity at
- * unk_0a4 / unk_0ac so the next step stays on the tilt.
+ * mSpeedX / mSpeedZ so the next step stays on the tilt.
  *
  * The rolling-sound gate reads mHorzSpeed after this state has stored
  * 0 there, so the sound does not start.
@@ -56,22 +56,20 @@ enum daSlide_Box_c_AssetId {
 #include "dBgPi.h"
 #include "dBgCh_Actr.h"
 
-namespace cstd { int fdiv(int a, int b); }
+namespace cstd {
+int fdiv(int a, int b);
+}
 
 /* File 1605 / 1606 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
  * func_02017acc / func_02017ab4 and func_02017b4c /
  * SharedFilePtr_Destruct_Clsn. 02113bac is the CLPS block SetFile takes. */
 struct SlideBoxModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     SlideBoxModelFilePtr(u32 fileID);
     ~SlideBoxModelFilePtr();
 };
 
 struct SlideBoxClsnFilePtr : SharedFilePtr {
-    u32 words[2];
-
     SlideBoxClsnFilePtr(u32 fileID);
     ~SlideBoxClsnFilePtr();
 };
@@ -80,20 +78,14 @@ extern "C" SlideBoxModelFilePtr gKiSlideBoxModelFile;
 extern "C" SlideBoxClsnFilePtr gKiSlideBoxCollisionFile;
 
 extern "C" {
-/* dBgCh_Actr::Init's header takes Fix12i (= s32), so the method form
-   mangles the two radii as `i` and names
-   _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_, which no object
-   defines. The ROM's is ..._5Fix12IiES3_P10Vector3_16S5_. */
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    dBgCh_Actr *self, int actor, Fix12i radius, Fix12i height, int a, int b);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(dBgCh_Actr *self, int actor, Fix12i radius, Fix12i height, int a, int b);
 extern int data_ov016_02113bac[];
 extern short data_02082214[];
 extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int angleZ);
 
-void dBgCh_Actr_UpdateContinuous_Veneer(void *clsn);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int radius, int height);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *thiz, void *kcl, void *mtx, int scale, short angleY, void *clps);
+extern void hold_d_a_slide_box(void *thiz, void *kcl, void *mtx, int scale, short angleY,
+                               void *clps);
 extern void func_020393d4(void *clsn, void *callback);
 }
 
@@ -232,12 +224,12 @@ int daSlide_Box_c::Behavior()
         UpdatePos(0);
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
         if (mWithMeshClsn.IsOnGround()) {
-            dBgPi *floor = (dBgPi *)mWithMeshClsn.GetFloorResult();
+            dBgPi *floor = mWithMeshClsn.GetFloorResult();
             floor->surface.CopyNormalTo(normal);
             if (normal.y != 0) {
-                mVertSpeed = -(cstd::fdiv(
-                    FixMul(normal.x, unk_0a4) + FixMul(normal.z, unk_0ac),
-                    normal.y) + kDeckSink);
+                mVertSpeed =
+                    -(cstd::fdiv(FixMul(normal.x, mSpeedX) + FixMul(normal.z, mSpeedZ), normal.y) +
+                      kDeckSink);
             }
         }
         if (DistToCPlayer() < kSoundRange) {
@@ -253,7 +245,7 @@ int daSlide_Box_c::Behavior()
     }
 
     UpdateModel();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0)) {
+    if (IsClsnInRange(0, 0)) {
         UpdateClsnPosAndRot();
     }
     return 1;
@@ -262,15 +254,16 @@ int daSlide_Box_c::Behavior()
 // @symbol _ZN13daSlide_Box_c13InitResourcesEv
 int daSlide_Box_c::InitResources()
 {
-    BMD_File *modelFile = (BMD_File *)Model::LoadFile(ModelFile);
+    BMD_File *modelFile = (BMD_File *)dExtSimpleModel_c::LoadFile(ModelFile);
     mModel.SetFile(modelFile, 1, -1);
     UpdateModel();
     UpdateClsnPosAndRot();
     KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(ClsnFile);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, clsnFile, &mClsnMat, kMeshScale, mAngleY, data_ov016_02113bac);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)(clsnFile), *(const Matrix4x3 *)(&mClsnMat), kMeshScale,
+                              mAngleY, *(CLPS_Block *)(data_ov016_02113bac));
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (int)this, kClsnRadius, kClsnRadius, 0, 0);
+    mWithMeshClsn.Init((dActor_c *)(int)this, kClsnRadius, kClsnRadius, 0, 0);
     mVertAccel = kGravity;
     mTerminalVelocity = kTerminalVelocity;
     mShip = 0;

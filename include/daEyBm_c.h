@@ -7,8 +7,6 @@
 #include "dActor_c.h"
 #include "math/Matrix.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* daEyBm_c is the ROM's own RTTI name for this class (this tree once coined it
  * MrI_Projectile): the typeinfo at ov071
  * 0x02122db8 names dActor_c as the sole base at offset 0, and the class's
@@ -34,18 +32,18 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * offset. Deriving from dActor_c is what makes the declarations below honest.
  */
 struct daEyBm_c : dActor_c {
-    u8                        pad_0d0[0x4];
-    dExtShadowModel_c               mShadowModel;                  /* 0x0d4 */
-    dCcAcPos_c mdCcAcPos_c;    /* 0x0fc */
-    dBgCh_Actr              mWithMeshClsn;                 /* 0x13c */
-    Matrix4x3 mMatrix;        /* 0x2f8 */
+    u8 pad_0d0[0x4];
+    dExtShadowModel_c mShadowModel; /* 0x0d4 */
+    dCcAcPos_c mdCcAcPos_c;         /* 0x0fc */
+    dBgCh_Actr mWithMeshClsn;       /* 0x13c */
+    Matrix4x3 mMatrix;              /* 0x2f8 */
     /* Two particle handles, effects 0x46 and 0x47, both fed back into
        Particle::System::NewUnkCallback818 every Render. mLifeTimer starts at
        0x96 (150 frames) and is counted down by Behavior. */
-    u32                       mParticle1;                       /* 0x328 */
-    u32                       mParticle2;                       /* 0x32c */
-    u16                       mLifeTimer;                       /* 0x330 */
-    u8                        pad_332[0x2];
+    u32 mParticle1; /* 0x328 */
+    u32 mParticle2; /* 0x32c */
+    u16 mLifeTimer; /* 0x330 */
+    u8 pad_332[0x2];
 
     /* Declared first on purpose, same reasoning as dActor_c.h: the key
        function pins where mwcc anchors the vtable. */
@@ -54,19 +52,12 @@ struct daEyBm_c : dActor_c {
        out-of-line virtual and anchors this TU's vtable/RTTI group. */
     virtual ~daEyBm_c() {}
 
-    virtual s32  InitResources();       /* slot 0 */
-    virtual s32  CleanupResources();    /* slot 3 */
-    virtual s32  Behavior();            /* slot 6 */
-    virtual s32  Render();              /* slot 9 */
-    virtual void OnPendingDestroy();    /* slot 12 */
-    virtual int  OnYoshiTryEat();       /* slot 18 */
-
-    /* Leaf in-class operator new until fBase_c::operator new(unsigned long)
-       lands (#2570). unsigned long, not unsigned int: `new daEyBm_c()` looks
-       up _Znwm. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    virtual s32 InitResources();     /* slot 0 */
+    virtual s32 CleanupResources();  /* slot 3 */
+    virtual s32 Behavior();          /* slot 6 */
+    virtual s32 Render();            /* slot 9 */
+    virtual void OnPendingDestroy(); /* slot 12 */
+    virtual int OnYoshiTryEat();     /* slot 18 */
 
 private:
     /* Class ownership, calls, bodies and codegen are proven. These readable
@@ -81,8 +72,7 @@ private:
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daEyBm_c_size_must_be_0x334[
-    sizeof(daEyBm_c) == 0x334 ? 1 : -1];
+typedef char daEyBm_c_size_must_be_0x334[sizeof(daEyBm_c) == 0x334 ? 1 : -1];
 #endif
 
 #endif /* DAEYBM_C_H */

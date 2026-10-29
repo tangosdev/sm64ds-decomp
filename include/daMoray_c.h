@@ -10,12 +10,12 @@
  *     dCcAcPos_c 0x110 + 0x040 = 0x150  -> the second one
  *     dCcAcPos_c 0x150 + 0x040 = 0x190  -> dBgCh_Actr
  *     dBgCh_Actr              0x190 + 0x1bc = 0x34c  -> mState
- *     BlendModelAnim            0x350 + 0x070 = 0x3c0
+ *     dExtBlendAnmModel_c            0x350 + 0x070 = 0x3c0
  *     Vector3[7]                0x448 + 0x054 = 0x49c  -> mStarUniqueID
  *
- * unk_360 and unk_3ac are gone: both fall INSIDE the BlendModelAnim at 0x350
+ * unk_360 and unk_3ac are gone: both fall INSIDE the dExtBlendAnmModel_c at 0x350
  * (+0x10 and +0x5c), so they were never daMoray_c's fields -- the generated header
- * declared them beside a `u8 mBlendModelAnim` marker whose padding stopped
+ * declared them beside a `u8 mBlendAnmModel` marker whose padding stopped
  * short of the real object.
  *
  * The array at 0x448 is Vector3[7]: the ROM destroys it with
@@ -27,7 +27,7 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "BlendModelAnim.h"
+#include "dExtBlendAnmModel_c.h"
 #include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"
 
@@ -45,7 +45,7 @@ struct daMoray_c : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c2;  /* 0x150 */
     dBgCh_Actr mWithMeshClsn;                             /* 0x190 */
     const State *mState;                                    /* 0x34c */
-    BlendModelAnim mBlendModelAnim;                         /* 0x350 */
+    dExtBlendAnmModel_c mBlendAnmModel;                     /* 0x350 */
     /* Where the carried star sits: the jaw bone's transform (bone 4) moved
        0x28000 along it. The star actor keeps a pointer to this matrix. */
     Matrix4x3 mStarMtx;                                     /* 0x3c0 */

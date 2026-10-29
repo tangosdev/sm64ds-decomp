@@ -10,13 +10,29 @@
     "CLASS IDENTITY FROM ROM RTTI: _ZTS7dBgW_Kc sits at arm9 0x020993bc, _ZTI7dBgW_Kc at 0x020993c8 and the vtable address point at 0x020993dc, naming the members in this run (destructor triple, both constructor variants, Virtual08, SetFile, UpdateFileOffsets) as one class's. The ITCM half of the class (the DetectClsn triple and the three geometry/surface slots the same vtable points into 0x01ffb0fc..0x01ffd97c) lives in src/engine/collision/d_bg_w_kc_itcm.cpp under module itcm.",
     "EMISSION ORDER: mwccarm 2004/b56 emits a TU's plain members in reverse source order and each lifecycle group in its fixed order, D2,D0,D1 for the destructor and C1,C2 for the constructor. The ROM holds _ZN7dBgW_KcD2Ev (0x020397fc), D0 (0x0203982c), D1 (0x02039864), then C1 (0x02039894), C2 (0x020398c8) -- exactly that layout from one destructor and one constructor definition at the head of the file.",
     "HELPERS ARE THIS TU'S OWN: func_020396dc turns a KCL_Tri* into its triangle index off this collider's kclFile->tris and is called only by the class's three DetectClsn overrides; func_02039794/7b8/7dc are the slope-band classify, wall-facing test and near-zero divisor guard the ITCM walk and actor-collision TUs (func_02036acc, dBgCh_Actr) call by raw address -- TU-local workers, not vtable slots.",
-    "NEIGHBOURS ARE OTHER SUBJECTS: below, func_020396d0 (0x020396d0..0x020396d8) belongs to the dBgW base family's own run. Above, func_020398fc (0x020398fc..) opens derived class dBgW_KcMbg's contiguous run (vtable _ZTV10dBgW_KcMbg at 0x02099434, RTTI _ZTI10dBgW_KcMbg at 0x02099410) -- the same class the promoted d_bg_w_kc_mbg.cpp TU already claims."
+    "NEIGHBOURS ARE OTHER SUBJECTS: below, func_020396d0 (0x020396d0..0x020396d8) belongs to the dBgW base family's own run. Above, func_020398fc (0x020398fc..) opens derived class dBgW_KcMbg's contiguous run (vtable _ZTV10dBgW_KcMbg at 0x02099434, RTTI _ZTI10dBgW_KcMbg at 0x02099410) -- the same class the promoted d_bg_w_kc_mbg.cpp TU already claims.",
+    "static initializer: __sinit_02074fe4 (.init 0x02074fe4..0x0207501c, .ctor word 0x02086b98) constructs only data_020a0cec, a dBgPc that only dBgW_Kc's ITCM DetectClsn overrides (d_bg_w_kc_itcm.cpp) read. arm9 .init, .ctor and .bss follow .text TU order: the next initializer, 0x0207501c, is d_bg_w_kc_mbg.cpp's, the TU directly above this one (0x020398fc), and its node at 0x020a0d00 directly follows this object. The ITCM half has no .init or .bss of its own, so the main-RAM half of the class owns the object."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020396d8",
       "end": "0x020398fc"
+    },
+    {
+      "name": ".init",
+      "start": "0x02074fe4",
+      "end": "0x0207501c"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02086b98",
+      "end": "0x02086b9c"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020a0ce0",
+      "end": "0x020a0d00"
     }
   ],
   "functions": [
@@ -106,12 +122,28 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_020a0ce0",
+      "address": "0x020a0ce0",
+      "size": "0xc",
+      "evidence": "compiler-generated destructor-registration node for data_020a0cec (mwcc emits it as @101); retail __sinit_02074fe4 passes it as the third __register_global_object argument",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_020a0cec",
+      "address": "0x020a0cec",
+      "size": "0x14",
+      "evidence": "the namespace-scope dBgPc surface record (sizeof 0x14); retail __sinit_02074fe4 calls _ZN5dBgPcC1Ev on it and registers _ZN5dBgPcD1Ev. Every reader is a dBgW_Kc DetectClsn override in the ITCM half of this class (d_bg_w_kc_itcm.cpp). The next .bss, 0x020a0d00, is d_bg_w_kc_mbg.cpp's registration node.",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "notes": [
     "Cartridge RTTI names the class dBgW_Kc (_ZTS7dBgW_Kc at arm9 0x020993bc, _ZTI at 0x020993c8, vtable address point at 0x020993dc). The licensed run is .text 0x020396d8..0x020398fc (12 functions): the Virtual08 stub, the prism-index helper, SetFile, UpdateFileOffsets, the three slope/divisor guards and the five lifecycle variants -- one TU the way the original engine file was almost certainly shaped.",
     "Deferred codegen emits D2,D0,D1 for the destructor and C1,C2 for the constructor in that fixed order, and plain members in reverse source order, so the promoted file defines ctor and dtor first and then walks the ROM run backwards. All five lifecycle variants are cartridge-retained here: derived classes dBgW_KcMbg and dBgW_KcMbgSclY construct through C2/D2.",
     "func_020396dc and the three func_020397* guards keep their func_ names. They are free workers called by raw address -- the guards by actor-collision TUs and the class's own ITCM overrides, the prism-index helper only inside this collider family -- not vtable slots, so there is no honest member name to give them.",
-    "The DetectClsn triple, the GetNormal/GetTriangleOrigin/GetSurfaceInfo slots and the GetUnkOctreeY/GetOctreeOriginY const members are ITCM-resident (0x01ffb07c..0x01ffd97c) and live in the sibling TU src/engine/collision/d_bg_w_kc_itcm.cpp under config/arm9/itcm/ -- the same class, split the way the cartridge splits it."
+    "The DetectClsn triple, the GetNormal/GetTriangleOrigin/GetSurfaceInfo slots and the GetUnkOctreeY/GetOctreeOriginY const members are ITCM-resident (0x01ffb07c..0x01ffd97c) and live in the sibling TU src/engine/collision/d_bg_w_kc_itcm.cpp under config/arm9/itcm/ -- the same class, split the way the cartridge splits it.",
+    "Static initializer folded: data_020a0cec, the dBgPc the ITCM DetectClsn overrides fill per triangle, is now defined in this TU (it was built by the handwritten src/unnamed/arm9/0207/__sinit_02074fe4.c and declared only in d_bg_w_kc_itcm.cpp). mwcc emits __sinit_d_bg_w_kc.cpp, its .ctor word and the registration node; all of it plus the object's .bss is byte- and relocation-identical to retail. The node is renamed from the emitted @101 back to its configured data_020a0ce0, because every @NNN this file can emit is already defined in another module."
   ],
   "compiler_only_output": [
     {
@@ -182,7 +214,226 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-dBgW_Kc/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020396d8",
+        "end": "0x020398fc",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020396d8",
+          "end": "0x020398fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02074fe4",
+          "end": "0x0207501c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02086b98",
+          "end": "0x02086b9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020a0ce0",
+          "end": "0x020a0d00",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 16
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              35
+            ],
+            "desired": [
+              35
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              33
+            ],
+            "desired": [
+              33
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              9,
+              12
+            ],
+            "desired": [
+              9,
+              12
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
-  "production_mode": "text-only"
+  "production_mode": "intact-object",
+  "init": [
+    {
+      "symbol": "__sinit_d_bg_w_kc.cpp",
+      "address": "0x02074fe4",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer for data_020a0cec is raw-byte-identical to retail __sinit_02074fe4 (0x38: ctor call, one registration, three pool words)"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_bg_w_kc.cpp",
+      "address": "0x02086b98",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the direct retail reference in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_bg_w_kc.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_bg_w_kc.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "data_020a0ce0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x020a0ce0"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@101",
+      "to": "data_020a0ce0",
+      "evidence": "compiler temp: the destructor-registration node for data_020a0cec. mwcc numbers it @101 here, and every source position in this file gives a number another module already defines (@101 ov095, @147 ov025, and so on), so it keeps its existing configured address name"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02074ff0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN5dBgPcC1Ev",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02037eec"
+    },
+    {
+      "section": ".init",
+      "source": "0x02075000",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02075010",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020a0cec",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020a0cec"
+    },
+    {
+      "section": ".init",
+      "source": "0x02075014",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5dBgPcD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02037ee8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02075018",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020a0ce0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020a0ce0"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02086b98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_bg_w_kc.cpp",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02074fe4"
+    }
+  ]
 }

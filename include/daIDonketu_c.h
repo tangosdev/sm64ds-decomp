@@ -4,8 +4,6 @@
 #include "types.h"
 #include "daOts_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* The third of daOts_c's children -- the small Bully that stands on the ice.
  * daIDonketu_c_classInit is daDonketu_c_classInit and daBDonketu_c_classInit again, with 0x3fc for the
  * allocation and this class's vtable stored last.
@@ -51,14 +49,14 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * (historical alias daIDonketu_c_SpawnInfo) is its registry descriptor.
  */
 struct daIDonketu_c : daOts_c {
-    u8  pad_398[0x62];
+    u8 pad_398[0x62];
     /* Which star this one carries: InitResources takes param1 & 0xf, and both users
        pass it on with bit 6 set. */
-    u8  mStarIdx;                   /* 0x3fa */
+    u8 mStarIdx; /* 0x3fa */
     /* The slot dActor_c::TrackStar claimed for that star, or -1 -- see the note on
        TrackStar in dActor_c.h. Its ADDRESS is what goes to UntrackAndSpawnStar, which
        is why it is a field and not a local. */
-    s8  mStarSlot;                  /* 0x3fb */
+    s8 mStarSlot; /* 0x3fb */
 
     /* --- vtable --- */
     /* INLINE IS LOAD-BEARING. Written out-of-line in the translation unit, mwccarm
@@ -68,7 +66,7 @@ struct daIDonketu_c : daOts_c {
        -- plus a third D2 with no ROM home. Defined here it emits the retail D1/D0
        pair in ROM order and no D2. Unlike daOts_c's and dEnemyBase_c's, this body is
        inlined by nobody: the class has no descendants. */
-    virtual ~daIDonketu_c() {}          /* slots 16 (D1), 17 (D0) */
+    virtual ~daIDonketu_c() {} /* slots 16 (D1), 17 (D0) */
 
     /* THE KEY FUNCTION IS Behavior -- the first DECLARED non-inline virtual, not
        the first slot. It and InitResources override daOts_c's pure
@@ -77,17 +75,10 @@ struct daIDonketu_c : daOts_c {
        exactly. Whichever TU defines the key function emits this class's
        _ZTV/_ZTI/_ZTS group -- src/game/actors/d_a_i_donketu.cpp, which licenses them as
        deadstrip-data so romdata_check word-compares them against the cartridge. */
-    int Behavior();                     /* slot  6 */
-    int InitResources();                /* slot  0 */
-    virtual int UpdateRunState();       /* slot 31 */
-    virtual void UpdateDeathState();    /* slot 32 */
-
-    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
-       Parameter is size_t (unsigned long on this compiler). `return new`
-       relocates to `_Znwm` without this. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    int Behavior();                  /* slot  6 */
+    int InitResources();             /* slot  0 */
+    virtual int UpdateRunState();    /* slot 31 */
+    virtual void UpdateDeathState(); /* slot 32 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

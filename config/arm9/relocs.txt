@@ -12177,17 +12177,6 @@ from:0x020876ec kind:load to:0x0208776c module:main
 from:0x020876f0 kind:load to:0x020889b0 module:main
 from:0x020876f4 kind:load to:0x0208776c module:main
 from:0x020876f8 kind:load to:0x02088b14 module:main
-from:0x02087bd0 kind:load to:0x02140000 module:overlays(6,99)
-from:0x02088368 kind:load to:0x0208050a module:main
-from:0x0208955c kind:load to:0x0210ffbf module:overlay(2)
-from:0x02089654 kind:load to:0x02078000 module:main
-from:0x02089ba4 kind:load to:0x020b0000 module:overlay(0)
-from:0x02089bd0 kind:load to:0x020a0244 module:main
-from:0x02089c4c kind:load to:0x02091000 module:main
-from:0x02089cb0 kind:load to:0x02090800 module:main
-from:0x02089cf0 kind:load to:0x020f0000 module:overlay(7)
-from:0x02089d78 kind:load to:0x020f1000 module:overlay(7)
-from:0x02089f4c kind:load to:0x020c020c module:overlay(7)
 from:0x0208a0e4 kind:load to:0x02096f08 module:main
 from:0x0208a0e8 kind:load to:0x02097230 module:main
 from:0x0208a0ec kind:load to:0x020975d4 module:main

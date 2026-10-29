@@ -15,27 +15,19 @@
  * (0x02111988), then a D2 the cartridge has no home for (manifest: deadstrip);
  * the same pragma lays .text down in source order, so this file is ROM-ascending.
  *
- * leftovers:
- * - dBgW_KcMbg::SetFile, dBgCh_Actr::Init and
- *   dBgActor_c::IsClsnInRange take Fix12<int> by value, so they stay mangled;
- *   a member call homes the argument and changes the ROM ABI.
+ * OnStoodOn and StoodOnCallback are coined names (the ROM records none):
+ * the collision callback body and the static entry InitResources installs
+ * into dBgW's slot.
+ *
+ * What stays:
  * - func_020393d4 / func_020393c4 are 4-byte stores into dBgW's
  *   callback slots; naming belongs with dBgW in arm9.
- * - func_ov036_02111ca4 and its veneer func_ov036_02111cc4 keep the
- *   cartridge's unmangled linker names. The first is the collision callback
- *   body, the second the C-ABI entry InitResources installs into dBgW's slot.
- *   Neither can become a method: C++ would mangle the symbol and the link
- *   would stop resolving the name the ROM carries. Its +0x4e8 store is this
- *   class's mHadClsn, named here because the callback only has a void*.
- * - The named local in func_ov036_02111ca4 is load-bearing -- folded
+ * - The named local in OnStoodOn is load-bearing -- folded
  *   into the `if`, mwcc emits 0x14 and the cartridge's is 0x20.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daObjRc_Tikuwa_c_AssetId {
-    ASSET_RC_TIKUWA_BMD = 0x06af,
-    ASSET_RC_TIKUWA_KCL = 0x06b0
-};
+enum daObjRc_Tikuwa_c_AssetId { ASSET_RC_TIKUWA_BMD = 0x06af, ASSET_RC_TIKUWA_KCL = 0x06b0 };
 
 #pragma defer_codegen off
 
@@ -54,15 +46,11 @@ enum daObjRc_Tikuwa_c_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct TikuwaModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     TikuwaModelFilePtr(u32 fileID);
     ~TikuwaModelFilePtr();
 };
 
 struct TikuwaCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     TikuwaCollisionFilePtr(u32 fileID);
     ~TikuwaCollisionFilePtr();
 };
@@ -70,52 +58,40 @@ struct TikuwaCollisionFilePtr : SharedFilePtr {
 typedef char TikuwaModelFilePtr_size_must_be_8[sizeof(TikuwaModelFilePtr) == 8 ? 1 : -1];
 typedef char TikuwaCollisionFilePtr_size_must_be_8[sizeof(TikuwaCollisionFilePtr) == 8 ? 1 : -1];
 
-extern "C" {
 extern TikuwaModelFilePtr gRcTikuwaModelFile;
 extern TikuwaCollisionFilePtr gRcTikuwaCollisionFile;
 
-void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *clsn);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int a, int b);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, void *kcl, Matrix4x3 *mat, int scale, s16 angY, void *clps);
+/* local extern: no shared header declares these. */
+extern "C" {
 void func_020393d4(dBgW *bgw, void *fn);
 void func_020393c4(dBgW *bgw, void *fn);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    dBgCh_Actr *clsn, dActor_c *actor, int radius, int height, void *a, void *b);
 }
 
 // @symbol _ZN16daObjRc_Tikuwa_cD1Ev
 // @symbol _ZN16daObjRc_Tikuwa_cD0Ev
-daObjRc_Tikuwa_c::~daObjRc_Tikuwa_c()
-{
-}
+daObjRc_Tikuwa_c::~daObjRc_Tikuwa_c() {}
 
 // @symbol _ZN16daObjRc_Tikuwa_c16CleanupResourcesEv
-s32 daObjRc_Tikuwa_c::CleanupResources()
-{
+s32 daObjRc_Tikuwa_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    ((SharedFilePtr *)&gRcTikuwaModelFile)->Release();
-    ((SharedFilePtr *)&gRcTikuwaCollisionFile)->Release();
+    gRcTikuwaModelFile.Release();
+    gRcTikuwaCollisionFile.Release();
     return 1;
 }
 
 // @symbol _ZN16daObjRc_Tikuwa_c16OnPendingDestroyEv
-void daObjRc_Tikuwa_c::OnPendingDestroy()
-{
-}
+void daObjRc_Tikuwa_c::OnPendingDestroy() {}
 
 // @symbol _ZN16daObjRc_Tikuwa_c6RenderEv
-s32 daObjRc_Tikuwa_c::Render()
-{
+s32 daObjRc_Tikuwa_c::Render() {
     if (mState != 2)
         mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN16daObjRc_Tikuwa_c8BehaviorEv
-s32 daObjRc_Tikuwa_c::Behavior()
-{
+s32 daObjRc_Tikuwa_c::Behavior() {
     switch (mState) {
     case 0:
         if (mHadClsn == 0)
@@ -157,28 +133,23 @@ s32 daObjRc_Tikuwa_c::Behavior()
     }
     UpdateModelPosAndRotY();
     if (mState != 2) {
-        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0x5dc000, 0) != 0)
+        if (IsClsnInRange(0x5dc000, 0) != 0)
             UpdateClsnPosAndRot();
     }
     return 1;
 }
 
 // @symbol _ZN16daObjRc_Tikuwa_c13InitResourcesEv
-s32 daObjRc_Tikuwa_c::InitResources()
-{
-    mModel.SetFile((BMD_File *)Model::LoadFile(*(SharedFilePtr *)&gRcTikuwaModelFile), 1, -1);
+s32 daObjRc_Tikuwa_c::InitResources() {
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gRcTikuwaModelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)&gRcTikuwaCollisionFile);
-    /* Leftover: dBgW_KcMbg::SetFile and dBgCh_Actr::Init take Fix12<int> by
-     * value, so they stay mangled (the header spellings take Fix12i and would
-     * mangle symbols the ROM does not have). */
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, data_ov036_02112b48);
+    void *kcl = dBgW_Kc::LoadFile(gRcTikuwaCollisionFile);
+    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY,
+                          *(CLPS_Block *)data_ov036_02112b48);
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithVelocity);
-    func_020393c4(&mMeshCollider, (void *)func_ov036_02111cc4);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, this, 0x32000, 0x64000, 0, 0);
+    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);
     mTerminalVelocity = -0x1e000;
     mVertAccel = ~0x198;
     mHomePosX = mPosX;
@@ -188,42 +159,34 @@ s32 daObjRc_Tikuwa_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* dBgW's collision callback body. The cartridge links this address under the
- * unmangled name func_ov036_02111ca4, so it has to keep C linkage -- spelling
- * it as a method would mangle the symbol to
- * _ZN16daObjRc_Tikuwa_c14OnClsnWithTypeEPv and the link would stop resolving
- * the name the ROM actually carries. `self` is this block. A clsn word of
- * 0xbf at +0xc is the collider it counts. */
+/* dBgW's collision callback body (ov036 0x02111ca4): an actor with actor ID
+ * 0xbf (the Player) on the block sets mHadClsn. */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov036_02111ca4
-extern "C" void func_ov036_02111ca4(void *self, void *clsn)
-{
+// @symbol _ZN16daObjRc_Tikuwa_c9OnStoodOnEP8dActor_c
+void daObjRc_Tikuwa_c::OnStoodOn(dActor_c *other) {
     /* The named local is load-bearing: folded into the `if`, mwcc drops the
      * store/reload pair and the function comes out 0x14. The cartridge's is
      * 0x20. */
-    unsigned char isOurs = *(unsigned short *)((char *)clsn + 0xc) == 0xbf;
-    if (isOurs)
-        ((daObjRc_Tikuwa_c *)self)->mHadClsn = 1;
+    unsigned char isPlayer = other->actorID == 0xbf;
+    if (isPlayer)
+        mHadClsn = 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* The C-ABI callback InitResources installs into dBgW's slot. It drops the
- * receiver dBgW passes first and hands the block itself to the body above. */
+/* The callback InitResources installs into dBgW's slot (ov036 0x02111cc4). It
+ * drops the receiver dBgW passes first and hands the pair to the body above. */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov036_02111cc4
-extern "C" void func_ov036_02111cc4(void *dBgW, void *self, void *clsn)
-{
-    func_ov036_02111ca4(self, clsn);
+// @symbol _ZN16daObjRc_Tikuwa_c15StoodOnCallbackEPvPS_P8dActor_c
+void daObjRc_Tikuwa_c::StoodOnCallback(void *collider, daObjRc_Tikuwa_c *self, dActor_c *other) {
+    self->OnStoodOn(other);
 }
 
 /* -------------------------------------------------------------------------- */
-/* Factory: `return new` goes through the class's leaf operator new adapter
- * to fBase_c::operator new -- the 0x4ec allocation the cartridge's own
- * factory makes. */
+/* Factory: `return new` calls the inherited fBase_c::operator new -- the
+ * 0x4ec allocation the cartridge's own factory makes. */
 /* -------------------------------------------------------------------------- */
 // @symbol daObjRc_Tikuwa_c_classInit
-extern "C" daObjRc_Tikuwa_c *daObjRc_Tikuwa_c_classInit()
-{
+extern "C" daObjRc_Tikuwa_c *daObjRc_Tikuwa_c_classInit() {
     return new daObjRc_Tikuwa_c;
 }
 

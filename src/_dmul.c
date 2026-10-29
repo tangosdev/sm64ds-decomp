@@ -12,8 +12,8 @@
 //
 // Every exceptional path reads the FP status word through func_0207322c and, when the
 // matching trap is enabled, leaves through func_0206dd7c or func_0206dcd4 with a packed
-// exception code. Those eight `bl` sites and the five pool words are its only references
-// outside its own 0x6f0 bytes.
+// exception code. Those `bl` sites and the five pool words are its only references
+// outside the body. The six eors after the pool are the fallthrough into func_01ff8e10.
 
 extern int func_0207322c(void);
 extern void func_0206dd7c(void);
@@ -305,7 +305,7 @@ _L41c:
     orr r0, r0, r1, lsl #1
     b _L4f4
 _L424:
-    ldr r1, =0x7ff00000
+    ldr r1, [pc, #0x2b0]
     orr r1, lr, r1
     mov r0, #0
     add sp, sp, #0x10
@@ -416,7 +416,7 @@ _L5a0:
     bne _L654
     orr r3, r3, #0x14
     str r3, [r2]
-    ldr r1, =0x7ff00000
+    ldr r1, [pc, #0x110]
     orr r1, lr, r1
     mov r0, #0
     tst r3, #0x800000
@@ -451,7 +451,7 @@ _L628:
 _L63c:
     add sp, sp, #0x10
     sub r1, r1, #0x60000000
-    ldr r2, =0x10000093
+    ldr r2, [pc, #0x94]
     bl func_0206dd7c
     ldmia sp!, {r4, r5, r6, r7, lr}
     bx lr
@@ -463,7 +463,7 @@ _L654:
     orr r1, lr, r1, lsr #12
     sub r12, r12, #0x600
     orr r1, r1, r12, lsl #20
-    ldr r2, =0x10000093
+    ldr r2, [pc, #0x68]
     bl func_0206dd7c
     ldmia sp!, {r4, r5, r6, r7, lr}
     bx lr
@@ -475,13 +475,13 @@ _L680:
     orr r1, lr, r1, lsr #12
     add r12, r12, #0x600
     orr r1, r1, r12, lsl #20
-    ldr r2, =0x20000093
+    ldr r2, [pc, #0x40]
     bl func_0206dd7c
     ldmia sp!, {r4, r5, r6, r7, lr}
     bx lr
 _L6ac:
     ldmia sp!, {r0, r1, r2, r3}
-    ldr ip, =0x04000093
+    ldr ip, [pc, #0x30]
     stmdb sp!, {r12}
     bl func_0206dcd4
     add sp, sp, #4
@@ -489,8 +489,24 @@ _L6ac:
     bx lr
 _L6c8:
     add sp, sp, #0x10
-    ldr r2, =0x40000093
+    ldr r2, [pc, #0x18]
     bl func_0206dd7c
     ldmia sp!, {r4, r5, r6, r7, lr}
     bx lr
+_pool7ff00000:
+    dcd 0x7ff00000
+_pool10000093:
+    dcd 0x10000093
+_pool20000093:
+    dcd 0x20000093
+_pool04000093:
+    dcd 0x04000093
+_pool40000093:
+    dcd 0x40000093
+    eor r1, r1, r3
+    eor r3, r1, r3
+    eor r1, r1, r3
+    eor r0, r0, r2
+    eor r2, r0, r2
+    eor r0, r0, r2
 }

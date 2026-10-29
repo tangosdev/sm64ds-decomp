@@ -185,7 +185,7 @@ declaration only lets `dScStage_c`'s implicit destructor find it by name. Not vi
 `_ZTV`, so it is not polymorphic and must not gain a vtable pointer.
 
 **`mSkyboxModel` at 0x9bc** is typed, not guessed, and evidenced from both ends:
-`LoadSkybox` `new`s 0x50 bytes, runs `Model::Model` on them and stores the result here;
+`LoadSkybox` `new`s 0x50 bytes, runs `dExtSimpleModel_c::dExtSimpleModel_c` on them and stores the result here;
 `CleanupResources` loads it back and destroys it through its vtable. The generated
 header called it `u8 unk_9bc`, so both files that use it had to cast a pointer out of a
 byte.
@@ -362,18 +362,11 @@ same slot. Two of the ten (`SetToEnd`, `SetToStart`) are pure tail-call veneers 
 `dFdBrightness_c`'s implementation; the rest branch on `type == 1` to the same
 `dFdBrightness_c`/`dFdColor_c` bodies and otherwise run the hardware-capture path.
 
-**`SetBackwardTime` stays plain C — measured, do not "fix".** The full record:
-`src/runtime/graphics/fader/d_wipe.cpp` takes a third parameter that arrives in r2 and is
-forwarded to the guard call with zero instructions, which keeps r2 live from entry to
-the call and forces the cached `type` into r3 as in the ROM. As a real method the
-mangled name fixes the arity at one (`Ej`), so the r2-holding parameter cannot exist,
-and the miss is exactly three words: `ldr r3,[r4,#0x14]` / `cmp r3,#1` / `cmp r3,#0`
-become r2. Measured 2026-08-22 over eleven spellings, all 3 words: declaration order
-(both ways), separate vs combined decls, init-at-decl, `int` vs `s32` vs `u32`, a third
-unused local, no `type` local at all, and reading `state` directly. `const s32 type`
-does not compile (assigned later). The rest of the function is byte-identical in every
-variant — only the colouring differs. Re-open only with a lever that makes r2 live at
-*entry* without emitting an instruction; source spelling alone does not reach it.
+**`SetBackwardTime` takes the forwarded second argument.** The wipe entry reads it
+in r2 and passes it to `dFdBrightness_c::SetBackwardTime`. The brightness body does
+not read it; callers pass 0. A one-argument method drops that register and misses
+three words (`ldr`/`cmp` of `type` at +0x0c, +0x10 and +0x054). The virtual is
+`(u32 frames, u32 extra)` on the whole slot, mangled `Ejj`.
 
 ---
 

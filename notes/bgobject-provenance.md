@@ -143,7 +143,7 @@ own.
 
 `daDgr_c::InitResources` (then a file of its own, now ordinal 8 of
 [src/game/actors/d_a_dgr.cpp](../src/game/actors/d_a_dgr.cpp)) was an `extern "C"` free function
-over a raw `char *`, with four local one-word shadow structs (`Model`, `ModelBase`, `dBgW_Kc`,
+over a raw `char *`, with four local one-word shadow structs (`dExtSimpleModel_c`, `dExtModel_c`, `dBgW_Kc`,
 `dBgW_KcMbg`) and every field reached by literal offset — `*(int *)(c + 0x320) =
 *(int *)(c + 0x60);`. It is now a real `s32 daDgr_c::InitResources()` over the shared
 header, with `&mModel`, `&mMeshCollider`, `mClsnMat`, `mAngleY`, `mPosY` and the six
@@ -229,10 +229,10 @@ one-function shards, now both members of `src/game/actors/d_a_pg_dfdr.cpp` — w
 virtual, so `tools/eligible.py` is unchanged by this. The conversion made one thing
 readable that the offsets hid: `Behavior`'s two `Animation::Advance` calls are the
 same call on two different sub-objects — `this + 0x370` is the **Animation base of
-mModelAnim** (0x320 + 0x50, the multiple-inheritance offset `include/ModelAnim.h`
+mModelAnim** (0x320 + 0x50, the multiple-inheritance offset `include/dExtAnmModel_c.h`
 documents) and `this + 0x384` is `mTextureSequence`, whose `Animation` base is at
 offset 0. Both are spelled `static_cast<Animation *>(&member)` now.
-`Render`'s `this + 0x328` was `mModelAnim.data`, `Model`'s own `ModelComponents`.
+`Render`'s `this + 0x328` was `mModelAnim.data`, `dExtSimpleModel_c`'s own `ModelComponents`.
 
 ---
 
@@ -417,7 +417,7 @@ not re-derived from the folded source.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x3ac | `mShadowMat` | `InitResources` copies the 0x30 bytes at `mModel + 0x1c` (`Model`'s own matrix) here, and 0x3ac is exactly where `mShadowModel` ends — the `ShadowModel` / `Matrix4x3` pairing `dActor_c::DropShadowScaleXYZ` takes. `0x3ac + 0x30 = 0x3dc`. It was `u8 unk_3ac` followed by `u8 pad_3ad[0x33]`. |
+| 0x3ac | `mShadowMat` | `InitResources` copies the 0x30 bytes at `mModel + 0x1c` (`dExtSimpleModel_c`'s own matrix) here, and 0x3ac is exactly where `mShadowModel` ends — the `ShadowModel` / `Matrix4x3` pairing `dActor_c::DropShadowScaleXYZ` takes. `0x3ac + 0x30 = 0x3dc`. It was `u8 unk_3ac` followed by `u8 pad_3ad[0x33]`. |
 | 0x3e0 | `mHomePosY` | `InitResources` sets it from `mPosY`; `Behavior` walks the block back down and clamps `if (mPosY <= mHomePosY) mPosY = mHomePosY;`. |
 | 0x3e8 | `mState` | every one of the five combat callbacks returns early on `mState == 1`, `Render` skips the model on `mState == 2`, and `Behavior` branches on `!= 2` then `!= 0`. It is also the key of the `data_ov102_0214e890` dispatch the callbacks jump into. |
 | 0x3f0 | `mStarTracked` | holds what `dActor_c::TrackStar(this, mStarId, 2)` returned. |
@@ -510,7 +510,7 @@ Bodies read in the promoted class TU: `daObjHatenaSwitch_c::InitResources`,
 | 0x71c | `mSoundDelay` | armed with `0x4b` on the frame the talk starts and run down by `DecIfAbove0_Short`; on the frame it reaches zero `Behavior` calls `Sound::PlaySub(0x20, 0x7f, 0, 0x8777, 0)`. |
 
 The promoted header derives from `dBgActor_c` directly and owns two complete
-`dBgW_KcMbg` members plus `ModelAnim`; the obsolete flat C twin has been removed.
+`dBgW_KcMbg` members plus `dExtAnmModel_c`; the obsolete flat C twin has been removed.
 
 ---
 

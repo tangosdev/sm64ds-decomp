@@ -41,13 +41,6 @@
  * Leftover: g_profile_MINIGAME lives outside this TU (S14).
  * Leftover: OAM::Render Fix12-by-value stays mangled (OAM.h, wall 6az).
  *   This TU's Render.
- * Leftover: GX / G2 / G2S / GXS / G3X / CP15 stay mangled. No recovered
- *   members in headers this TU includes. InitResources /
- *   MiniGm_LoadGroupIcons / MiniGm_LoadIconPalette are the callers.
- * Leftover: Sound::LoadGroupAndSetBank / LoadAndSetMusic_Layer1 and
- *   dScene_c::SetFaders / SetAndStopColorFader stay
- *   mangled -- decl_common.h / decl_Scene.h already declare the
- *   extern "C" names this TU includes.
  * Leftover: TouchOwner is a local overlay of data_0209f5bc. Slot 5 is
  *   IsActive. UpdateGameSelect / MiniGm_SaveIfDirty call the named
  *   method; the other tap helpers still dispatch vt[5] by hand.
@@ -56,13 +49,18 @@
  */
 
 #include "dScMiniGm_c.h"
+#include "MgMenuRow.h"
 #include "dWipe_c.h"
 #include "types.h"
 #include "Sound.h"
 #include "OAM.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
-
+#include "G2.h"
+#include "GX.h"
+#include "CP15.h"
+#include "G3X.h"
+#include "dScene_c.h"
 
 struct MinigameSaveData;
 struct OamAttr;
@@ -74,37 +72,12 @@ struct TouchOwner {
     virtual int v0(); virtual int v1(); virtual int v2();
     virtual int v3(); virtual int v4(); virtual int IsActive();
 };
-struct TouchRec { u8 held; u8 edge; u8 x; u8 y; };
-struct MgMid { s32 v[5]; };
-/* One menu entry (sMiniGmRows, 36 of them: rows 0-23 are the first page of
-   each tab, 24-35 the second). StartSceneFade(id, sceneParam, 0) opens the
-   game, so sceneParam becomes the scene's fBase_c param1. Its low byte is the
-   variant that dScMgBase_c::IsAltVariant tests. Six games are listed twice:
-   Amida (rows 0/24), Snowball (6/34), Smartball (10/22), Coin (14/30), Panel
-   (15/35) and Slot1 (17/33). Each first entry has low byte 0 and each second
-   1, except Amida's row 24 with 2 (Amida's override asks for exactly 1).
-   Sound's only entry (row 19) has 0, so its IsAltVariant branch is not
-   reached from this menu. Seen in play: the two Snowballs start with param1
-   0x0a00 and 0x2201. Bytes 1 and 2 each give every row a distinct number
-   0..35. */
-struct MgEntry {
-    u16 id; u16 pad;
-    s32 sceneParam, unk8, unkc, unk10;
-    MgMid mid;
-    s32 unk28, unk2c, unk30;
+struct TouchRec {
+    u8 held;
+    u8 edge;
+    u8 x;
+    u8 y;
 };
-typedef char MgEntry_size_must_be_0x34[sizeof(MgEntry) == 0x34 ? 1 : -1];
-typedef struct Entry {
-    int pad0;
-    int sceneParam;
-    int unk8;
-    int unkC;
-    int unk10;
-    int arr[5];
-    int unk28;
-    int unk2c;
-    int unk30;
-} Entry;
 typedef struct Pair { int x, y; } Pair;
 struct Off9 { int v[9]; };
 
@@ -116,7 +89,7 @@ extern "C" {
 extern u8 gMgSaveDirty;
 extern u8 gMgMenuPage;
 extern MgEntry gMgMenuRow;
-extern MgMid gMgMenuRowMid;
+extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
 extern u32 data_0209caa0[];
 extern u8 data_0209d454;
@@ -147,6 +120,17 @@ extern Pair sMiniGmBadgePos[];
 extern u32 sMiniGmIconPalettes[];
 extern int sMiniGmIconChars[];
 extern struct Off9 sMiniGmIconScreenOffsets; /* 9-entry screen-offset table, not a matrix */
+/* The menu rows (MgEntry, MgMenuRow.h), 36 of them: rows 0-23 are the first
+   page of each tab, 24-35 the second. StartSceneFade(id, sceneParam, 0) opens the
+   game, so sceneParam becomes the scene's fBase_c param1. Its low byte is the
+   variant that dScMgBase_c::IsAltVariant tests. Six games are listed twice:
+   Amida (rows 0/24), Snowball (6/34), Smartball (10/22), Coin (14/30), Panel
+   (15/35) and Slot1 (17/33). Each first entry has low byte 0 and each second
+   1, except Amida's row 24 with 2 (Amida's override asks for exactly 1).
+   Sound's only entry (row 19) has 0, so its IsAltVariant branch is not
+   reached from this menu. Seen in play: the two Snowballs start with param1
+   0x0a00 and 0x2201. Bytes 1 and 2 each give every row a distinct number
+   0..35. */
 extern const MgEntry sMiniGmRows[];
 extern int sMiniGmSaveTable[];
 extern int sMiniGmDigits[];
@@ -160,7 +144,6 @@ void MiniGm_DrawNumber(void *self, int x, int y, int val);
 void MiniGm_LoadIconPalette(char *self, int n);
 
 /* ---- arm9 / cross-overlay externals ---- */
-int  func_02012790(int);
 void func_02013568(int a, int b, int v);
 int  func_02013580(int a, int b);
 void func_02013598(int x);
@@ -170,25 +153,10 @@ int  RandomIntInternal(int *seed);
 extern char *LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
-extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
-extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, OamAttr *attr, int x, int y, int pal, int prio, int sx, int sy, int c, int d);
-extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int sub, OamAttr *attr, int x, int y, int pal, int prio, int s, int c);
-extern void *_ZN2G212GetBG2ScrPtrEv(void);
-extern void *_ZN2G213GetBG2CharPtrEv(void);
-extern void *_ZN3G2S12GetBG0ScrPtrEv(void);
-extern void *_ZN3G2S12GetBG2ScrPtrEv(void);
-extern void *_ZN3G2S12GetBG3ScrPtrEv(void);
-extern void *_ZN3G2S13GetBG0CharPtrEv(void);
-extern void *_ZN3G2S13GetBG2CharPtrEv(void);
-extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN2GX12SetBankForBGEt(u16 v);
-extern void _ZN2GX13SetBankForOBJEt(u16 v);
-extern void _ZN2GX15SetBankForSubBGEt(u16 v);
-extern void _ZN2GX16SetBankForSubOBJEt(u16 v);
-extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 n);
+
+extern void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pal, int prio, int sx,
+                                    int sy, int c, int d);
+
 }
 
 // @symbol dScMiniGm_c_classInit
@@ -201,11 +169,11 @@ extern "C" dScMiniGm_c *dScMiniGm_c_classInit()
 s32 dScMiniGm_c::InitResources()
 {
     int i, j;
-    Entry *tbl;
+    const MgEntry *tbl;
     int i2;
     int flag;
     int j2, j3;
-    Entry *tbl2;
+    const MgEntry *tbl2;
     volatile u16 sp0;
     volatile u16 sp2;
     char *dst;
@@ -214,14 +182,14 @@ s32 dScMiniGm_c::InitResources()
     LoadTextNarcs();
     LoadArchive(0);
     data_0209f5f8 = 0;
-    _ZN5Sound19LoadGroupAndSetBankEii(0x27, 5);
+    Sound::LoadGroupAndSetBank(0x27, 5);
     func_02019028();
 
     if (!(data_0209caa0[0x48 / 4] & 0x80000000)) {
-        tbl = (Entry *)sMiniGmRows;
+        tbl = sMiniGmRows;
         for (i = 0; i < 0x24; i++) {
             for (j = 0; j < 5; j++) {
-                MiniGm_SetRecord((char *)this, i, j, tbl->arr[j]);
+                MiniGm_SetRecord((char *)this, i, j, tbl->recordDefaults.v[j]);
             }
             tbl++;
         }
@@ -229,17 +197,17 @@ s32 dScMiniGm_c::InitResources()
         gMgSaveDirty = 1;
     }
 
-    tbl2 = (Entry *)sMiniGmRows;
+    tbl2 = sMiniGmRows;
     for (i2 = 0; i2 < 0x24; i2++) {
         flag = 0;
-        if (tbl2->unkC != 0) {
-            if (tbl2->unk10 == 1) {
-                if ((u32)MiniGm_GetRecord((char *)this, i2, 0) > (u32)tbl2->unkC) {
+        if (tbl2->scoreCap != 0) {
+            if (tbl2->ownRecords == 1) {
+                if ((u32)MiniGm_GetRecord((char *)this, i2, 0) > (u32)tbl2->scoreCap) {
                     flag = 1;
                 }
             } else {
                 for (j2 = 0; j2 < 5; j2++) {
-                    if ((u32)MiniGm_GetRecord((char *)this, i2, j2) > (u32)tbl2->unkC) {
+                    if ((u32)MiniGm_GetRecord((char *)this, i2, j2) > (u32)tbl2->scoreCap) {
                         flag = 1;
                     }
                 }
@@ -247,7 +215,7 @@ s32 dScMiniGm_c::InitResources()
         }
         if (flag != 0) {
             for (j3 = 0; j3 < 5; j3++) {
-                MiniGm_SetRecord((char *)this, i2, j3, tbl2->arr[j3]);
+                MiniGm_SetRecord((char *)this, i2, j3, tbl2->recordDefaults.v[j3]);
             }
             gMgSaveDirty = 1;
         }
@@ -261,29 +229,29 @@ s32 dScMiniGm_c::InitResources()
     }
     mGfxSlot = 0;
 
-    _ZN2GX15DisableAllBanksEv();
+    GX::DisableAllBanks();
     *(volatile u16 *)0x4000304 |= 0x8000;
-    _ZN2GX13SetBankForTexEt(1);
-    _ZN2GX12SetBankForBGEt(2);
-    _ZN2GX15SetBankForSubBGEt(4);
-    _ZN2GX16SetBankForSubOBJEt(8);
-    _ZN2GX13SetBankForOBJEt(0x10);
-    _ZN2GX17SetBankForTexPlttEt(0x20);
+    GX::SetBankForTex(1);
+    GX::SetBankForBG(2);
+    GX::SetBankForSubBG(4);
+    GX::SetBankForSubOBJ(8);
+    GX::SetBankForOBJ(0x10);
+    GX::SetBankForTexPltt(0x20);
 
     data_0209d45c &= ~0x1f;
     data_0209d454 &= ~0x1f;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;
-    _ZN2GX15SetGraphicsModeEiii(1, 0, 1);
-    _ZN3GXS15SetGraphicsModeEi(0);
+    GX::SetGraphicsMode(1, 0, 1);
+    GXS::SetGraphicsMode(0);
 
     *(volatile u32 *)0x4000000 &= 0xffcfffef;
     *(volatile u32 *)0x4001000 &= 0xffcfffef;
     *(volatile u32 *)0x4000000 &= ~0x7000000;
     *(volatile u32 *)0x4000000 &= ~0x38000000;
-    _ZN2GX6DispOnEv();
+    GX::DispOn();
     *(volatile u32 *)0x4001000 |= 0x10000;
-    _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
+    G3X::SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     *(volatile u32 *)0x40004cc = 0x7fff;
     *(volatile u32 *)0x40004cc = 0x40007fff;
@@ -296,16 +264,16 @@ s32 dScMiniGm_c::InitResources()
     SetBg2Offset(0, 0);
 
     f = LoadFile(0x4e);
-    DecompressLZ16(f, _ZN2G213GetBG2CharPtrEv());
+    DecompressLZ16(f, G2::GetBG2CharPtr());
     Deallocate(f);
 
     f = LoadFile(0x58);
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)f, 0x200);
-    _ZN2GX10LoadBGPlttEPKvjj((const void *)f, 0, 0x200);
+    CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
+    GX::LoadBGPltt((const void *)f, 0, 0x200);
     Deallocate((void *)f);
 
     f = LoadFile(0x59);
-    DecompressLZ16(f, _ZN2G212GetBG2ScrPtrEv());
+    DecompressLZ16(f, G2::GetBG2ScrPtr());
     Deallocate((void *)f);
 
     if (GetOwnerLanguage() == 5) {
@@ -323,8 +291,8 @@ s32 dScMiniGm_c::InitResources()
     Deallocate((void *)f);
 
     f = LoadFile(0xd9);
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)f, 0x100);
-    _ZN2GX11LoadOBJPlttEPKvjj((const void *)f, 0, 0x100);
+    CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
+    GX::LoadOBJPltt((const void *)f, 0, 0x100);
     Deallocate((void *)f);
 
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
@@ -340,12 +308,12 @@ s32 dScMiniGm_c::InitResources()
     SetSubBg3Offset(mSubBgScrollX, 0);
 
     f = LoadFile(0x53);
-    DecompressLZ16(f, _ZN3G2S13GetBG2CharPtrEv());
+    DecompressLZ16(f, G2S::GetBG2CharPtr());
     Deallocate((void *)f);
 
     f = LoadFile(0x5a);
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)f, 0x200);
-    _ZN3GXS10LoadBGPlttEPKvjj((const void *)f, 0, 0x200);
+    CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
+    GXS::LoadBGPltt((const void *)f, 0, 0x200);
     Deallocate((void *)f);
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 2;
@@ -354,10 +322,10 @@ s32 dScMiniGm_c::InitResources()
     *(volatile u32 *)0x4001010 = mSubBgScrollX & 0x1ff;
     SetSubBg0Offset(mSubBgScrollX, 0);
 
-    dst = (char *)_ZN3G2S13GetBG0CharPtrEv();
+    dst = (char *)G2S::GetBG0CharPtr();
     sp0 = 0;
     MultiStore16(sp0, dst, 0x8000);
-    dst = (char *)_ZN3G2S12GetBG0ScrPtrEv();
+    dst = (char *)G2S::GetBG0ScrPtr();
     sp2 = 0x1f;
     MultiStore16(sp2, dst, 0x1000);
 
@@ -378,8 +346,8 @@ s32 dScMiniGm_c::InitResources()
     Deallocate((void *)f);
 
     f = LoadFile(0xd9);
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)f, 0x100);
-    _ZN3GXS11LoadOBJPlttEPKvjj((const void *)f, 0, 0x100);
+    CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
+    GXS::LoadOBJPltt((const void *)f, 0, 0x100);
     Deallocate((void *)f);
 
     mPageFlipped = 0;
@@ -388,7 +356,7 @@ s32 dScMiniGm_c::InitResources()
     mNextPageTimer = 0;
     mExitTimer = 0;
     mIconBlinkPhase = 0;
-    unk_05c = 0;
+    mStartLevel = 0;
     unk_060 = 0;
     unk_0a4 = 0;
     unk_0a8 = 0;
@@ -401,7 +369,7 @@ s32 dScMiniGm_c::InitResources()
     }
     data_0208ee44 = 1;
     if (data_0209b2fc != 0) {
-        _ZN8dScene_c9SetFadersEP15dFdBrightness_c(&data_0209f61c);
+        dScene_c::SetFaders(&data_0209f61c);
     }
 
     data_0209b2fc = 0;
@@ -412,7 +380,7 @@ s32 dScMiniGm_c::InitResources()
     data_0209d45c |= 4;
     data_0209d45c &= ~8;
     data_0209d454 |= 0xc;
-    _ZN5Sound22LoadAndSetMusic_Layer1Ei(5);
+    Sound::LoadAndSetMusic_Layer1(5);
     return 1;
 }
 
@@ -443,11 +411,11 @@ void MiniGm_LoadGroupIcons(void *selfv)
     int t;
 
     f = LoadFile(sMiniGmBgFiles[gMgGroupBase]);
-    DecompressLZ16(f, _ZN3G2S12GetBG2ScrPtrEv());
+    DecompressLZ16(f, G2S::GetBG2ScrPtr());
     Deallocate(f);
 
     f = LoadFile(sMiniGmBgFiles[gMgGroupBase + 4]);
-    DecompressLZ16(f, _ZN3G2S12GetBG3ScrPtrEv());
+    DecompressLZ16(f, G2S::GetBG3ScrPtr());
     Deallocate(f);
 
     i = 0;
@@ -481,7 +449,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                 destOff = off << 1;
                 do {
                     char *dstp;
-                    scr = (char *)_ZN3G2S12GetBG0ScrPtrEv();
+                    scr = (char *)G2S::GetBG0ScrPtr();
                     dstp = scr + destOff;
                     dstp = destOff ? dstp : dstp; /* register-dest pin; arms identical */
                     valA = (u16)fill;
@@ -504,23 +472,23 @@ void MiniGm_LoadGroupIcons(void *selfv)
             int p;
 
             f = LoadFile(sMiniGmIconChars[gMgGroupBase + j]);
-            DecompressLZ16(f, (char *)_ZN3G2S13GetBG0CharPtrEv() + 0x8000);
+            DecompressLZ16(f, (char *)G2S::GetBG0CharPtr() + 0x8000);
             Deallocate(f);
 
             row = m;
             destOff = row;
             do {
                 idx = scene->mGfxSlot;
-                ch = (char *)_ZN3G2S13GetBG0CharPtrEv();
+                ch = (char *)G2S::GetBG0CharPtr();
                 scr = ch + (idx / 4) * 0x2400 + (idx % 4) * 0xc0 + destOff;
-                ch = (char *)_ZN3G2S13GetBG0CharPtrEv();
+                ch = (char *)G2S::GetBG0CharPtr();
                 MultiCopy_Int((int *)(ch + 0x8000 + destOff), (int *)scr, copyLen);
                 destOff += 0x400;
             } while (++row < 9);
 
             f = LoadFile(sMiniGmIconPalettes[gMgGroupBase + j]);
-            _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)f, flushSize);
-            _ZN3GXS10LoadBGPlttEPKvjj(f, scene->mGfxSlot << 5, plttSize);
+            CP15::FlushAndInvalidateDataCache((u32)f, flushSize);
+            GXS::LoadBGPltt(f, scene->mGfxSlot << 5, plttSize);
             Deallocate(f);
 
             scene->mGfxSlots[i] = scene->mGfxSlot;
@@ -534,7 +502,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                 do {
                     char *dstp;
                     idx = scene->mGfxSlot;
-                    scr = (char *)_ZN3G2S12GetBG0ScrPtrEv();
+                    scr = (char *)G2S::GetBG0ScrPtr();
                     dstp = scr + destOff;
                     dstp = idx ? dstp : dstp; /* register-dest pin; arms identical */
                     valB = (u16)(q + (p + ((idx % 4) * 6 + ((idx / 4) * 0x120 + (idx << 12)))));
@@ -566,9 +534,9 @@ extern "C" {
 void MiniGm_LoadIconPalette(char *self, int index)
 {
     char *file = LoadFile(sMiniGmIconPalettes[index]);
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)file, 0x200);
-    u32 slot = *(u32 *)(self + (index / 4) * 4 + 0x68);
-    _ZN3GXS10LoadBGPlttEPKvjj(file + 0x20, slot << 5, 0x20);
+    CP15::FlushAndInvalidateDataCache((u32)file, 0x200);
+    u32 slot = ((dScMiniGm_c *)self)->mGfxSlots[index / 4];
+    GXS::LoadBGPltt(file + 0x20, slot << 5, 0x20);
     Deallocate(file);
 }
 }
@@ -611,7 +579,7 @@ s32 dScMiniGm_c::Behavior()
     } else if (mExitTimer > 1) {
         mExitTimer -= 1;
         if (mExitTimer == 1) {
-            _ZN8dScene_c20SetAndStopColorFaderEv();
+            dScene_c::SetAndStopColorFader();
             ExitMinigameMenu();
             Sound::StopLoadedMusic_Layer1(0x1e);
             mExiting = 1;
@@ -668,7 +636,7 @@ void MiniGm_DrawRecords(void *selfv)
     r8 = i * 4;
     do {
         if (MiniGm_IsUnlocked(self, gMgGroupBase + r8) != 0) {
-            type = ((Entry *)sMiniGmRows)[gMgGroupBase + r8].unk8;
+            type = sMiniGmRows[gMgGroupBase + r8].scoringMode;
             if (type != 0) {
                 if (type == 1) {
                     y = sMiniGmRecordPos[i].y;
@@ -789,9 +757,9 @@ s32 dScMiniGm_c::Render()
     int scale;
 
     if (gMgSaveDirty == 1) {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (OamAttr *)sMiniGmSavingCaption, 0x80, 0xa4, -1, 0, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)sMiniGmSavingCaption, 0x80, 0xa4, -1, 0, 0x1000, 0x1000, 0, -1);
     } else {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (OamAttr *)sMiniGmCaption, 0x80, 0xa4, -1, 0, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)sMiniGmCaption, 0x80, 0xa4, -1, 0, 0x1000, 0x1000, 0, -1);
     }
 
     y0 = 0x18;
@@ -826,9 +794,11 @@ s32 dScMiniGm_c::Render()
             else
                 scale = (((0x12 - t) << 12) / 16) + 0x1000;
             if (mArrowBobPhase < 0x20)
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, (OamAttr *)sMiniGmPageArrows[0], 0x50 - mArrowBobPhase / 2, 0x60, -1, 0, scale, 0);
+                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 0x50 - mArrowBobPhase / 2, 0x60, -1,
+                            0, scale, 0);
             else
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, (OamAttr *)sMiniGmPageArrows[0], 0x50 - (0x40 - mArrowBobPhase) / 2, 0x60, -1, 0, scale, 0);
+                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 0x50 - (0x40 - mArrowBobPhase) / 2,
+                            0x60, -1, 0, scale, 0);
         } else if (MiniGm_HasSecondPage(this) != 0) {
             t = mNextPageTimer;
             if (t < 0xa)
@@ -838,9 +808,11 @@ s32 dScMiniGm_c::Render()
             else
                 scale = (((0x12 - t) << 12) / 16) + 0x1000;
             if (mArrowBobPhase < 0x20)
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, (OamAttr *)sMiniGmPageArrows[1], mArrowBobPhase / 2 + 0xe0, 0x60, -1, 0, scale, 0);
+                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], mArrowBobPhase / 2 + 0xe0, 0x60, -1,
+                            0, scale, 0);
             else
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, (OamAttr *)sMiniGmPageArrows[1], (0x40 - mArrowBobPhase) / 2 + 0xe0, 0x60, -1, 0, scale, 0);
+                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], (0x40 - mArrowBobPhase) / 2 + 0xe0,
+                            0x60, -1, 0, scale, 0);
         }
     }
 
@@ -854,7 +826,7 @@ s32 dScMiniGm_c::Render()
         scale = (((t - 0x14) << 12) / 16) + 0x1000;
     else
         scale = (((0x1c - t) << 12) / 16) + 0x1000;
-    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, (OamAttr *)sMiniGmExitButton, 0xe8, 0xa0, -1, 0, scale, 0);
+    OAM::Render(1, (OamAttr *)sMiniGmExitButton, 0xe8, 0xa0, -1, 0, scale, 0);
     return 1;
 }
 
@@ -1053,22 +1025,22 @@ void dScMiniGm_c::UpdateGameSelect()
         gMgLastSelected[0] = sel;
         gMgMenuRow.id = src->id;
         gMgMenuRow.sceneParam = src->sceneParam;
-        gMgMenuRow.unk8 = src->unk8;
-        gMgMenuRow.unkc = src->unkc;
-        gMgMenuRow.unk10 = src->unk10;
-        gMgMenuRowMid = src->mid;
-        gMgMenuRow.unk28 = src->unk28;
-        gMgMenuRow.unk2c = src->unk2c;
-        gMgMenuRow.unk30 = src->unk30;
+        gMgMenuRow.scoringMode = src->scoringMode;
+        gMgMenuRow.scoreCap = src->scoreCap;
+        gMgMenuRow.ownRecords = src->ownRecords;
+        gMgMenuRowMid = src->recordDefaults;
+        gMgMenuRow.musicTrack = src->musicTrack;
+        gMgMenuRow.musicMode = src->musicMode;
+        gMgMenuRow.level = src->level;
     }
     MiniGm_LoadIconPalette((char *)this, sel);
     func_02012790(0x1e);
-    _ZN8dScene_c9SetFadersEP15dFdBrightness_c(&data_0209f61c);
+    dScene_c::SetFaders(&data_0209f61c);
     data_0209f61c.func_0202ec9c(0);
-    gMgMenuRow.unk30 = unk_05c;
+    gMgMenuRow.level = mStartLevel;
     dScene_c::StartSceneFade(sMiniGmRows[gMgLastSelected[0]].id,
                              sMiniGmRows[gMgLastSelected[0]].sceneParam, 0);
-    _ZN5Sound22StopLoadedMusic_Layer1Ej(0x1e);
+    Sound::StopLoadedMusic_Layer1(0x1e);
     mExiting = 1;
     data_0209b2fc = 1;
 }

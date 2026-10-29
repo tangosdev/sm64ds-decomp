@@ -42,6 +42,8 @@
 #include "OAM.h"
 #include "OamAttr.h"
 #include "OamAnimation.h"
+#include "CP15.h"
+#include "cstd.h"
 
 struct Matrix2x2 { s32 m00, m01, m10, m11; };
 
@@ -94,14 +96,7 @@ void func_020566dc(const void *src, unsigned int offset, unsigned int count);
 void func_02056674(const void *src, unsigned int offset, unsigned int count);
 void MultiCopy_Int(int *dst, int *src, int len);
 void MultiCopy32Bytes(int *src, int *dst, int len);
-void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 addr, u32 size);
-int _ZN4cstd4fdivEii(int num, int den);
-/* Render stays an `extern "C"` free function -- by-value `Fix12<int>` scale
- * parameters (runbook section 7, the note in include/OAM.h). */
-void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-    int sub, OamAttr *data, s32 x, s32 y,
-    s32 palette, s32 priority, s32 scaleX, s32 scaleY,
-    s32 rotation, s32 mode);
+
 int func_0202043c(int thiz);
 }
 
@@ -131,7 +126,7 @@ void func_02020820(char *self, int *src, int arg2, int arg3, u8 arg5, u8 arg6)
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2
-/* ROM ordinal 1 -- _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2
+/* ROM ordinal 1 -- OAM::LoadAffineParams(OamAttr *, int *, Matrix2x2 *)
  * 0x02020884  size 0xe8 */
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
@@ -176,7 +171,7 @@ int OAM::LoadAffineParams(OamAttr *oam, int *count, Matrix2x2 *mtx)
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN3OAM12GetObjHeightEii
-/* ROM ordinal 2 -- _ZN3OAM12GetObjHeightEii
+/* ROM ordinal 2 -- OAM::GetObjHeight(int, int)
  * 0x0202096c  size 0x14 */
 u8 OAM::GetObjHeight(int shape, int sizeBits)
 {
@@ -187,7 +182,7 @@ u8 OAM::GetObjHeight(int shape, int sizeBits)
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN3OAM11GetObjWidthEii
-/* ROM ordinal 3 -- _ZN3OAM11GetObjWidthEii
+/* ROM ordinal 3 -- OAM::GetObjWidth(int, int)
  * 0x02020980  size 0x14 */
 u8 OAM::GetObjWidth(int shape, int sizeBits)
 {
@@ -198,26 +193,15 @@ u8 OAM::GetObjWidth(int shape, int sizeBits)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii
-/* ROM ordinal 4 -- _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii
+// @symbol _ZN3OAM6RenderEbP7OamAttriiiiiiii
+/* ROM ordinal 4 -- OAM::Render(bool, OamAttr *, int, int, int, int, int, int, int, int)
  * 0x02020994  size 0x690 */
 #pragma opt_common_subs off
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
-#pragma cplusplus off
-/* C region: this function's shard was a `.c` file, and the C front end homes
- * the scalar parameters in a different frame layout (measured: the C++ frame
- * comes out 8 bytes short). `extern "C"` is not C syntax, so the definition
- * below gets C linkage by language alone; the mangled callees keep the shard's
- * literal spellings. */
-extern unsigned char _ZN3OAM11GetObjWidthEii(int shape, int size);
-extern unsigned char _ZN3OAM12GetObjHeightEii(int shape, int size);
-extern int _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2(struct OamAttr *attr, int *affCnt, struct Matrix2x2 *m);
-extern int _ZN4cstd4fdivEii(int num, int den);
 
-void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr *attr_, int xOff, int yOff, int palette, int priority,
-                 int scaleX, int scaleY, int rotation, int mode)
-{
+void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palette, int priority,
+                 int scaleX, int scaleY, int rotation, int mode) {
     /* The 10-parameter form: walks a chain of template entries (terminated by
      * a3 == 0xffff) and writes each into whichever OAM buffer is being filled
      * this frame, clipping against the screen; a non-unit scale or a rotation
@@ -285,13 +269,13 @@ void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr *attr_,
             u = *(s8 *)attr;
             {
             u32 a = attr->a01;
-            w = _ZN3OAM11GetObjWidthEii((int)((a << 16) >> 30), (int)(a >> 30));
+            w = GetObjWidth((int)((a << 16) >> 30), (int)(a >> 30));
             }
         {
         int h;
         {
             u32 a = attr->a01;
-            h = _ZN3OAM12GetObjHeightEii((int)((a << 16) >> 30), (int)(a >> 30));
+            h = GetObjHeight((int)((a << 16) >> 30), (int)(a >> 30));
         }
         y = u;
 
@@ -301,9 +285,9 @@ void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr *attr_,
             halfW = w >> 1;
             halfH = h >> 1;
             if (scaleX != 0x1000)
-                x = _ZN4cstd4fdivEii(x, scaleX);
+                x = cstd::fdiv(x, scaleX);
             if (scaleY != 0x1000)
-                y = _ZN4cstd4fdivEii(y, scaleY);
+                y = cstd::fdiv(y, scaleY);
             if (rotation != 0) {
                 s16 s, c;
                 s = data_02082214[sinIdx];
@@ -390,7 +374,7 @@ void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr *attr_,
                     m.m10 = -m.m10;
                     m.m11 = -m.m11;
                 }
-                aff = _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2((struct OamAttr *)(dst - *pCount), pAff, &m);
+                aff = LoadAffineParams((struct OamAttr *)(dst - *pCount), pAff, &m);
                 if (aff == -1) {
                     if (attr->a3 == 0xffff) return;
                     attr++;
@@ -434,16 +418,11 @@ void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr *attr_,
 #pragma opt_loop_invariants on
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi
-/* ROM ordinal 5 -- _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi
- * 0x02021024  size 0x480 */
-extern "C"
-OamAttr *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int draw, OamAttr *obj_, int px, int py, int pal, int prio, int scale0, int rot0)
-{
-    /* The 7-parameter form: one object, one scale, one rotation. scale is a
-     * Fix12<int> and rot is the hardware angle -- both by-value in the real
-     * signature, which is why this is `extern "C"` (the by-value-class wall).
-     * `OamAttrTpl` is this body's own decomposition of the template entry. */
+// @symbol _ZN3OAM6RenderEbP7OamAttriiiiii
+/* 0x02021024  size 0x480. One object, one scale, one rotation.
+ * Scale and rotation are ints. `OamAttrTpl` is this body's view of the template entry. */
+OamAttr *OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio, int scale0,
+                     int rot0) {
     OamAttrTpl *obj = (OamAttrTpl *)obj_;
     int *counter;
     int *affctr;
@@ -636,7 +615,7 @@ OamAttr *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int draw, OamAttr *obj_, int px
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2
-/* ROM ordinal 6 -- _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2
+/* ROM ordinal 6 -- OAM::Render(bool, OamAttr *, int, int, int, int, Matrix2x2 *)
  * 0x020214a4  size 0x2e4 */
 void OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio, Matrix2x2 *mtx)
 {
@@ -737,7 +716,7 @@ void OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio, Ma
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN3OAM5ResetEv
-/* ROM ordinal 7 -- _ZN3OAM5ResetEv
+/* ROM ordinal 7 -- OAM::Reset()
  * 0x02021788  size 0xdc */
 void OAM::Reset()
 {
@@ -762,20 +741,20 @@ void OAM::Reset()
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN3OAM5FlushEv
-/* ROM ordinal 8 -- _ZN3OAM5FlushEv
+/* ROM ordinal 8 -- OAM::Flush()
  * 0x02021864  size 0x34 */
 void OAM::Flush()
 {
     /* Flush the two 0x400-byte staging buffers out of the data cache so the
      * DMA that follows reads what the CPU just wrote. 0x400 is 128 entries
      * of 8 bytes, the full hardware OAM. */
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_0209e674, 0x400);
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_0209ea74, 0x400);
+    CP15::FlushAndInvalidateDataCache((u32)data_0209e674, 0x400);
+    CP15::FlushAndInvalidateDataCache((u32)data_0209ea74, 0x400);
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN3OAM4LoadEv
-/* ROM ordinal 9 -- _ZN3OAM4LoadEv
+/* ROM ordinal 9 -- OAM::Load()
  * 0x02021898  size 0xb4 */
 void OAM::Load()
 {
@@ -799,7 +778,7 @@ void OAM::Load()
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN3OAM9RenderSubEP7OamAttrii
-/* ROM ordinal 10 -- _ZN3OAM9RenderSubEP7OamAttrii
+/* ROM ordinal 10 -- OAM::RenderSub(OamAttr *, int, int)
  * 0x0202194c  size 0x50 */
 void OAM::RenderSub(OamAttr *data, s32 x, s32 y)
 {
@@ -808,16 +787,12 @@ void OAM::RenderSub(OamAttr *data, s32 x, s32 y)
      * in 20.12; -1 in palette/priority/mode means "leave the attribute word
      * alone". The type is `OamAttr`, NOT `OamAttri` -- the extra `i` in
      * `P7OamAttrii` belongs to the parameter list. */
-    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-        1, data, x, y,
-        -1, -1,
-        0x1000, 0x1000,
-        0, -1);
+    OAM::Render(1, data, x, y, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN3OAM9RenderSubEP7OamAttriiii
-/* ROM ordinal 11 -- _ZN3OAM9RenderSubEP7OamAttriiii
+/* ROM ordinal 11 -- OAM::RenderSub(OamAttr *, int, int, int, int)
  * 0x0202199c  size 0x54 */
 void OAM::RenderSub(OamAttr *data, s32 x, s32 y, s32 palette, s32 priority)
 {
@@ -825,21 +800,17 @@ void OAM::RenderSub(OamAttr *data, s32 x, s32 y, s32 palette, s32 priority)
      * priority given explicitly rather than left as -1. Everything else is
      * still the identity transform -- 0x1000 scale in both axes (1.0 in
      * 20.12), no rotation, mode -1. */
-    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-        1, data, x, y,
-        palette, priority,
-        0x1000, 0x1000,
-        0, -1);
+    OAM::Render(1, data, x, y, palette, priority, 0x1000, 0x1000, 0, -1);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN3OAM12EnableSubOAMEv
-/* ROM ordinal 12 -- _ZN3OAM12EnableSubOAMEv
+// @symbol _ZN3OAM12EnableSubOAMEP6OamTmp
+/* ROM ordinal 12 -- OAM::EnableSubOAM(OamTmp *)
  * 0x020219f0  size 0x14 */
-u32 OAM::EnableSubOAM()
-{
+u32 OAM::EnableSubOAM(OamTmp *tmp) {
     /* Despite the name it only writes zero -- the flag is "sub OAM
-     * suppressed", so enabling is clearing it. The u32 return is a fiction
+     * suppressed", so enabling is clearing it. tmp is the caller's stack
+     * slot; this body does not read it. The u32 return is a fiction
      * the ROM does not honour: the function falls off its end without
      * setting r0. The `(long) 0` cast is preserved verbatim. */
     data_0209e660 = (long)0;

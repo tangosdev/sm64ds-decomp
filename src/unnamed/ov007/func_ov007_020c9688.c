@@ -75,6 +75,24 @@ typedef struct Ctx {
     u8 pad3[0x30];
 } Ctx;
 
+/* List B: a 0xc-byte group header, then `count` 0x18-byte members. Only
+ * the slots this function reads are named. */
+typedef struct GroupHdr {
+    u8 pad_00[8];
+    u8 count; /* 0x08: members that follow; func_ov007_020c13a4 sizes the group */
+    u8 pad_09[3];
+} GroupHdr;
+
+typedef struct GroupMember {
+    u16 entry; /* 0x00: index into Res::entries */
+    u16 value; /* 0x02: copied into Group::vals */
+    u8 pad_04[0x14];
+} GroupMember;
+
+typedef char GroupHdr_size_must_be_0xc[sizeof(GroupHdr) == 0xc ? 1 : -1];
+typedef char GroupMember_size_must_be_0x18[sizeof(GroupMember) == 0x18 ? 1 : -1];
+typedef char RecA_size_must_be_0x14[sizeof(RecA) == 0x14 ? 1 : -1];
+
 typedef struct Packed {
     u32 val;
     u16 ext;
@@ -130,7 +148,7 @@ Res *func_ov007_020c9688(int arg)
             r = (RecA *)p;
             key = ((u32)r->f8 << 8) | ((u32)r->f6 << 28) | ((u32)r->f7 << 29);
             hi = ((u32)r->fC << 14) | ((u32)r->fD << 30);
-            p = p + 0x14;
+            p = p + sizeof(RecA);
             bF = r->fF;
             h10 = r->f10;
             b5 = r->f5;
@@ -167,15 +185,15 @@ Res *func_ov007_020c9688(int arg)
         u32 c2;
         p = (u8 *)ctx.listB + 4;
         for (k = 0; k < nB; k++) {
-            c2 = *(p + 8);
-            g = (Group *)(s->groups + k * 0x10);
-            p = p + 0xc;
+            c2 = ((GroupHdr *)p)->count;
+            g = (Group *)(s->groups + k * sizeof(Group));
+            p = p + sizeof(GroupHdr);
             func_ov007_020c13a4(g, c2, 0, 0);
             for (m = 0; m < c2; m++) {
-                u8 *q0 = p;
-                p = p + 0x18;
-                g->arr[m] = (Entry *)((Entry *)s->entries + *(u16 *)q0);
-                g->vals[m] = *(u16 *)(q0 + 2);
+                GroupMember *q0 = (GroupMember *)p;
+                p = p + sizeof(GroupMember);
+                g->arr[m] = (Entry *)((Entry *)s->entries + q0->entry);
+                g->vals[m] = q0->value;
             }
         }
     }

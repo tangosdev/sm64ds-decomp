@@ -36,15 +36,15 @@ struct daObjFl_Ring_c : dBgActor_c {
        include/dBgActor_c.h). Field names are placeholders: offsets, widths
        and read/write sites are observed from Behavior (slot 6, ov022
        0x021112ac), not proven semantics. */
-    u8  mState;            /* 0x31e -- Behavior's own two-case switch */
-    u8  mSpawnGuard;        /* 0x31f -- DecIfAbove0_Byte-gated once per spawn */
-    u8  mTriggered;        /* 0x320 -- read once, reset to 0 every Behavior call;
-                              the collision callback func_ov022_02111564 sets it
-                              (func_ov022_02111558 writes 1 to byte 0x320) */
-    u8  pad_321[0x1];
-    u16 mCooldown;          /* 0x322 -- DecIfAbove0_Short, gates the whole switch */
-    u16 mSpawnCount;        /* 0x324 -- incremented once per actorID 0xf3 spawn */
-    u8  pad_326[0x2];
+    u8 mState;      /* 0x31e -- Behavior's own two-case switch */
+    u8 mSpawnGuard; /* 0x31f -- DecIfAbove0_Byte-gated once per spawn */
+    u8 mTriggered;  /* 0x320 -- read once, reset to 0 every Behavior call;
+                              the collision callback StoodOnCallback sets it
+                              through OnStoodOn */
+    u8 pad_321[0x1];
+    u16 mCooldown;   /* 0x322 -- DecIfAbove0_Short, gates the whole switch */
+    u16 mSpawnCount; /* 0x324 -- incremented once per actorID 0xf3 spawn */
+    u8 pad_326[0x2];
 
     /* MEASURED -- DEFINED INLINE, EMPTY, AND DECLARED FIRST. This is the key
        function, so the TU that defines it emits _ZTV14daObjFl_Ring_c together
@@ -60,12 +60,15 @@ struct daObjFl_Ring_c : dBgActor_c {
        this class has no home for. The brace stays on the signature line --
        tools/check_header_offsets.py recognises an inline body only when the
        signature line carries it. */
-    virtual ~daObjFl_Ring_c() {}     /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjFl_Ring_c() {} /* slots 16 (D1), 17 (D0) */
 
-    virtual s32 InitResources();     /* slot  0 */
-    virtual s32 CleanupResources();  /* slot  3 */
-    virtual s32 Behavior();          /* slot  6 */
-    virtual s32 Render();            /* slot  9 */
+    virtual s32 InitResources();    /* slot  0 */
+    virtual s32 CleanupResources(); /* slot  3 */
+    virtual s32 Behavior();         /* slot  6 */
+    virtual s32 Render();           /* slot  9 */
+
+    void OnStoodOn(dActor_c *);
+    static void StoodOnCallback(dBgW *, daObjFl_Ring_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

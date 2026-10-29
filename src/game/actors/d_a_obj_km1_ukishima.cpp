@@ -14,17 +14,13 @@
  * tools/rombuild.py refuses the object outright when the emitted order and the
  * ROM's disagree.
  *
- * deslop
- * Leftover: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled
- *   in this TU -- both take Fix12<int> by value (wall 6az); a method call
- *   homes the argument and size-DIFFs InitResources / Behavior.
- * Leftover: func_020393d4 is a 4-byte store into dBgW+0x18
+ * What stays: func_020393d4 is a 4-byte store into dBgW+0x18
  *   (beforeClsnCallback). This TU calls it; naming belongs with dBgW in arm9.
- * Leftover: data_ov043_021125e0 / 021125e8 are this overlay's KCL/BMD
+ * What stays: data_ov043_021125e0 / 021125e8 are this overlay's KCL/BMD
  *   handles. data_ov043_02111c00 is the CLPS block in overlay .data this
  *   TU does not own.
- * Leftover: g_profile_KM1_UKISHIMA lives outside this TU (S14).
- * Leftover: inline destructor (out-of-line emits D0 before D1).
+ * What stays: g_profile_KM1_UKISHIMA lives outside this TU (S14).
+ * What stays: inline destructor (out-of-line emits D0 before D1).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -41,41 +37,30 @@ enum d_a_obj_km1_ukishima_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct Km1UkishimaModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
-
     Km1UkishimaModelFilePtr(unsigned int fileID);
     ~Km1UkishimaModelFilePtr();
 };
 
 struct Km1UkishimaClsnFilePtr : SharedFilePtr {
-    unsigned int words[2];
-
     Km1UkishimaClsnFilePtr(unsigned int fileID);
     ~Km1UkishimaClsnFilePtr();
 };
 
-typedef char Km1UkishimaModelFilePtr_size_must_be_8[
-    sizeof(Km1UkishimaModelFilePtr) == 8 ? 1 : -1];
-typedef char Km1UkishimaClsnFilePtr_size_must_be_8[
-    sizeof(Km1UkishimaClsnFilePtr) == 8 ? 1 : -1];
+typedef char Km1UkishimaModelFilePtr_size_must_be_8[sizeof(Km1UkishimaModelFilePtr) == 8 ? 1 : -1];
+typedef char Km1UkishimaClsnFilePtr_size_must_be_8[sizeof(Km1UkishimaClsnFilePtr) == 8 ? 1 : -1];
 
 struct KCL_File;
 struct CLPS_Block;
 
-/* DecIfAbove0_Byte (arm9 0x0203add4) has no shared header anywhere in the
- * tree -- every caller declares it locally. */
-extern "C" {
-extern Km1UkishimaClsnFilePtr data_ov043_021125e0;   /* the KCL  */
-extern Km1UkishimaModelFilePtr data_ov043_021125e8;   /* the BMD  */
-extern CLPS_Block    data_ov043_02111c00;   /* the CLPS block SetFile is handed */
+extern Km1UkishimaClsnFilePtr data_ov043_021125e0;  /* the KCL  */
+extern Km1UkishimaModelFilePtr data_ov043_021125e8; /* the BMD  */
+extern CLPS_Block data_ov043_02111c00;              /* the CLPS block SetFile is handed */
 
+/* local extern: DecIfAbove0_Byte (arm9 0x0203add4) and func_020393d4 have
+ * no shared header; every caller declares them locally. */
+extern "C" {
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void func_020393d4(dBgW *bgw, void *fn);
-
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int a, int b);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
-    s16 angleY, CLPS_Block *clps);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -89,27 +74,20 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
    Every instruction the cartridge has here falls out of the one `new`.
    0x320 is the whole object: dBgActor_c's own size, this class's one byte
    living in its tail padding at 0x31e. */
-extern "C" daObjKm1_Ukishima_c *daObjKm1_Ukishima_c_classInit()
-{
+extern "C" daObjKm1_Ukishima_c *daObjKm1_Ukishima_c_classInit() {
     return new daObjKm1_Ukishima_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjKm1_Ukishima_c13InitResourcesEv
-/* dBgW_KcMbg::SetFile takes Fix12<int> by value. An ordinary member call
- * triggers mwccarm's by-value-class parameter homing and changes the ROM ABI,
- * so this one call deliberately retains the measured register-level view. */
-s32 daObjKm1_Ukishima_c::InitResources()
-{
-    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov043_021125e8), 1, -1);
+s32 daObjKm1_Ukishima_c::InitResources() {
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov043_021125e8), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov043_021125e0);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
-        &data_ov043_02111c00);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov043_02111c00);
 
     /* The mesh moves with the actor's velocity rather than its transform --
        the island slides, it does not carry a rotating platform's matrix. */
@@ -124,10 +102,7 @@ s32 daObjKm1_Ukishima_c::InitResources()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjKm1_Ukishima_c8BehaviorEv
-/* IsClsnInRange takes two Fix12<int> by value; see InitResources for why that
- * one call keeps the measured register-level spelling. */
-s32 daObjKm1_Ukishima_c::Behavior()
-{
+s32 daObjKm1_Ukishima_c::Behavior() {
     if (!DecIfAbove0_Byte(&mTurnTimer)) {
         mTurnTimer = 0x3c;
         /* A quarter turn, applied to the heading UpdatePos integrates along.
@@ -141,7 +116,7 @@ s32 daObjKm1_Ukishima_c::Behavior()
 
     UpdatePos(0);
     UpdateModelPosAndRotY();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+    if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
 
     return 1;
@@ -150,8 +125,7 @@ s32 daObjKm1_Ukishima_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjKm1_Ukishima_c6RenderEv
-s32 daObjKm1_Ukishima_c::Render()
-{
+s32 daObjKm1_Ukishima_c::Render() {
     mModel.Render(0);
     return 1;
 }
@@ -159,8 +133,7 @@ s32 daObjKm1_Ukishima_c::Render()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjKm1_Ukishima_c16CleanupResourcesEv
-s32 daObjKm1_Ukishima_c::CleanupResources()
-{
+s32 daObjKm1_Ukishima_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 

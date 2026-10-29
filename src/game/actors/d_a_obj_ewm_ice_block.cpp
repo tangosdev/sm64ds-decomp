@@ -32,7 +32,9 @@ enum daObjEwmIceBlock_c_AssetId {
 #include "daObjEwmIceBlock_c.h"
 #include "SharedFilePtr.h"
 
-namespace cstd { int fdiv(int a, int b); }
+namespace cstd {
+int fdiv(int a, int b);
+}
 
 extern "C" {
 extern SharedFilePtr *data_ov056_02113314[];
@@ -40,10 +42,8 @@ extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 extern int LenVec3(Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mtx, int scale, short angle,
-    void *clps);
+extern void hold_d_a_obj_ewm_ice_block(dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mtx, int scale,
+                                       short angle, void *clps);
 extern void func_020393d4(void *p, void *cb);
 }
 
@@ -143,23 +143,20 @@ int daObjEwmIceBlock_c::Behavior()
 
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0x5dc000, 0);
+    IsClsnInRange(0x5dc000, 0);
     return 1;
 }
 
 // @symbol _ZN18daObjEwmIceBlock_c13InitResourcesEv
 int daObjEwmIceBlock_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)Model::LoadFile(*data_ov056_02113314[0]), 1, -1);
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov056_02113314[0]), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider,
-        dBgW_Kc::LoadFile(*data_ov056_02113314[1]),
-        &mClsnMat,
-        0x199,
-        mAngleY,
-        data_ov056_02113314[2]);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(*data_ov056_02113314[1])),
+                              *(&mClsnMat), 0x199, mAngleY,
+                              *(CLPS_Block *)(data_ov056_02113314[2]));
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;
@@ -177,12 +174,10 @@ extern "C" daObjEwmIceBlock_c *daObjEwmIceBlock_c_classInit()
  * func_02017ab4 for the model, func_02017b4c / SharedFilePtr_Destruct_Clsn
  * for the collision); the subclasses exist to spell those entry points. */
 struct EwmIceBlockModelFilePtr : SharedFilePtr {
-    u32 words[2];
     EwmIceBlockModelFilePtr(u32 fileID);
     ~EwmIceBlockModelFilePtr();
 };
 struct EwmIceBlockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     EwmIceBlockCollisionFilePtr(u32 fileID);
     ~EwmIceBlockCollisionFilePtr();
 };

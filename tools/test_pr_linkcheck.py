@@ -299,6 +299,48 @@ class CheckFileResolvesAndThreadsBeforeCallingLinkcheck(unittest.TestCase):
         self.assertEqual(rep["results"][0]["verdict"], "VERIFIED")
 
 
+class ProductionContextChecks(unittest.TestCase):
+    def setUp(self):
+        import rombuild as RB
+        import tu_production as TP
+        PL._production_context.cache_clear()
+        self.addCleanup(PL._production_context.cache_clear)
+        self.stack = contextlib.ExitStack()
+        self.addCleanup(self.stack.close)
+        self.intact = {"src/promoted.cpp": {"id": "test"}}
+        self.stack.enter_context(mock.patch.object(RB, "enrolled", return_value=[]))
+        self.admit = self.stack.enter_context(mock.patch.object(
+            RB, "intact_tu_policies", return_value=self.intact))
+        for name, value in (("compiler_only_policies", {}), ("enrolled_symbols", {}),
+                            ("versions", {}), ("init_section_sources", set())):
+            self.stack.enter_context(mock.patch.object(RB, name, return_value=value))
+        self.control = self.stack.enter_context(mock.patch.object(
+            TP, "prepare_intact_link_verification"))
+
+    def test_stock_control_is_ready_before_context_is_shared(self):
+        context = PL._production_context()
+        self.control.assert_called_once_with(self.intact)
+        self.assertIs(context["intact"], self.intact)
+        self.assertIs(PL._production_context(), context)
+        self.control.assert_called_once()
+
+    def test_failed_stock_control_blocks_compilation_and_legacy_fallback(self):
+        self.control.side_effect = RuntimeError("stock control fingerprint differs")
+        with mock.patch.object(PL.SP, "symbols_for", return_value=["owned"]), \
+                mock.patch.object(PL, "_production_object") as compile_obj, \
+                mock.patch.object(RA, "winning_object") as legacy:
+            report = PL.check_file("src/promoted.cpp", {}, {})
+        self.assertEqual(PL.worst(report["results"]), "ERROR")
+        self.assertIn("stock control fingerprint differs", report["results"][0]["reason"])
+        compile_obj.assert_not_called()
+        legacy.assert_not_called()
+
+    def test_no_intact_tus_need_no_stock_control(self):
+        self.admit.return_value = {}
+        self.assertEqual(PL._production_context()["intact"], {})
+        self.control.assert_not_called()
+
+
 class ProductionObjectChecks(unittest.TestCase):
     PATH = "src/promoted.cpp"
     ADDR = 0x02000000

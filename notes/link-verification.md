@@ -62,10 +62,10 @@ uses) verified per function with `linkcheck` (not WRONG, still reproduces) and t
 oracle, reverting any that perturbed codegen. Shapes fixed: data symbols resolving to the
 wrong overlay, swapped pointer pairs (e.g. `Player`'s ctor/dtor callback pair registered in
 the wrong order), and `__sinit` initializers registering wrong data pointers. The two
-`_ZThn80_N9Animation{D0,D1}Ev` thunks were re-identified as `ModelAnim2`'s secondary-base
-thunks (they branch to `_ZN10ModelAnim2D{0,1}Ev`) and renamed.
+`_ZThn80_N9Animation{D0,D1}Ev` thunks were re-identified as `dExtAnm2Model_c`'s secondary-base
+thunks (they branch to `_ZN15dExtAnm2Model_cD{0,1}Ev`) and renamed.
 
-The lone remaining WRONG is `_ZThn80_N10ModelAnim2D0Ev`: the secondary-base DELETING
+The lone remaining WRONG is `_ZThn80_N15dExtAnm2Model_cD0Ev`: the secondary-base DELETING
 destructor thunk. The ROM branches it to `D0` (0x02016320); CodeWarrior emits it as a
 tail-branch to `D1` for this class under all 11 toolchain versions, so source cannot
 reproduce the `D0` delegation. Left as a documented codegen residual, not a source error.
@@ -88,7 +88,7 @@ python tools/linkcheck.py --json out.json
 
 ## Next
 
-WRONG is down to 1 (the `ModelAnim2` D0 thunk above). Re-run `linkcheck.py` after any
+WRONG is down to 1 (the `dExtAnm2Model_c` D0 thunk above). Re-run `linkcheck.py` after any
 harvest batch so newly banked matches with wrong destinations are caught while the source
 is fresh; the same repoint recipe applies. Closing more BLIND would need a fuller symbol
 table (addresses for the invented names).

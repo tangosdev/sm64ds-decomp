@@ -18,7 +18,7 @@
  * dScMgJump_c_classInit IS dScMgJump_c's FACTORY, and its own body says
  * so: it writes THIS class's vtable, and then writes _ZTV11dScMgJump_c --
  * dScMgJump_c's own vtable, confirmed by RTTI -- and only AFTER that derived
- * vptr store does it construct the Model at 0x501c and the two tables.
+ * vptr store does it construct the dExtSimpleModel_c at 0x501c and the two tables.
  * Everything a factory builds after the derived vptr store belongs to the
  * derived class. 0x5834 is dScMgJump_c's size.
  *
@@ -80,9 +80,20 @@ struct dScMgD3DBase_c : dScMgBase_c {
        slots 16 (D1) and 17 (D0). DEFINED INLINE, see the file banner. */
     virtual ~dScMgD3DBase_c() {}
 
+    /* Inline, and that is what the four factories show: each runs
+       dScMgBase_c's C2, stores this class's vtable, zeroes mDrawSubScreen,
+       steps over mCameras and constructs mSysTracker, with no call to any
+       dScMgD3DBase_c constructor (none exists in the cartridge). The zero is
+       a mem-initializer: written in the body it lands after mSysTracker's
+       construction instead of before the camera loop (measured on
+       dScMgJump_c_classInit). */
+    dScMgD3DBase_c() : mDrawSubScreen(0) {}
+
     /* Own copy, same reason dScMgBase_c has one -- unlocks D0 for the four
        descendants. */
-    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(ptr, data_020a0eac); }
+    void operator delete(void *ptr) {
+        Memory::Deallocate(ptr, (Heap *)data_020a0eac);
+    }
 
     /* --- overrides. 1, 2, 5, 7, 10 re-override slots dScMgBase_c already
            gave a body; 11 (AfterRender) is the first override below dScene_c's
@@ -135,37 +146,32 @@ struct dScMgD3DBase_c : dScMgBase_c {
                              screen (D3D_CaptureToSub), 0 for the main; both
                              factories zero it after the base constructor */
     u8 pad_4666[0x6];     /* 0x4666 */
-    /* 0x466c..0x47e4 is TWO ELEMENTS OF 0xbc, not flat state, and all four
-       factories say so: each runs `e = p + 0x466c; do { e += 0xbc; } while
-       (e != p + 0x47e4);`, and 0x47e4 - 0x466c = 0x178 = 2 * 0xbc. The
-       fourteen fields below prove the stride independently -- 0x470c..0x4724
-       and 0x47c8..0x47e0 are the SAME seven offsets within each element
-       (+0xa0..+0xb8), and all four children reference all fourteen. Kept as
-       flat names for now because the eight files that read them spell them
-       this way; typing it as a real array is its own change. */
-    /* AND EACH ELEMENT IS A MINIGAME CAMERA. Camera_UpdateMatrices (src/minigames/unit020bfec0.cpp)
+    /* 0x466c..0x47e4 is TWO ELEMENTS OF 0xbc, and all four factories say
+       so: each runs `e = p + 0x466c; do { e += 0xbc; } while (e != p +
+       0x47e4);`, and 0x47e4 - 0x466c = 0x178 = 2 * 0xbc. That empty loop is
+       what an array of a class with an empty inline constructor and no
+       destructor compiles to, which is why Camera declares one: with it,
+       `new dScMgJump_c` reproduces dScMgJump_c_classInit byte for byte.
+       The seven fields at +0xa0..+0xb8 prove the stride independently;
+       all four children set them for both elements. */
+    /* EACH ELEMENT IS A MINIGAME CAMERA. Camera_UpdateMatrices (src/minigames/unit020bfec0.cpp)
        carries the 0xbc layout: matrices in the head, `eye` at +0xa0, `target`
        at +0xac and `angle` at +0xb8. dScMgJump_c::InitResources settles which
        element is which by calling Camera_UpdateMatrices(this + 0x466c) and
-       Camera_UpdateMatrices(this + 0x4728) -- the two element bases -- so the
-       fourteen fields below are those three members of each. */
-    u8   pad_466c[0xa0];              /* 0x466c -- camera 0, matrices */
-    s32  mCamera0EyeX;                /* 0x470c */
-    s32  mCamera0EyeY;                /* 0x4710 */
-    s32  mCamera0EyeZ;                /* 0x4714 */
-    s32  mCamera0TargetX;             /* 0x4718 */
-    s32  mCamera0TargetY;             /* 0x471c */
-    s32  mCamera0TargetZ;             /* 0x4720 */
-    u16  mCamera0Angle;               /* 0x4724 */
-    u8   pad_4726[0xa2];              /* 0x4726 -- camera 1, matrices */
-    s32  mCamera1EyeX;                /* 0x47c8 */
-    s32  mCamera1EyeY;                /* 0x47cc */
-    s32  mCamera1EyeZ;                /* 0x47d0 */
-    s32  mCamera1TargetX;             /* 0x47d4 */
-    s32  mCamera1TargetY;             /* 0x47d8 */
-    s32  mCamera1TargetZ;             /* 0x47dc */
-    u16  mCamera1Angle;               /* 0x47e0 */
-    u8   pad_47e2[0x2];               /* 0x47e2 */
+       Camera_UpdateMatrices(this + 0x4728) -- the two element bases. */
+    struct Camera {
+        Camera() {}
+        u8 pad_00[0xa0]; /* 0x00 -- matrices */
+        s32 mEyeX;       /* 0xa0 */
+        s32 mEyeY;       /* 0xa4 */
+        s32 mEyeZ;       /* 0xa8 */
+        s32 mTargetX;    /* 0xac */
+        s32 mTargetY;    /* 0xb0 */
+        s32 mTargetZ;    /* 0xb4 */
+        u16 mAngle;      /* 0xb8 */
+        u8 pad_ba[0x2];  /* 0xba */
+    };
+    Camera mCameras[2];               /* 0x466c -- [0] main screen, [1] sub screen */
     Particle::SysTracker mSysTracker; /* 0x47e4 -- AfterInitResources initialises
                                           it, BeforeBehavior updates it, and all
                                           four children destroy it inline */
@@ -178,6 +184,8 @@ struct dScMgD3DBase_c : dScMgBase_c {
    both bounds. If this is short, all four children's fields land on the
    wrong bytes and build_pin says so at once. */
 #ifndef SM64DS_PLATFORM_PC
+typedef char
+    dScMgD3DBase_c_Camera_size_must_be_0xbc[sizeof(dScMgD3DBase_c::Camera) == 0xbc ? 1 : -1];
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgD3DBase_c_size_must_be_0x5004[sizeof(dScMgD3DBase_c) == 0x5004 ? 1 : -1];
 #endif

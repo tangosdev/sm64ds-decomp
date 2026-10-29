@@ -99,7 +99,7 @@
     "D1": {"address": "0x02115ee0", "size": "0x48", "vtable_slot": 16},
     "D0": {"address": "0x02115f28", "size": "0x5c", "vtable_slot": 17},
     "order_in_rom": "D1 at 0x02115ee0 immediately precedes D0 at 0x02115f28, and D1 is the first byte of ov065's whole .text section.",
-    "evidence": "Read from the cartridge. D1 stores the vptr 0x0211cba4, then destroys +0x364 (arm9 _ZN11ShadowModelD1Ev), +0x300 (_ZN9ModelAnimD1Ev), +0x144 (_ZN10dBgCh_ActrD1Ev), +0x110 (_ZN7dCcAc_cD1Ev) and tails into ov002 _ZN12dEnemyBase_cD2Ev. D0 repeats that same body verbatim (it does NOT call D1) and then loads arm9 GAME_HEAP_PTR (0x020a0eac) and calls arm9 _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE (0x0203c1e8). No _ZN6SnufitD2Ev or _ZN15daYurei_Mucho_cD2Ev exists in ANY symbols.txt in config/arm9 (searched arm9 + all 103 overlay files, case-sensitive, pattern 'Snufit|Yurei'; the 16 rows returned are listed under `symbols_txt_rows`).",
+    "evidence": "Read from the cartridge. D1 stores the vptr 0x0211cba4, then destroys +0x364 (arm9 _ZN11ShadowModelD1Ev), +0x300 (_ZN14dExtAnmModel_cD1Ev), +0x144 (_ZN10dBgCh_ActrD1Ev), +0x110 (_ZN7dCcAc_cD1Ev) and tails into ov002 _ZN12dEnemyBase_cD2Ev. D0 repeats that same body verbatim (it does NOT call D1) and then loads arm9 GAME_HEAP_PTR (0x020a0eac) and calls arm9 _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE (0x0203c1e8). No _ZN6SnufitD2Ev or _ZN15daYurei_Mucho_cD2Ev exists in ANY symbols.txt in config/arm9 (searched arm9 + all 103 overlay files, case-sensitive, pattern 'Snufit|Yurei'; the 16 rows returned are listed under `symbols_txt_rows`).",
     "lever_note_from_oracle": "INFERRED FROM THE ORACLE, not from the ROM: daObjCtMecha05_c's manifest states that one INLINE genuine destructor makes mwccarm 2004/b56 emit the retail D1-then-D0 pair with no D2. The ROM shape here is identical, so the same lever is the starting hypothesis. The nearby daObjCtKaitendai_c TU (same overlay, same shape) is only `text-verified` and its manifest records an unhandled `_ZN18daObjCtKaitendai_cD2Ev` -- i.e. the out-of-line form there produced a homeless D2. Take the inline form."
   },
   "text_span": {
@@ -157,7 +157,7 @@
     "subobjects_proven_by_ctor_and_dtor": [
       {"offset": "0x110", "type": "dCcAc_c",    "size": "0x34",  "evidence": "classInit `add r0,r4,#0x110; bl 0x20149c8` = arm9 _ZN7dCcAc_cC1Ev; D1/D0 `add r0,r4,#0x110; bl 0x20149a4` = _ZN7dCcAc_cD1Ev. 0x110 + 0x34 = 0x144, the next subobject."},
       {"offset": "0x144", "type": "dBgCh_Actr", "size": "0x1bc", "evidence": "classInit `add r0,r4,#0x144; bl 0x2037430` = arm9 _ZN10dBgCh_ActrC1Ev; destructors call 0x20373f8 = _ZN10dBgCh_ActrD1Ev. 0x144 + 0x1bc = 0x300."},
-      {"offset": "0x300", "type": "ModelAnim",  "size": "0x64",  "evidence": "classInit `add r0,r4,#0x300; bl 0x2016958` = arm9 _ZN9ModelAnimC1Ev; destructors call 0x201691c = _ZN9ModelAnimD1Ev. 0x300 + 0x64 = 0x364."},
+      {"offset": "0x300", "type": "dExtAnmModel_c",  "size": "0x64",  "evidence": "classInit `add r0,r4,#0x300; bl 0x2016958` = arm9 _ZN14dExtAnmModel_cC1Ev; destructors call 0x201691c = _ZN14dExtAnmModel_cD1Ev. 0x300 + 0x64 = 0x364."},
       {"offset": "0x364", "type": "ShadowModel","size": "0x28",  "evidence": "classInit `add r0,r4,#0x364; bl 0x2016068` = arm9 _ZN11ShadowModelC1Ev; destructors call 0x2015ff8 = _ZN11ShadowModelD1Ev. 0x364 + 0x28 = 0x38c."}
     ],
     "own_field_offsets_touched": [
@@ -172,7 +172,7 @@
       {"offset": "0x3d8", "width": "4", "evidence": "Behavior `add r2,r4,#0x3d8; ldr r0,[r2]; add r0,r0,#0x200; str r0,[r2]`, then re-reads it, sign-extends the low 16 bits and uses them as an index into arm9 data_02082214. A 32-bit counter read as a 16-bit angle, advanced 0x200 per frame."},
       {"offset": "0x3dc", "width": "4", "evidence": "func_ov065_02116588 does `str #0,[r4,#0x3dc]`; func_ov065_02116364 does `ldr r0,[r6,#0x3dc]; cmp r0,#3; bge` and later `add r3,r6,#0x3dc; str r2,[r3]`. A small counter. NOTE: include/Snufit.h currently spells 0x3dc as `pad_3dc[0x8]`; the cartridge reads and writes it."}
     ],
-    "measurement": "Every immediate load/store and ADD-immediate in the 0x1068-byte run was decoded and grouped by displacement (base registers r13/r15 excluded). The complete set of displacements >= 0x100 seen is: 0x100 0x107 0x108 0x10a 0x10c 0x110 0x130 0x134 0x144 0x200 0x300 0x314 0x31c 0x350 0x358 0x35c 0x364 0x38c 0x3bc 0x3c0 0x3c4 0x3c8 0x3cc 0x3d0 0x3d4 0x3d8 0x3dc, plus 0x6f9/0x6fb (on a Player* returned by arm9 0x02010ad8, not on this) and 0xb4000 (a constant addend, not a field). 0x314/0x31c/0x350/0x358/0x35c fall inside the ModelAnim subobject; 0x100..0x10c inside dEnemyBase_c."
+    "measurement": "Every immediate load/store and ADD-immediate in the 0x1068-byte run was decoded and grouped by displacement (base registers r13/r15 excluded). The complete set of displacements >= 0x100 seen is: 0x100 0x107 0x108 0x10a 0x10c 0x110 0x130 0x134 0x144 0x200 0x300 0x314 0x31c 0x350 0x358 0x35c 0x364 0x38c 0x3bc 0x3c0 0x3c4 0x3c8 0x3cc 0x3d0 0x3d4 0x3d8 0x3dc, plus 0x6f9/0x6fb (on a Player* returned by arm9 0x02010ad8, not on this) and 0xb4000 (a constant addend, not a field). 0x314/0x31c/0x350/0x358/0x35c fall inside the dExtAnmModel_c subobject; 0x100..0x10c inside dEnemyBase_c."
   },
   "data_band": {
     "owned_by_this_class": "0x0211cb20..0x0211cc20 (0x100 bytes), the first 0x100 bytes of ov065's .data (which starts at 0x0211cb20). 0x0211cc20 begins the next class's identical block.",
@@ -208,7 +208,7 @@
       {"address": "0x0211d600", "size": "0x08", "what": "SharedFilePtr, Construct(0x430) via arm9 _ZN13SharedFilePtr9ConstructEj; destructor arm9 SharedFilePtr_Destruct_Anim registered with node 0x0211d62c. InitResources passes it to arm9 0x0201794c."},
       {"address": "0x0211d608", "size": "0x08", "what": "SharedFilePtr, Construct(0x42e), destructor node 0x0211d638. InitResources passes it to arm9 0x0201794c."},
       {"address": "0x0211d610", "size": "0x08", "what": "file handle, constructed by arm9 func_02017acc(0x42f), destructor arm9 func_02017ab4 with node 0x0211d644. InitResources resolves it via arm9 0x02017a3c and hands the result to ShadowModel at this+0x364."},
-      {"address": "0x0211d618", "size": "0x08", "what": "file handle, constructed by arm9 func_02017acc(0x42d), destructor node 0x0211d620. InitResources resolves it via arm9 0x02017a3c and hands the result to ModelAnim at this+0x300."},
+      {"address": "0x0211d618", "size": "0x08", "what": "file handle, constructed by arm9 func_02017acc(0x42d), destructor node 0x0211d620. InitResources resolves it via arm9 0x02017a3c and hands the result to dExtAnmModel_c at this+0x300."},
       {"address": "0x0211d620", "size": "0x0c", "what": "static-destructor registration node for 0x0211d618 (arm9 func_020731dc)"},
       {"address": "0x0211d62c", "size": "0x0c", "what": "registration node for 0x0211d600"},
       {"address": "0x0211d638", "size": "0x0c", "what": "registration node for 0x0211d608"},
@@ -342,7 +342,7 @@
       "copy_probes": [
         {
           "type": "Matrix4x3",
-          "result": "Available through ModelAnim/Model headers as Matrix3x3 plus non-POD Vector3. Replacing the POD Mtx43 copies grows func_ov065_0211696c from 0x17c to 0x1c8."
+          "result": "Available through dExtAnmModel_c/dExtSimpleModel_c headers as Matrix3x3 plus non-POD Vector3. Replacing the POD Mtx43 copies grows func_ov065_0211696c from 0x17c to 0x1c8."
         },
         {
           "type": "Vector3",

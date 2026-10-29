@@ -203,8 +203,8 @@
     },
     {
       "offset": "0x300",
-      "type": "ModelAnim",
-      "evidence": "classInit 'add r0,r4,#0x300' -> bl 0x02016958 (ModelAnim ctor); D1 destroys it 2nd"
+      "type": "dExtAnmModel_c",
+      "evidence": "classInit 'add r0,r4,#0x300' -> bl 0x02016958 (dExtAnmModel_c ctor); D1 destroys it 2nd"
     },
     {
       "offset": "0x364",

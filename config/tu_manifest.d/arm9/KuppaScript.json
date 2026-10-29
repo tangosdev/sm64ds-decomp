@@ -1,0 +1,3942 @@
+{
+  "id": "arm9/KuppaScript",
+  "module": "arm9",
+  "source": "src/KuppaScript.cpp",
+  "promoted_source": "src/KuppaScript.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x0200e494..0x0200f0bc, 19 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
+    "BOTTOM EDGE: src/engine/view/d_camera.cpp ends at 0x0200e494 with dCamera_c_classInit (0x0200e444..0x0200e494), the class factory that closes that TU; its own manifest (arm9/dCamera_c) already names the helpers at 0x0200e494 as a different data table with no camera receiver. The seven functions 0x0200e494..0x0200e748 are not camera code: RunDemoCommand (e494) and RunPlayerCommand (e5ac) are called only from ProcessKuppaScript (bl at 0x0200ed84 for command >= 0x12, bl at 0x0200ed68 for command <= 3) and take the command record plus its first/last frame; SpawnDemoActor/FindDemoActor (e4e4/e55c) walk the 16-word actor-ID table data_0209b2a4 that EndKuppaScript and ResetKuppaScript also clear; SpawnScriptPlayer/FindScriptPlayer (e5fc/e6d8) walk the 4-word data_0209b284 that EndKuppaScript and ResetKuppaScript clear; ReadUnalignedSignedInt (e728) is the signed twin of ReadUnalignedInt (byte-identical body) and opens the four unaligned script-argument readers.",
+    "TOP EDGE: func_0200f0bc (0x0200f0bc) maps GetOwnerLanguage to a localized-asset index for func_0200f13c/func_0200f220 and the d_s_entry/d_s_mb scenes. It touches no script state, so ResetKuppaScript (0x0200f04c..0x0200f0bc) is the last function of this file.",
+    "STATE: every function here reads or writes the script state at data_0209fc48 (running script), data_0209fc4c (saved script), data_0209b274 (frame), data_0209b270 (spawned-player count), data_0209b284 (player IDs) or data_0209b2a4 (cutscene-actor IDs), or is called only by a function that does (ReadUnaligned*, the Find/Spawn helpers). StartIntroCutscene, StartEndingCutscene and RunStarCameraScript are the script entry points that bracket RunKuppaScript.",
+    "INITIALIZER AND DATA: __sinit_02073e6c (.init 0x02073e6c..0x02074d90, .ctor word 0x02086b64) is this file's static initializer. It stores, byte by byte, the addresses that the scripts this file runs hold in their records (INTRO_CUTSCENE data_020890a0, FALL_IN_FRONT_OF_CASTLE_CUTSCENE data_02089608, the staff roll data_02088fb8, the ending flight data_02088610, data_02087c00 and 33 more), then constructs the dFdColor_c fader data_0209b294 that the fade commands drive and registers its destructor on node 0x0209b278. The .data run 0x0208751c..0x0208a0e0 is those scripts, the 55 camera paths and point lists their camera records name, and the six-entry star-camera table data_020876e4 RunStarCameraScript indexes; every object in it is referenced only from inside the run or by this file. The .bss run 0x0209b270..0x0209b2e4 is the player count, frame counter, node, player-ID table, fader and demo-actor-ID table, in that order.",
+    "NOT CLAIMED: gRunningKuppaScript and gSavedKuppaScript (0x0209fc48/0x0209fc4c). They are this file's state but sit in a second .bss run, apart from 0x0209b270..0x0209b2e4, and one object cannot place a definition in two runs, so they stay extern."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0200e494",
+      "end": "0x0200f0bc"
+    },
+    {
+      "name": ".init",
+      "start": "0x02073e6c",
+      "end": "0x02074d90"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02086b64",
+      "end": "0x02086b68"
+    },
+    {
+      "name": ".data",
+      "start": "0x0208751c",
+      "end": "0x0208a0e0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0209b270",
+      "end": "0x0209b2e4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "RunDemoCommand",
+      "address": "0x0200e494",
+      "size": "0x00000050",
+      "legacy_source": "src/unnamed/arm9/0200/func_0200e494.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "SpawnDemoActor",
+      "address": "0x0200e4e4",
+      "size": "0x00000078",
+      "legacy_source": "src/unnamed/arm9/0200/func_0200e4e4.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "FindDemoActor",
+      "address": "0x0200e55c",
+      "size": "0x00000050",
+      "legacy_source": "src/unnamed/arm9/0200/func_0200e55c.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "RunPlayerCommand",
+      "address": "0x0200e5ac",
+      "size": "0x00000050",
+      "legacy_source": "src/unnamed/arm9/0200/func_0200e5ac.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "SpawnScriptPlayer",
+      "address": "0x0200e5fc",
+      "size": "0x000000dc",
+      "legacy_source": "src/unnamed/arm9/0200/func_0200e5fc.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "FindScriptPlayer",
+      "address": "0x0200e6d8",
+      "size": "0x00000050",
+      "legacy_source": "src/unnamed/arm9/0200/func_0200e6d8.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "ReadUnalignedSignedInt",
+      "address": "0x0200e728",
+      "size": "0x00000020",
+      "legacy_source": "src/unnamed/arm9/0200/func_0200e728.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "ReadUnalignedInt",
+      "address": "0x0200e748",
+      "size": "0x00000020",
+      "legacy_source": "src/ReadUnalignedInt.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "ReadUnalignedShort",
+      "address": "0x0200e768",
+      "size": "0x00000018",
+      "legacy_source": "src/ReadUnalignedShort.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "ReadUnalignedUshort",
+      "address": "0x0200e780",
+      "size": "0x00000018",
+      "legacy_source": "src/ReadUnalignedUshort.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "EndKuppaScript",
+      "address": "0x0200e798",
+      "size": "0x0000013c",
+      "legacy_source": "src/EndKuppaScript.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "ProcessKuppaScript",
+      "address": "0x0200e8d4",
+      "size": "0x00000594",
+      "legacy_source": "src/ProcessKuppaScript.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "IsStarCameraScript3Running",
+      "address": "0x0200ee68",
+      "size": "0x00000024",
+      "legacy_source": "src/unnamed/arm9/0200/func_0200ee68.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "RunStarCameraScript",
+      "address": "0x0200ee8c",
+      "size": "0x0000003c",
+      "legacy_source": "src/unnamed/arm9/0200/func_0200ee8c.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "StartEndingCutscene",
+      "address": "0x0200eec8",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0200/func_0200eec8.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "StartIntroCutscene",
+      "address": "0x0200eedc",
+      "size": "0x00000028",
+      "legacy_source": "src/StartIntroCutscene.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "RunKuppaScript",
+      "address": "0x0200ef04",
+      "size": "0x0000007c",
+      "legacy_source": "src/RunKuppaScript.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "ContinueKuppaScriptIfNecessary",
+      "address": "0x0200ef80",
+      "size": "0x000000cc",
+      "legacy_source": "src/ContinueKuppaScriptIfNecessary.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "ResetKuppaScript",
+      "address": "0x0200f04c",
+      "size": "0x00000070",
+      "legacy_source": "src/ResetKuppaScript.c",
+      "ordinal": 18
+    }
+  ],
+  "data": [
+    {
+      "symbol": "data_0208751c",
+      "address": "0x0208751c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02088140}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087524",
+      "address": "0x02087524",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {35, data_020894f0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208752c",
+      "address": "0x0208752c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {10, data_02088660}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087534",
+      "address": "0x02087534",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087e60}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208753c",
+      "address": "0x0208753c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {35, data_020893d8}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087544",
+      "address": "0x02087544",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {9, data_020883d0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208754c",
+      "address": "0x0208754c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {6, data_02087828}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087554",
+      "address": "0x02087554",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087f08}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208755c",
+      "address": "0x0208755c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02088080}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087564",
+      "address": "0x02087564",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_020880c0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208756c",
+      "address": "0x0208756c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {9, data_02088538}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087574",
+      "address": "0x02087574",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {9, data_02088460}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208757c",
+      "address": "0x0208757c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {9, data_020884a8}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087584",
+      "address": "0x02087584",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087d80}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208758c",
+      "address": "0x0208758c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {11, data_02088898}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087594",
+      "address": "0x02087594",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {9, data_020884f0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208759c",
+      "address": "0x0208759c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {6, data_020877c8}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875a4",
+      "address": "0x020875a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {10, data_020887a0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875ac",
+      "address": "0x020875ac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02088180}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875b4",
+      "address": "0x020875b4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087e28}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875bc",
+      "address": "0x020875bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {35, data_020891a8}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875c4",
+      "address": "0x020875c4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {11, data_02088840}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875cc",
+      "address": "0x020875cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02088300}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875d4",
+      "address": "0x020875d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {10, data_020886b0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875dc",
+      "address": "0x020875dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02088040}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875e4",
+      "address": "0x020875e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087c68}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875ec",
+      "address": "0x020875ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087ed0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875f4",
+      "address": "0x020875f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {9, data_02088418}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020875fc",
+      "address": "0x020875fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {9, data_020885c8}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087604",
+      "address": "0x02087604",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {20, data_02088c2c}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208760c",
+      "address": "0x0208760c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087d10}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087614",
+      "address": "0x02087614",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {10, data_020887f0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208761c",
+      "address": "0x0208761c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087e98}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087624",
+      "address": "0x02087624",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02088100}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208762c",
+      "address": "0x0208762c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_020881c0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087634",
+      "address": "0x02087634",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087d48}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208763c",
+      "address": "0x0208763c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087ca0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087644",
+      "address": "0x02087644",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {23, data_02088d80}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208764c",
+      "address": "0x0208764c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02087fc0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087654",
+      "address": "0x02087654",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087db8}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208765c",
+      "address": "0x0208765c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02088240}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087664",
+      "address": "0x02087664",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {23, data_02088e38}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208766c",
+      "address": "0x0208766c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {35, data_020892c0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087674",
+      "address": "0x02087674",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {10, data_02088750}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208767c",
+      "address": "0x0208767c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02087f80}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087684",
+      "address": "0x02087684",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_020882c0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208768c",
+      "address": "0x0208768c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02088200}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_02087694",
+      "address": "0x02087694",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087df0}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_0208769c",
+      "address": "0x0208769c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {6, data_020877f8}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020876a4",
+      "address": "0x020876a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {9, data_02088580}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020876ac",
+      "address": "0x020876ac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02088280}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020876b4",
+      "address": "0x020876b4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {10, data_02088700}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020876bc",
+      "address": "0x020876bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {6, data_02087798}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020876c4",
+      "address": "0x020876c4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {8, data_02088000}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020876cc",
+      "address": "0x020876cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "KuppaScriptPath {7, data_02087cd8}: a camera path a camera record names; retail second word relocates to the points"
+    },
+    {
+      "symbol": "data_020876d4",
+      "address": "0x020876d4",
+      "size": "0xe",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated"
+    },
+    {
+      "symbol": "data_020876e4",
+      "address": "0x020876e4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "the six star-camera scripts RunStarCameraScript indexes by setting; six ABS32 words"
+    },
+    {
+      "symbol": "data_020876fc",
+      "address": "0x020876fc",
+      "size": "0x1d",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_0208771c",
+      "address": "0x0208771c",
+      "size": "0x23",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087740",
+      "address": "0x02087740",
+      "size": "0x2a",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_0208776c",
+      "address": "0x0208776c",
+      "size": "0x2c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated"
+    },
+    {
+      "symbol": "data_02087798",
+      "address": "0x02087798",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "6 KuppaScriptPathPoint records of path data_020876bc; the last point has index -1"
+    },
+    {
+      "symbol": "data_020877c8",
+      "address": "0x020877c8",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "6 KuppaScriptPathPoint records of path data_0208759c; the last point has index -1"
+    },
+    {
+      "symbol": "data_020877f8",
+      "address": "0x020877f8",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "6 KuppaScriptPathPoint records of path data_0208769c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087828",
+      "address": "0x02087828",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "6 KuppaScriptPathPoint records of path data_0208754c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087858",
+      "address": "0x02087858",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_0208788c",
+      "address": "0x0208788c",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_020878c0",
+      "address": "0x020878c0",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_020878f4",
+      "address": "0x020878f4",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087928",
+      "address": "0x02087928",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_0208795c",
+      "address": "0x0208795c",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087990",
+      "address": "0x02087990",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_020879c4",
+      "address": "0x020879c4",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_020879f8",
+      "address": "0x020879f8",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087a2c",
+      "address": "0x02087a2c",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087a60",
+      "address": "0x02087a60",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087a94",
+      "address": "0x02087a94",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087ac8",
+      "address": "0x02087ac8",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087afc",
+      "address": "0x02087afc",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087b30",
+      "address": "0x02087b30",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087b64",
+      "address": "0x02087b64",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087b98",
+      "address": "0x02087b98",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087bcc",
+      "address": "0x02087bcc",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087c00",
+      "address": "0x02087c00",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087c34",
+      "address": "0x02087c34",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087c68",
+      "address": "0x02087c68",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_020875e4; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087ca0",
+      "address": "0x02087ca0",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_0208763c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087cd8",
+      "address": "0x02087cd8",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_020876cc; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087d10",
+      "address": "0x02087d10",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_0208760c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087d48",
+      "address": "0x02087d48",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_02087634; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087d80",
+      "address": "0x02087d80",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_02087584; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087db8",
+      "address": "0x02087db8",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_02087654; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087df0",
+      "address": "0x02087df0",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_02087694; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087e28",
+      "address": "0x02087e28",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_020875b4; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087e60",
+      "address": "0x02087e60",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_02087534; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087e98",
+      "address": "0x02087e98",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_0208761c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087ed0",
+      "address": "0x02087ed0",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_020875ec; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087f08",
+      "address": "0x02087f08",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "7 KuppaScriptPathPoint records of path data_02087554; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087f40",
+      "address": "0x02087f40",
+      "size": "0x3e",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02087f80",
+      "address": "0x02087f80",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_0208767c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02087fc0",
+      "address": "0x02087fc0",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_0208764c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088000",
+      "address": "0x02088000",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_020876c4; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088040",
+      "address": "0x02088040",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_020875dc; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088080",
+      "address": "0x02088080",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_0208755c; the last point has index -1"
+    },
+    {
+      "symbol": "data_020880c0",
+      "address": "0x020880c0",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_02087564; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088100",
+      "address": "0x02088100",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_02087624; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088140",
+      "address": "0x02088140",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_0208751c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088180",
+      "address": "0x02088180",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_020875ac; the last point has index -1"
+    },
+    {
+      "symbol": "data_020881c0",
+      "address": "0x020881c0",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_0208762c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088200",
+      "address": "0x02088200",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_0208768c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088240",
+      "address": "0x02088240",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_0208765c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088280",
+      "address": "0x02088280",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_020876ac; the last point has index -1"
+    },
+    {
+      "symbol": "data_020882c0",
+      "address": "0x020882c0",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_02087684; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088300",
+      "address": "0x02088300",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "8 KuppaScriptPathPoint records of path data_020875cc; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088340",
+      "address": "0x02088340",
+      "size": "0x45",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02088388",
+      "address": "0x02088388",
+      "size": "0x45",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated"
+    },
+    {
+      "symbol": "data_020883d0",
+      "address": "0x020883d0",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "9 KuppaScriptPathPoint records of path data_02087544; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088418",
+      "address": "0x02088418",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "9 KuppaScriptPathPoint records of path data_020875f4; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088460",
+      "address": "0x02088460",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "9 KuppaScriptPathPoint records of path data_02087574; the last point has index -1"
+    },
+    {
+      "symbol": "data_020884a8",
+      "address": "0x020884a8",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "9 KuppaScriptPathPoint records of path data_0208757c; the last point has index -1"
+    },
+    {
+      "symbol": "data_020884f0",
+      "address": "0x020884f0",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "9 KuppaScriptPathPoint records of path data_02087594; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088538",
+      "address": "0x02088538",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "9 KuppaScriptPathPoint records of path data_0208756c; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088580",
+      "address": "0x02088580",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "9 KuppaScriptPathPoint records of path data_020876a4; the list is bounded by its path count (last index 0)"
+    },
+    {
+      "symbol": "data_020885c8",
+      "address": "0x020885c8",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "9 KuppaScriptPathPoint records of path data_020875fc; the list is bounded by its path count (last index 0)"
+    },
+    {
+      "symbol": "data_02088610",
+      "address": "0x02088610",
+      "size": "0x4d",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02088660",
+      "address": "0x02088660",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "10 KuppaScriptPathPoint records of path data_0208752c; the last point has index -1"
+    },
+    {
+      "symbol": "data_020886b0",
+      "address": "0x020886b0",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "10 KuppaScriptPathPoint records of path data_020875d4; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088700",
+      "address": "0x02088700",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "10 KuppaScriptPathPoint records of path data_020876b4; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088750",
+      "address": "0x02088750",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "10 KuppaScriptPathPoint records of path data_02087674; the last point has index -1"
+    },
+    {
+      "symbol": "data_020887a0",
+      "address": "0x020887a0",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "10 KuppaScriptPathPoint records of path data_020875a4; the last point has index -1"
+    },
+    {
+      "symbol": "data_020887f0",
+      "address": "0x020887f0",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "10 KuppaScriptPathPoint records of path data_02087614; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088840",
+      "address": "0x02088840",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "11 KuppaScriptPathPoint records of path data_020875c4; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088898",
+      "address": "0x02088898",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "11 KuppaScriptPathPoint records of path data_0208758c; the last point has index -1"
+    },
+    {
+      "symbol": "data_020888f0",
+      "address": "0x020888f0",
+      "size": "0x5c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated"
+    },
+    {
+      "symbol": "data_0208894c",
+      "address": "0x0208894c",
+      "size": "0x63",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_020889b0",
+      "address": "0x020889b0",
+      "size": "0x67",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated"
+    },
+    {
+      "symbol": "data_02088a18",
+      "address": "0x02088a18",
+      "size": "0x7c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02088a94",
+      "address": "0x02088a94",
+      "size": "0x7d",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 5 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02088b14",
+      "address": "0x02088b14",
+      "size": "0x8b",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated"
+    },
+    {
+      "symbol": "data_02088ba0",
+      "address": "0x02088ba0",
+      "size": "0x8c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02088c2c",
+      "address": "0x02088c2c",
+      "size": "0xa0",
+      "binding": "STB_GLOBAL",
+      "evidence": "20 KuppaScriptPathPoint records of path data_02087604; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088ccc",
+      "address": "0x02088ccc",
+      "size": "0xb3",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02088d80",
+      "address": "0x02088d80",
+      "size": "0xb8",
+      "binding": "STB_GLOBAL",
+      "evidence": "23 KuppaScriptPathPoint records of path data_02087644; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088e38",
+      "address": "0x02088e38",
+      "size": "0xb8",
+      "binding": "STB_GLOBAL",
+      "evidence": "23 KuppaScriptPathPoint records of path data_02087664; the last point has index -1"
+    },
+    {
+      "symbol": "data_02088ef0",
+      "address": "0x02088ef0",
+      "size": "0xc6",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02088fb8",
+      "address": "0x02088fb8",
+      "size": "0xe8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 2 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_020890a0",
+      "address": "0x020890a0",
+      "size": "0x108",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 5 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_020891a8",
+      "address": "0x020891a8",
+      "size": "0x118",
+      "binding": "STB_GLOBAL",
+      "evidence": "35 KuppaScriptPathPoint records of path data_020875bc; the last point has index -1"
+    },
+    {
+      "symbol": "data_020892c0",
+      "address": "0x020892c0",
+      "size": "0x118",
+      "binding": "STB_GLOBAL",
+      "evidence": "35 KuppaScriptPathPoint records of path data_0208766c; the last point has index -1"
+    },
+    {
+      "symbol": "data_020893d8",
+      "address": "0x020893d8",
+      "size": "0x118",
+      "binding": "STB_GLOBAL",
+      "evidence": "35 KuppaScriptPathPoint records of path data_0208753c; the last point has index -1"
+    },
+    {
+      "symbol": "data_020894f0",
+      "address": "0x020894f0",
+      "size": "0x118",
+      "binding": "STB_GLOBAL",
+      "evidence": "35 KuppaScriptPathPoint records of path data_02087524; the last point has index -1"
+    },
+    {
+      "symbol": "data_02089608",
+      "address": "0x02089608",
+      "size": "0x245",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02089850",
+      "address": "0x02089850",
+      "size": "0x2a8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 2 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02089af8",
+      "address": "0x02089af8",
+      "size": "0x2d4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
+    },
+    {
+      "symbol": "data_02089dcc",
+      "address": "0x02089dcc",
+      "size": "0x314",
+      "binding": "STB_GLOBAL",
+      "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer; declared [0x314] so the array also covers the two zero bytes of ALIGN(4) fill after its terminator, the end of the .data claim"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "gKuppaScriptNumPlayers",
+      "address": "0x0209b270",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "players the running script has spawned; SpawnScriptPlayer counts up, EndKuppaScript/ResetKuppaScript clear"
+    },
+    {
+      "symbol": "gKuppaScriptFrame",
+      "address": "0x0209b274",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "the running script's frame counter ProcessKuppaScript compares each record's window against"
+    },
+    {
+      "symbol": "@259",
+      "address": "0x0209b278",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for data_0209b294; retail __sinit_02073e6c passes it as the third argument of its __register_global_object call"
+    },
+    {
+      "symbol": "gKuppaScriptPlayerIDs",
+      "address": "0x0209b284",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "actor IDs of the players a script spawned, by character; SpawnScriptPlayer/FindScriptPlayer walk it"
+    },
+    {
+      "symbol": "data_0209b294",
+      "address": "0x0209b294",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "namespace-scope dFdColor_c (sizeof 0x10), the fader the script fade commands drive; the initializer runs its inline constructor (dFader_c, dFdBrightness_c, dFdColor_c vptrs, currInterp 0x1000, speed 0, color 0) and registers its destructor"
+    },
+    {
+      "symbol": "gDemoActorIDs",
+      "address": "0x0209b2a4",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "actor IDs of the daDemo_c cutscene actors a script spawned; SpawnDemoActor/FindDemoActor walk it"
+    }
+  ],
+  "compiler_only_output": [],
+  "notes": [
+    "HAND-BUILT manifest entry -- the `main` module is unsegmentable, so there is no tubuild create candidate id.",
+    "No ROM RTTI names this code; KuppaScript is the tree's established name for it (RunKuppaScript, EndKuppaScript, ProcessKuppaScript, ...), so the file takes that coined name per AGENTS.md. Every function keeps C linkage: C sources bind FindDemoActor, FindScriptPlayer, ReadUnaligned*, and the rest are declared extern \"C\" by their C++ callers.",
+    "ROM-ascending under `#pragma defer_codegen off`; the opt_common_subs off bracket ProcessKuppaScript needs binds to that function only.",
+    "Pointer bytes: a script is a u8 array whose records hold unaligned addresses, spelled KS_PTR(p) = (u32)&p & 0xff, ((u32)&p >> 8) & 0xff, ... Those bytes are zero in .data and stored by the initializer, in definition order, so the 38 patched scripts are defined in retail's store order and the fader after them. The & 0xff masks are load-bearing: (u8) casts instead give an initializer 0x5c bytes short.",
+    "False relocations: dsd had read 11 words of script bytes (frame numbers and arguments) inside 0x0208751c..0x0208a0e0 as pointers; they are dropped from config/arm9/relocs.txt."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-KuppaScript/KuppaScript.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 19,
+    "functions_declared": 19,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-KuppaScript/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0200e494",
+        "end": "0x0200f0bc",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0200e494",
+          "end": "0x0200f0bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02073e6c",
+          "end": "0x02074d90",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02086b64",
+          "end": "0x02086b68",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0208751c",
+          "end": "0x0208a0e0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0209b270",
+          "end": "0x0209b2e4",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 182
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              258
+            ],
+            "desired": [
+              258
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              256
+            ],
+            "desired": [
+              256
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              37,
+              39,
+              41,
+              43,
+              45,
+              47,
+              49,
+              51,
+              53,
+              55,
+              57,
+              59,
+              61,
+              63,
+              65,
+              67,
+              69,
+              71,
+              73,
+              75,
+              77,
+              79,
+              81,
+              83,
+              85,
+              87,
+              89,
+              91,
+              93,
+              95,
+              97,
+              99,
+              101,
+              103,
+              105,
+              107,
+              109,
+              111,
+              113,
+              115,
+              118,
+              121,
+              123,
+              124,
+              125,
+              126,
+              127,
+              128,
+              129,
+              130,
+              131,
+              132,
+              133,
+              134,
+              135,
+              136,
+              137,
+              138,
+              139,
+              140,
+              141,
+              142,
+              143,
+              144,
+              145,
+              146,
+              147,
+              148,
+              149,
+              150,
+              151,
+              152,
+              153,
+              154,
+              155,
+              156,
+              157,
+              158,
+              159,
+              160,
+              161,
+              162,
+              163,
+              164,
+              165,
+              166,
+              167,
+              168,
+              169,
+              170,
+              171,
+              172,
+              173,
+              174,
+              175,
+              176,
+              177,
+              178,
+              179,
+              181,
+              182,
+              183,
+              184,
+              185,
+              186,
+              187,
+              188,
+              189,
+              190,
+              191,
+              192,
+              193,
+              194,
+              195,
+              196,
+              197,
+              198,
+              199,
+              200,
+              201,
+              202,
+              203,
+              204,
+              205,
+              206,
+              207,
+              208,
+              209,
+              210,
+              211,
+              212,
+              213,
+              214,
+              215,
+              216,
+              217,
+              218,
+              219,
+              220,
+              221
+            ],
+            "desired": [
+              21,
+              89,
+              51,
+              81,
+              73,
+              65,
+              97,
+              101,
+              49,
+              115,
+              61,
+              35,
+              91,
+              13,
+              79,
+              45,
+              27,
+              11,
+              19,
+              85,
+              63,
+              43,
+              23,
+              93,
+              107,
+              47,
+              57,
+              25,
+              41,
+              7,
+              55,
+              69,
+              87,
+              59,
+              77,
+              37,
+              113,
+              15,
+              99,
+              53,
+              71,
+              33,
+              17,
+              109,
+              83,
+              29,
+              67,
+              95,
+              75,
+              111,
+              31,
+              105,
+              39,
+              103,
+              9,
+              118,
+              121,
+              123,
+              124,
+              125,
+              126,
+              127,
+              128,
+              129,
+              130,
+              145,
+              146,
+              149,
+              148,
+              150,
+              131,
+              132,
+              133,
+              134,
+              135,
+              136,
+              137,
+              138,
+              139,
+              140,
+              141,
+              143,
+              144,
+              147,
+              142,
+              154,
+              155,
+              156,
+              157,
+              158,
+              159,
+              160,
+              161,
+              162,
+              163,
+              151,
+              152,
+              153,
+              164,
+              165,
+              166,
+              167,
+              168,
+              169,
+              170,
+              171,
+              172,
+              173,
+              174,
+              175,
+              176,
+              177,
+              178,
+              179,
+              181,
+              182,
+              183,
+              184,
+              185,
+              186,
+              187,
+              188,
+              189,
+              190,
+              191,
+              192,
+              193,
+              194,
+              195,
+              196,
+              197,
+              198,
+              199,
+              200,
+              201,
+              202,
+              203,
+              204,
+              205,
+              206,
+              207,
+              208,
+              209,
+              210,
+              211,
+              212,
+              213,
+              214,
+              215,
+              216,
+              217,
+              218,
+              219,
+              220,
+              221
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              117,
+              119,
+              120,
+              180
+            ],
+            "desired": [
+              5,
+              6,
+              117,
+              119,
+              120,
+              180
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                19,
+                21,
+                23,
+                25,
+                27,
+                29,
+                31,
+                33,
+                35,
+                37,
+                39,
+                41,
+                43,
+                45,
+                47,
+                49,
+                51,
+                53,
+                55,
+                57,
+                59,
+                61,
+                63,
+                65,
+                67,
+                69,
+                71,
+                73,
+                75,
+                77,
+                79,
+                81,
+                83,
+                85,
+                87,
+                89,
+                91,
+                93,
+                95,
+                97,
+                99,
+                101,
+                103,
+                105,
+                107,
+                109,
+                111,
+                113,
+                115,
+                118,
+                121,
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129,
+                130,
+                131,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141,
+                142,
+                143,
+                144,
+                145,
+                146,
+                147,
+                148,
+                149,
+                150,
+                151,
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158,
+                159,
+                160,
+                161,
+                162,
+                163,
+                164,
+                165,
+                166,
+                167,
+                168,
+                169,
+                170,
+                171,
+                172,
+                173,
+                174,
+                175,
+                176,
+                177,
+                178,
+                179,
+                181,
+                182,
+                183,
+                184,
+                185,
+                186,
+                187,
+                188,
+                189,
+                190,
+                191,
+                192,
+                193,
+                194,
+                195,
+                196,
+                197,
+                198,
+                199,
+                200,
+                201,
+                202,
+                203,
+                204,
+                205,
+                206,
+                207,
+                208,
+                209,
+                210,
+                211,
+                212,
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219,
+                220,
+                221
+              ],
+              "desired": [
+                21,
+                89,
+                51,
+                81,
+                73,
+                65,
+                97,
+                101,
+                49,
+                115,
+                61,
+                35,
+                91,
+                13,
+                79,
+                45,
+                27,
+                11,
+                19,
+                85,
+                63,
+                43,
+                23,
+                93,
+                107,
+                47,
+                57,
+                25,
+                41,
+                7,
+                55,
+                69,
+                87,
+                59,
+                77,
+                37,
+                113,
+                15,
+                99,
+                53,
+                71,
+                33,
+                17,
+                109,
+                83,
+                29,
+                67,
+                95,
+                75,
+                111,
+                31,
+                105,
+                39,
+                103,
+                9,
+                118,
+                121,
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129,
+                130,
+                145,
+                146,
+                149,
+                148,
+                150,
+                131,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141,
+                143,
+                144,
+                147,
+                142,
+                154,
+                155,
+                156,
+                157,
+                158,
+                159,
+                160,
+                161,
+                162,
+                163,
+                151,
+                152,
+                153,
+                164,
+                165,
+                166,
+                167,
+                168,
+                169,
+                170,
+                171,
+                172,
+                173,
+                174,
+                175,
+                176,
+                177,
+                178,
+                179,
+                181,
+                182,
+                183,
+                184,
+                185,
+                186,
+                187,
+                188,
+                189,
+                190,
+                191,
+                192,
+                193,
+                194,
+                195,
+                196,
+                197,
+                198,
+                199,
+                200,
+                201,
+                202,
+                203,
+                204,
+                205,
+                206,
+                207,
+                208,
+                209,
+                210,
+                211,
+                212,
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219,
+                220,
+                221
+              ],
+              "slots": [
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                19,
+                21,
+                23,
+                25,
+                27,
+                29,
+                31,
+                33,
+                35,
+                37,
+                39,
+                41,
+                43,
+                45,
+                47,
+                49,
+                51,
+                53,
+                55,
+                57,
+                59,
+                61,
+                63,
+                65,
+                67,
+                69,
+                71,
+                73,
+                75,
+                77,
+                79,
+                81,
+                83,
+                85,
+                87,
+                89,
+                91,
+                93,
+                95,
+                97,
+                99,
+                101,
+                103,
+                105,
+                107,
+                109,
+                111,
+                113,
+                115,
+                118,
+                121,
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129,
+                130,
+                131,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141,
+                142,
+                143,
+                144,
+                145,
+                146,
+                147,
+                148,
+                149,
+                150,
+                151,
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158,
+                159,
+                160,
+                161,
+                162,
+                163,
+                164,
+                165,
+                166,
+                167,
+                168,
+                169,
+                170,
+                171,
+                172,
+                173,
+                174,
+                175,
+                176,
+                177,
+                178,
+                179,
+                181,
+                182,
+                183,
+                184,
+                185,
+                186,
+                187,
+                188,
+                189,
+                190,
+                191,
+                192,
+                193,
+                194,
+                195,
+                196,
+                197,
+                198,
+                199,
+                200,
+                201,
+                202,
+                203,
+                204,
+                205,
+                206,
+                207,
+                208,
+                209,
+                210,
+                211,
+                212,
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219,
+                220,
+                221
+              ]
+            }
+          ],
+          "symbolIndices": 155,
+          "sectionLinks": 0,
+          "sectionInfos": 56,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "production_mode": "intact-object",
+  "init": [
+    {
+      "symbol": "__sinit_KuppaScript.cpp",
+      "address": "0x02073e6c",
+      "size": "0xf24",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_02073e6c (0xf24: the byte stores of every script and path address the script initializers hold, then the fader's inline constructor and its registration)"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_KuppaScript.cpp",
+      "address": "0x02086b64",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the direct retail reference in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_KuppaScript.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_KuppaScript.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@259",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0209b278"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@557",
+      "to": "@259",
+      "evidence": "the compiler emits @557, which ov064 already defines as a global, so the pin is the unused @259"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02074bf0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088fb8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088fb8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020876a4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020876a4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875bc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875bc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875fc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875fc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02089af8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02089af8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208766c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208766c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020876d4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020876d4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087858",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087858"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875e4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875e4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088a94",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088a94"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087644",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087644"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020876cc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020876cc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087664",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087664"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208753c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208753c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087524",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087524"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020890a0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020890a0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208788c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208788c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020878c0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020878c0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208767c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208767c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087684",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087684"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208762c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208762c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875dc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020878f4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020878f4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208751c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208751c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875ac",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875ac"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087928",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087928"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087534",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087534"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208761c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208761c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208795c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208795c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087694",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087694"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875b4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875b4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087990",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087990"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087614",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087614"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020879c4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020879c4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087594",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087594"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875a4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875a4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208756c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208756c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020879f8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020879f8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087584",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087584"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074c9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087654",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087654"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074ca0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087a2c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087a2c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074ca4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208760c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208760c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074ca8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087634",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087634"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087a60",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087a60"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020876b4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020876b4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087674",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087674"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087a94",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087a94"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087574",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087574"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208757c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208757c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087ac8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087ac8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087544",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087544"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074ccc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875f4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875f4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087afc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087afc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208759c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208759c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208754c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208754c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cdc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087b30",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087b30"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074ce0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208752c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208752c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074ce4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875d4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875d4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074ce8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087b64",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087b64"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087554",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087554"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208763c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208763c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cf4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087c34",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087c34"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020876c4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020876c4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074cfc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208755c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208755c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087b98",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087b98"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087564",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087564"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208764c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208764c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087bcc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087bcc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020876ac",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020876ac"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875cc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875cc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087c00",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087c00"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087624",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087624"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208768c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208768c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02089dcc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02089dcc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875ec",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875ec"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088ef0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088ef0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088a18",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088a18"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02089850",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02089850"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208765c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208765c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088ba0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088ba0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020876bc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020876bc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208769c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208769c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088ccc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088ccc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208894c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208894c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208758c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208758c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020875c4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020875c4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087604",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087604"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020876fc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020876fc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087f40",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087f40"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208771c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208771c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088340",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088340"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02089608",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02089608"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087740",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087740"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088610",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088610"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTV8dFader_c",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0208eafc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0209b294",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0209b294"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTV15dFdBrightness_c",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0208eacc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTV10dFdColor_c",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0208eb2c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dFdColor_cD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020175c4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074d8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@259",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0209b278"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02086b64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_KuppaScript.cpp",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02073e6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087520",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088140",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087528",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020894f0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020894f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087530",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088660",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088660"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087538",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087e60",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087e60"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087540",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020893d8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020893d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087548",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020883d0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020883d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087550",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087828",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087828"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087558",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087f08",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087f08"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087560",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088080",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088080"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087568",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020880c0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020880c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087570",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088538",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088538"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087578",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088460",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088460"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087580",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020884a8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020884a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087588",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087d80",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087d80"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087590",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088898",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088898"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087598",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020884f0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020884f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020877c8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020877c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020887a0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020887a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088180",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088180"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087e28",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087e28"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020891a8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020891a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088840",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088840"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088300",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088300"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020886b0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020886b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088040",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088040"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087c68",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087c68"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087ed0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087ed0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020875f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088418",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088418"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087600",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020885c8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020885c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087608",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088c2c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088c2c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087610",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087d10",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087d10"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087618",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020887f0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020887f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087620",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087e98",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087e98"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087628",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088100",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088100"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087630",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020881c0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020881c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087638",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087d48",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087d48"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087640",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087ca0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087ca0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087648",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088d80",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088d80"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087650",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087fc0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087fc0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087658",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087db8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087db8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087660",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088240",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088240"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087668",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088e38",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088e38"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087670",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020892c0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020892c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087678",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088750",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088750"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087680",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087f80",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087f80"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087688",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020882c0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020882c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087690",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088200",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088200"
+    },
+    {
+      "section": ".data",
+      "source": "0x02087698",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087df0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087df0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020877f8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020877f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088580",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088580"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088280",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088280"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088700",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088700"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087798",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087798"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088000",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088000"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02087cd8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02087cd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088388",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088388"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020888f0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020888f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208776c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208776c"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020889b0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020889b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208776c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208776c"
+    },
+    {
+      "section": ".data",
+      "source": "0x020876f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02088b14",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02088b14"
+    }
+  ]
+}

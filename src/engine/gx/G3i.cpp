@@ -7,32 +7,24 @@
  * projection and streams it to the projection port. Both are static (no this)
  * and both optionally mirror the matrix into a caller's Matrix4x3.
  */
-// leftovers: PerspectiveW_ keeps its literal-mangled extern "C" name and C
-// body with an int * matrix (the six by-value Fix12<int> params are the
-// include/OAM.h ABI wall; the ROM bytes are the C front end's output).
-// func_02055998 keeps its address name (no recovered name exists).
+// leftovers: func_02055998 keeps its address name (no recovered name exists).
 #include "G3i.h"
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
+#include "cstd.h"
 
 extern "C" {
 void NormalizeVec3(Vector3 *v, Vector3 *out);
 void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
-int _ZN4cstd4fdivEii(int, int);
-int _ZN4cstd11fdiv_resultEv(void);
-s64 _ZN4cstd11ldiv_resultEv(void);
-void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(
-    int sinF, int cosF, int aspect, int n, int f, int scaleW, int flag,
-    int *mtx);
 }
 
-// @symbol _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3
-#pragma cplusplus off
-void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(
-    int sinF, int cosF, int aspect, int n, int f, int scaleW, int flag,
-    int *mtx)
-{
+// @symbol _ZN3G3i13PerspectiveW_EiiiiiiiP9Matrix4x3
+/* The Nitro SDK's G3i_PerspectiveW_: the load flag is a BOOL. Spelled bool,
+   the body tests it differently from the ROM; int reproduces it. */
+void G3i::PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i f, Fix12i scaleW,
+                        int flag, Matrix4x3 *mtxp) {
+    int *mtx = (int *)mtxp;
     int tmp;
     volatile int *port;
     int xx;
@@ -41,7 +33,7 @@ void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(
     int v;
     int wz;
 
-    tmp = _ZN4cstd4fdivEii(cosF, sinF);
+    tmp = cstd::fdiv(cosF, sinF);
     if (scaleW != 0x1000)
         tmp = tmp * scaleW / 0x1000;
 
@@ -65,7 +57,7 @@ void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(
         mtx[13] = 0;
         mtx[15] = 0;
     }
-    xx = _ZN4cstd11fdiv_resultEv();
+    xx = cstd::fdiv_result();
     *(volatile u64 *)0x4000290 = (u64)0x1000 << 32;
     *(volatile u64 *)0x4000298 = (unsigned)(n - f);
     if (flag) {
@@ -84,7 +76,7 @@ void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(
         mtx[0] = xx;
         mtx[5] = tmp;
     }
-    q = _ZN4cstd11ldiv_resultEv();
+    q = cstd::ldiv_result();
     if (scaleW != 0x1000)
         q = q * scaleW / 0x1000;
     zz = (int)(((f + n) * q + 0x80000000LL) >> 32);
@@ -103,12 +95,10 @@ void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(
         mtx[14] = wz;
     }
 }
-#pragma cplusplus on
 
 // @symbol _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3
-void G3i::LookAt_(const Vector3 *at, const Vector3 *up, const Vector3 *eye,
-                  bool draw, Matrix4x3 *mat)
-{
+void G3i::LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target, bool draw,
+                  Matrix4x3 *mat) {
     Vector3 forward;
     Vector3 right;
     Vector3 up2;
@@ -117,9 +107,11 @@ void G3i::LookAt_(const Vector3 *at, const Vector3 *up, const Vector3 *eye,
     Fix12i tz;
     volatile int *mtx;
 
-    forward.x = at->x - eye->x;
-    forward.y = at->y - eye->y;
-    forward.z = at->z - eye->z;
+    /* The view's z axis, from the target back toward the camera (the
+     * camera looks down -z). */
+    forward.x = camPos->x - target->x;
+    forward.y = camPos->y - target->y;
+    forward.z = camPos->z - target->z;
     NormalizeVec3(&forward, &forward);
 
     CrossVec3(up, &forward, &right);
@@ -141,9 +133,9 @@ void G3i::LookAt_(const Vector3 *at, const Vector3 *up, const Vector3 *eye,
         *mtx = forward.z;
     }
 
-    tx = -DotVec3(at, &right);
-    ty = -DotVec3(at, &up2);
-    tz = -DotVec3(at, &forward);
+    tx = -DotVec3(camPos, &right);
+    ty = -DotVec3(camPos, &up2);
+    tz = -DotVec3(camPos, &forward);
 
     if (draw) {
         *mtx = tx;

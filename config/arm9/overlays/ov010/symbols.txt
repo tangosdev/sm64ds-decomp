@@ -1,10 +1,10 @@
 _ZN14daObjC1_Trap_cD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
 _ZN14daObjC1_Trap_cD0Ev kind:function(arm,size=0x60) addr:0x021111ec
-_ZN14daObjC1_Trap_c6State4Ev kind:function(arm,size=0x10) addr:0x0211124c
-_ZN14daObjC1_Trap_c6State3Ev kind:function(arm,size=0x28) addr:0x0211125c
-_ZN14daObjC1_Trap_c6State2Ev kind:function(arm,size=0x30) addr:0x02111284
-_ZN14daObjC1_Trap_c6State1Ev kind:function(arm,size=0x6c) addr:0x021112b4
-_ZN14daObjC1_Trap_c6State0Ev kind:function(arm,size=0x7c) addr:0x02111320
+_ZN14daObjC1_Trap_c13StateHeldOpenEv kind:function(arm,size=0x10) addr:0x0211124c
+_ZN14daObjC1_Trap_c12StateClosingEv kind:function(arm,size=0x28) addr:0x0211125c
+_ZN14daObjC1_Trap_c9StateOpenEv kind:function(arm,size=0x30) addr:0x02111284
+_ZN14daObjC1_Trap_c12StateOpeningEv kind:function(arm,size=0x6c) addr:0x021112b4
+_ZN14daObjC1_Trap_c11StateClosedEv kind:function(arm,size=0x7c) addr:0x02111320
 _ZN14daObjC1_Trap_c10GetSpawnerEv kind:function(arm,size=0x54) addr:0x0211139c
 _ZN14daObjC1_Trap_c24UpdateCollisionTransformEv kind:function(arm,size=0x7c) addr:0x021113f0
 _ZN14daObjC1_Trap_c20UpdateModelTransformEv kind:function(arm,size=0xe8) addr:0x0211146c

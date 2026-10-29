@@ -10,7 +10,7 @@
 
 /* fwd */
 struct dCc_c;
-struct ModelAnim;
+struct dExtAnmModel_c;
 struct Player;
 struct Vector3_16;
 struct dBgCh_Actr;
@@ -40,9 +40,8 @@ struct dEnemyBase_c : dActor_c {
        evidence that took dActor_c's 0x0a4/0x0ac: the subclasses declare them and
        read them, and `X : dEnemyBase_c` cannot compile unless they exist. The counts
        are how many of dEnemyBase_c's 51 subclasses declare each -- 0x100 is in
-       twenty-eight of them, which is not a coincidence. The names stay unk_
-       where the meaning is unevidenced. */
-    s32 mEatingPlayer;            /* 0x0d0 -- 4 subclasses */
+       twenty-eight of them, which is not a coincidence. */
+    Player *mEatingPlayer;        /* 0x0d0 -- 4 subclasses */
     s32 mFloorNormalX;            /* 0x0d4 */
     s32 mFloorNormalY;            /* 0x0d8 */
     s32 mFloorNormalZ;            /* 0x0dc */
@@ -71,25 +70,35 @@ struct dEnemyBase_c : dActor_c {
        rebinds it. */
     s16 mStateTimer;              /* 0x100 */
     u16 mDeathTimer;              /* 0x102 */
-    u16 unk_104;                  /* 0x104 -- 5 subclasses */
+    /* UpdateYoshiEat sets it to 5 on the frame Yoshi spits the enemy out and
+       counts it down once a frame while the body flies. Subclasses read 5 as
+       "just spat out" and 0 as "back to normal collision". */
+    u16 mSpitOutTimer; /* 0x104 */
     /* Written by IsGoingOffCliff. 0: on the ground and the downward probe
        found an acceptable floor (also 0 when not on the ground; no probe
-       runs). 1: no floor within the probe, the hit is at least fix2 below
-       the actor, or (when a5 is false) the floor belongs to a collision
-       object. 2: the floor is steeper than angle a3 (normal.y < cos a3).
-       AngleAwayFromWallOrCliff treats any non-zero value as a cliff edge. */
+       runs). 1: no floor within the probe, the hit is at least `down` below
+       the actor, or (when allowObjFloor is false) the floor belongs to a
+       collision object. 2: the floor is steeper than maxSlope (normal.y <
+       cos maxSlope). AngleAwayFromWallOrCliff treats any non-zero value as a
+       cliff edge. */
     u8 mCliffState;               /* 0x106 */
-    /* 0x107 -- set while Yoshi has this enemy in his mouth. Both matched
-       OnYoshiTryEat overrides refuse the bite while it is non-zero (BobOmb
-       returns mEatenByYoshi == 0; Rabbit returns 0 when it is set), Rabbit's
-       own mEatenTimer counts up only while it reads 1, and
+    /* 0x107 -- set by UpdateYoshiEat on the frame Yoshi spits this enemy out
+       and cleared once it settles on the ground (also cleared while it is held
+       in the mouth or swallowed). Both matched OnYoshiTryEat overrides refuse
+       the bite while it is non-zero (BobOmb returns mEatenByYoshi == 0; Rabbit
+       returns 0 when it is set), Rabbit's own mEatenTimer counts up only while
+       it reads 1, and
        dEnemyBase_c::SpawnParticlesIfHitOtherObj changes how a cylinder
        collision is reported while it is set. Eight subclass Behaviors clear it
        on release. */
     u8 mEatenByYoshi;             /* 0x107 */
-    u8  unk_108;                  /* 0x108 -- 10 subclasses */
+    /* The coin SpawnCoin drops: minus one, it indexes the actor IDs at
+       data_ov002_020ff014 (0x120 coin, 0x121 red, 0x122 blue); 0 drops none. */
+    u8 mCoinType; /* 0x108 */
     u8  pad_109[0x1];
-    u8  unk_10a;                  /* 0x10a -- 5 subclasses */
+    /* SpawnCoin drops mExtraCoinCount + 1 coins, and the subclasses pay out
+       the same count through GivePlayerCoins and dActor_c::SpawnCoins. */
+    u8 mExtraCoinCount; /* 0x10a */
     u8  pad_10b[0x1];
     s32 mDeathState;              /* 0x10c */
 
@@ -97,7 +106,7 @@ struct dEnemyBase_c : dActor_c {
        constructor and inlines it into every subclass that has one, turning a
        single `bl _ZN12dEnemyBase_cC2Ev` into the whole dActor_c/fBase_c vtable-store
        chain written out in place. The ROM calls it at 0x020aed98. Same
-       reasoning as the note on Model(); see include/Model.h. */
+       reasoning as the note on dExtSimpleModel_c(); see include/dExtSimpleModel_c.h. */
     dEnemyBase_c();
 
     virtual ~dEnemyBase_c();                   /* slots 0 (D1), 1 (D0) */
@@ -132,8 +141,8 @@ struct dEnemyBase_c : dActor_c {
        mangled name in this tree is reconstructed and this one was a guess that
        the bytes disagree with. `Fix12i` keeps the fixed-point intent and
        mangles as plain `i`. See notes/mwccarm-codegen.md 6az. */
-    int IsGoingOffCliff(dBgCh_Actr & clsn_, Fix12i down_, s16 slopeAng_,
-                        bool detectWater_, bool skipPipeCheck_, Fix12i up_);
+    int IsGoingOffCliff(dBgCh_Actr &clsn_, Fix12i down_, s16 maxSlope_, bool detectWater_,
+                        bool allowObjFloor_, Fix12i up_);
     void SpawnCoin();
     int SpawnParticlesIfHitOtherObj(dCc_c & clsn_);
     /* Its own file still builds this from a local `struct dEnemyBase_c { char pad[0x100]; }`
@@ -143,8 +152,8 @@ struct dEnemyBase_c : dActor_c {
        is dEnemyBase_c's key function; ~dEnemyBase_c is still the first virtual declared. The
        second parameter is the dCc_c the caller was handed, passed as raw
        bytes because that class has no header here. */
-    void SpawnMegaCharParticles(dActor_c & a, char * p);
-    int UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, unsigned int flags);
+    void SpawnMegaCharParticles(dActor_c &other_, char *p_);
+    int UpdateKillByInvincibleChar(dBgCh_Actr &clsn_, dExtAnmModel_c &anim_, unsigned int flags_);
     /* RESOLVED 2026-08-27. Both halves of the old PROVISIONAL note held up, and
        both are now fixed in config rather than carried as a caveat here.
 
@@ -176,12 +185,14 @@ struct dEnemyBase_c : dActor_c {
            form and still matched: at those sites the `mov r3, #0` doubles as the
            source of the following `strh`, so the argument setup is invisible.
 
-           Its type is `Fix12<int>`, by the sibling: the ROM's
+           It is a fixed-point value, by the sibling:
            `dBgActor_c::UpdateKillByMegaChar(s16, s16, s16, Fix12<int>)` is the
            background-actor form of the same operation and ends in the same
-           parameter. The mangled name below is the compiler's own answer for the
-           declaration, not a hand-mangle. */
-    void KillByInvincibleChar(const Vector3_16 & vel_, Player & player_, Fix12<int> unused_);
+           parameter. It is the scalar Fix12i here: the body never reads r3, so
+           the bytes cannot tell a by-value Fix12<int> from a scalar, and the
+           scalar lets the definition be a real method (notes/mwccarm-codegen.md
+           6az). */
+    void KillByInvincibleChar(const Vector3_16 &spin_, Player &player_, Fix12i unused_);
 };
 
 /* Makes dEnemyBase_c's size a claim the compiler enforces, and makes every header

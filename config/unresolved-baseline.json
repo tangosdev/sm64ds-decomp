@@ -222,7 +222,7 @@
    ]
   },
   "ov075:0x02117bc4": {
-   "name": "func_ov075_02117bc4",
+   "name": "_ZN10dScEntry_c9EnterQuitEv",
    "missing": [
     "overlay_64",
     "overlay_66"

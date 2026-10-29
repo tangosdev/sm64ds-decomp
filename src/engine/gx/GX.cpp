@@ -3,14 +3,14 @@
  * (LoadBGPltt .. BeginLoadTex). Below sits GXS::LoadBGPltt at 0x02056808;
  * above is Copy48BytesFixed at 0x02056c1c.
  */
-// leftovers: the SetBankForTex* and DMASyncWordTransfer declarations stay
-// wide (local extern): the definitions' narrower params insert narrowing ops
-// at the call. LoadTex's base/top stay plain int (the register web the bytes
+// leftovers: the DMASyncWordTransfer declaration stays wide (local extern):
+// the definition's narrower channel inserts a narrowing op at the call. LoadTex's base/top stay plain int (the register web the bytes
 // were built against). BeginLoadTex's byte-offset table reads stay a char *
 // tower (indexing reschedules the body). data_02099fd0 is the render DMA
 // channel, -1 if none.
 
 #include "types.h"
+#include "GX.h"
 
 extern int data_02099fd0;  // RENDER_DMA_CHANNEL: DMA channel number, -1 if none
 extern u32 data_020a60ac;  // texture upload window: base address
@@ -34,9 +34,6 @@ extern void DMASyncHalfTransfer(u32 channel, void *src, void *dst, u32 numHalfs)
 extern void DMASyncWordTransfer(unsigned int channel, const void *src, void *dest, unsigned int len);
 extern void MultiCopyHalf(const void *src, void *dst, s32 size);
 extern void MultiCopy_Int(int *src, int *dst, int len);
-// local extern: u16 parameter per the definition inserts narrowing shifts at the call
-extern void _ZN2GX13SetBankForTexEt(u32 tex);
-extern void _ZN2GX17SetBankForTexPlttEt(u32 bank);
 }
 
 namespace GX {
@@ -95,7 +92,7 @@ void EndLoadTex()
     if (data_02099fd0 != -1) {
         func_02059fa8(data_02099fd0);
     }
-    _ZN2GX13SetBankForTexEt(data_020a60b8);
+    SetBankForTex(data_020a60b8);
     data_020a60c0 = 0;
     data_020a60bc = 0;
     data_020a60ac = 0;
@@ -128,7 +125,7 @@ void EndLoadTexPltt(){
     if (dmaId != (u32)-1) {
         func_02059fa8(dmaId);
     }
-    _ZN2GX17SetBankForTexPlttEt(data_020a60b4);
+    SetBankForTexPltt(data_020a60b4);
     data_020a60b4 = 0;
     data_020a60b0 = 0;
 }

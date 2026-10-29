@@ -137,11 +137,6 @@
       "symbol": "_ZN8Vector3sD1Ev",
       "disposition": "deadstrip-duplicate",
       "reason": "Vague-linkage copy of Vector3s' empty destructor, instantiated by DetectClsn(dBgCh_SphCrr&)'s cross-product scratch `cr` -- Vector3s has to be a non-POD or mwccarm scalarizes it (see the function's notes). Canonical copy arm9:0x02011508."
-    },
-    {
-      "symbol": "_ZN11SurfaceInfoD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Vague-linkage copy of SurfaceInfo's compiler-generated destructor, dragged in by the function-scope `SurfaceInfo info` in DetectClsn(dBgCh_Lin&) -- its Vector3 member's user-declared ~Vector3 makes the type non-POD. No canonical owner in the cartridge run -- discarded."
     }
   ],
   "verification": {

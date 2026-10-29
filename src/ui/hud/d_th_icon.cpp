@@ -4,8 +4,10 @@
  * RTTI names dThIcon_c. Both virtuals are defined out of line here;
  * constructor and destructor are inline in include/dThIcon_c.h, so this
  * TU anchors the vague-linkage group and emits no C1/C2/D0/D1/D2.
- * The unit spans ov001 .text 0x020ab54c..0x020ab5f8: Render, Behavior,
- * then the icon placement helper func_ov001_020ab5b0.
+ * The unit spans ov001 .text 0x020ab41c..0x020ab5f8: Select, the pen
+ * test TouchArea_Update, Render, Behavior, then the icon placement
+ * helper func_ov001_020ab5b0. The press pulse func_ov001_020ab3f0 just
+ * below it is defined in d_cap_icon.cpp.
  *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S. mwccarm emits one .text
  * section per function, and with codegen deferred -- the default, which
@@ -13,68 +15,106 @@
  * the reverse of source order. Behavior before Render puts Render first
  * in the object. No optimisation pragma is needed.
  *
- * deslop
- * Leftover: unk_00c is the countdown this TU subtracts data_0208ee44
- *   from; unk_010 flips 0/1 when it expires; unk_011 latches to 1 when
- *   unk_014 >= 1. Original names are not in the cartridge. Naming fans
- *   out to derived Renders (ov004 TouchIcon, ov006 betIcon, ov075
- *   icon_c).
- * Leftover: unk_004 / unk_006 / unk_008 / unk_00a / unk_01c / unk_020
- *   are unused in this TU.
- * Leftover: data_0208ee44 stays the linker name (arm9 frame delta).
+ * The field names are coined (see include/dThIcon_c.h); the cartridge
+ * carries none. TouchArea_Update and func_ov001_020ab5b0 keep C
+ * linkage: the ov004/ov006/ov075 callers
+ * declare them as C functions that take the icon as a char * or void *.
  */
 
 #include "dThIcon_c.h"
+#include "PlayerInput.h"
 
 extern "C" {
+/* local extern: arm9 C helpers with no shared header. */
+int func_0203da9c(void);
+void func_ov001_020ab3f0(void *);
+}
 
 extern int data_0208ee44;
 
-}
-
 // @symbol func_ov001_020ab5b0
-/* Place an icon: store its touch kind, centre and half extents, clear the
- * countdown, the blink and the held latch, arm it at once when the kind is
- * touchable (the latch Behavior applies), and start the countdown reload
- * at ten. The highest address in this unit, so first in the file. Callers
+/* Place an icon: store its touch kind, centre and half extents, clear
+ * mPressTimer, mOn and mPenInside, arm it at once when the kind is
+ * touchable (the latch Behavior applies), and set the press reload to
+ * ten. The highest address in this unit, so first in the file. Callers
  * in ov004/ov006/ov075 pass the icon as a char *, so the entry keeps it. */
-extern "C" void func_ov001_020ab5b0(char *p, int kind, short x, short y,
-                                    short halfW, short halfH)
-{
+extern "C" void func_ov001_020ab5b0(char *p, int kind, short x, short y, short halfW, short halfH) {
     dThIcon_c *icon = reinterpret_cast<dThIcon_c *>(p);
-    icon->unk_014 = kind;
-    icon->unk_004 = x;
-    icon->unk_006 = y;
-    icon->unk_008 = halfW;
-    icon->unk_00a = halfH;
-    icon->unk_00c = 0;
-    icon->unk_010 = 0;
-    icon->unk_012 = 0;
-    if (icon->unk_014 >= 1)
-        icon->unk_011 = 1;
-    icon->unk_018 = 10;
+    icon->mTouchKind = kind;
+    icon->mX = x;
+    icon->mY = y;
+    icon->mHalfW = halfW;
+    icon->mHalfH = halfH;
+    icon->mPressTimer = 0;
+    icon->mOn = 0;
+    icon->mPenInside = 0;
+    if (icon->mTouchKind >= 1)
+        icon->mReady = 1;
+    icon->mPressTime = 10;
 }
 
 // @symbol _ZN9dThIcon_c8BehaviorEv
-void dThIcon_c::Behavior()
-{
-    if (unk_00c <= 0)
+void dThIcon_c::Behavior() {
+    if (mPressTimer <= 0)
         return;
 
-    unk_00c -= data_0208ee44;
-    if (unk_00c > 0)
+    mPressTimer -= data_0208ee44;
+    if (mPressTimer > 0)
         return;
 
-    if (unk_010 != 0)
-        unk_010 = 0;
+    if (mOn != 0)
+        mOn = 0;
     else
-        unk_010 = 1;
+        mOn = 1;
 
-    if (unk_014 >= 1)
-        unk_011 = 1;
+    if (mTouchKind >= 1)
+        mReady = 1;
 }
 
 // @symbol _ZN9dThIcon_c6RenderEv
-void dThIcon_c::Render()
-{
+void dThIcon_c::Render() {}
+
+// @symbol TouchArea_Update
+/* Test player `player`'s pen (the local player when negative) against the
+ * icon's box. Fires per mTouchKind: 1 on a touch that begins inside, 2 when
+ * the pen enters. Records whether the pen is inside for the next frame. */
+extern "C" int TouchArea_Update(char *c, int player) {
+    int ret;
+    int flag;
+    int dx, dy;
+    int v;
+    dThIcon_c *icon = reinterpret_cast<dThIcon_c *>(c);
+
+    if (icon->mReady == 0)
+        return 0;
+    if (player < 0)
+        player = func_0203da9c();
+    ret = 0;
+    flag = 0;
+    if (gTouchHeld[player * 4] != 0) {
+        int i4 = player * 4;
+        dx = gTouchX[i4] - icon->mX;
+        dy = gTouchY[i4] - icon->mY;
+        if (dx >= -icon->mHalfW && dx <= icon->mHalfW && dy >= -icon->mHalfH && dy <= icon->mHalfH)
+            flag = 1;
+    }
+    if (flag != 0) {
+        v = icon->mTouchKind;
+        if ((v == 1 && gTouchEdge[(unsigned int)player * 4] != 0) ||
+            (v == 2 && icon->mPenInside == 0))
+            ret = 1;
+    }
+    icon->mPenInside = (unsigned char)flag;
+    return ret;
+}
+
+// @symbol _ZN9dThIcon_c6SelectEv
+/* Light the icon a menu has just picked: an unlit icon simply turns on, a
+ * lit one plays the press pulse. The lowest address in this unit. */
+void dThIcon_c::Select() {
+    if (mOn == 0) {
+        mOn = 1;
+        return;
+    }
+    func_ov001_020ab3f0(this);
 }

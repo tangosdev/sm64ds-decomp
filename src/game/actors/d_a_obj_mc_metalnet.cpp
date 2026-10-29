@@ -9,40 +9,31 @@
  * Order is load-bearing: source runs REVERSE of ROM (highest address
  * first). Do not reorder.
  *
- * deslop
- * Leftover: NumStars is the shared coined star-count helper
- *   (src/unnamed/arm9/0203/func_0203128c.c); naming belongs at its definition.
+ * Note: NumStars is the shared coined star-count helper
+ * (src/engine/save/SaveData.cpp); no header declares it yet.
  */
 
 /* daObjMc_Metalnet_c.h FIRST: it pulls in dBgActor_c.h, which must reach
-   common.h ahead of Model.h or the wrong Matrix4x3 spelling wins. */
+   common.h ahead of dExtSimpleModel_c.h or the wrong Matrix4x3 spelling wins. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_mc_metalnet_AssetId {
-    ASSET_MC_METALNET_BMD = 0x0691,
-    ASSET_MC_METALNET_KCL = 0x0692
-};
+enum d_a_obj_mc_metalnet_AssetId { ASSET_MC_METALNET_BMD = 0x0691, ASSET_MC_METALNET_KCL = 0x0692 };
 
 #include "daObjMc_Metalnet_c.h"
 #include "SharedFilePtr.h"
 
 struct McMetalnetModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     McMetalnetModelFilePtr(u32 fileID);
     ~McMetalnetModelFilePtr();
 };
 
 struct McMetalnetClsnFileHandle : SharedFilePtr {
-    u32 words[2];
-
     McMetalnetClsnFileHandle(u32 fileID);
     ~McMetalnetClsnFileHandle();
 };
 
-extern "C" {
 extern McMetalnetModelFilePtr data_ov009_02113e90;   /* the net's BMD        */
 extern McMetalnetClsnFileHandle data_ov009_02113e88; /* its collision KCL    */
-extern CLPS_Block    data_ov009_02112bf8;
+extern CLPS_Block data_ov009_02112bf8;
 
 /* The global mode byte. Unnamed in config; compared against 1 in fifty-odd
    places across the tree, always to mean "not the ordinary single-player run". */
@@ -51,19 +42,8 @@ extern unsigned char data_0209f2d8;
    the way d_a_set_se.cpp does it; [2] is the 0x008 unlock word. */
 extern int data_0209caa0[];
 
+extern "C" {
 unsigned char NumStars(void);
-
-/* dBgActor_c::IsClsnInRange(Fix12<int>, Fix12<int>) -- reached through the
-   mangled name because the two by-value Fix12<int> parameters are wall 6az
-   on ov009/daObjMc_Metalnet_c::Behavior. */
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-
-/* dBgW_KcMbg::SetFile -- same wall on ov009/daObjMc_Metalnet_c::InitResources:
-   its by-value Fix12<int> scale makes a member call cost stack the ROM does
-   not spend. */
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, Matrix4x3 *mat, int scale, s16 angY,
-    void *clps);
 }
 
 /* data_0209f2d8 (CURRENT_GAMEMODE) is 1 in VS mode: PrepareVsMode stores it.
@@ -80,8 +60,7 @@ static inline int IsVsMode(void) {
  * inline operator new; 0x0211205c calls dBgActor_c's C2 and the store at
  * 0x02112068 lays down this class's vptr. The null check is the one `new`
  * itself emits. */
-extern "C" daObjMc_Metalnet_c *daObjMc_Metalnet_c_classInit(void)
-{
+extern "C" daObjMc_Metalnet_c *daObjMc_Metalnet_c_classInit(void) {
     return new daObjMc_Metalnet_c();
 }
 
@@ -96,20 +75,13 @@ extern "C" daObjMc_Metalnet_c *daObjMc_Metalnet_c_classInit(void)
  *                           word must be SET for the net to be removed.
  *   otherwise               the net is removed once the player has 150 stars.
  * Either way, mode 1 short-circuits both and the net always stays. */
-s32 daObjMc_Metalnet_c::InitResources()
-{
-    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov009_02113e90), 1, -1);
+s32 daObjMc_Metalnet_c::InitResources() {
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov009_02113e90), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov009_02113e88);
-    /* MEASURED on ov009/daObjMc_Metalnet_c::InitResources: this one call
-       has to keep the mangled spelling. Its third parameter is a by-value
-       Fix12<int> -- wall 6az -- and materialising one costs stack traffic
-       the ROM does not have. */
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY,
-        &data_ov009_02112bf8);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov009_02112bf8);
 
     if ((param1 & 0xff) == 0xff) {
         if (!IsVsMode() && (data_0209caa0[2] & 0x80000) != 0)
@@ -128,8 +100,7 @@ s32 daObjMc_Metalnet_c::InitResources()
  * The mode-1 branch force-enables the collider and leaves it enabled; the
  * ordinary branch calls IsClsnInRange purely for its side effect, which is to
  * enable the mesh near the player and switch it off again far away. */
-s32 daObjMc_Metalnet_c::Behavior()
-{
+s32 daObjMc_Metalnet_c::Behavior() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
@@ -137,16 +108,13 @@ s32 daObjMc_Metalnet_c::Behavior()
         if (mMeshCollider.IsEnabled() == 0)
             mMeshCollider.Enable(this);
     } else {
-        /* MEASURED on ov009/daObjMc_Metalnet_c::Behavior: the two by-value
-           Fix12<int> parameters are wall 6az. */
-        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0);
+        IsClsnInRange(0, 0);
     }
     return 1;
 }
 
 // @symbol _ZN18daObjMc_Metalnet_c6RenderEv
-s32 daObjMc_Metalnet_c::Render()
-{
+s32 daObjMc_Metalnet_c::Render() {
     mModel.Render(0);
     return 1;
 }
@@ -154,13 +122,10 @@ s32 daObjMc_Metalnet_c::Render()
 // @symbol _ZN18daObjMc_Metalnet_c16OnPendingDestroyEv
 /* Four bytes: a bare `bx lr`. The override exists to occupy slot 12 so that
  * fBase_c's own OnPendingDestroy does not run for this class. */
-void daObjMc_Metalnet_c::OnPendingDestroy()
-{
-}
+void daObjMc_Metalnet_c::OnPendingDestroy() {}
 
 // @symbol _ZN18daObjMc_Metalnet_c16CleanupResourcesEv
-s32 daObjMc_Metalnet_c::CleanupResources()
-{
+s32 daObjMc_Metalnet_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 
@@ -180,7 +145,7 @@ s32 daObjMc_Metalnet_c::CleanupResources()
    Their bodies are two vptr stores and the member destructions, every one a
    consequence of `daObjMc_Metalnet_c : dBgActor_c`: this class's vptr, then
    dBgActor_c's -- inlined, because that destructor is defined in its class
-   body -- then dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class
+   body -- then dBgActor_c's dExtSimpleModel_c and dBgW_KcMbg, then dActor_c. This class
    adds no member with a destructor of its own. */
 
 McMetalnetModelFilePtr data_ov009_02113e90(ASSET_MC_METALNET_BMD);

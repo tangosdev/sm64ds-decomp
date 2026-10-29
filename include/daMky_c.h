@@ -2,7 +2,7 @@
 #define DAMKY_C_H
 #include "types.h"
 #include "dActor_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
@@ -52,9 +52,9 @@ struct daMky_c : dActor_c {
 
     /* Member names below are inferred from use, not recovered identifiers. */
     Player *mEatingPlayer; /* 0x0d0 -- player holding this actor in its mouth */
-    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
+    /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0xd4 -- a relocation the ROM build
        checks. */
-    ModelAnim mModelAnim;            /* 0x0d4 */
+    dExtAnmModel_c mAnmModel; /* 0x0d4 */
     /* dExtShadowModel_c member, named by the class's own destructor calling
        dExtShadowModel_c's D1 at +0x138.
        [src/game/actors/d_a_mky.cpp: daMky_c::~daMky_c] */

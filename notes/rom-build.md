@@ -518,8 +518,8 @@ individually with `match.py` before the link confirmed them:
 
 | function | source named | ROM uses |
 |---|---|---|
-| `_ZN9daPeach_c6RenderEv` | `CommonModel::Render` | `Model::Render` |
-| `_ZN7daTor_c6RenderEv`, `_ZN14daWater_Ring_c6RenderEv` | `TextureSequence::Update` | `TextureTransformer::Update` |
+| `_ZN9daPeach_c6RenderEv` | `CommonModel::Render` | `dExtSimpleModel_c::Render` |
+| `_ZN7daTor_c6RenderEv`, `_ZN14daWater_Ring_c6RenderEv` | `dExtAnmTexPat_c::Update` | `dExtAnmTexSRT_c::Update` |
 | `_ZN18daObjBkKillerdai_c4KillEv` (then `func_ov079_02126e58`) | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
 | [func_ov085_0212e778](../src/game/actors/d_a_c_jugem.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
 | [func_ov006_0211a048](../src/minigames/d_s_mg_sound.cpp)(func 17 used to assemble TU), [func_ov006_0211a5ec](../src/minigames/d_s_mg_sound.cpp)(func 29 used to assemble TU) | wrong `data_ov006_*` base | the adjacent one |
@@ -537,8 +537,8 @@ while the ROM's pool word is the symbol **+ 0**:
 | function | `_ZTV*` symbol | ROM pool word |
 |---|---|---|
 | `_ZN11ShadowModelC1Ev` | `0x0208e868` | `0x0208e868` (+0) |
-| `_ZN5ModelC1Ev` | `0x0208e90c` | `0x0208e90c` (+0) |
-| `_ZN5ModelC2Ev` | `0x0208e90c` | `0x0208e90c` (+0) |
+| `_ZN17dExtSimpleModel_cC1Ev` | `0x0208e90c` | `0x0208e90c` (+0) |
+| `_ZN17dExtSimpleModel_cC2Ev` | `0x0208e90c` | `0x0208e90c` (+0) |
 | `_ZN11CommonModelC1Ev` | `0x0208e8a4` | `0x0208e8a4` (+0) |
 
 The `+ 2` is the Itanium-ABI reflex (skip offset-to-top and RTTI), but this ABI points
@@ -555,7 +555,7 @@ by construction.
 **Three remain. All three of the original six that took the cast-and-call shape were
 retired by the C++ class migration; see the struck-through bullet below.**
 
-- three (`_ZN5ModelD1Ev`, `_ZN5ModelD2Ev`, `_ZN14BlendModelAnimD1Ev`) call `_ZdlPv`
+- three (`_ZN17dExtSimpleModel_cD1Ev`, `_ZN17dExtSimpleModel_cD2Ev`, `_ZN19dExtBlendAnmModel_cD1Ev`) call `_ZdlPv`
   where the ROM goes through the 12-byte veneer at `0x0203cbc0`. That trampoline is the
   standard `LDR ip,[pc]; BX ip; .word target` shape, and its target word is
   **`0x0203cbf0` = `_ZdlPv`** —

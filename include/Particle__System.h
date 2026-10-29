@@ -13,6 +13,9 @@ struct Vector3_16f { s16 x, y, z; };
 
 namespace Particle {
 
+/* System::New's last parameter. The name is what the linker symbol encodes. */
+struct Callback;
+
 /* The list element's exact source type and member spellings are not
  * RTTI-backed. The water callbacks prove the intrusive link and the two
  * ASR-3 position vectors below; the names are descriptive. */
@@ -42,15 +45,23 @@ struct System {
         u32 unused  : 14;
     };
 
-    void *previous;              /* 0x00 */
-    void *next;                  /* 0x04 */
+    /* The manager's free/active list link: func_0204d958/func_0204d9a0
+       maintain it and the update and draw walks follow it. */
+    System *next;                /* 0x00 */
+    System *previous;            /* 0x04 */
     ParticleList particles;      /* 0x08 */
     ParticleList particles2;     /* 0x10 */
     SystemDefinition *mDefinition; /* 0x18 */
-    /* Callback virtuals toggle bit 1 while spawning or suppressing particles. */
+    /* Bit 0 retires the system once both particle lists are empty, bit 2
+       skips its update (func_0204a730) and bit 3 its draw (func_0204a5c8).
+       Callback virtuals toggle bit 1 while spawning or suppressing
+       particles. */
     u32 callbackFlags;             /* 0x1c */
     Vector3 position;              /* 0x20 */
-    u8 pad_02c[0x0e];
+    u8 pad_02c[0x0c];
+    /* func_0204a730 advances it; the update walk retires the system once it
+       passes the definition's callbackValue. */
+    u16 age; /* 0x38 */
     /* simpleCallback_c copies this value in both directions. */
     s16 callbackValue;             /* 0x3a */
     Vector3_16f direction;         /* 0x3c */
@@ -59,11 +70,29 @@ struct System {
     s32 callbackParam;             /* 0x48 */
     s32 callbackVelocity;          /* 0x4c */
     s32 callbackScale;             /* 0x50 */
-    u8 pad_054[0x20];
+    u8 pad_054[0x08];
+    /* Two axes spanning the plane perpendicular to `direction`, rebuilt by
+       func_0204cebc as cross products: basisU = direction x reference,
+       basisV = direction x basisU. func_0204cd5c maps a 2D emitter offset
+       onto that plane through them. */
+    Vector3_16f basisU; /* 0x5c */
+    Vector3_16f basisV; /* 0x62 */
+    u8 pad_068[0x0c];
     Flags flags;                   /* 0x74 */
 
     static System *FromUniqueID(u32 uniqueID);
+    /* Unnamed parameters: a name here numbers @NNN in every includer. */
+    static void *NewSimple(u32, Fix12i, Fix12i, Fix12i);
+    static int New(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *, Callback *);
+    static u32 NewRipple(Fix12i, Fix12i, Fix12i);
+    static void NewBigSplash(Fix12i, Fix12i, Fix12i);
+    static u32 NewUnkCallback818(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
+    /* Last parameter is u8. unsigned int shrinks a caller and reloads the
+       argument as a word; the matched body loads a byte. */
+    static u32 NewWeather(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *, u8);
 };
+
+void RunningSlidingDustAt(Fix12i, Fix12i, Fix12i);
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

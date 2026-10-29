@@ -24,13 +24,13 @@
  * literal closes the object after the state fields below. */
 struct daObjFlamethrower_c : dActor_c {
     u8 pad_0d0[0x4];
-    dCcPos_c mColliders[12];       /* 0x0d4 */
-    Vector3 mFlamePositions[12];   /* 0x3a4 */
-    Matrix4x3 mTransform;          /* 0x434 */
-    u8 mState;                     /* 0x464 */
-    u8 mActiveFlames;              /* 0x465 */
-    u16 mTimer;                    /* 0x466 */
-    u32 mSoundHandle;              /* 0x468 */
+    dCcPos_c mColliders[12];     /* 0x0d4 */
+    Vector3 mFlamePositions[12]; /* 0x3a4 */
+    Matrix4x3 mTransform;        /* 0x434 */
+    u8 mState;                   /* 0x464 */
+    u8 mActiveFlames;            /* 0x465 */
+    u16 mTimer;                  /* 0x466 */
+    u32 mSoundHandle;            /* 0x468 */
 
     virtual ~daObjFlamethrower_c() {}
     virtual int InitResources();
@@ -40,24 +40,24 @@ struct daObjFlamethrower_c : dActor_c {
 #else
 
 struct daObjFlamethrower_c {
-    u8  pad_000[0x5c];
+    u8 pad_000[0x5c];
     /* 0x05c..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    s32 mPosX;                 /* 0x05c */
-    s32 mPosY;                   /* 0x060 */
-    s32 mPosZ;                   /* 0x064 */
-    s32 mPrevPosX;                 /* 0x068 */
-    s32 mPrevPosY;                 /* 0x06c */
-    s32 mPrevPosZ;                 /* 0x070 */
-    s32 mCamSpacePosX;           /* 0x074 */
-    s32 mCamSpacePosY;           /* 0x078 */
-    s32 mCamSpacePosZ;           /* 0x07c */
-    s32 mScaleX;                 /* 0x080 */
-    s32 mScaleY;                 /* 0x084 */
-    s32 mScaleZ;                 /* 0x088 */
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
+    s32 mPosX;         /* 0x05c */
+    s32 mPosY;         /* 0x060 */
+    s32 mPosZ;         /* 0x064 */
+    s32 mPrevPosX;     /* 0x068 */
+    s32 mPrevPosY;     /* 0x06c */
+    s32 mPrevPosZ;     /* 0x070 */
+    s32 mCamSpacePosX; /* 0x074 */
+    s32 mCamSpacePosY; /* 0x078 */
+    s32 mCamSpacePosZ; /* 0x07c */
+    s32 mScaleX;       /* 0x080 */
+    s32 mScaleY;       /* 0x084 */
+    s32 mScaleZ;       /* 0x088 */
+    s16 mAngleX;       /* 0x08c */
+    s16 mAngleY;       /* 0x08e */
+    s16 mAngleZ;       /* 0x090 */
     /* TODO: Behavior reads past this generated span:
        dCc_c mClsn[12] at 0x0d4 (stride 0x3c),
        Vector3 mPartPos[12] at 0x3a4 (stride 0xc),

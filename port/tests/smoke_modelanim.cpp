@@ -1,9 +1,9 @@
 // Gate-7 smoke: the game owns frame progression.
 //
 // Gates 4c/5 posed the piano by handing UpdateBones a loop counter; here
-// ModelAnim runs the show: SetAnim installs the animation with the game's
+// dExtAnmModel_c runs the show: SetAnim installs the animation with the game's
 // flag/speed packing, dExtFrameCtrl_c::Advance steps currFrame each fiber frame
-// (fx12 speed, loop-mode modulo), and ModelAnim::UpdateVerts converts the
+// (fx12 speed, loop-mode modulo), and dExtAnmModel_c::UpdateVerts converts the
 // fx frame to the sampler index exactly as every actor does. The wrap
 // check is the point: after numFrames advances at speed 1.0 the game's
 // modulo lands back on frame 0, and the pose there must hash equal to the
@@ -13,9 +13,9 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtFrameCtrl_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 
 #include "ntr/gx.h"
 #include "ntr/mmio.h"
@@ -24,11 +24,11 @@
 #include "fault_probe.h"
 
 extern "C" {
-void *_ZN9ModelAnimC1Ev(void *self);
+void *_ZN14dExtAnmModel_cC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void *_ZN5mHeap6Heap_t13SetupRootHeapEv(void);
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca,
+void _ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca,
                                                  int flags, int speed, u16 start);
 extern Matrix4x3 data_0209b3ec;
 }
@@ -40,7 +40,7 @@ static int g_failures;
     do { if (!(cond)) { ++g_failures; \
         fprintf(stderr, "FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
 
-static ModelAnim *g_ma;
+static dExtAnmModel_c *g_ma;
 static unsigned g_hash[NUM_FRAMES + 1];
 static int g_frames_run;
 
@@ -78,9 +78,9 @@ static unsigned tri_hash()
 static void game_main()
 {
     for (int i = 0; i <= NUM_FRAMES; ++i) {
-        g_ma->ModelAnim::UpdateVerts();
+        g_ma->dExtAnmModel_c::UpdateVerts();
         reset_scene();
-        g_ma->Model::Render(NULL);
+        g_ma->dExtSimpleModel_c::Render(NULL);
         g_hash[i] = tri_hash();
         ++g_frames_run;
         g_ma->dExtFrameCtrl_c::Advance();
@@ -100,11 +100,11 @@ int main(void)
     SharedFilePtrC mp;
     _ZN13SharedFilePtr9ConstructEj(&mp, 1034);          /* piano.bmd */
     static char storage[0x70];
-    g_ma = (ModelAnim *)storage;
-    _ZN9ModelAnimC1Ev(storage);
-    void *file = Model::LoadFile(*(SharedFilePtr *)&mp);
+    g_ma = (dExtAnmModel_c *)storage;
+    _ZN14dExtAnmModel_cC1Ev(storage);
+    void *file = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&mp);
     CHECK(file != NULL);
-    CHECK(g_ma->Model::DoSetFile((char *)file, 0, -1) == 1);
+    CHECK(g_ma->dExtSimpleModel_c::DoSetFile((char *)file, 0, -1) == 1);
     ident_fx(&g_ma->mat4x3);
 
     SharedFilePtrC ap;
@@ -113,7 +113,7 @@ int main(void)
     CHECK(bca != NULL);
 
     /* the game's install: loop mode (flags 0), speed 1.0 (fx12), frame 0 */
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(g_ma, bca, 0, 0x1000, 0);
+    _ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj(g_ma, bca, 0, 0x1000, 0);
     CHECK(g_ma->currFrame == 0);
     CHECK((g_ma->numFramesAndFlags & ~0xc0000000) == (NUM_FRAMES << 12));
 

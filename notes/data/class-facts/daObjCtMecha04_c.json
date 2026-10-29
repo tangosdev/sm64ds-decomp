@@ -101,7 +101,7 @@
       "size": "0x34",
       "name": "Render",
       "symbol": "_ZN16daObjCtMecha04_c6RenderEv",
-      "note": "Own ov065 target. Updates the TextureTransformer at 0x0320 against model components at 0x00dc, then invokes the Model virtual render entry."
+      "note": "Own ov065 target. Updates the dExtAnmTexSRT_c at 0x0320 against model components at 0x00dc, then invokes the dExtSimpleModel_c virtual render entry."
     },
     {
       "slot": 16,
@@ -109,7 +109,7 @@
       "size": "0x54",
       "name": "~daObjCtMecha04_c (D1)",
       "symbol": "_ZN16daObjCtMecha04_cD1Ev",
-      "note": "Own ov065 target. Restores this vptr, destroys ShadowModel at 0x0334 then TextureTransformer at 0x0320, restores the dBgActor_c vptr, destroys dBgW_KcMbg at 0x0124 and Model at 0x00d4, then calls dActor_c D2."
+      "note": "Own ov065 target. Restores this vptr, destroys ShadowModel at 0x0334 then dExtAnmTexSRT_c at 0x0320, restores the dBgActor_c vptr, destroys dBgW_KcMbg at 0x0124 and dExtSimpleModel_c at 0x00d4, then calls dActor_c D2."
     },
     {
       "slot": 17,
@@ -152,7 +152,7 @@
     "note": "The nine function extents are contiguous and sum to 0x64c bytes. The two allocation factories begin at the exclusive end and are recorded separately as size witnesses."
   },
   "size": "0x3a0",
-  "size_evidence": "Both class factories execute `mov r0,#0x3a0` immediately before a relocated call to fBase_c::operator new: the CT_MECHA04L-associated factory calls at 0x0211aae8 and the CT_MECHA04S-associated factory calls at 0x0211ab28. Each then calls dBgActor_c C2 and constructs TextureTransformer at 0x0320 and ShadowModel at 0x0334, so the allocation literal and object-construction shape independently agree.",
+  "size_evidence": "Both class factories execute `mov r0,#0x3a0` immediately before a relocated call to fBase_c::operator new: the CT_MECHA04L-associated factory calls at 0x0211aae8 and the CT_MECHA04S-associated factory calls at 0x0211ab28. Each then calls dBgActor_c C2 and constructs dExtAnmTexSRT_c at 0x0320 and ShadowModel at 0x0334, so the allocation literal and object-construction shape independently agree.",
   "factory_witnesses": [
     {
       "current_symbol": "daObjCtMecha04_c_classInit_CT_MECHA04L",
@@ -180,8 +180,8 @@
       "offset": "0x0320",
       "size": "0x14",
       "name": "mTextureTransformer",
-      "type": "TextureTransformer",
-      "evidence": "Both factories call TextureTransformer C1 on object+0x0320; D1/D0 call TextureTransformer D1 there; InitResources calls Prepare/SetFile and Render calls Update on the same subobject. Type and extent to the next constructed member are ROM-proven; the member identifier is descriptive, not preserved."
+      "type": "dExtAnmTexSRT_c",
+      "evidence": "Both factories call dExtAnmTexSRT_c C1 on object+0x0320; D1/D0 call dExtAnmTexSRT_c D1 there; InitResources calls Prepare/SetFile and Render calls Update on the same subobject. Type and extent to the next constructed member are ROM-proven; the member identifier is descriptive, not preserved."
     },
     {
       "offset": "0x0334",
@@ -202,7 +202,7 @@
       "size": "0x04",
       "name": "unk_38c",
       "type": "s32",
-      "evidence": "Behavior passes its address to the signed 32-bit ApproachLinear routine, copies it to TextureTransformer+0x0c, and the movement helper uses it as a fixed-point belt displacement. The binary proves a signed word used with fixed-point scaling; an exact Fix12<int> source wrapper and English name are not recoverable."
+      "evidence": "Behavior passes its address to the signed 32-bit ApproachLinear routine, copies it to dExtAnmTexSRT_c+0x0c, and the movement helper uses it as a fixed-point belt displacement. The binary proves a signed word used with fixed-point scaling; an exact Fix12<int> source wrapper and English name are not recoverable."
     },
     {
       "offset": "0x0390",

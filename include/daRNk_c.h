@@ -14,7 +14,7 @@
  *
  *     0x110 dCcAc_c       0x34   -> 0x144
  *     0x144 dBgCh_Actr             0x1bc  -> 0x300
- *     0x300 ModelAnim                0x64   -> 0x364
+ *     0x300 dExtAnmModel_c                0x64   -> 0x364
  *     0x364 dExtShadowModel_c              0x28   -> 0x38c
  *     0x3cc Vector3                  0xc    -> 0x3d8
  *     0x3d8 PathPtr                  0x8    -> 0x3e0
@@ -31,7 +31,7 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "PathPtr.h"
 #include "dExtShadowModel_c.h"
@@ -42,7 +42,7 @@ struct Player;
 struct daRNk_c : dEnemyBase_c {
     dCcAc_c         mdCcAc_c;                        /* 0x110 */
     dBgCh_Actr      mWithMeshClsn;                   /* 0x144 */
-    ModelAnim       mModelAnim;                      /* 0x300 */
+    dExtAnmModel_c mAnmModel;                        /* 0x300 */
     dExtShadowModel_c     mShadowModel;                    /* 0x364 */
     s32             mState;                          /* 0x38c -- State */
     /* Step within the current state. OFFER_RACE, RACE and POST_RACE_TALK

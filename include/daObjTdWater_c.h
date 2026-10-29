@@ -3,9 +3,7 @@
 
 #include "types.h"
 #include "dBgActor_c.h"
-#include "TextureTransformer.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+#include "dExtAnmTexSRT_c.h"
 
 /* Huge water plane (profile HUGE_WATER / TD_WATER 107). ov032 also has
  * HUGE_COVER(106) / daObjTdFuta_c.
@@ -20,7 +18,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  *                           (InitResources, 0x021127f0).
  *   g_profile_TD_WATER      ov032 0x02113980
  *   size  0x334             the factory's own literal: dBgActor_c's 0x320
- *                           plus TextureTransformer at 0x320 (0x14 bytes).
+ *                           plus dExtAnmTexSRT_c at 0x320 (0x14 bytes).
  * Ugly RTTI name is final. Historical alias: HugeWater.
  *
  * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the
@@ -37,7 +35,7 @@ struct daObjTdWater_c : dBgActor_c {
     /* THIS CLASS'S OWN. InitResources hands it the BTA at ov032 0x02112f64 and
        Behavior sets its rate to 0x1000 and advances it every frame -- that is
        the whole scroll. */
-    TextureTransformer mTextureTransformer;    /* 0x320 */
+    dExtAnmTexSRT_c mTextureTransformer; /* 0x320 */
 
     /* MEASURED -- INLINE ON PURPOSE. The class TU is the only place these
        two are emitted; with the body out of line mwcc emits D0 ahead of D1
@@ -49,12 +47,6 @@ struct daObjTdWater_c : dBgActor_c {
     virtual s32   CleanupResources();      /* slot  3 */
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
-
-    /* Leaf operator new. Parameter is size_t (unsigned long on this
-       compiler). `return new` relocates to `_Znwm` without this. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

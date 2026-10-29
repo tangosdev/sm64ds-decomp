@@ -1,12 +1,12 @@
 #ifndef DABRQ_C_H
 #define DABRQ_C_H
 
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
-#include "TextureSequence.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexPat_c.h"
+#include "dExtAnmTexSRT_c.h"
 #include "dBgCh_Actr.h"
 #include "dActor_c.h"
 
@@ -28,30 +28,30 @@ struct daBrq_c : dActor_c {
         StateFn update;
     };
 
-    u8                        pad_0d0[0x4];
-    ModelAnim                 mModelAnim;                    /* 0x0d4 */
-    Model                     mModel;                        /* 0x138 */
-    TextureSequence           mTextureSequence;              /* 0x188 */
-    TextureTransformer        mTextureTransformer;           /* 0x19c */
-    dExtShadowModel_c               mShadowModel;                  /* 0x1b0 */
-    dCcAcPos_c                mdCcAcPos_c;                  /* 0x1d8 */
-    dBgCh_Actr                mWithMeshClsn;                /* 0x218 */
+    u8 pad_0d0[0x4];
+    dExtAnmModel_c mAnmModel;            /* 0x0d4 */
+    dExtSimpleModel_c mModel;            /* 0x138 */
+    dExtAnmTexPat_c mTextureSequence;    /* 0x188 */
+    dExtAnmTexSRT_c mTextureTransformer; /* 0x19c */
+    dExtShadowModel_c mShadowModel;      /* 0x1b0 */
+    dCcAcPos_c mdCcAcPos_c;              /* 0x1d8 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x218 */
     /* Matrix4x3, on three witnesses: InitResources block-copies the identity
        matrix IDENTITY_MATRIX4X3 (0x30 bytes) into it; UpdateModelTransform writes
        the position (>>3) at m[9]/m[10]/m[11] -- exactly the translation row --
        and passes &mMat4x3 as the matrix argument of DropShadowRadHeight. Same
        role as daJgm_c's 0x3f8 translation words. */
-    Matrix4x3                 mMat4x3;                       /* 0x3d4 */
-    Vector3                   mOrbitCenter;                  /* 0x404 */
-    Vector3                   mCylinderOffset;               /* 0x410 */
-    State                    *mStateHandlers;                /* 0x41c */
-    s32                       mState;                        /* 0x420 */
-    s32                       mTurnSpeed;                    /* 0x424 */
-    u32                       mSoundHandle;                  /* 0x428 */
-    s16                       mOrbitAngle;                   /* 0x42c */
-    s16                       mSpinAngle;                    /* 0x42e */
-    u8                        mStateTimer;                   /* 0x430 */
-    u8                        pad_431[0x3];
+    Matrix4x3 mMat4x3;       /* 0x3d4 */
+    Vector3 mOrbitCenter;    /* 0x404 */
+    Vector3 mCylinderOffset; /* 0x410 */
+    State *mStateHandlers;   /* 0x41c */
+    s32 mState;              /* 0x420 */
+    s32 mTurnSpeed;          /* 0x424 */
+    u32 mSoundHandle;        /* 0x428 */
+    s16 mOrbitAngle;         /* 0x42c */
+    s16 mSpinAngle;          /* 0x42e */
+    u8 mStateTimer;          /* 0x430 */
+    u8 pad_431[0x3];
 
     virtual ~daBrq_c() {}
 
@@ -83,10 +83,8 @@ private:
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daBrq_c_State_size_must_be_0x10[
-    sizeof(daBrq_c::State) == 0x10 ? 1 : -1];
-typedef char daBrq_c_size_must_be_0x434[
-    sizeof(daBrq_c) == 0x434 ? 1 : -1];
+typedef char daBrq_c_State_size_must_be_0x10[sizeof(daBrq_c::State) == 0x10 ? 1 : -1];
+typedef char daBrq_c_size_must_be_0x434[sizeof(daBrq_c) == 0x434 ? 1 : -1];
 #endif
 
 #endif /* DABRQ_C_H */

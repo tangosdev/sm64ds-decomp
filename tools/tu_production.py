@@ -190,10 +190,20 @@ def prepare_intact_link_verification(entries, jobs=4):
     baseline = _current_or_bootstrapped_intact_baseline(entries, jobs)
     current_errors = tuple(baseline["symbolErrors"])
     if admitted_errors != {current_errors}:
+        # A remote gate reports this exception and nothing else, so name what the
+        # control's link was given: which rows lcf_interior defined, which dsd
+        # checked them, and which tool and config bytes the control was bound to.
+        report = baseline.get("report") or {}
+        diagnostics = {
+            "lcfInteriorDefinitions": report.get("lcfInteriorDefinitions"),
+            "dsdTool": report.get("dsdTool"),
+            "baselineEvidence": report.get("baselineEvidence"),
+        }
         raise ProductionTuError(
             "strict post-promotion control symbol errors do not equal the admitted "
             f"pre-promotion inventory: current={list(current_errors)!r}, "
-            f"admitted={[list(rows) for rows in sorted(admitted_errors)]!r}")
+            f"admitted={[list(rows) for rows in sorted(admitted_errors)]!r}, "
+            f"control={json.dumps(diagnostics, sort_keys=True)}")
     if admitted_module_sets != {baseline["moduleSetSha256"]}:
         report = baseline.get("report") or {}
         diagnostics = {

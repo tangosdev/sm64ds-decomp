@@ -49,20 +49,17 @@
  *   [6] 0x02111854  src/_ZN14daObjRc_Hane_c13InitResourcesEv.cpp
  *   [7] 0x02111904  src/daObjRc_Hane_c_classInit.c
  *
- * common.h FIRST: func_ov036_02111618 assigns a whole Matrix4x3, and the ROM
+ * common.h FIRST: UpdateModelTransform assigns a whole Matrix4x3, and the ROM
  * copies it as three 4-word ldm/stm pairs. common.h's flat s32 m[12] is that
  * copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} splits it.
  *
- * deslop
- * Leftover:
- * - common.h first (func_ov036_02111618 twelve-word Matrix4x3 copy)
- * - leaf operator new(unsigned long) until #2570
+ * Notes:
+ * - common.h first (UpdateModelTransform's twelve-word Matrix4x3 copy)
  * - mFrame pointer RMW (named mFrame++ CSEs the field address)
  * - (s64) table <<n + 0x800 >> 12 (Fix12 round; (long long)(int) size-DIFF)
- * - data_ov036_02114070 / data_02082214 / data_020a0e68 handles
- *   (the BMD handle is constructed by this TU's static initializer, file 1702)
- * - func_ov036_02111618 C-linkage name (other config still names it)
- * - S14: g_profile_RC_HANE stays outside the licensed .text
+ * - data_ov036_02114070 / data_02082214 keep their linker names (the BMD
+ *   handle is constructed by this TU's static initializer, file 1702)
+ * - g_profile_RC_HANE stays outside the licensed .text
  */
 
 /* decl_common.h is deliberately NOT included: it declares
@@ -70,28 +67,24 @@
  * this TU (and the cartridge) actually uses. Everything this file needs from
  * it is declared explicitly below. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_rc_hane_AssetId {
-    ASSET_RC_HANE_BMD = 0x06a6
-};
+enum d_a_obj_rc_hane_AssetId { ASSET_RC_HANE_BMD = 0x06a6 };
 
 #include "common.h"
 #include "daObjRc_Hane_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
+#include "math/MtxStack.h"
 
 /* 8-byte model handle. The constructor and destructor are the retail
  * func_02017acc / func_02017ab4 pair; the manifest aliases the generated
  * names onto those ROM symbols. */
 struct RcHaneModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
-
     RcHaneModelFilePtr(unsigned int fileID);
     ~RcHaneModelFilePtr();
 };
 
-typedef char RcHaneModelFilePtr_size_must_be_8[
-    sizeof(RcHaneModelFilePtr) == 8 ? 1 : -1];
+typedef char RcHaneModelFilePtr_size_must_be_8[sizeof(RcHaneModelFilePtr) == 8 ? 1 : -1];
 
 /* Externs: the union of the legacy files', kept at their legacy spelling.
  *
@@ -102,28 +95,15 @@ typedef char RcHaneModelFilePtr_size_must_be_8[
  * one pair per 16 units of the cycle. It is arm9 data with no shared header,
  * so it keeps the house spelling rather than inventing one.
  *
- * data_020a0e68 is the global scratch Matrix4x3 the Matrix4x3_* helpers
- * compose into; func_ov036_02111618 below copies the finished matrix out of
- * it. It is scratch, not state -- every caller in the game uses it the same
- * way, one call chain at a time.
- *
- * func_ov036_02111618 is this class's own private helper -- see its
- * definition below. It is a global symbol the cartridge calls with `this`
- * from Behavior, so it keeps C linkage and its existing name; renaming it
- * would move a symbol other config still names. */
+ * data_020a0e68 (math/MtxStack.h) is the global scratch Matrix4x3 the
+ * Matrix4x3_* helpers compose into; UpdateModelTransform below copies the
+ * finished matrix out of it. */
 
-extern RcHaneModelFilePtr data_ov036_02114070;   /* the wing's BMD */
+extern RcHaneModelFilePtr data_ov036_02114070; /* the wing's BMD */
+extern s16 data_02082214[];                    /* the canned rock table */
 
 extern "C" {
-extern s16 data_02082214[];                 /* the canned rock table */
-extern Matrix4x3 data_020a0e68;             /* global scratch matrix */
-
-void func_ov036_02111618(daObjRc_Hane_c *self);
 void Vec3_Asr(void *dst, void *src, int n);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short ang);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short ang);
-void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, short ang);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -138,17 +118,15 @@ void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, short ang);
    sizeof is 0x11c; the implicit ctor calls dActor_c C2, stores this class's
    vptr, then dExtCommonModel_c C1 at 0xd4. The null check is the one `new` itself
    emits. */
-extern "C" daObjRc_Hane_c *daObjRc_Hane_c_classInit()
-{
+extern "C" daObjRc_Hane_c *daObjRc_Hane_c_classInit() {
     return new daObjRc_Hane_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjRc_Hane_c13InitResourcesEv
-s32 daObjRc_Hane_c::InitResources()
-{
-    BMD_File *file = (BMD_File *)Model::LoadFile(data_ov036_02114070);
+s32 daObjRc_Hane_c::InitResources() {
+    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov036_02114070);
     mModel.SetFile(file, 1, -1);
 
     /* Two independent bits of the spawn parameter: bit 0 mirrors the wing,
@@ -175,8 +153,7 @@ s32 daObjRc_Hane_c::InitResources()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjRc_Hane_c8BehaviorEv
-s32 daObjRc_Hane_c::Behavior()
-{
+s32 daObjRc_Hane_c::Behavior() {
     /* mFrame << 10 wraps the frame counter into a full 16-bit turn, and >> 4
        brings it back to the table's entries -- the round trip through s16 is
        what makes the cycle wrap for free. data_02082214[2i] is sin (yaw,
@@ -214,53 +191,45 @@ s32 daObjRc_Hane_c::Behavior()
         }
     }
 
-    func_ov036_02111618(this);
+    UpdateModelTransform();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjRc_Hane_c6RenderEv
-s32 daObjRc_Hane_c::Render()
-{
+s32 daObjRc_Hane_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov036_02111618
+// @symbol _ZN14daObjRc_Hane_c20UpdateModelTransformEv
 /* This class's private "put the model where the actor is" helper, and the
  * reason the rocking is visible at all: it composes the actor's position and
  * three angles into the global scratch matrix, then copies the result into
  * mModel.mat4x3 (mModel + 0xc, object offset 0xe0).
  *
  * The rotation order is Y, X, Z -- yaw first, then the pitch the table
- * drives, then roll.
- *
- * C linkage and the existing name stay: the cartridge calls it with `this`
- * from Behavior above, and other config still names the symbol. */
-extern "C" {
-void func_ov036_02111618(daObjRc_Hane_c *self)
-{
+ * drives, then roll. */
+void daObjRc_Hane_c::UpdateModelTransform() {
     int v[3];
 
-    Vec3_Asr(v, &self->mPosX, 3);
+    Vec3_Asr(v, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
 
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mAngleX);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, self->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
 
-    self->mModel.mat4x3 = data_020a0e68;
-}
+    mModel.mat4x3 = data_020a0e68;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjRc_Hane_c16CleanupResourcesEv
-s32 daObjRc_Hane_c::CleanupResources()
-{
+s32 daObjRc_Hane_c::CleanupResources() {
     data_ov036_02114070.Release();
     return 1;
 }

@@ -1,5 +1,4 @@
-typedef short s16;
-typedef long long s64;
+#include "Ov007Tween.h"
 
 extern void func_ov007_020c90c0(void *c);
 
@@ -10,28 +9,29 @@ inline int keep(int x)
 
 int func_ov007_020c8f98(int *thiz)
 {
+    Ov007Tween *tw = (Ov007Tween *)thiz;
     s16 t;
     int a;
     int b;
-    int *slot;
+    s32 *slot;
 
-    if (thiz[0] == 2) {
-        thiz[0] = 3;
-    } else if (thiz[0] == 1) {
-        switch (thiz[1]) {
+    if (tw->state == 2) {
+        tw->state = 3;
+    } else if (tw->state == 1) {
+        switch (tw->mode) {
         case 0:
-            t = *(s16 *)((char *)thiz + 0xc);
-            a = thiz[6];
-            b = thiz[5];
+            t = tw->t;
+            a = tw->to;
+            b = tw->from;
             if (t < 0x1000) {
                 if (t <= 0)
                     a = b;
                 else
                     a = (int)((((s64)t) * keep(a) + ((s64)(0x1000 - t)) * b) >> 12);
             }
-            slot = (int *)thiz[4];
+            slot = tw->out;
             *slot = a;
-            func_ov007_020c90c0(thiz);
+            func_ov007_020c90c0(tw);
             break;
         case 1: {
             int c;
@@ -40,29 +40,29 @@ int func_ov007_020c8f98(int *thiz)
             int d;
             int ad;
             int sg;
-            int dn; /* stays a flag: setting thiz[0] inside the arm shrinks it (0xdc) */
+            int dn; /* stays a flag: setting tw->state inside the arm shrinks it (0xdc) */
 
-            c = *(int *)thiz[4];
-            target = thiz[6];
-            st = thiz[2];
+            c = *tw->out;
+            target = tw->to;
+            st = tw->step;
             d = target - c;
             if (d >= 0)
                 ad = d;
             else
                 ad = -d;
             if (ad <= st) {
-                *(int *)thiz[4] = target;
+                *tw->out = target;
                 dn = 1;
             } else {
                 if (d >= 0)
                     sg = 1;
                 else
                     sg = -1;
-                *(int *)thiz[4] = st * sg + c;
+                *tw->out = st * sg + c;
                 dn = 0;
             }
             if (dn != 0)
-                thiz[0] = 2;
+                tw->state = 2;
             break;
         }
         default:
@@ -70,7 +70,7 @@ int func_ov007_020c8f98(int *thiz)
         }
     }
 
-    if (thiz[0] == 3)
+    if (tw->state == 3)
         return 1;
     return 0;
 }

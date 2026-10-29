@@ -4,26 +4,19 @@
  *
  * No fields. InitResources / CleanupResources hand this overlay's
  * model and collision files to daObjGuragura_c's shared ov002 helpers.
- * func_ov002_020b6244 loads slot 0 with Model::LoadFile, slot 1 with
+ * InitResourcesFrom loads slot 0 with dExtSimpleModel_c::LoadFile, slot 1 with
  * dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile. ov064 sinit
  * constructs those SharedFilePtrs as file IDs 1523 / 1524.
  *
  * daObjFl_Gura_c_classInit is reconstructed (RTTI daObjFl_Gura_c,
  * FL_GURA registry). Retail does not store that spelling.
  *
- * deslop
- * Leftover: func_ov002_020b6244 / func_ov002_020b60fc are still
- *   linker names. Naming belongs in ov002.
- * Leftover: data_ov064_0211adb0 is overlay .rodata this TU does not
- *   own; the BMD/KCL SharedFilePtrs and CLPS_Block are still
- *   data_ov064_*.
+ * What stays: data_ov064_0211adb0 is overlay .rodata this TU does not
+ * own; the BMD/KCL SharedFilePtrs and CLPS_Block are still data_ov064_*.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_fl_gura_AssetId {
-    ASSET_FL_GURA_BMD = 0x05f3,
-    ASSET_FL_GURA_KCL = 0x05f4
-};
+enum d_a_obj_fl_gura_AssetId { ASSET_FL_GURA_BMD = 0x05f3, ASSET_FL_GURA_KCL = 0x05f4 };
 
 #include "daObjFl_Gura_c.h"
 #include "SpawnInfo.h"
@@ -36,18 +29,12 @@ struct ResourceDescriptor {
     SharedFilePtr *collision;
     CLPS_Block *clps;
 };
-typedef char ResourceDescriptor_size_must_be_0x0c[
-    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
-extern "C" {
-int func_ov002_020b6244(daObjGuragura_c *self, ResourceDescriptor *descriptor);
-int func_ov002_020b60fc(daObjGuragura_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov064_0211adb0;
-}
 
 // @symbol daObjFl_Gura_c_classInit
-extern "C" daObjFl_Gura_c *daObjFl_Gura_c_classInit()
-{
+extern "C" daObjFl_Gura_c *daObjFl_Gura_c_classInit() {
     return new daObjFl_Gura_c();
 }
 
@@ -64,15 +51,13 @@ extern "C" SpawnInfo<daObjFl_Gura_c> g_profile_FL_GURA = {
 };
 
 // @symbol _ZN14daObjFl_Gura_c13InitResourcesEv
-s32 daObjFl_Gura_c::InitResources()
-{
-    return func_ov002_020b6244(this, &data_ov064_0211adb0);
+s32 daObjFl_Gura_c::InitResources() {
+    return InitResourcesFrom(&data_ov064_0211adb0);
 }
 
 // @symbol _ZN14daObjFl_Gura_c16CleanupResourcesEv
-s32 daObjFl_Gura_c::CleanupResources()
-{
-    return func_ov002_020b60fc(this, &data_ov064_0211adb0);
+s32 daObjFl_Gura_c::CleanupResources() {
+    return CleanupResourcesFrom(&data_ov064_0211adb0);
 }
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
@@ -81,12 +66,10 @@ s32 daObjFl_Gura_c::CleanupResources()
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct FlGuraModelFilePtr : SharedFilePtr {
-    u32 words[2];
     FlGuraModelFilePtr(u32 fileID);
     ~FlGuraModelFilePtr();
 };
 struct FlGuraCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     FlGuraCollisionFilePtr(u32 fileID);
     ~FlGuraCollisionFilePtr();
 };
@@ -94,5 +77,5 @@ struct FlGuraCollisionFilePtr : SharedFilePtr {
 // @symbol __sinit_d_a_obj_fl_gura.cpp
 /* The retail initializer constructs the model first, then the collision
  * file. */
-FlGuraModelFilePtr gFlGuraModelFile(ASSET_FL_GURA_BMD);      /* model */
-FlGuraCollisionFilePtr gFlGuraCollisionFile(ASSET_FL_GURA_KCL);  /* collision */
+FlGuraModelFilePtr gFlGuraModelFile(ASSET_FL_GURA_BMD);         /* model */
+FlGuraCollisionFilePtr gFlGuraCollisionFile(ASSET_FL_GURA_KCL); /* collision */

@@ -7,17 +7,13 @@
  * 0x020f0e08, then a D2 the cartridge does not keep. defer_codegen off
  * lays this file down in ROM order.
  *
- * leftovers:
- * - TextureSequence::SetFile and Particle::System::NewSimple stay
- *   mangled. Both take Fix12<int> by value.
- * - SharedFilePtr has no fields, so InitResources reads the loaded
- *   BMD and BTP at +4 of data_ov002_02110aa4 and 02110a9c.
+ * Notes:
  * - Behavior keeps a volatile read of mPosY and of pos.z. A plain
  *   read is folded into the add and the stores above it.
  * - The follow target's position is read through &mPos. Naming that
  *   actor's mPosX/Y/Z DIFFs.
- * - func_ov002_020f0e54 keeps the char * parameters decl_common.h
- *   declares. It is Player::IncMegaKillCount's attach helper.
+ * - SetFollowTarget is Player::IncMegaKillCount's attach helper; that
+ *   caller passes a null owner.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -30,13 +26,15 @@ enum daObj1UpLogo_c_AssetId {
 #include "decl_common.h"
 #include "daObj1UpLogo_c.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
+#include "math/MtxStack.h"
 
 /* 20.12 launch. Same numbers as daObjNumber_c's score popup. */
 enum {
-    kRiseSpeed = 0x14000,        /* 20.0 */
-    kGravity = -0x2000,          /* -0.5 */
-    kTerminalSpeed = -0x32000,   /* -50.0 */
-    kBounceSpeed = 0xf000,       /* 15.0 */
+    kRiseSpeed = 0x14000,      /* 20.0 */
+    kGravity = -0x2000,        /* -0.5 */
+    kTerminalSpeed = -0x32000, /* -50.0 */
+    kBounceSpeed = 0xf000,     /* 15.0 */
     kPopParticle = 0xd2,
     kBtpFlags = 0x40000000,
     kFrameCountCap = 8,
@@ -49,64 +47,44 @@ enum {
  * are local; the handle constructors and destructors are the ROM
  * resource-family functions, aliased in the manifest. */
 struct OneUpLogoModelFile : SharedFilePtr {
-    u32 words[2];
-
     OneUpLogoModelFile(u32 fileID);
     ~OneUpLogoModelFile();
 };
 
 struct OneUpLogoTexSeqFilePtr : SharedFilePtr {
-    u32 words[2];
-
     OneUpLogoTexSeqFilePtr(u32 fileID);
     ~OneUpLogoTexSeqFilePtr();
 };
 
-extern OneUpLogoModelFile data_ov002_02110aa4; /* BMD */
+extern OneUpLogoModelFile data_ov002_02110aa4;     /* BMD */
 extern OneUpLogoTexSeqFilePtr data_ov002_02110a9c; /* BTP */
-
-extern "C" {
-void Matrix4x3_FromTranslation(Matrix4x3 *matrix, s32 x, s32 y, s32 z);
-void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-    void *self, void *btp, int flags, int speed, unsigned int startFrame);
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-    u32 id, s32 x, s32 y, s32 z);
-}
 
 /* Emission order is ROM order. Do not reorder. */
 #pragma defer_codegen off
 
 // @symbol _ZN14daObj1UpLogo_cD1Ev
 // @symbol _ZN14daObj1UpLogo_cD0Ev
-daObj1UpLogo_c::~daObj1UpLogo_c()
-{
-}
+daObj1UpLogo_c::~daObj1UpLogo_c() {}
 
-// @symbol func_ov002_020f0e54
+// @symbol _ZN14daObj1UpLogo_c15SetFollowTargetEP8dActor_c
 /* Player::IncMegaKillCount's attach helper. Not a vtable slot. The only
- * caller passes a null owner. Parameters stay char* -- that is the
- * declaration in decl_common.h. */
-extern "C" void func_ov002_020f0e54(char *a, char *b)
-{
-    if (b == 0)
+ * caller passes a null owner. */
+void daObj1UpLogo_c::SetFollowTarget(dActor_c *owner) {
+    if (owner == 0)
         return;
-    daObj1UpLogo_c *self = (daObj1UpLogo_c *)a;
-    dActor_c *owner = (dActor_c *)b;
-    self->mOwnerUniqueID = owner->uniqueID;
-    self->mFollowOffsetY = self->mPosY - owner->mPosY;
+    mOwnerUniqueID = owner->uniqueID;
+    mFollowOffsetY = mPosY - owner->mPosY;
 }
 
 // @symbol _ZN14daObj1UpLogo_c16CleanupResourcesEv
-s32 daObj1UpLogo_c::CleanupResources()
-{
+s32 daObj1UpLogo_c::CleanupResources() {
     data_ov002_02110aa4.Release();
     data_ov002_02110a9c.Release();
     return 1;
 }
 
 // @symbol _ZN14daObj1UpLogo_c6RenderEv
-s32 daObj1UpLogo_c::Render()
-{
+s32 daObj1UpLogo_c::Render() {
     if (mDelay != 0) {
         mDelay--;
         return 1;
@@ -117,8 +95,7 @@ s32 daObj1UpLogo_c::Render()
 }
 
 // @symbol _ZN14daObj1UpLogo_c8BehaviorEv
-s32 daObj1UpLogo_c::Behavior()
-{
+s32 daObj1UpLogo_c::Behavior() {
     Vector3 pos;
 
     if (mDelay != 0)
@@ -140,8 +117,7 @@ s32 daObj1UpLogo_c::Behavior()
     case 1:
         if (mPosY < mStartPos.y) {
             /* Volatile: a plain mPosY read is folded into the add above. */
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-                kPopParticle, mPosX, *(volatile s32 *)&mPosY, mPosZ);
+            Particle::System::NewSimple(kPopParticle, mPosX, *(volatile s32 *)&mPosY, mPosZ);
             MarkForDestruction();
         }
         break;
@@ -169,22 +145,15 @@ s32 daObj1UpLogo_c::Behavior()
 }
 
 // @symbol _ZN14daObj1UpLogo_c13InitResourcesEv
-s32 daObj1UpLogo_c::InitResources()
-{
+s32 daObj1UpLogo_c::InitResources() {
     unsigned int count = param1;
     unsigned short frame = (unsigned short)(count > kFrameCountCap ? kLastFrame : (count - 1));
-    TextureSequence::LoadFile(data_ov002_02110a9c);
-    if (mModel.SetFile((BMD_File *)Model::LoadFile(data_ov002_02110aa4), 1, -1) == 0)
+    dExtAnmTexPat_c::LoadFile(data_ov002_02110a9c);
+    if (mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_02110aa4), 1, -1) == 0)
         return 0;
-    TextureSequence::Prepare(
-        **(BMD_File **)((char *)&data_ov002_02110aa4 + 4),
-        **(BTP_File **)((char *)&data_ov002_02110a9c + 4));
-    /* InitResources: SetFile's Fix12<int> parameter. A braced method call
-       does not compile, so this stays the scalar extern. */
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-        &mTextureSequence,
-        *(void **)((char *)&data_ov002_02110a9c + 4),
-        kBtpFlags, 0, frame);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_02110aa4.filePtr,
+                             *(BTP_File *)data_ov002_02110a9c.filePtr);
+    mTextureSequence.SetFile(*(BTP_File *)data_ov002_02110a9c.filePtr, kBtpFlags, 0, frame);
     mState = 0;
     mStartPos.x = mPosX;
     mStartPos.y = mPosY;
@@ -200,8 +169,7 @@ s32 daObj1UpLogo_c::InitResources()
 
 // @symbol daObj1UpLogo_c_classInit
 /* Historical alias OneUpLogo_Spawn. */
-extern "C" daObj1UpLogo_c *daObj1UpLogo_c_classInit()
-{
+extern "C" daObj1UpLogo_c *daObj1UpLogo_c_classInit() {
     return new daObj1UpLogo_c();
 }
 

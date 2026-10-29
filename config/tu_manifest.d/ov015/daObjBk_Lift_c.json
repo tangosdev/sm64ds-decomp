@@ -63,7 +63,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN14daObjBk_Lift_c19func_ov015_021123c8Ev",
+      "symbol": "_ZN14daObjBk_Lift_c12UpdateShadowEv",
       "address": "0x021123c8",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov015_021123c8.cpp",
@@ -98,14 +98,14 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZN14daObjBk_Lift_c19func_ov015_021128e8EPv",
+      "symbol": "_ZN14daObjBk_Lift_c9OnStoodOnEP8dActor_c",
       "address": "0x021128e8",
       "size": "0x00000010",
       "legacy_source": "src/func_ov015_021128e8.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov015_021128f8",
+      "symbol": "_ZN14daObjBk_Lift_c15StoodOnCallbackEP4dBgWP8dActor_cS3_",
       "address": "0x021128f8",
       "size": "0x00000014",
       "legacy_source": "src/func_ov015_021128f8.c",
@@ -234,14 +234,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@728",
+      "from": "@762",
       "to": "@44",
-      "evidence": "mwcc numbers this model registration node @714 per TU and ov063 already defines a global @714, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this model registration node @714 per TU and ov063 already defines a global @714, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; the stood-on pair and the shadow helper taking real names, Particle__System.h in place of the local stub and the dead named-parameter externs going move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@729",
+      "from": "@763",
       "to": "@45",
-      "evidence": "mwcc numbers this collision registration node @715 per TU and ov063 already defines a global @715, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this collision registration node @715 per TU and ov063 already defines a global @715, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; the stood-on pair and the shadow helper taking real names, Particle__System.h in place of the local stub and the dead named-parameter externs going move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     }
   ],
   "relocations": [
@@ -533,28 +533,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,

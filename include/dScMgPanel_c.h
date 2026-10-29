@@ -52,7 +52,9 @@ struct dScMgPanel_Scroll {
     u8 on;    /* +0x10 */
     u8 phase; /* +0x11 */
     u8 timer; /* +0x12 */
-    u8 pad_13;
+    /* Frames until Scroll_Update drops the next pair of edge particles: it
+       counts down, and at 0 spawns two and reloads 3 (phase 0) or 2. */
+    u8 spawnDelay; /* +0x13 */
 };
 
 /* One of the 64 debris particles (Particle_UpdateAll steps them). */
@@ -109,25 +111,61 @@ struct dScMgPanel_c : dScMgBase_c {
     s32 mFlips;                           /* 0x4cc0 how many panels the deal flips */
     s32 mX[0x24];                         /* 0x4cc4 panel x, Fix12 */
     s32 mY[0x24];                         /* 0x4d54 panel y, Fix12 */
-    u8 pad_4de4[0xe0];                    /* 0x4de4 flash timers and the last five deals */
-    s16 mDelay;                           /* 0x4ec4 countdown; helpers also read it as u16 */
-    u8 pad_4ec6[0x34];
+    /* ScramblePanels' last alt-variant pick (0..0xe); a reroll avoids
+       dealing the same one twice. */
+    s32 mLastPuzzle; /* 0x4de4 */
+    /* Per-panel flip animation, three u16[0x24] arrays ResetRound clears
+       together. Panel_StateFlip waits out mFlipDelay, then ticks mAnimTimer
+       to 4 (mFastFlip) or 8 and steps mFlipFrame, ending the flip past 5.
+       Panel_StateBlink toggles mVisible on mAnimTimer bit 3 until 0x40. */
+    u16 mFlipFrame[0x24]; /* 0x4de8 DrawPanels' flip sprite index */
+    u16 mAnimTimer[0x24]; /* 0x4e30 */
+    u16 mFlipDelay[0x24]; /* 0x4e78 8 for the neighbours of a flip, 0 for its centre */
+    u16 mResultTimer;     /* 0x4ec0 frames before the result: 0x40 once solved,
+                             0x50 once out of credits, 0x10 to rewind;
+                             Scene_StateResult/_StateGameOver count it down */
+    u8 pad_4ec2[0x2];
+    s16 mDelay; /* 0x4ec4 countdown; helpers also read it as u16 */
+    u16 mScrollFrames;     /* 0x4ec6 Scene_StateResult counts the frames it runs
+                              Scroll_Update; ResetRound clears it; nothing
+                              reads it */
+    u8 mPastFlips[5][0xa]; /* 0x4ec8 HasDuplicateRows: the first 0xa mFlipAt
+                              of the last five deals, newest first; a repeat
+                              is refused; ClearGrid fills it with 0xff */
     u8 mKind[0x24];    /* 0x4efa per-panel behavior index */
     u8 mFace[0x24];    /* 0x4f1e current face, flipped by the deal and by touches */
     u8 mGoal[0x24];    /* 0x4f42 solved pattern; set by the deal, compared
                                 against mFace, drawn as the overlay sprite */
     u8 mVisible[0x24]; /* 0x4f66 drawn only while non-zero (02105ab4);
                                 02106048 sets every entry at intro end */
-    u8 pad_4f8a[0x24];
-    u8 mFlipAt[0x30]; /* 0x4fae panels the deal flipped */
+    u8 mFastFlip[0x24]; /* 0x4f8a set (with mKind 1) where Answer_StateFind-
+                           Solution, _StateResetBoard and UpdateMoves flip a
+                           panel: Panel_StateFlip then steps every 4 frames,
+                           not 8; Panel_StateIdle clears it */
+    u8 mFlipAt[0x20];   /* 0x4fae panels the deal flipped; ResetRound fills
+                           0x20 with 0xff */
+    u8 mTouchLog[0x10]; /* 0x4fce panels the player touched, in order:
+                           UpdateTouch appends, UpdateMoves undoes them last
+                           first; ResetRound zeroes 0x10 */
     u8 mFlipCount;    /* 0x4fde */
     u8 mClear;        /* 0x4fdf set once every mKind is back to 0 */
     u8 mInputState;   /* 0x4fe0 indexes the four input handlers */
     u8 mMovesUsed;    /* 0x4fe1 accepted touches since the last reset */
     u8 mCredits;      /* 0x4fe2 starts at 3; a miss takes one */
-    u8 pad_4fe3[0x6];
-    u8 mBusy;    /* 0x4fe9 a flip is still playing */
-    u8 unk_4fea; /* 0x4fea only ever written 0 */
+    u8 mCreditsOn;    /* 0x4fe3 DrawCursor draws mCredits only while set:
+                         IntroCard_StateSlideOut sets it, the round end clears it */
+    u8 mTouchCount;   /* 0x4fe4 entries in mTouchLog */
+    u8 mReplayStep;   /* 0x4fe5 next mFlipAt entry Answer_StateFlipSolution plays */
+    u8 mSolved;       /* 0x4fe6 set by CountFlipping once every mFace matches
+                         mGoal; Scene_StateResult clears the round on it and
+                         lets a touch skip mResultTimer only without it */
+    u8 mGoalTimer;    /* 0x4fe7 Scene_StateIntro: frames toward the next mGoalFrame step */
+    u8 mGoalFrame;    /* 0x4fe8 counts 2 down to 0 every 8 frames, then play
+                         starts; DrawPanels draws the goal overlay with it */
+    u8 mBusy;         /* 0x4fe9 a flip is still playing */
+    u8 unk_4fea;      /* 0x4fea only ever written 0 */
+    u8 mCheckDelay;   /* 0x4feb UpdateTouch arms 0x28; CheckSolved counts it down
+                         while a flip plays and compares the faces at 0 */
 
     /* Helpers the state tables and the vtable bodies call. The address is the
        method name; no ROM spelling survives. */

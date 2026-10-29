@@ -27,7 +27,9 @@ dFdBrightness_c::~dFdBrightness_c() {}
 // SOMETHING in the slots for the vtables to link. Defaults chosen to be
 // inert and loud-adjacent: value-returning slots report "at neither end".
 void dFader_c::AdvanceFade() {}
-int dFader_c::SetBackwardTime(u32) { return 0; }
+int dFader_c::SetBackwardTime(u32, u32) {
+    return 0;
+}
 int dFader_c::SetForwardTime(u32) { return 0; }
 int dFader_c::IsAtStart() { return 0; }
 int dFader_c::IsAtEnd() { return 0; }

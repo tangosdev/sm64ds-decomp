@@ -20,16 +20,16 @@
  *     is the fBase_c/dScene_c convention: no slot 1 (BeforeInitResources)
  *     override, matching dScMiniGm_c and unlike dScEntry_c.
  *
- * CONSTRUCTION. dScDSMT_c_classInit is the factory: it opens with
- * `_ZN7fBase_cnwEj(0x64)` -- fBase_c::operator new(0x64). SIZE 0x64 (100
- * bytes) therefore comes directly off the allocator call.
+ * CONSTRUCTION. dScDSMT_c_classInit is the factory, `return new dScDSMT_c`:
+ * it opens with `_ZN7fBase_cnwEm(0x64)` -- fBase_c::operator new(0x64), so
+ * SIZE 0x64 (100 bytes) comes directly off the allocator call.
  *
- * The same function writes the vtable chain fBase_c -> (dBase_c/dScene_c
- * inlined) -> data_ov007_021032e8 (dScDSMT_c's own vtable), ORs two spawn-
- * flag bits at fBase_c's own 0x13 (unrelated to this class), then at 0x50
- * writes a nested object's vtable word twice (data_0208ee14, then
- * data_ov007_021032b0 -- a base-then-derived vptr-store pair) and calls the
- * shared helper _ZN10dFdDummy_cC1Ev(p + 0x54) to finish constructing it. The
+ * The implicit constructor that `new` inlines writes the vtable chain
+ * fBase_c -> (dBase_c/dScene_c inlined) -> _ZTV9dScDSMT_c, ORs two spawn-
+ * flag bits at fBase_c's own 0x13 (unrelated to this class), then constructs
+ * the two members: mGraphCallback at 0x50 gets its base-then-derived vptr
+ * pair (_ZTVN8dGraph_c10callback_cE, then _ZTVN9dScDSMT_c15graphCallback_cE)
+ * inline, and fader at 0x54 gets a call to _ZN10dFdDummy_cC1Ev. The
  * destructor (func_ov007_020cc028 / _020cc070) tears down the same range
  * with func_02017254(t + 0x54) before calling fBase_c's D2.
  *
@@ -38,10 +38,9 @@
  * graph records under this class, dScDSMT_c::graphCallback_c (base
  * dGraph_c::callback_c -- config/arm9/overlays/ov007/symbols.txt has
  * _ZTIN9dScDSMT_c15graphCallback_cE / _ZTSN9dScDSMT_c15graphCallback_cE
- * right next to dScDSMT_c's own RTTI). Two of its slots are independently
- * resolvable (GraphCallback0/2 at slots 0/2 of dGraph_c::callback_c's own
- * table) but recovering graphCallback_c's own internal layout is a
- * separate, later pass, so it stays opaque storage below.
+ * right next to dScDSMT_c's own RTTI). It overrides slots 0 and 2
+ * (GraphCallback0/2) of dGraph_c::callback_c's table and adds no fields:
+ * the vptr is the whole sub-object.
  *
  * IT IS NOT THE WHOLE RANGE, though this header used to say it was. The
  * constructor writes graphCallback_c's base-then-derived vptr pair at 0x50
@@ -62,12 +61,20 @@
  */
 struct dScDSMT_c : dScene_c {
 
-    class graphCallback_c;
-    u8  unk_050[0x4];  /* 0x050 -- opaque; the graphCallback_c sub-object,
-                                    whose own layout is a later pass. The
-                                    constructor writes a base-then-derived
-                                    vptr pair here and touches nothing else
-                                    below 0x54 -- see the note above */
+    /* The nested class the ROM's type graph records for this scene
+       (_ZTIN9dScDSMT_c15graphCallback_cE, ov007). It is defined here, not
+       after the class, because mGraphCallback below holds one by value. */
+    class graphCallback_c : public dGraph_c::callback_c {
+    public:
+        virtual int GraphCallback0(); /* slot 0 */
+        virtual int GraphCallback2(); /* slot 2 */
+    };
+
+    /* 0x050 -- the constructor writes its base-then-derived vptr pair here
+       and touches nothing else below 0x54 (see the note above), and
+       InitResources publishes its address as the active graph callback,
+       data_0209d4a8. */
+    graphCallback_c mGraphCallback;
     dFdDummy_c fader;  /* 0x054 -- member. The cartridge's own ~dScDSMT_c
                                     calls _ZN10dFdDummy_cD1Ev at +0x054
                                     (D0/D1), a relocation the ROM build
@@ -89,26 +96,10 @@ struct dScDSMT_c : dScene_c {
     virtual void OnPendingDestroy();                      /* slot 12 */
 };
 
-/* The nested class the ROM's type graph records for this scene
-   (_ZTIN9dScDSMT_c15graphCallback_cE, ov007), deriving from
-   dGraph_c::callback_c. Declaring it adds no storage -- the sub-object
-   itself is the vptr-only span already held as unk_050 below, whose own
-   internal layout stays a later pass.
-
-   The slots are declared virtual, matching dGraph_c::callback_c's own
-   declarations (include/dGraph_c.h): the base supplies the vptr at +0x0,
-   so the derived fields fall where the ROM puts them, and strict object
-   isolation discards the vtable/RTTI passengers the function range does
-   not own. */
-class dScDSMT_c::graphCallback_c : public dGraph_c::callback_c {
-public:
-    virtual int GraphCallback0();                            /* slot 0 */
-    virtual int GraphCallback2();                            /* slot 2 */
-};
-
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScDSMT_c_size_must_be_0x64[sizeof(dScDSMT_c) == 0x64 ? 1 : -1];
+typedef char graphCallback_c_size_must_be_0x4[sizeof(dScDSMT_c::graphCallback_c) == 0x4 ? 1 : -1];
 #endif
 
 #endif

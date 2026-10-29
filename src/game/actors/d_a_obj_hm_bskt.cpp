@@ -5,7 +5,7 @@
  * Hangs from its mesh collider until something gives it downward
  * acceleration; from then on it falls, and the star actor it spawned at
  * InitResources rides 0x3c000 above it. When the falling cage lands,
- * func_ov030_0211124c destroys both it and the star and puffs two particle
+ * CheckLanding destroys both it and the star and puffs two particle
  * effects where they were.
  *
  * daObjHmBskt_c_classInit is a reconstructed source-style name: SM64DS proves
@@ -15,83 +15,49 @@
  * preserved. Historical alias: UkikiCage_Spawn. Coined C name; it makes no
  * parameter-type claim.
  *
- * deslop
- * Leftover: func_ov030_0211124c keeps its address-derived name and its
- *   char* parameters. The ROM proves the body, the call site and the class
- *   that owns the call; it proves no name and no parameter types, and
- *   include/decl_common.h already declares this exact spelling.
- * Leftover: dBgActor_c::IsClsnInRangeOnScreen, dBgW_KcMbg::SetFile and
- *   dBgCh_Actr::Init stay mangled -- each takes Fix12<int> by value, the
- *   known mwccarm language-mode wall, and a typed call homes the argument.
- * Leftover: Behavior needs the four-word volatile stack reservation to
+ * Notes:
+ * - Behavior needs the four-word volatile stack reservation to
  *   reproduce the cartridge's frame; without it the body is 17 words short.
- * Leftover: data_ov030_02115c80 / 02115c88 are this overlay's KCL and BMD
- *   handles (InitResources LoadFile / CleanupResources Release), and
- *   data_ov030_02114ee4 is the CLPS block SetFile is handed. All three live
- *   in overlay .data and .bss this TU does not own.
- * Leftover: g_profile_HM_BASKET lives outside this TU.
- * Leftover: inline destructor (out of line emits D0 before D1).
+ * - data_ov030_02114ee4 is the CLPS block SetFile is handed, in overlay data
+ *   this TU does not own.
+ * - g_profile_HM_BASKET lives outside this TU.
+ * - The destructor is inline: out of line emits D0 before D1.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_hm_bskt_AssetId {
-    ASSET_HM_BASKET_BMD = 0x0618,
-    ASSET_HM_BASKET_KCL = 0x0619
-};
+enum d_a_obj_hm_bskt_AssetId { ASSET_HM_BASKET_BMD = 0x0618, ASSET_HM_BASKET_KCL = 0x0619 };
 
 #include "daObjHmBskt_c.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
 
 struct KCL_File;
 struct CLPS_Block;
 
-/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
- * cartridge's ctor/dtor imports are the functions the wrappers' aliases name. */
+/* The cartridge's ctor/dtor imports are the functions the wrappers' aliases
+ * name. */
 struct HmBsktModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     HmBsktModelFilePtr(u32 fileID);
     ~HmBsktModelFilePtr();
 };
 
 struct HmBsktCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     HmBsktCollisionFilePtr(u32 fileID);
     ~HmBsktCollisionFilePtr();
 };
 
-extern "C" {
 extern HmBsktCollisionFilePtr data_ov030_02115c80; /* the KCL */
 extern HmBsktModelFilePtr data_ov030_02115c88;     /* the BMD */
 extern CLPS_Block data_ov030_02114ee4;
 
-int func_ov030_0211124c(char *c, char *mc);
-
-int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(
-    dBgActor_c *self, s32 range, s32 offsetY);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
-    Fix12i scale, s16 angle, CLPS_Block *clps);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    dBgCh_Actr *self, dActor_c *actor, Fix12i radius, Fix12i height,
-    Vector3_16 *a, Vector3_16 *b);
-
-void dBgCh_Actr_UpdateContinuous_Veneer(void *);
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-    unsigned int, int, int, int);
-}
-
 // @symbol daObjHmBskt_c_classInit
-extern "C" daObjHmBskt_c *daObjHmBskt_c_classInit()
-{
+extern "C" daObjHmBskt_c *daObjHmBskt_c_classInit() {
     return new daObjHmBskt_c();
 }
 
 // @symbol _ZN13daObjHmBskt_c13InitResourcesEv
-s32 daObjHmBskt_c::InitResources()
-{
-    BMD_File *modelFile = (BMD_File *)Model::LoadFile(data_ov030_02115c88);
+s32 daObjHmBskt_c::InitResources() {
+    BMD_File *modelFile = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov030_02115c88);
     mModel.SetFile(modelFile, 1, -1);
 
     mVertAccel = 0;
@@ -101,40 +67,36 @@ s32 daObjHmBskt_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
 
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+    mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(data_ov030_02115c80);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, clsnFile, &mClsnMat, 0x199, mAngleY,
-        &data_ov030_02114ee4);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile(clsnFile, mClsnMat, 0x199, mAngleY, data_ov030_02114ee4);
 
     Vector3 starPos;
     starPos.x = mPosX;
     starPos.y = mPosY;
     starPos.z = mPosZ;
     starPos.y += 0x3c000;
-    mStarActor = dActor_c::Spawn(
-        0xb2, (u8)(param1 & 0xf) | 0x50, starPos, 0, mAreaId, -1);
+    mStarActor = dActor_c::Spawn(0xb2, (u8)(param1 & 0xf) | 0x50, starPos, 0, mAreaId, -1);
 
     return 1;
 }
 
 // @symbol _ZN13daObjHmBskt_c8BehaviorEv
-s32 daObjHmBskt_c::Behavior()
-{
+s32 daObjHmBskt_c::Behavior() {
     volatile int dummy[4];
     (void)&dummy;
 
-    _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0);
+    IsClsnInRangeOnScreen(0, 0);
     mAngleY = mAngleY + mHorzSpeed;
 
     if (mVertAccel != 0) {
         mFlags &= ~1;
         UpdatePos(0);
-        func_ov030_0211124c((char *)this, (char *)&mWithMeshClsn);
+        CheckLanding(&mWithMeshClsn);
 
         s32 y = mPosY;
         s32 z = mPosZ;
@@ -149,8 +111,7 @@ s32 daObjHmBskt_c::Behavior()
 }
 
 // @symbol _ZN13daObjHmBskt_c6RenderEv
-s32 daObjHmBskt_c::Render()
-{
+s32 daObjHmBskt_c::Render() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     mModel.Render(0);
@@ -158,8 +119,7 @@ s32 daObjHmBskt_c::Render()
 }
 
 // @symbol _ZN13daObjHmBskt_c16CleanupResourcesEv
-s32 daObjHmBskt_c::CleanupResources()
-{
+s32 daObjHmBskt_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
@@ -168,22 +128,25 @@ s32 daObjHmBskt_c::CleanupResources()
     return 1;
 }
 
-// @symbol func_ov030_0211124c
-extern "C" int func_ov030_0211124c(char *c, char *mc)
-{
-    daObjHmBskt_c *self = (daObjHmBskt_c *)c;
-    dBgCh_Actr_UpdateContinuous_Veneer(mc);
-    int g = ((dBgCh_Actr *)mc)->IsOnGround();
-    if (!g) return g;
-    self->mStarActor->MarkForDestruction();
-    int px = self->mPosX;
-    int pz = self->mPosZ;
-    int py = self->mPosY + 0x96000;
+/* Step the falling cage's collision. Once it is on the ground, destroy the
+ * star it carried, respawn a free star 150.0 above the landing point, puff
+ * two particle effects and destroy the cage. The landed path falls off the
+ * end without a return value; the caller ignores it. */
+// @symbol _ZN13daObjHmBskt_c12CheckLandingEP10dBgCh_Actr
+int daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
+    dBgCh_Actr_UpdateContinuous_Veneer(clsn);
+    int g = clsn->IsOnGround();
+    if (!g)
+        return g;
+    mStarActor->MarkForDestruction();
+    int px = mPosX;
+    int pz = mPosZ;
+    int py = mPosY + 0x96000;
     Vector3 p(px, py, pz);
-    dActor_c::Spawn(0xb2, (unsigned char)(self->param1 & 0xf) | 0x20, p, 0, self->mAreaId, -1);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb, self->mPosX, self->mPosY, self->mPosZ);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd, self->mPosX, self->mPosY, self->mPosZ);
-    self->MarkForDestruction();
+    dActor_c::Spawn(0xb2, (unsigned char)(param1 & 0xf) | 0x20, p, 0, mAreaId, -1);
+    Particle::System::NewSimple(0xb, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(0xd, mPosX, mPosY, mPosZ);
+    MarkForDestruction();
 }
 
 /* _ZN13daObjHmBskt_cD1Ev and _ZN13daObjHmBskt_cD0Ev are NOT WRITTEN HERE ON

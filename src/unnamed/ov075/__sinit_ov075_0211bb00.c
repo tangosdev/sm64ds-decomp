@@ -1,10 +1,26 @@
+/* __sinit_ov075_0211bb00 -- the static initializer of dScEntry_c's unit. It
+ * constructs the scene's graph callback, sets each of the unit's halfword-pair
+ * globals and registers its empty destructor, and fills the step sets (enter, behavior,
+ * render) that dScEntry_c::SetSteps installs. The steps are copied from the
+ * compiler's pointer-to-member literals, so those keep their address names.
+ * Blocker: compiler-emitting it needs dScEntry_c's unit joined into one intact
+ * object; it is split between intact d_s_entry.cpp and text-only
+ * d_s_entry_methods.cpp, and neither owns the .bss step sets. */
 #pragma opt_common_subs off
-struct P2 { int a, b; };
-struct P6 { struct P2 lo, hi, tail; };
 
-/* This generated C initializer must use the compiler-owned linker spelling
- * until its globals can be reconstructed as their original typed C++
- * definitions. */
+/* dScEntry_c::Step, a member-function pointer as the ARM C++ ABI lays it out. */
+struct EntryStep {
+    int func;
+    int thisAdjust;
+};
+
+/* dScEntry_c::StepSet. */
+struct EntryStepSet {
+    struct EntryStep enter;
+    struct EntryStep behavior;
+    struct EntryStep render;
+};
+
 extern void *_ZN10dScEntry_c15graphCallback_cC1Ev(void *);
 extern void func_020731dc(void *, void *, void **);
 extern void NoOpDestructor(void);
@@ -72,79 +88,78 @@ extern int data_ov075_0211d974;
 extern int data_ov075_0211d978;
 extern int data_ov075_0211d97c;
 
-extern struct P2 data_02086b58;
-extern struct P2 data_ov075_0211c6f8;
-extern struct P2 data_ov075_0211c700;
-extern struct P2 data_ov075_0211c718;
-extern struct P2 data_ov075_0211c728;
-extern struct P2 data_ov075_0211c738;
-extern struct P2 data_ov075_0211c740;
-extern struct P2 data_ov075_0211c748;
-extern struct P2 data_ov075_0211c750;
-extern struct P2 data_ov075_0211c758;
-extern struct P2 data_ov075_0211c760;
-extern struct P2 data_ov075_0211c768;
-extern struct P2 data_ov075_0211c770;
-extern struct P2 data_ov075_0211c780;
-extern struct P2 data_ov075_0211c798;
-extern struct P2 data_ov075_0211c7a0;
-extern struct P2 data_ov075_0211c7a8;
-extern struct P2 data_ov075_0211c7b0;
-extern struct P2 data_ov075_0211c7b8;
-extern struct P2 data_ov075_0211c7c8;
-extern struct P2 data_ov075_0211c7d8;
-extern struct P2 data_ov075_0211c7e8;
-extern struct P2 data_ov075_0211c7f0;
-extern struct P2 data_ov075_0211c800;
-extern struct P2 data_ov075_0211c808;
-extern struct P2 data_ov075_0211c810;
-extern struct P2 data_ov075_0211c818;
-extern struct P2 data_ov075_0211c820;
-extern struct P2 data_ov075_0211c828;
-extern struct P2 data_ov075_0211c830;
-extern struct P2 data_ov075_0211c838;
-extern struct P2 data_ov075_0211c840;
-extern struct P2 data_ov075_0211c848;
-extern struct P2 data_ov075_0211c850;
-extern struct P2 data_ov075_0211c858;
-extern struct P2 data_ov075_0211c860;
-extern struct P2 data_ov075_0211c868;
-extern struct P2 data_ov075_0211c878;
-extern struct P2 data_ov075_0211c888;
-extern struct P2 data_ov075_0211c898;
-extern struct P2 data_ov075_0211c8a0;
-extern struct P2 data_ov075_0211c8a8;
-extern struct P2 data_ov075_0211c8b8;
-extern struct P2 data_ov075_0211c8c0;
-extern struct P2 data_ov075_0211c8c8;
-extern struct P2 data_ov075_0211c8d0;
-extern struct P2 data_ov075_0211c8d8;
+extern struct EntryStep data_02086b58;
+extern struct EntryStep data_ov075_0211c6f8;
+extern struct EntryStep data_ov075_0211c700;
+extern struct EntryStep data_ov075_0211c718;
+extern struct EntryStep data_ov075_0211c728;
+extern struct EntryStep data_ov075_0211c738;
+extern struct EntryStep data_ov075_0211c740;
+extern struct EntryStep data_ov075_0211c748;
+extern struct EntryStep data_ov075_0211c750;
+extern struct EntryStep data_ov075_0211c758;
+extern struct EntryStep data_ov075_0211c760;
+extern struct EntryStep data_ov075_0211c768;
+extern struct EntryStep data_ov075_0211c770;
+extern struct EntryStep data_ov075_0211c780;
+extern struct EntryStep data_ov075_0211c798;
+extern struct EntryStep data_ov075_0211c7a0;
+extern struct EntryStep data_ov075_0211c7a8;
+extern struct EntryStep data_ov075_0211c7b0;
+extern struct EntryStep data_ov075_0211c7b8;
+extern struct EntryStep data_ov075_0211c7c8;
+extern struct EntryStep data_ov075_0211c7d8;
+extern struct EntryStep data_ov075_0211c7e8;
+extern struct EntryStep data_ov075_0211c7f0;
+extern struct EntryStep data_ov075_0211c800;
+extern struct EntryStep data_ov075_0211c808;
+extern struct EntryStep data_ov075_0211c810;
+extern struct EntryStep data_ov075_0211c818;
+extern struct EntryStep data_ov075_0211c820;
+extern struct EntryStep data_ov075_0211c828;
+extern struct EntryStep data_ov075_0211c830;
+extern struct EntryStep data_ov075_0211c838;
+extern struct EntryStep data_ov075_0211c840;
+extern struct EntryStep data_ov075_0211c848;
+extern struct EntryStep data_ov075_0211c850;
+extern struct EntryStep data_ov075_0211c858;
+extern struct EntryStep data_ov075_0211c860;
+extern struct EntryStep data_ov075_0211c868;
+extern struct EntryStep data_ov075_0211c878;
+extern struct EntryStep data_ov075_0211c888;
+extern struct EntryStep data_ov075_0211c898;
+extern struct EntryStep data_ov075_0211c8a0;
+extern struct EntryStep data_ov075_0211c8a8;
+extern struct EntryStep data_ov075_0211c8b8;
+extern struct EntryStep data_ov075_0211c8c0;
+extern struct EntryStep data_ov075_0211c8c8;
+extern struct EntryStep data_ov075_0211c8d0;
+extern struct EntryStep data_ov075_0211c8d8;
 
-extern struct P6 data_ov075_0211d768;
-extern struct P6 data_ov075_0211d780;
-extern struct P6 data_ov075_0211d798;
-extern struct P6 data_ov075_0211d7b0;
-extern struct P6 data_ov075_0211d7c8;
-extern struct P6 data_ov075_0211d7e0;
-extern struct P6 data_ov075_0211d7f8;
-extern struct P6 data_ov075_0211d810;
-extern struct P6 data_ov075_0211d828;
-extern struct P6 data_ov075_0211d840;
-extern struct P6 data_ov075_0211d858;
-extern struct P6 data_ov075_0211d870;
-extern struct P6 data_ov075_0211d888;
-extern struct P6 data_ov075_0211d8a0;
-extern struct P6 data_ov075_0211d8b8;
-extern struct P6 data_ov075_0211d8d0;
-extern struct P6 data_ov075_0211d8e8;
-extern struct P6 data_ov075_0211d900;
-extern struct P6 data_ov075_0211d918;
-extern struct P6 data_ov075_0211d930;
+extern struct EntryStepSet EntryPlayerSelectIntroSteps;
+extern struct EntryStepSet EntryCourseSelectSteps;
+extern struct EntryStepSet data_ov075_0211d798;
+extern struct EntryStepSet EntryMatchLoadingSteps;
+extern struct EntryStepSet data_ov075_0211d7c8;
+extern struct EntryStepSet data_ov075_0211d7e0;
+extern struct EntryStepSet data_ov075_0211d7f8;
+extern struct EntryStepSet data_ov075_0211d810;
+extern struct EntryStepSet data_ov075_0211d828;
+extern struct EntryStepSet EntryDelaySteps;
+extern struct EntryStepSet EntryFadeOutSteps;
+extern struct EntryStepSet data_ov075_0211d870;
+extern struct EntryStepSet data_ov075_0211d888;
+extern struct EntryStepSet data_ov075_0211d8a0;
+extern struct EntryStepSet data_ov075_0211d8b8;
+extern struct EntryStepSet data_ov075_0211d8d0;
+extern struct EntryStepSet data_ov075_0211d8e8;
+extern struct EntryStepSet data_ov075_0211d900;
+extern struct EntryStepSet data_ov075_0211d918;
+extern struct EntryStepSet data_ov075_0211d930;
 
-void __sinit_ov075_0211bb00(void)
-{
+void __sinit_ov075_0211bb00(void) {
     short *p;
-    struct P2 tmp;
+    struct EntryStep tmp;
     int ta, tb;
 
     _ZN10dScEntry_c15graphCallback_cC1Ev(data_ov075_0211d71c);
@@ -152,34 +167,61 @@ void __sinit_ov075_0211bb00(void)
     p = (short *)(&data_ov075_0211d948);
     ((short *)(&data_ov075_0211d948))[0] = 0x80;
     ((short *)(&data_ov075_0211d948))[1] = 0x10;
-    func_020731dc((short *)(&data_ov075_0211d948), (void *)NoOpDestructor, (void **)&data_ov075_0211d5fc);
+    func_020731dc((short *)(&data_ov075_0211d948), (void *)NoOpDestructor,
+                  (void **)&data_ov075_0211d5fc);
 
-    p = (short *)(&data_ov075_0211d94c); p[0] = 0x3c; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d94c);
+    p[0] = 0x3c;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6bc);
-    p = (short *)(&data_ov075_0211d950); p[0] = 0x1c; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d950);
+    p[0] = 0x1c;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6c8);
 
-    p = (short *)(&data_ov075_0211d954); p[0] = 8; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d954);
+    p[0] = 8;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6e0);
-    p = (short *)(&data_ov075_0211d958); p[0] = 8; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d958);
+    p[0] = 8;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6a4);
-    p = (short *)(&data_ov075_0211d95c); p[0] = 0x20; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d95c);
+    p[0] = 0x20;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6ec);
-    p = (short *)(&data_ov075_0211d960); p[0] = 0x30; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d960);
+    p[0] = 0x30;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6f8);
-    p = (short *)(&data_ov075_0211d964); p[0] = 0x20; p[1] = 0x20;
+    p = (short *)(&data_ov075_0211d964);
+    p[0] = 0x20;
+    p[1] = 0x20;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d710);
-    p = (short *)(&data_ov075_0211d968); p[0] = 0x28; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d968);
+    p[0] = 0x28;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d698);
-    p = (short *)(&data_ov075_0211d96c); p[0] = 0x58; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d96c);
+    p[0] = 0x58;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d5c0);
-    p = (short *)(&data_ov075_0211d970); p[0] = 0x78; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d970);
+    p[0] = 0x78;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d5cc);
-    p = (short *)(&data_ov075_0211d974); p[0] = 0x20; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d974);
+    p[0] = 0x20;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d5d8);
-    p = (short *)(&data_ov075_0211d978); p[0] = 0xa; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d978);
+    p[0] = 0xa;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6b0);
-    p = (short *)(&data_ov075_0211d97c); p[0] = 0; p[1] = 0;
+    p = (short *)(&data_ov075_0211d97c);
+    p[0] = 0;
+    p[1] = 0;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d5e4);
 
     {
@@ -187,16 +229,25 @@ void __sinit_ov075_0211bb00(void)
         int h = 0x10;
         ((short *)(&data_ov075_0211d72c))[0] = (short)sz;
         ((short *)(&data_ov075_0211d72c))[1] = (short)h;
-        func_020731dc((short *)(&data_ov075_0211d72c), (void *)NoOpDestructor, (void **)&data_ov075_0211d5f0);
+        func_020731dc((short *)(&data_ov075_0211d72c), (void *)NoOpDestructor,
+                      (void **)&data_ov075_0211d5f0);
     }
 
-    p = (short *)(&data_ov075_0211d730); p[0] = 0x18; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d730);
+    p[0] = 0x18;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d68c);
-    p = (short *)(&data_ov075_0211d734); p[0] = 0x1c; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d734);
+    p[0] = 0x1c;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d608);
-    p = (short *)(&data_ov075_0211d738); p[0] = 0x1c; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d738);
+    p[0] = 0x1c;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d614);
-    p = (short *)(&data_ov075_0211d73c); p[0] = 0x20; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d73c);
+    p[0] = 0x20;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d620);
 
     {
@@ -204,16 +255,25 @@ void __sinit_ov075_0211bb00(void)
         int h = 0x10;
         ((short *)(&data_ov075_0211d740))[0] = (short)sz;
         ((short *)(&data_ov075_0211d740))[1] = (short)h;
-        func_020731dc((short *)(&data_ov075_0211d740), (void *)NoOpDestructor, (void **)&data_ov075_0211d62c);
+        func_020731dc((short *)(&data_ov075_0211d740), (void *)NoOpDestructor,
+                      (void **)&data_ov075_0211d62c);
     }
 
-    p = (short *)(&data_ov075_0211d744); p[0] = 0x30; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d744);
+    p[0] = 0x30;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d638);
-    p = (short *)(&data_ov075_0211d748); p[0] = 0x30; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d748);
+    p[0] = 0x30;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d644);
-    p = (short *)(&data_ov075_0211d74c); p[0] = 0x30; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d74c);
+    p[0] = 0x30;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d704);
-    p = (short *)(&data_ov075_0211d750); p[0] = 0x18; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d750);
+    p[0] = 0x18;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d650);
 
     {
@@ -221,110 +281,119 @@ void __sinit_ov075_0211bb00(void)
         int h = 0x10;
         ((short *)(&data_ov075_0211d754))[0] = (short)sz;
         ((short *)(&data_ov075_0211d754))[1] = (short)h;
-        func_020731dc((short *)(&data_ov075_0211d754), (void *)NoOpDestructor, (void **)&data_ov075_0211d65c);
+        func_020731dc((short *)(&data_ov075_0211d754), (void *)NoOpDestructor,
+                      (void **)&data_ov075_0211d65c);
     }
 
-    p = (short *)(&data_ov075_0211d758); p[0] = 0x20; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d758);
+    p[0] = 0x20;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6d4);
-    p = (short *)(&data_ov075_0211d75c); p[0] = 0x28; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d75c);
+    p[0] = 0x28;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d668);
-    p = (short *)(&data_ov075_0211d760); p[0] = 0x20; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d760);
+    p[0] = 0x20;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d674);
-    p = (short *)(&data_ov075_0211d764); p[0] = 0x30; p[1] = 0x10;
+    p = (short *)(&data_ov075_0211d764);
+    p[0] = 0x30;
+    p[1] = 0x10;
     func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d680);
 
     tmp = data_02086b58;
-    ta = tmp.a;
-    tb = tmp.b;
+    ta = tmp.func;
+    tb = tmp.thisAdjust;
 
-    data_ov075_0211d840.lo = tmp;
-    data_ov075_0211d840.tail.a = tb ? ta : ta;
-    data_ov075_0211d840.tail.b = tb;
-    data_ov075_0211d840.hi = data_ov075_0211c8d0;
+    EntryDelaySteps.enter = tmp;
+    EntryDelaySteps.render.func = tb ? ta : ta;
+    EntryDelaySteps.render.thisAdjust = tb;
+    EntryDelaySteps.behavior = data_ov075_0211c8d0;
 
-    data_ov075_0211d858.tail.a = tb ? ta : ta;
-    data_ov075_0211d858.tail.b = tb;
-    data_ov075_0211d858.lo = data_ov075_0211c700;
-    data_ov075_0211d858.hi = data_ov075_0211c750;
+    EntryFadeOutSteps.render.func = tb ? ta : ta;
+    EntryFadeOutSteps.render.thisAdjust = tb;
+    EntryFadeOutSteps.enter = data_ov075_0211c700;
+    EntryFadeOutSteps.behavior = data_ov075_0211c750;
 
-    data_ov075_0211d888.lo = data_ov075_0211c850;
-    data_ov075_0211d888.hi = data_ov075_0211c828;
-    data_ov075_0211d888.tail = data_ov075_0211c8c8;
+    data_ov075_0211d888.enter = data_ov075_0211c850;
+    data_ov075_0211d888.behavior = data_ov075_0211c828;
+    data_ov075_0211d888.render = data_ov075_0211c8c8;
 
-    data_ov075_0211d8a0.tail.a = tb ? ta : ta;
-    data_ov075_0211d8a0.tail.b = tb;
-    data_ov075_0211d8a0.lo = data_ov075_0211c6f8;
-    data_ov075_0211d8a0.hi = data_ov075_0211c7d8;
+    data_ov075_0211d8a0.render.func = tb ? ta : ta;
+    data_ov075_0211d8a0.render.thisAdjust = tb;
+    data_ov075_0211d8a0.enter = data_ov075_0211c6f8;
+    data_ov075_0211d8a0.behavior = data_ov075_0211c7d8;
 
-    data_ov075_0211d8d0.lo = data_ov075_0211c8c0;
-    data_ov075_0211d8d0.hi = data_ov075_0211c8d8;
-    data_ov075_0211d8d0.tail = data_ov075_0211c718;
+    data_ov075_0211d8d0.enter = data_ov075_0211c8c0;
+    data_ov075_0211d8d0.behavior = data_ov075_0211c8d8;
+    data_ov075_0211d8d0.render = data_ov075_0211c718;
 
-    data_ov075_0211d900.tail.a = tb ? ta : ta;
-    data_ov075_0211d900.tail.b = tb;
-    data_ov075_0211d900.lo = data_ov075_0211c7b0;
-    data_ov075_0211d900.hi = data_ov075_0211c8b8;
+    data_ov075_0211d900.render.func = tb ? ta : ta;
+    data_ov075_0211d900.render.thisAdjust = tb;
+    data_ov075_0211d900.enter = data_ov075_0211c7b0;
+    data_ov075_0211d900.behavior = data_ov075_0211c8b8;
 
-    data_ov075_0211d918.lo = data_ov075_0211c878;
-    data_ov075_0211d918.hi = data_ov075_0211c760;
-    data_ov075_0211d918.tail = data_ov075_0211c780;
+    data_ov075_0211d918.enter = data_ov075_0211c878;
+    data_ov075_0211d918.behavior = data_ov075_0211c760;
+    data_ov075_0211d918.render = data_ov075_0211c780;
 
-    data_ov075_0211d768.tail.a = tb ? ta : ta;
-    data_ov075_0211d768.tail.b = tb;
-    data_ov075_0211d768.lo = data_ov075_0211c810;
-    data_ov075_0211d768.hi = data_ov075_0211c7e8;
+    EntryPlayerSelectIntroSteps.render.func = tb ? ta : ta;
+    EntryPlayerSelectIntroSteps.render.thisAdjust = tb;
+    EntryPlayerSelectIntroSteps.enter = data_ov075_0211c810;
+    EntryPlayerSelectIntroSteps.behavior = data_ov075_0211c7e8;
 
-    data_ov075_0211d780.lo = data_ov075_0211c768;
-    data_ov075_0211d780.hi = data_ov075_0211c898;
-    data_ov075_0211d780.tail = data_ov075_0211c738;
+    EntryCourseSelectSteps.enter = data_ov075_0211c768;
+    EntryCourseSelectSteps.behavior = data_ov075_0211c898;
+    EntryCourseSelectSteps.render = data_ov075_0211c738;
 
-    data_ov075_0211d7b0.tail.a = tb ? ta : ta;
-    data_ov075_0211d7b0.tail.b = tb;
-    data_ov075_0211d7b0.lo = data_ov075_0211c8a8;
-    data_ov075_0211d7b0.hi = data_ov075_0211c840;
+    EntryMatchLoadingSteps.render.func = tb ? ta : ta;
+    EntryMatchLoadingSteps.render.thisAdjust = tb;
+    EntryMatchLoadingSteps.enter = data_ov075_0211c8a8;
+    EntryMatchLoadingSteps.behavior = data_ov075_0211c840;
 
-    data_ov075_0211d7c8.lo = tmp;
-    data_ov075_0211d7c8.tail.a = tb ? ta : ta;
-    data_ov075_0211d7c8.tail.b = tb;
-    data_ov075_0211d7c8.hi = data_ov075_0211c7b8;
+    data_ov075_0211d7c8.enter = tmp;
+    data_ov075_0211d7c8.render.func = tb ? ta : ta;
+    data_ov075_0211d7c8.render.thisAdjust = tb;
+    data_ov075_0211d7c8.behavior = data_ov075_0211c7b8;
 
-    data_ov075_0211d7e0.lo = data_ov075_0211c728;
-    data_ov075_0211d7e0.hi = data_ov075_0211c830;
-    data_ov075_0211d7e0.tail = data_ov075_0211c860;
+    data_ov075_0211d7e0.enter = data_ov075_0211c728;
+    data_ov075_0211d7e0.behavior = data_ov075_0211c830;
+    data_ov075_0211d7e0.render = data_ov075_0211c860;
 
-    data_ov075_0211d810.lo = data_ov075_0211c818;
-    data_ov075_0211d810.hi = data_ov075_0211c770;
-    data_ov075_0211d810.tail = data_ov075_0211c888;
+    data_ov075_0211d810.enter = data_ov075_0211c818;
+    data_ov075_0211d810.behavior = data_ov075_0211c770;
+    data_ov075_0211d810.render = data_ov075_0211c888;
 
-    data_ov075_0211d870.lo = data_ov075_0211c858;
-    data_ov075_0211d870.hi = data_ov075_0211c808;
-    data_ov075_0211d870.tail = data_ov075_0211c798;
+    data_ov075_0211d870.enter = data_ov075_0211c858;
+    data_ov075_0211d870.behavior = data_ov075_0211c808;
+    data_ov075_0211d870.render = data_ov075_0211c798;
 
-    data_ov075_0211d8b8.tail.a = tb ? ta : ta;
-    data_ov075_0211d8b8.tail.b = tb;
-    data_ov075_0211d8b8.lo = data_ov075_0211c7a8;
-    data_ov075_0211d8b8.hi = data_ov075_0211c7c8;
+    data_ov075_0211d8b8.render.func = tb ? ta : ta;
+    data_ov075_0211d8b8.render.thisAdjust = tb;
+    data_ov075_0211d8b8.enter = data_ov075_0211c7a8;
+    data_ov075_0211d8b8.behavior = data_ov075_0211c7c8;
 
-    data_ov075_0211d8e8.lo = data_ov075_0211c7f0;
-    data_ov075_0211d8e8.tail.a = tb ? ta : ta;
-    data_ov075_0211d8e8.tail.b = tb;
-    data_ov075_0211d8e8.hi = data_ov075_0211c748;
+    data_ov075_0211d8e8.enter = data_ov075_0211c7f0;
+    data_ov075_0211d8e8.render.func = tb ? ta : ta;
+    data_ov075_0211d8e8.render.thisAdjust = tb;
+    data_ov075_0211d8e8.behavior = data_ov075_0211c748;
 
-    data_ov075_0211d930.hi = tmp;
-    data_ov075_0211d930.tail.a = tb ? ta : ta;
-    data_ov075_0211d930.tail.b = tb;
-    data_ov075_0211d930.lo = data_ov075_0211c8a0;
+    data_ov075_0211d930.behavior = tmp;
+    data_ov075_0211d930.render.func = tb ? ta : ta;
+    data_ov075_0211d930.render.thisAdjust = tb;
+    data_ov075_0211d930.enter = data_ov075_0211c8a0;
 
-    data_ov075_0211d798.lo = data_ov075_0211c758;
-    data_ov075_0211d798.hi = data_ov075_0211c740;
-    data_ov075_0211d798.tail = data_ov075_0211c7a0;
+    data_ov075_0211d798.enter = data_ov075_0211c758;
+    data_ov075_0211d798.behavior = data_ov075_0211c740;
+    data_ov075_0211d798.render = data_ov075_0211c7a0;
 
-    data_ov075_0211d7f8.lo = data_ov075_0211c868;
-    data_ov075_0211d7f8.hi = data_ov075_0211c800;
-    data_ov075_0211d7f8.tail = data_ov075_0211c838;
+    data_ov075_0211d7f8.enter = data_ov075_0211c868;
+    data_ov075_0211d7f8.behavior = data_ov075_0211c800;
+    data_ov075_0211d7f8.render = data_ov075_0211c838;
 
-    data_ov075_0211d828.lo = data_ov075_0211c848;
-    data_ov075_0211d828.hi = data_ov075_0211c820;
-    data_ov075_0211d828.tail.a = tb ? ta : ta;
-    data_ov075_0211d828.tail.b = tb;
+    data_ov075_0211d828.enter = data_ov075_0211c848;
+    data_ov075_0211d828.behavior = data_ov075_0211c820;
+    data_ov075_0211d828.render.func = tb ? ta : ta;
+    data_ov075_0211d828.render.thisAdjust = tb;
 }

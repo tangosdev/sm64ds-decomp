@@ -9,7 +9,7 @@
  * spring's allocation site is inside dScMgSmartball_c::InitResources
  * (ov006 0x02118b70), which had no matched source when this class was
  * recovered. The literal was read straight off the ROM:
- * `MOV r0, #0x48` immediately before `BL _Znwj` at 0x02119098, with the
+ * `MOV r0, #0x48` immediately before `BL _Znwm` at 0x02119098, with the
  * constructor called at 0x021190c0. Base ends at 0x34, so this class adds
  * 0x14 bytes -- five s32 fields.
  *

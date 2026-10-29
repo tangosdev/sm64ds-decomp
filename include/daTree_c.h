@@ -10,15 +10,13 @@
 #define DATREE_C_H
 #include "types.h"
 #include "dActor_c.h"
-#include "Model.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+#include "dExtSimpleModel_c.h"
 
 struct daTree_c : dActor_c {
     u8 pad_0d0[0x4];
-    /* One Model per spawn-param variant (bits 4-6, clamped to 4); the
+    /* One dExtSimpleModel_c per spawn-param variant (bits 4-6, clamped to 4); the
      * factory constructs all five, InitResources loads only its own. */
-    Model mModel[5]; /* 0x0d4 */
+    dExtSimpleModel_c mModel[5]; /* 0x0d4 */
 
     virtual ~daTree_c() {}
     virtual s32 InitResources();     /* slot  0 -- key function */
@@ -26,13 +24,6 @@ struct daTree_c : dActor_c {
     virtual s32 Behavior();          /* slot  6 */
     virtual s32 Render();            /* slot  9 */
     virtual void OnPendingDestroy(); /* slot 12 -- empty body in the ROM */
-
-    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
-       `return new daTree_c()` then routes through the retail allocator. */
-    static void *operator new(unsigned long size)
-    {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

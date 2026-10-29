@@ -2,8 +2,8 @@
 #define DAPGRCER_C_H
 
 #include "types.h"
-#include "ModelAnim.h"
-#include "TextureSequence.h"
+#include "dExtAnmModel_c.h"
+#include "dExtAnmTexPat_c.h"
 #include "dExtShadowModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
@@ -27,7 +27,7 @@ struct Player;
  */
 
 struct daPgRcer_c;
-typedef void (daPgRcer_c::*daPgRcerStateMethod)();
+typedef int (daPgRcer_c::*daPgRcerStateMethod)();
 
 struct daPgRcerState {
     daPgRcerStateMethod init;
@@ -41,8 +41,8 @@ typedef char daPgRcerState_size_must_be_0x10[
 
 struct daPgRcer_c : dActor_c {
     u8 pad_0d0[0x4];
-    ModelAnim mModelAnim;             /* 0x0d4 */
-    TextureSequence mTextureSequence; /* 0x138 */
+    dExtAnmModel_c mAnmModel;         /* 0x0d4 */
+    dExtAnmTexPat_c mTextureSequence; /* 0x138 */
     dExtShadowModel_c mShadowModel;         /* 0x14c */
     dCcAc_c mdCcAc_c;                 /* 0x174 */
     dBgCh_Actr mWithMeshClsn;         /* 0x1a8 */
@@ -79,7 +79,18 @@ struct daPgRcer_c : dActor_c {
     void func_ov019_021112b8();
     int func_ov019_0211131c();
     void func_ov019_021113b0();
+    int func_ov019_02111558();
+    int func_ov019_02111754();
+    int func_ov019_021117a8();
+    int func_ov019_02111904();
+    int func_ov019_0211197c();
+    int func_ov019_02111d58();
+    int func_ov019_02111dec();
+    int func_ov019_02111f54();
+    int func_ov019_02111fec();
+    int func_ov019_0211213c();
     int func_ov019_02112168();
+    int func_ov019_021121f8();
     void func_ov019_02112268();
     void func_ov019_021122a4();
     void func_ov019_021122dc(int state);

@@ -3,12 +3,12 @@
  * +0x0c rebuilt from the BMD bone list), arm9 0x020443c8..0x0204547c,
  * 14 functions: Render, func_02044534/0204488c/02044b30, UpdateVertsUsingBones,
  * UpdateBones, func_020453c0 + 10 helpers.
- * The file takes the class name already used in the tree (include/ModelBase.h),
+ * The file takes the class name already used in the tree (include/dExtModel_c.h),
  * per Juan 2026-10-11.
  *
  * SCOPE: func_02044334 above Render stays out (a different object, PURE-C).
  * func_020453c0 is the bone-tree walk UpdateBones forwards to. Next above is
- * func_0204547c.c, a Model leftover, and it stays out.
+ * func_0204547c.c, a dExtSimpleModel_c leftover, and it stays out.
  *
  * mwccarm emits .text in reverse source order here, so definitions run from
  * the highest address (func_020453c0) down to the lowest (Render).
@@ -19,15 +19,15 @@
  * f0..f2c record, func_02045074's f0..fc prefix) are one shared definition:
  * the short form is an exact prefix of the long one and func_02045074 only
  * touches f0/f8/fa/fc, so every accessed offset is identical. The
- * func_02044efc Matrix4x3 typedef is dropped for include/ModelBase.h's; both
+ * func_02044efc Matrix4x3 typedef is dropped for include/dExtModel_c.h's; both
  * bodies use it opaquely through pointers. No helper is promoted: none has
  * ROM method evidence, so all eleven stay extern "C" under their existing
  * names. func_0204531c's UpdateVertsUsingBones call is spelled as the member
- * it is (ModelBase.h); the mangled extern the shard used would be a new
+ * it is (dExtModel_c.h); the mangled extern the shard used would be a new
  * local redeclaration of a header member.
  */
 /* leftovers:
- * - Render is the member ModelBase.h declares; info/modules reach modelFile/
+ * - Render is the member dExtModel_c.h declares; info/modules reach modelFile/
  *   materials through casts (the header models the BMD half, and Info/
  *   ModuleEntry are its render-half views at the same offsets). RenderNode is
  *   the shard's Node renamed: the bone-record Node already lives here.
@@ -47,9 +47,13 @@
  * - func_02044534's z-prefixed zero temps and the two/three constants keep the
  *   ROM's register schedule; the compact human form does not emit them.
  */
-#include "ModelBase.h"
+#include "dExtModel_c.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+
+namespace CP15 {
+void FlushDataCache(void);
+}
 
 struct Sub {
     unsigned char *bytes;
@@ -136,7 +140,7 @@ struct RenderModule {
 extern "C" {
 void Matrix4x3_LoadIdentity(Matrix4x3 *mat);
 int InvMat4x3(int *a, int *b);
-void _ZN4CP1514FlushDataCacheEv(void);
+
 void func_02048234(int *out, int sa, int sb, int sc, int ax, int ay, int az, int tx, int ty, int tz);
 void MulMat4x3Mat4x3(const int *A, const int *B, int *dst);
 void func_02047218(void *a, void *b, void *out, fx32 c);
@@ -343,7 +347,7 @@ void func_02044efc(Obj *self) {
             byteOff += 0x30;
         } while (i < count);
     }
-    _ZN4CP1514FlushDataCacheEv();
+    CP15::FlushDataCache();
 }
 }
 

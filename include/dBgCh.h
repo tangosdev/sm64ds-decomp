@@ -33,13 +33,21 @@
  *
  * mDetectFlags bits, as ShouldPassThroughImpl (src/engine/collision/d_bg_w.cpp)
  * reads them against a surface's CLPS: 1 = ordinary surfaces,
- * 2 = water (StartDetectingWater), 8 = toxic (StartDetectingToxic); 4, 0x20
- * and 0x40 gate further surface classes whose names are not settled.
+ * 2 = water (StartDetectingWater), 8 = toxic (StartDetectingToxic); 4 gates
+ * a further surface class whose name is not settled.
  *
- * 0x08/0x0c are the querying actor: func_020353b0 (every SetObjAnd* entry
+ * 0x20 and 0x40 run the other way: SET, they let the query pass through a
+ * surface. 0x20 covers CLPS surface type 0x11. Every setter is a vanish
+ * case: Player sets it while mIsVanish, the camera's line query while its
+ * owner is a vanished PLAYER (func_0200897c), and daTrs_c (the Boo) always,
+ * hence "vanish surfaces". 0x40 covers surface type 0x14, tested only when
+ * the hit faces as a wall; nothing names that type, so the member names
+ * spell the number.
+ *
+ * 0x08/0x0c are the querying actor: SetActor (every SetObjAnd* entry
  * point) stores the actor and its fBase_c uniqueID there, or (0, -1) for no
  * actor -- the same pair, written the same way, that dBgW names
- * owner/ownerUniqueID (func_020395fc). func_02035354 matches both words
+ * owner/ownerUniqueID (func_020395fc). IsOwnedBy matches both words
  * against a collider's owner so a query skips its own actor's colliders.
  * The m prefix keeps them apart from dBgPi::owner, which every derived query
  * also inherits and which names the HIT collider's owner.
@@ -63,7 +71,9 @@
 
 #include "types.h"
 
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+namespace Memory {
+void operator_delete2(void *ptr);
+}
 
 struct CLPS;
 struct dActor_c;
@@ -95,7 +105,9 @@ struct dBgCh {
        finds it in the class or one level up, as include/dActor_c.h records.
        No layout effect: a non-virtual inline member adds no field and no
        vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 
     /* --- non-virtual --- */
     /* DECLARED, never defined in this header; the definition lives in
@@ -115,6 +127,22 @@ struct dBgCh {
        function means. */
     static bool ShouldPassThroughImpl(void *p, const CLPS &clps, const dBgCh &bg, bool flag);
 
+    /* Inferred name: bind the querying actor and its unique ID, or clear both. */
+    void SetActor(dActor_c *);
+    /* Inferred name: true when the actor is this query's own, by pointer
+       and by uniqueID. */
+    bool IsOwnedBy(dActor_c *) const;
+    /* Copies the detect flags and the actor pair; the vptr stays. Same
+       shape as dBgPi::operator=, and called the same way, through a cast
+       to the base. */
+    dBgCh &operator=(const dBgCh &);
+
+    int IsIgnoringVanishSurfaces() const;
+    void StopIgnoringVanishSurfaces();
+    void StartIgnoringVanishSurfaces();
+    int IsIgnoringType14Walls() const;
+    void StopIgnoringType14Walls();
+    void StartIgnoringType14Walls();
     void StartDetectingToxic();
     void StartDetectingWater();
     void StopDetectingOrdinary();

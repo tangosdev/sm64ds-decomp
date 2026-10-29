@@ -5,7 +5,7 @@
 
 /* The BMG-family message bank, as the five western msg_data_*.bin carry it.
  *
- * WHAT THE ROM PINS. ParseMessageBankSections (func_0201cb2c) does all of the
+ * WHAT THE ROM PINS. Message::SetTextGlobals (0x0201cb2c) does all of the
  * offset arithmetic this file encodes, and only this:
  *
  *   info    = base + 0x20                 -> the header is 0x20 bytes
@@ -57,8 +57,6 @@ typedef char MessageEntry_SizeIs8[sizeof(MessageEntry) == 8 ? 1 : -1];
 typedef char MessageDataSection_SizeIs8[sizeof(MessageDataSection) == 8 ? 1 : -1];
 
 /* Readable aliases retain the current symbols and therefore their relocations. */
-#define LoadMessageBankForLanguage   func_0201fe08
-#define ParseMessageBankSections     func_0201cb2c
 #define gMessageBankHeader           data_0209d6e8
 #define gMessageDataSection          data_0209d6ec
 #define gMessageBankBase             data_0209d6fc

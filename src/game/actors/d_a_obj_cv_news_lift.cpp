@@ -11,15 +11,14 @@
  * mwccarm emits .text in reverse source order, so the factory is written
  * first and the destructor last.
  *
- * deslop leftovers:
- * - InitResources: dBgW_KcMbg::SetFile as a method is 0x264 against 0x258
- *   (Fix12<int> by value). The scalar mangled call stays.
- * - InitResources: mMeshCollider.unk_1c = &MainMeshCallback, and a cast
+ * Notes (each measured with mwccarm 2004/b56):
+ * - InitResources: mMeshCollider.stoodOnCallback = &MainMeshCallback, and a cast
  *   store of UpdatePosWithTransform into beforeClsnCallback, are each
- *   0x254 against 0x258. func_020393c4 and func_020393d4 stay.
+ *   0x254 against 0x258. func_020393c4 and func_020393d4 stay; d_bg_w.cpp
+ *   defines them and no header declares them.
  * - InitResources: probePos.y = mPosY - 0x14000 is 0x254 against 0x258.
- * - InitResources: Model::LoadFile's return in place of filePtr differs
- *   by 20 words. NewsLiftFile stays; SharedFilePtr has no fields.
+ * - InitResources: dExtSimpleModel_c::LoadFile's return in place of filePtr differs
+ *   by 20 words.
  * - OnMainMeshRide: copying mTargetRotation in a loop is 0x100 against
  *   0x104.
  * - Behavior: reset reads of data_02092768 without volatile are 0x594
@@ -34,8 +33,7 @@
  * - MainMeshCallback and Platform0Callback: testing actorID == 0xbf
  *   inline is 0x34 against 0x40. The int temporary stays on all five
  *   callbacks.
- * - data_ov021_* handles, data_02092768, data_020a0e68 and data_02082214
- *   stay address names (__sinit_ov021_02113500 owns the handles).
+ * - data_02092768, data_020a0e68 and data_02082214 stay address names.
  */
 
 #include "daObjCvNewsLift_c.h"
@@ -46,72 +44,82 @@
 #include "dBgCh_Gnd.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
+#include "math/MtxStack.h"
 
 struct Quaternion;
 
-/* A SharedFilePtr seen from outside: SharedFilePtr.h deliberately declares
- * no fields, and these reads need the loaded buffer. The fields follow the
- * layout that _ZN13SharedFilePtr4LoadEv's definition uses. */
-struct NewsLiftFile {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
+/* Runtime asset handles, distinct from the NitroFS file IDs. */
+enum daObjCvNewsLift_c_AssetId {
+    ASSET_CV_LIFT_BTN_BMD = 0x05d5,
+    ASSET_CV_LIFT_BTN_KCL = 0x05d6,
+    ASSET_CV_NEWS_LIFT_BMD = 0x05d7,
+    ASSET_CV_NEWS_LIFT_KCL = 0x05d8
 };
 
-extern NewsLiftFile data_ov021_021149a0;
-extern NewsLiftFile data_ov021_021149a8;
-extern NewsLiftFile data_ov021_021149b0;
-extern NewsLiftFile data_ov021_021149b8;
+/* The handles reach their files through these wrappers' constructor and
+   destructor veneers; the manifest maps each to the retail destination.
+   Descriptive local types, not recovered spellings. */
+struct CvNewsLiftModelFile : SharedFilePtr {
+    CvNewsLiftModelFile(u32 fileID);
+    ~CvNewsLiftModelFile();
+};
+
+struct CvNewsLiftCollisionFile : SharedFilePtr {
+    CvNewsLiftCollisionFile(u32 fileID);
+    ~CvNewsLiftCollisionFile();
+};
+
+/* This TU's file handles and platform offsets, in the order the retail
+   initializer (0x02113500) builds them. */
+CvNewsLiftModelFile gCvNewsLiftModelFile(ASSET_CV_NEWS_LIFT_BMD);
+CvNewsLiftCollisionFile gCvNewsLiftCollisionFile(ASSET_CV_NEWS_LIFT_KCL);
+CvNewsLiftModelFile gCvLiftButtonModelFile(ASSET_CV_LIFT_BTN_BMD);
+CvNewsLiftCollisionFile gCvLiftButtonCollisionFile(ASSET_CV_LIFT_BTN_KCL);
+
+/* Where each platform hangs from the main mesh: +Z, -Z, +X and -X. */
+Vector3 gNewsLiftPlatformOffsets[4] = {
+    Vector3(0, 0x32000, 0xc8000),
+    Vector3(0, 0x32000, -0xc8000),
+    Vector3(0xc8000, 0x32000, 0),
+    Vector3(-0xc8000, 0x32000, 0),
+};
+
 extern CLPS_Block data_ov021_02113a60;
 extern CLPS_Block data_ov021_02113a80;
 
 extern "C" {
 void Matrix4x3_FromQuaternion(const struct Quaternion *q, struct Matrix4x3 *mF);
-void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
-void MulMat4x3Mat4x3(void *a, void *b, void *c);
-void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *mF, s16 angX);
-void Matrix4x3_ApplyInPlaceToRotationZ(struct Matrix4x3 *mF, s16 angZ);
-void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, s16 angY);
-void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, int x, int y, int z);
 void Vec3_Asr(void *d, void *s, int sh);
 void InvMat4x3(struct Matrix4x3 *d, struct Matrix4x3 *s);
 void MulVec3Mat4x3(const Vector3 *src, const Matrix4x3 *mtx, Vector3 *dst);
 void AddVec3(const Vector3 *a, const Vector3 *b, Vector3 *dst);
-void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angle);
 void Quaternion_FromVector3(void *q, Vector3 *axis, Vector3 *v);
 void Quaternion_Normalize(void *q);
 void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
-/* Scalar SetFile. The method form size-DIFFs InitResources; see leftovers. */
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
-    Fix12i scale, s16 angle, CLPS_Block *clps);
+
 void func_020393d4(dBgW *collider, void *callback);
 void func_020393c4(dBgW *collider, void *callback);
+}
 
-extern struct Matrix4x3 data_020a0e68;
 extern s32 data_02092768[];
 extern s16 data_02082214[];
-extern const Vector3 data_ov021_02114a20[4];
 /* Yaw for the +Z, -Z, +X and -X platforms, in the transform loops' order. */
 extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
-}
 
 // @symbol daObjCvNewsLift_c_classInit
 /* CV_NEWS_LIFT factory. classInit is the EAD shape; the cartridge's RTTI
  * names the class, not this function. */
-extern "C" daObjCvNewsLift_c *daObjCvNewsLift_c_classInit()
-{
+extern "C" daObjCvNewsLift_c *daObjCvNewsLift_c_classInit() {
     return new daObjCvNewsLift_c();
 }
 
 // @symbol _ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWPS_P8dActor_c
 /* One callback per collider. Only the player (actor 0xbf) is handled.
- * The comparison stays in an int; see leftovers. */
-void daObjCvNewsLift_c::MainMeshCallback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
-{
+ * The comparison stays in an int; see the notes above. */
+void daObjCvNewsLift_c::MainMeshCallback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other) {
     int isPlayer = other->actorID == 0xbf;
     if (isPlayer)
         self->OnMainMeshRide(other);
@@ -120,8 +128,7 @@ void daObjCvNewsLift_c::MainMeshCallback(dBgW *clsn, daObjCvNewsLift_c *self, dA
 // @symbol _ZN17daObjCvNewsLift_c14OnMainMeshRideEP8dActor_c
 /* The player is on the main mesh: hold the lift and, unless it is bumped,
  * tilt the target pose toward the player's position in the lift's frame. */
-void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player)
-{
+void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
     mPlayerOnMesh = 1;
     mResetTimer = 300;
     if (mBumped) {
@@ -146,92 +153,83 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player)
 }
 
 // @symbol _ZN17daObjCvNewsLift_c17Platform0CallbackEP4dBgWPS_P8dActor_c
-void daObjCvNewsLift_c::Platform0Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
-{
+void daObjCvNewsLift_c::Platform0Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other) {
     int isPlayer = other->actorID == 0xbf;
     if (isPlayer)
         self->OnPlatform0Ride(other);
 }
 
 // @symbol _ZN17daObjCvNewsLift_c15OnPlatform0RideEP8dActor_c
-void daObjCvNewsLift_c::OnPlatform0Ride(dActor_c *player)
-{
+void daObjCvNewsLift_c::OnPlatform0Ride(dActor_c *player) {
     mResetTimer = 300;
     mLoweredPlatform = 0;
 }
 
 // @symbol _ZN17daObjCvNewsLift_c17Platform1CallbackEP4dBgWPS_P8dActor_c
-void daObjCvNewsLift_c::Platform1Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
-{
+void daObjCvNewsLift_c::Platform1Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other) {
     int isPlayer = other->actorID == 0xbf;
     if (isPlayer)
         self->OnPlatform1Ride(other);
 }
 
 // @symbol _ZN17daObjCvNewsLift_c15OnPlatform1RideEP8dActor_c
-void daObjCvNewsLift_c::OnPlatform1Ride(dActor_c *player)
-{
+void daObjCvNewsLift_c::OnPlatform1Ride(dActor_c *player) {
     mResetTimer = 300;
     mLoweredPlatform = 1;
 }
 
 // @symbol _ZN17daObjCvNewsLift_c17Platform2CallbackEP4dBgWPS_P8dActor_c
-void daObjCvNewsLift_c::Platform2Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
-{
+void daObjCvNewsLift_c::Platform2Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other) {
     int isPlayer = other->actorID == 0xbf;
     if (isPlayer)
         self->OnPlatform2Ride(other);
 }
 
 // @symbol _ZN17daObjCvNewsLift_c15OnPlatform2RideEP8dActor_c
-void daObjCvNewsLift_c::OnPlatform2Ride(dActor_c *player)
-{
+void daObjCvNewsLift_c::OnPlatform2Ride(dActor_c *player) {
     mResetTimer = 300;
     mLoweredPlatform = 2;
 }
 
 // @symbol _ZN17daObjCvNewsLift_c17Platform3CallbackEP4dBgWPS_P8dActor_c
-void daObjCvNewsLift_c::Platform3Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
-{
+void daObjCvNewsLift_c::Platform3Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other) {
     int isPlayer = other->actorID == 0xbf;
     if (isPlayer)
         self->OnPlatform3Ride(other);
 }
 
 // @symbol _ZN17daObjCvNewsLift_c15OnPlatform3RideEP8dActor_c
-void daObjCvNewsLift_c::OnPlatform3Ride(dActor_c *player)
-{
+void daObjCvNewsLift_c::OnPlatform3Ride(dActor_c *player) {
     mResetTimer = 300;
     mLoweredPlatform = 3;
 }
 
 // @symbol _ZN17daObjCvNewsLift_c13InitResourcesEv
-s32 daObjCvNewsLift_c::InitResources()
-{
-    Model::LoadFile(*(SharedFilePtr *)&data_ov021_021149a0);
-    dBgW_Kc::LoadFile(*(SharedFilePtr *)&data_ov021_021149a8);
-    Model::LoadFile(*(SharedFilePtr *)&data_ov021_021149b0);
-    dBgW_Kc::LoadFile(*(SharedFilePtr *)&data_ov021_021149b8);
+s32 daObjCvNewsLift_c::InitResources() {
+    dExtSimpleModel_c::LoadFile(gCvNewsLiftModelFile);
+    dBgW_Kc::LoadFile(gCvNewsLiftCollisionFile);
+    dExtSimpleModel_c::LoadFile(gCvLiftButtonModelFile);
+    dBgW_Kc::LoadFile(gCvLiftButtonCollisionFile);
 
-    mModel.SetFile((BMD_File *)data_ov021_021149a0.filePtr, 1, -1);
+    mModel.SetFile((BMD_File *)gCvNewsLiftModelFile.filePtr, 1, -1);
     for (int i = 0; i < 4; i++)
-        mPlatformModels[i].SetFile((BMD_File *)data_ov021_021149b0.filePtr, 1, -1);
+        mPlatformModels[i].SetFile((BMD_File *)gCvLiftButtonModelFile.filePtr, 1, -1);
 
     mLoweredPlatform = -1;
     UpdateModelTransforms();
     UpdateClsnTransforms();
 
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, (KCL_File *)data_ov021_021149a8.filePtr, &mClsnMat,
-        0x199, mAngleY, &data_ov021_02113a60);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)gCvNewsLiftCollisionFile.filePtr, mClsnMat, 0x199,
+                              mAngleY, data_ov021_02113a60);
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
     func_020393c4(&mMeshCollider, (void *)&MainMeshCallback);
     mMeshCollider.Enable(this);
 
     for (int i = 0; i < 4; i++) {
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mPlatformColliders[i], (KCL_File *)data_ov021_021149b8.filePtr,
-            &mPlatformMats[i], 0x199, mAngleY, &data_ov021_02113a80);
+        ((dBgW_KcMbg *)(&mPlatformColliders[i]))
+            ->dBgW_KcMbg::SetFile((KCL_File *)gCvLiftButtonCollisionFile.filePtr, mPlatformMats[i],
+                                  0x199, mAngleY, data_ov021_02113a80);
         func_020393d4(&mPlatformColliders[i], (void *)&dBgW::UpdatePosWithTransform);
     }
 
@@ -266,9 +264,8 @@ s32 daObjCvNewsLift_c::InitResources()
  * direction (0 and 1, 2 and 3 are opposite platforms). The shared tail slerps
  * the tilt toward its target, snaps home when mResetTimer runs out and
  * rebuilds both sets of matrices. The wobble cast, the volatile rest-pose
- * reads and the ray-element pointer writes are load-bearing; see leftovers. */
-s32 daObjCvNewsLift_c::Behavior()
-{
+ * reads and the ray-element pointer writes are load-bearing; see the notes. */
+s32 daObjCvNewsLift_c::Behavior() {
     Vector3 rayStart[3];
     Vector3 rayFrom[3];
     Vector3 rayTo[3];
@@ -284,10 +281,18 @@ s32 daObjCvNewsLift_c::Behavior()
                 s8 which = mLoweredPlatform;
                 s16 wobble = (s16)FX_MUL(amp, sine);
                 switch (which) {
-                case 0: mAngleX = -wobble; break;
-                case 1: mAngleX = wobble; break;
-                case 2: mAngleZ = wobble; break;
-                case 3: mAngleZ = -wobble; break;
+                case 0:
+                    mAngleX = -wobble;
+                    break;
+                case 1:
+                    mAngleX = wobble;
+                    break;
+                case 2:
+                    mAngleZ = wobble;
+                    break;
+                case 3:
+                    mAngleZ = -wobble;
+                    break;
                 }
             }
         } else {
@@ -314,26 +319,44 @@ s32 daObjCvNewsLift_c::Behavior()
             mMotorSound = Sound::PlayLong(mMotorSound, 3, 0x88, mCamSpacePos, 0);
             mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
             mHorzSpeed = 0x5000;
-            rayStart[0].x = 0; rayStart[0].y = -0xa000; rayStart[0].z = 0x10e000;
+            rayStart[0].x = 0;
+            rayStart[0].y = -0xa000;
+            rayStart[0].z = 0x10e000;
             {
                 Vector3 *ray = &rayStart[1];
-                ray->x = 0x12c000; ray->y = -0xa000; ray->z = 0x10e000;
+                ray->x = 0x12c000;
+                ray->y = -0xa000;
+                ray->z = 0x10e000;
                 ray = &rayStart[2];
-                ray->x = -0x12c000; ray->y = -0xa000; ray->z = 0x10e000;
+                ray->x = -0x12c000;
+                ray->y = -0xa000;
+                ray->z = 0x10e000;
             }
-            rayFrom[0].x = 0; rayFrom[0].y = 0; rayFrom[0].z = 0;
+            rayFrom[0].x = 0;
+            rayFrom[0].y = 0;
+            rayFrom[0].z = 0;
             {
                 Vector3 *ray = &rayFrom[1];
-                ray->x = 0; ray->y = 0; ray->z = 0;
+                ray->x = 0;
+                ray->y = 0;
+                ray->z = 0;
                 ray = &rayFrom[2];
-                ray->x = 0; ray->y = 0; ray->z = 0;
+                ray->x = 0;
+                ray->y = 0;
+                ray->z = 0;
             }
-            rayTo[0].x = 0; rayTo[0].y = 0; rayTo[0].z = 0;
+            rayTo[0].x = 0;
+            rayTo[0].y = 0;
+            rayTo[0].z = 0;
             {
                 Vector3 *ray = &rayTo[1];
-                ray->x = 0; ray->y = 0; ray->z = 0;
+                ray->x = 0;
+                ray->y = 0;
+                ray->z = 0;
                 ray = &rayTo[2];
-                ray->x = 0; ray->y = 0; ray->z = 0;
+                ray->x = 0;
+                ray->y = 0;
+                ray->z = 0;
             }
             Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
             {
@@ -347,7 +370,9 @@ s32 daObjCvNewsLift_c::Behavior()
                     MulVec3Mat4x3(&ahead, &data_020a0e68, to);
                     AddVec3(from, &mPos, from);
                     AddVec3(to, &mPos, to);
-                    start++; from++; to++;
+                    start++;
+                    from++;
+                    to++;
                 }
             }
             {
@@ -368,7 +393,9 @@ s32 daObjCvNewsLift_c::Behavior()
                             mWobbleTimer = 60;
                             Sound::PlayBank3(hitSound, mCamSpacePos);
                         }
-                        to++; from++; line++;
+                        to++;
+                        from++;
+                        line++;
                     }
                 }
                 UpdatePos(0);
@@ -418,8 +445,7 @@ s32 daObjCvNewsLift_c::Behavior()
 
 // @symbol _ZN17daObjCvNewsLift_c6RenderEv
 /* Blinks on odd frames while the reset countdown is under 45. */
-s32 daObjCvNewsLift_c::Render()
-{
+s32 daObjCvNewsLift_c::Render() {
     if (mResetTimer < 45 && (mResetTimer & 1))
         return 1;
     mModel.Render(0);
@@ -429,23 +455,21 @@ s32 daObjCvNewsLift_c::Render()
 }
 
 // @symbol _ZN17daObjCvNewsLift_c16CleanupResourcesEv
-s32 daObjCvNewsLift_c::CleanupResources()
-{
+s32 daObjCvNewsLift_c::CleanupResources() {
     mMeshCollider.Disable();
     for (int i = 0; i < 4; i++)
         mPlatformColliders[i].Disable();
-    ((SharedFilePtr *)&data_ov021_021149b0)->Release();
-    ((SharedFilePtr *)&data_ov021_021149b8)->Release();
-    ((SharedFilePtr *)&data_ov021_021149a0)->Release();
-    ((SharedFilePtr *)&data_ov021_021149a8)->Release();
+    gCvLiftButtonModelFile.Release();
+    gCvLiftButtonCollisionFile.Release();
+    gCvNewsLiftModelFile.Release();
+    gCvNewsLiftCollisionFile.Release();
     return 1;
 }
 
 // @symbol _ZN17daObjCvNewsLift_c21UpdateModelTransformsEv
 /* The render-side twin of UpdateClsnTransforms: the same pose, built at model
  * scale (positions shifted down by 3), written into the models' matrices. */
-void daObjCvNewsLift_c::UpdateModelTransforms()
-{
+void daObjCvNewsLift_c::UpdateModelTransforms() {
     Matrix4x3 tilt;
     int i;
     Matrix4x3 *mainMat;
@@ -455,15 +479,15 @@ void daObjCvNewsLift_c::UpdateModelTransforms()
     Vector3 scaled;
 
     Matrix4x3_FromQuaternion((Quaternion *)mRotation, &tilt);
-    Vec3_Asr(&pos, &mPosX, 3);
+    Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    MulMat4x3Mat4x3(&tilt, &data_020a0e68, &data_020a0e68);
+    MtxStack::concat(tilt);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     mModel.mat4x3 = data_020a0e68;
     mainMat = &mModel.mat4x3;
-    offset = data_ov021_02114a20;
+    offset = gNewsLiftPlatformOffsets;
     for (i = 0; i < 4; i++) {
         hang = *offset;
         if (mLoweredPlatform == i && !mBumped)
@@ -485,8 +509,7 @@ void daObjCvNewsLift_c::UpdateModelTransforms()
 /* Rebuild the collision matrices: the main mesh from position, tilt and
  * facing, then each platform hung at its offset (lowered by 0x1e000 while
  * the player stands on it and the lift is not bumped). */
-void daObjCvNewsLift_c::UpdateClsnTransforms()
-{
+void daObjCvNewsLift_c::UpdateClsnTransforms() {
     Matrix4x3 tilt;
     int i;
     const Vector3 *offset;
@@ -497,14 +520,14 @@ void daObjCvNewsLift_c::UpdateClsnTransforms()
 
     Matrix4x3_FromQuaternion((Quaternion *)mRotation, &tilt);
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
-    MulMat4x3Mat4x3(&tilt, &data_020a0e68, &data_020a0e68);
+    MtxStack::concat(tilt);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     mClsnMat = data_020a0e68;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 
-    offset = data_ov021_02114a20;
+    offset = gNewsLiftPlatformOffsets;
     i = 0;
     cursor = this;
     platformMat = mPlatformMats;

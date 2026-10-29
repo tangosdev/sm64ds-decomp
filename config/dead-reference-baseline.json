@@ -75,6 +75,30 @@
   },
   {
    "file": "notes/agents/handoffs/fold-arm9-actor-1010.md",
+   "ref": "src/_ZN8Vector3sD1Ev.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/fold-arm9-actor-1010.md",
+   "ref": "src/_ZN8dActor_cC1Ev.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/fold-arm9-actor-1010.md",
+   "ref": "src/_ZN8dActor_cC2Ev.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/fold-arm9-actor-1010.md",
+   "ref": "src/_ZN8dActor_cD0Ev.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/fold-arm9-actor-1010.md",
+   "ref": "src/_ZN8dActor_cD1Ev.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/fold-arm9-actor-1010.md",
+   "ref": "src/_ZN8dActor_cD2Ev.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/fold-arm9-actor-1010.md",
    "ref": "src_tu/actors/Actor.cpp"
   },
   {
@@ -92,6 +116,18 @@
   {
    "file": "notes/agents/handoffs/fold-arm9-oam-1017.md",
    "ref": "config/converted-baseline.json"
+  },
+  {
+   "file": "notes/agents/handoffs/fold-arm9-texture-1018.md",
+   "ref": "config/tu_manifest.d/arm9/TextureTransformer.json"
+  },
+  {
+   "file": "notes/agents/handoffs/fold-arm9-texture-1018.md",
+   "ref": "include/TextureTransformer.h"
+  },
+  {
+   "file": "notes/agents/handoffs/fold-arm9-texture-1018.md",
+   "ref": "src/engine/model/TextureTransformer.cpp"
   },
   {
    "file": "notes/agents/handoffs/fold-ov006-curling2-1005.md",
@@ -310,6 +346,10 @@
    "ref": "tools/tiers_ratchet.py"
   },
   {
+   "file": "notes/agents/handoffs/pr-2445-source-review-fixes.md",
+   "ref": "src/_ZN8dActor_cC2Ev.cpp"
+  },
+  {
    "file": "notes/agents/handoffs/pr-2708-source-review-fixes.md",
    "ref": "src/func_0201267c.cpp"
   },
@@ -338,6 +378,10 @@
    "ref": "tools/check_src_tu_compiles.py"
   },
   {
+   "file": "notes/agents/handoffs/pr2456-final-composition-0910.md",
+   "ref": "src/unnamed/ov065/__sinit_ov065_0211c110.cpp"
+  },
+  {
    "file": "notes/agents/handoffs/pr2868-source-repair-0920.md",
    "ref": "include/BookShot.h"
   },
@@ -352,6 +396,10 @@
   {
    "file": "notes/agents/handoffs/prod-kuruma-0907-daObjKm1_Kurumajiku_c.md",
    "ref": "config/converted-baseline.json"
+  },
+  {
+   "file": "notes/agents/handoffs/prod-pkn-0907-daPkn_c.md",
+   "ref": "src/unnamed/ov084/__sinit_ov084_02130654.cpp"
   },
   {
    "file": "notes/agents/handoffs/prod-sanbo-0907-daSanbo_c.md",
@@ -447,6 +495,10 @@
   },
   {
    "file": "notes/agents/handoffs/promote-ov098-wbm-0924.md",
+   "ref": "include/ModelBase.h"
+  },
+  {
+   "file": "notes/agents/handoffs/promote-ov098-wbm-0924.md",
    "ref": "tools/check_src_tu_compiles.py"
   },
   {
@@ -460,6 +512,10 @@
   {
    "file": "notes/agents/handoffs/readable-ov021-newslift-0925.md",
    "ref": "src/func_020393d4.c"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov021-newslift-0925.md",
+   "ref": "src/unnamed/ov021/__sinit_ov021_02113500.c"
   },
   {
    "file": "notes/agents/handoffs/readable-ov021-newslift-0925.md",
@@ -484,6 +540,14 @@
   {
    "file": "notes/agents/handoffs/readable-ov025-dpbrock-0925.md",
    "ref": "tools/tiers_ratchet.py"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov034-hanachan-0925.md",
+   "ref": "src/engine/model/Model.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov034-hanachan-0925.md",
+   "ref": "src/engine/model/TextureSequence.cpp"
   },
   {
    "file": "notes/agents/handoffs/readable-ov034-hanachan-0925.md",
@@ -543,6 +607,14 @@
   },
   {
    "file": "notes/agents/handoffs/readable-ov084-pkn-0925.md",
+   "ref": "include/decl_Animation.h"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov084-pkn-0925.md",
+   "ref": "src/unnamed/ov084/__sinit_ov084_02130654.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov084-pkn-0925.md",
    "ref": "tools/check_src_tu_compiles.py"
   },
   {
@@ -584,6 +656,10 @@
   {
    "file": "notes/agents/handoffs/readable-ov095-udlift-0925.md",
    "ref": "tools/tiers_ratchet.py"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov098-wbm-0925.md",
+   "ref": "include/ModelBase.h"
   },
   {
    "file": "notes/agents/handoffs/readable-ov098-wbm-0925.md",
@@ -803,7 +879,7 @@
   },
   {
    "file": "notes/ctor-migration.md",
-   "ref": "src/_ZN5ModelC1Ev.cpp"
+   "ref": "src/_ZN17dExtSimpleModel_cC1Ev.cpp"
   },
   {
    "file": "notes/ctor-migration.md",
@@ -823,11 +899,11 @@
   },
   {
    "file": "notes/dtor-migration.md",
-   "ref": "src/_ZN5EnemyD0Ev.c"
+   "ref": "src/_ZN17dExtSimpleModel_cD1Ev.cpp"
   },
   {
    "file": "notes/dtor-migration.md",
-   "ref": "src/_ZN5ModelD1Ev.cpp"
+   "ref": "src/_ZN5EnemyD0Ev.c"
   },
   {
    "file": "notes/emu-trace-build.md",
@@ -880,6 +956,10 @@
   {
    "file": "notes/experiments/batch3-2707-floatboard-riderpos-ptr.md",
    "ref": "src/actors/daObjFloatBoard_c.cpp"
+  },
+  {
+   "file": "notes/experiments/batch3-2707-tree-applyopacity-census.md",
+   "ref": "include/ModelBase.h"
   },
   {
    "file": "notes/experiments/batch3-2707-tree-clipper-6az.md",
@@ -1030,6 +1110,14 @@
    "ref": "src/actors/dMgJump3DMario_c.cpp"
   },
   {
+   "file": "notes/experiments/koopa-2864-source-forms.md",
+   "ref": "src/engine/model/ModelAnim.cpp"
+  },
+  {
+   "file": "notes/experiments/piano-2712-dropshadow-advance.md",
+   "ref": "include/ModelAnim.h"
+  },
+  {
    "file": "notes/experiments/piano-2712-dropshadow-advance.md",
    "ref": "src/game/actors/daPiano_c/d_a_piano.cpp"
   },
@@ -1048,6 +1136,10 @@
   {
    "file": "notes/experiments/piano-2712-pmf-verified.md",
    "ref": "src/game/actors/daPiano_c/d_a_piano.cpp"
+  },
+  {
+   "file": "notes/experiments/piano-2712-setanim-6az.md",
+   "ref": "include/ModelAnim.h"
   },
   {
    "file": "notes/experiments/piano-2712-setanim-6az.md",
@@ -1263,7 +1355,15 @@
   },
   {
    "file": "notes/sinit-ownership-wave-resource-handles.md",
+   "ref": "src/unnamed/ov002/__sinit_ov002_02100f84.c"
+  },
+  {
+   "file": "notes/sinit-ownership-wave-resource-handles.md",
    "ref": "src/unnamed/ov009/__sinit_ov009_02112458.c"
+  },
+  {
+   "file": "notes/sinit-ownership-wave-resource-handles.md",
+   "ref": "src/unnamed/ov009/__sinit_ov009_02112524.c"
   },
   {
    "file": "notes/sinit-ownership-wave-resource-handles.md",
@@ -1272,6 +1372,10 @@
   {
    "file": "notes/sinit-wave-a-ownership.md",
    "ref": "src/game/actors/daPiano_c/__sinit_ov063_0211e5fc.c"
+  },
+  {
+   "file": "notes/sinit-wave-a-ownership.md",
+   "ref": "src/unnamed/ov002/__sinit_ov002_02100f84.c"
   },
   {
    "file": "notes/smartball-provenance.md",
@@ -1331,6 +1435,10 @@
   },
   {
    "file": "notes/tu-reconstruction-pilot-report.md",
+   "ref": "include/Model.h"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-report.md",
    "ref": "include/Platform.h"
   },
   {
@@ -1364,10 +1472,6 @@
   {
    "file": "port/docs/mmio-inventory.md",
    "ref": "src/_ZN4cstd4ldivEii.c"
-  },
-  {
-   "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd4sqrtEy.c"
   },
   {
    "file": "port/docs/opie-assessment.md",

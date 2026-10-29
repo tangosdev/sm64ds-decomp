@@ -50,11 +50,13 @@ enum dScMgCoin_c_AssetId {
 };
 
 #include "types.h"
+#include "G2.h"
 #include "decl_common.h"
 #include "Sound.h"
 #include "dScMgCoin_c.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "GX.h"
 
 #pragma defer_codegen off /* ROM-ascending emission; dropping this inverts it */
 
@@ -158,10 +160,7 @@ extern void Mg_PlayJingle(void *c);
 extern int Mg_GetTopRecord(void);
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
-extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0208ee44;
@@ -581,15 +580,16 @@ void dScMgCoin_c::DrawResultNumbers() {
 // @symbol _ZN11dScMgCoin_c15Popup_UpdateAllEv
 void dScMgCoin_c::Popup_UpdateAll() {
     char *raw = (char *)this;
-    /* Popup struct misses: the (int) cast is what makes the timer
-       read-modify-write use a fresh address. */
+    /* Strided through the scene pointer; the (int) cast is what makes the
+       timer read-modify-write use a fresh address. */
     int i;
     for (i = 0; i < 0x18; i++) {
         char *popup = raw + (int)((long long)i) * 0x10;
-        if (*(u8 *)(popup + 0x5020) != 0 && *(u16 *)(popup + 0x501c) != 0) {
-            *(u16 *)((int)(popup + 0x501c)) -= 1;
-            if (*(s16 *)((int)(popup + 0x501c)) <= 0)
-                *(u8 *)(popup + 0x5021) = 1;
+        if (((dScMgCoin_c *)popup)->mPopups[0].live != 0 &&
+            ((dScMgCoin_c *)popup)->mPopups[0].timer != 0) {
+            ((dScMgCoin_c *)(int)popup)->mPopups[0].timer -= 1;
+            if ((s16)((dScMgCoin_c *)(int)popup)->mPopups[0].timer <= 0)
+                ((dScMgCoin_c *)popup)->mPopups[0].flag = 1;
         }
     }
 }
@@ -649,24 +649,26 @@ void dScMgCoin_c::Sparkle_UpdateAll() {
 // @symbol _ZN11dScMgCoin_c13Sparkle_BurstEi
 void dScMgCoin_c::Sparkle_Burst(int coinIndex) {
     char *raw = (char *)this;
-    /* Sparkle struct reorders the literal pool (0212e430 before 0212e334). */
+    /* Strided through the scene pointer. The active store stays raw: as a
+       member it shares the test's address and reorders the literal pool
+       (0212e430 before 0212e334). */
     int i, j, k;
     char *coin = raw + coinIndex * 0x18;
-    int *coinX = (int *)(coin + 0x4ac0);
-    int *coinY = (int *)(coin + 0x4ac4);
+    int *coinX = &((dScMgCoin_c *)coin)->mCoins[0].x;
+    int *coinY = &((dScMgCoin_c *)coin)->mCoins[0].y;
     for (i = 0, j = 0, k = 1; i < 4; i++, raw += 0x18, j += 2, k += 2) {
-        if (*(u8 *)(raw + 0x4d28) == 0) {
-            *(u8 *)(raw + 0x4d28) = 1;
-            *(u8 *)(raw + 0x4d29) = 1;
-            *(int *)(raw + 0x4d14) = *coinX + (sCoinSparkleSpawnOffsets[j] << 12);
-            *(int *)(raw + 0x4d18) = *coinY + (sCoinSparkleSpawnOffsets[k] << 12);
+        if (((dScMgCoin_c *)raw)->mSparkles[0].active == 0) {
+            *(u8 *)(raw + 0x4d28) = 1; /* mSparkles[0].active */
+            ((dScMgCoin_c *)raw)->mSparkles[0].visible = 1;
+            ((dScMgCoin_c *)raw)->mSparkles[0].x = *coinX + (sCoinSparkleSpawnOffsets[j] << 12);
+            ((dScMgCoin_c *)raw)->mSparkles[0].y = *coinY + (sCoinSparkleSpawnOffsets[k] << 12);
             {
                 u16 ang = sCoinSparkleAngles[i];
                 int sine = (ang >> 4) * 2;
-                *(int *)(raw + 0x4d1c) = FX_MUL(data_02082214[sine + 1], 0x2000);
-                *(int *)(raw + 0x4d20) = FX_MUL(data_02082214[sine], 0x2000);
+                ((dScMgCoin_c *)raw)->mSparkles[0].vx = FX_MUL(data_02082214[sine + 1], 0x2000);
+                ((dScMgCoin_c *)raw)->mSparkles[0].vy = FX_MUL(data_02082214[sine], 0x2000);
             }
-            *(u16 *)(raw + 0x4d24) = 0x18;
+            ((dScMgCoin_c *)raw)->mSparkles[0].life = 0x18;
         }
     }
 }
@@ -804,8 +806,11 @@ void dScMgCoin_c::Coin_StateHop(int index) {
    the panned reveal jingle, and the win flag from the other score).
    Four spellings carry the match: p1 is assigned before p0; the touch point
    is re-read through gActivePlayerSlot rather than the i already in hand; each
-   of the five coin stores spells its own self + n + 0x4000 + ... with no
-   hoisted base; and the hop target re-reads its address instead of *p1. */
+   of the five coin stores goes through its own (self + n) with no hoisted
+   base; and the hop target re-reads its address instead of *p1. Three sites
+   stay raw because no member spelling keeps their address arithmetic: p1
+   (mCoins[idx].y), the hop target's read of it, and the final state store
+   (mCoins[idx].state). */
 void dScMgCoin_c::Coin_StateWaitTouch(int idx) {
     char *self = (char *)this;
     int i;
@@ -834,8 +839,10 @@ void dScMgCoin_c::Coin_StateWaitTouch(int idx) {
         return;
 
     n = idx * 0x18;
-    p1 = (int *)(self + 0x4ac4 + n);
-    p0 = (int *)(self + 0x4ac0 + n);
+    /* mCoins[idx].y as `&mCoins[0].y + n`, the ROM's this + field + record
+       order; the landY copy below must use the same spelling to CSE it. */
+    p1 = (int *)((char *)&mCoins[0].y + n);
+    p0 = &mCoins[idx].x;
     q1 = *p1;
     ax = gTouchX[gActivePlayerSlot * 4];
     ay = gTouchY[gActivePlayerSlot * 4];
@@ -852,18 +859,18 @@ void dScMgCoin_c::Coin_StateWaitTouch(int idx) {
     if (w >= 0x10)
         return;
 
-    *(u8 *)(self + n + 0x4000 + 0xad5) = 1;
-    if (*(u8 *)(self + n + 0x4000 + 0xad3) != 0) {
-        *(u8 *)(self + n + 0x4000 + 0xad0) = 1;
-        *(int *)(self + n + 0x4000 + 0xac8) = *(int *)(self + 0x4ac4 + n);
-        *(int *)(self + n + 0x4000 + 0xacc) = -0x3000;
-        *(u8 *)(self + n + 0x4000 + 0xad6) = 0;
+    ((dScMgCoin_c *)(self + n))->mCoins[0].collected = 1;
+    if (((dScMgCoin_c *)(self + n))->mCoins[0].value != 0) {
+        ((dScMgCoin_c *)(self + n))->mCoins[0].state = 1;
+        ((dScMgCoin_c *)(self + n))->mCoins[0].landY = *(int *)((char *)&mCoins[0].y + n);
+        ((dScMgCoin_c *)(self + n))->mCoins[0].vy = -0x3000;
+        ((dScMgCoin_c *)(self + n))->mCoins[0].bounces = 0;
         this->KickBlockUnderCoin(idx);
         return;
     }
 
     this->Sparkle_Burst(idx);
-    *(u8 *)(self + idx * 0x18 + 0x4000 + 0xad2) = 0;
+    ((dScMgCoin_c *)(self + idx * 0x18))->mCoins[0].visible = 0;
     mPhase = 3;
     mCountdown = 0x40;
 
@@ -876,7 +883,7 @@ void dScMgCoin_c::Coin_StateWaitTouch(int idx) {
     func_020127a4(2, 0xee, 0xffff, ang);
     Sound::PlayBank2_2D(0xf2);
 
-    *(u8 *)(self + 0x4000 + idx * 0x18 + 0xad0) = 2;
+    *((u8 *)&mCoins[0].state + idx * 0x18) = 2;
     stars = (gMgScene != 0) ? gMgScene->mCredits : 0;
     need = mPlayerScore;
     if (stars > need)
@@ -897,9 +904,8 @@ void dScMgCoin_c::Coin_UpdateAll() {
 
 // @symbol _ZN11dScMgCoin_c11LayOutCoinsEv
 /* Lays the 24 coins out in three rows of eight and marks two coins in each
-   row, picked at random, at +0x14. */
+   row, picked at random, as keepEmpty. */
 void dScMgCoin_c::LayOutCoins() {
-    char *c = (char *)this;
     int a[3];
     int b[3];
     int k;
@@ -923,7 +929,7 @@ void dScMgCoin_c::LayOutCoins() {
         mCoins[i].x = (((col << 5) + 0x10) << 12);
         mCoins[i].y = sCoinRowY[row] << 12;
         col++;
-        mCoins[i].pad11 = 1;
+        mCoins[i].placed = 1;
         mCoins[i].visible = 1;
         if (col >= 8) {
             col = 0;
@@ -931,12 +937,12 @@ void dScMgCoin_c::LayOutCoins() {
         }
     }
 
-    *(unsigned char *)(c + a[0] * 0x18 + 0x4ad4) = 1;
-    *(unsigned char *)(c + b[0] * 0x18 + 0x4ad4) = 1;
-    *(unsigned char *)(c + (a[1] + 8) * 0x18 + 0x4ad4) = 1;
-    *(unsigned char *)(c + (b[1] + 8) * 0x18 + 0x4ad4) = 1;
-    *(unsigned char *)(c + (a[2] + 0x10) * 0x18 + 0x4ad4) = 1;
-    *(unsigned char *)(c + (b[2] + 0x10) * 0x18 + 0x4ad4) = 1;
+    mCoins[a[0]].keepEmpty = 1;
+    mCoins[b[0]].keepEmpty = 1;
+    mCoins[a[1] + 8].keepEmpty = 1;
+    mCoins[b[1] + 8].keepEmpty = 1;
+    mCoins[a[2] + 0x10].keepEmpty = 1;
+    mCoins[b[2] + 0x10].keepEmpty = 1;
 }
 
 // @symbol _ZN11dScMgCoin_c18KickBlockUnderCoinEi
@@ -947,8 +953,9 @@ void dScMgCoin_c::KickBlockUnderCoin(int id) {
     int i;
     char *p = base;
     for (i = 0; i < 0x28; i++) {
-        if (*(unsigned char *)(p + 0x4677) != 0 && *(unsigned char *)(p + 0x4675) == 4 &&
-            id == *(unsigned char *)(p + 0x467b)) {
+        if (((dScMgCoin_c *)p)->mBlocks[0].active != 0 &&
+            ((dScMgCoin_c *)p)->mBlocks[0].state == 4 &&
+            id == ((dScMgCoin_c *)p)->mBlocks[0].coin) {
             int v = mCoins[id].y;
             mBlocks[i].y = v - 0x20000;
             mBlocks[i].visible = 1;
@@ -1059,24 +1066,25 @@ void dScMgCoin_c::Block_StateDropOnCoin(int index) {
     char *thiz = (char *)this;
     int off = index * 0x1c;
     int new_var;
-    int *pa = (int *)((thiz + 0x466c) + off);
-    int *pb = (int *)((thiz + 0x4664) + off);
-    *pb = (*pb) + (*((int *)((thiz + 0x466c) + off)));
-    *((int *)((thiz + 0x466c) + off)) = (*pa) + 0x400;
-    new_var = 0x674;
-    int look = sCoinBlockDropRowY[*((unsigned char *)(((thiz + off) - -0x4000) + new_var))];
+    int *pa = &mBlocks[index].vy;
+    int *pb = &mBlocks[index].y;
+    /* mBlocks[index].vy as `&mBlocks[0].vy + off`, the ROM's this + field +
+       record order; mBlocks[index].vy moves bytes */
+    *pb = (*pb) + (*(int *)((char *)&mBlocks[0].vy + off));
+    *(int *)((char *)&mBlocks[0].vy + off) = (*pa) + 0x400;
+    int look = sCoinBlockDropRowY[((dScMgCoin_c *)(thiz + off))->mBlocks[0].row];
     if (((*pb) >> 12) <= look) {
         return;
     }
-    new_var = (*((unsigned char *)(((thiz + off) + 0x4000) + 0x67b))) * 0x18;
-    char *g = (thiz + new_var) + 0x4000;
-    *((int *)(((thiz + off) + 0x4000) + 0x660)) = *((int *)(g + 0xac0));
+    new_var = ((dScMgCoin_c *)(thiz + off))->mBlocks[0].coin * 0x18;
+    char *g = thiz + new_var;
+    ((dScMgCoin_c *)(thiz + off))->mBlocks[0].x = ((dScMgCoin_c *)g)->mCoins[0].x;
     *pb = look << 12;
     *pa = 0;
-    *((int *)(((thiz + off) + 0x4000) + 0x668)) = 0;
-    *((unsigned char *)(((thiz + off) + 0x4000) + 0x675)) = 4;
+    ((dScMgCoin_c *)(thiz + off))->mBlocks[0].vx = 0;
+    ((dScMgCoin_c *)(thiz + off))->mBlocks[0].state = 4;
     pa += 0;
-    *((unsigned char *)(((thiz + off) + 0x4000) + 0x676)) = 0;
+    ((dScMgCoin_c *)(thiz + off))->mBlocks[0].visible = 0;
 }
 
 // @symbol _ZN11dScMgCoin_c17Block_StateWanderEi
@@ -1096,36 +1104,38 @@ void dScMgCoin_c::Block_StateWander(int i) {
     int j;
     int *pD;
 
-    *(int *)(c + 0x4660 + n) += *(int *)(c + 0x4668 + n);
-    *(int *)(c + 0x4664 + n) += *(int *)(c + 0x466c + n);
-    *(int *)(c + 0x466c + n) += 0x400;
+    mBlocks[i].x += mBlocks[i].vx;
+    /* mBlocks[i].vy, here and in pD, as `&mBlocks[0].vy + n` (this + field
+       + record); mBlocks[i].vy builds 8 bytes longer */
+    mBlocks[i].y += *(int *)((char *)&mBlocks[0].vy + n);
+    mBlocks[i].vy += 0x400;
     this->Block_ClampToWalls(i);
 
-    pD = (int *)(c + 0x466c + n);
-    idxb = *(u8 *)(c + n + 0x4674);
+    pD = (int *)((char *)&mBlocks[0].vy + n);
+    idxb = ((dScMgCoin_c *)(c + n))->mBlocks[0].row;
     diff = sCoinBlockWanderRowY[idxb] - sCoinBlockWanderRowHeight[idxb];
-    if ((*(int *)(c + 0x4664 + n) >> 12) > diff) {
-        *(int *)(c + 0x4664 + n) = diff * 0x1000;
+    if ((mBlocks[i].y >> 12) > diff) {
+        mBlocks[i].y = diff * 0x1000;
         *pD = 0;
-        if (*(int *)(c + 0x4668 + n) == 0) {
+        if (mBlocks[i].vx == 0) {
             unsigned int rv = (unsigned int)RandomIntInternal(&data_0209d4b8);
             if (((((rv >> 16) & 0x7fff) << 1) >> 15))
-                *(int *)(c + 0x4668 + n) = 0xc00;
+                mBlocks[i].vx = 0xc00;
             else
-                *(int *)(c + 0x4668 + n) = -0xc00;
+                mBlocks[i].vx = -0xc00;
         }
     }
     {
-        int bval = *(int *)(c + 0x4664 + n);
+        int bval = mBlocks[i].y;
         if (bval != (diff << 12))
             return;
     }
 
     base_j = (idxb - 3) * 8;
-    fp = *(int *)(c + 0x4660 + n) >> 12;
+    fp = mBlocks[i].x >> 12;
     for (j = 0; j < 8; j++) {
         int idx = base_j + j;
-        int d = (*(int *)((c + idx * 0x18) + 0x4ac0) >> 12) - fp;
+        int d = (mCoins[idx].x >> 12) - fp;
         int limit = 2;
         char *e = c + idx * 0x18;
         int res = this->IsAltVariant();
@@ -1133,14 +1143,14 @@ void dScMgCoin_c::Block_StateWander(int i) {
             limit = 5;
         if (d <= -6 || d >= 6)
             continue;
-        if (*(u8 *)(e + 0x4ad4) != 0)
+        if (((dScMgCoin_c *)e)->mCoins[0].keepEmpty != 0)
             continue;
-        if (LB(e + 0x4ad3) > limit)
+        if (LB(&((dScMgCoin_c *)e)->mCoins[0].value) > limit)
             continue;
-        LB(e + 0x4ad3) += 1;
-        *(u8 *)(c + n + 0x4675) = 3;
+        LB(&((dScMgCoin_c *)e)->mCoins[0].value) += 1;
+        ((dScMgCoin_c *)(c + n))->mBlocks[0].state = 3;
         *pD = 0x200;
-        *(u8 *)(c + n + 0x467b) = (u8)idx;
+        ((dScMgCoin_c *)(c + n))->mBlocks[0].coin = (u8)idx;
         return;
     }
 }
@@ -1216,19 +1226,15 @@ void dScMgCoin_c::Block_StateHopDown(int i) {
 // @symbol _ZN11dScMgCoin_c18Block_StateWaitingEi
 /* A block waiting to drop: counts its delay down, then starts it (state 1). */
 void dScMgCoin_c::Block_StateWaiting(int i) {
-    char *c = (char *)this;
-    int idx = i * 0x1c;
-    char *r2 = c + 0x4670;
-    unsigned short *p = (unsigned short *)(r2 + idx);
+    unsigned short *p = (unsigned short *)&mBlocks[i].delay;
     if (*p != 0) {
         *p = *p - 1;
         if (*(short *)p < 0)
             *(short *)p = 0;
         return;
     }
-    char *r0 = c + idx;
-    *(char *)(r0 + 0x4000 + 0x675) = 1;
-    *(char *)(r0 + 0x4000 + 0x679) = 1;
+    mBlocks[i].state = 1;
+    mBlocks[i].hops = 1;
 }
 
 // @symbol _ZN11dScMgCoin_c18Block_ClampToWallsEi
@@ -1257,8 +1263,9 @@ void dScMgCoin_c::Block_UpdateAll() {
     int i = 0;
     char *p = thiz;
     for (; i < 0x28; i++) {
-        if (*(unsigned char *)(p + 0x4000 + 0x677) != 0) {
-            (this->*sCoinBlockStateTable[*(unsigned char *)(p + 0x4000 + 0x675)].pmf)(i);
+        if (((dScMgCoin_c *)p)->mBlocks[0].active != 0) {
+            (this->*sCoinBlockStateTable[((dScMgCoin_c *)p)->mBlocks[0].state].pmf)(i);
+            /* mBlocks[0].state; the member spelling moves bytes */
             if (*(unsigned char *)(p + 0x4000 + 0x675) != 4)
                 n++;
             this->Block_Animate(i);
@@ -1320,34 +1327,34 @@ void dScMgCoin_c::ResetRound() {
     k = 0;
     for (; k < 0x28; k++) {
         i = 0;
-        *((u32 *)(p + 0x4660)) = i;
-        *((u32 *)(p + 0x4664)) = i;
-        *((u32 *)(p + 0x4668)) = i;
-        *((u32 *)(p + 0x466c)) = i;
-        *((u16 *)(p + 0x4670)) = i;
-        *((u16 *)(p + 0x4672)) = i;
-        *((u8 *)(p + 0x4674)) = i;
-        *((u8 *)(p + 0x4675)) = i;
-        *((u8 *)(p + 0x4676)) = i;
-        *((u8 *)(p + 0x4677)) = i;
-        *((u8 *)(p + 0x4678)) = i;
-        *((u8 *)(p + 0x4679)) = i;
-        *((u8 *)(p + 0x467a)) = i;
-        *((u8 *)(p + 0x467b)) = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].x = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].y = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].vx = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].vy = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].delay = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].animTimer = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].row = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].state = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].visible = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].active = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].animFrame = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].hops = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].stage = i;
+        ((dScMgCoin_c *)p)->mBlocks[0].coin = i;
         p += 0x1c;
     }
 
     p = c;
     for (i2 = 0; i2 < 0x18; i2++) {
         j = 0;
-        *((u32 *)(p + 0x4ac0)) = j;
-        *((u32 *)(p + 0x4ac4)) = j;
-        *((u8 *)(p + 0x4ad0)) = j;
-        *((u8 *)(p + 0x4ad1)) = j;
-        *((u8 *)(p + 0x4ad2)) = j;
-        *((u8 *)(p + 0x4ad3)) = j;
-        *((u8 *)(p + 0x4ad4)) = j;
-        *((u8 *)(p + 0x4ad5)) = j;
+        ((dScMgCoin_c *)p)->mCoins[0].x = j;
+        ((dScMgCoin_c *)p)->mCoins[0].y = j;
+        ((dScMgCoin_c *)p)->mCoins[0].state = j;
+        ((dScMgCoin_c *)p)->mCoins[0].placed = j;
+        ((dScMgCoin_c *)p)->mCoins[0].visible = j;
+        ((dScMgCoin_c *)p)->mCoins[0].value = j;
+        ((dScMgCoin_c *)p)->mCoins[0].keepEmpty = j;
+        ((dScMgCoin_c *)p)->mCoins[0].collected = j;
         p += 0x18;
     }
 
@@ -1356,29 +1363,29 @@ void dScMgCoin_c::ResetRound() {
     *(&mScore.total) = 0;
     *(&mScore.shown) = 0;
     *(&mScore.tick) = 0;
-    *((u8 *)(c + 0x4d13)) = 0;
+    mScore.running = 0;
     p = c;
     for (i3 = 0; i3 < 0x20; i3++) {
-        *((u8 *)(p + 0x4d28)) = 0;
-        *((u8 *)(p + 0x4d29)) = 0;
+        ((dScMgCoin_c *)p)->mSparkles[0].active = 0;
+        ((dScMgCoin_c *)p)->mSparkles[0].visible = 0;
         p += 0x18;
     }
 
     for (i4 = 0; i4 < 0x18; i4++) {
         char *e = c + ((i4 & 0xFFFFFFFFu) << 4);
-        *((u8 *)(e + 0x5020)) = 0;
-        *((u8 *)(e + 0x5021)) = 0;
+        ((dScMgCoin_c *)e)->mPopups[0].live = 0;
+        ((dScMgCoin_c *)e)->mPopups[0].flag = 0;
     }
 
-    *((u32 *)(c + 0x51c8)) = 0;
-    *((u32 *)(c + 0x51cc)) = 0;
+    mPhase = 0;
+    mCountdown = 0;
     mWonLast = 0;
     *((u8 *)(c + 0x51dd)) = 0;
     *((u32 *)(c + 0x51d0)) = 0;
     mCaptionLatch = 0;
     this->Caption_Reset();
     this->Bag_Hide();
-    *((u8 *)(c + 0x51df)) = 0;
+    mClearedAll = 0;
 }
 
 // @symbol _ZN11dScMgCoin_c17Phase_StateResultEv
@@ -1405,7 +1412,7 @@ void dScMgCoin_c::Phase_StateResult() {
     if (mCountdown > 0)
         return;
     mCountdown = 0;
-    if (*(unsigned char *)(self + 0x51df) != 0) {
+    if (mClearedAll != 0) {
         FreeGfxSlotsById(6);
         Mg_RestoreMusic();
     }
@@ -1414,15 +1421,14 @@ void dScMgCoin_c::Phase_StateResult() {
 }
 
 // @symbol _ZN11dScMgCoin_c21Phase_StateScoreDelayEv
-/* Counts the countdown at 0x51cc down; at zero, re-arms the caption if the
+/* Counts mCountdown down; at zero, re-arms the caption if the
    other player scored, then enters the result phase with 0xc0 frames. */
 void dScMgCoin_c::Phase_StateScoreDelay() {
-    char *c = (char *)this;
-    if (*(int *)((c + 0x5000) + 0x1cc) != 0) {
-        int *p = (int *)(int)(((long long)(int)(c + 0x51cc)));
+    if (mCountdown != 0) {
+        int *p = (int *)(int)(((long long)(int)&mCountdown));
         *p = *p - 1;
-        if (*(int *)((c + 0x5000) + 0x1cc) < 0)
-            *(int *)((c + 0x5000) + 0x1cc) = 0;
+        if (mCountdown < 0)
+            mCountdown = 0;
         return;
     }
     {
@@ -1439,7 +1445,7 @@ void dScMgCoin_c::Phase_StateScoreDelay() {
 
 // @symbol _ZN11dScMgCoin_c17Phase_StateSettleEv
 /* Phase 4 on the way to the result: runs the blocks, coins and sparkles,
-   and once nothing moves counts 0x51cc down, bringing in the caption or
+   and once nothing moves counts mCountdown down, bringing in the caption or
    the other screen at 0x20, then hands the score over and sets phase 4. */
 void dScMgCoin_c::Phase_StateSettle() {
     char *self = (char *)this;
@@ -1460,7 +1466,7 @@ void dScMgCoin_c::Phase_StateSettle() {
         }
     }
     for (j = 0; j < 0x18; j++) {
-        if (mCoins[j].state == 1 && mCoins[j].pad11 != 0)
+        if (mCoins[j].state == 1 && mCoins[j].placed != 0)
             count++;
     }
     this->Coin_UpdateAll();
@@ -1470,9 +1476,9 @@ void dScMgCoin_c::Phase_StateSettle() {
 
     if (mCountdown != 0) {
         mCountdown -= 1;
-        if (mCountdown == 0x20 && ((unsigned char *)(self + 0x5000))[0x1df] == 0)
+        if (mCountdown == 0x20 && mClearedAll == 0)
             this->Caption_Finish();
-        if (mCountdown == 0x20 && ((unsigned char *)(self + 0x5000))[0x1df] != 0) {
+        if (mCountdown == 0x20 && mClearedAll != 0) {
             Mg_ShowBanner(6, 0x80, -0x80, -1, -1, 0xd);
             Mg_PlayJingle(0);
         }
@@ -1521,7 +1527,7 @@ void dScMgCoin_c::Phase_StatePlay() {
     }
     mPhase = 3;
     mCountdown = 0x40;
-    *(u8 *)(c + 0x51df) = 1;
+    mClearedAll = 1;
     {
         int t;
         dScMgBase_c *g = gMgScene;
@@ -1622,7 +1628,7 @@ int dScMgCoin_c::InitResources() {
     Deallocate((void *)a);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);
-    _ZN2GX10LoadBGPlttEPKvjj((const void *)a, 0x1e0, 0x20);
+    GX::LoadBGPltt((const void *)a, 0x1e0, 0x20);
     Deallocate((void *)a);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_UP_NSC_BIN);
@@ -1632,18 +1638,18 @@ int dScMgCoin_c::InitResources() {
     b = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCG_BIN);
     a = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCL_BIN);
     DecompressLZ16(b, (void *)0x6400000);
-    _ZN2GX11LoadOBJPlttEPKvjj((const void *)a, 0, 0x100);
+    GX::LoadOBJPltt((const void *)a, 0, 0x100);
 
     data_0209d454 |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x1210;
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
-    DecompressLZ16(d, (void *)(_ZN3G2S13GetBG3CharPtrEv() + 0x4000));
+    DecompressLZ16(d, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
     Deallocate((void *)d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);
-    _ZN3GXS10LoadBGPlttEPKvjj((const void *)d, 0x1e0, 0x20);
+    GXS::LoadBGPltt((const void *)d, 0x1e0, 0x20);
     Deallocate((void *)d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_DOWN_NSC_BIN);
@@ -1651,7 +1657,7 @@ int dScMgCoin_c::InitResources() {
     Deallocate((void *)d);
 
     DecompressLZ16(b, (void *)0x6600000);
-    _ZN3GXS11LoadOBJPlttEPKvjj((const void *)a, 0, 0x100);
+    GXS::LoadOBJPltt((const void *)a, 0, 0x100);
     Deallocate((void *)b);
     Deallocate((void *)a);
 

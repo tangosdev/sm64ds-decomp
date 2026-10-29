@@ -42,7 +42,11 @@
  * immediate base, same as dScEntry_c.
  */
 struct dScTitle_c : dScene_c {
-    u16 unk_050;                   /* 0x050 -- repeat-delay counter, Behavior */
+    /* Cursor auto-repeat delay: Behavior moves the level-select cursor on a
+       fresh press, or on a held one once this is 0, reloading it with 8
+       (press) or 2 (held), and counts it down with DecIfAbove0_Short.
+       Was unk_050. */
+    u16 mRepeatDelay; /* 0x050 */
 
     /* Declared first and DEFINED INLINE, both deliberately -- the same form
        dScene_c.h and dBase_c.h use one and two levels up. Inline-in-class is

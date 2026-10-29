@@ -6,15 +6,15 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last note): partial linker run after hatch hole: 0x021115d8..0x02111a70, 8 function(s). func_ov009_0211145c (0x0211145c, 0x17c) is an unenrolled draft; D1/D0 remain leftover enrolled files below that hole and 02111224/02111234 folded into src/game/actors/d_a_s_bird_head.cpp.",
     "class label(s): daSBird_c",
-    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "FOLDED: compiler-generated __sinit_d_a_s_bird.cpp is byte-identical to retail __sinit_ov009_02112458 (0xcc) and carries the same fifteen relocation sites; the .data claim 0x021138fc..0x0211391c tiles the four descriptors with no gaps, and .bss 0x02113c20..0x02113c68 tiles both handles, both registration nodes and the state table."
+    "linker run 0x021111a0..0x02111a70, 13 functions: D1/D0 (key-function destructor), AttachToLeader, StateFly, StateLaunchFlock, StateWaitForPlayer, StateSpawnFlock, the five actor virtuals and the factory, contiguous in .text with d_a_obj_mc_water.cpp starting at 0x02111a70",
+    "membership: the four state bodies are the four records of the data_ov009_02113c48 PMF table (.data 0x02113914 / 0x0211390c / 0x021138fc / 0x02113904, each {code address, 0}); AttachToLeader is what the two spawn loops call on each spawned daSBird_c (profile SBIRD, actor id 0x157)",
+    "FOLD. Formerly two TUs (ov009/daSBird_c_head 0x021111a0..0x0211145c, text-only, and this one 0x021115d8..0x02111a70) around func_ov009_0211145c, which was kept as a one-function free routine. Its descriptor is the same {code address, 0} shape as the other three records, i.e. a non-virtual member-function pointer, so it is daSBird_c::StateLaunchFlock and the run is one TU. Under `#pragma defer_codegen off` the file is written ROM-ascending; the destructor comes out D1, D0, then a homeless D2 (deadstrip)."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x021115d8",
+      "start": "0x021111a0",
       "end": "0x02111a70"
     },
     {
@@ -40,60 +40,95 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN9daSBird_c19func_ov009_021115d8Ev",
-      "address": "0x021115d8",
-      "size": "0x00000114",
-      "legacy_source": "src/func_ov009_021115d8.c",
+      "symbol": "_ZN9daSBird_cD1Ev",
+      "address": "0x021111a0",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN9daSBird_cD1Ev.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_ZN9daSBird_c19func_ov009_021116ecEv",
+      "symbol": "_ZN9daSBird_cD0Ev",
+      "address": "0x021111d8",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN9daSBird_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN9daSBird_c14AttachToLeaderEi",
+      "address": "0x02111224",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov009_02111224.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN9daSBird_c8StateFlyEv",
+      "address": "0x02111234",
+      "size": "0x00000228",
+      "legacy_source": "src/func_ov009_02111234.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN9daSBird_c16StateLaunchFlockEv",
+      "address": "0x0211145c",
+      "size": "0x0000017c",
+      "legacy_source": "src/unnamed/ov009/func_ov009_0211145c.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN9daSBird_c18StateWaitForPlayerEv",
+      "address": "0x021115d8",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov009_021115d8.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN9daSBird_c15StateSpawnFlockEv",
       "address": "0x021116ec",
       "size": "0x00000150",
       "legacy_source": "src/func_ov009_021116ec.cpp",
-      "ordinal": 1
+      "ordinal": 6
     },
     {
       "symbol": "_ZN9daSBird_c16CleanupResourcesEv",
       "address": "0x0211183c",
       "size": "0x00000030",
       "legacy_source": "src/_ZN9daSBird_c16CleanupResourcesEv.cpp",
-      "ordinal": 2
+      "ordinal": 7
     },
     {
       "symbol": "_ZN9daSBird_c16OnPendingDestroyEv",
       "address": "0x0211186c",
       "size": "0x00000004",
       "legacy_source": "src/_ZN9daSBird_c16OnPendingDestroyEv.cpp",
-      "ordinal": 3
+      "ordinal": 8
     },
     {
       "symbol": "_ZN9daSBird_c6RenderEv",
       "address": "0x02111870",
       "size": "0x00000028",
       "legacy_source": "src/_ZN9daSBird_c6RenderEv.cpp",
-      "ordinal": 4
+      "ordinal": 9
     },
     {
       "symbol": "_ZN9daSBird_c8BehaviorEv",
       "address": "0x02111898",
       "size": "0x000000e4",
       "legacy_source": "src/_ZN9daSBird_c8BehaviorEv.cpp",
-      "ordinal": 5
+      "ordinal": 10
     },
     {
       "symbol": "_ZN9daSBird_c13InitResourcesEv",
       "address": "0x0211197c",
       "size": "0x000000b4",
       "legacy_source": "src/_ZN9daSBird_c13InitResourcesEv.cpp",
-      "ordinal": 6
+      "ordinal": 11
     },
     {
       "symbol": "daSBird_c_classInit",
       "address": "0x02111a30",
       "size": "0x00000040",
       "legacy_source": "src/d_a_s_bird.c",
-      "ordinal": 7
+      "ordinal": 12
     }
   ],
   "data": [
@@ -102,37 +137,105 @@
       "address": "0x021138fc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "state 2 descriptor: function-pointer/PMF pair for the free hatch func_ov009_0211145c; retail first word is 0x0211145c"
+      "evidence": "anonymous state 2 descriptor for daSBird_c::StateLaunchFlock; retail first word is 0x0211145c"
     },
     {
       "symbol": "@267",
       "address": "0x02113904",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "anonymous state 3 descriptor for daSBird_c::func_ov009_02111234; retail first word is 0x02111234"
+      "evidence": "anonymous state 3 descriptor for daSBird_c::StateFly; retail first word is 0x02111234"
     },
     {
       "symbol": "@265",
       "address": "0x0211390c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "anonymous state 1 descriptor for daSBird_c::func_ov009_021115d8; retail first word is 0x021115d8"
+      "evidence": "anonymous state 1 descriptor for daSBird_c::StateWaitForPlayer; retail first word is 0x021115d8"
     },
     {
       "symbol": "@263",
       "address": "0x02113914",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "anonymous state 0 descriptor for daSBird_c::func_ov009_021116ec; retail first word is 0x021116ec"
+      "evidence": "anonymous state 0 descriptor for daSBird_c::StateSpawnFlock; retail first word is 0x021116ec"
     }
   ],
   "compiler_only_output": [
+    {
+      "symbol": "_ZN9daSBird_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. One out-of-line destructor under #pragma defer_codegen off emits D1, D0, then D2. The cartridge has D1 at ov009:0x021111a0 and D0 at 0x021111d8 and no D2. Production isolation discards it. It is emitted after D0, so the licensed functions stay ROM-ascending."
+    },
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the stack Vector3 automatics in func_ov009_021115d8 / 021116ec pull it in. The cartridge keeps one copy at arm9:0x020072c0 and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte bx lr body."
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the stack Vector3 automatics in StateFly pull it in. The cartridge keeps one copy at arm9:0x020072c0 and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte bx lr body."
+    },
+    {
+      "symbol": "_ZTV9daSBird_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov009",
+      "canonical_address": "0x02113958",
+      "reason": "The out-of-line destructor is the key function, so this TU emits the vtable. Public address point ov009:0x02113958 is outside the licensed text span; D1/D0's vptr stores relocate to it (relocs.txt from 0x021111d4 and 0x0211121c). Text-only production isolation discards it after the address-point bias is checked."
+    },
+    {
+      "symbol": "_ZTI9daSBird_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov009",
+      "canonical_address": "0x02113928",
+      "reason": "This class's __si_class_type_info, dragged in with the vtable. Cartridge copy ov009:0x02113928; its name word relocates to _ZTS9daSBird_c and the vtable's RTTI word (0x02113954) relocates to it."
+    },
+    {
+      "symbol": "_ZTS9daSBird_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov009",
+      "canonical_address": "0x0211391c",
+      "reason": "Type-name string 9daSBird_c at ov009:0x0211391c."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Ancestor RTTI passenger. Chain is daSBird_c -> dActor_c -> dBase_c -> fBase_c. Cartridge copy arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Ancestor type-name string 8dActor_c. Cartridge copy arm9:0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Ancestor RTTI passenger. Cartridge copy arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Ancestor type-name string 7dBase_c. Cartridge copy arm9:0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Root __class_type_info passenger. Cartridge copy arm9:0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Root type-name string 7fBase_c. Cartridge copy arm9:0x02086e60."
     }
   ],
   "bss": [
@@ -174,10 +277,8 @@
   ],
   "notes": [
     "Renamed from coined Bird to ROM RTTI daSBird_c (tools/class_rename.py --with-derived) before promotion. _ZTS9daSBird_c 0x0211391c / _ZTI9daSBird_c 0x02113928 / _ZTV9daSBird_c 0x02113958. The coined _ZTV4Bird alias at the same address was deleted, not renamed onto the ROM name.",
-    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last note): PARTIAL PROMOTION. func_ov009_0211145c (0x0211145c, 0x17c) is a hand-written asm hatch that does not reproduce from C (five-word register-allocation miss). A delinks entry cannot skip a hole, so this TU licenses only the contiguous upper run 0x021115d8..0x02111a70 (8 functions). D1/D0 stay leftover enrolled files below the hole; 02111224/02111234 folded into src/game/actors/d_a_s_bird_head.cpp as daSBird_c members (manifest ov009/daSBird_c_head). The hatch stays src/unnamed/ov009/func_ov009_0211145c.c, not in delinks.",
-    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last note): Factory is return new daSBird_c() via fBase_c::operator new(unsigned long). Destructor is out of line so this TU does not emit D1/D0. Key function is ~daSBird_c(); leftover D1/D0 files emit the class vtable and RTTI, not this TU. RandomIntInternal kept as unsigned.",
-    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last note): The initializer __sinit_d_a_s_bird.cpp, its .ctor word, the four PMF descriptors, the two resource handles, their registration nodes and the state table are owned here. The handwritten __sinit_ov009_02112458.c is retired. State 2's descriptor names the free hatch func_ov009_0211145c (unenrolled draft); the other three name daSBird_c members. The class vtable/RTTI stay with the leftover D1/D0 files, g_profile_SBIRD stays outside.",
-    "DESTRUCTOR FOLD. D1/D0 (0x021111a0..0x02111224) are no longer leftover files: ~daSBird_c() is defined in src/game/actors/d_a_s_bird_head.cpp (manifest ov009/daSBird_c_head), which now licenses 0x021111a0..0x0211145c and, as the key-function TU, emits the class vtable and RTTI (deadstrip-data there against their ov009 homes). This TU is unchanged: it still does not define the destructor and emits no vtable/RTTI; its run stays 0x021115d8..0x02111a70 above the func_ov009_0211145c hatch."
+    "One TU since the fold of ov009/daSBird_c_head and func_ov009_0211145c. The out-of-line destructor is the key function, so this TU emits D1, D0 and the class vtable/RTTI; the vtable, this class's RTTI and the ancestor RTTI passengers take deadstrip-data against their configured homes (0x02113958 / 0x02113928 / 0x0211391c sit above the licensed .data, past g_profile_SBIRD).",
+    "The initializer __sinit_d_a_s_bird.cpp, its .ctor word, the four PMF descriptors, the two resource handles, their registration nodes and the state table are owned here. g_profile_SBIRD stays outside."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -185,27 +286,66 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov009-daSBird_c/d_a_s_bird.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 8,
-    "functions_declared": 8,
+    "functions_matched": 13,
+    "functions_declared": 13,
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 6 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 19 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
     "compilerOnlyOutput": {
       "requested": [
+        "_ZN9daSBird_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN9daSBird_cD2Ev"
       ],
       "droppedSections": [
-        20
+        17,
+        18,
+        22,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
       ],
-      "data": [],
-      "dataExternalized": []
+      "data": [
+        "_ZTV9daSBird_c",
+        "_ZTI9daSBird_c",
+        "_ZTS9daSBird_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI9daSBird_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS9daSBird_c",
+        "_ZTV9daSBird_c"
+      ],
+      "canonicalDuplicates": []
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
@@ -217,11 +357,11 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
-        "start": "0x021115d8",
+        "start": "0x021111a0",
         "end": "0x02111a70",
         "differingBytes": 0,
         "firstDiff": null
@@ -229,7 +369,7 @@
       "tuRanges": [
         {
           "section": ".text",
-          "start": "0x021115d8",
+          "start": "0x021111a0",
           "end": "0x02111a70",
           "differingBytes": 0,
           "firstDiff": null
@@ -264,7 +404,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 19
+          "LICENSED": 24
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -275,19 +415,19 @@
           {
             "section": ".init",
             "original": [
-              35
+              60
             ],
             "desired": [
-              35
+              60
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              33
+              58
             ],
             "desired": [
-              33
+              58
             ]
           },
           {
@@ -296,30 +436,30 @@
               5,
               7,
               9,
-              13
+              11
             ],
             "desired": [
-              9,
-              13,
+              5,
+              11,
               7,
-              5
+              9
             ]
           },
           {
             "section": ".bss",
             "original": [
-              11,
-              12,
-              15,
-              16,
-              17
+              39,
+              40,
+              41,
+              42,
+              43
             ],
             "desired": [
-              11,
-              12,
-              15,
-              16,
-              17
+              40,
+              42,
+              39,
+              41,
+              43
             ]
           }
         ],
@@ -331,23 +471,47 @@
                 5,
                 7,
                 9,
-                13
+                11
               ],
               "desired": [
-                9,
-                13,
+                5,
+                11,
                 7,
-                5
+                9
               ],
               "slots": [
                 5,
                 7,
                 9,
-                13
+                11
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                39,
+                40,
+                41,
+                42,
+                43
+              ],
+              "desired": [
+                40,
+                42,
+                39,
+                41,
+                43
+              ],
+              "slots": [
+                39,
+                40,
+                41,
+                42,
+                43
               ]
             }
           ],
-          "symbolIndices": 4,
+          "symbolIndices": 9,
           "sectionLinks": 0,
           "sectionInfos": 4,
           "error": null
@@ -356,28 +520,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -467,6 +611,12 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local state 1 descriptor is a configured initializer relocation destination at 0x0211390c"
+    },
+    {
+      "symbol": "data_ov009_021138fc",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local state 2 descriptor is a configured initializer relocation destination at 0x021138fc"
     },
     {
       "symbol": "@267",
@@ -653,7 +803,7 @@
       "source": "0x02113914",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSBird_c19func_ov009_021116ecEv",
+      "symbol": "_ZN9daSBird_c15StateSpawnFlockEv",
       "addend": 0,
       "target_module": "ov009",
       "target_address": "0x021116ec"
@@ -663,7 +813,7 @@
       "source": "0x0211390c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSBird_c19func_ov009_021115d8Ev",
+      "symbol": "_ZN9daSBird_c18StateWaitForPlayerEv",
       "addend": 0,
       "target_module": "ov009",
       "target_address": "0x021115d8"
@@ -673,7 +823,7 @@
       "source": "0x021138fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov009_0211145c",
+      "symbol": "_ZN9daSBird_c16StateLaunchFlockEv",
       "addend": 0,
       "target_module": "ov009",
       "target_address": "0x0211145c"
@@ -683,7 +833,7 @@
       "source": "0x02113904",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSBird_c19func_ov009_02111234Ev",
+      "symbol": "_ZN9daSBird_c8StateFlyEv",
       "addend": 0,
       "target_module": "ov009",
       "target_address": "0x02111234"
@@ -691,29 +841,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@277",
+      "from": "@362",
       "to": "@263",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp: state 0 descriptor (StateSpawnFlock); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
     },
     {
-      "from": "@279",
+      "from": "@364",
       "to": "@265",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp: state 1 descriptor (StateWaitForPlayer); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
     },
     {
-      "from": "@281",
+      "from": "@366",
+      "to": "data_ov009_021138fc",
+      "evidence": "compiler temp: state 2 descriptor (StateLaunchFlock), formerly a named definition; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
+    },
+    {
+      "from": "@368",
       "to": "@267",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp: state 3 descriptor (StateFly); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
     },
     {
-      "from": "@395",
+      "from": "@642",
       "to": "@381",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler-local model registration node; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
     },
     {
-      "from": "@396",
+      "from": "@643",
       "to": "@382",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler-local animation registration node; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
     }
   ]
 }

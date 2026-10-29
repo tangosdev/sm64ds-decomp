@@ -92,6 +92,8 @@ _names_lock = threading.Lock()
 _names = None
 _manifest_lock = threading.Lock()
 _source_manifests = None
+_alias_lock = threading.Lock()
+_alias_by_source = None
 
 
 def _rename_manifest(rel):
@@ -111,6 +113,87 @@ def _rename_manifest(rel):
     return entries[0] if entries else None
 
 
+def _undefined_alias_entries():
+    """source path -> manifests that alias an undefined import to a ROM name.
+
+    The production link rewrites those imports
+    (`tubuild.apply_undefined_symbol_alias_policy`). A vtable slot that still
+    carries the compiler's spelling has no `symbols.txt` home, so the compare
+    leaves it blind and the symbol can never be VERIFIED. Resolving the alias
+    here is the same address the linker would write.
+    """
+    global _alias_by_source
+    with _alias_lock:
+        if _alias_by_source is None:
+            by_source = collections.defaultdict(list)
+            for entry in TUM.load()["entries"]:
+                if not entry.get("undefined_symbol_aliases"):
+                    continue
+                source = entry.get("promoted_source") or entry.get("source")
+                if source:
+                    by_source[str(source).replace("\\", "/")].append(entry)
+            _alias_by_source = dict(by_source)
+        return _alias_by_source
+
+
+def _with_undefined_aliases(rel, names):
+    """Name index plus this source's admitted undefined-import aliases.
+
+    A name already in `names` is left alone: `symbols.txt` wins, and an alias
+    that disagrees with it is a refusal rather than a second opinion. The
+    address is not taken from the row by itself. `canonical_symbol` must
+    already resolve in this index to `canonical_module` and
+    `canonical_address`, the same check the production link makes before it
+    rewrites the import. A row that misses that address is a measurement
+    refusal, not a verified slot. The returned dict is a copy only when an
+    alias is added, so the shared index is never mutated.
+    """
+    entries = _undefined_alias_entries().get(str(rel).replace("\\", "/"), [])
+    if not entries:
+        return names
+    if len(entries) > 1:
+        raise ValueError(f"ambiguous undefined-symbol alias manifests for {rel}")
+    extra = {}
+    reasons = []
+    for ordinal, row in enumerate(entries[0].get("undefined_symbol_aliases") or []):
+        label = f"undefined_symbol_aliases[{ordinal}]"
+        if not isinstance(row, dict):
+            reasons.append(f"{label} is not an object")
+            continue
+        old, new = row.get("symbol"), row.get("canonical_symbol")
+        module, address = row.get("canonical_module"), row.get("canonical_address")
+        if not old or not new or module in (None, "") or address in (None, ""):
+            reasons.append(f"{label} is missing a symbol, canonical name, module, or address")
+            continue
+        try:
+            address = int(str(address), 0)
+        except (TypeError, ValueError):
+            reasons.append(f"{label} has an invalid canonical_address")
+            continue
+        module = RL.normalize_module(str(module))
+        resolved = names.get(new) or RA.resolve_candidate(new, names)
+        if (resolved is None or resolved[0] is None
+                or RL.normalize_module(resolved[0]) != module or resolved[1] != address):
+            reasons.append(f"{label} canonical symbol {new} does not resolve exactly "
+                           f"to {module}:0x{address:08x}")
+            continue
+        if old in extra:
+            reasons.append(f"duplicate undefined alias source {old}")
+            continue
+        current = names.get(old)
+        if current is not None and current != (module, address):
+            reasons.append(f"{label} source {old} already resolves elsewhere")
+            continue
+        extra[old] = (module, address)
+    if reasons:
+        raise ValueError("undefined symbol alias refused: " + "; ".join(reasons))
+    if not extra:
+        return names
+    merged = dict(names)
+    merged.update(extra)
+    return merged
+
+
 def _measurement_object(raw, rel, names):
     """Use production's validated definition names on an in-memory audit copy.
 
@@ -118,11 +201,14 @@ def _measurement_object(raw, rel, names):
     global name-index hit is not evidence that two such definitions are the same
     object. The source's manifest and the shared rename admission rule establish
     that identity; a refused policy produces an explicit measurement error.
-    Nothing is written back to the compiler output or supplied to the linker.
+    Undefined imports admitted by `undefined_symbol_aliases` resolve to those
+    same canonical addresses, so a vtable slot is compared at the address the
+    linker writes. Nothing is written back to the compiler output or supplied
+    to the linker.
     """
     entry = _rename_manifest(rel)
     if entry is None:
-        return raw, names
+        return raw, _with_undefined_aliases(rel, names)
     mapping, _requested, reasons = RA.validated_defined_symbol_rename_plan(raw, entry)
     if reasons:
         raise ValueError("data rename policy refused: " + "; ".join(reasons))
@@ -160,7 +246,7 @@ def _measurement_object(raw, rel, names):
                     and int(str(rows[0].get("address", "-1")), 0) == home[0]
                     and int(str(rows[0].get("size", "-1")), 0) == symbol["st_size"]):
                 contextual[symbol.name] = (module, home[0])
-    return renamed, contextual
+    return renamed, _with_undefined_aliases(rel, contextual)
 
 
 def name_index():
@@ -262,12 +348,19 @@ def rom_data_index():
         return _index
 
 
-def emitted_data_symbols(raw):
+def emitted_data_symbols(raw, linked_global=()):
     """[(name, shndx, value, size)] for defined data objects in this object file.
 
     Every one of these is a section `objisolate` drops, because it keeps exactly one
     `.text` and zeroes the rest. Locals are skipped: a static table has no ROM symbol
-    to be compared against and never collides with one.
+    to be compared against and never collides with one. The exception is
+    `linked_global`: locals the manifest's `symbol_binding_rewrites` link
+    STB_GLOBAL, such as a compiler temp renamed to its ROM data name.
+
+    `.bss` (SHT_NOBITS) objects are skipped too: they carry no initial bytes, and the
+    cartridge holds nothing for them either. arm9 makes comparing them actively wrong:
+    the file bytes at its `.bss` addresses are the ITCM/DTCM autoload payloads, copied
+    out at boot before `.bss` is cleared, so every arm9 `.bss` object "differed".
     """
     elf = ELFFile(io.BytesIO(raw))
     symtab = elf.get_section_by_name(".symtab")
@@ -279,10 +372,48 @@ def emitted_data_symbols(raw):
             continue
         if s["st_info"]["type"] != "STT_OBJECT" or not s["st_size"]:
             continue
-        if s["st_info"]["bind"] == "STB_LOCAL":
+        if s["st_info"]["bind"] == "STB_LOCAL" and s.name not in linked_global:
+            continue
+        if elf.get_section(s["st_shndx"])["sh_type"] == "SHT_NOBITS":
             continue
         out.append((s.name, s["st_shndx"], s["st_value"], s["st_size"]))
     return out
+
+
+def _rtti_off_secondary_preambles(linked, retail, module, addr):
+    """Offsets of secondary-preamble words RTTI-off mwcc zeroed inside one `_ZTV`.
+
+    A multiple-inheritance vtable is one symbol: primary slots, then each
+    secondary table's offset-to-top and typeinfo, then its slots. `symbols.txt`
+    names the secondary table at its slot array, and that preamble's
+    offset-to-top is negative, so `_vtable_preamble_at` does not split it out
+    of the primary's compared body. RTTI off writes both words as zeros. Mask
+    them only when the cartridge side is that preamble (a small negative
+    offset-to-top and a `_ZTI` pointer) sitting immediately before another
+    symbol in this span. A zero where the cartridge has a slot still differs.
+    """
+    if len(linked) < OI.VTABLE_PREAMBLE or len(retail) < OI.VTABLE_PREAMBLE:
+        return []
+    index = rom_data_index()
+    typeinfo = {a for (mod, name), (a, _ext) in index.items()
+                if name.startswith("_ZTI") and mod in (module, "arm9")}
+    if not typeinfo:
+        return []
+    end = addr + len(linked)
+    spans = []
+    for (mod, _name), (sym_addr, _ext) in index.items():
+        if mod != module or not (addr < sym_addr <= end):
+            continue
+        off = sym_addr - addr - OI.VTABLE_PREAMBLE
+        if off < 0 or off + OI.VTABLE_PREAMBLE > len(linked):
+            continue
+        if linked[off:off + OI.VTABLE_PREAMBLE] != b"\0" * OI.VTABLE_PREAMBLE:
+            continue
+        top, info = struct.unpack_from("<II", retail, off)
+        if top < 0xFFFF0000 or (top & 3) != 0 or info not in typeinfo:
+            continue
+        spans.append(off)
+    return spans
 
 
 def verify_data_symbol(raw, name, shndx, value, size, names=None):
@@ -332,6 +463,11 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
     if retail is None or len(retail) < len(linked):
         return {"symbol": name, "verdict": PARTIAL, "bytes": 0, "module": module,
                 "addr": addr, "note": "module image shorter than the emitted symbol"}
+    masked = (_rtti_off_secondary_preambles(linked, retail, module, addr)
+              if name.startswith("_ZTV") else [])
+    for off in masked:
+        blind.add(off)
+        blind_bytes.update(range(off, min(len(linked), off + OI.VTABLE_PREAMBLE)))
     compared = differing = 0
     for off in range(len(linked)):
         if off in blind_bytes:
@@ -341,6 +477,8 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
             differing += 1
     rec = {"symbol": name, "module": module, "addr": addr, "bytes": compared,
            "emitted": len(linked), "romExtent": extent, "blindWords": len(blind)}
+    if masked:
+        rec["note"] = "RTTI-off secondary preamble masked"
     if differing:
         rec["verdict"] = DIFFERS
         rec["differingBytes"] = differing
@@ -370,7 +508,11 @@ def check_object(obj_path, rel, names=None):
             # Retain the original measurement as well as the explicit refusal.
             out.append({"src": rel, "symbol": "?", "verdict": UNNAMED,
                         "bytes": 0, "note": f"{type(exc).__name__}: {exc}"})
-        for name, shndx, value, size in emitted_data_symbols(raw):
+        entry = _rename_manifest(rel)
+        linked_global = {row.get("symbol") for row in
+                         (entry or {}).get("symbol_binding_rewrites", []) or []
+                         if isinstance(row, dict) and row.get("to") == "STB_GLOBAL"}
+        for name, shndx, value, size in emitted_data_symbols(raw, linked_global):
             rec = verify_data_symbol(raw, name, shndx, value, size, names)
             rec["src"] = rel
             out.append(rec)

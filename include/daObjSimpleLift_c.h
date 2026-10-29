@@ -60,7 +60,7 @@ typedef char daObjSimpleLift_c_size_must_be_0x330[sizeof(daObjSimpleLift_c) == 0
    the C++ branch above. */
 struct daObjSimpleLift_c {
     u8  pad_000[0xd4];
-    Model mModel;            /* 0x0d4 */
+    dExtSimpleModel_c mModel;                  /* 0x0d4 */
     dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x32];
     u8  mPauseTimer;            /* 0x31e */

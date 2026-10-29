@@ -1,8 +1,12 @@
 //cpp
+
+namespace CP15 {
+void DrainWriteBuffer(void);
+void FlushAndInvalidateDataCache(unsigned int a, unsigned int b);
+}
 extern "C" {
 extern void CpuCopy8(int src, int dst, unsigned int n);
-extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int a, unsigned int b);
-extern void _ZN4CP1516DrainWriteBufferEv(void);
+
 extern int func_02060f60(void *o, int a, int b);
 extern void func_0206081c(void *o);
 
@@ -32,8 +36,8 @@ void func_0206062c(ChunkWriter *self) {
         int src = self->mSrc;
         if (n > 0x100) n = 0x100;
         CpuCopy8(src, (int)buf, n);
-        _ZN4CP1527FlushAndInvalidateDataCacheEjj((unsigned int)buf, n);
-        _ZN4CP1516DrainWriteBufferEv();
+        CP15::FlushAndInvalidateDataCache((unsigned int)buf, n);
+        CP15::DrainWriteBuffer();
         self->mRequest->mSrc = (int)buf;
         self->mRequest->mDst = self->mDst;
         self->mRequest->mLen = n;

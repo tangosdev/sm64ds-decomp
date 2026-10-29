@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dEnemyBase_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"
@@ -15,9 +15,9 @@
  *
  *     dEnemyBase_c                       ends 0x110
  *     dCcAcPos_c   0x110 + 0x040 = 0x150  -> dBgCh_Actr
- *     dBgCh_Actr   0x150 + 0x1bc = 0x30c  -> the body Model
- *     Model        0x30c + 0x050 = 0x35c  -> the second Model
- *     Model        0x35c + 0x050 = 0x3ac  -> the shadow
+ *     dBgCh_Actr   0x150 + 0x1bc = 0x30c  -> the body dExtSimpleModel_c
+ *     dExtSimpleModel_c        0x30c + 0x050 = 0x35c  -> the second dExtSimpleModel_c
+ *     dExtSimpleModel_c        0x35c + 0x050 = 0x3ac  -> the shadow
  *     dExtShadowModel_c  0x3ac + 0x028 = 0x3d4  -> mState
  *
  * The vtable overrides slots 0, 3, 6, 9 (InitResources, CleanupResources,
@@ -29,16 +29,16 @@
  * class), BulletBill_Spawn.
  */
 struct daKlr_c : dEnemyBase_c {
-    dCcAcPos_c  mCylClsn;          /* 0x110 */
-    dBgCh_Actr  mWallClsn;         /* 0x150 */
-    Model       mModel;            /* 0x30c */
-    Model       mModel2;           /* 0x35c -- same matrix, second file */
-    dExtShadowModel_c mShadow;           /* 0x3ac */
-    s32         mState;            /* 0x3d4 -- 0 flying, 1 shot down */
-    u32         mSmokeTrailID;     /* 0x3d8 -- Particle::System unique ID */
+    dCcAcPos_c mCylClsn;       /* 0x110 */
+    dBgCh_Actr mWallClsn;      /* 0x150 */
+    dExtSimpleModel_c mModel;  /* 0x30c */
+    dExtSimpleModel_c mModel2; /* 0x35c -- same matrix, second file */
+    dExtShadowModel_c mShadow; /* 0x3ac */
+    s32 mState;                /* 0x3d4 -- 0 flying, 1 shot down */
+    u32 mSmokeTrailID;         /* 0x3d8 -- Particle::System unique ID */
     /* Written by daObjBkKillerdai_c::Behavior right after the spawn: the
        launcher that fired this bill, so its own mesh never counts as a wall. */
-    dActor_c   *mLauncher;         /* 0x3dc */
+    dActor_c *mLauncher; /* 0x3dc */
 
     /* Inline is load-bearing: out-of-line emits D0 before D1. */
     virtual ~daKlr_c() {}
@@ -50,9 +50,12 @@ struct daKlr_c : dEnemyBase_c {
     virtual s32 Behavior();
     virtual s32 Render();
 
-    /* State-table targets. The address is the method name. */
-    void func_ov079_0212682c();
-    void func_ov079_02126794();
+    /* State-table targets: 0 flies, 1 is shot down. */
+    void StateFly();
+    void StateShotDown();
+
+    /* Poses both models from the actor and drops the shadow. */
+    void UpdateModelAndShadow();
 };
 
 #ifndef SM64DS_PLATFORM_PC

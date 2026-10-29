@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
-"""The two tiers: how much of the game is MATCHED and LINKED.
+"""The three tiers: how much of the game is MATCHED, LINKED and PORTED.
 
-One percentage cannot describe this project, because "done" means two
+One percentage cannot describe this project, because "done" means three
 different things and they move independently:
 
   MATCHED    the C compiles to the ROM's exact bytes. Provably the original
              logic. This is the number the README bar and the treemap show.
-  LINKED     the function's translation unit actually reaches the PC port's
+  LINKED     the function is enrolled in the ROM build: a delinks.txt entry
+             marks its range ``complete``, so mwccarm compiles its source and
+             the link byte-compares it against the cartridge. A matched
+             function served from gap bytes (the ROM's own bytes) is matched
+             but NOT linked. Computed live from committed config, no stamp.
+  PORTED     the function's translation unit actually reaches the PC port's
              binary, replacing the host stand-in that was there before.
 
 They are deliberately not a funnel: a function can be MATCHED and LINKED while
 still being unreadable, and readability work never changes the matched bytes.
+PORTED is measured on a port build and can lag the other two.
 
-Both bars count functions. MATCHED counts against the dsd function universe.
-LINKED counts functions whose translation unit the port build links, read from
+Bars count functions. MATCHED counts against the dsd function universe.
+LINKED counts universe functions covered by an enrolled ``complete`` range.
+PORTED counts functions whose translation unit the port build links, read from
 config/port_linked_functions.txt. A stamp without that list falls back to
 matched translation units and labels the count accordingly.
 
@@ -27,6 +34,7 @@ the README bar and treemap read, so every surface reports one number. Without
 it, the tiers that need no ROM are still reported and MATCHED is omitted rather
 than guessed.
 """
+import collections
 import json
 import pathlib
 import re
@@ -38,8 +46,9 @@ SRC = REPO / "src"
 README = REPO / "README.md"
 README_START = "<!-- tiers:start -->"
 README_END = "<!-- tiers:end -->"
-LINKED_STAMP = REPO / "config" / "port_linkage.json"
-LINKED_FUNCTIONS = REPO / "config" / "port_linked_functions.txt"
+PORTED_STAMP = REPO / "config" / "port_linkage.json"
+PORTED_FUNCTIONS = REPO / "config" / "port_linked_functions.txt"
+FUNCTION_AUTHORS = REPO / "function-authors.json"
 
 
 # ------------------------------------------------------------------ markers
@@ -72,7 +81,79 @@ def _marked_member_fragment(text, symbol):
 
 # ------------------------------------------------------------------- LINKED
 #
-# LINKED cannot be computed here and must not pretend otherwise. port/tools/
+# LINKED is computed live from committed config: a universe function counts
+# when a delinks.txt entry marks its range ``complete``, i.e. mwccarm compiles
+# its source and the ROM link byte-compares it against the cartridge. Ranges
+# with no entry (or without ``complete``) are served from ROM gap bytes: any
+# function there may be MATCHED but is NOT linked. Same rule as
+# chaos_db_ci.enrolled_addresses(), applied at function granularity so every
+# member of a multi-function TU counts, not just the range start.
+
+
+def _delinks_module(path):
+    """Module label for a config/**/delinks.txt path, or None if not code."""
+    parts = pathlib.Path(path).parts
+    try:
+        i = parts.index("arm9")
+    except ValueError:
+        return None
+    rest = parts[i + 1:]
+    if not rest or rest[0] == "delinks.txt":
+        return "arm9"
+    if rest[0] in ("itcm", "dtcm") and len(rest) == 2:
+        return rest[0]
+    if rest[0] == "overlays" and len(rest) == 3:
+        return rest[1]
+    return None
+
+
+def linked(authors_path=None, config_root=None):
+    """LINKED, live: enrolled functions over the function universe.
+
+    Returns ``linked`` / ``of`` / ``pct`` / ``unit`` (always ``"functions"``).
+    The universe is the function-authors.json keys (``module:0xaddr``, the same
+    keys the port list uses); a function counts when its address falls inside
+    a ``complete`` .text/.init range of its module's delinks.txt. Ranges claimed
+    by a deliberate-divergence path never count (see the mods rule in
+    enroll.py). None when function-authors.json is absent.
+    """
+    import rombuild_check as RBC  # noqa: E402 - canonical delinks reader
+
+    authors = pathlib.Path(authors_path) if authors_path else FUNCTION_AUTHORS
+    if not authors.is_file():
+        return None
+    try:
+        universe = set(json.loads(authors.read_text(encoding="utf-8"))["functions"])
+    except (OSError, ValueError, KeyError):
+        return None
+    if not universe:
+        return None
+    root = pathlib.Path(config_root) if config_root else REPO / "config"
+    covered = collections.defaultdict(list)
+    for dl in sorted(root.rglob("delinks.txt")):
+        mod = _delinks_module(dl)
+        if mod is None:
+            continue
+        try:
+            entries = RBC.complete_entries(dl)
+        except OSError:
+            continue
+        for rel, start, end in entries:
+            if str(rel).startswith("mods/"):
+                continue
+            covered[mod].append((start, end))
+    got = sum(
+        1 for key in universe
+        if any(st <= int(key.rsplit(":", 1)[1], 16) < en
+               for st, en in covered.get(key.rsplit(":", 1)[0], ()))
+    )
+    return {"linked": got, "of": len(universe), "unit": "functions",
+            "pct": round(100.0 * got / len(universe), 2)}
+
+
+# ------------------------------------------------------------------- PORTED
+#
+# PORTED cannot be computed here and must not pretend otherwise. port/tools/
 # linkage.py reads build/port/walk_window.map, which only exists after an MSVC
 # build of the port, and the port branches are not merged to main. So the number
 # is STAMPED: measured by hand, recorded with the branch and commit it came from,
@@ -82,7 +163,7 @@ def _marked_member_fragment(text, symbol):
 # branch/commit/date is treated as absent.
 
 
-def linked_functions(stamp=None, list_path=None):
+def ported_functions(stamp=None, list_path=None):
     """``(keys, commit)`` from the per-function list, or ``(None, reason)``.
 
     config/port_linked_functions.txt is written by tools/port_linked_functions.py
@@ -91,11 +172,11 @@ def linked_functions(stamp=None, list_path=None):
     without the stamp's provenance is a number nobody can trace. ``keys`` is the
     set of ``module:0xaddr`` strings; ``commit`` is the list's commit on success.
     """
-    p = pathlib.Path(list_path or LINKED_FUNCTIONS)
+    p = pathlib.Path(list_path or PORTED_FUNCTIONS)
     if not p.is_file():
         return None, "no per-function list"
     if stamp is None:
-        stamp = linked_stamp()
+        stamp = ported_stamp()
     if not stamp:
         return None, "no usable stamp"
     keys, commit, universe = set(), None, None
@@ -115,9 +196,9 @@ def linked_functions(stamp=None, list_path=None):
     return keys, universe
 
 
-def linked_stamp(stamp_path=None):
-    """The stamped LINKED measurement (translation units), or None if unusable."""
-    p = pathlib.Path(stamp_path or LINKED_STAMP)
+def ported_stamp(stamp_path=None):
+    """The stamped PORTED measurement (translation units), or None if unusable."""
+    p = pathlib.Path(stamp_path or PORTED_STAMP)
     if not p.is_file():
         return None
     try:
@@ -131,7 +212,8 @@ def linked_stamp(stamp_path=None):
     if not tot:
         return None
     return {
-        "linked": got,
+        "ported": got,
+        "portedTus": got,
         "matchedTus": tot,
         "pct": round(100.0 * got / tot, 2),
         "measuredAt": d["measuredAt"],
@@ -141,10 +223,10 @@ def linked_stamp(stamp_path=None):
     }
 
 
-def linked(stamp_path=None, list_path=None):
-    """LINKED, per function when the stamped build has a per-function list.
+def ported(stamp_path=None, list_path=None):
+    """PORTED, per function when the stamped build has a per-function list.
 
-    Returns ``linked`` / ``of`` / ``pct`` / ``unit`` (``"functions"`` or, for a
+    Returns ``ported`` / ``of`` / ``pct`` / ``unit`` (``"functions"`` or, for a
     stamp with no usable list, ``"units"``) plus the stamp's translation-unit
     figures as extra detail: ``linkedTus`` and ``matchedTus``. ``of`` for the
     function count is the list's own ``# universe:`` line, the function universe
@@ -152,15 +234,19 @@ def linked(stamp_path=None, list_path=None):
     count so both bars share one denominator. None when there is no usable
     stamp at all.
     """
-    stamp = linked_stamp(stamp_path)
+    stamp = ported_stamp(stamp_path)
     if not stamp:
         return None
-    out = dict(stamp, linkedTus=stamp["linked"], unit="units", of=stamp["matchedTus"])
-    keys, universe = linked_functions(
+    out = {"ported": stamp["ported"], "portedTus": stamp["portedTus"],
+           "matchedTus": stamp["matchedTus"], "unit": "units",
+           "of": stamp["matchedTus"], "pct": stamp["pct"],
+           "measuredAt": stamp["measuredAt"], "branch": stamp["branch"],
+           "commit": stamp["commit"], "stale": stamp["stale"]}
+    keys, universe = ported_functions(
         stamp, list_path or (pathlib.Path(stamp_path).with_name("port_linked_functions.txt")
                              if stamp_path else None))
     if keys is not None and universe:
-        out.update(linked=len(keys), of=universe, unit="functions",
+        out.update(ported=len(keys), of=universe, unit="functions",
                    pct=round(100.0 * len(keys) / universe, 2))
     return out
 
@@ -207,7 +293,7 @@ def matched(db_path=None):
 
 
 def collect(db_path=None):
-    return {"matched": matched(db_path), "linked": linked()}
+    return {"matched": matched(db_path), "linked": linked(), "ported": ported()}
 
 
 # Joining preserved README rows. Spelled as a constant because a newline escape
@@ -237,22 +323,15 @@ def matched_caption(m):
             f"(hand-written in the original, not C)")
 
 
-def _linked_noun(k):
-    """What LINKED counted: functions, or (an older stamp) matched translation units."""
+def _ported_noun(k):
+    """What PORTED counted: functions, or (an older stamp) matched translation units."""
     return "functions" if k.get("unit") == "functions" else "matched TUs"
 
 
 def bar_block(t, preserved_matched=None):
-    """The fenced block shown under the README "## Progress" heading.
-
-    It sits after the progress bar, as a SIBLING of the `progress:start` /
-    `progress:end` markers rather than nested inside them: `progress.py`
-    replaces everything between those two markers, so a block nested in that
-    range would be deleted by the next progress refresh and the next
-    `tiers.py` refresh would then throw on the missing marker.
-    """
+    """The single fenced block shown under the README "## Progress" heading."""
     rows = []
-    m, k = t["matched"], t["linked"]
+    m, k, p = t["matched"], t["linked"], t.get("ported")
     if m:
         rows.append(f"MATCHED    {bar(m['matched'], m['functions'])}  "
                     f"{m['pct']:4.1f}%   {m['matched']:,} / {m['functions']:,} functions")
@@ -266,12 +345,17 @@ def bar_block(t, preserved_matched=None):
         rows.append(preserved_matched)
     if k:
         rows.append(f"LINKED     {bar(k['linked'], k['of'])}  "
-                    f"{k['pct']:4.1f}%   {k['linked']:,} / {k['of']:,} {_linked_noun(k)}")
+                    f"{k['pct']:4.1f}%   {k['linked']:,} / {k['of']:,} functions")
+    if p:
+        rows.append(f"PORTED     {bar(p['ported'], p['of'])}  "
+                    f"{p['pct']:4.1f}%   {p['ported']:,} / {p['of']:,} {_ported_noun(p)}")
     return "```\n" + "\n".join(rows) + "\n```"
 
 
 def write_readme(t):
-    text = README.read_text(encoding="utf-8")
+    # Byte round-trip: pathlib text writes translate newlines on Windows, which
+    # would reformat the whole file. The block edit must be the only diff.
+    text = README.read_bytes().decode("utf-8")
     start = text.index(README_START) + len(README_START)
     end = text.index(README_END)
     current = text[start:end]
@@ -289,13 +373,13 @@ def write_readme(t):
     preserved_matched = NEWLINE.join(keep) if keep else None
     new_text = text[:start] + "\n" + bar_block(t, preserved_matched) + "\n" + text[end:]
     if new_text != text:
-        README.write_text(new_text, encoding="utf-8")
+        README.write_bytes(new_text.encode("utf-8"))
         return True
     return False
 
 
 def report(t):
-    m, k = t["matched"], t["linked"]
+    m, k, p = t["matched"], t["linked"], t.get("ported")
     out = []
     if m:
         out.append(f"MATCHED    {m['matched']:,} / {m['functions']:,} functions  "
@@ -307,12 +391,17 @@ def report(t):
     else:
         out.append("MATCHED    (no chaos-db.json; run tools/chaos_db_ci.py first)")
     if k:
-        flag = "  STALE" if k["stale"] else ""
-        out.append(f"LINKED     {k['linked']:,} / {k['of']:,} {_linked_noun(k)}  "
-                   f"{k['pct']:.1f}%   (stamped {k['measuredAt']} from {k['branch']}"
-                   f" @ {k['commit']}){flag}")
+        out.append(f"LINKED     {k['linked']:,} / {k['of']:,} functions  "
+                   f"{k['pct']:.1f}%   (live: enrolled in the ROM build)")
     else:
-        out.append("LINKED     (no usable stamp in config/port_linkage.json)")
+        out.append("LINKED     (no function-authors.json)")
+    if p:
+        flag = "  STALE" if p["stale"] else ""
+        out.append(f"PORTED     {p['ported']:,} / {p['of']:,} {_ported_noun(p)}  "
+                   f"{p['pct']:.1f}%   (stamped {p['measuredAt']} from {p['branch']}"
+                   f" @ {p['commit']}){flag}")
+    else:
+        out.append("PORTED     (no usable stamp in config/port_linkage.json)")
     return "\n".join(out)
 
 

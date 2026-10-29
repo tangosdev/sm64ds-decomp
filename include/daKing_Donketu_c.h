@@ -7,7 +7,7 @@
 
 #include "dEnemyBase_c.h"
 #include "dExtShadowModel_c.h"
-#include "BlendModelAnim.h"
+#include "dExtBlendAnmModel_c.h"
 #include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"
 
@@ -30,7 +30,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        (mat4x3, 0x328) to find where to put particles, treat its dExtFrameCtrl_c
        base (0x35c) as the clock they wait on, and set its playback speed
        (speed, 0x368; 0x1000 is 1.0). */
-    BlendModelAnim mBlendModelAnim;                        /* 0x30c */
+    dExtBlendAnmModel_c mBlendAnmModel; /* 0x30c */
     /* One state is two member-function pointers: the enter member runs once
        when the state is installed, the update member every frame. The sixteen
        records at data_ov073_02123320 .. data_ov073_02123410 are filled in by
@@ -66,7 +66,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        it for its talk state. */
     Player *mTalkPlayer;                                   /* 0x3e4 */
     /* Two eight-entry waypoint sets, both seeded with the boss's own position by
-       InitResources and refilled by func_ov073_021222ec. The steering helpers
+       InitResources and refilled by daObjEwbIce_c::StateReport_Update. The steering helpers
        (func_ov073_021203ac / _02120610) index one of them with mWaypointCursor
        and hand the element to Vec3_HorzAngle/Vec3_VertAngle as the point to
        turn towards -- set B while mHitsRemaining reads 2, set A otherwise. */
@@ -74,10 +74,12 @@ struct daKing_Donketu_c : dEnemyBase_c {
     Vector3 mWaypointsB[8];                                /* 0x448 */
     /* A copy of mGroundMissPos, taken by the enter handler of the state at
        data_ov073_021233d0; that state's update handler walks the boss
-       horizontally toward a point 120.0 from it along mAngleY + 0x8000. */
-    s32 unk_4a8;                                           /* 0x4a8 */
-    s32 unk_4ac;                                           /* 0x4ac */
-    s32 unk_4b0;                                           /* 0x4b0 */
+       horizontally toward a point 120.0 from it along mAngleY + 0x8000.
+       mGroundMissPos is where the forward ground ray found no floor, so
+       this is the arena edge the boss teeters at in that state. */
+    s32 mEdgePosX; /* 0x4a8 */
+    s32 mEdgePosY; /* 0x4ac */
+    s32 mEdgePosZ; /* 0x4b0 */
     /* Scratch word the states use for themselves (most enter handlers that
        rely on it zero it; ..3360 zeroes it from its update instead): a 0/1 latch in several, a frame count that
        runs up to 0x82 in the state at data_ov073_02123340, and in the state
@@ -93,7 +95,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
     /* Index of the model bone func_ov073_0211f2c0 combines with the model
        matrix to place its landing/step particles; it flips the index with `^= 1` after
        every call, and InitResources seeds it with 2, so it alternates 2, 3,
-       2, ... (func_ov073_021215cc builds unk_4d4 from bones 2 and 3). */
+       2, ... (func_ov073_021215cc builds mFootPos from bones 2 and 3). */
     s32 mStepBoneIdx;                                      /* 0x4bc */
     /* Coins func_ov073_0211f61c has spawned on hits, counted only while
        SaveData::IsCharacterUnlocked(2) holds (SaveData.h: bit 2 is Wario);
@@ -105,8 +107,12 @@ struct daKing_Donketu_c : dEnemyBase_c {
     u8  mWaypointCursor;                                   /* 0x4c4 */
     /* InitResources stores 0xff, several state handlers store 0xff, ..3340's wait stores 0, and the
        two hop-landing handlers (func_ov073_021203ac / _02120610) copy
-       mWaypointCursor into it; nothing in this file reads it. */
-    u8  unk_4c5;                                           /* 0x4c5 */
+       mWaypointCursor into it; nothing in this file reads it. The reader
+       is d_a_obj_ewb_ice.cpp's touch helper (daObjEwbIce_c::OnStoodOn): a rink
+       ice piece touched by the boss moves on to its next state only when
+       its spawn index equals this, i.e. the waypoint he just landed on
+       (0xff: none). */
+    u8 mLandedWaypoint; /* 0x4c5 */
     /* The heading (angle, 0x10000 = a full turn) the chase and
        return-to-arena states turn mPrevAngleY toward: the angle to the
        player, or to mSpawnPos. */
@@ -122,8 +128,10 @@ struct daKing_Donketu_c : dEnemyBase_c {
        cleared by the enter handler of the state at data_ov073_02123380.
        func_ov073_021200e0 reads it twice: it plays a sound on the hop's
        launch frame while it is set, and the 0x82-frame wait after the
-       landing runs only while it is clear. */
-    u8  unk_4ca;                                           /* 0x4ca */
+       landing runs only while it is clear. func_ov073_02120910 is the
+       teeter-at-the-edge state (see mEdgePos), so the flag marks the leap
+       back from the edge. Medium confidence. */
+    u8 mEdgeRecovered; /* 0x4ca */
     /* A counter that starts at 3 (InitResources). func_ov073_02120c7c, the
        hit-reaction state, decrements it when mNoGroundAhead is 1 and takes the
        state at data_ov073_021233d0 when it reaches 0; func_ov073_02120910
@@ -141,17 +149,20 @@ struct daKing_Donketu_c : dEnemyBase_c {
     /* Two jobs: the step the chase state's braking legs hand ApproachLinear
        to slow mHorzSpeed to zero (0x1000 or 0x2000), and the amplitude the
        state at data_ov073_021233d0 multiplies its sine by to rock
-       mAngleX (its enter handler stores -0x1000). */
-    s32 unk_4d0;                                           /* 0x4d0 */
+       mAngleX (its enter handler stores -0x1000). Named for the state that
+       sets it, like mStateScratch, since the two jobs share no one role. */
+    s32 mStateParam; /* 0x4d0 */
     /* Positions of bones 2 and 3, rebuilt each frame by func_ov073_021215cc
        (the model matrix times the bone matrix, shifted left by 3);
        func_ov073_02120c7c and func_ov073_02120ed0 pass both to
-       RunningSlidingDustAt while the boss is sliding. */
-    Vector3 unk_4d4[2];                                    /* 0x4d4 */
+       RunningSlidingDustAt while the boss is sliding. Bones 2 and 3 are
+       also the pair mStepBoneIdx alternates between for the landing/step
+       particles, which places them at the feet. */
+    Vector3 mFootPos[2]; /* 0x4d4 */
     /* Where the boss WAS when the ground ray missed: Behavior stores the live
        position here and then, except in the state at data_ov073_021233a0,
        rewinds mPos to mPrevPos. The enter handler of the
-       state at data_ov073_021233d0 copies it into unk_4a8. */
+       state at data_ov073_021233d0 copies it into mEdgePos. */
     s32 mGroundMissPosX;                                   /* 0x4ec */
     s32 mGroundMissPosY;                                   /* 0x4f0 */
     s32 mGroundMissPosZ;                                   /* 0x4f4 */

@@ -96,17 +96,17 @@ ACTOR_TRAP(void dBgActor_c::Kill(), "dBgActor_c::Kill")
 
 // The raw Itanium spelling ArrowSignRight_Spawn.c still calls: cdecl, `this`
 // as an ordinary first argument, where the real method is __thiscall.
-extern "C" void *_ZTV5Model[8];
+extern "C" void *_ZTV17dExtSimpleModel_c[8];
 extern "C" void _ZN10dBgActor_cC2Ev(void *self)
 {
     ::new (self) dBgActor_c();
-    // The real constructor builds its Model sub-object at +0xd4 by calling
-    // Model::Model() directly, which stores MSVC's own five-slot table -- it
-    // never goes through the _ZN5ModelC1Ev bridge in hal/ctor_bridge.cpp, so
+    // The real constructor builds its dExtSimpleModel_c sub-object at +0xd4 by calling
+    // dExtSimpleModel_c::dExtSimpleModel_c() directly, which stores MSVC's own five-slot table -- it
+    // never goes through the _ZN17dExtSimpleModel_cC1Ev bridge in hal/ctor_bridge.cpp, so
     // the dual-numbered synthetic table that bridge installs is bypassed here.
-    // Re-stamp it: gate 9 dispatches Model's virtuals by ROM slot number, and
+    // Re-stamp it: gate 9 dispatches dExtSimpleModel_c's virtuals by ROM slot number, and
     // ROM numbering carries two destructor slots where MSVC carries one.
-    *(void **)((char *)self + 0xd4) = _ZTV5Model;
+    *(void **)((char *)self + 0xd4) = _ZTV17dExtSimpleModel_c;
 }
 
 // dActor_c::operator delete reaches the two-argument Deallocate; the port's

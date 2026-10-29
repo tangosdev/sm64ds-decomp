@@ -2,10 +2,10 @@
 /* TREE (actor 286) -- ov002/daTree_c.
  *
  * The course trees. Spawn-param bits 4-6 select one of five variants; the
- * first tree of a variant loads that variant's Model, and every tree
+ * first tree of a variant loads that variant's dExtSimpleModel_c, and every tree
  * appends a heap node {render pos, dCcPos_c, next} to its variant's list.
  * Behavior ticks every list's collision, Render billboards each variant's
- * Model at every node with distance-faded opacity, and CleanupResources
+ * dExtSimpleModel_c at every node with distance-faded opacity, and CleanupResources
  * frees the lists of the variants that loaded.
  *
  * mwccarm emits ordinary function sections in reverse source order, so the
@@ -13,17 +13,10 @@
  * emits the _ZTV/_ZTI/_ZTS group; the inline destructor in daTree_c.h
  * emits the retail D1/D0 pair and no D2.
  *
- * deslop leftovers:
- * - dCcPos_c::Init 6az: two by-value Fix12<int> params; the header member
- *   form homes them to the stack and size-DIFFs, so the TU-local wrapper
- *   keeps scalar ints.
- * - dCcPos_c::C1 stays a mangled extern: a language limit, not a codegen
- *   one. C++ has no syntax for a qualified constructor call on storage that
- *   already exists, and the alternative -- placement new -- needs a leaf
- *   `operator new(size_t, void *)` this tree has no precedent for.
- * - _Znwj stays spelled: also a language limit. `::operator new` mangles
- *   _Znwm here (sizeof is unsigned long), which has no ROM home; the
- *   cartridge calls _Znwj.
+ * NOTES:
+ * - InitResources allocates each node with a plain `new TreeNode`: the
+ *   null test and dCcPos_c's C1 call the ROM makes are that expression's
+ *   own, so the node's collision cylinder needs no explicit construction.
  * - data_ov002_02110a48 / data_ov002_0210abb8 / g_profile_TREE: overlay
  *   bss/data owns them (S14); this TU's delinks span is .text-only.
  * - data_0209f43c / data_0209b3ec: arm9 bss, the dClipper singleton and the
@@ -35,10 +28,11 @@
 #include "dCcPos_c.h"
 #include "dCamera_c.h"
 #include "dClipper.h"
+#include "Memory.h"
 
 /* One tree instance's list node: the billboard/clip center in
  * matrix-shifted units (>> 3, y lifted by kCanopyLift), its cylinder
- * collision, and the list link. _Znwj allocates 0x4c = sizeof(this). */
+ * collision, and the list link. operator new allocates 0x4c = sizeof(this). */
 struct TreeNode {
     Vector3 pos;      /* 0x00 */
     dCcPos_c clsn;    /* 0x0c */
@@ -69,12 +63,9 @@ enum {
 };
 
 /* Shared ABI seams, kept above the first `// @symbol` marker so no member
- * is charged with their mangled spellings. */
+ * is charged with their mangled spellings. local extern: no shared header
+ * declares either helper. */
 extern "C" {
-void *_ZN8dCcPos_cC1Ev(void *clsn);
-void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
-    dCcPos_c *self, const Vector3 &pos, int radius, int height, u32 flags,
-    u32 vuln);
 void Matrix4x3_FromRotationY(Matrix4x3 *m, short ang);
 /* Spelled Vector3 * for the object actually passed. The definition in
  * src/Vec3_AsrInPlace.c says int *, and the tree also carries s32 * and a
@@ -83,25 +74,13 @@ void Matrix4x3_FromRotationY(Matrix4x3 *m, short ang);
  * other. The disagreement is nominal, not a contract difference, and int * is
  * the slop spelling this cleanup exists to retire. */
 int *Vec3_AsrInPlace(Vector3 *v, int shift);
-/* The global scalar operator new. Spelled, not `::operator new`:
- * sizeof is unsigned long here, so the `new` expression mangles _Znwm,
- * which has no ROM home; the cartridge calls _Znwj. */
-void *_Znwj(unsigned int size);
-/* The shared opacity method preserves the second scalar argument observed at
- * every retail caller. It is unused by this implementation; its source name
- * and unsigned type are reconstruction choices, not recovered ROM spelling.
- * See notes/experiments/applyopacity-api-0920.md. */
+}
 
 extern TreeNode *data_ov002_02110a48[kNumVariants];
 extern u16 data_ov002_0210abb8[];
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern dCamera_c *data_0209f318;
-}
-
-namespace Memory {
-void operator_delete2(void *p);
-}
 
 // @symbol daTree_c_classInit
 extern "C" daTree_c *daTree_c_classInit()
@@ -110,7 +89,7 @@ extern "C" daTree_c *daTree_c_classInit()
 }
 
 // @symbol _ZN8daTree_c13InitResourcesEv
-/* First tree of a variant loads that variant's Model; every tree appends
+/* First tree of a variant loads that variant's dExtSimpleModel_c; every tree appends
  * a node to its variant's list. Returns 1 when this tree was first. */
 int daTree_c::InitResources()
 {
@@ -123,16 +102,13 @@ int daTree_c::InitResources()
     slot = &data_ov002_02110a48[variant];
     if (*slot == 0)
         mModel[variant].LoadAndSetFile(data_ov002_0210abb8[variant], 1, 1);
-    node = (TreeNode *)_Znwj(sizeof(TreeNode));
-    if (node != 0)
-        _ZN8dCcPos_cC1Ev(&node->clsn);
+    node = new TreeNode;
     node->pos.x = mPosX;
     node->pos.y = mPosY;
     node->pos.z = mPosZ;
     Vec3_AsrInPlace(&node->pos, 3);
     node->pos.y += kCanopyLift;
-    _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(&node->clsn, mPos, kClsnRadius, kClsnHeight,
-                                               kClsnFlags, 0);
+    node->clsn.Init(mPos, kClsnRadius, kClsnHeight, kClsnFlags, 0);
     node->next = *slot;
     *slot = node;
     if (node->next != 0) {
@@ -165,7 +141,7 @@ int daTree_c::Render()
 {
     dCamera_c *cam = data_0209f318;
     TreeNode **slot = data_ov002_02110a48;
-    Model *model = mModel;
+    dExtSimpleModel_c *model = mModel;
     int i;
 
     for (i = 0; i < kNumVariants; i++) {
@@ -182,6 +158,8 @@ int daTree_c::Render()
                 int opacity = kOpacityFull;
                 if (dist < kFadeDist)
                     opacity = ((dist - kFadeBase) >> 12) & 0xff;
+                /* The second argument is the one every retail caller passes;
+                   see notes/experiments/applyopacity-api-0920.md. */
                 model->ApplyOpacity(opacity, 0);
                 mat->t.x = node->pos.x;
                 mat->t.y = node->pos.y - kCanopyLift;
@@ -205,7 +183,7 @@ void daTree_c::OnPendingDestroy()
 // @symbol _ZN8daTree_c16CleanupResourcesEv
 int daTree_c::CleanupResources()
 {
-    Model *model = mModel;
+    dExtSimpleModel_c *model = mModel;
     TreeNode **slot = data_ov002_02110a48;
     int i;
 

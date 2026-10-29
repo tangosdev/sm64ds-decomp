@@ -4,8 +4,6 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* Peach's Castle chain-link net (profile MC_METALNET / METAL_NET 339). A
  * climbable mesh with no state of its own. ov009 is mixed -- CASTLE_WATER
  * (338) and FLAG (342) sit next door -- this is the net, not those.
@@ -48,17 +46,7 @@ struct daObjMc_Metalnet_c : dBgActor_c {
        at 0x02111ea4. The override exists only to stop the base's own
        OnPendingDestroy from running. */
     virtual void  OnPendingDestroy();       /* slot 12 */
-
-    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
-       Parameter is size_t (unsigned long on this compiler). `return new`
-       relocates to `_Znwm` without this. */
-    static void *operator new(size_t size);
 };
-
-inline void *daObjMc_Metalnet_c::operator new(size_t size)
-{
-    return _ZN7fBase_cnwEj((unsigned)size);
-}
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

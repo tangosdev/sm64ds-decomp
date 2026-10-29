@@ -14,11 +14,6 @@
  * ledge check, collision, and the stuck check.
  *
  * leftovers:
- * - ModelAnim::SetAnim, MaterialChanger::SetFile, dCcAc_c::Init,
- *   DropShadowRadHeight and KillByInvincibleChar take Fix12<int> by
- *   value. The header calls size-DIFF 0212a6f8, 02129a00, 0212a580,
- *   02129ed4 and InitResources. The bridges pass those bits as
- *   scalars and still name the 5Fix12IiE symbols.
  * - dBgCh_Actr::Init stays mangled. Fix12i is a plain s32, so the
  *   header method mangles as int.
  * - Player::Hurt, Player::Bounce and dActor_c::IsTooFarAwayFromPlayer
@@ -27,12 +22,13 @@
  *   header member but still needs the equal-arm ternary so the rotation
  *   argument (r2) is set up before the position (r1).
  * - dExtFrameCtrl_c::Advance is called on the subobject at +0x3c0.
- *   mModelAnim.Advance() this-adjusts.
+ *   mAnmModel.Advance() this-adjusts.
  * - func_ov084_021290d4 recomputes the chase radius at each store.
  *   A named temporary DIFFs, and spelling mUnstickTimer on both
  *   sides of the decrement folds the halfword.
- * - OnTurnIntoEgg and the reward helper load param1 through a raw
- *   word. Spelling both sides as the member folds +8.
+ * - OnTurnIntoEgg, the reward helper and InitResources mask param1
+ *   in place as `param1 = (int)param1 & mask`. Without the cast the
+ *   read-modify-write CSEs the +8 address and DIFFs.
  * - mInitAngleY is the spawn heading, but func_ov084_02129cf4
  *   overwrites it with the chase heading. mWanderRerollTimer is s16
  *   in the header and this TU loads it unsigned.
@@ -48,12 +44,11 @@
  *   02130ce0/ce8/cf0/cc0/cc8/cd0 are BCA handles (SetAnim reads [1]).
  *   0213089c / 0213088c are BMA. The 021302xx words are the per-type
  *   tables. Render keeps a volatile Vector3 backup of the scale.
- * - GetCapState is called as the dCapEnemy_c.h member (the old "no header
- *   member" note was stale; d_a_trs.cpp already calls it that way).
+ * - GetCapState is the dCapEnemy_c.h member.
  * - What dCcAc_c bits 0x4 and 0x20000 mean, the king's mState 4 that
- *   unk_475 watches, dEnemyBase_c::unk_104, sounds 0xd0 / 0xe0 /
- *   0xd6 / 0x110 / 0x111 / 0x118 / 0x13a / 0x13b, mFlags bits 0x8 and
- *   0x10000000, and data_0209f2f8 values 6 and 0x1b are not named here.
+ *   mFreeRoamTimer watches, sounds 0xd0 / 0xe0 / 0xd6 / 0x110 / 0x111 / 0x118 /
+ *   0x13a / 0x13b, mFlags bits 0x8 and 0x10000000, and data_0209f2f8
+ *   values 6 and 0x1b are not named here.
  *   Nothing in this TU enters STATE_PAUSE except through the table.
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -81,29 +76,36 @@ enum daKrb_c_AssetId {
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "decl_dCapEnemy_c.h"
-#include "MaterialChanger.h"
+#include "dExtAnmMaterial_c.h"
 #include "Player.h"
 #include "daKuriKing_c.h"
+#include "daStarBase_c.h"
+#include "math/Approach.h"
 
-namespace cstd { int fdiv(int a, int b); }
+/* daStar_c::mMarkerID (daStar_c.h, 0x434), seen through a local view:
+   including daStar_c.h renumbers this TU's @NNN labels. */
+struct SilverStarView {
+    u8 head[0x434];
+    u32 mMarkerID;
+};
+typedef char SilverStarView_size_must_be_0x438[sizeof(SilverStarView) == 0x438 ? 1 : -1];
 
-bool ApproachLinear(short &value, short target, short step);
+namespace cstd {
+int fdiv(int a, int b);
+}
 
 typedef struct {
     unsigned char b0 : 1;
     unsigned char flag : 1;
 } Flags;
 
-/* Resource handles contain a file ID, reference count, and loaded-file pointer.
-   KrbModelFilePtr retains a packed view of the first word. The files the
-   Goombas load are read through .ptr. Model handles construct through
+/* Resource handles: the files the Goombas load are read through filePtr.
+   dExtSimpleModel_c handles construct through
    func_02017acc and destroy through func_02017ab4. Animation handles
    construct through SharedFilePtr::Construct and destroy through
    SharedFilePtr_Destruct_Anim. The manifest aliases those undefined members
    onto the ROM symbols. */
 struct KrbModelFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
-
     KrbModelFilePtr(u32 fileID);
     ~KrbModelFilePtr();
 };
@@ -169,7 +171,7 @@ enum {
 extern "C" {
 /* data_ov084_02130cf8 is the BMD this TU LoadFile / Release. The other
    six handles are never passed to a SharedFilePtr method; this TU reads
-   .ptr as the loaded BCA. Selected by role (see SetAnim calls):
+   filePtr as the loaded BCA. Selected by role (see SetAnim calls):
    02130ce8 is the walk animation (target speed data_ov084_02130228[type],
    also what the Goomba returns to after a pause or tumble), 02130cf0 the
    faster one chosen when it speeds up to data_ov084_02130268[type],
@@ -200,32 +202,20 @@ extern StateHandler data_ov084_02130d74[];
 int func_02037e20(int* p);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern int SurfaceInfo_TestFlag0x20(int* p);
-extern int func_02037e38(unsigned int* p);
-extern int func_02037e84(int* p);
-extern void _ZN5dBgPiD1Ev(void*);
 extern int data_02099368[];
-/* local extern: daStarBase_c::LinkSilverStarAndStarMarker. This TU does not include daStarBase_c.h. */
-extern void _ZN12daStarBase_c27LinkSilverStarAndStarMarkerEPc(char *a, char *b);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
-extern void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *m, void *f, int a, int fix, unsigned int j);
 /* Three-register reconstructed interface; death-state stores also use r3. */
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, void *f, int a, int fix, unsigned int j);
 extern int *data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 extern short Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
-extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* thiz, s16* v, void* r6, s32 flag);
-extern void _ZN6Player6BounceE5Fix12IiE(void* p, s32 f);
-extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, s32 f, u8 b, u8 cc, u8 d);
 
 extern u8 data_ov084_02130204[];
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
 extern short data_02082214[];
 extern char data_ov084_0213089c;
-extern int _Z14ApproachLinearRiii(int *a, int b, int c);
 extern int RandomIntInternal(int *seed);
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
@@ -239,11 +229,10 @@ extern unsigned short DecIfAbove0_Short(void *p);
 extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern void UnloadBlueCoinModel(void* p);
 extern s8 data_0209f2f8;
-extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(char* c, int f);
 void LoadSilverStarAndNumber(void);
 void LoadBlueCoinModel(void* c);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, Fix12i b, Fix12i cc, void* d, Fix12i e);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i cc, void *d, Fix12i e);
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
 extern int data_ov084_02130258[];
 extern int data_ov084_02130208[];
@@ -292,7 +281,9 @@ void daKrb_c::func_ov084_021290d4() {
         }
         else
         {
-            /* timerOff is the offset of mUnstickTimer (0x458). */
+            /* timerOff is the offset of mUnstickTimer (0x458). The plain
+               `c->mUnstickTimer--` builds the same .text but drops nine
+               @NNN numbers that daKrb_c.json pins, so this stays raw. */
             *((unsigned short *)((((int)c) + timerOff))) = (*((unsigned short *)((((int)c) + 0x458)))) - 1;
         }
         return;
@@ -330,10 +321,10 @@ void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     daKrb_c *goomba = this;
     goomba->mBounceCountdown = 0x3c;
     goomba->mVertSpeed = cstd::fdiv(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
-    goomba->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&goomba->unk_0a4) * -1;
+    goomba->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&goomba->mSpeedX) * -1;
     if (actor != 0)
         goomba->mPrevAngleY = Vec3_HorzAngle(&goomba->mPos, &actor->mPos);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130cc0.ptr, 0, 0x1000, 0);
+    goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cc0.filePtr, 0, 0x1000, 0);
     goomba->mState = daKrb_c::STATE_TUMBLE;
     goomba->mEatenByYoshi = 0;
     goomba->mWithMeshClsn.SetLimMovFlag();
@@ -341,7 +332,7 @@ void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     goomba->mWithMeshClsn.ClearJustHitGroundFlag();
     goomba->mWithMeshClsn.ClearGroundFlag();
     func_02012694(SND_TUMBLE_BOUNCE_FIRST, &goomba->mCamSpacePos);
-    goomba->unk_467 = 0;
+    goomba->mBounceCount = 0;
 }
 
 // @symbol _ZN7daKrb_c19func_ov084_02129238Ev
@@ -418,11 +409,11 @@ void daKrb_c::func_ov084_0212934c() {
 
     /* Frame before the file pointer: that order is what colors the short
        extract and the file load into the registers the ROM uses. */
-    frame = static_cast<dExtFrameCtrl_c &>(goomba->mModelAnim).currFrame;
+    frame = static_cast<dExtFrameCtrl_c &>(goomba->mAnmModel).currFrame;
     kind = (unsigned short)((unsigned)frame >> 12);
-    type = (int)goomba->mModelAnim.file;
+    type = (int)goomba->mAnmModel.file;
 
-    if (type == (int)data_ov084_02130ce8.ptr) {
+    if (type == (int)data_ov084_02130ce8.filePtr) {
         if (kind <= 4 || (kind >= 0xc && kind <= 0x10)) {
             if (((Flags *)&goomba->mMoveFlags)->flag)
                 return;
@@ -434,7 +425,7 @@ void daKrb_c::func_ov084_0212934c() {
         return;
     }
 
-    if (type == (int)data_ov084_02130cf0.ptr) {
+    if (type == (int)data_ov084_02130cf0.filePtr) {
         if (kind <= 3 || (kind >= 0x10 && kind <= 0x13)) {
             if (((Flags *)&goomba->mMoveFlags)->flag)
                 return;
@@ -465,11 +456,11 @@ void daKrb_c::func_ov084_02129498() {
  * coin, removal, cap released, back to mHomePos (RespawnIfHasCap).
  *
  * Otherwise the floor record is copied into a local dBgPi and its surface
- * type (CLPS bits 19..23, func_02037e38) is read. The Goomba is treated as
+ * type (CLPS bits 19..23, CLPS::GetSurfaceType) is read. The Goomba is treated as
  * lost (coin and removal, and a respawn at mHomePos when it has a cap or is
  * REWARD_SILVER_STAR_IF_CURRENT) if the type is 1, 4, 5 or 0x13, or if it is
  * 6..9 (Player.h calls those the quicksand tiers) while the collision kind
- * (CLPS bits 0..4, func_02037e84) is 8. */
+ * (CLPS bits 0..4, CLPS::func_02037e84) is 8. */
 void daKrb_c::func_ov084_021294d0() {
     daKrb_c *goomba = this;
     char obj[0x28];
@@ -477,7 +468,7 @@ void daKrb_c::func_ov084_021294d0() {
         return;
 
     char *fr = (char *)goomba->mWithMeshClsn.GetFloorResult();
-    if (SurfaceInfo_TestFlag0x20((int*)(fr + 4))) {
+    if (SurfaceInfo_TestFlag0x20((int *)&((dBgPi *)fr)->surface)) {
         goomba->func_ov084_021296cc();
         goomba->SpawnCoin();
         goomba->func_ov084_02129498();
@@ -496,27 +487,29 @@ void daKrb_c::func_ov084_021294d0() {
     char *floorResult = (char *)goomba->mWithMeshClsn.GetFloorResult();
     int surfaceType;
     {
-    char* surface = obj + 4;
-    int normalX = *(int*)(floorResult + 4);
-    int normalY = *(int*)(floorResult + 8);
-    /* `normalY ? normalX : normalX` is not a typo and not dead: both arms are the
-     * same value, and the ternary is what makes mwccarm materialize normalX after
-     * the load of normalY instead of before it. Collapsing it to a plain store
-     * reorders the pair and the function stops reproducing. */
-    *(int*)(surface) = normalY ? normalX : normalX;
-    *(int*)(surface + 4) = normalY;
-    *(int*)(surface + 8) = *(int*)(floorResult + 0xc);
-    *(int*)(surface + 0xc) = *(int*)(floorResult + 0x10);
-    *(int*)(surface + 0x10) = *(int*)(floorResult + 0x14);
-    *(int*)(obj) = (int)data_02099368;
-    *(unsigned short*)(obj + 0x18) = *(unsigned short*)(floorResult + 0x18);
-    *(unsigned short*)(obj + 0x1a) = *(unsigned short*)(floorResult + 0x1a);
-    *(int*)(obj + 0x1c) = *(int*)(floorResult + 0x1c);
-    *(int*)(obj + 0x20) = *(int*)(floorResult + 0x20);
-    *(int*)(obj + 0x24) = *(int*)(floorResult + 0x24);
-    surfaceType = func_02037e38((unsigned int*)surface);
+        /* obj + 4 is &((dBgPi *)obj)->surface; that spelling here or in the
+         * func_02037e84 receiver below adds an instruction, so both stay. */
+        char *surface = obj + 4;
+        int clpsLo = ((dBgPi *)floorResult)->surface.clps.w0;
+        int clpsHi = ((dBgPi *)floorResult)->surface.clps.w1;
+        /* `clpsHi ? clpsLo : clpsLo` is not a typo and not dead: both arms are the
+         * same value, and the ternary is what makes mwccarm materialize clpsLo after
+         * the load of clpsHi instead of before it. Collapsing it to a plain store
+         * reorders the pair and the function stops reproducing. */
+        ((SurfaceInfo *)surface)->clps.w0 = clpsHi ? clpsLo : clpsLo;
+        ((SurfaceInfo *)surface)->clps.w1 = clpsHi;
+        ((SurfaceInfo *)surface)->normal.x = ((dBgPi *)floorResult)->surface.normal.x;
+        ((SurfaceInfo *)surface)->normal.y = ((dBgPi *)floorResult)->surface.normal.y;
+        ((SurfaceInfo *)surface)->normal.z = ((dBgPi *)floorResult)->surface.normal.z;
+        *(int *)(obj) = (int)data_02099368;
+        ((dBgPi *)obj)->triangleID = ((dBgPi *)floorResult)->triangleID;
+        ((dBgPi *)obj)->colliderIdx = ((dBgPi *)floorResult)->colliderIdx;
+        ((dBgPi *)obj)->clsnID = ((dBgPi *)floorResult)->clsnID;
+        ((dBgPi *)obj)->owner = ((dBgPi *)floorResult)->owner;
+        ((dBgPi *)obj)->collider = ((dBgPi *)floorResult)->collider;
+        surfaceType = ((SurfaceInfo *)surface)->clps.GetSurfaceType();
     }
-    if (func_02037e84((int*)(obj + 4)) == 8) {
+    if (((const CLPS *)(obj + 4))->func_02037e84() == 8) {
         if (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9)
             goto action;
     }
@@ -537,7 +530,7 @@ action:
         goomba->RespawnIfHasCap();
     }
 dtor:
-    _ZN5dBgPiD1Ev(obj);
+    ((dBgPi *)obj)->dBgPi::~dBgPi();
 }
 
 // @symbol func_ov084_021296b0
@@ -577,13 +570,13 @@ void daKrb_c::func_ov084_021296cc() {
         silverStar =
             (char *)dActor_c::Spawn(ACTOR_SILVER_STAR, 0x10, goomba->mPos, 0, goomba->mAreaId, -1);
         if (starMarker != 0 && silverStar != 0) {
-            /* the silver star's +0x434 holds the marker's uniqueID (+4) */
-            *(int *)(silverStar + 0x434) = *(int *)(starMarker + 4);
-            _ZN12daStarBase_c27LinkSilverStarAndStarMarkerEPc(starMarker, silverStar);
+            ((SilverStarView *)silverStar)->mMarkerID = ((dActor_c *)starMarker)->uniqueID;
+            ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker(silverStar);
             goomba->SpawnSoundObj(1);
         }
-        /* Load side stays a raw word: spelling both sides as param1 CSEs +8. */
-        goomba->param1 = *(const int *)((const char *)goomba + 8) & 0xff0f;
+        /* The (int) cast on the load is load-bearing: a plain
+           `param1 & 0xff0f` CSEs the +8 address and builds one word longer. */
+        goomba->param1 = (int)goomba->param1 & 0xff0f;
         return;
     }
     if (goomba->mRewardType != daKrb_c::REWARD_SILVER_STAR_IF_CURRENT)
@@ -595,7 +588,7 @@ void daKrb_c::func_ov084_021296cc() {
     dActor_c::Spawn(ACTOR_SILVER_STAR, goomba->mStarID | 0x30, goomba->mPos, 0, goomba->mAreaId,
                     -1);
     goomba->mRewardType = daKrb_c::REWARD_SPENT;
-    goomba->param1 = *(const int *)((const char *)goomba + 8) & 0xff0f;
+    goomba->param1 = (int)goomba->param1 & 0xff0f;
     goomba->SpawnSoundObj(1);
 }
 
@@ -634,8 +627,8 @@ int daKrb_c::func_ov084_021298d0() {
     daKrb_c *goomba = this;
     int deathState = goomba->UpdateDeath(goomba->mWithMeshClsn);
     if ((unsigned int)(goomba->mDeathState - 2) > 4) goto L_a4;
-    static_cast<dExtFrameCtrl_c &>(goomba->mModelAnim).speed = 0x1000;
-    ((dExtFrameCtrl_c *)&goomba->mModelAnim)->Advance();
+    static_cast<dExtFrameCtrl_c &>(goomba->mAnmModel).speed = 0x1000;
+    ((dExtFrameCtrl_c *)&goomba->mAnmModel)->Advance();
     if (goomba->mGoombaType != daKrb_c::GOOMBA_KING_MINION) goto L_a4;
 
     /* SpawnCoin only when the actor we hit is a KURIKING. The flag and the
@@ -688,7 +681,7 @@ L_end:
  * the dCcAc_c flags (disabled).
  * Otherwise the model and cap are placed (func_ov084_0212a580) and, while
  * Yoshi holds it (mEatenByYoshi != 0), the ground check runs
- * (func_ov084_021294d0), then by unk_104: 0 updates the cylinder; 5 replays
+ * (func_ov084_021294d0), then by mSpitOutTimer: 0 updates the cylinder; 5 replays
  * the data_ov084_02130ce0 animation, turns the Goomba half a turn, reverses
  * its horizontal speed and restarts the material animation. The animation is
  * advanced, and on touchdown the Goomba is thrown clear again
@@ -710,8 +703,10 @@ int daKrb_c::func_ov084_02129a00() {
             goomba->func_ov084_02129168(actor);
             goomba->mHorzSpeed = -0xf000;     /* -15.0 */
             goomba->mVertSpeed = 0x14000;     /* 20.0 */
-            MaterialChanger::Prepare(*(BMD_File *)(data_ov084_02130cf8.ptr), *(BMA_File *)&data_ov084_0213088c);
-            _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(&goomba->mMaterialChanger, &data_ov084_0213088c, 0x40000000, 0x1000, 0);
+            dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
+                                       *(BMA_File *)&data_ov084_0213088c);
+            goomba->mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213088c, 0x40000000, 0x1000,
+                                             0);
             goomba->mMaterialChanger.currFrame = 0;
             ((dCc_c *)&goomba->mdCcAc_c)->Clear();
             return 0;
@@ -725,7 +720,7 @@ int daKrb_c::func_ov084_02129a00() {
         void *actor = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
         goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
         func_ov002_020aea30(goomba, actor, &goomba->mWithMeshClsn);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce0.ptr, 0x40000000, 0x1000, 0);
+        goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
         *(int *)(((int)&goomba->mdCcAc_c.flags)) |= 1;
         return 1;
     }
@@ -735,19 +730,22 @@ int daKrb_c::func_ov084_02129a00() {
     if (goomba->mEatenByYoshi != 0) {
         goomba->func_ov084_021294d0();
         {
-            u16 s = goomba->unk_104;
+            u16 s = goomba->mSpitOutTimer;
             if (s == 0) {
                 ((dCc_c *)&goomba->mdCcAc_c)->Update();
             } else if (s == 5) {
-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce0.ptr, 0x40000000, 0x1000, 0);
+                goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000,
+                                          0x1000, 0);
                 goomba->mPrevAngleY += 0x8000; /* half a turn */
                 goomba->mHorzSpeed = -goomba->mHorzSpeed;
-                MaterialChanger::Prepare(*(BMD_File *)(data_ov084_02130cf8.ptr), *(BMA_File *)&data_ov084_0213088c);
-                _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(&goomba->mMaterialChanger, &data_ov084_0213088c, 0x40000000, 0x1000, 0);
+                dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
+                                           *(BMA_File *)&data_ov084_0213088c);
+                goomba->mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213088c, 0x40000000,
+                                                 0x1000, 0);
                 goomba->mMaterialChanger.currFrame = 0;
             }
         }
-        ((dExtFrameCtrl_c *)&goomba->mModelAnim)->Advance();
+        ((dExtFrameCtrl_c *)&goomba->mAnmModel)->Advance();
         if (goomba->mWithMeshClsn.JustHitGround())
             goomba->func_ov084_02129168(0);
     }
@@ -777,8 +775,7 @@ void daKrb_c::func_ov084_02129c9c() {
     goomba->mHorzSpeed = 0;
     goomba->mVertSpeed = data_ov084_02130248[goomba->mGoombaType];
     goomba->mWithMeshClsn.ClearGroundFlag();
-    /* Integer cast keeps the orr on a freshly formed flags address, not a CSE of it. */
-    *((int *)((char *)(((int)((char *)&goomba->mdCcAc_c.flags)) + 0))) |= 4;
+    goomba->mdCcAc_c.flags |= 4;
 }
 
 // @symbol _ZN7daKrb_c19func_ov084_02129cf4Ei
@@ -904,7 +901,7 @@ void daKrb_c::func_ov084_02129ed4() {
     Vector3 hurtOriginRepeat;
     Vector3 hurtOriginJumped;
     Vector3 capReleaseOnExit;
-    void* other;
+    Player *other;
     u32 flags;
     s32 turnAround;
     s32 hurtKnockback;
@@ -915,7 +912,7 @@ void daKrb_c::func_ov084_02129ed4() {
 
     id = goomba->mdCcAc_c.otherOwner;
     if (id == 0) return;
-    other = dActor_c::FindWithID(id);
+    other = static_cast<Player *>(dActor_c::FindWithID(id));
     if (other == 0) return;
 
     flags = goomba->mdCcAc_c.hitFlags;
@@ -932,17 +929,18 @@ void daKrb_c::func_ov084_02129ed4() {
         typeMatch = (s32)(goomba->actorID == ACTOR_KURIBO);
         if (typeMatch != 0) {
             killDirNormal[0] = -0x2000; killDirNormal[1] = 0; killDirNormal[2] = 0;
-            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(goomba, killDirNormal, other, 0x41000);     /* 65.0 */
+            goomba->KillByInvincibleChar(*(Vector3_16 *)killDirNormal, *other, 0x41000); /* 65.0 */
             return;
         }
         killDirVariant[0] = -0x1800; killDirVariant[1] = 0; killDirVariant[2] = 0;
-        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(goomba, killDirVariant, other, 0x96000);     /* 150.0 */
+        goomba->KillByInvincibleChar(*(Vector3_16 *)killDirVariant, *other, 0x96000); /* 150.0 */
         return;
     }
 
     if (flags & HIT_SPIN_OR_POUND) {
         goomba->mDeathState = daKrb_c::DEATH_STOMPED;
-        if (goomba->mGoombaType == daKrb_c::GOOMBA_LARGE) goomba->unk_108 = daKrb_c::COIN_BLUE;
+        if (goomba->mGoombaType == daKrb_c::GOOMBA_LARGE)
+            goomba->mCoinType = daKrb_c::COIN_BLUE;
         goomba->mScaleX = 0x1000;     /* 1.0 */
         goomba->mScaleY = 0x1000;
         goomba->mScaleZ = 0x1000;
@@ -952,7 +950,7 @@ void daKrb_c::func_ov084_02129ed4() {
 
     if (flags & HIT_FIRE) {
         turnAround = 1;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130cd0.ptr, 0x40000000, 0x1000, 0);
+        goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cd0.filePtr, 0x40000000, 0x1000, 0);
         goomba->mDeathState = daKrb_c::DEATH_FIRE;
         goto block_68;
     }
@@ -961,28 +959,33 @@ void daKrb_c::func_ov084_02129ed4() {
     if (variantMatch == 0) {
         if (flags & HIT_UNLISTED_20000) {
             goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce0.ptr, 0x40000000, 0x1000, 0);
+            goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000,
+                                      0);
             *(s32*)(((int)&goomba->mdCcAc_c.flags) & 0xffffffffffffffffULL) |= 1;
             goto block_68;
         }
         if (flags & (HIT_EGG | HIT_DIVE)) {
             goomba->mDeathState = daKrb_c::DEATH_DIVE_OR_EGG;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce0.ptr, 0x40000000, 0x1000, 0);
+            goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000,
+                                      0);
             goto block_68;
         }
         if (flags & HIT_EXPLOSION) {
             goomba->mDeathState = daKrb_c::DEATH_EXPLOSION;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130cd0.ptr, 0x40000000, 0x1000, 0);
+            goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cd0.filePtr, 0x40000000, 0x1000,
+                                      0);
             goto block_68;
         }
         if (flags & (HIT_KICK | HIT_BREAKDANCE | HIT_SLIDE_KICK)) {
             turnAround = 1;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130cd0.ptr, 0x40000000, 0x1000, 0);
+            goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cd0.filePtr, 0x40000000, 0x1000,
+                                      0);
             goomba->mDeathState = daKrb_c::DEATH_KICKED;
             goto block_68;
         }
         if (flags & HIT_PUNCH) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce0.ptr, 0x40000000, 0x1000, 0);
+            goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000,
+                                      0);
             goomba->mDeathState = daKrb_c::DEATH_PUNCHED;
             turnAround = 1;
             goto block_68;
@@ -990,11 +993,12 @@ void daKrb_c::func_ov084_02129ed4() {
         if (!(flags & HIT_YOSHI_TONGUE)) {
             typeMatch = (s32)(((dActor_c *)other)->actorID == ACTOR_PLAYER);
             if (typeMatch != 0) {
-                if (((Player *)other)->mIsMetal != 0) {
+                if (other->mIsMetal != 0) {
                     capReleaseOnKill.x = 0; capReleaseOnKill.y = 0x6c000; capReleaseOnKill.z = 0;     /* 108.0 */
                     goomba->ReleaseCap(capReleaseOnKill);
                     killDirPlayer[0] = 0x2000; killDirPlayer[1] = 0; killDirPlayer[2] = 0;
-                    _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(goomba, killDirPlayer, other, 0x41000);     /* 65.0 */
+                    goomba->KillByInvincibleChar(*(Vector3_16 *)killDirPlayer, *other,
+                                                 0x41000); /* 65.0 */
                     return;
                 }
                 {
@@ -1003,14 +1007,16 @@ void daKrb_c::func_ov084_02129ed4() {
                     playerPos.y = pp->y;
                     playerPos.z = pp->z;
                 }
-                if (((Player *)other)->IsOnShell() != 0) {
+                if (other->IsOnShell() != 0) {
                     goomba->mDeathState = daKrb_c::DEATH_DIVE_OR_EGG;
                     turnAround = 1;
-                    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce0.ptr, 0x40000000, 0x1000, 0);
+                    goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000,
+                                              0x1000, 0);
                     goto block_68;
                 }
-                if (((dActor_c *)goomba)->JumpedOnByPlayer(*(dCc_c *)&goomba->mdCcAc_c, *(Player *)other) != 0) {
-                    _ZN6Player6BounceE5Fix12IiE(other, 0x28000);     /* 40.0 */
+                if (((dActor_c *)goomba)->JumpedOnByPlayer(*(dCc_c *)&goomba->mdCcAc_c, *other) !=
+                    0) {
+                    other->Bounce(0x28000); /* 40.0 */
                     func_02012694(SND_STOMPED, &goomba->mCamSpacePos);
                     goomba->mDeathState = daKrb_c::DEATH_STOMPED;
                     goomba->mScaleX = 0x1000;     /* 1.0 */
@@ -1018,19 +1024,21 @@ void daKrb_c::func_ov084_02129ed4() {
                     goomba->mScaleZ = 0x1000;
                     goto block_68;
                 }
-                if (((Player *)other)->mIsVanish != 0) return;
+                if (other->mIsVanish != 0)
+                    return;
                 if (goomba->mState == daKrb_c::STATE_WALK) {
                     if (goomba->mGoombaType == daKrb_c::GOOMBA_SMALL) {
                         ((dActor_c *)goomba)->SmallPoofDust();
                         hurtOriginFirstHit.x = goomba->mPosX; hurtOriginFirstHit.y = goomba->mPosY; hurtOriginFirstHit.z = goomba->mPosZ;
-                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(other, &hurtOriginFirstHit, 0, hurtKnockback, 1, 0, 1);
+                        other->Hurt(hurtOriginFirstHit, 0, hurtKnockback, 1, 0, 1);
                         goomba->func_ov084_02129498();
                         func_02012694(SND_DEATH_SMALL, &goomba->mCamSpacePos);
                         return;
                     }
                     if ((goomba->mdCcAc_c.hitFlags & HIT_PLAYER) == 0) return;
                     hurtOriginRepeat.x = goomba->mPosX; hurtOriginRepeat.y = goomba->mPosY; hurtOriginRepeat.z = goomba->mPosZ;
-                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(other, &hurtOriginRepeat, data_ov084_02130204[goomba->mGoombaType], hurtKnockback, 1, 0, 1);
+                    other->Hurt(hurtOriginRepeat, data_ov084_02130204[goomba->mGoombaType],
+                                hurtKnockback, 1, 0, 1);
                     goomba->mState = daKrb_c::STATE_HOP_START;
                     return;
                 }
@@ -1049,8 +1057,8 @@ void daKrb_c::func_ov084_02129ed4() {
             playerPosJump.y = pp->y;
             playerPosJump.z = pp->z;
         }
-        if (((dActor_c *)goomba)->JumpedOnByPlayer(*(dCc_c *)&goomba->mdCcAc_c, *(Player *)other) != 0) {
-            _ZN6Player6BounceE5Fix12IiE(other, 0x28000);     /* 40.0 */
+        if (((dActor_c *)goomba)->JumpedOnByPlayer(*(dCc_c *)&goomba->mdCcAc_c, *other) != 0) {
+            other->Bounce(0x28000); /* 40.0 */
             func_02012694(SND_STOMPED, &goomba->mCamSpacePos);
             goomba->mDeathState = daKrb_c::DEATH_STOMPED;
             goomba->mScaleX = 0x1000;     /* 1.0 */
@@ -1058,12 +1066,14 @@ void daKrb_c::func_ov084_02129ed4() {
             goomba->mScaleZ = 0x1000;
             goto block_68;
         }
-        if (((Player *)other)->mIsVanish != 0) return;
+        if (other->mIsVanish != 0)
+            return;
         if (goomba->mState == daKrb_c::STATE_WALK) {
             goomba->mState = daKrb_c::STATE_HOP_START;
             if ((goomba->mdCcAc_c.hitFlags & HIT_PLAYER) == 0) return;
             hurtOriginJumped.x = goomba->mPosX; hurtOriginJumped.y = goomba->mPosY; hurtOriginJumped.z = goomba->mPosZ;
-            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(other, &hurtOriginJumped, data_ov084_02130204[goomba->mGoombaType], hurtKnockback, 1, 0, 1);
+            other->Hurt(hurtOriginJumped, data_ov084_02130204[goomba->mGoombaType], hurtKnockback,
+                        1, 0, 1);
             return;
         }
         goto block_68;
@@ -1099,24 +1109,26 @@ block_68:
  * unless mFlags bit 0x40000 is set. Then the cap is attached (UpdateCapPos)
  * 108.0 above the origin, offset horizontally (x, z) by 10 * the sine/cosine
  * pair read from data_02082214 at (mAngleY >> 4). */
-void daKrb_c::func_ov084_0212a580(){
+void daKrb_c::func_ov084_0212a580() {
     Vector3_16 rotation;
     Vector3 pos;
     Vector3 arg;
     Vector3_16 arg16;
 
-    Matrix4x3_FromRotationY(&mModelAnim.mat4x3, mAngleY);
-    mModelAnim.mat4x3.t.x = mPosX >> 3;
-    mModelAnim.mat4x3.t.y = mPosY >> 3;
-    mModelAnim.mat4x3.t.z = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    mAnmModel.mat4x3.t.x = mPosX >> 3;
+    mAnmModel.mat4x3.t.y = mPosY >> 3;
+    mAnmModel.mat4x3.t.z = mPosZ >> 3;
     rotation.x = mAngleX;
     rotation.y = mAngleY;
     rotation.z = mAngleZ;
     if ((mFlags & 0x40000 ? 1 : 0) == 0) {
         if (mWithMeshClsn.IsOnGround()) {
-            _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j((char *)this, &mShadowModel, &mModelAnim.mat4x3, mScaleX * 0x50, 0x1e000, 0xf);
+            ((dActor_c *)this)
+                ->DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScaleX * 0x50, 0x1e000, 0xf);
         } else {
-            _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j((char *)this, &mShadowModel, &mModelAnim.mat4x3, mScaleX * 0x50, 0x96000, 0xf);
+            ((dActor_c *)this)
+                ->DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScaleX * 0x50, 0x96000, 0xf);
         }
     }
     pos.x = 0;
@@ -1148,7 +1160,7 @@ void daKrb_c::func_ov084_0212a6f8() {
     if (*(unsigned short *)&goomba->mWanderRerollTimer)
         return;
     goomba->mState = daKrb_c::STATE_WALK;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce8.ptr, 0, 0x1000, 0);
+    goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
 }
 
 // @symbol _ZN7daKrb_c19func_ov084_0212a774Ev
@@ -1167,8 +1179,8 @@ void daKrb_c::func_ov084_0212a6f8() {
  * becomes (countdown << 10) - mVertAccel when the old speed is no more than
  * countdown * 0x500, else 80 percent of the old one reversed; the horizontal
  * speed is halved but kept at 5.0 or more in magnitude; and a sound plays,
- * SND_TUMBLE_BOUNCE_FIRST when unk_467 is 0, SND_TUMBLE_BOUNCE_LATER for 1
- * and 2. unk_467 counts the landings. Staying on the ground clamps the
+ * SND_TUMBLE_BOUNCE_FIRST when mBounceCount is 0, SND_TUMBLE_BOUNCE_LATER for 1
+ * and 2. mBounceCount counts the landings. Staying on the ground clamps the
  * countdown the same way.
  * Last, mEatenByYoshi is 1 around a SpawnParticlesIfHitOtherObj call (which
  * reports hits differently while it is set, per dEnemyBase_c.h); a hit sets
@@ -1180,19 +1192,20 @@ void daKrb_c::func_ov084_0212a774() {
 
     if (h == 0) {
         ((dExtFrameCtrl_c *)&goomba->mMaterialChanger)->Advance();
-        if (((dExtFrameCtrl_c *)&goomba->mModelAnim)->Finished() == 0)
+        if (((dExtFrameCtrl_c *)&goomba->mAnmModel)->Finished() == 0)
             return;
         goomba->mFlags = goomba->mSavedParam;
         goomba->mState = daKrb_c::STATE_WALK;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce8.ptr, 0, 0x1000, 0);
+        goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
         goomba->mTargetHorzSpeed = data_ov084_02130228[goomba->mGoombaType];
         goomba->mWithMeshClsn.ClearLimMovFlag();
         {
             goomba->mPrevAngleY = goomba->mAngleY;
             goomba->mdCcAc_c.flags &= ~0x20000;
         }
-        MaterialChanger::Prepare(*(BMD_File *)(data_ov084_02130cf8.ptr), *(BMA_File *)&data_ov084_0213089c);
-        _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(&goomba->mMaterialChanger, &data_ov084_0213089c, 0x40000000, 0x1000, 0);
+        dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
+                                   *(BMA_File *)&data_ov084_0213089c);
+        goomba->mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213089c, 0x40000000, 0x1000, 0);
         goomba->mMaterialChanger.currFrame = 0;
         return;
     }
@@ -1241,12 +1254,12 @@ void daKrb_c::func_ov084_0212a774() {
             }
         }
 
-        if (goomba->unk_467 == 0) {
+        if (goomba->mBounceCount == 0) {
             func_02012694(SND_TUMBLE_BOUNCE_FIRST, &goomba->mCamSpacePos);
-        } else if (goomba->unk_467 <= 2) {
+        } else if (goomba->mBounceCount <= 2) {
             func_02012694(SND_TUMBLE_BOUNCE_LATER, &goomba->mCamSpacePos);
         }
-        goomba->unk_467 += 1;
+        goomba->mBounceCount += 1;
     } else {
         if (goomba->mWithMeshClsn.IsOnGround() != 0) {
             goomba->mWithMeshClsn.ClearLimMovFlag();
@@ -1261,7 +1274,7 @@ void daKrb_c::func_ov084_0212a774() {
         void *a = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
         goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
         func_ov002_020aea30(goomba, a, &goomba->mWithMeshClsn);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce0.ptr, 0x40000000, 0x1000, 0);
+        goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
         goomba->mdCcAc_c.flags |= 1;
     }
     goomba->mEatenByYoshi = 0;
@@ -1337,7 +1350,7 @@ void daKrb_c::func_ov084_0212abd4() {
     daKrb_c *goomba = this;
     short step = 0x200;
     func_ov084_02129cf4(0x3e8000);
-    _Z14ApproachLinearRiii((int *)&goomba->mHorzSpeed, goomba->mTargetHorzSpeed, 0x500);
+    ApproachLinear(*(int *)&goomba->mHorzSpeed, goomba->mTargetHorzSpeed, 0x500);
     if (((Flags *)&goomba->mMoveFlags)->b0) {
         if (ApproachLinear(*(short *)&goomba->mPrevAngleY, goomba->mInitAngleY, step)) {
             *(unsigned char *)(((int)&goomba->mMoveFlags)) &= ~daKrb_c::MOVE_AVOIDING;
@@ -1354,14 +1367,14 @@ void daKrb_c::func_ov084_0212abd4() {
             if (goomba->mTargetHorzSpeed <= data_ov084_02130228[goomba->mGoombaType]) {
                 goomba->func_ov084_02129c9c();
             } else {
-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130cf0.ptr, 0, 0x1000, 0);
+                goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cf0.filePtr, 0, 0x1000, 0);
             }
             step = 0x800;
             goomba->mTargetHorzSpeed = data_ov084_02130268[goomba->mGoombaType];
             goomba->mTargetAngleY = goomba->mInitAngleY;
         } else {
             goomba->mTargetHorzSpeed = data_ov084_02130228[goomba->mGoombaType];
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce8.ptr, 0, 0x1000, 0);
+            goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
             goomba->mTargetAngleY = Vec3_HorzAngle(&goomba->mPos, (Vector3 *)&goomba->mHomePos);
             step = 0x400;
         }
@@ -1385,7 +1398,7 @@ void daKrb_c::func_ov084_0212abd4() {
             if (goomba->mTargetHorzSpeed <= data_ov084_02130228[goomba->mGoombaType]) {
                 goomba->func_ov084_02129c9c();
             } else {
-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130cf0.ptr, 0, 0x1000, 0);
+                goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cf0.filePtr, 0, 0x1000, 0);
             }
             if (goomba->mCapId >= 6 || goomba->mUnstickTimer != 0) {
                 goomba->mTargetAngleY = goomba->mInitAngleY;
@@ -1396,7 +1409,7 @@ void daKrb_c::func_ov084_0212abd4() {
             goomba->mTargetHorzSpeed = data_ov084_02130268[goomba->mGoombaType];
         } else {
             goomba->mTargetHorzSpeed = data_ov084_02130228[goomba->mGoombaType];
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce8.ptr, 0, 0x1000, 0);
+            goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
 
             if (*(u16 *)&goomba->mHeadingHoldTimer != 0) {
                 *(u16 *)(((int)&goomba->mHeadingHoldTimer)) =
@@ -1428,7 +1441,7 @@ void daKrb_c::func_ov084_0212abd4() {
  * mMinionIndex into the spot (targetPos) this minion should stand at. When
  * ApproachAngle (mPrevAngleY toward mInitAngleY) returns 0 and the Goomba is
  * on the ground:
- *  - If the king's mState is 4 with mWalkSpeed 0, or the unk_475 countdown
+ *  - If the king's mState is 4 with mWalkSpeed 0, or the mFreeRoamTimer countdown
  *    (DecIfAbove0_Byte) is nonzero, or the spot is more than 1000.0 away, the
  *    minion acts for itself: if the player is within 1000.0 and the angle
  *    difference to the player is below 0x3000 (67.5 degrees) it faces the
@@ -1442,7 +1455,7 @@ void daKrb_c::func_ov084_0212abd4() {
  *    mGoombaTargetSpeed: a quarter, a half or all of it when the spot is under
  *    50.0, 100.0 or 150.0 away, and the run speed plus all of it beyond that.
  * A minion that falls more than 1000.0 below mHomePos is removed, and while
- * the king is in state 4 with mWalkSpeed 0 unk_475 is reloaded with 30. */
+ * the king is in state 4 with mWalkSpeed 0 mFreeRoamTimer is reloaded with 30. */
 void daKrb_c::func_ov084_0212af74() {
     daKrb_c *goomba = this;
     Vector3 targetPos;
@@ -1466,9 +1479,9 @@ void daKrb_c::func_ov084_0212af74() {
     }
 
     if (goomba->mTargetHorzSpeed == 0) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130cc8.ptr, 0, 0x1000, 0);
+        goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cc8.filePtr, 0, 0x1000, 0);
     } else {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, (void *)data_ov084_02130ce8.ptr, 0, 0x1000, 0);
+        goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
     }
 
     func_ov074_0212087c(&targetPos, king, goomba->mMinionIndex);
@@ -1480,9 +1493,7 @@ void daKrb_c::func_ov084_0212af74() {
         dist = Vec3_HorzDist(&goomba->mPosX, &targetPos);
 
         if ((king->mState == 4 && king->mWalkSpeed == 0) ||
-            DecIfAbove0_Byte(&goomba->unk_475) != 0 ||
-            dist > 0x3e8000)
-        {
+            DecIfAbove0_Byte(&goomba->mFreeRoamTimer) != 0 || dist > 0x3e8000) {
             ang = goomba->HorzAngleToCPlayer();
             flag = 1;
             if (goomba->DistToCPlayer() < 0x3e8000 &&
@@ -1513,7 +1524,7 @@ void daKrb_c::func_ov084_0212af74() {
                 goomba->mTargetHorzSpeed = 0;
             }
             if (flag != 0) {
-                _Z14ApproachLinearRiii((int *)&goomba->mHorzSpeed, goomba->mTargetHorzSpeed, 0x500);
+                ApproachLinear(*(int *)&goomba->mHorzSpeed, goomba->mTargetHorzSpeed, 0x500);
             }
         } else {
             goomba->mInitAngleY = Vec3_HorzAngle(&goomba->mPos, &targetPos);
@@ -1539,7 +1550,7 @@ void daKrb_c::func_ov084_0212af74() {
     if (king->mState != 4)
         return;
     if (king->mWalkSpeed == 0)
-        goomba->unk_475 = 0x1e;
+        goomba->mFreeRoamTimer = 0x1e;
 }
 
 // @symbol _ZN7daKrb_c19func_ov084_0212b2dcEv
@@ -1578,6 +1589,7 @@ int daKrb_c::OnAimedAtWithEgg()
  * Goomba is removed (func_ov084_02129498). */
 void daKrb_c::OnTurnIntoEgg(Player &playerRef)
 {
+    /* self is unused; deleting it drops @NNN numbers daKrb_c.json pins. */
     char *self = (char *)this;
     Player *player = &playerRef;
     int b5;
@@ -1592,21 +1604,21 @@ void daKrb_c::OnTurnIntoEgg(Player &playerRef)
 
     if (((dActor_c *)this)->OnYoshiTryEat() == 6) {
         if (player->IsCollectingCap()) {
-            if (unk_108 == COIN_PLAIN)
+            if (mCoinType == COIN_PLAIN)
                 GivePlayerCoins(*player, 1, 0);
             func_ov084_021296cc();
         } else {
             b5 = 0;
             b4 = b5;
-            if (unk_108 == COIN_PLAIN)
+            if (mCoinType == COIN_PLAIN)
                 b5 = 1;
             if (mRewardType == REWARD_SILVER_STAR) {
                 UntrackStar(mStarTracked);
                 b4 = 1;
                 dActor_c::Spawn(ACTOR_STARBASE, 0x50, mHomePos, 0, mAreaId, -1);
-                /* unsigned on the load side only: spelling both sides as param1
-                   lets mwccarm CSE the field address. The ROM wants [rN,#8]. */
-                *(int *)(self + 8) = *(unsigned int *)(self + 8) & 0xff0f;
+                /* The (int) cast keeps [rN,#8] on the load: a plain
+                   `param1 & 0xff0f` lets mwccarm CSE the field address. */
+                param1 = (int)param1 & 0xff0f;
             } else if (mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {
                 if (mStarID == data_0209f344[data_0209f208[0]]) {
                     UntrackStar(mStarTracked);
@@ -1617,7 +1629,7 @@ void daKrb_c::OnTurnIntoEgg(Player &playerRef)
             player->RegisterEggCoinCount(b5, b4, 0);
         }
     } else if (((dActor_c *)this)->OnYoshiTryEat() == 4) {
-        if (unk_108 == COIN_PLAIN)
+        if (mCoinType == COIN_PLAIN)
             GivePlayerCoins(*player, 1, 0);
     }
 
@@ -1679,12 +1691,12 @@ int daKrb_c::Render()
         mScaleZ = FX_MUL(mScaleZ, data_ov084_02130258[mGoombaType]);
     }
 
-    mModelAnim.Render(&mScale);
+    mAnmModel.Render(&mScale);
 
     mScaleX = backup.x;
     mScaleY = backup.y;
     mScaleZ = backup.z;
-    mMaterialChanger.Update(mModelAnim.data);
+    mMaterialChanger.Update(mAnmModel.data);
     RenderCapModel(0);
     return 1;
 }
@@ -1729,16 +1741,16 @@ int daKrb_c::Behavior()
         *(u32*)((char*)&mFlags) |= 0x10000000;
         PoofDust();
     }
-    if (mGoombaType != GOOMBA_KING_MINION && mState != STATE_TUMBLE &&
-        mEatenByYoshi == 0 && mDeathState == DEATH_NONE &&
-        _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000) != 0)     /* 1500.0 */
+    if (mGoombaType != GOOMBA_KING_MINION && mState != STATE_TUMBLE && mEatenByYoshi == 0 &&
+        mDeathState == DEATH_NONE &&
+        ((dActor_c *)(char *)this)->IsTooFarAwayFromPlayer(0x5dc000) != 0) /* 1500.0 */
     {
         Unk_02005d94();
         return 1;
     }
 
     if (mDeathState != DEATH_NONE) {
-        r = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 3);
+        r = UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3);
         if (r != 0) {
             if (r == 2) {
                 func_ov084_02129498();
@@ -1765,22 +1777,21 @@ int daKrb_c::Behavior()
     if (func_ov084_02129a00() != 0)
         return 1;
 
-    if (mState >= STATE_TUMBLE ||
-        (mGoombaType == GOOMBA_KING_MINION && (int)mModelAnim.file == (int)data_ov084_02130cc8.ptr))
-    {
-        mModelAnim.speed = 0x1000;
+    if (mState >= STATE_TUMBLE || (mGoombaType == GOOMBA_KING_MINION &&
+                                   (int)mAnmModel.file == (int)data_ov084_02130cc8.filePtr)) {
+        mAnmModel.speed = 0x1000;
     } else {
         int v = cstd::fdiv(mHorzSpeed, mScaleX * 2);
         if (v > 0x3000)
             v = 0x3000;
-        mModelAnim.speed = v;
+        mAnmModel.speed = v;
     }
 
     MakeVanishLuigiWork(*(dCc_c *)&mdCcAc_c);
 
     if (mState != STATE_AIRBORNE) {
         func_ov084_0212934c();
-        ((dExtFrameCtrl_c *)&mModelAnim)->Advance();
+        ((dExtFrameCtrl_c *)&mAnmModel)->Advance();
     }
 
     st = mState;
@@ -1879,84 +1890,72 @@ done:
  * dCapEnemy_c byte at 0x112 (mHadBank1Cap), bits 12..15 mStarID. The size
  * class follows from the actor id (see GoombaType); a KURIBO spawned with
  * param1 0xeeee or 0xeeef is a Goomba King minion, with bit 1 of mFlags
- * cleared, and 0xeeee also drops no coin (unk_108 = COIN_NONE). The dCcAc_c
+ * cleared, and 0xeeee also drops no coin (mCoinType = COIN_NONE). The dCcAc_c
  * cylinder gets radius 60 * scale and height data_ov084_02130208[type]; a
  * KURIBO_L has bit 0x8000 cleared from its vulnFlags (the Yoshi-tongue bit in
  * dCc_c.h's best-effort table); dBgCh_Actr::Init gets 60 * scale for its two
  * Fix12 size arguments. mSavedParam keeps the original param1 for the end of
  * STATE_TUMBLE. */
-int daKrb_c::InitResources()
-{
+int daKrb_c::InitResources() {
     char *c = (char *)this;
     int i;
 
-    mRewardType = (*(unsigned int*)(c + 8) >> 4) & 0xf;
+    mRewardType = (param1 >> 4) & 0xf;
     mStarTracked = -1;
-    mHadBank1Cap = (*(unsigned int*)(c + 8) >> 8) & 0xf;
-    mStarID = (*(unsigned int*)(c + 8) >> 0xc) & 0xf;
+    mHadBank1Cap = (param1 >> 8) & 0xf;
+    mStarID = (param1 >> 0xc) & 0xf;
 
-    if (mRewardType == REWARD_SILVER_STAR)
-    {
+    if (mRewardType == REWARD_SILVER_STAR) {
         mStarTracked = TrackStar(mStarID, 1);
         LoadSilverStarAndNumber();
-    }
-    else if (mRewardType == REWARD_SILVER_STAR_IF_CURRENT)
-    {
+    } else if (mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {
         LoadSilverStarAndNumber();
     }
 
-    Model::LoadFile(data_ov084_02130cf8);
+    dExtSimpleModel_c::LoadFile(data_ov084_02130cf8);
     for (i = 0; i < 7; i++)
         dExtFrameCtrl_c::LoadFile(*sKuriboAnimationFiles[i]);
 
-    AddCap((unsigned char)(*(int *)(c + 8) & 0xf));
+    AddCap((unsigned char)(param1 & 0xf));
 
     if ((mCapId & 0xf) < 6)
-        /* The load and the store must not be spelled the same way: mwcc CSEs the
-           field address across an RMW and the ROM re-issues it. See
+        /* The (int) cast is load-bearing: a plain `param1 & 0xf0ff` lets mwcc
+           CSE the field address across the RMW, and the ROM re-issues it. See
            notes/mwccarm-codegen.md. */
-        ((int*)c)[2] = *(int*)(c + 8) & 0xf0ff;
+        param1 = (int)param1 & 0xf0ff;
 
     if (DestroyIfCapNotNeeded() == 0)
         return 0;
 
-    if (((ModelBase *)&mModelAnim)->SetFile((BMD_File *)(data_ov084_02130cf8.ptr), 1, -1) == 0)
+    if (((dExtModel_c *)&mAnmModel)->SetFile((BMD_File *)(data_ov084_02130cf8.filePtr), 1, -1) == 0)
         return 0;
 
     if (mShadowModel.InitCylinder() == 0)
         return 0;
 
-    MaterialChanger::Prepare(*(BMD_File*)data_ov084_02130cf8.ptr, *(BMA_File*)&data_ov084_0213089c);
-    _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(&mMaterialChanger, &data_ov084_0213089c, 0x40000000, 0x1000, 0);
+    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr,
+                               *(BMA_File *)&data_ov084_0213089c);
+    mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213089c, 0x40000000, 0x1000, 0);
 
-    unk_108 = COIN_PLAIN;
+    mCoinType = COIN_PLAIN;
 
     {
         int id = actorID;
         int cond = (id == ACTOR_KURIBO_S);
-        if (cond != false)
-        {
+        if (cond != false) {
             mGoombaType = GOOMBA_SMALL;
-        }
-        else
-        {
+        } else {
             cond = (id == ACTOR_KURIBO);
-            if (cond != false)
-            {
-                if (*(int*)(c + 8) == 0xeeee || *(int*)(c + 8) == 0xeeef)
-                {
+            if (cond != false) {
+                if (param1 == 0xeeee || param1 == 0xeeef) {
                     mGoombaType = GOOMBA_KING_MINION;
-                    *(int*)(((int)&mFlags) & 0xFFFFFFFFFFFFFFFF) &= ~2;
-                    if (*(int*)(c + 8) == 0xeeee)
-                        unk_108 = COIN_NONE;
-                }
-                else
-                {
+                    mFlags &= ~2;
+                    if (param1 == 0xeeee)
+                        mCoinType = COIN_NONE;
+                } else {
                     mGoombaType = GOOMBA_NORMAL;
                 }
-            }
-            else
-            {
+            } else {
                 mGoombaType = GOOMBA_LARGE;
                 LoadBlueCoinModel(c);
             }
@@ -1969,12 +1968,13 @@ int daKrb_c::InitResources()
         mScaleY = scale;
         mScaleZ = scale;
     }
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, c, mScaleX * 0x3c, data_ov084_02130208[mGoombaType], 0x200000, 0xa6efe0);
+    mdCcAc_c.Init((dActor_c *)c, mScaleX * 0x3c, data_ov084_02130208[mGoombaType], 0x200000,
+                  0xa6efe0);
 
     if (mGoombaType == GOOMBA_LARGE)
-        *(int*)(((int)&mdCcAc_c.vulnFlags) & 0xFFFFFFFFFFFFFFFF) &= ~HIT_YOSHI_TONGUE;
+        *(int *)(((int)&mdCcAc_c.vulnFlags) & 0xFFFFFFFFFFFFFFFF) &= ~HIT_YOSHI_TONGUE;
 
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, c, mScaleX * 0x3c, mScaleX * 0x3c, 0, 0);
+    mWithMeshClsn.Init((dActor_c *)c, mScaleX * 0x3c, mScaleX * 0x3c, 0, 0);
     mWithMeshClsn.StartDetectingWater();
 
     mMoveFlags = 0;
@@ -1998,11 +1998,11 @@ int daKrb_c::InitResources()
     mHomePos.y = mPosY;
     mHomePos.z = mPosZ;
     mVertAccel = data_ov084_02130238[mGoombaType];
-    mTerminalVelocity = -0x32000;     /* -50.0 */
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130ce8.ptr, 0, 0x1000, 0);
+    mTerminalVelocity = -0x32000; /* -50.0 */
+    mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
 
-    unk_467 = 0;
-    mSavedParam = *(int*)(c + 8);
+    mBounceCount = 0;
+    mSavedParam = param1;
     return 1;
 }
 

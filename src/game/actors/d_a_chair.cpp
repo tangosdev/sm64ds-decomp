@@ -10,17 +10,13 @@
  * inline. common.h comes before daChair_c.h so the shadow-matrix copy
  * stays twelve words. opt_common_subs off holds ApproachStateValue.
  */
-// leftovers:
-// - dCcAcPos_c::Init, dBgCh_Actr::Init, DropShadowRadHeight,
-//   Particle::System::NewSimple, Player::Hurt and cstd::atan2 stay scalar
-//   externs. The header Fix12<int> forms pool constants (InitResources
-//   and UpdateModel grew .rodata). dBgCh_Actr::Init's header spells
-//   Fix12i, which mangles as int, not 5Fix12IiE; a scalar cstd::atan2
-//   declaration would mangle as ii.
+// What stays, and why:
+// - The extern "C" block holds the arm9 helpers that have no shared header
+//   (func_0200f760, Vec3_Sub, AddVec3, AngleDiff,
+//   Matrix4x3_FromRotationZXYExt).
 // - The ROM calls dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc), not
-//   UpdateContinuous. func_0200f760 (cylinder movement bit from the
-//   vanish flag) and func_0201267c (bank-3 player, one past
-//   Sound::PlayBank3) have no header names.
+//   UpdateContinuous. func_0201267c is Sound.h's bank-3 player, one past
+//   Sound::PlayBank3.
 // - GetWallResult is the member; the +4 SurfaceInfo and the CopyNormalTo
 //   reference pun stay. Vec3 POD twins (player copy, diff, normal, hurt
 //   pos): a Vector3 local emits its destructor call. player->mPosX by
@@ -28,14 +24,11 @@
 // - ST reads mStateTimer/mActionTimer through this+0x300, and the
 //   halfword increments use the int-cast form; the member forms change
 //   sizes.
-// - unk_0a4/unk_0ac keep the base header's names (lateral velocity
-//   beside mVertSpeed). g_profile_CHAIR is not in this TU.
-//   data_ov020_02114af0 is the model handle.
+// - g_profile_CHAIR is not in this TU. data_ov020_02114af0 is the model
+//   handle.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daChair_c_AssetId {
-    ASSET_CHAIR_BMD = 0x02d0
-};
+enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 
 #include "common.h"
 #include "nitro/fx/fx.h"
@@ -44,6 +37,10 @@ enum daChair_c_AssetId {
 #include "SurfaceInfo.h"
 #include "Player.h"
 #include "dBgCh_Actr.h"
+#include "Sound.h"
+#include "cstd.h"
+#include "Particle__System.h"
+#include "math/CalcLib.h"
 
 #pragma opt_common_subs off
 
@@ -51,8 +48,6 @@ enum daChair_c_AssetId {
  * spelling is local; the manifest aliases the generated names to those ROM
  * symbols. */
 struct ChairModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     ChairModelFilePtr(u32 fileID);
     ~ChairModelFilePtr();
 };
@@ -62,7 +57,9 @@ struct ChairModelFilePtr : SharedFilePtr {
 extern ChairModelFilePtr data_ov020_02114af0;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-typedef struct { s32 x, y, z; } Vec3;
+typedef struct {
+    s32 x, y, z;
+} Vec3;
 
 /* mStateTimer at +0x9e and mActionTimer at +0xa0, addressed from
  * this+0x300 rather than from the fields. */
@@ -91,55 +88,34 @@ enum ChairSfxId {
  * table: one s16 sin, s16 cos pair per 16 angle units. */
 #define SINCOS_INDEX(angle) ((*(u16 *)&(angle) >> 4) * 2)
 
+/* local extern: arm9 C helpers with no shared header yet. Vec3_Sub and
+   AddVec3 take this file's Vec3, as their definitions take a plain triple. */
 extern "C" {
 void func_0200f760(void *self, void *cyl);
-void func_0201267c(unsigned int id, void *pos);
-void dBgCh_Actr_UpdateContinuous_Veneer(void *clsn);
 void Vec3_Sub(Vec3 *res, Vec3 *v0, Vec3 *v1);
-s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
-s32 Vec3_HorzLen(const Vector3 *v);
 void AddVec3(Vec3 *dst, Vec3 *add, Vec3 *src);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
 void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
-
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    void *self, dActor_c *actor, int radius, int height,
-    Vector3_16 *rot, Vector3_16 *unk);
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    void *self, dActor_c *actor, const Vector3 *offset,
-    int radius, int height, u32 flags, u32 vulnFlags);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    void *self, void *shadow, void *matrix, int radius, int height, u32 flags);
-void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-    unsigned id, int x, int y, int z);
-int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-    void *player, const void *pos, u32 kind, int damage, u32 a, u32 b, u32 c);
+}
 
 extern s16 data_02082214[];
-}
 
 // @symbol daChair_c_classInit
 /* CHAIR registry factory. */
-extern "C" daChair_c *daChair_c_classInit(void)
-{
+extern "C" daChair_c *daChair_c_classInit(void) {
     return new daChair_c();
 }
 
 // @symbol _ZN9daChair_c13InitResourcesEv
-s32 daChair_c::InitResources()
-{
-    BMD_File *file = (BMD_File *)Model::LoadFile(data_ov020_02114af0);
+s32 daChair_c::InitResources() {
+    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov020_02114af0);
     mModel.SetFile(file, 1, -1);
     mShadowModel.InitCylinder();
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, this, 0x32000, 0x64000, 0, 0);
+    mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);
     mClsnOffset.x = 0;
     mClsnOffset.y = 0;
     mClsnOffset.z = 0;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &mCylinder, this, &mClsnOffset, 0x32000, 0x64000, 0x200004, 0);
+    mCylinder.Init(this, mClsnOffset, 0x32000, 0x64000, 0x200004, 0);
     mState = 0;
     mHomePos.x = mPosX;
     mHomePos.y = mPosY;
@@ -149,14 +125,21 @@ s32 daChair_c::InitResources()
 }
 
 // @symbol _ZN9daChair_c8BehaviorEv
-s32 daChair_c::Behavior()
-{
+s32 daChair_c::Behavior() {
     func_0200f760(this, &mCylinder);
     switch (mState) {
-    case 0: State0(); break;
-    case 1: State1(); break;
-    case 2: State2(); break;
-    case 3: State3(); break;
+    case 0:
+        State0();
+        break;
+    case 1:
+        State1();
+        break;
+    case 2:
+        State2();
+        break;
+    case 3:
+        State3();
+        break;
     }
     UpdateModel();
     mCylinder.Clear();
@@ -166,22 +149,19 @@ s32 daChair_c::Behavior()
 }
 
 // @symbol _ZN9daChair_c6RenderEv
-s32 daChair_c::Render()
-{
+s32 daChair_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN9daChair_c16CleanupResourcesEv
-s32 daChair_c::CleanupResources()
-{
+s32 daChair_c::CleanupResources() {
     data_ov020_02114af0.Release();
     return 1;
 }
 
 // @symbol _ZN9daChair_c11UpdateModelEv
-void daChair_c::UpdateModel()
-{
+void daChair_c::UpdateModel() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = mPosY >> 3;
@@ -189,29 +169,24 @@ void daChair_c::UpdateModel()
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = mHomePos.y >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel, &mShadowMat, 0x32000, 0x1e000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, 0x32000, 0x1e000, 0xf);
 }
 
 // @symbol _ZN9daChair_c5BreakEv
-void daChair_c::Break()
-{
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x25, mPosX, mPosY, mPosZ);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x26, mPosX, mPosY, mPosZ);
+void daChair_c::Break() {
+    Particle::System::NewSimple(0x25, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(0x26, mPosX, mPosY, mPosZ);
     PoofDust();
     MarkForDestruction();
 }
 
 // @symbol _ZN9daChair_c18ApproachStateValueEPsS0_isis
-int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target,
-                                  s16 thresh, s32 accel, s16 mult)
-{
+int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target, s16 thresh, s32 accel, s16 mult) {
     short old = pos[0];
     pos[0] = old + vel[0];
     short now = pos[0];
-    if (now == target
-        || ((now - target) * (old - target) < 0
-            && vel[0] > -thresh && vel[0] < thresh)) {
+    if (now == target ||
+        ((now - target) * (old - target) < 0 && vel[0] > -thresh && vel[0] < thresh)) {
         pos[0] = target;
         vel[0] = 0;
         return 1;
@@ -225,8 +200,7 @@ int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target,
 }
 
 // @symbol _ZN9daChair_c6State0Ev
-void daChair_c::State0()
-{
+void daChair_c::State0() {
     dActor_c *piano;
 
     mState = 1;
@@ -247,8 +221,7 @@ void daChair_c::State0()
 }
 
 // @symbol _ZN9daChair_c6State1Ev
-void daChair_c::State1()
-{
+void daChair_c::State1() {
     int targetPos[4];
     dActor_c *target;
     short delta;
@@ -306,7 +279,7 @@ void daChair_c::State1()
         if (mAngleX >= 0) {
             wobble = -4;
         } else {
-            func_0201267c(kSfxWobble, &mCamSpacePosX);
+            func_0201267c(kSfxWobble, &mCamSpacePos);
             wobble = 4;
         }
         /* int-cast address. */
@@ -336,8 +309,7 @@ void daChair_c::State1()
 }
 
 // @symbol _ZN9daChair_c6State2Ev
-void daChair_c::State2()
-{
+void daChair_c::State2() {
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     (*(u16 *)((int)&mStateTimer))++;
 
@@ -349,7 +321,7 @@ void daChair_c::State2()
         ApproachStateValue(&mAngleX, &mStateValue0, -0xfa0, 0xc8, 0x14, 2);
         ApproachStateValue(&mAngleZ, &mStateValue2, 0, 0, 0x14, 1);
         if (ST->counter == 0x46)
-            func_0201267c(kSfxWindup, &mCamSpacePosX);
+            func_0201267c(kSfxWindup, &mCamSpacePos);
     } else {
         if (ST->timer != 0) {
             (*(u16 *)((int)&mActionTimer))--;
@@ -359,7 +331,7 @@ void daChair_c::State2()
                 Vec3 playerPos;
                 Vec3 diff;
                 s32 reach;
-                func_0201267c(kSfxHop, &mCamSpacePosX);
+                func_0201267c(kSfxHop, &mCamSpacePos);
                 player = ClosestPlayer();
                 if (player == 0)
                     return;
@@ -370,14 +342,13 @@ void daChair_c::State2()
                 playerPos.y = pp->y;
                 playerPos.z = pp->z;
                 Vec3_Sub(&diff, &playerPos, (Vec3 *)&mPosX);
-                mPrevAngleY = _ZN4cstd5atan2E5Fix12IiES1_(diff.x, diff.z);
-                mPrevAngleX = _ZN4cstd5atan2E5Fix12IiES1_(
-                                  diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
-                /* unk_0a4 / unk_0ac: lateral velocity beside mVertSpeed. */
+                mPrevAngleY = cstd::atan2(diff.x, diff.z);
+                mPrevAngleX = cstd::atan2(diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
+                /* mSpeedX / mSpeedZ: lateral velocity beside mVertSpeed. */
                 reach = FX_MUL(data_02082214[SINCOS_INDEX(mPrevAngleX) + 1], 0x32000);
-                unk_0a4 = FX_MUL(reach, data_02082214[SINCOS_INDEX(mPrevAngleY)]);
+                mSpeedX = FX_MUL(reach, data_02082214[SINCOS_INDEX(mPrevAngleY)]);
                 mVertSpeed = FX_MUL(data_02082214[SINCOS_INDEX(mPrevAngleX)], -0x32000);
-                unk_0ac = FX_MUL(reach, data_02082214[SINCOS_INDEX(mPrevAngleY) + 1]);
+                mSpeedZ = FX_MUL(reach, data_02082214[SINCOS_INDEX(mPrevAngleY) + 1]);
             } else {
                 if (ST->timer > 0x14) {
                     /* (int)&mAngleY. mAngleY += 0x2710 changes the code size. */
@@ -391,15 +362,13 @@ void daChair_c::State2()
                 void *wall = mWithMeshClsn.GetWallResult();
                 Vec3 normal;
                 ((SurfaceInfo *)((char *)wall + 4))->CopyNormalTo((Vector3 &)normal);
-                if (GetSubtraction(mPrevAngleY,
-                        _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z))
-                    > 0x4000)
+                if (GetSubtraction(mPrevAngleY, cstd::atan2(normal.x, normal.z)) > 0x4000)
                     Break();
             }
         }
     }
 
-    AddVec3((Vec3 *)&mPosX, (Vec3 *)&unk_0a4, (Vec3 *)&mPosX);
+    AddVec3((Vec3 *)&mPosX, (Vec3 *)&mSpeedX, (Vec3 *)&mPosX);
 
     {
         u32 id = mCylinder.otherOwner;
@@ -422,15 +391,13 @@ void daChair_c::State2()
             pos.x = mPosX;
             pos.y = mPosY;
             pos.z = mPosZ;
-            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-                actor, &pos, 2, 0xc000, 1, 0, 1);
+            ((Player *)actor)->Hurt(*(Vector3 *)&pos, 2, 0xc000, 1, 0, 1);
         }
     }
 }
 
 // @symbol _ZN9daChair_c6State3Ev
-void daChair_c::State3()
-{
+void daChair_c::State3() {
     s16 *tracked = mTrackedAngle;
     int angle;
     s16 *ip;

@@ -17,7 +17,7 @@
  * now folded into src/game/actors/d_a_slide_box.cpp) allocates 0x4f8, constructs
  * dBgActor_c, then the dBgCh_Actr at 0x324. Both destructor variants call
  * _ZN10dBgCh_ActrD1Ev on that member before the inherited dBgActor_c
- * teardown (dBgW_KcMbg, Model, dActor_c), independently pinning the layout.
+ * teardown (dBgW_KcMbg, dExtSimpleModel_c, dActor_c), independently pinning the layout.
  */
 struct daSlide_Box_c : dBgActor_c {
     dActor_c *mShip;                    /* 0x320 -- actor 0x39, the upward ship */
@@ -36,7 +36,7 @@ struct daSlide_Box_c : dBgActor_c {
     virtual s32 Behavior();             /* slot  6 */
     virtual s32 Render();               /* slot  9 */
 
-    /* Model matrix from all three angles, then position at 1/8 scale. The
+    /* dExtSimpleModel_c matrix from all three angles, then position at 1/8 scale. The
      * anonymous ROM member at 0x021130a4 is called only by InitResources and
      * Behavior, both in this TU, and takes this in r0. */
     void UpdateModel();

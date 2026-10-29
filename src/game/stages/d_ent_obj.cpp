@@ -1,4 +1,11 @@
 //cpp
+struct Vector3_16f;
+namespace Particle {
+struct Callback;
+struct System {
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
 /* dEntObj_c and UnknownVsPlayer. ov075 0x02113ee0..0x02115ab8, 43 functions.
  *
  * The versus-mode entry scene's stage object: four player figures on the
@@ -17,20 +24,13 @@
  * the classInit factory, then UnknownVsPlayer's constructor.
  *
  * leftovers:
- *  - The Fix12-by-value member calls (BlendModelAnim::SetAnim,
- *    ModelAnim::SetAnim, TextureSequence::SetFile,
- *    dExtShadowModel_c::InitModel, Particle::System::New,
- *    G3i::PerspectiveW_) keep measured scalar-extern spellings: spelled as
+ *  - The Fix12-by-value member calls (dExtShadowModel_c::InitModel,
+ *    Particle::System::New) keep measured scalar-extern spellings: spelled as
  *    the real member types, mwccarm homes the register arguments and the
- *    callers grow.
+ *    callers grow. G3i::PerspectiveW_ is the Fix12i method.
  *  - LAUNDER((char*)) stays on the mModel.data / mAnimation.data /
  *    mModel.mat4x3 alias reads in func_ov075_02114be4 -- the plain member
  *    read changes which value-numbering class mwcc folds them into.
- *  - dEntObj_c_classInit keeps its hand-written ABI construction
- *    (fBase_c C2, explicit _ZTV9dEntObj_c + 2 store, __cxa_vec_ctor over
- *    the four UnknownVsPlayer elements): the natural `new dEntObj_c`
- *    emits the base steps inline instead of the C2 branch and no vec
- *    ctor call.
  *  - VsBoneFile/VsBoneComponents/MatrixCopyWords stay file-layout shadows: the bone
  *    record offsets are measured, not the BMD/ModelComponents layouts.
  *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
@@ -47,6 +47,9 @@
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
 #include "SpawnInfo.h"
+#include "Sound.h"
+#include "G3X.h"
+#include "math/Approach.h"
 
 struct BMD_File;
 struct BTP_File;
@@ -58,9 +61,11 @@ namespace Particle {
 void RenderAll();
 }
 namespace G3i {
-void LookAt_(const Vector3 *eye, const Vector3 *at, const Vector3 *up, bool b, Matrix4x3 *m);
+void LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target, bool draw,
+             Matrix4x3 *m);
+void PerspectiveW_(Fix12i sinFov, Fix12i cosFov, Fix12i aspect, Fix12i nearZ, Fix12i farZ,
+                   Fix12i scaleW, int load, Matrix4x3 *m);
 }
-bool ApproachLinear(short &value, short target, short step);
 void CopyToViewMat(const Matrix4x3 *m);
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
@@ -72,25 +77,16 @@ void CopyToViewMat(const Matrix4x3 *m);
    SharedFilePtr_Destruct_TexSeq. The manifest aliases each undefined member
    onto its ROM symbol. */
 struct EntObjModelFilePtr : SharedFilePtr {
-    u32 id;
-    void *ptr;
-
     EntObjModelFilePtr(u32 fileID);
     ~EntObjModelFilePtr();
 };
 
 struct EntObjAnimationFileHandle : SharedFilePtr {
-    u32 id;
-    void *ptr;
-
     EntObjAnimationFileHandle(u32 fileID);
     ~EntObjAnimationFileHandle();
 };
 
 struct EntObjTextureSequenceFileHandle : SharedFilePtr {
-    u32 id;
-    void *ptr;
-
     EntObjTextureSequenceFileHandle(u32 fileID);
     ~EntObjTextureSequenceFileHandle();
 };
@@ -99,21 +95,8 @@ struct EntObjTextureSequenceFileHandle : SharedFilePtr {
  * class type, mwccarm homes the register arguments and the callers grow, so
  * the measured scalar views stay. */
 extern "C" {
-void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *anim, void *file, int numBlendFrames,
-                                                        int flags, int speed,
-                                                        unsigned short startFrame);
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *anim, void *file, int flags, int speed,
-                                                 unsigned short startFrame);
-void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *seq, void *file, int flags, int speed,
-                                                        unsigned short startFrame);
-void _ZN17dExtShadowModel_c9InitModelEP9Matrix4x35Fix12IiES3_S3_j(void *shadow, Matrix4x3 *mat,
-                                                                  int radius, int height, int depth,
-                                                                  unsigned char flags);
-int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    unsigned handle, unsigned id, int x, int y, int z, const Vector3_16 *dir, void *callback);
-void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(int sinFov, int cosFov, int aspect,
-                                                                 int nearZ, int farZ, int scaleW,
-                                                                 bool load, Matrix4x3 *m);
+int d_ent_objNewHold(unsigned handle, unsigned id, int x, int y, int z, const Vector3_16 *dir,
+                     void *callback);
 
 int RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -126,9 +109,7 @@ int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 int func_0201251c(int a, int b, void *pos, int c);
 unsigned int func_02012174(unsigned int a, unsigned int b);
-unsigned int func_02012790(unsigned int sound);
 void func_020167a4(void *model);
-int func_ov075_0211b3d8(void *p);
 long long __aeabi_uidiv(unsigned int n, int d);
 
 extern Matrix4x3 data_020a0e68;
@@ -182,17 +163,6 @@ extern const int sVsPlayerStandingX[4][4] = {{0, 1843200, 1843200, 1843200},
 extern const int sVsPlayerExitX[16] = {0,       1843200, 1843200, 1843200, -204800, 204800,
                                        1843200, 1843200, -368640, 0,       368640,  1843200,
                                        -491520, -163840, 163840,  491520};
-
-extern void *_ZN7fBase_cnwEj(unsigned int size);
-extern void *_ZN7fBase_cC2Ev(void *p);
-extern void _ZN8Particle10SysTrackerC1Ev(void *p);
-extern void *_ZN5ModelC1Ev(void *p);
-extern void *_ZN9ModelAnimC1Ev(void *p);
-extern void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,
-                           void (*ctor)(void *), void (*dtor)(void *));
-extern void *data_0208e4b8;
-extern UnknownVsPlayer *_ZN15UnknownVsPlayerD1Ev(UnknownVsPlayer *object);
-extern UnknownVsPlayer *_ZN15UnknownVsPlayerC1Ev(UnknownVsPlayer *object);
 }
 
 /* A pointer-to-member row: the two per-figure state tables are arrays of
@@ -244,8 +214,7 @@ UnknownVsPlayer::~UnknownVsPlayer() {}
 // @symbol _ZN15UnknownVsPlayer19func_ov075_02114010Ev
 void UnknownVsPlayer::func_ov075_02114010() {
     if (mSpeed < mMaxSpeed / 2) {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d424.ptr,
-                                                           4, 0, 0x1000, 0);
+        mModel.SetAnim(*(BCA_File *)data_ov075_0211d424.filePtr, 4, 0, 0x1000, 0);
         mAnimState = ANIM_SLOW_GAIT;
     }
     mModel.speed = cstd::fdiv(mSpeed, mMaxSpeed) + 0x1000;
@@ -263,8 +232,7 @@ void UnknownVsPlayer::func_ov075_02114010() {
 // @symbol _ZN15UnknownVsPlayer19func_ov075_021140e4Ev
 void UnknownVsPlayer::func_ov075_021140e4() {
     if (mSpeed >= mMaxSpeed / 2) {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d42c.ptr,
-                                                           4, 0, 0x1000, 0);
+        mModel.SetAnim(*(BCA_File *)data_ov075_0211d42c.filePtr, 4, 0, 0x1000, 0);
         mAnimState = ANIM_FAST_GAIT;
     }
     mModel.speed = cstd::fdiv(mSpeed, mMaxSpeed) + 0x1000;
@@ -284,8 +252,7 @@ int UnknownVsPlayer::func_ov075_021141b8() {
     int finished = mModel.Finished();
     if (!finished)
         return finished;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d3ec.ptr, 4,
-                                                       0, 0x1000, 0);
+    mModel.SetAnim(*(BCA_File *)data_ov075_0211d3ec.filePtr, 4, 0, 0x1000, 0);
     mAnimState = ANIM_NONE;
     return 0;
 }
@@ -297,8 +264,7 @@ int UnknownVsPlayer::func_ov075_02114218() {
     int finished = mModel.Finished();
     if (!finished)
         return finished;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d3a4.ptr, 4,
-                                                       0x40000000, 0x1000, 0);
+    mModel.SetAnim(*(BCA_File *)data_ov075_0211d3a4.filePtr, 4, 0x40000000, 0x1000, 0);
     mAnimState = ANIM_WAIT_FOR_IDLE;
     return 3;
 }
@@ -332,8 +298,9 @@ void UnknownVsPlayer::func_ov075_02114300() {
     MulVec3Mat4x3(&bone->t, &mModel.mat4x3, &pos);
     Vec3_MulScalarInPlace(&pos, 0x8000);
     pos.y += 0x28000;
-    mParticleHandle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        mParticleHandle, 0x140, pos.x, pos.y, pos.z, (Vector3_16 *)0, (void *)0);
+    mParticleHandle = Particle::System::New(mParticleHandle, 0x140, pos.x, pos.y, pos.z,
+                                            (const Vector3_16f *)((Vector3_16 *)0),
+                                            (Particle::Callback *)((void *)0));
 }
 
 /* Movement state 8: frame 0x14 of the animation comes round twice; the
@@ -364,20 +331,18 @@ void UnknownVsPlayer::func_ov075_021143e4() {
             data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 6];
     }
     if (data_0209b2f0[mPlayerNo] != 0) {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d3ac.ptr,
-                                                           0, 0, 0x1000, 0);
-        textureFile = (void *)data_ov075_0211d40c.ptr;
+        mModel.SetAnim(*(BCA_File *)data_ov075_0211d3ac.filePtr, 0, 0, 0x1000, 0);
+        textureFile = (void *)data_ov075_0211d40c.filePtr;
         mMoveState = MOVE_WAIT_FOR_POSE_SOUND;
     } else {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
-            &mModel, (void *)(data_ov075_0211c688[data_ov075_0211d380 & 3])[1], 0, 0, 0x1000, 0);
-        textureFile = (void *)data_ov075_0211d3dc.ptr;
+        mModel.SetAnim(*(BCA_File *)((data_ov075_0211c688[data_ov075_0211d380 & 3])[1]), 0, 0,
+                       0x1000, 0);
+        textureFile = (void *)data_ov075_0211d3dc.filePtr;
         mMoveState = MOVE_POSE_PARTICLES;
         data_ov075_0211d380 >>= 2;
     }
-    TextureSequence::Prepare(*(BMD_File *)data_ov075_0211d3c4.ptr, *(BTP_File *)textureFile);
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, textureFile, 0, 0x1000,
-                                                       0);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov075_0211d3c4.filePtr, *(BTP_File *)textureFile);
+    mTextureSequence.SetFile(*(BTP_File *)textureFile, 0, 0x1000, 0);
     {
         unsigned int randomValue = (unsigned int)RandomIntInternal(&data_0209e650);
         int frameCount = mModel.GetFrameCount();
@@ -396,8 +361,7 @@ void UnknownVsPlayer::func_ov075_02114560() {
     if (mPosition.z < sVsPlayerTakeoffZ[mPlayerNo] && mInAir == 0) {
         mVertSpeed = 0x2a000;
         mInAir = 1;
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d41c.ptr,
-                                                           4, 0x40000000, 0x1000, 0);
+        mModel.SetAnim(*(BCA_File *)data_ov075_0211d41c.filePtr, 4, 0x40000000, 0x1000, 0);
         mAnimState = ANIM_NONE;
     }
 
@@ -491,8 +455,7 @@ void UnknownVsPlayer::func_ov075_02114890() {}
 void UnknownVsPlayer::func_ov075_02114894() {
     mSpeed = 0;
     mVertSpeed = 0;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d424.ptr, 4,
-                                                       0, 0x1000, 0);
+    mModel.SetAnim(*(BCA_File *)data_ov075_0211d424.filePtr, 4, 0, 0x1000, 0);
     mMoveState = MOVE_RUN_OFF_STAGE;
     mAnimState = ANIM_SLOW_GAIT;
     mInAir = 0;
@@ -508,8 +471,7 @@ int UnknownVsPlayer::func_ov075_021148f0() {
  * (movement state 2). */
 // @symbol _ZN15UnknownVsPlayer19func_ov075_02114904Ei
 void UnknownVsPlayer::func_ov075_02114904(int exitX) {
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d384.ptr, 8,
-                                                       0x40000000, 0x1000, 0);
+    mModel.SetAnim(*(BCA_File *)data_ov075_0211d384.filePtr, 8, 0x40000000, 0x1000, 0);
     mWaitTimer = (((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) + 0x1e) & 0xf;
     mExitPos.x = exitX;
     mExitPos.y = 0;
@@ -521,8 +483,7 @@ void UnknownVsPlayer::func_ov075_02114904(int exitX) {
 /* The selected figure's one-shot, followed by animation state 3. */
 // @symbol _ZN15UnknownVsPlayer19func_ov075_02114988Ev
 int UnknownVsPlayer::func_ov075_02114988() {
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d3a4.ptr, 8,
-                                                       0x40000000, 0x1000, 0);
+    mModel.SetAnim(*(BCA_File *)data_ov075_0211d3a4.filePtr, 8, 0x40000000, 0x1000, 0);
     mAnimState = ANIM_WAIT_FOR_IDLE;
     return 3;
 }
@@ -539,8 +500,7 @@ void UnknownVsPlayer::func_ov075_021149d0(int targetX) {
         mSpeed = -0x8000;
     mMoveState = MOVE_TO_SLOT;
     mAnimState = ANIM_WALK_SOUNDS;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d42c.ptr, 4,
-                                                       0, 0x1000, 0);
+    mModel.SetAnim(*(BCA_File *)data_ov075_0211d42c.filePtr, 4, 0, 0x1000, 0);
     mModel.speed = 0x1000;
 }
 
@@ -554,8 +514,7 @@ int UnknownVsPlayer::func_ov075_02114a58() {
 // @symbol _ZN15UnknownVsPlayer19func_ov075_02114a6cEv
 int UnknownVsPlayer::func_ov075_02114a6c() {
     unsigned char playerNo = mPlayerNo;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
-        &mModel, (void *)data_ov075_0211c678[playerNo][1], 4, 0, 0x1000, 0);
+    mModel.SetAnim(*(BCA_File *)(data_ov075_0211c678[playerNo][1]), 4, 0, 0x1000, 0);
     mModel.speed = 0x1000;
     mMoveState = MOVE_IDLE;
     mAnimState = ANIM_NONE;
@@ -650,8 +609,8 @@ void UnknownVsPlayer::func_ov075_02114be4() {
             *(int *)(mat + 0x20) = mMaterialColor;
             mat += sizeof(BMD_Material);
         }
-        mModel.Model::Render(0);
-        ModelAnim *animation = &mAnimation;
+        mModel.dExtSimpleModel_c::Render(0);
+        dExtAnmModel_c *animation = &mAnimation;
         animation->Virtual10(components->transforms[15]);
     }
 
@@ -668,7 +627,7 @@ void UnknownVsPlayer::func_ov075_02114be4() {
         }
     }
 
-    mAnimation.Model::Render(0);
+    mAnimation.dExtSimpleModel_c::Render(0);
     mTextureSequence.Update(mAnimation.data);
 }
 
@@ -685,8 +644,7 @@ void UnknownVsPlayer::func_ov075_02114cd8() {
     (this->*data_ov075_0211d53c[mAnimState].state)();
     mModel.Advance();
     mTextureSequence.Advance();
-    _ZN17dExtShadowModel_c9InitModelEP9Matrix4x35Fix12IiES3_S3_j(&mShadow, &mModel.mat4x3, 0x50000,
-                                                                 0x1f4000, 0x50000, 0xf);
+    mShadow.InitModel(&mModel.mat4x3, 0x50000, 0x1f4000, 0x50000, 0xf);
 }
 
 // @symbol _ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi
@@ -697,27 +655,23 @@ void UnknownVsPlayer::func_ov075_02114cd8() {
 int UnknownVsPlayer::func_ov075_02114ddc(unsigned char kind, unsigned char playerNo, int x) {
     void *textureFile;
 
-    mModel.SetFile((BMD_File *)data_ov075_0211d404.ptr, 1, 1);
+    mModel.SetFile((BMD_File *)data_ov075_0211d404.filePtr, 1, 1);
     mMaterialColor = *(int *)((char *)mModel.data.materials + 0x20) + (playerNo << 1);
-    mAnimation.SetFile((BMD_File *)data_ov075_0211d3c4.ptr, 1, 1);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mAnimation, (void *)data_ov075_0211d414.ptr, 0,
-                                                0x1000, 0);
+    mAnimation.SetFile((BMD_File *)data_ov075_0211d3c4.filePtr, 1, 1);
+    mAnimation.SetAnim((BCA_File *)((void *)data_ov075_0211d414.filePtr), 0, 0x1000, 0);
 
     if (kind == 0 || kind == 2) {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
-            &mModel, (void *)data_ov075_0211c678[playerNo][1], 0, 0, 0x1000, 0);
-        textureFile = (void *)data_ov075_0211d40c.ptr;
+        mModel.SetAnim(*(BCA_File *)(data_ov075_0211c678[playerNo][1]), 0, 0, 0x1000, 0);
+        textureFile = (void *)data_ov075_0211d40c.filePtr;
         mMoveState = MOVE_IDLE;
     } else {
-        _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&mModel, (void *)data_ov075_0211d3ac.ptr,
-                                                           0, 0, 0x1000, 0);
-        textureFile = (void *)data_ov075_0211d40c.ptr;
+        mModel.SetAnim(*(BCA_File *)data_ov075_0211d3ac.filePtr, 0, 0, 0x1000, 0);
+        textureFile = (void *)data_ov075_0211d40c.filePtr;
         mMoveState = MOVE_CHOOSE_POSE;
     }
 
-    TextureSequence::Prepare(*(BMD_File *)data_ov075_0211d3c4.ptr, *(BTP_File *)textureFile);
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, textureFile, 0, 0x1000,
-                                                       0);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov075_0211d3c4.filePtr, *(BTP_File *)textureFile);
+    mTextureSequence.SetFile(*(BTP_File *)textureFile, 0, 0x1000, 0);
 
     {
         unsigned randomValue = (unsigned)RandomIntInternal(&data_0209e650);
@@ -835,7 +789,7 @@ void dEntObj_c::func_ov075_021151b4(int playerNo) {
     markerPosition.y += 0x32000;
     Vec3_Asr(&renderPosition, &markerPosition, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, renderPosition.x, renderPosition.y, renderPosition.z);
-    *(MatrixCopyWords *)&mModelAnim.mat4x3 = *(MatrixCopyWords *)&data_020a0e68;
+    *(MatrixCopyWords *)&mAnmModel.mat4x3 = *(MatrixCopyWords *)&data_020a0e68;
 }
 
 // @symbol _ZN9dEntObj_c19func_ov075_0211524cEi
@@ -877,18 +831,14 @@ int dEntObj_c::func_ov075_02115290(int playerNo) {
 /* Rebuild the projection and the view from the camera eye and target. */
 void dEntObj_c::func_ov075_021152d4() {
     Matrix4x3 view;
-    _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(
-        data_02082614[0xa], data_02082614[0xb], 0x1555, 0x1000, 0x1388000, 0x1000, true,
-        (Matrix4x3 *)0);
+    G3i::PerspectiveW_(data_02082614[0xa], data_02082614[0xb], 0x1555, 0x1000, 0x1388000, 0x1000,
+                       true, (Matrix4x3 *)0);
     G3i::LookAt_((Vector3 *)&mCamPosX, (Vector3 *)&data_ov075_0211c660, (Vector3 *)&mCamTargetX,
                  true, &view);
     CopyToViewMat(&view);
     data_0209f43c.Func_020156DC(0x1555, 0x105b, 0x1000, 0x1388000);
 }
 
-/* -------------------------------------------------------------------------- */
-/* 0x02115388 _ZN9dEntObj_c16CleanupResourcesEv                               */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9dEntObj_c16CleanupResourcesEv
 int dEntObj_c::CleanupResources() {
     CleanCommonModelDataArr();
@@ -919,13 +869,10 @@ int dEntObj_c::CleanupResources() {
         data_ov075_0211d3bc.Release();
         data_ov075_0211d3e4.Release();
     }
-    func_ov075_0211b3b8(&unk_e80);
+    mMesh.Destroy();
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* 0x021154cc _ZN9dEntObj_c6RenderEv                                          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9dEntObj_c6RenderEv
 int dEntObj_c::Render() {
     mModel.Render(0);
@@ -939,16 +886,13 @@ int dEntObj_c::Render() {
         player++;
     } while (i < 4);
     if (mAnimActive) {
-        mModelAnim.Render(0);
+        mAnmModel.Render(0);
     }
-    func_ov075_0211b3d8(&unk_e80);
+    mMesh.Render();
     Particle::RenderAll();
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* 0x0211555c _ZN9dEntObj_c8BehaviorEv                                        */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9dEntObj_c8BehaviorEv
 int dEntObj_c::Behavior() {
     if (mSuspended == 0) {
@@ -966,11 +910,11 @@ int dEntObj_c::Behavior() {
             player->func_ov075_02114cd8();
             if (((dEntObj_c *)walk)->mPlayers[0].mFellOffThisFrame) {
                 Vector3 *playerPosition = &player->mPosition;
-                int position[3];
-                position[0] = playerPosition->x;
-                position[1] = playerPosition->y;
-                position[2] = playerPosition->z;
-                func_ov075_0211ab38(&unk_e80, position);
+                Vector3 position;
+                position.x = playerPosition->x;
+                position.y = playerPosition->y;
+                position.z = playerPosition->z;
+                mMesh.TouchAt(&position);
             }
             if (*present) {
                 if (player->func_ov075_021148f0() == 0)
@@ -998,16 +942,13 @@ int dEntObj_c::Behavior() {
         if (mAnimActive) {
             int localPlayer = func_0203da9c();
             func_ov075_021151b4(localPlayer);
-            mModelAnim.Advance();
+            mAnmModel.Advance();
         }
-        func_ov075_0211b418(&unk_e80);
+        mMesh.Behavior();
     }
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* 0x021156e0 _ZN9dEntObj_c13InitResourcesEv                                  */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9dEntObj_c13InitResourcesEv
 int dEntObj_c::InitResources() {
     int i;
@@ -1015,13 +956,13 @@ int dEntObj_c::InitResources() {
     UnknownVsPlayer *player;
 
     InitialiseVramGlobals();
-    Model::LoadFile(data_ov075_0211d3fc);
+    dExtSimpleModel_c::LoadFile(data_ov075_0211d3fc);
     if (param1 != 1) {
-        Model::LoadFile(data_ov075_0211d3bc);
+        dExtSimpleModel_c::LoadFile(data_ov075_0211d3bc);
         dExtFrameCtrl_c::LoadFile(data_ov075_0211d3e4);
     }
-    Model::LoadFile(data_ov075_0211d404);
-    Model::LoadFile(data_ov075_0211d3c4);
+    dExtSimpleModel_c::LoadFile(data_ov075_0211d404);
+    dExtSimpleModel_c::LoadFile(data_ov075_0211d3c4);
     dExtFrameCtrl_c::LoadFile(data_ov075_0211d414);
 
     if (param1 != 1) {
@@ -1040,28 +981,27 @@ int dEntObj_c::InitResources() {
         dExtFrameCtrl_c::LoadFile(data_ov075_0211d3b4);
         dExtFrameCtrl_c::LoadFile(data_ov075_0211d3f4);
         dExtFrameCtrl_c::LoadFile(data_ov075_0211d38c);
-        TextureSequence::LoadFile(data_ov075_0211d3dc);
+        dExtAnmTexPat_c::LoadFile(data_ov075_0211d3dc);
     }
 
-    TextureSequence::LoadFile(data_ov075_0211d40c);
+    dExtAnmTexPat_c::LoadFile(data_ov075_0211d40c);
 
-    _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
+    G3X::SetFog(false, 0, 2, 0x1000);
     dExtShadowModel_c::CleanAll();
 
-    mModel.SetFile((BMD_File *)data_ov075_0211d3fc.ptr, 1, -1);
+    mModel.SetFile((BMD_File *)data_ov075_0211d3fc.filePtr, 1, -1);
 
     func_0203c178(&data_020a0e68, 0x7d000, 0x7d000, 0x7d000);
-    /* 0x888 is +0x1c inside the Model at 0x86c -- its mat4x3. The cartridge's own
+    /* 0x888 is +0x1c inside the dExtSimpleModel_c at 0x86c -- its mat4x3. The cartridge's own
        ~dEntObj_c proves the extent; see tools/dtor_members.py. */
     *(MatrixCopyWords *)((char *)&mModel.mat4x3) = *(MatrixCopyWords *)&data_020a0e68;
 
     if (param1 != 1) {
-        mModelAnim.SetFile((BMD_File *)data_ov075_0211d3bc.ptr, 1, -1);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (void *)data_ov075_0211d3e4.ptr, 0,
-                                                    0x1000, 0);
+        mAnmModel.SetFile((BMD_File *)data_ov075_0211d3bc.filePtr, 1, -1);
+        mAnmModel.SetAnim((BCA_File *)((void *)data_ov075_0211d3e4.filePtr), 0, 0x1000, 0);
     }
 
-    func_ov075_0211b458((char *)&unk_e80, (int *)&data_ov075_0211c654, 0);
+    mMesh.Init((Vector3 *)&data_ov075_0211c654, 0);
     mParticles.Initialise();
 
     player = mPlayers;
@@ -1113,19 +1053,7 @@ int dEntObj_c::InitResources() {
  * boundary. */
 // @symbol dEntObj_c_classInit
 extern "C" dEntObj_c *dEntObj_c_classInit(void) {
-    dEntObj_c *p = (dEntObj_c *)_ZN7fBase_cnwEj(sizeof(dEntObj_c));
-    if (p) {
-        _ZN7fBase_cC2Ev(p);
-        *(void **)p = &data_0208e4b8;
-        *(void **)p = _ZTV9dEntObj_c + 2;
-        _ZN8Particle10SysTrackerC1Ev(&p->mParticles);
-        _ZN5ModelC1Ev(&p->mModel);
-        _ZN9ModelAnimC1Ev(&p->mModelAnim);
-        __cxa_vec_ctor(p->mPlayers, 4, sizeof(UnknownVsPlayer),
-                       (void (*)(void *))_ZN15UnknownVsPlayerC1Ev,
-                       (void (*)(void *))_ZN15UnknownVsPlayerD1Ev);
-    }
-    return p;
+    return new dEntObj_c;
 }
 
 /* -------------------------------------------------------------------------- */

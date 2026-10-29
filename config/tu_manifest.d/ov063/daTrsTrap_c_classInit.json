@@ -3,7 +3,7 @@
   "boundary_evidence": [
     "contiguous linker run: 0x0211d270..0x0211d3a0, 6 function(s) -- the whole tools/tu_map.py unit: the collision-callback pair func_ov063_0211d270 / func_ov063_0211d28c, then the four factories. Below it the method TU (entry ov063/daTrsTrap_c) ends with InitResources at 0x0211d270; above it daObjTh_Fall_Block_c opens at 0x0211d3a0.",
     "The callback pair is daTrsTrap_c's: InitResources stores func_ov063_0211d28c as mMovingMeshCollider's callback word (via func_020393c4), 0211d28c forwards its second and third arguments to 0211d270, and 0211d270 writes daTrsTrap_c::mStandingActor (0x124) when the colliding actor's actorID is 0xbf. Nothing places it in another TU.",
-    "All four factory bodies are the same construction sequence (operator new(852), dActor_c C2, vtable store, Model C1, dBgW_KcMbg C1) differing only in branch offsets, which is what proves four spawn profiles of the one ROM-_ZTS class daTrsTrap_c."
+    "All four factory bodies are the same construction sequence (operator new(852), dActor_c C2, vtable store, dExtSimpleModel_c C1, dBgW_KcMbg C1) differing only in branch offsets, which is what proves four spawn profiles of the one ROM-_ZTS class daTrsTrap_c."
   ],
   "bss": [],
   "compiler_only_output": [
@@ -28,14 +28,14 @@
       "legacy_source": "src/unnamed/ov063/func_ov063_0211d270.cpp",
       "ordinal": 0,
       "size": "0x0000001c",
-      "symbol": "func_ov063_0211d270"
+      "symbol": "_ZN11daTrsTrap_c18LatchStandingActorEP8dActor_c"
     },
     {
       "address": "0x0211d28c",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211d28c.c",
       "ordinal": 1,
       "size": "0x00000014",
-      "symbol": "func_ov063_0211d28c"
+      "symbol": "_ZN11daTrsTrap_c15OnMeshClsnTouchEP4dBgWPS_P8dActor_c"
     },
     {
       "address": "0x0211d2a0",

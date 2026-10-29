@@ -65,35 +65,16 @@ countdown block. Where a row cites "Behavior" that is the file meant.
   stores its `kind` argument and then passes it as the rotation to
   `Vec3_RotateYAndTranslate`). Three lifetimes, no common meaning; a single name
   would be a claim none of the three supports.
-- **0x716, 0x717, 0x726** -- every matched site *writes* them (`ChangeState`
-  clears, various `St_*_Init` set). Nothing in matched code reads them, so there
-  is no evidence of what they gate.
-- **0x6ac, 0x6b2, 0x6b6, 0x6ba, 0x6bc, 0x6c2, 0x6c4** -- countdown timers whose
-  only matched site is Behavior's `DecIfAbove0_Short` block. Their shape is
-  witnessed (`u16`, decrement-to-zero); their owner is not, because nothing
-  matched arms them. `0x6be` and `0x6c2` additionally fire one unnamed helper at
-  zero, which is not enough to name either.
-- **0x744..0x74c and 0x750..0x758** -- two `Vector3`s, already documented in the
-  header. 0x750 is the anchor and 0x744 the point `Vec3_RotateYAndTranslate`
-  derives from it (`TryEnterStarDoor`, `ShowMessage2`, `JumpIntoBooCage`), but
-  what the pair *means* is not settled, so the widths stay and the names do not.
-- **0x760, 0x762, 0x764, 0x766** -- four `s16`s that `ApproachLinear2` decays
-  toward 0 (`St_YoshiPower_Main`, `St_Talk_Main`) and that `St_Shell_Main` and
-  `St_Land_Main` set to 0x1000 / 0x4000. Almost certainly a render tilt/squash
-  group, but no matched body consumes them, so "almost certainly" is where it
-  stops.
-- **0x64c, 0x650** -- both seeded to the sentinel 0x80000000 by `InitResources`
-  and compared against `mPosY` with different slacks (`- 0xc8000` in
-  `St_Swim_Main`, `- 0x64000` in `St_Wait_Init`). Y thresholds of some kind;
-  which surface they record is not witnessed.
-- **0x578, 0x57c** -- `InitResources` allocates a 0x32-element container with a
-  0xc stride and `Vector3::~Vector3` as the element destructor at 0x578, and a
-  bare 0x32-byte block at 0x57c; `CleanupResources` frees both. Fifty `Vector3`s
-  plus fifty bytes is suggestive of a position trail, but nothing matched reads
-  either back.
-- **0x6f4, 0x6ee, 0x742, 0x722..0x728, 0x743** -- state-local scratch in
-  `St_YoshiPower_*`, `St_Talk_*` and `St_Wait_Cleanup` with writes but no
-  witnessed consumer.
+- **0x726** -- every matched site *writes* it (`ChangeState` clears, various
+  `St_*_Init` set). Nothing in matched code reads it, so there is no evidence of
+  what it gates.
+- **0x6ee, 0x722..0x725** -- state-local scratch in `St_YoshiPower_*`,
+  `St_Talk_*` and `St_Wait_Cleanup` with writes but no witnessed consumer.
+- **Since named.** This list once also held 0x716/0x717, the `u16` countdowns
+  0x6ac..0x6c4, the 0x744/0x750 vectors, the 0x75c..0x766 rotations, 0x64c/0x650,
+  0x578/0x57c, 0x6f4, 0x727/0x728, 0x742 and 0x743. Later passes found readers
+  or arming sites for each; the evidence is in the `include/Player.h` comments
+  beside the names, not repeated here.
 - **0x0e0, 0x0ec, 0x154, 0x158, 0x160, 0x27c, 0x28c** -- these are not scalars at
   all. `CleanupResources` walks them as arrays (`this + i*4 + 0xdc`,
   `+ 0x154`, `+ 0x27c`, `+ 0x28c` for `i < 4`, plus `i + 4` for the 0x154 and
@@ -116,24 +97,24 @@ Four runs, and each one's length is pinned by two independent witnesses -- the
 
 | offset | declaration | length is pinned by |
 | --- | --- | --- |
-| 0x0dc | `ModelAnim *mBodyModels[4]` | `CleanupResources` `i < 4`; closes at 0x0ec, the standalone pointer that was already there |
-| 0x154 | `ModelAnim *unk_154[8]` | `CleanupResources` `i < 4` **and** `i + 4`; closes exactly at `mModelAnim4` (0x174) |
+| 0x0dc | `dExtAnmModel_c *mBodyModels[4]` | `CleanupResources` `i < 4`; closes at 0x0ec, the standalone pointer that was already there |
+| 0x154 | `dExtAnmModel_c *unk_154[8]` | `CleanupResources` `i < 4` **and** `i + 4`; closes exactly at `mModelAnim4` (0x174) |
 | 0x27c | `s32 unk_27c[4]` | `i < 4`; closes exactly at 0x28c |
 | 0x28c | `s32 unk_28c[8]` | `i < 4` **and** `i + 4`; closes exactly at `mShadowModel` (0x2ac) |
 
-The element type of the two model runs is `ModelAnim`, and the matched bodies pin
-every part of that claim rather than just the size: they reach `+0x08` (Model's
-`ModelComponents`, handed to `TextureSequence::Update`), `+0x14` (`Model::mat4x3`),
+The element type of the two model runs is `dExtAnmModel_c`, and the matched bodies pin
+every part of that claim rather than just the size: they reach `+0x08` (dExtSimpleModel_c's
+`ModelComponents`, handed to `dExtAnmTexPat_c::Update`), `+0x14` (`dExtSimpleModel_c::mat4x3`),
 `+0x50` (the `Animation` base, handed to `Animation::Advance`) and `+0x58` (that
-base's `currFrame`); they call `Model::SetPolygonMode` and `Model::Render` on the
+base's `currFrame`); they call `dExtSimpleModel_c::SetPolygonMode` and `dExtSimpleModel_c::Render` on the
 same pointer; and they call vtable slots `+0x14` and `+0x18`, which in
-`_ZTV9ModelAnim` are `Render` and `Virtual18`. `CleanupResources` calls slot 1 --
+`_ZTV14dExtAnmModel_c` are `Render` and `Virtual18`. `CleanupResources` calls slot 1 --
 the deleting destructor -- on each element.
 
 The two `s32` runs are parallel to the model runs, one word per model, and that
 pairing is witnessed rather than inferred: `TurnOffToonShading` passes
 `unk_27c[j]` with `mBodyModels[...]`, `unk_28c[j]` with `unk_154[j]` and
-`unk_28c[j + 4]` with `unk_154[j + 4]`, all three to [func_ov002_020e6b74](../src/unnamed/ov002/func_ov002_020e6b74.c), which
+`unk_28c[j + 4]` with `unk_154[j + 4]`, all three to [func_ov002_020e6b74](../src/game/player/Player.cpp), which
 walks the model's material records writing one word of the array into each
 record's `+0x1c`. So each element is an allocated per-material word buffer owned
 by the model at the same index -- `CleanupResources` frees them with
@@ -164,9 +145,9 @@ Two sites were deliberately NOT collapsed:
   the "When a rename stops being byte-neutral" section) and `&mBodyModels` still
   compiles unchanged against the array, so it was left exactly as it was.
 - 0x0ec and 0x1d8 stay scalars. `CleanupResources` destroys them in their own
-  block, outside the `i < 4` loop, and they sit one on each side of a `ModelAnim`
+  block, outside the `i < 4` loop, and they sit one on each side of a `dExtAnmModel_c`
   member (`mModelAnim3` at 0x0f0, `mModelAnim4` at 0x174) rather than inside a run.
-  Both are `ModelAnim *` by the same slot-1/slot-5 evidence, but neither is part
+  Both are `dExtAnmModel_c *` by the same slot-1/slot-5 evidence, but neither is part
   of an array and neither was retyped this pass.
 
 `build/eligible-names.txt` is byte-identical across the whole change (11,065
@@ -289,7 +270,7 @@ daKpa_c decisively, and they read almost all of it. Named from that evidence:
 | 0x3fc | `mTimer` | incremented as a `u16`, tested `== 0`, and `& 1` for alternate-frame work. |
 | 0x40c | `mState` | assigned 0, 1, 5, 0xd and 0x13 by different state handlers and compared against 4. An enum-like state word, distinct from the pmf index at 0x410. |
 | 0x414 | `mVariantID` | `param1 & 3`, wrapped by `if (== 3) = 0`, then used to index [data_ov060_02119264](../config/arm9/overlays/ov060/symbols.txt) for the byte at 0x41e. A variant selector that picks per-instance configuration -- which is exactly the part the old note called a guess. |
-| 0x41c | `mOpacity` | the missing `0xff` exists: [func_ov060_021123dc](../src/game/actors/d_a_kpa.cpp) writes `0xff` here and to 0x41d, and [func_ov060_02112434](../src/game/actors/d_a_kpa.cpp) steps 0x41c toward 0x41d by 0x14 a frame, clamping at 0xff and 0, while another handler passes `*(u8 *)(this + 0x41c) >> 3` to `ModelBase::ApplyOpacity` -- 0..255 scaled to the DS's 5-bit alpha. `Render`'s `< 8` early-out is the invisible case. |
+| 0x41c | `mOpacity` | the missing `0xff` exists: [func_ov060_021123dc](../src/game/actors/d_a_kpa.cpp) writes `0xff` here and to 0x41d, and [func_ov060_02112434](../src/game/actors/d_a_kpa.cpp) steps 0x41c toward 0x41d by 0x14 a frame, clamping at 0xff and 0, while another handler passes `*(u8 *)(this + 0x41c) >> 3` to `dExtModel_c::ApplyOpacity` -- 0..255 scaled to the DS's 5-bit alpha. `Render`'s `< 8` early-out is the invisible case. |
 | 0x424 | `mTalkStep` | `switch` on it: case 0 calls `Player::StartTalk`, case 1 waits for `Player::GetTalkState() == 0` then `Player::ShowMessage`, each case incrementing it. |
 | 0x426 | `mDropsShadow` | gates the `dBgCh_Gnd` raycast that projects daKpa_c onto the ground and writes the shadow matrix at 0x330 -- the same role `daKpaFire_c::mDropsShadow` was named for. |
 | 0x427 | `mBounceOnLand` | while set, `dBgCh_Actr::JustHitGround()` reflects the vertical speed at -60% (clamped to 0x14000); cleared once he settles. |

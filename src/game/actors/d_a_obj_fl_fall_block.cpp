@@ -4,7 +4,7 @@
  *
  * No fields. InitResources / CleanupResources hand this overlay's
  * model, KCL, and CLPS to the shared ov098 helpers.
- * daObjFallBlock_c_InitResources loads the model with Model::LoadFile,
+ * InitResourcesFrom loads the model with dExtSimpleModel_c::LoadFile,
  * the KCL with dBgW_Kc::LoadFile, and the CLPS into SetFile. The ov022
  * sinit constructs those SharedFilePtrs as file IDs 1529 and 1530.
  *
@@ -13,8 +13,8 @@
  * that spelling.
  *
  */
-/* leftovers: CleanupResources stays a call to func_ov098_0213a2cc.
- * Retail 0x02112434 is 0x14 bytes and only loads that symbol plus
+/* CleanupResources is a call to CleanupResourcesFrom. Retail
+ * 0x02112434 is 0x14 bytes and only loads that symbol plus
  * data_ov022_0211427c. The callee calls dBgW::IsEnabled and
  * dBgW::Disable on mMeshCollider, then SharedFilePtr::Release on the
  * model and KCL slots. Those three calls are the body in ov098, not
@@ -35,15 +35,11 @@ struct CLPS_Block;
  * handle constructors and destructors are the ROM resource-family
  * functions, aliased in the manifest. */
 struct FallBlockModelFile : SharedFilePtr {
-    u32 words[2];
-
     FallBlockModelFile(u32 fileID);
     ~FallBlockModelFile();
 };
 
 struct FallBlockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     FallBlockCollisionFilePtr(u32 fileID);
     ~FallBlockCollisionFilePtr();
 };
@@ -53,31 +49,23 @@ struct ResourceDescriptor {
     SharedFilePtr *collision;
     CLPS_Block *clps;
 };
-typedef char ResourceDescriptor_size_must_be_0x0c[
-    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
-extern "C" {
-int func_ov098_0213a2cc(daObjFl_Fall_Block_c *self, ResourceDescriptor *descriptor);
-int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov022_0211427c;
-}
 
 // @symbol daObjFl_Fall_Block_c_classInit
-extern "C" daObjFl_Fall_Block_c *daObjFl_Fall_Block_c_classInit()
-{
+extern "C" daObjFl_Fall_Block_c *daObjFl_Fall_Block_c_classInit() {
     return new daObjFl_Fall_Block_c();
 }
 
 // @symbol _ZN20daObjFl_Fall_Block_c13InitResourcesEv
-int daObjFl_Fall_Block_c::InitResources()
-{
-    return daObjFallBlock_c_InitResources(this, &data_ov022_0211427c);
+int daObjFl_Fall_Block_c::InitResources() {
+    return InitResourcesFrom(&data_ov022_0211427c);
 }
 
 // @symbol _ZN20daObjFl_Fall_Block_c16CleanupResourcesEv
-int daObjFl_Fall_Block_c::CleanupResources()
-{
-    return func_ov098_0213a2cc(this, &data_ov022_0211427c);
+int daObjFl_Fall_Block_c::CleanupResources() {
+    return CleanupResourcesFrom(&data_ov022_0211427c);
 }
 
 // @symbol _ZN20daObjFl_Fall_Block_cD1Ev

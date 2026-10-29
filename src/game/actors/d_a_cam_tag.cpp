@@ -17,47 +17,40 @@
  * registry). Retail does not store that spelling. Historical alias
  * daCamTag_c_Spawn.
  *
- * deslop
- * Leftover: g_profile_CAMERA_TAG (ov002 0x02108518) stays outside this TU
- *   (S14) -- defining it here would emit .data this entry is not licensed
- *   to own; the ROM supplies it.
- * Leftover: pad_0d0 keeps the sibling spelling (daChRoom_c, daChScene_c,
- *   daBar_c all pad_0d0); no enrolled body touches those bytes.
+ * Notes:
+ * - g_profile_CAMERA_TAG (ov002 0x02108518) stays outside this TU: defining
+ *   it here would emit .data this entry is not licensed to own; the ROM
+ *   supplies it.
+ * - pad_0d0 keeps the sibling spelling (daChRoom_c, daChScene_c, daBar_c
+ *   all pad_0d0); no body touches those bytes.
  */
 
 #include "daCamTag_c.h"
 
 // @symbol daCamTag_c_classInit
-extern "C" daCamTag_c *daCamTag_c_classInit()
-{
+extern "C" daCamTag_c *daCamTag_c_classInit() {
     return new daCamTag_c();
 }
 
 // @symbol _ZN10daCamTag_c13InitResourcesEv
-int daCamTag_c::InitResources()
-{
+int daCamTag_c::InitResources() {
     return 1;
 }
 
 // @symbol _ZN10daCamTag_c8BehaviorEv
-int daCamTag_c::Behavior()
-{
+int daCamTag_c::Behavior() {
     return 1;
 }
 
 // @symbol _ZN10daCamTag_c6RenderEv
-int daCamTag_c::Render()
-{
+int daCamTag_c::Render() {
     return 1;
 }
 
 // @symbol _ZN10daCamTag_c16OnPendingDestroyEv
-void daCamTag_c::OnPendingDestroy()
-{
-}
+void daCamTag_c::OnPendingDestroy() {}
 
 // @symbol _ZN10daCamTag_c16CleanupResourcesEv
-int daCamTag_c::CleanupResources()
-{
+int daCamTag_c::CleanupResources() {
     return 1;
 }

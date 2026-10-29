@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
@@ -12,7 +12,7 @@
  *
  * RTTI ov062:0x0211d9ac is the string 10daHolhei_c. The factory
  * daHolhei_c_classInit allocates 0x438 bytes. Member names below are from
- * this TU's own reads and writes. g_profile_HOLHEI stays outside the TU.
+ * this TU's own reads and writes. d_a_holhei.cpp defines g_profile_HOLHEI.
  */
 
 struct HolheiState;  /* enter / update PMF pair, defined in d_a_holhei.cpp */
@@ -20,7 +20,7 @@ struct HolheiState;  /* enter / update PMF pair, defined in d_a_holhei.cpp */
 struct daHolhei_c : dEnemyBase_c {
     dCcAc_c     mdCc_c;        /* 0x110 */
     dBgCh_Actr  mMeshClsn;     /* 0x144 */
-    ModelAnim   mModel;        /* 0x300 */
+    dExtAnmModel_c mModel;     /* 0x300 */
     /* Current state record. Behavior calls its update PMF, when non-null,
        unless UpdateKillByInvincibleChar has already ended the frame.
        InitResources enters data_ov062_0211dee0 through
@@ -60,7 +60,7 @@ struct daHolhei_c : dEnemyBase_c {
     u8          pad_3f6[2];    /* 0x3f6 */
     /* Actor being held, or the player holding this. +0xc8 on that actor is
        still an unnamed dActor_c gap; Behavior and Render read it raw. */
-    dActor_c   *mHeld;         /* 0x3f8 */
+    Player *mHeld; /* 0x3f8 */
     /* func_ov062_02116e80 builds this from bone 3 and stores its address at
        this+0xc8, the same unnamed gap. */
     Matrix4x3   mHoldMtx;      /* 0x3fc */
@@ -83,11 +83,24 @@ struct daHolhei_c : dEnemyBase_c {
     void OnPendingDestroy();
     int Render();
 
+    int func_ov062_021161a8();
+    int func_ov062_02116238();
+    int func_ov062_02116274();
+    int func_ov062_021162b8();
+    int func_ov062_0211632c();
+    int func_ov062_02116368();
+    int func_ov062_021163b0();
+    int func_ov062_02116498();
     int func_ov062_021164e8();
+    int func_ov062_021165e0();
     int func_ov062_021165e8();
+    int func_ov062_02116784();
     int func_ov062_021167c0();
+    int func_ov062_02116850();
     int func_ov062_02116894();
     int func_ov062_02116980();
+    int func_ov062_02116a08();
+    int func_ov062_02116b80();
     int func_ov062_02116bf8();
     int func_ov062_02116c78();
     void func_ov062_02116d28();

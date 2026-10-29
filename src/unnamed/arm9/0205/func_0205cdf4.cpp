@@ -1,7 +1,11 @@
 //cpp
+
+namespace IRQ {
+unsigned int Disable(void);
+void Restore(unsigned int saved);
+}
 extern "C" {
-extern unsigned int _ZN3IRQ7DisableEv(void);
-extern void _ZN3IRQ7RestoreEj(unsigned int saved);
+
 extern void func_0205c788(char *self, int arg);
 extern void func_0205d8d8(void *node, void *list);
 extern void func_0205cfa4(char *self);
@@ -45,10 +49,10 @@ int func_0205cdf4(char *self, int arg1)
     file->mCommand = arg1;
     file->mResult = 2;
     file->mStat |= 1;
-    saved = _ZN3IRQ7DisableEv();
+    saved = IRQ::Disable();
     if (list->mFlags & 0x80) {
         func_0205c788(self, 3);
-        _ZN3IRQ7RestoreEj(saved);
+        IRQ::Restore(saved);
         return 0;
     }
     if (mask & 0x1fc) {
@@ -57,7 +61,7 @@ int func_0205cdf4(char *self, int arg1)
     func_0205d8d8(self, list->mPending);
     if (!HasBits(list->mFlags, 0x10)) {
         list->mFlags |= 0x10;
-        _ZN3IRQ7RestoreEj(saved);
+        IRQ::Restore(saved);
         if (list->mCallbackMask & 0x200) {
             list->mCallback(self, 9);
         }
@@ -67,13 +71,13 @@ int func_0205cdf4(char *self, int arg1)
         }
     } else {
         if (!HasBits(file->mStat, 4)) {
-            _ZN3IRQ7RestoreEj(saved);
+            IRQ::Restore(saved);
             return 1;
         }
         do {
             OS_SleepThread(file->mQueue);
         } while (self != list->mCurrent);
-        _ZN3IRQ7RestoreEj(saved);
+        IRQ::Restore(saved);
     }
     return func_0205cf5c(self);
 }

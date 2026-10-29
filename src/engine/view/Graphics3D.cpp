@@ -11,11 +11,10 @@
  * leftovers:
  * - data_0209b3ec is the view matrix and data_0209b41c its inverse; both
  *   stay linker names, and neither is claimed here.
- * - G3i::PerspectiveW_ takes Fix12<int> by value, so it is called through
- *   its mangled name.
  */
 #include "common.h"
 #include "G3X.h"
+#include "GX.h"
 
 #define REG_DISP3DCNT (*(volatile u16 *)0x04000060)
 #define REG_MTX_MODE (*(volatile u32 *)0x04000440)
@@ -27,12 +26,6 @@
 #define MTX_MODE_POSITION_VECTOR 2
 #define MTX_MODE_TEXTURE 3
 
-namespace GX {
-
-void SetBankForTex(u16 banks);
-void SetBankForTexPltt(u16 banks);
-
-}
 
 extern "C" {
 extern Matrix4x3 data_0209b3ec; /* the view matrix */
@@ -44,8 +37,13 @@ void func_020554bc(void);
 void func_020556d0(void);
 void func_020557b4(void);
 void func_02045d9c(void);
-void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(int a, int b, int c, int d, int e,
-                                                                 int f, int g, void *h);
+}
+
+struct G3i {
+    static void PerspectiveW_(Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, int, Matrix4x3 *);
+};
+
+extern "C" {
 
 // @symbol Initialise3dGraphics
 // Bring up the geometry engine with the game's default 3D state.
@@ -59,8 +57,7 @@ void Initialise3dGraphics(int arg) {
     REG_DISP3DCNT &= 0xcfdf;
     G3X::SetClearColor(0, arg, 0x7fff, 0x3f, false);
     REG_VIEWPORT = 0xbfff0000;
-    _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(0x579, 0xf09, 0x1555, 0x1000,
-                                                                0x3e8000, 0x1000, 1, 0);
+    G3i::PerspectiveW_(0x579, 0xf09, 0x1555, 0x1000, 0x3e8000, 0x1000, 1, 0);
     REG_MTX_STORE = 0;
     REG_SWAP_BUFFERS = 3;
 }

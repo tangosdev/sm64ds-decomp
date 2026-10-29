@@ -232,28 +232,28 @@
       "ordinal": 29
     },
     {
-      "symbol": "_ZN2GX23SetBankForSubOBJExtPlttEt",
+      "symbol": "_ZN2GX23SetBankForSubOBJExtPlttEi",
       "address": "0x020541f0",
       "size": "0x0000008c",
       "legacy_source": "src/_ZN2GX23SetBankForSubOBJExtPlttEt.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN2GX22SetBankForSubBGExtPlttEt",
+      "symbol": "_ZN2GX22SetBankForSubBGExtPlttEi",
       "address": "0x0205427c",
       "size": "0x0000008c",
       "legacy_source": "src/_ZN2GX22SetBankForSubBGExtPlttEt.cpp",
       "ordinal": 31
     },
     {
-      "symbol": "_ZN2GX16SetBankForSubOBJEt",
+      "symbol": "_ZN2GX16SetBankForSubOBJEi",
       "address": "0x02054308",
       "size": "0x0000007c",
       "legacy_source": "src/_ZN2GX16SetBankForSubOBJEt.cpp",
       "ordinal": 32
     },
     {
-      "symbol": "_ZN2GX15SetBankForSubBGEt",
+      "symbol": "_ZN2GX15SetBankForSubBGEi",
       "address": "0x02054384",
       "size": "0x000000ac",
       "legacy_source": "src/_ZN2GX15SetBankForSubBGEt.cpp",
@@ -267,14 +267,14 @@
       "ordinal": 34
     },
     {
-      "symbol": "_ZN2GX17SetBankForTexPlttEt",
+      "symbol": "_ZN2GX17SetBankForTexPlttEi",
       "address": "0x02054450",
       "size": "0x000000f4",
       "legacy_source": "src/_ZN2GX17SetBankForTexPlttEt.cpp",
       "ordinal": 35
     },
     {
-      "symbol": "_ZN2GX13SetBankForTexEt",
+      "symbol": "_ZN2GX13SetBankForTexEi",
       "address": "0x02054544",
       "size": "0x00000204",
       "legacy_source": "src/_ZN2GX13SetBankForTexEt.cpp",
@@ -288,14 +288,14 @@
       "ordinal": 37
     },
     {
-      "symbol": "_ZN2GX13SetBankForOBJEt",
+      "symbol": "_ZN2GX13SetBankForOBJEi",
       "address": "0x0205485c",
       "size": "0x0000016c",
       "legacy_source": "src/_ZN2GX13SetBankForOBJEt.cpp",
       "ordinal": 38
     },
     {
-      "symbol": "_ZN2GX12SetBankForBGEt",
+      "symbol": "_ZN2GX12SetBankForBGEi",
       "address": "0x020549c8",
       "size": "0x000002b8",
       "legacy_source": "src/_ZN2GX12SetBankForBGEt.cpp",

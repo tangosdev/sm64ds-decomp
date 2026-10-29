@@ -1,14 +1,17 @@
 //cpp
+struct Vector3_16f;
+namespace Particle {
+struct Callback;
+struct System {
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
 /* daMip_c -- MIPS the rabbit (MIP). ov085.
  *
  * defer_codegen off lays .text down in source order. The destructor
  * is the key function: the cartridge has D1 below D0 and no D2.
  *
  * leftovers:
- * - ModelAnim::SetAnim, dCcAc_c::Init, dBgCh_Actr::Init,
- *   DropShadowRadHeight, Sound::PlaySub and Particle::System::New
- *   stay mangled. They take Fix12 by value. dBgCh_Actr::Init's
- *   header spells Fix12i, which mangles as int.
  * - g_profile_MIP stays outside this TU. The file handles, the eight
  *   state records, the carry offsets and the rabbit-count int are
  *   the folded sinit objects at the end of this file.
@@ -19,15 +22,14 @@
  *   detect[12].
  * - Render stores the colour at BMD_Material+0x20,
  *   which is pad, and walks materials as an int**. Naming that walk
- *   off modelFile shrinks Render.
+ *   off data.modelFile shrinks Render, so only the int** slot is
+ *   retyped to BMD_File for numMaterials.
  * - UpdateMirrorShadow keeps its Obj overlay. Spelling the position
  *   and a Mtx43* at pad_3e8 moves 34 words.
  * - StateSaveTalkMain and StateCaughtMain write the player's mStateFlags
  *   through a u16 pointer. The direct member form changes the size.
  *   StateIdleMain updates mTargetAngY through a pointer, and
  *   Behavior increments mEatenTimer through (long long)(int)&.
- * - unk_426 is the header's name: 2 the frame Yoshi eats the rabbit,
- *   and any nonzero value forces the idle state.
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daMip_c_AssetId {
@@ -46,22 +48,22 @@ enum daMip_c_AssetId {
 #include "Player.h"
 #include "PathPtr.h"
 #include "decl_Message.h"
-#include "decl_PathPtr.h"
 #include "Message.h"
 #include "SaveData.h"
 #include "dBgCh_Gnd.h"
 #include "daObj_Mip_Key_c.h"
+#include "Sound.h"
+#include "cstd.h"
+#include "math/Approach.h"
 
-bool ApproachLinear(short &value, short target, short step);
+namespace Sound {
+bool PlaySub(u32, u32, u32, int, bool);
+}
 
 extern "C" {
 
 /* ground probe / collision */
-void *_ZN9dBgCh_GndC1Ev(void *);
-void  _ZN9dBgCh_GndD1Ev(void *);
 int   SurfaceInfo_TestFlag0x20(void *);
-void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, void *, s32, s32, void *, void *);
-void  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, void *, s32, s32, u32, u32);
 
 /* dActor_c / dEnemyBase_c, reached by their ROM names.
    dActor_c::ClosestPlayer and dActor_c::FindWithID are deliberately NOT here:
@@ -71,19 +73,13 @@ void  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, void *, s32, s32, u32, u
    under, because DropShadowRadHeight and Spawn take Fix12<int> and s8/s16 BY
    VALUE in their real declarations and mwccarm passes those differently at the
    call site. */
-void  _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void *, void *, void *, int, int, u32);
 
 /* Player / Message / Sound / SaveData */
 /* The return type is load-bearing: StateTalkMain tests it in an `if`, so the
    `void` spelling three of the four legacy files used cannot be the one. */
-bool  _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32, u32, u32, s32, int);
 
 /* model / animation / shadow */
-void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, s32, u32);
 
-/* path, particle, construction */
-void *_ZN7PathPtrC1Ev(void *);
-int   _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32, u32, s32, s32, s32, void *, void *);
 
 /* maths and the still-unnamed helpers */
 s16   Vec3_HorzAngle(const void *, const void *);
@@ -96,7 +92,6 @@ void  SubVec3(void *, void *, void *);
 s32   LenVec3(const void *);
 int   AngleDiff(int, int);
 int   ApproachAngle(void *, s16, int, int, int);
-int   _ZN4cstd4fdivEii(int, int);
 void  Matrix4x3_FromTranslation(void *, int, int, int);
 void  Matrix4x3_FromRotationY(void *, int);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
@@ -111,7 +106,6 @@ u16   DecIfAbove0_Short(void *);
 int   func_02013890(int, int);
 void  func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
-unsigned int func_02012790(unsigned int);
 void  func_02016acc(void *, int);
 void  func_02016b24(void *, int);
 u32   func_02022a4c(s32, s32, s32);
@@ -143,15 +137,11 @@ struct daMip_cSelf { char pad[0x364]; daMip_cStateFn *pp; };
  * instantiate its vague-linkage D1 into this TU, which deliberately avoids
  * it); the destructor alias points at the ROM's canonical copy. */
 struct DaMipModelFile : SharedFilePtr {
-    u32 words[2];
-
     DaMipModelFile(u32 fileID);
     ~DaMipModelFile();
 };
 
 struct DaMipAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
-
     DaMipAnimationFilePtr(u32 fileID);
     ~DaMipAnimationFilePtr();
 };
@@ -251,13 +241,12 @@ daMip_c::~daMip_c()
    water flag to pick splash over dust. */
 int daMip_c::TestWaterBelow()
 {
+    /* A POD twin: a real Vector3 local emits the vague-linkage ~Vector3. */
     typedef struct Vector3 { int x, y, z; } Vector3;
-    struct RG { char a[0x14]; int detect[16]; };
 
-    struct RG rg;
+    dBgCh_Gnd rg;
     Vector3 v;
-    _ZN9dBgCh_GndC1Ev(&rg);
-    ((dBgCh *)&rg)->StartDetectingWater();
+    rg.StartDetectingWater();
     int x = mPosX;
     int y = mPosY;
     int z = mPosZ;
@@ -265,22 +254,19 @@ int daMip_c::TestWaterBelow()
     v.x = x;
     v.y = yk;
     v.z = z;
-    ((dBgCh_Gnd *)&rg)->SetObjAndPos(*(::Vector3 *)&v, this);
-    if (((dBgCh_Gnd *)&rg)->dBgCh_Gnd::DetectClsn()) {
-        mFloorY = rg.detect[12];
-        if (SurfaceInfo_TestFlag0x20(rg.detect)) {
-            _ZN9dBgCh_GndD1Ev(&rg);
+    rg.SetObjAndPos(*(::Vector3 *)&v, this);
+    if (rg.DetectClsn()) {
+        mFloorY = rg.clsnY;
+        if (SurfaceInfo_TestFlag0x20(&rg.surface))
             return 1;
-        }
     }
-    _ZN9dBgCh_GndD1Ev(&rg);
     return 0;
 }
 
 // @symbol _ZN7daMip_c10UpdateGrabEv
 /* Pick-up. otherOwner is the actor touching the cylinder; actor 0xbf is
    Player. hitFlags 0x1000 is the grab bit. A rabbit already caught once
-   (unk_426) goes to Released instead of Caught. */
+   (mCatchState) goes to Released instead of Caught. */
 void daMip_c::UpdateGrab()
 {
     extern MipStatePair data_ov085_021306ac;
@@ -288,15 +274,16 @@ void daMip_c::UpdateGrab()
 
     unsigned int id = mdCcAc_c.otherOwner;
     if (id == 0) return;
-    dActor_c *o = dActor_c::FindWithID(id);
+    Player *o = static_cast<Player *>(dActor_c::FindWithID(id));
     if (o == 0) return;
     if (!IsPlayerActor(o))
         return;
     if ((mdCcAc_c.hitFlags & 0x1000) == 0) return;
-    if (((Player *)o)->TryGrab(*this) == 0) return;
-    mTalkingPlayer = (Player *)o;
+    if (o->TryGrab(*this) == 0)
+        return;
+    mTalkingPlayer = o;
     mdCcAc_c.flags |= 2;
-    if (unk_426 == 0) {
+    if (mCatchState == 0) {
         SetState(&data_ov085_021306ac);
     } else {
         SetState(&data_ov085_021306bc);
@@ -373,7 +360,7 @@ int daMip_c::StateSaveTalkInit()
 
     mActionStep = 0;
     func_02013944();
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (void *)((int *)&data_ov085_021305c0)[1], 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -413,7 +400,7 @@ int daMip_c::StateTalkMain()
             id = 0x13a;
         }
         if (ApproachLinear(mPrevAngleY, angle, 0x800)) {
-            if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x12, 0x7f, 0x15ccc, 0)) {
+            if (Sound::PlaySub(0x26, 0x12, 0x7f, 0x15ccc, 0)) {
                 Message::PrepareTalk();
                 player->ShowMessage(*this, id, (Vector3 *)&pos, 0, 0);
             }
@@ -422,7 +409,7 @@ int daMip_c::StateTalkMain()
     case 1:
         break;
     default:
-        if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x7f, 0, 0x7444, 0)) {
+        if (Sound::PlaySub(0x26, 0x7f, 0, 0x7444, 0)) {
             Message::EndTalk();
             SetState(&data_ov085_021306bc);
         }
@@ -447,7 +434,7 @@ int daMip_c::StateReleasedMain()
     extern MipStatePair data_ov085_021306dc;
 
     unsigned short h;
-    dActor_c *o;
+    Player *o;
     Player *cp;
     int a;
     int flags;
@@ -485,12 +472,12 @@ int daMip_c::StateReleasedMain()
     }
 
     if ((mdCcAc_c.hitFlags & 0x8000000) != 0) {
-        o = dActor_c::FindWithID(mdCcAc_c.otherOwner);
+        o = static_cast<Player *>(dActor_c::FindWithID(mdCcAc_c.otherOwner));
         if (o != 0) {
             if (IsPlayerActor(o)) {
-                mSaveTalkPlayer = (Player *)o;
-                o = mSaveTalkPlayer;
-                if (((Player *)o)->StartTalk(*this, 0) != 0) {
+                mSaveTalkPlayer = o;
+                o = static_cast<Player *>(mSaveTalkPlayer);
+                if (o->StartTalk(*this, 0) != 0) {
                     SetState(&data_ov085_021306dc);
                 }
             }
@@ -506,12 +493,12 @@ int daMip_c::StateReleasedInit()
     extern DaMipAnimationFilePtr data_ov085_021305c0;
 
     mVertAccel = -0x1000;
-    unk_426 = 1;
+    mCatchState = 1;
     mdCcAc_c.vulnFlags &= ~0x1000;
     mdCcAc_c.flags |= 0x4000000;
     mdCcAc_c.radius = 0x78000;
     mdCcAc_c.vulnFlags &= ~0x8000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (void *)((int *)&data_ov085_021305c0)[1], 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -520,12 +507,6 @@ int daMip_c::StateReleasedInit()
    branch that runs once all eight glowing rabbits are found. */
 int daMip_c::StateCaughtMain()
 {
-    typedef int s32;
-    typedef short s16;
-    typedef unsigned int u32;
-    typedef unsigned short u16;
-    typedef unsigned char u8;
-    typedef signed char s8;
     /* POD triple. The ::Vector3 casts below are the destructor-bearing type
        ShowMessage and Spawn take by pointer; this local is not that type. */
     typedef struct { s32 x, y, z; } Vector3;
@@ -558,14 +539,14 @@ int daMip_c::StateCaughtMain()
             pv.z = ps[2];
         }
 
-        if (unk_426 != 0) {
+        if (mCatchState != 0) {
             s16 ang = Vec3_HorzAngle(&mPos, &pv);
             ApproachLinear(mPrevAngleY, ang, 0x800);
             if (AngleDiff(mPrevAngleY, ang) > 0x200)
                 return 1;
         }
 
-        if ((IsFlagSet(this, 0x4000) || unk_426 == 2) && pl->StartTalk(*this, 1) != 0) {
+        if ((IsFlagSet(this, 0x4000) || mCatchState == 2) && pl->StartTalk(*this, 1) != 0) {
             pos.x = mPosX;
             soundId = 0;
             pos.y = mPosY;
@@ -577,7 +558,7 @@ int daMip_c::StateCaughtMain()
                         Message::PrepareTalk();
                         {
                             int z = soundId;
-                            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, z);
+                            Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, z);
                         }
                         if (mRabbitId != 6) {
                             msg = (s16)((s32)pl->param1 + 0x11b);
@@ -598,7 +579,7 @@ int daMip_c::StateCaughtMain()
                         if (mIsGlowing == 0) {
                             {
                                 int z = soundId;
-                                _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x12, 0x7f, 0x15ccc, z);
+                                Sound::PlaySub(0x26, 0x12, 0x7f, 0x15ccc, z);
                             }
                             if (mRabbitId != 6) {
                                 msg = (s16)((s32)pl->param1 + 0x11f);
@@ -608,7 +589,7 @@ int daMip_c::StateCaughtMain()
                                 soundId = 0x161;
                             }
                         } else {
-                            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, soundId);
+                            Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, soundId);
                             if (SaveData::NumGlowingRabbitsFound() == 7) {
                                 msg = 0x143;
                                 soundId = 0x160;
@@ -657,7 +638,7 @@ int daMip_c::StateCaughtMain()
         if (data_0209d660 != 0 && data_0209d6bc == 9 &&
             (mRabbitId == 7 || func_02013890(mRabbitId, (s32)pl->param1) == 0 || mIsGlowing != 0)) {
             int z = 0;
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, z, 0x8777, z);
+            Sound::PlaySub(0x27, 0x12, z, 0x8777, z);
         }
         return 1;
     }
@@ -721,7 +702,7 @@ int daMip_c::StateCaughtMain()
             mTalkState = 0;
         }
         if (mIsGlowing == 0) {
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x7f, 0, 0x7444, 0);
+            Sound::PlaySub(0x26, 0x7f, 0, 0x7444, 0);
             Message::EndTalk();
         }
     }
@@ -749,7 +730,7 @@ int daMip_c::StateCaughtInit()
     mActionStep = 0;
     mHorzSpeed = 0;
     mdCcAc_c.radius = 0x28000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (void*)((int *)&data_ov085_021305b8)[1], 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov085_021305b8.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -758,7 +739,7 @@ int daMip_c::StateRestMain()
 {
     extern MipStatePair data_ov085_021306cc;
 
-    if (mModelAnim.Finished() != 0) {
+    if (mAnmModel.Finished() != 0) {
         SetState(&data_ov085_021306cc);
     }
     return 1;
@@ -769,7 +750,7 @@ int daMip_c::StateRestInit()
 {
     extern DaMipAnimationFilePtr data_ov085_021305b0;
 
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, ((void **)&data_ov085_021305b0)[1], 0x40000000, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov085_021305b0.filePtr, 0x40000000, 0x1000, 0);
     return 1;
 }
 
@@ -788,7 +769,6 @@ int daMip_c::StateFleeMain() {
     extern MipStatePair data_ov085_0213069c;
 
     Player *pl;
-    char pathptr[8];
     struct V3Blk v;
     struct Vector3 pos;
     struct Vector3 node;
@@ -809,7 +789,7 @@ int daMip_c::StateFleeMain() {
         }
     }
     {
-        s32 t = mModelAnim.currFrame >> 12;
+        s32 t = mAnmModel.currFrame >> 12;
         if (((u16)t) == 0) {
             if (TestWaterBelow() == 1) {
                 func_02012694(0x124, &mCamSpacePos);
@@ -836,9 +816,9 @@ int daMip_c::StateFleeMain() {
         }
     }
 
-    _ZN7PathPtrC1Ev(pathptr);
-    ((PathPtr *)pathptr)->FromID(mPathId);
-    ((PathPtr *)pathptr)->GetNode(*(::Vector3 *)&node, mPathNodeIndex);
+    PathPtr pathptr;
+    pathptr.FromID(mPathId);
+    pathptr.GetNode(*(::Vector3 *)&node, mPathNodeIndex);
     ang = Vec3_HorzAngle(&mPos, &node);
     ApproachAngle(&mPrevAngleY, ang, 1, 0x1000, 0x1000);
     idx = mPathNodeIndex + mPathDir;
@@ -848,7 +828,7 @@ int daMip_c::StateFleeMain() {
     if (idx >= mNumPathNodes) {
         idx = 0;
     }
-    ((PathPtr *)pathptr)->GetNode(*(::Vector3 *)&node2, (u32)idx);
+    pathptr.GetNode(*(::Vector3 *)&node2, (u32)idx);
     lim = 0x26000;
     if (mRabbitId == 7) {
         lim = lim >> 1;
@@ -878,7 +858,7 @@ int daMip_c::StateFleeMain() {
         if (AngleDiff(ang, mPrevAngleY) < 0x2000) {
             ysave = mPosY;
             {
-                int s = _ZN4cstd4fdivEii(lim, len);
+                int s = cstd::fdiv(lim, len);
                 Vec3_MulScalar(&scaled, &delta, s);
                 SubVec3(&mPos, &scaled, &mPos);
             }
@@ -902,44 +882,44 @@ int daMip_c::StateFleeMain() {
    ROM emits no scope-exit cleanup here. */
 int daMip_c::StateFleeInit()
 {
-    typedef struct Vector3 { int x, y, z; } Vector3;
-  extern DaMipAnimationFilePtr gMipRunAnimationFile;
+    typedef struct Vector3 {
+        int x, y, z;
+    } Vector3;
+    extern DaMipAnimationFilePtr gMipRunAnimationFile;
 
-  char pathptr[8];
-  int indices[2];
-  struct Vector3 v;
-  struct Vector3 nodes[2];
-  int i;
-  int d0;
-  struct Vector3 *src;
+    struct Vector3 v;
+    struct Vector3 nodes[2];
+    int i;
+    int d0;
+    struct Vector3 *src;
 
-  Player *p = ClosestPlayer();
-  mActionStep = 0;
-  if (p)
-  {
-    src = (struct Vector3 *)&p->mPosX;
-    v = *src;
-    _ZN7PathPtrC1Ev(pathptr);
-    ((PathPtr *)pathptr)->FromID(mPathId);
+    Player *p = ClosestPlayer();
+    mActionStep = 0;
+    if (p) {
+        src = (struct Vector3 *)&p->mPosX;
+        v = *src;
+        PathPtr pathptr;
+        int indices[2];
+        pathptr.FromID(mPathId);
 
-    indices[0] = mPathNodeIndex - 1;
-    if (mPathNodeIndex - 1 < 0)
-      indices[0] = mNumPathNodes - 1;
-    indices[1] = mPathNodeIndex + 1;
-    if (mPathNodeIndex + 1 >= mNumPathNodes)
-      indices[1] = 0;
+        indices[0] = mPathNodeIndex - 1;
+        if (mPathNodeIndex - 1 < 0)
+            indices[0] = mNumPathNodes - 1;
+        indices[1] = mPathNodeIndex + 1;
+        if (mPathNodeIndex + 1 >= mNumPathNodes)
+            indices[1] = 0;
 
-    for (i = 0; i < 2; i++)
-      ((PathPtr *)pathptr)->GetNode(*(::Vector3 *)&nodes[i], indices[i]);
+        for (i = 0; i < 2; i++)
+            pathptr.GetNode(*(::Vector3 *)&nodes[i], indices[i]);
 
-    mPathDir = 1;
-    d0 = Vec3_Dist(&v, &nodes[0]);
-    if (d0 > Vec3_Dist(&v, &nodes[1]))
-      mPathDir = -1;
-  }
+        mPathDir = 1;
+        d0 = Vec3_Dist(&v, &nodes[0]);
+        if (d0 > Vec3_Dist(&v, &nodes[1]))
+            mPathDir = -1;
+    }
 
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, ((void **)&gMipRunAnimationFile)[1], 0, 0x1000, 0);
-  return 1;
+    mAnmModel.SetAnim((BCA_File *)gMipRunAnimationFile.filePtr, 0, 0x1000, 0);
+    return 1;
 }
 
 // @symbol _ZN7daMip_c16StateStartleMainEv
@@ -947,7 +927,7 @@ int daMip_c::StateStartleMain()
 {
     extern MipStatePair data_ov085_0213067c;
 
-    if (mModelAnim.Finished() != 0)
+    if (mAnmModel.Finished() != 0)
         SetState(&data_ov085_0213067c);
     return 1;
 }
@@ -957,7 +937,7 @@ int daMip_c::StateStartleInit()
 {
     extern DaMipAnimationFilePtr data_ov085_021305c8;
 
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, ((void **)&data_ov085_021305c8)[1], 0x40000000, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov085_021305c8.filePtr, 0x40000000, 0x1000, 0);
     return 1;
 }
 
@@ -1028,21 +1008,21 @@ int daMip_c::StateIdleMain()
         }
     }
 
-    if (mModelAnim.Finished() != 0) {
+    if (mAnmModel.Finished() != 0) {
         switch (mActionStep) {
         case 1:
             mHorzSpeed = 0x4000;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, ((void **)&gMipRunAnimationFile)[1], 0x40000000, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)gMipRunAnimationFile.filePtr, 0x40000000, 0x1000, 0);
             (mActionStep)++;
             break;
         case 2:
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, ((void **)&data_ov085_021305b0)[1], 0x40000000, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov085_021305b0.filePtr, 0x40000000, 0x1000, 0);
             mHorzSpeed = 0;
             (mActionStep)++;
             break;
         case 3:
             mStateTimer = (s16)((r & 0x1f) + 0x1e);
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, ((void **)&data_ov085_021305c0)[1], 0, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
             mActionStep = 0;
             break;
         }
@@ -1054,7 +1034,7 @@ int daMip_c::StateIdleMain()
             s16 *ang = &mTargetAngY;
             *ang = *ang + (0x1800 - ((r & 3) << 12));
         }
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, ((void **)&data_ov085_021305c8)[1], 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov085_021305c8.filePtr, 0x40000000, 0x1000, 0);
         mActionStep = 1;
     }
 
@@ -1065,15 +1045,15 @@ int daMip_c::StateIdleMain()
 // @symbol _ZN7daMip_c13StateIdleInitEv
 int daMip_c::StateIdleInit()
 {
-  extern DaMipAnimationFilePtr data_ov085_021305c0;
+    extern DaMipAnimationFilePtr data_ov085_021305c0;
 
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void**)((char*)&data_ov085_021305c0+4), 0, 0x1000, 0);
-  mIdlePosX = mPosX;
-  mIdlePosY = mPosY;
-  mIdlePosZ = mPosZ;
-  mActionStep = 0;
-  mStateTimer = 0;
-  return 1;
+    mAnmModel.SetAnim((BCA_File *)(*(void **)((char *)&data_ov085_021305c0 + 4)), 0, 0x1000, 0);
+    mIdlePosX = mPosX;
+    mIdlePosY = mPosY;
+    mIdlePosZ = mPosZ;
+    mActionStep = 0;
+    mStateTimer = 0;
+    return 1;
 }
 
 // @symbol _ZN7daMip_c8SetStateEPv
@@ -1100,15 +1080,14 @@ void daMip_c::UpdateMatrixAndShadow()
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(struct Mtx43 *)&mModelAnim.mat4x3 = data_020a0e68;
-    MulMat4x3Mat4x3(mModelAnim.data.transforms, &mModelAnim.mat4x3, tmp);
+    *(struct Mtx43 *)&mAnmModel.mat4x3 = data_020a0e68;
+    MulMat4x3Mat4x3(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
         (mPosY - 0xe000) >> 3,
         mPosZ >> 3);
     *(struct Mtx43 *)mShadowMtx = data_020a0e68;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel1, mShadowMtx, 0x46000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
 // @symbol _ZN7daMip_c19UpdateCarriedMatrixEv
@@ -1133,11 +1112,10 @@ void daMip_c::UpdateCarriedMatrix()
         idx = (idx + 2) & 0xff;
     }
     res = UpdateCarry(*mTalkingPlayer, *(Vector3 *)((char *)&data_ov085_021306ec + idx * 0xc));
-    *(struct Mtx43 *)&mModelAnim.mat4x3 = *(struct Mtx43 *)res;
+    *(struct Mtx43 *)&mAnmModel.mat4x3 = *(struct Mtx43 *)res;
     Matrix4x3_FromTranslation(data_020a0e68, mPosX >> 3, (mPosY - 0xc000) >> 3, mPosZ >> 3);
     *(struct Mtx43 *)mShadowMtx = *(struct Mtx43 *)data_020a0e68;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel1, mShadowMtx, 0x46000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
 // @symbol _ZN7daMip_c18UpdateMirrorShadowEv
@@ -1186,7 +1164,9 @@ void daMip_c::UpdateMirrorShadow()
         Matrix4x3_FromTranslation(&data_020a0e68, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);
     }
     c->mtx = data_020a0e68;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(c, &c->shadowmodel, &c->mtx, 0x46000, 0x258000, 0xf);
+    ((dActor_c *)c)
+        ->DropShadowRadHeight(*(dExtShadowModel_c *)&c->shadowmodel, *(Matrix4x3 *)&c->mtx, 0x46000,
+                              0x258000, 0xf);
 }
 
 // @symbol _ZN7daMip_c16CleanupResourcesEv
@@ -1234,13 +1214,13 @@ int daMip_c::Render()
     mScaleY = mScaleZ;
 
     {
-        /* modelFile, then materials. +0x24 of the BMD is numMaterials.
+        /* modelFile, then materials.
            +0x20 of each 0x30-byte material is still pad in BMD_Material;
            walking it as BMD_Material:: does not match this loop. */
-        int** base = (int**)&mModelAnim.data;
-        int* modelData = base[0];
+        int **base = (int **)&mAnmModel.data;
+        BMD_File *modelData = (BMD_File *)base[0];
         char* mat = (char*)base[1];
-        for (unsigned int i = 0; i < *(unsigned int*)((char*)modelData + 0x24); i++) {
+        for (unsigned int i = 0; i < modelData->numMaterials; i++) {
             *(int*)(mat + 0x20) = mMaterialColor;
             mat += 0x30;
         }
@@ -1250,7 +1230,7 @@ int daMip_c::Render()
         RenderMirrorImage();
     }
 
-    mModelAnim.Render(&mScale);
+    mAnmModel.Render(&mScale);
     return 1;
 }
 
@@ -1265,17 +1245,17 @@ void daMip_c::RenderMirrorImage()
     extern int data_020a0e68;
 
     struct Mtx43 tmp;
-    tmp = *(struct Mtx43 *)&mModelAnim.mat4x3;
-    mModelAnim.mat4x3.t.x = 0x421800 - mModelAnim.mat4x3.t.x;
+    tmp = *(struct Mtx43 *)&mAnmModel.mat4x3;
+    mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
-    MulMat3x3Mat3x3(&mModelAnim.mat4x3, &data_020a0e68, &mModelAnim.mat4x3);
-    func_02016acc(&mModelAnim, 0x80);
-    func_02016b24(&mModelAnim, 0x40);
-    mModelAnim.ModelAnim::Render(&mScale);
-    mModelAnim.ApplyOpacity(0xff, 0);
-    func_02016b24(&mModelAnim, 0x80);
-    func_02016acc(&mModelAnim, 0x40);
-    *(struct Mtx43 *)&mModelAnim.mat4x3 = tmp;
+    MulMat3x3Mat3x3(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
+    func_02016acc(&mAnmModel, 0x80);
+    func_02016b24(&mAnmModel, 0x40);
+    mAnmModel.dExtAnmModel_c::Render(&mScale);
+    mAnmModel.ApplyOpacity(0xff, 0);
+    func_02016b24(&mAnmModel, 0x80);
+    func_02016acc(&mAnmModel, 0x40);
+    *(struct Mtx43 *)&mAnmModel.mat4x3 = tmp;
 }
 
 // @symbol _ZN7daMip_c8BehaviorEv
@@ -1325,7 +1305,7 @@ int daMip_c::Behavior()
     extern MipStatePair data_ov085_021306dc;
 
     char* c = (char*)this;
-    void* player;
+    Player *player;
 
     if (data_0209f2f8 != 0x32) {
         if (mIsDisabled == 1) {
@@ -1337,7 +1317,7 @@ int daMip_c::Behavior()
         player = ClosestPlayer();
         if (player == 0)
             return 1;
-        if (!(data_0209caa0[2] & 0x20000) || mCharacterId != ((Player *)player)->mCharacter) {
+        if (!(data_0209caa0[2] & 0x20000) || mCharacterId != player->mCharacter) {
             mIsDisabled = 1;
             return 1;
         }
@@ -1353,15 +1333,15 @@ int daMip_c::Behavior()
         pv.y = mPosY;
         pv.z = mPosZ;
         pv.y = mPosY + 0x3c000;
-        mGlowParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(volatile u32*)&mGlowParticle, 0x10d, pv.x, pv.y, mPosZ, 0, 0);
+        mGlowParticle =
+            Particle::System::New(*(volatile u32 *)&mGlowParticle, 0x10d, pv.x, pv.y, mPosZ, 0, 0);
     }
 
     {
         u32 talkStep = mTalkState;
         if (talkStep < 2) {
             if (IsInYoshiMouth(this) == 1) {
-                void* talker = *(void**)&mTalkingPlayer;
+                Player *talker = mTalkingPlayer;
                 if (talker != 0) {
                     if (talkStep == 0) {
                         Vec3Scratch pos;
@@ -1374,32 +1354,32 @@ int daMip_c::Behavior()
                         Message::PrepareTalk();
                         t = mRabbitId;
                         if (t != 7) {
-                            if (func_02013890(t, (s32)((Player *)talker)->param1) == 0) {
-                                _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, 0);
+                            if (func_02013890(t, (s32)talker->param1) == 0) {
+                                Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, 0);
                                 if (mRabbitId != 6) { soundId = 0x162; messageId = 0x11e; }
                                 else { soundId = 0x160; messageId = 0x126; }
                             } else if (mIsGlowing == 0) {
-                                _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x12, 0x7f, 0x15ccc, 0);
+                                Sound::PlaySub(0x26, 0x12, 0x7f, 0x15ccc, 0);
                                 if (mRabbitId != 6) { soundId = 0x162; messageId = 0x122; }
                                 else { soundId = 0x160; messageId = 0x12a; }
                             } else {
-                                _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, 0);
+                                Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, 0);
                                 if (SaveData::NumGlowingRabbitsFound() == 7) { messageId = 0x145; soundId = 0x160; }
                                 else { soundId = 0x162; messageId = 0x144; }
                             }
                         } else {
-                            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, 0);
+                            Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, 0);
                             messageId = 0x13b; soundId = 0x160;
                         }
                         pos.y += 0x64000;
-                        if (((Player *)talker)->ShowMessage(*(fBase_c *)c, messageId, 0, 0, 0) == 1) {
+                        if (talker->ShowMessage(*(fBase_c *)c, messageId, 0, 0, 0) == 1) {
                             func_02012694(soundId, &mCamSpacePos);
                             mTalkState = 1;
                         }
-                    } else if (talkStep == 1 && ((Player *)talker)->GetTalkState() == -1) {
-                        ((Player *)talker)->DropActor();
+                    } else if (talkStep == 1 && talker->GetTalkState() == -1) {
+                        talker->DropActor();
                         mTalkState = 2;
-                        ((Player *)talker)->mStateFlags |= 0x800;
+                        talker->mStateFlags |= 0x800;
                     }
                 }
             }
@@ -1409,9 +1389,9 @@ int daMip_c::Behavior()
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
         if (mEatenByYoshi != 0) {
-            if (unk_104 == 5)
+            if (mSpitOutTimer == 5)
                 mHorzSpeed = 0;
-            if (unk_104 == 0)
+            if (mSpitOutTimer == 0)
                 mdCcAc_c.Update();
         }
         if (mEatenByYoshi == 1) {
@@ -1422,20 +1402,21 @@ int daMip_c::Behavior()
             }
         }
         UpdateMatrixAndShadow();
-        unk_426 = 2;
+        mCatchState = 2;
         SetState(&data_ov085_021306ac);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void**)((char*)&data_ov085_021305c0 + 4), 0, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)(*(void **)((char *)&data_ov085_021305c0 + 4)), 0, 0x1000, 0);
         if (*(void**)&mTalkingPlayer == 0)
             *(void**)&mTalkingPlayer = ClosestPlayer();
         return 1;
     }
 
-    if (unk_426 != 0) {
+    if (mCatchState != 0) {
         void* p = *(void**)&mState;
         if (p != (void*)&data_ov085_021306ac && p != (void*)&data_ov085_0213068c &&
             p != (void*)&data_ov085_021306bc && p != (void*)&data_ov085_021306dc) {
             SetState(&data_ov085_021306ac);
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void**)((char*)&data_ov085_021305c0 + 4), 0, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)(*(void **)((char *)&data_ov085_021305c0 + 4)), 0, 0x1000,
+                              0);
         }
         mHorzSpeed = 0;
     }
@@ -1457,7 +1438,7 @@ int daMip_c::Behavior()
         }
     }
 
-    mModelAnim.Advance();
+    mAnmModel.Advance();
 
     if (IsFlagSet(this, 0x4000))
         UpdateCarriedMatrix();
@@ -1468,7 +1449,7 @@ int daMip_c::Behavior()
         UpdateMirrorShadow();
 
     if (!IsFlagSet(this, 0x4000)) {
-        if (*(void **)&mState != (void *)&data_ov085_021306ac || unk_426 != 0)
+        if (*(void **)&mState != (void *)&data_ov085_021306ac || mCatchState != 0)
             UpdatePos(&mdCcAc_c);
         mAngleX = mPrevAngleX;
         mAngleY = mPrevAngleY;
@@ -1511,8 +1492,9 @@ int daMip_c::InitResources()
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305b0);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305c8);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305c0);
-    Model::LoadFile(*(SharedFilePtr *)&data_ov085_021305d8);
-    mModelAnim.SetFile((BMD_File *)Model::LoadFile(*(SharedFilePtr *)&data_ov085_021305e0), 1, -1);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305d8);
+    mAnmModel.SetFile(
+        (BMD_File *)dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305e0), 1, -1);
     mShadowModel1.InitCylinder();
     mShadowModel2.InitCylinder();
 
@@ -1546,10 +1528,10 @@ int daMip_c::InitResources()
 
     mVertAccel = -0x1000;
     mTerminalVelocity = -0x1e000;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x50000, 0x64000, 0xb00004, 0x9000);
+    mdCcAc_c.Init(this, 0x50000, 0x64000, 0xb00004, 0x9000);
     mTalkingPlayer = 0;
-    mModelAnim.speed = 0x1000;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x28000, 0x28000, 0, 0);
+    mAnmModel.speed = 0x1000;
+    mWithMeshClsn.Init(this, 0x28000, 0x28000, 0, 0);
     {
         PathPtr path;
         path.FromID(mPathId);
@@ -1621,7 +1603,7 @@ int daMip_c::InitResources()
         if (mAreaId == 3)
             mFlags = 0x8280;
     }
-    mMaterialColor = (mColorVariant << 1) + *(s32*)((char*)mModelAnim.data.materials + 0x20);
+    mMaterialColor = (mColorVariant << 1) + *(s32 *)((char *)mAnmModel.data.materials + 0x20);
     SetState(&data_ov085_021306cc);
     return 1;
 }

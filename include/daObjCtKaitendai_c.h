@@ -20,22 +20,22 @@ struct daObjCtKaitendai_c : dBgActor_c {
      * (CT_MECHA07), then indexes the ov065 {model, collision, clps} table.
      * CleanupResources indexes the same row. mwccarm reuses dBgActor_c's
      * 0x31e tail padding. */
-    u8  mVariant;                     /* 0x31e */
-    u8  pad_31f[0x1];
-    s32 mGroundY;                     /* 0x320 -- probe Y, then dBgCh_Gnd::clsnY on a hit */
-    dExtShadowModel_c mShadowModel;         /* 0x324 */
-    /* func_ov065_0211b40c copies mModel.mat4x3 here, then writes
+    u8 mVariant; /* 0x31e */
+    u8 pad_31f[0x1];
+    s32 mGroundY;                   /* 0x320 -- probe Y, then dBgCh_Gnd::clsnY on a hit */
+    dExtShadowModel_c mShadowModel; /* 0x324 */
+    /* UpdateShadow copies mModel.mat4x3 here, then writes
      * (mGroundY + 0x32000) >> 3 into the translation Y before
      * DropShadowRadHeight. */
-    Matrix4x3 mShadowMat;             /* 0x34c */
+    Matrix4x3 mShadowMat; /* 0x34c */
 
     int CleanupResources();
     int InitResources();
     int Behavior();
     int Render();
 
-    /* Helper taking this (S33): the ROM address is the method name. */
-    void func_ov065_0211b40c();
+    /* Behavior's shadow drop, after the model moves. */
+    void UpdateShadow();
 
     /* Declared last and inline so class instantiation emits the retail D1/D0
      * pair in cartridge order without a separate leaf D2 body. */
@@ -44,8 +44,7 @@ struct daObjCtKaitendai_c : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjCtKaitendai_c_size_must_be_0x37c[
-    sizeof(daObjCtKaitendai_c) == 0x37c ? 1 : -1];
+typedef char daObjCtKaitendai_c_size_must_be_0x37c[sizeof(daObjCtKaitendai_c) == 0x37c ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

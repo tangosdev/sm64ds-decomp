@@ -21,7 +21,7 @@
  * base leaves null; the base supplies only Render, the two destructors and
  * OnHitByMegaChar.
  *
- * WHAT THIS HEADER USED TO SAY: a `Model mModel` at 0xd4 and a
+ * WHAT THIS HEADER USED TO SAY: a `dExtSimpleModel_c mModel` at 0xd4 and a
  * `u8 mMovingMeshCollider` marker at 0x124, over `u8 pad_000[0xd4]`. Both were
  * dBgActor_c's, twice removed, and are inherited now. None of this class's three
  * methods reads either by name -- Behavior reaches the collider as

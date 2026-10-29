@@ -97,6 +97,7 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import modules as MOD
+import rom_fingerprint as RF
 import srcpath as SP
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
@@ -134,6 +135,22 @@ def _require_vtables():
         raise SystemExit(
             f"{VTABLES.relative_to(REPO)} is older than config/; "
             f"regenerate it with: {how}")
+
+
+def _load_vtables():
+    """{class: table} from build/rtti_vtables.json, after the freshness and ROM checks.
+
+    The ROM check is rom_fingerprint's: the file records the hash of the ROM images it
+    was built from, and a file from other images (a stale extraction gave 364 of 426
+    vtables wrong) is refused here instead of labelling the map with them. A file
+    that predates the field is warned about, not refused."""
+    _require_vtables()
+    tables, recorded = RF.split(json.loads(VTABLES.read_text(errors="ignore")))
+    RF.guard(recorded, "build/rtti_vtables.json",
+             "python tools/rtti_vtables.py --out build/rtti_vtables.json "
+             "(then python tools/tu_map.py)")
+    return tables
+
 
 # Nesting threshold for _drop_swallowers, set by --split-swallowers. None = off,
 # which keeps the committed map byte-identical until the change is reviewed.
@@ -226,8 +243,7 @@ def vtable_labels():
     The point of this table is the anonymous overlays. ov006 has 1866 functions
     and 38 named ones; RTTI still knows what its polymorphic classes are called,
     so a vtable slot lands a real name on code that no symbol ever named."""
-    _require_vtables()
-    data = json.loads(VTABLES.read_text(errors="ignore"))
+    data = _load_vtables()
     out = collections.defaultdict(dict)
     for cls, rec in data.items():
         if not isinstance(rec, dict) or "slots" not in rec:
@@ -248,8 +264,7 @@ def vtable_factory_classes():
     already-mangled method names.  `own` slots are the non-inherited entries and
     therefore pair the vtable with the exact class component those methods use.
     """
-    _require_vtables()
-    data = json.loads(VTABLES.read_text(errors="ignore"))
+    data = _load_vtables()
     candidates = collections.defaultdict(lambda: collections.defaultdict(set))
     for _cls, rec in data.items():
         if not isinstance(rec, dict):
@@ -814,6 +829,9 @@ def main():
             "boundaries": dict(conf),
             "tus_with_class": sum(r["tus_with_class"] for r in results),
             "under_segmented": suspect,
+            # Which ROM images the vtable labels came from (rom_fingerprint); null when
+            # the vtable file predates the field. class_scaffold checks it.
+            "rtti_vtables_fingerprint": RF.recorded_in(VTABLES),
             "caveat": "Boundaries marked 'low' rest on contiguity alone and cannot "
                       "distinguish two classes in one file from two files that "
                       "linked adjacently. Modules in under_segmented have too few "

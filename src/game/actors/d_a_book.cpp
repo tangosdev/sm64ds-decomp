@@ -23,13 +23,11 @@
  * emits D1 then D0; D2 has no ROM home. Both vtables are keyed here.
  * common.h comes first so InitResources' mShadowMat copy stays twelve words.
  */
-/* leftovers: ModelAnim::SetAnim, dBgCh_Actr::Init, dCcAcPos_c::Init,
- * Player::Hurt, Player::Bounce, DropShadowRadHeight and cstd::atan2 stay
- * mangled externs. This file calls them. The headers spell Fix12i, which
- * does not mangle to the Fix12<int> symbols the ROM has. GetWallResult is
+/* leftovers: Player::Hurt and Player::Bounce stay mangled externs. This file
+ * calls them, and each symbol takes Fix12<int> by value. GetWallResult is
  * not a dBgCh_Actr method; the call is dBgCh_Actr_UpdateContinuous_Veneer,
  * not UpdateContinuous. data_ov020_02114aa0 and 02114ab8 are model handles,
- * 02114aa8 and 02114ab0 animation handles; words[1] is the loaded file.
+ * 02114aa8 and 02114ab0 animation handles; filePtr is the loaded file.
  * State helpers keep address names. The ROM records no English name for them.
  */
 
@@ -44,9 +42,11 @@
 #include "dCc_c.h"
 #include "Sound.h"
 #include "dBgCh_Actr.h"
+#include "math/Approach.h"
+namespace cstd {
+s16 atan2(s32, s32);
+}
 
-int ApproachLinear(int &value, int target, int step);
-int ApproachLinear(short &value, short target, short step);
 
 /* Actor IDs from the ROM's actor table (symbols/actor_debug_names.tsv). */
 enum {
@@ -90,7 +90,7 @@ typedef struct { int x, y, z; } Vec3;
 #define SINCOS_INDEX(angle) ((*(u16 *)&(angle) >> 4) * 2)
 
 extern "C" {
-short _ZN4cstd5atan2E5Fix12IiES1_(int, int);
+short atan2_hold_d_a_book_1(int, int);
 void Vec3_Sub(Vector3 *d, Vector3 *a, Vector3 *b);
 int  Vec3_HorzLen(const Vector3 *);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
@@ -98,24 +98,15 @@ s16  Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int  Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void AddVec3(void *a, void *b, void *c_);
 int  RandomIntInternal(void *p);
-int  _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player *self, const Vector3 *pos, unsigned int a, int fix, u8 b, u8 d, u8 e);
-void _ZN6Player6BounceE5Fix12IiE(Player *self, int fix);
 void func_ov063_0211cae8(void *found, unsigned int mask);
 void func_0203568c(int *p, int v);
-void func_0201267c(unsigned int id, const Vector3 *pos);
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim *, BCA_File *, int, int, u16);
-void dBgCh_Actr_UpdateContinuous_Veneer(void *c_);
 void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(dActor_c *thiz, dExtShadowModel_c *sm, Matrix4x3 *mtx, int radius, int depth, u8 opacity);
 void UnloadBlueCoinModel(void *);
 void LoadBlueCoinModel(void *c);
 void func_0200f760(void *a, void *b);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    dBgCh_Actr *self, dActor_c *actor, int radius, int height,
-    Vector3_16 *first, Vector3_16 *second);
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    dCcAcPos_c *self, dActor_c *actor, const Vector3 *offset,
-    int radius, int height, u32 flags, u32 vulnFlags);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,
+                         Vector3_16 *first, Vector3_16 *second);
 }
 
 extern int data_0209e650[];     /* the random number generator's state */
@@ -124,26 +115,22 @@ extern s16 data_02082214[];     /* sin/cos table, see SINCOS_INDEX */
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
  * is book 0, then book 1, then book 2. */
 extern u8 data_ov020_02114828[];
-/* Model handles construct through func_02017acc and destroy through
+/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4. Animation handles construct through SharedFilePtr::Construct
  * and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
  * undefined members onto the ROM symbols. */
 struct BookModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     BookModelFilePtr(u32 fileID);
     ~BookModelFilePtr();
 };
 
 struct BookAnimationFileHandle : SharedFilePtr {
-    u32 words[2];
-
     BookAnimationFileHandle(u32 fileID);
     ~BookAnimationFileHandle();
 };
 
 /* The four slots, by how they are used below:
- *   aa0  the animated model that mModelAnim switches to (STATE_TILT_BACK)
+ *   aa0  the animated model that mAnmModel switches to (STATE_TILT_BACK)
  *   ab8  the model mModel starts with
  *   aa8  the animation that plays during STATE_WIND_UP
  *   ab0  the animation that plays in flight */
@@ -209,8 +196,8 @@ void daBook_c::func_ov020_021112b0()
     tmp.z = playerPos->z;
     Vector3 toPlayer;
     Vec3_Sub(&toPlayer, &tmp, &mPos);
-    mAimYaw = _ZN4cstd5atan2E5Fix12IiES1_(toPlayer.x, toPlayer.z);
-    mAimPitch = _ZN4cstd5atan2E5Fix12IiES1_(toPlayer.y, Vec3_HorzLen(&toPlayer));
+    mAimYaw = cstd::atan2(toPlayer.x, toPlayer.z);
+    mAimPitch = cstd::atan2(toPlayer.y, Vec3_HorzLen(&toPlayer));
     mAimRoll = 0x4000;
 }
 
@@ -260,7 +247,7 @@ void daBook_c::func_ov020_02111340()
 /* What a flying book does about whatever func_ov020_021115ac found. Returns 1
  * when the book is gone. The first count handed to Player::Hurt is 0 for a
  * metal player, 2 for KILLER_BOOK and 1 otherwise; touching the player also
- * clears unk_108, so no blue coin drops. */
+ * clears mCoinType, so no blue coin drops. */
 int daBook_c::func_ov020_02111418()
 {
     int r = func_ov020_021115ac();
@@ -268,7 +255,7 @@ int daBook_c::func_ov020_02111418()
     if (r == HIT_METAL_PLAYER) {
         Vector3 v;
         v.x = mPosX; v.y = mPosY; v.z = mPosZ;
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(mTouchedPlayer, &v, 0, 0xc000, 1, 0, 1);
+        mTouchedPlayer->Hurt(v, 0, 0xc000, 1, 0, 1);
         func_ov020_02112110();
         return 1;
     }
@@ -277,18 +264,18 @@ int daBook_c::func_ov020_02111418()
         if (eq) {
             Vector3 v;
             v.x = mPosX; v.y = mPosY; v.z = mPosZ;
-            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(mTouchedPlayer, &v, 2, 0xc000, 1, 0, 1);
+            mTouchedPlayer->Hurt(v, 2, 0xc000, 1, 0, 1);
         } else {
             Vector3 v;
             v.x = mPosX; v.y = mPosY; v.z = mPosZ;
-            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(mTouchedPlayer, &v, 1, 0xc000, 1, 0, 1);
+            mTouchedPlayer->Hurt(v, 1, 0xc000, 1, 0, 1);
         }
-        unk_108 = 0;
+        mCoinType = 0;
         func_ov020_02112110();
         return 1;
     }
     if (r != HIT_STOMPED) return 0;
-    _ZN6Player6BounceE5Fix12IiE(mTouchedPlayer, 0x28000);
+    mTouchedPlayer->Bounce(0x28000);
     func_ov020_02112110();
     return 1;
 }
@@ -303,7 +290,7 @@ int daBook_c::func_ov020_02111418()
 int daBook_c::func_ov020_021115ac()
 {
     u32 id;
-    dActor_c *found;
+    Player *found;
     int t;
     volatile int t1, t2;
     (void)&t1; (void)&t2;
@@ -311,7 +298,7 @@ int daBook_c::func_ov020_021115ac()
     id = mdCcAcPos_c.otherOwner;
     if (id == 0)
         return HIT_NONE;
-    found = dActor_c::FindWithID(id);
+    found = static_cast<Player *>(dActor_c::FindWithID(id));
     if (found == 0)
         return HIT_NONE;
 
@@ -323,41 +310,41 @@ int daBook_c::func_ov020_021115ac()
     if ((mdCcAcPos_c.hitFlags & 0x8000) != 0)
         return HIT_NONE;
 
-    if (((Player *)found)->mIsVanish != 0) {
+    if (found->mIsVanish != 0) {
         t = (int)(actorID == kShootBookActorId);
         if (t != 0)
             return HIT_NONE;
     }
 
-    mTouchedPlayer = (Player *)found;
+    mTouchedPlayer = found;
 
     /* the attack bits the profile made the collider vulnerable to */
     if ((mdCcAcPos_c.hitFlags & 0x26fe0) != 0)
         return HIT_ATTACKED;
 
-    if (BumpedUnderneathByPlayer(*(Player *)found) != 0) {
+    if (BumpedUnderneathByPlayer(*found) != 0) {
         /* the bump also cancels the player's vertical speed */
-        Vec3 *p = (Vec3 *)&found->unk_0a4;
+        Vec3 *p = (Vec3 *)&found->mSpeedX;
         Vec3 v;
         v.z = p->z;
         v.x = p->x;
         v.y = 0;
-        found->unk_0a4 = v.x;
+        found->mSpeedX = v.x;
         found->mVertSpeed = v.y;
-        found->unk_0ac = v.z;
-        mTouchedPlayer = (Player *)found;
+        found->mSpeedZ = v.z;
+        mTouchedPlayer = found;
         return HIT_ATTACKED;
     }
 
-    if (JumpedOnByPlayer(mdCcAcPos_c, *(Player *)found) != 0) {
-        mTouchedPlayer = (Player *)found;
+    if (JumpedOnByPlayer(mdCcAcPos_c, *found) != 0) {
+        mTouchedPlayer = found;
         return HIT_STOMPED;
     }
 
-    if (((Player *)found)->mIsMetal != 0)
+    if (found->mIsMetal != 0)
         return HIT_METAL_PLAYER;
 
-    if (((Player *)found)->mIsVanish != 0) {
+    if (found->mIsVanish != 0) {
         t = (int)(actorID == kKillerBookActorId);
         if (t != 0)
             return HIT_NONE;
@@ -473,7 +460,7 @@ void daBook_c::func_ov020_0211174c()
 
 // @symbol _ZN8daBook_c19func_ov020_021119dcEv
 /* STATE_YOSHI_SKID: brakes the book to a standstill at 0x800 a frame, with
- * its collider off while unk_104 counts down, then resumes mSavedState (a
+ * its collider off while mSpitOutTimer counts down, then resumes mSavedState (a
  * book that was in flight goes back to winding up). func_0203568c stores its
  * second argument in word 6 of mWithMeshClsn (the radius, as daBgSnmBdy_c
  * reads it): 100 units on every skid frame, back to Init's 50 when the skid
@@ -481,10 +468,10 @@ void daBook_c::func_ov020_0211174c()
 void daBook_c::func_ov020_021119dc()
 {
     func_0203568c((int *)&mWithMeshClsn, 0x64000);
-    if (unk_104 != 0) {
-        unsigned short *p = &unk_104;
+    if (mSpitOutTimer != 0) {
+        unsigned short *p = &mSpitOutTimer;
         *p = (unsigned short)(*p - 1);
-        if (unk_104 != 0) {
+        if (mSpitOutTimer != 0) {
             u32 *q = &mdCcAcPos_c.flags;
             *q = *q | 1;
         } else {
@@ -508,7 +495,7 @@ void daBook_c::func_ov020_021119dc()
  * on the third frame it becomes STATE_FLY at full speed with the collider on. */
 void daBook_c::func_ov020_02111aa8()
 {
-    unk_108 = 0;
+    mCoinType = 0;
     STATE_TIMER++;
     if (STATE_TIMER >= 3) {
         int *bf;
@@ -527,34 +514,36 @@ void daBook_c::func_ov020_02111aa8()
 }
 
 // @symbol _ZN8daBook_c19func_ov020_02111b28Ev
-/* STATE_FLY: moves by the velocity in unk_0a4/mVertSpeed/unk_0ac and is gone
+/* STATE_FLY: moves by the velocity in mSpeedX/mVertSpeed/mSpeedZ and is gone
  * when it hits the player, the ground, or a wall that faces it (the wall's
  * normal more than a quarter turn from the book's heading). */
-void daBook_c::func_ov020_02111b28()
-{
-  if (mUsesModelAnim != 0) {
-    mModelAnim.Advance();
-  }
-  AddVec3(&mPosX, &unk_0a4, &mPosX);
-  if (func_ov020_02111418() != 0) return;
-  dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
-  if (mWithMeshClsn.IsOnGround() != 0) {
-    unk_108 = 0;
+void daBook_c::func_ov020_02111b28() {
+    if (mUsesAnmModel != 0) {
+        mAnmModel.Advance();
+    }
+    AddVec3(&mPosX, &mSpeedX, &mPosX);
+    if (func_ov020_02111418() != 0)
+        return;
+    dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
+    if (mWithMeshClsn.IsOnGround() != 0) {
+        mCoinType = 0;
+        func_ov020_02112110();
+        func_0201267c(kSfxImpact, &mCamSpacePos);
+        return;
+    }
+    if (mWithMeshClsn.IsOnWall() == 0)
+        return;
+    {
+        Vector3 normal;
+        void *w = mWithMeshClsn.GetWallResult();
+        ((SurfaceInfo *)((char *)w + 4))->CopyNormalTo(normal);
+        short angle = cstd::atan2(normal.x, normal.z);
+        if (GetSubtraction(mPrevAngleY, angle) <= 0x4000)
+            return;
+    }
+    mCoinType = 0;
     func_ov020_02112110();
     func_0201267c(kSfxImpact, &mCamSpacePos);
-    return;
-  }
-  if (mWithMeshClsn.IsOnWall() == 0) return;
-  {
-    Vector3 normal;
-    void *w = mWithMeshClsn.GetWallResult();
-    ((SurfaceInfo *)((char *)w + 4))->CopyNormalTo(normal);
-    short angle = _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z);
-    if (GetSubtraction(mPrevAngleY, angle) <= 0x4000) return;
-  }
-  unk_108 = 0;
-  func_ov020_02112110();
-  func_0201267c(kSfxImpact, &mCamSpacePos);
 }
 
 // @symbol _ZN8daBook_c19func_ov020_02111c30Ev
@@ -568,15 +557,15 @@ void daBook_c::func_ov020_02111c30()
     if (func_ov020_02111418())
         return;
 
-    mModelAnim.Advance();
+    mAnmModel.Advance();
 
     {
         if (ApproachLinear(mHorzSpeed, 0xa000, 0xa00) == 0)
             return;
     }
 
-    if (mModelAnim.Finished()) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File*)data_ov020_02114ab0.words[1], 0, 0x1000, 0);
+    if (mAnmModel.Finished()) {
+        mAnmModel.SetAnim((BCA_File *)data_ov020_02114ab0.filePtr, 0, 0x1000, 0);
         mState = STATE_FLY;
         mHorzSpeed = 0;
         func_ov020_021112b0();
@@ -589,9 +578,9 @@ void daBook_c::func_ov020_02111c30()
         {
             /* velocity = kFlightSpeed along (yaw, pitch) */
             s32 r = FX_MUL(data_02082214[SINCOS_INDEX(mAngleX) + 1], 0x32000);
-            unk_0a4 = FX_MUL(r, data_02082214[SINCOS_INDEX(mAngleY)]);
+            mSpeedX = FX_MUL(r, data_02082214[SINCOS_INDEX(mAngleY)]);
             mVertSpeed = FX_MUL(data_02082214[SINCOS_INDEX(mAngleX)], -0x32000);
-            unk_0ac = FX_MUL(r, data_02082214[SINCOS_INDEX(mAngleY) + 1]);
+            mSpeedZ = FX_MUL(r, data_02082214[SINCOS_INDEX(mAngleY) + 1]);
         }
         return;
     }
@@ -626,29 +615,31 @@ void daBook_c::func_ov020_02111c30()
 }
 
 // @symbol _ZN8daBook_c19func_ov020_02111ee0Ev
-/* STATE_TILT_BACK: tips the book back by 45 degrees, then switches mModelAnim
+/* STATE_TILT_BACK: tips the book back by 45 degrees, then switches mAnmModel
  * to the animated model, starts its animation, lifts the book 50 units and
  * moves the collider down 25. */
 void daBook_c::func_ov020_02111ee0()
 {
-  int r = func_ov020_02111418();
-  if(r) return;
-  if(ApproachLinear(mAngleX, -0x2000, 0x200)){
-    int s;
-    mHorzSpeed = 0;
-    s = mModelAnim.SetFile((BMD_File*)data_ov020_02114aa0.words[1], 1, -1);
-    if(s == 0) return;
-    mState = STATE_WIND_UP;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File*)data_ov020_02114aa8.words[1], 0x40000000, 0x1000, 0);
-    mUsesModelAnim = 1;
-    mStateTimer = 0;
-    {
-      int* p60 = &mPosY;
-      *p60 = *p60 + 0x32000;
+    int r = func_ov020_02111418();
+    if (r)
+        return;
+    if (ApproachLinear(mAngleX, -0x2000, 0x200)) {
+        int s;
+        mHorzSpeed = 0;
+        s = mAnmModel.SetFile((BMD_File *)data_ov020_02114aa0.filePtr, 1, -1);
+        if (s == 0)
+            return;
+        mState = STATE_WIND_UP;
+        mAnmModel.SetAnim((BCA_File *)data_ov020_02114aa8.filePtr, 0x40000000, 0x1000, 0);
+        mUsesAnmModel = 1;
+        mStateTimer = 0;
+        {
+            int *p60 = &mPosY;
+            *p60 = *p60 + 0x32000;
+        }
+        mClsnOffset.y = -0x19000;
     }
-    mClsnOffset.y = -0x19000;
-  }
-  UpdatePos(0);
+    UpdatePos(0);
 }
 
 // @symbol _ZN8daBook_c19func_ov020_02111fc4Ev
@@ -697,16 +688,15 @@ void daBook_c::func_ov020_02112080()
 }
 
 // @symbol _ZN8daBook_c19func_ov020_02112110Ev
-/* The end of a book: drops a blue coin if unk_108 is set, puffs smoke and
+/* The end of a book: drops a blue coin if mCoinType is set, puffs smoke and
  * removes the actor. */
-void daBook_c::func_ov020_02112110()
-{
-  if (unk_108) {
-    int param = mAreaId;
-    dActor_c::Spawn(kBlueCoinActorId, 2, mPos, 0, param, -1);
-  }
-  PoofDust();
-  MarkForDestruction();
+void daBook_c::func_ov020_02112110() {
+    if (mCoinType) {
+        int param = mAreaId;
+        dActor_c::Spawn(kBlueCoinActorId, 2, mPos, 0, param, -1);
+    }
+    PoofDust();
+    MarkForDestruction();
 }
 
 // @symbol _ZN8daBook_c19func_ov020_0211216cEv
@@ -716,7 +706,7 @@ void daBook_c::func_ov020_02112110()
  * the home height. */
 void daBook_c::func_ov020_0211216c()
 {
-    Matrix4x3 *m = (mUsesModelAnim != 0) ? &mModelAnim.mat4x3 : &mModel.mat4x3;
+    Matrix4x3 *m = (mUsesAnmModel != 0) ? &mAnmModel.mat4x3 : &mModel.mat4x3;
     Matrix4x3_FromRotationZXYExt(m, mAngleX, mAngleY, mAngleZ);
     m->m[9] = mPosX >> 3;
     m->m[10] = mPosY >> 3;
@@ -726,8 +716,7 @@ void daBook_c::func_ov020_0211216c()
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = mHomePosY >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel, &mShadowMat, mScaleX * 0x64, 0x12c000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, mScaleX * 0x64, 0x12c000, 0xf);
 }
 
 // @symbol _ZN8daBook_c16CleanupResourcesEv
@@ -758,8 +747,8 @@ int daBook_c::Render()
     if (isHidden != 0)
         return 1;
 
-    if (mUsesModelAnim != 0)
-        mModelAnim.Render(&mScale);
+    if (mUsesAnmModel != 0)
+        mAnmModel.Render(&mScale);
     else
         mModel.Render(&mScale);
 
@@ -771,10 +760,10 @@ int daBook_c::Behavior()
 {
     func_0200f760(this, &mdCcAcPos_c);
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
-        /* Yoshi released the book (mEatenByYoshi, unk_104 == 5): save the
+        /* Yoshi released the book (mEatenByYoshi, mSpitOutTimer == 5): save the
          * state, give it 0x8000 forward speed and let STATE_YOSHI_SKID bring
          * it to rest */
-        if (mEatenByYoshi != 0 && unk_104 == 5) {
+        if (mEatenByYoshi != 0 && mSpitOutTimer == 5) {
             mSavedState = mState;
             mState = STATE_YOSHI_SKID;
             mEatenByYoshi = 0;
@@ -833,7 +822,7 @@ int daBookGen_c::Behavior()
 // @symbol _ZN8daBook_c13InitResourcesEv
 /* Loads both models and both animations, builds the collision objects, and
  * sets the profile's starting state by actorID. A book starts at half size;
- * unk_108 is nonzero only for the KILLER_BOOK; it is what makes destroying
+ * mCoinType is nonzero only for the KILLER_BOOK; it is what makes destroying
  * the book drop a blue coin, and touching the player or the world clears it.
  * The vulnFlags are dCc_c hit bits (dCc_c.h's best-effort reading):
  * the shot and killer books take the player's attacks, the killer book also
@@ -841,8 +830,8 @@ int daBookGen_c::Behavior()
  * kick. */
 int daBook_c::InitResources()
 {
-    Model::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
-    Model::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa8);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab0);
     LoadBlueCoinModel(this);
@@ -850,12 +839,12 @@ int daBook_c::InitResources()
     if (mShadowModel.InitCylinder() == 0)
         return 0;
 
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+    mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
 
     mClsnOffset.x = 0;
     mClsnOffset.y = 0;
     mClsnOffset.z = 0;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &mClsnOffset, 0x19000, 0x32000, 0x200001, 0);
+    mdCcAcPos_c.Init(this, mClsnOffset, 0x19000, 0x32000, 0x200001, 0);
 
     mLinkedActorID = 0;
     mTouchedPlayer = 0;
@@ -866,11 +855,11 @@ int daBook_c::InitResources()
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
 
-    if (mModel.SetFile((BMD_File*)data_ov020_02114ab8.words[1], 1, -1) == 0)
+    if (mModel.SetFile((BMD_File *)data_ov020_02114ab8.filePtr, 1, -1) == 0)
         return 0;
 
     mShadowMat = IDENTITY_MATRIX4X3;
-    mUsesModelAnim = 0;
+    mUsesAnmModel = 0;
     mAngleY += 0x8000;
     mUniformScale = 0x800;
 
@@ -882,7 +871,7 @@ int daBook_c::InitResources()
         {
             mKind = KIND_FLYING_BOOK;
             mState = STATE_SPAWNED;
-            unk_108 = 0;
+            mCoinType = 0;
             mdCcAcPos_c.vulnFlags |= 0x26fe0;
             goto success;
         }
@@ -892,7 +881,7 @@ int daBook_c::InitResources()
             {
                 mKind = KIND_FLYING_BOOK;
                 mState = STATE_WAIT;
-                unk_108 = 3;
+                mCoinType = 3;
                 mdCcAcPos_c.vulnFlags |= 0x2efe0;
                 goto success;
             }
@@ -903,7 +892,7 @@ int daBook_c::InitResources()
             {
                 mKind = KIND_SWITCH_BOOK;
                 mState = STATE_SWITCH_WAIT;
-                unk_108 = 0;
+                mCoinType = 0;
                 mdCcAcPos_c.flags |= 4;
                 mdCcAcPos_c.vulnFlags |= 0x3c0;
                 mScaleX = 0x1000;
@@ -923,8 +912,8 @@ success:
 int daBookGen_c::InitResources()
 {
     mSpawnTimer = 0;
-    Model::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
-    Model::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
     LoadBlueCoinModel(this);
     return 1;
 }

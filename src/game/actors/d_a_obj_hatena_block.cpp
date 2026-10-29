@@ -34,7 +34,7 @@
  *
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *
- *   common.h must be included first. Otherwise Model.h's nested Matrix4x3
+ *   common.h must be included first. Otherwise dExtSimpleModel_c.h's nested Matrix4x3
  *   wins and func_ov102_02149e38 / 02149ff0 change size (0x18 / 0x1c).
  *
  *   The destructor stays inline; out of line, mwccarm emits D0 before D1.
@@ -56,7 +56,7 @@
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
  *
  *   (a) Fix12<int> passed by value (notes/mwccarm-codegen.md 6az). A
- *       method call homes the argument and the bytes move: ModelAnim::SetAnim and
+ *       method call homes the argument and the bytes move: dExtAnmModel_c::SetAnim and
  *       dBgW_KcMbg::SetFile (InitResources), dBgActor_c::IsClsnInRange
  *       (Behavior), dActor_c::DropShadowScaleXYZ (func_ov102_02149ea4),
  *       Particle::System::NewSimple (also absent from Particle.h).
@@ -179,7 +179,7 @@ enum {
 
 /* SaveData::flags1 (data_0209caa0[1]) bit 31. Its meaning is not named in
    the tree; this class only tests it. While it is CLEAR, an actor 20
-   (HATENA_BLOCK) is drawn as the animated model (mModelAnim), Behavior only
+   (HATENA_BLOCK) is drawn as the animated model (mAnmModel), Behavior only
    advances that animation (while IDLE) and keeps the collider off, and the mega-player
    trigger (func_ov102_02149ccc) does not run for it. */
 enum { SAVE_FLAGS1_BIT31 = 0x80000000 };
@@ -216,13 +216,15 @@ extern int DecIfAbove0_Short(void *p);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void func_020393a4(int *p, int v);
 extern void func_02039394(int *p, int v);
-extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, void *pos, s32 radius);
-extern void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(void *self, void *shadow, void *mtx, int fix, int t1, int t2, unsigned int n);
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *bca, int a, int fx, unsigned int f);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *thiz, void *kcl, void *mtx, int fix, short s, void *clps);
+void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
+extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
+                                      void *clps);
 extern void func_ov102_0214ad14(void *actor);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned id, int x, int y, int z);
+namespace Particle {
+struct System {
+    static void NewSimple(unsigned id, int x, int y, int z);
+};
+}
 
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
@@ -237,19 +239,16 @@ void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src);
    destructors func_02017ab4, SharedFilePtr_Destruct_Anim and
    SharedFilePtr_Destruct_Clsn. */
 struct HatenaBlockModelFilePtr : SharedFilePtr {
-    int unk0; void *file;
     HatenaBlockModelFilePtr(unsigned int id);
     ~HatenaBlockModelFilePtr();
 };
 
 struct HatenaBlockAnimFileHandle : SharedFilePtr {
-    int unk0; void *file;
     HatenaBlockAnimFileHandle(unsigned int id);
     ~HatenaBlockAnimFileHandle();
 };
 
 struct HatenaBlockClsnFileHandle : SharedFilePtr {
-    int unk0; void *file;
     HatenaBlockClsnFileHandle(unsigned int id);
     ~HatenaBlockClsnFileHandle();
 };
@@ -257,7 +256,7 @@ struct HatenaBlockClsnFileHandle : SharedFilePtr {
 /* -------------------------------------------------------------------------- */
 /* The six model handles, the animation handle and the collision handle, in
    static-initializer order: the initializer constructs each and registers
-   its destructor. InitResources feeds the models to Model::LoadFile, the
+   its destructor. InitResources feeds the models to dExtSimpleModel_c::LoadFile, the
    animation to dExtFrameCtrl_c::LoadFile and the collision one to
    dBgW_Kc::LoadFile. */
 /* -------------------------------------------------------------------------- */
@@ -365,30 +364,30 @@ int daObjHatenaBlock_c::InitResources()
     void *modelFile = 0;
     switch (actorID - ACTOR_HATENA_BLOCK) {
     case 0:   /* HATENA_BLOCK */
-        modelFile = Model::LoadFile(data_ov102_0214e7e8);
-        mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov102_0214e808), 1, 0x19);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim, dExtFrameCtrl_c::LoadFile(data_ov102_0214e7f8), 0, 0x1000, 0);
-        Model::LoadFile(data_ov002_0210d9e0);
+        modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7e8);
+        mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov102_0214e808), 1, 0x19);
+        mAnmModel.SetAnim((BCA_File *)(dExtFrameCtrl_c::LoadFile(data_ov102_0214e7f8)), 0, 0x1000,
+                          0);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
         break;
     case 1:   /* ITEM_BLOCK */
     case 2:   /* VS_ITEM_BLOCK */
-        modelFile = Model::LoadFile(data_ov102_0214e800);
+        modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e800);
         break;
     case 3:   /* CAP_BLOCK_M */
-        modelFile = Model::LoadFile(data_ov102_0214e7f0);
-        Model::LoadFile(data_ov002_0210da40);
-        Model::LoadFile(data_ov002_0210d9e0);
+        modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7f0);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210da40);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
         break;
     case 5:   /* CAP_BLOCK_L */
-        modelFile = Model::LoadFile(data_ov102_0214e7d8);
-        Model::LoadFile(data_ov002_0210d9a0);
-        Model::LoadFile(data_ov002_0210d9e0);
+        modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7d8);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9a0);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
         break;
     case 4:   /* CAP_BLOCK_W */
-        modelFile = Model::LoadFile(data_ov102_0214e7e0);
-        Model::LoadFile(data_ov002_0210d9c0);
-        Model::LoadFile(data_ov002_0210d9e0);
+        modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7e0);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
         break;
     }
 
@@ -404,8 +403,9 @@ int daObjHatenaBlock_c::InitResources()
     mShadowMat = mModel.mat4x3;
     {
         void *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, &data_ov002_0210d954);
+        ((dBgW_KcMbg *)(&mMeshCollider))
+            ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), *(const Matrix4x3 *)(&mClsnMat), 0x199,
+                                  mAngleY, *(CLPS_Block *)(&data_ov002_0210d954));
     }
     mHomePosY = mPosY;
     mContentType = (unsigned char)param1;
@@ -422,7 +422,7 @@ int daObjHatenaBlock_c::InitResources()
         int b16 = !(actorID != ACTOR_VS_ITEM_BLOCK);
         if (b16 != 0) {
             mContentType = 0;
-            Model::LoadFile(*(SharedFilePtr *)data_ov002_0210da58);
+            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da58);
         }
     }
 
@@ -440,27 +440,27 @@ int daObjHatenaBlock_c::InitResources()
     case CONTENT_STAR:
         break;
     case CONTENT_SHELL:
-        Model::LoadFile(data_ov002_0210da18);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210da18);
         break;
     case CONTENT_ONEUP:
-        Model::LoadFile(data_ov002_0210d9d8);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
         break;
     case CONTENT_SCALEUP_KINOKO:
-        Model::LoadFile(data_ov002_0210da30);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
         break;
     case CONTENT_POWER_UP_7:
-        Model::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-        Model::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
-        Model::LoadFile(data_ov002_0210d9e0);
+        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
+        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
         break;
     case CONTENT_POWER_UP_5:
-        Model::LoadFile(*(SharedFilePtr *)data_ov002_0210da58);
-        Model::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-        Model::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
+        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da58);
+        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
+        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
         break;
     case CONTENT_POWER_UP_6:
-        Model::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-        Model::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
+        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
+        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
         break;
     }
 end:
@@ -502,7 +502,7 @@ int daObjHatenaBlock_c::Behavior()
     if ((data_0209caa0[1] & SAVE_FLAGS1_BIT31) == 0) {
         int b = (int)(actorID == ACTOR_HATENA_BLOCK);
         if (b != 0) {
-            mModelAnim.Advance();
+            mAnmModel.Advance();
             if (mMeshCollider.IsEnabled() != 0) {
                 mMeshCollider.Disable();
             }
@@ -519,12 +519,12 @@ int daObjHatenaBlock_c::Behavior()
         }
     }
     if (data_0209f2f8 == 0x1c) {   /* LEVEL_ID 0x1c */
-        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0x460000, 0x46000) != 0) {
+        if (IsClsnInRange(0x460000, 0x46000) != 0) {
             func_ov102_02149e38();
         }
         goto end;
     }
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0x118000, 0x46000) != 0) {
+    if (IsClsnInRange(0x118000, 0x46000) != 0) {
         func_ov102_02149e38();
     }
 end:
@@ -533,7 +533,7 @@ end:
 
 // @symbol _ZN18daObjHatenaBlock_c6RenderEv
 /* Draws nothing while POPPED. A HATENA_BLOCK with SAVE_FLAGS1_BIT31 clear
-   draws mModelAnim; every other case draws mModel, passing the Vector3 at
+   draws mAnmModel; every other case draws mModel, passing the Vector3 at
    mScaleX. Always returns 1. */
 int daObjHatenaBlock_c::Render()
 {
@@ -542,7 +542,7 @@ int daObjHatenaBlock_c::Render()
     if ((data_0209caa0[1] & SAVE_FLAGS1_BIT31) == 0) {
         int b = (actorID == ACTOR_HATENA_BLOCK);
         if (b != 0) {
-            mModelAnim.Render(0);
+            mAnmModel.Render(0);
             goto done;
         }
     }
@@ -638,7 +638,7 @@ int daObjHatenaBlock_c::CleanupResources()
 // @symbol _ZN18daObjHatenaBlock_c19func_ov102_02149ff0Ev
 /* Rebuilds the model matrix: a Y rotation by mAngleY, with the translation
    set to (mPosX, mPosY + mBounceYOffs, mPosZ) >> 3. A HATENA_BLOCK with
-   SAVE_FLAGS1_BIT31 clear then copies the matrix into mModelAnim as well. */
+   SAVE_FLAGS1_BIT31 clear then copies the matrix into mAnmModel as well. */
 void daObjHatenaBlock_c::func_ov102_02149ff0()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
@@ -650,7 +650,7 @@ void daObjHatenaBlock_c::func_ov102_02149ff0()
     int b = (int)(actorID == ACTOR_HATENA_BLOCK);
     if (b == 0)
         return;
-    mModelAnim.mat4x3 = mModel.mat4x3;
+    mAnmModel.mat4x3 = mModel.mat4x3;
 }
 
 // @symbol _ZN18daObjHatenaBlock_c19func_ov102_02149ea4Ev
@@ -695,8 +695,7 @@ skipcall:
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = (mPosY - 0x20000) >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
-    _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-        this, &mShadowModel, &mShadowMat, shadowScale, height + 0x14000, shadowScale, 0xf);
+    DropShadowScaleXYZ(mShadowModel, mShadowMat, shadowScale, height + 0x14000, shadowScale, 0xf);
 }
 
 // @symbol _ZN18daObjHatenaBlock_c19func_ov102_02149e38Ev
@@ -772,7 +771,7 @@ void daObjHatenaBlock_c::func_ov102_02149c78()
     vec[0] = mPosX;
     vec[1] = mPosY;
     vec[2] = mPosZ;
-    _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, vec, 0x5dc000);
+    Earthquake(*(const Vector3 *)vec, 0x5dc000);
     mBounceAng = 0x4000;
     mBounceTimer = 7;
 }
@@ -848,16 +847,19 @@ void daObjHatenaBlock_c::func_ov102_021498e0()
         mHeldActor = 0;
     }
     Sound::PlayBank3(0, mCamSpacePos);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb, pos.x, pos.y, pos.z);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(0xb, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(0xd, pos.x, pos.y, pos.z);
     typ = actorID;
     switch (typ - ACTOR_HATENA_BLOCK) {
     case 1: case 2:   /* ITEM_BLOCK, VS_ITEM_BLOCK */
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x10, pos.x, pos.y, pos.z); break;
+        Particle::System::NewSimple(0x10, pos.x, pos.y, pos.z);
+        break;
     case 0:           /* HATENA_BLOCK */
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xc, pos.x, pos.y, pos.z); break;
+        Particle::System::NewSimple(0xc, pos.x, pos.y, pos.z);
+        break;
     case 3: case 4: case 5:   /* CAP_BLOCK_M, W, L */
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(9, pos.x, pos.y, pos.z); break;
+        Particle::System::NewSimple(9, pos.x, pos.y, pos.z);
+        break;
     }
     ch = (int)mHitterParam;
     if (ch < 0) ch = 0; else if (ch > 3) ch = 3;
@@ -1029,7 +1031,7 @@ struct HbSpawnFrame { Vector3 pos; int vel[3]; };
    spawned, the cap gets heading (RandomIntInternal() + camera mAngleY +
    0x8000, truncated to 16 bits) in its mPrevAngleY, speed 0x3320 (about 3.2
    units) in mHorzSpeed, and a velocity vector (0, 0x11000, 0) in
-   unk_0a4 / mVertSpeed / unk_0ac (0x11000 = 17 units up). */
+   mSpeedX / mVertSpeed / mSpeedZ (0x11000 = 17 units up). */
 void daObjHatenaBlock_c::func_ov102_0214953c(int p1, int p2)
 {
     HbSpawnFrame f;
@@ -1051,9 +1053,9 @@ void daObjHatenaBlock_c::func_ov102_0214953c(int p1, int p2)
         o->mPrevAngleY = (short)vsum;
         o->mPrevAngleZ = 0;
         o->mHorzSpeed = 0x3320;
-        o->unk_0a4 = f.vel[0];
+        o->mSpeedX = f.vel[0];
         o->mVertSpeed = f.vel[1];
-        o->unk_0ac = f.vel[2];
+        o->mSpeedZ = f.vel[2];
     }
 }
 

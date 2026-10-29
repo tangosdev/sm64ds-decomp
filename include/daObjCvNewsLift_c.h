@@ -13,23 +13,23 @@
 #include "dBgActor_c.h"
 
 struct daObjCvNewsLift_c : dBgActor_c {
-    Model mPlatformModels[4];            /* 0x320 */
-    Matrix4x3 mPlatformMats[4];          /* 0x460 - the platform colliders' matrices */
-    dBgW_KcMbg mPlatformColliders[4];    /* 0x520 */
-    Vector3 mHomePos;                    /* 0xc40 - spawn position, restored on reset */
-    s32 mRotation[4];                    /* 0xc4c - current tilt quaternion */
-    s32 mTargetRotation[4];              /* 0xc5c - slerped toward each frame */
-    s32 mGroundY;                        /* 0xc6c - floor height below the spawn point */
-    u32 mMotorSound;                     /* 0xc70 - Sound::PlayLong handle */
-    u16 mResetTimer;                     /* 0xc74 - 300 while ridden; the lift resets at 0 */
-    u16 mWobblePhase;                    /* 0xc76 - sine-table phase of the bump wobble */
-    u16 mWobbleTimer;                    /* 0xc78 - frames left in the bump wobble */
-    s8 mLoweredPlatform;                 /* 0xc7a - platform the player stands on, or -1 */
-    s8 mPrevLoweredPlatform;             /* 0xc7b */
-    u8 mTiltHoldTimer;                   /* 0xc7c - frames before the tilt target clears */
-    u8 mBumped;                          /* 0xc7d - the lift ran into a wall */
-    u8 mPlayerOnMesh;                    /* 0xc7e - set by the main mesh's callback */
-    u8 pad_c7f;                          /* 0xc7f */
+    dExtSimpleModel_c mPlatformModels[4]; /* 0x320 */
+    Matrix4x3 mPlatformMats[4];           /* 0x460 - the platform colliders' matrices */
+    dBgW_KcMbg mPlatformColliders[4];     /* 0x520 */
+    Vector3 mHomePos;                     /* 0xc40 - spawn position, restored on reset */
+    s32 mRotation[4];                     /* 0xc4c - current tilt quaternion */
+    s32 mTargetRotation[4];               /* 0xc5c - slerped toward each frame */
+    s32 mGroundY;                         /* 0xc6c - floor height below the spawn point */
+    u32 mMotorSound;                      /* 0xc70 - Sound::PlayLong handle */
+    u16 mResetTimer;                      /* 0xc74 - 300 while ridden; the lift resets at 0 */
+    u16 mWobblePhase;                     /* 0xc76 - sine-table phase of the bump wobble */
+    u16 mWobbleTimer;                     /* 0xc78 - frames left in the bump wobble */
+    s8 mLoweredPlatform;                  /* 0xc7a - platform the player stands on, or -1 */
+    s8 mPrevLoweredPlatform;              /* 0xc7b */
+    u8 mTiltHoldTimer;                    /* 0xc7c - frames before the tilt target clears */
+    u8 mBumped;                           /* 0xc7d - the lift ran into a wall */
+    u8 mPlayerOnMesh;                     /* 0xc7e - set by the main mesh's callback */
+    u8 pad_c7f;                           /* 0xc7f */
 
     /* --- vtable overrides --- */
     /* Inline on purpose: the out-of-line form emits D0 ahead of D1, the
@@ -60,7 +60,8 @@ struct daObjCvNewsLift_c : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjCvNewsLift_c_size_must_be_0xc80[sizeof(struct daObjCvNewsLift_c) == 0xc80 ? 1 : -1];
+typedef char
+    daObjCvNewsLift_c_size_must_be_0xc80[sizeof(struct daObjCvNewsLift_c) == 0xc80 ? 1 : -1];
 #endif
 
 #endif

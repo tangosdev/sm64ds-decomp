@@ -51,49 +51,49 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov090_021330c8",
+      "symbol": "_ZN12daPukupuku_c14CheckPlayerHitEv",
       "address": "0x021330c8",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov090_021330c8.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN12daPukupuku_c19func_ov090_02133190Ev",
+      "symbol": "_ZN12daPukupuku_c10StatePauseEv",
       "address": "0x02133190",
       "size": "0x00000034",
       "legacy_source": "src/func_ov090_02133190.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov090_021331c4",
+      "symbol": "_ZN12daPukupuku_c14InitStatePauseEv",
       "address": "0x021331c4",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov090_021331c4.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN12daPukupuku_c19func_ov090_02133200Ev",
+      "symbol": "_ZN12daPukupuku_c9StateSwimEv",
       "address": "0x02133200",
       "size": "0x00000090",
       "legacy_source": "src/func_ov090_02133200.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov090_02133290",
+      "symbol": "_ZN12daPukupuku_c13InitStateSwimEv",
       "address": "0x02133290",
       "size": "0x00000058",
       "legacy_source": "src/func_ov090_02133290.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN12daPukupuku_c19func_ov090_021332e8EPM10PukuStateCFivE",
+      "symbol": "_ZN12daPukupuku_c8SetStateEPM10PukuStateCFivE",
       "address": "0x021332e8",
       "size": "0x00000050",
       "legacy_source": "src/func_ov090_021332e8.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov090_02133338",
+      "symbol": "_ZN12daPukupuku_c17UpdateModelMatrixEv",
       "address": "0x02133338",
       "size": "0x00000074",
       "legacy_source": "src/func_ov090_02133338.c",
@@ -174,7 +174,7 @@
       "address": "0x02134564",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model file handle constructed with file ID 0x418; Model::LoadFile consumes it in InitResources and CleanupResources releases it"
+      "evidence": "model file handle constructed with file ID 0x418; dExtSimpleModel_c::LoadFile consumes it in InitResources and CleanupResources releases it"
     },
     {
       "symbol": "@620",
@@ -452,7 +452,7 @@
     "RECONCILED: data_ov090_02134594 is declared by include/decl_common.h as a scalar int; the generator's local 'int[]' redeclaration was dropped and the call sites take its address.",
     "RECONCILED: the generator's 'struct dCcAcPos_c { int d; }' stand-in was dropped -- daPukupuku_c.h already supplies the real class, and the stand-in redefined it.",
     "RECONCILED: func_ov090_021332e8's local 'C'/'PMF' names were renamed PukuStateC/PukuStatePMF to clear a collision with the Holder::PMF pair that Behavior needs. Names only; the forward-declare-then-typedef-then-define ordering that fixes the pointer-to-member representation is preserved.",
-    "include/common.h is included FIRST, deliberately. Matrix4x3 has two spellings sharing the MATRIX4X3_DEFINED guard and whichever a TU sees first stands. daPukupuku_c.h reaches math/Matrix.h (nested 'Matrix3x3 r; Vector3 t') through ModelAnim.h; that spelling splits func_ov090_02133338's 48-byte matrix copy into a 9-word and a 3-word move and compiled to 0x90 against the ROM's 0x74. common.h's flat 's32 m[12]' restores the ROM's three 4-register ldm/stm blocks. Both are 0x30 bytes and nothing in this TU names .r or .t.",
+    "include/common.h is included FIRST, deliberately. Matrix4x3 has two spellings sharing the MATRIX4X3_DEFINED guard and whichever a TU sees first stands. daPukupuku_c.h reaches math/Matrix.h (nested 'Matrix3x3 r; Vector3 t') through dExtAnmModel_c.h; that spelling splits func_ov090_02133338's 48-byte matrix copy into a 9-word and a 3-word move and compiled to 0x90 against the ROM's 0x74. common.h's flat 's32 m[12]' restores the ROM's three 4-register ldm/stm blocks. Both are 0x30 bytes and nothing in this TU names .r or .t.",
     "Only the single ~daPukupuku_c() at ordinal 0 is defined: mwccarm emits the D1, D0 and D2 variants together from one declaration, so ordinal 1 carries its @symbol marker and a note instead of a body.",
     "REFUTED and not carried into the TU: the legacy src/func_ov090_02133200.c claimed 'recovered name: daManta_c_Kill' and 'daManta_c::Kill - recovered from vtable slot identity'. _ZTV9daManta_c spans 0x0213423c..0x021342b8 and its slots hold only daManta_c's own functions; 0x2133200 is in no vtable. Its sole referrer in the ROM is 0x21342b8, the first pointer-to-member entry of daPukupuku_c's state table, which begins exactly where daManta_c's vtable ends -- the likely source of the mis-assignment. No replacement name is coined.",
     "Static initializer folded: the PukupukuModelFile handle (file 0x418), the PukupukuAnimationFilePtr handle (file 0x419), their destructor-registration nodes and the two PukuStateRow state rows make mwcc emit __sinit_d_a_pukupuku.cpp itself (0xd4, raw-byte-identical to retail __sinit_ov090_02133f4c with the same instruction sequence and literal pool); the handwritten src/unnamed/ov090/__sinit_ov090_02133f4c.c is retired. The rows are plain word copies from the four .data descriptors (no destructor registration), so no vector alias is needed. Both compiler temps (@620/@621 nodes) are fleet-unique, so no defined_symbol_renames are needed. This fold does NOT license the .data descriptors, the RTTI chain, the g_profile row or the vtable, which stay compiler-only deadstrip.",
@@ -662,28 +662,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -781,12 +761,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@634",
+      "from": "@681",
       "to": "@620",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@635",
+      "from": "@682",
       "to": "@737",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }

@@ -21,23 +21,23 @@
  * SquareMetalNetLift_Spawn and ArrowPathLift_Spawn (the two factories).
  */
 struct daLinelift2_c : dBgActor_c {
-    s32 mState;                       /* 0x320 */
-    s32 mNodeCount;                   /* 0x324 */
-    s32 mNodeIndex;                   /* 0x328 */
-    s32 mBasePosX;                    /* 0x32c -- the node just left */
-    s32 mBasePosY;                    /* 0x330 */
-    s32 mBasePosZ;                    /* 0x334 */
-    s32 mTargetPosX;                  /* 0x338 -- the node being headed for */
-    s32 mTargetPosY;                  /* 0x33c */
-    s32 mTargetPosZ;                  /* 0x340 */
-    PathPtr mPathPtr;                 /* 0x344 */
-    s32 mSinkOffsetY;                 /* 0x34c */
-    s16 mBaseAngleY;                  /* 0x350 */
-    u8  mVariant;                     /* 0x352 -- param1 bits 8..15: resource set */
-    u8  pad_353;
-    u16 mStateTimer;                  /* 0x354 */
-    u8  mIsPressed;                   /* 0x356 -- set by the mesh callback */
-    u8  pad_357;
+    s32 mState;       /* 0x320 */
+    s32 mNodeCount;   /* 0x324 */
+    s32 mNodeIndex;   /* 0x328 */
+    s32 mBasePosX;    /* 0x32c -- the node just left */
+    s32 mBasePosY;    /* 0x330 */
+    s32 mBasePosZ;    /* 0x334 */
+    s32 mTargetPosX;  /* 0x338 -- the node being headed for */
+    s32 mTargetPosY;  /* 0x33c */
+    s32 mTargetPosZ;  /* 0x340 */
+    PathPtr mPathPtr; /* 0x344 */
+    s32 mSinkOffsetY; /* 0x34c */
+    s16 mBaseAngleY;  /* 0x350 */
+    u8 mVariant;      /* 0x352 -- param1 bits 8..15: resource set */
+    u8 pad_353;
+    u16 mStateTimer; /* 0x354 */
+    u8 mIsPressed;   /* 0x356 -- set by the mesh callback */
+    u8 pad_357;
 
     /* Inline is load-bearing: out-of-line emits D0 before D1. */
     virtual ~daLinelift2_c() {}
@@ -47,19 +47,23 @@ struct daLinelift2_c : dBgActor_c {
     virtual int Behavior();
     virtual int Render();
 
-    /* The three state bodies data_ov091_021354e0 dispatches, the path
-       stepper, and the collider callback's target. */
-    int  func_ov091_02131db8();
-    void func_ov091_02131ef0();
-    void func_ov091_02131f9c();
-    void func_ov091_02132000();
-    void func_ov091_02132360(dActor_c *other);
+    /* The three state bodies gLinelift2StateFuncs dispatches by mState. */
+    void StateWait();
+    void StateForward();
+    void StateReturn();
+
+    /* One step toward the target node; -1 off either end of the path. */
+    int StepAlongPath();
+    void SetVelocityToward(const Vector3 *to, const Vector3 *from);
+
+    /* The collider's stood-on callback and the lift-side half it forwards to. */
+    static void StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *rider);
+    void OnStoodOn(dActor_c *rider);
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daLinelift2_c_size_must_be_0x358[
-    sizeof(daLinelift2_c) == 0x358 ? 1 : -1];
+typedef char daLinelift2_c_size_must_be_0x358[sizeof(daLinelift2_c) == 0x358 ? 1 : -1];
 #endif
 
 #endif /* DALINELIFT2_C_H */

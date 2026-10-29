@@ -32,7 +32,7 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        THE QUERY SPHERE. dBgW_KcMbg::DetectClsn(dBgCh_SphCrr&) hands 0x03c
        to func_02039e48, which transforms a Vector3 into the collider's local
        frame, and scales 0x048 by the collider's uniform scale before passing it
-       as the `Fix12<int> radius` argument of dBgCh_SphCrr::SetObjAndSphere -- so
+       as the `Fix12i radius` argument of dBgCh_SphCrr::SetObjAndSphere -- so
        0x03c is twelve bytes of centre and 0x048 is the radius that follows it. */
     /* A Vector3 DISPLACEMENT. dBgCh_Actr's Update* methods read these three
        words (their Actr +0x6c) as a Vector3 and feed them to the movement
@@ -40,12 +40,12 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     Vector3 disp;           /* 0x04c */
     /* Per-axis range of the push-out vectors the contacts produce, not a
        spatial box: dBgW_Kc's sphere query tracks the lowest and highest push
-       per axis and hands both to func_02037a6c, which widens this range to
-       cover them. func_02037b1c clears all six words, func_02037a04 reads
-       them out, and func_02037a38 sums min + max into disp, so opposing
+       per axis and hands both to ExpandPushOutBounds, which widens this range to
+       cover them. ResetDisplacement clears all six words, GetPushOutBounds reads
+       them out, and UpdateDisplacement sums min + max into disp, so opposing
        pushes on one axis cancel and same-sign ones keep the largest. */
-    Vector3 aabbMin;        /* 0x058 */
-    Vector3 aabbMax;        /* 0x064 */
+    Vector3 mPushOutMin; /* 0x058 */
+    Vector3 mPushOutMax; /* 0x064 */
     /* Result flags, read and OR-ed a bit at a time by the same function:
        1 = any hit, 4 = floor, 8 = wall, 0x10 = from underneath. Each bit gates
        copying the matching dBgPi below it. */
@@ -57,26 +57,22 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     /* Wall-rejection half extent. When positive, dBgW_Kc's sphere query
        rejects a wall triangle whose three axis projections all lie within
        [-(extent + radius), extent - radius] (the retail comparison at
-       0x01ffcfa8); zero disables the test. dBgW_KcMbg rescales it into the
-       collider's frame with the radius. Its role name would be
-       mWallRejectHalfExtent; the unk_ spelling stays until the users in
-       d_bg_w_kc_itcm.cpp and d_bg_w_kc_mbg*.cpp move with it. */
-    s32 unk_0ec;            /* 0x0ec */
+       0x01ffcfa8); zero, the constructor's value, disables the test.
+       dBgW_KcMbg rescales it into the collider's frame with the radius. */
+    s32 mWallRejectHalfExtent; /* 0x0ec */
     u8  pad_0f0[0xc];
     /* Normal of the floor contact with the greatest Y component. The retail
        KCL query copies SurfaceInfo's normal at 0x01ffbe6c, then compares its
-       Y against the field at +0x100 before saving all three words at
-       0x01ffd094..0x01ffd0a8 through func_0203794c. Reset (func_02037b5c)
+       Y against mFloorNormal.y before saving all three words at
+       0x01ffd094..0x01ffd0a8 through SetFloorNormal. Reset (func_02037b5c)
        uses (0, -0x1000, 0), so the first accepted floor replaces it;
-       dBgCh_Actr copies it into its mGroundNormal on a grounded frame.
-       Their role names would be mFloorNormalX/Y/Z; the unk_ spellings stay
-       until the users in d_bg_w_kc_itcm.cpp, d_bg_w_kc_mbg*.cpp and
-       d_bg_ch_actr.cpp move with them. */
-    s32 unk_0fc;           /* 0x0fc - floor normal x */
-    s32 unk_100;           /* 0x100 - floor normal y (the compared word) */
-    s32 unk_104;           /* 0x104 - floor normal z */
-    s32 mScale;            /* 0x108 - dBgCh_Actr's Update* copy its tail word
-                               (Actr +0x128) here each update */
+       dBgCh_Actr copies it into its mGroundNormal on a grounded frame. */
+    Vector3 mFloorNormal; /* 0x0fc */
+    /* Contacts whose normal Y exceeds this are skipped: dBgW_Kc's sphere
+       query tests it against every candidate face before classifying it.
+       SetObjAndSphere sets 0x1000 (accept every face); dBgCh_Actr's Update*
+       copy its own tail word (Actr +0x1b8) here each update. */
+    s32 mMaxNormalY;       /* 0x108 */
     s32 mMotionAngPtr;     /* 0x10c - dBgCh_Actr::Init stores its fourth
                                argument, a Vector3_16 *, at Actr +0x12c = this
                                +0x10c, and the Update* bodies forward it and
@@ -104,11 +100,13 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        include/dActor_c.h that mwcc only inlines the member when it is in the
        class or its immediate base. This is load-bearing for the D0 at
        0x02037c40; a non-virtual inline member adds no field or vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 
     /* methods */
     void SetFloorResult(const dBgPi &result);
-    void SetObjAndSphere(const Vector3 &pos, Fix12<int> radius, dActor_c *actor);
+    void SetObjAndSphere(const Vector3 &pos, Fix12i radius, dActor_c *actor);
     int  DetectClsn();
 
     /* Result-slot accessors. mClsnResult1/2/3 are the floor / wall /
@@ -122,21 +120,27 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     void SetWallResult(const dBgPi &result);
     void SetUnderResult(const dBgPi &result);
 
+    /* Inferred names for the accumulated collision push-out range. */
+    void ResetDisplacement();
+    void ExpandPushOutBounds(s32 minX, s32 minY, s32 minZ, s32 maxX, s32 maxY, s32 maxZ);
+    void GetPushOutBounds(Vector3 *outMin, Vector3 *outMax);
+    void UpdateDisplacement();
+
+    /* Inferred names for the per-class result writers. SetFloorNormal saves
+       mFloorNormal; the rest forward to the floor, wall or under dBgPi
+       (mClsnResult1/2/3). */
+    void SetFloorNormal(const s32 *normal);
+    void SetFloorCollider(int i, int clsnID, dActor_c *owner, dBgW *collider);
+    void RecordFloorHit(int triID, void *src);
+    void SetWallCollider(int i, int clsnID, dActor_c *owner, dBgW *collider);
+    void RecordWallHit(int triID, void *src);
+    void SetUnderCollider(int i, int clsnID, dActor_c *owner, dBgW *collider);
+    void RecordUnderHit(int triID, void *src);
+
     /* Members the ROM keeps unnamed; each takes the SphCrr object as its
        first argument in the cartridge call graph and drives the evidenced
        fields above. */
     void func_02037940(u8 flags_);
-    void func_0203794c(const s32 *normal);
-    void func_02037968(int i, int clsnID, dActor_c *owner, dBgW *collider);
-    void func_0203798c(int triID, void *src);
-    void func_0203799c(int i, int clsnID, dActor_c *owner, dBgW *collider);
-    void func_020379c0(int triID, void *src);
-    void func_020379d0(int i, int clsnID, dActor_c *owner, dBgW *collider);
-    void func_020379f4(int triID, void *src);
-    void func_02037a04(Vector3 *outMin, Vector3 *outMax);
-    void func_02037a38();
-    void func_02037a6c(s32 minX, s32 minY, s32 minZ, s32 maxX, s32 maxY, s32 maxZ);
-    void func_02037b1c();
     void func_02037b5c();
     int  func_02038824();
     int  func_02038a38();
@@ -163,20 +167,18 @@ struct dBgCh_SphCrr {
     Vector3 pos;            /* 0x03c */
     Fix12i radius;          /* 0x048 */
     Vector3 disp;           /* 0x04c */
-    Vector3 aabbMin;        /* 0x058 */
-    Vector3 aabbMax;        /* 0x064 */
+    Vector3 mPushOutMin;    /* 0x058 */
+    Vector3 mPushOutMax;    /* 0x064 */
     u8  flags;              /* 0x070 - see the C++ branch; Actr's accessors
                                call this byte their mClsnFlags home */
     u8  pad_071[0x3];
     struct dBgPi mClsnResult1; /* 0x074 */
     struct dBgPi mClsnResult2; /* 0x09c */
     struct dBgPi mClsnResult3; /* 0x0c4 */
-    s32 unk_0ec;               /* 0x0ec - wall-rejection half extent, see C++ */
+    s32 mWallRejectHalfExtent; /* 0x0ec - see the C++ branch */
     u8 pad_0f0[0xc];
-    s32 unk_0fc;           /* 0x0fc - floor normal x, see the C++ branch */
-    s32 unk_100;           /* 0x100 - floor normal y */
-    s32 unk_104;           /* 0x104 - floor normal z */
-    s32 mScale;            /* 0x108 */
+    Vector3 mFloorNormal;  /* 0x0fc - see the C++ branch */
+    s32 mMaxNormalY;       /* 0x108 */
     s32 mMotionAngPtr;     /* 0x10c - see the C++ branch: Init's Vector3_16 * */
 };
 

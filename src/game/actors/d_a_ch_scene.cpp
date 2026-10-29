@@ -10,16 +10,10 @@
  * 0x02108674 is pointed at by exactly one word, 0x021086b0, this class's
  * own vtable slot.
  *
- * deslop leftovers:
- * - dCamera_c::SetFlag_3 / LookAtExit stay mangled: dCamera_c.h has no LookAtExit,
- *   and dCamera_c.h is out of scope.
- * - func_ov002_020b0a0c writes the exit band and calls LoadLevel; a member
- *   spelling would change the ROM symbol.
- * - LoadLevel / StartExitFaderWipe / func_02012790 / IsStarCollectedInLevel
- *   stay free functions; no owning header.
- * - data_0209f394 / data_0209f250 / data_0209f318 / data_0209f2c0 /
- *   data_0209f2f8 / data_0209f220 / data_02092110 / data_020a0e68 are arm9
- *   globals this TU does not own.
+ * LoadLevel, MulVec3Mat4x3, InvMat4x3, StartExitFaderWipe and
+ * IsStarCollectedInLevel are arm9 C helpers with no shared header yet, so they
+ * keep a local extern "C" block. The data_ globals are arm9 data this TU does
+ * not own.
  */
 
 #include "common.h"
@@ -28,30 +22,28 @@
 #include "dFdColor_c.h"
 #include "Player.h"
 #include "dCamera_c.h"
+#include "Sound.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 extern "C" {
-extern void LoadLevel(s8 levelID, u8 entranceID, s8 starID, u32 d, s8 e);
+/* local extern: these four have no shared header yet. LoadLevel keeps this
+   TU's narrow spelling; the definition's wider one is a codegen change. */
+void LoadLevel(s8 levelID, u8 entranceID, s8 starID, u32 d, s8 e);
+void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
+void InvMat4x3(void *in, void *out);
+void StartExitFaderWipe(int);
+int IsStarCollectedInLevel(signed char levelID, int starID);
+}
+
 extern u8 data_0209f2c0[];
-extern void MulVec3Mat4x3(void *in, void *m, void *out);
-extern void InvMat4x3(void *in, void *out);
-extern void func_ov002_020b0a0c(daChScene_c *self);
-extern void StartExitFaderWipe(int a);
-extern int Vec3_Dist(void *a, void *b);
-extern void func_02012790(int id);
 extern unsigned char data_0209f250;
 extern dActor_c *data_0209f394[];
 extern signed char data_02092110;
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f220;
-extern int IsStarCollectedInLevel(signed char levelID, int starID);
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
-}
-
 extern void *data_0209f318;
 extern dFdColor_c data_0209f5e8;
-extern Matrix4x3 data_020a0e68;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -62,18 +54,17 @@ extern Matrix4x3 data_020a0e68;
  * preserved. Historical alias: daChScene_c_Spawn.
  *
  * Every instruction the cartridge has here falls out of the one `new`. */
-extern "C" daChScene_c *daChScene_c_classInit()
-{
+extern "C" daChScene_c *daChScene_c_classInit() {
     return new daChScene_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daChScene_c13InitResourcesEv
-s32 daChScene_c::InitResources()
-{
+s32 daChScene_c::InitResources() {
     if (data_0209f2f8 == 8 && data_0209f220 != 1) {
-        if (IsStarCollectedInLevel(8, 1) != 0) return 0;
+        if (IsStarCollectedInLevel(8, 1) != 0)
+            return 0;
     }
 
     if ((unsigned char)((unsigned int)param1 >> 24) == 0x12) {
@@ -111,24 +102,23 @@ s32 daChScene_c::InitResources()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daChScene_c8BehaviorEv
-s32 daChScene_c::Behavior()
-{
-    int out1[3];
-    int out2[3];
+s32 daChScene_c::Behavior() {
+    Vector3 out1;
+    Vector3 out2;
     dActor_c *player = data_0209f394[data_0209f250];
     if (mHorzSpeed != 0) {
-        MulVec3Mat4x3(&player->mPosX, &mInvMat, out1);
-        if (out1[2] > mHorzSpeed || out1[2] < -0x300000) {
-            out1[2] = mHorzSpeed;
+        MulVec3Mat4x3(&player->mPos, &mInvMat, &out1);
+        if (out1.z > mHorzSpeed || out1.z < -0x300000) {
+            out1.z = mHorzSpeed;
             data_020a0e68 = mInvMat;
             InvMat4x3(&data_020a0e68, &data_020a0e68);
-            MulVec3Mat4x3(out1, &data_020a0e68, &player->mPosX);
+            MulVec3Mat4x3(&out1, &data_020a0e68, &player->mPos);
         }
         mHorzSpeed -= 0x20000;
         if (mHorzSpeed < -0x300000) {
             mHorzSpeed = -0x300000;
             if (data_02092110 < 0) {
-                func_ov002_020b0a0c(this);
+                LoadDestinationLevel();
                 dScene_c::SetAndStopColorFader();
                 data_0209f5e8.color = 0x7fff;
             }
@@ -136,36 +126,36 @@ s32 daChScene_c::Behavior()
     } else {
         if (data_02092110 < 0) {
             if (((Player *)player)->IsStateEnteringLevel() == 0) {
-                MulVec3Mat4x3(&player->mPosX, &mInvMat, out2);
+                MulVec3Mat4x3(&player->mPos, &mInvMat, &out2);
                 {
-                    int a = out2[0];
+                    int a = out2.x;
                     if (a < 0)
                         a = -a;
                     if (a <= mScaleX) {
-                        if (out2[1] >= 0 && out2[1] <= mScaleY) {
-                            if ((out2[2] ^ mScaleZ) < 0) {
+                        if (out2.y >= 0 && out2.y <= mScaleY) {
+                            if ((out2.z ^ mScaleZ) < 0) {
                                 void *cam;
                                 mAngleZ = 0;
-                                if (out2[1] > 0x100000) {
+                                if (out2.y > 0x100000) {
                                     mAngleZ = 2;
-                                } else if (out2[1] > 0x60000) {
+                                } else if (out2.y > 0x60000) {
                                     mAngleZ = 1;
                                 }
                                 cam = data_0209f318;
                                 if (((Player *)player)->Unk_020c9e5c(7)) {
-                                    func_ov002_020b0a0c(this);
+                                    LoadDestinationLevel();
                                     StartExitFaderWipe(6);
                                     ((dCamera_c *)cam)->SetFlag_3();
                                 } else {
                                     ((Player *)player)->SetNoControlState(6, -1, 0);
                                     if (mAngleX != 0) {
                                         dActor_c *o;
-                                        func_ov002_020b0a0c(this);
+                                        LoadDestinationLevel();
                                         StartExitFaderWipe(5);
                                         ((dCamera_c *)cam)->SetFlag_3();
                                         o = dActor_c::FindWithActorID(0x12a, 0);
                                         while (o != 0) {
-                                            if (Vec3_Dist(&o->mPosX, &mPosX) < 0x12c000)
+                                            if (Vec3_Dist(&o->mPos, &mPos) < 0x12c000)
                                                 break;
                                             o = dActor_c::FindWithActorID(0x12a, o);
                                         }
@@ -179,11 +169,11 @@ s32 daChScene_c::Behavior()
                                     } else {
                                         int t = (signed char)(int)(((unsigned int)param1 >> 0x18));
                                         if (t == 0x1b || t == 0x12) {
-                                            func_ov002_020b0a0c(this);
+                                            LoadDestinationLevel();
                                             dScene_c::SetAndStopColorFader();
                                             data_0209f5e8.color = 0x7fff;
                                         }
-                                        mHorzSpeed = out2[2];
+                                        mHorzSpeed = out2.z;
                                         ((dCamera_c *)cam)->LookAtExit(*this);
                                         func_02012790(0x1e);
                                     }
@@ -192,7 +182,7 @@ s32 daChScene_c::Behavior()
                         }
                     }
                 }
-                mScaleZ = out2[2];
+                mScaleZ = out2.z;
             }
         }
     }
@@ -202,45 +192,40 @@ s32 daChScene_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daChScene_c6RenderEv
-s32 daChScene_c::Render()
-{
+s32 daChScene_c::Render() {
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daChScene_c16OnPendingDestroyEv
-void daChScene_c::OnPendingDestroy()
-{
-}
+void daChScene_c::OnPendingDestroy() {}
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daChScene_c16CleanupResourcesEv
-s32 daChScene_c::CleanupResources()
-{
+s32 daChScene_c::CleanupResources() {
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020b0a0c
-extern "C" {
-void func_ov002_020b0a0c(daChScene_c *self)
-{
-    data_0209f2c0[0] = (u8)self->mAngleZ;
+// @symbol _ZN11daChScene_c20LoadDestinationLevelEv
+/* Hand the exit band to the next level and load the destination param1
+   names: level in the top byte, entrance in the next, and LoadLevel's last
+   argument in the third (0xff passes as -1). */
+void daChScene_c::LoadDestinationLevel() {
+    data_0209f2c0[0] = (u8)mAngleZ;
     {
-        u32 v = self->param1;
+        u32 v = param1;
         u32 hi = v >> 0x18;
         u32 mid = (v >> 8) & 0xff;
-        if (mid == 0xff) mid = -1;
+        if (mid == 0xff)
+            mid = -1;
         LoadLevel((s8)hi, (u8)(v >> 0x10), -1, 0, (s8)mid);
     }
 }
-}
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN11daChScene_cD0Ev, 0x020b09d4, size 0x38 */
-/* -------------------------------------------------------------------------- */
+
 // @symbol _ZN11daChScene_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
@@ -257,9 +242,6 @@ void func_ov002_020b0a0c(daChScene_c *self)
  * exactly D1 then D0 and no D2 -- the ROM's shape -- so both variants are
  * licensed functions of this TU and neither needs a deadstrip policy row. */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN11daChScene_cD1Ev, 0x020b09b0, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daChScene_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *

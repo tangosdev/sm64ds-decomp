@@ -49,14 +49,14 @@ game data. `build-port.cmd` builds all of them into `build\port\`.
 | 3a | `smoke_roots` | SetupRootHeap + the Memory:: layer (game global heap) |
 | 3b | `smoke_fs` | SharedFilePtr over the catalog card seam, LZ77 cross-checked |
 | 4a | `smoke_gx` | the interrupt-driven display-list pump, byte-equal vs harness |
-| 4b | `smoke_model` | the whole Model pipeline: load, rebase, VRAM upload, materials, render (Mario, textured) |
+| 4b | `smoke_model` | the whole dExtSimpleModel_c pipeline: load, rebase, VRAM upload, materials, render (Mario, textured) |
 | 4c | `smoke_anim` | dExtFrameCtrl_c/UpdateBones recursion (the Mad Piano, posed) |
 | 4d | `smoke_soak` | every compatible catalog model loads and renders with zero faults |
 | 5 | `smoke_frames` | the fiber frame loop: game-shaped frames, the piano attack in motion |
 | 5b | `smoke_soak_anim` | every compatible model+BCA pair animates and renders with zero faults |
 | 6 | `smoke_oam` | the 2D sprite engine: OAM emit, affine params, upload to mapped OAM |
 | 6b | `smoke_oam` | OBJ scan-out: the game's sprite placements become pixels |
-| 7 | `smoke_modelanim` | ModelAnim: the game owns frame progression (speed, loop wrap) |
+| 7 | `smoke_modelanim` | dExtAnmModel_c: the game owns frame progression (speed, loop wrap) |
 | 8 | `smoke_clsn` | collision: the octree walk answers ground queries over level KCL |
 | 9 | `smoke_actor` | the actor framework: spawn, init, behave, render through vtable dispatch |
 

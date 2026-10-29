@@ -16,13 +16,13 @@
  * that _ZTI. The tree called the class Coffin until then.
  *
  * The destructor proves 0x000..0x31f is the dBgActor_c base: it destroys the
- * inherited dBgW_KcMbg at 0x124 and Model at 0x0d4, then chains to dActor_c.
+ * inherited dBgW_KcMbg at 0x124 and dExtSimpleModel_c at 0x0d4, then chains to dActor_c.
  * The remaining fields are evidenced by the class's state functions. */
 struct daObjCasket_c : dBgActor_c {
-    s32 mState;             /* 0x320 -- index into the WAIT, STANDUP state table */
-    u16 mStateTimer;        /* 0x324 -- WAIT countdown, then the STANDUP shake */
-    s16 mAngleStep;         /* 0x326 -- per-frame step of mAngleX */
-    u16 mBehaviorTimer;     /* 0x328 -- frame counter; paces the rattle */
+    s32 mState;         /* 0x320 -- index into the WAIT, STANDUP state table */
+    u16 mStateTimer;    /* 0x324 -- WAIT countdown, then the STANDUP shake */
+    s16 mAngleStep;     /* 0x326 -- per-frame step of mAngleX */
+    u16 mBehaviorTimer; /* 0x328 -- frame counter; paces the rattle */
     /* 0x32a..0x32b is tail padding: sizeof rounds to 0x32c, the factory's
        allocation size. Nothing reads or writes it. */
 
@@ -52,11 +52,11 @@ struct daObjCasket_c : dBgActor_c {
 
 /* Flat compatibility view for C translation units. */
 struct daObjCasket_c {
-    u8  pad_000[0x320];
-    s32 mState;             /* 0x320 */
-    u16 mStateTimer;        /* 0x324 */
-    s16 mAngleStep;         /* 0x326 */
-    u16 mBehaviorTimer;     /* 0x328 */
+    u8 pad_000[0x320];
+    s32 mState;         /* 0x320 */
+    u16 mStateTimer;    /* 0x324 */
+    s16 mAngleStep;     /* 0x326 */
+    u16 mBehaviorTimer; /* 0x328 */
 };
 
 #endif

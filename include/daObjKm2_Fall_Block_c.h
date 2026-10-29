@@ -4,8 +4,6 @@
 #include "types.h"
 #include "daObjFallBlock_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * daKpa_c in the Fire Sea's falling block. No fields of its own: the
  * factory allocates 0x34c, which daObjFallBlock_c fills. Overrides
@@ -20,10 +18,6 @@ struct daObjKm2_Fall_Block_c : daObjFallBlock_c {
     virtual ~daObjKm2_Fall_Block_c() {}
     virtual s32 CleanupResources(); /* slot 3 */
     virtual s32 InitResources();    /* slot 0 */
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj(size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

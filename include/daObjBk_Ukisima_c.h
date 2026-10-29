@@ -4,8 +4,6 @@
 #include "types.h"
 #include "daObjKaitendai_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Whomp's Fortress spinning disc. No fields of its own:
  * sizeof(daObjBk_Ukisima_c) == 0x320 == sizeof(dBgActor_c).
@@ -20,16 +18,11 @@ struct daObjBk_Ukisima_c : daObjKaitendai_c {
     virtual ~daObjBk_Ukisima_c() {}
     virtual s32 CleanupResources(); /* slot 3 */
     virtual s32 InitResources();    /* slot 0 */
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj(size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjBk_Ukisima_c_size_must_be_0x320[
-    sizeof(daObjBk_Ukisima_c) == 0x320 ? 1 : -1];
+typedef char daObjBk_Ukisima_c_size_must_be_0x320[sizeof(daObjBk_Ukisima_c) == 0x320 ? 1 : -1];
 #endif
 
 #endif /* DAOBJBK_UKISIMA_C_H */

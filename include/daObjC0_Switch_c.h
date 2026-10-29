@@ -4,8 +4,6 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* daObjC0_Switch_c -- Castle basement switch pillar (profile C0_SWITCH /
  * SWITCH_PILLAR, actor 34, ov012). ov012 also has BASEMENT_WATER(35); this
  * class is the pillar, not the water.
@@ -45,13 +43,6 @@ struct daObjC0_Switch_c : dBgActor_c {
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
     virtual void  OnGroundPounded(dActor_c &other); /* slot 21 */
-
-    /* Leaf size_t operator new. A plain `new daObjC0_Switch_c` without this
-       relocates to the global `_Znwm`; this routes the factory through
-       fBase_c::operator new, the call this TU's classInit actually makes. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 
     virtual ~daObjC0_Switch_c() {}          /* slots 16 (D1), 17 (D0) */
 };

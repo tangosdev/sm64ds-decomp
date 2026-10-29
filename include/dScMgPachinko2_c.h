@@ -24,14 +24,23 @@ struct dScMgPachinko2_Ball {
     s32 vy;         /* +0x0c */
     s32 px;         /* +0x10 -- pen offset while held */
     s32 py;         /* +0x14 */
-    u8 unk_18[0x8]; /* +0x18 */
+    s32 prevX;      /* +0x18 -- DrawAimLine redraws the guide only when x or */
+    s32 prevY;      /* +0x1c    y differs from these, then stores x and y here;
+                                ResetRound zeroes them */
     s32 speed;      /* +0x20 */
-    u8 unk_24[0x4]; /* +0x24 */
+    s32 gravity;    /* +0x24 -- Ball_StateFlying and _StateScored grow it by
+                       0x10 a frame and _StateTumble by 0x20, then add it to
+                       vy (or take it off speed on the arc); Ball_HitAt,
+                       UpdateNextBall and ResetRound zero it */
     s32 sound;      /* +0x28 -- Sound_PlayIfNotActive handle */
     s32 prevDist;   /* +0x2c */
-    u8 unk_30[0x2]; /* +0x30 */
-    s16 spin;       /* +0x32 -- rotation step (rotation at +0x30); vx / 4 at the throw */
-    s16 angle;      /* +0x34 */
+    u16 rotation;   /* +0x30 -- Ball_DrawAll hands it to Mg_RenderSpriteBothScaled
+                       as the angle; _StateFlying and _StateTumble add spin,
+                       _StateHop and UpdateNextBall zero it */
+    s16 spin;       /* +0x32 -- rotation step; vx / 4 at the throw */
+    u16 angle;      /* +0x34 -- heading: Ball_HitAt stores 0xd000 or 0xb000,
+                       Ball_StateAim an atan2, and every reader takes it
+                       unsigned as the sine-table index (>> 4). Was s16. */
     s16 timer;      /* +0x36 -- anim tick in state 5, countdown from 0x40 in state 7 */
     u8 active;      /* +0x38 -- Ball_UpdateAll runs the ball while set */
     u8 state;       /* +0x39 -- 2 while released, 0 when reset */
@@ -57,13 +66,15 @@ struct dScMgPachinko2_Paddle {
     s32 vx;         /* +0x08 */
     s32 vy;         /* +0x0c */
     s32 speed;      /* +0x10 */
-    u8 unk_14[0x8]; /* +0x14 */
+    u8 unk_14[0x8]; /* +0x14 -- Paddle_SpawnForLanes zeroes both words; nothing reads them */
     s32 homeX;      /* +0x1c */
     s32 homeY;      /* +0x20 */
     s32 savedVx;    /* +0x24 */
     s32 savedVy;    /* +0x28 */
     s32 sound;      /* +0x2c -- Sound_PlayIfNotActive handle */
-    s16 angle;      /* +0x30 */
+    u16 angle;      /* +0x30 -- Paddle_StateOrbit steps it by 0x40 and reads
+                       the sine table at angle >> 4; _StateDescend stores
+                       0x8000 or 0; _StateDropBalls an atan2. Was s16. */
     u16 timer;      /* +0x32 */
     u8 active;      /* +0x34 */
     u8 visible;     /* +0x35 */
@@ -84,7 +95,7 @@ struct dScMgPachinko2_Paddle {
 struct dScMgPachinko2_HitFx {
     s32 x; /* +0x00 */
     s32 y; /* +0x04 */
-    s32 unk_08;
+    s32 unk_08; /* Spark_Spawn zeroes this and unk_0c; nothing reads them */
     s32 unk_0c;
     u16 timer; /* +0x10 */
     u8 pad_12[0x2];
@@ -100,13 +111,17 @@ struct dScMgPachinko2_ScorePop {
     s32 x;  /* +0x00 */
     s32 y;  /* +0x04 */
     s32 vy; /* +0x08 */
-    s32 unk_0c;
+    s32 unk_0c; /* Popup_Spawn zeroes it; nothing reads it */
     u16 life; /* +0x10 */
     u8 pad_12[0x2];
     u8 active;  /* +0x14 */
     u8 visible; /* +0x15 */
-    u8 sprite;  /* +0x16 */
-    u8 falling; /* +0x17 */
+    u8 score;   /* +0x16 -- the number Popup_DrawAll draws through
+                   Mg_DrawBigNumber: Ball_StateScored passes the submitted
+                   score plus one to Popup_Spawn. Was `sprite`. */
+    u8 settled; /* +0x17 -- Popup_UpdateAll moves the popup only while it is
+                   zero and sets it when life reaches 0x30; Popup_Spawn
+                   clears it. Was `falling`, the opposite of what it means. */
 };
 
 /* One of the two cups. State 0..4 dispatches through sPachinko2CupStateTable. */
@@ -114,7 +129,7 @@ struct dScMgPachinko2_Cup {
     s32 x;  /* +0x00 -- Fix12 */
     s32 y;  /* +0x04 */
     s32 vx; /* +0x08 */
-    s32 unk_0c;
+    s32 unk_0c; /* no function in the TU touches it */
     u16 timer; /* +0x10 */
     u8 pad_12[0x2];
     u8 active;   /* +0x14 */
@@ -249,7 +264,7 @@ struct dScMgPachinko2_c : dScMgBase_c {
     u16 mNextBallDelay; /* 0x566c -- frames until UpdateNextBall pens a new ball */
     u16 mEndTimer;      /* 0x566e -- 0x40 frames from time up to the results */
     u16 mBallDealt;     /* 0x5670 -- [medium] first ball dealt; later ones sound 0x19d */
-    u16 unk_5672;       /* 0x5672 */
+    u16 unk_5672;       /* 0x5672 -- ResetRound zeroes it; nothing reads it */
     u16 mCountdown;     /* 0x5674 -- seconds; UpdateCountdown */
     u8 mHeldBall;       /* 0x5676 -- 1 + the ball in the pen, 0 for none */
     u8 mResult;         /* 0x5677 */

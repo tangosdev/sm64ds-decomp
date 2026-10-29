@@ -624,7 +624,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov020_02114ab8' differs between the legacy file that used to hold _ZN8daBook_c16CleanupResourcesEv and the one that held _ZN8daBook_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration (extern int data_ov020_02114ab8[]) survives; SharedFilePtr's layout is not recovered, so the [1] file-pointer reads need the array view and the Release/LoadFile sites cast to SharedFilePtr. Verified: 31/31 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov020_02114aa8' differs between the legacy file that used to hold _ZN8daBook_c16CleanupResourcesEv and the one that held _ZN8daBook_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration (extern int data_ov020_02114aa8[]) survives; SharedFilePtr's layout is not recovered, so the [1] file-pointer reads need the array view and the Release/LoadFile sites cast to SharedFilePtr. Verified: 31/31 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov020_02114ab0' differs between the legacy file that used to hold _ZN8daBook_c16CleanupResourcesEv and the one that held _ZN8daBook_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration (extern int data_ov020_02114ab0[]) survives; SharedFilePtr's layout is not recovered, so the [1] file-pointer reads need the array view and the Release/LoadFile sites cast to SharedFilePtr. Verified: 31/31 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Model8LoadFileER13SharedFilePtr' differs between the legacy file that used to hold _ZN8daBook_c13InitResourcesEv and the one that held _ZN11daBookGen_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: no extern survives; both InitResources call the static member Model::LoadFile from Model.h. Verified: 31/31 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN17dExtSimpleModel_c8LoadFileER13SharedFilePtr' differs between the legacy file that used to hold _ZN8daBook_c13InitResourcesEv and the one that held _ZN11daBookGen_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: no extern survives; both InitResources call the static member dExtSimpleModel_c::LoadFile from dExtSimpleModel_c.h. Verified: 31/31 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'LoadBlueCoinModel' differs between the legacy file that used to hold _ZN8daBook_c13InitResourcesEv and the one that held _ZN11daBookGen_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope extern \"C\" void LoadBlueCoinModel(void *) survives and both InitResources pass this. Verified: 31/31 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'dActor_c') differs between the legacy file that used to hold func_ov020_02111fc4 and the one that held _ZN8daBook_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: no local dActor_c declaration survives; the real class comes from dActor_c.h through daBook_c.h. Verified: 31/31 MATCH.",
     "Promotion: src/game/actors/d_a_book.cpp is the whole unit, 31 functions in ROM order under #pragma defer_codegen off; the out-of-line empty destructors emit D1 then D0 for both classes and make this TU the key-function home of _ZTV/_ZTI/_ZTS8daBook_c and _ZTV/_ZTI/_ZTS11daBookGen_c (deadstrip-data rows at their ov020 homes, with the inherited dEnemyBase_c/dActor_c/dBase_c/fBase_c RTTI chain); the D2s and the inline Vector3 destructor are compiler_only_output rows. The id dropped '+Bookend': Bookend was only the historical alias of the KILLER_BOOK factory, not a class. The raw matrix and vector overlays at 0x1ec and 0x438 are typed members (Matrix4x3 mShadowMat, Vector3 mClsnOffset); common.h must precede daBook_c.h so mShadowMat takes the flat Matrix4x3 and the identity copy stays a twelve-word block move. Verified: 31/31 MATCH.",
@@ -982,28 +982,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -1015,24 +995,24 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@1260",
+      "from": "@1222",
       "to": "@1235",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1261",
+      "from": "@1223",
       "to": "@1236",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1262",
+      "from": "@1224",
       "to": "@1237",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1263",
+      "from": "@1225",
       "to": "@1238",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }
   ]
 }

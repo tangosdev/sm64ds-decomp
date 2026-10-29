@@ -4,7 +4,7 @@
 #include "common.h"
 #include "types.h"
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
@@ -12,7 +12,7 @@
 /**
  * Jolly Roger Bay Bubba (`BAKUBAKU` 228).
  *
- * common.h is first so Matrix4x3 is the flat 12-word spelling. Model.h's
+ * common.h is first so Matrix4x3 is the flat 12-word spelling. dExtSimpleModel_c.h's
  * nested { Matrix3x3 r; Vector3 t } scalarizes mShadowMat, and Vector3's
  * destructor would then run from this class's inline D1.
  */
@@ -30,7 +30,7 @@ struct daBakubaku_c : dEnemyBase_c {
     dCcAcPos_c  mBodyClsn;       /* 0x110 */
     dCcAcPos_c  mHeadClsn;       /* 0x150 */
     dBgCh_Actr  mWithMeshClsn;   /* 0x190 */
-    ModelAnim   mModelAnim;      /* 0x34c */
+    dExtAnmModel_c mAnmModel;    /* 0x34c */
     State      *mState;          /* 0x3b0 -- the table this fish is running */
     dExtShadowModel_c mShadowModel;    /* 0x3b4 */
     Matrix4x3   mShadowMat;      /* 0x3dc -- DropShadowRadHeight source */

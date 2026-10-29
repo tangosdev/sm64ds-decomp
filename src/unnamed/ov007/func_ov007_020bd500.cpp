@@ -1,13 +1,14 @@
 //cpp
-extern "C" void _ZN2GX15SetBankForSubBGEt(unsigned short a);
-extern "C" void _ZN2GX16SetBankForSubOBJEt(unsigned short a);
-extern "C" void _ZN3GXS15SetGraphicsModeEi(int a);
+#include "GX.h"
 
+namespace GXS {
+void SetGraphicsMode(int a);
+}
 extern "C" void func_ov007_020bd500(void)
 {
-    _ZN2GX15SetBankForSubBGEt(4);
-    _ZN2GX16SetBankForSubOBJEt(0x100);
-    _ZN3GXS15SetGraphicsModeEi(0);
+    GX::SetBankForSubBG(4);
+    GX::SetBankForSubOBJ(0x100);
+    GXS::SetGraphicsMode(0);
 
     *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 0x314;
     *(volatile unsigned short *)0x400100c = (*(volatile unsigned short *)0x400100c & 0x43) | 0x84;

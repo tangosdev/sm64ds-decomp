@@ -1,4 +1,8 @@
 //cpp
+
+namespace IRQ {
+void Disable(void);
+}
 struct Obj581 {
     char pad[0x64];
     int field64;
@@ -7,7 +11,7 @@ struct Obj581 {
     char pad3[0x90 - 0x70];
     char sub90[4];
 };
-extern "C" void _ZN3IRQ7DisableEv(void);
+
 extern "C" {
 extern void func_02058a44(struct Obj581 *o);
 extern void func_02058488(int target);
@@ -20,7 +24,7 @@ extern int data_020a6148[];
 extern "C" void func_020581a8(void);
 void func_020581a8(void) {
     struct Obj581 *o;
-    _ZN3IRQ7DisableEv();
+    IRQ::Disable();
     o = *(struct Obj581 **)data_020a612c;
     func_02058a44(o);
     func_02058488((int)o);

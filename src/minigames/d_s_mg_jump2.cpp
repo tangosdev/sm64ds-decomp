@@ -1,8 +1,7 @@
 //cpp
 /* ov006/dScMgJump2_c -- the second jump minigame, 30 functions
  * (.text 0x020eebe8..0x020efc0c), ending with the factory
- * dScMgJump2_c_classInit and the element constructor Jump2Popup_ElemCtor
- * it registers.
+ * dScMgJump2_c_classInit and the Jump2Popup constructor it registers.
  *
  * Functions run in REVERSE of ROM order (highest address first); do not
  * reorder. The legacy file for State_Play had
@@ -13,10 +12,9 @@
  *   - Jump2Popup_InitPool, ..ef05c, ..eeff0, ..eef90, ..eef58 and ..ef2b8
  *     stay free: none takes the object (they walk the element list globals
  *     or program the light registers), so a receiver exists only to be
- *     passed, not used. Jump2Popup_ElemDtor and Jump2Popup_ElemCtor are
- *     the shared empty element destructor and constructor --
- *     dScMgTrampoline2_c's factory and array cleanup use them too -- and
- *     are registered through the C __cxa_vec_ctor boundary.
+ *     passed, not used. Jump2Popup's empty constructor and destructor
+ *     are also dScMgTrampoline2_c's: its hand-built factory and array
+ *     cleanup register them by their mangled names.
  *   - pad_5004 stays bytes: the state functions copy the whole eight-byte
  *     PMF record into it with a struct assign, and Behavior calls through
  *     it. See the header's state-machine note.
@@ -32,11 +30,12 @@ enum d_s_mg_jump2_AssetId {
 };
 
 #include "dScMgJump2_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
 #include "types.h"
 #include "decl_common.h"
 #include "Particle__System.h"
+#include "math/Approach.h"
 
 /* The list link at the head of each Jump2Popup. Its two methods link `this` into
  * and back out of the live list at sJump2PopupList. */
@@ -44,31 +43,6 @@ struct Jump2PopupLink {
     struct Jump2PopupLink *next;
     void Link();   /* push */
     void Unlink(); /* remove */
-};
-
-/* The 0x24-byte entries of mArray3, read back from what the functions below
- * do with them. Local because nothing names the type yet. */
-struct Jump2Popup {
-    struct Jump2Popup *next;
-    /* 0x00 -- the live list */
-    int x, y;
-    /* 0x04 -- 20.12 position */
-    int targetX, targetY;
-    /* 0x0c */
-    int speedX, speedY;
-    /* 0x14 */
-    short life;
-    /* 0x1c -- frames left */
-    short number;
-    /* 0x1e -- displayed numeric value */
-    short active;
-    /* 0x20 */
-
-    short _22;
-
-    void Spawn(int startX, int startY, int value); /* spawn */
-    void Tick();                                   /* update */
-    void DrawNumber();                             /* draw   */
 };
 
 /* Whole-matrix copies go through this so they stay one block move. */
@@ -124,8 +98,6 @@ struct RoundStartCallbacks {
  * constructor and destructor are the ROM resource-family functions,
  * aliased in the manifest. */
 struct Jump2ModelFile : SharedFilePtr {
-    u32 words[2];
-
     Jump2ModelFile(u32 fileID);
     ~Jump2ModelFile();
 };
@@ -145,8 +117,8 @@ int GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern int data_020a0e68;
-unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-    unsigned int a, unsigned int b, int c, int d, int e, const Vector3_16f *f);
+unsigned int d_s_mg_jump2NewUnkCallback818Hold(unsigned int a, unsigned int b, int c, int d, int e,
+                                               const Vector3_16f *f);
 void Jump2Popup_UpdateAll(void);
 extern void *Jump3D_AllIdle(void *);
 extern void *Heyho_AllIdle(void *);
@@ -182,65 +154,27 @@ namespace GX {
 void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size);
 }
 namespace G3X {
-void SetFog(bool enable, int mode, int slope, int offset);
+void SetFog(int enable, int mode, int slope, int offset);
 }
 namespace cstd {
 s32 fdiv(s32 a, s32 b);
 }
-short ApproachLinear2(short &value, short target, short step);
-int ApproachLinear(int &value, int target, int step);
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void *_ZN11dScMgBase_cC2Ev(void *p);
-void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride, void (*ctor)(void *),
-                    void (*dtor)(void *));
-void _ZN8Particle10SysTrackerC1Ev(void *p);
-void *_ZN5ModelC1Ev(void *p);
-extern char _ZTV14dScMgD3DBase_c[];
-dMgJump3DMario_c *_ZN16dMgJump3DMario_cD1Ev(dMgJump3DMario_c *object);
-dMgJump3DMario_c *_ZN16dMgJump3DMario_cC1Ev(dMgJump3DMario_c *object);
-int Heyho_Construct(char *object);
+// @symbol _ZN10Jump2PopupC1Ev
+/* Empty and out of line: mPopups' element constructor, which the factory
+ * below registers with __cxa_vec_ctor (dScMgTrampoline2_c's factory reuses
+ * it). Written above the factory because this TU emits .text in reverse
+ * source order, and the ROM has it directly after the factory. */
+Jump2Popup::Jump2Popup() {}
 
-// @symbol Jump2Popup_ElemCtor
-/* The empty constructor of mArray3's 0x24-byte elements, the partner of
- * the shared empty destructor Jump2Popup_ElemDtor. The factory below hands
- * the pair to __cxa_vec_ctor; dScMgTrampoline2_c's factory reuses both.
- * Written above the factory because this TU emits .text in reverse source
- * order, and the ROM has it directly after the factory. */
-void Jump2Popup_ElemCtor(void *object) {}
-
-/* The array runtime passes each element address and ignores callback results.
- * The casts below adapt the existing lifecycle entries at that ABI boundary. */
 // @symbol dScMgJump2_c_classInit
-/* Builds the scene by hand (operator new, base constructor, vtables, member
- * construction) because the class has no constructor declared yet. The empty
- * loop steps over the two 0xbc-byte cameras, which have no constructor.
+/* Reconstructed source-style name. `new dScMgJump2_c` reproduces it: the
+ * inline dScMgD3DBase_c constructor (dScMgBase_c's C2, its vtable,
+ * mDrawSubScreen, the empty loop over the two cameras, mSysTracker), then
+ * this class's vtable and mPlayers, mHeyhos, mPopups and mModel.
  * Historical alias: dScMgJump2_c_Spawn. */
-void *dScMgJump2_c_classInit() {
-    char *raw = (char *)_ZN7fBase_cnwEj(0x5a78);
-    if (raw) {
-        char *e;
-        char *end;
-        _ZN11dScMgBase_cC2Ev(raw);
-        *(char **)raw = _ZTV14dScMgD3DBase_c;
-        *(u16 *)(raw + 0x4664) = 0;
-        e = raw + 0x466c;
-        end = raw;
-        end = end + 0x47e4;
-        do {
-            e += 0xbc;
-        } while (e != end);
-        _ZN8Particle10SysTrackerC1Ev(raw + 0x47e4);
-        *(char **)raw = (char *)&_ZTV12dScMgJump2_c[2];
-        __cxa_vec_ctor(raw + 0x500c, 3, 0xb8, (void (*)(void *))_ZN16dMgJump3DMario_cC1Ev,
-                       (void (*)(void *))_ZN16dMgJump3DMario_cD1Ev);
-        __cxa_vec_ctor(raw + 0x5234, 6, 0xf0, (void (*)(void *))Heyho_Construct,
-                       (void (*)(void *))Heyho_Destruct);
-        __cxa_vec_ctor(raw + 0x57d4, 0x10, 0x24, Jump2Popup_ElemCtor, Jump2Popup_ElemDtor);
-        _ZN5ModelC1Ev(raw + 0x5a14);
-    }
-    return raw;
-}
+extern "C" dScMgJump2_c *dScMgJump2_c_classInit() {
+    return new dScMgJump2_c;
 }
 
 // @symbol _ZN12dScMgJump2_c10StartRoundEi
@@ -262,10 +196,8 @@ int dScMgJump2_c::CanEndState(int /* mode */) {
 }
 
 // @symbol _ZN12dScMgJump2_c13InitResourcesEv
-/* Slot 0. The two camera blocks at 0x466c and 0x4728 are untyped padding
- * in dScMgD3DBase_c.h, so they are still passed by offset. */
+/* Slot 0. */
 s32 dScMgJump2_c::InitResources() {
-    char *base = (char *)this;
     int tiles, palette;
     s32 fov;
     void *bmdFile;
@@ -283,39 +215,39 @@ s32 dScMgJump2_c::InitResources() {
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082614);
 
-    this->mCamera0EyeX = 0;
-    this->mCamera0EyeY = -0x64000;
-    this->mCamera0EyeZ = 0;
-    this->mCamera0TargetX = 0;
-    this->mCamera0TargetY = 0;
-    this->mCamera0TargetZ = fov;
-    this->mCamera0Angle = 0x800;
-    Camera_UpdateMatrices(base + 0x466c);
+    this->mCameras[0].mEyeX = 0;
+    this->mCameras[0].mEyeY = -0x64000;
+    this->mCameras[0].mEyeZ = 0;
+    this->mCameras[0].mTargetX = 0;
+    this->mCameras[0].mTargetY = 0;
+    this->mCameras[0].mTargetZ = fov;
+    this->mCameras[0].mAngle = 0x800;
+    Camera_UpdateMatrices(&mCameras[0]);
 
-    this->mCamera1EyeX = 0;
-    this->mCamera1EyeY = 0x82000;
-    this->mCamera1EyeZ = 0;
-    this->mCamera1TargetX = 0;
-    this->mCamera1TargetY = 0;
-    this->mCamera1TargetZ = fov;
-    this->mCamera1Angle = 0x800;
-    Camera_UpdateMatrices(base + 0x4728);
+    this->mCameras[1].mEyeX = 0;
+    this->mCameras[1].mEyeY = 0x82000;
+    this->mCameras[1].mEyeZ = 0;
+    this->mCameras[1].mTargetX = 0;
+    this->mCameras[1].mTargetY = 0;
+    this->mCameras[1].mTargetZ = fov;
+    this->mCameras[1].mAngle = 0x800;
+    Camera_UpdateMatrices(&mCameras[1]);
 
-    if (Heyho_InitPool(mArray2, 6) == 0)
+    if (Heyho_InitPool(mHeyhos, 6) == 0)
         return 0;
 
-    Jump2Popup_InitPool((int)mArray3, 0x10);
+    Jump2Popup_InitPool((int)mPopups, 0x10);
 
     sHeyhoScorePopups = 1;
     if (Jump3D_InitPool(mPlayers, 3) == 0)
         return 0;
 
     sJump2BackFile = &sJump2Back02ModelFile;
-    bmdFile = Model::LoadFile(*(SharedFilePtr *)&sJump2Back02ModelFile);
+    bmdFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&sJump2Back02ModelFile);
 
-    if (((Model *)mModel)->SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
+    if (mModel.SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-        *(struct M48 *)&((Model *)mModel)->mat4x3 = *(struct M48 *)&data_020a0e68;
+        *(struct M48 *)&mModel.mat4x3 = *(struct M48 *)&data_020a0e68;
         return 0;
     }
 
@@ -478,8 +410,8 @@ void dScMgJump2_c::State_Idle() {}
  * calls keep their mangled spellings: declaring the real Fix12<int>
  * parameters changes how the call passes them. */
 s32 dScMgJump2_c::Behavior() {
-    mParticleID = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-        mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);
+    mParticleID =
+        Particle::System::NewUnkCallback818(mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);
     void *system = Particle::System::FromUniqueID(mParticleID);
     if (system != 0) {
         *(int *)((char *)system + 0x50) = 0x4000;
@@ -524,10 +456,7 @@ void Jump2_SetLights(void) {
 }
 
 // @symbol _ZN12dScMgJump2_c6RenderEv
-/* Slot 9. mModel is raw bytes in the header (the destructor has to destroy
- * it before the arrays), so it is cast to Model here. The component block
- * at mModel + 8 is reached by offset: naming it through Model changes the
- * code. */
+/* Slot 9. */
 // Consumed runtime-material prefix; this is not the BMD file record.
 struct MaterialScrollView {
     u8 prefix[0x18];
@@ -545,18 +474,18 @@ s32 dScMgJump2_c::Render() {
     Jump2Popup_DrawAll();
     Jump2_SetLights();
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0xffead000, -0xa0000);
-    *(struct M48 *)&((Model *)mModel)->mat4x3 = *(struct M48 *)&data_020a0e68;
+    *(struct M48 *)&mModel.mat4x3 = *(struct M48 *)&data_020a0e68;
 
     scale = *(struct S3 *)&sJump2RenderScale;
 
     {
-        ModelComponents *components = (ModelComponents *)(mModel + 8);
+        ModelComponents *components = &mModel.data;
         material = (MaterialScrollView *)components->materials;
         func_02045e44(components, 1, 0);
     }
     material->textureOffsetT = mTextureOffsetT;
     {
-        Model *model = (Model *)mModel;
+        dExtSimpleModel_c *model = &mModel;
         model->Render((Vector3 *)&scale);
     }
 
@@ -716,9 +645,9 @@ void Jump2Popup::DrawNumber() {
     Mg_DrawBigNumber(x >> 12, y >> 12, number, -1, -1, 0, data_ov006_021421b4);
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void Jump2Popup_ElemDtor(void *object) {}
-}
+// @symbol _ZN10Jump2PopupD1Ev
+/* Empty and out of line, the partner of the constructor above. */
+Jump2Popup::~Jump2Popup() {}
 
 // @symbol _ZN12dScMgJump2_cD0Ev
 /* Generated from the destructor below. */

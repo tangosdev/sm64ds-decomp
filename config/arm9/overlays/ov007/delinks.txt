@@ -13,13 +13,17 @@
     .rodata.luigiCounts start:0x020cfb84 end:0x020cfc18 kind:rodata align:4
     .rodata.portraitGapTail start:0x020cfc18 end:0x020d7db8 kind:rodata align:4
     .ctor       start:0x020d7db8 end:0x020d7db8 kind:rodata align:4
-    .data       start:0x020d7dc0 end:0x02103260 kind:data align:32
+    .data start:0x020d7dc0 end:0x020d7e68 kind:data align:32
+    .data.portraitSelectors start:0x020d7e68 end:0x020d7ec8 kind:data align:4
+    .data.portraitGap start:0x020d7ec8 end:0x020d7f0c kind:data align:4
+    .data.portraitPointers start:0x020d7f0c end:0x020d85fc kind:data align:4
+    .data.portraitGapTail start:0x020d85fc end:0x02103260 kind:data align:4
     .data.dsmtMeta0 start:0x02103260 end:0x02103290 kind:data align:4
     .data.dsmtCallbacks start:0x02103290 end:0x021032a8 kind:data align:4
     .data.dsmtMeta1 start:0x021032a8 end:0x02103330 kind:data align:4
     .data.dsmtUnknownTail start:0x02103330 end:0x02103340 kind:data align:4
     .bss        start:0x02103340 end:0x02104c40 kind:bss align:32
-src/unnamed/ov007/func_ov007_020ad660.c:
+src/unnamed/ov007/func_ov007_020ad660.cpp:
     complete
     .text start:0x020ad660 end:0x020ada70
 
@@ -55,11 +59,11 @@ src/unnamed/ov007/func_ov007_020ae070.c:
     complete
     .text start:0x020ae070 end:0x020ae2d0
 
-src/unnamed/ov007/func_ov007_020ae2d0.c:
+src/unnamed/ov007/func_ov007_020ae2d0.cpp:
     complete
     .text start:0x020ae2d0 end:0x020ae454
 
-src/unnamed/ov007/func_ov007_020ae454.c:
+src/unnamed/ov007/func_ov007_020ae454.cpp:
     complete
     .text start:0x020ae454 end:0x020ae558
 
@@ -83,7 +87,7 @@ src/unnamed/ov007/func_ov007_020aea6c.c:
     complete
     .text start:0x020aea6c end:0x020aeaec
 
-src/unnamed/ov007/func_ov007_020aeaec.c:
+src/unnamed/ov007/func_ov007_020aeaec.cpp:
     complete
     .text start:0x020aeaec end:0x020aeb34
 
@@ -115,7 +119,7 @@ src/unnamed/ov007/func_ov007_020aef84.cpp:
     complete
     .text start:0x020aef84 end:0x020aefb4
 
-src/unnamed/ov007/func_ov007_020aefb4.c:
+src/unnamed/ov007/func_ov007_020aefb4.cpp:
     complete
     .text start:0x020aefb4 end:0x020af0e4
 
@@ -207,11 +211,11 @@ src/unnamed/ov007/func_ov007_020b0834.c:
     complete
     .text start:0x020b0834 end:0x020b0a20
 
-src/unnamed/ov007/func_ov007_020b0a20.c:
+src/unnamed/ov007/func_ov007_020b0a20.cpp:
     complete
     .text start:0x020b0a20 end:0x020b0da0
 
-src/unnamed/ov007/func_ov007_020b0da0.c:
+src/unnamed/ov007/func_ov007_020b0da0.cpp:
     complete
     .text start:0x020b0da0 end:0x020b10dc
 
@@ -255,7 +259,7 @@ src/unnamed/ov007/func_ov007_020b16f0.c:
     complete
     .text start:0x020b16f0 end:0x020b1718
 
-src/unnamed/ov007/func_ov007_020b1718.c:
+src/unnamed/ov007/func_ov007_020b1718.cpp:
     complete
     .text start:0x020b1718 end:0x020b1b4c
 
@@ -267,11 +271,11 @@ src/unnamed/ov007/func_ov007_020b1b70.c:
     complete
     .text start:0x020b1b70 end:0x020b1b74
 
-src/unnamed/ov007/func_ov007_020b1b74.c:
+src/unnamed/ov007/func_ov007_020b1b74.cpp:
     complete
     .text start:0x020b1b74 end:0x020b1cf0
 
-src/unnamed/ov007/func_ov007_020b1cf0.c:
+src/unnamed/ov007/func_ov007_020b1cf0.cpp:
     complete
     .text start:0x020b1cf0 end:0x020b1f2c
 
@@ -279,15 +283,15 @@ src/unnamed/ov007/func_ov007_020b1f2c.cpp:
     complete
     .text start:0x020b1f2c end:0x020b1fa4
 
-src/unnamed/ov007/func_ov007_020b1fa4.c:
+src/unnamed/ov007/func_ov007_020b1fa4.cpp:
     complete
     .text start:0x020b1fa4 end:0x020b20e8
 
-src/unnamed/ov007/func_ov007_020b20e8.c:
+src/unnamed/ov007/func_ov007_020b20e8.cpp:
     complete
     .text start:0x020b20e8 end:0x020b2160
 
-src/unnamed/ov007/func_ov007_020b2160.c:
+src/unnamed/ov007/func_ov007_020b2160.cpp:
     complete
     .text start:0x020b2160 end:0x020b22e0
 
@@ -335,127 +339,23 @@ src/unnamed/ov007/func_ov007_020b2bd4.c:
     complete
     .text start:0x020b2bd4 end:0x020b2cdc
 
-src/unnamed/ov007/func_ov007_020b2cdc.c:
+src/ui/menus/unit020b2cdc.cpp:
     complete
-    .text start:0x020b2cdc end:0x020b2cf0
+    .text start:0x020b2cdc end:0x020b3edc
 
-src/unnamed/ov007/func_ov007_020b2cf0.c:
+src/ui/menus/unit020b3edc.cpp:
     complete
-    .text start:0x020b2cf0 end:0x020b2e64
+    .text start:0x020b3edc end:0x020b413c
 
-src/unnamed/ov007/func_ov007_020b2e64.c:
+src/ui/menus/unit020b413c.cpp:
     complete
-    .text start:0x020b2e64 end:0x020b3050
-
-src/unnamed/ov007/func_ov007_020b3050.c:
-    complete
-    .text start:0x020b3050 end:0x020b30b0
-
-src/unnamed/ov007/func_ov007_020b30b0.c:
-    complete
-    .text start:0x020b30b0 end:0x020b3190
-
-src/unnamed/ov007/func_ov007_020b3190.c:
-    complete
-    .text start:0x020b3190 end:0x020b3360
-
-src/unnamed/ov007/func_ov007_020b3360.c:
-    complete
-    .text start:0x020b3360 end:0x020b3708
-
-src/unnamed/ov007/func_ov007_020b3708.c:
-    complete
-    .text start:0x020b3708 end:0x020b3c54
-
-src/unnamed/ov007/func_ov007_020b3c54.c:
-    complete
-    .text start:0x020b3c54 end:0x020b3d30
-
-src/unnamed/ov007/func_ov007_020b3d30.cpp:
-    complete
-    .text start:0x020b3d30 end:0x020b3e04
-
-src/unnamed/ov007/func_ov007_020b3e04.cpp:
-    complete
-    .text start:0x020b3e04 end:0x020b3e84
-
-src/unnamed/ov007/func_ov007_020b3e84.c:
-    complete
-    .text start:0x020b3e84 end:0x020b3edc
-
-src/unnamed/ov007/func_ov007_020b3edc.cpp:
-    complete
-    .text start:0x020b3edc end:0x020b3f20
-
-src/unnamed/ov007/func_ov007_020b3f20.c:
-    complete
-    .text start:0x020b3f20 end:0x020b40c0
-
-src/unnamed/ov007/func_ov007_020b40c0.cpp:
-    complete
-    .text start:0x020b40c0 end:0x020b4100
-
-src/unnamed/ov007/func_ov007_020b4100.cpp:
-    complete
-    .text start:0x020b4100 end:0x020b413c
-
-src/unnamed/ov007/func_ov007_020b413c.c:
-    complete
-    .text start:0x020b413c end:0x020b42d8
-
-src/unnamed/ov007/func_ov007_020b42d8.c:
-    complete
-    .text start:0x020b42d8 end:0x020b43dc
-
-src/unnamed/ov007/func_ov007_020b43dc.c:
-    complete
-    .text start:0x020b43dc end:0x020b4438
-
-src/unnamed/ov007/func_ov007_020b4438.cpp:
-    complete
-    .text start:0x020b4438 end:0x020b4464
-
-src/unnamed/ov007/func_ov007_020b4464.c:
-    complete
-    .text start:0x020b4464 end:0x020b44ec
-
-src/unnamed/ov007/func_ov007_020b44ec.c:
-    complete
-    .text start:0x020b44ec end:0x020b45b0
-
-src/unnamed/ov007/func_ov007_020b45b0.c:
-    complete
-    .text start:0x020b45b0 end:0x020b46b0
-
-src/unnamed/ov007/func_ov007_020b46b0.c:
-    complete
-    .text start:0x020b46b0 end:0x020b4b5c
-
-src/unnamed/ov007/func_ov007_020b4b5c.c:
-    complete
-    .text start:0x020b4b5c end:0x020b4bd4
-
-src/unnamed/ov007/func_ov007_020b4bd4.cpp:
-    complete
-    .text start:0x020b4bd4 end:0x020b4c04
-
-src/unnamed/ov007/func_ov007_020b4c04.c:
-    complete
-    .text start:0x020b4c04 end:0x020b5068
-
-src/unnamed/ov007/func_ov007_020b5068.c:
-    complete
-    .text start:0x020b5068 end:0x020b50e8
-
-src/unnamed/ov007/func_ov007_020b50e8.c:
-    complete
-    .text start:0x020b50e8 end:0x020b58e4
+    .text start:0x020b413c end:0x020b58e4
 
 src/unnamed/ov007/func_ov007_020b58e4.c:
     complete
     .text start:0x020b58e4 end:0x020b5bf0
 
-src/unnamed/ov007/func_ov007_020b5bf0.c:
+src/unnamed/ov007/func_ov007_020b5bf0.cpp:
     complete
     .text start:0x020b5bf0 end:0x020b5f64
 
@@ -523,25 +423,9 @@ src/unnamed/ov007/func_ov007_020b6d40.c:
     complete
     .text start:0x020b6d40 end:0x020b6eb4
 
-src/unnamed/ov007/func_ov007_020b6eb4.c:
+src/ui/menus/unit020b6eb4.cpp:
     complete
-    .text start:0x020b6eb4 end:0x020b6f4c
-
-src/unnamed/ov007/func_ov007_020b6f4c.c:
-    complete
-    .text start:0x020b6f4c end:0x020b7040
-
-src/unnamed/ov007/func_ov007_020b7040.c:
-    complete
-    .text start:0x020b7040 end:0x020b7090
-
-src/unnamed/ov007/func_ov007_020b7090.c:
-    complete
-    .text start:0x020b7090 end:0x020b7138
-
-src/unnamed/ov007/func_ov007_020b7138.c:
-    complete
-    .text start:0x020b7138 end:0x020b72a0
+    .text start:0x020b6eb4 end:0x020b72a0
 
 src/unnamed/ov007/func_ov007_020b72a0.c:
     complete
@@ -575,259 +459,24 @@ src/unnamed/ov007/func_ov007_020b7594.c:
     complete
     .text start:0x020b7594 end:0x020b7658
 
-src/unnamed/ov007/func_ov007_020b7658.cpp:
+src/ui/menus/unit020b7658.cpp:
     complete
-    .text start:0x020b7658 end:0x020b7690
+    .text start:0x020b7658 end:0x020b797c
 
-src/unnamed/ov007/func_ov007_020b7690.cpp:
+src/ui/menus/unit020b797c.cpp:
     complete
-    .text start:0x020b7690 end:0x020b76a0
+    .text start:0x020b797c end:0x020b8f50
 
-src/unnamed/ov007/func_ov007_020b76a0.cpp:
+src/ui/menus/unit020b8f50.cpp:
     complete
-    .text start:0x020b76a0 end:0x020b76c4
-
-src/unnamed/ov007/func_ov007_020b76c4.cpp:
-    complete
-    .text start:0x020b76c4 end:0x020b7708
-
-src/unnamed/ov007/func_ov007_020b7708.cpp:
-    complete
-    .text start:0x020b7708 end:0x020b7764
-
-src/unnamed/ov007/func_ov007_020b7764.cpp:
-    complete
-    .text start:0x020b7764 end:0x020b77ac
-
-src/unnamed/ov007/func_ov007_020b77ac.cpp:
-    complete
-    .text start:0x020b77ac end:0x020b782c
-
-src/unnamed/ov007/func_ov007_020b782c.cpp:
-    complete
-    .text start:0x020b782c end:0x020b78d0
-
-src/unnamed/ov007/func_ov007_020b78d0.cpp:
-    complete
-    .text start:0x020b78d0 end:0x020b7914
-
-src/unnamed/ov007/func_ov007_020b7914.cpp:
-    complete
-    .text start:0x020b7914 end:0x020b7948
-
-src/unnamed/ov007/func_ov007_020b7948.cpp:
-    complete
-    .text start:0x020b7948 end:0x020b797c
-
-src/unnamed/ov007/func_ov007_020b797c.c:
-    complete
-    .text start:0x020b797c end:0x020b79c8
-
-src/unnamed/ov007/func_ov007_020b79c8.cpp:
-    complete
-    .text start:0x020b79c8 end:0x020b79e4
-
-src/unnamed/ov007/func_ov007_020b79e4.cpp:
-    complete
-    .text start:0x020b79e4 end:0x020b7a00
-
-src/unnamed/ov007/func_ov007_020b7a00.cpp:
-    complete
-    .text start:0x020b7a00 end:0x020b7a34
-
-src/unnamed/ov007/func_ov007_020b7a34.cpp:
-    complete
-    .text start:0x020b7a34 end:0x020b7a44
-
-src/unnamed/ov007/func_ov007_020b7a44.cpp:
-    complete
-    .text start:0x020b7a44 end:0x020b7a78
-
-src/unnamed/ov007/func_ov007_020b7a78.c:
-    complete
-    .text start:0x020b7a78 end:0x020b7d94
-
-src/unnamed/ov007/func_ov007_020b7d94.c:
-    complete
-    .text start:0x020b7d94 end:0x020b7eec
-
-src/unnamed/ov007/func_ov007_020b7eec.c:
-    complete
-    .text start:0x020b7eec end:0x020b8070
-
-src/unnamed/ov007/func_ov007_020b8070.cpp:
-    complete
-    .text start:0x020b8070 end:0x020b8188
-
-src/unnamed/ov007/func_ov007_020b8188.c:
-    complete
-    .text start:0x020b8188 end:0x020b84e8
-
-src/unnamed/ov007/func_ov007_020b84e8.cpp:
-    complete
-    .text start:0x020b84e8 end:0x020b84f4
-
-src/unnamed/ov007/func_ov007_020b84f4.cpp:
-    complete
-    .text start:0x020b84f4 end:0x020b8500
-
-src/unnamed/ov007/func_ov007_020b8500.cpp:
-    complete
-    .text start:0x020b8500 end:0x020b850c
-
-src/unnamed/ov007/func_ov007_020b850c.cpp:
-    complete
-    .text start:0x020b850c end:0x020b8548
-
-src/unnamed/ov007/func_ov007_020b8548.cpp:
-    complete
-    .text start:0x020b8548 end:0x020b8690
-
-src/unnamed/ov007/func_ov007_020b8690.cpp:
-    complete
-    .text start:0x020b8690 end:0x020b8714
-
-src/unnamed/ov007/func_ov007_020b8714.c:
-    complete
-    .text start:0x020b8714 end:0x020b883c
-
-src/unnamed/ov007/func_ov007_020b883c.cpp:
-    complete
-    .text start:0x020b883c end:0x020b8860
-
-src/unnamed/ov007/func_ov007_020b8860.cpp:
-    complete
-    .text start:0x020b8860 end:0x020b88c0
-
-src/unnamed/ov007/func_ov007_020b88c0.c:
-    complete
-    .text start:0x020b88c0 end:0x020b8a78
-
-src/unnamed/ov007/func_ov007_020b8a78.cpp:
-    complete
-    .text start:0x020b8a78 end:0x020b8b00
-
-src/unnamed/ov007/func_ov007_020b8b00.cpp:
-    complete
-    .text start:0x020b8b00 end:0x020b8b80
-
-src/unnamed/ov007/func_ov007_020b8b80.cpp:
-    complete
-    .text start:0x020b8b80 end:0x020b8cfc
-
-src/unnamed/ov007/func_ov007_020b8cfc.cpp:
-    complete
-    .text start:0x020b8cfc end:0x020b8d48
-
-src/unnamed/ov007/func_ov007_020b8d48.cpp:
-    complete
-    .text start:0x020b8d48 end:0x020b8ec0
-
-src/unnamed/ov007/func_ov007_020b8ec0.cpp:
-    complete
-    .text start:0x020b8ec0 end:0x020b8f50
-
-src/unnamed/ov007/func_ov007_020b8f50.c:
-    complete
-    .text start:0x020b8f50 end:0x020b8f64
-
-src/unnamed/ov007/func_ov007_020b8f64.c:
-    complete
-    .text start:0x020b8f64 end:0x020b8f78
-
-src/unnamed/ov007/func_ov007_020b8f78.c:
-    complete
-    .text start:0x020b8f78 end:0x020b8f8c
-
-src/unnamed/ov007/func_ov007_020b8f8c.c:
-    complete
-    .text start:0x020b8f8c end:0x020b8fa0
-
-src/unnamed/ov007/func_ov007_020b8fa0.c:
-    complete
-    .text start:0x020b8fa0 end:0x020b8fb4
-
-src/unnamed/ov007/func_ov007_020b8fb4.c:
-    complete
-    .text start:0x020b8fb4 end:0x020b8fd4
-
-src/unnamed/ov007/func_ov007_020b8fd4.c:
-    complete
-    .text start:0x020b8fd4 end:0x020b91b4
-
-src/unnamed/ov007/func_ov007_020b91b4.c:
-    complete
-    .text start:0x020b91b4 end:0x020b9640
-
-src/unnamed/ov007/func_ov007_020b9640.c:
-    complete
-    .text start:0x020b9640 end:0x020b9770
-
-src/unnamed/ov007/func_ov007_020b9770.cpp:
-    complete
-    .text start:0x020b9770 end:0x020b9880
-
-src/unnamed/ov007/func_ov007_020b9880.c:
-    complete
-    .text start:0x020b9880 end:0x020b9ca8
-
-src/unnamed/ov007/func_ov007_020b9ca8.c:
-    complete
-    .text start:0x020b9ca8 end:0x020b9f0c
-
-src/unnamed/ov007/func_ov007_020b9f0c.c:
-    complete
-    .text start:0x020b9f0c end:0x020b9fc0
-
-src/unnamed/ov007/func_ov007_020b9fc0.c:
-    complete
-    .text start:0x020b9fc0 end:0x020ba05c
-
-src/unnamed/ov007/func_ov007_020ba05c.c:
-    complete
-    .text start:0x020ba05c end:0x020ba2e0
-
-src/unnamed/ov007/func_ov007_020ba2e0.c:
-    complete
-    .text start:0x020ba2e0 end:0x020ba368
-
-src/unnamed/ov007/func_ov007_020ba368.c:
-    complete
-    .text start:0x020ba368 end:0x020ba9bc
-
-src/unnamed/ov007/func_ov007_020ba9bc.c:
-    complete
-    .text start:0x020ba9bc end:0x020baa10
-
-src/unnamed/ov007/func_ov007_020baa10.c:
-    complete
-    .text start:0x020baa10 end:0x020bad8c
-
-src/unnamed/ov007/func_ov007_020bad8c.c:
-    complete
-    .text start:0x020bad8c end:0x020bb09c
-
-src/unnamed/ov007/func_ov007_020bb09c.c:
-    complete
-    .text start:0x020bb09c end:0x020bb4b0
-
-src/unnamed/ov007/func_ov007_020bb4b0.c:
-    complete
-    .text start:0x020bb4b0 end:0x020bbc08
-
-src/unnamed/ov007/func_ov007_020bbc08.c:
-    complete
-    .text start:0x020bbc08 end:0x020bbd24
-
-src/unnamed/ov007/func_ov007_020bbd24.cpp:
-    complete
-    .text start:0x020bbd24 end:0x020bbe60
+    .text start:0x020b8f50 end:0x020bbe60
 
 src/unnamed/ov007/func_ov007_020bbe60.c:
     complete
     .text start:0x020bbe60 end:0x020bbf98
     .rodata.portraitSelectors start:0x020cdb34 end:0x020cdb4c
-    .data start:0x020d7e68 end:0x020d7ec8
+    .data.portraitSelectors start:0x020d7e68 end:0x020d7ec8
+    .data.portraitPointers start:0x020d7f0c end:0x020d85fc
     .rodata.yoshiPlainCounts start:0x020cef80 end:0x020cefd0
     .rodata.marioFrontCounts start:0x020cf700 end:0x020cf778
     .rodata.yoshiVariantCounts start:0x020cf8ec end:0x020cf9ec
@@ -838,11 +487,11 @@ src/unnamed/ov007/func_ov007_020bbf98.c:
     complete
     .text start:0x020bbf98 end:0x020bbff0
 
-src/unnamed/ov007/func_ov007_020bbff0.c:
+src/unnamed/ov007/func_ov007_020bbff0.cpp:
     complete
     .text start:0x020bbff0 end:0x020bc02c
 
-src/unnamed/ov007/func_ov007_020bc02c.c:
+src/unnamed/ov007/func_ov007_020bc02c.cpp:
     complete
     .text start:0x020bc02c end:0x020bc2e4
 
@@ -890,7 +539,7 @@ src/unnamed/ov007/func_ov007_020bc6d4.c:
     complete
     .text start:0x020bc6d4 end:0x020bc7dc
 
-src/unnamed/ov007/func_ov007_020bc7dc.c:
+src/unnamed/ov007/func_ov007_020bc7dc.cpp:
     complete
     .text start:0x020bc7dc end:0x020bc894
 
@@ -910,7 +559,7 @@ src/unnamed/ov007/func_ov007_020bca40.c:
     complete
     .text start:0x020bca40 end:0x020bcba8
 
-src/unnamed/ov007/func_ov007_020bcba8.c:
+src/unnamed/ov007/func_ov007_020bcba8.cpp:
     complete
     .text start:0x020bcba8 end:0x020bcdb8
 
@@ -922,7 +571,7 @@ src/unnamed/ov007/func_ov007_020bce70.cpp:
     complete
     .text start:0x020bce70 end:0x020bcf90
 
-src/unnamed/ov007/func_ov007_020bcf90.c:
+src/unnamed/ov007/func_ov007_020bcf90.cpp:
     complete
     .text start:0x020bcf90 end:0x020bd1c0
 
@@ -954,81 +603,13 @@ src/unnamed/ov007/func_ov007_020bd960.cpp:
     complete
     .text start:0x020bd960 end:0x020bd9e4
 
-src/unnamed/ov007/func_ov007_020bd9e4.cpp:
+src/ui/menus/unit020bd9e4.cpp:
     complete
-    .text start:0x020bd9e4 end:0x020bda38
+    .text start:0x020bd9e4 end:0x020be0dc
 
-src/unnamed/ov007/func_ov007_020bda38.c:
+src/ui/menus/unit020be0dc.cpp:
     complete
-    .text start:0x020bda38 end:0x020bda8c
-
-src/unnamed/ov007/func_ov007_020bda8c.c:
-    complete
-    .text start:0x020bda8c end:0x020bdbcc
-
-src/unnamed/ov007/func_ov007_020bdbcc.c:
-    complete
-    .text start:0x020bdbcc end:0x020bde2c
-
-src/unnamed/ov007/func_ov007_020bde2c.cpp:
-    complete
-    .text start:0x020bde2c end:0x020bde70
-
-src/unnamed/ov007/func_ov007_020bde70.cpp:
-    complete
-    .text start:0x020bde70 end:0x020bdeb0
-
-src/unnamed/ov007/func_ov007_020bdeb0.c:
-    complete
-    .text start:0x020bdeb0 end:0x020bdebc
-
-src/unnamed/ov007/func_ov007_020bdebc.cpp:
-    complete
-    .text start:0x020bdebc end:0x020bdf60
-
-src/unnamed/ov007/func_ov007_020bdf60.cpp:
-    complete
-    .text start:0x020bdf60 end:0x020be00c
-
-src/unnamed/ov007/func_ov007_020be00c.cpp:
-    complete
-    .text start:0x020be00c end:0x020be098
-
-src/unnamed/ov007/func_ov007_020be098.cpp:
-    complete
-    .text start:0x020be098 end:0x020be0dc
-
-src/unnamed/ov007/func_ov007_020be0dc.c:
-    complete
-    .text start:0x020be0dc end:0x020be3bc
-
-src/unnamed/ov007/func_ov007_020be3bc.cpp:
-    complete
-    .text start:0x020be3bc end:0x020be47c
-
-src/unnamed/ov007/func_ov007_020be47c.c:
-    complete
-    .text start:0x020be47c end:0x020be50c
-
-src/unnamed/ov007/func_ov007_020be50c.c:
-    complete
-    .text start:0x020be50c end:0x020be684
-
-src/unnamed/ov007/func_ov007_020be684.c:
-    complete
-    .text start:0x020be684 end:0x020be7a8
-
-src/unnamed/ov007/func_ov007_020be7a8.c:
-    complete
-    .text start:0x020be7a8 end:0x020be850
-
-src/unnamed/ov007/func_ov007_020be850.c:
-    complete
-    .text start:0x020be850 end:0x020be8b8
-
-src/unnamed/ov007/func_ov007_020be8b8.c:
-    complete
-    .text start:0x020be8b8 end:0x020be964
+    .text start:0x020be0dc end:0x020be964
 
 src/unnamed/ov007/func_ov007_020be964.c:
     complete
@@ -1050,71 +631,23 @@ src/unnamed/ov007/func_ov007_020beaa0.c:
     complete
     .text start:0x020beaa0 end:0x020beb80
 
-src/unnamed/ov007/func_ov007_020beb80.c:
+src/unnamed/ov007/func_ov007_020beb80.cpp:
     complete
     .text start:0x020beb80 end:0x020bed60
 
-src/unnamed/ov007/func_ov007_020bed60.c:
+src/ui/menus/unit020bed60.cpp:
     complete
-    .text start:0x020bed60 end:0x020bee14
+    .text start:0x020bed60 end:0x020bf690
 
-src/unnamed/ov007/func_ov007_020bee14.c:
+src/ui/menus/unit020bf690.cpp:
     complete
-    .text start:0x020bee14 end:0x020beeb0
-
-src/unnamed/ov007/func_ov007_020beeb0.c:
-    complete
-    .text start:0x020beeb0 end:0x020bf304
-
-src/unnamed/ov007/func_ov007_020bf304.c:
-    complete
-    .text start:0x020bf304 end:0x020bf428
-
-src/unnamed/ov007/func_ov007_020bf428.c:
-    complete
-    .text start:0x020bf428 end:0x020bf57c
-
-src/unnamed/ov007/func_ov007_020bf57c.c:
-    complete
-    .text start:0x020bf57c end:0x020bf630
-
-src/unnamed/ov007/func_ov007_020bf630.c:
-    complete
-    .text start:0x020bf630 end:0x020bf690
-
-src/unnamed/ov007/func_ov007_020bf690.c:
-    complete
-    .text start:0x020bf690 end:0x020bf790
-
-src/unnamed/ov007/func_ov007_020bf790.c:
-    complete
-    .text start:0x020bf790 end:0x020bfacc
-
-src/RequestScreenFade.c:
-    complete
-    .text start:0x020bfacc end:0x020bfaf0
-
-src/unnamed/ov007/func_ov007_020bfaf0.cpp:
-    complete
-    .text start:0x020bfaf0 end:0x020bfbdc
-
-src/unnamed/ov007/func_ov007_020bfbdc.c:
-    complete
-    .text start:0x020bfbdc end:0x020bfc54
-
-src/unnamed/ov007/func_ov007_020bfc54.c:
-    complete
-    .text start:0x020bfc54 end:0x020bfcec
-
-src/unnamed/ov007/func_ov007_020bfcec.c:
-    complete
-    .text start:0x020bfcec end:0x020bfd70
+    .text start:0x020bf690 end:0x020bfd70
 
 src/unnamed/ov007/func_ov007_020bfd70.cpp:
     complete
     .text start:0x020bfd70 end:0x020bfe4c
 
-src/unnamed/ov007/func_ov007_020bfe4c.c:
+src/unnamed/ov007/func_ov007_020bfe4c.cpp:
     complete
     .text start:0x020bfe4c end:0x020bff38
 
@@ -1126,7 +659,7 @@ src/unnamed/ov007/func_ov007_020bffb8.c:
     complete
     .text start:0x020bffb8 end:0x020c0078
 
-src/func_ov007_020c0078.c:
+src/func_ov007_020c0078.cpp:
     complete
     .text start:0x020c0078 end:0x020c0128
 
@@ -1182,22 +715,13 @@ src/unnamed/ov007/func_ov007_020c0638.c:
     complete
     .text start:0x020c0638 end:0x020c076c
 
-src/unnamed/ov007/func_ov007_020c076c.c:
+src/unnamed/ov007/func_ov007_020c076c.cpp:
     complete
     .text start:0x020c076c end:0x020c0a44
 
 src/unnamed/ov007/func_ov007_020c0a44.c:
     complete
-    .text start:0x020c0a44 end:0x020c0a9c
-
-src/unnamed/ov007/func_ov007_020c0a9c.c:
-    complete
-    .text start:0x020c0a9c end:0x020c0aa8
-
-src/unnamed/ov007/func_ov007_020c0aa8.c:
-    complete
-    .text start:0x020c0aa8 end:0x020c0af4
-
+    .text start:0x020c0a44 end:0x020c0af4
 src/unnamed/ov007/func_ov007_020c0af4.c:
     complete
     .text start:0x020c0af4 end:0x020c0b20
@@ -1220,16 +744,7 @@ src/unnamed/ov007/func_ov007_020c0eb0.cpp:
 
 src/unnamed/ov007/func_ov007_020c1048.c:
     complete
-    .text start:0x020c1048 end:0x020c105c
-
-src/unnamed/ov007/func_ov007_020c105c.c:
-    complete
-    .text start:0x020c105c end:0x020c1068
-
-src/unnamed/ov007/func_ov007_020c1068.c:
-    complete
-    .text start:0x020c1068 end:0x020c108c
-
+    .text start:0x020c1048 end:0x020c108c
 src/Sprite_SetAnimation.c:
     complete
     .text start:0x020c108c end:0x020c10b0
@@ -1270,74 +785,16 @@ src/unnamed/ov007/func_ov007_020c13f4.c:
     complete
     .text start:0x020c13f4 end:0x020c1404
 
-src/unnamed/ov007/func_ov007_020c1404.c:
+src/ui/menus/unit020c1404.cpp:
     complete
-    .text start:0x020c1404 end:0x020c1448
-
-src/unnamed/ov007/func_ov007_020c1448.c:
-    complete
-    .text start:0x020c1448 end:0x020c14b8
-
-src/unnamed/ov007/func_ov007_020c14b8.c:
-    complete
-    .text start:0x020c14b8 end:0x020c14d4
-
-src/unnamed/ov007/func_ov007_020c14d4.c:
-    complete
-    .text start:0x020c14d4 end:0x020c1560
-
-src/unnamed/ov007/func_ov007_020c1560.c:
-    complete
-    .text start:0x020c1560 end:0x020c15ec
-
-src/unnamed/ov007/func_ov007_020c15ec.c:
-    complete
-    .text start:0x020c15ec end:0x020c1620
-
-src/unnamed/ov007/func_ov007_020c1620.c:
-    complete
-    .text start:0x020c1620 end:0x020c162c
-
-src/unnamed/ov007/func_ov007_020c162c.c:
-    complete
-    .text start:0x020c162c end:0x020c16dc
-
-src/unnamed/ov007/func_ov007_020c16dc.cpp:
-    complete
-    .text start:0x020c16dc end:0x020c17f4
-
-src/unnamed/ov007/func_ov007_020c17f4.cpp:
-    complete
-    .text start:0x020c17f4 end:0x020c1804
-
-src/unnamed/ov007/func_ov007_020c1804.cpp:
-    complete
-    .text start:0x020c1804 end:0x020c1814
-
-src/unnamed/ov007/func_ov007_020c1814.cpp:
-    complete
-    .text start:0x020c1814 end:0x020c184c
-
-src/unnamed/ov007/func_ov007_020c184c.cpp:
-    complete
-    .text start:0x020c184c end:0x020c19cc
-
+    .text start:0x020c1404 end:0x020c19cc
 src/unnamed/ov007/func_ov007_020c19cc.cpp:
     complete
     .text start:0x020c19cc end:0x020c1d78
 
 src/unnamed/ov007/func_ov007_020c1d78.cpp:
     complete
-    .text start:0x020c1d78 end:0x020c1d8c
-
-src/unnamed/ov007/func_ov007_020c1d8c.cpp:
-    complete
-    .text start:0x020c1d8c end:0x020c1da0
-
-src/unnamed/ov007/func_ov007_020c1da0.cpp:
-    complete
-    .text start:0x020c1da0 end:0x020c1db0
-
+    .text start:0x020c1d78 end:0x020c1db0
 src/unnamed/ov007/func_ov007_020c1db0.c:
     complete
     .text start:0x020c1db0 end:0x020c2018
@@ -1348,12 +805,7 @@ src/unnamed/ov007/func_ov007_020c2018.c:
 
 src/unnamed/ov007/func_ov007_020c2024.c:
     complete
-    .text start:0x020c2024 end:0x020c2068
-
-src/unnamed/ov007/func_ov007_020c2068.c:
-    complete
-    .text start:0x020c2068 end:0x020c2090
-
+    .text start:0x020c2024 end:0x020c2090
 src/unnamed/ov007/func_ov007_020c2090.c:
     complete
     .text start:0x020c2090 end:0x020c20b8
@@ -1364,16 +816,7 @@ src/unnamed/ov007/func_ov007_020c20b8.c:
 
 src/unnamed/ov007/func_ov007_020c22a0.c:
     complete
-    .text start:0x020c22a0 end:0x020c22f8
-
-src/unnamed/ov007/func_ov007_020c22f8.c:
-    complete
-    .text start:0x020c22f8 end:0x020c2304
-
-src/unnamed/ov007/func_ov007_020c2304.c:
-    complete
-    .text start:0x020c2304 end:0x020c232c
-
+    .text start:0x020c22a0 end:0x020c232c
 src/unnamed/ov007/func_ov007_020c232c.c:
     complete
     .text start:0x020c232c end:0x020c2390
@@ -1410,7 +853,7 @@ src/unnamed/ov007/func_ov007_020c27b4.c:
     complete
     .text start:0x020c27b4 end:0x020c281c
 
-src/unnamed/ov007/func_ov007_020c281c.c:
+src/unnamed/ov007/func_ov007_020c281c.cpp:
     complete
     .text start:0x020c281c end:0x020c28ac
 
@@ -1428,16 +871,7 @@ src/unnamed/ov007/func_ov007_020c2a04.c:
 
 src/unnamed/ov007/func_ov007_020c2acc.c:
     complete
-    .text start:0x020c2acc end:0x020c2b38
-
-src/unnamed/ov007/func_ov007_020c2b38.c:
-    complete
-    .text start:0x020c2b38 end:0x020c2b9c
-
-src/unnamed/ov007/func_ov007_020c2b9c.c:
-    complete
-    .text start:0x020c2b9c end:0x020c2bf8
-
+    .text start:0x020c2acc end:0x020c2bf8
 src/unnamed/ov007/func_ov007_020c2bf8.c:
     complete
     .text start:0x020c2bf8 end:0x020c2c68
@@ -1450,7 +884,7 @@ src/unnamed/ov007/func_ov007_020c2d44.c:
     complete
     .text start:0x020c2d44 end:0x020c2dfc
 
-src/unnamed/ov007/func_ov007_020c2dfc.c:
+src/unnamed/ov007/func_ov007_020c2dfc.cpp:
     complete
     .text start:0x020c2dfc end:0x020c2e90
 
@@ -1526,33 +960,9 @@ src/unnamed/ov007/func_ov007_020c3be0.cpp:
     complete
     .text start:0x020c3be0 end:0x020c3ce4
 
-src/unnamed/ov007/func_ov007_020c3ce4.cpp:
+src/ui/menus/unit020c3ce4.cpp:
     complete
-    .text start:0x020c3ce4 end:0x020c3d1c
-
-src/unnamed/ov007/func_ov007_020c3d1c.cpp:
-    complete
-    .text start:0x020c3d1c end:0x020c3d40
-
-src/unnamed/ov007/func_ov007_020c3d40.cpp:
-    complete
-    .text start:0x020c3d40 end:0x020c3df4
-
-src/unnamed/ov007/func_ov007_020c3df4.cpp:
-    complete
-    .text start:0x020c3df4 end:0x020c3e1c
-
-src/unnamed/ov007/func_ov007_020c3e1c.cpp:
-    complete
-    .text start:0x020c3e1c end:0x020c3e2c
-
-src/unnamed/ov007/func_ov007_020c3e2c.cpp:
-    complete
-    .text start:0x020c3e2c end:0x020c3e3c
-
-src/unnamed/ov007/func_ov007_020c3e3c.cpp:
-    complete
-    .text start:0x020c3e3c end:0x020c3e4c
+    .text start:0x020c3ce4 end:0x020c3e4c
 
 src/unnamed/ov007/func_ov007_020c3e4c.cpp:
     complete
@@ -1572,12 +982,7 @@ src/unnamed/ov007/func_ov007_020c3ee8.c:
 
 src/unnamed/ov007/func_ov007_020c3f00.c:
     complete
-    .text start:0x020c3f00 end:0x020c3fe4
-
-src/unnamed/ov007/func_ov007_020c3fe4.c:
-    complete
-    .text start:0x020c3fe4 end:0x020c4090
-
+    .text start:0x020c3f00 end:0x020c4090
 src/unnamed/ov007/func_ov007_020c4090.c:
     complete
     .text start:0x020c4090 end:0x020c40b4
@@ -1646,7 +1051,7 @@ src/unnamed/ov007/func_ov007_020c4fcc.cpp:
     complete
     .text start:0x020c4fcc end:0x020c5014
 
-src/unnamed/ov007/func_ov007_020c5014.c:
+src/unnamed/ov007/func_ov007_020c5014.cpp:
     complete
     .text start:0x020c5014 end:0x020c510c
 
@@ -1770,7 +1175,7 @@ src/unnamed/ov007/func_ov007_020c6e68.c:
     complete
     .text start:0x020c6e68 end:0x020c704c
 
-src/unnamed/ov007/func_ov007_020c704c.c:
+src/unnamed/ov007/func_ov007_020c704c.cpp:
     complete
     .text start:0x020c704c end:0x020c71c0
 
@@ -1852,16 +1257,7 @@ src/unnamed/ov007/func_ov007_020c8010.cpp:
 
 src/unnamed/ov007/func_ov007_020c806c.c:
     complete
-    .text start:0x020c806c end:0x020c8098
-
-src/unnamed/ov007/func_ov007_020c8098.c:
-    complete
-    .text start:0x020c8098 end:0x020c80a4
-
-src/unnamed/ov007/func_ov007_020c80a4.c:
-    complete
-    .text start:0x020c80a4 end:0x020c80c8
-
+    .text start:0x020c806c end:0x020c80c8
 src/unnamed/ov007/func_ov007_020c80c8.c:
     complete
     .text start:0x020c80c8 end:0x020c81a0
@@ -1898,7 +1294,7 @@ src/unnamed/ov007/func_ov007_020c86a8.c:
     complete
     .text start:0x020c86a8 end:0x020c86c4
 
-src/unnamed/ov007/func_ov007_020c86c4.c:
+src/unnamed/ov007/func_ov007_020c86c4.cpp:
     complete
     .text start:0x020c86c4 end:0x020c8970
 
@@ -1976,16 +1372,7 @@ src/unnamed/ov007/func_ov007_020c9214.c:
 
 src/unnamed/ov007/func_ov007_020c9268.c:
     complete
-    .text start:0x020c9268 end:0x020c92a0
-
-src/unnamed/ov007/func_ov007_020c92a0.c:
-    complete
-    .text start:0x020c92a0 end:0x020c92ac
-
-src/unnamed/ov007/func_ov007_020c92ac.c:
-    complete
-    .text start:0x020c92ac end:0x020c92d0
-
+    .text start:0x020c9268 end:0x020c92d0
 src/unnamed/ov007/func_ov007_020c92d0.cpp:
     complete
     .text start:0x020c92d0 end:0x020c934c
@@ -2022,17 +1409,9 @@ src/unnamed/ov007/func_ov007_020c946c.c:
     complete
     .text start:0x020c946c end:0x020c94a0
 
-src/unnamed/ov007/func_ov007_020c94a0.c:
+src/ui/menus/unit020c94a0.cpp:
     complete
-    .text start:0x020c94a0 end:0x020c94e4
-
-src/unnamed/ov007/func_ov007_020c94e4.cpp:
-    complete
-    .text start:0x020c94e4 end:0x020c951c
-
-src/unnamed/ov007/func_ov007_020c951c.c:
-    complete
-    .text start:0x020c951c end:0x020c95fc
+    .text start:0x020c94a0 end:0x020c95fc
 
 src/unnamed/ov007/func_ov007_020c95fc.c:
     complete
@@ -2054,7 +1433,7 @@ src/unnamed/ov007/func_ov007_020c9a2c.c:
     complete
     .text start:0x020c9a2c end:0x020c9a84
 
-src/unnamed/ov007/func_ov007_020c9a84.c:
+src/unnamed/ov007/func_ov007_020c9a84.cpp:
     complete
     .text start:0x020c9a84 end:0x020c9c24
 
@@ -2062,7 +1441,7 @@ src/unnamed/ov007/func_ov007_020c9c24.c:
     complete
     .text start:0x020c9c24 end:0x020c9d90
 
-src/unnamed/ov007/func_ov007_020c9d90.c:
+src/unnamed/ov007/func_ov007_020c9d90.cpp:
     complete
     .text start:0x020c9d90 end:0x020c9f10
 
@@ -2078,27 +1457,14 @@ src/unnamed/ov007/func_ov007_020ca010.c:
     complete
     .text start:0x020ca010 end:0x020ca1d4
 
-src/unnamed/ov007/func_ov007_020ca1d4.c:
+src/unnamed/ov007/func_ov007_020ca1d4.cpp:
     complete
-    .text start:0x020ca1d4 end:0x020ca26c
-
-src/unnamed/ov007/func_ov007_020ca26c.c:
-    complete
-    .text start:0x020ca26c end:0x020ca2a8
-
-src/unnamed/ov007/func_ov007_020ca2a8.c:
-    complete
-    .text start:0x020ca2a8 end:0x020ca308
-
-src/unnamed/ov007/func_ov007_020ca308.c:
-    complete
-    .text start:0x020ca308 end:0x020ca578
-
+    .text start:0x020ca1d4 end:0x020ca578
 src/unnamed/ov007/func_ov007_020ca578.c:
     complete
     .text start:0x020ca578 end:0x020ca5f0
 
-src/unnamed/ov007/func_ov007_020ca5f0.c:
+src/unnamed/ov007/func_ov007_020ca5f0.cpp:
     complete
     .text start:0x020ca5f0 end:0x020ca86c
 
@@ -2130,7 +1496,7 @@ src/unnamed/ov007/func_ov007_020cbb04.cpp:
     complete
     .text start:0x020cbb04 end:0x020cbbb0
 
-src/unnamed/ov007/func_ov007_020cbbb0.c:
+src/unnamed/ov007/func_ov007_020cbbb0.cpp:
     complete
     .text start:0x020cbbb0 end:0x020cbf8c
 

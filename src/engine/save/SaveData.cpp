@@ -1,9 +1,9 @@
 //cpp
 /* leftovers:
- * - PlayerLoseCap keeps its raw word read-modify-write at byte 4: spelling it
- *   as `->flags1` through a cast makes mwccarm materialise the field address
- *   in a register first instead of the ROM's two direct `ldr [r0,#4]` hits.
- *   The unsigned char cast is what stops the int array from scaling that 4.
+ * - The flag read-modify-writes spell the load `(int)->flags1` (or flags2):
+ *   a plain `flags1 | bit` or `flags1 |= bit` makes mwccarm materialise the
+ *   field address in a register first instead of the ROM's two direct
+ *   `ldr [r0,#4]` hits. SetDefaultValues' `flags2 |= 8` needs no cast.
  * - SaveFile and ReadFileData keep their materialised-address forms: the
  *   `int* p = ...; *p = *p | ...` two-step is what the ROM compiled. Folding
  *   the offset into the store changes the instruction.
@@ -35,13 +35,14 @@
  *
  * Every method is static: the ROM bodies take no `this` and reach the single
  * save block at 0x0209caa0 directly. The TU declares it once as an int array.
- * Word updates are indexes (flags1 is [1], flags2 is [2], the cannon word is
- * [4]): a byte-pointer plus a constant folds that constant into the relocation
- * addend, and the ROM keeps the offset in the load. The minigame block sits
- * at byte 0x44, which on this array is `data_0209caa0 + 0x11` and still pools
- * addend 0x44. Byte 0x41 and the active-slot byte at 0x328 are read through
- * an unsigned char view. Where a named member was byte-neutral the source
- * uses it (CanPlayerHaveCap reads mCharacter, HasPlayerLostCap flags1).
+ * flags1, flags2 and mCharacter are reached as members of the block cast to
+ * SaveData. The words with no header name stay indexes (the word at 0xc is
+ * [3], the cannon word is [4]): a byte-pointer plus a constant folds that
+ * constant into the relocation addend, and the ROM keeps the offset in the
+ * load. The minigame block sits at byte 0x44, which on this array is
+ * `data_0209caa0 + 0x11` and still pools addend 0x44; `(SaveData*)block + 1`
+ * builds 4 bytes longer. The active-slot byte at 0x328 is read through an
+ * unsigned char view.
  */
 
 #include "SaveData.h"
@@ -83,8 +84,8 @@ void SaveData::SetDefaultValues(FileSaveData* fsd_)
 {
     func_0205a588(((void*)fsd_), 0, 0x44);
     *(int*)((void*)fsd_) = 0x30303038;      /* magic8000 */
-    *(unsigned char*)((char*)fsd_ + 0x41) = 3;
-    *(int*)((char*)fsd_ + 8) |= 8;
+    ((SaveData *)fsd_)->mCharacter = 3;
+    ((SaveData *)fsd_)->flags2 |= 8;
     *(unsigned char*)((char*)fsd_ + 0x42) = 0;
 }
 
@@ -109,7 +110,7 @@ int SaveData::ReadFileData(u32 fileID, FileSaveData* dest)
 // @symbol _ZN8SaveData8SaveFileEjP12FileSaveData
 int SaveData::SaveFile(u32 fileID, FileSaveData* data)
 {
-    int* ip = (int*)((char*)data + 4);
+    int *ip = (int *)&((SaveData *)data)->flags1;
     *ip = *ip | 1;
     if (SaveData::SaveDataToCart((char*)data, 0x44, fileID) == 0)
         return 1;
@@ -196,7 +197,8 @@ void SaveData::PlayerLoseCap()
 {
     if (!SaveData::CanPlayerHaveCap())
         return;
-    *(int*)((unsigned char*)data_0209caa0 + 4) = *(int*)((unsigned char*)data_0209caa0 + 4) | (0x1000000u << ((unsigned char*)data_0209caa0)[0x41]);
+    ((SaveData *)data_0209caa0)->flags1 = (int)((SaveData *)data_0209caa0)->flags1 |
+                                          (0x1000000u << ((SaveData *)data_0209caa0)->mCharacter);
 }
 
 // @symbol func_02013a88
@@ -204,7 +206,8 @@ extern "C" void func_02013a88(void)
 {
     if (!SaveData::CanPlayerHaveCap())
         return;
-    *(int*)((unsigned char*)data_0209caa0 + 4) = *(int*)((unsigned char*)data_0209caa0 + 4) & ~(0x1000000u << ((unsigned char*)data_0209caa0)[0x41]);
+    ((SaveData *)data_0209caa0)->flags1 = (int)((SaveData *)data_0209caa0)->flags1 &
+                                          ~(0x1000000u << ((SaveData *)data_0209caa0)->mCharacter);
     func_020139b8();
 }
 
@@ -213,7 +216,8 @@ extern "C" int func_02013a44(void)
 {
     if (!SaveData::CanPlayerHaveCap())
         return 0;
-    return *(int*)((unsigned char*)data_0209caa0 + 4) & (0x8000000u << ((unsigned char*)data_0209caa0)[0x41]);
+    return ((SaveData *)data_0209caa0)->flags1 &
+           (0x8000000u << ((SaveData *)data_0209caa0)->mCharacter);
 }
 
 // @symbol func_02013a00
@@ -221,7 +225,8 @@ extern "C" void func_02013a00(void)
 {
     if (!SaveData::CanPlayerHaveCap())
         return;
-    *(int*)((unsigned char*)data_0209caa0 + 4) = *(int*)((unsigned char*)data_0209caa0 + 4) | (0x8000000u << ((unsigned char*)data_0209caa0)[0x41]);
+    ((SaveData *)data_0209caa0)->flags1 = (int)((SaveData *)data_0209caa0)->flags1 |
+                                          (0x8000000u << ((SaveData *)data_0209caa0)->mCharacter);
 }
 
 // @symbol func_020139b8
@@ -229,14 +234,15 @@ extern "C" void func_020139b8(void)
 {
     if (!SaveData::CanPlayerHaveCap())
         return;
-    *(int*)((unsigned char*)data_0209caa0 + 4) = *(int*)((unsigned char*)data_0209caa0 + 4) & ~(0x8000000u << ((unsigned char*)data_0209caa0)[0x41]);
+    ((SaveData *)data_0209caa0)->flags1 = (int)((SaveData *)data_0209caa0)->flags1 &
+                                          ~(0x8000000u << ((SaveData *)data_0209caa0)->mCharacter);
 }
 
 // @symbol _ZN8SaveData22NumGlowingRabbitsFoundEv
 int SaveData::NumGlowingRabbitsFound()
 {
     int count = 0;
-    int f = data_0209caa0[2];
+    int f = ((SaveData *)data_0209caa0)->flags2;
     unsigned int mask = 0x100000;
     int i = 0;
     do {
@@ -253,9 +259,10 @@ int SaveData::NumGlowingRabbitsFound()
 extern "C" void func_02013944(void)
 {
     u32 count = SaveData::NumGlowingRabbitsFound();
-    data_0209caa0[2] = data_0209caa0[2] | (0x100000u << count);
+    ((SaveData *)data_0209caa0)->flags2 =
+        (int)((SaveData *)data_0209caa0)->flags2 | (0x100000u << count);
     if ((s32)count >= 7)
-        data_0209caa0[1] = data_0209caa0[1] | 0x80u;
+        ((SaveData *)data_0209caa0)->flags1 = (int)((SaveData *)data_0209caa0)->flags1 | 0x80u;
 }
 
 // @symbol _ZN8SaveData19IsCharacterUnlockedEj
@@ -267,7 +274,7 @@ s32 SaveData::IsCharacterUnlocked(u32 character)
 // @symbol _ZN8SaveData17SetCharacterIntroEi
 void SaveData::SetCharacterIntro(s32 character)
 {
-    data_0209caa0[2] |= 1 << character;
+    ((SaveData *)data_0209caa0)->flags2 = (int)((SaveData *)data_0209caa0)->flags2 | 1 << character;
 }
 
 // @symbol func_020138dc
@@ -406,9 +413,8 @@ u8 SaveData::GetCoinRecord(u32 courseID)
     return data_0209cad2[courseID];
 }
 
-// @symbol _ZN8SaveData21SetCoinRecordIfHigherEah
-void SaveData::SetCoinRecordIfHigher(s8 courseID, u8 coins)
-{
+// @symbol _ZN8SaveData21SetCoinRecordIfHigherEih
+void SaveData::SetCoinRecordIfHigher(int courseID, u8 coins) {
     if (coins > data_0209cad2[courseID])
         data_0209cad2[courseID] = coins;
 }

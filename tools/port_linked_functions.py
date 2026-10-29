@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Which functions the PC port links, from a port build, as a committed list.
 
-LINKED is measured on a port build (port/tools/linkage.py reads
+PORTED is measured on a port build (port/tools/linkage.py reads
 build/port/walk_window.map) and CI on main has no such build, so the headline is a
 STAMP in config/port_linkage.json. This tool produces the per-function half of the
 same measurement: config/port_linked_functions.txt, one ``module:0xaddr`` key per
 function whose translation unit is linked into walk_window, using the identical
 rule linkage.py applies (a source stem whose object appears in the map).
-tools/chaos_db_ci.py publishes a key found in that file as ``linked: true`` on the
-function's record, so the Atlas can colour by LINKED without a port build.
+tools/chaos_db_ci.py publishes a key found in that file as ``ported: true`` on the
+function's record, so the Atlas can colour by PORTED without a port build.
 
 The port tree and this tree can fold translation units differently (the port
 branches lag main's TU folding), so the mapping runs in the PORT tree: the tree's

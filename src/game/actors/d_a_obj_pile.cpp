@@ -16,14 +16,12 @@
  * The registry factory daObjPile_c_classInit (0x02133938) abuts the rest
  * of the run and is written last.
  *
- * leftovers:
- * - dBgActor_c::IsClsnInRangeOnScreen, dActor_c::SpawnCoins and
- *   dBgW_KcMbg::SetFile take Fix12<int> by value. Fix12<int>{0} does not
- *   compile. The calls stay the scalar externs.
- * - Behavior's SpawnCoins goes through V3 (copy ctor, empty dtor) by value.
- *   func_ov091_021334b8 uses a two-Vector3 stack struct and a function-pointer
- *   cast to const Vector3 &. Those are different calls; do not unify them.
- * - func_ov091_021334b8 keeps the mPosY and mStepsLeft pointer
+ * What stays:
+ * - Behavior's SpawnCoins passes a Vector3(x, y, z) temporary built from the
+ *   local, so the call copies the triple first. Sink passes a
+ *   two-Vector3 stack struct's second triple directly. Those are different
+ *   calls; do not unify them.
+ * - Sink keeps the mPosY and mStepsLeft pointer
  *   read-modify-writes and `*q = *q - 1`. The else path materializes offset
  *   0x31e from the pool because that displacement is not an ARM immediate.
  *   The early `if (mStepsLeft != 0) return` stays; wrapping the tail is a
@@ -34,10 +32,9 @@
  *   then optionally 1. func_02012694 plays bank 3 at mCamSpacePos. It is not
  *   Sound::PlayBank3 (that body is 0x02012664).
  * - Do not name mPos.
- * - func_ov091_02133498 and func_ov091_021334b8 are members. The address is
- *   the method name. A local `daObjPile_c *self = this` is not used:
- *   func_ov091_02133498 is a leaf, and saving this in another register
- *   would add a push.
+ * - NotifyTagPileGone and Sink are coined names; the ROM records none. A
+ *   local `daObjPile_c *self = this` is not used: NotifyTagPileGone is a
+ *   leaf, and saving this in another register would add a push.
  * - The two file handles live at the bottom of this file; the compiler's
  *   __sinit_d_a_obj_pile.cpp constructs them at overlay load. Their wrapper
  *   names are local -- the constructors are the ROM resource-family
@@ -45,10 +42,7 @@
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daObjPile_c_AssetId {
-    ASSET_PILE_BMD = 0x0481,
-    ASSET_PILE_KCL = 0x0482
-};
+enum daObjPile_c_AssetId { ASSET_PILE_BMD = 0x0481, ASSET_PILE_KCL = 0x0482 };
 
 #include "decl_common.h"
 #include "daObjPile_c.h"
@@ -57,46 +51,30 @@ enum daObjPile_c_AssetId {
 #include "SharedFilePtr.h"
 #include "daObjKinokoTag_c.h"
 
-/* SpawnCoins is declared on dActor_c as const Vector3 &, which is not the
- * call Behavior emits. V3's copy is what matches that call. */
-struct V3 {
-    int x, y, z;
-    V3() {}
-    V3(const V3 &o) { x = o.x; y = o.y; z = o.z; }
-    ~V3() {}
-};
-
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct PileModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     PileModelFilePtr(u32 fileID);
     ~PileModelFilePtr();
 };
 
 struct PileCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     PileCollisionFilePtr(u32 fileID);
     ~PileCollisionFilePtr();
 };
 
+/* local extern: no shared header declares these. */
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *c, int a, int b);
-extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, V3 v, unsigned int n, int f, short s);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern int func_02012694(int a, void *b);
+}
 
 /* This TU's two file handles: the pile model and its collision file.
  * InitResources loads both, CleanupResources releases them. Defined at the
  * end of this file so the constructors do not enter .text. */
 extern PileModelFilePtr gPileModelFile;
 extern PileCollisionFilePtr gPileCollisionFile;
-}
 
 /* ROM order. The out-of-line destructor is the key function, so it stays
  * first: D1, then D0, and the unused D2 is deadstripped. */
@@ -104,14 +82,11 @@ extern PileCollisionFilePtr gPileCollisionFile;
 
 // @symbol _ZN11daObjPile_cD1Ev
 // @symbol _ZN11daObjPile_cD0Ev
-daObjPile_c::~daObjPile_c()
-{
-}
+daObjPile_c::~daObjPile_c() {}
 
-// @symbol _ZN11daObjPile_c19func_ov091_02133498Ev
+// @symbol _ZN11daObjPile_c17NotifyTagPileGoneEv
 /* Tells the linked KINOKO_TAG (actor 0x140) that its pile is gone. */
-void daObjPile_c::func_ov091_02133498()
-{
+void daObjPile_c::NotifyTagPileGone() {
     dActor_c *tag = mLinkedTag;
     if (!tag)
         return;
@@ -119,14 +94,13 @@ void daObjPile_c::func_ov091_02133498()
         ((daObjKinokoTag_c *)tag)->mLinkedPileGone = 1;
 }
 
-// @symbol _ZN11daObjPile_c19func_ov091_021334b8Ei
+// @symbol _ZN11daObjPile_c4SinkEi
 /* Sinks the pile. With flag set it drops every remaining step (60 units each)
  * and zeroes mStepsLeft; otherwise it drops one step. It then arms the hit
  * cooldown and moves the model and collider, and once no steps are left it
  * drops 5 coins (unless mBusy or the death table says otherwise), records the
- * death and calls func_ov091_02133498. */
-void daObjPile_c::func_ov091_021334b8(int flag)
-{
+ * death and calls NotifyTagPileGone. */
+void daObjPile_c::Sink(int flag) {
     if (flag != 0) {
         unsigned char n = mStepsLeft;
         int *p = &mPosY;
@@ -144,7 +118,8 @@ void daObjPile_c::func_ov091_021334b8(int flag)
     mAttackCooldown = 0xf;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    if (mStepsLeft != 0) return;
+    if (mStepsLeft != 0)
+        return;
 
     struct {
         int vx, vy, vz;
@@ -159,18 +134,15 @@ void daObjPile_c::func_ov091_021334b8(int flag)
             st.v2x = st.vx;
             st.v2y = st.vy;
             st.v2z = st.vz;
-            typedef void (*SpawnRef)(void *, Vector3 const &, unsigned int, int, short);
-            ((SpawnRef)_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs)(
-                this, *(Vector3 *)&st.v2x, 5, 0x5000, 0);
+            SpawnCoins(*(Vector3 *)&st.v2x, 5, 0x5000, 0);
         }
     }
     TrackInDeathTable();
-    func_ov091_02133498();
+    NotifyTagPileGone();
 }
 
 // @symbol _ZN11daObjPile_c15OnHitByMegaCharER6Player
-void daObjPile_c::OnHitByMegaChar(Player &player)
-{
+void daObjPile_c::OnHitByMegaChar(Player &player) {
     if (mBusy)
         return;
     if (&player == 0)
@@ -182,12 +154,11 @@ void daObjPile_c::OnHitByMegaChar(Player &player)
     player.IncMegaKillCount();
     PoofDust();
     func_02012694(0x62, &mCamSpacePosX);
-    func_ov091_021334b8(1);
+    Sink(1);
 }
 
 // @symbol _ZN11daObjPile_c15OnGroundPoundedER8dActor_c
-void daObjPile_c::OnGroundPounded(dActor_c &other)
-{
+void daObjPile_c::OnGroundPounded(dActor_c &other) {
     if (&other == 0)
         return;
     if (mStepsLeft == 0)
@@ -198,12 +169,11 @@ void daObjPile_c::OnGroundPounded(dActor_c &other)
     int f = 0;
     if (other.param1 == 2 || ((Player &)other).mIsMega != 0)
         f = 1;
-    func_ov091_021334b8(f);
+    Sink(f);
 }
 
 // @symbol _ZN11daObjPile_c16CleanupResourcesEv
-s32 daObjPile_c::CleanupResources()
-{
+s32 daObjPile_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     gPileModelFile.Release();
@@ -212,19 +182,15 @@ s32 daObjPile_c::CleanupResources()
 }
 
 // @symbol _ZN11daObjPile_c6RenderEv
-s32 daObjPile_c::Render()
-{
+s32 daObjPile_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN11daObjPile_c8BehaviorEv
-s32 daObjPile_c::Behavior()
-{
+s32 daObjPile_c::Behavior() {
     Player *player = ClosestPlayer();
-    if (mStepsLeft == 3
-        && GetBitInDeathTable() == 0
-        && player->mPosY < mPosY + 0x64000) {
+    if (mStepsLeft == 3 && GetBitInDeathTable() == 0 && player->mPosY < mPosY + 0x64000) {
         /* The player is less than 100 units above the pile: watch how far it
            circles the pile, and drop coins once the summed turn passes three
            full turns (0x30000 in 0x10000-per-turn angle units). */
@@ -246,14 +212,13 @@ s32 daObjPile_c::Behavior()
                 int a = mAngleDelta;
                 if (a < 0)
                     a = -a;
-                if (a > 0x30000 && mBusy == 0
-                    && GetBitInDeathTable() == 0) {
-                    V3 v;
+                if (a > 0x30000 && mBusy == 0 && GetBitInDeathTable() == 0) {
+                    Vector3 v;
                     v.x = mPosX;
                     v.y = mPosY;
                     v.z = mPosZ;
                     v.y += 0xc8000;
-                    _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, v, 5, 0x5000, 0);
+                    SpawnCoins(Vector3(v.x, v.y, v.z), 5, 0x5000, 0);
                     TrackInDeathTable();
                 }
             }
@@ -261,27 +226,25 @@ s32 daObjPile_c::Behavior()
         mPrevAngle = angle;
     }
     DecIfAbove0_Byte((unsigned char *)&mAttackCooldown);
-    _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0);
+    IsClsnInRangeOnScreen(0, 0);
     return 1;
 }
 
 // @symbol _ZN11daObjPile_c13InitResourcesEv
-s32 daObjPile_c::InitResources()
-{
-    void *m = Model::LoadFile(gPileModelFile);
+s32 daObjPile_c::InitResources() {
+    void *m = dExtSimpleModel_c::LoadFile(gPileModelFile);
     mModel.SetFile((BMD_File *)m, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     void *k = dBgW_Kc::LoadFile(gPileCollisionFile);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, k, &mClsnMat, 0x199, mAngleY, data_ov002_0210d874);
+    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY,
+                          *(CLPS_Block *)data_ov002_0210d874);
     mStepsLeft = 3;
     return 1;
 }
 
 // @symbol daObjPile_c_classInit
-extern "C" daObjPile_c *daObjPile_c_classInit()
-{
+extern "C" daObjPile_c *daObjPile_c_classInit() {
     return new daObjPile_c();
 }
 

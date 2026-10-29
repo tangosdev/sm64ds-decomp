@@ -24,7 +24,7 @@
 #define DADOSSY_C_H
 
 #include "dActor_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dBgW_KcMbg.h"
 #include "dBgCh_Actr.h"
 #include "dCcAc_c.h"
@@ -54,10 +54,14 @@ struct daDossy_c : dActor_c {
     s32 mCapPosY;               /* 0x0dc */
     s32 mCapPosZ;               /* 0x0e0 */
     s16 mHeadRotX;              /* 0x0e4 */
-    u16 mUnkTimer;              /* 0x0e6 */
+    /* Frames before Dorrie accepts a rider again. func_ov065_021180d4
+       sets it to 30 when a player's hit (0x400000) pops the cap;
+       func_ov065_021183c8 counts it down and mounts the player only once
+       it reaches 0. */
+    u16 mRideCooldown;          /* 0x0e6 */
     u8  mHasCap;                /* 0x0e8 */
     u8  pad_0e9[0x3];
-    ModelAnim mModelAnim;       /* 0x0ec */
+    dExtAnmModel_c mAnmModel;     /* 0x0ec */
     DorriePlatform mPlatforms[7]; /* 0x150 */
     dBgCh_Actr mWithMeshClsn;   /* 0xf50 */
     dCcAc_c mCylClsn1;          /* 0x110c */

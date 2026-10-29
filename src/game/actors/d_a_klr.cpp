@@ -18,17 +18,10 @@
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S -- mwccarm emits one .text
  * section per function in the reverse of source order.
  *
- * leftovers:
- * - func_ov079_0212682c, func_ov079_02126794 and func_ov079_02126704
- *   keep address names: the two state-table methods have no recovered
- *   name evidence, and the pose helper is a plain free function.
- * - Particle::System::New/NewSimple, dActor_c::DropShadowRadHeight,
- *   dCcAcPos_c::Init, dBgCh_Actr::Init and Player::Hurt take Fix12<int>
- *   by value, so they stay mangled (notes/mwccarm-codegen.md 6az);
- *   dBgCh_Actr::GetWallResult has no header decl.
- * - func_0200f760, func_0201267c, func_02012694 and Vec3_Add keep linker
- *   names. data_ov079_02128300 / 021282f0 are the model handles, in
- *   overlay data this TU does not own.
+ * What stays, and why:
+ * - func_0200f760, func_02012694 and Vec3_Add have no shared header, so
+ *   they keep a local extern "C" block. data_ov079_02128300 / 021282f0 are
+ *   the model handles, in overlay data this TU does not own.
  * - MatrixWords keeps the one 0x30-byte mat4x3 block copy; Matrix4x3's
  *   own memberwise assignment comes out 0x18 bytes longer.
  */
@@ -40,45 +33,29 @@
 #include "Sound.h"
 #include "dBgPi.h"
 #include "dBgCh_Actr.h"
+#include "math/Approach.h"
+#include "Particle__System.h"
 
 struct BMD_File;
 
-extern "C" {
 extern SharedFilePtr data_ov079_02128300;
 extern SharedFilePtr data_ov079_021282f0;
 
+/* local extern: arm9 C helpers with no shared header yet. */
+extern "C" {
 void func_0200f760(dActor_c *self, dCc_c *cc);
 void func_02012694(u32 id, const Vector3 *pos);
-void func_0201267c(u32 id, const Vector3 *pos);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-
-void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
-int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32 uniqueID, u32 effectID, int x, int y, int z, void *dir, void *callback);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    dActor_c *self, dExtShadowModel_c *shadow, Matrix4x3 *mtx, int radius, int depth,
-    u8 opacity);
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    dCcAcPos_c *self, dActor_c *actor, const Vector3 *offset, int radius,
-    int height, u32 flags, u32 vulnFlags);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    dBgCh_Actr *self, dActor_c *actor, int radius, int height,
-    Vector3_16 *a, Vector3_16 *b);
-int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-    Player *self, const Vector3 *source, u32 damage, int speed, u8 a, u8 b,
-    u8 c);
-
-void func_ov079_02126704(daKlr_c *self);
 }
 
-bool ApproachLinear(short &value, short target, short step);
-
-/* Indexed by mState: [0] func_ov079_0212682c, [1] func_ov079_02126794.
+/* Indexed by mState: [0] StateFly, [1] StateShotDown.
    Defined at the end of this file so it does not insert a function into .text. */
 typedef void (daKlr_c::*KlrStateFunc)();
 extern KlrStateFunc data_ov079_021282e0[2];
 
-struct MatrixWords { s32 w[12]; };
+struct MatrixWords {
+    s32 w[12];
+};
 
 enum {
     kPlayerActorID = 0xbf,
@@ -87,19 +64,17 @@ enum {
 };
 
 // @symbol daKlr_c_classInit
-extern "C" daKlr_c *daKlr_c_classInit()
-{
+extern "C" daKlr_c *daKlr_c_classInit() {
     return new daKlr_c();
 }
 
 // @symbol _ZN7daKlr_c13InitResourcesEv
-s32 daKlr_c::InitResources()
-{
-    Model::LoadFile(data_ov079_02128300);
-    Model::LoadFile(data_ov079_021282f0);
-    if (mModel.SetFile(*(BMD_File **)((char *)&data_ov079_02128300 + 4), 1, -1) == 0)
+s32 daKlr_c::InitResources() {
+    dExtSimpleModel_c::LoadFile(data_ov079_02128300);
+    dExtSimpleModel_c::LoadFile(data_ov079_021282f0);
+    if (mModel.SetFile((BMD_File *)data_ov079_02128300.filePtr, 1, -1) == 0)
         return 0;
-    if (mModel2.SetFile(*(BMD_File **)((char *)&data_ov079_021282f0 + 4), 1, -1) == 0)
+    if (mModel2.SetFile((BMD_File *)data_ov079_021282f0.filePtr, 1, -1) == 0)
         return 0;
     if (mShadow.InitCylinder() == 0)
         return 0;
@@ -108,20 +83,17 @@ s32 daKlr_c::InitResources()
         offset.x = 0;
         offset.y = -0x50000;
         offset.z = 0;
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-            &mCylClsn, this, &offset, 0x78000, 0xa0000, 0x200005, 0x3c0);
+        mCylClsn.Init(this, offset, 0x78000, 0xa0000, 0x200005, 0x3c0);
     }
     mState = 0;
     mStateTimer = 0;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWallClsn, this, 0x32000, 0, 0, 0);
+    mWallClsn.Init(this, 0x32000, 0, 0, 0);
     mSmokeTrailID = 0;
     return 1;
 }
 
 // @symbol _ZN7daKlr_c8BehaviorEv
-s32 daKlr_c::Behavior()
-{
+s32 daKlr_c::Behavior() {
     int flags;
     u32 which;
     u32 id;
@@ -137,7 +109,7 @@ s32 daKlr_c::Behavior()
         flags = mCylClsn.hitFlags;
         if (flags & 0x10) {
             ((Player *)FindWithID(id))->IncMegaKillCount();
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kBurstParticle, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(kBurstParticle, mPosX, mPosY, mPosZ);
             MarkForDestruction();
             func_02012694(0x78, &mCamSpacePos);
         } else if (flags & 0x3c0) {
@@ -153,8 +125,7 @@ s32 daKlr_c::Behavior()
                         pos.x = mPosX;
                         pos.y = mPosY;
                         pos.z = mPosZ;
-                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-                            (Player *)o, &pos, 3, 0xc000, 1, 0, 1);
+                        ((Player *)o)->Hurt(pos, 3, 0xc000, 1, 0, 1);
                         mState = 1;
                         Sound::PlayBank0(0xb5, mCamSpacePos);
                     }
@@ -172,7 +143,7 @@ s32 daKlr_c::Behavior()
             *timer = 0;
     }
 
-    func_ov079_02126704(this);
+    UpdateModelAndShadow();
 
     mCylClsn.Clear();
     {
@@ -191,25 +162,22 @@ s32 daKlr_c::Behavior()
 }
 
 // @symbol _ZN7daKlr_c6RenderEv
-s32 daKlr_c::Render()
-{
+s32 daKlr_c::Render() {
     mModel.Render(0);
     mModel2.Render(0);
     return 1;
 }
 
 // @symbol _ZN7daKlr_c16CleanupResourcesEv
-s32 daKlr_c::CleanupResources()
-{
+s32 daKlr_c::CleanupResources() {
     data_ov079_02128300.Release();
     data_ov079_021282f0.Release();
     return 1;
 }
 
-// @symbol _ZN7daKlr_c19func_ov079_0212682cEv
+// @symbol _ZN7daKlr_c8StateFlyEv
 /* State 0: wait in the barrel, shiver, then fly. */
-void daKlr_c::func_ov079_0212682c()
-{
+void daKlr_c::StateFly() {
     Vector3 nose;
     u16 timer = this->mStateTimer;
     if (timer < 40) {
@@ -226,9 +194,9 @@ void daKlr_c::func_ov079_0212682c()
     this->UpdateWMClsn(this->mWallClsn, 0);
     this->mHorzSpeed = -0x1e000;
     this->UpdatePosWithHorzSpeedAndAng();
-    Vec3_Add(&nose, &this->mPos, (Vector3 *)&this->unk_0a4);
-    this->mSmokeTrailID = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        this->mSmokeTrailID, kSmokeParticle, nose.x, nose.y, nose.z, 0, 0);
+    Vec3_Add(&nose, &this->mPos, (Vector3 *)&this->mSpeedX);
+    this->mSmokeTrailID =
+        Particle::System::New(this->mSmokeTrailID, kSmokeParticle, nose.x, nose.y, nose.z, 0, 0);
     this->mHorzSpeed = 0x1e000;
     if (this->DistToCPlayer() > 0x12c000)
         ApproachLinear(this->mPrevAngleY, this->HorzAngleToCPlayer(), 0x200);
@@ -242,7 +210,7 @@ void daKlr_c::func_ov079_0212682c()
         if ((u16)this->mStateTimer > 150)
             hit = 1;
         if (this->mWallClsn.IsOnWall() != 0) {
-            dBgPi *wall = (dBgPi *)this->mWallClsn.GetWallResult();
+            dBgPi *wall = this->mWallClsn.GetWallResult();
             if (wall->GetClsnID() != (u32)-1) {
                 if (dActor_c::FindWithID(wall->GetClsnID()) != this->mLauncher)
                     hit = 1;
@@ -258,15 +226,14 @@ void daKlr_c::func_ov079_0212682c()
         this->PoofDust();
     } else {
         func_02012694(0x78, &this->mCamSpacePos);
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kBurstParticle, nose.x, nose.y, nose.z);
+        Particle::System::NewSimple(kBurstParticle, nose.x, nose.y, nose.z);
     }
     this->MarkForDestruction();
 }
 
-// @symbol _ZN7daKlr_c19func_ov079_02126794Ev
+// @symbol _ZN7daKlr_c13StateShotDownEv
 /* State 1: shot down -- pitch over and climb, then burst after 90 frames. */
-void daKlr_c::func_ov079_02126794()
-{
+void daKlr_c::StateShotDown() {
     if ((u16)this->mStateTimer == 0) {
         this->mHorzSpeed = -0x1e000;
         this->mCylClsn.flags |= 1;
@@ -275,29 +242,26 @@ void daKlr_c::func_ov079_02126794()
     this->mPosY += 0x14000;
     if ((u16)this->mStateTimer <= 90)
         return;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kBurstParticle, this->mPosX, this->mPosY, this->mPosZ);
+    Particle::System::NewSimple(kBurstParticle, this->mPosX, this->mPosY, this->mPosZ);
     func_02012694(0x78, &this->mCamSpacePos);
     this->MarkForDestruction();
 }
 
-// @symbol func_ov079_02126704
+// @symbol _ZN7daKlr_c20UpdateModelAndShadowEv
 /* Pose both models from the actor and drop the shadow under them. */
-extern "C" void func_ov079_02126704(daKlr_c *self)
-{
-    Matrix4x3_FromRotationXYZExt(&self->mModel.mat4x3, self->mAngleX, self->mAngleY, self->mAngleZ);
-    self->mModel.mat4x3.t.x = self->mPosX >> 3;
-    self->mModel.mat4x3.t.y = self->mPosY >> 3;
-    self->mModel.mat4x3.t.z = self->mPosZ >> 3;
+void daKlr_c::UpdateModelAndShadow() {
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.t.x = mPosX >> 3;
+    mModel.mat4x3.t.y = mPosY >> 3;
+    mModel.mat4x3.t.z = mPosZ >> 3;
     /* One 0x30-byte block copy. Matrix4x3's own assignment goes member by
        member through Vector3 and comes out 0x18 bytes longer. */
-    *(MatrixWords *)&self->mModel2.mat4x3 = *(MatrixWords *)&self->mModel.mat4x3;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        self, &self->mShadow, &self->mModel.mat4x3, 0x50000, 0x50000, 0xf);
+    *(MatrixWords *)&mModel2.mat4x3 = *(MatrixWords *)&mModel.mat4x3;
+    DropShadowRadHeight(mShadow, mModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 
 // @symbol _ZN7daKlr_c16OnAimedAtWithEggEv
-int daKlr_c::OnAimedAtWithEgg()
-{
+int daKlr_c::OnAimedAtWithEgg() {
     return 0;
 }
 
@@ -309,6 +273,6 @@ int daKlr_c::OnAimedAtWithEgg()
 /* Behavior indexes this by mState. The compiler copies the two
    pointer-to-member descriptors into it at overlay load. */
 KlrStateFunc data_ov079_021282e0[2] = {
-    &daKlr_c::func_ov079_0212682c,
-    &daKlr_c::func_ov079_02126794,
+    &daKlr_c::StateFly,
+    &daKlr_c::StateShotDown,
 };

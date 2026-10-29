@@ -4,8 +4,6 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Rolling log from the ex_m_map stage (Emm; data/stage/ex_m_map in the ROM
  * file table -- not Tiny-Huge Island, whose stage dirs are tibi_deka_*).
@@ -33,13 +31,6 @@ struct daObjEmmLog_c : dBgActor_c {
     s32 CleanupResources();   /* slot  3 */
     s32 Behavior();           /* slot  6 */
     s32 Render();             /* slot  9 */
-
-    /* Leaf until fBase_c::operator new(unsigned long) lands (#2570).
-     * MWCC has no size_t here; unsigned long is the new-expression operand. */
-    static void *operator new(size_t size)
-    {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

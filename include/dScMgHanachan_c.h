@@ -12,14 +12,14 @@
  * profile.
  *
  * The destructor is non-trivial: D1 and D0 both call __cxa_vec_cleanup on
- * the 15x0x98 array at 0x4678, as dScMgBase_c's own D1/D0 do. D0's
- * deallocation comes from dScMgBase_c's operator delete. __cxa_vec_cleanup
- * and the array's element destructor Wiggler_Destroy are declared here,
- * where both the destructor and dScMgHanachan_c_classInit reach them, like
- * func_ov004_020b929c in dScMgBase_c.h.
+ * the 15x0x98 array at 0x4678, as dScMgBase_c's own D1/D0 do, with
+ * Wiggler's destructor. D0's deallocation comes from dScMgBase_c's operator
+ * delete. Wiggler's structors are empty and inline: each only builds or tears
+ * down the five Vector2 segment points, and mwccarm emits each in the TU that
+ * first uses it -- the destructor after ~dScMgHanachan_c, the constructor
+ * after the factory.
  */
-extern "C" void __cxa_vec_cleanup(void *arr, int count, int elemSize, void *dtor);
-extern "C" void *Wiggler_Destroy(void *self);
+#include "Vector2.h"
 
 struct dScMgHanachan_c : dScMgBase_c {
     virtual ~dScMgHanachan_c();
@@ -40,7 +40,9 @@ struct dScMgHanachan_c : dScMgBase_c {
     s32 mTimeLeft;   /* 0x4670 seconds left */
     s32 mTimeTick;   /* 0x4674 counts down one second */
     /* Descriptive record names; the ROM supplies the field layout, not names.
-       Lifecycle calls remain explicit; Wiggler callback methods are native. */
+       Point is the by-value pair the methods keep in locals; the stored
+       segment points are Vector2, whose arm9 structors the ROM passes for
+       them. */
     struct Point {
         s32 x, y;
     };
@@ -49,7 +51,7 @@ struct dScMgHanachan_c : dScMgBase_c {
         State state;         /* 0x00 tick callback */
         State saved;         /* 0x08 */
         State sub;           /* 0x10 callback the pop states run */
-        Point seg[5];        /* 0x18 segment positions */
+        Vector2 seg[5];      /* 0x18 segment positions */
         int speed;           /* 0x40 */
         int speedTarget;     /* 0x44 */
         int flower;          /* 0x48 bloom, Fix12; 0x3000 when the flower shows */
@@ -74,6 +76,9 @@ struct dScMgHanachan_c : dScMgBase_c {
         u8 bloom;            /* 0x94 draw the flower */
         u8 face;             /* 0x95 head sprite */
         u8 pad96[2];
+
+        Wiggler() {}
+        ~Wiggler() {}
 
         void Update();
         void StateHold();

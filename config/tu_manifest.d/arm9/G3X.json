@@ -48,7 +48,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN3G3X6SetFogEbiii",
+      "symbol": "_ZN3G3X6SetFogEiiii",
       "address": "0x020555d0",
       "size": "0x00000054",
       "legacy_source": "src/_ZN3G3X6SetFogEbiii.cpp",

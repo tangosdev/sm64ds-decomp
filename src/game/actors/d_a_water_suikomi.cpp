@@ -11,13 +11,13 @@
  * tree previously called the class WaterSuction (coined; that spelling is not
  * in the cartridge).
  *
- * This is the whole unit: the destructor pair, the five state-machine
- * helpers between D0 and CleanupResources, the five virtuals, then the
- * factory. The helpers are not virtuals: 0x021122cc and 0x021122b0 are the two
- * member-function pointers that ov026's last static initializer (0x02112d68)
- * copies from 0x02113dd8/0x02113dd0 into the state record at 0x02113f58;
- * func_ov026_021122d4 installs a state record at +0x30c (InitResources hands
- * it 0x02113f58); and Behavior calls func_ov026_02112324. (A vtable scan
+ * This is the whole unit: the destructor pair, the five non-virtual members
+ * between D0 and CleanupResources, the five virtuals, then the factory.
+ * InitState0 (0x021122cc) and State0 (0x021122b0) are the two member-function
+ * pointers that ov026's last static initializer (0x02112d68) copies from
+ * 0x02113dd8/0x02113dd0 into the state record at 0x02113f58; SetState
+ * (0x021122d4) installs a state record at +0x30c (InitResources hands it
+ * 0x02113f58); and Behavior calls the empty func_ov026_02112324. (A vtable scan
  * that runs past daWater_Tatumaki_c's 31 slots at 0x02113d54 reads those two
  * member-function-pointer constants as Tatumaki "slots 31 and 33"; they are
  * not Tatumaki's, and no Tatumaki function lies in this range.)
@@ -31,54 +31,35 @@
  * Under `#pragma defer_codegen off` .text is laid down in source order, so
  * this file is ROM-ascending.
  *
- * leftovers:
- * - The helpers keep their func_ov026_* names and C linkage: the static
- *   initializer and the state record name them by address, and none has a
- *   recovered name.
- * - dCcAcPos_c::Init stays the mangled extern (InitResources): the real
- *   member takes its radius and height as Fix12<int> by value and mwccarm
- *   homes both in stack temporaries; measured 0x88 -> 0x98 with a 0x20
- *   frame instead of 0x18.
+ * What stays:
+ * - The empty member at 0x02112324 keeps its address name: Behavior calls it
+ *   where sibling actors rebuild their model matrix, but its body says
+ *   nothing about its role.
  */
-#include "decl_common.h"
 #include "daWater_Suikomi_c.h"
-
-/* The state record at +0x30c: an enter call at +0, then the per-frame call
- * at +8 that Behavior makes. SuikomiState stands in for the class the
- * member-function pointers are typed against. */
-struct SuikomiStateRec;
-struct SuikomiState {
-    char pad[0x30c];
-    SuikomiStateRec *state;
-};
-typedef void (SuikomiState::*SuikomiStateFn)();
-struct SuikomiStateRec {
-    char pad[8];
-    SuikomiStateFn execute;
-};
+#include "math/CalcLib.h"
 
 /* The ROM member-function-pointer constants the state table copies from
  * (unlicensed .data). */
-extern SuikomiStateFn data_ov026_02113dd8;
-extern SuikomiStateFn data_ov026_02113dd0;
+extern daWater_Suikomi_c::StateFn data_ov026_02113dd8;
+extern daWater_Suikomi_c::StateFn data_ov026_02113dd0;
 
-/* The state table at 0x02113f58: the two handlers this TU's InitResources
- * hands to func_ov026_021122d4, plus section-end fill (see the definition
- * at the end of this file). */
+/* The state table at 0x02113f58: the one state this TU's InitResources
+ * hands to SetState, plus section-end fill (see the definition at the end of
+ * this file). */
 struct SuikomiStateTable {
-    SuikomiStateFn handlers[2];
+    daWater_Suikomi_c::State state;
     u8 tailFill[0x18];
 };
 extern SuikomiStateTable data_ov026_02113f58;
 
-extern "C" {
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
+/* The collider offset. A plain int triple, not Vector3: a Vector3 local
+ * would emit Vector3's inline destructor, which this TU's manifest does not
+ * license. */
 struct V3 {
     int x, y, z;
 };
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *thiz, void *actor, V3 *vec, int a, int b, unsigned int cc, unsigned int d);
 extern V3 data_ov026_02113f4c;
-}
 
 #pragma defer_codegen off
 
@@ -89,110 +70,86 @@ extern V3 data_ov026_02113f4c;
  * dEnemyBase_c's D2; D0 does the same and hands the object to the inline
  * operator delete. The base-object D2 mwcc also emits has no home in the
  * cartridge. */
-daWater_Suikomi_c::~daWater_Suikomi_c()
-{
-}
+daWater_Suikomi_c::~daWater_Suikomi_c() {}
 
-// @symbol func_ov026_02112280
+// @symbol _ZN17daWater_Suikomi_c12CheckContactEv
 /* Looks up the actor the collider last touched (mdCcAcPos_c.otherOwner) and
  * does nothing with it: the ROM body returns either way. */
-extern "C" void func_ov026_02112280(char *c)
-{
-    unsigned int id = ((daWater_Suikomi_c *)c)->mdCcAcPos_c.otherOwner;
-    if (id == 0) return;
-    void *r = dActor_c::FindWithID(id);
-    if (r == 0) return;
+void daWater_Suikomi_c::CheckContact() {
+    unsigned int id = mdCcAcPos_c.otherOwner;
+    if (id == 0)
+        return;
+    dActor_c *other = dActor_c::FindWithID(id);
+    if (other == 0)
+        return;
 }
 
-// @symbol func_ov026_021122b0
+// @symbol _ZN17daWater_Suikomi_c6State0Ev
 /* The state's per-frame function (the record's second member pointer). */
-extern "C" int func_ov026_021122b0(void *t)
-{
-    func_ov026_02112280((char *)t);
+int daWater_Suikomi_c::State0() {
+    CheckContact();
     return 1;
 }
 
-// @symbol func_ov026_021122cc
+// @symbol _ZN17daWater_Suikomi_c10InitState0Ev
 /* The state's entry function (the record's first member pointer). */
-extern "C" int func_ov026_021122cc(void)
-{
+int daWater_Suikomi_c::InitState0() {
     return 1;
 }
 
-/* func_ov026_021122d4's view of the object: the state record pointer at
- * +0x30c, as a pointer to the record's first (entry) member pointer. */
-struct SuikomiStateOwner;
-typedef int (SuikomiStateOwner::*SuikomiEnterFn)();
-struct SuikomiStateOwner {
-    char pad[0x30c];
-    SuikomiEnterFn *pp;
-};
-
-// @symbol func_ov026_021122d4
+// @symbol _ZN17daWater_Suikomi_c8SetStateEPNS_5StateE
 /* Installs a state record at +0x30c and runs its entry function. */
-extern "C" int func_ov026_021122d4(void *thiz, void *rec)
-{
-    SuikomiStateOwner *c = (SuikomiStateOwner *)thiz;
-    c->pp = (SuikomiEnterFn *)rec;
-    SuikomiEnterFn *q = c->pp;
-    if (*q == 0) return 1;
-    return (c->**q)();
+int daWater_Suikomi_c::SetState(State *state) {
+    mState = state;
+    State *s = mState;
+    if (s->mInit == 0)
+        return 1;
+    return (this->*(s->mInit))();
 }
 
-// @symbol func_ov026_02112324
+// @symbol _ZN17daWater_Suikomi_c19func_ov026_02112324Ev
 /* Empty in the ROM: four bytes, `bx lr`. Behavior still calls it. */
-extern "C" void func_ov026_02112324(void *)
-{
-}
+void daWater_Suikomi_c::func_ov026_02112324() {}
 
 // @symbol _ZN17daWater_Suikomi_c16CleanupResourcesEv
-int daWater_Suikomi_c::CleanupResources()
-{
+int daWater_Suikomi_c::CleanupResources() {
     return 1;
 }
 
 // @symbol _ZN17daWater_Suikomi_c16OnPendingDestroyEv
 /* fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`. */
-void daWater_Suikomi_c::OnPendingDestroy()
-{
-}
+void daWater_Suikomi_c::OnPendingDestroy() {}
 
 // @symbol _ZN17daWater_Suikomi_c6RenderEv
 /* Draws nothing: the suction has no model of its own. */
-int daWater_Suikomi_c::Render()
-{
+int daWater_Suikomi_c::Render() {
     return 1;
 }
 
 // @symbol _ZN17daWater_Suikomi_c8BehaviorEv
-int daWater_Suikomi_c::Behavior()
-{
-    SuikomiState *s = (SuikomiState *)this;
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
-    SuikomiStateRec *rec = s->state;
-    if (rec->execute != 0) {
-        (s->*(rec->execute))();
+int daWater_Suikomi_c::Behavior() {
+    DecIfAbove0_Short((u16 *)&mStateTimer);
+    State *s = mState;
+    if (s->mMain != 0) {
+        (this->*(s->mMain))();
     }
     UpdatePos(&mdCcAcPos_c);
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
-    func_ov026_02112324(this);
+    func_ov026_02112324();
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
     return 1;
 }
 
 // @symbol _ZN17daWater_Suikomi_c13InitResourcesEv
-int daWater_Suikomi_c::InitResources()
-{
+int daWater_Suikomi_c::InitResources() {
     V3 vec;
     unk_314 = param1 & 0xff;
     vec = data_ov026_02113f4c;
-    /* See leftovers: the mangled extern stands in for the Fix12-by-value
-       member. */
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &vec, 0x64000, 0xa4000, 0x800006, 0);
-    func_ov026_021122d4(this, &data_ov026_02113f58);
+    mdCcAcPos_c.Init(this, *(Vector3 *)&vec, 0x64000, 0xa4000, 0x800006, 0);
+    SetState(&data_ov026_02113f58.state);
     return 1;
 }
 
@@ -201,8 +158,7 @@ int daWater_Suikomi_c::InitResources()
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: WaterSuction_Spawn. */
 // @symbol daWater_Suikomi_c_classInit
-extern "C" daWater_Suikomi_c *daWater_Suikomi_c_classInit()
-{
+extern "C" daWater_Suikomi_c *daWater_Suikomi_c_classInit() {
     return new daWater_Suikomi_c();
 }
 

@@ -8,17 +8,19 @@ line: {"addr","name","size","module","versions"}). De-duped by addr.
 
 Usage:
     python tools/progress.py               # full report (uses the local ledger)
-    python tools/progress.py --bar         # ready-to-paste README "## Progress" block
+    python tools/progress.py --bar         # console progress block (does NOT touch README)
     python tools/progress.py --bar --from-src  # ignore any ambient chaos-db.json
-    python tools/progress.py --write-readme  # rewrite that block in place in README.md
 
---bar and --write-readme deliberately do NOT use progress/matched.jsonl: that
+--bar deliberately does NOT use progress/matched.jsonl: that
 ledger is git-ignored (local-only, per-contributor, and known to drift stale).
-Instead they derive the matched set
+Instead it derives the matched set
 from committed data alone (config/**/symbols.txt cross-referenced through srcpath,
 then filtered by the shared byte-gate policy), so the number is reproducible on a
 fresh checkout with no ROM and no local state - which is what the hosted
 update-chaos-data.yml workflow needs.
+
+The README progress block is owned by tools/tiers.py (MATCHED + LINKED + PORTED
+in one fenced block). This tool never writes README.md.
 """
 import json
 import asm_policy  # noqa: E402
@@ -34,9 +36,6 @@ sys.path.insert(0, str(REPO / "tools"))
 import srcpath as SP  # noqa: E402
 import relocs as RL  # noqa: E402
 MATCHED = REPO / "progress" / "matched.jsonl"
-README = REPO / "README.md"
-README_START = "<!-- progress:start -->"
-README_END = "<!-- progress:end -->"
 
 FUNC_NAME_RE = re.compile(
     r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\)"
@@ -169,7 +168,8 @@ def bar(done, tot, width=30):
 
 
 def bar_block(done_n, n, done_b, tb):
-    """The fenced ``` block shown under the README "## Progress" heading."""
+    """The console progress block (Functions + Code size). Never written to README;
+    the README's single progress block is owned by tools/tiers.py."""
     lines = [
         "```",
         f"Functions  {bar(done_n, n)}  {100*done_n/n:4.1f}%   {done_n:,} / {n:,}",
@@ -177,18 +177,6 @@ def bar_block(done_n, n, done_b, tb):
         "```",
     ]
     return "\n".join(lines)
-
-
-def write_readme(done_n, n, done_b, tb):
-    """Replace the text between the progress markers in README.md in place."""
-    text = README.read_text(encoding="utf-8")
-    start = text.index(README_START) + len(README_START)
-    end = text.index(README_END)
-    new_text = text[:start] + "\n" + bar_block(done_n, n, done_b, tb) + "\n" + text[end:]
-    if new_text != text:
-        README.write_text(new_text, encoding="utf-8")
-        return True
-    return False
 
 
 def from_db(path):
@@ -234,14 +222,13 @@ def main():
     dbp = _db_path()  # ONE source of truth: chaos-db.json (the Atlas/treemap read the same file)
 
     if "--write-readme" in sys.argv:
-        done_n, done_b, n, tb = (from_db(dbp)[:4] if dbp else synced_from_src())
-        changed = write_readme(done_n, n, done_b, tb)
-        print(f"README.md {'updated' if changed else 'already up to date'}")
+        print("progress.py no longer writes README.md: "
+              "the single README progress block is owned by tools/tiers.py")
         return
 
     if "--bar" in sys.argv:
         done_n, done_b, n, tb = (from_db(dbp)[:4] if dbp else synced_from_src())
-        # ready-to-paste README "## Progress" block; reconfigure stdout so the
+        # console-only progress block; reconfigure stdout so the
         # block characters print on a Windows (cp1252) console
         try:
             sys.stdout.reconfigure(encoding="utf-8")
@@ -254,7 +241,7 @@ def main():
     if dbp:
         done_n, done_b, n, tb, per = from_db(dbp)
     elif "--from-src" in sys.argv:
-        # Same derivation --bar/--write-readme use for --from-src: the honest,
+        # Same derivation --bar uses for --from-src: the honest,
         # committed-data-only count. Without this branch, a bare `--from-src` (no
         # --bar) fell through to the branch below and read the local, gitignored
         # progress/matched.jsonl regardless of the flag -- on a fresh worktree that

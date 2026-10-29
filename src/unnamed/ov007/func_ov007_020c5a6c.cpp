@@ -28,19 +28,21 @@ struct Link {
     Vec3 dir;    /* 0xc */
 };
 
-struct Group {
+/* A committed stroke; names as in include/Ov007StrokePath.h. */
+struct Ov007StrokePath {
     char pad0[8];
-    u16 count; /* 0x8 */
+    u16 pointCount; /* 0x8 */
 };
 
-struct Picker {
+/* The 0xd0-byte touch picker func_ov007_020c690c builds. */
+struct Ov007Picker {
     char pad0[4];
     int mode;       /* 0x4 */
     int groupCount; /* 0x8 */
     char pad1[0x28 - 0xc];
     Vec3 **groupPoints; /* 0x28 */
     char pad2[0x38 - 0x2c];
-    Group **groups;         /* 0x38 */
+    Ov007StrokePath **groups; /* 0x38 */
     PointList **pointLists; /* 0x3c */
     char pad3[0x58 - 0x40];
     int hitGroup;   /* 0x58: picked group, -1 = none */
@@ -49,22 +51,24 @@ struct Picker {
     char pad4[0x70 - 0x6c];
     Vec3 pos; /* 0x70 */
     char pad5[0x98 - 0x7c];
-    Vec3 f98;   /* 0x98 */
+    /* 0x98: the position of the Point at +0x94 that anchors link's from end
+       (func_ov007_020c690c); mode 2 moves it to the hit point */
+    Vec3 anchorPos;
     Link *link; /* 0xa4 */
     char pad6[0xac - 0xa8];
     int limitGroup; /* 0xac */
     int limitIndex; /* 0xb0 */
 };
 
-extern "C" void func_ov007_020c5a6c(Picker *self, void *target, int flag) {
+extern "C" void func_ov007_020c5a6c(Ov007Picker *self, void *target, int flag) {
     self->hitGroup = self->hitIndex = -1;
 
     int i;
     int carry = -1;
     int out;
     for (i = 0; i < self->groupCount; i++) {
-        int best =
-            func_ov007_020c30ac(self->groupPoints[i], self->groups[i]->count, target, carry, &out);
+        int best = func_ov007_020c30ac(self->groupPoints[i], self->groups[i]->pointCount, target,
+                                       carry, &out);
         /* The ROM tests flag twice (cmp r7,#0 / beq twice), so the
            redundant `flag != 0` stays. */
         if (best != -1 &&
@@ -90,8 +94,8 @@ extern "C" void func_ov007_020c5a6c(Picker *self, void *target, int flag) {
         SubVec3(&self->pos, hit->pos, &self->hitOffset);
         break;
     case 2: {
-        self->pos.v[2] = self->f98.v[2];
-        self->f98 = *hit->pos;
+        self->pos.v[2] = self->anchorPos.v[2];
+        self->anchorPos = *hit->pos;
         Link *link = self->link;
         SubVec3(link->from->pos, link->to->pos, &link->dir);
         link->length = LenVec3(&link->dir);

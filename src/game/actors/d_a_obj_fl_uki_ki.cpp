@@ -35,12 +35,9 @@
  * highest-address ROM function is written first. Do not reorder. The compiler
  * chooses where the D1/D0 pair lands on its own.
  *
- * Known limits:
- * - dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled in this TU:
- *   both take Fix12<int> by value (wall 6az), and a member call homes the
- *   argument and size-DIFFs InitResources / Behavior.
- * - func_020393d4 is a 4-byte store into dBgW+0x18 (beforeClsnCallback). This
- *   TU calls it; naming belongs with dBgW in arm9.
+ * Notes:
+ * - func_020393d4 is a 4-byte store into dBgW+0x18 (beforeClsnCallback).
+ *   d_bg_w.cpp defines it and no header declares it.
  * - data_ov064_0211ba6c is the CLPS block, in overlay .data this TU does not
  *   own.
  * - g_profile_FL_UKI_KI, the FL_UKI_KI registry row that names this factory,
@@ -54,46 +51,50 @@
 struct KCL_File;
 struct CLPS_Block;
 
-extern "C" {
-/* This overlay's two file handles, constructed by the ov022 sinit as file IDs
- * 1554 (model) and 1555 (collision). Named rows in ov022/symbols.txt at
- * 0x02114620 and 0x02114618. */
-extern SharedFilePtr FloatingFloorLllBig_ModelFile;   /* the BMD */
-extern SharedFilePtr FloatingFloorLllBig_ClsnFile;    /* the KCL */
-extern CLPS_Block    data_ov064_0211ba6c;   /* the CLPS block SetFile is handed */
-extern s16           data_02082214[];   /* shared sin/cos table, sin at [i*2] */
+/* Runtime asset handles, distinct from the NitroFS file IDs. */
+enum daObjFl_UkiKi_c_AssetId { ASSET_FL_UKI_KI_BMD = 0x0612, ASSET_FL_UKI_KI_KCL = 0x0613 };
 
-void func_020393d4(dBgW *bgw, void *fn);
+/* The handles reach their files through these wrappers' constructor and
+ * destructor veneers; the manifest maps each to the retail destination.
+ * Descriptive local types, not recovered spellings. */
+struct FlUkiKiModelFile : SharedFilePtr {
+    FlUkiKiModelFile(u32 fileID);
+    ~FlUkiKiModelFile();
+};
 
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int a, int b);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
-    s16 angleY, CLPS_Block *clps);
-}
+struct FlUkiKiCollisionFile : SharedFilePtr {
+    FlUkiKiCollisionFile(u32 fileID);
+    ~FlUkiKiCollisionFile();
+};
+
+/* This TU's two file handles, in the order the retail initializer
+ * (0x02112f78) builds them. */
+FlUkiKiModelFile FloatingFloorLllBig_ModelFile(ASSET_FL_UKI_KI_BMD);
+FlUkiKiCollisionFile FloatingFloorLllBig_ClsnFile(ASSET_FL_UKI_KI_KCL);
+
+extern CLPS_Block data_ov064_0211ba6c; /* the CLPS block SetFile is handed */
+extern s16 data_02082214[];            /* shared sin/cos table, sin at [i*2] */
+
+/* local extern: d_bg_w.cpp defines it and no header declares it. */
+extern "C" void func_020393d4(dBgW *bgw, void *fn);
 
 // @symbol daObjFl_UkiKi_c_classInit
 /* The registry's allocator for FL_UKI_KI. The implicit default constructor is
    inlined into it at -O4: operator new, dBgActor_c's constructor, the vptr
    store. Historical alias in the rename ledger: LavaPlank_Spawn. */
-extern "C" daObjFl_UkiKi_c *daObjFl_UkiKi_c_classInit()
-{
+extern "C" daObjFl_UkiKi_c *daObjFl_UkiKi_c_classInit() {
     return new daObjFl_UkiKi_c();
 }
 
 // @symbol _ZN15daObjFl_UkiKi_c13InitResourcesEv
-/* dBgW_KcMbg::SetFile takes Fix12<int> by value. An ordinary member call
- * triggers mwccarm's by-value-class parameter homing and changes the ROM ABI,
- * so that one call deliberately keeps the measured register-level spelling. */
-s32 daObjFl_UkiKi_c::InitResources()
-{
-    mModel.SetFile((BMD_File *)Model::LoadFile(FloatingFloorLllBig_ModelFile), 1, -1);
+s32 daObjFl_UkiKi_c::InitResources() {
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(FloatingFloorLllBig_ModelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(FloatingFloorLllBig_ClsnFile);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY,
-        &data_ov064_0211ba6c);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov064_0211ba6c);
 
     /* The platform carries the mesh along by velocity rather than by its
        transform -- it slides straight up and down. */
@@ -106,32 +107,27 @@ s32 daObjFl_UkiKi_c::InitResources()
 
 // @symbol _ZN15daObjFl_UkiKi_c8BehaviorEv
 /* Bob 30 units either side of mOriginalPosY, one cycle per 64 frames
- * (mPhaseAngle advances 0x400 of 0x10000 a frame). IsClsnInRange takes two
- * Fix12<int> by value; see InitResources for why that one call keeps the
- * measured register-level spelling. */
-s32 daObjFl_UkiKi_c::Behavior()
-{
+ * (mPhaseAngle advances 0x400 of 0x10000 a frame). */
+s32 daObjFl_UkiKi_c::Behavior() {
     int val = (u16)mPhaseAngle >> 4;
     mPosY = data_02082214[val * 2] * (s16)0x1e + mOriginalPosY;
     mPhaseAngle += 0x400;
 
     UpdateModelPosAndRotY();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+    if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
 
     return 1;
 }
 
 // @symbol _ZN15daObjFl_UkiKi_c6RenderEv
-s32 daObjFl_UkiKi_c::Render()
-{
+s32 daObjFl_UkiKi_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN15daObjFl_UkiKi_c16CleanupResourcesEv
-s32 daObjFl_UkiKi_c::CleanupResources()
-{
+s32 daObjFl_UkiKi_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 

@@ -1,7 +1,7 @@
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
 //
 // func_01ffdb28 at 0x01ffdb28 (ITCM) -- the last step of the soft reset described in
-// src/unnamed/arm9/01ff/func_01ffdd98.c: after func_01ffdd08 has reloaded both binaries off the card,
+// src/unnamed/arm9/01ff/func_01ffdd08.cpp: after func_01ffdd08 has reloaded both binaries off the card,
 // this hands off to the freshly loaded ARM9 image and never returns.
 //
 // Why this is assembly and not C, independent of the instruction list:
@@ -22,7 +22,7 @@
 // and 0x027fff80 -- preserving the word at 0x027ffd9c across the first clear -- then
 // wait for the ARM7 to drop its 1 and release the register. 0x027ffe24 is the ARM9
 // entry-address field of the cartridge header copy at 0x027ffe00, the same block
-// src/unnamed/arm9/01ff/func_01ffdd08.c reads its ROM offset / RAM address / size triples out of.
+// src/unnamed/arm9/01ff/func_01ffdd08.cpp reads its ROM offset / RAM address / size triples out of.
 //
 // 0x04000208 is REG_IME; storing 0x04000000 there clears bit 0, i.e. interrupts off.
 // The I/O base doubles as both the value and the store's base register.

@@ -1,27 +1,17 @@
 //cpp
 /* daMoray_c -- Jolly Roger Bay eel (MORAY).
  *
- * Five states, installed by func_ov016_02111bf0. The sinit copies the
- * pointer-to-member words at 0x02114878 into the state records:
- * den wait, lunge, swim out, path swim, retreat.
- * Retreat's init is BookSwitch_Spawn. That name came from the spawn
- * table pass; the body only writes mStateTimer and mHorzSpeed, and
- * its only reference is the retreat init word. It keeps the name
- * because renaming it is a symbols change of its own.
+ * Five states installed by func_ov016_02111bf0 (retreat init is the
+ * BookSwitch_Spawn name from the spawn-table pass). InitResources keeps the
+ * variant picked by data_0209f220 and stars 1/2 of sublevel 8: variant 2
+ * waits in the den, variant 1 carries a STAR (178), variant 0 swims the path.
  *
- * Which variant InitResources keeps depends on data_0209f220 and
- * whether stars 1 and 2 of sublevel 8 are collected. Variant 2 waits
- * in the den. Variant 1 carries a STAR (178). Variant 0 swims the path.
- *
- * Text is 0x021111a0..0x0211260c. The out-of-line destructor is the
- * key function (D1 and D0 at the start of ov016). The native factory
- * constructs the Vector3 segment array through its empty default
- * constructor. defer_codegen off keeps ROM order and scopes the
- * den-wait and Render pragmas.
+ * Text 0x021111a0..0x0211260c. Key function ~daMoray_c (out-of-line; D1/D0
+ * at the start of ov016, D2 deadstripped). defer_codegen off keeps ROM order.
  * common.h stays first: the pose reads Matrix4x3 words m[9], m[10], m[11].
  *
  * leftovers:
- * - BlendModelAnim::SetAnim, dCcAcPos_c::Init, ApproachLinear and
+ * - dExtBlendAnmModel_c::SetAnim, dCcAcPos_c::Init, ApproachLinear and
  *   dActor_c::SetRanges stay scalar Fix12 externs. The member forms
  *   grow the callers (02111718, InitResources, 02111758).
  * - currFrame >> 12 instead of the << 4 >> 16 shift shrinks 02111758
@@ -55,8 +45,9 @@ enum daMoray_c_AssetId {
 #include "SharedFilePtr.h"
 #include "PathPtr.h"
 #include "dExtFrameCtrl_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "Player.h"
+#include "math/Approach.h"
 
 #pragma defer_codegen off
 
@@ -65,16 +56,9 @@ enum {
     ACTOR_STAR = 178,
 };
 
-/* SharedFilePtr.h intentionally leaves its storage unspecified. These local
- * handles follow their measured initialization/load/release operations:
- * u16 fileID at +0, u8 numRefs at +2, and the loaded file pointer at +4.
- * The compiler supplies the alignment byte before the pointer. */
 /* The model handle's ctor/dtor are the cartridge's func_02017acc /
  * func_02017ab4 pair; the manifest aliases these. */
 struct MorayModelFileHandle : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
     MorayModelFileHandle(u32 fileID);
     ~MorayModelFileHandle();
 };
@@ -82,9 +66,6 @@ struct MorayModelFileHandle : SharedFilePtr {
 /* The three animation handles construct through SharedFilePtr::Construct
  * and register SharedFilePtr_Destruct_Anim; the manifest aliases these. */
 struct MorayAnimResFileHandle : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
     MorayAnimResFileHandle(u32 fileID);
     ~MorayAnimResFileHandle();
 };
@@ -123,7 +104,7 @@ u16 DecIfAbove0_Short(u16 *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 /* UpdateBones(model.data, model.file, frame). Inlining that grows Render
    0x8c -> 0x9c. */
-void func_020167a4(BlendModelAnim *model);
+void func_020167a4(dExtBlendAnmModel_c *model);
 /* Blend the posed bones by blendWeight. No named method. */
 void func_0204531c(ModelComponents *data, s32 weight);
 
@@ -144,15 +125,6 @@ void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void MulMat4x3Mat4x3(void *m1, void *m0, void *mF);
-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, Vector3 *v, u32 a, int fix, u32 b, u32 d, u32 e);
-
-/* Header methods take Fix12<int> by value. Brace-init compiles and homes
-   the argument (see Known limits). These scalars are the calls that
-   match. */
-void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *file, int blendFrames, int flags, int speed, unsigned short startFrame);
-void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(dActor_c *self, int offsetY, int radius, int clipDistance, int farDistance);
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(dCcAcPos_c *self, dActor_c *actor, const Vector3 *offset, int radius, int height, u32 flags, u32 vulnFlags);
-int _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(Vector3 &cur, const Vector3 &target, int step);
 }
 
 /* Render's per-segment bend table, one 0xc record per body bone.
@@ -183,8 +155,9 @@ struct MorayStarCarrier {
 
 extern "C" MorayRenderStep data_ov016_02114908[];
 
-bool ApproachLinear(short &value, short target, short step);
-namespace cstd { int fdiv(int a, int b); }
+namespace cstd {
+int fdiv(int a, int b);
+}
 
 /* Out of line, and FIRST in this ROM-ascending file: that puts D1 and D0 at
  * 0x021111a0 / 0x02111208, the two lowest addresses in the unit.
@@ -322,7 +295,7 @@ void daMoray_c::func_ov016_02111284()
     hv.x = this->mPosX;
     hv.y = this->mPosY;
     hv.z = this->mPosZ;
-    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, &hv, 3, 0xc000, 1, 0, 1);
+    ((Player *)p)->Hurt(hv, 3, 0xc000, 1, 0, 1);
 }
 
 /* Retreat execute. When the timer set by the retreat init runs out, stops,
@@ -407,7 +380,7 @@ int daMoray_c::func_ov016_021115c0()
 // @symbol _ZN9daMoray_c19func_ov016_02111718Ev
 int daMoray_c::func_ov016_02111718()
 {
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov016_02114d30.filePtr, 8, 0, 0x1000, 0);
+    this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d30.filePtr, 8, 0, 0x1000, 0);
     return 1;
 }
 
@@ -423,7 +396,7 @@ int daMoray_c::func_ov016_02111758()
     Vector3 worldTarget;
     localOffset.x = 0; localOffset.y = 0; localOffset.z = 0;
     worldTarget.x = 0; worldTarget.y = 0; worldTarget.z = 0;
-    unsigned int frame = (unsigned int)this->mBlendModelAnim.currFrame << 4 >> 0x10;
+    unsigned int frame = (unsigned int)this->mBlendAnmModel.currFrame << 4 >> 0x10;
     if (frame >= 0x15 && frame <= 0x3c) {
         if (data_0209f220 == 1) {
             localOffset.z = 0x2bc000;
@@ -436,9 +409,9 @@ int daMoray_c::func_ov016_02111758()
         worldTarget.x += this->mHomePosX;
         worldTarget.y += this->mHomePosY;
         worldTarget.z += this->mHomePosZ;
-        _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(this->mPos, worldTarget, 0x14000);
+        ApproachLinear(this->mPos, worldTarget, 0x14000);
     }
-    if (this->mBlendModelAnim.Finished()) {
+    if (this->mBlendAnmModel.Finished()) {
         this->mHorzSpeed = 0;
         func_ov016_02111bf0(&data_ov016_02114dac);
     }
@@ -449,7 +422,8 @@ int daMoray_c::func_ov016_02111758()
 // @symbol _ZN9daMoray_c19func_ov016_02111860Ev
 int daMoray_c::func_ov016_02111860()
 {
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov016_02114d20.filePtr, 8, 0x40000000, 0x1000, 0);
+    this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d20.filePtr, 8, 0x40000000, 0x1000,
+                                 0);
     func_02012694(0xfa, &this->mCamSpacePos);
     return 1;
 }
@@ -471,7 +445,7 @@ int daMoray_c::func_ov016_021118b4()
     worldTarget.x += this->mHomePosX;
     worldTarget.y += this->mHomePosY;
     worldTarget.z += this->mHomePosZ;
-    _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(this->mPos, worldTarget, 0x14000);
+    ApproachLinear(this->mPos, worldTarget, 0x14000);
     if (Vec3_Dist(&this->mPos, &worldTarget) < 0x14000) {
         func_02012694(0xfa, &this->mCamSpacePos);
         func_ov016_02111bf0(&data_ov016_02114dbc);
@@ -485,7 +459,7 @@ int daMoray_c::func_ov016_02111994()
 {
     this->unk_400 = 0;
     func_02012694(0xfa, &this->mCamSpacePos);
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov016_02114d28.filePtr, 8, 0, 0x1000, 0);
+    this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d28.filePtr, 8, 0, 0x1000, 0);
     return 1;
 }
 
@@ -516,8 +490,7 @@ int daMoray_c::func_ov016_021119ec()
     int dy;
 
     if (Vec3_Dist(&this->mPos, (const Vector3 *)&this->mHomePosX) > 0xa000) {
-        _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(this->mPos, *(const Vector3 *)&this->mHomePosX,
-                                                 0x5000);
+        ApproachLinear(this->mPos, *(const Vector3 *)&this->mHomePosX, 0x5000);
         return 1;
     }
 
@@ -579,7 +552,7 @@ int daMoray_c::func_ov016_021119ec()
 int daMoray_c::func_ov016_02111bac()
 {
     this->unk_400 = 0;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov016_02114d28.filePtr, 8, 0, 0x1000, 0);
+    this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d28.filePtr, 8, 0, 0x1000, 0);
     return 1;
 }
 
@@ -626,10 +599,10 @@ void daMoray_c::func_ov016_02111c40()
     Matrix4x3_FromTranslation(&data_020a0e68, (this->mPosX + worldTarget.x) >> 3, this->mPosY >> 3,
                               (this->mPosZ + worldTarget.z) >> 3);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngleX, this->mAngleY, this->mAngleZ);
-    this->mBlendModelAnim.mat4x3 = data_020a0e68;
+    this->mBlendAnmModel.mat4x3 = data_020a0e68;
     ApproachLinear(this->mSegmentAngle[6], this->mSegmentAngle[7], 0x40);
     i = 0;
-    modelMtx = &this->mBlendModelAnim.mat4x3;
+    modelMtx = &this->mBlendAnmModel.mat4x3;
     this->mSegmentAngle[5] = this->mSegmentAngle[6];
     /* mSegmentPos[i] / transforms[i] is 0x10 smaller than this walk
        (func_ov016_02111c40 0x2f8 -> 0x2e8). row steps one Vector3 at a time
@@ -646,7 +619,7 @@ void daMoray_c::func_ov016_02111c40()
         row->mSegmentPos[0].z = zero[0];
         dst = &data_020a0e68;
         *dst = *modelMtx;
-        MulMat4x3Mat4x3((char *)this->mBlendModelAnim.data.transforms + transformOffset, dst, dst);
+        MulMat4x3Mat4x3((char *)this->mBlendAnmModel.data.transforms + transformOffset, dst, dst);
         pos->x = dst->m[9];
         pos->y = dst->m[10];
         pos->z = dst->m[11];
@@ -669,7 +642,8 @@ void daMoray_c::func_ov016_02111c40()
     this->mStarPos.x = 0;
     this->mStarPos.y = 0;
     this->mStarPos.z = 0;
-    MulMat4x3Mat4x3(&this->mBlendModelAnim.data.transforms[4], &this->mBlendModelAnim.mat4x3, &this->mStarMtx);
+    MulMat4x3Mat4x3(&this->mBlendAnmModel.data.transforms[4], &this->mBlendAnmModel.mat4x3,
+                    &this->mStarMtx);
     Matrix4x3_FromTranslation(&data_020a0e68, 0x28000, 0, 0);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x4000, -0x8000, this->mStarSpinAngle);
     MulMat4x3Mat4x3(&data_020a0e68, &this->mStarMtx, &this->mStarMtx);
@@ -707,8 +681,8 @@ s32 daMoray_c::Render()
     MorayRenderStep *step;
     MorayBone *bone;
 
-    func_020167a4(&mBlendModelAnim);
-    bone = (MorayBone *)mBlendModelAnim.data.bones + 1;
+    func_020167a4(&mBlendAnmModel);
+    bone = (MorayBone *)mBlendAnmModel.data.bones + 1;
     step = data_ov016_02114908;
     for (i = 1; i < 7; i++) {
         s16 movement = mSegmentAngle[i];
@@ -717,8 +691,8 @@ s32 daMoray_c::Render()
         step++;
         bone++;
     }
-    func_0204531c(&mBlendModelAnim.data, mBlendModelAnim.blendWeight);
-    mBlendModelAnim.Model::Render(0);
+    func_0204531c(&mBlendAnmModel.data, mBlendAnmModel.blendWeight);
+    mBlendAnmModel.dExtSimpleModel_c::Render(0);
     return 1;
 }
 #pragma pop
@@ -769,7 +743,7 @@ s32 daMoray_c::Behavior()
         mdCcAcPos_c2.Clear();
         mdCcAcPos_c2.Update();
     }
-    mBlendModelAnim.Advance();
+    mBlendAnmModel.Advance();
     return 1;
 }
 
@@ -783,8 +757,8 @@ s32 daMoray_c::InitResources()
     void *file;
     dActor_c *spawned;
 
-    file = Model::LoadFile(data_ov016_02114d38);
-    mBlendModelAnim.SetFile((BMD_File *)file, 1, -1);
+    file = dExtSimpleModel_c::LoadFile(data_ov016_02114d38);
+    mBlendAnmModel.SetFile((BMD_File *)file, 1, -1);
     dExtFrameCtrl_c::LoadFile(data_ov016_02114d20);
     dExtFrameCtrl_c::LoadFile(data_ov016_02114d30);
     dExtFrameCtrl_c::LoadFile(data_ov016_02114d28);
@@ -810,11 +784,11 @@ s32 daMoray_c::InitResources()
     cylOffset1.x = data_ov016_02114d4c.x;
     cylOffset1.y = data_ov016_02114d4c.y;
     cylOffset1.z = data_ov016_02114d4c.z;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c1, this, &cylOffset1, 0x32000, 0x50000, 0x200004, 0);
+    mdCcAcPos_c1.Init(this, cylOffset1, 0x32000, 0x50000, 0x200004, 0);
     cylOffset2.x = data_ov016_02114d4c.x;
     cylOffset2.y = data_ov016_02114d4c.y;
     cylOffset2.z = data_ov016_02114d4c.z;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c2, this, &cylOffset2, 0x32000, 0x50000, 0x200000, 0);
+    mdCcAcPos_c2.Init(this, cylOffset2, 0x32000, 0x50000, 0x200000, 0);
 
     /* Second bind is unused. Dropping the constructor and FromID shrinks
        InitResources by 0x14, so the ROM really does call them. */
@@ -824,7 +798,7 @@ s32 daMoray_c::InitResources()
     }
     mPathNodeIndex = 1;
     mStarUniqueID = 0;
-    mBlendModelAnim.speed = 0x1000;
+    mBlendAnmModel.speed = 0x1000;
 
     if (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0) {
         /* Entrance 1, or star 1 still uncollected: only variant 2. */
@@ -846,8 +820,7 @@ s32 daMoray_c::InitResources()
             if (spawned != 0) {
                 mStarUniqueID = spawned->uniqueID;
                 spawned->mFlags = 0;
-                _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(spawned, 0, 0x3e8000, 0x1f40000,
-                                                          0x1f40000);
+                spawned->SetRanges(0, 0x3e8000, 0x1f40000, 0x1f40000);
             }
             func_ov016_02111bf0(&data_ov016_02114d8c);
         } else {

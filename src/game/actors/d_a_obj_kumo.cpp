@@ -4,7 +4,7 @@
  * A scenery model that ranks itself against the other clouds by camera-space
  * distance and writes that rank into the model's polygon ID, so nearer
  * clouds draw in front. Direct base is dActor_c; the only owned member is
- * Model at 0xd4, which closes the class on the factory's literal 0x124.
+ * dExtSimpleModel_c at 0xd4, which closes the class on the factory's literal 0x124.
  *
  * daObjKumo_c_classInit is reconstructed (RTTI daObjKumo_c, OBJ_KUMO
  * registry). Retail does not store that spelling. Historical alias
@@ -14,16 +14,14 @@
  * emits one .text section per function in the REVERSE of source order, so
  * the highest-address ROM function is written FIRST here. Do not reorder.
  *
- * deslop
- * Leftover: g_profile_OBJ_KUMO lives outside this TU (S14).
- * Leftover: func_ov039_02111214 keeps its C-ABI cartridge name; it is not
- *   a vtable slot.
- * Leftover: Vec3_Dist has no shared header; every caller declares it
- *   locally.
- * Leftover: `#pragma opt_propagation off` is file-global last-wins;
+ * UpdateModelMatrix is a coined name (not a vtable slot; the ROM records
+ * none): yaw rotation plus position >> 3.
+ *
+ * What stays: g_profile_OBJ_KUMO lives outside this TU (S14).
+ * What stays: `#pragma opt_propagation off` is file-global last-wins;
  *   Behavior size-DIFFs without it.
- * Leftover: inline destructor (out-of-line emits D0 before D1).
- * Leftover: data_ov039_021118e0 is this TU's own load-count int, kept as a
+ * What stays: inline destructor (out-of-line emits D0 before D1).
+ * What stays: data_ov039_021118e0 is this TU's own load-count int, kept as a
  *   plain definition below; gOV039ObjKumoModelFile is the model handle the
  *   compiler constructs at load (file ID 1141), so it is a
  *   SharedFilePtr-derived object, not an extern array. Its constructor and
@@ -35,31 +33,24 @@
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_kumo_AssetId {
-    ASSET_OBJ_KUMO_BMD = 0x0475
-};
+enum d_a_obj_kumo_AssetId { ASSET_OBJ_KUMO_BMD = 0x0475 };
 
 #include "daObjKumo_c.h"
 #include "SharedFilePtr.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
-/* Model-file handle. The derived constructor and destructor are the retail
+/* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
  * SharedFilePtr pair (func_02017acc / func_02017ab4); this TU declares but
- * never defines them. The words[2] tail sizes the object to the 8 bytes the
- * cartridge keeps between 0x021118e4 and 0x021118ec. */
+ * never defines them. The cartridge keeps its 8 bytes between 0x021118e4 and
+ * 0x021118ec. */
 struct KumoModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     KumoModelFilePtr(u32 fileID);
     ~KumoModelFilePtr();
 };
 
-extern "C" {
-extern void Matrix4x3_FromRotationY(void *, int);
 extern KumoModelFilePtr gOV039ObjKumoModelFile;
-extern int Vec3_Dist(const Vector3* a, const Vector3* b);
-void func_ov039_02111214(daObjKumo_c *t);
 extern int data_ov039_021118e0;
-}
 
 /* FILE-GLOBAL BY MEASUREMENT. `opt_propagation` is not positional in mwccarm
    2004/b56 -- it is file-global last-wins -- so the legacy Behavior source's
@@ -74,21 +65,19 @@ extern int data_ov039_021118e0;
 /* Every instruction the cartridge has here falls out of the one `new`.
    0x02111380 loads 0x124 -- the class's own size -- into the header's inline
    operator new; the implicit ctor calls dActor_c's C2, stores this class's
-   vptr, then Model's C1 at 0xd4. The null check is the one `new` itself
+   vptr, then dExtSimpleModel_c's C1 at 0xd4. The null check is the one `new` itself
    emits. */
-extern "C" daObjKumo_c *daObjKumo_c_classInit(void)
-{
+extern "C" daObjKumo_c *daObjKumo_c_classInit(void) {
     return new daObjKumo_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daObjKumo_c13InitResourcesEv
-int daObjKumo_c::InitResources()
-{
-    void *f = Model::LoadFile(gOV039ObjKumoModelFile);
+int daObjKumo_c::InitResources() {
+    void *f = dExtSimpleModel_c::LoadFile(gOV039ObjKumoModelFile);
     mModel.SetFile((BMD_File *)f, 1, 2);
-    func_ov039_02111214(this);
+    UpdateModelMatrix();
     data_ov039_021118e0++;
     return 1;
 }
@@ -96,8 +85,7 @@ int daObjKumo_c::InitResources()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daObjKumo_c8BehaviorEv
-int daObjKumo_c::Behavior()
-{
+int daObjKumo_c::Behavior() {
     int d = Vec3_Dist(&mCamSpacePos, &mPos);
     int rank = 1;
     int base = 2;
@@ -117,8 +105,7 @@ int daObjKumo_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daObjKumo_c6RenderEv
-int daObjKumo_c::Render()
-{
+int daObjKumo_c::Render() {
     mModel.Render(0);
     return 1;
 }
@@ -126,22 +113,19 @@ int daObjKumo_c::Render()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daObjKumo_c16CleanupResourcesEv
-int daObjKumo_c::CleanupResources()
-{
+int daObjKumo_c::CleanupResources() {
     gOV039ObjKumoModelFile.Release();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov039_02111214(daObjKumo_c *t)
-{
-    Matrix4x3_FromRotationY(&t->mModel.mat4x3, t->mAngleY);
-    t->mModel.mat4x3.t.x = t->mPosX >> 3;
-    t->mModel.mat4x3.t.y = t->mPosY >> 3;
-    t->mModel.mat4x3.t.z = t->mPosZ >> 3;
-}
+// @symbol _ZN11daObjKumo_c17UpdateModelMatrixEv
+void daObjKumo_c::UpdateModelMatrix() {
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    mModel.mat4x3.t.x = mPosX >> 3;
+    mModel.mat4x3.t.y = mPosY >> 3;
+    mModel.mat4x3.t.z = mPosZ >> 3;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -1,9 +1,5 @@
 #include "types.h"
-typedef struct InitArrays {
-    int ptrs[0x10];
-    int zeros1[0x10];
-    int zeros2[0x10];
-} InitArrays;
+#include "private/arm9_a1fc0_file_share.h"
 
 extern int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(int);
@@ -33,7 +29,7 @@ extern char data_02082158[];
 #pragma opt_strength_reduction off
 void func_02040c34(int a0, int a1, int a2, int a3, int a4)
 {
-    char *G = data_020a1fc0;
+    FileShareWork *G = (FileShareWork *)data_020a1fc0;
     int state = _ZN3IRQ7DisableEv();
     if (data_020a0f84 != 0) {
         _ZN3IRQ7RestoreEj(state);
@@ -41,103 +37,109 @@ void func_02040c34(int a0, int a1, int a2, int a3, int a4)
         data_020a0f84 = 1;
         _ZN3IRQ7RestoreEj(state);
 
-        *(int*)(G) = a0;
-        *(u16*)(G + 0x30) = (u16)a1;
-        *(int*)(G + 4) = 0;
-        *(int*)(G + 8) = 0;
-        *(int*)(G + 0xc) = 1;
-        *(int*)(G + 0x10) = a2;
-        *(int*)(G + 0x14) = a3;
-        *(int*)(G + 0x18) = a4;
-        *(int*)(G + 0x1c) = 0;
-        *(int*)(G + 0x24) = 0;
-        *(int*)(G + 0x20) = 0;
-        *(int*)(G + 0x28) = 0;
-        *(int*)(G + 0x2c) = 0xe;
+        G->mIsParent = a0;
+        G->mPort = (u16)a1;
+        G->mSendRequest = 0;
+        G->mSendBusy = 0;
+        G->mState = 1;
+        G->mStateCallback = a2;
+        G->mAllocFunc = a3;
+        G->mAllocArg = a4;
+        G->mReadRequest = 0;
+        G->mTableSize = 0;
+        G->mTable = 0;
+        G->mParentPacketSize = 0;
+        G->mChildPacketSize = 0xe;
         data_020a0f88 = 0;
         if (func_02061c88((u16)a1, (int)func_020417d0, 0) != 0)
             Crash();
         func_0205d89c(-1);
 
-        if (*(int*)(G) != 0) {
+        if (G->mIsParent != 0) {
             {
-                char *base = G + 0x440;
+                char *base = (char *)G->mArea;
                 char *node;
                 char *next;
                 char *saved;
                 char *zero;
                 char *end;
-                _ZN4CP1527FlushAndInvalidateDataCacheEjj((int)base, 0x2730);
+                _ZN4CP1527FlushAndInvalidateDataCacheEjj((int)base, sizeof(FileShareParentArea));
                 _ZN4CP1516DrainWriteBufferEv();
-                saved = base + 0xc0;
+                saved = (char *)((FileShareParentArea *)base)->mNodes;
                 zero = 0;
                 node = saved;
-                next = node + 0xcc0;
-                end = ((int)next & 1) ? base + 0x2700 : base + 0x2700;
-                *(void**)(base + 0x2700) = saved;
+                next = node + FILE_SHARE_NODE_SIZE;
+                end = ((int)next & 1) ? (char *)((FileShareParentArea *)base)->mNodes[3]
+                                      : (char *)((FileShareParentArea *)base)->mNodes[3];
+                ((FileShareParentArea *)base)->mFreeList = (FileShareNode *)saved;
                 if (next < end) {
                     do {
-                        *(void**)node = node + 0xcc0;
-                        FS_InitFile((int*)(node + 0x38));
-                        *(int*)(node + 0x80) = (int)zero;
-                        *(int*)(node + 0x7c) = (int)zero;
-                        *(int*)(node + 0x88) = (((int)node + 0xcc00cc0) - (int)saved) / 0xcc0;
-                        node += 0xcc0;
-                    } while (node + 0xcc0 < end);
+                        ((FileShareNode *)node)->mNext =
+                            (FileShareNode *)(node + FILE_SHARE_NODE_SIZE);
+                        FS_InitFile((int *)((FileShareNode *)node)->mFile);
+                        ((FileShareNode *)node)->mRefCount = (int)zero;
+                        ((FileShareNode *)node)->mState = (int)zero;
+                        ((FileShareNode *)node)->mFileId =
+                            (((int)node + 0xcc00cc0) - (int)saved) / 0xcc0;
+                        node += FILE_SHARE_NODE_SIZE;
+                    } while (node + FILE_SHARE_NODE_SIZE < end);
                 }
-                *(void**)node = 0;
+                ((FileShareNode *)node)->mNext = 0;
                 *(int*)(base + 0x2710) = 0;
-                *(int*)(base + 0x270c) = 0;
-                *(int*)(base + 0x2714) = 0;
-                *(int*)(base + 0x2704) = 0;
-                *(int*)(base + 0x2708) = 0;
-                *(int*)(G + 0x28) = 0x200;
-                *(int*)(base + 0x2718) = 1;
-                *(int*)(base + 0x271c) = 0;
-                *(int*)(base + 0x2720) = 0;
-                *(int*)(base + 0x2728) = 0;
-                *(int*)(base + 0x2724) = 0;
-                *(int*)(base + 0x272c) = *(int*)(G + 0x28);
-                _ZN4CP1527FlushAndInvalidateDataCacheEjj((int)base, 0x2730);
+                ((FileShareParentArea *)base)->mReplyPending = 0;
+                ((FileShareParentArea *)base)->mReplySending = 0;
+                ((FileShareParentArea *)base)->mReadyList = 0;
+                ((FileShareParentArea *)base)->mBusyList = 0;
+                G->mParentPacketSize = 0x200;
+                ((FileShareParentArea *)base)->mConnectedBitmap = 1;
+                ((FileShareParentArea *)base)->mOpenChildren = 0;
+                ((FileShareParentArea *)base)->mResizePending = 0;
+                ((FileShareParentArea *)base)->mResizeChildren = 0;
+                ((FileShareParentArea *)base)->mBusyCount = 0;
+                ((FileShareParentArea *)base)->mNewPacketSize = G->mParentPacketSize;
+                _ZN4CP1527FlushAndInvalidateDataCacheEjj((int)base, sizeof(FileShareParentArea));
                 _ZN4CP1516DrainWriteBufferEv();
-                func_020652fc(*(int*)(G + 0x28), *(int*)(G + 0x2c), (int)func_020412f0);
+                func_020652fc(G->mParentPacketSize, G->mChildPacketSize, (int)func_020412f0);
                 func_020424c0();
             }
             {
-                char *base = G + 0x440;
-                char *nd;
-                nd = *(char**)(base + 0x2700);
-                *(void**)(base + 0x2700) = *(void**)nd;
-                func_0205a588(nd, 0, 0xcc0);
-                func_020658c0(nd + 4, 0x20000, data_02082158, *(int*)(G + 0x20), *(int*)(data_020a1fc0 + 0x24), 0);
-                *(void**)nd = *(void**)(base + 0x2704);
-                *(void**)(base + 0x2704) = nd;
-                *(int*)(nd + 0x80) = 1;
+                char *base = (char *)G->mArea;
+                FileShareNode *nd;
+                nd = ((FileShareParentArea *)base)->mFreeList;
+                ((FileShareParentArea *)base)->mFreeList = nd->mNext;
+                func_0205a588(nd, 0, FILE_SHARE_NODE_SIZE);
+                /* mTableSize is read through data_020a1fc0, not G, here and in the
+                   child branch: the G-> spelling comes out 8 bytes short */
+                func_020658c0(nd->mRegion, 0x20000, data_02082158, G->mTable,
+                              ((FileShareWork *)data_020a1fc0)->mTableSize, 0);
+                nd->mNext = ((FileShareParentArea *)base)->mReadyList;
+                ((FileShareParentArea *)base)->mReadyList = nd;
+                nd->mRefCount = 1;
                 func_02042200();
             }
         } else {
-            char *base = G + 0x440;
-            InitArrays *arr = (InitArrays*)base;
+            char *base = (char *)G->mArea;
+            FileShareChildArea *arr = (FileShareChildArea *)base;
             int i;
             char *p;
-            _ZN4CP1527FlushAndInvalidateDataCacheEjj((int)base, 0xc7c);
+            _ZN4CP1527FlushAndInvalidateDataCacheEjj((int)base, sizeof(FileShareChildArea));
             _ZN4CP1516DrainWriteBufferEv();
             p = base + 0xc0;
             for (i = 0; i < 0x10; i++) {
-                arr->ptrs[i] = (int)p;
-                arr->zeros1[i] = 0;
-                arr->zeros2[i] = 0;
+                arr->mBlockInfoTable[i] = (int)p;
+                arr->mRecvBufTable[i] = 0;
+                arr->mPacketBitmapTable[i] = 0;
                 p += 0x28;
             }
-            *(int*)(base + 0xc70) = 0;
-            *(int*)(base + 0xc78) = 0;
-            *(int*)(G + 0x28) = 0x80;
-            *(int*)(base + 0xc74) = 0x100000;
+            arr->mRecvWork = 0;
+            arr->mReadRegion = 0;
+            G->mParentPacketSize = 0x80;
+            arr->mMaxReadSize = 0x100000;
             func_02041224(base, -1);
-            *(int*)(G + 0x28) = 0;
+            G->mParentPacketSize = 0;
             func_020424c0();
-            func_02041224(base, *(int*)(data_020a1fc0 + 0x24));
-            _ZN4CP1527FlushAndInvalidateDataCacheEjj((int)base, 0xc7c);
+            func_02041224(base, ((FileShareWork *)data_020a1fc0)->mTableSize);
+            _ZN4CP1527FlushAndInvalidateDataCacheEjj((int)base, sizeof(FileShareChildArea));
             _ZN4CP1516DrainWriteBufferEv();
             func_02065234((int)func_02040f30);
         }

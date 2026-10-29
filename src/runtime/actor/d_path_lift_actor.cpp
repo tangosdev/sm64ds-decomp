@@ -18,10 +18,13 @@
  * is its ROM location.
  *
  * Known limits:
- * - Several helpers keep their mangled extern "C" spellings, and a few of those
- *   declarations are vaguer than the definitions they name (banked in
- *   config/decl-agreement-baseline.json). Tightening one changes its call sites,
- *   which is matching work needing its own byte proof.
+ * - The vector helpers (Vec3_Sub, LenVec3, SubVec3, Vec3_MulScalar) are
+ *   declared with void * parameters: their definitions take a file-local
+ *   struct, so no shared spelling agrees with them yet.
+ * - data_ov002_0210d9f0 is a SharedFilePtr, read here through a local
+ *   PathStuff struct: including SharedFilePtr.h renumbers the @NNN labels.
+ * - IsUnk42cSet keeps its symbol-bound name; the field it reads is
+ *   mRespawnAfterFall (see include/PathLift.h).
  * - StateFall keeps two views of mFallAngle: a signed read and an
  *   (int)-laundered unsigned read-modify-write. Collapsing both into
  *   mFallAngle makes mwcc reuse the signed load and drops 12 bytes.
@@ -35,8 +38,8 @@
 #include "decl_PathPtr.h"
 #include "decl_common.h"
 #include "common.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "cstd.h"
+#include "math/Approach.h"
 
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 
@@ -53,26 +56,47 @@ struct RawVector3 {
     int x, y, z;
 };
 
+/* The shared lift model file, in SharedFilePtr's layout. This TU does not
+   include SharedFilePtr.h: the header's declarations take one compiler
+   label number, and every @NNN of the state table would move up by one. */
+struct BMD_File;
+struct PathStuff {
+    u16 fileID;
+    u8 numRefs;
+    void *filePtr;
+};
+extern PathStuff data_ov002_0210d9f0;
+
+/* ROM symbols with no header of their own. The vector helpers whose
+   definitions take a file-local struct stay void *. */
 extern "C" {
-extern s16 data_02082214[];
+extern s16 data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
 extern u16 DecIfAbove0_Short(u16 *p);
 extern u8 DecIfAbove0_Byte(u8 *p);
-extern int Vec3_HorzDist(const void* a, const void* b);
+extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(void *out, void *a, void *b);
 extern int LenVec3(void *v);
-extern int _ZN4cstd4fdivEii(int a, int b);
-extern short Vec3_HorzAngle(void *a, void *b);
-extern short Vec3_VertAngle(void *a, void *b);
+extern short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
+extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
 extern void Vec3_MulScalar(void *out, void *v, int s);
-extern void SubVec3(void *a, void *b, void *c);
-void func_02012694(int a, void *p);
+extern void SubVec3(void *a, void *b, void *out);
+/* Sound.cpp: plays sound `id' at a camera-space position. */
+void func_02012694(unsigned int id, const Vector3 *camSpacePos);
+/* dBgW.cpp: sets a collider's stoodOnCallback. */
+void func_020393c4(int *collider, int callback);
 
 /* Defined last: the ROM-ascending order puts the collider callback after
    BaseInitResources, which stores its address. */
-void func_ov002_020eff90(int unused, dPathLiftActor_c *lift, int x);
+void func_ov002_020eff90(dBgW *collider, dPathLiftActor_c *lift, int rider);
 }
 
 extern PathLiftState data_ov002_0210af2c[];
+
+/* Which lift this is. An int-returning inline: the ROM materialises the 0/1
+   result before it branches on it. */
+static inline int IsActorID(const dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
 
 // @symbol _ZN16dPathLiftActor_cD0Ev
 // @symbol _ZN16dPathLiftActor_cD1Ev
@@ -169,44 +193,37 @@ void dPathLiftActor_c::StateFall()
 
 // 0x020ef57c (0xf4)
 // @symbol _ZN16dPathLiftActor_c13StateFallInitEv
-void dPathLiftActor_c::StateFallInit()
-{
-  int b = (int)(actorID == 0x82);
-  if (b != 0) {
-    mVertAccel = -0x1000;
-    mTerminalVelocity = -0x1e000;
-  } else {
-    mVertAccel = -0x2000;
-    mTerminalVelocity = -0x3c000;
-  }
-  mTriggerDelay = 0xfa;
-  mPrevAngleX = mAngleX;
-  mPrevAngleY = mAngleY;
-  mPrevAngleZ = mAngleZ;
-  mVertSpeed = 0;
-  if (HasNonzeroAngleZ() == 0) {
-    mFallDelay = 0x3c;
-    mFallBounceTimer = 0;
-  } else {
-    mFallDelay = 0x1e;
-    mFallBounceTimer = 0x18;
-    mFallAngle = 0;
-    mFallStartY = mPosY;
-  }
-  {
-    int b2 = (int)(actorID == 0x82);
-    if (b2 == 0) {
-      return;
+void dPathLiftActor_c::StateFallInit() {
+    if (IsActorID(this, 0x82)) {
+        mVertAccel = -0x1000;
+        mTerminalVelocity = -0x1e000;
+    } else {
+        mVertAccel = -0x2000;
+        mTerminalVelocity = -0x3c000;
     }
-    mHorzSpeed = Vec3_HorzDist(&mPosX, &mPrevPosX);
-  }
+    mTriggerDelay = 0xfa;
+    mPrevAngleX = mAngleX;
+    mPrevAngleY = mAngleY;
+    mPrevAngleZ = mAngleZ;
+    mVertSpeed = 0;
+    if (HasNonzeroAngleZ() == 0) {
+        mFallDelay = 0x3c;
+        mFallBounceTimer = 0;
+    } else {
+        mFallDelay = 0x1e;
+        mFallBounceTimer = 0x18;
+        mFallAngle = 0;
+        mFallStartY = mPosY;
+    }
+    if (IsActorID(this, 0x82))
+        mHorzSpeed = Vec3_HorzDist(&mPos, &mPrevPos);
 }
 
 // 0x020ef670 (0x3d4)
 // @symbol _ZN16dPathLiftActor_c9StatePathEv
 void dPathLiftActor_c::StatePath()
 {
-    struct Vector3 destNode, srcNode, fromDest, segment, stepA, stepB;
+    Vector3 destNode, srcNode, fromDest, segment, stepA, stepB;
     int arrived;
     int pitchDiff;
     int yawDiff;
@@ -250,11 +267,11 @@ void dPathLiftActor_c::StatePath()
     }
     mPath.GetNode(destNode, mCurrPathNode);
 
-    Vec3_Sub(&fromDest, &mPosX, &destNode);
+    Vec3_Sub(&fromDest, &mPos, &destNode);
     destDist = LenVec3(&fromDest);
     Vec3_Sub(&segment, &srcNode, &destNode);
     segLen = LenVec3(&segment);
-    segFrames = _ZN4cstd4fdivEii(segLen, mHorzSpeed) / 0x1000;
+    segFrames = cstd::fdiv(segLen, mHorzSpeed) / 0x1000;
 
     horzDist = Vec3_HorzDist(&srcNode, &destNode);
     if (horzDist != 0) {
@@ -279,12 +296,12 @@ void dPathLiftActor_c::StatePath()
     }
 
     if (destDist == 0 || destDist <= mHorzSpeed) {
-        Vec3_MulScalar(&stepA, &fromDest, _ZN4cstd4fdivEii(mHorzSpeed, destDist));
-        SubVec3(&mPosX, &stepA, &mPosX);
+        Vec3_MulScalar(&stepA, &fromDest, cstd::fdiv(mHorzSpeed, destDist));
+        SubVec3(&mPos, &stepA, &mPos);
         arrived = 1;
     } else {
-        Vec3_MulScalar(&stepB, &fromDest, _ZN4cstd4fdivEii(mHorzSpeed, destDist));
-        SubVec3(&mPosX, &stepB, &mPosX);
+        Vec3_MulScalar(&stepB, &fromDest, cstd::fdiv(mHorzSpeed, destDist));
+        SubVec3(&mPos, &stepB, &mPos);
     }
 
     if (arrived == 0) return;
@@ -342,18 +359,10 @@ void dPathLiftActor_c::BaseBehavior()
 
 // 0x020efaf0 (0xec)
 // @symbol _ZN16dPathLiftActor_c17BaseInitResourcesEv
-struct BMD_File;
-struct PathStuff { void* a; void* file; };  // data_0210d9f0: load [4]
-
-extern PathStuff data_ov002_0210d9f0;
-extern "C" {
-void func_020393c4(char* p, int v);
-}
-
 void dPathLiftActor_c::BaseInitResources()
 {
     for (int i = 0; i < 3; i++)
-        mModels[i].SetFile((BMD_File *)data_ov002_0210d9f0.file, 1, -1);
+        mModels[i].SetFile((BMD_File *)data_ov002_0210d9f0.filePtr, 1, -1);
 
     mPath.FromID(param1 & 0xff);
     if (Param08ModeIs1Or2()) SetState(0);
@@ -368,7 +377,7 @@ void dPathLiftActor_c::BaseInitResources()
     mInitialAngle.x = mAngleX;
     mInitialAngle.y = mAngleY;
     mInitialAngle.z = mAngleZ;
-    func_020393c4((char *)&mMeshCollider, (int)&func_ov002_020eff90);
+    func_020393c4((int *)&mMeshCollider, (int)&func_ov002_020eff90);
 }
 
 // 0x020efbdc (0x98)
@@ -397,7 +406,7 @@ void dPathLiftActor_c::RenderPathModels()
     if (Param12ModeIs1() == 0) return;
     if (mState == 2) return;
     int i = 0;
-    Model* model = mModels;
+    dExtSimpleModel_c *model = mModels;
     do {
         RawVector3 local = *(RawVector3 *)&data_ov002_0210af00;
         model->Render((Vector3 *)&local);
@@ -414,7 +423,7 @@ void dPathLiftActor_c::UpdatePathModels()
     int found;
     int i;
     int modelNode;
-    struct Vector3 node;
+    Vector3 node;
     int one;
 
     if (Param12ModeIs1() == 0)
@@ -432,7 +441,7 @@ void dPathLiftActor_c::UpdatePathModels()
 
         if (i == 0) {
             if (idx < (int)mPath.NumNodes() && idx >= 0) {
-                struct Vector3 diff;
+                Vector3 diff;
                 mPath.GetNode(node, idx);
                 Vec3_Sub(&diff, &node, &mPos);
                 if (LenVec3(&diff) < 0xc8000) {
@@ -467,7 +476,7 @@ void dPathLiftActor_c::UpdatePathModels()
 // 0x020efe68 (0x14)
 // @symbol _ZNK16dPathLiftActor_c16HasNonzeroAngleZEv
 int dPathLiftActor_c::HasNonzeroAngleZ() const {
-  return mAngleZ != 0;
+    return mAngleZ != 0;
 }
 
 // 0x020efe7c (0x20)
@@ -501,10 +510,11 @@ int dPathLiftActor_c::Param08ModeIs1Or2() const
 
 // 0x020eff04 (0x14)
 // @symbol _ZNK16dPathLiftActor_c11IsUnk42cSetEv
+/* The byte local is load-bearing: without it the TU's compiler-numbered
+   objects come out one short of the @851..@861 the manifest renames. */
 int dPathLiftActor_c::IsUnk42cSet() const {
-  unsigned char v = unk_42c;
-  if (v != 0x0) return 1;
-  return 0;
+    u8 respawn = mRespawnAfterFall;
+    return respawn != 0;
 }
 
 // 0x020eff18 (0x78)
@@ -514,10 +524,8 @@ void dPathLiftActor_c::AfterClsn(int)
     if (Param08ModeIs1Or2() != 0 &&
         mState == 0 &&
         DecIfAbove0_Byte(&mTriggerDelay) == 0) {
-        int b = actorID == 0x1f;
-        if (b) {
-            func_02012694(0x6f, &mCamSpacePosX);
-        }
+        if (IsActorID(this, 0x1f))
+            func_02012694(0x6f, &mCamSpacePos);
         SetState(1);
     }
     mAfterClsnRan = 1;
@@ -525,8 +533,10 @@ void dPathLiftActor_c::AfterClsn(int)
 
 // 0x020eff90 (0x28)
 // @symbol func_ov002_020eff90
-extern "C" void func_ov002_020eff90(int unused, dPathLiftActor_c* lift, int x) {
-  lift->AfterClsn(x);
+/* The mesh collider's stoodOnCallback: the actor that landed on the lift
+   arrives as AfterClsn's word argument. */
+extern "C" void func_ov002_020eff90(dBgW *collider, dPathLiftActor_c *lift, int rider) {
+    lift->AfterClsn(rider);
 }
 
 /* The path-follow scale applied to the path models. Spelled as three s32s:

@@ -197,7 +197,7 @@ Real ROM name confirmed by `tools/rtti_extract.py` (build/rtti.json). Own vtable
 `_ZTS19cMgSmartball_ball_c` at [ov006](../config/arm9/overlays/ov006/symbols.txt):0x0213edc0. One of eleven direct children of `cMgSmartball_object_c` -- see that header for the family's shape (a root,
 three slots, no virtual destructor).
 
-Size 0x12c, from `_Znwj(0x12c)` in [func_ov006_02115b0c](../src/minigames/d_s_mg_smartball.cpp). The base ends at 0x34,
+Size 0x12c, from `operator new(0x12c)` in [func_ov006_02115b0c](../src/minigames/d_s_mg_smartball.cpp). The base ends at 0x34,
 so this class adds 0xf8 bytes -- the densest of the eleven children. Everything
 below 0x34 is reached through inherited members; this class's four functions
 never touch the base's 0x31-0x33 region, so no raw cast is needed anywhere.

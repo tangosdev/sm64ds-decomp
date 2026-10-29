@@ -3,7 +3,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * ADDS NO FIELDS. Its allocation is _Znwj(0x34) in dScMgSmartball_c::SpawnObjects, and
+ * ADDS NO FIELDS. Its allocation is operator new(0x34) in dScMgSmartball_c::SpawnObjects, and
  * 0x34 is exactly the base's size: this class is three overrides and nothing
  * else. That is not an assumption from an empty field scan -- the literal
  * says so, and no code in the family touches an offset >= 0x34 through a

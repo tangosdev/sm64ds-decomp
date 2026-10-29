@@ -6,7 +6,7 @@
 /* The cartridge's own sphere primitive: a centre and a radius, with a vtable.
  * Named by the ROM's RTTI -- _ZTS8dM3dGSph at 0x020992ec, _ZTI8dM3dGSph at
  * 0x020992e4, vtable at 0x020994cc, named _ZTV8dM3dGSph in symbols.txt so
- * objisolate can rebind vptr stores against it (the Model-family arrangement;
+ * objisolate can rebind vptr stores against it (the dExtSimpleModel_c-family arrangement;
  * the addend loses 8 per the standing vtable-preamble rule).
  *
  * 0x14 BYTES, every offset pinned by a one-line matched function:
@@ -42,7 +42,9 @@
 
 #ifdef __cplusplus
 
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+namespace Memory {
+void operator_delete2(void *ptr);
+}
 
 struct dM3dGSph {
     /* --- members --- */
@@ -73,7 +75,9 @@ struct dM3dGSph {
      * a call to _ZdlPv (0x0203cbf0), which BYTE-MATCHES -- match.compare
      * wildcards every relocated word -- while calling the wrong function. Only
      * objisolate's reloc-destination check sees the difference. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

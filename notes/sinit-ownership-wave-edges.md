@@ -4,7 +4,7 @@
 
 | Initializer | Classifier owner | Ownership verdict | Regeneration verdict |
 | --- | --- | --- | --- |
-| [__sinit_ov002_02107370](../src/unnamed/ov002/__sinit_ov002_02107370.c) | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`CutsceneObject+daDemo_c` | **CONFIRMED HIGH for the combined original TU.** Do not narrow it to one class: the resource half is tied to `CutsceneObject`, while ten PMF tables and all 69 used PMF descriptors stay in the same 146-function multi-class TU. | **Structurally exact but not symbol-ready.** Ordinary global objects and PMF arrays generate the exact `0xc18` `.init` bytes and relocation shape, but stand-in type/member spellings are not licensed production symbols. |
+| [__sinit_ov002_02107370](../src/unnamed/ov002/__sinit_ov002_02107370.cpp) | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`CutsceneObject+daDemo_c` | **CONFIRMED HIGH for the combined original TU.** Do not narrow it to one class: the resource half is tied to `CutsceneObject`, while ten PMF tables and all 69 used PMF descriptors stay in the same 146-function multi-class TU. | **Structurally exact but not symbol-ready.** Ordinary global objects and PMF arrays generate the exact `0xc18` `.init` bytes and relocation shape, but stand-in type/member spellings are not licensed production symbols. |
 | [__sinit_ov080_02127b2c](../src/game/actors/d_a_pic_gate_methods.cpp) | [ov080](../config/arm9/overlays/ov080/symbols.txt)/`daPicGate_c` | **CONFIRMED HIGH and narrowable to `daPicGate_c`.** All 19 resource objects and the 12-entry PMF table are consumed within the 29-function daPicGate_c TU; all 12 descriptor targets are internal. | **Structurally exact but not symbol-ready.** Ordinary globals generate the exact `0x434` `.init` bytes and relocation shape; original resource-wrapper and unnamed member spellings remain to be recovered. |
 
 Both committed C transcriptions independently pass strict byte and linked-ROM
@@ -181,11 +181,11 @@ Observed: 429 RTTI records, 0 unresolved; 454 candidate TUs; the ownership repor
 contains 305 initializers, including both rows as high with no blocker.
 
 ```powershell
-python tools/match.py --c src/unnamed/ov002/__sinit_ov002_02107370.c `
+python tools/match.py --c src/unnamed/ov002/__sinit_ov002_02107370.cpp `
   --func __sinit_ov002_02107370 --addr 0x02107370 --size 0xc18 `
   --version 2004/b56 --module ov002 --strict-relocs --brief
 python tools/linkcheck.py --name __sinit_ov002_02107370 `
-  --c src/unnamed/ov002/__sinit_ov002_02107370.c --addr 0x02107370 --size 0xc18 --module ov002
+  --c src/unnamed/ov002/__sinit_ov002_02107370.cpp --addr 0x02107370 --size 0xc18 --module ov002
 
 python tools/match.py --c src/game/actors/d_a_pic_gate_methods.cpp `
   --func __sinit_ov080_02127b2c --addr 0x02127b2c --size 0x434 `

@@ -31,16 +31,11 @@ enum d_s_mg_single3_d_base_AssetId {
 #include "types.h"
 #include "decl_common.h"
 #include "nitro/hw/registers.h"
+#include "GX.h"
 
 /* SDK calls this file makes. */
 namespace GX {
-void SetBankForBG(u16);
-void SetBankForOBJ(u16);
-void SetBankForTex(u16);
-void SetBankForTexPltt(u16);
 void SetGraphicsMode(int, int, int);
-void SetBankForSubBG(u16);
-void SetBankForSubOBJ(u16);
 void LoadOBJPltt(const void*, u32, u32);
 }
 namespace GXS {
@@ -49,7 +44,9 @@ void LoadOBJPltt(const void*, u32, u32);
 }
 namespace G2S { u32 GetBG3CharPtr(); }
 namespace CP15 { void FlushAndInvalidateDataCache(u32 address, u32 length); }
-namespace G3X { void SetFog(bool enable, int, int, int); }
+namespace G3X {
+void SetFog(int enable, int, int, int);
+}
 
 extern "C" {
 int LoadFile(int fileId);

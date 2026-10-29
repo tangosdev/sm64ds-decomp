@@ -1,6 +1,3 @@
-// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm. Nintendo shipped this as an
-// assembly primitive, so there is no original C to recover and no match to chase. Counts as
-// done under the asm-primitive policy - see notes/arm9-endgame.md.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match. NitroSDK exception entry: saves the
 // faulting context (func_0205947c, which reads its frame through ip and is asm itself), then
 // runs the user exception handler (func_0205950c). The SDK writes this wrapper as asm, and

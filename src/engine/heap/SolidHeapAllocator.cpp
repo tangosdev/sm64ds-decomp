@@ -43,9 +43,11 @@
 #include "Heap.h"
 #include "SolidHeapAllocator.h"
 #include "decl_HeapAllocator.h"
+#include "cstd.h"
 
 extern "C" void MultiStore_Int(s32 val, int *dst, s32 count);
-extern "C" int _ZN4cstd3absEi(int x);
+/* local extern: the factory runs the constructor over an already-aligned
+   address; a placement new would add a null test the ROM does not make. */
 extern "C" SolidHeapAllocator* _ZN18SolidHeapAllocatorC1EPvj(
     SolidHeapAllocator* self, void* heapEnd, u32 flags);
 
@@ -264,7 +266,7 @@ int SolidHeapAllocator::MemoryLeft(int align)
     u32 aligned;
     u32 end;
 
-    a = (u32)_ZN4cstd3absEi(align);
+    a = (u32)cstd::abs(align);
     mask = a - 1u;
     fb = (int *)&mFreeRegion;
     aligned = (mask + (u32)*(int *)((long long)(int)((char *)this + 0x24))) & ~(a - 1u);

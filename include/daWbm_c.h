@@ -19,7 +19,7 @@
  *
  *     0x110 dCcAc_c         0x34    -> 0x144
  *     0x144 dBgCh_Actr      0x1bc   -> 0x300
- *     0x300 Model           0x50    -> 0x350
+ *     0x300 dExtSimpleModel_c           0x50    -> 0x350
  *     0x350 dExtShadowModel_c     0x28    -> 0x378
  *     0x378 Matrix4x3       0x30    -> 0x3a8
  *
@@ -40,7 +40,7 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dCcAc_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
@@ -48,7 +48,7 @@
 struct daWbm_c : dEnemyBase_c {
     dCcAc_c                      mdCcAc_c;              /* 0x110 */
     dBgCh_Actr                   mWithMeshClsn;         /* 0x144 */
-    Model                        mModel;                /* 0x300 */
+    dExtSimpleModel_c mModel;                           /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x350 */
     Matrix4x3                    mShadowMat;            /* 0x378 */
     /* Where it was placed. InitResources writes these and nothing in the

@@ -1,6 +1,3 @@
-// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm. Nintendo shipped this as an
-// assembly primitive, so there is no original C to recover and no match to chase. Counts as
-// done under the asm-primitive policy - see notes/arm9-endgame.md.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match. NitroSDK alarm timer interrupt entry:
 // a call wrapper around the alarm handler body (func_02059834). The SDK writes this wrapper
 // as asm, and the bytes show it was never compiled. Two independent walls: the plain C

@@ -20,9 +20,9 @@ typedef unsigned short u16;
 
 namespace OAM { void Reset(); }
 extern "C" {
-/* Render(draw, attr, x, y, palette, priority, scale fx12, rot) */
-void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int draw, void *attr, int x, int y,
-                                              int pal, int prio, int scale, int rot);
+/* 8-arg Render(draw, attr, x, y, palette, priority, scale, rot). Scale is an int. */
+void *_ZN3OAM6RenderEbP7OamAttriiiiii(int draw, void *attr, int x, int y, int pal, int prio,
+                                      int scale, int rot);
 void _ZN3OAM4LoadEv(void);
 extern unsigned char data_0209e660;
 extern int data_0209e664;
@@ -58,7 +58,7 @@ int main(void)
               | (0u << 16)          /* x placeholder */
               | (1u << 30);         /* size 1 = 16x16 (attr1 bits 30-31) */
     attr[1] = 5u | (0u << 10) | (0u << 12);   /* tile 5 */
-    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, attr, 40, 60, 2, 1, 0x1000, 0);
+    _ZN3OAM6RenderEbP7OamAttriiiiii(1, attr, 40, 60, 2, 1, 0x1000, 0);
     CHECK(data_0209e664 == 1);      /* one entry consumed */
     const u32 w0 = data_0209e674[0];
     const u32 w1 = data_0209e674[1];
@@ -71,7 +71,7 @@ int main(void)
     CHECK(((w1 >> 10) & 0x3) == 1);         /* priority */
 
     /* a rotated sprite: the affine slot must engage and fill params */
-    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, attr, 100, 80, 0, 0, 0x1000, 0x400);
+    _ZN3OAM6RenderEbP7OamAttriiiiii(1, attr, 100, 80, 0, 0, 0x1000, 0x400);
     CHECK(data_0209e664 == 2);
     const u32 r0 = data_0209e674[2];
     printf("  rotated sprite words: %08x %08x\n", r0, data_0209e674[3]);

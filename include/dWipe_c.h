@@ -27,11 +27,17 @@ struct dWipe_c : dFdColor_c {
     u8  needsCleanup;
     s32 state;           /* 0x10 -- 0 idle, 1 opening, 2 open, 3 closing, 4 closed */
     s32 type;            /* 0x14 -- palette/blend path selector; 1 defers to the base */
-    s32 unk_018;         /* 0x18 -- stashed type while a transition is pending */
+    /* 0x18 -- the type a mid-transition request stashed: func_0202ec9c stores
+       its argument here while IsBetweenStartAndEnd, and func_0202fb30 copies
+       it into `type` once typePending is 1. Was unk_018. */
+    s32 pendingType;
     s32 wipeInterp;      /* 0x1c -- 20.12 ramp, independent of dFader_c::currInterp */
     s32 wipeSpeed;       /* 0x20 -- per-frame delta added to wipeInterp */
     s32 wipeAccel;       /* 0x24 -- per-frame delta added to wipeSpeed */
-    u8  unk_028;         /* 0x28 -- a type change is pending (see unk_018) */
+    /* 0x28 -- 1 while pendingType waits to be committed: func_0202ec9c sets
+       it beside pendingType and clears it otherwise; func_0202fb30 tests it
+       for 1 and clears it. Was unk_028. */
+    u8 typePending;
 
     /* Its own ctor starts the interpolator at 0, not the family default
        0x1000 -- 0x0202fc40's chain writes `currInterp = 0; speed = 0`
@@ -41,12 +47,9 @@ struct dWipe_c : dFdColor_c {
 
     virtual ~dWipe_c();                          /* slots 0 (D1), 1 (D0) */
     virtual void AdvanceFade();                  /* slot 2 */
-    /* Slot 3 is declared one-argument so the vtable spells the ROM's
-       `_ZN7dWipe_c15SetBackwardTimeEj`; the definition in the TU is a
-       two-parameter extern "C" function under that same name -- the ROM's
-       function forwards a second argument in r2 to the base call, which a
-       real one-argument member cannot emit (measured, notes/scene-provenance.md). */
-    virtual int  SetBackwardTime(u32 frames);    /* slot 3 */
+    /* Slot 3. `extra` is forwarded and not read; the colour-fade body
+       ignores it too. Callers pass 0. */
+    virtual int SetBackwardTime(u32 frames, u32); /* slot 3 */
     virtual int  SetForwardTime(u32 frames);     /* slot 4 */
     virtual int  IsAtStart();                    /* slot 5 */
     virtual int  IsAtEnd();                      /* slot 6 */

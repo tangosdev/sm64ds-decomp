@@ -220,7 +220,7 @@ A file-format header, so the evidence is a different shape: nothing has methods
 or state, and a field is named by what a loader *reads at a fixed offset and
 then does with the result*. Two behaviours carry almost everything here.
 
-**A count that bounds a loop.** `Model::UpdateFileOffsets` walks the header
+**A count that bounds a loop.** `dExtSimpleModel_c::UpdateFileOffsets` walks the header
 with `for (i = 0; i < file.X; i++)` over `file.Y + i`, which is what pins each
 count/array pair — `numBones`/`bones`, `numTextures`/`textures`,
 `numPalettes`/`palettes`, `numMaterials`/`materials`, and now
@@ -264,7 +264,7 @@ cartridge data is good evidence, but it is a different kind of evidence from
 reading the ROM's instructions, and a later reader should know which one they
 have. `textureId` and `paletteId` were flat `pad_04[0x20]` before.
 
-`flags` at 0x24 stays as it is. `Model::HideMaterial` ORs bit 31 in and
+`flags` at 0x24 stays as it is. `dExtSimpleModel_c::HideMaterial` ORs bit 31 in and
 `ShowMaterial` clears it, so the field is at least partly a flag word; the port
 reads the same word as the DS specular/emission material colour. Both can be
 true of one register-shaped word, and neither reading is complete, so the
@@ -278,7 +278,7 @@ conservative name stands.
 | `BMD_File::unk_30` | Guards the block below: `if (file.unk_30 == 0) return;`. A count or a flag; the code never distinguishes. |
 | `BMD_File::unk_34` | Rebased, and then its first four words are each rebased. A block of exactly four pointers — nothing says to what. |
 | `BMD_Bone::unk_00`, `unk_3c` | Never rebased and never read by a matched function. Not pointers; that is all. |
-| `BMD_Bone::unk_04`, `unk_38` | Rebased, so pointers. Only `materialIds` at 0x34 has a reader (`Model::HideMaterial` / `ShowMaterial`). |
+| `BMD_Bone::unk_04`, `unk_38` | Rebased, so pointers. Only `materialIds` at 0x34 has a reader (`dExtSimpleModel_c::HideMaterial` / `ShowMaterial`). |
 | `BMD_Texture::unk_0c` | Not rebased, not read. |
 | `BMD_DisplayList::unk_00`, `unk_04` | `unk_04` is rebased, so a pointer; `unk_00` is not. |
 
@@ -305,7 +305,7 @@ level's texture-animation table (`data_0209f340`):
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x00 | `mTransformer` | `dScStage_c::LoadTextureTransformers` news a 0x14-byte `TextureTransformer`, constructs it, stores it here and calls `SetFile` on it; `dScStage_c::RenderModel` passes it to `TextureTransformer::Update`; `dScStage_c::CleanupResources` destroys it through its vtable. |
+| 0x00 | `mTransformer` | `dScStage_c::LoadTextureTransformers` news a 0x14-byte `dExtAnmTexSRT_c`, constructs it, stores it here and calls `SetFile` on it; `dScStage_c::RenderModel` passes it to `dExtAnmTexSRT_c::Update`; `dScStage_c::CleanupResources` destroys it through its vtable. |
 | 0x04 | `mActive` | Gates the slot in three places: `dScStage_c::Render` only advances the animation when it is set, and `dScStage_c::RenderModel` and `dScStage_c::RenderModelTransparent` both use it to decide whether that part's materials get the transparent bit or lose it. |
 | 0x08 | `mBlockList` | `dScStage_c::CleanupResources` walks it as a singly linked list, freeing each block and following the next pointer at the block's `+0x0c` — which is inside the *block*, not the slot; the slot's own stride is 0xc. |
 
@@ -333,7 +333,7 @@ the class already follows.
 ### A side effect worth recording
 
 `build/eligible-names.txt` gained one entry across this pass and lost none:
-`_ZN5Model17UpdateFileOffsetsER8BMD_File` became eligible once the raw
+`_ZN17dExtSimpleModel_c17UpdateFileOffsetsER8BMD_File` became eligible once the raw
 `*(int *)(m + 4)` pokes in it were replaced by the `BMD_DisplayList` /
 `BMD_DisplayListGroup` field accesses. Collapsing a shadow onto a real type is
 not only a readability change; it can move a file across the eligibility gate.

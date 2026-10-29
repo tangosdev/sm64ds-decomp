@@ -8,18 +8,16 @@
  * and the file table sit between the typeinfo and the vtable, so this TU
  * stays text-only. Highest address first.
  */
-// leftovers:
+// Notes (measured spellings that do not match):
 // - Behavior and UpdateDeathState each build the coin position in separate
 //   locals. `pos.y = mPosY + 0x136000` costs 9 words of Behavior.
 // - mStateTimer is read and written through a u16 pointer. A plain member
 //   increment does not match UpdateRunState.
-// - PlayStepSound, PlayHitSound, PlayShellHitSound and PlayDeathSound call
-//   func_0201267c. That symbol has no header name.
-// - The coin's unk_0a4 and unk_0ac stay the base header's lateral-velocity
-//   names.
-// - data_ov064_0211b834 stays the file table decl_common.h already declares.
-//   g_profile_DONKETU is not in this TU.
-
+// - The four Play*Sound methods call Sound.h's func_0201267c, the
+//   position-relative sound veneer, with mCamSpacePos.
+// - func_ov064_02116110 and func_ov064_0211616c are daOts_c's shared steppers
+//   and keep their labels with that class. data_ov064_0211b834 is the file
+//   table decl_common.h declares. g_profile_DONKETU is not in this TU.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daDonketu_c_AssetId {
@@ -35,14 +33,11 @@ enum daDonketu_c_AssetId {
 #include "daBDonketu_c.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
+#include "Sound.h"
 
-/* func_ov064_02116110, func_ov064_0211616c and data_ov064_0211b834 come
- * from decl_common.h. */
-extern "C" {
-extern void func_0201267c(u32 soundID, const Vector3 *pos);
-extern int RandomIntInternal(int *seed);
+/* The arm9 RNG step has no shared header; data_0209e650 is its state. */
+extern "C" int RandomIntInternal(int *seed);
 extern int data_0209e650;
-}
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the model,
@@ -50,26 +45,22 @@ extern int data_0209e650;
  * animation handles), spelled through declared-only subclasses so the
  * static initializer names the real entry points. */
 struct DonketuModelFilePtr : SharedFilePtr {
-    u32 words[2];
     DonketuModelFilePtr(u32 fileID);
     ~DonketuModelFilePtr();
 };
 struct DonketuAnimationFileHandle : SharedFilePtr {
-    u32 words[2];
     DonketuAnimationFileHandle(u32 fileID);
     ~DonketuAnimationFileHandle();
 };
 
 /* DONKETU factory. Written first so it emits last. */
 // @symbol daDonketu_c_classInit
-extern "C" daDonketu_c *daDonketu_c_classInit()
-{
+extern "C" daDonketu_c *daDonketu_c_classInit() {
     return new daDonketu_c();
 }
 
 // @symbol _ZN11daDonketu_c13InitResourcesEv
-int daDonketu_c::InitResources()
-{
+int daDonketu_c::InitResources() {
     mBigBullyID = 0;
     mFileTable = (int)&data_ov064_0211b834;
     InitResourcesCommon();
@@ -81,9 +72,8 @@ int daDonketu_c::InitResources()
  * written again in UpdateDeathState. The coin faces mPrevAngleY + 0x8000
  * plus a 10-bit roll, and launches upward.
  */
-int daDonketu_c::Behavior()
-{
-    int outcome = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 3);
+int daDonketu_c::Behavior() {
+    int outcome = UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3);
     if (outcome != 0) {
         if (outcome == 2) {
             int y = mPosY;
@@ -105,9 +95,9 @@ int daDonketu_c::Behavior()
             dActor_c *coin = dActor_c::Spawn(0x120, 2, pos, &rot, mAreaId, -1);
             if (coin) {
                 coin->mHorzSpeed = 0xa000;
-                coin->unk_0a4 = 0;
+                coin->mSpeedX = 0;
                 coin->mVertSpeed = 0x50000;
-                coin->unk_0ac = 0;
+                coin->mSpeedZ = 0;
             }
             dActor_c *spawner = dActor_c::FindWithID(mBigBullyID);
             if (spawner) {
@@ -125,8 +115,7 @@ int daDonketu_c::Behavior()
  * func_ov064_0211616c is the shared daOts_c death-animation step: it returns 0
  * while the bully is still falling apart, and the coin goes out on the frame it
  * finally returns non-zero. */
-void daDonketu_c::UpdateDeathState()
-{
+void daDonketu_c::UpdateDeathState() {
     if (func_ov064_0211616c() == 0)
         return;
     int pz = mPosZ;
@@ -145,9 +134,9 @@ void daDonketu_c::UpdateDeathState()
     dActor_c *coin = dActor_c::Spawn(0x120, 2, pos, &rot, mAreaId, -1);
     if (coin) {
         coin->mHorzSpeed = 0xa000;
-        coin->unk_0a4 = 0;
+        coin->mSpeedX = 0;
         coin->mVertSpeed = 0x50000;
-        coin->unk_0ac = 0;
+        coin->mSpeedZ = 0;
     }
     dActor_c *spawner = dActor_c::FindWithID(mBigBullyID);
     if (spawner) {
@@ -161,8 +150,7 @@ void daDonketu_c::UpdateDeathState()
  * shared daOts_c stepper; from ten on it charges at 0xf000 and the cycle timer
  * wraps at 0x2c. The Big Bully's override is the same shape with a faster charge
  * and a shorter cycle. */
-int daDonketu_c::UpdateRunState()
-{
+int daDonketu_c::UpdateRunState() {
     if (*(u16 *)&mStateTimer < 0xa) {
         mHorzSpeed = 0;
         int result = func_ov064_02116110(0x700);
@@ -185,30 +173,26 @@ int daDonketu_c::UpdateRunState()
 
 // @symbol _ZN11daDonketu_c13PlayStepSoundEv
 /* Frames 4 and 7 of the walk cycle are the two footfalls. */
-void daDonketu_c::PlayStepSound()
-{
-    if (mModelAnim.WillHitFrame(4) == 0) {
-        if (mModelAnim.WillHitFrame(7) == 0)
+void daDonketu_c::PlayStepSound() {
+    if (mAnmModel.WillHitFrame(4) == 0) {
+        if (mAnmModel.WillHitFrame(7) == 0)
             return;
     }
     func_0201267c(0xca, &mCamSpacePos);
 }
 
 // @symbol _ZN11daDonketu_c12PlayHitSoundEv
-void daDonketu_c::PlayHitSound()
-{
+void daDonketu_c::PlayHitSound() {
     func_0201267c(0xcb, &mCamSpacePos);
 }
 
 // @symbol _ZN11daDonketu_c17PlayShellHitSoundEv
-void daDonketu_c::PlayShellHitSound()
-{
+void daDonketu_c::PlayShellHitSound() {
     func_0201267c(0xc9, &mCamSpacePos);
 }
 
 // @symbol _ZN11daDonketu_c14PlayDeathSoundEv
-void daDonketu_c::PlayDeathSound()
-{
+void daDonketu_c::PlayDeathSound() {
     func_0201267c(0xc8, &mCamSpacePos);
 }
 

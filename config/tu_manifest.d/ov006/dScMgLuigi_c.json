@@ -1043,28 +1043,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -1178,49 +1158,119 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2188",
+      "from": "@2189",
       "to": "@8801",
-      "evidence": "mwcc numbers this PMF record @2188. Another module already defines @2188, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8801."
+      "evidence": "mwcc numbers this PMF record @2188. Another module already defines @2188, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8801. Re-keyed +6 (from @2181) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2190",
+      "from": "@2191",
       "to": "@8802",
-      "evidence": "mwcc numbers this PMF record @2190. Another module already defines @2190, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8802."
+      "evidence": "mwcc numbers this PMF record @2190. Another module already defines @2190, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8802. Re-keyed +6 (from @2183) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2192",
+      "from": "@2193",
       "to": "@8803",
-      "evidence": "mwcc numbers this PMF record @2192. Another module already defines @2192, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8803."
+      "evidence": "mwcc numbers this PMF record @2192. Another module already defines @2192, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8803. Re-keyed +6 (from @2185) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2194",
+      "from": "@2195",
       "to": "@8804",
-      "evidence": "mwcc numbers this PMF record @2194. Another module already defines @2194, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8804."
+      "evidence": "mwcc numbers this PMF record @2194. Another module already defines @2194, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8804. Re-keyed +6 (from @2187) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2196",
+      "from": "@2197",
       "to": "@8805",
-      "evidence": "mwcc numbers this PMF record @2196. Another module already defines @2196, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8805."
+      "evidence": "mwcc numbers this PMF record @2196. Another module already defines @2196, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8805. Re-keyed +6 (from @2189) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2224",
+      "from": "@2225",
       "to": "@8806",
-      "evidence": "mwcc numbers this PMF record @2224. Another module already defines @2224, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8806."
+      "evidence": "mwcc numbers this PMF record @2224. Another module already defines @2224, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8806. Re-keyed +6 (from @2217) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2226",
+      "from": "@2227",
       "to": "@8807",
-      "evidence": "mwcc numbers this PMF record @2226. Another module already defines @2226, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8807."
+      "evidence": "mwcc numbers this PMF record @2226. Another module already defines @2226, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8807. Re-keyed +6 (from @2219) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2228",
+      "from": "@2229",
       "to": "@8808",
-      "evidence": "mwcc numbers this PMF record @2228. Another module already defines @2228, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8808."
+      "evidence": "mwcc numbers this PMF record @2228. Another module already defines @2228, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8808. Re-keyed +6 (from @2221) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2230",
+      "from": "@2231",
       "to": "@8809",
-      "evidence": "mwcc numbers this PMF record @2230. Another module already defines @2230, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8809."
+      "evidence": "mwcc numbers this PMF record @2230. Another module already defines @2230, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @8809. Re-keyed +6 (from @2223) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2199",
+      "to": "@2198",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2198 to @2192. Re-keyed +6 (from @2191) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2201",
+      "to": "@2200",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2200 to @2194. Re-keyed +6 (from @2193) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2203",
+      "to": "@2202",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2202 to @2196. Re-keyed +6 (from @2195) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2205",
+      "to": "@2204",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2204 to @2198. Re-keyed +6 (from @2197) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2207",
+      "to": "@2206",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2206 to @2200. Re-keyed +6 (from @2199) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2209",
+      "to": "@2208",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2208 to @2202. Re-keyed +6 (from @2201) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2211",
+      "to": "@2210",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2210 to @2204. Re-keyed +6 (from @2203) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2213",
+      "to": "@2212",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2212 to @2206. Re-keyed +6 (from @2205) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2215",
+      "to": "@2214",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2214 to @2208. Re-keyed +6 (from @2207) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2217",
+      "to": "@2216",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2216 to @2210. Re-keyed +6 (from @2209) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2219",
+      "to": "@2218",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2218 to @2212. Re-keyed +6 (from @2211) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2221",
+      "to": "@2220",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2220 to @2214. Re-keyed +6 (from @2213) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2223",
+      "to": "@2222",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2222 to @2216. Re-keyed +6 (from @2215) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2233",
+      "to": "@2232",
+      "evidence": "compiler-local name pinned on the ROM side; a header edit renumbered the emitted label from @2232 to @2226. Re-keyed +6 (from @2225) when dScMgBase_c.h gained Mg_DrawLine."
     }
   ],
   "symbol_binding_rewrites": [

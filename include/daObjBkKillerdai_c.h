@@ -28,17 +28,17 @@ struct Player;
 struct daObjBkKillerdai_c : dBgActor_c {
     u32 mSpawnedUniqueID; /* 0x320 */
 
-    virtual ~daObjBkKillerdai_c();              /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjBkKillerdai_c(); /* slots 16 (D1), 17 (D0) */
 
-    virtual s32 InitResources();                /* slot  0 */
-    virtual s32 CleanupResources();             /* slot  3 */
-    virtual s32 Behavior();                     /* slot  6 */
-    virtual s32 Render();                       /* slot  9 */
+    virtual s32 InitResources();                  /* slot  0 */
+    virtual s32 CleanupResources();               /* slot  3 */
+    virtual s32 Behavior();                       /* slot  6 */
+    virtual s32 Render();                         /* slot  9 */
     virtual void OnHitByMegaChar(Player &player); /* slot 27 */
     /* dBgActor_c's own slot, overridden here: _ZTV18daObjBkKillerdai_c+0x7c relocates
        to 0x02126e58 while _ZTV10dBgActor_c+0x7c relocates to _ZN10dBgActor_c4KillEv. An
        override, so it adds no slot and no field. */
-    virtual void Kill();                        /* slot 31 */
+    virtual void Kill(); /* slot 31 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

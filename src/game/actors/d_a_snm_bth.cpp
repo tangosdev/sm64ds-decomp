@@ -1,4 +1,8 @@
 //cpp
+namespace Particle {
+struct Callback;
+}
+struct Vector3_16f;
 /* The snowman's breath. Fifty SnowmanBreathParticle members sit in this
  * file because their functions sit between the actor's destructor and its
  * other methods. .text 0x021120c4..0x02112b14.
@@ -8,8 +12,7 @@
  * defer_codegen off: D1 0x021120c4, D0 0x02112104, D2 deadstripped.
  */
 // leftovers:
-// - Particle::System::New and NewSimple, Sound::PlayLong, dCcPos_c::Init,
-//   Player::BlowAway and HasFinishedTalking stay mangled. This TU passes
+// - Particle::System::New and NewSimple stay mangled. This TU passes
 //   Fix12<int> by value.
 // - SnowmanBreathParticle is a coined name. ov027 has no type string for
 //   the member struct.
@@ -22,10 +25,9 @@
 
 #include "daSnmBth_c.h"
 #include "decl_common.h"
-#include "decl_Player.h"
 #include "SharedFilePtr.h"
 #include "types.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "Player.h"
 #include "SaveData.h"
 #include "SpawnInfo.h"
@@ -33,10 +35,19 @@
 /* This scene owns the position used by the breath effect. */
 extern Vector3 data_ov027_02113d10;
 
+namespace Sound {
+/* local extern: including Sound.h renumbers @NNN. */
+int PlayLong(u32, u32, u32, const Vector3 &, s16);
+}
+
 extern "C" {
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32, s32, s32, s32);
-u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32, u32, s32, s32, s32, const void *, void *);
+namespace Particle {
+struct System {
+    static void NewSimple(u32, s32, s32, s32);
+
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
 s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 s32 Vec3_Dist(const Vector3 *, const Vector3 *);
 void Matrix4x3_FromRotationY(Matrix4x3 *, s16);
@@ -45,24 +56,14 @@ void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *, s32, s32, s32);
 void AddVec3(const Vector3 *, const Vector3 *, Vector3 *);
 int DecIfAbove0_Byte(void *);
 s32 RandomIntInternal(s32 *);
-/* Fix12<int> by-value arguments are kept in their measured raw ABI view: a
- * direct C++ definition of this imported signature hits the mwccarm 6az wall. */
-void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
-    dCcPos_c *, const Vector3 *, s32, s32, u32, u32);
 void Vec3_Asr(Vector3 *, const Vector3 *, int);
 void MulVec3Mat4x3(const Vector3 *, const Matrix4x3 *, Vector3 *);
 void Vec3_LslInPlace(Vector3 *, int);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 void InvMat4x3(Matrix4x3 *dst, const Matrix4x3 *src);
-/* The Sound call below stays a mangled name inside this block: it takes
- * its position as void*, and a bare `extern` on a mangled name in a C++ file
- * is mangled a second time (ShowMessage once reached the linker as
- * _Z48_ZN6Player11ShowMessage...). Byte gates cannot see that, because
- * relocations compare as wildcards; only the link does. */
-int _ZN5Sound8PlayLongEjjjRK7Vector3s(int handle, unsigned int a,
-                                     unsigned int b, void *pos,
-                                     unsigned int c);
+/* local extern: these five names hold the @NNN count. */
+void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
 extern Matrix4x3 data_020a0e68;
 extern s32 data_0209e650;
 extern u8 data_0209f2d8[];
@@ -102,8 +103,7 @@ void SnowmanBreathParticle::HitPlayer()
         return;
     if (!IsPlayerActor(actor))
         return;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-        0x100, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(0x100, mPos.x, mPos.y, mPos.z);
 
     Player *player = (Player *)actor;
     if (player->mIsMetal)
@@ -112,7 +112,7 @@ void SnowmanBreathParticle::HitPlayer()
         return;
     if (player->mIsBalloon)
         return;
-    _ZN6Player8BlowAwayEs(player, mAngleY);
+    player->BlowAway(mAngleY);
     if (player->IsCollectingCap())
         return;
     if (player->mHasWings)
@@ -146,9 +146,9 @@ void SnowmanBreathParticle::HitPlayer()
         0x10d, (actor->param1 << 8) | 3, spawnPos, &rotation, 0, -1);
     if (cap == 0)
         return;
-    cap->unk_0a4 = 0;
+    cap->mSpeedX = 0;
     cap->mVertSpeed = 0x14000;
-    cap->unk_0ac = 0;
+    cap->mSpeedZ = 0;
     cap->mHorzSpeed = 0x1c000;
 }
 
@@ -160,8 +160,7 @@ void SnowmanBreathParticle::CheckSnowman()
     s32 distance = Vec3_Dist(&mPos, &snowman->mPos);
     if (distance >= threshold)
         return;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-        0x100, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(0x100, mPos.x, mPos.y, mPos.z);
     mTimer = 0;
 }
 
@@ -181,9 +180,7 @@ void SnowmanBreathParticle::Render()
 {
     if (mTimer == 0)
         return;
-    mParticleID =
-        _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            mParticleID, 0x111, mPos.x, mPos.y, mPos.z, 0, 0);
+    mParticleID = Particle::System::New(mParticleID, 0x111, mPos.x, mPos.y, mPos.z, 0, 0);
 }
 
 // @symbol _ZN21SnowmanBreathParticle8BehaviorEv
@@ -225,8 +222,7 @@ int SnowmanBreathParticle::TrySpawn(Player &player)
 SnowmanBreathParticle::SnowmanBreathParticle()
 {
     mPos = data_ov027_02113d10;
-    _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
-        &mCollider, &mPos, 0x32000, 0x28000, 0x800002, 0x800000);
+    mCollider.Init(mPos, 0x32000, 0x28000, 0x800002, 0x800000);
     mTimer = 0;
 }
 
@@ -325,7 +321,7 @@ int daSnmBth_c::Behavior()
             break;
         case 2:
             if (mTalkPlayer->GetTalkState() == -1) {
-                _ZN6Player18HasFinishedTalkingEv(mTalkPlayer);
+                mTalkPlayer->HasFinishedTalking();
                 mTalkDone = 1;
             }
             break;
@@ -343,9 +339,7 @@ int daSnmBth_c::Behavior()
                     *idx = *idx % 0x32;
                 } while (b == 0);
             }
-            mSoundHandle =
-                _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 3, 0x184,
-                                                  &mCamSpacePosX, 0);
+            mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x184, *(Vector3 *)&mCamSpacePosX, 0);
         }
     }
 
@@ -363,9 +357,9 @@ int daSnmBth_c::Behavior()
 // @symbol _ZN10daSnmBth_c13InitResourcesEv
 int daSnmBth_c::InitResources()
 {
-    Model::LoadFile(data_ov002_0210da40);
-    Model::LoadFile(data_ov002_0210d9a0);
-    Model::LoadFile(data_ov002_0210d9c0);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210da40);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210d9a0);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
     mPosX = 0x3fa770;
     mPosY = 0xcb2000;
     mPosZ = 0x46988e;

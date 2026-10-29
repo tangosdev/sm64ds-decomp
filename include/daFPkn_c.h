@@ -11,12 +11,12 @@
  * The members close exactly on one another, and dEnemyBase_c's own 0x110 closes
  * exactly on the first:
  *
- *     0x110 ModelAnim                  0x64   -> 0x174
+ *     0x110 dExtAnmModel_c                  0x64   -> 0x174
  *     0x174 dCcAc_c         0x34   -> 0x1a8
  *     0x1a8 dCcAcPos_c  0x40   -> 0x1e8
  *
  * Typing them absorbed these markers, which were a member's insides:
- *   - 0x160 mAnimation   = the dExtFrameCtrl_c base of mModelAnim
+ *   - 0x160 mAnimation   = the dExtFrameCtrl_c base of mAnmModel
  *   - 0x178 unk_178      = mdCcAc_c.radius (+0x04)
  *   - 0x17c unk_17c      = mdCcAc_c.height (+0x08)
  *   - 0x1ac unk_1ac      = mdCcAcPos_c.radius (+0x04)
@@ -39,14 +39,14 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "ModelAnim.h"
-#include "Model.h"
+#include "dExtAnmModel_c.h"
+#include "dExtSimpleModel_c.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
 
 struct daFPkn_c : dEnemyBase_c {
-    ModelAnim                    mModelAnim;            /* 0x110 */
+    dExtAnmModel_c mAnmModel;     /* 0x110 */
     dCcAc_c           mdCcAc_c;   /* 0x174 */
     dCcAcPos_c    mdCcAcPos_c; /* 0x1a8 */
     s32                          mRespawnMode;          /* 0x1e8 */

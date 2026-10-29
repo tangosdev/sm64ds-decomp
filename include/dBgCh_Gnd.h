@@ -23,6 +23,10 @@
 #include "dBgCh.h"
 #include "dBgPi.h"
 
+namespace Memory {
+void operator_delete2(void *);
+}
+
 /* fwd */
 struct dActor_c;
 
@@ -65,7 +69,9 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
        include/dActor_c.h that mwcc only inlines the member when it is in the
        class or its immediate base. This is load-bearing for the D0 at
        0x020374f0; a non-virtual inline member adds no field or vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 
     /* methods */
     void SetObjAndPos(const Vector3 &pos, dActor_c *actor);

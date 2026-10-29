@@ -20,16 +20,11 @@
  * inline destructor in include/daObjTdWater_c.h emits the retail D1/D0 pair
  * first and emits no D2 body.
  *
- * deslop leftovers:
- * - TextureTransformer::SetFile / dBgW_KcMbg::SetFile 6az: InitResources
- *   passes Fix12<int> by value; the header method form size-DIFFs.
- * - SharedFilePtr +4: InitResources' TextureTransformer::Prepare reads the
- *   BMD at data_ov032_02113afc +4; SharedFilePtr.h has no fields.
+ * What stays:
  * - data_ov032_02113afc / 02113af4 / 02112f64 / 02112fb8 BMD / KCL / BTA /
  *   CLPS handles; this TU consumes them, overlay .data owns them.
  * - S14: g_profile_TD_WATER stays outside the licensed .text.
- * - Event::GetBit has no shared header; every caller declares it locally.
- * - common.h first (dBgActor_c.h must see common.h ahead of Model.h).
+ * - common.h first (dBgActor_c.h must see common.h ahead of dExtSimpleModel_c.h).
  * - no Player.h / dCamera_c.h.
  *
  * Consolidated from these legacy one-function sources (ROM address order):
@@ -43,56 +38,36 @@
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_td_water_AssetId {
-    ASSET_TD_OBJ_WATER_BMD = 0x06b7,
-    ASSET_TD_OBJ_WATER_KCL = 0x06b8
-};
+enum d_a_obj_td_water_AssetId { ASSET_TD_OBJ_WATER_BMD = 0x06b7, ASSET_TD_OBJ_WATER_KCL = 0x06b8 };
 
 #include "common.h"
 #include "daObjTdWater_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "dBgW_Kc.h"
+#include "Event.h"
 
 struct KCL_File;
 struct CLPS_Block;
 
-/* Model handles construct through func_02017acc and destroy through
+/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; collision handles construct through func_02017b4c and
  * destroy through SharedFilePtr_Destruct_Clsn. The manifest aliases those
  * undefined members onto the ROM symbols. */
 struct TdWaterModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     TdWaterModelFilePtr(u32 fileID);
     ~TdWaterModelFilePtr();
 };
 
 struct TdWaterClsnFileHandle : SharedFilePtr {
-    u32 words[2];
-
     TdWaterClsnFileHandle(u32 fileID);
     ~TdWaterClsnFileHandle();
 };
 
-extern "C" {
 extern TdWaterModelFilePtr data_ov032_02113afc;   /* the water model's BMD */
 extern TdWaterClsnFileHandle data_ov032_02113af4; /* the collision KCL */
-extern BTA_File      data_ov032_02112f64;   /* the scrolling texture animation */
-extern CLPS_Block    data_ov032_02112fb8;
-
-/* 6az: both SetFile calls take Fix12<int> by value. */
-void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
-    TextureTransformer *self, BTA_File &animFile, int flags, int speed,
-    u32 startFrame);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 &mat, int scale,
-    s16 angleY, CLPS_Block &clps);
-}
-
-/* Event has no shared header anywhere in the tree -- every caller declares it
-   locally, so this matches the house spelling rather than inventing one. */
-namespace Event { s32 GetBit(u32 bit); }
+extern BTA_File data_ov032_02112f64;              /* the scrolling texture animation */
+extern CLPS_Block data_ov032_02112fb8;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -102,35 +77,26 @@ namespace Event { s32 GetBit(u32 bit); }
  * Every instruction the cartridge has here falls out of the one `new`.
  * 0x021128bc loads 820 = 0x334 -- the class's own size -- into the header's
  * inline operator new; dBgActor_c's C2, the derived vptr store, and
- * TextureTransformer at 0x320 are the implicit constructor. The null check
+ * dExtAnmTexSRT_c at 0x320 are the implicit constructor. The null check
  * is the one `new` itself emits. */
-extern "C" daObjTdWater_c *daObjTdWater_c_classInit(void)
-{
+extern "C" daObjTdWater_c *daObjTdWater_c_classInit(void) {
     return new daObjTdWater_c();
 }
 
 // @symbol _ZN14daObjTdWater_c13InitResourcesEv
-s32 daObjTdWater_c::InitResources()
-{
-    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov032_02113afc), 1, 0x14);
+s32 daObjTdWater_c::InitResources() {
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov032_02113afc), 1, 0x14);
 
-    /* The BMD the SharedFilePtr is holding, at +4: the ROM re-reads it out of
-       the descriptor rather than reusing LoadFile's return value. The class has
-       no recovered layout (include/SharedFilePtr.h says so), so the offset is
-       spelled out instead of being named. */
-    TextureTransformer::Prepare(
-        **(BMD_File **)((char *)&data_ov032_02113afc + 4), data_ov032_02112f64);
-    /* 6az: header SetFile takes Fix12<int> by value. */
-    _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
-        &mTextureTransformer, data_ov032_02112f64, 0, 0x1000, 0);
+    /* The BMD the SharedFilePtr is holding: the ROM re-reads it out of the
+       descriptor rather than reusing LoadFile's return value. */
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov032_02113afc.filePtr, data_ov032_02112f64);
+    mTextureTransformer.SetFile(data_ov032_02112f64, 0, 0x1000, 0);
 
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov032_02113af4);
-    /* 6az: header SetFile takes Fix12<int> by value. */
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, mClsnMat, 0x1000, mAngleY, data_ov032_02112fb8);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov032_02112fb8);
     mMeshCollider.Enable(this);
 
     /* The water only survives the spawn while the level's event bit 0xe is
@@ -139,8 +105,7 @@ s32 daObjTdWater_c::InitResources()
 }
 
 // @symbol _ZN14daObjTdWater_c8BehaviorEv
-s32 daObjTdWater_c::Behavior()
-{
+s32 daObjTdWater_c::Behavior() {
     mTextureTransformer.speed = 0x1000;
     mTextureTransformer.Advance();
 
@@ -150,16 +115,14 @@ s32 daObjTdWater_c::Behavior()
 }
 
 // @symbol _ZN14daObjTdWater_c6RenderEv
-s32 daObjTdWater_c::Render()
-{
+s32 daObjTdWater_c::Render() {
     mTextureTransformer.Update(mModel.data);
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN14daObjTdWater_c16CleanupResourcesEv
-s32 daObjTdWater_c::CleanupResources()
-{
+s32 daObjTdWater_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 

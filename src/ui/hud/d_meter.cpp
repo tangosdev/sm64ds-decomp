@@ -46,7 +46,6 @@
  *
  * leftovers:
  * - The HUD globals are data_ names: symbols.txt has no recovered name for them.
- * - The OAM class below stands in for the OamAttr statics include/OAM.h lacks.
  * - The OAM::Render overloads that take Fix12<int> by value keep their mangled
  *   spellings: the natural static member call homes the Fix12 arguments
  *   differently under mwccarm (the Fix12 wall) and rewrites every call site.
@@ -76,6 +75,8 @@ enum dMeter_c_AssetId {
 };
 
 #include "dMeter_c.h"
+#include "OAM.h"
+#include "GX.h"
 #include "Timer.h"
 #include "decl_common.h"
 #include "dFdBrightness_c.h"
@@ -85,6 +86,8 @@ enum dMeter_c_AssetId {
 #include "dCamera_c.h"
 #include "dScStage_c.h"
 #include "PlayerInput.h"
+#include "Sound.h"
+#include "Event.h"
 
 /* The declarations below are the union of what the nineteen shards declared
  * locally, minus everything a shared header already supplies. What is left is
@@ -94,57 +97,18 @@ enum dMeter_c_AssetId {
 struct OamAttr;
 struct Matrix2x2;
 
-/* Stands in for include/OAM.h, which declares Render and the five-argument
- * RenderSub but none of these OamAttr statics. The legacy sources spelled the
- * same twelve objects this way, and a static data member cannot be added to a
- * class from outside it, so moving them would mean editing a shared header that
- * every sprite-drawing TU consumes. The `namespace OAM` spelling one shard used
- * is folded in here; both mangle to _ZN3OAM...E. */
-class OAM {
-public:
-    static OamAttr CAM_BUTTON_L;
-    static OamAttr CAM_BUTTON_L_PRESSED;
-    static OamAttr CAM_BUTTON_R;
-    static OamAttr CAM_BUTTON_R_PRESSED;
-    static OamAttr S_CAM_BUTTON_L;
-    static OamAttr S_CAM_BUTTON_L_PRESSED;
-    static OamAttr S_CAM_BUTTON_R;
-    static OamAttr S_CAM_BUTTON_R_PRESSED;
-    static OamAttr CAM_ZOOM_BUTTON;
-    static OamAttr CAM_ZOOM_BUTTON_PRESSED;
-    static OamAttr S_CAM_ZOOM_BUTTON;
-    static OamAttr S_CAM_ZOOM_BUTTON_PRESSED;
-    static void RenderSub(OamAttr *attr, int x, int y, int a, int b);
-    static void Render(bool vis, OamAttr *attr, int x, int y, int a, int b, Matrix2x2 *m);
-};
-
-namespace GX {
-void LoadOBJPltt(const void *, u32, u32);
-}
-
-namespace GXS {
-void LoadOBJPltt(const void *, u32, u32);
-}
-
 extern "C" {
 extern unsigned char data_ov002_02111184;
 extern Timer data_0209d4c8;
 extern struct OamAttr data_ov002_0210ce80;
-extern struct OamAttr _ZN3OAM4TIMEE;
-extern struct OamAttr _ZN3OAM7MINUTESE;
 extern struct OamAttr data_ov002_0210c6c0;
-/* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and
-* so can never be the module this reaches. Sits with OAM::TIME and OAM::MINUTES above. */
-extern struct OamAttr *_ZN3OAM7NUMBERSE[];
-extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr *attr, int x, int y,
-                                                        int a, int b, int sx, int sy, int c, int d);
+extern void OamRender10_d_meter(int sub, struct OamAttr *attr, int x, int y, int a, int b, int sx,
+                                int sy, int c, int d);
 extern volatile unsigned short data_ov002_0210c208[];
 extern unsigned char data_0209f250;
 extern unsigned char data_ov002_02111178;
 extern signed char data_0209f2f4;
 struct OamAttr;
-extern OamAttr *_ZN3OAM10LIFE_ICONSE[];
-extern OamAttr _ZN3OAM5TIMESE;
 extern void *data_0209f394[];
 extern u8 data_ov002_02111180;
 extern void *data_0209f318;
@@ -154,18 +118,18 @@ extern u32 data_0209b454;
 extern unsigned short data_0209f49c[];
 extern u8 data_0209d660;
 extern signed char data_0209f310[];
+/* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and
+* so can never be the module this reaches. */
 extern int data_ov001_020abac8[];
 extern unsigned char data_0209f2d8;
 extern unsigned char data_0209f2fc;
 extern unsigned char data_0209f2ac;
 extern unsigned char data_0209f2d4;
 extern int data_020a0db0;
-extern struct OamAttr _ZN3OAM10POWER_STARE;
 extern unsigned char NumStars(void);
 extern signed char data_0209f30c[];
 extern struct OamAttr data_ov002_0210c6b8;
 extern signed char data_0209f2f8;
-extern OamAttr _ZN3OAM4COINE;
 extern int SublevelToLevel(int i);
 extern unsigned char data_0209f2c4;
 extern unsigned char data_0209f20c;
@@ -175,21 +139,16 @@ extern struct OamAttr data_ov002_0210d290;
 extern struct OamAttr data_ov002_0210d2c0;
 extern struct OamAttr data_ov002_0210d300;
 extern struct OamAttr data_ov002_0210d338;
-extern struct OamAttr _ZN3OAM7VS_TIMEE;
-extern struct OamAttr *_ZN3OAM17VS_YELLOW_NUMBERSE[];
 extern struct OamAttr *data_ov002_0210ca0c[];
 extern struct OamAttr data_ov002_0210d2a0;
 extern struct OamAttr data_ov002_0210d2d0;
 extern struct OamAttr data_ov002_0210d308;
 extern struct OamAttr data_ov002_0210d348;
-extern struct OamAttr _ZN3OAM10VS_TIME_UPE;
 extern int GetOwnerLanguage(void);
-extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int sub, struct OamAttr *attr, int x, int y,
-                                                    int a, int b, int s, int c);
+
 extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
 extern unsigned char data_0209d454;
-void func_02012790(int);
 extern unsigned char data_ov002_0211117c[];
 extern struct OamAttr *data_ov002_0210c254[];
 extern struct OamAttr *data_ov002_0210c278[];
@@ -197,7 +156,6 @@ extern struct OamAttr *data_ov002_0210c230[];
 extern struct OamAttr data_ov002_0210d5d0;
 extern struct OamAttr data_ov002_0210d4f0;
 extern struct OamAttr data_ov002_0210c690;
-extern int _ZN5Event6GetBitEj(unsigned int bit);
 extern int data_0209caa0[];
 extern unsigned char data_0209f284;
 extern dFdBrightness_c *data_0209f5bc;
@@ -230,13 +188,13 @@ static inline int StarCountVisible(void) {
  * allocation size, vtable identity, and the METER registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: HUD_Spawn. It was once labelled
- * _ZN8dMeter_cC1Ev, but it takes no `this`: it is the registry factory. */
+ * the dMeter_c constructor, but it takes no `this`: it is the registry factory. */
 // @symbol dMeter_c_classInit
 extern "C" dMeter_c *dMeter_c_classInit() {
     return new dMeter_c();
 }
 
-/* ROM ordinal 18 -- _ZN8dMeter_c13InitResourcesEv, 0x020fda04, size 0x750 */
+/* ROM ordinal 18 -- dMeter_c::InitResources(), 0x020fda04, size 0x750 */
 // @symbol _ZN8dMeter_c13InitResourcesEv
 int dMeter_c::InitResources() {
     /* Main and sub engine OBJ VRAM. */
@@ -423,7 +381,7 @@ int dMeter_c::InitResources() {
     return 1;
 }
 
-/* ROM ordinal 17 -- _ZN8dMeter_c8BehaviorEv, 0x020fd7a4, size 0x260 */
+/* ROM ordinal 17 -- dMeter_c::Behavior(), 0x020fd7a4, size 0x260 */
 // @symbol _ZN8dMeter_c8BehaviorEv
 int dMeter_c::Behavior() {
     int vs;
@@ -519,7 +477,7 @@ int dMeter_c::Behavior() {
     return 1;
 }
 
-/* ROM ordinal 16 -- _ZN8dMeter_c6RenderEv, 0x020fd5e0, size 0x1c4 */
+/* ROM ordinal 16 -- dMeter_c::Render(), 0x020fd5e0, size 0x1c4 */
 // @symbol _ZN8dMeter_c6RenderEv
 int dMeter_c::Render() {
     if (IsVsMode()) {
@@ -539,7 +497,7 @@ int dMeter_c::Render() {
         unsigned char v = data_0209f20c;
         if (((data_0209f2c4 | v | data_0209f294) & 0xff) == 0) {
             RenderHealthMeter();
-            if (_ZN5Event6GetBitEj(0x1d) == 0) {
+            if (Event::GetBit(0x1d) == 0) {
                 RenderCoinCount();
                 RenderRedCoins();
                 RenderSilverStars();
@@ -564,7 +522,7 @@ int dMeter_c::Render() {
     return 1;
 }
 
-/* ROM ordinal 15 -- _ZN8dMeter_c16OnPendingDestroyEv, 0x020fd5dc, size 0x4 */
+/* ROM ordinal 15 -- dMeter_c::OnPendingDestroy(), 0x020fd5dc, size 0x4 */
 // @symbol _ZN8dMeter_c16OnPendingDestroyEv
 /* dMeter_c::OnPendingDestroy() at 0x020fd5dc (ov002) -- vtable slot 12.
  * Empty override; the dMeter_c does nothing when marked for destruction.
@@ -573,7 +531,7 @@ void dMeter_c::OnPendingDestroy() {
     (void)this;
 }
 
-/* ROM ordinal 14 -- _ZN8dMeter_c16CleanupResourcesEv, 0x020fd5d4, size 0x8 */
+/* ROM ordinal 14 -- dMeter_c::CleanupResources(), 0x020fd5d4, size 0x8 */
 // @symbol _ZN8dMeter_c16CleanupResourcesEv
 /* dMeter_c::CleanupResources() at 0x020fd5d4 (ov002) -- vtable slot 3.
  * Returns VS_FAIL (1); the dMeter_c holds no SharedFilePtr/heap resources to
@@ -584,7 +542,7 @@ s32 dMeter_c::CleanupResources() {
     return 1;
 }
 
-/* ROM ordinal 13 -- _ZN8dMeter_c17UpdateHealthMeterEv, 0x020fd218, size 0x3bc */
+/* ROM ordinal 13 -- dMeter_c::UpdateHealthMeter(), 0x020fd218, size 0x3bc */
 // @symbol _ZN8dMeter_c17UpdateHealthMeterEv
 void dMeter_c::UpdateHealthMeter() {
     int chr = data_0209f250;
@@ -596,7 +554,7 @@ void dMeter_c::UpdateHealthMeter() {
         mHealthMeterHoldTimer -= data_0208ee44;
     if (mHealthTickTimer != 0)
         mHealthTickTimer -= data_0208ee44;
-    if (_ZN5Event6GetBitEj(0x1d)) {
+    if (Event::GetBit(0x1d)) {
         unsigned char s = mHealthMeterState;
         if (s != 0) {
             if (s < 5)
@@ -701,42 +659,36 @@ void dMeter_c::UpdateHealthMeter() {
             mHealthMeterState = 6;
         return;
     case 6:
-        if (_ZN5Event6GetBitEj(0x1d) == 0)
+        if (Event::GetBit(0x1d) == 0)
             mHealthMeterState = 1;
         return;
     }
 }
 
-/* ROM ordinal 12 -- _ZN8dMeter_c17RenderHealthMeterEv, 0x020fcfec, size 0x22c */
+/* ROM ordinal 12 -- dMeter_c::RenderHealthMeter(), 0x020fcfec, size 0x22c */
 // @symbol _ZN8dMeter_c17RenderHealthMeterEv
 void dMeter_c::RenderHealthMeter() {
     if (((Player *)data_0209f394[data_0209f250])->IsInsideOfCannon())
         return;
 
     if (GetOwnerLanguage() == 5) {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov002_0210c254[data_ov002_0211117c[0]],
-                                                    0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0,
-                                                    -1);
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d5d0, 0x80, mHealthMeterY,
-                                                    -1, 1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, data_ov002_0210c254[data_ov002_0211117c[0]], 0x80, mHealthMeterY, -1, 1,
+                    0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d5d0, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else if (GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov002_0210c278[data_ov002_0211117c[0]],
-                                                    0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0,
-                                                    -1);
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d4f0, 0x80, mHealthMeterY,
-                                                    -1, 1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, data_ov002_0210c278[data_ov002_0211117c[0]], 0x80, mHealthMeterY, -1, 1,
+                    0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d4f0, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov002_0210c230[data_ov002_0211117c[0]],
-                                                    0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0,
-                                                    -1);
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210c690, 0x80, mHealthMeterY,
-                                                    -1, 1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, data_ov002_0210c230[data_ov002_0211117c[0]], 0x80, mHealthMeterY, -1, 1,
+                    0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210c690, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     }
 
     GX::LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[data_ov002_0211117c[0]]], 0x60, 0x20);
 }
 
-/* ROM ordinal 11 -- _ZN8dMeter_c13UpdateVsTimerEv, 0x020fce9c, size 0x150 */
+/* ROM ordinal 11 -- dMeter_c::UpdateVsTimer(), 0x020fce9c, size 0x150 */
 // @symbol _ZN8dMeter_c13UpdateVsTimerEv
 void dMeter_c::UpdateVsTimer() {
     unsigned int v;
@@ -775,7 +727,7 @@ void dMeter_c::UpdateVsTimer() {
     }
 }
 
-/* ROM ordinal 10 -- _ZN8dMeter_c13RenderVsTimerEv, 0x020fca18, size 0x484 */
+/* ROM ordinal 10 -- dMeter_c::RenderVsTimer(), 0x020fca18, size 0x484 */
 // @symbol _ZN8dMeter_c13RenderVsTimerEv
 /* The VS-mode countdown: a localised "TIME" caption, and below it either the
  * remaining seconds or a localised "TIME UP".
@@ -801,20 +753,15 @@ void dMeter_c::RenderVsTimer() {
 
     if ((unsigned char)(data_0209f2c4 | data_0209f20c | data_0209f294) == 0) {
         if (GetOwnerLanguage() == 5) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d290, 0x84, 9, -1, -1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d290, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d2c0, 0x84, 9, -1, -1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d2c0, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 3) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d300, 0x84, 9, -1, -1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d300, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 2) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d338, 0x84, 9, -1, -1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d338, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM7VS_TIMEE, 0x84, 9, -1, -1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         }
     }
 
@@ -822,38 +769,32 @@ void dMeter_c::RenderVsTimer() {
         int pal = (mVsTimer <= 5) ? 0xb : -1;
         unsigned short tens = t / 10;
         if (tens != 0) {
-            OAM::Render(false, _ZN3OAM17VS_YELLOW_NUMBERSE[tens], 0x74, mVsTimerY, pal, -1, 0);
-            OAM::Render(false, _ZN3OAM17VS_YELLOW_NUMBERSE[t % 10], 0x84, mVsTimerY, pal, -1, 0);
+            OAM::Render(false, OAM::VS_YELLOW_NUMBERS[tens], 0x74, mVsTimerY, pal, -1, 0);
+            OAM::Render(false, OAM::VS_YELLOW_NUMBERS[t % 10], 0x84, mVsTimerY, pal, -1, 0);
         } else {
             int ones = t % 10;
             if (ones > 3) {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(0, _ZN3OAM17VS_YELLOW_NUMBERSE[ones], 0x7c,
-                                                        mVsTimerY, -1, -1, 0x1000, 0);
+                OAM::Render(0, OAM::VS_YELLOW_NUMBERS[ones], 0x7c, mVsTimerY, -1, -1, 0x1000, 0);
             } else {
                 OAM::Render(false, data_ov002_0210ca0c[3 - ones], 0x84, mVsTimerY, -1, -1, 0);
             }
         }
     } else {
         if (GetOwnerLanguage() == 5) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d2a0, 0x80, mVsTimerY,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d2a0, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d2d0, 0x80, mVsTimerY,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d2d0, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 3) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d308, 0x80, mVsTimerY,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d308, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 2) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d348, 0x80, mVsTimerY,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d348, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM10VS_TIME_UPE, 0x80, mVsTimerY,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_UP, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         }
     }
 }
 
-/* ROM ordinal 9 -- _ZN8dMeter_c15RenderCoinCountEv, 0x020fc81c, size 0x1fc */
+/* ROM ordinal 9 -- dMeter_c::RenderCoinCount(), 0x020fc81c, size 0x1fc */
 // @symbol _ZN8dMeter_c15RenderCoinCountEv
 void dMeter_c::RenderCoinCount() {
     if (IsVsMode()) {
@@ -862,12 +803,12 @@ void dMeter_c::RenderCoinCount() {
         for (int i = 2; i >= 0; i--) {
             signed char d = mDigits[i];
             if (d >= 0) {
-                OAM::Render(true, _ZN3OAM7NUMBERSE[d], sb, 2, -1, 1, 0);
+                OAM::Render(true, OAM::NUMBERS[d], sb, 2, -1, 1, 0);
                 sb -= 9;
             }
         }
-        OAM::Render(true, &_ZN3OAM5TIMESE, sb, 0xa, -1, 1, 0);
-        OAM::Render(true, &_ZN3OAM4COINE, sb - 0x10, 2, -1, 1, 0);
+        OAM::Render(true, &OAM::TIMES, sb, 0xa, -1, 1, 0);
+        OAM::Render(true, &OAM::COIN, sb - 0x10, 2, -1, 1, 0);
     } else {
         if (SublevelToLevel(data_0209f2f8) == 0x1d)
             return;
@@ -877,16 +818,16 @@ void dMeter_c::RenderCoinCount() {
         for (i = 2; i >= 0; i--) {
             signed char d = mDigits[i];
             if (d >= 0) {
-                OAM::Render(false, _ZN3OAM7NUMBERSE[d], sb, 2, -1, 1, 0);
+                OAM::Render(false, OAM::NUMBERS[d], sb, 2, -1, 1, 0);
                 sb -= 9;
             }
         }
-        OAM::Render(false, &_ZN3OAM5TIMESE, sb, 0xa, -1, 1, 0);
-        OAM::Render(false, &_ZN3OAM4COINE, sb - 0x10, 2, -1, 1, 0);
+        OAM::Render(false, &OAM::TIMES, sb, 0xa, -1, 1, 0);
+        OAM::Render(false, &OAM::COIN, sb - 0x10, 2, -1, 1, 0);
     }
 }
 
-/* ROM ordinal 8 -- _ZN8dMeter_c14RenderRedCoinsEv, 0x020fc77c, size 0xa0 */
+/* ROM ordinal 8 -- dMeter_c::RenderRedCoins(), 0x020fc77c, size 0xa0 */
 // @symbol _ZN8dMeter_c14RenderRedCoinsEv
 /* Draws one sprite per red coin still to collect, stepping 0xb across from
  * x=0x10. Both the count (data_0209f30c) and the row selector (data_0209f310)
@@ -914,7 +855,7 @@ void dMeter_c::RenderRedCoins() {
     }
 }
 
-/* ROM ordinal 7 -- _ZN8dMeter_c15RenderStarCountEv, 0x020fc458, size 0x324 */
+/* ROM ordinal 7 -- dMeter_c::RenderStarCount(), 0x020fc458, size 0x324 */
 // @symbol _ZN8dMeter_c15RenderStarCountEv
 /* Draws the star counter: the star icon, an "x", and up to three digits laid
  * out RIGHT to LEFT from mStarCountX, skipping the -1 slots CalculateDigits
@@ -945,12 +886,12 @@ void dMeter_c::RenderStarCount() {
         CalculateDigits((unsigned short)data_0209f310[data_0209f250]);
         for (i = 2; i >= 0; i--) {
             if (mDigits[i] >= 0) {
-                OAM::Render(false, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
+                OAM::Render(false, OAM::NUMBERS[mDigits[i]], x, 2, -1, 1, 0);
                 x -= 9;
             }
         }
-        OAM::Render(false, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
-        OAM::Render(false, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
+        OAM::Render(false, &OAM::TIMES, x, 10, -1, 1, 0);
+        OAM::Render(false, &OAM::POWER_STAR, x - 16, 10, -1, 1, 0);
         return;
     }
 
@@ -965,27 +906,27 @@ void dMeter_c::RenderStarCount() {
             }
             for (i = 2; i >= 0; i--) {
                 if (mDigits[i] >= 0) {
-                    OAM::Render(false, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
+                    OAM::Render(false, OAM::NUMBERS[mDigits[i]], x, 2, -1, 1, 0);
                     x -= 9;
                 }
             }
-            OAM::Render(false, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
-            OAM::Render(false, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
+            OAM::Render(false, &OAM::TIMES, x, 10, -1, 1, 0);
+            OAM::Render(false, &OAM::POWER_STAR, x - 16, 10, -1, 1, 0);
             return;
         }
     }
 
     for (i = 2; i >= 0; i--) {
         if (mDigits[i] >= 0) {
-            OAM::Render(true, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
+            OAM::Render(true, OAM::NUMBERS[mDigits[i]], x, 2, -1, 1, 0);
             x -= 9;
         }
     }
-    OAM::Render(true, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
-    OAM::Render(true, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
+    OAM::Render(true, &OAM::TIMES, x, 10, -1, 1, 0);
+    OAM::Render(true, &OAM::POWER_STAR, x - 16, 10, -1, 1, 0);
 }
 
-/* ROM ordinal 6 -- _ZN8dMeter_c17RenderSilverStarsEv, 0x020fc3c4, size 0x94 */
+/* ROM ordinal 6 -- dMeter_c::RenderSilverStars(), 0x020fc3c4, size 0x94 */
 // @symbol _ZN8dMeter_c17RenderSilverStarsEv
 /* Draws one sprite per silver star collected, in a row starting at x=0x10 and
  * stepping 0x11 across at y=0xa. The count comes from data_0209f310 indexed by
@@ -1012,7 +953,7 @@ void dMeter_c::RenderSilverStars() {
     }
 }
 
-/* ROM ordinal 5 -- _ZN8dMeter_c19RenderCameraButtonsEv, 0x020fc04c, size 0x378 */
+/* ROM ordinal 5 -- dMeter_c::RenderCameraButtons(), 0x020fc04c, size 0x378 */
 // @symbol _ZN8dMeter_c19RenderCameraButtonsEv
 /* Takes the object only because its caller in this TU passes it; the body
  * never reads it, which is why the legacy source could spell it static. */
@@ -1079,7 +1020,7 @@ void dMeter_c::RenderCameraButtons() {
     OAM::RenderSub(&OAM::S_CAM_ZOOM_BUTTON, 0xe7, y, -1, 1);
 }
 
-/* ROM ordinal 4 -- _ZN8dMeter_c15RenderLifeCountEv, 0x020fbe38, size 0x214 */
+/* ROM ordinal 4 -- dMeter_c::RenderLifeCount(), 0x020fbe38, size 0x214 */
 // @symbol _ZN8dMeter_c15RenderLifeCountEv
 void dMeter_c::RenderLifeCount() {
     unsigned char idx = data_0209f250;
@@ -1087,35 +1028,35 @@ void dMeter_c::RenderLifeCount() {
     unsigned char state = data_ov002_02111178;
 
     if (state >= 3 && state < 6) {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, _ZN3OAM10LIFE_ICONSE[player->mCharacter],
-                                                    mLifeCountX, 0xa, -1, 1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(false, &_ZN3OAM5TIMESE, mLifeCountX + 0x10, 0xa, -1, 1, 0);
+        OAM::Render(0, OAM::LIFE_ICONS[player->mCharacter], mLifeCountX, 0xa, -1, 1, 0x1000, 0x1000,
+                    0, -1);
+        OAM::Render(false, &OAM::TIMES, mLifeCountX + 0x10, 0xa, -1, 1, 0);
         CalculateDigits((unsigned short)data_0209f2f4);
         int x = mLifeCountX + 0x18;
         for (int i = 0; i < 3; i++) {
             signed char d = mDigits[i];
             if (d >= 0) {
-                OAM::Render(false, _ZN3OAM7NUMBERSE[d], x, 2, -1, 1, 0);
+                OAM::Render(false, OAM::NUMBERS[d], x, 2, -1, 1, 0);
                 x += 9;
             }
         }
     } else {
-        OAM::RenderSub(_ZN3OAM10LIFE_ICONSE[player->mCharacter], mLifeCountX, 0xa, -1, 1);
-        OAM::Render(true, &_ZN3OAM5TIMESE, mLifeCountX + 0x10, 0xa, -1, 1, 0);
+        OAM::RenderSub(OAM::LIFE_ICONS[player->mCharacter], mLifeCountX, 0xa, -1, 1);
+        OAM::Render(true, &OAM::TIMES, mLifeCountX + 0x10, 0xa, -1, 1, 0);
         CalculateDigits((unsigned short)data_0209f2f4);
         int i;
         int x = mLifeCountX + 0x18;
         for (i = 0; i < 3; i++) {
             signed char d = mDigits[i];
             if (d >= 0) {
-                OAM::Render(true, _ZN3OAM7NUMBERSE[d], x, 2, -1, 1, 0);
+                OAM::Render(true, OAM::NUMBERS[d], x, 2, -1, 1, 0);
                 x += 9;
             }
         }
     }
 }
 
-/* ROM ordinal 3 -- _ZN8dMeter_c15CalculateDigitsEt, 0x020fbdac, size 0x8c */
+/* ROM ordinal 3 -- dMeter_c::CalculateDigits(unsigned short), 0x020fbdac, size 0x8c */
 // @symbol _ZN8dMeter_c15CalculateDigitsEt
 /* Splits a count into the three decimal digits the dMeter_c draws, most significant
  * first, and blanks leading zeros by writing -1 rather than a digit.
@@ -1143,7 +1084,7 @@ void dMeter_c::CalculateDigits(unsigned short value) {
     }
 }
 
-/* ROM ordinal 2 -- _ZN8dMeter_c15RenderTimeTimerEv, 0x020fb96c, size 0x440 */
+/* ROM ordinal 2 -- dMeter_c::RenderTimeTimer(), 0x020fb96c, size 0x440 */
 // @symbol _ZN8dMeter_c15RenderTimeTimerEv
 void dMeter_c::RenderTimeTimer() {
     unsigned long long t;
@@ -1168,33 +1109,29 @@ void dMeter_c::RenderTimeTimer() {
 
     if (min / 10 != 0) {
         if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         } else {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xa4, 0x1e, -1, 1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::TIME, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         }
-        OAM::Render(false, _ZN3OAM7NUMBERSE[min / 10], 0xb8, 0x16, -1, 1, 0);
+        OAM::Render(false, OAM::NUMBERS[min / 10], 0xb8, 0x16, -1, 1, 0);
     } else {
         if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         } else {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xac, 0x1e, -1, 1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::TIME, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         }
     }
 
-    OAM::Render(false, _ZN3OAM7NUMBERSE[min % 10], 0xc0, 0x16, -1, 1, 0);
-    OAM::Render(false, &_ZN3OAM7MINUTESE, 0xc4, 0x1e, -1, 1, 0);
-    OAM::Render(false, _ZN3OAM7NUMBERSE[sec / 10], 0xcf, 0x16, -1, 1, 0);
-    OAM::Render(false, _ZN3OAM7NUMBERSE[sec % 10], 0xd7, 0x16, -1, 1, 0);
+    OAM::Render(false, OAM::NUMBERS[min % 10], 0xc0, 0x16, -1, 1, 0);
+    OAM::Render(false, &OAM::MINUTES, 0xc4, 0x1e, -1, 1, 0);
+    OAM::Render(false, OAM::NUMBERS[sec / 10], 0xcf, 0x16, -1, 1, 0);
+    OAM::Render(false, OAM::NUMBERS[sec % 10], 0xd7, 0x16, -1, 1, 0);
     OAM::Render(false, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);
-    OAM::Render(false, _ZN3OAM7NUMBERSE[centi / 10], 0xe8, 0x16, -1, 1, 0);
-    OAM::Render(false, _ZN3OAM7NUMBERSE[centi % 10], 0xf0, 0x16, -1, 1, 0);
+    OAM::Render(false, OAM::NUMBERS[centi / 10], 0xe8, 0x16, -1, 1, 0);
+    OAM::Render(false, OAM::NUMBERS[centi % 10], 0xf0, 0x16, -1, 1, 0);
 }
 
-/* ROM ordinal 1 -- _ZN8dMeter_cD0Ev, 0x020fb928, size 0x44 */
+/* ROM ordinal 1 -- dMeter_c::~dMeter_c() (deleting, D0), 0x020fb928, size 0x44 */
 // @symbol _ZN8dMeter_cD0Ev
 /* No body here, and none is possible: D0 is the deleting destructor and the
  * compiler writes all of it. The inline `~dMeter_c() {}` in include/dMeter_c.h
@@ -1203,13 +1140,13 @@ void dMeter_c::RenderTimeTimer() {
  *
  * What the cartridge's 0x44 bytes do: the same two vptr stores and the same
  * fBase_c chain call as D1 below, then `ldr r1, =GAME_HEAP_PTR; ldr r1, [r1]`
- * and `bl _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE` (arm9 0x0203c1e8) before returning
+ * and `bl Memory::Deallocate(void*, mHeap::Heap_t*)` (arm9 0x0203c1e8) before returning
  * the object in r0. So the deallocation is fBase_c's operator delete inlined
  * here, and it does name a heap -- the global game heap, loaded from
  * arm9 0x020a0eac.
  */
 
-/* ROM ordinal 0 -- _ZN8dMeter_cD1Ev, 0x020fb8f8, size 0x30 */
+/* ROM ordinal 0 -- dMeter_c::~dMeter_c() (complete, D1), 0x020fb8f8, size 0x30 */
 // @symbol _ZN8dMeter_cD1Ev
 /* No body here either, for the same reason. The cartridge's 0x30 bytes are two
  * vtable stores and one call, and every one of the three follows from
@@ -1217,7 +1154,7 @@ void dMeter_c::RenderTimeTimer() {
  *
  *     str r2, [r4]     ; _ZTV8dMeter_c   0x0210c2c8
  *     str r1, [r4]     ; _ZTV7dBase_c    0x0208e4b8  -- dBase_c's dtor, INLINED
- *     bl  0x02043d48   ; _ZN7fBase_cD2Ev
+ *     bl  0x02043d48   ; fBase_c::~fBase_c() (base, D2)
  *
  * The second store is there because include/dBase_c.h defines that class's
  * destructor in its class body, so it inlines into every derived destructor.

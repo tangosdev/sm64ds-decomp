@@ -7,17 +7,17 @@
  *
  * LAYOUT is read out of the matched code, not out of format docs:
  *
- *   * Model::Virtual10 pins numBones at 0x04 and bones at 0x08, and
- *     Model::HideMaterial indexes bones with a << 6, which pins the bone
+ *   * dExtSimpleModel_c::Virtual10 pins numBones at 0x04 and bones at 0x08, and
+ *     dExtSimpleModel_c::HideMaterial indexes bones with a << 6, which pins the bone
  *     record at 0x40 bytes with the per-bone material-ID list at +0x34.
- *   * Model::LoadTexAndPal walks textures (0x14-byte records) through
+ *   * dExtSimpleModel_c::LoadTexAndPal walks textures (0x14-byte records) through
  *     0x14/0x18 and palettes (0x10-byte records) through 0x1c/0x20, reading
  *     the data pointer at +0x04, the byte size at +0x08, and writing the
  *     VRAM offset it obtains back into the record.
- *   * Model::HideMaterial reaches materials through ModelComponents and
+ *   * dExtSimpleModel_c::HideMaterial reaches materials through ModelComponents and
  *     ORs bit 31 into the word at +0x24 of a 0x30-byte record; the header's
  *     own 0x30-stride array at 0x24/0x28 is the same record type.
- *   * Model::UpdateFileOffsets relocates every pointer above plus the ones
+ *   * dExtSimpleModel_c::UpdateFileOffsets relocates every pointer above plus the ones
  *     still named unk_*, which is where the "is a pointer" evidence for
  *     each slot comes from. It is also what shapes the display-list chain at
  *     0x0c/0x10: a count, a table of {count, pointer} groups, and 0x10-byte
@@ -38,13 +38,17 @@
 struct BMD_Bone {
     u32 unk_00;
     void *unk_04;          /* 0x04 - file-relative, fixed up on load */
-    u8 pad_08[0x2c];
+    u8 pad_08[0x28];
+    /* 0x30 - length of materialIds: bounds the material walks in
+       dScStage_c::RenderModel and RenderModelTransparent */
+    u16 numMaterials;
+    u8 pad_32[0x2];
     u8 *materialIds;       /* 0x34 - per-bone material index list */
     void *unk_38;          /* 0x38 - file-relative, fixed up on load */
     u32 unk_3c;
 };
 
-/* One 0x10-byte display-list record. Model::UpdateFileOffsets rebases the
+/* One 0x10-byte display-list record. dExtSimpleModel_c::UpdateFileOffsets rebases the
    words at +0x04 and +0x0c, which is the evidence that both are file-relative
    offsets; the host port reads +0x08 as the byte size of the stream at +0x0c
    and feeds that stream straight to the geometry engine (port/ntr/bmd.cpp). */
@@ -65,7 +69,8 @@ struct BMD_Material {
     char *name;            /* 0x00 - file-relative, fixed up on load */
     u32 textureId;         /* 0x04 - index into BMD_File::textures */
     u32 paletteId;         /* 0x08 - index into BMD_File::palettes */
-    u8 pad_0c[0x18];
+    u8 pad_0c[0x14];
+    u32 texImageParam;     /* 0x20 - ORed with the texture's flags by func_02046bbc */
     u32 flags;             /* 0x24 - bit 31 hides the material */
     u8 pad_28[0x8];
 };
@@ -83,7 +88,7 @@ struct BMD_Palette {
     char *name;            /* 0x00 - file-relative, fixed up on load */
     char *data;            /* 0x04 */
     u32 size;              /* 0x08 */
-    u32 vramOffset;        /* 0x0c - written by Model::LoadTexAndPal */
+    u32 vramOffset;        /* 0x0c - written by dExtSimpleModel_c::LoadTexAndPal */
 };
 
 struct BMD_File {

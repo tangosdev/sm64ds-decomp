@@ -2,14 +2,12 @@
 #define DAJGM_C_H
 
 #include "dActor_c.h"
-#include "ModelAnim.h"
-#include "Model.h"
+#include "dExtAnmModel_c.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
-#include "TextureSequence.h"
+#include "dExtAnmTexPat_c.h"
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct daJgm_c;
 
@@ -38,8 +36,8 @@ typedef char DaJgmStateHandlers_size_must_be_0x10[
  * vtable; g_profile_JUGEM is the registry descriptor.
  *
  * deslop leftovers (this TU):
- * - Factory stays `return new daJgm_c()`. Leaf unsigned-long
- *   operator new forwards `_ZN7fBase_cnwEj` until #2570.
+ * - Factory stays `return new daJgm_c()`, through the inherited
+ *   fBase_c::operator new (`_ZN7fBase_cnwEm`).
  * - Inline destructor: out-of-line emits D0 before D1. Reverse
  *   source order of the ordinary members is the TU's.
  * - sizeof wrap stays (0x420 / DaJgmStateHandlers 0x10).
@@ -50,10 +48,10 @@ typedef char DaJgmStateHandlers_size_must_be_0x10[
  */
 struct daJgm_c : dActor_c {
     dActor_c                 *mCarryActor;          /* 0x0d0 */
-    ModelAnim                 mModelAnim;            /* 0x0d4 */
-    Model                     mModel;                /* 0x138 */
+    dExtAnmModel_c mAnmModel;                       /* 0x0d4 */
+    dExtSimpleModel_c mModel;                       /* 0x138 */
     dExtShadowModel_c               mShadowModel;          /* 0x188 */
-    TextureSequence           mTextureSequence;      /* 0x1b0 */
+    dExtAnmTexPat_c mTextureSequence;                      /* 0x1b0 */
     dCcAcPos_c                mdCcAcPos_c;           /* 0x1c4 */
     dBgCh_Actr                mWithMeshClsn;         /* 0x204 */
     /* InitResources assigns IDENTITY_MATRIX4X3 straight into this slot, so
@@ -86,10 +84,6 @@ struct daJgm_c : dActor_c {
     virtual int  OnYoshiTryEat();       /* slot 18 */
     virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual int  OnAimedAtWithEgg();    /* slot 29 */
-
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 
 private:
     void EnterState();

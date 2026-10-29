@@ -14,8 +14,9 @@
  *
  * leftovers:
  * - ClipSphere and TransformAndClip are names inferred from their operations.
- * - ClipSphere's opt_propagation off pair and its materialized 0/1
- *   outside/ok locals are the matched form; dClipper_EmitDeletingDestructor/EmitDestructor
+ * - ClipSphere's opt_propagation off pair, its materialized 0/1
+ *   outside/insidePlane locals and its unsigned re-reads of viewPos.y/z are
+ *   the matched form; dClipper_EmitDeletingDestructor/EmitDestructor
  *   are uncalled stubs that force D0 then D1 out of the inline
  *   destructor (ROM order).
  */
@@ -26,18 +27,21 @@
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
 
+/* local extern: no non-generated header declares these vector helpers, the
+   cstd fdiv, or the sine/cosine pair table. */
+namespace cstd {
+int fdiv(s32, s32);
+}
 extern "C" {
 void MulVec3Mat4x3(const Vector3 *v, const Matrix4x3 *m, Vector3 *res);
 void CrossVec3(Vector3 *a, Vector3 *b, Vector3 *result);
 void NormalizeVec3(Vector3 *src, Vector3 *dst);
-int _ZN4cstd4fdivEii(int a, int b);
 }
 extern short data_02082214[];
 
 /* Signed distance of (x, y, z) from a frustum side plane, each product rounded to Fix12. */
 static inline int PlaneDistance(const ClipperPlane &n, long long x, long long y, long long z) {
-    return (int)((z * n.z + 0x800) >> 12) +
-           ((int)((x * n.x + 0x800) >> 12) + (int)((y * n.y + 0x800) >> 12));
+    return FX_MUL(z, n.z) + (FX_MUL(x, n.x) + FX_MUL(y, n.y));
 }
 
 #pragma opt_propagation off
@@ -73,6 +77,8 @@ int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
             outside = wideMargin < firstPlaneDistance;
             if (outside == 0) {
                 planeIndex = (firstPlane + 1) & 3;
+                /* Re-read through an unsigned view: a plain `y = viewPos.y`
+                   reorders the loop's register web (57 words). */
                 y = (int)*(unsigned int *)&viewPos.y;
                 z = (int)*(unsigned int *)&viewPos.z;
                 zero = 0;
@@ -135,8 +141,7 @@ int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i
  */
 void dClipper::Func_0201559C() {
     int angleIndex = (int)mFovAngle >> 4;
-    int tanHalfFov =
-        _ZN4cstd4fdivEii(data_02082214[2 * angleIndex], data_02082214[2 * angleIndex + 1]);
+    int tanHalfFov = cstd::fdiv(data_02082214[2 * angleIndex], data_02082214[2 * angleIndex + 1]);
     Fix12i halfHeight = FX_MUL(mNearZ, tanHalfFov);
     Fix12i halfWidth = FX_MUL(mAspectRatio, halfHeight);
     Vector3 corner0, corner1, corner2, corner3;
@@ -162,11 +167,14 @@ void dClipper::Func_0201559C() {
     NormalizeVec3((Vector3 *)&mPlaneNormals[3], (Vector3 *)&mPlaneNormals[3]);
 }
 
-// @symbol _ZN8dClipper13Func_020156DCEitii
+// @symbol _ZN8dClipper13Func_020156DCEisii
 /* The former `Ev` spelling claimed this method took no arguments, contradicting
    every call site and the register/stack reads in the ROM. Scalar parameter
-   types reproduce both the observed ABI and the complete function bytes. */
-void dClipper::Func_020156DC(Fix12i aspectRatio, u16 fovAngle, Fix12i nearZ, Fix12i farZ) {
+   types reproduce both the observed ABI and the complete function bytes. The
+   fov angle is signed: both callers pass a short camera angle unconverted
+   (Camera_UpdateMatrices loads it with ldrsh), which a u16 parameter would
+   re-narrow; the body only stores it, so s16 and u16 compile alike here. */
+void dClipper::Func_020156DC(Fix12i aspectRatio, s16 fovAngle, Fix12i nearZ, Fix12i farZ) {
     mAspectRatio = aspectRatio;
     mFovAngle = fovAngle;
     mNearZ = nearZ;

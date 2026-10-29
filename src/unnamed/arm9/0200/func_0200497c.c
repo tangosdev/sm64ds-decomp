@@ -1,12 +1,9 @@
-// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm. Nintendo shipped this as an
-// assembly primitive, so there is no original C to recover and no match to chase. Counts as
-// done under the asm-primitive policy - see notes/arm9-endgame.md.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only runtime primitive).
 // Segment/autoload initializer: reads a {dest, end, source} table from a pooled base,
 // block-copies words then bzeroes ranges, and chains to the next init routine by falling
-// through (b func_020049ec). Uses r4-r7 with no prologue/epilogue saving them and no
+// through (b AutoloadCallback). Uses r4-r7 with no prologue/epilogue saving them and no
 // bx lr return -- no C compiler emits that, so there is no C to decompile it to. Per asm policy.
-extern void func_020049ec(void);
+extern void AutoloadCallback(void);
 asm void func_0200497c(void) {
     ldr     r0, =0x2004ad8
     ldr     r1, [r0]
@@ -39,5 +36,5 @@ in3:
     cmp     r4, r6
     strlo   r7, [r4], #4
     blo     in3
-    b       func_020049ec
+    b       AutoloadCallback
 }

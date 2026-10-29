@@ -6,82 +6,488 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "UPPER PART OF dScEntry_c's UNIT. tools/tu_map.py (build/tu_map.json, rebuilt from build/rtti.json and build/rtti_vtables.json) puts dScEntry_c and OamAnimation in one linker run, ov075 0x02115ab8..0x0211a854, 82 functions, and ov075's three __sinit_* functions match its three runs. ov075/dScEntry_c (src/game/stages/d_s_entry.cpp) licenses the run's first 13 functions, 0x02115ab8..0x02116128. This entry licenses its last nine, 0x0211a210..0x0211a854. The 69 func_ov075_* helpers between them each have their own complete delinks entry, and a delinks entry carries exactly one contiguous .text claim, so the two parts cannot be one source until those 69 are folded too.",
-    "THE HOLE IS THIS CLASS's CODE. Referrer census over every relocs.txt under config/arm9, each relocating word resolved to its owning symbol in its own module: every inbound reference to 0x02116128..0x0211a210 comes from dScEntry_c::InitResources (func_ov075_02116818, func_ov075_02116ad4), dScEntry_c::Behavior (func_ov075_02119dc4), one another, or the step tables at ov075 0x0211c6f8..0x0211c8d8. Every reference into that .data range comes from this run's own functions (icon_c::Render, the hole helpers), from neighbouring ov075 .data, or from __sinit_ov075_0211bb00, which copies the step tables into .bss and also constructs dScEntry_c::graphCallback_c (0x021160b4) and the callback object data_ov075_0211d71c that InitResources registers. No other class's code reaches the hole.",
-    "LEFT EDGE 0x0211a210: dScEntry_c::CleanupResources, the first of six members pinned only by _ZTV10dScEntry_c (0x0211d304) at their slots -- 3, 12, 9, 6, 0, 1 in ROM order. The three functions below it (func_ov075_0211a100/0211a148/0211a194) are hole helpers reached from other hole helpers; they are not folded here, because they do not move the join any closer. The edge is where the per-function sources stop, not a unit boundary.",
+    "UPPER PART OF dScEntry_c's UNIT. tools/tu_map.py puts dScEntry_c and OamAnimation in one linker run, ov075 0x02115ab8..0x0211a854. src/game/stages/d_s_entry.cpp licenses 0x02115ab8..0x021165b0. This entry licenses 0x021165b0..0x0211a854: the round tally, the two InitResources halves, the readiness helpers, the settings, quit, rematch and results steps, the six course-select and match-loading steps, the five player-select and sync steps, the unnamed helpers through SetSteps, then the six scene methods, the RESULT factory and the OamAnimation and icon_c constructors. The two parts abut. Joining them into one source makes one intact object that also owns the unit's .bss step sets and __sinit_ov075_0211bb00, which is a separate promotion.",
+    "THE HOLE IS THIS CLASS's CODE. Referrer census over every relocs.txt under config/arm9, each relocating word resolved to its owning symbol in its own module: every inbound reference to 0x02116128..0x0211a210 comes from dScEntry_c::InitResources (InitResultResources, InitEntryResources), dScEntry_c::Behavior (HandlePlayerDisconnect), one another, or the step tables at ov075 0x0211c6f8..0x0211c8d8. Every reference into that .data range comes from this run's own functions (icon_c::Render, the hole helpers), from neighbouring ov075 .data, or from __sinit_ov075_0211bb00, which copies the step tables into .bss and also constructs dScEntry_c::graphCallback_c (0x021160b4) and the callback object data_ov075_0211d71c that InitResources registers. No other class's code reaches the hole.",
+    "LEFT EDGE 0x021165b0: dScEntry_c::TallyRoundWinners, called only from InitResultResources at 0x02116818. Below it, 0x021160dc..0x021165b0 is d_s_entry.cpp's (the player-row and border-palette helpers).",
     "RIGHT EDGE 0x0211a854: dScEntry_c_classInit_RESULT (referenced only by g_profile_RESULT) is followed by _ZN12OamAnimationC1Ev and _ZN10dScEntry_c6icon_cC1Ev, which only the two factories reference (__cxa_vec_ctor arguments). That is d_ent_obj.cpp's unit tail exactly -- vtable methods, classInit, then the constructor the factory hands to __cxa_vec_ctor -- and the two constructors are empty, the shape of inline copies a factory forces out at the end of its unit. dScEntry_c_classInit_ENTRY at 0x0211a854 is past that tail. The code after it, 0x0211a948..0x0211b524, is reached from dEntObj_c's methods and through the tables at 0x0211d34c..0x0211d35c that __sinit_ov075_0211c51c reads, never from dScEntry_c. tu_map starts its third run at 0x0211a854. src/game/stages/d_s_entry_entry.cpp therefore stays out of this entry.",
     "NO VTABLE OR TYPEINFO IS EMITTED. dScEntry_c's key function, its destructor, is defined in src/game/stages/d_s_entry.cpp. icon_c and OamAnimation get no record here either; the verified object carries no data symbols (verification.compilerOnlyOutput.data is empty)."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x0211a210",
+      "start": "0x021165b0",
       "end": "0x0211a854"
     }
   ],
   "functions": [
     {
+      "legacy_source": "src/unnamed/ov075/func_ov075_021165b0.c",
+      "symbol": "_ZN10dScEntry_c17TallyRoundWinnersEv",
+      "address": "0x021165b0",
+      "size": "0x00000268",
+      "ordinal": 0
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02116818.cpp",
+      "symbol": "_ZN10dScEntry_c19InitResultResourcesEv",
+      "address": "0x02116818",
+      "size": "0x000002bc",
+      "ordinal": 1
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02116ad4.cpp",
+      "symbol": "_ZN10dScEntry_c18InitEntryResourcesEv",
+      "address": "0x02116ad4",
+      "size": "0x00000164",
+      "ordinal": 2
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02116c38.cpp",
+      "symbol": "_ZN10dScEntry_c13LeaveSettingsEv",
+      "address": "0x02116c38",
+      "size": "0x00000054",
+      "ordinal": 3
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c10StartMatchEv.cpp",
+      "symbol": "_ZN10dScEntry_c10StartMatchEv",
+      "address": "0x02116c8c",
+      "size": "0x00000058",
+      "ordinal": 4
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02116ce4.c",
+      "symbol": "_ZN10dScEntry_c19func_ov075_02116ce4Ev",
+      "address": "0x02116ce4",
+      "size": "0x0000005c",
+      "ordinal": 5
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c15ArePlayersReadyEv.cpp",
+      "symbol": "_ZN10dScEntry_c15ArePlayersReadyEv",
+      "address": "0x02116d40",
+      "size": "0x0000005c",
+      "ordinal": 6
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c16CheckMenuConfirmEi.cpp",
+      "symbol": "_ZN10dScEntry_c16CheckMenuConfirmEi",
+      "address": "0x02116d9c",
+      "size": "0x00000064",
+      "ordinal": 7
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02116e00.c",
+      "symbol": "_ZN10dScEntry_c17ResetMatchRecordsEv",
+      "address": "0x02116e00",
+      "size": "0x00000044",
+      "ordinal": 8
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02116e44.cpp",
+      "symbol": "_ZN10dScEntry_c18UpdateSettingsSyncEv",
+      "address": "0x02116e44",
+      "size": "0x00000078",
+      "ordinal": 9
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02116ebc.c",
+      "symbol": "_ZN10dScEntry_c17EnterSettingsSyncEv",
+      "address": "0x02116ebc",
+      "size": "0x00000084",
+      "ordinal": 10
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02116f40.cpp",
+      "symbol": "_ZN10dScEntry_c19RenderSoundSettingsEv",
+      "address": "0x02116f40",
+      "size": "0x0000011c",
+      "ordinal": 11
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_0211705c.cpp",
+      "symbol": "_ZN10dScEntry_c19UpdateSoundSettingsEv",
+      "address": "0x0211705c",
+      "size": "0x0000034c",
+      "ordinal": 12
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_021173a8.cpp",
+      "symbol": "_ZN10dScEntry_c18EnterSoundSettingsEv",
+      "address": "0x021173a8",
+      "size": "0x000001e8",
+      "ordinal": 13
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02117590.cpp",
+      "symbol": "_ZN10dScEntry_c21RenderControlSettingsEv",
+      "address": "0x02117590",
+      "size": "0x000000ac",
+      "ordinal": 14
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_0211763c.cpp",
+      "symbol": "_ZN10dScEntry_c21UpdateControlSettingsEv",
+      "address": "0x0211763c",
+      "size": "0x000002dc",
+      "ordinal": 15
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02117918.cpp",
+      "symbol": "_ZN10dScEntry_c20EnterControlSettingsEv",
+      "address": "0x02117918",
+      "size": "0x000001ac",
+      "ordinal": 16
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02117ac4.cpp",
+      "symbol": "_ZN10dScEntry_c16EnterQuitMessageEv",
+      "address": "0x02117ac4",
+      "size": "0x00000094",
+      "ordinal": 17
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02117b58.cpp",
+      "symbol": "_ZN10dScEntry_c10UpdateQuitEv",
+      "address": "0x02117b58",
+      "size": "0x0000006c",
+      "ordinal": 18
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02117bc4.c",
+      "symbol": "_ZN10dScEntry_c9EnterQuitEv",
+      "address": "0x02117bc4",
+      "size": "0x00000048",
+      "ordinal": 19
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02117c0c.cpp",
+      "symbol": "_ZN10dScEntry_c17UpdateQuitConfirmEv",
+      "address": "0x02117c0c",
+      "size": "0x00000174",
+      "ordinal": 20
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02117d80.cpp",
+      "symbol": "_ZN10dScEntry_c16EnterQuitConfirmEv",
+      "address": "0x02117d80",
+      "size": "0x00000104",
+      "ordinal": 21
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02117e84.cpp",
+      "symbol": "_ZN10dScEntry_c17UpdateRematchSyncEv",
+      "address": "0x02117e84",
+      "size": "0x000000d8",
+      "ordinal": 22
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02117f5c.c",
+      "symbol": "_ZN10dScEntry_c16EnterRematchSyncEv",
+      "address": "0x02117f5c",
+      "size": "0x00000088",
+      "ordinal": 23
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02117fe4.cpp",
+      "symbol": "_ZN10dScEntry_c15RenderWinCountsEv",
+      "address": "0x02117fe4",
+      "size": "0x00000264",
+      "ordinal": 24
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02118248.cpp",
+      "symbol": "_ZN10dScEntry_c19UpdateRematchPromptEv",
+      "address": "0x02118248",
+      "size": "0x00000130",
+      "ordinal": 25
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02118378.cpp",
+      "symbol": "_ZN10dScEntry_c18EnterRematchPromptEv",
+      "address": "0x02118378",
+      "size": "0x00000138",
+      "ordinal": 26
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_021184b0.cpp",
+      "symbol": "_ZN10dScEntry_c13RenderResultsEv",
+      "address": "0x021184b0",
+      "size": "0x000001cc",
+      "ordinal": 27
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_0211867c.cpp",
+      "symbol": "_ZN10dScEntry_c13UpdateResultsEv",
+      "address": "0x0211867c",
+      "size": "0x00000238",
+      "ordinal": 28
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_021188b4.cpp",
+      "symbol": "_ZN10dScEntry_c12EnterResultsEv",
+      "address": "0x021188b4",
+      "size": "0x000001c4",
+      "ordinal": 29
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02118a78.c",
+      "symbol": "_ZN10dScEntry_c19func_ov075_02118a78Ev",
+      "address": "0x02118a78",
+      "size": "0x0000000c",
+      "ordinal": 30
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c18UpdateMatchLoadingEv.cpp",
+      "symbol": "_ZN10dScEntry_c18UpdateMatchLoadingEv",
+      "address": "0x02118a84",
+      "size": "0x00000174",
+      "ordinal": 31
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c19LoadCourseResourcesEi.cpp",
+      "symbol": "_ZN10dScEntry_c19LoadCourseResourcesEi",
+      "address": "0x02118bf8",
+      "size": "0x00000088",
+      "ordinal": 32
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c17EnterMatchLoadingEv.cpp",
+      "symbol": "_ZN10dScEntry_c17EnterMatchLoadingEv",
+      "address": "0x02118c80",
+      "size": "0x00000050",
+      "ordinal": 33
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c23RenderCourseSelectTitleEv.cpp",
+      "symbol": "_ZN10dScEntry_c23RenderCourseSelectTitleEv",
+      "address": "0x02118cd0",
+      "size": "0x0000004c",
+      "ordinal": 34
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c18UpdateCourseSelectEv.cpp",
+      "symbol": "_ZN10dScEntry_c18UpdateCourseSelectEv",
+      "address": "0x02118d1c",
+      "size": "0x0000021c",
+      "ordinal": 35
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c17EnterCourseSelectEv.cpp",
+      "symbol": "_ZN10dScEntry_c17EnterCourseSelectEv",
+      "address": "0x02118f38",
+      "size": "0x0000016c",
+      "ordinal": 36
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c23UpdatePlayerSelectIntroEv.cpp",
+      "symbol": "_ZN10dScEntry_c23UpdatePlayerSelectIntroEv",
+      "address": "0x021190a4",
+      "size": "0x000000f8",
+      "ordinal": 37
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c22EnterPlayerSelectIntroEv.cpp",
+      "symbol": "_ZN10dScEntry_c22EnterPlayerSelectIntroEv",
+      "address": "0x0211919c",
+      "size": "0x00000120",
+      "ordinal": 38
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c16UpdatePlayerSyncEv.cpp",
+      "symbol": "_ZN10dScEntry_c16UpdatePlayerSyncEv",
+      "address": "0x021192bc",
+      "size": "0x00000190",
+      "ordinal": 39
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c15EnterPlayerSyncEv.cpp",
+      "symbol": "_ZN10dScEntry_c15EnterPlayerSyncEv",
+      "address": "0x0211944c",
+      "size": "0x00000098",
+      "ordinal": 40
+    },
+    {
+      "legacy_source": "src/_ZN10dScEntry_c17RenderWaitingTextEv.cpp",
+      "symbol": "_ZN10dScEntry_c17RenderWaitingTextEv",
+      "address": "0x021194e4",
+      "size": "0x0000015c",
+      "ordinal": 41
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02119640.c",
+      "symbol": "func_ov075_02119640",
+      "address": "0x02119640",
+      "size": "0x00000090",
+      "ordinal": 42
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_021196d0.c",
+      "symbol": "func_ov075_021196d0",
+      "address": "0x021196d0",
+      "size": "0x000000ac",
+      "ordinal": 43
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_0211977c.c",
+      "symbol": "func_ov075_0211977c",
+      "address": "0x0211977c",
+      "size": "0x00000060",
+      "ordinal": 44
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_021197dc.c",
+      "symbol": "func_ov075_021197dc",
+      "address": "0x021197dc",
+      "size": "0x0000000c",
+      "ordinal": 45
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_021197e8.c",
+      "symbol": "func_ov075_021197e8",
+      "address": "0x021197e8",
+      "size": "0x00000130",
+      "ordinal": 46
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02119918.c",
+      "symbol": "func_ov075_02119918",
+      "address": "0x02119918",
+      "size": "0x000000c0",
+      "ordinal": 47
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_021199d8.cpp",
+      "symbol": "func_ov075_021199d8",
+      "address": "0x021199d8",
+      "size": "0x0000015c",
+      "ordinal": 48
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02119b34.c",
+      "symbol": "func_ov075_02119b34",
+      "address": "0x02119b34",
+      "size": "0x00000104",
+      "ordinal": 49
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02119c38.c",
+      "symbol": "func_ov075_02119c38",
+      "address": "0x02119c38",
+      "size": "0x00000088",
+      "ordinal": 50
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02119cc0.c",
+      "symbol": "_ZN10dScEntry_c17UpdateStepFadeOutEv",
+      "address": "0x02119cc0",
+      "size": "0x0000007c",
+      "ordinal": 51
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02119d3c.c",
+      "symbol": "_ZN10dScEntry_c16EnterStepFadeOutEv",
+      "address": "0x02119d3c",
+      "size": "0x0000003c",
+      "ordinal": 52
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02119d78.c",
+      "symbol": "_ZN10dScEntry_c15UpdateStepDelayEv",
+      "address": "0x02119d78",
+      "size": "0x0000004c",
+      "ordinal": 53
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_02119dc4.cpp",
+      "symbol": "_ZN10dScEntry_c22HandlePlayerDisconnectEPKNS_7StepSetE",
+      "address": "0x02119dc4",
+      "size": "0x0000033c",
+      "ordinal": 54
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_0211a100.c",
+      "symbol": "_ZN10dScEntry_c19ChangeStepsWithFadeEPKNS_7StepSetE",
+      "address": "0x0211a100",
+      "size": "0x00000048",
+      "ordinal": 55
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_0211a148.c",
+      "symbol": "_ZN10dScEntry_c21ChangeStepsAfterDelayEPKNS_7StepSetEi",
+      "address": "0x0211a148",
+      "size": "0x0000004c",
+      "ordinal": 56
+    },
+    {
+      "legacy_source": "src/unnamed/ov075/func_ov075_0211a194.cpp",
+      "symbol": "_ZN10dScEntry_c8SetStepsEPKNS_7StepSetE",
+      "address": "0x0211a194",
+      "size": "0x0000007c",
+      "ordinal": 57
+    },
+    {
       "symbol": "_ZN10dScEntry_c16CleanupResourcesEv",
       "address": "0x0211a210",
       "size": "0x00000058",
       "legacy_source": "src/_ZN10dScEntry_c16CleanupResourcesEv.cpp",
-      "ordinal": 0
+      "ordinal": 58
     },
     {
       "symbol": "_ZN10dScEntry_c16OnPendingDestroyEv",
       "address": "0x0211a268",
       "size": "0x00000004",
       "legacy_source": "src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp",
-      "ordinal": 1
+      "ordinal": 59
     },
     {
       "symbol": "_ZN10dScEntry_c6RenderEv",
       "address": "0x0211a26c",
       "size": "0x0000004c",
       "legacy_source": "src/_ZN10dScEntry_c6RenderEv.cpp",
-      "ordinal": 2
+      "ordinal": 60
     },
     {
       "symbol": "_ZN10dScEntry_c8BehaviorEv",
       "address": "0x0211a2b8",
       "size": "0x00000158",
       "legacy_source": "src/_ZN10dScEntry_c8BehaviorEv.cpp",
-      "ordinal": 3
+      "ordinal": 61
     },
     {
       "symbol": "_ZN10dScEntry_c13InitResourcesEv",
       "address": "0x0211a410",
       "size": "0x00000324",
       "legacy_source": "src/_ZN10dScEntry_c13InitResourcesEv.cpp",
-      "ordinal": 4
+      "ordinal": 62
     },
     {
       "symbol": "_ZN10dScEntry_c19BeforeInitResourcesEv",
       "address": "0x0211a734",
       "size": "0x0000000c",
       "legacy_source": "src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp",
-      "ordinal": 5
+      "ordinal": 63
     },
     {
       "symbol": "dScEntry_c_classInit_RESULT",
       "address": "0x0211a740",
       "size": "0x000000f4",
       "legacy_source": "src/game/stages/d_s_entry_result.cpp",
-      "ordinal": 6
+      "ordinal": 64
     },
     {
       "symbol": "_ZN12OamAnimationC1Ev",
       "address": "0x0211a834",
       "size": "0x00000004",
       "legacy_source": "src/_ZN12OamAnimationC1Ev.cpp",
-      "ordinal": 7
+      "ordinal": 65
     },
     {
       "symbol": "_ZN10dScEntry_c6icon_cC1Ev",
       "address": "0x0211a838",
       "size": "0x0000001c",
       "legacy_source": "src/_ZN10dScEntry_c6icon_cC1Ev.cpp",
-      "ordinal": 8
+      "ordinal": 66
     }
   ],
   "compiler_only_output": [
@@ -103,10 +509,15 @@
   ],
   "notes": [
     "Absorbed sources (all retired): src/_ZN10dScEntry_c16CleanupResourcesEv.cpp, src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp, src/_ZN10dScEntry_c6RenderEv.cpp, src/_ZN10dScEntry_c8BehaviorEv.cpp, src/_ZN10dScEntry_c13InitResourcesEv.cpp, src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp, src/game/stages/d_s_entry_result.cpp, src/_ZN12OamAnimationC1Ev.cpp, src/_ZN10dScEntry_c6icon_cC1Ev.cpp. Credit stays by address in function-authors.json.",
-    "Form: `#pragma defer_codegen off` and ROM-ascending source, the same form as d_s_entry.cpp, so the two parts join by concatenation once the hole is folded.",
-    "Render and Behavior now share one this-relative view, dScEntryStepView, in place of the per-file `C` and `Self` shadows. It names only what the header still holds as opaque storage: the two pointer-to-member steps at 0x5c (Behavior) and 0x64 (Render) and the icon count at 0x280. Behavior's fade bytes are the header's mFadeBrightness/mFadeTick/mIsFading, its icon loop calls icon_c::Behavior through an icon_c pointer over mIcons (the shard's one-slot `Poly0` view is gone), and InitResources reads fBase_c::param1 instead of `*(s32 *)(c + 8)`. All byte-identical.",
+    "Form: `#pragma defer_codegen off` and ROM-ascending source, the same form as d_s_entry.cpp. The six transition helpers now use native dScEntry_c::Step and StepSet copies, including the saved render callback; no C-language islands or volatile copy scaffolding remain in these helpers.",
+    "SUFFIX FOLD (2026-10-20): absorbed 0x021190a4..0x0211a210 into this file. Retired the five step shards and the sixteen unnamed helpers through func_ov075_0211a194. 30/30 .text functions byte-match the ROM with relocation destinations checked, including the nine functions this file already owned. The ENTRY factory and the code after 0x0211a948 stay out: that tail is reached from dEntObj_c.",
+    "Render and Behavior use the real dScEntry_c member pointers at 0x5c and 0x64 and the named icon count at 0x280. The header also names the pending StepSet at 0x6c. Behavior restores brightness after a step change before invoking the new behavior, and its icon loop calls icon_c::Behavior. InitResources reads fBase_c::param1. Disconnect handling now uses the native Step fields; the RESULT factory retains its separate two-word construction view.",
     "InitResources' GXS palette loads and Sound calls are real namespace/member calls now (GXS declared in the preamble as d_s_star_sel_methods.cpp does; Sound from Sound.h). The factory moves over verbatim except `_ZTV8dScene_c`, which decl_common.h declares as int[], so the factory casts it rather than redeclaring it as char[].",
-    "OamAnimation() and icon_c() stay out-of-line definitions. Inline class-body forms would not be emitted, because the factory names the constructors by their linker names for __cxa_vec_ctor and nothing in C++ uses them."
+    "OamAnimation() and icon_c() stay out-of-line definitions. Inline class-body forms would not be emitted, because the factory names the constructors by their linker names for __cxa_vec_ctor and nothing in C++ uses them.",
+    "FLOW RECOVERY (2026-10-20): six inferred transition method identities replace the unnamed helpers at 0x02119cc0, 0x02119d3c, 0x02119d78, 0x0211a100, 0x0211a148 and 0x0211a194 inside this existing production owner. The 30-entry function census now covers the complete licensed range. Folded callers use the typed API; external callers retain their separate ownership. Original matched-function authors are preserved by address.",
+    "DISCONNECT INTERFACE (2026-10-21): HandlePlayerDisconnect at ov075:0x02119dc4 is an inferred name. All three callers supply the scene and an address of a three-callback StepSet; the const pointer spelling is inferred, not recoverable from ROM. Native PMF comparison and null assignments replace the teardown shadow. The existing data_ov075_0211d920 symbol names data_ov075_0211d918.behavior at +8, not a new object; direct field spelling changes register allocation. mDisconnectHideMask identifies the byte cleared from the main-screen layer mask, and mEntObj->mSuspended uses the existing figure field. Ownership and remaining class reconstruction are unchanged.",
+    "DOWNWARD EXTENSION (2026-10-22): absorbed 0x02118a84..0x021190a4 into this file, extending the run downward to 36 .text functions. Retired the six course-select/match-loading step shards in ROM-ascending order ahead of UpdatePlayerSelectIntro. Bodies copied verbatim except two casts on data_ov075_0211d71c in EnterCourseSelect, which this file sees as decl_common's void *; otherwise only new extern declarations plus the AsyncJob/Heap includes were added.",
+    "HOLE FOLD (2026-10-28): absorbed 0x021165b0..0x02118a84 into this file, extending the run downward to 67 .text functions. Retired 27 shards from src/unnamed/ov075 and src/game/stages/d_s_entry_readiness.cpp (StartMatch, func_ov075_02116ce4, ArePlayersReady, CheckMenuConfirm; its manifest ov075/d_s_entry_readiness is merged here). Every absorbed free function took the scene as its only argument and is now a dScEntry_c member under the same address; the names come from the step set each one fills in __sinit_ov075_0211bb00 (d7e0 results, d810 rematch prompt, d870 rematch sync, d8b8 quit yes/no, d8e8 quit, d930 quit message, d828 settings sync, d798 controller settings, d7f8 sound settings). func_ov075_02116ce4 and func_ov075_02118a78 become members under their address names because their meaning is not proven. Two declarations in this file changed to match the hole's callers: LoadCompressedFileAt takes int (the definition says unsigned short, but a u16 parameter adds six masks to InitResultResources) and func_02020028's second parameter is unsigned char (UpdateControlSettings passes the loop index without a mask). The other callers match either way. dThIcon_c::Select replaces func_ov001_020ab41c at every call. 67/67 match with relocation destinations checked."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -114,8 +525,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov075-d_s_entry_methods/d_s_entry_methods.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 9,
-    "functions_declared": 9,
+    "functions_matched": 67,
+    "functions_declared": 67,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN12OamAnimationC2Ev",
@@ -128,11 +539,11 @@
         "_ZN9dThIcon_cD2Ev"
       ],
       "droppedSections": [
-        18,
-        20,
-        21,
-        24,
-        25
+        132,
+        134,
+        135,
+        138,
+        139
       ],
       "data": [],
       "dataExternalized": [],

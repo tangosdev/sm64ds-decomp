@@ -18,11 +18,12 @@
  * Three of the main engine's character getters (BG0, BG1, BG3) keep their
  * address names under C linkage: their callers name them that way.
  *
- * G2 and G2S have no header, and most callers spell these symbols by their
- * mangled names. For G2 that is forced in any TU that includes
- * decl_common.h, whose `extern int G2[];` (a ROM data symbol) hides a
- * `namespace G2`. This file does not include it.
+ * Declared in include/G2.h. Every getter returns a pointer, as the main
+ * engine's always did; the sub engine's computed the same address as an
+ * unsigned int, which costs nothing to cast at the return.
  */
+
+#include "G2.h"
 
 namespace G2 {
 
@@ -38,9 +39,9 @@ void *GetBG0ScrPtr(void) {
 namespace G2S {
 
 // @symbol _ZN3G2S12GetBG0ScrPtrEv
-unsigned int GetBG0ScrPtr() {
+void *GetBG0ScrPtr(void) {
     int v = *(volatile unsigned short *)0x4001008;
-    return (((v & 0x1f00) >> 8) << 0xb) + 0x6200000;
+    return (void *)((((v & 0x1f00) >> 8) << 0xb) + 0x6200000);
 }
 
 } // namespace G2S
@@ -59,9 +60,9 @@ void *GetBG1ScrPtr(void) {
 namespace G2S {
 
 // @symbol _ZN3G2S12GetBG1ScrPtrEv
-unsigned int GetBG1ScrPtr() {
+void *GetBG1ScrPtr(void) {
     int v = *(volatile unsigned short *)0x400100a;
-    return (((v & 0x1f00) >> 8) << 0xb) + 0x6200000;
+    return (void *)((((v & 0x1f00) >> 8) << 0xb) + 0x6200000);
 }
 
 } // namespace G2S
@@ -99,7 +100,7 @@ void *GetBG2ScrPtr(void) {
 namespace G2S {
 
 // @symbol _ZN3G2S12GetBG2ScrPtrEv
-unsigned int GetBG2ScrPtr() {
+void *GetBG2ScrPtr(void) {
     int m = *(volatile int *)0x4001000 & 7;
     unsigned int v = *(volatile unsigned short *)0x400100c;
     unsigned int r1 = (v & 0x1f00) >> 8;
@@ -109,11 +110,11 @@ unsigned int GetBG2ScrPtr() {
     case 2:
     case 3:
     case 4:
-        return (r1 << 0xb) + 0x6200000;
+        return (void *)((r1 << 0xb) + 0x6200000);
     case 5:
         if (v & 0x80)
-            return (r1 << 0xe) + 0x6200000;
-        return (r1 << 0xb) + 0x6200000;
+            return (void *)((r1 << 0xe) + 0x6200000);
+        return (void *)((r1 << 0xb) + 0x6200000);
     case 6:
         return 0;
     default:
@@ -154,7 +155,7 @@ void *GetBG3ScrPtr() {
 namespace G2S {
 
 // @symbol _ZN3G2S12GetBG3ScrPtrEv
-unsigned int GetBG3ScrPtr() {
+void *GetBG3ScrPtr(void) {
     int m = *(volatile int *)0x4001000 & 7;
     unsigned int v = *(volatile unsigned short *)0x400100e;
     unsigned int r1 = (v & 0x1f00) >> 8;
@@ -162,13 +163,13 @@ unsigned int GetBG3ScrPtr() {
     case 0:
     case 1:
     case 2:
-        return (r1 << 0xb) + 0x6200000;
+        return (void *)((r1 << 0xb) + 0x6200000);
     case 3:
     case 4:
     case 5:
         if (v & 0x80)
-            return (r1 << 0xe) + 0x6200000;
-        return (r1 << 0xb) + 0x6200000;
+            return (void *)((r1 << 0xe) + 0x6200000);
+        return (void *)((r1 << 0xb) + 0x6200000);
     case 6:
         return 0;
     default:
@@ -189,9 +190,9 @@ extern "C" void *func_02054efc(void) {
 namespace G2S {
 
 // @symbol _ZN3G2S13GetBG0CharPtrEv
-unsigned int GetBG0CharPtr() {
+void *GetBG0CharPtr(void) {
     int v = *(volatile unsigned short *)0x4001008;
-    return (((v & 0x3c) >> 2) << 0xe) + 0x6200000;
+    return (void *)((((v & 0x3c) >> 2) << 0xe) + 0x6200000);
 }
 
 } // namespace G2S
@@ -207,9 +208,9 @@ extern "C" void *func_02054ea8(void) {
 namespace G2S {
 
 // @symbol _ZN3G2S13GetBG1CharPtrEv
-unsigned int GetBG1CharPtr() {
+void *GetBG1CharPtr(void) {
     int v = *(volatile unsigned short *)0x400100a;
-    return (((v & 0x3c) >> 2) << 0xe) + 0x6200000;
+    return (void *)((((v & 0x3c) >> 2) << 0xe) + 0x6200000);
 }
 
 } // namespace G2S
@@ -232,11 +233,11 @@ void *GetBG2CharPtr(void) {
 namespace G2S {
 
 // @symbol _ZN3G2S13GetBG2CharPtrEv
-unsigned GetBG2CharPtr() {
+void *GetBG2CharPtr(void) {
     int v1 = *(volatile int *)0x4001000;
     unsigned short v2 = *(volatile unsigned short *)0x400100c;
     if (!((v1 & 7) >= 5 && (v2 & 0x80)))
-        return ((unsigned)(v2 & 0x3c) >> 2 << 0xe) + 0x6200000;
+        return (void *)(((unsigned)(v2 & 0x3c) >> 2 << 0xe) + 0x6200000);
     return 0;
 }
 
@@ -258,12 +259,12 @@ extern "C" int func_02054d88(void) {
 namespace G2S {
 
 // @symbol _ZN3G2S13GetBG3CharPtrEv
-unsigned int GetBG3CharPtr() {
+void *GetBG3CharPtr(void) {
     int cfg = *(volatile int *)0x4001000;
     unsigned int v = *(volatile unsigned short *)0x400100e;
     int m = cfg & 7;
     if (m < 3 || (m < 6 && !(v & 0x80)))
-        return (((v & 0x3c) >> 2) << 0xe) + 0x6200000;
+        return (void *)((((v & 0x3c) >> 2) << 0xe) + 0x6200000);
     return 0;
 }
 

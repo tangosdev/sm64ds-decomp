@@ -130,6 +130,11 @@ class Graph:
         for e in r["edges"]:
             self.parents[e["derived_key"]].append((e["base_key"], e.get("offset", 0)))
             self.children[e["base_key"]].append(e["derived_key"])
+        # Offset order, so parents[k][0] is the primary base that depth() follows.
+        # rtti.json orders edges by base key, which put dExtFrameCtrl_c (+0x50)
+        # ahead of dExtSimpleModel_c (+0x0) for dExtAnmModel_c.
+        for v in self.parents.values():
+            v.sort(key=lambda b: b[1])
         for k in self.children:
             self.children[k].sort(key=lambda x: (-len(self.children.get(x, [])),
                                                  self.name[x]))
@@ -540,9 +545,11 @@ def build(d):
       "and it is <em>not</em> always the first one listed, which is a trap that has "
       "already cost this project one wrong reading.</p>" % len(mi))
     A("<figure>%s<figcaption>Base subobjects drawn at their recorded offsets. The "
-      "filled box is the primary base at offset 0. <code>dExtAnmModel_c</code> lists "
-      "<code>dExtFrameCtrl_c</code> (+0x50) before <code>dExtSimpleModel_c</code> "
-      "(+0x0): list order is not offset order.</figcaption></figure>"
+      "filled box is the primary base at offset 0. <code>daDemo_c::anmModel_c</code> "
+      "lists <code>daDemo_c::param_c</code> (+0x64) before <code>dExtAnmModel_c</code> "
+      "(+0x0): list order is not offset order. <code>dExtAnmModel_c</code> itself lists "
+      "<code>dExtSimpleModel_c</code> (+0x0) first and <code>dExtFrameCtrl_c</code> "
+      "(+0x50) second.</figcaption></figure>"
       % mi_diagram(g))
 
     # ---- §5 contradicted

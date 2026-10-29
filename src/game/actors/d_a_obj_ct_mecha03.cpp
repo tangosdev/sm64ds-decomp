@@ -1,36 +1,32 @@
 //cpp
-/* daObjCtMecha03_c -- the swinging pendulum of Tick Tock Clock (CT_MECHA03),
- * ov065.
- *
+/* daObjCtMecha03_c -- TTC swinging pendulum (CT_MECHA03, ov065).
  * It swings under mSwingAccel; in clock mode 2 (data_0209f2c0) each stop
- * rolls a new push strength and an occasional pause. Its shadow follows the
- * bob, not the pivot (func_ov065_02119fe8).
+ * rolls a new push strength and an occasional pause. Shadow follows the
+ * bob (UpdateShadow); UpdateModelMatrix builds the model matrix.
  *
- * mwccarm emits ordinary functions in reverse source order, so the factory
- * stays first and the inline destructor stays last in the header. `return new`
- * emits a homeless _ZN10dBgActor_cD2Ev; the compiler-only policy deadstrips it.
- *
+ * The destructor pair comes off the inline header destructor (D1 then D0,
+ * no D2). Source order is reverse ROM order (2004/b56 emits .text back to
+ * front); the factory stays first and the inline destructor stays in the
+ * header. `return new` emits a homeless _ZN10dBgActor_cD2Ev (compiler-only
+ * deadstrip).
  * common.h stays first. Shadow and model matrices are the flat 12-word
  * Matrix4x3; translation is m[9], m[10], m[11].
  *
- * func_ov065_02119fe8 and func_ov065_0211a114 are methods. The ROM address is
- * the method name. No other TU calls the old free-function spelling.
- *
- * leftovers:
- * - dBgW_KcMbg::SetFile with a Fix12<int> local sizes InitResources
- *   0x104->0x110. dActor_c::DropShadowScaleXYZ with Fix12<int> locals sizes
- *   func_ov065_02119fe8 0x12c->0x144. Fix12<int>{...} does not compile
- *   ("( expected"). Declaring dBgActor_c::IsClsnInRange and calling it with
- *   Fix12<int> locals sizes Behavior 0x190->0x1b0. The scalar externs match.
+ * What stays, and why:
+ * - dBgW_KcMbg::SetFile, dActor_c::DropShadowScaleXYZ and
+ *   dBgActor_c::IsClsnInRange are header member calls whose headers spell
+ *   Fix12 as Fix12i, a plain s32. With Fix12<int> locals SetFile sizes
+ *   InitResources 0x104->0x110, DropShadowScaleXYZ sizes UpdateShadow
+ *   0x12c->0x144, and IsClsnInRange sizes Behavior 0x190->0x1b0.
  * - Assigning mMeshCollider.beforeClsnCallback does not compile: the static
  *   takes references and the field takes pointers. Casting
  *   &dBgW::UpdatePosWithTransform onto the field type sizes InitResources
  *   0x104->0xfc. func_020393d4 is the store that matches. func_020393a4 and
  *   func_02039394 store the mesh range the same way.
- * - func_ov065_02119fe8 keeps the dead stores. Dropping armOffset.y = 0, the
+ * - UpdateShadow keeps the dead stores. Dropping armOffset.y = 0, the
  *   first pos.y = bobY, or writing armOffset once, sizes it 0x12c->0x128.
  *   Dropping the bobPos zeros sizes it 0x12c->0x120.
- * - func_ov065_0211a114 returns the local z. Returning m[11] after the shift
+ * - UpdateModelMatrix returns the local z. Returning m[11] after the shift
  *   store sizes it 0x48->0x4c.
  * - Behavior's angle store is I16(0x322). mSwingAngle = mSwingAngle +
  *   mSwingSpeed sizes Behavior 0x190->0x184. *accelP += (short)(spd * pos)
@@ -55,6 +51,8 @@ enum daObjCtMecha03_c_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Sound.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 struct CLPS_Block;
 
@@ -65,60 +63,44 @@ struct CLPS_Block;
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
 struct Mecha03ModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     Mecha03ModelFilePtr(u32 fileID);
     ~Mecha03ModelFilePtr();
 };
 
 struct Mecha03ClsnFilePtr : SharedFilePtr {
-    u32 words[2];
-
     Mecha03ClsnFilePtr(u32 fileID);
     ~Mecha03ClsnFilePtr();
 };
 
-/* Fix12-by-value calls retain their measured raw ABI declarations. Natural
- * class-typed declarations make mwccarm home arguments absent from retail. */
-extern "C" {
-extern void Matrix4x3_FromRotationZXYExt(Matrix4x3 *m, int x, int y, int z);
-extern void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angle);
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern u16 DecIfAbove0_Short(u16 *p);
-extern int RandomIntInternal(int *seed);
-extern void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-    dActor_c *actor, dExtShadowModel_c *shadow, Matrix4x3 *matrix,
-    int scaleX, int scaleY, int scaleZ, u32 opacity);
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *thisp, KCL_File *kcl, const Matrix4x3 &mtx, int fix, short s,
-    CLPS_Block &clps);
-extern void func_02039394(void *p, int v);
-extern void func_020393a4(void *p, int v);
-extern void func_020393d4(void *p, void *v);
-extern Matrix4x3 data_020a0e68;
 extern u8 data_0209f2c0;
 extern int data_0209e650;
 extern s16 data_ov065_0211c0b0[];
 extern Mecha03ModelFilePtr data_ov065_0211d88c;
 extern Mecha03ClsnFilePtr data_ov065_0211d894;
-extern int data_ov035_02112198;
+extern CLPS_Block data_ov035_02112198;
+
+/* local extern: arm9 matrix/vector helpers and dBgW stores with no shared
+ * header. */
+extern "C" {
+extern void Matrix4x3_FromRotationZXYExt(Matrix4x3 *m, int x, int y, int z);
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void func_02039394(void *p, int v);
+extern void func_020393a4(void *p, int v);
+extern void func_020393d4(void *p, void *v);
 }
 
 // @symbol daObjCtMecha03_c_classInit
-extern "C" daObjCtMecha03_c *daObjCtMecha03_c_classInit()
-{
+extern "C" daObjCtMecha03_c *daObjCtMecha03_c_classInit() {
     return new daObjCtMecha03_c();
 }
 
 // @symbol _ZN16daObjCtMecha03_c13InitResourcesEv
-int daObjCtMecha03_c::InitResources()
-{
+int daObjCtMecha03_c::InitResources() {
     void *bmd;
     void *kcl;
 
-    bmd = Model::LoadFile(data_ov065_0211d88c);
+    bmd = dExtSimpleModel_c::LoadFile(data_ov065_0211d88c);
     mModel.SetFile((BMD_File *)bmd, 1, -1);
     mShadowModel.InitCuboid();
 
@@ -127,13 +109,11 @@ int daObjCtMecha03_c::InitResources()
     mSwingAngle = 0x1964;
     mAngleZ = mSwingAngle;
 
-    func_ov065_0211a114();
+    UpdateModelMatrix();
     UpdateClsnPosAndRot();
 
     kcl = dBgW_Kc::LoadFile(data_ov065_0211d894);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, (KCL_File *)kcl, mClsnMat, 0x1000,
-        mAngleY, *(CLPS_Block *)&data_ov035_02112198);
+    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY, data_ov035_02112198);
 
     func_020393a4(&mMeshCollider, 0x300000);
     func_02039394(&mMeshCollider, -0x200000);
@@ -145,8 +125,7 @@ int daObjCtMecha03_c::InitResources()
 }
 
 // @symbol _ZN16daObjCtMecha03_c8BehaviorEv
-int daObjCtMecha03_c::Behavior()
-{
+int daObjCtMecha03_c::Behavior() {
     if (data_0209f2c0 != 3) {
         if ((u16)mSoundTimer != 0) {
             if (DecIfAbove0_Short((u16 *)&mSoundTimer) == 0) {
@@ -187,23 +166,21 @@ int daObjCtMecha03_c::Behavior()
         mAngleZ = mSwingAngle;
     }
 
-    func_ov065_0211a114();
-    func_ov065_02119fe8();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0x300000, -0x200000) != 0)
+    UpdateModelMatrix();
+    UpdateShadow();
+    if (IsClsnInRange(0x300000, -0x200000) != 0)
         UpdateClsnPosAndRot();
     return 1;
 }
 
 // @symbol _ZN16daObjCtMecha03_c6RenderEv
-int daObjCtMecha03_c::Render()
-{
+int daObjCtMecha03_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN16daObjCtMecha03_c16CleanupResourcesEv
-int daObjCtMecha03_c::CleanupResources()
-{
+int daObjCtMecha03_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     data_ov065_0211d88c.Release();
@@ -211,11 +188,10 @@ int daObjCtMecha03_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN16daObjCtMecha03_c19func_ov065_0211a114Ev
+// @symbol _ZN16daObjCtMecha03_c17UpdateModelMatrixEv
 /* Writes mModel.mat4x3 from the actor's Y/Z angles and copies the
    actor position into its translation row. */
-int daObjCtMecha03_c::func_ov065_0211a114()
-{
+int daObjCtMecha03_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = mPosY >> 3;
@@ -224,12 +200,11 @@ int daObjCtMecha03_c::func_ov065_0211a114()
     return z;
 }
 
-// @symbol _ZN16daObjCtMecha03_c19func_ov065_02119fe8Ev
+// @symbol _ZN16daObjCtMecha03_c12UpdateShadowEv
 /* Drops the pendulum's shadow: swings a fixed offset through the actor's
    orientation, raycasts the ground under the result, then hands the shadow
    matrix to dActor_c::DropShadowScaleXYZ. */
-void daObjCtMecha03_c::func_ov065_02119fe8()
-{
+void daObjCtMecha03_c::UpdateShadow() {
     Vector3 armOffset;
     Vector3 bobPos;
     Vector3 pos;
@@ -259,8 +234,7 @@ void daObjCtMecha03_c::func_ov065_02119fe8()
     mShadowMat.m[9] = bobPos.x >> 3;
     mShadowMat.m[10] = mGroundY >> 3;
     mShadowMat.m[11] = bobPos.z >> 3;
-    _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-        this, &mShadowModel, &mShadowMat, 0x12c000, 0x12c000, 0x78000, 0xf);
+    DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x12c000, 0x12c000, 0x78000, 0xf);
 }
 // @symbol _ZN16daObjCtMecha03_cD1Ev
 // @symbol _ZN16daObjCtMecha03_cD0Ev

@@ -1,4 +1,4 @@
-// Host side of the Model pipeline (gate 4b).
+// Host side of the dExtSimpleModel_c pipeline (gate 4b).
 //
 // The game's own code does the loading, rebasing, VRAM upload and render
 // walk; this file provides only what hardware/asm provided on the DS:
@@ -7,7 +7,7 @@
 // - the VRAM window globals GX::LoadTex/LoadTexPltt resolve against
 //   (on hardware these come from bank assignment at GX init; here they
 //   point into the ntr mapped VRAM so a slot offset IS a host address),
-// - the texture-VRAM budget globals Model::GetVramOffset bump-allocates
+// - the texture-VRAM budget globals dExtSimpleModel_c::GetVramOffset bump-allocates
 //   from,
 // - storage for the render context globals the walk stores through.
 #include <string.h>
@@ -103,7 +103,7 @@ int data_02099fd0 = -1;
 // LoadTexPltt destination base (palette slots, same convention)
 u32 data_020a60b0 = 0x06880000u;
 
-// ---- Model texture-VRAM budget -------------------------------------------
+// ---- dExtSimpleModel_c texture-VRAM budget -------------------------------------------
 // Two shared arenas (semantics recovered from LoadCompressedTextureToVram +
 // GetVramOffset together):
 //   arena A (slot 0): compressed 4x4 BLOCKS rise from _bc8, plain textures
@@ -141,18 +141,18 @@ int data_02099f24[4];
 int data_0209cefc[3 * 64];  /* 64 records x 0xc */
 int data_0209cef8[1];       /* record count */
 int data_0208e738[1] = { 1 };   /* nonzero: upload textures on registration */
-int _ZTV9ModelBase[8];       /* ModelBase vtable storage; never dispatched */
+int _ZTV11dExtModel_c[8];       /* dExtModel_c vtable storage; never dispatched */
 int data_0209b3ec[12];      /* camera Matrix4x3 the render walk composes */
 
-// Model's Itanium vtable storage: installed by the C ctor. The gates call
+// dExtSimpleModel_c's Itanium vtable storage: installed by the C ctor. The gates call
 // every method non-virtually (qualified), so plain zero slots are fine; if
 // anything ever dispatches through them it faults immediately and loudly.
-void *_ZTV5Model[8];
-// Same story for the animated-model hierarchy: primary vtables plus the
-// multiple-inheritance thunk table the ModelAnim ctor installs at +0x50.
+void *_ZTV17dExtSimpleModel_c[8];
+// Same story for the animated-model hierarchy. The secondary (dExtFrameCtrl_c
+// at +0x50) table needs no storage here: on the DS it is _ZTV14dExtAnmModel_c
+// + 0x24, inside the same vtable group, and nothing in src/ names it.
 void *_ZTV15dExtFrameCtrl_c[8];
-void *_ZTV9ModelAnim[10];
-void *VTable_Animation_ModelAnimThunk[8];
+void *_ZTV14dExtAnmModel_c[10];
 void *_ZTV4dBgW[13];   /* base: never dispatched in the gates */
 unsigned char data_020a0c78[8]; /* the default CLPS ENTRY (8-byte storage,
                                    func_02037e9c fills it on first lookup) */

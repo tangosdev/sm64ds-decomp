@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dActor_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 
 /* A school of fish (profile FISH). ROM RTTI daFish_c; direct base dActor_c.
  *
@@ -14,7 +14,7 @@
  * Each spawned fish is visible and follows its spawner by uniqueID; it
  * removes itself as soon as the spawner is gone or back in its idle wait.
  *
- * _ZTI8daFish_c names dActor_c as the direct base. D1/D0 call ModelAnim's
+ * _ZTI8daFish_c names dActor_c as the direct base. D1/D0 call dExtAnmModel_c's
  * complete destructor at +0xd4 and dActor_c's base destructor. The factory
  * allocates 0x160, and mVariant's padding closes exactly on it.
  *
@@ -23,47 +23,47 @@
  * Fish_Spawn.
  */
 struct daFish_c : dActor_c {
-    u8 pad_0d0[0x4];        /* 0x0d0 */
-    ModelAnim mModelAnim;   /* 0x0d4 -- its dExtFrameCtrl_c base sits at 0x124 */
-    s32 mSeed;              /* 0x138 -- set to 1 at construction, never read here */
-    u32 mSpawnerID;         /* 0x13c -- a fish's spawner; the spawner's own ID */
-    s32 mSurfaceY;          /* 0x140 -- spawner only: fish spawn below this */
-    s32 mMaxSpeed;          /* 0x144 -- fleeing */
-    s32 mTriggerDist;       /* 0x148 -- distance that ends the current state */
-    s32 mState;             /* 0x14c -- index into the state table */
-    s32 mStateTimer;        /* 0x150 -- -1 on a state change, so 0 on entry */
-    s16 mTurnSpeed;         /* 0x154 */
-    s16 mTargetAngle;       /* 0x156 */
-    u8  mNumFish;           /* 0x158 -- spawner only: live fish */
-    u8  mIsSpawner;         /* 0x159 */
-    u8  mWanderTimer;       /* 0x15a */
-    u8  mModelIndex;        /* 0x15b */
-    u8  mVariant;           /* 0x15c -- 0, or 1..3 for the wandering kinds */
-    u8  pad_15d[0x3];       /* 0x15d */
+    u8 pad_0d0[0x4];          /* 0x0d0 */
+    dExtAnmModel_c mAnmModel; /* 0x0d4 -- its dExtFrameCtrl_c base sits at 0x124 */
+    s32 mSeed;                /* 0x138 -- set to 1 at construction, never read here */
+    u32 mSpawnerID;           /* 0x13c -- a fish's spawner; the spawner's own ID */
+    s32 mSurfaceY;            /* 0x140 -- spawner only: fish spawn below this */
+    s32 mMaxSpeed;            /* 0x144 -- fleeing */
+    s32 mTriggerDist;         /* 0x148 -- distance that ends the current state */
+    s32 mState;               /* 0x14c -- index into the state table */
+    s32 mStateTimer;          /* 0x150 -- -1 on a state change, so 0 on entry */
+    s16 mTurnSpeed;           /* 0x154 */
+    s16 mTargetAngle;         /* 0x156 */
+    u8 mNumFish;              /* 0x158 -- spawner only: live fish */
+    u8 mIsSpawner;            /* 0x159 */
+    u8 mWanderTimer;          /* 0x15a */
+    u8 mModelIndex;           /* 0x15b */
+    u8 mVariant;              /* 0x15c -- 0, or 1..3 for the wandering kinds */
+    u8 pad_15d[0x3];          /* 0x15d */
 
     /* The constructor's only body is mSeed = 1, through an out-of-line
-       arm9 setter, after dActor_c's and mModelAnim's constructors. */
+       arm9 setter, after dActor_c's and mAnmModel's constructors. */
     daFish_c();
 
     /* Inline is load-bearing: out-of-line emits D0 before D1. */
     virtual ~daFish_c() {}
 
-    virtual s32 InitResources();       /* slot 0 */
-    virtual s32 CleanupResources();    /* slot 3 */
-    virtual s32 Behavior();            /* slot 6 */
-    virtual s32 Render();              /* slot 9 */
-    virtual void OnPendingDestroy();   /* slot 12 */
+    virtual s32 InitResources();     /* slot 0 */
+    virtual s32 CleanupResources();  /* slot 3 */
+    virtual s32 Behavior();          /* slot 6 */
+    virtual s32 Render();            /* slot 9 */
+    virtual void OnPendingDestroy(); /* slot 12 */
 
-    void func_ov100_02146280();
-    void func_ov100_0214629c(unsigned int spawnerID);
-    int  func_ov100_0214639c();
-    void func_ov100_021463b0();
-    void func_ov100_02146468();
-    void func_ov100_021464f4();
-    void func_ov100_02146640();
-    void func_ov100_021467d4();
-    int  func_ov100_021467e8();
-    void func_ov100_02146828();
+    void OnFishGone();
+    void InitFromSpawner(unsigned int spawnerID);
+    int IsSpawnerIdle();
+    void StateTurnAbout();
+    void StateWander();
+    void StateFlee();
+    void StateIdle();
+    void StateWaitSchoolGone();
+    int StateWaitPlayerAway();
+    void StateWaitForPlayer();
 };
 
 #ifndef SM64DS_PLATFORM_PC

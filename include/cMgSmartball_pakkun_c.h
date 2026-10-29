@@ -3,7 +3,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * ADDS TWO s32 FIELDS. Its allocation is _Znwj(0x3c) in dScMgSmartball_c::SpawnObjects,
+ * ADDS TWO s32 FIELDS. Its allocation is operator new(0x3c) in dScMgSmartball_c::SpawnObjects,
  * 0x8 past the base's 0x34 -- exactly the two ints below. Both are read and
  * written only by this child's own SaveSnapshot/Update/RestoreInitial.
  *

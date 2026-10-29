@@ -6,64 +6,64 @@
 #include "common.h"
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 
-
+#include "Ov007Sprite.h"
 
 int func_ov007_020c44e4(int count)
 {
-    char* p = (char*)func_ov007_020c3df4(0, 0x88);
+    Ov007Sprite *p = (Ov007Sprite *)func_ov007_020c3df4(0, 0x88);
     int i;
     u16 zs[3];
 
-    *(s16*)(p + 0x5a) = 0;
-    *(s16*)(p + 0x58) = (s16)count;
-    *(int**)(p + 0x5c) = (int*)func_ov007_020c3df4(0, count << 2);
+    p->frame = 0;
+    p->frameCount = (s16)count;
+    p->frames = (void **)func_ov007_020c3df4(0, count << 2);
     for (i = 0; i < count; i++) {
-        (*(int**)(p + 0x5c))[i] = 0;
+        p->frames[i] = 0;
     }
 
-    *(int*)(p) = 0;
-    *(u16*)(p + 0x62) = 1;
-    *(u16*)(p + 0x60) = *(u16*)(p + 0x62);
-    *(int*)(p + 8) = 0;
-    *(int*)(p + 4) = *(int*)(p + 8);
-    *(u16*)(p + 0xe) = 0;
-    *(u16*)(p + 0xc) = *(u16*)(p + 0xe);
+    p->drawFlags = 0;
+    p->repeatV = 1;
+    p->repeatU = p->repeatV;
+    p->screenY = 0;
+    p->screenX = p->screenY;
+    p->height = 0;
+    p->width = p->height;
 
     {
         struct Vector3 z3 = {0, 0, 0};
-        *(struct Vector3*)(p + 0x14) = z3;
+        p->pos = z3;
 
-    *(int*)(p + 0x24) = 0;
-    *(int*)(p + 0x20) = *(int*)(p + 0x24);
-    *(int*)(p + 0x40) = 0x1000;
-    *(int*)(p + 0x3c) = *(int*)(p + 0x40);
-    *(u16*)(p + 0x38) = 0;
-    *(u16*)(p + 0x36) = *(u16*)(p + 0x38);
-    *(u16*)(p + 0x34) = *(u16*)(p + 0x36);
+        p->worldHeight = 0;
+        p->worldWidth = p->worldHeight;
+        p->scaleY = 0x1000;
+        p->scaleX = p->scaleY;
+        p->rotZ = 0;
+        p->rotY = p->rotZ;
+        p->rotX = p->rotY;
 
         {
             struct Vector3 z3b = {0, 0, 0};
-            *(struct Vector3*)(p + 0x28) = z3b;
+            p->posOffset = z3b;
         }
     }
 
-    *(u16*)(p + 0x4c) = 0x7fff;
-    *(u16*)(p + 0x4a) = *(u16*)(p + 0x4c);
-    *(u16*)(p + 0x48) = *(u16*)(p + 0x4a);
-    *(u16*)(p + 0x46) = *(u16*)(p + 0x48);
-    *(u16*)(p + 0x44) = 0x7fff;
-    *(u8*)(p + 0x4e) = 0x23;
-    *(int*)(p + 0x50) = 0x1f000;
-    *(int*)(p + 0x64) = 3;
-    *(int*)(p + 0x68) = 0;
-    *(int*)(p + 0x6c) = 0;
-    *(s16*)(p + 0x72) = 0;
-    *(s16*)(p + 0x70) = *(s16*)(p + 0x72);
-    *(int*)(p + 0x54) = 0;
-    *(int*)(p + 0x78) = 0x1000;
-    *(int*)(p + 0x74) = *(int*)(p + 0x78);
-    *(u8*)(p + 0x7c) = 0x19;
-    *(u8*)(p + 0x7d) = 0x24;
+    p->cornerColors[3] = 0x7fff;
+    p->cornerColors[2] = p->cornerColors[3];
+    p->cornerColors[1] = p->cornerColors[2];
+    p->cornerColors[0] = p->cornerColors[1];
+    p->color = 0x7fff;
+    p->polygonId = 0x23;
+    p->alpha = 0x1f000;
+    p->texRepeat = 3;
+    p->texFlip = 0;
+    p->texColor0 = 0;
+    p->texT = 0;
+    p->texS = p->texT;
+    p->polygonAttr = 0;
+    p->shadowScaleY = 0x1000;
+    p->shadowScaleX = p->shadowScaleY;
+    p->shadowAlphaDrop = 0x19;
+    p->shadowPolygonId = 0x24;
 
     {
         u16 *zw = (u16 *)AT(zs, 0);
@@ -74,10 +74,10 @@ int func_ov007_020c44e4(int count)
     {
         u16 a = ((volatile u16 *)zs)[0];
         u16 b = ((volatile u16 *)zs)[1];
-        *(u16*)(p + 0x7e) = a;
-        *(u16*)(p + 0x80) = b;
-        *(u16*)(p + 0x82) = zs[2];
+        p->shadowOffset[0] = a;
+        p->shadowOffset[1] = b;
+        p->shadowOffset[2] = zs[2];
     }
-    *(int*)(p + 0x84) = 0;
+    p->tilemap = 0;
     return (int)p;
 }

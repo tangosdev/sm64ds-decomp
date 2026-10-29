@@ -1,4 +1,7 @@
 //cpp
+#include "Ov007MenuState.h"
+#include "Ov007Work.h"
+
 extern "C" {
 extern void func_ov007_020b283c(void);
 extern void func_ov007_020b9770(void);
@@ -15,9 +18,39 @@ extern char *data_ov007_0210342c;
 typedef int (*FP)(int);
 #define G  (data_ov007_0210342c)
 
+/* The 0xa0-byte model record func_ov007_020bc6d4 allocates; names as in
+ * func_ov007_020bc47c, only the slot this file writes. */
+struct Ov007Model {
+    char pad_00[0x94];
+    int visible; /* 0x94: func_ov007_020bbff0 renders only while it is nonzero */
+};
+
+/* The 0x1c-byte record func_ov007_020beaa0 builds around an Ov007Model;
+ * names as in func_ov007_020b0da0. */
+struct Ov007Figure {
+    char pad_00[4];
+    Ov007Model *model; /* 0x04: func_ov007_020bc6d4 */
+};
+
+/* The 0x3c-byte record func_ov007_020b6a84 allocates; names as in
+ * func_ov007_020aec94. +0x37/+0x38 (the bytes the +0x2c callback returns for
+ * queries 0x14/0x15 here) and the record its first word points at stay raw. */
+struct Ov007Settings {
+    char pad_00[0x39];
+    /* 0x39: func_ov007_020b7d94's kind, the window menu state 9 opens before
+     * the choice goes through (func_ov007_020b0834); cleared here */
+    unsigned char dialogKind;
+};
+
+typedef char Ov007Model_visible_must_be_at_0x94[(int)&((Ov007Model *)0)->visible == 0x94 ? 1 : -1];
+
+/* The extern keeps the tree's char * spelling; the typed view is reached
+ * through a cast macro. */
+#define WORK ((Ov007Work *)data_ov007_0210342c)
+
 extern "C" void func_ov007_020b066c(void)
 {
-    switch (*(short*)(*(char**)(G + 4) + 0xa)) {
+    switch (WORK->states[0]->previousState) {
     case 6:
         func_ov007_020b283c();
         break;
@@ -29,9 +62,9 @@ extern "C" void func_ov007_020b066c(void)
         (*(FP*)(G + 0x2c))(0x11);
         break;
     default:
-        *(unsigned char*)(*(char**)(G + 0x28) + 0x38) = (unsigned char)(*(FP*)(G + 0x2c))(0x15);
-        *(unsigned char*)(*(char**)(G + 0x28) + 0x37) = (unsigned char)(*(FP*)(G + 0x2c))(0x14);
-        *(unsigned char*)(*(char**)(G + 0x28) + 0x39) = 0;
+        *((unsigned char *)WORK->settings + 0x38) = (unsigned char)(*(FP *)(G + 0x2c))(0x15);
+        *((unsigned char *)WORK->settings + 0x37) = (unsigned char)(*(FP *)(G + 0x2c))(0x14);
+        WORK->settings->dialogKind = 0;
         break;
     }
 
@@ -40,24 +73,24 @@ extern "C" void func_ov007_020b066c(void)
     func_ov007_020bca40(0);
 
     {
-        char *bb = G;
-        if ((unsigned short)(short)(*(short*)(*(char**)(bb + 4) + 0xa) - 4) <= 2) {
-            *(short*)(*(char**)(bb + 8) + 2) = 5;
+        Ov007Work *bb = WORK;
+        if ((unsigned short)(short)(bb->states[0]->previousState - 4) <= 2) {
+            bb->states[1]->requestedState = 5;
         } else {
-            switch (*(int*)(*(char**)(*(char**)(bb + 0x28)) + 4)) {
+            switch (*(int *)(*(char **)bb->settings + 4)) {
             case 0:
             case 2:
-                *(short*)(*(char**)(bb + 8) + 2) = 0xb;
+                bb->states[1]->requestedState = 0xb;
                 break;
             case 1:
-                *(short*)(*(char**)(bb + 8) + 2) = 0xa;
+                bb->states[1]->requestedState = 0xa;
                 RequestScreenFade(3, 0xa, 0);
                 break;
             }
         }
     }
 
-    *(short*)(*(char**)(G + 0xc) + 2) = 0;
+    WORK->states[2]->requestedState = 0;
 
     *(int*)(G + 0xec) = *(int*)(G + 0xf0);
 
@@ -68,8 +101,8 @@ extern "C" void func_ov007_020b066c(void)
 
     func_ov007_020bd1c0(0);
 
-    *(int*)(*(char**)(G + 0xf4) + 0x94) = 0;
-    *(int*)(*(char**)(*(char**)(G + 0x100) + 4) + 0x94) = 0;
-    *(int*)(*(char**)(*(char**)(G + 0x104) + 4) + 0x94) = 0;
+    WORK->model->visible = 0;
+    WORK->figure->model->visible = 0;
+    WORK->altFigure->model->visible = 0;
     func_ov007_020b131c();
 }

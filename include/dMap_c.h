@@ -31,12 +31,14 @@ struct dMap_c : dBase_c {
     u8  pad_068[0x8];
     s32 mPlayerIconX[4];                   /* 0x070 */
     s32 mPlayerIconY[4];                   /* 0x080 */
-    s32 unk_090;                      /* 0x090 */
-    s32 unk_094;                      /* 0x094 */
-    s32 unk_098;                      /* 0x098 */
-    s32 unk_09c;                      /* 0x09c */
-    s32 mStarIconX[12];                  /* 0x0a0 */
-    s32 mStarIconY[12];                  /* 0x0d0 */
+    /* Write-only: InitResources zeroes these four words and nothing in the
+       class reads them, so no role can be named from the code. */
+    s32 unk_090;                        /* 0x090 */
+    s32 unk_094;                        /* 0x094 */
+    s32 unk_098;                        /* 0x098 */
+    s32 unk_09c;                        /* 0x09c */
+    s32 mStarIconX[12];                 /* 0x0a0 */
+    s32 mStarIconY[12];                 /* 0x0d0 */
     s32 mCapIconX[9];                   /* 0x100 */
     s32 mCapIconY[9];                   /* 0x124 */
     u8  pad_148[0x30];
@@ -55,6 +57,7 @@ struct dMap_c : dBase_c {
     s32 mMapOriginX;                      /* 0x1e0 */
     s32 mMapOriginY;                      /* 0x1e4 */
     s32 mMapOriginZ;                      /* 0x1e8 */
+    /* Write-only, like unk_090..unk_09c: InitResources zeroes it. */
     s32 unk_1ec;                      /* 0x1ec */
     s32 mCurrentScale;                      /* 0x1f0 */
     /* The map centre actually used this frame, in world coordinates. Behavior
@@ -104,6 +107,9 @@ struct dMap_c : dBase_c {
     int Behavior();
     static void FixTHIPaintingRoomPos(Vector3 & v_);
     static void UpdateLevelSpecific();
+    /* Types only. A named parameter here renumbers @NNN in every consumer. */
+    static void GetPosOnMinimap(Vector3 *, Vector3 *, Fix12i, short, Vector3 *);
+    static void GetPosFromMinimapPos(Vector3 &, Vector3 &, Fix12i, short, Vector3 &);
     int InitResources();
     int Render();
     s32 CleanupResources();

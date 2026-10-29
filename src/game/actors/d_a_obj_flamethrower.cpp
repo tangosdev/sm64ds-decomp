@@ -24,7 +24,7 @@
  * constructs the member arrays through their real class constructors. The
  * Vector3 array uses its empty default constructor at arm9 0x0203d384.
  *
- * deslop leftovers:
+ * Notes (each measured with mwccarm 2004/b56):
  * - InitResources: a Vector3* / dCcPos_c* walk was 0x16c against the
  *   ROM's 0x174. The cartridge keeps a pointer that starts at this
  *   and strides by 0xc, storing through +0x3a4, plus a second pointer
@@ -35,9 +35,8 @@
  *   ((char *)this + 0x400) + 0x65. The segment loop is the same
  *   shape as InitResources (this-based, stores at +0x3a4 / +0x104 /
  *   +0xf8). Those two spellings together were 0x454 against 0x470.
- * - InitResources: dCcPos_c::Init as the header method, Fix12<int>
- *   passed by value, was 0x18c against 0x174. The call stays the
- *   mangled int-parameter extern.
+ * - InitResources: dCcPos_c::Init with by-value Fix12<int> was 0x18c
+ *   against 0x174. The call is the scalar Fix12i method.
  */
 
 #include "daObjFlamethrower_c.h"
@@ -45,10 +44,13 @@
 #include "Player.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
 
 /* Three ints, so the transform helpers can take their address without
  * calling ~Vector3. */
-struct Vec3 { int x, y, z; };
+struct Vec3 {
+    int x, y, z;
+};
 
 /* LEVEL_ID 0xc is Big Boo's Haunt (its course overlay is ov020). */
 enum {
@@ -66,12 +68,12 @@ enum {
     kHeightMul = 0x28
 };
 
-extern "C" {
 extern signed char data_0209f2f8;
 extern short data_02082214[];
 /* Second particle parameter per segment: 0xe61 + i * 0x689. */
 extern short data_ov095_02136f98[];
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
+
+extern "C" {
 extern void MulVec3Mat4x3(int *v, void *m, int *dst);
 extern void Vec3_Add(int *out, int *a, int *b);
 /* Flame particles. 0x4f / 0x50 when param1's low byte is not 0xff;
@@ -80,9 +82,6 @@ extern void func_02022774(Fix12i x, Fix12i y, Fix12i z, s16 ang1, int ang2);
 extern void func_020226fc(Fix12i x, Fix12i y, Fix12i z, s16 ang1, s16 ang2);
 extern void func_02022864(Fix12i x, Fix12i y, Fix12i z, s16 ang1, int ang2);
 extern void func_020227ec(Fix12i x, Fix12i y, Fix12i z, s16 ang1, s16 ang2);
-extern void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
-    void *self, struct Vec3 *pos, int radius, int height,
-    unsigned int flags, unsigned int vuln);
 }
 
 /* data_ov095_02136f80 (decl_common.h) is the per-segment scale,
@@ -96,14 +95,12 @@ extern void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
  * flame positions in member order. Vector3's empty default constructor
  * is the original array callback at arm9 0x0203d384. */
 // @symbol daObjFlamethrower_c_classInit
-extern "C" daObjFlamethrower_c *daObjFlamethrower_c_classInit()
-{
+extern "C" daObjFlamethrower_c *daObjFlamethrower_c_classInit() {
     return new daObjFlamethrower_c;
 }
 
 // @symbol _ZN19daObjFlamethrower_c13InitResourcesEv
-int daObjFlamethrower_c::InitResources()
-{
+int daObjFlamethrower_c::InitResources() {
     int count;
     int i;
     int im1;
@@ -140,21 +137,19 @@ int daObjFlamethrower_c::InitResources()
             MulVec3Mat4x3((int *)&offset, &mTransform, (int *)&dst);
             if (im1 < 0) {
                 Vec3_Add((int *)&firstPos, (int *)&mPosX, (int *)&dst);
-                *(int *)(rowBase + 0x3a4) = firstPos.x;
-                *(int *)(rowBase + 0x3a8) = firstPos.y;
-                *(int *)(rowBase + 0x3ac) = firstPos.z;
+                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = firstPos.x;
+                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = firstPos.y;
+                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = firstPos.z;
             } else {
                 Vec3_Add((int *)&nextPos, (int *)&mFlamePositions[im1], (int *)&dst);
-                *(int *)(rowBase + 0x3a4) = nextPos.x;
-                *(int *)(rowBase + 0x3a8) = nextPos.y;
-                *(int *)(rowBase + 0x3ac) = nextPos.z;
+                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = nextPos.x;
+                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = nextPos.y;
+                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = nextPos.z;
             }
             {
                 short segmentSize = data_ov095_02136f80[i];
-                _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
-                    collider, (struct Vec3 *)flamePos,
-                    segmentSize * kRadiusMul, segmentSize * kHeightMul,
-                    kClsnFlags, flag);
+                collider->Init(*flamePos, segmentSize * kRadiusMul, segmentSize * kHeightMul,
+                               kClsnFlags, flag);
             }
             rowBase += 0xc;
             flamePos++;
@@ -166,8 +161,7 @@ int daObjFlamethrower_c::InitResources()
 }
 
 // @symbol _ZN19daObjFlamethrower_c8BehaviorEv
-int daObjFlamethrower_c::Behavior()
-{
+int daObjFlamethrower_c::Behavior() {
     char *self;
     int count;
     int i;
@@ -270,24 +264,28 @@ int daObjFlamethrower_c::Behavior()
                     MulVec3Mat4x3(in, &mTransform, dst);
                     if (im1 < 0) {
                         Vec3_Add(sum, (int *)&mPosX, dst);
-                        *((int *)(ppos + 0x3a4)) = sum[0];
-                        *((int *)(ppos + 0x3a8)) = sum[1];
-                        *((int *)(ppos + 0x3ac)) = sum[2];
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum[0];
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum[1];
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum[2];
                     } else {
                         Vec3_Add(sum2, (int *)&mFlamePositions[im1], dst);
-                        *((int *)(ppos + 0x3a4)) = sum2[0];
-                        *((int *)(ppos + 0x3a8)) = sum2[1];
-                        *((int *)(ppos + 0x3ac)) = sum2[2];
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum2[0];
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum2[1];
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum2[2];
                     }
                     if (data_0209f2f8 == kBigBoosHaunt) {
                         s16 wave = data_02082214[(((u16)(s16)wavePhase) >> 4) * 2];
-                        *((int *)(ppos + 0x3a8)) = mPosY + FX_MUL(wave, -0xaa000);
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y =
+                            mPosY + FX_MUL(wave, -0xaa000);
                     }
-                    *((int *)(pclsn + 0x104)) = *((int *)(ppos + 0x3a4));
-                    *((int *)(pclsn + 0x108)) = *((int *)(ppos + 0x3a8));
-                    *((int *)(pclsn + 0x10c)) = *((int *)(ppos + 0x3ac));
+                    ((daObjFlamethrower_c *)pclsn)->mColliders[0].pos.x =
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x;
+                    ((daObjFlamethrower_c *)pclsn)->mColliders[0].pos.y =
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y;
+                    ((daObjFlamethrower_c *)pclsn)->mColliders[0].pos.z =
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z;
                 }
-                id = *((u32 *)(pclsn + 0xf8));
+                id = ((daObjFlamethrower_c *)pclsn)->mColliders[0].otherOwner;
                 if (id != 0) {
                     other = dActor_c::FindWithID(id);
                     if (other != 0) {
@@ -299,11 +297,11 @@ int daObjFlamethrower_c::Behavior()
                             ((Player *)other)->Burn();
                     }
                 }
-                part[0] = *((int *)(ppos + 0x3a4));
-                y = *((int *)(ppos + 0x3a8));
+                part[0] = ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x;
+                y = ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y;
                 part[1] = y;
                 y = y + kParticleLift;
-                part[2] = *((int *)(ppos + 0x3ac));
+                part[2] = ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z;
                 part[1] = y;
                 if ((param1 & 0xff) != kAltParam) {
                     ang = data_ov095_02136f80[i];

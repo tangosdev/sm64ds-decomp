@@ -84,6 +84,13 @@ struct RadiusConverge {
     static void Func(EffectData& effect, char* particle, Vector3& velocity);
 };
 
+/* One entry of a SystemDefinition's behavior table: func_0204a17c pairs each
+ * behavior's Func with its record in the resource. */
+struct Behavior {
+    void (*func)(EffectData &, char *, Vector3 &);
+    EffectData *data;
+};
+
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char AccelerationData_size_must_be_0x8[
@@ -100,6 +107,7 @@ typedef char RadiusConvergeData_size_must_be_0x10[
     sizeof(RadiusConvergeData) == 0x10 ? 1 : -1];
 typedef char EffectData_size_must_be_0x10[
     sizeof(EffectData) == 0x10 ? 1 : -1];
+typedef char Behavior_size_must_be_0x8[sizeof(Behavior) == 0x8 ? 1 : -1];
 #endif
 } // namespace Particle
 

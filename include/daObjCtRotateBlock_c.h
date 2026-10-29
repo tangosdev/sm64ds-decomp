@@ -16,10 +16,10 @@
  * BASE: dBgActor_c, direct, at offset zero -- the record's third word is
  * _ZTI10dBgActor_c at ov002 0x021089ec.
  *
- * MEMBERS: the factories construct a Model at 0x320 and a dExtShadowModel_c at
+ * MEMBERS: the factories construct a dExtSimpleModel_c at 0x320 and a dExtShadowModel_c at
  * 0x380; D1/D0 destroy them in reverse (_ZN17dExtShadowModel_cD1Ev at +0x380,
- * _ZN5ModelD1Ev at +0x320) before dBgActor_c's inlined destructor takes down
- * its dBgW_KcMbg (0x124) and Model (0xd4).
+ * _ZN17dExtSimpleModel_cD1Ev at +0x320) before dBgActor_c's inlined destructor takes down
+ * its dBgW_KcMbg (0x124) and dExtSimpleModel_c (0xd4).
  *
  * SIZE 0x3d8: both daObjCtRotateBlock_c_classInit_CT_MECHA01 (historical
  * alias TtcRotatingCube_Spawn) and daObjCtRotateBlock_c_classInit_CT_MECHA02
@@ -32,40 +32,40 @@
  * slots 0, 3, 6, 9, 16 and 17 differ, exactly the overrides declared here.
  */
 struct daObjCtRotateBlock_c : dBgActor_c {
-    Model mRotatingModel;      /* 0x320 the part that turns */
-    s32 mOffsetY;              /* 0x370 hop added to mPosY */
-    u16 mWaitTimer;            /* 0x374 DecIfAbove0_Short countdown */
-    u8 mState;                 /* 0x376 0 wait, 1 hop, 2 turn */
-    u8 mVariant;               /* 0x377 actor 0x6c or 0x6d */
-    s16 mTargetAngleZ;         /* 0x378 ApproachLinear target */
-    u8 mUnevenGround;          /* 0x37a the two floor probes disagreed */
-    u8 mPad37b;                /* 0x37b */
-    s32 mFloorY;               /* 0x37c ground height under the cube */
-    dExtShadowModel_c mShadowModel;  /* 0x380 */
-    Matrix4x3 mShadowMat;      /* 0x3a8 */
+    dExtSimpleModel_c mRotatingModel; /* 0x320 the part that turns */
+    s32 mOffsetY;                     /* 0x370 hop added to mPosY */
+    u16 mWaitTimer;                   /* 0x374 DecIfAbove0_Short countdown */
+    u8 mState;                        /* 0x376 0 wait, 1 hop, 2 turn */
+    u8 mVariant;                      /* 0x377 actor 0x6c or 0x6d */
+    s16 mTargetAngleZ;                /* 0x378 ApproachLinear target */
+    u8 mUnevenGround;                 /* 0x37a the two floor probes disagreed */
+    u8 mPad37b;                       /* 0x37b */
+    s32 mFloorY;                      /* 0x37c ground height under the cube */
+    dExtShadowModel_c mShadowModel;   /* 0x380 */
+    Matrix4x3 mShadowMat;             /* 0x3a8 */
 
     /* OUT OF LINE, DECLARED FIRST: the key function. The TU defines it first
        under `#pragma defer_codegen off`, which emits D1 then D0 -- the
        cartridge's order -- then a D2 the cartridge has no home for. */
-    virtual ~daObjCtRotateBlock_c();      /* slots 16, 17 */
+    virtual ~daObjCtRotateBlock_c(); /* slots 16, 17 */
 
-    virtual s32 InitResources();          /* slot  0 */
-    virtual s32 CleanupResources();       /* slot  3 */
-    virtual s32 Behavior();               /* slot  6 */
-    virtual s32 Render();                 /* slot  9 */
+    virtual s32 InitResources();    /* slot  0 */
+    virtual s32 CleanupResources(); /* slot  3 */
+    virtual s32 Behavior();         /* slot  6 */
+    virtual s32 Render();           /* slot  9 */
 
     /* These three routines are anonymous in the image. Their names describe
      * their exclusive calls and field effects; they are not claimed as
      * cartridge-authenticated EAD spellings. */
-    s32 UpdateShadow();
+    void UpdateShadow();
     void UpdateClsn();
     void UpdateModel();
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjCtRotateBlock_c_size_must_be_0x3d8[
-    sizeof(daObjCtRotateBlock_c) == 0x3d8 ? 1 : -1];
+typedef char
+    daObjCtRotateBlock_c_size_must_be_0x3d8[sizeof(daObjCtRotateBlock_c) == 0x3d8 ? 1 : -1];
 #endif
 
 #endif

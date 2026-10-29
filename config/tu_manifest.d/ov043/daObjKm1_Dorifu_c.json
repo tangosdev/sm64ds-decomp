@@ -1520,7 +1520,7 @@
   ],
   "notes": [
     "Manually curated against include/daObjKm1_Dorifu_c.h; an inline empty destructor makes mwccarm emit the retail D1/D0 pair in order. return new also emits base D2 helpers; exact compiler-only policy deadstrips those.",
-    "daObjKm1_Dorifu_c_classInit is the adjacent fifth function: return new allocates exactly sizeof(daObjKm1_Dorifu_c), constructs the inherited Model[5] and dBgW_KcMbg[5], and installs this class's vtable; the next function is the overlay initializer.",
+    "daObjKm1_Dorifu_c_classInit is the adjacent fifth function: return new allocates exactly sizeof(daObjKm1_Dorifu_c), constructs the inherited dExtSimpleModel_c[5] and dBgW_KcMbg[5], and installs this class's vtable; the next function is the overlay initializer.",
     "The earlier 3/4 cleanup-helper warning was stale. Fresh strict isolation gives both D0 objects the same __cxa_vec_cleanup relocations; __cxa_vec_cleanup is now the sized owner at that ROM address: the tree's own name __destroy_arr was deleted when 0x0207328c was carved out to source, because a size-0 alias row is a link definition only while a dsd gap object owns its range.",
     "HISTORICAL CONTAINER RECEIPT, not current proof: LOCAL WORKER NOTE (sinit fold __sinit_ov043_02111940): this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40; the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container/packaging fields outside every module range: all five owned ranges identical, 106/106 modules exact, moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b and the 9-error symbol inventory (0 new vs baseline) all equal the canonical records.",
     "Native CLPS continuation (issue 4072): five 24-byte .data.clps0..4 claims route complete native sections through the accepted tooling dependency. Asset-derived sKm1Dorifu0Clps..4 names are inferred; all five numeric start aliases and five existing interior labels retain their configured identities. Each following eight-byte FF tail stays ROM-owned with unknown purpose. Shared parent/header and raw handle wrappers remain outside this bounded source change.",
@@ -1869,28 +1869,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -2828,52 +2808,52 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@374",
+      "from": "@364",
       "to": "@346",
       "evidence": "compiler-local __register_global_object node; @360 is taken on main by ov023 bss, renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@375",
+      "from": "@365",
       "to": "@347",
       "evidence": "compiler-local __register_global_object node; @361 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@376",
+      "from": "@366",
       "to": "@348",
       "evidence": "compiler-local __register_global_object node; @362 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@377",
+      "from": "@367",
       "to": "@349",
       "evidence": "compiler-local __register_global_object node; @363 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@378",
+      "from": "@368",
       "to": "@350",
       "evidence": "compiler-local __register_global_object node; @364 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@379",
+      "from": "@369",
       "to": "@351",
       "evidence": "compiler-local __register_global_object node; @365 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@380",
+      "from": "@370",
       "to": "@352",
       "evidence": "compiler-local __register_global_object node; @366 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@381",
+      "from": "@371",
       "to": "@353",
       "evidence": "compiler-local __register_global_object node; @367 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@382",
+      "from": "@372",
       "to": "@354",
       "evidence": "compiler-local __register_global_object node; @368 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@383",
+      "from": "@373",
       "to": "@355",
       "evidence": "compiler-local __register_global_object node; @369 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
     }

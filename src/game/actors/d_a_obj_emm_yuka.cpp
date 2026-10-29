@@ -40,12 +40,10 @@ struct EmmYukaFiles {
  * func_02017ab4 for the model, func_02017b4c / SharedFilePtr_Destruct_Clsn
  * for the collision); the subclasses exist to spell those entry points. */
 struct EmmYukaModelFilePtr : SharedFilePtr {
-    u32 words[2];
     EmmYukaModelFilePtr(u32 fileID);
     ~EmmYukaModelFilePtr();
 };
 struct EmmYukaCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     EmmYukaCollisionFilePtr(u32 fileID);
     ~EmmYukaCollisionFilePtr();
 };
@@ -53,17 +51,17 @@ struct EmmYukaCollisionFilePtr : SharedFilePtr {
 extern "C" {
 extern EmmYukaFiles data_ov052_021125a0;
 void func_020393d4(int *bg, int cb);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int range, int b);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
-    s16 angleY, CLPS_Block *clps);
+extern void hold_d_a_obj_emm_yuka(dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
+                                  s16 angleY, CLPS_Block *clps);
 void Vec3_Sub(void *out, void *a, void *b);
 int LenVec3(void *v);
 void Vec3_MulScalar(void *out, void *v, int s);
 void SubVec3(void *a, void *b, void *c);
 }
 
-namespace cstd { int fdiv(int a, int b); }
+namespace cstd {
+int fdiv(int a, int b);
+}
 
 #pragma defer_codegen off
 
@@ -150,20 +148,19 @@ int daObjEmmYuka_c::Behavior()
     }
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0x320000, 0);
+    IsClsnInRange(0x320000, 0);
     return 1;
 }
 
 // @symbol _ZN14daObjEmmYuka_c13InitResourcesEv
 int daObjEmmYuka_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)Model::LoadFile(*data_ov052_021125a0.model), 1, -1);
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov052_021125a0.model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider,
-        (KCL_File *)dBgW_Kc::LoadFile(*data_ov052_021125a0.collision),
-        &mClsnMat, 0x199, mAngleY, data_ov052_021125a0.clps);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov052_021125a0.collision),
+                              *(&mClsnMat), 0x199, mAngleY, *(data_ov052_021125a0.clps));
     func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;

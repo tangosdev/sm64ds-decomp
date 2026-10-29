@@ -1,4 +1,11 @@
 //cpp
+struct Vector3_16f;
+namespace Particle {
+struct Callback;
+struct System {
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
 /* daMenbo_c -- Skeeter, the water strider on the lake.
  *
  * ov090 0x02130f00..0x0213269c, twenty-five functions, the last being the
@@ -14,22 +21,9 @@
  *   data_ov090_02134514  patrol       02131a74 / 02131648   anim 02134480
  *   data_ov090_02134504  water rest   02131b94 / 02131ac4   anim 02134490
  *   data_ov090_021344f4  water chase  02131db0 / 02131c48   anim 02134488
- * Idle and patrol hand off to water rest while unk_39c is set (the skeeter
+ * Idle and patrol hand off to water rest while mOnWater is set (the skeeter
  * is on the water line). Water chase hands back to idle when it clears.
  * Patrol itself speeds up when a player is close; that is not a fifth state.
- *
- * The tail the header still spells unk_ or pad_:
- *   unk_374..37c  anchor position
- *   unk_394       turn cooldown
- *   unk_396       post-turn hold
- *   unk_398       heading-jitter timer
- *   unk_39c       on the water line this frame
- *   unk_3a1       death tumble (3 pitches down and yaws)
- *   unk_3a4       playback rate, copied into the frame controller
- *   unk_3a8       floor height from the ground probe
- *   unk_3ac       water line
- *   pad_380       four ripple-particle ids
- *   pad_39d       chase / far / wall / missed-probe latches
  *
  * common.h is included first so Matrix4x3 is the flat twelve words the two
  * matrix copies were matched under. defer_codegen is off, so the bodies are
@@ -39,15 +33,9 @@
  * deslop leftovers:
  * - func_ov090_02131ac4: `mStateTimer == 0` is ldrsh. The ROM is ldrh, one
  *   word. `*(unsigned short *)&mStateTimer` matches.
- * - func_ov090_02131608: ModelAnim::SetAnim with a Fix12<int> rate is 0x4c
+ * - func_ov090_02131608: dExtAnmModel_c::SetAnim with a Fix12<int> rate is 0x4c
  *   against 0x40 and emits 4 bytes of .rodata. The scalar SetAnim call
  *   matches. The patrol, water-rest and water-chase entries keep it.
- * - func_ov090_021310b4: dActor_c::SpawnCoins with a Fix12<int> spread is
- *   0x2cc against 0x2c4 and emits 4 bytes of .rodata. The same function's
- *   KillByInvincibleChar with a Fix12<int> argument is 0x2d0 against 0x2c4.
- *   Both scalar calls match. Behavior's coin spawn keeps the scalar call.
- * - InitResources: dCcAcPos_c::Init with two Fix12<int> arguments is 0x2d0
- *   against 0x2bc and emits two 4-byte .rodata words. The scalar call matches.
  */
 
 #pragma defer_codegen off
@@ -59,8 +47,7 @@
 #include "SharedFilePtr.h"
 #include "Player.h"
 #include "dExtFrameCtrl_c.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "math/Approach.h"
 
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
@@ -74,34 +61,18 @@ struct BCA_File;
 typedef int (daMenbo_c::*MenboStateFn)();
 struct MenboState { char pad[0x370]; MenboStateFn *mState; };
 
-/* 8-byte file handles: word[0] is the file id/refcount record, word[1] the
- * loaded file pointer. The model constructs with func_02017acc and destroys
- * with func_02017ab4; the anims use SharedFilePtr::Construct and
+/* 8-byte file handles: filePtr is the loaded file. The model constructs
+ * with func_02017acc and destroys with func_02017ab4; the anims use
+ * SharedFilePtr::Construct and
  * SharedFilePtr_Destruct_Anim. Manifest aliases carry the spellings. */
 struct MenboModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     MenboModelFilePtr(u32 fileID);
     ~MenboModelFilePtr();
 };
 
 struct MenboAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
-
     MenboAnimationFilePtr(u32 fileID);
     ~MenboAnimationFilePtr();
-};
-
-/* Fills pad_380 exactly: the four ripple-particle ids. */
-struct MenboRipples {
-    u32 id[4];
-};
-/* Fills pad_39d exactly. */
-struct MenboLatches {
-    u8 chase;
-    u8 far;
-    u8 wall;
-    u8 probe;
 };
 
 struct CoinVec3 { s32 x, y, z; };
@@ -124,29 +95,20 @@ int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s16   Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int   AngleDiff(int a, int b);
 int   ApproachAngle(s16 *cur, int target, int divisor, int band, int maxStep);
-void  _Z14ApproachLinearRiii(int &cur, int target, int step);
 u16   DecIfAbove0_Short(u16 *p);
 int   RandomIntInternal(int *seed);
 void  func_02012694(int id, const Vector3 *pos);
 
-int   _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-          unsigned int a0, unsigned int a1, int a2, int a3, int a4, int a5, int a6);
-int   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, BCA_File *f, int a, LocFix12 rate, unsigned int n);
+int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3, int a4, int a5, int a6);
 
-void  _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, dActor_c *a, const Vector3 *v, LocFix12 r, LocFix12 h, unsigned int e, unsigned int g);
-/* Not dBgCh_Actr::Init: the header method mangles with int, the ROM symbol with Fix12<int>. */
-void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
 int   SurfaceInfo_TestFlag0x20(const SurfaceInfo *p);
 void  func_0203558c(void *self);
 int   func_02035638(u8 *p);
 void  func_02035684(int *p, int v);
 
-void  _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const void *v, u32 n, s32 fix, s16 s);
-
-void  _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void *self, void *v, void *player, LocFix12 a);
 void  func_ov002_020aea30(void *self, void *actor, void *collision);
-void  _ZN6Player6BounceE5Fix12IiE(void *p, LocFix12 f);
-void  _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, void *v, int a, LocFix12 b, int d, int e, int f);
 
 extern Matrix4x3     data_020a0e68;
 extern int           data_02092138;
@@ -175,12 +137,6 @@ int  func_ov090_02131e00(MenboState *c, MenboStateFn *p);
 void func_ov090_02131e50(daMenbo_c *c);
 
 }
-
-/* SharedFilePtr.h has no fields. The BCA pointer SetAnim takes is the
- * second word of each anim handle. */
-#define MENBO_BCA(handle) (((BCA_File **)&(handle))[1])
-#define MENBO_RIPPLES(c) ((MenboRipples *)(c)->pad_380)
-#define MENBO_LATCH(c)   ((MenboLatches *)(c)->pad_39d)
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. Actor ID 0xbf is PLAYER. data_0209f2d8 is the current game
@@ -222,7 +178,7 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
     if (IsOffScreen(c))
         return;
 
-    src = &c->mModelAnim.mat4x3;
+    src = &c->mAnmModel.mat4x3;
     i = 0;
     idx = 6;
     zero = 0;
@@ -233,7 +189,8 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
         Vector3 r;
 
         data_020a0e68 = *src;
-        MulMat4x3Mat4x3((Matrix4x3 *)c->mModelAnim.data.transforms + idx, &data_020a0e68, &data_020a0e68);
+        MulMat4x3Mat4x3((Matrix4x3 *)c->mAnmModel.data.transforms + idx, &data_020a0e68,
+                        &data_020a0e68);
         v.x = *(int *)((char *)&data_020a0e68 + 0x24);
         v.y = *(int *)((char *)&data_020a0e68 + 0x28);
         v.z = *(int *)((char *)&data_020a0e68 + 0x2c);
@@ -241,10 +198,10 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
         v.x = r.x;
         v.y = r.y;
         v.z = r.z;
-        v.y = c->unk_3ac;
-        MENBO_RIPPLES(c)->id[i] =
-            _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                MENBO_RIPPLES(c)->id[i], id, v.x, v.y, r.z, zero, zero);
+        v.y = c->mSurfaceY;
+        c->mRippleParticles[i] =
+            Particle::System::New(c->mRippleParticles[i], id, v.x, v.y, r.z,
+                                  (const Vector3_16f *)(zero), (Particle::Callback *)(zero));
         idx += 3;
     }
 }
@@ -291,16 +248,16 @@ void func_ov090_021310b4(daMenbo_c *c)
         return;
     }
     if (c->JumpedOnByPlayer(*(dCc_c *)&c->mdCcAcPos_c, *(Player *)p)) {
-        _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
+        ((Player *)p)->Bounce(0x28000);
         c->mDeathState = 1;
         func_ov002_020aea30(c, p, 0);
         return;
     }
     if (flags & 0x20) {
         c->mVertAccel = 0;
-        c->unk_0a4 = 0;
+        c->mSpeedX = 0;
         c->mVertSpeed = 0;
-        c->unk_0ac = 0;
+        c->mSpeedZ = 0;
         c->mDeathState = 1;
         func_ov002_020aea30(c, p, 0);
         return;
@@ -309,12 +266,12 @@ void func_ov090_021310b4(daMenbo_c *c)
         hv[0] = 0x1000;
         hv[1] = 0;
         hv[2] = 0;
-        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, hv, p, 0);
+        c->KillByInvincibleChar(*(Vector3_16 *)hv, *(Player *)p, 0);
         func_02012694(0x1d, &c->mCamSpacePos);
         return;
     }
     if (flags & 0x4380) {
-        c->unk_3a1 = 3;
+        c->mDeathTumble = 3;
         c->mDeathState = 3;
         func_ov002_020aea30(c, p, 0);
         return;
@@ -325,7 +282,7 @@ void func_ov090_021310b4(daMenbo_c *c)
         cv.x = c->mPosX;
         cv.y = c->mPosY;
         cv.z = c->mPosZ;
-        _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &cv, c->unk_10a + 1, 0xa000, 0);
+        c->SpawnCoins(cv, c->mExtraCoinCount + 1, 0xa000, 0);
         c->PoofDust();
         c->KillAndTrackInDeathTable();
         return;
@@ -333,14 +290,14 @@ void func_ov090_021310b4(daMenbo_c *c)
     hurt.x = c->mPosX;
     hurt.y = c->mPosY;
     hurt.z = c->mPosZ;
-    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, &hurt, 2, 0xc000, 1, 0, 1);
+    ((Player *)p)->Hurt(hurt, 2, 0xc000, 1, 0, 1);
 }
 
 #pragma opt_common_subs on
 // @symbol func_ov090_02131378
 /* Ground probe. Mode 2 on course 0x12 skips it and only spawns ripples.
  * Otherwise a hit below the published water height (data_0209f32c) means
- * the skeeter is on the water: record that line, mark unk_39c, ripple.
+ * the skeeter is on the water: record that line, mark mOnWater, ripple.
  * A higher floor is the line instead, and either way Y is clamped up to it. */
 void func_ov090_02131378(daMenbo_c *c)
 {
@@ -355,23 +312,23 @@ void func_ov090_02131378(daMenbo_c *c)
     v.x = c->mPosX;
     v.y = vy;
     v.z = vz;
-    c->unk_39c = 0;
+    c->mOnWater = 0;
     if (Vec3_HorzDist(&c->mPos, &c->mPrevPos) != 0) {
         rg.SetObjAndPos(v, c);
         if (rg.DetectClsn() != 0)
-            c->unk_3a8 = rg.clsnY;
+            c->mFloorY = rg.clsnY;
     }
-    if (c->unk_3a8 < data_0209f32c) {
-        c->unk_3ac = data_0209f32c;
-        if (c->mPosY <= c->unk_3ac) {
-            c->unk_39c = 1;
+    if (c->mFloorY < data_0209f32c) {
+        c->mSurfaceY = data_0209f32c;
+        if (c->mPosY <= c->mSurfaceY) {
+            c->mOnWater = 1;
             func_ov090_02130f94(c);
         }
     } else {
-        c->unk_3ac = c->unk_3a8;
+        c->mSurfaceY = c->mFloorY;
     }
-    if (c->mPosY <= c->unk_3ac) {
-        c->mPosY = c->unk_3ac;
+    if (c->mPosY <= c->mSurfaceY) {
+        c->mPosY = c->mSurfaceY;
         c->mVertSpeed = 0;
     }
 }
@@ -396,14 +353,14 @@ int func_ov090_021314a0(daMenbo_c *c)
             w[1] = v[1];
             w[2] = v[2];
             c->mTargetAngleY = (u16)Vec3_HorzAngle(&c->mPos, (const Vector3 *)w);
-            MENBO_LATCH(c)->chase = 1;
+            c->mChaseLatch = 1;
             return 1;
         }
     }
-    if (MENBO_LATCH(c)->chase == 1) {
+    if (c->mChaseLatch == 1) {
         c->mHorzSpeed = 0x9000;
-        MENBO_LATCH(c)->chase = 0;
-        c->mTargetAngleY = (u16)Vec3_HorzAngle(&c->mPos, (const Vector3 *)&c->unk_374);
+        c->mChaseLatch = 0;
+        c->mTargetAngleY = (u16)Vec3_HorzAngle(&c->mPos, (const Vector3 *)&c->mAnchorPosX);
     }
     return 0;
 }
@@ -415,12 +372,12 @@ int daMenbo_c::func_ov090_02131584()
 {
     unsigned int v;
     mHorzSpeed = 0;
-    v = ((unsigned int)static_cast<dExtFrameCtrl_c &>(mModelAnim).currFrame << 4) >> 0x10;
+    v = ((unsigned int)static_cast<dExtFrameCtrl_c &>(mAnmModel).currFrame << 4) >> 0x10;
     if (v >= 0x3b)
         mAnimLoops += 1;
     if (mAnimLoops > 2 || func_ov090_021314a0(this) == 1)
         func_ov090_02131e00((MenboState *)this, data_ov090_02134514);
-    if (unk_39c == 1)
+    if (mOnWater == 1)
         func_ov090_02131e00((MenboState *)this, data_ov090_02134504);
     return 1;
 }
@@ -430,8 +387,8 @@ int daMenbo_c::func_ov090_02131584()
 int daMenbo_c::func_ov090_02131608()
 {
     mAnimLoops = 0;
-    unk_3a4 = 0x1000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, MENBO_BCA(data_ov090_02134498), 0, 0x1000, 0);
+    mAnimSpeed = 0x1000;
+    mAnmModel.SetAnim((BCA_File *)data_ov090_02134498.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -455,9 +412,10 @@ int daMenbo_c::func_ov090_02131648()
     s32 *p390;
 
     rnd = (u32)RandomIntInternal(&data_0209e650) >> 8;
-    dist = Vec3_Dist(&self->mPos, (Vector3 *)&self->unk_374);
+    dist = Vec3_Dist(&self->mPos, (Vector3 *)&self->mAnchorPosX);
 
-    if (((((u32)static_cast<dExtFrameCtrl_c &>(self->mModelAnim).currFrame) << 4) >> 0x10 & 0xf) == 0) {
+    if (((((u32) static_cast<dExtFrameCtrl_c &>(self->mAnmModel).currFrame) << 4) >> 0x10 & 0xf) ==
+        0) {
         func_02012694(0xfc, &self->mCamSpacePos);
     }
 
@@ -491,8 +449,8 @@ int daMenbo_c::func_ov090_02131648()
     line.SetObjAndLine(a, b, self);
 
     if (!line.DetectClsn()) {
-        if (MENBO_LATCH(self)->probe == 0) {
-            ha = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->unk_374);
+        if (self->mProbeLatch == 0) {
+            ha = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mAnchorPosX);
             sh = (rnd & 3) << 0xc;
             self->mTargetAngleY = (u16)ha;
             p39a = (s16 *)&self->mTargetAngleY;
@@ -501,29 +459,29 @@ int daMenbo_c::func_ov090_02131648()
             self->mPosX = self->mPrevPosX;
             self->mPosY = self->mPrevPosY;
             self->mPosZ = self->mPrevPosZ;
-            MENBO_LATCH(self)->probe = 1;
+            self->mProbeLatch = 1;
         }
     } else {
-        MENBO_LATCH(self)->probe = (u8)angleSet;
+        self->mProbeLatch = (u8)angleSet;
     }
 
     if (dist > 0x3c0000) {
-        if (MENBO_LATCH(self)->far == 0 && MENBO_LATCH(self)->probe == 0) {
-            ha = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->unk_374);
+        if (self->mFarLatch == 0 && self->mProbeLatch == 0) {
+            ha = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mAnchorPosX);
             self->mTargetAngleY = (u16)ha;
             angleSet = 1;
             self->mPosX = self->mPrevPosX;
             self->mPosY = self->mPrevPosY;
             self->mPosZ = self->mPrevPosZ;
-            MENBO_LATCH(self)->far = 1;
+            self->mFarLatch = 1;
         }
     } else {
-        MENBO_LATCH(self)->far = 0;
+        self->mFarLatch = 0;
     }
 
     if (self->mWithMeshClsn.IsOnWall() != 0) {
-        if (MENBO_LATCH(self)->wall == 0 && MENBO_LATCH(self)->far == 0 && MENBO_LATCH(self)->probe == 0) {
-            ha = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->unk_374);
+        if (self->mWallLatch == 0 && self->mFarLatch == 0 && self->mProbeLatch == 0) {
+            ha = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mAnchorPosX);
             sh = (rnd & 3) << 0xc;
             self->mTargetAngleY = (u16)ha;
             p39a = (s16 *)&self->mTargetAngleY;
@@ -532,49 +490,51 @@ int daMenbo_c::func_ov090_02131648()
             self->mPosX = self->mPrevPosX;
             self->mPosY = self->mPrevPosY;
             self->mPosZ = self->mPrevPosZ;
-            MENBO_LATCH(self)->wall = 1;
+            self->mWallLatch = 1;
         }
     } else {
-        MENBO_LATCH(self)->wall = 0;
+        self->mWallLatch = 0;
     }
 
-    if (self->unk_398 == 0 && MENBO_LATCH(self)->wall == 0 && MENBO_LATCH(self)->far == 0 && MENBO_LATCH(self)->probe == 0) {
-        self->unk_398 = (u16)((rnd + 0x32) & 0x3f);
+    if (self->mWanderTimer == 0 && self->mWallLatch == 0 && self->mFarLatch == 0 &&
+        self->mProbeLatch == 0) {
+        self->mWanderTimer = (u16)((rnd + 0x32) & 0x3f);
         p39a = (s16 *)&self->mTargetAngleY;
         *p39a = *p39a + (0x1800 - ((rnd & 3) << 0xc));
     }
 
     if (angleSet == 1) {
-        self->unk_394 = 0xa;
-        self->unk_398 = 0x32;
-        self->unk_396 = 0x1e;
+        self->mTurnTimer = 0xa;
+        self->mWanderTimer = 0x32;
+        self->mSpeedHoldTimer = 0x1e;
         self->mHorzSpeed = 0x9000;
-        self->unk_3a4 = 0x1000;
+        self->mAnimSpeed = 0x1000;
     }
 
     ApproachLinear(self->mPrevAngleY, (s16)self->mTargetAngleY, 0x500);
 
-    if (self->unk_394 == 0 && self->unk_396 == 0) {
-        self->unk_3a4 = 0x1000;
+    if (self->mTurnTimer == 0 && self->mSpeedHoldTimer == 0) {
+        self->mAnimSpeed = 0x1000;
         self->mHorzSpeed = 0x9000;
         if (func_ov090_021314a0(self) == 1) {
-            self->unk_396 = 0x1e;
-            self->unk_398 = 0x1e;
-            self->unk_3a4 = 0x2000;
+            self->mSpeedHoldTimer = 0x1e;
+            self->mWanderTimer = 0x1e;
+            self->mAnimSpeed = 0x2000;
             self->mHorzSpeed = 0xe000;
         }
     }
 
-    if (((u32)(((u32)static_cast<dExtFrameCtrl_c &>(self->mModelAnim).currFrame) << 4) >> 0x10) >= 0x10) {
+    if (((u32)(((u32) static_cast<dExtFrameCtrl_c &>(self->mAnmModel).currFrame) << 4) >> 0x10) >=
+        0x10) {
         p390 = &self->mAnimLoops;
         *p390 = *p390 + 1;
     }
 
-    if (self->mAnimLoops > 0x1e && MENBO_LATCH(self)->far == 0) {
+    if (self->mAnimLoops > 0x1e && self->mFarLatch == 0) {
         func_ov090_02131e00((MenboState *)self, data_ov090_021344e4);
     }
 
-    if (self->unk_39c == 1) {
+    if (self->mOnWater == 1) {
         func_ov090_02131e00((MenboState *)self, data_ov090_02134504);
     }
 
@@ -585,11 +545,11 @@ int daMenbo_c::func_ov090_02131648()
 /* Patrol entry. */
 int daMenbo_c::func_ov090_02131a74()
 {
-    unk_3a4 = 0x1000;
-    unk_396 = 0;
-    unk_398 = 0x32;
+    mAnimSpeed = 0x1000;
+    mSpeedHoldTimer = 0;
+    mWanderTimer = 0x32;
     mAnimLoops = 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, MENBO_BCA(data_ov090_02134480), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov090_02134480.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -600,12 +560,12 @@ int daMenbo_c::func_ov090_02131a74()
  * easing either way. */
 int daMenbo_c::func_ov090_02131ac4()
 {
-    _Z14ApproachLinearRiii(mHorzSpeed, 0, 0x1000);
+    ApproachLinear(mHorzSpeed, 0, 0x1000);
     if (mHorzSpeed > 0) return 1;
-    if (unk_39c == 0) {
-        unk_374 = mPosX;
-        unk_378 = mPosY;
-        unk_37c = mPosZ;
+    if (mOnWater == 0) {
+        mAnchorPosX = mPosX;
+        mAnchorPosY = mPosY;
+        mAnchorPosZ = mPosZ;
         mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650) >> 8) << 0xd);
         func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
@@ -630,8 +590,8 @@ int daMenbo_c::func_ov090_02131b94()
     *s = (short)(*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
     r = (unsigned)RandomIntInternal(&data_0209e650);
     mStateTimer = (short)(((r >> 8) & 0x1f) + 0x96);
-    unk_3a4 = 0x1000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, MENBO_BCA(data_ov090_02134490), 0, 0x1000, 0);
+    mAnimSpeed = 0x1000;
+    mAnmModel.SetAnim((BCA_File *)data_ov090_02134490.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -641,23 +601,23 @@ int daMenbo_c::func_ov090_02131b94()
  * enough, go back to water rest. Off the water, drop the anchor and idle. */
 int daMenbo_c::func_ov090_02131c48()
 {
-    if ((((unsigned)static_cast<dExtFrameCtrl_c &>(mModelAnim).currFrame) << 4) >> 16 >= 4)
+    if ((((unsigned)static_cast<dExtFrameCtrl_c &>(mAnmModel).currFrame) << 4) >> 16 >= 4)
         mHorzSpeed = 0x19000;
 
-    if ((((unsigned)static_cast<dExtFrameCtrl_c &>(mModelAnim).currFrame) << 4) >> 16 == 4)
+    if ((((unsigned)static_cast<dExtFrameCtrl_c &>(mAnmModel).currFrame) << 4) >> 16 == 4)
         func_02012694(0xfd, &mCamSpacePos);
 
-    if (unk_394 == 0 && mWithMeshClsn.IsOnWall() &&
+    if (mTurnTimer == 0 && mWithMeshClsn.IsOnWall() &&
         AngleDiff(mPrevAngleY, (s16)mTargetAngleY) < 0x200) {
         s16 *p = (s16 *)&mTargetAngleY;
         *p = *p + 0x4000;
-        unk_394 = 8;
+        mTurnTimer = 8;
     }
 
-    if (unk_394 != 0) {
+    if (mTurnTimer != 0) {
         ApproachAngle(&mPrevAngleY, (s16)mTargetAngleY, 1, 0x1000, 0x1000);
     } else {
-        if (static_cast<dExtFrameCtrl_c &>(mModelAnim).Finished()) {
+        if (static_cast<dExtFrameCtrl_c &>(mAnmModel).Finished()) {
             s32 *q = &mAnimLoops;
             *q = *q + 1;
             if (mAnimLoops > 0x14)
@@ -665,10 +625,10 @@ int daMenbo_c::func_ov090_02131c48()
         }
     }
 
-    if (unk_39c == 0) {
-        unk_374 = mPosX;
-        unk_378 = mPosY;
-        unk_37c = mPosZ;
+    if (mOnWater == 0) {
+        mAnchorPosX = mPosX;
+        mAnchorPosY = mPosY;
+        mAnchorPosZ = mPosZ;
         mTargetAngleY = (u16)(((unsigned)RandomIntInternal(&data_0209e650) >> 8) << 13);
         func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
@@ -680,8 +640,8 @@ int daMenbo_c::func_ov090_02131c48()
 /* Water-chase entry. The 0x40000000 flag is passed straight through. */
 int daMenbo_c::func_ov090_02131db0()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, MENBO_BCA(data_ov090_02134488), 0x40000000, 0x1000, 0);
-    unk_3a4 = 0x1000;
+    mAnmModel.SetAnim((BCA_File *)data_ov090_02134488.filePtr, 0x40000000, 0x1000, 0);
+    mAnimSpeed = 0x1000;
     mAnimLoops = 0;
     return 1;
 }
@@ -697,7 +657,7 @@ int func_ov090_02131e00(MenboState *c, MenboStateFn *p)
 }
 
 // @symbol func_ov090_02131e50
-/* Model matrix from position (shifted down 3, the renderer's scale) and
+/* dExtSimpleModel_c matrix from position (shifted down 3, the renderer's scale) and
  * the three rotation halfwords. */
 void func_ov090_02131e50(daMenbo_c *c)
 {
@@ -709,7 +669,7 @@ void func_ov090_02131e50(daMenbo_c *c)
     Vec3_Asr(dst, src, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
-    c->mModelAnim.mat4x3 = data_020a0e68;
+    c->mAnmModel.mat4x3 = data_020a0e68;
 }
 
 // @symbol _ZN9daMenbo_c16CleanupResourcesEv
@@ -737,7 +697,7 @@ int daMenbo_c::Render()
     unsigned int f = mFlags;
     int b = ((f & 0x40000) != 0);
     if (b) return 1;
-    mModelAnim.Render(&mScale);
+    mAnmModel.Render(&mScale);
     return 1;
 }
 
@@ -754,13 +714,13 @@ int daMenbo_c::Behavior()
 
     if (UpdateYoshiEat(mWithMeshClsn)) {
         mdCcAcPos_c.Clear();
-        if (mEatenByYoshi != 0 && unk_104 == 0)
+        if (mEatenByYoshi != 0 && mSpitOutTimer == 0)
             mdCcAcPos_c.Update();
         func_ov090_02131e50(this);
         return 1;
     }
 
-    if (UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 3))
+    if (UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3))
         return 1;
 
     if (mDeathState != 0) {
@@ -772,19 +732,19 @@ int daMenbo_c::Behavior()
         func_ov090_02131e50(this);
         if (mDeathState == 0)
             PoofDust();
-        if (unk_3a1 == 3) {
+        if (mDeathTumble == 3) {
             ApproachLinear(mAngleX, -32767, 0x500);
             if (AngleDiff(*&mAngleX, -32767) < 0x1000) {
                 s16 *yaw = &mAngleY;
                 *yaw += 0x1000;
             }
         }
-        if (mDeathState != 1 && mPosY <= unk_3ac) {
+        if (mDeathState != 1 && mPosY <= mSurfaceY) {
             CoinVec3 v;
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;
-            _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, unk_10a + 1, 0xa000, 0);
+            ((dActor_c *)c)->SpawnCoins(*(const Vector3 *)&v, mExtraCoinCount + 1, 0xa000, 0);
             PoofDust();
             KillAndTrackInDeathTable();
         }
@@ -801,9 +761,9 @@ int daMenbo_c::Behavior()
             UpdateWMClsn(mWithMeshClsn, 2);
             if (func_02035638((u8 *)(&mWithMeshClsn))) {
                 mVertAccel = 0;
-                unk_0a4 = 0;
+                mSpeedX = 0;
                 mVertSpeed = 0;
-                unk_0ac = 0;
+                mSpeedZ = 0;
                 mDeathState = 1;
                 func_ov002_020aea30(c, ClosestPlayer(), 0);
                 return 1;
@@ -816,17 +776,17 @@ int daMenbo_c::Behavior()
     UpdatePos(&mdCcAcPos_c);
     func_ov090_02131378(this);
     DecIfAbove0_Short((u16 *)&mStateTimer);
-    DecIfAbove0_Short(&unk_394);
-    DecIfAbove0_Short(&unk_396);
-    DecIfAbove0_Short(&unk_398);
+    DecIfAbove0_Short(&mTurnTimer);
+    DecIfAbove0_Short(&mSpeedHoldTimer);
+    DecIfAbove0_Short(&mWanderTimer);
     UpdateWMClsn(mWithMeshClsn, 2);
-    if (mPosY <= unk_3ac)
-        mPosY = unk_3ac;
+    if (mPosY <= mSurfaceY)
+        mPosY = mSurfaceY;
     if (data_0209f2f8 == 0x15 && mAreaId == 1 && func_02035638((u8 *)(&mWithMeshClsn))) {
         mVertAccel = 0;
-        unk_0a4 = 0;
+        mSpeedX = 0;
         mVertSpeed = 0;
-        unk_0ac = 0;
+        mSpeedZ = 0;
         mDeathState = 1;
         func_ov002_020aea30(c, ClosestPlayer(), 0);
         return 1;
@@ -838,8 +798,8 @@ int daMenbo_c::Behavior()
             (this->*n[1])();
     }
     mAngleY = mPrevAngleY;
-    static_cast<dExtFrameCtrl_c &>(mModelAnim).speed = unk_3a4;
-    static_cast<dExtFrameCtrl_c &>(mModelAnim).Advance();
+    static_cast<dExtFrameCtrl_c &>(mAnmModel).speed = mAnimSpeed;
+    static_cast<dExtFrameCtrl_c &>(mAnmModel).Advance();
     func_ov090_02131e50(this);
     func_ov090_021310b4(this);
     mdCcAcPos_c.Clear();
@@ -853,7 +813,7 @@ int daMenbo_c::Behavior()
 #pragma opt_common_subs off
 
 // @symbol _ZN9daMenbo_c13InitResourcesEv
-/* Model, four anims, both collision volumes, then the water line.
+/* dExtSimpleModel_c, four anims, both collision volumes, then the water line.
  * Mode 2 on course 0x12 skips the raycast and starts at water chase with
  * the line equal to the spawn height. A surface whose 0x20 flag is set
  * records the hit as the line only and also starts at water chase. Anything
@@ -865,8 +825,8 @@ int daMenbo_c::InitResources()
     Vector3 pos;
     Vector3 v;
 
-    f = (BMD_File *)Model::LoadFile(data_ov090_021344a0);
-    mModelAnim.SetFile(f, 1, -1);
+    f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov090_021344a0);
+    mAnmModel.SetFile(f, 1, -1);
     dExtFrameCtrl_c::LoadFile(data_ov090_02134488);
     dExtFrameCtrl_c::LoadFile(data_ov090_02134480);
     dExtFrameCtrl_c::LoadFile(data_ov090_02134490);
@@ -877,25 +837,25 @@ int daMenbo_c::InitResources()
     v.x = data_ov090_0213412c.x;
     v.y = data_ov090_0213412c.y;
     v.z = data_ov090_0213412c.z;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
+    mdCcAcPos_c.Init(this, v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
 
     mAngleY = mPrevAngleY;
-    unk_3a4 = 0x1000;
+    mAnimSpeed = 0x1000;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (int)this, 0xc8000, 0, 0, 0);
+    mWithMeshClsn.Init((dActor_c *)(int)this, 0xc8000, 0, 0, 0);
     func_0203558c(&mWithMeshClsn);
 
-    unk_108 = 1;
-    unk_10a = 2;
+    mCoinType = 1;
+    mExtraCoinCount = 2;
     mVertAccel = -0x3000;
 
     if (IsGameMode(2) && data_0209f2f8 == 0x12) {
-        unk_3ac = mPosY;
-        unk_374 = mPosX;
-        unk_378 = mPosY;
-        unk_37c = mPosZ;
+        mSurfaceY = mPosY;
+        mAnchorPosX = mPosX;
+        mAnchorPosY = mPosY;
+        mAnchorPosZ = mPosZ;
         func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
         return 1;
     }
@@ -914,23 +874,23 @@ int daMenbo_c::InitResources()
             pos.z = pz;
         }
         ground.SetObjAndPos(pos, this);
-        unk_3a8 = data_02092138;
+        mFloorY = data_02092138;
         if (ground.DetectClsn() != 0) {
             if (SurfaceInfo_TestFlag0x20(&ground.surface) != 0) {
-                unk_39c = 1;
-                unk_3ac = ground.clsnY;
+                mOnWater = 1;
+                mSurfaceY = ground.clsnY;
             } else {
-                unk_3a8 = ground.clsnY;
-                unk_3ac = ground.clsnY;
+                mFloorY = ground.clsnY;
+                mSurfaceY = ground.clsnY;
             }
         }
 
-        mPosY = unk_3ac;
-        unk_374 = mPosX;
-        unk_378 = mPosY;
-        unk_37c = mPosZ;
+        mPosY = mSurfaceY;
+        mAnchorPosX = mPosX;
+        mAnchorPosY = mPosY;
+        mAnchorPosZ = mPosZ;
 
-        if (unk_39c != 0) {
+        if (mOnWater != 0) {
             func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
             return 1;
         }
@@ -958,7 +918,7 @@ s32 daMenbo_c::OnAimedAtWithEgg()
 // @symbol _ZN9daMenbo_c13OnTurnIntoEggER6Player
 void daMenbo_c::OnTurnIntoEgg(Player &player)
 {
-    GivePlayerCoins(player, (unsigned char)(unk_10a + 1), 0);
+    GivePlayerCoins(player, (unsigned char)(mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();
 }
 
@@ -1001,7 +961,7 @@ MenboStateFn data_ov090_021344e4[2] = {
  *
  * `new daMenbo_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x3b0), dEnemyBase_c's base constructor, the vptr
- * store, then the dCcAcPos_c, dBgCh_Actr and ModelAnim member constructors. */
+ * store, then the dCcAcPos_c, dBgCh_Actr and dExtAnmModel_c member constructors. */
 // @symbol daMenbo_c_classInit
 extern "C" daMenbo_c *daMenbo_c_classInit(void)
 {

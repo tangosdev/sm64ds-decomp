@@ -27,16 +27,22 @@ struct daPicGate_c : dActor_c {
     struct Vertex {
         s32 x, y, z;             /* 0x00 -- z is the ripple height */
         s32 dist;                /* 0x0c -- ripple phase input */
-        u32 color;               /* 0x10 -- written straight to GXCOLOR */
+        u32 normal;              /* 0x10 -- packed 10-bit-per-axis normal: BuildNormals
+                                    packs it, and both strip writers store it to
+                                    G3_NORMAL (0x04000484) */
         u32 texCoord;            /* 0x14 -- written straight to GXTEXCOORD */
     };
 
-    /* One row of data_ov080_021277a8, 0x14 bytes. */
+    /* One row of data_ov080_021277a8, 0x14 bytes. RippleHeight
+       (func_ov080_02125bb0) reads every field. */
     struct WaveParams {
-        s32 unk_00;
+        s32 amplitude;           /* 0x00 -- peak height; func_ov080_02125cd4 decays it
+                                    linearly to 0 over duration */
         s32 phaseStep;           /* 0x04 -- added to mWavePhase every frame */
-        s32 unk_08;
-        s32 unk_0c;
+        s32 wavelength;          /* 0x08 -- distance per cycle: func_ov080_02125d08
+                                    turns distance into phase by 0xffff / wavelength */
+        s32 radius;              /* 0x0c -- the height falls off linearly with distance,
+                                    reaching 0 here */
         s32 duration;            /* 0x10 -- reloads mWaveTimer */
     };
 
@@ -48,10 +54,11 @@ struct daPicGate_c : dActor_c {
         StateFunc render;        /* 0x10 */
     };
 
-    u8  pad_0d0[4];              /* 0x0d0 */
+    u8 pad_0d0[4];               /* 0x0d0 -- untouched */
     s32 mMtx[12];                /* 0x0d4 -- model-to-world, Matrix4x3 */
     s32 mInvMtx[12];             /* 0x104 -- its inverse */
-    s32 unk_134[3];              /* 0x134 */
+    s32 mWaveOrigin[3];          /* 0x134 -- x, y, 0 in cell space: BeginWave sets it,
+                                    func_ov080_02125d64 measures each cell's dist from it */
     Vertex mCorners[4];          /* 0x140 */
     Vertex *mCells;              /* 0x1a0 -- mNumCells, Memory::operator_new2'd */
     State *mState;               /* 0x1a4 */

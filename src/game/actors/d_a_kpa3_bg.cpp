@@ -12,8 +12,10 @@
  * Behavior runs data_ov060_0211b1ac[mState]: 0 finds Bowser, 1 watches
  * him, 2 drops the platform. The three handlers are declared in the
  * header so the table's pointer-to-member constants are real.
- * func_ov060_021180e0 is defined as a member; the other two are free
- * functions under the members' mangled names.
+ * func_ov060_021181b4 and func_ov060_021180e0 are defined as members;
+ * func_ov060_02117db8 is a free function under the member's mangled name.
+ * func_ov060_021181b4 returns an int, so its table entry casts the
+ * pointer-to-member to the table's void handler type.
  *
  * __sinit at the end of this file emits compiler-numbered statics; they
  * compile as @666..@691 and the manifest maps them to the ROM's
@@ -23,9 +25,6 @@
  * advances it by 25, and including daKpa_c.h by 171), so adding or
  * deleting one renumbers them. These
  * names are there for the count:
- * - the local-extern prototype of func_ov060_021181b4 names its
- *   parameter c. Making the function a member drops that name; the
- *   bytes stay the same, and one extra named local restores the count.
  * - InitResources loads the model through the named local bmd.
  * - func_ov060_021180e0 steps its timer through two named locals.
  * - func_ov060_02117db8 keeps live, p and py (never read) and steps
@@ -35,10 +34,11 @@
  * - The three handlers keep their address names.
  * - func_ov060_02117db8 parses as C (cplusplus off): the same body as
  *   C++ DIFFs. It reaches the members through a struct daKpa3Bg_c *.
- *   dActor_c::Earthquake, PoofDustAt and fBase_c::MarkForDestruction
- *   stay mangled because the body is C (Earthquake also takes
- *   Fix12<int> and is not on dActor_c.h). func_02012694 plays bank-3 sound
- *   0xbc at a point written into mCamSpacePos, restored afterwards.
+ *   Earthquake, PoofDustAt and MarkForDestruction go through
+ *   kpaCallEarthquake, kpaCallPoof and kpaCallDestroy. A member call in
+ *   the C body DIFFs; the bridges inline to the same calls.
+ *   func_02012694 plays bank-3 sound 0xbc at a point written into
+ *   mCamSpacePos, restored afterwards.
  * - dBgW_KcMbg::SetFile is called through its mangled name, with the
  *   Fix12<int> argument passed as a raw int.
  * - func_020393d4 stores dBgW::UpdatePosWithTransform.
@@ -62,14 +62,10 @@ extern "C" {
 typedef struct Vec3 { int x, y, z; } Vec3;
 
 void Vec3_AsrInPlace(Vec3 *v, int n);
-void MulVec3Mat4x3(Vec3 *in, void *m, void *out);
-void func_02012694(int a, void *p);
-void CopyTexPalFromLevelModel(void *p);
-void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, Vec3 *v, int fix);
-// local extern: func_ov060_02117db8 is parsed as C and cannot call the member.
-void _ZN8dActor_c10PoofDustAtERK7Vector3(void *self, Vec3 *v);
-// local extern: the C body of func_ov060_02117db8 calls it, as above.
-void _ZN7fBase_c18MarkForDestructionEv(void *self);
+/* Unnamed on purpose: see the @NNN note in the banner. */
+void MulVec3Mat4x3(Vec3 *, void *, void *);
+void func_02012694(int, void *);
+void CopyTexPalFromLevelModel(void *);
 
 extern u16 data_ov060_0211956c[];
 extern s16 data_02082214[];
@@ -82,8 +78,9 @@ extern SharedFilePtr *data_ov060_0211953c[];
 extern CLPS_Block *data_ov060_0211a980[];
 extern int data_0208e738;
 
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *self, KCL_File *f, const Matrix4x3 &m, int fix, short sh, CLPS_Block &b);
+/* Three parameter names dropped: kpaCallDestroy took those @NNN slots. */
+extern void hold_d_a_kpa3_bg(void *, KCL_File *, const Matrix4x3 &, int fix, short sh,
+                             CLPS_Block &b);
 void func_020393d4(void *p, void *v);
 void func_020393c4(void *p, void *v);
 void func_ov060_021183f4(void *collider, daKpa3Bg_c *self, dActor_c *other);
@@ -91,8 +88,6 @@ void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other);
 
 // local extern: defined below as a free function (cplusplus off has no member syntax); the header declares the member spelling for the PMF table.
 void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(daKpa3Bg_c *self);
-// local extern: defined below as a free function; this prototype's named c counts toward the @NNN statics (see the banner). The header declares the member spelling for the PMF table.
-int _ZN10daKpa3Bg_c19func_ov060_021181b4Ev(char *c);
 
 }
 
@@ -105,15 +100,11 @@ extern HandlerEntry data_ov060_0211b1ac[];
  * and destroy through SharedFilePtr_Destruct_Clsn. The wrappers are declared,
  * never defined: the manifest aliases their members onto the ROM veneers. */
 struct Kpa3BgModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     Kpa3BgModelFilePtr(u32 fileID);
     ~Kpa3BgModelFilePtr();
 };
 
 struct Kpa3BgCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     Kpa3BgCollisionFilePtr(u32 fileID);
     ~Kpa3BgCollisionFilePtr();
 };
@@ -151,16 +142,14 @@ s32 daKpa3Bg_c::InitResources()
     mVariant = (u8)(param1 & 0xf);
     data_0208e738 = 0;
     /* bmd is named for the @NNN count (see the banner). */
-    BMD_File *bmd = (BMD_File *)Model::LoadFile(*data_ov060_02119514[mVariant]);
+    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov060_02119514[mVariant]);
     mModel.SetFile(bmd, 1, -1);
     CopyTexPalFromLevelModel(&mModel.data);
     data_0208e738 = 1;
     UpdateClsnPosAndRot();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider,
-        (KCL_File *)dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]),
-        mClsnMat, 0x1000, mAngleY,
-        *data_ov060_0211a980[mVariant]);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]),
+                              mClsnMat, 0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
     func_020393d4(&mMeshCollider,
                   (void *)&dBgW::UpdatePosWithTransform);
     func_020393c4(&mMeshCollider, (void *)&func_ov060_021183f4);
@@ -205,16 +194,13 @@ s32 daKpa3Bg_c::CleanupResources()
 // @symbol _ZN10daKpa3Bg_c19func_ov060_021181b4Ev
 /* mState 0: finds the daKpa actor (id 0x117), remembers its uniqueID and
    moves to mState 1. Retries every frame until Bowser exists. */
-extern "C" int _ZN10daKpa3Bg_c19func_ov060_021181b4Ev(char *c)
-{
-    daKpa3Bg_c *bg = (daKpa3Bg_c *)c;
+int daKpa3Bg_c::func_ov060_021181b4() {
     dActor_c *koopa = dActor_c::FindWithActorID(0x117, 0);
     if (koopa) {
-        bg->mKoopaUniqueId = koopa->uniqueID;
-        bg->mState = 1;
+        mKoopaUniqueId = koopa->uniqueID;
+        mState = 1;
         return 1;
     }
-    return (int)koopa;
 }
 
 // @symbol _ZN10daKpa3Bg_c19func_ov060_021180e0Ev
@@ -248,6 +234,18 @@ void daKpa3Bg_c::func_ov060_021180e0()
     if (dropAfter < mTimer)
         mState = 2;
     (*timer)++;
+}
+
+/* The C body cannot spell a member call. These inline to the direct calls.
+   They sit above the @symbol so that marker stays on the C function. */
+static inline void kpaCallEarthquake(daKpa3Bg_c *self, Vec3 *v, int fix) {
+    self->Earthquake(*(const Vector3 *)v, fix);
+}
+static inline void kpaCallPoof(daKpa3Bg_c *self, Vec3 *v) {
+    self->PoofDustAt(*(const Vector3 *)v);
+}
+static inline void kpaCallDestroy(daKpa3Bg_c *self) {
+    self->MarkForDestruction();
 }
 
 // @symbol _ZN10daKpa3Bg_c19func_ov060_02117db8Ev
@@ -311,7 +309,7 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         eq.x = self->mPosX;
         eq.y = self->mPosY;
         eq.z = self->mPosZ;
-        _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(self, &eq, 0x7d0000);
+        kpaCallEarthquake(self, &eq, 0x7d0000);
         self->mVertSpeed = 0x8000;
         self->mVertAccel = 0;
     }
@@ -334,7 +332,7 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         dust1.x = x;
         dust1.y = y;
         dust1.z = z;
-        _ZN8dActor_c10PoofDustAtERK7Vector3(self, &dust1);
+        kpaCallPoof(self, &dust1);
 
         a = ((int)(u16)(s16)(mul - 0x14b0) >> 4) * 2;
         x = k * (s16)data_02082214[a] + (bx << 12);
@@ -346,7 +344,7 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         dust2.x = x;
         dust2.y = y;
         dust2.z = z;
-        _ZN8dActor_c10PoofDustAtERK7Vector3(self, &dust2);
+        kpaCallPoof(self, &dust2);
     }
 
     {
@@ -358,7 +356,7 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         *posY += self->mVertSpeed;
     }
     if (self->mPhase > 0x12cu)
-        _ZN7fBase_c18MarkForDestructionEv(self);
+        kpaCallDestroy(self);
     self->mPhase++;
 }
 #pragma cplusplus on
@@ -398,7 +396,7 @@ Kpa3BgCollisionFilePtr data_ov060_0211b084(0x634);
 Kpa3BgCollisionFilePtr data_ov060_0211b08c(0x636);
 Kpa3BgCollisionFilePtr data_ov060_0211b04c(0x638);
 HandlerEntry data_ov060_0211b1ac[3] = {
-    { &daKpa3Bg_c::func_ov060_021181b4 },
-    { &daKpa3Bg_c::func_ov060_021180e0 },
-    { &daKpa3Bg_c::func_ov060_02117db8 },
+    {(Handler)&daKpa3Bg_c::func_ov060_021181b4},
+    {&daKpa3Bg_c::func_ov060_021180e0},
+    {&daKpa3Bg_c::func_ov060_02117db8},
 };

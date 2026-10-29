@@ -1,5 +1,20 @@
+#include "Ov007MenuState.h"
+#include "Ov007Touch.h"
+#include "Ov007Work.h"
+
+/* The 0x70-byte key record func_ov007_020c2304 allocates; names as in
+ * func_ov007_020c20b8, only the slots read here. */
+typedef struct Ov007Pad {
+    u16 keys;     /* 0x00: held this frame */
+    u16 prevKeys; /* 0x02: held last frame */
+} Ov007Pad;
+
 extern char *data_ov007_0210342c;
 extern int data_ov007_020ccc20[];
+
+/* The extern keeps the tree's char * spelling (the declaration-agreement
+ * gate); the typed view is reached through a cast macro. */
+#define WORK ((Ov007Work *)data_ov007_0210342c)
 
 extern void func_ov007_020c1d78(int i);
 extern void func_ov007_020b0244(void);
@@ -11,7 +26,7 @@ extern void func_ov007_020c1d8c(int i);
 extern int func_ov007_020b79c8(void);
 extern void func_ov007_020aec00(void);
 extern void Crash(void);
-extern void func_ov007_020bdeb0(void *self);
+extern void func_ov007_020bdeb0(int idx);
 extern void func_ov007_020b7a44(void);
 
 typedef int (*pfn)(int);
@@ -19,9 +34,9 @@ typedef int (*pfn)(int);
 void func_ov007_020af84c(void)
 {
     char *b = data_ov007_0210342c;
-    char *s2 = *(char **)(b + 8);
-    int state = *(short *)s2;
-    int r2var = *(int *)(s2 + 0xc);
+    Ov007MenuState *s2 = ((Ov007Work *)b)->states[1];
+    int state = s2->currentState;
+    int r2var = s2->stateTicks;
     unsigned char *base = *(unsigned char **)(*(char **)(b + 0x28)) + 0xb;
 
     switch (state) {
@@ -29,56 +44,56 @@ void func_ov007_020af84c(void)
         if (r2var == 0) {
             func_ov007_020c1d78(0);
             func_ov007_020b0244();
-            *(short *)(*(char **)(data_ov007_0210342c + 0xc) + 2) = 0xc;
+            WORK->states[2]->requestedState = 0xc;
         }
-        switch (*(int *)(s2 + 4)) {
+        switch (s2->stateWork) {
         case 0: {
-            int idx = *(int *)(data_ov007_0210342c + 0x58);
+            int idx = WORK->selectedSlot;
             if (idx == -1)
                 return;
             if (base[idx] != 0) {
-                *(int *)(s2 + 4) = 1;
+                s2->stateWork = 1;
                 return;
             }
             func_ov007_020b7d94(3);
-            *(int *)(data_ov007_0210342c + 0x58) = -1;
-            *(int *)(s2 + 4) = 2;
+            WORK->selectedSlot = -1;
+            s2->stateWork = 2;
             return;
         }
         case 1: {
-            int idx = *(int *)(data_ov007_0210342c + 0x58);
+            int idx = WORK->selectedSlot;
             if (idx == -1) {
-                *(int *)(s2 + 4) = 0;
+                s2->stateWork = 0;
                 func_ov007_020c1d78(0);
                 return;
             }
             {
-                int idx2 = *(int *)(data_ov007_0210342c + 0x5c);
+                int idx2 = WORK->targetSlot;
                 if (idx2 == -1)
                     return;
                 if (base[idx2] == 0) {
-                    *(short *)(s2 + 2) = 8;
+                    s2->requestedState = 8;
                     return;
                 }
                 func_ov007_020b43dc((void *)9);
-                *(int *)(s2 + 4) = 3;
+                s2->stateWork = 3;
                 return;
             }
         }
         case 2:
             if (func_ov007_020b79e4() == 0)
-                *(int *)(s2 + 4) = 0;
+                s2->stateWork = 0;
             return;
         case 3:
             if (func_ov007_020b4438() == 2) {
-                *(short *)(s2 + 2) = 8;
+                s2->requestedState = 8;
                 func_ov007_020c1d8c(0);
                 return;
             }
             if (func_ov007_020b4438() != 3)
                 return;
-            *(int *)(data_ov007_0210342c + 0x5c) = -1;
-            *(int *)(s2 + 4) = 0;
+            WORK->targetSlot = -1;
+            s2->stateWork = 0;
             return;
         }
         break;
@@ -88,22 +103,20 @@ void func_ov007_020af84c(void)
             func_ov007_020c1d8c(0);
             func_ov007_020b7d94(4);
         }
-        switch (*(int *)(s2 + 4)) {
+        switch (s2->stateWork) {
         case 0: {
             int r;
             if (func_ov007_020b79c8() == 0)
                 return;
             r = (*(pfn *)(data_ov007_0210342c + 0x2c))(
-                ((int (*)[3])data_ov007_020ccc20)
-                    [*(int *)(data_ov007_0210342c + 0x58)]
-                    [*(int *)(data_ov007_0210342c + 0x5c)]);
+                ((int(*)[3])data_ov007_020ccc20)[WORK->selectedSlot][WORK->targetSlot]);
             func_ov007_020aec00();
             switch (r) {
             case 0:
-                *(int *)(s2 + 4) = 1;
+                s2->stateWork = 1;
                 return;
             case 1:
-                *(int *)(s2 + 4) = 2;
+                s2->stateWork = 2;
                 return;
             case 2:
                 Crash();
@@ -116,37 +129,37 @@ void func_ov007_020af84c(void)
             int bb;
             if (func_ov007_020b79e4() != 0)
                 return;
-            bb = (*(int *)(s2 + 4) == 1);
-            func_ov007_020b7d94(bb ? 5 : *(int *)(data_ov007_0210342c + 0x5c) + 6);
-            *(int *)(data_ov007_0210342c + 0x5c) = -1;
-            *(int *)(data_ov007_0210342c + 0x58) = *(int *)(data_ov007_0210342c + 0x5c);
-            *(int *)(s2 + 4) = bb ? 4 : 3;
+            bb = (s2->stateWork == 1);
+            func_ov007_020b7d94(bb ? 5 : WORK->targetSlot + 6);
+            WORK->targetSlot = -1;
+            WORK->selectedSlot = WORK->targetSlot;
+            s2->stateWork = bb ? 4 : 3;
             return;
         }
         case 3:
             if (func_ov007_020b79c8() == 0)
                 return;
             {
-                char *p54 = *(char **)(data_ov007_0210342c + 0x54);
-                unsigned short aa = *(unsigned short *)(p54 + 2);
-                unsigned short bx = *(unsigned short *)p54;
+                Ov007Pad *p54 = WORK->pad;
+                unsigned short aa = p54->prevKeys;
+                unsigned short bx = p54->keys;
                 if ((bx & ~aa) == 0) {
-                    char *p50 = *(char **)(data_ov007_0210342c + 0x50);
-                    if (*(unsigned short *)(p50 + 0xc) == 0)
+                    Ov007Touch *p50 = WORK->touch;
+                    if (p50->cur.touch == 0)
                         return;
-                    if (*(unsigned short *)(p50 + 0x14) != 0)
+                    if (p50->prev.touch != 0)
                         return;
-                    if (*(unsigned int *)(p50 + 0x24) < 1)
+                    if (p50->releasedFrames < 1)
                         return;
                 }
-                func_ov007_020bdeb0((void *)0xc);
+                func_ov007_020bdeb0(0xc);
                 func_ov007_020b7a44();
-                *(int *)(s2 + 4) = 4;
+                s2->stateWork = 4;
                 return;
             }
         case 4:
             if (func_ov007_020b79e4() == 0)
-                *(short *)(s2 + 2) = 7;
+                s2->requestedState = 7;
             return;
         }
         break;

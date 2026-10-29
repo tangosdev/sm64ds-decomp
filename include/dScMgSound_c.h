@@ -14,8 +14,7 @@
 #ifndef DSCMGSOUND_C_H
 #define DSCMGSOUND_C_H
 #include "dScMgSingle3DBase_c.h"
-
-extern "C" int Presenter_Destruct(char *t);
+#include "Presenter.h"
 
 /* One HUD sprite. Two of them, not an array: nothing indexes between them. */
 struct dMgSoundSprite_c {
@@ -64,29 +63,22 @@ struct dMgSoundPop_c {
     u8  dir;          /* +0x23 velX oscillation */
 };
 
-/* Storage for the component accesses observed at scene offset 0x4f38.
- * The constructor clears +0x1a8 and the animation callbacks test it before
- * requesting sound. The type and field names are descriptive; 0x1ac is the
- * observed minimum extent, not a recovered original class boundary. */
-struct dMgSoundComponentStorage {
-    u8 raw_000[0x1a8];
-    s32 mSuppressSound;       /* +0x1a8 -- zero permits animation sounds */
-};
-
 #ifndef SM64DS_PLATFORM_PC
 typedef char dMgSoundSprite_c_size_must_be_0x10[sizeof(dMgSoundSprite_c) == 0x10 ? 1 : -1];
 typedef char dMgSoundNote_c_size_must_be_0x14[sizeof(dMgSoundNote_c) == 0x14 ? 1 : -1];
 typedef char dMgSoundPop_c_size_must_be_0x24[sizeof(dMgSoundPop_c) == 0x24 ? 1 : -1];
-typedef char dMgSoundComponentStorage_size_must_be_0x1ac[
-    sizeof(dMgSoundComponentStorage) == 0x1ac ? 1 : -1];
 #endif
 
 struct dScMgSound_c : dScMgSingle3DBase_c {
-    virtual ~dScMgSound_c() { Presenter_Destruct((char *)&mTable); }
+    /* The body is empty: the compiler destroys mTable. */
+    virtual ~dScMgSound_c() {}
+    /* Defined inline in src/minigames/d_s_mg_sound.cpp, where the factory's
+       `new` expands it. */
+    dScMgSound_c();
     virtual void StartRound(int arg);               /* slot 18 */
     virtual void OnNewRecord();                          /* slot 20 */
 
-    dMgSoundComponentStorage mTable; /* 0x4f38; mSuppressSound at 0x50e0 */
+    Presenter mTable; /* 0x4f38 -- the Mario face */
     u8  pad_50e4[4];
     dMgSoundNote_c mNotes[10];       /* 0x50e8 */
     dMgSoundPop_c mPops[30];         /* 0x51b0 */

@@ -6,18 +6,14 @@
 #include "dBgCh_Actr.h"
 #include "dActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* daKpFr_c is the ROM's own RTTI name for this class (this tree once coined it
  * FlameChompFire): the typeinfo at ov070
  * 0x02123418 names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x02123448 (31 slots, same count as dActor_c's) is what pairs it
  * to daKpFr_c_classInit (historical aliases daKpFr_c_Spawn and
  * FlameChompFire_Spawn).
- * The factory is `return new daKpFr_c()`. A bare `new` without the leaf
- * operator new below relocates to unresolved `_Znwm`; the in-class
- * `operator new(unsigned long)` forwards `_ZN7fBase_cnwEj((unsigned)size)`
- * until #2570's fBase overload lands.
+ * The factory is `return new daKpFr_c()`, which calls the inherited
+ * fBase_c::operator new (`_ZN7fBase_cnwEm`).
  *
  * The synthesized ctor constructs the three owned subobjects below at
  * 0xd4..0x130 in declaration order; D1 destroys them in exactly the reverse
@@ -91,10 +87,6 @@ struct daKpFr_c : dActor_c {
     void func_ov070_02121fd0();
     void func_ov070_0212200c();
     void func_ov070_02122044(int idx);
-
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

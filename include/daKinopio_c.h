@@ -12,7 +12,7 @@
  * SIZE 0x210 is the literal passed to fBase_c::operator new by the factory at
  * 0x02129cd0 (historical alias Toad_Spawn).
  * Member subobjects are pinned independently by both constructor and
- * destructor calls: dCcAc_c at 0x0d4, ModelAnim at 0x108, and dExtShadowModel_c at
+ * destructor calls: dCcAc_c at 0x0d4, dExtAnmModel_c at 0x108, and dExtShadowModel_c at
  * 0x16c. The two Matrix4x3 objects and state fields are addressed by the
  * class's own nonvirtual methods and pointer-to-member state table.
  *
@@ -35,7 +35,7 @@
 
 #include "dActor_c.h"
 #include "dCcAc_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "math/Matrix.h"
 
@@ -47,12 +47,12 @@ struct daKinopio_c : dActor_c {
     struct State {
         StateFunc init;
         StateFunc main;
-        u32 unk_10;
+        const char *name;
     };
 
     u8 mPadD0[0x4];               /* 0x0d0 */
     dCcAc_c mCollider;             /* 0x0d4 */
-    ModelAnim mModelAnim;          /* 0x108 */
+    dExtAnmModel_c mAnmModel;      /* 0x108 */
     dExtShadowModel_c mShadowModel;      /* 0x16c */
     Matrix4x3 mCapTransform;       /* 0x194 */
     Matrix4x3 mShadowTransform;    /* 0x1c4 */

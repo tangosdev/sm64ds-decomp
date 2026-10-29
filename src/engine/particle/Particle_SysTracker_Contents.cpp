@@ -7,8 +7,8 @@
  * links or unlinks the node.
  *
  * leftovers:
- * - unk_000 is the next unique id. Create skips 0. The header still
- *   calls the field unk_000, and dScStage_c embeds that class.
+ * - Entry::Initialise copies system into a local before writing the
+ *   direction. Writing through the member directly DIFFs Initialise.
  * - Entry::Reset clears callbackFlags bit 0 and then sets it. A
  *   single |= on the field DIFFs Reset.
  * - Update widens active == 1 to an int before testing it. A plain
@@ -89,9 +89,9 @@ SysTracker::Contents::Contents()
     do {
         entry->uniqueID = 0;
         entry++;
-    } while (entry != (Entry*)mBuckets);
+    } while (entry != &mEntries[0x40]);
 
-    unk_000 = 0;
+    mLastUniqueID = 0;
     mCurrentIndex = 0;
     for (i = 0; i < 0x10; i++)
         mBuckets[i] = 0;
@@ -122,7 +122,7 @@ void SysTracker::Contents::Update()
         }
 
         Unlink(*entry);
-        mCurrentIndex = (u8)i;
+        mCurrentIndex = i;
     }
 }
 
@@ -136,7 +136,7 @@ void SysTracker::Contents::Clear()
         if (entry->uniqueID != 0) {
             entry->active = 0;
             Unlink(*entry);
-            mCurrentIndex = (u8)i;
+            mCurrentIndex = i;
         }
     }
 }
@@ -165,16 +165,16 @@ u32 SysTracker::Contents::Create(
 
     for (i = 0; i < 0x40; i++) {
         if (mEntries[mCurrentIndex].uniqueID == 0) {
-            ++unk_000;
-            if (unk_000 == 0)
-                ++unk_000;
+            ++mLastUniqueID;
+            if (mLastUniqueID == 0)
+                ++mLastUniqueID;
 
-            if (!mEntries[mCurrentIndex].Initialise(
-                    unk_000, definitionID, position, direction, callback))
+            if (!mEntries[mCurrentIndex].Initialise(mLastUniqueID, definitionID, position,
+                                                    direction, callback))
                 return 0;
 
             Link(mEntries[mCurrentIndex]);
-            return unk_000;
+            return mLastUniqueID;
         }
 
         mCurrentIndex = (mCurrentIndex + 1) % 0x40;

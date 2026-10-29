@@ -17,7 +17,7 @@ no signedness, no struct layouts.
 Nothing in the build can object to a wrong type, because a wrong type usually emits
 identical instructions. That is why `src/` currently carries **43,922 local `extern`
 declaration lines across 8,948 files**, restating 13,368 distinct names, of which **27%
-are declared inconsistently across files**. `ModelAnim::SetAnim` has 123 distinct
+are declared inconsistently across files**. `dExtAnmModel_c::SetAnim` has 123 distinct
 spellings; `ApproachLinear` is declared under three different mangled names at once
 (`...Riii`, `...Rsss`, `...R7Vector3RKS_5Fix12IiE`). Those were degrees of freedom the
 matcher was free to exploit, and nothing ever forced them to converge.
@@ -450,7 +450,7 @@ the check the ROM build cannot report**, and it is why the baseline is step 0.
   declaration order. Probed — a root declaring `~R()` first emits `[D1, D0, a]` at
   slots 0/1/2, so declaring it later moves the destructor to slots 2/3 and stops
   matching the ROM. Every root in the ROM puts D1/D0 at slots 0/1 (`dFader_c`,
-  `dBgW`, `ModelBase`), so the flip is impossible for exactly the classes that
+  `dBgW`, `dExtModel_c`), so the flip is impossible for exactly the classes that
   motivate it. And for a derived class it buys nothing on its own — the freed
   destructor TU is still a three-`.text` object.
 

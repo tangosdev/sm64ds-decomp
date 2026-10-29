@@ -10,7 +10,7 @@
  *
  * The members close exactly on one another:
  *
- *     0x110 Model                      0x50   -> 0x160
+ *     0x110 dExtSimpleModel_c                      0x50   -> 0x160
  *     0x160 dExtShadowModel_c                0x28   -> 0x188
  *     0x1b8 dCcAcPos_c  0x40   -> 0x1f8
  *     0x1f8 dBgCh_Actr               0x1bc  -> 0x3b4
@@ -30,38 +30,64 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 #include "dBgCh_Actr.h"
 
 struct daGrock_c : dEnemyBase_c {
-    Model                        mModel;                /* 0x110 */
-    dExtShadowModel_c                  mShadowModel;          /* 0x160 */
-    u8  pad_188[0x30];
-    dCcAcPos_c    mdCcAcPos_c; /* 0x1b8 */
-    dBgCh_Actr                 mWithMeshClsn;         /* 0x1f8 */
-    u32                          unk_3b4;               /* 0x3b4 */
-    u8  pad_3b8[0x6];
-    u8                           mType;                 /* 0x3be */
-    u8                           unk_3bf;               /* 0x3bf */
-    u8                           unk_3c0;               /* 0x3c0 */
-    u8                           unk_3c1;               /* 0x3c1 */
-    u8                           unk_3c2;               /* 0x3c2 */
-    u8  pad_3c3[0x5];
+    dExtSimpleModel_c mModel;       /* 0x110 */
+    dExtShadowModel_c mShadowModel; /* 0x160 */
+    u8 pad_188[0x30];
+    dCcAcPos_c mdCcAcPos_c;   /* 0x1b8 */
+    dBgCh_Actr mWithMeshClsn; /* 0x1f8 */
+    /* On a star rock, the uniqueID of the spawner that made it (the spawner
+       stores it into the child right after Spawn); 0 on everything else.
+       When the star rock falls out of the level it looks the spawner up by
+       this id and clears its mStarRockOut. */
+    u32 mSpawnerID; /* 0x3b4 */
+    /* The rolling sound's Sound::PlayLong handle, passed back in each frame
+       the rock rolls on the ground; InitResources zeroes it. */
+    s32 mRollSoundID; /* 0x3b8 */
+    u8 pad_3bc[0x2];
+    u8 mType; /* 0x3be */
+    /* Spawner only: rocks spawned since the last star rock. Kind 1 spawns
+       the star rock once this reaches 5, then zeroes it. */
+    u8 mSpawnCount; /* 0x3bf */
+    /* The slot dActor_c::TrackStar returned for mStarID (-1 when none);
+       UntrackStar / UntrackAndSpawnStar take it back (s8 &trackStarID). */
+    s8 mTrackStarID; /* 0x3c0 */
+    /* The star index from param1's second nibble, 0xff when the rock
+       carries none; handed to TrackStar, UntrackAndSpawnStar and passed on
+       in the star rock's spawn parameter. */
+    u8 mStarID; /* 0x3c1 */
+    /* Spawner only: 1 while its star rock is alive (set on the spawn,
+       cleared by the star rock when it falls). No second star rock is
+       spawned while it is set. */
+    u8 mStarRockOut; /* 0x3c2 */
+    u8 pad_3c3[0x1];
+    /* The rolling dust's Particle::System::New handle, renewed each frame
+       the rock rolls on the ground; InitResources zeroes it. */
+    s32 mDustParticleID; /* 0x3c4 */
 
     /* --- vtable --- */
     virtual ~daGrock_c();
 
-    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+    virtual s32 OnAimedAtWithEgg(); /* slot 29 */
 
     int Behavior();
     int InitResources();
     int Render();
     int CleanupResources();
+
+    void SpawnStar();
+    void UpdateModelTransform();
+    void HandleCylinderHit();
+    void HandleMeshCollision();
+    void ApplyGravityAndMove();
 };
 
 #ifndef SM64DS_PLATFORM_PC

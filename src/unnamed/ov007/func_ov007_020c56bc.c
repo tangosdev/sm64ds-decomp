@@ -1,8 +1,31 @@
 extern int func_ov007_020c3ba8(int r4);
 #pragma opt_propagation off
 
+typedef struct {
+    int x, y, z;
+} Vec3;
+
+/* The 0xd0-byte touch picker func_ov007_020c690c builds; names as in that
+ * file and func_ov007_020c684c, only the slots this function touches. */
+typedef struct Ov007Picker {
+    char pad_00[8];
+    int groupCount; /* 0x08 */
+    char pad_0c[0x20];
+    int **groupPointCopies; /* 0x2c */
+    char pad_30[4];
+    int **groupLinks; /* 0x34: per group, one link per point; +0xc is its dir */
+    char pad_38[4];
+    int **pointLists; /* 0x3c: per group; +4 is the point count */
+    char pad_40[0x3c];
+    Vec3 restPos; /* 0x7c */
+} Ov007Picker;
+
+/* Offsets the link dirs where func_ov007_020c3ba8(1000) < r2 * 10: sb 0
+ * sets them to the offset, 1 adds it, 2 adds it to the rest offset
+ * from restPos. */
 void func_ov007_020c56bc(char* sl, int sb, int r2, int r3, int p4, int fp)
 {
+    Ov007Picker *self = (Ov007Picker *)sl;
     int i, j;
     int lim, neg3, d1, negp4, d2, jinit, base3e8;
     int* r6;
@@ -10,7 +33,8 @@ void func_ov007_020c56bc(char* sl, int sb, int r2, int r3, int p4, int fp)
     int r4;
 
     i = 0;
-    if (*(int*)(sl + 8) <= 0) return;
+    if (self->groupCount <= 0)
+        return;
 
     r4 = r2 * 10;
     neg3 = -r3;
@@ -23,13 +47,13 @@ void func_ov007_020c56bc(char* sl, int sb, int r2, int r3, int p4, int fp)
 
     do {
         j = jinit;
-        if ((*(int***)(sl + 0x3c))[i][1] > 0) {
+        if (self->pointLists[i][1] > 0) {
             r4 = j;
             do {
                 int r0v;
 
                 if (func_ov007_020c3ba8(base3e8) <= lim) {
-                    r6 = (int*)((*(int***)(sl + 0x34))[i][j]) + 3;
+                    r6 = (int *)(self->groupLinks[i][j]) + 3;
                     r5 = fp * (neg3 + func_ov007_020c3ba8(d1));
                     r0v = fp * (negp4 + func_ov007_020c3ba8(d2));
 
@@ -47,18 +71,18 @@ void func_ov007_020c56bc(char* sl, int sb, int r2, int r3, int p4, int fp)
                         }
                         break;
                     case 2:
-                        r6[0] = r5 + (*(int*)(sl + 0x7c) -
-                                      *(int*)((char*)((*(int***)(sl + 0x2c))[i]) + r4));
-                        r6[1] = r0v + (*(int*)(sl + 0x80) -
-                                       *(int*)((char*)((*(int***)(sl + 0x2c))[i]) + r4 + 4));
+                        r6[0] = r5 + (self->restPos.x -
+                                      *(int *)((char *)(self->groupPointCopies[i]) + r4));
+                        r6[1] = r0v + (self->restPos.y -
+                                       *(int *)((char *)(self->groupPointCopies[i]) + r4 + 4));
                         break;
                     }
                 }
 
                 r4 += 0xc;
                 j++;
-            } while (j < (*(int***)(sl + 0x3c))[i][1]);
+            } while (j < self->pointLists[i][1]);
         }
         i++;
-    } while (i < *(int*)(sl + 8));
+    } while (i < self->groupCount);
 }

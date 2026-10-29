@@ -175,7 +175,7 @@
   "fields": [
     {"offset": "0x110", "type": "dCcAcPos_c", "name": "unproven", "evidence": "classInit calls dCcAcPos_c::dCcAcPos_c on this+0x110; D1 and D0 call dCcAcPos_c::~dCcAcPos_c on the same address."},
     {"offset": "0x150", "type": "dBgCh_Actr", "name": "unproven", "evidence": "classInit calls dBgCh_Actr::dBgCh_Actr on this+0x150; both destructors call its destructor there."},
-    {"offset": "0x30c", "type": "BlendModelAnim", "name": "unproven", "evidence": "classInit calls BlendModelAnim::BlendModelAnim on this+0x30c; both destructors call BlendModelAnim::~BlendModelAnim there."},
+    {"offset": "0x30c", "type": "dExtBlendAnmModel_c", "name": "unproven", "evidence": "classInit calls dExtBlendAnmModel_c::dExtBlendAnmModel_c on this+0x30c; both destructors call dExtBlendAnmModel_c::~dExtBlendAnmModel_c there."},
     {"offset": "0x37c", "type": "pointer to 0x10-byte state-dispatch record", "name": "unproven", "evidence": "the dispatcher at 0x02121584 stores its r1 record pointer here; Behavior reads it at 0x021218c0 and dispatches the second member-function pointer at record+8."},
     {"offset": "0x380", "type": "ShadowModel", "name": "unproven", "evidence": "classInit calls ShadowModel::ShadowModel on this+0x380; both destructors call ShadowModel::~ShadowModel there; 0x021217a8 passes it to dActor_c::DropShadowRadHeight."},
     {"offset": "0x3a8", "type": "Matrix4x3", "name": "unproven", "evidence": "0x02121774 forms this+0x3a8 and copies exactly 12 words into it, then 0x021217a0 passes it as the Matrix4x3 argument to dActor_c::DropShadowRadHeight."},
@@ -183,7 +183,7 @@
     {"offset": "0x3e4", "type": "4-byte pointer-like value", "name": "unk_3e4", "evidence": "func_ov073_0211fbf4 loads it as a word at 0x0211fc00; func_ov073_0211fc78 stores an object pointer to it at 0x0211fdd0. Exact pointee type is unproven."},
     {"offset": "0x3e8", "type": "Vector3[8]", "name": "unproven", "evidence": "classInit invokes __cxa_vec_ctor at this+0x3e8 with count 8, stride 0x0c, element destructor Vector3::~Vector3; D1/D0 invoke __cxa_vec_dtor with the same address/count/stride."},
     {"offset": "0x448", "type": "Vector3[8]", "name": "unproven", "evidence": "classInit and both destructors use the same vector constructor/destructor pattern at literal offset 0x448, count 8, stride 0x0c."},
-    {"offset": "0x4bc", "type": "4-byte scalar", "name": "unk_4bc", "evidence": "InitResources stores 2 here. func_ov073_0211f2c0 loads it and multiplies by 0x30 before indexing through the BlendModelAnim region; signedness and original name are unproven."},
+    {"offset": "0x4bc", "type": "4-byte scalar", "name": "unk_4bc", "evidence": "InitResources stores 2 here. func_ov073_0211f2c0 loads it and multiplies by 0x30 before indexing through the dExtBlendAnmModel_c region; signedness and original name are unproven."},
     {"offset": "0x4c0", "type": "s32 counter", "name": "unk_4c0", "evidence": "func_ov073_0211f61c increments the word at this+0x4c0, compares it to 0x1e with a signed `ble`, and later resets it."},
     {"offset": "0x4c5", "type": "u8", "name": "unk_4c5", "evidence": "InitResources stores the byte sentinel 0xff at 0x02121e34; original meaning and spelling are unproven."},
     {"offset": "0x4c6", "type": "s16 angle", "name": "unk_4c6", "evidence": "InitResources sign-loads actor angleY and stores that halfword to this+0x4c6 at 0x02121e5c."},

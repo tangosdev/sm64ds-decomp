@@ -12,23 +12,24 @@
  *   slot 0  0x02014a60  ~dCcAcPos_c (D1)
  *   slot 1  0x02014a34  ~dCcAcPos_c (D0)
  *   slot 2  0x02014a2c  GetPos()     - `add r0, r0, #0x34', this->pos
- *   slot 3  0x02014a20  INHERITED, see below
+ *   slot 3  0x02014a20  GetOwnerID() - the veneer, see below
  *
  * Derives from dCcAc_c, not from dCc_c directly: its
  * typeinfo at 0x0208e680 is the 12-byte __si_class_type_info kind whose base
  * pointer resolves to dCcAc_c, and the ROM names this class dCcAcPos_c. C1
  * agrees -- it calls dCcAc_c's C2, then stores this vtable.
  *
- * SLOT 3 IS NOT AN OVERRIDE. func_02014a20 is a 12-byte interworking veneer,
- * `ldr ip,[pc]; bx ip; .word 0x0201493c', and that literal is
- * _ZN7dCcAc_c10GetOwnerIDEv -- the parent's body. The linker put
- * the veneer there; the class inherits GetOwnerID unchanged, so it is
- * deliberately NOT redeclared below. Declaring it would invent an override
- * the ROM does not have.
+ * SLOT 3 STAYS THE VENEER. The cartridge word is 0x02014a20, twelve bytes:
+ * `ldr ip,[pc]; bx ip; .word _ZN7dCcAc_c10GetOwnerIDEv`. It is not the base
+ * body at 0x0201493c. The definition is the qualified call; -interworking
+ * lowers that call to the veneer, and declaring the override here is what
+ * makes the key function's vtable bind the slot to the veneer. Leaving the
+ * function inherited binds slot 3 to dCcAc_c::GetOwnerID and the emitted
+ * table no longer matches the cartridge.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
- * include/ModelBase.h for the key-function rule and the objisolate exemption
- * to it. D0 stays a C file.
+ * THE DESTRUCTOR IS DECLARED FIRST. One ~dCcAcPos_c() in
+ * src/engine/collision/d_cc_ac.cpp emits D2, D0 and D1. D2 has no ROM home.
+ * See include/dExtModel_c.h for the key-function rule.
  *
  * LAYOUT: dCcAc_c is 0x34 and pos starts at exactly 0x34, so the
  * object is 0x40.
@@ -47,15 +48,16 @@ struct dCcAcPos_c : dCcAc_c {
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~dCcAcPos_c();   /* slots 0 (D1), 1 (D0) */
     virtual Vector3 &GetPos();              /* slot 2 - our pos, not the owner's */
-    /* slot 3 GetOwnerID is inherited through a linker veneer; see above. */
+    virtual u32 GetOwnerID();               /* slot 3 - veneer to dCcAc_c::GetOwnerID */
 
-    /* DECLARED, defined out of line in src/_ZN10dCcAcPos_cC1Ev.cpp as real
-     * C++ -- the body is empty; the dCcAc_c base step and the vptr store are
-     * the whole ROM function. */
+    /* Defined out of line in src/engine/collision/d_cc_ac.cpp. The body is
+     * empty; C1 is the dCcAc_c base step and the vptr store. C2 is the
+     * homeless base-object variant of that same definition. */
     dCcAcPos_c();
 
     /* --- non-virtual --- */
-    void Init(dActor_c *actor, const Vector3 &offset, Fix12<int> radius, Fix12<int> height, u32 flags, u32 vulnFlags);
+    void Init(dActor_c *actor, const Vector3 &offset, Fix12i radius, Fix12i height, u32 flags,
+              u32 vulnFlags);
     void SetPosRelativeToActor(const Vector3 &offset);
 };
 

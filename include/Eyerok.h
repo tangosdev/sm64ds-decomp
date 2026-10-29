@@ -15,10 +15,10 @@
  * destroy each in this order):
  *
  *     dCcAcPos_c         0x320 + 0x40 = 0x360
- *     BlendModelAnim     0x360 + 0x70 = 0x3d0
- *     Model              0x3d0 + 0x50 = 0x420
+ *     dExtBlendAnmModel_c     0x360 + 0x70 = 0x3d0
+ *     dExtSimpleModel_c              0x3d0 + 0x50 = 0x420
  *     dExtShadowModel_c  0x420 + 0x28 = 0x448
- *     TextureSequence    0x448 + 0x14 = 0x45c
+ *     dExtAnmTexPat_c    0x448 + 0x14 = 0x45c
  *
  * 0x45c..0x4d6 is a run of individually evidenced scalars. At 0x4dc,
  * Vector3[0x14] (0xc == sizeof(Vector3)) -- destroyed with
@@ -45,23 +45,23 @@
 #ifndef EYEROK_H
 #define EYEROK_H
 #include "types.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dBgW_KcMbg.h"
 #include "dBgActor_c.h"
 #include "dCcAcPos_c.h"
-#include "BlendModelAnim.h"
+#include "dExtBlendAnmModel_c.h"
 #include "dExtShadowModel_c.h"
-#include "TextureSequence.h"
+#include "dExtAnmTexPat_c.h"
 
 /* Defined in d_a_iwante.cpp: the enter/run pointer-to-member pair. */
 struct EyerokState;
 
 struct Eyerok : dBgActor_c {
     dCcAcPos_c mdCcAcPos_c;                                 /* 0x320 */
-    BlendModelAnim mBlendModelAnim;                         /* 0x360 */
-    Model mModel2;                                          /* 0x3d0 */
+    dExtBlendAnmModel_c mBlendAnmModel;                     /* 0x360 */
+    dExtSimpleModel_c mModel2;                              /* 0x3d0 */
     dExtShadowModel_c mShadowModel;                         /* 0x420 */
-    TextureSequence mTextureSequence;                       /* 0x448 */
+    dExtAnmTexPat_c mTextureSequence;                       /* 0x448 */
     /* Drop-shadow matrix, flat words. A Matrix4x3 member would run another
        ~Vector3 from ~Eyerok. */
     s32 mShadowMtx[12];                                     /* 0x45c */
@@ -129,10 +129,10 @@ struct Eyerok : dBgActor_c {
     u8  pad_4da[0x2];
     /* The ROM destroys this with __cxa_vec_cleanup(this + 0x4dc, 0x14, 0xc,
        _ZN7Vector3D1Ev) -- 0x14 elements, 0xc == sizeof(Vector3), same
-       evidence shape as include/daMoray_c.h's mStarUniqueID. Only raw
-       `this + 0x4dc` / `+ 0x4e0` / `+ 0x4e4` offsets are read elsewhere
-       (one Vector3), so the count is trusted from the destructor call, not
-       from any indexed access. */
+       evidence shape as include/daMoray_c.h's mStarUniqueID. The three
+       loops in d_a_iwante.cpp walk it with a stepping char * and read
+       mDustPos[0] through it, so the count is trusted from the destructor
+       call and the 0x14-iteration loops, not from any indexed access. */
     Vector3 mDustPos[0x14];                                 /* 0x4dc */
     /* One recycled Particle::System handle per mDustPos slot, per effect id.
        Behavior reissues both for each slot with a nonzero position

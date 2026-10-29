@@ -4,8 +4,6 @@
 #include "types.h"
 #include "daObjDorifu_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Rainbow Ride's Tricky Triangles (`dorifu`). No fields of its
  * own: the factory allocates 0xdcc, which daObjDorifu_c fills
@@ -19,18 +17,13 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 struct daObjRc_Dorifu_c : daObjDorifu_c {
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
     virtual ~daObjRc_Dorifu_c() {}
-    int CleanupResources();                /* slot  3 */
-    int InitResources();                   /* slot  0 */
-
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj(size);
-    }
+    int CleanupResources(); /* slot  3 */
+    int InitResources();    /* slot  0 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjRc_Dorifu_c_size_must_be_0xdcc[
-    sizeof(daObjRc_Dorifu_c) == 0xdcc ? 1 : -1];
+typedef char daObjRc_Dorifu_c_size_must_be_0xdcc[sizeof(daObjRc_Dorifu_c) == 0xdcc ? 1 : -1];
 #endif
 
 #endif /* DAOBJRC_DORIFU_C_H */

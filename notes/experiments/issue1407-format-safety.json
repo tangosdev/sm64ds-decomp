@@ -41,7 +41,7 @@
       "src/MultiStore32Bytes.c",
       "src/MultiStore_Int.c",
       "src/_ZN3IRQ20UserInterruptHandlerEv.cpp",
-      "src/_ZN4CP1511SystemSetupEv.cpp",
+      "src/engine/cp15/CP15_SystemSetup.cpp",
       "src/cstd4.cpp",
       "src/engine/cp15/CP15.cpp",
       "src/engine/cp15/CP154.cpp",
@@ -165,11 +165,11 @@
       "src/_ZN4CP1510EnableDTCMEv.cpp": [
         "src/_ZN4CP1510EnableDTCMEv.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/_ZN4CP1511SystemSetupEv.cpp": [
-        "src/_ZN4CP1511SystemSetupEv.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/CP15_SystemSetup.cpp": [
+        "src/engine/cp15/CP15_SystemSetup.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/_ZN4CP1514MPUDataRegion1Ej.cpp": [
-        "src/_ZN4CP1514MPUDataRegion1Ej.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/CP15_MPUDataRegion1.cpp": [
+        "src/engine/cp15/CP15_MPUDataRegion1.cpp: assembly requires original instruction line boundaries"
       ],
       "src/_ZN4CP1516WaitForInterruptEv.cpp": [
         "src/_ZN4CP1516WaitForInterruptEv.cpp: assembly requires original instruction line boundaries"
@@ -530,11 +530,11 @@
       "src/_ZN4CP1510EnableDTCMEv.cpp": [
         "src/_ZN4CP1510EnableDTCMEv.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/_ZN4CP1511SystemSetupEv.cpp": [
-        "src/_ZN4CP1511SystemSetupEv.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/CP15_SystemSetup.cpp": [
+        "src/engine/cp15/CP15_SystemSetup.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/_ZN4CP1514MPUDataRegion1Ej.cpp": [
-        "src/_ZN4CP1514MPUDataRegion1Ej.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/CP15_MPUDataRegion1.cpp": [
+        "src/engine/cp15/CP15_MPUDataRegion1.cpp: assembly requires original instruction line boundaries"
       ],
       "src/_ZN4CP1516WaitForInterruptEv.cpp": [
         "src/_ZN4CP1516WaitForInterruptEv.cpp: assembly requires original instruction line boundaries"
@@ -714,11 +714,11 @@
       "src/_ZN4CP1510EnableDTCMEv.cpp": [
         "src/_ZN4CP1510EnableDTCMEv.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/_ZN4CP1511SystemSetupEv.cpp": [
-        "src/_ZN4CP1511SystemSetupEv.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/CP15_SystemSetup.cpp": [
+        "src/engine/cp15/CP15_SystemSetup.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/_ZN4CP1514MPUDataRegion1Ej.cpp": [
-        "src/_ZN4CP1514MPUDataRegion1Ej.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/CP15_MPUDataRegion1.cpp": [
+        "src/engine/cp15/CP15_MPUDataRegion1.cpp: assembly requires original instruction line boundaries"
       ],
       "src/_ZN4CP1516WaitForInterruptEv.cpp": [
         "src/_ZN4CP1516WaitForInterruptEv.cpp: assembly requires original instruction line boundaries"
@@ -945,11 +945,11 @@
       "src/_ZN4CP1510EnableDTCMEv.cpp": [
         "src/_ZN4CP1510EnableDTCMEv.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/_ZN4CP1511SystemSetupEv.cpp": [
-        "src/_ZN4CP1511SystemSetupEv.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/CP15_SystemSetup.cpp": [
+        "src/engine/cp15/CP15_SystemSetup.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/_ZN4CP1514MPUDataRegion1Ej.cpp": [
-        "src/_ZN4CP1514MPUDataRegion1Ej.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/CP15_MPUDataRegion1.cpp": [
+        "src/engine/cp15/CP15_MPUDataRegion1.cpp: assembly requires original instruction line boundaries"
       ],
       "src/_ZN4CP1516WaitForInterruptEv.cpp": [
         "src/_ZN4CP1516WaitForInterruptEv.cpp: assembly requires original instruction line boundaries"

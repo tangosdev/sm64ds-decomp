@@ -6,9 +6,10 @@
  * Function order is the reverse of the ROM's: mwccarm 2004/b56 emits one
  * .text section per function in reverse source order.
  *
- * deslop leftovers:
- * - dCcAc_c::Init stays a scalar extern: it takes Fix12<int> by value and
- *   the member form size-DIFFs (mwccarm-codegen wall 6az).
+ * S41: RTTI ov002:0x0210b000 names daSCoin_c; D1 0x020f03c4 size 0x30,
+ * D0 0x020f03f4 size 0x44; no destructor body in this TU (@symbol only).
+ *
+ * NOTES:
  * - SpawnStar copies the marker's position through an int * at its mPosX:
  *   member reads (marker->mPos.x or marker->mPosX, ...) size-DIFF.
  * - LinkToBlock's ID tests go through the int-returning HasActorID: a
@@ -20,22 +21,15 @@
 #include "daSCoin_c.h"
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "daStar_c.h"
 #include "daStarBase_c.h"
 #include "daObjHatenaBlock_c.h"
 #include "daObjPushblock_c.h"
+#include "Sound.h"
+#include "math/CalcLib.h"
 
-extern "C" {
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-unsigned int func_02012790(unsigned int);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor,
-                                              int radius, int height,
-                                              unsigned int flags,
-                                              unsigned int vulnFlags);
 extern SharedFilePtr data_ov002_0210d9a8;
-}
 
 /* int-returning, so the ROM materializes the 0/1 of each ID test before
  * branching on it; a direct `actorID == id` does not. */
@@ -58,15 +52,14 @@ extern "C" SpawnInfo<daSCoin_c> g_profile_SECRET_COIN = {
 // @symbol _ZN9daSCoin_c13InitResourcesEv
 s32 daSCoin_c::InitResources()
 {
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x64000,
-                                              0x40000, 0x800002, 0);
+    mdCcAc_c.Init(this, 0x64000, 0x40000, 0x800002, 0);
     mStarID = param1 & 0xf;
     mGroupId = (param1 >> 8) & 0xf;
     mGroupRole = 0;
     mLeaderUniqueID = 0;
     mCollectedCount = 0;
     mDeathTimer = 0;
-    Model::LoadFile(data_ov002_0210d9a8);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
     return 1;
 }
 
@@ -198,9 +191,6 @@ void daSCoin_c::Collect()
     if (mGroupRole != 2) return;
     MarkForDestruction();
 }
-
-/*   _ZN9daSCoin_cD1Ev  0x020f03c4  size 0x30  (complete-object destructor)   */
-/*   _ZN9daSCoin_cD0Ev  0x020f03f4  size 0x44  (deleting destructor)          */
 
 // @symbol _ZN9daSCoin_cD0Ev
 // @symbol _ZN9daSCoin_cD1Ev

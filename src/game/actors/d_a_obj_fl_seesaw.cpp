@@ -10,28 +10,22 @@
  * down in source order, so the file is ROM-ascending and the registry
  * factory daObjFl_Seesaw_c_classInit comes last. Do not reorder.
  *
- * leftovers:
- * - dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay extern "C"
- *   scalar spellings: the real members take Fix12<int> by value, which
- *   the bytes refuse (the Fix12 wall; daObjFl_Block_c carries the same
- *   note).
- * - func_020393a4 and func_020393d4 stay extern "C": they store into dBgW
- *   internals and have no member form.
+ * Notes:
+ * - func_020393a4 and func_020393d4 store into dBgW internals. d_bg_w.cpp
+ *   defines them and no header declares them.
  * - data_ov022_021145a8 (the seesaw BMD), data_ov022_021145a0 (the KCL)
  *   and data_ov064_0211bacc (the CLPS row SetFile is handed) are unnamed
  *   data rows in their own modules.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daObjFl_Seesaw_c_AssetId {
-    ASSET_FL_SHISO_BMD = 0x0610,
-    ASSET_FL_SHISO_KCL = 0x0611
-};
+enum daObjFl_Seesaw_c_AssetId { ASSET_FL_SHISO_BMD = 0x0610, ASSET_FL_SHISO_KCL = 0x0611 };
 
 #include "math/Matrix.h"
 #include "daObjFl_Seesaw_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "math/CalcLib.h"
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x610, collision file 0x611). mwcc emits
@@ -39,34 +33,24 @@ enum daObjFl_Seesaw_c_AssetId {
  * are local; the handle constructors and destructors are the ROM
  * resource-family functions, aliased in the manifest. */
 struct SeesawModelFile : SharedFilePtr {
-    u32 words[2];
-
     SeesawModelFile(u32 fileID);
     ~SeesawModelFile();
 };
 
 struct SeesawCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     SeesawCollisionFilePtr(u32 fileID);
     ~SeesawCollisionFilePtr();
 };
 
-extern "C" {
 extern SeesawModelFile data_ov022_021145a8;
 extern SeesawCollisionFilePtr data_ov022_021145a0;
 extern char data_ov064_0211bacc[];
 
+extern "C" {
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
 
-/* Scalar ABI. The real members take Fix12<int> by value. */
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, char *kcl, const Matrix4x3 *mtx, int scale, s16 angleY,
-    char *clps);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int radius, int yOffset);
-
-/* Stores at dBgW+0x0c and +0x1c. Spellings match the C definitions. */
+/* local extern: stores at dBgW+0x0c and +0x1c. d_bg_w.cpp defines them
+ * and no header declares them. */
 void func_020393a4(int *mesh, int range);
 void func_020393d4(int *mesh, int callback);
 }
@@ -76,17 +60,12 @@ void func_020393d4(int *mesh, int callback);
 /* Vtable slots 16 (D1) and 17 (D0). */
 // @symbol _ZN16daObjFl_Seesaw_cD1Ev
 // @symbol _ZN16daObjFl_Seesaw_cD0Ev
-daObjFl_Seesaw_c::~daObjFl_Seesaw_c()
-{
-}
+daObjFl_Seesaw_c::~daObjFl_Seesaw_c() {}
 
 /* Writes mModel's transform from mPosX/Y/Z and mAngleX/Y/Z -- the base's
- * UpdateModelPosAndRotY job, on three axes. r0 is the object and the body
- * only touches this class's members, so the function is a member and the
- * parameter is this; the address is kept as the method name. */
-// @symbol _ZN16daObjFl_Seesaw_c19func_ov022_02111d48Ev
-void daObjFl_Seesaw_c::func_ov022_02111d48()
-{
+ * UpdateModelPosAndRotY job, on three axes. */
+// @symbol _ZN16daObjFl_Seesaw_c20UpdateModelTransformEv
+void daObjFl_Seesaw_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
@@ -94,8 +73,7 @@ void daObjFl_Seesaw_c::func_ov022_02111d48()
 }
 
 // @symbol _ZN16daObjFl_Seesaw_c16CleanupResourcesEv
-s32 daObjFl_Seesaw_c::CleanupResources()
-{
+s32 daObjFl_Seesaw_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
@@ -105,16 +83,14 @@ s32 daObjFl_Seesaw_c::CleanupResources()
 }
 
 // @symbol _ZN16daObjFl_Seesaw_c6RenderEv
-s32 daObjFl_Seesaw_c::Render()
-{
+s32 daObjFl_Seesaw_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 /* Slot 6. */
 // @symbol _ZN16daObjFl_Seesaw_c8BehaviorEv
-s32 daObjFl_Seesaw_c::Behavior()
-{
+s32 daObjFl_Seesaw_c::Behavior() {
     func_020393a4((int *)&mMeshCollider, 0x650000);
     if (DecIfAbove0_Byte(&mSwingCooldown) == 0) {
         mAngleX += mSwingStep;
@@ -123,8 +99,8 @@ s32 daObjFl_Seesaw_c::Behavior()
             mSwingCooldown = 0x1e;
         }
     }
-    func_ov022_02111d48();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0) {
+    UpdateModelTransform();
+    if (IsClsnInRange(0, 0) != 0) {
         UpdateClsnPosAndRot();
     }
     return 1;
@@ -132,22 +108,21 @@ s32 daObjFl_Seesaw_c::Behavior()
 
 /* Slot 0. */
 // @symbol _ZN16daObjFl_Seesaw_c13InitResourcesEv
-s32 daObjFl_Seesaw_c::InitResources()
-{
-    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov022_021145a8), 1, -1);
-    func_ov022_02111d48();
+s32 daObjFl_Seesaw_c::InitResources() {
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov022_021145a8), 1, -1);
+    UpdateModelTransform();
     UpdateClsnPosAndRot();
     char *kcl = dBgW_Kc::LoadFile(data_ov022_021145a0);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, data_ov064_0211bacc);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
+                              *(CLPS_Block *)(data_ov064_0211bacc));
     func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
     mSwingStep = -0x10;
     return 1;
 }
 
 // @symbol daObjFl_Seesaw_c_classInit
-extern "C" daObjFl_Seesaw_c *daObjFl_Seesaw_c_classInit()
-{
+extern "C" daObjFl_Seesaw_c *daObjFl_Seesaw_c_classInit() {
     return new daObjFl_Seesaw_c();
 }
 

@@ -3,8 +3,6 @@
 
 #include "types.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Wet-Dry World's long floating board.
  *
@@ -20,14 +18,8 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 struct daObjWcObj06_c : daObjFloatBoard_c {
     int InitResources();               /* slot  0 */
 
-    static void *operator new(unsigned long size);
     virtual ~daObjWcObj06_c() {}
 };
-
-inline void *daObjWcObj06_c::operator new(unsigned long size)
-{
-    return _ZN7fBase_cnwEj(size);
-}
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

@@ -269,7 +269,7 @@ Tree-wide today: **85** files are rejected with `extra sections: .data` and **13
 
 It also records *why* the choice is free: *"An override takes its base's slot wherever
 it is declared, so putting `~Actor` first costs nothing and makes it the key
-function."* `include/dBgW.h` and `include/ModelBase.h` name the same
+function."* `include/dBgW.h` and `include/dExtModel_c.h` name the same
 arrangement (*"THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD"*),
 `include/dBgW_Kc.h` states it as *"The structors stay C files"*, and
 `include/fBase_c.h` reaches it a third way — declaring `InitResources` (slot 0)

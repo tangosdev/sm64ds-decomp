@@ -12,9 +12,7 @@
 
 #include "types.h"
 #include "dActor_c.h"
-#include "ModelAnim.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+#include "dExtAnmModel_c.h"
 
 /* An animated seaweed prop -- ov002/daObjWakame_c, a scenery model and nothing
  * else. Profile SEAWEED(296) in symbols/overlay_actors.md.
@@ -26,23 +24,23 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  *   fBase_c::operator new. The factory then runs dActor_c's constructor, stores
  *   the vptr, and constructs ONE member, at this+0xd4.
  *
- *   THE MEMBER CLOSES ON IT. include/ModelAnim.h asserts sizeof(ModelAnim) ==
+ *   THE MEMBER CLOSES ON IT. include/dExtAnmModel_c.h asserts sizeof(dExtAnmModel_c) ==
  *   0x64, and 0xd4 + 0x64 = 0x138 exactly. Two independent numbers -- a factory
  *   literal in ov002 and a size assert on an arm9 class -- meet with nothing
  *   left over, so there is no room for a trailing field this header has missed.
  *
  * THE MEMBER'S OFFSET HAS FOUR WITNESSES, all of them code that runs:
- *   - the factory calls _ZN9ModelAnimC1Ev on this+0xd4;
- *   - ~daObjWakame_c calls _ZN9ModelAnimD1Ev on this+0xd4 (see below);
+ *   - the factory calls _ZN14dExtAnmModel_cC1Ev on this+0xd4;
+ *   - ~daObjWakame_c calls _ZN14dExtAnmModel_cD1Ev on this+0xd4 (see below);
  *   - Render loads a vptr from this+0xd4 and dispatches slot 5 through it,
- *     which is Model::Render -- so +0xd4 is a polymorphic object, not bytes;
+ *     which is dExtSimpleModel_c::Render -- so +0xd4 is a polymorphic object, not bytes;
  *   - Behavior calls dExtFrameCtrl_c::Advance (arm9 0x02015c3c) on this+0x124, and
- *     0x124 - 0xd4 = 0x50, which include/ModelAnim.h pins as exactly where the
- *     dExtFrameCtrl_c base sits inside a ModelAnim. The second base lands where the
+ *     0x124 - 0xd4 = 0x50, which include/dExtAnmModel_c.h pins as exactly where the
+ *     dExtFrameCtrl_c base sits inside a dExtAnmModel_c. The second base lands where the
  *     class says it should.
  *
  * unk_0d0 IS AN UNKNOWN FIELD, NOT ALIGNMENT. dActor_c asserts its own size
- * at 0xd0 and ModelAnim needs no more than 4-byte alignment, so those four
+ * at 0xd0 and dExtAnmModel_c needs no more than 4-byte alignment, so those four
  * bytes are a gap the ROM leaves and nothing in this TU reads or writes.
  *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (arm9 0x0208e3a4).
@@ -56,23 +54,18 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * and whose one base, at subobject offset 0, is arm9 0x0208e390 = _ZTI8dActor_c.
  */
 struct daObjWakame_c : dActor_c {
-    u32       unk_0d0;                  /* 0x0d0 -- not accessed by this TU */
-    ModelAnim mModelAnim;               /* 0x0d4 -- model and its animation */
+    u32 unk_0d0;              /* 0x0d0 -- not accessed by this TU */
+    dExtAnmModel_c mAnmModel; /* 0x0d4 -- model and its animation */
 
     /* All four are overrides of fBase_c/dActor_c, not new members -- see the
        vtable diff above. `virtual` is redundant to the compiler and costs no
        codegen; it is written so a reader can tell these from a plain member. */
-    virtual s32 InitResources();        /* slot 0 -- 0x020bc540 */
-    virtual s32 CleanupResources();     /* slot 3 -- 0x020bc4c8 */
-    virtual s32 Behavior();             /* slot 6 -- 0x020bc520 */
-    virtual s32 Render();               /* slot 9 -- 0x020bc4f8 */
+    virtual s32 InitResources();    /* slot 0 -- 0x020bc540 */
+    virtual s32 CleanupResources(); /* slot 3 -- 0x020bc4c8 */
+    virtual s32 Behavior();         /* slot 6 -- 0x020bc520 */
+    virtual s32 Render();           /* slot 9 -- 0x020bc4f8 */
 
-    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
-       Parameter is size_t (unsigned long on this compiler). `return new`
-       relocates to `_Znwm` without this. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    void UpdateModelTransform(); /* 0x020bc488 */
 
     /* INLINE, AND THAT IS WHAT LETS THIS CLASS OWN A TRANSLATION UNIT. Declared
        out of line, mwccarm 2004/b56 emits D0 before D1 -- the reverse of the
@@ -93,20 +86,19 @@ struct daObjWakame_c : dActor_c {
 
        THE BODY IS EMPTY, WHICH IS NOT THE SAME AS THE DESTRUCTOR BEING EMPTY.
        D1 at 0x020bc414 is 0x30 bytes and disassembles to `push {r4,lr} / mov r4,
-       r0 / ldr r1,[pc] / add r0,r4,#0xd4 / str r1,[r4] / bl _ZN9ModelAnimD1Ev /
+       r0 / ldr r1,[pc] / add r0,r4,#0xd4 / str r1,[r4] / bl _ZN14dExtAnmModel_cD1Ev /
        mov r0,r4 / bl _ZN8dActor_cD2Ev / mov r0,r4 / pop / bx lr`: one vptr store,
        then the member destroyed, then the tail into the base destructor. All
        three are things the compiler emits for an empty body -- the member call
-       BECAUSE mModelAnim has a destructor of its own, which is exactly why this
+       BECAUSE mAnmModel has a destructor of its own, which is exactly why this
        class's D1 is 0x30 bytes where a scalar-only sibling's is 0x24. Writing
        anything between the braces would add code the cartridge does not have. */
-    virtual ~daObjWakame_c() {}         /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjWakame_c() {} /* slots 16 (D1), 17 (D0) */
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjWakame_c_size_must_be_0x138[
-    sizeof(daObjWakame_c) == 0x138 ? 1 : -1];
+typedef char daObjWakame_c_size_must_be_0x138[sizeof(daObjWakame_c) == 0x138 ? 1 : -1];
 #endif
 
 #endif /* DAOBJWAKAME_C_H */

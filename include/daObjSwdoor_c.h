@@ -26,15 +26,18 @@
  * _ZTV10dBgActor_c.
  *
  * FOUR BYTE FIELDS, 0x31e..0x321. Both factories pass 804 = 0x324. The bytes
- * are read and written only by the two ov002 helpers this class's translation
- * unit owns -- func_ov002_020bad10 (setup) and func_ov002_020bac18 (the
- * per-frame body) -- which both leaves call with themselves as the argument;
- * neither leaf's own code names them. So they are this class's, declared below.
+ * are read and written only by two of the ov002 helpers this class's
+ * translation unit owns -- InitResourcesFrom (setup) and UpdateShutter (the
+ * per-frame body) -- which both leaves call on themselves; neither leaf's own
+ * code names them. So they are this class's, declared below.
  * The first two land in dBgActor_c's tail padding (0x31e, 0x31f), the same
  * reuse daObjRc_Guruguru_c::mAngVelY makes; the size assert below holds it.
  */
 
 #ifdef __cplusplus
+
+/* {model, collision, CLPS}: each leaf's own file handles. */
+struct ResourceDescriptor;
 
 struct daObjSwdoor_c : dBgActor_c {
     /* --- vtable --- */
@@ -65,13 +68,19 @@ struct daObjSwdoor_c : dBgActor_c {
        pure-specifier is only valid on a declaration carrying the keyword, and a
        pure virtual has no body to emit, so it can never become the key function:
        whichever virtual was first and non-inline before is still first now. */
-    virtual s32 InitResources() = 0;        /* slot  0 */
-    virtual s32 CleanupResources() = 0;     /* slot  3 */
-    virtual s32 Behavior() = 0;             /* slot  6 */
+    virtual s32 InitResources() = 0;    /* slot  0 */
+    virtual s32 CleanupResources() = 0; /* slot  3 */
+    virtual s32 Behavior() = 0;         /* slot  6 */
 
-    /* The shutter's own four bytes. func_ov002_020bad10 (setup) writes all
-       four from param1; func_ov002_020bac18 (the per-frame body both leaves
-       install as Behavior) runs on them. The first two sit in dBgActor_c's
+    /* The bodies both leaves call from their own InitResources /
+       CleanupResources / Behavior, with their own file tables. */
+    s32 InitResourcesFrom(ResourceDescriptor *);
+    s32 CleanupResourcesFrom(ResourceDescriptor *);
+    s32 UpdateShutter();
+
+    /* The shutter's own four bytes. InitResourcesFrom writes all four from
+       param1; UpdateShutter (the per-frame body both leaves run as
+       Behavior) runs on them. The first two sit in dBgActor_c's
        tail padding, which mwccarm lets a derived class reuse.
        mTurnDir is param1 bit 0: nonzero turns mAngleY by +0x100 a frame
        while turning, zero by -0x100. mState runs 0 (wait for the event),

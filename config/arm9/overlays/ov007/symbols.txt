@@ -1123,21 +1123,21 @@ sPortraitStrokeYCoords kind:data(any) addr:0x020d7e98 local
 sPortraitStrokeProgressThresholds kind:data(any) addr:0x020d7eb0 local
 data_ov007_020d7ec8 kind:data(any) addr:0x020d7ec8
 data_ov007_020d7ee8 kind:data(any) addr:0x020d7ee8
-data_ov007_020d7f0c kind:data(any) addr:0x020d7f0c
-data_ov007_020d7f5c kind:data(any) addr:0x020d7f5c
-data_ov007_020d7fac kind:data(any) addr:0x020d7fac
-data_ov007_020d7ffc kind:data(any) addr:0x020d7ffc
-data_ov007_020d8074 kind:data(any) addr:0x020d8074
-data_ov007_020d80ec kind:data(any) addr:0x020d80ec
-data_ov007_020d8164 kind:data(any) addr:0x020d8164
-data_ov007_020d81e4 kind:data(any) addr:0x020d81e4
-data_ov007_020d8264 kind:data(any) addr:0x020d8264
-data_ov007_020d82e4 kind:data(any) addr:0x020d82e4
-data_ov007_020d8364 kind:data(any) addr:0x020d8364
-data_ov007_020d83e4 kind:data(any) addr:0x020d83e4
-data_ov007_020d8464 kind:data(any) addr:0x020d8464
-data_ov007_020d84ec kind:data(any) addr:0x020d84ec
-data_ov007_020d8574 kind:data(any) addr:0x020d8574
+sYoshiPlainStrokeXCoords kind:data(any) addr:0x020d7f0c local
+sYoshiPlainStrokeYCoords kind:data(any) addr:0x020d7f5c local
+sYoshiPlainStrokeProgressThresholds kind:data(any) addr:0x020d7fac local
+sMarioFrontStrokeXCoords kind:data(any) addr:0x020d7ffc local
+sMarioFrontStrokeYCoords kind:data(any) addr:0x020d8074 local
+sMarioFrontStrokeProgressThresholds kind:data(any) addr:0x020d80ec local
+sYoshiStarStrokeXCoords kind:data(any) addr:0x020d8164 local
+sYoshiStarStrokeYCoords kind:data(any) addr:0x020d81e4 local
+sYoshiStarStrokeProgressThresholds kind:data(any) addr:0x020d8264 local
+sYoshiHeartStrokeXCoords kind:data(any) addr:0x020d82e4 local
+sYoshiHeartStrokeYCoords kind:data(any) addr:0x020d8364 local
+sYoshiHeartStrokeProgressThresholds kind:data(any) addr:0x020d83e4 local
+sMarioSideStrokeXCoords kind:data(any) addr:0x020d8464 local
+sMarioSideStrokeYCoords kind:data(any) addr:0x020d84ec local
+sMarioSideStrokeProgressThresholds kind:data(any) addr:0x020d8574 local
 data_ov007_020d85fc kind:data(any) addr:0x020d85fc
 data_ov007_020d8690 kind:data(any) addr:0x020d8690
 data_ov007_020d8724 kind:data(any) addr:0x020d8724

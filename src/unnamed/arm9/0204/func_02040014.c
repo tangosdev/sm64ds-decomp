@@ -11,12 +11,31 @@ extern void CpuCopy8(void *dst, void *src, int n);
 extern int func_02042748(u16 *a, u16 *b);
 extern int func_02061d30(int self, unsigned int idx);
 
+/* Leading fields of NitroSDK WMStartParentCallback, with the names
+ * func_02066a94.c gives them. */
+typedef struct WmStartParentCallback {
+    u16 apiid;        /* 0x00 */
+    u16 errcode;      /* 0x02 */
+    u16 wlCmdID;      /* 0x04 */
+    u16 wlResult;     /* 0x06 */
+    u16 state;        /* 0x08 -- 0 PARENT_START, 2 BEACON_SENT, 7 CONNECTED, 9 DISCONNECTED */
+    u8 macAddress[6]; /* 0x0a -- the child's */
+    u16 aid;          /* 0x10 */
+} WmStartParentCallback;
+
+/* The parent's WM_StartParent callback. A connecting child stays only when
+ * its MAC address equals one of the three entries of data_020a0fbe whose
+ * data_020a0f9d flag is set (func_02042748 compares the three halfwords);
+ * data_020a0fa0[aid] then takes the address. Any other child is
+ * disconnected (func_02061d30, WM_Disconnect). The parameter keeps its
+ * char * spelling: the other declaration is checked against it. */
 void func_02040014(char *a)
 {
+    WmStartParentCallback *cb = (WmStartParentCallback *)a;
     int v;
 
-    if (*(u16 *)(a + 2) == 0) {
-        v = *(u16 *)(a + 8);
+    if (cb->errcode == 0) {
+        v = cb->state;
         switch (v) {
         case 0: {
             int sel = data_020a0f5c;
@@ -48,7 +67,7 @@ void func_02040014(char *a)
             u16 *item_p;
 
             matched = 0;
-            CpuCopy8(a + 0xa, buf, 6);
+            CpuCopy8(cb->macAddress, buf, 6);
 
             flag_p = data_020a0f9d;
             item_p = data_020a0fbe[0];
@@ -56,7 +75,7 @@ void func_02040014(char *a)
             do {
                 if (*flag_p != 0) {
                     if (func_02042748(buf, item_p) != 0) {
-                        u16 idx = *(u16 *)(a + 0x10);
+                        u16 idx = cb->aid;
                         CpuCopy8(buf, data_020a0fa0[idx], 6);
                         matched = 1;
                         break;
@@ -71,7 +90,7 @@ void func_02040014(char *a)
             if (matched != 0) {
                 return;
             }
-            func_02061d30(0, *(u16 *)(a + 0x10));
+            func_02061d30(0, cb->aid);
             break;
         }
         case 9:

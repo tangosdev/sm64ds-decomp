@@ -44,7 +44,7 @@
     "symbol": "daObjMarioCap_c_classInit",
     "address": "0x020b8b98",
     "source": "src/d_a_obj_mario_cap.c",
-    "note": "OUTSIDE the promoted range. tu_map.py ends this TU's span at 0x020b8b98, and the factory is its own delinks entry above it. It calls _ZN7fBase_cnwEj(1040), constructs dEnemyBase_c, stores _ZTV15daObjMarioCap_c, then dCcAc_c at 0x110, dBgCh_Actr at 0x144, ModelAnim at 0x300, ShadowModel at 0x364 and dCapIcon_c at 0x3d0."
+    "note": "OUTSIDE the promoted range. tu_map.py ends this TU's span at 0x020b8b98, and the factory is its own delinks entry above it. It calls _ZN7fBase_cnwEj(1040), constructs dEnemyBase_c, stores _ZTV15daObjMarioCap_c, then dCcAc_c at 0x110, dBgCh_Actr at 0x144, dExtAnmModel_c at 0x300, ShadowModel at 0x364 and dCapIcon_c at 0x3d0."
   },
   "profile": {
     "symbol": "g_profile_OBJ_MARIO_CAP",

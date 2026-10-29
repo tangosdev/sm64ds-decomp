@@ -1,5 +1,5 @@
 #include "types.h"
-extern void MultiCopy_Int(void* dst, void* src, u32 count);
+extern void MultiCopy_Int(void *src, void *dst, u32 count);
 
 typedef struct ObjWithField0a {
     u8 pad0[10];

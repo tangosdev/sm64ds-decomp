@@ -4,8 +4,6 @@
 #include "types.h"
 #include "daObjFallBlock_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Big Boo's Haunt falling block. No fields of its own: the
  * factory allocates 0x34c, which daObjFallBlock_c fills. Overrides
@@ -20,12 +18,6 @@ struct daObjTh_Fall_Block_c : daObjFallBlock_c {
     virtual ~daObjTh_Fall_Block_c() {}
     virtual s32 CleanupResources(); /* slot 3 */
     virtual s32 InitResources();    /* slot 0 */
-
-    /* Leaf adapter until fBase_c::operator new(size_t) lands (#2570).
-       `return new daObjTh_Fall_Block_c()` then routes through the retail allocator. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

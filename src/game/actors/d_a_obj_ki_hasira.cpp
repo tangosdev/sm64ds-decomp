@@ -38,33 +38,26 @@
  * constructor emits exactly that sequence; the factory is now
  * `return new daObjKi_Hasira_c();`.
  *
- * deslop
- * Leftover: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled in
- *   this TU -- both take Fix12<int> by value (wall 6az); a member call homes
- *   the argument and size-DIFFs InitResources / Behavior.
- * Leftover: func_ov016_02112a9c is a member retaining its linker address as
- *   its name -- the three-axis model-matrix update (dBgActor_c::
- *   UpdateModelPosAndRotY's pitch-and-roll sibling); the real name is
- *   unrecovered.
- * Leftover: the model and collision SharedFilePtrs are ov016 .bss rows still
+ * UpdateModelMatrix is the three-axis model-matrix update (dBgActor_c::
+ *   UpdateModelPosAndRotY's pitch-and-roll sibling); the name is coined,
+ *   the real one is unrecovered.
+ * What stays: the model and collision SharedFilePtrs are ov016 .bss rows still
  *   named RockPillar_ModelFile / RockPillar_ClsnFile in symbols.txt; they are
  *   data names, not the class name, and renaming them is a separate change.
- * Leftover: data_ov016_02113cac, the CLPS block handed to SetFile, is an
+ * What stays: data_ov016_02113cac, the CLPS block handed to SetFile, is an
  *   unnamed ov016 .data row this TU does not own.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daObjKi_Hasira_c_AssetId {
-    ASSET_KI_HASIRA_BMD = 0x063d,
-    ASSET_KI_HASIRA_KCL = 0x063e
-};
+enum daObjKi_Hasira_c_AssetId { ASSET_KI_HASIRA_BMD = 0x063d, ASSET_KI_HASIRA_KCL = 0x063e };
 
 #include "daObjKi_Hasira_c.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
 #include "Sound.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "math/Approach.h"
+#include "math/CalcLib.h"
+#include "Particle__System.h"
 
 typedef long long s64;
 
@@ -72,37 +65,26 @@ typedef long long s64;
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct HasiraModelFile : SharedFilePtr {
-    u32 words[2];
-
     HasiraModelFile(u32 fileID);
     ~HasiraModelFile();
 };
 
 struct HasiraCollisionFile : SharedFilePtr {
-    u32 words[2];
-
     HasiraCollisionFile(u32 fileID);
     ~HasiraCollisionFile();
 };
 
 struct dCamera_c;
 
-extern "C" {
 /* This class's model and collision files (ov016 .bss) and the CLPS block
  * dBgW_KcMbg::SetFile is handed (ov016 .data). */
 extern HasiraModelFile RockPillar_ModelFile;
 extern HasiraCollisionFile RockPillar_ClsnFile;
 extern char data_ov016_02113cac[];
 
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *self, void *kcl, void *mtx, int scale, s16 angleY, void *clps);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-
+/* local extern: no shared header declares these. */
+extern "C" {
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-u8 DecIfAbove0_Byte(u8 *p);
-void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 /* The camera-shake request and the camera it goes to (arm9). */
 void func_0200d8c8(dCamera_c *cam, const Vector3 *pos, int strength);
 extern void *data_0209f318;
@@ -117,23 +99,21 @@ extern s16 data_02082214[];
  * not preserved. Historical aliases: RockPillar_Spawn, and RockPillar for
  * the class itself. */
 // @symbol daObjKi_Hasira_c_classInit
-extern "C" daObjKi_Hasira_c *daObjKi_Hasira_c_classInit()
-{
+extern "C" daObjKi_Hasira_c *daObjKi_Hasira_c_classInit() {
     return new daObjKi_Hasira_c();
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjKi_Hasira_c13InitResourcesEv
-s32 daObjKi_Hasira_c::InitResources()
-{
-    void *f = Model::LoadFile(RockPillar_ModelFile);
+s32 daObjKi_Hasira_c::InitResources() {
+    void *f = dExtSimpleModel_c::LoadFile(RockPillar_ModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
-    func_ov016_02112a9c();
+    UpdateModelMatrix();
     UpdateClsnPosAndRot();
 
     char *k = dBgW_Kc::LoadFile(RockPillar_ClsnFile);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, k, &mClsnMat, 0x199, mAngleY, data_ov016_02113cac);
+    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY,
+                          *(CLPS_Block *)data_ov016_02113cac);
 
     Spawn(0x3b, 0, mPos, 0, mAreaId, -1);
     return 1;
@@ -141,8 +121,7 @@ s32 daObjKi_Hasira_c::InitResources()
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjKi_Hasira_c8BehaviorEv
-s32 daObjKi_Hasira_c::Behavior()
-{
+s32 daObjKi_Hasira_c::Behavior() {
     Vector3 targetPos;
     /* volatile on purpose: the cartridge stores each crash coordinate as soon
        as it is known, then stores x, y and z again once the offsets are in,
@@ -212,8 +191,10 @@ s32 daObjKi_Hasira_c::Behavior()
             z = z + (int)(((s64)cos * (s64)reach + round) >> 12);
             crashPos.y = y;
             crashPos.z = z;
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(particleID, x, y, z);
-            dustPos.x = crashPos.x; dustPos.y = crashPos.y; dustPos.z = crashPos.z;
+            Particle::System::NewSimple(particleID, x, y, z);
+            dustPos.x = crashPos.x;
+            dustPos.y = crashPos.y;
+            dustPos.z = crashPos.z;
             LandingDustAt(dustPos, true);
             func_0200d8c8((dCamera_c *)data_0209f318, &mPos, 0x5dc000);
             Sound::PlayBank3(0x41, mCamSpacePos);
@@ -223,24 +204,22 @@ s32 daObjKi_Hasira_c::Behavior()
     }
     }
 
-    func_ov016_02112a9c();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
+    UpdateModelMatrix();
+    if (IsClsnInRange(0, 0) != 0)
         UpdateClsnPosAndRot();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjKi_Hasira_c6RenderEv
-s32 daObjKi_Hasira_c::Render()
-{
+s32 daObjKi_Hasira_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjKi_Hasira_c16CleanupResourcesEv
-s32 daObjKi_Hasira_c::CleanupResources()
-{
+s32 daObjKi_Hasira_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 
@@ -250,14 +229,13 @@ s32 daObjKi_Hasira_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjKi_Hasira_c19func_ov016_02112a9cEv
+// @symbol _ZN16daObjKi_Hasira_c17UpdateModelMatrixEv
 /* dBgActor_c::UpdateModelPosAndRotY with pitch and roll as well: rebuild the
  * model matrix from all three angles, then drop the position into its
  * translation row at 1/8 scale, the model-space unit. */
-void daObjKi_Hasira_c::func_ov016_02112a9c()
-{
+void daObjKi_Hasira_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9]  = mPosX >> 3;
+    mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = mPosY >> 3;
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }

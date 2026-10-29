@@ -43,20 +43,20 @@
 #ifdef __cplusplus
 
 struct daObjMaruta_c : dBgActor_c {
-    u8  pad_31e[0x2];
-    s32 mRestPosX;          /* 0x320 -- InitResources copies mPosX */
-    s32 mRestPosY;          /* 0x324 */
-    s32 mRestPosZ;          /* 0x328 */
-    s32 mHitPosX;           /* 0x32c -- BeforeClsn copies PLAYER mPos */
-    s32 mHitPosY;           /* 0x330 */
-    s32 mHitPosZ;           /* 0x334 */
-    s32 mPathAngDiff;       /* 0x338 -- AngleDiff of travel vs mAngleY */
-    s16 mRollAngVel;        /* 0x33c */
-    u8  mHitTimer;          /* 0x33e -- DecIfAbove0_Byte */
-    u8  pad_33f;
-    u16 mSoundTimer;        /* 0x340 -- DecIfAbove0_Short */
-    u8  mHitByPlayer;       /* 0x342 */
-    u8  pad_343;
+    u8 pad_31e[0x2];
+    s32 mRestPosX;    /* 0x320 -- InitResources copies mPosX */
+    s32 mRestPosY;    /* 0x324 */
+    s32 mRestPosZ;    /* 0x328 */
+    s32 mHitPosX;     /* 0x32c -- BeforeClsn copies PLAYER mPos */
+    s32 mHitPosY;     /* 0x330 */
+    s32 mHitPosZ;     /* 0x334 */
+    s32 mPathAngDiff; /* 0x338 -- AngleDiff of travel vs mAngleY */
+    s16 mRollAngVel;  /* 0x33c */
+    u8 mHitTimer;     /* 0x33e -- DecIfAbove0_Byte */
+    u8 pad_33f;
+    u16 mSoundTimer; /* 0x340 -- DecIfAbove0_Short */
+    u8 mHitByPlayer; /* 0x342 */
+    u8 pad_343;
 
     /* --- vtable --- */
     /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
@@ -76,13 +76,20 @@ struct daObjMaruta_c : dBgActor_c {
        the implicit destructor bodies. The cartridge orders D0 below D1, which
        no admissible source form reproduces, so those two bodies stay in their
        enrolled shards and this TU's copies are licensed deadstrip-duplicate. */
-    void OnHitByMegaChar(Player &player);  /* void, see include/daObjPile_c.h */
+    void OnHitByMegaChar(Player &player); /* void, see include/daObjPile_c.h */
 
     /* Slot 9, this class's own override. Not `virtual` -- fBase_c already
        declares it virtual, and re-adding the keyword here is a style
        choice this header hasn't made for its own other declarations. */
     s32 Render();
-    void func_ov080_02127094();
+
+    /* Rotate the model by mAngleX/Y/Z and set its translation to mPos >> 3. */
+    void UpdateModelTransform();
+    /* The collider's before-collision hook: record a touching player and
+       shove it along mAngleY. BeforeClsnCallback is the address the dBgW
+       stores; it drops its first argument and forwards to this. */
+    void HandlePlayerContact(dActor_c *);
+    static void BeforeClsnCallback(void *, void *, void *);
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero
@@ -96,9 +103,9 @@ struct daObjMaruta_c : dBgActor_c {
        pure-specifier is only valid on a declaration carrying the keyword, and a
        pure virtual has no body to emit, so it can never become the key function:
        whichever virtual was first and non-inline before is still first now. */
-    virtual s32 InitResources() = 0;        /* slot  0 */
-    virtual s32 CleanupResources() = 0;     /* slot  3 */
-    virtual s32 Behavior() = 0;             /* slot  6 */
+    virtual s32 InitResources() = 0;    /* slot  0 */
+    virtual s32 CleanupResources() = 0; /* slot  3 */
+    virtual s32 Behavior() = 0;         /* slot  6 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

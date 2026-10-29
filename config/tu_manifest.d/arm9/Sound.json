@@ -10,13 +10,29 @@
     "The run is one module: the Sound namespace public API (Play/Play2D/PlayBank*/PlayLong/PlayCharVoice/PlaySub, the music-layer Set/End/LoadAndSet/StopLoadedMusic/Pause/Unpause group, the voice-group Load/Reset/Unset calls) plus the sound-object registry it all drives (the 16-bucket table at data_0209b53c: find func_02011934, allocs func_020116c4/func_0201179c/func_0201186c, link func_02011698, unlink func_02011654, sweeps func_02011974/func_020119c8, init func_02011a28/func_02011a5c), the per-frame update func_020132d8, and the boot init func_020133bc/func_020134c8.",
     "Every public member is a Sound:: mangled name; the func_ helpers are TU-local extern \"C\" statics called only from inside the run plus a handful of tail-call veneers into the separate sound-engine TU at 0x02048xxx.",
     "Bounded on the left by the dActor_c lifecycle/Vector3s destructor run ending at 0x02011654 and on the right by GetLevelPart/SublevelToLevel (level utilities) starting at 0x02013548, so the run is bounded by other TUs on both sides.",
-    "module sinit corroboration: arm9 is one under-segmented unit, so sinit attribution does not narrow this TU."
+    "module sinit corroboration: arm9 is one under-segmented unit, so sinit attribution does not narrow this TU.",
+    "static initializer: __sinit_02074da8 (.init 0x02074da8..0x02074dbc, .ctor word 0x02086b6c) initializes only data_0209b53c by calling func_02011a5c, which this TU defines (0x02011a5c, inside 0x02011654..0x02013548). arm9 .init and .ctor follow .text TU order: the previous initializer 0x02074d90 is d_actor.cpp's, the TU directly below this one (0x0200f658..0x02011654)."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02011654",
       "end": "0x02013548"
+    },
+    {
+      "name": ".init",
+      "start": "0x02074da8",
+      "end": "0x02074dbc"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02086b6c",
+      "end": "0x02086b70"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0209b53c",
+      "end": "0x0209ba84"
     }
   ],
   "functions": [
@@ -497,7 +513,7 @@
       "ordinal": 67
     },
     {
-      "symbol": "_ZN5Sound8EndMusicEjj",
+      "symbol": "_ZN5Sound8EndMusicEj",
       "address": "0x02012998",
       "legacy_source": "src/_ZN5Sound8EndMusicEjj.cpp",
       "size": "0x000000d0",
@@ -525,14 +541,14 @@
       "ordinal": 71
     },
     {
-      "symbol": "_ZN5Sound7PlaySubEjjj5Fix12IiEb",
+      "symbol": "_ZN5Sound7PlaySubEjjjib",
       "address": "0x02012be0",
       "legacy_source": "src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp",
       "size": "0x0000014c",
       "ordinal": 72
     },
     {
-      "symbol": "_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE",
+      "symbol": "_ZN5Sound17ChangeMusicVolumeEji",
       "address": "0x02012d2c",
       "legacy_source": "src/_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE.c",
       "size": "0x00000038",
@@ -645,14 +661,23 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_0209b53c",
+      "address": "0x0209b53c",
+      "size": "0x548",
+      "evidence": "the sound-object registry (SndRegTable, sizeof 0x548: counter/cursor header, 0x40 0x14-byte entries at +0x8, 16 bucket heads at +0x508); retail __sinit_02074da8 tail-calls this TU's func_02011a5c on it, which clears the entries, header and buckets. Its readers are this TU's registry find/alloc/link/unlink/sweep helpers and Play wrappers, plus dScene_c::BeforeCleanupResources.",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "compiler_only_output": [],
   "notes": [
     "Text-only. The module state (data_0208e420..data_0208e498, data_0209b470..data_0209baa0, data_0209d574, data_0209f250/2f8/394, data_02092120) is all .bss: no initialized bytes exist for this TU to own, so data and bss claims stay empty and the entry promotes as text-only like the other namespace-module TUs.",
     "Sound::Play and Sound::Play2D are defined void, matching the plurality of the tree. Callers that consume r0 (PlayCharVoice, PlayBank2_2D/PlayBank3_2D, func_02012174/func_0201277c/func_02012790) keep the extern \"C\" mangled spelling -- the same return-split the shard files already carried, banked in decl-agreement-baseline.json.",
     "Sound::PlaySub and Sound::ChangeMusicVolume keep their literal mangled names: the `5Fix12IiE` encoding cannot be produced by any type this tree defines (the Fix12 wall, see include/Sound.h).",
     "func_020133bc keeps its shard's opt_propagation-off pragma (load-bearing); the pragma is file-global under deferred codegen, so func_020132d8 and func_020133bc sit inside defer_codegen brackets -- func_020132d8 flushes the deferred queue under on and func_020133bc alone binds off. func_02012468 keeps the u64-mask launder that pins its register birth order.",
-    "Sound::Player::SetPlayableSeqCount (0x0204fadc), Sound::Func_02048e* (0x02048eb4..) and the rest of the sound-engine internals at 0x0204xxxx/0x0205xxxx are other TUs and are not claimed here."
+    "Sound::Player::SetPlayableSeqCount (0x0204fadc), Sound::Func_02048e* (0x02048eb4..) and the rest of the sound-engine internals at 0x0204xxxx/0x0205xxxx are other TUs and are not claimed here.",
+    "Static initializer folded: data_0209b53c, the sound-object registry, is now defined in this TU as a SndRegTable (it was an extern char[], built by the handwritten src/unnamed/arm9/0207/__sinit_02074da8.c). SndRegTable gains an inline constructor that runs func_02011a5c, the registry's clear routine; mwcc emits __sinit_Sound.cpp and its .ctor word, both byte- and relocation-identical to retail with the object's .bss. The registry helpers still take char*, so their call sites pass (char *)&data_0209b53c. symbols.txt gains data_0209ba84 to anchor the claim's end: it labels the 0x1c-byte gap between the registry's end and data_0209baa0, the 32-byte-aligned 0x1000-byte sound heap func_020133bc hands to func_02049cd8; nothing references the gap."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -674,7 +699,172 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-Sound/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02011654",
+        "end": "0x02013548",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02011654",
+          "end": "0x02013548",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02074da8",
+          "end": "0x02074dbc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02086b6c",
+          "end": "0x02086b70",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0209b53c",
+          "end": "0x0209ba84",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 92
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              182
+            ],
+            "desired": [
+              182
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              180
+            ],
+            "desired": [
+              180
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
-  "production_mode": "text-only"
+  "production_mode": "intact-object",
+  "init": [
+    {
+      "symbol": "__sinit_Sound.cpp",
+      "address": "0x02074da8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer for data_0209b53c is raw-byte-identical to retail __sinit_02074da8 (0x14: the inline SndRegTable constructor's tail call to func_02011a5c through ip, two pool words); there is no destructor to register"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_Sound.cpp",
+      "address": "0x02086b6c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_Sound.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_Sound.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02074db4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02011a5c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011a5c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02074db8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0209b53c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0209b53c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02086b6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_Sound.cpp",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02074da8"
+    }
+  ]
 }

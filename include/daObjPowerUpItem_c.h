@@ -10,7 +10,7 @@
  */
 #include "types.h"
 #include "dActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
@@ -47,11 +47,11 @@
  */
 struct daObjPowerUpItem_c : dActor_c {
     u8  pad_0d0[0x4];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks. */
-    Model mCloseModel;            /* 0x0d4 -- SetFile'd from gPFlowerCloseModelFile */
-    /* Model member, named by the class's own destructor calling
-       Model's D1 at +0x124. [_ZN18daObjPowerUpItem_cD0Ev, now in src/game/actors/d_a_obj_power_up_item.cpp] */
-    Model mOpenModel;            /* 0x124 -- SetFile'd from gPFlowerOpenModelFile */
+    /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0xd4 -- a relocation the ROM build checks. */
+    dExtSimpleModel_c mCloseModel; /* 0x0d4 -- SetFile'd from gPFlowerCloseModelFile */
+    /* dExtSimpleModel_c member, named by the class's own destructor calling
+       dExtSimpleModel_c's D1 at +0x124. [_ZN18daObjPowerUpItem_cD0Ev, now in src/game/actors/d_a_obj_power_up_item.cpp] */
+    dExtSimpleModel_c mOpenModel; /* 0x124 -- SetFile'd from gPFlowerOpenModelFile */
     /* dExtShadowModel_c member, named by daObjPowerUpItem_c_classInit's own C1 call and the
        class's own destructor's D1 call at +0x174.
        [daObjPowerUpItem_c_classInit, _ZN18daObjPowerUpItem_cD0Ev, now in src/game/actors/d_a_obj_power_up_item.cpp] */
@@ -109,7 +109,7 @@ struct daObjPowerUpItem_c : dActor_c {
     /* Behavior's per-frame helpers: the pickup check against the flower's
        collider, the drop shadow, and the open/close model matrices. */
     void CheckPickup();
-    int  DropShadow();
+    void DropShadow();
     void UpdateMatrices();
 };
 

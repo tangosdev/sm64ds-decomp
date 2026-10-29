@@ -16,7 +16,7 @@
  * edge.
  *
  * leftovers:
- * - data_0209fc48/data_0209fc4c keep the shard's `int' spelling: no header
+ * - gRunningKuppaScript/gSavedKuppaScript keep the shard's `int' spelling: no header
  *   declares the kuppa-script words and the tree's other spellings disagree.
  * - dView_c_EmitDestructor/dView_c_EmitDeletingDestructor are byte-required
  *   pins for the header-inline destructor; the wrappers have no cartridge
@@ -30,11 +30,11 @@ void CopyToViewMat(const Matrix4x3 *mat);
 
 // @symbol func_0202fd2c
 extern "C" {
-extern int data_0209fc48, data_0209fc4c;
+extern int gRunningKuppaScript, gSavedKuppaScript;
 void func_0202fd2c(void)
 {
-    data_0209fc48 = 0;
-    data_0209fc4c = 0;
+    gRunningKuppaScript = 0;
+    gSavedKuppaScript = 0;
 }
 }
 

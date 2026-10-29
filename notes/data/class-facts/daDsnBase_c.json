@@ -91,8 +91,8 @@
   "size_evidence": "MINIMAL READING, and said as such. mShadowModel closes at 0x338 + 0x28 = 0x360 and nothing this class owns reaches higher. The two leaves allocate MORE and disagree with each other -- daDkk_c_classInit passes 928 = 0x3a0 and Thwomp_Spawn 932 = 0x3a4 -- so no allocation literal fixes this class's end. 0x360..0x3a0 exists in both leaves and is declared on them.",
   "fields": [
     { "offset": "0x320", "name": "mFileTable", "type": "s32", "note": "a void** in practice. CleanupResources releases entries [0], [1] and, when non-null, [3]; Render reads entry [3] to decide whether to run the texture animation. NAME IS COINED." },
-    { "offset": "0x324", "name": "mTextureSequence", "type": "TextureSequence", "size": "0x14",
-      "note": "Two-sided evidence: Thwomp_Spawn and daDkk_c_classInit both call _ZN15TextureSequenceC1Ev at +0x324 while the vptr is this class's, and this class's own D1 calls its D1 there." },
+    { "offset": "0x324", "name": "mTextureSequence", "type": "dExtAnmTexPat_c", "size": "0x14",
+      "note": "Two-sided evidence: Thwomp_Spawn and daDkk_c_classInit both call _ZN15dExtAnmTexPat_cC1Ev at +0x324 while the vptr is this class's, and this class's own D1 calls its D1 there." },
     { "offset": "0x338", "name": "mShadowModel", "type": "ShadowModel", "size": "0x28",
       "note": "Same two-sided evidence, _ZN11ShadowModelC1Ev at +0x338. Corroborated a third way: func_ov091_02133098 passes this+0x338 as dActor_c::DropShadowScaleXYZ's ShadowModel& parameter." }
   ],

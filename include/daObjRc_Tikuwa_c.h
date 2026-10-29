@@ -15,7 +15,7 @@
  * BASE: dBgActor_c, direct -- the record's third word is _ZTI10dBgActor_c at
  * ov002 0x021089ec. The destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and the
- * Model at 0xd4 before chaining to dActor_c. Those two members belong to
+ * dExtSimpleModel_c at 0xd4 before chaining to dActor_c. Those two members belong to
  * dBgActor_c and are inherited.
  *
  * MEMBERS: the dBgCh_Actr at 0x320 is named by the class's own D1/D0 calling
@@ -35,35 +35,31 @@
 #include "dBgActor_c.h"
 #include "dBgCh_Actr.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daObjRc_Tikuwa_c : dBgActor_c {
-    u8 pad_31e[0x2];                 /* 0x31e -- dBgActor_c tail */
-    dBgCh_Actr mWithMeshClsn;        /* 0x320 */
-    s32 mHomePosX;                   /* 0x4dc */
-    s32 mHomePosY;                   /* 0x4e0 */
-    s32 mHomePosZ;                   /* 0x4e4 */
-    u8 mHadClsn;                     /* 0x4e8 */
-    u8 mClsnTimer;                   /* 0x4e9 */
-    u8 mState;                       /* 0x4ea */
+    u8 pad_31e[0x2];          /* 0x31e -- dBgActor_c tail */
+    dBgCh_Actr mWithMeshClsn; /* 0x320 */
+    s32 mHomePosX;            /* 0x4dc */
+    s32 mHomePosY;            /* 0x4e0 */
+    s32 mHomePosZ;            /* 0x4e4 */
+    u8 mHadClsn;              /* 0x4e8 */
+    u8 mClsnTimer;            /* 0x4e9 */
+    u8 mState;                /* 0x4ea */
 
     /* OUT OF LINE, DECLARED FIRST: the key function. The TU defines it first
        under `#pragma defer_codegen off`, which emits D1 then D0 -- the
        cartridge's order -- then a D2 the cartridge has no home for. */
     virtual ~daObjRc_Tikuwa_c();
 
-    virtual s32 InitResources();       /* slot 0 */
-    virtual s32 CleanupResources();    /* slot 3 */
-    virtual s32 Behavior();            /* slot 6 */
-    virtual s32 Render();              /* slot 9 */
-    virtual void OnPendingDestroy();   /* slot 12 -- empty body in the ROM */
+    virtual s32 InitResources();     /* slot 0 */
+    virtual s32 CleanupResources();  /* slot 3 */
+    virtual s32 Behavior();          /* slot 6 */
+    virtual s32 Render();            /* slot 9 */
+    virtual void OnPendingDestroy(); /* slot 12 -- empty body in the ROM */
 
-    /* Leaf adapter until fBase_c::operator new(size_t) lands.
-       `return new daObjRc_Tikuwa_c` then routes through the retail allocator,
-       which is the 0x4ec allocation the cartridge's factory makes. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    /* The mesh's stood-on callback (ov036 0x02111cc4, installed with
+       func_020393c4) and the body it forwards to (0x02111ca4). */
+    void OnStoodOn(dActor_c *);
+    static void StoodOnCallback(void *, daObjRc_Tikuwa_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

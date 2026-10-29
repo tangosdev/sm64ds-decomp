@@ -10,8 +10,6 @@
 #include "types.h"
 #include "dActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* The fields are witnessed by InitResources, which loads all four from
  * one row of the 0xc-stride table at data_ov002_0210c080, and by the
  * two starter callbacks, which read them back: mSoundID/mVolume go
@@ -37,12 +35,6 @@ struct daSoundObj_c : dActor_c {
 
     virtual int InitResources();        /* slot 0 */
     virtual int Behavior();             /* slot 6 */
-
-    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
-       `return new daSoundObj_c()` then routes through the retail allocator. */
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

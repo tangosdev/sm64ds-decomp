@@ -11,6 +11,89 @@ For source conventions and the local/CI style check, read the
 [canonical source-style guide](notes/source-style.md). It covers initialization,
 naming, casts, formatting, and documented matching exceptions.
 
+## What "matching" means
+
+The goal is source code that, when compiled with the original toolchain,
+produces a binary byte-for-byte identical to the retail ROM. This is the same
+standard the N64 `sm64` project holds to. Every matched function is checked
+against the ROM, so the source is known to be correct.
+
+The matching compiler is pinned to **mwccarm 2004/b56** with these flags (the
+1.2 `base`/`sp2`/`sp2p3` trio remains available for version sweeps; the linker
+is still 1.2/sp2p3 `mwldarm`, because b56 ships no linker):
+
+```sh
+-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
+```
+
+C++ sources compile under the same pin with `-lang c++` in place of `-lang
+c99`, plus `-Cpp_exceptions off`. `tools/match.py` makes both substitutions
+itself for a file whose first line is `//cpp`.
+
+## What counts as matched
+
+A function counts as matched when the source in this repo, compiled with the
+pinned compiler, produces exactly the bytes that are on the cartridge. Not
+similar bytes. The same bytes. If the check fails, it does not count, however
+close it looks.
+
+Almost all of the game was written in C and C++, so almost all of that work
+is writing C and C++. A small number of routines were neither. Nintendo wrote
+those by hand in assembly, because they do jobs the C language has no way to
+ask for: driving the chip's cache, calling into the DS firmware, switching
+the processor between modes, and a few pieces of the compiler's own maths
+library that hand back two answers at once.
+
+There is no C to find for those. The honest source for them is the same
+assembly, so that is what this repo carries, and each one is checked against
+the cartridge exactly like everything else. They count as matched, and every
+file counted that way carries a `HAND-ASM PRIMITIVE` line at the top so
+nobody mistakes it for recovered C. The caption under the MATCHED bar says
+how many there are.
+
+That exception is narrow on purpose. A function only qualifies when its body
+contains an instruction C cannot express at all. If it is ordinary code that
+we simply cannot reproduce yet, writing it out as assembly proves nothing, so
+it does not qualify and does not count. Those files are marked `NONMATCHING`
+instead, and unmatched means just that: the original was C or C++, and we do
+not yet have source the compiler turns into those exact bytes. The rule is
+written up in [notes/asm-policy.md](notes/asm-policy.md).
+
+## How matching works
+
+Every candidate is verified the same way: compile it with mwccarm, then
+compare the result to the ROM byte-for-byte, relocation-aware (call and data
+references are slots the linker fills in, so they are compared
+structurally). Nothing counts as matched until that check passes, including
+the hand-written assembly primitives above: the banner explains why a file is
+assembly, it never excuses it from the byte check.
+
+1. **Automatic templates.** A set of rules recognizes common function shapes
+   (constant returns, field getters and setters, bitfield reads, struct
+   copies, simple wrappers, constructors, and destructors), generates the C,
+   and confirms it against the ROM. This cleared the bulk of the small,
+   regular functions with no hand work.
+2. **Hand-written.** For functions with real logic, you write the source
+   yourself and verify each attempt until it is byte-identical. A decompiler
+   such as Ghidra is useful for reading the function, though its output never
+   matches on its own.
+
+Almost-right attempts are evidence, not trash: see [Easy
+pickings](#easy-pickings-the-near-miss-database) below.
+
+`tools/linkcheck.py` performs the stronger relocation destination check: it
+reconstructs each function's linked bytes and compares them to the ROM,
+catching wrong callees or globals that the normal unlinked byte diff would
+wildcard. See [notes/link-verification.md](notes/link-verification.md).
+
+Pull requests are then validated automatically. Each changed source file is
+compiled and compared against ROM bytes on a build box, which catches wrong
+relocation destinations and non-reproducing near misses before anything
+lands. See [notes/pr-validation.md](notes/pr-validation.md). Class and TU
+work coordinated through [the agent
+protocol](notes/agents/README.md) also gets an independent source review in
+the work queue before it lands.
+
 ## Get in touch
 
 - **Discord: `beansntoast`**, DM me. Best for claiming work, asking which
@@ -139,6 +222,15 @@ optional, but mint one if you're running batches.
 See [`AGENTS.md`](AGENTS.md) for what belongs in the PR and how it's
 reviewed. Fork, branch, and PR against `main` — one function, class, or small
 related cluster per PR is easiest to review.
+
+## Funding
+
+Sponsoring helps cover development time and the AI compute the work runs on.
+Most functions were matched for free by the automatic templates, and the
+harder ones with AI assistance at a few cents of usage each. You can sponsor
+at https://github.com/sponsors/tangosdev or back the project on Patreon at
+https://www.patreon.com/c/the_tango. This goes toward development and compute
+only; it has nothing to do with Nintendo's ROM or assets.
 
 If anything here is unclear or out of date, ping me on Discord
 (`beansntoast`) — I'd rather fix the docs than have you stuck.

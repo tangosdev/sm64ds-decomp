@@ -30,20 +30,17 @@
  * player calls Player::Hurt, plays the sound and bursts; a metal player makes
  * it burst without Hurt; a vanished player is ignored (no burst).
  *
- * leftovers:
- * - func_ov081_02125fb8, func_ov081_021261d4 and func_ov081_02126224 stay
- *   free functions under those address names. None has a recovered name.
- *   The state-record targets are methods under the same addresses. The
- *   file-scope record data_ov081_02128eb4 is what the compiler's
- *   __sinit_d_a_snowball.cpp copies the two pointer-to-member descriptors into.
- * - Both Init calls stay on their mangled names (see InitResources).
+ * What stays:
+ * - The file-scope record data_ov081_02128eb4 is what the compiler's
+ *   __sinit_d_a_snowball.cpp copies the two pointer-to-member descriptors
+ *   into.
  * - func_02012694's sound id 0x3c and the particle id 0x11c are bare numbers;
  *   the SND3_/PTCL_ enum names only say where they are used.
  * - The hit-flag bits (0x10, 0x40000) follow dCc_c's best-effort table and are
  *   named by value here for that reason.
  * - mdCcAc_c's `flags`/`vulnFlags` words (0x200004 / 0x40010) are likewise
  *   given as numbers.
- * - unk_0a4 / unk_0ac are dActor_c's x/z velocity words (as da1up_c's banner
+ * - mSpeedX / mSpeedZ are dActor_c's x/z velocity words (as da1up_c's banner
  *   records); they stay unnamed because naming them is a shared header change.
  */
 
@@ -53,31 +50,18 @@
 #include "daSnowball_c.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 extern SharedFilePtr data_ov081_02128d90;
 extern daSnowball_StateRec data_ov081_02128eb4;
 
+/* local extern: no shared header declares these. */
 extern "C" {
-unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    void *thiz, void *actor, int radius, int height, unsigned int flags, unsigned int vuln);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    void *thiz, void *actor, int radius, int height, void *a, int b);
-}
-
-extern "C" {
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-/* local extern: Player.h has no Hurt member; the owning symbol remains a
- * scalar C ABI entry. Keep its exact return, receiver, payload and byte flags. */
-int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-    Player *player, void *pos, u32 a, int b, u8 c, u8 d, u8 e);
 void func_02012694(int a0, void *a1);
 void Vec3_Asr(void *dst, void *src, int n);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, short rx, short ry, short rz);
 }
-
-extern Matrix4x3 data_020a0e68;
 
 // @symbol _ZN12daSnowball_cD1Ev
 // @symbol _ZN12daSnowball_cD0Ev
@@ -85,9 +69,7 @@ extern Matrix4x3 data_020a0e68;
  * declaration order, then runs dEnemyBase_c::~dEnemyBase_c; D0 does the
  * same and hands the object to dEnemyBase_c's inline operator delete. The
  * base-object D2 mwcc also emits has no home in the cartridge. */
-daSnowball_c::~daSnowball_c()
-{
-}
+daSnowball_c::~daSnowball_c() {}
 
 enum SnowballBool { SNOWBALL_FALSE, SNOWBALL_TRUE };
 
@@ -113,18 +95,15 @@ enum { SND3_SNOWBALL_BURST = 0x3c };
  * applies (best-effort names, not pinned by the ROM). The flags word (0x200004)
  * is not described by that table. */
 enum {
-    SNOWBALL_CC_FLAGS = 0x200004,   /* dCc_c::flags word */
-    SNOWBALL_CC_VULN  = 0x40010     /* dCc_c::vulnFlags word */
+    SNOWBALL_CC_FLAGS = 0x200004, /* dCc_c::flags word */
+    SNOWBALL_CC_VULN = 0x40010    /* dCc_c::vulnFlags word */
 };
 
 /* Hit-flag bits tested on mdCcAc_c.hitFlags. The values are the 0x10 and 0x40000
  * rows of the dCc_c bit table ("mega character" and "fire"; best-effort names). */
-enum {
-    SNOWBALL_HIT_BIT_0x10    = 0x10,
-    SNOWBALL_HIT_BIT_0x40000 = 0x40000
-};
+enum { SNOWBALL_HIT_BIT_0x10 = 0x10, SNOWBALL_HIT_BIT_0x40000 = 0x40000 };
 
-// @symbol func_ov081_02125fb8
+// @symbol _ZN12daSnowball_c13HandleContactEv
 /* Contact handler, called from the update helper whenever one of the x/z
  * velocity words at 0x0a4/0x0ac is non-zero. mdCcAc_c.otherOwner holds the
  * unique id of the actor that owns the other cylinder; hitFlags says which hit
@@ -137,28 +116,30 @@ enum {
  *   - anything else: nothing.
  * "Burst" is a particle at the snowball's position plus MarkForDestruction; only
  * the Player::Hurt path also plays the sound. */
-extern "C" void func_ov081_02125fb8(daSnowball_c *self)
-{
+void daSnowball_c::HandleContact() {
     dActor_c *other;
     int flags;
-    unsigned int id = self->mdCcAc_c.otherOwner;
-    if (id == 0) return;
+    unsigned int id = mdCcAc_c.otherOwner;
+    if (id == 0)
+        return;
     other = dActor_c::FindWithID(id);
-    if (other == 0) return;
-    flags = self->mdCcAc_c.hitFlags;
+    if (other == 0)
+        return;
+    flags = mdCcAc_c.hitFlags;
     if ((flags & SNOWBALL_HIT_BIT_0x10) || (flags & SNOWBALL_HIT_BIT_0x40000)) {
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(PTCL_SNOWBALL_BURST, self->mPosX, self->mPosY, self->mPosZ);
-        self->MarkForDestruction();
+        Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
+        MarkForDestruction();
         return;
     }
     {
         SnowballBool eq = (SnowballBool)(other->actorID == ACTOR_ID_PLAYER);
         if (eq != SNOWBALL_FALSE) {
             Player *player = static_cast<Player *>(other);
-            if (player->mIsVanish != 0) return;
+            if (player->mIsVanish != 0)
+                return;
             if (player->mIsMetal == 1) {
-                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(PTCL_SNOWBALL_BURST, self->mPosX, self->mPosY, self->mPosZ);
-                self->MarkForDestruction();
+                Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
+                MarkForDestruction();
                 return;
             }
             {
@@ -166,20 +147,20 @@ extern "C" void func_ov081_02125fb8(daSnowball_c *self)
                    (1, 0xc000, 1, 0, 1) daBasabasa_c and Scuttlebug pass; 0xc000
                    is Fix12 12.0. */
                 Vector3 pos;
-                pos.x = self->mPosX;
-                pos.y = self->mPosY;
-                pos.z = self->mPosZ;
-                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &pos, 1, 0xc000, 1, 0, 1);
-                func_02012694(SND3_SNOWBALL_BURST, &self->mCamSpacePosX);
-                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(PTCL_SNOWBALL_BURST, self->mPosX, self->mPosY, self->mPosZ);
-                self->MarkForDestruction();
+                pos.x = mPosX;
+                pos.y = mPosY;
+                pos.z = mPosZ;
+                player->Hurt(pos, 1, 0xc000, 1, 0, 1);
+                func_02012694(SND3_SNOWBALL_BURST, &mCamSpacePosX);
+                Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
+                MarkForDestruction();
                 return;
             }
         }
     }
 }
 
-// @symbol _ZN12daSnowball_c19func_ov081_021260fcEv
+// @symbol _ZN12daSnowball_c6State0Ev
 /* The state record's update function (offset +8 of data_ov081_02128eb4).
  * Behavior calls it once per frame.
  *
@@ -193,8 +174,7 @@ extern "C" void func_ov081_02125fb8(daSnowball_c *self)
  *    destruction; this function carries on to step 3 afterwards.
  * 3. If either x/z velocity word at 0x0a4/0x0ac is non-zero, run the contact handler.
  * Always returns 1. */
-int daSnowball_c::func_ov081_021260fc()
-{
+int daSnowball_c::State0() {
     if (this->mReachedSpawnY == 0 && this->mTerminalVelocity == -0x3c000) {
         if (this->mSpawnPosY > this->mPosY) {
             this->mVertSpeed = 0;
@@ -202,74 +182,65 @@ int daSnowball_c::func_ov081_021260fc()
             this->mReachedSpawnY = 1;
         }
     }
-    if ((unsigned short)this->mStateTimer == 0 ||
-        mWithMeshClsn.IsOnGround() != 0) {
+    if ((unsigned short)this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
         func_02012694(SND3_SNOWBALL_BURST, &this->mCamSpacePosX);
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-            PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
+        Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
         MarkForDestruction();
     }
-    if (this->unk_0a4 != 0 || this->unk_0ac != 0) {
-        func_ov081_02125fb8(this);
+    if (this->mSpeedX != 0 || this->mSpeedZ != 0) {
+        HandleContact();
     }
     return 1;
 }
 
-// @symbol _ZN12daSnowball_c19func_ov081_021261b8Ev
+// @symbol _ZN12daSnowball_c10InitState0Ev
 /* The state record's enter function (offset +0 of data_ov081_02128eb4).
- * func_ov081_021261d4 runs it: clear mReachedSpawnY and arm mStateTimer with
- * 200 frames. */
-int daSnowball_c::func_ov081_021261b8()
-{
+ * SetState runs it: clear mReachedSpawnY and arm mStateTimer with 200
+ * frames. */
+int daSnowball_c::InitState0() {
     this->mReachedSpawnY = 0;
     this->mStateTimer = 200;
     return 1;
 }
 
-// @symbol func_ov081_021261d4
+// @symbol _ZN12daSnowball_c8SetStateEP19daSnowball_StateRec
 /* Installs a state record in mStateRec and runs its enter function, if it has one. */
-extern "C" int func_ov081_021261d4(daSnowball_c *c, daSnowball_StateRec *p)
-{
-    c->mStateRec = p;
-    daSnowball_StateRec *q = c->mStateRec;
-    if (q->enter == 0) return 1;
-    return (c->*(q->enter))();
+int daSnowball_c::SetState(daSnowball_StateRec *p) {
+    mStateRec = p;
+    daSnowball_StateRec *q = mStateRec;
+    if (q->enter == 0)
+        return 1;
+    return (this->*(q->enter))();
 }
 
-// @symbol func_ov081_02126224
+// @symbol _ZN12daSnowball_c17UpdateModelMatrixEv
 /* Builds the model's world matrix from position (>> 3 per axis, via Vec3_Asr)
  * and the three angles, through the scratch matrix data_020a0e68, and copies it
  * to mModel.mat4x3. */
-extern "C" void func_ov081_02126224(daSnowball_c *c)
-{
+void daSnowball_c::UpdateModelMatrix() {
     int v[3];
-    Vec3_Asr(v, &c->mPosX, 3);
+    Vec3_Asr(v, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        c->mAngleX, c->mAngleY, c->mAngleZ);
-    c->mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3 = data_020a0e68;
 }
 
 // @symbol _ZN12daSnowball_c16CleanupResourcesEv
 /* Releases the one shared file InitResources claimed. Touches no field: the
  * ROM body never reads `this`, and as a method it receives one and ignores
  * it, which measured byte-free. */
-int daSnowball_c::CleanupResources()
-{
+int daSnowball_c::CleanupResources() {
     data_ov081_02128d90.Release();
     return 1;
 }
 
 // @symbol _ZN12daSnowball_c16OnPendingDestroyEv
 /* fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`. */
-void daSnowball_c::OnPendingDestroy()
-{
-}
+void daSnowball_c::OnPendingDestroy() {}
 
 // @symbol _ZN12daSnowball_c6RenderEv
 /* Draws mModel (the matrix Behavior built into mat4x3). Always returns 1. */
-int daSnowball_c::Render()
-{
+int daSnowball_c::Render() {
     mModel.Render(0);
     return 1;
 }
@@ -277,19 +248,18 @@ int daSnowball_c::Render()
 // @symbol _ZN12daSnowball_c8BehaviorEv
 /* Per-frame update, always returns 1:
  *   - count mStateTimer down towards 0 (DecIfAbove0_Short stops at 0);
- *   - run the installed state record's update function (func_ov081_021260fc
- *     for the record InitResources installs), if it has one;
+ *   - run the installed state record's update function (State0 for the
+ *     record InitResources installs), if it has one;
  *   - mVertSpeed = max(mVertSpeed + mVertAccel, mTerminalVelocity), i.e. fall
  *     under gravity but not faster than the terminal velocity (both negative);
  *   - move by speed, update the mesh collision, copy mPrevAngleY into mAngleY,
  *     rebuild the model matrix;
  *   - clear the cylinder and, if there is a closest player and it is not
  *     vanished (mIsVanish), re-register it with dCcAc_c::Update.
- * leftover: the read and write-back of unk_0ac around the mVertSpeed store is
+ * What stays: the read and write-back of mSpeedZ around the mVertSpeed store is
  * a no-op in source terms; it stays as written, the shape these bytes were
  * matched with. */
-int daSnowball_c::Behavior()
-{
+int daSnowball_c::Behavior() {
     DecIfAbove0_Short((unsigned short *)&mStateTimer);
     daSnowball_StateRec *rec = mStateRec;
     if (rec->update != 0)
@@ -298,13 +268,13 @@ int daSnowball_c::Behavior()
     int hi = mTerminalVelocity;
     if (v >= hi)
         hi = v;
-    int tmp = unk_0ac;
+    int tmp = mSpeedZ;
     mVertSpeed = hi;
-    unk_0ac = tmp;
+    mSpeedZ = tmp;
     UpdatePosWithOnlySpeed((dCc_c *)&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     mAngleY = mPrevAngleY;
-    func_ov081_02126224(this);
+    UpdateModelMatrix();
     mdCcAc_c.Clear();
     Player *player = ClosestPlayer();
     if (player != 0 && player->mIsVanish == 0)
@@ -319,9 +289,8 @@ int daSnowball_c::Behavior()
  * position saved and the snowball lifted 0x32000 (50 units) above it; a mesh
  * collision of 0x14000 (20 units); and the two-entry state record installed.
  * Returns 0 if the model file could not be bound, else 1. */
-int daSnowball_c::InitResources()
-{
-    void *file = Model::LoadFile(data_ov081_02128d90);
+int daSnowball_c::InitResources() {
+    void *file = dExtSimpleModel_c::LoadFile(data_ov081_02128d90);
     if (mModel.SetFile((BMD_File *)file, 1, -1) == 0)
         return 0;
 
@@ -329,30 +298,21 @@ int daSnowball_c::InitResources()
 
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    /* leftover: both Init calls below stay on their mangled names.
-       dCcAc_c::Init takes Fix12<int> by value, and passing the radii that way
-       spills them into .rodata, so the method call no longer matches.
-       dBgCh_Actr::Init is declared with Fix12i, a plain s32 that mangles as
-       `i`, so the method call would name a symbol other than the ROM's
-       5Fix12IiE one. */
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &mdCcAc_c, this, 0x1e000, 0x1e000, SNOWBALL_CC_FLAGS, SNOWBALL_CC_VULN);
+    mdCcAc_c.Init(this, 0x1e000, 0x1e000, SNOWBALL_CC_FLAGS, SNOWBALL_CC_VULN);
 
     mSpawnPosX = mPosX;
     mSpawnPosY = mPosY;
     mSpawnPosZ = mPosZ;
     mPosY += 0x32000;
     mAngleY = mPrevAngleY;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, this, 0x14000, 0x14000, 0, 0);
+    mWithMeshClsn.Init(this, 0x14000, 0x14000, 0, 0);
 
-    func_ov081_021261d4(this, (daSnowball_StateRec *)&data_ov081_02128eb4);
+    SetState(&data_ov081_02128eb4);
     return 1;
 }
 
 // @symbol daSnowball_c_classInit
-extern "C" daSnowball_c *daSnowball_c_classInit()
-{
+extern "C" daSnowball_c *daSnowball_c_classInit() {
     return new daSnowball_c();
 }
 
@@ -360,6 +320,6 @@ extern "C" daSnowball_c *daSnowball_c_classInit()
  * are anonymous compiler objects; this definition is what makes mwcc emit
  * __sinit_d_a_snowball.cpp. */
 daSnowball_StateRec data_ov081_02128eb4 = {
-    &daSnowball_c::func_ov081_021261b8,
-    &daSnowball_c::func_ov081_021260fc,
+    &daSnowball_c::InitState0,
+    &daSnowball_c::State0,
 };

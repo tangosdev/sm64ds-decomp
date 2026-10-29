@@ -33,14 +33,27 @@
 #include "daCoin_c.h"
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "Player.h"
 #include "daStar_c.h"
 #include "daStarBase_c.h"
 #include "daObjBlockL_c.h"
 #include "SurfaceInfo.h"
-#include "ModelBase.h"
+#include "dExtModel_c.h"
 #include "dBgCh_Actr.h"
+#include "Sound.h"
+#include "cstd.h"
+
+/* Views of daObjBC_Switch_c.h and daObjFl_Coin_c.h, same member names and
+   offsets: including either header renumbers this TU's @NNN labels. */
+struct daObjBC_Switch_cView {
+    u8 pad_000[0x32a];
+    u16 mCoinTimerSeed; /* 0x32a */
+};
+struct daObjFl_Coin_cView {
+    u8 pad_000[0xd6];
+    u8 mLiveCoinCount; /* 0x0d6 */
+};
 
 namespace Event { s32 GetBit(u32 bit); void SetBit(u32 bit); }
 
@@ -85,26 +98,18 @@ extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void GiveCoins(int idx, int amount);
 extern int GiveRedCoins(int i, int amt);
 extern s8 NumRedCoins(void);
-extern unsigned int func_02012790(unsigned int a);
 extern void func_02012694(unsigned int id, const Vector3 *v);
-extern int func_02037e58(unsigned int *p);
 extern int SurfaceInfo_TestFlag0x20(void* p);
-extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3 &pos);
-extern void _ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_(int a, int b, int c);
-extern short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void*, int, int, short);
-extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    void *c, void *sm, void *mtx, int a, int b, unsigned char u);
-extern void *_ZN9dBgCh_LinC1Ev(dBgCh_Lin* self);
-extern dBgCh_Lin *_ZN9dBgCh_LinD1Ev(void* self);
-extern void *_ZN5dBgPiC1Ev(void* self);
-extern void _ZN5dBgPiD1Ev(void* self);
-/* local extern: no header declares the veneer. It forwards r0 (the
- * dBgCh_Actr) to UpdateDiscreteNoLava. */
-extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* p);
-extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
+}
+namespace Particle {
+struct System {
+    static void NewBigSplash(int a, int b, int c);
+    static void *NewSimple(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
+};
+}
+extern "C" {
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern short _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
-extern int _ZN4cstd4fdivEii(int a, int b);
+extern short atan2_hold_d_a_coin_1(int a, int b);
 }
 
 // @symbol _ZN8daCoin_cD1Ev
@@ -188,11 +193,9 @@ void daCoin_c::func_ov002_020b10e4()
     }
 
     {
-        char ray[0x78];
-        char hit[0x28];
+        dBgCh_Lin ray;
+        dBgPi hit;
         Vector3 rayTop, rayBottom;
-        _ZN9dBgCh_LinC1Ev((dBgCh_Lin*)ray);
-        _ZN5dBgPiC1Ev(hit);
         rayBottom.x = mPosX;
         rayBottom.y = mPosY;
         rayBottom.z = mPosZ;
@@ -201,20 +204,17 @@ void daCoin_c::func_ov002_020b10e4()
         rayTop.z = rayBottom.z;
         rayTop.y += 0x14000;
         rayBottom.y -= 0x1f4000;
-        ((dBgCh_Lin*)ray)->SetObjAndLine(rayTop, rayBottom, this);
-        if (((dBgCh_Lin*)ray)->DetectClsn()) {
-            ((dBgPi*)(ray + 0x10))->CopyTo(*(dBgPi*)hit);
-            if (((dBgPi*)hit)->GetClsnID() != (u32)-1 &&
-                dActor_c::FindWithID(((dBgPi*)hit)->GetClsnID()) != 0) {
+        ray.SetObjAndLine(rayTop, rayBottom, this);
+        if (ray.DetectClsn()) {
+            ray.CopyTo(hit);
+            if (hit.GetClsnID() != (u32)-1 && dActor_c::FindWithID(hit.GetClsnID()) != 0) {
                 ((CoinFlagBits*)((long long)&mCoinFlags))->floorState = FLOOR_DYNAMIC;
             } else {
-                Vector3 pos = ((dBgCh_Lin*)ray)->GetClsnPos();
+                Vector3 pos = ray.GetClsnPos();
                 mFloorPosY = pos.y;
                 ((CoinFlagBits*)((long long)&mCoinFlags))->floorState = FLOOR_FIXED;
             }
         }
-        _ZN5dBgPiD1Ev(hit);
-        _ZN9dBgCh_LinD1Ev(ray);
     }
 }
 
@@ -272,13 +272,13 @@ void daCoin_c::func_ov002_020b1384()
     int normal[3];
     void *wall = mWithMeshClsn.GetWallResult();
     ((SurfaceInfo*)((char*)wall + 4))->CopyNormalTo(*(Vector3*)normal);
-    mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(this, normal[0], normal[2], mPrevAngleY);
+    mPrevAngleY = ReflectAngle(normal[0], normal[2], mPrevAngleY);
 }
 
 /* Shared per-frame tail of the movement handlers. Counts down the no-collision
  * timer and the disappear timer (the coin is killed when the latter reaches 1),
  * moves the coin, and runs the mesh collision -- the continuous variant when
- * the speed vector (unk_0a4, mVertSpeed, unk_0ac) is longer than the collision
+ * the speed vector (mSpeedX, mVertSpeed, mSpeedZ) is longer than the collision
  * radius. Landing on a floor with surface flag 0x20 while falling makes a big
  * splash and leaves the coin sinking slowly (gravity -0x800, terminal velocity
  * -0x5000). */
@@ -291,7 +291,7 @@ void daCoin_c::func_ov002_020b13e0()
         return;
     }
     UpdatePos(&mdCc_c);
-    if (LenVec3(&unk_0a4) > mWithMeshClsn.mRadius)
+    if (LenVec3(&mSpeedX) > mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -300,7 +300,7 @@ void daCoin_c::func_ov002_020b13e0()
         return;
     if (mVertSpeed > 0) return;
     func_02012694(0xe2, &mCamSpacePos);
-    _ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_(mPosX, mPosY, mPosZ);
+    Particle::System::NewBigSplash(mPosX, mPosY, mPosZ);
     mHorzSpeed = 0;
     mVertAccel = -0x800;
     mTerminalVelocity = -0x5000;
@@ -343,8 +343,7 @@ void daCoin_c::func_ov002_020b14d8()
 
     floorState = ((CoinFlagBits*)&mCoinFlags)->floorState;
     if (floorState == FLOOR_DYNAMIC) {
-        _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-            this, &mShadowModel, &mShadowMat, 0x50000, 0x1f4000, 0xf);
+        DropShadowRadHeight(mShadowModel, mShadowMat, 0x50000, 0x1f4000, 0xf);
         mClipRadius = 0x3e800;
         return;
     }
@@ -353,8 +352,7 @@ void daCoin_c::func_ov002_020b14d8()
     {
         int depth = mPosY - mFloorPosY;
         mClipRadius = (depth + 0x50000) >> 3;
-        _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-            this, &mShadowModel, &mShadowMat, 0x50000, depth + 0x28000, 0xf);
+        DropShadowRadHeight(mShadowModel, mShadowMat, 0x50000, depth + 0x28000, 0xf);
     }
 }
 
@@ -390,9 +388,9 @@ void daCoin_c::func_ov002_020b16c4(Player *player)
     mDisappearTimer = 0;
     KillAndTrackInDeathTable();
     if (player->mIsUnderwater != 0)
-        _ZN5Sound9PlayBank3EjRK7Vector3(0x12, mCamSpacePos);
+        Sound::PlayBank3(0x12, mCamSpacePos);
     else
-        _ZN5Sound9PlayBank3EjRK7Vector3(0x11, mCamSpacePos);
+        Sound::PlayBank3(0x11, mCamSpacePos);
 
     filter = mSpawnFilter;
     if (filter != 0 && filter <= 7) {
@@ -433,7 +431,7 @@ void daCoin_c::func_ov002_020b16c4(Player *player)
         star->mAreaId = -1;
     star->AddStarMarker();
     *(unsigned short *)LAUNDER(&star->unk_4a2) |= 0x1000;
-    *(int *)((char *)star + 0x434) = marker->uniqueID;
+    star->mMarkerID = marker->uniqueID;
     *(u8 *)LAUNDER(&marker->mFlags) |= 4;
 }
 #undef LAUNDER
@@ -446,9 +444,9 @@ void daCoin_c::func_ov002_020b1884(Player *player)
     mDisappearTimer = 0;
     KillAndTrackInDeathTable();
     if (player->mIsUnderwater)
-        _ZN5Sound9PlayBank3EjRK7Vector3(0x12, mCamSpacePos);
+        Sound::PlayBank3(0x12, mCamSpacePos);
     else
-        _ZN5Sound9PlayBank3EjRK7Vector3(0x11, mCamSpacePos);
+        Sound::PlayBank3(0x11, mCamSpacePos);
     GiveCoins(player->mPlayerNo, 1);
     player->Heal(0x100);
 }
@@ -522,7 +520,7 @@ void daCoin_c::func_ov002_020b1a60()
 {
     mDisappearTimer += 1;
     {
-        int *targetPos = (int *)((int)mFollowTarget + 0x5c);
+        int *targetPos = &mFollowTarget->mPosX;
         mPosX = targetPos[0];
         mPosY = targetPos[1];
         mPosZ = targetPos[2];
@@ -569,7 +567,7 @@ void daCoin_c::func_ov002_020b1ad4()
     }
     if (mWithMeshClsn.JustHitGround()) {
         if (SurfaceInfo_TestFlag0x20((char *)mWithMeshClsn.GetFloorResult() + 4) == 0) {
-            _ZN5Sound9PlayBank3EjRK7Vector3(0x52, mCamSpacePos);
+            Sound::PlayBank3(0x52, mCamSpacePos);
             mVertSpeed = 0x19000;
         }
     }
@@ -590,7 +588,7 @@ void daCoin_c::func_ov002_020b1bfc()
     if (!mWithMeshClsn.JustHitGround()) return;
     if (SurfaceInfo_TestFlag0x20((char *)mWithMeshClsn.GetFloorResult() + 4) != 0)
         return;
-    _ZN5Sound9PlayBank3EjRK7Vector3(0x52, mCamSpacePos);
+    Sound::PlayBank3(0x52, mCamSpacePos);
     if (mHorzSpeed == 0) {
         mHorzSpeed = 0x13000;
         mDisappearTimer = 0x12c;
@@ -636,7 +634,7 @@ void daCoin_c::func_ov002_020b1cc0()
         if (isFlCoin != 0) {
             if (mPosY <= flCoin->mPosY) {
                 mPosY = flCoin->mPosY;
-                _ZN5Sound9PlayBank3EjRK7Vector3(0x52, mCamSpacePos);
+                Sound::PlayBank3(0x52, mCamSpacePos);
                 bits = (CoinFlagBits *)((int)&mCoinFlags);
                 bits->bounces++;
                 bounces = ((CoinFlagBits *)&mCoinFlags)->bounces;
@@ -661,14 +659,14 @@ void daCoin_c::func_ov002_020b1cc0()
         return;
 
     floor = (char *)mWithMeshClsn.GetFloorResult();
-    floorClass = func_02037e58((unsigned int*)(floor + 4));
+    floorClass = ((SurfaceInfo *)(floor + 4))->clps.GetFloorClass();
     ((SurfaceInfo*)(floor + 4))->CopyNormalTo(normal);
 
     if (mWithMeshClsn.JustHitGround() != 0) {
         if (SurfaceInfo_TestFlag0x20((char *)mWithMeshClsn.GetFloorResult() + 4) == 0) {
             if (mDisappearTimer > 0xf000)
                 mDisappearTimer = 0xf;
-            _ZN5Sound9PlayBank3EjRK7Vector3(0x52, mCamSpacePos);
+            Sound::PlayBank3(0x52, mCamSpacePos);
             bits = (CoinFlagBits *)((int)&mCoinFlags);
             bits->bounces++;
             bounces = ((CoinFlagBits *)&mCoinFlags)->bounces;
@@ -683,15 +681,15 @@ void daCoin_c::func_ov002_020b1cc0()
 
     if (normal.x != 0 || normal.z != 0) {
         int slide = data_ov002_020ff078[floorClass];
-        int *velocity = (int *)((int)&unk_0a4);
+        int *velocity = (int *)((int)&mSpeedX);
         *velocity += normal.x * slide;
-        *(int *)((int)&unk_0ac) += normal.z * slide;
+        *(int *)((int)&mSpeedZ) += normal.z * slide;
         mHorzSpeed = Vec3_HorzLen(velocity);
         if (mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
             UpdatePosWithHorzSpeedAndAng();
         }
-        mPrevAngleY = _ZN4cstd5atan2E5Fix12IiES1_(unk_0a4, unk_0ac);
+        mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
     }
 
     if (mWithMeshClsn.JustHitGround() != 0)
@@ -700,9 +698,9 @@ void daCoin_c::func_ov002_020b1cc0()
         return;
 
     if (normal.y != 0) {
-        int dotX = FX_MUL(normal.x, unk_0a4);
-        int dotZ = FX_MUL(normal.z, unk_0ac);
-        mVertSpeed = -(_ZN4cstd4fdivEii(dotX + dotZ, normal.y) + 0x8000);
+        int dotX = FX_MUL(normal.x, mSpeedX);
+        int dotZ = FX_MUL(normal.z, mSpeedZ);
+        mVertSpeed = -(cstd::fdiv(dotX + dotZ, normal.y) + 0x8000);
     }
 
     if ((unsigned)(floorClass - 1) <= 1) {
@@ -747,7 +745,7 @@ void daCoin_c::func_ov002_020b20b4()
     *(u32 *)(int)&mdCc_c.flags &= ~1;
     found = dActor_c::FindWithActorID(0xa, 0);
     if (found) {
-        mDisappearTimer = *(unsigned short *)((char *)found + 0x32a);
+        mDisappearTimer = ((daObjBC_Switch_cView *)found)->mCoinTimerSeed;
     } else {
         mDisappearTimer = 0xfa;
     }
@@ -767,12 +765,6 @@ void daCoin_c::func_ov002_020b2150()
         mBehaviorType = BEHAVIOR_RESTING;
     }
 }
-
-/* Particle::System::NewSimple takes its coordinates as Fix12<int>, which this
- * tree still spells as a plain s32, so the call is reached through its mangled
- * name. The declaration must carry C linkage: a C++-linkage prototype of that
- * identifier mangles a second time and names a symbol nothing defines. */
-extern "C" void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
 
 // @symbol _ZN8daCoin_c16CleanupResourcesEv
 s32 daCoin_c::CleanupResources()
@@ -797,16 +789,14 @@ s32 daCoin_c::CleanupResources()
     if (manager != 0) {
         int isFlCoin = (int)(manager->actorID == 0x4f);
         if (isFlCoin != 0) {
-            /* +0xd6 is the manager's live-coin count; no header describes
-               that class yet, so the offset stays raw. */
-            if (*(unsigned char *)((char *)manager + 0xd6) != 0) {
-                unsigned char *count = (unsigned char *)((int)manager + 0xd6);
+            if (((daObjFl_Coin_cView *)manager)->mLiveCoinCount != 0) {
+                unsigned char *count = &((daObjFl_Coin_cView *)manager)->mLiveCoinCount;
                 *count = *count - 1;
             }
         }
     }
     if (mDisappearTimer != 0) return 1;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, mPosY + 0x28000, mPosZ);
+    Particle::System::NewSimple(0xd2, mPosX, mPosY + 0x28000, mPosZ);
     return 1;
 }
 
@@ -844,7 +834,7 @@ int daCoin_c::Behavior()
 
     if ((unsigned int)(mCoinFlags << 0x1e) >> 0x1f) {
         mCoinFlags &= ~2;
-        _ZN5Sound9PlayBank3EjRK7Vector3(0x30, mCamSpacePos);
+        Sound::PlayBank3(0x30, mCamSpacePos);
     }
     if ((int)(actorID == 0x122) != 0) {
         if ((unsigned int)(mCoinFlags << 0x1f) >> 0x1f)
@@ -882,8 +872,8 @@ int daCoin_c::Behavior()
 extern "C" {
 extern int SublevelToLevel(int i);
 extern void SetStarMarker(int i, void* actor, int v2);
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, s32 f1, s32 f2, u32 a, u32 b);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, s32 f1, s32 f2, void* v, s32 f3);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, s32 f3);
 }
 s32 daCoin_c::InitResources()
 {
@@ -984,7 +974,7 @@ common:;
         isRed = (isRed == 0x121);
         if (isRed) {
             mSpawnFilter = (u8)((param1 >> 4) & 7);
-            Model::LoadFile(*(SharedFilePtr *)&data_ov002_0210d9a8);
+            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov002_0210d9a8);
             mCoinType = COIN_RED;
             if (SublevelToLevel(data_0209f2f8) == 0x13 ||
                 mSpawnFilter == data_0209f220) {
@@ -1020,8 +1010,8 @@ common:;
             return 0;
         }
     } else {
-        Model::LoadFile(*(SharedFilePtr *)data_ov002_020ff06c[type]);
-        Model::LoadFile(*(SharedFilePtr *)data_ov002_020ff060[mCoinType]);
+        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_020ff06c[type]);
+        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_020ff060[mCoinType]);
         if (mCommonModel1.SetFile((BMD_File *)data_ov002_020ff06c[mCoinType]->bmd, 1, 1) == 0) {
             return 0;
         }
@@ -1034,8 +1024,8 @@ common:;
         return 0;
     }
 
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCc_c, this, ccRadius, ccHeight, 0x100002, 0x8000);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x3c000, 0x3c000, 0, 0);
+    mdCc_c.Init(this, ccRadius, ccHeight, 0x100002, 0x8000);
+    mWithMeshClsn.Init(this, 0x3c000, 0x3c000, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
     mWithMeshClsn.StartDetectingWater();
 

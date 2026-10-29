@@ -10,13 +10,28 @@
     "class label(s): daObjKurumajiku_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "DESTRUCTOR FOLD. The licensed run is now 0x020b69e4..0x020b6c54 (6 functions), with _ZN17daObjKurumajiku_cD0Ev at 0x020b69e4 (size 0x58) and _ZN17daObjKurumajiku_cD1Ev at 0x020b6a3c (size 0x44) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/game/actors/d_a_obj_dorifu.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 6/6 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending.",
-    "HELPER TAIL FOLD (2026-10-10): func_ov002_020b6c54 (0x020b6c54..0x020b6d28, 0xd4) abuts this TU's old .text end (0x020b6c54) with no gap and is now inside it; src/game/actors/d_a_obj_lava.cpp starts exactly at 0x020b6d28 above it. Membership: it is the shared setup helper of this abstract class, the sibling of the cleanup helper func_ov002_020b6ac8 already here. It calls this TU's func_ov002_020b6a80, writes this class's mMountedActorIds (+0x320..+0x330) with the uniqueIDs of four spawned riders, and its only callers are the InitResources of the two descendants, daObjKm1_Kurumajiku_c (ov043) and daObjKm3_Kurumajiku_c (ov047), whose destructors store _ZTV17daObjKurumajiku_c. Appended last in the file (this TU emits .text in source order under #pragma defer_codegen off); its #pragma opt_strength_reduction off is kept in a push/pop around it."
+    "HELPER TAIL FOLD (2026-10-10): func_ov002_020b6c54, now InitResourcesFrom (0x020b6c54..0x020b6d28, 0xd4) abuts this TU's old .text end (0x020b6c54) with no gap and is now inside it; src/game/actors/d_a_obj_lava.cpp starts exactly at 0x020b6d28 above it. Membership: it is the shared setup helper of this abstract class, the sibling of the cleanup helper func_ov002_020b6ac8 already here. It calls this TU's func_ov002_020b6a80, writes this class's mMountedActorIds (+0x320..+0x330) with the uniqueIDs of four spawned riders, and its only callers are the InitResources of the two descendants, daObjKm1_Kurumajiku_c (ov043) and daObjKm3_Kurumajiku_c (ov047), whose destructors store _ZTV17daObjKurumajiku_c. Appended last in the file (this TU emits .text in source order under #pragma defer_codegen off); its #pragma opt_strength_reduction off is kept in a push/pop around it."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020b69e4",
       "end": "0x020b6d28"
+    },
+    {
+      "name": ".init",
+      "start": "0x02100f84",
+      "end": "0x02101064"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021080ec",
+      "end": "0x021080f0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0210dda0",
+      "end": "0x0210de00"
     }
   ],
   "functions": [
@@ -35,14 +50,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020b6a80",
+      "symbol": "_ZN17daObjKurumajiku_c20UpdateModelTransformEv",
       "address": "0x020b6a80",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b6a80.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov002_020b6ac8",
+      "symbol": "_ZN17daObjKurumajiku_c20CleanupResourcesFromEPNS_9ResourcesE",
       "address": "0x020b6ac8",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b6ac8.cpp",
@@ -63,7 +78,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_ov002_020b6c54",
+      "symbol": "_ZN17daObjKurumajiku_c17InitResourcesFromEPNS_9ResourcesEj",
       "address": "0x020b6c54",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/ov002/func_ov002_020b6c54.c",
@@ -71,7 +86,43 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov002_0210dda0",
+      "address": "0x0210dda0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov002_0210ddac",
+      "address": "0x0210ddac",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov002_0210ddb8",
+      "address": "0x0210ddb8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov002_0210ddc4",
+      "address": "0x0210ddc4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov002_0210ddd0",
+      "address": "0x0210ddd0",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "four-entry Vector3 rider mount-offset table the initializer stores elementwise and registers with ~Vector3 one by one; the axle's cart update walks it"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_Z40daObjKurumajiku_c_EmitDeletingDestructorP17daObjKurumajiku_c",
@@ -170,13 +221,14 @@
   ],
   "notes": [
     "Partial promotion: two compiler-spelled methods (Render, Behavior) and two linker-named C helpers. All four functions use named actor/model/collider fields. No source enrollment or licensed range changed during the review repair. [Superseded by the destructor fold: the pair is now in this TU, emitted by two forcing functions under defer_codegen off.]",
-    "func_ov002_020b6a80 retains the char* entry required by the existing shared declaration and setup caller, then recovers the base type locally. Its matrix is mModel.mat4x3, not the collision matrix; translation is world position divided by eight. The inherited scalar IsClsnInRange bridge matches its actual definition, not an asserted by-value Fix12 ABI.",
+    "UpdateModelTransform (formerly func_ov002_020b6a80) is a member; with its siblings CleanupResourcesFrom (func_ov002_020b6ac8) and InitResourcesFrom (func_ov002_020b6c54) it takes the base-class this and the descendant's Resources record, byte-identical to the old char* / void* C entry points. Its matrix is mModel.mat4x3, not the collision matrix; translation is world position divided by eight. The inherited scalar IsClsnInRange bridge matches its actual definition, not an asserted by-value Fix12 ABI.",
     "Cleanup restores the pre-PR opaque void*/void* C boundary. Both current callers pass an unadjusted empty derived object and a descriptor containing SharedFilePtr* model/collision followed by CLPS_Block*. The common axle owns the reconstructed daObjKurumajiku_c::Resources layout, corroborated by both descendant records and the shared setup helper. Named collider and descriptor accesses pass strict bytes. Distinct caller-side pointer spellings remain interface reconstruction debt; void* is not full declaration agreement.",
     "Fourteen bounded review variants are recorded as exact source patches in notes/experiments/pr2873-source-repair-0920.json. Named model/collider/descriptor accesses and mAngleZ += 0x100 match. A comparison widened to int is retained: direct, bool and masked-integer tests emit a 0x110-byte Behavior instead of retail 0x11c. Noncompound angle assignment also fails. The angle increment precedes the suppression test.",
     "Historical producer report: the original PR listed a fourteen-form destructor grid (inline/header/order variants, implicit destructor and odr-use arrangements) but did not commit exact variant artifacts. That report is not a reproduced universal barrier. This review measures the unchanged inline-header form only: duplicate D1 then D0; both bodies and relocations match their retained retail homes. No destructor-definition change or forced-emission workaround is proposed. [Superseded by the destructor fold: the pair is now in this TU, emitted by two forcing functions under defer_codegen off.]",
     "The manifest remains text-only. All eleven complete emitted metadata objects, including the 0x88-byte vtable storage/preamble, are compared byte-for-byte after relocation in the repair evidence. Four inherited names emit 9/9/10/13 bytes including NUL; configured extents are 12/12/12/16 and the remaining 3/3/2/3 retail bytes are zero gap padding not emitted by these objects. The ordinary romdata report remains 7 VERIFIED / 4 PARTIAL / 0 DIFFERS.",
     "Integration still owns removal of exactly the two newly banked Cleanup receiver fingerprints and regeneration of this actor's promotion queue accounting. Source-stage evidence does not accept reserved ledger contents. Original four per-symbol credits and the sole Render converted identity are retained.",
-    "FORCING FUNCTIONS AND PRAGMA. This TU compiles under `#pragma defer_codegen off` and carries two uncalled functions, daObjKurumajiku_c_EmitDeletingDestructor and daObjKurumajiku_c_EmitDestructor, recorded as compiler_only_output deadstrip rows. They are the parse-time trigger that places D0 then D1 ahead of the real members and are not in the ROM. The destructor itself stays inline in include/daObjKurumajiku_c.h because the class's descendants inline its vptr store."
+    "FORCING FUNCTIONS AND PRAGMA. This TU compiles under `#pragma defer_codegen off` and carries two uncalled functions, daObjKurumajiku_c_EmitDeletingDestructor and daObjKurumajiku_c_EmitDestructor, recorded as compiler_only_output deadstrip rows. They are the parse-time trigger that places D0 then D1 ahead of the real members and are not in the ROM. The destructor itself stays inline in include/daObjKurumajiku_c.h because the class's descendants inline its vptr store.",
+    "Static initializer folded: the four-entry Vector3 rider mount-offset table is a real definition in d_a_obj_kurumajiku.cpp, replacing the handwritten src/unnamed/ov002/__sinit_ov002_02100f84.c. mwcc emits __sinit_d_a_obj_kurumajiku.cpp (0xe0), its .ctor word and the four registration nodes itself; all are byte- and relocation-identical to retail. Ownership: ov002 .init, .ctor and .bss run in .text TU order; this initializer is the only one between d_a_obj_hatena_switch's and d_a_obj_mario_cap's, its .ctor word 0x021080ec sits between theirs, its .bss 0x0210dda0..0x0210de00 runs from hatena_switch's end to mario_cap's start, and this TU is the only .text that reads the table. Interior element addresses are recorded as table + offset, as mwcc emits them; dsd keeps its own labels for them in symbols.txt."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -252,6 +304,376 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov002-daObjKurumajiku_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b69e4",
+        "end": "0x020b6d28",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b69e4",
+          "end": "0x020b6d28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02100f84",
+          "end": "0x02101064",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021080ec",
+          "end": "0x021080f0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0210dda0",
+          "end": "0x0210de00",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 14
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              45
+            ],
+            "desired": [
+              45
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              43
+            ],
+            "desired": [
+              43
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9
+            ],
+            "desired": [
+              5,
+              8,
+              7,
+              6,
+              9
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "desired": [
+                5,
+                8,
+                7,
+                6,
+                9
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9
+              ]
+            }
+          ],
+          "symbolIndices": 5,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "init": [
+    {
+      "symbol": "__sinit_d_a_obj_kurumajiku.cpp",
+      "address": "0x02100f84",
+      "size": "0xe0",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov002_02100f84 (0xe0) and carries the same relocation sites in the same order"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_obj_kurumajiku.cpp",
+      "address": "0x021080ec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@415",
+      "to": "data_ov002_0210ddac",
+      "evidence": "compiler temp mapped to 0x0210ddac by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@418",
+      "to": "data_ov002_0210ddb8",
+      "evidence": "compiler temp mapped to 0x0210ddb8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@421",
+      "to": "data_ov002_0210ddc4",
+      "evidence": "compiler temp mapped to 0x0210ddc4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    },
+    {
+      "from": "@424",
+      "to": "data_ov002_0210dda0",
+      "evidence": "compiler temp mapped to 0x0210dda0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_obj_kurumajiku.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_obj_kurumajiku.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "data_ov002_0210dda0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov002_0210ddac",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov002_0210ddb8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov002_0210ddc4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02100fb0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100fdc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101004",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101030",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101040",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ddd0",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210ddd0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101044",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7Vector3D1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020072c0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101048",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ddac",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210ddac"
+    },
+    {
+      "section": ".init",
+      "source": "0x0210104c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ddd0",
+      "addend": 12,
+      "target_module": "ov002",
+      "target_address": "0x0210dddc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101050",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ddb8",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210ddb8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101054",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ddd0",
+      "addend": 24,
+      "target_module": "ov002",
+      "target_address": "0x0210dde8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101058",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ddc4",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210ddc4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0210105c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ddd0",
+      "addend": 36,
+      "target_module": "ov002",
+      "target_address": "0x0210ddf4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101060",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dda0",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dda0"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021080ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_obj_kurumajiku.cpp",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02100f84"
+    }
+  ],
+  "production_mode": "intact-object"
 }

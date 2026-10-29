@@ -670,28 +670,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -966,44 +946,44 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1536",
+      "from": "@1616",
       "to": "@1530",
-      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1562 and retained licensed @1530. No function alias, new metadata, or deadstrip policy introduced."
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1562 and retained licensed @1530. No function alias, new metadata, or deadstrip policy introduced. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     },
     {
-      "from": "@1548",
+      "from": "@1628",
       "to": "@1542",
-      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1574 and retained licensed @1542. No function alias, new metadata, or deadstrip policy introduced."
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1574 and retained licensed @1542. No function alias, new metadata, or deadstrip policy introduced. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     },
     {
-      "from": "@1546",
+      "from": "@1626",
       "to": "@1540",
-      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1572 and retained licensed @1540. No function alias, new metadata, or deadstrip policy introduced."
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1572 and retained licensed @1540. No function alias, new metadata, or deadstrip policy introduced. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     },
     {
-      "from": "@1544",
+      "from": "@1624",
       "to": "@1538",
-      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1570 and retained licensed @1538. No function alias, new metadata, or deadstrip policy introduced."
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1570 and retained licensed @1538. No function alias, new metadata, or deadstrip policy introduced. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     },
     {
-      "from": "@1538",
+      "from": "@1618",
       "to": "@1532",
-      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1564 and retained licensed @1532. No function alias, new metadata, or deadstrip policy introduced."
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1564 and retained licensed @1532. No function alias, new metadata, or deadstrip policy introduced. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     },
     {
-      "from": "@1534",
+      "from": "@1614",
       "to": "@1528",
-      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1560 and retained licensed @1528. No function alias, new metadata, or deadstrip policy introduced."
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1560 and retained licensed @1528. No function alias, new metadata, or deadstrip policy introduced. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     },
     {
-      "from": "@1540",
+      "from": "@1620",
       "to": "@1534",
-      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1566 and retained licensed @1534. No function alias, new metadata, or deadstrip policy introduced."
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1566 and retained licensed @1534. No function alias, new metadata, or deadstrip policy introduced. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     },
     {
-      "from": "@1542",
+      "from": "@1622",
       "to": "@1536",
-      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1568 and retained licensed @1536. No function alias, new metadata, or deadstrip policy introduced."
+      "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1568 and retained licensed @1536. No function alias, new metadata, or deadstrip policy introduced. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address)"
     }
   ]
 }

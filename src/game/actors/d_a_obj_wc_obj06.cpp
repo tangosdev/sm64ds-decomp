@@ -10,38 +10,31 @@
  * daObjWcObj06_c_classInit is reconstructed (RTTI daObjWcObj06_c,
  * WC_OBJ06 registry). Retail does not store that spelling.
  *
- * deslop
- * Leftover: startEnd is two Vector3 copies flattened
- *   (start = pos; end = pos; start.y += 20; end.y = waterY); the
- *   extra stores are decompiler dead stores, not an int[6] type.
- * Leftover: g_profile_WC_OBJ06 is ov029 data outside this TU (S14).
+ * What stays:
+ * - startEnd is two Vector3 copies flattened into one int[6]
+ *   (start = pos; end = pos; start.y += 20; end.y = waterY); the store
+ *   order is the ROM's.
+ * - g_profile_WC_OBJ06 is ov029 data outside this TU (S14).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_wc_obj06_AssetId {
-    ASSET_WC_OBJ06_BMD = 0x06d5,
-    ASSET_WC_OBJ06_KCL = 0x06d6
-};
+enum d_a_obj_wc_obj06_AssetId { ASSET_WC_OBJ06_BMD = 0x06d5, ASSET_WC_OBJ06_KCL = 0x06d6 };
 
 #include "daObjWcObj06_c.h"
 #include "dBgCh_Lin.h"
 #include "SharedFilePtr.h"
 
-extern "C" daObjFloatBoard_c_Resources data_ov029_02113f00;
+extern daObjFloatBoard_c_Resources data_ov029_02113f00;
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
  * addresses are the ROM resource-family functions. */
 struct WcObj06ModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     WcObj06ModelFilePtr(u32 fileID);
     ~WcObj06ModelFilePtr();
 };
 
 struct WcObj06CollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     WcObj06CollisionFilePtr(u32 fileID);
     ~WcObj06CollisionFilePtr();
 };
@@ -51,35 +44,32 @@ enum {
 };
 
 // @symbol daObjWcObj06_c_classInit
-extern "C" daObjWcObj06_c *daObjWcObj06_c_classInit()
-{
+extern "C" daObjWcObj06_c *daObjWcObj06_c_classInit() {
     return new daObjWcObj06_c();
 }
 
 // @symbol _ZN14daObjWcObj06_c13InitResourcesEv
-int daObjWcObj06_c::InitResources()
-{
+int daObjWcObj06_c::InitResources() {
     int startEnd[6]; /* start[3] then end[3] */
     int waterY;
     int x, y, z;
 
-    if (func_ov002_020b5e58(&data_ov029_02113f00) != 0) {
+    if (InitResourcesFrom(&data_ov029_02113f00) != 0) {
         waterY = GetWaterHeightWDW();
         if (mPosY > waterY) {
             dBgCh_Lin line;
             x = mPosX;
-            startEnd[3] = x;                 /* end.x */
+            startEnd[3] = x; /* end.x */
             y = mPosY;
-            startEnd[4] = y;                 /* end.y temp */
+            startEnd[4] = y; /* end.y temp */
             z = mPosZ;
-            startEnd[1] = y;                 /* start.y temp */
-            startEnd[5] = z;                 /* end.z */
-            startEnd[0] = x;                 /* start.x */
-            startEnd[2] = z;                 /* start.z */
+            startEnd[1] = y; /* start.y temp */
+            startEnd[5] = z; /* end.z */
+            startEnd[0] = x; /* start.x */
+            startEnd[2] = z; /* start.z */
             startEnd[1] = y + kRayStartAboveFix12;
             startEnd[4] = waterY;
-            line.SetObjAndLine(*(Vector3 *)&startEnd[0],
-                *(Vector3 *)&startEnd[3], this);
+            line.SetObjAndLine(*(Vector3 *)&startEnd[0], *(Vector3 *)&startEnd[3], this);
             if (line.DetectClsn() == 0) {
                 mPosY = waterY;
             } else {

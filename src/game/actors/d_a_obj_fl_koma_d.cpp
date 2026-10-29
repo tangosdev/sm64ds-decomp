@@ -1,9 +1,6 @@
 //cpp
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daObjFl_Koma_D_c_AssetId {
-    ASSET_FL_KOMA_D_BMD = 0x05f5,
-    ASSET_FL_KOMA_D_KCL = 0x05f6
-};
+enum daObjFl_Koma_D_c_AssetId { ASSET_FL_KOMA_D_BMD = 0x05f5, ASSET_FL_KOMA_D_KCL = 0x05f6 };
 
 #pragma defer_codegen off
 /**
@@ -20,10 +17,7 @@ enum daObjFl_Koma_D_c_AssetId {
  * spelling.
  */
 
-// leftovers:
-// - func_ov002_020b676c / func_ov002_020b66a8 are still the linker names
-//   of daObjKaitendai_c Init/Cleanup (the base leaves those slots pure
-//   virtual). Naming belongs in ov002.
+// What stays:
 // - data_ov022_02113da4 is the model/collision/CLPS row between typeinfo
 //   at 02113d98 and the type name at 02113db0. Not owned here. The two
 //   handles it points at are defined at the bottom of this file;
@@ -48,32 +42,22 @@ struct ResourceDescriptor {
     CLPS_Block *clps;
 };
 
-typedef char ResourceDescriptor_size_must_be_0x0c[
-    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
-extern "C" {
-int func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor,
-                        s16 angle);
-int func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov022_02113da4;
-}
 
 // @symbol _ZN16daObjFl_Koma_D_cD1Ev
 // @symbol _ZN16daObjFl_Koma_D_cD0Ev
-daObjFl_Koma_D_c::~daObjFl_Koma_D_c()
-{
-}
+daObjFl_Koma_D_c::~daObjFl_Koma_D_c() {}
 
 // @symbol _ZN16daObjFl_Koma_D_c16CleanupResourcesEv
-int daObjFl_Koma_D_c::CleanupResources()
-{
-    return func_ov002_020b66a8(this, &data_ov022_02113da4);
+int daObjFl_Koma_D_c::CleanupResources() {
+    return CleanupResourcesFrom(&data_ov022_02113da4);
 }
 
 // @symbol _ZN16daObjFl_Koma_D_c13InitResourcesEv
-int daObjFl_Koma_D_c::InitResources()
-{
-    return func_ov002_020b676c(this, &data_ov022_02113da4, 0x100);
+int daObjFl_Koma_D_c::InitResources() {
+    return InitResourcesFrom(&data_ov022_02113da4, 0x100);
 }
 
 // @symbol daObjFl_Koma_D_c_classInit
@@ -85,8 +69,7 @@ int daObjFl_Koma_D_c::InitResources()
  * `new daObjFl_Koma_D_c` is the whole sequence the loose factory spelled
  * by hand: fBase_c::operator new(0x320), dBgActor_c's base constructor,
  * then daObjKaitendai_c's vptr store and this class's own. */
-extern "C" daObjFl_Koma_D_c *daObjFl_Koma_D_c_classInit(void)
-{
+extern "C" daObjFl_Koma_D_c *daObjFl_Koma_D_c_classInit(void) {
     return new daObjFl_Koma_D_c;
 }
 
@@ -94,15 +77,11 @@ extern "C" daObjFl_Koma_D_c *daObjFl_Koma_D_c_classInit(void)
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct KomaDModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     KomaDModelFilePtr(u32 fileID);
     ~KomaDModelFilePtr();
 };
 
 struct KomaDCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     KomaDCollisionFilePtr(u32 fileID);
     ~KomaDCollisionFilePtr();
 };
@@ -115,15 +94,14 @@ KomaDCollisionFilePtr gFlKomaDCollisionFile(ASSET_FL_KOMA_D_KCL);
 
 #ifdef _MSC_VER
 /* Host flat names. Not compiled into the cartridge object. */
-extern "C" daObjFl_Koma_D_c *_ZN16daObjFl_Koma_D_cD0Ev(daObjFl_Koma_D_c *thiz)
-{
+extern "C" daObjFl_Koma_D_c *_ZN16daObjFl_Koma_D_cD0Ev(daObjFl_Koma_D_c *thiz) {
     thiz->daObjFl_Koma_D_c::~daObjFl_Koma_D_c();
     daObjFl_Koma_D_c::operator delete(thiz);
     return thiz;
 }
 
-extern "C" daObjFl_Koma_D_c *_ZN19RotatingPlatformLllD0Ev(daObjFl_Koma_D_c *thiz)
-{
-    return _ZN16daObjFl_Koma_D_cD0Ev(thiz);
+extern "C" daObjFl_Koma_D_c *_ZN19RotatingPlatformLllD0Ev(daObjFl_Koma_D_c *thiz) {
+    delete thiz;
+    return thiz;
 }
 #endif

@@ -16,6 +16,7 @@ src/game/actors/d_a_linelift2.cpp:
     .text start:0x02131c14 end:0x02132404
     .init start:0x021345dc end:0x021346e8
     .ctor start:0x02134b6c end:0x02134b70
+    .data start:0x02134e44 end:0x02134e5c
     .bss start:0x02135490 end:0x021354f8
 
 src/game/actors/d_a_obj_simple_lift.cpp:

@@ -1,14 +1,14 @@
 _ZN18daObjClockHuriko_cD1Ev kind:function(arm,size=0x30) addr:0x021111a0
 _ZN18daObjClockHuriko_cD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 _ZN18daObjClockHuriko_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111214
-func_ov013_02111238 kind:function(arm,size=0x48) addr:0x02111238
+_ZN18daObjClockHuriko_c20UpdateModelTransformEv kind:function(arm,size=0x48) addr:0x02111238
 _ZN18daObjClockHuriko_c6RenderEv kind:function(arm,size=0x28) addr:0x02111280
 _ZN18daObjClockHuriko_c8BehaviorEv kind:function(arm,size=0x94) addr:0x021112a8
 _ZN18daObjClockHuriko_c13InitResourcesEv kind:function(arm,size=0x48) addr:0x0211133c
 daObjClockHuriko_c_classInit kind:function(arm,size=0x38) addr:0x02111384
 _ZN12daObjClock_cD1Ev kind:function(arm,size=0x30) addr:0x021113bc
 _ZN12daObjClock_cD0Ev kind:function(arm,size=0x44) addr:0x021113ec
-_ZN12daObjClock_c19func_ov013_02111430Ev kind:function(arm,size=0x48) addr:0x02111430
+_ZN12daObjClock_c20UpdateModelTransformEv kind:function(arm,size=0x48) addr:0x02111430
 _ZN12daObjClock_c16CleanupResourcesEv kind:function(arm,size=0x2c) addr:0x02111478
 _ZN12daObjClock_c6RenderEv kind:function(arm,size=0x28) addr:0x021114a4
 _ZN12daObjClock_c8BehaviorEv kind:function(arm,size=0x100) addr:0x021114cc

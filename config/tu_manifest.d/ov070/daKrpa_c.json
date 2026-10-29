@@ -60,98 +60,98 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_021211c4Ev",
+      "symbol": "_ZN8daKrpa_c15HandlePlayerHitEv",
       "address": "0x021211c4",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov070_021211c4.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_02121298Ev",
+      "symbol": "_ZN8daKrpa_c18TrackClosestPlayerEv",
       "address": "0x02121298",
       "size": "0x00000078",
       "legacy_source": "src/func_ov070_02121298.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_02121310Ev",
+      "symbol": "_ZN8daKrpa_c20UpdateModelAndShadowEv",
       "address": "0x02121310",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov070_02121310.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_021213ccEv",
+      "symbol": "_ZN8daKrpa_c18ExecuteKnockedAwayEv",
       "address": "0x021213cc",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov070_021213cc.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_02121438Ev",
+      "symbol": "_ZN8daKrpa_c16EnterKnockedAwayEv",
       "address": "0x02121438",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov070_02121438.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_021214f8Ev",
+      "symbol": "_ZN8daKrpa_c12ExecuteEatenEv",
       "address": "0x021214f8",
       "size": "0x00000050",
       "legacy_source": "src/func_ov070_021214f8.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_02121548Ev",
+      "symbol": "_ZN8daKrpa_c10EnterEatenEv",
       "address": "0x02121548",
       "size": "0x00000024",
       "legacy_source": "src/func_ov070_02121548.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_0212156cEv",
+      "symbol": "_ZN8daKrpa_c11ExecuteSpitEv",
       "address": "0x0212156c",
       "size": "0x0000014c",
       "legacy_source": "src/func_ov070_0212156c.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_021216b8Ev",
+      "symbol": "_ZN8daKrpa_c9EnterSpitEv",
       "address": "0x021216b8",
       "size": "0x00000058",
       "legacy_source": "src/func_ov070_021216b8.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_02121710Ev",
+      "symbol": "_ZN8daKrpa_c11ExecuteIdleEv",
       "address": "0x02121710",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov070_02121710.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_021217acEv",
+      "symbol": "_ZN8daKrpa_c9EnterIdleEv",
       "address": "0x021217ac",
       "size": "0x00000060",
       "legacy_source": "src/func_ov070_021217ac.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_0212180cEv",
+      "symbol": "_ZN8daKrpa_c12ExecuteStateEv",
       "address": "0x0212180c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov070_0212180c.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_02121848Ev",
+      "symbol": "_ZN8daKrpa_c10EnterStateEv",
       "address": "0x02121848",
       "size": "0x00000038",
       "legacy_source": "src/func_ov070_02121848.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN8daKrpa_c19func_ov070_02121880Ei",
+      "symbol": "_ZN8daKrpa_c11ChangeStateEi",
       "address": "0x02121880",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov070_02121880.c",
@@ -193,14 +193,14 @@
       "ordinal": 21
     },
     {
-      "symbol": "_ZN21daKrpaFrameController19func_ov070_02121a64Ev",
+      "symbol": "_ZN21daKrpaFrameController9NextFrameEv",
       "address": "0x02121a64",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov070_02121a64.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN21daKrpaFrameController19func_ov070_02121ae0EPjjj",
+      "symbol": "_ZN21daKrpaFrameController9SetFramesEPjjj",
       "address": "0x02121ae0",
       "size": "0x00000018",
       "legacy_source": "src/func_ov070_02121ae0.c",
@@ -278,7 +278,7 @@
       "address": "0x02123698",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 0x351; consumed by Model::LoadFile in InitResources and released in CleanupResources"
+      "evidence": "model resource handle constructed with file ID 0x351; consumed by dExtSimpleModel_c::LoadFile in InitResources and released in CleanupResources"
     },
     {
       "symbol": "@676",
@@ -620,28 +620,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -762,49 +742,49 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@707",
+      "from": "@738",
       "to": "@676",
-      "evidence": "compiler temporary destructor-registration node; mwcc numbers it @692 per TU and ov062 daJango_c (on main) also defines a global @692, so the scratch link collides"
+      "evidence": "compiler temporary destructor-registration node; mwcc numbers it @692 per TU and ov062 daJango_c (on main) also defines a global @692, so the scratch link collides | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@708",
+      "from": "@739",
       "to": "@677",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @693 per TU and ov079 daBtn_c (on main) also defines a global @693, so the scratch link collides"
+      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @693 per TU and ov079 daBtn_c (on main) also defines a global @693, so the scratch link collides | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@709",
+      "from": "@740",
       "to": "@679",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @694 per TU and ov079 daBtn_c (on main) also defines a global @694, so the scratch link collides"
+      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @694 per TU and ov079 daBtn_c (on main) also defines a global @694, so the scratch link collides | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@710",
+      "from": "@741",
       "to": "@680",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @695 per TU and ov079 daBtn_c (on main) also defines a global @695, so the scratch link collides"
+      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @695 per TU and ov079 daBtn_c (on main) also defines a global @695, so the scratch link collides | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@711",
+      "from": "@742",
       "to": "@681",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @696 per TU and ov085 daObjKanban_c (on main) also defines a global @696, so the scratch link collides"
+      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @696 per TU and ov085 daObjKanban_c (on main) also defines a global @696, so the scratch link collides | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@712",
+      "from": "@743",
       "to": "@682",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @697 per TU and ov079 daBtn_c (on main) also defines a global @697, so the scratch link collides"
+      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @697 per TU and ov079 daBtn_c (on main) also defines a global @697, so the scratch link collides | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@713",
+      "from": "@744",
       "to": "@683",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @698 per TU and ov079 daBtn_c (on main) also defines a global @698, so the scratch link collides"
+      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @698 per TU and ov079 daBtn_c (on main) also defines a global @698, so the scratch link collides | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@714",
+      "from": "@745",
       "to": "@684",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @699 per TU and ov079 daBtn_c (on main) also defines a global @699, so the scratch link collides"
+      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @699 per TU and ov079 daBtn_c (on main) also defines a global @699, so the scratch link collides | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@715",
+      "from": "@746",
       "to": "@685",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @700 per TU and ov089 daObjKey_c (on main) also defines a global @700, so the scratch link collides"
+      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @700 per TU and ov089 daObjKey_c (on main) also defines a global @700, so the scratch link collides | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }
   ],
   "relocations": [
@@ -963,7 +943,7 @@
       "source": "0x021232f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daKrpa_c19func_ov070_02121438Ev",
+      "symbol": "_ZN8daKrpa_c16EnterKnockedAwayEv",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02121438"
@@ -973,7 +953,7 @@
       "source": "0x021232fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daKrpa_c19func_ov070_02121548Ev",
+      "symbol": "_ZN8daKrpa_c10EnterEatenEv",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02121548"
@@ -983,7 +963,7 @@
       "source": "0x02123304",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daKrpa_c19func_ov070_0212156cEv",
+      "symbol": "_ZN8daKrpa_c11ExecuteSpitEv",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x0212156c"
@@ -993,7 +973,7 @@
       "source": "0x0212330c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daKrpa_c19func_ov070_021214f8Ev",
+      "symbol": "_ZN8daKrpa_c12ExecuteEatenEv",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x021214f8"
@@ -1003,7 +983,7 @@
       "source": "0x02123314",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daKrpa_c19func_ov070_021216b8Ev",
+      "symbol": "_ZN8daKrpa_c9EnterSpitEv",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x021216b8"
@@ -1013,7 +993,7 @@
       "source": "0x0212331c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daKrpa_c19func_ov070_02121710Ev",
+      "symbol": "_ZN8daKrpa_c11ExecuteIdleEv",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02121710"
@@ -1023,7 +1003,7 @@
       "source": "0x02123324",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daKrpa_c19func_ov070_021213ccEv",
+      "symbol": "_ZN8daKrpa_c18ExecuteKnockedAwayEv",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x021213cc"
@@ -1033,7 +1013,7 @@
       "source": "0x0212332c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daKrpa_c19func_ov070_021217acEv",
+      "symbol": "_ZN8daKrpa_c9EnterIdleEv",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x021217ac"

@@ -6,7 +6,7 @@
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
- * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * the dExtSimpleModel_c at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x31e was dActor_c's and
  * dBgActor_c's, and is inherited now.
  *
@@ -60,9 +60,9 @@ typedef char daObjKanban_c_size_must_be_0x368[sizeof(daObjKanban_c) == 0x368 ? 1
    can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
 struct daObjKanban_c {
     u8  pad_000[0xd4];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+    /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
+    dExtSimpleModel_c mModel; /* 0x0d4 */
     /* dBgW_KcMbg member. The cartridge's own ~daObjKanban_c calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */

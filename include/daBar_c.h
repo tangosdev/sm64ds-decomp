@@ -8,8 +8,8 @@
  * Invisible climbable pole. Mario grabs mClsn.
  */
 struct daBar_c : dActor_c {
-    u8 pad_0d0[0x4];       /* 0x0d0 unused */
-    dCcAc_c mClsn;         /* 0x0d4 climb cylinder */
+    u8 pad_0d0[0x4]; /* 0x0d0 unused */
+    dCcAc_c mClsn;   /* 0x0d4 climb cylinder */
 
     virtual ~daBar_c() {}
     virtual s32 InitResources();
@@ -21,8 +21,7 @@ struct daBar_c : dActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daBar_c_size_must_be_0x108[
-    sizeof(daBar_c) == 0x108 ? 1 : -1];
+typedef char daBar_c_size_must_be_0x108[sizeof(daBar_c) == 0x108 ? 1 : -1];
 #endif
 
 #endif /* DABAR_C_H */

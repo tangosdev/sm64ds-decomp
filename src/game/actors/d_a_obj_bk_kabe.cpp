@@ -24,7 +24,7 @@
  * (ROM-ascending); the two factories append after InitResources, in ROM
  * order (BK_KABE01 then BK_KABE00).
  *
- * deslop leftovers:
+ * What stays, and why (each alternative measured):
  * - Kill: folding the test into `if (actorID == kBreakableActor)` is a
  *   size-DIFF, 0x60 to 0x54. The compare stays a 0/1 local.
  * - Kill: a Vector3 built from mCamSpacePosX/Y/Z for PlayBank3 is a
@@ -36,7 +36,7 @@
  *   0xf0 to 0xe4. The 0/1 local stays.
  * - Behavior: `pos.y = mPosY + kStarPopY` is a size-DIFF, 0xf0 to 0xec.
  *   Y is stored, then increased.
- * - Behavior: assigning mMeshCollider.unk_0c is a size-DIFF, 0xf0 to 0xe8.
+ * - Behavior: assigning mMeshCollider.clipRadius is a size-DIFF, 0xf0 to 0xe8.
  *   func_020393a4 stays; that is the call the ROM makes.
  * - Behavior: IsClsnInRange(kClsnRange, 0) does not compile (no conversion
  *   to Fix12<int>). Fix12<int> locals are a size-DIFF, 0xf0 to 0x108. The
@@ -74,33 +74,27 @@ struct KabeFiles {
  * resource-family functions, aliased in the manifest. Nothing in this TU
  * names the handles directly; the KabeFiles rows above point at them. */
 struct BkKabeModelFile : SharedFilePtr {
-    u32 words[2];
-
     BkKabeModelFile(u32 fileID);
     ~BkKabeModelFile();
 };
 
 struct BkKabeCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     BkKabeCollisionFilePtr(u32 fileID);
     ~BkKabeCollisionFilePtr();
 };
 
-extern "C" {
 extern KabeFiles data_ov079_02128058[];
 
-/* Writes the mesh active range at dBgW+0x0c. The definition is C and
- * takes int *, so this spelling matches it and the call casts. */
-void func_020393a4(int *mesh, int range);
+/* local extern: writes the mesh active range at dBgW+0x0c. The definition
+ * is C and takes int *, so this spelling matches it and the call casts. */
+extern "C" void func_020393a4(int *mesh, int range);
 
-/* Scalar ABI. These members take Fix12<int> by value, and that spelling
- * does not compile against the ints this file actually passes. */
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int radius, int yOffset);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale, short angY,
-    CLPS_Block *clps);
-void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
+/* Scalar ABI. Particle__System.h's NewSimple takes Fix12<int> by value, and
+ * that spelling does not compile against the ints Kill passes (see above). */
+namespace Particle {
+struct System {
+    static void *NewSimple(u32 id, s32 x, s32 y, s32 z);
+};
 }
 
 enum {
@@ -119,15 +113,12 @@ enum {
 
 // @symbol _ZN14daObjBk_Kabe_cD1Ev
 // @symbol _ZN14daObjBk_Kabe_cD0Ev
-daObjBk_Kabe_c::~daObjBk_Kabe_c()
-{
-}
+daObjBk_Kabe_c::~daObjBk_Kabe_c() {}
 
 // @symbol _ZN14daObjBk_Kabe_c4KillEv
-void daObjBk_Kabe_c::Kill()
-{
+void daObjBk_Kabe_c::Kill() {
     Sound::PlayBank3(kBreakSound, mCamSpacePos);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kBreakParticle, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kBreakParticle, mPosX, mPosY, mPosZ);
     int isBreakable = (actorID == kBreakableActor);
     if (isBreakable) {
         mBroken = 1;
@@ -137,14 +128,12 @@ void daObjBk_Kabe_c::Kill()
 }
 
 // @symbol _ZN14daObjBk_Kabe_c24OnHitByCannonBlastedCharER8dActor_c
-int daObjBk_Kabe_c::OnHitByCannonBlastedChar(dActor_c &other)
-{
+int daObjBk_Kabe_c::OnHitByCannonBlastedChar(dActor_c &other) {
     Kill();
 }
 
 // @symbol _ZN14daObjBk_Kabe_c16CleanupResourcesEv
-int daObjBk_Kabe_c::CleanupResources()
-{
+int daObjBk_Kabe_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     data_ov079_02128058[mVariant].model->Release();
@@ -153,8 +142,7 @@ int daObjBk_Kabe_c::CleanupResources()
 }
 
 // @symbol _ZN14daObjBk_Kabe_c6RenderEv
-int daObjBk_Kabe_c::Render()
-{
+int daObjBk_Kabe_c::Render() {
     if (mBroken)
         return 1;
     mModel.Render(0);
@@ -162,8 +150,7 @@ int daObjBk_Kabe_c::Render()
 }
 
 // @symbol _ZN14daObjBk_Kabe_c8BehaviorEv
-int daObjBk_Kabe_c::Behavior()
-{
+int daObjBk_Kabe_c::Behavior() {
     int isBreakable = (actorID == kBreakableActor);
     if (isBreakable && mBroken) {
         if (mMeshCollider.IsEnabled())
@@ -174,20 +161,19 @@ int daObjBk_Kabe_c::Behavior()
             pos.y = mPosY;
             pos.z = mPosZ;
             pos.y += kStarPopY;
-            dActor_c::Spawn(kStarActor, mStarId | kStarSpawnFlags, pos,
-                            (Vector3_16 *)0, mAreaId, -1);
+            dActor_c::Spawn(kStarActor, mStarId | kStarSpawnFlags, pos, (Vector3_16 *)0, mAreaId,
+                            -1);
             MarkForDestruction();
         }
         return 1;
     }
     func_020393a4((int *)&mMeshCollider, kClsnRange);
-    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, kClsnRange, 0);
+    IsClsnInRange(kClsnRange, 0);
     return 1;
 }
 
 // @symbol _ZN14daObjBk_Kabe_c13InitResourcesEv
-int daObjBk_Kabe_c::InitResources()
-{
+int daObjBk_Kabe_c::InitResources() {
     int isBreakable = actorID == kBreakableActor;
     if (isBreakable) {
         mVariant = 0;
@@ -198,27 +184,25 @@ int daObjBk_Kabe_c::InitResources()
         mVariant = 1;
     }
     int idx = mVariant;
-    void *mdl = Model::LoadFile(*data_ov079_02128058[idx].model);
+    void *mdl = dExtSimpleModel_c::LoadFile(*data_ov079_02128058[idx].model);
     mModel.SetFile((BMD_File *)mdl, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     int idx2 = mVariant;
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov079_02128058[idx2].kcl);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, kMeshScale, mAngleY,
-        data_ov079_02128058[idx2].clps);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), kMeshScale, mAngleY,
+                              *(data_ov079_02128058[idx2].clps));
     return 1;
 }
 
 // @symbol daObjBk_Kabe_c_classInit_BK_KABE01
-extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE01()
-{
+extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE01() {
     return new daObjBk_Kabe_c();
 }
 
 // @symbol daObjBk_Kabe_c_classInit_BK_KABE00
-extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE00()
-{
+extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE00() {
     return new daObjBk_Kabe_c();
 }
 

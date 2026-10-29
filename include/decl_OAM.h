@@ -22,8 +22,6 @@ extern "C" {
 
 extern int _ZN3OAM11GetObjWidthEii(int, int);
 extern int _ZN3OAM12GetObjHeightEii(int, int);
-extern int _ZN3OAM9RenderSubEP7OamAttriiii(int, int, int, int, int);
-extern void _ZN3OAM9RenderSubEP7OamAttrii(void*, int, int);
 
 
 #ifdef __cplusplus

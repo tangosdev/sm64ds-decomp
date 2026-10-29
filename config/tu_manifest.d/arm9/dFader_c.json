@@ -10,7 +10,7 @@
     "contiguous linker run 0x020171c8..0x0201787c: the thirty delinks entries tile the span exactly with no hole and no foreign function inside (config/arm9/delinks.txt, config/arm9/symbols.txt).",
     "class-label homogeneity: every symbol in the run is a member of the one inheritance chain -- dFdDummy_c : dFdColor_c : dFdBrightness_c : dFader_c, plus dFdWipe_c : dFdColor_c -- the screen-fade hierarchy documented in include/dFader_c.h.",
     "ROM evidence says one family: the vtable chain written by _ZN9dFdWipe_cC1Ev (0x0208eafc, 0x0208eacc, 0x0208eb2c, 0x0208ea9c) and the __si_class_type_info records (dFader_c -> dFdBrightness_c -> dFdColor_c -> dFdWipe_c / dFdDummy_c) are the same adjacency this run shows in .text.",
-    "neighbour below: the ModelAnim thunk row _ZThn80_N10ModelAnim2D1Ev at 0x020171b8 (a different class). Neighbour above: func_0201787c, a SharedFilePtr/Model helper of the TextureSequence family at 0x020178e4+. The run is bracketed rather than cut out of a uniform stretch.",
+    "neighbour below: the dExtAnmModel_c thunk row _ZThn80_N15dExtAnm2Model_cD1Ev at 0x020171b8 (a different class). Neighbour above: func_0201787c, a SharedFilePtr/dExtSimpleModel_c helper of the dExtAnmTexPat_c family at 0x020178e4+. The run is bracketed rather than cut out of a uniform stretch.",
     "Current production enrollment owns the complete .text run 0x020171c8..0x0201787c, including dFader_c D2/D0/D1. The earlier trimmed-tail experiment is superseded: the native destructor variants are included in this intact object, with no remaining D0/D1 shards."
   ],
   "sections": [
@@ -34,7 +34,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "_ZN10dFdDummy_c15SetBackwardTimeEj",
+      "symbol": "_ZN10dFdDummy_c15SetBackwardTimeEjj",
       "address": "0x020171f0",
       "size": "0x0000002c",
       "legacy_source": "src/_ZN10dFdDummy_c15SetBackwardTimeEj.cpp",
@@ -181,7 +181,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEj",
+      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEjj",
       "address": "0x020176d8",
       "size": "0x00000048",
       "legacy_source": "src/engine/fader/_ZN15dFdBrightness_c15SetBackwardTimeEj.cpp",
@@ -523,28 +523,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -601,7 +581,7 @@
       "source": "0x0208ea78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10dFdDummy_c15SetBackwardTimeEj",
+      "symbol": "_ZN10dFdDummy_c15SetBackwardTimeEjj",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020171f0"
@@ -711,7 +691,7 @@
       "source": "0x0208eaa8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEj",
+      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEjj",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020176d8"
@@ -821,7 +801,7 @@
       "source": "0x0208ead8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEj",
+      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEjj",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020176d8"
@@ -961,7 +941,7 @@
       "source": "0x0208eb38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEj",
+      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEjj",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020176d8"

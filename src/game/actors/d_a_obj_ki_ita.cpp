@@ -9,41 +9,33 @@
  * daObjKi_Ita_c_classInit / g_profile_KI_ITA are reconstructed (RTTI
  * daObjKi_Ita_c, KI_ITA registry). Retail does not store those spellings.
  *
- * deslop
- * Leftover: data_ov016_02114b8c is still the linker name of this
- *   overlay's three-word file table. Those words sit between this
- *   class's RTTI and type-name; this TU does not own them.
+ * Note: data_ov016_02114b8c is still the linker name of this
+ * overlay's three-word file table. Those words sit between this
+ * class's RTTI and type-name; this TU does not own them.
  */
 
 #include "daObjKi_Ita_c.h"
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
-extern "C" {
 extern daObjFloatBoard_c_Resources data_ov016_02114b8c;
-}
 
 /* File 1601 / 1602 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
  * func_02017acc / func_02017ab4 and func_02017b4c /
  * SharedFilePtr_Destruct_Clsn. */
 struct KiItaModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     KiItaModelFilePtr(u32 fileID);
     ~KiItaModelFilePtr();
 };
 
 struct KiItaCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     KiItaCollisionFilePtr(u32 fileID);
     ~KiItaCollisionFilePtr();
 };
 
 // @symbol daObjKi_Ita_c_classInit
-extern "C" daObjKi_Ita_c *daObjKi_Ita_c_classInit()
-{
+extern "C" daObjKi_Ita_c *daObjKi_Ita_c_classInit() {
     return new daObjKi_Ita_c();
 }
 
@@ -59,9 +51,8 @@ extern "C" SpawnInfo<daObjKi_Ita_c> g_profile_KI_ITA = {
 };
 
 // @symbol _ZN13daObjKi_Ita_c13InitResourcesEv
-int daObjKi_Ita_c::InitResources()
-{
-    return func_ov002_020b5e58(&data_ov016_02114b8c);
+int daObjKi_Ita_c::InitResources() {
+    return InitResourcesFrom(&data_ov016_02114b8c);
 }
 
 /* Definitions stay after the last .text function so they do not insert

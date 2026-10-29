@@ -1,7 +1,10 @@
+#include "Ov007Tween.h"
+
 void func_ov007_020c90f8(char *p)
 {
-    *(int *)(p + 0x0) = 0;
-    *(int *)(p + 0x4) = 0;
-    *(int *)(p + 0x8) = 0;
-    *(short *)(p + 0xc) = 0;
+    Ov007Tween *tw = (Ov007Tween *)p;
+    tw->state = 0;
+    tw->mode = 0;
+    tw->step = 0;
+    tw->t = 0;
 }

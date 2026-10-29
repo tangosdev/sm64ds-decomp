@@ -3,8 +3,8 @@
  *
  * .text 0x02034a78..0x02035354. Twelve class functions plus the factory
  * dScMB_c_classInit, which abuts InitResources and stores this class's
- * vtable. The next symbol, func_02035354, is a list-node compare and is
- * not part of the scene.
+ * vtable. The next symbol, dBgCh::IsOwnedBy, opens the collision-query
+ * run and is not part of the scene.
  *
  * _ZTS7dScMB_c 0x02094364. _ZTI7dScMB_c 0x02094370, base word _ZTI8dScene_c.
  * Nested _ZTIN7dScMB_c15graphCallback_cE 0x0209437c,
@@ -18,22 +18,20 @@
 // leftovers: OAM::Render stays mangled (Fix12 by value -- this TU's render
 // calls). func_02034b1c initialises the global graph callback, retaining
 // the raw store to its unmodelled byte at +0x0f. func_02034fbc stays free
-// (no receiver). classInit keeps the literal construction sequence
-// (`return new` inlines a different fader
-// constructor).
+// (no receiver).
 #include "dScMB_c.h"
+#include "AsyncJob.h"
 #include "decl_common.h"
 #include "Heap.h"
 #include "OAM.h"
+#include "Sound.h"
+#include "GX.h"
 
 extern "C" {
 void MultiStore16(u16 val, char *dst, int nbytes);
 void DecompressLZ16(int src, void *dst);
-void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-int func_0201a244(int a0, int a1, int a2, int a3, int a4);
+
 void func_020308b4(void);
-void func_02012790(int x);
 
 void func_0201a5f8(int t);
 void *func_0201a3e4(void);
@@ -43,10 +41,8 @@ extern void *data_020a0c5c;
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
-void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int sub, void *attr, int x, int y, int a, int cc,
-                                             int fx, int mode);
-void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, void *attr, int x, int y, int a, int cc,
-                                                 int fx0, int fy0, int rot, int mode);
+void OamRender10_d_s_mb(int sub, void *attr, int x, int y, int a, int cc, int fx0, int fy0, int rot,
+                        int mode);
 extern struct OamAttr *data_0208a0f8[];
 extern s16 data_02082214[];
 
@@ -54,15 +50,13 @@ extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern void *data_0209d4a8;
 extern int data_0208ee44;
-extern u8 func_0201a2f8[];
-
-void *_ZN7fBase_cC2Ev(void *);
-extern int data_0208e4b8[];
-extern int data_020943c4[];
-extern int _ZTV8dFader_c[];
-extern int _ZTV15dFdBrightness_c[];
-extern int _ZTV10dFdColor_c[];
 }
+
+/* The scene's graph callback. A global, not a member: InitResources points
+   it at the scene and hands it to the graph hook. Its constructor is inline,
+   so mwcc emits __sinit_d_s_mb.cpp to run it (was the handwritten
+   __sinit_02074fb8). */
+dScMB_c::graphCallback_c data_020a0c68;
 
 #pragma defer_codegen off
 
@@ -114,10 +108,8 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
                     y = x;
                 }
 
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(drawFlags[1], sprite, x, y, -1, -1, 0x1000,
-                                                        drawFlags[1]);
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(one, sprite, x, y, -1, -1, 0x1000,
-                                                        drawFlags[2]);
+                OAM::Render(drawFlags[1], (OamAttr *)sprite, x, y, -1, -1, 0x1000, drawFlags[1]);
+                OAM::Render(one, (OamAttr *)sprite, x, y, -1, -1, 0x1000, drawFlags[2]);
 
                 if (*(u16 *)((char *)sprite + 6) == 0xffff)
                     break;
@@ -131,8 +123,7 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
                     mStillTimer = 0x78;
             }
         } else {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, sprite, 0x80, 0x80, -1, -1, 0x1000,
-                                                        0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)sprite, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
             OAM::RenderSub((OamAttr *)sprite, 0x80, 0x80);
             mStillTimer -= data_0208ee44;
             mSpinAngle = 0;
@@ -205,7 +196,7 @@ s32 dScMB_c::Behavior() {
         mStep++;
         /* fallthrough */
     case 4:
-        func_0201a244((int)&func_02034fbc, 0, 0xf, 0, 0x1000);
+        func_0201a244(func_02034fbc, 0, 0xf, 0, 0x1000);
         mStep++;
         /* fallthrough */
     case 5:
@@ -242,7 +233,7 @@ s32 dScMB_c::Behavior() {
 }
 
 // @symbol func_02034fbc
-void func_02034fbc(void) {
+void func_02034fbc(int unused) {
     void *h;
 
     LoadArchive(0);
@@ -289,9 +280,9 @@ s32 dScMB_c::InitResources() {
         vram += 0x1280;
         DecompressLZ16((int)&data_0209446c, vram);
     }
-    _ZN2GX11LoadOBJPlttEPKvjj((const void *)&data_0209444c, 0, 0x20);
-    _ZN2GX11LoadOBJPlttEPKvjj((const void *)&data_020945d0, 0xa0, 0x20);
-    _ZN3GXS11LoadOBJPlttEPKvjj((const void *)&data_0209444c, 0, 0x20);
+    GX::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
+    GX::LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
+    GXS::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
 
     *(volatile u16 *)0x400000a &= ~3;
     *(volatile u16 *)0x400100a &= ~3;
@@ -302,45 +293,24 @@ s32 dScMB_c::InitResources() {
     *(u8 *)&data_0209d454 = 0;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;
-    _ZN2GX6DispOnEv();
+    GX::DispOn();
 
     *(volatile u32 *)0x4001000 |= 0x10000;
-    func_02034b1c((void *)&data_020a0c68, (int)this);
+    func_02034b1c(&data_020a0c68, (int)this);
 
-    *(void **)&data_0209d4a8 = (void *)&data_020a0c68;
+    *(void **)&data_0209d4a8 = &data_020a0c68;
     mStep = 0;
     mTimeout = 0;
     dScene_c::SetFaders(&fader);
 
     fader.color = 0x7fff;
     *(int *)&data_0208ee44 = 1;
-    *(int *)&data_020a0c64 = func_0201a244((int)&func_0201a2f8, 0, 0xf, 0, 0x1000);
+    *(int *)&data_020a0c64 = func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
 
     return 1;
 }
 
 // @symbol dScMB_c_classInit
 extern "C" void *dScMB_c_classInit(void) {
-    char *p = (char *)_ZN7fBase_cnwEj(0x68);
-    if (p) {
-        _ZN7fBase_cC2Ev(p);
-        *(int **)p = data_0208e4b8;
-        *(int **)p = _ZTV8dScene_c;
-        {
-            u8 *bp = (u8 *)((int)p + 0x13);
-            *bp |= 1;
-            *bp |= 4;
-        }
-        *(int **)p = data_020943c4;
-        {
-            int *fp = (int *)((int)p + 0x50);
-            fp[0] = (int)_ZTV8dFader_c;
-            fp[0] = (int)_ZTV15dFdBrightness_c;
-            fp[1] = 0x1000;
-            fp[2] = 0;
-            fp[0] = (int)_ZTV10dFdColor_c;
-            *(short *)(fp + 3) = 0;
-        }
-    }
-    return p;
+    return new dScMB_c;
 }

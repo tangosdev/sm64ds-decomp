@@ -412,6 +412,39 @@ class SrcPath(unittest.TestCase):
         self.assertEqual(SP.path_for("func_0203b438"), SP.SRC / "func_0203b438.c")
 
 
+def _itanium_qualified_stem(symbol):
+    """``Outer_Inner_Method`` from an Itanium nested name, or None.
+
+    A one-symbol source may be named for the symbol, or for the qualified name
+    with the signature dropped. ``CP15::SystemSetup()`` is ``CP15_SystemSetup``.
+    A constructor, a destructor, or a substitution in the name does not match,
+    so those stay on the legacy ``stem == symbol`` rule.
+    """
+    if not symbol.startswith("_ZN"):
+        return None
+    i = 3
+    parts = []
+    while i < len(symbol):
+        if symbol[i] == "E":
+            break
+        if not symbol[i].isdigit():
+            return None
+        j = i + 1
+        while j < len(symbol) and symbol[j].isdigit():
+            j += 1
+        length = int(symbol[i:j])
+        name = symbol[j:j + length]
+        if len(name) != length:
+            return None
+        parts.append(name)
+        i = j + length
+    else:
+        return None
+    if len(parts) < 2:
+        return None
+    return "_".join(parts)
+
+
 def _reconstructed_stem(symbol):
     """The NSMBW-convention stem a `<Class>_classInit[_<PROFILE_ID>]` symbol must use.
 
@@ -435,8 +468,10 @@ def _reconstructed_stem(symbol):
 class EnrolmentMatchesTheTree(unittest.TestCase):
     """Against the REAL repository, not a fixture.
 
-    A one-symbol source is named after the thing it defines, but "named after" has two
-    spellings now.  Legacy sources use the symbol itself.  The actor/process profile
+    A one-symbol source is named after the thing it defines, but "named after" has three
+    spellings now.  Legacy sources use the symbol itself.  A nested Itanium name may
+    instead use ``Outer_Inner_Method`` (``_itanium_qualified_stem``), which is how
+    ``CP15::SystemSetup`` lives in ``CP15_SystemSetup.cpp``.  The actor/process profile
     reconstruction gave every recovered factory an NSMBW-convention filename instead --
     `daObjKm2_Ami_Bou_c_classInit` lives in `d_a_obj_km2_ami_bou.c` -- so `symbol_for`,
     which is `Path.stem` and nothing else, stops agreeing for those.
@@ -483,7 +518,7 @@ class EnrolmentMatchesTheTree(unittest.TestCase):
                     self.assertEqual(SP.path_for(symbol).resolve(), source.resolve())
                 if len(symbols) == 1:
                     stem = SP.symbol_for(source)
-                    if stem == symbols[0]:
+                    if stem == symbols[0] or stem == _itanium_qualified_stem(symbols[0]):
                         continue
                     want = _reconstructed_stem(symbols[0])
                     self.assertIsNotNone(
@@ -506,6 +541,15 @@ class EnrolmentMatchesTheTree(unittest.TestCase):
         self.assertIsNone(_reconstructed_stem("func_0203b438"))
         self.assertIsNone(_reconstructed_stem("_ZN8dActor_cD1Ev"))
         self.assertIsNone(_reconstructed_stem("Cloud_Spawn"))
+        self.assertEqual(_itanium_qualified_stem("_ZN4CP1511SystemSetupEv"),
+                         "CP15_SystemSetup")
+        self.assertEqual(_itanium_qualified_stem("_ZN4cstd5atan2E5Fix12IiES1_"),
+                         "cstd_atan2")
+        self.assertEqual(
+            _itanium_qualified_stem("_ZN15dExtFrameCtrl_c17UpdateFileOffsetsER8BCA_File"),
+            "dExtFrameCtrl_c_UpdateFileOffsets")
+        self.assertIsNone(_itanium_qualified_stem("func_0203b438"))
+        self.assertIsNone(_itanium_qualified_stem("_ZN8dActor_cD1Ev"))
 
     def test_the_derivation_is_a_function_but_not_injective(self):
         """Pinned so the limit is a recorded fact rather than a surprise later.

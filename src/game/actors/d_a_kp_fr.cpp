@@ -7,10 +7,6 @@
  * within 50.0 below is undone (func_ov070_02121be4). A Mario it touches is
  * burnt (Player::Burn) unless he is vanished.
  *
- * One TU, 21 functions. It began as the old one-function files
- * concatenated in reverse ROM order: their bodies were wrapped in
- * extern "C" { }, which the merge tool could not take apart.
- *
  * _ZTS8daKpFr_c 0x0212340c. _ZTI8daKpFr_c 0x02123418.
  * _ZTV8daKpFr_c 0x02123448. The inline destructor in the header is the key
  * function: D1 at 0x02121b48, D0 at 0x02121b88, no D2.
@@ -26,21 +22,11 @@
  *   matching form.
  *   func_ov070_02121d50 calls dBgCh_Actr_UpdateContinuous_Veneer, as the
  *   ROM does, not UpdateContinuous.
- *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
- * notes/mwccarm-codegen.md 6az, unless noted):
- *   dCcAc_c::Init, DropShadowRadHeight and
- *   Particle::System::NewUnkCallback818.
- *   dBgCh_Actr::Init: its header's Fix12i mangles as int.
- *   dBgCh_Actr::GetFloorResult: not in dBgCh_Actr.h yet.
  */
 
 // leftovers:
 // - `return new` synthesizes a vague-linkage _ZN9Matrix4x3D1Ev over mMatrix
 //   (deadstripped; no ROM symbol).
-// - unk_0a4/unk_0ac stay raw in func_ov070_02121d50's smull: the velocity
-//   triples live on the shared dActor_c header, which has not named them yet
-//   (same header work as the linelift2 leaf below).
 #include "daKpFr_c.h"
 #include "nitro/fx/fx.h"
 #include "SpawnInfo.h"
@@ -48,6 +34,7 @@
 #include "Particle__System.h"
 #include "Player.h"
 #include "SurfaceInfo.h"
+#include "math/Approach.h"
 
 /* The registry factory behind the KERONPA_FIRE profile.
  * `return new daKpFr_c()` emits 0x48 with the synthesized ctor storing
@@ -81,10 +68,6 @@ extern "C" SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
  * Nested math/Matrix.h spelling (via dExtShadowModel_c.h) scalarizes otherwise. */
 struct M48 { int w[12]; };
 extern "C" {
-/* Fix12-by-value, notes/mwccarm-codegen.md 6az. dBgCh_Actr::Init header Fix12i
-   mangles as int. */
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(dCcAc_c*, dActor_c*, Fix12i, Fix12i, unsigned int, unsigned int);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(dBgCh_Actr*, dActor_c*, Fix12i, Fix12i, void*, int);
 extern int IDENTITY_MATRIX4X3[];
 }
 
@@ -92,8 +75,8 @@ int daKpFr_c::InitResources()
 {
     if (mShadowModel.InitCylinder() == 0)
         return 0;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x37000, 0x78000, 0x200002, 0x8000);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+    mdCcAc_c.Init(this, 0x37000, 0x78000, 0x200002, 0x8000);
+    mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mVertAccel = -0x400;
     mTerminalVelocity = -0x5000;
     mScaleX = 0x1000;
@@ -116,20 +99,14 @@ int daKpFr_c::Behavior()
 /* Particle__System.h owns Vector3_16f but does not yet declare this member;
  * retain its typed, exact-spelling ABI import rather than widening that
  * shared header in a class-source lane. */
-extern "C" {
-extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-    u32 handle, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
-    const Vector3_16f *rotation);
-}
-
 int daKpFr_c::Render()
 {
   int hidden = (mFlags & 0x40000) != 0;
   if (hidden) return 1;
-  mParticle1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-      mParticle1, 0x7f, mPosX, mPosY + 0x4b000, mPosZ, 0);
-  mParticle2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-      mParticle2, 0x80, mPosX, mPosY + 0x4b000, mPosZ, 0);
+  mParticle1 =
+      Particle::System::NewUnkCallback818(mParticle1, 0x7f, mPosX, mPosY + 0x4b000, mPosZ, 0);
+  mParticle2 =
+      Particle::System::NewUnkCallback818(mParticle2, 0x80, mPosX, mPosY + 0x4b000, mPosZ, 0);
   return 1;
 }
 
@@ -182,7 +159,6 @@ int daKpFr_c::func_ov070_02121fb0()
     return 1;
 }
 
-bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
@@ -231,9 +207,6 @@ int daKpFr_c::func_ov070_02121eb0() {
 extern "C" {
 /* Fix12-by-value, notes/mwccarm-codegen.md 6az -- header method form homes the
    class args. */
-extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    dActor_c *actor, dExtShadowModel_c *shadow, Matrix4x3 *matrix,
-    Fix12i radius, Fix12i depth, u32 opacity);
 }
 // @symbol _ZN8daKpFr_c19func_ov070_02121e14Ev
 void daKpFr_c::func_ov070_02121e14() {
@@ -247,27 +220,26 @@ void daKpFr_c::func_ov070_02121e14() {
     shadowDepth = (mPosY - ground.clsnY) + 0x1e000;
   else
     shadowDepth = 0x12c000;
-  _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-      this, &mShadowModel, &mMatrix, 0x64000, shadowDepth, 0xf);
+  DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 0xf);
 }
 
 // @symbol _ZN8daKpFr_c19func_ov070_02121d50EPv
 /* GetFloorResult is not declared in the shared header yet; keep only that
  * proven typed ABI seam. ROM calls the UpdateContinuous veneer, not the
  * method. FX_MUL's 64-bit product is the smull the ROM uses. */
-namespace cstd { int fdiv(int a, int b); }
-
-extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void* c);
+namespace cstd {
+int fdiv(int a, int b);
+}
 
 void daKpFr_c::func_ov070_02121d50(void* vclsn) {
     dBgCh_Actr* clsn = (dBgCh_Actr*)vclsn;
     Fix12i normal[3];
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
-        ((dBgPi *)clsn->GetFloorResult())->surface.CopyNormalTo(*(Vector3 *)normal);
+        clsn->GetFloorResult()->surface.CopyNormalTo(*(Vector3 *)normal);
         if (normal[1] != 0) {
-            int a = FX_MUL(normal[0], unk_0a4);
-            int b = FX_MUL(normal[2], unk_0ac);
+            int a = FX_MUL(normal[0], mSpeedX);
+            int b = FX_MUL(normal[2], mSpeedZ);
             mVertSpeed = -(cstd::fdiv(a + b, normal[1]) + 0x8000);
         }
     }

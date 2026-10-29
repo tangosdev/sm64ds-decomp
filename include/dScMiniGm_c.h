@@ -10,8 +10,13 @@ struct dScMiniGm_c : dScene_c {
     u8  mPageFlipped;            /* 0x054 */
     u8  pad_055[0x3];
     s32 mGroupBase;              /* 0x058 */
-    s32 unk_05c;                 /* 0x05c -- InitResources zeroes; 020c0378 copies into the selected entry */
-    s32 unk_060;                 /* 0x060 -- InitResources zeroes */
+    s32 mStartLevel;             /* 0x05c -- level the picked game starts at.
+                                    UpdateGameSelect stores it to
+                                    gMgMenuRow.level, which dScMgBase_c's
+                                    constructor loads into mLevel.
+                                    InitResources zeroes it and nothing else
+                                    writes it, so every game starts at 0. */
+    s32 unk_060;                 /* 0x060 -- write-only: InitResources zeroes it */
     s32 mGfxSlot;                /* 0x064 -- 020c16e4 walks 0..9 for char/palette dest */
     s32 mGfxSlots[9];            /* 0x068 -- 020c16e4 writes, 020c1688 reads as palette dest */
     s32 mArrowBobPhase;          /* 0x08c */
@@ -20,8 +25,8 @@ struct dScMiniGm_c : dScene_c {
     s32 mExitTimer;              /* 0x098 */
     s32 mIconBlinkPhase;         /* 0x09c */
     s32 mScrollDelay;            /* 0x0a0 */
-    s32 unk_0a4;                 /* 0x0a4 -- InitResources zeroes */
-    s32 unk_0a8;                 /* 0x0a8 -- InitResources zeroes */
+    s32 unk_0a4;                 /* 0x0a4 -- write-only: InitResources zeroes it */
+    s32 unk_0a8;                 /* 0x0a8 -- write-only: InitResources zeroes it */
     u8  mExiting;                /* 0x0ac */
     u8  pad_0ad[0x3];
 

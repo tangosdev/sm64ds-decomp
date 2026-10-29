@@ -9,8 +9,6 @@
 
 #include "dActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daSetSE_c : dActor_c {
     u8  pad_0d0[0x4];
     u32 mSoundHandle;       /* 0x0d4: Sound::PlayLong recycled handle, never
@@ -28,12 +26,6 @@ struct daSetSE_c : dActor_c {
     virtual s32 Behavior();             /* slot 6 */
     virtual s32 Render();               /* slot 9 */
     virtual void OnPendingDestroy();    /* slot 12 */
-
-    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
-       `return new daSetSE_c()` then routes through the retail allocator. */
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

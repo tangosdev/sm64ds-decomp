@@ -1,9 +1,6 @@
 //cpp
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_ks_water_AssetId {
-    ASSET_KS_MIZU_BMD = 0x0689,
-    ASSET_KS_MIZU_KCL = 0x068a
-};
+enum d_a_obj_ks_water_AssetId { ASSET_KS_MIZU_BMD = 0x0689, ASSET_KS_MIZU_KCL = 0x068a };
 
 #include "Sound.h"
 /* Production translation unit for ov017/daObjKsWater_c, hand-curated.
@@ -20,12 +17,7 @@ enum d_a_obj_ks_water_AssetId {
  * inline destructor in include/daObjKsWater_c.h emits the retail D1/D0 pair
  * first and emits no D2 body.
  *
- * deslop leftovers:
- * - TextureTransformer::SetFile / dBgW_KcMbg::SetFile 6az: InitResources
- *   passes Fix12<int> by value; the header method form size-DIFFs.
- * - Sound::PlayLong: Behavior's long water sound; Sound.h has no PlayLong.
- * - SharedFilePtr +4: InitResources' TextureTransformer::Prepare reads the
- *   BMD at data_ov017_02111c88 +4; SharedFilePtr.h has no fields.
+ * What stays:
  * - data_ov017_02111c80 / 02111c88 / 02111a60 / 02111a94 KCL / BMD / BTA / CLPS
  *   handles; this TU consumes them, overlay .bss/.data owns them.
  * - no Player.h.
@@ -50,36 +42,24 @@ struct BTA_File;
 struct KCL_File;
 struct CLPS_Block;
 
-/* Model handles construct through func_02017acc and destroy through
+/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; collision handles construct through func_02017b4c and
  * destroy through SharedFilePtr_Destruct_Clsn. The manifest aliases those
  * undefined members onto the ROM symbols. */
 struct KsWaterModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     KsWaterModelFilePtr(u32 fileID);
     ~KsWaterModelFilePtr();
 };
 
 struct KsWaterClsnFileHandle : SharedFilePtr {
-    u32 words[2];
-
     KsWaterClsnFileHandle(u32 fileID);
     ~KsWaterClsnFileHandle();
 };
 
-extern "C" {
-void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
-    TextureTransformer *self, BTA_File *file, int flags, int speed, u32 startFrame);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale, s16 angY,
-    CLPS_Block *clps);
-
 extern KsWaterClsnFileHandle data_ov017_02111c80;
 extern KsWaterModelFilePtr data_ov017_02111c88;
-extern BTA_File      data_ov017_02111a60;
-extern CLPS_Block    data_ov017_02111a94;
-}
+extern BTA_File data_ov017_02111a60;
+extern CLPS_Block data_ov017_02111a94;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -90,33 +70,25 @@ extern CLPS_Block    data_ov017_02111a94;
  * Every instruction the cartridge has here falls out of the one `new`.
  * 0x02111484 loads 0x340 -- the class's own size -- into the header's leaf
  * operator new; 0x02111494 calls dBgActor_c's C2, the store at 0x021114a0
- * lays down this class's vptr, and TextureTransformer C1 runs on the member
+ * lays down this class's vptr, and dExtAnmTexSRT_c C1 runs on the member
  * at 0x320. The null check is the one `new` itself emits. The implicit
  * constructor is what keeps the intervening construction inlined; declaring
  * a constructor of our own would emit a `bl` the factory does not have. */
-extern "C" daObjKsWater_c *daObjKsWater_c_classInit()
-{
+extern "C" daObjKsWater_c *daObjKsWater_c_classInit() {
     return new daObjKsWater_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKsWater_c13InitResourcesEv
-int daObjKsWater_c::InitResources()
-{
-    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov017_02111c88), 1, -1);
-    /* SharedFilePtr.h has no fields; +4 is the loaded BMD pointer. */
-    TextureTransformer::Prepare(**(BMD_File **)((char *)&data_ov017_02111c88 + 4),
-                                data_ov017_02111a60);
-    /* 6az: header SetFile takes Fix12<int> by value. */
-    _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
-        &mTextureTransformer, &data_ov017_02111a60, 0, 0x1000, 0);
+int daObjKsWater_c::InitResources() {
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov017_02111c88), 1, -1);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov017_02111c88.filePtr, data_ov017_02111a60);
+    mTextureTransformer.SetFile(data_ov017_02111a60, 0, 0x1000, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    /* 6az: header SetFile takes Fix12<int> by value. */
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, (KCL_File *)dBgW_Kc::LoadFile(data_ov017_02111c80),
-        &mClsnMat, 0x1000, mAngleY, &data_ov017_02111a94);
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov017_02111c80), mClsnMat, 0x1000,
+                          mAngleY, data_ov017_02111a94);
     mMeshCollider.Enable(this);
     mOriginalPosY = mPosY;
     return 1;
@@ -125,8 +97,7 @@ int daObjKsWater_c::InitResources()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKsWater_c8BehaviorEv
-int daObjKsWater_c::Behavior()
-{
+int daObjKsWater_c::Behavior() {
     if (mChestsOpen == 0) {
         int ok = 1;
         dActor_c *p = dActor_c::FindWithActorID(0xd, 0);
@@ -134,15 +105,19 @@ int daObjKsWater_c::Behavior()
             int state = ((daObjTbox_c *)p)->mState;
             int cond = 1;
             if (state != 1) {
-                if (state != 2) cond = 0;
+                if (state != 2)
+                    cond = 0;
             }
-            if (cond == 0) ok = 0;
+            if (cond == 0)
+                ok = 0;
             p = dActor_c::FindWithActorID(0xd, p);
         }
-        if (ok != 0) mChestsOpen = 1;
+        if (ok != 0)
+            mChestsOpen = 1;
     } else {
         int d = mOriginalPosY - mPosY;
-        if (d < 0) d = -d;
+        if (d < 0)
+            d = -d;
         if (d < 0x92e000) {
             mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, mCamSpacePos, 0);
             mPosY -= 0x5000;
@@ -158,8 +133,7 @@ int daObjKsWater_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKsWater_c6RenderEv
-int daObjKsWater_c::Render()
-{
+int daObjKsWater_c::Render() {
     mTextureTransformer.Update(mModel.data);
     mModel.Render(0);
     return 1;
@@ -168,8 +142,7 @@ int daObjKsWater_c::Render()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKsWater_c16CleanupResourcesEv
-int daObjKsWater_c::CleanupResources()
-{
+int daObjKsWater_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }

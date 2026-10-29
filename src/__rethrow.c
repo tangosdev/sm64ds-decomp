@@ -9,10 +9,6 @@
 // the old stem config declared a function at 0x020717c0 that no source resolved to,
 // and tools/nearmiss_db.py resync-names would have relabelled the stored row to
 // __rethrow and then lost its link to this source.
-// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm, so there is no original C to
-// recover and no match to chase. Counts as done under the asm-primitive policy - see
-// notes/arm9-endgame.md. (Metrowerks shipped this one, not Nintendo: it is MSL's C++
-// exception runtime, not an SDK or BIOS shim.)
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
 //
 // Which class, precisely, re-checked 2026-09-12. The body carries no instruction from

@@ -24,10 +24,19 @@
 #include "dBgCh_Actr.h"
 
 struct daWater_Suikomi_c : dEnemyBase_c {
-    dCcAcPos_c mdCcAcPos_c;/* 0x110 */
-    dBgCh_Actr mWithMeshClsn;       /* 0x150 */
-    u8  pad_30c[0x8];
-    s32 unk_314;                      /* 0x314 */
+    typedef int (daWater_Suikomi_c::*StateFn)();
+    /* SetState runs mInit as it installs the state; Behavior runs mMain
+       every frame. The one state is InitState0 / State0. */
+    struct State {
+        StateFn mInit; /* 0x00 */
+        StateFn mMain; /* 0x08 */
+    };
+
+    dCcAcPos_c mdCcAcPos_c;   /* 0x110 */
+    dBgCh_Actr mWithMeshClsn; /* 0x150 */
+    State *mState;            /* 0x30c */
+    u8 pad_310[0x4];
+    s32 unk_314; /* 0x314 */
 
     /* --- vtable --- */
     virtual ~daWater_Suikomi_c();
@@ -37,6 +46,13 @@ struct daWater_Suikomi_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+
+    /* --- non-virtual --- */
+    void CheckContact();        /* ov026 0x02112280 */
+    int State0();               /* ov026 0x021122b0 */
+    int InitState0();           /* ov026 0x021122cc */
+    int SetState(State *);      /* ov026 0x021122d4 */
+    void func_ov026_02112324(); /* ov026 0x02112324, empty */
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -50,25 +66,25 @@ typedef char daWater_Suikomi_c_size_must_be_0x318[sizeof(daWater_Suikomi_c) == 0
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
 struct daWater_Suikomi_c {
-    u8  pad_000[0x8];
-    s32 param1;            /* 0x008 */
-    u8  pad_00c[0x80];
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    s16 mPrevAngleX;            /* 0x092 */
-    s16 mPrevAngleY;            /* 0x094 */
-    s16 mPrevAngleZ;            /* 0x096 */
-    u8  pad_098[0x68];
-    u8  mStateTimer;            /* 0x100 */
-    u8  pad_101[0xf];
+    u8 pad_000[0x8];
+    s32 param1; /* 0x008 */
+    u8 pad_00c[0x80];
+    s16 mAngleX;     /* 0x08c */
+    s16 mAngleY;     /* 0x08e */
+    s16 mAngleZ;     /* 0x090 */
+    s16 mPrevAngleX; /* 0x092 */
+    s16 mPrevAngleY; /* 0x094 */
+    s16 mPrevAngleZ; /* 0x096 */
+    u8 pad_098[0x68];
+    u8 mStateTimer; /* 0x100 */
+    u8 pad_101[0xf];
     /* dCcAcPos_c member, named by the class's own destructor calling
        dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
        checks. Was a u8 marker. [src/game/actors/d_a_water_suikomi.cpp] */
-    dCcAcPos_c mdCcAcPos_c;            /* 0x110 */
-    u8  mWithMeshClsn;            /* 0x150 */
-    u8  pad_151[0x1c3];
-    s32 unk_314;            /* 0x314 */
+    dCcAcPos_c mdCcAcPos_c; /* 0x110 */
+    u8 mWithMeshClsn;       /* 0x150 */
+    u8 pad_151[0x1c3];
+    s32 unk_314; /* 0x314 */
 };
 
 #endif /* __cplusplus */

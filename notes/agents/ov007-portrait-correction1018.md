@@ -2,7 +2,7 @@
 
 This continues [issue #4112](https://github.com/tangosdev/sm64ds-decomp/issues/4112) and supersedes the source-quality acceptance of the original PR #4117 and #4119 candidates. Both PRs are drafts. The correction task is `ov007-portrait-correction1018`.
 
-The pointer tables at `020d7f0c..020d85fc` belong to the original configured data interval. Making their pointer elements const and changing the link configuration to accommodate that guess was wrong. The pointer continuation must emit writable `.data` with const pointees; that correction is tracked in PR #4119. Original historical declarations are still not known.
+The pointer tables at `020d7f0c..020d85fc` belong to the original configured data interval. Making their pointer elements const and changing the link configuration to accommodate that guess was wrong. They now emit writable `.data`; their pointees remain const. Original historical declarations are still not known.
 
 ## Source ownership
 
@@ -31,4 +31,4 @@ python tools/port_refcheck.py
 
 The committed experiment compiles the actual source, checks original section kinds and writable flags, verifies every native object against ROM bytes after exact relocation, checks configured overlay destinations, and generates the requests consumed by the production provider check. It requires no private helper scripts or precomputed fixtures. Its output is object-level proof; the separate full production command establishes actual providers and module fidelity.
 
-For the count-only candidate, the native experiment checks 11 objects, 860 bytes, and 24 data relocations. The pointer continuation must be validated separately. Independent source-layout acceptance remains pending. Nine historical DSD symbol diagnostics must be reported separately from new diagnostics. All 435 unique leaf arrays and all 18 pointer tables remain ROM supplied in this count-only candidate. This is not a fully source-built overlay or a recovered original TU.
+At this checkpoint, the native experiment passes: 26 objects, 2,636 bytes, and 468 data relocations. Production results must be bound to the tested commit; source-layout acceptance remains pending. Nine historical DSD symbol diagnostics must be reported separately from new diagnostics. All 435 unique leaf arrays and the three Luigi pointer tables remain ROM supplied. This is not a fully source-built overlay or a recovered original TU.

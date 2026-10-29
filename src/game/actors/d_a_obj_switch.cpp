@@ -40,24 +40,22 @@ enum daObjSwitch_c_AssetId {
 #include "daStar_c.h"
 #include "nitro/fx/fx.h"
 
-namespace cstd { Fix12i fdiv(Fix12i numerator, Fix12i denominator); }
+namespace cstd {
+Fix12i fdiv(Fix12i numerator, Fix12i denominator);
+}
 
 namespace Event { int ClearBit(unsigned int bit); void SetBit(unsigned int bit); }
 
-/* Model handles construct through func_02017acc and destroy through
+/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; collision handles construct through func_02017b4c and destroy
  * through SharedFilePtr_Destruct_Clsn. The manifest aliases those undefined
  * members onto the ROM symbols. */
 struct SwitchModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     SwitchModelFilePtr(u32 fileID);
     ~SwitchModelFilePtr();
 };
 
 struct SwitchClsnFileHandle : SharedFilePtr {
-    u32 words[2];
-
     SwitchClsnFileHandle(u32 fileID);
     ~SwitchClsnFileHandle();
 };
@@ -72,15 +70,13 @@ extern "C" {
     extern SwitchClsnFileHandle data_ov002_0210dfc4;
     extern SwitchModelFilePtr data_ov002_0210dfcc;
     extern SwitchClsnFileHandle data_ov002_0210dfbc;
-    // local extern: Sound.h/dBgActor_c.h declare the members, but Fix12<int>
-    // by value through the member call changes codegen under 2004/b56.
-    int _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int id, int volume);
-    int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int a, int b);
+    // Names stay on this unused prototype so this file's @NNN numbers do not move.
+    int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
     // local extern: the actual free definition accepts a scalar scale. The
     // genuine member call changes InitResources under 2004/b56; see the
     // committed experiment.
-    void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        void *self, void *file, const Matrix4x3 *matrix, int scale, s16 angle, void *clps);
+    extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
+                                    s16 angle, void *clps);
     // The existing setter stores a callback address as a 32-bit word at +0x1c.
     void func_020393c4(int *self, int callback);
     void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other);
@@ -172,7 +168,7 @@ int daObjSwitch_c::InitResources()
                 mStarID = 0;
             mTimeLimit = (param1 >> 8) & 0xff;
             LoadSilverStarAndNumber();
-            Model::LoadFile(data_ov002_0211092c);
+            dExtSimpleModel_c::LoadFile(data_ov002_0211092c);
             mResourceIdx = 1;
         } else {
             mSwitchType = param1 & 3;
@@ -184,16 +180,16 @@ int daObjSwitch_c::InitResources()
     }
 
     idx = mResourceIdx;
-    f = Model::LoadFile(*data_ov002_021098e8[idx].model);
+    f = dExtSimpleModel_c::LoadFile(*data_ov002_021098e8[idx].model);
     mModel.SetFile((BMD_File *)f, 1, -1);
     UpdateModelPosAndRotY();
     func_ov002_020b9f80();
 
     idx = mResourceIdx;
     f = dBgW_Kc::LoadFile(*data_ov002_021098e8[idx].collision);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, f, &mClsnMat, 0x199, mAngleY,
-        data_ov002_021098e8[idx].clps);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)(f), *(&mClsnMat), 0x199, mAngleY,
+                              *(CLPS_Block *)(data_ov002_021098e8[idx].clps));
 
     func_020393c4(reinterpret_cast<int *>(&mMeshCollider),
                   reinterpret_cast<int>(&func_ov002_020baa98));
@@ -246,7 +242,7 @@ int daObjSwitch_c::Behavior()
         if (id344 == 0) {
             func_ov002_020ba01c(2, 3, 0x333, 0x1000);
             UpdateModelPosAndRotY();
-            if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0) {
+            if (IsClsnInRange(0, 0) != 0) {
                 func_ov002_020b9f80();
             }
             return 1;
@@ -263,7 +259,7 @@ int daObjSwitch_c::Behavior()
     }
     func_ov002_020ba520();
     UpdateModelPosAndRotY();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0) {
+    if (IsClsnInRange(0, 0) != 0) {
         func_ov002_020b9f80();
     }
 
@@ -273,11 +269,11 @@ int daObjSwitch_c::Behavior()
             if (v != 0x40) {
                 if (v == 0x7f) {
                     if ((data_0209b454 & 0x4000000) == 0) {
-                        mMusicFadeDone = _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(v, 0x64cc);
+                        mMusicFadeDone = Sound::ChangeMusicVolume(v, 0x64cc);
                     }
                 }
             } else {
-                mMusicFadeDone = _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(v, 0xc999);
+                mMusicFadeDone = Sound::ChangeMusicVolume(v, 0xc999);
             }
         }
     }

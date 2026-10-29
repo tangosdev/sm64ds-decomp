@@ -1,33 +1,39 @@
+#include "Ov007Sprite.h"
+
 typedef struct { int x, y, z; } Vec3;
 
 extern void func_ov007_020c4388(char* r0, int r1);
 extern void SubVec3(Vec3 *a, Vec3 *b, Vec3 *c);
 extern void func_ov007_020c421c(char *r4);
 
-#define ADDR(p) ((int *)(p))
-
+/* Draws sprite `dest` relative to sprite `self`: dest takes self's scale,
+ * colour and alpha, is offset by self's screen position for the screen ->
+ * world pass, drawn with its world position relative to self's, and then has
+ * its own screen position restored. */
 void func_ov007_020c4128(char *self, char *dest, int arg2)
 {
-    int save10, save4, save8;
+    Ov007Sprite *parent = (Ov007Sprite *)self;
+    Ov007Sprite *child = (Ov007Sprite *)dest;
+    int savedDepth, savedX, savedY;
 
-    *(int *)(dest + 0x3c) = *(int *)(self + 0x3c);
-    *(int *)(dest + 0x40) = *(int *)(self + 0x40);
-    *(unsigned short *)(dest + 0x44) = *(unsigned short *)(self + 0x44);
-    *(int *)(dest + 0x50) = *(int *)(self + 0x50);
+    child->scaleX = parent->scaleX;
+    child->scaleY = parent->scaleY;
+    child->color = parent->color;
+    child->alpha = parent->alpha;
 
-    save10 = *(int *)(dest + 0x10);
-    save4 = *(int *)(dest + 4);
-    save8 = *(int *)(dest + 8);
+    savedDepth = child->depth;
+    savedX = child->screenX;
+    savedY = child->screenY;
 
-    *ADDR(dest + 4) = *ADDR(dest + 4) + *(int *)(self + 4);
-    *ADDR(dest + 8) = *ADDR(dest + 8) + *(int *)(self + 8);
-    *ADDR(dest + 0x10) = *ADDR(dest + 0x10) + *(int *)(self + 0x10);
+    child->screenX += parent->screenX;
+    child->screenY += parent->screenY;
+    child->depth += parent->depth;
 
     func_ov007_020c4388(dest, arg2);
-    SubVec3((Vec3 *)(dest + 0x14), (Vec3 *)(self + 0x14), (Vec3 *)(dest + 0x14));
+    SubVec3((Vec3 *)&child->pos, (Vec3 *)&parent->pos, (Vec3 *)&child->pos);
     func_ov007_020c421c(dest);
 
-    *(int *)(dest + 4) = save4;
-    *(int *)(dest + 8) = save8;
-    *(int *)(dest + 0x10) = save10;
+    child->screenX = savedX;
+    child->screenY = savedY;
+    child->depth = savedDepth;
 }

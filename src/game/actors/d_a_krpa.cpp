@@ -22,27 +22,20 @@
  *   order; the inline destructor group comes out retail D1 then D0, no D2.
  *   M48, the array wrapper for InitResources' IDENTITY_MATRIX4X3 copy. This
  *   TU uses the nested Matrix4x3 (.t) that math/Matrix.h brings in via
- *   ModelAnim.h; putting common.h first would drop .t.
- *   func_ov070_021213cc calls dBgCh_Actr_UpdateDiscreteNoLava_veneer: the
+ *   dExtAnmModel_c.h; putting common.h first would drop .t.
+ *   ExecuteKnockedAway calls dBgCh_Actr_UpdateDiscreteNoLava_veneer: the
  *   veneer is the retail call destination.
- *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
- * notes/mwccarm-codegen.md 6az):
- *   dCcAcPos_c::Init, dBgCh_Actr::Init (its header Fix12i also mangles as
- *   int), ModelAnim::SetAnim, DropShadowRadHeight and
- *   Particle::System::NewSimple.
  */
 
-// leftovers:
+// What stays, and why:
 // - The data_ov070_* SharedFilePtr / BCA / frame tables / state records are
 //   overlay .data, not this TU's data claim (consumers: the spit sequencer
 //   and the size-pulse reader in this TU).
-// - func_0201267c is the bank-3 Sound::Play wrapper behind the spit sound;
-//   no header declares it yet.
+// - The two Matrix4x3_FromRotation* helpers keep a local extern "C": this
+//   TU's Matrix4x3 is the nested one, and math/MtxStack.h does not declare
+//   FromRotationXYZExt.
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_krpa_AssetId {
-    ASSET_KERONPA_BMD = 0x0351
-};
+enum d_a_krpa_AssetId { ASSET_KERONPA_BMD = 0x0351 };
 
 #include "daKrpa_c.h"
 #include "SpawnInfo.h"
@@ -50,13 +43,27 @@ enum d_a_krpa_AssetId {
 #include "Player.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "Sound.h"
+#include "math/Approach.h"
+#include "math/CalcLib.h"
+#include "Particle__System.h"
+
+extern int IDENTITY_MATRIX4X3[];
+extern int data_0209f32c;
+extern short data_02082214[];
+
+/* local extern: arm9 matrix helpers this TU calls with its nested
+   Matrix4x3; no shared header declares them in that spelling. */
+extern "C" {
+void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
+void Matrix4x3_FromRotationY(void *m, int angle);
+}
 
 // @symbol daKrpa_c_classInit
-/* `return new daKrpa_c()` emits 0x50; the leaf unsigned-long
- * operator new forwards `_ZN7fBase_cnwEj`. Historical aliases: daKrpa_c_Spawn
- * and FlameChomp_Spawn. */
-extern "C" daKrpa_c *daKrpa_c_classInit()
-{
+/* `return new daKrpa_c()` emits 0x50, calling the inherited
+ * fBase_c::operator new (`_ZN7fBase_cnwEm`). Historical aliases:
+ * daKrpa_c_Spawn and FlameChomp_Spawn. */
+extern "C" daKrpa_c *daKrpa_c_classInit() {
     return new daKrpa_c();
 }
 
@@ -66,26 +73,16 @@ extern "C" daKrpa_c *daKrpa_c_classInit()
  * spellings are not preserved. Historical aliases: daKrpa_c_Spawn and
  * daKrpa_c_SpawnInfo. The descriptor is at ov070:0x0212334c. */
 extern "C" SpawnInfo<daKrpa_c> g_profile_KERONPA = {
-    daKrpa_c_classInit,
-    0x010e,
-    0x0081,
-    0x00000003,
-    0x00000000,
-    0x0002d000,
-    0x01000000,
-    0x00ed8000
-};
-// @symbol _ZN21daKrpaFrameController19func_ov070_02121ae0EPjjj
-void daKrpaFrameController::func_ov070_02121ae0(u32 *frames, u32 count, u32 mode)
-{
+    daKrpa_c_classInit, 0x010e, 0x0081, 0x00000003, 0x00000000, 0x0002d000, 0x01000000, 0x00ed8000};
+// @symbol _ZN21daKrpaFrameController9SetFramesEPjjj
+void daKrpaFrameController::SetFrames(u32 *frames, u32 count, u32 mode) {
     this->frames = frames;
     this->count = count;
     this->mode = mode;
     this->cursor = 0;
 }
-// @symbol _ZN21daKrpaFrameController19func_ov070_02121a64Ev
-u32 daKrpaFrameController::func_ov070_02121a64()
-{
+// @symbol _ZN21daKrpaFrameController9NextFrameEv
+u32 daKrpaFrameController::NextFrame() {
     switch (this->mode) {
     case 0:
         if (this->cursor < this->count)
@@ -100,47 +97,32 @@ u32 daKrpaFrameController::func_ov070_02121a64()
 }
 
 // @symbol _ZN8daKrpa_c13InitResourcesEv
-/* The Fix12-by-value Init methods are typed ABI seams: ordinary method calls
- * home their class-typed values and do not reproduce the retail callers. */
-struct M48 { int w[12]; };
+struct M48 {
+    int w[12];
+};
 struct KrpaModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     KrpaModelFilePtr(u32 fileID);
     ~KrpaModelFilePtr();
 };
-extern "C" {
 extern KrpaModelFilePtr gKeronpaModelFile;
-extern int IDENTITY_MATRIX4X3[];
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    dCcAcPos_c *clsn, dActor_c *actor, const Vector3 *offset,
-    Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    dBgCh_Actr *clsn, dActor_c *actor, Fix12i radius, Fix12i height,
-    Vector3_16 *a, Vector3_16 *b);
-}
 
-int daKrpa_c::InitResources()
-{
+int daKrpa_c::InitResources() {
     Vector3 offset;
-    void *bmd = Model::LoadFile(gKeronpaModelFile);
+    void *bmd = dExtSimpleModel_c::LoadFile(gKeronpaModelFile);
     int groundDistance;
-    mModelAnim.SetFile((BMD_File *)bmd, 1, 1);
+    mAnmModel.SetFile((BMD_File *)bmd, 1, 1);
     if (!mShadowModel.InitCylinder())
         return 0;
 
     offset.x = 0;
     offset.y = -0x32000;
     offset.z = 0;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &mdCcAcPos_c, this, &offset,
-        0x32000, 0x64000, 0x200002, 0x8000);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+    mdCcAcPos_c.Init(this, offset, 0x32000, 0x64000, 0x200002, 0x8000);
+    mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
 
     mVertAccel = 0;
     mTerminalVelocity = 0;
-    func_ov070_02121880(0);
+    ChangeState(0);
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
@@ -153,120 +135,92 @@ int daKrpa_c::InitResources()
     else
         groundDistance = 0x1f4000;
     mGroundDistance = groundDistance;
-    func_ov070_02121310();
+    UpdateModelAndShadow();
     return 1;
 }
 
 // @symbol _ZN8daKrpa_c8BehaviorEv
-int daKrpa_c::Behavior()
-{
-    func_ov070_0212180c();
-    func_ov070_02121310();
+int daKrpa_c::Behavior() {
+    ExecuteState();
+    UpdateModelAndShadow();
     return 1;
 }
 
 // @symbol _ZN8daKrpa_c6RenderEv
-int daKrpa_c::Render()
-{
-    mModelAnim.Render(&mScale);
+int daKrpa_c::Render() {
+    mAnmModel.Render(&mScale);
     return 1;
 }
 
 // @symbol _ZN8daKrpa_c16OnPendingDestroyEv
 
-void daKrpa_c::OnPendingDestroy()
-{
-}
+void daKrpa_c::OnPendingDestroy() {}
 
 // @symbol _ZN8daKrpa_c16CleanupResourcesEv
 
-int daKrpa_c::CleanupResources()
-{
+int daKrpa_c::CleanupResources() {
     gKeronpaModelFile.Release();
     return 1;
 }
-extern "C" {
 extern daKrpaState data_ov070_021236ac[];
-}
-// @symbol _ZN8daKrpa_c19func_ov070_02121880Ei
-void daKrpa_c::func_ov070_02121880(int state) {
+// @symbol _ZN8daKrpa_c11ChangeStateEi
+void daKrpa_c::ChangeState(int state) {
     this->mStateMethods = &data_ov070_021236ac[state];
-    this->func_ov070_02121848();
+    this->EnterState();
 }
-// @symbol _ZN8daKrpa_c19func_ov070_02121848Ev
-void daKrpa_c::func_ov070_02121848()
-{
+// @symbol _ZN8daKrpa_c10EnterStateEv
+void daKrpa_c::EnterState() {
     daKrpaStateMethod *method = &this->mStateMethods->init;
     (this->**method)();
 }
-// @symbol _ZN8daKrpa_c19func_ov070_0212180cEv
-void daKrpa_c::func_ov070_0212180c()
-{
+// @symbol _ZN8daKrpa_c12ExecuteStateEv
+void daKrpa_c::ExecuteState() {
     daKrpaStateMethod *method = &this->mStateMethods->behavior;
     (this->**method)();
 }
-// @symbol _ZN8daKrpa_c19func_ov070_021217acEv
-/* SetAnim is another proven Fix12-by-value caller seam. */
-extern "C" {
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-    ModelAnim *model, BCA_File *file, int flags, Fix12i speed, u32 startFrame);
+// @symbol _ZN8daKrpa_c9EnterIdleEv
 extern char data_ov070_021234c4[];
 extern char data_ov070_021234dc[];
 extern u32 data_ov070_02122404[];
 extern u32 data_ov070_021222e8[];
-}
 
-int daKrpa_c::func_ov070_021217ac() {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &this->mModelAnim, (BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
-    this->mFrameController.func_ov070_02121ae0(
-        data_ov070_02122404, 0x64, 1);
+int daKrpa_c::EnterIdle() {
+    this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
+    this->mFrameController.SetFrames(data_ov070_02122404, 0x64, 1);
     this->mStateTimer = 0x73;
     this->mStateIndex = 0;
     return 1;
 }
-// @symbol _ZN8daKrpa_c19func_ov070_02121710Ev
-extern "C" {
-extern u8 DecIfAbove0_Byte(u8 *value);
-extern int data_0209f32c;
-}
-int daKrpa_c::func_ov070_02121710() {
+// @symbol _ZN8daKrpa_c11ExecuteIdleEv
+int daKrpa_c::ExecuteIdle() {
     if (this->mPlayer) {
         if (this->mPosY > data_0209f32c) {
             if (DecIfAbove0_Byte(&this->mStateTimer) == 0)
-                this->func_ov070_02121880(1);
+                this->ChangeState(1);
         }
     } else {
         this->mStateTimer = 0x73;
     }
-    this->mModelAnim.Advance();
-    u32 frame = this->mFrameController.func_ov070_02121a64();
+    this->mAnmModel.Advance();
+    u32 frame = this->mFrameController.NextFrame();
     this->mScaleX = frame;
     this->mScaleY = frame;
     this->mScaleZ = frame;
-    this->func_ov070_02121298();
-    this->func_ov070_021211c4();
+    this->TrackClosestPlayer();
+    this->HandlePlayerHit();
     this->mdCcAcPos_c.Clear();
     this->mdCcAcPos_c.Update();
     return 1;
 }
-// @symbol _ZN8daKrpa_c19func_ov070_021216b8Ev
-int daKrpa_c::func_ov070_021216b8() {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &this->mModelAnim, (BCA_File *)data_ov070_021234dc,
-        0x40000000, 0x1000, 0);
-    this->mFrameController.func_ov070_02121ae0(
-        data_ov070_021222e8, 0x47, 0);
+// @symbol _ZN8daKrpa_c9EnterSpitEv
+int daKrpa_c::EnterSpit() {
+    this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234dc, 0x40000000, 0x1000, 0);
+    this->mFrameController.SetFrames(data_ov070_021222e8, 0x47, 0);
     this->mStateIndex = 1;
     return 1;
 }
-// @symbol _ZN8daKrpa_c19func_ov070_0212156cEv
-extern "C" {
-extern short data_02082214[];
-void func_0201267c(u32 soundID, const Vector3 *pos);
-}
-
-int daKrpa_c::func_ov070_0212156c() {
+// @symbol _ZN8daKrpa_c11ExecuteSpitEv
+int daKrpa_c::ExecuteSpit() {
     if (this->mFrameController.cursor == 0x1e) {
         Vector3 firePos;
         int idx = (int)(u16)this->mAngleY >> 4;
@@ -284,28 +238,26 @@ int daKrpa_c::func_ov070_0212156c() {
         func_0201267c(0x105, &this->mCamSpacePos);
     }
     if (this->mFrameController.cursor == this->mFrameController.count)
-        this->func_ov070_02121880(0);
-    this->mModelAnim.Advance();
-    u32 frame = this->mFrameController.func_ov070_02121a64();
+        this->ChangeState(0);
+    this->mAnmModel.Advance();
+    u32 frame = this->mFrameController.NextFrame();
     this->mScaleX = frame;
     this->mScaleY = frame;
     this->mScaleZ = frame;
-    this->func_ov070_02121298();
-    this->func_ov070_021211c4();
+    this->TrackClosestPlayer();
+    this->HandlePlayerHit();
     this->mdCcAcPos_c.Clear();
     this->mdCcAcPos_c.Update();
     return 1;
 }
-// @symbol _ZN8daKrpa_c19func_ov070_02121548Ev
-int daKrpa_c::func_ov070_02121548()
-{
+// @symbol _ZN8daKrpa_c10EnterEatenEv
+int daKrpa_c::EnterEaten() {
     this->mdCcAcPos_c.Clear();
     this->mStateIndex = 2;
     return 1;
 }
-// @symbol _ZN8daKrpa_c19func_ov070_021214f8Ev
-int daKrpa_c::func_ov070_021214f8()
-{
+// @symbol _ZN8daKrpa_c12ExecuteEatenEv
+int daKrpa_c::ExecuteEaten() {
     int flags = this->mFlags;
     int blocked = (flags & 0x20000) != 0;
     if (!blocked) {
@@ -317,15 +269,8 @@ int daKrpa_c::func_ov070_021214f8()
     }
     return 1;
 }
-// @symbol _ZN8daKrpa_c19func_ov070_02121438Ev
-/* Particle::System::NewSimple is not yet declared by its shared header; retain
- * this typed ABI import without guessing the unresolved state's source name. */
-namespace Sound { void PlayBank0(u32 soundID, const Vector3 &pos); }
-extern "C" u32 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-    u32 effectID, Fix12i x, Fix12i y, Fix12i z);
-
-int daKrpa_c::func_ov070_02121438()
-{
+// @symbol _ZN8daKrpa_c16EnterKnockedAwayEv
+int daKrpa_c::EnterKnockedAway() {
     Sound::PlayBank0(9, this->mCamSpacePos);
     this->mFlags &= ~1;
     this->mVertAccel = -0x2000;
@@ -336,24 +281,18 @@ int daKrpa_c::func_ov070_02121438()
     this->mScaleY = 0x1000;
     this->mScaleZ = 0x1000;
     this->mStateTimer = 0x2d;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &this->mModelAnim, (BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-        0x43, this->mPosX, this->mPosY, this->mPosZ);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-        0x44, this->mPosX, this->mPosY, this->mPosZ);
+    this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
+    Particle::System::NewSimple(0x43, this->mPosX, this->mPosY, this->mPosZ);
+    Particle::System::NewSimple(0x44, this->mPosX, this->mPosY, this->mPosZ);
     this->mStateIndex = 3;
     return 1;
 }
-// @symbol _ZN8daKrpa_c19func_ov070_021213ccEv
+// @symbol _ZN8daKrpa_c18ExecuteKnockedAwayEv
 /* The collision update veneer is retained because it is the retail call
  * destination; the rest are ordinary real class calls. */
-extern "C" {
-extern int dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *clsn);
-}
-int daKrpa_c::func_ov070_021213cc() {
+int daKrpa_c::ExecuteKnockedAway() {
     this->mAngleX = this->mAngleX - 0x1000;
-    this->mModelAnim.Advance();
+    this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAcPos_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&this->mWithMeshClsn);
     if (!this->mWithMeshClsn.JustHitGround()) {
@@ -365,80 +304,66 @@ int daKrpa_c::func_ov070_021213cc() {
 end:
     return 1;
 }
-// @symbol _ZN8daKrpa_c19func_ov070_02121310Ev
-/* DropShadowRadHeight is a Fix12-by-value caller seam for the same codegen
- * reason as the two Init imports above. */
-extern "C" void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
-extern "C" void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    dActor_c *actor, dExtShadowModel_c *shadow, Matrix4x3 *matrix,
-    Fix12i radius, Fix12i depth, u32 opacity);
-
-void daKrpa_c::func_ov070_02121310()
-{
+// @symbol _ZN8daKrpa_c20UpdateModelAndShadowEv
+void daKrpa_c::UpdateModelAndShadow() {
     if (this->mStateIndex == 3) {
-        Matrix4x3_FromRotationXYZExt(&this->mModelAnim.mat4x3,
-            this->mAngleX, this->mAngleY, this->mAngleZ);
+        Matrix4x3_FromRotationXYZExt(&this->mAnmModel.mat4x3, this->mAngleX, this->mAngleY,
+                                     this->mAngleZ);
     } else {
-        Matrix4x3_FromRotationY(&this->mModelAnim.mat4x3, this->mAngleY);
+        Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
     }
-    this->mModelAnim.mat4x3.t.x = this->mPosX >> 3;
-    this->mModelAnim.mat4x3.t.y = this->mPosY >> 3;
-    this->mModelAnim.mat4x3.t.z = this->mPosZ >> 3;
+    this->mAnmModel.mat4x3.t.x = this->mPosX >> 3;
+    this->mAnmModel.mat4x3.t.y = this->mPosY >> 3;
+    this->mAnmModel.mat4x3.t.z = this->mPosZ >> 3;
     this->mMatrix.t.x = this->mPosX >> 3;
     this->mMatrix.t.y = this->mPosY >> 3;
     this->mMatrix.t.z = this->mPosZ >> 3;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &this->mShadowModel, &this->mMatrix,
-        this->mScaleX * 0x46, this->mGroundDistance, 0xf);
+    DropShadowRadHeight(this->mShadowModel, this->mMatrix, this->mScaleX * 0x46,
+                        this->mGroundDistance, 0xf);
 }
 
-bool ApproachLinear(short &value, short target, short step);
-extern "C" {
-extern int Vec3_Dist(void* a, void* b);
-extern short Vec3_HorzAngle(void* a, void* b);
-}
-// @symbol _ZN8daKrpa_c19func_ov070_02121298Ev
-void daKrpa_c::func_ov070_02121298() {
+// @symbol _ZN8daKrpa_c18TrackClosestPlayerEv
+void daKrpa_c::TrackClosestPlayer() {
     Player *player = this->ClosestNonVanishPlayer();
     if (!player) {
         this->mPlayer = 0;
         return;
     }
-    if (Vec3_Dist(&this->mPosX, &player->mPosX) >= 0x2bc000) {
+    if (Vec3_Dist(&this->mPos, &player->mPos) >= 0x2bc000) {
         this->mPlayer = 0;
         return;
     }
     this->mPlayer = player;
-    ApproachLinear(this->mAngleY,
-        Vec3_HorzAngle(&this->mPosX, &player->mPosX), 0x800);
+    ApproachLinear(this->mAngleY, Vec3_HorzAngle(&this->mPos, &player->mPos), 0x800);
 }
-// @symbol _ZN8daKrpa_c19func_ov070_021211c4Ev
-void daKrpa_c::func_ov070_021211c4()
-{
+// @symbol _ZN8daKrpa_c15HandlePlayerHitEv
+void daKrpa_c::HandlePlayerHit() {
     u32 id = this->mdCcAcPos_c.otherOwner;
-    if (id == 0) return;
+    if (id == 0)
+        return;
     dActor_c *found = dActor_c::FindWithID(id);
-    if (found == 0) return;
+    if (found == 0)
+        return;
     int isPlayer = (found->actorID == 0xbf);
-    if (isPlayer == 0) return;
+    if (isPlayer == 0)
+        return;
     Player *player = (Player *)found;
     int beingEaten = ((this->mFlags & 0x20000) != 0);
     if (beingEaten != 0) {
-        this->func_ov070_02121880(2);
+        this->ChangeState(2);
         return;
     }
-    if ((this->mdCcAcPos_c.hitFlags & 0x10) == 0) return;
-    this->mPrevAngleY = Vec3_HorzAngle(&player->mPosX, &this->mPosX);
+    if ((this->mdCcAcPos_c.hitFlags & 0x10) == 0)
+        return;
+    this->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &this->mPos);
     this->mAngleY = (short)(this->mPrevAngleY + 0x8000);
     player->IncMegaKillCount();
-    this->func_ov070_02121880(3);
+    this->ChangeState(3);
 }
 
 // @symbol _ZN8daKrpa_c13OnYoshiTryEatEv
 
-int daKrpa_c::OnYoshiTryEat()
-{
+int daKrpa_c::OnYoshiTryEat() {
     return 5;
 }
 
@@ -457,12 +382,9 @@ int daKrpa_c::OnYoshiTryEat()
  * records copied in ascending table slot. */
 KrpaModelFilePtr gKeronpaModelFile(ASSET_KERONPA_BMD);
 daKrpaState data_ov070_021236ac[4] = {
-    {(daKrpaStateMethod)&daKrpa_c::func_ov070_021217ac,
-     (daKrpaStateMethod)&daKrpa_c::func_ov070_02121710},
-    {(daKrpaStateMethod)&daKrpa_c::func_ov070_021216b8,
-     (daKrpaStateMethod)&daKrpa_c::func_ov070_0212156c},
-    {(daKrpaStateMethod)&daKrpa_c::func_ov070_02121548,
-     (daKrpaStateMethod)&daKrpa_c::func_ov070_021214f8},
-    {(daKrpaStateMethod)&daKrpa_c::func_ov070_02121438,
-     (daKrpaStateMethod)&daKrpa_c::func_ov070_021213cc},
+    {(daKrpaStateMethod)&daKrpa_c::EnterIdle, (daKrpaStateMethod)&daKrpa_c::ExecuteIdle},
+    {(daKrpaStateMethod)&daKrpa_c::EnterSpit, (daKrpaStateMethod)&daKrpa_c::ExecuteSpit},
+    {(daKrpaStateMethod)&daKrpa_c::EnterEaten, (daKrpaStateMethod)&daKrpa_c::ExecuteEaten},
+    {(daKrpaStateMethod)&daKrpa_c::EnterKnockedAway,
+     (daKrpaStateMethod)&daKrpa_c::ExecuteKnockedAway},
 };

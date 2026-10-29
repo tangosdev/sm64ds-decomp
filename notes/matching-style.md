@@ -114,7 +114,7 @@ struct M48 { int w[12]; };
 **Newly-allocated pointer is reloaded from the field, not cached.**
 WHEN: store an alloc result into a field then write through it. WRITE:
 ```c
-*(void**)(thiz+0x148) = _Znwj(0xc);
+*(void**)(thiz+0x148) = operator new(0xc);
 p = *(s32**)(thiz+0x148);   // reload â€” mwcc does str then ldr back
 p[0] = ...;
 ```

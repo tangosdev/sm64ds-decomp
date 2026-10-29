@@ -1,9 +1,5 @@
 //cpp
-
-namespace cstd {
-int div(int, int);
-int mod(int, int);
-}
+#include "cstd.h"
 
 extern "C" {
 #pragma opt_strength_reduction off

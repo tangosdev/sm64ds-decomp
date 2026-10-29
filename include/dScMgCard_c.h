@@ -4,27 +4,20 @@
  * English minigame identity; the unique factory is named
  * dScMgCard_c_classInit from that profile+RTTI evidence.
  *
- * SIZE 0x539c, from dScMgCard_c_classInit's `_ZN7fBase_cnwEj(0x539c)`.
+ * SIZE 0x539c, from dScMgCard_c_classInit's `_ZN7fBase_cnwEm(0x539c)`.
  *
- * SHARED TABLE at 0x4f38, size 0x270 (Dealer_Construct/020c1c64), same
- * as five siblings -- see include/dScMgMemory_c.h's own note. TWO fields
- * fall WITHIN it and are real matched access:
- * mShared.unk_01a and mShared.unk_1e6 are literally the ctor's own
- * `*(short*)(t+0x1a)=0`
- * and `*(short*)(t+0x1e6)=0` writes (Dealer_Construct's own
- * body), same as dScMgMCarlo2_c's own instance of these two fields -- named
- * here instead of folded into the opaque table, everything else stays pad.
+ * THE DEALER at 0x4f38: a Dealer (include/Dealer.h, 0x270 bytes), the
+ * same record the roulette, BSC, Monte Carlo and memory scenes embed there.
+ * This scene writes its mHand and mReserved directly.
  *
  * THE TWO CARD HANDS, 0x51a8 and 0x5298: five 0x30-byte card objects each.
  * The element types are recovered below -- dMgCardObj_c for the hand at
  * 0x51a8, dMgDilarCardObj_c for the hand at 0x5298, both RTTI-confirmed --
  * and the members themselves carry those types here, so UpdateState's state
  * walks spell real member access (&mArray1[0].mState, mArray1[i].mState) and
- * the compiler folds each member+field address itself. The two classes
- * deliberately declare no C++ destructor: real lifecycle definitions make
- * the exact bodies but not the cartridge's required section order. The
- * scene's inline destructor therefore retains the two measured array-helper
- * ABI callbacks, the smallest surviving compiler-wall bridge.
+ * the compiler folds each member+field address itself. Both classes declare
+ * a destructor, so the compiler builds and tears down each hand through
+ * __cxa_vec_ctor/__cxa_vec_cleanup with the classes' own C1 and D1.
  *
  * OWN TAIL, 0x5388..0x539c: nine fields are real matched access (five
  * src files: func_ov006_020da9c4.cpp, 020db6ec.c, 020db720.c,
@@ -40,67 +33,21 @@
  * _ZTV11dScMgCard_c. Slots 16 and 17 name D1 then D0, odr-using both, so the
  * compiler emits the pair for us in cartridge order. It also removes the
  * homeless D2 entirely -- a base-object variant byte-identical to D1, with no
- * ROM address to claim and no inbound relocation. The two __cxa_vec_cleanup calls
- * preserve the cartridge's callback ABI and reverse member order; the third
- * releases the typed shared state. No separate operator delete is needed --
+ * ROM address to claim and no inbound relocation. The body is empty: the
+ * compiler destroys mArray2, mArray1 and then mDealer, in reverse member
+ * order, as the cartridge does. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one.
  * Same recipe as include/dScMgMCarlo2_c.h, and for the same reason. */
 #ifndef DSCMGCARD_C_H
 #define DSCMGCARD_C_H
 #include "dScMgSingle3DBase_c.h"
+#include "Dealer.h"
 
-extern "C" int  Dealer_Destruct(char *t); /* decl_common.h's own signature */
-extern "C" void Dealer_Construct(void *t);
-extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
-extern "C" void _ZN12dMgCardObj_cD1Ev(void *elem);
-extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem);
-
-/* The element destroy callbacks use their ABI D1 spellings because C++ cannot
-   take a destructor's address. Both live beside their constructor callbacks
-   and classInit in src/minigames/d_s_mg_card.cpp. The classes below declare no
-   destructor because no member-destructor spelling lands the pair in the
-   cartridge's own shape AND section order, measured across every form:
-     both written out of line
-        -> mwcc never -O4 auto-inlines a callee that is not marked inline:
-           the derived D1 goes out as a bl to the base D2 (0x24 bytes with a
-           push/blr frame; the cartridge carries 0x1c -- two vptr stores and
-           no bl), and both classes' D0 and D2 come with it -- six
-           destructor symbols emitted where the cartridge carries two; and
-           reordering the source cannot help, because the section groups
-           follow reverse source order -- the one order that puts the base
-           body ahead of the derived definition (so an inline mark could
-           bite) is exactly the order that flips the groups off the
-           cartridge layout;
-     both marked inline (in class, on the definition, any source order)
-        -> the two D1s ARE emitted, byte-matching the cartridge pair, with
-           no D0/D2 anywhere -- the bodies are right. The failure is
-           emission ORDER: the element pair is emitted between the scene
-           class's D1 (0x020d95a4) and its D0 (0x020d9638) -- the scene D0
-           slides behind the element pair -- while the cartridge carries
-           the scene pair adjacent with the element pair after it, and
-           rombuild's fail-closed isolate refuses a TU whose licensed
-           .text is not in ROM address order. #pragma force_inline /
-           #pragma inline change neither outcome.
-   Construction has a second measured wall: CW 1.2 rejects class/global
-   placement-new declarations and has no builtin placement new, so the folded
-   allocation+construction factory cannot be expressed as semantic C++.
-   The vtable/RTTI records do not follow these callbacks: this header
-   declares Render -- each class's key function -- non-inline, and
-   src/minigames/d_s_mg_card.cpp defines it, so the key-function TU keeps
-   emitting _ZTV/_ZTI/_ZTS for both classes either way. */
-struct dMgCardSharedState_c {
-    u8  pad_000[0x1a];
-    s16 unk_01a;
-    u8  pad_01c[0x1ca];
-    s16 unk_1e6;
-    u8  pad_1e8[0x88];
-};
-
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dMgCardSharedState_c_size_must_be_0x270[sizeof(dMgCardSharedState_c) == 0x270 ? 1 : -1];
-#endif
-
+/* The card destructors are declared here and defined out of line at the
+   bottom of src/minigames/d_s_mg_card.cpp. Defined inline, both D1s come
+   out between the scene's D1 (0x020d95a4) and D0 (0x020d9638), and the
+   cartridge has them after the D0. The constructors are implicit; the
+   factory's `new dScMgCard_c` generates both C1s. */
 /* --- the card element classes ---------------------------------------------
    Both names are RTTI-confirmed (build/rtti.json: _ZTS12dMgCardObj_c and
    _ZTS17dMgDilarCardObj_c at 0x0213bc8c / 0x0213bc9c). Both are polymorphic
@@ -124,14 +71,11 @@ typedef char dMgCardSharedState_c_size_must_be_0x270[sizeof(dMgCardSharedState_c
    0x4000 meaning fully raised, (mLift >> 12) indexing the flip frames);
    the fly-away stagger counter (mFlyDelay); the card's value byte (mValue,
    the weighted 0..5 draw), its state byte (mState) and the combo marker
-   (mComboFlag) the hand evaluation sets on the cards forming the pair.
-
-   Objects are constructed and destroyed through the C1/D1 ABI callbacks in
-   src/minigames/d_s_mg_card.cpp. Their class identities are RTTI-proven; the
-   callback spellings remain only at the measured factory and section-order
-   walls described above. */
+   (mComboFlag) the hand evaluation sets on the cards forming the pair. */
 
 struct dMgCardObj_c {
+    ~dMgCardObj_c(); /* ov006 0x020d96e0 -- not virtual */
+
     virtual void Render();       /* slot 0 -- ov006 0x020d9bdc */
     virtual void Update();       /* slot 1 -- ov006 0x020d9c5c */
     virtual s32 GetOffscreenY(); /* slot 2 -- ov006 0x020d9bd0 */
@@ -164,6 +108,8 @@ struct dMgCardObj_c {
    12-byte single-inheritance form, and the 0x14-byte record at
    0x0213bcec/0x0213bcf4 confirms it adds nothing). */
 struct dMgDilarCardObj_c : dMgCardObj_c {
+    ~dMgDilarCardObj_c(); /* ov006 0x020d96f0 */
+
     virtual void Render();       /* slot 0 -- ov006 0x020d970c */
     virtual void Update();       /* slot 1 -- ov006 0x020d978c */
     virtual s32 GetOffscreenY(); /* slot 2 -- ov006 0x020d9998 */
@@ -176,11 +122,7 @@ typedef char dMgDilarCardObj_c_size_must_be_0x30[sizeof(dMgDilarCardObj_c) == 0x
 #endif
 
 struct dScMgCard_c : dScMgSingle3DBase_c {
-    virtual ~dScMgCard_c() {
-        __cxa_vec_cleanup(mArray2, 5, 0x30, (void *)_ZN17dMgDilarCardObj_cD1Ev);
-        __cxa_vec_cleanup(mArray1, 5, 0x30, (void *)_ZN12dMgCardObj_cD1Ev);
-        Dealer_Destruct((char *)&mShared);
-    }
+    virtual ~dScMgCard_c() {}
 
     /* --- this class's own vtable slots, named from the table ---
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
@@ -218,9 +160,9 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     static int  DrawCardValue();                                           /* 0x020da8e4 */
     static void FillWeights(int v);                                       /* 0x020da974 */
 
-    dMgCardSharedState_c mShared; /* 0x4f38..0x51a8 */
-    dMgCardObj_c     mArray1[5];  /* 0x51a8 -- dtor _ZN12dMgCardObj_cD1Ev (hand stub) */
-    dMgDilarCardObj_c mArray2[5]; /* 0x5298 -- dtor _ZN17dMgDilarCardObj_cD1Ev (hand stub) */
+    Dealer mDealer;               /* 0x4f38 */
+    dMgCardObj_c mArray1[5];      /* 0x51a8 -- the player's hand */
+    dMgDilarCardObj_c mArray2[5]; /* 0x5298 -- the dealer's hand */
     s16 mState;              /* 0x5388 -- the round's step counter; UpdateState
                                 is one long switch on it and mostly just `++`s it */
     s16 mStateTimer;         /* 0x538a -- reloaded (0x10, 0x14, 0x1e, 0x3c,

@@ -9,10 +9,8 @@
  * leftovers:
  *   - the ov004 helpers and the data_ov006 globals are unnamed in
  *     symbols.txt.
- *   - the ROM has no dScMgMCarlo2_c constructor, so the factory builds the
- *     scene by hand.
- *   - the shared table at 0x4f38 is opaque in dScMgMCarlo2_c.h, so its
- *     helpers take its address.
+ *   - the Dealer_* helpers are still called through `raw + 0x4f38`
+ *     rather than through mDealer.
  */
 
 
@@ -21,6 +19,8 @@
 #include "types.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
+#include "Sound.h"
+#include "math/Approach.h"
 
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -62,7 +62,6 @@ int  GetGameLanguage(void);
 int  LoadFile(int handle);
 void DecompressLZ16(int src, int dst);
 void Vec2_Sub(int* out, int* a, int* b);
-unsigned int func_02012790(unsigned int id);
 int  func_0203d5dc(void* a, void* b);
 void Mg_CommitRecords(void* t);
 void Mg_SubmitScore(int score);
@@ -74,21 +73,12 @@ void Dealer_Draw(void* t);
 void Dealer_Update(void* t);
 int  Dealer_Load(void* t);
 
-void *_ZN11dScMgBase_cC2Ev(void*);
-void _ZN8Particle10SysTrackerC1Ev(void*);
-void __cxa_vec_ctor(void*, int, int, void*, void*);
-extern int _ZTV19dScMgSingle3DBase_c;
-extern int _ZTV14dScMgMCarlo2_c[];
-void *_ZN19dMgMCarlo2CardObj_cC1Ev(void*);
 }
 
 namespace GX { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
 namespace GXS { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
-namespace Sound { void PlayBank2_2D(unsigned int); }
 
 /* C++ linkage: the reference parameters are part of the ROM names. */
-int ApproachLinear(int& value, int target, int step);
-int ApproachLinear2(s16& value, s16 target, s16 step);
 
 // @symbol _ZN19dMgMCarlo2CardObj_cC1Ev
 dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c()
@@ -97,20 +87,11 @@ dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c()
 }
 
 // @symbol dScMgMCarlo2_c_classInit
+/* `new` inlines the implicit constructor: the base chain, this class's
+   vptr, then mDealer and the card array in declaration order. */
 extern "C" void* dScMgMCarlo2_c_classInit()
 {
-    char* p = (char*)_ZN7fBase_cnwEj(0x5930);
-    if (p) {
-        _ZN11dScMgBase_cC2Ev(p);
-        *(int*)p = (int)&_ZTV19dScMgSingle3DBase_c;
-        _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
-        *(int*)p = (int)&_ZTV14dScMgMCarlo2_c[2];
-        Dealer_Construct(p + 0x4f38);
-        __cxa_vec_ctor(p + 0x51a8, 0x28, 0x30,
-                     (void*)_ZN19dMgMCarlo2CardObj_cC1Ev,
-                     (void*)_ZN19dMgMCarlo2CardObj_cD1Ev);
-    }
-    return p;
+    return new dScMgMCarlo2_c;
 }
 
 // @symbol _ZN14dScMgMCarlo2_c13InitResourcesEv
@@ -156,9 +137,9 @@ void dScMgMCarlo2_c::StartRound(int /* arg */)
     dScMgMCarlo2_c::SetupBoard(mArray);
     sMCarlo2PickAllowed = 0;
     mDealCount = 0;
-    mShared.unk_1e6 = 1;
+    mDealer.mReserved = 1;
     Dealer_StartShuffle(raw + 0x4f38, 4, 4, raw + 0x592e);
-    mShared.unk_01a = 1;
+    mDealer.mHand = 1;
     mTimer = 0;
     Mg_SubmitScore(0);
     mRoundState = 1;
@@ -246,10 +227,10 @@ s32 dScMgMCarlo2_c::Behavior()
             if (sMCarlo2DeckSize != 0 && dealt > 10 && dealt <= 18 &&
                 Dealer_IsIdle(raw + 0x4f38) != 0) {
                 mDealCount = 0;
-                mShared.unk_1e6 = 0;
+                mDealer.mReserved = 0;
                 Dealer_StartReveal(raw + 0x4f38, 2, &mDealCount);
                 if (sMCarlo2DeckSize == 2)
-                    mShared.unk_01a = 0;
+                    mDealer.mHand = 0;
             } else {
                 int lim = mDealCount + 0x12;
                 if (dealt >= lim) {
@@ -264,8 +245,8 @@ s32 dScMgMCarlo2_c::Behavior()
                     sMCarlo2PickAllowed = 1;
                 } else {
                     if (sMCarlo2CardsWanted != 0) {
-                        if (mShared.unk_01a == 1) {
-                            mShared.unk_01a = 0;
+                        if (mDealer.mHand == 1) {
+                            mDealer.mHand = 0;
                         } else if (Dealer_IsIdleAtRest(raw + 0x4f38) != 0) {
                             Dealer_PlayLose(raw + 0x4f38);
                             Mg_SetSharedState(MG_STATE_GAME_OVER);

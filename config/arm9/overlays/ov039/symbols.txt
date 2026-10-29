@@ -1,6 +1,6 @@
 _ZN11daObjKumo_cD1Ev kind:function(arm,size=0x30) addr:0x021111a0
 _ZN11daObjKumo_cD0Ev kind:function(arm,size=0x44) addr:0x021111d0
-func_ov039_02111214 kind:function(arm,size=0x40) addr:0x02111214
+_ZN11daObjKumo_c17UpdateModelMatrixEv kind:function(arm,size=0x40) addr:0x02111214
 _ZN11daObjKumo_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
 _ZN11daObjKumo_c6RenderEv kind:function(arm,size=0x28) addr:0x02111278
 _ZN11daObjKumo_c8BehaviorEv kind:function(arm,size=0x8c) addr:0x021112a0

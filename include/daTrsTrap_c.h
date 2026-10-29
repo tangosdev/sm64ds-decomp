@@ -9,16 +9,14 @@
 #ifndef DATRSTRAP_C_H
 #define DATRSTRAP_C_H
 #include "types.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dBgW_KcMbg.h"
 #include "dActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daTrsTrap_c : dActor_c {
     u32 pad_0d0;                 /* 0x0d0 -- dActor_c closes at 0xd0, mModel opens at 0xd4 */
-    Model mModel;                /* 0x0d4 */
-    /* Set by the mesh-collision callback (func_ov063_0211d270) while the player
+    dExtSimpleModel_c mModel;    /* 0x0d4 */
+    /* Set by the mesh-collision callback (LatchStandingActor) while the player
        (actor 0xbf) stands on the trapdoor; cleared every Behavior frame. The
        trapdoor state steers off its position, the merry-go-round off nullness. */
     dActor_c *mStandingActor;    /* 0x124 */
@@ -46,7 +44,7 @@ struct daTrsTrap_c : dActor_c {
     u8  mStepIndex;              /* 0x151 */
     u8  mInitLatch;              /* 0x152 -- merry-go-round skips occupancy once, then latches this */
     /* Merry-go-round occupancy: a rider stands on the mesh or the area is
-       showing. Written every frame; no reader recovered yet. */
+       showing. Written every frame; the Boo (daTrs_c, 021163d0) reads it. */
     u8  mOccupiedFlag;           /* 0x153 */
     u8  pad_154;                 /* 0x154 -- zeroed by InitResources, no reader recovered */
     /* KAIDAN release: the Boo's death path (ov063:0x02118b98) finds the master
@@ -82,11 +80,11 @@ struct daTrsTrap_c : dActor_c {
     void func_ov063_0211c89c(); /* 2 BOOKSHELF -- shelf slide,   0x0211c89c */
     void func_ov063_0211c7b0(); /* 3 MERRYGOROUND -- spin,       0x0211c7b0 */
 
-    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
-       `return new daTrsTrap_c()` then routes through the retail allocator. */
-    static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    /* Mesh-collision rider hook, defined in d_a_trs_trap_classinits.cpp.
+       InitResources stores OnMeshClsnTouch as mMovingMeshCollider's
+       callback word; it forwards the colliding actor to LatchStandingActor. */
+    static void OnMeshClsnTouch(dBgW *, daTrsTrap_c *, dActor_c *);
+    void LatchStandingActor(dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

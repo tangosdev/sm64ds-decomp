@@ -13,12 +13,12 @@
  *     0x110 dCcAc_c         0x34   -> 0x144
  *     0x144 dCcAcPos_c  0x40   -> 0x184
  *     0x184 dBgCh_Actr               0x1bc  -> 0x340
- *     0x340 ModelAnim                  0x64   -> 0x3a4
+ *     0x340 dExtAnmModel_c                  0x64   -> 0x3a4
  *     0x3a4 dExtShadowModel_c                0x28   -> 0x3cc
  *
  * Typing them absorbed these markers, which were a member's insides:
- *   - 0x390 mAnimation   = mModelAnim + 0x50
- *   - 0x39c unk_39c      = mModelAnim + 0x5c
+ *   - 0x390 mAnimation   = mAnmModel + 0x50
+ *   - 0x39c unk_39c      = mAnmModel + 0x5c
  *
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
@@ -35,12 +35,12 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
-#include "ModelAnim.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
 #include "dExtShadowModel_c.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 #include "dBgCh_Actr.h"
 
 /* Actor IDs this class compares against (symbols/actor_debug_names.tsv). */
@@ -75,7 +75,7 @@ struct daPopoi_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dCcAcPos_c    mdCcAcPos_c; /* 0x144 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x184 */
-    ModelAnim                    mModelAnim;            /* 0x340 */
+    dExtAnmModel_c mAnmModel;                         /* 0x340 */
     dExtShadowModel_c                  mShadowModel;          /* 0x3a4 */
     u8  pad_3cc[0x30];                                   /* 0x3cc -- no function here touches it */
     /* The current state's record; see the table above. Installed by
@@ -138,7 +138,7 @@ struct daPopoi_c : dEnemyBase_c {
     void func_ov077_02126528();
     /* State installer: stores the record in mState and runs its enter handler. */
     int  func_ov077_02126d5c(daPopoi_StateRecord *next);
-    /* Rebuilds mModelAnim.mat4x3 from mAngleY and mPos. Behavior only. */
+    /* Rebuilds mAnmModel.mat4x3 from mAngleY and mPos. Behavior only. */
     void func_ov077_02126dac();
 
     /* The five state records' handler pairs; see the table above. */

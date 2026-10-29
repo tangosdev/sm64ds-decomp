@@ -15,6 +15,21 @@
       "name": ".text",
       "start": "0x02111a70",
       "end": "0x02111dc4"
+    },
+    {
+      "name": ".init",
+      "start": "0x02112524",
+      "end": "0x02112a5c"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02112b38",
+      "end": "0x02112b3c"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02113c68",
+      "end": "0x02113e88"
     }
   ],
   "functions": [
@@ -33,7 +48,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov009_02111b1c",
+      "symbol": "_ZN14daObjMcWater_c15SpawnWaterfallsEv",
       "address": "0x02111b1c",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov009_02111b1c.cpp",
@@ -76,7 +91,204 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "gMcWaterModelFile",
+      "address": "0x02113c68",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with id 0x693 and registered with func_02017ab4, as in retail"
+    },
+    {
+      "symbol": "gMcWaterCollisionFile",
+      "address": "0x02113c70",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision resource handle constructed with id 0x694 through func_02017b4c and registered with SharedFilePtr_Destruct_Clsn, as in retail"
+    },
+    {
+      "symbol": "data_ov009_02113c78",
+      "address": "0x02113c78",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113c84",
+      "address": "0x02113c84",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113c90",
+      "address": "0x02113c90",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113c9c",
+      "address": "0x02113c9c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113ca8",
+      "address": "0x02113ca8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113cb4",
+      "address": "0x02113cb4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113cc0",
+      "address": "0x02113cc0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113ccc",
+      "address": "0x02113ccc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113cd8",
+      "address": "0x02113cd8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113ce4",
+      "address": "0x02113ce4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113cf0",
+      "address": "0x02113cf0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113cfc",
+      "address": "0x02113cfc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d08",
+      "address": "0x02113d08",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d14",
+      "address": "0x02113d14",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d20",
+      "address": "0x02113d20",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d2c",
+      "address": "0x02113d2c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d38",
+      "address": "0x02113d38",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d44",
+      "address": "0x02113d44",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d50",
+      "address": "0x02113d50",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d5c",
+      "address": "0x02113d5c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d68",
+      "address": "0x02113d68",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d74",
+      "address": "0x02113d74",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d80",
+      "address": "0x02113d80",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node, the third __register_global_object argument at the matching retail initializer site"
+    },
+    {
+      "symbol": "data_ov009_02113d8c",
+      "address": "0x02113d8c",
+      "size": "0x54",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven-entry Vector3 spawn table the initializer stores elementwise and registers with ~Vector3 one by one; func_ov009_02111b1c's default table"
+    },
+    {
+      "symbol": "data_ov009_02113de0",
+      "address": "0x02113de0",
+      "size": "0x54",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven-entry Vector3 spawn table the initializer stores elementwise and registers with ~Vector3 one by one; func_ov009_02111b1c uses it when data_0209f2d8[0] is 1"
+    },
+    {
+      "symbol": "data_ov009_02113e34",
+      "address": "0x02113e34",
+      "size": "0x54",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven-entry Vector3 spawn table the initializer stores elementwise and registers with ~Vector3 one by one; func_ov009_02111b1c uses it when bit 0x80000 of data_0209caa0[2] is set"
+    }
+  ],
   "notes": [
     "The cartridge's own RTTI names this class daObjMcWater_c: _ZTS at ov009:0x021139e0 spells \"14daObjMcWater_c\", and _ZTI at 0x021139d4 is an __si_class_type_info whose +8 word points at _ZTI10dBgActor_c (ov002:0x021089ec), so dBgActor_c is the direct and only base. The coined CastleWater alias that used to sit on this vtable has been removed from config/arm9/overlays/ov009/symbols.txt.",
     "The destructor is declared FIRST and INLINE in include/daObjMcWater_c.h. Out of line, mwccarm emits D0 ahead of D1 (the cartridge has D1 first, at 0x02111a70) and also emits the D2 base-object variant the ROM never carried; declaring it first is also what makes this TU the vtable's home, so _ZTV and the RTTI pair land here.",
@@ -84,7 +296,9 @@
     "The factory's ROM-era name was CastleWater_Spawn; it is spelled daObjMcWater_c_classInit here, matching its ov009 neighbour daObjMc_Metalnet_c_classInit.",
     "func_ov009_02111b1c stays a C-linkage free function taking char*. The cartridge gives it a global symbol that other config still names, and it is called with `this` from InitResources; promoting it to a member is a separate change with its own codegen risk.",
     "data_0209caa0 carried two conflicting legacy spellings (bare int vs a three-int record). The record wins in this TU and InitResources reaches the same word through the byte offset its own matched body already spelled, which is why the tubuild create conflict note is resolved rather than carried.",
-    "LEFTOVER CLEANUP. SUPERSEDES the factory / char* helper / data_0209caa0 notes above. classInit is now `return new daObjMcWater_c()` with a leaf `operator new(unsigned long)` forwarding `_ZN7fBase_cnwEj((unsigned)size)`. `virtual ~daObjMcWater_c() {}` is inline and first among virtuals, so mwccarm emits the retail D1-then-D0 pair and no leaf D2; InitResources is the key function and still homes _ZTV/_ZTI/_ZTS here (deadstrip-data, same 11 records). The inline chain also emits a homeless `_ZN10dBgActor_cD2Ev`, licensed deadstrip below -- the same helper ov016/daObjKi_Ita_c and ov029/daObjWc_Mizu_c record. Named-field substitutions in Init/Behavior/Render/Cleanup/func_ov009_02111b1c MATCH. func_ov009_02111b1c stays C-linkage (cartridge global); it now takes daObjMcWater_c* and uses mPosX / mAreaId."
+    "LEFTOVER CLEANUP. SUPERSEDES the factory / char* helper / data_0209caa0 notes above. classInit is now `return new daObjMcWater_c()` with a leaf `operator new(unsigned long)` forwarding `_ZN7fBase_cnwEj((unsigned)size)`. `virtual ~daObjMcWater_c() {}` is inline and first among virtuals, so mwccarm emits the retail D1-then-D0 pair and no leaf D2; InitResources is the key function and still homes _ZTV/_ZTI/_ZTS here (deadstrip-data, same 11 records). The inline chain also emits a homeless `_ZN10dBgActor_cD2Ev`, licensed deadstrip below -- the same helper ov016/daObjKi_Ita_c and ov029/daObjWc_Mizu_c record. Named-field substitutions in Init/Behavior/Render/Cleanup/func_ov009_02111b1c MATCH. func_ov009_02111b1c stays C-linkage (cartridge global); it now takes daObjMcWater_c* and uses mPosX / mAreaId.",
+    "Static initializer folded: the model and collision handles (ids 0x693/0x694) and the three seven-entry Vector3 spawn tables are real definitions in d_a_obj_mc_water.cpp, replacing the handwritten src/unnamed/ov009/__sinit_ov009_02112524.c. mwcc emits __sinit_d_a_obj_mc_water.cpp (0x538), its .ctor word and the twenty-three registration nodes itself; all are byte- and relocation-identical to retail. Ownership: ov009 .init, .ctor and .bss run in .text TU order; this TU's .bss 0x02113c68..0x02113e88 sits between d_a_obj_dk_pole's (ending 0x02113c68) and d_a_obj_mc_metalnet's (from 0x02113e88), and func_ov009_02111b1c in this TU is the only .text that reads the tables. Interior element addresses that dsd names by their own labels are recorded as table + offset, as mwcc emits them.",
+    "ACTOR CLEANUP (1028). SUPERSEDES the C-linkage notes above: func_ov009_02111b1c is now the member daObjMcWater_c::SpawnWaterfalls(), byte-identical, called as SpawnWaterfalls() from InitResources. The dBgW_KcMbg::SetFile call is spelled as a plain member call on mMeshCollider. The TU's @NNN uniquifiers shifted by one; defined_symbol_renames were re-keyed by __sinit relocation-site order."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -149,9 +363,271 @@
         "_ZTS8dActor_c",
         "_ZTV14daObjMcWater_c"
       ]
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov009-daObjMcWater_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02111a70",
+        "end": "0x02111dc4",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02111a70",
+          "end": "0x02111dc4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02112524",
+          "end": "0x02112a5c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02112b38",
+          "end": "0x02112b3c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02113c68",
+          "end": "0x02113e88",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 38
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              70
+            ],
+            "desired": [
+              70
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              68
+            ],
+            "desired": [
+              68
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              7,
+              8,
+              16,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              45,
+              46,
+              47
+            ],
+            "desired": [
+              7,
+              8,
+              24,
+              19,
+              33,
+              20,
+              22,
+              23,
+              16,
+              25,
+              26,
+              29,
+              30,
+              31,
+              32,
+              36,
+              34,
+              35,
+              21,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              45,
+              46,
+              47
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                7,
+                8,
+                16,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                45,
+                46,
+                47
+              ],
+              "desired": [
+                7,
+                8,
+                24,
+                19,
+                33,
+                20,
+                22,
+                23,
+                16,
+                25,
+                26,
+                29,
+                30,
+                31,
+                32,
+                36,
+                34,
+                35,
+                21,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                45,
+                46,
+                47
+              ],
+              "slots": [
+                7,
+                8,
+                16,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                45,
+                46,
+                47
+              ]
+            }
+          ],
+          "symbolIndices": 28,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "The three Vector3[7] spawn tables this TU now defines have static storage, and types.h gives Vector3 an inline destructor, so the initializer registers it for each element and the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9; this copy is a duplicate and is discarded."
+    },
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
@@ -234,5 +710,1082 @@
       "canonical_module": "ov009",
       "canonical_address": "0x02113a18"
     }
-  ]
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_d_a_obj_mc_water.cpp",
+      "address": "0x02112524",
+      "size": "0x538",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov009_02112524 (0x538) and carries the same relocation sites in the same order"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_obj_mc_water.cpp",
+      "address": "0x02112b38",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@361",
+      "to": "data_ov009_02113c78",
+      "evidence": "compiler temp mapped to 0x02113c78 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@362",
+      "to": "data_ov009_02113cc0",
+      "evidence": "compiler temp mapped to 0x02113cc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@364",
+      "to": "data_ov009_02113d74",
+      "evidence": "compiler temp mapped to 0x02113d74 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@367",
+      "to": "data_ov009_02113d80",
+      "evidence": "compiler temp mapped to 0x02113d80 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@370",
+      "to": "data_ov009_02113d08",
+      "evidence": "compiler temp mapped to 0x02113d08 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@373",
+      "to": "data_ov009_02113d14",
+      "evidence": "compiler temp mapped to 0x02113d14 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@376",
+      "to": "data_ov009_02113d5c",
+      "evidence": "compiler temp mapped to 0x02113d5c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@379",
+      "to": "data_ov009_02113d50",
+      "evidence": "compiler temp mapped to 0x02113d50 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@382",
+      "to": "data_ov009_02113d44",
+      "evidence": "compiler temp mapped to 0x02113d44 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@384",
+      "to": "data_ov009_02113d2c",
+      "evidence": "compiler temp mapped to 0x02113d2c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@387",
+      "to": "data_ov009_02113d20",
+      "evidence": "compiler temp mapped to 0x02113d20 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@390",
+      "to": "data_ov009_02113c90",
+      "evidence": "compiler temp mapped to 0x02113c90 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@393",
+      "to": "data_ov009_02113c84",
+      "evidence": "compiler temp mapped to 0x02113c84 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@396",
+      "to": "data_ov009_02113cfc",
+      "evidence": "compiler temp mapped to 0x02113cfc by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@399",
+      "to": "data_ov009_02113cf0",
+      "evidence": "compiler temp mapped to 0x02113cf0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@402",
+      "to": "data_ov009_02113cb4",
+      "evidence": "compiler temp mapped to 0x02113cb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@404",
+      "to": "data_ov009_02113ccc",
+      "evidence": "compiler temp mapped to 0x02113ccc by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@407",
+      "to": "data_ov009_02113cd8",
+      "evidence": "compiler temp mapped to 0x02113cd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@410",
+      "to": "data_ov009_02113ce4",
+      "evidence": "compiler temp mapped to 0x02113ce4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@413",
+      "to": "data_ov009_02113d68",
+      "evidence": "compiler temp mapped to 0x02113d68 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@416",
+      "to": "data_ov009_02113ca8",
+      "evidence": "compiler temp mapped to 0x02113ca8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@419",
+      "to": "data_ov009_02113d38",
+      "evidence": "compiler temp mapped to 0x02113d38 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    },
+    {
+      "from": "@422",
+      "to": "data_ov009_02113c9c",
+      "evidence": "compiler temp mapped to 0x02113c9c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_obj_mc_water.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_obj_mc_water.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "data_ov009_02113c78",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113c84",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113c90",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113c9c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113ca8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113cb4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113cc0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113ccc",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113cd8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113ce4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113cf0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113cfc",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d08",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d14",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d20",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d2c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d38",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d44",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d50",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d5c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d68",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d74",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "data_ov009_02113d80",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN16McWaterModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN20McWaterCollisionFileC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN16McWaterModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    },
+    {
+      "symbol": "_ZN20McWaterCollisionFileD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail initializer call/load destination at this exact relocation site"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02112534",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112544",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112550",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112560",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211258c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021125b8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021125e8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112614",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112640",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211266c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112698",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021126c4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021126f0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211271c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211274c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112778",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021127a4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021127d0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021127fc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112824",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211284c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112874",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211289c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021128c4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021128ec",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021128fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMcWaterModelFile",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c68"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112904",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112908",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113c78",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c78"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211290c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMcWaterCollisionFile",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c70"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112914",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112918",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113cc0",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113cc0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112920",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d8c",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d8c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112928",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7Vector3D1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020072c0"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211292c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d74",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d74"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112930",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d8c",
+      "addend": 12,
+      "target_module": "ov009",
+      "target_address": "0x02113d98"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211293c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d80",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d80"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112940",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d8c",
+      "addend": 24,
+      "target_module": "ov009",
+      "target_address": "0x02113da4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112948",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d08",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d08"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211294c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d8c",
+      "addend": 36,
+      "target_module": "ov009",
+      "target_address": "0x02113db0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112958",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d14",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d14"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211295c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d8c",
+      "addend": 48,
+      "target_module": "ov009",
+      "target_address": "0x02113dbc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112968",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d5c",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d5c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211296c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d8c",
+      "addend": 60,
+      "target_module": "ov009",
+      "target_address": "0x02113dc8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112978",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d50",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d50"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211297c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d8c",
+      "addend": 72,
+      "target_module": "ov009",
+      "target_address": "0x02113dd4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112984",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d44",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d44"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211298c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113e34",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113e34"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112994",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d2c",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d2c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112998",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113e34",
+      "addend": 12,
+      "target_module": "ov009",
+      "target_address": "0x02113e40"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d20",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d20"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113e34",
+      "addend": 24,
+      "target_module": "ov009",
+      "target_address": "0x02113e4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113c90",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c90"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113e34",
+      "addend": 36,
+      "target_module": "ov009",
+      "target_address": "0x02113e58"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113c84",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c84"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113e34",
+      "addend": 48,
+      "target_module": "ov009",
+      "target_address": "0x02113e64"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113cfc",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113cfc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113e34",
+      "addend": 60,
+      "target_module": "ov009",
+      "target_address": "0x02113e70"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113cf0",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113cf0"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113e34",
+      "addend": 72,
+      "target_module": "ov009",
+      "target_address": "0x02113e7c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113cb4",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113cb4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113de0",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113de0"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113ccc",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113ccc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113de0",
+      "addend": 12,
+      "target_module": "ov009",
+      "target_address": "0x02113dec"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113cd8",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113cd8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113de0",
+      "addend": 24,
+      "target_module": "ov009",
+      "target_address": "0x02113df8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113ce4",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113ce4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113de0",
+      "addend": 36,
+      "target_module": "ov009",
+      "target_address": "0x02113e04"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d68",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d68"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113de0",
+      "addend": 48,
+      "target_module": "ov009",
+      "target_address": "0x02113e10"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113ca8",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113ca8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113de0",
+      "addend": 60,
+      "target_module": "ov009",
+      "target_address": "0x02113e1c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113d38",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113d38"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113de0",
+      "addend": 72,
+      "target_module": "ov009",
+      "target_address": "0x02113e28"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112a58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113c9c",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c9c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02112b38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_obj_mc_water.cpp",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02112524"
+    }
+  ],
+  "production_mode": "intact-object"
 }

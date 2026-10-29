@@ -27,24 +27,42 @@
 //   (mTarget, 0x5bcc) and the background scroller (mBg, 0x5bfc) are typed
 //   in the header. PachinkoFlyer_Draw, PachinkoFx_DrawAll, PachinkoBg_Stop,
 //   PachinkoTarget_ShowAll/HideAll/DrawAll and the target count read them by
-//   field (PachinkoFx_Spawn's typed forms change code). mFlyer and mBg are
+//   field (PachinkoFx_Spawn indexes mFx through the strided `PACHINKO(fx)->mFx[0]`
+//   form; `mFx[i]` changes code). mFlyer and mBg are
 //   one-element arrays because their handlers take an index; PachinkoBg_StateScroll
-//   and PachinkoFlyer_CheckHits' head use them, while Bg_StateWaiting/RiseIn/SinkOut,
-//   Bg_Start and Flyer_StateWaiting/Cross/Pause/Leave measured different typed and stay on
-//   offsets; the other handlers
+//   and PachinkoFlyer_CheckHits' head use them. Bg_Start and Target_Choose
+//   read the fields through a `self` local: spelled on the cast `PACHINKO(raw)`
+//   directly, each field folds to its own base and the shared raw + 0x5000
+//   add is lost. Bg_StateRiseIn/SinkOut and Flyer_Cross/Pause/Leave mostly keep
+//   REC_OFF forms; the other handlers
 //   keep the offset forms their launder macros and saved row cursors tune,
-//   and convert one function at a time. 0x5418..0x5958 is never
-//   accessed by this class's code, so it stays padding. The pipe fields behind the ST/CTA/FB/ACC/VEL byte-offset
+//   and convert one function at a time. mShot holds 0x30 records,
+//   ending exactly at mFx. The pipe fields behind the PIPE_* byte-offset
 //   macros take a pre-scaled offset rather than an index.
-// - Shot and ball fields go through `p + i * 0x38`: indexing mShot[i]/mBall[i]
-//   is one word different, so the multiply forms stay; the r5 cursor locals
-//   in the two table walkers are named for the register they color.
+// - Pachinko_SpawnWave, the Ball Fall/Pop/Dive/SpinAway states and
+//   PachinkoBobOmb_StateFallAway index mBall[i]/mShot[i]. In StateAim,
+//   StateDrift and the other BALL_OFF sites indexing is one word different, so
+//   `p + i * 0x38` stays; the r5 cursor locals in the two table walkers are
+//   named for the register they color.
+// - Where a typed member moves code, the whole-scene offset is spelled
+//   SHOT_OFF/BALL_OFF/REC_OFF(field): the same constant, checked against the
+//   header. Split bases (`+ 0x4000 + 0x68f`) keep their literal halves.
 
 #pragma defer_codegen off
 
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "dScMgPachinko_c.h"
+
+namespace GX {
+void LoadBGPltt(const void *p, u32 a, u32 b);
+void LoadOBJPltt(const void *p, u32 a, u32 b);
+}
+
+namespace GXS {
+void LoadBGPltt(const void *p, u32 a, u32 b);
+void LoadOBJPltt(const void *p, u32 a, u32 b);
+}
 
 /* Two helpers dispatch through the ov006 pointer-to-member tables, each on
    its own view of the scene. Both pointer-to-member types are formed while
@@ -53,32 +71,40 @@
 struct C;
 typedef void (C::*PMF)(int);
 struct Entry { PMF pmf; };
-struct C { char pad[0x5c0e]; unsigned char guard; unsigned char idx; };
+/* C is the scene from mBg[0].active (0x5c0e) and mBg[0].state (0x5c0f). */
+struct C {
+    char pad[0x5c0e];
+    unsigned char active;
+    unsigned char state;
+};
 
 struct C2;
 typedef void (C2::*PMF2)(int);
-struct C2 { char pad[0x5bc6]; unsigned char g; char gap; unsigned char idx; };
+/* C2 is the scene from mFlyer[0].active (0x5bc6) to mFlyer[0].state (0x5bc8). */
+struct C2 {
+    char pad[0x5bc6];
+    unsigned char active;
+    char visible;
+    unsigned char state;
+};
 
-/* PachinkoFlyer_StateDescend's typed view of the rows at 0x5bb4. `volatile` on the
-   position is needed: the ROM reloads it after the store. */
+/* PachinkoFlyer_StateDescend's typed view of mFlyer from its y (0x5bb4).
+   `volatile` on y is needed: the ROM reloads it after the store. */
 typedef struct Ent {
-    volatile int a; /* 0x00 position (20.12) */
-    int unk4;       /* 0x04 */
-    int b;          /* 0x08 velocity (20.12) */
+    volatile int y; /* 0x00 mFlyer[i].y (20.12) */
+    int vx;         /* 0x04 mFlyer[i].vx */
+    int vy;         /* 0x08 mFlyer[i].vy (20.12) */
     char _padC[0x10];
 } Ent;
 
 typedef struct Obj {
     char _pad0[0x5bb4]; /* 0x0000 */
-    Ent entries[8];     /* 0x5bb4 */
+    Ent entries[8];     /* 0x5bb4 mFlyer[0].y */
 } Obj;
 
 /* The {code pointer, adjustment} records PachinkoPipe_UpdateAll,
    PachinkoBall_UpdateAll and PachinkoBobOmb_UpdateAll walk. */
 struct Ent7d0 { int a; int b; };
-
-/* PachinkoFlyer_StateWaiting's stride-only view of the same 0x1c-byte rows. */
-struct E { char pad[0x1c]; };
 
 /* The sprite record Mg_RenderSpriteBothScaled draws; only handled by pointer here. */
 struct OamAttr;
@@ -96,16 +122,16 @@ struct Matrix2x2 { int _00, _01, _10, _11; };
 #define ATU(p, off) ((char *)(unsigned int)((char *)(p) + (off)))
 #define M1(a) (a)
 #define M2(a) (a)
-#define AC (*(int *)(((long long)((int)a + 0x5c14))))
 
-/* Pipe row accessors for PachinkoPipe_StateSink. */
-#define ST(c,b)       (*(u8*)((c) + 0x4eb4 + (b)))
-#define CTA(c,b)      (*(u16*)((c) + 0x4eb0 + (b)))
-#define FB(c,b)       (*(u8*)((c) + 0x4eb6 + (b)))
-#define OUTFLAG(c,b)  (*(u8*)((c) + 0x4eb5 + (b)))
-#define OUTFLAG2(c,b) (*(u8*)((c) + 0x4eb3 + (b)))
-#define ACC(c,b)      (*(s32*)((c) + 0x4ea0 + (b)))
-#define VEL(c,b)      (*(s32*)((c) + 0x4ea8 + (b)))
+/* Pipe row accessors for PachinkoPipe_StateSink: mPipe[0]'s field, then the
+   pre-scaled index b. */
+#define PIPE_PHASE(c, b)  (*(u8*)((c) + REC_OFF(mPipe, phase) + (b)))
+#define PIPE_TIMER(c, b)  (*(u16*)((c) + REC_OFF(mPipe, timer) + (b)))
+#define PIPE_FRAME(c, b)  (*(u8*)((c) + REC_OFF(mPipe, frame) + (b)))
+#define PIPE_SPRITE(c, b) (*(u8*)((c) + REC_OFF(mPipe, sprite) + (b)))
+#define PIPE_STATE(c, b)  (*(u8*)((c) + REC_OFF(mPipe, state) + (b)))
+#define PIPE_X(c, b)      (*(s32*)((c) + REC_OFF(mPipe, x) + (b)))
+#define PIPE_VEL(c, b)    (*(s32*)((c) + REC_OFF(mPipe, vel) + (b)))
 
 /* The scene seen through a char pointer, for the free helpers below. */
 #define PACHINKO(p) ((dScMgPachinko_c *)(p))
@@ -115,9 +141,16 @@ struct Matrix2x2 { int _00, _01, _10, _11; };
 #define BALL_BASE ((int)&((dScMgPachinko_c *)0)->mBall)
 #define SHOT(p) ((dScMgPachinko_shot *)((p) + SHOT_BASE))
 #define BALL(p) ((dScMgPachinko_ball *)((p) + BALL_BASE))
+#define PIPE(p) ((dScMgPachinko_pipe *)((p) + (int)&((dScMgPachinko_c *)0)->mPipe))
 /* Pachinko_DrawAimLine adds the field first, then the index. `&SHOT(p)->f`
  * shares one base and does not match. */
 #define SHOT_OFF(member) (SHOT_BASE + (int)&((dScMgPachinko_shot *)0)->member)
+#define BALL_OFF(member) (BALL_BASE + (int)&((dScMgPachinko_ball *)0)->member)
+/* The same for the other arrays: a field of element 0, as a byte offset into
+ * the scene, for the handlers that add their pre-scaled index after it. */
+#define REC_OFF(arr, member) ((int)&((dScMgPachinko_c *)0)->arr[0].member)
+/* A scalar scene field as a byte offset, for a read off the char pointer. */
+#define SCENE_OFF(member) ((int)&((dScMgPachinko_c *)0)->member)
 
 namespace G2 {
     void *GetBG2CharPtr();
@@ -131,7 +164,8 @@ namespace G2S {
 }
 
 namespace cstd {
-    int sqrt(unsigned long long val);
+s16 atan2(s32, s32);
+int sqrt(unsigned long long val);
 }
 
 namespace Sound {
@@ -153,7 +187,10 @@ extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short
 extern void SetBg2Offset(int a, int b);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern int  RandomIntInternal(int *seed);
-extern int  _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, void*, int, int, int, int, int, void*, int, int);
+struct OamAttr;
+struct OAM {
+    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
+};
 extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
 extern int  Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);
@@ -162,7 +199,7 @@ extern void Mg_InitBrush(char *a, char b, int c, int d);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern void func_02012718(int a, int b);
 extern int  Sound_PlayIfNotActive(int handle, int player, int id, int unused);
-extern s16  _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
+extern s16 atan2_hold_d_s_mg_pachinko_1(int y, int x);
 extern void FreeGfxSlotsById(int arg);
 extern int  LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
@@ -172,10 +209,6 @@ extern void func_02056314(void *dst, u32 offset, u32 len);
 extern void func_020563d4(const void *src, u32 offset, u32 count);
 extern void func_020562b4(const void *src, u32 offset, u32 count);
 extern void func_020564f4(const void *src, int offset, int count);
-extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 
 /* --- ROM data this TU reads --- */
 extern int   data_0209d4b8;
@@ -341,11 +374,10 @@ extern "C" {  /* .c-derived members: C linkage for everything below */
 void PachinkoDeco_DrawAll(char* row)
 {
     for (int i = 0; i < 3; i++) {
-        if (*(unsigned char*)(row + 0x4000 + 0xe6d) != 0) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-                false, sPachinkoDecoSprite, *(int *)(row + 0x4000 + 0xe58) >> 12,
-                *(int *)(row + 0x4000 + 0xe5c) >> 12, -1, -1, 0x1000, (void *)0x1000,
-                *(unsigned short *)(row + 0x4e00 + 0x68), -1);
+        if (PACHINKO(row)->mRow[0].visible != 0) {
+            OAM::Render(false, (OamAttr *)sPachinkoDecoSprite, PACHINKO(row)->mRow[0].x >> 12,
+                        PACHINKO(row)->mRow[0].y >> 12, -1, -1, 0x1000, 0x1000,
+                        (unsigned short)PACHINKO(row)->mRow[0].angle, -1);
         }
         row += 0x18;
     }
@@ -359,19 +391,20 @@ void PachinkoDeco_UpdateAll(char *raw)
 
     row = raw;
     for (i = 0; i < 3; i++) {
-        *(s32 *)(row + 0x4e58) = (data_ov006_0212eb44[i] << 12) - *(s32 *)(raw + 0x5bfc);
-        *(s32 *)(row + 0x4e5c) = -*(s32 *)(raw + 0x5c00);
-        if (*(u8 *)(row + 0x4e6e) != 0) {
-            *(u16 *)AT(row, 0x4e68) -= 0x40;
-            if (*(s16 *)(row + 0x4e68) <= -0x1000) {
-                *(u16 *)(row + 0x4e68) = 0xf000;
-                *(u8 *)(row + 0x4e6e) = 0;
+        *(s32 *)(row + REC_OFF(mRow, x)) =
+            (data_ov006_0212eb44[i] << 12) - *(s32 *)(raw + REC_OFF(mBg, x));
+        *(s32 *)(row + REC_OFF(mRow, y)) = -*(s32 *)(raw + REC_OFF(mBg, y));
+        if (*(u8 *)(row + REC_OFF(mRow, dir)) != 0) {
+            *(u16 *)AT(row, REC_OFF(mRow, angle)) -= 0x40;
+            if (*(s16 *)(row + REC_OFF(mRow, angle)) <= -0x1000) {
+                *(u16 *)(row + REC_OFF(mRow, angle)) = 0xf000;
+                *(u8 *)(row + REC_OFF(mRow, dir)) = 0;
             }
         } else {
-            *(u16 *)AT(row, 0x4e68) += 0x40;
-            if (*(s16 *)(row + 0x4e68) >= 0x1000) {
-                *(s16 *)(row + 0x4e68) = 0x1000;
-                *(u8 *)AT(row, 0x4e6e) += 1;
+            *(u16 *)AT(row, REC_OFF(mRow, angle)) += 0x40;
+            if (*(s16 *)(row + REC_OFF(mRow, angle)) >= 0x1000) {
+                *(s16 *)(row + REC_OFF(mRow, angle)) = 0x1000;
+                *(u8 *)AT(row, REC_OFF(mRow, dir)) += 1;
             }
         }
         row += 0x18;
@@ -379,21 +412,19 @@ void PachinkoDeco_UpdateAll(char *raw)
 }
 
 // @symbol PachinkoDeco_ShowAll
-void PachinkoDeco_ShowAll(char *row)
-{
+void PachinkoDeco_ShowAll(char *row) {
     int i;
     char *raw = row;
-    for (i = 0; i < 3; i++, row += 0x18)
-    {
-        if (*(unsigned char *)(row + 0x4e6c) == 0)
-        {
-            *(unsigned char *)(row + 0x4e6c) = 1;
-            *(unsigned char *)(row + 0x4e6d) = 1;
-            *(int *)(row + 0x4e58) = (data_ov006_0212eb44[i] << 12) - *(int *)(raw + 0x5bfc);
-            *(int *)(row + 0x4e5c) = -*(int *)(raw + 0x5c00);
-            *(short *)(row + 0x4e6a) = 0;
-            *(short *)(row + 0x4e68) = 0;
-            *(unsigned char *)(row + 0x4e6e) = 0;
+    for (i = 0; i < 3; i++, row += 0x18) {
+        if (*(unsigned char *)(row + REC_OFF(mRow, active)) == 0) {
+            *(unsigned char *)(row + REC_OFF(mRow, active)) = 1;
+            PACHINKO(row)->mRow[0].visible = 1;
+            PACHINKO(row)->mRow[0].x =
+                (data_ov006_0212eb44[i] << 12) - *(int *)(raw + REC_OFF(mBg, x));
+            PACHINKO(row)->mRow[0].y = -*(int *)(raw + REC_OFF(mBg, y));
+            *(short *)(row + 0x4e6a) = 0; /* mRow[0].unk12: nothing reads it */
+            PACHINKO(row)->mRow[0].angle = 0;
+            PACHINKO(row)->mRow[0].dir = 0;
         }
     }
 }
@@ -403,8 +434,8 @@ void PachinkoDeco_HideAll(char *row)
 {
     int i;
     for (i = 0; i < 3; i++) {
-        *(unsigned char *)(row + 0x4e6c) = 0;
-        *(unsigned char *)(row + 0x4e6d) = 0;
+        PACHINKO(row)->mRow[0].active = 0;
+        PACHINKO(row)->mRow[0].visible = 0;
         row += 0x18;
     }
 }
@@ -413,17 +444,17 @@ void PachinkoDeco_HideAll(char *row)
 void PachinkoBg_StateSinkOut(char *raw, int i) {
     int off = i * 0x14;
     int y;
-    *(int *)(raw + 0x5bfc + off) += *(int *)(raw + 0x5c04 + off);
-    *(int *)(raw + 0x5c00 + off) += *(int *)(raw + 0x5c08 + off);
-    if (*(int *)(raw + 0x5c04 + off) <= -0x1000)
-        *(int *)(raw + 0x5c04 + off) += 0x40;
-    if (*(int *)(raw + 0x5c08 + off) >= 0x3000)
-        *(int *)(raw + 0x5c08 + off) += 0x100;
-    y = *(int *)(raw + 0x5c00 + off) >> 12;
-    SetBg2Offset(*(int *)(raw + 0x5bfc + off) >> 12, y);
+    *(int *)(raw + REC_OFF(mBg, x) + off) += *(int *)(raw + REC_OFF(mBg, vx) + off);
+    *(int *)(raw + REC_OFF(mBg, y) + off) += *(int *)(raw + REC_OFF(mBg, vy) + off);
+    if (*(int *)(raw + REC_OFF(mBg, vx) + off) <= -0x1000)
+        *(int *)(raw + REC_OFF(mBg, vx) + off) += 0x40;
+    if (*(int *)(raw + REC_OFF(mBg, vy) + off) >= 0x3000)
+        *(int *)(raw + REC_OFF(mBg, vy) + off) += 0x100;
+    y = *(int *)(raw + REC_OFF(mBg, y) + off) >> 12;
+    SetBg2Offset(*(int *)(raw + REC_OFF(mBg, x) + off) >> 12, y);
     if (y < 0x40) return;
-    *(short *)(raw + 0x5c0c + off) = 0x258;
-    *(unsigned char *)(raw + 0x5c0f + off) = 0;
+    *(short *)(raw + REC_OFF(mBg, timer) + off) = 0x258;
+    *(unsigned char *)(raw + REC_OFF(mBg, state) + off) = 0;
     data_0209d45c &= ~4;
     PachinkoDeco_HideAll(raw);
 }
@@ -459,12 +490,12 @@ void PachinkoBg_StateRiseIn(char *raw, int i) {
     int y;
     int x;
 
-    *(int*)(raw + 0x5bfc + off) += *(int*)(raw + 0x5c04 + off);
-    *(int*)(raw + 0x5c00 + off) += *(int*)(raw + 0x5c08 + off);
-    velX = (int*)(raw + 0x5c04 + off);
-    posX = (int*)(raw + 0x5bfc + off);
-    posY = (int*)(raw + 0x5c00 + off);
-    velY = (int*)(raw + 0x5c08 + off);
+    *(int *)(raw + REC_OFF(mBg, x) + off) += *(int *)(raw + REC_OFF(mBg, vx) + off);
+    *(int *)(raw + REC_OFF(mBg, y) + off) += *(int *)(raw + REC_OFF(mBg, vy) + off);
+    velX = (int *)(raw + REC_OFF(mBg, vx) + off);
+    posX = (int *)(raw + REC_OFF(mBg, x) + off);
+    posY = (int *)(raw + REC_OFF(mBg, y) + off);
+    velY = (int *)(raw + REC_OFF(mBg, vy) + off);
     if (*velX <= -0x2000) *velX -= 0x100;
     if (*velY <= -0xc00) *velY += 0x40;
     y = *posY >> 12;
@@ -473,7 +504,7 @@ void PachinkoBg_StateRiseIn(char *raw, int i) {
         y = 0;
         *posY = 0;
         *velY = 0;
-        *(unsigned char*)(raw + off + 0x5c0f) = 2;
+        *(unsigned char *)(raw + off + REC_OFF(mBg, state)) = 2;
     }
     SetBg2Offset(x, y);
 }
@@ -490,13 +521,13 @@ void PachinkoBg_StateWaiting(char *raw, int idx) {
     int hi;
     unsigned char flag;
 
-    if (*(int *)((raw + 0x5000) + 0xc10) == 2)
+    if (PACHINKO(raw)->mPhase == 2)
         return;
 
     off = idx * 0x14;
-    delay = *(unsigned short *)((raw + 0x5c0c) + off);
+    delay = *(unsigned short *)((raw + REC_OFF(mBg, timer)) + off);
     if (delay != 0) {
-        *(unsigned short *)((raw + 0x5c0c) + off) = delay - 1;
+        *(unsigned short *)((raw + REC_OFF(mBg, timer)) + off) = delay - 1;
         return;
     }
 
@@ -504,17 +535,17 @@ void PachinkoBg_StateWaiting(char *raw, int idx) {
     p_row = raw + off;
     neg = 0x1000;
     data_0209d45c = flag | 4;
-    *(int *)((raw + 0x5bfc) + off) = 0x100000;
-    *(int *)((raw + 0x5c00) + off) = 0x40000;
+    *(int *)((raw + REC_OFF(mBg, x)) + off) = 0x100000;
+    *(int *)((raw + REC_OFF(mBg, y)) + off) = 0x40000;
     neg = -neg;
     /* Mix (raw+off) and p_row so mwccarm colors r4 and r5 like the ROM. */
-    *(int *)(((raw + off) + 0x5000) + 0xc04) = neg;
-    *(int *)((p_row + 0x5000) + 0xc08) = neg;
-    a = *(int *)((raw + 0x5c00) + off);
-    b = *(int *)((raw + 0x5bfc) + off);
+    PACHINKO(raw + off)->mBg[0].vx = neg;
+    PACHINKO(p_row)->mBg[0].vy = neg;
+    a = *(int *)((raw + REC_OFF(mBg, y)) + off);
+    b = *(int *)((raw + REC_OFF(mBg, x)) + off);
     lo = b >> 12;
     hi = a >> 12;
-    *(unsigned char *)(((raw + off) + 0x5000) + 0xc0f) = 1;
+    PACHINKO(raw + off)->mBg[0].state = 1;
     *(volatile int *)0x4000018 = (0x1ff & lo) | (0x1ff0000 & (hi << 16));
     PachinkoDeco_ShowAll(raw);
 }
@@ -522,24 +553,24 @@ void PachinkoBg_StateWaiting(char *raw, int idx) {
 // @symbol PachinkoBg_Update
 /* Dispatches through the ov006 pointer-to-member table at 0x02142604. */
 void PachinkoBg_Update(C* c) {
-    if (c->guard) {
-        (c->*(sPachinkoBgStateTable[c->idx].pmf))(0);
+    if (c->active) {
+        (c->*(sPachinkoBgStateTable[c->state].pmf))(0);
     }
     PachinkoDeco_UpdateAll((char *)c);
 }
 
 // @symbol PachinkoBg_Start
 void PachinkoBg_Start(char *raw){
-    *(unsigned char*)(raw+0x5000+0xc0e) = 1;
-    *(int*)(raw+0x5000+0xbfc) = 0x100000;
-    *(int*)(raw+0x5000+0xc00) = 0x40000;
-    *(int*)(raw+0x5000+0xc04) = 0;
-    *(int*)(raw+0x5000+0xc08) = 0;
-    *(unsigned char*)(raw+0x5000+0xc0f) = 0;
-    *(short*)(raw+0x5c00+0xc) = 0;
-    *(volatile int*)0x4000018 =
-        (0x1ff & (*(int*)(raw+0x5000+0xbfc) >> 12)) |
-        (0x1ff0000 & ((*(int*)(raw+0x5000+0xc00) >> 12) << 16));
+    dScMgPachinko_c *self = PACHINKO(raw);
+    self->mBg[0].active = 1;
+    self->mBg[0].x = 0x100000;
+    self->mBg[0].y = 0x40000;
+    self->mBg[0].vx = 0;
+    self->mBg[0].vy = 0;
+    self->mBg[0].state = 0;
+    self->mBg[0].timer = 0;
+    *(volatile int *)0x4000018 =
+        (0x1ff & (self->mBg[0].x >> 12)) | (0x1ff0000 & ((self->mBg[0].y >> 12) << 16));
 }
 
 // @symbol PachinkoBg_Stop
@@ -627,11 +658,9 @@ void PachinkoFlyer_CheckHits(char *raw, int idx)
         n = idx * 0x1c;
         PACHINKO(raw)->mHitPause = 0x20;
         SHOT(raw + i * 0x38)->active = 0;
-        SHOT(raw + i * 0x38)->unk36 = 0;
-        PachinkoFx_Spawn(raw,
-                            *(int *)(raw + n + 0x5bb0),
-                            *(int *)(raw + n + 0x5bb4),
-                            2, 0, 0);
+        SHOT(raw + i * 0x38)->visible = 0;
+        PachinkoFx_Spawn(raw, PACHINKO(raw + n)->mFlyer[0].x, PACHINKO(raw + n)->mFlyer[0].y, 2, 0,
+                         0);
         ball = raw;
         for (j = 0; j < 0x1e; j++, ball += 0x38) {
             if (BALL(ball)->active == 0)
@@ -644,9 +673,9 @@ void PachinkoFlyer_CheckHits(char *raw, int idx)
                 BALL(ball)->timer = 0x10;
             }
         }
-        *(u8 *)(raw + n + 0x5bc7) = 0;
-        *(u8 *)(raw + n + 0x5bc6) = 0;
-        *(u8 *)(raw + 0x5c34) = 0;
+        PACHINKO(raw + n)->mFlyer[0].visible = 0;
+        PACHINKO(raw + n)->mFlyer[0].active = 0;
+        PACHINKO(raw)->mFlyerOut = 0;
         Sound::PlayBank2_2D(0x18a);
         return;
     }
@@ -656,11 +685,11 @@ void PachinkoFlyer_CheckHits(char *raw, int idx)
 // @symbol PachinkoFlyer_StateLeave
 void PachinkoFlyer_StateLeave(char *raw, int i) {
     int n = i * 0x1c;
-    int *pos = (int *)(raw + 0x5bb0);
-    int *sound = (int *)(raw + 0x5bc0);
+    int *pos = (int *)(raw + REC_OFF(mFlyer, x));
+    int *sound = (int *)(raw + REC_OFF(mFlyer, sound));
     *(int *)((char *)sound + n) = func_02012468(*(int *)((char *)sound + n), 2, 0x189, 4, 0, 0,
                                                 func_020126e8(*(int *)((char *)pos + n)), 0);
-    *(int *)((char *)pos + n) = *(int *)((char *)pos + n) + *(int *)(raw + 0x5bb8 + n);
+    *(int *)((char *)pos + n) = *(int *)((char *)pos + n) + PACHINKO(raw + n)->mFlyer[0].vx;
     {
         int v = *(int *)((char *)pos + n) >> 12;
         if (v >= 0x110)
@@ -669,21 +698,22 @@ void PachinkoFlyer_StateLeave(char *raw, int i) {
             return;
     }
 clear:
-  *(unsigned char*)(raw + 0x5bc6 + n) = 0;
-  *(unsigned char*)(raw + 0x5bc7 + n) = 0;
-  *(unsigned char*)(raw + 0x5c34) = 0;
+    PACHINKO(raw + n)->mFlyer[0].active = 0;
+    PACHINKO(raw + n)->mFlyer[0].visible = 0;
+    PACHINKO(raw)->mFlyerOut = 0;
 }
 
 // @symbol PachinkoFlyer_StatePause
 void PachinkoFlyer_StatePause(char *raw, int i) {
-    short *delay = (short*)(raw + 0x5bc4 + i*0x1c);
+    short *delay = (short *)(raw + REC_OFF(mFlyer, delay) + i * 0x1c);
     if(*(unsigned short*)delay != 0){
         *delay = *(unsigned short*)delay - 1;
         if(*delay < 0) *delay = 0;
         return;
     }
-    *(unsigned char*)(raw+i*0x1c+0x5000+0xbc8)=2;
-    *(unsigned char*)(raw+0x5bca+i*0x1c) = *(unsigned char*)(raw+0x5bca+i*0x1c) - 1;
+    PACHINKO(raw + i * 0x1c)->mFlyer[0].state = 2;
+    *(unsigned char *)(raw + REC_OFF(mFlyer, passes) + i * 0x1c) =
+        *(unsigned char *)(raw + REC_OFF(mFlyer, passes) + i * 0x1c) - 1;
 }
 
 // @symbol PachinkoFlyer_StateCross
@@ -691,64 +721,64 @@ void PachinkoFlyer_StateCross(char *raw, int i) {
     int n = i * 0x1c;
     int x;
     u8 flag;
-    *((int *)((raw + 0x5bc0) + n)) =
-        func_02012468(*((int *)((raw + 0x5bc0) + n)), 2, 0x189, 4, 0, 0,
-                      func_020126e8(*((int *)((raw + 0x5bb0) + n))), 0);
-    *((int *)((raw + 0x5bb0) + n)) += *((int *)((raw + 0x5bb8) + n));
-    flag = *((u8 *)((raw + 0x5bc9) + n));
-    x = (*((int *)((raw + 0x5bb0) + n))) >> 12;
+    *((int *)((raw + REC_OFF(mFlyer, sound)) + n)) =
+        func_02012468(*((int *)((raw + REC_OFF(mFlyer, sound)) + n)), 2, 0x189, 4, 0, 0,
+                      func_020126e8(*((int *)((raw + REC_OFF(mFlyer, x)) + n))), 0);
+    *((int *)((raw + REC_OFF(mFlyer, x)) + n)) += *((int *)((raw + REC_OFF(mFlyer, vx)) + n));
+    flag = *((u8 *)((raw + REC_OFF(mFlyer, facing)) + n));
+    x = (*((int *)((raw + REC_OFF(mFlyer, x)) + n))) >> 12;
     if (flag != 0) {
         if (x >= 0xc0)
-            *((int *)((raw + 0x5bb8) + n)) -= 0x80;
-        else if ((*((int *)((raw + 0x5bb8) + n))) <= 0x3000)
-            *((int *)((raw + 0x5bb8) + n)) += 0x200;
+            *((int *)((raw + REC_OFF(mFlyer, vx)) + n)) -= 0x80;
+        else if ((*((int *)((raw + REC_OFF(mFlyer, vx)) + n))) <= 0x3000)
+            *((int *)((raw + REC_OFF(mFlyer, vx)) + n)) += 0x200;
         if (x >= 0xf0) {
             u32 a;
-            if ((*((u8 *)((raw + 0x5bca) + n))) == 0) {
-                *((u8 *)((raw + 0x5bc8) + n)) = 4;
+            if ((*((u8 *)((raw + REC_OFF(mFlyer, passes)) + n))) == 0) {
+                *((u8 *)((raw + REC_OFF(mFlyer, state)) + n)) = 4;
                 return;
             }
-            *((int *)((raw + 0x5bb0) + n)) = 0xf0000;
-            *((int *)((raw + 0x5bb8) + n)) = 0;
-            *((u8 *)((raw + 0x5bc9) + n)) ^= 1;
+            *((int *)((raw + REC_OFF(mFlyer, x)) + n)) = 0xf0000;
+            *((int *)((raw + REC_OFF(mFlyer, vx)) + n)) = 0;
+            *((u8 *)((raw + REC_OFF(mFlyer, facing)) + n)) ^= 1;
             a = (((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
-            *((u16 *)((raw + 0x5bc4) + n)) = (u16)((((a << 3) >> 15) * 2) + 0x10);
-            *((u8 *)((raw + 0x5bc8) + n)) = 3;
+            *((u16 *)((raw + REC_OFF(mFlyer, delay)) + n)) = (u16)((((a << 3) >> 15) * 2) + 0x10);
+            *((u8 *)((raw + REC_OFF(mFlyer, state)) + n)) = 3;
             return;
         }
     } else {
         if (x <= 0x40)
-            *((int *)((raw + 0x5bb8) + n)) += 0x80;
-        else if ((*((int *)((raw + 0x5bb8) + n))) >= (-0x3000))
-            *((int *)((raw + 0x5bb8) + n)) -= 0x200;
+            *((int *)((raw + REC_OFF(mFlyer, vx)) + n)) += 0x80;
+        else if ((*((int *)((raw + REC_OFF(mFlyer, vx)) + n))) >= (-0x3000))
+            *((int *)((raw + REC_OFF(mFlyer, vx)) + n)) -= 0x200;
         if (x <= 0x10) {
             u32 a;
-            if ((*((u8 *)((raw + 0x5bca) + n))) == 0) {
-                *((u8 *)((raw + 0x5bc8) + n)) = 4;
+            if ((*((u8 *)((raw + REC_OFF(mFlyer, passes)) + n))) == 0) {
+                *((u8 *)((raw + REC_OFF(mFlyer, state)) + n)) = 4;
                 return;
             }
-            *((int *)((raw + 0x5bb0) + n)) = 0x10000;
-            *((int *)((raw + 0x5bb8) + n)) = 0;
-            *((u8 *)((raw + 0x5bc9) + n)) ^= 1;
+            *((int *)((raw + REC_OFF(mFlyer, x)) + n)) = 0x10000;
+            *((int *)((raw + REC_OFF(mFlyer, vx)) + n)) = 0;
+            *((u8 *)((raw + REC_OFF(mFlyer, facing)) + n)) ^= 1;
             a = (((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
-            *((u16 *)((raw + 0x5bc4) + n)) = (u16)((((a << 3) >> 15) * 2) + 0x10);
-            *((u8 *)((raw + 0x5bc8) + n)) = 3;
+            *((u16 *)((raw + REC_OFF(mFlyer, delay)) + n)) = (u16)((((a << 3) >> 15) * 2) + 0x10);
+            *((u8 *)((raw + REC_OFF(mFlyer, state)) + n)) = 3;
             return;
         }
     }
 }
 
 // @symbol PachinkoFlyer_StateDescend
-/* Moves row i: pos += vel. While below -0xc0 it keeps accelerating
-   (vel -= 0x60); once it reaches -0xc0 it snaps to -0xc0000 and stops.
+/* Moves flyer i down: y += vy. While y is still below -0xc0 it slows
+   (vy -= 0x60); once it reaches -0xc0 it snaps to -0xc0000 and stops.
    Then hands on to PachinkoFlyer_StateCross. */
 void PachinkoFlyer_StateDescend(Obj *self, int i) {
-    self->entries[i].a += self->entries[i].b;
-    if (self->entries[i].a >> 12 >= -0xc0) {
-        self->entries[i].a = -0xc0000;
-        self->entries[i].b = 0;
+    self->entries[i].y += self->entries[i].vy;
+    if (self->entries[i].y >> 12 >= -0xc0) {
+        self->entries[i].y = -0xc0000;
+        self->entries[i].vy = 0;
     } else {
-        self->entries[i].b -= 0x60;
+        self->entries[i].vy -= 0x60;
     }
     PachinkoFlyer_StateCross((char *)self, i);
 }
@@ -761,72 +791,69 @@ void PachinkoFlyer_StateWaiting(char *raw, int idx) {
     short* delay;
     unsigned int side;
     off = idx * 0x1c;
-    delay = (short*)((char*)&((struct E*)(raw + 0x5bc4))[idx]);
+    delay = (short *)&PACHINKO(raw)->mFlyer[idx].delay;
     if (*(unsigned short*)delay != 0) {
         *delay = *(unsigned short*)delay - 1;
         if (*delay < 0) *delay = 0;
         return;
     }
     Sound::PlayBank2_2D(0x188);
-    *(char*)(raw + off + 0x5000 + 0xbc8) = 1;
+    PACHINKO(raw + off)->mFlyer[0].state = 1;
     side = (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1;
     side = side >> 0xf;
-    *(char*)(raw + off + 0x5000 + 0xbc9) = side;
+    PACHINKO(raw + off)->mFlyer[0].facing = side;
     if (side != 0) {
-        *(char*)(raw + off + 0x5000 + 0xbc7) = 1;
-        *(int*)(raw + off + 0x5000 + 0xbb0) = -0x10000;
-        *(int*)(raw + off + 0x5000 + 0xbb8) = 0x400;
+        PACHINKO(raw + off)->mFlyer[0].visible = 1;
+        PACHINKO(raw + off)->mFlyer[0].x = -0x10000;
+        PACHINKO(raw + off)->mFlyer[0].vx = 0x400;
     } else {
-        *(char*)(raw + off + 0x5000 + 0xbc7) = 1;
-        *(int*)(raw + off + 0x5000 + 0xbb0) = 0x110000;
-        *(int*)(raw + off + 0x5000 + 0xbb8) = -0x400;
+        PACHINKO(raw + off)->mFlyer[0].visible = 1;
+        PACHINKO(raw + off)->mFlyer[0].x = 0x110000;
+        PACHINKO(raw + off)->mFlyer[0].vx = -0x400;
     }
-    *(int*)(raw + off + 0x5000 + 0xbb4) = -0xf8000;
-    *(char*)(raw + off + 0x5000 + 0xbca) = ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3 >> 0xf) + 2;
-    *(int*)(raw + off + 0x5000 + 0xbbc) = 0x2000;
+    PACHINKO(raw + off)->mFlyer[0].y = -0xf8000;
+    PACHINKO(raw + off)->mFlyer[0].passes =
+        ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3 >> 0xf) + 2;
+    PACHINKO(raw + off)->mFlyer[0].vy = 0x2000;
 }
 #pragma pop
 
 // @symbol PachinkoFlyer_Update
 /* Dispatches through the ov006 pointer-to-member table at 0x0214266c. */
 void PachinkoFlyer_Update(C2 *c){
-  if (c->g == 0) return;
-  (c->*sPachinkoFlyerStateTable[c->idx])(0);
-  PachinkoFlyer_CheckHits((char *)c, 0);
+    if (c->active == 0)
+        return;
+    (c->*sPachinkoFlyerStateTable[c->state])(0);
+    PachinkoFlyer_CheckHits((char *)c, 0);
 }
 
 // @symbol PachinkoTarget_Choose
-void PachinkoTarget_Choose(char *raw)
-{
-  int targets;
-  int i;
-  unsigned int rand;
-  char *target;
-  if ((*((unsigned char *) ((raw + 0x5000) + 0xc34))) != 0)
-  {
-    return;
-  }
-  *((unsigned char *) ((raw + 0x5000) + 0xbc6)) = 1;
-  *((unsigned char *) ((raw + 0x5000) + 0xbc8)) = 0;
-  *((int *) ((raw + 0x5000) + 0xbc0)) = 0;
-  rand = (((unsigned int) RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
-  *((short *) ((raw + 0x5b00) + 0xc4)) = (short) ((((rand << 5) >> 15) << 3) + 0x200);
-  targets = 0;
-  for (i = 0; i < 4; i++)
-  {
-    if (PACHINKO(raw)->mTarget[i].active != 0)
-    {
-      targets++;
+void PachinkoTarget_Choose(char *raw) {
+    int targets;
+    int i;
+    unsigned int rand;
+    char *target;
+    dScMgPachinko_c *self = PACHINKO(raw);
+    if (self->mFlyerOut != 0) {
+        return;
     }
-  }
+    self->mFlyer[0].active = 1;
+    self->mFlyer[0].state = 0;
+    self->mFlyer[0].sound = 0;
+    rand = (((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
+    self->mFlyer[0].delay = (short)((((rand << 5) >> 15) << 3) + 0x200);
+    targets = 0;
+    for (i = 0; i < 4; i++) {
+        if (self->mTarget[i].active != 0) {
+            targets++;
+        }
+    }
 
-  if (targets == 1)
-  {
-    rand = (((unsigned int) RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
-    *((short *) ((raw + 0x5b00) + 0xc4)) = (short) ((((rand << 5) >> 15) << 2) + 0x200);
-  }
-  unsigned char *pending = (unsigned char *) (((int) raw + 0x5c34));
-  *pending = *pending + 1;
+    if (targets == 1) {
+        rand = (((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
+        self->mFlyer[0].delay = (short)((((rand << 5) >> 15) << 2) + 0x200);
+    }
+    self->mFlyerOut++;
 }
 
 // @symbol PachinkoFx_DrawAll
@@ -856,29 +883,29 @@ void PachinkoFx_UpdateAll(char *raw)
     int i;
     char *fx = raw;
     for (i = 0; i < 0x1e; i++) {
-        if (*(u8 *)(fx + 0x5964) != 0) {
-            u16 *timer = (u16 *)(int)M1((u32)fx + 0x5960);
+        if (*(u8 *)(fx + REC_OFF(mFx, active)) != 0) {
+            u16 *timer = (u16 *)(int)M1((u32)fx + REC_OFF(mFx, timer));
             int lastFrame;
             u8 target;
             (*timer)++;
-            if (*(u16 *)(fx + 0x5960) >= 6) {
-                *(u16 *)(fx + 0x5960) = 0;
-                (*(u8 *)(int)M2((u32)fx + 0x5965))++;
+            if (*(u16 *)(fx + REC_OFF(mFx, timer)) >= 6) {
+                *(u16 *)(fx + REC_OFF(mFx, timer)) = 0;
+                (*(u8 *)(int)M2((u32)fx + REC_OFF(mFx, frame)))++;
                 lastFrame = 3;
-                if (*(u8 *)(fx + 0x5967) == 2) lastFrame = 5;
-                target = *(u8 *)(fx + 0x5968);
+                if (*(u8 *)(fx + REC_OFF(mFx, kind)) == 2)
+                    lastFrame = 5;
+                target = *(u8 *)(fx + REC_OFF(mFx, target));
                 if (target != 0) {
-                    if (lastFrame - 2 == *(u8 *)(fx + 0x5965)) {
-                        char *q = raw + (target - 1) * 0xc + 0x5000;
-                        *(u8 *)(q + 0xbd4) = 0;
-                        *(u8 *)(q + 0xbd6) = 1;
+                    if (lastFrame - 2 == *(u8 *)(fx + REC_OFF(mFx, frame))) {
+                        PACHINKO(raw)->mTarget[target - 1].active = 0;
+                        PACHINKO(raw)->mTarget[target - 1].sprite = 1;
                     }
                 }
-                if (*(u8 *)(fx + 0x5965) >= lastFrame) {
-                    *(u8 *)(fx + 0x5966) = 0;
-                    *(u8 *)(fx + 0x5964) = 0;
-                    if (*(u16 *)(fx + 0x5962) != 0) {
-                        PachinkoPopup_SpawnScore(raw, i, *(u16 *)(fx + 0x5962));
+                if (*(u8 *)(fx + REC_OFF(mFx, frame)) >= lastFrame) {
+                    *(u8 *)(fx + REC_OFF(mFx, visible)) = 0;
+                    *(u8 *)(fx + REC_OFF(mFx, active)) = 0;
+                    if (*(u16 *)(fx + REC_OFF(mFx, points)) != 0) {
+                        PachinkoPopup_SpawnScore(raw, i, *(u16 *)(fx + REC_OFF(mFx, points)));
                     }
                 }
             }
@@ -893,17 +920,17 @@ void PachinkoFx_Spawn(char *raw, int x, int y, int kind, int points, int target)
     int i = 0;
     char *scan = raw;
     do {
-        if (*(unsigned char *)(scan + 0x5964) == 0) {
+        if (PACHINKO(scan)->mFx[0].active == 0) {
             char *fx = raw + i * 0x14;
-            *(int *)(fx + 0x5958) = x;
-            *(int *)(fx + 0x595c) = y;
-            *(unsigned char *)(fx + 0x5964) = 1;
-            *(unsigned char *)(fx + 0x5966) = 1;
-            *(unsigned short *)(fx + 0x5960) = 0;
-            *(unsigned char *)(fx + 0x5965) = 0;
-            *(unsigned char *)(fx + 0x5967) = kind;
-            *(unsigned short *)(fx + 0x5962) = points;
-            *(unsigned char *)(fx + 0x5968) = target;
+            PACHINKO(fx)->mFx[0].x = x;
+            PACHINKO(fx)->mFx[0].y = y;
+            PACHINKO(fx)->mFx[0].active = 1;
+            PACHINKO(fx)->mFx[0].visible = 1;
+            PACHINKO(fx)->mFx[0].timer = 0;
+            PACHINKO(fx)->mFx[0].frame = 0;
+            PACHINKO(fx)->mFx[0].kind = kind;
+            PACHINKO(fx)->mFx[0].points = points;
+            PACHINKO(fx)->mFx[0].target = target;
             return;
         }
         i++;
@@ -912,31 +939,31 @@ void PachinkoFx_Spawn(char *raw, int x, int y, int kind, int points, int target)
 }
 
 // @symbol Pachinko_CheckTargetsLeft
-void Pachinko_CheckTargetsLeft(char* raw){
-  volatile unsigned short zero;
-  int count = 0;
-  int i = 0;
-  char* target = raw;
-  do {
-    if (*(unsigned char*)(target + 0x5bd4) != 0) {
-      count++;
-      break;
+void Pachinko_CheckTargetsLeft(char *raw) {
+    volatile unsigned short zero;
+    int count = 0;
+    int i = 0;
+    char *target = raw;
+    do {
+        if (PACHINKO(target)->mTarget[0].active != 0) {
+            count++;
+            break;
+        }
+        i++;
+        target += 0xc;
+    } while (i < 4);
+    if (count != 0)
+        return;
+    PACHINKO(raw)->mPhase = 2;
+    PACHINKO(raw)->mEndTimer = 0x40;
+    {
+        unsigned chars = G2S::GetBG2CharPtr();
+        zero = 0;
+        MultiStore16(zero, (char *)chars, 0x6000);
     }
-    i++;
-    target += 0xc;
-  } while (i < 4);
-  if (count != 0)
-    return;
-  PACHINKO(raw)->mPhase = 2;
-  PACHINKO(raw)->mEndTimer = 0x40;
-  {
-    unsigned chars = G2S::GetBG2CharPtr();
-    zero = 0;
-    MultiStore16(zero, (char*)chars, 0x6000);
-  }
-  *(unsigned char*)(raw + 0x5c30) = 0;
-  PachinkoBobOmb_ClearAll(raw);
-  PachinkoPipe_SetAll(raw, 1);
+    *(unsigned char *)(raw + 0x5c30) = 0;
+    PachinkoBobOmb_ClearAll(raw);
+    PachinkoPipe_SetAll(raw, 1);
 }
 
 // @symbol Pachinko_DrawScore
@@ -960,37 +987,32 @@ void PachinkoPopup_DrawAll(char *raw)
     int i;
     char *popup = raw;
     for (i = 0; i < 0x1e; i++) {
-        if (*(unsigned short *)(popup + 0x4c00 + 0xfa) != 0) {
-            Mg_DrawBigNumber(
-                *(int *)(popup + 0x4000 + 0xcf0) >> 0xc,
-                *(int *)(popup + 0x4000 + 0xcf4) >> 0xc,
-                *(unsigned short *)(popup + 0x4c00 + 0xf8),
-                -1, -1, 0, 0);
+        if (PACHINKO(popup)->mPopup[0].timer != 0) {
+            Mg_DrawBigNumber(PACHINKO(popup)->mPopup[0].x >> 0xc,
+                             PACHINKO(popup)->mPopup[0].y >> 0xc, PACHINKO(popup)->mPopup[0].points,
+                             -1, -1, 0, 0);
         }
         popup += 0xc;
     }
 }
 
 // @symbol PachinkoPopup_UpdateAll
-void PachinkoPopup_UpdateAll(char *popup)
-{
-  int i;
-  for (i = 0; i < 0x1e; i++)
-  {
-    char *block = popup + 0x4c00;
-    unsigned short v = *((unsigned short *) (block + 0xfa));
-    if (v != 0)
-    {
-      unsigned short *timer = (unsigned short *) (((long long) ((int) (popup + 0x4cfa))));
-      *timer = (*timer) - 1;
-      if ((*((short *) ((popup + 0x4c00) + 0xfa))) < 0)
-      {
-        *((short *) ((popup + 0x4c00) + 0xfa)) = 0;
-      }
+void PachinkoPopup_UpdateAll(char *popup) {
+    int i;
+    for (i = 0; i < 0x1e; i++) {
+        unsigned short v = PACHINKO(popup)->mPopup[0].timer;
+        if (v != 0) {
+            unsigned short *timer =
+                (unsigned short *)(((long long)((int)(popup + REC_OFF(mPopup, timer)))));
+            *timer = (*timer) - 1;
+            /* mPopup[0].timer, signed: the member spelling shares the laundered
+               address above instead of a fresh + 0x4c00 base. */
+            if ((*((short *)((popup + 0x4c00) + 0xfa))) < 0) {
+                *((short *)((popup + 0x4c00) + 0xfa)) = 0;
+            }
+        }
+        popup += 0xc;
     }
-    popup += 0xc;
-  }
-
 }
 
 // @symbol PachinkoPopup_SpawnScore
@@ -998,14 +1020,15 @@ void PachinkoPopup_SpawnScore(char *raw, int idx, unsigned short points)
 {
     dScMgPachinko_c *self = (dScMgPachinko_c *)raw;
     int i;
-    char *popup = raw + 0x15c;
+    char *popup = raw + 0x1d * sizeof(dScMgPachinko_popup);
     for (i = 0x1d; i >= 0; popup -= 0xc, i--) {
-        if (*(unsigned short *)(popup + 0x4cfa) != 0) continue;
+        if (PACHINKO(popup)->mPopup[0].timer != 0)
+            continue;
         self->mPopup[i].x = self->mFx[idx].x;
         self->mPopup[i].y = self->mFx[idx].y;
-        self->mPopup[i].value = 0x30;
-        self->mPopup[i].timer = points;
-        Mg_SubmitScore(self->mPopup[i].timer + Mg_GetSubmittedScore());
+        self->mPopup[i].timer = 0x30;
+        self->mPopup[i].points = points;
+        Mg_SubmitScore(self->mPopup[i].points + Mg_GetSubmittedScore());
         if ((unsigned int)Mg_GetSubmittedScore() < 0xbb8) return;
         if (PACHINKO(raw)->mPromptEnabled != 0)
             PACHINKO(raw)->mPromptEnabled = 0;
@@ -1017,7 +1040,8 @@ void PachinkoPopup_SpawnScore(char *raw, int idx, unsigned short points)
 void Pachinko_ClearAimLine(char* raw)
 {
     volatile unsigned short zero;
-    int shotNo = *(unsigned char*)(raw + 0x5c2f);
+    /* By offset: PACHINKO(raw)->mAimShot is 8 bytes longer. */
+    int shotNo = *(unsigned char *)(raw + SCENE_OFF(mAimShot));
     int dx, dy;
     char* shot;
 
@@ -1033,7 +1057,7 @@ void Pachinko_ClearAimLine(char* raw)
     if (dy > 6) return;
     if (SHOT(shot)->state != 2) return;
 
-    *(unsigned char*)(raw + 0x5c2f) = 0;
+    PACHINKO(raw)->mAimShot = 0;
     {
         char* dst = (char*)G2S::GetBG2CharPtr();
         zero = 0;
@@ -1099,14 +1123,14 @@ void Pachinko_DrawAimLine(void *arg0)
     char *buf;
     int n;
 
-    n = *(u8 *)(a + 0x5c2f);
+    n = PACHINKO(a)->mAimShot;
     if (n == 0)
         return;
     idx = n - 1;
     off = idx * 0x38;
     pf18 = (int *)(a + SHOT_OFF(prevX) + off);
     pf00 = (int *)(a + SHOT_OFF(x) + off);
-    if (*pf00 != *pf18 || *(int *)(a + SHOT_OFF(y) + off) != *(int *)(a + SHOT_OFF(prevY) + off)) {
+    if (*pf00 != *pf18 || SHOT(a + off)->y != SHOT(a + off)->prevY) {
         buf = (char *)G2S::GetBG2CharPtr();
         fill = 0;
         MultiStore16(fill, buf, 0x6000);
@@ -1138,27 +1162,27 @@ void Pachinko_DrawAimLine(void *arg0)
             ady = dy;
             if (dy < 0) ady = -dy;
             if (adx >= ady) {
-                *(int *)(a + 0x5c14) = adx / 2;
+                PACHINKO(a)->mLineErr = adx / 2;
                 for (;;) {
                     if (dx == 0) {
                         Pachinko_PlotSubBg2Pixels(a, cx, cy, 2);
                         break;
                     } else if (dx > 0) {
                         cx++;
-                        AC += ady;
-                        if (*(int *)(a + 0x5c14) > adx) {
+                        PACHINKO(a)->mLineErr += ady;
+                        if (PACHINKO(a)->mLineErr > adx) {
                             if (dy >= 0) cy++; else cy--;
-                            AC -= adx;
+                            PACHINKO(a)->mLineErr -= adx;
                         }
                         Pachinko_PlotSubBg2Pixels(a, cx, cy, 2);
                         if (cx == tx)
                             break;
                     } else {
                         cx--;
-                        AC += ady;
-                        if (*(int *)(a + 0x5c14) > adx) {
+                        PACHINKO(a)->mLineErr += ady;
+                        if (PACHINKO(a)->mLineErr > adx) {
                             if (dy >= 0) cy++; else cy--;
-                            AC -= adx;
+                            PACHINKO(a)->mLineErr -= adx;
                         }
                         Pachinko_PlotSubBg2Pixels(a, cx, cy, 2);
                         if (cx == tx)
@@ -1166,27 +1190,27 @@ void Pachinko_DrawAimLine(void *arg0)
                     }
                 }
             } else {
-                *(int *)(a + 0x5c14) = ady / 2;
+                PACHINKO(a)->mLineErr = ady / 2;
                 for (;;) {
                     if (dy == 0) {
                         Pachinko_PlotSubBg2Pixels(a, cx, cy, 2);
                         break;
                     } else if (dy > 0) {
                         cy++;
-                        AC += adx;
-                        if (*(int *)(a + 0x5c14) > ady) {
+                        PACHINKO(a)->mLineErr += adx;
+                        if (PACHINKO(a)->mLineErr > ady) {
                             if (dx >= 0) cx++; else cx--;
-                            AC -= ady;
+                            PACHINKO(a)->mLineErr -= ady;
                         }
                         Pachinko_PlotSubBg2Pixels(a, cx, cy, 2);
                         if (cy == ty)
                             break;
                     } else {
                         cy--;
-                        AC += adx;
-                        if (*(int *)(a + 0x5c14) > ady) {
+                        PACHINKO(a)->mLineErr += adx;
+                        if (PACHINKO(a)->mLineErr > ady) {
                             if (dx >= 0) cx++; else cx--;
-                            AC -= ady;
+                            PACHINKO(a)->mLineErr -= ady;
                         }
                         Pachinko_PlotSubBg2Pixels(a, cx, cy, 2);
                         if (cy == ty)
@@ -1197,7 +1221,7 @@ void Pachinko_DrawAimLine(void *arg0)
         }
     }
     *pf18 = *pf00;
-    *(int *)(a + SHOT_OFF(prevY) + idx * 0x38) = *(int *)(a + SHOT_OFF(y) + idx * 0x38);
+    SHOT(a + idx * 0x38)->prevY = SHOT(a + idx * 0x38)->y;
 }
 #pragma pop
 
@@ -1207,24 +1231,22 @@ void PachinkoPipe_DrawAll(char *raw)
     int i;
     char *row = raw;
     for (i = 0; i < 2; i++) {
-        if (*(unsigned char *)(row + 0x4000 + 0xeb8) != 0) {
-            Mg_RenderSpriteBoth(
-                (void *)sPachinkoPipeSprites[*(unsigned char *)(row + 0x4000 + 0xeb5)],
-                *(int *)(row + 0x4000 + 0xea0) >> 0xc, *(int *)(row + 0x4000 + 0xea4) >> 0xc, -1,
-                2);
+        if (PIPE(row)->visible != 0) {
+            Mg_RenderSpriteBoth((void *)sPachinkoPipeSprites[PIPE(row)->sprite],
+                                PIPE(row)->x >> 0xc, PIPE(row)->y >> 0xc, -1, 2);
         }
         row += 0x1c;
     }
 }
 
 // @symbol PachinkoPipe_SetAll
-void PachinkoPipe_SetAll(char* row, int mode) {
+void PachinkoPipe_SetAll(char *row, int phase) {
     int i;
     for (i = 0; i < 2; i++) {
-        if (*(unsigned char*)(row + 0x4eb7)) {
-            *(unsigned char*)(row + 0x4eb3) = 3;
-            *(unsigned char*)(row + 0x4eba) = 0;
-            *(unsigned char*)(row + 0x4eb4) = (unsigned char)mode;
+        if (PIPE(row)->active) {
+            PIPE(row)->state = 3;
+            PIPE(row)->laps = 0;
+            PIPE(row)->phase = (unsigned char)phase;
         }
         row += 0x1c;
     }
@@ -1233,94 +1255,94 @@ void PachinkoPipe_SetAll(char* row, int mode) {
 // @symbol PachinkoPipe_StateIdle
 int PachinkoPipe_StateIdle(char *raw, int idx) {
     dScMgPachinko_c *self = (dScMgPachinko_c *)raw;
-  u16* counter = &self->mPipe[idx].timer;
-  u8* frame = (u8*)(raw + 0x4eb6 + idx*0x1c);
-  u16 c = *counter;
-  *counter = c + 1;
-  u8 oldFrame = *frame;
-  if (*counter >= sPachinkoPipeIdleTimes[oldFrame]) {
-      *counter = 0;
-      *frame = *frame + 1;
-      if (*frame >= 8) {
-          *frame = 0;
-          self->mPipe[idx].laps = self->mPipe[idx].laps + 1;
-      }
-      self->mPipe[idx].out = sPachinkoPipeIdleFrames[*frame];
-  }
-  {
-    if (self->mPipe[idx].state != 0) {
-      self->mPipe[idx].laps = 0;
-      return 0;
+    u16 *counter = &self->mPipe[idx].timer;
+    u8 *frame = &self->mPipe[idx].frame;
+    u16 c = *counter;
+    *counter = c + 1;
+    u8 oldFrame = *frame;
+    if (*counter >= sPachinkoPipeIdleTimes[oldFrame]) {
+        *counter = 0;
+        *frame = *frame + 1;
+        if (*frame >= 8) {
+            *frame = 0;
+            self->mPipe[idx].laps = self->mPipe[idx].laps + 1;
+        }
+        self->mPipe[idx].sprite = sPachinkoPipeIdleFrames[*frame];
     }
-  }
-  {
-    u8 c3 = self->mPipe[idx].laps;
-    if (c3 >= 2) {
-      c3 = 0;
-      self->mPipe[idx].out2 = c3;
-      self->mPipe[idx].laps = c3;
+    {
+        if (self->mPipe[idx].phase != 0) {
+            self->mPipe[idx].laps = 0;
+            return 0;
+        }
     }
-    return c3;
-  }
+    {
+        u8 c3 = self->mPipe[idx].laps;
+        if (c3 >= 2) {
+            c3 = 0;
+            self->mPipe[idx].state = c3;
+            self->mPipe[idx].laps = c3;
+        }
+        return c3;
+    }
 }
 
 // @symbol PachinkoPipe_StateSink
 void PachinkoPipe_StateSink(char *raw, int i) {
     int off = i * 0x1c;
-    int y;
+    int x;
 
-    if (ST(raw, off) != 0) {
-        CTA(raw, off)++;
-        if (CTA(raw, off) < 4)
+    if (PIPE_PHASE(raw, off) != 0) {
+        PIPE_TIMER(raw, off)++;
+        if (PIPE_TIMER(raw, off) < 4)
             return;
-        CTA(raw, off) = 0;
-        FB(raw, off)++;
-        if (FB(raw, off) >= 3) {
-            FB(raw, off) = 0;
-            OUTFLAG2(raw, off) = 1;
-            ST(raw, off) = 0;
+        PIPE_TIMER(raw, off) = 0;
+        PIPE_FRAME(raw, off)++;
+        if (PIPE_FRAME(raw, off) >= 3) {
+            PIPE_FRAME(raw, off) = 0;
+            PIPE_STATE(raw, off) = 1;
+            PIPE_PHASE(raw, off) = 0;
             return;
         }
-        OUTFLAG(raw, off) = sPachinkoPipeSinkStartFrames[FB(raw, off)];
+        PIPE_SPRITE(raw, off) = sPachinkoPipeSinkStartFrames[PIPE_FRAME(raw, off)];
         return;
     }
 
-    CTA(raw, off)++;
-    if (CTA(raw, off) >= 4) {
-        CTA(raw, off) = 0;
-        FB(raw, off)++;
-        if (FB(raw, off) >= 6) {
-            FB(raw, off) = 0;
+    PIPE_TIMER(raw, off)++;
+    if (PIPE_TIMER(raw, off) >= 4) {
+        PIPE_TIMER(raw, off) = 0;
+        PIPE_FRAME(raw, off)++;
+        if (PIPE_FRAME(raw, off) >= 6) {
+            PIPE_FRAME(raw, off) = 0;
         }
-        OUTFLAG(raw, off) = sPachinkoPipeSinkFrames[FB(raw, off)];
+        PIPE_SPRITE(raw, off) = sPachinkoPipeSinkFrames[PIPE_FRAME(raw, off)];
     }
 
-    ACC(raw, off) += VEL(raw, off);
-    y = ACC(raw, off) >> 0xc;
-    if (y >= sPachinkoPipeSinkStops[i + 2]) {
-        if (VEL(raw, off) >= 0x800)
-            VEL(raw, off) -= 0x80;
+    PIPE_X(raw, off) += PIPE_VEL(raw, off);
+    x = PIPE_X(raw, off) >> 0xc;
+    if (x >= sPachinkoPipeSinkStops[i + 2]) {
+        if (PIPE_VEL(raw, off) >= 0x800)
+            PIPE_VEL(raw, off) -= 0x80;
     } else {
-        VEL(raw, off) += 0x80;
+        PIPE_VEL(raw, off) += 0x80;
     }
-    if (y < sPachinkoPipeSinkStops[i])
+    if (x < sPachinkoPipeSinkStops[i])
         return;
 
-    ACC(raw, off) = sPachinkoPipeSinkStops[i] << 0xc;
-    VEL(raw, off) = -0x1000;
-    ST(raw, off)++;
-    CTA(raw, off) = 0;
-    FB(raw, off) = 0;
-    OUTFLAG(raw, off) = sPachinkoPipeSinkStartFrames[0];
+    PIPE_X(raw, off) = sPachinkoPipeSinkStops[i] << 0xc;
+    PIPE_VEL(raw, off) = -0x1000;
+    PIPE_PHASE(raw, off)++;
+    PIPE_TIMER(raw, off) = 0;
+    PIPE_FRAME(raw, off) = 0;
+    PIPE_SPRITE(raw, off) = sPachinkoPipeSinkStartFrames[0];
 }
 
 // @symbol PachinkoPipe_StateRise
 void PachinkoPipe_StateRise(char *raw, int i) {
     dScMgPachinko_c *self = (dScMgPachinko_c *)raw;
     int off = i * 0x1c;
-    int y;
+    int x;
 
-    if (self->mPipe[i].state != 0) {
+    if (self->mPipe[i].phase != 0) {
         (self->mPipe[i].timer)++;
         if (self->mPipe[i].timer < 4) {
             return;
@@ -1329,11 +1351,11 @@ void PachinkoPipe_StateRise(char *raw, int i) {
         (self->mPipe[i].frame)++;
         if (self->mPipe[i].frame >= 3) {
             self->mPipe[i].frame = 0;
-            self->mPipe[i].out2 = 2;
-            self->mPipe[i].state = 0;
+            self->mPipe[i].state = 2;
+            self->mPipe[i].phase = 0;
             return;
         }
-        self->mPipe[i].out = sPachinkoPipeRiseStartFrames[self->mPipe[i].frame];
+        self->mPipe[i].sprite = sPachinkoPipeRiseStartFrames[self->mPipe[i].frame];
         return;
     }
 
@@ -1344,12 +1366,12 @@ void PachinkoPipe_StateRise(char *raw, int i) {
         if (self->mPipe[i].frame >= 6) {
             self->mPipe[i].frame = 0;
         }
-        self->mPipe[i].out = sPachinkoPipeRiseFrames[self->mPipe[i].frame];
+        self->mPipe[i].sprite = sPachinkoPipeRiseFrames[self->mPipe[i].frame];
     }
 
-    self->mPipe[i].acc = self->mPipe[i].acc + self->mPipe[i].vel;
-    y = self->mPipe[i].acc >> 0xc;
-    if (y <= sPachinkoPipeRiseStops[i + 2]) {
+    self->mPipe[i].x = self->mPipe[i].x + self->mPipe[i].vel;
+    x = self->mPipe[i].x >> 0xc;
+    if (x <= sPachinkoPipeRiseStops[i + 2]) {
         if (self->mPipe[i].vel <= -0x800) {
             self->mPipe[i].vel = self->mPipe[i].vel + 0x80;
         }
@@ -1357,15 +1379,15 @@ void PachinkoPipe_StateRise(char *raw, int i) {
         self->mPipe[i].vel = self->mPipe[i].vel - 0x80;
     }
 
-    if (y > sPachinkoPipeRiseStops[i]) {
+    if (x > sPachinkoPipeRiseStops[i]) {
         return;
     }
-    self->mPipe[i].acc = sPachinkoPipeRiseStops[i] << 0xc;
+    self->mPipe[i].x = sPachinkoPipeRiseStops[i] << 0xc;
     self->mPipe[i].vel = 0x1000;
-    (self->mPipe[i].state)++;
+    (self->mPipe[i].phase)++;
     self->mPipe[i].timer = 0;
     self->mPipe[i].frame = 0;
-    self->mPipe[i].out = sPachinkoPipeRiseStartFrames[0];
+    self->mPipe[i].sprite = sPachinkoPipeRiseStartFrames[0];
 }
 
 #pragma push
@@ -1373,8 +1395,8 @@ void PachinkoPipe_StateRise(char *raw, int i) {
 // @symbol PachinkoPipe_StatePick
 /* Resets one row of the ov006 table (rows are 0x1c bytes apart) after
    rolling a random kind from sPachinkoPipeKinds.  The row base `raw + off`
-   is spelled twice on purpose: the ROM computes it once for the +0x4000
-   stores and again, right after the kind reload and before the predicated
+   is spelled twice on purpose: the ROM computes it once for the phase
+   store and again, right after the kind reload and before the predicated
    if-else, for the tail stores.  With common-subexpression elimination on,
    mwccarm folds the second into the first and sinks the add below the
    if-else, which recolours the whole tail. */
@@ -1384,67 +1406,66 @@ void PachinkoPipe_StatePick(char *raw, int n) {
     unsigned int rand = ((unsigned)rnd >> 16) & 0x7fff;
     unsigned int idx = (rand << 1) >> 0xf;
     int kind = sPachinkoPipeKinds[idx];
-    unsigned char *kinds = (unsigned char*)(raw + 0x4eb3);
+    unsigned char *state = (unsigned char *)(raw + REC_OFF(mPipe, state));
     char *q;
-    kinds[off] = (unsigned char)kind;
-    q = raw + off + 0x4000;
-    *(unsigned char*)(q + 0xeb4) = 0;
+    state[off] = (unsigned char)kind;
+    PIPE(raw + off)->phase = 0;
     q = raw + off;
-    if (kinds[off] == 2) {
-        *(unsigned char*)(q + 0x4000 + 0xeb9) = 1;
-        *(int*)(q + 0x4000 + 0xea8) = 0x1000;
+    if (state[off] == 2) {
+        PIPE(q)->sinking = 1;
+        PIPE(q)->vel = 0x1000;
     } else {
-        *(unsigned char*)(q + 0x4000 + 0xeb9) = 0;
-        *(int*)(q + 0x4000 + 0xea8) = -0x1000;
+        PIPE(q)->sinking = 0;
+        PIPE(q)->vel = -0x1000;
     }
-    *(short*)(raw + off + 0x4e00 + 0xb0) = 0;
-    *(unsigned char*)(raw + off + 0x4000 + 0xeb6) = 0;
-    *(unsigned char*)(raw + off + 0x4000 + 0xeb8) = 1;
+    PIPE(raw + off)->timer = 0;
+    PIPE(raw + off)->frame = 0;
+    PIPE(raw + off)->visible = 1;
 }
 #pragma pop
 
 // @symbol PachinkoPipe_UpdateAll
 /* Walks the 8-byte {code pointer, adjustment} records at 0x02142624; an odd
    adjustment selects the virtual spelling through the receiver's own vtable. */
-void PachinkoPipe_UpdateAll(char* raw){
-  int i=0;
-  char* row=raw;
-  do{
-    if(*(unsigned char*)(row+0x4000+0xeb7)!=0){
-      int idx=*(unsigned char*)(row+0x4000+0xeb3);
-      Ent7d0 *rec = &sPachinkoPipeStateTable[idx];
-      int adj=rec->b;
-      char* obj=raw+(adj>>1);
-      int fn;
-      if(adj&1){
-        fn=*(int*)(*(int*)obj + rec->a);
-      } else {
-        fn=rec->a;
-      }
-      ((void(*)(void*,int))fn)(obj,i);
-    }
-    i++;
-    row+=0x1c;
-  }while(i<2);
+void PachinkoPipe_UpdateAll(char *raw) {
+    int i = 0;
+    char *row = raw;
+    do {
+        if (PIPE(row)->active != 0) {
+            int idx = PIPE(row)->state;
+            Ent7d0 *rec = &sPachinkoPipeStateTable[idx];
+            int adj = rec->b;
+            char *obj = raw + (adj >> 1);
+            int fn;
+            if (adj & 1) {
+                fn = *(int *)(*(int *)obj + rec->a);
+            } else {
+                fn = rec->a;
+            }
+            ((void (*)(void *, int))fn)(obj, i);
+        }
+        i++;
+        row += 0x1c;
+    } while (i < 2);
 }
 
 // @symbol PachinkoPipe_ResetAll
-void PachinkoPipe_ResetAll(unsigned char* row){
-  int i;
-  for(i=0;i<2;i++,row+=0x1c){
-    *(unsigned char*)(row+0x4eb7)=1;
-    *(unsigned char*)(row+0x4eb8)=0;
-    *(unsigned char*)(row+0x4eb3)=0;
-    *(unsigned char*)(row+0x4eb4)=0;
-    *(unsigned char*)(row+0x4eb5)=0;
-    *(short*)(row+0x4eb0)=0;
-    *(int*)(row+0x4ea0)=data_ov006_0212eb24[i]<<12;
-    *(int*)(row+0x4ea4)=0x68000;
-    *(int*)(row+0x4ea8)=0;
-    *(int*)(row+0x4eac)=0;
-    *(unsigned char*)(row+0x4eb9)=0;
-    *(unsigned char*)(row+0x4eba)=0;
-  }
+void PachinkoPipe_ResetAll(unsigned char *row) {
+    int i;
+    for (i = 0; i < 2; i++, row += 0x1c) {
+        PIPE(row)->active = 1;
+        PIPE(row)->visible = 0;
+        PIPE(row)->state = 0;
+        PIPE(row)->phase = 0;
+        PIPE(row)->sprite = 0;
+        PIPE(row)->timer = 0;
+        PIPE(row)->x = data_ov006_0212eb24[i] << 12;
+        PIPE(row)->y = 0x68000;
+        PIPE(row)->vel = 0;
+        *(int *)(row + 0x4eac) = 0;
+        PIPE(row)->sinking = 0;
+        PIPE(row)->laps = 0;
+    }
 }
 
 #pragma push
@@ -1456,11 +1477,10 @@ static inline int FX_Mul(int v1, int v2)
 }
 
 // @symbol PachinkoBall_DrawAll
-/* Draws the 30 balls. A ball whose byte at +0x2d is set is drawn with the
- * sprite the byte at +0x33 picks, at its position plus the offset at
- * +0x10/+0x14, through a 2x2 rotate-and-scale matrix: the u16 at +0x24 is the
- * angle (>> 4 indexes the shared sine/cosine table) and the 20.12 value at
- * +0x20 is the scale. The products go through FX_Mul; spelled out in the body
+/* Draws the 30 balls. A ball with `visible` set is drawn with the sprite
+ * `sprite` picks, at its position plus offX/offY, through a 2x2
+ * rotate-and-scale matrix: `rotation` is the angle (>> 4 indexes the shared
+ * sine/cosine table) and the 20.12 `scale` is the scale. The products go through FX_Mul; spelled out in the body
  * they put the scale in the first smull's Rm instead of the table value. With
  * opt_prelinearize on, every callee-saved register in the loop rotates by one
  * place. */
@@ -1469,16 +1489,15 @@ void PachinkoBall_DrawAll(char *scene)
     int i;
     char *ball = scene;
     for (i = 0; i < 30; i++, ball += 0x38) {
-        char *p = ball + 0x4000;
-        if (*(unsigned char *)(p + 0x68d) != 0) {
-            int idx = ((int)*(unsigned short *)(ball + 0x4684) >> 4) << 1;
-            int scale = *(int *)(p + 0x680);
-            int sprite = *(unsigned char *)(p + 0x693);
+        if (BALL(ball)->visible != 0) {
+            int idx = ((int)BALL(ball)->rotation >> 4) << 1;
+            int scale = BALL(ball)->scale;
+            int sprite = BALL(ball)->sprite;
             Matrix2x2 m;
             int cosv = FX_Mul(data_02082214[idx + 1], scale);
             int sinv = FX_Mul(data_02082214[idx], scale);
-            int x = (*(int *)(p + 0x660) + *(int *)(p + 0x670)) >> 12;
-            int y = (*(int *)(p + 0x664) + *(int *)(p + 0x674)) >> 12;
+            int x = (BALL(ball)->x + BALL(ball)->offX) >> 12;
+            int y = (BALL(ball)->y + BALL(ball)->offY) >> 12;
             m._00 = cosv;
             m._01 = sinv;
             m._10 = -sinv;
@@ -1494,15 +1513,17 @@ void PachinkoBall_CountNearby(char *base, int i)
 {
     int x, y, cnt;
 
-    if (*(unsigned char *)(base + 0x4000 + i * 0x38 + 0x68f) == 5) return;
-    x = *(int *)(base + 0x4000 + i * 0x38 + 0x660) >> 12;
-    y = *(int *)(base + 0x4000 + i * 0x38 + 0x664) >> 12;
+    dScMgPachinko_c *self = PACHINKO(base);
+    if (self->mBall[i].state == 5)
+        return;
+    x = self->mBall[i].x >> 12;
+    y = self->mBall[i].y >> 12;
     cnt = 0;
     if (y >= 0xd0) cnt++;
     if (x >= 0x120 || x <= -0x20) cnt++;
     if (cnt != 0) {
-        *(unsigned char *)(base + 0x4000 + i * 0x38 + 0x68c) = 0;
-        *(unsigned char *)(base + 0x4000 + i * 0x38 + 0x68d) = 0;
+        self->mBall[i].active = 0;
+        self->mBall[i].visible = 0;
     }
 }
 
@@ -1517,30 +1538,28 @@ void PachinkoBall_CheckPipes(char *c, int idx)
     int dy;
     int n;
 
-    if (*(u8 *)(c + idx * 0x38 + 0x468f) == 5)
+    if (BALL(c + idx * 0x38)->state == 5)
         return;
 
     p = c;
     for (i = 0; i < 4; i++, p += 0xc) {
-        if (*(u8 *)(p + 0x5bd4) == 0)
+        if (PACHINKO(p)->mTarget[0].active == 0)
             continue;
 
-        dx = (*(int *)(p + 0x5bcc) - *(int *)(c + idx * 0x38 + 0x4660)) >> 12;
-        dy = (*(int *)(p + 0x5bd0) - *(int *)(c + idx * 0x38 + 0x4664)) >> 12;
+        dx = (PACHINKO(p)->mTarget[0].x - *(int *)(c + idx * 0x38 + BALL_OFF(x))) >> 12;
+        dy = (PACHINKO(p)->mTarget[0].y - *(int *)(c + idx * 0x38 + BALL_OFF(y))) >> 12;
         if (dx < -0x10) continue;
         if (dx > 0x18) continue;
         if (dy < -0x10) continue;
         if (dy > 0x18) continue;
 
         n = idx * 0x38;
-        *(u8 *)(c + n + 0x468c) = 0;
-        *(u8 *)(c + n + 0x468d) = 0;
-        PachinkoFx_Spawn(c,
-                            *(int *)(c + i * 0xc + 0x5bcc),
-                            *(int *)(c + i * 0xc + 0x5bd0),
-                            2, 0, i + 1);
+        BALL(c + n)->active = 0;
+        BALL(c + n)->visible = 0;
+        PachinkoFx_Spawn(c, *(int *)(c + i * 0xc + REC_OFF(mTarget, x)),
+                         *(int *)(c + i * 0xc + REC_OFF(mTarget, y)), 2, 0, i + 1);
         PachinkoPipe_SetAll(c, 0);
-        func_02012718(0x18c, *(int *)(c + n + 0x4000 + 0x660));
+        func_02012718(0x18c, BALL(c + n)->x);
         return;
     }
 }
@@ -1549,82 +1568,105 @@ void PachinkoBall_CheckPipes(char *c, int idx)
 #pragma push
 #pragma opt_common_subs off
 // @symbol PachinkoBall_AimAtTarget
-/* Re-aims entity `i` at a randomly chosen live player. Bails out if no
- * player slot is live, or if the entity has sunk below y=0. Takes the length of the entity's current velocity vector, scales
- * it to 9/10, picks a random live player slot, and rewrites the velocity as
- * that speed pointed along atan2 towards the chosen player, then fires a sound
- * whose pan comes from the entity's x. Slot state at +0x4000+0x68f/0x694.
+/* Re-aims ball `i` at a randomly chosen active target. Bails out if no
+ * mTarget slot is active, or if the ball has sunk below y=0. Takes the length
+ * of the ball's current velocity vector, scales it to 9/10, picks a random
+ * active mTarget, and rewrites the velocity as that speed pointed along
+ * atan2 towards the chosen target, then fires a sound whose pan comes from
+ * the ball's x.
  *
  * The two velocity-component base offsets must be introduced in the order
  * below: the constant pool emits 0x4668 before 0x466c, and the declaration
  * order is what fixes it. */
-void PachinkoBall_AimAtTarget(char *base, int i)
-{
-    int idx; int n; int factor; int dist; int *pY; int *pVx; int *pVy; char *p; char *angBase; s16 angle;
-    int count=0,j; char *q;
-    for(j=0,q=base;j<4;j++,q+=0xc){ if(*(u8*)(q+0x5000+0xbd4)!=0){count++;break;} }
-    if(!count) return;
-    n = i*0x38;
-    { char *yBase=base+0x4664; int y=*(int*)(yBase+n); pY=(int*)(yBase+n); if((y>>12)<0) return; }
+void PachinkoBall_AimAtTarget(char *base, int i) {
+    int idx;
+    int n;
+    int factor;
+    int dist;
+    int *pY;
+    int *pVx;
+    int *pVy;
+    char *p;
+    char *angBase;
+    s16 angle;
+    int count = 0, j;
+    char *q;
+    for (j = 0, q = base; j < 4; j++, q += 0xc) {
+        if (PACHINKO(q)->mTarget[0].active != 0) {
+            count++;
+            break;
+        }
+    }
+    if (!count)
+        return;
+    n = i * 0x38;
     {
-        char *vyBase = base + 0x4668;
-        char *vxBase = base + 0x466c;
-        int a = *(int*)(vyBase + n);
+        char *yBase = base + BALL_OFF(y);
+        int y = *(int *)(yBase + n);
+        pY = (int *)(yBase + n);
+        if ((y >> 12) < 0)
+            return;
+    }
+    {
+        char *velXBase = base + BALL_OFF(velX);
+        char *velYBase = base + BALL_OFF(velY);
+        int a = *(int *)(velXBase + n);
         s64 distSq = (s64)a * a;
-        int b = *(int*)(vxBase + n);
-        pVx = (int*)(vyBase + n);
+        int b = *(int *)(velYBase + n);
+        pVx = (int *)(velXBase + n);
         distSq += (s64)b * b;
-        pVy = (int*)(vxBase + n);
+        pVy = (int *)(velYBase + n);
         dist = (int)cstd::sqrt((u64)distSq);
     }
     factor = dist * 9 / 10;
-    idx = ((u32)RandomIntInternal(&data_0209d4b8)>>16 & 0x7fff)*4>>15;
-    for(;;){
+    idx = ((u32)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) * 4 >> 15;
+    for (;;) {
         int t = idx * 0xc;
         p = base + t;
-        p = p + 0x5000;
-        if(*(u8*)(p+0xbd4)!=0) break;
-        idx = ((u32)RandomIntInternal(&data_0209d4b8)>>16 & 0x7fff)*4>>15;
+        if (PACHINKO(p)->mTarget[0].active != 0)
+            break;
+        idx = ((u32)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) * 4 >> 15;
     }
     {
-        char *xBase = base + 0x4660;
-        int playerY = *(int*)(p + 0xbd0);
+        char *xBase = base + BALL_OFF(x);
+        int targetY = PACHINKO(p)->mTarget[0].y;
         int yval = *pY;
-        int playerX = *(int*)(p + 0xbcc);
-        int entX = *(int*)(xBase + n);
-        angBase = base + 0x4686;
-        angle = _ZN4cstd5atan2E5Fix12IiES1_((playerY-yval)>>12, (playerX-entX)>>12);
-        *(u16*)(angBase + n) = (u16)angle;
-        u16 angU = *(u16*)(angBase + n);
+        int targetX = PACHINKO(p)->mTarget[0].x;
+        int entX = *(int *)(xBase + n);
+        angBase = base + BALL_OFF(angle);
+        angle = cstd::atan2((targetY - yval) >> 12, (targetX - entX) >> 12);
+        *(u16 *)(angBase + n) = (u16)angle;
+        u16 angU = *(u16 *)(angBase + n);
         int angIdx = (angU >> 4) << 1;
         {
             s16 cosv = data_02082214[angIdx + 1];
             *pVx = FX_MUL(cosv, factor);
         }
         {
-            u16 angU2 = *(u16*)(angBase + n);
+            u16 angU2 = *(u16 *)(angBase + n);
             s16 sinv = data_02082214[(angU2 >> 4) << 1];
             *pVy = FX_MUL(sinv, factor);
         }
-        int fieldByte = *(u8*)(base + n + 0x4000 + 0x696);
+        int fieldByte = BALL(base + n)->level;
         int div40 = (fieldByte * 0x180) / 40;
-        int e8ret = func_020126e8(*(int*)(xBase + n));
+        int e8ret = func_020126e8(*(int *)(xBase + n));
         func_020126ac(0x186, 6, 0, div40 - 0x80, e8ret);
-        *(u8*)(base + n + 0x4000 + 0x68f) = 4;
-        *(u8*)(base + n + 0x4000 + 0x694) = (u8)idx;
+        BALL(base + n)->state = 4;
+        BALL(base + n)->target = (u8)idx;
     }
 }
 #pragma pop
 
 // @symbol PachinkoBall_CheckFall
 void PachinkoBall_CheckFall(char *thiz, int idx) {
-    unsigned char *flag = (unsigned char*)(thiz + 0x4695) + idx * 0x38;
+    unsigned char *flag = (unsigned char *)(thiz + BALL_OFF(fallPlayed)) + idx * 0x38;
     char *e;
     if (*flag != 0) return;
     e = thiz + idx * 0x38;
-    if ((*(int*)(e + 0x4664) >> 0xc) < -0xf2) return;
+    if ((BALL(e)->y >> 0xc) < -0xf2)
+        return;
     *flag = *flag + 1;
-    func_02012718(0x184, *(int*)(e + 0x4660));
+    func_02012718(0x184, BALL(e)->x);
 }
 
 // @symbol PachinkoBall_StatePop
@@ -1640,6 +1682,7 @@ void PachinkoBall_StatePop(char *c, int i) {
         func_02012718(0x18b, self->mBall[i].x);
         return;
     }
+    /* active, visible: BALL() drops the + 0x4000 base and grows it. */
     *(unsigned char *)((c + k) + 0x4000 + 0x68c) = 0;
     *(unsigned char *)((c + k) + 0x4000 + 0x68d) = 0;
 }
@@ -1653,20 +1696,20 @@ void PachinkoBall_StateSpinAway(char *c, int i) {
     int f;
     short sv;
 
-    self->mBall[i].x += self->mBall[i].unk08;
-    self->mBall[i].y += self->mBall[i].unk0c;
-    self->mBall[i].unk24 += 0x800;
-    if (self->mBall[i].unk18 <= 0x30000) {
-        self->mBall[i].unk18 += 0x800;
+    self->mBall[i].x += self->mBall[i].velX;
+    self->mBall[i].y += self->mBall[i].velY;
+    self->mBall[i].rotation += 0x800;
+    if (self->mBall[i].spinRadius <= 0x30000) {
+        self->mBall[i].spinRadius += 0x800;
     }
-    sv = data_02082214[(self->mBall[i].unk24 >> 4) * 2 + 1];
-    self->mBall[i].unk10 = FX_MUL(sv, self->mBall[i].unk18);
-    sv = data_02082214[(self->mBall[i].unk24 >> 4) * 2];
-    self->mBall[i].unk14 = FX_MUL(sv, self->mBall[i].unk18);
+    sv = data_02082214[(self->mBall[i].rotation >> 4) * 2 + 1];
+    self->mBall[i].offX = FX_MUL(sv, self->mBall[i].spinRadius);
+    sv = data_02082214[(self->mBall[i].rotation >> 4) * 2];
+    self->mBall[i].offY = FX_MUL(sv, self->mBall[i].spinRadius);
 
-    x = (self->mBall[i].x + self->mBall[i].unk10) >> 12;
-    y = (self->mBall[i].y + self->mBall[i].unk14) >> 12;
-    self->mBall[i].unk1c = Sound_PlayIfNotActive(self->mBall[i].unk1c, 2, 0x187, 0);
+    x = (self->mBall[i].x + self->mBall[i].offX) >> 12;
+    y = (self->mBall[i].y + self->mBall[i].offY) >> 12;
+    self->mBall[i].sound = Sound_PlayIfNotActive(self->mBall[i].sound, 2, 0x187, 0);
     f = 0;
     if (x >= 0x130 || x <= -0x30) {
         f++;
@@ -1676,24 +1719,25 @@ void PachinkoBall_StateSpinAway(char *c, int i) {
     }
     if (f != 0) {
         self->mBall[i].active = 0;
-        self->mBall[i].unk2d = 0;
+        self->mBall[i].visible = 0;
     }
 }
 
 // @symbol PachinkoBall_StateGlide
 void PachinkoBall_StateGlide(char *self, int idx) {
     char *new_var;
-    *((int *)((self + 0x4660) + (idx * 0x38))) =
-        (*((int *)((self + 0x4660) + (idx * 0x38)))) + (*((int *)((self + (idx * 0x38)) + 0x4668)));
+    *((int *)((self + BALL_OFF(x)) + (idx * 0x38))) =
+        (*((int *)((self + BALL_OFF(x)) + (idx * 0x38)))) +
+        (*((int *)((self + (idx * 0x38)) + BALL_OFF(velX))));
     new_var = self;
-    *((int *)((new_var + 0x4664) + (idx * 0x38))) =
-        (*((int *)((new_var + 0x4664) + (idx * 0x38)))) +
-        (*((int *)((self + (idx * 0x38)) + 0x466c)));
+    *((int *)((new_var + BALL_OFF(y)) + (idx * 0x38))) =
+        (*((int *)((new_var + BALL_OFF(y)) + (idx * 0x38)))) +
+        (*((int *)((self + (idx * 0x38)) + BALL_OFF(velY))));
     {
-        int raw = *((u16 *)((new_var + ((idx * 0x38) & 0xFFFFFFFF)) + 0x4686));
+        int raw = *((u16 *)((new_var + ((idx * 0x38) & 0xFFFFFFFF)) + BALL_OFF(angle)));
         u16 ip = (u16)(raw - 0x4000);
         short tgt = (short)ip;
-        short *cur = (short *)((self + 0x4684) + (idx * 0x38));
+        short *cur = (short *)((self + BALL_OFF(rotation)) + (idx * 0x38));
         if ((*cur) > tgt) {
             *cur = (*cur) - 0x100;
             if ((*cur) <= ((short)ip)) {
@@ -1727,8 +1771,8 @@ void PachinkoBall_StateDive(char *c, int i) {
         }
     }
 
-    self->mBall[i].x += self->mBall[i].unk08;
-    self->mBall[i].y += self->mBall[i].unk0c;
+    self->mBall[i].x += self->mBall[i].velX;
+    self->mBall[i].y += self->mBall[i].velY;
 
     t = self->mWaveLevel;
     if (t > 12)
@@ -1740,18 +1784,16 @@ void PachinkoBall_StateDive(char *c, int i) {
         lim = 0x600 + t * 0xa0;
     }
 
-    if (self->mBall[i].unk0c <= lim)
-    {
-        self->mBall[i].unk0c += t * 4 + 8;
+    if (self->mBall[i].velY <= lim) {
+        self->mBall[i].velY += t * 4 + 8;
     }
 
     PachinkoBall_CheckHitByBobOmb(c, i);
     PachinkoBall_CheckPipes(c, i);
     PachinkoBall_CountNearby(c, i);
 
-    self->mBall[i].angle =
-        _ZN4cstd5atan2E5Fix12IiES1_(self->mBall[i].unk0c, self->mBall[i].unk08);
-    self->mBall[i].unk24 = self->mBall[i].angle - 0x4000;
+    self->mBall[i].angle = cstd::atan2(self->mBall[i].velY, self->mBall[i].velX);
+    self->mBall[i].rotation = self->mBall[i].angle - 0x4000;
 
     PachinkoBall_AimAtTarget(c, i);
 }
@@ -1762,16 +1804,15 @@ void PachinkoBall_StateDrift(char *o, int i) {
     int idx;
     PachinkoBall_CheckFall(o, i);
     idx = i * 0x38;
-    if (*(unsigned char *)(o + 0x4690 + idx) == 0)
-    {
-        *(unsigned char *)(o + 0x4690 + idx) += 1;
+    if (*(unsigned char *)(o + BALL_OFF(started) + idx) == 0) {
+        *(unsigned char *)(o + BALL_OFF(started) + idx) += 1;
         if (self->mWaveLevel > 0xc) {
-            *(int *)(ATI(o, idx) + 0x466c) =
+            *(int *)(ATI(o, idx) + BALL_OFF(velY)) =
                 ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 3) >> 0xf)
                  << 7) +
                 0xb80 + ((self->mWaveLevel - 0xc) << 7);
         } else {
-            *(int *)(ATU(o, idx) + 0x466c) =
+            *(int *)(ATU(o, idx) + BALL_OFF(velY)) =
                 self->mWaveLevel * 0xa0 +
                 (((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 3) >> 0xf)
                   << 7) +
@@ -1779,137 +1820,159 @@ void PachinkoBall_StateDrift(char *o, int i) {
         }
         if ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1) >> 0xf) != 0)
         {
-            *(int *)(o + idx + 0x4668) = (self->mWaveLevel << 7) + 0x600;
-            *(unsigned char *)(o + idx + 0x4691) = 0;
+            *(int *)(o + idx + BALL_OFF(velX)) = (self->mWaveLevel << 7) + 0x600;
+            *(unsigned char *)(o + idx + BALL_OFF(driftDir)) = 0;
         }
         else
         {
-            *(int *)(o + idx + 0x4668) = -((self->mWaveLevel << 7) + 0x600);
-            *(unsigned char *)(o + idx + 0x4691) = 0;
+            *(int *)(o + idx + BALL_OFF(velX)) = -((self->mWaveLevel << 7) + 0x600);
+            *(unsigned char *)(o + idx + BALL_OFF(driftDir)) = 0;
         }
-        *(unsigned short *)((ATI(o, 0) + idx) + 0x4688) =
-            ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) << 3) + 0x20;
-    }
-    else
-    {
+        *(unsigned short *)((ATI(o, 0) + idx) + BALL_OFF(timer)) =
+            ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf)
+             << 3) +
+            0x20;
+    } else {
         int v12;
         int *vel;
-        *(int *)(o + 0x4664 + idx) += *(int *)(o + idx + 0x466c);
-        vel = (int *)(o + 0x4668 + idx);
-        *(int *)(o + 0x4660 + idx) += *(int *)(o + 0x4668 + idx);
-        v12 = *(int *)(o + 0x4660 + idx) >> 12;
+        *(int *)(o + BALL_OFF(y) + idx) += *(int *)(o + idx + BALL_OFF(velY));
+        vel = (int *)(o + BALL_OFF(velX) + idx);
+        *(int *)(o + BALL_OFF(x) + idx) += *(int *)(o + BALL_OFF(velX) + idx);
+        v12 = *(int *)(o + BALL_OFF(x) + idx) >> 12;
         if (v12 > 0xf0)
         {
             u8 d;
             *vel = -*vel;
-            d = *(unsigned char *)(o + 0x4691 + idx);
+            d = *(unsigned char *)(o + BALL_OFF(driftDir) + idx);
             if (d != 0)
             {
                 if (d == 1)
-                    *(unsigned char *)(o + 0x4691 + idx) = 2;
+                    *(unsigned char *)(o + BALL_OFF(driftDir) + idx) = 2;
                 else
-                    *(unsigned char *)(o + 0x4691 + idx) = 1;
+                    *(unsigned char *)(o + BALL_OFF(driftDir) + idx) = 1;
             }
-            *(int *)(o + 0x4660 + idx) = 0xf0000;
+            *(int *)(o + BALL_OFF(x) + idx) = 0xf0000;
         }
         if (v12 < 0x10)
         {
             u8 d;
-            *(int *)(o + 0x4668 + idx) = -*(int *)(o + 0x4668 + idx);
-            d = *(unsigned char *)(o + 0x4691 + idx);
+            *(int *)(o + BALL_OFF(velX) + idx) = -*(int *)(o + BALL_OFF(velX) + idx);
+            d = *(unsigned char *)(o + BALL_OFF(driftDir) + idx);
             if (d != 0)
             {
                 if (d == 1)
-                    *(unsigned char *)(o + 0x4691 + idx) = 2;
+                    *(unsigned char *)(o + BALL_OFF(driftDir) + idx) = 2;
                 else
-                    *(unsigned char *)(o + 0x4691 + idx) = 1;
+                    *(unsigned char *)(o + BALL_OFF(driftDir) + idx) = 1;
             }
-            *(int *)(o + 0x4660 + idx) = 0x10000;
+            *(int *)(o + BALL_OFF(x) + idx) = 0x10000;
         }
         PachinkoBall_CheckHitByBobOmb(o, i);
         PachinkoBall_CheckPipes(o, i);
         PachinkoBall_CountNearby(o, i);
         {
-            unsigned short t = *(unsigned short *)(o + 0x4688 + idx);
+            unsigned short t = *(unsigned short *)(o + BALL_OFF(timer) + idx);
             if (t != 0)
             {
-                *(unsigned short *)(o + 0x4688 + idx) = t - 1;
+                *(unsigned short *)(o + BALL_OFF(timer) + idx) = t - 1;
                 if (*vel > 0)
                 {
-                    *(unsigned short *)(o + 0x4684 + idx) -= 0x80;
-                    if (*(short *)(o + 0x4684 + idx) <= -0x1800)
-                        *(unsigned short *)(o + 0x4684 + idx) = 0xe800;
+                    *(unsigned short *)(o + BALL_OFF(rotation) + idx) -= 0x80;
+                    if (*(short *)(o + BALL_OFF(rotation) + idx) <= -0x1800)
+                        *(unsigned short *)(o + BALL_OFF(rotation) + idx) = 0xe800;
                 }
                 else if (*vel < 0)
                 {
-                    *(unsigned short *)(o + 0x4684 + idx) += 0x80;
-                    if (*(short *)(o + 0x4684 + idx) >= 0x1800)
-                        *(short *)(o + 0x4684 + idx) = 0x1800;
+                    *(unsigned short *)(o + BALL_OFF(rotation) + idx) += 0x80;
+                    if (*(short *)(o + BALL_OFF(rotation) + idx) >= 0x1800)
+                        *(short *)(o + BALL_OFF(rotation) + idx) = 0x1800;
                 }
-                if (*(short *)(o + 0x4688 + idx) < 0)
-                    *(short *)(o + 0x4688 + idx) = 0;
+                if (*(short *)(o + BALL_OFF(timer) + idx) < 0)
+                    *(short *)(o + BALL_OFF(timer) + idx) = 0;
                 return;
             }
             {
-                u8 st = *(unsigned char *)(o + 0x4691 + idx);
+                u8 st = *(unsigned char *)(o + BALL_OFF(driftDir) + idx);
                 if (st == 0)
                 {
                     int v = *vel;
                     if (v > 0)
                     {
                         *vel = v - 0x20;
-                        *(unsigned short *)(o + 0x4684 + idx) += 0x80;
-                        if (*(short *)(o + 0x4684 + idx) >= 0)
-                            *(short *)(o + 0x4684 + idx) = 0;
+                        *(unsigned short *)(o + BALL_OFF(rotation) + idx) += 0x80;
+                        if (*(short *)(o + BALL_OFF(rotation) + idx) >= 0)
+                            *(short *)(o + BALL_OFF(rotation) + idx) = 0;
                         if (*vel <= 0)
                         {
-                            *(unsigned char *)(o + 0x4691 + idx) =
-                                (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1) >> 0xf) + 1;
-                            *(unsigned short *)(o + 0x4688 + idx) =
-                                ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 4) >> 0xf) << 2);
-                            *(short *)(o + 0x4684 + idx) = 0;
+                            *(unsigned char *)(o + BALL_OFF(driftDir) + idx) =
+                                (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+                                  << 1) >>
+                                 0xf) +
+                                1;
+                            *(unsigned short *)(o + BALL_OFF(timer) + idx) =
+                                ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
+                                    0x7fff)
+                                   << 4) >>
+                                  0xf)
+                                 << 2);
+                            *(short *)(o + BALL_OFF(rotation) + idx) = 0;
                         }
                     }
                     else if (v < 0)
                     {
                         *vel = v + 0x20;
-                        *(unsigned short *)(o + 0x4684 + idx) -= 0x80;
-                        if (*(short *)(o + 0x4684 + idx) < 0)
-                            *(short *)(o + 0x4684 + idx) = 0;
+                        *(unsigned short *)(o + BALL_OFF(rotation) + idx) -= 0x80;
+                        if (*(short *)(o + BALL_OFF(rotation) + idx) < 0)
+                            *(short *)(o + BALL_OFF(rotation) + idx) = 0;
                         if (*vel >= 0)
                         {
-                            *(unsigned char *)(o + 0x4691 + idx) =
-                                (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1) >> 0xf) + 1;
-                            *(unsigned short *)(o + 0x4688 + idx) =
-                                ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 4) >> 0xf) << 2);
-                            *(short *)(o + 0x4684 + idx) = 0;
+                            *(unsigned char *)(o + BALL_OFF(driftDir) + idx) =
+                                (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+                                  << 1) >>
+                                 0xf) +
+                                1;
+                            *(unsigned short *)(o + BALL_OFF(timer) + idx) =
+                                ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
+                                    0x7fff)
+                                   << 4) >>
+                                  0xf)
+                                 << 2);
+                            *(short *)(o + BALL_OFF(rotation) + idx) = 0;
                         }
                     }
                 }
                 else if (st == 1)
                 {
                     *vel += 0x20;
-                    *(unsigned short *)(o + 0x4684 + idx) -= 0x80;
-                    if (*(short *)(o + 0x4684 + idx) <= -0x1800)
-                        *(unsigned short *)(o + 0x4684 + idx) = 0xe800;
+                    *(unsigned short *)(o + BALL_OFF(rotation) + idx) -= 0x80;
+                    if (*(short *)(o + BALL_OFF(rotation) + idx) <= -0x1800)
+                        *(unsigned short *)(o + BALL_OFF(rotation) + idx) = 0xe800;
                     if (*vel >= (self->mWaveLevel << 7) + 0x600) {
-                        *(unsigned char *)(o + 0x4691 + idx) = 0;
+                        *(unsigned char *)(o + BALL_OFF(driftDir) + idx) = 0;
                         *vel = (self->mWaveLevel << 7) + 0x600;
-                        *(unsigned short *)(o + 0x4688 + idx) =
-                            ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) << 3) + 0x10;
+                        *(unsigned short *)(o + BALL_OFF(timer) + idx) =
+                            ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+                               << 5) >>
+                              0xf)
+                             << 3) +
+                            0x10;
                     }
                 }
                 else
                 {
                     *vel -= 0x20;
-                    *(unsigned short *)(o + 0x4684 + idx) += 0x80;
-                    if (*(short *)(o + 0x4684 + idx) >= 0x1800)
-                        *(short *)(o + 0x4684 + idx) = 0x1800;
+                    *(unsigned short *)(o + BALL_OFF(rotation) + idx) += 0x80;
+                    if (*(short *)(o + BALL_OFF(rotation) + idx) >= 0x1800)
+                        *(short *)(o + BALL_OFF(rotation) + idx) = 0x1800;
                     if (*vel <= -((self->mWaveLevel << 7) + 0x600)) {
-                        *(unsigned char *)(o + 0x4691 + idx) = 0;
+                        *(unsigned char *)(o + BALL_OFF(driftDir) + idx) = 0;
                         *vel = -((self->mWaveLevel << 7) + 0x600);
-                        *(unsigned short *)(o + 0x4688 + idx) =
-                            ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) << 3) + 0x10;
+                        *(unsigned short *)(o + BALL_OFF(timer) + idx) =
+                            ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+                               << 5) >>
+                              0xf)
+                             << 3) +
+                            0x10;
                     }
                 }
             }
@@ -1921,25 +1984,22 @@ void PachinkoBall_StateDrift(char *o, int i) {
 // @symbol PachinkoBall_StateFall
 void PachinkoBall_StateFall(char *o, int i) {
     dScMgPachinko_c *self = (dScMgPachinko_c *)o;
-    if (self->mBall[i].unk30 == 0)
-    {
-        self->mBall[i].unk30 += 1;
+    if (self->mBall[i].started == 0) {
+        self->mBall[i].started += 1;
         if (self->mWaveLevel > 0xc) {
-            self->mBall[i].unk0c =
+            self->mBall[i].velY =
                 ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 3) >> 0xf)
                  << 7) +
                 0xb80 + ((self->mWaveLevel - 0xc) << 7);
         } else {
-            self->mBall[i].unk0c =
+            self->mBall[i].velY =
                 self->mWaveLevel * 0xa0 +
                 (((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 3) >> 0xf)
                   << 7) +
                  0x400);
         }
-    }
-    else
-    {
-        self->mBall[i].y += self->mBall[i].unk0c;
+    } else {
+        self->mBall[i].y += self->mBall[i].velY;
     }
     PachinkoBall_CheckFall(o, i);
     PachinkoBall_CheckHitByBobOmb(o, i);
@@ -1951,7 +2011,7 @@ void PachinkoBall_StateFall(char *o, int i) {
 // @symbol PachinkoBall_StateWaiting
 void PachinkoBall_StateWaiting(char *base, int idx) {
     int off = idx * 0x38;
-    unsigned short *timer = (unsigned short *)(base + 0x4688 + off);
+    unsigned short *timer = (unsigned short *)(base + BALL_OFF(timer) + off);
     unsigned int r;
     char *o;
     if (*timer != 0) {
@@ -1960,39 +2020,39 @@ void PachinkoBall_StateWaiting(char *base, int idx) {
     }
     r = RandomIntInternal(&data_0209d4b8);
     o = base + off;
-    *(unsigned char *)(o + 0x468f) = ((((r >> 16) & 0x7fff) << 1) >> 0xf) + 1;
-    *(unsigned char *)(o + 0x4690) = 0;
-    *(unsigned char *)(o + 0x468d) = 1;
-    *(unsigned char *)(o + 0x4693) = 0;
-    *(unsigned short *)(o + 0x4684) = 0;
-    *(int *)(o + 0x4678) = 0;
-    *(int *)(o + 0x4670) = 0;
-    *(int *)(o + 0x4674) = 0;
-    *(int *)(o + 0x4680) = 0x1000;
-    *(unsigned char *)(o + 0x4695) = 0;
+    BALL(o)->state = ((((r >> 16) & 0x7fff) << 1) >> 0xf) + 1;
+    BALL(o)->started = 0;
+    BALL(o)->visible = 1;
+    BALL(o)->sprite = 0;
+    BALL(o)->rotation = 0;
+    BALL(o)->spinRadius = 0;
+    BALL(o)->offX = 0;
+    BALL(o)->offY = 0;
+    BALL(o)->scale = 0x1000;
+    BALL(o)->fallPlayed = 0;
 }
 
 // @symbol PachinkoBall_UpdateAll
-void PachinkoBall_UpdateAll(char* c){
-  int i=0;
-  char* r5=c;
-  do{
-    if(*(unsigned char*)(r5+0x468c)!=0){
-      int idx=*(unsigned char*)(r5+0x468f);
-      Ent7d0 *e = &sPachinkoBallStateTable[idx];
-      int adj=e->b;
-      char* obj=c+(adj>>1);
-      int fn;
-      if(adj&1){
-        fn=*(int*)(*(int*)obj + e->a);
-      } else {
-        fn=e->a;
-      }
-      ((void(*)(void*,int))fn)(obj,i);
-    }
-    i++;
-    r5+=0x38;
-  }while(i<30);
+void PachinkoBall_UpdateAll(char *c) {
+    int i = 0;
+    char *r5 = c;
+    do {
+        if (BALL(r5)->active != 0) {
+            int idx = BALL(r5)->state;
+            Ent7d0 *e = &sPachinkoBallStateTable[idx];
+            int adj = e->b;
+            char *obj = c + (adj >> 1);
+            int fn;
+            if (adj & 1) {
+                fn = *(int *)(*(int *)obj + e->a);
+            } else {
+                fn = e->a;
+            }
+            ((void (*)(void *, int))fn)(obj, i);
+        }
+        i++;
+        r5 += 0x38;
+    } while (i < 30);
 }
 
 /* Finds the first live entry within 0x18 of
@@ -2035,16 +2095,16 @@ void PachinkoBall_CheckHitByBobOmb(char *base, int i)
     char *o = base;
     int j = 0;
     char *walk = o;
-    int *xp = (int *)((o + n) + 0x4660);
-    int *zp = (int *)((o + n) + 0x4664);
+    int *xp = (int *)((o + n) + BALL_OFF(x));
+    int *zp = (int *)((o + n) + BALL_OFF(y));
     do {
-        if (*(u8 *)(walk + 0x4f0c) == 0)
+        if (SHOT(walk)->active == 0)
             goto next;
-        if (*(u8 *)(walk + 0x4f0d) < 2)
+        if (SHOT(walk)->state < 2)
             goto next;
         {
-            int dy = (*zp - *(int *)(walk + 0x4edc)) >> 12;
-            int dx = (*xp - *(int *)(walk + 0x4ed8)) >> 12;
+            int dy = (*zp - SHOT(walk)->y) >> 12;
+            int dx = (*xp - SHOT(walk)->x) >> 12;
             s64 distsq = (s64)dx * dx + (s64)dy * dy;
             if (cstd::sqrt((unsigned long long)distsq) > 0x18)
                 goto next;
@@ -2053,61 +2113,60 @@ void PachinkoBall_CheckHitByBobOmb(char *base, int i)
             int m = j * 0x38;
             int five = 5;
             char *ov = (char *)o;
-            unsigned char *f0f = (unsigned char *)(o + 0x4f0f);
+            unsigned char *comboBase = (unsigned char *)(o + SHOT_OFF(combo));
             char *bn = ov + n;
             char *bm = ov + m;
-            char *ip = bn; ip += 0x4000;
             u16 ang;
             s16 s;
             s16 c;
             int vel;
             int cnt;
             int cc;
-            char *p84;
-            char *p78;
-            char *p60;
+            char *rotationBase;
+            char *spinRadiusBase;
+            char *xBase;
             unsigned char *cntp;
             int round = 0x800;
 
-            *(u8 *)(ip + 0x68f) = (u8)five;
+            BALL(bn)->state = (u8)five;
             {
-                char *r = bm + 0x4f00;
+                char *r = bm + 0x4f00; /* split base: + 8 is the angle */
                 ang = *(u16 *)(r + 8);
-                r = o + 0x4684;
-                p84 = r;
+                r = o + BALL_OFF(rotation);
+                rotationBase = r;
             }
-            *(u16 *)(p84 + n) = ang;
-            ang = *(u16 *)(p84 + n);
+            *(u16 *)(rotationBase + n) = ang;
+            ang = *(u16 *)(rotationBase + n);
 
             s = data_02082214[((ang >> 4) << 1) + 1];
             {
-                unsigned char *lr = f0f;
-                p78 = o + 0x4678;
-                *(int *)(ip + 0x668) = (int)((((s64)s * 0x2000) + round) >> 12);
-                ang = *(u16 *)(p84 + n);
+                unsigned char *lr = comboBase;
+                spinRadiusBase = o + BALL_OFF(spinRadius);
+                BALL(bn)->velX = (int)((((s64)s * 0x2000) + round) >> 12);
+                ang = *(u16 *)(rotationBase + n);
                 c = data_02082214[(ang >> 4) << 1];
-                *(int *)(ip + 0x66c) = (int)((((s64)c * 0x2000) + round) >> 12);
-                *(int *)(p78 + n) = 0;
-                ang = *(u16 *)(p84 + n);
-                vel = *(int *)(p78 + n);
+                BALL(bn)->velY = (int)((((s64)c * 0x2000) + round) >> 12);
+                *(int *)(spinRadiusBase + n) = 0;
+                ang = *(u16 *)(rotationBase + n);
+                vel = *(int *)(spinRadiusBase + n);
                 s = data_02082214[((ang >> 4) << 1) + 1];
-                *(int *)(ip + 0x670) = (int)((((s64)s * (s64)vel) + round) >> 12);
-                ang = *(u16 *)(p84 + n);
-                vel = *(int *)(p78 + n);
+                BALL(bn)->offX = (int)((((s64)s * (s64)vel) + round) >> 12);
+                ang = *(u16 *)(rotationBase + n);
+                vel = *(int *)(spinRadiusBase + n);
                 c = data_02082214[(ang >> 4) << 1];
-                *(int *)(ip + 0x674) = (int)((((s64)c * (s64)vel) + round) >> 12);
+                BALL(bn)->offY = (int)((((s64)c * (s64)vel) + round) >> 12);
                 cnt = *(u8 *)(lr + m);
                 cc = cnt;
                 if (cc >= 5)
                     cc = five;
-                p60 = o + 0x4660;
-                func_02012718(sPachinkoPopSfx[cc], *(int *)(p60 + n));
+                xBase = o + BALL_OFF(x);
+                func_02012718(sPachinkoPopSfx[cc], *(int *)(xBase + n));
                 {
                     char *q = (char *)o + n;
-                    PachinkoFx_Spawn(o, *(int *)(p60 + n), *(int *)(q + 0x4664), 2,
+                    PachinkoFx_Spawn(o, *(int *)(xBase + n), BALL(q)->y, 2,
                                      (int)sPachinkoPopScores[cc], 0);
                 }
-                cntp = f0f + m;
+                cntp = comboBase + m;
                 *cntp = (u8)(*cntp + 1);
             }
             return;
@@ -2143,15 +2202,15 @@ void Pachinko_SpawnWave(dScMgPachinko_c *self)
                             ((((u32)ra >> 16) & 0x7fff) * 4 >> 15) * 8)
                            << 12;
         self->mBall[i].y = -0x100000;
-        self->mBall[i].unk08 = 0;
-        self->mBall[i].unk0c = 0;
+        self->mBall[i].velX = 0;
+        self->mBall[i].velY = 0;
         self->mBall[i].state = 0;
-        self->mBall[i].unk30 = 0;
+        self->mBall[i].started = 0;
         ra = RandomIntInternal(&data_0209d4b8);
         self->mBall[i].timer = ((((u32)ra >> 16) & 0x7fff) * 8 >> 15) << 4;
-        self->mBall[i].unk24 = 0;
-        self->mBall[i].unk1c = 0;
-        self->mBall[i].unk36 = self->mWaveLevel;
+        self->mBall[i].rotation = 0;
+        self->mBall[i].sound = 0;
+        self->mBall[i].level = self->mWaveLevel;
         self->mWaveSpawns++;
         if (self->mWaveLevel == 0)
             break;
@@ -2169,17 +2228,17 @@ void Pachinko_SpawnWave(dScMgPachinko_c *self)
             self->mBall[i].x = 0;
             self->mBall[i].angle = (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0xc >> 15) + 1 << 9) + 0xc000;
         }
-        self->mBall[i].unk18 = 0;
-        self->mBall[i].unk10 = 0;
-        self->mBall[i].unk14 = 0;
-        self->mBall[i].unk24 = self->mBall[i].angle - 0x4000;
+        self->mBall[i].spinRadius = 0;
+        self->mBall[i].offX = 0;
+        self->mBall[i].offY = 0;
+        self->mBall[i].rotation = self->mBall[i].angle - 0x4000;
         self->mBall[i].y = -0x60000;
-        self->mBall[i].unk08 = FX_MUL(data_02082214[(self->mBall[i].angle >> 4) * 2 + 1], 0xe80);
-        self->mBall[i].unk0c = FX_MUL(data_02082214[(self->mBall[i].angle >> 4) * 2], 0xe80);
+        self->mBall[i].velX = FX_MUL(data_02082214[(self->mBall[i].angle >> 4) * 2 + 1], 0xe80);
+        self->mBall[i].velY = FX_MUL(data_02082214[(self->mBall[i].angle >> 4) * 2], 0xe80);
         self->mBall[i].state = 3;
-        self->mBall[i].unk2d = 1;
-        self->mBall[i].unk33 = 0;
-        self->mBall[i].unk20 = 0x1000;
+        self->mBall[i].visible = 1;
+        self->mBall[i].sprite = 0;
+        self->mBall[i].scale = 0x1000;
         self->mBall[i].timer = 0x10;
         break;
     }
@@ -2199,8 +2258,8 @@ void PachinkoBobOmb_ClearAll(char *p)
 {
     int i;
     for (i = 0; i < 0x30; i++) {
-        *(unsigned char *)(p + 0x4f0c) = 0;
-        *(unsigned char *)(p + 0x4f0e) = 0;
+        SHOT(p)->active = 0;
+        SHOT(p)->visible = 0;
         p += 0x38;
     }
 }
@@ -2209,40 +2268,42 @@ void PachinkoBobOmb_ClearAll(char *p)
 void PachinkoBobOmb_DrawAll(char *thiz) {
     int i;
     for (i = 0; i < 0x30; i++, thiz += 0x38) {
-        if (*(unsigned char*)(thiz + 0x4f0e) == 0) continue;
-        Mg_RenderSpriteBothScaled((OamAttr *)sPachinkoBobOmbSprites, *(int *)(thiz + 0x4ed8) >> 0xc,
-                                  *(int *)(thiz + 0x4edc) >> 0xc, -1, -1, 0x1000, 0);
+        if (SHOT(thiz)->visible == 0)
+            continue;
+        Mg_RenderSpriteBothScaled((OamAttr *)sPachinkoBobOmbSprites, SHOT(thiz)->x >> 0xc,
+                                  SHOT(thiz)->y >> 0xc, -1, -1, 0x1000, 0);
     }
 }
 
 // @symbol PachinkoBobOmb_UpdateAll
-void PachinkoBobOmb_UpdateAll(char* c){
-  int i=0;
-  char* r5=c;
-  do{
-    if(*(unsigned char*)(r5+0x4f0c)!=0){
-      int idx=*(unsigned char*)(r5+0x4f0d);
-      Ent7d0 *e = &sPachinkoBobOmbStateTable[idx];
-      int adj=e->b;
-      char* obj=c+(adj>>1);
-      int fn;
-      if(adj&1){
-        fn=*(int*)(*(int*)obj + e->a);
-      } else {
-        fn=e->a;
-      }
-      ((void(*)(void*,int))fn)(obj,i);
-    }
-    i++;
-    r5+=0x38;
-  }while(i<48);
+void PachinkoBobOmb_UpdateAll(char *c) {
+    int i = 0;
+    char *r5 = c;
+    do {
+        if (SHOT(r5)->active != 0) {
+            int idx = SHOT(r5)->state;
+            Ent7d0 *e = &sPachinkoBobOmbStateTable[idx];
+            int adj = e->b;
+            char *obj = c + (adj >> 1);
+            int fn;
+            if (adj & 1) {
+                fn = *(int *)(*(int *)obj + e->a);
+            } else {
+                fn = e->a;
+            }
+            ((void (*)(void *, int))fn)(obj, i);
+        }
+        i++;
+        r5 += 0x38;
+    } while (i < 48);
 }
 
 // @symbol Pachinko_CountLaunch
 void Pachinko_CountLaunch(char *c)
 {
-    if (*(unsigned char *)(c + 0x5000 + 0xc32) == 0)
-        *(unsigned char *)(c + 0x5c32) += 1;
+    dScMgPachinko_c *self = PACHINKO(c);
+    if (self->mPlayStarted == 0)
+        self->mPlayStarted += 1;
 }
 
 // @symbol PachinkoBobOmb_StateWaitGrab
@@ -2257,12 +2318,12 @@ void PachinkoBobOmb_StateWaitGrab(char *self, int i) {
     }
     if (flag != 0) {
         p = self + i * 0x38;
-        dx = ((*(s32 *)(p + 0x4ed8)) >> 12) - gTouchX[idx][0];
-        dy = ((*(s32 *)(p + 0x4edc)) >> 12) - gTouchY[idx][0];
-        *(unsigned char *)(p + 0x4f0d) = 1;
-        *(s32 *)(p + 0x4ee8) = dx << 12;
-        *(s32 *)(p + 0x4eec) = dy << 12;
-        *(unsigned char *)(p + 0x4f0f) = 0;
+        dx = (SHOT(p)->x >> 12) - gTouchX[idx][0];
+        dy = (SHOT(p)->y >> 12) - gTouchY[idx][0];
+        SHOT(p)->state = 1;
+        SHOT(p)->offX = dx << 12;
+        SHOT(p)->offY = dy << 12;
+        SHOT(p)->combo = 0;
     }
     Pachinko_DrawAimLine(self);
 }
@@ -2302,88 +2363,89 @@ void PachinkoBobOmb_StateAim(dScMgPachinko_c *self, int i) {
 
         cx = gTouchX[idx][0];
         cy = gTouchY[idx][0];
-        *(s32 *)(c + 0x4ed8 + off) = (cx << 12) + *(s32 *)(c + 0x4ee8 + off);
-        *(s32 *)(c + 0x4edc + off) = (cy << 12) + *(s32 *)(c + 0x4eec + off);
+        *(s32 *)(c + SHOT_OFF(x) + off) = (cx << 12) + *(s32 *)(c + SHOT_OFF(offX) + off);
+        *(s32 *)(c + SHOT_OFF(y) + off) = (cy << 12) + *(s32 *)(c + SHOT_OFF(offY) + off);
 
-        vy = *(s32 *)(c + 0x4edc + off) >> 12;
-        vx = *(s32 *)(c + 0x4ed8 + off) >> 12;
+        vy = *(s32 *)(c + SHOT_OFF(y) + off) >> 12;
+        vx = *(s32 *)(c + SHOT_OFF(x) + off) >> 12;
         if (vx >= 0xf8)
-            *(s32 *)(c + 0x4ed8 + off) = 0xf8000;
-        py = (s32 *)(c + 0x4edc + off);
+            *(s32 *)(c + SHOT_OFF(x) + off) = 0xf8000;
+        py = (s32 *)(c + SHOT_OFF(y) + off);
         if (vx <= 8)
-            *(s32 *)(c + 0x4ed8 + off) = 0x8000;
+            *(s32 *)(c + SHOT_OFF(x) + off) = 0x8000;
         if (vy >= 0xb8)
             *py = 0xb8000;
         if (vy <= 8)
             *py = 0x8000;
 
         {
-            s32 nx = (*(s32 *)(c + 0x4ed8 + off) >> 12) - gTouchX[gActivePlayerSlot][0];
-            s32 ny = (*(s32 *)(c + 0x4edc + off) >> 12) - gTouchY[gActivePlayerSlot][0];
+            s32 nx = (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - gTouchX[gActivePlayerSlot][0];
+            s32 ny = (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - gTouchY[gActivePlayerSlot][0];
 
-            *(s32 *)(c + 0x4ee8 + off) = nx << 12;
-            *(s32 *)(c + 0x4eec + off) = ny << 12;
+            *(s32 *)(c + SHOT_OFF(offX) + off) = nx << 12;
+            *(s32 *)(c + SHOT_OFF(offY) + off) = ny << 12;
         }
 
         {
-            s32 dy = 0x80 - (*(s32 *)(c + 0x4ed8 + off) >> 12);
-            s32 dx = 0x20 - (*(s32 *)(c + 0x4edc + off) >> 12);
+            s32 dy = 0x80 - (*(s32 *)(c + SHOT_OFF(x) + off) >> 12);
+            s32 dx = 0x20 - (*(s32 *)(c + SHOT_OFF(y) + off) >> 12);
             s32 dist = cstd::sqrt((u64)(s64)(dy * dy + dx * dx));
-            s32 prev = *(s32 *)(c + 0x4f04 + off);
+            s32 prev = *(s32 *)(c + SHOT_OFF(dist) + off);
 
-            *(s32 *)(c + 0x4f04 + off) = dist;
+            *(s32 *)(c + SHOT_OFF(dist) + off) = dist;
             if (dist > prev) {
                 if (dist > prev + 10)
-                    *(s32 *)(c + 0x4f00 + off) = Sound_PlayIfNotActive(
-                        *(s32 *)(c + 0x4f00 + off), 2, 0x17b, 0);
+                    *(s32 *)(c + SHOT_OFF(sound) + off) =
+                        Sound_PlayIfNotActive(*(s32 *)(c + SHOT_OFF(sound) + off), 2, 0x17b, 0);
                 else
-                    *(s32 *)(c + 0x4f00 + off) = Sound_PlayIfNotActive(
-                        *(s32 *)(c + 0x4f00 + off), 2, 0x17c, 0);
+                    *(s32 *)(c + SHOT_OFF(sound) + off) =
+                        Sound_PlayIfNotActive(*(s32 *)(c + SHOT_OFF(sound) + off), 2, 0x17c, 0);
             }
         }
     } else {
         int off = i * 0x38;
         s32 dy, dx, dist;
 
-        *(u8 *)(c + 0x4f0d + off) = 2;
-        dy = 0x80 - (*(s32 *)(c + 0x4ed8 + off) >> 12);
-        dx = 0x20 - (*(s32 *)(c + 0x4edc + off) >> 12);
+        *(u8 *)(c + SHOT_OFF(state) + off) = 2;
+        dy = 0x80 - (*(s32 *)(c + SHOT_OFF(x) + off) >> 12);
+        dx = 0x20 - (*(s32 *)(c + SHOT_OFF(y) + off) >> 12);
         dist = cstd::sqrt((u64)(s64)(dy * dy + dx * dx));
         if (dist >= 0x10) {
             {
-                s16 ang = _ZN4cstd5atan2E5Fix12IiES1_(dx, dy);
+                s16 ang = cstd::atan2(dx, dy);
                 char *p = c + off;
 
-                *(s16 *)(p + 0x4f08) = ang;
+                *(s16 *)(p + SHOT_OFF(angle)) = ang;
             }
-            *(s32 *)(c + 0x4ef8 + off) =
-                cstd::sqrt((u64)(s64)(dy * dy + dx * dx)) << 8;
-            *(s32 *)(c + 0x4ef8 + off) += *(s32 *)(c + 0x4ef8 + off) >> 2;
-            *(s32 *)(c + 0x4ef8 + off) += *(s32 *)(c + 0x4ef8 + off) >> 2;
-            *(s32 *)(c + 0x4ef8 + off) += *(s32 *)(c + 0x4ef8 + off) >> 2;
-            if (*(s32 *)(c + 0x4ef8 + off) >= 0xa000)
-                *(s32 *)(c + 0x4ef8 + off) = 0xa000;
-            self->mNextBallDelay = (u16)(*(s32 *)(c + 0x4ef8 + off) >> 10);
+            *(s32 *)(c + SHOT_OFF(speed) + off) = cstd::sqrt((u64)(s64)(dy * dy + dx * dx)) << 8;
+            *(s32 *)(c + SHOT_OFF(speed) + off) += *(s32 *)(c + SHOT_OFF(speed) + off) >> 2;
+            *(s32 *)(c + SHOT_OFF(speed) + off) += *(s32 *)(c + SHOT_OFF(speed) + off) >> 2;
+            *(s32 *)(c + SHOT_OFF(speed) + off) += *(s32 *)(c + SHOT_OFF(speed) + off) >> 2;
+            if (*(s32 *)(c + SHOT_OFF(speed) + off) >= 0xa000)
+                *(s32 *)(c + SHOT_OFF(speed) + off) = 0xa000;
+            self->mNextBallDelay = (u16)(*(s32 *)(c + SHOT_OFF(speed) + off) >> 10);
             if (self->mNextBallDelay == 0)
                 self->mNextBallDelay = 1;
             *(u8 *)(c + 0x5c31) = 0;
             {
-                int ai = (*(u16 *)(c + 0x4f08 + off) >> 4) * 2 + 1;
-                *(s32 *)(c + 0x4ee0 + off) = FX_MUL(data_02082214[ai], *(s32 *)(c + 0x4ef8 + off));
+                int ai = (*(u16 *)(c + SHOT_OFF(angle) + off) >> 4) * 2 + 1;
+                *(s32 *)(c + SHOT_OFF(velX) + off) =
+                    FX_MUL(data_02082214[ai], *(s32 *)(c + SHOT_OFF(speed) + off));
             }
             {
-                const s16 *sp = &data_02082214[(*(u16 *)(c + 0x4f08 + off) >> 4) * 2];
-                *(s32 *)(c + 0x4ee4 + off) = FX_MUL(*sp, *(s32 *)(c + 0x4ef8 + off));
+                const s16 *sp = &data_02082214[(*(u16 *)(c + SHOT_OFF(angle) + off) >> 4) * 2];
+                *(s32 *)(c + SHOT_OFF(velY) + off) =
+                    FX_MUL(*sp, *(s32 *)(c + SHOT_OFF(speed) + off));
             }
-            *(s16 *)(c + 0x4f0a + off) = 0;
+            *(s16 *)(c + SHOT_OFF(timer) + off) = 0;
             if (dist >= 0x40)
                 Sound::PlayBank2_2D(0x17e);
             else
                 Sound::PlayBank2_2D(0x17d);
         } else {
-            *(s32 *)(c + 0x4ed8 + off) = 0x80000;
-            *(s32 *)(c + 0x4edc + off) = 0x28000;
-            *(u8 *)(c + 0x4f0d + off) = 0;
+            *(s32 *)(c + SHOT_OFF(x) + off) = 0x80000;
+            *(s32 *)(c + SHOT_OFF(y) + off) = 0x28000;
+            *(u8 *)(c + SHOT_OFF(state) + off) = 0;
         }
     }
     Pachinko_DrawAimLine(self);
@@ -2396,40 +2458,42 @@ void PachinkoBobOmb_StateFlying(char *c, int idx) {
     int old;
     int e, b;
 
-    *(int*)(c + 0x4ed8 + n) = *(int*)(c + 0x4ed8 + n) + *(int*)(c + 0x4ee0 + n);
-    *(int*)(c + 0x4edc + n) = *(int*)(c + 0x4edc + n) + *(int*)(c + 0x4ee4 + n);
-    *(int*)(c + 0x4efc + n) = *(int*)(c + 0x4efc + n) + 0x10;
-    old = *(int*)(c + 0x4ee4 + n);
-    *(int*)(c + 0x4ee4 + n) = old + *(int*)(c + 0x4efc + n);
-    if (*(int*)(c + 0x4ee4 + n) >= 0x8000)
-        *(int*)(c + 0x4ee4 + n) = 0x8000;
+    *(int *)(c + SHOT_OFF(x) + n) =
+        *(int *)(c + SHOT_OFF(x) + n) + *(int *)(c + SHOT_OFF(velX) + n);
+    *(int *)(c + SHOT_OFF(y) + n) =
+        *(int *)(c + SHOT_OFF(y) + n) + *(int *)(c + SHOT_OFF(velY) + n);
+    /* a typed mShot[idx]. access here changes the code. */
+    *(int *)(c + SHOT_OFF(gravity) + n) = *(int *)(c + SHOT_OFF(gravity) + n) + 0x10;
+    old = *(int *)(c + SHOT_OFF(velY) + n);
+    *(int *)(c + SHOT_OFF(velY) + n) = old + *(int *)(c + SHOT_OFF(gravity) + n);
+    if (*(int *)(c + SHOT_OFF(velY) + n) >= 0x8000)
+        *(int *)(c + SHOT_OFF(velY) + n) = 0x8000;
 
-    *(s16*)(c + 0x4f08 + n) = _ZN4cstd5atan2E5Fix12IiES1_(
-        *(int*)(c + 0x4ee4 + n) >> 12,
-        *(int*)(c + 0x4ee0 + n) >> 12);
+    *(s16 *)(c + SHOT_OFF(angle) + n) =
+        cstd::atan2(*(int *)(c + SHOT_OFF(velY) + n) >> 12, *(int *)(c + SHOT_OFF(velX) + n) >> 12);
 
     if (old < 0) {
-        if (*(int*)(c + 0x4ee4 + n) >= 0)
-            *(s16*)(c + 0x4f0a + n) = 0x40;
+        if (*(int *)(c + SHOT_OFF(velY) + n) >= 0)
+            *(s16 *)(c + SHOT_OFF(timer) + n) = 0x40;
     }
 
-    if (*(u16*)(c + 0x4f0a + n) != 0) {
-        *(volatile u16*)(c + 0x4f0a + n) = *(volatile u16*)(c + 0x4f0a + n) - 1;
-        if (*(s16*)(c + 0x4f0a + n) <= 0)
-            *(u8*)(c + 0x4f0d + n) = 4;
+    if (*(u16 *)(c + SHOT_OFF(timer) + n) != 0) {
+        *(volatile u16 *)(c + SHOT_OFF(timer) + n) = *(volatile u16 *)(c + SHOT_OFF(timer) + n) - 1;
+        if (*(s16 *)(c + SHOT_OFF(timer) + n) <= 0)
+            *(u8 *)(c + SHOT_OFF(state) + n) = 4;
     }
 
-    b = *(int*)(c + 0x4ed8 + n) >> 12;
-    e = *(int*)(c + 0x4edc + n) >> 12;
+    b = *(int *)(c + SHOT_OFF(x) + n) >> 12;
+    e = *(int *)(c + SHOT_OFF(y) + n) >> 12;
     if (e <= -0x120)
-        *(u8*)(c + 0x4f0d + n) = 4;
+        *(u8 *)(c + SHOT_OFF(state) + n) = 4;
     if (e >= 0xd0)
-        *(u8*)(c + 0x4f0d + n) = 4;
+        *(u8 *)(c + SHOT_OFF(state) + n) = 4;
     if (b >= 0x140 || b <= -0x40)
-        *(u8*)(c + 0x4f0d + n) = 4;
+        *(u8 *)(c + SHOT_OFF(state) + n) = 4;
 
     Pachinko_ClearAimLine(c);
-    if (*(u8*)(c + 0x5c2f) != 0)
+    if (PACHINKO(c)->mAimShot != 0)
         Pachinko_DrawAimLine(c);
 }
 
@@ -2439,8 +2503,8 @@ void PachinkoBobOmb_StateFallAway(char *base, int i) {
     int n = i * 0x38;
     s16 t;
     u16 v;
-    self->mShot[i].speed = self->mShot[i].speed + self->mShot[i].unk24;
-    self->mShot[i].unk24 = self->mShot[i].unk24 + 0x10;
+    self->mShot[i].speed = self->mShot[i].speed + self->mShot[i].gravity;
+    self->mShot[i].gravity = self->mShot[i].gravity + 0x10;
     self->mShot[i].x =
         self->mShot[i].x + FX_MUL(data_02082214[((self->mShot[i].angle >> 4) << 1) + 1], 0x800);
     t = data_02082214[(self->mShot[i].angle >> 4) << 1];
@@ -2457,8 +2521,8 @@ void PachinkoBobOmb_StateFallAway(char *base, int i) {
 
 // @symbol PachinkoBobOmb_StateRemove
 void PachinkoBobOmb_StateRemove(char *p, int idx) {
-    *(p + idx * 0x38 + 0x4000 + 0xf0c) = 0;
-    *(p + idx * 0x38 + 0x4000 + 0xf0e) = 0;
+    PACHINKO(p)->mShot[idx].active = 0;
+    PACHINKO(p)->mShot[idx].visible = 0;
 }
 
 // @symbol Pachinko_UpdateNextBall
@@ -2475,34 +2539,29 @@ void Pachinko_UpdateNextBall(char *o) {
     self->mNextBallDelay = 0;
 
     p = o;
-    for (i = 0; i < 0x30; i++)
-    {
-        if (*(unsigned char *)(p + 0x4f0c) == 0)
-        {
-            /* Two-step base: mla into temp then add #0x4000 into r3 (not ip). */
+    for (i = 0; i < 0x30; i++) {
+        if (SHOT(p)->active == 0) {
             p = o + i * 0x38;
-            p = p + 0x4000;
-            *(unsigned char *)(p + 0xf0c) = 1;
-            *(unsigned char *)(p + 0xf0e) = 1;
-            *(unsigned char *)(p + 0xf0d) = 0;
-            *(int *)(p + 0xefc) = 0;
-            *(int *)(p + 0xed8) = 0x80000;
-            *(int *)(p + 0xedc) = 0x28000;
-            *(int *)(p + 0xee8) = 0;
-            *(int *)(p + 0xeec) = 0;
-            *(unsigned char *)(p + 0xf0f) = 0;
-            *(int *)(p + 0xee0) = 0;
-            *(int *)(p + 0xee4) = 0;
+            SHOT(p)->active = 1;
+            SHOT(p)->visible = 1;
+            SHOT(p)->state = 0;
+            SHOT(p)->gravity = 0;
+            SHOT(p)->x = 0x80000;
+            SHOT(p)->y = 0x28000;
+            SHOT(p)->offX = 0;
+            SHOT(p)->offY = 0;
+            SHOT(p)->combo = 0;
+            SHOT(p)->velX = 0;
+            SHOT(p)->velY = 0;
             self->mShot[i].timer = 0;
-            *(int *)(p + 0xf00) = 0;
-            *(int *)(p + 0xf04) = 4;
-            *(unsigned char *)(o + 0x5c2f) = (unsigned char)(i + 1);
-            if (*(unsigned short *)(o + 0x5c20) != 0)
-            {
+            SHOT(p)->sound = 0;
+            SHOT(p)->dist = 4;
+            self->mAimShot = (unsigned char)(i + 1);
+            if (self->mBallsServed != 0) {
                 Sound::PlayBank2_2D(0x18d);
                 return;
             }
-            *(unsigned short *)(o + 0x5c20) += 1;
+            self->mBallsServed += 1;
             return;
         }
         p += 0x38;
@@ -2514,87 +2573,86 @@ void Pachinko_ResetRound(char *self)
 {
     dScMgPachinko_c *scene = (dScMgPachinko_c *)self;
     int i, j, k, l, m, n;
-    char *p, *q, *r, *s, *t, *u;
+    char *r, *s, *t;
 
     scene->mPhase = 0;
 
-    p = self;
     for (i = 0; i < 30; i++) {
-        *(int *)(p + 0x4cf0) = 0;
-        *(int *)(p + 0x4cf4) = 0;
-        *(short *)(p + 0x4cf8) = 0;
-        *(short *)(p + 0x4cfa) = 0;
-        p += 0xc;
+        scene->mPopup[i].x = 0;
+        scene->mPopup[i].y = 0;
+        scene->mPopup[i].points = 0;
+        scene->mPopup[i].timer = 0;
     }
 
-    q = self;
     for (j = 0; j < 3; j++) {
-        *(char *)(q + 0x4e6c) = 0;
-        *(char *)(q + 0x4e6d) = 0;
-        q += 0x18;
+        scene->mRow[j].active = 0;
+        scene->mRow[j].visible = 0;
     }
 
+    /* r, s and t walk `this` one record per pass, so their [0] is element k,
+       l or m; indexing the arrays directly grows the function by 16 bytes.
+       The two raw pipe stores hit pads nothing reads. */
     r = self;
     for (k = 0; k < 2; k++) {
-        *(int *)(r + 0x4ea0) = 0;
-        *(int *)(r + 0x4ea4) = 0;
-        *(int *)(r + 0x4ea8) = 0;
+        ((dScMgPachinko_c *)r)->mPipe[0].x = 0;
+        ((dScMgPachinko_c *)r)->mPipe[0].y = 0;
+        ((dScMgPachinko_c *)r)->mPipe[0].vel = 0;
         *(int *)(r + 0x4eac) = 0;
-        *(short *)(r + 0x4eb0) = 0;
-        *(char *)(r + 0x4eb5) = 0;
-        *(char *)(r + 0x4eb3) = 0;
+        ((dScMgPachinko_c *)r)->mPipe[0].timer = 0;
+        ((dScMgPachinko_c *)r)->mPipe[0].sprite = 0;
+        ((dScMgPachinko_c *)r)->mPipe[0].state = 0;
         *(char *)(r + 0x4eb2) = 0;
-        *(char *)(r + 0x4eb7) = 0;
-        *(char *)(r + 0x4eb8) = 0;
+        ((dScMgPachinko_c *)r)->mPipe[0].active = 0;
+        ((dScMgPachinko_c *)r)->mPipe[0].visible = 0;
         r += 0x1c;
     }
 
     s = self;
     for (l = 0; l < 0x30; l++) {
-        *(int *)(s + 0x4ed8) = 0;
-        *(int *)(s + 0x4edc) = 0;
-        *(int *)(s + 0x4ef0) = 0;
-        *(int *)(s + 0x4ef4) = 0;
-        *(int *)(s + 0x4ef8) = 0;
-        *(int *)(s + 0x4efc) = 0;
-        *(short *)(s + 0x4f08) = 0;
-        *(short *)(s + 0x4f0a) = 0;
-        *(char *)(s + 0x4f0c) = 0;
-        *(char *)(s + 0x4f0d) = 0;
-        *(char *)(s + 0x4f0e) = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].x = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].y = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].prevX = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].prevY = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].speed = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].gravity = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].angle = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].timer = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].active = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].state = 0;
+        ((dScMgPachinko_c *)s)->mShot[0].visible = 0;
         s += 0x38;
     }
 
     t = self;
     for (m = 0; m < 30; m++) {
-        *(char *)(t + 0x468c) = 0;
-        *(char *)(t + 0x468d) = 0;
-        *(char *)(t + 0x468f) = 0;
+        ((dScMgPachinko_c *)t)->mBall[0].active = 0;
+        ((dScMgPachinko_c *)t)->mBall[0].visible = 0;
+        ((dScMgPachinko_c *)t)->mBall[0].state = 0;
         t += 0x38;
     }
 
-    u = self;
     for (n = 0; n < 30; n++) {
-        *(char *)(u + 0x5964) = 0;
-        *(char *)(u + 0x5966) = 0;
-        u += 0x14;
+        scene->mFx[n].active = 0;
+        scene->mFx[n].visible = 0;
     }
 
-    *(char *)(self + 0x5bc6) = 0;
-    *(char *)(self + 0x5bc8) = 0;
-    *(char *)(self + 0x5bc7) = 0;
+    scene->mFlyer[0].active = 0;
+    scene->mFlyer[0].state = 0;
+    scene->mFlyer[0].visible = 0;
     scene->mEndTimer = 0;
+    /* 0x5c1e, 0x5c22 and 0x5c30 stay raw header pads: nothing in this
+       file reads them; 0x5c30 is also cleared at time up. */
     *(short *)(self + 0x5c22) = 0;
     *(short *)(self + 0x5c1e) = 0;
     *(char *)(self + 0x5c30) = 0;
     scene->unk_5c31 = 0;
-    *(char *)(self + 0x5c32) = 0;
+    scene->mPlayStarted = 0;
     scene->mWaveTimer = 0;
-    *(char *)(self + 0x5c34) = 0;
+    scene->mFlyerOut = 0;
     scene->mWaveSpawns = 0;
     scene->mWaveLevel = 0;
     scene->mHitPause = 0;
-    *(short *)(self + 0x5c20) = 0;
+    scene->mBallsServed = 0;
 
     Mg_SubmitScore(0);
     PachinkoTarget_HideAll(self);
@@ -2732,7 +2790,7 @@ s32 dScMgPachinko_c::InitResources()
     Deallocate((void *)f);
 
     f = LoadFile(0x60);
-    _ZN2GX10LoadBGPlttEPKvjj((const void *)f, 0x60, 0x1a0);
+    GX::LoadBGPltt((const void *)f, 0x60, 0x1a0);
     Deallocate((void *)f);
 
     f = LoadFile(0x61);
@@ -2758,7 +2816,7 @@ s32 dScMgPachinko_c::InitResources()
     objChar = LoadFile(0xe0);
     objPltt = LoadFile(0xe1);
     DecompressLZ16((void *)objChar, (void *)0x6400000);
-    _ZN2GX11LoadOBJPlttEPKvjj((const void *)objPltt, 0, 0x100);
+    GX::LoadOBJPltt((const void *)objPltt, 0, 0x100);
 
     data_0209d454 |= 0xd;
     *(volatile u16 *)0x400100c &= ~3;
@@ -2792,7 +2850,7 @@ s32 dScMgPachinko_c::InitResources()
     Deallocate((void *)f);
 
     f = LoadFile(0x5d);
-    _ZN3GXS10LoadBGPlttEPKvjj((const void *)f, 0x60, 0x1a0);
+    GXS::LoadBGPltt((const void *)f, 0x60, 0x1a0);
     Deallocate((void *)f);
 
     f = LoadFile(0x5e);
@@ -2809,7 +2867,7 @@ s32 dScMgPachinko_c::InitResources()
     Deallocate((void *)f);
 
     DecompressLZ16((void *)objChar, (void *)0x6600000);
-    _ZN3GXS11LoadOBJPlttEPKvjj((const void *)objPltt, 0, 0x100);
+    GXS::LoadOBJPltt((const void *)objPltt, 0, 0x100);
     Deallocate((void *)objChar);
     Deallocate((void *)objPltt);
 

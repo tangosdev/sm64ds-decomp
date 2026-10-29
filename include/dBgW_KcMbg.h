@@ -11,21 +11,22 @@
  * this in turn. Overrides every slot except BeforeClsn (slot 9) and
  * GetSurfaceInfo (slot 3), both of which it inherits unchanged.
  *
- * THE DESTRUCTOR IS DECLARED FIRST -- see include/ModelBase.h for the
+ * THE DESTRUCTOR IS DECLARED FIRST -- see include/dExtModel_c.h for the
  * key-function rule. src/engine/collision/d_bg_w_kc_mbg.cpp defines it once
  * and the TU keeps all five structor variants.
  *
- * SetFile keeps an extern-C free definition: its mangled name carries
- * Fix12<int> by value (wall 6az). Its declaration here is the real
- * signature. SetFile and Transform copy matrices through a flat 12-word
- * view (the Model::Virtual10 lesson).
+ * SetFile takes the scale as Fix12i (a scalar; it mangles as i).
+ * SetFile and Transform copy matrices through a flat 12-word
+ * view (the dExtSimpleModel_c::Virtual10 lesson).
  */
 
 #ifdef __cplusplus
 
 #include "math/Fix12.h"
 
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+namespace Memory {
+void operator_delete2(void *);
+}
 
 struct dBgW_KcMbg : dBgW_Kc {
     Fix12i scale;              /* 0x50 */
@@ -38,8 +39,8 @@ struct dBgW_KcMbg : dBgW_Kc {
     Vector3 pos;               /* 0x118 */
     Vector3 velocity;          /* 0x124 */
     /* Set by func_020398fc. While set, Transform points dBgW_Kc's
-       face filter (unk_34/unk_35/unk_38/unk_44) along the collider's
-       horizontal velocity every frame. SetFile clears it. */
+       depth policy (shallowOnly/depthByDir/depthDir/depthDirMinDot) along the
+       collider's horizontal velocity every frame. SetFile clears it. */
     bool filterByMoveDir; /* 0x130 */
     u8 pad_131[3];
     Matrix4x3 newScaledMat;    /* 0x134 */
@@ -67,8 +68,7 @@ struct dBgW_KcMbg : dBgW_Kc {
     dBgW_KcMbg();
 
     /* --- non-virtual --- */
-    void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12<int> scale,
-                 s16 angY, CLPS_Block &clps);             /* free def, wall 6az */
+    void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12i scale, s16 angY, CLPS_Block &clps);
     void Transform(const Matrix4x3 &mat, s16 angY);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
@@ -85,8 +85,9 @@ struct dBgW_KcMbg : dBgW_Kc {
        Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
        in the class or one level up, as include/dActor_c.h records. No layout
        effect: a non-virtual inline member adds no field and no vtable slot. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
-
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

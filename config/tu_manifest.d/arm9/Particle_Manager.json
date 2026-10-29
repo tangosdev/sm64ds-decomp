@@ -1,0 +1,117 @@
+{
+  "id": "arm9/Particle_Manager",
+  "module": "arm9",
+  "source": "src/engine/particle/Particle_Manager.cpp",
+  "promoted_source": "src/engine/particle/Particle_Manager.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "Contiguous .text 0x02049d60..0x0204a5bc. Nine functions tile the span with no hole and no tail: func_02049d60, func_02049d78, Particle::Manager::AddSystem, func_02049ee8, func_02049f58, func_0204a028, func_0204a0dc, func_0204a17c, func_0204a4c8.",
+    "TOP EDGE: func_02049cd8 (0x02049cd8..0x02049d60) is the sound-context switch Sound.cpp calls (data_020a4c64 / data_020a4c70). It is not a Particle::Manager method.",
+    "BOTTOM EDGE: func_0204a5bc (0x0204a5bc..0x0204a5c8) is a 12-byte tail veneer to func_0204c584. Its arguments are (system, list), not the manager, and the system draw/update helpers continue from func_0204a5c8.",
+    "Every function in the span takes the 0x3c manager (or returns one). Initialise calls func_0204a4c8 then func_0204a17c, func_0204a0dc and func_0204a028; SysTracker::Update calls func_02049f58; RenderAll calls func_02049ee8; dPa_c callbacks call func_02049d60; ov007 calls func_02049d78 to retire a system. AddSystem is the named spawn in the middle of that run.",
+    "The callees AddSystem names are outside the span: func_0204ae2c at 0x0204ae2c, func_0204d958 at 0x0204d958, func_0204d9a0 at 0x0204d9a0. Particle.cpp is 0x020226d4..0x020233d4 and Particle_Behavior.cpp is 0x0204d4d0..0x0204d8e8, so this run is its own TU."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02049d60",
+      "end": "0x0204a5bc"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_02049d60",
+      "address": "0x02049d60",
+      "size": "0x18",
+      "legacy_source": "src/unnamed/arm9/0204/func_02049d60.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_02049d78",
+      "address": "0x02049d78",
+      "size": "0x94",
+      "legacy_source": "src/unnamed/arm9/0204/func_02049d78.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN8Particle7Manager9AddSystemEiR7Vector3",
+      "address": "0x02049e0c",
+      "size": "0xdc",
+      "legacy_source": "src/_ZN8Particle7Manager9AddSystemEiR7Vector3.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_02049ee8",
+      "address": "0x02049ee8",
+      "size": "0x70",
+      "legacy_source": "src/unnamed/arm9/0204/func_02049ee8.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_02049f58",
+      "address": "0x02049f58",
+      "size": "0xd0",
+      "legacy_source": "src/unnamed/arm9/0204/func_02049f58.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_0204a028",
+      "address": "0x0204a028",
+      "size": "0xb4",
+      "legacy_source": "src/unnamed/arm9/0204/func_0204a028.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_0204a0dc",
+      "address": "0x0204a0dc",
+      "size": "0xa0",
+      "legacy_source": "src/unnamed/arm9/0204/func_0204a0dc.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_0204a17c",
+      "address": "0x0204a17c",
+      "size": "0x34c",
+      "legacy_source": "src/unnamed/arm9/0204/func_0204a17c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_0204a4c8",
+      "address": "0x0204a4c8",
+      "size": "0xf4",
+      "legacy_source": "src/unnamed/arm9/0204/func_0204a4c8.c",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [],
+  "notes": [
+    "Folded from nine one-function files. The unnamed functions stay extern \"C\" under their existing symbols; only AddSystem is a real Particle::Manager method. tools/srcpath.py still answered src/_ZN8Particle7Manager9AddSystemEiR7Vector3.cpp for that symbol because that shard was the enrolled owner; placement_for returned None (its filename cohort was the repo root). The production name follows the other Particle TUs already in src/engine/particle/ (Particle.cpp, Particle_Behavior.cpp, Particle_SysTracker_Contents.cpp).",
+    "Each function matched under mwccarm 2004/b56 both alone, compiled as C++, and again from this TU. The object emits nine .text sections in ROM-ascending address order and no data."
+  ],
+  "relocations": [],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-Particle_Manager/Particle_Manager.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

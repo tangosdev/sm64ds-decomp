@@ -8,29 +8,26 @@
  * One class, two C-linkage factories: EAD would name both
  * daObjFire_c_classInit (not_apply=global_classinit_name_collision).
  *
+ * S41: RTTI daObjFire_c; D1 0x020b5734 size 0x30 (slot 16),
+ * D0 0x020b5764 size 0x44 (slot 17); inline dtor in daObjFire_c.h
+ * emits D1 then D0, no D2.
+ *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S.
  *
- * deslop leftovers:
- * - dCcAc_c::Init 6az: InitResources passes Fix12<int> by value; the
- *   header method form size-DIFFs.
- * - func_020228dc / func_0202293c: blue/red flame particle wrappers
- *   (effects 0x117 / 0x118). No recovered names.
- * - Particle::System::NewSimple stays mangled (Fix12i by value, 6az).
+ * func_020228dc / func_0202293c are the arm9 blue/red flame particle
+ * wrappers (effects 0x117 / 0x118). Their names are not recovered and no
+ * header declares them.
  */
 
 #include "daObjFire_c.h"
 #include "SpawnInfo.h"
 #include "Player.h"
+#include "Particle__System.h"
 
 extern "C" {
 u8 DecIfAbove0_Byte(u8 *value);
 u32 func_020228dc(Fix12i x, Fix12i y, Fix12i z);
 u32 func_0202293c(Fix12i x, Fix12i y, Fix12i z);
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-    u32 id, Fix12i x, Fix12i y, Fix12i z);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    void *self, dActor_c *actor, Fix12i radius, Fix12i height,
-    u32 flags, u32 vulnFlags);
 }
 
 /* Actor ID 0x13d is BLUE_FLAME, 0xbf is PLAYER. dActor_c::mFlags bit
@@ -50,14 +47,12 @@ static inline int IsPlayerActor(dActor_c *actor) {
 }
 
 // @symbol daObjFire_c_classInit_OBJ_RED_FIRE
-extern "C" daObjFire_c *daObjFire_c_classInit_OBJ_RED_FIRE()
-{
+extern "C" daObjFire_c *daObjFire_c_classInit_OBJ_RED_FIRE() {
     return new daObjFire_c();
 }
 
 // @symbol daObjFire_c_classInit_OBJ_BLUE_FIRE
-extern "C" daObjFire_c *daObjFire_c_classInit_OBJ_BLUE_FIRE()
-{
+extern "C" daObjFire_c *daObjFire_c_classInit_OBJ_BLUE_FIRE() {
     return new daObjFire_c();
 }
 
@@ -86,21 +81,16 @@ extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_BLUE_FIRE = {
 };
 
 // @symbol _ZN11daObjFire_c13OnYoshiTryEatEv
-s32 daObjFire_c::OnYoshiTryEat()
-{
+s32 daObjFire_c::OnYoshiTryEat() {
     return 5;
 }
 
 // @symbol _ZN11daObjFire_c13OnTurnIntoEggER6Player
-void daObjFire_c::OnTurnIntoEgg(Player &player)
-{
-}
+void daObjFire_c::OnTurnIntoEgg(Player &player) {}
 
 // @symbol _ZN11daObjFire_c13InitResourcesEv
-int daObjFire_c::InitResources()
-{
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &mdCcAc_c, this, 0x41000, 0x41000, 0x200002, 0x8000);
+int daObjFire_c::InitResources() {
+    mdCcAc_c.Init(this, 0x41000, 0x41000, 0x200002, 0x8000);
     mFlamePos.x = mPosX;
     mFlamePos.y = mPosY;
     mFlamePos.z = mPosZ;
@@ -108,8 +98,7 @@ int daObjFire_c::InitResources()
 }
 
 // @symbol _ZN11daObjFire_c8BehaviorEv
-int daObjFire_c::Behavior()
-{
+int daObjFire_c::Behavior() {
     Vector3 pos;
     Vector3 particlePos;
     Vector3 dust;
@@ -146,8 +135,7 @@ int daObjFire_c::Behavior()
         particlePos.y = mFlamePos.y;
         particlePos.z = mFlamePos.z;
         particlePos.y -= 0x1b000;
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-            0x9f, particlePos.x, particlePos.y, particlePos.z);
+        Particle::System::NewSimple(0x9f, particlePos.x, particlePos.y, particlePos.z);
     }
 
     {
@@ -169,7 +157,6 @@ int daObjFire_c::Behavior()
     return 1;
 }
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN11daObjFire_cD0Ev, 0x020b5764, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daObjFire_cD0Ev
 /* Deleting destructor, vtable slot 17. No body here: the destructor is inline in
@@ -178,7 +165,6 @@ int daObjFire_c::Behavior()
  * supplies the actor-heap release after complete destruction. */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN11daObjFire_cD1Ev, 0x020b5734, size 0x30 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daObjFire_cD1Ev
 /* Complete destructor, vtable slot 16. No body here either -- same inline header

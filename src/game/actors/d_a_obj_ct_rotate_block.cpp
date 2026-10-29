@@ -14,17 +14,16 @@
  * the same pragma lays .text down in source order, so this file is ROM-ascending.
  */
 
-// leftovers: dBgW_KcMbg::SetFile, dActor_c::DropShadowScaleXYZ and
-// dBgActor_c::IsClsnInRange take Fix12<int> by value, so they stay mangled
-// (a member call homes the argument and changes the ROM ABI -- this TU's
-// InitResources/Behavior/UpdateShadow calls). func_020393d4 is a 4-byte
-// store into dBgW's callback slot; naming belongs with dBgW in arm9.
+// Notes: func_020393d4 is the out-of-line store into the collider's
+// beforeClsnCallback; d_bg_w.cpp defines it and no header declares it.
+// UpdateShadow is void: its early exit leaves no value, and Behavior
+// ignores it.
 
 /* The two registry factories close the run in ROM order:
  * daObjCtRotateBlock_c_classInit_CT_MECHA02 (0x02119ebc, historical alias
  * TtcRotatingPrism_Spawn) and daObjCtRotateBlock_c_classInit_CT_MECHA01
  * (0x02119efc, historical alias TtcRotatingCube_Spawn). Each is operator
- * new(0x3d8), the dBgActor_c constructor, the vtable store and the Model and
+ * new(0x3d8), the dBgActor_c constructor, the vtable store and the dExtSimpleModel_c and
  * dExtShadowModel_c constructors, which is exactly `new daObjCtRotateBlock_c()`.
  * Their names are reconstructed from the profiles; retail does not store
  * them. The new-expression also emits dBgActor_c's base-object destructor,
@@ -48,6 +47,8 @@ enum daObjCtRotateBlock_c_AssetId {
 #include "dBgW.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
+#include "math/Approach.h"
+#include "math/MtxStack.h"
 
 /* Per-variant records are 0xc bytes. The first word is a SharedFilePtr. */
 extern char data_ov065_0211cfd0[];
@@ -61,60 +62,50 @@ extern char data_ov065_0211cfd4[];
  * manifest. Nothing in this TU names the handles directly; the variant
  * records above point at them. */
 struct RotateBlockModelFile : SharedFilePtr {
-    u32 words[2];
-
     RotateBlockModelFile(u32 fileID);
     ~RotateBlockModelFile();
 };
 
 struct RotateBlockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     RotateBlockCollisionFilePtr(u32 fileID);
     ~RotateBlockCollisionFilePtr();
 };
 
 extern "C" {
-extern void Matrix4x3_FromRotationY(void *m, short ang);
 extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 extern void MulVec3Mat4x3(void *src, void *mtx, void *dst);
 extern void AddVec3(void *a, void *b, void *c);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern int _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-    void *self, void *sm, void *mtx, int a, int b, int d, unsigned int e);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
 extern void func_020393d4(void *p, void *v);
+}
+
 extern short data_02082214[];
 extern u8 data_0209f2c0;
 extern int data_0209e650;
-extern s32 data_020a0e68[];
-}
-
-bool ApproachLinear(short &value, short target, short step);
 
 #pragma defer_codegen off
 
 // @symbol _ZN20daObjCtRotateBlock_cD1Ev
 // @symbol _ZN20daObjCtRotateBlock_cD0Ev
-daObjCtRotateBlock_c::~daObjCtRotateBlock_c()
-{
-}
+daObjCtRotateBlock_c::~daObjCtRotateBlock_c() {}
 
 // @symbol _ZN20daObjCtRotateBlock_c12UpdateShadowEv
-int daObjCtRotateBlock_c::UpdateShadow()
-{
+void daObjCtRotateBlock_c::UpdateShadow() {
     int d, b;
     int bval = mFloorY;
     int aval = mPosY;
     int diff = aval - bval;
-    if (diff < 0) diff = -diff;
-    if (diff > 0x9c4000) return 0x9c4000;
+    if (diff < 0)
+        diff = -diff;
+    if (diff > 0x9c4000)
+        return;
     b = 0x32000;
     d = 0x190000;
-    if (mUnevenGround) { b = 0x17c000; d = b; }
+    if (mUnevenGround) {
+        b = 0x17c000;
+        d = b;
+    }
     Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = (mFloorY + 0x1000) >> 3;
@@ -124,14 +115,12 @@ int daObjCtRotateBlock_c::UpdateShadow()
         int s = data_02082214[idx << 1];
         int sa = s < 0 ? -s : s;
         int depthAdd = FX_MUL(sa, 0x64000);
-        return _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-            this, &mShadowModel, &mShadowMat, d + depthAdd, b, d, 0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMat, d + depthAdd, b, d, 0xf);
     }
 }
 
 // @symbol _ZN20daObjCtRotateBlock_c10UpdateClsnEv
-void daObjCtRotateBlock_c::UpdateClsn()
-{
+void daObjCtRotateBlock_c::UpdateClsn() {
     mClsnMat = mModel.mat4x3;
     mClsnMat.m[9] = mPosX;
     mClsnMat.m[10] = mPosY + mOffsetY;
@@ -140,8 +129,7 @@ void daObjCtRotateBlock_c::UpdateClsn()
 }
 
 // @symbol _ZN20daObjCtRotateBlock_c11UpdateModelEv
-void daObjCtRotateBlock_c::UpdateModel()
-{
+void daObjCtRotateBlock_c::UpdateModel() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = (mPosY + mOffsetY) >> 3;
@@ -153,8 +141,7 @@ void daObjCtRotateBlock_c::UpdateModel()
 }
 
 // @symbol _ZN20daObjCtRotateBlock_c16CleanupResourcesEv
-int daObjCtRotateBlock_c::CleanupResources()
-{
+int daObjCtRotateBlock_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     ((SharedFilePtr *)data_ov065_0211c0a8[mVariant])->Release();
@@ -164,8 +151,7 @@ int daObjCtRotateBlock_c::CleanupResources()
 }
 
 // @symbol _ZN20daObjCtRotateBlock_c6RenderEv
-int daObjCtRotateBlock_c::Render()
-{
+int daObjCtRotateBlock_c::Render() {
     int flags;
     int b;
     flags = mFlags;
@@ -179,8 +165,7 @@ int daObjCtRotateBlock_c::Render()
 }
 
 // @symbol _ZN20daObjCtRotateBlock_c8BehaviorEv
-int daObjCtRotateBlock_c::Behavior()
-{
+int daObjCtRotateBlock_c::Behavior() {
     if (data_0209f2c0 != 3) {
         switch (mState) {
         case 0:
@@ -215,14 +200,13 @@ int daObjCtRotateBlock_c::Behavior()
     }
     UpdateModel();
     UpdateShadow();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+    if (IsClsnInRange(0, 0))
         UpdateClsn();
     return 1;
 }
 
 // @symbol _ZN20daObjCtRotateBlock_c13InitResourcesEv
-int daObjCtRotateBlock_c::InitResources()
-{
+int daObjCtRotateBlock_c::InitResources() {
     u16 id = actorID;
 
     if (id != 0x6c) {
@@ -235,12 +219,13 @@ int daObjCtRotateBlock_c::InitResources()
 
     u8 idx = mVariant;
     {
-        void *bmd = Model::LoadFile(*(SharedFilePtr *)*(void **)(data_ov065_0211cfd0 + idx * 0xc));
+        void *bmd = dExtSimpleModel_c::LoadFile(
+            *(SharedFilePtr *)*(void **)(data_ov065_0211cfd0 + idx * 0xc));
         mModel.SetFile((BMD_File *)bmd, 1, -1);
     }
 
     {
-        void *bmd = Model::LoadFile(*(SharedFilePtr *)data_ov065_0211c0a8[mVariant]);
+        void *bmd = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov065_0211c0a8[mVariant]);
         mRotatingModel.SetFile((BMD_File *)bmd, 1, -1);
     }
 
@@ -255,15 +240,15 @@ int daObjCtRotateBlock_c::InitResources()
     if (idx == 0) {
         s32 oi = idx * 0xc;
         void *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)*(void **)(data_ov065_0211cfd4 + oi));
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY,
-            *(void **)((char *)data_ov065_0211cfd8 + oi));
+        ((dBgW_KcMbg *)(&mMeshCollider))
+            ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
+                                  *(CLPS_Block *)(*(void **)((char *)data_ov065_0211cfd8 + oi)));
     } else {
         s32 oi = idx * 0xc;
         void *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)*(void **)(data_ov065_0211cfd4 + oi));
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
-            *(void **)((char *)data_ov065_0211cfd8 + oi));
+        ((dBgW_KcMbg *)(&mMeshCollider))
+            ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
+                                  *(CLPS_Block *)(*(void **)((char *)data_ov065_0211cfd8 + oi)));
     }
 
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
@@ -281,9 +266,9 @@ int daObjCtRotateBlock_c::InitResources()
         va.x = 0x64000;
         va.z = 0x64000;
 
-        Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-        MulVec3Mat4x3(&va, data_020a0e68, &vb);
-        AddVec3(&vb, &mPosX, &vb);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        MulVec3Mat4x3(&va, &data_020a0e68, &vb);
+        AddVec3(&vb, &mPos, &vb);
         vb.y -= 0xd2000;
 
         dBgCh_Gnd ground;
@@ -312,14 +297,12 @@ int daObjCtRotateBlock_c::InitResources()
 }
 
 // @symbol daObjCtRotateBlock_c_classInit_CT_MECHA02
-extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA02()
-{
+extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA02() {
     return new daObjCtRotateBlock_c();
 }
 
 // @symbol daObjCtRotateBlock_c_classInit_CT_MECHA01
-extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA01()
-{
+extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA01() {
     return new daObjCtRotateBlock_c();
 }
 

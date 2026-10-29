@@ -7,36 +7,24 @@
  * daBar_c_classInit and g_profile_BAR are reconstructed from RTTI daBar_c
  * and the BAR registry. Retail does not store those spellings.
  */
-/* leftovers: dActor_c::SetRanges and dCcAc_c::Init stay TU-local externs.
- * InitResources calls both. A member call changes that function's size
- * because each definition takes Fix12<int> by value.
- */
 
 #include "daBar_c.h"
 #include "SpawnInfo.h"
 
-extern "C" {
-extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
-    dActor_c *self, int offsetY, int radius, int clipDistance, int farDistance);
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    dCcAc_c *self, dActor_c *actor, int radius, int height, u32 flags, u32 vulnFlags);
-}
-
 enum {
-    kHeightParamBias = 10,        /* subtracted from the param byte first */
-    kHeightMul = 10,              /* then x10 */
-    kMinHeightFix12 = 0x1000,     /* 1.0 if that underflowed */
-    kClipPadFix12 = 0x640000,     /* extra clip past half-height */
+    kHeightParamBias = 10,    /* subtracted from the param byte first */
+    kHeightMul = 10,          /* then x10 */
+    kMinHeightFix12 = 0x1000, /* 1.0 if that underflowed */
+    kClipPadFix12 = 0x640000, /* extra clip past half-height */
     kCylinderRadiusFix12 = 0x35555,
-    kParamHurtBit = 0x100,        /* param1 bit 8: cylinder hurts */
+    kParamHurtBit = 0x100, /* param1 bit 8: cylinder hurts */
     kClsnFlags = 0x0080000c,
-    kClsnHurtBit = 0x02000000,    /* the one extra bit on the hurt cylinder */
+    kClsnHurtBit = 0x02000000, /* the one extra bit on the hurt cylinder */
     kClsnFlagsHurt = kClsnFlags | kClsnHurtBit
 };
 
 // @symbol daBar_c_classInit
-extern "C" daBar_c *daBar_c_classInit()
-{
+extern "C" daBar_c *daBar_c_classInit() {
     return new daBar_c();
 }
 
@@ -53,42 +41,34 @@ extern "C" SpawnInfo<daBar_c> g_profile_BAR = {
 };
 
 // @symbol _ZN7daBar_c13InitResourcesEv
-s32 daBar_c::InitResources()
-{
+s32 daBar_c::InitResources() {
     s32 height = (((param1 & 0xff) - kHeightParamBias) * kHeightMul) << 12;
     if (height <= 0)
         height = kMinHeightFix12;
     s32 halfHeight = height >> 1;
 
-    _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
-        this, halfHeight, halfHeight, halfHeight + kClipPadFix12, 0);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &mClsn, this, kCylinderRadiusFix12, height,
-        (param1 & kParamHurtBit) ? kClsnFlagsHurt : kClsnFlags, 0);
+    SetRanges(halfHeight, halfHeight, halfHeight + kClipPadFix12, 0);
+    mClsn.Init(this, kCylinderRadiusFix12, height,
+               (param1 & kParamHurtBit) ? kClsnFlagsHurt : kClsnFlags, 0);
     return 1;
 }
 
 // @symbol _ZN7daBar_c8BehaviorEv
-s32 daBar_c::Behavior()
-{
+s32 daBar_c::Behavior() {
     mClsn.Clear();
     mClsn.Update();
     return 1;
 }
 
 // @symbol _ZN7daBar_c6RenderEv
-s32 daBar_c::Render()
-{
+s32 daBar_c::Render() {
     return 1;
 }
 
 // @symbol _ZN7daBar_c16OnPendingDestroyEv
-void daBar_c::OnPendingDestroy()
-{
-}
+void daBar_c::OnPendingDestroy() {}
 
 // @symbol _ZN7daBar_c16CleanupResourcesEv
-s32 daBar_c::CleanupResources()
-{
+s32 daBar_c::CleanupResources() {
     return 1;
 }

@@ -117,7 +117,7 @@
     "D0": {"address": "0x020aee88", "size": "0x5c", "slot": 17},
     "address_order": "D1 then D0, D1 at the lower address -- identical to the promoted sibling daBar_c (D1 0x020b05d0, D0 0x020b0600).",
     "shape": "D0 does NOT call D1; it inlines D1's whole teardown and then calls Memory::Deallocate(this, *heap) at arm9:0x0203c1e8 with the heap pointer loaded from 0x020a0eac. This is the inline-destructor shape the daBar_c oracle produces from `virtual ~daBar_c() {}` declared FIRST in the class body with InitResources as the first out-of-line virtual.",
-    "teardown_order": "vptr store, then ShadowModel@0x350, Model@0x300, dBgCh_Actr@0x144, dCcAc_c@0x110, then base _ZN12dEnemyBase_cD2Ev -- exact reverse of the constructor."
+    "teardown_order": "vptr store, then ShadowModel@0x350, dExtSimpleModel_c@0x300, dBgCh_Actr@0x144, dCcAc_c@0x110, then base _ZN12dEnemyBase_cD2Ev -- exact reverse of the constructor."
   },
 
   "size": "0x398",
@@ -129,7 +129,7 @@
     {"step": "store vptr &_ZTV7da1up_c at this+0", "target": "0x021083c8"},
     {"step": "dCcAc_c::dCcAc_c() at this+0x110", "target": "arm9:0x020149c8"},
     {"step": "dBgCh_Actr::dBgCh_Actr() at this+0x144", "target": "arm9:0x02037430"},
-    {"step": "Model::Model() at this+0x300", "target": "arm9:0x02016d58"},
+    {"step": "dExtSimpleModel_c::dExtSimpleModel_c() at this+0x300", "target": "arm9:0x02016d58"},
     {"step": "ShadowModel::ShadowModel() at this+0x350", "target": "arm9:0x02016068"}
   ],
 
@@ -137,7 +137,7 @@
     {"offset": "0x000", "type": "dEnemyBase_c", "size": "0x110", "proven": "base subobject; first own member sits at 0x110 so sizeof(dEnemyBase_c) <= 0x110. The exact value 0x110 is inferred from that bound, not directly measured."},
     {"offset": "0x110", "type": "dCcAc_c",    "size": "0x34",  "proven": "constructed by both factories, destroyed first-in-reverse by D1/D0"},
     {"offset": "0x144", "type": "dBgCh_Actr", "size": "0x1bc", "proven": "constructed by both factories, destroyed by D1/D0"},
-    {"offset": "0x300", "type": "Model",      "size": "0x50",  "proven": "constructed by both factories, destroyed by D1/D0"},
+    {"offset": "0x300", "type": "dExtSimpleModel_c",      "size": "0x50",  "proven": "constructed by both factories, destroyed by D1/D0"},
     {"offset": "0x350", "type": "ShadowModel","size": "0x28",  "proven": "constructed by both factories, destroyed by D1/D0"},
     {"offset": "0x378", "width": 4, "accesses": 4,  "name": null},
     {"offset": "0x37c", "width": 4, "accesses": 6,  "name": null},
@@ -263,7 +263,7 @@
       "0x0210da30 shared bss",
       "0x0210dc00 own bss PMF array"
     ],
-    "note": "105 relocations from the run into arm9 across 56 distinct arm9 symbols, plus the 14 ov002 destinations listed above. Notables: dActor_c::Spawn, dActor_c::KillAndTrackInDeathTable, dActor_c::IsPlayerInRange, Sound::PlayBank3, dCcAc_c::Init, dBgCh_Actr::Init, dBgCh_Gnd::DetectClsn, Particle::System::New, GiveLives, GiveCoins, IsStarCollectedInCurLevel, ModelBase::SetFile, Model::LoadFile, cstd::atan2, cstd::fdiv."
+    "note": "105 relocations from the run into arm9 across 56 distinct arm9 symbols, plus the 14 ov002 destinations listed above. Notables: dActor_c::Spawn, dActor_c::KillAndTrackInDeathTable, dActor_c::IsPlayerInRange, Sound::PlayBank3, dCcAc_c::Init, dBgCh_Actr::Init, dBgCh_Gnd::DetectClsn, Particle::System::New, GiveLives, GiveCoins, IsStarCollectedInCurLevel, dExtModel_c::SetFile, dExtSimpleModel_c::LoadFile, cstd::atan2, cstd::fdiv."
   },
 
   "bss_ownership": {

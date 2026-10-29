@@ -5,10 +5,11 @@
  * (_ZTV12daBDonketu_c at 0x0211b978). Source order is the reverse of the ROM.
  * Do not reorder. The factory is `new daBDonketu_c()` (was BigBully_Spawn).
  */
-/* leftovers: UpdateRunState returns a pointer cast to int on the timer path;
+/* Notes: UpdateRunState returns a pointer cast to int on the timer path;
  * that shape is what matches. func_ov064_02116110, func_ov064_0211616c and
- * func_ov064_02116bac are daOts_c workers this file calls, still named by
- * address. InitResources leaves spawnPos.y unset when DetectClsn misses.
+ * func_ov064_02116bac are daOts_c members (d_a_ots.cpp) still named by
+ * address. InitResources leaves spawnPos.y unset when DetectClsn misses, as
+ * the ROM does.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -33,28 +34,21 @@ enum daBDonketu_c_AssetId {
  * SharedFilePtr::Construct and destroy through SharedFilePtr_Destruct_Anim.
  * The file table stays ROM data. */
 struct DonketuModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
     DonketuModelFilePtr(unsigned int fileId);
     ~DonketuModelFilePtr();
 };
 struct DonketuAnimFileHandle : SharedFilePtr {
-    unsigned int words[2];
     DonketuAnimFileHandle(unsigned int fileId);
     ~DonketuAnimFileHandle();
 };
-typedef char DonketuModelFilePtr_size_must_be_8[
-    sizeof(DonketuModelFilePtr) == 8 ? 1 : -1];
-typedef char DonketuAnimFileHandle_size_must_be_8[
-    sizeof(DonketuAnimFileHandle) == 8 ? 1 : -1];
+typedef char DonketuModelFilePtr_size_must_be_8[sizeof(DonketuModelFilePtr) == 8 ? 1 : -1];
+typedef char DonketuAnimFileHandle_size_must_be_8[sizeof(DonketuAnimFileHandle) == 8 ? 1 : -1];
 
-extern "C" {
-extern s16 data_02082214[];
-}
+extern s16 data_02082214[]; /* sine/cosine table, (angle >> 4) pairs */
 
 /* Factory for the BOSS_DONKETU profile. Written first so it emits last. */
 // @symbol daBDonketu_c_classInit
-extern "C" daBDonketu_c *daBDonketu_c_classInit()
-{
+extern "C" daBDonketu_c *daBDonketu_c_classInit() {
     return new daBDonketu_c();
 }
 
@@ -63,8 +57,7 @@ extern "C" daBDonketu_c *daBDonketu_c_classInit()
  * mNumBulliesKilled starts at 0. Any other setting starts it at 0xff, which
  * skips the small-Bully phase in Behavior. */
 // @symbol _ZN12daBDonketu_c13InitResourcesEv
-int daBDonketu_c::InitResources()
-{
+int daBDonketu_c::InitResources() {
     int result;
 
     mFileTable = (s32)&data_ov064_0211b93c;
@@ -127,8 +120,7 @@ int daBDonketu_c::InitResources()
  * dead) the boss drops in under gravity, and increments the count when it
  * lands. From 4 on, the shared daOts_c behavior runs. */
 // @symbol _ZN12daBDonketu_c8BehaviorEv
-int daBDonketu_c::Behavior()
-{
+int daBDonketu_c::Behavior() {
     u8 killed = mNumBulliesKilled;
     if (killed >= 4) {
         if (mSecretSoundCounter != 0) {
@@ -144,7 +136,8 @@ int daBDonketu_c::Behavior()
             mSecretSoundCounter = 0;
         speed = mVertSpeed + mVertAccel;
         limit = mTerminalVelocity;
-        if (speed >= limit) limit = speed;
+        if (speed >= limit)
+            limit = speed;
         mVertSpeed = limit;
         mPosY = mPosY + mVertSpeed;
         UpdateWMClsn(mWithMeshClsn, 0);
@@ -161,18 +154,16 @@ int daBDonketu_c::Behavior()
 
 /* Drawn once the small Bullies are dead. */
 // @symbol _ZN12daBDonketu_c6RenderEv
-int daBDonketu_c::Render()
-{
+int daBDonketu_c::Render() {
     if (mNumBulliesKilled >= 3)
-        mModelAnim.Render(0);
+        mAnmModel.Render(0);
     return 1;
 }
 
 /* Once func_ov064_0211616c reports nonzero: poof dust, and spawn the star
  * (0x40 | mStarID) 100 units above the actor. */
 // @symbol _ZN12daBDonketu_c16UpdateDeathStateEv
-void daBDonketu_c::UpdateDeathState()
-{
+void daBDonketu_c::UpdateDeathState() {
     int result = func_ov064_0211616c();
     if (result == 0)
         return;
@@ -187,9 +178,8 @@ void daBDonketu_c::UpdateDeathState()
 
 /* Charge timer, then run. Key function: the inline destructor emits no vtable. */
 // @symbol _ZN12daBDonketu_c14UpdateRunStateEv
-int daBDonketu_c::UpdateRunState()
-{
-    if (*(u16 *)&mStateTimer < 0xa) {
+int daBDonketu_c::UpdateRunState() {
+    if ((u16)mStateTimer < 0xa) {
         mHorzSpeed = 0;
         int result = func_ov064_02116110(0x700);
         if (result != 0)

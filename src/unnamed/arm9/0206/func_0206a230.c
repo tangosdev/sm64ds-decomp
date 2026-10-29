@@ -1,10 +1,11 @@
+#include "WmWork.h"
 #pragma optimize_for_size on
 
 extern char *data_020a9db4;
 
 int func_0206a230(void)
 {
-    char *r2;
+    char *r2; /* not WmWork *: a typed local re-colours r2/ip/r3 */
     unsigned int r0;
     unsigned int ip;
     unsigned int r3;
@@ -16,19 +17,19 @@ int func_0206a230(void)
     r2 = data_020a9db4;
     ip = 0;
     r3 = 0;
-    r1 = *(unsigned short *)(r2 + 0x1e00 + 0x28);
+    r1 = ((WmWork *)r2)->mpStarted;
     if (r1 != 1) { /* empty arm: r1 == 1 && ... re-colours r3 (0x74) */
-    } else if (*(unsigned char *)(r2 + 0x1000 + 0x410) == 0) {
+    } else if (((WmWork *)r2)->mpSending == 0) {
         r3 = 1;
     }
     if (r3 != 0) {
-        r1 = *(unsigned short *)(r2 + 0x1e00 + 0x26);
+        r1 = ((WmWork *)r2)->resetting;
         if (r1 == 0) {
             ip = 1;
         }
     }
     if (ip != 0) {
-        r1 = *(unsigned short *)(r2 + 0x1e00 + 0x2a);
+        r1 = ((WmWork *)r2)->childBitmap;
         if (r1 != 0) {
             r0 = 1;
         }

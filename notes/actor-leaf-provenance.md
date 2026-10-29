@@ -41,8 +41,8 @@ to 0x96, never read).
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x138 | `mKeyModel` | `new Model` + `ModelBase::SetFile` in `daDoor_c::InitResources`; `Virtual10(mModel.data.transforms)` then `Render(0)` in `daDoor_c::Render`, where the local holding it is already called `key`; `delete key` through Model's vtable slot 1 in `daDoor_c::CleanupResources`. Owned by the door. |
-| 0x13c | `mKeyFile` | handed to `Model::LoadFile` and `Release()`d as a `SharedFilePtr`. Three sources in `InitResources`: [data_ov002_0211094c](../config/arm9/overlays/ov002/symbols.txt), `func_02132894[mKeyModelIdx + 1]` for the keyed-door `param1` range, else [data_ov089_02132c50](../config/arm9/overlays/ov089/symbols.txt). |
+| 0x138 | `mKeyModel` | `new dExtSimpleModel_c` + `dExtModel_c::SetFile` in `daDoor_c::InitResources`; `Virtual10(mModel.data.transforms)` then `Render(0)` in `daDoor_c::Render`, where the local holding it is already called `key`; `delete key` through dExtSimpleModel_c's vtable slot 1 in `daDoor_c::CleanupResources`. Owned by the door. |
+| 0x13c | `mKeyFile` | handed to `dExtSimpleModel_c::LoadFile` and `Release()`d as a `SharedFilePtr`. Three sources in `InitResources`: [data_ov002_0211094c](../config/arm9/overlays/ov002/symbols.txt), `func_02132894[mKeyModelIdx + 1]` for the keyed-door `param1` range, else [data_ov089_02132c50](../config/arm9/overlays/ov089/symbols.txt). |
 | 0x140 | `mCallbackNode` | `daDoor_c::Behavior` casts it to a node whose `+0x8` is a `void (daDoor_c::*)(int)` and calls it on this door. |
 | 0x144 | `mKeyModelIdx` | `param1 - 8` for `param1` in 9..0xd, re-zeroed for `param1 == 0xc`; indexes `LoadKeyModels` and `func_02132894`. The header already carried "key-model index" as a comment. |
 
@@ -80,7 +80,7 @@ branches on that all the way through.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x33c | `mMatrix` | The real `Matrix4x3` member receives `IDENTITY_MATRIX4X3` in `InitResources`; 0x33c..0x36b spans its 0x30 bytes. `Model.h` already imports the matrix header. The TU retains the separately measured `common.h`-first include order for the whole-object copy. |
+| 0x33c | `mMatrix` | The real `Matrix4x3` member receives `IDENTITY_MATRIX4X3` in `InitResources`; 0x33c..0x36b spans its 0x30 bytes. `dExtSimpleModel_c.h` already imports the matrix header. The TU retains the separately measured `common.h`-first include order for the whole-object copy. |
 | 0x36c | `mRootPosX` | The head seeds it from its own `mPosX`; each new segment copies the root-position triple from its previous segment at the same offsets. The chain therefore carries the head's root position. |
 | 0x370 | `mRootPosY` | same. |
 | 0x374 | `mRootPosZ` | same. |
@@ -115,7 +115,7 @@ All bodies are in `src/game/actors/d_a_pg_bby.cpp`.
 | offset | new name | evidence |
 | --- | --- | --- |
 | 0x3c0 | `mMatrix` | `*(Matrix4x3*)&unk_3c0 = IDENTITY_MATRIX4X3` in `daJgm_c::InitResources` (`src/game/actors/d_a_jgm.cpp`). The pad after it runs to 0x3f3, four bytes past the matrix's own 0x30. |
-| 0x3f4 | `mState` | `daJgm_c::Render` (`src/game/actors/d_a_jgm.cpp`) draws the second `Model` only when this is 1. |
+| 0x3f4 | `mState` | `daJgm_c::Render` (`src/game/actors/d_a_jgm.cpp`) draws the second `dExtSimpleModel_c` only when this is 1. |
 | 0x3f8 | `mSpawnPosX` | `InitResources` copies `this + 0x5c` (`mPosX`) in. |
 | 0x3fc | `mSpawnPosY` | same, `this + 0x60` (`mPosY`). |
 | 0x400 | `mSpawnPosZ` | same, `this + 0x64` (`mPosZ`); this is the only one of the three spelt as a member, the other two are raw `this + 0xNN` stores. |
@@ -137,7 +137,7 @@ so the per-shard citations below are given as member names.
 | 0x3dc | `mStatePmfPair` | `SetState` stores `&mirror + (n<<4)` here; `CallStateEnter` invokes pair slot 0 and `CallStateUpdate` pair slot 1. |
 | 0x3e0 | `mStateIndex` | each of the nine `EnterStateN` members writes its own literal `N` here as its last act. |
 | 0x3e4 | `mNextState` | every path of `ChooseNextState` writes a state number here, then reaches `SetState`. |
-| 0x3f0 | `mState` | set to 1 by `InitResources`; `Render` draws the `ModelAnim` only above 1 and the `Model` only at or below 0x1f. `UpdateState0` also reaches 0x3f0 as an `int *` through `ApproachLinear2`, so 0x3f0..0x3f3 is one word there. |
+| 0x3f0 | `mState` | set to 1 by `InitResources`; `Render` draws the `dExtAnmModel_c` only above 1 and the `dExtSimpleModel_c` only at or below 0x1f. `UpdateState0` also reaches 0x3f0 as an `int *` through `ApproachLinear2`, so 0x3f0..0x3f3 is one word there. |
 | 0x3f1 | `mPhase` | `UpdateState0` and `UpdateState3` switch on it; `EnterState0` and `EnterState3` reset it to 0. |
 | 0x3f2 | `mTimer` | `EnterState1` and `EnterState8` set it; `UpdateState1` and `UpdateState8` end the state when `DecIfAbove0_Byte` drives it to 0. |
 
@@ -293,7 +293,7 @@ Source: `src/game/actors/d_a_krpa.cpp`.
 | offset | new name | evidence |
 | --- | --- | --- |
 | 0x3a0 | `mMatrix` | identity-matrix shape. |
-| 0x3d8 | `mState` | `Render` draws the still `Model` in states 0 and 4 and the `ModelAnim` otherwise; `Behavior` treats 1 (once on the ground), 4 and 5 as states that must keep running whatever the distance to the player. |
+| 0x3d8 | `mState` | `Render` draws the still `dExtSimpleModel_c` in states 0 and 4 and the `dExtAnmModel_c` otherwise; `Behavior` treats 1 (once on the ground), 4 and 5 as states that must keep running whatever the distance to the player. |
 | 0x3e9 | `mDespawnTimer` | 0x2c (44 frames) at init, counted down ONLY on the frames daTgz_c is too far from the player to behave, destroys at 0. Not a plain life timer -- being near the player refills nothing but stops the count. |
 
 Sources: `src/game/actors/d_a_tgz.cpp`.

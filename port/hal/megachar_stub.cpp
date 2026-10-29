@@ -2,7 +2,7 @@
 // Mega-Mario squash check whose closure (dBgCh_Lin methods,
 // dActor_c::UpdatePos) belongs to the Player gates; with no mega char in
 // play the real function takes its early-out, which is what 0 means.
-extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(
+extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsssi(
     void *, short, short, short, int)
 {
     return 0;

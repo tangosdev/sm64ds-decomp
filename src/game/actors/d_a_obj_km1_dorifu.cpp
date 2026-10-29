@@ -5,7 +5,7 @@
  * No fields of its own. InitResources / CleanupResources hand this
  * overlay's five-plank file table to daObjDorifu_c's shared
  * overloads. Each daObjDorifuResources row is modelFile, clsnFile,
- * clps: InitResources loads modelFile with Model::LoadFile,
+ * clps: InitResources loads modelFile with dExtSimpleModel_c::LoadFile,
  * clsnFile with dBgW_Kc::LoadFile, clps as CLPS into SetFile.
  * ov043 sinit constructs those SharedFilePtrs as file IDs
  * 1609 / 1610, 1611 / 1612, 1613 / 1614, 1615 / 1616, 1617 / 1618.
@@ -14,7 +14,7 @@
  * after the profile, before the vtable).
  *
  * The ten file handles at 02112658..021126a8 are defined here too.
- * Model handles construct through func_02017acc and destroy through
+ * dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; collision handles construct through func_02017b4c
  * and destroy through SharedFilePtr_Destruct_Clsn. The manifest
  * aliases those undefined members onto the ROM symbols, and mwcc
@@ -61,20 +61,15 @@ struct Km1DorifuClpsBlock {
 typedef char Km1DorifuClps_size_must_be_24[sizeof(Km1DorifuClpsBlock) == 24 ? 1 : -1];
 
 struct DorifuModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     DorifuModelFilePtr(u32 fileID);
     ~DorifuModelFilePtr();
 };
 
 struct DorifuCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     DorifuCollisionFilePtr(u32 fileID);
     ~DorifuCollisionFilePtr();
 };
 
-extern "C" {
 extern DorifuModelFilePtr data_ov043_021126a0;
 extern DorifuCollisionFilePtr data_ov043_02112678;
 extern Km1DorifuClpsBlock sKm1Dorifu0Clps;
@@ -90,11 +85,9 @@ extern Km1DorifuClpsBlock sKm1Dorifu3Clps;
 extern DorifuModelFilePtr data_ov043_02112690;
 extern DorifuCollisionFilePtr data_ov043_02112660;
 extern Km1DorifuClpsBlock sKm1Dorifu4Clps;
-}
 
 // @symbol daObjKm1_Dorifu_c_classInit
-extern "C" daObjKm1_Dorifu_c *daObjKm1_Dorifu_c_classInit()
-{
+extern "C" daObjKm1_Dorifu_c *daObjKm1_Dorifu_c_classInit() {
     return new daObjKm1_Dorifu_c();
 }
 
@@ -107,10 +100,9 @@ extern "C" SpawnInfo<daObjKm1_Dorifu_c> g_profile_KM1_DORIFU = {
     0x00500000,
     0x01000000,
     0x02000000,
-    0
-};
+    0};
 
-extern "C" daObjDorifuResources data_ov043_02112518[5] = {
+daObjDorifuResources data_ov043_02112518[5] = {
     {&data_ov043_021126a0, &data_ov043_02112678, reinterpret_cast<CLPS_Block *>(&sKm1Dorifu0Clps)},
     {&data_ov043_02112680, &data_ov043_02112658, reinterpret_cast<CLPS_Block *>(&sKm1Dorifu1Clps)},
     {&data_ov043_02112668, &data_ov043_02112670, reinterpret_cast<CLPS_Block *>(&sKm1Dorifu2Clps)},
@@ -123,8 +115,7 @@ s32 daObjKm1_Dorifu_c::InitResources() {
 }
 
 // @symbol _ZN17daObjKm1_Dorifu_c16CleanupResourcesEv
-s32 daObjKm1_Dorifu_c::CleanupResources()
-{
+s32 daObjKm1_Dorifu_c::CleanupResources() {
     return daObjDorifu_c::CleanupResources(data_ov043_02112518);
 }
 
@@ -142,17 +133,17 @@ DorifuCollisionFilePtr data_ov043_02112670(ASSET_KM1_DORIFU2_KCL);
 DorifuCollisionFilePtr data_ov043_02112698(ASSET_KM1_DORIFU3_KCL);
 DorifuCollisionFilePtr data_ov043_02112660(ASSET_KM1_DORIFU4_KCL);
 
-extern "C" Km1DorifuClpsBlock sKm1Dorifu0Clps = {
+Km1DorifuClpsBlock sKm1Dorifu0Clps = {
     {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x2fc0, 0x00ff}}};
 
-extern "C" Km1DorifuClpsBlock sKm1Dorifu1Clps = {
+Km1DorifuClpsBlock sKm1Dorifu1Clps = {
     {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x4fc0, 0x00ff}}};
 
-extern "C" Km1DorifuClpsBlock sKm1Dorifu2Clps = {
+Km1DorifuClpsBlock sKm1Dorifu2Clps = {
     {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x4fc0, 0x00ff}}};
 
-extern "C" Km1DorifuClpsBlock sKm1Dorifu3Clps = {
+Km1DorifuClpsBlock sKm1Dorifu3Clps = {
     {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x4fc0, 0x00ff}}};
 
-extern "C" Km1DorifuClpsBlock sKm1Dorifu4Clps = {
+Km1DorifuClpsBlock sKm1Dorifu4Clps = {
     {'C', 'L', 'P', 'S'}, 8, 2, {{0x4fc0, 0x00ff}, {0x0fc0, 0x00ff}}};

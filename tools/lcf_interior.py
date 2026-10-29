@@ -15,10 +15,22 @@ range is source-built and no gap object defines the rows inside it any more.
 
 `patch` closes that gap with absolute definitions: for every function row
 of a fixed-address module (arm9, itcm, dtcm) that lies strictly inside a
-`complete` delinks range, that some object handed to the link imports and that
-none defines, it adds `name = 0x<addr>;` to the linker command file. Those
-modules never move, so the address in symbols.txt is the address the linked
-code is at. Overlay code entry points are left alone.
+`complete` delinks range and that no object handed to the link defines, it
+adds `name = 0x<addr>;` to the linker command file, inside that module's
+output section. Those modules never move, so the address in
+symbols.txt is the address the linked code is at. Overlay code entry points are
+left alone.
+
+The output section matters to `dsd check symbols`, which reads the linked ELF
+and looks for a row in its own module's section. An assignment at the top of
+`SECTIONS` gets whatever section mwldarm happens to give it (`_deq` and
+`func_01ff98f4` landed in OV007, OV060 and ARM9, never ITCM), so it links and
+then fails the check. Inside `.itcm : {` the same assignment keeps its address
+and lands in ITCM. A newly enrolled ITCM block takes a second route: the gap
+object used to export every symbols.txt row at that address, and the asm block
+exports one, so `stamp_linked_aliases` writes the other rows into that object
+before the link, size 0 when symbols.txt says so, so the sum of symbol sizes
+stays inside the section.
 
 BSS interior labels, including overlay labels, retain configured identities even
 without live imports when one actual source provider proves the complete NOBITS
@@ -303,6 +315,10 @@ def interior_rows(config_root):
     label, not a function, but callers import it by name all the same. A row at
     a range's own start is still skipped (strict `<`): that address is the
     source's own symbol, defined by its object."""
+    return [(name, addr) for name, addr, _module in _interior_rows(config_root)]
+
+
+def _interior_rows(config_root):
     config_root = pathlib.Path(config_root)
     rows = []
     for module in FIXED:
@@ -317,7 +333,41 @@ def interior_rows(config_root):
                 continue
             addr = int(m.group(2), 16)
             if any(lo < addr < hi for lo, hi in ranges):
-                rows.append((m.group(1), addr))
+                rows.append((m.group(1), addr, module))
+    return rows
+
+
+def start_alias_rows(config_root):
+    """[(name, addr)] for same-address pairs at a complete range's start.
+
+    One asm block defines one spelling there, so a second row at the same
+    address is the other spelling. `patch` defines whichever spelling the
+    link imports but no object defines.
+    """
+    return [(name, addr) for name, addr, _module in _start_alias_rows(config_root)]
+
+
+def _start_alias_rows(config_root):
+    config_root = pathlib.Path(config_root)
+    rows = []
+    for module in FIXED:
+        d = _module_dir(config_root, module)
+        syms, dl = d / "symbols.txt", d / "delinks.txt"
+        if not (syms.is_file() and dl.is_file()):
+            continue
+        ranges = complete_text_ranges(dl)
+        starts = {lo for lo, _hi in ranges}
+        by_addr: dict[int, list[tuple[str, int, str]]] = {}
+        for ln in syms.read_text(errors="ignore").splitlines():
+            m = _ROW.match(ln)
+            if not m:
+                continue
+            addr = int(m.group(2), 16)
+            if addr in starts:
+                by_addr.setdefault(addr, []).append((m.group(1), addr, module))
+        for addr in sorted(by_addr):
+            if len(by_addr[addr]) >= 2:
+                rows.extend(by_addr[addr])
     return rows
 
 
@@ -372,12 +422,236 @@ def _elf_names(data):
     return defined, imported
 
 
+# Object basenames whose asm block replaced a gap object that exported every
+# symbols.txt row. The older complete ITCM block (func_01ff97d8.c) is not here:
+# `patch` defines its interior rows inside `.itcm`, which satisfies dsd as well.
+_ALIAS_OBJECTS = {
+    "_dadd.o": "src/_dadd.c",
+    "_dmul.o": "src/_dmul.c",
+    "func_01ff8e10.o": "src/unnamed/arm9/01ff/func_01ff8e10.c",
+    "func_01ff9378.o": "src/unnamed/arm9/01ff/func_01ff9378.c",
+    "func_01ffa594.o": "src/unnamed/arm9/01ff/func_01ffa594.c",
+    "_ll_udiv.o": "src/_ll_udiv.c",
+    "_ull_mod.o": "src/_ull_mod.c",
+    "_ll_sdiv.o": "src/_ll_sdiv.c",
+    "_s32_div_f.o": "src/_s32_div_f.c",
+    "_u32_div_f.o": "src/_u32_div_f.c",
+}
+
+_NAMED = re.compile(
+    r"^(\S+)\s+kind:(function|label)\(([^)]*)\).*?addr:0x([0-9a-fA-F]+)")
+
+
+def _complete_text_range_for(delinks_path, source):
+    """(lo, hi) of one complete .text entry, or None."""
+    want = source.replace("\\", "/")
+    current, complete = None, False
+    found = None
+    for ln in pathlib.Path(delinks_path).read_text(errors="ignore").splitlines():
+        if ln and not ln[0].isspace() and ln.rstrip().endswith(":"):
+            current = ln.strip()[:-1].replace("\\", "/")
+            complete = False
+            continue
+        if current != want:
+            continue
+        if ln.strip() == "complete":
+            complete = True
+            continue
+        match = _TEXT.match(ln)
+        if match and complete:
+            found = (int(match.group(1), 16), int(match.group(2), 16))
+    return found
+
+
+def _configured_rows(symbols_path, lo, hi):
+    """[(name, addr, size, kind)] of function and label rows in [lo, hi)."""
+    rows = []
+    for ln in pathlib.Path(symbols_path).read_text(errors="ignore").splitlines():
+        match = _NAMED.match(ln)
+        if not match:
+            continue
+        addr = int(match.group(4), 16)
+        if not lo <= addr < hi:
+            continue
+        size_match = re.search(r"size=0x([0-9a-fA-F]+)", match.group(3))
+        size = int(size_match.group(1), 16) if size_match else 0
+        rows.append((match.group(1), addr, size, match.group(2)))
+    return rows
+
+
+def _elf_sections(data):
+    if data[:4] != b"\x7fELF" or data[4] != 1 or data[5] != 1:
+        raise ValueError("alias stamp expects an ELF32 LE object")
+    shoff, = struct.unpack_from("<I", data, 0x20)
+    shentsize, shnum, shstrndx = struct.unpack_from("<HHH", data, 0x2e)
+    sections = [struct.unpack_from("<IIIIIIIIII", data, shoff + i * shentsize)
+                for i in range(shnum)]
+    return shoff, shentsize, shstrndx, sections
+
+
+def _section_name(data, sections, shstrndx, index):
+    name_off = sections[shstrndx][4] + sections[index][0]
+    end = data.index(b"\0", name_off)
+    return data[name_off:end].decode("latin-1")
+
+
+def _symbol_names(data, sym_off, sym_size, str_off):
+    """[(name, value, size, info, shndx)] including the null symbol."""
+    out = []
+    for off in range(sym_off, sym_off + sym_size, 16):
+        name, value, size, info, _other, shndx = struct.unpack_from("<IIIBBH", data, off)
+        if name:
+            start = str_off + name
+            symbol = data[start:data.index(b"\0", start)].decode("latin-1")
+        else:
+            symbol = ""
+        out.append((symbol, value, size, info, shndx))
+    return out
+
+
+def _stamp_elf(data, additions, shrink):
+    """Return `data` with extra .text symbols. Section bytes are not rewritten.
+
+    `additions` is [(name, value, size, kind)]. `shrink` is {name: size} applied
+    to symbols the object already defines. Inserted bytes are a multiple of every
+    later section's alignment, so those sections stay aligned.
+    """
+    if not additions and not shrink:
+        return data
+    shoff, shentsize, shstrndx, sections = _elf_sections(data)
+    _phoff, _phentsize, phnum = struct.unpack_from("<IHH", data, 0x1c)
+    if phnum:
+        raise ValueError("alias stamp does not rewrite program headers")
+    text_index = next(i for i, sec in enumerate(sections)
+                      if sec[1] == 1 and _section_name(data, sections, shstrndx, i) == ".text")
+    sym_index = next(i for i, sec in enumerate(sections) if sec[1] == 2)
+    str_index = sections[sym_index][6]
+    sym_off, sym_size = sections[sym_index][4], sections[sym_index][5]
+    str_off, str_size = sections[str_index][4], sections[str_index][5]
+    if str_off < sym_off + sym_size:
+        raise ValueError("alias stamp expects the string table after the symbol table")
+    text_size = sections[text_index][5]
+    existing = _symbol_names(data, sym_off, sym_size, str_off)
+    have = {name for name, _value, _size, _info, shndx in existing if name and shndx}
+    additions = [row for row in additions if row[0] not in have]
+    shrink = {name: size for name, size in shrink.items() if name in have}
+    if not additions and not shrink:
+        return data
+    for name, value, size, _kind in additions:
+        if value >= text_size or value + size > text_size:
+            raise ValueError(f"{name} at +0x{value:x} size 0x{size:x} does not fit .text")
+    by_name = {name: index for index, (name, *_rest) in enumerate(existing) if name}
+    out = bytearray(data)
+    for name, size in shrink.items():
+        struct.pack_into("<I", out, sym_off + by_name[name] * 16 + 8, size)
+    if not additions:
+        return bytes(out)
+
+    new_strings = b"".join(name.encode("latin-1") + b"\0" for name, *_rest in additions)
+    delta_sym = 16 * len(additions)
+    str_end = str_off + str_size
+    sym_end = sym_off + sym_size
+    moved_align = [sec[8] for sec in sections if sec[4] >= str_end and sec[8] > 1]
+    if shoff >= str_end:
+        moved_align.append(4)
+    max_align = max([16, *moved_align])
+    raw_shift = delta_sym + len(new_strings)
+    pad = (max_align - (raw_shift % max_align)) % max_align
+    info_for = {"function": (1 << 4) | 2, "label": 1 << 4}
+    extra = bytearray()
+    cursor = str_size
+    for name, value, size, kind in additions:
+        extra += struct.pack("<IIIBBH", cursor, value, size, info_for[kind], 0, text_index)
+        cursor += len(name) + 1
+    out[sym_end:sym_end] = extra
+    out[str_end + delta_sym:str_end + delta_sym] = new_strings + (b"\0" * pad)
+    shift = delta_sym + len(new_strings) + pad
+
+    def move(offset):
+        if offset >= str_end:
+            return offset + shift
+        if offset >= sym_end:
+            return offset + delta_sym
+        return offset
+
+    struct.pack_into("<I", out, 0x20, move(shoff))
+    new_shoff = move(shoff)
+    for index, sec in enumerate(sections):
+        name, typ, flags, addr, offset, size, link, info, align, entsize = sec
+        offset = move(offset)
+        if index == sym_index:
+            size += delta_sym
+        elif index == str_index:
+            size += len(new_strings) + pad
+        struct.pack_into("<IIIIIIIIII", out, new_shoff + index * shentsize,
+                         name, typ, flags, addr, offset, size, link, info, align, entsize)
+    return bytes(out)
+
+
+def stamp_linked_aliases(objects_txt, config_root):
+    """Give each newly enrolled ITCM asm object the symbols.txt rows it replaced.
+
+    The gap object exported both spellings and the interior labels. The asm
+    object exports one. dsd's symbol check wants the others as ELF symbols.
+    """
+    config_root = pathlib.Path(config_root)
+    itcm = _module_dir(config_root, "itcm")
+    delinks, symbols = itcm / "delinks.txt", itcm / "symbols.txt"
+    if not delinks.is_file() or not symbols.is_file():
+        return
+    for line in pathlib.Path(objects_txt).read_text(errors="ignore").splitlines():
+        path = pathlib.Path(line.strip().strip('"'))
+        source = _ALIAS_OBJECTS.get(path.name)
+        if source is None or not path.is_file():
+            continue
+        span = _complete_text_range_for(delinks, source)
+        if span is None:
+            raise ValueError(f"{source} is linked but has no complete itcm .text range")
+        lo, hi = span
+        rows = _configured_rows(symbols, lo, hi)
+        data = path.read_bytes()
+        _shoff, _shentsize, shstrndx, sections = _elf_sections(data)
+        text_index = next(i for i, sec in enumerate(sections)
+                          if sec[1] == 1 and _section_name(data, sections, shstrndx, i) == ".text")
+        sym_index = next(i for i, sec in enumerate(sections) if sec[1] == 2)
+        str_index = sections[sym_index][6]
+        existing = _symbol_names(data, sections[sym_index][4], sections[sym_index][5],
+                                 sections[str_index][4])
+        have = {name: (value, size) for name, value, size, _info, shndx in existing
+                if name and shndx}
+        configured = {name: (addr - lo, size, kind) for name, addr, size, kind in rows}
+        additions = [(name, value, size, kind)
+                     for name, (value, size, kind) in configured.items() if name not in have]
+        shrink = {}
+        for name, (_value, size, _kind) in configured.items():
+            if size or name not in have:
+                continue
+            old_value, old_size = have[name]
+            if old_size and any(other_value == old_value and other_size
+                                for other, (other_value, other_size, _k) in configured.items()
+                                if other != name):
+                shrink[name] = 0
+        text = data[sections[text_index][4]:sections[text_index][4] + sections[text_index][5]]
+        stamped = _stamp_elf(data, additions, shrink)
+        stamped_text_off = _elf_sections(stamped)[3][text_index][4]
+        stamped_text = stamped[stamped_text_off:stamped_text_off + len(text)]
+        if stamped_text != text:
+            raise ValueError(f"{path.name}: alias stamp changed .text bytes")
+        if stamped != data:
+            path.write_bytes(stamped)
+
+
 def patch(lcf_path, objects_txt, config_root, *, initialized_prefixes=()):
     """Add the missing interior definitions and linker constants to `lcf_path`;
     return [(name, addr)].
 
-    Code labels require an import. Source-proven storage interior labels also
+    An interior code row is defined whenever no object defines it, imported or
+    not: dsd checks every symbols.txt row, and an asm block cannot export it, so
+    the LCF is the only place it can come from (the strict stock control links
+    no compiled caller of func_01ff99a4). Start-alias spellings and linker
+    constants still require an import. Source-proven storage interior labels also
     preserve configured identities checked by dsd, even without an import."""
+    stamp_linked_aliases(objects_txt, config_root)
     defined, imported, bss = _link_inventory(objects_txt)
     aliases = bss_interior_rows(config_root, defined, imported, bss)
     aliases += initialized_interior_rows(config_root, objects_txt, defined)
@@ -393,32 +667,48 @@ def patch(lcf_path, objects_txt, config_root, *, initialized_prefixes=()):
     aliases = sorted(set(aliases))
     if len({row[0] for row in aliases}) != len(aliases):
         raise ValueError("conflicting storage alias identities")
-    rows = interior_rows(config_root) + list(LINKER_CONSTANTS.items())
-    missing = sorted({(n, a) for n, a in rows
-                      if n in imported and n not in defined}, key=lambda r: r[1])
+    interior = _interior_rows(config_root)
+    # A linker constant is a value, not an address in a module: module None.
+    gated = _start_alias_rows(config_root)
+    gated += [(name, value, None) for name, value in LINKER_CONSTANTS.items()]
+    missing = sorted({row for row in interior if row[0] not in defined}
+                     | {row for row in gated
+                        if row[0] in imported and row[0] not in defined},
+                     key=lambda r: r[1])
     if not missing and not aliases:
         return []
     lcf_path = pathlib.Path(lcf_path)
     text = lcf_path.read_bytes().decode("latin-1")    # keep CRLF visible
     nl = "\r\n" if "\r\n" in text else "\n"
-    if missing:
+    constants = [(n, a) for n, a, module in missing if module is None]
+    if constants:
         anchor = "SECTIONS {"
         at = text.index(anchor) + len(anchor)
-        block = "".join(f"{nl}    {n} = 0x{a:08x};" for n, a in missing)
+        block = "".join(f"{nl}    {n} = 0x{a:08x};" for n, a in constants)
         text = text[:at] + block + text[at:]
+    # Each insert goes first in its section, so reversed order reads ascending.
+    for name, address, module in reversed(missing):
+        if module is not None:
+            text = _define_in_section(text, nl, module, name, address, "interior row")
+    missing = [(n, a) for n, a, _module in missing]
     for name, address, _owner, _offset, module in aliases:
         section = pathlib.PurePosixPath(module).name if module != "." else "arm9"
-        pattern = re.compile(r"^([ \t]*\." + re.escape(section) +
-                             r"[ \t]*:[ \t]*\{)", re.MULTILINE)
-        matches = list(pattern.finditer(text))
-        if len(matches) != 1:
-            raise ValueError(f"storage alias {name} requires exactly one .{section} "
-                             "output section")
-        at = matches[0].end()
         # mwldarm evaluates `object + offset` here before relocating the
         # object and would retain only the offset. A canonical value INSIDE
         # the output module preserves both the address and ELF section identity.
-        text = text[:at] + f"{nl}        {name} = 0x{address:08x};" + text[at:]
+        text = _define_in_section(text, nl, section, name, address, "storage alias")
         missing.append((name, address))
     lcf_path.write_bytes(text.encode("latin-1"))
     return sorted(missing, key=lambda row: row[1])
+
+
+def _define_in_section(text, nl, section, name, address, what):
+    """`text` with `name = 0x<address>;` first inside the one `.<section>` block."""
+    pattern = re.compile(r"^([ \t]*\." + re.escape(section) +
+                         r"[ \t]*:[ \t]*\{)", re.MULTILINE)
+    matches = list(pattern.finditer(text))
+    if len(matches) != 1:
+        raise ValueError(f"{what} {name} requires exactly one .{section} "
+                         "output section")
+    at = matches[0].end()
+    return text[:at] + f"{nl}        {name} = 0x{address:08x};" + text[at:]

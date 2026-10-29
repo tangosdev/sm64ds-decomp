@@ -5,7 +5,7 @@
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
- * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * the dExtSimpleModel_c at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x31e was dActor_c's and
  * dBgActor_c's, and is inherited now.
  *
@@ -15,10 +15,8 @@
 
 #include "dBgActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daObjWanwanShutter_c : dBgActor_c {
-    u8 mDisabled;                     /* 0x31e -- Behavior and Render return immediately while it is set; func_ov014_02112ea8 writes 1 when the chomp breaks the fence */
+    u8 mDisabled; /* 0x31e -- Behavior and Render return immediately while it is set; Break writes 1 when the chomp breaks the fence */
 
     /* --- vtable --- */
     /* MEASURED -- INLINE ON PURPOSE, do not move out of line.
@@ -39,10 +37,10 @@ struct daObjWanwanShutter_c : dBgActor_c {
      * vtable header, so nothing derives from it.
      *
      * The body is empty but the FUNCTION IS NOT: at 0x44 bytes it inlines
-     * dBgActor_c's own inline destructor, which destroys the Model at 0xd4
+     * dBgActor_c's own inline destructor, which destroys the dExtSimpleModel_c at 0xd4
      * and the dBgW_KcMbg at 0x124. Do not write those members as padding.
      */
-    virtual ~daObjWanwanShutter_c() {}  /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjWanwanShutter_c() {} /* slots 16 (D1), 17 (D0) */
 
     /* Diffed slot by slot against _ZTV10dBgActor_c (ov002 0x0210ae38): of the
      * table's 32 slots only the six declared here differ. Every other slot
@@ -51,25 +49,18 @@ struct daObjWanwanShutter_c : dBgActor_c {
      * In ROM vtable order. Do not reorder, and do not drop the `virtual`:
      * an override that stops being declared virtual silently stops
      * overriding, and the vtable still links. */
-    virtual s32 InitResources();       /* slot  0 -- 0x02112ffc */
-    virtual s32 CleanupResources();    /* slot  3 -- 0x02112f3c */
-    virtual s32 Behavior();            /* slot  6 -- 0x02112fc0 */
-    virtual s32 Render();              /* slot  9 -- 0x02112f80 */
+    virtual s32 InitResources();    /* slot  0 -- 0x02112ffc */
+    virtual s32 CleanupResources(); /* slot  3 -- 0x02112f3c */
+    virtual s32 Behavior();         /* slot  6 -- 0x02112fc0 */
+    virtual s32 Render();           /* slot  9 -- 0x02112f80 */
 
-    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
-       Parameter is size_t (unsigned long on this compiler). `return new`
-       relocates to `_Znwm` without this. */
-    static void *operator new(size_t size);
+    void Break(); /* 0x02112ea8 -- called by daWanwan_c */
 };
-
-inline void *daObjWanwanShutter_c::operator new(size_t size)
-{
-    return _ZN7fBase_cnwEj((unsigned)size);
-}
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjWanwanShutter_c_size_must_be_0x320[sizeof(daObjWanwanShutter_c) == 0x320 ? 1 : -1];
+typedef char
+    daObjWanwanShutter_c_size_must_be_0x320[sizeof(daObjWanwanShutter_c) == 0x320 ? 1 : -1];
 #endif
 
 #endif /* DAOBJWANWANSHUTTER_C_H */

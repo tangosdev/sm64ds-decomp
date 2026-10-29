@@ -4,6 +4,9 @@ extern char data_02092188;
 extern char data_0209f388;
 extern void *volatile data_0209f3c4;
 extern char data_0209f43c;
+/* local extern: data_0209f43c is defined elsewhere as raw storage, so this
+   static initializer constructs it by name and registers the destructor by
+   address, which C++ cannot take. */
 extern "C" void *_ZN8dClipperC1Ev(void *object);
 extern "C" void *_ZN8dClipperD1Ev(void *object);
 extern "C" void func_020731dc(void *object, void *destructor, void *node);

@@ -3,8 +3,6 @@
 
 #include "dActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* Ice slide manager. ROM debug string is SLIDER_MANAGER (356);
  * overlay_actors.md's project name is ICE_SLIDE_MANAGER. The sibling
  * RACING_PENGUIN (259) is a different class and is not this TU.
@@ -39,10 +37,6 @@ struct daSldMng_c : dActor_c {
      * _ZTV/_ZTI/_ZTS group; that is src/game/actors/d_a_sld_mng.cpp. */
     virtual int InitResources(); /* slot 0 */
     virtual int Behavior();      /* slot 6 */
-
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 
     /* Declared last and inline so class instantiation emits the retail D1/D0
        pair in that order, with no separate D2 body. */

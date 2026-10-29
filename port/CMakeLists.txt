@@ -185,8 +185,8 @@ if(MSVC)
     target_compile_options(smoke_gx PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
 
-# Gate 4b: the whole Model pipeline. Adds the material-bind and matrix
-# feeders to the hostgen set and the Model/render slice on top of everything.
+# Gate 4b: the whole dExtSimpleModel_c pipeline. Adds the material-bind and matrix
+# feeders to the hostgen set and the dExtSimpleModel_c/render slice on top of everything.
 set(GATE4B_SYMS func_02044b30 Geometry_MatrixMultiply3x3 func_02055998
     func_02044534 func_0204488c NormalizeVec3)
 sm64ds_hostgen_symbols(GATE4B_GEN ${GATE4B_SYMS})
@@ -259,7 +259,7 @@ endif()
 
 # Gate 8: collision -- the octree walk over real KCL data. cstd::sqrt
 # drives the hardware sqrt unit through literal MMIO -> hostgen.
-set(GATE8_SYMS _ZN4cstd4sqrtEy _ZN4cstd11fdiv_resultEv _ZN4cstd16reciprocal_asyncE5Fix12IiE
+set(GATE8_SYMS _ZN4cstd4sqrtEy _ZN4cstd11fdiv_resultEv _ZN4cstd16reciprocal_asyncEi
     Matrix4x3_ApplyInPlaceToScale)
 sm64ds_hostgen_symbols(GATE8_GEN ${GATE8_SYMS})
 
@@ -290,7 +290,7 @@ if(MSVC)
     target_compile_options(smoke_clsn PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
 
-# Gate 7: ModelAnim -- the game owns frame progression.
+# Gate 7: dExtAnmModel_c -- the game owns frame progression.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate7.txt" SLICE7_LINES)
 set(SLICE7_SOURCES "")
 foreach(line IN LISTS SLICE7_LINES)
@@ -433,7 +433,7 @@ if(MSVC)
 endif()
 
 # src/SharedFilePtr.cpp (slice 3b) holds the X::LoadFile(SharedFilePtr&)
-# members of Model, dExtFrameCtrl_c and dBgW_Kc, which call UpdateFileOffsets
+# members of dExtSimpleModel_c, dExtFrameCtrl_c and dBgW_Kc, which call UpdateFileOffsets
 # members only the gate-4b and gate-8 slices carry. The file compiles them on
 # the host only where these say the slice that resolves them is linked.
 foreach(sfp_target IN ITEMS smoke_model smoke_frames smoke_soak smoke_clsn

@@ -16,36 +16,41 @@
  * the same pragma lays .text down in source order, so this file is
  * ROM-ascending.
  *
- * leftovers:
- * - func_ov064_0211982c retains its current configured linker name and
- *   TU-local C/PMF view: it stores the state pointer at +0x300, then invokes
- *   its first callback as int-returning. Behavior invokes the callback at
- *   +0x08 through the header's void-returning State::mMain. The original
- *   callback contracts remain unresolved; this cleanup does not unify them.
- * - `#pragma opt_strength_reduction off` is required inside
- *   func_ov064_021193b4 and is turned back on right after it: the pragma is
- *   file-global and the later members matched without it.
- * - func_ov064_021193b4 keeps its M() launders, the volatile rot block and
- *   `m1 = -1` as found; they were needed to match.
- * - Particle::System::New and dCcAc_c::Init stay mangled extern "C" calls,
- *   with Fix12<int> spelled as int (see InitResources).
+ * The class has one state (data_ov064_0211c934): InitState0 (0x021197fc)
+ * enters it, State0 (0x021193b4) runs it every frame. SetState (0x0211982c)
+ * installs it from InitResources.
+ *
+ * What stays:
+ * - `#pragma opt_strength_reduction off` is required inside State0 and is
+ *   turned back on right after it: the pragma is file-global and the later
+ *   members matched without it.
+ * - State0 keeps its M() launders, the volatile rot block and `m1 = -1` as
+ *   found; they were needed to match.
+ * - The state table is two plain copies of the ROM's pointer-to-member
+ *   constants (HakPmfSlot), so InitResources casts it to State.
+ * - The empty member at 0x0211987c keeps its address name: Behavior calls it
+ *   where sibling actors rebuild their model matrix, but its body is empty and
+ *   says nothing about its role.
  */
 
 #include "daWater_Hakidasi_c.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
 #include "daWater_Ring_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
+#include "Sound.h"
+#include "Particle__System.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 #pragma defer_codegen off
 
-struct Vec3 { int x, y, z; };
-struct Vec3_16 { s16 x, y, z; };
-
-
-struct C;
-typedef int (C::*PMF)();
-struct C { char pad[0x300]; PMF *pp; };
+struct Vec3 {
+    int x, y, z;
+};
+struct Vec3_16 {
+    s16 x, y, z;
+};
 
 /* The ROM member-function-pointer constants the state table copies from
  * (unlicensed .data), and the table itself (defined at the end of this
@@ -53,8 +58,7 @@ struct C { char pad[0x300]; PMF *pp; };
  * by side. The names are TU-unique on purpose: PMF as a type name is
  * redefined differently all over the tree, and naming it in new
  * declarations would drag every one of those spellings into the decl
- * gate's scope. The consumer still reads the table as PMF (see the
- * func_ov064_0211982c call). */
+ * gate's scope. InitResources hands the table to SetState as a State. */
 struct HakPmfSlot {
     int w[2];
 };
@@ -65,22 +69,12 @@ extern HakPmfSlot data_ov064_0211c2e4;
 extern HakPmfSlot data_ov064_0211c2dc;
 extern HakPmfTable data_ov064_0211c934;
 
-
+/* local extern: MulVec3Mat4x3 takes this TU's Vec3; no shared header
+ * declares SublevelToLevel or IsStarCollected. */
 extern "C" {
-extern void Matrix4x3_FromRotationY(void *m, s16 angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern void MulVec3Mat4x3(struct Vec3 *in, void *m, struct Vec3 *out);
-/* local extern: retain the matched scalar ABI; native Fix12<int> call reconstruction remains pending. */
-extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    int a, int b, int x, int y, int z, int f, int cb);
-extern void func_02012790(int a);
-extern int data_020a0e68;
 extern int SublevelToLevel(int);
 extern int IsStarCollected(int r0, int r1);
-/* local extern: retain the matched scalar ABI; native Fix12<int> call reconstruction remains pending. */
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    void *, dActor_c *a, Fix12i b, int c, unsigned int d, unsigned int e);
-unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
 extern SharedFilePtr data_ov002_0210da10;
@@ -96,18 +90,15 @@ extern unsigned char data_0209f220;
  * inline operator delete, which is why nothing here mentions a heap. */
 // @symbol _ZN18daWater_Hakidasi_cD1Ev
 // @symbol _ZN18daWater_Hakidasi_cD0Ev
-daWater_Hakidasi_c::~daWater_Hakidasi_c()
-{
-}
+daWater_Hakidasi_c::~daWater_Hakidasi_c() {}
 
 /* Per-frame update. Moves a non-metal player's position while within
  * 0x3e8000 of the spout, spawns a WATER_RING (actor 0xf4) every 0x50 frames
  * (recording its uniqueID in the mSpawnedIDs buffer), and counts the rings the
  * player passes, as reported in mPassedRing, in spawn order. At a count of 5 it
  * waits 0x1e frames, spawns a STAR (actor 0xb2) and sets mRingsPassed to 0xa. */
-// @symbol _ZN18daWater_Hakidasi_c19func_ov064_021193b4Ev
-int daWater_Hakidasi_c::func_ov064_021193b4()
-{
+// @symbol _ZN18daWater_Hakidasi_c6State0Ev
+int daWater_Hakidasi_c::State0() {
     struct Vec3_16 rot;
     struct Vec3 vec;
     struct Vec3 delta;
@@ -132,7 +123,7 @@ int daWater_Hakidasi_c::func_ov064_021193b4()
     int m1;
 
     player = ClosestPlayer();
-    if (player != 0 && player->mIsMetal == 0) {     /* Player::mIsMetal */
+    if (player != 0 && player->mIsMetal == 0) { /* Player::mIsMetal */
         dist = DistToCPlayer();
         if (dist < 0x3e8000) {
             dist = (0x3e8000 - dist) / 30;
@@ -169,9 +160,8 @@ int daWater_Hakidasi_c::func_ov064_021193b4()
         }
     }
 
-    if (unk_318 == 0) {
-        mParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            mParticle, 0x138, mPosX, mPosY, mPosZ, 0, 0);
+    if (mNoRings == 0) {
+        mParticle = Particle::System::New(mParticle, 0x138, mPosX, mPosY, mPosZ, 0, 0);
         if (mRingsPassed < 5) {
             if (*(u16 *)&mStateTimer == 0) {
                 ax = *(volatile u16 *)&mAngleX;
@@ -198,9 +188,9 @@ int daWater_Hakidasi_c::func_ov064_021193b4()
                         mSpawnedHead = 0;
                     }
                     ring->mSpawner = this;
-                    ring->unk_0a4 = 0;
+                    ring->mSpeedX = 0;
                     ring->mVertSpeed = 0x5000;
-                    ring->unk_0ac = 0;
+                    ring->mSpeedZ = 0;
                 }
                 mStateTimer = 0x50;
             }
@@ -260,8 +250,7 @@ int daWater_Hakidasi_c::func_ov064_021193b4()
             }
         }
     } else {
-        mParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            mParticle, 0x7b, mPosX, mPosY, mPosZ, 0, 0);
+        mParticle = Particle::System::New(mParticle, 0x7b, mPosX, mPosY, mPosZ, 0, 0);
     }
 
     if (mRingsPassed == 5) {
@@ -272,7 +261,7 @@ int daWater_Hakidasi_c::func_ov064_021193b4()
         rewardPos.y = rewardPos.y - 0x64000;
         *timerp = *timerp + 1;
         if (mRewardTimer > 0x1e) {
-            dActor_c::Spawn(0xb2, unk_314 | 0x40, *(Vector3 *)&rewardPos, &mAngle, mAreaId, -1);
+            dActor_c::Spawn(0xb2, mStarID | 0x40, *(Vector3 *)&rewardPos, &mAngle, mAreaId, -1);
             mRingsPassed = 0xa;
         }
     }
@@ -281,9 +270,10 @@ int daWater_Hakidasi_c::func_ov064_021193b4()
 
 #pragma opt_strength_reduction on
 
-/* Clears the hit actor, the ring head, the matched slot and the ring. */
-// @symbol _ZN18daWater_Hakidasi_c19func_ov064_021197fcEv
-int daWater_Hakidasi_c::func_ov064_021197fc() {
+/* Enters the state: clears the passed ring, the ring head, the matched slot
+ * and the spawned-ring buffer. */
+// @symbol _ZN18daWater_Hakidasi_c10InitState0Ev
+int daWater_Hakidasi_c::InitState0() {
     int i = 0;
     mPassedRing = 0;
     mSpawnedHead = i;
@@ -294,20 +284,24 @@ int daWater_Hakidasi_c::func_ov064_021197fc() {
     return 1;
 }
 
-// @symbol func_ov064_0211982c
-extern "C" int func_ov064_0211982c(C *c, PMF *p) { c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
+// @symbol _ZN18daWater_Hakidasi_c8SetStateEPNS_5StateE
+/* Installs a state and runs its enter handler, if it has one. */
+int daWater_Hakidasi_c::SetState(State *state) {
+    mState = state;
+    State *s = mState;
+    if (s->mInit == 0)
+        return 1;
+    return (this->*(s->mInit))();
+}
 
 // @symbol _ZN18daWater_Hakidasi_c19func_ov064_0211987cEv
-void daWater_Hakidasi_c::func_ov064_0211987c()
-{
-}
+void daWater_Hakidasi_c::func_ov064_0211987c() {}
 
 /* Gives back the two shared files the spout renders from. Both live in ov002,
  * not in this overlay: the class borrows models the always-resident module
  * owns, so the handles are released rather than freed. */
 // @symbol _ZN18daWater_Hakidasi_c16CleanupResourcesEv
-s32 daWater_Hakidasi_c::CleanupResources()
-{
+s32 daWater_Hakidasi_c::CleanupResources() {
     data_ov002_0210da10.Release();
     data_ov002_0210d9a8.Release();
     return 1;
@@ -316,54 +310,44 @@ s32 daWater_Hakidasi_c::CleanupResources()
 /* Empty: the ROM body is a single `bx lr`. The override exists to suppress
  * whatever the base does on pending destroy. */
 // @symbol _ZN18daWater_Hakidasi_c16OnPendingDestroyEv
-void daWater_Hakidasi_c::OnPendingDestroy()
-{
-}
+void daWater_Hakidasi_c::OnPendingDestroy() {}
 
 /* `mov r0,#1; bx lr` and nothing else: the class draws nothing of its own
  * from the render slot. */
 // @symbol _ZN18daWater_Hakidasi_c6RenderEv
-s32 daWater_Hakidasi_c::Render()
-{
+s32 daWater_Hakidasi_c::Render() {
     return 1;
 }
 
 /* The state pointer at 0x300 is daWater_Hakidasi_c::State (see the header),
  * the same shape and treatment as daPropeller_Heyho_Fire_c::Behavior. */
 // @symbol _ZN18daWater_Hakidasi_c8BehaviorEv
-s32 daWater_Hakidasi_c::Behavior()
-{
-  DecIfAbove0_Short((unsigned short*)&mStateTimer);
-  State* h = mState;
-  /* Reads the handler's pointer word directly rather than as `&h->mMain`:
-     taking the ADDRESS of a pointer-to-member makes mwcc materialise the whole
-     8-byte pmf. Reading one to CALL it is free. */
-  if (*(int*)((char*)h + 8) != 0) {
-    (this->*(h->mMain))();
-  }
-  mAngleX = mPrevAngleX;
-  mAngleY = mPrevAngleY;
-  mAngleZ = mPrevAngleZ;
-  func_ov064_0211987c();
-  return 1;
+s32 daWater_Hakidasi_c::Behavior() {
+    DecIfAbove0_Short((u16 *)&mStateTimer);
+    State *h = mState;
+    if (h->mMain != 0) {
+        (this->*(h->mMain))();
+    }
+    mAngleX = mPrevAngleX;
+    mAngleY = mPrevAngleY;
+    mAngleZ = mPrevAngleZ;
+    func_ov064_0211987c();
+    return 1;
 }
 
 // @symbol _ZN18daWater_Hakidasi_c13InitResourcesEv
-/* Signature of _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj deliberately keeps
-   Fix12<int> as a plain int: mwccarm passes that class by value differently
-   when the parameter is spelled as the real type. See notes/mwccarm-codegen.md 6az. */
-s32 daWater_Hakidasi_c::InitResources()
-{
-    Model::LoadFile(data_ov002_0210da10);
-    Model::LoadFile(data_ov002_0210d9a8);
-    unk_314 = (param1 >> 0xc) & 0xf;
-    unk_318 = param1 & 1;
-    if ((param1 & 0xf) > 1) unk_318 = 0;
+s32 daWater_Hakidasi_c::InitResources() {
+    dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
+    mStarID = (param1 >> 0xc) & 0xf;
+    mNoRings = param1 & 1;
+    if ((param1 & 0xf) > 1)
+        mNoRings = 0;
     if (data_0209f2f8 == 8 && (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0)) {
         return 0;
     }
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, (dActor_c*)this, 0xc8000, 0x190000, 0x800004, 0);
-    func_ov064_0211982c((C *)this, (PMF *)&data_ov064_0211c934);
+    mdCcAc_c.Init(this, 0xc8000, 0x190000, 0x800004, 0);
+    SetState((State *)&data_ov064_0211c934);
     return 1;
 }
 
@@ -372,8 +356,7 @@ s32 daWater_Hakidasi_c::InitResources()
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: JetStream_Spawn. */
 // @symbol daWater_Hakidasi_c_classInit
-extern "C" daWater_Hakidasi_c *daWater_Hakidasi_c_classInit()
-{
+extern "C" daWater_Hakidasi_c *daWater_Hakidasi_c_classInit() {
     return new daWater_Hakidasi_c();
 }
 

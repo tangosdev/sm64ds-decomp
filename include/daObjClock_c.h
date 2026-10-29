@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 /* daObjClock_c -- the two rotating hands of the clock painting.
  *
@@ -22,20 +22,18 @@
  * run time by actorID and stores the answer in mHandIndex.
  *
  * LAYOUT: dActor_c occupies 0x000..0x0cf; four bytes of derived padding precede
- * the owned Model the implicit constructor builds at +0xd4 (_ZN5ModelC1Ev);
- * the one-byte hand index follows it at 0x124. The helper at 0x02111430 writes
+ * the owned dExtSimpleModel_c the implicit constructor builds at +0xd4 (_ZN17dExtSimpleModel_cC1Ev);
+ * the one-byte hand index follows it at 0x124. UpdateModelTransform writes
  * mModel.mat4x3 from mAngleX/Y/Z and mModel.mat4x3.t from mPosX/Y/Z >> 3.
  */
 
 #ifdef __cplusplus
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct daObjClock_c : dActor_c {
-    u8    pad_0d0[0x4];    /* 0x0d0 */
-    Model mModel;          /* 0x0d4 */
-    u8    mHandIndex;      /* 0x124 -- 0 = long hand, 1 = short hand */
-    u8    pad_125[0x3];    /* 0x125 */
+    u8 pad_0d0[0x4];          /* 0x0d0 */
+    dExtSimpleModel_c mModel; /* 0x0d4 */
+    u8 mHandIndex;            /* 0x124 -- 0 = long hand, 1 = short hand */
+    u8 pad_125[0x3];          /* 0x125 */
 
     /* --- vtable. The destructor is INLINE, and that is load-bearing rather
        than a style choice. Out of line, mwccarm emits D0 before D1 -- the
@@ -49,27 +47,20 @@ struct daObjClock_c : dActor_c {
        function is the first DECLARED non-inline virtual, so this ordering is
        what makes src/game/actors/d_a_obj_clock.cpp the TU that emits the
        _ZTV/_ZTI/_ZTS group -- exactly what the promotion needs it to be. --- */
-    virtual ~daObjClock_c() {}         /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjClock_c() {} /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides of inherited fBase_c slots dActor_c left untouched.
        The ROM installs all four in the vtable at 0x02112200. Matching an
        inherited virtual signature already makes an override virtual without
        repeating the keyword. These explicit declarations document that role;
        the inline destructor and declaration order above control TU emission. --- */
-    virtual int InitResources();       /* slot 0 -- 0x021115cc */
-    virtual int CleanupResources();    /* slot 3 -- 0x02111478 */
-    virtual int Behavior();            /* slot 6 -- 0x021114cc */
-    virtual int Render();              /* slot 9 -- 0x021114a4 */
+    virtual int InitResources();    /* slot 0 -- 0x021115cc */
+    virtual int CleanupResources(); /* slot 3 -- 0x02111478 */
+    virtual int Behavior();         /* slot 6 -- 0x021114cc */
+    virtual int Render();           /* slot 9 -- 0x021114a4 */
 
-    /* State helper taking this (S33): the ROM address is the method name. */
-    void func_ov013_02111430();
-
-    /* Until #2570 merges, a leaf `unsigned long` new forwards the retail
-       `fBase_c::operator new(unsigned int)`. `unsigned int` here mangles
-       differently and the factories miss. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    /* Rebuilds mModel.mat4x3 from the angles and position; ov013 0x02111430. */
+    void UpdateModelTransform();
 };
 
 /* Holds the chain to the size both factories' operator new(0x128) evidences.

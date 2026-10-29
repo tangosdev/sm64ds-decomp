@@ -33,14 +33,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020b330c",
+      "symbol": "_ZN12daObjAbuku_c3PopEv",
       "address": "0x020b330c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov002_020b330c.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov002_020b3344",
+      "symbol": "_ZN12daObjAbuku_c18IsNearWaterSurfaceEv",
       "address": "0x020b3344",
       "size": "0x00000098",
       "legacy_source": "src/func_ov002_020b3344.c",
@@ -140,6 +140,13 @@
       "canonical_module": "ov002",
       "canonical_address": "0x02108940",
       "reason": "The actor-table descriptor is naturally defined beside its factory in this TU. Its canonical gap-owned home is outside the text-only claim; romdata_check proves the factory relocation and all descriptor words before production isolation discards the duplicate."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "IsNearWaterSurface builds its water-probe position in a real Vector3 local, so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     }
   ],
   "notes": [

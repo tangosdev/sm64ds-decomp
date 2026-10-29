@@ -44,7 +44,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020b68b0",
+      "symbol": "_ZN13daObjKuruma_c20CleanupResourcesFromEPNS_9ResourcesE",
       "address": "0x020b68b0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b68b0.cpp",
@@ -65,7 +65,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov002_020b6958",
+      "symbol": "_ZN13daObjKuruma_c17InitResourcesFromEPNS_9ResourcesE",
       "address": "0x020b6958",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020b6958.c",
@@ -79,7 +79,7 @@
     "THIS FOLD MOVES THE CLASS'S KEY FUNCTION, which is the one difference from the two landed siblings in this stretch. daObjKaitendai_c and daObjUkiyuka_c declare Behavior first, so their key function was already out of line before their fold. daObjKuruma_c declares RENDER first, and Render's definition was the unmigrated one, so until now NO TU owned this class's key function and nothing in the tree emitted _ZTV13daObjKuruma_c. Defining Render here makes this TU the vtable's anchor. include/daObjKuruma_c.h's comment recording that pre-fold state is updated by this promotion; the header's DECLARATION ORDER is untouched, so the class layout, the slot numbering and the 0x320 size assert are all unchanged.",
     "TWO PREVIOUSLY UNATTRIBUTED FUNCTIONS ARE FOLDED IN. func_ov002_020b68b0 and func_ov002_020b6958 are this class's shared teardown and setup halves, reached by an ordinary call from each of the two leaves rather than through a vtable slot, because the class is abstract in slots 0 and 3. build/tu_map.json cannot see the second one: it carries no mangled name and no vtable slot, so no label bounds the run on the right.",
     "The class is ABSTRACT: vtable slots 0 (InitResources) and 3 (CleanupResources) are bare zero words with no relocation, and each of the two leaves supplies its own. There is no factory and no g_profile row -- both leaves' factories live in their own overlays (ov043 daObjKm1_Kuruma_c, ov047 daObjKm3_Kuruma_c) and neither abuts this run -- which is why the entry claims no data, no ctor and no BSS.",
-    "func_ov002_020b68b0 and func_ov002_020b6958 keep their address-derived names. Neither occupies a vtable slot in any class in the image and nothing in the ROM names either, so a coined English name would be invention, not recovery.",
+    "func_ov002_020b68b0 and func_ov002_020b6958 are now the non-virtual members CleanupResourcesFrom and InitResourcesFrom, taking the descendant's daObjKuruma_c::Resources record; both leaves call them as members, byte-identical to the old C entry points. Neither occupies a vtable slot and the ROM names neither, so the names describe the bodies; they are not recovered spellings.",
     "func_ov002_020b6958's local `typedef int Fix12` had to go when the body moved into a TU that includes the class header, because Fix12 is a class template there. The typedef named parameter 4 of an extern \"C\" declaration of _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block, so it is spelled `int` -- the type the typedef named -- directly. It reaches no mangled name and no codegen; all four members still byte-match. The same substitution was made for the same reason on ov002/daObjUkiyuka_c's setup half.",
     "func_ov002_020b68b0's body is UNCHANGED, and it is the only one of the five copies of this teardown body in ov002 that was already C++ before the fold: it reaches dBgW and SharedFilePtr through include/dBgW.h and include/SharedFilePtr.h and real member calls, where daObjGuragura_c's, daObjUkiyuka_c's, daObjKaitendai_c's and daObjKurumajiku_c's copies each use extern \"C\" declarations of the mangled names. Those two includes move to the top of the folded file; nothing else about the body changed.",
     "POST-PROMOTION `tubuild.py linkcheck` IS STRUCTURALLY UNAVAILABLE TO THIS ENTRY, and that is not a defect in it. Once the single intact delinks.txt entry exists, linkcheck treats the source as an enrolled intact-object candidate and routes its object through tools/tu_production.prepare_intact_object, which refuses any entry that does not claim a non-text section: 'intact production requires one .text claim and at least one non-text claim'. This TU claims .text only, because the class has no factory, no g_profile row and no owned data. The proof of record for this entry is therefore the PRE-PROMOTION linkcheck run recorded in `verification`, plus tools/rombuild.py against the real tree. production_mode is deliberately left unset, as it is on the other promoted text-only entries in this module.",
@@ -374,28 +374,8 @@
       },
       "moduleFidelity": "106/106 exact, 100.000000% of compared bytes",
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "symbolCheckBaselineControl": "tools/tubuild.py linkcheck --baseline --module ov002 -- the identical scratch pipeline with NO TU substitution. It fails dsd check symbols --fail with the SAME 9 error lines and builds the same ROM, so the 9 belong to the tree and not to this TU: 0 new, 0 resolved.",
       "rom": {
         "bytes": 16777216,

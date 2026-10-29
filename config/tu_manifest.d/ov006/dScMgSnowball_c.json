@@ -7,10 +7,11 @@
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "HISTORY: contiguous linker run: 0x0212568c..0x0212a520, 42 functions. tools/tu_map.py cuts the run at 0x021295ac, between this labelled class run and the following unlabelled one, at 'medium' confidence: a contiguity cut that nothing in the ROM backs. The cut is moved here to 0x0212a520, the start of dScMgSnowball_c_classInit (0x0212a520..0x0212a554, src/d_s_mg_snowball.cpp), which stays its own TU the way dScMgCoin_c_classInit does beside the widened dScMgCoin_c.",
-    "WHY 0x021295ac..0x0212a520 BELONGS TO THIS CLASS. dScMgSnowball_c_Construct is dScMgSnowball_c's constructor: it calls _ZN11dScMgBase_cC2Ev, stores the vptr _ZTV19dScMgSingle3DBase_c, then _ZTV15dScMgSnowball_c (the class's own, address _ZTV+8), constructs mModel at 0xaba4 and the three element arrays that ~dScMgSnowball_c (0x0212568c) tears down in reverse, with SnowSpray_ElemDtor (in this TU) as the mArray3 element destructor and SnowSpray_ElemCtor (empty, 0x0212968c) as its constructor. The 17 functions after it are per-element and whole-array helpers on the 0x32-element, 0x24-byte array at this+0xbe94 (the field map in include/dScMgSnowball_c.h) and the pointer-to-member tables sSnowballBitStateTable/02143038/02143050/02143070. Only dScMgSnowball_c_classInit, which calls the constructor, is factory code.",
+    "WHY 0x021295ac..0x0212a520 BELONGS TO THIS CLASS. _ZN15dScMgSnowball_cC1Ev (formerly dScMgSnowball_c_Construct) is dScMgSnowball_c's constructor: it calls _ZN11dScMgBase_cC2Ev, stores the vptr _ZTV19dScMgSingle3DBase_c, then _ZTV15dScMgSnowball_c (the class's own, address _ZTV+8), constructs mModel at 0xaba4 and the three element arrays that ~dScMgSnowball_c (0x0212568c) tears down in reverse, with SnowSpray_ElemDtor (in this TU) as the mSprays element destructor and SnowSpray_ElemCtor (empty, 0x0212968c) as its constructor. The 17 functions after it are per-element and whole-array helpers on the 0x32-element, 0x24-byte array at this+0xbe94 (the field map in include/dScMgSnowball_c.h) and the pointer-to-member tables sSnowballBitStateTable/02143038/02143050/02143070. Only dScMgSnowball_c_classInit, which calls the constructor, is factory code.",
     "class label(s): dScMgSnowball_c",
     "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "CLASSINIT TAIL FOLD (2026-10-10): dScMgSnowball_c_classInit (0x0212a520, size 0x34), formerly src/d_s_mg_snowball.cpp, is folded in as the last function, so the TU is 43 functions over .text 0x0212568c..0x0212a554, ROM ordinals 0..42, ROM-ascending under #pragma defer_codegen off. Membership: the factory calls fBase_c::operator new(0xc59c) == sizeof(dScMgSnowball_c) (the header's static size assert) and hands the storage to dScMgSnowball_c_Construct, this TU's constructor body, which stores _ZTV15dScMgSnowball_c. It is spelled as dScMgSnowball_c::operator new(sizeof(dScMgSnowball_c)) plus the explicit constructor call because that constructor stays a free function."
+    "CLASSINIT TAIL FOLD (2026-10-10): dScMgSnowball_c_classInit (0x0212a520, size 0x34), formerly src/d_s_mg_snowball.cpp, is folded in as the last function, so the TU is 43 functions over .text 0x0212568c..0x0212a554, ROM ordinals 0..42, ROM-ascending under #pragma defer_codegen off. Membership: the factory calls fBase_c::operator new(0xc59c) == sizeof(dScMgSnowball_c) (the header's static size assert) and hands the storage to dScMgSnowball_c_Construct, this TU's constructor body, which stores _ZTV15dScMgSnowball_c. It is spelled as dScMgSnowball_c::operator new(sizeof(dScMgSnowball_c)) plus the explicit constructor call because that constructor stays a free function.",
+    "bss 0x02143004..0x02143020: the guard, registration node and storage of ResetScene's function-local static unit-Y Vector3; only ResetScene refers to the three addresses, and the previous TU's .bss ends at 0x02143004."
   ],
   "sections": [
     {
@@ -35,7 +36,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x02143020",
+      "start": "0x02143004",
       "end": "0x021430a0"
     }
   ],
@@ -55,7 +56,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "SnowSpray_ElemDtor",
+      "symbol": "_ZN9SnowSprayD1Ev",
       "address": "0x02125800",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_02125800.c",
@@ -202,14 +203,14 @@
       "ordinal": 22
     },
     {
-      "symbol": "dScMgSnowball_c_Construct",
+      "symbol": "_ZN15dScMgSnowball_cC1Ev",
       "address": "0x021295ac",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov006_021295ac.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "SnowSpray_ElemCtor",
+      "symbol": "_ZN9SnowSprayC1Ev",
       "address": "0x0212968c",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0212968c.c",
@@ -451,6 +452,27 @@
   ],
   "bss": [
     {
+      "symbol": "_ZGVsUnitY$1570",
+      "address": "0x02143004",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of ResetScene's function-local static sUnitY; ResetScene tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "@1573",
+      "address": "0x02143008",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for sUnitY; ResetScene passes it as the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sUnitY$1570",
+      "address": "0x02143014",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResetScene's function-local static Vector3(0, 0x1000, 0); retail stores the three words under the guard and registers ~Vector3() for it"
+    },
+    {
       "symbol": "sSnowballBitStateTable",
       "address": "0x02143020",
       "size": "0x18",
@@ -495,13 +517,15 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RedrawCourse' differs between the legacy file that used to hold _ZN15dScMgSnowball_c6RenderEv and the one that held _ZN15dScMgSnowball_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: kept `void RedrawCourse(char *)`, the typed view; the call sites in OnYoshiTryEat and InitResources, which had declared it `void *`, take an explicit (char *) cast. Verified: 23/23 MATCH.",
     "WIDENED to 0x0212a520: the 19 shards dScMgSnowball_c_Construct through Bit_InitAll are appended to src/minigames/d_s_mg_snowball.cpp in ROM order, each under its `// @symbol` marker. Their file-local struct and pointer-to-member typedefs carry the shard's address as a suffix so they cannot collide. Bit_DrawAll takes `void*` (include/decl_common.h declares it so) and casts to its local object type. The constructor keeps its C name: the ROM does not distinguish C1 from C2, so a rename to _ZN15dScMgSnowball_cC1Ev would be unsupported. Its own-vtable store is spelled `&_ZTV15dScMgSnowball_c[2]`, because this TU defines that symbol and objisolate requires the vptr-store addend to be at least the 8-byte vtable preamble.",
     "Folded __sinit_ov006_021333e0 into this TU. The four PMF tables are file-scope arrays, so mwcc emits __sinit_d_s_mg_snowball.cpp, the same 0x18c-byte initializer and the same eighteen relocations, plus fourteen {function, 0} descriptors and the eight-byte g_profile_MG_SNOWBALL word that sits between them. @2720, @2722, @2724, @2726, @2728, @2730, @2732, @2734 and @2736 are free and kept. @2710, @2712 and @2714 are already ov060's, and @2716 and @2718 are already ov002's, so defined_symbol_renames maps them to the unused same-length @2719, @2721, @2723, @2725 and @2727.",
-    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
+    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares.",
+    "2026-10-25: include/Vector2.h gains Vector2(Fix12i, Fix12i), the inline constructor unit020b2c84's two function-local Vector2 statics need. Its body consumes eight compiler numbers ahead of this TU's first @NNN, so every defined_symbol_renames[].from moved by exactly +8 (base and head objects compared: same @ symbols, each +8, same relocation sites). tubuild verify: TEXT-VERIFIED.",
+    "Function-local static folded: ResetScene's unit-Y vector is now `static Vector3 sUnitY(0, 0x1000, 0);`, replacing the externs sSnowball_ResetScene_UnitYGuard/DtorRec/UnitY and the handwritten guard block that called func_020731dc with _ZN7Vector3D1Ev. mwcc emits the guard test, stores and registration itself, byte- and relocation-identical; the TU's .bss claim grows down to 0x02143004 to own the three objects."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgSnowball_c/dScMgSnowball_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgSnowball_c/d_s_mg_snowball.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 43,
     "functions_declared": 43,
@@ -509,27 +533,32 @@
       "requested": [
         "_ZN15dScMgSnowball_cD2Ev",
         "_ZN15dScMgSnowball_c4Vec2D1Ev",
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN7Vector2C1Ev",
+        "_ZN7Vector2D1Ev",
+        "_ZN15dScMgSnowball_cC2Ev",
+        "_ZN19dScMgSingle3DBase_cD2Ev"
       ],
       "deadstripped": [
         "_ZN15dScMgSnowball_c4Vec2D1Ev",
+        "_ZN15dScMgSnowball_cC2Ev",
         "_ZN15dScMgSnowball_cD2Ev",
+        "_ZN19dScMgSingle3DBase_cD2Ev",
+        "_ZN7Vector2C1Ev",
+        "_ZN7Vector2D1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         9,
         10,
-        22,
+        11,
         23,
-        118,
-        119,
-        120,
-        121,
-        122,
-        123,
-        124,
-        125,
-        126,
+        24,
+        56,
+        57,
+        59,
+        60,
+        61,
         127,
         128,
         129,
@@ -540,7 +569,16 @@
         134,
         135,
         136,
-        137
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146
       ],
       "data": [
         "_ZTV15dScMgSnowball_c",
@@ -571,12 +609,32 @@
         "_ZTS7fBase_c",
         "_ZTS8dScene_c",
         "_ZTV15dScMgSnowball_c"
+      ],
+      "canonicalDuplicates": [
+        {
+          "symbol": "_ZN7Vector2C1Ev",
+          "canonicalSymbol": "func_0203d738",
+          "module": "arm9",
+          "address": "0x0203d738",
+          "size": 4,
+          "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": 0
+        },
+        {
+          "symbol": "_ZN7Vector2D1Ev",
+          "canonicalSymbol": "NullDestructor_0203d47c",
+          "module": "arm9",
+          "address": "0x0203d47c",
+          "size": 4,
+          "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": 0
+        }
       ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 6 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -590,7 +648,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -630,14 +688,14 @@
         },
         {
           "section": ".bss",
-          "start": "0x02143020",
+          "start": "0x02143004",
           "end": "0x021430a0",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 64
+          "LICENSED": 67
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -648,28 +706,24 @@
           {
             "section": ".init",
             "original": [
-              140
+              149
             ],
             "desired": [
-              140
+              149
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              138
+              147
             ],
             "desired": [
-              138
+              147
             ]
           },
           {
             "section": ".data",
             "original": [
-              82,
-              84,
-              86,
-              88,
               91,
               93,
               95,
@@ -680,39 +734,49 @@
               106,
               109,
               111,
-              113
+              113,
+              115,
+              118,
+              120,
+              122
             ],
             "desired": [
+              115,
+              113,
+              111,
               106,
-              104,
-              102,
               97,
-              88,
-              95,
-              84,
-              91,
+              104,
               93,
               100,
-              111,
-              86,
-              82,
-              113,
-              109
+              102,
+              109,
+              120,
+              95,
+              91,
+              122,
+              118
             ]
           },
           {
             "section": ".bss",
             "original": [
-              90,
+              33,
+              34,
+              35,
               99,
               108,
-              115
+              117,
+              124
             ],
             "desired": [
-              115,
-              90,
+              33,
+              34,
+              35,
+              124,
               99,
-              108
+              108,
+              117
             ]
           }
         ],
@@ -721,10 +785,6 @@
             {
               "section": ".data",
               "original": [
-                82,
-                84,
-                86,
-                88,
                 91,
                 93,
                 95,
@@ -735,30 +795,30 @@
                 106,
                 109,
                 111,
-                113
+                113,
+                115,
+                118,
+                120,
+                122
               ],
               "desired": [
+                115,
+                113,
+                111,
                 106,
-                104,
-                102,
                 97,
-                88,
-                95,
-                84,
-                91,
+                104,
                 93,
                 100,
-                111,
-                86,
-                82,
-                113,
-                109
+                102,
+                109,
+                120,
+                95,
+                91,
+                122,
+                118
               ],
               "slots": [
-                82,
-                84,
-                86,
-                88,
                 91,
                 93,
                 95,
@@ -769,32 +829,45 @@
                 106,
                 109,
                 111,
-                113
+                113,
+                115,
+                118,
+                120,
+                122
               ]
             },
             {
               "section": ".bss",
               "original": [
-                90,
+                33,
+                34,
+                35,
                 99,
                 108,
-                115
+                117,
+                124
               ],
               "desired": [
-                115,
-                90,
-                99,
-                108
-              ],
-              "slots": [
-                90,
+                33,
+                34,
+                35,
+                124,
                 99,
                 108,
-                115
+                117
+              ],
+              "slots": [
+                33,
+                34,
+                35,
+                99,
+                108,
+                117,
+                124
               ]
             }
           ],
-          "symbolIndices": 19,
+          "symbolIndices": 22,
           "sectionLinks": 0,
           "sectionInfos": 15,
           "error": null
@@ -803,28 +876,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -940,6 +993,32 @@
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
       "reason": "Vector3's empty destructor from include/types.h. Unlike the two above this one HAS a ROM home -- arm9:0x020072c0, kind:function(arm,size=0x4) in config/arm9/symbols.txt -- owned by another source, so this object's copy is a vague-linkage duplicate rather than compiler-only output. rombuild proves the body against the cartridge before discarding it."
+    },
+    {
+      "symbol": "_ZN7Vector2C1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d738",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d738",
+      "reason": "dScMgSnowball_c's constructor builds its two 0x80-element Vector2 arrays (mArray1, mArray2) through __cxa_vec_ctor with func_0203d738 as the element constructor, as retail does. goes through __cxa_vec_ctor with func_0203d738 as the element constructor, as retail does. include/Vector2.h defines the empty Vector2() inline, so this TU emits its own 4-byte vague-linkage copy; that body is the arm9 callback at 0x0203d738, so this copy is discarded (the Vector3 constructor's policy, ov025/daDpLift_c)."
+    },
+    {
+      "symbol": "_ZN7Vector2D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "NullDestructor_0203d47c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d47c",
+      "reason": "The same Vector2 array is torn down through __cxa_vec_cleanup with NullDestructor_0203d47c, as retail does. include/Vector2.h defines the empty ~Vector2() inline, so this TU emits its own 4-byte vague-linkage copy; that body is the arm9 element destructor at 0x0203d47c, so this copy is discarded."
+    },
+    {
+      "symbol": "_ZN15dScMgSnowball_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. The out-of-line dScMgSnowball_c::dScMgSnowball_c() emits C1 and C2. The cartridge carries only C1, at 0x021295ac (size 0xe0), followed directly by _ZN9SnowSprayC1Ev at 0x0212968c; the class is a leaf only ever built by the factory's `new dScMgSnowball_c`, so its base-object constructor is never called and no symbols.txt names a C2 for it. Plain deadstrip."
+    },
+    {
+      "symbol": "_ZN19dScMgSingle3DBase_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor of dScMgSingle3DBase_c, emitted as vague linkage once the real constructor expands the inline base-constructor chain (the same byproduct ov006/dScMgFlower_c, ov006/dScMgMemory2_c and ov006/dScMgBSC_c license for theirs). dScMgSnowball_c's D1/D0 inline the base destructor rather than chain to it, and no module's symbols.txt gives _ZN19dScMgSingle3DBase_cD2Ev a home. Homeless and unreferenced, so a plain deadstrip."
     }
   ],
   "production_mode": "intact-object",
@@ -961,67 +1040,100 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "undefined_symbol_aliases": [],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated function-local static registration in ResetScene; retail ResetScene calls func_020731dc with sUnitY, ~Vector3() and the registration node"
+    }
+  ],
   "defined_symbol_renames": [
     {
-      "from": "@2729",
-      "to": "@2723",
-      "evidence": "mwcc numbers this PMF descriptor @2714. ov060 already defines @2714, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @2723."
-    },
-    {
-      "from": "@2731",
-      "to": "@2719",
-      "evidence": "mwcc numbers this PMF descriptor @2716. ov002 already defines @2716, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @2725."
-    },
-    {
       "from": "@2733",
-      "to": "@2721",
-      "evidence": "mwcc numbers this PMF descriptor @2718. ov002 already defines @2718, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @2727."
-    },
-    {
-      "from": "@2745",
-      "to": "@2730",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2745 now; licensed under the existing pin @2730"
-    },
-    {
-      "from": "@2743",
-      "to": "@2728",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2743 now; licensed under the existing pin @2728"
-    },
-    {
-      "from": "@2741",
-      "to": "@2726",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2741 now; licensed under the existing pin @2726"
-    },
-    {
-      "from": "@2737",
-      "to": "@2722",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2737 now; licensed under the existing pin @2722"
+      "to": "@2723",
+      "evidence": "mwcc numbers this PMF descriptor @2714. ov060 already defines @2714, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @2723. Re-keyed +2 (from @2723) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2725) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
       "from": "@2735",
-      "to": "@2720",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2735 now; licensed under the existing pin @2720"
+      "to": "@2719",
+      "evidence": "mwcc numbers this PMF descriptor @2716. ov002 already defines @2716, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @2725. Re-keyed +2 (from @2725) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2727) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2739",
-      "to": "@2724",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2739 now; licensed under the existing pin @2724"
+      "from": "@2737",
+      "to": "@2721",
+      "evidence": "mwcc numbers this PMF descriptor @2718. ov002 already defines @2718, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @2727. Re-keyed +2 (from @2727) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2729) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
       "from": "@2749",
-      "to": "@2734",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2749 now; licensed under the existing pin @2734"
-    },
-    {
-      "from": "@2751",
-      "to": "@2736",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2751 now; licensed under the existing pin @2736"
+      "to": "@2730",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2758 now; licensed under the existing pin @2730 Re-keyed +2 (from @2739) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2741) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
       "from": "@2747",
+      "to": "@2728",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2756 now; licensed under the existing pin @2728 Re-keyed +2 (from @2737) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2739) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2745",
+      "to": "@2726",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2754 now; licensed under the existing pin @2726 Re-keyed +2 (from @2735) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2737) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2741",
+      "to": "@2722",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2750 now; licensed under the existing pin @2722 Re-keyed +2 (from @2731) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2733) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2739",
+      "to": "@2720",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2748 now; licensed under the existing pin @2720 Re-keyed +2 (from @2729) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2731) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2743",
+      "to": "@2724",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2752 now; licensed under the existing pin @2724 Re-keyed +2 (from @2733) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2735) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2753",
+      "to": "@2734",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2762 now; licensed under the existing pin @2734 Re-keyed +2 (from @2743) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2745) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2755",
+      "to": "@2736",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2764 now; licensed under the existing pin @2736 Re-keyed +2 (from @2745) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2747) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2751",
       "to": "@2732",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2747 now; licensed under the existing pin @2732"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2760 now; licensed under the existing pin @2732 Re-keyed +2 (from @2741) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2743) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2729",
+      "to": "@2725",
+      "evidence": "compiler temp; the real constructor's inline Vector2 and SnowSpray structors shift this TU's per-TU @NNN uniquifier by 13, so mwcc emits it as @2738 now; licensed under the existing pin @2725 Re-keyed +2 (from @2719) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2721) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "@2731",
+      "to": "@2727",
+      "evidence": "compiler temp; the real constructor's inline Vector2 and SnowSpray structors shift this TU's per-TU @NNN uniquifier by 13, so mwcc emits it as @2740 now; licensed under the existing pin @2727 Re-keyed +2 (from @2721) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2723) when dScMgBase_c.h gained Mg_DrawLine."
+    },
+    {
+      "from": "_ZGVsUnitY$1578",
+      "to": "_ZGVsUnitY$1570",
+      "evidence": "configured name kept; dScMgBase_c.h gained Mg_DrawLine and moved the emitted name from _ZGVsUnitY$1570 to _ZGVsUnitY$1578 (index-matched against origin/main)."
+    },
+    {
+      "from": "@1581",
+      "to": "@1573",
+      "evidence": "configured name kept; dScMgBase_c.h gained Mg_DrawLine and moved the emitted name from @1573 to @1581 (index-matched against origin/main)."
+    },
+    {
+      "from": "sUnitY$1578",
+      "to": "sUnitY$1570",
+      "evidence": "configured name kept; dScMgBase_c.h gained Mg_DrawLine and moved the emitted name from sUnitY$1570 to sUnitY$1578 (index-matched against origin/main)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -1120,6 +1232,24 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-emitted PMF descriptor; DSD requires a configured global symbol at the same exact address"
+    },
+    {
+      "symbol": "_ZGVsUnitY$1570",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local static guard; DSD requires a configured global symbol at 0x02143004, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@1573",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node; DSD requires a configured global symbol at 0x02143008"
+    },
+    {
+      "symbol": "sUnitY$1570",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x02143014, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
     }
   ],
   "relocations": [

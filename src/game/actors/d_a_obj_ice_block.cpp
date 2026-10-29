@@ -5,7 +5,7 @@
  * Fire melts it: the block shrinks over 30 frames under a pair of recycled
  * particle systems and is gone. An explosion or a mega character shatters it
  * instead (Kill). Either way the star is let go through
- * func_ov081_02127be0, which destroys the frozen daStar_c (actor 0xb2) and
+ * ReleaseStar, which destroys the frozen daStar_c (actor 0xb2) and
  * respawns it free-standing, with a daStarBase_c (actor 0xb4) beside it.
  *
  * daObjIceBlock_c_classInit is reconstructed (RTTI daObjIceBlock_c,
@@ -19,37 +19,16 @@
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S -- mwccarm emits one .text
  * section per function in the reverse of source order.
  *
- * Known limits:
- * - dBgW_KcMbg::SetFile, dCcAc_c::Init, Particle::System::New / NewSimple
- *   and dBgActor_c::IsClsnInRangeOnScreen stay mangled: each takes
- *   Fix12<int> by value (notes/mwccarm-codegen.md 6az). cstd::fdiv stays
- *   mangled because no header declares the cstd namespace yet.
- * - data_ov081_02128fd0 / 02128fd8 are this overlay's KCL / BMD file
- *   handles and data_ov002_0210d8d4 the CLPS block, all in data this TU
- *   does not own.
- * - func_ov081_02127be0 keeps its placeholder name, and the particle
- *   system word at +0x44 has no member in Particle::System yet.
+ * Notes:
+ * - data_ov002_0210d8d4 is the CLPS block, in ov002 data this TU does not
+ *   own.
+ * - The particle system word at +0x44 has no member in Particle::System yet.
+ * - daStar_c's unk_49f (written when the star is let go) lives on another
+ *   class's header, which has not named it yet.
  */
 
-// leftovers:
-// - dBgW_KcMbg::SetFile, dCcAc_c::Init, Particle::System::New / NewSimple
-//   and dBgActor_c::IsClsnInRangeOnScreen stay mangled: each takes
-//   Fix12<int> by value (notes/mwccarm-codegen.md 6az). cstd::fdiv stays
-//   mangled because no header declares the cstd namespace yet.
-// - data_ov081_02128fd0 / 02128fd8 are this overlay's KCL / BMD file
-//   handles and data_ov002_0210d8d4 the CLPS block, all in data this TU
-//   does not own.
-// - func_ov081_02127be0 keeps its placeholder name (caller: Kill and the
-//   melt-out path in this TU), and the particle system word at +0x44 has no
-//   member in Particle::System yet.
-// - daStar_c's unk_49f (written when the star is let go) lives on another
-//   class's header, which has not named it yet.
-
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_ice_block_AssetId {
-    ASSET_ICE_BLOCK_LL_BMD = 0x045a,
-    ASSET_ICE_BLOCK_LL_KCL = 0x045b
-};
+enum d_a_obj_ice_block_AssetId { ASSET_ICE_BLOCK_LL_BMD = 0x045a, ASSET_ICE_BLOCK_LL_KCL = 0x045b };
 
 #include "daObjIceBlock_c.h"
 #include "Player.h"
@@ -59,6 +38,8 @@ enum d_a_obj_ice_block_AssetId {
 #include "dBgW.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
+#include "cstd.h"
+#include "math/CalcLib.h"
 
 struct KCL_File;
 struct CLPS_Block;
@@ -67,44 +48,23 @@ struct CLPS_Block;
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct IceBlockModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     IceBlockModelFilePtr(u32 fileID);
     ~IceBlockModelFilePtr();
 };
 
 struct IceBlockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     IceBlockCollisionFilePtr(u32 fileID);
     ~IceBlockCollisionFilePtr();
 };
 
-extern "C" {
 /* Defined at the end of this file so the constructors do not enter .text. */
 extern IceBlockCollisionFilePtr data_ov081_02128fd0; /* the KCL */
-extern IceBlockModelFilePtr data_ov081_02128fd8; /* the BMD */
+extern IceBlockModelFilePtr data_ov081_02128fd8;     /* the BMD */
 extern CLPS_Block data_ov002_0210d8d4;
 
-u8 DecIfAbove0_Byte(u8 *counter);
+extern "C" {
+/* local extern: arm9 sound helper, no header declares it. */
 void func_02012694(u32 soundID, const Vector3 *pos);
-int _ZN4cstd4fdivEii(int num, int den);
-
-void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-    u32 effectID, int x, int y, int z);
-int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32 handle, u32 effectID, int x, int y, int z, const Vector3_16f *dir,
-    void *callback);
-int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(
-    dBgActor_c *self, int a, int b);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    dCcAc_c *self, dActor_c *owner, int radius, int height, u32 flags,
-    u32 vulnFlags);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
-    s16 angleY, CLPS_Block *clps);
-
-void func_ov081_02127be0(daObjIceBlock_c *self);
 }
 
 enum {
@@ -115,35 +75,30 @@ enum {
 };
 
 // @symbol daObjIceBlock_c_classInit
-extern "C" daObjIceBlock_c *daObjIceBlock_c_classInit()
-{
+extern "C" daObjIceBlock_c *daObjIceBlock_c_classInit() {
     return new daObjIceBlock_c();
 }
 
 // @symbol _ZN15daObjIceBlock_c13InitResourcesEv
-s32 daObjIceBlock_c::InitResources()
-{
-    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov081_02128fd8), 1, 0x17);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &mCollider, this, 0xc8000, 0x12c000, 0x800002, 0x44000);
+s32 daObjIceBlock_c::InitResources() {
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov081_02128fd8), 1, 0x17);
+    mCollider.Init(this, 0xc8000, 0x12c000, 0x800002, 0x44000);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov081_02128fd0);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY,
-        &data_ov002_0210d8d4);
+    ((dBgW_KcMbg *)(&mMeshCollider))
+        ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov002_0210d8d4);
     mScale = 0x1000;
     return 1;
 }
 
 // @symbol _ZN15daObjIceBlock_c8BehaviorEv
-s32 daObjIceBlock_c::Behavior()
-{
-    _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0);
+s32 daObjIceBlock_c::Behavior() {
+    IsClsnInRangeOnScreen(0, 0);
 
     if (mMeltTimer != 0) {
-        mScale = _ZN4cstd4fdivEii(mMeltTimer << 12, kMeltFrames << 12);
+        mScale = cstd::fdiv(mMeltTimer << 12, kMeltFrames << 12);
 
         if (DecIfAbove0_Byte(&mMeltTimer) == 0) {
             dActor_c *star = mContainedActor;
@@ -157,10 +112,10 @@ s32 daObjIceBlock_c::Behavior()
             pos.z = mPosZ;
             pos.y += FX_MUL(mScale, kShardHeight);
 
-            mParticleHandle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                mParticleHandle1, 0x77, pos.x, pos.y, pos.z, 0, 0);
-            mParticleHandle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                mParticleHandle2, 0x78, pos.x, pos.y, pos.z, 0, 0);
+            mParticleHandle1 =
+                Particle::System::New(mParticleHandle1, 0x77, pos.x, pos.y, pos.z, 0, 0);
+            mParticleHandle2 =
+                Particle::System::New(mParticleHandle2, 0x78, pos.x, pos.y, pos.z, 0, 0);
 
             u32 handle = mParticleHandle1;
             if (handle != 0) {
@@ -179,12 +134,12 @@ s32 daObjIceBlock_c::Behavior()
     }
 
     if (mCollider.otherOwner != 0) {
-        if (mCollider.hitFlags & 0x40000) {       /* fire: start melting */
+        if (mCollider.hitFlags & 0x40000) { /* fire: start melting */
             mMeltTimer = kMeltFrames;
             func_02012694(0x7a, &mCamSpacePos);
-            func_ov081_02127be0(this);
+            ReleaseStar();
         }
-        if (mCollider.hitFlags & 0x4000)          /* explosion: shatter */
+        if (mCollider.hitFlags & 0x4000) /* explosion: shatter */
             Kill();
     }
 
@@ -194,8 +149,7 @@ s32 daObjIceBlock_c::Behavior()
 }
 
 // @symbol _ZN15daObjIceBlock_c6RenderEv
-s32 daObjIceBlock_c::Render()
-{
+s32 daObjIceBlock_c::Render() {
     Vector3 scale;
     scale.x = mScale;
     scale.y = mScale;
@@ -205,8 +159,7 @@ s32 daObjIceBlock_c::Render()
 }
 
 // @symbol _ZN15daObjIceBlock_c16CleanupResourcesEv
-s32 daObjIceBlock_c::CleanupResources()
-{
+s32 daObjIceBlock_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     data_ov081_02128fd8.Release();
@@ -222,8 +175,7 @@ s32 daObjIceBlock_c::CleanupResources()
  * The second Vector3 is memberwise on purpose: Vector3 declares a destructor
  * (types.h), so a whole-object assignment compiles to an ldm/stm pair, four
  * instructions where the ROM has six. */
-void daObjIceBlock_c::Kill()
-{
+void daObjIceBlock_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
     Sound::PlayBank3(0x41, mCamSpacePos);
@@ -233,34 +185,32 @@ void daObjIceBlock_c::Kill()
     pos.x = x;
     pos.y = y;
     pos.z = z;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x74, pos.x, pos.y, pos.z);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x75, pos.x, pos.y, pos.z);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x76, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(0x74, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(0x75, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(0x76, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;
     dustPos.y = pos.y;
     dustPos.z = pos.z;
     PoofDustAt(dustPos);
-    func_ov081_02127be0(this);
+    ReleaseStar();
     MarkForDestruction();
 }
 
 // @symbol _ZN15daObjIceBlock_c15OnHitByMegaCharER6Player
-void daObjIceBlock_c::OnHitByMegaChar(Player &player)
-{
+void daObjIceBlock_c::OnHitByMegaChar(Player &player) {
     player.IncMegaKillCount();
     Kill();
 }
 
-// @symbol func_ov081_02127be0
+// @symbol _ZN15daObjIceBlock_c11ReleaseStarEv
 /* Let the frozen star go: destroy it and respawn it free-standing at the
  * same place and angle, with its star base beside it.
  *
  * The position is read through a Vector3 pointer (the ROM forms star + 0x5c
  * once and loads off it), and the angle is one Vector3_16 struct copy -- three
  * ldrh/strh pairs, where member-by-member s16 reads come out as ldrsh. */
-extern "C" void func_ov081_02127be0(daObjIceBlock_c *self)
-{
-    dActor_c *star = self->mContainedActor;
+void daObjIceBlock_c::ReleaseStar() {
+    dActor_c *star = mContainedActor;
     if (star == 0)
         return;
     if (star->actorID != kStarActorID)
@@ -273,16 +223,14 @@ extern "C" void func_ov081_02127be0(daObjIceBlock_c *self)
     pos.y = starPos->y;
     pos.z = starPos->z;
 
-    Vector3_16 rot = self->mContainedActor->mAngle;
+    Vector3_16 rot = mContainedActor->mAngle;
 
-    self->mContainedActor->MarkForDestruction();
+    mContainedActor->MarkForDestruction();
 
     u32 spawnParam = (u8)(param1 & 0xf) | 0x20;
-    dActor_c::Spawn(
-        kStarBaseActorID, spawnParam, pos, &rot, self->mAreaId, -1);
-    self->mContainedActor = dActor_c::Spawn(
-        kStarActorID, spawnParam, pos, &rot, self->mAreaId, -1);
-    self->mFlags |= 0x4000000;
+    dActor_c::Spawn(kStarBaseActorID, spawnParam, pos, &rot, mAreaId, -1);
+    mContainedActor = dActor_c::Spawn(kStarActorID, spawnParam, pos, &rot, mAreaId, -1);
+    mFlags |= 0x4000000;
 }
 
 // @symbol _ZN15daObjIceBlock_cD1Ev

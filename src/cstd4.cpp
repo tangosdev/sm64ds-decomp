@@ -13,6 +13,7 @@
  * function asm is emitted in source order; compiled bodies are too, under a
  * per-function defer_codegen off. */
 #include "types.h"
+#include "cstd.h"
 
 extern "C" {
 // HAND-ASM PRIMITIVE: `swp` atomic swap has no C equivalent under mwccarm, so asm is the source.
@@ -119,150 +120,70 @@ void func_0206dc4c(void) {
 }
 #pragma pop
 
-typedef struct Pair { int x, y; } Pair;
+typedef union Pair {
+    double d;
+    float f;
+    struct { int x, y; } w;
+} Pair;
 void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags);
 
-// HAND-ASM PRIMITIVE: softfloat glue, double OP double -> float, forwarding to func_0206de14.
-// ADS-era library code (below-sp staging, no sp adjustment) no mwccarm build
-// reproduces from C.
-
+#pragma push
+#pragma defer_codegen off
 // @symbol func_0206dc7c
-asm float func_0206dc7c(double a, double b, int op) {
-    stmdb sp!, {lr}
-    sub sp, sp, #0x24
-    ldr ip, [sp, #0x28]
-    str r2, [sp, #0x10]
-    str r0, [sp, #8]
-    str r1, [sp, #0xc]
-    str r3, [sp, #0x14]
-    str ip, [sp, #4]
-    ldr r1, [sp, #0x10]
-    ldr r0, [sp, #0x14]
-    sub r2, sp, #4
-    str r1, [r2]
-    str r0, [r2, #4]
-    add r1, sp, #8
-    ldmia r2, {r3}
-    add r0, sp, #0x18
-    ldmia r1, {r1, r2}
-    bl func_0206de14
-    ldr r0, [sp, #0x18]
-    add sp, sp, #0x24
-    ldmia sp!, {lr}
-    bx lr
+float func_0206dc7c(double a, double b, int op) {
+    Pair u1, u2, out;
+    u1.d = a;
+    u2.d = b;
+    func_0206de14((int)&out, u1, u2, op);
+    return out.f;
 }
+#pragma pop
 
-// HAND-ASM PRIMITIVE: softfloat glue, double OP double -> double, forwarding to func_0206de14.
-// ADS-era library code (below-sp staging, no sp adjustment) no mwccarm build
-// reproduces from C.
-
+#pragma push
+#pragma defer_codegen off
 // @symbol func_0206dcd4
-asm double func_0206dcd4(double a, double b, int op) {
-    stmdb sp!, {lr}
-    sub sp, sp, #0x24
-    ldr ip, [sp, #0x28]
-    str r2, [sp, #0x10]
-    str r0, [sp, #8]
-    str r1, [sp, #0xc]
-    str r3, [sp, #0x14]
-    str ip, [sp, #4]
-    ldr r1, [sp, #0x10]
-    ldr r0, [sp, #0x14]
-    sub r2, sp, #4
-    str r1, [r2]
-    str r0, [r2, #4]
-    add r1, sp, #8
-    ldmia r2, {r3}
-    add r0, sp, #0x18
-    ldmia r1, {r1, r2}
-    bl func_0206de14
-    ldr r0, [sp, #0x18]
-    ldr r1, [sp, #0x1c]
-    add sp, sp, #0x24
-    ldmia sp!, {lr}
-    bx lr
+double func_0206dcd4(double a, double b, int op) {
+    Pair u1, u2, out;
+    u1.d = a;
+    u2.d = b;
+    func_0206de14((int)&out, u1, u2, op);
+    return out.d;
 }
+#pragma pop
 
-// HAND-ASM PRIMITIVE: softfloat glue, float OP float -> float, forwarding to func_0206de14.
-// ADS-era library code (below-sp staging, no sp adjustment) no mwccarm build
-// reproduces from C.
-
+#pragma push
+#pragma defer_codegen off
 // @symbol func_0206dd30
-asm float func_0206dd30(float a, float b, int op) {
-    stmdb sp!, {lr}
-    sub sp, sp, #0x24
-    str r0, [sp, #8]
-    str r1, [sp, #0x10]
-    str r2, [sp, #4]
-    ldr r1, [sp, #0x10]
-    ldr r0, [sp, #0x14]
-    sub r2, sp, #4
-    str r1, [r2]
-    str r0, [r2, #4]
-    add r1, sp, #8
-    ldmia r2, {r3}
-    add r0, sp, #0x18
-    ldmia r1, {r1, r2}
-    bl func_0206de14
-    ldr r0, [sp, #0x18]
-    add sp, sp, #0x24
-    ldmia sp!, {lr}
-    bx lr
+float func_0206dd30(float a, float b, int op) {
+    Pair u1, u2, out;
+    u1.f = a;
+    u2.f = b;
+    func_0206de14((int)&out, u1, u2, op);
+    return out.f;
 }
+#pragma pop
 
-// HAND-ASM PRIMITIVE: softfloat glue, unary double -> double, forwarding to func_0206de14.
-// ADS-era library code (below-sp staging, no sp adjustment) no mwccarm build
-// reproduces from C.
-
+#pragma push
+#pragma defer_codegen off
 // @symbol func_0206dd7c
-asm double func_0206dd7c(double a, int op) {
-    stmdb sp!, {lr}
-    sub sp, sp, #0x1c
-    str r0, [sp, #8]
-    str r1, [sp, #0xc]
-    str r2, [sp, #4]
-    ldr r1, [sp, #8]
-    ldr r0, [sp, #0xc]
-    sub r2, sp, #4
-    str r1, [r2]
-    str r0, [r2, #4]
-    add r1, sp, #8
-    ldmia r2, {r3}
-    add r0, sp, #0x10
-    ldmia r1, {r1, r2}
-    bl func_0206de14
-    ldr r0, [sp, #0x10]
-    ldr r1, [sp, #0x14]
-    add sp, sp, #0x1c
-    ldmia sp!, {lr}
-    bx lr
+double func_0206dd7c(double a, int op) {
+    Pair u1, out;
+    u1.d = a;
+    func_0206de14((int)&out, u1, u1, op);
+    return out.d;
 }
+#pragma pop
 
-// HAND-ASM PRIMITIVE: softfloat glue, unary float -> float, forwarding to func_0206de14.
-// ADS-era library code (below-sp staging, no sp adjustment) no mwccarm build
-// reproduces from C.
-
+#pragma push
+#pragma defer_codegen off
 // @symbol func_0206ddcc
-asm float func_0206ddcc(float a, int op) {
-    stmdb sp!, {lr}
-    sub sp, sp, #0x1c
-    str r0, [sp, #8]
-    str r1, [sp, #4]
-    ldr r1, [sp, #8]
-    ldr r0, [sp, #0xc]
-    sub r2, sp, #4
-    str r1, [r2]
-    str r0, [r2, #4]
-    add r1, sp, #8
-    ldmia r2, {r3}
-    add r0, sp, #0x10
-    ldmia r1, {r1, r2}
-    bl func_0206de14
-    ldr r0, [sp, #0x10]
-    add sp, sp, #0x1c
-    ldmia sp!, {lr}
-    bx lr
+float func_0206ddcc(float a, int op) {
+    Pair u1, out;
+    u1.f = a;
+    func_0206de14((int)&out, u1, u1, op);
+    return out.f;
 }
+#pragma pop
 
 #pragma push
 #pragma defer_codegen off
@@ -481,7 +402,6 @@ int func_0206e06c(S6e06c *p)
 #pragma push
 #pragma defer_codegen off
 int func_0206e218(int a, int b);
-extern void _ZN4cstd7strncpyEPcPKcj(char *d, const char *s, u32 n);
 
 // @symbol func_0206e184
 u32 func_0206e184(char *dst, u16 *src, u32 max)
@@ -503,7 +423,7 @@ u32 func_0206e184(char *dst, u16 *src, u32 max)
         len = func_0206e218((int)bp, code);
         if (total + len > max)
             break;
-        _ZN4cstd7strncpyEPcPKcj(dst + total, bp, len);
+        cstd::strncpy(dst + total, bp, len);
         total += len;
         if (total > max)
             break;
@@ -635,8 +555,6 @@ enum {
 #define MAX_BUFF 512
 
 extern unsigned char *func_0206fd6c(unsigned char *format_string, char **arg, print_format *format); /* parse_format */
-extern char *_ZN4cstd6strchrEPKcc(const char *s, char c);
-extern unsigned int _ZN4cstd6strlenEPKc(const char *s);
 
 extern int func_0206e450(char *obj, const void *src, unsigned int n);
 extern int func_0206e4a4(int (*WriteProc)(void *, const char *, size_t), void *WriteProcArg,
@@ -783,10 +701,10 @@ int func_0206e4a4(int (*WriteProc)(void *, const char *, size_t), void *WritePro
     num_chars = 0;
 
     while (*format_str) {
-        curr_format = (unsigned char *)_ZN4cstd6strchrEPKcc((const char *)format_str, '%');
+        curr_format = (unsigned char *)cstd::strchr((const char *)format_str, '%');
 
         if (curr_format == 0) {
-            num_chars += (n = _ZN4cstd6strlenEPKc((const char *)format_str));
+            num_chars += (n = cstd::strlen((const char *)format_str));
             if (n && !(*WriteProc)(WriteProcArg, (const char *)format_str, n))
                 return -1;
             break;
@@ -910,7 +828,7 @@ int func_0206e4a4(int (*WriteProc)(void *, const char *, size_t), void *WritePro
                 if ((e = (unsigned char *)func_0206e2cc((u8 *)buff_ptr, 0, n)) != 0)
                     n = e - buff_ptr;
             } else {
-                n = _ZN4cstd6strlenEPKc((const char *)buff_ptr);
+                n = cstd::strlen((const char *)buff_ptr);
             }
             break;
 
@@ -950,7 +868,7 @@ int func_0206e4a4(int (*WriteProc)(void *, const char *, size_t), void *WritePro
         /* invalid_conversion gotos kept, as in MSL's __pformatter: a failed-conversion
            test after the switch instead grows it (0x848) */
         invalid_conversion:
-            num_chars += (n = _ZN4cstd6strlenEPKc((const char *)curr_format));
+            num_chars += (n = cstd::strlen((const char *)curr_format));
             if (n && !(*WriteProc)(WriteProcArg, (const char *)curr_format, n))
                 return -1;
             return num_chars;

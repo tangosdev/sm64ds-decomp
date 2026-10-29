@@ -26,7 +26,7 @@
  * NO FIELDS OF ITS OWN, and that is measured rather than assumed. Its own
  * Behavior (0x020b6920) and Render (`func_ov002_020b68f8`) reach
  * nothing above dBgActor_c -- Behavior is UpdateModelPosAndRotY plus the guarded
- * UpdateClsnPosAndRot, Render dispatches through the Model at 0xd4. Its own
+ * UpdateClsnPosAndRot, Render dispatches through the dExtSimpleModel_c at 0xd4. Its own
  * destructor destroys only dBgActor_c's two members. And both factories,
  * daObjKm1_Kuruma_c_Spawn and daObjKm3_Kuruma_c_classInit, pass 800 = 0x320 to
  * fBase_c::operator new, which is sizeof(dBgActor_c) exactly: there is no room
@@ -36,9 +36,17 @@
 #ifdef __cplusplus
 
 struct daObjKuruma_c : dBgActor_c {
+    /* Resource record each descendant passes to the shared setup and teardown
+       below: the model and collision handles, then the collision surface table. */
+    struct Resources {
+        SharedFilePtr *model;
+        SharedFilePtr *collision;
+        CLPS_Block *clps;
+    };
+
     /* --- vtable --- */
-    /* INLINE ON PURPOSE -- see include/dBgActor_c.h. The out-of-line copy is at
-       ov002 0x020b686c, still under its func_ov002_ name. */
+    /* INLINE ON PURPOSE -- see include/dBgActor_c.h. The out-of-line copy is
+       _ZN13daObjKuruma_cD1Ev at ov002 0x020b686c. */
     virtual ~daObjKuruma_c() {}
 
     /* The two own overrides the banner above already lists, spelled WITHOUT the
@@ -72,8 +80,8 @@ struct daObjKuruma_c : dBgActor_c {
        decides which TU anchors the vtable. Measured before the fold, on the
        one-function shard: with Behavior first the object came out with eleven .data
        sections and five .text; with Render first, one .text of 0x38. */
-    s32 Render();                      /* slot  9 -- key function; see above */
-    s32 Behavior();                    /* slot  6 */
+    s32 Render();   /* slot  9 -- key function; see above */
+    s32 Behavior(); /* slot  6 */
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero
@@ -87,8 +95,13 @@ struct daObjKuruma_c : dBgActor_c {
        pure-specifier is only valid on a declaration carrying the keyword, and a
        pure virtual has no body to emit, so it can never become the key function:
        whichever virtual was first and non-inline before is still first now. */
-    virtual s32 InitResources() = 0;        /* slot  0 */
-    virtual s32 CleanupResources() = 0;     /* slot  3 */
+    virtual s32 InitResources() = 0;    /* slot  0 */
+    virtual s32 CleanupResources() = 0; /* slot  3 */
+
+    /* The shared bodies both descendants' InitResources / CleanupResources
+       hand their own Resources record to. */
+    int CleanupResourcesFrom(Resources *);
+    int InitResourcesFrom(Resources *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

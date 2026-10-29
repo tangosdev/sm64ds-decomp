@@ -16,19 +16,17 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "Model.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+#include "dExtSimpleModel_c.h"
 
 struct daObjC1_Trap_c : dBgActor_c {
-    Model mDoorModel;                 /* 0x320 */
-    Matrix4x3 mDoorMat;               /* 0x370 */
-    s32 mState;                         /* 0x3a0 */
-    s32 mPlayerDist;                    /* 0x3a4 */
-    s16 mOpenSpeed;                     /* 0x3a8 */
-    u8  mTrapActive;                    /* 0x3aa -- set when a player enters the trap */
-    u8  mIsSpawner;                     /* 0x3ab -- invisible paired-door controller */
-    s32 mSpawnerID;                     /* 0x3ac -- unique ID of the controller */
+    dExtSimpleModel_c mDoorModel; /* 0x320 */
+    Matrix4x3 mDoorMat;           /* 0x370 */
+    s32 mState;                   /* 0x3a0 */
+    s32 mPlayerDist;              /* 0x3a4 */
+    s16 mOpenSpeed;               /* 0x3a8 */
+    u8 mTrapActive;               /* 0x3aa -- set when a player enters the trap */
+    u8 mIsSpawner;                /* 0x3ab -- invisible paired-door controller */
+    s32 mSpawnerID;               /* 0x3ac -- unique ID of the controller */
 
     /* --- vtable --- */
     /* Inline so InitResources can own the vtable and emit retail's D1 then D0
@@ -40,25 +38,17 @@ struct daObjC1_Trap_c : dBgActor_c {
     virtual int Behavior();
     virtual int Render();
 
-    void State0();
-    void State1();
-    void State2();
-    void State3();
-    void State4();
+    /* Behavior runs data_ov010_02112d28[mState]. */
+    void StateClosed();   /* 0 */
+    void StateOpening();  /* 1 */
+    void StateOpen();     /* 2 */
+    void StateClosing();  /* 3 */
+    void StateHeldOpen(); /* 4: the player is entering the level */
     daObjC1_Trap_c *GetSpawner();
     void UpdateCollisionTransform();
     void UpdateModelTransform();
     void OnCollision(dActor_c &other);
-
-    /* Leaf operator new until fBase_c can declare it (#2570). unsigned long
-       is size_t on this ABI; unsigned int is illegal. */
-    static void *operator new(size_t size);
 };
-
-inline void *daObjC1_Trap_c::operator new(size_t size)
-{
-    return _ZN7fBase_cnwEj((unsigned)size);
-}
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

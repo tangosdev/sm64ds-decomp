@@ -7,11 +7,18 @@
 src/game/actors/d_a_bg_snm_bdy.cpp:
     complete
     .text start:0x0211f000 end:0x0211ff34
-    .data start:0x02122780 end:0x0212283c
+    .init start:0x02122018 end:0x021221f8
+    .ctor start:0x02122708 end:0x0212270c
+    .data start:0x02122720 end:0x0212283c
+    .bss start:0x02122b20 end:0x02122bc4
 
 src/game/actors/d_a_bg_snm_hed.cpp:
     complete
     .text start:0x0211ff34 end:0x02120824
+    .init start:0x021221f8 end:0x02122350
+    .ctor start:0x0212270c end:0x02122710
+    .data start:0x0212283c end:0x02122938
+    .bss start:0x02122bc4 end:0x02122c40
 
 src/game/actors/d_a_bg_snwmn.cpp:
     complete
@@ -29,11 +36,3 @@ src/game/actors/d_a_pg_bby.cpp:
     .ctor start:0x02122714 end:0x02122718
     .data start:0x021229f4 end:0x02122b0c
     .bss start:0x02122c94 end:0x02122dcc
-
-src/unnamed/ov072/__sinit_ov072_02122018.c:
-    complete
-    .init start:0x02122018 end:0x021221f8
-
-src/unnamed/ov072/__sinit_ov072_021221f8.c:
-    complete
-    .init start:0x021221f8 end:0x02122350

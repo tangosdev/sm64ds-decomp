@@ -11,10 +11,10 @@
  * Behavior runs one of four states out of a pointer-to-member table that the
  * module's static initializer fills:
  *
- *   0 func_ov098_0213b0a4  aim: ease the barrel to its target, then fire
- *   1 func_ov098_0213ade8  fire: count down, launch a water bomb, recoil
- *   2 func_ov098_0213ad08  wait for a player to climb in
- *   3 func_ov098_0213aa28  load sequence: rise, turn, shoot the player out
+ *   0 StateAim           ease the barrel to its target, then fire
+ *   1 StateFire          count down, launch a water bomb, recoil
+ *   2 StateWaitForRider  wait for a player to climb in
+ *   3 StateLoad          rise, turn, shoot the player out
  *
  * NAME: daCnn_c is the cartridge's RTTI spelling. _ZTS at ov098 0x0213c664 is
  * the string "7daCnn_c", and the _ZTI at 0x0213c670 names the vtable at
@@ -31,14 +31,10 @@
  * the highest-address ROM function, the factory, is written FIRST here. Do
  * not reorder.
  *
- * Leftover: the four state bodies and the two helpers are members retaining
- *   their linker addresses as names; the real names are unrecovered. The
- *   state table's pointer-to-member records are still the sinit's .data
- *   words, resolved to the mangled spellings through symbols.txt.
- * Leftover: dCcAc_c::Init, dActor_c::Earthquake and Particle::System::New
- *   stay mangled; each takes Fix12<int> by value (notes/mwccarm-codegen.md
- *   6az).
- * Leftover: func_ov098_0213a984 and InitResources reach the model's bone
+ * The state, aim and pose names are descriptive; the cartridge keeps no
+ * names for them. The state table's pointer-to-member records are still the
+ * sinit's .data words, resolved to the mangled spellings through symbols.txt.
+ * Leftover: UpdateModel and InitResources reach the model's bone
  *   records through raw offsets; BMD_Bone does not name those fields.
  * Leftover: the fire state's launch block keeps the legacy match's shape (a
  *   volatile velocity copy read through an opaque pointer, hand-hoisted
@@ -54,21 +50,39 @@
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_cnn_AssetId {
-    ASSET_HOUDAI_BMD = 0x045e
-};
+enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 
 #include "common.h"
 #include "daCnn_c.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
 #include "Sound.h"
+#include "math/Approach.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
+#include "Particle__System.h"
 
 typedef void (daCnn_c::*State)();
 
-bool ApproachLinear(short &value, short target, short step);
+/* One 0x34-byte runtime bone of mModel.data.bones (ModelComponents types the
+   array as BMD_Bone, but the pose pass fills these). Extends
+   d_a_moray.cpp's MorayBone view (rotX/rotY/rotZ at 0x1a) with the
+   translation at 0x20: InitResources keeps the barrel bone's transY as its
+   rest height, and the barrel's recoil slides transY/transZ. */
+struct CnnBone {
+    u8 pad_00[0x1a];
+    s16 rotX;   /* 0x1a */
+    s16 rotY;   /* 0x1c */
+    s16 rotZ;   /* 0x1e */
+    s32 transX; /* 0x20 */
+    s32 transY; /* 0x24 */
+    s32 transZ; /* 0x28 */
+    u8 pad_2c[0x8];
+};
+#ifndef SM64DS_PLATFORM_PC
+typedef char CnnBone_size_must_be_0x34[sizeof(CnnBone) == 0x34 ? 1 : -1];
+#endif
 
-extern "C" {
 /* The cannon's model, and the water bomb's two (bomb and fragment), which
    InitResources preloads for the bombs it fires. */
 extern SharedFilePtr data_ov098_0213c91c;
@@ -79,23 +93,16 @@ extern u16 data_ov098_0213c63c[3];
 extern s16 data_02082214[];
 extern int data_0209e650;
 
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-int RandomIntInternal(int *seed);
+/* local extern: arm9/ov002/ov102 C helpers with no shared header yet. The
+   two Player helpers are defined in Player.cpp, the Bob-omb one in
+   d_a_bmb.cpp. */
+extern "C" {
 int AngleDiff(int a, int b);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short GetAngleToCamera(int playerNo);
 
 int func_ov002_020df300(Player *player);
 int func_ov002_020df34c(Player *player);
 void func_ov102_0214ae1c(dActor_c *bomb);
-
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(dCcAc_c *self, dActor_c *actor,
-    int radius, int height, u32 flags, u32 vulnFlags);
-void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(dActor_c *self,
-    const Vector3 *pos, int magnitude);
-int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32 slot, u32 id, int x, int y, int z, const Vector3_16 *rot, void *cb);
-
 }
 
 /* The cannon's file-scope SharedFilePtr object, spelled through the same
@@ -104,8 +111,6 @@ int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
    The constructor aliases func_02017acc and the destructor func_02017ab4 in
    this unit's manifest. */
 struct CnnModelFilePtr : SharedFilePtr {
-    int unk0;
-    void *file;
     CnnModelFilePtr(unsigned int id);
     ~CnnModelFilePtr();
 };
@@ -114,7 +119,7 @@ struct CnnModelFilePtr : SharedFilePtr {
  * The model handle and the state table's four member pointers, in
  * static-initializer order: the initializer constructs the handle, registers
  * its destructor, then copies the pointers from .data. InitResources feeds
- * the model to Model::LoadFile.
+ * the model to dExtSimpleModel_c::LoadFile.
  * ------------------------------------------------------------------------ */
 // @symbol __sinit_d_a_cnn.cpp
 CnnModelFilePtr data_ov098_0213c8e8(ASSET_HOUDAI_BMD);
@@ -136,24 +141,22 @@ State data_ov098_0213c8fc[4] = {
 
 enum {
     kPlayerActorID = 0xbf,
-    kBobOmbActorID = 0xce,       /* BOMBHEI */
-    kWaterBombActorID = 0xd0,    /* WATERBOMB */
+    kBobOmbActorID = 0xce,    /* BOMBHEI */
+    kWaterBombActorID = 0xd0, /* WATERBOMB */
 };
 
 /* -------------------------------------------------------------------------- */
 // @symbol daCnn_c_classInit
-extern "C" daCnn_c *daCnn_c_classInit()
-{
+extern "C" daCnn_c *daCnn_c_classInit() {
     return new daCnn_c();
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daCnn_c13InitResourcesEv
-int daCnn_c::InitResources()
-{
-    BMD_File *file = (BMD_File *)Model::LoadFile(data_ov098_0213c8e8);
+int daCnn_c::InitResources() {
+    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov098_0213c8e8);
     mModel.SetFile(file, 1, -1);
-    mBarrelRestY = *(s32 *)((u8 *)mModel.data.bones + 0x58);
+    mBarrelRestY = ((CnnBone *)mModel.data.bones)[1].transY;
     mVariant = param1 & 3;
     mTimer = 0;
     mPosY -= 0x50000;
@@ -169,32 +172,29 @@ int daCnn_c::InitResources()
         mTargetPitch = 0x2000;
         mTargetAngleY = mAngleY;
         mState = 0;
-        func_ov098_0213b15c();
-        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-            &mdCcAc_c, this, 0xa0000, 0x12c000, 0x800004, 0);
+        PickNextAim();
+        mdCcAc_c.Init(this, 0xa0000, 0x12c000, 0x800004, 0);
     } else {
         mPosY -= 0x190000;
         mTargetAngleY = mAngleZ;
         mTargetPitch = 0x2000;
         mState = 2;
         mFlags &= ~1;
-        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-            &mdCcAc_c, this, 0x50000, 0x12c000, 0x800004, 0);
+        mdCcAc_c.Init(this, 0x50000, 0x12c000, 0x800004, 0);
     }
 
-    Model::LoadFile(data_ov098_0213c91c);
-    Model::LoadFile(data_ov002_0210da38);
+    dExtSimpleModel_c::LoadFile(data_ov098_0213c91c);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daCnn_c8BehaviorEv
-int daCnn_c::Behavior()
-{
+int daCnn_c::Behavior() {
     if (mVariant != 1)
         (this->*data_ov098_0213c8fc[mState])();
 
-    func_ov098_0213a984();
+    UpdateModel();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -202,8 +202,7 @@ int daCnn_c::Behavior()
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daCnn_c6RenderEv
-int daCnn_c::Render()
-{
+int daCnn_c::Render() {
     if (mState == 3 && mLoadStep >= 3)
         return 1;
 
@@ -214,8 +213,7 @@ int daCnn_c::Render()
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daCnn_c16CleanupResourcesEv
-int daCnn_c::CleanupResources()
-{
+int daCnn_c::CleanupResources() {
     data_ov098_0213c8e8.Release();
     data_ov098_0213c91c.Release();
     data_ov002_0210da38.Release();
@@ -223,25 +221,25 @@ int daCnn_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c19func_ov098_0213b15cEv
+// @symbol _ZN7daCnn_c11PickNextAimEv
 /* Pick the next aim: a random pitch in 0x1000..0x1fff and a random heading
    within a quarter turn either side of home, at least 0x800 from the current
    heading. */
-void daCnn_c::func_ov098_0213b15c()
-{
+void daCnn_c::PickNextAim() {
     int angleY;
-    mTargetPitch = (short)(((unsigned int)RandomIntInternal(&data_0209e650) >> 16 & 0xfff) + 0x1000);
+    mTargetPitch =
+        (short)(((unsigned int)RandomIntInternal(&data_0209e650) >> 16 & 0xfff) + 0x1000);
     angleY = mAngleY;
     do {
-        mTargetAngleY = (short)(mHomeAngleY + 0xe000 + ((unsigned int)RandomIntInternal(&data_0209e650) >> 16 & 0x3fff));
+        mTargetAngleY = (short)(mHomeAngleY + 0xe000 +
+                                ((unsigned int)RandomIntInternal(&data_0209e650) >> 16 & 0x3fff));
     } while (AngleDiff(angleY, mTargetAngleY) < 0x800);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c19func_ov098_0213b0a4Ev
+// @symbol _ZN7daCnn_c8StateAimEv
 /* State 0, aim. */
-void daCnn_c::func_ov098_0213b0a4()
-{
+void daCnn_c::StateAim() {
     short prevAngleY = mPrevAngleY;
     ApproachLinear(mPrevAngleX, mTargetPitch, 0x100);
     ApproachLinear(mPrevAngleY, mTargetAngleY, 0x100);
@@ -252,7 +250,8 @@ void daCnn_c::func_ov098_0213b0a4()
         if (prevAngleY != target && mPrevAngleY == target)
             Sound::PlayBank3(0x14d, mCamSpacePos);
     }
-    if (mPrevAngleX != mTargetPitch) return;
+    if (mPrevAngleX != mTargetPitch)
+        return;
     if (mPrevAngleY == mTargetAngleY) {
         mState = 1;
         mTimer = 120;
@@ -260,13 +259,12 @@ void daCnn_c::func_ov098_0213b0a4()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c19func_ov098_0213ade8Ev
+// @symbol _ZN7daCnn_c9StateFireEv
 /* State 1, fire: while a player is within 2048.0, count down; at 60 launch a
    water bomb out of the barrel with a puff of smoke and kick the barrel back,
    and at 0 pick a new aim. The barrel slides back under mRecoilSpeed and
    springs home. */
-void daCnn_c::func_ov098_0213ade8()
-{
+void daCnn_c::StateFire() {
     Vector3_16 rot;
     Vector3 pos;
     /* The launch block keeps the legacy match's statement shape: the
@@ -287,7 +285,7 @@ void daCnn_c::func_ov098_0213ade8()
     timer = mTimer;
     if (timer == 0) {
         mState = 0;
-        func_ov098_0213b15c();
+        PickNextAim();
         Sound::PlayBank3(0x14c, mCamSpacePos);
         return;
     }
@@ -305,8 +303,7 @@ void daCnn_c::func_ov098_0213ade8()
         pos.y += 0x80000;
 
         {
-            dActor_c *spawned = dActor_c::Spawn(kWaterBombActorID, 3, pos, 0,
-                                                mAreaId, -1);
+            dActor_c *spawned = dActor_c::Spawn(kWaterBombActorID, 3, pos, 0, mAreaId, -1);
             s16 *table = data_02082214;
             int launchSpeed = 100;
             s16 pitch = mPrevAngleX;
@@ -316,9 +313,9 @@ void daCnn_c::func_ov098_0213ade8()
             sinCos = table;
             speed = launchSpeed;
             ball = spawned;
-            ball->unk_0a4 = 0;
+            ball->mSpeedX = 0;
             ball->mVertSpeed = sine * launchSpeed;
-            ball->unk_0ac = 0;
+            ball->mSpeedZ = 0;
         }
 
         elevation = (s16)(0x4000 - mPrevAngleX);
@@ -337,7 +334,7 @@ void daCnn_c::func_ov098_0213ade8()
         /* The muzzle is two frames of the ball's travel out from the spawn
            point. */
         {
-            int *vp = (int *)(int)&ball->unk_0a4;
+            int *vp = (int *)(int)&ball->mSpeedX;
             int vx = *vp;
             int px = pos.x;
             vel[0] = vx;
@@ -360,10 +357,10 @@ void daCnn_c::func_ov098_0213ade8()
         rot.x = (u16)data_02082214[((u16)mPrevAngleY >> 4) * 2];
         rot.z = (u16)data_02082214[((u16)mPrevAngleY >> 4) * 2 + 1];
 
-        _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            0, 7, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ, &rot, 0);
-        _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            0, 8, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ, &rot, 0);
+        Particle::System::New(0, 7, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
+                              (const Vector3_16f *)(&rot), 0);
+        Particle::System::New(0, 8, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
+                              (const Vector3_16f *)(&rot), 0);
 
         Sound::PlayBank3(0xd4, mCamSpacePos);
         mRecoilSpeed = -0x1800;
@@ -381,17 +378,18 @@ void daCnn_c::func_ov098_0213ade8()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c19func_ov098_0213ad08Ev
+// @symbol _ZN7daCnn_c17StateWaitForRiderEv
 /* State 2, wait: when a player touches the collider, climb them in and start
    the load sequence. A player carrying a Bob-omb has it handed to
    func_ov102_0214ae1c instead. */
-void daCnn_c::func_ov098_0213ad08()
-{
+void daCnn_c::StateWaitForRider() {
     u32 id = mdCcAc_c.otherOwner;
     dActor_c *other;
-    if (id == 0) return;
+    if (id == 0)
+        return;
     other = dActor_c::FindWithID(id);
-    if (other == 0) return;
+    if (other == 0)
+        return;
     int isPlayer = other->actorID == kPlayerActorID;
     if (isPlayer) {
         Player *player = (Player *)other;
@@ -403,7 +401,8 @@ void daCnn_c::func_ov098_0213ad08()
                 return;
             }
         }
-        if (func_ov002_020df34c(player) == 0) return;
+        if (func_ov002_020df34c(player) == 0)
+            return;
         mState = 3;
         mLoadStep = 0;
         mPlayer = player;
@@ -413,7 +412,7 @@ void daCnn_c::func_ov098_0213ad08()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c19func_ov098_0213aa28Ev
+// @symbol _ZN7daCnn_c9StateLoadEv
 /* State 3, the load sequence. The rider is pinned 208.0 above the cannon
    (and turned with it until step 3) while the cannon
      0  rises out of the ground to its spawn height and shakes the camera,
@@ -421,8 +420,7 @@ void daCnn_c::func_ov098_0213ad08()
      2  tilts its barrel up and hands the rider over to func_ov002_020df300,
      3  follows the camera until the rider has been shot out,
      4  sinks back into the ground and returns to waiting. */
-void daCnn_c::func_ov098_0213aa28()
-{
+void daCnn_c::StateLoad() {
     /* Never used, but it holds the frame at the ROM's 0x1c with quakePos at
        sp+0xc; without it the frame is 0xc. */
     Vector3 pos;
@@ -467,7 +465,7 @@ void daCnn_c::func_ov098_0213aa28()
         quakePos.x = mPosX;
         quakePos.y = mPosY;
         quakePos.z = mPosZ;
-        _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &quakePos, 0x1f4000);
+        Earthquake(quakePos, 0x1f4000);
         Sound::PlayBank3(0x14c, mCamSpacePos);
         break;
 
@@ -501,8 +499,7 @@ void daCnn_c::func_ov098_0213aa28()
         mTimer = 0;
         break;
 
-    case 4:
-    {
+    case 4: {
         u8 settled = 0;
         mPosY -= 0x32000;
         if (ApproachLinear(mAngleX, 0, 0x800))
@@ -527,27 +524,25 @@ void daCnn_c::func_ov098_0213aa28()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c19func_ov098_0213a984Ev
+// @symbol _ZN7daCnn_c11UpdateModelEv
 /* Place the model and pose the barrel: yaw on the root bone, pitch and the
    recoil slide on the barrel bone. */
-void daCnn_c::func_ov098_0213a984()
-{
+void daCnn_c::UpdateModel() {
     u16 pitch = mAngleX;
     s16 yaw = mAngleY;
-    u8 *bones;
+    CnnBone *bones;
     int idx;
 
-    Matrix4x3_FromTranslation(&mModel.mat4x3,
-        mPosX >> 3, mPosY >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&mModel.mat4x3, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
 
-    bones = (u8 *)mModel.data.bones;
+    bones = (CnnBone *)mModel.data.bones;
     idx = pitch >> 4;
 
-    *(s16 *)(bones + 0x1c) = yaw;
-    *(u16 *)(bones + 0x4e) = pitch;
-    *(s32 *)(bones + 0x54) = 0;
-    *(s32 *)(bones + 0x58) = mBarrelRestY + (mRecoil * data_02082214[idx * 2 + 1]) / 4096;
-    *(s32 *)(bones + 0x5c) = (mRecoil * data_02082214[idx * 2]) / 4096;
+    bones[0].rotY = yaw;
+    bones[1].rotX = pitch;
+    bones[1].transX = 0;
+    bones[1].transY = mBarrelRestY + (mRecoil * data_02082214[idx * 2 + 1]) / 0x1000;
+    bones[1].transZ = (mRecoil * data_02082214[idx * 2]) / 0x1000;
 }
 
 // @symbol _ZN7daCnn_cD0Ev

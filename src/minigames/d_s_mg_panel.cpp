@@ -16,23 +16,32 @@
  * (the address is the method name; no ROM spelling survives), declared in
  * dScMgPanel_c.h. Some helpers retain local layout views and raw offset accesses where native member loads change the matching build. The three empty handlers Shake_StateIdle, Banner_StateIdle and IntroCard_StateDone are members too; the state tables point at them.
  *
- * Leftover, each measured against the matching build:
- * - Particle_DrawAll, Particle_UpdateAll, Particle_Spawn,
- *   Particle_ClearAll: `PanelPart *p = (PanelPart *)(scene + 0x46a8)`
- *   with p->x / p->show / p++ DIFFs. The 0x18 byte step stays.
- * - Scroll_Update, Scroll_Start: `PanelScroll *` at 0x4694
- *   DIFFs. Scroll_Stop uses the native `on` member. Answer_StateFlipSolution and UpdateMoves keep mWidth and mDelay raw;
- *   `(u16 *)(int)&mDelay` then an s16 compare DIFFs by 25 words.
- * - Answer_StateFindSolution, Answer_StateResetBoard, Scene_StateGameOver,
- *   Scene_StateShowAnswer, Scene_StateRewind, Scene_StatePlay: mKind
- *   and mCount (and mFace, mDelay where used) DIFF as members.
- * - CheckSolved: the mFace / mGoal compare DIFFs as members.
- * - UpdateTouch, FlipAt, Panel_StartAll: mWidth
- *   DIFFs as a member; so does mKind in Panel_StartAll.
- * - DrawPanels keeps a local layout view: the native-member rewrite changes
- *   its body from 360 to 388 bytes. UpdateTouch uses native position members.
- * - Scene_StateResult and FlipAt's mFace flip still go through a computed byte
- *   pointer; native forms have not been tried.
+ * Stepped member reads. Many per-panel sites index a member through a
+ * stepped scene pointer, `((dScMgPanel_c *)(scene + i))->mFace[0]`, rather
+ * than `mFace[i]`. The two name the same byte, but the plain index moves code
+ * or renumbers @NNN at each of these sites. This applies to:
+ * - Particle_Spawn / Particle_ClearAll's slot scan
+ * - Banner_Show
+ * - CountMatches
+ * - Answer_StateFindSolution
+ * - CheckSolved
+ * - FlipAt
+ * - HasDuplicateRows / ClearGrid
+ * - ResetRound
+ * - Panel_StateIdle
+ * - Scene_StateResult
+ * The shake helpers address mShake[index] as &mShake[0].field + index * 0xc
+ * for the same reason.
+ *
+ * Leftover raw sites, each measured against the matching build:
+ * - Shake_StateLoseTry: the dead `q` (dropping it renumbers @NNN).
+ * - Panel_StateBlink: the mAnimTimer[idx] reset through a +0x4e00 split base.
+ * - Scene_StateResult: mSolved through a +0x4000 byte base. mResultTimer and
+ *   mScrollFrames go through laundered `scene + off` pointers.
+ * - ResetRound: 0x4ec2 and 0x466c are pads that only ResetRound writes.
+ * - Answer_StateFindSolution keeps the PanelInputView width view, and
+ *   DrawPanels a local layout view. Its native-member rewrite grows the body
+ *   from 360 to 388 bytes.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -84,7 +93,6 @@ int RandomIntInternal(int *seed);
 void SetBg2Offset(int x, int y);
 void SetSubBg2Offset(int x, int y);
 void SetSubBg0Offset(int a, int b);
-unsigned int func_02012790(unsigned int a);
 void FreeGfxSlotsById(int arg);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 void Hud_RenderSprite(void *a, int b, int c, int d, int e);
@@ -175,29 +183,30 @@ void dScMgPanel_c::Particle_Spawn(int x, int y, int mode) {
     int i;
     char *q = scene;
     for (i = 0; i < 0x40; i++, q += 0x18) {
-        if (*(u8 *)(q + 0x46b8) == 0) {
+        if (((dScMgPanel_c *)q)->mParticles[0].active == 0) {
             int off = i * 0x18;
             int *w;
-            *(u8 *)(scene + off + 0x46b8) = 1;
-            *(u8 *)(scene + off + 0x46bd) = 1;
-            *(u8 *)(scene + off + 0x46bc) = 0;
-            *(u8 *)(scene + off + 0x46ba) = 0;
-            *(u8 *)(scene + off + 0x46bb) = 0;
-            *(u8 *)(scene + off + 0x46b9) = mode;
+            mParticles[i].active = 1;
+            mParticles[i].visible = 1;
+            mParticles[i].tick = 0;
+            mParticles[i].kind = 0;
+            mParticles[i].frame = 0;
+            mParticles[i].stuck = mode;
             /* The `(int)` launder keeps mwcc from common-subexpressioning this
                field address with the one taken three lines down; without it 16
                words of this function move. */
-            *(int *)((char *)(((int)scene + 0x46b0)) + off) = 0;
-            *(int *)(scene + off + 0x46b4) = 0;
-            *(int *)(scene + off + 0x46a8) = x;
-            *(int *)(scene + off + 0x46ac) = y;
-            w = (int *)((char *)(((int)scene + 0x46b0)) + off);
+            *(int *)((char *)(((int)&mParticles[0].vx)) + off) = 0;
+            mParticles[i].vy = 0;
+            mParticles[i].x = x;
+            mParticles[i].y = y;
+            w = (int *)((char *)(((int)&mParticles[0].vx)) + off);
             if (mode != 0) {
-                *(u8 *)(scene + off + 0x46be) = 0;
+                mParticles[i].drift = 0;
             } else {
                 int rnd = (int)((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff);
                 rnd = (int)((((u32)rnd) << 1) >> 15);
-                *(u8 *)(scene + off + 0x46be) = rnd;
+                /* Strided on purpose: `mParticles[i].drift = rnd` moves code. */
+                ((dScMgPanel_c *)(scene + off))->mParticles[0].drift = rnd;
             }
             if (x >= 0x80000)
                 *w = -0x100;
@@ -215,8 +224,8 @@ void dScMgPanel_c::Particle_ClearAll() {
     char *scene = (char *)this;
     int i;
     for (i = 0; i < 0x40; i++) {
-        *(u8 *)(scene + 0x46b8) = 0;
-        *(u8 *)(scene + 0x46bd) = 0;
+        ((dScMgPanel_c *)scene)->mParticles[0].active = 0;
+        ((dScMgPanel_c *)scene)->mParticles[0].visible = 0;
         scene += 0x18;
     }
 }
@@ -232,15 +241,15 @@ void dScMgPanel_c::Scroll_Update() {
     u32 r;
     u32 r2;
 
-    if (*(u8 *)(scene + 0x46a5) == 0) {
-        *(u8 *)(scene + 0x46a6) += 1;
-        if (((*(u8 *)(scene + 0x46a6) >> 1) & 1) != 0)
-            *(int *)(scene + 0x4694) = 0x2000;
+    if (mScroll.phase == 0) {
+        mScroll.timer += 1;
+        if (((mScroll.timer >> 1) & 1) != 0)
+            mScroll.x = 0x2000;
         else
-            *(int *)(scene + 0x4694) = -0x2000;
+            mScroll.x = -0x2000;
 
-        if (*(u8 *)(scene + 0x46a7) != 0) {
-            *(u8 *)(scene + 0x46a7) -= 1;
+        if (mScroll.spawnDelay != 0) {
+            mScroll.spawnDelay -= 1;
         } else {
             r = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
             x = ((r * 7) >> 15) * 5;
@@ -253,26 +262,26 @@ void dScMgPanel_c::Scroll_Update() {
             x = (((r >> 16 & 0x7fff) * 7) >> 15) * 5;
             y = ((((r2 >> 16) & 0x7fff) << 4) >> 15) + 0xb0;
             Particle_Spawn((0x100 - x) << 12, y << 12, 0);
-            *(u8 *)(scene + 0x46a7) = 3;
+            mScroll.spawnDelay = 3;
         }
 
-        if (*(u8 *)(scene + 0x46a6) >= 0x3c) {
-            *(u8 *)(scene + 0x46a5) += 1;
-            *(u8 *)(scene + 0x46a6) = 0;
-            *(u8 *)(scene + 0x46a7) = 0;
-            *(int *)(scene + 0x4694) = 0;
-            *(int *)(scene + 0x46a0) = 0x1000;
+        if (mScroll.timer >= 0x3c) {
+            mScroll.phase += 1;
+            mScroll.timer = 0;
+            mScroll.spawnDelay = 0;
+            mScroll.x = 0;
+            mScroll.vel = 0x1000;
         }
-    } else if (*(int *)(scene + 0x4698) < 0x200000) {
-        *(int *)(scene + 0x4698) += *(int *)(scene + 0x46a0);
-        *(int *)(scene + 0x46a0) += 0x200;
-        if (*(int *)(scene + 0x4698) >= 0x200000)
-            *(int *)(scene + 0x4698) = 0x200000;
+    } else if (mScroll.y < 0x200000) {
+        mScroll.y += mScroll.vel;
+        mScroll.vel += 0x200;
+        if (mScroll.y >= 0x200000)
+            mScroll.y = 0x200000;
 
-        if (*(u8 *)(scene + 0x46a7) != 0) {
-            *(u8 *)(scene + 0x46a7) -= 1;
+        if (mScroll.spawnDelay != 0) {
+            mScroll.spawnDelay -= 1;
         } else {
-            y = *(int *)(scene + 0x4698) >> 12;
+            y = mScroll.y >> 12;
             if (y >= 0 && y <= 0xc0)
                 y = (0xc0 - y) << 12;
             else if (y >= 0x100)
@@ -282,12 +291,12 @@ void dScMgPanel_c::Scroll_Update() {
             Particle_Spawn(x << 12, y, 1);
             x = (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 7) >> 15) * 5;
             Particle_Spawn((0x100 - x) << 12, y, 1);
-            *(u8 *)(scene + 0x46a7) = 2;
+            mScroll.spawnDelay = 2;
         }
     }
 
-    x = *(int *)(scene + 0x4694) >> 12;
-    y = *(int *)(scene + 0x4698) >> 12;
+    x = mScroll.x >> 12;
+    y = mScroll.y >> 12;
     SetBg2Offset(x, y);
     if (y >= 0x100)
         y = 0x100;
@@ -298,14 +307,14 @@ void dScMgPanel_c::Scroll_Update() {
 // @symbol _ZN12dScMgPanel_c12Scroll_StartEv
 void dScMgPanel_c::Scroll_Start() {
     char *scene = (char *)this;
-    *(u8 *)(scene + 0x46a4) = 1;
-    *(int *)(scene + 0x4694) = 0;
-    *(int *)(scene + 0x4698) = 0;
-    *(int *)(scene + 0x469c) = 0;
-    *(int *)(scene + 0x46a0) = 0;
-    *(u8 *)(scene + 0x46a6) = 0;
-    *(u8 *)(scene + 0x46a7) = 0;
-    *(u8 *)(scene + 0x46a5) = 0;
+    mScroll.on = 1;
+    mScroll.x = 0;
+    mScroll.y = 0;
+    mScroll.z = 0;
+    mScroll.vel = 0;
+    mScroll.timer = 0;
+    mScroll.spawnDelay = 0;
+    mScroll.phase = 0;
     Sound::PlayBank2_2D(0x1fd);
 }
 
@@ -318,12 +327,12 @@ void dScMgPanel_c::Scroll_Stop() {
 
 // @symbol _ZN12dScMgPanel_c18EnableOverlayLayerEv
 void dScMgPanel_c::EnableOverlayLayer() {
-    u8 *scene = (u8 *)this;
+    u8 *scene = (u8 *)this; /* dead, but dropping it renumbers @NNN */
     extern u8 data_0209d454[];
-    if (scene[0x4693] != 0)
+    if (mShake[0].state != 0)
         return;
-    scene[0x4693] = 1;
-    *(u16 *)(scene + 0x4600 + 0x90) = 0;
+    mShake[0].state = 1;
+    mShake[0].timer = 0;
     data_0209d454[0] |= 1;
 }
 
@@ -334,27 +343,31 @@ void dScMgPanel_c::Shake_StateLoseTry(int index) {
     extern u8 data_0209d454;
     extern int data_ov006_0212ed00[];
     int n = index * 0xc;
-    char *base = scene + 0x4690;
+    /* base + n is mShake[index].timer and &mShake[0].offset + n is
+       mShake[index].offset: `s->mShake[index].timer` / `.offset` move this
+       function's code.  The dead `q` below stays: dropping it renumbers
+       @NNN. */
+    char *base = (char *)&s->mShake[0].timer;
     int cnt;
     *(u16 *)(base + n) = *(u16 *)(base + n) + 1;
     cnt = *(u16 *)(base + n);
     if ((u32)cnt >= 0x20) {
         *(u16 *)(base + n) = 0;
-        *(u8 *)(scene + n + 0x4000 + 0x693) = 0;
+        ((dScMgPanel_c *)(scene + n))->mShake[0].state = 0;
         SetSubBg0Offset(0, 0);
         data_0209d454 &= ~1;
         func_02012790(0x12f);
         s->mCredits -= 1;
         return;
     }
-    *(int *)(scene + 0x468c + n) = data_ov006_0212ed00[cnt >> 3];
+    *(int *)((char *)&s->mShake[0].offset + n) = data_ov006_0212ed00[cnt >> 3];
     {
         char *q = scene + n + 0x4600;
-        u16 t = *(u16 *)(q + 0x90);
+        u16 t = ((dScMgPanel_c *)(scene + n))->mShake[0].timer;
         if (t == 1 || t == 0x11)
             Sound::PlayBank2_2D(0x1fc);
     }
-    SetSubBg0Offset(0, *(int *)(scene + 0x468c + n));
+    SetSubBg0Offset(0, *(int *)((char *)&s->mShake[0].offset + n));
 }
 
 // @symbol _ZN12dScMgPanel_c16Shake_StateShakeEi
@@ -365,22 +378,24 @@ void dScMgPanel_c::Shake_StateShake(int index) {
     char *scene = (char *)this;
     extern int sPanelShakeOffsets[];
     int m = index * 0xc;
-    char *b = scene + 0x4690;
+    /* b + m is mShake[index].timer and dst mShake[index].offset: the
+       indexed member spellings move this function's code. */
+    char *b = (char *)&((dScMgPanel_c *)scene)->mShake[0].timer;
     u16 h = *(u16 *)(b + m);
     h = h + 1;
     *(u16 *)(b + m) = h;
     h = *(u16 *)(b + m);
     if (h >= 0x20) {
         *(s16 *)(b + m) = 0;
-        *(u8 *)(scene + m + 0x4000 + 0x693) = 2;
+        ((dScMgPanel_c *)(scene + m))->mShake[0].state = 2;
         return;
     }
     {
         int t = sPanelShakeOffsets[h >> 3];
-        int *dst = (int *)(scene + 0x468c + m);
+        int *dst = (int *)((char *)&((dScMgPanel_c *)scene)->mShake[0].offset + m);
         u16 st;
         *dst = t;
-        st = *(u16 *)(scene + m + 0x4600 + 0x90);
+        st = ((dScMgPanel_c *)(scene + m))->mShake[0].timer;
         if (st == 1 || st == 0x11)
             Sound::PlayBank2_2D(0x1fc);
         SetSubBg0Offset(0, *dst);
@@ -465,19 +480,19 @@ void dScMgPanel_c::Banner_Update() {
     char *scene = (char *)this;
     extern PanelStateFn sPanelBannerStateTable[];
     u16 *ip;
-    if (*(u8 *)(scene + 0x4000 + 0x684) == 0)
+    if (mBanner.active == 0)
         return;
-    ip = (u16 *)(scene + 0x4680);
+    ip = &mBanner.timer;
     *ip = *ip - 1;
-    if (*(s16 *)(scene + 0x4600 + 0x80) <= 0) {
-        *(s16 *)(scene + 0x4600 + 0x80) = 0;
-        *(u8 *)(scene + 0x4000 + 0x684) = 0;
-        *(u8 *)(scene + 0x4000 + 0x685) = 0;
+    if ((s16)mBanner.timer <= 0) {
+        mBanner.timer = 0;
+        mBanner.active = 0;
+        mBanner.visible = 0;
         return;
     }
     {
         dScMgPanel_c *cc = (dScMgPanel_c *)scene;
-        (cc->*sPanelBannerStateTable[*(u8 *)(scene + 0x4000 + 0x686)])();
+        (cc->*sPanelBannerStateTable[mBanner.state])();
     }
 }
 
@@ -485,13 +500,14 @@ void dScMgPanel_c::Banner_Update() {
 void dScMgPanel_c::Banner_Show(int i) {
     char *scene = (char *)this;
     char *e = scene + (i << 2);
-    *(u8 *)(scene + 0x4684) = 1;
-    *(u8 *)(scene + 0x4685) = 1;
-    *(int *)(scene + 0x4678) = *(int *)(e + 0x4cc4);
-    *(int *)(scene + 0x467c) = *(int *)(e + 0x4d54) + 0x8000;
-    *(s16 *)(scene + 0x4680) = 0x30;
-    *(s16 *)(scene + 0x4682) = 0;
-    *(u8 *)(scene + 0x4686) = 0;
+    mBanner.active = 1;
+    mBanner.visible = 1;
+    mBanner.x = mX[i];
+    /* Stepped: `mY[i]` moves this function's code. */
+    mBanner.y = ((dScMgPanel_c *)e)->mY[0] + 0x8000;
+    mBanner.timer = 0x30;
+    mBanner.hold = 0;
+    mBanner.state = 0;
 }
 
 // @symbol _ZN12dScMgPanel_c10DrawCursorEv
@@ -499,7 +515,7 @@ void dScMgPanel_c::DrawCursor() {
     char *scene = (char *)this;
     dScMgPanel_c *s = (dScMgPanel_c *)scene;
     extern void *sPanelCursorSprites[];
-    if (*(u8 *)(scene + 0x4fe3) == 0)
+    if (mCreditsOn == 0)
         return;
     Hud_RenderSprite(sPanelCursorSprites[s->mCredits], 0xf0, 0x24, -1, -1);
 }
@@ -530,14 +546,13 @@ void dScMgPanel_c::DrawHud() {
 // @symbol _ZN12dScMgPanel_c16ReloadSlideDelayEv
 void dScMgPanel_c::ReloadSlideDelay() {
     u8 *scene = (u8 *)this;
-    scene += 0x4000;
-    scene[0x677] = scene[0xfde];
+    /* Through `scene`: the plain `mSlideLeft = mFlipCount` moves code. */
+    ((dScMgPanel_c *)scene)->mSlideLeft = ((dScMgPanel_c *)scene)->mFlipCount;
 }
 
 // @symbol _ZN12dScMgPanel_c14TickSlideDelayEv
-// If the byte flag at self+0x4677 is set, decrement it. The read folds to add+ldrb
-// (offset > 0xfff), while the laundered RMW pool-loads the offset, matching the ROM's
-// predicated ldrbne/subne/strbne tail.
+// If mSlideLeft (self+0x4677) is set, decrement it: the ROM's predicated
+// ldrbne/subne/strbne tail.
 void dScMgPanel_c::TickSlideDelay() {
     char *scene = (char *)this;
     dScMgPanel_c *s = (dScMgPanel_c *)scene;
@@ -580,7 +595,7 @@ void dScMgPanel_c::IntroCard_StateSlideOut() {
         s->mPromptBlinkCount = 1;
         s->mPromptBlinkTimer = 0;
     }
-    *(u8 *)(scene + 0x4fe3) = 1;
+    mCreditsOn = 1;
     s->mSlideLeft = s->mFlipCount;
     s->mHold = 0;
     ShowAllPanels();
@@ -659,10 +674,10 @@ void dScMgPanel_c::StartSolveCheck() {
         mState = 3;
         CountMatches();
     } else {
-        *(u8 *)(scene + 0x4fe6) = 0;
+        mSolved = 0;
         CountMatches();
         mState = 6;
-        *(s16 *)(scene + 0x4ec0) = 0x50;
+        mResultTimer = 0x50;
     }
 }
 
@@ -680,20 +695,20 @@ void dScMgPanel_c::Answer_StateFlipSolution() {
     int x;
 
     if ((u16)s->mDelay != 0) {
-        (*(u16 *)(int)(scene + 0x4ec4))--;
+        (*(u16 *)&s->mDelay)--;
         if (s->mDelay < 0)
             s->mDelay = 0;
         return;
     }
 
-    if (*(u8 *)(scene + 0x4fe5) >= s->mFlipCount) {
-        *(u16 *)(scene + 0x4ec0) = 0x50;
+    if (s->mReplayStep >= s->mFlipCount) {
+        s->mResultTimer = 0x50;
         s->mState = 6;
-        *(u8 *)(scene + 0x4fe6) = 0;
+        s->mSolved = 0;
         return;
     }
 
-    index = *(u8 *)(scene + *(u8 *)(scene + 0x4fe5) + 0x4fae);
+    index = s->mFlipAt[s->mReplayStep];
     w = s->mWidth;
     hq = 3;
     wq = hq;
@@ -717,14 +732,14 @@ void dScMgPanel_c::Answer_StateFlipSolution() {
 
             s->mKind[cell] = 1;
             s->mFace[cell] ^= 1;
-            *(u16 *)(scene + cell * 2 + 0x4e78) = 8;
+            s->mFlipDelay[cell] = 8;
         }
     }
 
     Banner_Show(index);
-    *(u16 *)(scene + index * 2 + 0x4e78) = 0;
+    s->mFlipDelay[index] = 0;
     s->mDelay = 0x30;
-    (*(u8 *)(int)(scene + 0x4fe5))++;
+    s->mReplayStep++;
 }
 
 // @symbol _ZN12dScMgPanel_c24Answer_StateFindSolutionEv
@@ -756,20 +771,20 @@ void dScMgPanel_c ::Answer_StateFindSolution() {
     int cell;
     u8 *p;
 
-    if (((u16 *)(c + 0x4e00))[0x62] != 0) {
-        (*(u16 *)(c + 0x4ec4))--;
-        if (((s16 *)(c + 0x4e00))[0x62] < 0) {
-            ((s16 *)(c + 0x4e00))[0x62] = 0;
+    if ((u16)mDelay != 0) {
+        (*(u16 *)&mDelay)--;
+        if (mDelay < 0) {
+            mDelay = 0;
         }
         return;
     }
 
-    n = *(int *)(c + 0x4cb8);
+    n = mCount;
     found = 0;
     i = found;
     if (n > 0) {
         do {
-            if (*(u8 *)(c + i + 0x4efa) != 0) {
+            if (((dScMgPanel_c *)(c + i))->mKind[0] != 0) {
                 found++;
                 break;
             }
@@ -789,22 +804,22 @@ void dScMgPanel_c ::Answer_StateFindSolution() {
 
     if (n > 0) {
         do {
-            idx = *(int *)(c + 0x4cb4);
+            idx = mFaceSet;
             if (IsAltVariant() != 0) {
                 arr[j] = sPanelPuzzlesAlt[idx][j];
             } else {
                 arr[j] = sPanelPuzzles[idx][j];
             }
-            n = *(int *)(c + 0x4cb8);
+            n = mCount;
             j++;
         } while (j < n);
     }
 
-    nlights = *(u8 *)(c + 0x4fde);
+    nlights = mFlipCount;
     li = 0;
     if (nlights > 0) {
         do {
-            idx = *(u8 *)(c + li + 0x4fae);
+            idx = ((dScMgPanel_c *)(c + li))->mFlipAt[0];
             wq = 3;
             hq = 3;
             col = idx % scene->width;
@@ -842,40 +857,40 @@ void dScMgPanel_c ::Answer_StateFindSolution() {
     j = 0;
     if (n > 0) {
         do {
-            p = (u8 *)(c + j + 0x4f1e);
+            p = &((dScMgPanel_c *)(c + j))->mFace[0];
             if (*p != arr[j]) {
-                *(u8 *)(c + j + 0x4efa) = 1;
+                ((dScMgPanel_c *)(c + j))->mKind[0] = 1;
                 *p ^= 1;
-                *(u8 *)(c + j + 0x4f8a) = 1;
+                ((dScMgPanel_c *)(c + j))->mFastFlip[0] = 1; /* mFastFlip[j] renumbers @NNN */
             }
             j++;
-        } while (j < *(int *)(c + 0x4cb8));
+        } while (j < mCount);
     }
 
-    ((u16 *)(c + 0x4e00))[0x62] = 0x40;
+    mDelay = 0x40;
     mInputState = 3;
-    *(u8 *)(c + 0x4fe5) = 0;
+    mReplayStep = 0;
 }
 
 // @symbol _ZN12dScMgPanel_c22Answer_StateResetBoardEv
 void dScMgPanel_c::Answer_StateResetBoard() {
     char *scene = (char *)this;
     dScMgPanel_c *self = (dScMgPanel_c *)scene;
-    if (((u16 *)(scene + 0x4e00))[0x62] != 0) {
-        (*(u16 *)(scene + 0x4ec4))--;
-        if (((s16 *)(scene + 0x4e00))[0x62] < 0) {
-            ((s16 *)(scene + 0x4e00))[0x62] = 0;
+    if ((u16)mDelay != 0) {
+        (*(u16 *)&mDelay)--;
+        if (mDelay < 0) {
+            mDelay = 0;
         }
         return;
     } else {
         int k;
         for (k = 0; k < self->mCount; k++) {
-            *(u8 *)(scene + k + 0x4efa) = 1;
-            *(u8 *)(scene + k + 0x4f1e) ^= 1;
-            *(u8 *)(scene + k + 0x4f8a) = 1;
+            self->mKind[k] = 1;
+            self->mFace[k] ^= 1;
+            self->mFastFlip[k] = 1;
         }
         mInputState = 2;
-        ((u16 *)(scene + 0x4e00))[0x62] = 0x20;
+        mDelay = 0x20;
     }
 }
 
@@ -943,10 +958,10 @@ void dScMgPanel_c ::Answer_Update() {
 void dScMgPanel_c::UpdateMoves() {
     char *scene = (char *)this;
     dScMgPanel_c *s = (dScMgPanel_c *)scene;
-    if (*(u16 *)(scene + 0x4ec4) != 0) {
-        (*(u16 *)(int)(scene + 0x4ec4))--;
+    if ((u16)mDelay != 0) {
+        (*(u16 *)&mDelay)--;
         if (mDelay < 0)
-            *(u16 *)(scene + 0x4ec4) = 0;
+            mDelay = 0;
         return;
     }
 
@@ -955,7 +970,7 @@ void dScMgPanel_c::UpdateMoves() {
         int i;
         int n = s->mCount;
         for (i = 0; i < n; i++) {
-            if (*(u8 *)(scene + i + 0x4efa) != 0) {
+            if (mKind[i] != 0) {
                 found++;
                 break;
             }
@@ -964,18 +979,18 @@ void dScMgPanel_c::UpdateMoves() {
             return;
     }
 
-    if (*(u8 *)(scene + 0x4fe4) == 0xff) {
-        *(u8 *)(scene + 0x4fe4) = 0;
+    if (mTouchCount == 0xff) {
+        mTouchCount = 0;
         mState = 2;
         SetSlideFlag();
         ReloadSlideDelay();
         return;
     }
 
-    (*(u8 *)(int)(scene + 0x4fe4))--;
+    mTouchCount--;
 
-    if (*(u8 *)(scene + 0x4fe4) == 0xff) {
-        *(u8 *)(scene + 0x4fe4) = 0;
+    if (mTouchCount == 0xff) {
+        mTouchCount = 0;
         mState = 2;
         mMovesUsed = 0;
         SetSlideFlag();
@@ -984,9 +999,9 @@ void dScMgPanel_c::UpdateMoves() {
     }
 
     {
-        u8 slot = *(u8 *)(scene + 0x4fe4);
+        u8 slot = mTouchCount;
         int hq = 3;
-        int index = *(u8 *)(scene + slot + 0x4fce);
+        int index = mTouchLog[slot];
         int w = mWidth;
         int wq = 3;
         int col = index % w;
@@ -1005,13 +1020,13 @@ void dScMgPanel_c::UpdateMoves() {
         for (y = 0; y < hq; y++) {
             for (x = 0; x < wq; x++) {
                 int cell = mWidth * (row + y) + (col + x);
-                *(u8 *)(scene + cell + 0x4efa) = 1;
+                mKind[cell] = 1;
                 s->mFace[cell] ^= 1;
-                *(u16 *)(scene + cell * 2 + 0x4e78) = 8;
-                *(u8 *)(scene + cell + 0x4f8a) = 1;
+                s->mFlipDelay[cell] = 8;
+                s->mFastFlip[cell] = 1;
             }
         }
-        *(u16 *)(scene + index * 2 + 0x4e78) = 0;
+        s->mFlipDelay[index] = 0;
         Sound::PlayBank2_2D(0x1fb);
     }
 }
@@ -1091,7 +1106,8 @@ void dScMgPanel_c::CountMatches() {
     do {
         if (s->mFace[i] != s->mGoal[i]) {
             s->mKind[i] = 2;
-            *(u16 *)(scene + (int)(((long long)i)) * 2 + 0x4e30) = 0;
+            /* Stepped: `mAnimTimer[i]` moves code. */
+            ((dScMgPanel_c *)(scene + (int)(((long long)i)) * 2))->mAnimTimer[0] = 0;
         }
         i++;
     } while (i < s->mCount);
@@ -1117,8 +1133,8 @@ void dScMgPanel_c::CountFlipping() {
         return;
 
     s->mState = 6;
-    *(u8 *)(scene + 0x4fe6) = 1;
-    *(s16 *)(scene + 0x4ec0) = 0x40;
+    s->mSolved = 1;
+    s->mResultTimer = 0x40;
 }
 
 // @symbol _ZN12dScMgPanel_c11CheckSolvedEv
@@ -1130,21 +1146,21 @@ void dScMgPanel_c::CheckSolved() {
     int tmp;
     if (mBusy == 0)
         return;
-    if (*(u8 *)(scene + 0x4feb) == 0)
+    if (mCheckDelay == 0)
         return;
     /* Laundered volatile round trip: the `(int)` cast and the volatile are both
        load-bearing -- they are what turns this decrement into the ROM's
        ldrb/sub/strb instead of a folded one. */
-    tmp = *(volatile u8 *)(int *)(((int)scene + 0x4feb));
+    tmp = *(volatile u8 *)(int *)((int)&((dScMgPanel_c *)scene)->mCheckDelay);
     --tmp;
-    *(volatile u8 *)(int *)(((int)scene + 0x4feb)) = tmp;
-    if (*(u8 *)(scene + 0x4feb) != 0)
+    *(volatile u8 *)(int *)((int)&((dScMgPanel_c *)scene)->mCheckDelay) = tmp;
+    if (mCheckDelay != 0)
         return;
     found = 0;
     i = 0;
     n = ((dScMgPanel_c *)scene)->mCount;
     while (i < n) {
-        if (*(u8 *)(scene + i + 0x4f1e) != *(u8 *)(scene + i + 0x4f42)) {
+        if (((dScMgPanel_c *)(scene + i))->mFace[0] != ((dScMgPanel_c *)(scene + i))->mGoal[0]) {
             found++;
             break;
         }
@@ -1200,8 +1216,8 @@ void dScMgPanel_c::UpdateTouch() {
             int flipHeight = 3;
             int gridWidth, col, row;
 
-            *(u8 *)(scene + *(u8 *)(scene + 0x4fe4) + 0x4fce) = i;
-            (*(u8 *)(int)(scene + 0x4fe4))++;
+            mTouchLog[mTouchCount] = i;
+            mTouchCount++;
             gridWidth = mWidth;
             col = i % gridWidth;
             row = i / gridWidth;
@@ -1224,13 +1240,13 @@ void dScMgPanel_c::UpdateTouch() {
                         int index = mWidth * (row + y) + (col + x);
                         ((dScMgPanel_c *)scene)->mKind[index] = 1;
                         ((dScMgPanel_c *)scene)->mFace[index] ^= 1;
-                        *(u16 *)(scene + index * 2 + 0x4e78) = 8;
+                        mFlipDelay[index] = 8;
                     }
                 }
             }
 
-            *(u16 *)(scene + i * 2 + 0x4e78) = 0;
-            *(u8 *)(scene + 0x4feb) = 0x28;
+            mFlipDelay[i] = 0;
+            mCheckDelay = 0x28;
             mMovesUsed++;
             Sound::PlayBank2_2D(0x1fa);
             TickSlideDelay();
@@ -1277,7 +1293,7 @@ void dScMgPanel_c::FlipAt(int index) {
     int y, x;
     for (y = 0; y < hq; y++) {
         for (x = 0; x < wq; x++) {
-            u8 *p = (u8 *)((((int)scene + ((mWidth) * (row + y) + (col + x))) + 0x4f1e));
+            u8 *p = ((dScMgPanel_c *)((int)scene + ((mWidth) * (row + y) + (col + x))))->mFace;
             *p ^= 1;
         }
     }
@@ -1363,10 +1379,7 @@ void dScMgPanel_c::DealPuzzle() {
 // @symbol _ZN12dScMgPanel_c14ScramblePanelsEv
 #pragma push
 #pragma opt_common_subs off
-/* Address launder and the 15-bit random draw, both used a dozen times below.
-   The launder is what stops mwcc folding the field address into the
-   surrounding expression; Particle_Spawn spells out the same lever. */
-#define PANEL_AT(p, off) ((void *)(int)((char *)(p) + (off)))
+/* The 15-bit random draw, used a dozen times below. */
 #define PANEL_RAND ((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff)
 
 void dScMgPanel_c::ScramblePanels() {
@@ -1384,7 +1397,7 @@ void dScMgPanel_c::ScramblePanels() {
         int nv;
         if (t >= 0xf) {
             t = (PANEL_RAND * 0xf) >> 15;
-            if (t == *(int *)(scene + 0x4de4)) {
+            if (t == self->mLastPuzzle) {
                 t += ((PANEL_RAND * 0xe) >> 15) + 1;
                 if (t >= 0xf)
                     t -= 0xf;
@@ -1392,7 +1405,7 @@ void dScMgPanel_c::ScramblePanels() {
         }
         if (sPanelScrambleFlipEnabled[t] != 0 || self->mDealt == 0) {
             if (self->mDealt == 0)
-                *(int *)PANEL_AT(scene, 0x4cb0) += 1;
+                self->mDealt += 1;
             nv = (PANEL_RAND * 8) >> 15;
             if (nv == self->mFaceSet) {
                 nv = (nv + (((PANEL_RAND * 7) >> 15) + 1)) & 7;
@@ -1405,7 +1418,7 @@ void dScMgPanel_c::ScramblePanels() {
             ((dScMgPanel_c *)scene)->mCount = q * q;
         }
         self->mFlips = sPanelScrambleFlips[t];
-        *(int *)(scene + 0x4de4) = t;
+        self->mLastPuzzle = t;
     } else {
         int nv;
         int k;
@@ -1414,7 +1427,7 @@ void dScMgPanel_c::ScramblePanels() {
             t -= 0x19;
         if (sPanelScrambleFlipEnabledAlt[t] != 0 || self->mDealt == 0) {
             if (self->mDealt == 0)
-                *(int *)PANEL_AT(scene, 0x4cb0) += 1;
+                self->mDealt += 1;
             nv = (PANEL_RAND * 4) >> 15;
             k = sPanelPuzzleSizes[t];
             p = &sPanelPuzzleSizes[t];
@@ -1440,7 +1453,6 @@ void dScMgPanel_c::ScramblePanels() {
         self->mFlips = sPanelScrambleFlipsAlt[t];
     }
 }
-#undef PANEL_AT
 #undef PANEL_RAND
 #pragma pop
 
@@ -1456,7 +1468,7 @@ int dScMgPanel_c::HasDuplicateRows() {
     for (i = 0; i < 5; i++) {
         bad = 0;
         for (j = 0; j < 0xa; j++) {
-            if (*(u8 *)(scene + 0x4fae + j) != *(u8 *)(row + 0x4ec8 + j)) {
+            if (((dScMgPanel_c *)scene)->mFlipAt[j] != ((dScMgPanel_c *)row)->mPastFlips[0][j]) {
                 bad = 1;
                 break;
             }
@@ -1473,14 +1485,15 @@ int dScMgPanel_c::HasDuplicateRows() {
         for (r = 0; r < 4; r++) {
             dst = scene + (r + 1) * 0xa;
             for (k = 0; k < 0xa; k++) {
-                *(u8 *)(dst + 0x4ec8) = *(u8 *)(src + 0x4ec8 + k);
+                ((dScMgPanel_c *)dst)->mPastFlips[0][0] = ((dScMgPanel_c *)src)->mPastFlips[0][k];
                 dst++;
             }
             src += 0xa;
         }
     }
+    /* mPastFlips[0][i] = mFlipAt[i]; the indexed store renumbers @NNN. */
     for (i = 0; i < 0xa; i++) {
-        *(u8 *)(scene + 0x4ec8 + i) = *(u8 *)(scene + 0x4fae + i);
+        ((dScMgPanel_c *)(scene + i))->mPastFlips[0][0] = ((dScMgPanel_c *)scene)->mFlipAt[i];
     }
     return 1;
 }
@@ -1490,9 +1503,11 @@ int dScMgPanel_c::HasDuplicateRows() {
 void dScMgPanel_c::ClearGrid() {
     char *scene = (char *)this;
     int i, j;
+    /* Fills mPastFlips with 0xff; `mPastFlips[i][j]` shrinks it and
+       renumbers @NNN. */
     for (i = 0; i < 5; i++) {
         for (j = 0; j < 0xa; j++) {
-            *(u8 *)(scene + j + 0x4ec8) = 0xff;
+            ((dScMgPanel_c *)(scene + j))->mPastFlips[0][0] = 0xff;
         }
         scene += 0xa;
     }
@@ -1507,32 +1522,35 @@ void dScMgPanel_c::ClearGrid() {
 void dScMgPanel_c::ResetRound() {
     char *scene = (char *)this;
     int i;
+    /* mX, mY, mFlipFrame, mAnimTimer and mFlipDelay are stepped: indexed
+       they renumber this file's @NNN labels. 0x4ec2 and 0x466c are pads
+       that only this function writes. */
     for (i = 0; i < 0x24; i++) {
-        *(int *)(scene + i * 4 + 0x4cc4) = 0;
-        *(int *)(scene + i * 4 + 0x4d54) = 0;
-        *(s16 *)(scene + i * 2 + 0x4de8) = 0;
-        *(s16 *)(scene + i * 2 + 0x4e30) = 0;
-        *(s16 *)(scene + i * 2 + 0x4e78) = 0;
+        ((dScMgPanel_c *)(scene + i * 4))->mX[0] = 0;
+        ((dScMgPanel_c *)(scene + i * 4))->mY[0] = 0;
+        ((dScMgPanel_c *)(scene + i * 2))->mFlipFrame[0] = 0;
+        ((dScMgPanel_c *)(scene + i * 2))->mAnimTimer[0] = 0;
+        ((dScMgPanel_c *)(scene + i * 2))->mFlipDelay[0] = 0;
         ((dScMgPanel_c *)scene)->mFace[i] = 0;
         ((dScMgPanel_c *)scene)->mKind[i] = 0;
         ((dScMgPanel_c *)scene)->mGoal[i] = 0;
         ((dScMgPanel_c *)scene)->mVisible[i] = 0;
-        *(char *)(scene + i + 0x4f8a) = 0;
+        ((dScMgPanel_c *)scene)->mFastFlip[i] = 0;
     }
     mState = 0;
-    *(char *)(scene + 0x4fe9) = 0;
-    *(s16 *)(scene + 0x4ec0) = 0;
+    mBusy = 0;
+    mResultTimer = 0;
     *(s16 *)(scene + 0x4ec2) = 0;
-    *(char *)(scene + 0x4fde) = 0;
+    mFlipCount = 0;
     mMovesUsed = 0;
     ((dScMgPanel_c *)scene)->mCredits = 0;
     for (i = 0; i < 0x20; i++) {
-        *(u8 *)(scene + i + 0x4fae) = 0xff;
+        ((dScMgPanel_c *)scene)->mFlipAt[i] = 0xff;
     }
     for (i = 0; i < 0x10; i++) {
-        *(char *)(scene + i + 0x4fce) = 0;
+        ((dScMgPanel_c *)scene)->mTouchLog[i] = 0;
     }
-    *(char *)(scene + 0x4fe4) = 0;
+    mTouchCount = 0;
     mInputState = 0;
     dScMgPanel_c *s = (dScMgPanel_c *)scene;
     s->mSlide = 0;
@@ -1543,14 +1561,14 @@ void dScMgPanel_c::ResetRound() {
     s->mSlideStep = 0;
     s->mSlideFlag = 0;
     s->mSlideOn = 0;
-    *(int *)(scene + 0x4678) = 0;
-    *(int *)(scene + 0x467c) = 0;
-    *(s16 *)(scene + 0x4680) = 0;
-    *(char *)(scene + 0x4684) = 0;
-    *(char *)(scene + 0x4685) = 0;
-    *(char *)(scene + 0x4686) = 0;
-    *(char *)(scene + 0x4fe6) = 0;
-    *(s16 *)(scene + 0x4ec6) = 0;
+    s->mBanner.x = 0;
+    s->mBanner.y = 0;
+    s->mBanner.timer = 0;
+    s->mBanner.active = 0;
+    s->mBanner.visible = 0;
+    s->mBanner.state = 0;
+    s->mSolved = 0;
+    s->mScrollFrames = 0;
     Shake_Stop();
     Scroll_Stop();
     Particle_ClearAll();
@@ -1562,7 +1580,7 @@ void dScMgPanel_c::Panel_StartAll() {
     char *scene = (char *)this;
     int i;
     for (i = 0; i < mWidth; i++) {
-        *(u8 *)(scene + i + 0x4efa) = 3;
+        mKind[i] = 3;
     }
 }
 
@@ -1582,7 +1600,7 @@ void dScMgPanel_c::Panel_StateFall(int index) {
        The row/column split is a subtract loop, not a divide, and the nested
        blocks are what keep it that way -- flattening them costs 18 words. */
     {
-        u8 *flag = (u8 *)(scene + 0x4f8a + index);
+        u8 *flag = &s->mFastFlip[index];
         if (*flag != 0)
             return;
         {
@@ -1601,7 +1619,7 @@ void dScMgPanel_c::Panel_StateFall(int index) {
             }
             {
                 int nxt = (row + 1) * div + col;
-                if (((s->mY[nxt] - *(int *)(scene + (u32)index * 4 + 0x4d54)) >> 12) > 0)
+                if (((s->mY[nxt] - s->mY[index]) >> 12) > 0)
                     return;
                 *flag = 1;
                 s->mKind[nxt] = 3;
@@ -1614,10 +1632,10 @@ void dScMgPanel_c::Panel_StateFall(int index) {
 void dScMgPanel_c::Panel_StateBlink(int idx) {
     char *c = (char *)this;
     dScMgPanel_c *s = (dScMgPanel_c *)c;
-    u16 *timers = (u16 *)(int)(c + 0x4e30);
+    u16 *timers = s->mAnimTimer;
     u8 *q;
     timers[idx] = timers[idx] + 1;
-    if ((((int)*(u16 *)(c + idx * 2 + 0x4e30) >> 3) & 1) != 0) {
+    if ((((int)s->mAnimTimer[idx] >> 3) & 1) != 0) {
         q = s->mVisible;
         q[idx] = 1;
     } else {
@@ -1625,7 +1643,9 @@ void dScMgPanel_c::Panel_StateBlink(int idx) {
         q[idx] = 0;
     }
     {
-        /* The `(long long)` round trip on the index is load-bearing here. */
+        /* b + 0x30 is mAnimTimer[idx]. The `(long long)` round trip on the
+           index and this split base are load-bearing: `s->mAnimTimer[idxL]`
+           moves code. */
         int idxL = (int)((long long)idx);
         char *b = c + idxL * 2;
         b += 0x4e00;
@@ -1641,52 +1661,50 @@ void dScMgPanel_c::Panel_StateBlink(int idx) {
 #pragma push
 #pragma opt_common_subs off
 /*
- * Per-slot tick for one of the tracked entries (idx).
- * Bumps the global tick byte at +0x4fe9.  If the slot's hold counter
- * (+0x4e78[idx]) is running, count it down and clamp at zero; otherwise
- * advance the slot's frame counter (+0x4e30[idx]) and, once it reaches
- * the limit (4 while the +0x4f8a flag is set, else 8), reset it, step the
- * slot's phase (+0x4de8[idx]) and wrap the phase past 5 with the +0x4efa
- * flag cleared.
+ * Per-panel flip tick for one panel (index).
+ * Bumps mBusy.  If the panel's mFlipDelay is running, count it down and
+ * clamp at zero; otherwise advance its mAnimTimer and, once it reaches
+ * the limit (4 while mFastFlip is set, else 8), reset it, step mFlipFrame
+ * and end the flip past 5 by clearing mKind.
  *
- * Shape notes: the pool-constant + register-offset form is what the
- * RMW sites (`*p = *p +- 1`) produce, the split base+0xNN00/#off form is
- * what the plain reads produce, and opt_common_subs off keeps the
- * else-branch recomputing base+idx*2 (its own extended basic block) the
- * way the ROM does.  The frame counter must be bumped before the flag
- * byte is read, and the limit compare is unsigned.
+ * Shape notes: the RMW sites (`*p = *p +- 1`) go through a pointer local,
+ * the plain reads index the member directly, and opt_common_subs off
+ * keeps the else-branch recomputing this+index*2 (its own extended basic
+ * block) the way the ROM does.  The timer must be bumped before mFastFlip
+ * is read, and the limit compare is unsigned.  The unused `scene` local
+ * stays: dropping it renumbers the pinned @NNN labels.
  */
 
 void dScMgPanel_c::Panel_StateFlip(int index) {
     char *scene = (char *)this;
-    u8 *cnt = (u8 *)(scene + 0x4fe9);
+    u8 *cnt = &mBusy;
 
     *cnt = *cnt + 1;
 
-    if (*(u16 *)(scene + index * 2 + 0x4e78) != 0) {
-        u16 *q = (u16 *)(scene + 0x4e78 + index * 2);
+    if (mFlipDelay[index] != 0) {
+        u16 *q = &mFlipDelay[index];
         *q = *q - 1;
-        if (*(s16 *)(scene + index * 2 + 0x4e78) < 0) {
-            *(u16 *)(scene + index * 2 + 0x4e78) = 0;
+        if ((s16)mFlipDelay[index] < 0) {
+            mFlipDelay[index] = 0;
         }
     } else {
-        u16 *r = (u16 *)(scene + 0x4e30 + index * 2);
+        u16 *r = &mAnimTimer[index];
         u8 flag;
         u32 lim;
         *r = *r + 1;
-        flag = *(u8 *)(scene + index + 0x4000 + 0xf8a);
+        flag = mFastFlip[index];
         lim = (flag != 0) ? 4 : 8;
-        if (*(u16 *)(scene + index * 2 + 0x4e30) < lim) {
+        if (mAnimTimer[index] < lim) {
             return;
         }
-        *(u16 *)(scene + index * 2 + 0x4e30) = 0;
+        mAnimTimer[index] = 0;
         {
-            u16 *s = (u16 *)(scene + 0x4de8 + index * 2);
+            u16 *s = &mFlipFrame[index];
             *s = *s + 1;
         }
-        if (*(u16 *)(scene + index * 2 + 0x4d00 + 0xe8) >= 5) {
-            *(u16 *)(scene + index * 2 + 0x4d00 + 0xe8) = 0;
-            *(u8 *)(scene + index + 0x4000 + 0xefa) = 0;
+        if (mFlipFrame[index] >= 5) {
+            mFlipFrame[index] = 0;
+            mKind[index] = 0;
         }
     }
 }
@@ -1695,8 +1713,10 @@ void dScMgPanel_c::Panel_StateFlip(int index) {
 // @symbol _ZN12dScMgPanel_c15Panel_StateIdleEi
 void dScMgPanel_c::Panel_StateIdle(int index) {
     char *scene = (char *)this;
-    char *base = scene + index + 0x4000;
-    base[0xf8a] = 0;
+    char *base = scene + index;
+    /* The separate base local is load-bearing: `mFastFlip[index]`, and the
+       stepped form without the local, both move code. */
+    ((dScMgPanel_c *)base)->mFastFlip[0] = 0;
 }
 
 // @symbol _ZN12dScMgPanel_c19Scene_StateGameOverEv
@@ -1712,7 +1732,7 @@ void dScMgPanel_c::Scene_StateGameOver() {
     extern PanelStateFnI sPanelPanelStateTable[];
     int i;
     for (i = 0; i < mCount; i++) {
-        u8 index = *(u8 *)(scene + i + 0x4efa);
+        u8 index = mKind[i];
         struct PanelPmfRec_bc0 *e = (struct PanelPmfRec_bc0 *)&sPanelPanelStateTable[index];
         int adj = e->adj;
         char *thisp = scene + (adj >> 1);
@@ -1724,22 +1744,21 @@ void dScMgPanel_c::Scene_StateGameOver() {
         }
         fn(thisp, i);
     }
-    if (*(u16 *)(scene + 0x4ec0) == 0)
+    if (mResultTimer == 0)
         return;
-    *(u16 *)(scene + 0x4ec0) -= 1;
-    if (*(s16 *)(scene + 0x4ec0) > 0)
+    mResultTimer -= 1;
+    if ((s16)mResultTimer > 0)
         return;
-    *(u16 *)(scene + 0x4ec0) = 0;
+    mResultTimer = 0;
     Mg_SetSharedState(MG_STATE_GAME_OVER);
     mPromptEnabled = 0;
-    *(u8 *)(scene + 0x4fe3) = 0;
+    mCreditsOn = 0;
     ClearSlideFlag();
 }
 
 // @symbol _ZN12dScMgPanel_c17Scene_StateResultEv
 #pragma push
 #pragma opt_propagation off
-extern "C" {}
 void dScMgPanel_c::Scene_StateResult() {
     char *scene = (char *)this;
     extern PanelStateFnI sPanelPanelStateTable[];
@@ -1759,7 +1778,7 @@ void dScMgPanel_c::Scene_StateResult() {
     n = mCount;
     if (n > 0) {
         do {
-            u8 *p = (u8 *)(scene + i + 0x4efa);
+            u8 *p = &((dScMgPanel_c *)(scene + i))->mKind[0];
             (((dScMgPanel_c *)scene)->*sPanelPanelStateTable[*p])(i);
             i++;
             if (*p != 0)
@@ -1770,12 +1789,15 @@ void dScMgPanel_c::Scene_StateResult() {
     if (found != 0)
         return;
 
-    if (*(u16 *)(scene + 0x4e00 + 0xc0) != 0) {
+    if (mResultTimer != 0) {
         int off;
         u16 *tp;
         u8 *flags;
+        /* scene + 0x4ec0 is mResultTimer, laundered. `&mResultTimer` in place
+           of `scene + off` leaves `off` dead, and dropping it renumbers @NNN. */
         off = 0x4ec0;
         tp = (u16 *)(int)((long long)(int)(scene + off) & 0xFFFFFFFFFFFFFFFFLL);
+        /* flags[0xfe6] is mSolved; `&mSolved` moves this code. */
         flags = (u8 *)(scene + 0x4000);
         *tp = *tp - 1;
         if (flags[0xfe6] == 0) {
@@ -1788,29 +1810,29 @@ void dScMgPanel_c::Scene_StateResult() {
                     hit = 1;
             }
             if (hit)
-                *(u16 *)(scene + 0x4e00 + 0xc0) = 0;
+                mResultTimer = 0;
         }
-        if (*(s16 *)(scene + 0x4e00 + 0xc0) > 0)
+        if ((s16)mResultTimer > 0)
             return;
-        *(u16 *)(scene + 0x4e00 + 0xc0) = 0;
-        if (*(u8 *)(scene + 0x4000 + 0xfe6) != 0) {
-            char *g;
+        mResultTimer = 0;
+        if (mSolved != 0) {
+            dScMgBase_c *g;
             Scroll_Start();
             Mg_SetSharedState(MG_STATE_ROUND_CLEAR);
             ClearSlideFlag();
-            *(u8 *)(scene + 0x4000 + 0xfe3) = 0;
+            mCreditsOn = 0;
             mPromptEnabled = 0;
-            g = (char *)gMgScene;
+            g = gMgScene;
             if (g != 0) {
-                if (*(int *)(g + 0xb4) < 9999)
-                    (*(int *)(int)(g + 0xb4))++;
-                if (*(int *)(g + 0xb4) > *(int *)(g + 0xb8))
-                    *(int *)(g + 0xb8) = *(int *)(g + 0xb4);
+                if (g->mHudScore < 9999)
+                    g->mHudScore++;
+                if (g->mHudScore > g->mBestHudScore)
+                    g->mBestHudScore = g->mHudScore;
             }
             Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
             return;
         }
-        *(u16 *)(scene + 0x4e00 + 0xc0) = 0x10;
+        mResultTimer = 0x10;
         mState = 7;
         Panel_StartAll();
         return;
@@ -1819,6 +1841,7 @@ void dScMgPanel_c::Scene_StateResult() {
     {
         int inc;
         u16 *ip;
+        /* scene + 0x4ec6 is mScrollFrames, laundered the same way. */
         inc = 0x4ec6;
         ip = (u16 *)(int)((long long)(unsigned)(scene + inc) & 0xFFFFFFFFFFFFFFFFLL);
         *ip = *ip + 1;
@@ -1834,7 +1857,7 @@ void dScMgPanel_c::Scene_StateShowAnswer() {
     IntroCard_Update();
     Answer_Update();
     for (i = 0; i < mCount; i++) {
-        u8 index = *(u8 *)(scene + i + 0x4efa);
+        u8 index = mKind[i];
         (((dScMgPanel_c *)scene)->*sPanelPanelStateTable[index])(i);
     }
 }
@@ -1849,7 +1872,7 @@ void dScMgPanel_c::Scene_StateRewind() {
     self->mBusy = 1;
     UpdateMoves();
     for (i = 0; i < self->mCount; i++) {
-        u8 index = *(u8 *)(scene + i + 0x4efa);
+        u8 index = mKind[i];
         (((dScMgPanel_c *)scene)->*sPanelPanelStateTable[index])(i);
     }
 }
@@ -1882,12 +1905,12 @@ void dScMgPanel_c::Scene_StatePlay() {
     dScMgPanel_c *scene = this;
     extern PanelStateFnI sPanelPanelStateTable[];
     int i;
-    char *b = (char *)scene;
+    char *b = (char *)scene; /* unused; dropping it renumbers @NNN */
     UpdateTouch();
     IntroCard_Update();
-    *(u8 *)(b + 0x4fe9) = 0;
-    for (i = 0; i < *(int *)(b + 0x4cb8); i++) {
-        u8 index = *(u8 *)(b + i + 0x4efa);
+    mBusy = 0;
+    for (i = 0; i < mCount; i++) {
+        u8 index = scene->mKind[i];
         (scene->*sPanelPanelStateTable[index])(i);
     }
     CheckSolved();
@@ -1901,16 +1924,16 @@ void dScMgPanel_c::Scene_StateIntro() {
     dScMgPanel_c *self = (dScMgPanel_c *)scene;
     if (self->mIntro == 0) {
         IntroCard_Update();
-        *(u8 *)(scene + 0x4fe7) = 0;
-        *(u8 *)(scene + 0x4fe8) = 2;
+        self->mGoalTimer = 0;
+        self->mGoalFrame = 2;
         return;
     }
-    *(u8 *)(scene + 0x4fe7) += 1;
-    if (*(u8 *)(scene + 0x4fe7) >= 8) {
-        *(u8 *)(scene + 0x4fe7) = 0;
-        *(u8 *)(scene + 0x4fe8) -= 1;
+    self->mGoalTimer += 1;
+    if (self->mGoalTimer >= 8) {
+        self->mGoalTimer = 0;
+        self->mGoalFrame -= 1;
     }
-    if (*(u8 *)(scene + 0x4fe8) == 0)
+    if (self->mGoalFrame == 0)
         self->mState = 2;
 }
 
@@ -1962,7 +1985,7 @@ void dScMgPanel_c::StartRound(int flag) {
     char *p;
 
     if (flag == 0) {
-        int *q = (int *)(self + 0xbc);
+        u32 *q = &mLevel;
         *q += 1;
         if (mLevel > 0x270e)
             mLevel = 0x270e;
@@ -1976,7 +1999,7 @@ void dScMgPanel_c::StartRound(int flag) {
             gMgScene->mHudScore = 0;
 
         p = (char *)gMgScene;
-        Mg_SubmitScore(p != 0 ? *(int *)(p + 0xb4) : 0);
+        Mg_SubmitScore(p != 0 ? ((dScMgBase_c *)p)->mHudScore : 0);
     }
 
     FreeGfxSlotsById(0x1d);

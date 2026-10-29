@@ -70,7 +70,7 @@ inside the daSBird_c span:
 | --- | --- |
 | `0x02113914` | [func_ov009_021116ec](../src/game/actors/d_a_s_bird.cpp) - (ROM ordinal 6 used to assemble `d_a_s_bird.cpp`) (`0x021116ec`) |
 | `0x0211390c` | [func_ov009_021115d8](../src/game/actors/d_a_s_bird.cpp) - (ROM ordinal 5 used to assemble `d_a_s_bird.cpp`) (`0x021115d8`) |
-| `0x021138fc` | [func_ov009_0211145c](../src/game/actors/d_a_s_bird.cpp) - (ROM ordinal 4 used to assemble `d_a_s_bird.cpp`) (`0x0211145c`) |
+| `0x021138fc` | [daSBird_c::StateLaunchFlock](../src/game/actors/d_a_s_bird.cpp) - (ROM ordinal 4 used to assemble `d_a_s_bird.cpp`) (`0x0211145c`) |
 | `0x02113904` | [func_ov009_02111234](../src/game/actors/d_a_s_bird.cpp) - (ROM ordinal 3 used to assemble `d_a_s_bird.cpp`) (`0x02111234`) |
 
 The ROM BSS contribution `0x02113c20..0x02113c68` is exactly two 8-byte

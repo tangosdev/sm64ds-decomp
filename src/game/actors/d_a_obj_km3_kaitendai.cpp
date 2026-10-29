@@ -7,7 +7,7 @@
  * helpers. The default rotation increment is 312 angle units per frame,
  * or 624 when param1's low byte is 1. The shared setup stores the
  * increment and Behavior adds it each frame; it is not a start angle.
- * func_ov002_020b676c loads slot 0 with Model::LoadFile, slot 1 with
+ * InitResourcesFrom loads slot 0 with dExtSimpleModel_c::LoadFile, slot 1 with
  * dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile. This TU's static
  * initializer constructs those SharedFilePtrs as file IDs 1661 / 1662.
  *
@@ -19,11 +19,7 @@
  * daObjKm3_Kaitendai_c, KM3_KAITENDAI registry). Retail does not
  * store that spelling.
  *
- * deslop
- * Leftover: func_ov002_020b676c / func_ov002_020b66a8 are still
- *   linker names. Naming belongs in ov002.
- * Leftover: the BMD/KCL handle storage remains a two-word wrapper,
- *   and the handles and descriptor retain their address names.
+ * What stays: the BMD/KCL handles and descriptor retain their address names.
  *   The shared setup/cleanup interface still takes an opaque mutable
  *   CLPS_Block pointer, although its collision-property consumers only read it.
  */
@@ -41,21 +37,17 @@ enum d_a_obj_km3_kaitendai_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct Km3KaitendaiModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
-
     Km3KaitendaiModelFilePtr(unsigned int fileID);
     ~Km3KaitendaiModelFilePtr();
 };
 
 struct Km3KaitendaiClsnFilePtr : SharedFilePtr {
-    unsigned int words[2];
-
     Km3KaitendaiClsnFilePtr(unsigned int fileID);
     ~Km3KaitendaiClsnFilePtr();
 };
 
-typedef char Km3KaitendaiModelFilePtr_size_must_be_8[
-    sizeof(Km3KaitendaiModelFilePtr) == 8 ? 1 : -1];
+typedef char
+    Km3KaitendaiModelFilePtr_size_must_be_8[sizeof(Km3KaitendaiModelFilePtr) == 8 ? 1 : -1];
 typedef char Km3KaitendaiClsnFilePtr_size_must_be_8[sizeof(Km3KaitendaiClsnFilePtr) == 8 ? 1 : -1];
 
 struct Km3KaitendaiClpsBlock {
@@ -74,30 +66,23 @@ struct ResourceDescriptor {
 };
 typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
-extern "C" {
 extern Km3KaitendaiModelFilePtr data_ov047_02112610;
 extern Km3KaitendaiClsnFilePtr data_ov047_02112608;
 /* KCL prism attributes index these two entries. The following ROM bytes
  * have no established type or ownership and are not part of this block. */
 extern const Km3KaitendaiClpsBlock gKm3KaitendaiClps = {
     {'C', 'L', 'P', 'S'}, 8, 2, {{0x00000fc0, 0x000000ff}, {0x00000fc4, 0x000000ff}}};
-}
 
 /* Defined here because this TU owns the descriptor in overlay .data. */
-extern "C" ResourceDescriptor data_ov047_02112334 = {
+ResourceDescriptor data_ov047_02112334 = {
     &data_ov047_02112610, &data_ov047_02112608,
     reinterpret_cast<CLPS_Block *>(const_cast<Km3KaitendaiClpsBlock *>(&gKm3KaitendaiClps))};
 
 #include "daObjKm3_Kaitendai_c.h"
 #include "SpawnInfo.h"
 
-extern "C" {
-s32 func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor,
-                        s16 rotationIncrement);
-s32 func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *descriptor);
 s16 gKm3KaitendaiRotationIncrement = 312;
 s16 gKm3KaitendaiAlternateRotationIncrement = 624;
-}
 
 // @symbol daObjKm3_Kaitendai_c_classInit
 extern "C" daObjKm3_Kaitendai_c *daObjKm3_Kaitendai_c_classInit() {
@@ -113,21 +98,19 @@ extern "C" SpawnInfo<daObjKm3_Kaitendai_c> g_profile_KM3_KAITENDAI = {
     0,
     0x00380000,
     0x02000000,
-    0
-};
+    0};
 
 // @symbol _ZN20daObjKm3_Kaitendai_c13InitResourcesEv
-s32 daObjKm3_Kaitendai_c::InitResources()
-{
+s32 daObjKm3_Kaitendai_c::InitResources() {
     s16 rotationIncrement = gKm3KaitendaiRotationIncrement;
     if ((param1 & 0xff) == 1)
         rotationIncrement = gKm3KaitendaiAlternateRotationIncrement;
-    return func_ov002_020b676c(this, &data_ov047_02112334, rotationIncrement);
+    return InitResourcesFrom(&data_ov047_02112334, rotationIncrement);
 }
 
 // @symbol _ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv
 s32 daObjKm3_Kaitendai_c::CleanupResources() {
-    return func_ov002_020b66a8(this, &data_ov047_02112334);
+    return CleanupResourcesFrom(&data_ov047_02112334);
 }
 
 /* Source order is construction order: model file 1661, then the collision

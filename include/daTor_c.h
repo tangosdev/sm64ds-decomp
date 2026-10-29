@@ -29,10 +29,10 @@
 #define DATOR_C_H
 #include "types.h"
 #include "dActor_c.h"
-#include "ModelAnim.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 
 /* BASE: dActor_c, direct. _ZTI7daTor_c at ov096 0x02137a60 reads
  * [__si_class_type_info, _ZTS7daTor_c (0x02137a54), _ZTI8dActor_c], and the
@@ -52,15 +52,15 @@ struct daTor_c : dActor_c {
        dBgCh_Actr's D1 at +0x108 -- a relocation the ROM build
        checks. Was a u8 marker. */
     dBgCh_Actr mWithMeshClsn;            /* 0x108 */
-    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x2c4 -- a relocation the ROM build
+    /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0x2c4 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
        stopped short of the object, so the member also takes over mAnimation (+0x50 = the
        dExtFrameCtrl_c base), which the header declared separately inside it. */
-    ModelAnim mModelAnim;            /* 0x2c4 */
-    /* TextureTransformer member, named by the class's own destructor calling
-       TextureTransformer's D1 at +0x328 -- a relocation the ROM build
+    dExtAnmModel_c mAnmModel; /* 0x2c4 */
+    /* dExtAnmTexSRT_c member, named by the class's own destructor calling
+       dExtAnmTexSRT_c's D1 at +0x328 -- a relocation the ROM build
        checks. Was a u8 marker. */
-    TextureTransformer mTextureTransformer;            /* 0x328 */
+    dExtAnmTexSRT_c mTextureTransformer; /* 0x328 */
     /* The actor that hit this tornado. Set from mdCcAc_c.otherOwner once
        func_ov002_020de33c approves it; daTor_c::State2 clears it as
        the tornado winds down. */
@@ -69,9 +69,7 @@ struct daTor_c : dActor_c {
        mPos back to it after mChaseTimer runs out, and both other states
        measure their distances from it rather than from where the tornado
        currently is. */
-    s32 mHomePosX;               /* 0x340 */
-    s32 mHomePosY;               /* 0x344 */
-    s32 mHomePosZ;               /* 0x348 */
+    Vector3 mHomePos;            /* 0x340 */
     s32 mChaseRange;             /* 0x34c -- how far from home the player may
                                      be and still be chased. InitResources
                                      builds it out of mParam's low byte:

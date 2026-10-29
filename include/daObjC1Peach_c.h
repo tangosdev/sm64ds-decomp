@@ -2,7 +2,7 @@
 #define DAOBJC1PEACH_C_H
 
 #include "dActor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 /* Castle painting (profile C1_PEACH). ROM RTTI ov010:0x02112c24 names
  * daObjC1Peach_c as a direct dActor_c subclass. classInit allocates 0x128.
@@ -10,7 +10,7 @@
  * has the same extent as that base's table. */
 struct daObjC1Peach_c : dActor_c {
     u32 unk_0d0;                 /* 0x0d0 */
-    Model mModel;                /* 0x0d4 */
+    dExtSimpleModel_c mModel;    /* 0x0d4 */
     u8 mOpacity;                 /* 0x124 */
     u8 pad_125[3];
 
@@ -24,7 +24,7 @@ struct daObjC1Peach_c : dActor_c {
     virtual int Render();
 
     /* Nonvirtual helper called once by InitResources. Its body consumes this
-     * actor's angle, position, scale, and embedded Model, proving ownership. */
+     * actor's angle, position, scale, and embedded dExtSimpleModel_c, proving ownership. */
     void UpdateModelTransform();
 };
 

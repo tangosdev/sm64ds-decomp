@@ -1,6 +1,5 @@
 //cpp
 /* Production translation unit for ov010/daObjC1_Trap_c.
- * deslop
  *
  * Castle trap doors (profile C1_TRAP / TRAP(36)). ov010 also LIGHT_BEAM /
  * PEACH_PAINTING / ROTATING_COG_BIG. RTTI ov010:0x02112aa0 names
@@ -12,8 +11,7 @@
  * destructor in daObjC1_Trap_c.h, which makes the compiler emit retail's D1
  * then D0 pair without a D2 or a forcing helper.
  *
- * Leftover:
- * - dBgW_KcMbg::SetFile stays mangled (Fix12<int> by value, wall 6az)
+ * What stays, and why:
  * - TrapVector3 POD locals; Vector3's empty destructor would add an
  *   unrelated helper to this TU
  * - InitResources adds to mAngleY through a pointer local (plain
@@ -24,13 +22,12 @@
  *   data_ov010_021122f8 is CLPS
  * - common.h first via dBgActor_c.h (Matrix4x3 copies in UpdateModel/Collision)
  * - func_ov010_02111984 three-argument C ABI collider adapter
+ * - Vec3_HorzAngle / Vec3_HorzDist stay local: they take the TrapVector3
+ *   locals, and math/CalcLib.h's spelling takes const Vector3 *
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_c1_trap_AssetId {
-    ASSET_C1_TRAP_BMD = 0x05af,
-    ASSET_C1_TRAP_KCL = 0x05b0
-};
+enum d_a_obj_c1_trap_AssetId { ASSET_C1_TRAP_BMD = 0x05af, ASSET_C1_TRAP_KCL = 0x05b0 };
 
 #include "daObjC1_Trap_c.h"
 #include "SpawnInfo.h"
@@ -38,6 +35,7 @@ enum d_a_obj_c1_trap_AssetId {
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
+#include "math/MtxStack.h"
 
 /* The two copied position locals must stay POD. The shared Vector3 has an
  * empty destructor, which would add an unrelated compiler helper to this TU. */
@@ -60,49 +58,28 @@ struct TrapStateRec {
 /* 8-byte resource handles. The ctor/dtor bodies are the ROM functions the
  * initializer calls; this TU only names them. */
 struct TrapModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     TrapModelFilePtr(u32 fileID);
     ~TrapModelFilePtr();
 };
 
 struct TrapCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     TrapCollisionFilePtr(u32 fileID);
     ~TrapCollisionFilePtr();
 };
 
-/* Fix12-by-value SetFile and the TrapVector3 POD seam are measured ABI walls.
- * The remaining declarations are genuine free functions or ROM-address
- * globals. */
-extern "C" {
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *collider, void *file, const Matrix4x3 *matrix,
-    int scale, s16 angleY, CLPS_Block *clps);
-extern void func_020393c4(dBgW *collider, void *callback);
-
-extern void Matrix4x3_FromTranslation(
-    Matrix4x3 *matrix, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(
-    Matrix4x3 *matrix, s16 angle);
-extern void Matrix4x3_ApplyInPlaceToRotationZ(
-    Matrix4x3 *matrix, s16 angle);
-extern s16 Vec3_HorzAngle(const TrapVector3 *from, const TrapVector3 *to);
-extern s32 Vec3_HorzDist(const TrapVector3 *from, const TrapVector3 *to);
-
-extern Matrix4x3 data_020a0e68;
 extern s16 data_02082214[];
 extern CLPS_Block data_ov010_021122f8;
 extern TrapModelFilePtr data_ov010_02112d08;
 extern TrapCollisionFilePtr data_ov010_02112d00;
-
-void func_ov010_02111984(
-    int unused, daObjC1_Trap_c *trap, dActor_c *other);
-}
-
 extern TrapStateRec data_ov010_02112d28;
 
+/* local extern: the dBgW callback setter and the two horizontal helpers, on
+   the TrapVector3 POD seam (see the banner). */
+extern "C" {
+extern void func_020393c4(dBgW *collider, void *callback);
+extern s16 Vec3_HorzAngle(const TrapVector3 *from, const TrapVector3 *to);
+extern s32 Vec3_HorzDist(const TrapVector3 *from, const TrapVector3 *to);
+}
 
 /* Reconstructed source-style name: SM64DS proves daObjC1_Trap_c through RTTI,
  * allocation size, vtable identity, and the C1_TRAP registry profile;
@@ -113,35 +90,23 @@ extern TrapStateRec data_ov010_02112d28;
  * The header's inline operator new keeps the allocation on fBase_c::operator
  * new; without it the call relocates to the unavailable global `_Znwm`. */
 // @symbol daObjC1_Trap_c_classInit
-extern "C" daObjC1_Trap_c *daObjC1_Trap_c_classInit()
-{
+extern "C" daObjC1_Trap_c *daObjC1_Trap_c_classInit() {
     return new daObjC1_Trap_c();
 }
 
 extern "C" SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
-    daObjC1_Trap_c_classInit,
-    0x0024,
-    0x0143,
-    0,
-    0,
-    0x001f4000,
-    0,
-    0
-};
+    daObjC1_Trap_c_classInit, 0x0024, 0x0143, 0, 0, 0x001f4000, 0, 0};
 
 /*
  * registered directly in InitResources. */
 // @symbol func_ov010_02111984
-extern "C" void func_ov010_02111984(
-    int unused, daObjC1_Trap_c *trap, dActor_c *other)
-{
+extern "C" void func_ov010_02111984(int unused, daObjC1_Trap_c *trap, dActor_c *other) {
     trap->OnCollision(*other);
 }
 
 // @symbol _ZN14daObjC1_Trap_c11OnCollisionER8dActor_c
 
-void daObjC1_Trap_c::OnCollision(dActor_c &other)
-{
+void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     daObjC1_Trap_c *spawner;
     u32 spawnerID;
     TrapVector3 otherPos;
@@ -190,8 +155,7 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other)
 
 // @symbol _ZN14daObjC1_Trap_c13InitResourcesEv
 
-int daObjC1_Trap_c::InitResources()
-{
+int daObjC1_Trap_c::InitResources() {
     mTrapActive = 0;
     mSpawnerID = 0;
 
@@ -236,13 +200,11 @@ int daObjC1_Trap_c::InitResources()
     }
 
     mIsSpawner = 0;
-    mDoorModel.SetFile(
-        (BMD_File *)Model::LoadFile(data_ov010_02112d08), 1, -1);
+    mDoorModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov010_02112d08), 1, -1);
     UpdateModelTransform();
     UpdateCollisionTransform();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, dBgW_Kc::LoadFile(data_ov010_02112d00),
-        &mDoorMat, 0x1000, mAngleY, &data_ov010_021122f8);
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov010_02112d00), mDoorMat, 0x1000,
+                          mAngleY, data_ov010_021122f8);
     func_020393c4(&mMeshCollider, (void *)func_ov010_02111984);
     mMeshCollider.Enable(this);
     mOpenSpeed = 0;
@@ -259,8 +221,7 @@ int daObjC1_Trap_c::InitResources()
 
 // @symbol _ZN14daObjC1_Trap_c8BehaviorEv
 
-int daObjC1_Trap_c::Behavior()
-{
+int daObjC1_Trap_c::Behavior() {
     if (mIsSpawner) {
         mPlayerDist = DistToCPlayer();
         return 1;
@@ -275,8 +236,7 @@ int daObjC1_Trap_c::Behavior()
 
 // @symbol _ZN14daObjC1_Trap_c6RenderEv
 
-int daObjC1_Trap_c::Render()
-{
+int daObjC1_Trap_c::Render() {
     if (!mIsSpawner)
         mDoorModel.Render(0);
     return 1;
@@ -284,8 +244,7 @@ int daObjC1_Trap_c::Render()
 
 // @symbol _ZN14daObjC1_Trap_c16CleanupResourcesEv
 
-int daObjC1_Trap_c::CleanupResources()
-{
+int daObjC1_Trap_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     if ((param1 & 0xff) != 0xff) {
@@ -297,8 +256,7 @@ int daObjC1_Trap_c::CleanupResources()
 
 // @symbol _ZN14daObjC1_Trap_c20UpdateModelTransformEv
 
-void daObjC1_Trap_c::UpdateModelTransform()
-{
+void daObjC1_Trap_c::UpdateModelTransform() {
     int angleY = (int)(u16)mAngleY >> 4;
     int angleZ = (int)(u16)mAngleZ >> 4;
     int sinZ = data_02082214[angleZ * 2];
@@ -319,10 +277,8 @@ void daObjC1_Trap_c::UpdateModelTransform()
 
 // @symbol _ZN14daObjC1_Trap_c24UpdateCollisionTransformEv
 
-void daObjC1_Trap_c::UpdateCollisionTransform()
-{
-    Matrix4x3_FromTranslation(
-        &data_020a0e68, mPosX, mPosY, mPosZ);
+void daObjC1_Trap_c::UpdateCollisionTransform() {
+    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
     mDoorMat = data_020a0e68;
@@ -331,24 +287,21 @@ void daObjC1_Trap_c::UpdateCollisionTransform()
 
 // @symbol _ZN14daObjC1_Trap_c10GetSpawnerEv
 
-daObjC1_Trap_c *daObjC1_Trap_c::GetSpawner()
-{
+daObjC1_Trap_c *daObjC1_Trap_c::GetSpawner() {
     if (mSpawnerID == 0) {
         MarkForDestruction();
         return 0;
     }
 
-    daObjC1_Trap_c *spawner =
-        (daObjC1_Trap_c *)dActor_c::FindWithID(mSpawnerID);
+    daObjC1_Trap_c *spawner = (daObjC1_Trap_c *)dActor_c::FindWithID(mSpawnerID);
     if (!spawner)
         MarkForDestruction();
     return spawner;
 }
 
-// @symbol _ZN14daObjC1_Trap_c6State0Ev
+// @symbol _ZN14daObjC1_Trap_c11StateClosedEv
 
-void daObjC1_Trap_c::State0()
-{
+void daObjC1_Trap_c::StateClosed() {
     Player *player = ClosestPlayer();
     if (!player)
         return;
@@ -365,10 +318,9 @@ void daObjC1_Trap_c::State0()
     Sound::PlayBank3(0xe, mCamSpacePos);
 }
 
-// @symbol _ZN14daObjC1_Trap_c6State1Ev
+// @symbol _ZN14daObjC1_Trap_c12StateOpeningEv
 
-void daObjC1_Trap_c::State1()
-{
+void daObjC1_Trap_c::StateOpening() {
     daObjC1_Trap_c *spawner = GetSpawner();
     if (!spawner)
         return;
@@ -382,19 +334,17 @@ void daObjC1_Trap_c::State1()
     }
 }
 
-// @symbol _ZN14daObjC1_Trap_c6State2Ev
+// @symbol _ZN14daObjC1_Trap_c9StateOpenEv
 
-void daObjC1_Trap_c::State2()
-{
+void daObjC1_Trap_c::StateOpen() {
     daObjC1_Trap_c *spawner = GetSpawner();
     if (spawner && !spawner->mTrapActive)
         mState = 3;
 }
 
-// @symbol _ZN14daObjC1_Trap_c6State3Ev
+// @symbol _ZN14daObjC1_Trap_c12StateClosingEv
 
-void daObjC1_Trap_c::State3()
-{
+void daObjC1_Trap_c::StateClosing() {
     mAngleZ += 0x400;
     if (mAngleZ > 0) {
         mAngleZ = 0;
@@ -402,10 +352,9 @@ void daObjC1_Trap_c::State3()
     }
 }
 
-// @symbol _ZN14daObjC1_Trap_c6State4Ev
+// @symbol _ZN14daObjC1_Trap_c13StateHeldOpenEv
 
-void daObjC1_Trap_c::State4()
-{
+void daObjC1_Trap_c::StateHeldOpen() {
     mAngleZ = -0x3c00;
 }
 
@@ -418,9 +367,6 @@ void daObjC1_Trap_c::State4()
 TrapModelFilePtr data_ov010_02112d08(ASSET_C1_TRAP_BMD);
 TrapCollisionFilePtr data_ov010_02112d00(ASSET_C1_TRAP_KCL);
 TrapStateRec data_ov010_02112d28 = {
-    &daObjC1_Trap_c::State0,
-    &daObjC1_Trap_c::State1,
-    &daObjC1_Trap_c::State2,
-    &daObjC1_Trap_c::State3,
-    &daObjC1_Trap_c::State4,
+    &daObjC1_Trap_c::StateClosed,  &daObjC1_Trap_c::StateOpening,  &daObjC1_Trap_c::StateOpen,
+    &daObjC1_Trap_c::StateClosing, &daObjC1_Trap_c::StateHeldOpen,
 };

@@ -4,20 +4,17 @@
  * pointer one word below it is _ZTI13dScMgFlower_c, which is what ties
  * that table to this class rather than to a neighbour.
  *
- * SIZE 0x5ff8, from the factory's own `_ZN7fBase_cnwEj(0x5ff8)`
+ * SIZE 0x5ff8, from the factory's own `_ZN7fBase_cnwEm(0x5ff8)`
  * (dScMgFlower_c_classInit, at the end of src/minigames/d_s_mg_flower.cpp).
  *
  * FACTORY AND DESTRUCTOR AGREE MEMBER FOR MEMBER. The factory builds
- * mPetals at 0x4f38 (0x16 elements of 0x20, element ctor
- * Petal_ElemCtor) and then an object at 0x51f8
- * (FlowerFace_Construct); the destructor destroys the 0x51f8 object first
- * (FlowerFace_Destruct), then mPetals (element dtor Petal_ElemDtor).
- * Nothing is left over either way.
+ * mPetals at 0x4f38 (0x16 elements of 0x20, with Petal's own constructor)
+ * and then mFace at 0x51f8 (FlowerFace's constructor, ov006 0x020c3f54);
+ * the destructor destroys mFace first, then mPetals. Both are members, so
+ * the compiler does it, and nothing is left over either way.
  *
- * THE 0x51f8 OBJECT is opaque: nothing reads inside it, so its size is
- * bounded only by the first own-tail field at 0x5fb8, giving 0xdc0. Left
- * unsplit rather than guessed at, same as dScMgCard_c.h leaves its own
- * shared table.
+ * mFace is the 0xdac-byte FlowerFace (include/FlowerFace.h). Nothing reads
+ * the 0x14 bytes between its end and the first own-tail field at 0x5fb8.
  *
  * OWN TAIL, 0x5fb8..0x5ff6: seventeen fields carried over verbatim from
  * this header's previous auto-generated form, all real matched access out
@@ -84,10 +81,7 @@
 #ifndef DSCMGFLOWER_C_H
 #define DSCMGFLOWER_C_H
 #include "dScMgSingle3DBase_c.h"
-
-extern "C" void *FlowerFace_Destruct(char *t); /* decl_common.h's own signature */
-extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
-extern "C" void Petal_ElemDtor(void);
+#include "FlowerFace.h"
 
 struct dScMgFlower_c : dScMgSingle3DBase_c {
     /* The 2-vector value type the petal setup swaps through (Fix12 x, y --
@@ -141,9 +135,14 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     void UpdatePetals(); /* per-frame petal update */
     void DealPetals();   /* round setup / restart */
 
-    /* A plain record: lifecycle callbacks are still explicit in the scene
-       constructor/destructor. Using Vec2 here would add an implicit cleanup. */
+    /* The petal record. Its constructor and destructor are empty and out of
+       line (ov006 0x0212b88c and 0x0212a650): the scene's constructor and
+       destructor run them over mPetals through __cxa_vec_ctor and
+       __cxa_vec_cleanup. */
     struct Petal {
+        Petal();
+        ~Petal();
+
         u8 active;       /* 0x00 */
         u8 released;     /* 0x01, detached from the flower */
         u8 held;         /* 0x02, follows the stylus */
@@ -158,7 +157,9 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
         u8 pad_1e[2];
     };
     Petal mPetals[22];  /* 0x4f38, 0x20-byte records */
-    u8 pad_51f8[0xdc0]; /* 0x51f8 -- opaque object, see file banner */
+    FlowerFace mFace;   /* 0x51f8 -- Yoshi and the falling petals; the
+                              FlowerFace_* helpers take its address */
+    u8 pad_5fa4[0x14];  /* 0x5fa4 -- untouched up to mCursorX */
     s32 mCursorX;       /* 0x5fb8 -- Fix12 stylus position, from the touch
                               sample gTouchX/gTouchY << 12 */
     s32 mCursorY;       /* 0x5fbc */

@@ -39,6 +39,11 @@ enum daRNk_c_AssetId {
 #include "Timer.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "Sound.h"
+#include "math/Approach.h"
+namespace cstd {
+s16 atan2(s32, s32);
+}
 
 /* Actor IDs (symbols/actor_debug_names.tsv). */
 enum {
@@ -108,8 +113,6 @@ typedef void (daRNk_c::*StateFunc)();
 /* The model handle's ctor/dtor are the cartridge's func_02017acc /
    func_02017ab4 pair; the manifest aliases these. */
 struct RNkModelFileHandle : SharedFilePtr {
-    s32 fileId;
-    void *file;
     RNkModelFileHandle(u32 fileID);
     ~RNkModelFileHandle();
 };
@@ -117,28 +120,24 @@ struct RNkModelFileHandle : SharedFilePtr {
 /* The seven animation handles construct through SharedFilePtr::Construct
    and register SharedFilePtr_Destruct_Anim; the manifest aliases these. */
 struct RNkAnimationFileHandle : SharedFilePtr {
-    s32 fileId;
-    void *file;
     RNkAnimationFileHandle(u32 fileID);
     ~RNkAnimationFileHandle();
 };
 
-/* Each SharedFilePtr below is {?, loaded file} with the file at +4. Names are
-   by when SetAnim plays them. */
-#define ANIM_IDLE      (gdaRNkNokonokoWait1AnimationFile.file)   /* after talking, after stopping, at spawn */
-#define ANIM_TALK      (gdaRNkNokonokoWait2AnimationFile.file)   /* turned to face the player and talking */
-#define ANIM_RUN_START (data_ov062_0211e014.file)   /* at the start of the race; then ANIM_RUN */
-#define ANIM_RUN       (data_ov062_0211e024.file)   /* the looping run; speed follows mHorzSpeed */
-#define ANIM_JUMP      (data_ov062_0211e02c.file)   /* in the air */
-#define ANIM_LAND      (data_ov062_0211e004.file)   /* on landing, or when the path ends; then ANIM_RUN */
-#define ANIM_BRAKE     (gdaRNkNokonokoWalkEdAnimationFile.file)   /* STATE_PULL_UP's last frame to a stop */
+/* The animation each handle below has loaded. Names are by when SetAnim
+   plays them. */
+#define ANIM_IDLE      (gdaRNkNokonokoWait1AnimationFile.filePtr)   /* after talking, after stopping, at spawn */
+#define ANIM_TALK      (gdaRNkNokonokoWait2AnimationFile.filePtr)   /* turned to face the player and talking */
+#define ANIM_RUN_START (data_ov062_0211e014.filePtr)   /* at the start of the race; then ANIM_RUN */
+#define ANIM_RUN       (data_ov062_0211e024.filePtr)   /* the looping run; speed follows mHorzSpeed */
+#define ANIM_JUMP      (data_ov062_0211e02c.filePtr)   /* in the air */
+#define ANIM_LAND      (data_ov062_0211e004.filePtr)   /* on landing, or when the path ends; then ANIM_RUN */
+#define ANIM_BRAKE     (gdaRNkNokonokoWalkEdAnimationFile.filePtr)   /* STATE_PULL_UP's last frame to a stop */
 
-/* Play a BCA on Koopa's ModelAnim at normal speed (0x1000 = 1.0), from frame 0. */
+/* Play a BCA on Koopa's dExtAnmModel_c at normal speed (0x1000 = 1.0), from frame 0. */
 #define SET_ANIM(this, bca, flags) \
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&(this)->mModelAnim, (bca), (flags), 0x1000, 0)
+    (this)->mAnmModel.SetAnim((BCA_File *)(bca), (flags), 0x1000, 0)
 
-bool ApproachLinear(short &value, short target, short step);
-int ApproachLinear(int &value, int target, int step);
 
 /* func_ov062_02119af0's result. */
 enum {
@@ -157,43 +156,39 @@ enum {
 /* Table of six pointers-to-member, one per State, built by
    __sinit_d_a_r_nk.cpp. */
 extern StateFunc data_ov062_0211e0a4[6];
-extern "C" {
-void _ZN5Sound22LoadAndSetMusic_Layer2Ej(u32 id);
-}
 
 /* Scalar fixed-point ABI entry; the class-valued form still needs
    caller reconstruction under the pinned compiler. */
-extern "C" s16 _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
+extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
 
 extern "C" {
 /* Positional sound at the actor's camera-space position (Sound::Play(3, id, pos)). */
-extern void func_0201267c(unsigned int id, void *p);
-extern void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
+namespace Particle {
+struct System {
+    static void *NewSimple(unsigned int id, int x, int y, int z);
+};
+}
 extern short data_02082214[];   /* SINE_TABLE: {sin, cos} pairs in fix12, indexed by angle >> 4 */
 /* This scalar entry follows its C definition, including u16 startFrame.
-   ModelAnim.h instead declares u32; that shared contract is still unresolved. */
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, u16);
+   dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */
 extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);
 /* Play2D(3, id): a sound with no position. */
 extern unsigned int func_0201277c(unsigned int id);
 extern signed char data_0209f2f8;   /* LEVEL_ID */
 extern s8 data_ov002_02111184;      /* DISPLAY_TIMER: nonzero shows the course timer */
-extern bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int d, int e);
+extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 extern void func_02012694(u32 a, void *b);
-unsigned int func_02012790(unsigned int id);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
 extern Timer data_0209d4c8;         /* TIME_TIMER: the course timer */
 extern void Vec3_Asr(void *destination, void *source, int shift);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* m, short angY);
-extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int a, int b, unsigned char g);
 extern struct Matrix4x3 data_020a0e68;  /* MATRIX_SCRATCH_PAPER */
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int r, int h, unsigned int d, unsigned int e);
 /* The existing C initializer erases pointer slots to integers. Keep the
    evidenced actor view here; repairing the shared initializer is separate. */
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int r, int h, void *p, int q);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *self, void *actor, int r, int h, void *p, int q);
 /* The files InitResources loads and CleanupResources releases; see ANIM_*. */
 extern RNkModelFileHandle gdaRNkNokonokoModelFile;      /* the model (BMD) */
 extern RNkAnimationFileHandle data_ov062_0211e014;  /* ANIM_RUN_START */
@@ -222,7 +217,7 @@ int daRNk_c::InitResources()
     unsigned char b;
     int zero;
 
-    Model::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoModelFile);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoModelFile);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e014);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e024);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoWalkEdAnimationFile);
@@ -230,7 +225,7 @@ int daRNk_c::InitResources()
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoWait2AnimationFile);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e02c);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e004);
-    if (mModelAnim.SetFile((BMD_File *)gdaRNkNokonokoModelFile.file, 1, -1) == 0)
+    if (mAnmModel.SetFile((BMD_File *)gdaRNkNokonokoModelFile.filePtr, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
         return 0;
@@ -239,7 +234,7 @@ int daRNk_c::InitResources()
     mScaleY = 0x14cc;
     mScaleZ = 0x14cc;
     /* Body cylinder: radius 120 units, height 300 units. */
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x78000, 0x12c000, 0x800004, 0);
+    mdCcAc_c.Init(this, 0x78000, 0x12c000, 0x800004, 0);
     zero = 0;
     mState = zero;
     unk_3aa = (s16)zero;
@@ -250,7 +245,7 @@ int daRNk_c::InitResources()
     mVertAccel = -0x2000;           /* gravity: 2 units a frame squared */
     mTerminalVelocity = -0x3c000;   /* 60 units a frame */
     /* Mesh collision: 120 units by 120 units. */
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x78000, 0x78000, 0, 0);
+    mWithMeshClsn.Init(this, 0x78000, 0x78000, 0, 0);
     mPathPtr.FromID(param1 & 0xf);
     mNumPathPts = mPathPtr.NumNodes();
     mCurPathPt = zero;
@@ -289,7 +284,8 @@ int daRNk_c::CleanupResources()
     ((SharedFilePtr *)&gdaRNkNokonokoWait2AnimationFile)->Release();
     ((SharedFilePtr *)&data_ov062_0211e02c)->Release();
     ((SharedFilePtr *)&data_ov062_0211e004)->Release();
-    if (mIsRacing) _ZN5Sound22StopLoadedMusic_Layer2Ev();
+    if (mIsRacing)
+        Sound::StopLoadedMusic_Layer2();
     return 1;
 }
 
@@ -299,26 +295,26 @@ int daRNk_c::CleanupResources()
    body cylinder and draw the drop shadow. */
 int daRNk_c::Behavior()
 {
-  StateFunc *states = data_ov062_0211e0a4;
-  (this->*states[mState])();
-  mModelAnim.Advance();
-  mAngleY = mPrevAngleY;
-  UpdatePos(&mdCcAc_c);
-  UpdateWMClsn(mWithMeshClsn, 0);
-  mdCcAc_c.Clear();
-  mdCcAc_c.Update();
-  func_ov062_0211aac0();
-  return 1;
+    StateFunc *states = data_ov062_0211e0a4;
+    (this->*states[mState])();
+    mAnmModel.Advance();
+    mAngleY = mPrevAngleY;
+    UpdatePos(&mdCcAc_c);
+    UpdateWMClsn(mWithMeshClsn, 0);
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
+    func_ov062_0211aac0();
+    return 1;
 }
 
 // @symbol _ZN7daRNk_c6RenderEv
-/* Model is the real class now, through daRNk_c.h: HideMaterial is its own
-   non-virtual and the slot-5 virtual is Render, which ModelAnim overrides. */
+/* dExtSimpleModel_c is the real class now, through daRNk_c.h: HideMaterial is its own
+   non-virtual and the slot-5 virtual is Render, which dExtAnmModel_c overrides. */
 int daRNk_c::Render()
 {
-  mModelAnim.HideMaterial(0, 1);
-  mModelAnim.Render(&mScale);
-  return 1;
+    mAnmModel.HideMaterial(0, 1);
+    mAnmModel.Render(&mScale);
+    return 1;
 }
 
 // @symbol _ZN7daRNk_c19func_ov062_0211aac0Ev
@@ -326,13 +322,17 @@ int daRNk_c::Render()
    matrix expects) and heading in the scratch matrix, copy it into the model's matrix,
    and give DropShadowRadHeight a radius and height of 160 units. */
 void daRNk_c::func_ov062_0211aac0(){
-  struct Vector3 v;
-  Vec3_Asr(&v, &this->mPosX, 3);
-  Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-  Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
-  { struct M43w { int w[12]; };  /* array-wrapper copy: keeps C's block copy under -lang c++ */
-    *(M43w*)&this->mModelAnim.mat4x3 = *(M43w*)&data_020a0e68; }
-  _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(this, &this->mShadowModel, &this->mModelAnim.mat4x3, 0xa0000, 0xa0000, 0xf);
+    struct Vector3 v;
+    Vec3_Asr(&v, &this->mPosX, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
+    {
+        struct M43w {
+            int w[12];
+        }; /* array-wrapper copy: keeps C's block copy under -lang c++ */
+        *(M43w *)&this->mAnmModel.mat4x3 = *(M43w *)&data_020a0e68;
+    }
+    DropShadowRadHeight(this->mShadowModel, this->mAnmModel.mat4x3, 0xa0000, 0xa0000, 0xf);
 }
 
 // @symbol _ZN7daRNk_c19func_ov062_0211a9c4Ev
@@ -403,7 +403,7 @@ void daRNk_c::func_ov062_0211a740()
         if (ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep) != 0) {
             SET_ANIM(this, ANIM_TALK, kAnimLoop);
             this->mStep += 1;
-            func_0201267c(kSfxTurnToTalk, &this->mCamSpacePosX);
+            func_0201267c(kSfxTurnToTalk, &this->mCamSpacePos);
             if (this->mPlayer->param1 == 0) {
                 func_02012790(0xa);
                 this->mIsTalkingToMario = 1;
@@ -500,22 +500,22 @@ void daRNk_c::func_ov062_0211a1f4()
             this->mStep++;
         return;
     case 1:
-        _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x14, 0x7f, 0x6b000, 0);
+        Sound::PlaySub(0x1f, 0x14, 0x7f, 0x6b000, 0);
         if (this->mPlayer->GetTalkState() != -1)
             return;
-        _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x7f, 0, 0x7f000, 0);
+        Sound::PlaySub(0x1f, 0x7f, 0, 0x7f000, 0);
         func_02012694(kSfx4D, &this->mCamSpacePosX);
-        _ZN5Sound22LoadAndSetMusic_Layer2Ej(kMusicRace);
+        Sound::LoadAndSetMusic_Layer2(kMusicRace);
         this->mIsRacing = 1;
         this->mStep++;
         SET_ANIM(this, ANIM_RUN_START, kAnimPlayOnce);
         data_ov002_02111184 = 1;
         data_0209d4c8.StartTimer();
-        func_0201267c(kSfx4D, &this->mCamSpacePosX);
+        func_0201267c(kSfx4D, &this->mCamSpacePos);
         return;
     case 2:
         progress = func_ov062_02119af0();
-        if (this->mModelAnim.file == (BCA_File *)ANIM_RUN)
+        if (this->mAnmModel.file == (BCA_File *)ANIM_RUN)
             func_ov062_02119800();
         if (progress == PATH_DONE) {
             daRFlag_c *flag;
@@ -537,7 +537,7 @@ void daRNk_c::func_ov062_0211a1f4()
            (135 degrees), scale by normalY * 7 - 6 (1.0 on level ground, less
            on a slope); otherwise full speed (1.0). */
         if (this->GetSubtraction(this->mPrevAngleY,
-                _ZN4cstd5atan2E5Fix12IiES1_(this->mFloorNormalX, this->mFloorNormalZ)) >= 0x6000)
+                                 cstd::atan2(this->mFloorNormalX, this->mFloorNormalZ)) >= 0x6000)
             speedScale = this->mFloorNormalY * 7 - 0x6000;
         else
             speedScale = 0x1000;
@@ -565,12 +565,13 @@ void daRNk_c::func_ov062_0211a1f4()
             ApproachLinear(this->mHorzSpeed, FX_MUL(acc, speedScale), speedMul * 0x19a);
         }
         ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep);
-        if (this->mModelAnim.file == (BCA_File *)ANIM_RUN) {
-            this->mModelAnim.speed = this->mHorzSpeed >> 3;
+        if (this->mAnmModel.file == (BCA_File *)ANIM_RUN) {
+            this->mAnmModel.speed = this->mHorzSpeed >> 3;
         } else {
-            this->mModelAnim.speed = 0x1000;
-            if (this->mModelAnim.Finished() != 0 &&
-                (this->mModelAnim.file == (BCA_File *)ANIM_RUN_START || this->mModelAnim.file == (BCA_File *)ANIM_LAND))
+            this->mAnmModel.speed = 0x1000;
+            if (this->mAnmModel.Finished() != 0 &&
+                (this->mAnmModel.file == (BCA_File *)ANIM_RUN_START ||
+                 this->mAnmModel.file == (BCA_File *)ANIM_LAND))
                 SET_ANIM(this, ANIM_RUN, kAnimLoop);
         }
         if (progress == PATH_NODE_REACHED && (this->mCurPathPt == this->mPathPtToJumpAt1 || this->mCurPathPt == this->mPathPtToJumpAt2)) {
@@ -612,13 +613,13 @@ void daRNk_c::func_ov062_0211a1f4()
         this->mStep = 2;
         this->mVertAccel = -0x2000;     /* InitResources' gravity again */
         SET_ANIM(this, ANIM_LAND, kAnimPlayOnce);
-        this->mModelAnim.currFrame = 0;
+        this->mAnmModel.currFrame = 0;
         tmp[0] = this->mPosX;
         tmp[1] = this->mPosY;
         tmp[2] = this->mPosZ;
         tmp[1] = this->mPosY + kDustHeight;
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kPtclLandingDust, this->mPosX,
-            this->mPosY + kDustHeight, this->mPosZ);
+        Particle::System::NewSimple(kPtclLandingDust, this->mPosX, this->mPosY + kDustHeight,
+                                    this->mPosZ);
         return;
     default:
         return;
@@ -630,13 +631,13 @@ void daRNk_c::func_ov062_0211a1f4()
    step); when the current animation is about to hit its last frame, fix the
    speed at 3 units, play ANIM_BRAKE once and go to STATE_STOP. */
 void daRNk_c::func_ov062_0211a168(){
-  ApproachLinear(this->mHorzSpeed, 0x3000, 0x1000);
-  if (this->mModelAnim.WillHitFrame(
-        (unsigned short)(this->mModelAnim.GetFrameCount() - 1)) == 0) return;
-  this->mState = daRNk_c::STATE_STOP;
-  this->mHorzSpeed = 0x3000;
-  this->mStep = 0;
-  SET_ANIM(this, ANIM_BRAKE, kAnimPlayOnce);
+    ApproachLinear(this->mHorzSpeed, 0x3000, 0x1000);
+    if (this->mAnmModel.WillHitFrame((unsigned short)(this->mAnmModel.GetFrameCount() - 1)) == 0)
+        return;
+    this->mState = daRNk_c::STATE_STOP;
+    this->mHorzSpeed = 0x3000;
+    this->mStep = 0;
+    SET_ANIM(this, ANIM_BRAKE, kAnimPlayOnce);
 }
 
 // @symbol _ZN7daRNk_c19func_ov062_0211a0f0Ev
@@ -646,7 +647,8 @@ void daRNk_c::func_ov062_0211a168(){
 void daRNk_c::func_ov062_0211a0f0()
 {
     ApproachLinear(this->mHorzSpeed, 0, 0x4000);
-    if (!this->mModelAnim.Finished()) return;
+    if (!this->mAnmModel.Finished())
+        return;
     SET_ANIM(this, ANIM_IDLE, kAnimLoop);
     this->mState = daRNk_c::STATE_POST_RACE_TALK;
     this->mStep = 0;
@@ -706,7 +708,7 @@ void daRNk_c::func_ov062_02119be0() {
         this->mStep++;
         SET_ANIM(this, ANIM_TALK, kAnimLoop);
         if (this->mHasFinished == 0) {
-            _ZN5Sound22StopLoadedMusic_Layer2Ev();
+            Sound::StopLoadedMusic_Layer2();
             func_0201277c(kSfx4D);
             this->mIsRacing = 0;
             this->mHasFinished = 1;
@@ -848,7 +850,7 @@ int daRNk_c::func_ov062_02119af0() {
     prevZ = p->mPrevPathPt.z;
     dz = targetZ - posZ;
     dzc = targetZ - prevZ;
-    p->mTargetAngleY = (short)_ZN4cstd5atan2E5Fix12IiES1_(dx, dz);
+    p->mTargetAngleY = (short)cstd::atan2(dx, dz);
     int dot = (dxc >> 0xc) * (dx >> 0xc) + (dzc >> 0xc) * (dz >> 0xc);
     if (dot <= 0 || Vec3_Dist(&p->mPos, (Vector3 *)&p->mPathTarget) < (p->mHorzSpeed >> 1)) {
         int v = p->mPathTarget.x;
@@ -953,7 +955,7 @@ void daRNk_c::func_ov062_02119954()
 void daRNk_c::func_ov062_02119800()
 {
     volatile int stack[3];
-    unsigned int kind = ((unsigned int)(this->mModelAnim.currFrame << 4)) >> 16;
+    unsigned int kind = ((unsigned int)(this->mAnmModel.currFrame << 4)) >> 16;
     short ang;
     int x, y, z;
 
@@ -970,7 +972,7 @@ check_hi:
 body:
     if (this->mFootstepDone != 0)
         return;
-    func_0201267c(kSfxFootstep, &this->mCamSpacePosX);
+    func_0201267c(kSfxFootstep, &this->mCamSpacePos);
     this->mFootstepDone = 1;
 
     ang = this->mAngleY;
@@ -1010,7 +1012,7 @@ add_path:
         stack[2] = (int)(cosA * k) + z;
     }
 do_new:
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kPtclFootstepDust, (int)stack[0], (int)stack[1], (int)stack[2]);
+    Particle::System::NewSimple(kPtclFootstepDust, (int)stack[0], (int)stack[1], (int)stack[2]);
     return;
 
 reset:

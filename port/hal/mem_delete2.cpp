@@ -30,7 +30,18 @@
 // duplicate is a link error, which is loud -- not a silent divergence.
 #include <new>
 
+#include "Memory.h"
+
 extern "C" void _ZN6Memory16operator_delete2EPv(void *ptr)
 {
     ::operator delete(ptr);
+}
+
+// The class headers call Memory::operator_delete2. mwcc mangles that to the
+// Itanium name above. MSVC decorates the namespace function on its own, so the
+// host link needs this definition as well as the Itanium spelling.
+namespace Memory {
+void operator_delete2(void *ptr) {
+    ::operator delete(ptr);
+}
 }

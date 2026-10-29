@@ -1,4 +1,5 @@
 #include "types.h"
+#include "private/arm9_a9db8_mb_parent.h"
 extern void func_0205a588(void *dst, int val, int len);
 extern u8 *func_02065d5c(void *src, void *dst);
 extern void CpuCopy8(void *dst, void *src, int len);
@@ -23,8 +24,8 @@ int func_020662c0(void)
     func_0205a588(buf, mask, 16);
 
     for (n = 1; n <= 15; n++) {
-        if (*(int *)((char *)data_020a9db8 + (n - 1) * 4 + 0x14e8) == 5) {
-            s8 t = *(s8 *)((char *)data_020a9db8 + (n - 1) + 0x1526);
+        if (((MbParentWork *)data_020a9db8)->mChildState[n - 1] == 5) {
+            s8 t = ((MbParentWork *)data_020a9db8)->mChildFile[n - 1];
             buf[t]++;
         }
     }
@@ -32,7 +33,7 @@ int func_020662c0(void)
     c = data_0209a078;
     for (k = 0; k < 16; k++) {
         c = (c + 1) % 16;
-        if (*(u8 *)((char *)data_020a9db8 + c * 0x5c4 + 0x1d4a) != 0) {
+        if (((MbParentWork *)data_020a9db8)->mFiles[c].mActive != 0) {
             if (buf[c] != 0) {
                 found = c;
                 break;
@@ -45,8 +46,8 @@ int func_020662c0(void)
 
     data_0209a078 = found;
     for (n = 1; n <= 15; n++) {
-        if (*(int *)((char *)data_020a9db8 + (n - 1) * 4 + 0x14e8) == 5) {
-            if (found == *(s8 *)((char *)data_020a9db8 + (n - 1) + 0x1526))
+        if (((MbParentWork *)data_020a9db8)->mChildState[n - 1] == 5) {
+            if (found == ((MbParentWork *)data_020a9db8)->mChildFile[n - 1])
                 mask |= 1 << n;
         }
     }
@@ -55,7 +56,7 @@ int func_020662c0(void)
     local.b = found;
     ret = func_02065d5c(&local, data_020a9db8);
     if (ret != 0)
-        CpuCopy8((char *)data_020a9db8 + 0x1788 + found * 0x5c4, ret, 0xe4);
+        CpuCopy8(((MbParentWork *)data_020a9db8)->mFiles[found].mHeader, ret, 0xe4);
 
     return func_02067f2c(0xea, mask, (u32)data_020a9db8);
 }

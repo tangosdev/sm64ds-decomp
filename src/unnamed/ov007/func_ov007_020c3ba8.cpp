@@ -1,8 +1,5 @@
 //cpp
-
-namespace cstd {
-int div(int, int);
-}
+#include "cstd.h"
 
 extern "C" {
 extern int func_02070348(int);

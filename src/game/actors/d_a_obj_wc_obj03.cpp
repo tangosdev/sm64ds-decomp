@@ -1,6 +1,5 @@
 //cpp
 /* PROMOTED translation unit -- ov029/daObjWc_Obj03_c (10 function(s)).
- * deslop
  *
  * Wet-Dry World's water diamond (profile WATER_DIAMOND, actor 97): a spinning
  * crystal that, when Mario touches it, sets the WDW water (daObjWc_Mizu_c,
@@ -19,17 +18,13 @@
  * include/daObjWc_Obj03_c.h, declared last, and so emits first, which is
  * where the cartridge has it.
  *
- * Leftover:
- * - dCcAc_c::Init stays the scalar mangled ABI (InitResources). A real member
- *   call homes Fix12<int> by value onto the stack (notes/mwccarm-codegen.md 6az).
+ * What stays:
  * - data_ov029_02114270 is the model SharedFilePtr, defined here; symbols.txt
  *   has no recovered name, so it is not coined.
- * - Matrix4x3_FromRotationY stays an extern "C" free function
- *   (UpdateModelTransform).
  * - Address-valued `&mAngleY` in Behavior: a named increment CSEs the field
  *   address. The cartridge keeps r1 as &mAngleY for both the halfword load
  *   and store.
- * - Class header first so Model.h's structured Matrix4x3 (`.t`) wins;
+ * - Class header first so dExtSimpleModel_c.h's structured Matrix4x3 (`.t`) wins;
  *   daObjWc_Mizu_c.h would otherwise pull common.h's flat `s32 m[12]`.
  *
  * Absorbed these legacy one-function sources (ROM address order), all deleted
@@ -46,7 +41,7 @@
  *   [9] 0x02111a84  src/daObjWc_Obj03_c_classInit.c
  */
 
-/* Class header first: Model.h pulls the structured Matrix4x3 (`.t`) that
+/* Class header first: dExtSimpleModel_c.h pulls the structured Matrix4x3 (`.t`) that
  * UpdateModelTransform writes. daObjWc_Mizu_c.h -> dBgActor_c.h would otherwise
  * reach common.h's flat `s32 m[12]` spelling first. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -58,20 +53,12 @@ enum d_a_obj_wc_obj03_AssetId {
 #include "daObjWc_Mizu_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
-
-extern "C" {
-/* dCcAc_c::Init's true signature takes Fix12<int> by value. A faithful C++
- * call homes those arguments to the stack and grows InitResources. */
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    void *, dActor_c *, Fix12i, Fix12i, u32, u32);
-void Matrix4x3_FromRotationY(Matrix4x3 *, int);
+#include "math/MtxStack.h"
 
 /* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
  * spelling is local; the manifest aliases the generated names to those ROM
  * symbols. */
 struct WcObj03ModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     WcObj03ModelFilePtr(u32 fileID);
     ~WcObj03ModelFilePtr();
 };
@@ -80,7 +67,6 @@ struct WcObj03ModelFilePtr : SharedFilePtr {
  * loads it, CleanupResources releases it. Defined at the end of this file so
  * the constructor does not enter .text. */
 extern WcObj03ModelFilePtr data_ov029_02114270;
-}
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -99,7 +85,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
  * Every instruction the cartridge has here falls out of the one `new`.
  * 0x02111a88 loads 0x160 -- the class's own size -- into the header's leaf
  * operator new; 0x02111a98 calls dActor_c's C2, the store at 0x02111aa4 lays
- * down this class's vptr, and the two member ctors (Model at 0xd4, dCcAc_c
+ * down this class's vptr, and the two member ctors (dExtSimpleModel_c at 0xd4, dCcAc_c
  * at 0x124) follow. The null check is the one `new` itself emits. The
  * implicit constructor is what keeps the intervening construction inlined;
  * declaring a constructor of our own would emit a `bl` the factory does not
@@ -114,9 +100,8 @@ extern "C" daObjWc_Obj03_c *daObjWc_Obj03_c_classInit()
 // @symbol _ZN15daObjWc_Obj03_c13InitResourcesEv
 int daObjWc_Obj03_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov029_02114270), 1, -1);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &mCylinder, this, 0x32000, 0x64000, 0x800002, 0);
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov029_02114270), 1, -1);
+    mCylinder.Init(this, 0x32000, 0x64000, 0x800002, 0);
     mWaterID = 0;
     mWaterParam = param1 & 1;
     mActive = 0;
@@ -248,7 +233,7 @@ void daObjWc_Obj03_c::CheckClsnWithPlayer()
  * what emits the used D1/D0 pair in cartridge order and keeps this TU the
  * vtable's home.
  *
- * Both bodies destroy dCcAc_c at +0x124 and Model at +0xd4 in reverse
+ * Both bodies destroy dCcAc_c at +0x124 and dExtSimpleModel_c at +0xd4 in reverse
  * construction order, then chain to dActor_c. D0 then returns the object to
  * the actor heap through dActor_c's inline operator delete.
  */

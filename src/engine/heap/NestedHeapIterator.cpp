@@ -30,7 +30,7 @@
  *   mCount and mLinkOffset it used to carry measured byte-neutral as plain
  *   member spellings and are gone.
  * - func_0204df54 calls the ctor by its mangled spelling: the explicit
- *   `_ZN18NestedHeapIteratorC1Ej' on &mChildren is the matched ABI seam --
+ *   NestedHeapIterator(u32) C1 call on &mChildren is the matched ABI seam --
  *   the body registers child lists on an already-built object, so the
  *   original could not have been an in-place `new'.
  */

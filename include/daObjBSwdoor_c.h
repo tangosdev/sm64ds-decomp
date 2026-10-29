@@ -4,8 +4,6 @@
 #include "types.h"
 #include "daObjSwdoor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /**
  * Bob-omb Battlefield's switch-operated shutter. ov014 SHUTTER_BOB (40).
  *
@@ -22,13 +20,9 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 struct daObjBSwdoor_c : daObjSwdoor_c {
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
     virtual ~daObjBSwdoor_c() {}
-    virtual s32 Behavior();           /* slot 6 */
-    virtual s32 CleanupResources();   /* slot 3 */
-    virtual s32 InitResources();      /* slot 0 */
-
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj(size);
-    }
+    virtual s32 Behavior();         /* slot 6 */
+    virtual s32 CleanupResources(); /* slot 3 */
+    virtual s32 InitResources();    /* slot 0 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

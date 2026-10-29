@@ -100,8 +100,8 @@
     {
       "offset": "0x0d4",
       "name": "mModel",
-      "type": "Model",
-      "evidence": "D1 destroys a Model here (_ZN5ModelD1Ev); UpdateModelPosAndRotY writes its matrix at 0xf0 and translation row at 0x114/0x118/0x11c"
+      "type": "dExtSimpleModel_c",
+      "evidence": "D1 destroys a dExtSimpleModel_c here (_ZN17dExtSimpleModel_cD1Ev); UpdateModelPosAndRotY writes its matrix at 0xf0 and translation row at 0x114/0x118/0x11c"
     },
     {
       "offset": "0x124",

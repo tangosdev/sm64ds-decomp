@@ -1844,12 +1844,8 @@ def demangled_arity(symbol, root=REPO):
     return info.get("nargs")
 
 
-def _direct_destructor_marker(text):
-    """One ordinary, exactly encoded direct D1/D2 identity; no ABI guess yet."""
-    _code, marks = scrub(text)
-    if len(marks) != 1:
-        return None
-    symbol = marks[0][1]
+def _decode_direct_destructor(symbol):
+    """(symbol, owner, encoded prefix) for an ordinary direct D1/D2, else None."""
     if not symbol.startswith("_ZN") or not symbol.endswith(("D1Ev", "D2Ev")):
         return None
     encoded = symbol[3:-4]
@@ -1864,7 +1860,56 @@ def _direct_destructor_marker(text):
         if len(name) != length or IDENT.fullmatch(name) is None:
             return None
         parts.append(name)
-    return (symbol, "::".join(parts)) if parts else None
+    if not parts:
+        return None
+    prefix = "_ZN" + "".join("%d%s" % (len(part), part) for part in parts)
+    return symbol, "::".join(parts), prefix
+
+
+def _direct_destructor_marker(text):
+    """One ordinary, exactly encoded direct D1/D2 identity; no ABI guess yet."""
+    _code, marks = scrub(text)
+    if len(marks) != 1:
+        return None
+    decoded = _decode_direct_destructor(marks[0][1])
+    return None if decoded is None else (decoded[0], decoded[1])
+
+
+def _element_destructor_marker(text, extra_symbols=()):
+    """A leftover direct D1/D2 mark for a type this file does not define.
+
+    A one-function carrier has that mark alone. A multi-function TU marks every
+    method and can carry one extra mark for an inline element destructor it
+    emits but does not define. Marks in a definition's window name that
+    definition. A mark whose class this file already names is that class's
+    destructor, not an element.
+    """
+    code, marks = scrub(text)
+    if len(marks) <= 1:
+        return None
+    attached = set()
+    for start, chunk, term, *_rest in top_level_units(code, "C++"):
+        if term != "{":
+            continue
+        decl_start = start + (len(chunk) - len(chunk.lstrip()))
+        window = [idx for idx, _sym in marks if start <= idx < decl_start]
+        if window:
+            attached.update(window)
+    found = []
+    for idx, sym in marks:
+        if idx in attached:
+            continue
+        decoded = _decode_direct_destructor(sym)
+        if decoded:
+            found.append(decoded)
+    if len(found) != 1:
+        return None
+    symbol, owner, prefix = found[0]
+    others = {sym for _idx, sym in marks} | set(extra_symbols)
+    others.discard(symbol)
+    if symbol in extra_symbols or any(other.startswith(prefix) for other in others):
+        return None
+    return symbol, owner
 
 
 def _inline_directive_text(line):
@@ -2046,12 +2091,14 @@ def inline_destructor_definitions(root, targets, definitions):
         if not rel.endswith((".cc", ".cpp")) or not (root / rel).exists():
             continue
         text = (root / rel).read_text(encoding="utf-8", errors="replace")
-        marker = _direct_destructor_marker(text)
+        direct = _direct_destructor_marker(text)
+        file_symbols = {d.symbol for d in definitions if d.file == rel}
+        marker = direct or _element_destructor_marker(text, file_symbols)
         if marker is None or marker[0] in defined:
             continue
         symbol, owner = marker
         _code, _certain, includes, source_macros = _inline_cpp_view(text)
-        context_macros = _inline_include_macros(root, rel, text)
+        context_macros = _inline_include_macros(root, rel, text, strict=direct is not None)
         if context_macros is None or set(owner.split("::")) & set(context_macros):
             continue
         possibilities = []
@@ -2082,7 +2129,7 @@ def inline_destructor_definitions(root, targets, definitions):
     return result
 
 
-def _inline_include_macros(root, rel, text):
+def _inline_include_macros(root, rel, text, strict=True):
     """Possible owner renames from the carrier's whole available include context.
 
     Header bodies are still recovered only through a direct include, but macros
@@ -2106,19 +2153,28 @@ def _inline_include_macros(root, rel, text):
             return None
         code, _certain, _includes, local_macros = _inline_cpp_view(
             content, header=path.endswith(HEADER_SUFFIXES), keep_includes=True)
-        # A textual include can carry an open namespace/class scope into its
-        # caller. Reject scope transfer and uncertain braces rather than pretend
-        # every separately read header starts in the global namespace.
+        # A textual include can carry an open namespace into its caller.
+        # Strict carriers reject every uncertain brace. An element carrier
+        # rejects an uncertain namespace or extern, not a struct under #ifndef.
         visible, _marks = scrub(code)
         depth = 0
+        uncertain = []
         for i, char in enumerate(visible):
+            if not _certain[i]:
+                uncertain.append(char)
             if char in "{}":
-                if not _certain[i]:
+                # A strict carrier rejects every uncertain brace. An element
+                # carrier still rejects an uncertain namespace or extern, which
+                # can wrap a later include, but not a struct buried in #ifndef.
+                if strict and not _certain[i]:
                     return None
                 depth += 1 if char == "{" else -1
                 if depth < 0:
                     return None
         if depth:
+            return None
+        if (not strict and uncertain
+                and re.search(r"\b(?:namespace|extern)\b", "".join(uncertain))):
             return None
         used_names.update(IDENT.findall(visible))
         if {'_MSC_VER', '__cplusplus'} & local_macros:
@@ -2139,8 +2195,12 @@ def _inline_include_macros(root, rel, text):
                 return None
     # Object/function macros may manufacture scopes without spelling the owner
     # or braces at their use site. Do not attempt expansion: any context macro
-    # used in non-directive code makes this bounded lookup uncertain.
-    return None if used_names & set(macros) else macros
+    # used in non-directive code makes a strict lookup uncertain. An element
+    # carrier keeps expression macros (FX_MUL and the like); a macro named the
+    # owner is still rejected by the caller.
+    if strict and used_names & set(macros):
+        return None
+    return macros
 
 
 def _inline_changed_symbols(touched, base, root):
@@ -2162,6 +2222,8 @@ def _inline_changed_symbols(touched, base, root):
             versions.append(blob_text(rel, base, root))
         for text in versions:
             marker = _direct_destructor_marker(text) if text is not None else None
+            if marker is None and text is not None:
+                marker = _element_destructor_marker(text)
             if marker is not None:
                 symbols.add(marker[0])
     return symbols
@@ -2205,6 +2267,19 @@ def _reference(symbol, decls, defs):
     return best[0], "plurality"
 
 
+def _cxx_linkage(decl):
+    """True when `decl` can only have C++ linkage.
+
+    A bare `.h` declaration is read with unknown linkage, because the includer
+    decides. A reference parameter settles it: no C compiler accepts `int &`, so a
+    header spelling one is only ever included from C++ and names the C++ overload.
+    """
+    if decl.linkage == "C++":
+        return True
+    return (decl.linkage == "?" and decl.params is not UNSPECIFIED
+            and any(p.endswith("&") for p in decl.params))
+
+
 def _overload_reference(decl, definitions, unmangled, fallback):
     """Select an existing native C++ overload without guessing its signature.
 
@@ -2213,7 +2288,7 @@ def _overload_reference(decl, definitions, unmangled, fallback):
     C linkage, explicit linker names, unknown signatures, and unmatched types;
     none of those can be excused merely by another overload's existence.
     """
-    if (not decl.is_function or decl.linkage != "C++" or decl.is_member
+    if (not decl.is_function or not _cxx_linkage(decl) or decl.is_member
             or decl.this_unknown
             or decl.symbol.startswith("_Z") or decl.symbol in unmangled
             or decl.params is UNSPECIFIED):
@@ -2268,6 +2343,17 @@ def disagreements(decls, defs, unmangled, root=REPO):
     defs_by_symbol = {}
     for d in defs:
         defs_by_symbol.setdefault(d.symbol, []).append(d)
+    # A marked overload definition is keyed by its `_Z` name, while a native call
+    # site's declaration is keyed by the bare name it spells. Index the free C++
+    # definitions by that bare name too, so a declaration can find its overload.
+    defs_by_bare = {}
+    for d in defs:
+        if (d.symbol.startswith("_Z") and d.is_function and d.linkage == "C++"
+                and not d.is_member):
+            info = _demangled(d.symbol, root)
+            bare = info.get("qualified")
+            if bare and not info.get("class") and "::" not in bare:
+                defs_by_bare.setdefault(bare, []).append(d)
 
     out = []
     for symbol in sorted(by_symbol):
@@ -2276,7 +2362,8 @@ def disagreements(decls, defs, unmangled, root=REPO):
         default_reference = _reference(symbol, group, own)
         want_arity = demangled_arity(symbol, root)
         for d in group:
-            ref, basis = _overload_reference(d, own, unmangled, default_reference)
+            ref, basis = _overload_reference(d, own or defs_by_bare.get(symbol, []),
+                                             unmangled, default_reference)
             if d is not ref and d.is_function != ref.is_function:
                 out.append(_finding(symbol, "kind", d, ref, basis,
                                     "function" if d.is_function else "data",

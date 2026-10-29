@@ -1,10 +1,10 @@
 _ZN9daSBird_cD1Ev kind:function(arm,size=0x38) addr:0x021111a0
 _ZN9daSBird_cD0Ev kind:function(arm,size=0x4c) addr:0x021111d8
-_ZN9daSBird_c19func_ov009_02111224Ei kind:function(arm,size=0x10) addr:0x02111224
-_ZN9daSBird_c19func_ov009_02111234Ev kind:function(arm,size=0x228) addr:0x02111234
-func_ov009_0211145c kind:function(arm,size=0x17c) addr:0x0211145c
-_ZN9daSBird_c19func_ov009_021115d8Ev kind:function(arm,size=0x114) addr:0x021115d8
-_ZN9daSBird_c19func_ov009_021116ecEv kind:function(arm,size=0x150) addr:0x021116ec
+_ZN9daSBird_c14AttachToLeaderEi kind:function(arm,size=0x10) addr:0x02111224
+_ZN9daSBird_c8StateFlyEv kind:function(arm,size=0x228) addr:0x02111234
+_ZN9daSBird_c16StateLaunchFlockEv kind:function(arm,size=0x17c) addr:0x0211145c
+_ZN9daSBird_c18StateWaitForPlayerEv kind:function(arm,size=0x114) addr:0x021115d8
+_ZN9daSBird_c15StateSpawnFlockEv kind:function(arm,size=0x150) addr:0x021116ec
 _ZN9daSBird_c16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x0211183c
 _ZN9daSBird_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0211186c
 _ZN9daSBird_c6RenderEv kind:function(arm,size=0x28) addr:0x02111870
@@ -13,7 +13,7 @@ _ZN9daSBird_c13InitResourcesEv kind:function(arm,size=0xb4) addr:0x0211197c
 daSBird_c_classInit kind:function(arm,size=0x40) addr:0x02111a30
 _ZN14daObjMcWater_cD1Ev kind:function(arm,size=0x4c) addr:0x02111a70
 _ZN14daObjMcWater_cD0Ev kind:function(arm,size=0x60) addr:0x02111abc
-func_ov009_02111b1c kind:function(arm,size=0xb8) addr:0x02111b1c
+_ZN14daObjMcWater_c15SpawnWaterfallsEv kind:function(arm,size=0xb8) addr:0x02111b1c
 _ZN14daObjMcWater_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111bd4
 _ZN14daObjMcWater_c6RenderEv kind:function(arm,size=0x34) addr:0x02111c18
 _ZN14daObjMcWater_c8BehaviorEv kind:function(arm,size=0x28) addr:0x02111c4c
@@ -58,11 +58,11 @@ data_ov009_02112434 kind:data(any) addr:0x02112434 ambiguous
 data_ov009_02112438 kind:data(any) addr:0x02112438 ambiguous
 data_ov009_0211244c kind:data(any) addr:0x0211244c ambiguous
 __sinit_d_a_s_bird.cpp kind:function(arm,size=0xcc) addr:0x02112458
-__sinit_ov009_02112524 kind:function(arm,size=0x538) addr:0x02112524
+__sinit_d_a_obj_mc_water.cpp kind:function(arm,size=0x538) addr:0x02112524
 __sinit_d_a_obj_mc_metalnet.cpp kind:function(arm,size=0x6c) addr:0x02112a5c
 __sinit_d_a_mc_flag.cpp kind:function(arm,size=0x6c) addr:0x02112ac8
 .p__sinit_d_a_s_bird.cpp kind:data(word) addr:0x02112b34
-.p__sinit_ov009_02112524 kind:data(word) addr:0x02112b38
+.p__sinit_d_a_obj_mc_water.cpp kind:data(word) addr:0x02112b38
 .p__sinit_d_a_obj_mc_metalnet.cpp kind:data(word) addr:0x02112b3c
 .p__sinit_d_a_mc_flag.cpp kind:data(word) addr:0x02112b40
 data_ov009_02112b60 kind:data(any) addr:0x02112b60
@@ -178,8 +178,8 @@ data_ov009_02113c28 kind:bss addr:0x02113c28
 @381 kind:bss addr:0x02113c30
 @382 kind:bss addr:0x02113c3c
 data_ov009_02113c48 kind:bss addr:0x02113c48
-data_ov009_02113c68 kind:bss addr:0x02113c68
-data_ov009_02113c70 kind:bss addr:0x02113c70
+gMcWaterModelFile kind:bss addr:0x02113c68
+gMcWaterCollisionFile kind:bss addr:0x02113c70
 data_ov009_02113c78 kind:bss addr:0x02113c78
 data_ov009_02113c84 kind:bss addr:0x02113c84
 data_ov009_02113c90 kind:bss addr:0x02113c90

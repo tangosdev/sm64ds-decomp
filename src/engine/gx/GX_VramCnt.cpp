@@ -80,8 +80,8 @@ void Vram__Map(int mask) {
 
 namespace GX {
 
-// @symbol _ZN2GX12SetBankForBGEt
-void SetBankForBG(u16 bg) {
+// @symbol _ZN2GX12SetBankForBGEi
+void SetBankForBG(int bg) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.bg) & ~bg);
     data_020a6088.bg = bg;
     switch (bg) {
@@ -163,8 +163,8 @@ void SetBankForBG(u16 bg) {
     Vram__Map(data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX13SetBankForOBJEt
-void SetBankForOBJ(u16 obj) {
+// @symbol _ZN2GX13SetBankForOBJEi
+void SetBankForOBJ(int obj) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.obj) & ~obj);
     data_020a6088.obj = obj;
     switch (obj) {
@@ -243,8 +243,8 @@ void func_02054748(int bgExtPltt) {
 namespace GX {
 
 /* No texture banks also switches texturing off in DISP3DCNT. */
-// @symbol _ZN2GX13SetBankForTexEt
-void SetBankForTex(u16 tex) {
+// @symbol _ZN2GX13SetBankForTexEi
+void SetBankForTex(int tex) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.tex) & ~tex);
     data_020a6088.tex = tex;
     if (tex == 0) {
@@ -311,8 +311,8 @@ void SetBankForTex(u16 tex) {
     Vram__Map(data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX17SetBankForTexPlttEt
-void SetBankForTexPltt(u16 texPltt) {
+// @symbol _ZN2GX17SetBankForTexPlttEi
+void SetBankForTexPltt(int texPltt) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.texPltt) & ~texPltt);
     data_020a6088.texPltt = texPltt;
     switch (texPltt) {
@@ -355,8 +355,8 @@ void func_02054430(int lcdc) {
 
 namespace GX {
 
-// @symbol _ZN2GX15SetBankForSubBGEt
-void SetBankForSubBG(u16 subBg) {
+// @symbol _ZN2GX15SetBankForSubBGEi
+void SetBankForSubBG(int subBg) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.sub_bg) & ~subBg);
     data_020a6088.sub_bg = subBg;
     switch (subBg) {
@@ -375,8 +375,8 @@ void SetBankForSubBG(u16 subBg) {
     Vram__Map(data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX16SetBankForSubOBJEt
-void SetBankForSubOBJ(u16 subObj) {
+// @symbol _ZN2GX16SetBankForSubOBJEi
+void SetBankForSubOBJ(int subObj) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.sub_obj) & ~subObj);
     data_020a6088.sub_obj = subObj;
     switch (subObj) {
@@ -392,8 +392,8 @@ void SetBankForSubOBJ(u16 subObj) {
     Vram__Map(data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX22SetBankForSubBGExtPlttEt
-void SetBankForSubBGExtPltt(u16 subBgExtPltt) {
+// @symbol _ZN2GX22SetBankForSubBGExtPlttEi
+void SetBankForSubBGExtPltt(int subBgExtPltt) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.sub_bgExtPltt) & ~subBgExtPltt);
     data_020a6088.sub_bgExtPltt = subBgExtPltt;
     if (subBgExtPltt != 0) {
@@ -407,8 +407,8 @@ void SetBankForSubBGExtPltt(u16 subBgExtPltt) {
     Vram__Map(data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX23SetBankForSubOBJExtPlttEt
-void SetBankForSubOBJExtPltt(u16 subObjExtPltt) {
+// @symbol _ZN2GX23SetBankForSubOBJExtPlttEi
+void SetBankForSubOBJExtPltt(int subObjExtPltt) {
     data_020a6088.lcdc =
         (u16)((data_020a6088.lcdc | data_020a6088.sub_objExtPltt) & ~subObjExtPltt);
     data_020a6088.sub_objExtPltt = subObjExtPltt;

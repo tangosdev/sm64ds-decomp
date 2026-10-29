@@ -15,7 +15,7 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN8SaveData21SetCoinRecordIfHigherEah",
+      "symbol": "_ZN8SaveData21SetCoinRecordIfHigherEih",
       "address": "0x02013650",
       "size": "0x1c",
       "ordinal": 0,

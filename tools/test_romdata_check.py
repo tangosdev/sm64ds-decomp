@@ -310,6 +310,70 @@ class PreambleIsGatedOnTheCartridge(unittest.TestCase):
         with unittest.mock.patch.object(RDC, "RV", FakeRV):
             self.assertFalse(RDC._vtable_preamble_at("ov006", 0x200, frozenset()))
 
+class RttiOffSecondaryPreamble(unittest.TestCase):
+    """RTTI off zeroes a secondary preamble that still sits inside the primary _ZTV.
+
+    The cartridge words are a negative offset-to-top and a _ZTI pointer, named at
+    the following symbol's address point. Mask that pair. A zero slot stays a
+    difference, and a preamble the object actually emitted is compared as-is.
+    """
+
+    def check(self, emitted, retail, index, *, extent=24, name="_ZTV3Foo"):
+        elf = unittest.mock.Mock()
+        elf.get_section.return_value.data.return_value = b"prefix" + emitted + b"suffix"
+        with (unittest.mock.patch.object(RDC, "ELFFile", return_value=elf),
+              unittest.mock.patch.object(RDC.RA, "resolve_candidate",
+                                         return_value=("arm9", 0x200)),
+              unittest.mock.patch.object(RDC, "rom_data_index", return_value=index),
+              unittest.mock.patch.object(RDC.LC, "func_relocs_typed", return_value=[]),
+              unittest.mock.patch.object(RDC.RV, "rom_bytes", return_value=retail)):
+            return RDC.verify_data_symbol(b"object", name, 1, 6, len(emitted), names={})
+
+    def test_rtti_off_zeros_are_masked_and_the_slots_still_count(self):
+        slots = b"\x11\x22\x33\x44" * 4
+        tail = b"\x55\x66\x77\x88" * 2
+        emitted = b"\0" * 8 + slots + b"\0" * 8 + tail
+        retail = slots + struct.pack("<II", 0xFFFFFFB0, 0x300) + tail
+        index = {
+            ("arm9", "_ZTV3Foo"): (0x200, 24),
+            ("arm9", "VTable_Thunk"): (0x218, 8),
+            ("arm9", "_ZTI3Foo"): (0x300, 12),
+        }
+        result = self.check(emitted, retail, index)
+        self.assertEqual(result["verdict"], RDC.PARTIAL)
+        self.assertEqual(result["note"], "RTTI-off secondary preamble masked")
+        self.assertEqual(result["bytes"], len(retail) - 8)
+        self.assertEqual(result["blindWords"], 1)
+
+    def test_a_zero_where_the_cartridge_has_a_slot_still_differs(self):
+        slots = b"\x11\x22\x33\x44" * 4
+        emitted = b"\0" * 8 + slots + b"\0" * 8
+        retail = slots + b"\x99\x88\x77\x66" * 2
+        index = {
+            ("arm9", "_ZTV3Foo"): (0x200, 24),
+            ("arm9", "VTable_Thunk"): (0x218, 8),
+            ("arm9", "_ZTI3Foo"): (0x300, 12),
+        }
+        result = self.check(emitted, retail, index, extent=16)
+        self.assertEqual(result["verdict"], RDC.DIFFERS)
+        self.assertNotIn("note", result)
+
+    def test_an_emitted_preamble_is_compared_not_masked(self):
+        slots = b"\x11\x22\x33\x44" * 4
+        preamble = struct.pack("<II", 0xFFFFFFB0, 0x300)
+        tail = b"\x55\x66\x77\x88" * 2
+        body = slots + preamble + tail
+        emitted = b"\0" * 8 + body
+        index = {
+            ("arm9", "_ZTV3Foo"): (0x200, len(body)),
+            ("arm9", "VTable_Thunk"): (0x218, 8),
+            ("arm9", "_ZTI3Foo"): (0x300, 12),
+        }
+        result = self.check(emitted, body, index, extent=len(body))
+        self.assertEqual(result["verdict"], RDC.VERIFIED)
+        self.assertNotIn("note", result)
+
+
 class ObjectLocalDataRenames(unittest.TestCase):
     """Real ELF relocations must use this source's identity, not a global temp."""
 
@@ -424,6 +488,92 @@ class ObjectLocalDataRenames(unittest.TestCase):
         self._named_local_policy()
         self.entry['data'].append(dict(self.entry['data'][1]))
         self.assertEqual(self.check()[0]['blindWords'], 1)
+
+
+class UndefinedImportAliases(unittest.TestCase):
+    """A manifest alias is the address romdata compares, not a second spelling."""
+
+    def setUp(self):
+        self.saved = RDC._alias_by_source
+        self.names = {"_ZN5Model9DoSetFileEPcii": ("arm9", 0x02016bf8)}
+        RDC._alias_by_source = {
+            "src/game/actors/d_a_demo.cpp": [{
+                "undefined_symbol_aliases": [{
+                    "symbol": "_ZN17dExtSimpleModel_c9DoSetFileEPcii",
+                    "canonical_symbol": "_ZN5Model9DoSetFileEPcii",
+                    "canonical_module": "arm9",
+                    "canonical_address": "0x02016bf8",
+                }],
+            }],
+        }
+
+    def tearDown(self):
+        RDC._alias_by_source = self.saved
+
+    def test_alias_resolves_to_the_canonical_address(self):
+        merged = RDC._with_undefined_aliases("src/game/actors/d_a_demo.cpp", self.names)
+        self.assertEqual(merged["_ZN17dExtSimpleModel_c9DoSetFileEPcii"],
+                         ("arm9", 0x02016bf8))
+        self.assertNotIn("_ZN17dExtSimpleModel_c9DoSetFileEPcii", self.names)
+
+    def test_other_sources_are_unchanged(self):
+        self.assertIs(RDC._with_undefined_aliases("src/other.cpp", self.names), self.names)
+
+    def test_disagreement_with_symbols_txt_is_a_refusal(self):
+        self.names["_ZN17dExtSimpleModel_c9DoSetFileEPcii"] = ("arm9", 0x1)
+        with self.assertRaises(ValueError) as caught:
+            RDC._with_undefined_aliases("src/game/actors/d_a_demo.cpp", self.names)
+        self.assertIn("already resolves elsewhere", str(caught.exception))
+
+    def test_a_canonical_that_misses_its_address_is_a_refusal(self):
+        RDC._alias_by_source["src/game/actors/d_a_demo.cpp"][0][
+            "undefined_symbol_aliases"][0]["canonical_address"] = "0x1"
+        with self.assertRaises(ValueError) as caught:
+            RDC._with_undefined_aliases("src/game/actors/d_a_demo.cpp", self.names)
+        self.assertIn("does not resolve exactly", str(caught.exception))
+
+
+class EmittedDataSymbols(unittest.TestCase):
+    """Which defined objects are offered for comparison at all."""
+
+    @staticmethod
+    def symbol(name, shndx, bind="STB_GLOBAL"):
+        return {"st_shndx": shndx, "st_value": 0, "st_size": 8,
+                "st_info": {"type": "STT_OBJECT", "bind": bind}, "_name": name}
+
+    def emitted(self, symbols, section_types, linked_global=()):
+        syms = []
+        for raw in symbols:
+            s = unittest.mock.MagicMock()
+            s.name = raw["_name"]
+            s.__getitem__.side_effect = raw.__getitem__
+            syms.append(s)
+        elf = unittest.mock.Mock()
+        elf.get_section_by_name.return_value.iter_symbols.return_value = syms
+        elf.get_section.side_effect = lambda i: {"sh_type": section_types[i]}
+        with unittest.mock.patch.object(RDC, "ELFFile", return_value=elf):
+            return [name for name, *_ in RDC.emitted_data_symbols(b"object", linked_global)]
+
+    def test_bss_objects_are_not_compared(self):
+        # arm9's file bytes at .bss addresses are the autoload payloads, not zeros.
+        self.assertEqual(
+            self.emitted([self.symbol("data_table", 1), self.symbol("data_0209b468", 2)],
+                         {1: "SHT_PROGBITS", 2: "SHT_NOBITS"}),
+            ["data_table"])
+
+    def test_locals_are_still_skipped(self):
+        self.assertEqual(
+            self.emitted([self.symbol("local_table", 1, bind="STB_LOCAL")],
+                         {1: "SHT_PROGBITS"}),
+            [])
+
+    def test_a_local_linked_global_by_the_manifest_is_compared(self):
+        # A compiler temp renamed to its ROM data name and bound STB_GLOBAL at link.
+        self.assertEqual(
+            self.emitted([self.symbol("data_ov009_021138fc", 1, bind="STB_LOCAL"),
+                          self.symbol("local_table", 1, bind="STB_LOCAL")],
+                         {1: "SHT_PROGBITS"}, {"data_ov009_021138fc"}),
+            ["data_ov009_021138fc"])
 
 
 if __name__ == "__main__":

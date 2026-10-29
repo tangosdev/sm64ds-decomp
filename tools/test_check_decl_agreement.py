@@ -2313,6 +2313,51 @@ class NativeFreeOverloadTests(unittest.TestCase):
         self.assertEqual([f["kind"] for f in findings], ["param"])
 
 
+class MarkedOverloadTests(unittest.TestCase):
+    """One file defining an overload set under `@symbol` lines, declared from a header.
+
+    src/ApproachAngle.cpp is that shape: its definitions are keyed by their `_Z`
+    names, while a native declaration is keyed by the bare name it spells.
+    """
+
+    def fixture(self, header, user=None):
+        def tree(t):
+            t.write("src/ApproachAngle.cpp",
+                    "// @symbol _Z14ApproachLinearRiii\n"
+                    "int ApproachLinear(int &x, int target, int step) { return 0; }\n"
+                    "// @symbol _Z14ApproachLinearRsss\n"
+                    "bool ApproachLinear(short &x, short target, short step) { return 1; }\n")
+            t.write("include/CalcLib.h", header)
+            if user:
+                t.write("src/user.cpp", user)
+        findings, _, _, _ = build(tree)
+        return findings
+
+    def test_header_reference_overloads_select_their_marked_definitions(self):
+        findings = self.fixture("int ApproachLinear(int &, int, int);\n"
+                                "bool ApproachLinear(short &, short, short);\n")
+        self.assertEqual(findings, [])
+
+    def test_source_overloads_select_their_marked_definitions(self):
+        findings = self.fixture("", "int ApproachLinear(int &, int, int);\n"
+                                    "bool ApproachLinear(short &, short, short);\n")
+        self.assertEqual(findings, [])
+
+    def test_header_wrong_return_is_compared_to_the_selected_definition(self):
+        findings = self.fixture("int ApproachLinear(int &, int, int);\n"
+                                "int ApproachLinear(short &, short, short);\n")
+        self.assertEqual([(f["kind"], f["got"], f["want"]) for f in findings],
+                         [("return", "int", "bool")])
+
+    def test_header_without_a_reference_keeps_unknown_linkage(self):
+        decls, _, _ = CDA.parse_file(
+            "include/CalcLib.h", "int ApproachLinear(int *, int, int);\n", {})
+        self.assertFalse(CDA._cxx_linkage(decls[0]))
+        decls, _, _ = CDA.parse_file(
+            "include/CalcLib.h", "int ApproachLinear(int &, int, int);\n", {})
+        self.assertTrue(CDA._cxx_linkage(decls[0]))
+
+
 class NativeDestructorTests(unittest.TestCase):
     """Source syntax and a precisely mapped direct Arm ABI entry stay distinct."""
 
@@ -2639,7 +2684,7 @@ class NativeConstructorAndWrapperTests(unittest.TestCase):
         self.assertEqual(defs, [])
 
     def test_real_constructor_and_force_wrapper_fixtures(self):
-        examples = (("src/engine/model/Model.cpp", "_ZN5ModelC1Ev", "Model"),
+        examples = (("src/engine/model/d_ext_model.cpp", "_ZN17dExtSimpleModel_cC1Ev", "dExtSimpleModel_c"),
                     ("src/game/stages/d_s_entry_methods.cpp", "_ZN10dScEntry_c6icon_cC1Ev", "dScEntry_c::icon_c"))
         for rel, symbol, owner in examples:
             with self.subTest(path=rel):
@@ -2648,9 +2693,9 @@ class NativeConstructorAndWrapperTests(unittest.TestCase):
                 found = [d for d in defs if d.symbol == symbol]
                 self.assertEqual(len(found), 1)
                 self.assertEqual(CDA._native_constructor_abi(found[0]), (owner, owner + " *"))
-        for owner in ("Vector3", "Vector3s"):
+        for owner, rel in (("Vector3", "src/engine/view/d_camera_dtor.cpp"),
+                           ("Vector3s", "src/runtime/actor/d_actor.cpp")):
             symbol = "_ZN%d%sD1Ev" % (len(owner), owner)
-            rel = "src/" + symbol + ".cpp"
             _, defs, _ = CDA.parse_file(rel, (REPO / rel).read_text(encoding="utf-8"), {})
             self.assertFalse(any(d.symbol == symbol for d in defs))
 
@@ -2930,7 +2975,7 @@ class IncludedInlineDestructorTests(unittest.TestCase):
         self.assertEqual(self.inspect(header)[2], [])
 
     def test_real_vector_carriers_reference_inline_header_bodies(self):
-        targets=['src/_ZN7Vector3D1Ev.cpp', 'src/_ZN8Vector3sD1Ev.cpp']
+        targets=['src/engine/view/d_camera_dtor.cpp', 'src/runtime/actor/d_actor.cpp']
         _, _, defs, _=CDA.collect(REPO, targets)
         for owner, line in (('Vector3', 61), ('Vector3s', 89)):
             symbol='_ZN%d%sD1Ev' % (len(owner), owner)

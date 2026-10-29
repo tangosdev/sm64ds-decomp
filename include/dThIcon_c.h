@@ -9,41 +9,56 @@
  * extent is fixed by the derived constructors/destructors and array
  * stride.
  *
- * deslop leftovers:
- * - unk_00c is the countdown this class's TU subtracts data_0208ee44
- *   from; unk_010 flips 0/1 when it expires; unk_011 latches to 1 when
- *   unk_014 >= 1. Original names are not in the cartridge. Naming fans
- *   out to derived Renders.
- * - unk_004 / unk_006 / unk_008 / unk_00a are the icon's centre and
- *   half extents, unk_014 its touch kind and unk_018 the countdown
- *   reload; this class's TU writes them only in func_ov001_020ab5b0,
- *   which also clears unk_012. unk_01c / unk_020 are unused there.
+ * Field names are coined from how the code uses them; the cartridge
+ * carries none. unk_01c / unk_020 stay unk_ because each derived icon
+ * gives them a different role: dScMgSlot1_c::betIcon_c the bet count and
+ * the payout countdown, dScEntry_c::icon_c the icon type and index,
+ * dMgPsOpt_c::TouchIcon_c the graphic style and variant.
  */
 struct dThIcon_c {
-    s16 unk_004;
-    s16 unk_006;
-    s16 unk_008;
-    s16 unk_00a;
-    s32 unk_00c;
-    u8 unk_010;
-    u8 unk_011;
-    u8 unk_012;
+    /* Centre and half extents in pixels. func_ov001_020ab5b0 stores them;
+       TouchArea_Update tests the pen against centre +/- half extent, and
+       the derived Renders draw or fill the BG at them. */
+    s16 mX;     /* 0x004 */
+    s16 mY;     /* 0x006 */
+    s16 mHalfW; /* 0x008 */
+    s16 mHalfH; /* 0x00a */
+    /* Frames left in a press. func_ov001_020ab3f0 loads it from
+       mPressTime; Behavior counts it down by data_0208ee44 and, at zero,
+       flips mOn back and re-arms mReady. dScEntry_c::icon_c::Render
+       scales its sprite by it. */
+    s32 mPressTimer; /* 0x00c */
+    /* Lit / pressed: func_ov001_020ab3f0 toggles it, Behavior toggles it
+       back; the derived Renders pick the lit sprite or palette by it. */
+    u8 mOn; /* 0x010 */
+    /* TouchArea_Update returns 0 unless set. func_ov001_020ab3f0 clears
+       it; func_ov001_020ab5b0 and Behavior set it when mTouchKind >= 1. */
+    u8 mReady; /* 0x011 */
+    /* TouchArea_Update stores whether the pen is inside this frame, so
+       mTouchKind 2 fires only on entry. */
+    u8 mPenInside; /* 0x012 */
     u8 pad_013[0x1];
-    s32 unk_014;
-    s32 unk_018;
+    /* How TouchArea_Update fires: 1 on a new pen touch inside, 2 when the
+       pen enters, 0 never. func_ov001_020ab5b0 stores it. */
+    s32 mTouchKind; /* 0x014 */
+    /* mPressTimer's reload: func_ov001_020ab5b0 stores 10 and
+       SlotBet_Place 6. */
+    s32 mPressTime; /* 0x018 */
     s32 unk_01c;
     s32 unk_020;
 
     dThIcon_c() {}
     ~dThIcon_c() {}
+    /* Light an icon a menu has just picked: an unlit icon turns on, a lit
+       one plays the press pulse. */
+    void Select();
     virtual void Behavior();
     virtual void Render();
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dThIcon_c_size_must_be_0x24[
-    sizeof(dThIcon_c) == 0x24 ? 1 : -1];
+typedef char dThIcon_c_size_must_be_0x24[sizeof(dThIcon_c) == 0x24 ? 1 : -1];
 #endif
 
 #endif

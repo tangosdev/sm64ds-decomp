@@ -142,7 +142,9 @@ struct Heap {
     u32   flags;                    /* 0x10 */
 };
 #else
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+namespace Memory {
+void operator_delete2(void *);
+}
 
 /* Global, so the elaborated `struct SolidHeapAllocator*' below names the
    allocator classes and does not declare new ones inside mHeap. */
@@ -273,8 +275,9 @@ struct Heap_t {
        needs its own. Inline and in the IMMEDIATE base: mwcc inlines it only
        when it finds it in the class or one level up (see include/dActor_c.h).
        No layout effect. */
-    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
-
+    void operator delete(void *ptr) {
+        Memory::operator_delete2(ptr);
+    }
 };
 
 } /* namespace mHeap */

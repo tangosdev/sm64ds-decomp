@@ -1,15 +1,18 @@
 //cpp
 // @symbol func_ov007_020bfd70
-/* recovered: project a world point into DS screen pixels for an ov007 actor.
+/* recovered: project a world point into DS screen pixels through an ov007 camera.
  *
- * The point at `pos` is transformed by the actor's 4x3 matrix at +0x44 into a local
- * camera-space triple. The actor's 16-bit angle at +0xd4, reduced by >> 4, indexes the
+ * The point at `pos` is transformed by the camera's viewMatrix into a local
+ * camera-space triple. The camera's 16-bit fovy, reduced by >> 4, indexes the
  * arm9 SINE_TABLE (data_02082214) in PAIRS: the even half multiplies the absolute depth
  * out[2] to give the denominator, and cstd::fdiv divides the odd half by it. Everything
  * is 1.12 fixed point, so each product is rounded with + 0x800 and shifted down by 12.
  * The resulting factor scales the x and y components, and the last two lines land them
  * on the screen: x times 0x60 about the 0x80 centre column, y negated about the 0x60
  * centre row.
+ *
+ * Both callers (func_ov007_020be0dc, func_ov007_020be7a8) pass the manager's
+ * cameras[0]. `actor` keeps the tree's char * spelling; `cam` is the typed view.
  *
  * ONE SPELLING IS LOAD-BEARING and it is a declaration RANK, not a type (notes 6cc/6k):
  * `z` and its absolute-value fix-up are read FIRST, ahead of the angle, the table base
@@ -22,24 +25,42 @@
  * it (492-cell pragma sweep and ~6,000 permuter iterations, both flat at 7).
  */
 #include "nitro/fx/fx.h"
+
+/* The overlay's camera (func_ov007_020c023c); names as in
+ * func_ov007_020b2160, only the slots this file reads. */
+struct Ov007Camera {
+    char pad_00[0x44];
+    int viewMatrix[12]; /* 0x44: Matrix4x3 */
+    char pad_74[0x60];
+    /* 0xd4: a u16 angle; this file indexes the sine table with it >> 4 */
+    unsigned short fovy;
+};
+
+typedef char Ov007Camera_fovy_must_be_at_0xd4[(int)&((Ov007Camera *)0)->fovy == 0xd4 ? 1 : -1];
+
+namespace cstd {
+int fdiv(int, int);
+}
+
 extern "C" {
 void MulVec3Mat4x3(void* v, void* m, void* out);
-int _ZN4cstd4fdivEii(int a, int b);
 extern short data_02082214[];
 
-void func_ov007_020bfd70(char* actor, void* pos, int* outX, int* outY) {
+void func_ov007_020bfd70(char *actor, void *pos, int *outX, int *outY) {
+    Ov007Camera *cam = (Ov007Camera *)actor;
     int out[3];
-    MulVec3Mat4x3(pos, actor + 0x44, out);
+    MulVec3Mat4x3(pos, cam->viewMatrix, out);
     int z = out[2];
-    if (z < 0) z = -z;
-    int ang = *(unsigned short*)(actor + 0xd4) >> 4;
+    if (z < 0)
+        z = -z;
+    int ang = cam->fovy >> 4;
     int i = ang << 1;
-    short* base = &data_02082214[0];
+    short *base = &data_02082214[0];
     int j = i + 1;
     int cosv = base[i];
     int sinv = base[j];
     int r = FX_MUL(cosv, z);
-    int f = _ZN4cstd4fdivEii(sinv, r);
+    int f = cstd::fdiv(sinv, r);
     int a = FX_MUL(f, out[1]);
     int b = FX_MUL(f, out[0]);
     outX[0] = ((b * 0x60) >> 0xc) + 0x80;

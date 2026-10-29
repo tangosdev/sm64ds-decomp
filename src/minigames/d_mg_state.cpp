@@ -17,9 +17,9 @@
  * .data window (Mg_SetNextBanner, 020b67f8, 020b6808, 020b682c and
  * Mg_ResetBannerLayout).
  *
- * Edges. 0x020b67e8 is the first function after Coin_Construct, the last
- * destructor helper __sinit_ov004_020b9ad0 registers for the preceding unit
- * (the 0x14-entry array at sMgCoins). 0x020b8c18 is the start of
+ * Edges. 0x020b67e8 is the first function after Sprite::Sprite, the last
+ * helper the preceding unit's static initializer (0x020b9ad0) passes for
+ * its 0x14-entry array sMgCoins. 0x020b8c18 is the start of
  * dMgPsOpt_c. The unit's .data window, 0x020bc850..0x020bca44, is read only
  * by this unit's functions and ends before dMgPsOpt_c's at 0x020bca58; the
  * words at gMgCoinsShowDelta and sMgCoinsDeltaShown belong to the preceding
@@ -112,8 +112,9 @@
 #include "dScene_c.h"
 #include "dWipe_c.h"
 #include "PlayerInput.h"
+#include "Sound.h"
+#include "math/Approach.h"
 
-extern int ApproachLinear(s32 &value, s32 target, s32 step);
 /* local extern: including Sound.h renumbers SetState's local static. */
 namespace Sound {
 u32 PlayBank2_2D(u32);
@@ -168,7 +169,6 @@ struct FaderCallView {
 extern "C" {
 extern void FreeGfxSlotsById(int arg);
 extern int GetGameLanguage(void);
-extern unsigned int func_02012790(unsigned int x);
 extern void func_02012dd0(void *c);
 extern void Mg_CommitRecords(void);
 extern int Mg_GetSubmittedScore(void);
@@ -1088,12 +1088,12 @@ void dMgState_c::DrawScoreDigits() {
     Mg_DrawBigNumber(sMgScoreDigitsX + 0x2c, sMgScoreDigitsY, r % 10, -1, -1, 1, 0);
 
     idx = GetGameLanguage();
-    Mg_RenderSubSpriteMtx((void *)*(int *)(sMgStateTextSpritesByLanguage[idx] + 0xc),
-                          sMgScoreDigitsX - 0x24, sMgScoreDigitsY, 0);
+    Mg_RenderSubSpriteMtx(((void **)sMgStateTextSpritesByLanguage[idx])[3], sMgScoreDigitsX - 0x24,
+                          sMgScoreDigitsY, 0);
 
     idx = GetGameLanguage();
-    Mg_RenderSubSpriteMtx((void *)*(int *)(sMgStateTextSpritesByLanguage[idx] + 0x1c),
-                          sMgScoreDigitsX + 0x10, sMgScoreDigitsY, 0);
+    Mg_RenderSubSpriteMtx(((void **)sMgStateTextSpritesByLanguage[idx])[7], sMgScoreDigitsX + 0x10,
+                          sMgScoreDigitsY, 0);
 }
 
 // @symbol _ZN10dMgState_c15DrawRecordTableEv

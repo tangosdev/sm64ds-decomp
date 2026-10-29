@@ -23,18 +23,14 @@
  */
 
 // leftovers:
-// - OAM::Render, OAM::RenderSub, Sound::PlaySub, cstd::atan2, Fog::Init and
-//   TextureTransformer::SetFile stay mangled (Fix12 by value); the OAM
-//   sprite records (COIN, TIMES, VS_NEW_STAR_APPEARED, ...) keep their
-//   mangled data names because OAM.h declares no static data. RenderNumber
-//   keeps a local extern spelled over the member's mask-emitting parameter
-//   conversions; G2x::SetBlendBrightness, G3X::SetFog and
-//   dScStage_c::LoadGraphics2D stay mangled where the ROM passes a raw int
-//   the header's u16/bool parameter would narrow. G2:: stays mangled
-//   (decl_common.h's `extern int G2[]` hides the namespace).
-// - LoadSkybox and LoadTextureTransformers spell `new` as _Znwj plus a
-//   null-guarded constructor call, which a new-expression does not emit; the
-//   fader array passes dFdWipe_c's constructor and destructor by address.
+// - OAM::Render, OAM::RenderSub, Sound::PlaySub and cstd::atan2
+//   stay mangled (Fix12 by value). Fog::Init is the scalar Fix12i method.
+//   RenderNumber keeps a local extern spelled over the member's mask-emitting
+//   parameter conversions. InitResources calls LoadGraphics2D with the comparison
+//   itself as the bool, which is what the ROM passes.
+// - LoadTextureTransformers spells `new` as an explicit operator new call
+//   plus a null-guarded constructor call, a form from before the allocator
+//   was named _Znwm, when a new-expression could not link; the fader array passes dFdWipe_c's constructor and destructor by address.
 // - CheckCameraInput keeps `#pragma opt_strength_reduction off` and a local
 //   CamInput overlay of the camera input array; PS_Update and Behavior keep
 //   `#pragma opt_common_subs off` (switched back on after each), the
@@ -50,6 +46,7 @@
 enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a };
 
 #include "types.h"
+#include "G2.h"
 #include "dFdBrightness_c.h"
 #include "dScStage_c.h"
 #include "Timer.h"
@@ -62,7 +59,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "nitro/hw/registers.h"
 #include "dScene_c.h"
 #include "Event.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dCamera_c.h"
 #include "Particle__SysTracker.h"
 #include "Fog.h"
@@ -71,7 +68,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "dFdWipe_c.h"
 #include "SaveData.h"
 #include "G3X.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "dExtShadowModel_c.h"
 #include "dCc_c.h"
@@ -79,6 +76,9 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "Message.h"
 #include "Memory.h"
 #include "Heap.h"
+#include "GX.h"
+#include "cstd.h"
+#include "daMugenBGM_c.h"
 
 struct OamAttr;
 struct Matrix2x2 {
@@ -138,7 +138,6 @@ void SetBg3Offset(int x, int y);
 void SetBg1Offset(int x, int y);
 void SetSubBg0Offset(int x, int y);
 void SetSubBg1Offset(int x, int y);
-unsigned int func_02012790(unsigned int snd);
 int func_02029408(void);
 int LoadFile(int handle);
 void SetControllerMode(unsigned char m);
@@ -149,25 +148,10 @@ void TurnBacklightOn(void);
 void TurnBacklightOff(void);
 int IsStarCollected(int lv, int star);
 
-// local extern: Message.h's s8 level parameter re-narrows the SublevelToLevel result (LC_Update differs).
-void _ZN7Message21DisplayLevelClearTextEta(int m, unsigned char lvl);
-// local extern: Message::Display is a non-static member; this call passes the message id in r0 with no receiver.
-void _ZN7Message7DisplayEj(int m);
-// local extern: Message.h's u16 parameter re-narrows the s16 table entry (PS_Update differs by one word).
-void _ZN7Message11DisplayTextEt(int m);
-// local extern: Message.h's u16 parameter changes the sign-extended (s16) argument codegen (PS_Update differs).
-void _ZN7Message22DisplayOptionsMenuTextEt(int m);
-bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fix,
-                                     int e);
-unsigned int _ZN5Sound12PlayBank3_2DEj(unsigned int a);
-void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int a);
-// local extern: SaveData.h's (s8, u8) parameters re-narrow both arguments (LC_Update differs).
-void _ZN8SaveData21SetCoinRecordIfHigherEah(int a, int b);
-void _ZN3G2x18SetBlendBrightnessEPVtts(volatile unsigned short *p, int val, short amt);
-void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, unsigned int a, unsigned int b);
-void _ZN3OAM14BOUNCING_ARROWE(void);
-void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, void *attr, int x, int y, int a, int cc,
-                                                 int fx, int fy, int rot, int mode);
+bool d_s_stage_methodsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int fix, int e);
+
+void OamRender10_d_s_stage_methods(int sub, void *attr, int x, int y, int a, int cc, int fx, int fy,
+                                   int rot, int mode);
 int __aeabi_idiv(int a, int b);
 
 extern int data_0208ee44;
@@ -251,19 +235,6 @@ extern void *data_ov001_020abd98[];
 extern void *data_ov001_020ac218[];
 extern void *data_ov001_020ac64c[];
 extern void *data_ov001_020acb68[];
-extern void *_ZN3OAM21CONTROLLER_MODE_TEXTSE[];
-extern OamAttr *_ZN3OAM7NUMBERSE[];
-extern char _ZN3OAM8VS_PAUSEE;
-extern char _ZN3OAM19ARROW_POINTING_LEFTE;
-extern char _ZN3OAM20ARROW_POINTING_RIGHTE;
-extern char _ZN3OAM13MM_SMALL_STARE;
-extern char _ZN3OAM5PAUSEE;
-extern char _ZN3OAM9TINY_STARE;
-extern char _ZN3OAM25SMALL_ARROW_POINTING_LEFTE;
-extern char _ZN3OAM26SMALL_ARROW_POINTING_RIGHTE;
-extern char _ZN3OAM16SMALL_STAR_EMPTYE;
-extern OamAttr _ZN3OAM4COINE;
-extern OamAttr _ZN3OAM5TIMESE;
 }
 
 /* The level-state globals the stage's free functions below read and write: the
@@ -275,15 +246,19 @@ extern OamAttr _ZN3OAM5TIMESE;
 struct MinimapDesc {
     u32 w[4];
 };
+/* data_0209f3c4 is the stage's graph callback object (InitResources hands
+   it to data_0209d4a8). Its last four words are StageGraphCallbackView's
+   BG3 affine origin and target, which GraphCallback2 passes to SetBGyAffine
+   and UpdateMinimap sets. */
 struct MinimapState {
     char _pad[0x14];
-    volatile u32 f14, f18, f1c, f20;
+    volatile u32 originX, originY, targetX, targetY;
 };
 /* SetNextLevel's return table: level, return level, entrance. */
 struct LevelReturnEntry {
-    s8 a;
-    s8 b;
-    u8 c;
+    s8 level;
+    s8 returnLevel;
+    u8 entrance;
 };
 struct OvTbl {
     unsigned int t[7];
@@ -294,17 +269,28 @@ struct PadData {
 };
 /* The object at data_0209f5bc; only its slot-5 and slot-7 queries are called
    from this file. */
-/* The level record data_0209f340 points at, as far as the texture-animation
-   passes read it: the animation table at +0x10 and its count at +0x14. */
+/* The level record data_0209f340 points at, as far as this file and dMap_c
+   read it: the per-area table at +0x10 and its count at +0x14. Each area
+   entry carries its texture animation and the minimap GetMinimapID falls
+   back to when no minimap-change record applies. */
 struct LevelTexAnim {
     int x;
     void *bta;
-    char pad[4];
+    s8 minimapId; /* 0x08 */
+    char pad[3];
 };
 struct LevelInfo {
-    char pad[0x10];
-    LevelTexAnim *entries;
-    unsigned char count;
+    char pad[0xc];
+    /* func_0202a980; dMap_c decompresses it into the minimap BG3 characters. */
+    u16 minimapTilesFile; /* 0x0c */
+    /* func_0202a96c; dMap_c loads it as the minimap BG extended palette. */
+    u16 minimapPaletteFile; /* 0x0e */
+    LevelTexAnim *entries;  /* 0x10 */
+    unsigned char count;    /* 0x14 */
+    /* Bit 0: StartWithFarCamera. */
+    u8 cameraFlags; /* 0x15 */
+    /* func_0202a958; dMap_c stores it as mScale. */
+    s16 minimapScale; /* 0x16 */
 };
 
 extern "C" {
@@ -312,7 +298,6 @@ extern int OVERLAY_60_ID;
 extern int OVERLAY_98_ID;
 extern int OVERLAY_102_ID;
 extern char VS_STAR_SPAWN_ORDERS[][0xC];
-extern int _ZN3OAM20VS_NEW_STAR_APPEAREDE[];
 extern u8 data_020755bc[];
 extern u16 data_020755e0[7];
 extern u16 data_020755f0[7];
@@ -391,7 +376,7 @@ extern int data_0209f40c[];
 extern u32 data_0209f4f8[][16];
 extern dFdBrightness_c *data_0209f5bc;
 extern unsigned short data_0209f5e8;
-extern int data_0209fc48;
+extern int gRunningKuppaScript;
 extern u8 data_0209fcc8;
 extern PadData data_020a0e58[];
 extern u16 data_020a0e5a[];
@@ -486,31 +471,9 @@ void LoadOrUnloadObjectOverlays(void (*fn)(int), int levelID);
 namespace Particle {
 void RenderAll();
 }
-// And to _ZN4cstd6strcmpEPKcS1_.
-namespace cstd {
-int strcmp(const char *a, const char *b);
-int sqrt(unsigned long long v);
-int fdiv(int a, int b);
-}
 
-// Outside extern "C" so the namespace mangles to _ZN3G2S12GetBG1ScrPtrEv.
-namespace G2S {
-u16 *GetBG1ScrPtr();
-char *GetBG0CharPtr();
-char *GetBG0ScrPtr();
-char *GetBG2ScrPtr();
-}
-
-// The GX/GXS/Sound entry points InitResources and CleanupResources call that no
+// The Sound entry points InitResources and CleanupResources call that no
 // header declares yet.
-namespace GX {
-void DisableAllBanks();
-void SetGraphicsMode(int, int, int);
-void DispOn();
-}
-namespace GXS {
-void SetGraphicsMode(int);
-}
 namespace Sound {
 void ResetPlayerVoiceGroup();
 void LoadGroupAndSetBank(int group, int bank);
@@ -519,12 +482,13 @@ void SetMusic(u32 player, u32 music);
 
 #define REG16(a) (*(volatile u16 *)(a))
 #define REG32(a) (*(volatile u32 *)(a))
-#define TOUCHP(off) ((u8 *)(gTouchHeld + (off)))
+/* The TouchInfo record at byte offset off (slot * 4) from gTouchHeld. */
+#define TOUCHP(off) ((TouchInfo *)(gTouchHeld + (off)))
 
 #pragma defer_codegen off
 
 // @symbol _ZN10dScStage_cD1Ev, _ZN10dScStage_cD0Ev
-/* Destroy through dScStage_c's own three fields -- dBgW_Kc at 0x91c, Model at
+/* Destroy through dScStage_c's own three fields -- dBgW_Kc at 0x91c, dExtSimpleModel_c at
  * 0x86c, Particle::SysTracker at 0x50 -- in reverse declaration order, then
  * dScene_c (now inline-defined in dScene_c.h, so its vptr store and dBase_c's
  * inline in turn), then fBase_c's subobject destructor, called rather than
@@ -645,8 +609,8 @@ void dScStage_c::VE_Init() {
     data_0209b464 = data_0209b454;
     data_0209f294 = 1;
     data_0209f290 = 0;
-    _ZN3G2x18SetBlendBrightnessEPVtts((volatile unsigned short *)0x4000050, a | 0x20, -7);
-    _ZN3G2x18SetBlendBrightnessEPVtts((volatile unsigned short *)0x4001050, b | 0x20, -7);
+    G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, a | 0x20, -7);
+    G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, b | 0x20, -7);
 }
 // @symbol _ZN10dScStage_c20RenderBouncingArrowsEv
 void dScStage_c::RenderBouncingArrows() {
@@ -660,17 +624,12 @@ void dScStage_c::RenderBouncingArrows() {
     A = data_0209f2c4;
     if ((A == 0 && data_0209f284 != 0 && (int)(data_0209f2d8 == 1) == 0) ||
         (A != 0 && (unsigned char)(data_0209f248 + 0xf7) <= 2u)) {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)_ZN3OAM14BOUNCING_ARROWE, 0x40, r4,
-                                                    -1, -1, 0x1000, 0x1000, 0, -1);
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)_ZN3OAM14BOUNCING_ARROWE, 0x80, r4,
-                                                    -1, -1, 0x1000, 0x1000, 0, -1);
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)_ZN3OAM14BOUNCING_ARROWE, 0xc0, r4,
-                                                    -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::BOUNCING_ARROW, 0x40, r4, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::BOUNCING_ARROW, 0x80, r4, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::BOUNCING_ARROW, 0xc0, r4, -1, -1, 0x1000, 0x1000, 0, -1);
     } else {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)_ZN3OAM14BOUNCING_ARROWE, 0xc, r4,
-                                                    -1, -1, 0x1000, 0x1000, 0, -1);
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)_ZN3OAM14BOUNCING_ARROWE, 0xf4, r4,
-                                                    -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::BOUNCING_ARROW, 0xc, r4, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::BOUNCING_ARROW, 0xf4, r4, -1, -1, 0x1000, 0x1000, 0, -1);
     }
 }
 // @symbol _ZN10dScStage_c9LC_RenderEv
@@ -684,62 +643,62 @@ void dScStage_c::LC_Render() {
 
     {
         void *p = (void *)LoadFile(ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN);
-        _ZN2GX11LoadOBJPlttEPKvjj((void *)((char *)p + (((unsigned int)data_0209f2a8 >> 2) << 5)),
-                                  0x1c0, 0x10);
+        GX::LoadOBJPltt((void *)((char *)p + (((unsigned int)data_0209f2a8 >> 2) << 5)), 0x1c0,
+                        0x10);
         Deallocate(p);
     }
 
     if (SublevelToLevel(data_02092124) >= 0xf && SublevelToLevel(data_02092124) < 0x15) {
         if (GetOwnerLanguage() == 5)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210cea8, 0x80, 0x38,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)&data_ov002_0210cea8, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else if (GetOwnerLanguage() == 4)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210cee8, 0x80, 0x38,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)&data_ov002_0210cee8, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else if (GetOwnerLanguage() == 3)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210cf28, 0x80, 0x38,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)&data_ov002_0210cf28, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else if (GetOwnerLanguage() == 2)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210cf78, 0x80, 0x38,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)&data_ov002_0210cf78, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210cb14, 0x80, 0x38,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)&data_ov002_0210cb14, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
     }
 
     if (data_0209f2b0 != 0) {
         if (data_0209f20c != 0 && SublevelToLevel(data_02092124) >= 0xf) {
             if (GetOwnerLanguage() == 5)
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210ce90, 0x80,
-                                                            0x70, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210ce90, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
+                            0, -1);
             else if (GetOwnerLanguage() == 4)
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210ced0, 0x80,
-                                                            0x70, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210ced0, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
+                            0, -1);
             else if (GetOwnerLanguage() == 3)
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210cf08, 0x80,
-                                                            0x70, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210cf08, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
+                            0, -1);
             else if (GetOwnerLanguage() == 2)
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210cfa0, 0x80,
-                                                            0x70, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210cfa0, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
+                            0, -1);
             else
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210caf4, 0x80,
-                                                            0x70, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210caf4, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
+                            0, -1);
         } else {
             if (GetOwnerLanguage() == 5)
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210ce90, 0x80,
-                                                            0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210ce90, 0x80, 0x80, -1, -1, 0x1000, 0x1000,
+                            0, -1);
             else if (GetOwnerLanguage() == 4)
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210ced0, 0x80,
-                                                            0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210ced0, 0x80, 0x80, -1, -1, 0x1000, 0x1000,
+                            0, -1);
             else if (GetOwnerLanguage() == 3)
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210cf08, 0x80,
-                                                            0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210cf08, 0x80, 0x80, -1, -1, 0x1000, 0x1000,
+                            0, -1);
             else if (GetOwnerLanguage() == 2)
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210cfa0, 0x80,
-                                                            0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210cfa0, 0x80, 0x80, -1, -1, 0x1000, 0x1000,
+                            0, -1);
             else
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210caf4, 0x80,
-                                                            0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, (OamAttr *)&data_ov002_0210caf4, 0x80, 0x80, -1, -1, 0x1000, 0x1000,
+                            0, -1);
         }
     }
 
@@ -761,7 +720,7 @@ void dScStage_c::LC_Update() {
     switch (data_0209f2d4) {
     case 0:
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
-        _ZN7Message21DisplayLevelClearTextEta(0x27a, SublevelToLevel(data_02092124));
+        Message::DisplayLevelClearText(0x27a, SublevelToLevel(data_02092124));
         data_0209f360[0] = 0xa0;
         data_0209f360[1] = 0x140;
         data_0209f360[2] = 0x1e0;
@@ -777,7 +736,7 @@ void dScStage_c::LC_Update() {
         if (data_0209f358[0] != 0)
             return;
         if (data_0209f2ac != 0) {
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x23, 0x14, 0x7f, 0x15666, 0);
+            Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
             data_0209f280 = 1;
         }
         data_0209f22c = 0x1e;
@@ -788,11 +747,11 @@ void dScStage_c::LC_Update() {
             data_0209f260 += 1;
             if (data_0209f260 % 50 == 0) {
                 GiveLives(1);
-                _ZN5Sound12PlayBank3_2DEj(0x6e);
+                Sound::PlayBank3_2D(0x6e);
             }
             if (data_0209f358[0] == data_0209f260) {
                 if (data_0209f2ac != 0) {
-                    _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x23, 0x14, 0x7f, 0x15666, 0);
+                    Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
                     data_0209f280 = 1;
                 }
                 data_0209f22c = 0x1e;
@@ -800,7 +759,7 @@ void dScStage_c::LC_Update() {
                     u8 coins = data_0209f260;
                     if (SaveData::GetCoinRecord(level) >= coins)
                         return;
-                    _ZN8SaveData21SetCoinRecordIfHigherEah(level, coins);
+                    SaveData::SetCoinRecordIfHigher(level, coins);
                     data_0209f2b0 = 1;
                     func_02012790(0x22);
                     return;
@@ -810,7 +769,7 @@ void dScStage_c::LC_Update() {
                 if (level >= 0x15)
                     return;
                 func_02012790(0x22);
-                _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x23, 0x14, 0x7f, 0x15666, 0);
+                Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
                 data_0209f280 = 1;
                 return;
             }
@@ -818,7 +777,7 @@ void dScStage_c::LC_Update() {
             return;
         }
         if (data_0209f260 == 0 && level >= 0xf && level < 0x15) {
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x23, 0x14, 0x7f, 0x15666, 0);
+            Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
             data_0209f280 = 1;
         }
         data_0209f22c = 0x3c;
@@ -842,8 +801,8 @@ void dScStage_c::LC_Update() {
         SetSubBg1Offset(0, 0);
         data_0209d45c |= 4;
         data_0209d454 |= 3;
-        _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16 *)0x4000050, t6 | 0x20, -7);
-        _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16 *)0x4001050, t5 | 0x20, -7);
+        G2x::SetBlendBrightness((volatile u16 *)0x4000050, t6 | 0x20, -7);
+        G2x::SetBlendBrightness((volatile u16 *)0x4001050, t5 | 0x20, -7);
         data_0209f2d4 = 3;
         return;
     }
@@ -930,7 +889,7 @@ void dScStage_c::LC_Update() {
         return;
     case 6:
         if (data_0209f280 != 0) {
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x23, 0x7f, 0, 0x15666, 0);
+            Sound::PlaySub(0x23, 0x7f, 0, 0x15666, 0);
             data_0209f280 = 0;
         }
         data_0209d45c &= ~0xc;
@@ -941,7 +900,7 @@ void dScStage_c::LC_Update() {
         } else {
             dScene_c::StartSceneFade(1, 0, 0);
             data_ov002_02111178 = 0;
-            _ZN5Sound22StopLoadedMusic_Layer1Ej(0xa);
+            Sound::StopLoadedMusic_Layer1(0xa);
             {
                 int t = data_0209b454 | 0x40000000;
                 data_0209b454 = t;
@@ -970,8 +929,9 @@ void dScStage_c::CheckCameraInput() {
                 cam->pressed = 0;
                 cam->held = 0;
                 if (((TouchInfo *)gTouchHeld)[i].held != 0) {
-                    if (*(int *)((u8 *)data_0209f318 + 0x154) & 0x1000) {
-                        u8 state = *((u8 *)data_0209f498 + i * 0x18 + 0x16);
+                    if (((dCamera_c *)data_0209f318)->mFlags & 0x1000) {
+                        // cam->mode here builds 32 bytes shorter; the indexed read is the ROM shape.
+                        u8 state = ((CamInput *)data_0209f498)[i].mode;
                         if ((state == 0 && ((((TouchInfo *)gTouchHeld)[i].x <= 0x58 &&
                                              ((TouchInfo *)gTouchHeld)[i].y >= 0x8a) ||
                                             (((TouchInfo *)gTouchHeld)[i].x >= 0xa7 &&
@@ -1001,11 +961,11 @@ void dScStage_c::CheckCameraInput() {
                                      ((TouchInfo *)gTouchHeld)[i].edge)
                                         ? 1
                                         : 0)
-                                    *(u16 *)(((int)cam + 6)) |= mask;
+                                    cam->pressed |= mask;
                                 else
-                                    *(u16 *)(((int)cam + 6)) |= mask & (mask ^ data_0209f368[i]);
+                                    cam->pressed |= mask & (mask ^ data_0209f368[i]);
                                 data_0209f368[i] = mask;
-                                *(u16 *)(((int)cam + 4)) |= mask;
+                                cam->held |= mask;
                                 *st = 1;
                             }
                         } else if (*st == 1) {
@@ -1019,9 +979,10 @@ void dScStage_c::CheckCameraInput() {
                     data_0209f368[i] = 0;
                 }
                 {
-                    u8 state2 = *((u8 *)data_0209f498 + i * 0x18 + 0x16);
+                    u8 state2 = ((CamInput *)data_0209f498)[i].mode;
                     if (state2 != 0) {
-                        if (((*((u8 *)gTouchHeld + i * 4) && ((TouchInfo *)gTouchHeld)[i].edge)
+                        if (((((TouchInfo *)gTouchHeld)[i].held &&
+                              ((TouchInfo *)gTouchHeld)[i].edge)
                                  ? 1
                                  : 0) &&
                             ((state2 == 1 && ((TouchInfo *)gTouchHeld)[i].x >= 0xd7 &&
@@ -1030,7 +991,7 @@ void dScStage_c::CheckCameraInput() {
                               ((TouchInfo *)gTouchHeld)[i].y >= 0x73 &&
                               ((TouchInfo *)gTouchHeld)[i].y < 0x97))) {
                             data_ov002_02111180 = 0x10;
-                            *(u16 *)(((int)cam + 6)) |= 0x8000;
+                            cam->pressed |= 0x8000;
                             *st = 2;
                             cam->touching = 0;
                         } else if (*st == 2) {
@@ -1079,9 +1040,9 @@ void dScStage_c::RenderNumber(unsigned char num, int x, int y, bool b, int p5) {
         int digit = __aeabi_idiv(num, data_020755b8[i]);
         if (digit != 0 || leading != 0 || i == 2) {
             if (b == 0) {
-                OAM::Render(true, _ZN3OAM7NUMBERSE[digit], x, y, p5, -1, mtx);
+                OAM::Render(true, OAM::NUMBERS[digit], x, y, p5, -1, mtx);
             } else {
-                OAM::Render(false, _ZN3OAM7NUMBERSE[digit], x, y, p5, -1, 0);
+                OAM::Render(false, OAM::NUMBERS[digit], x, y, p5, -1, 0);
             }
             leading = 1;
             x += 9;
@@ -1099,8 +1060,7 @@ void dScStage_c::PS_Render() {
 
     int r0v = (data_0209f2d8 == 1);
     if (r0v != 0 && data_0209fc68 == 0) {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM8VS_PAUSEE, 0x80, 0x60, -1, -1,
-                                                    0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_PAUSE, 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
     } else if (data_0209f248 == 1 ||
                (SublevelToLevel(data_0209f2f8) == 0x1d &&
                 ((unsigned int)data_0209f248 < 7U || (unsigned int)data_0209f248 > 8U))) {
@@ -1117,22 +1077,22 @@ void dScStage_c::PS_Render() {
         }
         if (data_0209f248 == 1 && data_0209f2f0 == 0) {
             if (data_0209f238 == 1) {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM19ARROW_POINTING_LEFTE, 0x12,
-                                                            0x60, -1, -1, 0x1000, 0x1000, 0, -1);
-                OAM::RenderSub((OamAttr *)&_ZN3OAM19ARROW_POINTING_LEFTE, 0x12, 0x10);
+                OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 0x12, 0x60, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
+                OAM::RenderSub(&OAM::ARROW_POINTING_LEFT, 0x12, 0x10);
             } else {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM19ARROW_POINTING_LEFTE, 0x14,
-                                                            0x60, -1, -1, 0x1000, 0x1000, 0, -1);
-                OAM::RenderSub((OamAttr *)&_ZN3OAM19ARROW_POINTING_LEFTE, 0x14, 0x10);
+                OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 0x14, 0x60, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
+                OAM::RenderSub(&OAM::ARROW_POINTING_LEFT, 0x14, 0x10);
             }
             if (data_0209f238 == 2) {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-                    0, &_ZN3OAM20ARROW_POINTING_RIGHTE, 0xee, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
-                OAM::RenderSub((OamAttr *)&_ZN3OAM20ARROW_POINTING_RIGHTE, 0xee, 0x10);
+                OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 0xee, 0x60, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
+                OAM::RenderSub(&OAM::ARROW_POINTING_RIGHT, 0xee, 0x10);
             } else {
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-                    0, &_ZN3OAM20ARROW_POINTING_RIGHTE, 0xec, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
-                OAM::RenderSub((OamAttr *)&_ZN3OAM20ARROW_POINTING_RIGHTE, 0xec, 0x10);
+                OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 0xec, 0x60, -1, -1, 0x1000, 0x1000, 0,
+                            -1);
+                OAM::RenderSub(&OAM::ARROW_POINTING_RIGHT, 0xec, 0x10);
             }
         }
         if (data_0209f2c8 != 0xf) {
@@ -1141,12 +1101,10 @@ void dScStage_c::PS_Render() {
             if (var_r8 != 0) {
                 do {
                     if (IsStarCollected(data_0209f2c8, var_sl) != 0) {
-                        OAM::Render(false, (OamAttr *)&_ZN3OAM13MM_SMALL_STARE, var_sb, 0x60, -1,
-                                    -1, 0);
+                        OAM::Render(false, &OAM::MM_SMALL_STAR, var_sb, 0x60, -1, -1, 0);
                         var_r7 = (var_r7 + 1) & 0xff;
                     } else {
-                        OAM::Render(false, (OamAttr *)&_ZN3OAM16SMALL_STAR_EMPTYE, var_sb, 0x60, -1,
-                                    -1, 0);
+                        OAM::Render(false, &OAM::SMALL_STAR_EMPTY, var_sb, 0x60, -1, -1, 0);
                         sp18 = 1;
                     }
                     var_sb += 0x10;
@@ -1154,33 +1112,33 @@ void dScStage_c::PS_Render() {
                 } while (var_r7 != var_r8);
             }
             if (sp18 == 0 && var_r8 != 7) {
-                OAM::Render(false, (OamAttr *)&_ZN3OAM16SMALL_STAR_EMPTYE, var_sb, 0x60, -1, -1, 0);
+                OAM::Render(false, &OAM::SMALL_STAR_EMPTY, var_sb, 0x60, -1, -1, 0);
             }
             unsigned char r5v = SaveData::GetCoinRecord(data_0209f2c8);
-            OAM::Render(false, &_ZN3OAM4COINE, 0x70, 0x70, -1, -1, 0);
-            OAM::Render(false, &_ZN3OAM5TIMESE, 0x80, 0x78, -1, -1, 0);
+            OAM::Render(false, &OAM::COIN, 0x70, 0x70, -1, -1, 0);
+            OAM::Render(false, &OAM::TIMES, 0x80, 0x78, -1, -1, 0);
             RenderNumber(r5v, 0x88, 0x70, 1, 8);
             if (IsStarCollected(data_0209f2c8, 0) != 0) {
-                OAM::Render(false, (OamAttr *)&_ZN3OAM13MM_SMALL_STARE, 0xb0, 0x78, -1, -1, 0);
+                OAM::Render(false, &OAM::MM_SMALL_STAR, 0xb0, 0x78, -1, -1, 0);
             }
         } else {
-            OAM::Render(false, (OamAttr *)&_ZN3OAM13MM_SMALL_STARE, 0x70, 0x60, -1, -1, 0);
-            OAM::Render(false, &_ZN3OAM5TIMESE, 0x80, 0x60, -1, -1, 0);
+            OAM::Render(false, &OAM::MM_SMALL_STAR, 0x70, 0x60, -1, -1, 0);
+            OAM::Render(false, &OAM::TIMES, 0x80, 0x60, -1, -1, 0);
             RenderNumber(CountStarsCollectedInLevelToDisplay(0x1d), 0x88, 0x58, 1, 8);
         }
     } else if (data_0209d45c & 8) {
         if ((unsigned int)data_0209f2c8 < 0xfU) {
             unsigned char r4v = CountStarsCollectedInLevelToDisplay(data_0209f2c8);
-            OAM::Render(false, (OamAttr *)&_ZN3OAM13MM_SMALL_STARE, 0x58, 0x8c, -1, -1, 0);
-            OAM::Render(false, &_ZN3OAM5TIMESE, 0x68, 0x8c, -1, -1, 0);
+            OAM::Render(false, &OAM::MM_SMALL_STAR, 0x58, 0x8c, -1, -1, 0);
+            OAM::Render(false, &OAM::TIMES, 0x68, 0x8c, -1, -1, 0);
             RenderNumber(r4v, 0x70, 0x84, 1, 1);
             unsigned char r4v2 = SaveData::GetCoinRecord(data_0209f2c8);
-            OAM::Render(false, &_ZN3OAM4COINE, 0x88, 0x84, -1, -1, 0);
-            OAM::Render(false, &_ZN3OAM5TIMESE, 0x98, 0x8c, -1, -1, 0);
+            OAM::Render(false, &OAM::COIN, 0x88, 0x84, -1, -1, 0);
+            OAM::Render(false, &OAM::TIMES, 0x98, 0x8c, -1, -1, 0);
             RenderNumber(r4v2, 0xa0, 0x84, 1, 1);
         }
         if (data_0209f248 == 0xb) {
-            OAM::RenderSub((OamAttr *)&_ZN3OAM5PAUSEE, 0x80, 0x60);
+            OAM::RenderSub(&OAM::PAUSE, 0x80, 0x60);
         }
     }
 
@@ -1189,46 +1147,43 @@ void dScStage_c::PS_Render() {
         if (data_0209f2e0 == 3) {
             if (data_0209f29c == 0) {
                 if (GetOwnerLanguage() == 5) {
-                    OAM::Render(true, (OamAttr *)&_ZN3OAM9TINY_STARE, 0x46,
-                                ((data_0209f2e0 * 5) + 6) * 8, -1, -1, 0);
+                    OAM::Render(true, &OAM::TINY_STAR, 0x46, ((data_0209f2e0 * 5) + 6) * 8, -1, -1,
+                                0);
                 } else if (GetOwnerLanguage() == 3) {
-                    OAM::Render(true, (OamAttr *)&_ZN3OAM9TINY_STARE, 0x4e,
-                                ((data_0209f2e0 * 5) + 6) * 8, -1, -1, 0);
+                    OAM::Render(true, &OAM::TINY_STAR, 0x4e, ((data_0209f2e0 * 5) + 6) * 8, -1, -1,
+                                0);
                 } else {
-                    OAM::Render(true, (OamAttr *)&_ZN3OAM9TINY_STARE, 0x56,
-                                ((data_0209f2e0 * 5) + 6) * 8, -1, -1, 0);
+                    OAM::Render(true, &OAM::TINY_STAR, 0x56, ((data_0209f2e0 * 5) + 6) * 8, -1, -1,
+                                0);
                 }
             } else {
-                OAM::Render(true, (OamAttr *)&_ZN3OAM9TINY_STARE, 0xce,
-                            ((data_0209f2e0 * 5) + 6) * 8, -1, -1, 0);
+                OAM::Render(true, &OAM::TINY_STAR, 0xce, ((data_0209f2e0 * 5) + 6) * 8, -1, -1, 0);
             }
         } else {
-            OAM::Render(true, (OamAttr *)&_ZN3OAM9TINY_STARE, 0x26, ((data_0209f2e0 * 5) + 6) * 8,
-                        -1, -1, 0);
+            OAM::Render(true, &OAM::TINY_STAR, 0x26, ((data_0209f2e0 * 5) + 6) * 8, -1, -1, 0);
         }
         if (GetOwnerLanguage() == 5) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov001_020abd98[data_0209f2dc], 0x80,
-                                                        0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020abd98[data_0209f2dc], 0x80, 0x60, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 4) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov001_020ac218[data_0209f2dc], 0x80,
-                                                        0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020ac218[data_0209f2dc], 0x80, 0x60, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 3) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov001_020ac64c[data_0209f2dc], 0x80,
-                                                        0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[data_0209f2dc], 0x80, 0x60, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 2) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov001_020acb68[data_0209f2dc], 0x80,
-                                                        0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020acb68[data_0209f2dc], 0x80, 0x60, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0,
-                                                    _ZN3OAM21CONTROLLER_MODE_TEXTSE[data_0209f2dc],
-                                                    0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000,
+                    0x1000, 0, -1);
         return;
     }
 
@@ -1239,31 +1194,30 @@ void dScStage_c::PS_Render() {
     if (data_0209f2e0 == 2) {
         if (data_0209f29c == 0) {
             if (GetOwnerLanguage() == 5) {
-                OAM::Render(true, (OamAttr *)&_ZN3OAM9TINY_STARE, 0x46, 0xa8, -1, -1, 0);
+                OAM::Render(true, &OAM::TINY_STAR, 0x46, 0xa8, -1, -1, 0);
             } else if (GetOwnerLanguage() == 3) {
-                OAM::Render(true, (OamAttr *)&_ZN3OAM9TINY_STARE, 0x4e, 0xa8, -1, -1, 0);
+                OAM::Render(true, &OAM::TINY_STAR, 0x4e, 0xa8, -1, -1, 0);
             } else {
-                OAM::Render(true, (OamAttr *)&_ZN3OAM9TINY_STARE, 0x56, 0xa8, -1, -1, 0);
+                OAM::Render(true, &OAM::TINY_STAR, 0x56, 0xa8, -1, -1, 0);
             }
         } else {
-            OAM::Render(true, (OamAttr *)&_ZN3OAM9TINY_STARE, 0xce, 0xa8, -1, -1, 0);
+            OAM::Render(true, &OAM::TINY_STAR, 0xce, 0xa8, -1, -1, 0);
         }
     } else {
-        OAM::Render(true, (OamAttr *)&_ZN3OAM9TINY_STARE, 0xe, ((data_0209f2e0 * 6) + 7) * 8, -1,
-                    -1, 0);
+        OAM::Render(true, &OAM::TINY_STAR, 0xe, ((data_0209f2e0 * 6) + 7) * 8, -1, -1, 0);
     }
 
     if (data_0209f238 == 2) {
-        OAM::Render(true, (OamAttr *)&_ZN3OAM25SMALL_ARROW_POINTING_LEFTE, 0x62, 0x38, -1, -1, 0);
+        OAM::Render(true, &OAM::SMALL_ARROW_POINTING_LEFT, 0x62, 0x38, -1, -1, 0);
     } else {
-        OAM::Render(true, (OamAttr *)&_ZN3OAM25SMALL_ARROW_POINTING_LEFTE, 0x64, 0x38, -1, -1, 0);
+        OAM::Render(true, &OAM::SMALL_ARROW_POINTING_LEFT, 0x64, 0x38, -1, -1, 0);
     }
 
     if (data_0209f238 == 1) {
-        OAM::Render(true, (OamAttr *)&_ZN3OAM26SMALL_ARROW_POINTING_RIGHTE, 0xf6, 0x38, -1, -1, 0);
+        OAM::Render(true, &OAM::SMALL_ARROW_POINTING_RIGHT, 0xf6, 0x38, -1, -1, 0);
         return;
     }
-    OAM::Render(true, (OamAttr *)&_ZN3OAM26SMALL_ARROW_POINTING_RIGHTE, 0xf4, 0x38, -1, -1, 0);
+    OAM::Render(true, &OAM::SMALL_ARROW_POINTING_RIGHT, 0xf4, 0x38, -1, -1, 0);
 }
 // @symbol _ZN10dScStage_c25PS_UpdateOkAndBackButtonsEb
 /* Lever (notes 6au): TWO coupled changes that only work together.
@@ -1310,7 +1264,7 @@ void dScStage_c::PS_UpdateOkAndBackButtons(bool b) {
         }
 
         idx = i + base;
-        u16 *scr = G2S::GetBG1ScrPtr() + data_020755cc[idx];
+        u16 *scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755cc[idx];
         for (j = 0; j < data_02075610[idx]; j++) {
             scr[0] = (scr[0] & 0x3ff) | sl;
             scr[0x20] = (scr[0x20] & 0x3ff) | sl;
@@ -1337,7 +1291,7 @@ void dScStage_c::PS_UpdateSaveMenu(bool b) {
                 t = 0x1000;
             v = (u16)t;
         }
-        p = G2S::GetBG1ScrPtr() + data_020755c8[i];
+        p = (u16 *)G2S::GetBG1ScrPtr() + data_020755c8[i];
         for (j = 0; j < 10; j++) {
             p[0] = (p[0] & 0x3ff) | v;
             p[0x20] = (p[0x20] & 0x3ff) | v;
@@ -1357,7 +1311,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     u16 v;
 
     sel = (data_0209f2e4 != 0) ? 0x5000 : 0x6000;
-    scr = G2S::GetBG1ScrPtr() + 0xae;
+    scr = (u16 *)G2S::GetBG1ScrPtr() + 0xae;
     for (j = 0; j < 0xf; j++) {
         scr[0] = (scr[0] & 0x3ff) | sel;
         scr[0x20] = (scr[0x20] & 0x3ff) | sel;
@@ -1367,7 +1321,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     }
 
     for (j = 0; j < 2; j++) {
-        scr = G2S::GetBG1ScrPtr() + data_020755c0[j];
+        scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755c0[j];
         v = (data_0209f2e0 == j) ? 0x4000 : 0x3000;
         counter = 0;
         for (; counter < 0xa; counter++) {
@@ -1378,7 +1332,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     }
 
     for (i = 0; i < 2; i++) {
-        scr = G2S::GetBG1ScrPtr() + data_020755c4[i];
+        scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755c4[i];
         v = (data_0209f2ec == i && data_0209f2cc == 0) ? 0x6000 : 0x5000;
         counter = 0;
         for (; counter < 7; counter++) {
@@ -1397,7 +1351,7 @@ void dScStage_c::UpdateMenuButtons(bool b) {
         unsigned int v;
         int j;
         u16 *p;
-        p = G2S::GetBG1ScrPtr() + data_0209f360[i];
+        p = (u16 *)G2S::GetBG1ScrPtr() + data_0209f360[i];
         if (b == 0) {
             if (data_0209f2e0 == i && data_0209f244 == 0) {
                 v = 0x2000;
@@ -1542,7 +1496,7 @@ void dScStage_c::PS_Update() {
             }
             data_0209f2f0 = 0;
         }
-        _ZN7Message7DisplayEj(data_020756d0[data_0209f2c8]);
+        Message::Display(data_020756d0[data_0209f2c8]);
         data_0209f360[0] = 0x80;
         data_0209f360[1] = 0x120;
         data_0209f360[2] = 0x1c0;
@@ -1671,11 +1625,11 @@ void dScStage_c::PS_Update() {
                     }
                     de_off = sl2 * 4;
                 }
-                if ((a != 0) && (TOUCHP(de_off)[1] != 0)) {
+                if ((a != 0) && (TOUCHP(de_off)->edge != 0)) {
                     var_r0 = 1;
                 }
-                if ((var_r0 != 0) && ((u32)(vx = TOUCHP(sl2 * 4)[2]) < 0x38U) &&
-                    ((u32)TOUCHP(sl2 * 4)[3] < 0x20U)) {
+                if ((var_r0 != 0) && ((u32)(vx = TOUCHP(sl2 * 4)->x) < 0x38U) &&
+                    ((u32)TOUCHP(sl2 * 4)->y < 0x20U)) {
                     u8 t;
                     data_0209f2c8 = (u8)(data_0209f2c8 - 1);
                     var_fp = 1;
@@ -1691,14 +1645,14 @@ void dScStage_c::PS_Update() {
                     }
                 } else {
                     s32 var_r0_2;
-                    if ((a != 0) && (TOUCHP(sl2 * 4)[1] != 0)) {
+                    if ((a != 0) && (TOUCHP(sl2 * 4)->edge != 0)) {
                         var_r0_2 = 1;
                     } else {
                         var_r0_2 = sp4;
                     }
                     if (var_r0_2 != 0) {
-                        if (((u32)(u8)(TOUCHP(sl2 * 4)[2] - 0xC8) < 0x38U) &&
-                            ((u32)TOUCHP(sl2 * 4)[3] < 0x20U)) {
+                        if (((u32)(u8)(TOUCHP(sl2 * 4)->x - 0xC8) < 0x38U) &&
+                            ((u32)TOUCHP(sl2 * 4)->y < 0x20U)) {
                             data_0209f2c8 = (u8)(data_0209f2c8 + 1);
                             data_0209f238 = 2;
                             var_fp = 1;
@@ -1722,7 +1676,7 @@ void dScStage_c::PS_Update() {
         }
         if (var_fp == 0)
             return;
-        _ZN7Message11DisplayTextEt(data_020756d0[data_0209f2c8]);
+        Message::DisplayText(data_020756d0[data_0209f2c8]);
         return;
     }
     case 2: {
@@ -2158,7 +2112,7 @@ void dScStage_c::PS_Update() {
         data_0209f2ec = data_0208ee3c ^ 1;
         data_0209f1fc = data_0208ee40;
         data_0209f238 = 0;
-        _ZN7Message22DisplayOptionsMenuTextEt((s16)(data_0209f234 + 0x284));
+        Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
         data_0209f2b4 = 2;
         data_0209f2e0 = 0;
         dScStage_c::PS_UpdateOptionsMenu();
@@ -2223,7 +2177,7 @@ void dScStage_c::PS_Update() {
                 data_0209f238 = 2;
                 data_0209f210 = data_0208ee44 * 3;
                 data_0209f2e0 = 0;
-                _ZN7Message22DisplayOptionsMenuTextEt((s16)(data_0209f234 + 0x284));
+                Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
                 data_0209f2e4 = 8;
                 dScStage_c::PS_UpdateOptionsMenu();
                 SetSoundMode(data_0209f234);
@@ -2264,7 +2218,7 @@ void dScStage_c::PS_Update() {
                 func_02012790(0x64);
                 data_0209f2e4 = 8;
                 dScStage_c::PS_UpdateOptionsMenu();
-                _ZN7Message22DisplayOptionsMenuTextEt((s16)(data_0209f234 + 0x284));
+                Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
                 {
                     u8 s3 = gActivePlayerSlot;
                     u8 x3 = gTouchX[s3 * 4];
@@ -2544,7 +2498,7 @@ void dScStage_c::PS_Update() {
         dScStage_c::PS_Cleanup();
         data_0209b454 |= 0x40000000;
         data_0209b464 = data_0209b454;
-        _ZN5Sound22StopLoadedMusic_Layer1Ej(0xa);
+        Sound::StopLoadedMusic_Layer1(0xa);
         return;
     }
     case 0x10: {
@@ -2665,8 +2619,7 @@ extern "C" int func_02029408(void) {
 /* Open the pause screen: clear the pause-menu state, pick the first page from
  * the level-clear/VS/castle situation, pause the music and darken both
  * screens. Static, like the rest of the pause-screen family -- dScStage_c::
- * Behavior calls it with nothing in r0. SetBlendBrightness is reached through
- * its mangled symbol `_ZN3G2x18SetBlendBrightnessEPVtts` (declared above). */
+ * Behavior calls it with nothing in r0. */
 void dScStage_c::PS_Init() {
     int isVsMode;
     u8 specialPauseState;
@@ -2721,8 +2674,8 @@ void dScStage_c::PS_Init() {
     }
 
     Sound::PauseMusic();
-    _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16 *)0x04000050, mainBlendTargets | 0x20, -7);
-    _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16 *)0x04001050, subBlendTargets | 0x20, -7);
+    G2x::SetBlendBrightness((volatile u16 *)0x04000050, mainBlendTargets | 0x20, -7);
+    G2x::SetBlendBrightness((volatile u16 *)0x04001050, subBlendTargets | 0x20, -7);
 }
 
 // @symbol func_02029600
@@ -2786,18 +2739,7 @@ int IsButtonInputValid(void) {
 /* The callback object GraphCallback2 reads through `this`: vptr at +0 (never
    touched as data), a fixed-point 2x2 matrix at +0x4 that the object's
    static-init constructor at 0x02074edc seeds with 0x1000 (1.0), and the four
-   affine words after it. */
-struct SceneRelated {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkc;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1c;
-    s32 unk20;
-};
+   affine words after it (StageGraphCallbackView). */
 
 /* Nullary, and a member: vtable slot 2 of dScStage_c::graphCallback_c (RTTI
    si-child of dGraph_c::callback_c). Every dispatcher -- func_02018ec0,
@@ -2823,10 +2765,10 @@ int dScStage_c::GraphCallback1() {
    params into data_0209f3c4 (+0x14..+0x20). */
 extern "C" void UpdateMinimap(MinimapDesc *desc, u32 a, u32 b, u32 c, u32 d) {
     *(MinimapDesc *)(((long long)(int)&data_0209f3c8)) = *desc;
-    data_0209f3c4.f14 = a;
-    data_0209f3c4.f18 = b;
-    data_0209f3c4.f1c = c;
-    data_0209f3c4.f20 = d;
+    data_0209f3c4.originX = a;
+    data_0209f3c4.originY = b;
+    data_0209f3c4.targetX = c;
+    data_0209f3c4.targetY = d;
 }
 
 // @symbol StartEntranceFaderWipe
@@ -2974,9 +2916,9 @@ extern "C" void SetNextLevel(int arg) {
     } else {
         p = data_02075638;
         for (i = 0; i < 8; i++) {
-            if (v == p->a) {
-                data_0209211c = p->b;
-                data_0209f200 = p->c;
+            if (v == p->level) {
+                data_0209211c = p->returnLevel;
+                data_0209f200 = p->entrance;
                 break;
             }
             p++;
@@ -3083,20 +3025,19 @@ void dScStage_c::RenderVsModeNewStar() {
     data_0209f308 = timer - data_0208ee44;
     if (data_0209f308 % 60 >= 10) {
         if (GetOwnerLanguage() == 5)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov002_0210cfd0, 0x80, 0x30, -1, -1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210cfd0, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else if (GetOwnerLanguage() == 4)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov002_0210d050, 0x80, 0x30, -1, -1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210d050, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else if (GetOwnerLanguage() == 3)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov002_0210d0e8, 0x80, 0x30, -1, -1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210d0e8, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else if (GetOwnerLanguage() == 2)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov002_0210d188, 0x80, 0x30, -1, -1,
-                                                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210d188, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, _ZN3OAM20VS_NEW_STAR_APPEAREDE, 0x80,
-                                                        0x30, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
         if (data_0209f1f4 != 0)
             return;
         func_02012790(0x2c);
@@ -3131,41 +3072,36 @@ void dScStage_c::RenderVsModeCountdown() {
         return;
     if (data_0209f2bc != 0) {
         if (GetOwnerLanguage() == 5)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210d008, 0x80, 0x30,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)&data_ov002_0210d008, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else if (GetOwnerLanguage() == 4)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210d098, 0x80, 0x30,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)&data_ov002_0210d098, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else if (GetOwnerLanguage() == 3)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210d130, 0x80, 0x30,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)&data_ov002_0210d130, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else if (GetOwnerLanguage() == 2)
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210d1c8, 0x80, 0x30,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)&data_ov002_0210d1c8, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
         else
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210d210, 0x80, 0x30,
-                                                        -1, -1, 0x1000, 0x1000, 0, -1);
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov002_0210ca0c[3 - data_0209f2bc], 0x80,
-                                                    0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)&data_ov002_0210d210, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
+                        -1);
+        OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 0x80, 0x50, -1, -1,
+                    0x1000, 0x1000, 0, -1);
         return;
     }
     if (data_0209f304 == 0)
         return;
     if (GetOwnerLanguage() == 5)
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210d378, 0x80, 0x50, -1,
-                                                    -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)&data_ov002_0210d378, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 4)
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210d3a0, 0x80, 0x50, -1,
-                                                    -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)&data_ov002_0210d3a0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 3)
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210d3c0, 0x80, 0x50, -1,
-                                                    -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)&data_ov002_0210d3c0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 2)
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210d3e0, 0x80, 0x50, -1,
-                                                    -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)&data_ov002_0210d3e0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
     else
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (void *)&data_ov002_0210d420, 0x80, 0x50, -1,
-                                                    -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)&data_ov002_0210d420, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
 // @symbol NumVsStarsObtained
@@ -3384,68 +3320,66 @@ int dScStage_c::GetSkyboxID() {
 
 // @symbol func_0202a958
 extern "C" int func_0202a958(void) {
-    return ((short *)data_0209f340)[11];
+    return ((LevelInfo *)data_0209f340)->minimapScale;
 }
 
 // @symbol func_0202a96c
 extern "C" int func_0202a96c(void) {
-    return ((unsigned short *)data_0209f340)[7];
+    return ((LevelInfo *)data_0209f340)->minimapPaletteFile;
 }
 
 // @symbol func_0202a980
 extern "C" int func_0202a980(void) {
-    return ((unsigned short *)data_0209f340)[6];
+    return ((LevelInfo *)data_0209f340)->minimapTilesFile;
 }
 
-// @symbol _Z23LoadMinimapChangeObjecti5Fix12IiEh
+// @symbol _Z23LoadMinimapChangeObjectiia
 /* data_0209f314 points at mTexAnimSlots (InitResources stores it). Each
    0xc-byte slot doubles as the per-area record: HideArea/ShowArea toggle its
    mActive byte, and mBlockList heads a sorted list of these minimap-change
    records, threshold at +0, next at +0xc (the link CleanupResources walks
-   when it frees them). */
+   when it frees them). GetMinimapID walks next from the head and answers
+   minimapId for the first record whose height an actor is above. */
 struct MinimapChangeNode {
-    int f0; /* 0x00 value */
-    s8 f4;  /* 0x04 */
+    int height; /* 0x00 */
+    /* 0xf from the loader becomes -1. */
+    s8 minimapId; /* 0x04 */
     char pad5[3];
-    struct MinimapChangeNode *f8; /* 0x08 */
-    struct MinimapChangeNode *fc; /* 0x0c */
+    /* Only LoadMinimapChangeObject reads it, to find the new list head. */
+    struct MinimapChangeNode *prev; /* 0x08 */
+    struct MinimapChangeNode *next; /* 0x0c */
 };
 
-/* The cartridge's global operator new is _Znwj, operator new(unsigned int);
-   a new-expression here asks for operator new(unsigned long) (_Znwm), which
-   the cartridge does not carry, so the allocation calls _Znwj by name. */
-extern "C" void *_Znwj(u32 size);
-
-extern "C" void _Z23LoadMinimapChangeObjecti5Fix12IiEh(int idx, Fix12i val, u8 h) {
-    struct MinimapChangeNode *nn = (MinimapChangeNode *)_Znwj(sizeof(MinimapChangeNode));
-    StageTexAnimSlot *e = (StageTexAnimSlot *)((char *)data_0209f314 + idx * 0xc);
+void LoadMinimapChangeObject(int idx, Fix12i val, s8 h) {
+    struct MinimapChangeNode *nn = (MinimapChangeNode *)::operator new(sizeof(MinimapChangeNode));
+    StageTexAnimSlot *e = &((StageTexAnimSlot *)data_0209f314)[idx];
     struct MinimapChangeNode *cur = (MinimapChangeNode *)e->mBlockList;
     struct MinimapChangeNode *prev = cur;
     if (cur != 0) {
         for (;;) {
             prev = cur;
-            if (val > cur->f0)
+            if (val > cur->height)
                 break;
-            cur = cur->fc;
+            cur = cur->next;
             if (cur == 0)
                 break;
         }
     }
-    nn->fc = prev;
+    nn->next = prev;
     if (prev == 0) {
-        nn->f8 = 0;
+        nn->prev = 0;
     } else {
-        nn->f8 = prev->f8;
-        prev->f8 = nn;
+        nn->prev = prev->prev;
+        prev->prev = nn;
     }
-    if (nn->f8 == 0)
+    if (nn->prev == 0)
         e->mBlockList = nn;
     {
         int hh = h;
-        nn->f0 = val;
+        nn->height = val;
         if (hh == 0xf)
             hh = -1;
-        nn->f4 = (u8)hh;
+        nn->minimapId = (u8)hh;
     }
 }
 
@@ -3607,7 +3541,7 @@ extern "C" void StartFile(s8 levelID, u8 entranceID) {
 
 // @symbol StartWithFarCamera
 extern "C" int StartWithFarCamera(void) {
-    return (((unsigned char *)data_0209f340)[0x15] & 1) != 0;
+    return (((LevelInfo *)data_0209f340)->cameraFlags & 1) != 0;
 }
 
 // @symbol GetStarCameraSetting
@@ -3632,16 +3566,17 @@ extern "C" void func_0202af80(int a, int b) {
 }
 
 // @symbol GetMinimapID
-/* The object GetMinimapID places: its height at +0x60, its area at +0xcc. */
+/* The actor GetMinimapID places, with dActor_c's names: its height at
+   +0x60, its area at +0xcc. */
 struct Obj {
     char pad0[0x60];
-    int f60;
+    int mPosY; /* 0x60 */
     char pad64[0xcc - 0x64];
-    s8 fcc;
+    s8 mAreaId; /* 0xcc */
 };
 
 extern "C" int GetMinimapID(struct Obj *obj, int arg) {
-    int idx = obj->fcc;
+    int idx = obj->mAreaId;
     char *g;
     int val;
     struct MinimapChangeNode *node;
@@ -3649,23 +3584,23 @@ extern "C" int GetMinimapID(struct Obj *obj, int arg) {
         idx = data_02092120;
     g = (char *)data_0209f314;
     if (g != 0) {
-        node = (MinimapChangeNode *)((StageTexAnimSlot *)(g + idx * 0xc))->mBlockList;
+        node = (MinimapChangeNode *)((StageTexAnimSlot *)g)[idx].mBlockList;
         if (node != 0) {
-            val = obj->f60;
+            val = obj->mPosY;
             while (node != 0) {
-                int d = val - node->f0;
+                int d = val - node->height;
                 if (d > 0) {
                     if (arg >= 0 && d < 0xc8000)
                         return arg;
                     break;
                 }
-                node = node->fc;
+                node = node->next;
             }
             if (node != 0)
-                return node->f4;
+                return node->minimapId;
         }
     }
-    return *(s8 *)(*(char **)(data_0209f340 + 0x10) + idx * 0xc + 8);
+    return ((LevelInfo *)data_0209f340)->entries[idx].minimapId;
 }
 
 // @symbol func_0202b044
@@ -3719,35 +3654,23 @@ extern "C" void func_0202b0e0(int a, int b) {
 
 // @symbol _ZN10dScStage_c10LoadSkyboxEv
 /* Ask the level record which skybox to use and, if there is one, allocate a
- * Model, construct it and load the file for that ID. mSkyboxModel is typed in
+ * dExtSimpleModel_c, construct it and load the file for that ID. mSkyboxModel is typed in
  * include/dScStage_c.h because of this store and the virtual destroy in
  * CleanupResources.
- *
- * The `new` is spelled as the raw _Znwj call rather than as `new Model` because
- * the ROM calls operator new and then guards the constructor on a null return,
- * which the language's own `new` expression does not emit.
  */
-extern "C" {
-extern void *_ZN5ModelC1Ev(void *thiz);
-}
-
 void dScStage_c::LoadSkybox() {
     u32 skyboxID = GetSkyboxID();
     if (!skyboxID)
         return;
-    Model *model = (Model *)_Znwj(0x50);
-    if (model != 0) {
-        model = (Model *)_ZN5ModelC1Ev(model);
-    }
-    mSkyboxModel = model;
+    mSkyboxModel = new dExtSimpleModel_c;
     u16 fileID = data_02075620[skyboxID - 1];
     mSkyboxModel->LoadAndSetFile(fileID, 0, 2);
 }
 
 // @symbol _ZN10dScStage_c22RenderModelTransparentEv
-/* Model's own vtable shape as far as the two RenderModel passes need it (six
+/* dExtSimpleModel_c's own vtable shape as far as the two RenderModel passes need it (six
    slots: D1, D0, DoSetFile, UpdateVerts, Virtual10, Render), named to avoid
-   colliding with the real ModelBase (which has only three). */
+   colliding with the real dExtModel_c (which has only three). */
 struct LocalModelVtableShape {
     virtual void vf0();
     virtual void vf1();
@@ -3770,7 +3693,7 @@ struct Component {
     char pad28[0x8];
 };
 
-/* Local view of the real ModelComponents (include/ModelBase.h): `sub` is that
+/* Local view of the real ModelComponents (include/dExtModel_c.h): `sub` is that
    type's `modelFile` (offset 0x0); `components` is its `materials` (offset
    0x4, 0x30-byte records). */
 struct LocalModelComponents {
@@ -3779,7 +3702,6 @@ struct LocalModelComponents {
 };
 
 void dScStage_c::RenderModelTransparent() {
-    // The material count at bone +0x30 is still opaque in BMD_Bone.
     ModelComponents *components = &mModel.data;
     BMD_Bone *bone = components->modelFile->bones;
     StageTexAnimSlot *slot = mTexAnimSlots;
@@ -3789,8 +3711,7 @@ void dScStage_c::RenderModelTransparent() {
         if (slot->mActive != 0) {
             u8 *materialIds = bone->materialIds;
             u16 materialIndex;
-            for (materialIndex = 0; materialIndex < *(u16 *)((char *)bone + 0x30);
-                 materialIndex++) {
+            for (materialIndex = 0; materialIndex < bone->numMaterials; materialIndex++) {
                 BMD_Material *material = &components->materials[*materialIds];
                 if ((material->flags & 0x1f0000) != 0x1f0000)
                     material->flags &= ~0x80000000;
@@ -3800,13 +3721,12 @@ void dScStage_c::RenderModelTransparent() {
             }
         }
     }
-    Model *model = &mModel;
+    dExtSimpleModel_c *model = &mModel;
     model->Render((const Vector3 *)&data_020755d4);
 }
 
 // @symbol _ZN10dScStage_c11RenderModelEv
 void dScStage_c::RenderModel() {
-    // The material count at bone +0x30 is still opaque in BMD_Bone.
     ModelComponents *components = &mModel.data;
     BMD_Bone *bone = components->modelFile->bones;
     StageTexAnimSlot *slot = mTexAnimSlots;
@@ -3818,8 +3738,7 @@ void dScStage_c::RenderModel() {
 
         if (active != 0) {
             u16 materialIndex;
-            for (materialIndex = 0; materialIndex < *(u16 *)((char *)bone + 0x30);
-                 materialIndex++) {
+            for (materialIndex = 0; materialIndex < bone->numMaterials; materialIndex++) {
                 u8 materialId = *materialIds;
                 BMD_Material *material = &components->materials[materialId];
                 materialIds++;
@@ -3833,11 +3752,10 @@ void dScStage_c::RenderModel() {
                 }
             }
             if (slot->mTransformer != 0)
-                ((TextureTransformer *)slot->mTransformer)->Update(mModel.data);
+                slot->mTransformer->Update(mModel.data);
         } else {
             u16 materialIndex;
-            for (materialIndex = 0; materialIndex < *(u16 *)((char *)bone + 0x30);
-                 materialIndex++) {
+            for (materialIndex = 0; materialIndex < bone->numMaterials; materialIndex++) {
                 u8 materialId = *materialIds;
                 BMD_Material *material = &components->materials[materialId];
                 material->flags |= 0x80000000;
@@ -3849,7 +3767,7 @@ void dScStage_c::RenderModel() {
         bone++;
     }
 
-    Model *model = &mModel;
+    dExtSimpleModel_c *model = &mModel;
     model->Render((const Vector3 *)&data_020755d4);
 }
 
@@ -3926,12 +3844,6 @@ extern "C" int CopyTexPalFromLevelModel(void *p) {
 }
 
 // @symbol _ZN10dScStage_c23LoadTextureTransformersEv
-extern "C" {
-extern void *_ZN18TextureTransformerC1Ev(void *);
-extern void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *self, void *bta, int a,
-                                                                  int b, u32 c);
-}
-
 void dScStage_c::LoadTextureTransformers() {
     struct LevelTexAnim *entry = ((LevelInfo *)data_0209f340)->entries;
     StageTexAnimSlot *slot = mTexAnimSlots;
@@ -3939,14 +3851,9 @@ void dScStage_c::LoadTextureTransformers() {
     int slotIndex;
     for (slotIndex = 0; slotIndex < (int)((LevelInfo *)data_0209f340)->count; slotIndex++) {
         if (entry->bta) {
-            TextureTransformer::Prepare(*modelFile, *(BTA_File *)entry->bta);
-            // The ROM calls _Znwj; a C++ new expression selects _Znwm under this pin.
-            void *transformer = _Znwj(0x14);
-            if (transformer)
-                transformer = _ZN18TextureTransformerC1Ev(transformer);
-            slot->mTransformer = transformer;
-            _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(slot->mTransformer, entry->bta, 0,
-                                                                  0x1000, 0);
+            dExtAnmTexSRT_c::Prepare(*modelFile, *(BTA_File *)entry->bta);
+            slot->mTransformer = new dExtAnmTexSRT_c;
+            slot->mTransformer->SetFile(*(BTA_File *)entry->bta, 0, 0x1000, 0);
         }
         entry++;
         slot++;
@@ -3979,23 +3886,18 @@ void dScStage_c::LoadModel() {
 }
 
 // @symbol _ZN10dScStage_c9RenderFogEv
-extern "C" {
-void *func_ov002_020f1c20(void);
-// local extern: G3X::SetFog takes a bool, and the ROM passes the raw byte with no conversion
-void _ZN3G3X6SetFogEbiii(int b, int a1, int a2, int a3);
-}
 
 void dScStage_c::RenderFog() {
     Fog *fog = 0;
     if (data_0209f2f8 == 5)
-        fog = (Fog *)func_ov002_020f1c20();
+        fog = daMugenBGM_c::GetActiveFog();
     if (fog == 0) {
         dCamera_c *camera = (dCamera_c *)data_0209f318;
         fog = mFog;
         if (camera->IsUnderwater())
             fog++;
     }
-    _ZN3G3X6SetFogEbiii(fog->mEnabled, 0, fog->mShift, fog->mOffset);
+    G3X::SetFog(fog->mEnabled, 0, fog->mShift, fog->mOffset);
     *(volatile unsigned int *)0x4000358 = fog->mColor | 0x1f0000;
     G3X::SetFogTable(fog);
 }
@@ -4004,10 +3906,6 @@ void dScStage_c::RenderFog() {
 /* dScStage_c::LoadFog. Lays down two default ramps -- a shallow one in mFog[0] and
    a steeper one in mFog[1] -- then lets the level's own fog records, if it has
    any, overwrite them through Fog::Init. */
-extern "C" {
-extern void _ZN3Fog4InitEt5Fix12IiES1_(Fog *self, unsigned short color, int nearv, int farv);
-}
-
 void dScStage_c::LoadFog() {
     unsigned char normalDensity = 0;
     unsigned char underwaterDensity = 0x28;
@@ -4036,8 +3934,8 @@ void dScStage_c::LoadFog() {
             } else {
                 unsigned short color = ((fogRecord[1] >> 3) | ((fogRecord[2] >> 3) << 5)) |
                                        ((fogRecord[3] >> 3) << 10);
-                _ZN3Fog4InitEt5Fix12IiES1_(fog, color, *((unsigned short *)(fogRecord + 4)),
-                                           *((unsigned short *)(fogRecord + 6)));
+                fog->Init(color, *((unsigned short *)(fogRecord + 4)),
+                          *((unsigned short *)(fogRecord + 6)));
             }
             fogRecord += 8;
             fog++;
@@ -4083,14 +3981,14 @@ int dScStage_c::Render() {
         int slotIndex;
         for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count; slotIndex++, slot++) {
             if (slot->mActive != 0 && slot->mTransformer != 0)
-                ((dExtFrameCtrl_c *)slot->mTransformer)->Advance();
+                slot->mTransformer->Advance();
         }
         mSysTracker.Update();
     }
     func_020391f0();
     RenderFog();
     {
-        Model *skybox = mSkyboxModel;
+        dExtSimpleModel_c *skybox = mSkyboxModel;
         if (skybox != 0) {
             Matrix4x3 *transform = &skybox->mat4x3;
             Vector3 *cameraPosition = &((dCamera_c *)data_0209f318)->pos;
@@ -4140,8 +4038,8 @@ int dScStage_c::Render() {
         int coinCounterY = (SublevelToLevel(data_02092124) < 0xf) ? 0x80 : 0x70;
         if (data_0209f2b0 != 0)
             coinCounterY += 0x10;
-        OAM::Render(0, &_ZN3OAM4COINE, 0x68, coinCounterY, -1, -1, 0);
-        OAM::Render(0, &_ZN3OAM5TIMESE, 0x78, coinCounterY + 8, -1, -1, 0);
+        OAM::Render(0, &OAM::COIN, 0x68, coinCounterY, -1, -1, 0);
+        OAM::Render(0, &OAM::TIMES, 0x78, coinCounterY + 8, -1, -1, 0);
         RenderNumber(data_0209f260, 0x80, coinCounterY, 1, 8);
     }
     LC_Render();
@@ -4285,7 +4183,7 @@ int dScStage_c::Behavior() {
             if ((b1 && data_0209fc68 == 0) || (((SaveData *)data_0209caa0)->flags2 & 0x80)) {
                 int b2 = (st == 2);
                 if (b2 == 0) {
-                    int b3 = (data_0209fc48 != 0);
+                    int b3 = (gRunningKuppaScript != 0);
                     if (b3 == 0) {
                         if (data_0209f300 == 0) {
                             u32 pj = gActivePlayerSlot;
@@ -4327,7 +4225,7 @@ int dScStage_c::Behavior() {
 
 extern "C" {
 u8 DecIfAbove0_Byte(u8 *p);
-s16 _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
+s16 atan2_hold_d_s_stage_methods_1(int y, int x);
 }
 
 void dScStage_c::CheckInput() {
@@ -4336,7 +4234,7 @@ void dScStage_c::CheckInput() {
     if (isVsMode == false) {
         int modeIsTwo = (mode == 2);
         if (modeIsTwo != false || !(((SaveData *)data_0209caa0)->flags2 & 0x80) ||
-            (data_0209d660 == 0 && (int)(data_0209fc48 != 0) != false)) {
+            (data_0209d660 == 0 && (int)(gRunningKuppaScript != 0) != false)) {
             {
                 CamInput *control = (CamInput *)data_0209f498;
                 int playerIndex;
@@ -4434,7 +4332,7 @@ void dScStage_c::CheckInput() {
                 control->mag = (distance << 12) / maxDistance;
                 control->nx = (deltaX << 12) / maxDistance;
                 control->ny = (deltaY << 12) / maxDistance;
-                control->ang = _ZN4cstd5atan2E5Fix12IiES1_(deltaX, deltaY);
+                control->ang = cstd::atan2(deltaX, deltaY);
             }
         } else {
             int touchEnded;
@@ -4459,7 +4357,7 @@ void dScStage_c::CheckInput() {
             }
         }
         {
-            int skipButtonMapping = (data_0209fc48 != 0);
+            int skipButtonMapping = (gRunningKuppaScript != 0);
             if (skipButtonMapping == false) {
                 u16 *buttonMap = data_0209214c[control->mode];
                 u32 buttonIndex = 0;
@@ -4487,27 +4385,26 @@ void dScStage_c::CheckInput() {
     } while (playerIndex < data_0209f21c);
 }
 
-// @symbol _ZN3Fog4InitEt5Fix12IiES1_
+// @symbol _ZN3Fog4InitEtii
 /* Fills the density ramp from a near/far pair, then writes the fog registers.
-   The ramp is walked with a running `p`, not `self->mDensity[i]`: MEASURED,
+   The ramp is walked with a running `p`, not `mDensity[i]`: MEASURED,
    the indexed spelling changes the function's size. */
-extern "C" void _ZN3Fog4InitEt5Fix12IiES1_(struct Fog *self, unsigned short color, int nearv,
-                                           int farv) {
+void Fog::Init(unsigned short color, Fix12i nearv, Fix12i farv) {
     int dist;
     int step;
     int i;
     char *p; /* walks mDensity */
 
-    self->mEnabled = 1;
+    this->mEnabled = 1;
     dist = 0x28000 - (nearv << 4);
-    self->mColor = color;
-    self->mShift = 6;
-    self->mOffset = 0;
+    this->mColor = color;
+    this->mShift = 6;
+    this->mOffset = 0;
     if (dist >= 0x80000)
         dist = 0x7ffff;
     step = (0x100000 - (farv << 4) - dist) >> 5;
     i = 0;
-    p = ((char *)self);
+    p = ((char *)this);
     while (i < 0x20) {
         if (dist <= 0) {
             *p = 0;
@@ -4553,7 +4450,7 @@ extern "C" void ResetInput(void) {
 }
 
 // @symbol _ZN10dScStage_c16CleanupResourcesEv
-/* _ZN10dScStage_c16CleanupResourcesEv @ 0x0202c9a8 (arm9, size 0x264)
+/* dScStage_c::CleanupResources() @ 0x0202c9a8 (arm9, size 0x264)
  * Releases the level file handles, tears down fader/mesh-collider/message
  * state and unloads the level overlays/archive. Returns 1.
  */
@@ -4587,7 +4484,7 @@ int dScStage_c::CleanupResources() {
     data_0209d4a8 = 0;
 
     {
-        Model *skybox = mSkyboxModel;
+        dExtSimpleModel_c *skybox = mSkyboxModel;
         if (skybox)
             delete skybox;
     }
@@ -4596,13 +4493,13 @@ int dScStage_c::CleanupResources() {
         StageTexAnimSlot *slot = mTexAnimSlots;
         int slotIndex;
         for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count; slotIndex++, slot++) {
-            TextureTransformer *transformer = (TextureTransformer *)slot->mTransformer;
+            dExtAnmTexSRT_c *transformer = slot->mTransformer;
             if (transformer)
                 delete transformer;
             {
-                char *block = (char *)slot->mBlockList;
+                MinimapChangeNode *block = (MinimapChangeNode *)slot->mBlockList;
                 while (block) {
-                    char *next = *(char **)(block + 0xc);
+                    MinimapChangeNode *next = block->next;
                     Memory::operator_delete2(block);
                     block = next;
                 }
@@ -4702,8 +4599,6 @@ void func_ov001_020ab2e4(void);
 // local extern: the fader array's constructor is passed by address to
 // func_02073470, which member syntax cannot express.
 void *_ZN9dFdWipe_cC1Ev(void *thiz);
-// local extern: member form converts the e3d argument to bool; the ROM call passes the raw int
-void _ZN10dScStage_c14LoadGraphics2DEbi(int e3d, int level);
 }
 
 int dScStage_c::InitResources() {
@@ -4904,13 +4799,12 @@ int dScStage_c::InitResources() {
         }
 
         *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 2;
-        int vsModeGraphics = (data_0209f2d8 == 1) ? 1 : 0;
-        _ZN10dScStage_c14LoadGraphics2DEbi(vsModeGraphics, data_0209f2f8);
+        LoadGraphics2D(data_0209f2d8 == 1, data_0209f2f8);
 
         {
             u32 i;
             for (i = 0; i < 0xC; i++) {
-                Model::LoadFile(*(SharedFilePtr *)data_020756f0[i]);
+                dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_020756f0[i]);
             }
         }
 
@@ -4943,7 +4837,7 @@ int dScStage_c::InitResources() {
 
         int vsModeMusic = (data_0209f2d8 == 1) ? 1 : 0;
         if (vsModeMusic == 0) {
-            int skipMusicSetup = (data_0209fc48 != 0) ? 1 : 0;
+            int skipMusicSetup = (gRunningKuppaScript != 0) ? 1 : 0;
             if (skipMusicSetup == 0) {
                 if (!IsLevelInsideCastle(data_0209f2f8) || !IsLevelInsideCastle(previousSublevel)) {
                     if (!IsLevelTinyHugeIslandOutside(data_0209f2f8) ||
@@ -5027,10 +4921,8 @@ extern "C" {
 void SetBg0Offset(int a, int b);
 void LoadFont(u8 arg);
 int GetOwnerLanguage(void);
-char *_ZN2G213GetBG2CharPtrEv(void);
 u32 LoadCompressedFileAt(u16 fileID, void *target);
 int LoadFileAt(int handle, int dest);
-char *_ZN2G212GetBG2ScrPtrEv(void);
 void LoadControllerModeText(int a);
 void LoadFont3D(void);
 void MultiStore16(u16 val, char *dst, int nbytes);
@@ -5061,18 +4953,18 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     if (vsMode == 0) {
         LoadFont(0);
         if (GetOwnerLanguage() == 5) {
-            LoadCompressedFileAt(0xb00f, _ZN2G213GetBG2CharPtrEv());
+            LoadCompressedFileAt(0xb00f, G2::GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 4) {
-            LoadCompressedFileAt(0xac0f, _ZN2G213GetBG2CharPtrEv());
+            LoadCompressedFileAt(0xac0f, G2::GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 3) {
-            LoadCompressedFileAt(0xa80f, _ZN2G213GetBG2CharPtrEv());
+            LoadCompressedFileAt(0xa80f, G2::GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 2) {
-            LoadCompressedFileAt(0xa40f, _ZN2G213GetBG2CharPtrEv());
+            LoadCompressedFileAt(0xa40f, G2::GetBG2CharPtr());
         } else {
-            LoadCompressedFileAt(0xa00f, _ZN2G213GetBG2CharPtrEv());
+            LoadCompressedFileAt(0xa00f, G2::GetBG2CharPtr());
         }
         LoadFileAt(0x980b, 0x5000000);
-        screenMap = _ZN2G212GetBG2ScrPtrEv();
+        screenMap = (char *)G2::GetBG2ScrPtr();
         LoadCompressedFileAt(0x9808, screenMap);
         LoadCompressedFileAt(0x9809, screenMap + 0x800);
         LoadCompressedFileAt(0x980a, screenMap + 0x1000);
@@ -5082,7 +4974,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     }
 
     if ((int)(data_0209f2d8 == 0) != 0 && (((SaveData *)data_0209caa0)->flags2 & 0x80) == 0 &&
-        (int)(data_0209fc48 != 0) == 0) {
+        (int)(gRunningKuppaScript != 0) == 0) {
         BG0CNT_SUB &= ~3;
         BG0CNT_SUB &= ~0x40;
         BG0CNT_SUB = (BG0CNT_SUB & 0x43) | 0xd000;
@@ -5100,7 +4992,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadCompressedFileAt(ASSET_D_2D_OP_OBJ_CL_NCG_BIN, (void *)0x6600000);
         LoadFileAt(ASSET_D_2D_OP_OBJ_CL_NCL_BIN, 0x5000600);
         {
-            char *clearScreenMap = G2S::GetBG2ScrPtr();
+            char *clearScreenMap = (char *)G2S::GetBG2ScrPtr();
             volatile u16 fillTile = 0x10d0;
             MultiStore16(fillTile, clearScreenMap, 0x800);
         }
@@ -5155,7 +5047,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadCompressedFileAt(0xa00b, screenMap + 0x2000);
     }
 
-    subBg2Screen = G2S::GetBG2ScrPtr();
+    subBg2Screen = (char *)G2S::GetBG2ScrPtr();
     LoadCompressedFileAt(0x9805, subBg2Screen);
     LoadCompressedFileAt(0x9806, subBg2Screen + 0x1000);
 
@@ -5164,19 +5056,19 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
             return;
         }
         if (GetOwnerLanguage() == 5) {
-            LoadCompressedFileAt(0xb00f, _ZN2G213GetBG2CharPtrEv());
+            LoadCompressedFileAt(0xb00f, G2::GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 4) {
-            LoadCompressedFileAt(0xac0f, _ZN2G213GetBG2CharPtrEv());
+            LoadCompressedFileAt(0xac0f, G2::GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 3) {
-            LoadCompressedFileAt(0xa80f, _ZN2G213GetBG2CharPtrEv());
+            LoadCompressedFileAt(0xa80f, G2::GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 2) {
-            LoadCompressedFileAt(0xa40f, _ZN2G213GetBG2CharPtrEv());
+            LoadCompressedFileAt(0xa40f, G2::GetBG2CharPtr());
         } else {
-            LoadCompressedFileAt(0xa00f, _ZN2G213GetBG2CharPtrEv());
+            LoadCompressedFileAt(0xa00f, G2::GetBG2CharPtr());
         }
         LoadFileAt(0x980b, 0x5000000);
         LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
-                             _ZN2G212GetBG2ScrPtrEv() + 0x1800);
+                             (char *)G2::GetBG2ScrPtr() + 0x1800);
         LoadCompressedFileAt(0x9801, screenMap + 0x2800);
         return;
     }
@@ -5185,14 +5077,16 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         volatile u16 blankTile = 0;
         MultiStore16(blankTile, screenMap, 0x40);
         LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_SELECT_PAUSE_NSC_BIN, screenMap + 0x40);
-        LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_PAGE_NSC_BIN, _ZN2G212GetBG2ScrPtrEv() + 0x1800);
+        LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_PAGE_NSC_BIN,
+                             (char *)G2::GetBG2ScrPtr() + 0x1800);
         LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
-                             _ZN2G212GetBG2ScrPtrEv() + 0x2800);
+                             (char *)G2::GetBG2ScrPtr() + 0x2800);
         LoadCompressedFileAt(0x9802, screenMap + 0x2800);
         return;
     }
 
-    LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN, _ZN2G212GetBG2ScrPtrEv() + 0x1800);
+    LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
+                         (char *)G2::GetBG2ScrPtr() + 0x1800);
     LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_SELECT_PAUSE_NSC_BIN, screenMap);
 }
 

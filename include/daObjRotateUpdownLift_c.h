@@ -38,7 +38,12 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
     /* Named by the class's own destructor calling dExtShadowModel_c's D1 at +0x320
        -- a relocation the ROM build checks. Was a u8 marker. */
     dExtShadowModel_c mShadowModel;    /* 0x320 */
-    u8  pad_348[0x30];
+    /* The drop shadow's matrix: func_ov091_02131160 builds a Y rotation here,
+       stores position >> 3 in its translation row (0x36c..0x374) and hands it
+       to dActor_c::DropShadowScaleXYZ as the Matrix4x3 & after mShadowModel.
+       Raw bytes: a Matrix4x3 member emits _ZN9Matrix4x3D1Ev in the TU and
+       renumbers its @NNN (measured). Was pad_348. */
+    u8 mShadowMat[0x30];         /* 0x348 */
     s32 mSoundHandle;            /* 0x378 */
     s32 mGroundY;            /* 0x37c */
     s16 mSpawnAngleX;            /* 0x380 */
@@ -51,8 +56,11 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
     u8  mWaypointIndex;            /* 0x394 */
     u8  mVariant;            /* 0x395 */
     u8  pad_396[0x2];
-    s32 mPlatform0;            /* 0x398 */
-    s32 mPlatform1;            /* 0x39c */
+    /* The two UPDOWN_LIFTs the param1 0xffff watcher found within 0xa0000
+       (Behavior): it reads their mIsDead and calls func_ov091_02130fac on
+       them, so these are daObjRotateUpdownLift_c pointers. Were s32. */
+    daObjRotateUpdownLift_c *mPlatform0; /* 0x398 */
+    daObjRotateUpdownLift_c *mPlatform1; /* 0x39c */
     u8  mIsDead;            /* 0x3a0 */
     u8  pad_3a1[0x1];
     s16 mPitchBase;            /* 0x3a2 */
@@ -77,7 +85,7 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
     int Render();
 
     void func_ov091_02130fac();
-    int  func_ov091_02131160();
+    void func_ov091_02131160();
     void func_ov091_02131340();
 
     /* Slot 27, dActor_c's combat-callback override (include/dActor_c.h).
@@ -93,7 +101,7 @@ typedef char daObjRotateUpdownLift_c_size_must_be_0x3a8[sizeof(daObjRotateUpdown
 
 #else
 
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 /* The same object spelled flat, for the compiler-generated destructor, which
    lives in a C translation unit and can never be migrated. */
@@ -120,7 +128,7 @@ struct daObjRotateUpdownLift_c {
     u8  pad_0b4[0x18];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
-    Model mModel;            /* 0x0d4 */
+    dExtSimpleModel_c mModel;            /* 0x0d4 */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x14];
     u8  unk_300;            /* 0x300 */

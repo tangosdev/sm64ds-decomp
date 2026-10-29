@@ -3,14 +3,12 @@
  * (ov006/dScMgCard_c, 37 functions).
  *
  * Keep definition order: the compiler emits functions in reverse. The scene
- * destructor is inline in dScMgCard_c.h, which with the four card
- * constructor and destructor callbacks keeps D1 ahead of D0 as in the
- * cartridge.
+ * destructor is inline in dScMgCard_c.h, so its D1 and D0 come out first,
+ * as in the cartridge. The two card destructors are defined at the bottom
+ * of this file and their D1s follow the scene's D0. The card constructors
+ * are implicit and come out after the factory that uses them.
  *
  * leftovers:
- *   - the ROM has no dScMgCard_c constructor, so the factory builds the
- *     scene by hand and its base constructor, operator new and vtable
- *     stores stay mangled.
  *   - the ov004 and ov006 helpers are unnamed in symbols.txt.
  */
 
@@ -18,6 +16,7 @@
 #include "types.h"
 #include "decl_common.h"
 #include "Sound.h"
+#include "math/Approach.h"
 extern "C" {
 // local extern: PlayerInput.h cannot be included here, its flat gTouchX/gTouchY spelling does not reproduce dMgCardObj_c::Update.
 extern unsigned char gActivePlayerSlot;
@@ -47,16 +46,12 @@ typedef struct OamAttrTmpl {
 extern "C" {
 extern int pmf_Dealer_StateDeal_2[2];
 extern int pmf_Dealer_StateReveal[2];
-/* The two element vtables are emitted here by their key functions. The four
-   measured array-construction ABI callbacks reference the ROM address points;
-   these names are already mangled, so C linkage means "use literally". */
 extern unsigned short sCardFaceSprites[];
 extern void *sCardObjSprites[];
 extern int sMgCardSprites[];
 extern void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
 extern void **sCardPayoutHighlightSprites[];
 extern void *sCardHudSprites[];
-unsigned int func_02012790(unsigned int a);
 extern int sCardSelectLocked;
 extern int sCardSwapRequested;
 extern int data_ov006_02141770;
@@ -99,50 +94,17 @@ extern void *LoadFile(int);
 extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *, void *);
 extern int Dealer_Load(char *);
-void *_ZN11dScMgBase_cC2Ev(void*);
-void _ZN8Particle10SysTrackerC1Ev(void*);
-typedef void (*CardElementCallback)(void *);
-void __cxa_vec_ctor(void *, unsigned int, unsigned int,
-                    CardElementCallback, CardElementCallback);
-extern int _ZTV19dScMgSingle3DBase_c;
-extern int _ZTV11dScMgCard_c[];
-extern int _ZTV12dMgCardObj_c[];
-extern int _ZTV17dMgDilarCardObj_c[];
-void _ZN12dMgCardObj_cC1Ev(void*);
-void _ZN17dMgDilarCardObj_cC1Ev(void*);
-}
-
-// @symbol _ZN12dMgCardObj_cC1Ev
-extern "C" void _ZN12dMgCardObj_cC1Ev(void* elem)
-{
-    *(int*)elem = (int)&_ZTV12dMgCardObj_c[2];
-}
-
-// @symbol _ZN17dMgDilarCardObj_cC1Ev
-extern "C" void _ZN17dMgDilarCardObj_cC1Ev(void* elem)
-{
-    *(int*)elem = (int)&_ZTV12dMgCardObj_c[2];
-    *(int*)elem = (int)&_ZTV17dMgDilarCardObj_c[2];
 }
 
 // @symbol dScMgCard_c_classInit
+/* `new` inlines the implicit constructor: the base chain, this class's
+   vptr, mDealer, then the two hands through __cxa_vec_ctor. The two card
+   classes' implicit constructors are generated here, as the ROM's
+   _ZN12dMgCardObj_cC1Ev (0x020dbe30) and _ZN17dMgDilarCardObj_cC1Ev
+   (0x020dbe14), the last two functions of the run. */
 extern "C" void* dScMgCard_c_classInit()
 {
-    char* p = (char*)_ZN7fBase_cnwEj(sizeof(dScMgCard_c));
-    if (p) {
-        _ZN11dScMgBase_cC2Ev(p);
-        *(int*)p = (int)&_ZTV19dScMgSingle3DBase_c;
-        _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
-        *(int*)p = (int)&_ZTV11dScMgCard_c[2];
-        Dealer_Construct(p + 0x4f38);
-        __cxa_vec_ctor(p + 0x51a8, 5, 0x30,
-                     _ZN12dMgCardObj_cC1Ev,
-                     _ZN12dMgCardObj_cD1Ev);
-        __cxa_vec_ctor(p + 0x5298, 5, 0x30,
-                     _ZN17dMgDilarCardObj_cC1Ev,
-                     _ZN17dMgDilarCardObj_cD1Ev);
-    }
-    return p;
+    return new dScMgCard_c;
 }
 
 /* Engine calls by their C++ names. The parameter types are read off the
@@ -150,9 +112,9 @@ extern "C" void* dScMgCard_c_classInit()
    `Riii` int reference, `Rsss` short reference. */
 namespace GX { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
 namespace GXS { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
-namespace G2x { void SetBlendAlpha(volatile u16 *reg, u16 a, u16 b, u16 c, u32 d); }
-int  ApproachLinear(int &value, int target, int step);
-int  ApproachLinear2(s16 &value, s16 target, s16 step);
+namespace G2x {
+void SetBlendAlpha(volatile u16 *reg, int a, int b, int c, int d);
+}
 
 // @symbol _ZN11dScMgCard_c13InitResourcesEv
 /* Slot 0. Loads and decompresses the OBJ tiles and palettes for both
@@ -210,7 +172,7 @@ s32 dScMgCard_c::InitResources()
     *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
 
     Camera_InitDealerView(pad_4660);
-    if (Dealer_Load((char *)&mShared) == 0)
+    if (Dealer_Load((char *)&mDealer) == 0)
         return 0;
 
     {
@@ -256,10 +218,10 @@ void dScMgCard_c::StartRound(int mode)
     mPlayerHandFace2 = 6;
     mDealerHandFace = 6;
     mDealerHandFace2 = 6;
-    Dealer_StartShuffle((char *)&mShared, 4, 5, (int)&mDealCount);
+    Dealer_StartShuffle((char *)&mDealer, 4, 5, (int)&mDealCount);
 
-    mShared.unk_1e6 = 1;
-    mShared.unk_01a = 2;
+    mDealer.mReserved = 1;
+    mDealer.mHand = 2;
     dScMgCard_c::FillWeights(5);
 
     p1 = (char *)mArray1;
@@ -301,7 +263,7 @@ int dScMgCard_c::CanEndState(int mode)
         break;
     }
     case 0xf:
-        if (Dealer_IsIdle(&mShared) != 0) {
+        if (Dealer_IsIdle(&mDealer) != 0) {
             int r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
             if (r == -1) {
                 MgCoins_StartLose();
@@ -424,11 +386,11 @@ void dScMgCard_c::UpdateState()
             mPromptBlinkCount = 1;
             mPromptBlinkTimer = 0;
         }
-        if (Dealer_IsBusy(&mShared) != 0)
+        if (Dealer_IsBusy(&mDealer) != 0)
             mState++;
         break;
     case 2:
-        if (Dealer_IsIdle(&mShared) != 0) {
+        if (Dealer_IsIdle(&mDealer) != 0) {
             mStateTimer = 0x10;
             mState++;
         } else {
@@ -518,14 +480,14 @@ void dScMgCard_c::UpdateState()
     case 5:
         if (sCardSelectLocked != 0 &&
             dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 2) != 0 &&
-            Dealer_IsIdle(&mShared) != 0) {
+            Dealer_IsIdle(&mDealer) != 0) {
             mState++;
-        } else if (Dealer_IsIdle(&mShared) != 0) {
+        } else if (Dealer_IsIdle(&mDealer) != 0) {
             r = dScMgCard_c::CountInState((const dMgCardObj_c *)mArray1, 6);
             if (r != 0) {
                 mDealCount = 0;
-                mShared.unk_1e6 = 0;
-                Dealer_StartDeal(&mShared, (s16)r, &mDealCount);
+                mDealer.mReserved = 0;
+                Dealer_StartDeal(&mDealer, (s16)r, &mDealCount);
             }
         } else {
             r = dScMgCard_c::FindInState((const dMgCardObj_c *)mArray1, 6);
@@ -540,7 +502,8 @@ void dScMgCard_c::UpdateState()
         mState++;
         break;
     case 7:
-        if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray2, 1) != 0 && Dealer_IsIdle(&mShared) != 0) {
+        if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray2, 1) != 0 &&
+            Dealer_IsIdle(&mDealer) != 0) {
             r = sCardDrawsLeft - 1;
             sCardDrawsLeft = r;
             if (r == 0) {
@@ -551,12 +514,12 @@ void dScMgCard_c::UpdateState()
                 sCardSelectLocked = 0;
                 data_ov006_02141770 = 0;
             }
-        } else if (Dealer_IsIdle(&mShared) != 0) {
+        } else if (Dealer_IsIdle(&mDealer) != 0) {
             r = dScMgCard_c::CountInState((const dMgCardObj_c *)mArray2, 6);
             if (r != 0) {
                 mDealCount = 0;
-                mShared.unk_1e6 = 0;
-                Dealer_StartDeal(&mShared, (s16)r, &mDealCount);
+                mDealer.mReserved = 0;
+                Dealer_StartDeal(&mDealer, (s16)r, &mDealCount);
             }
         } else {
             r = dScMgCard_c::FindInState((const dMgCardObj_c *)mArray2, 6);
@@ -655,7 +618,7 @@ void dScMgCard_c::UpdateState()
         if (mStateTimer == 0) {
             r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
             if (r == -1) {
-                Dealer_PlayLose(&mShared);
+                Dealer_PlayLose(&mDealer);
                 g = gMgScene;
                 if (g != 0) {
                     if (g->mHudScore > 0) {
@@ -664,7 +627,7 @@ void dScMgCard_c::UpdateState()
                 }
                 Mg_SetSharedState(MG_STATE_LOSE);
             } else if (r == 1) {
-                Dealer_PlayWin(&mShared);
+                Dealer_PlayWin(&mDealer);
                 g = gMgScene;
                 if (g != 0) {
                     if (g->mHudScore < 0x270f) {
@@ -703,12 +666,12 @@ void dScMgCard_c::UpdateState()
 }
 
 // @symbol _ZN11dScMgCard_c8BehaviorEv
-/* Slot 6. mShared is the 0x270-byte table this family of scenes shares;
+/* Slot 6. mDealer is the 0x270-byte table this family of scenes shares;
  * Dealer_Update steps it. */
 s32 dScMgCard_c::Behavior()
 {
     mFrameCounter += 1;
-    Dealer_Update(&mShared);
+    Dealer_Update(&mDealer);
     UpdateState();
     MgCoins_Update();
     return 1;
@@ -805,7 +768,7 @@ s32 dScMgCard_c::Render()
         }
     }
 
-    Dealer_Draw(&mShared);
+    Dealer_Draw(&mDealer);
     return 1;
 }
 
@@ -1699,22 +1662,21 @@ void dMgDilarCardObj_c::Render()
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN17dMgDilarCardObj_cD1Ev
-/* Genuine C++ produces these two stores only when the base destructor is
- * inline, but then emits the base D1 between the scene D1/D0. This callback
- * is the measured section-order ABI bridge. */
-extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem)
-{
-  *(int *)elem = (int)&_ZTV17dMgDilarCardObj_c[2];
-  *(int *)elem = (int)&_ZTV12dMgCardObj_c[2];
-}
+/* The ROM's D1 sets this class's vptr, then the base's, with no call: the
+ * base destructor below is inlined into it. */
+dMgDilarCardObj_c::~dMgDilarCardObj_c() {}
 
 // @symbol _ZN12dMgCardObj_cD1Ev
-/* The real inline body is byte-identical but cannot occupy the cartridge's
- * post-scene-D0 section position. */
-extern "C" void _ZN12dMgCardObj_cD1Ev(void *elem)
-{
-  *(int *)elem = (int)&_ZTV12dMgCardObj_c[2];
-}
+/* Defined last so its D1 sits below the dealer card's, as in the ROM.
+ * auto_inline lets the dealer card's destructor above inline this body even
+ * though it comes later. Without it that D1 calls this class's D2 and is 0x24
+ * bytes, not 0x1c. With auto_inline on for the whole file, five scene methods
+ * stop matching, so it is scoped to this one definition. Defining this
+ * destructor `inline` instead puts its D1 between the scene's D1 and D0. */
+#pragma push
+#pragma auto_inline on
+dMgCardObj_c::~dMgCardObj_c() {}
+#pragma pop
 
 /* The destructor is DEFINED INLINE in include/dScMgCard_c.h. mwcc emits the
  * D1/D0 pair at ROM ordinals 1 and 2 (0x020d95a4 size 0x94, 0x020d9638 size

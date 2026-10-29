@@ -573,7 +573,7 @@
     "PROMOTION: the generated preamble from tubuild create was discarded and this TU was written by hand from the 36 shard sources, per notes/agents/roles/writer.md ('past roughly 30 members the generated preamble is unusable'). No /* TUBUILD CONFLICT */ marker therefore survives in the source; the CONFLICT notes above are marked RESOLVED with the disposition each key actually received.",
     "PROMOTION: source order is ROM-ascending under #pragma defer_codegen off with an out-of-line destructor declared first, which is what reproduces the cartridge's D1-at-0x020aee40-then-D0-at-0x020aee88 with no D2. Only 3 of the intra-TU calls run upward, so the file carries just 3 forward declarations and every other member keeps its own independently recovered spelling.",
     "PROMOTION: include/decl_common.h is deliberately NOT included. It declares 11 of these 36 symbols and 4 of those declarations disagree with the byte-matched shard: func_ov002_020af4ec and func_ov002_020afc68 on a pointer type, func_ov002_020af684 on two parameters, func_ov002_020afa6c on the return type.",
-    "LEFTOVER CLEANUP: folded da1up_c_classInit_SCALEUP_KINOKO / _ONEUPKINOKO as `return new da1up_c()` with leaf operator new(unsigned long). Named-field substitution on C++ members; Behavior 0x100 stays the unsigned-short launder (named ++mStateTimer size-DIFF). dBgCh_Actr::Init / dCcAc_c::Init stay mangled (6az). 38/38 MATCH TEXT-VERIFIED.",
+    "LEFTOVER CLEANUP: folded da1up_c_classInit_SCALEUP_KINOKO / _ONEUPKINOKO as `return new da1up_c()` with leaf operator new(unsigned long). Named-field substitution on C++ members; Behavior 0x100 stays the unsigned-short launder (named ++mStateTimer size-DIFF). dBgCh_Actr::Init and dCcAc_c::Init are member calls through their scalar Fix12i declarations. 38/38 MATCH TEXT-VERIFIED.",
     "PROMOTION: two deliberate signature changes are recorded in the source. func_ov002_020af218 gains a declared but unused second parameter (five callers pass 0xbb8), and func_ov002_020af684 changed from void to int without gaining a return statement. Reverting either change was recorded to move bytes; that measurement does not establish a valid C++ return contract for func_ov002_020af684 or a typed forwarding contract for func_ov002_020af218. Both remain source-reconstruction work requiring fresh caller/callee evidence and byte/relocation proof.",
     "PRE-PROMOTION LINK EVIDENCE, recorded verbatim because it is the only usable kind: `python tools/tubuild.py linkcheck ov002/da1up_c` run against the pre-substitution tree returned SCRATCH-LINK-VERIFIED. The whole .text range 0x020aee40..0x020b0530 reproduces from one object; source-built functions 11,190 reproducing / 0 mismatching; module fidelity 106/106 exact, 100.000000% of compared bytes; `dsd check modules --fail` PASS; the full ROM builds to sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, IDENTICAL to the source-independent strict stock control. `dsd check symbols --fail` FAILS with 9 error lines (overlay_100, overlay_102, data_020ad524, data_020ad560 and five ITCM symbols) -- the baseline control has the same 9, so 0 NEW and 0 resolved, but the check is NOT green and must not be reported as such. Once the source is enrolled in delinks.txt a re-run routes down the intact path and fails at [4/8] regardless; that is pre-existing behaviour and not evidence about this TU.",
     "SINIT INTEGRATION: this file now defines the fourteen-entry pointer-to-member-function dispatch table data_ov002_0210dc00 that Behavior indexes by mMushroomType. mwcc emits the fourteen {function pointer, 0} PMF descriptors (@1151..@1176, one per dispatch index) as anonymous .data objects, the .init copy loop __sinit_d_a_1up.cpp at 0x02100adc, and the .p__sinit_d_a_1up.cpp ctor-table word at 0x021080d8; the delinker pins every object to its retail address via symbols.txt. The handwritten src/unnamed/ov002/__sinit_ov002_02100adc.c is retired -- the compiler-generated initializer is byte-identical and carries the same fifteen relocation sites. Dispatch index 3's handler func_ov002_020afc44 returns int, so its entry takes an explicit (PMF) cast. The definition sits at file end because @NNN is a single linker namespace across the tree: at its natural spot the descriptors would emit @974..@999, which collide with ov092/daOnms_c's configured @963..@981 pins.",
@@ -844,28 +844,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -1270,72 +1250,72 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1173",
+      "from": "@1157",
       "to": "@2166",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1175",
+      "from": "@1159",
       "to": "@2163",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1177",
+      "from": "@1161",
       "to": "@2165",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1178",
+      "from": "@1162",
       "to": "@1156",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1180",
+      "from": "@1164",
       "to": "@1158",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1182",
+      "from": "@1166",
       "to": "@1160",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1184",
+      "from": "@1168",
       "to": "@1162",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1186",
+      "from": "@1170",
       "to": "@1164",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1188",
+      "from": "@1172",
       "to": "@2162",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1190",
+      "from": "@1174",
       "to": "@2164",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1192",
+      "from": "@1176",
       "to": "@1170",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1194",
+      "from": "@1178",
       "to": "@1172",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1196",
+      "from": "@1180",
       "to": "@1174",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1198",
+      "from": "@1182",
       "to": "@1176",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }

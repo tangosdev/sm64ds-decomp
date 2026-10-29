@@ -4,10 +4,10 @@
  * _ZTS11daKpaFire_c at ov060 0x0211a7c0, _ZTI at 0x0211a7b4 (base
  * _ZTI12dEnemyBase_c), _ZTV at 0x0211a7f4. The tree used to call this
  * class BowserFire. The out-of-line destructor is the key function:
- * D1 at 0x02116484, D0 at 0x021164c4, then a D2 the cartridge does not
- * keep. Codegen is deferred, so .text is the reverse of source order.
- * The destructor alone sits under defer_codegen off, which is what
- * emits D1 before D0.
+ * D1 at 0x02116484, D0 at 0x021164c4, then a D2 the
+ * cartridge does not keep. Codegen is deferred, so .text is the reverse
+ * of source order. The destructor alone sits under defer_codegen off,
+ * which is what emits D1 before D0.
  *
  * Eight variants, param1 & 7. Behavior runs data_ov060_0211afb4.
  * InitResources runs data_ov060_0211af74, then finishes setup.
@@ -22,28 +22,19 @@
  *   7  same handler as 6, tossed straight up
  * FIRE_PARAM packs variant in bits 0..2 and the sub-variant in bits 4..5.
  *
- * Actor creation, lookup, movement and destruction use the existing native
- * interfaces, as do the ground predicate and Player::Burn. Spawn still views
- * the base actor's contiguous scalar position/angle fields as vectors; that
- * inherited flat-field layout is not reconstructed here.
+ * Actor creation, lookup, movement and destruction use the native
+ * interfaces, as do the ground predicate and Player::Burn. Spawn still
+ * views the base actor's contiguous scalar position/angle fields as
+ * vectors; that inherited flat-field layout is not reconstructed here.
  *
  * leftovers:
  * - func_ov060_02116740, 02117624 stay free functions with
  *   the char * / unsigned char * decl_common.h declares. Their bodies
  *   compile as C++; 02117624 uses a POD matrix view for its block copy.
- * - dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight,
- *   Particle::System::New / NewSimple / NewUnkCallback818 and
- *   SaveData::IsCharacterUnlocked stay mangled. Those calls pass
- *   Fix12<int> by value; the header spelling of dBgCh_Actr::Init is
- *   Fix12i, which mangles as int.
- * - GetFrameCount stays the void* extern. The argument is
- *   static_cast<dExtFrameCtrl_c *>(&o->mModelAnim), ModelAnim's
- *   second base, which is Bowser + 0x124. The header method is not
- *   that symbol's spelling at this site.
  * - Particle::System::callbackScale and callbackVelocity are named.
  *   The word at +0x44 sits in pad_042 and stays a raw store.
- * - DropShadowRadHeight's matrix is pad_32c. daKpaFire_c.h has no
- *   Matrix4x3 member there.
+ * - DropShadowRadHeight's matrix is `mShadowMat`, raw `u8[0x30]` storage.
+ *   daKpaFire_c.h has no Matrix4x3 member there.
  * - Sound 0x180, player param1 == 3, and the particle kind pairs are
  *   named only by the use-site enums below.
  * - data_ov060_0211af74 and data_ov060_0211afb4 are this TU's owned
@@ -114,22 +105,22 @@ enum {
 /* Sound id variant 0 plays through its mSoundHandle; named by use site, not decoded. */
 enum { SOUND_ID_MOUTH = 0x180 };
 
+namespace Sound {
+/* local extern: including Sound.h renumbers @NNN. */
+int PlayLong(u32, u32, u32, const Vector3 &, s16);
+}
+
 extern "C" {
 /* This file's own helpers, defined further down. */
 extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
 
 /* Fix12<int>-by-value and other mangled-name calls (see the banner). */
-extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f( u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const struct Vector3_16f* f);
-extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE( u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f, void* g);
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12i x, Fix12i y, Fix12i z);
-/* local extern: the header method is not this symbol's spelling here. */
-extern int _ZNK15dExtFrameCtrl_c13GetFrameCountEv(void *anim);
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *pos, u32 d);
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void *thisp, void *sm, void *mtx, int rad, int t, unsigned int j);
-extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *p);
+extern u32 d_a_kpa_fireNewUnkCallback818Hold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
+                                             const struct Vector3_16f *f);
+extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
+void d_a_kpa_fireNewSimpleHold(u32 id, Fix12i x, Fix12i y, Fix12i z);
+extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
 
 extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
@@ -159,8 +150,7 @@ extern "C" daKpaFire_c *daKpaFire_c_classInit(void)
  * exit); the variant dispatch through data_ov060_0211af74 measured
  * byte-identical with the real dActor_c. The `|= 1` sets dCc_c::flags bit 0
  * inside mdCcAc_c when the variant is mouth. The doubled pos.y store is the
- * ROM's own shape. dCcAc_c/dBgCh_Actr Init stay mangled: they take
- * Fix12<int> by value (notes/mwccarm-codegen.md, 6az). */
+ * ROM's own shape. */
 int daKpaFire_c::InitResources()
 {
     Vector3 pos;
@@ -168,10 +158,11 @@ int daKpaFire_c::InitResources()
     if (this->mShadowModel.InitCylinder() == 0)
         return 0;
 
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &this->mdCcAc_c, this, 0x28000, 0x50000, 0x200002, 0);   /* radius 40, height 80 units; flags 0x200002, vulnFlags 0 */
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &this->mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);     /* radius and height 50 units; the two Vector3_16 * args are null */
+    this->mdCcAc_c.Init(this, 0x28000, 0x50000, 0x200002,
+                        0); /* radius 40, height 80 units; flags 0x200002, vulnFlags 0 */
+    this->mWithMeshClsn.Init(
+        this, 0x32000, 0x32000, 0,
+        0); /* radius and height 50 units; the two Vector3_16 * args are null */
 
     /* Fix12: gravity -4.0 units per frame per frame, fall speed floor -30.0
        units per frame. The variant's init (below) may overwrite both. */
@@ -239,8 +230,8 @@ int daKpaFire_c::Behavior()
             }
         }
     }
-    func_ov060_02116740((char *)this);
-    func_ov060_02117624((char *)this);
+    func_ov060_02116740();
+    func_ov060_02117624();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -260,7 +251,7 @@ int daKpaFire_c::CleanupResources()
     return 1;
 }
 
-// @symbol func_ov060_02117624
+// @symbol _ZN11daKpaFire_c19func_ov060_02117624Ev
 /* Per-frame drop shadow. Does nothing when mDropsShadow is 0. Otherwise it
  * builds a translation matrix in the shared scratch matrix data_020a0e68 at
  * the fire's x, its mGroundY and its z (each >> 3), copies it into the
@@ -268,14 +259,15 @@ int daKpaFire_c::CleanupResources()
  * radius mShadowRadiusMul * mFireScale, the second Fix12 argument (dActor_c.h
  * calls it `depth`) 30 units (0x1e000), and the `opacity` argument 0xf (what
  * that value means is not decoded; every caller passes 0xf).
- * The Matrix4x3 at 0x32c remains the header's pad_32c storage; copying it
+ * The Matrix4x3 at 0x32c remains the header's `mShadowMat` storage; copying it
  * through the RawMatrix4x3 view keeps the block copy intact in C++. */
-extern "C" void func_ov060_02117624(char *c) {
-    struct daKpaFire_c *self = (struct daKpaFire_c *)c;
-    if (self->mDropsShadow == 0) return;
-    Matrix4x3_FromTranslation(&data_020a0e68, self->mPosX>>3, self->mGroundY>>3, self->mPosZ>>3);
-    *(RawMatrix4x3*)self->pad_32c = *(RawMatrix4x3*)&data_020a0e68;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(self, &self->mShadowModel, self->pad_32c, self->mShadowRadiusMul * self->mFireScale, 0x1e000, 0xf);
+void daKpaFire_c::func_ov060_02117624() {
+    if (mDropsShadow == 0)
+        return;
+    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, mGroundY >> 3, mPosZ >> 3);
+    *(RawMatrix4x3 *)mShadowMat = *(RawMatrix4x3 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, mShadowRadiusMul * mFireScale,
+                        0x1e000, 0xf);
 }
 
 // @symbol _ZN11daKpaFire_c19func_ov060_0211747cEv
@@ -301,7 +293,7 @@ extern "C" void func_ov060_02117624(char *c) {
  *
  * Bowser's position goes through v[] first (volatile, so the reads keep their
  * order). Yaw is the unsigned half of mAngleY. Frame count is the
- * dExtFrameCtrl_c inside mModelAnim. */
+ * dExtFrameCtrl_c inside mAnmModel. */
 void daKpaFire_c::func_ov060_0211747c() {
     daKpa_c *koopa;
     int n;
@@ -338,8 +330,7 @@ void daKpaFire_c::func_ov060_0211747c() {
     v[2] = kpaPos[2];
     t = data_ov060_02119364;
 
-    if (n == _ZNK15dExtFrameCtrl_c13GetFrameCountEv(
-            static_cast<dExtFrameCtrl_c *>(&koopa->mModelAnim)))
+    if (n == koopa->mAnmModel.GetFrameCount())
         n = 0;
 
     t += n * 5;
@@ -347,8 +338,8 @@ void daKpaFire_c::func_ov060_0211747c() {
     if (this->mSoundID != SOUND_ID_MOUTH)
         this->mSoundHandle = 0;
     this->mSoundID = SOUND_ID_MOUTH;
-    this->mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(this->mSoundHandle, 3, this->mSoundID,
-                                                           &this->mCamSpacePosX, 0);
+    this->mSoundHandle =
+        Sound::PlayLong(this->mSoundHandle, 3, this->mSoundID, *(Vector3 *)&this->mCamSpacePosX, 0);
 
     side = t[0];
     fwd = t[2] + 0x14;
@@ -378,9 +369,8 @@ void daKpaFire_c::func_ov060_0211747c() {
  *     and stops -- this branch returns whether or not the spawn worked;
  *   - otherwise it spawns a coin and zeroes the coin's three velocity words. */
 void daKpaFire_c::func_ov060_021172e0() {
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(PARTICLE_END_PUFF, *(Fix12i *)&this->mPosX,
-                                                   *(Fix12i *)&this->mPosY,
-                                                   *(Fix12i *)&this->mPosZ);
+    Particle::System::NewSimple(PARTICLE_END_PUFF, *(Fix12i *)&this->mPosX, *(Fix12i *)&this->mPosY,
+                                *(Fix12i *)&this->mPosZ);
     this->MarkForDestruction();
 
     if ((((u32)RandomIntInternal(&data_0209e650[0]) >> 0x10) % 10) >= 2) {
@@ -418,9 +408,9 @@ void daKpaFire_c::func_ov060_021172e0() {
     {
         dActor_c *spawned = dActor_c::Spawn(ACTOR_COIN, 0, this->mPos, 0, this->mAreaId, -1);
         if (spawned != 0) {
-            spawned->unk_0a4 = 0;
+            spawned->mSpeedX = 0;
             spawned->mVertSpeed = 0;
-            spawned->unk_0ac = 0;
+            spawned->mSpeedZ = 0;
         }
     }
 }
@@ -513,9 +503,8 @@ void daKpaFire_c::func_ov060_02116f90() {
 
     if (this->mLanded == 0) {
         this->mParticleHandle =
-            _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-                this->mParticleHandle, PARTICLE_FALLING, this->mPosX, this->mPosY + 0x37000,
-                this->mPosZ, 0);
+            Particle::System::NewUnkCallback818(this->mParticleHandle, PARTICLE_FALLING,
+                                                this->mPosX, this->mPosY + 0x37000, this->mPosZ, 0);
         this->mdCcAc_c.flags |= 1;
         func_ov060_0211712c();
         if (this->mWithMeshClsn.IsOnGround()) {
@@ -564,8 +553,8 @@ void daKpaFire_c::func_ov060_02116f74() {
  * Each frame: mFireScale grows by 0x255 (about 0.146) while below 5.0 (0x5000),
  * and the pitch word (mPrevAngleX, signed) loses 0x200 while above 0x800.
  * The three velocity words come from the speed (mHorzSpeed), the pitch and the
- * heading through the sine table: unk_0a4 = x, mVertSpeed = y (-speed times
- * the pitch's table[2p]), unk_0ac = z; the x and z values are divided by 896
+ * heading through the sine table: mSpeedX = x, mVertSpeed = y (-speed times
+ * the pitch's table[2p]), mSpeedZ = z; the x and z values are divided by 896
  * (0x380, not decoded). Position moves by those velocities. Shows
  * PARTICLE_SCALED_9A scaled by mFireScale (y offset 12 * scale). When the mesh
  * collision reports ground it spawns a variant 6 fire with a 16 in 17 chance
@@ -585,7 +574,7 @@ void daKpaFire_c::func_ov060_02116d78() {
         int s0 = data_02082214[i0];
         int speed = this->mHorzSpeed;
         int s1 = data_02082214[i1];
-        this->unk_0a4 = (s1 * (speed * s0)) / 896;
+        this->mSpeedX = (s1 * (speed * s0)) / 896;
     }
     {
         int speed = this->mHorzSpeed;
@@ -596,11 +585,11 @@ void daKpaFire_c::func_ov060_02116d78() {
         int s0 = data_02082214[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
         int s1 = data_02082214[((*(unsigned short *)&this->mPrevAngleY) >> 4) * 2];
         int speed = this->mHorzSpeed;
-        this->unk_0ac = (s1 * ((-speed) * s0)) / 896;
+        this->mSpeedZ = (s1 * ((-speed) * s0)) / 896;
     }
-    this->mPosX += this->unk_0a4;
+    this->mPosX += this->mSpeedX;
     this->mPosY += this->mVertSpeed;
-    this->mPosZ += this->unk_0ac;
+    this->mPosZ += this->mSpeedZ;
 
     func_ov060_02116518(PARTICLE_SCALED_9A, 1, this->mFireScale * 0xc);
     if (this->mWithMeshClsn.IsOnGround() != 0) {
@@ -810,19 +799,17 @@ void daKpaFire_c::func_ov060_021167c8() {
     this->mShadowRadiusMul = 0x10;
 }
 
-// @symbol func_ov060_02116740
+// @symbol _ZN11daKpaFire_c19func_ov060_02116740Ev
 /* Burn the player the fire's cylinder touched. Reads mdCcAc_c.otherOwner (the
  * dCc_c field Clear zeroes; here it is used as an actor uniqueID, 0 for none)
  * and looks that actor up; if it is the Player (actor id 0xbf = ACTOR_PLAYER)
  * and neither Player::mIsMetal nor Player::mIsVanish is set it calls
- * Player::Burn.
- * Keeps the char * parameter decl_common.h declares. */
-extern "C" {
-void func_ov060_02116740(char* c)
-{
-    unsigned int id = ((daKpaFire_c *)c)->mdCcAc_c.otherOwner;
-    if (id == 0) return;
-    Player* player = (Player *)dActor_c::FindWithID(id);
+ * Player::Burn. */
+void daKpaFire_c::func_ov060_02116740() {
+    unsigned int id = ((daKpaFire_c *)this)->mdCcAc_c.otherOwner;
+    if (id == 0)
+        return;
+    Player *player = (Player *)dActor_c::FindWithID(id);
     if (player == 0) return;
     /* Measured: folding this temp into `if (player->actorID != ACTOR_PLAYER)`
        makes the function 12 bytes shorter than the ROM size, 0x88. */
@@ -831,7 +818,6 @@ void func_ov060_02116740(char* c)
     if (player->mIsMetal != 0) return;
     if (player->mIsVanish != 0) return;
     player->Burn();
-}
 }
 
 // @symbol _ZN11daKpaFire_c19func_ov060_02116518Ejii
@@ -851,13 +837,11 @@ void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
     Particle::System *sys;
 
     if (kind == 0xa2 || kind == 0xa4) {
-        this->mParticleHandle =
-            _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-                this->mParticleHandle, kind, this->mPosX, this->mPosY + yOffset, this->mPosZ, 0);
+        this->mParticleHandle = Particle::System::NewUnkCallback818(
+            this->mParticleHandle, kind, this->mPosX, this->mPosY + yOffset, this->mPosZ, 0);
     } else {
-        this->mParticleHandle =
-            _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                this->mParticleHandle, kind, this->mPosX, this->mPosY + yOffset, this->mPosZ, 0, 0);
+        this->mParticleHandle = Particle::System::New(this->mParticleHandle, kind, this->mPosX,
+                                                      this->mPosY + yOffset, this->mPosZ, 0, 0);
     }
 
     if (this->mParticleHandle != 0 && resize != 0) {
@@ -874,8 +858,8 @@ void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
         }
     }
 
-    this->mParticleHandle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        this->mParticleHandle2, kind + 1, this->mPosX, this->mPosY + yOffset, this->mPosZ, 0, 0);
+    this->mParticleHandle2 = Particle::System::New(this->mParticleHandle2, kind + 1, this->mPosX,
+                                                   this->mPosY + yOffset, this->mPosZ, 0, 0);
     if (this->mParticleHandle2 == 0)
         return;
     if (resize == 0)

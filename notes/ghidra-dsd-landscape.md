@@ -609,7 +609,7 @@ the `[[unbuildable-files-invisible]]` class. The finding is still worth keeping 
 that file is made to compile, the reference needs deciding first.
 
 **G10.3 — [ov002](../config/arm9/overlays/ov002/symbols.txt) is itself an Enemy-base overlay, which explains the whole pattern.**
-[high] `_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj` is defined in **[ov002](../config/arm9/overlays/ov002/symbols.txt)** at `0x020ad838` (size 0x208). So the enemy behaviour overlays calling into [ov002](../config/arm9/overlays/ov002/symbols.txt) is semantically expected, not just statistically supported — the co-residency verdict and the class structure agree. [ov004](../config/arm9/overlays/ov004/symbols.txt) holds a parallel, mutually exclusive copy; only three [ov004](../config/arm9/overlays/ov004/symbols.txt)-resident files plus the unbuildable [ov081](../config/arm9/overlays/ov081/symbols.txt) one name its `_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player` at `0x020ada40`.
+[high] `_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR14dExtAnmModel_cj` is defined in **[ov002](../config/arm9/overlays/ov002/symbols.txt)** at `0x020ad838` (size 0x208). So the enemy behaviour overlays calling into [ov002](../config/arm9/overlays/ov002/symbols.txt) is semantically expected, not just statistically supported — the co-residency verdict and the class structure agree. [ov004](../config/arm9/overlays/ov004/symbols.txt) holds a parallel, mutually exclusive copy; only three [ov004](../config/arm9/overlays/ov004/symbols.txt)-resident files plus the unbuildable [ov081](../config/arm9/overlays/ov081/symbols.txt) one name its `_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player` at `0x020ada40`.
 
 **G10.4 — What is left of this worklist.** [high] Repo-wide, **213 files are rejected
 with missing symbols across 254 distinct names**. This change cleared 30 of those files.
@@ -621,7 +621,7 @@ The largest remaining single names:
 | `_ZTV10dBgActor_c` | 12 |
 | `_ll_udiv` | **9** |
 | `func_020bc7d4` | 8 |
-| `_Z35_ZN5Model8LoadFileER13SharedFilePtrPv` | 6 |
+| `_Z35_ZN17dExtSimpleModel_c8LoadFileER13SharedFilePtrPv` | 6 |
 | `_Z77_ZN18MovingMeshCollider7SetFileE…` | 6 |
 
 `func_020beb68` and `func_020bc7d4` are the same module-less shape as the nine just

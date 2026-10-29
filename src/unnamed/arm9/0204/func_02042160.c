@@ -1,16 +1,21 @@
-extern char data_020a1fc0[];
-extern void func_02041e14(void *p);
+#include "private/arm9_a1fc0_file_share.h"
 
+extern char data_020a1fc0[];
+extern void func_02041e14(void);
+
+/* The parent's reply-send callback: once the file-sharing work is up
+ * (mState) and running as the parent, clear mReplySending, which
+ * func_02041e14 set after its send, and let it send the next reply. */
 void func_02042160(void)
 {
-    char *g = data_020a1fc0;
-    if (*(int *)(g + 0xc) == 0)
+    FileShareWork *g = FILE_SHARE_WORK;
+    if (g->mState == 0)
         return;
-    if (*(int *)g == 0)
+    if (g->mIsParent == 0)
         return;
     {
-        char *sub = g + 0x2000;
-        *(int *)(sub + 0xb54) = 0;
-        func_02041e14(sub);
+        FileShareParentArea *s = (FileShareParentArea *)g->mArea;
+        s->mReplySending = 0;
+        func_02041e14();
     }
 }

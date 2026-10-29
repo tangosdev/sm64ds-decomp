@@ -20,9 +20,9 @@
  * emits one .text section per function in reverse source order. Do not
  * reorder.
  *
- * classInit stays a literal construction bridge: the fader member's
- * constructor is the out-of-line arm9 _ZN10dFdDummy_cC1Ev, so
- * `new dScDSMT_c` would not spell the same call.
+ * classInit is `return new dScDSMT_c`: the implicit constructor inlines the
+ * fBase_c/dBase_c/dScene_c chain and mGraphCallback's vptr pair, and calls
+ * the out-of-line arm9 dFdDummy_c::dFdDummy_c() on the fader member.
  */
 
 // leftovers: the four func_ov007_* helpers, the dispatcher and the wrappers
@@ -40,6 +40,8 @@
 #include "SaveData.h"
 #include "Heap.h"
 #include "decl_common.h"
+#include "Memory.h"
+#include "GX.h"
 
 /* One save file, the 0x44-byte unit SaveData::ReadFileData and
  * SaveData::EraseSaveFile move; include/SaveData.h only forward-declares
@@ -69,10 +71,6 @@ extern u8 data_0209f1e0;
 extern void *data_0209d4a8;
 extern int data_0208ee44;
 extern void *data_020a0ea0;
-extern int data_0208e4b8[];
-extern int data_0208ee14[];
-extern int data_ov007_021032e8[];
-extern int data_ov007_021032b0[];
 /* Linker-defined overlay IDs: the address is the overlay number. */
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
@@ -92,38 +90,12 @@ void StartMinigameMenu(u8 returnToRecRoom);
 void SetSoundMode(int mode);
 void TurnBacklightOn(void);
 void TurnBacklightOff(void);
-void *_ZN7fBase_cC2Ev(void *p);
-struct dFdDummy_c *_ZN10dFdDummy_cC1Ev(struct dFdDummy_c *p);
 }
 
-/* The two GX entry points this scene uses have no header of their own.
- * decl_common.h carries them under their mangled spellings; the namespace
- * form below emits the same two symbols. */
-namespace GX {
-void DispOn();
-void DisableAllBanks();
-}
-
-/* Factory: literal construction bridge (fBase chain, vtable aliasing, spawn-flag
- * bits, graphCallback vptr pair, dFdDummy_c member). `new` would not spell
- * the same arm9 C1 call. */
+/* Factory: the registry's spawn entry point. */
 // @symbol dScDSMT_c_classInit
 extern "C" dScDSMT_c *dScDSMT_c_classInit(void) {
-    int *p = (int *)_ZN7fBase_cnwEj(0x64);
-    if (p) {
-        unsigned char *f;
-        _ZN7fBase_cC2Ev(p);
-        p[0] = (int)data_0208e4b8;
-        p[0] = (int)_ZTV8dScene_c;
-        f = (unsigned char *)((char *)p + 0x13);
-        *f |= 1;
-        *f |= 4;
-        p[0] = (int)data_ov007_021032e8;
-        p[0x50 / 4] = (int)data_0208ee14;
-        p[0x50 / 4] = (int)data_ov007_021032b0;
-        _ZN10dFdDummy_cC1Ev((struct dFdDummy_c *)((char *)p + 0x54));
-    }
-    return (dScDSMT_c *)p;
+    return new dScDSMT_c;
 }
 
 /* Heap thunks onto the game heap; `bx ip` sibcalls. */
@@ -214,7 +186,7 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
     } else if (command == 18) {
         func_ov007_020cc118(0x38, 8);
     } else if (command == 20) {
-        u8 *fileBytes = (u8 *)_ZN6Memory13operator_new2Ej(0xcc);
+        u8 *fileBytes = (u8 *)Memory::operator_new2(0xcc);
         u32 saveSlot;
         func_ov007_020cc0e4((FileSaveData *)fileBytes);
         for (saveSlot = 0; (s32)saveSlot < 3; saveSlot++, fileBytes += 0x44) {
@@ -262,7 +234,7 @@ s32 dScDSMT_c::InitResources() {
     *(volatile u32 *)0x4001000 |= 0x10000;
     Enable3dEngines();
     ::Initialise3dGraphics(0);
-    data_0209d4a8 = &unk_050;
+    data_0209d4a8 = &mGraphCallback;
     dScene_c::SetFaders(&fader);
     data_0208ee44 = 1;
     GX::DisableAllBanks();

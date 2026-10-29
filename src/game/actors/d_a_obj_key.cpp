@@ -1,4 +1,11 @@
 //cpp
+struct Vector3_16f;
+namespace Particle {
+struct Callback;
+struct System {
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
 /* daObjKey_c (ov089): OBJ_KEY is actor 0x11a (282) and LAST_STAR is 0x11b
  * (283); both factories install this vtable. param1 & 7 picks the kind: 7 uses
  * the power-star model (data_ov002_0211094c, file 0x8015) and StateStarJump; 3
@@ -16,11 +23,8 @@
  * - StateDrop: Particle::System::New (Fix12<int> x/y/z) size 0x2b4 -> 0x2c8
  *   (+0x14). Behavior's two calls size 0x310 -> 0x344 (+0x34). The header
  *   does not declare New, and a bare int does not convert to Fix12<int>.
- * - UpdateModelTransform: dActor_c::DropShadowRadHeight with Fix12<int>
- *   radius/depth size 0x130 -> 0x140 (+0x10). A bare int does not compile.
- * - InitResources: ModelAnim::SetAnim, both calls, Fix12<int> speed, size
- *   0x32c -> 0x344 (+0x18). dCcAcPos_c::Init, both calls, Fix12<int>
- *   radius/height, size 0x32c -> 0x34c (+0x20).
+ * - InitResources: dExtAnmModel_c::SetAnim, both calls, Fix12<int> speed, size
+ *   0x32c -> 0x344 (+0x18).
  * - InitResources: mWithMeshClsn.Init(...) links to the undefined
  *   _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_: dBgCh_Actr.h spells
  *   the radii Fix12i, a plain s32, so the ROM's Fix12<int> mangling is
@@ -74,6 +78,8 @@ enum daObjKey_c_AssetId {
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "Message.h"
+#include "cstd.h"
+#include "math/Approach.h"
 
 #pragma defer_codegen off
 
@@ -83,13 +89,9 @@ namespace Sound {
 void LoadAndSetMusic_Layer3(unsigned int musicId);
 }
 
-/* {file id, loaded file}. Same two words daStar_c reads as id/ptr, and the
- * words this TU passes to SetAnim / SetFile / compares with mModelAnim.file.
- * SharedFilePtr itself has no fields; Release and LoadFile go through it. */
-struct ObjKeyFile {
-    u32 id;
-    void *ptr;
-};
+/* This TU's file handle type. The star's idle animation
+ * data_ov002_02110964 is declared through it as well. */
+struct ObjKeyFile : SharedFilePtr {};
 
 /* File-scope objects at the end of this file construct the eight resource
  * handles and fill the eight-entry state table. mwcc emits
@@ -192,22 +194,18 @@ struct ObjKeyStateTable {
 
 extern ObjKeyStateTable data_ov089_02132cec;
 
-/* local extern: dCamera_c.h has no SetFlag_3. Particle::System::New,
- * DropShadowRadHeight, ModelAnim::SetAnim and dCcAcPos_c::Init take
- * Fix12<int> by value; the scalar call does not compile and the Fix12
+/* local extern: dCamera_c.h has no SetFlag_3. Particle::System::New and
+ * dExtAnmModel_c::SetAnim take Fix12<int> by value; the scalar call does not compile and the Fix12
  * temporary size-DIFFs (see the file comment). The ROM calls the
  * UpdateContinuous veneer, not the method. */
 extern "C" {
-extern void dBgCh_Actr_UpdateContinuous_Veneer(char *p);
 extern void *data_0209f318;
 extern int data_0209b454;
-extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32 a, u32 b, int c, int d, int e, void *f, void *g);
+extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern void func_ov002_020c3dbc(void *player);
 extern int data_0209caa0[];
 void Matrix4x3_FromRotationY(void *m, short angle);
-void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void *a, void *sm, void *mtx, int rad, int h, unsigned int x);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;
@@ -229,9 +227,8 @@ extern void SubVec3(void *d, void *a, void *b);
 extern void Vec3_LslInPlace(void *v, int sh);
 extern void AddVec3(void *d, void *a, void *b);
 extern void LoadKeyModels(int idx);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *bca, int a, int fx, unsigned int f);
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *thiz, void *actor, void *pos, int r, int s, unsigned int a, unsigned int b);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, int a, int b, void *v, void *w);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *thiz, void *actor, int a, int b, void *v, void *w);
 /* An ObjKeyFile in layout, but daDemo_c::InitResources declares it `char`;
    keep that spelling so the declarations of this symbol stay in agreement. */
 extern char data_ov002_0211094c;
@@ -240,17 +237,13 @@ extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 /* The collect animations, by mAnimID. */
 extern ObjKeyFile *data_ov089_02132880[];
-/* Fix12<int> by value: called by symbol. */
-extern int _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int id, int vol);
-extern int _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(Vector3 &value, const Vector3 &target, int step);
+/* Names stay on this unused prototype so this file's @NNN numbers do not move. */
+extern int d_a_obj_keyChangeMusicVolumeHold(unsigned int id, int vol);
 /* Level-overlay BSS: ov089 relocs record the store as claimed by fourteen
    overlays, and ov055 is the one that names 0x02111b68 unambiguous kind:bss
    (the func_ov002_020e3e00 precedent for its neighbours 0x02111b64/6c). */
 extern int data_ov055_02111b68;
 }
-
-/* local extern: no header declares cstd; its ROM symbol is _ZN4cstd4sqrtEy. */
-namespace cstd { s32 sqrt(u64 value); }
 
 /* The key function, defined first. Under defer_codegen off it emits D1, D0 and
  * a D2 the cartridge does not keep, then the vtable and RTTI chain. */
@@ -317,11 +310,11 @@ extern "C" void LoadKeyModels(int kind)
     SharedFilePtr *extra;
     if (kind >= 8)
         return;
-    Model::LoadFile(*(SharedFilePtr *)data_ov089_02132894[kind]);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov089_02132894[kind]);
     extra = (SharedFilePtr *)data_ov089_021328b4[kind];
     if (extra == 0)
         return;
-    Model::LoadFile(*extra);
+    dExtSimpleModel_c::LoadFile(*extra);
 }
 
 // @symbol _ZN10daObjKey_c19func_ov089_0213115cEi
@@ -333,8 +326,7 @@ void daObjKey_c::func_ov089_0213115c(int anim)
         return;
     }
     mAnimID = anim;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov089_02132880[anim]->ptr,
-                                                 ANIM_FLAGS, ANIM_SPEED, 0);
+    mAnmModel.SetAnim((BCA_File *)(data_ov089_02132880[anim]->filePtr), ANIM_FLAGS, ANIM_SPEED, 0);
 }
 
 // @symbol _ZN10daObjKey_c16StateFlyToCenterEv
@@ -370,7 +362,7 @@ void daObjKey_c::StateFlyToCenter()
             mSavedCamPos.z = pos->z;
             cam->SetFlag_3();
             mStep++;
-            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0, data_0209b490 / 15);
+            Sound::ChangeMusicVolume(0, data_0209b490 / 15);
             break;
         }
 
@@ -400,7 +392,7 @@ void daObjKey_c::StateFlyToCenter()
         v.y = mPosY;
         v.z = mPosZ;
         v.y = v.y + Y_LOOK;
-        _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(mCamLookAt, v, CAM_STEP);
+        ApproachLinear(mCamLookAt, v, CAM_STEP);
         cam->SetLookAt(mCamLookAt);
         center2.x = 0;
         center2.y = 0;
@@ -453,7 +445,7 @@ void daObjKey_c::StateFlyToCenter()
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mPrevAngleY);
-    MulMat4x3Mat4x3(mModelAnim.data.transforms, &data_020a0e68, &data_020a0e68);
+    MulMat4x3Mat4x3(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.m[9];
     v.y = data_020a0e68.m[10];
     v.z = data_020a0e68.m[11];
@@ -461,12 +453,9 @@ void daObjKey_c::StateFlyToCenter()
     Vec3_LslInPlace(&v, 3);
     AddVec3(&v, &mPosX, &v);
     v.y = mScaleX * 13 + v.y;
-    mParticleID[0] = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        mParticleID[0], FX_TRAIL_A, v.x, v.y, v.z, 0, 0);
-    mParticleID[1] = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        mParticleID[1], FX_TRAIL_B, v.x, v.y, v.z, 0, 0);
-    mParticleID[2] = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        mParticleID[2], FX_TRAIL_C, v.x, v.y, v.z, 0, 0);
+    mParticleID[0] = (u32)Particle::System::New(mParticleID[0], FX_TRAIL_A, v.x, v.y, v.z, 0, 0);
+    mParticleID[1] = (u32)Particle::System::New(mParticleID[1], FX_TRAIL_B, v.x, v.y, v.z, 0, 0);
+    mParticleID[2] = (u32)Particle::System::New(mParticleID[2], FX_TRAIL_C, v.x, v.y, v.z, 0, 0);
 }
 
 // @symbol _ZN10daObjKey_c13StateStarJumpEv
@@ -484,11 +473,10 @@ void daObjKey_c::StateStarJump()
         v.y = mPosY;
         v.z = mPosZ;
         v.y = v.y + Y_SPARK;
-        mParticleID[0] = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
+        mParticleID[0] = (u32)Particle::System::New(mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
     }
     if (mStep >= 2)
-        dBgCh_Actr_UpdateContinuous_Veneer((char *)&mWithMeshClsn);
+        dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
     switch (mStep) {
     case 0:
@@ -615,8 +603,8 @@ void daObjKey_c::StateStarJump()
             mPosY = pos[1];
             mPosZ = pos[2];
             mAngleY = mPlayer->mAngleY;
-            mModelAnim.Advance();
-            if (mModelAnim.Finished())
+            mAnmModel.Advance();
+            if (mAnmModel.Finished())
                 mStep++;
             return;
         }
@@ -629,7 +617,7 @@ void daObjKey_c::StateDrop()
     dCamera_c *cam = (dCamera_c *)data_0209f318;
     Vector3 v;
 
-    dBgCh_Actr_UpdateContinuous_Veneer((char *)&mWithMeshClsn);
+    dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
     switch (mStep) {
     case 0:
@@ -666,8 +654,7 @@ void daObjKey_c::StateDrop()
         v.y = mPosY;
         v.z = mPosZ;
         v.y = v.y + Y_SPARK;
-        mParticleID[0] = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
+        mParticleID[0] = (u32)Particle::System::New(mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
         if (mWithMeshClsn.JustHitGround()) {
             mVertSpeed = -mVertSpeed >> 1;
             func_02012694(SND_LAND, &mCamSpacePos);
@@ -766,10 +753,10 @@ s32 daObjKey_c::OnYoshiTryEat() {
 // @symbol _ZN10daObjKey_c20UpdateModelTransformEv
 void daObjKey_c::UpdateModelTransform()
 {
-    Matrix4x3_FromRotationY(&mModelAnim.mat4x3, mAngleY);
-    mModelAnim.mat4x3.m[9] = mPosX >> 3;
-    mModelAnim.mat4x3.m[10] = mPosY >> 3;
-    mModelAnim.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    mAnmModel.mat4x3.m[9] = mPosX >> 3;
+    mAnmModel.mat4x3.m[10] = mPosY >> 3;
+    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
     if (data_ov089_021328b4[mState] != 0 && mAnimID == 0) {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
         mModel.mat4x3.m[9] = mPosX >> 3;
@@ -781,8 +768,8 @@ void daObjKey_c::UpdateModelTransform()
     mShadowMatrix.m[10] = mPosY >> 3;
     mShadowMatrix.m[11] = mPosZ >> 3;
     /* Shadow only while the idle anim (file 0x801b) is showing. */
-    if (mModelAnim.file == (BCA_File *)data_ov002_02110964.ptr)
-        _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(this, &mShadowModel, &mShadowMatrix, SHADOW_R, SHADOW_DEPTH, SHADOW_OPACITY);
+    if (mAnmModel.file == (BCA_File *)data_ov002_02110964.filePtr)
+        DropShadowRadHeight(mShadowModel, mShadowMatrix, SHADOW_R, SHADOW_DEPTH, SHADOW_OPACITY);
 }
 
 // @symbol _ZN10daObjKey_c16CleanupResourcesEv
@@ -807,9 +794,9 @@ int daObjKey_c::Render()
     if (hidden)
         return 1;
     if (mAnimID != 0) {
-        mModelAnim.Render(0);
+        mAnmModel.Render(0);
     } else {
-        mModelAnim.Render(&mScale);
+        mAnmModel.Render(&mScale);
         /* mAnimID == 0 is already the else; the second test is in the ROM. */
         if (data_ov089_021328b4[mState] != 0 && mAnimID == 0)
             mModel.Render(0);
@@ -836,10 +823,10 @@ int daObjKey_c::Behavior()
                 mPosZ = pos[2];
                 mAngleY = mPlayer->mAngleY;
             }
-            if (mModelAnim.Finished() == 0) {
+            if (mAnmModel.Finished() == 0) {
                 Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
                 Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-                MulMat4x3Mat4x3(mModelAnim.data.transforms, &data_020a0e68, &data_020a0e68);
+                MulMat4x3Mat4x3(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
                 vec.x = data_020a0e68.m[9];
                 vec.y = data_020a0e68.m[10];
                 vec.z = data_020a0e68.m[11];
@@ -847,23 +834,23 @@ int daObjKey_c::Behavior()
                 Vec3_LslInPlace(&vec, 3);
                 AddVec3(&vec, &mPosX, &vec);
                 /* First bone, word at +0xc. BMD_Bone has no field there. */
-                vec.y = *(int *)((char *)mModelAnim.data.bones + 0xc) * BONE_Y_MUL + vec.y;
+                vec.y = *(int *)((char *)mAnmModel.data.bones + 0xc) * BONE_Y_MUL + vec.y;
                 vec.y = vec.y - Y_BONE;
-                mParticleID[0] = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                    mParticleID[0], FX_BURST_A, vec.x, vec.y, vec.z, 0, 0);
-                mParticleID[1] = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                    mParticleID[1], FX_BURST_B, vec.x, vec.y, vec.z, 0, 0);
+                mParticleID[0] = (u32)Particle::System::New(mParticleID[0], FX_BURST_A, vec.x,
+                                                            vec.y, vec.z, 0, 0);
+                mParticleID[1] = (u32)Particle::System::New(mParticleID[1], FX_BURST_B, vec.x,
+                                                            vec.y, vec.z, 0, 0);
             }
         }
 
-        mModelAnim.Advance();
+        mAnmModel.Advance();
         UpdateModelTransform();
-        if (mModelAnim.Finished()) {
+        if (mAnmModel.Finished()) {
             /* The flag keeps the ROM's moveq and movne pair. */
             int isKey = (actorID == ACTOR_OBJ_KEY);
             if (isKey != 0) {
                 /* Anim 3's file (data_ov089_02132c40, id 0x44f) stays; the others die. */
-                if (mModelAnim.file != (BCA_File *)data_ov089_02132c40.ptr)
+                if (mAnmModel.file != (BCA_File *)data_ov089_02132c40.filePtr)
                     MarkForDestruction();
             }
         }
@@ -911,17 +898,17 @@ int daObjKey_c::InitResources()
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov002_02110964);
 
     if (mState == KEY_KIND_STAR) {
-        if (mModelAnim.SetFile((BMD_File *)((ObjKeyFile *)&data_ov002_0211094c)->ptr, 1, 1) == 0)
+        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)&data_ov002_0211094c)->filePtr, 1, 1) == 0)
             return 0;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_02110964.ptr, ANIM_FLAGS, ANIM_SPEED, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov002_02110964.filePtr, ANIM_FLAGS, ANIM_SPEED, 0);
         mScaleX = SCALE_STAR;
         mScaleY = SCALE_STAR;
         mScaleZ = SCALE_STAR;
         offset7.x = data_ov089_02132b40.x;
         offset7.y = data_ov089_02132b40.y;
         offset7.z = data_ov089_02132b40.z;
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &offset7, CC_R, STAR_CC_H, CC_FLAGS, CC_VULN);
-        _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, STAR_CLSN_R, 0, 0, 0);
+        mdCcAcPos_c.Init(this, offset7, CC_R, STAR_CC_H, CC_FLAGS, CC_VULN);
+        mWithMeshClsn.Init(this, STAR_CLSN_R, 0, 0, 0);
         mSpinSpeed = SPIN_FAST;
         mVertAccel = 0;
         Sound::PlayBank3(SND_APPEAR, mCamSpacePos);
@@ -930,16 +917,17 @@ int daObjKey_c::InitResources()
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov089_02132c40);
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov089_02132c70);
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov089_02132c48);
-        if (mModelAnim.SetFile((BMD_File *)((ObjKeyFile *)data_ov089_02132894[mState])->ptr, 1, 1) == 0)
+        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)data_ov089_02132894[mState])->filePtr, 1,
+                              1) == 0)
             return 0;
         {
             void *extra = data_ov089_021328b4[mState];
             if (extra != 0) {
-                if (mModel.SetFile((BMD_File *)((ObjKeyFile *)extra)->ptr, 1, -1) == 0)
+                if (mModel.SetFile((BMD_File *)((ObjKeyFile *)extra)->filePtr, 1, -1) == 0)
                     return 0;
             }
         }
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_02110964.ptr, ANIM_FLAGS, ANIM_SPEED, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov002_02110964.filePtr, ANIM_FLAGS, ANIM_SPEED, 0);
         mScaleX = SCALE_KEY;
         mScaleY = SCALE_KEY;
         mScaleZ = SCALE_KEY;
@@ -947,8 +935,8 @@ int daObjKey_c::InitResources()
         offset.x = data_ov089_02132ca4.x;
         offset.y = data_ov089_02132ca4.y;
         offset.z = data_ov089_02132ca4.z;
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &offset, CC_R, KEY_CC_H, CC_FLAGS, CC_VULN);
-        _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, KEY_CLSN_R, 0, 0, 0);
+        mdCcAcPos_c.Init(this, offset, CC_R, KEY_CC_H, CC_FLAGS, CC_VULN);
+        mWithMeshClsn.Init(this, KEY_CLSN_R, 0, 0, 0);
         mVertAccel = GRAVITY;
         mSpinSpeed = 0;
     }
@@ -972,7 +960,7 @@ int daObjKey_c::InitResources()
 }
 
 /* Both profiles build the same class. fBase_c's inline operator new forwards to
- * _ZN7fBase_cnwEj; the implicit constructor inlines dEnemyBase_c's base step,
+ * _ZN7fBase_cnwEm; the implicit constructor inlines dEnemyBase_c's base step,
  * the vptr store and the five member constructors. */
 // @symbol daObjKey_c_classInit_LAST_STAR
 extern "C" daObjKey_c *daObjKey_c_classInit_LAST_STAR()

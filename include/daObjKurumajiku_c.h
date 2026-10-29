@@ -53,7 +53,7 @@ struct daObjKurumajiku_c : dBgActor_c {
     };
 
     /* Field NAME is a placeholder; the offset and the width are observed. */
-    u32 mMountedActorIds[4];        /* 0x320 */
+    u32 mMountedActorIds[4]; /* 0x320 */
 
     /* --- vtable --- */
     /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
@@ -70,7 +70,7 @@ struct daObjKurumajiku_c : dBgActor_c {
        own slot-3 override: virtualness is inherited, and the destructor above
        stays the first virtual DECLARED in the class. */
     s32 Behavior();
-    s32 Render();                      /* slot 9, ov002 0x020b6b10 -- mModel.Render(0) */
+    s32 Render(); /* slot 9, ov002 0x020b6b10 -- mModel.Render(0) */
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero
@@ -84,8 +84,15 @@ struct daObjKurumajiku_c : dBgActor_c {
        pure-specifier is only valid on a declaration carrying the keyword, and a
        pure virtual has no body to emit, so it can never become the key function:
        whichever virtual was first and non-inline before is still first now. */
-    virtual s32 InitResources() = 0;        /* slot  0 */
-    virtual s32 CleanupResources() = 0;     /* slot  3 */
+    virtual s32 InitResources() = 0;    /* slot  0 */
+    virtual s32 CleanupResources() = 0; /* slot  3 */
+
+    /* The shared bodies both descendants' InitResources / CleanupResources
+       hand their own resource record to, and the model-transform helper
+       Behavior and the setup share. */
+    int UpdateModelTransform();
+    int CleanupResourcesFrom(Resources *);
+    int InitResourcesFrom(Resources *, unsigned int);
 };
 
 #ifndef SM64DS_PLATFORM_PC

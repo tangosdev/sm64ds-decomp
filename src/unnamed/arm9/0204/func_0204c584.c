@@ -1,8 +1,25 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 
-typedef struct Node { struct Node *next; struct Node *prev; } Node;
-typedef struct List { Node *head; int count; } List;
+/* File-local view of Particle::System (include/Particle__System.h is C++):
+   the direction and the two axes perpendicular to it. */
+typedef struct {
+    u8 pad_000[0x3c];
+    Vector3s direction; /* 0x3c */
+    u8 pad_042[0x1a];
+    Vector3s basisU; /* 0x5c */
+    Vector3s basisV; /* 0x62 */
+} ParticleSystemView;
+
+typedef struct Node {
+    struct Node *next;
+    struct Node *prev;
+} Node;
+
+typedef struct List {
+    Node *head;
+    int count;
+} List;
 
 typedef struct Def {
     u32 mode : 4;      /* bits 0-3 */
@@ -15,34 +32,34 @@ typedef struct Def {
     u32 sizerand : 1;  /* 12 */
     u32 anglerand : 1; /* 13 */
     u32 rest : 18;
-    int rate;          /* 0x4 */
-    u8 pad8[0xa];      /* 0x8 */
-    u16 tex;           /* 0x12 */
-    u8 pad14[0x10];    /* 0x14 */
-    s16 lo;            /* 0x24 */
-    s16 hi;            /* 0x26 */
-    u8 pad28[4];       /* 0x28 */
-    u8 b2c;            /* 0x2c */
-    u8 b2d;            /* 0x2d */
-    u8 b2e;            /* 0x2e */
-    u8 pad2f[4];       /* 0x2f */
-    u8 b33;            /* 0x33 */
-    u8 b34;            /* 0x34 */
+    int rate;       /* 0x4 */
+    u8 pad8[0xa];   /* 0x8 */
+    u16 tex;        /* 0x12 */
+    u8 pad14[0x10]; /* 0x14 */
+    s16 lo;         /* 0x24 */
+    s16 hi;         /* 0x26 */
+    u8 pad28[4];    /* 0x28 */
+    u8 b2c;         /* 0x2c */
+    u8 b2d;         /* 0x2d */
+    u8 b2e;         /* 0x2e */
+    u8 pad2f[4];    /* 0x2f */
+    u8 b33;         /* 0x33 */
+    u8 b34;         /* 0x34 */
 } Def;
 
 typedef struct TexAnim {
-    u16 a;             /* 0x0 */
-    u16 b;             /* 0x2 */
-    u8 pad[4];         /* 0x4 */
-    u16 flag : 1;      /* 0x8 bit 0 */
+    u16 a;        /* 0x0 */
+    u16 b;        /* 0x2 */
+    u8 pad[4];    /* 0x4 */
+    u16 flag : 1; /* 0x8 bit 0 */
     u16 frest : 15;
 } TexAnim;
 
 typedef struct Pal {
-    u8 colors[8];      /* 0x0 */
-    u32 cnt : 8;       /* 0x8 bits 0-7 */
-    u32 px : 8;        /* bits 8-15 */
-    u32 loop : 1;      /* bit 16 */
+    u8 colors[8]; /* 0x0 */
+    u32 cnt : 8;  /* 0x8 bits 0-7 */
+    u32 px : 8;   /* bits 8-15 */
+    u32 loop : 1; /* bit 16 */
     u32 prest : 15;
 } Pal;
 
@@ -105,36 +122,79 @@ typedef struct ParticleElement {
     u8 color; /* 0x42 */
 } ParticleElement;
 
-extern void func_0204cebc(void *c);
+extern Vector3s data_02099fc4;
+extern void func_02053380(void *a, Vector3s *b);
 extern Node *func_0204d958(List *list);
 extern void func_0204d9a0(List *list, Node *node);
 extern void func_0204da4c(Vector3 *out);
 extern void func_0204d9f0(Vector3 *out);
-extern void func_0204cd5c(int *out, int *in, int sel, s16 *m);
 extern void NormalizeVec3(int *v, int *out); /* as defined; the call casts */
-
 extern u32 data_020a4d30;
 extern s16 data_02082214[];
 
-static inline u32 RandVal(void)
-{
+static inline u32 RandVal(void) {
     u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
     data_020a4d30 = s;
     return s;
 }
 
-static inline int RandScale(void)
-{
+static inline int RandScale(void) {
     return (int)(((RandVal() >> 0x17) << 0xc) - 0x100000) >> 8;
 }
 
-static inline int FMul(int a, int b)
-{
+static inline int FMul(int a, int b) {
     return FX_MUL(a, b);
 }
 
-void func_0204c584(u8 *self, List *list)
-{
+void func_0204cebc(void *c) {
+    ParticleSystemView *sys = (ParticleSystemView *)c;
+    Vector3s vecA;
+    Vector3s vecB;
+
+    vecA = data_02099fc4;
+    func_02053380(&sys->direction, &vecB);
+
+    if (vecA.x == vecB.x && vecA.y == vecB.y && vecA.z == vecB.z) {
+        vecA.x = 0x1000;
+        vecA.y = 0;
+        vecA.z = 0;
+    }
+
+    sys->basisU.x = (s16)(FX_MUL(vecB.y, vecA.z) - FX_MUL(vecB.z, vecA.y));
+    sys->basisU.y = (s16)(FX_MUL(vecB.z, vecA.x) - FX_MUL(vecB.x, vecA.z));
+    sys->basisU.z = (s16)(FX_MUL(vecB.x, vecA.y) - FX_MUL(vecB.y, vecA.x));
+
+    sys->basisV.x = (s16)(FX_MUL(vecB.y, sys->basisU.z) - FX_MUL(vecB.z, sys->basisU.y));
+    sys->basisV.y = (s16)(FX_MUL(vecB.z, sys->basisU.x) - FX_MUL(vecB.x, sys->basisU.z));
+    sys->basisV.z = (s16)(FX_MUL(vecB.x, sys->basisU.y) - FX_MUL(vecB.y, sys->basisU.x));
+}
+
+void func_0204cd5c(int *out, int *in, int sel, s16 *m) {
+    switch (sel) {
+    case 2:
+        out[0] = 0;
+        out[1] = in[0];
+        out[2] = in[1];
+        break;
+    case 1:
+        out[0] = in[1];
+        out[1] = 0;
+        out[2] = in[0];
+        break;
+    case 0:
+        out[0] = in[0];
+        out[1] = in[1];
+        out[2] = 0;
+        break;
+    case 3:
+        out[0] = FX_MUL(in[0], m[0x2e]) + FX_MUL(in[1], m[0x31]);
+        out[1] = FX_MUL(in[0], m[0x2f]) + FX_MUL(in[1], m[0x32]);
+        out[2] = FX_MUL(in[0], m[0x30]) + FX_MUL(in[1], m[0x33]);
+        break;
+    }
+}
+
+void func_0204c584(u8 *self, List *list) {
     int i;
     int count;
     int mag1;

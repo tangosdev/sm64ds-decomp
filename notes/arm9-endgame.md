@@ -254,7 +254,7 @@ five simply reproduce and should lose the banner.
 | function | size | note |
 |---|---|---|
 | `_ZN8CapEnemy11GetCapStateEv` | 180 | div 4 under b56, see below |
-| `_ZN5Model27LoadCompressedTextureToVramEPcjPc` | 184 | div 13 both compilers |
+| `_ZN17dExtSimpleModel_c27LoadCompressedTextureToVramEPcjPc` | 184 | div 13 both compilers |
 | `_ZN2GX7LoadTexEPKvjj` | 332 | div 34 both compilers |
 | `_ZN10dScStage_c25PS_UpdateOkAndBackButtonsEb` | 340 | size mismatch both |
 | `func_02038824` | 532 | div 25 sp2p3, **div 20 under b56** |

@@ -1,16 +1,19 @@
+#include "Ov007Tween.h"
+
 void func_ov007_020c90c0(char *c)
 {
-    short value = *(short *)(c + 0xc);
+    Ov007Tween *tw = (Ov007Tween *)c;
+    short value = tw->t;
 
     if (value >= 0x1000) {
-        *(short *)(c + 0xc) = 0x1000;
-        *(int *)c = 2;
+        tw->t = 0x1000;
+        tw->state = 2;
         return;
     }
 
     {
-        int speed = *(int *)(c + 8);
-        short *pos = (short *)(((int)c + 0xc));
+        int speed = tw->step;
+        short *pos = &tw->t;
         short old = *pos;
 
         speed <<= 16;

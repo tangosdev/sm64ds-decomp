@@ -15,7 +15,7 @@
  *     0x110 dCcAc_c       0x34   -> 0x144
  *     0x144 dCcAc_c       0x34   -> 0x178
  *     0x178 dBgCh_Actr             0x1bc  -> 0x334
- *     0x334 BlendModelAnim           0x70   -> 0x3a4
+ *     0x334 dExtBlendAnmModel_c           0x70   -> 0x3a4
  *     0x3a4 dExtShadowModel_c              0x28   -> 0x3cc
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
@@ -30,8 +30,8 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "BlendModelAnim.h"
-#include "ModelAnim.h"
+#include "dExtBlendAnmModel_c.h"
+#include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 #include "PathPtr.h"
 #include "dExtShadowModel_c.h"
@@ -46,7 +46,7 @@ struct daJango_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c1;  /* 0x110 */
     dCcAc_c           mdCcAc_c2;  /* 0x144 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x178 */
-    BlendModelAnim               mBlendModelAnim;       /* 0x334 */
+    dExtBlendAnmModel_c mBlendAnmModel;               /* 0x334 */
     dExtShadowModel_c                  mShadowModel;          /* 0x3a4 */
     /* Both matrices are 12 words rather than a Matrix4x3 member: a Matrix4x3
        member makes the synthesised constructor emit a Matrix4x3 destructor that
@@ -81,15 +81,16 @@ struct daJango_c : dEnemyBase_c {
        turn rate: func_ov062_0211bc54 stores 0x300, 0x400, 0x500 or 0x600 (random)
        and func_ov062_0211ba84 uses it (plus 0x500 outside level id 0x10) as the
        ApproachLinear step for pitch and yaw. func_ov062_0211c218 stores 0;
-       func_ov062_0211b930 stores 1, then 0 again when it found a held actor. */
-    s32                          unk_43c;               /* 0x43c */
+       func_ov062_0211b930 stores 1, then 0 again when it found a held actor.
+       Named for the states that own it, since the two jobs share no role. */
+    s32 mStateParam; /* 0x43c */
     /* Countdown that holds the circling state back from leaving along the path:
        func_ov062_0211c218 stores 0, or 2 for the silver-star variant and level ids
        0x18 and 0x19, and func_ov062_0211bd10 takes one off whenever the phase
        counter above moves from 1 to 2 (again only for those variants). The actor
        leaves for the path only when this and mStateTimer are both 0 and mAngleY
        is within 45 degrees of the node's direction. */
-    s32                          unk_440;               /* 0x440 */
+    s32 mLeaveDelay; /* 0x440 */
     /* Counted down by DecIfAbove0_Short at the top of every frame. While it is
        non-zero the circling state flies the actor back toward mSpawnPos; it is
        reloaded with 0x1e (30 frames) whenever the actor has just lost its
@@ -101,8 +102,10 @@ struct daJango_c : dEnemyBase_c {
        first and recomputed on every b3ac call past the tick gate and the
        no-change check. func_ov062_0211c594
        then gives the actor a 20 unit/frame vertical speed and a 60 frame
-       mStateTimer, and func_ov062_0211c2f4 clears it when that timer runs out. */
-    u8                           unk_446;               /* 0x446 */
+       mStateTimer, and func_ov062_0211c2f4 clears it when that timer runs out.
+       The 20.0 vector is turned by a -0x4000 pitch, so the leg to the far node
+       starts as a climb. */
+    u8 mRiseToFarNode; /* 0x446 */
     /* Set to 1 just before func_ov062_0211b51c calls Player::Hurt; the next
        func_ov062_0211c218 (circling state entry) zeroes mStateTimer and clears
        it. Set even if Hurt does nothing. */
@@ -132,7 +135,7 @@ struct daJango_c : dEnemyBase_c {
     /* Ticked (+1, & 7) at the top of func_ov062_0211b3ac, which only does its
        work when it wraps to 0; func_ov062_0211c2f4 stores 7 so the very next
        call runs. */
-    s32                          unk_460;               /* 0x460 */
+    s32 mPathPickTick;                                  /* 0x460 */
     s32                          mPathId;               /* 0x464 */
     /* 0 (CARRIES_NO_STAR): no star; starts out empty-handed and goes for the
        player's cap, after which mHeldActorID is the cap. 1 (CARRIES_STAR):

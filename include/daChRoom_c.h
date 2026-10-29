@@ -25,19 +25,18 @@ struct daChRoom_c : dActor_c {
     u8 pad_0d0[0x4];
 
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
-    virtual ~daChRoom_c() {}            /* slots 16 (D1), 17 (D0) */
+    virtual ~daChRoom_c() {} /* slots 16 (D1), 17 (D0) */
 
-    virtual s32 InitResources();        /* slot 0  -- 0x020b0938 */
-    virtual s32 CleanupResources();     /* slot 3  -- 0x020b0854 */
-    virtual s32 Behavior();             /* slot 6  -- 0x020b0868 */
-    virtual s32 Render();               /* slot 9  -- 0x020b0860 */
-    virtual void OnPendingDestroy();    /* slot 12 -- 0x020b085c */
+    virtual s32 InitResources();     /* slot 0  -- 0x020b0938 */
+    virtual s32 CleanupResources();  /* slot 3  -- 0x020b0854 */
+    virtual s32 Behavior();          /* slot 6  -- 0x020b0868 */
+    virtual s32 Render();            /* slot 9  -- 0x020b0860 */
+    virtual void OnPendingDestroy(); /* slot 12 -- 0x020b085c */
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daChRoom_c_size_must_be_0xd4[
-    sizeof(daChRoom_c) == 0xd4 ? 1 : -1];
+typedef char daChRoom_c_size_must_be_0xd4[sizeof(daChRoom_c) == 0xd4 ? 1 : -1];
 #endif
 
 #endif /* DACHROOM_C_H */

@@ -46,14 +46,14 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii",
+      "symbol": "_ZN3OAM6RenderEbP7OamAttriiiiiiii",
       "address": "0x02020994",
       "size": "0x00000690",
       "legacy_source": "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
+      "symbol": "_ZN3OAM6RenderEbP7OamAttriiiiii",
       "address": "0x02021024",
       "size": "0x00000480",
       "legacy_source": "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c",
@@ -102,7 +102,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "_ZN3OAM12EnableSubOAMEv",
+      "symbol": "_ZN3OAM12EnableSubOAMEP6OamTmp",
       "address": "0x020219f0",
       "size": "0x00000014",
       "legacy_source": "src/_ZN3OAM12EnableSubOAMEv.cpp",

@@ -1,6 +1,9 @@
 //cpp
-/* Production translation unit for ov098/daObjBlockS_c.
- * 37 functions, .text 0x02138040..0x02139f70. The small breakable crate
+namespace Particle {
+struct Callback;
+}
+/* daObjBlockS_c -- small breakable crate (BLOCK_S, ov098).
+ * 37 functions, .text 0x02138040..0x02139f70, ending with classInit.
  * (registry profile BLOCK_S): it sits where it is placed, can be picked up
  * and thrown by a player, spat out or swallowed, slides and bounces on
  * the floor, sinks into quicksand, and breaks (paying out three coins once)
@@ -12,23 +15,12 @@
  * kill it; quicksand and the off-screen respawn path send it to STATE_BROKEN
  * directly, without coins).
  *
- * NAME: _ZTS13daObjBlockS_c is "13daObjBlockS_c" at ov098 0x0213c500; _ZTI at
- * 0x0213c4d4 reads [__si_class_type_info, that string, _ZTI10dBgActor_c], and
- * the word before the _ZTV13daObjBlockS_c address point (0x0213c534) points at
- * that _ZTI. The tree previously called the class Crate (coined).
+ * _ZTS13daObjBlockS_c at ov098 0x0213c500, _ZTI at 0x0213c4d4
+ * (base _ZTI10dBgActor_c), _ZTV13daObjBlockS_c at 0x0213c534.
+ * The tree previously called the class Crate (coined).
  *
- * The unit runs from the destructor pair (D1 0x02138040, D0 0x021380bc) to
- * daObjBlockS_c_classInit (0x02139f04). The out-of-line destructor is the key
- * function, so this TU emits the vtable and the RTTI chain; D2 has no ROM home.
- *
- * Crate_SetState and func_ov098_02138b70 run the state table at
- * data_ov098_0213c878: one {enter, update} member-pointer pair per state, and
- * mState (0x560) is the index. The state functions (0x0213814c..0x02138b18
- * and the helpers after them) are methods named func_ov098_<addr>. The first
- * argument is this.
- *
- * Under `#pragma defer_codegen off` .text is laid down in source order, so
- * this file is ROM-ascending.
+ * Key function ~daObjBlockS_c (out-of-line): D1 0x02138040, D0 0x021380bc,
+ * D2 homeless. Under `#pragma defer_codegen off` .text is ROM-ascending.
  *
  * STATES. mState (daObjBlockS_c::State) indexes the table at
  * data_ov098_0213c878, built by __sinit_ov098_0213c058 from fourteen
@@ -83,6 +75,7 @@ enum daObjBlockS_c_AssetId {
 };
 
 #include "decl_Actor.h"
+#include "cstd.h"
 #include "nitro/fx/fx.h"
 #include "decl_common.h"
 #include "daObjBlockS_c.h"
@@ -94,6 +87,8 @@ enum daObjBlockS_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "SurfaceInfo.h"
 #include "dCc_c.h"
+#include "Sound.h"
+#include "math/Approach.h"
 
 struct Vector3_16f;
 
@@ -139,44 +134,38 @@ extern int data_ov098_0213c4c8[];
 extern s16 data_02082214[];
 extern int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern u8 DecIfAbove0_Byte(u8 *p);
-extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
-extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-    u32 a, u32 b, int c, int d, int e, const Vector3_16f *v);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(s32 x, s32 y, s32 z);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    char *thiz, int f, char *m, int fix, short s, int blk);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    char *thiz, char *actor, int b, int d, void *v, int f);
+extern void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
+extern u32 d_a_obj_block_sNewUnkCallback818Hold(u32 a, u32 b, int c, int d, int e,
+                                                const Vector3_16f *v);
+namespace Particle {
+struct System {
+    static void NewSimple(unsigned int id, int x, int y, int z);
 
-extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, void *pos, unsigned int n, int speed, short ang);
-extern short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *self, int a, int b, short c);
-extern void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-    void *self, void *shadow, void *mtx, int fix, int t1, int t2, unsigned int n);
-extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    void *thiz, void *actor, void *vec, int fix, int t, unsigned u1, unsigned u2);
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+    static u32 NewUnkCallback818(u32, u32, int, int, int, const Vector3_16f *);
+};
+}
+}
+namespace Particle {
+void RunningSlidingDustAt(s32, s32, s32);
+}
+extern "C" {
+extern void d_a_obj_block_sRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
+extern void hold_d_a_obj_block_s(char *thiz, int f, char *m, int fix, short s, int blk);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(char *thiz, char *actor, int b, int d, void *v, int f);
 
-extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
+
 extern int SurfaceInfo_TestFlag0x20(int *p);
-extern int func_0203567c(int p);
-extern int func_02037e38(u32 *p);
-extern int func_02037e58(u32 *p);
 extern int func_ov002_020ef228(void *c, int arg);
 extern int func_ov002_020f030c(int x);
-extern int func_ov002_020e496c(char *c);
+extern int func_ov002_020e496c(Player *c);
 extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, struct Vector3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
 
-extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, const struct Vector3 *pos);
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);
+extern void d_a_obj_block_sPlayLongHold(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);
 
-extern int _Z14ApproachLinearRiii(int *a, int b, int c);
-extern void _Z11UpdateAngleRssis(s16 *a, s16 b, int c, s16 d);
-extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
-extern int _ZN4cstd4fdivEii(int a, int b);
+extern s16 atan2_hold_d_a_obj_block_s_1(s32 y, s32 x);
 extern s32 Vec3_HorzLen(const Vector3 *v0);
 extern void Vec3_MulScalarInPlace(int *v, int s);
 extern void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
@@ -213,12 +202,10 @@ struct BlockSStateHost { char pad[0x560]; int idx; };
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct BlockSModelFilePtr : SharedFilePtr {
-    u32 words[2];
     BlockSModelFilePtr(u32 fileID);
     ~BlockSModelFilePtr();
 };
 struct BlockSCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     BlockSCollisionFilePtr(u32 fileID);
     ~BlockSCollisionFilePtr();
 };
@@ -236,7 +223,7 @@ extern "C" BlockSW4 data_ov098_0213c4f0;
 // @symbol _ZN13daObjBlockS_cD0Ev
 /* Destroys dCcAcPos_c x2, dExtShadowModel_c and dBgCh_Actr in reverse declaration
  * order, then dBgActor_c's inline destructor stores its own vptr and destroys
- * its dBgW_KcMbg and Model before chaining to dActor_c. D0 then returns the
+ * its dBgW_KcMbg and dExtSimpleModel_c before chaining to dActor_c. D0 then returns the
  * object through the inline operator delete. */
 daObjBlockS_c::~daObjBlockS_c()
 {
@@ -356,9 +343,9 @@ void daObjBlockS_c::func_ov098_02138344()
 {
     UpdatePos(&mdCcAcPos_c1);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
-    _Z14ApproachLinearRiii(&mHorzSpeed, 0, 0x555);
+    ApproachLinear(mHorzSpeed, 0, 0x555);
     if (mWithMeshClsn.IsOnGround() != 0) {
-        _ZN5Sound9PlayBank3EjRK7Vector3(0x51, &mCamSpacePos);
+        Sound::PlayBank3(0x51, mCamSpacePos);
         DecIfAbove0_Byte(&mBounceCount);
         mVertSpeed = mBounceCount * 0xa000;
         mHorzSpeed = mBounceCount * 0x5000;
@@ -378,7 +365,7 @@ void daObjBlockS_c::func_ov098_02138344()
     if (mWithMeshClsn.IsOnGround() == 0) {
         func_ov098_021396a4();
     }
-    if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0) != 0) {
+    if (IsClsnInRangeOnScreen(0, 0) != 0) {
         func_ov098_021397c8();
     }
 }
@@ -416,7 +403,7 @@ void daObjBlockS_c::func_ov098_021384fc()
         Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
         return;
     }
-    _Z14ApproachLinearRiii(&mHorzSpeed, 0, 0x555);
+    ApproachLinear(mHorzSpeed, 0, 0x555);
     func_ov098_02138e6c();
     func_ov098_021390ec();
     if (func_ov098_02138bb8()) {
@@ -498,7 +485,7 @@ void daObjBlockS_c::func_ov098_02138734()
         Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
         return;
     }
-    _Z14ApproachLinearRiii(&mHorzSpeed, 0, 0x555);
+    ApproachLinear(mHorzSpeed, 0, 0x555);
     func_ov098_02138e6c();
     func_ov098_021390ec();
     if (func_ov098_02138bb8()) {
@@ -647,7 +634,7 @@ void daObjBlockS_c::func_ov098_021389f8()
     if (!mWithMeshClsn.IsOnGround()) {
         func_ov098_021396a4();
     }
-    if (!_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0x600000, 0)) {
+    if (!IsClsnInRangeOnScreen(0x600000, 0)) {
         return;
     }
     func_ov098_021397c8();
@@ -702,14 +689,14 @@ int daObjBlockS_c::func_ov098_02138bb8()
  * on it. Which surface func_02035638 tests is not recovered here. */
 int daObjBlockS_c::func_ov098_02138bfc()
 {
-    int r;
+    dBgPi *r;
     void *a;
     unsigned short type;
     if (!func_02035638((unsigned char *)&mWithMeshClsn)) return 0;
-    r = func_0203567c((int)&mWithMeshClsn);
-    if (((dBgPi *)r)->GetClsnID() == -1)
+    r = func_0203567c(&mWithMeshClsn);
+    if (r->GetClsnID() == -1)
         return 0;
-    a = dActor_c::FindWithID((unsigned int)((dBgPi *)r)->GetClsnID());
+    a = dActor_c::FindWithID(r->GetClsnID());
     if (!a) return 0;
     type = ((dActor_c *)a)->actorID;
     {
@@ -751,9 +738,9 @@ void daObjBlockS_c::func_ov098_02138ce0()
     mAngleY = mHomeAngleY;
     mAngleZ = mHomeAngleZ;
     mHorzSpeed = 0;
-    unk_0a4 = 0;
+    mSpeedX = 0;
     mVertSpeed = 0;
-    unk_0ac = 0;
+    mSpeedZ = 0;
 
     ((struct Vector3 *)(((long long)(int)&zero)))->x = 0;
     ((struct Vector3 *)(((long long)(int)&zero)))->y = 0;
@@ -762,14 +749,12 @@ void daObjBlockS_c::func_ov098_02138ce0()
     a1.x = zero.x;
     a1.y = zero.y;
     a1.z = zero.z;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &mdCcAcPos_c1, this, &a1, 0x3c000, 0x6e000, 0x200002, 0x4d390);
+    mdCcAcPos_c1.Init(this, a1, 0x3c000, 0x6e000, 0x200002, 0x4d390);
 
     a2.x = zero.x;
     a2.y = zero.y;
     a2.z = zero.z;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &mdCcAcPos_c2, this, &a2, 0x3c000, 0x1e000, 0x800004, 0);
+    mdCcAcPos_c2.Init(this, a2, 0x3c000, 0x1e000, 0x800004, 0);
 }
 
 // @symbol _ZN13daObjBlockS_c19func_ov098_02138e08Ev
@@ -782,7 +767,7 @@ void daObjBlockS_c::func_ov098_02138e08()
     v[0] = mPosX;
     v[1] = mPosY;
     v[2] = mPosZ;
-    _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, v, 3, 0xf000, 0);
+    SpawnCoins(*(const Vector3 *)v, 3, 0xf000, 0);
     mCoinsPaid = 1;
 }
 
@@ -805,7 +790,7 @@ void daObjBlockS_c::func_ov098_02138e08()
  *   1, 0, 1; what those arguments select is not recovered here. */
 void daObjBlockS_c::func_ov098_02138e6c()
 {
-    void *a;
+    Player *a;
     u32 fl;
     int b;
 
@@ -835,7 +820,7 @@ void daObjBlockS_c::func_ov098_02138e6c()
         Kill();
     }
 
-    a = dActor_c::FindWithID(mdCcAcPos_c1.otherOwner);
+    a = static_cast<Player *>(dActor_c::FindWithID(mdCcAcPos_c1.otherOwner));
     if (a == 0) return;
     {
         int bf = (int)(((dActor_c *)a)->actorID == ACTOR_PLAYER);
@@ -852,9 +837,9 @@ void daObjBlockS_c::func_ov098_02138e6c()
         return;
     }
     if ((fl & CC_HIT_GRAB) != 0) {
-        if (((Player *)a)->TryGrab(*this) == 0)
+        if (a->TryGrab(*this) == 0)
             return;
-        mHoldingPlayer = (Player *)a;
+        mHoldingPlayer = a;
         Crate_SetState(this, daObjBlockS_c::STATE_CARRIED);
         return;
     }
@@ -869,7 +854,7 @@ void daObjBlockS_c::func_ov098_02138e6c()
         v.x = mPosX;
         v.y = mPosY;
         v.z = mPosZ;
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(a, &v, 1, 0xc000, 1, 0, 1);
+        a->Hurt(v, 1, 0xc000, 1, 0, 1);
     }
 }
 
@@ -891,12 +876,12 @@ void daObjBlockS_c::Kill()
     vec.x = x;
     vec.y = y;
     vec.z = z;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xe, vec.x, vec.y, vec.z);
+    Particle::System::NewSimple(0xe, vec.x, vec.y, vec.z);
     ((int *)&vec2)[0] = ((int *)&vec)[0];
     ((int *)&vec2)[1] = ((int *)&vec)[1];
     ((int *)&vec2)[2] = ((int *)&vec)[2];
-    _ZN8dActor_c19DisappearPoofDustAtERK7Vector3((char *)this, &vec2);
-    _ZN5Sound9PlayBank3EjRK7Vector3(0x41, &mCamSpacePos);
+    DisappearPoofDustAt(vec2);
+    Sound::PlayBank3(0x41, mCamSpacePos);
     Crate_SetState(this, STATE_BROKEN);
 }
 
@@ -915,7 +900,7 @@ void daObjBlockS_c::func_ov098_021390ec()
     if (DecIfAbove0_Byte(&mWallCooldown) != 0)
         return;
     if (mWithMeshClsn.IsOnWall() != 0) {
-        dBgPi *wr = (dBgPi *)mWithMeshClsn.GetWallResult();
+        dBgPi *wr = mWithMeshClsn.GetWallResult();
         if (wr->GetClsnID() != -1) {
             dActor_c *a = dActor_c::FindWithID((u32)wr->GetClsnID());
             if (a != 0) {
@@ -939,8 +924,7 @@ void daObjBlockS_c::func_ov098_021390ec()
     }
     Vector3 v;
     ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))->CopyNormalTo(v);
-    mPrevAngleY =
-        _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(this, v.x, v.z, mPrevAngleY);
+    mPrevAngleY = ReflectAngle(v.x, v.z, mPrevAngleY);
 }
 
 #pragma push
@@ -959,14 +943,14 @@ void daObjBlockS_c::func_ov098_021390ec()
  * units per frame (-0xb000) calls Kill, and the step carries on.
  *
  * The slide: CopyNormalTo fills mFloorNormalX/Y/Z, n is the floor's CLPS
- * type (func_02037e58; include/Player.h calls it the slipperiness class),
+ * floor class (CLPS::GetFloorClass; include/Player.h calls it the slipperiness class),
  * hl its slide acceleration (func_ov002_020f02c8). a1 is the current
  * velocity (mHorzSpeed along mPrevAngleY, through the sin / cos table at
  * data_02082214), a2 is hl in the direction atan2 of the normal's x and z
  * gives (through the same table), scaled by Vec3_HorzLen of the normal;
  * their sum becomes the new mPrevAngleY and mHorzSpeed (capped at 100 units,
- * 0x64000). mVertSpeed is set to -((normalX * unk_0a4 + normalZ * unk_0ac)
- * / normalY + 8 units); unk_0a4 / unk_0ac sit either side of mVertSpeed and
+ * 0x64000). mVertSpeed is set to -((normalX * mSpeedX + normalZ * mSpeedZ)
+ * / normalY + 8 units); mSpeedX / mSpeedZ sit either side of mVertSpeed and
  * are treated here as its x and z companions, which this file does not
  * otherwise confirm. When func_ov002_020f035c(n, mFloorNormalY) (the
  * per-class slope test, include/Player.h) is nonzero, the crate is nearly
@@ -998,7 +982,7 @@ int daObjBlockS_c::func_ov098_02139228()
         return 0;
 
     fr = mWithMeshClsn.GetFloorResult();
-    switch (func_02037e38((u32 *)((char *)fr + 4))) {
+    switch (((SurfaceInfo *)((char *)fr + 4))->clps.GetSurfaceType()) {
     case 6:
         mClsnYOffsetTarget = 0x1e000;
         break;
@@ -1017,7 +1001,7 @@ int daObjBlockS_c::func_ov098_02139228()
         break;
     }
 
-    _Z14ApproachLinearRiii(&mClsnYOffset, mClsnYOffsetTarget, 0x800);
+    ApproachLinear(mClsnYOffset, mClsnYOffsetTarget, 0x800);
 
     if ((mFloorNormalY | mHorzSpeed) == 0) {
         u32 *p = &mdCcAcPos_c1.flags;
@@ -1030,8 +1014,8 @@ int daObjBlockS_c::func_ov098_02139228()
     }
 
     ((SurfaceInfo *)((char *)fr + 4))->CopyNormalTo(*(Vector3 *)&mFloorNormalX);
-    n = func_02037e58((u32 *)((char *)fr + 4));
-    ang = _ZN4cstd5atan2E5Fix12IiES1_(mFloorNormalX, mFloorNormalZ);
+    n = ((SurfaceInfo *)((char *)fr + 4))->clps.GetFloorClass();
+    ang = cstd::atan2(mFloorNormalX, mFloorNormalZ);
     hl = func_ov002_020f02c8(n);
     func_ov002_020f030c(n);
 
@@ -1058,7 +1042,7 @@ int daObjBlockS_c::func_ov098_02139228()
     }
     Vec3_MulScalarInPlace(&a2.x, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
     Vec3_Add(&sum, &a1, &a2);
-    newAng = _ZN4cstd5atan2E5Fix12IiES1_(sum.x, sum.z);
+    newAng = cstd::atan2(sum.x, sum.z);
     mHorzSpeed = Vec3_HorzLen(&sum);
     if (mHorzSpeed > 0x64000)
         mHorzSpeed = 0x64000;
@@ -1066,9 +1050,9 @@ int daObjBlockS_c::func_ov098_02139228()
     AngleDiff(mPrevAngleY, mAngleY);
 
     {
-        s32 m0 = FX_MUL(mFloorNormalX, unk_0a4);
-        s32 m1 = FX_MUL(mFloorNormalZ, unk_0ac);
-        mVertSpeed = -(_ZN4cstd4fdivEii(m0 + m1, mFloorNormalY) + 0x8000);
+        s32 m0 = FX_MUL(mFloorNormalX, mSpeedX);
+        s32 m1 = FX_MUL(mFloorNormalZ, mSpeedZ);
+        mVertSpeed = -(cstd::fdiv(m0 + m1, mFloorNormalY) + 0x8000);
     }
 
     if (func_ov002_020f035c(n, mFloorNormalY) != 0 && mHorzSpeed > 0x5000) {
@@ -1081,29 +1065,28 @@ int daObjBlockS_c::func_ov098_02139228()
             if (q1 < 0) q1 = ((-q1) << 16) >> 16;
             if (q1 < 0x10) {
                 s32 v = mHorzSpeed;
-                sd = _ZN4cstd4fdivEii(FX_MUL(v, 8), 0xa);
+                sd = cstd::fdiv(FX_MUL(v, 8), 0xa);
                 if (sd < 0) sd = -sd;
                 if (mVertSpeed > 0xa000)
-                    _ZN5Sound9PlayBank3EjRK7Vector3(0x51, &mCamSpacePos);
+                    Sound::PlayBank3(0x51, mCamSpacePos);
                 if (mVertSpeed > sd)
                     mVertSpeed = sd;
             }
         }
     }
 
-    if (_Z14ApproachLinearRiii(&mHorzSpeed, 0, 0x800) == 0
-        && mClsnYOffsetTarget != 0xa0
-        && mHorzSpeed > 0xa000) {
-        _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(mPosX, mPosY, mPosZ);
+    if (ApproachLinear(mHorzSpeed, 0, 0x800) == 0 && mClsnYOffsetTarget != 0xa0 &&
+        mHorzSpeed > 0xa000) {
+        Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
         mSlideSoundHandle =
-            _ZN5Sound8PlayLongEjjjRK7Vector3s(mSlideSoundHandle, 3, 0x93, &mCamSpacePos, 0);
+            Sound::PlayLong(mSlideSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePos, 0);
     }
 
     {
         s16 r5 = func_02010844(this, (Vector3 *)&mFloorNormalX, mAngleY);
         s16 r4 = func_02010844(this, (Vector3 *)&mFloorNormalX, (s16)(mAngleY - 0x4000));
-        _Z11UpdateAngleRssis(&mAngleX, r5, 4, 0x1000);
-        _Z11UpdateAngleRssis(&mAngleZ, r4, 4, 0x1000);
+        UpdateAngle(mAngleX, r5, 4, 0x1000);
+        UpdateAngle(mAngleZ, r4, 4, 0x1000);
     }
     return 1 | (base & 0);
 }
@@ -1144,8 +1127,7 @@ void daObjBlockS_c::func_ov098_021396a4()
     mShadowMtx.m[9] = mPosX >> 3;
     mShadowMtx.m[10] = (mPosY - 0x14000) >> 3;
     mShadowMtx.m[11] = mPosZ >> 3;
-    _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
-        this, &mShadowModel, &mShadowMtx, r4, r5 + 0x28000, r4, 0xf);
+    DropShadowScaleXYZ(mShadowModel, mShadowMtx, r4, r5 + 0x28000, r4, 0xf);
 }
 
 // @symbol _ZN13daObjBlockS_c19func_ov098_021397c8Ev
@@ -1169,7 +1151,7 @@ void daObjBlockS_c::func_ov098_021397c8()
 }
 
 // @symbol _ZN13daObjBlockS_c19func_ov098_02139850Ev
-/* Model matrix. When mHoldingPlayer is set, mFlags bit 0x4000 is set and the
+/* dExtSimpleModel_c matrix. When mHoldingPlayer is set, mFlags bit 0x4000 is set and the
  * player's mCarryMatrix is nonzero, the
  * crate follows the player's hand: it picks a row r5 of the carry-offset
  * table (data_ov098_0213bf60 / 64 / 68 are its x / y / z columns, stride 12
@@ -1195,7 +1177,7 @@ void daObjBlockS_c::func_ov098_02139850()
         goto other;
 
     {
-        char *r4 = (char *)func_ov002_020e496c((char *)obj);
+        char *r4 = (char *)func_ov002_020e496c(obj);
         int r5 = 0;
         if (mHoldingPlayer->IsFrontSliding() != 0)
             r5 = 1;
@@ -1209,7 +1191,7 @@ void daObjBlockS_c::func_ov098_02139850()
         Math_Function_0203b14c((char *)&mCarryOffsetY, *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc), 0x800, 0x3e8000, 4);
         Math_Function_0203b14c((char *)&mCarryOffsetZ, *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc), 0x800, 0x3e8000, 4);
         {
-            char *res = (char *)UpdateCarry(*(Player *)mHoldingPlayer, *(Vector3 *)&mCarryOffsetX);
+            char *res = (char *)UpdateCarry(*mHoldingPlayer, *(Vector3 *)&mCarryOffsetX);
             mModel.mat4x3 = *(struct Matrix4x3 *)res;
         }
         mFlags |= 0x4000000;
@@ -1255,7 +1237,7 @@ int daObjBlockS_c::CleanupResources()
 }
 
 // @symbol _ZN13daObjBlockS_c6RenderEv
-/* Draws the model through Model's vtable slot 5 (Render) unless the crate is
+/* Draws the model through dExtSimpleModel_c's vtable slot 5 (Render) unless the crate is
  * in STATE_BROKEN or mFlags 0x40000 (a yoshi-mouth bit) is set. The call goes
  * through the local `Sub` shadow so it stays a virtual dispatch on the member
  * object. Always returns 1. */
@@ -1318,10 +1300,10 @@ int daObjBlockS_c::Behavior()
         ((int *)&v)[1] = y;
         ((int *)&v)[2] = z;
         if (DecIfAbove0_Byte(&mBreakTimer)) {
-            mParticleHandle1 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                mParticleHandle1, 0x13a, v.x, v.y, v.z, 0, 0);
-            mParticleHandle2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-                mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
+            mParticleHandle1 =
+                (u32)Particle::System::New(mParticleHandle1, 0x13a, v.x, v.y, v.z, 0, 0);
+            mParticleHandle2 =
+                Particle::System::NewUnkCallback818(mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
             goto done;
         }
         func_ov098_02138e08();
@@ -1334,7 +1316,7 @@ int daObjBlockS_c::Behavior()
         ((int *)&vec2)[0] = ((int *)&vec)[0];
         ((int *)&vec2)[1] = ((int *)&vec)[1];
         ((int *)&vec2)[2] = ((int *)&vec)[2];
-        _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(((char *)this), &vec2);
+        DisappearPoofDustAt(vec2);
         Crate_SetState(this, STATE_BROKEN);
         return 1;
     }
@@ -1377,13 +1359,13 @@ int daObjBlockS_c::InitResources()
     mHomeAngleX = mAngleX;
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;
-    mModel.SetFile((BMD_File *)Model::LoadFile(**(SharedFilePtr **)(f)), 1, -1);
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(**(SharedFilePtr **)(f)), 1, -1);
     mShadowModel.InitCuboid();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        (char *)&mMeshCollider, (int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(f + 4)),
-        (char *)&mClsnMat, 0x199, mAngleY, *(int *)(f + 8));
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        (char *)&mWithMeshClsn, ((char *)this), 0x28000, 0x28000, 0, 0);
+    ((dBgW_KcMbg *)((char *)&mMeshCollider))
+        ->dBgW_KcMbg::SetFile((KCL_File *)((int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(f + 4))),
+                              *(const Matrix4x3 *)((char *)&mClsnMat), 0x199, mAngleY,
+                              *(CLPS_Block *)(*(int *)(f + 8)));
+    mWithMeshClsn.Init((dActor_c *)((char *)this), 0x28000, 0x28000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -1426,10 +1408,9 @@ int daObjBlockS_c::OnYoshiTryEat()
  * result. */
 void daObjBlockS_c::OnTurnIntoEgg(Player &player)
 {
-    char *r4 = (char *)&player;
-    if (((Player *)r4)->IsCollectingCap()) {
+    if (player.IsCollectingCap()) {
         if (mCoinsPaid != 1) {
-            ((dActor_c *)this)->GivePlayerCoins(*(Player *)r4, 3, 0);
+            ((dActor_c *)this)->GivePlayerCoins(player, 3, 0);
             mCoinsPaid = 1;
         }
     } else {
@@ -1438,7 +1419,7 @@ void daObjBlockS_c::OnTurnIntoEgg(Player &player)
             mCoinsPaid = 1;
             count = 3;
         }
-        ((Player *)r4)->RegisterEggCoinCount(count, 0, 0);
+        player.RegisterEggCoinCount(count, 0, 0);
     }
     Crate_SetState(this, STATE_BROKEN);
 }

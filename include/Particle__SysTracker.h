@@ -32,6 +32,11 @@
  * whose next pointer is at +0x18. The constructor's 0x40-entry walk from +0x8
  * to the bucket array at +0x708 proves the node's 0x1c stride.
  *
+ * The constructor zeroes only ten of the ID slots, but func_02022774 and
+ * func_020226fc pass 0x7d0 and 0x7e0 to System::New as the unique ID and
+ * store its result back, with the callback four bytes above, exactly like
+ * the other mSystemID_* slots.
+ *
  * Field NAMES cannot change codegen. */
 #ifndef PARTICLE__SYSTRACKER_H
 #define PARTICLE__SYSTRACKER_H
@@ -69,7 +74,9 @@ struct SysTracker {
                             dPa_c::level_c::callback_c *newCallback);
         };
 
-        u32   unk_000;
+        /* Create pre-increments this for each new entry and skips 0, which
+           FindData treats as "no system". */
+        u32 mLastUniqueID;
         u8    mCurrentIndex;
         u8    pad_005[0x3];
         Entry mEntries[0x40];
@@ -110,9 +117,9 @@ struct SysTracker {
     dPa_c::level_c::scaleCallback_c mCallback_7b4; /* 0x7b4 */
     s32 mSystemID_7c0;      /* 0x7c0 */
     dPa_c::level_c::scaleCallback_c mCallback_7c4; /* 0x7c4 */
-    u8 pad_7d0[0x4];
+    s32 mSystemID_7d0;                             /* 0x7d0 */
     dPa_c::level_c::scaleCallback_c mCallback_7d4; /* 0x7d4 */
-    u8 pad_7e0[0x4];
+    s32 mSystemID_7e0;                             /* 0x7e0 */
     dPa_c::level_c::scaleCallback_c mCallback_7e4; /* 0x7e4 */
     dPa_c::level_c::checkWaterCallback_c mCallback_7f0; /* 0x7f0 */
     dPa_c::level_c::checkWaterRippleCallback_c mCallback_7f4; /* 0x7f4 */

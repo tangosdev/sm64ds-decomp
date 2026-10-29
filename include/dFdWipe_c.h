@@ -2,7 +2,7 @@
 #define DFDWIPE_C_H
 
 #include "dFdColor_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 
 /* Wipe transition: a dFdColor_c that also draws a 3D model scaled by the fade
  * level, so the screen is covered by geometry rather than by a blend register.
@@ -23,9 +23,9 @@
  *
  * THE MODEL AT 0x10 is read out of that same constructor. Its last act before
  * returning is `add r0, r4, #0x10` followed by `bl 0x02016d58`, and 0x02016d58
- * is _ZN5ModelC1Ev. include/Model.h asserts sizeof(Model) == 0x50, so the whole
+ * is _ZN17dExtSimpleModel_cC1Ev. include/dExtSimpleModel_c.h asserts sizeof(dExtSimpleModel_c) == 0x50, so the whole
  * object is 0x10 + 0x50 = 0x60. dFdWipe_c::LoadAndSetFile confirms the offset
- * independently: it forwards to Model::LoadAndSetFile on `this + 0x10`.
+ * independently: it forwards to dExtSimpleModel_c::LoadAndSetFile on `this + 0x10`.
  *
  * VTABLE. _ZTV9dFdWipe_c (0x0208ea9c) is ten slots and overrides exactly one,
  * slot 2 -- AdvanceFade. Everything else is still dFdBrightness_c's.
@@ -33,11 +33,11 @@
  */
 #ifdef __cplusplus
 struct dFdWipe_c : dFdColor_c {
-    Model model;                    /* 0x10 -- constructed last by dFdWipe_c::dFdWipe_c */
+    dExtSimpleModel_c model; /* 0x10 -- constructed last by dFdWipe_c::dFdWipe_c */
 
     /* Out of line -- the ROM keeps it as a real call at 0x02017480, and its
        body is empty: every store it makes belongs to a base sub-object
-       constructor or to Model's. */
+       constructor or to dExtSimpleModel_c's. */
     dFdWipe_c();
 
     virtual ~dFdWipe_c();           /* key function; defined in D1Ev.cpp / D0Ev.cpp */
@@ -57,7 +57,7 @@ struct dFdWipe_c {
     Fix12i speed;       /* 0x08 (from dFader_c) */
     u16    color;       /* 0x0c (from dFdColor_c) */
     u8     pad_00e[0x2];
-    Model model;              /* 0x010 */
+    dExtSimpleModel_c model; /* 0x010 */
 };
 #endif
 

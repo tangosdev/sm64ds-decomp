@@ -16,6 +16,10 @@ src/game/actors/d_a_krb.cpp:
 src/game/actors/d_a_red_bombhei.cpp:
     complete
     .text start:0x0212c10c end:0x0212d248
+    .init start:0x02130558 end:0x02130654
+    .ctor start:0x02130864 end:0x02130868
+    .data start:0x021309c4 end:0x02130ab4
+    .bss start:0x02130d9c end:0x02130df4
 
 src/game/actors/d_a_f_pkn.cpp:
     complete
@@ -24,11 +28,7 @@ src/game/actors/d_a_f_pkn.cpp:
 src/game/actors/d_a_pkn.cpp:
     complete
     .text start:0x0212eaf0 end:0x02130174
-
-src/unnamed/ov084/__sinit_ov084_02130558.c:
-    complete
-    .init start:0x02130558 end:0x02130654
-
-src/unnamed/ov084/__sinit_ov084_02130654.c:
-    complete
     .init start:0x02130654 end:0x02130860
+    .ctor start:0x02130868 end:0x0213086c
+    .data start:0x02130ba4 end:0x02130ca4
+    .bss start:0x02130df4 end:0x02130ec8

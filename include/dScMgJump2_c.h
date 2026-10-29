@@ -15,14 +15,13 @@
  * name is known for this minigame, unlike dScMgJump_c's own factory
  * dScMgJump_c_classInit.
  *
- * mPlayers is dMgJump3DMario_c[3], now named by the ROM's own RTTI and its
- * paired constructor/destructor helpers. The compiler therefore owns the
- * final array teardown after the still-explicit Model, mArray3 and mArray2
- * steps. mModel remains raw for now: typing only it would move its automatic
- * destruction after those two still-opaque arrays, opposite the ROM order.
- * The factory's `_ZN5ModelC1Ev(p + 0x5a14)` and sizeof(Model) == 0x50 still
- * fix the model's offset and extent without pretending the other element
- * type names are known.
+ * Every member the factory builds is typed: mPlayers (dMgJump3DMario_c[3],
+ * named by the ROM's own RTTI), mHeyhos (Heyho[6]), mPopups (Jump2Popup[0x10])
+ * and mModel, in the factory's construction order. The ROM destructor tears
+ * them down in exact reverse -- mModel first, then mPopups, mHeyhos and
+ * mPlayers -- so the compiler writes the whole teardown and the factory is
+ * `return new dScMgJump2_c;`. sizeof(dExtSimpleModel_c) == 0x50 closes mModel
+ * on mTextureOffsetT at 0x5a64.
  *
  * THE DESTRUCTOR IS DEFINED IN THE CLASS BODY, for the emission-order reason
  * spelled out at the definition below. No separate operator delete is needed:
@@ -36,14 +35,9 @@
 #define DSCMGJUMP2_C_H
 #include "dScMgD3DBase_c.h"
 #include "dMgJump3DMario_c.h"
-
-/* The array runtime passes each element address and ignores callback results.
- * The casts below adapt the existing lifecycle entries at that ABI boundary. */
-extern "C" void __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride,
-                                  void (*dtor)(void *));
-extern "C" void _ZN5ModelD1Ev(void *p);
-extern "C" int Heyho_Destruct(int *object);
-extern "C" void Jump2Popup_ElemDtor(void *object);
+#include "dExtSimpleModel_c.h"
+#include "Heyho.h"
+#include "Jump2Popup.h"
 
 struct dScMgJump2_c : dScMgD3DBase_c {
     /* DEFINED IN THE CLASS BODY, DELIBERATELY -- not a style choice.
@@ -59,11 +53,7 @@ struct dScMgJump2_c : dScMgD3DBase_c {
        DECLARED but not defined here is StartRound below, which lives in
        src/minigames/d_s_mg_jump2.cpp, so _ZTV12dScMgJump2_c is still emitted
        by that one translation unit and by no other. */
-    virtual ~dScMgJump2_c() {
-        _ZN5ModelD1Ev((char *)this + 0x5a14);
-        __cxa_vec_cleanup(mArray3, 0x10, 0x24, Jump2Popup_ElemDtor);
-        __cxa_vec_cleanup(mArray2, 6, 0xf0, (void (*)(void *))Heyho_Destruct);
-    }
+    virtual ~dScMgJump2_c() {}
     virtual void StartRound(int arg);  /* slot 18 */
     virtual int CanEndState(int mode); /* slot 19 */
 
@@ -77,9 +67,9 @@ struct dScMgJump2_c : dScMgD3DBase_c {
        function in the table, and none of them is recovered. */
     u8 pad_5004[0x8];             /* 0x5004 -- the state callback; see the block above */
     dMgJump3DMario_c mPlayers[3]; /* 0x500c -- RTTI-proven element type */
-    u8 mArray2[0x5a0];            /* 0x5234 -- 6 * 0xf0,  elem dtor Heyho_Destruct */
-    u8 mArray3[0x240];            /* 0x57d4 -- 0x10 * 0x24, elem dtor Jump2Popup_ElemDtor */
-    u8 mModel[0x50];              /* 0x5a14 -- a real Model, raw bytes; see banner */
+    Heyho mHeyhos[6];             /* 0x5234 -- 6 * 0xf0 */
+    Jump2Popup mPopups[0x10];     /* 0x57d4 -- 0x10 * 0x24 */
+    dExtSimpleModel_c mModel;     /* 0x5a14 -- see banner */
     s32 mTextureOffsetT;          /* 0x5a64 -- T texture-coordinate offset for material 0 */
     s32 mTextureScrollRate;       /* 0x5a68 -- texture scroll rate, applied >> 12 */
     u32 mParticleID;              /* 0x5a6c -- particle system unique ID */

@@ -30,8 +30,6 @@
  *   case 13. Naming belongs in arm9.
  * Leftover: ApproachLinear2 stays mangled. No header. This TU's
  *   icon_c::Behavior.
- * Leftover: G2S::GetBG2ScrPtr stays mangled. No header. GraphCallback2
- *   and icon_c::Render.
  * Leftover: OAM::Render Fix12-by-value stays mangled (OAM.h, wall 6az).
  *   This TU's icon_c::Render.
  * Leftover: data_ov075_0211cb64 / 0211c720 / 0211c730 / 0211c954 are
@@ -55,11 +53,14 @@
  * its own and nested-class metadata now use complete native data ranges;
  * ancestor copies retain their separately configured homes.
  *
- * .text 0x02115ab8..0x021165b0, 15 functions. The unit goes on to
- * 0x0211a854 (82 functions): 58 remaining func_ov075_* helpers, each still its own
- * file, then d_s_entry_methods.cpp (0x0211a210..0x0211a854) with the six
- * scene methods, the RESULT factory and the OamAnimation and icon_c
- * constructors. A licensed range cannot step over the helpers.
+ * .text 0x02115ab8..0x021165b0. The unit goes on to 0x0211a854.
+ * 37 separately owned functions still sit in the hole 0x021165b0..0x021190a4,
+ * each its own file. d_s_entry_methods.cpp now owns 0x021190a4..0x0211a854
+ * (the player-select and sync steps, the helpers through
+ * SetSteps, the six scene methods, the RESULT factory and the
+ * OamAnimation and icon_c constructors). A licensed range cannot step
+ * over the remaining helpers. The code past the ENTRY factory is
+ * dEntObj_c, not this class.
  */
 
 #pragma defer_codegen off
@@ -67,17 +68,18 @@
 #include "dScEntry_c.h"
 #include "OAM.h"
 #include "OamAttr.h"
+#include "G2.h"
+#include "math/Approach.h"
 
 extern "C" {
-unsigned int _ZN3G2S12GetBG2ScrPtrEv();
+
 void DecompressLZ16(void *, void *);
 void Deallocate(void *);
 
-int _Z15ApproachLinear2Rsss(short *, short, short);
 extern unsigned char data_0209b2e4;
 
-extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int a, void *oam, int b, int c, int d,
-                                                        int e, int f, int g, int h, int i);
+extern void OamRender10_d_s_entry(int a, void *oam, int b, int c, int d, int e, int f, int g, int h,
+                                  int i);
 extern int func_0203d974(void);
 
 int func_0200f0bc(void);
@@ -131,8 +133,8 @@ void dScEntry_c::icon_c::Render() {
     int y;
     int x;
 
-    xy[0] = unk_004;
-    xy[1] = unk_006;
+    xy[0] = mX;
+    xy[1] = mY;
 
     switch (unk_01c) {
     case 7: {
@@ -141,13 +143,13 @@ void dScEntry_c::icon_c::Render() {
         int scale;
 
         spriteIndex = unk_020;
-        if (unk_010 == 0) {
-            if (unk_011 != 0)
+        if (mOn == 0) {
+            if (mReady != 0)
                 spriteIndex += 4;
         }
         spriteData = (void *)data_ov075_0211cb64[spriteIndex];
 
-        scale = unk_00c;
+        scale = mPressTimer;
         if (scale <= 0) {
             scale = 0x1000;
         } else if (scale < 4) {
@@ -156,15 +158,14 @@ void dScEntry_c::icon_c::Render() {
             scale = ((8 - scale) << 8) + 0x1000;
         }
 
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, spriteData, xy[0], xy[1], -1, -1, scale,
-                                                    scale, 0, -1);
+        OAM::Render(1, (OamAttr *)spriteData, xy[0], xy[1], -1, -1, scale, scale, 0, -1);
         return;
     }
 
     case 0:
     case 1:
     case 2:
-        paletteBits = (unk_010 != 0) ? 0x6000 : 0x5000;
+        paletteBits = (mOn != 0) ? 0x6000 : 0x5000;
         /* The ROM's case 0..2 block branches into case 8..11's fill loop.
          * A shared inline helper (void or int-returning), one merged
          * case, a do/while(0) that breaks out of a merged case, a fill
@@ -179,35 +180,35 @@ void dScEntry_c::icon_c::Render() {
     case 9:
     case 10:
     case 11:
-        paletteBits = (unk_010 != 0) ? 0x2000 : 0x1000;
+        paletteBits = (mOn != 0) ? 0x2000 : 0x1000;
     fill:
-        halfWidth = unk_008;
-        screenMap = (u16 *)_ZN3G2S12GetBG2ScrPtrEv();
-        x = unk_004;
-        halfHeight = unk_00a;
+        halfWidth = mHalfW;
+        screenMap = (u16 *)G2S::GetBG2ScrPtr();
+        x = mX;
+        halfHeight = mHalfH;
         x -= halfWidth;
         x >>= 3;
         screenMap += x;
-        y = unk_006;
+        y = mY;
         y -= halfHeight;
         screenMap += (y >> 3) << 5;
-        for (row = 0; row < unk_00a >> 2; row++) {
+        for (row = 0; row < mHalfH >> 2; row++) {
             for (column = 0; column < halfWidth >> 2; column++) {
                 screenMap[column] = (u16)(paletteBits | (screenMap[column] & 0xfff));
-                halfWidth = unk_008;
+                halfWidth = mHalfW;
             }
             screenMap += 0x20;
         }
         return;
 
     case 3:
-        if (unk_010 != 0)
+        if (mOn != 0)
             xy[0] = (s16)(xy[0] - 2);
         sprite = data_ov075_0211c720;
         break;
 
     case 4:
-        if (unk_010 != 0)
+        if (mOn != 0)
             xy[0] = (s16)(xy[0] + 2);
         sprite = data_ov075_0211c730;
         break;
@@ -232,9 +233,9 @@ void dScEntry_c::icon_c::Render() {
 void dScEntry_c::icon_c::Behavior() {
     if (unk_01c == 0xd) {
         if (unk_020 == data_0209b2e4) {
-            _Z15ApproachLinear2Rsss(&unk_006, 0x14, 8);
+            ApproachLinear2(mY, 0x14, 8);
         } else {
-            if (_Z15ApproachLinear2Rsss(&unk_006, -0x24, 8) != 0)
+            if (ApproachLinear2(mY, -0x24, 8) != 0)
                 unk_020 = data_0209b2e4;
         }
     }
@@ -300,7 +301,7 @@ int dScEntry_c::graphCallback_c::GraphCallback2() {
     *reg = value | (bg2ScreenBase << 8);
 
     if (compressedBg2Screen != 0) {
-        unsigned short *screen = (unsigned short *)_ZN3G2S12GetBG2ScrPtrEv();
+        unsigned short *screen = (unsigned short *)G2S::GetBG2ScrPtr();
         DecompressLZ16(compressedBg2Screen, screen);
         Deallocate(compressedBg2Screen);
         compressedBg2Screen = 0;
@@ -353,7 +354,7 @@ extern "C" void func_ov075_021160dc(char *rawScene) {
  */
 
 extern "C" {
-void *_ZN2G212GetBG1ScrPtrEv();
+
 int func_02030958(int val);
 }
 extern u8 data_0209fc50;
@@ -364,7 +365,7 @@ static inline void SetPalette(u16 *entry, u16 pal) {
 
 extern "C" void func_ov075_02116128(int unused, int slot, int dim) {
     int players = data_0209fc50;
-    u16 *map = (u16 *)_ZN2G212GetBG1ScrPtrEv();
+    u16 *map = (u16 *)G2::GetBG1ScrPtr();
     u16 pal = func_02030958(slot) + 10;
     u16 *p;
     int i;
@@ -421,9 +422,6 @@ extern OamAttr data_ov075_0211c870[];
 extern s8 data_0209f310[];
 extern s16 data_0209f358[];
 extern char data_0209ee90[];
-// local extern: OAM::Render takes Fix12<int> by value (measured wall 6az).
-extern OamAttr *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int a, OamAttr *attr, int x, int y, int pal,
-                                                        int prio, int scale, int rot);
 }
 
 static inline int EntryPlayerIndex(int arg0) {
@@ -467,21 +465,18 @@ extern "C" void func_ov075_0211621c(char *c) {
             do {
                 int *p;
                 int pid = EntryPlayerIndex(i);
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(zA, data_ov075_0211c7c0,
-                                                            xbase + i * stride, yIcon, minus1,
-                                                            minus1, scale, scale, zA, minus1);
-                p = (int *)_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(
-                    zC, (OamAttr *)data_ov075_0211c8b0, xbase + 0x1c + i * stride, yIcon, minus1,
-                    minus1, scale, zC);
+                OAM::Render(zA, data_ov075_0211c7c0, xbase + i * stride, yIcon, minus1, minus1,
+                            scale, scale, zA, minus1);
+                p = (int *)OAM::Render(zC, (OamAttr *)data_ov075_0211c8b0,
+                                       xbase + 0x1c + i * stride, yIcon, minus1, minus1, scale, zC);
                 if (p != 0) {
                     int *q = (int *)((int)(p + 1));
                     int val = *q;
                     *q = (val & (~0x3ff)) |
                          ((data_0209f310[pid] + (((u32)(val << 22)) >> 22)) & 0x3ff);
                 }
-                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(zB, data_ov075_0211c870,
-                                                            xbase + i * stride, yNum, minus1,
-                                                            minus1, scale, scale, zB, minus1);
+                OAM::Render(zB, data_ov075_0211c870, xbase + i * stride, yNum, minus1, minus1,
+                            scale, scale, zB, minus1);
                 {
                     int n;
                     int dx = off14;
@@ -491,9 +486,9 @@ extern "C" void func_ov075_0211621c(char *c) {
                     rem = n % 100;
                     tens = rem / 10;
                     if (hundreds != 0) {
-                        p = (int *)_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(
-                            zD, (OamAttr *)data_ov075_0211c8b0, xbase + 0x14 + i * stride, yNum,
-                            minus1, minus1, scale, zD);
+                        p = (int *)OAM::Render(zD, (OamAttr *)data_ov075_0211c8b0,
+                                               xbase + 0x14 + i * stride, yNum, minus1, minus1,
+                                               scale, zD);
                         if (p != 0) {
                             int *q = (int *)((int)(p + 1));
                             int val = *q;
@@ -505,9 +500,9 @@ extern "C" void func_ov075_0211621c(char *c) {
                         dx = dx + 4;
                     }
                     if ((tens != 0) || (hundreds != 0)) {
-                        p = (int *)_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(
-                            zE, (OamAttr *)data_ov075_0211c8b0, xbase + dx + i * stride, yNum,
-                            minus1, minus1, scale, zE);
+                        p = (int *)OAM::Render(zE, (OamAttr *)data_ov075_0211c8b0,
+                                               xbase + dx + i * stride, yNum, minus1, minus1, scale,
+                                               zE);
                         if (p != 0) {
                             int *q = (int *)((int)(p + 1));
                             int val = *q;
@@ -517,9 +512,9 @@ extern "C" void func_ov075_0211621c(char *c) {
                     } else {
                         dx = dx + 4;
                     }
-                    p = (int *)_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(
-                        zF, (OamAttr *)data_ov075_0211c8b0, xbase + dx + i * stride, yNum, minus1,
-                        minus1, scale, zF);
+                    p = (int *)OAM::Render(zF, (OamAttr *)data_ov075_0211c8b0,
+                                           xbase + dx + i * stride, yNum, minus1, minus1, scale,
+                                           zF);
                     if (p != 0) {
                         int *q = (int *)((int)(p + 1));
                         int val = *q;

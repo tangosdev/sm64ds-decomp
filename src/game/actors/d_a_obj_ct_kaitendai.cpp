@@ -12,20 +12,17 @@
  * target in mPrevAngleX, and the accumulated yaw in mPrevAngleY, which
  * is copied to mAngleY for the model and the mesh.
  *
- * mwccarm lays the definitions below down back to front, so they run
- * from the highest retail address toward the destructor pair the
- * inline ~daObjCtKaitendai_c() emits. Keep that order.
+ * The destructor pair comes off the inline ~daObjCtKaitendai_c() in the
+ * header. Source order is reverse ROM order (2004/b56 emits .text back
+ * to front); do not reorder.
  *
- * leftovers:
- * - dBgW_KcMbg::SetFile and dActor_c::DropShadowRadHeight stay mangled
- *   scalar calls. Passing a Fix12<int> local to the real method
- *   size-DIFFs this TU: InitResources 0x14c against 0x140, and
- *   func_ov065_0211b40c 0x80 against 0x70. A brace initializer and a
- *   C cast to Fix12<int> do not compile on this mwccarm. Same wall as
- *   notes/mwccarm-codegen.md 6az.
- * - dBgActor_c does not declare IsClsnInRange. Behavior's scalar extern
- *   is the call that matches; the Fix12-by-value spelling is the same
- *   wall.
+ * Notes:
+ * - dBgW_KcMbg::SetFile, dActor_c::DropShadowRadHeight and
+ *   dBgActor_c::IsClsnInRange are header member calls; their headers
+ *   spell the Fix12 parameters as Fix12i, a plain s32. Passing a
+ *   Fix12<int> by value size-DIFFs this TU: InitResources 0x14c against
+ *   0x140, and UpdateShadow 0x80 against 0x70 (notes/mwccarm-codegen.md
+ *   6az).
  * - func_020393d4 is the store of dBgW::beforeClsnCallback (+0x18).
  *   This InitResources calls it with &dBgW::UpdatePosAndAngs. No setter.
  * - The sign flip and the yaw add go through a pointer. Writing
@@ -33,8 +30,6 @@
  *   mPrevAngleY = mPrevAngleY + mPrevAngleZ comes out 0x134, against
  *   Behavior's 0x138. The pointer is what keeps the halfword multiply
  *   and the reload into mAngleY.
- * - func_ov065_0211b40c is a daObjCtKaitendai_c method under its ROM
- *   address (S33); symbols.txt carries the mangled spelling.
  * - data_ov065_0211d334 (the 200/400 speeds) and data_ov065_0211d35c
  *   (the two resource rows) are not this TU's data. Neither are
  *   g_profile_CT_MECHA06 / CT_MECHA07.
@@ -61,8 +56,7 @@ enum daObjCtKaitendai_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "math/Approach.h"
 
 struct CLPS_Block;
 
@@ -74,8 +68,7 @@ struct KaitendaiResources {
     CLPS_Block *clps;
 };
 
-typedef char KaitendaiResources_size_must_be_0x0c[
-    sizeof(KaitendaiResources) == 0x0c ? 1 : -1];
+typedef char KaitendaiResources_size_must_be_0x0c[sizeof(KaitendaiResources) == 0x0c ? 1 : -1];
 
 /* File-scope objects at the end of this file construct the four resource
  * handles (model files 0x5c4/0x5c6, collision files 0x5c5/0x5c7). mwcc
@@ -85,15 +78,11 @@ typedef char KaitendaiResources_size_must_be_0x0c[
  * names the handles directly; the KaitendaiResources rows above point at
  * them. */
 struct KaitendaiModelFile : SharedFilePtr {
-    u32 words[2];
-
     KaitendaiModelFile(u32 fileID);
     ~KaitendaiModelFile();
 };
 
 struct KaitendaiCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
-
     KaitendaiCollisionFilePtr(u32 fileID);
     ~KaitendaiCollisionFilePtr();
 };
@@ -103,39 +92,32 @@ typedef char KaitendaiModelFile_size_must_be_0x08[sizeof(KaitendaiModelFile) == 
 typedef char
     KaitendaiCollisionFilePtr_size_must_be_0x08[sizeof(KaitendaiCollisionFilePtr) == 0x08 ? 1 : -1];
 
-/* Fix12-by-value calls keep the scalar argument the callee actually
- * reads. The class spelling homes it (see the leftover above). */
+extern u8 data_0209f2c0;           /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
+extern int data_0209e650;          /* shared RNG state */
+extern s16 data_ov065_0211d334[2]; /* yaw speed for the slow and fast hands: 200, 400 */
+extern KaitendaiResources data_ov065_0211d35c[];
+
+/* local extern: func_020393d4 is the dBgW callback store (see the banner)
+ * and has no shared header. RandomIntInternal is declared unsigned here:
+ * math/CalcLib.h's int return turns Behavior's `>> 16` into an asr and
+ * changes its bytes. */
 extern "C" {
-extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    dActor_c *actor, dExtShadowModel_c *shadow, Matrix4x3 *matrix,
-    int radius, int height, u32 opacity);
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *thisp, KCL_File *kcl, const Matrix4x3 &mtx, int fix, short s,
-    CLPS_Block &clps);
 extern void func_020393d4(void *p, void *v);
 extern unsigned int RandomIntInternal(int *seed);
-extern u8 data_0209f2c0;              /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
-extern int data_0209e650;             /* shared RNG state */
-extern s16 data_ov065_0211d334[2];    /* yaw speed for the slow and fast hands: 200, 400 */
-extern KaitendaiResources data_ov065_0211d35c[];
 }
 
 // @symbol daObjCtKaitendai_c_classInit_CT_MECHA06
-extern "C" daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA06()
-{
+extern "C" daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA06() {
     return new daObjCtKaitendai_c();
 }
 
 // @symbol daObjCtKaitendai_c_classInit_CT_MECHA07
-extern "C" daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA07()
-{
+extern "C" daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA07() {
     return new daObjCtKaitendai_c();
 }
 
 // @symbol _ZN18daObjCtKaitendai_c13InitResourcesEv
-int daObjCtKaitendai_c::InitResources()
-{
+int daObjCtKaitendai_c::InitResources() {
     Vector3 pos;
 
     /* Gear is 0x72 and takes row 0; triangle is 0x73 and takes row 1. */
@@ -146,19 +128,15 @@ int daObjCtKaitendai_c::InitResources()
         mVariant = 0;
     }
 
-    mModel.SetFile(
-        (BMD_File *)Model::LoadFile(*data_ov065_0211d35c[mVariant].model),
-        1, -1);
+    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov065_0211d35c[mVariant].model), 1,
+                   -1);
 
     mShadowModel.InitCylinder();
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider,
-        (KCL_File *)dBgW_Kc::LoadFile(*data_ov065_0211d35c[mVariant].collision),
-        mClsnMat, 0x199, mAngleY,
-        *data_ov065_0211d35c[mVariant].clps);
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov065_0211d35c[mVariant].collision),
+                          mClsnMat, 0x199, mAngleY, *data_ov065_0211d35c[mVariant].clps);
 
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
 
@@ -180,8 +158,7 @@ int daObjCtKaitendai_c::InitResources()
 }
 
 // @symbol _ZN18daObjCtKaitendai_c8BehaviorEv
-int daObjCtKaitendai_c::Behavior()
-{
+int daObjCtKaitendai_c::Behavior() {
     switch (data_0209f2c0) {
     case 0: /* slow hand */
     case 1: /* fast hand */
@@ -212,24 +189,22 @@ int daObjCtKaitendai_c::Behavior()
     mAngleY = mPrevAngleY;
 
     UpdateModelPosAndRotY();
-    func_ov065_0211b40c();
+    UpdateShadow();
 
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
+    if (IsClsnInRange(0, 0) != 0)
         UpdateClsnPosAndRot();
 
     return 1;
 }
 
 // @symbol _ZN18daObjCtKaitendai_c6RenderEv
-int daObjCtKaitendai_c::Render()
-{
+int daObjCtKaitendai_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN18daObjCtKaitendai_c16CleanupResourcesEv
-int daObjCtKaitendai_c::CleanupResources()
-{
+int daObjCtKaitendai_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     data_ov065_0211d35c[mVariant].model->Release();
@@ -237,15 +212,13 @@ int daObjCtKaitendai_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN18daObjCtKaitendai_c19func_ov065_0211b40cEv
+// @symbol _ZN18daObjCtKaitendai_c12UpdateShadowEv
 /* Copy the model matrix, plant its translation Y on the floor probe,
  * and drop the shadow. m[10] is that Y in the flat Matrix4x3. */
-void daObjCtKaitendai_c::func_ov065_0211b40c()
-{
+void daObjCtKaitendai_c::UpdateShadow() {
     mShadowMat = mModel.mat4x3;
     mShadowMat.m[10] = (mGroundY + 0x32000) >> 3;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel, &mShadowMat, 0x258000, 0xc8000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, 0x258000, 0xc8000, 0xf);
 }
 
 /* Static-init globals (was the handwritten __sinit_ov065_0211c8fc shard).

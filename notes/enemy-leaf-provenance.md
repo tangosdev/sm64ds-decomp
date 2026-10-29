@@ -34,13 +34,13 @@ once, here, rather than per class.
 | --- | --- | --- |
 | 0x300 | `mState` (`State *`) | `src/game/actors/d_a_water_hakidasi.cpp` loads the pointer word at 0x300 every frame, tests the word at `+0x08` of what it points at, and if non-zero calls it as a pointer-to-member on `this`. That is the same object `daPropeller_Heyho_Fire_c::State` describes (`include/daPropeller_Heyho_Fire_c.h`, handler at +0x08) and the same `mState` spelling `daHolhei_c`, `daKing_Donketu_c` and `daBakubaku_c` already use for it. Only `+0x08` is evidenced; the first two words stay padding. |
 
-Left `unk_`:
+Named later, once `func_ov064_021193b4` was read (the earlier pass missed both
+reads):
 
-* **0x314, 0x318** — `src/game/actors/d_a_water_hakidasi.cpp` decodes both out of
-  the spawn word: `unk_314 = (param1 >> 12) & 0xf`, `unk_318 = param1 & 1` and then
-  `if ((param1 & 0xf) > 1) unk_318 = 0`. Nothing in the tree reads either back, so
-  the bytes say how they are *built* but nothing about what they *select*. A name
-  here would be invention.
+* **0x314 `mStarID`** — `(param1 >> 12) & 0xf`; the STAR (actor 0xb2) spawns with
+  param1 `mStarID | 0x40`.
+* **0x318 `mNoRings`** — `param1 & 1`, zeroed when `(param1 & 0xf) > 1`; when set
+  the update only re-feeds particle 0x7b and spawns and counts no rings.
 
 Byte-neutral cleanups made in the same pass (each re-verified with
 `build_pin.verify`, `2004/b56`):
@@ -78,7 +78,7 @@ Byte-neutral cleanups (each re-verified, `2004/b56`):
 
 * `Render` — `((char*)this)+0x3e4 / +0x3d0 / +0x3f8` became `&mTextureSequence`,
   `&mMaterialChanger`, `&mTextureTransformer`; `((char*)this)+0x218` became
-  `&mModelAnim.data` (`Model::data` is at +0x08, `include/Model.h`).
+  `&mModelAnim.data` (`dExtSimpleModel_c::data` is at +0x08, `include/dExtSimpleModel_c.h`).
 * `Behavior` — `((char*)this)+0x40c` became `&mWithMeshClsn`, `+0x110` became
   `(char *)mdCc_cs`, `+0x74` became `&mCamSpacePosX`.
 
@@ -98,7 +98,7 @@ one-function files, now all consolidated into the promoted TU
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x524 | `mLinkPos[7]` (`Vector3`) | `InitResources` walks a seven-iteration loop writing `mPosX/mPosY/mPosZ` into `self+0x524 + i*0xc`. Seven is the chain-link count this whole header is built around (`Model mLinkModels[7]`, `ShadowModel mLinkShadows[7]`). |
+| 0x524 | `mLinkPos[7]` (`Vector3`) | `InitResources` walks a seven-iteration loop writing `mPosX/mPosY/mPosZ` into `self+0x524 + i*0xc`. Seven is the chain-link count this whole header is built around (`dExtSimpleModel_c mLinkModels[7]`, `ShadowModel mLinkShadows[7]`). |
 | 0x5ec | `mSpawnPosX` | `InitResources` copies `self+0x5c/0x60/0x64` into `self+0x5ec/0x5f0/0x5f4` and then adds `0xc8000` to each of the live position words, so these three are where the actor started. |
 | 0x5f0 | `mSpawnPosY` | as above, and `Behavior` clamps `mPosY` up to `mSpawnPosY + 0xc8000` every frame — the rest height the chomp hangs at. |
 | 0x5f4 | `mSpawnPosZ` | as above. |

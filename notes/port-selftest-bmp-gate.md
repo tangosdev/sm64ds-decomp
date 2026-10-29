@@ -70,7 +70,7 @@ contents depend on the image base.
 
 The *castle moat water* is a **texgen mode 1 material** whose S/T translation comes from a
 91 frame BTA track: `src/unnamed/arm9/0204/func_020469e8.c` reads `tableC[idx+frame]`,
-`TextureTransformer::Update` supplies the frame, and `Animation::Advance` wraps modulo
+`dExtAnmTexSRT_c::Update` supplies the frame, and `Animation::Advance` wraps modulo
 the BTA header's 91. The track is one contiguous run of 91 `Fix12` words at [ov009](../config/arm9/overlays/ov009/symbols.txt) DS
 address 0x021122ec.
 Nothing named that track, so the only thing hosting it was the synthetic gap block

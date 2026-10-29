@@ -405,7 +405,7 @@
       "ordinal": 54
     },
     {
-      "symbol": "_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_",
+      "symbol": "_ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_",
       "address": "0x02037388",
       "size": "0x00000030",
       "legacy_source": "src/_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_.c",
@@ -437,7 +437,7 @@
   "bss": [],
   "notes": [
     "Cartridge RTTI names the class dBgCh_Actr (_ZTS10dBgCh_Actr at arm9 0x020991ec, _ZTI at 0x020991e0, vtable address point 0x02099204). The licensed run is .text 0x0203553c..0x02037464 (59 functions): the flag/query accessors on mFlags, the water-detection fan-outs over mRaycastLine/mSphereClsn, the three schedule-sensitive Update* bodies, the two discrete variants, the ground-snap helpers, Init (a Fix12-wall free def spelling its own mangled name), and the lifecycle trio -- one TU the way the original engine file was almost certainly shaped.",
-    "The four #pragma opt_common_subs off bodies (UpdateExtraContinous, UpdateContinuousNoLava, UpdateContinuous, func_02036acc) keep their raw-offset spellings: real dBgPi locals and member-call promotion changed frame layout and instruction selection there (measured 0xaa4 vs 0xa6c on UpdateExtraContinous). Member calls stay where the bytes proved safe: the smaller members, accessors, discrete updates and Init. Init keeps the Fix12i-by-value free-definition spelling (wall 6az); the mSphereClsn SetObjAndSphere call sites go through a TU-local extern for the same reason.",
+    "The four #pragma opt_common_subs off bodies (UpdateExtraContinous, UpdateContinuousNoLava, UpdateContinuous, func_02036acc) hold their hit records as real dBgPi locals: declared after the GetFloorResult hand-off and before the line endpoints, they take the low stack slots the cartridge gives them and the compiler emits the ROM's constructor and destructor calls. The wall-result copy in UpdateExtraContinous is dBgPi's implicit copy constructor. Init keeps the Fix12i-by-value free-definition spelling (wall 6az). The mSphereClsn SetObjAndSphere call sites are member calls through dBgCh_SphCrr's scalar Fix12i declaration.",
     "func_02037464 is dBgCh_Gnd's worker (called by Gnd members) and stays in its own shard run, as do the named veneers that tail-call into this TU's members from another region."
   ],
   "compiler_only_output": [
@@ -455,11 +455,6 @@
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
       "reason": "Vague-linkage copy of Vector3's empty destructor, instantiated by the Vector3 locals inside the Update* bodies. The cartridge keeps a canonical copy at arm9:0x020072c0; this one is discarded."
-    },
-    {
-      "symbol": "_ZN8dBgPiLocD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Empty destructor mwccarm synthesizes for the TU-local dBgPiLoc layout struct used by UpdateExtraContinous's tmp image. The type is this file's own spelling of dBgPi's layout for the field-by-field copy; no canonical owner exists -- discarded."
     },
     {
       "symbol": "_ZTV10dBgCh_Actr",
@@ -505,13 +500,13 @@
         "_ZN10dBgCh_ActrD2Ev",
         "_ZN10dBgCh_ActrC2Ev",
         "_ZN7Vector3D1Ev",
-        "_ZN8dBgPiLocD1Ev"
+        "_ZN11SurfaceInfoD1Ev"
       ],
       "deadstripped": [
         "_ZN10dBgCh_ActrC2Ev",
         "_ZN10dBgCh_ActrD2Ev",
-        "_ZN7Vector3D1Ev",
-        "_ZN8dBgPiLocD1Ev"
+        "_ZN11SurfaceInfoD1Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         5,

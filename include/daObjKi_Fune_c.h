@@ -7,19 +7,19 @@ struct daObjKi_Fune_c : dBgActor_c {
     /* dBgActor_c's data ends at 0x31e and its sizeof rounds to 0x320. The ABI
        reuses that tail padding for the first derived byte, as the matched
        daObjKi_Fune_c methods prove. */
-    u8  mModelIndex;            /* 0x31e */
-    u8  pad_31f[0x1];
-    u16 mBobAngle;            /* 0x320 */
-    u8  pad_322[0x2];
-    s32 mSoundHandle;            /* 0x324 */
-    u16 unk_328;            /* 0x328 */
+    u8 mModelIndex; /* 0x31e */
+    u8 pad_31f[0x1];
+    u16 mBobAngle; /* 0x320 */
+    u8 pad_322[0x2];
+    s32 mSoundHandle; /* 0x324 */
+    u16 unk_328;      /* 0x328 */
     /* Inline is load-bearing. Written out of line mwccarm 2004/b56 emits the
        synthesized D0 ahead of the written D1 and adds a homeless D2, the
        reverse of the cartridge's D1 0x0211260c / D0 0x02112650 pair, which
        has no D2 at all. Inline emits D1 then D0 and no D2, and moves the key
        function to InitResources, the first non-inline virtual, which is what
        makes the promoted TU emit this class's vtable and RTTI records under
-       the ROM's own names. Body is empty: destroying the dBgW_KcMbg and Model
+       the ROM's own names. Body is empty: destroying the dBgW_KcMbg and dExtSimpleModel_c
        subobjects and running dBgActor_c's own destructor all follow from the
        declarations above. Keep the brace on the signature line --
        tools/check_header_offsets.py only recognises a body written that way.
@@ -37,7 +37,7 @@ struct daObjKi_Fune_c : dBgActor_c {
     /* --- non-virtual --- */
     /* Builds mModel.mat4x3 from mAngle* and mPos* >> 3; the ROM records no
        name for it, so it keeps its address-derived one. */
-    void func_ov016_021126a8();
+    void UpdateModelMatrix();
 };
 
 #ifndef SM64DS_PLATFORM_PC

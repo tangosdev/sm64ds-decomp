@@ -1,8 +1,9 @@
 //cpp
 /* arm9/Particle_Behavior -- the six effect behaviors of the particle engine,
  * folded from six legacy shards at .text 0x0204d4d0..0x0204d8e8. Each
- * Particle::<Name> is a POD behavior struct carrying one static Func that the
- * manager's behavior table calls per particle: the resource supplies the
+ * Particle::<Name> is a POD behavior struct carrying one static Func that a
+ * SystemDefinition's Particle::Behavior table (built by func_0204a17c in
+ * Particle_Manager.cpp) calls per particle: the resource supplies the
  * EffectData record, the Element the per-particle state, and Func advances
  * the particle's velocity/offset accordingly. The span is bounded on both
  * sides by func_ free functions: func_0204d440 below and func_0204d8e8 above.
@@ -51,7 +52,7 @@ void Jitter::Func(EffectData& effect, char* particle, Vector3& velocity)
     int r;
     int amp;
 
-    if ((int)state.age % (int)effect.jitter.period != 0)
+    if (state.age % effect.jitter.period != 0)
         return;
 
     s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;

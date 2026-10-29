@@ -33,7 +33,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020f1c20",
+      "symbol": "_ZN12daMugenBGM_c12GetActiveFogEv",
       "address": "0x020f1c20",
       "size": "0x00000030",
       "legacy_source": "src/func_ov002_020f1c20.c",

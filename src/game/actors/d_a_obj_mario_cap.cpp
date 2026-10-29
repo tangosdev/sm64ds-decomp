@@ -17,7 +17,7 @@
  * The whole cap unit of ov002 .text, 0x020b6f18..0x020b8bf0, 31 functions:
  * the D1/D0 pair, the state helpers and methods, InitResources and the
  * registry factory daObjMarioCap_c_classInit (`return new`, through the
- * class's leaf operator new). OnYoshiTryEat is the key function -- the first
+ * inherited fBase_c::operator new). OnYoshiTryEat is the key function -- the first
  * out-of-line virtual daObjMarioCap_c declares after the inline destructor in
  * daObjMarioCap_c.h -- so the compiler owns retail's D1/D0 pair and the
  * complete RTTI/vtable group, and no D2 is retained.
@@ -68,7 +68,7 @@
  *   emits one .text section per function in the reverse of source order.
  *
  *   common.h comes first so Matrix4x3 is the flat s32[12] spelling; math/
- *   Matrix.h through ModelAnim.h would scalarize the copies in
+ *   Matrix.h through dExtAnmModel_c.h would scalarize the copies in
  *   UpdateMatrix.
  *
  *   The PMF stand-ins (CapStateSelf / CapStateRec / CapEnterSelf). A PMF on
@@ -88,27 +88,24 @@
  *
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
  *   dActor_c::SetRanges is not on the header (notes/mwccarm-codegen.md 6az).
- *   ModelAnim::SetAnim / DropShadowRadHeight / ReflectAngle take Fix12<int>
+ *   dExtAnmModel_c::SetAnim / DropShadowRadHeight / ReflectAngle take Fix12<int>
  *   by value, which has no implicit int conversion (notes/mwccarm-codegen.md
- *   6az). dBgCh_Actr::GetFloorResult / GetWallResult are not declared.
+ *   6az).
  *
  * leftovers:
  *   InitResources keeps two `(u32)param1` read-side casts; spelled plainly,
  *   2004/b56 materialises the param1 address once for each read-modify-write
  *   and the body grows from 0x4c8 to 0x4d0 (see the comments at both sites).
- *   It also keeps the dCcAc_c::Init / dBgCh_Actr::Init calls mangled: both
- *   take Fix12<int> by value.
  *   The data_ov002_0210de* / 0210df* handles have no recovered names in
  *   symbols.txt, so none are coined; the sixteen-byte state records are only
  *   described above.
  *   Unrecovered meaning: most mType values (only 4, 6..9 and 19 are named in
  *   the header), what the animations behind the 0210de* handles contain (the
  *   file ids 0x8012 / 0x8013 and 0x476..0x480 are in __sinit_ov002_02101064), what func_ov002_020f030c's result (unused here) is, and the
- *   fields unk_403 and unk_408, which are written and never read in this file.
+ *   field unk_408, which is written and never read in this file (mTaken is
+ *   likewise only written here; daJango_c reads it).
  *   mStateEntry stays an s32 because the member-pointer record is spelled by
  *   the file-local CapStateRec / CapEnterSelf stand-ins.
- *   The SharedFilePtr header has no fields; CleanupResources still casts the
- *   AnimRec tables.
  *   dBgCh_Gnd stays a 0x50 stack blob: its C1/D1 only run on the airborne
  *   path (UpdateMatrix).
  *   The carrier's matrix is dActor_c::mCarryMatrix; this file never sets it.
@@ -130,6 +127,7 @@ enum daObjMarioCap_c_AssetId {
 };
 
 #include "common.h"
+#include "cstd.h"
 #include "nitro/fx/fx.h"
 #include "daObjMarioCap_c.h"
 #include "decl_common.h"
@@ -140,29 +138,19 @@ enum daObjMarioCap_c_AssetId {
 #include "SurfaceInfo.h"
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Actr.h"
+#include "math/Approach.h"
 
 /* --------------------------------------------------------------------------
  * Local shapes the merged members need.
  * ------------------------------------------------------------------------ */
 
-/* The animation descriptor pairs these tables hold: a header word and the
- * BCA file pointer read at +4. Spelled as a struct because three members
- * reach the second word by name and two more take the address of the whole
- * record. SharedFilePtr.h commits to no fields, so CleanupResources still
- * casts these to SharedFilePtr*. */
-struct AnimRec { void *f0; void *file; };
-
 /* The static initializer's own types. __sinit_ov002_02101064 constructs the 13
  * file handles with SharedFilePtr's constructor and registers each for
  * destruction through func_020731dc, then copies 18 pointer-to-member records
- * into the nine {enter, per-frame} state records. SharedFilePtr's layout is
- * not recovered, so a handle is a subclass carrying the two words, its
- * constructor/destructor the ROM's SharedFilePtr entry points (the manifest
- * aliases those symbols). */
+ * into the nine {enter, per-frame} state records. A handle is a SharedFilePtr
+ * subclass whose constructor/destructor are the ROM's SharedFilePtr entry
+ * points (the manifest aliases those symbols). */
 struct daObjMarioCapFileHandle : SharedFilePtr {
-    u32 f0;
-    void *file;
-
     daObjMarioCapFileHandle(u32 fileID);
     ~daObjMarioCapFileHandle();
 };
@@ -240,7 +228,6 @@ extern "C" {
 void  func_02013a88(void);
 short func_02010844(void *self, void *v, short angle);
 void  func_020167a4(void *p);
-int   func_02037e58(void *p);
 void  func_ov002_020f030c(int x);
 
 unsigned short DecIfAbove0_Short(unsigned short *p);
@@ -254,30 +241,13 @@ void  Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void  Matrix4x3_FromRotationY(void *m, int angle);
 
-void  _Z11UpdateAngleRssis(void *p, short target, int step, short limit);
-void  _Z14ApproachLinearRiii(int *x, int target, int step);
 
-short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-int   _ZN4cstd4fdivEii(int a, int b);
+short atan2_hold_d_a_obj_mario_cap_1(int y, int x);
 
 
-/* dCcAc_c::Init and dBgCh_Actr::Init take Fix12<int> by value, which has no
-   implicit int conversion (notes/mwccarm-codegen.md 6az). */
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, s32 f1, s32 f2, u32 a, u32 b);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
 
-void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd *ray);
-void  _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *ray);
-
-/* SetRanges carries Fix12<int> by value; dActor_c.h deliberately omits it
-   (notes/mwccarm-codegen.md 6az). A call is unaffected. */
-void  _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *self, int offsetY, int radius,
-                                                int clipDistance, int farDistance);
-void  _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-          void *self, void *shadow, void *matrix, int radius, int depth, int opacity);
-short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *self, int nx, int nz, short ang);
-void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int flags,
-                                                  int speed, unsigned int startFrame);
 
 /* -- data -- */
 extern Matrix4x3      data_020a0e68;
@@ -313,8 +283,8 @@ extern McapStatePmf data_ov002_0210957c, data_ov002_02109584;
 extern McapStatePmf data_ov002_0210958c, data_ov002_02109594;
 extern McapStatePmf data_ov002_0210959c, data_ov002_021095a4;
 
-extern struct AnimRec *data_ov002_020ff0a0[];
-extern struct AnimRec *data_ov002_020ff0b8[];
+extern SharedFilePtr *data_ov002_020ff0a0[];
+extern SharedFilePtr *data_ov002_020ff0b8[];
 extern int            *data_ov002_020ff0c4[];
 
 }
@@ -386,9 +356,9 @@ int daObjMarioCap_c::InitResources()
         break;
     }
 
-    if (mModelAnim.SetFile(
-            (BMD_File *)Model::LoadFile(*(SharedFilePtr *)data_ov002_020ff0ac[mModelIndex]),
-            1, -1) == 0)
+    if (mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(
+                              *(SharedFilePtr *)data_ov002_020ff0ac[mModelIndex]),
+                          1, -1) == 0)
         return 0;
 
     mShadowModel.InitCylinder();
@@ -401,8 +371,8 @@ int daObjMarioCap_c::InitResources()
 
     /* dCcAc_c collider: radius and height 30 units, flags 0x800002, vulnFlags 0.
        dBgCh_Actr level-collision: radius 30 units, height 22 units. */
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, kClsnSizeSmall, kClsnSizeSmall, 0x800002, 0);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, kClsnSizeSmall, 0x16000, 0, 0);
+    mdCcAc_c.Init(this, kClsnSizeSmall, kClsnSizeSmall, 0x800002, 0);
+    mWithMeshClsn.Init(this, kClsnSizeSmall, 0x16000, 0, 0);
 
     /* Remember where the cap was placed. */
     mHomePosX = mPosX;
@@ -510,7 +480,7 @@ int daObjMarioCap_c::InitResources()
         break;
     }
 
-    mModelAnim.speed = 0x1000;  /* animations play at 1.0x */
+    mAnmModel.speed = 0x1000; /* animations play at 1.0x */
 
     /* Register with the cap-icon list for this character; flag is the
        cap-bank bit. */
@@ -565,8 +535,8 @@ int daObjMarioCap_c::Behavior()
     /* Pop-in: the target eases from 2.0 to 1.0 by 0.125 a frame, the scale
        follows it by 0.25 a frame, and the cap moves and collides meanwhile. */
     if (mIconKind != 0xff && mPopIn != 0) {
-        _Z14ApproachLinearRiii(&mPopScale, 0x1000, 0x200);
-        _Z14ApproachLinearRiii(&mScaleX, mPopScale, 0x400);
+        ApproachLinear(mPopScale, 0x1000, 0x200);
+        ApproachLinear(mScaleX, mPopScale, 0x400);
         mScaleZ = mScaleX;
         mScaleY = mScaleZ;
         UpdatePos(&mdCcAc_c);
@@ -588,11 +558,11 @@ int daObjMarioCap_c::Behavior()
     }
 
     UpdateMatrix();
-    mModelAnim.Advance();
+    mAnmModel.Advance();
 
-    if (mModelAnim.file != 0) {
-        func_020167a4(&mModelAnim);
-        mModelAnim.UpdateVerts();
+    if (mAnmModel.file != 0) {
+        func_020167a4(&mAnmModel);
+        mAnmModel.UpdateVerts();
     }
 
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
@@ -629,10 +599,10 @@ int daObjMarioCap_c::Render()
     int t = mType;
     if (t == 4 || t == 17 || t == 5 || t == 18 || t == 16 || t == 11 || (unsigned)(t - 6) <= 3) {
         if (!(mBlinkHidden & 1) || mStateEntry == (int)&data_ov002_0210df54) {
-            mModelAnim.Model::Render(&mScale);
+            mAnmModel.dExtSimpleModel_c::Render(&mScale);
         }
     } else {
-        mModelAnim.Model::Render(&mScale);
+        mAnmModel.dExtSimpleModel_c::Render(&mScale);
     }
     return 1;
 }
@@ -703,8 +673,7 @@ void daObjMarioCap_c::OnTurnIntoEgg(Player &player)
 {
     if (player.SetNoControlState(8, -1, 0) == 1) {
         player.SetNewHatCharacter(mModelIndex & 0xff, 1, 0);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de30.file,
-                                                    0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov002_0210de30.filePtr, 0x40000000, 0x1000, 0);
         mAnimStarted = 1;
     }
     mPlayer = &player;
@@ -731,7 +700,6 @@ void daObjMarioCap_c::UpdateMatrix()
 {
     int probe[3];
     int v[3];
-    char ray[0x50];
     int m = mType;
     if (m != 5 && m != 0x12 && m != 0x10 && m != 0xb && m != 7 && m != 9 &&
         m != 0x14 && m != 0x15 && m != 0x16) {
@@ -741,18 +709,18 @@ void daObjMarioCap_c::UpdateMatrix()
     }
 
     if (mCarryMatrix != 0) {
-        mModelAnim.mat4x3 = *mCarryMatrix;
+        mAnmModel.mat4x3 = *mCarryMatrix;
         return;
     }
 
     if ((unsigned int)(mType - 6) <= 1)
-        mModelAnim.ApplyOpacity(0, 0);
+        mAnmModel.ApplyOpacity(0, 0);
 
     Vec3_Asr(v, &mPosX, 3);     /* position / 8: the model matrix's translation scale */
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX,
                                            mAngleY, mAngleZ);
-    mModelAnim.mat4x3 = data_020a0e68;
+    mAnmModel.mat4x3 = data_020a0e68;
 
     {
         char *s = *(char **)&mStateEntry;
@@ -775,12 +743,11 @@ void daObjMarioCap_c::UpdateMatrix()
             probe[1] = mPosY;
             probe[2] = mPosZ;
             probe[1] = probe[1] + 0x28000;
-            _ZN9dBgCh_GndC1Ev((dBgCh_Gnd *)ray);
-            ((dBgCh_Gnd *)ray)->SetObjAndPos(*(Vector3 *)probe, 0);
+            dBgCh_Gnd ray;
+            ray.SetObjAndPos(*(Vector3 *)probe, 0);
             y = probe[1];
-            if (((dBgCh_Gnd *)ray)->DetectClsn() != 0)
-                y = ((dBgCh_Gnd *)ray)->clsnY;
-            _ZN9dBgCh_GndD1Ev((dBgCh_Gnd *)ray);
+            if (ray.DetectClsn() != 0)
+                y = ray.clsnY;
         }
 
         off = 0;
@@ -798,8 +765,7 @@ void daObjMarioCap_c::UpdateMatrix()
         mShadowMat.m[9] = mPosX >> 3;
         mShadowMat.m[10] = (y + (off << 12)) >> 3;
         mShadowMat.m[11] = mPosZ >> 3;
-        _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-            this, &mShadowModel, &mShadowMat, 0x50000, 0x32000, 0xf);
+        DropShadowRadHeight(mShadowModel, mShadowMat, 0x50000, 0x32000, 0xf);
     }
 }
 
@@ -848,7 +814,7 @@ int daObjMarioCap_c::Wait() {
         return 1;
     }
     if (mCarryMatrix == 0) {
-        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0x32000, 0x32000, kClipFar, kClipFar);
+        SetRanges(0x32000, 0x32000, kClipFar, kClipFar);
     }
     CheckTouch();
     if (data_02092138 > mPosY) {
@@ -946,7 +912,7 @@ int daObjMarioCap_c::Fall() {
     if (mWithMeshClsn.IsOnGround()) {
       mHorzSpeed = 0;
       CheckTouch();
-      _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0x32000, 0x32000, kClipFar, kClipFar);
+      SetRanges(0x32000, 0x32000, kClipFar, kClipFar);
     }
   }
   if (data_02092138 > mPosY) {
@@ -1006,7 +972,7 @@ int daObjMarioCap_c::InitSlide()
  * and drives the blink (mBlinkHidden) from the low bits of the timer: bit 2
  * while the timer is under half of mStartTimer, bit 1 once it is under a
  * quarter. Type 18 then stops (speed 0). The rest slide: the floor surface
- * (func_02037e58 on the floor result's surface info, which sits 4 bytes into the result) picks a push of
+ * (CLPS::GetFloorClass on the floor result's surface info, which sits 4 bytes into the result) picks a push of
  * 0x5000..0xa000 (5..10 units a frame; func_ov002_020f02c8, which maps the
  * surface value to it), aimed along mSlopeAngle and scaled by the horizontal
  * length of the floor normal. That is added to the cap's own velocity
@@ -1064,8 +1030,8 @@ int daObjMarioCap_c::Slide()
     }
     fr = (char *)mWithMeshClsn.GetFloorResult();
     ((SurfaceInfo *)(fr + 4))->CopyNormalTo(*(Vector3 *)&mFloorNormalX);
-    surface = func_02037e58(fr + 4);
-    mSlopeAngle = _ZN4cstd5atan2E5Fix12IiES1_(mFloorNormalX, mFloorNormalZ);
+    surface = ((SurfaceInfo *)(fr + 4))->clps.GetFloorClass();
+    mSlopeAngle = cstd::atan2(mFloorNormalX, mFloorNormalZ);
     slopePush = func_ov002_020f02c8(surface);
     func_ov002_020f030c(surface);
     spd = mHorzSpeed;
@@ -1086,24 +1052,24 @@ int daObjMarioCap_c::Slide()
     slopeVel.z = FX_MUL(slopePush, co);
     Vec3_MulScalarInPlace(&slopeVel, Vec3_HorzLen(&mFloorNormalX));
     Vec3_Add(&out, &ownVel, &slopeVel);
-    ang = _ZN4cstd5atan2E5Fix12IiES1_(out.x, out.z);
+    ang = cstd::atan2(out.x, out.z);
     mHorzSpeed = Vec3_HorzLen(&out);
     if (mHorzSpeed > 0xf000)
         mHorzSpeed = 0xf000;
     mPrevAngleY = ang;
-    mVertSpeed = -(_ZN4cstd4fdivEii(FX_MUL(mFloorNormalX, unk_0a4) + FX_MUL(mFloorNormalZ, unk_0ac),
-                                    mFloorNormalY) +
-                   0x8000);
+    mVertSpeed = -(
+        cstd::fdiv(FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ), mFloorNormalY) +
+        0x8000);
     pitch = func_02010844(this, &mFloorNormalX, mAngleY);
     roll = func_02010844(this, &mFloorNormalX, mAngleY - 0x4000);
-    _Z11UpdateAngleRssis(&mAngleX, pitch, 4, 0x1000);
-    _Z11UpdateAngleRssis(&mAngleZ, roll, 4, 0x1000);
+    UpdateAngle(mAngleX, pitch, 4, 0x1000);
+    UpdateAngle(mAngleZ, roll, 4, 0x1000);
     return 1;
 }
 
 /* df54's enter function: the taken state. Zeroes the velocity words and
  * mVertAccel, clears mTakenStep, mBlinkHidden and the override matrix, sets
- * unk_403, drops the Yoshi-mouth bit 0x40000 from mFlags and the 0x8000 bit
+ * mTaken, drops the Yoshi-mouth bit 0x40000 from mFlags and the 0x8000 bit
  * from vulnFlags, and binds the nearest player if none is bound yet. In
  * modes other than 1 (CURRENT_GAMEMODE), when that player's mCharacter is 3
  * and mModelIndex equals the player's param1, plays the 1-up sound, gives one
@@ -1112,14 +1078,14 @@ int daObjMarioCap_c::Slide()
 // @symbol _ZN15daObjMarioCap_c9InitTakenEv
 int daObjMarioCap_c::InitTaken()
 {
-    unk_0a4 = 0;
+    mSpeedX = 0;
     mVertSpeed = 0;
-    unk_0ac = 0;
+    mSpeedZ = 0;
     mVertAccel = 0;
     mTakenStep = 0;
     mBlinkHidden = 0;
     mCarryMatrix = 0;
-    unk_403 = 1;
+    mTaken = 1;
 
     /* (int)self + off is the MATCH form; mFlags &= / vulnFlags &= CSE. */
     *(u32 *)(((int)&mFlags)) &= ~0x40000u;
@@ -1200,12 +1166,12 @@ int daObjMarioCap_c::Taken() {
         if (mPlayer->SetNoControlState(0xf, -1, 0) == 1) {
             mPlayer->SetNewHatCharacter(mModelIndex & 0xff, 0, 0);
             func_02013a88();
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de38.file, 0x40000000, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov002_0210de38.filePtr, 0x40000000, 0x1000, 0);
             mTakenStep = 2;
         }
         break;
     case 2:
-        if (mModelAnim.Finished() != 0) {
+        if (mAnmModel.Finished() != 0) {
             MarkForDestruction();
         }
         break;
@@ -1217,13 +1183,13 @@ int daObjMarioCap_c::Taken() {
 
     if (mAnimStarted == 0) {
         if (mPlayer->Unk_020c9e5c(8) == 1) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de30.file, 0x40000000, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov002_0210de30.filePtr, 0x40000000, 0x1000, 0);
             mAnimStarted = 1;
         }
     }
 
     if (mAnimStarted == 1) {
-        if (mModelAnim.Finished() != 0) {
+        if (mAnmModel.Finished() != 0) {
             if (mType == 4) {
                 dActor_c::Spawn(kActorMarioCap, param1, *(const Vector3 *)&mHomePosX, (const Vector3_16 *)0, mAreaId, -1);
             }
@@ -1242,7 +1208,7 @@ int daObjMarioCap_c::Taken() {
 // @symbol _ZN15daObjMarioCap_c8InitAnimEv
 int daObjMarioCap_c::InitAnim()
 {
-    /* Reading the angles through closest->mAngleX / &mModelAnim methods
+    /* Reading the angles through closest->mAngleX / &mAnmModel methods
        changes the size; the pointer-to-first-member form below is the one
        that matches. */
     int state;
@@ -1267,24 +1233,21 @@ int daObjMarioCap_c::InitAnim()
 
     switch (mType) {
     case 0xa:
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim, data_ov002_0210de30.file, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov002_0210de30.filePtr, 0x40000000, 0x1000, 0);
         break;
     case 0xf:
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim, data_ov002_020ff0a0[mModelIndex]->file, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)(data_ov002_020ff0a0[mModelIndex]->filePtr), 0x40000000,
+                          0x1000, 0);
         break;
     case 0x14:
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim, data_ov002_020ff0b8[mModelIndex]->file, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)(data_ov002_020ff0b8[mModelIndex]->filePtr), 0x40000000,
+                          0x1000, 0);
         break;
     case 0x15:
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim, data_ov002_0210de58.file, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov002_0210de58.filePtr, 0x40000000, 0x1000, 0);
         break;
     case 0x16:
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim, data_ov002_0210de18.file, 0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov002_0210de18.filePtr, 0x40000000, 0x1000, 0);
         break;
     }
 
@@ -1319,7 +1282,7 @@ int daObjMarioCap_c::Anim()
         }
     }
 
-    if (mModelAnim.Finished() != 0) {
+    if (mAnmModel.Finished() != 0) {
         switch (mType) {
         case 0xa:
         case 0xf:
@@ -1332,10 +1295,8 @@ int daObjMarioCap_c::Anim()
 
         case 0x14:
             if (mAnimStarted == 0) {
-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-                    &mModelAnim,
-                    (void*)data_ov002_020ff0c4[mModelIndex][1],
-                    0, 0x1000, 0);
+                mAnmModel.SetAnim((BCA_File *)((void *)data_ov002_020ff0c4[mModelIndex][1]), 0,
+                                  0x1000, 0);
                 mAnimStarted = 1;
             }
             break;
@@ -1382,8 +1343,7 @@ void daObjMarioCap_c::CheckTouch()
     if (mWithMeshClsn.IsOnWall() != 0) {
         void *wr = mWithMeshClsn.GetWallResult();
         ((SurfaceInfo *)((char*)wr + 4))->CopyNormalTo(*(Vector3 *)&normal[0]);
-        mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(
-            this, normal[0], normal[2], mPrevAngleY);
+        mPrevAngleY = ReflectAngle(normal[0], normal[2], mPrevAngleY);
     }
 
     if (mdCcAc_c.otherOwner == 0) return;

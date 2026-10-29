@@ -18,11 +18,14 @@ src/minigames/unit020b2c84.cpp:
     .init start:0x020b955c end:0x020b9ad0
     .ctor start:0x020b9de8 end:0x020b9dec
     .data start:0x020bc6e8 end:0x020bc7d0
-    .bss start:0x020bf41c end:0x020bf9e4
+    .bss start:0x020bf3ec end:0x020bf9e4
 
 src/minigames/unit020b4aa4.cpp:
     complete
     .text start:0x020b4aa4 end:0x020b67e8
+    .init start:0x020b9ad0 end:0x020b9b24
+    .ctor start:0x020b9dec end:0x020b9df0
+    .bss start:0x020bfa28 end:0x020bfd04
 
 src/minigames/d_mg_state.cpp:
     complete
@@ -32,12 +35,8 @@ src/minigames/d_mg_state.cpp:
 src/minigames/d_mg_ps_opt.cpp:
     complete
     .text start:0x020b8c18 end:0x020b944c
+    .init start:0x020b9b24 end:0x020b9de4
+    .ctor start:0x020b9df0 end:0x020b9df4
+    .bss start:0x020bfda8 end:0x020bfeb8
     .data start:0x020bca68 end:0x020bcaa0
 
-src/unnamed/ov004/__sinit_ov004_020b9ad0.c:
-    complete
-    .init start:0x020b9ad0 end:0x020b9b24
-
-src/unnamed/ov004/__sinit_ov004_020b9b24.c:
-    complete
-    .init start:0x020b9b24 end:0x020b9de4

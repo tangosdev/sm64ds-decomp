@@ -201,14 +201,14 @@
       "ordinal": 25
     },
     {
-      "symbol": "Trmp2Mario_Destruct",
+      "symbol": "_ZN17dMgTrmpln2Mario_cD1Ev",
       "address": "0x020ca604",
       "size": "0x00000188",
       "legacy_source": "src/func_ov006_020ca604.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "Trmp2Mario_Construct",
+      "symbol": "_ZN17dMgTrmpln2Mario_cC1Ev",
       "address": "0x020ca78c",
       "size": "0x0000002c",
       "legacy_source": "src/_ZN6Player29TryExitCharacterDoorWithIntroEv.cpp",
@@ -537,14 +537,14 @@
       "ordinal": 73
     },
     {
-      "symbol": "Trmp3DMario_Destruct",
+      "symbol": "_ZN18dMgTrmpln3DMario_cD1Ev",
       "address": "0x020ccfc8",
       "size": "0x00000164",
       "legacy_source": "src/func_ov006_020ccfc8.cpp",
       "ordinal": 74
     },
     {
-      "symbol": "Trmp3DMario_Construct",
+      "symbol": "_ZN18dMgTrmpln3DMario_cC1Ev",
       "address": "0x020cd12c",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020cd12c.c",
@@ -607,28 +607,28 @@
       "ordinal": 83
     },
     {
-      "symbol": "TrmpRingObjAdapter_Clear",
+      "symbol": "_ZN23dMgTrmpRingObjAdapter_c5ClearEv",
       "address": "0x020cd6d8",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020cd6d8.c",
       "ordinal": 84
     },
     {
-      "symbol": "TrmpRingObjAdapter_Construct",
+      "symbol": "_ZN23dMgTrmpRingObjAdapter_cC2Ev",
       "address": "0x020cd6f4",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020cd6f4.c",
       "ordinal": 85
     },
     {
-      "symbol": "TrmpObjAdapter_Clear",
+      "symbol": "_ZN19dMgTrmpObjAdapter_c5ClearEv",
       "address": "0x020cd720",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020cd720.c",
       "ordinal": 86
     },
     {
-      "symbol": "TrmpObjAdapter_Construct",
+      "symbol": "_ZN19dMgTrmpObjAdapter_cC2Ev",
       "address": "0x020cd72c",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_020cd72c.c",
@@ -676,6 +676,98 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "This TU odr-uses Vector3 by value, so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0 and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZN17dMgTrmpln2Mario_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line dMgTrmpln2Mario_c::dMgTrmpln2Mario_c(). The cartridge carries only C1 at 0x020ca78c (size 0x2c), and dMgTrmpln2Mario_c is only ever constructed as a complete object (dScMgTrampoline2_c's five-Mario array, through __cxa_vec_ctor), so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN17dMgTrmpln2Mario_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor emitted beside D1 by the out-of-line dMgTrmpln2Mario_c::~dMgTrmpln2Mario_c(). The cartridge carries only D1 at 0x020ca604 (size 0x188), which dScMgTrampoline2_c hands to the array helpers; no module's symbols.txt gives D2 a home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN17dMgTrmpln2Mario_cD0Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless deleting destructor: mwcc emits D0 for a polymorphic class even though this destructor is not virtual -- the vtable at 0x0213b2e0 is five slots (GetPos, GetPrevPos, GetVelocity, IsActive, Clear) and none is a destructor. No symbols.txt names a D0 for this class and nothing in the image calls one, so a plain deadstrip (the same disposition ov006/dMgJump3DMario_c records)."
+    },
+    {
+      "symbol": "_ZN18dMgTrmpln3DMario_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line dMgTrmpln3DMario_c::dMgTrmpln3DMario_c(). The cartridge carries only C1 at 0x020cd12c (size 0x2c), and dMgTrmpln3DMario_c is only ever constructed as a complete object (dScMgTrampoline_c's four-Mario array, through __cxa_vec_ctor), so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN18dMgTrmpln3DMario_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor emitted beside D1 by the out-of-line dMgTrmpln3DMario_c::~dMgTrmpln3DMario_c(). The cartridge carries only D1 at 0x020ccfc8 (size 0x164), which dScMgTrampoline_c hands to the array helpers; no module's symbols.txt gives D2 a home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN18dMgTrmpln3DMario_cD0Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless deleting destructor: mwcc emits D0 for a polymorphic class even though this destructor is not virtual -- the vtable at 0x0213b2c4 is five slots (GetPos, GetPrevPos, GetVelocity, IsActive, Clear) and none is a destructor. No symbols.txt names a D0 for this class and nothing in the image calls one, so a plain deadstrip (the same disposition ov006/dMgJump3DMario_c records)."
+    },
+    {
+      "symbol": "_ZN23dMgTrmpRingObjAdapter_cC1Ev",
+      "disposition": "deadstrip",
+      "reason": "Complete-object constructor emitted beside the licensed base-object C2 at 0x020cd6f4 by the out-of-line dMgTrmpRingObjAdapter_c::dMgTrmpRingObjAdapter_c(). The ring adapter is only ever constructed as dMgTrmpln2Mario_c's base (its C1 calls C2), so no ov006 symbols.txt row configures a C1 home and no surviving relocation reaches one -- the same disposition ov006/dMg3DHeyhoObjAdapter_c takes for its adapter's C1."
+    },
+    {
+      "symbol": "_ZN19dMgTrmpObjAdapter_cC1Ev",
+      "disposition": "deadstrip",
+      "reason": "Complete-object constructor emitted beside the licensed base-object C2 at 0x020cd72c by the out-of-line dMgTrmpObjAdapter_c::dMgTrmpObjAdapter_c(). The class is abstract (four pure slots) and only ever constructed as a base (the ring adapter's and dMgTrmpln3DMario_c's constructors call C2), so no ov006 symbols.txt row configures a C1 home and no surviving relocation reaches one -- the same disposition ov006/dMg3DHeyhoObjAdapter_c takes for its adapter's C1."
+    },
+    {
+      "symbol": "_ZN23dMgTrmpRingObjAdapter_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Vague-linkage copy of the inline, empty ~dMgTrmpRingObjAdapter_c() (include/dMgTrmpObjAdapter_c.h), emitted because the derived D2/D0 odr-use it. The cartridge has no out-of-line adapter destructor: dMgTrmpln2Mario_c's D1 at 0x020ca604 inlines it as the ring-vptr store before the base-vptr store, and no symbols.txt row gives it a home. Homeless and unreferenced after the derived D2/D0 are discarded, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN19dMgTrmpObjAdapter_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Vague-linkage copy of the inline, empty ~dMgTrmpObjAdapter_c() (include/dMgTrmpObjAdapter_c.h), emitted because the derived D2/D0 odr-use it. The cartridge has no out-of-line adapter destructor: both Marios' D1s (0x020ca604, 0x020ccfc8) inline it as their last vptr store, and no symbols.txt row gives it a home. Homeless and unreferenced after the derived D2/D0 are discarded, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZTV19dMgTrmpObjAdapter_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b3c4",
+      "reason": "dMgTrmpObjAdapter_c::Clear, the class's first non-pure virtual, is its key function and is defined here, so this TU naturally emits the class's vtable storage (four zero pure slots, then Clear). The cartridge's own copy is configured at ov006 0x0213b3c4 (config/arm9/overlays/ov006/symbols.txt). romdata_check compares the emitted payload against those cartridge words before text-only isolation discards it -- the ov006/dMg3DHeyhoObjAdapter_c recipe."
+    },
+    {
+      "symbol": "_ZTV23dMgTrmpRingObjAdapter_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b3e0",
+      "reason": "dMgTrmpRingObjAdapter_c::Clear, the class's first non-inline virtual, is its key function and is defined here, so this TU naturally emits the class's vtable storage (four zero pure slots, then Clear). The cartridge's own copy is configured at ov006 0x0213b3e0 (config/arm9/overlays/ov006/symbols.txt). romdata_check compares the emitted payload against those cartridge words before text-only isolation discards it -- the ov006/dMg3DHeyhoObjAdapter_c recipe."
+    },
+    {
+      "symbol": "_ZTI19dMgTrmpObjAdapter_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b19c",
+      "reason": "The type_info record the emitted dMgTrmpObjAdapter_c vtable references. The cartridge's copy is configured at ov006 0x0213b19c; romdata_check word-compares the two, relocations applied, before production isolation discards the emitted copy."
+    },
+    {
+      "symbol": "_ZTS19dMgTrmpObjAdapter_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b288",
+      "reason": "The type-name string of the emitted dMgTrmpObjAdapter_c type_info. The cartridge's copy is configured at ov006 0x0213b288; romdata_check compares the two before production isolation discards the emitted copy."
+    },
+    {
+      "symbol": "_ZTI23dMgTrmpRingObjAdapter_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b238",
+      "reason": "The type_info record the emitted dMgTrmpRingObjAdapter_c vtable references (single-inheritance record naming dMgTrmpObjAdapter_c as its base). The cartridge's copy is configured at ov006 0x0213b238; romdata_check word-compares the two, relocations applied, before production isolation discards the emitted copy."
+    },
+    {
+      "symbol": "_ZTS23dMgTrmpRingObjAdapter_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b2a0",
+      "reason": "The type-name string of the emitted dMgTrmpRingObjAdapter_c type_info. The cartridge's copy is configured at ov006 0x0213b2a0; romdata_check compares the two before production isolation discards the emitted copy."
     }
   ]
 }

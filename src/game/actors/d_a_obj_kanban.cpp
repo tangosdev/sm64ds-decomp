@@ -8,34 +8,28 @@
  * and releases the player when talk ends. InitResources loads the
  * sign model and lays the collider.
  *
- * deslop
- * Leftover: Vec3_HorzDist / Vec3_HorzAngle / Vec3_ApproachHorz /
- *   AngleDiff keep linker names (no header home).
- * Leftover: func_ov002_020bec9c is still the linker name of the
+ * What stays: Vec3_ApproachHorz / AngleDiff have no shared header.
+ * What stays: func_ov002_020bec9c is still the linker name of the
  *   Player SetAnim wrapper owned by the Player TU. Naming belongs there.
- * Leftover: data_02082214 is the shared arm9 sine table.
- * Leftover: the (s16)mMessageID / (u16 *)&mAngleY casts are
+ * What stays: data_02082214 is the shared arm9 sine table.
+ * What stays: the (s16)mMessageID / (u16 *)&mAngleY casts are
  *   load-bearing (sign-extends / zero-extends the halfword load).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daObjKanban_c_AssetId {
-    ASSET_OBJ_KANBAN_BMD = 0x0474
-};
+enum daObjKanban_c_AssetId { ASSET_OBJ_KANBAN_BMD = 0x0474 };
 
 #include "daObjKanban_c.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
 #include "nitro/fx/fx.h"
-
-bool ApproachLinear(short &value, short target, short step);
+#include "math/Approach.h"
+#include "math/CalcLib.h"
 
 /* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
  * spelling is local; the manifest aliases the generated names to those ROM
  * symbols. */
 struct KanbanModelFilePtr : SharedFilePtr {
-    u32 words[2];
-
     KanbanModelFilePtr(u32 fileID);
     ~KanbanModelFilePtr();
 };
@@ -44,26 +38,17 @@ struct KanbanModelFilePtr : SharedFilePtr {
  * at the end of this file so the constructor does not enter .text. */
 extern KanbanModelFilePtr data_ov085_02130858;
 
-extern "C" {
-
 /* the collider's offset, in .rodata */
-extern struct Vector3 data_ov085_0212f29c;
+extern Vector3 data_ov085_0212f29c;
 
-/* math / vector helpers */
-extern int Vec3_HorzDist(Vector3 *a, Vector3 *b);
-extern s16 Vec3_HorzAngle(Vector3 *a, Vector3 *b);
+/* local extern: no shared header declares these. */
+extern "C" {
 extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
 extern int AngleDiff(int a, int b);
 extern s16 data_02082214[];
 
-/* actor / collision plumbing */
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char *self, char *actor, const struct Vector3 *pos, int a, unsigned int b, unsigned int c, unsigned int d);
-
-/* model loading */
-
 /* the player side of the conversation */
-extern int func_ov002_020bec9c(void *c, unsigned int a, int b, int d, unsigned short e);
-
+extern void func_ov002_020bec9c(void *c, unsigned int a, int b, int d, unsigned short e);
 }
 
 #pragma defer_codegen off
@@ -72,30 +57,25 @@ extern int func_ov002_020bec9c(void *c, unsigned int a, int b, int d, unsigned s
 // @symbol _ZN13daObjKanban_cD0Ev
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order: its own vptr, then dCcAcPos_c (0x320), then dBgActor_c's
- * inlined, then dBgActor_c's dBgW_KcMbg and Model, then dActor_c. */
-daObjKanban_c::~daObjKanban_c()
-{
-}
+ * inlined, then dBgActor_c's dBgW_KcMbg and dExtSimpleModel_c, then dActor_c. */
+daObjKanban_c::~daObjKanban_c() {}
 
 // @symbol _ZN13daObjKanban_c16CleanupResourcesEv
 /* One release. A wall sign owns exactly one shared file -- the sign
  * model -- and gives it back on the way out. */
-int daObjKanban_c::CleanupResources()
-{
+int daObjKanban_c::CleanupResources() {
     data_ov085_02130858.Release();
     return 1;
 }
 
 // @symbol _ZN13daObjKanban_c6RenderEv
-int daObjKanban_c::Render()
-{
+int daObjKanban_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN13daObjKanban_c8BehaviorEv
-int daObjKanban_c::Behavior()
-{
+int daObjKanban_c::Behavior() {
     Player *tgt = mTalkingPlayer;
     Vector3 mine, pos, tpos;
 
@@ -183,17 +163,16 @@ int daObjKanban_c::Behavior()
 }
 
 // @symbol _ZN13daObjKanban_c13InitResourcesEv
-int daObjKanban_c::InitResources()
-{
-  struct Vector3 v;
-  void* file = Model::LoadFile(data_ov085_02130858);
-  mModel.SetFile((BMD_File *)file, 1, -1);
-  UpdateModelPosAndRotY();
-  v.x = data_ov085_0212f29c.x;
-  v.y = data_ov085_0212f29c.y;
-  v.z = data_ov085_0212f29c.z;
-  _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this) + 0x320, ((char*)this), &v, 0x78000, 0x64000, 0x4800002, 0);
-  return 1;
+int daObjKanban_c::InitResources() {
+    struct Vector3 v;
+    void *file = dExtSimpleModel_c::LoadFile(data_ov085_02130858);
+    mModel.SetFile((BMD_File *)file, 1, -1);
+    UpdateModelPosAndRotY();
+    v.x = data_ov085_0212f29c.x;
+    v.y = data_ov085_0212f29c.y;
+    v.z = data_ov085_0212f29c.z;
+    mdCcAcPos_c.Init(this, v, 0x78000, 0x64000, 0x4800002, 0);
+    return 1;
 }
 
 // @symbol daObjKanban_c_classInit
@@ -202,8 +181,7 @@ int daObjKanban_c::InitResources()
  * what runs dBgActor_c's base step, stores the vptr and then
  * constructs the dCcAcPos_c at 0x320, in that order, and `operator
  * new` is fBase_c's. */
-extern "C" daObjKanban_c *daObjKanban_c_classInit(void)
-{
+extern "C" daObjKanban_c *daObjKanban_c_classInit(void) {
     return new daObjKanban_c();
 }
 

@@ -691,7 +691,7 @@ mwccarm 2004/b56 behaviours, not style preferences.
   resolves to whichever header now arrives first. Measured on `daPgDfdr_c`:
   `common.h` and `math/Matrix.h` both define `Matrix4x3` at 0x30, the shard saw
   `common.h`'s flat `s32 m[12]`, and the merged file reached `math/Matrix.h`
-  first (via `daPgDfdr_c.h` -> `Model.h`) and got `Matrix3x3 r; Vector3 t`.
+  first (via `daPgDfdr_c.h` -> `dExtSimpleModel_c.h`) and got `Matrix3x3 r; Vector3 t`.
   mwcc then split one whole-matrix assignment into a 9-word `ldm`/`stm` plus a
   3-word tail it CSE'd — `0x94` became `0xac`, in a function nobody had touched.
   Reordering the includes restored the match. `Vector3_16` behaves the same way.

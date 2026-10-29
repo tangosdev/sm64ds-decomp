@@ -4,6 +4,7 @@
   "source": "src/minigames/unit020bfec0.cpp",
   "promoted_source": "src/minigames/unit020bfec0.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "Lower edge 0x020bfec0 is the overlay .text base (the ov006 .text section starts there), so nothing precedes it.",
@@ -11,13 +12,19 @@
     "93 functions, contiguous, every one a one-function shard that already byte-matched; no gaps inside 0x020bfec0..0x020c4048.",
     "Data windows are exclusive: all 45 distinct ov006 data targets referenced from the run lie in 0x0213ac48..0x0213aee8, 0x0213ad28, 0x0212b890, 0x0212b89c, 0x0212b8fc, 0x0212c9e4, and none is referenced from outside the run.",
     "bss 0x021402e0..0x021402fc belongs to the one function-local static (guard word, destructor node, Vector3) in FallingPetal_Spawn.",
-    "No RTTI, vtable or sinit record separates the run into smaller units, so interior boundaries are unproven and it is folded whole as the tu_map unit."
+    "No RTTI, vtable or sinit record separates the run into smaller units, so interior boundaries are unproven and it is folded whole as the tu_map unit.",
+    "bss 0x021402e0..0x021402fc: the guard, registration node and storage of FallingPetal_Spawn's function-local static unit-Y Vector3. Only FallingPetal_Spawn refers to the three addresses; the overlay's .bss starts at 0x021402e0, and the next word (0x021402fc) is read by d_mg3d_heyho_obj_adapter."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020bfec0",
       "end": "0x020c4048"
+    },
+    {
+      "name": ".bss",
+      "start": "0x021402e0",
+      "end": "0x021402fc"
     }
   ],
   "functions": [
@@ -99,14 +106,14 @@
       "ordinal": 10
     },
     {
-      "symbol": "MascotWalker_Destruct",
+      "symbol": "_ZN12MascotWalkerD1Ev",
       "address": "0x020c09f8",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_020c09f8.c",
       "ordinal": 11
     },
     {
-      "symbol": "MascotWalker_Construct",
+      "symbol": "_ZN12MascotWalkerC1Ev",
       "address": "0x020c0a48",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020c0a48.c",
@@ -274,14 +281,14 @@
       "ordinal": 35
     },
     {
-      "symbol": "Dealer_Destruct",
+      "symbol": "_ZN6DealerD1Ev",
       "address": "0x020c1c64",
       "size": "0x0000011c",
       "legacy_source": "src/func_ov006_020c1c64.c",
       "ordinal": 36
     },
     {
-      "symbol": "Dealer_Construct",
+      "symbol": "_ZN6DealerC1Ev",
       "address": "0x020c1d80",
       "size": "0x00000134",
       "legacy_source": "src/func_ov006_020c1d80.c",
@@ -337,14 +344,14 @@
       "ordinal": 44
     },
     {
-      "symbol": "Mascot_Destruct",
+      "symbol": "_ZN6MascotD1Ev",
       "address": "0x020c21e4",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020c21e4.c",
       "ordinal": 45
     },
     {
-      "symbol": "Mascot_Construct",
+      "symbol": "_ZN6MascotC1Ev",
       "address": "0x020c221c",
       "size": "0x00000040",
       "legacy_source": "src/func_ov006_020c221c.c",
@@ -498,14 +505,14 @@
       "ordinal": 67
     },
     {
-      "symbol": "Presenter_Destruct",
+      "symbol": "_ZN9PresenterD1Ev",
       "address": "0x020c3288",
       "size": "0x00000154",
       "legacy_source": "src/func_ov006_020c3288.c",
       "ordinal": 68
     },
     {
-      "symbol": "Presenter_Construct",
+      "symbol": "_ZN9PresenterC1Ev",
       "address": "0x020c33dc",
       "size": "0x0000014c",
       "legacy_source": "src/func_ov006_020c33dc.c",
@@ -645,28 +652,28 @@
       "ordinal": 88
     },
     {
-      "symbol": "FallingPetal_Destruct",
+      "symbol": "_ZN12FallingPetalD1Ev",
       "address": "0x020c3e54",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020c3e54.c",
       "ordinal": 89
     },
     {
-      "symbol": "FlowerFace_Destruct",
+      "symbol": "_ZN10FlowerFaceD1Ev",
       "address": "0x020c3e70",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020c3e70.cpp",
       "ordinal": 90
     },
     {
-      "symbol": "FlowerFace_Construct",
+      "symbol": "_ZN10FlowerFaceC1Ev",
       "address": "0x020c3f54",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov006_020c3f54.cpp",
       "ordinal": 91
     },
     {
-      "symbol": "FallingPetal_Construct",
+      "symbol": "_ZN12FallingPetalC1Ev",
       "address": "0x020c402c",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020c402c.c",
@@ -674,7 +681,29 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "_ZGVsAxis$543",
+      "address": "0x021402e0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of FallingPetal_Spawn's function-local static sAxis; the function tests and sets bit 0 exactly as retail"
+    },
+    {
+      "symbol": "@546",
+      "address": "0x021402e4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for sAxis; FallingPetal_Spawn passes it as the third __register_global_object argument exactly as retail"
+    },
+    {
+      "symbol": "sAxis$543",
+      "address": "0x021402f0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "FallingPetal_Spawn's function-local static Vector3(0, 0x1000, 0); retail stores the three words under the guard and registers ~Vector3() for it"
+    }
+  ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
@@ -685,16 +714,101 @@
     "functions_declared": 93,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN12MascotWalkerC2Ev",
+        "_ZN12MascotWalkerD2Ev",
+        "_ZN6DealerC2Ev",
+        "_ZN6DealerD2Ev",
+        "_ZN18DealerModelFilePtrD1Ev",
+        "_ZN25DealerAnimationFileHandleD1Ev",
+        "_ZN24MascotWalkerModelFilePtrD1Ev",
+        "_ZN31MascotWalkerAnimationFileHandleD1Ev",
+        "_ZN12FallingPetalC2Ev",
+        "_ZN12FallingPetalD2Ev",
+        "_ZN10FlowerFaceC2Ev",
+        "_ZN10FlowerFaceD2Ev",
+        "_ZN22FlowerFaceModelFilePtrD1Ev",
+        "_ZN29FlowerFaceAnimationFileHandleD1Ev",
+        "_ZN9PresenterC2Ev",
+        "_ZN9PresenterD2Ev",
+        "_ZN21PresenterModelFilePtrD1Ev",
+        "_ZN28PresenterAnimationFileHandleD1Ev",
+        "_ZN25PresenterTexSeqFileHandleD1Ev",
+        "_ZN6MascotC2Ev",
+        "_ZN6MascotD2Ev"
       ],
       "deadstripped": [
-        "_ZN7Vector3D1Ev"
+        "_ZN10FlowerFaceC2Ev",
+        "_ZN10FlowerFaceD2Ev",
+        "_ZN12FallingPetalC2Ev",
+        "_ZN12FallingPetalD2Ev",
+        "_ZN12MascotWalkerC2Ev",
+        "_ZN12MascotWalkerD2Ev",
+        "_ZN18DealerModelFilePtrD1Ev",
+        "_ZN21PresenterModelFilePtrD1Ev",
+        "_ZN22FlowerFaceModelFilePtrD1Ev",
+        "_ZN24MascotWalkerModelFilePtrD1Ev",
+        "_ZN25DealerAnimationFileHandleD1Ev",
+        "_ZN25PresenterTexSeqFileHandleD1Ev",
+        "_ZN28PresenterAnimationFileHandleD1Ev",
+        "_ZN29FlowerFaceAnimationFileHandleD1Ev",
+        "_ZN31MascotWalkerAnimationFileHandleD1Ev",
+        "_ZN6DealerC2Ev",
+        "_ZN6DealerD2Ev",
+        "_ZN6MascotC2Ev",
+        "_ZN6MascotD2Ev",
+        "_ZN7Vector3D1Ev",
+        "_ZN9PresenterC2Ev",
+        "_ZN9PresenterD2Ev"
       ],
       "droppedSections": [
-        11
+        14,
+        31,
+        32,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        88,
+        89,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        112,
+        113,
+        118,
+        119,
+        162,
+        163,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        211,
+        212,
+        215,
+        216,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        229,
+        230
       ],
       "data": [],
-      "dataExternalized": []
+      "dataExternalized": [],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -702,11 +816,85 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov006-unit020bfec0/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020bfec0",
+        "end": "0x020c4048",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020bfec0",
+          "end": "0x020c4048",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x021402e0",
+          "end": "0x021402fc",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 96
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7
+            ],
+            "desired": [
+              5,
+              6,
+              7
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "notes": [
     "Text-only fold; data and bss stay in the ROM image. The unit is probably more than one original TU (by data use, three groups), but nothing in the ROM can cut it.",
-    "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy."
+    "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy.",
+    "Function-local static folded: FallingPetal_Spawn's spin axis is now `static Vector3 sAxis(0, 0x1000, 0);`, replacing the externs sFallingPetal_Spawn_UnitYGuard/DtorRec and sFallingPetalAxis and the handwritten guard block that called func_020731dc with _ZN7Vector3D1Ev. mwcc emits the guard test, stores and registration itself, byte- and relocation-identical; the TU becomes intact-object to own the three .bss objects."
   ],
   "compiler_only_output": [
     {
@@ -715,6 +903,140 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "include/types.h gives Vector3 an empty inline destructor, so this TU re-emits it with vague linkage for the Vector3 temporary in FlowerFace_Draw. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by the enrolled `complete` source src/_ZN7Vector3D1Ev.cpp. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZN12MascotWalkerC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line MascotWalker::MascotWalker(). The cartridge carries only C1 at 0x020c0a48 (size 0x60), and MascotWalker is only ever constructed as a complete member of Dealer, so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN12MascotWalkerD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor emitted beside D1 by the out-of-line MascotWalker::~MascotWalker(). The cartridge carries only D1 at 0x020c09f8 (size 0x50), followed directly by C1 at 0x020c0a48, so the image has no room for a D2. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN6DealerC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line Dealer::Dealer(). The cartridge carries only C1 at 0x020c1d80 (size 0x134), the scenes construct Dealer only as a complete member, so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN6DealerD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor emitted beside D1 by the out-of-line Dealer::~Dealer(). The cartridge carries only D1 at 0x020c1c64 (size 0x11c), followed directly by C1 at 0x020c1d80, so the image has no room for a D2. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN18DealerModelFilePtrD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line vague-linkage copy of the inline DealerModelFilePtr destructor this source defines over func_02017ab4. mwccarm emits it once a member of the type is destroyed, but Dealer's D1 inlines the call (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN25DealerAnimationFileHandleD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line vague-linkage copy of the inline DealerAnimationFileHandle destructor this source defines over SharedFilePtr_Destruct_Anim. mwccarm emits it once a member of the type is destroyed, but Dealer's D1 inlines all thirteen calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN24MascotWalkerModelFilePtrD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line vague-linkage copy of the inline MascotWalkerModelFilePtr destructor this source defines over func_02017ab4. mwccarm emits it once a member of the type is destroyed, but MascotWalker's D1 inlines the call (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN31MascotWalkerAnimationFileHandleD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line vague-linkage copy of the inline MascotWalkerAnimationFileHandle destructor this source defines over SharedFilePtr_Destruct_Anim. mwccarm emits it once a member of the type is destroyed, but MascotWalker's D1 inlines both calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN12FallingPetalC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line FallingPetal::FallingPetal(). The cartridge carries only C1 at 0x020c402c (size 0x1c), the last function of the unit, and FallingPetal is only ever constructed as an element of FlowerFace::mPetals (through __cxa_vec_ctor, which takes C1), so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN12FallingPetalD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor emitted beside D1 by the out-of-line FallingPetal::~FallingPetal(). The cartridge carries only D1 at 0x020c3e54 (size 0x1c), followed directly by FlowerFace's D1 at 0x020c3e70, so the image has no room for a D2. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN10FlowerFaceC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line FlowerFace::FlowerFace(). The cartridge carries only C1 at 0x020c3f54 (size 0xd8), followed directly by FallingPetal's C1 at 0x020c402c, and the flower scene constructs FlowerFace only as a complete member, so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN10FlowerFaceD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor emitted beside D1 by the out-of-line FlowerFace::~FlowerFace(). The cartridge carries only D1 at 0x020c3e70 (size 0xe4), followed directly by C1 at 0x020c3f54, so the image has no room for a D2. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN22FlowerFaceModelFilePtrD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line vague-linkage copy of the inline FlowerFaceModelFilePtr destructor this source defines over func_02017ab4. mwccarm emits it once a member of the type is destroyed, but FlowerFace's D1 inlines both calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN29FlowerFaceAnimationFileHandleD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line vague-linkage copy of the inline FlowerFaceAnimationFileHandle destructor this source defines over SharedFilePtr_Destruct_Anim. mwccarm emits it once a member of the type is destroyed, but FlowerFace's D1 inlines all four calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN9PresenterC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line Presenter::Presenter(). The cartridge carries only C1 at 0x020c33dc (size 0x14c), followed directly by FallingPetal_UpdateMatrix at 0x020c3528, and the cup and sound scenes construct Presenter only as a complete member, so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN9PresenterD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor emitted beside D1 by the out-of-line Presenter::~Presenter(). The cartridge carries only D1 at 0x020c3288 (size 0x154), followed directly by C1 at 0x020c33dc, so the image has no room for a D2. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN21PresenterModelFilePtrD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line vague-linkage copy of the inline PresenterModelFilePtr destructor this source defines over func_02017ab4. mwccarm emits it once a member of the type is destroyed, but Presenter's D1 inlines both calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN28PresenterAnimationFileHandleD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line vague-linkage copy of the inline PresenterAnimationFileHandle destructor this source defines over SharedFilePtr_Destruct_Anim. mwccarm emits it once a member of the type is destroyed, but Presenter's D1 inlines all eight calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN25PresenterTexSeqFileHandleD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line vague-linkage copy of the inline PresenterTexSeqFileHandle destructor this source defines over SharedFilePtr_Destruct_TexSeq. mwccarm emits it once a member of the type is destroyed, but Presenter's D1 inlines all eight calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN6MascotC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line Mascot::Mascot(). The cartridge carries only C1 at 0x020c221c (size 0x40), followed directly by Camera_InitPresenterView at 0x020c225c, and the slot scene constructs Mascot only as a complete member, so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN6MascotD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor emitted beside D1 by the out-of-line Mascot::~Mascot(). The cartridge carries only D1 at 0x020c21e4 (size 0x38), followed directly by C1 at 0x020c221c, so the image has no room for a D2. Homeless and unreferenced, so a plain deadstrip."
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated function-local static registration in FallingPetal_Spawn; retail calls func_020731dc with sAxis, ~Vector3() and the registration node"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "_ZGVsAxis$543",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local static guard; DSD requires a configured global symbol at 0x021402e0, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "@546",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node; DSD requires a configured global symbol at 0x021402e4"
+    },
+    {
+      "symbol": "sAxis$543",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x021402f0, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
     }
   ]
 }

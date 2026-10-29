@@ -1,8 +1,8 @@
 #ifndef DMG3DESPMODEL_C_H
 #define DMG3DESPMODEL_C_H
 
-#include "ModelAnim.h"
-#include "TextureSequence.h"
+#include "dExtAnmModel_c.h"
+#include "dExtAnmTexPat_c.h"
 #include "dMg3DEspAnimSet_c.h"
 
 /* The source spelling and ordinary method names are inferred from its sole
@@ -33,8 +33,8 @@ struct dMg3DEspModel_c {
     s32 unk_000;                      /* 0x000 */
     s32 unk_004;                      /* 0x004 */
     s32 unk_008;                      /* 0x008 */
-    ModelAnim mModelAnim;             /* 0x00c */
-    TextureSequence mTextureSequence; /* 0x070 */
+    dExtAnmModel_c mAnmModel;         /* 0x00c */
+    dExtAnmTexPat_c mTextureSequence; /* 0x070 */
     dMg3DEspAnimSet_c mAnimSet;       /* 0x084 */
     u32 mParticleSys;                 /* 0x204 */
     s32 mShowSparks;                  /* 0x208 */

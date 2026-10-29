@@ -63,13 +63,13 @@
  *   func_ov100_02145014 / func_ov100_02145070 stay free -- the shared
  *   countdown helpers, which Player.cpp, daMugenBGM_c and d_a_star_gate.cpp
  *   also call and which take no door.
- * - the callees with Fix12<int> parameters (Sound, ModelAnim::SetAnim),
+ * - the callees with Fix12<int> parameters (Sound, dExtAnmModel_c::SetAnim),
  *   the SaveData, Sound::PlayCharVoice and dExtFrameCtrl_c::LoadFile calls, and the
- *   Model loaders InitResources calls stay spelled as mangled extern-C free
+ *   dExtSimpleModel_c loaders InitResources calls stay spelled as mangled extern-C free
  *   functions.
  * - dActor_c's mScaleX/Y/Z and mAngleX/Z carry other things for a door
  *   (the player's position in the door's frame, and two area ids), and
- *   unk_0a4/mVertSpeed/unk_0ac hold the message position; the base names
+ *   mSpeedX/mVertSpeed/mSpeedZ hold the message position; the base names
  *   cannot change on one derived class's evidence, so the functions that read
  *   them describe them in their own comments.
  * - the sound ids other than the two swing pairs, the message ids, camera
@@ -107,8 +107,10 @@ enum daDoor_c_AssetId {
 #include "SharedFilePtr.h"
 #include "dCamera_c.h"
 #include "daObjKey_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
+#include "dExtFrameCtrl_c.h"
 #include "dActor_c.h"
+#include "Sound.h"
 
 /* Three plain words: the stack and static vectors of the helpers that were
    C, which carry none of Vector3's empty destructor. */
@@ -206,23 +208,11 @@ int func_ov100_02144f84(void);
 int func_ov100_02144fcc(void);
 int func_ov100_02145014(void);
 void func_ov100_02145070(int v);
-
-void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int, unsigned int, unsigned int, int, int);
-void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void *pos);
-/* local extern: the call passes an untyped this, so it cannot use the header method. */
-void *_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(void *fp);
-/* local extern: include/Player.h declares Player::Unk_020ca488 void, and
-   func_ov100_021449c8 tests the value it leaves in r0. */
-int _ZN6Player12Unk_020ca488Ev(void *p);
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int fix, unsigned int j);
-void *_ZN5ModelC1Ev(void *self);
-void *_Znwj(unsigned int sz);
-/* func_0201277c(id) and func_02012790(id) play a sound id with no position
-   (d_a_jango.cpp says the same of func_02012790); func_02012694(id, pos)
-   plays it at a position. */
+}
+extern "C" {
+/* func_0201277c(id) plays a sound id with no position, as func_02012790
+   does (Sound.h); func_02012694(id, pos) plays it at a position. */
 void func_0201277c(int a);
-void func_02012790(int a);
 int func_02012694(int a, void *b);
 unsigned char DecIfAbove0_Byte(void *p);
 int DecIfAbove0_Short(void *p);
@@ -244,6 +234,7 @@ unsigned char IsAreaShowing(int idx);
 void SetTouchScreenDelay(void);
 void LoadKeyModels(int idx);
 void UnloadKeyModels(int idx);
+/* local extern: C++ cannot take ~Vector3()'s address */
 void *_ZN7Vector3D1Ev(void *object);
 
 extern DoorEntry data_ov100_02148204[];
@@ -314,13 +305,11 @@ extern void *data_ov089_02132894[];
    SharedFilePtr::Construct (animation) in this unit's manifest, and the
    destructors func_02017ab4 and SharedFilePtr_Destruct_Anim. */
 struct DoorModelFilePtr : SharedFilePtr {
-    int unk0; void *file;
     DoorModelFilePtr(unsigned int id);
     ~DoorModelFilePtr();
 };
 
 struct DoorAnimationFileHandle : SharedFilePtr {
-    int unk0; void *file;
     DoorAnimationFileHandle(unsigned int id);
     ~DoorAnimationFileHandle();
 };
@@ -380,10 +369,6 @@ daDoor_StateRecord data_ov100_02148914 = {data_ov100_02148144, data_ov100_021480
 daDoor_StateRecord data_ov100_02148924 = {data_02086b58, data_ov100_02148134};
 daDoor_StateRecord data_ov100_021488a4 = {data_02086b58, data_ov100_02148114};
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinals 0 and 1 -- _ZN8daDoor_cD1Ev, 0x021443f4, size 0x30;
- *                         _ZN8daDoor_cD0Ev, 0x02144424, size 0x44 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDoor_cD1Ev
 // @symbol _ZN8daDoor_cD0Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body.
@@ -427,7 +412,7 @@ int daDoor_c::func_ov100_02144468(int p)
         if (param1 != DOOR_LAST_KEY_MODEL) {
             SaveData::SetCharacterIntro(mKeyModelIdx - 1);
         } else {
-            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0xcb33);
+            Sound::ChangeMusicVolume(0x7f, 0xcb33);
         }
         func_ov100_021453d8(&data_ov100_021488b4, p);
     }
@@ -483,7 +468,7 @@ int daDoor_c::func_ov100_02144528(Player *pl)
                     pl->mHasNoCap = 1;
                     func_0201277c(0x7e);
                     mTimer = 0x40;
-                    _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0, 0x19666);  /* 25.4 as Fix12 */
+                    Sound::ChangeMusicVolume(0, 0x19666); /* 25.4 as Fix12 */
                 } else {
                     func_0201277c(0x7f);
                 }
@@ -493,7 +478,7 @@ int daDoor_c::func_ov100_02144528(Player *pl)
                     func_02012790(0xa1);
                 else
                     func_02012790(0xa2);
-                _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0, 0x19666);
+                Sound::ChangeMusicVolume(0, 0x19666);
             }
             func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END, &mCamSpacePosX);
         }
@@ -509,7 +494,7 @@ int daDoor_c::func_ov100_02144528(Player *pl)
             if (data_ov100_02148704 == 0
                 && mTimer == 0xa
                 && param1 == DOOR_LAST_KEY_MODEL) {
-                _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0xcb33);
+                Sound::ChangeMusicVolume(0x7f, 0xcb33);
             }
         }
     }
@@ -579,7 +564,7 @@ int daDoor_c::func_ov100_02144730(Player *arg1)
             u32 *p = &((dCamera_c *)data_0209f318)->mFlags;
             *p &= ~DOOR_CAMERA_FLAGS;
             if (param1 != DOOR_LAST_KEY_MODEL) {
-                _ZN5Sound13PlayCharVoiceEjjRK7Vector3(data_0209caa0.mCharacter, 0x21, &mCamSpacePosX);
+                Sound::PlayCharVoice(data_0209caa0.mCharacter, 0x21, mCamSpacePos);
             } else if (data_ov100_02148704 == 0) {
                 arg1->PlayMammaMiaSound();
             }
@@ -640,7 +625,7 @@ int daDoor_c::func_ov100_02144950(Player *pl, int unused)
    data_ov100_021488b4. */
 int daDoor_c::func_ov100_021449c8(Player *a2)
 {
-    if (!_ZN6Player12Unk_020ca488Ev(a2)) {
+    if (!a2->Unk_020ca488()) {
         signed char sh = (((signed char *)data_ov100_02148204) + (param1 << 4))[0xa];  /* flagShift; the array-indexed spelling compiles to a different load */
         data_0209caa0.flags1 |= DOOR_SAVE_KEY_UNLOCKED << sh;
         func_ov100_021453d8(&data_ov100_021488b4, (int)a2);
@@ -791,7 +776,7 @@ int daDoor_c::func_ov100_02144ccc()
        data_ov100_02148904 for a nonzero mKeyModelIdx, else
        data_ov100_021488f4.
    Where ShowMessage, TryTalkToDoor or TryTalkToKeyDoor returns 0, control
-   goes to the last case. The message position is unk_0a4 (see
+   goes to the last case. The message position is mSpeedX (see
    InitResources). Was a C source. */
 int daDoor_c::func_ov100_02144cf8(Player *b)
 {
@@ -803,7 +788,8 @@ int daDoor_c::func_ov100_02144cf8(Player *b)
             if (data_0209caa0.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift)) goto L240;
             if (NumStars() < entry->starsNeeded) {
                 if (func_ov100_02144f84() == 0) return 1;
-                if (b->ShowMessage(*this, entry->msg, (Vector3 *)&unk_0a4, 0, 2) == 0) goto L240;
+                if (b->ShowMessage(*this, entry->msg, (Vector3 *)&mSpeedX, 0, 2) == 0)
+                    goto L240;
                 func_ov100_021453d8(&data_ov100_021488c4, (int)b);
                 return 1;
             } else {
@@ -832,7 +818,8 @@ int daDoor_c::func_ov100_02144cf8(Player *b)
                     }
                     msg = sel ? entry->msg : 0x17;
                 }
-                if (b->ShowMessage(*this, (short)msg, (Vector3 *)&unk_0a4, 0, 2) == 0) goto L240;
+                if (b->ShowMessage(*this, (short)msg, (Vector3 *)&mSpeedX, 0, 2) == 0)
+                    goto L240;
             }
             func_ov100_021453d8(&data_ov100_021488c4, (int)b);
             if (entry->keyIndex == 5)
@@ -876,7 +863,7 @@ extern "C" int func_ov100_02144fcc(void)
 {
     int r = func_ov100_02145014();
     if (r == 0) return 0;
-    return _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x24, 0x7f, 0, 0x7222, 0);
+    return Sound::PlaySub(0x24, 0x7f, 0, 0x7222, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -891,7 +878,7 @@ extern "C" int func_ov100_02145014(void)
 {
     int r = DecIfAbove0_Short(data_ov100_02148708);
     if (r) {
-        _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x24, 0x14, 0x7f, 0x15666, 0);
+        Sound::PlaySub(0x24, 0x14, 0x7f, 0x15666, 0);
     }
     return data_ov100_02148708[0] == 0 ? 1 : 0;
 }
@@ -924,13 +911,13 @@ int daDoor_c::func_ov100_02145080(Player *arg1)
         if (mTimer == 0) {
             if (func_ov002_020ca78c(arg1) == 0)
                 goto ret1;
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x2b, 0, 0x7f, 0x15666, 0);
+            Sound::PlaySub(0x2b, 0, 0x7f, 0x15666, 0);
             mTimer = 0x78;
             goto ret1;
         }
         if (DecIfAbove0_Byte(&mTimer) != 0)
             goto ret1;
-        _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x2b, 0x7f, 0, 0x7222, 0);
+        Sound::PlaySub(0x2b, 0x7f, 0, 0x7222, 0);
         mTimer += 1;
         return 0;
     }
@@ -1058,18 +1045,15 @@ int daDoor_c::func_ov100_021453d8(void *p, int a2)
     return (this->*q->enter)(a2);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- _ZN8daDoor_c16CleanupResourcesEv, 0x0214542c, size 0x98 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDoor_c16CleanupResourcesEv
 /* vtable slot 3. `delete key` IS the ROM's `ldr r1,[r0]; ldr r1,[r1,#4];
- * blx r1` -- vtable slot 1, Model's deleting destructor -- and it is also
+ * blx r1` -- vtable slot 1, dExtSimpleModel_c's deleting destructor -- and it is also
  * where the doubled null check comes from: the explicit `if` emits one and
  * `delete` emits its own. */
 s32 daDoor_c::CleanupResources()
 {
     DoorEntry *e = &data_ov100_02148204[param1];
-    Model *key;
+    dExtSimpleModel_c *key;
     e->file->Release();
     data_ov100_02148744.Release();
     key = mKeyModel;
@@ -1085,9 +1069,6 @@ s32 daDoor_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- _ZN8daDoor_c16OnPendingDestroyEv, 0x021454c4, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDoor_c16OnPendingDestroyEv
 /* vtable slot 12. The ROM body is empty: the override exists only to
    occupy the slot. */
@@ -1095,9 +1076,6 @@ void daDoor_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- _ZN8daDoor_c6RenderEv, 0x021454c8, size 0x88 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDoor_c6RenderEv
 /* vtable slot 9. Draw the door if either area it joins is showing, then
  * hand the door's bone transforms to the key model hanging off 0x138
@@ -1109,10 +1087,10 @@ void daDoor_c::OnPendingDestroy()
  *                   width before IsAreaShowing sees it). Only mAngleY is a
  *                   real angle for this class.
  *   0x0e8           mModel.data.transforms, the door's own bone transform
- *                   array (ModelBase::data at +0x08, ModelComponents::
+ *                   array (dExtModel_c::data at +0x08, ModelComponents::
  *                   transforms at +0x0c).
  *
- * The two virtual calls are Model's slot 4 Virtual10(Matrix4x3&) and slot
+ * The two virtual calls are dExtSimpleModel_c's slot 4 Virtual10(Matrix4x3&) and slot
  * 5 Render(const Vector3*), exactly what the ROM dispatches. */
 s32 daDoor_c::Render()
 {
@@ -1123,8 +1101,8 @@ s32 daDoor_c::Render()
         /* &mModel is taken HERE and not at the top of the function: hoisting
            it costs a callee-saved register and a stack adjust the ROM does
            not have. The ROM computes it lazily, so this does too. */
-        ModelAnim *body = &mModel;
-        Model *key;
+        dExtAnmModel_c *body = &mModel;
+        dExtSimpleModel_c *key;
         body->Render(0);
         key = mKeyModel;
         if (key == 0) goto done;
@@ -1135,9 +1113,6 @@ done:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- _ZN8daDoor_c8BehaviorEv, 0x02145550, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDoor_c8BehaviorEv
 /* vtable slot 6. Run the current state's execute member with the player.
  *
@@ -1157,9 +1132,6 @@ s32 daDoor_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- _ZN8daDoor_c13InitResourcesEv, 0x021455a0, size 0x2fc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDoor_c13InitResourcesEv
 /* vtable slot 0. Was a C source taking the object explicitly.
  *
@@ -1191,7 +1163,6 @@ s32 daDoor_c::InitResources()
     DoorEntry *e;
     void *f;
     void *an;
-    void *m;
     Vec3i tmp;
     int r4;
     int v;
@@ -1221,7 +1192,7 @@ s32 daDoor_c::InitResources()
 
     idx = param1;
     e = &data_ov100_02148204[idx];
-    f = Model::LoadFile(*e->file);
+    f = dExtSimpleModel_c::LoadFile(*e->file);
     mModel.SetFile((BMD_File *)f, 1, 1);
 
     /* Only in game mode 0: pick the key-model file (mKeyFile) and load it. */
@@ -1243,11 +1214,11 @@ s32 daDoor_c::InitResources()
             }
         }
         if (mKeyFile != 0)
-            Model::LoadFile(*(SharedFilePtr *)mKeyFile);
+            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)mKeyFile);
     }
 
-    an = _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(&data_ov100_02148744);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModel, an, 0x40000000, 0x1000, 0);
+    an = dExtFrameCtrl_c::LoadFile(data_ov100_02148744);
+    mModel.SetAnim((BCA_File *)an, 0x40000000, 0x1000, 0);
 
     /* The model matrix takes the position >> 3. */
     Vec3_Asr(&tmp, &mPosX, 3);
@@ -1256,11 +1227,8 @@ s32 daDoor_c::InitResources()
     *(M48 *)&mModel.mat4x3 = data_020a0e68;
 
     if (e->keyFile != 0) {
-        m = _Znwj(0x50);                     /* sizeof(Model) */
-        if (m != 0)
-            m = _ZN5ModelC1Ev(m);
-        mKeyModel = (Model *)m;
-        f = Model::LoadFile(*e->keyFile);
+        mKeyModel = new dExtSimpleModel_c;
+        f = dExtSimpleModel_c::LoadFile(*e->keyFile);
         mKeyModel->SetFile((BMD_File *)f, 1, -1);
         *(M48 *)&mKeyModel->mat4x3 = data_020a0e68;
     }
@@ -1271,11 +1239,11 @@ s32 daDoor_c::InitResources()
         z = mPosZ;
         x = mPosX;
         w = y + 0xb4000;                     /* 180 units up */
-        unk_0a4 = x;
+        mSpeedX = x;
         mVertSpeed = w;
         {
             unsigned char bi = data_0209f250;
-            unk_0ac = z;
+            mSpeedZ = z;
             r4 = (int)data_0209f394[bi];
         }
     }

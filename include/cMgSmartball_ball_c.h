@@ -28,14 +28,17 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     virtual void RestoreInitial(); /* slot 2 */
 
     /* Recovered helpers. The state/query set gates the physics step: HasHit
-       reads the base's mTriggered (the ball collided this frame), IsOut the
+       reads anyHit (0xcc -- SmartballBall_UpdatePhysics raises it when a
+       probe on the ball's rim hits a wall, exit or obstacle this frame;
+       dScMgSmartball_c::ResolveBallPair
+       zeroes such a ball's velocity instead of exchanging it), IsOut the
        off-field flag, IsFinished the settled/dead end state, ArmExpire the
-       expiry countdown Freeze arms, PutInPlay the respawn, Burst the score
-       pop. The Hit* sweep set walks one manager table each and returns the
-       first solid contact. */
+       mExpireTimer countdown, Freeze the pin at mFrozenPos, PutInPlay the
+       respawn, Burst the score pop. The Hit* sweep set walks one manager
+       table each and returns the first solid contact. */
     void PlayHitSound(int a1, int *vel);
-    void Freeze();                 /* stop velocity, arm unk_038 expiry */
-    int HasHit();                  /* mTriggered */
+    void Freeze();                 /* pin at mFrozenPos, raise mIsFrozen and state3b */
+    int HasHit();                  /* anyHit */
     int  IsOut();                  /* off-field flag */
     int  ArmExpire(int val);       /* expiry timer hits val */
     int  IsFinished();             /* end state reached */
@@ -68,10 +71,11 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     u8  unk_039;      /* 0x039 -- cleared alongside mUpperWallSolid and by
                           RestoreInitial; NOTHING IN THE TREE READS IT. No
                           evidence, so no name. */
-    u8  state3a;      /* 0x03a -- name from SmartballBall_UpdatePhysics.c's own
-                          Obj cast of this same class; gates most of that
-                          function's per-frame collision work */
-    u8  state3b;      /* 0x03b -- ditto; set once mZoneDwell maxes out */
+    u8 state3a;       /* 0x03a -- name carried over from the Obj view that
+                          SmartballBall_UpdatePhysics used to cast this class
+                          to; gates most of that function's per-frame
+                          collision work */
+    u8 state3b;       /* 0x03b -- ditto; set once mZoneDwell maxes out, and by Freeze */
     s32 mZoneDwell;      /* 0x03c -- frames spent inside the box x [0x8000,
                              0xd8000) z [0x74000,0x7c000); counts up, sets
                              state3b past 0x1e, saturates at 0x12c, and resets
@@ -82,9 +86,12 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
                              base's mIsActive -- after which every SaveSnapshot
                              and Update returns immediately. */
 
-    /* hitX/hitZ per SmartballBall_UpdatePhysics, but nothing in this class reads
-       them -- unmodelled, not unread. */
-    u8  pad_044[0x8]; /* 0x044-0x04b */
+    /* Where the ball was swallowed: SmartballBall_UpdatePhysics (whose old Obj
+       view called them hitX/hitZ) copies the position of the ana it falls into,
+       right before that ana's Swallow(). While state3a is 1, NeedsRespawn
+       measures the ball's distance from this point. */
+    s32 mSwallowX; /* 0x044 */
+    s32 mSwallowZ; /* 0x048 */
 
     u8  hit[0x20];      /* 0x04c */
     u8  hitA[0x20];     /* 0x06c */
@@ -110,11 +117,10 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     u8  mIsWaiting;      /* 0x100 -- 1 while this ball is still queued behind the
                              one in play. RestoreInitial sets it; SaveSnapshot
                              clears it once the base's mIndex (this ball's own
-                             slot index) equals the manager's current index at
-                             mgr+0x4664 and mInPlay is up. While set,
+                             slot index) equals the manager's mServeIndex and mInPlay is up. While set,
                              SaveSnapshot runs QueueBehind, which lines
                              the ball up behind its predecessor in the
-                             manager's 13-entry table at mgr+0x4688; once clear
+                             manager's 13-entry mpBalls table; once clear
                              it runs the live physics path
                              SmartballBall_UpdatePhysics instead. */
     u8  pad_101[0x3]; /* 0x101-0x103 -- alignment */

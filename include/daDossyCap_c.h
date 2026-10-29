@@ -2,7 +2,7 @@
 #define DADOSSYCAP_C_H
 
 #include "CapIcon.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dCcAc_c.h"
 #include "dActor_c.h"
 
@@ -30,7 +30,7 @@
  * The ROM's dCapIcon_c RTTI and vtable now identify its constructor and
  * destructor by their original class name. That declaration is what finally
  * lets the compiler reproduce this class's lifecycle: construction proceeds
- * base, dCapIcon_c, Model, dCcAc_c; destruction is the exact reverse.
+ * base, dCapIcon_c, dExtSimpleModel_c, dCcAc_c; destruction is the exact reverse.
  *
  * The header this replaces was deliberately flat -- a non-deriving struct
  * whose leading "fields" duplicated dActor_c's storage -- because giving a
@@ -48,7 +48,7 @@ struct daDossyCap_c : dActor_c {
        header had it; the pointer reads go through explicit casts. */
     s32                mEatingPlayer;           /* 0x0d0 */
     dCapIcon_c         mCapIcon;                /* 0x0d4 */
-    Model              mModel;                  /* 0x0f0 */
+    dExtSimpleModel_c mModel;                   /* 0x0f0 */
     dCcAc_c mdCcAc_c;     /* 0x140 */
     /* The actor this cap is riding, a pointer spelt s32. Behavior bails out
        when it is null, and otherwise copies the cap position out of that actor

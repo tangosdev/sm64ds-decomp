@@ -4,8 +4,6 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 /* BitDW floating island (profile KM1_UKISHIMA / DIAMOND_LIFT 135).
  * ROM RTTI daObjKm1_Ukishima_c; direct base dBgActor_c (_ZTI+8 at
  * ov043 0x02112270 points at _ZTI10dBgActor_c). Factory allocates
@@ -31,12 +29,6 @@ struct daObjKm1_Ukishima_c : dBgActor_c {
     virtual s32   CleanupResources();      /* slot  3 */
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
-
-    /* size_t == unsigned long here; unsigned int is illegal. Forwards
-       fBase_c::operator new until #2570 merges. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

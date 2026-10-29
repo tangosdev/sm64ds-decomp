@@ -78,7 +78,7 @@ functions, all inside this class's own address range:
 | 0x09c | `mVertAccel` | `dActor_c`'s offset; `daTor_c::InitResources` sets -0x1000. |
 | 0x0a0 | `mTerminalVelocity` | `dActor_c`'s offset; InitResources sets -0x1e000. |
 | 0x33c | `mCaughtActor` | `daTor_c::Behavior` resolves `mdCcAc_c.otherOwner` to an actor and stores it here once [func_ov002_020de33c](../src/game/player/Player.cpp) approves. State 1 re-tests it through [func_ov002_020de328](../src/game/player/Player.cpp); state 2 clears it. |
-| 0x340/0x344/0x348 | `mHomePosX/Y/Z` | InitResources copies `mPos` here. State 0 snaps `mPos` back to it; states 1 and 2 measure every distance from it rather than from where the tornado is. |
+| 0x340 | `mHomePos` | InitResources copies `mPos` here. State 0 snaps `mPos` back to it; states 1 and 2 measure every distance from it rather than from where the tornado is. |
 | 0x34c | `mChaseRange` | InitResources builds it from `mParam & 0xff`: `byte * 0x64000`, or 0x5dc000 when the byte is 0xff. State 1 chases only while the player is within it of `mHomePos`. |
 | 0x350 | `mStateTimer` | Behavior counts it up every frame and zeroes it when `mState` changed. State 0 spins up over its first 0x3c, state 2 shrinks over its own 0x3c and gives up at 0x168. |
 | 0x354 | `mChaseTimer` | Counted up by state 1 only. At 0x384 the chase ends: state 1 drops to state 2, and state 0 uses the same threshold to decide it must teleport home. |

@@ -22,18 +22,19 @@
  * reads low-address-first. Do not reorder.
  */
 
-// leftovers: dBgW_KcMbg::SetFile stays ABI-exact (by-value Fix12<int> scale;
-// the member spelling grows InitResources by eight bytes). InitResources'
-// two matrix copies stay Matrix4x3Copy block copies (C++ struct assignment
-// scalarizes the ROM's ldm/stm sequence). DecIfAbove0_Byte has no shared
-// header.
+// What stays, and why: InitResources' two matrix copies stay Matrix4x3Copy
+// block copies (C++ struct assignment scalarizes the ROM's ldm/stm sequence).
 
 #pragma defer_codegen off
 
 #include "daObjDorifu_c.h"
 #include "Event.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
-typedef struct { s32 words[12]; } Matrix4x3Copy;
+typedef struct {
+    s32 words[12];
+} Matrix4x3Copy;
 
 /* Behavior's mState values. What each does is read off the code: 0 and 2 wait
    on Event::GetBit(mEventBit) going set and clear, 1 and 3 step mActivePlank
@@ -44,17 +45,6 @@ enum {
     STATE_AWAIT_EVENT_CLEAR = 2,
     STATE_STEP_UP = 3
 };
-
-extern "C" {
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-void Matrix4x3_FromRotationY(void *mat, s32 angle);
-
-/* A genuine SetFile call with its by-value Fix12<int> parameter triggers the
- * known mwccarm by-value reload wall and grows InitResources by eight bytes.
- * Keep the ABI-exact declaration until that wall has a source-form solution. */
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *self, void *kcl, void *mat, s32 scale, s16 angle, void *clps);
-}
 
 // @symbol _ZN13daObjDorifu_cD0Ev
 // @symbol _ZN13daObjDorifu_cD1Ev
@@ -72,22 +62,19 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
  * per-function sources this file replaces. */
 
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
-void daObjDorifu_c_EmitDeletingDestructor(daObjDorifu_c *p)
-{
+void daObjDorifu_c_EmitDeletingDestructor(daObjDorifu_c *p) {
     delete p;
 }
 
 /* Not called. Forces the out-of-line copy of the inline destructor. */
-void daObjDorifu_c_EmitDestructor(daObjDorifu_c *p)
-{
+void daObjDorifu_c_EmitDestructor(daObjDorifu_c *p) {
     p->~daObjDorifu_c();
 }
 
 // @symbol _ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources
 /* ov002 0x020b4b6c. Shared cleanup for the three concrete drifting-platform
  * descendants. Their slot-3 overrides pass their own five-entry resource table here. */
-s32 daObjDorifu_c::CleanupResources(daObjDorifuResources *resources)
-{
+s32 daObjDorifu_c::CleanupResources(daObjDorifuResources *resources) {
     for (s32 i = 0; i < 5; ++i) {
         if (mPlankClsn[i].IsEnabled())
             mPlankClsn[i].Disable();
@@ -102,10 +89,9 @@ s32 daObjDorifu_c::CleanupResources(daObjDorifuResources *resources)
  * reloc: _ZTV13daObjDorifu_c+0x24 -> 0x020b4bc4, where
  * _ZTV10dBgActor_c+0x24 -> 0x02043af0, so this is a real override.
  *
- * Indexes the Model[5] at 0x320 with the byte at 0xdc8 and calls the element's
- * vtable slot 5 with a literal 0 -- Model::Render(const Vector3 *), NULL. */
-s32 daObjDorifu_c::Render()
-{
+ * Indexes the dExtSimpleModel_c[5] at 0x320 with the byte at 0xdc8 and calls the element's
+ * vtable slot 5 with a literal 0 -- dExtSimpleModel_c::Render(const Vector3 *), NULL. */
+s32 daObjDorifu_c::Render() {
     mPlankModels[mActivePlank].Render(0);
     return 1;
 }
@@ -129,8 +115,7 @@ s32 daObjDorifu_c::Render()
  * The `(int)` launder on &mActivePlank is load-bearing: without it mwcc
  * common-subexpressions the field address across the DecIfAbove0_Byte call and
  * emits one instruction fewer than the ROM has. */
-s32 daObjDorifu_c::Behavior()
-{
+s32 daObjDorifu_c::Behavior() {
     int i;
     dBgW_KcMbg *clsn;
     unsigned char *plankPtr;
@@ -187,22 +172,21 @@ s32 daObjDorifu_c::Behavior()
  * drifting-platform descendants. Each passes its own five-entry daObjDorifuResources table. The raw matrix
  * copies are load-bearing: ordinary C++ struct assignment scalarizes them
  * instead of emitting the ROM's ldm/stm sequence. */
-s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources)
-{
+s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources) {
     s32 i;
     daObjDorifuResources *resource;
-    Model *model;
+    dExtSimpleModel_c *model;
     s32 j;
     Matrix4x3 *sourceMat;
     s32 scale = 0x1000;
-    Model *modelDst;
+    dExtSimpleModel_c *modelDst;
     dBgW_KcMbg *clsn;
     daObjDorifuResources *clsnResource = resources;
 
     resource = clsnResource;
     model = mPlankModels;
     for (i = 0; i < 5; ++i) {
-        model->SetFile((BMD_File *)Model::LoadFile(*resource->modelFile), 1, -1);
+        model->SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*resource->modelFile), 1, -1);
         resource++;
         model++;
     }
@@ -225,9 +209,8 @@ s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources)
     clsn = mPlankClsn;
     for (; j < 5; ++j) {
         *(Matrix4x3Copy *)&modelDst->mat4x3 = *(Matrix4x3Copy *)sourceMat;
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            clsn, dBgW_Kc::LoadFile(*clsnResource->clsnFile), &mPlatformMat, scale, mAngleY,
-            clsnResource->clps);
+        clsn->SetFile((KCL_File *)dBgW_Kc::LoadFile(*clsnResource->clsnFile), mPlatformMat, scale,
+                      mAngleY, *clsnResource->clps);
         if (j == mActivePlank)
             clsn->Enable(this);
         modelDst++;
@@ -236,4 +219,3 @@ s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources)
     }
     return 1;
 }
-

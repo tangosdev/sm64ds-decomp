@@ -1,4 +1,7 @@
 //cpp
+namespace Particle {
+struct Callback;
+}
 /* daObjPowerUpItem_c -- the power flower: a pickup that gives the player who
  * touches it a character-specific power-up (see CheckPickup).
  *
@@ -24,10 +27,6 @@
  * __sinit from six descriptor records.
  *
  * leftovers:
- *  - DropShadow and InitResources keep their mangled `_ZN` spellings for
- *    DropShadowRadHeight, dCcAc_c::Init and dBgCh_Actr::Init: those take
- *    Fix12<int> by value, and Fix12<int> has no int conversion (the Fix12
- *    wall the rest of the tree banks on too).
  *  - dBgCh_Actr_UpdateContinuous_Veneer is a real ROM symbol callers name
  *    directly, not a wrapper to collapse into UpdateContinuous.
  *  - StateOpening still writes mWobbleAngle through a `short*` pun:
@@ -49,11 +48,11 @@
 #include "SaveData.h"
 #include "fBase_c.h"
 #include "dCc_c.h"
-#include "decl_SaveData.h"
 #include "decl_common.h"
 #include "dBgCh_Gnd.h"
 #include "Player.h"
 #include "nitro/fx/fx.h"
+#include "math/Approach.h"
 
 struct Vector3_16f;
 struct Callback;
@@ -94,30 +93,32 @@ enum {
     CHARACTER_YOSHI = 3
 };
 
-int ApproachLinear(int&, int, int);
-namespace cstd { int fdiv(int, int); }
+namespace cstd {
+int fdiv(int, int);
+}
 
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8* p);
-extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32 id, u32 a, int x, int y, int z, const struct Vector3_16f* rot, struct Callback* cb);
+extern void *d_a_obj_power_up_itemNewHold(u32 id, u32 a, int x, int y, int z,
+                                          const struct Vector3_16f *rot, struct Callback *cb);
 extern signed short data_02082214[];
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
+namespace Particle {
+struct System {
+    static void NewSimple(unsigned int, int, int, int);
+
+    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
+};
+}
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern void *data_0209f318;
 extern void func_0203568c(int *p, int v);
 extern void func_02035684(int *p, int v);
-extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern int func_0200fccc(char* s, int r1);
-extern int _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-    char* self, dExtShadowModel_c* sm, struct Matrix4x3* m, int fix, int t, u32 f);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void *gPFlowerCloseModelFile[];
 extern void *gPFlowerOpenModelFile[];
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    void *self, void *act, Fix12i a, Fix12i b, unsigned int c2, unsigned int d);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    void *self, void *act, Fix12i a, Fix12i b, void *d, void *e);
+/* Parameter names keep this TU's @NNN. */
+typedef void BgchInitAt_(void *self, void *act, Fix12i a, Fix12i b, void *d, void *e);
 }
 
 // @symbol _ZN18daObjPowerUpItem_cD1Ev
@@ -153,10 +154,8 @@ void daObjPowerUpItem_c::StateResting()
         ((int*)&pos)[0] = x;
         ((int*)&pos)[1] = y;
         ((int*)&pos)[2] = z;
-        mEffectHandle = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            mEffectHandle, 0x104,
-            ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2],
-            0, 0);
+        mEffectHandle = (u32)Particle::System::New(mEffectHandle, 0x104, ((int *)&pos)[0],
+                                                   ((int *)&pos)[1], ((int *)&pos)[2], 0, 0);
     }
 }
 
@@ -216,8 +215,7 @@ void daObjPowerUpItem_c::BeginOpening()
     ((int *)&pos)[0] = x;
     ((int *)&pos)[1] = y;
     ((int *)&pos)[2] = z;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-        0x102, ((int *)&pos)[0], ((int *)&pos)[1], ((int *)&pos)[2]);
+    Particle::System::NewSimple(0x102, ((int *)&pos)[0], ((int *)&pos)[1], ((int *)&pos)[2]);
     func_02012694(0x7d, &mCamSpacePos);
     mEffectHandle = 0;
     mAngleY = *(short *)((char *)data_0209f318 + 0x17c);
@@ -242,8 +240,7 @@ void daObjPowerUpItem_c::StateLaunched()
     int gy;
     int diff;
 
-    mEffectHandle = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        mEffectHandle, 0x103, mPosX, mPosY, mPosZ, 0, 0);
+    mEffectHandle = (u32)Particle::System::New(mEffectHandle, 0x103, mPosX, mPosY, mPosZ, 0, 0);
 
     a = mVertSpeed;
     mag = (a < 0) ? -a : a;
@@ -260,7 +257,7 @@ void daObjPowerUpItem_c::StateLaunched()
     func_0203568c((int*)&mWithMeshClsn, 0x3c000);
     func_02035684((int*)&mWithMeshClsn, 0x3c000);
     UpdatePos((dCc_c*)&mdCcAc_c);
-    dBgCh_Actr_UpdateContinuous_Veneer((void*)&mWithMeshClsn);
+    dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.TouchesWater()) {
         pos.x = mPosX;
@@ -395,14 +392,14 @@ void daObjPowerUpItem_c::CheckPickup() {
 /* Shadow: copies mOpenModel's matrix into mShadowMat, puts its Y at the ground
  * height (mGroundY >> 3) and drops the shadow. In state 0 the shadow radius
  * shrinks with the flower's height above the ground (0x64000 down to a floor of
- * 0x3c000); otherwise it is 0x78000. Returns 1 without doing anything while the
- * 0x40000 yoshi-mouth bit is set. */
+ * 0x3c000); otherwise it is 0x78000. Does nothing while the 0x40000 yoshi-mouth
+ * bit is set. */
 // @symbol _ZN18daObjPowerUpItem_c10DropShadowEv
-int daObjPowerUpItem_c::DropShadow()
-{
+void daObjPowerUpItem_c::DropShadow() {
     int r3;
     int b = (int)((mFlags & 0x40000) != 0);
-    if (b != 0) return b;
+    if (b != 0)
+        return;
     *(struct Matrix4x3*)&mShadowMat = *(struct Matrix4x3*)&mOpenModel.mat4x3;
     mShadowMat.m[10] = mGroundY >> 3;
     r3 = 0x78000;
@@ -412,10 +409,10 @@ int daObjPowerUpItem_c::DropShadow()
         r3 = 0x64000 - FX_MUL(d, 0x180);
         if (r3 < 0x3c000) r3 = 0x3c000;
     }
-    return _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j((char*)this, &mShadowModel, &mShadowMat, r3, 0x3c000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, r3, 0x3c000, 0xf);
 }
 
-/* Model matrices: rotates mOpenModel's matrix by mAngleY, sets its translation
+/* dExtSimpleModel_c matrices: rotates mOpenModel's matrix by mAngleY, sets its translation
  * to the position >> 3 and copies it to mCloseModel. */
 // @symbol _ZN18daObjPowerUpItem_c14UpdateMatricesEv
 void daObjPowerUpItem_c::UpdateMatrices(){
@@ -482,8 +479,8 @@ int daObjPowerUpItem_c::InitResources()
 {
     struct Vector3 pos;
 
-    Model::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
-    Model::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
     if (mOpenModel.SetFile((BMD_File*)gPFlowerOpenModelFile[1], 1, -1) == 0)
         return 0;
     if (mCloseModel.SetFile((BMD_File*)gPFlowerCloseModelFile[1], 1, -1) == 0)
@@ -499,9 +496,8 @@ int daObjPowerUpItem_c::InitResources()
     mScaleY = 0xfa0;
     mScaleZ = 0xfa0;
 
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x32000, 0x64000, 0x800002, 0x8000);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x3c000,
-                                                                0x3c000, 0, 0);
+    mdCcAc_c.Init(this, 0x32000, 0x64000, 0x800002, 0x8000);
+    mWithMeshClsn.Init(this, 0x3c000, 0x3c000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
 
     /* ground probe: a ray starting 0x14000 above the flower */
@@ -517,7 +513,7 @@ int daObjPowerUpItem_c::InitResources()
     mLifeTimer = 0xb4;
 
     if (param1 == FLOWER_PARAM_PERSISTENT) {
-        if (ClosestPlayer()->param1 == CHARACTER_LUIGI && _ZN8SaveData16HasPlayerLostCapEv() == 0) {
+        if (ClosestPlayer()->param1 == CHARACTER_LUIGI && SaveData::HasPlayerLostCap() == 0) {
             SetState(FLOWER_STATE_RESTING);
         } else {
             return 0;

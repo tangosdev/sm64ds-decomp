@@ -7,7 +7,7 @@
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x2127b34..0x21280d8, 10 function(s): the nine class members (including the func_ov081_02127be0 cargo-release helper) from build/tu_map.json (tools/tu_map.py), extended over the zero-gap daObjIceBlock_c_classInit factory tu_map cannot label because it cuts on symbol name. LEFT bound: daGmch_c_classInit ends exactly at 0x02127b34. RIGHT bound: 0x021280d8 is the end of ov081 .text; the .rodata that follows (data_ov081_021280d8) is referenced only from daGmch_c (0x021277d8, 0x02127a70) and is not claimed here.",
+    "contiguous linker run: 0x2127b34..0x21280d8, 10 function(s): the nine class members (including the ReleaseStar cargo-release helper) from build/tu_map.json (tools/tu_map.py), extended over the zero-gap daObjIceBlock_c_classInit factory tu_map cannot label because it cuts on symbol name. LEFT bound: daGmch_c_classInit ends exactly at 0x02127b34. RIGHT bound: 0x021280d8 is the end of ov081 .text; the .rodata that follows (data_ov081_021280d8) is referenced only from daGmch_c (0x021277d8, 0x02127a70) and is not claimed here.",
     "class label(s): daObjIceBlock_c",
     "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
@@ -49,7 +49,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov081_02127be0",
+      "symbol": "_ZN15daObjIceBlock_c11ReleaseStarEv",
       "address": "0x02127be0",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov081_02127be0.cpp",
@@ -274,28 +274,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -316,7 +296,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 temporary re-emits it with vague linkage; Behavior, Render, Kill and func_ov081_02127be0 all build Vector3 locals. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations, and no surviving section in this TU references it; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 temporary re-emits it with vague linkage; Behavior, Render, Kill and ReleaseStar all build Vector3 locals. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations, and no surviving section in this TU references it; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -591,14 +571,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@800",
+      "from": "@769",
       "to": "@786",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @800 now; licensed under the existing pin @786"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @800 now; licensed under the existing pin @786 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     },
     {
-      "from": "@799",
+      "from": "@768",
       "to": "@785",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @799 now; licensed under the existing pin @785"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @799 now; licensed under the existing pin @785 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     }
   ]
 }

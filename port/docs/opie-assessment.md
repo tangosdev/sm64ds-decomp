@@ -103,7 +103,7 @@ straight to it:
 ```c
 /* src/Geometry_MatrixMultiply3x3.c:5 */   *(volatile u32 *)0x4000400 = 0x1a;
                                            Copy36Bytes(m, (int *)0x4000400);
-/* src/func_0205a290.c:35 */               DMAStartTransfer(ch, base, 0x4000400, 0x84400000 | ...);
+/* src/func_0205a290.cpp:39 */               DMAStartTransfer(ch, base, 0x4000400, 0x84400000 | ...);
 ```
 
 So the 3D seam for us is the **command stream**, not per-call immediate inlines.
@@ -149,7 +149,7 @@ That grep proves nothing in a tree that names unknowns `func_XXXX`. Re-examined:
 
 - **G3d/G2d: genuinely absent.** The BMD loader checks no magic anywhere, `BMD_File.h`
   is a flat count/offset header, and name lookup is linear `strcmp`
-  (`src/func_020471ac.c`) where NNS G3d uses radix dictionaries. Hand-rolled EAD readers.
+  (`src/func_020471ac.cpp`) where NNS G3d uses radix dictionaries. Hand-rolled EAD readers.
 - **FND heaps: NNS under EAD names.** The signatures are literal NNS FND tags —
   `0x46524d48` = `'FRMH'` (`src/engine/heap/SolidHeapAllocator.cpp:86`) and `0x45585048` =
   `'EXPH'` (`src/engine/heap/ExpandingHeapAllocator.cpp`, the `C1`).
@@ -165,7 +165,7 @@ side is the **stock NitroSDK sound stack over SDAT**:
 
 - `src/Snd_SendCommand.c` builds command records from a pool and dispatches them —
   NitroSDK's `SND` command-queue shape.
-- `src/func_0205b070.c` is `SND_FlushCommand` (DC-flush of 0x1800 = 256 × 0x18, then IPC
+- `src/func_0205b070.cpp` is `SND_FlushCommand` (DC-flush of 0x1800 = 256 × 0x18, then IPC
   on **PXI tag 7** = sound). `IPCSend` in `src/engine/pxi/PXI_Fifo.cpp` is `PXI_SendWordByFifo` on `0x4000188`.
 - The data is SDAT: `symbols/verified.tsv` names `0x020a5bb8` as
   `_ZN5Sound8SDAT_RAM3PTRE`, and `Sound::InfoSequenceEntry::GetWithID` walks the SDAT
@@ -210,9 +210,9 @@ via `(u32)&` / `(int)&`, and they point at globals, function pointers, and overl
 descriptors:
 
 ```c
-if (g == (int)&data_02089608)                     /* src/ContinueKuppaScriptIfNecessary.c:17 */
+if (g == (int)&data_02089608)                     /* the ContinueKuppaScriptIfNecessary shard, since folded */
 (int)&func_02034fbc                                /* src/func_02034da4.c:48 — function ptr */
-LoadOverlay((int)&overlay_0)                       /* src/func_0201a2f8.c:41 */
+LoadOverlay((int)&overlay_0)                       /* src/func_0201a2f8.cpp:44 */
 ```
 
 Moving `s_HW_MAIN_MEM` low fixes none of those; host `.data`/`.text` sit at the image

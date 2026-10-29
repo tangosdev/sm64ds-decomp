@@ -19,8 +19,6 @@
 #include "dBgActor_c.h"
 #include "dBgCh_Actr.h"
 
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
-
 struct dActor_c;
 struct Player;
 
@@ -66,10 +64,6 @@ struct daObjPushblock_c : dBgActor_c {
        0x7c -- where _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv. Confirmed
        with tools/mangle.py: _ZN16daObjPushblock_c4KillEv. */
     void Kill();                           /* slot 31 */
-
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

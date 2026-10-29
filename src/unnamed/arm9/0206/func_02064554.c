@@ -1,4 +1,5 @@
 #include "types.h"
+#include "private/arm9_wbt.h"
 extern void CpuCopy8(int a, int b, int c);
 
 /* NitroSDK WBT (wireless block transfer): this raises a system callback for
@@ -10,58 +11,8 @@ extern void CpuCopy8(int a, int b, int c);
  * is 0xc, SYSTEM_CALLBACK.
  *
  * The 0x68-byte per-peer record (peer[], +0x1d4) holds what func_02063ea8
- * parsed out of that peer's packet. Its fields are named after the callback
- * fields they feed. cmd_counter is the peer's command counter;
- * last_cmd_counter is the one already reported, so a repeat is dropped. */
-typedef struct WBTCommand {
-    s32 command;              /* 0x00 */
-    s32 event;                /* 0x04 */
-    u16 target_bmp;           /* 0x08 */
-    u16 peer_bmp;             /* 0x0a */
-    u8 my_cmd_counter;        /* 0x0c */
-    u8 peer_cmd_counter;      /* 0x0d */
-    s16 result;               /* 0x0e */
-    void (*callback)(char *); /* 0x10 */
-    union {
-        struct {
-            s16 num_of_list;      /* 0x14 */
-            s16 peer_packet_size; /* 0x16 */
-            s16 my_packet_size;   /* 0x18 */
-        } sync;
-        struct {
-            s32 block_id; /* 0x14 */
-        } blockdone;
-        struct {
-            u8 data[9]; /* 0x14 */
-            u8 size;    /* 0x1d */
-        } user_data;
-    } u;
-} WBTCommand;
-
-typedef struct WBTPeerRecord {
-    u8 pad_00[2];
-    u8 cmd_counter;       /* 0x02 */
-    u8 last_cmd_counter;  /* 0x03 */
-    s16 my_packet_size;   /* 0x04 */
-    s16 peer_packet_size; /* 0x06 */
-    u8 pad_08[2];
-    s16 num_of_list; /* 0x0a */
-    u8 pad_0c;
-    u8 user_data_size; /* 0x0d */
-    u8 pad_0e[2];
-    s32 block_id; /* 0x10 */
-    u8 pad_14[0xc];
-    s32 user_data; /* 0x20 -- the payload's address in the packet */
-    u8 pad_24[0x44];
-} WBTPeerRecord;
-
-typedef struct WBTWork {
-    u8 pad_000[0x138];
-    WBTCommand system_cmd; /* 0x138 */
-    u8 pad_158[0x7c];
-    WBTPeerRecord peer[1]; /* 0x1d4 -- indexed by the peer's aid */
-} WBTWork;
-
+ * parsed out of that peer's packet; its fields are named after the callback
+ * fields they feed. The views are in private/arm9_wbt.h. */
 void func_02064554(int self, int sel, int idx, s16 a3)
 {
     WBTWork *work = (WBTWork *)self;

@@ -11,10 +11,9 @@
  * freely. They are STATIC: the ROM bodies take no `this` and drive the hardware
  * OAM buffers through file globals.
  *
- * The three Render overloads taking a by-value Fix12<int> are NOT declared here and
- * must not be: mwccarm homes r0-r3 to the stack for a by-value class parameter
- * (+0x14) on all 25 sweep versions at every optimisation level. Those stay
- * extern "C" free functions -- runbook section 7.
+ * Render's int overloads are declared below with no parameter names: a named
+ * parameter renumbers @NNN in every includer. A by-value Fix12<int> still must
+ * not be declared here -- mwccarm homes r0-r3 to the stack for it.
  *
  * OamAttr now lives in include/OamAttr.h -- eleven files that each carried their own
  * copy of the 4 x u16 layout share it, and the `OamAttri` misspelling is retired. See
@@ -38,6 +37,8 @@
 struct OamAttr;   /* fwd only -- see the note above */
 struct Matrix2x2; /* fwd only -- a pointer parameter needs no more, and the two
                      files that pass one keep their own 4 x s32 definition */
+struct OamTmp;    /* fwd only -- EnableSubOAM's caller passes one and the body
+                     does not read it */
 
 struct OAM {
     u8  pad_000[0xa8];
@@ -55,7 +56,7 @@ struct OAM {
        mangled name, not chosen: `Eii` is (int, int), `Ev` is (). */
     static u8 GetObjWidth(int shape, int sizeBits);
     static u8 GetObjHeight(int shape, int sizeBits);
-    static u32 EnableSubOAM();
+    static u32 EnableSubOAM(OamTmp *);
     static void Flush();
     static void Load();
     static void Reset();
@@ -64,8 +65,61 @@ struct OAM {
        coefficient, which is also why the search strides by 4. */
     static int LoadAffineParams(OamAttr* attr, int* count, Matrix2x2* mtx);
     static void Render(bool draw, OamAttr* obj, int x, int y, int palette, int priority, Matrix2x2* mtx);
+    /* 10-arg form. Scales are ints (0x1000), not Fix12. Unnamed: a named parameter renumbers @NNN in every includer. */
+    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
+    /* 8-arg form. Scale and rotation are ints, not Fix12. Unnamed: a named parameter renumbers @NNN in every includer. */
+    static OamAttr *Render(bool, OamAttr *, int, int, int, int, int, int);
     static void RenderSub(OamAttr* data, s32 x, s32 y);
     static void RenderSub(OamAttr* data, s32 x, s32 y, s32 palette, s32 priority);
+
+    /* The sprite tables. These are ROM data with no definition in src/; each
+       name is its symbols.txt row (_ZN3OAM<name>E). A single sprite
+       is an OamAttr whose ADDRESS the callers pass to Render; a table is an
+       array of OamAttr pointers that the callers index by digit, character or
+       mode. A data member's type is not part of its mangled name. */
+    static OamAttr *LIFE_ICONS[];
+    static OamAttr *NUMBERS[];
+    static OamAttr *VS_YELLOW_NUMBERS[];
+    static OamAttr *CONTROLLER_MODE_TEXTS[];
+    static OamAttr *MM_PLAYER_ICONS[];
+    static OamAttr *MM_VS_PLAYER_ICONS[];
+    static OamAttr *MM_VS_PLAYER_ICONS_S[];
+    static OamAttr *MM_STAR_MARKERS[];
+    static OamAttr *MM_STAR_KEYS[];
+    static OamAttr TIMES;
+    static OamAttr COIN;
+    static OamAttr POWER_STAR;
+    static OamAttr SMALL_STAR_EMPTY;
+    static OamAttr TINY_STAR;
+    static OamAttr BOUNCING_ARROW;
+    static OamAttr ARROW_POINTING_LEFT;
+    static OamAttr ARROW_POINTING_RIGHT;
+    static OamAttr SMALL_ARROW_POINTING_LEFT;
+    static OamAttr SMALL_ARROW_POINTING_RIGHT;
+    static OamAttr PAUSE;
+    static OamAttr VS_PAUSE;
+    static OamAttr VS_NEW_STAR_APPEARED;
+    static OamAttr VS_TIME;
+    static OamAttr VS_TIME_UP;
+    static OamAttr TIME;
+    static OamAttr MINUTES;
+    static OamAttr MM_SMALL_STAR;
+    static OamAttr MM_ARROW;
+    static OamAttr MM_RED_COIN;
+    static OamAttr MM_SPIKE_BOMB;
+    /* The camera-control buttons, top screen and (S_) sub screen. */
+    static OamAttr CAM_BUTTON_L;
+    static OamAttr CAM_BUTTON_L_PRESSED;
+    static OamAttr CAM_BUTTON_R;
+    static OamAttr CAM_BUTTON_R_PRESSED;
+    static OamAttr S_CAM_BUTTON_L;
+    static OamAttr S_CAM_BUTTON_L_PRESSED;
+    static OamAttr S_CAM_BUTTON_R;
+    static OamAttr S_CAM_BUTTON_R_PRESSED;
+    static OamAttr CAM_ZOOM_BUTTON;
+    static OamAttr CAM_ZOOM_BUTTON_PRESSED;
+    static OamAttr S_CAM_ZOOM_BUTTON;
+    static OamAttr S_CAM_ZOOM_BUTTON_PRESSED;
 #endif
 };
 

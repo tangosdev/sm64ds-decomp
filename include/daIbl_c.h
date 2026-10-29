@@ -12,7 +12,7 @@
  * The following constructor/destructor calls witness these member layouts:
  *
  *     0x110 dBgCh_Actr               0x1bc   -> 0x2cc
- *     0x2cc Model                      0x50    -> 0x31c
+ *     0x2cc dExtSimpleModel_c                      0x50    -> 0x31c
  *     0x31c dExtShadowModel_c                0x28    -> 0x344
  *     0x374 dCcAc_c         0x34    -> 0x3a8
  *     0x3f4 PathPtr                    0x8     -> 0x3fc
@@ -24,7 +24,7 @@
  * the destructor leaves the class eight bytes short.
  *
  * The draw-scale group at 0x3ac is separately inferred from the three scalar
- * stores and the pointer passed to Model::Render. Its Vector3 type and name
+ * stores and the pointer passed to dExtSimpleModel_c::Render. Its Vector3 type and name
  * are reconstruction choices, not original spelling proved by RTTI. The empty
  * Vector3 constructor/destructor adds real subobject lifetimes; unchanged
  * emitted lifecycle code is checked separately from that source distinction.
@@ -46,7 +46,7 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dCcAc_c.h"
 #include "PathPtr.h"
 #include "dExtShadowModel_c.h"
@@ -78,7 +78,7 @@ enum daIbl_Kind {
 
 struct daIbl_c : dEnemyBase_c {
     dBgCh_Actr                 mWithMeshClsn;         /* 0x110 */
-    Model                        mModel;                /* 0x2cc -- mModel.mat4x3 is the model matrix */
+    dExtSimpleModel_c mModel; /* 0x2cc -- mModel.mat4x3 is the model matrix */
     dExtShadowModel_c                  mShadowModel;          /* 0x31c */
     /* The shadow's Matrix4x3, as twelve words (words 9..11 are the
        translation). func_ov100_02142264 copies the model matrix into it and then
@@ -91,7 +91,7 @@ struct daIbl_c : dEnemyBase_c {
        slot back through mLiveBalls. InitResources zeroes it, so a spawner's own
        word stays 0. */
     daIbl_c                     *mDispenser;            /* 0x3a8 */
-    /* Inferred draw-scale vector: Render passes this actual object to Model.
+    /* Inferred draw-scale vector: Render passes this actual object to dExtSimpleModel_c.
        InitResources writes 0x1000 (1.0) or 0x800 (0.5) component by component
        for drawn variants; the empty default constructor does not initialize it.
        func_ov100_02142264 reads x for the shadow's size and offset. */
@@ -159,7 +159,7 @@ struct daIbl_c : dEnemyBase_c {
     void func_ov100_02142130();
     void func_ov100_02142264();
     int  func_ov100_0214233c();
-    int  func_ov100_021424c0();
+    void func_ov100_021424c0();
     void func_ov100_0214272c();
     void func_ov100_02142918();
     void func_ov100_02142b90();

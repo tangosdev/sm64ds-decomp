@@ -6,14 +6,14 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x02031b84..0x02034a78, 26 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
-    "TOP EDGE: src/unnamed/arm9/0203/func_020319fc.c (0x020319fc..0x02031b84) ends exactly where the run begins -- an address-named helper of the surrounding block, not folded here. BOTTOM EDGE: src/game/stages/d_s_mb.cpp begins exactly at 0x02034a78 -- a different class TU, not part of the run.",
-    "CLASS-LOCAL COMPLETE: the run is every VS-mode text path -- the four Message::*VS members (SetTextGlobalsVS, DisplayVsExitText, DisplayPauseTextVS, LoadTextVS) plus the tile/pixel helpers and the state machine they all drive (func_02034504 reset, func_02031e00 op walker, func_020326ac input/blit switch), ending at LoadFont3D + LoadTextVS which load the font and pick the language table. Internal calls (func_02031b84/31cd4/31e00/33e50/34098/341a8/34504) resolve inside the TU."
+    "contiguous linker run: 0x02030fa8..0x02034a78, 35 function(s), gapless in config/arm9/delinks.txt.",
+    "VS TWIN: 0x02030fa8..0x02034a78 is the Message text code compiled a second time for the VS build. Masking relocated words, nine functions are word-identical to their single-player twins at the same relative order: func_0200f0bc->func_02030fa8, func_0201ab6c->func_02031154, func_0201adac->func_020313d8, Message::AddChar->Message::AddCharVS, func_0201b7cc->func_02031e00, Message::SetTextGlobals->Message::SetTextGlobalsVS, func_0201cfb8->func_02033a80, func_0201d590->func_02034098, Message_DrawCenteredLine->Message_DrawCenteredLineVS. The rest are VS-specific variants (other sizes) in the same order.",
+    "TOP EDGE: src/unnamed/arm9/0203/func_02030e4c.c (0x02030e4c..0x02030fa8) ends where the run begins; neither it nor any shard below it has a masked twin in the single-player text code, and func_02030fa8 (twin of func_0200f0bc) is the first. BOTTOM EDGE: src/game/stages/d_s_mb.cpp begins at 0x02034a78, a different class TU."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x02031b84",
+      "start": "0x02030fa8",
       "end": "0x02034a78"
     }
   ],
@@ -25,10 +25,9 @@
     "Message is the tree's existing class name (include/Message.h); the `3` suffix follows the tree's numeric style (d_s_mg_jump2.cpp next to d_s_mg_jump.cpp) per Juan's 2026-10-11 new-file rule -- fold onto the established name, never coin one.",
     "Message is NOT polymorphic -- no RTTI, no vtable, no ctor/dtor -- and every member here is static. The VS text path drives one shared render state around 0x0209fc50 plus the blob pointers at 0x0209fd00..0x0209fd1c.",
     "#pragma defer_codegen off gives source-order emission: src/Message3.cpp lists definitions ROM-ascending and the emitted section order is ROM-ascending. Deferred codegen was unusable because the four optimization-pragma functions (func_020326ac opt_common_subs, func_020331fc/func_02033e50 opt_strength_reduction, func_02033bb8 both) would read their offs last-wins at end of file.",
-    "The address-named helpers and the named C helper LoadFont3D keep extern \"C\" linkage and their existing names. data_0209f4a4 is consumed through decl_common.h's s16[] spelling; func_020326ac reads it through a byte-stride pointer pun, so the (u8*) cast stays at the use site.",
-    "_ZN3G2x18SetBlendBrightnessEPVtts keeps the byte-forced (volatile u16*, int, int) spelling -- the definition's u16/s16 params would emit narrows the ROM lacks. _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii keeps the literal-name spelling with scalar params (Fix12 wall).",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b).",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+    "The address-named helpers and the named C helpers LoadFont3D and Message_DrawCenteredLineVS keep extern \"C\" linkage. AddCharVS is a static member like its single-player twin Message::AddChar. data_0209f4a4 is consumed through decl_common.h's s16[] spelling; func_020326ac reads it through a byte-stride pointer pun, so the (u8*) cast stays at the use site.",
+    "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii keeps the literal-name spelling with scalar params (Fix12 wall).",
+    "The nine func_02030fa8..func_020319fc shards were folded in ROM order ahead of AddCharVS. func_02031028's glyph-table search keeps its inline predicate, now `bool`: an int-returning or open-coded compare swaps the two cmp operands."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -36,8 +35,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/arm9-Message3/Message3.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 26,
-    "functions_declared": 26,
+    "functions_matched": 35,
+    "functions_declared": 35,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],
@@ -94,28 +93,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -127,186 +106,249 @@
   },
   "functions": [
     {
-      "symbol": "func_02031b84",
+      "symbol": "func_02030fa8",
+      "address": "0x02030fa8",
+      "size": "0x00000080",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030fa8.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_02031028",
+      "address": "0x02031028",
+      "size": "0x0000012c",
+      "legacy_source": "src/unnamed/arm9/0203/func_02031028.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_02031154",
+      "address": "0x02031154",
+      "size": "0x00000138",
+      "legacy_source": "src/unnamed/arm9/0203/func_02031154.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_0203128c",
+      "address": "0x0203128c",
+      "size": "0x0000014c",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203128c.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_020313d8",
+      "address": "0x020313d8",
+      "size": "0x00000050",
+      "legacy_source": "src/unnamed/arm9/0203/func_020313d8.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_02031428",
+      "address": "0x02031428",
+      "size": "0x000002b0",
+      "legacy_source": "src/unnamed/arm9/0203/func_02031428.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_020316d8",
+      "address": "0x020316d8",
+      "size": "0x000001cc",
+      "legacy_source": "src/unnamed/arm9/0203/func_020316d8.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_020318a4",
+      "address": "0x020318a4",
+      "size": "0x00000158",
+      "legacy_source": "src/unnamed/arm9/0203/func_020318a4.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_020319fc",
+      "address": "0x020319fc",
+      "size": "0x00000188",
+      "legacy_source": "src/unnamed/arm9/0203/func_020319fc.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN7Message9AddCharVSEh",
       "address": "0x02031b84",
       "size": "0x00000150",
       "legacy_source": "src/unnamed/arm9/0203/func_02031b84.c",
-      "ordinal": 0
+      "ordinal": 9
     },
     {
       "symbol": "func_02031cd4",
       "address": "0x02031cd4",
       "size": "0x0000012c",
       "legacy_source": "src/unnamed/arm9/0203/func_02031cd4.c",
-      "ordinal": 1
+      "ordinal": 10
     },
     {
       "symbol": "func_02031e00",
       "address": "0x02031e00",
       "size": "0x000003fc",
       "legacy_source": "src/unnamed/arm9/0203/func_02031e00.c",
-      "ordinal": 2
+      "ordinal": 11
     },
     {
       "symbol": "func_020321fc",
       "address": "0x020321fc",
       "size": "0x000004b0",
       "legacy_source": "src/unnamed/arm9/0203/func_020321fc.c",
-      "ordinal": 3
+      "ordinal": 12
     },
     {
       "symbol": "func_020326ac",
       "address": "0x020326ac",
       "size": "0x00000858",
       "legacy_source": "src/unnamed/arm9/0203/func_020326ac.c",
-      "ordinal": 4
+      "ordinal": 13
     },
     {
       "symbol": "_ZN7Message16SetTextGlobalsVSEv",
       "address": "0x02032f04",
       "size": "0x00000050",
       "legacy_source": "src/_ZN7Message16SetTextGlobalsVSEv.cpp",
-      "ordinal": 5
+      "ordinal": 14
     },
     {
       "symbol": "func_02032f54",
       "address": "0x02032f54",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/arm9/0203/func_02032f54.c",
-      "ordinal": 6
+      "ordinal": 15
     },
     {
       "symbol": "func_02032f9c",
       "address": "0x02032f9c",
       "size": "0x00000260",
       "legacy_source": "src/unnamed/arm9/0203/func_02032f9c.c",
-      "ordinal": 7
+      "ordinal": 16
     },
     {
       "symbol": "func_020331fc",
       "address": "0x020331fc",
       "size": "0x00000194",
       "legacy_source": "src/unnamed/arm9/0203/func_020331fc.c",
-      "ordinal": 8
+      "ordinal": 17
     },
     {
       "symbol": "func_02033390",
       "address": "0x02033390",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/arm9/0203/func_02033390.cpp",
-      "ordinal": 9
+      "ordinal": 18
     },
     {
       "symbol": "func_02033464",
       "address": "0x02033464",
       "size": "0x00000388",
       "legacy_source": "src/unnamed/arm9/0203/func_02033464.c",
-      "ordinal": 10
+      "ordinal": 19
     },
     {
       "symbol": "func_020337ec",
       "address": "0x020337ec",
       "size": "0x000000c4",
       "legacy_source": "src/unnamed/arm9/0203/func_020337ec.c",
-      "ordinal": 11
+      "ordinal": 20
     },
     {
       "symbol": "func_020338b0",
       "address": "0x020338b0",
       "size": "0x00000110",
       "legacy_source": "src/unnamed/arm9/0203/func_020338b0.cpp",
-      "ordinal": 12
+      "ordinal": 21
     },
     {
       "symbol": "_ZN7Message17DisplayVsExitTextEt",
       "address": "0x020339c0",
       "size": "0x000000c0",
       "legacy_source": "src/_ZN7Message17DisplayVsExitTextEt.cpp",
-      "ordinal": 13
+      "ordinal": 22
     },
     {
       "symbol": "func_02033a80",
       "address": "0x02033a80",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0203/func_02033a80.c",
-      "ordinal": 14
+      "ordinal": 23
     },
     {
-      "symbol": "func_02033ae0",
+      "symbol": "_ZN7Message24DisplayOptionsMenuTextVSEs",
       "address": "0x02033ae0",
       "size": "0x000000d8",
       "legacy_source": "src/unnamed/arm9/0203/func_02033ae0.c",
-      "ordinal": 15
+      "ordinal": 24
     },
     {
       "symbol": "func_02033bb8",
       "address": "0x02033bb8",
       "size": "0x00000298",
       "legacy_source": "src/unnamed/arm9/0203/func_02033bb8.c",
-      "ordinal": 16
+      "ordinal": 25
     },
     {
       "symbol": "func_02033e50",
       "address": "0x02033e50",
       "size": "0x00000248",
       "legacy_source": "src/unnamed/arm9/0203/func_02033e50.c",
-      "ordinal": 17
+      "ordinal": 26
     },
     {
       "symbol": "func_02034098",
       "address": "0x02034098",
       "size": "0x00000110",
       "legacy_source": "src/unnamed/arm9/0203/func_02034098.cpp",
-      "ordinal": 18
+      "ordinal": 27
     },
     {
-      "symbol": "func_020341a8",
+      "symbol": "Message_DrawCenteredLineVS",
       "address": "0x020341a8",
       "size": "0x000001b0",
       "legacy_source": "src/unnamed/arm9/0203/func_020341a8.cpp",
-      "ordinal": 19
+      "ordinal": 28
     },
     {
       "symbol": "_ZN7Message18DisplayPauseTextVSEt",
       "address": "0x02034358",
       "size": "0x000000bc",
       "legacy_source": "src/_ZN7Message18DisplayPauseTextVSEt.cpp",
-      "ordinal": 20
+      "ordinal": 29
     },
     {
-      "symbol": "func_02034414",
+      "symbol": "_ZN7Message21DisplayDontSaveTextVSEt",
       "address": "0x02034414",
       "size": "0x000000f0",
       "legacy_source": "src/unnamed/arm9/0203/func_02034414.cpp",
-      "ordinal": 21
+      "ordinal": 30
     },
     {
       "symbol": "func_02034504",
       "address": "0x02034504",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0203/func_02034504.c",
-      "ordinal": 22
+      "ordinal": 31
     },
     {
       "symbol": "func_020345b0",
       "address": "0x020345b0",
       "size": "0x000003a4",
       "legacy_source": "src/unnamed/arm9/0203/func_020345b0.c",
-      "ordinal": 23
+      "ordinal": 32
     },
     {
       "symbol": "LoadFont3D",
       "address": "0x02034954",
       "size": "0x0000008c",
       "legacy_source": "src/LoadFont3D.c",
-      "ordinal": 24
+      "ordinal": 33
     },
     {
       "symbol": "_ZN7Message10LoadTextVSEv",
       "address": "0x020349e0",
       "size": "0x00000098",
       "legacy_source": "src/_ZN7Message10LoadTextVSEv.cpp",
-      "ordinal": 25
+      "ordinal": 34
     }
   ]
 }

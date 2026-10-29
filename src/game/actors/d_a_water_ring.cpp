@@ -5,16 +5,13 @@
  * One out-of-line destructor emits D1 then D0;
  * `#pragma defer_codegen off` lays .text down in source order.
  *
- * The seven func_ov064_* members are the state bodies daWater_Ring_c::State
- * points at (the tables are filled with member-function pointers), the state
- * installer, and the per-frame pose update. Their ROM names are unrecovered,
- * so they keep their address names.
+ * Two states, each a daWater_Ring_c::State of member-function pointers:
+ * active (InitStateActive / StateActive, data_ov064_0211c954), installed by
+ * InitResources, and passed (InitStatePassed / StatePassed,
+ * data_ov064_0211c944), installed by CheckPlayerPass once the player swims
+ * through. SetState installs a state; UpdateModel poses the model each frame.
  *
- * leftovers:
- * - TextureTransformer::SetFile and dCcAcPos_c::Init stay mangled local
- *   externs: the header spellings take Fix12<int> by value, and Fix12 has
- *   no int constructor, so a call through them cannot be written with
- *   these literals.
+ * What stays:
  * - The data_ov064_* tables and constants keep address names; the profile
  *   rows and .data PMF constants are not owned by this TU.
  */
@@ -24,53 +21,44 @@
 #include "common.h"
 #include "daWater_Ring_c.h"
 #include "SharedFilePtr.h"
-#include "TextureTransformer.h"
+#include "dExtAnmTexSRT_c.h"
 #include "Player.h"
+#include "math/Approach.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
+#include "daManta_c.h"
+#include "daWater_Hakidasi_c.h"
 
-extern "C" {
 /* The two state tables, ov064 .bss; the definitions at the end of this
    file fill them from .data rows holding these methods' addresses. Each
    table is one State (init + execute); the descriptors below are the
    single-handler constants it copies. */
-extern daWater_Ring_c::State data_ov064_0211c944;   /* passed */
-extern daWater_Ring_c::State data_ov064_0211c954;   /* active */
+extern daWater_Ring_c::State data_ov064_0211c944; /* passed */
+extern daWater_Ring_c::State data_ov064_0211c954; /* active */
 extern int (daWater_Ring_c::*data_ov064_0211c3b0)();
 extern int (daWater_Ring_c::*data_ov064_0211c3c8)();
 extern int (daWater_Ring_c::*data_ov064_0211c3c0)();
 extern int (daWater_Ring_c::*data_ov064_0211c3b8)();
-extern Vector3 data_ov064_0211c3d0;         /* the collider offset */
-extern s16 data_02082214[];                 /* sine/cosine table */
-extern char data_ov002_0210d6dc[];          /* the ring's BTA */
-extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
+extern Vector3 data_ov064_0211c3d0; /* the collider offset */
+extern s16 data_02082214[];         /* sine/cosine table */
+extern char data_ov002_0210d6dc[];  /* the ring's BTA */
 
+/* local extern: no shared header declares these. */
+extern "C" {
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 int AngleDiff(int a, int b);
-unsigned short DecIfAbove0_Short(unsigned short *p);
 void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-
-/* local extern: the header spellings take Fix12<int> by value, and Fix12
-   has no int constructor, so a call through them cannot be written with
-   these literals. */
-void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(TextureTransformer *self, BTA_File *animFile, int flags, int speed, unsigned short startFrame);
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(dCcAcPos_c *self, dActor_c *actor, const Vector3 *offset, int radius, int height, u32 flags, u32 vulnFlags);
 }
 
-extern SharedFilePtr data_ov002_0210da10;   /* the ring's BMD */
-
-void ApproachLinear(int &value, int target, int step);
+extern SharedFilePtr data_ov002_0210da10; /* the ring's BMD */
 
 // @symbol _ZN14daWater_Ring_cD1Ev
 // @symbol _ZN14daWater_Ring_cD0Ev
-daWater_Ring_c::~daWater_Ring_c()
-{
-}
+daWater_Ring_c::~daWater_Ring_c() {}
 
 /* Checks whether the player swam through the ring this frame. */
-// @symbol _ZN14daWater_Ring_c19func_ov064_02119afcEv
-void daWater_Ring_c::func_ov064_02119afc()
-{
+// @symbol _ZN14daWater_Ring_c15CheckPlayerPassEv
+void daWater_Ring_c::CheckPlayerPass() {
     Vector3 otherPos;
     Vector3 offset;
     dActor_c *other;
@@ -81,11 +69,14 @@ void daWater_Ring_c::func_ov064_02119afc()
     offset = data_ov064_0211c3d0;
     mdCcAcPos_c.SetPosRelativeToActor(offset);
     id = mdCcAcPos_c.otherOwner;
-    if (id == 0) return;
+    if (id == 0)
+        return;
     other = dActor_c::FindWithID(id);
-    if (other == 0) return;
+    if (other == 0)
+        return;
     isPlayer = (other->actorID == 0xbf);
-    if (isPlayer == 0) return;
+    if (isPlayer == 0)
+        return;
     {
         const Vector3 &pos = other->mPos;
         otherPos.x = pos.x;
@@ -94,21 +85,20 @@ void daWater_Ring_c::func_ov064_02119afc()
     }
     if (AngleDiff(mAngleX, Vec3_VertAngle(&mPos, &otherPos)) >= 0x3000)
         return;
-    if ((mRingType == 1 && ((mPrevPlayerAngle >> 16) & 1) != ((HorzAngleToCPlayer() >> 16) & 1))
-        || mRingType != 1) {
+    if ((mRingType == 1 && ((mPrevPlayerAngle >> 16) & 1) != ((HorzAngleToCPlayer() >> 16) & 1)) ||
+        mRingType != 1) {
         if (mRingType == 1)
-            ((Player *)other)->Heal(0x100);
+            static_cast<Player *>(other)->Heal(0x100);
         mTextureTransformer.speed = 0x4000;
-        func_ov064_02119ecc(&data_ov064_0211c944);
+        SetState(&data_ov064_0211c944);
     } else {
         mPrevPlayerAngle = HorzAngleToCPlayer();
     }
 }
 
 /* Fading out: grows and fades until it is gone. */
-// @symbol _ZN14daWater_Ring_c19func_ov064_02119c60Ev
-int daWater_Ring_c::func_ov064_02119c60()
-{
+// @symbol _ZN14daWater_Ring_c11StatePassedEv
+int daWater_Ring_c::StatePassed() {
     mOpacity -= 2;
     if (mOpacity < 2)
         mOpacity = 2;
@@ -121,21 +111,20 @@ int daWater_Ring_c::func_ov064_02119c60()
 }
 
 /* Init of the passed state: tells the spawner which ring was hit. */
-// @symbol _ZN14daWater_Ring_c19func_ov064_02119ce4Ev
-int daWater_Ring_c::func_ov064_02119ce4() {
+// @symbol _ZN14daWater_Ring_c15InitStatePassedEv
+int daWater_Ring_c::InitStatePassed() {
     mOpacity = 0x1f;
     mStateTimer = 0x64;
     int type = mRingType;
     if (type == 1 || type == 2) {
-        char *spawner = (char *)mSpawner;
+        dActor_c *spawner = mSpawner;
         if (spawner != 0) {
-            /* The spawner's passed-ring slot, at a different offset in each
-               spawning class: daManta_c::mHitRing at +0x3a8,
-               daWater_Hakidasi_c::mPassedRing at +0x31c. */
+            /* The spawner's passed-ring slot: type 1 rings come from
+               daManta_c, type 2 from daWater_Hakidasi_c. */
             if (type == 1) {
-                *(daWater_Ring_c **)(spawner + 0x3a8) = this;
+                static_cast<daManta_c *>(spawner)->mHitRing = this;
             } else {
-                *(daWater_Ring_c **)(spawner + 0x31c) = this;
+                static_cast<daWater_Hakidasi_c *>(spawner)->mPassedRing = this;
             }
         }
     }
@@ -143,10 +132,10 @@ int daWater_Ring_c::func_ov064_02119ce4() {
 }
 
 /* Main of the active state: wobbles, spins and waits for the player. */
-// @symbol _ZN14daWater_Ring_c19func_ov064_02119d28Ev
-int daWater_Ring_c::func_ov064_02119d28() {
+// @symbol _ZN14daWater_Ring_c11StateActiveEv
+int daWater_Ring_c::StateActive() {
     int spd;
-    func_ov064_02119afc();
+    CheckPlayerPass();
     if ((u16)mStateTimer < 0x1e) {
         if (mOpacity >= 2)
             mOpacity--;
@@ -175,8 +164,8 @@ int daWater_Ring_c::func_ov064_02119d28() {
 }
 
 /* Init of the active state. */
-// @symbol _ZN14daWater_Ring_c19func_ov064_02119ea0Ev
-s32 daWater_Ring_c::func_ov064_02119ea0() {
+// @symbol _ZN14daWater_Ring_c15InitStateActiveEv
+s32 daWater_Ring_c::InitStateActive() {
     mStateTimer = 0xc8;
     s32 angle = HorzAngleToCPlayer();
     mPrevPlayerAngle = (s16)angle;
@@ -184,9 +173,8 @@ s32 daWater_Ring_c::func_ov064_02119ea0() {
 }
 
 /* Installs a state and runs its init. */
-// @symbol _ZN14daWater_Ring_c19func_ov064_02119eccEPKNS_5StateE
-int daWater_Ring_c::func_ov064_02119ecc(const State *state)
-{
+// @symbol _ZN14daWater_Ring_c8SetStateEPKNS_5StateE
+int daWater_Ring_c::SetState(const State *state) {
     mState = state;
     const State *installed = mState;
     if (installed->init == 0)
@@ -195,8 +183,8 @@ int daWater_Ring_c::func_ov064_02119ecc(const State *state)
 }
 
 /* Poses the model: position, rotation and opacity. */
-// @symbol _ZN14daWater_Ring_c19func_ov064_02119f1cEv
-void daWater_Ring_c::func_ov064_02119f1c() {
+// @symbol _ZN14daWater_Ring_c11UpdateModelEv
+void daWater_Ring_c::UpdateModel() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
@@ -206,28 +194,23 @@ void daWater_Ring_c::func_ov064_02119f1c() {
 }
 
 // @symbol _ZN14daWater_Ring_c16CleanupResourcesEv
-int daWater_Ring_c::CleanupResources()
-{
+int daWater_Ring_c::CleanupResources() {
     data_ov002_0210da10.Release();
     return 1;
 }
 
 // @symbol _ZN14daWater_Ring_c16OnPendingDestroyEv
-void daWater_Ring_c::OnPendingDestroy()
-{
-}
+void daWater_Ring_c::OnPendingDestroy() {}
 
 // @symbol _ZN14daWater_Ring_c6RenderEv
-int daWater_Ring_c::Render()
-{
+int daWater_Ring_c::Render() {
     mTextureTransformer.Update(mModel.data);
     mModel.Render(&mScale);
     return 1;
 }
 
 // @symbol _ZN14daWater_Ring_c8BehaviorEv
-int daWater_Ring_c::Behavior()
-{
+int daWater_Ring_c::Behavior() {
     DecIfAbove0_Short((unsigned short *)&mStateTimer);
     if (mState->execute)
         (this->*mState->execute)();
@@ -235,7 +218,7 @@ int daWater_Ring_c::Behavior()
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
-    func_ov064_02119f1c();
+    UpdateModel();
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
     mTextureTransformer.Advance();
@@ -243,20 +226,19 @@ int daWater_Ring_c::Behavior()
 }
 
 // @symbol _ZN14daWater_Ring_c13InitResourcesEv
-int daWater_Ring_c::InitResources()
-{
-    BMD_File *f = (BMD_File *)Model::LoadFile(data_ov002_0210da10);
+int daWater_Ring_c::InitResources() {
+    BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
     if (mModel.SetFile(f, 1, -1) == 0)
         return 0;
 
     mRingType = param1 & 0xff;
-    if (mRingType > 2 || mRingType == 0xff)
-    {
+    if (mRingType > 2 || mRingType == 0xff) {
         mRingType = 0;
     }
 
-    TextureTransformer::Prepare(*((BMD_File **)&data_ov002_0210da10)[1], *(BTA_File *)data_ov002_0210d6dc);
-    _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(&mTextureTransformer, (BTA_File *)data_ov002_0210d6dc, 0, 0x1000, 0);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov002_0210da10.filePtr,
+                             *(BTA_File *)data_ov002_0210d6dc);
+    mTextureTransformer.SetFile(*(BTA_File *)data_ov002_0210d6dc, 0, 0x1000, 0);
 
     mTextureTransformer.speed = 0x1000;
     mScaleX = 0x1000;
@@ -267,10 +249,10 @@ int daWater_Ring_c::InitResources()
     v.x = data_ov064_0211c3d0.x;
     v.y = data_ov064_0211c3d0.y;
     v.z = data_ov064_0211c3d0.z;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v, 0x88000, 0xe8000, 0x800006, 0);
+    mdCcAcPos_c.Init(this, v, 0x88000, 0xe8000, 0x800006, 0);
 
     mOpacity = 0x1f;
-    func_ov064_02119ecc(&data_ov064_0211c954);
+    SetState(&data_ov064_0211c954);
     return 1;
 }
 
@@ -279,8 +261,7 @@ int daWater_Ring_c::InitResources()
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: WaterRing_Spawn. */
 // @symbol daWater_Ring_c_classInit
-extern "C" daWater_Ring_c *daWater_Ring_c_classInit()
-{
+extern "C" daWater_Ring_c *daWater_Ring_c_classInit() {
     return new daWater_Ring_c();
 }
 

@@ -33,7 +33,7 @@
  *
  *     0x110 dCcAc_c         0x34    -> 0x144
  *     0x144 dBgCh_Actr               0x1bc   -> 0x300
- *     0x300 Model                      0x50    -> 0x350
+ *     0x300 dExtSimpleModel_c                      0x50    -> 0x350
  *     0x350 dExtShadowModel_c                0x28    -> 0x378
  *
  * SIZE IS THE ROM'S OWN: `da1up_c_classInit_ONEUPKINOKO` calls `fBase_c::operator new(920)`
@@ -42,12 +42,10 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "Model.h"
+#include "dExtSimpleModel_c.h"
 #include "dCcAc_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 /* mMushroomType, intended range 0..13 (Behavior indexes the array without a
    bounds check), is picked from the low nibble of param1 in
@@ -82,7 +80,7 @@ enum da1up_MushroomType {
 struct da1up_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
-    Model                        mModel;                /* 0x300 */
+    dExtSimpleModel_c mModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x350 */
     /* mPos as InitResources found it (the three words are copied from
        mPosX/Y/Z). Type 10 rises to 100 units above mSpawnPosY; type 9 spawns
@@ -147,7 +145,7 @@ struct da1up_c : dEnemyBase_c {
     void func_ov002_020aeee4();
     void func_ov002_020aefb8();
     void func_ov002_020af0c0();
-    int  func_ov002_020af1dc();
+    Player *func_ov002_020af1dc();
     int  func_ov002_020af218(int range);
     int  func_ov002_020af248(int n);
     void func_ov002_020af3a8();
@@ -170,13 +168,6 @@ struct da1up_c : dEnemyBase_c {
     void func_ov002_020afde4();
     void func_ov002_020afe4c();   /* dispatch  1 */
     void func_ov002_020aff10();   /* dispatch  0 */
-
-    /* Leaf allocator until fBase_c::operator new is a real method (#2570).
-       unsigned long, not unsigned int: that is the C++ new signature mwccarm
-       2004/b56 emits for `new da1up_c()`. */
-    static void *operator new(size_t size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

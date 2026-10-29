@@ -14,6 +14,8 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
+For class-form work, read notes/cpp-class-form.md before filling this in.
+
 - Class/TU/symbol and module-qualified ROM scope:
 - Reserved source/header/config surfaces actually touched:
 - ROM observations:

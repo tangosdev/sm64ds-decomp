@@ -49,7 +49,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN18daObjCtKaitendai_c19func_ov065_0211b40cEv",
+      "symbol": "_ZN18daObjCtKaitendai_c12UpdateShadowEv",
       "address": "0x0211b40c",
       "size": "0x00000070",
       "legacy_source": "src/func_ov065_0211b40c.c",
@@ -254,7 +254,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN18daObjCtKaitendai_c8BehaviorEv and the one that held _ZN18daObjCtKaitendai_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild reconcile note: both warnings above were false positives of the union step and are reconciled. The legacy Behavior and InitResources files spelled the same extern \"C\" void(void*) declaration of _ZN10dBgActor_c21UpdateModelPosAndRotYEv / _ZN10dBgActor_c19UpdateClsnPosAndRotEv with different PARAMETER NAMES, so the texts differed and the types did not; the consolidated TU keeps one spelling and calls the real member, byte-neutral. The markers those warnings were frozen against are no longer present in src/game/actors/d_a_obj_ct_kaitendai.cpp. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Same shape as ov002/daObjBC_Switch_c. Checked by tools/check_tubuild_conflicts.py.",
     "The inline destructor in the directly included class header, declared last, makes mwccarm emit exactly the retail D1 (0x0211b360) then D0 (0x0211b3ac) pair, without a D2.",
-    "func_ov065_0211b40c is a daObjCtKaitendai_c method under its ROM address (S33); symbols.txt carries the mangled spelling.",
+    "UpdateShadow (0x0211b40c, formerly the address-named method func_ov065_0211b40c) is a daObjCtKaitendai_c method; symbols.txt carries the mangled spelling.",
     "daObjCtKaitendai_c_classInit_CT_MECHA06 / CT_MECHA07 are reconstructed source-style names: ROM RTTI names the class, the CT_MECHA06/07 registry profiles select the factories, and later EAD lineage supplies classInit. Exact original SM64DS spellings are not preserved. Historical aliases were TtcRotatingGear_Spawn and TtcRotatingTriangle_Spawn.",
     "compiler_only_output is 13 rows: 2 x (4 ancestors + self) typeinfo/type-string rows + 1 vtable + 1 Vector3 D1 + 1 homeless dBgActor_c D2 from return new. Every canonical_module/canonical_address was read out of the ROM's own symbols.txt, not copied from a sibling without checking this class's homes.",
     "Cleanup folded the adjacent CT_MECHA06/CT_MECHA07 factories as return new daObjCtKaitendai_c(). Inherited fBase_c::operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size).",
@@ -479,28 +479,8 @@
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
@@ -567,24 +547,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@469",
+      "from": "@448",
       "to": "@878",
-      "evidence": "mwcc numbers this registration node @455 per TU and the fleet already defines a global @455, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @455 per TU and the fleet already defines a global @455, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@470",
+      "from": "@449",
       "to": "@867",
-      "evidence": "mwcc numbers this registration node @456 per TU and the in-flight ov060 kpa3bg fork branch already claims @456, so the batch merge would multiply-define it"
+      "evidence": "mwcc numbers this registration node @456 per TU and the in-flight ov060 kpa3bg fork branch already claims @456, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@471",
+      "from": "@450",
       "to": "@863",
-      "evidence": "mwcc numbers this registration node @457 per TU and the in-flight ov060 kpa3bg fork branch already claims @457, so the batch merge would multiply-define it"
+      "evidence": "mwcc numbers this registration node @457 per TU and the in-flight ov060 kpa3bg fork branch already claims @457, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@472",
+      "from": "@451",
       "to": "@818",
-      "evidence": "mwcc numbers this registration node @458 per TU and the in-flight ov060 kpa3bg fork branch already claims @458, so the batch merge would multiply-define it"
+      "evidence": "mwcc numbers this registration node @458 per TU and the in-flight ov060 kpa3bg fork branch already claims @458, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }
   ],
   "symbol_binding_rewrites": [

@@ -33,10 +33,10 @@
  * vtable slots and live in this class's own overlay. A method can reach its own
  * members and its ancestors', never a descendant's.
  *
- *   0x320  the rest X. The Init helper (func_ov002_020b5e58) and each leaf
+ *   0x320  the rest X. The Init helper (InitResourcesFrom) and each leaf
  *          Init seed it from mPosX; the Wet-Dry World leaves read it back
  *          through their RestPos overlay.
- *   0x324  the water surface height. `func_ov002_020b5ab4`, the helper this
+ *   0x324  the water surface height. UpdateWaterY, the helper this
  *          class's Behavior calls to ask whether the board is on water, writes it
  *          from the raycast result, and Behavior then sets the actor's Y from it.
  *   0x328  the rest Z, seeded and read like 0x320.
@@ -47,7 +47,7 @@
  *   0x334  the bob offset, 10 * sin(phase).
  *   0x338  the bob phase, stepped 0xa00 a frame.
  *   0x33c  the rider: the Player standing on the board, stored by the mesh
- *          callback func_ov002_020b5f9c (which also reloads the timeout to 5).
+ *          callback OnStoodOn (which also reloads the timeout to 5).
  *          Behavior reads the rider's position through it and tilts the board
  *          toward the horizontal bearing.
  *   0x342  the rider timeout; when it reaches zero 0x33c is cleared.
@@ -68,53 +68,55 @@ struct SharedFilePtr;
 struct CLPS_Block;
 
 /* The leaf's model/collision/CLPS bundle, stored in mFileTable by the Init
- * helper func_ov002_020b5e58: entry [0] goes to Model::LoadFile, [1] to
+ * helper InitResourcesFrom: entry [0] goes to dExtSimpleModel_c::LoadFile, [1] to
  * dBgW_Kc::LoadFile, [2] to dBgW_KcMbg::SetFile as the CLPS. Same member
  * vocabulary as every other typed table in the tree (FlyingCarpetResources,
  * the ki_ita leaf's ResourceDescriptor). */
 struct daObjFloatBoard_c_Resources {
-    SharedFilePtr *model;        /* 0x00 */
-    SharedFilePtr *collision;    /* 0x04 */
-    CLPS_Block *clps;            /* 0x08 */
+    SharedFilePtr *model;     /* 0x00 */
+    SharedFilePtr *collision; /* 0x04 */
+    CLPS_Block *clps;         /* 0x08 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjFloatBoard_c_Resources_size_must_be_0x0c[
-    sizeof(daObjFloatBoard_c_Resources) == 0x0c ? 1 : -1];
+typedef char
+    daObjFloatBoard_c_Resources_size_must_be_0x0c[sizeof(daObjFloatBoard_c_Resources) == 0x0c ? 1
+                                                                                              : -1];
 #endif
 
 struct daObjFloatBoard_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
-    s32  mRestPosX;                        /* 0x320 */
-    s32  mWaterY;                           /* 0x324 */
-    s32  mRestPosZ;                        /* 0x328 */
-    daObjFloatBoard_c_Resources *mFileTable;  /* 0x32c */
-    s32  mSinkOffset;                       /* 0x330 */
-    s32  mBobOffset;                        /* 0x334 */
-    s16  mBobPhase;                         /* 0x338 */
-    u8   pad_33a[0x2];
-    dActor_c *mRider;                      /* 0x33c */
-    u8   pad_340[0x2];
-    u16  mRiderTimeout;                     /* 0x342 */
-    s32  mFallbackWaterY;                   /* 0x344 */
+    s32 mRestPosX;                           /* 0x320 */
+    s32 mWaterY;                             /* 0x324 */
+    s32 mRestPosZ;                           /* 0x328 */
+    daObjFloatBoard_c_Resources *mFileTable; /* 0x32c */
+    s32 mSinkOffset;                         /* 0x330 */
+    s32 mBobOffset;                          /* 0x334 */
+    s16 mBobPhase;                           /* 0x338 */
+    u8 pad_33a[0x2];
+    dActor_c *mRider; /* 0x33c */
+    u8 pad_340[0x2];
+    u16 mRiderTimeout;   /* 0x342 */
+    s32 mFallbackWaterY; /* 0x344 */
 
     /* --- vtable --- */
     /* INLINE ON PURPOSE -- see include/dBgActor_c.h. The out-of-line pair is
        at ov002 0x020b5a18/0x020b5a70, still under its own delinks entries. */
     virtual ~daObjFloatBoard_c() {}
 
-    int CleanupResources();             /* slot 3, ov002 0x020b5be0 */
-    int Behavior();                     /* slot 6, ov002 0x020b5c4c */
-    s32 Render();                       /* slot 9, ov002 0x020b5c24 -- mModel.Render(0) */
-    void func_ov002_020b5b98();
-    int func_ov002_020b5ab4();
+    int CleanupResources();   /* slot 3, ov002 0x020b5be0 */
+    int Behavior();           /* slot 6, ov002 0x020b5c4c */
+    s32 Render();             /* slot 9, ov002 0x020b5c24 -- mModel.Render(0) */
+    void UpdateModelMatrix(); /* ov002 0x020b5b98 */
+    int UpdateWaterY();       /* ov002 0x020b5ab4 */
     /* The shared Init helper every leaf's InitResources calls with its own
-       file table (ov002 0x020b5e58), and the mesh-collision callback it
-       registers (ov002 0x020b5f9c). Address names: nothing in the ROM names
-       either. */
-    int  func_ov002_020b5e58(daObjFloatBoard_c_Resources *resources);
-    void func_ov002_020b5f9c(dActor_c *rider);
+       file table (ov002 0x020b5e58), the mesh-collision callback body it
+       registers (ov002 0x020b5f9c) and the thunk that forwards to it
+       (ov002 0x020b5fc4). */
+    int InitResourcesFrom(daObjFloatBoard_c_Resources *resources);
+    void OnStoodOn(dActor_c *rider);
+    static void StoodOnCallback(void *, daObjFloatBoard_c *, dActor_c *);
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero
@@ -128,7 +130,7 @@ struct daObjFloatBoard_c : dBgActor_c {
        pure-specifier is only valid on a declaration carrying the keyword, and a
        pure virtual has no body to emit, so it can never become the key function:
        whichever virtual was first and non-inline before is still first now. */
-    virtual int InitResources() = 0;        /* slot  0 */
+    virtual int InitResources() = 0; /* slot  0 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -97,7 +97,7 @@ Promoted C++ translation units are filed by what the class is
 | `src/minigames/` | minigame scenes and helpers (`dScMg*_c`, `dMg*_c`, ov004 `unit<addr>`) | `d_s_mg_*.cpp` / `d_mg_*.cpp` |
 | `src/runtime/actor/` | actor base classes (`dActor_c`, `dEnemyBase_c`, ...) | `d_actor.cpp`, ...; coined `ActorBase*` keep the class name |
 | `src/ui/hud/` | HUD classes (`dMeter_c`, `dMap_c`, cap icons) | `d_meter.cpp`, ...; coined `CapIconMgr` keeps its name |
-| `src/engine/<subsystem>/` | collision, model, sound, heap, ... | `d_bg_ch.cpp`, ...; coined classes (`Model`, `Heap`) keep the class name |
+| `src/engine/<subsystem>/` | collision, model, sound, heap, ... | `d_bg_ch.cpp`, ...; coined classes (`ModelComponents`, `Heap`) keep the class name |
 
 **One rule for file names:** a class that has a ROM RTTI name is filed under its
 NSMBW-decomp snake_case spelling (`daFoo_c` -> `d_a_foo.cpp`, `dScFoo_c` ->

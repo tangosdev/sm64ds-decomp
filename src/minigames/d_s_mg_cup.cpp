@@ -10,8 +10,10 @@
 // StatePrepareShuffle retains a byte-pointer decrement of mSparkleShuffles.
 // StateShuffle's fake-out angle bump keeps the full assignment; += changes its address calculation.
 // Render's cup x/y arguments retain two different spellings.
-// the factory is still _ZN11dScMgBase_cC2Ev plus SysTracker C1. There is
-// no dScMgCup_c constructor.
+// mFx and mCup are still built and torn down through spelled __cxa_vec_ctor /
+// __cxa_vec_cleanup calls: CupFx and CupPos have no constructor or destructor
+// of their own yet (Cup_Nothing, CupFx_ElemDtor, func_0203d738,
+// NullDestructor_0203d47c).
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScMgCup_c_AssetId {
@@ -30,6 +32,7 @@ enum dScMgCup_c_AssetId {
 #include "SpawnInfo.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "Sound.h"
 
 /* sCupRoundTable: swap count, then two speed-row nibbles.
    StateSetup reads byte [kind * 2]. df024 reads .lo / .hi. */
@@ -60,9 +63,6 @@ struct AnimStep {
     int ticks;
 };
 
-namespace Sound {
-void PlayBank2_2D(unsigned int id);
-}
 
 namespace G2S {
 int GetBG2CharPtr();
@@ -75,6 +75,11 @@ void LoadBGPltt(const void *data, unsigned int offset, unsigned int size);
 void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
 }
 
+struct OamAttr;
+struct OAM {
+    static OamAttr *Render(bool, OamAttr *, int, int, int, int, int, int);
+};
+
 extern "C" {
 extern void CupFx_Move(char *p, int a, int b);
 extern int CupFx_FindFree(char *p, int a, int b, int c);
@@ -85,8 +90,8 @@ struct OamAttr;
 extern int sCupFxScales[];
 extern unsigned char sCupFxFrameSprites[];
 extern OamAttr *sCupFxSprites[];
-extern int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int show, struct OamAttr *attr, int a, int b,
-                                                   int c, int d, int e, int f);
+extern int OamRender8_d_s_mg_cup(int show, struct OamAttr *attr, int a, int b, int c, int d, int e,
+                                 int f);
 extern unsigned char DecIfAbove0_Byte(unsigned char *counter);
 extern int func_02053200(int x);
 extern int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
@@ -103,7 +108,6 @@ extern void Presenter_PlayCheer(void *c);
 extern void Mg_SubCredits(void *c, int val);
 extern void Presenter_PlayMiss(char *c);
 extern void Presenter_PlayLose(char *c);
-extern void func_02012790(int x);
 extern void Mg_SubmitScore(int self);
 extern void FreeGfxSlotsById(int arg);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
@@ -116,11 +120,6 @@ struct CupShuffleOffset {
 extern CupShuffleOffset sCupShuffleOffsets[];
 extern void Cup_PickShuffleSpeed(char *o);
 extern void Presenter_ResetPose(char *c);
-/* Render spells cup y as this view. mCup[cup].y changes that call. */
-struct P8 {
-    int a;
-    int b;
-};
 void CupFx_DrawForCup(char *a, int b);
 void Cup_DrawOamList(int a0, void *a1, int a2, int a3, int a4, int a5);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
@@ -136,25 +135,21 @@ extern void Camera_InitPresenterView(char *);
 extern int Presenter_Load(char *);
 extern void LoadCompressedFileAt(int, int);
 extern void *LoadFile(int);
-void _ZN8Particle10SysTrackerC1Ev(void *tracker);
-void Presenter_Construct(void *table);
 void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
 void Cup_Nothing(void);
 void func_0203d738(void);
-extern void *_ZTV19dScMgSingle3DBase_c[];
-extern void *_ZTV10dScMgCup_c[];
 }
 
 #pragma defer_codegen off
 /* Emit each function as it is read, so D1 lands ahead of D0. */
 
 // @symbol _ZN10dScMgCup_cD1Ev
-/* Reverse of the factory: cups, effects, then the model. The tracker and
-   the base chain are the inlined dScMgSingle3DBase_c destructor. */
+/* Reverse of the factory: cups, effects, then the model, which the
+   compiler destroys as a member. The tracker and the base chain are the
+   inlined dScMgSingle3DBase_c destructor. */
 dScMgCup_c::~dScMgCup_c() {
     __cxa_vec_cleanup(mCup, 3, 8, (void *)NullDestructor_0203d47c);
     __cxa_vec_cleanup(mFx, 0x20, 0x18, (void *)CupFx_ElemDtor);
-    Presenter_Destruct((char *)&mModel);
 }
 
 extern "C" void CupFx_ElemDtor(void) {}
@@ -234,11 +229,8 @@ extern "C" void CupFx_Move(char *sprite, int dx, int dy) {
 extern "C" void CupFx_Draw(char *sprite) {
     CupFx *fx = (CupFx *)sprite;
     int frameIndex = fx->frame + fx->row * 6;
-    /* Fix12 overload. OAM.h does not declare it: a by-value Fix12 homes
-       r0-r3 on the stack. */
-    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, sCupFxSprites[sCupFxFrameSprites[frameIndex]],
-                                            fx->x >> 12, fx->y >> 12, -1, -1,
-                                            sCupFxScales[frameIndex], 0);
+    OAM::Render(1, sCupFxSprites[sCupFxFrameSprites[frameIndex]], fx->x >> 12, fx->y >> 12, -1, -1,
+                sCupFxScales[frameIndex], 0);
 }
 
 extern "C" void CupFx_Update(int sprite) {
@@ -250,10 +242,8 @@ extern "C" void CupFx_Update(int sprite) {
     if (DecIfAbove0_Byte(&fx->delay))
         return;
     fx->delay = 3;
-    /* Keep the frame reload through the byte view: using fx->frame again
-       reuses the decrement address and changes the emitted instructions. */
     fx->frame -= 1;
-    if (*((signed char *)sprite + 0x12) < 0)
+    if (fx->frame < 0)
         fx->active = 0;
 }
 
@@ -327,34 +317,40 @@ extern "C" void Cup_DrawOamList(int scene, void *list, int x, int y, int scale, 
     }
 }
 
+/* Cup_UpdateAnim adds 0x5000 to the scene (plus the cup's index) first and
+   then the rest of the field's offset, as the ROM does; CUP_HI(m) is that
+   rest. Spelling the members directly folds the two adds and grows the
+   function by 12 bytes. */
+#define CUP_HI(member) ((int)&((dScMgCup_c *)0)->member - 0x5000)
+
 extern "C" void Cup_UpdateAnim(char *raw, int cupIndex) {
     unsigned char flag;
     char *row = raw + cupIndex;
     int resetCupIndex;
     row += 0x5000;
-    flag = *((unsigned char *)(row + 0x465));
+    flag = *((unsigned char *)(row + CUP_HI(mRevealRequested)));
     if (flag == 0) {
-        flag = *((unsigned char *)(row + 0x462));
+        flag = *((unsigned char *)(row + CUP_HI(mCupContents)));
         if (flag != 0) {
             char *out = raw + (cupIndex << 2);
             out += 0x5000;
-            *((int *)(out + 0x434)) = 4;
+            *((int *)(out + CUP_HI(mAnim))) = 4;
         } else {
             char *out = raw + (cupIndex << 2);
             out += 0x5000;
-            *((int *)(out + 0x434)) = 1;
+            *((int *)(out + CUP_HI(mAnim))) = 1;
         }
         resetCupIndex = cupIndex;
         goto epilogue;
     }
-    flag = *((unsigned char *)(row + 0x462));
+    flag = *((unsigned char *)(row + CUP_HI(mCupContents)));
     if (flag != 0) {
         char *out = raw + (cupIndex << 2);
         out += 0x5000;
-        *((int *)(out + 0x434)) = 5;
-        if ((*((unsigned char *)((raw + 0x5000) + 0x46d))) == 0xff) {
-            if ((*((unsigned char *)((raw + 0x5000) + 0x469))) != 1) {
-                *((unsigned char *)((raw + 0x5000) + 0x46d)) = (unsigned char)cupIndex;
+        *((int *)(out + CUP_HI(mAnim))) = 5;
+        if ((*((unsigned char *)((raw + 0x5000) + CUP_HI(mRevealCup)))) == 0xff) {
+            if ((*((unsigned char *)((raw + 0x5000) + CUP_HI(mCorrect)))) != 1) {
+                *((unsigned char *)((raw + 0x5000) + CUP_HI(mRevealCup))) = (unsigned char)cupIndex;
             }
         }
         resetCupIndex = cupIndex;
@@ -363,7 +359,7 @@ extern "C" void Cup_UpdateAnim(char *raw, int cupIndex) {
     {
         char *out = raw + (cupIndex << 2);
         out += 0x5000;
-        *((int *)(out + 0x434)) = 2;
+        *((int *)(out + CUP_HI(mAnim))) = 2;
     }
     resetCupIndex = cupIndex;
 
@@ -372,8 +368,8 @@ extern "C" void Cup_UpdateAnim(char *raw, int cupIndex) {
 epilogue: {
     char *out = raw + (resetCupIndex << 2);
     out += 0x5000;
-    *((int *)(out + 0x440)) = 0;
-    *((int *)(out + 0x44c)) = 0;
+    *((int *)(out + CUP_HI(mFrame))) = 0;
+    *((int *)(out + CUP_HI(mTick))) = 0;
 }
 }
 
@@ -542,9 +538,9 @@ void dScMgCup_c::StateSelect() {
             unsigned int currentPlayerSlot = gActivePlayerSlot;
             unsigned char lockedTouchY = *(volatile unsigned char *)&gTouchY[currentPlayerSlot * 4];
             unsigned char lockedTouchX = *(volatile unsigned char *)&gTouchX[currentPlayerSlot * 4];
-            mTouchLock = 1;
-            mTouchX = lockedTouchX;
-            mTouchY = lockedTouchY;
+            mModel.mTouchLocked = 1;
+            mModel.mTouchX = lockedTouchX;
+            mModel.mTouchY = lockedTouchY;
         }
         Sound::PlayBank2_2D(0x1cd);
         return;
@@ -726,7 +722,7 @@ void dScMgCup_c::StatePrepareShuffle() {
         return;
     Cup_PickShuffleSpeed(raw);
     if (mSparkleShuffles != 0) {
-        unsigned char *pending = (unsigned char *)(raw + 0x546b);
+        unsigned char *pending = &mSparkleShuffles;
         *pending = *pending - 1;
     }
     mState = 2;
@@ -844,7 +840,7 @@ void dScMgCup_c::StartRound(int msg) {
 
     mTimer = 0x3c;
     mState = 0;
-    mTouchLock = 0;
+    mModel.mTouchLocked = 0;
     Presenter_ResetPose((char *)&mModel);
 
     mLevel = mHudScore;
@@ -888,8 +884,7 @@ s32 dScMgCup_c::Render() {
         cup = order[drawIndex];
         CupFx_DrawForCup((char *)mFx, (char)cup);
         Cup_DrawOamList((int)raw, (void *)sCupAnimTable[mAnim[cup]][mFrame[drawIndex]].list,
-                        mCup[cup].x, ((struct P8 *)raw + cup)[0xa7d].b, mCupScale[cup],
-                        mCupContents[cup]);
+                        mCup[cup].x, mCup[cup].y, mCupScale[cup], mCupContents[cup]);
     }
 
     if (mState == 4 || mState == 5) {
@@ -994,21 +989,17 @@ s32 dScMgCup_c::InitResources() {
     CupFx_ClearAll((char *)mFx);
     return 1;
 }
+/* The constructor is inline, so the factory below holds it: the base
+   constructors, mSysTracker and mModel are the compiler's, then the two
+   arrays of element records. */
+inline dScMgCup_c::dScMgCup_c() {
+    __cxa_vec_ctor(mFx, 0x20, 0x18, (void *)Cup_Nothing, (void *)CupFx_ElemDtor);
+    __cxa_vec_ctor(mCup, 3, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
+}
+
 // @symbol dScMgCup_c_classInit
-/* No dScMgCup_c constructor. Base ctor, intermediate vtable, the tracker,
-   then this vtable, the model, the effects, the cups. */
 extern "C" void *dScMgCup_c_classInit() {
-    dScMgCup_c *scene = (dScMgCup_c *)_ZN7fBase_cnwEj(sizeof(dScMgCup_c));
-    if (scene) {
-        _ZN11dScMgBase_cC2Ev(scene);
-        *(void **)scene = _ZTV19dScMgSingle3DBase_c;
-        _ZN8Particle10SysTrackerC1Ev(&scene->mSysTracker);
-        *(void **)scene = _ZTV10dScMgCup_c + 2;
-        Presenter_Construct(&scene->mModel);
-        __cxa_vec_ctor(scene->mFx, 0x20, 0x18, (void *)Cup_Nothing, (void *)CupFx_ElemDtor);
-        __cxa_vec_ctor(scene->mCup, 3, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
-    }
-    return scene;
+    return new dScMgCup_c;
 }
 
 // @symbol Cup_Nothing

@@ -4,77 +4,97 @@
 #include "common.h"
 struct H2 { u16 a, b; };
 
-struct Src {
-    char pad0[0xc];
-    u16 h_c;    /* 0xc */
-    u16 h_e;    /* 0xe */
-    u16 h_10;   /* 0x10 */
-    char pad12[2];
-    int w_8_at_8;  /* placeholder */
-};
+/* Initialise a Particle::System that Particle::Manager::AddSystem
+ * (Particle_Manager.cpp) has just taken from the free list: clear its links
+ * and both particle lists, store the definition and position, zero the
+ * velocity, age and callback value, and seed the emitter from the
+ * definition's header.
+ *
+ * File-local views; Particle__System.h and Particle__Manager.h are C++.
+ * The System view reuses that header's names plus func_0204a730.c's
+ * (velocity, age, emitInterval, callback) and func_0204c584.c's (emitRadius,
+ * particleLifetime). Header +0x12 is func_0204d294.c's color; the other
+ * header fields are named for the System field this function seeds from
+ * them. */
+typedef struct PtclData {
+    u8 pad_00[0x8];
+    int emitRadius;       /* 0x08 -- System::emitRadius */
+    u16 axis[3];          /* 0x0c -- System::direction; read unsigned (ldrh) */
+    u16 color;            /* 0x12 */
+    int callbackParam;    /* 0x14 -- System::callbackParam */
+    int callbackVelocity; /* 0x18 -- System::callbackVelocity */
+    int callbackScale;    /* 0x1c -- System::callbackScale */
+    u8 pad_20[0xa];
+    u16 particleLifetime; /* 0x2a -- System::particleLifetime */
+    u8 pad_2c[0x4];
+    u8 emitInterval; /* 0x30 -- System::emitInterval */
+} PtclData;
 
-struct Obj {
-    int m0;      /* 0 */
-    int m4;      /* 4 */
-    int m8;      /* 8 */
-    int mc;      /* 0xc */
-    int m10;     /* 0x10 */
-    int m14;     /* 0x14 */
-    void *m18;   /* 0x18 */
-    int m1c;     /* 0x1c */
-    struct Vector3 m20;  /* 0x20 */
-    int m2c;     /* 0x2c */
-    int m30;     /* 0x30 */
-    int m34;     /* 0x34 */
-    u16 m38;     /* 0x38 */
-    u16 m3a;     /* 0x3a */
-    u16 m3c;     /* 0x3c */
-    u16 m3e;     /* 0x3e */
-    u16 m40;     /* 0x40 */
+typedef struct SystemDefinition {
+    PtclData *data; /* 0x00 */
+} SystemDefinition;
+
+typedef struct PtclList {
+    void *head; /* 0x00 */
+    int count;  /* 0x04 */
+} PtclList;
+
+/* Particle::System, named as func_0204c584.c's view. */
+struct ParticleSystem {
+    void *previous;                /* 0x00 */
+    void *next;                    /* 0x04 */
+    PtclList particles;            /* 0x08 */
+    PtclList particles2;           /* 0x10 */
+    SystemDefinition *mDefinition; /* 0x18 */
+    int callbackFlags;             /* 0x1c */
+    struct Vector3 position;       /* 0x20 */
+    struct Vector3 velocity;       /* 0x2c */
+    u16 age;                       /* 0x38 */
+    s16 callbackValue;             /* 0x3a */
+    s16 direction[3];              /* 0x3c */
     char pad42[2];
-    int m44;     /* 0x44 */
-    int m48;     /* 0x48 */
-    int m4c;     /* 0x4c */
-    int m50;     /* 0x50 */
-    u16 m54;     /* 0x54 */
+    int emitRadius;       /* 0x44 */
+    int callbackParam;    /* 0x48 */
+    int callbackVelocity; /* 0x4c */
+    int callbackScale;    /* 0x50 */
+    u16 particleLifetime; /* 0x54 */
     char pad56[2];
-    u8 m58;      /* 0x58 */
-    u8 m59;      /* 0x59 */
+    u8 emitInterval; /* 0x58 */
+    u8 m59;          /* 0x59 -- header +0x31; no established role */
     char pad5a[0xe];
-    int m68;     /* 0x68 */
-    int m6c;     /* 0x6c */
-    int m70;     /* 0x70 */
+    void *callback; /* 0x68 */
+    int m6c;        /* 0x6c */
+    int m70;        /* 0x70 */
 };
 
-void func_0204ae2c(struct Obj *o, void *p18, struct Vector3 *src3)
-{
-    o->m18 = p18;
-    o->m1c = 0;
-    o->m20 = *src3;
-    o->m34 = 0;
-    o->m30 = o->m34;
-    o->m2c = o->m30;
-    o->m38 = 0;
-    o->m3a = 0;
+void func_0204ae2c(struct ParticleSystem *o, void *p18, struct Vector3 *src3) {
+    o->mDefinition = p18;
+    o->callbackFlags = 0;
+    o->position = *src3;
+    o->velocity.z = 0;
+    o->velocity.y = o->velocity.z;
+    o->velocity.x = o->velocity.y;
+    o->age = 0;
+    o->callbackValue = 0;
     {
-        char *s = *(char **)(o->m18);
-        *(struct H2 *)((char *)o + 0x3c) = *(struct H2 *)(s + 0xc);
-        o->m40 = *(u16 *)(s + 0x10);
-        o->m44 = *(int *)((char *)(*(void **)(o->m18)) + 8);
-        o->m48 = *(int *)((char *)(*(void **)(o->m18)) + 0x14);
-        o->m4c = *(int *)((char *)(*(void **)(o->m18)) + 0x18);
-        o->m50 = *(int *)((char *)(*(void **)(o->m18)) + 0x1c);
-        o->m54 = *(u16 *)((char *)(*(void **)(o->m18)) + 0x2a);
-        o->m58 = *(u8 *)((char *)(*(void **)(o->m18)) + 0x30);
-        o->m59 = *(u8 *)((char *)(*(void **)(o->m18)) + 0x31);
+        PtclData *s = o->mDefinition->data;
+        *(struct H2 *)o->direction = *(struct H2 *)s->axis;
+        o->direction[2] = s->axis[2];
+        o->emitRadius = o->mDefinition->data->emitRadius;
+        o->callbackParam = o->mDefinition->data->callbackParam;
+        o->callbackVelocity = o->mDefinition->data->callbackVelocity;
+        o->callbackScale = o->mDefinition->data->callbackScale;
+        o->particleLifetime = o->mDefinition->data->particleLifetime;
+        o->emitInterval = o->mDefinition->data->emitInterval;
+        o->m59 = *(u8 *)((char *)(*(void **)(o->mDefinition)) + 0x31);
     }
-    o->m4 = 0;
-    o->m0 = o->m4;
-    o->m10 = 0;
-    o->m8 = o->m10;
-    o->m14 = 0;
-    o->mc = o->m14;
-    o->m68 = 0;
+    o->next = 0;
+    o->previous = o->next;
+    o->particles2.head = 0;
+    o->particles.head = o->particles2.head;
+    o->particles2.count = 0;
+    o->particles.count = o->particles2.count;
+    o->callback = 0;
     o->m6c = 0;
     o->m70 = 0;
 }
