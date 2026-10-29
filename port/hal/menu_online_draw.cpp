@@ -276,6 +276,18 @@ void menu_online_plank_state(const OnlFacts *f, int k, int *kind, int *w1000)
     if (*w1000 < 40) *w1000 = 40;
 }
 
+/* FLIPSMOOTH1: the same turn as menu_online_plank_state, as a phase for the pictures between ticks: 1 while plank k's turn has a tick from 1 to
+   dur (*a = ticks into it, *half = dur / 2, *from / *to = the faces), 0 otherwise (the pictures before tick 1 and after dur are the rest). */
+int menu_online_plank_phase(const OnlFacts *f, int k, int *a, int *half, int *from, int *to)
+{
+    const int solo = k == 0 ? ONL_K_ONLINE : k == 1 ? ONL_K_ADV : ONL_K_REC, onl = k == 0 ? ONL_K_SOLO : k == 1 ? ONL_K_ADV_ONLINE : ONL_K_VS;
+    const int on = f ? f->on : 0, age = f ? f->age : 999;
+    const int dur = 16, start = k == 0 ? 0 : (k - 1) * 3;
+    *a = age - start; *half = dur / 2;
+    *from = on ? solo : onl; *to = on ? onl : solo;
+    return age < 999 && *a >= 1 && *a <= dur;
+}
+
 int menu_online_add_plank(MenuLayout *L, int kind, int fx, int fy, int fw, int fh, int bx, int by, int bw, int bh, int lit, int pressed, int alpha,
                           int touch, int frame)
 {

@@ -8,6 +8,7 @@ void menu_online_plank_state(const OnlFacts *, int k, int *kind, int *w1000)
     *w1000 = 1000;
     *kind = k == 0 ? ONL_K_ONLINE : k == 1 ? ONL_K_ADV : ONL_K_REC;
 }
+int menu_online_plank_phase(const OnlFacts *, int, int *a, int *half, int *from, int *to) { *a = 0; *half = 8; *from = *to = 0; return 0; }
 int menu_online_add_plank(MenuLayout *, int, int, int, int, int, int, int, int, int, int, int, int, int, int) { return -1; }
 int menu_online_plank_w(int, int fh) { return fh; }
 int menu_online_plank_art_ready(int) { return 0; }

@@ -77,6 +77,8 @@ int  menu_online_back(int kind);                         /* the back key: 1 = ta
 /* ---- recipe (build / draw side) -------------------------------------------------------------------------------- */
 /* the state of plank k (0 = the MP slot, 1 = ADVENTURE, 2 = REC ROOM) at age: kind = ONL_K_*, w1000 = width in permille of the full plank (the turn) */
 void menu_online_plank_state(const OnlFacts *f, int k, int *kind, int *w1000);
+/* FLIPSMOOTH1: 1 while plank k's turn is on its ticks 1 .. 2 * half (a = ticks into it, from / to = the faces): the pictures between ticks follow it */
+int  menu_online_plank_phase(const OnlFacts *f, int k, int *a, int *half, int *from, int *to);
 /* adds the piece of an online-family plank (kind): the HD picture if the mod has it, else a code drawn plank. The dest rect is in host pixels; the
    ROM touch box (bx, by, bw, bh) is what a click maps to. lit / pressed: the selection look. alpha 0 = opaque. Returns the piece index or -1. */
 int  menu_online_add_plank(MenuLayout *L, int kind, int fx, int fy, int fw, int fh, int bx, int by, int bw, int bh, int lit, int pressed, int alpha,
