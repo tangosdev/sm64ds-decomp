@@ -679,7 +679,8 @@ void port_coop_world_frame(void);
 void port_star_popup_frame(void);
 void port_event_frame(void);   /* run hunt8 lane EVENTS1 (hal/event_client.cpp) */
 int port_star_popup_stop_now(void);   /* run mp1 lane STARPOP1 (hal/star_popup.cpp) */
-extern "C" void port_career_frame(int ticked);   /* run after093 lane CAREER1 (hal/career.cpp) */
+extern "C" void port_career_frame(int ticked);
+extern "C" void menu_pause_rom_career_draw(uint32_t *px, int stride, int w, int h);   /* CAREER1: hal/menu_recipe_pause.cpp */   /* run after093 lane CAREER1 (hal/career.cpp) */
 /* PARTY: per-slot party-member predicate (hal/comms_sync.cpp). */
 extern "C" int port_party_member(int slot);
 extern char data_0209f4a0[];
@@ -7740,9 +7741,36 @@ static void cs_frame(int pad_live, const XPad *pad)
    recipe is up; with OneScreenMenus off the recipe is never up, so nothing here runs a read. */
 extern "C" int menu_pause_input(unsigned keys, int mvalid, int mx, int my, int mdown);
 extern "C" int menu_pause_active(void);
+extern "C" void menu_pause_rom_input(unsigned keys, int mvalid, int mx, int my, int mdown);   /* CAREER1: hal/menu_recipe_pause.cpp */
 static void pause3_input(int pad_live, const XPad *pad)
 {
-    if (!menu_pause_active()) { menu_pause_input(0, 0, 0, 0, 0); return; }
+    if (!menu_pause_active()) {
+        menu_pause_input(0, 0, 0, 0, 0);
+        /* CAREER1: OneScreenMenus off: the ROM's own pause gets the Career page's keys and edge tabs (it ignores them while no pause is up) */
+        unsigned k2 = 0;
+        if (pad_live && (pad->buttons & 0x0100)) k2 |= 1;
+        if (pad_live && (pad->buttons & 0x0200)) k2 |= 2;
+        if (key_live('Q')) k2 |= 4;
+        if (key_live('E')) k2 |= 8;
+        int x2 = 0, y2 = 0;
+        int m2 = hal_window_cursor_fb(&x2, &y2), d2 = g_mouse_left_down ? 1 : 0;
+#ifndef PORT_ROM_CLEAN
+        {   /* SM64DS_PAUSE_MOUSE, as below (proof rows only) */
+            const char *e2 = getenv("SM64DS_PAUSE_MOUSE");
+            while (e2 && *e2) {
+                int x = 0, y = 0, f0 = 0, f1 = 0, got = 0;
+                if (sscanf(e2, "%d,%d@%d-%d%n", &x, &y, &f0, &f1, &got) >= 4) {
+                    if (g_host_key_frame >= f0 && g_host_key_frame <= f1 + 2) { m2 = 1; x2 = x; y2 = y; d2 = g_host_key_frame >= f0 + 1 && g_host_key_frame <= f1; }
+                    e2 += got;
+                }
+                while (*e2 && *e2 != ';') ++e2;
+                if (*e2 == ';') ++e2;
+            }
+        }
+#endif
+        menu_pause_rom_input(k2, m2, x2, y2, d2);
+        return;
+    }
     unsigned k = 0;
     if (pad_live && (pad->buttons & 0x0100)) k |= 1;
     if (pad_live && (pad->buttons & 0x0200)) k |= 2;
@@ -23861,6 +23889,7 @@ int main(void)
            one renders. */
         { HITCH_SCOPE(HK_CHAT); chat_host_frame(surf, frame); }   /* HITCH9C: timed by name */
         if (!rb_skip_render()) {
+        menu_pause_rom_career_draw(surf.px, surf.stride, ntr::active_w, ntr::active_h);   /* CAREER1: the two-screen pause's Career page (nothing unless it is up) */
         if (menu_on) menu_draw(surf);
         }
         /* THE WINNER, once a VS match is over. Centred, over everything, for

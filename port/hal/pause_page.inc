@@ -438,6 +438,17 @@ extern "C" void pause_page_draw(const MenuLayout *lay, int piece, uint32_t *dst,
     if (mvis && moff <= 500 && moff >= -500) pp_pointer(sf, g, f);
 }
 
+/* CAREER1: the two-screen pause's Career page (OneScreenMenus off: hal/menu_recipe_pause.cpp menu_pause_rom_career_draw): the sheet slid to its
+   place over the upper screen and the wooden edge tabs on that screen's sides. The ROM's own pause stays as it is under it. */
+extern "C" void pause_page_rom_draw(const PauseFacts *f, uint32_t *px, int stride, int w, int h)
+{
+    if (!f || f->magic != PAUSE_FACTS_MAGIC || !px || w < 64 || h < 64) return;
+    const Surf sf = { px, stride, w, h };
+    const PauseGeo g = pause_geo(w, h, f, 3);
+    if (pause_page_visible(f, PAUSE_PG_CAREER)) pp_career(sf, g, f);
+    pp_tabs(sf, g, f);
+}
+
 /* the pictures the pause draws itself, for the warm-up to decode and scale ahead of the first open: idx 0.. -> (id, dw, dh), 1 while idx is valid */
 extern "C" int pause_page_art(int w, int h, int idx, int *id, int *dw, int *dh)
 {

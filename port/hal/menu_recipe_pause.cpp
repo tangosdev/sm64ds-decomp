@@ -76,6 +76,7 @@ void _ZN10dScStage_c17UpdateMenuButtonsEb(int b);
 void func_02012790(int id);
 void pause_page_draw(const MenuLayout *lay, int piece, uint32_t *dst, int w, int h, int stride);   /* hal/settings_page.cpp (pause_page.inc) */
 int pause_page_art(int w, int h, int idx, int *id, int *dw, int *dh);
+void pause_page_rom_draw(const PauseFacts *f, uint32_t *px, int stride, int w, int h);   /* CAREER1: hal/settings_page.cpp (pause_page.inc) */
 int port_rom_frame(void);              /* hal/rom_frame.cpp */
 }
 
@@ -260,6 +261,24 @@ void slide_tick(int allowed, int wide)
     ++g_slide.ticks;
 }
 
+/* CAREER1: the Career page's numbers, per file (times in seconds; bit i of career_has: file i has a record, bit 3 + i: it has a clear) */
+void career_facts(PauseFacts *f)
+{
+    f->career_cur = (int8_t)port_career_slot_now();
+    int has = 0;
+    for (int i = 0; i < 3; ++i) {
+        unsigned long long play = 0, clear = 0;
+        int hc = 0;
+        if (port_career_get(i, &play, &hc, &clear)) {
+            has |= 1 << i;
+            if (hc) has |= 1 << (3 + i);
+        }
+        f->career_play[i] = (uint32_t)(play / 60 > 0xffffffffull ? 0xffffffffull : play / 60);
+        f->career_clear[i] = (uint32_t)(clear / 60 > 0xffffffffull ? 0xffffffffull : clear / 60);
+    }
+    f->career_has = (int8_t)has;
+}
+
 int g_wide_now;                         /* the picture of this tick is wide (set by pause_facts) */
 int g_pic_w = 1024, g_pic_h = 768;      /* the picture of this tick */
 int g_tab_hover = -1, g_tab_press = -1; /* the 4:3 edge tabs under / held by the pointer (set by the input hook) */
@@ -292,6 +311,8 @@ int slide_busy(void)
     if (!is_main_page(g_last_variant)) return 0;
     return slide_moving() && g_slide.ticks < kSlideTicks;
 }
+/* CAREER1: the same for the two-screen Career page (no recipe variant there) */
+int slide_busy_any(void) { return slide_moving() && g_slide.ticks < kSlideTicks; }
 /* the page in view (or going into view) is not the main one: the planks are away */
 int off_main(void) { return is_main_page(g_last_variant) && g_slide.page != PAUSE_PG_MAIN; }
 int tracker_view(void) { return !g_wide_now && off_main() && g_slide.page == PAUSE_PG_TRACKER; }
@@ -526,21 +547,7 @@ void pause_facts(MenuFacts *mf)
         f->slide_t1000 = wide ? 0 : (vis ? (o < 0 ? -o : o) : 1000);
         f->dir = o < 0 ? -1 : (o > 0 ? 1 : g_slide.dir);
     }
-    {   /* the Career page's numbers, per file */
-        f->career_cur = (int8_t)port_career_slot_now();
-        int has = 0;
-        for (int i = 0; i < 3; ++i) {
-            unsigned long long play = 0, clear = 0;
-            int hc = 0;
-            if (port_career_get(i, &play, &hc, &clear)) {
-                has |= 1 << i;
-                if (hc) has |= 1 << (3 + i);
-            }
-            f->career_play[i] = (uint32_t)(play / 60 > 0xffffffffull ? 0xffffffffull : play / 60);
-            f->career_clear[i] = (uint32_t)(clear / 60 > 0xffffffffull ? 0xffffffffull : clear / 60);
-        }
-        f->career_has = (int8_t)has;
-    }
+    career_facts(f);      /* the Career page's numbers, per file */
     f->settings_open = settings_page_open();
     const int in_course = SublevelToLevel(data_0209f2f8) != 0x1d;
     f->in_course = in_course;
@@ -1036,6 +1043,8 @@ extern "C" void menu_pause_hook_pad(uint16_t *pressed, int back)
     *pressed = (uint16_t)(*pressed & ~(confirm | MENU_PAD_UP | MENU_PAD_DOWN));
 }
 
+int rom_career_eats(void);      /* CAREER1: below */
+
 /* OneScreenMenus OFF: no recipe is up, the ROM's own two-screen pause is on screen. The cartridge's pause has no pad cursor (PS_Update case 3: only a
    touch inside a plate picks it; the pad's Start / Select presses whatever plate data_0209f2e0 already names, IsButtonInputValid's special path
    src/IsButtonInputValid.c :39), so with the keyboard or a pad no key could ever reach Exit Course and A / Space did nothing at all. The same two things the
@@ -1043,6 +1052,14 @@ extern "C" void menu_pause_hook_pad(uint16_t *pressed, int back)
    the port's confirm keys (pad A, Space, the DS A key) become the Start the ROM confirms with. pressed is the DS key word (MENU_PAD_*); the caller writes it back. */
 extern "C" void menu_pause_rom_pad(uint16_t *pressed)
 {
+    if (rom_career_eats()) {           /* CAREER1: the two-screen Career page is in view: the plates get nothing */
+        const uint16_t k = *pressed;
+        if (slide_busy_any()) { *pressed = 0; return; }
+        if (k & MENU_PAD_START) { slide_reset(); set_chosen(0); *pressed = MENU_PAD_START; return; }     /* resumes at once */
+        if (k & (MENU_PAD_CONFIRM | 0x0001)) slide_home();
+        *pressed = 0;
+        return;
+    }
     if (data_0209f248 != 5 && menu_pause_pad_ok()) park_idle_stylus();      /* (the VS pause stays the ROM's own) */
     if (!pause_cursor_live() || !menu_pause_pad_ok()) return;
     uint16_t k = *pressed;
@@ -1075,7 +1092,89 @@ extern "C" int menu_pause_rom_fallback(void) { return 0; }      /* PAUSEFULL1: w
 
 extern "C" int menu_pause_active(void) { return g_last_variant != 0; }
 /* 1 while a 4:3 pause slide is in flight: the host stylus / click and the Backspace back key are eaten by their seam (hal/sub_screen.cpp) */
-extern "C" int menu_pause_slide_busy(void) { return slide_busy(); }
+extern "C" int menu_pause_slide_busy(void) { return slide_busy() || rom_career_eats(); }   /* CAREER1: and the two-screen Career page in view */
+
+/* CAREER1: THE CAREER PAGE WITH OneScreenMenus OFF. The ROM's own pause is on two screens there (its plates on the touch screen) and no recipe is
+   up, so the page is the host's: the Career sheet slides over the upper screen the way it slides in the one-screen pause (the same Slide, a
+   ring of two pages: the ROM's pause and the Career page), and the wooden edge tabs sit on the upper screen's sides. LB / RB / Q / E and the tabs
+   switch; while the Career page is in view the ROM's plates get no key and no touch (A / B / the back key slide back, Start resumes at once).
+   The ROM's main pause states only (1 the course pause, 3 the castle's); the VS pause, the save prompts and the options pages are left alone. */
+namespace {
+PauseFacts g_rc;                 /* what the overlay draws, written by the input frame */
+int g_rc_live;                   /* the two-screen page system is up this frame */
+int g_rc_w = 256, g_rc_h = 192;  /* the upper screen's surface as the last draw had it */
+int g_rc_hover = -1, g_rc_press = -1;
+
+int rom_career_allowed(void)
+{
+    if (hal_menu_live() || g_last_variant != 0 || !menu_pause_pad_ok() || GetOwnerLanguage() > 1 || settings_page_open()) return 0;
+    const unsigned st = data_0209f248;
+    return (st == 1 || st == 3) && pause_cursor_live();
+}
+}  // namespace
+
+int rom_career_eats(void) { return g_rc_live && (slide_moving() || g_slide.page != PAUSE_PG_MAIN); }
+
+extern "C" void menu_pause_rom_input(unsigned keys, int mvalid, int mx, int my, int mdown)
+{
+    static unsigned prev_keys;
+    static int prev_down;
+    const unsigned edge = keys & ~prev_keys;
+    prev_keys = keys;
+    const int down_edge = mdown && !prev_down, up_edge = !mdown && prev_down;
+    prev_down = mdown;
+    if (!rom_career_allowed()) {
+        if (g_rc_live) slide_reset();
+        g_rc_live = 0; g_rc_hover = g_rc_press = -1;
+        return;
+    }
+    if (!g_rc_live) slide_reset();
+    g_rc_live = 1;
+    slide_tick(1, 1);            /* (wide = 1: this ring has no tracker page) */
+    int act = (edge & (2u | 8u)) ? 1 : ((edge & (1u | 4u)) ? -1 : 0);
+    PauseFacts f0;
+    memset(&f0, 0, sizeof f0);
+    f0.dir = g_slide.dir;
+    const PauseGeo g = pause_geo(g_rc_w, g_rc_h, &f0, 3);
+    g_rc_hover = -1;
+    for (int side = 0; mvalid && side < 2; ++side) {
+        const PauseRect r = pause_tab_rect(g, side);
+        const int inside = mx >= r.x && mx < r.x + r.w && my >= r.y && my < r.y + r.h;
+        if (inside) g_rc_hover = side;
+        if (inside && down_edge) g_rc_press = side;
+        if (up_edge && g_rc_press == side && inside) act = side ? 1 : -1;
+    }
+    if (!mdown || !mvalid) g_rc_press = -1;
+    if (act && slide_busy_any()) act = 0;
+    if (act) slide_go(g_slide.page == PAUSE_PG_MAIN ? PAUSE_PG_CAREER : PAUSE_PG_MAIN, act);
+    /* the facts the overlay draws */
+    PauseFacts *f = &g_rc;
+    memset(f, 0, sizeof *f);
+    f->magic = PAUSE_FACTS_MAGIC;
+    f->variant = data_0209f248 == 1 ? V_COURSE : V_CASTLE;
+    f->dir = 1;
+    f->nslots = 3;
+    f->pg_page = (int16_t)g_slide.page;
+    f->pg_from = (int16_t)g_slide.from;
+    f->pg_to = (int16_t)g_slide.page;
+    f->pg_dir = (int16_t)g_slide.dir;
+    f->pg_e = (int16_t)(slide_moving() ? slide_e(g_slide.ticks) : 0);
+    f->pg_e0 = (int16_t)(slide_moving() ? g_slide.e0 : 0);
+    f->pg_a = 1000;
+    career_facts(f);
+    f->frame = ++g_frame;
+    f->hover_tab = g_rc_hover;
+    f->press_tab = g_rc_press;
+    if (hal_menu_trace_on() && act) fprintf(stderr, "[pause-rom] career page: %s\n", g_slide.page == PAUSE_PG_CAREER ? "in" : "out");
+}
+
+/* the overlay (tests/walk_window.cpp main()): the upper screen's surface, w x h */
+extern "C" void menu_pause_rom_career_draw(uint32_t *px, int stride, int w, int h)
+{
+    if (!g_rc_live || !px || w < 64 || h < 64) return;
+    g_rc_w = w; g_rc_h = h;
+    pause_page_rom_draw(&g_rc, px, stride, w, h);
+}
 
 /* run after093, lane SEAMART1 (one-process plan M3c): hal/mods.cpp's relatch at the title changed which mods ship hd_ui/, so the planks-or-plates
    answer above is asked again on the next pause (no pause is open at the title). Returns 1 when the old answer was the mod's planks. */

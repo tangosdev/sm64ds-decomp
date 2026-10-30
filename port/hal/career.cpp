@@ -97,7 +97,7 @@ void load_for_now(void)
         g_f[i].play = num_after(sub.c_str(), "\"playTicks\"", &got);
         g_f[i].clear = num_after(sub.c_str(), "\"clearTicks\"", &gotc);
         g_f[i].has_clear = gotc;
-        g_f[i].any = got || gotc;
+        g_f[i].any = g_f[i].play > 0 || gotc;
         q = b + 1;
     }
     fprintf(stderr, "[career] read %s: A %llu B %llu C %llu ticks\n", p.c_str(), g_f[0].play, g_f[1].play, g_f[2].play);
