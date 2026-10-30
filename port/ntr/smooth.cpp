@@ -1838,6 +1838,7 @@ struct WeldFront {
     uint32_t gen;         // the book's generation the answer belongs to
     uint8_t kind, result;
     uint16_t slot[3];     // its three edges' records (0xFFFF = none)
+    uint8_t bnd;          // WELDALL1: which of its edges have this one side only (bit k)
     uint16_t ver[3];      // their versions, low 16 bits
 };
 struct TopoFast { int16_t p[9]; int idx; uint32_t epoch; int kind; };
@@ -2647,7 +2648,8 @@ struct WeldSide {
 enum { WELD_SIDES = 4 };
 struct WeldEdge {
     int16_t k[6];      // low end, high end (pos_gt order)
-    uint16_t used;     // 1 = slot holds an edge; | 2 = a side beyond WELD_SIDES came (overflow)
+    uint16_t used;     // 1 = slot holds an edge; | 2 = a side beyond WELD_SIDES came (overflow);
+                       // | 4 = another raw edge is drawn on top of it (WELDALL1, smooth_weld_partner)
     uint16_t nside;
     uint32_t ver;
     WeldSide side[WELD_SIDES];
@@ -2689,6 +2691,9 @@ uint64_t g_ws_clears;              // books emptied by a scene change, since boo
 uint64_t g_ws_clear_full;          // WELDALL1: books emptied at 75 percent load, since boot
 uint64_t g_ws_clear_probe;         // WELDALL1: books emptied because a probe found no slot, since boot
 uint32_t g_weld_pic = 1;           // WELDALL1: the picture being drawn (ticks and in-betweens)
+uint32_t g_weld_last_bnd = 0;      // WELDALL1: the last answer's one-sided edges (bit k) ...
+uint16_t g_weld_last_slot[3];      // ... and its three edges' records
+uint64_t g_ws_partners;            // WELDALL1: raw edges found drawn on top of another, since boot
 uint32_t g_weld_conflicts = 0;     // WELDALL1: a straight side met an edge kept curved this picture
 uint64_t g_ws_frozen, g_ws_complied; // WELDALL1: answers kept at a change; sides that drew a kept answer
 int g_weld_provisional = 0;        // WELDALL1: the last answer used a kept one that the record no longer gives
@@ -2760,7 +2765,7 @@ inline bool weld_same(const float a[3], const float b[3]) {
    `weld` says which). Every side computes it from the same record and gets
    the same bits. */
 void weld_edge_answer(const WeldEdge &e, bool &straight, float n[2][3], bool weld[2]) {
-    straight = (e.used & 2) != 0;
+    straight = (e.used & 6) != 0;
     weld[0] = weld[1] = false;
     for (int j = 0; j < e.nside; ++j)
         if (e.side[j].kind != SMOOTH_WELD_CURVED) straight = true;
@@ -2867,7 +2872,7 @@ void weld_report(uint64_t frame) {
     if (!on || frame % 100) return;
     fprintf(stderr, "[smoothweld] f%llu calls %llu settled %llu reconfirmed %llu worked %llu "
             "edges %u epoch %u time %.3f ms a tick, replays read %llu asked %llu, overflow edges %llu, scene clears %llu, "
-            "churn max %u a tick, guarded ticks %llu, full clears %llu, probe clears %llu, kept %llu complied %llu\n",
+            "churn max %u a tick, guarded ticks %llu, full clears %llu, probe clears %llu, kept %llu complied %llu partners %llu\n",
             (unsigned long long)frame, (unsigned long long)g_ws_calls, (unsigned long long)g_ws_fast,
             (unsigned long long)g_ws_ver, (unsigned long long)g_ws_slow,
             g_weld_count, g_weld_epoch, g_ws_ns / 100.0 / 1e6,
@@ -2875,7 +2880,7 @@ void weld_report(uint64_t frame) {
             (unsigned long long)g_ws_overflow, (unsigned long long)g_ws_clears,
             g_guard_max, (unsigned long long)g_guard_ticks,
             (unsigned long long)g_ws_clear_full, (unsigned long long)g_ws_clear_probe,
-            (unsigned long long)g_ws_frozen, (unsigned long long)g_ws_complied);
+            (unsigned long long)g_ws_frozen, (unsigned long long)g_ws_complied, (unsigned long long)g_ws_partners);
     g_ws_frozen = g_ws_complied = 0;
     g_guard_max = 0;
     g_guard_ticks = 0;
@@ -2888,6 +2893,24 @@ uint32_t smooth_weld_epoch() { return g_weld_epoch; }
 int smooth_weld_guarded() { return g_guard_hold > 0; }
 void smooth_weld_picture() { ++g_weld_pic; }
 void smooth_weld_conflict() { ++g_weld_conflicts; }
+uint32_t smooth_weld_pic() { return g_weld_pic; }
+uint32_t smooth_weld_last_bnd(uint16_t slot[3]) {
+    memcpy(slot, g_weld_last_slot, sizeof g_weld_last_slot);
+    return g_weld_last_bnd;
+}
+void smooth_weld_partner(uint16_t a, uint16_t b) {
+    if (!g_weld_edges || a >= WELD_EDGE_N || b >= WELD_EDGE_N || a == b) return;
+    const uint16_t sl[2] = {a, b};
+    for (int i = 0; i < 2; ++i) {
+        WeldEdge &e = g_weld_edges[sl[i]];
+        if (!e.used || (e.used & 4)) continue;
+        weld_freeze(e);
+        e.used |= 4;
+        ++e.ver;
+        ++g_weld_epoch;
+        ++g_ws_partners;
+    }
+}
 int smooth_weld_provisional() { return g_weld_provisional; }
 void smooth_weld_scene_change() { g_weld_scene_pending = 1; }
 uint64_t smooth_weld_overflow() { return g_ws_overflow; }
@@ -2952,6 +2975,8 @@ inline int weld_front_answer(WeldFront &fw, const WeldOut &fo, uint32_t nh, int 
     }
     if (fw.result) { memcpy(out, fo.out, sizeof fo.out); *id = fo.id; }
     g_weld_provisional = 0;
+    g_weld_last_bnd = fw.bnd;
+    memcpy(g_weld_last_slot, fw.slot, sizeof g_weld_last_slot);
     return fw.result;
 }
 }  // namespace
@@ -3052,7 +3077,7 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
         const int s = weld_slot(lo, hi);
         /* a full neighbourhood: empty the book (every answer kept against it
            goes with the generation) and draw this one as planned */
-        if (s < 0) { weld_clear(); ++g_ws_clear_probe; g_weld_provisional = 0; return 0; }
+        if (s < 0) { weld_clear(); ++g_ws_clear_probe; g_weld_provisional = 0; g_weld_last_bnd = 0; return 0; }
         slot[k] = s;
         WeldEdge &e = g_weld_edges[s];
         WeldSide me;
@@ -3127,7 +3152,7 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
                 ++g_ws_complied;
                 continue;
             }
-            bool straight = (e.used & 2) != 0;
+            bool straight = (e.used & 6) != 0;
             if (e.nside < 2 && !straight) continue;
             for (int j = 0; j < e.nside; ++j)
                 if (e.side[j].kind != SMOOTH_WELD_CURVED) straight = true;
@@ -3205,6 +3230,13 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
         w.ver[k] = slot[k] >= 0 ? (uint16_t)g_weld_edges[slot[k]].ver : 0;
     }
     w.result = (uint8_t)result;
+    w.bnd = 0;
+    if (kind == SMOOTH_WELD_CURVED)
+        for (int k = 0; k < 3; ++k)
+            if (slot[k] >= 0 && g_weld_edges[slot[k]].nside == 1 && !(g_weld_edges[slot[k]].used & 6))
+                w.bnd |= (uint8_t)(1u << k);
+    g_weld_last_bnd = w.bnd;
+    memcpy(g_weld_last_slot, w.slot, sizeof g_weld_last_slot);
     WeldOut wo;
     memset(&wo, 0, sizeof wo);
     if (result) {

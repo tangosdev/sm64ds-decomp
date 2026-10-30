@@ -698,6 +698,18 @@ int smooth_weld_provisional();
 // WELDALL1: a side drawn straight could not follow an edge kept curved for this
 // picture (no matrix for it): the guard counts these.
 void smooth_weld_conflict();
+// WELDALL1: VIEW PARTNERS. Two pieces of a model can meet along an edge that
+// each stores at its own raw coordinates (a clam's two shells, a chest's lid,
+// each in its own bone's space), so the raw-keyed book never sees the two as
+// one edge. The geometry stage pairs the one-sided edges of curved triangles
+// by where they are drawn, once a picture; two raw edges drawn on top of each
+// other are marked, and from then on (until the book is emptied) both are
+// drawn straight on every side, like a crease. smooth_weld_last_bnd gives the
+// last answer's one-sided edges (bit k = edge k, corners k and k+1) and their
+// records; smooth_weld_pic the picture being drawn.
+uint32_t smooth_weld_pic();
+uint32_t smooth_weld_last_bnd(uint16_t slot[3]);
+void smooth_weld_partner(uint16_t a, uint16_t b);
 // The replay memo's own count (SM64DS_SMOOTH_WELD_STATS): an answer read back, or asked again.
 void smooth_weld_memo_count(int hit);
 
