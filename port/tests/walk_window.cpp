@@ -4887,14 +4887,16 @@ static void ct_camera_behavior_post(void *cam)
    (sp28 < fp, 0x02009e70 lines L_A5F8 / L_A6FC) swings toward behind the player (ApproachAngle 0x600 a tick) and is pushed back out,
    which is what keeps Mario from running under the lens. A held rotate bit that hardly turns the camera is not a DS input (the DS pad
    turns a full step or none), and with neither the turn nor the swing the eye sat on Mario's path until the heading flipped across
-   him. So while the eye is inside that near limit a light tilt lets go of the rotate bit for the tick and the ROM runs its own
-   no-press tick. fp is the ROM's own (func_02009e70 0x02009e70..0x0200a0b0): the camera mode's +0x1c, the two 1.5x boosts and the
-   star-marker shrink, eased toward +0x12c by +0x130, scaled by func_020093f4. Full pushes, keys and the D-pad never take this path.
+   him. So when the eye is over the player (inside that near limit AND its level distance from the look-at under half the limit) a
+   light tilt lets go of the rotate bit for the tick and the ROM runs its own no-press tick, as a DS player not pressing gets. In
+   ordinary play the eye rests at the near limit, mostly level with the look-at (in levels 9 and 12 just inside it), so the second
+   test keeps their light-tilt turn as it was. fp is the ROM's own (func_02009e70 0x02009e70..0x0200a0b0): the camera mode's +0x1c,
+   the two 1.5x boosts and the star-marker shrink, eased toward +0x12c by +0x130, scaled by func_020093f4. Full pushes, keys and the D-pad never take this path.
    SM64DS_KNOWNCAM1_OLD=1: proof only, the rotate bit stays held. */
 extern "C" unsigned func_020093f4(void *p, int x);
 extern "C" int func_02009374(void *self);
 extern "C" unsigned char data_0208747c[];
-static int kc1_eye_inside_near_limit(void *cam)
+static int kc1_eye_over_player(void *cam)
 {
     char *k = (char *)cam;
     const unsigned cf = *(unsigned *)(k + 0x154);
@@ -4910,10 +4912,12 @@ static int kc1_eye_inside_near_limit(void *cam)
     const int *pv = (const int *)(k + 0x80), *eye = (const int *)(k + 0x8c);
     int d[3] = {eye[0] - pv[0], eye[1] - pv[1], eye[2] - pv[2]};
     const int sp28 = LenVec3(d);
+    const double hz = sqrt((double)d[0] * d[0] + (double)d[2] * d[2]);
+    const int over = sp28 < fp && hz * 2.0 < (double)fp;
     static int tr = -1;
     if (tr < 0) tr = getenv("SM64DS_CAMTEST_TRACE") ? 1 : 0;
-    if (tr) fprintf(stderr, "[knowncam1] dist %d near %d inside %d\n", sp28 >> 12, fp >> 12, sp28 < fp);
-    return sp28 < fp;
+    if (tr) fprintf(stderr, "[knowncam1] dist %d horz %d near %d over %d\n", sp28 >> 12, (int)hz >> 12, fp >> 12, over);
+    return over;
 }
 static int g_cam93_mouse_owned;            /* the mouse is steering the camera: no auto-recenter until the stick or keys take it back */
 static int g_cam93_scale = 4096;           /* eased fraction of the eye distance the collision allows */
@@ -19097,8 +19101,8 @@ int main(void)
                         /* below the ROM's step: scaled after the camera's own tick (ct_camera_behavior_post) */
                         static int kc1_old = -1;
                         if (kc1_old < 0) kc1_old = getenv("SM64DS_KNOWNCAM1_OLD") ? 1 : 0;
-                        if (!kc1_old && kc1_eye_inside_near_limit(cam)) {
-                            /* KNOWNCAM1: the eye is inside the near limit; the ROM's own no-press tick (its close follow) runs */
+                        if (!kc1_old && kc1_eye_over_player(cam)) {
+                            /* KNOWNCAM1: the eye is over the player; the ROM's own no-press tick (its close follow) runs */
                             cam_rot &= ~(cam_bit_left | cam_bit_right);
                         } else {
                             g_ct_turn = turn > 0 ? turn : 1;
