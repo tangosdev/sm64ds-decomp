@@ -2380,6 +2380,7 @@ struct CapHr {
 };
 CapHr g_caphr[2];               /* VRAM blocks 2 and 3 (C and D), by block & 1 */
 long g_caphr_n[4];              /* captures kept, scan-outs drawn, DS pixels taken, scan-outs with no capture matching */
+double g_caphr_ms[2];           /* time keeping the captures, time drawing the scan-outs (ms, summed) */
 
 inline uint16_t caphr_555(uint32_t p)
 {
@@ -2403,6 +2404,7 @@ void caphr_overlay(const SubFramebuffer &fb)
     const int pol = g_hr_policy ? g_hr_policy() : 0;
     const int S = active_h / SUB_H;
     if (!(pol & 4) || S < 2 || S > 8) return;
+    const auto t0 = std::chrono::steady_clock::now();
     int best = -1, bs = 0;
     for (int k = 0; k < 2; ++k) {
         if (!g_caphr[k].valid) continue;
@@ -2449,13 +2451,15 @@ void caphr_overlay(const SubFramebuffer &fb)
     hs.valid = true;
     ++g_caphr_n[1];
     g_caphr_n[2] += taken;
+    g_caphr_ms[1] += std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
 }
 
 void caphr_report()
 {
     if (!g_caphr_n[0] && !g_caphr_n[1]) return;
-    std::fprintf(stderr, "[mg-caphr] %ld captures kept at render scale, %ld scan-outs drawn from them (%.1f DS px each), %ld scan-outs with none matching\n",
-                 g_caphr_n[0], g_caphr_n[1], g_caphr_n[1] ? (double)g_caphr_n[2] / g_caphr_n[1] : 0.0, g_caphr_n[3]);
+    std::fprintf(stderr, "[mg-caphr] %ld captures kept at render scale (%.3f ms each), %ld scan-outs drawn from them (%.1f DS px each, %.3f ms each), %ld scan-outs with none matching\n",
+                 g_caphr_n[0], g_caphr_n[0] ? g_caphr_ms[0] / g_caphr_n[0] : 0.0, g_caphr_n[1],
+                 g_caphr_n[1] ? (double)g_caphr_n[2] / g_caphr_n[1] : 0.0, g_caphr_n[1] ? g_caphr_ms[1] / g_caphr_n[1] : 0.0, g_caphr_n[3]);
 }
 
 }  // namespace
@@ -6739,6 +6743,7 @@ extern "C" void port_caphr_keep(const uint32_t *src, int stride, int x0, int w, 
     ntr::CapHr &c = ntr::g_caphr[block & 1];
     const int pol = ntr::g_hr_policy ? ntr::g_hr_policy() : 0;
     if (!(pol & 4) || !src || w <= 0 || h <= 0 || rx < 1 || ry < 1 || block < 2) { c.valid = false; return; }
+    const auto t0 = std::chrono::steady_clock::now();
     const size_t need = (size_t)w * (size_t)h;
     if (c.cap < need) {
         std::free(c.px);
@@ -6750,4 +6755,5 @@ extern "C" void port_caphr_keep(const uint32_t *src, int stride, int x0, int w, 
     c.w = w; c.h = h; c.rx = rx; c.ry = ry; c.cx0 = cx0; c.cy0 = cy0;
     c.valid = (ntr::SUB_W - 1) * rx + cx0 < w && (ntr::SUB_H - 1) * ry + cy0 < h;   /* every 256x192 sample lies inside the extent */
     ++ntr::g_caphr_n[0];
+    ntr::g_caphr_ms[0] += std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
 }
