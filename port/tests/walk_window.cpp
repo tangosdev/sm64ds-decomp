@@ -8028,6 +8028,16 @@ static void menu_vs_poll(void)
     fprintf(stderr, "[menu] VS map %d: started at the title in this process\n", map + 1);
 }
 
+/* DEBUGMENU1 (Tango 10-30): F4 (next character) and F8 / F9 (save / load state) are debug keys, so they answer only with the
+   Debug menu setting on (settings.json DebugMenu, the CHEATS tab; SM64DS_DEBUG_MENU forces it), the gate F5 has had since
+   CHARSLOT1. Called on a press edge; 1 = refused, with one line. */
+static int debug_fkey_refused(const char *what)
+{
+    if (host_setting_debug_menu()) return 0;
+    fprintf(stderr, "[menu] %s REFUSED: the Debug menu setting is off\n", what);
+    return 1;
+}
+
 static void menu_input(int pad_live, const XPad *pad)
 {
     menu_vs_poll();   /* DEBUGMENU1 */
@@ -17936,8 +17946,8 @@ int main(void)
         {
             static int chr_edge;
             const int now = key_live(VK_F4);
-            if (now && !chr_edge && online_blocks_fkey("F4 character swap")) {
-                /* off online: nothing */
+            if (now && !chr_edge && (online_blocks_fkey("F4 character swap") || debug_fkey_refused("F4 character swap"))) {
+                /* off online, or the Debug menu setting off (DEBUGMENU1): nothing */
             } else if (now && !chr_edge) {
                 const port::CommsReadout cr = port::comms_readout();
                 if (cr.connected && cr.players > 1) {
@@ -17971,8 +17981,10 @@ int main(void)
             static int save_edge, load_edge;
             int save_now = key_live(VK_F8);
             int load_now = key_live(VK_F9);
-            if (save_now && !save_edge && online_blocks_fkey("F8 save state")) save_now = 1, save_edge = 1;
-            if (load_now && !load_edge && online_blocks_fkey("F9 load state")) load_now = 1, load_edge = 1;
+            if (save_now && !save_edge && (online_blocks_fkey("F8 save state") || debug_fkey_refused("F8 save state")))
+                save_now = 1, save_edge = 1;
+            if (load_now && !load_edge && (online_blocks_fkey("F9 load state") || debug_fkey_refused("F9 load state")))
+                load_now = 1, load_edge = 1;
             if (save_now && !save_edge)
                 ss_save_state("F8", 1);
             int do_load = load_now && !load_edge;
