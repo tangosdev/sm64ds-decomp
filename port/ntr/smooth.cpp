@@ -1380,6 +1380,7 @@ void smooth_prof_add(int bucket, long long dt_ns, unsigned n) {
 }
 
 // --- THE CRACK BOOK (smooth.h, SM64DS_SMOOTH_CRACKS) -----------------------
+void smooth_weld_dump_edge(const int16_t a[3], const int16_t b[3]);
 namespace {
 int g_cracks = -1;
 std::vector<SmoothCrackTri> g_ck_tris;
@@ -1508,6 +1509,13 @@ void crack_report(uint64_t frame) {
         const float ls = sqrtf((sa[0] - sb[0]) * (sa[0] - sb[0]) + (sa[1] - sb[1]) * (sa[1] - sb[1]));
         const float pxs = lv > 1e-12f ? ls / lv : 0.0f;
         const float gpx = worst * pxs;
+        /* WELDALL1: an edge with an end behind the eye, or off the picture,
+           cannot be measured in pixels and cannot be seen: not an opening. */
+        {
+            const float mx = (sa[0] + sb[0]) * 0.5f, my = (sa[1] + sb[1]) * 0.5f;
+            if (ta.clip[s[wa].a][2] <= 0.0f || ta.clip[s[wa].b][2] <= 0.0f ||
+                mx < 0.0f || my < 0.0f || mx > (float)active_w || my > (float)active_h) continue;
+        }
         int cause;
         /* WELDALL1: two sides the weld cannot pair (their raw edges differ:
            one view-space edge drawn from two different raw edges), or a side
@@ -1592,6 +1600,10 @@ void crack_report(uint64_t frame) {
                     t.raw[s[j].a][0], t.raw[s[j].a][1], t.raw[s[j].a][2],
                     t.raw[s[j].b][0], t.raw[s[j].b][1], t.raw[s[j].b][2],
                     t.mg[s[j].a], t.mg[s[j].b], t.nrm[s[j].a], t.nrm[s[j].b]);
+        }
+        if (getenv("SM64DS_SMOOTH_CRACKS_EDGE")) {
+            const SmoothCrackTri &t0 = g_ck_tris[s[0].tri];
+            smooth_weld_dump_edge(t0.raw[s[0].a], t0.raw[s[0].b]);
         }
         fprintf(stderr, "\n");
     }
@@ -2665,6 +2677,8 @@ uint32_t g_weld_flips = 0;        // a recorded side changed, or an edge overflo
 uint64_t g_ws_calls, g_ws_fast, g_ws_ver, g_ws_slow, g_wm_hit, g_wm_miss;
 uint64_t g_ws_overflow;            // edges that met a fifth side, since boot
 uint64_t g_ws_clears;              // books emptied by a scene change, since boot
+uint64_t g_ws_clear_full;          // WELDALL1: books emptied at 75 percent load, since boot
+uint64_t g_ws_clear_probe;         // WELDALL1: books emptied because a probe found no slot, since boot
 int g_weld_scene_pending = 0;
 
 inline uint32_t weld_fnv(const void *p, size_t n, uint32_t h = 2166136261u) {
@@ -2783,13 +2797,14 @@ void weld_report(uint64_t frame) {
     if (!on || frame % 100) return;
     fprintf(stderr, "[smoothweld] f%llu calls %llu settled %llu reconfirmed %llu worked %llu "
             "edges %u epoch %u time %.3f ms a tick, replays read %llu asked %llu, overflow edges %llu, scene clears %llu, "
-            "churn max %u a tick, guarded ticks %llu\n",
+            "churn max %u a tick, guarded ticks %llu, full clears %llu, probe clears %llu\n",
             (unsigned long long)frame, (unsigned long long)g_ws_calls, (unsigned long long)g_ws_fast,
             (unsigned long long)g_ws_ver, (unsigned long long)g_ws_slow,
             g_weld_count, g_weld_epoch, g_ws_ns / 100.0 / 1e6,
             (unsigned long long)g_wm_hit, (unsigned long long)g_wm_miss,
             (unsigned long long)g_ws_overflow, (unsigned long long)g_ws_clears,
-            g_guard_max, (unsigned long long)g_guard_ticks);
+            g_guard_max, (unsigned long long)g_guard_ticks,
+            (unsigned long long)g_ws_clear_full, (unsigned long long)g_ws_clear_probe);
     g_guard_max = 0;
     g_guard_ticks = 0;
     g_ws_calls = g_ws_fast = g_ws_ver = g_ws_slow = g_wm_hit = g_wm_miss = 0;
@@ -2802,6 +2817,27 @@ int smooth_weld_guarded() { return g_guard_hold > 0; }
 void smooth_weld_scene_change() { g_weld_scene_pending = 1; }
 uint64_t smooth_weld_overflow() { return g_ws_overflow; }
 void smooth_weld_memo_count(int hit) { if (hit) ++g_wm_hit; else ++g_wm_miss; }
+
+/* WELDALL1: the record of one raw edge, for the crack book's hit lines. */
+void smooth_weld_dump_edge(const int16_t a[3], const int16_t b[3]) {
+    if (!g_weld_edges) { fprintf(stderr, " {book empty}"); return; }
+    const bool gt = a[0] != b[0] ? a[0] > b[0] : a[1] != b[1] ? a[1] > b[1] : a[2] > b[2];
+    const int16_t *lo = gt ? b : a, *hi = gt ? a : b;
+    int16_t k[6] = {lo[0], lo[1], lo[2], hi[0], hi[1], hi[2]};
+    uint32_t h = weld_fnv(k, sizeof k) & (WELD_EDGE_N - 1);
+    for (int q = 0; q < WELD_PROBE; ++q) {
+        const WeldEdge &e = g_weld_edges[(h + q) & (WELD_EDGE_N - 1)];
+        if (!e.used) break;
+        if (memcmp(e.k, k, sizeof k) != 0) continue;
+        fprintf(stderr, " {edge used %u ver %u sides %u:", e.used, e.ver, e.nside);
+        for (int j = 0; j < e.nside; ++j)
+            fprintf(stderr, " %08x/k%u n(%.3f,%.3f,%.3f)(%.3f,%.3f,%.3f)", e.side[j].id, e.side[j].kind,
+                    e.side[j].n[0][0], e.side[j].n[0][1], e.side[j].n[0][2], e.side[j].n[1][0], e.side[j].n[1][1], e.side[j].n[1][2]);
+        fprintf(stderr, "}");
+        return;
+    }
+    fprintf(stderr, " {edge not in book}");
+}
 
 int smooth_weld_on() {
     if (g_weld_on < 0) {
@@ -2906,7 +2942,7 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
         }
     }
 
-    if (g_weld_count > (uint32_t)(WELD_EDGE_N / 4 * 3)) weld_clear();
+    if (g_weld_count > (uint32_t)(WELD_EDGE_N / 4 * 3)) { weld_clear(); ++g_ws_clear_full; }
 
     /* The side's id: its corners in a fixed order and their normals, so the
        same triangle has the same id whichever way the list walks it. */
@@ -2940,7 +2976,7 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
         const int s = weld_slot(lo, hi);
         /* a full neighbourhood: empty the book (every answer kept against it
            goes with the generation) and draw this one as planned */
-        if (s < 0) { weld_clear(); return 0; }
+        if (s < 0) { weld_clear(); ++g_ws_clear_probe; return 0; }
         slot[k] = s;
         WeldEdge &e = g_weld_edges[s];
         WeldSide me;
