@@ -424,6 +424,11 @@ void ppu_scanout(Engine eng, Framebuffer &fb) {
    screen draws the same frame the bottom will. Zero everywhere else, which
    is the hardware OAM and the behaviour every level has always had. */
 static uint32_t g_oam_src_a;
+}  // namespace ntr
+/* CLICKSTART1: an engine A entry the title recipe draws itself (the attract's TOUCH TO START sprites, hal/menu_recipe_title.cpp clk_skip) is
+   left out of both engine A rasters (this one and hal/message_compositor.cpp). Null = every entry is drawn. */
+extern "C" int (*g_port_obj_a_skip)(int idx) = nullptr;
+namespace ntr {
 void ppu_obj_oam_source_a(uint32_t addr) { g_oam_src_a = addr; }
 
 void ppu_scanout_obj(Engine eng, Framebuffer &fb) {
@@ -474,6 +479,7 @@ void ppu_scanout_obj(Engine eng, Framebuffer &fb) {
         }
         const bool affine = a0 & 0x100;
         if (!affine && (a0 & 0x200)) continue;             // disabled
+        if (eng == ENGINE_A && g_port_obj_a_skip && g_port_obj_a_skip(i)) continue;   // CLICKSTART1
         const unsigned objmode = (a0 >> 10) & 3;
         if (objmode == 2) continue;   // OBJ window: a mask, never drawn
         if (objmode == 3) continue;   // bitmap OBJ: not hosted

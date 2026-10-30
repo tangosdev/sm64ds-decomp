@@ -204,6 +204,7 @@ int hal_gapless_obj_raster_shift_ds(void);
 /* the top screen's OAM source while the gapless mod is engaged; see the note
    over oam_a below and the definition in hal/screen_gap.cpp */
 unsigned hal_gapless_oam_src_a(void);
+extern "C" int (*g_port_obj_a_skip)(int idx);   /* CLICKSTART1: ntr/ppu.cpp */
 extern "C" {
 /* THE IMPROVED MAP'S ATTENTION-ARROW RE-ANCHOR, asked once a frame. The banner
    is over the definition in hal/sub_screen.cpp, which owns both the option and
@@ -2081,6 +2082,7 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
         const uint16_t a2 = rd16(oam_a() + i * 8u + 4);
         const bool affine = a0 & 0x100;
         if (!affine && (a0 & 0x200)) continue;
+        if (g_port_obj_a_skip && g_port_obj_a_skip(i)) continue;   /* CLICKSTART1: drawn by the title recipe (ntr/ppu.cpp) */
         // OBJ MODE (attribute 0 bits 10-11): 0 normal, 1 semi-transparent,
         // 2 OBJ window, 3 prohibited/bitmap. This test used to be `== 3` under
         // the name "OBJ window", which skipped the wrong mode and painted a
