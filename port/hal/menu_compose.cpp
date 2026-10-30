@@ -1197,7 +1197,6 @@ int g_snap_w, g_snap_h;
 std::vector<uint32_t> g_snap_old;
 int g_snap_old_valid, g_in_relift;
 static double g_relift_alpha = 1.0;      /* ARROWSLOW1: the place between ticks of the pictures hal_menu_present_relift draws next (a bob piece's dest y follows it) */
-static double g_draw_alpha = 1.0;        /* CAREER1: the picture being drawn now (hal_menu_draw_alpha) */
 
 void snap_save(const uint32_t *dst, int w, int h)
 {
@@ -2646,21 +2645,6 @@ void hal_menu_present(uint32_t *dst, int w, int h, int stage)
     }
     /* FLIPSMOOTH1: a turning plank (MenuPiece.turn) is drawn at this picture's own phase of the turn; see turn_place. The tick's rect comes
        back after the draw, so the decision (the touch inverse, the next picture) never sees an in-between's rect. */
-    /* CAREER1: a piece that slides with the pause pages (MenuPiece.slide_dx0) is drawn at this picture's own place: slide_dx0 * (1 - a) from
-       the tick rect, a = the picture's place between the tick before and this tick. Put back after the draw, as the turn is. */
-    static int s_slide_keep[MENU_MAX_PIECES];
-    static uint8_t s_slide_moved[MENU_MAX_PIECES];
-    {
-        const double a = g_in_relift ? g_relift_alpha : 1.0;
-        for (int i = 0; i < D.L.np && i < MENU_MAX_PIECES; ++i) {
-            s_slide_moved[i] = 0;
-            if (!D.L.p[i].slide_dx0 || a >= 1.0) continue;
-            s_slide_keep[i] = D.L.dest[i][0];
-            D.L.dest[i][0] += (int)floor(D.L.p[i].slide_dx0 * (1.0 - a) + 0.5);
-            s_slide_moved[i] = 1;
-        }
-    }
-    g_draw_alpha = g_in_relift ? g_relift_alpha : 1.0;
     turn_place(D.L, g_in_relift ? g_relift_alpha : 1.0);
     g_rep.enable = cost_fast(); g_rep.valid = 0;
     if (trace_on()) {
@@ -2676,8 +2660,6 @@ void hal_menu_present(uint32_t *dst, int w, int h, int stage)
         for (int i = 0; i < D.L.np; ++i) if (!(i < MENU_MAX_PIECES && g_turn_hide[i])) menu_piece_draw(&D.L, i, S, dst, w, h);      /* FLIPSMOOTH1 */
     }
     turn_restore(D.L);      /* FLIPSMOOTH1 */
-    for (int i = 0; i < D.L.np && i < MENU_MAX_PIECES; ++i) if (s_slide_moved[i]) D.L.dest[i][0] = s_slide_keep[i];      /* CAREER1 */
-    g_draw_alpha = 1.0;
     g_rep.enable = 0; g_rep.valid = 0;
     /* MGEXIT1: the wipe (the minigames' star and circle) is cut into the finished picture once, about its centre; the two source screens were
        not cut while this recipe is live (ntr::wipe_suppressed), because the recipe moves their pieces */
@@ -2693,7 +2675,6 @@ void hal_menu_present(uint32_t *dst, int w, int h, int stage)
 /* MENUINTERP2: the same draw for a picture between ticks (see hal_menu_relift_ok). Never saves the held frame, draws held-frame
    pieces from the one this tick drew from. */
 void hal_menu_set_relift_alpha(double a) { g_relift_alpha = a < 0.0 ? 0.0 : a > 1.0 ? 1.0 : a; }
-float hal_menu_draw_alpha(void) { return (float)g_draw_alpha; }      /* CAREER1 */
 float hal_menu_piece_bob_frac(int piece) { return piece >= 0 && piece < MENU_MAX_PIECES ? g_bob_frac[piece] : 0.f; }
 void hal_menu_present_relift(uint32_t *dst, int w, int h, int stage)
 {

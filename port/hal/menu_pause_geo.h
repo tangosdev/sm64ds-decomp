@@ -65,7 +65,8 @@ struct PauseFacts {
     /* CAREER1: THE PAUSE PAGES. pg_page is the page at rest (or the one a slide is going to): PAUSE_PG_MAIN (wide: the tracker and the planks
        together; 4:3: the planks), PAUSE_PG_TRACKER (4:3 only), PAUSE_PG_CAREER. A slide runs pg_from -> pg_to (equal at rest): pg_e is its eased
        progress on this tick, pg_e0 on the tick before (permille), pg_dir the side the leaving page goes to (+1 right). pg_a is the place between
-       ticks of the picture being drawn (permille, 1000 = the tick's own picture): the recipe fills 1000, the draw sets its own copy. */
+       ticks of the picture being drawn (permille, 1000 = the tick's own picture): 1000 today, since on the level path a picture between ticks repeats
+       the tick's own 2D (the menus are not re-drawn between ticks there), the old planks / tracker slide included. */
     int16_t pg_page, pg_from, pg_to, pg_dir, pg_e, pg_e0, pg_a;
     /* the Career page: per save file, playtime and clear time in seconds; bit i of career_has = file i has a record, bit 3 + i = it has a clear
        time; career_cur = the file being played (-1 none) */

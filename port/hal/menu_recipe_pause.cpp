@@ -703,17 +703,10 @@ void build_new(MenuLayout *L, int variant)
                 add_touch_zone(L, pause_arrow_rect(g, f, side), side ? 0xc8 : 0, 0, 0x38, 0x20);
         const int rest = pause_page_rest(f, PAUSE_PG_MAIN);
         if (!f->settings_open && pause_page_visible(f, PAUSE_PG_MAIN)) {
-            /* CAREER1: a picture between ticks draws each plank at its own place of the slide (MenuPiece.slide_dx0: the tick before's x
-               minus this tick's) */
-            PauseFacts f0 = *f;
-            f0.pg_a = 0;
-            const int slide0 = pause_planks_dx(g, &f0) - pause_planks_dx(g, f);
             for (int i = 0; i < 3; ++i) {
                 const PauseRect r = pause_plank_rect(g, f, 3, i);
-                const int np0 = L->np;
                 const int h = f->rom_art ? add_rom_plate(L, r, 8, box_y[i], 240, 32, kRomMain[i])
                                          : add_plank(L, img[i], r, 8, box_y[i], 240, 32, kRomMain[i], i == sel, prs);
-                if (L->np > np0) L->p[L->np - 1].slide_dx0 = slide0;
                 if (i == 0 && rest && h >= 0) L->back = (int8_t)h;
             }
         }

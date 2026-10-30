@@ -412,13 +412,7 @@ extern "C" void pause_page_draw(const MenuLayout *lay, int piece, uint32_t *dst,
     (void)piece;
     const PauseFacts *f0 = (const PauseFacts *)lay->facts.blob;
     if (f0->magic != PAUSE_FACTS_MAGIC || w < 64 || h < 64) return;
-    /* CAREER1: this picture's own place in a page slide (1000 on a tick's own picture, the place between ticks on Smooth Motion's) */
-    PauseFacts fl = *f0;
-    {
-        const float a = hal_menu_draw_alpha();
-        fl.pg_a = (int16_t)(a >= 1.f ? 1000 : (a <= 0.f ? 0 : (int)(a * 1000.f + 0.5f)));
-    }
-    const PauseFacts *f = &fl;
+    const PauseFacts *f = f0;
     const Surf sf = { dst, stride, w, h };
     const PauseGeo g = pause_geo(w, h, f, f->nslots);
     const int dialog = f->variant == PAUSE_V_SAVE || f->variant == PAUSE_V_STATUS || f->variant == PAUSE_V_NOSAVE;
