@@ -5432,6 +5432,7 @@ static void chat_host_frame(const OvlSurface &surf, int frame)
    both read sites, the focus gate's own position, so a scripted pad still
    drives an automated run. */
 static void chat_key_test_frame(void);   /* SM64DS_CHAT_KEY_TEST, test only */
+static int mouse_act(int action);         /* MOUSEBIND1: the party rows read their mouse buttons here, above its body */
 static void chat_pad_gate(int *pad_live, XPad *pad)
 {
     chat_key_test_frame();
@@ -5439,8 +5440,8 @@ static void chat_pad_gate(int *pad_live, XPad *pad)
     port::world_party_set_binds(host_setting_key(HOST_KEY_PARTY_INVITE), host_setting_key(HOST_KEY_PARTY_LEAVE),
                                 (unsigned)host_setting_pad(HOST_PAD_PARTY_INVITE), (unsigned)host_setting_pad(HOST_PAD_PARTY_LEAVE));
     const unsigned wp_used = port::world_party_input(*pad_live ? (unsigned)pad->buttons : 0u,
-                            key_live(port::world_party_vk_invite()) != 0,
-                            key_live(port::world_party_vk_leave()) != 0);
+                            key_live(port::world_party_vk_invite()) != 0 || mouse_act(HOST_MOUSE_PARTY_INVITE),
+                            key_live(port::world_party_vk_leave()) != 0 || mouse_act(HOST_MOUSE_PARTY_LEAVE));
     if (wp_used && *pad_live) pad->buttons = (unsigned short)((unsigned)pad->buttons & ~wp_used);   /* the press was the party's */
     if (!port::chat_typing()) return;
     memset(pad, 0, sizeof *pad);
@@ -5492,6 +5493,17 @@ static int mouse_act(int action)
     bindings_load();
     const int vk = host_setting_mouse(action);
     return vk && key_live(vk);     /* GetAsyncKeyState reads the mouse buttons by VK; SM64DS_HOST_KEY=<vk hex>@f0-f1 scripts one for a row */
+}
+/* MOUSEBIND1: the raw DS Start (0x08) and Select (0x04) bits from their mouse buttons, for the two places the keys' own bits are made */
+static unsigned short mouse_start_select_raw(void)
+{
+    return (unsigned short)((mouse_act(HOST_MOUSE_START) ? 0x08 : 0) | (mouse_act(HOST_MOUSE_SELECT) ? 0x04 : 0));
+}
+/* MOUSEBIND1: a menu that answers the right / middle / side buttons itself (the settings page, the white door) has just closed: the
+   button that closed it is still down and is not a fresh press for a game action bound to it */
+static void mouse_buttons_stale(void)
+{
+    key_stale[2] = key_stale[4] = key_stale[5] = key_stale[6] = 1;
 }
 
 /* THE PAD'S HALF OF THE SAME GATE, and it was missing for as long as the
@@ -7573,6 +7585,7 @@ static int sp_frame(int pad_live, const XPad *pad)
         /* the Escape or Backspace that closed it is still down: not a fresh F5 for the debug menu, not a fresh Select for the ROM */
         key_stale[VK_ESCAPE] = 1; key_stale[VK_F5] = 1; key_stale[VK_BACK] = 1;
         if (g_key[HOST_KEY_SELECT] > 0 && g_key[HOST_KEY_SELECT] < 256) key_stale[g_key[HOST_KEY_SELECT]] = 1;
+        mouse_buttons_stale();      /* MOUSEBIND1: a right click Back is not a fresh mouse-bound Jump */
         if ((in.keys & SPK_BACK) && pad_live && (pad->buttons & 0x2000)) menu_b_swallow = 1;   /* the B that closed it is not a punch */
         fprintf(stderr, "[settings] page closed\n");
         if (g_sp_src) { sp_close_sound(g_sp_src); g_sp_src = 0; }
@@ -7622,6 +7635,7 @@ static int cd_frame(int pad_live, const XPad *pad)
         /* the Escape / Backspace / B that closed it is still down: not a fresh F5 for the debug menu, not a fresh Select for the ROM */
         key_stale[VK_ESCAPE] = 1; key_stale[VK_F5] = 1; key_stale[VK_BACK] = 1;
         if (g_key[HOST_KEY_SELECT] > 0 && g_key[HOST_KEY_SELECT] < 256) key_stale[g_key[HOST_KEY_SELECT]] = 1;
+        mouse_buttons_stale();      /* MOUSEBIND1: a right click Back is not a fresh mouse-bound Jump */
         if (pad_live && (pad->buttons & 0x3000)) menu_b_swallow = 1;       /* the B / A that closed it is not a punch or a jump */
         const int pick = port_char_door_take_pick();
         if (pick >= 0) {
@@ -9007,13 +9021,13 @@ static unsigned short host_ds_buttons(int pad_live, const XPad *pad)
        KeyCrouch; hal/host_settings.h), read through key_act so 0 is unbound.
        The defaults are the literals that used to be on these lines -- space,
        X, ctrl -- so a file without the keys is the old program. */
-    if (key_act(HOST_KEY_JUMP)) btn |= 2;
+    if (key_act(HOST_KEY_JUMP) || mouse_act(HOST_MOUSE_JUMP)) btn |= 2;     /* MOUSEBIND1: each game action may sit on a mouse button too */
     /* THE RUN BUTTON, from wherever the player put it. Shift by default, so an
        untouched settings.json is the line that was here before; zero means
        they unbound the keyboard half. */
-    if (g_run_key && key_live(g_run_key)) btn |= 0x800;
-    if (key_act(HOST_KEY_CROUCH)) btn |= 0x400;
-    if (key_act(HOST_KEY_ATTACK)) btn |= 1;
+    if ((g_run_key && key_live(g_run_key)) || mouse_act(HOST_MOUSE_RUN)) btn |= 0x800;
+    if (key_act(HOST_KEY_CROUCH) || mouse_act(HOST_MOUSE_CROUCH)) btn |= 0x400;
+    if (key_act(HOST_KEY_ATTACK) || mouse_act(HOST_MOUSE_ATTACK)) btn |= 1;
     /* DS X, settings.json KeyLook: Z by default, beside the attack key */
     if (key_act(HOST_KEY_LOOK) || mouse_act(HOST_MOUSE_LOOK)) btn |= 0x8000;     /* CAMPACK1: MouseLook too */
     if (pad_live) {
@@ -9053,6 +9067,7 @@ static unsigned short host_menu_raw_keys(int pad_live, const XPad *pad)
     unsigned short raw = 0;
     if (key_act(HOST_KEY_START))  raw |= 0x08;
     if (key_act(HOST_KEY_SELECT)) raw |= 0x04;
+    raw |= mouse_start_select_raw();
     if (pad_live) {
         if (pad_act(pad, HOST_PAD_START))  raw |= 0x08;
         if (pad_act(pad, HOST_PAD_SELECT)) raw |= 0x04;
@@ -14841,6 +14856,7 @@ static int scene_host_input_frame(HWND hwnd, int frame, XPad *pad,
                 btn |= 0x80;
             if (key_act(HOST_KEY_START))  btn |= 0x08;   /* enter     */
             if (key_act(HOST_KEY_SELECT)) btn |= 0x04;   /* backspace */
+            btn |= mouse_start_select_raw();             /* MOUSEBIND1 */
             if (pad_live) {
                 if (pad->buttons & 0x0008) btn |= 0x10;   /* d-pad right */
                 if (pad->buttons & 0x0004) btn |= 0x20;   /* d-pad left  */

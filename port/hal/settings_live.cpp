@@ -72,6 +72,15 @@ static const SlInfo INFO[] = {
     { "MouseCamZoomOut", SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
     { "MouseCamMode",    SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
     { "MouseLook",       SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
+    /* MOUSEBIND1: the game actions, in their HOST_MOUSE_ place (after MouseLook) */
+    { "MouseJump",        SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
+    { "MouseAttack",      SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
+    { "MouseCrouch",      SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
+    { "MouseRun",         SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
+    { "MouseStart",       SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
+    { "MouseSelect",      SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
+    { "MousePartyInvite", SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
+    { "MousePartyLeave",  SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
     /* the rest */
     { "RunMode",                SL_KIND_ENUM,    0, 2, 1, RUN_NAMES, 1 },
     { "StickDeadzone",          SL_KIND_PERCENT, 0, 50, 24, 0, 1 },

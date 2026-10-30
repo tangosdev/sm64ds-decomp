@@ -660,12 +660,12 @@ const Row ROWS_CONTROLS[] = {
     { R_BIND, "Down", SL_KEY_BASE + HOST_KEY_DOWN, SL_KEY_BASE + HOST_KEY_DOWN_ALT, 0, 0, 0 },
     { R_BIND, "Left", SL_KEY_BASE + HOST_KEY_LEFT, SL_KEY_BASE + HOST_KEY_LEFT_ALT, 0, 0, 0 },
     { R_BIND, "Right", SL_KEY_BASE + HOST_KEY_RIGHT, SL_KEY_BASE + HOST_KEY_RIGHT_ALT, 0, 0, 0 },
-    { R_BIND, "Jump", SL_KEY_BASE + HOST_KEY_JUMP, SL_PAD_BASE + HOST_PAD_JUMP, 0, 0, 0 },
-    { R_BIND, "Attack", SL_KEY_BASE + HOST_KEY_ATTACK, SL_PAD_BASE + HOST_PAD_ATTACK, 0, 0, 0 },
-    { R_BIND, "Crouch", SL_KEY_BASE + HOST_KEY_CROUCH, SL_PAD_BASE + HOST_PAD_CROUCH, 0, 0, 0 },
-    { R_BIND, "Run", SL_KEY_BASE + HOST_KEY_RUN, SL_PAD_BASE + HOST_PAD_RUN, 0, 0, 0 },
-    { R_BIND, "Start", SL_KEY_BASE + HOST_KEY_START, SL_PAD_BASE + HOST_PAD_START, 0, 0, 0 },
-    { R_BIND, "Select", SL_KEY_BASE + HOST_KEY_SELECT, SL_PAD_BASE + HOST_PAD_SELECT, 0, 0, 0 },
+    { R_BIND, "Jump", SL_KEY_BASE + HOST_KEY_JUMP, SL_PAD_BASE + HOST_PAD_JUMP, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_JUMP + 1 },
+    { R_BIND, "Attack", SL_KEY_BASE + HOST_KEY_ATTACK, SL_PAD_BASE + HOST_PAD_ATTACK, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_ATTACK + 1 },
+    { R_BIND, "Crouch", SL_KEY_BASE + HOST_KEY_CROUCH, SL_PAD_BASE + HOST_PAD_CROUCH, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_CROUCH + 1 },
+    { R_BIND, "Run", SL_KEY_BASE + HOST_KEY_RUN, SL_PAD_BASE + HOST_PAD_RUN, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_RUN + 1 },
+    { R_BIND, "Start", SL_KEY_BASE + HOST_KEY_START, SL_PAD_BASE + HOST_PAD_START, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_START + 1 },
+    { R_BIND, "Select", SL_KEY_BASE + HOST_KEY_SELECT, SL_PAD_BASE + HOST_PAD_SELECT, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_SELECT + 1 },
     { R_BIND, "Look", SL_KEY_BASE + HOST_KEY_LOOK, SL_PAD_BASE + HOST_PAD_LOOK, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_LOOK + 1 },
     { R_BIND, "Center camera", SL_KEY_BASE + HOST_KEY_CAM_CENTER, SL_PAD_BASE + HOST_PAD_CAM_CENTER, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_CAM_CENTER + 1 },
     { R_BIND, "Rotate camera left", SL_KEY_BASE + HOST_KEY_CAM_LEFT, SL_PAD_BASE + HOST_PAD_CAM_LEFT, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_CAM_LEFT + 1 },
@@ -684,8 +684,8 @@ const Row ROWS_ONLINE[] = {
     { R_CHECK, "Online events", SL_ONLINE_EVENTS, -1, 0, 0, 0 },
     { R_CHOICE, "Chat size", SL_CHAT_SCALE, -1, 0, CHAT_LABELS, 5, CHAT_VALS },
     { R_HEAD, "World party", -1, -1, 0, 0, 0 },
-    { R_BIND, "Party invite", SL_KEY_BASE + HOST_KEY_PARTY_INVITE, SL_PAD_BASE + HOST_PAD_PARTY_INVITE, 0, 0, 0 },
-    { R_BIND, "Leave party", SL_KEY_BASE + HOST_KEY_PARTY_LEAVE, SL_PAD_BASE + HOST_PAD_PARTY_LEAVE, 0, 0, 0 },
+    { R_BIND, "Party invite", SL_KEY_BASE + HOST_KEY_PARTY_INVITE, SL_PAD_BASE + HOST_PAD_PARTY_INVITE, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_PARTY_INVITE + 1 },
+    { R_BIND, "Leave party", SL_KEY_BASE + HOST_KEY_PARTY_LEAVE, SL_PAD_BASE + HOST_PAD_PARTY_LEAVE, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_PARTY_LEAVE + 1 },
     { R_NOTE, "Name, colours and voice are set in the launcher.", -1, -1, 0, 0, 0 },
 };
 /* CHEATS1: CHEATS holds the rows that change how the game plays, moved from GENERAL (same keys: DebugMenu, CharactersUnlockedFromStart,
@@ -1314,7 +1314,19 @@ extern "C" int settings_page_frame(const SpInput *in)
             const int pad = !mouse && id >= SL_PAD_BASE;
             const int lo = mouse ? SL_MOUSE_BASE + HOST_MOUSE_CAM_CENTER : pad ? SL_PAD_BASE + HOST_PAD_CAM_CENTER : SL_KEY_BASE + HOST_KEY_CAM_CENTER;
             const int hi = mouse ? SL_MOUSE_BASE + HOST_MOUSE_CAM_MODE : pad ? SL_PAD_BASE + HOST_PAD_CAM_ZOOM_OUT : SL_KEY_BASE + HOST_KEY_CAM_ZOOM_OUT;
-            if (id >= lo && id <= hi) {
+            if (mouse && id < SL_MOUSE_BASE + HOST_MOUSE_COUNT) {
+                /* MOUSEBIND1: every mouse row, in HOST_MOUSE_ order; two actions may share a button and the page says which */
+                static const char *const m_names[HOST_MOUSE_COUNT] = { "Mouse look button", "Center camera", "Rotate camera left",
+                    "Rotate camera right", "Tilt camera up", "Tilt camera down", "Zoom camera in", "Zoom camera out", "Camera mode", "Look",
+                    "Jump", "Attack", "Crouch", "Run", "Start", "Select", "Party invite", "Leave party" };
+                for (int o = SL_MOUSE_BASE; o < SL_MOUSE_BASE + HOST_MOUSE_COUNT; ++o)
+                    if (o != id && sl_get(o) == sl_get(id) && sl_get(id)) {
+                        char b[160];
+                        snprintf(b, sizeof b, "Shared with %s", m_names[o - SL_MOUSE_BASE]);
+                        note(b);
+                        break;
+                    }
+            } else if (id >= lo && id <= hi) {
                 /* host order: center, left, right, mode (key / pad), up, down, zoom in, zoom out; mouse: center, left, right, up, down, zoom in, zoom out, mode */
                 static const char *const cam_names_kp[8] = { "Center camera", "Rotate camera left", "Rotate camera right", "Camera mode",
                                                              "Tilt camera up", "Tilt camera down", "Zoom camera in", "Zoom camera out" };

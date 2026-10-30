@@ -602,6 +602,14 @@ const BindKey MOUSE_BIND[HOST_MOUSE_COUNT] = {
     { "MouseCamZoomOut", 0 },
     { "MouseCamMode",    0 },
     { "MouseLook",       0 },
+    { "MouseJump",       0 },     /* MOUSEBIND1: the game actions, unbound until the player binds one */
+    { "MouseAttack",     0 },
+    { "MouseCrouch",     0 },
+    { "MouseRun",        0 },
+    { "MouseStart",      0 },
+    { "MouseSelect",     0 },
+    { "MousePartyInvite", 0 },
+    { "MousePartyLeave", 0 },
 };
 int g_mouse[HOST_MOUSE_COUNT];
 int g_camera_stick_zoom;

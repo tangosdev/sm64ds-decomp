@@ -199,11 +199,17 @@ enum { HOST_PAD_LT = 0x10000, HOST_PAD_RT = 0x20000, HOST_PAD_MASK_MAX = 0x3ffff
                     movement, today's right-button look. 0 turns the hold off (use
                     MouseCapture for look with no button).
      MouseCamCenter / MouseCamLeft / MouseCamRight / MouseCamUp / MouseCamDown /
-     MouseCamZoomIn / MouseCamZoomOut / MouseCamMode / MouseLook: all default 0. */
+     MouseCamZoomIn / MouseCamZoomOut / MouseCamMode / MouseLook: all default 0.
+   MOUSEBIND1: the game actions too, all default 0 (nobody's controls change):
+     MouseJump / MouseAttack / MouseCrouch / MouseRun / MouseStart / MouseSelect /
+     MousePartyInvite / MousePartyLeave. A bound button is read like the action's key,
+     into the same words, so it does what that key does where that key does it. */
 enum {
     HOST_MOUSE_CAM_HOLD = 0, HOST_MOUSE_CAM_CENTER, HOST_MOUSE_CAM_LEFT, HOST_MOUSE_CAM_RIGHT,
     HOST_MOUSE_CAM_UP, HOST_MOUSE_CAM_DOWN, HOST_MOUSE_CAM_ZOOM_IN, HOST_MOUSE_CAM_ZOOM_OUT,
     HOST_MOUSE_CAM_MODE, HOST_MOUSE_LOOK,
+    HOST_MOUSE_JUMP, HOST_MOUSE_ATTACK, HOST_MOUSE_CROUCH, HOST_MOUSE_RUN,
+    HOST_MOUSE_START, HOST_MOUSE_SELECT, HOST_MOUSE_PARTY_INVITE, HOST_MOUSE_PARTY_LEAVE,
     HOST_MOUSE_COUNT
 };
 int host_setting_mouse(int action);                     /* VK of the bound button or 0 */
