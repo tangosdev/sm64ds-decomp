@@ -1155,9 +1155,9 @@ extern "C" void port_fader_wipe_render(void)
     Matrix4x3_FromTranslation(mtx, 0, 0, -0x1000);
     Matrix4x3_ApplyInPlaceToScale(mtx, sc, sc, sc);
     Matrix4x3_ApplyInPlaceToRotationX(mtx, 0x4000);
-    /* FADEFLASH1: the mesh is fixed to the screen; the pictures between ticks draw it as this tick drew it
-       (ntr/gx.cpp, gx_interp_screen_begin) instead of blending it with the camera, which made one black picture
-       when the camera jumped as a pit death began */
+    /* FADEFLASH1: the mesh is fixed to the screen; the pictures between ticks blend its matrices straight with the
+       last tick's (ntr/gx.cpp, gx_interp_screen_begin) instead of re-viewing it through the blended camera, which made
+       one black picture when the camera jumped as a pit death began */
     port_gx_interp_screen_begin();
     _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3(
         (char *)g_wipe_draw + 0x18, mtx, 0);

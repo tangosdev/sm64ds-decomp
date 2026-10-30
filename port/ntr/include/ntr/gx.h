@@ -770,7 +770,7 @@ int gx_interp_ready();
 // The blended camera's eye, for the probe.
 void gx_interp_view(float alpha, float eye[3]);
 // FADEFLASH1: the geometry drawn between these two calls is fixed to the screen (the fader wipe's mesh); a picture
-// between ticks draws it with this tick's own matrices, never blended or re-viewed. Inert unless a frame is recording.
+// between ticks blends its matrices straight with the last tick's, never re-viewed. Inert unless a frame is recording.
 void gx_interp_screen_begin();
 void gx_interp_screen_end();
 // Replay the current record at alpha (0 = the previous tick, 1 = this tick)
