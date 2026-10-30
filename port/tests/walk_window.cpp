@@ -6924,6 +6924,11 @@ static void port_scene_soft_reset(int frame, int was_up)
     /* THE STAR SELECT IS NOT A SCENE OF ITS OWN HERE: hal/level_change.cpp runs it as an interlude inside the level change, and
        that interlude ends only on its scene-3 ask (the castle Stage waits outside the tree), so a scene-1 ask inside it strands
        the interlude (row star_r2: torn down by the backstop, then 0xC0000409). It takes the restart at the front door. */
+#ifndef PORT_ROM_CLEAN
+    /* proof rows only (compiled out of a kit): SM64DS_RESET_SCENEBOOT_INPLACE=1 lets a minigame booted with SM64DS_SCENE answer in
+       place, so each minigame type can be reached without walking the Rec Room's menu; a player's minigame is never scene-booted */
+    if (why && strstr(why, "(SM64DS_SCENE is set)") && getenv("SM64DS_RESET_SCENEBOOT_INPLACE")) why = 0;
+#endif
     if (!why && port_level_interlude_live())
         why = "the star select runs inside the level change interlude, which only ends on its own scene 3 ask";
     if (wait < 0) {
@@ -6963,7 +6968,19 @@ static void port_scene_soft_reset(int frame, int was_up)
     fprintf(stderr, "[seamless] in place refused: %s; restarting\n", why);
     data_0209f1e0[0] = 0;
     data_0209f1e4 = 0;
-    if (g_selftest_frames) {
+    int successor = !g_selftest_frames;
+#ifndef PORT_ROM_CLEAN
+    /* KNOWNRESET1 proof arm (dev only): SM64DS_RESET_SELFTEST_RELAUNCH=1 lets a selftest that drove itself to a refused scene
+       (the star select) really start its successor, so the row can show the new process booting the title. The scripted key and
+       warp feeds are cleared with the selftest so the child is a plain launch. */
+    if (!successor && getenv("SM64DS_RESET_SELFTEST_RELAUNCH")) {
+        successor = 1;
+        SetEnvironmentVariableA("SM64DS_HOST_KEY", 0);
+        SetEnvironmentVariableA("SM64DS_WARP_SEQ", 0);
+        SetEnvironmentVariableA("SM64DS_RESET_SELFTEST_RELAUNCH", 0);
+    }
+#endif
+    if (!successor) {
         fprintf(stderr, "[loopin2] scene soft reset: no successor: this run is a %d-frame selftest\n", g_selftest_frames);
     } else if (port_online_quit_offline_env(), port_menu_relaunch(-1, -1)) {
         fprintf(stderr, "[loopin2] scene soft reset: started the game again at its front door (the title), this process is quitting\n");
@@ -19184,11 +19201,21 @@ int main(void)
                inlined (run link100, lane INPUTRAW) because the pad-mirror
                store just below wants this SAME value: the mirror and the
                comms stash must agree bit for bit. */
-            const unsigned short port_raw_bt_bits_for_mirror = (unsigned short)(
+            unsigned short port_raw_bt_bits_for_mirror = (unsigned short)(
                 host_btn_to_raw_keys(btn) |
                 (menu_on ? 0 : host_menu_raw_keys(pad_live, &pad)) |
                 (menu_on ? 0 : port_input_probe_bits(
                     port_rom_frame_checked(frame, "input-probe-raw"))));
+            /* KNOWNRESET1: THE SOFT RESET FROM THE PAUSE MENU AND IN EVERY CAMERA MODE. The DS L reaches this word only from the
+               centre-camera bind inside the DS camera block, and that bind reads as not pressed while the ROM's pause is up (CAMPACK2's
+               cam_paused) and in the analog and free cameras, so L + R + START + SELECT could not be formed there; on the cartridge
+               dScene_c::BeforeBehavior takes the latch branch before its pause branch, so the combo resets from the pause menu too.
+               The L bit is added here only when the other three combo bits are already in the word (R 0x100, START 0x08, SELECT
+               0x04), so a lone centre-camera press keeps the camera's own rules and only the full combo changes. */
+            if (!menu_on && (port_raw_bt_bits_for_mirror & 0x10c) == 0x10c &&
+                (key_act(HOST_KEY_CAM_CENTER) || mouse_act(HOST_MOUSE_CAM_CENTER) ||
+                 (pad_live && pad_act(&pad, HOST_PAD_CAM_CENTER))))
+                port_raw_bt_bits_for_mirror = (unsigned short)(port_raw_bt_bits_for_mirror | 0x200);
             port_raw_btn_stash(port_raw_bt_bits_for_mirror);
             /* THE PAD MIRROR (run link100, lane INPUTRAW; moved here from
                right after `raw`'s four direction bits were computed, a few
