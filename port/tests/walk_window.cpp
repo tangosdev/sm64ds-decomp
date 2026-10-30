@@ -19101,7 +19101,11 @@ int main(void)
                         /* below the ROM's step: scaled after the camera's own tick (ct_camera_behavior_post) */
                         static int kc1_old = -1;
                         if (kc1_old < 0) kc1_old = getenv("SM64DS_KNOWNCAM1_OLD") ? 1 : 0;
-                        if (!kc1_old && kc1_eye_over_player(cam)) {
+                        /* only a real analog light tilt: the stick alone, below its full push. A full push, Q/E or a shoulder key at a
+                           Camera speed under 100 also lands in this branch and keeps the rotate bit as before. */
+                        const int kc1_light = ds_stick_only && ds_stick_rate != 0 &&
+                                              (ds_stick_rate < 0 ? -ds_stick_rate : ds_stick_rate) < CAM_STEP;
+                        if (!kc1_old && kc1_light && kc1_eye_over_player(cam)) {
                             /* KNOWNCAM1: the eye is over the player; the ROM's own no-press tick (its close follow) runs */
                             cam_rot &= ~(cam_bit_left | cam_bit_right);
                         } else {
