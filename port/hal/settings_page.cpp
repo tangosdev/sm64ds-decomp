@@ -1865,6 +1865,24 @@ static void spi_keep_page()
     g_spi_pf = S.pf;
     g_spi_fin_ok = 0;
 }
+/* proof trace: the strip's window start and its sideways shift in pixels (the first name's left edge from the sheet's left edge) on a picture
+   at `alpha` of this frame */
+extern "C" int settings_page_strip_place(double alpha, double *win, double *shift)
+{
+    if (!S.open) return 0;
+    const double keep = g_sp_pic_alpha;
+    g_sp_pic_alpha = alpha < 0 ? 0 : (alpha > 1 ? 1 : alpha);
+    const double f = strip_win_now();
+    g_sp_pic_alpha = keep;
+    const int a = (int)f, b = a + 1 < T_COUNT - TAB_VIS + 1 ? a + 1 : a;
+    const float fr = (float)(f - a);
+    const float off = L.tab_pos[a] + (L.tab_pos[b] - L.tab_pos[a]) * fr;
+    const float wa = L.tab_pos[a + TAB_VIS] - L.tab_gap - L.tab_pos[a], wb = L.tab_pos[b + TAB_VIS] - L.tab_gap - L.tab_pos[b];
+    const float lend = L.sx + (L.sw - (wa + (wb - wa) * fr)) * 0.5f;
+    *win = f;
+    *shift = lend - off - L.sx;
+    return 1;
+}
 extern "C" int settings_page_picture(double alpha)
 {
     if (!S.open || g_spi_pf != S.pf || S.slide_t <= 0 || !g_spi_px) return 0;

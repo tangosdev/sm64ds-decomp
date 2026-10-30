@@ -66,6 +66,7 @@ int  settings_page_strip_moving(void);
 /* SETPAGEINTERP1: redraw the last frame's picture with the page at `alpha` between that frame and the one before (the pacer's pictures between
    ticks); 0 when this frame kept nothing to redraw (nothing moves, Smooth Motion off, the page did not draw this frame) */
 int  settings_page_picture(double alpha);
+int  settings_page_strip_place(double alpha, double *win, double *shift);   /* proof trace: where the strip stands at `alpha` of this frame */
 void settings_page_idle_tick(int idle_frames, int w, int h);   /* hooks.cpp: warms the caches once, when OneScreenMenus is on */
 int settings_page_warm_waiting(void);               /* PAUSEFIX1: 1 while the worker decodes the picture the warm-up waits for */
 int settings_page_warm_step(int w, int h);          /* PAUSEFIX1: one small slice of the cache build (about 2 ms at most); 1 when all of it is cached for this size */
