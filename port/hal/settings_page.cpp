@@ -992,6 +992,13 @@ void caps_of(const Row &R, CapPos *cp /* [3] */)
     cp[0].x = L.ctl_x;
     cp[1].x = L.ctl_x + cp[0].w + P(24);
     cp[2].x = cp[1].x + cp[1].w + P(24);
+    /* MOUSEBIND1: three long caps (BKSP / NONE / FORWARD on Select) ran into the scroll bar: close the two gaps just enough to stop short of it */
+    const int over = bind_cols(R) == 3 ? cp[2].x + cp[2].w - (L.bar[0] - P(10)) : 0;
+    if (over > 0) {
+        const int g = P(24) - (over + 1) / 2 < P(6) ? P(6) : P(24) - (over + 1) / 2;
+        cp[1].x = L.ctl_x + cp[0].w + g;
+        cp[2].x = cp[1].x + cp[1].w + g;
+    }
 }
 /* which cap a pointer x is nearest: the last one whose left edge is within P(12) of it */
 int cap_col_at(const Row &R, const CapPos *cp, int mx)
