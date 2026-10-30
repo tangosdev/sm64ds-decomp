@@ -6894,6 +6894,80 @@ static int port_online_leave_restart(void)
 }
 static const int port_online_leave_restart_seated = (port_online_leave_restart_hook = port_online_leave_restart, 1);
 
+/* KNOWNRESET1: THE SOFT RESET ON A SCENE (the title, the file select, the Rec Room, every minigame, the card game, the star select).
+   On the cartridge one loop (src/unnamed/arm9/0201/func_020197b8.c) runs every scene and every level, and func_02023498 raises the
+   latch on any of them; dScene_c::BeforeBehavior (src/game/stages/d_scene.cpp, the latch branch) is the base of every scene's
+   BeforeBehavior (dScMgBase_c's calls it), so a scene fades for 16 frames with input zeroed, asks for scene 1 with
+   StartSceneFade(1, 0, 0), snaps the colour fader and marks itself, and the title's dScDSMT_c::InitResources stores
+   data_0209b340[1] = 1. The brightness fade cannot step here (_ZTV15dFdBrightness_c slot 2 is trapped), so this is the level
+   loop's SEAMRESET1 / SEAMRESET2 / SEAMCLEAN1 answer moved onto the scene loop: hal/scene_boot.cpp's port_scene_tick calls it right
+   after func_02023498 with `was_up` = the latch before that call. 15 frozen frames with the parked fader taken back, then the two
+   title stores, the latch byte down, StartSceneFade(1, 0, 0), the colour fader snapped and at its end, so the scene's ordinary
+   BeforeBehavior marks it and the scene carrier spawns the title in this process. data_0209f1dc is left to func_02023498, so a
+   combo still held cannot raise the latch again. Offline only: with a transport up nothing here runs (online, VS, coop, party keep
+   what they did before); an offline refusal (a code mod, a scene-booted process) restarts at the front door like the level loop. */
+static void port_scene_soft_reset(int frame, int was_up)
+{
+    static int wait = -1, parked, answered;
+    if (!data_0209f1e0[0]) {
+        if (answered || wait >= 0) {
+            fprintf(stderr, "[loopin2] scene f%d soft reset: the latch is down (still-held %u): the reset is armed again\n",
+                    frame, (unsigned)data_0209f1dc[0]);
+            fflush(stderr);
+        }
+        wait = -1; parked = 0; answered = 0;
+        return;
+    }
+    if (!was_up || answered || rb_replaying() || port::comms_transport()) return;
+    const char *why = port_quit_in_place_refusal();
+    if (wait < 0) {
+        wait = frame;
+        fprintf(stderr, "[loopin2] scene f%d soft reset: the latch is up on scene %u (L+R+START+SELECT)\n", frame,
+                (unsigned)data_02092664);
+    }
+    if (!why) {
+        if (data_0209f1e4 == (void *)data_0209f5d0) {
+            parked = 1;
+            data_0209f1e4 = 0;
+        }
+        if (!parked) {
+            if (frame - wait < 30) return;
+            why = "the ROM did not start its reset fade within 30 frames";
+        } else if (frame - wait < 15) {
+            return;
+        }
+    }
+    answered = 1;
+    if (!why) {
+        if (port_level_crossing_live()) port_front_end_in_place = 1;
+        data_0209b340[1] = 1;
+        data_0209f1e0[0] = 0;
+        data_0209f1e4 = 0;
+        _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);
+        /* the colour fader at its end: the word after the vptr is currInterp in the ROM's Fader as in HalFaderWipe. The level
+           block's snap through port_hal_wipe_s10 is not made here: on a scene data_0209f5e8 holds the scene's own fader object,
+           which that seated wipe body refuses ("WRONG RECEIVER", row rr5k_r1), and the at-end word is what IsAtEnd reads */
+        ((int *)data_0209f5e8)[1] = 0x1000;
+        fprintf(stderr, "[loopin2] scene f%d soft reset: returning to the title in this process (the ROM's own scene change to "
+                "scene 1 after %d frozen frames; installed fader %p, colour fader %p)\n", frame, frame - wait,
+                data_0209f5bc, (void *)data_0209f5e8);
+        fflush(stderr);
+        return;
+    }
+    fprintf(stderr, "[seamless] in place refused: %s; restarting\n", why);
+    data_0209f1e0[0] = 0;
+    data_0209f1e4 = 0;
+    if (g_selftest_frames) {
+        fprintf(stderr, "[loopin2] scene soft reset: no successor: this run is a %d-frame selftest\n", g_selftest_frames);
+    } else if (port_online_quit_offline_env(), port_menu_relaunch(-1, -1)) {
+        fprintf(stderr, "[loopin2] scene soft reset: started the game again at its front door (the title), this process is quitting\n");
+    }
+    fflush(stderr);
+    W.PostQuitMessage_(0);
+}
+extern "C" void (*port_scene_soft_reset_hook)(int frame, int was_up);   /* hal/scene_boot.cpp */
+static const int port_scene_soft_reset_seated = (port_scene_soft_reset_hook = port_scene_soft_reset, 1);
+
 static int port_front_end_quit_poll(int frame)
 {
     static int seen = -1;       /* the frame the request first appeared */
@@ -14871,8 +14945,15 @@ static int scene_host_input_frame(HWND hwnd, int frame, XPad *pad,
            wants this SAME value. */
         if (g_cs_hide) btn = (unsigned short)(btn & ~g_cs_hide);      /* PRECOURSE1: what the star select's strip took */
         if (port_join_plate_up()) btn = 0;                           /* JOINFLOW1: the Joining plate takes every key */
+        /* KNOWNRESET1: THE DS L BUTTON ON THE SCENE PATH. The level path's DS L is the centre-camera bind (Ctrl 0x4000 -> raw
+           0x200 through host_btn_to_raw_keys); the scene path had no L at all, so L + R + START + SELECT (0x30c, the soft reset
+           func_0203bc7c tests for) could not be formed on the title, the file select, the Rec Room, a minigame or the star
+           select, where the cartridge resets too. Same binds, raw bit only (the Ctrl word above keeps its five bits). */
+        const unsigned short scene_l = (!menu_on && !port_join_plate_up() &&
+            (key_act(HOST_KEY_CAM_CENTER) || mouse_act(HOST_MOUSE_CAM_CENTER) ||
+             (pad_live && pad_act(pad, HOST_PAD_CAM_CENTER)))) ? 0x0200 : 0;
         const unsigned short scene_raw_all =
-            (unsigned short)(host_btn_to_raw_keys(btn) | (btn & 0x00fc));
+            (unsigned short)(host_btn_to_raw_keys(btn) | (btn & 0x00fc) | scene_l);
         port_host_keys_set(scene_raw_all);
         /* SLOT 0 ONLY, AND ONLY WHEN THE ROM'S FAN-OUT IS NOT DRIVING.
            Run mg16 lane MP3, field failure 2. This publishes the LOCAL
@@ -19506,7 +19587,9 @@ int main(void)
                    never raises the latch there (rows rr5, rr366, star of REVSEAMRESET2); wiring both also needs a port answer for
                    the trapped brightness fader on the scene side or the player is left with dead input. A PC player leaves those
                    scenes through their own exits or the pause menu. Revisit after 1.0 if asked; the two seams are in
-                   out/SEAMRESET2/suspects.tsv. */
+                   out/SEAMRESET2/suspects.tsv.
+                   KNOWNRESET1 REVERSED IT: the scene key word carries L now, port_scene_tick runs func_0203bc7c's latch test
+                   solo, and port_scene_soft_reset is this block's answer on the scene loop. */
                 /* SEAMRESET2: func_02023498 found the latch up, so its ResetInput zeroed the Ctrl records this frame; the
                    host's direct Ctrl store further down (data_0209f49c / data_0209f49e from btn) would write the held keys
                    straight back before phase 4, and Mario jumped on an A pressed inside the reset (rows fz_r1 before this
