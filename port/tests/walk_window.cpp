@@ -11229,6 +11229,8 @@ extern "C" int port_message_engine_a_replay(void *fbp);
 extern "C" void hal_sub_screen_blend_rescan(void);
 extern "C" void hal_sub_screen_blend_restore(void);
 extern "C" long hal_sub_screen_blend_check(void);
+extern "C" void port_mghr_frac_set(const short *obj, const short *bg);
+extern "C" void port_mghr_a_frac_set(const short *obj);
 enum { kMgiReach = 48, kMgiBgReach = 64 };
 static const double kMgiTurnDeg = 60.0;
 static const double kMgiPi = 3.14159265358979323846;
@@ -11295,6 +11297,28 @@ static void mgi_capture(void)
         }
     }
     memcpy(g_mgi_cur.oam, port_message_engine_a_oam_drawn(), 0x400);
+    {   /* MGHIRES1 survey: shown sprites per engine whose matrix turns or scales, and affine BGs with a non-identity matrix */
+        extern unsigned g_mghr_survey[2][3];
+        for (int e = 0; e < 2; ++e) {
+            const unsigned char *O = g_mgi_cur.oam + e * 0x400;
+            for (int i = 0; i < 128; ++i) {
+                const int a0 = mgi_rd16(O + i * 8), a1 = mgi_rd16(O + i * 8 + 2);
+                if ((a0 & 0x300) != 0x100 && (a0 & 0x300) != 0x300) continue;
+                const int g = (a1 >> 9) & 31;
+                const int pa = (short)mgi_rd16(O + (g * 4) * 8 + 6), pb = (short)mgi_rd16(O + (g * 4 + 1) * 8 + 6);
+                const int pc = (short)mgi_rd16(O + (g * 4 + 2) * 8 + 6), pd = (short)mgi_rd16(O + (g * 4 + 3) * 8 + 6);
+                if (pa != 256 || pb || pc || pd != 256) ++g_mghr_survey[e][(pb || pc) ? 0 : 1];
+            }
+            const unsigned dc = (unsigned)(mgi_rd16(g_mgi_cur.reg[e]) | (mgi_rd16(g_mgi_cur.reg[e] + 2) << 16));
+            const int mode = dc & 7;
+            for (int bg = 2; bg < 4; ++bg) {
+                if (!((dc >> (8 + bg)) & 1)) continue;
+                if (!((bg == 3 && mode >= 1 && mode <= 5) || (bg == 2 && (mode == 2 || mode == 4 || mode == 5)))) continue;
+                const unsigned char *R = g_mgi_cur.reg[e] + 0x20 + (bg - 2) * 0x10;
+                if ((short)mgi_rd16(R) != 256 || mgi_rd16(R + 2) || mgi_rd16(R + 4) || (short)mgi_rd16(R + 6) != 256) ++g_mghr_survey[e][2];
+            }
+        }
+    }
     g_mgi_cur.serial = g_si_ticks;
     g_mgi_cur.valid = 1;
 }
@@ -11342,6 +11366,9 @@ static inline int mgi_same(const unsigned char *a, const unsigned char *b)
 static inline int mgi_dx(int c, int p) { return ((c - p + 256) & 511) - 256; }
 static inline int mgi_dy(int c, int p) { return ((c - p + 128) & 255) - 128; }
 /* one engine's 128 sprites: positions and the matrices of the groups only blended sprites use */
+/* MGHIRES1: the part of a blended place the rounding to whole DS pixels dropped, 1/256 px (true - drawn), per entry / BG */
+static short g_mgi_ofr[128][2], g_mgi_bfr[4][2];
+static inline short mgi_rem(double want, int drawn) { return (short)floor((want - drawn) * 256.0 + 0.5); }
 static void mgi_blend_oam(const unsigned char *P, const unsigned char *C, unsigned char *O, double alpha)
 {
     signed char grp_ok[32];            /* 1 = every shown sprite of tick N using the group was blended, -1 = one was not */
@@ -11377,6 +11404,8 @@ static void mgi_blend_oam(const unsigned char *P, const unsigned char *C, unsign
                     moved = 1;
                     const int x = ((p1 & 511) + mgi_round(dx * alpha)) & 511;
                     const int y = ((p0 & 255) + mgi_round(dy * alpha)) & 255;
+                    g_mgi_ofr[i][0] = mgi_rem(dx * alpha, mgi_round(dx * alpha));
+                    g_mgi_ofr[i][1] = mgi_rem(dy * alpha, mgi_round(dy * alpha));
                     mgi_wr16(o, (c0 & 0xFF00) | y);
                     mgi_wr16(o + 2, (c1 & 0xFE00) | x);
                 }
@@ -11417,6 +11446,8 @@ static void mgi_blend_bg(const unsigned char *P, const unsigned char *C, unsigne
             if (abs(dh) > kMgiBgReach || abs(dv) > kMgiBgReach) { ++g_mgi_n[5]; continue; }
             mgi_wr16(O + 0x10 + bg * 4, (ph + mgi_round(dh * alpha)) & 511);
             mgi_wr16(O + 0x12 + bg * 4, (pv + mgi_round(dv * alpha)) & 511);
+            g_mgi_bfr[bg][0] = mgi_rem(dh * alpha, mgi_round(dh * alpha));
+            g_mgi_bfr[bg][1] = mgi_rem(dv * alpha, mgi_round(dv * alpha));
             ++g_mgi_n[4];
             continue;
         }
@@ -11444,9 +11475,14 @@ static void mgi_swap_in(double alpha)
     mgi_read(g_mgi_live);
     MgiState o = g_mgi_cur;
     for (int e = 0; e < 2; ++e) {
+        memset(g_mgi_ofr, 0, sizeof g_mgi_ofr);
+        memset(g_mgi_bfr, 0, sizeof g_mgi_bfr);
         mgi_blend_oam(g_mgi_prev.oam + e * 0x400, g_mgi_cur.oam + e * 0x400, o.oam + e * 0x400, alpha);
         mgi_blend_bg(g_mgi_prev.reg[e], g_mgi_cur.reg[e], o.reg[e], alpha, e);
+        if (e == 0) port_mghr_a_frac_set(alpha < 1.0 ? &g_mgi_ofr[0][0] : 0);   /* MGHIRES1: engine A's sprite remainders */
     }
+    /* MGHIRES1: engine B's (the loop's last) remainders, for its render-scale scan-out; alpha 1 has none */
+    port_mghr_frac_set(alpha < 1.0 ? &g_mgi_ofr[0][0] : 0, &g_mgi_bfr[0][0]);
     memcpy((void *)0x07000000, o.oam, sizeof o.oam);
     /* engine A: DISPCNT and the BG words as its raster read them (blended); engine B: the scroll and affine words */
     memcpy((void *)0x04000000, o.reg[0], 4);
@@ -11457,6 +11493,8 @@ static void mgi_swap_in(double alpha)
 static void mgi_swap_out(void)
 {
     if (!g_mgi_swapped) return;
+    port_mghr_frac_set(0, 0);
+    port_mghr_a_frac_set(0);
     memcpy((void *)0x07000000, g_mgi_live.oam, sizeof g_mgi_live.oam);
     memcpy((void *)0x04000000, g_mgi_live.reg[0], 4);
     memcpy((void *)0x04000008, g_mgi_live.reg[0] + 8, 0x38);
@@ -11486,8 +11524,14 @@ static void mgi_after_compose(void)
     hal_sub_screen_blend_restore();
     mgi_swap_out();
 }
+unsigned g_mghr_survey[2][3];
+unsigned g_mghr_g3d[2];
 static void mgi_report(void)
 {
+    if (g_mghr_g3d[0]) fprintf(stderr, "[mg-hires] survey 3D: %u ticks drew 3D groups (at most %u in one tick)\n", g_mghr_g3d[0], g_mghr_g3d[1]);
+    if (g_mghr_survey[0][0] | g_mghr_survey[0][1] | g_mghr_survey[0][2] | g_mghr_survey[1][0] | g_mghr_survey[1][1] | g_mghr_survey[1][2])
+        fprintf(stderr, "[mg-hires] survey (sprite-ticks turned / scaled, affine BG ticks): engine A %u / %u, %u; engine B %u / %u, %u\n",
+                g_mghr_survey[0][0], g_mghr_survey[0][1], g_mghr_survey[0][2], g_mghr_survey[1][0], g_mghr_survey[1][1], g_mghr_survey[1][2]);
     if (!g_mgi_n[0] && !g_mgi_n[6]) return;
     fprintf(stderr, "[mg-interp] %u minigame ticks drawn between, %u refused; %u pictures; sprites moved and blended %u, unmatched (drawn at the tick) %u; BG layers blended %u kept %u; alpha-1 check bad %u\n",
             g_mgi_n[0], g_mgi_n[6], g_mgi_n[1], g_mgi_n[2], g_mgi_n[3], g_mgi_n[4], g_mgi_n[5], g_mgi_n[7]);
@@ -11643,6 +11687,10 @@ static void scene_ip_hook_body(int stage, void *fbp, int frame, int tick_game)
         g_ip_tick_ok = ntr::gx_interp_commit(data_0209b3ec, why >= 0 ? 1 : 0, &ist);
         g_mgi_g3d[0] = g_mgi_g3d[1];   /* MGINTERP1: 3D draw groups of the last two ticks */
         g_mgi_g3d[1] = ist.groups;
+        {   /* MGHIRES1 survey: ticks whose picture has 3D draw groups, and the most groups in one tick */
+            extern unsigned g_mghr_g3d[2];
+            if (ist.groups > 0) { ++g_mghr_g3d[0]; if ((unsigned)ist.groups > g_mghr_g3d[1]) g_mghr_g3d[1] = (unsigned)ist.groups; }
+        }
         g_si_ms[5] += ip_ms_since(tcm);
         if (why < 0 && !g_ip_tick_ok) scene_ip_note(SI_COMMIT);
         ++g_ip_serial;

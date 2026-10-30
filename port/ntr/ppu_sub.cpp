@@ -90,6 +90,7 @@
 #include "ntr/ppu_audit.h"
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -1675,6 +1676,684 @@ void twod_verify_sub(const SubFramebuffer &fb, uint32_t dispcnt,
                      (unsigned)dispcnt);
 }
 
+
+/* ---- THE BOTTOM SCREEN AT RENDER SCALE (run after093, lane MGHIRES1) ---------
+ *
+ * Everything above rasterises engine B at 256x192, the DS's own size, and the
+ * stacked compose scales that up with nearest neighbour. For the tile art that
+ * is the whole truth: a text BG or an unrotated sprite at a whole-pixel place
+ * has no detail finer than a DS pixel. Three things DO have finer detail, and
+ * the scale-up threw it away:
+ *
+ *   - an AFFINE sprite or BG (rotated, scaled: cards turning, wheels, zooms).
+ *     The DS evaluates its matrix once per DS pixel, so its edges step in whole
+ *     DS pixels; evaluated per host pixel the same matrix gives an edge as fine
+ *     as the screen.
+ *   - a position BETWEEN two DS pixels, which MGINTERP1's pictures between two
+ *     ticks produce (a sprite blended 40 percent of the way from x 10 to x 13 is
+ *     at 11.2). Rounded to 11 it moves in DS-pixel steps at 144 Hz.
+ *   - an affine BG's reference point, which is already 1/256 of a pixel.
+ *
+ * THE METHOD IS THE DS's OWN RESOLVER, RUN AT SUB-PIXEL PHASES. Host pixel
+ * (X*S + i, Y*S + j) is DS pixel (X, Y) sampled at (X + i/S, Y + j/S): every
+ * affine map is evaluated at that point (8.8 matrices, so the sum is kept in
+ * 16.16), a sprite or text BG with a sub-pixel remainder is offset by it, and
+ * then the priority walk, the windows, the colour effects and the master
+ * brightness are scan_fast's own, term for term. Windows are whole-DS-pixel
+ * rectangles on the hardware and stay so. Phase (0, 0) with no remainders IS
+ * the DS pixel, so a layer with nothing finer to show (a text BG at a whole
+ * scroll, an unrotated sprite at a whole place, an identity matrix) gives the
+ * same colour at every phase and the picture is the nearest scale-up exactly.
+ * SM64DS_MG_HIRES_CHECK=1 proves the copy of the resolver against scan_fast on
+ * every scan-out: phase (0, 0) of every sensitive row must equal fb.
+ *
+ * ONLY WHAT CAN CHANGE IS REDONE. A row is sensitive when a turned / scaled /
+ * remaindered sprite's box (plus one pixel) or such a BG crosses it; other rows
+ * are the nearest copy. A scan-out with nothing sensitive leaves no buffer and
+ * the compose takes the old path.
+ *
+ * THE PIXEL-ART UPSCALER (optional) is the EPX / AdvMAME Scale2x and Scale3x
+ * rules on the finished 256x192 screen (Scale4x = Scale2x twice), BEFORE the
+ * stacked compose, so the gap band, the side bars and the wipe read the
+ * upscaled panel. It only ever copies a neighbour's colour into a corner, so
+ * no colour that is not in the DS picture appears. Where the render-scale pass
+ * above gives a host pixel a colour different from its DS pixel (a turned
+ * edge, a sub-pixel place) that colour wins; elsewhere the upscaled one does.
+ *
+ * Two buffers: slot 0 is the tick's scan-out, slot 1 a picture between ticks
+ * (hal/sub_screen.cpp's blend rescan), so the tick's buffer survives the
+ * picture. Each remembers the 256x192 picture it was built from and the compose
+ * uses it only for that picture. Off (S 0), none of this runs or allocates. */
+struct HrSlot {
+    uint32_t *px = nullptr;     /* (192*S) x (256*S) */
+    SubFramebuffer *of = nullptr;
+    int S = 0, cap = 0;
+    bool valid = false;
+    bool ups_only = false;   /* built by the upscaler alone (no render-scale rows) */
+};
+HrSlot g_hr[2];
+int g_hr_slot;
+int (*g_hr_policy)(void);      /* hal: bit 0 render scale, bit 1 the upscaler; S comes from active_h */
+short g_hr_ofr[128][2];        /* engine B OAM entry: x, y remainder in 1/256 DS px (true place - drawn place) */
+short g_hr_bfr[4][2];          /* engine B text BG: scroll remainder */
+int g_hr_frac_on;
+long g_hr_n[7];                /* scan-outs built, sensitive rows, phases run, upscaled, check px, check bad px, capped */
+double g_hr_ms;
+
+int hr_check_on()
+{
+    static int v = -1;
+    if (v < 0) { const char *e = std::getenv("SM64DS_MG_HIRES_CHECK"); v = (e && *e && *e != '0') ? 1 : 0; }
+    return v;
+}
+
+inline uint32_t hr_eq_rgb(uint32_t a, uint32_t b) { return ((a ^ b) & 0x00FFFFFFu) == 0; }
+
+/* EPX / Scale2x: src w x h -> dst 2w x 2h (dst stride 2w) */
+void hr_scale2x(const uint32_t *src, int w, int h, uint32_t *dst)
+{
+    const int dw = w * 2;
+    for (int y = 0; y < h; ++y) {
+        const uint32_t *r = src + (size_t)y * w;
+        const uint32_t *ru = src + (size_t)(y > 0 ? y - 1 : 0) * w;
+        const uint32_t *rd = src + (size_t)(y < h - 1 ? y + 1 : y) * w;
+        uint32_t *o0 = dst + (size_t)(y * 2) * dw, *o1 = o0 + dw;
+        for (int x = 0; x < w; ++x) {
+            const uint32_t E = r[x], B = ru[x], H = rd[x];
+            const uint32_t D = r[x > 0 ? x - 1 : 0], F = r[x < w - 1 ? x + 1 : x];
+            uint32_t e0 = E, e1 = E, e2 = E, e3 = E;
+            if (B != H && D != F) {
+                if (D == B) e0 = D;
+                if (B == F) e1 = F;
+                if (D == H) e2 = D;
+                if (H == F) e3 = F;
+            }
+            o0[x * 2] = e0; o0[x * 2 + 1] = e1; o1[x * 2] = e2; o1[x * 2 + 1] = e3;
+        }
+    }
+}
+
+/* AdvMAME Scale3x: src w x h -> dst 3w x 3h */
+void hr_scale3x(const uint32_t *src, int w, int h, uint32_t *dst)
+{
+    const int dw = w * 3;
+    for (int y = 0; y < h; ++y) {
+        const uint32_t *r = src + (size_t)y * w;
+        const uint32_t *ru = src + (size_t)(y > 0 ? y - 1 : 0) * w;
+        const uint32_t *rd = src + (size_t)(y < h - 1 ? y + 1 : y) * w;
+        uint32_t *o0 = dst + (size_t)(y * 3) * dw, *o1 = o0 + dw, *o2 = o1 + dw;
+        for (int x = 0; x < w; ++x) {
+            const int xl = x > 0 ? x - 1 : 0, xr = x < w - 1 ? x + 1 : x;
+            const uint32_t A = ru[xl], B = ru[x], C = ru[xr], D = r[xl], E = r[x], F = r[xr],
+                           G = rd[xl], H = rd[x], I = rd[xr];
+            uint32_t e[9] = {E, E, E, E, E, E, E, E, E};
+            if (B != H && D != F) {
+                e[0] = D == B ? D : E;
+                e[1] = ((D == B && E != C) || (B == F && E != A)) ? B : E;
+                e[2] = B == F ? F : E;
+                e[3] = ((D == B && E != G) || (D == H && E != A)) ? D : E;
+                e[5] = ((B == F && E != I) || (H == F && E != C)) ? F : E;
+                e[6] = D == H ? D : E;
+                e[7] = ((D == H && E != I) || (H == F && E != G)) ? H : E;
+                e[8] = H == F ? F : E;
+            }
+            for (int k = 0; k < 3; ++k) { o0[x * 3 + k] = e[k]; o1[x * 3 + k] = e[3 + k]; o2[x * 3 + k] = e[6 + k]; }
+        }
+    }
+}
+
+/* the base picture at S: the upscaled one (k = 4, 3 or 2 dividing S, then a nearest S/k) or the nearest copy */
+void hr_base(const SubFramebuffer &fb, int S, bool ups, uint32_t *out)
+{
+    const int W = SUB_W * S;
+    int k = 0;
+    if (ups) k = (S % 4 == 0) ? 4 : (S % 3 == 0) ? 3 : (S % 2 == 0) ? 2 : 0;
+    if (!k) {
+        for (int y = 0; y < SUB_H; ++y) {
+            uint32_t *o = out + (size_t)(y * S) * W;
+            for (int x = 0; x < SUB_W; ++x) { const uint32_t c = fb.px[y][x]; for (int i = 0; i < S; ++i) o[x * S + i] = c; }
+            for (int j = 1; j < S; ++j) std::memcpy(o + (size_t)j * W, o, (size_t)W * 4);
+        }
+        return;
+    }
+    static uint32_t *t2, *t4;
+    const uint32_t *up = nullptr;
+    if (k == 2 || k == 4) {
+        if (!t2) t2 = static_cast<uint32_t *>(std::malloc(sizeof(uint32_t) * 512 * 384));
+        if (!t2) { hr_base(fb, S, false, out); return; }
+        hr_scale2x(&fb.px[0][0], SUB_W, SUB_H, t2);
+        up = t2;
+        if (k == 4) {
+            if (!t4) t4 = static_cast<uint32_t *>(std::malloc(sizeof(uint32_t) * 1024 * 768));
+            if (!t4) { hr_base(fb, S, false, out); return; }
+            hr_scale2x(t2, 512, 384, t4);
+            up = t4;
+        }
+    } else {
+        if (!t4) t4 = static_cast<uint32_t *>(std::malloc(sizeof(uint32_t) * 1024 * 768));
+        if (!t4) { hr_base(fb, S, false, out); return; }
+        hr_scale3x(&fb.px[0][0], SUB_W, SUB_H, t4);
+        up = t4;
+    }
+    const int m = S / k, uw = SUB_W * k, uh = SUB_H * k;
+    if (m == 1) { std::memcpy(out, up, sizeof(uint32_t) * (size_t)uw * uh); return; }
+    for (int y = 0; y < uh; ++y) {
+        uint32_t *o = out + (size_t)(y * m) * W;
+        const uint32_t *s = up + (size_t)y * uw;
+        for (int x = 0; x < uw; ++x) for (int i = 0; i < m; ++i) o[x * m + i] = s[x];
+        for (int j = 1; j < m; ++j) std::memcpy(o + (size_t)j * W, o, (size_t)W * 4);
+    }
+}
+
+/* MGHIRES1: the columns qx (1/256 px from the box's left edge) of one sample row qy at which an affine sprite's texture
+   coordinate (the DS's sum, 16.16) can fall inside the sprite, one texel of margin: [lo, hi]; false when none */
+static inline bool mghr_aff_span(int pa, int pb, int pc, int pd, int w, int h, int bw, int bh, int qy, int &lo, int &hi)
+{
+    const double cy = (double)qy - (bh / 2) * 256.0;
+    double a = -1e18, b = 1e18;
+    const double lims[2][2] = {{(-1.0 - w / 2) * 65536.0, (w + 1.0 - w / 2) * 65536.0}, {(-1.0 - h / 2) * 65536.0, (h + 1.0 - h / 2) * 65536.0}};
+    const int k[2] = {pa, pc}, m[2] = {pb, pd};
+    for (int t = 0; t < 2; ++t) {
+        const double r0 = lims[t][0] - m[t] * cy, r1 = lims[t][1] - m[t] * cy;
+        if (k[t] == 0) { if (r0 > 0 || r1 < 0) return false; continue; }
+        double c0 = r0 / k[t], c1 = r1 / k[t];
+        if (c0 > c1) { const double z = c0; c0 = c1; c1 = z; }
+        if (c0 > a) a = c0;
+        if (c1 < b) b = c1;
+    }
+    a += (bw / 2) * 256.0 - 256.0; b += (bw / 2) * 256.0 + 256.0;
+    if (a < 0) a = 0;
+    if (b > bw * 256.0 - 1) b = bw * 256.0 - 1;
+    if (a > b) return false;
+    lo = (int)a; hi = (int)b;
+    return true;
+}
+ObjPixel g_hr_obj[192][256];
+uint8_t g_hr_objwin[192][256];
+uint8_t g_hr_oidx[192][256];        /* the OAM entry that holds each g_hr_obj pixel (the tie rule across the two passes) */
+ObjPixel g_hr_obj0[192][256];       /* the entries with nothing finer to show, drawn once a scan-out */
+uint8_t g_hr_objwin0[192][256], g_hr_oidx0[192][256];
+uint8_t g_hr_sens[128];             /* entry i has something finer to show (hr_rows) */
+
+/* raster_obj at phase (u, v) (1/256 DS px), only rows with need[y]: the same sprites, the same rules, sampled at
+   (X + u/256, Y + v/256) with each entry's remainder taken off its place. u = v = 0 and no remainders is raster_obj. */
+/* pass 0: the entries with nothing finer to show, at phase 0, into a cleared buffer; pass 1: the others at (u, v) over what
+   the caller put in the buffer (pass 0's). The overwrite rule is raster_obj's 127 -> 0 walk, spelled as "the lower
+   priority number wins, then the lower index", so drawing in two passes picks the same winner. */
+void hr_raster_obj(uint32_t dispcnt, const uint8_t *skip, int u, int v, const uint8_t *need, int pass)
+{
+    static const int kSizes[3][4][2] = {
+        {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
+        {{16, 8}, {32, 8}, {32, 16}, {64, 32}},
+        {{8, 16}, {8, 32}, {16, 32}, {32, 64}},
+    };
+    for (int y = 0; pass == 0 && y < 192; ++y)
+        if (need[y]) { std::memset(g_hr_obj[y], 0, sizeof g_hr_obj[y]); std::memset(g_hr_objwin[y], 0, 256); }
+    if (!((dispcnt >> 12) & 1)) return;
+    const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
+    const bool map1d = (dispcnt >> 4) & 1;
+    const uint32_t objext = ((dispcnt >> 31) & 1) ? kObjExtPltt : 0;
+    const uint32_t oam_b = g_oam_src_b ? g_oam_src_b : kOamBase;
+    for (int i = 127; i >= 0; --i) {
+        if (skip[i]) continue;
+        if ((pass == 0) == (g_hr_sens[i] != 0)) continue;
+        const uint16_t a0 = rd16(oam_b + i * 8u);
+        const uint16_t a1 = rd16(oam_b + i * 8u + 2);
+        const uint16_t a2 = rd16(oam_b + i * 8u + 4);
+        const bool affine = a0 & 0x100;
+        if (!affine && (a0 & 0x200)) continue;
+        const unsigned objmode = (a0 >> 10) & 3;
+        const bool is_bmp = objmode == 3;
+        const bool is_win = objmode == 2;
+        const int shape = (a0 >> 14) & 3;
+        if (shape == 3) continue;
+        const int size = (a1 >> 14) & 3;
+        const int w = kSizes[shape][size][0], h = kSizes[shape][size][1];
+        const bool dbl = affine && (a0 & 0x200);
+        const int bw = dbl ? w * 2 : w, bh = dbl ? h * 2 : h;
+        int x = a1 & 0x1FF, y = a0 & 0xFF;
+        if (x >= 256) x -= 512;
+        if (y >= 192 && y >= 256 - bh) y -= 256;
+        const bool c256 = a0 & 0x2000;
+        const bool hflip = !affine && (a1 & 0x1000);
+        const bool vflip = !affine && (a1 & 0x2000);
+        const uint32_t tile = a2 & 0x3FF;
+        const uint32_t pal = (a2 >> 12) & 0xF;
+        const uint8_t prio = (a2 >> 10) & 3;
+        const int du = u - (g_hr_frac_on ? g_hr_ofr[i][0] : 0), dv = v - (g_hr_frac_on ? g_hr_ofr[i][1] : 0);
+        int pa = 256, pb = 0, pc = 0, pd = 256;
+        if (affine) {
+            const int grp = (a1 >> 9) & 0x1F;
+            pa = (int16_t)rd16(oam_b + (grp * 4 + 0) * 8u + 6);
+            pb = (int16_t)rd16(oam_b + (grp * 4 + 1) * 8u + 6);
+            pc = (int16_t)rd16(oam_b + (grp * 4 + 2) * 8u + 6);
+            pd = (int16_t)rd16(oam_b + (grp * 4 + 3) * 8u + 6);
+        }
+        /* a remainder can pull the sample point one DS pixel either side of the box */
+        for (int sy = -1; sy <= bh; ++sy) {
+            const int py = y + sy;
+            if (py < 0 || py >= 192 || !need[py]) continue;
+            const int qy = sy * 256 + dv;            /* sample row inside the box, 1/256 px */
+            int sxa = -1, sxb = bw;
+            if (affine) {
+                int lo, hi;
+                if (qy < 0 || qy >= bh * 256 || !mghr_aff_span(pa, pb, pc, pd, w, h, bw, bh, qy, lo, hi)) continue;
+                sxa = ((lo - du) >> 8) - 1; sxb = ((hi - du) >> 8) + 1;
+                if (sxa < -1) sxa = -1;
+                if (sxb > bw) sxb = bw;
+            }
+            for (int sx = sxa; sx <= sxb; ++sx) {
+                const int px = x + sx;
+                if (px < 0 || px >= 256) continue;
+                const int qx = sx * 256 + du;
+                int tx, ty;
+                if (affine) {
+                    if (qx < 0 || qx >= bw * 256 || qy < 0 || qy >= bh * 256) continue;   /* the box clips, as on the DS */
+                    const int cx = qx - (bw / 2) * 256, cy = qy - (bh / 2) * 256;
+                    tx = (int)(((long long)pa * cx + (long long)pb * cy) >> 16) + w / 2;
+                    ty = (int)(((long long)pc * cx + (long long)pd * cy) >> 16) + h / 2;
+                    if (tx < 0 || tx >= w || ty < 0 || ty >= h) continue;
+                } else {
+                    const int bx2 = qx >> 8, by2 = qy >> 8;
+                    if (bx2 < 0 || bx2 >= w || by2 < 0 || by2 >= h) continue;
+                    tx = hflip ? w - 1 - bx2 : bx2;
+                    ty = vflip ? h - 1 - by2 : by2;
+                }
+                const int tcol = tx >> 3, trow = ty >> 3;
+                const int fx = tx & 7, fy = ty & 7;
+                ObjPixel &op = g_hr_obj[py][px];
+                if (is_bmp) {
+                    const unsigned alpha = (a2 >> 12) & 0xF;
+                    if (!alpha) continue;
+                    uint32_t at;
+                    if ((dispcnt >> 6) & 1) {
+                        const uint32_t bnd = ((dispcnt >> 22) & 1) ? 256u : 128u;
+                        at = tile * bnd + (uint32_t)(ty * w + tx) * 2u;
+                    } else {
+                        const uint32_t wide = ((dispcnt >> 5) & 1) ? 256u : 128u;
+                        const uint32_t mask = (wide >> 3) - 1u;
+                        at = ((tile & mask) * 0x10u + (tile & ~mask) * 0x80u) + ((uint32_t)ty * wide + (uint32_t)tx) * 2u;
+                    }
+                    const uint16_t vv = rd16(kObjVram + at);
+                    if (!(vv & 0x8000)) continue;
+                    if (op.hit && (prio > op.prio || (prio == op.prio && i > g_hr_oidx[py][px]))) continue;
+                    op.color = bgr555(vv); op.prio = prio; op.hit = 1; op.semi = 0;
+                    g_hr_oidx[py][px] = (uint8_t)i;
+                    continue;
+                }
+                const uint32_t slot =
+                    map1d ? (c256 ? (uint32_t)(trow * (w / 8) + tcol) * 2u : (uint32_t)(trow * (w / 8) + tcol))
+                          : (uint32_t)(trow * 32 + (c256 ? tcol * 2 : tcol));
+                const uint32_t cell = kObjVram + tile * boundary + slot * 32u;
+                uint32_t color;
+                if (c256) {
+                    const uint32_t idx = rd8(cell + fy * 8u + fx);
+                    if (!idx) continue;
+                    color = objext ? bgr555(rd16(objext + (pal * 256u + idx) * 2u)) : bgr555(rd16(kObjPltt + idx * 2u));
+                } else {
+                    const uint8_t b = rd8(cell + fy * 4u + fx / 2);
+                    const uint32_t idx = (fx & 1) ? (b >> 4) : (b & 0xF);
+                    if (!idx) continue;
+                    color = bgr555(rd16(kObjPltt + (pal * 16u + idx) * 2u));
+                }
+                if (is_win) { g_hr_objwin[py][px] = 1; continue; }
+                if (op.hit && (prio > op.prio || (prio == op.prio && i > g_hr_oidx[py][px]))) continue;
+                op.color = color; op.prio = prio; op.hit = 1; op.semi = (objmode == 1);
+                g_hr_oidx[py][px] = (uint8_t)i;
+            }
+        }
+    }
+}
+
+/* sample_line at phase (u, v), columns [x0, x1) */
+void hr_sample_line(const BgLayer &c, int bg, int y, int u, int v, const uint32_t *pal32, uint32_t *col, uint8_t *ok,
+                    int x0, int x1)
+{
+    if (c.kind == BG_TEXT) {
+        const int hf = g_hr_frac_on ? g_hr_bfr[bg][0] : 0, vf = g_hr_frac_on ? g_hr_bfr[bg][1] : 0;
+        const int py = (y + c.vofs + ((v + vf) >> 8)) & (c.map_h * 8 - 1);
+        const int ty = py >> 3, fy0 = py & 7;
+        const int blocks_w = c.map_w >> 5;
+        const uint32_t rowbase = c.screen + ((ty >> 5) * blocks_w) * 0x800 + (ty & 31) * 32 * 2;
+        const int wm = c.map_w * 8 - 1;
+        const int du = (u + hf) >> 8;
+        for (int x = x0; x < x1; ++x) {
+            const int px = (x + c.hofs + du) & wm;
+            const int tx = px >> 3;
+            const uint16_t se = rd16(rowbase + (tx >> 5) * 0x800 + (tx & 31) * 2);
+            int fx = px & 7, fy = fy0;
+            if (se & 0x400) fx = 7 - fx;
+            if (se & 0x800) fy = 7 - fy;
+            ok[x] = tile_px(c, pal32, se & 0x3FF, fx, fy, se, col[x]) ? 1 : 0;
+        }
+        return;
+    }
+    const long long ry = (long long)y * 256 + v;
+    const long long bx = (long long)c.refx * 256 + (long long)c.pb * ry, by = (long long)c.refy * 256 + (long long)c.pd * ry;
+    const int tw = c.map_w >> 3;
+    for (int x = x0; x < x1; ++x) {
+        const long long rx = (long long)x * 256 + u;
+        int px = (int)((bx + c.pa * rx) >> 16);
+        int py = (int)((by + c.pc * rx) >> 16);
+        if (c.wrap) {
+            px &= c.map_w - 1;
+            py &= c.map_h - 1;
+        } else if (px < 0 || px >= c.map_w || py < 0 || py >= c.map_h) {
+            ok[x] = 0;
+            continue;
+        }
+        if (c.kind == BG_BITMAP_256 || c.kind == BG_BITMAP_DIRECT) {
+            const uint32_t at = (uint32_t)py * (uint32_t)c.map_w + (uint32_t)px;
+            if (c.kind == BG_BITMAP_DIRECT) {
+                const uint16_t vv = rd16(c.screen + at * 2);
+                ok[x] = (vv & 0x8000) ? 1 : 0;
+                if (ok[x]) col[x] = bgr555(vv);
+            } else {
+                const uint8_t i8 = rd8(c.screen + at);
+                ok[x] = i8 ? 1 : 0;
+                if (ok[x]) col[x] = pal32[i8];
+            }
+            continue;
+        }
+        uint16_t se;
+        uint32_t tile;
+        int fx = px & 7, fy = py & 7;
+        if (c.kind == BG_AFFINE) {
+            tile = rd8(c.screen + (py >> 3) * tw + (px >> 3));
+            se = 0;
+        } else {
+            se = rd16(c.screen + ((py >> 3) * tw + (px >> 3)) * 2);
+            tile = se & 0x3FF;
+            if (se & 0x400) fx = 7 - fx;
+            if (se & 0x800) fy = 7 - fy;
+        }
+        ok[x] = tile_px(c, pal32, tile, fx, fy, se, col[x]) ? 1 : 0;
+    }
+}
+
+/* which axes a BG's picture can change along between phases: bit 0 x (the column phase u), bit 1 y (the row phase v) */
+inline int hr_bg_axes(const BgLayer &c, int bg)
+{
+    if (c.kind == BG_OFF) return 0;
+    if (c.kind == BG_TEXT)
+        return g_hr_frac_on ? ((g_hr_bfr[bg][0] ? 1 : 0) | (g_hr_bfr[bg][1] ? 2 : 0)) : 0;
+    if (c.pb || c.pc) return 3;   /* a turn: x and y both move every sample */
+    return ((c.pa != 256 || (c.refx & 0xFF)) ? 1 : 0) | ((c.pd != 256 || (c.refy & 0xFF)) ? 2 : 0);
+}
+
+/* the rows (and their column span) a phase can change: x0[y] < x1[y], and ax[y] the axes (as hr_bg_axes). A row that
+   only changes along x is drawn at the column phases and copied down its S host rows; along y only, at the row phases
+   and copied across. */
+bool hr_rows(uint32_t dispcnt, const uint8_t *skip, const BgLayer *bgs, int16_t *x0, int16_t *x1, uint8_t *ax)
+{
+    static const int kSizes[3][4][2] = {
+        {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
+        {{16, 8}, {32, 8}, {32, 16}, {64, 32}},
+        {{8, 16}, {8, 32}, {16, 32}, {32, 64}},
+    };
+    int bgax = 0;
+    for (int b = 0; b < 4; ++b) bgax |= hr_bg_axes(bgs[b], b);
+    for (int y = 0; y < 192; ++y) {
+        x0[y] = bgax ? 0 : 256; x1[y] = bgax ? 256 : 0; ax[y] = (uint8_t)bgax;
+    }
+    bool any = bgax != 0;
+    std::memset(g_hr_sens, 0, sizeof g_hr_sens);
+    if (!((dispcnt >> 12) & 1)) return any;
+    const uint32_t oam_b = g_oam_src_b ? g_oam_src_b : kOamBase;
+    for (int i = 0; i < 128; ++i) {
+        if (skip[i]) continue;
+        const uint16_t a0 = rd16(oam_b + i * 8u), a1 = rd16(oam_b + i * 8u + 2);
+        const bool affine = a0 & 0x100;
+        if (!affine && (a0 & 0x200)) continue;
+        const int shape = (a0 >> 14) & 3;
+        if (shape == 3) continue;
+        int sax = g_hr_frac_on ? ((g_hr_ofr[i][0] ? 1 : 0) | (g_hr_ofr[i][1] ? 2 : 0)) : 0;
+        int pa = 256, pb = 0, pc = 0, pd = 256;
+        if (affine) {
+            const int grp = (a1 >> 9) & 0x1F;
+            pa = (int16_t)rd16(oam_b + (grp * 4 + 0) * 8u + 6); pb = (int16_t)rd16(oam_b + (grp * 4 + 1) * 8u + 6);
+            pc = (int16_t)rd16(oam_b + (grp * 4 + 2) * 8u + 6); pd = (int16_t)rd16(oam_b + (grp * 4 + 3) * 8u + 6);
+            if (pb || pc) sax = 3;
+            else sax |= (pa != 256 ? 1 : 0) | (pd != 256 ? 2 : 0);
+        }
+        g_hr_sens[i] = sax ? 1 : 0;
+        if (!sax) continue;
+        const int size = (a1 >> 14) & 3;
+        const int w = kSizes[shape][size][0], h = kSizes[shape][size][1];
+        const bool dbl = affine && (a0 & 0x200);
+        const int bw = dbl ? w * 2 : w, bh = dbl ? h * 2 : h;
+        int x = a1 & 0x1FF, y = a0 & 0xFF;
+        if (x >= 256) x -= 512;
+        if (y >= 192 && y >= 256 - bh) y -= 256;
+        const int xa0 = x - 1 < 0 ? 0 : x - 1, xb0 = x + bw + 1 > 256 ? 256 : x + bw + 1;
+        if (xa0 >= xb0) continue;
+        const int fxr = g_hr_frac_on ? g_hr_ofr[i][0] : 0, fyr = g_hr_frac_on ? g_hr_ofr[i][1] : 0;
+        for (int yy = y - 1; yy <= y + bh; ++yy) {
+            if (yy < 0 || yy >= 192) continue;
+            int xa = xa0, xb = xb0;
+            if (affine) {
+                /* the columns this row's samples can find the sprite in: the footprint at the row's top, middle and
+                   bottom sample rows (one texel of margin in the span, one pixel here) */
+                int lo = 1 << 30, hi = -1;
+                for (int k = 0; k < 3; ++k) {
+                    int qy = (yy - y) * 256 + k * 127 - fyr, l, h2;
+                    if (qy < 0) qy = 0;
+                    if (qy >= bh * 256) qy = bh * 256 - 1;
+                    if (mghr_aff_span(pa, pb, pc, pd, w, h, bw, bh, qy, l, h2)) { if (l < lo) lo = l; if (h2 > hi) hi = h2; }
+                }
+                if (hi < 0) continue;
+                xa = x + ((lo - 255 + fxr) >> 8) - 1; xb = x + ((hi + fxr) >> 8) + 2;
+                if (xa < xa0) xa = xa0;
+                if (xb > xb0) xb = xb0;
+                if (xa >= xb) continue;
+            }
+            if (xa < x0[yy]) x0[yy] = (int16_t)xa;
+            if (xb > x1[yy]) x1[yy] = (int16_t)xb;
+            ax[yy] |= (uint8_t)sax;
+            any = true;
+        }
+    }
+    return any;
+}
+
+/* the resolve of scan_fast for one row at phase (u, v), columns [xa, xb); writes the host pixels whose colour differs
+   from the DS pixel (or every one, phase (0,0) under the check, into chk) */
+void hr_build(const SubFramebuffer &fb, uint32_t dispcnt, const uint8_t *skip)
+{
+    HrSlot &hs = g_hr[g_hr_slot & 1];
+    hs.valid = false;
+    const int pol = g_hr_policy ? g_hr_policy() : 0;
+    const int S = active_h / SUB_H;
+    if (!(pol & 3) || S < 2 || S > 8) return;
+    const unsigned disp_mode = (dispcnt >> 16) & 3;
+    if (disp_mode == 0 || ((dispcnt >> 7) & 1)) return;
+    const auto t0 = std::chrono::steady_clock::now();
+    BgLayer bgs[4];
+    for (int i = 0; i < 4; ++i) read_bg(bgs[i], i, dispcnt);
+    static int16_t rx0[192], rx1[192];
+    static uint8_t rax[192];
+    const bool sens = (pol & 1) && hr_rows(dispcnt, skip, bgs, rx0, rx1, rax);
+    const bool ups = (pol & 2) != 0;
+    if (!sens && !ups) return;
+    const int W = SUB_W * S;
+    const int need = W * SUB_H * S;
+    if (hs.cap < need) {
+        std::free(hs.px);
+        hs.px = static_cast<uint32_t *>(std::malloc(sizeof(uint32_t) * (size_t)need));
+        hs.cap = hs.px ? need : 0;
+        if (!hs.px) return;
+    }
+    if (!hs.of) { hs.of = static_cast<SubFramebuffer *>(std::malloc(sizeof(SubFramebuffer))); hs.ups_only = false; if (!hs.of) return; }
+    /* the upscaler alone, and this slot already holds it for this very picture: nothing to redo */
+    if (!sens && hs.ups_only && hs.S == S && std::memcmp(hs.of->px, fb.px, sizeof fb.px) == 0) {
+        hs.valid = true;
+        ++g_hr_n[0];
+        return;
+    }
+    hs.ups_only = false;
+    hr_base(fb, S, ups, hs.px);
+    if (ups) ++g_hr_n[3];
+    if (sens) {
+        Bright br;
+        {
+            const uint16_t mb = rd16(kRegBase + 0x6C);
+            br.factor = mb & 0x1F;
+            if (br.factor > 16) br.factor = 16;
+            br.mode = (mb >> 14) & 3;
+        }
+        Windows win;
+        read_windows(dispcnt, win);
+        uint32_t pal32[256];
+        for (int i = 0; i < 256; ++i) pal32[i] = bgr555(rd16(kPlttBase + i * 2));
+        const uint32_t backdrop = g_backdrop_ovr >= 0 ? bgr555((uint16_t)g_backdrop_ovr) : pal32[0];
+        const Blend bld = read_blend();
+        int flat[4], fprio[4], nflat = 0;
+        for (int prio = 0; prio < 4; ++prio)
+            for (int bg = 0; bg < 4; ++bg)
+                if (bgs[bg].kind != BG_OFF && bgs[bg].prio == prio) { flat[nflat] = bg; fprio[nflat++] = prio; }
+        int nrows = 0;
+        for (int y = 0; y < 192; ++y) nrows += rx1[y] > rx0[y] ? 1 : 0;
+        g_hr_n[1] += nrows;
+        const bool chk = hr_check_on() != 0;
+        static uint32_t lcol[4][256];
+        static uint8_t lok[4][256];
+        uint8_t needrow[192];
+        /* ONCE A SCAN-OUT: the entries with nothing finer to show at phase 0 over every row a phase may draw, and every BG
+           with nothing finer to show sampled once per such row (hr_bg_axes 0: every phase reads the same texel) */
+        static uint32_t bcol[4][192][256];
+        static uint8_t bok[4][192][256];
+        int bgfix[4];
+        for (int bg = 0; bg < 4; ++bg) bgfix[bg] = bgs[bg].kind != BG_OFF && !hr_bg_axes(bgs[bg], bg);
+        for (int y = 0; y < 192; ++y) needrow[y] = rx1[y] > rx0[y] ? 1 : 0;
+        hr_raster_obj(dispcnt, skip, 0, 0, needrow, 0);
+        for (int y = 0; y < 192; ++y) {
+            if (!needrow[y]) continue;
+            std::memcpy(g_hr_obj0[y], g_hr_obj[y], sizeof g_hr_obj[y]);
+            std::memcpy(g_hr_objwin0[y], g_hr_objwin[y], 256);
+            std::memcpy(g_hr_oidx0[y], g_hr_oidx[y], 256);
+            for (int bg = 0; bg < 4; ++bg)
+                if (bgfix[bg]) hr_sample_line(bgs[bg], bg, y, 0, 0, pal32, bcol[bg][y], bok[bg][y], rx0[y], rx1[y]);
+        }
+        /* THE COST CAP. A whole screen turning at S 4 is 15 extra resolves per DS pixel; past the budget (resolves per
+           scan-out, SM64DS_MG_HIRES_BUDGET, default 160000, about 2-3 ms here) the phases go every second host pixel and
+           each fills a 2x2 block: half-DS-pixel edges instead of quarter ones, a quarter of the work. */
+        static long budget = -1;
+        if (budget < 0) { const char *e = std::getenv("SM64DS_MG_HIRES_BUDGET"); budget = e ? std::atol(e) : 160000; }
+        long est = 0;
+        for (int y = 0; y < 192; ++y)
+            if (rx1[y] > rx0[y]) est += (long)(rx1[y] - rx0[y]) * (rax[y] == 3 ? S * S - 1 : S - 1);
+        const int st = (est > budget && S % 2 == 0) ? 2 : 1;
+        if (st > 1) ++g_hr_n[6];
+        for (int j = 0; j < S; j += st)
+            for (int i = 0; i < S; i += st) {
+                const int u = i * 256 / S, v = j * 256 / S;
+                /* phase (0,0) with no remainder is the DS pixel: drawn only for the check */
+                const bool zero_check = chk && i == 0 && j == 0 && !g_hr_frac_on;
+                int nr = 0;
+                for (int y = 0; y < 192; ++y) {
+                    const int m = rx1[y] > rx0[y] ? rax[y] : 0;
+                    /* x only: the row phase 0 stands for every row phase; y only: the column phase 0 for every column one */
+                    const bool want = m && (zero_check || (i == 0 && j == 0 && g_hr_frac_on) ||
+                                            (m == 3 && (i || j)) || (m == 1 && j == 0 && i) || (m == 2 && i == 0 && j));
+                    needrow[y] = want ? 1 : 0;
+                    nr += want ? 1 : 0;
+                }
+                if (!nr) continue;
+                for (int y = 0; y < 192; ++y) {
+                    if (!needrow[y]) continue;
+                    std::memcpy(g_hr_obj[y], g_hr_obj0[y], sizeof g_hr_obj[y]);
+                    std::memcpy(g_hr_objwin[y], g_hr_objwin0[y], 256);
+                    std::memcpy(g_hr_oidx[y], g_hr_oidx0[y], 256);
+                }
+                hr_raster_obj(dispcnt, skip, u, v, needrow, 1);
+                ++g_hr_n[2];
+                for (int y = 0; y < SUB_H; ++y) {
+                    if (!needrow[y]) continue;
+                    const int xa = rx0[y], xb = rx1[y];
+                    const int m = rax[y];
+                    for (int bg = 0; bg < 4; ++bg) {
+                        if (bgs[bg].kind == BG_OFF) continue;
+                        if (bgfix[bg]) {
+                            std::memcpy(lcol[bg] + xa, bcol[bg][y] + xa, (size_t)(xb - xa) * 4);
+                            std::memcpy(lok[bg] + xa, bok[bg][y] + xa, (size_t)(xb - xa));
+                        } else {
+                            hr_sample_line(bgs[bg], bg, y, u, v, pal32, lcol[bg], lok[bg], xa, xb);
+                        }
+                    }
+                    uint32_t *orow = hs.px + (size_t)(y * S + j) * W;
+                    for (int x = xa; x < xb; ++x) {
+                        const unsigned mask = win.any ? window_mask(win, x, y, g_hr_objwin) : 0x3Fu;
+                        uint32_t col[2] = {backdrop, backdrop};
+                        int id[2] = {5, 5};
+                        bool semi = false;
+                        int found = 0;
+                        const ObjPixel &o = g_hr_obj[y][x];
+                        int lim = 2;
+                        bool objpend = o.hit && (mask & 0x10);
+                        for (int k = 0; k <= nflat; ++k) {
+                            if (objpend && (k == nflat || o.prio <= fprio[k])) {
+                                objpend = false;
+                                if (!found) semi = o.semi;
+                                col[found] = o.color; id[found] = 4; ++found;
+                                if (found == 1) lim = (!bld.off && (mask & 0x20) && (semi || bld.mode == 1)) ? 2 : 1;
+                                if (found >= lim) break;
+                            }
+                            if (k == nflat) break;
+                            const int bg = flat[k];
+                            if (!(mask & (1u << bg))) continue;
+                            if (lok[bg][x]) {
+                                col[found] = lcol[bg][x]; id[found] = bg; ++found;
+                                if (found == 1) lim = (!bld.off && (mask & 0x20) && (semi || bld.mode == 1)) ? 2 : 1;
+                                if (found >= lim) break;
+                            }
+                        }
+                        const uint32_t c = apply_bright(found ? blend_apply(bld, mask, col[0], id[0], semi, col[1], id[1]) : backdrop, br);
+                        if (zero_check) {
+                            ++g_hr_n[4];
+                            if (c != fb.px[y][x]) {
+                                if (++g_hr_n[5] <= 20)
+                                    std::fprintf(stderr, "[mg-hires] check: phase 0 differs at %d,%d hr %08x ds %08x\n", x, y, (unsigned)c, (unsigned)fb.px[y][x]);
+                            }
+                            continue;
+                        }
+                        if (c == fb.px[y][x]) continue;
+                        /* x only: the cell's column(s) of this phase, all S rows; y only: its row(s), all S columns;
+                           both: the st x st block of this phase */
+                        const int j0 = m == 1 ? 0 : j, j1 = m == 1 ? S : j + st;
+                        const int i0 = m == 2 ? 0 : i, i1 = m == 2 ? S : i + st;
+                        for (int jj = j0; jj < j1; ++jj) {
+                            uint32_t *q = orow + (ptrdiff_t)(jj - j) * W + x * S;
+                            for (int ii = i0; ii < i1; ++ii) q[ii] = c;
+                        }
+                    }
+                }
+            }
+    }
+    std::memcpy(hs.of->px, fb.px, sizeof fb.px);
+    hs.S = S;
+    hs.valid = true;
+    hs.ups_only = !sens;
+    ++g_hr_n[0];
+    g_hr_ms += std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+}
+
+/* the render-scale panel for this 256x192 picture at S, or null (the compose then scales sub up itself) */
+const uint32_t *hr_for(const SubFramebuffer &sub, int S)
+{
+    for (int k = 0; k < 2; ++k) {
+        const HrSlot &hs = g_hr[(g_hr_slot + k) & 1];
+        if (hs.valid && hs.S == S && hs.of && std::memcmp(hs.of->px, sub.px, sizeof sub.px) == 0) return hs.px;
+    }
+    return nullptr;
+}
+
+void hr_report()
+{
+    if (!g_hr_n[0]) return;
+    std::fprintf(stderr, "[mg-hires] %ld render-scale scan-outs (%ld upscaled, %ld at half phases), %ld sensitive rows, %ld phase passes, %.3f ms per scan-out; check %ld px compared, %ld differ\n",
+                 g_hr_n[0], g_hr_n[3], g_hr_n[6], g_hr_n[1], g_hr_n[2], g_hr_ms / g_hr_n[0], g_hr_n[4], g_hr_n[5]);
+}
+
 }  // namespace
 
 void ppu_scanout_sub(SubFramebuffer &fb)
@@ -1706,6 +2385,12 @@ void ppu_scanout_sub(SubFramebuffer &fb)
     else
         scan_cached(fb, dispcnt, skip);
     if (twod_verify_on()) twod_verify_sub(fb, dispcnt, skip);
+    /* MGHIRES1: the render-scale panel of this picture, when the host asks for one (see hr_build) */
+    if (g_hr_policy) {
+        static bool rep;
+        if (!rep) { rep = true; std::atexit(hr_report); }
+        hr_build(fb, dispcnt, skip);
+    }
 }
 
 bool ppu_write_bmp_sub(const char *path, const SubFramebuffer &fb)
@@ -5638,9 +6323,17 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
            identity left to mask against. evy/to_white stay live below for the
            gap band's own seam/straddle fade, a host UI element and not part
            of the DS raster. */
+        /* MGHIRES1: the render-scale panel when hr_build made one for this picture (same rows and columns) */
+        const uint32_t *hrp = (ry >= 2 && pw == SUB_W * ry && lay.pan_h <= SUB_H * ry) ? hr_for(sub, ry) : nullptr;
+        for (int y = 0; hrp && y < lay.pan_h; ++y) {
+            uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
+            for (int x = 0; x < px0; ++x) out[x] = 0xFF000000u;
+            for (int x = px0 + pw; x < active_w; ++x) out[x] = 0xFF000000u;
+            std::memcpy(out + px0, hrp + (size_t)y * pw, (size_t)pw * 4);
+        }
         /* MGINTERP1: the same nearest scale-up, a DS pixel repeated ry times along the row and a row equal to the one above it
            (the same DS row) copied whole, instead of a divide per host pixel. Same pixels. */
-        for (int y = 0; y < lay.pan_h; ++y) {
+        for (int y = 0; !hrp && y < lay.pan_h; ++y) {
             const int sy = y / ry;
             const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
             uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
@@ -5738,7 +6431,11 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
        stay live below for the gap band's own seam/straddle fade, a host UI
        element and not part of the DS raster. */
     const int rx = active_w / SUB_W, ry = active_h / SUB_H;
-    for (int y = 0; y < active_h; ++y) {
+    /* MGHIRES1: the render-scale panel when hr_build made one for this picture */
+    const uint32_t *hrs = (ry >= 2 && rx == ry && active_w == SUB_W * rx && active_h == SUB_H * ry) ? hr_for(sub, ry) : nullptr;
+    for (int y = 0; hrs && y < active_h; ++y)
+        std::memcpy(dst + (size_t)(b_y + y) * dst_w, hrs + (size_t)y * active_w, (size_t)active_w * 4);
+    for (int y = 0; !hrs && y < active_h; ++y) {
         const int sy = ry > 0 ? y / ry : (y * SUB_H) / active_h;
         const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
         uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
@@ -5815,6 +6512,12 @@ void ppu_compose_sub_panel(const SubFramebuffer &sub, uint32_t *dst, const Stack
     if (lay.pan_x0 > 0) {
         const int px0 = lay.pan_x0, pw = lay.pan_w, ry = active_h / SUB_H, dst_w = lay.w;
         if (ry <= 0) return;
+        /* MGHIRES1: the render-scale panel, as ppu_compose_stacked takes it */
+        if (const uint32_t *hrp = (ry >= 2 && pw == SUB_W * ry && lay.pan_h <= SUB_H * ry) ? hr_for(sub, ry) : nullptr) {
+            for (int y = 0; y < lay.pan_h; ++y)
+                std::memcpy(dst + (size_t)(b_y + y) * dst_w + px0, hrp + (size_t)y * pw, (size_t)pw * 4);
+            return;
+        }
         for (int y = 0; y < lay.pan_h; ++y) {
             const int sy = y / ry;
             const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
@@ -5829,6 +6532,11 @@ void ppu_compose_sub_panel(const SubFramebuffer &sub, uint32_t *dst, const Stack
         return;
     }
     const int rx = active_w / SUB_W, ry = active_h / SUB_H, dst_w = lay.w;
+    if (const uint32_t *hrs = (ry >= 2 && rx == ry && active_w == SUB_W * rx && active_h == SUB_H * ry) ? hr_for(sub, ry) : nullptr) {
+        for (int y = 0; y < active_h; ++y)
+            std::memcpy(dst + (size_t)(b_y + y) * dst_w, hrs + (size_t)y * active_w, (size_t)active_w * 4);
+        return;
+    }
     for (int y = 0; y < active_h; ++y) {
         const int sy = ry > 0 ? y / ry : (y * SUB_H) / active_h;
         const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
@@ -5899,3 +6607,19 @@ extern "C" void port_compose_state_restore(int slot) { ntr::ppu_compose_state_re
 extern "C" int port_compose_state_have(int slot) { return ntr::g_keep_slot[slot & 1] ? 1 : 0; }
 extern "C" void port_wipe_suppress_set(int on) { ntr::set_wipe_suppress(on != 0); }
 extern "C" int port_wipe_cut_picture(uint32_t *dst, int w, int h, int stride) { return ntr::wipe_cut_picture(dst, w, h, stride) ? 1 : 0; }
+/* MGHIRES1: the host's policy (hal/sub_screen.cpp: bit 0 render scale, bit 1 the upscaler), which buffer the next scan-out
+   fills (0 the tick, 1 a picture between ticks), and engine B's sub-pixel remainders for that picture (null clears them) */
+extern "C" void port_mghr_policy_install(int (*fn)(void)) { ntr::g_hr_policy = fn; }
+extern "C" void port_mghr_slot(int slot) { ntr::g_hr_slot = slot & 1; }
+/* the upscaler alone, for engine A (hal/message_compositor.cpp): a 256x192 picture to (256*S) x (192*S) */
+extern "C" void port_mghr_upscale(const unsigned int *ds, int S, unsigned int *out)
+{
+    ntr::hr_base(*reinterpret_cast<const ntr::SubFramebuffer *>(ds), S, true, reinterpret_cast<uint32_t *>(out));
+}
+extern "C" void port_mghr_frac_set(const short *obj, const short *bg)
+{
+    if (!obj || !bg) { ntr::g_hr_frac_on = 0; return; }
+    std::memcpy(ntr::g_hr_ofr, obj, sizeof ntr::g_hr_ofr);
+    std::memcpy(ntr::g_hr_bfr, bg, sizeof ntr::g_hr_bfr);
+    ntr::g_hr_frac_on = 1;
+}

@@ -848,6 +848,22 @@ int host_setting_save_frame_rate(int rate);
    SM64DS_SMOOTH_MOTION overrides. */
 int host_setting_smooth_motion(void);
 
+/* ---- MinigameUpscale: THE PIXEL-ART UPSCALER ON THE MINIGAMES' 2D (run after093, lane MGHIRES1) --
+   Default 0, the DS pixels sharp as they are. 1 runs the EPX / Scale2x-Scale3x rules on each minigame screen's finished
+   2D before the two screens are stacked, at a render scale of 2 or more (ntr/ppu_sub.cpp hr_build, engine B). It only
+   moves a neighbour's colour into a pixel's corner: no new colours, gameplay untouched. Accepted: 1 / true on, anything
+   else off. SM64DS_MG_UPSCALE overrides. */
+int host_setting_minigame_upscale(void);
+
+/* ---- MinigameHiRes: THE MINIGAMES' TURNED AND MOVING 2D AT RENDER SCALE (run after093, lane MGHIRES1) --
+   Default 0. At a render scale of 2 or more a minigame's turned or scaled sprites and BGs are sampled at every host pixel
+   and its sprites between two ticks (Smooth Motion) sit at their sub-pixel places, on both screens (ntr/ppu_sub.cpp
+   hr_build, hal/message_compositor.cpp mghr_a_*). The DS pixel itself is unchanged. 0 is the DS-pixel picture. It costs
+   picture time (about 1 to 3 ms a picture on the busiest minigames here: Wiggler and Loves Me...? keep a tenth to a
+   quarter of their pictures between ticks at 144 Hz with Smooth Motion on), which is why it is off unless asked for.
+   Accepted: 1 / true on, anything else off. SM64DS_MG_HIRES overrides. */
+int host_setting_minigame_hires(void);
+
 /* ---- THE THREE PICTURE-QUALITY KEYS (run hd1) ---------------------------
    One block, because they are one promise: with every one of them absent the
    game's picture, timing and behaviour are what the build without them
