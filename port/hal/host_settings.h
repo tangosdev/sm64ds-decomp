@@ -863,6 +863,9 @@ int host_setting_minigame_upscale(void);
    quarter of their pictures between ticks at 144 Hz with Smooth Motion on), which is why it is off unless asked for.
    Accepted: 1 / true on, anything else off. SM64DS_MG_HIRES overrides. */
 int host_setting_minigame_hires(void);
+/* MGHIRES2: the settings page's setters for the two keys (live, saved like the other page rows) */
+int host_setting_set_minigame_hires(int on);
+int host_setting_set_minigame_upscale(int on);
 
 /* ---- THE THREE PICTURE-QUALITY KEYS (run hd1) ---------------------------
    One block, because they are one promise: with every one of them absent the

@@ -61,6 +61,8 @@ enum SlId {
     SL_KEEP_LIVES,        /* bool: KeepLives; off by default (SHELVED1) */
     SL_ONLINE_EVENTS,           /* bool: take the host's events in Adventure Online (EVENTS2); on by default */
     SL_FIX_ORIGINAL_BUGS,       /* bool: FixOriginalBugs; on by default (RABBIT1) */
+    SL_MINIGAME_HIRES,          /* bool: MinigameHiRes, the minigames' 2D at render scale (MGHIRES1); off by default */
+    SL_MINIGAME_UPSCALE,        /* bool: MinigameUpscale, the pixel-art upscaler on the minigames' 2D (MGHIRES1); off by default */
     SL_COUNT
 };
 

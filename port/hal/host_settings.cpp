@@ -4403,6 +4403,25 @@ extern "C" int host_setting_minigame_hires(void)
     load_once();
     return g_minigame_hires;
 }
+/* MGHIRES2: the settings page's two rows; the next picture's mghr_policy reads the new value, so both apply at once */
+extern "C" int host_setting_set_minigame_hires(int on)
+{
+    load_once();
+    on = on ? 1 : 0;
+    g_minigame_hires = on;
+    g_poll_flag = 1;
+    queue_bool("MinigameHiRes", on);
+    return 1;
+}
+extern "C" int host_setting_set_minigame_upscale(int on)
+{
+    load_once();
+    on = on ? 1 : 0;
+    g_minigame_upscale = on;
+    g_poll_flag = 1;
+    queue_bool("MinigameUpscale", on);
+    return 1;
+}
 
 extern "C" int host_setting_smooth_models(void)
 {

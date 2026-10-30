@@ -718,6 +718,11 @@ const Row *display_rows(int *n)
         const int dd = sl_find("DrawDistance");
         if (dd >= 0) g_disp_rows[k++] = Row{ R_CHOICE, "Draw distance", dd, -1, 0, DIST_LABELS, 5, DIST_VALS };
     }
+    {   /* MGHIRES2: MinigameHiRes / MinigameUpscale (MGHIRES1), off by default; they do nothing below Resolution 2x */
+        const int mh = sl_find("MinigameHiRes"), mu = sl_find("MinigameUpscale");
+        if (mh >= 0) g_disp_rows[k++] = Row{ R_CHECK, "Sharper minigames", mh, -1, 0, 0, 0 };
+        if (mu >= 0) g_disp_rows[k++] = Row{ R_CHECK, "Minigame upscaler", mu, -1, 0, 0, 0 };
+    }
     const int fr = sl_find("FrameRate");
     const SlInfo *fi = fr >= 0 ? sl_info(fr) : 0;
     static const char *const RATE_LABELS[] = { "Native", "60", "90", "120", "144", "165", "180", "240" };
