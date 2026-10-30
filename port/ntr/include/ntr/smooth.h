@@ -666,7 +666,10 @@ enum { SMOOTH_WELD_STRAIGHT = 0, SMOOTH_WELD_CURVED = 1 };
 // plain curved one (the authored normals are decoded from `nrm`). On a return
 // of 1, `out` holds the six normals to draw with, in the same spaces, a zero
 // vector meaning "this edge is straight", and `*id` a number that changes when
-// they do (for the shape store's key).
+// they do (for the shape store's key). A STRAIGHT side returns 1 only for this
+// picture, when an edge it shares was kept curved (a curved side drew it before
+// the record knew of this one): `out` then holds the kept normals on that edge
+// and zeros on the others, and the side is drawn bent along that edge only.
 int smooth_weld(const int16_t p[3][3], const uint32_t nrm[3], int kind,
                 const float (*en)[3], float out[6][3], uint32_t *id);
 // The picture counter smooth_frame_mark advances (once a tick).
@@ -692,6 +695,9 @@ void smooth_weld_picture();
 // for this picture that its record no longer gives: good for this picture only,
 // so it must not be reused in another (the replay memo stores it as stale).
 int smooth_weld_provisional();
+// WELDALL1: a side drawn straight could not follow an edge kept curved for this
+// picture (no matrix for it): the guard counts these.
+void smooth_weld_conflict();
 // The replay memo's own count (SM64DS_SMOOTH_WELD_STATS): an answer read back, or asked again.
 void smooth_weld_memo_count(int hit);
 

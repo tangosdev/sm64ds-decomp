@@ -1855,6 +1855,32 @@ int weld_call(const int16_t p[3][3], const uint32_t n[3], int kind, const float 
     return r;
 }
 
+/* WELDALL1: a side that is drawn straight, entered in the weld book; when an
+   edge of it was kept curved for this picture (a curved neighbour drew it
+   before the book knew of this side) it is drawn bent along that edge, its
+   other edges straight, so the two still meet. 1 = drawn here. */
+int weld_straight(const int16_t wp[3][3], const uint32_t wn[3], const GxRaw *const wr[3],
+                  const SmoothVertex s[3], const SmoothPolicy &pol) {
+    float wo[6][3];
+    uint32_t wid = 0;
+    if (!weld_call(wp, wn, SMOOTH_WELD_STRAIGHT, 0, wo, &wid)) return 0;
+    if (smooth_weld_on() != 1 || smooth_weld_guarded()) return 0;
+    int level = pol.level;
+    if (level > SMOOTH_MAX_LEVEL) level = SMOOTH_MAX_LEVEL;
+    const int tf = 1 << level;
+    float ven[6][3];
+    if (tf <= 1 || !weld_view_en(wo, wr, s, ven)) { smooth_weld_conflict(); return 0; }
+    if (smooth_cracks_on()) {
+        g_ck.curved = 1; g_ck.book = 1; g_ck.tf = tf;
+        std::memcpy(g_ck.en, ven, sizeof ven);
+    }
+    smooth_store_count(SMOOTH_STORE_LIVE, 1);
+    float pts[SMOOTH_MAX_GRID * 3];
+    smooth_grid_positions_edges(s[0], s[1], s[2], ven, tf, pts);
+    smooth_emit_grid(pts, tf, s, 0);
+    return 1;
+}
+
 int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
                const GxRaw &ra, const GxRaw &rb, const GxRaw &rc) {
     const SmoothPolicy &pol = smooth_policy();
@@ -1978,7 +2004,7 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
                 if (tf > 1) smooth_topo_count(ov.cls == SMOOTH_CLASS_FACET
                                               ? SMOOTH_TOPO_FACET : SMOOTH_TOPO_FLATKEEP);
                 ck_straight(ov.cls == SMOOTH_CLASS_FACET ? SMOOTH_CKWHY_FACET : SMOOTH_CKWHY_BOOKFLAT);
-                if (weld) weld_call(wp, wn, SMOOTH_WELD_STRAIGHT, 0, wo, &wid);
+                if (weld && weld_straight(wp, wn, wr, s, pol)) return 1;
                 return 0;
             }
             int level = pol.level;
@@ -2052,14 +2078,14 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
         if (smooth_topo_cross(tp, ra.mgen, rb.mgen, rc.mgen)) {
             smooth_topo_count(SMOOTH_TOPO_FLATKEEP);
             ck_straight(SMOOTH_CKWHY_CROSSKEEP);
-            if (weld) weld_call(wp, wn, SMOOTH_WELD_STRAIGHT, 0, wo, &wid);
+            if (weld && weld_straight(wp, wn, wr, s, pol)) return 1;
             return 0;
         }
     }
     if (tf <= 1) {
         smooth_counters_for(why);
         ck_straight(why);
-        if (weld) weld_call(wp, wn, SMOOTH_WELD_STRAIGHT, 0, wo, &wid);
+        if (weld && weld_straight(wp, wn, wr, s, pol)) return 1;
         return 0;
     }
 

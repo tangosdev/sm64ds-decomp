@@ -2887,6 +2887,7 @@ uint64_t smooth_frame_no() { return g_counters.frames; }
 uint32_t smooth_weld_epoch() { return g_weld_epoch; }
 int smooth_weld_guarded() { return g_guard_hold > 0; }
 void smooth_weld_picture() { ++g_weld_pic; }
+void smooth_weld_conflict() { ++g_weld_conflicts; }
 int smooth_weld_provisional() { return g_weld_provisional; }
 void smooth_weld_scene_change() { g_weld_scene_pending = 1; }
 uint64_t smooth_weld_overflow() { return g_ws_overflow; }
@@ -3098,14 +3099,6 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
         }
     }
 
-    /* A side drawn straight on an edge kept curved for this picture cannot
-       follow it: the one disagreement the picture's answer leaves. Counted
-       for the guard. */
-    if (kind != SMOOTH_WELD_CURVED)
-        for (int k = 0; k < 3; ++k)
-            if (slot[k] >= 0 && g_weld_edges[slot[k]].fpic == g_weld_pic && !g_weld_edges[slot[k]].fstraight)
-                ++g_weld_conflicts;
-
     /* DECIDE each edge, the same way from every side of it. */
     int result = 0;
     bool provisional = false;
@@ -3178,6 +3171,24 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
             const int ea = lo_is_a[k] ? 0 : 1, eb = 1 - ea;
             if (weld[ea]) { for (int q = 0; q < 3; ++q) out[sa][q] = w[ea][q]; result = 1; }
             if (weld[eb]) { for (int q = 0; q < 3; ++q) out[sb][q] = w[eb][q]; result = 1; }
+        }
+    } else {
+        /* A SIDE DRAWN STRAIGHT on an edge kept curved for this picture (a
+           curved neighbour came first, the record learned of this side only
+           now): it follows the kept curve along that edge and keeps its other
+           edges straight, for this picture only. The next picture's record
+           makes the edge straight on both sides. */
+        memset(out, 0, sizeof(float) * 18);
+        for (int k = 0; k < 3; ++k) {
+            if (slot[k] < 0) continue;
+            const WeldEdge &e = g_weld_edges[slot[k]];
+            if (e.fpic != g_weld_pic || e.fstraight) continue;
+            const int sa = kWeldSa[k], sb = kWeldSb[k];
+            const int ea = lo_is_a[k] ? 0 : 1, eb = 1 - ea;
+            for (int q = 0; q < 3; ++q) { out[sa][q] = e.fn[ea][q]; out[sb][q] = e.fn[eb][q]; }
+            result = 1;
+            provisional = true;
+            ++g_ws_complied;
         }
     }
 
