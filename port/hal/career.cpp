@@ -199,7 +199,7 @@ void on_backup_write(unsigned addr, const void *src, unsigned len, const unsigne
         /* the title's buffers come from ReadFileData, which masks the word at +0xc with the live block's (SaveData::ReadFileData): that word
            may differ from the chip's, every other byte of a copy is the source file's */
         if (memcmp(o, rec, 0xc) != 0 || memcmp(o + 0x10, rec + 0x10, kRecLen - 0x10) != 0) continue;
-        if (top != 7) {
+        if (top != 7 && top != 8) {      /* the copy page, and the file options page it is back on when the copy is written */
             fprintf(stderr, "[career] file %c written at the title with file %c's bytes, but the page is %d/%d (not copy): not carried\n",
                     'A' + d, 'A' + s, top, elem);
             return;

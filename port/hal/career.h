@@ -15,7 +15,7 @@
    names the save. A guest in someone else's world (a .coopsav) keeps nothing. Copy and erase on the file select carry and clear it: the
    ROM's own writes of a file record to the save chip are watched (ntr/backup.cpp write observer). EraseSaveFile writes the record with
    flags1 bit 0 clear (SaveData::SetDefaultValues); SaveFile always sets it (SaveData::SaveFile), so a clear bit is an erase. A file
-   record written on the title's copy page with the same bytes as another file is a copy from it. */
+   record written on the title's copy page (or the file options page it returns to) with the same bytes as another file is a copy from it. */
 #ifndef HAL_CAREER_H
 #define HAL_CAREER_H
 
