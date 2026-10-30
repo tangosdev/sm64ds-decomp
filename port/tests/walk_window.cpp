@@ -7945,6 +7945,31 @@ static int menu_scene_go(int id, const char *name)
     return 1;
 }
 
+/* the level row from a scene (it relaunched too): the scene-to-level hand-off a scene makes on the cartridge, dScTitle_c's confirm
+   branch (port_title_select's order) with scene 3 asked for instead of the star select, as the VS start and the file select's
+   StartFile do; the scene carrier hands the game to the level path (main's first level boot on the process's first title, the
+   level-to-scene crossing's level start after a crossing). A scene-booted process keeps the relaunch (harness boots only). */
+extern "C" void SetPlayerGlobals(void);
+extern "C" void SetNumPlayers(int n);
+static int menu_level_go(int lv, int en)
+{
+    const char *why = menu_scene_change_refusal();
+    if (!why && getenv("SM64DS_SCENE")) why = "a scene-booted process";
+    if (why) {
+        fprintf(stderr, "[seamless] in place refused: %s; restarting\n", why);
+        return 0;
+    }
+    data_0209f2d8 = 0;
+    LoadLevelNoReturn(lv, (unsigned)en, 1, 0);
+    SetPlayerGlobals();
+    SetNumPlayers(1);
+    _ZN8dScene_c14StartSceneFadeEjjt(3, 0, 0);
+    menu_on = 0;
+    fprintf(stderr, "[menu] level %d entrance %d: asked for from scene %d in this process (LoadLevelNoReturn, StartSceneFade(3); "
+            "no restart)\n", lv, en, port_scene_live_id());
+    return 1;
+}
+
 extern "C" const char *port_vs_start_offline_in_place(int map);   /* hal/scene_vs_menu.cpp (DEBUGMENU1) */
 static int g_menu_vs_wait;
 static int menu_vs_go(int map)
@@ -8272,6 +8297,8 @@ static void menu_input(int pad_live, const XPad *pad)
                                 "mounted -- refused, menu stays open (a "
                                 "relaunch would quit this run and the child "
                                 "would abort)\n", lv, menu_level_row);
+                    } else if (menu_level_go(lv, en)) {
+                        /* DEBUGMENU1: in this process */
                     } else if (port_menu_relaunch(-1, lv)) {
                         fprintf(stderr, "[menu] level %d (row %d): started "
                                 "SM64DS_LEVEL=%d, this process is quitting\n",
@@ -8475,6 +8502,15 @@ static void menu_input(int pad_live, const XPad *pad)
                 break;
             }
         }
+        /* DEBUGMENU1: A ROW THAT CLOSED THE MENU WITH ITS ACT PRESS (the minigame, level, VS rows) LEAVES THAT PRESS BEHIND. Enter is
+           the Start key and pad A the jump with the menu shut, and the game read them the same frame: the ROM's pause opened over the
+           fade to the minigame (row lvl1mg_b0), and the one-screen title took Enter as a press on its button. The key goes stale and
+           the pad button is swallowed until each is let go, as the B close and the settings page already do. */
+        if (!menu_on && (edge & (1u << 5))) {
+            key_stale[VK_RETURN] = 1;
+            if (pad_live && (pad->buttons & 0x1000)) menu_b_swallow = 1;
+            fprintf(stderr, "[menu] closed by a row: the act press (enter / A) is held back from the game until it is let go\n");
+        }
     }
 }
 
@@ -8489,20 +8525,15 @@ static void menu_input(int pad_live, const XPad *pad)
    the frames AFTER the close, when the menu is shut and that block is
    no longer looking at B.
 
-   A HAS THE SAME OVERLAP ON THE LEVEL-SELECT ROW AND IT IS NOT FIXED
-   HERE. PRE-EXISTING, measured, written down so the next person does
-   not have to find it twice: MENU_LEVEL's enter branch sets
-   menu_on = 0 on a successful select, and A is the jump button with
-   the menu shut, so the A that picks a level also jumps on the
-   handoff frame. It wants the same latch this one gets. It is left
-   alone deliberately -- it sits on the level handoff, which is
-   somebody else's change this run, and widening a menu commit into
-   that path is how two fixes become one bisect. */
+   A HAD THE SAME OVERLAP on every row that closes the menu (level,
+   minigame, VS), and Enter with it (Enter is the Start key): DEBUGMENU1
+   gives them this latch, set at the end of menu_input. */
 static void menu_b_swallow_spend(int pad_live, XPad *pad)
 {
     if (!menu_b_swallow) return;
-    if (pad_live && (pad->buttons & 0x2000))
-        pad->buttons = (unsigned short)(pad->buttons & ~0x2000u);
+    /* DEBUGMENU1: A as well as B (0x3000): a row's act press and the character door's A close set this too */
+    if (pad_live && (pad->buttons & 0x3000))
+        pad->buttons = (unsigned short)(pad->buttons & ~0x3000u);
     else
         menu_b_swallow = 0;
 }
