@@ -653,6 +653,7 @@ const Row ROWS_CONTROLS[] = {
     { R_CHECK, "Invert camera up/down", SL_INVERT_CAMERA_Y, -1, 0, 0, 0 },
     { R_CHECK, "Lock mouse", SL_MOUSE_CAPTURE, -1, 0, 0, 0 },
     { R_CHECK, "Right stick zooms", SL_CAMERA_STICK_ZOOM, -1, 0, 0, 0 },
+    { R_CHECK, "Camera collision", SL_CAMERA_COLLISION, -1, 0, 0, 0 },
     { R_SLIDER, "Stick deadzone", SL_STICK_DEADZONE, -1, 1, 0, 0 },
     { R_SLIDER, "Run point", SL_RUN_THRESHOLD, -1, 1, 0, 0 },
     { R_HEAD, "Keys and buttons", -1, -1, 0, 0, 0 },

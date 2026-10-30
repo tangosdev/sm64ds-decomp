@@ -4898,6 +4898,12 @@ static void cam93_collide(char *player, const int *pivot, int *eye)
     g_cam93_hit = 0;
     g_cam93_floorhit = 0;
     if (!player) { g_cam93_scale = 4096; return; }
+    if (!host_setting_camera_collision()) {   /* CAMCOLL1: setting off = no ray, no floor lift: the eye by pure geometry, as 0.9.2 */
+        g_cam93_scale = 4096;
+        g_cam93_wouldscale = 4096;
+        g_cam93_eye[0] = eye[0]; g_cam93_eye[1] = eye[1]; g_cam93_eye[2] = eye[2];
+        return;
+    }
     long long v[3] = {(long long)eye[0] - pivot[0], (long long)eye[1] - pivot[1], (long long)eye[2] - pivot[2]};
     int vi[3] = {(int)v[0], (int)v[1], (int)v[2]};
     const int len = LenVec3(vi);

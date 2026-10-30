@@ -61,6 +61,7 @@ enum SlId {
     SL_KEEP_LIVES,        /* bool: KeepLives; off by default (SHELVED1) */
     SL_ONLINE_EVENTS,           /* bool: take the host's events in Adventure Online (EVENTS2); on by default */
     SL_FIX_ORIGINAL_BUGS,       /* bool: FixOriginalBugs; on by default (RABBIT1) */
+    SL_CAMERA_COLLISION,        /* bool: CameraCollision, the analog / free camera stops at walls; on by default (CAMCOLL1) */
     SL_COUNT
 };
 
