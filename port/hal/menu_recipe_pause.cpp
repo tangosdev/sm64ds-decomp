@@ -32,6 +32,7 @@
 #include "settings_page.h"
 #include "settings_live.h"
 #include "event_client.h"
+#include "career.h"
 
 #include <atomic>
 #include <chrono>
@@ -199,31 +200,64 @@ void warm_tick(int scene_id)
     warm_slice(w, h);
 }
 
-/* ---- the slide (4:3): planks page <-> tracker page ----------------------------------------------------------------------- */
+/* ---- the pages and the slide between them ------------------------------------------------------------------------------
+   CAREER1: the pause has pages, switched with LB / RB / Q / E and the wooden edge tabs. 4:3: a ring of three, the planks (PAUSE_PG_MAIN), the
+   star tracker and the Career page (RB goes to the next, LB to the one before; RB from the planks is the tracker, as before the Career page).
+   16:9 and wider: two, the main page (the tracker and the planks together) and the Career page. A slide runs from one page to another in
+   kSlideTicks ticks: the page in view leaves toward the press's side (RB, E and the right tab: to the right), the other comes in from the other
+   side. It is one curve, eased out of its own start (slide_e), and every picture between ticks draws its own place on it (the facts carry this
+   tick's place and the tick before's). */
 
 struct Slide {
-    int target;       /* 0 planks page, 1 tracker page */
+    int page;         /* the page at rest, or the one the slide is going to */
+    int from;         /* the page the slide leaves (== page at rest) */
     int ticks;        /* 0..kSlideTicks */
-    int dir;          /* +1: the planks leave to the right (RB, E, the right tab), -1: to the left */
-} g_slide = { 0, 0, 1 };
+    int dir;          /* +1: the leaving page goes to the right */
+    int e0;           /* the eased place on the tick before */
+} g_slide = { PAUSE_PG_MAIN, PAUSE_PG_MAIN, 0, 1, 0 };
 const int kSlideTicks = 14;      /* about 0.23 s at the ROM's 60 ticks a second */
 
-/* ONE CURVE FOR EVERY SLIDE. ticks counts up toward the tracker (target 1) and down toward the planks (target 0), so the same ease-out read off
-   ticks would run backwards on the way back (slow start, then a hard stop: the "too fast" slide). Both ways ease out of the slide's own start:
-   toward the tracker the progress is ticks / kSlideTicks, toward the planks it is the ticks already walked back (kSlideTicks - ticks). Every
-   slide is kSlideTicks ticks long and lands on the same curve. */
-int slide_eased(void)
+int slide_e(int ticks)
 {
-    const double p = (double)(g_slide.target ? g_slide.ticks : kSlideTicks - g_slide.ticks) / kSlideTicks, q = 1.0 - p;
-    const int e = (int)((1.0 - q * q * q) * 1000.0 + 0.5);
-    return g_slide.target ? e : 1000 - e;
+    const double p = (double)ticks / kSlideTicks, q = 1.0 - p;
+    return (int)((1.0 - q * q * q) * 1000.0 + 0.5);
 }
 
-void slide_tick(int allowed)
+int slide_moving(void) { return g_slide.from != g_slide.page; }
+
+/* start a slide to page `to`, the page in view leaving to side `dir` */
+void slide_go(int to, int dir)
 {
-    if (!allowed) g_slide.target = 0;
-    if (g_slide.target && g_slide.ticks < kSlideTicks) ++g_slide.ticks;
-    else if (!g_slide.target && g_slide.ticks > 0) --g_slide.ticks;
+    if (to == g_slide.page && !slide_moving()) return;
+    g_slide.from = g_slide.page;
+    g_slide.page = to;
+    g_slide.ticks = 0;
+    g_slide.dir = dir;
+    g_slide.e0 = 0;
+}
+
+/* back to the main page, the way the last slide came (the page in view leaves where the main page arrives from) */
+void slide_home(void)
+{
+    if (g_slide.page == PAUSE_PG_MAIN && !slide_moving()) return;
+    if (slide_moving()) {
+        /* a slide in flight (a resize, a dialog) lands at once: the main page */
+        g_slide.page = g_slide.from = PAUSE_PG_MAIN; g_slide.ticks = 0; g_slide.e0 = 0;
+        return;
+    }
+    slide_go(PAUSE_PG_MAIN, -g_slide.dir);
+}
+
+void slide_reset(void) { g_slide.page = g_slide.from = PAUSE_PG_MAIN; g_slide.ticks = 0; g_slide.dir = 1; g_slide.e0 = 0; }
+
+void slide_tick(int allowed, int wide)
+{
+    if (!allowed) { slide_reset(); return; }
+    if (wide && (g_slide.page == PAUSE_PG_TRACKER || g_slide.from == PAUSE_PG_TRACKER)) slide_reset();   /* the wide layout has no tracker page */
+    if (!slide_moving()) return;
+    if (g_slide.ticks >= kSlideTicks) { g_slide.from = g_slide.page; g_slide.ticks = 0; g_slide.e0 = 0; return; }   /* landed on the tick before */
+    g_slide.e0 = slide_e(g_slide.ticks);
+    ++g_slide.ticks;
 }
 
 int g_wide_now;                         /* the picture of this tick is wide (set by pause_facts) */
@@ -251,14 +285,16 @@ void park_idle_stylus(void)
 }
 
 int is_main_page(int v) { return v == V_CASTLE || v == V_COURSE; }
-/* A SLIDE IN FLIGHT EATS EVERY INPUT: from the press that starts it until it lands on the planks or the tracker, nothing is queued and nothing
-   is delivered late (bumpers, Q / E, the edge tabs, the planks' A / Enter / Space / Up / Down / Start / B and clicks). 4:3 main pages only. */
+/* A SLIDE IN FLIGHT EATS EVERY INPUT: from the press that starts it until it lands on its page, nothing is queued and nothing is delivered
+   late (bumpers, Q / E, the edge tabs, the planks' A / Enter / Space / Up / Down / Start / B and clicks). Main pages only. */
 int slide_busy(void)
 {
-    if (g_wide_now || !is_main_page(g_last_variant)) return 0;
-    return g_slide.target ? g_slide.ticks < kSlideTicks : g_slide.ticks > 0;
+    if (!is_main_page(g_last_variant)) return 0;
+    return slide_moving() && g_slide.ticks < kSlideTicks;
 }
-int tracker_view(void) { return !g_wide_now && is_main_page(g_last_variant) && g_slide.ticks > 0 && g_slide.target; }
+/* the page in view (or going into view) is not the main one: the planks are away */
+int off_main(void) { return is_main_page(g_last_variant) && g_slide.page != PAUSE_PG_MAIN; }
+int tracker_view(void) { return !g_wide_now && off_main() && g_slide.page == PAUSE_PG_TRACKER; }
 
 /* ---- the ROM's strings ------------------------------------------------------------------------------------------------ */
 
@@ -442,7 +478,7 @@ void publish_embed(const PauseFacts *f, int wide)
     e.on = on;
     e.wide = wide;
     e.dx = (!wide && on) ? pause_planks_dx(pause_geo(g_pic_w, g_pic_h, f, 3), f) : 0;
-    e.input = wide || (f->slide_t1000 < 500 && !slide_busy());
+    e.input = !slide_busy() && g_slide.page == PAUSE_PG_MAIN;      /* CAREER1: the panel takes input only on the main page at rest */
     settings_page_set_embed(&e);
     g_embed_set = on;
 }
@@ -471,13 +507,40 @@ void pause_facts(MenuFacts *mf)
     ++g_frame;
     if (v != V_SAVE) g_save_init = 0;
     else if (!g_save_init && data_0209f248 == 0xd && data_0209f300 == 0) { g_save_init = 1; set_chosen(1); }   /* the cursor starts on Save & Quit */
-    slide_tick(is_main_page(v) && !wide);       /* the slide runs on the main pages only; a dialog forces the planks page */
+    slide_tick(is_main_page(v), wide);       /* the pages are the main pages' only; a dialog forces the main page */
     PauseFacts *f = (PauseFacts *)mf->blob;
     memset(f, 0, sizeof *f);
     f->magic = PAUSE_FACTS_MAGIC;
     f->variant = v;
-    f->slide_t1000 = wide ? 0 : slide_eased();
-    f->dir = g_slide.dir;
+    /* CAREER1: the page state (menu_pause_geo.h pause_page_off reads it); slide_t1000 / dir keep their old meaning for the planks at 4:3 */
+    f->pg_page = (int16_t)g_slide.page;
+    f->pg_from = (int16_t)g_slide.from;
+    f->pg_to = (int16_t)g_slide.page;
+    f->pg_dir = (int16_t)g_slide.dir;
+    f->pg_e = (int16_t)(slide_moving() ? slide_e(g_slide.ticks) : 0);
+    f->pg_e0 = (int16_t)(slide_moving() ? g_slide.e0 : 0);
+    f->pg_a = 1000;
+    {
+        int vis;
+        const int o = pause_page_off(f, PAUSE_PG_MAIN, &vis);
+        f->slide_t1000 = wide ? 0 : (vis ? (o < 0 ? -o : o) : 1000);
+        f->dir = o < 0 ? -1 : (o > 0 ? 1 : g_slide.dir);
+    }
+    {   /* the Career page's numbers, per file */
+        f->career_cur = (int8_t)port_career_slot_now();
+        int has = 0;
+        for (int i = 0; i < 3; ++i) {
+            unsigned long long play = 0, clear = 0;
+            int hc = 0;
+            if (port_career_get(i, &play, &hc, &clear)) {
+                has |= 1 << i;
+                if (hc) has |= 1 << (3 + i);
+            }
+            f->career_play[i] = (uint32_t)(play / 60 > 0xffffffffull ? 0xffffffffull : play / 60);
+            f->career_clear[i] = (uint32_t)(clear / 60 > 0xffffffffull ? 0xffffffffull : clear / 60);
+        }
+        f->career_has = (int8_t)has;
+    }
     f->settings_open = settings_page_open();
     const int in_course = SublevelToLevel(data_0209f2f8) != 0x1d;
     f->in_course = in_course;
@@ -530,7 +593,7 @@ void pause_facts(MenuFacts *mf)
     } else f->sel_slot = -1;
     f->event_n = port::event_pause_lines(f->event, 2);     /* EVENTS3 */
     f->rom_art = !pause_art_present();     /* PAUSEFULL1: no mod planks, the ROM's own plates */
-    f->arrows_live = f->paging && (wide || f->slide_t1000 >= 1000) && !f->settings_open && is_main_page(v);
+    f->arrows_live = f->paging && pause_page_rest(f, wide ? PAUSE_PG_MAIN : PAUSE_PG_TRACKER) && !f->settings_open && is_main_page(v);
     publish_embed(f, wide);
     mf->spare[0] = data_0209f2e0;
     mf->spare[1] = g_frame;
@@ -631,12 +694,19 @@ void build_new(MenuLayout *L, int variant)
         if (f->arrows_live)
             for (int side = 0; side < 2; ++side)      /* the ROM's course arrows (PS_Update.cpp :322-401), clickable where the tracker draws them */
                 add_touch_zone(L, pause_arrow_rect(g, f, side), side ? 0xc8 : 0, 0, 0x38, 0x20);
-        const int rest = f->slide_t1000 == 0;
-        if (!f->settings_open && (g.wide || f->slide_t1000 < 1000)) {
+        const int rest = pause_page_rest(f, PAUSE_PG_MAIN);
+        if (!f->settings_open && pause_page_visible(f, PAUSE_PG_MAIN)) {
+            /* CAREER1: a picture between ticks draws each plank at its own place of the slide (MenuPiece.slide_dx0: the tick before's x
+               minus this tick's) */
+            PauseFacts f0 = *f;
+            f0.pg_a = 0;
+            const int slide0 = pause_planks_dx(g, &f0) - pause_planks_dx(g, f);
             for (int i = 0; i < 3; ++i) {
                 const PauseRect r = pause_plank_rect(g, f, 3, i);
+                const int np0 = L->np;
                 const int h = f->rom_art ? add_rom_plate(L, r, 8, box_y[i], 240, 32, kRomMain[i])
                                          : add_plank(L, img[i], r, 8, box_y[i], 240, 32, kRomMain[i], i == sel, prs);
+                if (L->np > np0) L->p[L->np - 1].slide_dx0 = slide0;
                 if (i == 0 && rest && h >= 0) L->back = (int8_t)h;
             }
         }
@@ -807,7 +877,7 @@ int pause_up(int scene_id)
     if (v != g_last_variant) {
         /* settings must reach the file on every way out of the pause (REVSETLIVE1 G1: the queue waits half a second and has no flush on quit) */
         if (!v || v == V_STATUS || v == V_NOSAVE) sl_flush();
-        g_slide.target = 0; g_slide.ticks = 0;
+        slide_reset();
     }
     g_last_variant = v;
     if (!v) {
@@ -818,10 +888,10 @@ int pause_up(int scene_id)
     if (hal_menu_trace_on()) {      /* SM64DS_MENU_TRACE: every change of the ROM's pause words, for the proof rows */
         static int last[10] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
         const int now[10] = { v, data_0209f2c4, data_0209f248, data_0209f1ec, data_0209f2c8, data_0209f2e0, data_0209f218,
-                              (int)g_slide.ticks, (int)g_slide.target, g_slide.dir };
+                              (int)g_slide.ticks, (int)g_slide.page, g_slide.dir };
         if (memcmp(now, last, sizeof now) != 0) {
             memcpy(last, now, sizeof last);
-            fprintf(stderr, "[pause] variant=%d f2c4=%d f248=%d f1ec=%d course=%d sel=%d select=%d slide_ticks=%d slide_target=%d dir=%d\n", now[0], now[1],
+            fprintf(stderr, "[pause] variant=%d f2c4=%d f248=%d f1ec=%d course=%d sel=%d select=%d slide_ticks=%d page=%d dir=%d\n", now[0], now[1],
                     now[2], now[3], now[4], now[5], now[6], now[7], now[8], now[9]);
         }
     }
@@ -839,10 +909,10 @@ int pause_cursor(int dir, int *owns)
     if (data_0209f300 != 0 || data_0209f22c != 0 || data_0209f244 != 0) return 1;
     if (dir == MENU_DIR_LEFT || dir == MENU_DIR_RIGHT) {
         /* the course arrows: live in the castle's main page, and only where the tracker is on screen (wide, or slid in at 4:3) */
-        if (st == 1 && !data_0209f2f0 && (g_wide_now || tracker_view()) && !settings_page_open()) page_course(dir == MENU_DIR_LEFT ? -1 : 1);
+        if (st == 1 && !data_0209f2f0 && ((g_wide_now && !off_main()) || tracker_view()) && !settings_page_open()) page_course(dir == MENU_DIR_LEFT ? -1 : 1);
         return 1;
     }
-    if (tracker_view()) return 1;         /* the planks are slid away: up and down do nothing */
+    if (off_main()) return 1;         /* the planks are slid away (the tracker or the Career page): up and down do nothing */
     const int v = g_last_variant;
     const int slot = slot_of_rom(v, data_0209f2e0);
     int ns = slot;
@@ -900,14 +970,11 @@ extern "C" int menu_pause_input(unsigned keys, int mvalid, int mx, int my, int m
     const int open = settings_page_open();
     unsigned left = edge & (1u | 4u), right = edge & (2u | 8u);       /* LB / Q, RB / E */
     if (open) { left &= 4u; right &= 8u; }                             /* the settings page's own tabs take LB / RB */
-    if (g_wide_now) {
-        if (!open) { if (left) page_course(-1); if (right) page_course(1); }
-        return 1;
-    }
+    if (open && g_wide_now) left = right = 0;                          /* the wide settings column does not slide */
     int act = 0;
     if (left || right) { act = right ? 1 : -1; }
-    /* the edge tabs: shown on the main pages, hidden while the settings panel is up and in view */
-    const int tabs_up = !open || g_slide.ticks > 0;
+    /* the edge tabs: shown on the main pages (both layouts since CAREER1), hidden while the settings panel is up and in view */
+    const int tabs_up = !open || off_main();
     g_tab_hover = -1;
     if (tabs_up && mvalid) {
         PauseFacts f0;
@@ -923,16 +990,19 @@ extern "C" int menu_pause_input(unsigned keys, int mvalid, int mx, int my, int m
         }
     }
     if (!mdown || !mvalid) g_tab_press = -1;
-    /* A CAROUSEL: each bumper, Q / E and edge tab always slides its own way (RB, E and the right tab: the page in view leaves to the right, the
-       other page comes in from the left; LB, Q and the left tab the mirror). From the planks page that is the planks leaving and the tracker
-       arriving; from the tracker page it is the tracker leaving the same way and the planks arriving from the other side, so a second RB keeps
-       going the way the first one went. The slide is one number (slide_t1000, 0 planks .. 1000 tracker) and dir is the side the PLANKS leave to, so
-       tracker -> planks with the tracker leaving to side act is the planks arriving from side -act: dir = -act, run back toward 0. A press while a
-       slide is still running is dropped (slide_busy), not remembered. */
+    /* A CAROUSEL: each bumper, Q / E and edge tab always slides its own way (RB, E and the right tab: the page in view leaves to the right and
+       the next page comes in from the left; LB, Q and the left tab the mirror, to the page before). 4:3 rings three pages (the planks, the
+       tracker, the Career page: RB from the planks is the tracker, as it was), the wide layout two (the main page and the Career page). A press
+       while a slide is still running is dropped (slide_busy), not remembered. */
     if (act && slide_busy()) act = 0;
     if (act) {
-        if (g_slide.target) { g_slide.dir = -act; g_slide.target = 0; }
-        else { g_slide.dir = act; g_slide.target = 1; }
+        static const int ring[3] = { PAUSE_PG_MAIN, PAUSE_PG_TRACKER, PAUSE_PG_CAREER };
+        static const int ring_w[2] = { PAUSE_PG_MAIN, PAUSE_PG_CAREER };
+        const int n = g_wide_now ? 2 : 3;
+        const int *rg = g_wide_now ? ring_w : ring;
+        int at = 0;
+        for (int i = 0; i < n; ++i) if (rg[i] == g_slide.page) at = i;
+        slide_go(rg[(at + (act > 0 ? 1 : n - 1)) % n], act);
     }
     return 1;
 }
@@ -954,15 +1024,15 @@ extern "C" void menu_pause_hook_pad(uint16_t *pressed, int back)
         return;
     }
     if (slide_busy()) { *pressed = 0; return; }       /* a slide in flight eats the pad */
-    if (!tracker_view() || settings_page_open()) return;
+    if (!off_main() || settings_page_open()) return;
     const uint16_t confirm = (uint16_t)(MENU_PAD_CONFIRM | MENU_PAD_START | 0x0001);
-    if (*pressed & MENU_PAD_START) {       /* Start resumes at once (the ROM's Continue plate), the tracker view is left behind */
-        g_slide.target = 0;
+    if (*pressed & MENU_PAD_START) {       /* Start resumes at once (the ROM's Continue plate), the tracker / Career page is left behind */
+        slide_reset();
         set_chosen(0);
         *pressed = (uint16_t)(*pressed & ~(MENU_PAD_CONFIRM | 0x0001 | MENU_PAD_UP | MENU_PAD_DOWN));
         return;
     }
-    if ((*pressed & confirm) || back) g_slide.target = 0;
+    if ((*pressed & confirm) || back) slide_home();      /* A / B: back to the main page the way it left */
     *pressed = (uint16_t)(*pressed & ~(confirm | MENU_PAD_UP | MENU_PAD_DOWN));
 }
 

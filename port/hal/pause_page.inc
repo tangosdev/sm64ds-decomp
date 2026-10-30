@@ -185,10 +185,7 @@ void pp_tracker(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
         const Piece *al = arrow_left_piece(aw, ah), *ar = arrow_right_piece(aw, ah);
         if (al) blit(sf, al->px, al->w, al->h, x + (int)(104 * sc), row_cy - ah / 2, 255, 0, 0, 0);
         if (ar) blit(sf, ar->px, ar->w, ar->h, x + w - (int)(104 * sc) - aw, row_cy - ah / 2, 255, 0, 0, 0);
-        const float lb = (float)(26 * sc);
-        ui_text_draw(&sf, (float)(x + 36 * sc), row_cy + ui_text_cap_height(lb) * 0.5f, "LB", lb, PP_FADED, 255, 0);
-        const float rw = ui_text_width("RB", lb);
-        ui_text_draw(&sf, x + w - 36 * sc - rw, row_cy + ui_text_cap_height(lb) * 0.5f, "RB", lb, PP_FADED, 255, 0);
+        /* CAREER1: no LB / RB letters here any more: the bumpers switch the pause pages; the D-pad and the arrows page the courses */
     }
     int yy = y + (int)((110 + 20 + 48) * sc + 0.5);
     const int rowh = (int)(54 * sc + 0.5), ic = (int)(40 * sc + 0.5);
@@ -253,6 +250,58 @@ void pp_tracker(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
             pp_stat_row(sf, x, yy, w, sh, MENU_IMG_P_COIN_GOLD, "Coin record", 0, buf, sc);
         }
     }
+}
+
+/* CAREER1: THE CAREER PAGE. The tracker's sheet and title plank, then one row per save file: the file, its playtime and its clear time ("--"
+   until the file has beaten the final Bowser). The file being played has the pointer beside it. The rest of the sheet is left for what comes
+   later (achievements): nothing is drawn there. */
+void pp_hms(uint32_t sec, char *out, int cap)
+{
+    snprintf(out, (size_t)cap, "%u:%02u:%02u", sec / 3600, sec / 60 % 60, sec % 60);
+}
+
+void pp_career(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
+{
+    const PauseRect r = pause_career_rect(g, f);
+    if (r.x >= sf.w || r.x + r.w <= 0) return;
+    const double sc = g.tsc;
+    const int x = r.x, y = r.y, w = r.w;
+    const Piece *sheet = sheet_piece(w, r.h, (int)(sc * 100 + 0.5));
+    if (sheet) blit_piece(sf, sheet, x, y);
+    const int tw = (int)(640 * sc + 0.5), th = tw * 256 / 960;
+    const int tcx = x + w / 2, tcy = y + (int)(8 * sc);
+    blit_hi(sf, MENU_IMG_P_TITLE_BLANK, tcx - tw / 2, tcy - th / 2, tw, th);
+    pp_title_text(sf, tcx, tcy, (int)(tw * 0.72), "CAREER", th * 0.40);
+    /* the column heads, on the tracker's page-name row */
+    const int head_cy = y + (int)((110 + 20) * sc + 0.5);
+    const int c1 = x + (int)(500 * sc), c2 = x + w - (int)(70 * sc);      /* right edges of the two number columns */
+    const float he = (float)(28 * sc);
+    ui_text_draw(&sf, c1 - ui_text_width("Playtime", he), head_cy + ui_text_cap_height(he) * 0.5f, "Playtime", he, PP_FADED, 255, 0);
+    ui_text_draw(&sf, c2 - ui_text_width("Clear time", he), head_cy + ui_text_cap_height(he) * 0.5f, "Clear time", he, PP_FADED, 255, 0);
+    int yy = y + (int)((110 + 20 + 48) * sc + 0.5);
+    const int rowh = (int)(64 * sc + 0.5);
+    const int lx = x + (int)(110 * sc);
+    for (int i = 0; i < 3; ++i) {
+        const int cy = yy + rowh / 2;
+        const int has = (f->career_has >> i) & 1, clr = (f->career_has >> (3 + i)) & 1;
+        const uint32_t col = has ? PP_BROWN : PP_FADED;
+        char name[12], play[24], clear[24];
+        snprintf(name, sizeof name, "File %c", 'A' + i);
+        if (has) pp_hms(f->career_play[i], play, sizeof play); else snprintf(play, sizeof play, "--");
+        if (clr) pp_hms(f->career_clear[i], clear, sizeof clear); else snprintf(clear, sizeof clear, "--");
+        const float ne = (float)(33 * sc), ve = (float)(34 * sc);
+        if (i == f->career_cur) {
+            const int ah = (int)(rowh * 0.5 + 0.5), aw = (int)(ah * 24.0 / 34.0 + 0.5);
+            const Piece *ap = arrow_right_piece(aw, ah);
+            if (ap) blit(sf, ap->px, ap->w, ap->h, lx - aw - (int)(16 * sc), cy - ah / 2, 255, 0, 0, 0);
+        }
+        ui_text_draw(&sf, (float)lx, cy + ui_text_cap_height(ne) * 0.5f, name, ne, col, 255, 0);
+        ui_text_draw(&sf, c1 - ui_text_width(play, ve), cy + ui_text_cap_height(ve) * 0.5f, play, ve, col, 255, 0);
+        ui_text_draw(&sf, c2 - ui_text_width(clear, ve), cy + ui_text_cap_height(ve) * 0.5f, clear, ve, clr ? PP_BROWN : PP_FADED, 255, 0);
+        yy += rowh;
+    }
+    yy += (int)(10 * sc);
+    fill_rrect(sf, (float)(x + 60 * sc), (float)yy, (float)(w - 120 * sc), (float)(4 * sc > 3 ? 4 * sc : 3), 2.f, PP_DKBROWN, 255, 0);
 }
 
 /* the save pages' sheet: title plank, the words, (the planks are the recipe's pieces on top) */
@@ -361,22 +410,32 @@ void pp_air_plank(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
 extern "C" void pause_page_draw(const MenuLayout *lay, int piece, uint32_t *dst, int w, int h, int stride)
 {
     (void)piece;
-    const PauseFacts *f = (const PauseFacts *)lay->facts.blob;
-    if (f->magic != PAUSE_FACTS_MAGIC || w < 64 || h < 64) return;
+    const PauseFacts *f0 = (const PauseFacts *)lay->facts.blob;
+    if (f0->magic != PAUSE_FACTS_MAGIC || w < 64 || h < 64) return;
+    /* CAREER1: this picture's own place in a page slide (1000 on a tick's own picture, the place between ticks on Smooth Motion's) */
+    PauseFacts fl = *f0;
+    {
+        const float a = hal_menu_draw_alpha();
+        fl.pg_a = (int16_t)(a >= 1.f ? 1000 : (a <= 0.f ? 0 : (int)(a * 1000.f + 0.5f)));
+    }
+    const PauseFacts *f = &fl;
     const Surf sf = { dst, stride, w, h };
     const PauseGeo g = pause_geo(w, h, f, f->nslots);
     const int dialog = f->variant == PAUSE_V_SAVE || f->variant == PAUSE_V_STATUS || f->variant == PAUSE_V_NOSAVE;
     const int main_page = f->variant == PAUSE_V_CASTLE || f->variant == PAUSE_V_COURSE;
-    if (g.wide || (main_page && f->slide_t1000 > 0)) pp_tracker(sf, g, f);
+    int mvis;
+    const int moff = main_page ? pause_page_off(f, PAUSE_PG_MAIN, &mvis) : (mvis = 1, 0);
+    if (main_page ? (g.wide ? mvis : pause_page_visible(f, PAUSE_PG_TRACKER)) : g.wide) pp_tracker(sf, g, f);
+    if (main_page && pause_page_visible(f, PAUSE_PG_CAREER)) pp_career(sf, g, f);
     if (dialog) pp_dialog(sf, g, f);
     if (main_page && f->event_n > 0 && !f->settings_open) {
         /* EVENTS3: under the plank stack (it slides away with the planks) */
         const PauseRect last = pause_plank_rect(g, f, 3, 2);
-        if (g.wide || f->slide_t1000 < 1000) pp_event_card(sf, g, f, g.pcx + pause_planks_dx(g, f), last.y + last.h + (int)(30 * g.u));
+        if (mvis) pp_event_card(sf, g, f, g.pcx + pause_planks_dx(g, f), last.y + last.h + (int)(30 * g.u));
     }
-    if (!g.wide && main_page && !f->settings_open) pp_tabs(sf, g, f);
+    if (main_page && !f->settings_open) pp_tabs(sf, g, f);
     if (f->variant == PAUSE_V_AIR && f->rom_art) pp_air_plank(sf, g, f);
-    if (!(!g.wide && f->slide_t1000 > 500)) pp_pointer(sf, g, f);
+    if (mvis && moff <= 500 && moff >= -500) pp_pointer(sf, g, f);
 }
 
 /* the pictures the pause draws itself, for the warm-up to decode and scale ahead of the first open: idx 0.. -> (id, dw, dh), 1 while idx is valid */

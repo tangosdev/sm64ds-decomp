@@ -152,6 +152,10 @@ struct MenuPiece {
   uint8_t turn_half;
   short turn_fw;
   float turn_a;
+  /* CAREER1 (appended): slide_dx0 = a fixed host rect piece that slides sideways with the pause pages: its x on the tick before minus its x
+     on this tick, in host pixels. A picture between ticks draws it slide_dx0 * (1 - a) to the side of the tick rect; the tick's own picture
+     (a = 1) is the tick rect. */
+  int slide_dx0;
 };
 /* ARROWSLOW1: the cursor arrow's bob in half units (0..4), one cycle every 24 ticks (a third of the ROM's 8-tick pace), eased (a cosine); ph in ticks, fractional
    between ticks */
@@ -450,6 +454,7 @@ void hal_menu_relift_dump(void);                /* MENUINTERP2 debug: one trace 
 void hal_menu_present_relift(uint32_t *dst, int w, int h, int stage);   /* MENUINTERP2: hal_menu_present for a picture between ticks */
 void hal_menu_set_relift_alpha(double a);      /* ARROWSLOW1: the next re-draws between ticks are a of the way from the tick before to this tick (bob pieces) */
 float hal_menu_piece_bob_frac(int piece);       /* ARROWSLOW1: the picture being drawn shifts this bob piece down by this fraction of a pixel (0..1) */
+float hal_menu_draw_alpha(void);                 /* CAREER1: the place between ticks of the picture being drawn (1 on a tick's own picture), for custom pieces */
 int  hal_menu_key_sentinel(void);               /* MENUS093E: the bound layout wants its masked engine-B planes drawn over a sentinel backdrop (exact key_backdrop) */
 int  hal_menu_needs_picsnap(void);              /* MENUINTERP2: the tick must keep the picture as the menu found it for a re-draw between ticks */
 int  hal_menu_relift_ok(void);                  /* MENUINTERP2: a tick the gate snaps may still blend if every in-between re-draws the menu on its own 3D picture (hal_menu_relift) */

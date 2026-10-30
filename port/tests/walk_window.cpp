@@ -679,6 +679,7 @@ void port_coop_world_frame(void);
 void port_star_popup_frame(void);
 void port_event_frame(void);   /* run hunt8 lane EVENTS1 (hal/event_client.cpp) */
 int port_star_popup_stop_now(void);   /* run mp1 lane STARPOP1 (hal/star_popup.cpp) */
+extern "C" void port_career_frame(int ticked);   /* run after093 lane CAREER1 (hal/career.cpp) */
 /* PARTY: per-slot party-member predicate (hal/comms_sync.cpp). */
 extern "C" int port_party_member(int slot);
 extern char data_0209f4a0[];
@@ -21758,6 +21759,7 @@ int main(void)
             port_party_hits_frame();   /* hook: PLAYINT1, inert outside party / coop rooms */
             port_star_popup_frame();   /* hook: STARPOP1, inert outside party / coop rooms */
             port_event_frame();        /* hook: EVENTS1, inert outside a live world hub */
+            port_career_frame(game_ticked);   /* hook: CAREER1, the pause Career page's playtime (hal/career.h) */
         }
         /* PARTY: the render boundary (a party body solid+colliding vs a
            non-party ghost translucent+pass-through) and party-body liveness.

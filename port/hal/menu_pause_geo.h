@@ -26,6 +26,8 @@ enum {
 
 #define PAUSE_FACTS_MAGIC 0x50415533
 
+enum { PAUSE_PG_MAIN = 0, PAUSE_PG_TRACKER = 1, PAUSE_PG_CAREER = 2 };      /* CAREER1: the pause pages */
+
 struct PauseFacts {
     int32_t magic;            /* PAUSE_FACTS_MAGIC once the recipe filled it (a zeroed blob means "no facts", e.g. the layout selftest) */
     int32_t variant;          /* PAUSE_V_* */
@@ -60,6 +62,15 @@ struct PauseFacts {
     /* EVENTS3: the live online event's rows ("CASTLE UNLOCKED 4:32", a race's leader), 0 rows when nothing runs */
     int32_t event_n;
     char event[2][44];
+    /* CAREER1: THE PAUSE PAGES. pg_page is the page at rest (or the one a slide is going to): PAUSE_PG_MAIN (wide: the tracker and the planks
+       together; 4:3: the planks), PAUSE_PG_TRACKER (4:3 only), PAUSE_PG_CAREER. A slide runs pg_from -> pg_to (equal at rest): pg_e is its eased
+       progress on this tick, pg_e0 on the tick before (permille), pg_dir the side the leaving page goes to (+1 right). pg_a is the place between
+       ticks of the picture being drawn (permille, 1000 = the tick's own picture): the recipe fills 1000, the draw sets its own copy. */
+    int16_t pg_page, pg_from, pg_to, pg_dir, pg_e, pg_e0, pg_a;
+    /* the Career page: per save file, playtime and clear time in seconds; bit i of career_has = file i has a record, bit 3 + i = it has a clear
+       time; career_cur = the file being played (-1 none) */
+    int8_t career_cur, career_has;
+    uint32_t career_play[3], career_clear[3];
 };
 static_assert(sizeof(PauseFacts) <= 1024, "PauseFacts must fit MenuFacts.blob");
 
@@ -137,18 +148,43 @@ inline int pause_tracker_h(const PauseGeo &g, const PauseFacts *f)
     return pause_round(pause_tracker_units_h(rows, stats) * g.tsc);
 }
 
+/* CAREER1: page pg's place in the slide on the picture being drawn, permille of its own way out (0 = in place, +-1000 = just gone to the right /
+   left; 2000 = parked, a page the slide does not move). *vis = 0 when no pixel of it is on the picture. pg_a 0 is the tick before's place. A facts
+   blob with no page state (the selftest, a warm-up solve) is the main page at rest. */
+inline int pause_page_off(const PauseFacts *f, int pg, int *vis)
+{
+    if (f->pg_from == f->pg_to) { *vis = pg == f->pg_to; return *vis ? 0 : 2000; }
+    const int a = f->pg_a >= 0 && f->pg_a <= 1000 ? f->pg_a : 1000;
+    const int e = f->pg_e0 + (int)((long long)(f->pg_e - f->pg_e0) * a / 1000);
+    if (pg == f->pg_from) { *vis = e < 1000; return f->pg_dir * e; }
+    if (pg == f->pg_to) { *vis = e > 0; return -f->pg_dir * (1000 - e); }
+    *vis = 0;
+    return 2000;
+}
+inline int pause_page_visible(const PauseFacts *f, int pg) { int v; pause_page_off(f, pg, &v); return v; }
+inline int pause_page_rest(const PauseFacts *f, int pg) { return f->pg_from == f->pg_to && f->pg_to == pg; }
+/* the way out of the wide main page (the tracker and the planks move as one), in host pixels */
+inline int pause_main_away(const PauseGeo &g) { return g.w + pause_round(g.w * 0.05); }
+
 /* the slide's sideways offsets in host pixels (narrow; both 0 in the wide layout and at slide_t1000 == 0 for the planks) */
 inline int pause_planks_dx(const PauseGeo &g, const PauseFacts *f)
 {
-    if (g.wide) return 0;
-    return (int)((double)f->dir * f->slide_t1000 / 1000.0 * (g.w / 2 + g.pw / 2 + g.w * 0.05));
+    int vis;
+    const int o = pause_page_off(f, PAUSE_PG_MAIN, &vis);     /* CAREER1: the planks are the main page (wide: with the tracker) */
+    if (g.wide) return (int)((long long)o * pause_main_away(g) / 1000);
+    return (int)((double)o / 1000.0 * (g.w / 2 + g.pw / 2 + g.w * 0.05));
 }
 inline int pause_tracker_dx(const PauseGeo &g, const PauseFacts *f)
 {
-    if (g.wide) return 0;
-    /* the tracker rests at tx; it is parked off the opposite edge at slide 0 */
+    int vis;
+    if (g.wide) {       /* CAREER1: the wide tracker is part of the main page */
+        const int o = pause_page_off(f, PAUSE_PG_MAIN, &vis);
+        return (int)((long long)o * pause_main_away(g) / 1000);
+    }
+    /* the tracker rests at tx; it is parked off the opposite edge when it is not on the picture */
     const double away = g.tw + g.tx + g.w * 0.05;       /* far enough that no pixel shows */
-    return (int)(-(double)f->dir * (1000 - f->slide_t1000) / 1000.0 * away);
+    const int o = pause_page_off(f, PAUSE_PG_TRACKER, &vis);
+    return (int)((double)o / 1000.0 * away);
 }
 
 /* the ROM's own plate is 240 x 32 DS pixels (the touch boxes of PS_Update: 8, y, 240, 32); a rom_art page draws it at the mod plank's width */
@@ -224,6 +260,21 @@ inline PauseRect pause_dialog_plank(const PauseGeo &g, const PauseFacts *f, int 
     r.w = pw; r.h = ph;
     r.x = d.x + (d.w - pw) / 2;
     r.y = bottom - (n - i) * ph - (n - 1 - i) * gap;
+    return r;
+}
+
+/* CAREER1: the Career page's sheet: the tracker's size (its tallest page), centred, with the slide applied */
+inline PauseRect pause_career_rect(const PauseGeo &g, const PauseFacts *f)
+{
+    PauseRect r;
+    r.w = g.tw;
+    r.h = pause_round(pause_tracker_units_h(8, 3) * g.tsc);
+    const int x0 = (g.w - r.w) / 2;
+    int vis;
+    const int o = pause_page_off(f, PAUSE_PG_CAREER, &vis);
+    const double away = r.w + x0 + g.w * 0.05;
+    r.x = x0 + (int)((double)o / 1000.0 * away);
+    r.y = (g.h - r.h) / 2 + pause_round(g.wide ? 10 * g.u : 14 * g.u);
     return r;
 }
 

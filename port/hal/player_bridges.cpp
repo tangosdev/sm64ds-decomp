@@ -2476,6 +2476,8 @@ extern "C" int port_player_st_climb_main(void *self);
 /* Player::St_EndingFly_Main, under the flat name the ov002 world gives it
    (the sinit's PMF table pairs it with the EndingFly state; see the case). */
 extern "C" int _ZN6Player17St_EndingFly_MainEv(char *self);
+/* CAREER1: the Grand Star's EndingFly begins (the final Bowser is beaten); hal/career.cpp records the file's clear time. Null by default. */
+extern "C" { void (*port_career_ending_hook)(void) = 0; }
 
 extern "C" int hal_call_state_fn(void *self, unsigned ds_addr)
 {
@@ -2567,7 +2569,7 @@ extern "C" int hal_call_state_fn(void *self, unsigned ds_addr)
        its data (the 27-record rising-spiral step table data_ov002_0210a8b8
        and the kuppa script data_02088610) rode in with the wave-2 mounts. */
     case 0x020c3d1c: return _ZN6Player17St_EndingFly_MainEv((char *)self);
-    case 0x020c3d6c: return ((Player *)self)->Player::St_EndingFly_Init();
+    case 0x020c3d6c: if (port_career_ending_hook) port_career_ending_hook(); return ((Player *)self)->Player::St_EndingFly_Init();   /* CAREER1 */
     case 0x020d9fc4: return ((Player *)self)->Player::St_SwingPlayer_Cleanup();
     case 0x020da3b0: return ((Player *)self)->Player::St_SwingPlayer_Init();
     case 0x020d9fec: return ((Player *)self)->Player::St_SwingPlayer_Main();
