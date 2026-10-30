@@ -9496,34 +9496,40 @@ void ip_match(IpRec &C, const IpRec &P, GxInterpStats *st, const IpRec *P2 = nul
     const double tele2 = ip_tele_units() * ip_tele_units();
     int matched = 0, tele = 0, shapebad = 0;
     double max_moved = 0;
+    /* RENDERBUGS1: tagged particles pair by element (see ip_particle_id_mode) and leave the likeness pairing below.
+       One element map over ALL of P's groups, not one per draw key: a particle whose colour or fade step changed
+       between the ticks lands under another key and must still find itself. */
+    const bool by_id = ip_particle_id_mode() != 0;
+    if (by_id) {
+        std::map<uint32_t, int> pidp;
+        for (size_t j = 0; j < P.groups.size(); ++j) {
+            const IpGroup &q = P.groups[j];
+            if (q.part && q.pid) pidp[q.pid] = (int)j;
+        }
+        for (size_t ci = 0; ci < C.groups.size(); ++ci) {
+            IpGroup &q = C.groups[ci];
+            if (!(q.part && q.pid)) continue;
+            auto f = pidp.find(q.pid);
+            /* the same element one tick older: its age went up by a tick or two (a slot freed and taken again starts over) */
+            if (f == pidp.end()) continue;
+            const IpGroup &qp = P.groups[f->second];
+            const uint32_t da = (q.page - qp.page) & 0xffffu;
+            if (da < 1 || da > 2) continue;
+            if (q.nmtx != qp.nmtx || q.shape != qp.shape) { ++shapebad; continue; }
+            q.match = f->second;
+            ++matched;
+            const double d = std::sqrt(ip_dist2(q, qp));
+            if (d > max_moved) max_moved = d;
+        }
+    }
     for (auto &kv : kc) {
         auto it = kp.find(kv.first);
         if (it == kp.end()) continue;
         const std::vector<int> &lc_all = kv.second, &lp_all = it->second;
-        /* RENDERBUGS1: tagged particles pair by element (see ip_particle_id_mode) and leave the likeness pairing below */
         std::vector<int> lc_rest, lp_rest;
-        const bool by_id = ip_particle_id_mode() != 0;
         if (by_id) {
-            std::map<uint32_t, int> pidp;
-            for (int j : lp_all) {
-                const IpGroup &q = P.groups[j];
-                if (q.part && q.pid) pidp[q.pid] = j; else lp_rest.push_back(j);
-            }
-            for (int ci : lc_all) {
-                IpGroup &q = C.groups[ci];
-                if (!(q.part && q.pid)) { lc_rest.push_back(ci); continue; }
-                auto f = pidp.find(q.pid);
-                /* the same element one tick older: its age went up by a tick or two (a slot freed and taken again starts over) */
-                if (f == pidp.end()) continue;
-                const IpGroup &qp = P.groups[f->second];
-                const uint32_t da = (q.page - qp.page) & 0xffffu;
-                if (da < 1 || da > 2) continue;
-                if (q.nmtx != qp.nmtx || q.shape != qp.shape) { ++shapebad; continue; }
-                q.match = f->second;
-                ++matched;
-                const double d = std::sqrt(ip_dist2(q, qp));
-                if (d > max_moved) max_moved = d;
-            }
+            for (int j : lp_all) { const IpGroup &q = P.groups[j]; if (!(q.part && q.pid)) lp_rest.push_back(j); }
+            for (int ci : lc_all) { const IpGroup &q = C.groups[ci]; if (!(q.part && q.pid)) lc_rest.push_back(ci); }
         }
         const std::vector<int> &lc = by_id ? lc_rest : lc_all, &lp = by_id ? lp_rest : lp_all;
         if (lc.empty() || lp.empty()) continue;
