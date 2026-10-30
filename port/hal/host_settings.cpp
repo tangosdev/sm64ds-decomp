@@ -885,6 +885,8 @@ int g_character_strip = 1;
 
 /* KeepLives: 1 keeps each save file's life count in the port's own side file (save/lives.json) and gives it back when that file starts; 0 is the DS, which starts every file with 4 lives. Default 0. Read live. */
 int g_keep_lives = 0;
+/* SKIPINTRO1: SkipOpening, 1 skips a new file's opening (Peach's letter, Lakitu's flight) and starts the file at the castle with the opening marked seen; 0 (the default) is the DS. Read live. */
+int g_skip_opening = 0;
 char g_online_name[20];      /* PROFILE1: OnlineName, "" until the player set one */
 int g_online_have = 0;       /* PROFILE1: 1 once the player has picked colours (OnlineBodyColor / OnlineShoeColor, or the old OnlineYoshiColor index mapped) */
 unsigned g_online_body, g_online_shoes;   /* 0xRRGGBB */
@@ -1563,6 +1565,7 @@ void load_once(void)
     g_rich_presence = 1;
     g_character_strip = 1;
     g_keep_lives = 0;
+    g_skip_opening = 0;
     g_online_name[0] = '\0';
     g_online_have = 0;
     g_online_migrate = 0;
@@ -1771,6 +1774,7 @@ void load_once(void)
         g_online_events = json_bool(text, "OnlineEvents", 1);
         g_character_strip = json_bool(text, "CharacterStrip", 1);
         g_keep_lives = json_bool(text, "KeepLives", 0);
+        g_skip_opening = json_bool(text, "SkipOpening", 0);
         /* PROFILE1: the player's Adventure Online name and Yoshi colour. The name is cleaned the way the popup writes it. */
         {
             char nm[40];
@@ -2489,6 +2493,14 @@ int reload_live(const char *text)
             g_keep_lives = kv;
             changed = 1;
             fprintf(stderr, "[settings] live re-read: KeepLives %s\n", kv ? "ON" : "off");
+        }
+    }
+    {
+        const int so = json_bool(text, "SkipOpening", g_skip_opening);
+        if (so != g_skip_opening) {
+            g_skip_opening = so;
+            changed = 1;
+            fprintf(stderr, "[settings] live re-read: SkipOpening %s\n", so ? "ON" : "off");
         }
     }
     {
@@ -4532,4 +4544,21 @@ extern "C" int host_setting_vsync(void)
     if (env >= 0) return env;
     load_once();
     return g_vsync;
+}
+
+/* SKIPINTRO1: SkipOpening. Read by hal/level_boot.cpp port_intro_suppressed beside the launcher's SM64DS_SKIP_INTRO. */
+extern "C" int host_setting_skip_opening(void)
+{
+    load_once();
+    return g_skip_opening;
+}
+
+extern "C" int host_setting_set_skip_opening(int on)
+{
+    load_once();
+    on = on ? 1 : 0;
+    g_skip_opening = on;
+    g_poll_flag = 1;
+    queue_bool("SkipOpening", on);
+    return 1;
 }

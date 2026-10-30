@@ -632,7 +632,7 @@ const Row ROWS_GENERAL[] = {
    same default off). "Fix original bugs" (key FixOriginalBugs, default on, SM64DS_FIX_ORIGINAL_BUGS=0 off) is defined in
    settings_live by the lane that implements it; the row is looked up by key name, like Draw distance, so it shows once that key
    exists in a build and the page builds without it. New patch rows go in patches_rows(). */
-Row g_patch_rows[6];
+Row g_patch_rows[8];
 const Row *patches_rows(int *n)
 {
     int k = 0;
@@ -640,6 +640,8 @@ const Row *patches_rows(int *n)
     g_patch_rows[k++] = Row{ R_NOTE, "Off is the DS: every file starts with 4 lives.", -1, -1, 0, 0, 0 };
     const int fb = sl_find("FixOriginalBugs");
     if (fb >= 0) g_patch_rows[k++] = Row{ R_CHECK, "Fix original bugs", fb, -1, 0, 0, 0 };
+    g_patch_rows[k++] = Row{ R_CHECK, "Skip opening", SL_SKIP_OPENING, -1, 0, 0, 0 };   /* SKIPINTRO1 */
+    g_patch_rows[k++] = Row{ R_NOTE, "New files skip Peach's letter and start at the castle.", -1, -1, 0, 0, 0 };
     *n = k;
     return g_patch_rows;
 }

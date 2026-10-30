@@ -1127,6 +1127,9 @@ double host_setting_run_norm(void);          /* 0.87 by default (MP fold) */
 int host_setting_invert_camera_y(void);
 int host_setting_camera_sensitivity(void);
 int host_setting_mouse_sensitivity(void);
+/* SKIPINTRO1: SkipOpening, bool, OFF by default: a new file skips its opening and starts at the castle with the opening marked seen. Live. */
+int host_setting_skip_opening(void);
+int host_setting_set_skip_opening(int on);
 
 #ifdef __cplusplus
 }
