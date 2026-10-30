@@ -2354,6 +2354,110 @@ void hr_report()
                  g_hr_n[0], g_hr_n[3], g_hr_n[6], g_hr_n[1], g_hr_n[2], g_hr_ms / g_hr_n[0], g_hr_n[4], g_hr_n[5]);
 }
 
+/* ---- THE CAPTURED HALF AT RENDER SCALE (run after093, lane MGHIRES2) ----------
+ *
+ * The four dual-screen 3D minigames (372 373 384 385) draw one screen's 3D a
+ * tick, capture engine A's finished picture into VRAM-C or VRAM-D (ntr/ppu.cpp
+ * ppu_display_capture, 256x192 BGR555) and show that capture on engine B (a
+ * direct-colour bitmap BG from VRAM-C, twelve 64x64 bitmap sprites from
+ * VRAM-D) while engine A draws the other screen live; the next tick they swap.
+ * The live screen is at render scale, the captured one at the DS's 256x192, so
+ * each screen went sharp, blocky, sharp, blocky at the tick rate.
+ *
+ * The capture itself is unchanged (it is what the game reads back). Beside it
+ * the host keeps the picture it was sampled from, at render scale
+ * (port_caphr_keep, one per VRAM block). At engine B's scan-out every DS pixel
+ * whose colour is exactly the colour that capture wrote for that same screen
+ * pixel (the bitmap shown 1:1, nothing blended over it, no fade) takes the
+ * render-scale block it was sampled from; any other pixel (a fade, a sprite
+ * over it, a stale block) keeps the DS pixel. Policy bit 2; off, nothing is
+ * kept or drawn. */
+struct CapHr {
+    uint32_t *px = nullptr;     /* w x h host picture, stride w */
+    size_t cap = 0;
+    int w = 0, h = 0, rx = 0, ry = 0, cx0 = 0, cy0 = 0;
+    bool valid = false;
+};
+CapHr g_caphr[2];               /* VRAM blocks 2 and 3 (C and D), by block & 1 */
+long g_caphr_n[4];              /* captures kept, scan-outs drawn, DS pixels taken, scan-outs with no capture matching */
+
+inline uint16_t caphr_555(uint32_t p)
+{
+    return (uint16_t)(0x8000u | (((p >> 3) & 0x1Fu) << 10) | (((p >> 11) & 0x1Fu) << 5) | ((p >> 19) & 0x1Fu));
+}
+
+/* the DS pixels of fb that show capture c 1:1 (nmatch), sampled every 4th pixel */
+int caphr_score(const CapHr &c, const SubFramebuffer &fb)
+{
+    int n = 0;
+    for (int y = 1; y < SUB_H; y += 4) {
+        const uint32_t *row = c.px + (size_t)(y * c.ry + c.cy0) * c.w;
+        for (int x = 1; x < SUB_W; x += 4)
+            if (bgr555(caphr_555(row[x * c.rx + c.cx0])) == fb.px[y][x]) ++n;
+    }
+    return n;
+}
+
+void caphr_overlay(const SubFramebuffer &fb)
+{
+    const int pol = g_hr_policy ? g_hr_policy() : 0;
+    const int S = active_h / SUB_H;
+    if (!(pol & 4) || S < 2 || S > 8) return;
+    int best = -1, bs = 0;
+    for (int k = 0; k < 2; ++k) {
+        if (!g_caphr[k].valid) continue;
+        const int s = caphr_score(g_caphr[k], fb);
+        if (s > bs) { bs = s; best = k; }
+    }
+    /* fewer than half the sampled pixels: not a screen showing a capture (or a fade over one) */
+    if (best < 0 || bs < (SUB_W / 4) * (SUB_H / 4) / 2) { ++g_caphr_n[3]; return; }
+    const CapHr &c = g_caphr[best];
+    HrSlot &hs = g_hr[g_hr_slot & 1];
+    const int W = SUB_W * S;
+    if (!hs.valid || hs.S != S || !hs.of || std::memcmp(hs.of->px, fb.px, sizeof fb.px) != 0) {
+        const int need = W * SUB_H * S;
+        if (hs.cap < need) {
+            std::free(hs.px);
+            hs.px = static_cast<uint32_t *>(std::malloc(sizeof(uint32_t) * (size_t)need));
+            hs.cap = hs.px ? need : 0;
+            if (!hs.px) { hs.valid = false; return; }
+        }
+        if (!hs.of) { hs.of = static_cast<SubFramebuffer *>(std::malloc(sizeof(SubFramebuffer))); if (!hs.of) { hs.valid = false; return; } }
+        hr_base(fb, S, false, hs.px);
+        std::memcpy(hs.of->px, fb.px, sizeof fb.px);
+        hs.S = S;
+    }
+    hs.ups_only = false;
+    /* host column / row of output phase i of DS pixel x: (x*S + i) * rx / S, inside the capture's extent */
+    int hx[SUB_W * 8], hy[SUB_H * 8];
+    for (int X = 0; X < W; ++X) { const int v = X * c.rx / S; hx[X] = v < c.w ? v : c.w - 1; }
+    for (int Y = 0; Y < SUB_H * S; ++Y) { const int v = Y * c.ry / S; hy[Y] = v < c.h ? v : c.h - 1; }
+    long taken = 0;
+    for (int y = 0; y < SUB_H; ++y) {
+        const uint32_t *crow = c.px + (size_t)(y * c.ry + c.cy0) * c.w;
+        for (int x = 0; x < SUB_W; ++x) {
+            const uint32_t ds = fb.px[y][x];
+            if (bgr555(caphr_555(crow[x * c.rx + c.cx0])) != ds) continue;
+            ++taken;
+            for (int j = 0; j < S; ++j) {
+                const uint32_t *src = c.px + (size_t)hy[y * S + j] * c.w;
+                uint32_t *o = hs.px + (size_t)(y * S + j) * W + (size_t)x * S;
+                for (int i = 0; i < S; ++i) o[i] = (src[hx[x * S + i]] & 0x00FFFFFFu) | (ds & 0xFF000000u);
+            }
+        }
+    }
+    hs.valid = true;
+    ++g_caphr_n[1];
+    g_caphr_n[2] += taken;
+}
+
+void caphr_report()
+{
+    if (!g_caphr_n[0] && !g_caphr_n[1]) return;
+    std::fprintf(stderr, "[mg-caphr] %ld captures kept at render scale, %ld scan-outs drawn from them (%.1f DS px each), %ld scan-outs with none matching\n",
+                 g_caphr_n[0], g_caphr_n[1], g_caphr_n[1] ? (double)g_caphr_n[2] / g_caphr_n[1] : 0.0, g_caphr_n[3]);
+}
+
 }  // namespace
 
 void ppu_scanout_sub(SubFramebuffer &fb)
@@ -2390,6 +2494,10 @@ void ppu_scanout_sub(SubFramebuffer &fb)
         static bool rep;
         if (!rep) { rep = true; std::atexit(hr_report); }
         hr_build(fb, dispcnt, skip);
+        /* MGHIRES2: a captured 3D screen at render scale (see caphr_overlay) */
+        static bool crep;
+        if (!crep) { crep = true; std::atexit(caphr_report); }
+        caphr_overlay(fb);
     }
 }
 
@@ -6622,4 +6730,24 @@ extern "C" void port_mghr_frac_set(const short *obj, const short *bg)
     std::memcpy(ntr::g_hr_ofr, obj, sizeof ntr::g_hr_ofr);
     std::memcpy(ntr::g_hr_bfr, bg, sizeof ntr::g_hr_bfr);
     ntr::g_hr_frac_on = 1;
+}
+/* MGHIRES2: ntr/ppu.cpp ppu_display_capture hands over the host picture a capture into VRAM block `block` was sampled from
+   (src at stride `stride`, the w x h extent from column x0, nearest at rx x ry per DS pixel from (cx0, cy0)); kept only while
+   the host's policy asks for the captured half at render scale (bit 2) */
+extern "C" void port_caphr_keep(const uint32_t *src, int stride, int x0, int w, int h, int rx, int ry, int cx0, int cy0, unsigned block)
+{
+    ntr::CapHr &c = ntr::g_caphr[block & 1];
+    const int pol = ntr::g_hr_policy ? ntr::g_hr_policy() : 0;
+    if (!(pol & 4) || !src || w <= 0 || h <= 0 || rx < 1 || ry < 1 || block < 2) { c.valid = false; return; }
+    const size_t need = (size_t)w * (size_t)h;
+    if (c.cap < need) {
+        std::free(c.px);
+        c.px = static_cast<uint32_t *>(std::malloc(sizeof(uint32_t) * need));
+        c.cap = c.px ? need : 0;
+        if (!c.px) { c.valid = false; return; }
+    }
+    for (int y = 0; y < h; ++y) std::memcpy(c.px + (size_t)y * w, src + (size_t)y * stride + x0, (size_t)w * 4);
+    c.w = w; c.h = h; c.rx = rx; c.ry = ry; c.cx0 = cx0; c.cy0 = cy0;
+    c.valid = (ntr::SUB_W - 1) * rx + cx0 < w && (ntr::SUB_H - 1) * ry + cy0 < h;   /* every 256x192 sample lies inside the extent */
+    ++ntr::g_caphr_n[0];
 }

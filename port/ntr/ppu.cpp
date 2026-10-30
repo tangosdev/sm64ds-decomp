@@ -858,6 +858,10 @@ void ppu_capture_counters(unsigned long long &performed,
     from_preimage = g_cap_from_preimage;
 }
 
+}  // namespace ntr
+extern "C" void port_caphr_keep(const uint32_t *src, int stride, int x0, int w, int h, int rx, int ry, int cx0, int cy0, unsigned block);
+namespace ntr {
+
 void ppu_display_capture(const uint32_t *src, int w, int h) {
     volatile uint32_t *reg = reinterpret_cast<volatile uint32_t *>(kDispCapCnt);
     const uint32_t cap = *reg;
@@ -1061,6 +1065,9 @@ void ppu_display_capture(const uint32_t *src, int w, int h) {
     }
     g_cap_hash = h1;
     ++g_cap_performed;
+    /* MGHIRES2: the host keeps the render-scale picture this capture was sampled from, for engine B to show it at render scale
+       (ntr/ppu_sub.cpp caphr_overlay); the bytes written above, and so what the game reads, are unchanged */
+    port_caphr_keep(src, SCREEN_W, cap_x0, w, h, rx, ry, cx0, cy0, block);
     g_cap[block].off = off;
     g_cap[block].len = need;
     g_cap[block].home0 = bank_home((unsigned)block, *reinterpret_cast<volatile uint8_t *>(kVramCnt + (unsigned)block));

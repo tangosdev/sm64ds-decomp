@@ -6192,15 +6192,18 @@ static int mghr_env(const char *name)
 }
 static int mghr_policy(void)
 {
-    static int hi = -2, up = -2;
-    if (hi == -2) { hi = mghr_env("SM64DS_MG_HIRES"); up = mghr_env("SM64DS_MG_UPSCALE"); }
+    static int hi = -2, up = -2, ch = -2;
+    if (hi == -2) { hi = mghr_env("SM64DS_MG_HIRES"); up = mghr_env("SM64DS_MG_UPSCALE"); ch = mghr_env("SM64DS_MG_CAPHR"); }
     if (!hal_sub_screen_stacked() || ntr::active_h / ntr::SUB_H < 2) return 0;
     int sc = port_scene_live_id();
     if (sc < 0) sc = port_scene_env_want();
     if (sc < 0 || !(IsMinigameActorID((unsigned)sc) || sc == 5)) return 0;
     const int a = hi >= 0 ? hi : (host_setting_minigame_hires() ? 1 : 0);
     const int b = up >= 0 ? up : host_setting_minigame_upscale();
-    return a | (b ? 2 : 0);
+    /* MGHIRES2: bit 2, the captured 3D screen of 372 373 384 385 at render scale (ntr/ppu_sub.cpp caphr_overlay); it goes with
+       MinigameHiRes (SM64DS_MG_CAPHR overrides it alone) */
+    const int c = ch >= 0 ? ch : (host_setting_minigame_hires() ? 1 : 0);
+    return a | (b ? 2 : 0) | (c ? 4 : 0);
 }
 static const int g_mghr_installed = (port_mghr_policy_install(mghr_policy), 1);
 /* engine A's half (hal/message_compositor.cpp mghr_a_*) asks the same question */
