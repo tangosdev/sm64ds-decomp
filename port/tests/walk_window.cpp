@@ -7929,6 +7929,7 @@ static const char *menu_scene_change_refusal(void)
     if (port_level_interlude_live())
         return "the star select runs inside the level change interlude, which only ends on its own scene 3 ask";
     if (data_02092664 != 0x187) return "a scene change is already under way";
+    if (port_level_change_pending()) return "a level change is already under way";
     return 0;
 }
 
@@ -7940,8 +7941,8 @@ static int menu_scene_go(int id, const char *name)
     }
     _ZN8dScene_c14StartSceneFadeEjjt((unsigned)id, 0, 0);
     menu_on = 0;
-    fprintf(stderr, "[menu] minigame %d (%s): asked for from scene %d in this process (the ROM's StartSceneFade; no restart)\n", id,
-            name, port_scene_live_id());
+    fprintf(stderr, "[menu] minigame %d (%s): asked for from a scene in this process (the ROM's StartSceneFade; no restart)\n", id,
+            name);
     return 1;
 }
 
@@ -7965,8 +7966,8 @@ static int menu_level_go(int lv, int en)
     SetNumPlayers(1);
     _ZN8dScene_c14StartSceneFadeEjjt(3, 0, 0);
     menu_on = 0;
-    fprintf(stderr, "[menu] level %d entrance %d: asked for from scene %d in this process (LoadLevelNoReturn, StartSceneFade(3); "
-            "no restart)\n", lv, en, port_scene_live_id());
+    fprintf(stderr, "[menu] level %d entrance %d: asked for from a scene in this process (LoadLevelNoReturn, StartSceneFade(3); "
+            "no restart)\n", lv, en);
     return 1;
 }
 
@@ -8358,6 +8359,10 @@ static void menu_input(int pad_live, const XPad *pad)
                                 "not a hosted scene yet -- refused, "
                                 "menu stays open\n", id,
                                 MG_SCENE[mi].name);
+                    } else if (menu_live_player() && port_level_change_pending()) {
+                        /* DEBUGMENU1: the level change already staged wins and a scene ask was dropped with no word (row st2_d2) */
+                        ss_note("a level change is already under way");
+                        fprintf(stderr, "[menu] minigame %d: a level change is already under way -- refused, menu stays open\n", id);
                     } else if (menu_live_player() && !port_quit_in_place_refusal()) {
                         /* SEAMCLEAN1 (one-process plan M6, R11): FROM A LEVEL THE ROW GOES IN THIS PROCESS. The scene change is
                            the one the Rec Room's door makes: the ROM's Scene::StartSceneFade parks the scene and starts its
@@ -8444,6 +8449,10 @@ static void menu_input(int pad_live, const XPad *pad)
                 if (edge & (1u << 5)) {
                     fprintf(stderr, "[menu] ExitLevel()\n");
                     ExitLevel();
+                    /* DEBUGMENU1: the menu closes, as the level row's select does: the exit wipe and the level change run on the
+                       game tick, which the open menu holds, so the course stood frozen until the menu was shut by hand (row c_exit) */
+                    menu_on = 0;
+                    fprintf(stderr, "[menu] closed for the exit\n");
                 }
                 break;
             case MENU_CHARACTER:
