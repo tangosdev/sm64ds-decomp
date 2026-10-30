@@ -1229,8 +1229,8 @@ extern "C" void port_vs_stage_and_start(int mapIdx)
         more, so the ROM's start is called a second time with the same map, as in the child), on a title reached by a crossing
         through the level-to-scene crossing and port_level_change_apply.
    VS NEEDS NO ONLINE HEAP (hal/comms_conductor.cpp hub_game_heap_extra: the arena gets 0), so a title after a solo level takes it.
-   REFUSED (the launcher starts a fresh game): a lockstep match (no SM64DS_VS_NETMODE=arena: hal/comms_loopback.cpp has no in-place
-   install or teardown), a map this build does not mount, a code mod, a relatch refusal, an install failure (undone first). The lobby
+   REFUSED (the launcher starts a fresh game): a lockstep match (no SM64DS_VS_NETMODE=arena: the carrier has a teardown since
+   KNOWNNET1, hal/comms_loopback.cpp comms_loopback_leave_reset, but no in-place install), a map this build does not mount, a code mod, a relatch refusal, an install failure (undone first). The lobby
    colours (hal/fs_mods.cpp vsc_load) and Luigi Infection (hal/luigi_infection.cpp li_load) read once per process; SEAMCLEAN1 resets
    both on the hand-off (port_fs_mods_relatch_reset, port_luigi_reset), so a second match with colours or Luigi no longer refuses. */
 #include "handoff_poll.h"
