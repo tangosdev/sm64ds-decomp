@@ -74,6 +74,9 @@
 //    trace). Nothing under port/tools reads either; both were properties of
 //    the host pump, not of the game.
 
+#include <cstdio>
+#include "sdat/sdat.h"   /* sd_seq_player_mask / sd_seq_active: is the tune still sounding */
+
 extern "C" {
 
 void _ZN7Message6UpdateEv(void *self);     /* Message::Update, faced in reverse_bridges */
@@ -128,8 +131,85 @@ void Message::Update()
     port_message_flush_engine_a_regs();
 }
 
+/* PEACHJINGLE1: the cartridge's NCS_BGM_PEACH (SDAT sequence 70, 7 s) when a star door's UNLOCK message opens.
+   The DS plays nothing there. The unlock state (Player func_ov002_020c8b78) ends in ShowMessage(0x188) for a star door (daDoor_c, TryTalkToDoor(0)) or
+   ShowMessage(0x29) for a big star gate (daStarGate_c, TryTalkToDoor(1)); the refusals ("It takes the power of N Stars", 0x19, 0x1a..0x1f) are other ids
+   and play nothing, and the key doors have no unlock text. The box opening (func_0201f32c) sets data_0209d660 and the id data_0209d6d4, so this watches
+   that edge once a frame.
+   HOW IT PLAYS. The cartridge files sequence 70 under the MAIN music player (like the two Lakitu tunes), so it takes the level music's place rather than
+   mixing over it. The game's own way to do that and give the level music back is the temporary-music pair the cap power-ups use (Player.cpp, the
+   invincibility / metal / wing tunes): Sound::SetMusic(player, id) swaps the id in, Sound::EndMusic(player, ..) puts the level's own id back and restarts
+   it. Both ignore any player but the local one (data_0209f250), so nothing here reaches another player. It is not started while a boss layer (e444) or
+   another temporary tune is up, and it is only ended if sequence 70 is still the current music (a level change or the game's own end of a tune that
+   replaced it leaves nothing for us to undo). The unlock state ducks the music to 20 of 127 every frame it runs, which would make the tune a whisper,
+   so the volume target is held at the level it had before while the tune plays and handed back when it ends. Audio only. Setting PeachJingle (default
+   on); off never calls into the sound code, so the audio is the DS's. */
+extern "C" {
+extern unsigned char data_0209d660;      /* the box is open */
+extern short data_0209d6d4;              /* the open box's message id */
+extern int data_0209b4ac;                /* the current music id (layer 1 / temporary tune) */
+extern int data_0208e43c;                /* the level's own music id */
+extern int data_0208e444;                /* the boss layer's id, -1 = none */
+extern signed char data_0208e42c;        /* the music volume it is being faded to */
+extern unsigned char data_0209f250;      /* the local player's number */
+void _ZN5Sound8SetMusicEjj(unsigned int player, unsigned int id);
+void _ZN5Sound8EndMusicEjj(unsigned int player, unsigned int unused);
+int _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int vol, int fade);
+int host_setting_peach_jingle(void);
+}
+static void port_peach_jingle_tick(void)
+{
+    enum { PEACH_SEQ = 70, PEACH_CAP = 330 /* fallback when the sequence player cannot be found: the tune is audible about 5.5 s at 60 per second */, PEACH_MAX = 720 /* a stuck player never holds the music longer than this */, PEACH_FADE = 0x15666 };
+    static int s_prev_open, s_prev_id = -1, s_age = -1, s_vol = 0x7f, s_player = -1;
+    static unsigned s_mask0;
+    const int open = data_0209d660 ? 1 : 0;
+    const int id = open ? (int)data_0209d6d4 : -1;
+    const bool edge = open && !(s_prev_open && s_prev_id == id);
+    s_prev_open = open;
+    s_prev_id = id;
+    if (s_age >= 0 && data_0209b4ac != PEACH_SEQ) {   /* the level changed, or something else took the music: nothing of ours is left to undo */
+        fprintf(stderr, "[peach] music changed under the tune (now %d) after %d frames; dropped\n", data_0209b4ac, s_age);
+        s_age = -1;
+    }
+    if (s_age < 0) {
+        if (edge && (id == 0x188 || id == 0x29) && host_setting_peach_jingle()
+            && data_0208e444 < 0 && data_0208e43c >= 0 && data_0209b4ac == data_0208e43c) {
+            s_vol = data_0208e42c;
+            s_mask0 = sd_seq_player_mask();
+            s_player = -1;
+            _ZN5Sound8SetMusicEjj((unsigned)data_0209f250, PEACH_SEQ);
+            if (data_0209b4ac == PEACH_SEQ) {
+                s_age = 0;
+                fprintf(stderr, "[peach] unlock message 0x%x opened: NCS_BGM_PEACH (sequence %d) in place of music %d, volume target was %d\n", id, PEACH_SEQ, data_0208e43c, s_vol);
+            }
+        }
+    }
+    if (s_age >= 0) {
+        /* what the game wants the music at: its duck while the unlock box is up (read before this tick overrides it), the full level once the box is closed */
+        if (!open) s_vol = 0x7f;
+        else if (data_0208e42c != 0x7f) s_vol = data_0208e42c;
+        if (s_player < 0 && s_age >= 1 && s_age <= 20) {   /* the sound queue starts the sequence a tick after the call: the player that is newly sounding is the tune's */
+            const unsigned fresh = sd_seq_player_mask() & ~s_mask0;
+            for (int p = 0; p < SD_SEQ_PLAYERS && s_player < 0; ++p)
+                if ((fresh >> p) & 1u && sd_seq_active(p)) s_player = p;
+            if (s_player >= 0) fprintf(stderr, "[peach] the tune is on sequence player %d\n", s_player);
+        }
+        const bool over = s_player >= 0 ? (s_age > 20 && !sd_seq_active(s_player)) || s_age >= PEACH_MAX : s_age >= PEACH_CAP;
+        if (!over) {
+            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, PEACH_FADE);   /* the unlock state's own duck runs earlier in the frame; this is what the sound tick sees */
+            ++s_age;
+        } else {
+            _ZN5Sound8EndMusicEjj((unsigned)data_0209f250, 0);
+            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE((unsigned)s_vol, PEACH_FADE);
+            fprintf(stderr, "[peach] NCS_BGM_PEACH ended after %d frames; level music %d back, volume target %d\n", s_age, data_0209b4ac, s_vol);
+            s_age = -1;
+        }
+    }
+}
+
 /* hal/stage_frame.cpp's Stage::UpdateMessage face lands here. */
 extern "C" void port_message_pump(void)
 {
     dScStage_c::UpdateMessage_rom();
+    port_peach_jingle_tick();
 }

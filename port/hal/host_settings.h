@@ -495,6 +495,9 @@ int host_setting_set_fix_original_bugs(int on);
    SM64DS_WIDE_DRAWING=0/1 overrides the file for a proof run. */
 int host_setting_wide_drawing(void);
 int host_setting_set_wide_drawing(int on);
+/* PEACHJINGLE1: PeachJingle, bool, ON by default. 1 plays the cartridge's NCS_BGM_PEACH tune (sound id 70) when a star door's unlock message (0x188 star door, 0x29 big star gate) opens, locally only; 0 is the DS, silent. Live; SM64DS_PEACH_JINGLE=0/1 overrides the file. */
+int host_setting_peach_jingle(void);
+int host_setting_set_peach_jingle(int on);
 /* PROFILE1: the Adventure Online profile, owned by the game (settings.json OnlineName, OnlineBodyColor, OnlineShoeColor). The name is letters, digits and single spaces, trimmed, 16 bytes at most; "" until the player has set one once (the popup shows until then). The colours are the player's Yoshi BODY and SHOES as six hex digits each, freely picked in the popup; host_setting_online_colours answers 1 once they are set (a settings.json with the old OnlineYoshiColor index maps it to its pair once and writes the new keys). host_setting_launcher_nick is the launcher's Nickname (cleaned the same way), only the popup's first suggestion. The set writes both at once and flushes. */
 #define HOST_ONLINE_COLORS 8
 void host_online_name_clean(const char *in, char *out, size_t cap);

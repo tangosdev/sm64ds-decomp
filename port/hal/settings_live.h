@@ -62,6 +62,7 @@ enum SlId {
     SL_ONLINE_EVENTS,           /* bool: take the host's events in Adventure Online (EVENTS2); on by default */
     SL_FIX_ORIGINAL_BUGS,       /* bool: FixOriginalBugs; on by default (RABBIT1) */
     SL_WIDE_DRAWING,            /* bool: WideDrawingPage; on by default (DOODLEWIDE1) */
+    SL_PEACH_JINGLE,            /* bool: PeachJingle; on by default (PEACHJINGLE1) */
     SL_COUNT
 };
 
