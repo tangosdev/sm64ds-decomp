@@ -3,18 +3,11 @@
  * command 0 (flag 1) over PXI tag 6; on a send failure set its error bit
  * and report (0, 4, 0) to the user callback. */
 #include "IRQ.h"
+#include "nitro/spi/tp.h"
 
 extern "C" {
 
 int PXI_SendWordByFifo(int cmd, int a, int b);
-
-typedef struct {
-    void (*fp)(int, int, int);
-    char pad[0x34 - 4];
-    volatile unsigned short s34;
-    volatile unsigned short s36;
-} G_t;
-extern G_t data_020a80cc;
 
 void TP_RequestSamplingAsync(void) {
     unsigned int saved = IRQ::Disable();
@@ -22,15 +15,15 @@ void TP_RequestSamplingAsync(void) {
     if (!ok) {
         void (*fp)(int, int, int);
         IRQ::Restore(saved);
-        fp = data_020a80cc.fp;
-        data_020a80cc.s34 |= 1;
+        fp = data_020a80cc.callback;
+        data_020a80cc.errFlags |= 1;
         if (fp == 0)
             return;
         fp(0, 4, 0);
         return;
     }
-    data_020a80cc.s36 |= 1;
-    data_020a80cc.s34 &= ~1;
+    data_020a80cc.commandFlags |= 1;
+    data_020a80cc.errFlags &= ~1;
     IRQ::Restore(saved);
 }
 }

@@ -1,23 +1,18 @@
-/* NitroSDK SPI_tp.c TP_GetCalibratedPoint(disp, raw): copy the sample
- * while uncalibrated (data_020a80cc + 0x30), else keep touch/validity and
- * scale x/y by the calibration at data_020a80e4 (+0x18), clamped to the
- * 256x192 screen. */
-extern unsigned short data_020a80cc[];
-extern int data_020a80e4[];
+/* NitroSDK SPI_tp.c TP_GetCalibratedPoint(disp, raw): copy the sample while
+ * uncalibrated, else keep touch/validity and scale x/y by the calibration,
+ * clamped to the 256x192 screen. The calibration words used to carry their own
+ * symbol row, data_020a80e4, although this function reads the calibrated flag
+ * out of the same block one line earlier; see include/nitro/spi/tp.h. */
+#include "nitro/spi/tp.h"
 
-/* NitroSDK TPData: one touch-panel sample. */
-struct TPData {
-    unsigned short x, y, touch, validity;
-};
-
-void TP_GetCalibratedPoint(struct TPData *disp, struct TPData *raw) {
+void TP_GetCalibratedPoint(TPData *disp, TPData *raw) {
     int *p;
     int t;
-    if (data_020a80cc[0x18] == 0) {
+    if (data_020a80cc.calibrated == 0) {
         *disp = *raw;
         return;
     }
-    p = data_020a80e4;
+    p = data_020a80cc.calibration;
     disp->touch = raw->touch;
     disp->validity = raw->validity;
     if (raw->touch == 0) {

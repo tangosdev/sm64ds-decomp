@@ -5,28 +5,16 @@
  * inverses (0x10000000 / dot size) at +0x18..+0x2c and set it. */
 #include "types.h"
 #include "IRQ.h"
+#include "nitro/spi/tp.h"
 
 extern "C" {
-
-typedef struct {
-    char pad18[0x18];
-    int field_18;
-    int field_1c;
-    int field_20;
-    int field_24;
-    int field_28;
-    int field_2c;
-    s16 field_30;
-} Glob;
-
-extern Glob data_020a80cc;
 
 void TP_SetCalibrateParam(s16 *arg) {
     u32 state;
     unsigned long long vv;
 
     if (arg == 0) {
-        data_020a80cc.field_30 = 0;
+        data_020a80cc.calibrated = 0;
         return;
     }
 
@@ -36,23 +24,23 @@ void TP_SetCalibrateParam(s16 *arg) {
     *(volatile u16 *)0x4000280 = 0;
     *(volatile u32 *)0x4000290 = 0x10000000;
     *(volatile unsigned long long *)0x4000298 = vv;
-    data_020a80cc.field_18 = arg[0];
-    data_020a80cc.field_1c = arg[2];
+    data_020a80cc.calibration[0] = arg[0];
+    data_020a80cc.calibration[1] = arg[2];
     while (*(volatile u16 *)0x4000280 & 0x8000) {
     }
 
-    data_020a80cc.field_20 = *(volatile u32 *)0x40002a0;
+    data_020a80cc.calibration[2] = *(volatile u32 *)0x40002a0;
     vv = (u32)arg[3];
     *(volatile u16 *)0x4000280 = 0;
     *(volatile u32 *)0x4000290 = 0x10000000;
     *(volatile unsigned long long *)0x4000298 = vv;
-    data_020a80cc.field_24 = arg[1];
-    data_020a80cc.field_28 = arg[3];
+    data_020a80cc.calibration[3] = arg[1];
+    data_020a80cc.calibration[4] = arg[3];
     while (*(volatile u16 *)0x4000280 & 0x8000) {
     }
-    data_020a80cc.field_2c = *(volatile u32 *)0x40002a0;
+    data_020a80cc.calibration[5] = *(volatile u32 *)0x40002a0;
 
     IRQ::Restore(state);
-    data_020a80cc.field_30 = 1;
+    data_020a80cc.calibrated = 1;
 }
 }
