@@ -1431,12 +1431,13 @@ void ck_screen(const SmoothCrackTri &t, int i, float o[2]) {
     o[1] = (0.5f - t.clip[i][1] / w * 0.5f) * (float)active_h;
 }
 
+struct CkActorRow { int open[64]; int over1; float worst; CkActorRow() : over1(0), worst(0.0f) { memset(open, 0, sizeof open); } };
 struct CkHit {
     float px, units, sx, sy;
     int cause;     // index into ck_cause_name
     int e;         // the edge's slot in the edge list
 };
-enum { CK_STRAIGHT_BASE = 0, CK_BOOK = 40, CK_XMESH, CK_SPLITN, CK_SAMEN, CK_NCAUSE };
+enum { CK_STRAIGHT_BASE = 0, CK_BOOK = 40, CK_XMESH, CK_SPLITN, CK_SAMEN, CK_RAWDIFF, CK_NOWELD, CK_NCAUSE };
 const char *ck_cause_name(int c, char *buf) {
     if (c < CK_BOOK) { sprintf(buf, "straight_%s", ck_why_name(c)); return buf; }
     switch (c) {
@@ -1444,6 +1445,8 @@ const char *ck_cause_name(int c, char *buf) {
         case CK_XMESH: return "xmesh_splitn";
         case CK_SPLITN: return "splitn";
         case CK_SAMEN: return "samen";
+        case CK_RAWDIFF: return "rawdiff";
+        case CK_NOWELD: return "noweld";
         default: return "other";
     }
 }
@@ -1470,6 +1473,8 @@ void crack_report(uint64_t frame) {
     float worst_cause[CK_NCAUSE] = {0};
     std::vector<CkHit> hits;
     std::vector<const std::vector<CkSide> *> elist;
+    std::map<uint32_t, CkActorRow> ck_rows;     // WELDALL1: by actor pair (low id << 16 | high id)
+    std::map<uint32_t, int> ck_actor_tris;
     int shared = 0, with_curved = 0;
     for (std::map<std::pair<uint32_t, EKey>, std::vector<CkSide> >::const_iterator it = edges.begin();
          it != edges.end(); ++it) {
@@ -1504,7 +1509,17 @@ void crack_report(uint64_t frame) {
         const float pxs = lv > 1e-12f ? ls / lv : 0.0f;
         const float gpx = worst * pxs;
         int cause;
-        if (!ta.curved || !tb.curved) {
+        /* WELDALL1: two sides the weld cannot pair (their raw edges differ:
+           one view-space edge drawn from two different raw edges), or a side
+           the weld never saw. */
+        const bool rawsame =
+            (memcmp(ta.raw[s[wa].a], tb.raw[s[wb].a], 6) == 0 && memcmp(ta.raw[s[wa].b], tb.raw[s[wb].b], 6) == 0) ||
+            (memcmp(ta.raw[s[wa].a], tb.raw[s[wb].b], 6) == 0 && memcmp(ta.raw[s[wa].b], tb.raw[s[wb].a], 6) == 0);
+        if (!rawsame) {
+            cause = CK_RAWDIFF;
+        } else if (!ta.wseen || !tb.wseen) {
+            cause = CK_NOWELD;
+        } else if (!ta.curved || !tb.curved) {
             const SmoothCrackTri &st = !ta.curved ? ta : tb;
             cause = st.why >= 0 && st.why < CK_BOOK ? st.why : 39;
         } else if (ta.book || tb.book) {
@@ -1520,6 +1535,14 @@ void crack_report(uint64_t frame) {
         ++n_cause[cause];
         if (gpx > 1.0f) ++n_cause1[cause];
         if (gpx > worst_cause[cause]) worst_cause[cause] = gpx;
+        {
+            const uint32_t aa = ta.actor < tb.actor ? ta.actor : tb.actor;
+            const uint32_t ab = ta.actor < tb.actor ? tb.actor : ta.actor;
+            CkActorRow &r = ck_rows[(aa << 16) | ab];
+            ++r.open[cause];
+            if (gpx > 1.0f) ++r.over1;
+            if (gpx > r.worst) r.worst = gpx;
+        }
         CkHit h;
         h.px = gpx; h.units = worst; h.cause = cause; h.e = (int)elist.size();
         h.sx = (sa[0] + sb[0]) * 0.5f; h.sy = (sa[1] + sb[1]) * 0.5f;
@@ -1536,6 +1559,18 @@ void crack_report(uint64_t frame) {
             fprintf(stderr, "[smoothck] f%llu cause %-20s open %4d over1px %4d worst %.2f px  tjunction_only %d\n",
                     (unsigned long long)frame, ck_cause_name(c, nb), n_cause[c], n_cause1[c],
                     (double)worst_cause[c], n_tj[c]);
+    for (size_t i = 0; i < g_ck_tris.size(); ++i) ++ck_actor_tris[g_ck_tris[i].actor];
+    for (std::map<uint32_t, CkActorRow>::const_iterator it = ck_rows.begin(); it != ck_rows.end(); ++it) {
+        const uint32_t aa = it->first >> 16, ab = it->first & 0xFFFFu;
+        int tot = 0;
+        for (int c = 0; c < CK_NCAUSE; ++c) tot += it->second.open[c];
+        fprintf(stderr, "[smoothck] f%llu actor %u/%u tris %d/%d open %d over1px %d worst %.2f px causes",
+                (unsigned long long)frame, aa, ab, ck_actor_tris[aa], ck_actor_tris[ab], tot, it->second.over1,
+                (double)it->second.worst);
+        for (int c = 0; c < CK_NCAUSE; ++c)
+            if (it->second.open[c]) fprintf(stderr, " %s=%d", ck_cause_name(c, nb), it->second.open[c]);
+        fprintf(stderr, "\n");
+    }
     // the worst openings, with enough to find them in the picture
     std::vector<int> ord(hits.size());
     for (size_t i = 0; i < ord.size(); ++i) ord[i] = (int)i;
@@ -1552,7 +1587,7 @@ void crack_report(uint64_t frame) {
                 ck_cause_name(h.cause, nb), (int)s.size());
         for (size_t j = 0; j < s.size() && j < 4; ++j) {
             const SmoothCrackTri &t = g_ck_tris[s[j].tri];
-            fprintf(stderr, " [%s%s raw %d,%d,%d/%d,%d,%d mg %u/%u n %08x/%08x]",
+            fprintf(stderr, " [a%u%s %s%s raw %d,%d,%d/%d,%d,%d mg %u/%u n %08x/%08x]", t.actor, t.wseen ? "" : " noweld",
                     t.curved ? "curved" : ck_why_name(t.why), t.book ? "+book" : "",
                     t.raw[s[j].a][0], t.raw[s[j].a][1], t.raw[s[j].a][2],
                     t.raw[s[j].b][0], t.raw[s[j].b][1], t.raw[s[j].b][2],
@@ -1575,8 +1610,28 @@ int smooth_cracks_on() {
 uint32_t g_ck_pic = 0;
 void smooth_crack_picture() { ++g_ck_pic; }
 
+/* WELDALL1: which actor's Render is drawing, for the census. The ROM's list
+   walker (func_02043fdc) keeps the node it is running in data_020a4b68; the
+   node's owner (+8) is the actor, its class id the u16 at +0x0c. A build that
+   has no such global (a test exe without the game) reads a null instead. */
+extern "C" void *data_020a4b68;
+extern "C" void *g_smooth_ck_no_node = 0;
+#pragma comment(linker, "/alternatename:_data_020a4b68=_g_smooth_ck_no_node")
+namespace {
+uint32_t ck_actor_now() {
+    const unsigned char *node = (const unsigned char *)data_020a4b68;
+    if (!node) return 0xFFFFu;
+    const unsigned char *owner = *(const unsigned char *const *)(node + 8);
+    if (!owner) return 0xFFFEu;
+    return *(const uint16_t *)(owner + 0x0c);
+}
+}  // namespace
 void smooth_crack_tri(const SmoothCrackTri &t) {
-    if (g_ck_tris.size() < 400000) { g_ck_tris.push_back(t); g_ck_tris.back().pic = g_ck_pic; }
+    if (g_ck_tris.size() < 400000) {
+        g_ck_tris.push_back(t);
+        g_ck_tris.back().pic = g_ck_pic;
+        g_ck_tris.back().actor = ck_actor_now();
+    }
 }
 
 namespace { void topo_report(uint64_t frame); }

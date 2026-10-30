@@ -622,6 +622,8 @@ struct SmoothCrackTri {
     uint32_t mg[3];
     uint32_t nrm[3];
     uint32_t pic;         // which picture of the tick (0 = the tick's own, then each in-between)
+    uint32_t wseen;       // WELDALL1: 1 = the triangle was entered in the weld book
+    uint32_t actor;       // WELDALL1: the actor whose Render drew it (class id), 0xFFFF none
 };
 int smooth_cracks_on();
 // A SmoothMotion in-between starts: the crack book pairs edges only within one picture.

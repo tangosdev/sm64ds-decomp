@@ -1696,7 +1696,7 @@ int smooth_try_store(const SmoothVertex s[3], const GxRaw &ra, const GxRaw &rb,
 
 /* THE CRACK BOOK'S NOTE OF WHAT smooth_try DID (SM64DS_SMOOTH_CRACKS, ntr/smooth.h).
    Written only while the book is on; emit_tri hands it over with the corners. */
-struct CkNote { int curved, why, book, tf; float en[6][3]; };
+struct CkNote { int curved, why, book, tf, wseen; float en[6][3]; };
 CkNote g_ck;
 inline void ck_straight(int why) { g_ck.curved = 0; g_ck.why = why; }
 
@@ -1812,6 +1812,7 @@ int weld_call(const int16_t p[3][3], const uint32_t n[3], int kind, const float 
               float wo[6][3], uint32_t *wid) {
     const uint32_t chk = weld_check(p, n, kind, en);
     const uint32_t ep = smooth_weld_epoch();
+    g_ck.wseen = 1;
     if (g_ip_replaying) {
         if (g_wm_cursor < g_wm.size() && g_wm[g_wm_cursor].check == chk && g_wm[g_wm_cursor].epoch == ep) {
             smooth_weld_memo_count(1);
@@ -1855,7 +1856,7 @@ int weld_call(const int16_t p[3][3], const uint32_t n[3], int kind, const float 
 int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
                const GxRaw &ra, const GxRaw &rb, const GxRaw &rc) {
     const SmoothPolicy &pol = smooth_policy();
-    g_ck.curved = 0; g_ck.why = -1; g_ck.book = 0; g_ck.tf = 1;
+    g_ck.curved = 0; g_ck.why = -1; g_ck.book = 0; g_ck.tf = 1; g_ck.wseen = 0;
     const long long t_pre = smooth_prof_on() ? smooth_prof_ticks() : 0;
 
     /* A mode-3 polygon is a shadow volume. Its stencil protocol compares the
@@ -2138,6 +2139,7 @@ void smooth_crack_book(const GxVertex &a, const GxVertex &b, const GxVertex &c,
     t.why = g_ck.why;
     t.book = g_ck.book;
     t.tf = g_ck.tf;
+    t.wseen = (uint32_t)g_ck.wseen;
     if (t.curved && g_ck.book) {
         std::memcpy(t.en, g_ck.en, sizeof t.en);
     } else if (t.curved) {
