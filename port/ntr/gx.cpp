@@ -8801,12 +8801,16 @@ struct IpGroup {
     double ps;           // its billboard scale, in the view matrix's units
     int match2 = -1;     // SMOOTHREND1: the group in the record TWO ticks back, when this one has none a tick back (a blinking model)
     int bind = -1;       // VISUAL093B: index into IpRec::binds of the texture bound when the group's first matrix command ran (-1 none)
+    uint32_t pid = 0;    // RENDERBUGS1: the particle element the ROM drew this group for (0 none), and its age that tick
+    uint32_t page = 0;
 };
 
 struct IpRec {
     std::vector<IpEv> ev;
     std::vector<uint32_t> par;
     std::vector<IpBind> binds;
+    struct PTag { uint32_t ev, id, age; };
+    std::vector<PTag> ptag;      // RENDERBUGS1: per particle element drawn this tick, the event count when the ROM's render walk reached it
     mutable std::vector<int8_t> bind_sparkle;   // VISUAL093B: per bind, -1 not looked at, 0 not a sparkle texture, 1 it is
     std::vector<IpGroup> groups;
     std::vector<int> mtx;        // event index of every matrix-parameter command
@@ -9002,11 +9006,35 @@ bool ip_newborn_recam() {
     return on != 0;
 }
 
+/* RENDERBUGS1: A PARTICLE IS PAIRED WITH ITSELF. The ROM's render walk (func_0204a5c8) draws every live Particle::Element of a system in
+   turn; the port tags each one (its address and its age, Element+0x2e) just before its draw. Two ticks' particle groups pair when they
+   are the same element and its age went up: a particle born this tick has no partner and is re-viewed where it was born. The likeness
+   pairing (closest position and size among every particle drawn with the same geometry) paired a newborn ripple ring with a dying
+   ring of an earlier step, or with a waterfall mist speck 20 units off, so the in-between picture slid the new ring in from there
+   (the ripples behind a running player at 60 fps and up). SM64DS_PARTICLE_ID=0 puts the likeness pairing back (the tags are still
+   taken, so SM64DS_PART_LOG shows which element each pair joined). */
+int ip_particle_id_mode() {
+    static int m = -1;
+    if (m < 0) { const char *e = getenv("SM64DS_PARTICLE_ID"); m = e ? atoi(e) : 1; }
+    return m;
+}
+
+void ip_part_tag_now(const void *elem) {
+    if (!g_ip_rec || !elem) return;
+    IpRec &r = g_ipr[g_ip_w];
+    IpRec::PTag t;
+    t.ev = static_cast<uint32_t>(r.ev.size());
+    t.id = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(elem));
+    t.age = *reinterpret_cast<const uint16_t *>(static_cast<const char *>(elem) + 0x2e);
+    r.ptag.push_back(t);
+}
+
 void ip_rec_begin() {
     IpRec &r = g_ipr[g_ip_w];
     r.ev.clear();
     r.par.clear();
     r.binds.clear();
+    r.ptag.clear();
     r.bind_sparkle.clear();
     r.ev_tri.clear();
     r.gt_bad = 0;
@@ -9253,6 +9281,8 @@ void ip_build_groups(IpRec &r) {
         G.shape = shape;
     };
     int run_bind = -1;
+    size_t tag_at = 0;     // RENDERBUGS1: the particle element tags, walked in step with the groups
+    int tag_used = -1;
     for (uint32_t i = 0; i < r.sealed; ++i) {
         const IpEv &e = r.ev[i];
         if (e.kind == IPK_BIND) run_bind = (int)e.off;
@@ -9266,6 +9296,7 @@ void ip_build_groups(IpRec &r) {
             G.has_rel = 0; G.rx = G.ry = G.rz = 0;
             G.match = -1;
             G.part = 0; G.ps = 0;
+            G.pid = 0; G.page = 0;
             G.ev0 = i; G.ev1 = i;
             r.groups.push_back(G);
             cur = static_cast<int>(r.groups.size()) - 1;
@@ -9320,6 +9351,13 @@ void ip_build_groups(IpRec &r) {
                 ip_world(q, 12, r.view, w);
                 G.part = 1;
                 G.has_pos = 1; G.px = w[0]; G.py = w[1]; G.pz = w[2];
+                /* RENDERBUGS1: the element the render walk tagged last before this group began, if no group took it yet */
+                while (tag_at + 1 < r.ptag.size() && r.ptag[tag_at + 1].ev <= G.ev0) ++tag_at;
+                if (tag_at < r.ptag.size() && r.ptag[tag_at].ev <= G.ev0 && (int)tag_at != tag_used) {
+                    G.pid = r.ptag[tag_at].id;
+                    G.page = r.ptag[tag_at].age;
+                    tag_used = (int)tag_at;
+                }
                 G.has_rel = 0; G.rx = G.ry = G.rz = 0;
                 const double a = (int32_t)q[0] / 4096.0, b = (int32_t)q[1] / 4096.0;
                 G.ps = std::sqrt(a * a + b * b);
@@ -9461,7 +9499,34 @@ void ip_match(IpRec &C, const IpRec &P, GxInterpStats *st, const IpRec *P2 = nul
     for (auto &kv : kc) {
         auto it = kp.find(kv.first);
         if (it == kp.end()) continue;
-        const std::vector<int> &lc = kv.second, &lp = it->second;
+        const std::vector<int> &lc_all = kv.second, &lp_all = it->second;
+        /* RENDERBUGS1: tagged particles pair by element (see ip_particle_id_mode) and leave the likeness pairing below */
+        std::vector<int> lc_rest, lp_rest;
+        const bool by_id = ip_particle_id_mode() != 0;
+        if (by_id) {
+            std::map<uint32_t, int> pidp;
+            for (int j : lp_all) {
+                const IpGroup &q = P.groups[j];
+                if (q.part && q.pid) pidp[q.pid] = j; else lp_rest.push_back(j);
+            }
+            for (int ci : lc_all) {
+                IpGroup &q = C.groups[ci];
+                if (!(q.part && q.pid)) { lc_rest.push_back(ci); continue; }
+                auto f = pidp.find(q.pid);
+                /* the same element one tick older: its age went up by a tick or two (a slot freed and taken again starts over) */
+                if (f == pidp.end()) continue;
+                const IpGroup &qp = P.groups[f->second];
+                const uint32_t da = (q.page - qp.page) & 0xffffu;
+                if (da < 1 || da > 2) continue;
+                if (q.nmtx != qp.nmtx || q.shape != qp.shape) { ++shapebad; continue; }
+                q.match = f->second;
+                ++matched;
+                const double d = std::sqrt(ip_dist2(q, qp));
+                if (d > max_moved) max_moved = d;
+            }
+        }
+        const std::vector<int> &lc = by_id ? lc_rest : lc_all, &lp = by_id ? lp_rest : lp_all;
+        if (lc.empty() || lp.empty()) continue;
         std::vector<int> pair(lc.size(), -1);
         /* ONE INSTANCE EACH SIDE pairs directly. SEVERAL (the same model part
            drawn for many objects: coins, goombas, a particle kind) pair by
@@ -9602,8 +9667,9 @@ void ip_match(IpRec &C, const IpRec &P, GxInterpStats *st, const IpRec *P2 = nul
                         }
                     }
                 }
-                std::fprintf(stderr, "[part] tk %d g %d m %d ps %.4f pps %.4f mv %.4f tex %08x/%08x %dx%d id %u hash %08x\n", tk, (int)gi, gc.match, gc.ps, pps, mv,
-                             bd ? bd->teximage : 0u, bd ? bd->plttbase : 0u, bd ? bd->w : 0, bd ? bd->h : 0, bd ? bd->id : 0u, th);
+                std::fprintf(stderr, "[part] tk %d g %d m %d ps %.4f pps %.4f mv %.4f tex %08x/%08x %dx%d id %u hash %08x el %08x age %u pel %08x page %u\n", tk, (int)gi, gc.match, gc.ps, pps, mv,
+                             bd ? bd->teximage : 0u, bd ? bd->plttbase : 0u, bd ? bd->w : 0, bd ? bd->h : 0, bd ? bd->id : 0u, th,
+                             gc.pid, gc.page, gc.match >= 0 ? P.groups[gc.match].pid : 0u, gc.match >= 0 ? P.groups[gc.match].page : 0u);
             }
         }
     }
@@ -10437,4 +10503,7 @@ void gx_interp_dump_groups(void *fp, int frame) {
 }
 
 }  // namespace ntr
+
+/* RENDERBUGS1: the ROM's particle render walk (src/unnamed/arm9/0204/func_0204a5c8.c, its host arm) names the element it draws next */
+extern "C" void port_particle_tag(const void *elem) { ntr::ip_part_tag_now(elem); }
 
