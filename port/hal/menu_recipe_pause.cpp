@@ -554,12 +554,13 @@ const PauseFacts *facts_of(const MenuLayout *L, PauseFacts *fallback, int varian
 }
 
 /* the whole-picture piece the pause draws its tracker, dialogs, tabs and pointer with (pause_page_draw) */
+extern "C" void pause_page_draw_kept(const MenuLayout *lay, int piece, uint32_t *dst, int w, int h, int stride);   /* SETPAGEINTERP1: hal/settings_page.cpp */
 int add_custom(MenuLayout *L)
 {
     MenuPiece p = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
     p.bg = 1;
     p.fixdest = 1; p.fx = 0; p.fy = 0; p.fw = (short)L->w; p.fh = (short)L->h;
-    p.custom = pause_page_draw;
+    p.custom = pause_page_draw_kept;      /* SETPAGEINTERP1: pause_page_draw, kept for the page's pictures between frames */
     return menu_add_piece(L, p);
 }
 

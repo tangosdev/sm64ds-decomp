@@ -1265,8 +1265,10 @@ extern "C" void settings_page_open_now(int from)
     while (S.sel < n && !row_focusable(rows[S.sel])) ++S.sel;
 }
 
+static void spi_free(void);
 extern "C" void settings_page_close(void)
 {
+    spi_free();                  /* SETPAGEINTERP1: the kept pictures go with the page */
     if (S.cap_active) { sl_capture_cancel(); S.cap_active = 0; }
     sl_flush();
     S.open = 0; S.pending = 0; S.hold_touch = 1;
@@ -1845,16 +1847,58 @@ extern "C" int settings_page_warm_step(int w, int h)
 static std::vector<uint32_t> g_spi_under, g_spi_page, g_spi_fin;
 static uint32_t *g_spi_px;
 static int g_spi_stride, g_spi_w, g_spi_h, g_spi_pf = -1, g_spi_fin_ok, g_spi_in;
-static void spi_copy_out(std::vector<uint32_t> &v, const uint32_t *px)
+static void spi_copy(std::vector<uint32_t> &v, const uint32_t *px, int stride, int w, int h)
 {
-    v.resize((size_t)g_spi_w * g_spi_h);
-    for (int y = 0; y < g_spi_h; ++y) memcpy(&v[(size_t)y * g_spi_w], px + (size_t)y * g_spi_stride, (size_t)g_spi_w * 4);
+    v.resize((size_t)w * h);
+    for (int y = 0; y < h; ++y) memcpy(&v[(size_t)y * w], px + (size_t)y * stride, (size_t)w * 4);
+}
+static void spi_copy_out(std::vector<uint32_t> &v, const uint32_t *px) { spi_copy(v, px, g_spi_stride, g_spi_w, g_spi_h); }
+
+/* SETPAGEINTERP1: THE PAUSE'S OWN SLIDE UNDER THE PAGE. Opened from the pause, the page slides sideways with the pause's pages (Q / E: the
+   tracker comes in, the page leaves by the dx the recipe hands it, settings_page_set_embed) once a tick, since the page holds the game. The pause
+   recipe's one custom piece (pause_page_draw, the tracker) goes through pause_page_draw_kept: on a frame whose slide moves it keeps the picture
+   under the piece and over it, and the facts; settings_page_picture then draws the piece again at the slide's place between the two frames, lays
+   back what the host drew between the recipe and the page (where the frame's picture under the page is not the piece's own), and draws the page at
+   the dx of that same place. spp_facts_at is the one place the in-between is set: with CAREER1's page state it becomes f->pg_a (permille). */
+extern "C" void pause_page_draw(const MenuLayout *lay, int piece, uint32_t *dst, int w, int h, int stride);
+static std::vector<uint32_t> g_spp_before, g_spp_after;
+static MenuLayout g_spp_lay;
+static const uint32_t *g_spp_px;
+static int g_spp_stride, g_spp_w, g_spp_h, g_spp_pf = -1, g_spp_tpf = -1, g_spp_t0 = -1, g_spp_t1 = -1;
+static void spp_facts_at(PauseFacts *f, double a)
+{
+    f->slide_t1000 = g_spp_t0 + (int)floor((g_spp_t1 - g_spp_t0) * a + 0.5);
+}
+extern "C" void pause_page_draw_kept(const MenuLayout *lay, int piece, uint32_t *dst, int w, int h, int stride)
+{
+    const PauseFacts *f = (const PauseFacts *)lay->facts.blob;
+    int keep = 0;
+    if (!tl_warm && !g_warming && !g_spi_in && S.open && S.emb_on && !S.emb_wide && f->magic == PAUSE_FACTS_MAGIC) {
+        if (S.pf != g_spp_tpf) { g_spp_t0 = g_spp_tpf == S.pf - 1 ? g_spp_t1 : -1; g_spp_t1 = f->slide_t1000; g_spp_tpf = S.pf; }
+        g_spp_pf = -1;
+        keep = g_spp_t0 >= 0 && g_spp_t0 != g_spp_t1 && host_setting_smooth_motion();
+        if (keep) spi_copy(g_spp_before, dst, stride, w, h);
+    }
+    pause_page_draw(lay, piece, dst, w, h, stride);
+    if (!keep) return;
+    spi_copy(g_spp_after, dst, stride, w, h);
+    g_spp_lay.facts = lay->facts;
+    g_spp_px = dst; g_spp_stride = stride; g_spp_w = w; g_spp_h = h;
+    g_spp_pf = S.pf;
+}
+static int spp_now(void) { return g_spp_pf >= 0 && g_spp_pf == S.pf; }
+static void spi_free(void)
+{
+    std::vector<uint32_t>().swap(g_spi_under); std::vector<uint32_t>().swap(g_spi_page); std::vector<uint32_t>().swap(g_spi_fin);
+    std::vector<uint32_t>().swap(g_spp_before); std::vector<uint32_t>().swap(g_spp_after);
+    g_spi_px = 0; g_spi_pf = -1; g_spi_fin_ok = 0;
+    g_spp_px = 0; g_spp_pf = -1; g_spp_tpf = -1; g_spp_t0 = g_spp_t1 = -1;
 }
 static int spi_keep_now(uint32_t *px, int stride, int w, int h)
 {
     if (tl_warm || g_warming || g_spi_in) return 0;
     g_spi_pf = -1;
-    if (S.slide_t <= 0 || !host_setting_smooth_motion()) return 0;
+    if ((S.slide_t <= 0 && !spp_now()) || !host_setting_smooth_motion()) return 0;
     g_spi_px = px; g_spi_stride = stride; g_spi_w = w; g_spi_h = h;
     spi_copy_out(g_spi_under, px);
     return 1;
@@ -1885,15 +1929,37 @@ extern "C" int settings_page_strip_place(double alpha, double *win, double *shif
 }
 extern "C" int settings_page_picture(double alpha)
 {
-    if (!S.open || g_spi_pf != S.pf || S.slide_t <= 0 || !g_spi_px) return 0;
+    if (!S.open || g_spi_pf != S.pf || !g_spi_px) return 0;
     uint32_t *px = g_spi_px;
     const int w = g_spi_w, h = g_spi_h, st = g_spi_stride;
+    const int pause = spp_now() && g_spp_px == px && g_spp_w == w && g_spp_h == h && g_spp_stride == st;
+    if (S.slide_t <= 0 && !pause) return 0;
     if (!g_spi_fin_ok) { spi_copy_out(g_spi_fin, px); g_spi_fin_ok = 1; }
-    for (int y = 0; y < h; ++y) memcpy(px + (size_t)y * st, &g_spi_under[(size_t)y * w], (size_t)w * 4);
+    const int edx = S.emb_dx;
+    if (pause) {
+        PauseFacts *f = (PauseFacts *)g_spp_lay.facts.blob;
+        spp_facts_at(f, alpha < 0 ? 0 : (alpha > 1 ? 1 : alpha));
+        for (int y = 0; y < h; ++y) memcpy(px + (size_t)y * st, &g_spp_before[(size_t)y * w], (size_t)w * 4);
+        pause_page_draw(&g_spp_lay, 0, px, w, h, st);
+        for (int y = 0; y < h; ++y) {
+            uint32_t *row = px + (size_t)y * st;
+            const uint32_t *a = &g_spp_after[(size_t)y * w], *b = &g_spi_under[(size_t)y * w];
+            for (int x = 0; x < w; ++x)
+                if (a[x] != b[x]) row[x] = b[x];
+        }
+        S.emb_dx = pause_planks_dx(pause_geo(w, h, f, 3), f);
+#ifndef PORT_ROM_CLEAN
+        { static const int tr = getenv("SM64DS_SETPAGE_SCRIPT") ? 1 : 0;
+          if (tr) fprintf(stderr, "[sp-pause] pf %d a %.3f slide %d (%d..%d) page dx %d (frame %d)\n", S.pf, alpha, f->slide_t1000, g_spp_t0, g_spp_t1, S.emb_dx, edx); }
+#endif
+    } else {
+        for (int y = 0; y < h; ++y) memcpy(px + (size_t)y * st, &g_spi_under[(size_t)y * w], (size_t)w * 4);
+    }
     g_spi_in = 1;
     settings_page_set_picture_alpha(alpha);
     settings_page_draw(px, st, w, h);
     g_spi_in = 0;
+    S.emb_dx = edx;
     for (int y = 0; y < h; ++y) {
         uint32_t *row = px + (size_t)y * st;
         const uint32_t *a = &g_spi_page[(size_t)y * w], *b = &g_spi_fin[(size_t)y * w];

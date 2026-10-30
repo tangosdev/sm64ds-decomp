@@ -10869,7 +10869,9 @@ static int sp_picture_now(int slot)
     if (on < 0) { const char *e = getenv("SM64DS_SETPAGE_INTERP"); on = (e && e[0] == '0') ? 0 : 1; }
     if (!settings_page_open()) return 0;
     double a = 1.0;
-    const int timed = g_ip_on > 0 && g_ip_rate_ok && g_ip_tick_t0 > 0 && g_ip_tick_len > 0;
+    /* FrameRate 60 stays the picture it was, in a course too (its tick is 30 a second, so the pacer would make one picture between) */
+    const int rate = port_frame_rate_target();
+    const int timed = g_ip_on > 0 && g_ip_rate_ok && (rate == 0 || rate > 60) && g_ip_tick_t0 > 0 && g_ip_tick_len > 0;
     if (timed) {
         a = (double)(ip_qpc() - g_ip_tick_t0) / (double)g_ip_tick_len;
         if (a < 0.0) a = 0.0;
