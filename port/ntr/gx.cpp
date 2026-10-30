@@ -10342,8 +10342,9 @@ int gx_interp_begin(float alpha) {
                 static const int pdraw = std::getenv("SM64DS_PART_DRAW") ? 1 : 0;
                 if (pdraw && gi >= 0 && C.groups[gi].part && e.np == 12 && e.cmd == 0x19) {
                     const double a_ = (int32_t)pp[0] / 4096.0, b_ = (int32_t)pp[1] / 4096.0;
-                    std::fprintf(stderr, "[pdraw] tick %d pic %d alpha %.3f ps %.5f x %.4f y %.4f z %.4f sp %d match %d\n", g_ip_tick_no, pic, (double)alpha, std::sqrt(a_ * a_ + b_ * b_),
-                                 (int32_t)pp[9] / 4096.0, (int32_t)pp[10] / 4096.0, (int32_t)pp[11] / 4096.0, ip_bind_is_sparkle(C, C.groups[gi].bind) ? 1 : 0, C.groups[gi].match);
+                    std::fprintf(stderr, "[pdraw] tick %d pic %d alpha %.3f ps %.5f x %.4f y %.4f z %.4f sp %d match %d el %08x\n", g_ip_tick_no, pic, (double)alpha, std::sqrt(a_ * a_ + b_ * b_),
+                                 (int32_t)pp[9] / 4096.0, (int32_t)pp[10] / 4096.0, (int32_t)pp[11] / 4096.0, ip_bind_is_sparkle(C, C.groups[gi].bind) ? 1 : 0, C.groups[gi].match,
+                                 C.groups[gi].pid);
                 }
             }
             g_ip_ex_on = ex_on;
