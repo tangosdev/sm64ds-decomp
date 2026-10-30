@@ -3,7 +3,8 @@
 
    WHAT COUNTS AS PLAYTIME. A game tick of the Stage (a course or the castle) on a known save file, with the ROM's pause down
    (data_0209f2c4 == 0) and no level-clear menu up (data_0209f20c == 0). The title, the file select, the star select, the pause, the
-   save prompts, the debug menu and the settings page (both hold the game: no tick) do not count; VS does not count. The ROM ticks 60
+   save prompts, the debug menu and the settings page (both hold the game: no tick) do not count; VS does not count; the ending (from
+   the Grand Star's EndingFly through the flyover and the credits, until the title) does not count. The ROM ticks 60
    times a second, so the time shown is ticks / 60 (frames the host drops are not played time, the same as the cartridge).
 
    THE CLEAR. The ROM ends the game when the player takes the Grand Star after the final Bowser: daObjKey_c's LAST_STAR path

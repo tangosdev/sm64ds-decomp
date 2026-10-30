@@ -18,6 +18,7 @@ extern "C" {
 extern unsigned char data_0209f2c4[];   /* 0 = playing, else the pause is up */
 extern unsigned char data_0209f20c[];   /* level-clear owns the game */
 extern unsigned char data_0209f2d8[];   /* game mode: 1 = VS */
+int port_rom_frame(void);                /* hal/rom_frame.cpp */
 int port_scene_live_id(void);           /* hal/scene_boot.cpp: 3 the Stage, -1 a level with no scene, 1 the title */
 int port_title_page_state(int *top, int *elem, int *req);   /* hal/title_entry.cpp: the title's page (copy = 7 / 5) */
 /* seams, null by default, in files that sit on more targets than this one */
@@ -38,6 +39,7 @@ int g_dirty;
 unsigned long long g_since_save;
 int g_was_paused;
 int g_was_stage;
+int g_ending;          /* the ending (flyover, credits) is running: not play; back to counting at the title */
 int g_atexit;
 
 /* the side file for the save medium in use now; "" for a guest world */
@@ -150,6 +152,7 @@ int slot_now(void)
 
 void on_ending(void)
 {
+    g_ending = 1;
     const int s = slot_now();
     if (s < 0) { fprintf(stderr, "[career] the ending began with no file known: nothing recorded\n"); return; }
     load_for_now();
@@ -235,7 +238,17 @@ void port_career_frame(int ticked)
     if ((paused && !g_was_paused) || (!stage && g_was_stage)) { if (g_dirty) save_now(); }
     g_was_paused = paused;
     g_was_stage = stage;
-    if (!ticked || !stage || paused || data_0209f20c[0] != 0) return;
+    {   /* the ending is over once the game has been somewhere the level loop does not run (the title, the file select: the scene loop) for
+           more than half a second, or the title shows here; a new process starts with it off too */
+        static int last = -1;
+        const int now = port_rom_frame();
+        if (g_ending && (scene == 1 || (last >= 0 && now - last > 30))) {
+            g_ending = 0;
+            fprintf(stderr, "[career] the ending is over (frame %d, scene %d): playtime counts again\n", now, scene);
+        }
+        last = now;
+    }
+    if (!ticked || !stage || paused || g_ending || data_0209f20c[0] != 0) return;
     const int s = slot_now();
     if (s < 0) return;
     load_for_now();
