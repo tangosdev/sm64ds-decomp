@@ -3130,7 +3130,7 @@ void clk_pic_build(ClkPic &P, float u, int mod)
     }
 }
 
-/* the piece: wth = the HD font flag. The place and the brightness are the banner's as the raster just drew it (g_clk_rec): nothing while none of
+/* the piece: wth = the HD font flag, wox = host pixels per DS pixel x 1000 (the attract's own scale). The place and the brightness are the banner's as the raster just drew it (g_clk_rec): nothing while none of
    its sprites is shown. The brightness: the engine's master brightness (mode 2 darkens by factor / 16), a darkening blend on the sprites (BLDCNT
    mode 3 with OBJ a first target, BLDY: the attract's fade in), and a semi-transparent sprite's EVA (the picture under the banner is black). */
 void clk_draw(const MenuLayout *L, int piece, uint32_t *dst, int w, int h, int stride)
@@ -3145,10 +3145,10 @@ void clk_draw(const MenuLayout *L, int piece, uint32_t *dst, int w, int h, int s
     if (b.objsemi || (((b.bldcnt >> 6) & 3) == 1 && (b.bldcnt & 0x10))) { const int ea = (b.bldalpha & 31) > 16 ? 16 : (b.bldalpha & 31); k = k * ea / 16; }
     if (k <= 0) return;
     static ClkPic P;
-    const float u = (float)L->unum / (float)L->uden;
+    const float u = Pc.wox > 0 ? (float)Pc.wox / 1000.f : (float)L->unum / (float)L->uden;
     const int em_key = (int)(u * 64.f);
     if (P.em != em_key || P.mod != Pc.wth) { clk_pic_build(P, u, Pc.wth); P.em = em_key; P.mod = Pc.wth; }
-    /* the DS box is the picture's centre 256 x 192 units (the attract piece is centred at 1/1); the letters sit in the sprites' 16 rows from b.y0 */
+    /* the DS box is centred in the picture at u pixels a DS pixel; the letters sit in the sprites' 16 rows from b.y0 */
     const float cx = (float)w * 0.5f + ((float)(b.x0 + b.x1) * 0.5f - 128.f) * u;
     const float cy = (float)h * 0.5f + ((float)b.y0 + 8.f - 96.f) * u;
     const int X = (int)(cx + 0.5f) - P.w / 2, Y = (int)(cy + 0.5f) - P.h / 2;
@@ -3196,5 +3196,12 @@ static void clk_add(MenuLayout *L)
     cp.fx = 0; cp.fy = 0; cp.fw = (short)L->w; cp.fh = (short)L->h;
     cp.custom = clk_draw;
     cp.wth = (short)(pc_assets_ready() ? 1 : 0);
+    /* the scale: the 4:3 piece's (the canvas unit), or with the full-canvas scene the scene's (its canvas units over the window: at 21:9 the
+       scene is height-limited, 2 px a DS pixel in a 1024 x 440 window where the canvas unit is 2.29). The DS box is centred either way, where the
+       scene puts the star: at 4:3 and 16:9 that is the ROM banner's own place; at 21:9 the ROM's sprites sat 14 DS rows higher than that,
+       against the star (engine A's 2D is placed at the top of the wide 3D frame), and the words keep the DS gap under the star. */
+    float sc = (float)L->unum / (float)L->uden;
+    if (scene_now()) { float cw, ch; scene_canvas_units(&cw, &ch); if (cw > 0.f) sc = (float)L->w / cw; }
+    cp.wox = (short)(sc * 1000.f + 0.5f);
     menu_add_piece(L, cp);
 }
