@@ -8844,6 +8844,9 @@ struct IpRec {
     int gt_div = 0;              // GHOSTPERF1: the figures were made straight into gt (ev_gt filled as the events came)
     struct GPair { int p; uint32_t ca, cb, pa, pb; };
     std::vector<GPair> gpair;
+    /* FADEFLASH1: the events [screen_ev0, screen_ev1) were drawn fixed to the screen (the fader wipe's mesh, see
+       gx_interp_screen_begin): a picture between ticks blends their matrices straight with tick N-1's range */
+    uint32_t screen_ev0 = 0, screen_ev1 = 0;
 };
 
 IpRec g_ipr[3];
@@ -9005,6 +9008,7 @@ bool ip_newborn_recam() {
 void ip_rec_begin() {
     IpRec &r = g_ipr[g_ip_w];
     r.ev.clear();
+    r.screen_ev0 = r.screen_ev1 = 0;
     r.par.clear();
     r.binds.clear();
     r.bind_sparkle.clear();
@@ -10110,6 +10114,27 @@ void gx_interp_view(float alpha, float eye[3]) {
     for (int i = 0; i < 3; ++i) eye[i] = (float)e[i];
 }
 
+/* FADEFLASH1: A PIECE FIXED TO THE SCREEN. FaderWipe::AdvanceFade draws the wipe's mesh at (0, 0, -1) in camera
+   space, so on every tick it sits centred on the picture whatever the camera does. Paired with the previous tick as a
+   world object it is not: its "world position" rides the camera, so the jump the camera makes when a pit death starts
+   (the camera stops following) reads as a teleport, the group goes unpaired, and the replay re-views its LOAD through
+   the blended camera. The mesh, scaled about 31 times, then turns into the view and the picture between the two ticks
+   is black around a hole that is off screen or the wrong size: one black picture, then the next tick is right. The
+   matrices drawn between begin and end blend word by word with the same events of tick N-1's range (both camera
+   space, so no camera goes in) and the hole closes smoothly; with no such range (the wipe's first tick) they keep
+   tick N's words. Inert unless a frame is being recorded. */
+void gx_interp_screen_begin() {
+    if (!g_ip_rec) return;
+    IpRec &r = g_ipr[g_ip_w];
+    r.screen_ev0 = r.screen_ev1 = static_cast<uint32_t>(r.ev.size());
+}
+
+void gx_interp_screen_end() {
+    if (!g_ip_rec) return;
+    IpRec &r = g_ipr[g_ip_w];
+    r.screen_ev1 = static_cast<uint32_t>(r.ev.size());
+}
+
 int gx_interp_begin(float alpha) {
     if (g_ip_open || !gx_interp_ready()) return 0;
     if (alpha < 0) alpha = 0;
@@ -10212,7 +10237,23 @@ int gx_interp_begin(float alpha) {
             int ex_on = 0;
             uint32_t tex_adj[32];
             bool tex_wrapped = false;
-            if (ip_is_mtx(e.cmd) && e.np <= 32) {
+            if (ip_is_mtx(e.cmd) && e.np <= 32 && i >= C.screen_ev0 && i < C.screen_ev1) {
+                /* FADEFLASH1: a matrix fixed to the screen blends its words straight with the same event of tick N-1's
+                   screen-fixed range (both are camera space, no camera goes in); with no such event it keeps tick N's */
+                const uint32_t k0 = i - C.screen_ev0;
+                if (alpha < 1.0f && e.mode != MTX_PROJ && P.screen_ev1 - P.screen_ev0 == C.screen_ev1 - C.screen_ev0 &&
+                    P.screen_ev0 + k0 < P.ev.size()) {
+                    const IpEv &pe = P.ev[P.screen_ev0 + k0];
+                    if (pe.kind == IPK_CMD && pe.cmd == e.cmd && pe.np == e.np && pe.mode == e.mode) {
+                        for (int k = 0; k < e.np; ++k) {
+                            tmp[k] = (uint32_t)ip_lerp(P.par[pe.off + k], pp[k], alpha);
+                            g_ip_ex[k] = (double)(int32_t)P.par[pe.off + k] * (1.0 - alpha) + (double)(int32_t)pp[k] * alpha;
+                        }
+                        pp = tmp;
+                        ex_on = 1;
+                    }
+                }
+            } else if (ip_is_mtx(e.cmd) && e.np <= 32) {
                 const int b = C.blend.empty() ? -1 : C.blend[i];
                 const int b2 = (C.has_p2 && !C.blend2.empty()) ? C.blend2[i] : -1;
                 if (b2 >= 0 && b < 0 && e.mode != MTX_TEX && g_ipr[g_ip_w].valid) {
@@ -10438,3 +10479,8 @@ void gx_interp_dump_groups(void *fp, int frame) {
 
 }  // namespace ntr
 
+
+/* FADEFLASH1: C-linkage faces of gx_interp_screen_begin / _end for hal/fader_wipes.cpp, whose declarations sit
+   where the ROM headers it includes give every name C linkage */
+extern "C" void port_gx_interp_screen_begin(void) { ntr::gx_interp_screen_begin(); }
+extern "C" void port_gx_interp_screen_end(void) { ntr::gx_interp_screen_end(); }

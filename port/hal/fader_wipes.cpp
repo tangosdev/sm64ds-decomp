@@ -1143,6 +1143,8 @@ extern "C" void port_fader_wipes_load(void)
    (0, 0, -1) in camera space, scaled by the queued (0x1000 - interp) * 0x20,
    turned 0x4000 about X -- submitted into this frame's geometry just before it
    is rasterised (tests/walk_window.cpp). Nothing queued, nothing drawn. */
+extern "C" void port_gx_interp_screen_begin(void);   /* ntr/gx.cpp */
+extern "C" void port_gx_interp_screen_end(void);
 extern "C" void port_fader_wipe_render(void)
 {
     if (!g_wipe_draw)
@@ -1153,8 +1155,13 @@ extern "C" void port_fader_wipe_render(void)
     Matrix4x3_FromTranslation(mtx, 0, 0, -0x1000);
     Matrix4x3_ApplyInPlaceToScale(mtx, sc, sc, sc);
     Matrix4x3_ApplyInPlaceToRotationX(mtx, 0x4000);
+    /* FADEFLASH1: the mesh is fixed to the screen; the pictures between ticks draw it as this tick drew it
+       (ntr/gx.cpp, gx_interp_screen_begin) instead of blending it with the camera, which made one black picture
+       when the camera jumped as a pit death began */
+    port_gx_interp_screen_begin();
     _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3(
         (char *)g_wipe_draw + 0x18, mtx, 0);
+    port_gx_interp_screen_end();
     g_wipe_draw = 0;
 }
 
