@@ -32,6 +32,7 @@ extern void (*port_sdat_frame_hook)(void);   /* hal/sdat/consumer.cpp: one call 
 int port_scene_live_id(void);                /* hal/scene_boot.cpp: 1 = SCENE_TITLE */
 extern unsigned short data_02092664;         /* Scene::SetSceneToSpawn's pending id (0x187 = nothing) */
 int port_join_plate_up(void);                /* hal/menu_join_plate.cpp */
+int port_join_plate_holds_handoff(void);     /* hal/menu_join_plate.cpp (KNOWNNET1): up, and not just lowering */
 int port_online_handoff_busy(const char **why);   /* hal/online_join.cpp: a leave or a join under way */
 int port_vs_end_pending(void);               /* hal/star_flow.cpp: a VS match end still on its way to the title */
 void port_vs_lobby_title_frame(void);        /* hal/scene_vs_menu.cpp: the VS lobby's mods, at the title */
@@ -307,7 +308,7 @@ const char *busy()
 {
     if (port_scene_live_id() != 1) return "the title is not the live scene";
     if (data_02092664 != 0x187) return "a scene change is pending";
-    if (port_join_plate_up()) return "the Joining plate is up";
+    if (port_join_plate_holds_handoff()) return "the Joining plate is up";
     if (port::comms_hub_active() || port::comms_hub_state() != port::kHubOff) return "a hub is installed";
     if (port::vs_arena_active()) return "a VS arena is installed";
     if (port::comms_transport()) return "a DS session transport is installed";

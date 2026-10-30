@@ -184,6 +184,13 @@ const int g_seated = boot();
 
 extern "C" int port_join_plate_up(void) { return P.up; }
 
+/* KNOWNNET1: an in-place plate whose join has ended (cancelled, or the title walking to the world) only waits to cover one more
+   picture (SEAMJOIN2's lowering, plate_lowered in port_join_plate_picture). A window that presents nothing (minimised) never draws
+   that picture, so the plate stayed "up" and hal/handoff_poll.cpp refused every hand-off after a B / Esc cancel until the window
+   was shown again: the launcher's next join ran out its deadline once. A lowering plate no longer holds the title's hand-off poll;
+   the presenter still draws it once (port_join_plate_up is unchanged). */
+extern "C" int port_join_plate_holds_handoff(void) { return (P.up && !(P.inplace && P.lowering)) ? 1 : 0; }
+
 static void plate_lowered(void);   /* SEAMJOIN2: below, with the in-place plate's end */
 
 extern "C" const uint32_t *port_join_plate_picture(int w, int h)
