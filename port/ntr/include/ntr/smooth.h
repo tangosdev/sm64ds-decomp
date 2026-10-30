@@ -685,6 +685,13 @@ int smooth_weld_guarded();
 void smooth_weld_scene_change();
 // Edges that met more sides than the book records (a fifth), since boot.
 uint64_t smooth_weld_overflow();
+// WELDALL1: an in-between picture starts (the tick's own picture starts at the
+// frame mark). Each edge gives one answer for the whole of one picture.
+void smooth_weld_picture();
+// WELDALL1: 1 when the last smooth_weld answer followed an edge's answer kept
+// for this picture that its record no longer gives: good for this picture only,
+// so it must not be reused in another (the replay memo stores it as stale).
+int smooth_weld_provisional();
 // The replay memo's own count (SM64DS_SMOOTH_WELD_STATS): an answer read back, or asked again.
 void smooth_weld_memo_count(int hit);
 

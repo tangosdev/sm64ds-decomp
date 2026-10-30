@@ -1828,7 +1828,7 @@ int weld_call(const int16_t p[3][3], const uint32_t n[3], int kind, const float 
         g_wm.clear(); g_wm_out.clear();
         g_wm_prev_cursor = 0;
     }
-    int r = -1;
+    int r = -1, prov = 0;
     for (size_t look = 0; look < 8 && g_wm_prev_cursor + look < g_wm_prev.size(); ++look) {
         const WeldMemo &m = g_wm_prev[g_wm_prev_cursor + look];
         if (m.check != chk) continue;
@@ -1842,9 +1842,11 @@ int weld_call(const int16_t p[3][3], const uint32_t n[3], int kind, const float 
     if (r < 0) {
         smooth_weld_memo_count(0);
         r = smooth_weld(p, n, kind, en, wo, wid);
+        prov = smooth_weld_provisional();
     }
     WeldMemo m;
     m.check = chk; m.epoch = smooth_weld_epoch(); m.result = r; m.id = r ? *wid : 0; m.out = -1;
+    if (prov) m.epoch = ~smooth_weld_epoch();   /* WELDALL1: this picture's only */
     if (r) {
         m.out = (int)(g_wm_out.size() / 18);
         g_wm_out.insert(g_wm_out.end(), &wo[0][0], &wo[0][0] + 18);
@@ -10175,6 +10177,7 @@ int gx_interp_begin(float alpha) {
     ++pic;
     g_ip_replaying = 1;
     g_wm_cursor = 0;          /* SMOOTHWELD1: the replay reads the tick's weld answers from the top */
+    smooth_weld_picture();    /* WELDALL1: an in-between is its own picture for the weld's per-picture answer */
     if (smooth_cracks_on()) smooth_crack_picture();
     uint32_t tmp[32];
     int last_group = -1;
