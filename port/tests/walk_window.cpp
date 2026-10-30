@@ -14796,7 +14796,7 @@ static int scene_host_input_frame(HWND hwnd, int frame, XPad *pad,
        does reaches the hidden title walk (the walk's own presses come from the game, not from here). */
     if (port_join_plate_up()) {
         port_join_plate_input(key_live(VK_ESCAPE) ? 1 : 0,
-                              (key_act(HOST_KEY_ATTACK) || (pad_live && pad_act(pad, HOST_PAD_ATTACK))) ? 1 : 0);
+                              (key_act(HOST_KEY_ATTACK) || mouse_act(HOST_MOUSE_ATTACK) || (pad_live && pad_act(pad, HOST_PAD_ATTACK))) ? 1 : 0);
         pad_live = 0;
         memset(pad, 0, sizeof *pad);
     }
