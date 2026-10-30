@@ -3015,6 +3015,8 @@ bool clk_env_on()
 inline uint16_t clk_rd16(uint32_t a) { return *(volatile uint16_t *)(uintptr_t)a; }
 /* entry i of engine A's OAM as a banner glyph: shown, not affine, a normal or semi-transparent 32 x 16 sprite of the banner's tiles (0x00..0x1f),
    at or below DS row 96 (the attract has no other engine A sprite; the bounds keep anything else out) */
+/* It reads engine A's own sprite table at 0x07000000 on purpose, not the raster's source (ntr/ppu.cpp can point engine A at the game's OAM
+   shadow, g_oam_src_a, for the gapless levels): that override is never on the title, and clk_live() answers 0 anywhere else. */
 bool clk_entry(int i, int *x, int *y, int *w, int *h, int *semi)
 {
     static const int kSizes[3][4][2] = { {{8, 8}, {16, 16}, {32, 32}, {64, 64}}, {{16, 8}, {32, 8}, {32, 16}, {64, 32}}, {{8, 16}, {8, 32}, {16, 32}, {32, 64}} };
@@ -3078,16 +3080,30 @@ void clk_pic_build(ClkPic &P, float u, int mod)
         if (fp < 1.f) fp = 1.f;
         em = fp * 9.6f;
     }
-    float tw = ui_text_width(kClkText, em);
-    const float maxw = 192.f * u;                           /* the ROM's banner is 186 DS pixels wide (35..221) */
-    if (tw > maxw) { em *= maxw / tw; tw = maxw; }
+    /* the HD lettering's letters sit close enough for their outlines to touch (C L I): one DS pixel more between letters, so each outline
+       stands apart; the words then keep the ROM banner's width (186 DS pixels, 35..221) by a slightly smaller size */
+    const int nch = (int)strlen(kClkText);
+    const float track = mod ? u : 0.f;
+    float tw = ui_text_width(kClkText, em) + track * (float)(nch - 1);
+    const float maxw = (mod ? 186.f : 192.f) * u;
+    if (tw > maxw) {
+        const float room = maxw - track * (float)(nch - 1);
+        em *= room / ui_text_width(kClkText, em);
+        tw = maxw;
+    }
     const float capd = ui_text_cap_height(em);
     const int ol = (int)(u + 0.5f) < 1 ? 1 : (int)(u + 0.5f); /* one DS pixel of outline */
     P.w = (int)ceilf(tw) + 3 * ol + 2; P.h = (int)ceilf(capd) + 3 * ol + 2;
     std::vector<uint32_t> cov((size_t)P.w * P.h, 0u);
     UiSurface sf = { cov.data(), P.w, P.w, P.h };
     const float top = (float)ol + 1.f;
-    ui_text_draw(&sf, (float)ol + 1.f, top + capd, kClkText, em, 0xFFFFFF, 255, nullptr);
+    {
+        float pen = (float)ol + 1.f;
+        for (int k = 0; k < nch; ++k) {
+            const char one[2] = { kClkText[k], 0 };
+            pen = ui_text_draw(&sf, pen, top + capd, one, em, 0xFFFFFF, 255, nullptr) + track;
+        }
+    }
     std::vector<uint8_t> c((size_t)P.w * P.h), d((size_t)P.w * P.h, 0);
     for (size_t k = 0; k < c.size(); ++k) c[k] = (uint8_t)((cov[k] >> 8) & 255);
     if (!mod)                                               /* the pixel font's strokes are one font pixel; the banner's are about 3 DS pixels: grown one DS pixel right */
