@@ -655,6 +655,12 @@ void smooth_crack_tri(const SmoothCrackTri &t);
 //   * normals that agree exactly     -> left alone (every edge inside a mesh).
 // Corners never move: only the edge's inner control points change. A triangle
 // none of whose edges needs a rule returns 0 and is drawn exactly as before.
+// ONE ANSWER A PICTURE (WELDALL1): when a record changes while a picture is
+// drawn (a model coming into view meets its first neighbour, a book still
+// learning), the answer it gave before the change stands for the rest of that
+// picture, so a side drawn early and a side drawn late still meet; a side drawn
+// straight on an edge kept curved follows that curve for the picture. The
+// next picture draws every side by the record as it now stands.
 // SM64DS_SMOOTH_WELD=0 turns the book off.
 // ---------------------------------------------------------------------------
 int smooth_weld_on();
