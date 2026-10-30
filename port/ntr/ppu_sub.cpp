@@ -187,6 +187,8 @@ const unsigned char kModeKinds[6][4] = {
     /* 5 */ {BG_TEXT, BG_TEXT, BG_EXT_AFFINE, BG_EXT_AFFINE},
 };
 
+int g_bg0_hofs_add;          /* RECROOMSLIDE1: columns added to BG0's text scroll for one scan-out (ppu_sub_set_bg0_hofs_add) */
+
 void read_bg(BgLayer &c, int bg, uint32_t dispcnt) {
     c.kind = BG_OFF;
     if (!((dispcnt >> (8 + bg)) & 1))
@@ -248,7 +250,7 @@ void read_bg(BgLayer &c, int bg, uint32_t dispcnt) {
     if (kind == BG_TEXT) {
         c.map_w = (sz & 1) ? 64 : 32;
         c.map_h = (sz & 2) ? 64 : 32;
-        c.hofs = rd16(kRegBase + 0x10 + bg * 4) & 0x1FF;
+        c.hofs = (rd16(kRegBase + 0x10 + bg * 4) + (bg == 0 ? g_bg0_hofs_add : 0)) & 0x1FF;   /* RECROOMSLIDE1: see ppu_sub_set_bg0_hofs_add */
         c.vofs = rd16(kRegBase + 0x12 + bg * 4) & 0x1FF;
     } else {
         c.map_w = c.map_h = 128 << sz;   // 128 / 256 / 512 / 1024 pixels
@@ -1369,6 +1371,7 @@ struct ScanKey {
     uint32_t oam_src;
     uint32_t rows_on;
     int bd_ovr;
+    int bg0_hofs_add;
     uint8_t regs[0x70];
     uint8_t skip[128];
     uint32_t rows[192];
@@ -1531,6 +1534,7 @@ void scan_key(ScanKey &k, uint32_t dispcnt, const uint8_t *skip)
     k.dispcnt = dispcnt;
     k.oam_src = g_oam_src_b;
     k.bd_ovr = g_backdrop_ovr;
+    k.bg0_hofs_add = g_bg0_hofs_add;
     for (int i = 0; i < 0x70; ++i) k.regs[i] = rd8(kRegBase + i);
     std::memcpy(k.skip, skip, sizeof k.skip);
     const uint32_t *rows = nullptr;
@@ -1769,6 +1773,11 @@ void ppu_sub_set_bg_suppress(uint32_t mask)
 void ppu_sub_set_backdrop_override(int bgr555v)
 {
     g_backdrop_ovr = bgr555v;
+}
+
+void ppu_sub_set_bg0_hofs_add(int add)
+{
+    g_bg0_hofs_add = add;
 }
 
 void ppu_sub_set_obj_select(const uint32_t *mask4)

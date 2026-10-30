@@ -47,6 +47,10 @@
    MASK it is bit 4 so BG3 and OBJ never collide.) */
 enum { MENU_L_BG0 = 1, MENU_L_BG1 = 2, MENU_L_BG2 = 4, MENU_L_BG3 = 8, MENU_L_OBJ = 16,
        MENU_L_ALL = 31 };
+/* RECROOMSLIDE1: a plane flag beside the layer bits, SRC_SUB only: the scan-out draws BG0 with its horizontal scroll moved by 256 columns
+   (ntr::ppu_sub_set_bg0_hofs_add), so a 512 wide BG0 map shows the columns just past the DS screen's right edge (source x 0..255 = DS
+   x 256..511, which on that map are also DS x -256..-1). */
+enum { MENU_L_BG0_NEXT = 32 };
 
 enum MenuSrc   { SRC_TOP_2D,      /* engine-A cells lifted out by layer owner, kept in DS space */
                  SRC_TOP_PIC,     /* the tick framebuffer (3D + 2D) at host resolution */
