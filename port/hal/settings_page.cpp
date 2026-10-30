@@ -1133,6 +1133,31 @@ double strip_win_now()
     const double e = p * p * (3 - 2 * p);
     return S.slide_from + (to - S.slide_from) * e;
 }
+/* SETPAGEINTERP1: where tab i stands on the picture the player last saw, clipped to the strip's ends (0 when it is out of sight). Read by the
+   mouse during a frame: the frame has already stepped the slide, and the last picture of the frame before showed that step at fraction 0. */
+int tab_drawn_at(int i, float *x0, float *x1)
+{
+    if (S.slide_t <= 0) {
+        if (L.tab_w[i] <= 0) return 0;
+        *x0 = (float)L.tab_x[i]; *x1 = (float)(L.tab_x[i] + L.tab_w[i]);
+        return 1;
+    }
+    const double keep = g_sp_pic_alpha;
+    g_sp_pic_alpha = 0;
+    const double f = strip_win_now();
+    g_sp_pic_alpha = keep;
+    const int a = (int)f, b = a + 1 < T_COUNT - TAB_VIS + 1 ? a + 1 : a;
+    const float fr = (float)(f - a);
+    const float off = L.tab_pos[a] + (L.tab_pos[b] - L.tab_pos[a]) * fr;
+    const float wa = L.tab_pos[a + TAB_VIS] - L.tab_gap - L.tab_pos[a], wb = L.tab_pos[b + TAB_VIS] - L.tab_gap - L.tab_pos[b];
+    const float tot = wa + (wb - wa) * fr;
+    const float lend = L.sx + (L.sw - tot) * 0.5f, rbeg = lend + tot;
+    const float x = lend + L.tab_pos[i] - off, w = L.tab_pos[i + 1] - L.tab_gap - L.tab_pos[i];
+    const float l = x < lend ? lend : x, r = x + w > rbeg ? rbeg : x + w;
+    if (r - l < 1) return 0;
+    *x0 = l; *x1 = r;
+    return 1;
+}
 
 /* ============================================================ the frame =============================================== */
 
@@ -1423,8 +1448,10 @@ extern "C" int settings_page_frame(const SpInput *in)
                 else if (in_rect(mx, my, L.reset)) { S.pressed_plank = 2; S.sel = n; }
                 else {
                     int tabhit = -1;
-                    for (int i = 0; i < T_COUNT; ++i)
-                        if (L.tab_w[i] > 0 && mx >= L.tab_x[i] - P(10) && mx < L.tab_x[i] + L.tab_w[i] + P(10) && my >= L.tab_y && my < L.tab_y + L.tab_h) tabhit = i;
+                    for (int i = 0; i < T_COUNT; ++i) {
+                        float tx0, tx1;     /* SETPAGEINTERP1: where it is drawn, during a slide too */
+                        if (tab_drawn_at(i, &tx0, &tx1) && mx >= tx0 - P(10) && mx < tx1 + P(10) && my >= L.tab_y && my < L.tab_y + L.tab_h) tabhit = i;
+                    }
                     if (tabhit >= 0) switch_tab(tabhit);
                     else if (over_row >= 0 && over_row < n && row_focusable(rows[over_row])) {
                         const Row &R = rows[over_row];
@@ -1809,10 +1836,60 @@ extern "C" int settings_page_warm_step(int w, int h)
     return g_ws_stage >= ST_DONE;
 }
 
+/* SETPAGEINTERP1: THE PAGE'S PICTURES BETWEEN TWO PAGE FRAMES. While the page is open the game stands still (it holds the debug menu's
+   pause), so the host's Smooth Motion makes no picture between ticks and the pacer shows each frame's picture again; the strip's slide then
+   stepped once a frame. The picture under the page is the same for the whole frame, so a frame whose page moves keeps it (spi_keep_now, at
+   the frame's own draw) and its own drawn page (spi_keep_page); settings_page_picture(alpha) puts the kept picture back, draws the page at
+   that place between the two frames and lays back what the host drew over the page after it (the toast, the pad pointer: the pixels where the
+   frame's finished picture is not the page's own). Only while something moves, only with Smooth Motion on, never for the warm-up's draws. */
+static std::vector<uint32_t> g_spi_under, g_spi_page, g_spi_fin;
+static uint32_t *g_spi_px;
+static int g_spi_stride, g_spi_w, g_spi_h, g_spi_pf = -1, g_spi_fin_ok, g_spi_in;
+static void spi_copy_out(std::vector<uint32_t> &v, const uint32_t *px)
+{
+    v.resize((size_t)g_spi_w * g_spi_h);
+    for (int y = 0; y < g_spi_h; ++y) memcpy(&v[(size_t)y * g_spi_w], px + (size_t)y * g_spi_stride, (size_t)g_spi_w * 4);
+}
+static int spi_keep_now(uint32_t *px, int stride, int w, int h)
+{
+    if (tl_warm || g_warming || g_spi_in) return 0;
+    g_spi_pf = -1;
+    if (S.slide_t <= 0 || !host_setting_smooth_motion()) return 0;
+    g_spi_px = px; g_spi_stride = stride; g_spi_w = w; g_spi_h = h;
+    spi_copy_out(g_spi_under, px);
+    return 1;
+}
+static void spi_keep_page()
+{
+    spi_copy_out(g_spi_page, g_spi_px);
+    g_spi_pf = S.pf;
+    g_spi_fin_ok = 0;
+}
+extern "C" int settings_page_picture(double alpha)
+{
+    if (!S.open || g_spi_pf != S.pf || S.slide_t <= 0 || !g_spi_px) return 0;
+    uint32_t *px = g_spi_px;
+    const int w = g_spi_w, h = g_spi_h, st = g_spi_stride;
+    if (!g_spi_fin_ok) { spi_copy_out(g_spi_fin, px); g_spi_fin_ok = 1; }
+    for (int y = 0; y < h; ++y) memcpy(px + (size_t)y * st, &g_spi_under[(size_t)y * w], (size_t)w * 4);
+    g_spi_in = 1;
+    settings_page_set_picture_alpha(alpha);
+    settings_page_draw(px, st, w, h);
+    g_spi_in = 0;
+    for (int y = 0; y < h; ++y) {
+        uint32_t *row = px + (size_t)y * st;
+        const uint32_t *a = &g_spi_page[(size_t)y * w], *b = &g_spi_fin[(size_t)y * w];
+        for (int x = 0; x < w; ++x)
+            if (a[x] != b[x]) row[x] = b[x];
+    }
+    return 1;
+}
+
 extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
 {
     if (!S.open || !px || w < 64 || h < 64) return;
-    if (!tl_warm) free_retired();                      /* WARMFIX1 F1: this frame holds no piece yet */
+    const int spi_keep = spi_keep_now(px, stride, w, h);    /* SETPAGEINTERP1: the picture under the page, for the pictures between frames */
+    if (!tl_warm) free_retired();                     /* WARMFIX1 F1: this frame holds no piece yet */
     const auto t0 = std::chrono::steady_clock::now();
     S.w = w; S.h = h;
     compute_layout(w, h);
@@ -2004,6 +2081,7 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
     }
     }
     S.draw_ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+    if (spi_keep) spi_keep_page();                     /* SETPAGEINTERP1: and the page's own picture over it */
     if (!tl_warm) g_sp_pic_alpha = 1.0;                /* CHEATS1: a picture fraction is for one draw */
     if (!tl_warm) publish_pieces();                    /* WARMFIX1 F1 */
     {   /* SM64DS_SETPAGE_COST=1: the cost of the page's draw, a line every 120 frames (proof rows only) */
@@ -2013,7 +2091,7 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
 #endif
         static double sum, mn = 1e9, mx;
         if (on < 0) on = getenv("SM64DS_SETPAGE_COST") != 0;
-        if (on && !g_warming) {
+        if (on && !g_warming && !g_spi_in) {
             sum += S.draw_ms; ++cnt;
             if (S.draw_ms < mn) mn = S.draw_ms;
             if (S.draw_ms > mx) mx = S.draw_ms;

@@ -10859,10 +10859,30 @@ static int ip_measure_now(long long deadline)
    a slot drawn late (the first one after a tick's work, usually) then shows
    the world as it is when it is drawn, so what is on screen keeps pace with
    the clock even when the grid does not. */
+/* run after093, lane SETPAGEINTERP1: while the settings page is open the game stands still and every tick snaps, so these slots only showed
+   the tick's picture again and the page's tab strip slid once a tick. When the page has something moving it redraws its picture at the slot's
+   place between the two ticks (hal/settings_page.cpp settings_page_picture). Off with Smooth Motion off or at 60 (g_ip_on, g_ip_rate_ok),
+   while the frame is held on the card, and with SM64DS_SETPAGE_INTERP=0. */
+static int sp_picture_now(void)
+{
+    static int on = -1;
+    if (on < 0) { const char *e = getenv("SM64DS_SETPAGE_INTERP"); on = (e && e[0] == '0') ? 0 : 1; }
+    if (!on || g_ip_on <= 0 || !g_ip_rate_ok || g_ip_tick_t0 <= 0 || g_ip_tick_len <= 0 || !settings_page_open()) return 0;
+    if (ntr::gx_card_overlay_active()) return 0;
+    double a = (double)(ip_qpc() - g_ip_tick_t0) / (double)g_ip_tick_len;
+    if (a < 0.0) a = 0.0;
+    if (a > 1.0) a = 1.0;
+    if (!settings_page_picture(a)) return 0;
+    if (!g_ip_scene_tick) g_si_pic_tick = (unsigned)port_rom_frame();
+    si_pic('s', a, g_present_fb, g_present_stack);
+    present();
+    return 1;
+}
 static int ip_present_slot(long long t, long long deadline)
 {
     if (!ip_owns_picture()) {
         ip_pend_flush();
+        if (sp_picture_now()) return 1;    /* SETPAGEINTERP1 */
         g_present_repeat = 1;
         present();
         g_present_repeat = 0;
@@ -10926,7 +10946,7 @@ static void ip_present_tick(void)
         presenter_note_work(w);
         slot_log("WORK", now.QuadPart, 0, g_ip_cost_ms, "tick work ended");
     }
-    if (!ip_owns_picture()) { present(); return; }
+    if (!ip_owns_picture()) { if (!sp_picture_now()) present(); return; }    /* SETPAGEINTERP1: a moving settings page starts its tick at its own place */
     if (g_ip_pace_seen && now.QuadPart - g_ip_pace_seen < 2 * g_ip_tick_len) {
         g_ip_deferred = 1;
         return;
