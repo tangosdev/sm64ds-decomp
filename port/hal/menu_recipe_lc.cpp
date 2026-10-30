@@ -17,8 +17,13 @@
  *               byte identity with the 0.5.x picture is the gate.
  *   HOTSPOTS    the ROM's own three touch boxes, LC_Update case 3: DS rows 0x28, 0x50, 0x78,
  *               0x20 tall, any column (src/_ZN5Stage9LC_UpdateEv.cpp:175, :196, :217).
- *   STAGE       PRE_FADE: drawn before engine A's fade, so the ROM's own -7 dim on the finished
- *               picture reaches the plates and the lettering exactly as it always did.
+ *   STAGE       POST_FADE, and each piece takes engine A's fade itself (MenuPiece.fade_own, SAVEDIM1):
+ *               the plates as the 3D under them does (the ROM's dim on the finished picture, as
+ *               when they were drawn before the fade), the lifted lettering by the verdict each
+ *               pixel carried out of the compositor. LC_Update case 2 leaves BG3 and OBJ out of
+ *               the dim (src/game/stages/d_s_stage_methods.cpp:520), so the course name,
+ *               CLEAR! / COMPLETE!, CONGRATULATIONS and the coin total stay bright at their new
+ *               rows, as on the cartridge, while the 3D scene dims.
  *   VARIANT     1 + (new coin record) + 2 * (castle / secret-course star): the two ROM flags
  *               the band rows depend on, so build() is pure and the selftest can ask for any.
  *   DRIVER      ROM_CURSOR: up/down move the ROM's chosen plate (data_0209f2e0) through the
@@ -229,6 +234,7 @@ void build_lc(int variant, MenuLayout *L)
     /* the course-clear lettering, BG3, from its source rows to the top of the picture */
     MenuPiece t = menu_piece_make(SRC_TOP_HOSTROW, 0, g.ty_src, L->w, g.t_lift_h, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
     t.layers = MENU_L_BG3;
+    t.fade_own = 1;
     if (boss) {
         /* the CONGRATULATIONS OBJ travels with the name and CLEAR! (it stayed behind before and CLEAR! landed on it) */
         t.layers = MENU_L_BG3 | MENU_L_OBJ;
@@ -239,12 +245,13 @@ void build_lc(int variant, MenuLayout *L)
     /* the coin total, OBJ, from its source rows to the very bottom */
     MenuPiece c = menu_piece_make(SRC_TOP_HOSTROW, 0, g.cy_src, L->w, g.c_h, MENU_AX_L, MENU_AY_B, 0, 0, 1, 1);
     c.layers = MENU_L_OBJ;
+    c.fade_own = 1;
     menu_add_piece(L, c);
     /* SHELF1 (S4): the plates wait for the end of the port's dim ease (the cartridge dims and shows them in one tick) */
     if (dim_progress() < 255) {
         L->hide_owners = MENU_L_BG2;
         L->backdrop = MENU_BACKDROP_TOP_AS_IS;
-        L->stage = MENU_STAGE_PRE_FADE;
+        L->stage = MENU_STAGE_POST_FADE;
         return;
     }
     /* the three plates, BG0 | BG1 of engine B, placed and sampled by the legacy rational */
@@ -253,13 +260,14 @@ void build_lc(int variant, MenuLayout *L)
     p.key_backdrop = 1;
     p.row_ok = menu_plate_row;
     p.touch = 1;
+    p.fade_own = 1;
     p.fx = (short)g.px; p.fy = (short)g.py; p.fw = (short)g.pw; p.fh = (short)g.ph;
     p.lnum = g.pnum; p.lden = g.pden;
     const int pi = menu_add_piece(L, p);
     for (int b = 0; b < 3; ++b) menu_add_hotspot(L, pi, 0, kMenuFirstRow + b * 0x28, SUB_W, 0x20, b);
     L->hide_owners = MENU_L_BG2;           /* "TOUCH TO SELECT", which the compose has never drawn */
     L->backdrop = MENU_BACKDROP_TOP_AS_IS;
-    L->stage = MENU_STAGE_PRE_FADE;
+    L->stage = MENU_STAGE_POST_FADE;
 }
 
 /* The ROM reads the menu with a pad only in LC_Update's case 3 and only when no wait is running: the

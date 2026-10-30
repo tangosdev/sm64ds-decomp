@@ -1209,6 +1209,15 @@ inline int lc_overlay_verdict(unsigned owner)
    EXACTLY the same pixels and a glyph can never be taken out of the picture and then fall outside the band that puts
    it back. A pixel of a lifted layer outside its band is left in the picture where the game put it (the lives
    counter, a sprite far above the coin band). */
+/* SAVEDIM1: A LIFTED PIXEL KEEPS ITS BRIGHTNESS VERDICT. The word the plane holds is the pixel with its alpha saying whether engine A's
+   fade takes it where the game drew it: FF taken (and every pixel of a frame without a brightness mask, a plain fade), FE not taken
+   (the save screen's dim: LC_Update case 2 leaves BG3 and OBJ out of BLDCNT's first targets, src/game/stages/d_s_stage_methods.cpp:520).
+   A recipe drawn after the fade (MenuPiece.fade_own) fades it by that verdict at its new rows; every other reader only tests alpha != 0. */
+inline uint32_t lc_lift_word(uint32_t c, bool bm_on, unsigned char bmv)
+{
+    return (c & 0x00FFFFFFu) | ((bm_on && !bmv) ? 0xFE000000u : 0xFF000000u);
+}
+
 inline bool lc_overlay_in_band(unsigned owner, int hy)
 {
     const MenuLiftInfo *li = lc_ov.info;
@@ -4571,7 +4580,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                 for (int hy = hy0; hy <= hy1; ++hy) {
                     const bool inb = hy < hy1 && lc_overlay_in_band(lcow, hy);
                     if (hy < hy1 && inb)
-                        for (int dx = 0; dx < bw; ++dx) lc_ov.col[(size_t)hy * ntr::SCREEN_W + hx0 + dx] = c | 0xff000000u;
+                        for (int dx = 0; dx < bw; ++dx) lc_ov.col[(size_t)hy * ntr::SCREEN_W + hx0 + dx] = lc_lift_word(c, bm_on, bmv);
                     if (hy < hy1 && !inb) { if (run0 < 0) run0 = hy; continue; }
                     if (run0 >= 0) {
                         /* rows run0..hy-1 of this cell stay in the picture */
@@ -4666,7 +4675,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                         }
                         if (cover && cover[hy * ntr::SCREEN_W + hx]) ++buried;
                         if (lcv && lc_overlay_in_band(lcow, hy)) {
-                            lc_ov.col[(size_t)hy * ntr::SCREEN_W + hx] = c | 0xff000000u;
+                            lc_ov.col[(size_t)hy * ntr::SCREEN_W + hx] = lc_lift_word(c, bm_on, bmv);
                         } else {
                             fb.px[hy][hx] = c;
                             if (bm_on)
@@ -4691,7 +4700,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                     }
                     if (cover[hy * ntr::SCREEN_W + hx]) { ++kept; continue; }
                     if (lcv && lc_overlay_in_band(lcow, hy)) {
-                        lc_ov.col[(size_t)hy * ntr::SCREEN_W + hx] = c | 0xff000000u;
+                        lc_ov.col[(size_t)hy * ntr::SCREEN_W + hx] = lc_lift_word(c, bm_on, bmv);
                     } else {
                         fb.px[hy][hx] = c;
                         if (bm_on)

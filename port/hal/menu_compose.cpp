@@ -1412,7 +1412,8 @@ static void piece_draw_ref(const MenuLayout *L, int i, const MenuSources *S, uin
                 const int sx = P.s.x + xx;
                 if (sx < 0 || sx >= S->hostrow_w) continue;
                 const uint32_t c = S->hostrow[(size_t)sy * S->hostrow_stride + sx];
-                if (c >> 24) row[xx] = c | 0xff000000u;
+                if (!(c >> 24)) continue;
+                row[xx] = (P.fade_own && S->bm_apply) ? S->bm_apply(c, (uint8_t)((c >> 24) == 0xffu)) | 0xff000000u : c | 0xff000000u;
             }
             continue;
         }
@@ -1460,7 +1461,7 @@ static void piece_draw_ref(const MenuLayout *L, int i, const MenuSources *S, uin
                 if (sx < 0) continue;
                 const uint32_t c = srow[sx];
                 if (P.key_backdrop && (c & 0xffffffu) == bd) continue;
-                row[xx] = c | 0xff000000u;
+                row[xx] = (P.fade_own && S->bm_apply) ? S->bm_apply(c, 1) | 0xff000000u : c | 0xff000000u;
             }
         } else {   /* SRC_TOP_2D */
             if (!S->top2d) continue;
@@ -1490,6 +1491,7 @@ struct RepState {
     int enable, valid;
     uint32_t *dst; int w, h; size_t stride;
     MenuSrc src; uint8_t layers, key_backdrop, xfill, oam_on, oam_lo, oam_hi; DsRect s; short fill_w; int lnum, lden; int (*row_ok)(int);
+    uint8_t fade_own;
     int x0, y0, dw, dh;
 } g_rep;
 
@@ -1497,7 +1499,8 @@ static int rep_same(const RepState &a, const MenuPiece &P, int dw, int dh)
 {
     return a.src == P.src && a.layers == P.layers && a.key_backdrop == P.key_backdrop && a.xfill == P.xfill && a.oam_on == P.oam_on &&
            a.oam_lo == P.oam_lo && a.oam_hi == P.oam_hi && a.s.x == P.s.x && a.s.y == P.s.y && a.s.w == P.s.w && a.s.h == P.s.h &&
-           a.fill_w == P.fill_w && a.lnum == P.lnum && a.lden == P.lden && a.row_ok == P.row_ok && a.dw == dw && a.dh == dh;
+           a.fill_w == P.fill_w && a.lnum == P.lnum && a.lden == P.lden && a.row_ok == P.row_ok && a.dw == dw && a.dh == dh &&
+           a.fade_own == P.fade_own;
 }
 
 static void piece_draw_2d(const MenuLayout *L, int i, const MenuSources *S, uint32_t *dst, int w, int h)
@@ -1565,6 +1568,8 @@ static void piece_draw_2d(const MenuLayout *L, int i, const MenuSources *S, uint
                 if (P.key_backdrop) for (int sx = 0; sx < 256; ++sx) { const uint32_t c = srow[sx]; crow[sx] = (c & 0xffffffu) == bd ? 0u : (c | 0xff000000u); }
                 else if (msk) for (int sx = 0; sx < 256; ++sx) { const uint32_t c = srow[sx]; crow[sx] = (c & 0xffffffu) == bd ? rbd : (c | 0xff000000u); }
                 else for (int sx = 0; sx < 256; ++sx) crow[sx] = srow[sx] | 0xff000000u;
+                if (P.fade_own && S->bm_apply)     /* SAVEDIM1: the piece takes engine A's fade itself */
+                    for (int sx = 0; sx < 256; ++sx) if (crow[sx]) crow[sx] = S->bm_apply(crow[sx], 1) | 0xff000000u;
             } else {
                 const MenuTopCell *trow = S->top2d + sy * 256;
                 for (int sx = 0; sx < 256; ++sx) {
@@ -1608,7 +1613,7 @@ static void piece_draw_2d(const MenuLayout *L, int i, const MenuSources *S, uint
         g_rep.dst = dst; g_rep.w = w; g_rep.h = h; g_rep.stride = stride;
         g_rep.src = P.src; g_rep.layers = P.layers; g_rep.key_backdrop = P.key_backdrop; g_rep.xfill = P.xfill; g_rep.oam_on = P.oam_on;
         g_rep.oam_lo = P.oam_lo; g_rep.oam_hi = P.oam_hi; g_rep.s = P.s; g_rep.fill_w = P.fill_w; g_rep.lnum = P.lnum; g_rep.lden = P.lden;
-        g_rep.row_ok = P.row_ok; g_rep.x0 = x0; g_rep.y0 = y0; g_rep.dw = dw; g_rep.dh = dh;
+        g_rep.row_ok = P.row_ok; g_rep.fade_own = P.fade_own; g_rep.x0 = x0; g_rep.y0 = y0; g_rep.dw = dw; g_rep.dh = dh;
         g_rep.valid = 1;
     }
 }
