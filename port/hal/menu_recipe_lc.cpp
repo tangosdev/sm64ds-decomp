@@ -460,6 +460,13 @@ void build_lc2(int variant, MenuLayout *L)
         fbh = U(kMenuRows) / 2;
         plates_h = fbh;
     }
+    /* the ROM's own status box ("Saving file..." / "File saved.") that takes the plates' place while the save runs: drawn at a whole
+       number of host pixels per DS pixel, the nearest to 2/3 of a DS pixel's size and never under one (the DS font is one pixel thin,
+       and a box drawn under 1:1 dropped whole columns of it: at RenderScale 1 "File saved." lost the F's stem). The same size as
+       before at RenderScale 3. Where the box is taller than the plates and a gap (RenderScale 1), the column keeps room for it the
+       whole time, so nothing moves when the save starts. */
+    const int boxk = ((4 * L->unum + 3 * L->uden) / (6 * L->uden)) > 1 ? (4 * L->unum + 3 * L->uden) / (6 * L->uden) : 1;
+    if (80 * boxk - U(9) > plates_h) plates_h = 80 * boxk - U(9);         /* U(9) = g4, the gap over the plates */
     const int g1 = U(3), g2 = high ? 0 : U(3), g3 = U(5), g4 = U(9);
     int T = hA + g2 + hB + g3 + hCoin + g4 + plates_h;
     if (record) T += hBan + g1;
@@ -535,13 +542,13 @@ void build_lc2(int variant, MenuLayout *L)
         menu_add_piece(L, ar);
     }
     if (saving) {
-        /* the ROM's own "Saving file..." box, bottom screen (56,40,144,80, the same box the pause menu's save shows), at 2/3 where the plates were */
+        /* the ROM's own "Saving file..." box, bottom screen (56,40,144,80, the same box the pause menu's save shows), where the plates were */
         MenuPiece sp = menu_piece_make(SRC_SUB, 56, 40, 144, 80, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
         sp.layers = MENU_L_BG0 | MENU_L_BG1 | MENU_L_OBJ;   /* the box and its text; never the minimap behind it */
         sp.key_backdrop = 1;
-        const int sw = U(144) * 2 / 3, sh2 = U(80) * 2 / 3;
+        const int sw = 144 * boxk, sh2 = 80 * boxk;                      /* boxk host px per DS px (above) */
         sp.fx = (short)((W - sw) / 2); sp.fy = (short)(py0 + (plates_h - sh2) / 2); sp.fw = (short)sw; sp.fh = (short)sh2;
-        sp.lnum = 2 * L->unum; sp.lden = 3 * L->uden;
+        sp.lnum = boxk; sp.lden = 1;
         menu_add_piece(L, sp);
     }
     L->no_focus_paint = 1;                 /* the lit plank and the arrow are the selection */
