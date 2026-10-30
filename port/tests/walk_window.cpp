@@ -6906,6 +6906,7 @@ static const int port_online_leave_restart_seated = (port_online_leave_restart_h
    BeforeBehavior marks it and the scene carrier spawns the title in this process. data_0209f1dc is left to func_02023498, so a
    combo still held cannot raise the latch again. Offline only: with a transport up nothing here runs (online, VS, coop, party keep
    what they did before); an offline refusal (a code mod, a scene-booted process) restarts at the front door like the level loop. */
+extern "C" int port_level_interlude_live(void);   /* hal/level_change.cpp: the star select interlude is running */
 static void port_scene_soft_reset(int frame, int was_up)
 {
     static int wait = -1, parked, answered;
@@ -6920,6 +6921,11 @@ static void port_scene_soft_reset(int frame, int was_up)
     }
     if (!was_up || answered || rb_replaying() || port::comms_transport()) return;
     const char *why = port_quit_in_place_refusal();
+    /* THE STAR SELECT IS NOT A SCENE OF ITS OWN HERE: hal/level_change.cpp runs it as an interlude inside the level change, and
+       that interlude ends only on its scene-3 ask (the castle Stage waits outside the tree), so a scene-1 ask inside it strands
+       the interlude (row star_r2: torn down by the backstop, then 0xC0000409). It takes the restart at the front door. */
+    if (!why && port_level_interlude_live())
+        why = "the star select runs inside the level change interlude, which only ends on its own scene 3 ask";
     if (wait < 0) {
         wait = frame;
         fprintf(stderr, "[loopin2] scene f%d soft reset: the latch is up on scene %u (L+R+START+SELECT)\n", frame,
