@@ -454,7 +454,7 @@ void pause_facts(MenuFacts *mf)
     int w = 1024, h = 768;
     hal_menu_last_size(&w, &h);
     g_pic_w = w; g_pic_h = h;
-    const int wide = (long long)w * 192 / h >= 300;
+    const int wide = pause_wide_layout(w, h, !pause_art_present());      /* PAUSESCALE1: 16:9 at RenderScale 1 with the ROM's plates is the 4:3 page */
     g_wide_now = wide;
     const int v = g_last_variant;
     /* MOUSE HOVER: a pointer that moved onto a plank makes it the ROM's chosen plate (silent), so the lit plank, the pointer and a
@@ -913,6 +913,7 @@ extern "C" int menu_pause_input(unsigned keys, int mvalid, int mx, int my, int m
         PauseFacts f0;
         memset(&f0, 0, sizeof f0);
         f0.dir = g_slide.dir;
+        f0.rom_art = !pause_art_present();         /* PAUSESCALE1: the ROM's plates can move the tabs (pause_geo) */
         const PauseGeo g = pause_geo(g_pic_w, g_pic_h, &f0, 3);
         for (int side = 0; side < 2; ++side) {
             const PauseRect r = pause_tab_rect(g, side);
