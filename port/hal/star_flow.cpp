@@ -2462,6 +2462,7 @@ void hub_presence_leave_reset();
 bool adventure_ghost_mode();
 struct CommsTransport;
 const CommsTransport *comms_transport();
+bool comms_loopback_leave_reset(const char *why);   /* hal/comms_loopback.cpp (KNOWNNET1) */
 }
 }
 
@@ -2515,7 +2516,8 @@ static const char *vs_end_refusal(void)
        hal/comms_loopback.cpp, so its end still closes the game (exit 0) and a lockstep hand-off is refused (exit 8): the old
        two-process path, one window at a time. The arena is the lobby's default netmode and is the in-place path; lockstep stays
        for developer pairs. A teardown would be a lane of its own (the carrier owns a thread, a socket and the frame ring). */
-    if (port::comms_transport()) return "the lockstep VS carrier (hal/comms_loopback.cpp) has no teardown yet";
+    /* KNOWNNET1: the lockstep carrier has its teardown now (comms_loopback_leave_reset, step 1 of vs_end_at_title), so a lockstep
+       match ends in place too: the results, then the title in this process, no exit. */
     if (const char *sc = std::getenv("SM64DS_SCENE"))
         if (*sc) return "a scene-booted process";
     if (!port_scene_is_hosted(1)) return "this build does not host the title scene";
@@ -2548,7 +2550,11 @@ static void vs_end_at_title(void)
     }
     fprintf(stderr, "[seamless] the title is up (the VS match ended in place at f%d: %s): leaving the VS session in this process\n",
             g_vs_end_at, g_vs_end_why);
-    /* 1. the arena (or a plain hub) */
+    /* 1. the lockstep carrier (KNOWNNET1), then the arena (or a plain hub) */
+    if (port::comms_transport() && !port::comms_loopback_leave_reset("the VS match ended in place")) {
+        vs_end_close("the lockstep carrier could not be torn down");
+        return;
+    }
     if (!port::vs_arena_leave_reset("the VS match ended in place")) {
         vs_end_close("the hub's I/O thread did not stop");
         return;
