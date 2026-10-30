@@ -1361,6 +1361,68 @@ static const char *port_vs_handoff(const PortHandoffRequest *r)
 }
 static const int g_vs_handoff_seated = port_handoff_register("vs", port_vs_handoff);
 
+/* ==== DEBUGMENU1: THE DEBUG MENU'S VS ROW, IN THIS PROCESS ======================================================================
+   The row used to start a VS child (tests/walk_window.cpp port_menu_relaunch_vs: SM64DS_VS_MAP set, the session names carried, this
+   process quit), a second window. This is that child's boot done at the title of the running game, the hand-off above without a
+   relay: no session, one player on this console, the ROM's own start. Called by walk_window.cpp menu_vs_poll once the title has been
+   the live scene for 30 frames; the caller has already refused a session, the star select interlude, a scene-booted process and a
+   code mod. Steps, in the hand-off's order:
+     1. SM64DS_VS_MAP in the environment (_putenv_s writes both copies), the one name the child booted with; the VS boot block in
+        main(), the mods' multiplayer rule and the match's end read it as they do in the child;
+     2. Luigi Infection's names read again (SEAMCLEAN1), the Adventure flag's env latch read again, the mods under the multiplayer rule;
+     3. the single player save;
+     4. the session words for one player (the hand-off's step 4b, which a title reached by a crossing needs);
+     5. port_vs_stage_and_start(map) from the title and the two names the VS boot block sets.
+   The match's own end (hal/star_flow.cpp vs_end_begin / vs_end_at_title) comes back to the title in this process and clears
+   SM64DS_VS_MAP from both copies (it is in hal/online_join.cpp's k_session_env) and relatches the offline mods. Returns 0, or the
+   refusal with everything undone. */
+extern "C" const char *port_vs_start_offline_in_place(int map)
+{
+    static char buf[200];
+    if (port_scene_live_id() != 1) return "the title is not the live scene";
+    const int mi = map & 3;
+    port_level_mounts_install();
+    const int vlv = port_vs_map_level(mi);
+    if (!port_level_is_mounted(vlv)) {
+        snprintf(buf, sizeof buf, "VS map %d is level %d, not mounted in this build", mi + 1, vlv);
+        return buf;
+    }
+    /* 1 */
+    char sid[2] = { (char)('0' + mi), 0 };
+    _putenv_s("SM64DS_VS_MAP", sid);
+    /* 2 */
+    port_luigi_reset();
+    host_setting_adventure_env_reread();
+    unsigned extra = 0;
+    const bool after_level = port::hub_game_heap_carved(&extra);
+    if (!(after_level ? port_mods_relatch_after_level("the debug menu's VS row")
+                      : port_mods_relatch_at_title("the debug menu's VS row"))) {
+        _putenv_s("SM64DS_VS_MAP", "");
+        host_setting_adventure_env_reread();
+        return "the mods layer refused the switch to the multiplayer list";
+    }
+    /* 3 */
+    ntr::backup::select_online(0);
+    /* 4 */
+    {
+        const int np = port::vs_player_count();
+        data_0209fc68[0] = np > 1 ? 1 : 0;
+        SetNumPlayers(np);
+        data_0209f21c = (unsigned char)np;
+        data_0209f250[0] = data_020a0f10[0];
+    }
+    /* 5 */
+    port_vs_stage_and_start(mi);
+    _putenv_s("SM64DS_ENTRANCE", "0");
+    _putenv_s("SM64DS_STAR_FILTER", "2");
+    fprintf(stderr, "[seamless] VS started from the title in this process (the debug menu's VS row): map %d of 4 -> level %d, the ROM's "
+            "own start (pending scene %u); %d player(s); %d mod(s) on under the multiplayer rule %d (%s)\n", mi + 1, vlv,
+            (unsigned)data_02092664, port::vs_player_count(), port_mods_count(), port_mods_multiplayer(),
+            after_level ? "a title after a level" : "the process's first title");
+    fflush(stderr);
+    return 0;
+}
+
 /* the map list, read for the debug row's display and the env boot's report */
 extern "C" {
 extern signed char data_ov075_0211c6ec[];
