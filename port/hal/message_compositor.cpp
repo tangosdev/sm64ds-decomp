@@ -1992,11 +1992,16 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
     };
     const uint32_t obj_pltt = kPlttBase + 0x200u;
     const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
-    // Integer scale DS 256x192 -> host, for reading the 3D pixel under a
-    // semi-transparent sprite where no 2D layer covers it. Named distinctly
-    // from the sx/sy sprite-walk counters below, which would otherwise shadow.
-    const int xscale = ntr::SCREEN_W / 256;
-    const int yscale = ntr::SCREEN_H / 192;
+    // DS 256x192 -> host, for reading the 3D pixel under a semi-transparent
+    // sprite where no 2D layer covers it. Named distinctly from the sx/sy
+    // sprite-walk counters below, which would otherwise shadow. The scale is
+    // the LIVE picture's (active_w / present_h), placed past the widescreen
+    // margin the way hide_by_window maps it: SCREEN_W / SCREEN_H are only the
+    // allocation, so dividing them read the 3D from the wrong spot at every
+    // render scale but the largest (the cannon arrows blended with black, or
+    // with a far part of the picture).
+    const int xscale = ntr::active_w / 256;
+    const int wmargin = ntr::active_w - ds_col_x0(256);
     // DISPCNT bit 4: 1 = one-dimensional tile mapping, 0 = two-dimensional.
     // Scene::ResetHardwareRegisters clears it on both engines (it ANDs
     // 0xffcfffef, which takes bit 4 and the boundary field together) and
@@ -2380,7 +2385,9 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                            see the setting through it. Null -- the default --
                            is the framebuffer, unchanged. */
                         const uint32_t *pre3d = ntr::gx_aa_preimage();
-                        const int by = py * yscale, bx = px * xscale;
+                        const int by = ds_row_y0(py);
+                        const int bx = ntr::widescreen ? wmargin / 2 + ds_col_x0(px)
+                                                       : px * xscale;
                         color = blend_alpha(
                             color,
                             pre3d ? pre3d[(size_t)by * ntr::SCREEN_W + bx]
