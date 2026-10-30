@@ -2080,9 +2080,9 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
         const uint16_t a0 = rd16(oam_a() + i * 8u);
         const uint16_t a1 = rd16(oam_a() + i * 8u + 2);
         const uint16_t a2 = rd16(oam_a() + i * 8u + 4);
+        if (g_port_obj_a_skip && g_port_obj_a_skip(i)) continue;   /* CLICKSTART1: drawn by the title recipe (ntr/ppu.cpp) */
         const bool affine = a0 & 0x100;
         if (!affine && (a0 & 0x200)) continue;
-        if (g_port_obj_a_skip && g_port_obj_a_skip(i)) continue;   /* CLICKSTART1: drawn by the title recipe (ntr/ppu.cpp) */
         // OBJ MODE (attribute 0 bits 10-11): 0 normal, 1 semi-transparent,
         // 2 OBJ window, 3 prohibited/bitmap. This test used to be `== 3` under
         // the name "OBJ window", which skipped the wrong mode and painted a

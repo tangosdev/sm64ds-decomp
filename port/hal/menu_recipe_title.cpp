@@ -2990,8 +2990,8 @@ extern "C" void menu_title_file_subpage_back(void)
 
 /* ---- CLICKSTART1 (run after093): THE ATTRACT SAYS CLICK TO START ---------------------------------------------------------------------------
    The attract's TOUCH TO START is a row of engine A sprites (on the title the engines are swapped, so engine A is the lower screen, where the
-   star idles): the ROM places them in DS rows 128..143, under the star (measured on the attract: 8 OAM entries placed, all inside that band,
-   none affine). The letters L I K are not on their tile sheet, so the sprites cannot be pointed at other tiles. On the one-screen attract
+   star idles): eight 32 x 16 sprites, entries 0..7, tiles 0x00..0x1c, at DS row 128 across the whole width, under the star (SM64DS_CLICKSTART_TRACE
+   on the attract; after a press the ROM drops them down the screen a few rows a tick and then hides them). The letters L I K are not on their tile sheet, so the sprites cannot be pointed at other tiles. On the one-screen attract
    those entries are left out of the engine A raster (both rasters ask g_port_obj_a_skip) and the words CLICK TO START are drawn in their place
    at window resolution: the ui_text font (the HD UI mod's DS lettering when the mod is on, else the port's own pixel font) filled with the
    banner's own colour bands (FFFF94 FFCE6B FF9C4A F76321 FF3910 top to bottom, outline and drop shadow 4A1800, read off the ROM's render).
@@ -3013,19 +3013,20 @@ bool clk_env_on()
     return v != 0;
 }
 inline uint16_t clk_rd16(uint32_t a) { return *(volatile uint16_t *)(uintptr_t)a; }
-/* entry i of engine A's OAM as a banner glyph: shown, not affine, a normal or semi-transparent sprite whose box lies in DS rows 112..155 */
+/* entry i of engine A's OAM as a banner glyph: shown, not affine, a normal or semi-transparent 32 x 16 sprite of the banner's tiles (0x00..0x1f),
+   at or below DS row 96 (the attract has no other engine A sprite; the bounds keep anything else out) */
 bool clk_entry(int i, int *x, int *y, int *w, int *h, int *semi)
 {
     static const int kSizes[3][4][2] = { {{8, 8}, {16, 16}, {32, 32}, {64, 64}}, {{16, 8}, {32, 8}, {32, 16}, {64, 32}}, {{8, 16}, {8, 32}, {16, 32}, {32, 64}} };
     const uint16_t a0 = clk_rd16(0x07000000u + i * 8u), a1 = clk_rd16(0x07000000u + i * 8u + 2);
     if (a0 & 0x300) return false;                           /* affine, or not shown */
     const int mode = (a0 >> 10) & 3, shape = (a0 >> 14) & 3;
-    if (mode >= 2 || shape == 3) return false;
+    if (mode >= 2 || shape != 1 || ((a1 >> 14) & 3) != 2 || (clk_rd16(0x07000000u + i * 8u + 4) & 0x3ff) >= 0x20) return false;
     const int sw = kSizes[shape][(a1 >> 14) & 3][0], sh = kSizes[shape][(a1 >> 14) & 3][1];
     int px = a1 & 0x1ff, py = a0 & 0xff;
     if (px >= 256) px -= 512;
     if (py >= 192 && py >= 256 - sh) py -= 256;
-    if (py < 112 || py + sh > 156) return false;
+    if (py < 96) return false;
     *x = px; *y = py; *w = sw; *h = sh; *semi = mode == 1;
     return true;
 }
@@ -3038,28 +3039,27 @@ bool clk_live()
     int top, elem, req;
     return port_title_page_state(&top, &elem, &req) && variant_for(top, elem) == V_ATTRACT;
 }
+/* THE RASTER'S OWN VIEW. The decide step (clk_add) runs before the tick's sprites and fade registers reach the hardware, so what it reads is one tick
+   old (measured: the fade and the drop came one picture late). So the banner the words follow is the one the engine A raster draws: the hook is
+   asked for every entry of a pass, 127 first, and keeps the banner's box and the blend registers of that pass for the draw that follows it. */
+ClkBanner g_clk_rec = { 0, 999, 999, -999, -999, 0, 0, 0, 0, 0 };
 int clk_skip(int i)
 {
+    if (i == 127) {
+        g_clk_rec = ClkBanner{ 0, 999, 999, -999, -999, 0, 0, 0, 0, 0 };
+        g_clk_rec.mb = clk_rd16(0x0400006Cu); g_clk_rec.bldcnt = clk_rd16(0x04000050u); g_clk_rec.bldalpha = clk_rd16(0x04000052u); g_clk_rec.bldy = clk_rd16(0x04000054u);
+    }
     int x, y, w, h, s;
-    return clk_entry(i, &x, &y, &w, &h, &s) && clk_live() ? 1 : 0;
+    if (!clk_entry(i, &x, &y, &w, &h, &s) || !clk_live()) return 0;
+    ClkBanner &b = g_clk_rec;
+    ++b.n; b.objsemi |= s;
+    if (x < b.x0) b.x0 = x;
+    if (y < b.y0) b.y0 = y;
+    if (x + w > b.x1) b.x1 = x + w;
+    if (y + h > b.y1) b.y1 = y + h;
+    return 1;
 }
 struct ClkHookInit { ClkHookInit() { g_port_obj_a_skip = clk_skip; } } g_clk_hook_init;
-
-ClkBanner clk_read()
-{
-    ClkBanner b = { 0, 999, 999, -999, -999, 0, 0, 0, 0, 0 };
-    for (int i = 0; i < 128; ++i) {
-        int x, y, w, h, s;
-        if (!clk_entry(i, &x, &y, &w, &h, &s)) continue;
-        ++b.n; b.objsemi |= s;
-        if (x < b.x0) b.x0 = x;
-        if (y < b.y0) b.y0 = y;
-        if (x + w > b.x1) b.x1 = x + w;
-        if (y + h > b.y1) b.y1 = y + h;
-    }
-    b.mb = clk_rd16(0x0400006Cu); b.bldcnt = clk_rd16(0x04000050u); b.bldalpha = clk_rd16(0x04000052u); b.bldy = clk_rd16(0x04000054u);
-    return b;
-}
 
 /* the words, drawn once per window size into a premultiplied picture (alpha in the top byte), then blended at the tick's brightness */
 struct ClkPic { int w = 0, h = 0, em = 0, mod = -1; std::vector<uint32_t> px; };
@@ -3083,13 +3083,19 @@ void clk_pic_build(ClkPic &P, float u, int mod)
     if (tw > maxw) { em *= maxw / tw; tw = maxw; }
     const float capd = ui_text_cap_height(em);
     const int ol = (int)(u + 0.5f) < 1 ? 1 : (int)(u + 0.5f); /* one DS pixel of outline */
-    P.w = (int)ceilf(tw) + 2 * ol + 2; P.h = (int)ceilf(capd) + 3 * ol + 2;
+    P.w = (int)ceilf(tw) + 3 * ol + 2; P.h = (int)ceilf(capd) + 3 * ol + 2;
     std::vector<uint32_t> cov((size_t)P.w * P.h, 0u);
     UiSurface sf = { cov.data(), P.w, P.w, P.h };
     const float top = (float)ol + 1.f;
     ui_text_draw(&sf, (float)ol + 1.f, top + capd, kClkText, em, 0xFFFFFF, 255, nullptr);
     std::vector<uint8_t> c((size_t)P.w * P.h), d((size_t)P.w * P.h, 0);
     for (size_t k = 0; k < c.size(); ++k) c[k] = (uint8_t)((cov[k] >> 8) & 255);
+    if (!mod)                                               /* the pixel font's strokes are one font pixel; the banner's are about 3 DS pixels: grown one DS pixel right */
+        for (int y = 0; y < P.h; ++y)
+            for (int x = P.w - 1; x >= 0; --x) {
+                uint8_t &v = c[(size_t)y * P.w + x];
+                for (int dx = 1; dx <= ol && x - dx >= 0; ++dx) { const uint8_t q = c[(size_t)y * P.w + x - dx]; if (q > v) v = q; }
+            }
     /* the outline: the letters grown by one DS pixel all round; the drop shadow: the outline once more, one DS pixel lower */
     for (int y = 0; y < P.h; ++y)
         for (int x = 0; x < P.w; ++x) {
@@ -3124,17 +3130,28 @@ void clk_pic_build(ClkPic &P, float u, int mod)
     }
 }
 
-/* the piece: wox, woy = the centre of the words in host pixels, wth = the HD font flag, alpha = the tick's brightness (0 = full) */
+/* the piece: wth = the HD font flag. The place and the brightness are the banner's as the raster just drew it (g_clk_rec): nothing while none of
+   its sprites is shown. The brightness: the engine's master brightness (mode 2 darkens by factor / 16), a darkening blend on the sprites (BLDCNT
+   mode 3 with OBJ a first target, BLDY: the attract's fade in), and a semi-transparent sprite's EVA (the picture under the banner is black). */
 void clk_draw(const MenuLayout *L, int piece, uint32_t *dst, int w, int h, int stride)
 {
     const MenuPiece &Pc = L->p[piece];
-    if (!ui_text_ready() || L->uden <= 0) return;
+    const ClkBanner b = g_clk_rec;
+    if (!b.n || !ui_text_ready() || L->uden <= 0) return;
+    int k = 255;
+    const int mbf = (b.mb & 31) > 16 ? 16 : (b.mb & 31);
+    if (((b.mb >> 14) & 3) == 2) k = k * (16 - mbf) / 16;
+    if (((b.bldcnt >> 6) & 3) == 3 && (b.bldcnt & 0x10)) { const int ey = (b.bldy & 31) > 16 ? 16 : (b.bldy & 31); k = k * (16 - ey) / 16; }
+    if (b.objsemi || (((b.bldcnt >> 6) & 3) == 1 && (b.bldcnt & 0x10))) { const int ea = (b.bldalpha & 31) > 16 ? 16 : (b.bldalpha & 31); k = k * ea / 16; }
+    if (k <= 0) return;
     static ClkPic P;
     const float u = (float)L->unum / (float)L->uden;
     const int em_key = (int)(u * 64.f);
     if (P.em != em_key || P.mod != Pc.wth) { clk_pic_build(P, u, Pc.wth); P.em = em_key; P.mod = Pc.wth; }
-    const int k = Pc.alpha ? Pc.alpha : 255;
-    const int X = Pc.wox - P.w / 2, Y = Pc.woy - P.h / 2;
+    /* the DS box is the picture's centre 256 x 192 units (the attract piece is centred at 1/1); the letters sit in the sprites' 16 rows from b.y0 */
+    const float cx = (float)w * 0.5f + ((float)(b.x0 + b.x1) * 0.5f - 128.f) * u;
+    const float cy = (float)h * 0.5f + ((float)b.y0 + 8.f - 96.f) * u;
+    const int X = (int)(cx + 0.5f) - P.w / 2, Y = (int)(cy + 0.5f) - P.h / 2;
     for (int y = 0; y < P.h; ++y) {
         const int dy = Y + y;
         if (dy < 0 || dy >= h) continue;
@@ -3156,17 +3173,17 @@ void clk_draw(const MenuLayout *L, int piece, uint32_t *dst, int w, int h, int s
 }
 }  // namespace
 
-/* the attract's build adds the words over the picture: called last in its V_ATTRACT branch */
+/* the attract's build adds the words' piece over the picture (called last in its V_ATTRACT branch); the draw decides each picture whether and where */
 static void clk_add(MenuLayout *L)
 {
     if (!clk_env_on() || !data_ov007_0210342c) return;
     g_clk_frame = data_ov007_0210342c[0];
-    const ClkBanner b = clk_read();
     static int tr = -1;
     if (tr < 0) { const char *e = getenv("SM64DS_CLICKSTART_TRACE"); tr = (e && *e && *e != '0') ? 1 : 0; }
     if (tr) {
-        fprintf(stderr, "[clickstart] f%d banner entries %d box (%d,%d)-(%d,%d) semi %d MB %04x BLDCNT %04x BLDALPHA %04x BLDY %04x:", g_clk_frame, b.n, b.x0, b.y0,
-                b.x1, b.y1, b.objsemi, b.mb, b.bldcnt, b.bldalpha, b.bldy);
+        const ClkBanner b = g_clk_rec;
+        fprintf(stderr, "[clickstart] f%d banner (last raster) entries %d box (%d,%d)-(%d,%d) semi %d MB %04x BLDCNT %04x BLDALPHA %04x BLDY %04x:", g_clk_frame, b.n,
+                b.x0, b.y0, b.x1, b.y1, b.objsemi, b.mb, b.bldcnt, b.bldalpha, b.bldy);
         for (int i = 0; i < 128; ++i) {
             int x, y, w, h, s;
             if (clk_entry(i, &x, &y, &w, &h, &s))
@@ -3174,25 +3191,10 @@ static void clk_add(MenuLayout *L)
         }
         fprintf(stderr, "\n");
     }
-    if (!b.n) return;
-    /* the tick's brightness: the engine's master brightness (mode 2 darkens by factor / 16), a darkening blend on the sprites (BLDCNT mode 3 with
-       OBJ a first target, BLDY), and a semi-transparent sprite's EVA (the picture under the banner is black on the attract) */
-    int k = 256;
-    const int mbf = (b.mb & 31) > 16 ? 16 : (b.mb & 31);
-    if (((b.mb >> 14) & 3) == 2) k = k * (16 - mbf) / 16;
-    if (((b.bldcnt >> 6) & 3) == 3 && (b.bldcnt & 0x10)) { const int ey = (b.bldy & 31) > 16 ? 16 : (b.bldy & 31); k = k * (16 - ey) / 16; }
-    if (b.objsemi || (((b.bldcnt >> 6) & 3) == 1 && (b.bldcnt & 0x10))) { const int ea = (b.bldalpha & 31) > 16 ? 16 : (b.bldalpha & 31); k = k * ea / 16; }
-    if (k <= 0) return;
-    const float u = (float)L->unum / (float)L->uden;
     MenuPiece cp = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
-    /* the DS box is the picture's centre 256 x 192 units (the attract piece is centred at 1/1); the letters are DS rows 129..141 */
-    const float cx = (float)L->w * 0.5f + ((float)(b.x0 + b.x1) * 0.5f - 128.f) * u;
-    const float cy = (float)L->h * 0.5f + (136.f - 96.f) * u;
     cp.lden = 1; cp.lnum = 1; cp.fixdest = 1;
-    cp.fx = (short)(cx - 100.f * u); cp.fy = (short)(cy - 12.f * u); cp.fw = (short)(200.f * u); cp.fh = (short)(24.f * u);
+    cp.fx = 0; cp.fy = 0; cp.fw = (short)L->w; cp.fh = (short)L->h;
     cp.custom = clk_draw;
-    cp.wox = (short)(cx + 0.5f); cp.woy = (short)(cy + 0.5f);
     cp.wth = (short)(pc_assets_ready() ? 1 : 0);
-    cp.alpha = (uint8_t)(k >= 256 ? 0 : (k < 1 ? 1 : k));
     menu_add_piece(L, cp);
 }
