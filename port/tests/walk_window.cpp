@@ -4881,6 +4881,40 @@ static void ct_camera_behavior_post(void *cam)
     if (tr < 0) tr = getenv("SM64DS_CAMLOCK_TRACE") ? 1 : 0;
     if (tr) fprintf(stderr, "[camtags] rom turned %d, stick asked %d of 1024 -> %d\n", delta, turn, want);
 }
+/* KNOWNCAM1 (known issue 0.9.3: Hazy Maze Cave, running at the camera with the right stick at a light tilt flipped the view 113
+   degrees in one tick). A light tilt holds the ROM's rotate bit every tick and the scaling above takes most of the ROM's 0x400 step
+   back. With a rotate bit held, func_02009e70 skips its own close follow: with no press, an eye inside the camera's near limit
+   (sp28 < fp, 0x02009e70 lines L_A5F8 / L_A6FC) swings toward behind the player (ApproachAngle 0x600 a tick) and is pushed back out,
+   which is what keeps Mario from running under the lens. A held rotate bit that hardly turns the camera is not a DS input (the DS pad
+   turns a full step or none), and with neither the turn nor the swing the eye sat on Mario's path until the heading flipped across
+   him. So while the eye is inside that near limit a light tilt lets go of the rotate bit for the tick and the ROM runs its own
+   no-press tick. fp is the ROM's own (func_02009e70 0x02009e70..0x0200a0b0): the camera mode's +0x1c, the two 1.5x boosts and the
+   star-marker shrink, eased toward +0x12c by +0x130, scaled by func_020093f4. Full pushes, keys and the D-pad never take this path.
+   SM64DS_KNOWNCAM1_OLD=1: proof only, the rotate bit stays held. */
+extern "C" unsigned func_020093f4(void *p, int x);
+extern "C" int func_02009374(void *self);
+extern "C" unsigned char data_0208747c[];
+static int kc1_eye_inside_near_limit(void *cam)
+{
+    char *k = (char *)cam;
+    const unsigned cf = *(unsigned *)(k + 0x154);
+    const char *md = (cf & 0x100) ? (const char *)data_0208747c : *(const char *const *)(k + 0x13c);
+    if (!md || !*(void **)(k + 0x110)) return 0;
+    const unsigned short mflags = *(const unsigned short *)(md + 0x26);
+    long long r4 = *(const int *)(md + 0x1c);
+    if (!(mflags & 1) && (cf & 2)) r4 = (r4 * 0x1800 + 0x800) >> 12;
+    if (data_0209f2d8 == 1 && (mflags & 2) && func_02009374(cam)) r4 = (r4 * 0x14cc + 0x800) >> 12;
+    if (cf & 0x80) r4 = (r4 * 0x1800 + 0x800) >> 12;
+    const long long t0 = (long long)*(int *)(k + 0x12c) - (int)r4;
+    const int fp = (int)func_020093f4(cam, (int)r4 + (int)((t0 * *(int *)(k + 0x130) + 0x800) >> 12));
+    const int *pv = (const int *)(k + 0x80), *eye = (const int *)(k + 0x8c);
+    int d[3] = {eye[0] - pv[0], eye[1] - pv[1], eye[2] - pv[2]};
+    const int sp28 = LenVec3(d);
+    static int tr = -1;
+    if (tr < 0) tr = getenv("SM64DS_CAMTEST_TRACE") ? 1 : 0;
+    if (tr) fprintf(stderr, "[knowncam1] dist %d near %d inside %d\n", sp28 >> 12, fp >> 12, sp28 < fp);
+    return sp28 < fp;
+}
 static int g_cam93_mouse_owned;            /* the mouse is steering the camera: no auto-recenter until the stick or keys take it back */
 static int g_cam93_scale = 4096;           /* eased fraction of the eye distance the collision allows */
 static int g_cam93_hit;                    /* trace: the ray hit this frame */
@@ -19061,8 +19095,15 @@ int main(void)
                     g_ct_dir = 0;
                     if (!ct_old && turn < 0x400 && dir && cam && !ct_owned && !ct_stepped_mode && !(btn & 0x4000)) {
                         /* below the ROM's step: scaled after the camera's own tick (ct_camera_behavior_post) */
-                        g_ct_turn = turn > 0 ? turn : 1;
-                        g_ct_dir = dir;
+                        static int kc1_old = -1;
+                        if (kc1_old < 0) kc1_old = getenv("SM64DS_KNOWNCAM1_OLD") ? 1 : 0;
+                        if (!kc1_old && kc1_eye_inside_near_limit(cam)) {
+                            /* KNOWNCAM1: the eye is inside the near limit; the ROM's own no-press tick (its close follow) runs */
+                            cam_rot &= ~(cam_bit_left | cam_bit_right);
+                        } else {
+                            g_ct_turn = turn > 0 ? turn : 1;
+                            g_ct_dir = dir;
+                        }
                     } else
                     if (turn != 0x400 && dir && cam && !ct_owned && !(btn & 0x4000) && (rom_took || cv_old))
                         { g_ds_extra_turn = dir * (turn - 0x400); g_ds_cam = cam; }
