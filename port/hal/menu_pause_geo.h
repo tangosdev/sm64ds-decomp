@@ -72,6 +72,9 @@ struct PauseFacts {
        time; career_cur = the file being played (-1 none) */
     int8_t career_cur, career_has;
     uint32_t career_play[3], career_clear[3];
+    /* PAUSESCALE2: the two-screen / non-English pause on a one-screen-sized picture (hal/sub_screen.cpp g_pause_fit): 0 not that pause, 1 its
+       plates view, 2 its page view (the edge tabs' place, pause_rom_tab_rect) */
+    int8_t rom_fit;
 };
 static_assert(sizeof(PauseFacts) <= 1024, "PauseFacts must fit MenuFacts.blob");
 
@@ -103,11 +106,31 @@ inline void pause_tracker_shape(const PauseFacts *f, int *rows, int *stats)
     *stats = 2 + (f->in_course ? (f->show_red ? 1 : 0) : 0);                /* stars, coins (or the record), red coins */
 }
 
+/* PAUSESCALE1: THE ROM'S PLATES NEVER UNDER ONE PIXEL. A rom_art page draws the ROM's own plates (240 x 32 DS pixels, 80 x 32 for YES / NO),
+   whose lettering is the DS font, one pixel thin: drawn at less than one host pixel per DS pixel, nearest sampling drops whole columns of it
+   (at RenderScale 1 CONTINUE, OPTIONS, QUIT, SAVE, DON'T SAVE lost strokes). A plate whose slot is narrower than the plate itself is drawn at
+   exactly one host pixel per DS pixel and the page makes room around it; a slot at or above 1:1 keeps its size (no column is lost there).
+   pause_rom_w is that width for a slot `slot` host pixels wide holding a plate `ds` DS pixels wide. */
+inline int pause_rom_w(int slot, int ds) { return slot < ds ? ds : slot; }
+
+/* the layout is WIDE (tracker and planks side by side) at 16:9 and wider, unless the ROM's plates at 1:1 do not fit beside the tracker
+   (16:9 at RenderScale 1): then the page is the 4:3 one, the planks alone and the tracker a page of its own, as at 4:3 */
+inline int pause_wide_layout(int w, int h, int rom_art)
+{
+    if ((long long)w * 192 / h < 300) return 0;
+    if (!rom_art) return 1;
+    const double u = h / 1080.0;
+    const int pcx = w - (int)(500 * u > 0.26 * w ? 500 * u : 0.26 * w);
+    const int tr = (int)(100 * u > 0.05 * w ? 100 * u : 0.05 * w) + (int)(840 * u + 0.5);
+    const int half = pause_rom_w((int)(440 * u + 0.5), 240) / 2 + 8;       /* the widest sheet: the save page's, plates plus a margin */
+    return pcx - half >= tr && pcx + half <= w;
+}
+
 inline PauseGeo pause_geo(int w, int h, const PauseFacts *f, int nplanks)
 {
     PauseGeo g;
     g.w = w; g.h = h;
-    g.wide = (long long)w * 192 / h >= 300;
+    g.wide = pause_wide_layout(w, h, f && f->rom_art);
     int rows = 8, stats = 3;
     pause_tracker_shape(f, &rows, &stats);
     const int thu = pause_tracker_units_h(rows, stats);
@@ -138,6 +161,15 @@ inline PauseGeo pause_geo(int w, int h, const PauseFacts *f, int nplanks)
     g.tabw = pause_round(96 * g.u);
     g.tabh = pause_round(170 * g.u);
     g.tabcy = h / 2 + pause_round(8 * g.u);
+    if (f && f->rom_art) {
+        /* PAUSESCALE1: the ROM's plates at 1:1 at least; at 4:3 RenderScale 1 they span the picture's width (as on the DS's own screen), so the
+           edge tabs go under the stack, in the bottom corners, and the stack rises to the room above them */
+        g.pw = pause_rom_w(g.pw, 240);
+        if (!g.wide && g.pcx - g.pw / 2 < g.tabw + 2) {
+            g.tabcy = h - g.tabh / 2 - 2;
+            g.pcy = (h - g.tabh - 4) / 2;
+        }
+    }
     (void)nplanks;
     return g;
 }
@@ -226,6 +258,38 @@ inline PauseRect pause_tab_rect(const PauseGeo &g, int side)
     return r;
 }
 
+/* PAUSESCALE2: the ROM pause's edge tabs (OneScreenMenus off, or a language but English). view (PauseFacts.rom_fit): 0 the old place, the
+   sides' middle. 1, the plates view of a one-screen-sized picture: the bottom screen stands at 1:1 in the middle and its plates leave less room
+   beside them than a tab is wide (8 picture pixels at 4:3 RenderScale 1), so a tab that does not fit there stands in the picture only as far as
+   the room (at least 4 pixels), the rest of it past the picture's edge, and never covers a plate. 2, the page view: the ROM's page at 1:1 has
+   its course arrows at the sides' middle, so the tabs go to the top corners (the page's first cells start 45 DS pixels down). Drawing and the
+   hit test both use this rect. */
+inline PauseRect pause_rom_tab_rect(const PauseGeo &g, int side, int view)
+{
+    PauseRect r = pause_tab_rect(g, side);
+    if (view == 2) { r.y = 2; return r; }
+    if (view != 1) return r;
+    int room = (g.w - 240) / 2 - 1;         /* the plates are 240 DS pixels wide, at 1:1 */
+    if (room < 4) room = 4;
+    if (room >= r.w) return r;
+    r.x = side ? g.w - room : room - r.w;
+    return r;
+}
+
+/* PAUSESCALE2: the castle card's own course arrows on the page view, in picture pixels. The page is the ROM's top screen where the ROM draws it
+   (DS 256 x 192, centred, h / 192 picture pixels per DS pixel); its arrows are top-screen cells beside the card at about x 15..28 and 227..240,
+   y 84..108 (they bob and slide out a few pixels when pressed), so the box is the room beside the card: x 4..31 / 224..251, y 76..116. */
+inline PauseRect pause_rom_card_arrow_rect(int w, int h, int side)
+{
+    const double k = h / 192.0;
+    const int nx = (int)((w - 256 * k) / 2);
+    const int x0 = side ? 224 : 4;
+    PauseRect r;
+    r.x = nx + pause_round(x0 * k); r.w = pause_round(28 * k);
+    r.y = pause_round(76 * k); r.h = pause_round(40 * k);
+    return r;
+}
+
 /* the dialog sheet (save prompt, saving, quit) that stands where the planks stand: its box for `kind` (PAUSE_V_*), the slide applied */
 inline PauseRect pause_dialog_rect(const PauseGeo &g, const PauseFacts *f, int kind)
 {
@@ -236,8 +300,36 @@ inline PauseRect pause_dialog_rect(const PauseGeo &g, const PauseFacts *f, int k
     PauseRect r;
     const double k = g.wide ? g.u : g.u * 1.0;
     r.w = pause_round(dwu * k); r.h = pause_round(dhu * k);
+    if (f && f->rom_art && (kind == PAUSE_V_SAVE || kind == PAUSE_V_NOSAVE)) {
+        /* PAUSESCALE1: the ROM's plates at 1:1 at least (pause_rom_w): the sheet grows to hold them under its text block (title, two lines:
+           195 u) with its bottom margin (34 u), and stays whole on the picture with its title plate (380 u wide, 256:960) */
+        int sw, sh;
+        if (kind == PAUSE_V_SAVE) {
+            const int pw = pause_rom_w(pause_round(440 * g.u), 240), ph = pause_rom_plate_h(pw);
+            sw = pw; sh = 3 * ph + 2 * pause_round(14 * g.u);
+        } else {
+            const int pw = pause_rom_w(pause_round(220 * g.u), 80);
+            sw = 2 * pw + pause_round(30 * g.u); sh = pause_round(pw * 32.0 / 80.0);
+        }
+        const int m = pause_round(20 * g.u) > 6 ? pause_round(20 * g.u) : 6;
+        int nw = sw + 2 * m;
+        if (nw > g.w - 4) nw = g.w - 4;
+        const int nh = pause_round(195 * g.u) + sh + pause_round(34 * g.u);
+        if (nw > r.w) r.w = nw;
+        if (nh > r.h) r.h = nh;
+        r.x = g.pcx - r.w / 2 + pause_planks_dx(g, f);
+        r.y = g.pcy - r.h / 2 + pause_round(26 * k);
+        const int top = pause_round(380 * g.u * 256.0 / 960.0) / 2 - pause_round(4 * g.u) + 2;
+        if (r.h > g.h - 2 - top) r.h = g.h - 2 - top;       /* a short picture: the sheet ends 2 rows above the bottom (pause_dialog_plank keeps the plates under the text) */
+        if (r.y + r.h > g.h - 2) r.y = g.h - 2 - r.h;
+        if (r.y < top) r.y = top;
+        return r;
+    }
     r.x = g.pcx - r.w / 2 + pause_planks_dx(g, f);
-    r.y = g.pcy - r.h / 2 + pause_round(26 * k);
+    /* PAUSESCALE2: the Saving / File saved sheet has no edge tabs under it, so at 4:3 it keeps the picture's own centre line (h / 2 + 8 u)
+       when the ROM's plates lifted the plank stack above the bottom-corner tabs (pause_geo) */
+    const int cy = (!g.wide && kind == PAUSE_V_STATUS) ? g.h / 2 + pause_round(8 * g.u) : g.pcy;
+    r.y = cy - r.h / 2 + pause_round(26 * k);
     return r;
 }
 
@@ -251,16 +343,23 @@ inline PauseRect pause_dialog_plank(const PauseGeo &g, const PauseFacts *f, int 
     PauseRect r;
     const int bottom = d.y + d.h - pause_round(34 * g.u);
     if (rom && kind == PAUSE_V_NOSAVE) {
-        r.w = pause_round(220 * g.u); r.h = pause_round(r.w * 32.0 / 80.0);
+        r.w = pause_rom_w(pause_round(220 * g.u), 80); r.h = pause_round(r.w * 32.0 / 80.0);     /* PAUSESCALE1: never under 1:1 */
         const int gap = pause_round(30 * g.u);
         r.x = d.x + d.w / 2 + (i == 0 ? -gap / 2 - r.w : gap / 2);
         r.y = bottom - r.h;
         return r;
     }
-    const int pw = pause_round(440 * g.u), ph = rom ? pause_rom_plate_h(pw) : pause_round(440 * g.u * 129.0 / 606.0), gap = pause_round(14 * g.u);
+    const int pw = rom ? pause_rom_w(pause_round(440 * g.u), 240) : pause_round(440 * g.u), ph = rom ? pause_rom_plate_h(pw) : pause_round(440 * g.u * 129.0 / 606.0), gap = pause_round(14 * g.u);
     r.w = pw; r.h = ph;
     r.x = d.x + (d.w - pw) / 2;
     r.y = bottom - (n - i) * ph - (n - 1 - i) * gap;
+    if (rom && kind == PAUSE_V_SAVE) {
+        /* PAUSESCALE1: on a sheet cut short by the picture the bottom margin gives way first, so the plates never ride up into the text
+           (its second line ends about 176 u under the sheet's top) */
+        const int stack = n * ph + (n - 1) * gap, room = d.h - pause_round(176 * g.u) - 3 - stack;
+        const int bm = room < pause_round(34 * g.u) ? (room > 4 ? room : 4) : pause_round(34 * g.u);
+        r.y = d.y + d.h - bm - (n - i) * ph - (n - 1 - i) * gap;
+    }
     return r;
 }
 

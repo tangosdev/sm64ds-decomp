@@ -889,7 +889,10 @@ void compute_layout(int w, int h)
     L.w = w; L.h = h;
     /* PAUSE3: inside the wide pause the sheet is a tall column at the right (900 x 990 units); everywhere else the page is the 900 x 664 sheet
        centred on the picture (the title wrench's page, and the 4:3 pause where it takes the whole screen), shifted by the slide offset */
-    const bool col = S.emb_on && S.emb_wide;
+    bool col = S.emb_on && S.emb_wide;
+    /* PAUSESCALE1: the column needs a unit of at least the 0.3 floor; on a small picture (16:9 at RenderScale 1) it would run off the picture,
+       so the page is the centred sheet there, as at 4:3 */
+    if (col && (0.46 * w / 900.0 < 0.3 || 0.92 * h / 990 < 0.3)) col = false;
     const int shu = col ? 990 : 664;
     const double u = col ? 0.46 * w / 900.0 : (double)w / 1024.0, v = col ? 0.92 * h / shu : (double)h / 768.0;
     L.u = u < v ? u : v;
@@ -898,6 +901,11 @@ void compute_layout(int w, int h)
     L.sx = (col ? (int)(w * 0.74) : w / 2) - L.sw / 2 + (S.emb_on ? S.emb_dx : 0);
     L.sy = (h - L.sh) / 2 + P(36);
     if (L.sy + L.sh > h - 2) L.sy = h - 2 - L.sh;
+    {   /* PAUSESCALE1: the title plate (half above the sheet's top edge) stays on the picture: where the sheet at the 0.3 floor is taller than
+           the picture (RenderScale 1), the sheet starts under the plate and ends 2 rows above the bottom, its body a little shorter (it scrolls) */
+        const int top = P(380) * 160 / 600 / 2 + 2;
+        if (L.sy < top) { L.sy = top; if (L.sy + L.sh > h - 2) L.sh = h - 2 - L.sy; }
+    }
     L.title[2] = P(380); L.title[3] = L.title[2] * 160 / 600;
     L.title[0] = L.sx + (L.sw - L.title[2]) / 2; L.title[1] = L.sy - L.title[3] / 2;
     L.back[2] = P(158); L.back[3] = L.back[2] * 182 / 320;

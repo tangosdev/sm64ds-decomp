@@ -2272,7 +2272,8 @@ void hal_menu_decide(int w, int h, int scene_id)
         g_cur_recipe = -1;
         g_focus_shown = 0;
         g_drag_piece = -1;
-        g_q_state = 0;          /* a queued synthesised press must not fire into the next scene */
+        if (g_live) g_q_state = 0;      /* a queued synthesised press must not fire into the next scene (PAUSESCALE2: only as the recipe goes off; with
+                                           none up the ROM's own pause queues its course-arrow press here, hal/menu_recipe_pause.cpp page_course) */
         {
             std::lock_guard<std::mutex> lk(g_mu);
             g_slatch.recipe = -2;

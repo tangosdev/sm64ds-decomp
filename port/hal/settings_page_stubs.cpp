@@ -9,3 +9,4 @@ extern "C" void menu_pause_hook_pad(uint16_t *, int) {}
 extern "C" void menu_pause_rom_pad(uint16_t *) {}
 extern "C" int menu_pause_rom_fallback(void) { return 0; }
 extern "C" int menu_pause_slide_busy(void) { return 0; }
+extern "C" int menu_pause_rom_page_view(void) { return 0; }    /* PAUSESCALE2 */

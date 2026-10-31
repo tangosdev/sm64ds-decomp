@@ -383,11 +383,22 @@ void pp_pointer(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
     PauseRect r;
     if (f->variant == PAUSE_V_CASTLE || f->variant == PAUSE_V_COURSE || f->variant == PAUSE_V_AIR) r = pause_plank_rect(g, f, f->nslots, f->sel_slot);
     else r = pause_dialog_plank(g, f, f->variant, f->nslots, f->sel_slot);
-    const int ah = (int)(r.h * 0.5 + 0.5), aw = (int)(ah * 24.0 / 34.0 + 0.5);
+    int ah = (int)(r.h * 0.5 + 0.5), aw = (int)(ah * 24.0 / 34.0 + 0.5);
+    int gap = (int)(22 * g.u);
+    if (r.x - aw - gap < 0) {
+        /* PAUSESCALE2: a plate at 1:1 that spans the picture (4:3 RenderScale 1: x 8..248 of 256) leaves less room at its left than the pointer
+           and its gap take, and the pointer went off the picture's edge. It is made to fit the room there instead (one pixel from the plate),
+           kept to the shape of its art, never under 5 px wide */
+        gap = 1;
+        if (r.x - gap < aw) {
+            aw = r.x - gap > 5 ? r.x - gap : 5;
+            ah = (int)(aw * 34.0 / 24.0 + 0.5);
+        }
+    }
     const Piece *ap = arrow_right_piece(aw, ah);
     if (!ap) return;
     static const int bob[8] = { 0, 1, 2, 3, 4, 3, 2, 1 };
-    const int ax = r.x - aw - (int)(22 * g.u) + (int)(bob[(f->frame >> 1) & 7] * g.u * 0.5);
+    const int ax = r.x - aw - gap + (int)(bob[(f->frame >> 1) & 7] * g.u * 0.5);
     blit(sf, ap->px, ap->w, ap->h, ax, r.y + r.h / 2 - ah / 2, 255, 0, 0, 0);
 }
 
@@ -440,7 +451,13 @@ extern "C" void pause_page_rom_draw(const PauseFacts *f, uint32_t *px, int strid
     const Surf sf = { px, stride, w, h };
     const PauseGeo g = pause_geo(w, h, f, 3);
     if (pause_page_visible(f, PAUSE_PG_CAREER)) pp_career(sf, g, f);
-    pp_tabs(sf, g, f);
+    if (!f->rom_fit) { pp_tabs(sf, g, f); return; }
+    /* PAUSESCALE2: the fit ring's tabs (pause_rom_tab_rect: on the plates view only as far into the picture as the room, top corners on the page view) */
+    for (int side = 0; side < 2; ++side) {
+        const PauseRect r = pause_rom_tab_rect(g, side, f->rom_fit);
+        const int hov = f->hover_tab == side, prs = f->press_tab == side;
+        blit_hi(sf, side ? MENU_IMG_P_TAB_R : MENU_IMG_P_TAB_L, r.x + (prs ? (side ? -(int)(2 * g.u) : (int)(2 * g.u)) : 0), r.y, r.w, r.h, 255, hov ? 30 : 0, prs ? 25 : 0);
+    }
 }
 
 /* the pictures the pause draws itself, for the warm-up to decode and scale ahead of the first open: idx 0.. -> (id, dw, dh), 1 while idx is valid */
