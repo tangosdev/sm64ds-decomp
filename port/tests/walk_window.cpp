@@ -5026,34 +5026,41 @@ static void k1_level_camera_render_hook(void *cam)
    nothing decides anything while a person is reading. Rendering carries on, so
    the frame stays live behind the menu and the F3 overlay's fps keeps counting
    while its TICK rate falls to zero. That divergence is what the two numbers
-   are next to each other for. */
+   are next to each other for.
+
+   DEBUGMENU1 (Tango 10-29: "trimmed of things that the setting can do now"): the camera, run mode and run button rows are gone,
+   because the in-game settings page (CONTROLS: Camera, Run, the Run binding) and the launcher write the same settings.json keys and
+   are the one place for them; F1 still cycles the camera. The VS mode row is folded into the VS row (the ROM's VS has one mode, so
+   the row only ever restated it), and the recorder row, which had nothing to press, is the panel's last line. What is left is in
+   three groups (MENU_GROUP below): where to go, the player and the save state, and the test views. */
 enum {
+    /* go to */
     MENU_WARP = 0,
     MENU_LEVEL,
     MENU_MINIGAME,      /* left/right pick one of the ROM's thirty, enter goes */
     /* ---- VS wiring lane: the section the owner asked for -- choose a VS map
-       and game mode, then boot the ROM's own VS mode. Enter on either row
-       starts VS on the showing map (a relaunch, the minigame row's shape: the
-       child boots the ROM's own start through SM64DS_VS_MAP; see the boot
-       hook past the game-heap init). The ROM's VS has exactly ONE game mode
-       -- the star battle; no mode selector exists in ov075
-       (port/slice_vs.txt section 4) -- so the mode row states it rather than
+       and boot the ROM's own VS mode. Enter starts VS on the showing map (in
+       this process since DEBUGMENU1: menu_vs_go below). The ROM's VS has
+       exactly ONE game mode -- the star battle; no mode selector exists in
+       ov075 (port/slice_vs.txt section 4) -- so the row states it rather than
        inventing choices. */
     MENU_VS_MAP,        /* left/right walk the ROM's four VS maps, enter goes */
-    MENU_VS_MODE,       /* the ROM's single mode, stated; enter goes too      */
     MENU_EXIT,
+    /* the player */
     MENU_CHARACTER,
-    MENU_SNAP,
-    MENU_OVERLAY,
-    MENU_CAMERA,
-    MENU_RUNMODE,       /* left/right: how running works (the block below) */
-    MENU_RUNBIND,       /* enter: capture the next press as the run button */
-    MENU_PADLAYOUT,     /* enter: teach the game a DirectInput pad, one press each */
-    MENU_RECORDER,
     MENU_SAVESTATE,     /* enter: snapshot the game into the in-memory slot */
     MENU_LOADSTATE,     /* enter: restore the in-memory slot (F9's twin) */
+    /* test views */
+    MENU_OVERLAY,
+    MENU_SNAP,
+    MENU_PADLAYOUT,     /* enter: teach the game a DirectInput pad, one press each */
     MENU_COUNT
 };
+/* the group headings menu_draw puts above a group's first row */
+static const struct { int first; const char *name; } MENU_GROUP[] = {
+    { MENU_WARP, "go to" }, { MENU_CHARACTER, "player" }, { MENU_OVERLAY, "test views" },
+};
+enum { MENU_GROUPS = sizeof MENU_GROUP / sizeof *MENU_GROUP };
 
 /* ---- HOW RUNNING WORKS (port mod, pure input shaping) -------------------
    THE DS HAD NO RUN BUTTON. Its stick was the touch screen, and the game
@@ -6074,6 +6081,8 @@ static int menu_level_row = 1;
 /* the VS row's map cursor, 0..3 into the ROM's own list at
    data_ov075_0211c6ec (hal/scene_vs_menu.cpp reads it back by index) */
 static int menu_vs_map;
+/* DEBUGMENU1: the VS row's map while the game goes to the title first (menu_vs_go); -1 none */
+static int g_menu_vs_pending = -1;
 extern "C" int port_vs_map_level(int mapIdx);   /* hal/scene_vs_menu.cpp */
 /* the VS boot hook's seams (see THE VS BOOT block in main): the ROM's own
    start, the port's one level latch, and the request release -- all extern
@@ -7422,14 +7431,16 @@ static void menu_draw(const OvlSurface &fb)
            level id, overlay, mount state) the way the level row does; the
            mode line states the ROM's one mode. Both act on enter. */
         const int vlv = port_vs_map_level(menu_vs_map);
-        snprintf(ln[MENU_VS_MAP], sizeof ln[0],
-                 "vs map            %d of 4   level %2d ov%03d %s",
-                 menu_vs_map + 1, vlv, port_level_overlay_id(vlv),
-                 port_level_is_mounted(vlv) ? "enter starts VS"
-                                            : "NOT MOUNTED");
-        snprintf(ln[MENU_VS_MODE], sizeof ln[0],
-                 "vs mode           star battle (the ROM's only mode)   "
-                 "enter starts VS");
+        if (g_menu_vs_pending >= 0)
+            snprintf(ln[MENU_VS_MAP], sizeof ln[0],
+                     "vs star battle    map %d of 4   starting from the title...",
+                     g_menu_vs_pending + 1);
+        else
+            snprintf(ln[MENU_VS_MAP], sizeof ln[0],
+                     "vs star battle    map %d of 4   level %2d ov%03d %s",
+                     menu_vs_map + 1, vlv, port_level_overlay_id(vlv),
+                     port_level_is_mounted(vlv) ? "enter starts VS"
+                                                : "NOT MOUNTED");
     }
     snprintf(ln[MENU_EXIT], sizeof ln[0],
              "exit course       ExitLevel() -> level 1 entrance 13   "
@@ -7460,25 +7471,6 @@ static void menu_draw(const OvlSurface &fb)
              g_fake_snap ? "ON (collider owner set at boot)" : "off");
     snprintf(ln[MENU_OVERLAY], sizeof ln[0], "stats overlay     %s",
              g_overlay_on ? "on" : "off");
-    snprintf(ln[MENU_CAMERA], sizeof ln[0], "camera            %s",
-             cam_mode_name(cam_mode));
-    snprintf(ln[MENU_RUNMODE], sizeof ln[0], "run mode          %s",
-             RUN_MODE_NAME[g_run_mode]);
-    /* the binding row shows BOTH devices, because it can set either one and a
-       player who has only ever rebound the keyboard should still be able to
-       see what the pad is doing */
-    {
-        char kb[16], pb[16];
-        if (g_rebind_capture)
-            snprintf(ln[MENU_RUNBIND], sizeof ln[0],
-                     "rebind run        press the new key or pad button "
-                     "(esc cancels)");
-        else
-            snprintf(ln[MENU_RUNBIND], sizeof ln[0],
-                     "rebind run        %s / %s   enter to rebind",
-                     run_key_name(g_run_key, kb, sizeof kb),
-                     run_pad_name(g_run_pad, pb, sizeof pb));
-    }
     /* the learn row: what the live pad is and whether its layout is the
        table's guess or a learned one; refused in words on an XInput pad */
     {
@@ -7497,7 +7489,9 @@ static void menu_draw(const OvlSurface &fb)
                      "pad layout        needs a DirectInput pad (XInput pads "
                      "are already right)");
     }
-    snprintf(ln[MENU_RECORDER], sizeof ln[0], "recorder          %s", g_playlog);
+    /* DEBUGMENU1: the recorder had nothing to press; it is the panel's last line now */
+    char foot[96];
+    snprintf(foot, sizeof foot, "playlog  %.86s", g_playlog);
     /* the disk suffix tells the player whether a save will outlive the run: it
        does only when the arena is at its fixed base, which is what lets a disk
        state's pointers relocate on the next launch (hal/lk7_persist.cpp). */
@@ -7594,21 +7588,31 @@ static void menu_draw(const OvlSurface &fb)
     {
         const int tw = (int)strlen(title) * OVL_ADVANCE * OVL_SCALE;
         if (tw > w) w = tw;
+        const int fw = (int)strlen(foot) * OVL_ADVANCE * OVL_SCALE;
+        if (fw > w) w = fw;
     }
     w += 3 * OVL_ADVANCE * OVL_SCALE;
     x0 = (ntr::active_w - w) / 2;
     if (x0 < 2) x0 = 2;
-    y0 = (ntr::active_h - (MENU_COUNT + 2) * OVL_LINE) / 2;
-    ovl_shade(fb, x0 - 4, y0 - 4, w + 8, (MENU_COUNT + 2) * OVL_LINE + 8);
-    ovl_shade(fb, x0 - 4, y0 - 4, w + 8, (MENU_COUNT + 2) * OVL_LINE + 8);
+    /* DEBUGMENU1: the title, a heading line above each group, the rows, a gap and the playlog line */
+    const int lines = MENU_COUNT + MENU_GROUPS + 4;
+    y0 = (ntr::active_h - lines * OVL_LINE) / 2;
+    if (y0 < 2) y0 = 2;
+    ovl_shade(fb, x0 - 4, y0 - 4, w + 8, lines * OVL_LINE + 8);
+    ovl_shade(fb, x0 - 4, y0 - 4, w + 8, lines * OVL_LINE + 8);
     ovl_text(fb, x0, y0, title, 0xFF80C0FFu);
+    int row_line = 2;
     for (i = 0; i < MENU_COUNT; ++i) {
-        const int y = y0 + (i + 2) * OVL_LINE;
+        for (int g = 0; g < MENU_GROUPS; ++g)
+            if (MENU_GROUP[g].first == i)
+                ovl_text(fb, x0, y0 + row_line++ * OVL_LINE, MENU_GROUP[g].name, 0xFF80C0FFu);
+        const int y = y0 + row_line++ * OVL_LINE;
         const int sel = i == menu_sel;
         if (sel) ovl_text(fb, x0, y, ">", 0xFFFFE060u);
         ovl_text(fb, x0 + 2 * OVL_ADVANCE * OVL_SCALE, y, ln[i],
                  sel ? 0xFFFFE060u : 0xFFB0B0B0u);
     }
+    ovl_text(fb, x0, y0 + (row_line + 1) * OVL_LINE, foot, 0xFF808080u);
 }
 
 /* ---- THE DEBUG MENU'S OWN INPUT. It runs before anything else reads
@@ -7980,8 +7984,136 @@ static void menu_warp_to_entrance(int ent)
     fprintf(stderr, "[menu] warp to entrance %d (%d, %d, %d)\n", ent, ex, ey, ez);
 }
 
+/* ---- DEBUGMENU1: THE MINIGAME ROW FROM A SCENE AND THE VS ROW, IN THIS WINDOW ------------------------------------------------------
+   Both rows used to start a second copy of the game (port_menu_relaunch / port_menu_relaunch_vs) and quit this one, which a player saw
+   as a second window. The cartridge never restarts for either: a scene goes to the next one with dScene_c::StartSceneFade (the Rec
+   Room's own picker asks for a minigame that way, and SEAMCLEAN1's level row already does), and VS starts from a scene through the
+   ROM's own func_ov075_02116c8c (PrepareVsMode, StartSceneFade(3), LoadLevelNoReturn(map, 0, 2, 0)), the call the lobby makes.
+   So the minigame row from a scene asks for the minigame with StartSceneFade(id, 0, 0) and the scene carrier spawns it here, laid out
+   by the per-scene layout hook. The VS row goes to the title in this process first when the title is not the live scene (from a
+   level the pause menu's quit route: StartSceneFade(1, 0, 0) with port_front_end_in_place, as the VS match's own end does; from a
+   scene the plain scene change), then menu_vs_poll calls hal/scene_vs_menu.cpp port_vs_start_offline_in_place at the title, which
+   sets up what a VS child of the old relaunch booted with and makes the ROM's start; the match's own end comes back to the title in
+   place (hal/star_flow.cpp) and clears it again. Whatever these cannot do in place keeps the old relaunch, said in one line. */
+extern "C" int port_scene_live_id(void);                          /* hal/scene_boot.cpp: 1 = the title, -1 none (a level) */
+static const char *menu_scene_change_refusal(void)
+{
+    if (port::comms_transport() || port::comms_hub_active()) return "a multiplayer session is up";
+    if (port_level_interlude_live())
+        return "the star select runs inside the level change interlude, which only ends on its own scene 3 ask";
+    if (data_02092664 != 0x187) return "a scene change is already under way";
+    if (port_level_change_pending()) return "a level change is already under way";
+    return 0;
+}
+
+static int menu_scene_go(int id, const char *name)
+{
+    if (const char *why = menu_scene_change_refusal()) {
+        fprintf(stderr, "[seamless] in place refused: %s; restarting\n", why);
+        return 0;
+    }
+    _ZN8dScene_c14StartSceneFadeEjjt((unsigned)id, 0, 0);
+    menu_on = 0;
+    fprintf(stderr, "[menu] minigame %d (%s): asked for from a scene in this process (the ROM's StartSceneFade; no restart)\n", id,
+            name);
+    return 1;
+}
+
+/* the level row from a scene (it relaunched too): the scene-to-level hand-off a scene makes on the cartridge, dScTitle_c's confirm
+   branch (port_title_select's order) with scene 3 asked for instead of the star select, as the VS start and the file select's
+   StartFile do; the scene carrier hands the game to the level path (main's first level boot on the process's first title, the
+   level-to-scene crossing's level start after a crossing). A scene-booted process keeps the relaunch (harness boots only). */
+extern "C" void SetPlayerGlobals(void);
+extern "C" void SetNumPlayers(int n);
+static int menu_level_go(int lv, int en)
+{
+    const char *why = menu_scene_change_refusal();
+    if (!why && getenv("SM64DS_SCENE")) why = "a scene-booted process";
+    if (why) {
+        fprintf(stderr, "[seamless] in place refused: %s; restarting\n", why);
+        return 0;
+    }
+    data_0209f2d8 = 0;
+    LoadLevelNoReturn(lv, (unsigned)en, 1, 0);
+    SetPlayerGlobals();
+    SetNumPlayers(1);
+    _ZN8dScene_c14StartSceneFadeEjjt(3, 0, 0);
+    menu_on = 0;
+    fprintf(stderr, "[menu] level %d entrance %d: asked for from a scene in this process (LoadLevelNoReturn, StartSceneFade(3); "
+            "no restart)\n", lv, en);
+    return 1;
+}
+
+extern "C" const char *port_vs_start_offline_in_place(int map);   /* hal/scene_vs_menu.cpp (DEBUGMENU1) */
+static int g_menu_vs_wait;
+static int menu_vs_go(int map)
+{
+    const char *why = menu_scene_change_refusal();
+    if (!why && getenv("SM64DS_SCENE")) why = "a scene-booted process (its VS match could not end at the title in place)";
+    if (!why && !port_scene_is_hosted(1)) why = "this build does not host the title scene";
+    if (!why) {
+        for (int i = 0; i < port_mods_count(); ++i) {
+            const char *k = port_mods_kind(i);
+            if (k && !strcmp(k, "code")) { why = "a code mod is loaded and a plugin cannot be unloaded"; break; }
+        }
+    }
+    if (why) {
+        fprintf(stderr, "[seamless] in place refused: %s; restarting\n", why);
+        return 0;
+    }
+    g_menu_vs_pending = map & 3;
+    g_menu_vs_wait = 0;
+    menu_on = 0;
+    if (port_scene_live_id() == 1 && !menu_live_player()) {
+        fprintf(stderr, "[menu] VS map %d: starting at the title in this process\n", map + 1);
+        return 1;
+    }
+    if (menu_live_player() || port_level_crossing_live()) port_front_end_in_place = 1;
+    _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);
+    fprintf(stderr, "[menu] VS map %d: the title is asked for first (StartSceneFade(1, 0, 0), from %s); VS starts there, in this "
+            "process\n", map + 1, menu_live_player() ? "a level" : "a scene");
+    return 1;
+}
+
+/* every frame: the VS row's start once the title has been live for 30 frames (its own InitResources and first frames run first) */
+static void menu_vs_poll(void)
+{
+    if (g_menu_vs_pending < 0) return;
+    static int title_frames;
+    if (port_scene_live_id() != 1 || menu_live_player()) {
+        title_frames = 0;
+        if (++g_menu_vs_wait > 1200) {
+            fprintf(stderr, "[menu] VS map %d: the title did not come up in 1200 frames; VS not started\n", g_menu_vs_pending + 1);
+            ss_note("VS could not start");
+            g_menu_vs_pending = -1;
+        }
+        return;
+    }
+    if (++title_frames < 30) return;
+    title_frames = 0;
+    const int map = g_menu_vs_pending;
+    g_menu_vs_pending = -1;
+    if (const char *why = port_vs_start_offline_in_place(map)) {
+        fprintf(stderr, "[seamless] in place refused at the title: %s; restarting\n", why);
+        if (port_menu_relaunch_vs(map)) W.PostQuitMessage_(0);
+        return;
+    }
+    fprintf(stderr, "[menu] VS map %d: started at the title in this process\n", map + 1);
+}
+
+/* DEBUGMENU1 (Tango 10-30): F4 (next character) and F8 / F9 (save / load state) are debug keys, so they answer only with the
+   Debug menu setting on (settings.json DebugMenu, the CHEATS tab; SM64DS_DEBUG_MENU forces it), the gate F5 has had since
+   CHARSLOT1. Called on a press edge; 1 = refused, with one line. */
+static int debug_fkey_refused(const char *what)
+{
+    if (host_setting_debug_menu()) return 0;
+    fprintf(stderr, "[menu] %s REFUSED: the Debug menu setting is off\n", what);
+    return 1;
+}
+
 static void menu_input(int pad_live, const XPad *pad)
 {
+    menu_vs_poll();   /* DEBUGMENU1 */
     pause3_input(pad_live, pad);
     if (sp_frame(pad_live, pad)) return;
     if (cd_frame(pad_live, pad)) return;
@@ -8249,6 +8381,8 @@ static void menu_input(int pad_live, const XPad *pad)
                                 "mounted -- refused, menu stays open (a "
                                 "relaunch would quit this run and the child "
                                 "would abort)\n", lv, menu_level_row);
+                    } else if (menu_level_go(lv, en)) {
+                        /* DEBUGMENU1: in this process */
                     } else if (port_menu_relaunch(-1, lv)) {
                         fprintf(stderr, "[menu] level %d (row %d): started "
                                 "SM64DS_LEVEL=%d, this process is quitting\n",
@@ -8308,6 +8442,10 @@ static void menu_input(int pad_live, const XPad *pad)
                                 "not a hosted scene yet -- refused, "
                                 "menu stays open\n", id,
                                 MG_SCENE[mi].name);
+                    } else if (menu_live_player() && port_level_change_pending()) {
+                        /* DEBUGMENU1: the level change already staged wins and a scene ask was dropped with no word (row st2_d2) */
+                        ss_note("a level change is already under way");
+                        fprintf(stderr, "[menu] minigame %d: a level change is already under way -- refused, menu stays open\n", id);
                     } else if (menu_live_player() && !port_quit_in_place_refusal()) {
                         /* SEAMCLEAN1 (one-process plan M6, R11): FROM A LEVEL THE ROW GOES IN THIS PROCESS. The scene change is
                            the one the Rec Room's door makes: the ROM's Scene::StartSceneFade parks the scene and starts its
@@ -8320,6 +8458,8 @@ static void menu_input(int pad_live, const XPad *pad)
                         menu_on = 0;
                         fprintf(stderr, "[menu] minigame %d (%s): the scene is asked for in this process (the level-to-scene "
                                 "crossing takes it; no restart)\n", id, MG_SCENE[mi].name);
+                    } else if (!menu_live_player() && menu_scene_go(id, MG_SCENE[mi].name)) {
+                        /* DEBUGMENU1: from a scene, the scene change the Rec Room's own picker makes, in this process */
                     } else if (port_menu_relaunch(id, -1)) {
                         fprintf(stderr, "[menu] minigame %d (%s): "
                                 "started SM64DS_SCENE=%d "
@@ -8346,18 +8486,15 @@ static void menu_input(int pad_live, const XPad *pad)
                 }
                 break;
             case MENU_VS_MAP:
-            case MENU_VS_MODE:
-                /* left/right walk the ROM's four maps (the map row only);
-                   enter on either row starts VS on the showing map -- the
-                   minigame row's relaunch shape, and the same refusal
-                   discipline: an unmounted map is refused in words BEFORE
-                   the parent commits, because the relaunch is a one-way
-                   door. The mode row moves nothing: the ROM's VS has ONE
-                   mode (port/slice_vs.txt section 4) and a selector with
-                   one entry would be an invented choice. */
+                /* left/right walk the ROM's four maps; enter starts VS on
+                   the showing map, in this process when menu_vs_go can
+                   (DEBUGMENU1), else the old relaunch. An unmounted map is
+                   refused in words first either way. */
                 if (edge & (1u << 5)) {
                     const int vlv = port_vs_map_level(menu_vs_map);
-                    if (!port_level_is_mounted(vlv)) {
+                    if (g_menu_vs_pending >= 0) {
+                        ss_note("VS is already starting");
+                    } else if (!port_level_is_mounted(vlv)) {
                         char msg[64];
                         snprintf(msg, sizeof msg,
                                  "VS map %d (level %d) is not mounted",
@@ -8367,6 +8504,8 @@ static void menu_input(int pad_live, const XPad *pad)
                                 "(overlay %d), NOT mounted -- refused, menu "
                                 "stays open\n", menu_vs_map + 1, vlv,
                                 port_level_overlay_id(vlv));
+                    } else if (menu_vs_go(menu_vs_map)) {
+                        /* in this process: menu_vs_go closed the menu */
                     } else if (port_menu_relaunch_vs(menu_vs_map)) {
                         fprintf(stderr, "[menu] VS map %d (level %d): "
                                 "started SM64DS_VS_MAP=%d, this process is "
@@ -8382,7 +8521,7 @@ static void menu_input(int pad_live, const XPad *pad)
                                 "the VS run (win32 %lu)\n", menu_vs_map + 1,
                                 (unsigned long)GetLastError());
                     }
-                } else if (menu_sel == MENU_VS_MAP) {
+                } else {
                     if (dec)
                         menu_vs_map = (menu_vs_map + 3) & 3;
                     else
@@ -8393,6 +8532,10 @@ static void menu_input(int pad_live, const XPad *pad)
                 if (edge & (1u << 5)) {
                     fprintf(stderr, "[menu] ExitLevel()\n");
                     ExitLevel();
+                    /* DEBUGMENU1: the menu closes, as the level row's select does: the exit wipe and the level change run on the
+                       game tick, which the open menu holds, so the course stood frozen until the menu was shut by hand (row c_exit) */
+                    menu_on = 0;
+                    fprintf(stderr, "[menu] closed for the exit\n");
                 }
                 break;
             case MENU_CHARACTER:
@@ -8416,49 +8559,7 @@ static void menu_input(int pad_live, const XPad *pad)
             case MENU_OVERLAY:
                 g_overlay_on = !g_overlay_on;
                 break;
-            case MENU_CAMERA:
-                if (g_menu_host.real_camera) {
-                    cam_mode = dec ? (cam_mode + 2) % 3
-                                   : (cam_mode + 1) % 3;
-                    if (cam_mode != CAM_DS) fc_seed(g_menu_host.cam);
-                    if (cam_mode == CAM_ANALOG) an_pivot_live = 0;
-                    /* persisted on the spot like the run row, and for the
-                       same reason: settings.json's CameraMode is what a
-                       lobby match boots with, and this row is the one place
-                       in the game a player can set it. F1 does not write it;
-                       F1 is a look, this is a choice. */
-                    host_setting_save_camera_mode(cam_mode);
-                    fprintf(stderr, "[menu] camera %s\n",
-                            cam_mode_name(cam_mode));
-                }
-                break;
-            case MENU_RUNMODE:
-                /* left and right cycle it and enter acts as right, the
-                   same shape as the camera row. Persisted on the spot
-                   rather than at exit: this program is one a player
-                   does sometimes crash, and a preference that only
-                   survives a clean shutdown is a preference that gets
-                   lost exactly when they were experimenting. */
-                g_run_mode = dec ? (g_run_mode + RUN_MODE_COUNT - 1) %
-                                       RUN_MODE_COUNT
-                                 : (g_run_mode + 1) % RUN_MODE_COUNT;
-                host_setting_save_run(g_run_mode, g_run_key, g_run_pad);
-                fprintf(stderr, "[run] mode %s\n",
-                        RUN_MODE_NAME[g_run_mode]);
-                break;
-            case MENU_RUNBIND:
-                /* enter/right only: arm the capture. Left does nothing
-                   on purpose -- there is no "previous binding" to walk
-                   back to, and a row that changed a binding by being
-                   scrolled past would be a trap. */
-                if (edge & (1u << 5)) {
-                    /* the same engine the settings page rebinds through;
-                       rebind_capture_frame arms the window's capture on the
-                       next frame and marks the held enter stale */
-                    sl_capture_start_run();
-                    ss_note("press the new run button (esc cancels)");
-                }
-                break;
+            /* DEBUGMENU1: the camera, run mode and run button rows are the settings page's CONTROLS tab now (same keys) */
             case MENU_PADLAYOUT:
                 /* enter/right only, and only with a DirectInput pad live:
                    arm the learn flow (padlearn_frame runs it) */
@@ -8493,6 +8594,15 @@ static void menu_input(int pad_live, const XPad *pad)
                 break;
             }
         }
+        /* DEBUGMENU1: A ROW THAT CLOSED THE MENU WITH ITS ACT PRESS (the minigame, level, VS rows) LEAVES THAT PRESS BEHIND. Enter is
+           the Start key and pad A the jump with the menu shut, and the game read them the same frame: the ROM's pause opened over the
+           fade to the minigame (row lvl1mg_b0), and the one-screen title took Enter as a press on its button. The key goes stale and
+           the pad button is swallowed until each is let go, as the B close and the settings page already do. */
+        if (!menu_on && (edge & (1u << 5))) {
+            key_stale[VK_RETURN] = 1;
+            if (pad_live && (pad->buttons & 0x1000)) menu_b_swallow = 1;
+            fprintf(stderr, "[menu] closed by a row: the act press (enter / A) is held back from the game until it is let go\n");
+        }
     }
 }
 
@@ -8507,20 +8617,15 @@ static void menu_input(int pad_live, const XPad *pad)
    the frames AFTER the close, when the menu is shut and that block is
    no longer looking at B.
 
-   A HAS THE SAME OVERLAP ON THE LEVEL-SELECT ROW AND IT IS NOT FIXED
-   HERE. PRE-EXISTING, measured, written down so the next person does
-   not have to find it twice: MENU_LEVEL's enter branch sets
-   menu_on = 0 on a successful select, and A is the jump button with
-   the menu shut, so the A that picks a level also jumps on the
-   handoff frame. It wants the same latch this one gets. It is left
-   alone deliberately -- it sits on the level handoff, which is
-   somebody else's change this run, and widening a menu commit into
-   that path is how two fixes become one bisect. */
+   A HAD THE SAME OVERLAP on every row that closes the menu (level,
+   minigame, VS), and Enter with it (Enter is the Start key): DEBUGMENU1
+   gives them this latch, set at the end of menu_input. */
 static void menu_b_swallow_spend(int pad_live, XPad *pad)
 {
     if (!menu_b_swallow) return;
-    if (pad_live && (pad->buttons & 0x2000))
-        pad->buttons = (unsigned short)(pad->buttons & ~0x2000u);
+    /* DEBUGMENU1: A as well as B (0x3000): a row's act press and the character door's A close set this too */
+    if (pad_live && (pad->buttons & 0x3000))
+        pad->buttons = (unsigned short)(pad->buttons & ~0x3000u);
     else
         menu_b_swallow = 0;
 }
@@ -17914,8 +18019,8 @@ int main(void)
         {
             static int chr_edge;
             const int now = key_live(VK_F4);
-            if (now && !chr_edge && online_blocks_fkey("F4 character swap")) {
-                /* off online: nothing */
+            if (now && !chr_edge && (online_blocks_fkey("F4 character swap") || debug_fkey_refused("F4 character swap"))) {
+                /* off online, or the Debug menu setting off (DEBUGMENU1): nothing */
             } else if (now && !chr_edge) {
                 const port::CommsReadout cr = port::comms_readout();
                 if (cr.connected && cr.players > 1) {
@@ -17949,8 +18054,10 @@ int main(void)
             static int save_edge, load_edge;
             int save_now = key_live(VK_F8);
             int load_now = key_live(VK_F9);
-            if (save_now && !save_edge && online_blocks_fkey("F8 save state")) save_now = 1, save_edge = 1;
-            if (load_now && !load_edge && online_blocks_fkey("F9 load state")) load_now = 1, load_edge = 1;
+            if (save_now && !save_edge && (online_blocks_fkey("F8 save state") || debug_fkey_refused("F8 save state")))
+                save_now = 1, save_edge = 1;
+            if (load_now && !load_edge && (online_blocks_fkey("F9 load state") || debug_fkey_refused("F9 load state")))
+                load_now = 1, load_edge = 1;
             if (save_now && !save_edge)
                 ss_save_state("F8", 1);
             int do_load = load_now && !load_edge;
