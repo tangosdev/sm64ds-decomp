@@ -103,6 +103,8 @@ static const SlInfo INFO[] = {
     { "WideDrawingPage",        SL_KIND_BOOL,    0, 1, 1, 0, 1 },
     { "PeachJingle",            SL_KIND_BOOL,    0, 1, 1, 0, 1 },
     { "SkipOpening",            SL_KIND_BOOL,    0, 1, 0, 0, 1 },
+    { "MinigameHiRes",          SL_KIND_BOOL,    0, 1, 0, 0, 1 },
+    { "MinigameUpscale",        SL_KIND_BOOL,    0, 1, 0, 0, 1 },
 };
 
 /* INFO[] is positional: row i describes id i. If a host key or pad is added (HOST_KEY_COUNT / HOST_PAD_COUNT move, for example
@@ -162,6 +164,8 @@ int sl_get(int id)
     case SL_WIDE_DRAWING:       return host_setting_wide_drawing();
     case SL_PEACH_JINGLE:       return host_setting_peach_jingle();
     case SL_SKIP_OPENING:       return host_setting_skip_opening();
+    case SL_MINIGAME_HIRES:     return host_setting_minigame_hires();
+    case SL_MINIGAME_UPSCALE:   return host_setting_minigame_upscale();
     case SL_GAP_COLOR: {
         const unsigned c = host_setting_gap_color() & 0xffffffu;
         for (int i = 0; i < 6; ++i) if (GAP_COLORS[i] == c) return i;
@@ -210,6 +214,8 @@ int sl_set(int id, int v)
     case SL_WIDE_DRAWING:       return host_setting_set_wide_drawing(v);
     case SL_PEACH_JINGLE:       return host_setting_set_peach_jingle(v);
     case SL_SKIP_OPENING:       return host_setting_set_skip_opening(v);
+    case SL_MINIGAME_HIRES:     return host_setting_set_minigame_hires(v);
+    case SL_MINIGAME_UPSCALE:   return host_setting_set_minigame_upscale(v);
     case SL_GAP_COLOR:
         if (v < 0 || v > 5) return 0;
         return host_setting_set_gap_color(GAP_COLORS[v]);

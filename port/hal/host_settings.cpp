@@ -1439,6 +1439,10 @@ int g_hd_textures = 0;
 int g_smooth_models = 0;
 /* SmoothMotion (run interp1): 0 off, 1 on. Boot-latched like FrameRate. */
 int g_smooth_motion = 0;
+/* MinigameUpscale (MGHIRES1): 0 off, 1 the pixel-art upscaler on the minigames' 2D. */
+int g_minigame_upscale = 0;
+/* MinigameHiRes (MGHIRES1): 0 the DS-pixel picture (the default), 1 the minigames' turned and moving 2D at render scale. */
+int g_minigame_hires = 0;
 
 /* run hd2's two, latched beside them and for the same kind of reason: the
    filter mode decides whether the texture cache builds a mip chain at the
@@ -1613,6 +1617,8 @@ void load_once(void)
     g_hd_textures = 0;
     g_smooth_models = 0;
     g_smooth_motion = 0;
+    g_minigame_upscale = 0;
+    g_minigame_hires = 0;
     /* run hd2's two, here for the same reason: nearest sampling and no
        smoothing pass are the picture the port shipped with, so a missing file
        and a file that will not parse both have to land on them. */
@@ -2029,6 +2035,11 @@ void load_once(void)
         /* SmoothMotion: both spellings of a toggle, HdTextures' rule. */
         g_smooth_motion = (json_int(text, "SmoothMotion", 0) != 0 ||
                            json_bool(text, "SmoothMotion", 0) != 0) ? 1 : 0;
+        g_minigame_upscale = (json_int(text, "MinigameUpscale", 0) != 0 ||
+                              json_bool(text, "MinigameUpscale", 0) != 0) ? 1 : 0;
+        /* MinigameHiRes: both spellings of a toggle, HdTextures' rule (absent = off) */
+        g_minigame_hires = (json_int(text, "MinigameHiRes", 0) != 0 ||
+                            json_bool(text, "MinigameHiRes", 0) != 0) ? 1 : 0;
         /* run hd2's two, read the same way and sanitised here rather than at
            the accessor, so the stored value is always one the sampler can
            choose a tap count from and the smoothing pass can size itself
@@ -4496,6 +4507,37 @@ extern "C" int host_setting_smooth_motion(void)
     if (env >= 0) return env;
     load_once();
     return g_smooth_motion;
+}
+
+/* MinigameUpscale: 1 on, 0 off; the environment override is read by its one caller (hal/sub_screen.cpp mghr_policy). */
+extern "C" int host_setting_minigame_upscale(void)
+{
+    load_once();
+    return g_minigame_upscale;
+}
+extern "C" int host_setting_minigame_hires(void)
+{
+    load_once();
+    return g_minigame_hires;
+}
+/* MGHIRES2: the settings page's two rows; the next picture's mghr_policy reads the new value, so both apply at once */
+extern "C" int host_setting_set_minigame_hires(int on)
+{
+    load_once();
+    on = on ? 1 : 0;
+    g_minigame_hires = on;
+    g_poll_flag = 1;
+    queue_bool("MinigameHiRes", on);
+    return 1;
+}
+extern "C" int host_setting_set_minigame_upscale(int on)
+{
+    load_once();
+    on = on ? 1 : 0;
+    g_minigame_upscale = on;
+    g_poll_flag = 1;
+    queue_bool("MinigameUpscale", on);
+    return 1;
 }
 
 extern "C" int host_setting_smooth_models(void)
