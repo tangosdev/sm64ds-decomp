@@ -63,6 +63,7 @@ enum SlId {
     SL_FIX_ORIGINAL_BUGS,       /* bool: FixOriginalBugs; on by default (RABBIT1) */
     SL_CAMERA_COLLISION,        /* bool: CameraCollision, the analog / free camera stops at walls; on by default (CAMCOLL1) */
     SL_WIDE_DRAWING,            /* bool: WideDrawingPage; on by default (DOODLEWIDE1) */
+    SL_PEACH_JINGLE,            /* bool: PeachJingle; on by default (PEACHJINGLE1) */
     SL_COUNT
 };
 

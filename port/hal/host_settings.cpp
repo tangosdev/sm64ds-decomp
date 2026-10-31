@@ -896,6 +896,8 @@ int g_fix_original_bugs = 1;
 int g_camera_collision = 1;
 /* WideDrawingPage (DOODLEWIDE1): 1 makes the title's drawing page as wide as the window at the DS pixel scale. Default 1. Read live (applied at the next page open). */
 int g_wide_drawing = 1;
+/* PeachJingle (PEACHJINGLE1): 1 plays the cartridge's own NCS_BGM_PEACH tune when a star door's unlock message opens. Default 1. Read live. */
+int g_peach_jingle = 1;
 
 /* Aspect: the presentation ratio, WIDTH DIVIDED BY HEIGHT. 0 (the default) is
    the explicit native sentinel -- the DS's own 4:3 at the 512x384 window the
@@ -1574,6 +1576,7 @@ void load_once(void)
     g_fix_original_bugs = 1;
     g_camera_collision = 1;
     g_wide_drawing = 1;
+    g_peach_jingle = 1;
     g_aspect = 0.0;
     g_vs_luigi_infection = 0;
     g_vs_luigi_seconds = 0;
@@ -1808,6 +1811,7 @@ void load_once(void)
         g_fix_original_bugs = json_bool(text, "FixOriginalBugs", 1);
         g_camera_collision = json_bool(text, "CameraCollision", 1);
         g_wide_drawing = json_bool(text, "WideDrawingPage", 1);
+        g_peach_jingle = json_bool(text, "PeachJingle", 1);
         /* the presentation aspect, read against its own default of 0 (native)
            so a file written before this key existed reads as the 4:3 window.
            Sanitised HERE rather than at the accessor, so the stored value is
@@ -2521,6 +2525,14 @@ int reload_live(const char *text)
             g_wide_drawing = wv;
             changed = 1;
             fprintf(stderr, "[settings] live re-read: WideDrawingPage %s\n", wv ? "ON" : "off");
+        }
+    }
+    {
+        const int pv = json_bool(text, "PeachJingle", g_peach_jingle);
+        if (pv != g_peach_jingle) {
+            g_peach_jingle = pv;
+            changed = 1;
+            fprintf(stderr, "[settings] live re-read: PeachJingle %s\n", pv ? "ON" : "off");
         }
     }
     const int voice_changed = read_voice_keys(text);
@@ -3573,6 +3585,29 @@ extern "C" int host_setting_set_camera_collision(int on)
     g_camera_collision = on;
     g_poll_flag = 1;
     queue_bool("CameraCollision", on);
+    return 1;
+}
+
+/* PeachJingle, plus SM64DS_PEACH_JINGLE (0 forces it off, any other value on) for proof runs. */
+extern "C" int host_setting_peach_jingle(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_PEACH_JINGLE");
+        env = (e && *e) ? ((e[0] == '0' && e[1] == 0) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_peach_jingle;
+}
+
+extern "C" int host_setting_set_peach_jingle(int on)
+{
+    load_once();
+    on = on ? 1 : 0;
+    g_peach_jingle = on;
+    g_poll_flag = 1;
+    queue_bool("PeachJingle", on);
     return 1;
 }
 
