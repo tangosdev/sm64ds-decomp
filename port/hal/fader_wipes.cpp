@@ -1337,12 +1337,13 @@ static int g_pf_fine_armed;
 extern "C" void port_fader_fine_arm(int on) { g_pf_fine_armed = on ? 1 : 0; }
 extern "C" int port_fader_fine_armed(void) { return g_pf_fine_armed; }
 extern "C" void *data_0209d4ac;
-extern "C" int port_fader_blend_fine(int *e256, int *toWhite)
+/* the question for one engine's register pair: 0x4000050 (engine A) or 0x4001050 (engine B) */
+static int fader_blend_fine_at(unsigned base, int *e256, int *toWhite)
 {
     if (data_0209f20c != 0)
         return 0;                            /* the level-clear screen's eased dim stays whole steps */
-    const unsigned short bldcnt = *(volatile unsigned short *)0x4000050;
-    const unsigned short bldy = *(volatile unsigned short *)0x4000054;
+    const unsigned short bldcnt = *(volatile unsigned short *)base;
+    const unsigned short bldy = *(volatile unsigned short *)(base + 4);
     const int mode = (bldcnt >> 6) & 3;
     int e = bldy & 0x1f;
     if (e > 16) e = 16;
@@ -1369,6 +1370,10 @@ extern "C" int port_fader_blend_fine(int *e256, int *toWhite)
     }
     return 0;
 }
+extern "C" int port_fader_blend_fine(int *e256, int *toWhite) { return fader_blend_fine_at(0x4000050u, e256, toWhite); }
+/* review REVPAINTFADE1 F1: the same question of engine B (the corner map panel's and the stacked bottom screen's picture); a colour
+   fader writes both engines with one formula (FaderColor::AdvanceFade, SetBlendBrightness on 0x4000050 and 0x4001050) */
+extern "C" int port_fader_blend_fine_sub(int *e256, int *toWhite) { return fader_blend_fine_at(0x4001050u, e256, toWhite); }
 
 /* ---- THE FRAME CLOCK, data_020a0db0 (run mg12 lane SELECT) ----------------
  *

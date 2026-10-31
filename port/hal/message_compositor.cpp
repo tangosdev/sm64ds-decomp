@@ -3101,6 +3101,27 @@ extern "C" int port_fader_blend_fine(int *e256, int *toWhite);
 extern "C" void port_gpu_card_set_fade256(int e256, int white);
 extern "C" int port_engine_a_fade_applied256(void) { return g_ea_applied256; }
 
+/* review REVPAINTFADE1 F1: WILL ENGINE A'S FINE FADE COVER THE CORNER PANEL THIS FRAME? Asked by hal/sub_screen.cpp right before engine
+   B's scan-out, after engine A's composite (so the brightness mask is known). Yes when the arm is on, no mask is live, the colour fader
+   answers for engine A on *toWhite's colour, and the panel is not on engine B's own wipe blend (inset_b below needs a wipe moving or
+   closed in data_0209f5bc). The scan-out then leaves engine B's brightness off the panel, because this fade covers the whole picture and
+   the panel with it: one fade at the fine value, instead of engine B's whole step under engine A's fine one. */
+extern "C" int port_engine_a_panel_fine(int *toWhite)
+{
+    if (!port_fader_fine_armed() || g_bm_live)
+        return 0;
+    int fe = 0, fw = 0, evy = 0, aw = 0;
+    if (!port_fader_blend_fine(&fe, &fw))
+        return 0;
+    if (port_fader_blend_state(&evy, &aw) && (aw ? 1 : 0) != (fw ? 1 : 0))
+        return 0;
+    if ((*(volatile unsigned short *)0x4000304 & 0x8000u) && port_fader_entrance_wipe_armed() &&
+        data_0209f5bc && ((const int *)data_0209f5bc)[1] != 0)
+        return 0;
+    if (toWhite) *toWhite = fw ? 1 : 0;
+    return 1;
+}
+
 extern "C" void port_engine_a_fade(unsigned int *px, int w, int h)
 {
     int evy = 0, toWhite = 0;
