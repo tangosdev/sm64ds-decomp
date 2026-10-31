@@ -196,6 +196,74 @@ class StagingCiterTests(unittest.TestCase):
             self.assertEqual(stranded, [], path.name + " banks unscanned citers")
 
 
+class NestedCheckoutTests(unittest.TestCase):
+    """A worktree under `.claude/worktrees/` is another branch, not this tree.
+
+    Every citer branch in `_prose_targets` is prefix-gated except the C/C++ one,
+    which matches a `.c` or `.h` ANYWHERE under the root -- so a nested checkout's
+    `src/` and `include/` walked in and the gate reported that branch's comments.
+    Measured on main at `d0ce25d477` with four agent worktrees on disk: 23,595 dead
+    references, 23,593 of them from the worktrees, against 2 in the repo itself.
+    """
+
+    DEAD = "src/" + "_ZN8BookShotD0Ev.c"
+
+    def _dead(self, build):
+        with tempfile.TemporaryDirectory() as tmp:
+            t = Tree(tmp)
+            build(t)
+            old = CDR.REPO
+            CDR.REPO = t.root
+            try:
+                _f, _r, dead = CDR.dead_references(t.root)
+            finally:
+                CDR.REPO = old
+            return {(f, r) for f, r in dead}
+
+    def _comment(self, ref):
+        return "// assembled from " + ref + "\n"
+
+    def test_a_dead_reference_in_a_nested_worktree_is_not_reported(self):
+        rel = ".claude/worktrees/agent-1/src/actors/BookShot.cpp"
+        self.assertEqual(self._dead(lambda t: t.write(rel, self._comment(self.DEAD))),
+                         set())
+
+    def test_a_nested_worktrees_notes_are_not_scanned_either(self):
+        rel = ".claude/worktrees/agent-1/notes/handoff.md"
+        self.assertEqual(self._dead(lambda t: t.write(rel, "see " + self.DEAD + "\n")),
+                         set())
+
+    def test_a_dot_claude_file_outside_worktrees_is_still_reported(self):
+        """The skip is `.claude/worktrees`, not `.claude` -- skills live there too."""
+        rel = ".claude/probe.c"
+        self.assertEqual(self._dead(lambda t: t.write(rel, self._comment(self.DEAD))),
+                         {(rel, self.DEAD)})
+
+    def test_the_same_comment_in_this_checkout_is_still_reported(self):
+        rel = "src/actors/BookShot.cpp"
+        self.assertEqual(self._dead(lambda t: t.write(rel, self._comment(self.DEAD))),
+                         {(rel, self.DEAD)})
+
+    def test_a_nested_copy_cannot_resolve_a_reference_for_us(self):
+        """`.claude` is not a TOPDIR, so no nested path is ever a reference target."""
+        self.assertNotIn(".claude", CDR.TOPDIRS)
+        self.assertIn(".claude/worktrees", CDR.NESTED_CHECKOUTS)
+
+        def build(t):
+            t.write(".claude/worktrees/agent-1/" + self.DEAD, "int gone;\n")
+            t.write("include/Thing.h", "/* see " + self.DEAD + " */\n")
+        self.assertEqual(self._dead(build), {("include/Thing.h", self.DEAD)})
+
+    def test_no_baselined_citer_lives_in_a_nested_checkout(self):
+        for path in (CDR.BASELINE, CDR.CODE_BASELINE):
+            banked = json.loads(path.read_text(encoding="utf-8"))["known"]
+            citers = (banked.keys() if isinstance(banked, dict)
+                      else (row["file"] for row in banked))
+            stranded = sorted(c for c in citers
+                              if c.startswith(tuple(CDR.NESTED_CHECKOUTS)))
+            self.assertEqual(stranded, [], path.name + " banks a nested citer")
+
+
 class NoiseTests(unittest.TestCase):
     """Negative controls: the shapes that must never be called a path."""
 
