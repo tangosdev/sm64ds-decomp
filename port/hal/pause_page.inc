@@ -451,7 +451,13 @@ extern "C" void pause_page_rom_draw(const PauseFacts *f, uint32_t *px, int strid
     const Surf sf = { px, stride, w, h };
     const PauseGeo g = pause_geo(w, h, f, 3);
     if (pause_page_visible(f, PAUSE_PG_CAREER)) pp_career(sf, g, f);
-    pp_tabs(sf, g, f);
+    if (!f->rom_fit) { pp_tabs(sf, g, f); return; }
+    /* PAUSESCALE2: the fit ring's tabs (pause_rom_tab_rect: on the plates view only as far into the picture as the room, top corners on the page view) */
+    for (int side = 0; side < 2; ++side) {
+        const PauseRect r = pause_rom_tab_rect(g, side, f->rom_fit);
+        const int hov = f->hover_tab == side, prs = f->press_tab == side;
+        blit_hi(sf, side ? MENU_IMG_P_TAB_R : MENU_IMG_P_TAB_L, r.x + (prs ? (side ? -(int)(2 * g.u) : (int)(2 * g.u)) : 0), r.y, r.w, r.h, 255, hov ? 30 : 0, prs ? 25 : 0);
+    }
 }
 
 /* the pictures the pause draws itself, for the warm-up to decode and scale ahead of the first open: idx 0.. -> (id, dw, dh), 1 while idx is valid */

@@ -301,6 +301,21 @@ std::atomic<int> g_force_panel{0};
    (hal_menu_hook_h1). SM64DS_PAGEFIT=0 puts the old picture back for a before / after on one binary. */
 std::atomic<int> g_page_fit{0};
 int g_page_fit_frame;
+/* PAUSESCALE2: THE ROM'S OWN PAUSE AT A PICTURE TOO SMALL FOR BOTH SCREENS. Where the panel above would draw the plates under one picture pixel
+   per DS pixel (RenderScale 1: the picture is one DS screen, 256 x 192 at 4:3, 340 x 192 at 16:9) the plates' one pixel lettering lost whole
+   columns, and the page moved beside it shrank its card text the same way. Both at 1:1 take about twice that picture (the castle card with
+   its band about 243 x 143 DS pixels, the plates 240 x 160), so they become two views of the pause, as the one-screen pause's planks and
+   tracker are at 4:3: the plates view (the bottom screen at 1:1, centred, without the map's frame) and the page view (the ROM's page where the
+   ROM draws it, at 1:1, no panel). LB / RB / Q / E and the edge tabs switch (hal/menu_recipe_pause.cpp menu_pause_rom_input). g_pause_fit is
+   set by hal_sub_panel_geometry while that pause is up; SM64DS_PAUSEFIT=0 keeps the old picture for a before / after on one binary. */
+int g_pause_fit;
+extern "C" int menu_pause_rom_page_view(void);     /* hal/menu_recipe_pause.cpp: 1 while the page view is shown */
+int pause_fit_off()
+{
+    static int v = -1;
+    if (v < 0) { const char *e = std::getenv("SM64DS_PAUSEFIT"); v = (e && e[0] == '0') ? 1 : 0; }
+    return v;
+}
 /* HUDMENU2 (H3): the moved page's source box is the largest box seen since the page went up, not each frame's own. The right arrow's press
    frames draw the page's cells two DS pixels wider, and the placement of a page that sits against the panel (x = left edge of the panel less
    the page's width) followed that width, so the whole chart stepped left on every other frame while the arrow was pressed. */
@@ -434,6 +449,18 @@ void hal_sub_panel_geometry(int w, int h)
     g_y0 = h - m - eb - g_pan_h;
     if (g_x0 < 0) g_x0 = 0;
     if (g_y0 < 0) g_y0 = 0;
+
+    /* PAUSESCALE2: the ROM's own pause with its plates under 1:1 (see g_pause_fit): the bottom screen at exactly 1:1, centred, no frame */
+    g_pause_fit = g_page_fit.load() && !pause_fit_off() && g_pan_w < ntr::SUB_W && w >= ntr::SUB_W && h >= ntr::SUB_H && h < 2 * ntr::SUB_H;
+    if (g_pause_fit) {
+        g_pan_num = g_pan_den = 1;
+        g_pan_w = ntr::SUB_W;
+        g_pan_h = ntr::SUB_H;
+        g_pan_margin = 0;
+        g_x0 = (w - g_pan_w) / 2;
+        g_y0 = (h - g_pan_h) / 2;
+        return;
+    }
 
     if (on) panel_trace(w, h);
 }
@@ -1290,6 +1317,7 @@ int handle_rect(int *hx, int *hy, int *hs, int h)
        and it covers the draw and the press both, because both come through
        here. */
     if (hal_menu_live()) return 0;
+    if (g_pause_fit && g_page_fit.load()) return 0;     /* PAUSESCALE2: the pause's 1:1 bottom screen is not the map: no handle */
     if (host_setting_mouse_capture()) return 0;
     PanelGeom g;
     panel_geom(&g);
@@ -2523,6 +2551,7 @@ void poll_touch(void)
                 } else {
                     fx = fdiv((bx - g_x0) * g_pan_den, g_pan_num);
                     fy = fdiv((by - g_y0) * g_pan_den, g_pan_num);
+                    if (g_pause_fit && g_page_fit.load() && menu_pause_rom_page_view()) on_picture = 0;   /* PAUSESCALE2: no plates on the page view */
                 }
             }
             live_cx = (int)p.x;
@@ -3954,7 +3983,8 @@ extern "C" const MenuLiftInfo *hal_menu_hook_h1(int w, int h)
     const MenuLiftInfo *li = hal_menu_lift_info();
     const int pf_was = g_page_fit_frame;
     g_page_fit_frame = 0;
-    if (!li && g_page_fit.load() && !hal_menu_draw_live() && !hal_sub_screen_stacked() && !menu_bigmap_up() && page_fit_overlaps(w, h)) {
+    if (!li && g_page_fit.load() && !hal_menu_draw_live() && !hal_sub_screen_stacked() && !menu_bigmap_up() && page_fit_overlaps(w, h) &&
+        !(g_pause_fit && menu_pause_rom_page_view())) {     /* PAUSESCALE2: the page view leaves the ROM's page where the ROM draws it */
         /* INT093G: the ROM's pause page, to be moved clear of the corner panel (see g_page_fit) */
         g_page_fit_frame = 1;
         if (!pf_was) g_pf_union_valid = 0;   /* HUDMENU2 (H3): a new moved-page stretch starts from its own first picture */
@@ -4137,6 +4167,9 @@ extern "C" int hal_sub_inset_rect(int *x, int *y, int *w, int *h)
    present drew the panel in, decoration included, in framebuffer pixels
    (x0, y0, x1, y1). Returns 0 and leaves r alone when no panel was drawn
    (the stacked layout, the panel off, the level-clear compose). */
+/* PAUSESCALE2: 1 while the ROM's own pause is up on a one-screen-sized picture (g_pause_fit), for hal/menu_recipe_pause.cpp's ring */
+extern "C" int hal_sub_pause_fit(void) { return g_pause_fit && g_page_fit.load(); }
+
 extern "C" int hal_sub_screen_inset_rect(int r[4])
 {
     if (!g_inset_live) return 0;
@@ -4535,6 +4568,16 @@ static void sub_screen_present_body(unsigned int *dst, int w, int h)
         ntr::gx_card_settle_because("the big map's picture");
         menu_bigmap_draw(&g_sub.px[0][0], dst, w, h, ntr::SCREEN_W, g_inset_rect);
         g_inset_live = 1;
+    } else if (!hal_sub_screen_stacked() && g_pause_fit) {
+        /* PAUSESCALE2: the ROM's own pause on a one-screen-sized picture (see g_pause_fit). The plates view is the bottom screen alone at 1:1,
+           centred, with no map frame, plaque, handle or attention arrows (it is the pause's touch screen, not the map); the page view draws no
+           panel at all and takes no touch, the ROM's page stands where the ROM draws it */
+        if (!menu_pause_rom_page_view()) {
+            ntr::ppu_compose_sub(g_sub, dst, w, h, g_x0, g_y0, 1, 1);
+            g_inset_rect[0] = g_x0; g_inset_rect[1] = g_y0;
+            g_inset_rect[2] = g_x0 + g_pan_w; g_inset_rect[3] = g_y0 + g_pan_h;
+            g_inset_live = 1;
+        }
     } else if (!hal_sub_screen_stacked()) {
         /* THE DECORATIVE PANEL FIRST, because it goes BEHIND the map: the
            compose below writes the map over the middle of it and its own one
@@ -4660,7 +4703,7 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
                                        g_inset_rect[2], g_inset_rect[3]);
     port_engine_a_fade(dst, w, h);
     /* INT093G: the ROM's pause page, moved clear of the corner panel. After the fade, so each lifted cell takes the ROM's own brightness verdict it carried out of the compositor */
-    if (g_page_fit_frame && g_inset_live) {
+    if (g_page_fit_frame && g_inset_live && !g_pause_fit) {      /* PAUSESCALE2: the plates view lifts the page and draws it nowhere */
         page_fit_draw(dst, w, h, g_inset_rect);
         /* the cue's arrows with it, after the fade too: on this frame the compositor went down the processor's loops, whose brightness mask would
            judge each arrow by the 3D under its new place and dim it with the pause's partial-target dim, which the arrows (sprites) never take */

@@ -72,6 +72,9 @@ struct PauseFacts {
        time; career_cur = the file being played (-1 none) */
     int8_t career_cur, career_has;
     uint32_t career_play[3], career_clear[3];
+    /* PAUSESCALE2: the two-screen / non-English pause on a one-screen-sized picture (hal/sub_screen.cpp g_pause_fit): 0 not that pause, 1 its
+       plates view, 2 its page view (the edge tabs' place, pause_rom_tab_rect) */
+    int8_t rom_fit;
 };
 static_assert(sizeof(PauseFacts) <= 1024, "PauseFacts must fit MenuFacts.blob");
 
@@ -252,6 +255,24 @@ inline PauseRect pause_tab_rect(const PauseGeo &g, int side)
     r.w = g.tabw; r.h = g.tabh;
     r.x = side ? g.w - g.tabw : 0;
     r.y = g.tabcy - g.tabh / 2;
+    return r;
+}
+
+/* PAUSESCALE2: the ROM pause's edge tabs (OneScreenMenus off, or a language but English). view (PauseFacts.rom_fit): 0 the old place, the
+   sides' middle. 1, the plates view of a one-screen-sized picture: the bottom screen stands at 1:1 in the middle and its plates leave less room
+   beside them than a tab is wide (8 picture pixels at 4:3 RenderScale 1), so a tab that does not fit there stands in the picture only as far as
+   the room (at least 4 pixels), the rest of it past the picture's edge, and never covers a plate. 2, the page view: the ROM's page at 1:1 has
+   its course arrows at the sides' middle, so the tabs go to the top corners (the page's first cells start 45 DS pixels down). Drawing and the
+   hit test both use this rect. */
+inline PauseRect pause_rom_tab_rect(const PauseGeo &g, int side, int view)
+{
+    PauseRect r = pause_tab_rect(g, side);
+    if (view == 2) { r.y = 2; return r; }
+    if (view != 1) return r;
+    int room = (g.w - 240) / 2 - 1;         /* the plates are 240 DS pixels wide, at 1:1 */
+    if (room < 4) room = 4;
+    if (room >= r.w) return r;
+    r.x = side ? g.w - room : room - r.w;
     return r;
 }
 

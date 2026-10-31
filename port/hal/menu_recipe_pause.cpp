@@ -78,6 +78,7 @@ void pause_page_draw(const MenuLayout *lay, int piece, uint32_t *dst, int w, int
 int pause_page_art(int w, int h, int idx, int *id, int *dw, int *dh);
 void pause_page_rom_draw(const PauseFacts *f, uint32_t *px, int stride, int w, int h);   /* CAREER1: hal/settings_page.cpp (pause_page.inc) */
 int port_rom_frame(void);              /* hal/rom_frame.cpp */
+int hal_sub_pause_fit(void);           /* PAUSESCALE2: hal/sub_screen.cpp */
 }
 
 namespace {
@@ -1105,7 +1106,34 @@ int rom_career_allowed(void)
     const unsigned st = data_0209f248;
     return (st == 1 || st == 3) && pause_cursor_live();
 }
+
+int g_rc_fit;                    /* PAUSESCALE2: the ring is the plates / page views of a one-screen-sized picture (hal/sub_screen.cpp g_pause_fit) */
+
+/* PAUSESCALE2: the ROM's own main pause on a picture with room for one DS screen only (RenderScale 1), any language: the plates view and the
+   page view (and the Career page in English) */
+int rom_fit_allowed(void)
+{
+    if (hal_menu_live() || g_last_variant != 0 || !menu_pause_pad_ok() || settings_page_open() || !hal_sub_pause_fit()) return 0;
+    const unsigned st = data_0209f248;
+    return (st == 1 || st == 3) && pause_cursor_live();
+}
+
+/* the page after (step +1) or before (-1) pg in this ring: the plates (main), the ROM's page (fit only, in the TRACKER slot), Career (English) */
+int rom_ring_next(int pg, int step)
+{
+    int ring[3], n = 0;
+    ring[n++] = PAUSE_PG_MAIN;
+    if (g_rc_fit) ring[n++] = PAUSE_PG_TRACKER;
+    if (rom_career_allowed()) ring[n++] = PAUSE_PG_CAREER;
+    int i = 0;
+    while (i < n && ring[i] != pg) ++i;
+    if (i >= n) i = 0;
+    return ring[(i + step + n) % n];
+}
 }  // namespace
+
+/* PAUSESCALE2: 1 while the fit ring's page view is the one shown (hal/sub_screen.cpp then draws no panel and leaves the ROM's page as it is) */
+extern "C" int menu_pause_rom_page_view(void) { return g_rc_live && g_rc_fit && g_slide.page == PAUSE_PG_TRACKER; }
 
 int rom_career_eats(void) { return g_rc_live && (slide_moving() || g_slide.page != PAUSE_PG_MAIN); }
 
@@ -1117,22 +1145,25 @@ extern "C" void menu_pause_rom_input(unsigned keys, int mvalid, int mx, int my, 
     prev_keys = keys;
     const int down_edge = mdown && !prev_down, up_edge = !mdown && prev_down;
     prev_down = mdown;
-    if (!rom_career_allowed()) {
+    const int fit = rom_fit_allowed();
+    if (!fit && !rom_career_allowed()) {
         if (g_rc_live) slide_reset();
-        g_rc_live = 0; g_rc_hover = g_rc_press = -1;
+        g_rc_live = 0; g_rc_fit = 0; g_rc_hover = g_rc_press = -1;
         return;
     }
-    if (!g_rc_live) slide_reset();
+    if (!g_rc_live || fit != g_rc_fit) slide_reset();
     g_rc_live = 1;
-    slide_tick(1, 1);            /* (wide = 1: this ring has no tracker page) */
+    g_rc_fit = fit;
+    slide_tick(1, !fit);         /* (wide = 1: the Career ring has no tracker page; the fit ring's TRACKER slot is the ROM's page view) */
     int act = (edge & (2u | 8u)) ? 1 : ((edge & (1u | 4u)) ? -1 : 0);
     PauseFacts f0;
     memset(&f0, 0, sizeof f0);
     f0.dir = g_slide.dir;
     const PauseGeo g = pause_geo(g_rc_w, g_rc_h, &f0, 3);
+    const int view = fit ? (g_slide.page == PAUSE_PG_TRACKER ? 2 : 1) : 0;      /* PAUSESCALE2: the fit ring's view (pause_rom_tab_rect) */
     g_rc_hover = -1;
     for (int side = 0; mvalid && side < 2; ++side) {
-        const PauseRect r = pause_tab_rect(g, side);
+        const PauseRect r = pause_rom_tab_rect(g, side, view);
         const int inside = mx >= r.x && mx < r.x + r.w && my >= r.y && my < r.y + r.h;
         if (inside) g_rc_hover = side;
         if (inside && down_edge) g_rc_press = side;
@@ -1140,7 +1171,7 @@ extern "C" void menu_pause_rom_input(unsigned keys, int mvalid, int mx, int my, 
     }
     if (!mdown || !mvalid) g_rc_press = -1;
     if (act && slide_busy_any()) act = 0;
-    if (act) slide_go(g_slide.page == PAUSE_PG_MAIN ? PAUSE_PG_CAREER : PAUSE_PG_MAIN, act);
+    if (act) slide_go(rom_ring_next(g_slide.page, act), act);
     /* the facts the overlay draws */
     PauseFacts *f = &g_rc;
     memset(f, 0, sizeof *f);
@@ -1159,7 +1190,8 @@ extern "C" void menu_pause_rom_input(unsigned keys, int mvalid, int mx, int my, 
     f->frame = ++g_frame;
     f->hover_tab = g_rc_hover;
     f->press_tab = g_rc_press;
-    if (hal_menu_trace_on() && act) fprintf(stderr, "[pause-rom] career page: %s\n", g_slide.page == PAUSE_PG_CAREER ? "in" : "out");
+    f->rom_fit = (int8_t)(fit ? (g_slide.page == PAUSE_PG_TRACKER ? 2 : 1) : 0);     /* PAUSESCALE2: 1 the plates view, 2 the page view (after this tick's switch) */
+    if (hal_menu_trace_on() && act) fprintf(stderr, "[pause-rom] page %d (fit %d)\n", g_slide.page, fit);
 }
 
 /* the overlay (tests/walk_window.cpp main()): the upper screen's surface, w x h */
