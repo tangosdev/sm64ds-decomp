@@ -162,7 +162,7 @@ own its key function. The proof-block example shows nonzero counts; do not read
 zeros as a failed run.
 
 **They are NOT evidence for an empty `compiler_only_output`, and this file used
-to say they were.** `romdata_check` reports on *data* symbols. [ov066](../../../config/arm9/overlays/ov066/symbols.txt)/`Eyerok`
+to say they were.** `romdata_check` reports on *data* symbols. [ov066](../../../config/arm9/overlays/ov066/symbols.txt)/`daIwante_c`
 measures 0/0/0/0 with a non-empty **two-row** `compiler_only_output`, because
 both rows are functions. Read all-zero as "no data rows", never as "no rows".
 

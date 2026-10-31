@@ -1203,7 +1203,7 @@
         ],
         [
           "_ZN6Player17SetNoControlStateEhih",
-          "src/actors/Eyerok.cpp",
+          "src/actors/daIwante_c.cpp",
           "return:void"
         ],
         [
@@ -3871,8 +3871,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN6Eyerok13InitResourcesEv.cpp",
-      "name": "_ZN6Eyerok13InitResourcesEv",
+      "file": "src/_ZN10daIwante_c13InitResourcesEv.cpp",
+      "name": "_ZN10daIwante_c13InitResourcesEv",
       "module": "ov066",
       "addr": "0x2119ce8",
       "verdict": "VERIFIED",
@@ -21106,7 +21106,7 @@
           "src/_ZN5Timer10StartTimerEv.cpp",
           "src/_ZN5Whomp16CleanupResourcesEv.cpp",
           "src/_ZN9dCamera_c11ChangeStateEPNS_5StateE.cpp",
-          "src/_ZN6Eyerok13InitResourcesEv.cpp",
+          "src/_ZN10daIwante_c13InitResourcesEv.cpp",
           "src/_ZN6Player11St_Owl_InitEv.cpp",
           "src/_ZN6Player12St_Land_MainEv.cpp",
           "src/_ZN6Player14St_Crouch_InitEv.cpp",
@@ -21231,7 +21231,7 @@
           "src/_ZN5Timer10StartTimerEv.cpp",
           "src/_ZN5Whomp16CleanupResourcesEv.cpp",
           "src/_ZN9dCamera_c11ChangeStateEPNS_5StateE.cpp",
-          "src/_ZN6Eyerok13InitResourcesEv.cpp",
+          "src/_ZN10daIwante_c13InitResourcesEv.cpp",
           "src/_ZN6Player11St_Owl_InitEv.cpp",
           "src/_ZN6Player12St_Land_MainEv.cpp",
           "src/_ZN6Player14St_Crouch_InitEv.cpp",
@@ -21818,7 +21818,7 @@
         "src/_ZN6Coffin13InitResourcesEv.cpp",
         "src/_ZN6Coffin16CleanupResourcesEv.cpp",
         "src/_ZN6Coffin8BehaviorEv.cpp",
-        "src/_ZN6Eyerok13InitResourcesEv.cpp",
+        "src/_ZN10daIwante_c13InitResourcesEv.cpp",
         "src/_ZN6Fwoosh13InitResourcesEv.cpp",
         "src/_ZN6Fwoosh8BehaviorEv.cpp",
         "src/_ZN6Klepto13InitResourcesEv.cpp",
@@ -23190,8 +23190,8 @@
           "name": "_ZN6Coffin8BehaviorEv"
         },
         {
-          "file": "src/_ZN6Eyerok13InitResourcesEv.cpp",
-          "name": "_ZN6Eyerok13InitResourcesEv"
+          "file": "src/_ZN10daIwante_c13InitResourcesEv.cpp",
+          "name": "_ZN10daIwante_c13InitResourcesEv"
         },
         {
           "file": "src/_ZN6Fwoosh13InitResourcesEv.cpp",
@@ -30769,7 +30769,7 @@
         "disposition": "unchanged inherited strict-relocation coverage gap; not VERIFIED, not repaired and not banked"
       }
     ],
-    "changed_header_exact_diff": "--- base/include/decl_common.h\n+++ candidate/include/decl_common.h\n@@ -432,7 +432,7 @@\n extern int _ZTV10Scuttlebug[];\n extern int _ZTV10SlidingIce[];\n extern int _ZTV12daStarBase_c[];\n-extern int _ZTV10StarSwitch[];\n+extern int _ZTV13daObjSwitch_c[];\n extern int _ZTV10dBgActor_c[];\n extern int _ZTV10dScTitle_c[];\n extern int _ZTV10daHolhei_c[];\n",
+    "changed_header_exact_diff": "--- base/include/decl_common.h\n+++ candidate/include/decl_common.h\n@@ -432,7 +432,7 @@\n extern int _ZTV7daSpd_c[];\n extern int _ZTV10SlidingIce[];\n extern int _ZTV12daStarBase_c[];\n-extern int _ZTV10StarSwitch[];\n+extern int _ZTV13daObjSwitch_c[];\n extern int _ZTV10dBgActor_c[];\n extern int _ZTV10dScTitle_c[];\n extern int _ZTV10daHolhei_c[];\n",
     "summary": {
       "control_warnings": 2,
       "candidate_warnings": 2,

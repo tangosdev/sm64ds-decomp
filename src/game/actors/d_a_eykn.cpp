@@ -1,5 +1,5 @@
 //cpp
-/* Enemy - Mr. I (EYEKUN / EYEKUN_BOSS). Not Eyerok.
+/* Enemy - Mr. I (EYEKUN / EYEKUN_BOSS). Not daIwante_c.
  * The small eye and the big one that holds a star turn in place and shoot
  * EYEKUN_BEAM. Circling one of them until the yaw count passes kDizzyYaw
  * makes it die. Wait, attack, and die are the three rows of

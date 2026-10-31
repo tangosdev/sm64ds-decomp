@@ -79,7 +79,7 @@ carrying a mangled name converts as a codegen question -- does it byte-match.
 A member carrying an auto-generated `func_ovNNN_*` name converts only by being
 **renamed**, which is a different, larger, and riskier act: the new name must
 reach `symbols.txt` in the same commit (see below), and every external caller
-must move with it. Measured on [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug`, all 27 still-unrenamed members
+must move with it. Measured on [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`daSpd_c`, all 27 still-unrenamed members
 were auto-named, so its ceiling was **name recovery, not codegen and not
 scope** -- a different wall from `dScMgCurling2_c`'s, where all 29 compiled
 byte-neutrally and 12 were refused for scope alone.
@@ -102,7 +102,7 @@ region goes after the last surviving `func_*` member.
 An earlier version of this file **parked** every class whose name was not read from
 the cartridge's RTTI. That rule is withdrawn: it was stricter than the project's own
 practice and it retroactively condemned merged work. Ten classes with coined names
-have already shipped -- `Player`, `Goomboss`, `Eyerok`, `ActorDerived`,
+have already shipped -- `Player`, `Goomboss`, `daIwante_c`, `ActorDerived`,
 `ActorBase_SceneNode`, and five `Mg*` minigame classes.
 
 **The standard is disclosure, not abstention.** Promote the class; record the name as

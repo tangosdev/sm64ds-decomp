@@ -62,7 +62,7 @@ struct daSnmBth_c : dActor_c {
        spelling, whose Vector3 `t` has an inline destructor) makes the
        out-of-line ~daSnmBth_c emit D2, D0, D1 even under
        `defer_codegen off`; the cartridge has D1 then D0. Same as
-       Scuttlebug's and Eyerok's shadow matrices. */
+       daSpd_c's and daIwante_c's shadow matrices. */
     s32 mInvModelMat[12];                  /* 0x1394 */
     Player *mTalkPlayer;                   /* 0x13c4 */
     s32 mTalkTimer;                        /* 0x13c8 */

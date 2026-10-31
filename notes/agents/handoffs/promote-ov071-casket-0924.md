@@ -78,7 +78,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `notes/data/c-cpp-classification.tsv`, `notes/data/tu-merge-candidates.json`,
   `notes/experiments/pr2873-integration-0920.json`,
   `notes/experiments/pr2874-integration-0920.json`,
-  `notes/data/class-facts/Scuttlebug.json` and `notes/handoff-marker-typing.md`
+  `notes/data/class-facts/daSpd_c.json` and `notes/handoff-marker-typing.md`
   (all historical or out of scope). Its one-line rewrite of
   `notes/converted-tier.md` was reverted too; that line was fixed by hand
   afterwards, as above.
@@ -108,7 +108,7 @@ This document describes this commit. The queue records its immutable output SHA.
   writes the model matrix from the actor's angles and position.
 ---
 - Factory: folded. Its [delinks](../../../config/arm9/overlays/ov071/delinks.txt) entry abutted `InitResources` with a zero-byte gap,
-  [ov071](../../../config/arm9/overlays/ov071/symbols.txt) ends each class run with its `classInit`, and the promoted Scuttlebug TU
+  [ov071](../../../config/arm9/overlays/ov071/symbols.txt) ends each class run with its `classInit`, and the promoted daSpd_c TU
   in the same overlay folds its factory the same way. It is now `return new
   daObjCasket_c();`, which matched on the first compile and replaces the legacy
   C seam (raw `_ZN7fBase_cnwEj`, `_ZN10dBgActor_cC2Ev` and vptr store).

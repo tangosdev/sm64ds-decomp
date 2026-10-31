@@ -52,7 +52,7 @@ left where only a branch listing can find it.
 - **11 branches** from 2026-09-06/07, the run this file was written during.
 - **32 branches** dated 2026-09-05, from an earlier session — the `-tu` / `-tu-build`
   pairs (`daOts_c`, `daPgDfdr_c` at 24 commits, `daDkk_c`, `daDgr_c`,
-  `dScMgHanachan_c`, `dScMgMemory2_c`, `Player`, `Eyerok`, `Goomboss`,
+  `dScMgHanachan_c`, `dScMgMemory2_c`, `Player`, `daIwante_c`, `Goomboss`,
   `KingBobOmb`, `Koopa`, and more). Some of this landed on `main` under a different
   branch name and some did not; **which is which has never been established.**
 - **14 older branches**, including `cpp/promote-da-obj-lava` at 40 commits.

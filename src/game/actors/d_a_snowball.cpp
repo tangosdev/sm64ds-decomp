@@ -144,7 +144,7 @@ void daSnowball_c::HandleContact() {
             }
             {
                 /* Hurt's arguments after the source position are the same tuple
-                   (1, 0xc000, 1, 0, 1) daBasabasa_c and Scuttlebug pass; 0xc000
+                   (1, 0xc000, 1, 0, 1) daBasabasa_c and daSpd_c pass; 0xc000
                    is Fix12 12.0. */
                 Vector3 pos;
                 pos.x = mPosX;

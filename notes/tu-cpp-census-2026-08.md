@@ -46,7 +46,7 @@ Permanently excluded: **37** files take a class BY VALUE (mostly `Fix12<int>`/`V
 
 A retail NDS cart has NO symbol table. Every `_ZN...` name in this tree is a placeholder, a community import (>=1,349 verbatim from `reference/DynamicAllocationDecomp/symbols.x`), or an assertion — only the ADDRESS was verified on import. So a hand-spelled mangled name is a LABEL, not ROM evidence. That is why tier P3 (112 non-virtual mangled members) + P4 (2 free fns) are NOT in the 330.
 
-Corollary already observed: coined names disagree with ROM RTTI in places — `_ZN10FlameChomp16CleanupResourcesEv.c` occupies slot 3 of `daKrpa_c`'s vtable; Scuttlebug sits in `daSpd_c`. The ROM name wins.
+Corollary already observed: coined names disagree with ROM RTTI in places — `_ZN10FlameChomp16CleanupResourcesEv.c` occupies slot 3 of `daKrpa_c`'s vtable; daSpd_c sits in `daSpd_c`. The ROM name wins.
 
 Also confirmed: NO `.c` file in `src/` defines `_ZTV`/`_ZTI`/`_ZTS` data or owns a `.ctor` delink section. Every `_ZTV` in a `.c` file is an extern declaration.
 

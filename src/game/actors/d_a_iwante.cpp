@@ -3,17 +3,14 @@ namespace Particle {
 struct Callback;
 }
 struct Vector3_16f;
-/* Eyerok, the two-handed pyramid boss (.text 0x02115ee0..0x0211a418,
- * 64 functions). ROM RTTI daIwante_c (_ZTS10daIwante_c ov066:0x0211ad30);
- * this tree keeps the coined name.
+/* daIwante_c, the two-handed pyramid boss (.text 0x02115ee0..0x0211a418,
+ * 64 functions). ROM RTTI daIwante_c (_ZTS10daIwante_c ov066:0x0211ad30).
  *
  * The unit's two destructors (D1 0x02115ee0, D0 0x02115f84) are defined at
- * the top of this file: ~Eyerok is the key function, so defining it here
- * also emits the vtable as _ZTV6Eyerok. The reconstructed class keeps
- * the coined Eyerok name; #pragma RTTI off suppresses its _ZTI/_ZTS records.
- * The emitted vtable has a zero typeinfo word instead of the retail
- * daIwante_c typeinfo pointer. The unchanged policy externalizes that
- * unowned table to retail data and discards the homeless D2 variant. The
+ * the top of this file: ~daIwante_c is the key function, so defining it here
+ * also emits the vtable, typeinfo and type name (_ZTV/_ZTI/_ZTS10daIwante_c).
+ * The manifest compares all three against the cartridge's copies and
+ * discards them, along with the homeless D2 variant. The
  * tail folds the three zero-gap neighbours and the static initializer up to
  * the .ctor word at 0x0211abc0: the free helper func_ov066_0211a2e4, its
  * tail-call veneer func_ov066_0211a35c (this unit's dBgW callback), the
@@ -42,7 +39,7 @@ struct Vector3_16f;
  *    mTargetPos*, mHorzAccelStep, mTexTimer/mTexPhase, mDustCounter; patterns
  *    4..9 are numbered, not named; the SE_* ids are named by the situation
  *    that plays them; the HIT_* names lean on the best-effort bit table in
- *    dCc_c.h; Eyerok assigns mFlags outright (0x10000000, 0x2000000 or 0,
+ *    dCc_c.h; daIwante_c assigns mFlags outright (0x10000000, 0x2000000 or 0,
  *    wiping its other bits) and dActor_c.h lists those two bits as
  *    profile-authored with the consumer unrecovered, so what reads them is
  *    unknown; and the 0x2 bit of the collider flags (set and cleared by
@@ -61,7 +58,7 @@ struct Vector3_16f;
 
 /* Turns off deferred codegen, which does two things at once here: it makes
  * the bracketed opt_common_subs / opt_strength_reduction pair around
- * _ZN6Eyerok8BehaviorEv bind to that member alone instead of leaking
+ * _ZN10daIwante_c8BehaviorEv bind to that member alone instead of leaking
  * file-wide, and it flips .text emission from reverse-source to source
  * order -- which is why this file is written ROM-ascending. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -94,7 +91,7 @@ enum Eyerok_AssetId {
 /* Includes. decl_common.h is DELIBERATELY NOT included: every symbol it
  * would have supplied is declared below instead, with the spelling the
  * shards actually matched under. */
-#include "Eyerok.h"
+#include "daIwante_c.h"
 #include "types.h"
 #include "dBgW.h"
 #include "common.h"
@@ -182,7 +179,7 @@ enum {
 
 /* EVec3 is three plain words: unlike a Vector3, a local of it has no destructor. */
 struct EVec3 { int x, y, z; };
-typedef int (Eyerok::*EyerokPMF)();
+typedef int (daIwante_c::*EyerokPMF)();
 /* A state descriptor: enter PMF at +0 (run by func_ov066_02119454 on install),
  * run PMF at +8 (run by Behavior every frame). */
 struct EyerokState { EyerokPMF enter; EyerokPMF run; };
@@ -404,16 +401,8 @@ static inline int IsOffScreen(dActor_c *actor) {
     return (actor->mFlags & 8) != 0;
 }
 
-/* The cartridge spells this class daIwante_c, so the compiler-emitted
- * _ZTS6Eyerok / _ZTI6Eyerok records would be homeless under the project
- * spelling. RTTI off suppresses those records and emits a zero typeinfo
- * word in the vtable preamble; retail has daIwante_c's 0x0211ad24 there.
- * All 128 bytes of slots (32 entries) reproduce. The manifest externalizes
- * this unowned vtable, so production retains the complete retail table. */
-#pragma RTTI off
-
-// @symbol _ZN6EyerokD1Ev
-// @symbol _ZN6EyerokD0Ev
+// @symbol _ZN10daIwante_cD1Ev
+// @symbol _ZN10daIwante_cD0Ev
 /* recovered: real C++ destructors -- the compiler emits the whole bodies
  * (folded from the retired D1/D0 shards,
  * whose .text is address-contiguous below).
@@ -423,23 +412,18 @@ static inline int IsOffScreen(dActor_c *actor) {
  * dExtAnmTexPat_c, dExtShadowModel_c, dExtSimpleModel_c, dExtBlendAnmModel_c,
  * dCcAcPos_c), then dBgActor_c's vptr -- inlined, because
  * dBgActor_c's destructor is defined in its class body -- then dBgActor_c's
- * own dBgW_Kc and dExtSimpleModel_c, then dActor_c. See include/Eyerok.h for why
+ * own dBgW_Kc and dExtSimpleModel_c, then dActor_c. See include/daIwante_c.h for why
  * this is a direct dBgActor_c child, not three levels deep.
  *
- * Out-of-line ~Eyerok is the key function, so this TU also emits the vtable
- * as _ZTV6Eyerok (deadstrip-data in the manifest: the cartridge keeps the
- * record at ov066:0x0211ad64) and D2 next to the ROM's D1/D0 pair
- * (deadstripped: the cartridge has no Eyerok D2). No _ZTI/_ZTS records
- * accompany them: this reconstructed class keeps the coined Eyerok name
- * and compiles with RTTI off. Its zero typeinfo preamble is not retail
- * metadata; the unchanged externalization policy retains the retail table. The
- * deallocation in D0 is an inline operator delete, inherited from
- * dActor_c. */
-Eyerok::~Eyerok()
-{
-}
+ * Out-of-line ~daIwante_c is the key function, so this TU also emits the vtable
+ * and RTTI as _ZTV/_ZTI/_ZTS10daIwante_c (deadstrip-data in the manifest: the
+ * cartridge keeps the records at ov066:0x0211ad64/0x0211ad24/0x0211ad30) and
+ * D2 next to the ROM's D1/D0 pair (deadstripped: the cartridge has no
+ * daIwante_c D2). The deallocation in D0 is an inline operator delete,
+ * inherited from dActor_c. */
+daIwante_c::~daIwante_c() {}
 
-// @symbol _ZN6Eyerok19func_ov066_0211603cEv
+// @symbol _ZN10daIwante_c19func_ov066_0211603cEv
 /* Hit check for a hand. The hitter is mdCcAcPos_c.otherOwner, a uniqueID
  * (0 = none) that dActor_c::FindWithID turns back into an actor. Returns 0 when
  * nothing counted: no hitter, hitter not found, the angle between the hand's
@@ -460,8 +444,7 @@ Eyerok::~Eyerok()
  * data_ov066_0211abe4 is set to -3, SE_HAND_DEFEATED plays and the hand enters
  * the defeat state (data_ov066_0211b07c). Callers read the return value to tell
  * these apart. */
-int Eyerok::func_ov066_0211603c()
-{
+int daIwante_c::func_ov066_0211603c() {
     Player *actor;
     int flags;
     int hit;
@@ -537,13 +520,12 @@ int Eyerok::func_ov066_0211603c()
     return 0;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021162e8Ev
+// @symbol _ZN10daIwante_c19func_ov066_021162e8Ev
 /* Hit volume for a hand at rest: sets the 0x2 bit of mdCcAcPos_c.flags (what it
  * means is not known here; func_ov066_0211632c clears it), radius and height
  * 0x64000 (100.0 each), and the volume's offset from the hand,
  * data_ov066_0211ad18, to (0, 0x20000, -0x10000) = (0, 32.0, -16.0). */
-void Eyerok::func_ov066_021162e8()
-{
+void daIwante_c::func_ov066_021162e8() {
     mdCcAcPos_c.flags |= 2;
     mdCcAcPos_c.radius = 0x64000;
     mdCcAcPos_c.height = 0x64000;
@@ -552,13 +534,12 @@ void Eyerok::func_ov066_021162e8()
     data_ov066_0211ad18[2] = -0x10000;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_0211632cEv
+// @symbol _ZN10daIwante_c19func_ov066_0211632cEv
 /* Counterpart of func_ov066_021162e8, run every frame by the pattern 4 hand
  * handler: clears the 0x2 flags bit, radius 0x9c000 (156.0), height 0x164000 (356.0),
  * and the offset becomes (+0x55000 = +85.0 for hand 2, -85.0 otherwise;
  * -0xc0000 = -192.0; 0x80000 = 128.0). */
-void Eyerok::func_ov066_0211632c()
-{
+void daIwante_c::func_ov066_0211632c() {
     mdCcAcPos_c.flags &= ~2;
     mdCcAcPos_c.radius = 0x9c000;
     mdCcAcPos_c.height = 0x164000;
@@ -570,14 +551,13 @@ void Eyerok::func_ov066_0211632c()
     data_ov066_0211ad18[2] = 0x80000;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02116390Ev
+// @symbol _ZN10daIwante_c19func_ov066_02116390Ev
 /* Texture-pattern swap timer for a hand. mTexTimer counts down; at 0, if
  * mTexPhase is 0 the hand switches to the pattern in data_ov066_0211ae2c (hand
  * 2) / ae9c and mTexTimer is re-armed to 0x32 + 2 * (0..15) frames (50..80);
  * otherwise it switches back to ae3c / aebc for 8 frames. mTexPhase flips each
  * time. */
-void Eyerok::func_ov066_02116390()
-{
+void daIwante_c::func_ov066_02116390() {
     DecIfAbove0_Short(&mTexTimer);
     if (mTexTimer != 0)
         return;
@@ -601,7 +581,7 @@ void Eyerok::func_ov066_02116390()
     mTexPhase ^= 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021164ecEv
+// @symbol _ZN10daIwante_c19func_ov066_021164ecEv
 /* Arm a hand's hit volume. Does nothing unless mStateWork1 is 0 and the animation
  * is on its first whole frame (currFrame >> 12 == 0). Then: vulnFlags gets
  * HIT_HAND_VULNERABLE | HIT_MEGA, mFlags is assigned 0x10000000 (dActor_c.h
@@ -609,8 +589,7 @@ void Eyerok::func_ov066_02116390()
  * bit is set, the
  * animation in data_ov066_0211ae64 (hand 2) / ae44 is started, and mStateWork1
  * becomes 1. The pattern states only call the hit check once mStateWork1 is 1. */
-void Eyerok::func_ov066_021164ec()
-{
+void daIwante_c::func_ov066_021164ec() {
     if (mStateWork1 != 0) return;
     if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) != 0)
         return;
@@ -625,15 +604,14 @@ void Eyerok::func_ov066_021164ec()
     mStateWork1 = 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021165ccEv
+// @symbol _ZN10daIwante_c19func_ov066_021165ccEv
 /* Stand a hand down (the name only says it ends the hittable window; the
  * animation in ae54 / ae94 plays forward here, and func_ov066_021166c8 plays
  * the same one reversed): starts the animation in data_ov066_0211ae54 (hand 2) / ae94
  * with the texture pattern from ae3c / aebc, sets the animation speed to 0x1000
  * (1.0), clears the vulnFlags bits func_ov066_021164ec armed except
  * HIT_SPIN_OR_GROUND_POUND, and sets mFlags to 0. */
-void Eyerok::func_ov066_021165cc()
-{
+void daIwante_c::func_ov066_021165cc() {
     if (mPartIdx == PART_HAND_2) {
         mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae54.filePtr, 4, 0x40000000, 0x1000, 0);
         mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
@@ -649,7 +627,7 @@ void Eyerok::func_ov066_021165cc()
     }
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021166c8Ev
+// @symbol _ZN10daIwante_c19func_ov066_021166c8Ev
 /* Put a hand into its lowered pose: starts the animation in data_ov066_0211ae54
  * (hand 2) / ae94 with the texture pattern from ae2c / ae9c, disables the hand's
  * dBgW_Kc collision if it is enabled, loads the one in ae34 (hand 1) / ae1c with
@@ -657,8 +635,7 @@ void Eyerok::func_ov066_021165cc()
  * callbacks and enables it. The animation then starts at its last frame
  * (GetFrameCount() - 1, as a 20.12 value) and runs backwards (speed -0x1000 =
  * -1.0). */
-void Eyerok::func_ov066_021166c8()
-{
+void daIwante_c::func_ov066_021166c8() {
 
     if (mPartIdx == PART_HAND_2) {
         mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae54.filePtr, 4, 0x40000000, 0x1000, 0);
@@ -695,12 +672,11 @@ void Eyerok::func_ov066_021166c8()
     }
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021168b0Ev
+// @symbol _ZN10daIwante_c19func_ov066_021168b0Ev
 /* Body-side wait used by the pick states: sub-state 0 waits for both hands to have
  * reported in (data_ov066_0211ae0c == HANDS_BOTH), then clears it and moves to
  * sub-state 1. Returns 0 while waiting, 1 afterwards. */
-int Eyerok::func_ov066_021168b0()
-{
+int daIwante_c::func_ov066_021168b0() {
     if (mSubState == 0) {
         if (data_ov066_0211ae0c != HANDS_BOTH) return 0;
         mSubState = 1;
@@ -709,15 +685,14 @@ int Eyerok::func_ov066_021168b0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021168ecEv
+// @symbol _ZN10daIwante_c19func_ov066_021168ecEv
 /* Phase check, called by hand states. Returns 0 while the hand is airborne
  * (mVertAccel != 0). If the phase is PHASE_REST and the hand is not already in
  * its waiting state (data_ov066_0211b06c) it is moved into it and 3 is
  * returned. From the waiting state, once the phase is a pattern number, the hand
  * enters that pattern's state (4: b08c, 5: b0bc, 6: b0ec, 7: afec, 8: b01c,
  * 9: b04c) and the phase is returned. Otherwise 0. */
-int Eyerok::func_ov066_021168ec()
-{
+int daIwante_c::func_ov066_021168ec() {
     unsigned char m;
     if (mVertAccel != 0) return 0;
     m = data_ov066_0211ae04;
@@ -739,13 +714,12 @@ int Eyerok::func_ov066_021168ec()
     return 0;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02116a68Ev
+// @symbol _ZN10daIwante_c19func_ov066_02116a68Ev
 /* Which depth band the closest player is in, by its mPosZ (no null check on the
  * player). Returns -0xc52000 (-3154.0) if Z is below that, else -0xb50000
  * (-2896.0) if Z is below that, else 0 if Z is at or above -0xa68000 (-2664.0),
  * else -0xa68000. The decision state tests for the first two values. */
-int Eyerok::func_ov066_02116a68()
-{
+int daIwante_c::func_ov066_02116a68() {
     /* Unused; sizes the frame to the ROM's 12 bytes (sub sp,#0xc). */
     volatile int dummy[3];
     (void)dummy;
@@ -760,15 +734,14 @@ int Eyerok::func_ov066_02116a68()
     return hi;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02116ac4Ei
+// @symbol _ZN10daIwante_c19func_ov066_02116ac4Ei
 /* Landing effect. Calls func_0200d8c8 with the camera (data_0209f318), the hand's
  * position and `strength` (every caller in this file passes 0x7d0000 = 2000.0). Then, with
  * mPosX/Z temporarily moved by 0x80000 (128.0) (X by -128.0 for hand 1, +128.0
  * otherwise; Z by +128.0), it spawns the huge landing dust at that shifted spot
  * and plays SE_LANDING at the object's own cached camera-space position
  * (mCamSpacePosX, which the shift does not change), and restores the position. */
-void Eyerok::func_ov066_02116ac4(int strength)
-{
+void daIwante_c::func_ov066_02116ac4(int strength) {
     /* Saved through stack slots; non-volatile locals make this 24 bytes
        shorter. */
     volatile int s0, s1, s2;
@@ -788,15 +761,14 @@ void Eyerok::func_ov066_02116ac4(int strength)
     mPosZ = s2;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02116b78Ev
+// @symbol _ZN10daIwante_c19func_ov066_02116b78Ev
 /* Keep a hand inside the arena. Bounds on mPosX (the values are in units and
  * shifted << 12 here): hand 1 -800..900, hand 2 -900..800, each end widened by
  * 80 unless data_ov066_0211abe0 is HANDS_BOTH (a hand is gone). mPosZ is held
  * between -0xf01000 (-3841.0) and -0x73a000 (-1850.0), the upper bound raised by
  * 0x8c000 (140.0) when a hand is gone. When a bound is hit the position is
  * clamped, mHorzSpeed is zeroed and 1 is returned; otherwise 0. */
-int Eyerok::func_ov066_02116b78()
-{
+int daIwante_c::func_ov066_02116b78() {
     int b1 = 0x320;
     int lo = -0x320;
     int ip = mPartIdx;
@@ -836,13 +808,12 @@ int Eyerok::func_ov066_02116b78()
     return 0;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02116c6cEv
+// @symbol _ZN10daIwante_c19func_ov066_02116c6cEv
 /* Defeat state, run handler. After the animation passes whole frame 12 the
  * hand's mHorzSpeed is zeroed. When the animation finishes it spawns particles
  * 0x7c and 0x7d at the hand, a triple poof of dust, plays SE_DEFEAT_POOF and
  * marks the actor for destruction. */
-int Eyerok::func_ov066_02116c6c()
-{
+int daIwante_c::func_ov066_02116c6c() {
     if ((unsigned int)((unsigned int)(mBlendAnmModel.currFrame << 4) >> 0x10) > 0xc) {
         mHorzSpeed = 0;
     }
@@ -862,12 +833,11 @@ int Eyerok::func_ov066_02116c6c()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02116d14Ev
+// @symbol _ZN10daIwante_c19func_ov066_02116d14Ev
 /* Defeat state, enter handler: clears the work words, timer and sub-state, sets
  * mHorzSpeed to -0xa000 (-10.0) and starts the animation in data_ov066_0211aea4
  * (hand 2) / ae8c. */
-int Eyerok::func_ov066_02116d14()
-{
+int daIwante_c::func_ov066_02116d14() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -881,7 +851,7 @@ int Eyerok::func_ov066_02116d14()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02116db0Ev
+// @symbol _ZN10daIwante_c19func_ov066_02116db0Ev
 /* Pattern 9, hand run handler (the body picks pattern 9 when a hand is gone and
  * enough picks have passed). Sub-states:
  *   0  lowered pose (func_ov066_021166c8).
@@ -899,8 +869,7 @@ int Eyerok::func_ov066_02116d14()
  *   4  return to the rest position at 55.0 per frame, angle 0; on arrival the
  *      position is snapped and data_ov066_0211ae08 is set to 2 -> 5.
  *   5  waits for the phase to leave PATTERN_9, then back to the waiting state. */
-int Eyerok::func_ov066_02116db0()
-{
+int daIwante_c::func_ov066_02116db0() {
     EVec3 in, out;
     s16 ang;
     int r;
@@ -1015,10 +984,9 @@ int Eyerok::func_ov066_02116db0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02117190Ev
+// @symbol _ZN10daIwante_c19func_ov066_02117190Ev
 /* Pattern 9, hand enter handler: clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_02117190()
-{
+int daIwante_c::func_ov066_02117190() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1026,7 +994,7 @@ int Eyerok::func_ov066_02117190()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021171b0Ev
+// @symbol _ZN10daIwante_c19func_ov066_021171b0Ev
 /* Pattern 8, hand run handler: both hands move to the player's depth, then each
  * lands, then hops three more times (counted by mStateWork0). Sub-states:
  *   0  pick the target: the closest player's position with Z lowered by 0xc8000
@@ -1050,8 +1018,7 @@ int Eyerok::func_ov066_02117190()
  *      arrival clear data_ov066_0211ae0c, snap to rest, data_ov066_0211ae08 += 1
  *      -> 5.
  *   5  waits for the phase to leave PATTERN_8, then back to the waiting state. */
-int Eyerok::func_ov066_021171b0()
-{
+int daIwante_c::func_ov066_021171b0() {
 
     switch (mSubState) {
     case 0: {
@@ -1176,11 +1143,10 @@ int Eyerok::func_ov066_021171b0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021175bcEv
+// @symbol _ZN10daIwante_c19func_ov066_021175bcEv
 /* Pattern 8, hand enter handler: clears the work words, mTimer1,
  * data_ov066_0211ae00 and the sub-state. */
-int Eyerok::func_ov066_021175bc()
-{
+int daIwante_c::func_ov066_021175bc() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1189,7 +1155,7 @@ int Eyerok::func_ov066_021175bc()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021175e8Ev
+// @symbol _ZN10daIwante_c19func_ov066_021175e8Ev
 /* Pattern 7, hand run handler. The hand whose number is in data_ov066_0211ae0c is
  * the one that moves; the other lowers and waits, hittable. Sub-states:
  *   0  selected hand: target = the closest player's position if there is one
@@ -1220,8 +1186,7 @@ int Eyerok::func_ov066_021175bc()
  *      clear this hand's bit in data_ov066_0211ae0c, snap to rest,
  *      data_ov066_0211ae08 += 1 (and once more if a hand is gone) -> 8.
  *   8  waits for the phase to leave PATTERN_7, then back to the waiting state. */
-int Eyerok::func_ov066_021175e8()
-{
+int daIwante_c::func_ov066_021175e8() {
     EVec3 v;
 
     switch (mSubState) {
@@ -1380,10 +1345,9 @@ int Eyerok::func_ov066_021175e8()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02117bd0Ev
+// @symbol _ZN10daIwante_c19func_ov066_02117bd0Ev
 /* Pattern 7, hand enter handler: clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_02117bd0()
-{
+int daIwante_c::func_ov066_02117bd0() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1391,7 +1355,7 @@ int Eyerok::func_ov066_02117bd0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02117bf0Ev
+// @symbol _ZN10daIwante_c19func_ov066_02117bf0Ev
 /* Pattern 6, hand run handler. Like pattern 7 without the descent: the selected
  * hand (data_ov066_0211ae0c == mPartIdx) walks level to a target and may run
  * sideways; the other hand lowers and waits, hittable. Sub-states:
@@ -1414,8 +1378,7 @@ int Eyerok::func_ov066_02117bd0()
  *      bit in data_ov066_0211ae0c, snap to rest, data_ov066_0211ae08 += 1 (and
  *      once more if a hand is gone) -> 7.
  *   7  waits for the phase to leave PATTERN_6, then back to the waiting state. */
-int Eyerok::func_ov066_02117bf0()
-{
+int daIwante_c::func_ov066_02117bf0() {
     EVec3 v;
 
     switch (mSubState) {
@@ -1560,10 +1523,9 @@ int Eyerok::func_ov066_02117bf0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118168Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118168Ev
 /* Pattern 6, hand enter handler: clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_02118168()
-{
+int daIwante_c::func_ov066_02118168() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1571,7 +1533,7 @@ int Eyerok::func_ov066_02118168()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118188Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118188Ev
 /* Pattern 5, hand run handler: the selected hand hops once while the other waits,
  * hittable. Sub-states:
  *   0  after mTimer1: the selected hand jumps (mVertSpeed 0x64000 = 100.0,
@@ -1587,8 +1549,7 @@ int Eyerok::func_ov066_02118168()
  *   4  when the animation finishes, restore the hit volume and collision file,
  *      data_ov066_0211ae08 += 1 -> 5.
  *   5  waits for the phase to leave PATTERN_5, then back to the waiting state. */
-int Eyerok::func_ov066_02118188()
-{
+int daIwante_c::func_ov066_02118188() {
 
     switch (mSubState) {
     case 0:
@@ -1699,10 +1660,9 @@ int Eyerok::func_ov066_02118188()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021184c0Ev
+// @symbol _ZN10daIwante_c19func_ov066_021184c0Ev
 /* Pattern 5, hand enter handler: clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_021184c0()
-{
+int daIwante_c::func_ov066_021184c0() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1710,7 +1670,7 @@ int Eyerok::func_ov066_021184c0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021184e0Ev
+// @symbol _ZN10daIwante_c19func_ov066_021184e0Ev
 /* Pattern 4, hand run handler: the hands take turns hopping in place. It first
  * calls func_ov066_021168ec (twice), whose phase check moves the hand back to
  * its waiting state when the phase returns to PHASE_REST. If the first call
@@ -1723,8 +1683,7 @@ int Eyerok::func_ov066_021184c0()
  * jumps (mVertSpeed 0x64000 = 100.0, mVertAccel -0x14000 = -20.0) -> 1.
  * Sub-state 1: on landing, snap to rest, landing effect, clear this hand's bit
  * in data_ov066_0211ae0c -> 0. */
-int Eyerok::func_ov066_021184e0()
-{
+int daIwante_c::func_ov066_021184e0() {
     if (func_ov066_021168ec() != 0 && func_ov066_021168ec() != 4) {
         mFlags = 0;
         func_ov066_021162e8();
@@ -1757,10 +1716,9 @@ int Eyerok::func_ov066_021184e0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021185e4Ev
+// @symbol _ZN10daIwante_c19func_ov066_021185e4Ev
 /* Pattern 4, hand enter handler: clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_021185e4()
-{
+int daIwante_c::func_ov066_021185e4() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1768,13 +1726,13 @@ int Eyerok::func_ov066_021185e4()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118604Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118604Ev
 /* Waiting state, run handler for a hand. When func_ov066_021168ec has just sent
  * the hand into a pattern, this hand's bit is XORed into data_ov066_0211ae0c (so
  * once both hands have done it the mask reads HANDS_BOTH, which the body-side
  * wait in func_ov066_021168b0 looks for); with a hand gone, both bits are forced
  * on. */
-int Eyerok::func_ov066_02118604() {
+int daIwante_c::func_ov066_02118604() {
     int r = func_ov066_021168ec();
     if (r != 0) {
         data_ov066_0211ae0c ^= mPartIdx;
@@ -1785,11 +1743,10 @@ int Eyerok::func_ov066_02118604() {
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118658Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118658Ev
 /* Waiting state, enter handler for a hand: clears the work words, timer and
  * sub-state. */
-int Eyerok::func_ov066_02118658()
-{
+int daIwante_c::func_ov066_02118658() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1797,7 +1754,7 @@ int Eyerok::func_ov066_02118658()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118678Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118678Ev
 /* Rise state, hand run handler (the first state a hand runs). Until the phase is
  * PHASE_RISE it only waits, with the animation held at speed 0. Then: animation
  * speed 0x1000 (1.0), a hop (hand 1: mVertSpeed 0x2d000 = 45.0, mVertAccel
@@ -1807,8 +1764,7 @@ int Eyerok::func_ov066_02118658()
  * within 20.0 of the rest X/Z and the animation has finished, its collision is
  * enabled, its bit is ORed into data_ov066_0211ae0c and it enters the waiting
  * state (data_ov066_0211b06c). */
-int Eyerok::func_ov066_02118678()
-{
+int daIwante_c::func_ov066_02118678() {
     if (mStateWork0 == 0) {
         if (data_ov066_0211ae04 == PHASE_RISE) {
             mBlendAnmModel.speed = 0x1000;
@@ -1845,12 +1801,11 @@ int Eyerok::func_ov066_02118678()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021187c8Ev
+// @symbol _ZN10daIwante_c19func_ov066_021187c8Ev
 /* Rise state, hand enter handler: starts the animation in data_ov066_0211ae74
  * (hand 2) / ae7c with the texture pattern from ae3c / aebc, freezes it
  * (speed 0) and clears the work words. */
-int Eyerok::func_ov066_021187c8()
-{
+int daIwante_c::func_ov066_021187c8() {
     if (mPartIdx == PART_HAND_2) {
         mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae74.filePtr, 4, 0x40000000, 0x1000, 0);
         mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
@@ -1864,14 +1819,13 @@ int Eyerok::func_ov066_021187c8()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021188b0Ev
+// @symbol _ZN10daIwante_c19func_ov066_021188b0Ev
 /* Body state while a pattern runs (enter handler func_ov066_02118934). If both
  * hands are gone (data_ov066_0211abe0 == 0) it sets mTimer2 = 100 and enters the
  * talk state (data_ov066_0211b0ac). Otherwise, once the completion count
  * data_ov066_0211ae08 is 2 or more it sets PHASE_REST and returns to the decision
  * state (data_ov066_0211b0cc). */
-int Eyerok::func_ov066_021188b0()
-{
+int daIwante_c::func_ov066_021188b0() {
     if (data_ov066_0211abe0 == 0) {
         mTimer2 = 0x64;
         func_ov066_02119454(&data_ov066_0211b0ac);
@@ -1884,11 +1838,10 @@ int Eyerok::func_ov066_021188b0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118934Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118934Ev
 /* Body state while a pattern runs, enter handler: clears the work words, timer
  * and sub-state. */
-int Eyerok::func_ov066_02118934()
-{
+int daIwante_c::func_ov066_02118934() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1896,11 +1849,11 @@ int Eyerok::func_ov066_02118934()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118954Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118954Ev
 /* Pattern 9, body run handler. Once func_ov066_021168b0 reports that the hands
  * are in, resets mPickCount and data_ov066_0211ae10 and enters the
  * pattern-running state (data_ov066_0211b03c). No hand is picked. */
-s32 Eyerok::func_ov066_02118954() {
+s32 daIwante_c::func_ov066_02118954() {
     s32 r = func_ov066_021168b0();
     if (r == 0) {
         return 1;
@@ -1911,10 +1864,9 @@ s32 Eyerok::func_ov066_02118954() {
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021189a0Ev
+// @symbol _ZN10daIwante_c19func_ov066_021189a0Ev
 /* Pattern 9, body enter handler: clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_021189a0()
-{
+int daIwante_c::func_ov066_021189a0() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1922,13 +1874,12 @@ int Eyerok::func_ov066_021189a0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021189c0Ev
+// @symbol _ZN10daIwante_c19func_ov066_021189c0Ev
 /* Pattern 8, body run handler. Once func_ov066_021168b0 reports that the hands are
  * in, picks data_ov066_0211ae0c from the top bit of a random number (0: hand 2,
  * 1: hand 1), resets mPickCount and enters the pattern-running state
  * (data_ov066_0211b03c). */
-int Eyerok::func_ov066_021189c0()
-{
+int daIwante_c::func_ov066_021189c0() {
     if (func_ov066_021168b0() == 0) return 1;
     if ((((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1f) & 1) == 0)
         data_ov066_0211ae0c = PART_HAND_2;
@@ -1939,10 +1890,9 @@ int Eyerok::func_ov066_021189c0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118a30Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118a30Ev
 /* Pattern 8, body enter handler: clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_02118a30()
-{
+int daIwante_c::func_ov066_02118a30() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1950,14 +1900,14 @@ int Eyerok::func_ov066_02118a30()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118a50Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118a50Ev
 /* Pattern 7, body run handler. Once func_ov066_021168b0 reports that the hands are
  * in, picks the hand: with both alive it alternates using the low bit of
  * data_ov066_0211ae10 (0: hand 2, 1: hand 1), otherwise it is the surviving hand;
  * then mPickCount += 1, the toggle flips and the body enters the
  * pattern-running state (data_ov066_0211b03c). The pattern 5 and 6 body handlers
  * (func_ov066_02118c00, func_ov066_02118b28) have identical code. */
-s32 Eyerok::func_ov066_02118a50() {
+s32 daIwante_c::func_ov066_02118a50() {
     s32 r = func_ov066_021168b0();
     if (r == 0) return 1;
     if (data_ov066_0211abe0 == HANDS_BOTH) {
@@ -1973,10 +1923,9 @@ s32 Eyerok::func_ov066_02118a50() {
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118b08Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118b08Ev
 /* Pattern 7, body enter handler: clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_02118b08()
-{
+int daIwante_c::func_ov066_02118b08() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1984,9 +1933,9 @@ int Eyerok::func_ov066_02118b08()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118b28Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118b28Ev
 /* Pattern 6, body run handler; the same pick as func_ov066_02118a50. */
-s32 Eyerok::func_ov066_02118b28() {
+s32 daIwante_c::func_ov066_02118b28() {
     s32 r = func_ov066_021168b0();
     if (r == 0) return 1;
     if (data_ov066_0211abe0 == HANDS_BOTH) {
@@ -2002,10 +1951,9 @@ s32 Eyerok::func_ov066_02118b28() {
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118be0Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118be0Ev
 /* Pattern 6, body enter handler: clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_02118be0()
-{
+int daIwante_c::func_ov066_02118be0() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -2013,9 +1961,9 @@ int Eyerok::func_ov066_02118be0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118c00Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118c00Ev
 /* Pattern 5, body run handler; the same pick as func_ov066_02118a50. */
-s32 Eyerok::func_ov066_02118c00() {
+s32 daIwante_c::func_ov066_02118c00() {
     s32 r = func_ov066_021168b0();
     if (r == 0) return 1;
     if (data_ov066_0211abe0 == HANDS_BOTH) {
@@ -2031,10 +1979,9 @@ s32 Eyerok::func_ov066_02118c00() {
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118cb8Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118cb8Ev
 /* Pattern 5, body enter handler: like the others, but mTimer1 starts at 30. */
-int Eyerok::func_ov066_02118cb8()
-{
+int daIwante_c::func_ov066_02118cb8() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 30;
@@ -2042,7 +1989,7 @@ int Eyerok::func_ov066_02118cb8()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118cdcEv
+// @symbol _ZN10daIwante_c19func_ov066_02118cdcEv
 /* Pattern 4, body run handler: keeps the hands hopping while the player stays in
  * the far band. After func_ov066_021168b0 reports the hands are in: once
  * mTimer1 (30 frames) is 0 and the player is no longer in the -3154.0 band
@@ -2051,7 +1998,7 @@ int Eyerok::func_ov066_02118cb8()
  * the decision state. Whenever no hand is mid-hop it also picks the next one:
  * with both alive hand 1 first, then alternating (mStateWork0 flips between 0
  * and 1); with one gone, that one. */
-int Eyerok::func_ov066_02118cdc() {
+int daIwante_c::func_ov066_02118cdc() {
     if (func_ov066_021168b0() == 0)
         return 1;
     if (mTimer1 == 0) {
@@ -2079,10 +2026,9 @@ int Eyerok::func_ov066_02118cdc() {
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118de0Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118de0Ev
 /* Pattern 4, body enter handler: like the others, but mTimer1 starts at 30. */
-int Eyerok::func_ov066_02118de0()
-{
+int daIwante_c::func_ov066_02118de0() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 30;
@@ -2090,7 +2036,7 @@ int Eyerok::func_ov066_02118de0()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02118e04Ev
+// @symbol _ZN10daIwante_c19func_ov066_02118e04Ev
 /* Decision state, run handler (the body's idle state between patterns). If both
  * hands are gone it sets mTimer2 = 100 and enters the talk state. It waits for a
  * player and for mTimer2 to be 0, then resets the completion count
@@ -2105,8 +2051,7 @@ int Eyerok::func_ov066_02118de0()
  *   coin flip 0 / 1                      -> PATTERN_7 (affc) / PATTERN_6 (afdc)
  * It enters the matching body state and sets data_ov066_0211ae04 to the pattern
  * number, which is what the hands follow (func_ov066_021168ec). */
-int Eyerok::func_ov066_02118e04()
-{
+int daIwante_c::func_ov066_02118e04() {
     Player* p = ClosestPlayer();
     int coinFlip;
     int v;
@@ -2162,10 +2107,9 @@ int Eyerok::func_ov066_02118e04()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_0211901cEv
+// @symbol _ZN10daIwante_c19func_ov066_0211901cEv
 /* Decision state, enter handler: clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_0211901c()
-{
+int daIwante_c::func_ov066_0211901c() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -2173,7 +2117,7 @@ int Eyerok::func_ov066_0211901c()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_0211903cEv
+// @symbol _ZN10daIwante_c19func_ov066_0211903cEv
 /* Talk state, run handler (enter handler func_ov066_02119348). Used twice: before
  * the fight (both hands alive, once they have risen) and after it (both gone).
  * Waits for mTimer2. On the first frame it sets the camera flag
@@ -2192,7 +2136,7 @@ int Eyerok::func_ov066_0211901c()
  * the body spawns its star (UntrackAndSpawnStar at (0, -1500.0, -3660.0), with
  * the id and tracking state from InitResources) and marks itself for
  * destruction. */
-int Eyerok::func_ov066_0211903c() {
+int daIwante_c::func_ov066_0211903c() {
     struct Vector3 v1, v2, in, out, star;
     dCamera_c* cam;
     int msgid;
@@ -2277,11 +2221,10 @@ int Eyerok::func_ov066_0211903c() {
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02119348Ev
+// @symbol _ZN10daIwante_c19func_ov066_02119348Ev
 /* Talk state, enter handler: disables the body's collision (mMeshCollider2) if it
  * is enabled, then clears the work words, timer and sub-state. */
-int Eyerok::func_ov066_02119348()
-{
+int daIwante_c::func_ov066_02119348() {
     if (mMeshCollider2.IsEnabled() != 0) {
         mMeshCollider2.Disable();
     }
@@ -2292,7 +2235,7 @@ int Eyerok::func_ov066_02119348()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02119398Ev
+// @symbol _ZN10daIwante_c19func_ov066_02119398Ev
 /* Dormant state, run handler (the body's first state). Each frame that the body
  * is on screen (mFlags bit 0x8, "off screen", is clear), the closest player's
  * mPosY (read as playerPos + 4, with playerPos = player + 0x5c = mPosX) is below
@@ -2301,8 +2244,7 @@ int Eyerok::func_ov066_02119348()
  * 0, the phase becomes PHASE_RISE and the body enters the talk state
  * (data_ov066_0211b0ac). */
 struct Vec4 { int a, b, self, d; ~Vec4(){} };
-int Eyerok::func_ov066_02119398()
-{
+int daIwante_c::func_ov066_02119398() {
     Vec4 sp;
     /* Reading p->mPosY and p->mPosZ directly makes this 4 bytes shorter;
        the pointer to the position triple is what matches. */
@@ -2324,31 +2266,28 @@ int Eyerok::func_ov066_02119398()
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_0211944cEv
+// @symbol _ZN10daIwante_c19func_ov066_0211944cEv
 /* Dormant state, enter handler: does nothing. */
-int Eyerok::func_ov066_0211944c()
-{
+int daIwante_c::func_ov066_0211944c() {
     return 1;
 }
 
-// @symbol _ZN6Eyerok19func_ov066_02119454EPv
+// @symbol _ZN10daIwante_c19func_ov066_02119454EPv
 /* Install a state. `pv` points at a descriptor made of two pointer-to-member
  * pairs (8 bytes each: enter handler at +0, run handler at +8, filled in by
  * __sinit_ov066_0211a418). It is stored in mState (+0x48c) and the enter handler
  * is called on the object unless that first word is null. */
-int Eyerok::func_ov066_02119454(void *pv)
-{
+int daIwante_c::func_ov066_02119454(void *pv) {
     mState = (EyerokState *)pv;
     if (*(int *)&mState->enter == 0)
         return 1;
     return (this->*mState->enter)();
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021194a4Ev
+// @symbol _ZN10daIwante_c19func_ov066_021194a4Ev
 /* Refresh the collision matrix mClsnMat2 from the object (rotation about Y by
  * mAngleY, translation = position) and hand it to dBgW_KcMbg::Transform. */
-void Eyerok::func_ov066_021194a4()
-{
+void daIwante_c::func_ov066_021194a4() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
     mClsnMat2.t.x = mPosX;
     mClsnMat2.t.y = mPosY;
@@ -2356,15 +2295,14 @@ void Eyerok::func_ov066_021194a4()
     mMeshCollider2.Transform(mClsnMat2, mAngleY);
 }
 
-// @symbol _ZN6Eyerok19func_ov066_021194fcEv
+// @symbol _ZN10daIwante_c19func_ov066_021194fcEv
 /* Refresh the model matrices. The matrix is a translation of mPos >> 3 rotated
  * by mAngleX/Y/Z and is stored in mModel2 (the body) or mBlendAnmModel (a hand).
  * A hand above its rest height also gets a drop shadow: a matrix at mPosX
  * +0x64000 (+100.0; -100.0 for hand 1), mPosY - 0x8000 (8.0 lower), mPosZ +
  * 0xa0000 (160.0), each >> 3, passed to dActor_c::DropShadowRadHeight with
  * radius 0x140000 (320.0) and height 0x258000 (600.0). */
-void Eyerok::func_ov066_021194fc()
-{
+void daIwante_c::func_ov066_021194fc() {
     int v[3];
     Vec3_Asr(v, &mPosX, 3);
     Matrix4x3_FromTranslation(data_020a0e68, v[0], v[1], v[2]);
@@ -2392,12 +2330,11 @@ void Eyerok::func_ov066_021194fc()
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0x140000, 0x258000, 0xf);
 }
 
-// @symbol _ZN6Eyerok16CleanupResourcesEv
+// @symbol _ZN10daIwante_c16CleanupResourcesEv
 /* Disables the collision if it is still enabled; the body (mPartIdx 0) alone
  * then releases the 22 shared files InitResources loaded: 3 models, 4 texture
  * patterns, 10 animations and 5 collision files. */
-int Eyerok::CleanupResources()
-{
+int daIwante_c::CleanupResources() {
     if (mMeshCollider2.IsEnabled())
         mMeshCollider2.Disable();
     if (mPartIdx == PART_MAIN) {
@@ -2427,19 +2364,16 @@ int Eyerok::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN6Eyerok16OnPendingDestroyEv
-/* Eyerok::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
+// @symbol _ZN10daIwante_c16OnPendingDestroyEv
+/* daIwante_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
-void Eyerok::OnPendingDestroy()
-{
-}
+void daIwante_c::OnPendingDestroy() {}
 
-// @symbol _ZN6Eyerok6RenderEv
+// @symbol _ZN10daIwante_c6RenderEv
 /* Body: draws mModel2, only during PHASE_DORMANT. Hands: not drawn during
  * PHASE_DORMANT; afterwards the texture pattern is updated from the model data
  * and mBlendAnmModel is drawn. */
-int Eyerok::Render()
-{
+int daIwante_c::Render() {
     if (mPartIdx == PART_MAIN) {
         if (data_ov066_0211ae04 == PHASE_DORMANT) {
             mModel2.Render(0);
@@ -2452,20 +2386,19 @@ int Eyerok::Render()
     return 1;
 }
 
-
 /* Bracketed, and it binds only because of the file-top
  * `#pragma defer_codegen off`: with codegen deferred (mwccarm 2004/b56s
  * default) a bracketed opt_* pragma does not bind and these two go
  * file-global, which costs func_ov066_021184e0 (4 words) and
  * func_ov066_021194fc (a size change).  Deleting them outright instead
- * costs _ZN6Eyerok8BehaviorEv: 33/34, a 999-word content divergence plus one
+ * costs _ZN10daIwante_c8BehaviorEv: 33/34, a 999-word content divergence plus one
  * wrong relocation destination, with the size UNCHANGED at 0x4b0.  (An earlier
  * revision of this comment said 0x4b0 -> 0x4ac; that size change belongs to a
  * ROM-descending arrangement, not this one.  Re-measured by negative control on
  * the shipped source.) */
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
-// @symbol _ZN6Eyerok8BehaviorEv
+// @symbol _ZN10daIwante_c8BehaviorEv
 /* Per frame, for all three parts: count mTimer1 and mTimer2 down, then run the
  * current state's run handler (the second pointer-to-member of the descriptor
  * mState points at). Then the dust burst: while mDustCounter is nonzero, on each
@@ -2483,8 +2416,7 @@ int Eyerok::Render()
 /* Vtable slot 6. EVec3 is a local plain-int triple (stack temps); callees whose
  * ROM symbols carry by-value/ref class parameters keep their literal mangled
  * extern "C" spellings. */
-int Eyerok::Behavior()
-{
+int daIwante_c::Behavior() {
     char *c = (char *)this;
 
     DecIfAbove0_Short(&mTimer1);
@@ -2564,15 +2496,16 @@ int Eyerok::Behavior()
             u32 id1 = 0x13b;
             int z0 = 0;
             for (; i < 0x14; i++) {
-                if (((Eyerok *)cur)->mDustPos[0].x != 0 || ((Eyerok *)cur)->mDustPos[0].y != 0 ||
-                    ((Eyerok *)cur)->mDustPos[0].z != 0) {
+                if (((daIwante_c *)cur)->mDustPos[0].x != 0 ||
+                    ((daIwante_c *)cur)->mDustPos[0].y != 0 ||
+                    ((daIwante_c *)cur)->mDustPos[0].z != 0) {
                     mDustParticle1[i] = Particle::System::New(
-                        mDustParticle1[i], id0, ((Eyerok *)cur)->mDustPos[0].x,
-                        ((Eyerok *)cur)->mDustPos[0].y, ((Eyerok *)cur)->mDustPos[0].z,
+                        mDustParticle1[i], id0, ((daIwante_c *)cur)->mDustPos[0].x,
+                        ((daIwante_c *)cur)->mDustPos[0].y, ((daIwante_c *)cur)->mDustPos[0].z,
                         (const Vector3_16f *)((void *)z0), (Particle::Callback *)((void *)z0));
                     mDustParticle2[i] = Particle::System::New(
-                        mDustParticle2[i], id1, ((Eyerok *)cur)->mDustPos[0].x,
-                        ((Eyerok *)cur)->mDustPos[0].y, ((Eyerok *)cur)->mDustPos[0].z,
+                        mDustParticle2[i], id1, ((daIwante_c *)cur)->mDustPos[0].x,
+                        ((daIwante_c *)cur)->mDustPos[0].y, ((daIwante_c *)cur)->mDustPos[0].z,
                         (const Vector3_16f *)((void *)z0), (Particle::Callback *)((void *)z0));
                 }
                 cur += 0xc;
@@ -2587,9 +2520,9 @@ int Eyerok::Behavior()
                 char *q = c;
                 mDustCounter = (u16)j;
                 for (; j < 0x14; j++) {
-                    ((Eyerok *)q)->mDustPos[0].x = 0;
-                    ((Eyerok *)q)->mDustPos[0].y = 0;
-                    ((Eyerok *)q)->mDustPos[0].z = 0;
+                    ((daIwante_c *)q)->mDustPos[0].x = 0;
+                    ((daIwante_c *)q)->mDustPos[0].y = 0;
+                    ((daIwante_c *)q)->mDustPos[0].z = 0;
                     q += 0xc;
                 }
             }
@@ -2625,11 +2558,10 @@ int Eyerok::Behavior()
     return 1;
 }
 
-
 #pragma opt_strength_reduction on
 #pragma opt_common_subs on
 
-// @symbol _ZN6Eyerok13InitResourcesEv
+// @symbol _ZN10daIwante_c13InitResourcesEv
 /* mPartIdx comes from the low byte of param1 (0xff, or anything above 2, means
  * the body); mStarId from param1 bits 12..15; TrackStar(mStarId, 2) is stored in
  * mStarTracked. The body loads every shared file and the hands bind their model
@@ -2648,8 +2580,7 @@ int Eyerok::Behavior()
  * 0x32000 (50.0) toward -Z; the matching collision file is loaded;
  * mHitPoints = 3; data_ov066_0211ae00 = 0; it enters the rise state
  * (data_ov066_0211b05c). */
-int Eyerok::InitResources()
-{
+int daIwante_c::InitResources() {
     char *c = (char *)((void *)this);
     Vector3 v;
     Vector3 w;
@@ -2720,10 +2651,10 @@ int Eyerok::InitResources()
         int i = 0;
         char *p = c;
         do {
-            ((Eyerok *)p)->mDustPos[0].x = 0;
-            ((Eyerok *)p)->mDustPos[0].y = 0;
+            ((daIwante_c *)p)->mDustPos[0].x = 0;
+            ((daIwante_c *)p)->mDustPos[0].y = 0;
             i += 1;
-            ((Eyerok *)p)->mDustPos[0].z = 0;
+            ((daIwante_c *)p)->mDustPos[0].z = 0;
             p += 0xC;
         } while (i < 0x14);
     }
@@ -2796,19 +2727,18 @@ int Eyerok::InitResources()
     return 1;
 }
 
-// @symbol _ZN6Eyerok16OnAimedAtWithEggEv
-/* Slot 29, attributed by the vtable: _ZTV6Eyerok + 4*29 = 0x0211ad64 + 0x74
+// @symbol _ZN10daIwante_c16OnAimedAtWithEggEv
+/* Slot 29, attributed by the vtable: _ZTV10daIwante_c + 4*29 = 0x0211ad64 + 0x74
    = 0x0211ade8, and config/arm9/overlays/ov066/relocs.txt relocates
    0x0211ade8 -> 0x0211a2dc. The body is a constant: 163840 (0x28000). */
-int Eyerok::OnAimedAtWithEgg()
-{
+int daIwante_c::OnAimedAtWithEgg() {
     return 163840;
 }
 
 /* -------------------------------------------------------------------------- */
 /* FOLDED ZERO-GAP NEIGHBOURS. These three sit between this unit and the
    module's sinit at 0x0211a418, and they belong to this class: the factory
-   installs _ZTV6Eyerok, which is this unit's vtable. */
+   installs _ZTV10daIwante_c, which is this unit's vtable. */
 /* -------------------------------------------------------------------------- */
 /* Redundant with the declaration near the top of this file. Kept only so the
    declaration-agreement vote stays at unsigned char (the ldrb/blo loads of
@@ -2859,9 +2789,8 @@ extern "C" void func_ov066_0211a35c(void *a, void *b, void *c)
  * allocation size, vtable identity, and the IWANTE registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Eyerok_Spawn. */
-extern "C" Eyerok *daIwante_c_classInit(void)
-{
-    return new Eyerok();
+extern "C" daIwante_c *daIwante_c_classInit(void) {
+    return new daIwante_c();
 }
 
 /* ---- the static initializer's objects. __sinit_d_a_iwante.cpp, emitted from
