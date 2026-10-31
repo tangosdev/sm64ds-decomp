@@ -234,6 +234,7 @@
 // guarantee, and it is in the unproven items.
 
 #include <cstdio>
+#include <intrin.h>
 #include "types.h"
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
@@ -833,8 +834,26 @@ int __fastcall fdr_s2c(void *, void *)
    argument. */
 void *__fastcall fdr_s00(void *s, void *) { return _ZN7dWipe_cD1Ev(s); }
 void *__fastcall fdr_s04(void *s, void *) { return _ZN7dWipe_cD0Ev(s); }
-int   __fastcall fdr_s14(void *s, void *) { return _ZN7dWipe_c9IsAtStartEv(s); }
-int   __fastcall fdr_s18(void *s, void *) { return _ZN7dWipe_c7IsAtEndEv(s); }
+/* 0x14 / 0x18 / 0x1c TAKE THE RECEIVER FROM WHICHEVER SHAPE THE CALLER USED.
+   port/fader_boot_map.txt section 9c lists the predicates as reached in shape
+   A (a C++ virtual: `this` in ECX, nothing pushed) AND shape C (a struct of
+   plain function pointers: the receiver pushed as a cdecl argument). Reading
+   only ECX serves shape C by luck, when the compiler happens to have the
+   object in ECX at the call. dScMgTrampoline_c::OnGraphCallback0
+   (src/minigames/d_s_mg_trampoline.cpp, `data_0209f5bc->vt[5](data_0209f5bc)`)
+   loads the fader into EDX for its first call and leaves ECX = the scene, so
+   IsAtStart ran on the trampoline object and answered 0 with the wipe
+   finished; data_ov006_0213fa9c never cleared and the stroke block (the
+   TrmpLine_Create hit test) was never reached: no drawn trampoline worked.
+   dWipe_c has ONE instance, data_0209f61c (__sinit_02074f80), so the stub
+   compares the first stack word with that address (a compare, nothing is
+   read through it) and takes it when it matches; otherwise ECX. Both shapes
+   clean nothing, so the stack is balanced either way. */
+#define FDR_RECV(s) \
+    ((((void **)_AddressOfReturnAddress())[1] == (void *)data_0209f61c) \
+         ? (void *)data_0209f61c : (s))
+int   __fastcall fdr_s14(void *s, void *) { return _ZN7dWipe_c9IsAtStartEv(FDR_RECV(s)); }
+int   __fastcall fdr_s18(void *s, void *) { return _ZN7dWipe_c7IsAtEndEv(FDR_RECV(s)); }
 /* 0x1c, run linkfull lane PSYCHE1: section 9e's ruling, applied to the one
    table that had not taken it. The ROM's dWipe_c::IsBetweenStartAndEnd
    (0x0202ed7c) answers `!IsAtStart() && !IsAtEnd()` through the receiver's own
@@ -847,7 +866,7 @@ int   __fastcall fdr_s18(void *s, void *) { return _ZN7dWipe_c7IsAtEndEv(s); }
    FaderBrightness body through the view that lands its two calls on this
    object's ROM 0x14 and 0x18, which is the cartridge's answer on both
    branches. The dWipe_c TU stays in the link: ??_7dWipe_c@@6B@ names it. */
-int   __fastcall fdr_s1c(void *s, void *) { return _ZN15dFdBrightness_c20IsBetweenStartAndEndEv(s); }
+int   __fastcall fdr_s1c(void *s, void *) { return _ZN15dFdBrightness_c20IsBetweenStartAndEndEv(FDR_RECV(s)); }
 /* 0x20: the target the ROM's veneer at 0x0202ed08 tail-calls. See the header
    for why src/_ZN7dWipe_c8SetToEndEv.cpp is not in the link. */
 void  __fastcall fdr_s20(void *s, void *)
