@@ -721,10 +721,13 @@ static inline void vs_group_pick(const u16 *row, const int *idx, int n,
  * four of those are not the drawn shade: green body 208b20 (now 31a431), blue
  * body 6aace6 (now 4a52b4), blue boots 9c089c (now b410b4) and yellow boots
  * 31ac00 (now 31bd08). Players saved them, and an older console still sends
- * them; they meant the cartridge Yoshi, which is what those values drew under
- * the old anchor. None of the four is a cell of the hue grid. So each is read
- * as the cartridge colour it named, and an old save or an older player still
- * draws the cartridge Yoshi he chose, on every console. */
+ * them. Under the old anchor only the green cell actually drew the cartridge
+ * Yoshi: the old blue cell drew a pale sky blue and the old yellow cell a pale
+ * cream. Each value is read here as the cartridge colour its cell now shows,
+ * so a player who saved an old classic swatch gets the cartridge Yoshi that
+ * swatch shows today (a saved Blue goes from pale to the cartridge's deep
+ * blue). None of the four is a cell of the hue grid; the match is exact, so a
+ * hand-typed 6aace6 draws the cartridge blue while 6aace7 does not. */
 static inline void vs_classic_alias(const u8 in[3], u8 out[3])
 {
     static const u8 kOld[4][3] = { { 0x20, 0x8b, 0x20 }, { 0x6a, 0xac, 0xe6 },
