@@ -1898,6 +1898,7 @@ static int g_spp_stride, g_spp_w, g_spp_h, g_spp_pf = -1, g_spp_tpf = -1, g_spp_
 static void spp_facts_at(PauseFacts *f, double a)
 {
     f->slide_t1000 = g_spp_t0 + (int)floor((g_spp_t1 - g_spp_t0) * a + 0.5);
+    f->pg_a = (int16_t)(a * 1000 + 0.5);
 }
 extern "C" void pause_page_draw_kept(const MenuLayout *lay, int piece, uint32_t *dst, int w, int h, int stride)
 {
