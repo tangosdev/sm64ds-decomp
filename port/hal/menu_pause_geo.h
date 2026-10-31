@@ -291,7 +291,10 @@ inline PauseRect pause_dialog_rect(const PauseGeo &g, const PauseFacts *f, int k
         return r;
     }
     r.x = g.pcx - r.w / 2 + pause_planks_dx(g, f);
-    r.y = g.pcy - r.h / 2 + pause_round(26 * k);
+    /* PAUSESCALE2: the Saving / File saved sheet has no edge tabs under it, so at 4:3 it keeps the picture's own centre line (h / 2 + 8 u)
+       when the ROM's plates lifted the plank stack above the bottom-corner tabs (pause_geo) */
+    const int cy = (!g.wide && kind == PAUSE_V_STATUS) ? g.h / 2 + pause_round(8 * g.u) : g.pcy;
+    r.y = cy - r.h / 2 + pause_round(26 * k);
     return r;
 }
 
