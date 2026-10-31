@@ -3914,8 +3914,15 @@ int card_settle(const ntr::GxGpuFrame *f)
         if (f->sink3d) {
             static std::vector<uint32_t> zero_row;
             if ((int)zero_row.size() < g_cp_cw) zero_row.assign((size_t)g_cp_cw, 0u);
+            /* run after093, lane LCPLANK1: nor the menu layer. A layer in this
+               snapshot matched the tick's own picture on every menu pixel, so
+               the pictures between ticks kept the replayed 3D there (the save
+               menu's planks and words gone, the floor showing through) */
+            const bool lay_live = g_lay_live;
+            g_lay_live = false;
             cp_resolve(&zero_row[0], 0, f->sink3d, stride, 0, 0, stride, false,
                        sm, m);
+            g_lay_live = lay_live;
         }
         cp_resolve(f->fb, stride, f->fb, stride, f->cover,
                    (sm && f->pre) ? f->pre : 0, stride, g_cp_fade != 0, sm, m);
