@@ -669,8 +669,7 @@ s32 daObjMarioCap_c::OnYoshiTryEat() {
  * passes 0 as the second argument) and starts the 0x8012 animation, then binds
  * the cap to that player and enters the taken state. */
 // @symbol _ZN15daObjMarioCap_c13OnTurnIntoEggER7daPly_c
-void daObjMarioCap_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daObjMarioCap_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.SetNoControlState(8, -1, 0) == 1) {
         player.SetNewHatCharacter(mModelIndex & 0xff, 1, 0);
         mAnmModel.SetAnim((BCA_File *)data_ov002_0210de30.filePtr, 0x40000000, 0x1000, 0);
@@ -1219,7 +1218,7 @@ int daObjMarioCap_c::InitAnim()
 
     state = mType;
     if (state == 0xa || state == 0xf) {
-        daPly_c* closest = ClosestPlayer();
+        daPly_c *closest = ClosestPlayer();
         if (closest != 0) {
             s16* src = &closest->mAngleX;
             mPrevAngleX = src[0];
@@ -1393,7 +1392,7 @@ void daObjMarioCap_c::CheckTouch()
 
     {
         /* `a = b ? a : a` through a V16 is the MATCH form. */
-        daPly_c* found = mPlayer;
+        daPly_c *found = mPlayer;
         int a = *(u16*)&found->mAngleX;
         int b = *(u16*)&found->mAngleY;
         a = b ? a : a;

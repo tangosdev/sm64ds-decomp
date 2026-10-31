@@ -71,15 +71,24 @@
   ],
   "data": [],
   "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "func_ov007_020bf630's Vector3 point local emits the vague-linkage ~Vector3 into this object; the ROM keeps one copy, in arm9."
+    }
+  ],
   "notes": [
     "Text only: the bss word 0x02104bd4 and the .data templates 0x020d7c98..0x020d7d60 stay ROM-owned and are reached by extern, as the one-function sources did.",
     "Folded from 7 one-function sources. They spelled data_ov007_02104bd4 as int, int *, char * and u8[] with offset arithmetic; the unit declares it Ov007MeshScene * (no file outside the unit names it) and drops its stale include/decl_common.h line, with those of func_ov007_020ca5f0, func_ov007_020cb3dc and data_ov007_020d7d60, whose only decl_common consumer was func_ov007_020bee14.c.",
     "Two of the sources needed file-scope #pragma opt_strength_reduction off (and one opt_common_subs off); in the unit every function matches with neither pragma.",
-    "func_ov007_020bf57c's sprite copy is a block move through a union of a word view and a POD layout twin (Ov007SpriteCopy): Ov007Sprite holds Vector3s, so in C++ a plain assignment copies member by member and a local of it emits Vector3's out-of-line destructor, which a text-only unit cannot carry. func_ov007_020bee14's point is a POD twin of Vector3 for the same reason.",
+    "func_ov007_020bf57c's sprite copy is a block move through a union of a word view and a POD layout twin (Ov007SpriteCopy): Ov007Sprite holds Vector3s, so in C++ a plain assignment copies member by member. func_ov007_020bee14's point copy is a block move through Ov007Point, a POD view of Vector3, for the same reason: a Vector3 local assigned from data_ov007_020d7d60 does not match. func_ov007_020bf630's point is a real Vector3; its destructor is the deadstripped duplicate above.",
     "func_ov007_020bf630 now returns func_ov007_020c30ac's result, as its one caller func_ov007_020bed60 reads it; the source spelled it void."
   ],
   "verification": {
-    "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "functions_matched": 7,
@@ -87,7 +96,25 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "functions_occur_in_expected_order": "PASS"
+      "functions_occur_in_expected_order": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "object": "build/tu/ov007-unit020bed60/unit020bed60.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        19
+      ],
+      "data": [],
+      "dataExternalized": [],
+      "canonicalDuplicates": []
     }
   }
 }

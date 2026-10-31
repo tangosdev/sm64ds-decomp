@@ -8,10 +8,10 @@
  * where they go.
  *
  * Whether `Sound` is a namespace or a class cannot be read off the mangling:
- * _ZN5Sound7daPly_c... is identical either way. Namespace is what the existing
+ * _ZN5Sound6Player... is identical either way. Namespace is what the existing
  * sources chose, and this header keeps that choice rather than reopening it.
  *
- * NO FIELDS, deliberately. Sound::daPly_c's only recovered method is static
+ * NO FIELDS, deliberately. Sound::Player's only recovered method is static
  * and reaches a file-scope table, so nothing here evidences an instance
  * layout -- and inventing one would silently retype whatever else turns out
  * to live at those addresses.
@@ -68,11 +68,11 @@ struct InfoInstrumentBankEntry {
     static InfoInstrumentBankEntry *GetWithID(u32 id);
 };
 
-struct daPly_c {
+struct Player {
     /* STATIC, and the bytes are what say so. A non-static member would take
      * `this` in r0; the ROM body multiplies r0 by 0x1c and uses it as a table
      * index, so r0 is the first int and there is no this. The mangling cannot
-     * distinguish the two -- _ZN5Sound7daPly_c19SetPlayableSeqCountEii is the
+     * distinguish the two -- _ZN5Sound6Player19SetPlayableSeqCountEii is the
      * same for both -- so this is settled by the disassembly alone. */
     static void SetPlayableSeqCount(int index, int count);
 };

@@ -136,7 +136,7 @@ struct da1up_c : dEnemyBase_c {
     virtual s32   Render();                      /* slot  9 */
     virtual void  OnPendingDestroy();            /* slot 12 */
     virtual s32   OnYoshiTryEat();               /* slot 18 */
-    virtual void  OnTurnIntoEgg(daPly_c &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
 
     /* The fourteen mMushroomType handlers Behavior dispatches through the
        pointer-to-member table data_ov002_0210dc00 (indices in comments) plus

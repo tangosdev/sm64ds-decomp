@@ -232,17 +232,22 @@ void func_ov007_020b283c(void) {
     WORK->modelReady = 0;
 }
 
+/* Q12 product, truncated. */
+static inline int MulFx(int a, int b) {
+    return (int)(((s64)a * b) >> 12);
+}
+
 // @symbol func_ov007_020b2764
 /* Blends the corner colours of screenSprites[0] and [1] from
  * data_ov007_020ccc50 (t = 0) to data_ov007_020ccc5c (t = 0x1000), and
  * fades [1]'s alpha along a curve: 31 (of 31) at either end, 16 at
  * t = 0x800. */
 void func_ov007_020b2764(int t) {
-    int i = 0;
+    int i;
     Ov007Sprite *sprite;
     int falling = 0x1000 - (t - 0x800) * 2;
     int rising = t * 2;
-    do {
+    for (i = 0; i < 2; i++) {
         sprite = WORK->screenSprites[i];
         sprite->cornerColors[3] =
             func_ov007_020c3be0(t, data_ov007_020ccc50[i].outer, data_ov007_020ccc5c[i].outer);
@@ -252,11 +257,9 @@ void func_ov007_020b2764(int t) {
         sprite->cornerColors[1] = sprite->cornerColors[2];
         if (i == 1) {
             int ramp = (t >= 0x800) ? falling : rising;
-            int rest = 0x2000 - ramp;
-            int curve = (int)(((long long)ramp * rest) >> 12);
+            int curve = MulFx(ramp, 0x2000 - ramp);
             sprite->alpha = (0x1000 - curve) * 0xf + 0x10000;
         }
-        i++;
-    } while (i < 2);
+    }
 }
 }

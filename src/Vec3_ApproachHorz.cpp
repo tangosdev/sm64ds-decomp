@@ -25,7 +25,7 @@ extern void Vec3_Sub(struct Vec3* out, struct Vec3* a, struct Vec3* b);
 extern int Vec3_HorzLen(const struct Vector3* v);
 extern int LenVec3(struct Vec3* v);
 extern void Vec3_MulScalar(Vec3_Fix12* out, const Vec3_Fix12* in, int scale);
-extern void SubVec3(struct Vec3* a, struct Vec3* b, struct Vec3* c);
+extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern int Vec3_Equal(const struct Vector3 *a, const struct Vector3 *b);
 }
 
@@ -41,7 +41,7 @@ int ApproachLinear(Vector3 &dst, const Vector3 &target, int step) {
             return 1;
         }
         Vec3_MulScalar((Vec3_Fix12 *)&scaled, (const Vec3_Fix12 *)&diff, cstd::fdiv(step, len));
-        SubVec3((struct Vec3*)&dst, (struct Vec3*)&scaled, (struct Vec3*)&dst);
+        SubVec3((Vector3 *)&dst, (Vector3 *)&scaled, (Vector3 *)&dst);
     } else if (Vec3_Equal(&dst, &target)) {
         return 1;
     }
@@ -65,7 +65,7 @@ extern "C" int Vec3_ApproachHorz(struct Vec3 *out, struct Vec3 *a, int maxStep) 
         {
             int s = cstd::fdiv(maxStep, len);
             Vec3_MulScalar((Vec3_Fix12*)&scaled, (const Vec3_Fix12*)&diff, s);
-            SubVec3(out, &scaled, out);
+            SubVec3((Vector3 *)out, (Vector3 *)&scaled, (Vector3 *)out);
         }
     } else {
         if (len == 0) return 1;

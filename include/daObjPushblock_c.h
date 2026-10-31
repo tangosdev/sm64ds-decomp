@@ -57,7 +57,7 @@ struct daObjPushblock_c : dBgActor_c {
        _ZTV16daObjPushblock_c carries 0x020b8d14 at slot 27 -- vtable + 0x6c -- where
        _ZTV10dBgActor_c carries dActor_c's generic 0x02010124. Confirmed with
        tools/mangle.py: _ZN16daObjPushblock_c15OnHitByMegaCharER7daPly_c. */
-    void OnHitByMegaChar(daPly_c &player);  /* slot 27 */
+    void OnHitByMegaChar(daPly_c &player); /* slot 27 */
 
     /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). Attributed
        the same way: _ZTV16daObjPushblock_c carries 0x020b8c9c at slot 31 -- vtable +

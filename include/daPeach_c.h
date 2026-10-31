@@ -48,7 +48,7 @@ struct daPeach_c : dActor_c {
     StateEntry *mState;                 /* 0x0350 */
     s32 mStateValue;                    /* 0x0354 */
     u32 unk_358;                        /* 0x0358 */
-    daPly_c *mTalkPlayer;                /* 0x035c */
+    daPly_c *mTalkPlayer;               /* 0x035c */
     s16 mLookVertAngle;                 /* 0x0360 */
     s16 mLookHorzAngle;                 /* 0x0362 */
     s16 mTargetLookVertAngle;           /* 0x0364 */

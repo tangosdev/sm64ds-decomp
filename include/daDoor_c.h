@@ -157,23 +157,23 @@ struct daDoor_c : dActor_c {
        names are not recovered; the addresses stand in. */
     int func_ov100_02144468(int p);         /* state 021488a4 execute */
     int func_ov100_021444e8(int a1);        /* state 02148924 execute */
-    int func_ov100_02144528(daPly_c *pl);    /* state 02148904 execute */
-    void func_ov100_021446f8(daPly_c *r1);   /* state 02148904 enter */
-    int func_ov100_02144730(daPly_c *arg1);  /* states 021488f4/02148914 execute */
+    int func_ov100_02144528(daPly_c *pl);   /* state 02148904 execute */
+    void func_ov100_021446f8(daPly_c *r1);  /* state 02148904 enter */
+    int func_ov100_02144730(daPly_c *arg1); /* states 021488f4/02148914 execute */
     int func_ov100_0214491c();              /* state 02148914 enter */
     int func_ov100_02144950(daPly_c *pl, int unused); /* state 021488f4 enter */
-    int func_ov100_021449c8(daPly_c *a2);    /* state 021488e4 execute */
-    int func_ov100_02144a38(daPly_c *p);     /* state 021488e4 enter */
-    int func_ov100_02144bf4(daPly_c *a2);    /* state 021488d4 execute */
+    int func_ov100_021449c8(daPly_c *a2);             /* state 021488e4 execute */
+    int func_ov100_02144a38(daPly_c *p);              /* state 021488e4 enter */
+    int func_ov100_02144bf4(daPly_c *a2);             /* state 021488d4 execute */
     int func_ov100_02144c64();              /* state 021488d4 enter */
-    int func_ov100_02144c6c(daPly_c *r1);    /* state 021488c4 execute */
+    int func_ov100_02144c6c(daPly_c *r1);   /* state 021488c4 execute */
     int func_ov100_02144ccc();              /* state 021488c4 enter */
-    int func_ov100_02144cf8(daPly_c *b);     /* state 021488b4 execute */
-    int func_ov100_02145080(daPly_c *arg1);  /* the exit timing */
+    int func_ov100_02144cf8(daPly_c *b);    /* state 021488b4 execute */
+    int func_ov100_02145080(daPly_c *arg1); /* the exit timing */
     void func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b); /* place the player */
-    int func_ov100_021451c4(void *r5, daPly_c *r4);  /* send the player through */
-    int func_ov100_021452e4(daPly_c *r1);    /* player inside the door's box */
-    daPly_c *func_ov100_02145370();          /* the current player */
+    int func_ov100_021451c4(void *r5, daPly_c *r4);                /* send the player through */
+    int func_ov100_021452e4(daPly_c *r1);     /* player inside the door's box */
+    daPly_c *func_ov100_02145370();           /* the current player */
     int func_ov100_021453d8(void *p, int a2); /* the state installer */
 };
 

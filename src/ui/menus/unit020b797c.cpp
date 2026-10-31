@@ -359,7 +359,7 @@ void func_ov007_020b88c0(void) {
     int h;
     int botrow;
     int i;
-    int r;
+    int row;
 
     {
         Ov007Sprite *frame = data_ov007_02103460;
@@ -377,12 +377,12 @@ void func_ov007_020b88c0(void) {
 
     i = 0;
     if (h > 0) {
-        r = i;
+        row = i;
         do {
-            data_ov007_02103484[r] = 4;
-            data_ov007_02103484[(int)(((long long)r)) + w - 1] = 6;
+            data_ov007_02103484[row] = 4;
+            data_ov007_02103484[(int)(((long long)row)) + w - 1] = 6;
             i++;
-            r += w;
+            row += w;
         } while (i < h);
     }
 
@@ -750,6 +750,11 @@ void func_ov007_020b7d94(int kind) {
     func_ov007_020b88c0();
 }
 
+/* Q12 product, truncated. */
+static inline int MulFx(int a, int b) {
+    return (int)(((s64)a * b) >> 12);
+}
+
 /* Runs the window for one frame. Opening, it grows by 0x100 a frame and
  * draws the kind's message once it is 0xaf0 open (kinds 5 and 0xb also play
  * a sound); closing, it wipes the message below 0xaf0 and shrinks to closed.
@@ -759,9 +764,9 @@ void func_ov007_020b7a78(void) {
     case OV007_WINDOW_OPENING:
         if (data_ov007_02102ddc.textDrawn == 0) {
             if (data_ov007_02102ddc.scale == 0) {
-                volatile int sp0;
-                sp0 = 0;
-                MultiStore32Bytes(sp0, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
+                volatile int zero;
+                zero = 0;
+                MultiStore32Bytes(zero, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
             } else if (data_ov007_02102ddc.scale >= 0xAF0) {
                 data_ov007_02102dd8 = 0xF;
                 data_ov007_02103464 = 0x80;
@@ -817,10 +822,10 @@ void func_ov007_020b7a78(void) {
             func_ov007_020c1d8c(0);
         }
         if (data_ov007_02102ddc.textDrawn != 0 && data_ov007_02102ddc.scale <= 0xAF0) {
-            volatile int sp4;
-            sp4 = 0;
+            volatile int zero;
+            zero = 0;
             data_ov007_02102ddc.textDrawn = 0;
-            MultiStore32Bytes(sp4, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
+            MultiStore32Bytes(zero, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
         }
         data_ov007_02102ddc.scale -= 0x100;
         if (data_ov007_02102ddc.scale < 0) {
@@ -834,11 +839,11 @@ void func_ov007_020b7a78(void) {
     }
 
     if (data_ov007_02102ddc.scale > 0) {
-        int a = data_ov007_02102ddc.scale;
-        int result = (int)(((long long)a * (0x2000 - a)) >> 0xC);
-        data_ov007_0210346c->scaleY = result;
+        int t = data_ov007_02102ddc.scale;
+        int ease = MulFx(t, 0x2000 - t);
+        data_ov007_0210346c->scaleY = ease;
         data_ov007_0210346c->scaleX = data_ov007_0210346c->scaleY;
-        data_ov007_02103460->scaleY = result;
+        data_ov007_02103460->scaleY = ease;
         data_ov007_02103460->scaleX = data_ov007_02103460->scaleY;
     } else {
         data_ov007_0210346c->scaleY = 0;

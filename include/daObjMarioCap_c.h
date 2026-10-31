@@ -62,7 +62,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
        daPly_c*; the touch check stores FindWithID's result here before it
        tests the actor ID, so it can briefly hold a non-daPly_c actor after a
        failed touch. */
-    daPly_c *mPlayer;                            /* 0x3c0 */
+    daPly_c *mPlayer; /* 0x3c0 */
     /* Where InitResources found the cap; the taken state respawns a
        TYPE_RESPAWNING cap here. */
     s32 mHomePosX;                              /* 0x3c4 */
@@ -150,7 +150,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
     int InitResources();
     int Render();
     void OnPendingDestroy();
-    void OnTurnIntoEgg(daPly_c &player);  /* slot 19, ov002 0x020b81e0 */
+    void OnTurnIntoEgg(daPly_c &player); /* slot 19, ov002 0x020b81e0 */
 
     /* Once-a-frame render-matrix update and drop-shadow placement. */
     void UpdateMatrix();

@@ -1,6 +1,6 @@
 //cpp
 /* The constructor/destructor order retains all five lifecycle variants used
- * by dBgW_KcMbgSclY. The func_02039* transform workers retain C linkage.
+ * by dBgW_KcMbgSclY. The direction-to-world and movement-filter helpers retain C linkage.
  * SetFile and dBgCh_SphCrr::SetObjAndSphere are scalar Fix12i methods.
  * Flat matrix copies use RawMatrix4x3;
  * the shared Matrix4x3 copy changes the retail instruction sequence.
@@ -20,9 +20,6 @@ extern "C" {
 /* This TU's own free helpers, defined below the members that call them. */
 void func_020398fc(dBgW_KcMbg *self);
 void func_02039db8(dBgW_KcMbg *collider, Vector3 *v, Vector3 *res);
-void func_02039e18(dBgW_KcMbg *self, Vector3 *v, Vector3 *res);
-void func_02039e30(dBgW_KcMbg *self, Vector3 *v, Vector3 *res);
-void func_02039e48(dBgW_KcMbg *self, Vector3 *v, Vector3 *res);
 
 /* Shared math workers.
    local extern: no header in include/ declares them. */
@@ -119,7 +116,7 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, Fix12i scale, s16
     scratch.up.x = 0;
     scratch.up.y = 0x1000;
     scratch.up.z = 0;
-    func_02039e18(self, (Vector3 *)&scratch.up, (Vector3 *)&self->upAxis);
+    self->WorldToLocalDirection(*(Vector3 *)&scratch.up, *(Vector3 *)&self->upAxis);
     self->filterByMoveDir = false;
 }
 
@@ -165,7 +162,7 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     up.x = 0;
     up.y = 0x1000;
     up.z = 0;
-    func_02039e18(this, (Vector3 *)&up, (Vector3 *)&upAxis);
+    WorldToLocalDirection(*(Vector3 *)&up, *(Vector3 *)&upAxis);
 
     if (!filterByMoveDir)
         return;
@@ -180,7 +177,7 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
         func_01ffb0a4(this);
         NormalizeVec3((Vector3 *)&moveDir, (Vector3 *)&moveDir);
         RawVector3 localDir;
-        func_02039e18(this, (Vector3 *)&moveDir, (Vector3 *)&localDir);
+        WorldToLocalDirection(*(Vector3 *)&moveDir, *(Vector3 *)&localDir);
         func_01ffb07c(this, (Vector3 *)&localDir);
         SetDepthDirMinDot(0xe66);
         func_01ffb0b0(this);
@@ -210,22 +207,22 @@ void dBgW_KcMbg::GetTriangleOrigin(s16 triID, Vector3 &res) {
     localOrigin.x = packedPosition[0] << 6;
     localOrigin.y = packedPosition[1] << 6;
     localOrigin.z = packedPosition[2] << 6;
-    func_02039e30(this, &localOrigin, &res);
+    LocalToWorldPosition(localOrigin, res);
 }
 
-// @symbol func_02039e48
-extern "C" void func_02039e48(dBgW_KcMbg *self, Vector3 *position, Vector3 *result) {
-    MulVec3Mat4x3(position, &self->invScaledMat, result);
+// @symbol _ZN10dBgW_KcMbg20WorldToLocalPositionERK7Vector3RS0_
+void dBgW_KcMbg::WorldToLocalPosition(const Vector3 &position, Vector3 &result) {
+    MulVec3Mat4x3((Vector3 *)&position, &invScaledMat, &result);
 }
 
-// @symbol func_02039e30
-extern "C" void func_02039e30(dBgW_KcMbg *self, Vector3 *position, Vector3 *result) {
-    MulVec3Mat4x3(position, &self->newScaledMat, result);
+// @symbol _ZN10dBgW_KcMbg20LocalToWorldPositionERK7Vector3RS0_
+void dBgW_KcMbg::LocalToWorldPosition(const Vector3 &position, Vector3 &result) {
+    MulVec3Mat4x3((Vector3 *)&position, &newScaledMat, &result);
 }
 
-// @symbol func_02039e18
-extern "C" void func_02039e18(dBgW_KcMbg *self, Vector3 *direction, Vector3 *result) {
-    MulVec3Mat4x3(direction, &self->invRotMat, result);
+// @symbol _ZN10dBgW_KcMbg21WorldToLocalDirectionERK7Vector3RS0_
+void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result) {
+    MulVec3Mat4x3((Vector3 *)&direction, &invRotMat, &result);
 }
 
 // @symbol func_02039db8
@@ -258,14 +255,14 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
     }
     lineEnd.y -= probeHeight;
 
-    func_02039e48(this, &probePos, &localStart);
-    func_02039e48(this, &lineEnd, &localEnd);
+    WorldToLocalPosition(probePos, localStart);
+    WorldToLocalPosition(lineEnd, localEnd);
     data_020a0d0c.SetObjAndLine(localStart, localEnd, 0);
     (dBgCh &)data_020a0d0c = ray;
 
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
-        func_02039e30(this, &data_020a0d0c.lineEnd, &worldPos);
+        LocalToWorldPosition(data_020a0d0c.lineEnd, worldPos);
         (dBgPi &)ray = static_cast<dBgPi &>(data_020a0d0c);
         ray.clsnY = worldPos.y;
         ray.hasClsn = 1;
@@ -286,7 +283,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere) {
     dBgCh_SphCrr localSphere;
     int hit;
 
-    func_02039e48(this, &sphere.centre, &localCentre);
+    WorldToLocalPosition(sphere.centre, localCentre);
     localSphere.SetObjAndSphere(localCentre, FX_MUL(sphere.radius, invScale), 0);
     localSphere.mWallRejectHalfExtent = FX_MUL(sphere.mWallRejectHalfExtent, invScale);
     localSphere.SetQueryFlags(sphere.flags);
@@ -335,8 +332,8 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
     Vector3 end;
     Vector3 worldPos;
 
-    func_02039e48(this, &ray.start, &start);
-    func_02039e48(this, &ray.lineEnd, &end);
+    WorldToLocalPosition(ray.start, start);
+    WorldToLocalPosition(ray.lineEnd, end);
 
     u8 hadClsn = ray.hasClsn;
     data_020a0d0c.SetObjAndLine(start, end, 0);
@@ -347,7 +344,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
         Fix12i distance = data_020a0d0c.clsnDist;
-        func_02039e30(this, &data_020a0d60, &worldPos);
+        LocalToWorldPosition(data_020a0d60, worldPos);
         ray.SetClsnPos(worldPos);
         ray.clsnDist = distance;
         (dBgPi &)ray = data_020a0d1c;

@@ -25,7 +25,6 @@
 // - Several bodies keep `(int)ptr + off` and `(long long)` casts. PMF records
 //   stay on the sinit side, not this TU's .data.
 
-
 #pragma defer_codegen off
 
 #include "common.h"
@@ -358,8 +357,7 @@ void daCoin_c::func_ov002_020b14d8()
 
 /* Blue coin picked up: 5 coins and 0x500 health for the player. */
 // @symbol _ZN8daCoin_c19func_ov002_020b1674EP7daPly_c
-void daCoin_c::func_ov002_020b1674(daPly_c *player)
-{
+void daCoin_c::func_ov002_020b1674(daPly_c *player) {
     mDisappearTimer = 0;
     KillAndTrackInDeathTable();
     func_02012694(0x1c, &mCamSpacePos);
@@ -374,8 +372,7 @@ void daCoin_c::func_ov002_020b1674(daPly_c *player)
  * units above the coin's STARBASE and hands that marker over to the star. */
 // @symbol _ZN8daCoin_c19func_ov002_020b16c4EP7daPly_c
 #define LAUNDER(p) ((int)(p))
-void daCoin_c::func_ov002_020b16c4(daPly_c *player)
-{
+void daCoin_c::func_ov002_020b16c4(daPly_c *player) {
     volatile Vector3 unusedPos; /* written but never read; the ROM stores it */
     Vector3 starPos;
     Vector3 popupPos;
@@ -439,8 +436,7 @@ void daCoin_c::func_ov002_020b16c4(daPly_c *player)
 /* Yellow coin picked up: same sound choice as the red coin, 1 coin and 0x100
  * health. */
 // @symbol _ZN8daCoin_c19func_ov002_020b1884EP7daPly_c
-void daCoin_c::func_ov002_020b1884(daPly_c *player)
-{
+void daCoin_c::func_ov002_020b1884(daPly_c *player) {
     mDisappearTimer = 0;
     KillAndTrackInDeathTable();
     if (player->mIsUnderwater)
@@ -464,7 +460,7 @@ void func_ov002_020b18f0(char* self)
     extern short data_0209f358[];
     extern int SublevelToLevel(int);
 
-    daPly_c* player = (daPly_c*)self;
+    daPly_c *player = (daPly_c *)self;
     daStar_c* star;
     struct Vector3 spawnPos;
     struct Vector3* playerPos;
@@ -1074,8 +1070,7 @@ flagsDone:;
 }
 
 // @symbol _ZN8daCoin_c13OnTurnIntoEggER7daPly_c
-void daCoin_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daCoin_c::OnTurnIntoEgg(daPly_c &player) {
     /* Vtable slot 19. Each path hands the payout to a helper. */
     int coinType = mCoinType;
 

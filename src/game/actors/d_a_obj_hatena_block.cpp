@@ -966,8 +966,7 @@ void daObjHatenaBlock_c::OnKicked(dActor_c &other)
 /* Hit by a mega player: the same accept test as OnGroundPounded; when
    accepted, counts the hit (daPly_c::IncMegaKillCount), records the player's
    param1 and starts the bounce. */
-void daObjHatenaBlock_c::OnHitByMegaChar(daPly_c &player)
-{
+void daObjHatenaBlock_c::OnHitByMegaChar(daPly_c &player) {
     if (mState == STATE_BOUNCING) return;
     if (func_ov102_02149078() != 0) return;
     player.IncMegaKillCount();

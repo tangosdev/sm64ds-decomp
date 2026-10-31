@@ -809,7 +809,7 @@ extern "C" int func_02052008(int arg)
         unsigned char *p = ((unsigned char *(*)(unsigned int id))func_02050ae8)(i);
         if (p == 0)
             continue;
-        Sound::daPly_c::SetPlayableSeqCount(i, p[0]);
+        Sound::Player::SetPlayableSeqCount(i, p[0]);
         if (*(int *)(p + 4) == 0)
             continue;
         if (arg == 0)
@@ -2066,8 +2066,8 @@ extern "C" void func_0204fafc(void) {
     } while (next != 0);
 }
 
-// @symbol _ZN5Sound7daPly_c19SetPlayableSeqCountEii
-void Sound::daPly_c::SetPlayableSeqCount(int index, int count)
+// @symbol _ZN5Sound6Player19SetPlayableSeqCountEii
+void Sound::Player::SetPlayableSeqCount(int index, int count)
 {
     data_020a4d6c[index].mPlayableSeqCount = (unsigned short)count;
 }

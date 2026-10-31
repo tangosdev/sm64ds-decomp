@@ -1649,42 +1649,42 @@
   "production_mode": "intact-object",
   "defined_symbol_renames": [
     {
-      "from": "@1188",
+      "from": "@1180",
       "to": "pmf_dScMgCup_c_StateSetup",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1180) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1190",
+      "from": "@1182",
       "to": "pmf_dScMgCup_c_StatePrepareShuffle",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1182) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1192",
+      "from": "@1184",
       "to": "pmf_dScMgCup_c_StateShuffle",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1184) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1194",
+      "from": "@1186",
       "to": "pmf_dScMgCup_c_StateWaitForInput",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1186) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1196",
+      "from": "@1188",
       "to": "pmf_dScMgCup_c_StateSelect",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1188) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1198",
+      "from": "@1190",
       "to": "pmf_dScMgCup_c_StateResult",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1190) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1200",
+      "from": "@1192",
       "to": "pmf_dScMgCup_c_StateFinish",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1192) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1202",
+      "from": "@1194",
       "to": "pmf_dScMgCup_c_StateIdle",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1194) when dScMgBase_c.h gained Mg_DrawLine."
     }

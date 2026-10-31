@@ -1175,7 +1175,7 @@ struct Vec3 {
     int z;
 };
 extern "C" extern int DotVec3(struct Vec3 *a, struct Vec3 *b);
-extern "C" extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
+extern "C" extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" extern int LenVec3(struct Vec3 *v);
 extern "C" {
 extern int data_ov006_0212e0f0[];
@@ -1191,7 +1191,7 @@ extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, struct Ve
         int column;
         for (column = 0; column < 4; column++) {
             struct Vec3 delta;
-            SubVec3((struct Vec3 *)restVertex, (struct Vec3 *)referencePoint, &delta);
+            SubVec3((Vector3 *)restVertex, (Vector3 *)referencePoint, (Vector3 *)&delta);
             int halfLength = (long long)(TRMPLINE(sl)->mHalfWidth);
             int distance = LenVec3(&delta);
             int distanceWeight = cstd::fdiv(halfLength, halfLength + distance);
@@ -1211,7 +1211,7 @@ typedef struct {
     int x, y, z;
 } Vec3;
 
-extern "C" extern void SubVec3(Vec3 *a, Vec3 *b, Vec3 *c);
+extern "C" extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" extern void CrossVec3(const Vec3 *a, const Vec3 *b, Vec3 *out);
 extern "C" extern void NormalizeVec3(int *v, int *out);
 
@@ -1246,18 +1246,18 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
             components[2] = zero;
 
             if (column == 0)
-                SubVec3((Vec3 *)p, (Vec3 *)p + 1, &columnEdge);
+                SubVec3((Vector3 *)p, (Vector3 *)p + 1, (Vector3 *)&columnEdge);
             else if (column == 3)
-                SubVec3((Vec3 *)p - 1, (Vec3 *)p, &columnEdge);
+                SubVec3((Vector3 *)p - 1, (Vector3 *)p, (Vector3 *)&columnEdge);
             else
-                SubVec3((Vec3 *)p - 1, (Vec3 *)p + 1, &columnEdge);
+                SubVec3((Vector3 *)p - 1, (Vector3 *)p + 1, (Vector3 *)&columnEdge);
 
             if (row == 0)
-                SubVec3((Vec3 *)p, (Vec3 *)p + 4, &rowEdge);
+                SubVec3((Vector3 *)p, (Vector3 *)p + 4, (Vector3 *)&rowEdge);
             else if (row == 3)
-                SubVec3((Vec3 *)p - 4, (Vec3 *)p, &rowEdge);
+                SubVec3((Vector3 *)p - 4, (Vector3 *)p, (Vector3 *)&rowEdge);
             else
-                SubVec3((Vec3 *)p - 4, (Vec3 *)p + 4, &rowEdge);
+                SubVec3((Vector3 *)p - 4, (Vector3 *)p + 4, (Vector3 *)&rowEdge);
 
             CrossVec3(&columnEdge, &rowEdge, normal);
             NormalizeVec3((int *)normal, (int *)normal);

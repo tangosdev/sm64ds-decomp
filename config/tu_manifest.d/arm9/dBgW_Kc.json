@@ -72,14 +72,14 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_020397b8",
+      "symbol": "_ZN7dBgW_Kc12IsWallNormalEi",
       "address": "0x020397b8",
       "size": "0x00000024",
       "legacy_source": "src/func_020397b8.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_020397dc",
+      "symbol": "_ZN7dBgW_Kc17IsNearZeroDivisorEi",
       "address": "0x020397dc",
       "size": "0x00000020",
       "legacy_source": "src/func_020397dc.c",

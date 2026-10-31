@@ -73,8 +73,7 @@ extern "C" daPgBby_c *daPgBby_c_classInit()
 }
 
 // @symbol _ZN9daPgBby_c13OnTurnIntoEggER7daPly_c
-void daPgBby_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daPgBby_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 

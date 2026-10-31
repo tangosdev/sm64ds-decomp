@@ -455,12 +455,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@683",
+      "from": "@675",
       "to": "@165",
       "evidence": "mwcc numbers this registration node @623 per TU and the fleet already defines a global @623, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     },
     {
-      "from": "@682",
+      "from": "@674",
       "to": "@622",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @636 now; licensed under the existing pin @622 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     }

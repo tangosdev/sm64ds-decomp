@@ -193,8 +193,7 @@ extern "C" SpawnInfo<daJgm_c> g_profile_JUGEM = {
 };
 
 // @symbol _ZN7daJgm_c13OnTurnIntoEggER7daPly_c
-void daJgm_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daJgm_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap())
         GivePlayerCoins(player, 5, 0);
     else

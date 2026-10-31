@@ -41,7 +41,7 @@ struct dEnemyBase_c : dActor_c {
        read them, and `X : dEnemyBase_c` cannot compile unless they exist. The counts
        are how many of dEnemyBase_c's 51 subclasses declare each -- 0x100 is in
        twenty-eight of them, which is not a coincidence. */
-    daPly_c *mEatingPlayer;        /* 0x0d0 -- 4 subclasses */
+    daPly_c *mEatingPlayer;       /* 0x0d0 -- 4 subclasses */
     s32 mFloorNormalX;            /* 0x0d4 */
     s32 mFloorNormalY;            /* 0x0d8 */
     s32 mFloorNormalZ;            /* 0x0dc */

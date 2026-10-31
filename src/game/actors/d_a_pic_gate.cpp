@@ -104,7 +104,7 @@ void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
 int   InvMat4x3(int *src, int *dst);
 void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void  SubVec3(Vec3 *a, Vec3 *b, Vec3 *out);
+void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 void  CrossVec3(const Vec3_Fix12 *a, const Vec3_Fix12 *b, Vec3_Fix12 *out);
 void  NormalizeVec3(int *v, int *out);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
@@ -322,18 +322,18 @@ void daPicGate_c::func_ov080_02125940()
             q = (int *)&n;  q[0] = z; q[1] = z; q[2] = z;
 
             if (j == 0)
-                SubVec3((Vec3 *)p, (Vec3 *)(p + 1), &ej);
+                SubVec3((Vector3 *)p, (Vector3 *)(p + 1), (Vector3 *)&ej);
             else if (j == mCols - 1)
-                SubVec3((Vec3 *)(p - 1), (Vec3 *)p, &ej);
+                SubVec3((Vector3 *)(p - 1), (Vector3 *)p, (Vector3 *)&ej);
             else
-                SubVec3((Vec3 *)(p - 1), (Vec3 *)(p + 1), &ej);
+                SubVec3((Vector3 *)(p - 1), (Vector3 *)(p + 1), (Vector3 *)&ej);
 
             if (i == 0)
-                SubVec3((Vec3 *)p, (Vec3 *)(p + mRows), &ei);
+                SubVec3((Vector3 *)p, (Vector3 *)(p + mRows), (Vector3 *)&ei);
             else if (i == mRows - 1)
-                SubVec3((Vec3 *)(p - mRows), (Vec3 *)p, &ei);
+                SubVec3((Vector3 *)(p - mRows), (Vector3 *)p, (Vector3 *)&ei);
             else
-                SubVec3((Vec3 *)(p - mRows), (Vec3 *)(p + mRows), &ei);
+                SubVec3((Vector3 *)(p - mRows), (Vector3 *)(p + mRows), (Vector3 *)&ei);
 
             CrossVec3((const Vec3_Fix12 *)&ej, (const Vec3_Fix12 *)&ei, (Vec3_Fix12 *)&n);
             n.z >>= 1;

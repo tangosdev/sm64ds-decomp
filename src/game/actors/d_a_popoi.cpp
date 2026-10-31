@@ -377,7 +377,7 @@ int daPopoi_c::func_ov077_02126cd4(){
 int daPopoi_c::func_ov077_02126ad0()
 {
     int dist;
-    daPly_c* player;
+    daPly_c *player;
     struct Vector3 pp;
 
     dist = Vec3_Dist(&mPosX, &mHomePosX);

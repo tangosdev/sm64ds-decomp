@@ -2062,147 +2062,147 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1696",
+      "from": "@1688",
       "to": "pmf_dScMgMemory2_c_ResultWait",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1688) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1669",
+      "from": "@1661",
       "to": "pmf_dScMgMemory2_c_StatePlay",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1661) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1718",
+      "from": "@1710",
       "to": "pmf_dScMgMemory2_c_PlayerDrop",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1710) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1683",
+      "from": "@1675",
       "to": "pmf_dScMgMemory2_c_RoundDealHard",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1675) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1667",
+      "from": "@1659",
       "to": "pmf_dScMgMemory2_c_StateSetup",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1659) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1706",
+      "from": "@1698",
       "to": "pmf_dScMgMemory2_c_CardIdle",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1698) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1675",
+      "from": "@1667",
       "to": "pmf_dScMgMemory2_c_StateExit",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1667) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1685",
+      "from": "@1677",
       "to": "pmf_dScMgMemory2_c_RoundDealFourth",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1677) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1681",
+      "from": "@1673",
       "to": "pmf_dScMgMemory2_c_RoundDealNormal",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1673) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1687",
+      "from": "@1679",
       "to": "pmf_dScMgMemory2_c_RoundShowCards",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1679) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1691",
+      "from": "@1683",
       "to": "pmf_dScMgMemory2_c_RoundReadyCards",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1683) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1694",
+      "from": "@1686",
       "to": "pmf_dScMgMemory2_c_RoundReveal",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1686) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1708",
+      "from": "@1700",
       "to": "pmf_dScMgMemory2_c_CardSelect",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1700) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1722",
+      "from": "@1714",
       "to": "pmf_dScMgMemory2_c_PlayerWait",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1714) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1671",
+      "from": "@1663",
       "to": "pmf_dScMgMemory2_c_StateJudge",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1663) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1677",
+      "from": "@1669",
       "to": "pmf_dScMgMemory2_c_RoundStart",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1669) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1679",
+      "from": "@1671",
       "to": "pmf_dScMgMemory2_c_RoundDealEasy",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1671) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1716",
+      "from": "@1708",
       "to": "pmf_dScMgMemory2_c_CardFlyAway",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1708) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1714",
+      "from": "@1706",
       "to": "pmf_dScMgMemory2_c_CardFlipDown",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1706) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1712",
+      "from": "@1704",
       "to": "pmf_dScMgMemory2_c_CardWait",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1704) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1710",
+      "from": "@1702",
       "to": "pmf_dScMgMemory2_c_CardFlipUp",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1702) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1702",
+      "from": "@1694",
       "to": "pmf_dScMgMemory2_c_ResultFinish",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1694) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1673",
+      "from": "@1665",
       "to": "pmf_dScMgMemory2_c_StateResult",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1665) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1704",
+      "from": "@1696",
       "to": "pmf_dScMgMemory2_c_CardMove",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1696) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1689",
+      "from": "@1681",
       "to": "pmf_dScMgMemory2_c_RoundHideCards",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1681) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1692",
+      "from": "@1684",
       "to": "pmf_dScMgMemory2_c_RoundWaitDeal",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1684) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1698",
+      "from": "@1690",
       "to": "pmf_dScMgMemory2_c_ResultReward",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1690) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1700",
+      "from": "@1692",
       "to": "pmf_dScMgMemory2_c_ResultTurnCards",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1692) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1720",
+      "from": "@1712",
       "to": "pmf_dScMgMemory2_c_PlayerMove",
       "evidence": "Unique eight-byte native member-pointer constant identified by exact method relocation destination and zero adjustment; source retains correctly typed header method. Re-keyed +6 (from @1712) when dScMgBase_c.h gained Mg_DrawLine."
     }

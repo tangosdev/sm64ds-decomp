@@ -142,8 +142,7 @@ s32 daYurei_Mucho_c::OnYoshiTryEat()
  * The `R6Player` reference spelling in the mangled name is a coined guess: a
  * reference and a pointer generate identical ARM for this body, so the bytes
  * cannot distinguish them. */
-void daYurei_Mucho_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daYurei_Mucho_c::OnTurnIntoEgg(daPly_c &player) {
     GivePlayerCoins(player, (unsigned char)(mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();
 }

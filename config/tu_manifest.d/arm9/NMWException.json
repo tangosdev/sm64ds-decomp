@@ -1,8 +1,8 @@
 {
   "id": "arm9/NMWException",
   "module": "arm9",
-  "source": "src/NMWException.cpp",
-  "promoted_source": "src/NMWException.cpp",
+  "source": "src/lib/runtime/NMWException.cpp",
+  "promoted_source": "src/lib/runtime/NMWException.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

@@ -1587,8 +1587,7 @@ int daKrb_c::OnAimedAtWithEgg()
  * RegisterEggCoinCount (b5 = it carries a plain coin, b4 = it carried a
  * silver star). If it is 4 (KURIBO_S) only the coin is given. Finally the
  * Goomba is removed (func_ov084_02129498). */
-void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef)
-{
+void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
     /* self is unused; deleting it drops @NNN numbers daKrb_c.json pins. */
     char *self = (char *)this;
     daPly_c *player = &playerRef;

@@ -7475,64 +7475,234 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLookTarget$3568",
+      "from": "_ZGVsLookTarget$3560",
       "to": "_ZGVsLookTarget$3570",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@3571",
+      "from": "@3563",
       "to": "@3573",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "sLookTarget$3568",
+      "from": "sLookTarget$3560",
       "to": "sLookTarget$3570",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "_ZGVsViewStart$3744",
+      "from": "_ZGVsViewStart$3736",
       "to": "_ZGVsViewStart$3746",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@3747",
+      "from": "@3739",
       "to": "@3749",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "sViewStart$3744",
+      "from": "sViewStart$3736",
       "to": "sViewStart$3746",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "_ZGVsViewEnd$3748",
+      "from": "_ZGVsViewEnd$3740",
       "to": "_ZGVsViewEnd$3750",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@3751",
+      "from": "@3743",
       "to": "@3753",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "sViewEnd$3748",
+      "from": "sViewEnd$3740",
       "to": "sViewEnd$3750",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "_ZGVsViewIdle$3752",
+      "from": "_ZGVsViewIdle$3744",
       "to": "_ZGVsViewIdle$3754",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@3755",
+      "from": "@3747",
       "to": "@3757",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "sViewIdle$3752",
+      "from": "sViewIdle$3744",
       "to": "sViewIdle$3754",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
+    },
+    {
+      "from": "@4347",
+      "to": "@4355",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4348",
+      "to": "@4356",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4349",
+      "to": "@4357",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4350",
+      "to": "@4358",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4351",
+      "to": "@4359",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4352",
+      "to": "@4360",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4353",
+      "to": "@4361",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4354",
+      "to": "@4362",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4355",
+      "to": "@4363",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4356",
+      "to": "@4364",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4357",
+      "to": "@4365",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4358",
+      "to": "@4366",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4359",
+      "to": "@4367",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4360",
+      "to": "@4368",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4361",
+      "to": "@4369",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4362",
+      "to": "@4370",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4363",
+      "to": "@4371",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4364",
+      "to": "@4372",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4365",
+      "to": "@4373",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4366",
+      "to": "@4374",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4367",
+      "to": "@4375",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4368",
+      "to": "@4376",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4369",
+      "to": "@4377",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4370",
+      "to": "@4378",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4371",
+      "to": "@4379",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4372",
+      "to": "@4380",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4373",
+      "to": "@4381",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4374",
+      "to": "@4382",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4375",
+      "to": "@4383",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4376",
+      "to": "@4384",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4377",
+      "to": "@4385",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4378",
+      "to": "@4386",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4379",
+      "to": "@4387",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@4380",
+      "to": "@4388",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
     }
   ],
   "init": [

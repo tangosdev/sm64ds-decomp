@@ -1630,74 +1630,74 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@1021",
+      "from": "@1013",
       "to": "@1043",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1022",
+      "from": "@1014",
       "to": "@1044",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
       "to": "data_ov096_02137970",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1038"
+      "from": "@1030"
     },
     {
       "to": "data_ov096_02137920",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1034"
+      "from": "@1026"
     },
     {
       "to": "data_ov096_02137978",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1036"
+      "from": "@1028"
     },
     {
       "to": "data_ov096_02137958",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1046"
+      "from": "@1038"
     },
     {
       "to": "data_ov096_02137928",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1030"
+      "from": "@1022"
     },
     {
       "to": "data_ov096_02137950",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1028"
+      "from": "@1020"
     },
     {
       "to": "data_ov096_02137930",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1032"
+      "from": "@1024"
     },
     {
       "to": "data_ov096_02137948",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1024"
+      "from": "@1016"
     },
     {
       "to": "data_ov096_02137960",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1044"
+      "from": "@1036"
     },
     {
       "to": "data_ov096_02137940",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1026"
+      "from": "@1018"
     },
     {
       "to": "data_ov096_02137968",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1042"
+      "from": "@1034"
     },
     {
       "to": "data_ov096_02137938",
       "evidence": "Native int-return member-pointer descriptor; exact method target and zero this adjustment map the compiler-local literal to the existing ov096 identity. See data-sanbo-native1018 evidence. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)",
-      "from": "@1040"
+      "from": "@1032"
     }
   ]
 }

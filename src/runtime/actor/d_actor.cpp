@@ -483,19 +483,14 @@ extern "C" void func_02010da4(dActor_c *actor) {
 // @symbol _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c
 /* ROM ordinal 75 -- dActor_c::UpdatePosWithOnlySpeed(dCc_c *)
  * 0x02010d40  size 0x64 */
-/* AddVec3's own definition (src/AddVec3.c) spells its operands with this
-   three-int struct, not Vector3; declared to agree with it. */
-struct Vec3 {
-    s32 x, y, z;
-};
 extern "C" {
-void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 void func_02010da4(dActor_c *actor);
 }
 /* Adds the velocity (mSpeedX, mVertSpeed, mSpeedZ) to mPos, then the
    cylinder's horizontal push-out, then clamps to the world bounds. */
 void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
-    AddVec3((Vec3 *)&mPos, (Vec3 *)&mSpeedX, (Vec3 *)&mPos);
+    AddVec3(&mPos, (Vector3 *)&mSpeedX, &mPos);
     if (clsn != 0) {
         mPosX += clsn->pushback.x;
         mPosZ += clsn->pushback.z;
@@ -593,8 +588,7 @@ extern int data_0208e37c;           /* distance to the cached farthest player */
 extern unsigned char data_0209f21c; /* number of players */
 extern void *data_0209f394[];       /* the player table */
 }
-daPly_c *dActor_c::ClosestPlayer()
-{
+daPly_c *dActor_c::ClosestPlayer() {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
         data_0208e37c = 0x80000000;
@@ -621,8 +615,7 @@ daPly_c *dActor_c::ClosestPlayer()
 // @symbol _ZN8dActor_c22ClosestNonVanishPlayerEv
 /* ROM ordinal 69 -- dActor_c::ClosestNonVanishPlayer()
  * 0x02010a08  size 0xd0 */
-daPly_c *dActor_c::ClosestNonVanishPlayer()
-{
+daPly_c *dActor_c::ClosestNonVanishPlayer() {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
         data_0208e37c = 0x80000000;
@@ -690,8 +683,7 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
 // @symbol _ZN8dActor_c14FarthestPlayerEv
 /* ROM ordinal 65 -- dActor_c::FarthestPlayer()
  * 0x02010958  size 0x24 */
-daPly_c *dActor_c::FarthestPlayer()
-{
+daPly_c *dActor_c::FarthestPlayer() {
     ClosestPlayer();
     return (daPly_c *)data_0209b450;
 }
@@ -817,8 +809,7 @@ extern u32 data_02075238[]; /* coins each kind is worth */
 extern u16 data_02075230[]; /* actor ID of the coin each kind spawns */
 void GiveCoins(s32 playerNo, s32 amount); /* 0x0202a7b8 */
 }
-void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind)
-{
+void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
     if (&player == 0)
         return;
     if (count == 0)
@@ -873,8 +864,7 @@ extern "C" void func_020105cc(dActor_c *actor, u32 flags) {
 // @symbol _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR7daPly_c
 /* ROM ordinal 58 -- dActor_c::JumpedOnByPlayer(dCc_c &, daPly_c &)
  * 0x0201054c  size 0x80 */
-int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player)
-{
+int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
     volatile s32 pad[4];
     s32 vel = player.mVertSpeed;
 
@@ -896,8 +886,7 @@ int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player)
 // @symbol _ZN8dActor_c24BumpedUnderneathByPlayerER7daPly_c
 /* ROM ordinal 57 -- dActor_c::BumpedUnderneathByPlayer(daPly_c &)
  * 0x02010518  size 0x34 */
-int dActor_c::BumpedUnderneathByPlayer(daPly_c &player)
-{
+int dActor_c::BumpedUnderneathByPlayer(daPly_c &player) {
     if (player.mIsAirborne != 0 && player.mVertSpeed > 0
         && player.mPosY < mPosY)
         return 1;
@@ -1050,8 +1039,7 @@ void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
 void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
 extern Matrix4x3 data_020a0e68;
 }
-Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec)
-{
+Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
     t.x = 0;
     t.y = 0;
@@ -1108,8 +1096,7 @@ int dActor_c::OnYoshiTryEat()
 // @symbol _ZN8dActor_c13OnTurnIntoEggER7daPly_c
 /* ROM ordinal 44 -- dActor_c::OnTurnIntoEgg(daPly_c &)
  * 0x02010154  size 0xc */
-void dActor_c::OnTurnIntoEgg(daPly_c &player)
-{
+void dActor_c::OnTurnIntoEgg(daPly_c &player) {
     KillAndTrackInDeathTable();
 }
 
@@ -1174,9 +1161,7 @@ int dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker)
 // @symbol _ZN8dActor_c15OnHitByMegaCharER7daPly_c
 /* ROM ordinal 36 -- dActor_c::OnHitByMegaChar(daPly_c &)
  * 0x02010130  size 0x4 */
-void dActor_c::OnHitByMegaChar(daPly_c &player)
-{
-}
+void dActor_c::OnHitByMegaChar(daPly_c &player) {}
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8dActor_c19OnHitFromUnderneathERS_

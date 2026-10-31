@@ -219,8 +219,7 @@ void daObjRotateUpdownLift_c::Kill()
 // @symbol _ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER7daPly_c
 /* HS_UPDOWN_LIFT ignores the hit. The others count it, play 0x1e, and
    snap yaw back to the previous angle. */
-void daObjRotateUpdownLift_c::OnHitByMegaChar(daPly_c &player)
-{
+void daObjRotateUpdownLift_c::OnHitByMegaChar(daPly_c &player) {
     unsigned short id = actorID;
     int isHs = (id == 0x1e);
     if (isHs)

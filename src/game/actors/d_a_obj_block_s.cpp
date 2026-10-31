@@ -1406,8 +1406,7 @@ int daObjBlockS_c::OnYoshiTryEat()
  * the egg. Either way the crate goes to STATE_BROKEN. The shared actor hook
  * returns void, so the method ends after the state change with no invented
  * result. */
-void daObjBlockS_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daObjBlockS_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap()) {
         if (mCoinsPaid != 1) {
             ((dActor_c *)this)->GivePlayerCoins(player, 3, 0);

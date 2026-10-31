@@ -93,21 +93,21 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_02039e18",
+      "symbol": "_ZN10dBgW_KcMbg21WorldToLocalDirectionERK7Vector3RS0_",
       "address": "0x02039e18",
       "size": "0x00000018",
       "legacy_source": "src/func_02039e18.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_02039e30",
+      "symbol": "_ZN10dBgW_KcMbg20LocalToWorldPositionERK7Vector3RS0_",
       "address": "0x02039e30",
       "size": "0x00000018",
       "legacy_source": "src/func_02039e30.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_02039e48",
+      "symbol": "_ZN10dBgW_KcMbg20WorldToLocalPositionERK7Vector3RS0_",
       "address": "0x02039e48",
       "size": "0x00000018",
       "legacy_source": "src/func_02039e48.c",
@@ -207,8 +207,9 @@
     "func_020398fc and the four func_0203* transform helpers keep their func_ names. They are free workers called by raw address -- func_020398fc by actor TUs (daIwante_c's mMeshCollider2), the helpers only inside this collider family -- not vtable slots, so there is no honest member name to give them.",
     "SetFile and func_02039db8 now compile as C++ with C linkage. Existing RawMatrix4x3 copies retain the retail block moves; SetFile names its two matrices and up vector in a local aggregate. It retains the scalar free entry for the shared Fix12<int>-by-value signature pending native ABI reconstruction. The qualified dBgW_Kc::SetFile call uses the existing header declaration.",
     "#pragma opt_common_subs off wraps DetectClsn(dBgCh_SphCrr&) and nothing else: the six FMULs against `scale` are deliberately not CSE'd, and the pragma is restored before DetectClsn(dBgCh_Lin&) which was compiled without it.",
-    "Static initializer folded: data_020a0d0c, the shared dBgCh_Lin scratch line, is now defined in this TU (it was an extern, built by the handwritten src/unnamed/arm9/0207/__sinit_0207501c.c). mwcc emits __sinit_d_bg_w_kc_mbg.cpp, its .ctor word and the @251 registration node (unused in every symbols.txt and manifest); all of it plus the object's .bss is byte- and relocation-identical to retail. The object keeps its address name because dBgW_KcMbgSclY declares it by that name; the interior names data_020a0d1c and data_020a0d60 stay as configured labels inside it.",
-    "Collision property member calls replace local helper declarations. Reconciled 1 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (34 sections, 106 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Static initializer folded: data_020a0d0c, the shared dBgCh_Lin scratch line, is now defined in this TU (it was an extern, built by the handwritten src/unnamed/arm9/0207/__sinit_0207501c.c). mwcc emits __sinit_d_bg_w_kc_mbg.cpp, its .ctor word and a registration node, which defined_symbol_renames pins as @260; all of it plus the object's .bss is byte- and relocation-identical to retail. The object keeps its address name because dBgW_KcMbgSclY declares it by that name; the interior names data_020a0d1c and data_020a0d60 stay as configured labels inside it.",
+    "Collision property member calls replace local helper declarations. Reconciled 1 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (34 sections, 106 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "Moving-mesh coordinate members replace local helper declarations. Reconciled 1 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (34 sections, 106 relocations). Retail destination identities are unchanged; see notes/collision-transforms-1031.md."
   ],
   "compiler_only_output": [
     {
@@ -461,9 +462,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@251",
+      "from": "@242",
       "to": "@260",
-      "evidence": "the compiler emits @253, which ov015 daObjBkBillboard_c already defines as a global, so the pin is the unused @260"
+      "evidence": "the node's emitted number moves with this TU's named declarations (@253 when it was pinned, @242 now); ov015 daObjBkBillboard_c defines @253 as a global, so the pin is the unused @260"
     }
   ],
   "relocations": [

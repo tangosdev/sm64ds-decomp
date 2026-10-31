@@ -58,12 +58,12 @@ struct daBombking_c : dEnemyBase_c {
     u8  mSpawnedThrown[2];            /* 0x42c */
     u8  pad_42e[0x2];
     /* ClosestPlayer / the actor handed to ShowMessage and GetTalkState. */
-    daPly_c *mTalkingPlayer;           /* 0x430 */
+    daPly_c *mTalkingPlayer; /* 0x430 */
     /* DropShadowRadHeight matrix: IDENTITY then translation = pos >> 3. */
     s32 mShadowMtx[12];               /* 0x434 */
     u8  pad_464[0x30];
     /* TryGrab / DropActor target. Render also tests its +0xc8 mtx pointer. */
-    daPly_c *mHeldActor;               /* 0x494 */
+    daPly_c *mHeldActor;              /* 0x494 */
     u8  unk_498;                      /* 0x498 -- Init stores 0x1f */
     /* 0/1/2 substep of the current state. */
     u8  mActionStep;                  /* 0x499 */

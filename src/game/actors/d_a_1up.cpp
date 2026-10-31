@@ -326,7 +326,7 @@ void da1up_c::func_ov002_020af0c0() {
     extern short data_02082214[];
     /* Forward: ordinal 11 sits above this one in ROM order. */
 
-    daPly_c* p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     if(p != 0){
         Vector3 diff;
         Vector3 ppos;
@@ -420,7 +420,7 @@ int da1up_c::func_ov002_020af248(int n) {
    ordinals 19 and 22 retain the player lookup result and its null test. */
 extern "C" {
 void GiveLives(int count);
-void func_ov002_020bdf8c(daPly_c* player);
+void func_ov002_020bdf8c(daPly_c *player);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -434,8 +434,7 @@ void func_ov002_020bdf8c(daPly_c* player);
    life, spawns the 1UP logo actor (331) 180 units (0xb4000) above itself and
    removes itself; any other actor ID calls daPly_c::func_ov002_020bdf8c on
    `player` and removes itself. */
-void da1up_c::OnTurnIntoEgg(daPly_c &player)
-{
+void da1up_c::OnTurnIntoEgg(daPly_c &player) {
     if (mMushroomType == MUSHROOM_SPIN_TRIGGER_FOR_5) {
         return func_ov002_020af684(MUSHROOM_HIDDEN_FLEE, &player);
     }
@@ -612,8 +611,8 @@ void da1up_c::func_ov002_020af4ec() {
    playing sound 0x12 when the player is underwater and 0x11 otherwise -- the
    same calls and sounds dActor_c::GivePlayerCoins makes for a single coin.
    Always ends by removing the mushroom. */
-void da1up_c::func_ov002_020af684(int target, daPly_c* player) {
-    daPly_c* p = player;
+void da1up_c::func_ov002_020af684(int target, daPly_c *player) {
+    daPly_c *p = player;
     dActor_c* found = 0;
     for (;;) {
         found = dActor_c::FindWithActorID(actorID, found);

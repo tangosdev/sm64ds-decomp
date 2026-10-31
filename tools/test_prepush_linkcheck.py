@@ -48,8 +48,70 @@ def _linkcheck_table(table):
     return fn
 
 
+def _match_or_skip():
+    """tools/match.py, or skip: it imports elftools and capstone, which this stdlib-only
+    module (see the docstring) must not require."""
+    try:
+        import match
+    except ImportError as exc:  # pragma: no cover - depends on the environment
+        raise unittest.SkipTest("match.py needs %s" % exc.name)
+    return match
+
+
+class Compiles(unittest.TestCase):
+    """`_compiles` -- the check an overlay source cannot dodge.
+
+    linkcheck needs --bin/--base to place an overlay, so every function of an overlay file
+    comes back NO-BIN, a coverage warning. That is right as far as it goes, and it meant a
+    whole overlay TU could stop COMPILING with this gate still reporting `0 blocking` --
+    which is how PR #4553's contradictory CalcLib.h declaration reached the validator in
+    seven overlay actors. A compile failure needs no ROM and no overlay base, so it is
+    checked first and blocks on its own.
+    """
+
+    def test_a_file_that_does_not_compile_blocks_and_never_reaches_linkcheck(self):
+        called = []
+        with mock.patch.object(PL, "_compiles", return_value=(False, "did not compile at 2004/b56")), \
+             mock.patch.object(PL, "_run_linkcheck", lambda *a: called.append(a) or ("VERIFIED", 0, [])):
+            rows = PL.verify("src/game/actors/d_a_mky.cpp")
+        self.assertEqual([r["verdict"] for r in rows], ["NO-COMPILE"])
+        self.assertEqual(rows[0]["name"], "d_a_mky.cpp")
+        self.assertIn("NO-COMPILE", PL.BLOCKING)
+        self.assertEqual(called, [], "linkcheck must not run for a TU that does not compile")
+
+    def test_a_missing_toolchain_is_a_skip_not_a_failure(self):
+        """match.compile_c returns None for "no compiler" and for "broken file" alike. A
+        gate that blocks every push on a box without mwccarm is worse than one that skips
+        this check there, so the compiler's absence is detected before compiling.
+
+        Skipped where match is unimportable: it pulls in elftools and capstone, and this
+        module is deliberately stdlib-only so tool-tests.yml can run it. `_compiles`
+        imports match lazily for the same reason."""
+        match = _match_or_skip()
+        with mock.patch.object(match, "MW", pathlib.Path("/nonexistent-toolchain")):
+            ok, why = PL._compiles("src/game/actors/d_a_mky.cpp")
+        self.assertTrue(ok)
+        self.assertEqual(why, "")
+
+    def test_a_path_the_tree_no_longer_has_is_a_skip(self):
+        """A delete, or the old side of a rename: not a compile failure. The symbol loop
+        reports it as NO-SYM."""
+        _match_or_skip()
+        ok, why = PL._compiles("src/this_file_does_not_exist_0209aaaa.c")
+        self.assertTrue(ok)
+        self.assertEqual(why, "")
+
+
 class Verify(unittest.TestCase):
     """`verify(path)` -- the resolver, isolated from linkcheck.py and the compiler."""
+
+    def setUp(self):
+        """These fixtures name files that do not exist on disk, which `_compiles` skips
+        anyway; patching it keeps that an explicit property of the fixture rather than a
+        coincidence."""
+        patcher = mock.patch.object(PL, "_compiles", return_value=(True, ""))
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def test_legacy_one_function_source_is_still_one_row(self):
         with mock.patch.object(PL.srcpath, "symbols_for", return_value=["func_0205a61c"]), \

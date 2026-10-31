@@ -118,9 +118,9 @@ struct daTrs_c : dCapEnemy_c {
     dExtShadowModel_c                mShadowModel2;               /* 0x45c */
     /* Refreshed from ClosestPlayer every Behavior; the angle/distance below
        are measured against it. */
-    daPly_c *mClosestPlayer;    /* 0x484 */
+    daPly_c *mClosestPlayer; /* 0x484 */
     /* The player this Boo is talking to (02117b0c StartTalk/GetTalkState). */
-    daPly_c *mTalkPlayer;       /* 0x488 */
+    daPly_c *mTalkPlayer; /* 0x488 */
     /* Scratch for FindWithID results; every user clears it after the use. */
     dActor_c *mFoundActor;     /* 0x48c */
     /* uniqueID of the 0xd/0xe Big Boo, resolved by 02119c58 by scanning the

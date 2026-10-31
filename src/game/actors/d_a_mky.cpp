@@ -1579,8 +1579,7 @@ s32 daMky_c::InitResources()
  * long-branch veneer to _ZN7fBase_c18MarkForDestructionEv in arm9 -- r0 still
  * holds `this` at the jump and the daPly_c& is dropped -- so the source form
  * that reproduces it is a one-line forwarding member with no return. */
-void daMky_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daMky_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 

@@ -946,7 +946,7 @@ extern "C" void DisableSoundPlayersForCredits(void)
     s32 zero;
     zero = 0;
     for (i = 0; i < 10; i++)
-        Sound::daPly_c::SetPlayableSeqCount(data_0208e448[i].playerID, zero);
+        Sound::Player::SetPlayableSeqCount(data_0208e448[i].playerID, zero);
 }
 
 // @symbol func_02011c8c
@@ -954,7 +954,7 @@ extern "C" void func_02011c8c(void)
 {
     u32 i;
     for (i = 0; i < 10; i++)
-        Sound::daPly_c::SetPlayableSeqCount(data_0208e448[i].playerID, data_0208e448[i].maxSeq);
+        Sound::Player::SetPlayableSeqCount(data_0208e448[i].playerID, data_0208e448[i].maxSeq);
 }
 
 // @symbol func_02011c54

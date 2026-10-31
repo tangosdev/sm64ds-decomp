@@ -1,8 +1,8 @@
 {
   "id": "arm9/ansi_fp",
   "module": "arm9",
-  "source": "src/ansi_fp.c",
-  "promoted_source": "src/ansi_fp.c",
+  "source": "src/lib/msl/ansi_fp.c",
+  "promoted_source": "src/lib/msl/ansi_fp.c",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

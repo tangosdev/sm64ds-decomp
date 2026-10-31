@@ -462,17 +462,17 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@664",
+      "from": "@656",
       "to": "@88",
       "evidence": "emitted destructor-registration node name collides with the configured @360 on ov023 on main; @88 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@665",
+      "from": "@657",
       "to": "@89",
       "evidence": "emitted destructor-registration node name collides with the configured @361 on ov036 on main; @89 is unused everywhere and shorter than the original"
     },
     {
-      "from": "@666",
+      "from": "@658",
       "to": "@90",
       "evidence": "emitted destructor-registration node name collides with the configured @362 on ov036 on main; @90 is unused everywhere and shorter than the original"
     }

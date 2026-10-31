@@ -591,8 +591,7 @@ void dBgActor_c::Kill()
  * (20 u/frame away from the player, 30 up, gravity 2, 30-frame fuse), and
  * take the mesh collider out of the world. */
 // @symbol _ZN10dBgActor_c14KillByMegaCharER7daPly_c
-void dBgActor_c::KillByMegaChar(daPly_c &player)
-{
+void dBgActor_c::KillByMegaChar(daPly_c &player) {
     Vector3 v;
     v.x = mPosX;
     v.y = mPosY;

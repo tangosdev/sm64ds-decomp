@@ -531,7 +531,7 @@ int daHolhei_c::func_ov062_02116784() {
 // @symbol _ZN10daHolhei_c19func_ov062_021165e8Ev
 int daHolhei_c::func_ov062_021165e8()
 {
-    daPly_c* player;
+    daPly_c *player;
     int r;
     volatile struct Vector3 pos;
     struct Vector3* pp;

@@ -772,12 +772,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@733",
+      "from": "@725",
       "to": "@158",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @748 where main emits @734; licensed under the existing pin @158. Re-keyed +6 (from @725) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@734",
+      "from": "@726",
       "to": "@159",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @749 where main emits @735; licensed under the existing pin @159. Re-keyed +6 (from @726) when dScMgBase_c.h gained Mg_DrawLine."
     }

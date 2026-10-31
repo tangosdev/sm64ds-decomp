@@ -130,7 +130,7 @@ struct daObjYajirusi_c : dBgActor_c {
        bytes cannot distinguish them. Class ownership, slot identity, bodies
        and relocations are proven; the exact original spelling is not. */
     virtual int  OnAttacked1(dActor_c &other);      /* slot 22 */
-    virtual void OnHitByMegaChar(daPly_c &player);   /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &player);  /* slot 27 */
     /* THE VTABLE SAYS SO. _ZTV15daObjYajirusi_c is ov098 0x0213c3d8 and the word
        at +0x7c relocates to ov098 0x02137ccc, while _ZTV10dBgActor_c carries
        _ZN10dBgActor_c4KillEv at the same slot -- so this is this class's own

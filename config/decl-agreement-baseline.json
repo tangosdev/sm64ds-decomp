@@ -5657,7 +5657,7 @@
         "param:#3 void *"
       ]
     },
-    "_ZN5Sound7daPly_c19SetPlayableSeqCountEii": {
+    "_ZN5Sound6Player19SetPlayableSeqCountEii": {
       "include/decl_common.h": [
         "return:void"
       ]
@@ -8730,11 +8730,6 @@
     "data_0209cddc": {
       "src/unnamed/arm9/0201/func_0201a03c.c": [
         "return:int"
-      ]
-    },
-    "data_0209cee8": {
-      "src/engine/collision/d_cc.cpp": [
-        "return:dCc_c *"
       ]
     },
     "data_0209ceec": {

@@ -28,7 +28,7 @@ struct daRedBombhei_c : dActor_c {
     dCcAc_c     mdCcAc_c;           /* 0x0d4 -- talk trigger; a player hit starts the talk */
     dExtAnmModel_c mAnmModel;       /* 0x108 */
     dExtShadowModel_c mShadowModel;       /* 0x16c */
-    daPly_c     *mTalkPlayer;        /* 0x194 -- the player that walked into mdCcAc_c */
+    daPly_c *mTalkPlayer;                 /* 0x194 -- the player that walked into mdCcAc_c */
     u32         mShutterID;         /* 0x198 -- uniqueID of this level's closed cannon shutter, 0 if none */
     Matrix4x3   mShadowMat;         /* 0x19c */
     Vector3     mSavedCamLookAt;    /* 0x1cc -- camera, captured when the cannon cutscene starts */

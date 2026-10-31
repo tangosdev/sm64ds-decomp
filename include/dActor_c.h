@@ -204,7 +204,7 @@ struct dActor_c : dBase_c {
 
     /* --- new slots, 18..30, in declaration order. Do not reorder. --- */
     virtual int  OnYoshiTryEat();                      /* slot 18 */
-    virtual void OnTurnIntoEgg(daPly_c &);              /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &);             /* slot 19 */
     virtual int  Virtual50();                          /* slot 20 -- vtable+0x50 */
     /* Slots 21, 24 and 27 return void, NOT int. Nothing in the tree reads them,
        so only an override with early returns can tell the difference -- and one
@@ -216,7 +216,7 @@ struct dActor_c : dBase_c {
     virtual void OnKicked(dActor_c &);                 /* slot 24 */
     virtual int OnPushed(dActor_c &);                  /* slot 25 */
     virtual int OnHitByCannonBlastedChar(dActor_c &);  /* slot 26 */
-    virtual void OnHitByMegaChar(daPly_c &);            /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &);           /* slot 27 */
     virtual int OnHitFromUnderneath(dActor_c &);       /* slot 28 */
     virtual int  OnAimedAtWithEgg();                   /* slot 29 */
     /* Returns a Vector3 by value, and the ROM says so: 0x020100dc writes x/y/z

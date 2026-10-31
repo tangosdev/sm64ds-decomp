@@ -773,7 +773,7 @@ void daYegg_c::func_ov002_020ecfc8() {
 void daYegg_c::func_ov002_020ed0d4()
 {
     struct Vector3 in, out;
-    daPly_c* com;
+    daPly_c *com;
     int* p;
     volatile struct Vector3 t1, t2;
     struct Vector3 v1, v2;
@@ -927,7 +927,7 @@ void daYegg_c::func_ov002_020ed0d4()
 // into both the goal angles and the eased angles.
 void daYegg_c::func_ov002_020ed5b0()
 {
-    daPly_c* src;
+    daPly_c *src;
     int* sp;
     short* m;
     src = mPlayer;
@@ -1017,7 +1017,7 @@ void daYegg_c::func_ov002_020ed738() {
         e6 = func_02010844(this, &n, (short)(mAngleY - 0x4000));
     } else {
         if (mState == 0) {
-            daPly_c* p = mPlayer;
+            daPly_c *p = mPlayer;
             if (p != 0) {
                 e4 = p->mAngleX;
                 e6 = p->mAngleZ;

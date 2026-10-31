@@ -20,7 +20,6 @@
 extern "C" {
 #endif
 
-extern void _ZN10dBgActor_c14KillByMegaCharER7daPly_c(void*, void*);
 extern void *_ZN10dBgActor_cC2Ev(void*);
 
 

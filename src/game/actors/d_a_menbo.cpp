@@ -916,8 +916,7 @@ s32 daMenbo_c::OnAimedAtWithEgg()
 }
 
 // @symbol _ZN9daMenbo_c13OnTurnIntoEggER7daPly_c
-void daMenbo_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daMenbo_c::OnTurnIntoEgg(daPly_c &player) {
     GivePlayerCoins(player, (unsigned char)(mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();
 }

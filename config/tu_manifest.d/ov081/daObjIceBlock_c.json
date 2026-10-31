@@ -565,12 +565,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@768",
+      "from": "@760",
       "to": "@786",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @800 now; licensed under the existing pin @786 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     },
     {
-      "from": "@767",
+      "from": "@759",
       "to": "@785",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @799 now; licensed under the existing pin @785 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     }

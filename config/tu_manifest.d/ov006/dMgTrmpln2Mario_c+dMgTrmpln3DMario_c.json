@@ -34,28 +34,28 @@
   ],
   "functions": [
     {
-      "symbol": "Trmp2Mario_GetVelocity",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11GetVelocityEv",
       "address": "0x020c8dd4",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020c8dd4.c",
       "ordinal": 0
     },
     {
-      "symbol": "Trmp2Mario_Reset",
+      "symbol": "_ZN17dMgTrmpln2Mario_c8IsActiveEv",
       "address": "0x020c8ddc",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_020c8ddc.c",
       "ordinal": 1
     },
     {
-      "symbol": "Trmp2Mario_GetPrevPos",
+      "symbol": "_ZN17dMgTrmpln2Mario_c10GetPrevPosEv",
       "address": "0x020c8e80",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020c8e80.c",
       "ordinal": 2
     },
     {
-      "symbol": "Trmp2Mario_GetPos",
+      "symbol": "_ZN17dMgTrmpln2Mario_c6GetPosEv",
       "address": "0x020c8e88",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020c8e88.c",
@@ -293,28 +293,28 @@
       "ordinal": 36
     },
     {
-      "symbol": "Trmp3DMario_GetVelocity",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11GetVelocityEv",
       "address": "0x020caf44",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020caf44.c",
       "ordinal": 37
     },
     {
-      "symbol": "Trmp3DMario_IsMissed",
+      "symbol": "_ZN18dMgTrmpln3DMario_c8IsActiveEv",
       "address": "0x020caf4c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_020caf4c.c",
       "ordinal": 38
     },
     {
-      "symbol": "Trmp3DMario_GetPrevPos",
+      "symbol": "_ZN18dMgTrmpln3DMario_c10GetPrevPosEv",
       "address": "0x020cafa4",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020cafa4.c",
       "ordinal": 39
     },
     {
-      "symbol": "Trmp3DMario_GetPos",
+      "symbol": "_ZN18dMgTrmpln3DMario_c6GetPosEv",
       "address": "0x020cafac",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_020cafac.c",
@@ -1277,7 +1277,7 @@
     }
   ],
   "notes": [
-    "Text-only fold of 88 one-function shards (Trmp2Mario_GetVelocity .. TrmpObjAdapter_Construct). Class forms stay address-named free functions: neither dMgTrmpln2Mario_c nor dMgTrmpln3DMario_c has a header and no key function is a real method here, so no vtable/RTTI is emitted by this TU.",
+    "Text-only fold of 88 one-function shards (0x020c8dd4 dMgTrmpln2Mario_c::GetVelocity .. 0x020cd72c dMgTrmpObjAdapter_c C2). Both Marios' slot overrides (GetPos, GetPrevPos, GetVelocity, IsActive) are real methods, so GetPos is each class's key function and this TU emits both Mario vtables and typeinfos; they are discarded against the cartridge's copies (compiler_only_output deadstrip-data).",
     "Folded __sinit_ov006_0212f6b4 into this TU. mwcc emits __sinit_d_mg_trmpln2_mario.cpp. @2155-@2166 clash with ov002 and are renamed to unused same-length names. The goal slots are TrmpGoal, not Vector3(x, y, z): ten of them store through an unsigned int*, and the cartridge does not. ~TrmpGoal is aliased to ~Vector3 after the unreferenced vague ~Vector3 import is parked on func_02017a9c.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded fleet rom.sha256 stays d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8."
   ],
@@ -1285,22 +1285,109 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dMgTrmpln2Mario_c+dMgTrmpln3DMario_c/dMgTrmpln2Mario_c.o (gitignored)",
+    "object": "build/tu/ov006-dMgTrmpln2Mario_c+dMgTrmpln3DMario_c/d_mg_trmpln2_mario.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 88,
-    "functions_declared": 88,
+    "functions_matched": 89,
+    "functions_declared": 89,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN17dMgTrmpln2Mario_cC2Ev",
+        "_ZN17dMgTrmpln2Mario_cD2Ev",
+        "_ZN17dMgTrmpln2Mario_cD0Ev",
+        "_ZN18dMgTrmpln3DMario_cC2Ev",
+        "_ZN18dMgTrmpln3DMario_cD2Ev",
+        "_ZN18dMgTrmpln3DMario_cD0Ev",
+        "_ZN23dMgTrmpRingObjAdapter_cC1Ev",
+        "_ZN19dMgTrmpObjAdapter_cC1Ev",
+        "_ZN23dMgTrmpRingObjAdapter_cD2Ev",
+        "_ZN19dMgTrmpObjAdapter_cD2Ev"
       ],
       "deadstripped": [
+        "_ZN17dMgTrmpln2Mario_cC2Ev",
+        "_ZN17dMgTrmpln2Mario_cD0Ev",
+        "_ZN17dMgTrmpln2Mario_cD2Ev",
+        "_ZN18dMgTrmpln3DMario_cC2Ev",
+        "_ZN18dMgTrmpln3DMario_cD0Ev",
+        "_ZN18dMgTrmpln3DMario_cD2Ev",
+        "_ZN19dMgTrmpObjAdapter_cC1Ev",
+        "_ZN19dMgTrmpObjAdapter_cD2Ev",
+        "_ZN23dMgTrmpRingObjAdapter_cC1Ev",
+        "_ZN23dMgTrmpRingObjAdapter_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        26
+        26,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        64,
+        65,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        165,
+        166,
+        187,
+        188,
+        192,
+        193,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301
       ],
-      "data": [],
-      "dataExternalized": []
+      "data": [
+        "_ZTV19dMgTrmpObjAdapter_c",
+        "_ZTV23dMgTrmpRingObjAdapter_c",
+        "_ZTI19dMgTrmpObjAdapter_c",
+        "_ZTS19dMgTrmpObjAdapter_c",
+        "_ZTI23dMgTrmpRingObjAdapter_c",
+        "_ZTS23dMgTrmpRingObjAdapter_c",
+        "_ZTV17dMgTrmpln2Mario_c",
+        "_ZTV18dMgTrmpln3DMario_c",
+        "_ZTI17dMgTrmpln2Mario_c",
+        "_ZTS17dMgTrmpln2Mario_c",
+        "_ZTI18dMgTrmpln3DMario_c",
+        "_ZTS18dMgTrmpln3DMario_c"
+      ],
+      "dataExternalized": [
+        "_ZTI17dMgTrmpln2Mario_c",
+        "_ZTI18dMgTrmpln3DMario_c",
+        "_ZTI19dMgTrmpObjAdapter_c",
+        "_ZTI23dMgTrmpRingObjAdapter_c",
+        "_ZTS17dMgTrmpln2Mario_c",
+        "_ZTS18dMgTrmpln3DMario_c",
+        "_ZTS19dMgTrmpObjAdapter_c",
+        "_ZTS23dMgTrmpRingObjAdapter_c",
+        "_ZTV17dMgTrmpln2Mario_c",
+        "_ZTV18dMgTrmpln3DMario_c",
+        "_ZTV19dMgTrmpObjAdapter_c",
+        "_ZTV23dMgTrmpRingObjAdapter_c"
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -1964,6 +2051,48 @@
       "canonical_module": "ov006",
       "canonical_address": "0x0213b2a0",
       "reason": "The type-name string of the emitted dMgTrmpRingObjAdapter_c type_info. The cartridge's copy is configured at ov006 0x0213b2a0; romdata_check compares the two before production isolation discards the emitted copy."
+    },
+    {
+      "symbol": "_ZTV17dMgTrmpln2Mario_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b2e0",
+      "reason": "dMgTrmpln2Mario_c::GetPos, the class's first declared non-inline virtual, is its key function and is defined here, so this TU naturally emits the class's vtable storage (GetPos, GetPrevPos, GetVelocity, IsActive, then the inherited dMgTrmpRingObjAdapter_c::Clear). The cartridge's own copy is configured at ov006 0x0213b2e0 (config/arm9/overlays/ov006/symbols.txt). romdata_check compares the emitted payload against those cartridge words before text-only isolation discards it -- the same recipe as the adapter vtables above."
+    },
+    {
+      "symbol": "_ZTV18dMgTrmpln3DMario_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b2c4",
+      "reason": "dMgTrmpln3DMario_c::GetPos, the class's first declared non-inline virtual, is its key function and is defined here, so this TU naturally emits the class's vtable storage (GetPos, GetPrevPos, GetVelocity, IsActive, then the inherited dMgTrmpObjAdapter_c::Clear). The cartridge's own copy is configured at ov006 0x0213b2c4 (config/arm9/overlays/ov006/symbols.txt). romdata_check compares the emitted payload against those cartridge words before text-only isolation discards it -- the same recipe as the adapter vtables above."
+    },
+    {
+      "symbol": "_ZTI17dMgTrmpln2Mario_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b250",
+      "reason": "The type_info record the emitted dMgTrmpln2Mario_c vtable references (single-inheritance record naming dMgTrmpRingObjAdapter_c as its base). The cartridge's copy is configured at ov006 0x0213b250; romdata_check word-compares the two, relocations applied, before production isolation discards the emitted copy."
+    },
+    {
+      "symbol": "_ZTS17dMgTrmpln2Mario_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b25c",
+      "reason": "The type-name string of the emitted dMgTrmpln2Mario_c type_info. The cartridge's copy is configured at ov006 0x0213b25c; romdata_check compares the two before production isolation discards the emitted copy."
+    },
+    {
+      "symbol": "_ZTI18dMgTrmpln3DMario_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b244",
+      "reason": "The type_info record the emitted dMgTrmpln3DMario_c vtable references (single-inheritance record naming dMgTrmpObjAdapter_c as its base). The cartridge's copy is configured at ov006 0x0213b244; romdata_check word-compares the two, relocations applied, before production isolation discards the emitted copy."
+    },
+    {
+      "symbol": "_ZTS18dMgTrmpln3DMario_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b270",
+      "reason": "The type-name string of the emitted dMgTrmpln3DMario_c type_info. The cartridge's copy is configured at ov006 0x0213b270; romdata_check compares the two before production isolation discards the emitted copy."
     }
   ],
   "production_mode": "intact-object",

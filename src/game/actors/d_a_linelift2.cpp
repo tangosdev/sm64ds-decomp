@@ -26,8 +26,8 @@
 //   dBgW carries no setter for them.
 // - &mTargetPosX / &mSpeedX: this class and dActor_c store those triples
 //   as scalars, so the vector helpers take the first word's address.
-// - Vec3_Sub and AddVec3 are defined on a file-local struct Vec3, so no
-//   shared header declares them yet; they are declared here.
+// - Vec3_Sub is defined on a file-local struct Vec3, so no shared header
+//   declares it yet; it is declared here. AddVec3 takes Vector3 now.
 // - Behavior lowers mPosY by the sink offset and restores it before the
 //   model update, which the cartridge does too; the dead store is its own.
 
@@ -73,7 +73,7 @@ extern s16 data_02082214[];                       /* sin/cos pairs */
 /* arm9 C helpers with no shared header. */
 extern "C" {
 void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
-void AddVec3(Vec3 *a, Vec3 *b, Vec3 *out);
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 void func_02010da4(dActor_c *actor);
 void func_020393d4(int *collider, int callback);
 void func_020393c4(int *collider, int callback);
@@ -256,7 +256,7 @@ void daLinelift2_c::StateReturn() {
    off either end of the path, 1 on reaching a node, 0 in between. */
 int daLinelift2_c::StepAlongPath() {
     int result;
-    AddVec3((Vec3 *)&mPosX, (Vec3 *)&mSpeedX, (Vec3 *)&mPosX);
+    AddVec3((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
     if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) < (mHorzSpeed >> 1)) {
         result = 1;
         mBasePosX = mTargetPosX;

@@ -30,7 +30,7 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        0x3c, radius at 0x48 -- see include/dM3dGSph.h.
 
        THE QUERY SPHERE. dBgW_KcMbg::DetectClsn(dBgCh_SphCrr&) hands 0x03c
-       to func_02039e48, which transforms a Vector3 into the collider's local
+       to WorldToLocalPosition, which transforms a Vector3 into the collider's local
        frame, and scales 0x048 by the collider's uniform scale before passing it
        as the `Fix12i radius` argument of dBgCh_SphCrr::SetObjAndSphere -- so
        0x03c is twelve bytes of centre and 0x048 is the radius that follows it. */

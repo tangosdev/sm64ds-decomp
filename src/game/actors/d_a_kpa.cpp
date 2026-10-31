@@ -150,34 +150,43 @@ enum daKpa_c_AssetId {
  * handler for each state is named on its own header below. A state with no
  * writer in this file (0x12) is reached only through the table. */
 enum Bowser_State {
-    BOWSER_STATE_IDLE = 0,            /* stand, then pick the next state (variant decides how) */
-    BOWSER_STATE_THROWN = 1,          /* set when the tail grabs him and again when he is released; handler runs after release */
-    BOWSER_STATE_RECOVER = 2,         /* entered 1000 units below the arena: hidden, then launched back up toward the centre */
-    BOWSER_STATE_PLAY_ANIM_0F = 3,    /* animation 0xf, then idle */
-    BOWSER_STATE_DEFEATED = 4,        /* set when mHealth reaches 0; the multi-step defeat sequence */
-    BOWSER_STATE_INTRO_WAIT = 5,      /* initial state; stands idle until daPly_c::StartTalk succeeds */
-    BOWSER_STATE_INTRO = 6,           /* animations, then the intro message */
-    BOWSER_STATE_CHARGE = 7,          /* run at the target (animations 0x18..0x1a) */
-    BOWSER_STATE_FIRE_BREATH = 8,     /* spawns KOOPAFIRE (actor 0x118) every 5th frame */
-    BOWSER_STATE_FIREBALLS = 9,       /* mFireballShots (1..3) fireballs */
-    BOWSER_STATE_PLAY_ANIM_1B = 0xa,  /* animation 0x1b, then BOWSER_STATE_TURN_IN_PLACE; entered when a charge leaves the floor */
+    BOWSER_STATE_IDLE = 0, /* stand, then pick the next state (variant decides how) */
+    BOWSER_STATE_THROWN =
+        1, /* set when the tail grabs him and again when he is released; handler runs after release */
+    BOWSER_STATE_RECOVER =
+        2, /* entered 1000 units below the arena: hidden, then launched back up toward the centre */
+    BOWSER_STATE_PLAY_ANIM_0F = 3, /* animation 0xf, then idle */
+    BOWSER_STATE_DEFEATED = 4,     /* set when mHealth reaches 0; the multi-step defeat sequence */
+    BOWSER_STATE_INTRO_WAIT = 5,  /* initial state; stands idle until daPly_c::StartTalk succeeds */
+    BOWSER_STATE_INTRO = 6,       /* animations, then the intro message */
+    BOWSER_STATE_CHARGE = 7,      /* run at the target (animations 0x18..0x1a) */
+    BOWSER_STATE_FIRE_BREATH = 8, /* spawns KOOPAFIRE (actor 0x118) every 5th frame */
+    BOWSER_STATE_FIREBALLS = 9,   /* mFireballShots (1..3) fireballs */
+    BOWSER_STATE_PLAY_ANIM_1B =
+        0xa, /* animation 0x1b, then BOWSER_STATE_TURN_IN_PLACE; entered when a charge leaves the floor */
     BOWSER_STATE_TURN_IN_PLACE = 0xb, /* mAngleY += 0x200 per frame until mTimer reaches 0x3e */
-    BOWSER_STATE_HURT_HOP = 0xc,      /* knocked back; set after a spike bomb hit that leaves mHealth above 0 */
-    BOWSER_STATE_JUMP = 0xd,          /* jump and land; the landing effect func_ov060_02115b0c shakes the ground (variant 2) */
-    BOWSER_STATE_TURN_TO_TARGET = 0xe, /* turn mAngleY toward mAngleToTarget while animations 0x13, 0x11, 0x12 play */
-    BOWSER_STATE_ANIM_CHAIN = 0xf,    /* animations 8, 6, 7 in turn, then idle */
-    BOWSER_STATE_VANISH_DASH = 0x10,  /* fade out, dash invisibly at the target, fade in */
-    BOWSER_STATE_HOP = 0x11,          /* hop forward at mHorzSpeed 25.0; the variant-0 idle pick chooses it when he faces a target 1500 or more units away */
+    BOWSER_STATE_HURT_HOP =
+        0xc, /* knocked back; set after a spike bomb hit that leaves mHealth above 0 */
+    BOWSER_STATE_JUMP =
+        0xd, /* jump and land; the landing effect func_ov060_02115b0c shakes the ground (variant 2) */
+    BOWSER_STATE_TURN_TO_TARGET =
+        0xe, /* turn mAngleY toward mAngleToTarget while animations 0x13, 0x11, 0x12 play */
+    BOWSER_STATE_ANIM_CHAIN = 0xf,   /* animations 8, 6, 7 in turn, then idle */
+    BOWSER_STATE_VANISH_DASH = 0x10, /* fade out, dash invisibly at the target, fade in */
+    BOWSER_STATE_HOP =
+        0x11, /* hop forward at mHorzSpeed 25.0; the variant-0 idle pick chooses it when he faces a target 1500 or more units away */
     BOWSER_STATE_WAIT_ANIM_END = 0x12, /* wait for the current animation to end, then idle */
-    BOWSER_STATE_ARENA_TILT = 0x13    /* tilts the KOOPA2BG arena (actor 0xa6) for a few frames, see func_ov060_02112bfc */
+    BOWSER_STATE_ARENA_TILT =
+        0x13 /* tilts the KOOPA2BG arena (actor 0xa6) for a few frames, see func_ov060_02112bfc */
 };
 
 /* daKpa_c::mHoldState, the index into the table at data_ov060_0211aeb4. */
 enum Bowser_HoldState {
-    BOWSER_HOLD_NONE = 0,             /* normal: run the state table */
-    BOWSER_HOLD_HELD = 1,             /* a daPly_c has grabbed the tail and is swinging Bowser by it */
-    BOWSER_HOLD_RELEASE_NOW = 2,      /* the tail's flag bit 0x400 was set: let go at once */
-    BOWSER_HOLD_RELEASE_AFTER_ANIM = 3 /* the daPly_c no longer holds an object or the hold countdown ran out: let go once the animation ends */
+    BOWSER_HOLD_NONE = 0,        /* normal: run the state table */
+    BOWSER_HOLD_HELD = 1,        /* a daPly_c has grabbed the tail and is swinging Bowser by it */
+    BOWSER_HOLD_RELEASE_NOW = 2, /* the tail's flag bit 0x400 was set: let go at once */
+    BOWSER_HOLD_RELEASE_AFTER_ANIM =
+        3 /* the daPly_c no longer holds an object or the hold countdown ran out: let go once the animation ends */
 };
 
 /* daKpa_c::mCondFlags. The low byte is recomputed every frame by
@@ -193,9 +202,10 @@ enum Bowser_CondFlag {
 
 /* daKpaTail_c::mState: the index into the table at data_ov060_0211ae9c. */
 enum BowserTail_State {
-    BOWSER_TAIL_FREE = 0,             /* waiting for a daPly_c to grab it */
-    BOWSER_TAIL_COOLDOWN = 1,         /* after a release: back to FREE once mTimer passes 0x1e (30 frames) */
-    BOWSER_TAIL_HOLDING = 2           /* a daPly_c is holding it (mHeldPlayer) */
+    BOWSER_TAIL_FREE = 0, /* waiting for a daPly_c to grab it */
+    BOWSER_TAIL_COOLDOWN =
+        1,                  /* after a release: back to FREE once mTimer passes 0x1e (30 frames) */
+    BOWSER_TAIL_HOLDING = 2 /* a daPly_c is holding it (mHeldPlayer) */
 };
 
 /* Actor IDs, from symbols/actor_debug_names.tsv. */
@@ -213,18 +223,19 @@ enum Bowser_ActorID {
 
 /* Sound IDs, named by where this file plays them. */
 enum Bowser_Sound {
-    BOWSER_SND_FOOTFALL = 0xb0,       /* Sound::Play(3, ..) in the footfall window */
-    BOWSER_SND_LEAP = 0xb1,           /* hop, jump, knockback, rise out of a fall */
-    BOWSER_SND_GRABBED = 0xb2,        /* a daPly_c grabs the tail and starts swinging Bowser */
-    BOWSER_SND_B5 = 0xb5,             /* when the fire breath starts its second animation, and at frame 8 of animation 8 in the animation chain */
-    BOWSER_SND_LAND = 0xb6,           /* touching down after a jump */
-    BOWSER_SND_TALK_START = 0xb7,     /* the intro message appears */
-    BOWSER_SND_VANISH = 0xb9,         /* start of the vanish-and-dash fade */
-    BOWSER_SND_SHRINK_LOOP = 0xba,    /* PlayLong while he shrinks in the defeat sequence */
-    BOWSER_SND_DEFEATED = 0xbb,       /* the key is spawned after the defeat sequence */
-    BOWSER_SND_LAND_SOFT = 0xbd,      /* landing dust in func_ov060_02115a84 */
-    BOWSER_SND_FIREBALL = 0x122,      /* a fireball is spawned (func_ov060_021140c0) */
-    BOWSER_SND_FIRE_LOOP = 0x180      /* PlayLong while he breathes fire */
+    BOWSER_SND_FOOTFALL = 0xb0, /* Sound::Play(3, ..) in the footfall window */
+    BOWSER_SND_LEAP = 0xb1,     /* hop, jump, knockback, rise out of a fall */
+    BOWSER_SND_GRABBED = 0xb2,  /* a daPly_c grabs the tail and starts swinging Bowser */
+    BOWSER_SND_B5 =
+        0xb5, /* when the fire breath starts its second animation, and at frame 8 of animation 8 in the animation chain */
+    BOWSER_SND_LAND = 0xb6,        /* touching down after a jump */
+    BOWSER_SND_TALK_START = 0xb7,  /* the intro message appears */
+    BOWSER_SND_VANISH = 0xb9,      /* start of the vanish-and-dash fade */
+    BOWSER_SND_SHRINK_LOOP = 0xba, /* PlayLong while he shrinks in the defeat sequence */
+    BOWSER_SND_DEFEATED = 0xbb,    /* the key is spawned after the defeat sequence */
+    BOWSER_SND_LAND_SOFT = 0xbd,   /* landing dust in func_ov060_02115a84 */
+    BOWSER_SND_FIREBALL = 0x122,   /* a fireball is spawned (func_ov060_021140c0) */
+    BOWSER_SND_FIRE_LOOP = 0x180   /* PlayLong while he breathes fire */
 };
 
 /* dCc_c::flags bits this file touches (see include/dCc_c.h). */
@@ -3436,7 +3447,7 @@ return 1 when func_020092c4 returns non-zero. Step 4: clear bit 0x8 of
 Camera::mFlags. */
 int daKpa_c::func_ov060_02111f08(){
     dCamera_c* cam = (dCamera_c *)data_0209f318;
-    daPly_c* player = this->ClosestPlayer();
+    daPly_c *player = this->ClosestPlayer();
     struct Vector3 sp;
     struct Vector3* pv;
     int dist;

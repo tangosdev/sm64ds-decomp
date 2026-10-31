@@ -146,8 +146,8 @@ void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 a);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 a);
 void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 a);
 void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *o);
-void SubVec3(const Vector3 *a, const Vector3 *b, Vector3 *o);
-void AddVec3(const Vector3 *a, const Vector3 *b, Vector3 *o);
+void SubVec3(Vector3 *a, Vector3 *b, Vector3 *o);
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *o);
 void Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern void Vec3_Asr(void* d, void* s, int sh);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
@@ -673,9 +673,8 @@ void daDossy_c::func_ov065_021183c8()
         if (mClsnState == 2 && mRideCooldown == 0) {
             if (mCap == 0 || func_ov065_02119210((unsigned char *)mCap) == 0) {
                 playerPos = mClsnPlayer->mPos;
-                if (playerPos.y >= mHomePosY
-                    && Vec3_HorzDist(&playerPos, &mHomePosX) < 0x88000
-                    && ((daPly_c *)mClsnPlayer)->SetNoControlState(5, -1, 0) != 0) {
+                if (playerPos.y >= mHomePosY && Vec3_HorzDist(&playerPos, &mHomePosX) < 0x88000 &&
+                    ((daPly_c *)mClsnPlayer)->SetNoControlState(5, -1, 0) != 0) {
                     mState++;
                     mStateState = 0;
                     mAnmModel.SetAnim((BCA_File *)data_ov065_0211d748.filePtr, 0x40000000, 0x1000,
@@ -710,7 +709,8 @@ void daDossy_c::func_ov065_021182e4()
         return;
     case 1:
         if (mRider != 0) {
-            if (((daPly_c *)mRider)->Unk_020c9e5c(5) != 0) return;
+            if (((daPly_c *)mRider)->Unk_020c9e5c(5) != 0)
+                return;
         }
         mState = 0;
         mStateState = 0;

@@ -538,7 +538,7 @@ int daC_Jugem_c::StateArriveInit()
     typedef struct Vector3 { int x, y, z; } Vector3;
     Vector3 look, pos;
     dCamera_c *cam;
-    daPly_c* player;
+    daPly_c *player;
     mTargetX = -0x5a0000;
     mTargetY = 0x1c0000;
     mTargetZ = 0x1a66000;

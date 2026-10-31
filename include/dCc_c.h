@@ -34,7 +34,7 @@
  *   ldr r2,[r0,#0x28] / strne r1,[r2,#0x2c]   prev->next = next
  *   ldr r2,[r0,#0x2c] / strne r1,[r2,#0x28]   next->prev = prev
  *
- * with the list head at data_0209cee8 patched when this node is the head,
+ * with the list head (dCc_c::listHead) patched when this node is the head,
  * then both links zeroed.
  *
  * Update() is the matching link-in: it stores the old head into next, points
@@ -104,6 +104,13 @@ struct dCc_c {
     void Unlink();
     void Update();
     static void Process();
+
+    /* The head of the active collider list (arm9 .bss 0x0209cee8). Update()
+       pushes nodes on, Unlink() takes them off, Process() drains it every
+       frame, and the stage clears it on scene start. Declared only: the TU
+       owns no .bss, so the link resolves it to the ROM's word. The name is
+       coined. */
+    static dCc_c *listHead;
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator

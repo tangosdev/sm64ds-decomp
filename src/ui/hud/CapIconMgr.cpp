@@ -338,7 +338,8 @@ int func_ov001_020aa858(int self, char* a, int b, int d)
     if (d != 0) return 0;
     void* p = data_0209f394[0];
     if (k != 4) {
-        if (((daPly_c *)p)->IsCollectingCap()) return 0;
+        if (((daPly_c *)p)->IsCollectingCap())
+            return 0;
     }
     if (!((daPly_c *)p)->IsCollectingCap()) {
         if (self == *(int*)((char*)p+8)) return 0;
@@ -355,7 +356,8 @@ int func_ov001_020aa7b8(void* self, char* a)
     for (i = 0; i < ((unsigned char *)&data_0208a0e0)[0]; i++) {
         void* p = data_0209f394[i];
         if (p == 0) continue;
-        if (((daPly_c *)p)->IsCollectingCap()) return 0;
+        if (((daPly_c *)p)->IsCollectingCap())
+            return 0;
         if (self == *(void**)((char*)p+8)) return 0;
     }
     return 1;

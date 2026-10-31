@@ -2027,8 +2027,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
                     int rec = SaveData::GetCoinRecord(lvl);
                     if (rec < NumCoins()) {
                         SaveData::SetCoinRecordIfHigher(
-                            lvl,
-                            (u8)(data_0209f358[((daPly_c *)p)->mPlayerNo] & 0xff));
+                            lvl, (u8)(data_0209f358[((daPly_c *)p)->mPlayerNo] & 0xff));
                     }
                 }
             }
@@ -2078,8 +2077,7 @@ s32 daStar_c::OnYoshiTryEat() {
  * `this`/`player` straight through unchanged.
  * Matched byte-for-byte with mwccarm 2004/b56 (ov002).
  */
-void daStar_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daStar_c::OnTurnIntoEgg(daPly_c &player) {
     return func_ov002_020e8e80((int)&player);
 }
 
@@ -3183,14 +3181,14 @@ void daStar_c::func_ov002_020e7104(int r1){
  * plays sound 0x2d. */
 void daStar_c::func_ov002_020e7090(int arg) {
     mPlayer = (daPly_c *)arg;
-  mPlayer->mFlags |= CUTSCENE_FLAG;
-  mFlags |= CUTSCENE_FLAG;
-  data_0209b454 |= CUTSCENE_FLAG;
-  func_ov002_020e6fbc(0);
-  mSoundObjMode = 1;
-  func_ov002_020e9464();
-  CollectStarInCurLevel(mStarID);
-  func_02012790(0x2d);
+    mPlayer->mFlags |= CUTSCENE_FLAG;
+    mFlags |= CUTSCENE_FLAG;
+    data_0209b454 |= CUTSCENE_FLAG;
+    func_ov002_020e6fbc(0);
+    mSoundObjMode = 1;
+    func_ov002_020e9464();
+    CollectStarInCurLevel(mStarID);
+    func_02012790(0x2d);
 }
 
 /* -------------------------------------------------------------------------- */

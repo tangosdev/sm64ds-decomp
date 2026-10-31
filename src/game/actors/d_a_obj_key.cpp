@@ -692,16 +692,14 @@ void daObjKey_c::StateDrop()
 
 // @symbol _ZN10daObjKey_c19func_ov089_02131dccER7daPly_c
 /* Last-star path. Hands the collector to ov002 and removes the star. */
-void daObjKey_c::func_ov089_02131dcc(daPly_c &player)
-{
+void daObjKey_c::func_ov089_02131dcc(daPly_c &player) {
     func_ov002_020c3dbc(&player);
     Event::SetBit(EVENT_KEY);
     MarkForDestruction();
 }
 
 // @symbol _ZN10daObjKey_c19func_ov089_02131df4ER7daPly_c
-void daObjKey_c::func_ov089_02131df4(daPly_c &p)
-{
+void daObjKey_c::func_ov089_02131df4(daPly_c &p) {
     daPly_c *player = &p;
 
     /* Word 1, bit (2 << kind): already collected. 1 asks dScStage_c/dMeter/daPly_c
@@ -736,8 +734,7 @@ void daObjKey_c::func_ov089_02131df4(daPly_c &p)
 }
 
 // @symbol _ZN10daObjKey_c13OnTurnIntoEggER7daPly_c
-void daObjKey_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daObjKey_c::OnTurnIntoEgg(daPly_c &player) {
     /* The flag keeps the ROM's moveq and movne pair. */
     unsigned isKey = (actorID == ACTOR_OBJ_KEY);
     if (isKey)

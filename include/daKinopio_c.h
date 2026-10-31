@@ -57,7 +57,7 @@ struct daKinopio_c : dActor_c {
     Matrix4x3 mCapTransform;       /* 0x194 */
     Matrix4x3 mShadowTransform;    /* 0x1c4 */
     u32 mCapUniqueID;              /* 0x1f4 */
-    daPly_c *mTalkPlayer;           /* 0x1f8 */
+    daPly_c *mTalkPlayer;          /* 0x1f8 */
     s32 mState;                    /* 0x1fc */
     s16 mHeadYaw;                  /* 0x200 */
     s16 mHeadYawTarget;            /* 0x202 */

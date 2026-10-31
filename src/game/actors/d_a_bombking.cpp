@@ -48,7 +48,6 @@ namespace cstd {
 s16 atan2(s32, s32);
 }
 
-
 /* Remaining reconstruction views. Reconciled by hand against include/: every type
  * the real headers already define (Vector3, Matrix4x3, Fix12<int>, u8/u16/s16,
  * dActor_c, fBase_c, daPly_c, BMD_File, dExtBlendAnmModel_c) was DROPPED here -- the
@@ -1496,9 +1495,9 @@ void daBombking_c::func_ov078_02125c98() {
   }
   int b = (this->mFlags & 0x4000) != 0;
   if (b) {
-    daPly_c *p = this->mHeldActor;
-    if (p != 0)
-      h = p->mPosY;
+      daPly_c *p = this->mHeldActor;
+      if (p != 0)
+          h = p->mPosY;
   }
   int ip = this->mPosY - h;
   if (ip <= 0x1000)

@@ -1244,8 +1244,7 @@ void func_ov102_0214ae1c(void *cv) {
  * ======================================================================== */
 
 // @symbol _ZN7daBmb_c13OnTurnIntoEggER7daPly_c
-void daBmb_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daBmb_c::OnTurnIntoEgg(daPly_c &player) {
     if (mCoinType == 1) {
         Sound::PlayBank3(0x11, mCamSpacePos);
         GiveCoins(player.mPlayerNo, 1);

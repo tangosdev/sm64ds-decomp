@@ -120,8 +120,7 @@ extern "C" daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void)
 
 // @symbol _ZN9daSanbo_c13OnTurnIntoEggER7daPly_c
 /* Only the head pays out a coin. Every piece then destroys itself. */
-void daSanbo_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daSanbo_c::OnTurnIntoEgg(daPly_c &player) {
     int flag = (actorID == SANBO_HEAD);
     if (flag)
         GivePlayerCoins(player, 1, 2);

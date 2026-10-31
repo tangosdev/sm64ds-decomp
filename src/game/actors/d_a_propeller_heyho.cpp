@@ -135,8 +135,7 @@ s32 daPropeller_Heyho_c::OnYoshiTryEat() {
 /* Turned into an egg: the player is paid mExtraCoinCount + 1 coins
  * (InitResources seeds mExtraCoinCount to 1, so 2 coins here), then this
  * actor is killed and recorded in the death table. */
-void daPropeller_Heyho_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daPropeller_Heyho_c::OnTurnIntoEgg(daPly_c &player) {
     GivePlayerCoins(player, (u8)(mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();
 }
@@ -704,7 +703,7 @@ extern void MulVec3Mat4x3(void* v, void* m, void* res);
  * counts down and the speed drops to 9.0. */
 int daPropeller_Heyho_c::func_ov070_0211f6e0()
 {
-    daPly_c* player;
+    daPly_c *player;
     Vector3 tmp;
     Vector3 v;
     Vector3 aim;
@@ -884,7 +883,7 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
  * When the animation has finished it resets the frame to 0, starts the 90-frame
  * cooldown and returns to wander. */
 int daPropeller_Heyho_c::func_ov070_0211f48c() {
-    daPly_c* pl;
+    daPly_c *pl;
     struct Vector3_16 vel;
     struct Vector3 posbuf;
     struct Vector3 fp;
@@ -1013,7 +1012,7 @@ extern void func_02012694(int a, void* b);
  * mHitDuringAttack = 1. */
 extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
 {
-    daPly_c* hitPlayer;
+    daPly_c *hitPlayer;
     s32 hitFlags;
 
     if (c->mdCcAc_c.otherOwner == 0)

@@ -85,7 +85,7 @@ struct daPopoi_c : dEnemyBase_c {
        state. Zero from InitResources; cleared by func_ov077_02126640 once its launch
        call returns nonzero. If Grab ends (animation Finished) without a launch it is
        left set. */
-    daPly_c                      *mCaughtPlayer;         /* 0x400 */
+    daPly_c *mCaughtPlayer; /* 0x400 */
     /* InitResources copies the actor's own position here once; nothing in this
        file writes it again. Behavior snaps the actor back to it when it falls
        below the water height, and the Wander/Chase handlers measure their

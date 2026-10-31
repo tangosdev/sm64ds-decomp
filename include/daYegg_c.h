@@ -50,9 +50,9 @@ enum daYegg_State {
 /* The egg's own bits in dActor_c::mFlags (+0x0b0). Nothing in this file sets
  * them; the names say what the egg does while each is set. */
 enum daYegg_Flag {
-    daYegg_FLAG_ATTACHED = 0x100,   /* rides the daPly_c's matrix (func_ov002_020ed998) */
-    daYegg_FLAG_FLYING   = 0x400,   /* runs the flight logic in state 1 */
-    daYegg_FLAG_DROPPED  = 0x2000   /* state 1 gives way to state 3 */
+    daYegg_FLAG_ATTACHED = 0x100, /* rides the daPly_c's matrix (func_ov002_020ed998) */
+    daYegg_FLAG_FLYING = 0x400,   /* runs the flight logic in state 1 */
+    daYegg_FLAG_DROPPED = 0x2000  /* state 1 gives way to state 3 */
 };
 
 struct daYegg_c : dEnemyBase_c {
@@ -63,7 +63,7 @@ struct daYegg_c : dEnemyBase_c {
     /* The ROM loads this WORD and passes it to _ZN7daPly_c16IsInsideOfCannonEv as that
        function's `this`, which is an object address -- so the word is a daPly_c *.
        It is the actor the egg follows and reads its pose from. */
-    daPly_c             *mPlayer;                /* 0x38c */
+    daPly_c *mPlayer; /* 0x38c */
     /* A 4x3 matrix of twelve words. It is the Matrix4x3 argument of both
        dActor_c::DropShadow* calls, so it is the drop shadow's transform; the
        shadow code builds it from mAngleY and mPos >> 3 (words 9..11 are the

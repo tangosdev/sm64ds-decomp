@@ -45,7 +45,7 @@ struct daFPknBall_c : dEnemyBase_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x144 */
     dExtShadowModel_c mShadowModel; /* 0x300 */
     Matrix4x3 mShadowMat;           /* 0x328 -- translation only; the ball's position >> 3 */
-    struct daPly_c *mTargetPlayer;   /* 0x358 -- ClosestPlayer, refreshed every Behavior */
+    struct daPly_c *mTargetPlayer;  /* 0x358 -- ClosestPlayer, refreshed every Behavior */
     s32 mTargetSpeed; /* 0x35c -- what mHorzSpeed approaches; dActor_c.h names SpawnFireball's fourth argument targetSpeed; daFPkn_c passes 0xa000 */
     s32 mDistanceFlown; /* 0x360 -- sum of mHorzSpeed each frame */
     s32 mMaxDistance;   /* 0x364 -- 0x5dc000 (1500 units) from InitResources */

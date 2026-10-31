@@ -854,10 +854,9 @@ s32 dScMgTrampoline2_c::Behavior() {
     Trmp2Spinner_UpdateAll();
     mParticleID =
         Particle::System::NewUnkCallback818(mParticleID, 0xf0, 0x280000, 0x700000, -0x580000, 0);
-    void *p = Particle::System::FromUniqueID(mParticleID);
-    if (p != 0) {
-        /* +0x58 sits in Particle::System's unnamed pad_054. */
-        *(char *)((char *)p + 0x58) = (char)(mRamp >> 12);
+    Particle::System *trail = Particle::System::FromUniqueID(mParticleID);
+    if (trail != 0) {
+        trail->spawnFrames = mRamp >> 12;
         ApproachLinear(mRamp, 0x14000, 0x200);
     }
     {

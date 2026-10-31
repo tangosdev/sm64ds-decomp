@@ -152,8 +152,7 @@ s32 daNknk_c::OnYoshiTryEat() {
  * _ZTV8daNknk_c (0x0211dab4) + 0x4c -> 0x02119628, exactly this placeholder's
  * former address (former name func_ov062_02119628).
  */
-void daNknk_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daNknk_c::OnTurnIntoEgg(daPly_c &player) {
     if (mCoinType == 3) {
         if (OnYoshiTryEat() == 6 && !player.IsCollectingCap()) {
             player.RegisterEggCoinCount(0, 0, 1);
@@ -795,15 +794,20 @@ void daNknk_c::func_ov062_021180d4() {
 
 // @symbol _ZN8daNknk_c19func_ov062_02118058Ev
 void daNknk_c::func_ov062_02118058() {
-  daPly_c *o = mClosestPlayer;
-  int d = mPlayerDist;
-  if(o!=0) d=Vec3_Dist(&mPosX, &o->mPosX);
-  if(d>=0x12c000) return;
-  int s=GetSubtraction(mAimAngle, mPrevAngleY);
-  if(s>=0x3000) return;
-  if(mKoopaVariant==1) mState=1;
-  else mState=3;
-  func_ov062_02117994(3);
+    daPly_c *o = mClosestPlayer;
+    int d = mPlayerDist;
+    if (o != 0)
+        d = Vec3_Dist(&mPosX, &o->mPosX);
+    if (d >= 0x12c000)
+        return;
+    int s = GetSubtraction(mAimAngle, mPrevAngleY);
+    if (s >= 0x3000)
+        return;
+    if (mKoopaVariant == 1)
+        mState = 1;
+    else
+        mState = 3;
+    func_ov062_02117994(3);
 }
 
 // @symbol _ZN8daNknk_c19func_ov062_02118004Ei

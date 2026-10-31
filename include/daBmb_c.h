@@ -54,12 +54,12 @@ struct daBmb_c : dEnemyBase_c {
     dExtShadowModel_c                  mShadowModel;          /* 0x364 */
     /* 0214b988 stores ClosestPlayer here after the notice-angle test;
        0214ad14 stores it unconditionally. Arm 0 chases this pointer. */
-    daPly_c                      *mChasePlayer;          /* 0x38c */
+    daPly_c *mChasePlayer; /* 0x38c */
     /* The daPly_c carrying this Bob-omb, or 0. 0214b53c passes it to
        UpdateCarry and calls IsFrontSliding / LostGrabbedObject; 0214ae1c
        calls DropActor and Hurt, then clears it; 0214b3f0 sets it and
        0214b3b8 clears it. InitResources zeroes it. */
-    daPly_c                      *mCarrier;              /* 0x390 */
+    daPly_c *mCarrier; /* 0x390 */
     /* Twelve words, not a Matrix4x3: this header is included by files that
        do not pull common.h. InitResources copies IDENTITY_MATRIX4X3 here.
        0214b444 writes the translation at [9..11] before the shadow drop. */
@@ -118,7 +118,7 @@ struct daBmb_c : dEnemyBase_c {
     virtual ~daBmb_c() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 -- key function */
-    virtual void  OnTurnIntoEgg(daPly_c &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

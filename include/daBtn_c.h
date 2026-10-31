@@ -52,12 +52,12 @@ struct daBtn_c : dEnemyBase_c {
     /* InitResources zeroes all four and then refills as many as data_0209f21c
        says from data_0209f394, the live player list. func_ov079_02123f34
        measures each one's distance and bearing. */
-    daPly_c                      *mPlayers[4];           /* 0x39c */
+    daPly_c *mPlayers[4]; /* 0x39c */
     /* The player whose touch counted as a hit this frame: func_ov079_02125058
        records it when func_ov002_020dd8b8 accepts the contact. The king's
        lying-down handler bursts a particle at it, and the defeat talk
        (state 8) is addressed to it. */
-    daPly_c                      *mPounder;              /* 0x3ac */
+    daPly_c *mPounder; /* 0x3ac */
     /* Behavior's state index: it selects the per-state handler out of the
        pointer-to-member table data_ov079_02128280, and the king path skips its
        camera-target update while it reads 9. */
@@ -154,7 +154,7 @@ struct daBtn_c : dEnemyBase_c {
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
     virtual Vector3 OnAimedAtWithEggReturnVec();       /* slot 30 */
 
-    virtual void OnHitByMegaChar(daPly_c &player);      /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
 
     int Behavior();
     int CleanupResources();

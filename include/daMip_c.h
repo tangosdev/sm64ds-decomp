@@ -99,9 +99,9 @@ struct daMip_c : dEnemyBase_c {
     s32                          mPathDir;              /* 0x44c */
     u8  pad_450[0xc];
     /* Assigned ClosestPlayer(); ShowMessage / GetTalkState / DropActor. */
-    daPly_c                      *mTalkingPlayer;        /* 0x45c */
+    daPly_c *mTalkingPlayer; /* 0x45c */
     /* StateSaveTalkMain / StateCaughtMain store the player they turn toward. */
-    daPly_c                      *mSaveTalkPlayer;       /* 0x460 */
+    daPly_c *mSaveTalkPlayer; /* 0x460 */
     /* TestWaterBelow caches the water-detect clsn Y. */
     s32                          mFloorY;               /* 0x464 */
     /* (mColorVariant << 1) + the material record's own +0x20 word. Render writes

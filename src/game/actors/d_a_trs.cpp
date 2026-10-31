@@ -313,7 +313,7 @@ void daTrs_c::func_ov063_021160d4() {
 int daTrs_c::func_ov063_02116190() {
 
     int vec[3];
-    daPly_c* p;
+    daPly_c *p;
 
     if (this->mBooFlags.limitZ) {
         p = ClosestPlayer();
@@ -1010,7 +1010,7 @@ void daTrs_c::func_ov063_021177b0() {
         unsigned short flags = *(unsigned short*)&this->mBooFlags;
 
         if (((unsigned)(flags << 21)) >> 31) {
-            daPly_c* pl = ClosestPlayer();
+            daPly_c *pl = ClosestPlayer();
             if (pl != 0) {
                 Vec3 v;
                 Vec3 mid;
@@ -2404,16 +2404,15 @@ void daTrs_c::func_ov063_02119e38(int a1, short a2, int a3) {
     this->mVertSpeed = 0;
 
     {
-      daPly_c *p = this->mClosestPlayer;
-      if (p->mIsAirborne == 0) {
-        int myY = this->mPosY;
-        int otherY = p->mPosY;
-        int dy = myY - otherY;
-        if ((a1 << 0xc) < dy && dy < 0x1f4000 &&
-            (this->mHomePosY - myY) < 0xfa000) {
-          this->mVertSpeed = func_ov063_0211a0a8((int)this, myY, otherY, 0xa000, 0x2000);
+        daPly_c *p = this->mClosestPlayer;
+        if (p->mIsAirborne == 0) {
+            int myY = this->mPosY;
+            int otherY = p->mPosY;
+            int dy = myY - otherY;
+            if ((a1 << 0xc) < dy && dy < 0x1f4000 && (this->mHomePosY - myY) < 0xfa000) {
+                this->mVertSpeed = func_ov063_0211a0a8((int)this, myY, otherY, 0xa000, 0x2000);
+            }
         }
-      }
     }
 
     func_ov063_0211a030(0xa000 - this->mSpeedJitter,a3);

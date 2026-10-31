@@ -597,12 +597,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@712",
+      "from": "@704",
       "to": "@160",
       "evidence": "emitted destructor-registration node collides with ov002 @657; renumber to fleet-free name of the same length"
     },
     {
-      "from": "@713",
+      "from": "@705",
       "to": "@161",
       "evidence": "emitted destructor-registration node renumbered alongside @657 so both nodes leave the collision-prone emission range; @161 is unused everywhere and the same length"
     }

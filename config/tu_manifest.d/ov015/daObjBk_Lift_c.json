@@ -227,12 +227,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@757",
+      "from": "@749",
       "to": "@44",
       "evidence": "mwcc numbers this model registration node @714 per TU and ov063 already defines a global @714, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; the stood-on pair and the shadow helper taking real names, Particle__System.h in place of the local stub and the dead named-parameter externs going move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@758",
+      "from": "@750",
       "to": "@45",
       "evidence": "mwcc numbers this collision registration node @715 per TU and ov063 already defines a global @715, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; the stood-on pair and the shadow helper taking real names, Particle__System.h in place of the local stub and the dead named-parameter externs going move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     }

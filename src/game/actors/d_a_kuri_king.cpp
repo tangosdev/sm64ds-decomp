@@ -356,7 +356,7 @@ int daKuriKing_c::func_ov074_0211f38c(){
     struct Vector3_16 spawnAngle;
     int radius;
     int spawnTarget;
-    daPly_c* player;
+    daPly_c *player;
     spawnPos.x=0; spawnPos.y=0; spawnPos.z=0;
     spawnAngle.x=0; spawnAngle.y=0; spawnAngle.z=0;
     spawnPos.x=this->mPosX;
@@ -405,7 +405,7 @@ void daKuriKing_c::func_ov074_0211f5b8()
 {
     Vector3 vzero;
     Vector3 vmsg;
-    daPly_c* player;
+    daPly_c *player;
     s32 state;
     dCamera_c* cam;
 
@@ -619,7 +619,7 @@ void daKuriKing_c::func_ov074_0211fc38()
         return;
     if (this->mSizeIndex != 0) goto detox;
     {
-        daPly_c* player = this->ClosestPlayer();
+        daPly_c *player = this->ClosestPlayer();
         if (player->StartTalk(*this, 1) == 0) return;
         Message::PrepareTalk();
         if (func_ov074_02121a20(1) != 0 || func_ov074_02121a20(2) != 0) {
@@ -665,7 +665,7 @@ void daKuriKing_c::func_ov074_0211fd74()
 
 L90:;
     int spawnTarget = data_ov074_02122d80[this->mSizeIndex];
-    daPly_c* pl = this->ClosestPlayer();
+    daPly_c *pl = this->ClosestPlayer();
     if (this->mSizeIndex == 1 && (int)pl->param1 != 3) spawnTarget = spawnTarget + 1;
 
     if (this->mAnmModel.Finished() == 0)
@@ -699,7 +699,7 @@ L90:;
     *spawnedCount = (u8)(*spawnedCount + 1);
     this->mTimer = 2;
 
-    daPly_c* pl2 = this->ClosestPlayer();
+    daPly_c *pl2 = this->ClosestPlayer();
     int dv = 3;
     if ((int)pl2->param1 != 3) {
         if (this->mSizeIndex == 1) dv = 5;
@@ -811,7 +811,7 @@ void daKuriKing_c::func_ov074_021201f0() {
     struct Ang16 ang;
     struct Vector3 look, pos;
     struct Vector3 msgpos[2];
-    daPly_c* player;
+    daPly_c *player;
     dCamera_c* cam;
     short msg;
 

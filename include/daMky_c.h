@@ -89,7 +89,7 @@ struct daMky_c : dActor_c {
     s32 mPathNode;               /* 0x3a0 -- 02111b20 GetNode index */
     /* 021141a8 stores &data_ov030_02115e0c[idx]; 02114170/02114134 call through. */
     StateFunctions *mStateDesc; /* 0x3a4 */
-    daPly_c *mPlayer;            /* 0x3a8 -- closest/contact player or mEatingPlayer copy */
+    daPly_c *mPlayer;           /* 0x3a8 -- closest/contact player or mEatingPlayer copy */
     /* The cap-thief group. Only actor 0x10b (the MONKEY_THIEF profile) runs it: it reads the
        closest player's fBase_c::param1 (the character number, guarded < 3) into
        mCapPlayerNo, spawns actor 0x10d -- Mario's lost cap -- with

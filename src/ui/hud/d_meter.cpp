@@ -326,7 +326,7 @@ int dMeter_c::InitResources() {
     {
         u8 idx = *(volatile u8 *)&data_0209f250;
         data_ov002_0211117c[0] = ((daPly_c *)((idx ? (void *volatile *)data_0209f394
-                                                  : (void *volatile *)data_0209f394)[idx]))
+                                                   : (void *volatile *)data_0209f394)[idx]))
                                      ->GetHealth();
     }
     if (data_ov002_0211117c[0] == 8) {

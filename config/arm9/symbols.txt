@@ -1440,8 +1440,8 @@ func_020396dc kind:function(arm,size=0x14) addr:0x020396dc
 _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block kind:function(arm,size=0x70) addr:0x020396f0
 _ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File kind:function(arm,size=0x34) addr:0x02039760
 func_02039794 kind:function(arm,size=0x24) addr:0x02039794
-func_020397b8 kind:function(arm,size=0x24) addr:0x020397b8
-func_020397dc kind:function(arm,size=0x20) addr:0x020397dc
+_ZN7dBgW_Kc12IsWallNormalEi kind:function(arm,size=0x24) addr:0x020397b8
+_ZN7dBgW_Kc17IsNearZeroDivisorEi kind:function(arm,size=0x20) addr:0x020397dc
 _ZN7dBgW_KcD2Ev kind:function(arm,size=0x30) addr:0x020397fc
 _ZN7dBgW_KcD0Ev kind:function(arm,size=0x38) addr:0x0203982c
 _ZN7dBgW_KcD1Ev kind:function(arm,size=0x30) addr:0x02039864
@@ -1455,9 +1455,9 @@ _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin kind:function(arm,size=0xcc) addr:0x0203
 _ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr kind:function(arm,size=0x27c) addr:0x02039a3c
 _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd kind:function(arm,size=0x100) addr:0x02039cb8
 func_02039db8 kind:function(arm,size=0x60) addr:0x02039db8
-func_02039e18 kind:function(arm,size=0x18) addr:0x02039e18
-func_02039e30 kind:function(arm,size=0x18) addr:0x02039e30
-func_02039e48 kind:function(arm,size=0x18) addr:0x02039e48
+_ZN10dBgW_KcMbg21WorldToLocalDirectionERK7Vector3RS0_ kind:function(arm,size=0x18) addr:0x02039e18
+_ZN10dBgW_KcMbg20LocalToWorldPositionERK7Vector3RS0_ kind:function(arm,size=0x18) addr:0x02039e30
+_ZN10dBgW_KcMbg20WorldToLocalPositionERK7Vector3RS0_ kind:function(arm,size=0x18) addr:0x02039e48
 _ZN10dBgW_KcMbg17GetTriangleOriginEsR7Vector3 kind:function(arm,size=0x60) addr:0x02039e60
 _ZN10dBgW_KcMbg9GetNormalEsR7Vector3 kind:function(arm,size=0x60) addr:0x02039ec0
 _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s kind:function(arm,size=0x2bc) addr:0x02039f20
@@ -2087,7 +2087,7 @@ func_0204f958 kind:function(arm,size=0x6c) addr:0x0204f958
 func_0204f9c4 kind:function(arm,size=0x68) addr:0x0204f9c4
 func_0204fa2c kind:function(arm,size=0x10) addr:0x0204fa2c
 func_0204fa3c kind:function(arm,size=0xa0) addr:0x0204fa3c
-_ZN5Sound7daPly_c19SetPlayableSeqCountEii kind:function(arm,size=0x20) addr:0x0204fadc
+_ZN5Sound6Player19SetPlayableSeqCountEii kind:function(arm,size=0x20) addr:0x0204fadc
 func_0204fafc kind:function(arm,size=0x144) addr:0x0204fafc
 func_0204fc40 kind:function(arm,size=0xa8) addr:0x0204fc40
 _ZN1C13func_0204fce8EPv kind:function(arm,size=0xbc) addr:0x0204fce8
@@ -4582,7 +4582,7 @@ data_0209cddc kind:bss addr:0x0209cddc
 data_0209cde0 kind:bss addr:0x0209cde0
 data_0209cde4 kind:bss addr:0x0209cde4
 data_0209cde8 kind:bss addr:0x0209cde8
-data_0209cee8 kind:bss addr:0x0209cee8
+_ZN5dCc_c8listHeadE kind:bss addr:0x0209cee8
 data_0209ceec kind:bss addr:0x0209ceec
 data_0209cef0 kind:bss addr:0x0209cef0
 data_0209cef4 kind:bss addr:0x0209cef4

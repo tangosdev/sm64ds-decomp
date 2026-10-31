@@ -33,8 +33,8 @@ struct daUdlift_c : dBgActor_c {
     /* dBgActor_c's last member ends at 0x31e. Keep its two bytes of tail
        padding so the first word owned by this class starts at 0x320. */
     u8 pad_31e[0x2];
-    daPly_c *mRider;                 /* 0x320 */
-    daPly_c *mClosestPlayer;         /* 0x324 */
+    daPly_c *mRider;                /* 0x320 */
+    daPly_c *mClosestPlayer;        /* 0x324 */
     s32 mVariant;                   /* 0x328 */
     s32 mState;                     /* 0x32c */
     s32 mPlayerPosY;                /* 0x330 */

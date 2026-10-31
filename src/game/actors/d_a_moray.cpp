@@ -28,9 +28,9 @@
  * - Deleting the dead mVariant == 0xff and mPathID < 0 tests, or the
  *   unused second PathPtr::FromID, shrinks InitResources. mwcc still
  *   emits those tests.
- * - The held actor's matrix is the word at dActor_c+0xc8, inside
- *   pad_0c5. unk_400 is zeroed by the two idle inits and read nowhere
- *   in this file. Sound 0xfa has no name here.
+ * - The held actor borrows mStarMtx through dActor_c::mCarryMatrix.
+ *   unk_400 is zeroed by the two idle inits and read nowhere in this
+ *   file. Sound 0xfa has no name here.
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daMoray_c_AssetId {
@@ -144,13 +144,6 @@ struct MorayBone {
     s16 rotY;
     s16 rotZ;
     u8 pad_20[0x14];
-};
-
-/* The carried star keeps its carrier matrix at dActor_c+0xc8, inside pad_0c5.
-   Other actors use that word differently, so it is not a dActor_c field. */
-struct MorayStarCarrier {
-    u8 pad[0xc8];
-    Matrix4x3 *mtx;
 };
 
 extern "C" MorayRenderStep data_ov016_02114908[];
@@ -654,7 +647,7 @@ void daMoray_c::func_ov016_02111c40()
     this->mStarPos.x <<= 3;
     this->mStarPos.y <<= 3;
     this->mStarPos.z <<= 3;
-    ((MorayStarCarrier *)star)->mtx = &this->mStarMtx;
+    star->mCarryMatrix = &this->mStarMtx;
 }
 
 // @symbol _ZN9daMoray_c16CleanupResourcesEv

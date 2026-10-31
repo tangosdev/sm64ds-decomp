@@ -3,10 +3,7 @@
 #include "dExtModel_c.h"
 #include "Ov007Work.h"
 #include "Ov007Model.h"
-/* AddVec3 still defines its vector as its own struct Vec3;
-   declared as defined, the call casts. */
-struct Vec3;
-extern void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
+extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 
 void func_ov007_020b2454(Vector3 *out, Vector3 *r1) {
     int w;
@@ -37,7 +34,7 @@ void func_ov007_020b2454(Vector3 *out, Vector3 *r1) {
         r1->x = r1->x - 0xa000;
         break;
     }
-    AddVec3((struct Vec3 *)base, (struct Vec3 *)&a, (struct Vec3 *)&b);
+    AddVec3((Vector3 *)base, (Vector3 *)&a, (Vector3 *)&b);
     out->x = base->x;
     out->y = (int)(((long long)(0x1000 - w) * b.y + (long long)w * base->y) >> 12);
 }

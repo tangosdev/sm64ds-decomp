@@ -166,15 +166,15 @@ extern short Vec3_HorzAngle(void* v0, void* v1);
 }
 // @symbol _ZN8daKpFr_c19func_ov070_02121f18Ev
 int daKpFr_c::func_ov070_02121f18() {
-  daPly_c* player;
-  if (DecIfAbove0_Byte(&mStateTimer) == 0)
-    func_ov070_02121c8c();
-  player = ClosestNonVanishPlayer();
-  if (player) {
-    short angleToPlayer = Vec3_HorzAngle(&mPosX, &player->mPosX);
-    ApproachLinear(mAngleY, angleToPlayer, 0x180);
-    mPrevAngleY = mAngleY;
-  }
+    daPly_c *player;
+    if (DecIfAbove0_Byte(&mStateTimer) == 0)
+        func_ov070_02121c8c();
+    player = ClosestNonVanishPlayer();
+    if (player) {
+        short angleToPlayer = Vec3_HorzAngle(&mPosX, &player->mPosX);
+        ApproachLinear(mAngleY, angleToPlayer, 0x180);
+        mPrevAngleY = mAngleY;
+    }
   UpdatePos(&mdCcAc_c);
   func_ov070_02121be4();
   func_ov070_02121d50(&mWithMeshClsn);
@@ -252,7 +252,7 @@ extern "C" void func_02012694(int id, void *pos);
 // @symbol _ZN8daKpFr_c19func_ov070_02121cbcEv
 void daKpFr_c::func_ov070_02121cbc(){
   dActor_c* found;
-  daPly_c* player;
+  daPly_c *player;
   int b;
   unsigned int id = mdCcAc_c.otherOwner;
   if (id == 0) return;
@@ -260,7 +260,7 @@ void daKpFr_c::func_ov070_02121cbc(){
   if (found == 0) return;
   b = (int)(found->actorID == 0xbf);
   if (b == 0) return;
-  player = (daPly_c*)found;
+  player = (daPly_c *)found;
   b = (int)((mFlags & 0x20000) != 0);
   if (b != 0) {
     func_ov070_02122044(1);

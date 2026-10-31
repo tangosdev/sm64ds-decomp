@@ -78,7 +78,7 @@ struct daObjBlockS_c : dBgActor_c {
        (daObjKey_c names that mFlags bit a camera takeover), so it is the player
        currently carrying the crate. It says nothing about the rest of the marker's span, which stays explicit
        padding. Was a u8 marker. */
-    daPly_c *mHoldingPlayer;     /* 0x5e4 */
+    daPly_c *mHoldingPlayer; /* 0x5e4 */
     /* The actor that last let go of the crate: copied from mHoldingPlayer when
        it is thrown and from the 0x0d0 word when it is spat out. The thrown
        state's hit test will not hurt it. */
@@ -112,7 +112,7 @@ struct daObjBlockS_c : dBgActor_c {
 
     /* --- vtable, own overrides --- */
     virtual int  OnYoshiTryEat();                      /* slot 18 */
-    virtual void OnTurnIntoEgg(daPly_c &player);         /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player);       /* slot 19 */
     virtual void OnGroundPounded(dActor_c &other);      /* slot 21 */
     virtual void Kill();                                /* slot 31 */
 
@@ -222,7 +222,7 @@ struct daObjBlockS_c {
     s32 mdCcAcPos_c2_posX;      /* 0x5d8 */
     s32 mdCcAcPos_c2_posY;      /* 0x5dc */
     s32 mdCcAcPos_c2_posZ;      /* 0x5e0 */
-    daPly_c *mHoldingPlayer;     /* 0x5e4 */
+    daPly_c *mHoldingPlayer;    /* 0x5e4 */
     void *mPrevHolder;          /* 0x5e8 */
     s32 mGroundY;               /* 0x5ec */
     s32 mClsnYOffsetTarget;     /* 0x5f0 */

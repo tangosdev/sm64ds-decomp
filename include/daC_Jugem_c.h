@@ -47,7 +47,7 @@ struct daC_Jugem_c : dEnemyBase_c {
     dExtShadowModel_c            mShadowModel2;         /* 0x218 */
     ShadowMat                    mShadowMat1;           /* 0x240 */
     ShadowMat                    mShadowMat2;           /* 0x270 */
-    daPly_c                      *mTalkPlayer;           /* 0x2a0 */
+    daPly_c *mTalkPlayer;                               /* 0x2a0 */
     s32                          mTargetX;              /* 0x2a4 */
     s32                          mTargetY;              /* 0x2a8 */
     s32                          mTargetZ;              /* 0x2ac */

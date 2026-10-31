@@ -329,11 +329,11 @@ void daObjPowerUpItem_c::UpdateState() {
  * 0x64. */
 // @symbol _ZN18daObjPowerUpItem_c11CheckPickupEv
 void daObjPowerUpItem_c::CheckPickup() {
-    daPly_c* player;
+    daPly_c *player;
     u32 id = mdCcAc_c.otherOwner;
     if (id == 0) return;
 
-    player = (daPly_c*)dActor_c::FindWithID(id);
+    player = (daPly_c *)dActor_c::FindWithID(id);
     if (player == 0) return;
 
     {

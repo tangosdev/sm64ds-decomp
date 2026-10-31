@@ -106,9 +106,9 @@ struct daPly_c : dActor_c {
        The two symbols were registered as ov006 FUNCTIONS. They are now ov002
        objects, declared below as the static members whose mangling they match. */
     struct State {
-        int (daPly_c::*mInit)();       /* 0x00 */
-        int (daPly_c::*mMain)();       /* 0x08 */
-        int (daPly_c::*mCleanup)();    /* 0x10 */
+        int (daPly_c::*mInit)();    /* 0x00 */
+        int (daPly_c::*mMain)();    /* 0x08 */
+        int (daPly_c::*mCleanup)(); /* 0x10 */
     };
 
     s32 mEatingPlayer;            /* 0x0d0 */
@@ -228,7 +228,7 @@ struct daPly_c : dActor_c {
        veto can abort the transition -- so it records what was asked for, not
        what was taken. */
     State *mRequestedState;            /* 0x378 */
-    /* The collider being climbed: func_ov002_020caf98, reached from a dCc_c hit
+    /* The collider being climbed: StartClimb, reached from a dCc_c hit
        callback, stores it and enters St_Climb; St_Headstand_Main stands on its
        top (+0x08 height); func_ov002_020caf68 clears it. Every access is a word. */
     dCc_c *mClimbClsn; /* 0x37c */
@@ -424,7 +424,7 @@ struct daPly_c : dActor_c {
     u16 mHoldHeavyTimer;            /* 0x6b4 */
     /* Climb re-grab cooldown: St_Climb_Cleanup sets it to 8 when the player
        leaves the climb for a non-climb state, Behavior counts it down, and
-       func_ov002_020caf98 (the climb-start collider callback) refuses while
+       StartClimb (the climb-start collider callback) refuses while
        it is nonzero. */
     u16 mClimbCooldown;        /* 0x6b6 */
     u16 mWalkTimer;            /* 0x6b8 */
@@ -763,7 +763,7 @@ struct daPly_c : dActor_c {
            order comes from the out-of-line definition (see its comment there).
            daPly_c() is defined in the same file; the ROM homes only its C1. --- */
     daPly_c();
-    virtual ~daPly_c();                  /* slots 16, 17 */
+    virtual ~daPly_c();                 /* slots 16, 17 */
     virtual s32  InitResources();       /* slot  0 */
     virtual s32  CleanupResources();    /* slot  3 */
     virtual s32  Behavior();            /* slot  6 */
@@ -834,6 +834,9 @@ struct daPly_c : dActor_c {
     int St_Cannon_Main();
     int St_CeilingGrate_Init();
     int St_CeilingGrate_Main();
+    /* Offered a collider by dCc_c's player-hit callback; grabs it and enters
+       St_Climb. Returns 1 if it did. Coined name. */
+    int StartClimb(dCc_c *);
     int St_Climb_Cleanup();
     int St_Climb_Init();
     int St_Climb_Main();

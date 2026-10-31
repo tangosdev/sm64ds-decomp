@@ -71,7 +71,7 @@ extern CLPS_Block data_ov035_02112258;
 /* local extern: arm9 vector helpers and the dBgW stores; no shared header. */
 extern "C" {
 extern void MulVec3Mat4x3(const Vector3 *src, const Matrix4x3 *matrix, Vector3 *dst);
-extern void AddVec3(const Vector3 *left, const Vector3 *right, Vector3 *dst);
+extern void AddVec3(Vector3 *left, Vector3 *right, Vector3 *dst);
 extern void func_020393d4(dBgW *collider, void *callback);
 }
 

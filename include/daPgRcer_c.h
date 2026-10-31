@@ -50,7 +50,7 @@ struct daPgRcer_c : dActor_c {
     s32 mPathNodeIndex;               /* 0x36c */
     daPgRcerState *mStateDesc;        /* 0x370 -- func_ov019_021122dc */
     s32 mAction;                      /* 0x374 -- state index 0..5 */
-    daPly_c *mTalkPlayer;              /* 0x378 */
+    daPly_c *mTalkPlayer;             /* 0x378 */
     s32 mFallAccum;                   /* 0x37c -- |player vertSpeed| while airborne */
     s32 mPathDist;                    /* 0x380 -- remaining dist to current node */
     u32 mSlideSound;                  /* 0x384 -- Sound::PlayLong handle */

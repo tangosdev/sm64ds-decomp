@@ -1579,8 +1579,7 @@ void daBtn_c::func_ov079_02123f34()
 }
 
 // @symbol _ZN7daBtn_c15OnHitByMegaCharER7daPly_c
-void daBtn_c::OnHitByMegaChar(daPly_c &player)
-{
+void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     if (mIsKing != 0) return;
     if (mDeathState == 8) return;
     player.IncMegaKillCount();
@@ -1638,7 +1637,9 @@ extern "C" void func_ov079_02123d4c(int* out, daBtn_c *self){
 int daBtn_c::func_ov079_02123bcc() {
     int v[6];
     int dist, rangle, idx, hc, hs, idx2, nx, nz;
-    daPly_c *player; s32 *p; s16 cosv, sinv, sin2, cos2;
+    daPly_c *player;
+    s32 *p;
+    s16 cosv, sinv, sin2, cos2;
     int a0, a1, a2, raw, ang;
     player = mPlayers[mNearestPlayer];
     p = &player->mPosX;

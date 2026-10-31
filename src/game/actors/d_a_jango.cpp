@@ -1291,7 +1291,7 @@ int daJango_c::func_ov062_0211b51c()
    mPathNodeIndex and returns 1. */
 int daJango_c::func_ov062_0211b3ac()
 {
-    daPly_c* player;
+    daPly_c *player;
     Vector3 node;
     Vector3 best;
     Vector3 ppos;

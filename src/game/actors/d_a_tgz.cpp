@@ -863,8 +863,7 @@ int daTgz_c::InitResources()
 // @symbol _ZN7daTgz_c13OnTurnIntoEggER7daPly_c
 /* Vtable slot 19. Yoshi's egg is worth one coin -- paid directly while the
  * player is collecting a cap, otherwise counted as an egg coin. */
-void daTgz_c::OnTurnIntoEgg(daPly_c &player)
-{
+void daTgz_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap())
         GivePlayerCoins(player, 1, 0);
     else

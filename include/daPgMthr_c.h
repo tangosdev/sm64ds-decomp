@@ -42,7 +42,7 @@ struct daPgMthr_c : dActor_c {
     void *mState;                    /* 0x370 */
     /* ClosestPlayer / FindWithID result. StartTalk, ShowMessage,
        GetTalkState, DropActor take it as daPly_c. */
-    daPly_c *mPlayer;                 /* 0x374 */
+    daPly_c *mPlayer; /* 0x374 */
     /* 021118fc: last FindWithID hit, so a new PLAYER (0xbf) is noticed. */
     dActor_c *mLastPlayer;           /* 0x378 */
     s32 unk_37c;                     /* 0x37c -- 021122ec/021121dc/02111f1c write 0/1/2; no reader in this TU */

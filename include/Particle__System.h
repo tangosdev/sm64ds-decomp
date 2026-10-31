@@ -70,7 +70,11 @@ struct System {
     s32 callbackParam;             /* 0x48 */
     s32 callbackVelocity;          /* 0x4c */
     s32 callbackScale;             /* 0x50 */
-    u8 pad_054[0x08];
+    u8 pad_054[0x04];
+    /* Written by its callers only: ov007's figure trail stores 1..5, fewer
+       the faster the figure moves, and the trampoline minigame ramps it. */
+    u8 spawnFrames; /* 0x58 */
+    u8 pad_059[0x03];
     /* Two axes spanning the plane perpendicular to `direction`, rebuilt by
        func_0204cebc as cross products: basisU = direction x reference,
        basisV = direction x basisU. func_0204cd5c maps a 2D emitter offset

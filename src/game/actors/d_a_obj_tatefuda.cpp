@@ -968,8 +968,7 @@ void daObjTatefuda_c::Kill()
  * slot 27: dBgActor_c::KillByMegaChar is non-virtual, so the unqualified
  * call is already the direct `bl` the ROM has. mAngleY = mPrevAngleY is
  * dActor_c's own field pair (include/dActor_c.h, 0x08e/0x094). */
-void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player)
-{
+void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     func_02012694(0x1d, &mCamSpacePosX);
     KillByMegaChar(player);

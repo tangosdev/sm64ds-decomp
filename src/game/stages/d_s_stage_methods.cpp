@@ -4539,8 +4539,8 @@ int dScStage_c::CleanupResources() {
         if (mode == 1)
             resetSequenceCounts = 1;
         if (resetSequenceCounts) {
-            Sound::daPly_c::SetPlayableSeqCount(2, 2);
-            Sound::daPly_c::SetPlayableSeqCount(3, 1);
+            Sound::Player::SetPlayableSeqCount(2, 2);
+            Sound::Player::SetPlayableSeqCount(3, 1);
         }
     }
     return 1;
@@ -4606,9 +4606,9 @@ int dScStage_c::InitResources() {
         u8 mode = data_0209f2d8;
         int isVsMode = (mode == 1) ? 1 : 0;
         if (isVsMode) {
-            Sound::daPly_c::SetPlayableSeqCount(2, 5);
+            Sound::Player::SetPlayableSeqCount(2, 5);
             int sequenceCount = 3;
-            Sound::daPly_c::SetPlayableSeqCount(sequenceCount, sequenceCount);
+            Sound::Player::SetPlayableSeqCount(sequenceCount, sequenceCount);
         }
         dScene_c::Initialise3dGraphics();
         Enable3dEngines();
@@ -4879,7 +4879,7 @@ int dScStage_c::InitResources() {
         if (skipSubDisplayLayers == 0) {
             *p1 = (*p1 & ~0x1F00) | (data_0209d454 << 8);
         }
-        data_0209cee8 = 0;
+        dCc_c::listHead = 0;
         dExtShadowModel_c::CleanAll();
         data_02092110 = -1;
 

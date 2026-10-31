@@ -531,8 +531,8 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
                 }
             }
             if (hit == 0) {
-                if ((c->mdCcAcPos_c.hitFlags & 0x70) || (((daPly_c *)target)->mIsMetal != 0)
-                    || (c->JumpedOnByPlayer(c->mdCcAcPos_c, *(daPly_c *)target) != 0)) {
+                if ((c->mdCcAcPos_c.hitFlags & 0x70) || (((daPly_c *)target)->mIsMetal != 0) ||
+                    (c->JumpedOnByPlayer(c->mdCcAcPos_c, *(daPly_c *)target) != 0)) {
                     c->func_ov073_0211f494(c);
                     c->mHorzSpeed = 0x20000;
                     hit = 1;
@@ -739,7 +739,7 @@ int daKing_Donketu_c::func_ov073_0211fc78() {
     daKing_Donketu_c *c = this;
     struct Vector3 msgpos[2];
     struct Vector3 la, ps, in, out;
-    daPly_c* player;
+    daPly_c *player;
     dCamera_c* cam;
 
     player = c->ClosestPlayer();
@@ -818,7 +818,7 @@ int daKing_Donketu_c::func_ov073_0211fe84()
 int daKing_Donketu_c::func_ov073_0211fe8c() {
     daKing_Donketu_c *c = this;
     struct Vector3 look, pos, in, out;
-    daPly_c* player;
+    daPly_c *player;
     dCamera_c* cam;
 
     c->mSoundHandle = Sound::PlayLong(c->mSoundHandle, 3, 0x170, *(Vector3 *)&c->mCamSpacePos, 0);
@@ -1604,7 +1604,7 @@ int daKing_Donketu_c::func_ov073_0212128c()
     struct Vector3 la;
     struct Vector3 ps;
     void* cam;
-    daPly_c* player;
+    daPly_c *player;
 
     cam = data_0209f318;
     player = c->mTalkPlayer;
@@ -1656,10 +1656,10 @@ int daKing_Donketu_c::func_ov073_02121388() {
     struct Vector3 vmsg;
     struct Vector3 la;
     struct Vector3 ps;
-    daPly_c* player;
+    daPly_c *player;
     void* cam;
     int msg;
-    daPly_c* p;
+    daPly_c *p;
 
     player = c->ClosestPlayer();
     if (player == 0) return 1;

@@ -117,17 +117,17 @@ struct daObjTatefuda_c : dBgActor_c {
     /* The player this sign is talking to: set by TryStartTalk from the
        actor that hit the collider, and handed to daPly_c::GetTalkState,
        daPly_c::ShowMessage2 and friends as their `this`. */
-    daPly_c *mTalkingPlayer;          /* 0x598 */
+    daPly_c *mTalkingPlayer; /* 0x598 */
     /* daPly_c * -- the ROM loads this WORD and passes it to _ZN7daPly_c9DropActorEv as that
        function's `this`, which is an object address, so the word is a daPly_c *. It says
        nothing about the rest of the marker's span, which stays explicit padding. Was a u8
        marker. Set when the grab succeeds (CARRIED) and moved to mLastHolder, then
        cleared, when the sign is thrown or dropped. */
-    daPly_c *mHoldingPlayer;          /* 0x59c */
+    daPly_c *mHoldingPlayer; /* 0x59c */
     /* The player that held it last: the enter routines of THROWN and DROPPED copy
        mHoldingPlayer here before clearing it. The THROWN update skips this
        player when it looks for someone to hurt. */
-    daPly_c *mLastHolder;             /* 0x5a0 */
+    daPly_c *mLastHolder; /* 0x5a0 */
 
     /* --- vtable --- */
     /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own.
@@ -164,7 +164,7 @@ struct daObjTatefuda_c : dBgActor_c {
 
     void OnGroundPounded(dActor_c &other);   /* slot 21 */
     int  OnAttacked1(dActor_c &other);       /* slot 22 */
-    void OnHitByMegaChar(daPly_c &player);    /* slot 27 */
+    void OnHitByMegaChar(daPly_c &player);   /* slot 27 */
 
     /* The five-state machine on mState: SetState enters a state (mState =
        state, then runs the row's enter routine) and UpdateState runs the
@@ -260,9 +260,9 @@ struct daObjTatefuda_c {
     u8  pad_592[0x2];
     u8  mFlagSeen;               /* 0x594 */
     u8  pad_595[0x3];
-    daPly_c *mTalkingPlayer;          /* 0x598 */
-    daPly_c *mHoldingPlayer;          /* 0x59c */
-    daPly_c *mLastHolder;             /* 0x5a0 */
+    daPly_c *mTalkingPlayer; /* 0x598 */
+    daPly_c *mHoldingPlayer; /* 0x59c */
+    daPly_c *mLastHolder;    /* 0x5a0 */
 };
 
 #endif /* __cplusplus */

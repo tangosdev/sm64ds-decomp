@@ -1,0 +1,109 @@
+{
+  "id": "ov007/unit020c9a84",
+  "module": "ov007",
+  "source": "src/ui/menus/unit020c9a84.cpp",
+  "promoted_source": "src/ui/menus/unit020c9a84.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous run 0x020c9a84..0x020ca1d4, 6 functions, all byte-matched from the one unit source. A sub-range of build/tu_map.json's unattributed ov007 unit 0x020b72a0..0x020cc028, which the map cannot cut: no ROM RTTI, vtable or static initializer falls in it.",
+    "module shape: one object type's whole life cycle: build (func_ov007_020ca010), free (020c9fa0), place (020c9f10), bind to the mesh (020c9d90), step (020c9c24) and read out the item sprite's pose (020c9a84). These six are the overlay's only functions that take an Ov007Swing.",
+    "start edge (high): func_ov007_020c9a2c parses an Ov007BinFile and touches no Ov007Swing. End edge (high): func_ov007_020ca1d4 starts the mesh-wave functions and touches no Ov007Swing either."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020c9a84",
+      "end": "0x020ca1d4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov007_020c9a84",
+      "address": "0x020c9a84",
+      "size": "0x000001a0",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c9a84.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov007_020c9c24",
+      "address": "0x020c9c24",
+      "size": "0x0000016c",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c9c24.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov007_020c9d90",
+      "address": "0x020c9d90",
+      "size": "0x00000180",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c9d90.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov007_020c9f10",
+      "address": "0x020c9f10",
+      "size": "0x00000090",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c9f10.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov007_020c9fa0",
+      "address": "0x020c9fa0",
+      "size": "0x00000070",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c9fa0.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov007_020ca010",
+      "address": "0x020ca010",
+      "size": "0x000001c4",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020ca010.c",
+      "ordinal": 5
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "func_ov007_020c9a84's Vector3 span local emits the vague-linkage ~Vector3 into this object; the ROM keeps one copy, in arm9."
+    }
+  ],
+  "notes": [
+    "Text only: the unit owns no data or bss.",
+    "Folded from 6 sources, three of them C. Under C++ the C sources' Vector3 struct copies lower member by member; the unit copies through CopyVec3, which goes through Vector3Bits, an array-only struct that keeps the ROM's ldm/stm block moves. func_ov007_020ca010's zero-initialised locals stay RawVector3 aggregates: a Vector3 local, built by constructor or assigned, stores differently. func_ov007_020c9c24's source carried #pragma opt_common_subs off and cached self->params in a temporary; reading self->params directly, it matches under the TU's flags with no pragma."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "functions_matched": 6,
+    "functions_declared": 6,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "object": "build/tu/ov007-unit020c9a84/unit020c9a84.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        7
+      ],
+      "data": [],
+      "dataExternalized": [],
+      "canonicalDuplicates": []
+    }
+  }
+}

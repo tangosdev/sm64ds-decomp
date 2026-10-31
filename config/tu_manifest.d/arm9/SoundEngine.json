@@ -6,7 +6,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x0204eda4..0x020524e4, 138 function(s), gapless in config/arm9/delinks.txt, every entry complete.",
-    "The run is the sound-engine half of the Sound module: Sound::daPly_c::SetPlayableSeqCount, Sound::InfoInstrumentBankEntry::GetWithID and Sound::InfoSequenceEntry::GetWithID are mangled members of types declared in include/Sound.h, and the neighboring func_* workers resolve relocs into the player record table (data_020a4d6c = SoundPlayerRecord[32]), the nested-heap iterators (data_020a4d60, data_020a4d54, data_020a5bc8), the voice/channel workers and the stream/sequence machinery the promoted arm9/Sound public API calls into.",
+    "The run is the sound-engine half of the Sound module: Sound::Player::SetPlayableSeqCount, Sound::InfoInstrumentBankEntry::GetWithID and Sound::InfoSequenceEntry::GetWithID are mangled members of types declared in include/Sound.h, and the neighboring func_* workers resolve relocs into the player record table (data_020a4d6c = SoundPlayerRecord[32]), the nested-heap iterators (data_020a4d60, data_020a4d54, data_020a5bc8), the voice/channel workers and the stream/sequence machinery the promoted arm9/Sound public API calls into.",
     "Preceding TU is the promoted arm9/SolidHeapAllocator (ends 0x0204eda4); following TU is the matrix math run beginning func_020524f0 (Matrix3x3_LoadIdentity). NOT FROM tools/tu_map.py: the arm9 main module is reported under-segmented and emits one unit for 0x20049f0..0x20707a4; this entry was assembled by hand from the linker run."
   ],
   "sections": [
@@ -361,9 +361,9 @@
       "ordinal": 48
     },
     {
-      "symbol": "_ZN5Sound7daPly_c19SetPlayableSeqCountEii",
+      "symbol": "_ZN5Sound6Player19SetPlayableSeqCountEii",
       "address": "0x0204fadc",
-      "legacy_source": "src/_ZN5Sound7daPly_c19SetPlayableSeqCountEii.cpp",
+      "legacy_source": "src/_ZN5Sound6Player19SetPlayableSeqCountEii.cpp",
       "size": "0x00000020",
       "ordinal": 49
     },

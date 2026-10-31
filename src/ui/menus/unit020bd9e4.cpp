@@ -37,13 +37,12 @@
  *
  * The functions keep their ROM names under C linkage.
  */
+#include "types.h"
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "nnsys/snd/player.h"
 
 extern "C" {
-
-typedef long long s64;
 
 extern void func_0204f934(int **);
 extern void func_0204f94c(int *);
@@ -87,13 +86,12 @@ void func_ov007_020be00c(void) {
 
 // @symbol func_ov007_020bdf60
 void func_ov007_020bdf60(void) {
-    int i = 0;
-    int off = 0;
-    for (; i < 0x39; i++, off += 4) {
+    int i;
+    for (i = 0; i < 0x39; i++) {
         if (data_ov007_02104bbc[i] != 0) {
-            func_0204fa2c((int *)((char *)data_ov007_02104bbc + off), 5);
+            func_0204fa2c(&data_ov007_02104bbc[i], 5);
         }
-        func_0204f934((int **)((char *)data_ov007_02104bbc + off));
+        func_0204f934((int **)&data_ov007_02104bbc[i]);
     }
     if (data_ov007_02104bb8 != 0) {
         func_ov007_020c3d1c(data_ov007_02104bb8);
@@ -108,12 +106,16 @@ void func_ov007_020bdf60(void) {
 // @symbol func_ov007_020bdebc
 void func_ov007_020bdebc(void) {
     int i;
-    int j;
+    int sound;
     for (i = 0; i < 4; i++) {
-        j = i + 0x35;
+        sound = i + 0x35;
         if (data_ov007_02104bb8[i] == 0) {
-            if (data_ov007_02104bbc[j] != 0) {
-                func_0204fa2c(&data_ov007_02104bbc[j], 1);
+            if (data_ov007_02104bbc[sound] != 0) {
+                func_0204fa2c(&data_ov007_02104bbc[sound], 1);
+                /* Never true (i is a loop index, 0..3): the reset of
+                 * func_ov007_020bdbcc's smoothed input looks meant for
+                 * sound 0x35. The ROM keeps the test; without it 020bdebc
+                 * does not match. */
                 if (i == 0x35) {
                     data_ov007_02104bb4 = 0;
                     data_ov007_02104bb0 = 0;
@@ -146,32 +148,35 @@ void func_ov007_020bde2c(int idx) {
     data_ov007_02104bb8[idx - 0x35] = 1;
 }
 
+/* Q12 lerp: from at t = 0, to at t = 0x1000. */
+static inline int BlendFx(int from, int to, int t) {
+    return (int)(((s64)(0x1000 - t) * from + (s64)t * to) >> 12);
+}
+
 // @symbol func_ov007_020bdbcc
-void func_ov007_020bdbcc(int a0, int a1) {
-    int stateA = data_ov007_02104bb4;
-    int stateB = data_ov007_02104bb0;
-    int newA = (int)((((s64)stateA * 0xc18) + ((s64)(a0 << 12) * 0x3e8)) >> 12);
-    int newB = (int)((((s64)stateB * 0xc18) + ((s64)(a1 << 12) * 0x3e8)) >> 12);
-    int magSq;
-    int spd;
-    int percent;
+void func_ov007_020bdbcc(int dx, int dy) {
+    int x = BlendFx(data_ov007_02104bb4, dx << 12, 0x3e8);
+    int y = BlendFx(data_ov007_02104bb0, dy << 12, 0x3e8);
+    int lengthSq;
+    int speed;
+    int loudness;
     int active;
-    int *pp;
-    int r5v;
+    int *handle;
+    int volume;
     int t;
 
-    data_ov007_02104bb0 = newB;
-    magSq = FX_MUL(newA, newA) + FX_MUL(newB, newB);
-    data_ov007_02104bb4 = newA;
+    data_ov007_02104bb0 = y;
+    lengthSq = FX_MUL(x, x) + FX_MUL(y, y);
+    data_ov007_02104bb4 = x;
 
-    spd = func_020531a4(magSq);
+    speed = func_020531a4(lengthSq);
 
-    if (spd <= 0x1388) {
-        percent = 0;
-    } else if (spd >= 0x1b58) {
-        percent = 0x1000;
+    if (speed <= 0x1388) {
+        loudness = 0;
+    } else if (speed >= 0x1b58) {
+        loudness = 0x1000;
     } else {
-        percent = cstd::fdiv(spd - 0x1388, 0x7d0);
+        loudness = cstd::fdiv(speed - 0x1388, 0x7d0);
     }
 
     if (data_ov007_02104bbc[0x35] == 0) {
@@ -179,7 +184,7 @@ void func_ov007_020bdbcc(int a0, int a1) {
         data_ov007_02104ba4 = 0;
     }
 
-    active = (percent >= 0x800) ? 0x1000 : 0;
+    active = (loudness >= 0x800) ? 0x1000 : 0;
 
     if (active > 0) {
         data_ov007_02104ba4 = data_ov007_02104ba4 + 1;
@@ -197,20 +202,20 @@ void func_ov007_020bdbcc(int a0, int a1) {
         data_ov007_02104ba4 = 0;
     }
 
-    r5v = (active * 0x7f) >> 12;
+    volume = (active * 0x7f) >> 12;
 
-    if (spd <= 0x1388) {
+    if (speed <= 0x1388) {
         t = 0;
-    } else if (spd >= 0x5000) {
+    } else if (speed >= 0x5000) {
         t = 0x1000;
     } else {
-        t = cstd::fdiv(spd - 0x1388, 0x3c78);
+        t = cstd::fdiv(speed - 0x1388, 0x3c78);
     }
 
-    pp = &data_ov007_02104bbc[0x35];
+    handle = &data_ov007_02104bbc[0x35];
     func_ov007_020bde2c(0x35);
-    NNS_SndPlayerSetVolume((NNSSndHandle *)pp, r5v);
-    NNS_SndPlayerSetTrackPitch((NNSSndHandle *)pp, 0xf, -(((0x1000 - t) * 0x300) >> 12));
+    NNS_SndPlayerSetVolume((NNSSndHandle *)handle, volume);
+    NNS_SndPlayerSetTrackPitch((NNSSndHandle *)handle, 0xf, -(((0x1000 - t) * 0x300) >> 12));
 
     data_ov007_02104bac = data_ov007_02104bac + 1;
 }
@@ -227,33 +232,33 @@ static inline int scale_div(int v, int range, int scale) {
 }
 
 // @symbol func_ov007_020bda8c
-void func_ov007_020bda8c(int a, int b) {
-    NNSSndHandle *obj = (NNSSndHandle *)&data_ov007_02104bbc[0x36];
-    int r4, r6;
+void func_ov007_020bda8c(int frames, int fadingOut) {
+    NNSSndHandle *handle = (NNSSndHandle *)&data_ov007_02104bbc[0x36];
+    int depth, speed;
 
-    if (b == 0) {
-        r4 = scale_div(a, 0xb4, 0x7f);
-        r6 = scale_div(a, 0x78, 0x23) + 5;
+    if (fadingOut == 0) {
+        depth = scale_div(frames, 0xb4, 0x7f);
+        speed = scale_div(frames, 0x78, 0x23) + 5;
     } else {
-        int v = 0x1e - a;
-        r4 = scale_div(v, 0x1e, 0x7f);
-        r6 = scale_div(v, 0x1e, 0x23) + 5;
-        if (a == 0) {
-            NNS_SndPlayerMoveVolume(obj, 0, 0x1e);
+        int left = 0x1e - frames;
+        depth = scale_div(left, 0x1e, 0x7f);
+        speed = scale_div(left, 0x1e, 0x23) + 5;
+        if (frames == 0) {
+            NNS_SndPlayerMoveVolume(handle, 0, 0x1e);
         }
     }
     func_ov007_020bde2c(0x36);
-    NNS_SndPlayerSetTrackModDepth(obj, 0xf, r4);
-    NNS_SndPlayerSetTrackModSpeed(obj, 0xf, r6);
+    NNS_SndPlayerSetTrackModDepth(handle, 0xf, depth);
+    NNS_SndPlayerSetTrackModSpeed(handle, 0xf, speed);
 }
 
 // @symbol func_ov007_020bda38
 void func_ov007_020bda38(int v) {
-    NNSSndHandle *r5 = (NNSSndHandle *)&data_ov007_02104bbc[0x37];
+    NNSSndHandle *handle = (NNSSndHandle *)&data_ov007_02104bbc[0x37];
     func_ov007_020bde2c(0x37);
-    int r4 = (v << 8) >> 12;
-    NNS_SndPlayerSetTempoRatio(r5, r4 + 0x100);
-    NNS_SndPlayerSetTrackPitch(r5, 0xf, r4);
+    int shift = (v << 8) >> 12;
+    NNS_SndPlayerSetTempoRatio(handle, shift + 0x100);
+    NNS_SndPlayerSetTrackPitch(handle, 0xf, shift);
 }
 
 // @symbol func_ov007_020bd9e4

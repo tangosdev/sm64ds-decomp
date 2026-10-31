@@ -32,7 +32,7 @@
 struct daObjKey_c : dEnemyBase_c {
     /* No member name here is a recovered symbol; "coined" marks names given
        from the field's uses in this class's code. */
-    daPly_c      *mPlayer;           /* 0x110 coined: the daPly_c collecting the key */
+    daPly_c *mPlayer;               /* 0x110 coined: the daPly_c collecting the key */
     dExtAnmModel_c mAnmModel;       /* 0x114 */
     dExtSimpleModel_c mModel;       /* 0x178 */
     dExtShadowModel_c mShadowModel;       /* 0x1c8 */
@@ -55,7 +55,7 @@ struct daObjKey_c : dEnemyBase_c {
     virtual ~daObjKey_c();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
-    virtual void  OnTurnIntoEgg(daPly_c &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
 
     int Behavior();
     int CleanupResources();
@@ -71,8 +71,8 @@ struct daObjKey_c : dEnemyBase_c {
     /* The address is the method name. The actor was the first parameter. */
     void func_ov089_02130fb4(Vector3 *target, int height); /* 0x02130fb4 */
     void func_ov089_0213115c(int anim);                    /* 0x0213115c */
-    void func_ov089_02131dcc(daPly_c &player);              /* 0x02131dcc */
-    void func_ov089_02131df4(daPly_c &player);              /* 0x02131df4 */
+    void func_ov089_02131dcc(daPly_c &player);             /* 0x02131dcc */
+    void func_ov089_02131df4(daPly_c &player);             /* 0x02131df4 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

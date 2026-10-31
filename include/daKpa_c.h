@@ -270,7 +270,7 @@ struct daKpa_c {
     /* The C++ half types this dActor_c*; C translation units have no dActor_c
        declaration in scope here, so it is spelt void* -- same width, same slot. */
     void *mTargetPlayer;            /* 0x3a0 */
-    void *mGrabbedPlayer;         /* 0x3a4 -- the daPly_c holding the tail; null when nobody does */
+    void *mGrabbedPlayer; /* 0x3a4 -- the daPly_c holding the tail; null when nobody does */
     /* uniqueID of the KOOPATAIL actor (ID 278) that InitResources spawns. */
     s32 mTailUniqueID;            /* 0x3a8 */
     /* uniqueID of the KOOPA2BG actor (ID 166) found with FindWithActorID. The

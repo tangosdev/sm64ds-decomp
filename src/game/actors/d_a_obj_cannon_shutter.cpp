@@ -42,7 +42,7 @@ enum d_a_obj_cannon_shutter_AssetId {
 
 extern "C" {
 void MulVec3Mat4x3(const Vector3 *v, const Matrix4x3 *m, Vector3 *dst);
-void AddVec3(const Vector3 *a, const Vector3 *b, Vector3 *dst);
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 }

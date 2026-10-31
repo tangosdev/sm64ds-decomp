@@ -2,10 +2,10 @@
 #include "Ov007Tween.h"
 
 extern void func_ov007_020c90c0(void *self);
-/* SubVec3/LenVec3 still define their vector as their own struct Vec3;
-   declared as defined, the calls cast. */
+/* LenVec3 still defines its vector as its own struct Vec3; declared as
+   defined, its call casts. SubVec3 takes Vector3 now. */
 struct Vec3;
-extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
+extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern int LenVec3(struct Vec3 *v);
 extern void NormalizeVec3(int *v, int *out); /* as defined */
 extern void func_02053320(int s, int *a, int *b, int *out);
@@ -62,7 +62,7 @@ int func_ov007_020c8de0(Ov007VecTween *o) {
             Vector3 *dst = o->out;
             int step = o->step;
             int ok; /* stays a flag: setting state inside the arm shrinks it (0x170) */
-            SubVec3((struct Vec3 *)&o->to, (struct Vec3 *)dst, (struct Vec3 *)&tmp);
+            SubVec3((Vector3 *)&o->to, (Vector3 *)dst, (Vector3 *)&tmp);
             if (LenVec3((struct Vec3 *)&tmp) <= step) {
                 *dst = o->to;
                 ok = 1;
