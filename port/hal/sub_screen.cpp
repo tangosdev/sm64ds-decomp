@@ -1619,7 +1619,9 @@ const uint32_t *menu_sub_for(uint8_t layers)
     ++g_msub_n;
     ntr::ppu_sub_set_bg_suppress((~(unsigned)layers & 0x1fu) << 8);
     if (g_sentinel_on) ntr::ppu_sub_set_backdrop_override(kKeySentinel);
+    if (layers & MENU_L_BG0_NEXT) ntr::ppu_sub_set_bg0_hofs_add(256);      /* RECROOMSLIDE1 */
     ntr::ppu_scanout_sub(buf);
+    if (layers & MENU_L_BG0_NEXT) ntr::ppu_sub_set_bg0_hofs_add(0);
     if (g_sentinel_on) ntr::ppu_sub_set_backdrop_override(-1);
     ntr::ppu_sub_set_bg_suppress(inset_bg_suppress());
     return &buf.px[0][0];

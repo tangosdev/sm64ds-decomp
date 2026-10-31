@@ -417,6 +417,11 @@ void ppu_sub_set_bg_suppress(uint32_t mask);
    makes the key exact. Read-only on the ROM; set it around one masked ppu_scanout_sub and clear it after. */
 void ppu_sub_set_backdrop_override(int bgr555);
 
+/* RECROOMSLIDE1: ENGINE B's BG0 SCANNED OUT WITH ITS HORIZONTAL SCROLL MOVED by add columns (wrapping at the map width, as the hardware's
+   own scroll does), for one masked scan-out: a wide menu draws the columns of a 512 wide BG0 map that sit just past the DS screen's edges.
+   Read-only on the ROM's registers; set it around one masked ppu_scanout_sub and clear it (0) after. */
+void ppu_sub_set_bg0_hofs_add(int add);
+
 /* ASSET1 (run menu1): ENGINE B DRAWS ONLY SOME OAM ENTRIES. mask4 is a 128-bit set (bit i of word i / 32 is OAM entry i);
    an entry outside it is skipped exactly as the camera-button veto skips one (obj_decide's skip[], so the scan-out cache
    and the reference raster agree). Null = every entry, the behaviour this file shipped with. Read-only on the ROM's OAM;

@@ -148,8 +148,8 @@ void menu_recroom_build(int, MenuLayout *L)
     /* ANCHOR1: on a wide picture the corner controls ride the WINDOW's edges (Tango 10-24, the corner-control rule), the cards stay
        centred. The one block is cut into pieces of the same layers: the tab column at the left edge (DS x 0 .. kLw; on page two the
        page arrow is beside it), the page arrow and the back arrow at the right edge (DS x 0xd0 .. 256, right edge on the picture's
-       edge), the cards between, centred. 4:3 (one) is the single block, untouched. The page slide's clip then sits at the cards
-       piece's left edge instead of under the tab column (RECROOM1's DECISION traded that clip for one block; the rule outranks it). */
+       edge), the cards between, centred. 4:3 (one) is the single block, untouched. The cards themselves are one layer under all of it,
+       out to the window edges (RECROOMSLIDE1, below), so a page slide passes under the tab column and the arrows as on the DS. */
     int pm = -1, p_tab = -1, p_right = -1, p_back = -1, p_cards = -1;
     if (one) {
         pm = menu_add_piece(L, m);
@@ -163,38 +163,61 @@ void menu_recroom_build(int, MenuLayout *L)
             q.dx = (short)(ax == MENU_AX_C ? sx + sw / 2 - 128 : 0);       /* centred pieces keep their DS x from the DS box's centre */
             return menu_add_piece(L, q);
         };
-        const uint8_t all = m.layers;
-        /* ANCHOR1 page change: the cards slide sideways across the whole DS width and the ROM hides them under the tab column / clips them at the
-           screen edge. The cut pieces below would tear that slide at their seams (a blank band as wide as the side margin), so the BG0 layer
-           (the cards' art, and nothing else) is drawn first as ONE centred piece over the whole DS width: the art is continuous across the
-           margin up to the tab column's edge, where the tab piece (strip + tabs, opaque) is drawn over it, exactly the ROM's own order. The
-           edge pieces for the arrows draw the OBJ layer only, so no second copy of a card is drawn at a window edge. */
-        /* Only WHILE a slide runs. At rest the cards are where the ROM put them and the page that is not showing is parked under the DS
-           strip (hidden there by the strip, which now sits at the window edge), so a full width cards layer would show the parked page
-           between the tab column and the arrow; at rest the cut pieces alone are exact, and cost two scan-outs, not four. */
-        const bool slide = o && R.flip != 0;
-        if (slide) {
+        /* RECROOMSLIDE1 (Tango 10-29, ANCHOR1's plan): THE CARDS RUN OUT INTO THE MARGINS. BG0 (the cards' art and nothing else) is a 512 column
+           map the ROM scrolls by mSubBgScrollX (0 page one, 0xb0 page two; src/minigames/d_s_mini_gm.cpp MiniGm_UpdatePageScroll): page one
+           sits at map x 0x40..0xd0, page two at 0x110..0x1a0, so at rest the page not showing is parked 16 columns past the screen's right
+           edge (page one) or under the strip (page two). A wide picture is that same map seen through a wider window: the DS box draws BG0 at
+           its own scroll (one centred piece, DS x 0..255), and the margins draw BG0 scanned out with its scroll moved by 256 columns
+           (MENU_L_BG0_NEXT: source x c is DS x 256 + c, and on a 512 column map also DS x c - 256), out to both window edges (at most 128
+           columns a side, the map's other half). It is drawn at rest too: the margins show the
+           neighbouring page where the map keeps it, so nothing pops in on the first slide frame. Over it, every piece at a window edge or
+           in the DS box draws the strip and the objects only (BG2 + OBJ), so a card is never drawn twice: the cards pass under the tab
+           column at the left window edge and under the page arrow and back arrow at the right one. Four masks a frame (stars, BG0, BG0 moved,
+           strip + objects), the cap of menu_sub_for. 4:3 is untouched. */
+        {
             MenuPiece u = m;
             u.s.x = 0; u.s.y = 0; u.s.w = 256; u.s.h = 192;
             u.layers = MENU_L_BG0; u.touch = 0; u.ax = MENU_AX_C; u.ay = MENU_AY_T; u.dx = 0; u.dy = 0;
             menu_add_piece(L, u);
+            /* The margins are placed in host pixels on the DS box's own grid (a centred piece's offset is whole units, and the margin is
+               rarely a whole number of units): DS column p starts at host x hx(p), the floor of the exact place, the same floor the core
+               gives the DS box piece's own edges (menu_layout_dest), and the fixed placement samples one source column per unit from its
+               left edge, so every margin column sits within a host pixel of where a wider DS screen would put it. */
+            const long long UN = L->unum, UD = L->uden;
+            auto hx = [&](int p) { return (int)(((long long)L->w * UD + 2LL * (p - 128) * UN) / (2 * UD)); };      /* p >= -128 keeps it >= 0 here */
+            auto fixed = [&](int sx, int sw, int x0, int x1) {
+                if (x1 <= x0 || sw < 1) return;
+                MenuPiece q = u;
+                q.layers = MENU_L_BG0_NEXT | MENU_L_BG0;
+                q.s.x = (short)sx; q.s.w = (short)sw;
+                q.lnum = (int)UN; q.lden = (int)UD;
+                q.fx = (short)x0; q.fy = 0; q.fw = (short)(x1 - x0); q.fh = (short)L->h;
+                menu_add_piece(L, q);
+            };
+            /* K = whole DS columns of the margin (at most 128, the map's other half); on the right the piece runs from DS x 256 to the window
+               edge (its last column cut by the edge); on the left from DS x -K to the DS box, and the sliver left of that (under one unit) is
+               the one column DS x -K - 1, cut by the edge */
+            const long long num = (long long)L->w * UD - 256LL * UN;
+            int K = num > 0 ? (int)(num / (2 * UN)) : 0;
+            const bool capped = K >= 128;
+            if (capped) K = 128;
+            if (num > 0) {
+                fixed(0, capped ? 128 : K + 1, hx(256), capped ? hx(384) : L->w);
+                fixed(256 - K, K, hx(-K), hx(0));
+                if (!capped) fixed(255 - K, 1, 0, hx(-K));
+            }
         }
-        /* A slide: the pieces at the window edges draw the strip and the objects only (BG2 + OBJ). The tab piece reads DS columns 0 .. lw at the
-           window's left edge, so with BG0 in it the cards crossing those columns were drawn a second time, shifted by the side margin, and the
-           arrows' pieces did the same at the right: the cards now appear only in the centred DS box and are cut at its left and right edges, the
-           way the cartridge draws the slide (under the strip on the left, at the screen edge on the right). */
-        const uint8_t arrows = slide ? (uint8_t)(MENU_L_BG2 | MENU_L_OBJ) : all;
+        const uint8_t arrows = (uint8_t)(MENU_L_BG2 | MENU_L_OBJ);
         p_tab = cut(0, 0, lw, 192, MENU_AX_L, arrows);
         if (mode == 0) {
-            p_cards = cut(lw, 0, 0xd0 - lw, 192, MENU_AX_C, all);
-            if (slide) { if (!o || R.arrow) p_right = cut(0xd4, 0x3c, 44, 0x48, MENU_AX_R, arrows); }     /* the page arrow only: the ROM draws it only while no page change runs */
-            else p_right = cut(0xd0, 0, 48, 0x88, MENU_AX_R, arrows);
+            p_cards = cut(lw, 0, 0xd0 - lw, 192, MENU_AX_C, arrows);
+            p_right = cut(0xd0, 0, 48, 0x88, MENU_AX_R, arrows);
         } else {
-            p_cards = cut(lw, 0, 256 - lw, 0x88, MENU_AX_C, all);
-            cut(lw, 0x88, 0xd0 - lw, 56, MENU_AX_C, all);
+            p_cards = cut(lw, 0, 256 - lw, 0x88, MENU_AX_C, arrows);
+            cut(lw, 0x88, 0xd0 - lw, 56, MENU_AX_C, arrows);
             p_right = p_tab;                              /* page two: the page arrow is beside the tab column */
         }
-        p_back = slide ? cut(0xd4, 0x8c, 44, 0x2c, MENU_AX_R, arrows) : cut(0xd0, 0x88, 48, 56, MENU_AX_R, arrows);
+        p_back = cut(0xd0, 0x88, 48, 56, MENU_AX_R, arrows);
         pm = p_cards;
     }
 
