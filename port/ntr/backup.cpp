@@ -206,6 +206,8 @@
 
 /* defined in the ROM-side block at the foot of this file */
 extern "C" unsigned char data_020a4b40[8];
+/* CAREER1: told of every write before it lands (image = the chip as it is now), so hal/career.cpp can follow a file copy or erase. Null by default. */
+extern "C" { void (*port_backup_write_hook)(unsigned addr, const void *src, unsigned len, const unsigned char *image) = 0; }
 
 namespace ntr {
 namespace backup {
@@ -984,6 +986,7 @@ bool write(unsigned addr, const void *src, unsigned len)
            other kind's tag can be judged here, not "neither" */
         fence_image(cand, g_path, true);
     }
+    if (port_backup_write_hook) port_backup_write_hook(addr, src, len, g_image);   /* CAREER1 */
     std::memcpy(g_image + addr, src, len);
     ++g_stats.writes;
     if (trace_on())
