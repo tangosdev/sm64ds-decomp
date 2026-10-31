@@ -87,7 +87,9 @@ Exit 0 if every hosted DS symbol is inside .dsstate; non-zero (with the offendin
 symbols listed) otherwise.
 """
 
+import os
 import re
+import struct
 import sys
 
 
@@ -316,6 +318,66 @@ def main():
     print(f"dsstate_guard: OK -- {len(seen)} hosted DS symbols all inside "
           f".dsstate [{lo:#x}, {hi:#x}), {(hi - lo)} bytes captured "
           f"({by_name} matched by name, {by_obj} by mount object).")
+    check_image_end(sys.argv[1])
+
+
+# THE IMAGE MUST END BELOW THE 26-BIT LINE (run after093, VSFLAKE1). The ROM
+# packs the address of its WM command buffer, an image static in .dsstate, into
+# a 26-bit IPC payload (src/IPCSend.c), and hal/wm_arm7.cpp ipc_restore_ptr
+# puts the top six bits back from the image's own address. A payload of
+# 0x02000000 or more reads as DS main RAM and is taken whole, so every image
+# address must sit in the low 32 MB of one 64 MB block: with the image based at
+# 0x10000000 (port/CMakeLists.txt /BASE), the image must END at or below
+# 0x12000000. 0.9.3.5's fold crossed it by static buffers alone (image end
+# 0x1214c000) and every lockstep VS match closed with "[wm7] HARD FAULT: no
+# answer for this apiid on rung W4 -- apiid 0x00", which is a link-time fact
+# showing up as a network fault. This makes it a build failure instead.
+IPC26_BLOCK = 0x04000000
+IPC26_MAIN_RAM = 0x02000000
+
+
+def image_span(exe):
+    """(ImageBase, ImageBase + SizeOfImage) of a PE32 file, or None."""
+    try:
+        with open(exe, "rb") as f:
+            head = f.read(0x400)
+    except OSError:
+        return None
+    if head[:2] != b"MZ":
+        return None
+    pe = struct.unpack_from("<I", head, 0x3C)[0]
+    if head[pe:pe + 4] != b"PE\0\0":
+        return None
+    opt = pe + 24
+    if struct.unpack_from("<H", head, opt)[0] != 0x10B:   # PE32 only
+        return None
+    base = struct.unpack_from("<I", head, opt + 28)[0]
+    size = struct.unpack_from("<I", head, opt + 56)[0]
+    return base, base + size
+
+
+def check_image_end(map_path):
+    exe = os.path.join(os.path.dirname(os.path.abspath(map_path)), "walk_window.exe")
+    span = image_span(exe)
+    if span is None:
+        print(f"dsstate_guard: image-end check skipped, no PE32 walk_window.exe next to the map ({exe})")
+        return
+    base, end = span
+    block = base & ~(IPC26_BLOCK - 1)
+    limit = block + IPC26_MAIN_RAM
+    if base & (IPC26_BLOCK - 1) >= IPC26_MAIN_RAM or end > limit:
+        print(f"dsstate_guard: the image [{base:#010x}, {end:#010x}) ends "
+              f"{(end - limit) / 1048576:.2f} MB PAST {limit:#010x}. An image "
+              f"address at or above it does not survive the 26-bit IPC payload "
+              f"(hal/wm_arm7.cpp ipc_restore_ptr reads it as DS main RAM), so "
+              f"every lockstep VS match faults with '[wm7] HARD FAULT ... apiid "
+              f"0x00'. Fix: move the newest big static buffers to the heap "
+              f"(std::calloc once, the way hal/message_compositor.cpp's "
+              f"g_mghr_bg and ntr/ppu_sub.cpp's g_hr_obj are), then rebuild.",
+              file=sys.stderr)
+        sys.exit(1)
+    print(f"dsstate_guard: image end OK -- [{base:#010x}, {end:#010x}), "
+          f"{(limit - end) / 1048576:.2f} MB under the 26-bit IPC line {limit:#010x}.")
 
 
 if __name__ == "__main__":
