@@ -3003,10 +3003,17 @@ static int g_intro_armed;
    precondition below (data_0209f2d8 != 0: PrepareVsMode writes mode 1), which
    is measured rather than reasoned in this lane's proof runs. */
 extern "C" int port_boot_skip_intro(void);   /* hal/title_entry.cpp */
+extern "C" int host_setting_skip_opening(void);   /* hal/host_settings.cpp */
+extern "C++" { namespace port { bool coop_save_active(); } }   /* hal/coop_save.cpp */
 
+/* SKIPINTRO1: the in-game "Skip opening" row (settings key SkipOpening, off by
+   default) says not this time as well. A coop room is left out: there every
+   console plays the host's file, the opening is synced with the coop barriers,
+   and hal/coop_boot.cpp clears SM64DS_SKIP_INTRO for that reason. */
 extern "C" int port_intro_suppressed(void)
 {
-    return port_boot_skip_intro();
+    if (port_boot_skip_intro()) return 1;
+    return (host_setting_skip_opening() && !port::coop_save_active()) ? 1 : 0;
 }
 
 /* Armed by the title bridge's own latch, or by the level-to-scene crossing's

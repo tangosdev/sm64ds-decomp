@@ -643,6 +643,8 @@ const Row *patches_rows(int *n)
     g_patch_rows[k++] = Row{ R_CHECK, "Wide drawing page", SL_WIDE_DRAWING, -1, 0, 0, 0 };
     g_patch_rows[k++] = Row{ R_NOTE, "Off is the DS: the drawing page stays 4:3.", -1, -1, 0, 0, 0 };
     g_patch_rows[k++] = Row{ R_CHECK, "Peach unlock jingle", SL_PEACH_JINGLE, -1, 0, 0, 0 };
+    g_patch_rows[k++] = Row{ R_CHECK, "Skip opening", SL_SKIP_OPENING, -1, 0, 0, 0 };   /* SKIPINTRO1 */
+    g_patch_rows[k++] = Row{ R_NOTE, "New files skip Peach's letter and start at the castle.", -1, -1, 0, 0, 0 };
     *n = k;
     return g_patch_rows;
 }
