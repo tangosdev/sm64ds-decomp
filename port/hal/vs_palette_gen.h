@@ -168,8 +168,10 @@ typedef unsigned int   u32;
  *
  * Read out of the retail cartridge (0022 - Super Mario 64 DS.nds,
  * ARCHIVE/arc0.narc member 196, palette yoshi_all_16p_pl at offset 14168) and
- * pasted here verbatim. Nothing at runtime reads these -- the game always uses
- * the player's own extraction -- but the unit tests do, and a build whose
+ * pasted here verbatim. The game's own colours always come from the player's
+ * own extraction; at runtime these are read only as the four shading ramps a
+ * pick is built from (vs_ramp_source, below), and only when the row handed in
+ * is still the cartridge's. The unit tests read them too, so a build whose
  * arithmetic drifts is caught against real ROM bytes rather than against a
  * fixture somebody typed. */
 static const u16 kVsRomRows[4][16] = {
@@ -501,10 +503,12 @@ static inline int family_rep(const u16 *row, const int *idx, int n)
     return best;
 }
 
-static inline void family_edit(const u16 *row, const int *idx, int n,
-                               const u8 target[3], FamilyEdit *out)
+/* The family transform anchored on a GIVEN member: that member lands exactly
+ * on the picked colour and the rest keep their shading around it. */
+static inline void family_edit_main(const u16 *row, const int *idx, int n,
+                                    int rep, const u8 target[3],
+                                    FamilyEdit *out)
 {
-    int rep = family_rep(row, idx, n);
     float dmin = 0.0f, dmax = 0.0f;
     float hsl[3];
 
@@ -521,6 +525,13 @@ static inline void family_edit(const u16 *row, const int *idx, int n,
     out->span[1] = dmax;
     word_hsl(row[rep], hsl);
     out->neutral = hsl[1] < kSatCutoff;
+}
+
+/* The Studio's own choice of anchor (family_rep), kept for the oracle tests. */
+static inline void family_edit(const u16 *row, const int *idx, int n,
+                               const u8 target[3], FamilyEdit *out)
+{
+    family_edit_main(row, idx, n, family_rep(row, idx, n), target, out);
 }
 
 /* palette_editor.rs:2884, apply_transform.
@@ -613,23 +624,131 @@ static inline void apply_transform(const u16 *rom_row, const int *idx, int n,
     }
 }
 
+/* ---- which shade IS the picked colour (run after093, lane YOSHICOLOR1) -----
+ *
+ * The anchor used to be family_rep, the Studio's "punchiest mid-tone". On the
+ * green row that is index 1 (208b20), but the Yoshi the player looks at is
+ * index 2: the texel count above gives index 2 2974 of the body atlas's 3582
+ * body texels, and a render with each slot flashed a marker hue shows index 2
+ * on the whole body and index 1 only along the edges. So a pick landed on an
+ * edge shade and the body was drawn one step LIGHTER than the pick, squeezed
+ * into the little headroom above it, where sRGB holds almost no chroma: a warm
+ * yellow came out pale cream. The shoes are the other way round in atlas
+ * texels (7: 186, 8: 147) but not on screen: the flashed render shows index 8
+ * on the boot and index 7 only on the tops, and index 8 is also the green
+ * row's family_rep, which is why shoe picks always looked right.
+ *
+ * So the pick lands on the DRAWN shade of each group, on every row. */
+static const int kBodyMain = 2;
+static const int kShoeMain = 8;
+
+/* ---- whose shading (the cartridge's four ramps) ----------------------------
+ *
+ * The cartridge authored four ramps for one body: green, red, blue and yellow
+ * (kVsRomRows). They are not one shape recoloured: the yellow ramp sits high
+ * and tight (Oklab L 0.75 .. 0.92) where the green one is deep (0.44 .. 0.67).
+ * Building every pick from the green ramp meant even the cartridge's own
+ * yellow came back different from the cartridge's yellow Yoshi. A group's
+ * shading is now taken from the cartridge row whose drawn shade is nearest the
+ * pick (Oklab distance; the lowest row wins a tie), so a pick of a cartridge
+ * Yoshi's own colours IS that cartridge Yoshi, word for word, and every other
+ * pick is shaded by the artists' ramp for the nearest colour.
+ *
+ * Only when the row handed in still holds the cartridge's words for that group:
+ * a player's own palette mod (PaletteYoshi, CustomPalette) wrote other words
+ * there, and his row is then the shading source as before. Every input is the
+ * same on every console (the retail rows, the handed row, the two hex values),
+ * so every console still computes the same bytes. */
+static inline float pick_dist2(u16 w, const u8 rgb[3])
+{
+    u8 c[3];
+    float a[3], b[3], la[3], lb[3];
+    word_rgb(w, c);
+    unit_rgb(c, a);
+    unit_rgb(rgb, b);
+    srgb_to_oklab(a, la);
+    srgb_to_oklab(b, lb);
+    return (la[0] - lb[0]) * (la[0] - lb[0]) + (la[1] - lb[1]) * (la[1] - lb[1])
+         + (la[2] - lb[2]) * (la[2] - lb[2]);
+}
+
+static inline const u16 *vs_ramp_source(const u16 *row, const int *idx, int n,
+                                        int main_idx, const u8 pick[3])
+{
+    int retail = 0;
+    for (int r = 0; r < 4 && !retail; ++r) {
+        int same = 1;
+        for (int i = 0; i < n; ++i)
+            if (row[idx[i]] != kVsRomRows[r][idx[i]]) same = 0;
+        retail = same;
+    }
+    if (!retail)
+        return row;
+    int best = 0;
+    float bd = pick_dist2(kVsRomRows[0][main_idx], pick);
+    for (int r = 1; r < 4; ++r) {
+        float d = pick_dist2(kVsRomRows[r][main_idx], pick);
+        if (d < bd) { bd = d; best = r; }
+    }
+    return kVsRomRows[best];
+}
+
+static inline void vs_group_pick(const u16 *row, const int *idx, int n,
+                                 int main_idx, const u8 pick[3], u16 *out_row)
+{
+    FamilyEdit e;
+    const u16 *src = vs_ramp_source(row, idx, n, main_idx, pick);
+    family_edit_main(src, idx, n, main_idx, pick, &e);
+    apply_transform(src, idx, n, &e, out_row);
+    /* The anchor IS the pick. apply_transform reaches it through gamut_chroma,
+       whose bisection assumes the in-gamut chroma at one (L, h) is a single
+       interval; along the dark-blue edge it is not (at 0000dd, L 0.406, the
+       red channel dips to -0.0005 between chroma 0.25 and 0.27 and comes back),
+       so a deep blue pick came back up to five DS levels greener. Every pick is
+       an sRGB colour, so it is written as itself. */
+    out_row[main_idx] = rgb_word(pick, src[main_idx]);
+}
+
 /* ---- the one call the game makes -----------------------------------------
  *
  * Take the ROM's sixteen words for a Yoshi, a body colour and a shoe colour,
  * and write the sixteen words that Yoshi should wear. Slots outside the two
- * groups come through untouched, so a row generated from the ROM's own row-0
- * colours is the ROM's own row 0, bit for bit. */
+ * groups come through untouched; the body's drawn shade (index 2) and the
+ * boot's (index 8) are the picked colours, to the DS's 5 bits a channel, and
+ * a pick of a cartridge Yoshi's own two colours gives that Yoshi's own row. */
+/* THE OLD CLASSIC CELLS. Until this change the picker's "classic" cells and
+ * the launcher's starting colour were each cartridge row's family_rep, and
+ * four of those are not the drawn shade: green body 208b20 (now 31a431), blue
+ * body 6aace6 (now 4a52b4), blue boots 9c089c (now b410b4) and yellow boots
+ * 31ac00 (now 31bd08). Players saved them, and an older console still sends
+ * them; they meant the cartridge Yoshi, which is what those values drew under
+ * the old anchor. None of the four is a cell of the hue grid. So each is read
+ * as the cartridge colour it named, and an old save or an older player still
+ * draws the cartridge Yoshi he chose, on every console. */
+static inline void vs_classic_alias(const u8 in[3], u8 out[3])
+{
+    static const u8 kOld[4][3] = { { 0x20, 0x8b, 0x20 }, { 0x6a, 0xac, 0xe6 },
+                                   { 0x9c, 0x08, 0x9c }, { 0x31, 0xac, 0x00 } };
+    static const u8 kNew[4][3] = { { 0x31, 0xa4, 0x31 }, { 0x4a, 0x52, 0xb4 },
+                                   { 0xb4, 0x10, 0xb4 }, { 0x31, 0xbd, 0x08 } };
+    out[0] = in[0]; out[1] = in[1]; out[2] = in[2];
+    for (int k = 0; k < 4; ++k)
+        if (in[0] == kOld[k][0] && in[1] == kOld[k][1] && in[2] == kOld[k][2]) {
+            out[0] = kNew[k][0]; out[1] = kNew[k][1]; out[2] = kNew[k][2];
+        }
+}
+
 static inline void vs_palette_row(const u16 rom_row[16],
                                   const u8 body_rgb[3], const u8 shoe_rgb[3],
                                   u16 out_row[16])
 {
-    FamilyEdit e;
+    u8 body[3], shoe[3];
+    vs_classic_alias(body_rgb, body);
+    vs_classic_alias(shoe_rgb, shoe);
     for (int i = 0; i < 16; ++i)
         out_row[i] = rom_row[i];
-    family_edit(rom_row, kBodyIdx, 4, body_rgb, &e);
-    apply_transform(rom_row, kBodyIdx, 4, &e, out_row);
-    family_edit(rom_row, kShoeIdx, 2, shoe_rgb, &e);
-    apply_transform(rom_row, kShoeIdx, 2, &e, out_row);
+    vs_group_pick(rom_row, kBodyIdx, 4, kBodyMain, body, out_row);
+    vs_group_pick(rom_row, kShoeIdx, 2, kShoeMain, shoe, out_row);
 }
 
 /* ---- SIXTEEN ROWS: the port's wide VS palette ------------------------------
@@ -654,11 +773,10 @@ static inline void vs_palette_row(const u16 rom_row[16],
  * test_rows16_rom_identity checks -- so a two- or four-player match with no
  * SM64DS_VS_COLORS draws exactly what it has always drawn.
  *
- * WHICH ROW A GENERATED SLOT IS BUILT FROM. rom[s % 4], for every slot,
- * including 0..3. That keeps slots 0..3 doing precisely what they already did
- * (slot s built from row s) and rotates the ROM's four shading families through
- * the wide seats, so seat 4 anchors on the same row as seat 0 and the same pick
- * in either seat gives the same bytes.
+ * WHICH ROW A GENERATED SLOT IS BUILT FROM. rom[s % 4] is handed in for every
+ * slot, including 0..3; while that row is the cartridge's, vs_palette_row takes
+ * each group's shading from the cartridge ramp nearest the pick, so the same
+ * pick gives the same bytes in every seat.
  *
  * THE TWELVE DEFAULTS are authored here rather than derived, because there is
  * nothing to derive them from -- the cartridge has four VS Yoshis and no fifth.

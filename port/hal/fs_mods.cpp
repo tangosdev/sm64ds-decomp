@@ -2670,8 +2670,11 @@ const char *vcc_recolor_group(u8 *d, u32 size, const vscg::Group *g,
         return "out of host memory";
     for (int i = 0; i < ncol; ++i)
         buf[i] = rd16(d, dp + (u32)i * 2);
+    /* the pick lands on the shade this file draws most (vs_char_palette_gen.h) */
+    const int main_idx = vspal::bmd_drawn_member(d, size, g->pal, g->idx,
+                                                 g->count);
     const char *why = vspal::char_recolor_palette(buf, ncol, g->idx, g->count,
-                                                  target);
+                                                  target, main_idx);
     if (why) {
         free(buf);
         return why;

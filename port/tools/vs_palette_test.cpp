@@ -50,25 +50,100 @@ static void check(const char *what, int cond)
  * The Studio's own promise, palette_editor.rs:2905: "at the anchor both
  * readings are the same number, so the representative still lands exactly on
  * the picked colour, and an identity edit is still the identity". Pick each
- * group's representative's own ROM colour and the row must come back
- * unchanged -- which also proves the two groups do not touch each other's
- * slots, and that the ten fixed slots are genuinely fixed. */
+ * group's DRAWN shade's own ROM colour (kBodyMain, kShoeMain) and the row must
+ * come back unchanged -- which also proves the two groups do not touch each
+ * other's slots, and that the ten fixed slots are genuinely fixed.
+ *
+ * And the cartridge's four Yoshis from ANY row: the shading comes from the
+ * cartridge ramp nearest the pick, so picking the yellow Yoshi's two colours on
+ * the green row (what the online popup and the launcher do) gives the yellow
+ * Yoshi word for word. Index 11 is the one fixed slot the ROM rows disagree on
+ * (never drawn, see the banner), so it is left out of that comparison. */
 static void test_identity(void)
 {
     printf("identity: picking the ROM's own colours changes nothing\n");
     for (int r = 0; r < 4; ++r) {
         const u16 *row = kVsRomRows[r];
-        int brep = family_rep(row, kBodyIdx, 4);
-        int srep = family_rep(row, kShoeIdx, 2);
         u8 body[3], shoe[3];
         u16 out[16];
         char name[64];
-        word_rgb(row[brep], body);
-        word_rgb(row[srep], shoe);
+        word_rgb(row[kBodyMain], body);
+        word_rgb(row[kShoeMain], shoe);
         vs_palette_row(row, body, shoe, out);
         sprintf(name, "ROM row %d regenerates itself", r);
         check_rows(name, out, row);
+        for (int b = 0; b < 4; ++b) {
+            u16 want[16];
+            vs_palette_row(kVsRomRows[b], body, shoe, out);
+            memcpy(want, row, 32);
+            want[11] = kVsRomRows[b][11];
+            sprintf(name, "cartridge Yoshi %d picked on row %d is that Yoshi", r, b);
+            check_rows(name, out, want);
+        }
     }
+}
+
+/* ---- 1a. the old classic cells still give the cartridge Yoshis -------------
+ *
+ * Saved settings and older consoles carry the old cells (family_rep colours):
+ * 208b20 / e66218 is the green Yoshi, 6aace6 / 9c089c the blue one, ffcd00 /
+ * 31ac00 the yellow one. vs_classic_alias reads them as the cartridge colours,
+ * so they still regenerate the cartridge rows (index 11 aside, as above). */
+static void test_classic_alias(void)
+{
+    printf("old classic cells: still the cartridge Yoshis\n");
+    static const char *kOld[4][2] = { { "208b20", "e66218" }, { "ff3139", "004aff" },
+                                      { "6aace6", "9c089c" }, { "ffcd00", "31ac00" } };
+    for (int r = 0; r < 4; ++r) {
+        u8 bc[3], sc[3];
+        u16 out[16], want[16];
+        char name[64];
+        parse_hex6(kOld[r][0], bc);
+        parse_hex6(kOld[r][1], sc);
+        vs_palette_row(kVsRomRows[0], bc, sc, out);
+        memcpy(want, kVsRomRows[r], 32);
+        want[11] = kVsRomRows[0][11];
+        sprintf(name, "old cell pair %s / %s is cartridge Yoshi %d", kOld[r][0], kOld[r][1], r);
+        check_rows(name, out, want);
+    }
+}
+
+/* ---- 1b. the picked colour is the drawn colour ---------------------------
+ *
+ * The forum report (10-30): a picked f7c85b drew pale cream. The body's drawn
+ * shade (index 2) and the boot's (index 8) must hold the picked colour to the
+ * DS's five bits a channel, for every hue and lightness: a 16-step cube of
+ * picks (4096 of them, greys, white and black included) on all four rows. */
+static void test_main_tone(void)
+{
+    printf("main tone: index 2 and index 8 wear the picked colour\n");
+    int worst = 0, off = 0, tried = 0;
+    for (int r = 0; r < 4; ++r)
+        for (int a = 0; a < 256; a += 17)
+            for (int b = 0; b < 256; b += 17)
+                for (int c = 0; c < 256; c += 17) {
+                    u8 bc[3], sc[3];
+                    u16 out[16];
+                    bc[0] = (u8)a; bc[1] = (u8)b; bc[2] = (u8)c;
+                    sc[0] = (u8)c; sc[1] = (u8)a; sc[2] = (u8)b;
+                    vs_palette_row(kVsRomRows[r], bc, sc, out);
+                    ++tried;
+                    for (int g = 0; g < 2; ++g) {
+                        u16 want = rgb_word(g ? sc : bc, 0);
+                        u16 got = out[g ? kShoeMain : kBodyMain];
+                        int d = 0;
+                        for (int k = 0; k < 15; k += 5) {
+                            int x = (want >> k) & 31, y = (got >> k) & 31;
+                            int e = x > y ? x - y : y - x;
+                            if (e > d) d = e;
+                        }
+                        if (d > worst) worst = d;
+                        if (d) ++off;
+                    }
+                }
+    printf("       %d picks x 2 groups, %d off by a level, worst %d level(s)\n",
+           tried, off, worst);
+    check("every drawn shade within one DS level of the pick", worst <= 1);
 }
 
 /* ---- 2. determinism -------------------------------------------------------
@@ -140,15 +215,6 @@ static void test_fixed_slots(void)
 static void test_shading_order(void)
 {
     printf("shading: the body ramp keeps its order and stays distinct\n");
-    /* The ROM's row-0 body ramp, darkest first, by Oklab lightness. */
-    int order[4] = { 0, 1, 2, 3 };
-    for (int i = 0; i < 4; ++i)
-        for (int j = i + 1; j < 4; ++j) {
-            float a[3], b[3];
-            word_oklch(kVsRomRows[0][order[i]], a);
-            word_oklch(kVsRomRows[0][order[j]], b);
-            if (b[0] < a[0]) { int t = order[i]; order[i] = order[j]; order[j] = t; }
-        }
     int flips = 0, collapses = 0, tried = 0;
     for (int h = 0; h < 360; h += 7)
         for (int lv = 40; lv <= 220; lv += 60) {
@@ -163,11 +229,26 @@ static void test_shading_order(void)
             sc[0] = bc[2]; sc[1] = bc[0]; sc[2] = bc[1];
             vs_palette_row(kVsRomRows[0], bc, sc, out);
             ++tried;
+            /* the ramp the pick was shaded from (the cartridge row nearest
+               it), darkest first, by Oklab lightness */
+            const u16 *src = vs_ramp_source(kVsRomRows[0], kBodyIdx, 4,
+                                            kBodyMain, bc);
+            int order[4] = { 0, 1, 2, 3 };
+            for (int i = 0; i < 4; ++i)
+                for (int j = i + 1; j < 4; ++j) {
+                    float a[3], b[3];
+                    word_oklch(src[order[i]], a);
+                    word_oklch(src[order[j]], b);
+                    if (b[0] < a[0]) { int t = order[i]; order[i] = order[j]; order[j] = t; }
+                }
             for (int i = 0; i + 1 < 4; ++i) {
                 float a[3], b[3];
                 word_oklch(out[order[i]], a);
                 word_oklch(out[order[i + 1]], b);
-                if (b[0] < a[0] - 1e-6f) ++flips;
+                /* the red ramp's top two shades are 0.005 apart in the ROM
+                   (L 0.648 / 0.653), under one DS level, so a pair may
+                   round across each other by that much and no more */
+                if (b[0] < a[0] - 0.01f) ++flips;
             }
             {
                 int distinct = 0;
@@ -202,11 +283,13 @@ static void test_parse(void)
  * bisection count, a rounding rule -- this is what says so, and it is also the
  * vector the Studio oracle is compared against.
  *
- * Frozen against the Studio oracle (C:\tmp\vscolorui-out\oracle), which is the
- * Studio's own palette_editor.rs arithmetic copied verbatim: 512 vectors over
- * four ROM rows agree word for word. See oracle_diff.sh. */
+ * Re-frozen by lane YOSHICOLOR1 (run after093): the pick now lands on the
+ * drawn shade (index 2 / index 8) with the shading of the nearest cartridge
+ * ramp, so this row no longer equals the Studio oracle's, which anchors on
+ * family_rep over row 0. family_edit keeps the Studio's anchor for that
+ * comparison. */
 static const u16 kGoldenPurple[16] = {
-    0x4c8c, 0x6cb1, 0x7573, 0x69d3, 0x0022, 0x075d, 0x084e, 0x12da,
+    0x448a, 0x606e, 0x6cb1, 0x7eb3, 0x0022, 0x075d, 0x084e, 0x031d,
     0x035f, 0x107c, 0x1093, 0x1a99, 0x56d7, 0x675a, 0x77bd, 0x7fff,
 };
 
@@ -347,6 +430,8 @@ int main(int argc, char **argv)
         return 0;
     }
     test_identity();
+    test_classic_alias();
+    test_main_tone();
     test_determinism();
     test_fixed_slots();
     test_shading_order();

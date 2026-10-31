@@ -134,6 +134,58 @@ int main(void)
         ok("shoes has a record for Wario", warioshoes > 0);
     }
 
+    /* 6. the drawn shade (YOSHICOLOR1): with a main index in the group the pick
+       lands on THAT word exactly; a main index outside the group falls back to
+       family_rep, which is the old behaviour. */
+    {
+        u16 p[64], q[64];
+        make_palette(p, 64);
+        make_palette(q, 64);
+        int idx[4] = { 30, 31, 32, 33 };
+        u8 tgt[3] = { 0xf7, 0xc8, 0x5b };
+        char_recolor_palette(p, 64, idx, 4, tgt, 32);
+        ok("the pick is the main word, to the DS's five bits",
+           p[32] == rgb_word(tgt, q[32]));
+        u16 r[64];
+        make_palette(r, 64);
+        char_recolor_palette(r, 64, idx, 4, tgt, 7);   /* 7 is not a member */
+        int rep = family_rep(q, idx, 4);
+        ok("a main index outside the group falls back to family_rep",
+           r[rep] == rgb_word(tgt, q[rep]));
+    }
+
+    /* 7. bmd_drawn_member counts texels: a one-texture BMD (format 3, 8x8)
+       whose texels read word 5 forty times, word 6 twenty times and word 7
+       four times picks 5 out of {5,6,7}; an unknown palette name gives -1. */
+    {
+        static u8 d[0x200];
+        memset(d, 0, sizeof d);
+        struct { u32 o, v; } hdr[] = {
+            { 0x14, 1 }, { 0x18, 0x40 },      /* one texture record at 0x40 */
+            { 0x1c, 1 }, { 0x20, 0x60 },      /* one palette record at 0x60 */
+            { 0x24, 1 }, { 0x28, 0x80 },      /* one material record at 0x80 */
+        };
+        for (unsigned i = 0; i < sizeof hdr / sizeof hdr[0]; ++i)
+            memcpy(d + hdr[i].o, &hdr[i].v, 4);
+        u32 tex[5] = { 0xf0, 0x100, 32, 0, (3u << 26) };   /* name, data, size, -, fmt 3 8x8 */
+        u32 pal[4] = { 0xf8, 0x140, 32, 0 };
+        u32 mat[3] = { 0xf0, 0, 0 };                       /* name, tex 0, pal 0 */
+        memcpy(d + 0x40, tex, sizeof tex);
+        memcpy(d + 0x60, pal, sizeof pal);
+        memcpy(d + 0x80, mat, sizeof mat);
+        memcpy(d + 0xf0, "t", 2);
+        memcpy(d + 0xf8, "t_pl", 5);
+        for (int t = 0; t < 64; ++t) {
+            int v = t < 40 ? 5 : (t < 60 ? 6 : 7);
+            d[0x100 + (t >> 1)] |= (u8)(v << ((t & 1) * 4));
+        }
+        int idx[3] = { 7, 6, 5 };
+        ok("bmd_drawn_member finds the most-drawn word",
+           bmd_drawn_member(d, sizeof d, "t_pl", idx, 3) == 5);
+        ok("bmd_drawn_member refuses an unknown palette",
+           bmd_drawn_member(d, sizeof d, "x_pl", idx, 3) == -1);
+    }
+
     if (g_fail) {
         printf("\n%d FAILED\n", g_fail);
         return 1;

@@ -17,15 +17,15 @@
 
 struct OnlFacts;
 
-/* the first four pairs are the ROM's own four Yoshi rows (kVsRomRows in hal/vs_palette_gen.h; each pair is the colour the VS arithmetic anchors that
-   row on, measured with vspal::family_rep): the picker's "classic" cells. The last four were the old fixed list; they are kept only so a settings.json
+/* the first four pairs are the ROM's own four Yoshi rows (kVsRomRows in hal/vs_palette_gen.h; each pair is the row's DRAWN body and boot shade,
+   index 2 and index 8, where the VS arithmetic puts a pick, so a classic cell gives that cartridge Yoshi word for word): the picker's "classic" cells. The last four were the old fixed list; they are kept only so a settings.json
    with the old OnlineYoshiColor index maps to its pair (host_settings.cpp carries the same eight). */
 struct OnlineYoshiColor { const char *name; const char *body; const char *shoes; };
 static const OnlineYoshiColor kOnlineYoshiColors[8] = {
-    { "Green",  "208B20", "E66218" },
+    { "Green",  "31A431", "E66218" },
     { "Red",    "FF3139", "004AFF" },
-    { "Blue",   "6AACE6", "9C089C" },
-    { "Yellow", "FFCD00", "31AC00" },
+    { "Blue",   "4A52B4", "B410B4" },
+    { "Yellow", "FFCD00", "31BD08" },
     { "Pink",   "FF7FBF", "8A1F5C" },
     { "Cyan",   "20D8E0", "0E5E7A" },
     { "Purple", "8A4FD8", "3A1A7A" },

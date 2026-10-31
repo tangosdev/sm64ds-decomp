@@ -142,7 +142,7 @@ void profile_open(int pending_slot)
     P.len = (int)strlen(P.name);
     unsigned body = 0, shoes = 0;
     if (host_setting_online_colours(&body, &shoes)) { P.col[0] = body; P.col[1] = shoes; }
-    else { P.col[0] = 0x208B20; P.col[1] = 0xE66218; }            /* nothing picked yet: the ROM's green Yoshi */
+    else { P.col[0] = 0x31A431; P.col[1] = 0xE66218; }            /* nothing picked yet: the ROM's green Yoshi */
     P.which = 0;
     goto_pick(0);
     /* keys already down when the popup opens type nothing */
@@ -154,7 +154,7 @@ int profile_active(void) { return P.open; }
 
 uint32_t profile_cell_colour(int which, int col, int row)
 {
-    static const uint32_t kClassic[2][4] = { { 0x208B20, 0xFF3139, 0x6AACE6, 0xFFCD00 }, { 0xE66218, 0x004AFF, 0x9C089C, 0x31AC00 } };
+    static const uint32_t kClassic[2][4] = { { 0x31A431, 0xFF3139, 0x4A52B4, 0xFFCD00 }, { 0xE66218, 0x004AFF, 0xB410B4, 0x31BD08 } };
     static const uint32_t kNeutral[4] = { 0xFFFFFF, 0x808080, 0x202020, 0x000000 };
     if (row < 0) row = 0;
     if (row > 3) row = 3;
