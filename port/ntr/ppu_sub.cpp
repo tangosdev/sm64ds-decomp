@@ -188,6 +188,7 @@ const unsigned char kModeKinds[6][4] = {
     /* 5 */ {BG_TEXT, BG_TEXT, BG_EXT_AFFINE, BG_EXT_AFFINE},
 };
 
+int g_fine_mode, g_fine_e256, g_fine_white;   /* review REVPAINTFADE1: engine B's brightness for one scan-out (ppu_sub_set_fine) */
 int g_bg0_hofs_add;          /* RECROOMSLIDE1: columns added to BG0's text scroll for one scan-out (ppu_sub_set_bg0_hofs_add) */
 
 void read_bg(BgLayer &c, int bg, uint32_t dispcnt) {
@@ -955,6 +956,8 @@ struct Blend {
     unsigned second;   // bits 8-13: 2nd-target layers
     int eva, evb;      // BLDALPHA: 1st/2nd coefficients, 0..16 in 1/16 steps
     int evy;           // BLDY: brightness up/down coefficient, 0..16 in 1/16 steps
+    int fine;          // ppu_sub_set_fine: 0 the register's brightness, 1 none (engine A's fade covers this picture), 2 e256 below
+    int e256;          // fine 2: the coefficient in 1/256 steps (0..4096), 8-bit arithmetic
 };
 
 inline Blend read_blend() {
@@ -968,6 +971,13 @@ inline Blend read_blend() {
     b.eva = alpha & 0x1F; if (b.eva > 16) b.eva = 16;
     b.evb = (alpha >> 8) & 0x1F; if (b.evb > 16) b.evb = 16;
     b.evy = rd16(kRegBase + 0x54) & 0x1F; if (b.evy > 16) b.evy = 16;
+    b.fine = g_fine_mode;
+    b.e256 = g_fine_e256;
+    if (b.fine == 2 && b.mode != 2 && b.mode != 3) {
+        /* a white fade still under its first whole step: the register is off, the fader is not */
+        b.mode = g_fine_white ? 2 : 3;
+        b.first = 0x3F;
+    }
     return b;
 }
 
@@ -1007,6 +1017,22 @@ PPU_SUB_INLINE uint32_t blend_apply(const Blend &bl, unsigned mask, uint32_t top
     if (bl.mode == 1 && (bl.first & (1u << top_id)) && below_second)
         return blend_alpha(top, below, bl.eva, bl.evb);
     if ((bl.mode == 2 || bl.mode == 3) && (bl.first & (1u << top_id))) {
+        if (bl.fine == 1) return top;
+        if (bl.fine == 2) {
+            /* review REVPAINTFADE1: the colour fader's own value, at the picture's 8-bit precision (the 1/256 rule
+               hal/message_compositor.cpp's fade_pass256 runs on engine A) */
+            int r = (top >> 16) & 0xFF, g = (top >> 8) & 0xFF, b = top & 0xFF;
+            if (bl.mode == 2) {
+                r += ((255 - r) * bl.e256) >> 12;
+                g += ((255 - g) * bl.e256) >> 12;
+                b += ((255 - b) * bl.e256) >> 12;
+            } else {
+                r -= (r * bl.e256) >> 12;
+                g -= (g * bl.e256) >> 12;
+                b -= (b * bl.e256) >> 12;
+            }
+            return 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
+        }
         // Brightness increase/decrease, gated on the first-target mask: only
         // the layers BLDCNT bits 0-5 name are affected, one layer at a time,
         // same as the DS. In 5-bit space, the DS's own arithmetic, the same
@@ -1373,6 +1399,7 @@ struct ScanKey {
     uint32_t rows_on;
     int bd_ovr;
     int bg0_hofs_add;
+    int fine_mode, fine_e256, fine_white;
     uint8_t regs[0x70];
     uint8_t skip[128];
     uint32_t rows[192];
@@ -1536,6 +1563,9 @@ void scan_key(ScanKey &k, uint32_t dispcnt, const uint8_t *skip)
     k.oam_src = g_oam_src_b;
     k.bd_ovr = g_backdrop_ovr;
     k.bg0_hofs_add = g_bg0_hofs_add;
+    k.fine_mode = g_fine_mode;
+    k.fine_e256 = g_fine_e256;
+    k.fine_white = g_fine_white;
     for (int i = 0; i < 0x70; ++i) k.regs[i] = rd8(kRegBase + i);
     std::memcpy(k.skip, skip, sizeof k.skip);
     const uint32_t *rows = nullptr;
@@ -2570,6 +2600,13 @@ void ppu_sub_set_bg_suppress(uint32_t mask)
 void ppu_sub_set_backdrop_override(int bgr555v)
 {
     g_backdrop_ovr = bgr555v;
+}
+
+void ppu_sub_set_fine(int mode, int e256, int white)
+{
+    g_fine_mode = mode;
+    g_fine_e256 = mode == 2 ? e256 : 0;
+    g_fine_white = mode == 2 ? (white ? 1 : 0) : 0;
 }
 
 void ppu_sub_set_bg0_hofs_add(int add)

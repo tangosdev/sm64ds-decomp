@@ -9889,6 +9889,20 @@ static int g_ip_prev_fade, g_ip_prev_evy, g_ip_prev_white, g_ip_fade_masked;
    the pictures between two ticks take the coefficient from g_ip_fade_from to
    g_ip_fade_evy (this tick's) by the blend's alpha, in g_ip_fade_white's colour */
 static int g_ip_prev_masked, g_ip_fade_cpumask, g_ip_fade_mov, g_ip_fade_from;
+/* run after093, lane PAINTFADE1: a colour fader in motion at the fader's own
+   precision (hal/fader_wipes.cpp port_fader_blend_fine, 1/256 EVY steps). The
+   5-bit BLDY moves every second tick of the painting's 30-tick white, so the
+   pictures between ticks took a whole step on one tick and none on the next.
+   With g_ip_fine_on the pictures between tick N-1 and tick N take the fader's
+   value between its two ticks (g_ip_fine_from to g_ip_fine_to by alpha),
+   never past tick N's. Only above FrameRate 60: at 60 every picture stays the
+   one it was. */
+static int g_ip_fine_on, g_ip_fine_from, g_ip_fine_to;
+static int g_ip_prev_fine, g_ip_prev_fine_e, g_ip_prev_fine_w;
+static int g_ip_fine_tick_e;            /* the coefficient the tick's own picture was composited with, 1/256 steps */
+extern "C" int port_fader_blend_fine(int *e256, int *toWhite);
+extern "C" void port_fader_fine_arm(int on);
+extern "C" int port_engine_a_fade_applied256(void);
 /* why a tick could not blend (SM64DS_INTERP_TRACE's census): 0 it could, 1 the
    fit fallback, 2 a frozen / stacked / skipped tick, 3 the recorded geometry
    (gx_interp_commit refused it: a cut, a new level), 4 a fade that cannot be
@@ -9921,6 +9935,36 @@ static inline uint32_t ip_fade_px(uint32_t p, int evy, int toWhite)
         b -= (b * evy) >> 4;
     }
     return 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
+}
+/* PAINTFADE1: the same blend with the coefficient in 1/256 steps (e256 = evy * 256 gives ip_fade_px exactly) */
+static inline uint32_t ip_fade_px256(uint32_t p, int e256, int toWhite)
+{
+    int r = (p >> 16) & 0xff, g = (p >> 8) & 0xff, b = p & 0xff;
+    if (toWhite) {
+        r += ((255 - r) * e256) >> 12;
+        g += ((255 - g) * e256) >> 12;
+        b += ((255 - b) * e256) >> 12;
+    } else {
+        r -= (r * e256) >> 12;
+        g -= (g * e256) >> 12;
+        b -= (b * e256) >> 12;
+    }
+    return 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
+}
+/* PAINTFADE1: a 2D pixel of the tick, faded there by the tick's coefficient from256, moved to the picture's e256 (the 2D is never re-run,
+   so its unfaded colour is taken back out of the tick's: exact up to the tick's own rounding) */
+static inline uint32_t ip_refade_px256(uint32_t p, int from256, int e256, int toWhite)
+{
+    const int den = 4096 - from256, num = 4096 - e256;
+    if (den <= 0) return ip_fade_px256(p, e256, toWhite);
+    int c[3] = { (int)((p >> 16) & 0xff), (int)((p >> 8) & 0xff), (int)(p & 0xff) };
+    for (int i = 0; i < 3; ++i) {
+        int v = toWhite ? 255 - c[i] : c[i];
+        v = (v * num + den / 2) / den;
+        if (v > 255) v = 255;
+        c[i] = toWhite ? 255 - v : v;
+    }
+    return 0xFF000000u | ((uint32_t)c[0] << 16) | ((uint32_t)c[1] << 8) | (uint32_t)c[2];
 }
 static int g_ip_rate_ok;
 /* run hunt8, lane MENUINTERP2: this scene tick's menu moves 3D pixels, so each picture between ticks draws the menu again on its own
@@ -10163,6 +10207,7 @@ struct IpPend {
     int ip_evy_t, tw, twc, tw_outer[4], tw_inner[4], ts_rect[4], ts_D, card;
     long long t2;
     int tag_j, tag_k;            /* the force instrument's picture number */
+    int ip_e256;                 /* PAINTFADE1: the fade coefficient of this picture in 1/256 steps (ip_evy_t * 256 unless g_ip_fine_on) */
     int was_pending;             /* this picture's readback was left pending while the one before it was finished */
 };
 static IpPend g_ip_pend;
@@ -10224,6 +10269,14 @@ static int ip_build_a(double alpha, IpPend *P, int pipe)
         if (ip_evy_t < 0) ip_evy_t = 0;
         if (ip_evy_t > 16) ip_evy_t = 16;
     }
+    int ip_e256 = ip_evy_t * 256;
+    if (g_ip_fade_on && g_ip_fade_mov && g_ip_fine_on) {
+        /* PAINTFADE1: the fader's own value between its two ticks */
+        double a = alpha < 0.0 ? 0.0 : (alpha > 1.0 ? 1.0 : alpha);
+        ip_e256 = (int)(g_ip_fine_from + (g_ip_fine_to - g_ip_fine_from) * a + 0.5);
+        if (ip_e256 < 0) ip_e256 = 0;
+        if (ip_e256 > 4096) ip_e256 = 4096;
+    }
     int tw_outer[4] = {0, 0, 0, 0}, tw_inner[4] = {0, 0, 0, 0};
     int tw = port_tween_win(alpha, tw_outer, tw_inner);
     /* INTERP093 I1: a CLOSING box is drawn only where the tick has a fade to make the panel with */
@@ -10278,6 +10331,7 @@ static int ip_build_a(double alpha, IpPend *P, int pipe)
     const long long t2 = ip_qpc();
     P->alpha = alpha;
     P->ip_evy_t = ip_evy_t;
+    P->ip_e256 = ip_e256;
     P->tw = tw;
     P->twc = twc;
     memcpy(P->tw_outer, tw_outer, sizeof tw_outer);
@@ -10296,6 +10350,8 @@ static int ip_build_b(IpPend *P)
     if (g_mgi_tick && !P->card && g_ip_stack_on) return mgi_build(P->alpha, *g_ip_fb);
     const double alpha = P->alpha;
     const int ip_evy_t = P->ip_evy_t;
+    const int ip_e256 = P->ip_e256;
+    const int ip_fine = g_ip_fade_on && g_ip_fade_mov && g_ip_fine_on;
     int tw = P->tw, twc = P->twc;
     const int ts_D = P->ts_D;
     int tw_outer[4], tw_inner[4], ts_rect[4];
@@ -10306,7 +10362,9 @@ static int ip_build_b(IpPend *P)
     const long long t2 = P->t2;
     ntr::Framebuffer &o = *g_ip_fb;
     if (card && ntr::gx_card_overlay_active()) {
-        if (g_ip_fade_on && g_ip_fade_mov)
+        if (ip_fine)
+            port_gpu_card_inter_fade256(ip_e256, g_ip_fade_white);
+        else if (g_ip_fade_on && g_ip_fade_mov)
             port_gpu_card_inter_fade(ip_evy_t, g_ip_fade_white);
         else
             port_gpu_card_inter_fade_off();
@@ -10426,6 +10484,13 @@ static int ip_build_b(IpPend *P)
                 const int tw_cut = tw_row && x >= tw_outer[0] && x < tw_outer[2] &&
                                    !(tw_mid && x >= tw_inner[0] && x < tw_inner[2]);
                 const int ts_in = ts_row && x >= ts_rect[0] && x < ts_rect[2];
+                if (ip_fine && !tw_row && !ts_row) {
+                    /* PAINTFADE1: no mask, no box: the replayed 3D and the tick's 2D both take this picture's coefficient (the tick
+                       itself was composited at g_ip_fine_tick_e, its fader's own value, or at its whole step when unarmed) */
+                    const uint32_t pf2 = ip_fade_px256(a[x], g_ip_fine_tick_e, toWhite);
+                    row[x] = pf2 != b[x] ? ip_refade_px256(b[x], g_ip_fine_tick_e, ip_e256, toWhite) : ip_fade_px256(row[x], ip_e256, toWhite);
+                    continue;
+                }
                 row[x] = (pf != b[x] && !tw_cut && !ts_in) ? b[x] : ((take && !(tw_cut && mr)) ? ip_fade_px(row[x], ip_evy_t, toWhite) : row[x]);
                 if (ts_in) {
                     /* TEXT2D1: the tick's text pixel that sits ts_D rows above this one, moved down */
@@ -24011,8 +24076,15 @@ int main(void)
            With the panel toggled off this writes nothing. Before the overlay,
            so F3 text stays readable over the panel. */
         pt_mark(PS_SUB);
+        /* run after093, lane PAINTFADE1: above FrameRate 60 with Smooth Motion on, a colour fader's tick is composited at the
+           fader's own value, where its pictures between ticks arrive (hal/message_compositor.cpp port_engine_a_fade) */
+        {
+            const int pf_rate = port_frame_rate_target();
+            port_fader_fine_arm(g_ip_on > 0 && ip_fades_on() && (pf_rate == 0 || pf_rate > 60));
+        }
         if (!rb_skip_render())
         hal_sub_screen_present(&fb.px[0][0], ntr::active_w, ntr::active_h);
+        port_fader_fine_arm(0);
         pt_mark(PS_FADE_OVL);
         /* THE LOAD HOLD'S PICTURE (run hunt8, lane BLACKHOLD1): the exit wipe's
            last picture is whole-screen black on the DS (measured, both screens),
@@ -24043,6 +24115,7 @@ int main(void)
         int ip_fade_const = 0, ip_fe = 0, ip_fw = 0;
         int ip_fade_mov = 0, ip_mov_from = 0, ip_mov_white = 0;
         int ip_masked_now = 0;
+        int ip_fine_mov = 0, ip_fine_from = 0, ip_fine_to = 0, ip_fine_white = 0;
         if (g_ip_on > 0) {
             const int fnow = port_fader_blend_state(&ip_fe, &ip_fw);
             ip_fade_const = fnow && g_ip_prev_fade && g_ip_prev_evy == ip_fe &&
@@ -24066,6 +24139,38 @@ int main(void)
                     ip_mov_from = from;
                     ip_mov_white = fnow ? ip_fw : g_ip_prev_white;
                 }
+            }
+            /* run after093, lane PAINTFADE1: a colour fader in motion is blended at its own precision, above FrameRate 60 only: from
+               its value on the tick before to its value on this tick (1/256 EVY steps), so a tick whose 5-bit register did not move
+               still moves the pictures between, and the one whose register moved by a step does not take the step at alpha 0.5. Its
+               colour must be the one engine A shows on both ticks; a mask on either tick keeps the rule above. */
+            g_ip_fine_on = 0;
+            {
+                int fe2 = 0, fw2 = 0;
+                const int fin = port_fader_blend_fine(&fe2, &fw2);
+                const int rate = port_frame_rate_target();
+                if (ip_fades_on() && (rate == 0 || rate > 60) && (fin || g_ip_prev_fine) && !ip_masked_now && !g_ip_prev_masked) {
+                    const int w = fin ? fw2 : g_ip_prev_fine_w;
+                    const int to = fin ? fe2 : (fnow ? ip_fe * 256 : 0);
+                    const int from = g_ip_prev_fine ? g_ip_prev_fine_e : (g_ip_prev_fade ? g_ip_prev_evy * 256 : 0);
+                    const int d = to > from ? to - from : from - to;
+                    if (d >= 1 && d <= 4 * 256 && (!fin || !g_ip_prev_fine || fw2 == g_ip_prev_fine_w) &&
+                        (!fnow || ip_fw == w) && (!g_ip_prev_fade || g_ip_prev_white == w)) {
+                        ip_fine_mov = 1;
+                        ip_fine_from = from;
+                        ip_fine_to = to;
+                        ip_fine_white = w;
+                    }
+                }
+                g_ip_prev_fine = fin;
+                g_ip_prev_fine_e = fe2;
+                g_ip_prev_fine_w = fw2;
+            }
+            if (ip_fine_mov) {
+                ip_fade_const = 0;
+                ip_fade_mov = 1;
+                ip_mov_from = g_ip_prev_fade ? g_ip_prev_evy : 0;
+                ip_mov_white = ip_fine_white;
             }
             g_ip_prev_masked = ip_masked_now;
             g_ip_prev_fade = fnow;
@@ -24133,6 +24238,12 @@ int main(void)
                 g_ip_fade_on = 1;
                 g_ip_fade_evy = ip_fe;          /* 0 when the fade ends this tick */
                 g_ip_fade_white = ip_mov_white;
+                if (ip_fine_mov) {              /* PAINTFADE1 */
+                    g_ip_fine_on = 1;
+                    g_ip_fine_from = ip_fine_from;
+                    g_ip_fine_to = ip_fine_to;
+                    g_ip_fine_tick_e = port_engine_a_fade_applied256();
+                }
             } else if (port_fader_blend_state(&ip_evy, &ip_white)) {
                 g_ip_tick_ok = 0;
                 g_ip_snapwhy = 4;

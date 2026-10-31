@@ -9936,10 +9936,10 @@ and r0.y, r1.y, r0.y
 and r0.zw, cb0[2].zzzz, l(0, 0, 4, 128)
 iadd r1.xyz, -r2.xyzx, l(255, 255, 255, 0)
 imul null, r1.xyz, r1.xyzx, cb0[2].wwww
-ishr r1.xyz, r1.xyzx, l(4)
+ishr r1.xyz, r1.xyzx, l(12)
 iadd r1.xyz, r1.xyzx, r2.xyzx
 imul null, r3.xyz, r2.xyzx, cb0[2].wwww
-ishr r3.xyz, r3.xyzx, l(4)
+ishr r3.xyz, r3.xyzx, l(12)
 iadd r3.xyz, r2.xyzx, -r3.xyzx
 movc r1.xyz, r0.zzzz, r1.xyzx, r3.xyzx
 movc r1.xyz, r0.yyyy, r1.xyzx, r2.xyzx
@@ -9986,10 +9986,10 @@ ret
 
 static const unsigned char kGpuCompPS[] =
 {
-     68,  88,  66,  67,  88, 254, 
-     41, 211, 244, 127, 204, 249, 
-    110, 107,  21,  20, 119,  35, 
-     66,  79,   1,   0,   0,   0, 
+     68,  88,  66,  67, 111,  72, 
+     92, 252, 215,  68,  56,  91, 
+    125, 224,  23, 235,  20,  65, 
+    179, 126,   1,   0,   0,   0, 
      36,  21,   0,   0,   5,   0, 
       0,   0,  52,   0,   0,   0, 
      20,   2,   0,   0,  72,   2, 
@@ -10634,7 +10634,7 @@ static const unsigned char kGpuCompPS[] =
       0,   7, 114,   0,  16,   0, 
       1,   0,   0,   0,  70,   2, 
      16,   0,   1,   0,   0,   0, 
-      1,  64,   0,   0,   4,   0, 
+      1,  64,   0,   0,  12,   0, 
       0,   0,  30,   0,   0,   7, 
     114,   0,  16,   0,   1,   0, 
       0,   0,  70,   2,  16,   0, 
@@ -10650,7 +10650,7 @@ static const unsigned char kGpuCompPS[] =
      16,   0,   3,   0,   0,   0, 
      70,   2,  16,   0,   3,   0, 
       0,   0,   1,  64,   0,   0, 
-      4,   0,   0,   0,  30,   0, 
+     12,   0,   0,   0,  30,   0, 
       0,   8, 114,   0,  16,   0, 
       3,   0,   0,   0,  70,   2, 
      16,   0,   2,   0,   0,   0, 

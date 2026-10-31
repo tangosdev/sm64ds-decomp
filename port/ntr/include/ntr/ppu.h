@@ -421,6 +421,10 @@ void ppu_sub_set_backdrop_override(int bgr555);
    own scroll does), for one masked scan-out: a wide menu draws the columns of a 512 wide BG0 map that sit just past the DS screen's edges.
    Read-only on the ROM's registers; set it around one masked ppu_scanout_sub and clear it (0) after. */
 void ppu_sub_set_bg0_hofs_add(int add);
+/* review REVPAINTFADE1: engine B's brightness (BLDCNT mode 2 / 3) for one scan-out. mode 0 the register's whole step (the default),
+   1 none (engine A's fine fade covers the corner panel), 2 the colour fader's own value e256 (1/256 steps, 0..4096) in 8-bit
+   arithmetic, toward white when `white`. Set it around one ppu_scanout_sub and clear it (0) after. */
+void ppu_sub_set_fine(int mode, int e256, int white);
 
 /* ASSET1 (run menu1): ENGINE B DRAWS ONLY SOME OAM ENTRIES. mask4 is a 128-bit set (bit i of word i / 32 is OAM entry i);
    an entry outside it is skipped exactly as the camera-button veto skips one (obj_decide's skip[], so the scan-out cache

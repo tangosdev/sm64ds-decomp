@@ -3027,6 +3027,29 @@ static void fade_pass(unsigned int *px, int w, int h, int evy, int toWhite,
     }
 }
 
+/* run after093, lane PAINTFADE1: the whole-picture fade (no mask, no rectangle) with the coefficient in 1/256 steps; e256 = evy * 256
+   gives fade_pass exactly */
+static void fade_pass256(unsigned int *px, int w, int h, int e256, int toWhite)
+{
+    for (int y = 0; y < h; ++y) {
+        uint32_t *row = px + (size_t)y * ntr::SCREEN_W;
+        for (int x = 0; x < w; ++x) {
+            uint32_t p = row[x];
+            int r = (p >> 16) & 0xff, g = (p >> 8) & 0xff, b = p & 0xff;
+            if (toWhite) {
+                r += ((255 - r) * e256) >> 12;
+                g += ((255 - g) * e256) >> 12;
+                b += ((255 - b) * e256) >> 12;
+            } else {
+                r -= (r * e256) >> 12;
+                g -= (g * e256) >> 12;
+                b -= (b * e256) >> 12;
+            }
+            row[x] = 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
+        }
+    }
+}
+
 /* the overlay words the processor wrote itself (alpha FF) inside the host
    rectangle rc, faded by engine B's coefficient; every other word is left alone
    (zero alpha means "the card's own pixel here", which a fade must not turn into
@@ -3068,11 +3091,55 @@ static int bootstall_panel_on(void)
     return v;
 }
 
+/* run after093, lane PAINTFADE1: the coefficient engine A's fade was last composited with, in 1/256 steps (0 = none). With the
+   fine arm on (Smooth Motion above FrameRate 60, the level loop) a colour fader's tick takes the fader's own value (hal/
+   fader_wipes.cpp port_fader_blend_fine) instead of its 5-bit cut, so the tick's picture is where its pictures between ticks
+   arrive and a tick shown on its own does not drop back a step. Unarmed, it is the register's value, the old picture exactly. */
+static int g_ea_applied256;
+extern "C" int port_fader_fine_armed(void);
+extern "C" int port_fader_blend_fine(int *e256, int *toWhite);
+extern "C" void port_gpu_card_set_fade256(int e256, int white);
+extern "C" int port_engine_a_fade_applied256(void) { return g_ea_applied256; }
+
+/* review REVPAINTFADE1 F1: WILL ENGINE A'S FINE FADE COVER THE CORNER PANEL THIS FRAME? Asked by hal/sub_screen.cpp right before engine
+   B's scan-out, after engine A's composite (so the brightness mask is known). Yes when the arm is on, no mask is live, the colour fader
+   answers for engine A on *toWhite's colour, and the panel is not on engine B's own wipe blend (inset_b below needs a wipe moving or
+   closed in data_0209f5bc). The scan-out then leaves engine B's brightness off the panel, because this fade covers the whole picture and
+   the panel with it: one fade at the fine value, instead of engine B's whole step under engine A's fine one. */
+extern "C" int port_engine_a_panel_fine(int *toWhite)
+{
+    if (!port_fader_fine_armed() || g_bm_live)
+        return 0;
+    int fe = 0, fw = 0, evy = 0, aw = 0;
+    if (!port_fader_blend_fine(&fe, &fw))
+        return 0;
+    if (port_fader_blend_state(&evy, &aw) && (aw ? 1 : 0) != (fw ? 1 : 0))
+        return 0;
+    if ((*(volatile unsigned short *)0x4000304 & 0x8000u) && port_fader_entrance_wipe_armed() &&
+        data_0209f5bc && ((const int *)data_0209f5bc)[1] != 0)
+        return 0;
+    if (toWhite) *toWhite = fw ? 1 : 0;
+    return 1;
+}
+
 extern "C" void port_engine_a_fade(unsigned int *px, int w, int h)
 {
     int evy = 0, toWhite = 0;
-    const int a_on = px && port_fader_blend_state(&evy, &toWhite);
+    int a_on = px && port_fader_blend_state(&evy, &toWhite);
     if (a_on && evy > 16) evy = 16;
+    int fine256 = -1;
+    if (px && port_fader_fine_armed() && !g_bm_live) {
+        int fe = 0, fw = 0;
+        if (port_fader_blend_fine(&fe, &fw) && (!a_on || (fw ? 1 : 0) == (toWhite ? 1 : 0))) {
+            fine256 = fe;
+            if (!a_on) {                    /* a white fade still under its first whole step: engine A is off, the fader is not */
+                a_on = 1;
+                evy = 0;
+                toWhite = fw;
+            }
+        }
+    }
+    g_ea_applied256 = a_on ? (fine256 >= 0 ? fine256 : evy * 256) : 0;
     /* the inset on engine B's blend (see above) */
     int b_evy = 0, b_white = 0;
     const int inset_b =
@@ -3085,6 +3152,10 @@ extern "C" void port_engine_a_fade(unsigned int *px, int w, int h)
         data_0209f5bc && ((const int *)data_0209f5bc)[1] != 0;
     if (inset_b && !port_fader_blend_state_sub(&b_evy, &b_white))
         b_evy = 0;
+    if (inset_b && fine256 >= 0) {          /* PAINTFADE1: the panel's own engine B fade keeps the whole-step rule */
+        fine256 = -1;
+        g_ea_applied256 = evy * 256;
+    }
     if (settle_drill() & 2u) ntr::gx_card_settle_because("a test drill, before the fade");
     /* A FRAME HELD ON THE GRAPHICS CARD (run cardfull, lane CARD2): the picture
        is not on the processor to fade, and no pixel of it needs the brightness
@@ -3104,7 +3175,8 @@ extern "C" void port_engine_a_fade(unsigned int *px, int w, int h)
     if (ntr::gx_card_overlay_active()) {
         if (!(inset_b && b_evy) || same_fade) {
             if (a_on) {
-                port_gpu_card_set_fade(evy, toWhite);
+                if (fine256 >= 0 && !inset_b) port_gpu_card_set_fade256(fine256, toWhite);   /* PAINTFADE1 */
+                else port_gpu_card_set_fade(evy, toWhite);
                 port_gpu_card_set_mask(g_bm_live ? g_bm : nullptr,
                                        ntr::SCREEN_W, g_bm_shown3d,
                                        g_bm_clear_opaque);
@@ -3137,7 +3209,8 @@ extern "C" void port_engine_a_fade(unsigned int *px, int w, int h)
        every pixel qualifies (a plain fade). */
     const unsigned char *bm = port_engine_a_bright_mask();
     if (!inset_b) {
-        fade_pass(px, w, h, evy, toWhite, bm, nullptr, 0);
+        if (fine256 >= 0 && !bm) fade_pass256(px, w, h, fine256, toWhite);   /* PAINTFADE1 */
+        else fade_pass(px, w, h, evy, toWhite, bm, nullptr, 0);
         return;
     }
     if (a_on)

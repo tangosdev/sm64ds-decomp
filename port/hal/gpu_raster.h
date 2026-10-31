@@ -104,6 +104,10 @@ int port_gpu_card_fade_recorded(void);
    fade at this coefficient (0..16, 0 = none) and colour (nonzero white) instead
    of the tick's own, the whole picture; _off puts the tick's own back. */
 void port_gpu_card_inter_fade(int evy, int white);
+/* run after093, lane PAINTFADE1: the same with the coefficient in 1/256 steps (0..4096) */
+void port_gpu_card_inter_fade256(int e256, int white);
+/* PAINTFADE1: the tick's own fade in 1/256 steps (the fine arm, hal/message_compositor.cpp port_engine_a_fade) */
+void port_gpu_card_set_fade256(int e256, int white);
 void port_gpu_card_inter_fade_off(void);
 /* TEXTBOX2: the next picture between two ticks shows the 3D alone inside the outer rectangle (x1 y1 x2 y2, host pixels) and outside the
    inner one: an opening dialogue box. Null arguments clear it. */

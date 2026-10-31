@@ -1319,6 +1319,62 @@ int port_fader_blend_state_sub(int *evy, int *toWhite)
     return 1;
 }
 
+/* run after093, lane PAINTFADE1: ENGINE A'S FADE AT THE FADER'S OWN PRECISION.
+   A colour fader (FaderColor::AdvanceFade, the arm above and the matched body
+   in hal/portsync3_dtors.cpp) steps currInterp every tick (137 a tick for the
+   painting's 30-tick white) and writes BLDY = (currInterp * +-16) >> 12, so the
+   5-bit register moves only every second tick. This hands Smooth Motion's
+   pictures between ticks the value the register was cut from: *e256 is the
+   coefficient in 1/256 EVY steps (currInterp itself, since 16 * 256 = 0x1000),
+   *toWhite its colour. It answers only for the installed fader whose own
+   formula gives exactly what engine A holds now (or, for a white fade still
+   under one step, a register at 0), so a fade some other code wrote (the
+   title's SetBlendBrightness, a wipe's black, the level-clear dim) is never
+   mistaken for it; 0 otherwise. Reads only. */
+/* Armed by the level loop around its composite (tests/walk_window.cpp) while Smooth Motion runs above FrameRate 60: the tick's own
+   picture then takes the same fine value its pictures between ticks blend toward (hal/message_compositor.cpp port_engine_a_fade). */
+static int g_pf_fine_armed;
+extern "C" void port_fader_fine_arm(int on) { g_pf_fine_armed = on ? 1 : 0; }
+extern "C" int port_fader_fine_armed(void) { return g_pf_fine_armed; }
+extern "C" void *data_0209d4ac;
+/* the question for one engine's register pair: 0x4000050 (engine A) or 0x4001050 (engine B) */
+static int fader_blend_fine_at(unsigned base, int *e256, int *toWhite)
+{
+    if (data_0209f20c != 0)
+        return 0;                            /* the level-clear screen's eased dim stays whole steps */
+    const unsigned short bldcnt = *(volatile unsigned short *)base;
+    const unsigned short bldy = *(volatile unsigned short *)(base + 4);
+    const int mode = (bldcnt >> 6) & 3;
+    int e = bldy & 0x1f;
+    if (e > 16) e = 16;
+    const int reg_on = (mode == 2 || mode == 3) && e != 0;
+    const unsigned char *w0 = (const unsigned char *)&hal_wipes[0];
+    void *const cand[2] = { data_0209f5bc, data_0209d4ac };
+    for (int i = 0; i < 2; ++i) {
+        const unsigned char *f = (const unsigned char *)cand[i];
+        if (!f || (f >= w0 && f < w0 + sizeof hal_wipes && hal_wipe_mesh_ready((void *)f)))
+            continue;                        /* an iris wipe draws its own mesh; its BLDY is not this */
+        const int ci = *(const int *)(f + 4);
+        const unsigned short color = *(const unsigned short *)(f + 0xc);
+        if (ci <= 0 || ci > 0x1000)
+            continue;
+        const int r = (ci * (color ? 0x10 : -0x10)) >> 12;
+        if (r == 0) {
+            if (reg_on) continue;            /* a white fade under its first step: engine A off */
+        } else {
+            if (!reg_on || mode != (r > 0 ? 2 : 3) || e != (r > 0 ? r : -r)) continue;
+        }
+        if (e256) *e256 = ci;
+        if (toWhite) *toWhite = color ? 1 : 0;
+        return 1;
+    }
+    return 0;
+}
+extern "C" int port_fader_blend_fine(int *e256, int *toWhite) { return fader_blend_fine_at(0x4000050u, e256, toWhite); }
+/* review REVPAINTFADE1 F1: the same question of engine B (the corner map panel's and the stacked bottom screen's picture); a colour
+   fader writes both engines with one formula (FaderColor::AdvanceFade, SetBlendBrightness on 0x4000050 and 0x4001050) */
+extern "C" int port_fader_blend_fine_sub(int *e256, int *toWhite) { return fader_blend_fine_at(0x4001050u, e256, toWhite); }
+
 /* ---- THE FRAME CLOCK, data_020a0db0 (run mg12 lane SELECT) ----------------
  *
  * WHAT IT IS. One int at 0x020a0db0, incremented once per frame by the ROM's

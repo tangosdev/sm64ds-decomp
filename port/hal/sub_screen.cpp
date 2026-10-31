@@ -345,6 +345,11 @@ int g_x0, g_y0;            // panel origin in framebuffer pixels
 /* The improved map's own gate, asked once per process. The keys are latched
    at boot like Aspect and RenderScale, so re-asking every frame would only
    re-walk the environment. */
+/* review REVPAINTFADE1: the fine fade's questions (hal/fader_wipes.cpp, hal/message_compositor.cpp) */
+extern "C" int port_fader_fine_armed(void);
+extern "C" int port_fader_blend_fine_sub(int *e256, int *toWhite);
+extern "C" int port_engine_a_panel_fine(int *toWhite);
+
 int improved_map_on(void)
 {
     static int v = -1;
@@ -4532,7 +4537,19 @@ static void sub_screen_present_body(unsigned int *dst, int w, int h)
     ntr::ppu_vram_publish();
     ntr::ppu_display_capture(dst, w, h);
 
-    if (g_on || g_force_panel.load() || hal_menu_draw_live() || menu_bigmap_up()) ntr::ppu_scanout_sub(g_sub);   /* a live menu, or the big map (MAP1), forces its own scan-out */
+    if (g_on || g_force_panel.load() || hal_menu_draw_live() || menu_bigmap_up()) {   /* a live menu, or the big map (MAP1), forces its own scan-out */
+        /* review REVPAINTFADE1 (Smooth Motion above 60, the level loop's arm): a colour fade on both engines. The corner panel is pasted
+           into engine A's picture and engine A's fine fade covers it, so engine B's own whole step stays off it (one fade, not two);
+           the stacked bottom screen has no engine A fade over it and takes engine B's at the fader's own value. Unarmed: mode 0. */
+        int fe = 0, fw = 0, aw = 0, fm = 0;
+        if (port_fader_fine_armed() && port_fader_blend_fine_sub(&fe, &fw)) {
+            if (hal_sub_screen_stacked()) fm = 2;
+            else if (port_engine_a_panel_fine(&aw) && aw == (fw ? 1 : 0)) fm = 1;
+        }
+        ntr::ppu_sub_set_fine(fm, fe, fw);
+        ntr::ppu_scanout_sub(g_sub);
+        ntr::ppu_sub_set_fine(0, 0, 0);
+    }
     /* THE LATE UPLOAD, and it is now the OPT-IN arm. port_frame_oam_upload
        above already ran this frame's OAM::Load at func_02019144's own line,
        ahead of both rasters; this block is what SM64DS_OAM_LOAD_LATE=1 gets

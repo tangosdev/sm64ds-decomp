@@ -515,7 +515,7 @@ cbuffer CompParams : register(b0)
 {
     uint4 box;      // x0, y0, x1, y1 of the pixels the card drew in
     uint4 rect;     // the present rectangle: x0, y0, w, h
-    uint4 clr;      // clear colour (0xAARRGGBB), pillarbox constant, flags, evy
+    uint4 clr;      // clear colour (0xAARRGGBB), pillarbox constant, flags, evy * 256
                     // flags: bit 0 the frame was smoothed, bit 1 a fade is on,
                     // bit 2 the fade goes to white, bit 3 a brightness mask is
                     // bound (t3), bit 4 the 3D layer is shown, bit 5 its clear
@@ -599,15 +599,18 @@ float4 comp_ps(float4 pos : SV_Position) : SV_Target0
         r = q.x; g = q.y; b = q.z;
     }
     if ((clr.z & 2u) && take) {
+        // run after093, lane PAINTFADE1: clr.w is the coefficient in 1/256 steps
+        // (EVY * 256 gives the 5-bit rule exactly; a colour fader between two
+        // ticks passes the values between)
         int evy = (int)clr.w;
         if (clr.z & 4u) {
-            r += ((255 - r) * evy) >> 4;
-            g += ((255 - g) * evy) >> 4;
-            b += ((255 - b) * evy) >> 4;
+            r += ((255 - r) * evy) >> 12;
+            g += ((255 - g) * evy) >> 12;
+            b += ((255 - b) * evy) >> 12;
         } else {
-            r -= (r * evy) >> 4;
-            g -= (g * evy) >> 4;
-            b -= (b * evy) >> 4;
+            r -= (r * evy) >> 12;
+            g -= (g * evy) >> 12;
+            b -= (b * evy) >> 12;
         }
     }
     if (clr.z & 128u) {
