@@ -2335,12 +2335,30 @@ bool gw_decide() {
 
 void gw_target_probe();   // with the follower, below
 
+// KNOWNNET1: A SEAT THAT LEFT IS FORGOTTEN WHEN IT LEAVES. The identity (name, character, colours) of a seat was only dropped when
+// the seat's join epoch changed, i.e. when somebody took the seat again (gw_epoch_check), so a player who left stayed in this
+// console's names for as long as the seat stood empty. The hub's roster says when a seat goes (the relay's goodbye or 3 s unheard,
+// hal/comms_hub.cpp seat_leave), the way hal/player_list.cpp already reads it: the ghost layer now forgets the seat on that frame.
+void gw_forget_left() {
+    const int my = comms_hub_my_seat();
+    for (int s = 0; s < kHubMaxSeats; ++s) {
+        GwSeat &z = g_gw[s];
+        if (s == my || (!z.have_ident && z.n == 0)) continue;
+        HubSeatInfo si;
+        if (comms_hub_seat_info(s, &si) && si.present) continue;
+        std::fprintf(stderr, "[ghost] seat %d (\"%s\") left the hub: its name and ghost are forgotten\n", s,
+                     z.have_ident ? z.name : "");
+        gw_reset_seat(z, false);
+    }
+}
+
 // One frame of the hub ghost layer, from sync_tick.
 void gw_tick() {
     const unsigned now = GetTickCount();
     ++g_gw_frame;
     gw_target_probe();
     gw_recv();
+    gw_forget_left();
     gw_assign(now);
     gw_ident_tick(now);
     gw_send(now);

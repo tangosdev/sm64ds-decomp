@@ -156,6 +156,10 @@ enum : int { kCommsLoopbackPortBase = 51765 };
 // Safe to call more than once; only the first call with a role installs.
 bool comms_loopback_install_from_env();
 
+// KNOWNNET1: the lockstep carrier's teardown for a VS match that ends in place at the title (hal/star_flow.cpp). The goodbye, the
+// role byte back to 0 and the transport handed back; true when nothing is left installed. Safe when nothing was installed.
+bool comms_loopback_leave_reset(const char *why);
+
 // Run vs16, hosted-conductor follow-up: the number of players this session was
 // opened for -- the clamped SM64DS_VS_PLAYERS the installer read, 0 when no
 // session was installed. This is the SAME number that chooses between the two

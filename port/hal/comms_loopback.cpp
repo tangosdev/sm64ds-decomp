@@ -162,6 +162,8 @@
 // call below goes through the WS table.
 
 extern "C" void func_02040724(void);   /* the seam's close() face */
+extern "C" unsigned char data_020a0f04[];   /* the ROLE byte (hal/stage_slot0.cpp; seated by comms_seat_session_request) */
+extern "C" unsigned char data_02099e1c[];   /* the "open the radio" one-shot (hal/comms_conductor.cpp) */
 
 extern "C" int host_setting_net_mode(void);   /* hal/host_settings.cpp */
 // The DS's multiplayer error word. src/func_0203ea5c.c (and the wide host copy,
@@ -6807,6 +6809,28 @@ void comms_loopback_report(const char *tag) {
         s.relay_paired ? 1 : 0, s.handshake_rtt_ms, s.resend_ms,
         s.delay_ms, s.jitter_ms, s.delay_overflow, g_dup, g_aux_ambiguous,
         s.input_delay, s.starved);
+}
+
+// KNOWNNET1: A LOCKSTEP VS MATCH LEFT IN PLACE. The arena netmode ends at the title in this process (hal/star_flow.cpp
+// vs_end_at_title); the lockstep carrier had no teardown, so its end was refused and closed the game (exit 0). This is that
+// teardown, run at the title once the match's own end has run: the goodbye goes out through the seam's close face exactly as the
+// shutdown sends it (lb_close: a DONE Bye, since the match is over), the session request is taken back (the role byte to 0, the
+// value outside a session on the DS, and the radio one-shot cleared), and the transport is handed back, so comms_transport() is
+// null again and the seam keeps its solo answers. The conductor's pump stays chained: with no transport it polls nothing. A later
+// install (a new VS hand-off) reads its environment again.
+bool comms_loopback_leave_reset(const char *why) {
+    if (!g_installed) return true;
+    const int slot = g_slot;
+    const bool was_open = g_open;
+    func_02040724();
+    data_020a0f04[0] = 0;
+    data_02099e1c[0] = 0;
+    comms_set_transport(nullptr);
+    g_installed = false;
+    std::fprintf(stderr, "[seamless] lockstep VS carrier torn down (%s): %s, role byte 0, transport handed back; it was slot %d\n",
+                 why ? why : "-", was_open ? "goodbye sent and socket closed" : "it was already closed", slot);
+    std::fflush(stderr);
+    return true;
 }
 
 }  // namespace port

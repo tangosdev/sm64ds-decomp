@@ -2428,7 +2428,7 @@ extern "C" void port_vs_match_end_hold(void)
  *      src/game/stages/d_s_title.cpp, and what main() writes before a first level);
  *   7. one line says what is now in effect, and the SETTINGS line is armed again for the next level.
  * SM64DS_VS_EXIT_ON_END=1 keeps the old close (a tester knob; the launcher never sets it); =0 keeps the old opt-out (the match stays on
- * screen). REFUSALS take the old close (exit 0), with one line: the lockstep carrier (hal/comms_loopback.cpp has no teardown), a
+ * screen). REFUSALS take the old close (exit 0), with one line: a lockstep carrier whose teardown fails (comms_loopback_leave_reset), a
  * scene-booted process, a build that does not host the title; at the title a hub thread that does not stop or a relatch the mods layer
  * refuses. */
 extern "C" {
@@ -2462,6 +2462,7 @@ void hub_presence_leave_reset();
 bool adventure_ghost_mode();
 struct CommsTransport;
 const CommsTransport *comms_transport();
+bool comms_loopback_leave_reset(const char *why);   /* hal/comms_loopback.cpp (KNOWNNET1) */
 }
 }
 
@@ -2511,11 +2512,10 @@ static const char *vs_end_refusal(void)
 {
     static char why[200];
     if (g_vs_end_ip == 1) return "an in-place end is already under way";
-    /* SEAMCLEAN1, DECISION (review item 20): LEFT, AND DOCUMENTED. A lockstep (non-arena) VS match has no teardown in
-       hal/comms_loopback.cpp, so its end still closes the game (exit 0) and a lockstep hand-off is refused (exit 8): the old
-       two-process path, one window at a time. The arena is the lobby's default netmode and is the in-place path; lockstep stays
-       for developer pairs. A teardown would be a lane of its own (the carrier owns a thread, a socket and the frame ring). */
-    if (port::comms_transport()) return "the lockstep VS carrier (hal/comms_loopback.cpp) has no teardown yet";
+    /* SEAMCLEAN1 left a lockstep (non-arena) match closing the game at its end, for want of a carrier teardown. KNOWNNET1: the
+       carrier has that teardown now (hal/comms_loopback.cpp comms_loopback_leave_reset, step 1 of vs_end_at_title), so a lockstep
+       match ends in place too: the results, then the title in this process, no exit. A lockstep HAND-OFF is still refused
+       (exit 8, hal/scene_vs_menu.cpp): the carrier has no in-place install. */
     if (const char *sc = std::getenv("SM64DS_SCENE"))
         if (*sc) return "a scene-booted process";
     if (!port_scene_is_hosted(1)) return "this build does not host the title scene";
@@ -2548,7 +2548,11 @@ static void vs_end_at_title(void)
     }
     fprintf(stderr, "[seamless] the title is up (the VS match ended in place at f%d: %s): leaving the VS session in this process\n",
             g_vs_end_at, g_vs_end_why);
-    /* 1. the arena (or a plain hub) */
+    /* 1. the lockstep carrier (KNOWNNET1), then the arena (or a plain hub) */
+    if (port::comms_transport() && !port::comms_loopback_leave_reset("the VS match ended in place")) {
+        vs_end_close("the lockstep carrier could not be torn down");
+        return;
+    }
     if (!port::vs_arena_leave_reset("the VS match ended in place")) {
         vs_end_close("the hub's I/O thread did not stop");
         return;

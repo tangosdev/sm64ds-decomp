@@ -857,17 +857,31 @@ struct LowStage {
     unsigned char reply[0x100];
     unsigned char ind_msg[0x40];
 };
-LowStage *low_stage()
+//
+// TAKEN AT GAME START (KNOWNNET1). The block used to be taken on first use, at
+// the ROM's WM_Init, and by then Windows had often filled every 64 KB slot of
+// 0x02400000..0x03F00000 bottom up (thread stacks, heaps, mapped sections), so
+// about one lockstep launch in six closed with the fault below (base and tip
+// alike). The static initializer under this function takes it while the CRT
+// starts, when that range is still empty; it is kept for the whole process,
+// as before, and a failure there only leaves the first use to try again.
+LowStage *g_low_stage;
+LowStage *low_stage_take()
 {
-    static LowStage *p;
-    if (p) return p;
+    if (g_low_stage) return g_low_stage;
 #if defined(_WIN32)
     for (uintptr_t a = 0x02400000u; a < 0x03F00000u; a += 0x10000u) {
         void *v = VirtualAlloc((void *)a, 0x10000, MEM_RESERVE | MEM_COMMIT,
                                PAGE_READWRITE);
-        if (v) { p = (LowStage *)v; break; }
+        if (v) { g_low_stage = (LowStage *)v; break; }
     }
 #endif
+    return g_low_stage;
+}
+const bool g_low_stage_early = low_stage_take() != nullptr;
+LowStage *low_stage()
+{
+    LowStage *p = low_stage_take();
     if (!p) {
         std::fprintf(stderr, "[wm7] HARD FAULT: no free block below 0x04000000 "
                              "for the FIFO staging buffers.\n");

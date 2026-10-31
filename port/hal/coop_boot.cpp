@@ -106,6 +106,9 @@ struct Ctl {
     bool said_end = false, said_release = false;
     int ticked = 0;
     ULONGLONG gone_since = 0;
+    // KNOWNNET1: a launcher-started guest waiting for the host's opening (before the ROM and the window): the room is dropped there
+    bool opening_wait = false;
+    bool dropped = false;
 } C;
 bool g_ranges_registered = false;   // SEAMCOOP1: the two SYNB ranges are registered once per process
 bool g_host_atexit = false;         // and host_atexit once
@@ -544,14 +547,17 @@ void guest_gate() {
     LOG("host heard after %u ms (phase %d go %d closed %d)", (unsigned)(tick() - t0), C.hs.phase, C.hs.go, C.hs.closed);
     // A joiner must not start its own intro: wait for the host's opening to end.
     const ULONGLONG w0 = tick();
+    C.opening_wait = true;
     while (C.hs.go && C.hs.phase == kCoopPhaseIntro) {
         comms_hub_pump();
         check_host_gone();
+        if (C.dropped) return;   // KNOWNNET1: the host left during its opening; this process boots to the title (boot_drop_room)
         if (tick() - w0 > 900000ULL) guest_fail("the opening never ended");
         static ULONGLONG said;
         if (tick() - said > 2000) { said = tick(); LOG("joined during the opening: waiting for it to end"); }
         Sleep(20);
     }
+    C.opening_wait = false;
     if (tick() - w0 > 100) LOG("the opening ended; entering after %u ms", (unsigned)(tick() - w0));
     // A gate beat can be the host's last pump before it loads the ROM, so the
     // save is only served once the host is running (seen: 30 s on a loaded
@@ -1052,6 +1058,8 @@ struct LeaveState {
     int code = 0;
     bool from_level = false;
     bool slow_said = false;
+    bool wait_title = false;   // KNOWNNET1: the line goes up when this process's first title is live (boot_drop_room)
+    char text[96] = {};
 } LV;
 
 struct LinePic {
@@ -1223,8 +1231,52 @@ void leave_at_title() {
     port_join_settings_rearm();
 }
 
+// KNOWNNET1: THE HOST LEFT WHILE A LAUNCHER-STARTED GUEST WAITED FOR ITS OPENING. That wait runs in port_coop_boot_begin, before the
+// ROM loads and before the game window exists, so the leave used to take leave_exit's TOPMOST popup and exit code 7 although the
+// player had joined a room and was about to see the game. Now the room is dropped right there the way the title's teardown drops it
+// (the hub with its I/O thread, the layers on it, the session record, the launcher's names out of both environment copies, the
+// Adventure latch read again, the coop layer, the save medium forced back to the single player save), the boot goes on as a plain
+// game, and the same line every other host-left case draws is drawn in the game window once the title is live: 3 s, then
+// leave_at_title runs the rest of the title's teardown (mods relatched to the offline list, the files read again), as for a room
+// that ends at the title. A teardown refused here (the hub thread did not stop) keeps the old popup and exit.
+void boot_drop_room(int code, const char *line) {
+    LOG("%s during the wait for the host's opening (no title and no window yet): the room is dropped here, the game boots to "
+        "its title and the line is drawn in the game window there (no popup, no exit code %d)", line, code);
+    if (!comms_hub_teardown("the host left during its opening, before this guest's boot")) leave_exit(code, line);
+    comms_sync_leave_reset();
+    comms_conductor_leave_reset();
+    hub_presence_leave_reset();
+    const int fields = online_session_clear();
+    int names = 0;
+    for (const char *n : k_coop_env) {
+        if (!env_any(n)) continue;
+        SetEnvironmentVariableA(n, nullptr);
+        _putenv_s(n, "");
+        ++names;
+    }
+    host_setting_adventure_env_reread();
+    coop_world_session_reset();
+    coop_save_session_reset();
+    party_hits::session_reset();
+    ntr::backup::select_coop(0);
+    C.on = false;
+    C.opening_wait = false;
+    C.dropped = true;
+    C.exiting = true;
+    LV = LeaveState{};
+    LV.st = kLvLine;
+    LV.code = code;
+    LV.from_level = false;
+    LV.wait_title = true;
+    std::snprintf(LV.text, sizeof LV.text, "%s", line);
+    lv_chain();
+    LOG("room dropped before the boot: session record %d field(s), %d launcher name(s) cleared; the boot goes on as a plain game",
+        fields, names);
+}
+
 void leave(int code, const char *line) {
     if (C.exiting) return;
+    if (!C.title_seen && C.opening_wait && !C.host) { boot_drop_room(code, line); return; }
     if (!C.title_seen) leave_exit(code, line);   // the boot gate: no title yet, the launcher's exit code
     C.exiting = true;
     LV = LeaveState{};
@@ -1241,6 +1293,16 @@ void leave(int code, const char *line) {
 bool coop_leave_holds() { return LV.st == kLvLine && LV.from_level; }
 
 void leave_step() {
+    if (LV.st == kLvLine && LV.wait_title) {   // KNOWNNET1 (boot_drop_room): the line waits for the title, then its 3 s start
+        if (port_scene_live_id() != 1) return;
+        LV.wait_title = false;
+        C.title_seen = true;
+        line_raise(LV.text);
+        LV.t0 = tick();
+        LOG("%s: the title is live; the line is drawn in the game window for 3 s, then the room's teardown finishes at the title",
+            LV.text);
+        return;
+    }
     if (LV.st == kLvLine) {
         if (tick() - LV.t0 < 3000) return;
         if (port_scene_live_id() == 1) { leave_at_title(); return; }
