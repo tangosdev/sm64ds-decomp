@@ -11,6 +11,13 @@ extern void func_0204b81c(void* self, void* node);
 extern void func_0204b028(void* self, void* node);
 extern void func_0204bbd8(void* self, void* node);
 extern void func_0204b460(void* self, void* node);
+#ifdef _MSC_VER
+/* Host only: Smooth Motion pairs each particle with the same element a tick later (port/ntr/gx.cpp ip_part_tag_now). */
+extern void port_particle_tag(const void* elem);
+#define PORT_PARTICLE_TAG(n) port_particle_tag(n)
+#else
+#define PORT_PARTICLE_TAG(n)
+#endif
 
 typedef struct Node1 {
     u32 pad0 : 4;
@@ -76,6 +83,7 @@ void func_0204a5c8(char* self)
     if (n != 0) {
         do {
             fn2(*(char**)(self + 0x20) + n->idx42 * 0x14);
+            PORT_PARTICLE_TAG(n);
             fn1(self, n);
             n = n->next;
         } while (n != 0);
@@ -94,6 +102,7 @@ void func_0204a5c8(char* self)
     n = ctx->f10;
     if (n == 0) return;
     do {
+        PORT_PARTICLE_TAG(n);
         fn1(self, n);
         n = n->next;
     } while (n != 0);
