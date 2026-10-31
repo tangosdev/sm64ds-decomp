@@ -78,7 +78,7 @@ existing class/range owner. Root owns follow-through after those dependencies.
 |---|---|
 |002 02100560|Mixed actor resources; investigate multi-owner boundaries; ov002 config held by enemy-switch-tu-1003.|
 |002 02100f84|Kurumajiku vectors; class held by yegg-native-three-method-continuation1014; config reserved.|
-|002 021019d0|Large Player resource initializer; typed resource recovery and reserved config required.|
+|002 021019d0|Large daPly_c resource initializer; typed resource recovery and reserved config required.|
 |002 02107370|Demo resources; config reservation prerequisite.|
 |002 02107f88|SoundObj tables; owner issue2410-sound-playsub1015 and config reserved.|
 |002 0210804c|HUD-map vector; use d_map owner evidence, not adjacent actor; config reserved.|

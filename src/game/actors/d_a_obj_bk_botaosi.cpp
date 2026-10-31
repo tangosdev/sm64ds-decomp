@@ -50,7 +50,7 @@ enum daObjBk_Botaosi_c_AssetId { ASSET_BK_BOTAOSI_BMD = 0x0589, ASSET_BK_BOTAOSI
 #pragma defer_codegen off
 
 #include "daObjBk_Botaosi_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -97,8 +97,8 @@ void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
 daObjBk_Botaosi_c::~daObjBk_Botaosi_c() {}
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c15OnHitByMegaCharER6Player
-void daObjBk_Botaosi_c::OnHitByMegaChar(Player &player) {
+// @symbol _ZN17daObjBk_Botaosi_c15OnHitByMegaCharER7daPly_c
+void daObjBk_Botaosi_c::OnHitByMegaChar(daPly_c &player) {
     if (mState >= 2)
         return;
     player.IncMegaKillCount();

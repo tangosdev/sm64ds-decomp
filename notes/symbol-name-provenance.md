@@ -157,7 +157,7 @@ inference:
 |---|---|---|---|
 | `_ZN7Clipper13Func_020156DCEv` | 0 | **5** | `Camera_UpdateMatrices` (in `src/minigames/unit020bfec0.cpp`) declares `(void*,int,int,int,int)` and matches the ROM |
 | `_ZN12dEnemyBase_c12KillByAttackER8dActor_c` | 1 (+`this`) | **4** | its own definition takes 4, and three call sites pass 4 |
-| `_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player` | 2 (+`this`) | **3** | 15 call sites outside ov004 materialise r3; the four inside it do not |
+| `_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_c` | 2 (+`this`) | **3** | 15 call sites outside ov004 materialise r3; the four inside it do not |
 
 ### And two of the three were on the wrong function entirely (2026-08-27)
 
@@ -169,7 +169,7 @@ can.
 
 `KillByInvincibleChar` was on ov004 0x020ada40, which reads only r0 and range-checks
 it as a scalar. The ov002 body at the same address consumes r0/r1/r2 as (enemy,
-Vector3_16 &, Player &). Moved, given its third parameter, and migrated to a real
+Vector3_16 &, daPly_c &). Moved, given its third parameter, and migrated to a real
 method that matches -- which is the strongest form of check this note describes.
 
 `KillByAttack` was on ov004 0x020aea30, whose body walks an 8-byte table to an

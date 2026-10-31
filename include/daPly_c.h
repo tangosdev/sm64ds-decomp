@@ -3,10 +3,10 @@
  * explicit padding. Field NAMES cannot change codegen, so they are safe to
  * improve -- but the OFFSETS and WIDTHS are pinned by the bytes.
  *
- * Player derives from dActor_c: fBase_c -> dBase_c -> dActor_c -> Player.
- * See notes/actor-vtables.md. That IS expressed here now: `struct Player :
+ * daPly_c derives from dActor_c: fBase_c -> dBase_c -> dActor_c -> daPly_c.
+ * See notes/actor-vtables.md. That IS expressed here now: `struct daPly_c :
  * dActor_c` inherits 0x000..0x0cf rather than duplicating it, and the 31-slot
- * vtable (_ZTV6Player, 0x0210a83c in ov002) has seven of its overrides
+ * vtable (_ZTV7daPly_c, 0x0210a83c in ov002) has seven of its overrides
  * declared -- the destructor pair plus slots 0, 3, 6, 9, 12 and 18. See the
  * vtable block above the method list; the key-function rule documented there
  * is load-bearing, not advisory.
@@ -14,15 +14,15 @@
  * This header is C++ only. The old #ifndef __cplusplus twin is gone, so a
  * consumer that still needs the C spelling has none -- 201 files include it.
  *
- * NOT yet expressed: the nested type `Player::State`. Both
- * _ZN6Player7IsStateERNS_5StateE and _ZN6Player11ChangeStateERNS_5StateE take
+ * NOT yet expressed: the nested type `daPly_c::State`. Both
+ * _ZN7daPly_c7IsStateERNS_5StateE and _ZN7daPly_c11ChangeStateERNS_5StateE take
  * a `State&`, and every St_*_Init/_Main/_Cleanup handler is reached through
  * it, so it wants settling before those are migrated.
  *
- * sizeof(Player) is 0x768 -- _ZN6PlayerC3Ev asks operator new for exactly that.
+ * sizeof(daPly_c) is 0x768 -- _ZN7daPly_cC3Ev asks operator new for exactly that.
  */
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef DAPLY_C_H
+#define DAPLY_C_H
 #include "types.h"
 #include "dActor_c.h"
 #include "dExtShadowModel_c.h"
@@ -44,16 +44,16 @@ struct Vector3;
    consumer's compiler temporaries. mBodyModels only needs the name. */
 struct dExtAnm2Model_c;
 
-struct Player : dActor_c {
+struct daPly_c : dActor_c {
     /* 0x000..0x0cf is dActor_c's, inherited rather than duplicated. It used to be
        written out inline here -- mParam at 0x008 was fBase_c's param1, mPosX
        at 0x05c was dActor_c's, and so on. The names were reconciled first so that
        deleting the block is all that happens here. sizeof(dActor_c) is 0xd0, so
-       Player's own fields start exactly where the base ends. */
+       daPly_c's own fields start exactly where the base ends. */
 
-    /* One entry of the player state machine. _ZN6Player7IsStateERNS_5StateE
-       and _ZN6Player11ChangeStateERNS_5StateE both take a State&, so the type
-       is nested in Player and is named State; the mangling fixes both facts.
+    /* One entry of the player state machine. _ZN7daPly_c7IsStateERNS_5StateE
+       and _ZN7daPly_c11ChangeStateERNS_5StateE both take a State&, so the type
+       is nested in daPly_c and is named State; the mangling fixes both facts.
 
        Each member is a POINTER TO MEMBER FUNCTION, not a plain function
        pointer. Both callers use the ARM/Itanium pmf sequence verbatim --
@@ -74,7 +74,7 @@ struct Player : dActor_c {
 
        Who calls what, and when:
          mInit     ChangeState, LAST, on the state being entered (+0x00)
-         mMain     Player::Behavior, per tick, at 0x020e5118       (+0x08)
+         mMain     daPly_c::Behavior, per tick, at 0x020e5118       (+0x08)
          mCleanup  ChangeState, FIRST, on the state being left     (+0x10)
 
        mCleanup is a veto, not a notification: ChangeState tests its result
@@ -88,7 +88,7 @@ struct Player : dActor_c {
        names directly), populated by ov002's static constructors.
 
        CORRECTION, and it reverses what this note used to say. It used to warn
-       that ov006's _ZN6Player7ST_WAITE and _ZN6Player6ST_OWLE, at addresses in
+       that ov006's _ZN7daPly_c7ST_WAITE and _ZN7daPly_c6ST_OWLE, at addresses in
        the same 0x0211xxxx window, were NOT these -- that overlays 2 and 6
        share the window and the coincidence meant nothing. The first half is
        true and the conclusion was backwards: those two symbols ARE these, and
@@ -100,36 +100,36 @@ struct Player : dActor_c {
        times, every one module:overlay(2). __sinit_ov002_021019d0 fills
        0x02110154's three slots from 0x0210a25c, 0x02109e14 and 0x02109f84, all
        inside ov002's pointer-to-member constant pool: a State being built
-       member by member. And Player::CanEnterDoor already cast the raw address
+       member by member. And daPly_c::CanEnterDoor already cast the raw address
        to State& to hand it to IsState.
 
        The two symbols were registered as ov006 FUNCTIONS. They are now ov002
        objects, declared below as the static members whose mangling they match. */
     struct State {
-        int (Player::*mInit)();       /* 0x00 */
-        int (Player::*mMain)();       /* 0x08 */
-        int (Player::*mCleanup)();    /* 0x10 */
+        int (daPly_c::*mInit)();    /* 0x00 */
+        int (daPly_c::*mMain)();    /* 0x08 */
+        int (daPly_c::*mCleanup)(); /* 0x10 */
     };
 
     s32 mEatingPlayer;            /* 0x0d0 */
     u8  pad_0d4[0x8];
     /* 0x0dc..0x2ac: the models and the texture/material animations drawn on
        them, grouped as one embedded sub-object. The grouping is what the
-       constructor proves: retail Player::Player() (0x020e68f4) keeps `this` in
+       constructor proves: retail daPly_c::daPly_c() (0x020e68f4) keeps `this` in
        r5 and `this + 0xdc` in r4, and builds the two dExtAnmModel_c and the
        three animation arrays off r4 (+0x14, +0x98, +0x100, +0x150, +0x178)
        while everything after 0x2ac is built off r5. That second base is the
-       inlined implicit constructor of a member whose `this` is Player + 0xdc;
-       with these fields flat in Player the constructor comes out one
+       inlined implicit constructor of a member whose `this` is daPly_c + 0xdc;
+       with these fields flat in daPly_c the constructor comes out one
        instruction short. The bytes require 0x0dc..0x27c inside; the two
        saved-texparam arrays at 0x27c..0x2ac match either way and are kept
        with the models they save state for. The type name is not recovered:
        its constructor and destructor are only ever inlined. Offsets in the
-       field comments are Player offsets. */
+       field comments are daPly_c offsets. */
     struct Models {
-        /* FOUR body models, not one pointer plus padding. Player::CleanupResources
+        /* FOUR body models, not one pointer plus padding. daPly_c::CleanupResources
            walks this run as `*(this + i * 4 + 0xdc)` for `i < 4` and calls each
-           element's deleting destructor; Player::Render indexes it with
+           element's deleting destructor; daPly_c::Render indexes it with
            GetBodyModelID(mBodyModelId, 1) and TurnOffToonShading with
            GetBodyModelID(j, 0). The element type is dExtAnm2Model_c, not dExtAnmModel_c:
            func_ov002_020e5948 allocates every slot with operator new(0x78), which
@@ -143,7 +143,7 @@ struct Player : dActor_c {
            func_ov002_020e5948 builds [4] from wario_metal_model.bmd (arc0 0x54c).
            CleanupResources deletes [4] on its own after the `i < 4` loop. */
         dExtAnm2Model_c *mBodyModels[5]; /* 0x0dc */
-        /* ~Player calls _ZN14dExtAnmModel_cD1Ev on this LAST of the two, and dExtAnmModel_c
+        /* ~daPly_c calls _ZN14dExtAnmModel_cD1Ev on this LAST of the two, and dExtAnmModel_c
            asserts 0x64 -- 0x0f0..0x154, closing exactly at mHeadModels. The markers
            this replaces are its own sub-objects: mAnimation1 at 0x140 was the
            dExtFrameCtrl_c base (+0x50) and unk_148 at 0x148 was that base's currFrame
@@ -174,7 +174,7 @@ struct Player : dActor_c {
            it at mSleepBubbleScale while func_ov002_020d225c (Yoshi, sleep stage 2)
            holds, and CleanupResources deletes it. */
         dExtSimpleModel_c *mSleepBubbleModel; /* 0x1d8 */
-        /* The three __cxa_vec_cleanup calls in ~Player, in the order it makes them
+        /* The three __cxa_vec_cleanup calls in ~daPly_c, in the order it makes them
            (last array first). Both element types assert 0x14, which is exactly
            the stride the destructor passes. unk_25c and unk_270 were the
            currFrame of mTexSeqPlayer[0] and [1] -- +0x08 into each element. */
@@ -189,19 +189,19 @@ struct Player : dActor_c {
         s32 mBodyTexParams[4]; /* 0x27c */
         s32 mHeadTexParams[8]; /* 0x28c */
     } mModels;                 /* 0x0dc */
-    /* ~Player calls _ZN17dExtShadowModel_cD1Ev on this, and dExtShadowModel_c asserts
+    /* ~daPly_c calls _ZN17dExtShadowModel_cD1Ev on this, and dExtShadowModel_c asserts
        0x28 -- which closes exactly at mdCcAcPos_c. */
     dExtShadowModel_c mShadowModel;            /* 0x2ac */
-    /* ~Player calls _ZN10dCcAcPos_cD1Ev on this too, and the
+    /* ~daPly_c calls _ZN10dCcAcPos_cD1Ev on this too, and the
        0x40 it asserts closes exactly at mAttackClsn. The four markers it
        absorbs are all dCc_c's own, reached through the base:
        unk_2d8 = radius (+0x04), unk_2dc = height (+0x08),
        mBodyClsnFlags = flags (+0x18), unk_2f0 = vulnFlags (+0x1c).
-       mBodyClsnFlags in particular was never a Player field -- it is the
-       body collider's flags word, which is why thirteen Player methods
+       mBodyClsnFlags in particular was never a daPly_c field -- it is the
+       body collider's flags word, which is why thirteen daPly_c methods
        set and clear bits in it. */
     dCcAcPos_c mdCcAcPos_c;            /* 0x2d4 */
-    /* ~Player calls _ZN10dCcAcPos_cD1Ev on this, and that
+    /* ~daPly_c calls _ZN10dCcAcPos_cD1Ev on this, and that
        type asserts 0x40 -- which closes exactly at mRidingShell. */
     dCcAcPos_c mAttackClsn;            /* 0x314 */
     s32 mRidingShell;            /* 0x354 */
@@ -232,10 +232,10 @@ struct Player : dActor_c {
        callback, stores it and enters St_Climb; St_Headstand_Main stands on its
        top (+0x08 height); func_ov002_020caf68 clears it. Every access is a word. */
     dCc_c *mClimbClsn; /* 0x37c */
-    /* ~Player calls _ZN10dBgCh_ActrD1Ev on this FIRST, and dBgCh_Actr
+    /* ~daPly_c calls _ZN10dBgCh_ActrD1Ev on this FIRST, and dBgCh_Actr
        asserts 0x1bc -- which closes exactly at mSpawnPosX. */
     dBgCh_Actr mMeshClsn;            /* 0x380 */
-    /* The spawn point, saved once and restored on death. Player::InitResources
+    /* The spawn point, saved once and restored on death. daPly_c::InitResources
        writes all four from the live values (0x53c..0x544 <- mPosX/Y/Z, and
        mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.
        Two functions, opposite directions, the same four slots -- which is what
@@ -247,7 +247,7 @@ struct Player : dActor_c {
     s32 mPreClsnPosY;            /* 0x54c */
     s32 mPreClsnPosZ;            /* 0x550 */
     /* Floor normal, fx12 (1.0 == 0x1000 -- already rescaled from KCL's 0x400).
-     * Stored as three consecutive words by Player::SetFloorSurfaceInfo
+     * Stored as three consecutive words by daPly_c::SetFloorSurfaceInfo
      * (0x020c16ec) at 0x020c1768 / 0x020c1770 / 0x020c1778, sourced
      * from SurfaceInfo::CopyNormalTo (func_02037dcc). 0x554 and 0x55c were
      * marked padding until those stores were disassembled.
@@ -334,7 +334,7 @@ struct Player : dActor_c {
        |dist| >> 3 while it is nonzero, and ChangeState zeroes it. */
     s32 mTongueHitDist; /* 0x654 */
     /* --- Unpacked CLPS (collision property) fields ---------------------
-     * Player::SetFloorSurfaceInfo (0x020c16ec) calls one bitfield
+     * daPly_c::SetFloorSurfaceInfo (0x020c16ec) calls one bitfield
      * getter per field on the floor's CLPS and stores each result here. The
      * getters are 3-instruction accessors at 0x02037e14..0x02037e90; the
      * bit extents below are read off those instructions, so the mapping is
@@ -381,9 +381,9 @@ struct Player : dActor_c {
     s32 mModelOffsetZ;           /* 0x694 */
     s16 mSpawnAngleY;            /* 0x698 */
     /* Downhill direction of the current floor, binary angle (0x10000 per turn).
-     * Player::SetFloorSurfaceInfo computes it as cstd::atan2(mFloorNormalX,
+     * daPly_c::SetFloorSurfaceInfo computes it as cstd::atan2(mFloorNormalX,
      * mFloorNormalZ) and stores it with a 16-bit strh at 0x020c178c (written
-     * as [r5 + 0x600] + 0x9a). Consumed by Player::ApplySlopeAccel
+     * as [r5 + 0x600] + 0x9a). Consumed by daPly_c::ApplySlopeAccel
      * (func_ov002_020c04e0) via AngleDiff(mFloorAngle, moveYaw) to decide
      * whether a slope speeds you up or slows you down. */
     s16 mFloorAngle;            /* 0x69a */
@@ -728,7 +728,7 @@ struct Player : dActor_c {
     s16 mHeadRot[3]; /* 0x762 */
     /* methods */
     /* Two of the State objects, as the static members they are. `ST_WAIT`
-       mangles to _ZN6Player7ST_WAITE and `ST_OWL` to _ZN6Player6ST_OWLE --
+       mangles to _ZN7daPly_c7ST_WAITE and `ST_OWL` to _ZN7daPly_c6ST_OWLE --
        which is what those two symbols always were, and the reason they read
        as ALL_CAPS constants rather than St_Foo_Bar handlers.
 
@@ -742,28 +742,28 @@ struct Player : dActor_c {
        They are DECLARED and never defined here: the objects are the ROM's,
        carved out into the gap, so a definition in any translation unit would
        be a duplicate. Referencing them emits the undefined symbol the gap
-       supplies, which is what the four Player methods below already did by
+       supplies, which is what the four daPly_c methods below already did by
        hand. */
     static State ST_WAIT;
     static State ST_OWL;
 
-    /* --- vtable. _ZTV6Player (0x0210a83c, ov002) is dActor_c's 31 slots with
+    /* --- vtable. _ZTV7daPly_c (0x0210a83c, ov002) is dActor_c's 31 slots with
            eight overridden and NO new virtuals; see notes/actor-vtables.md.
 
            The destructor is declared FIRST on purpose. CW 1.2 emits the vtable
            into the translation unit that DEFINES the first non-inline virtual
            declared -- the key function -- and that copy collides with the one
-           the module's gap object supplies from ROM data. Because Player only
+           the module's gap object supplies from ROM data. Because daPly_c only
            overrides, an override takes its base's slot wherever it is declared,
-           so putting ~Player first costs nothing and pins the key function to
-           the destructor. src/game/player/Player.cpp defines it out of line,
-           so that TU alone emits _ZTV6Player, and ov002/Player.json
-           externalizes the copy to the ROM table. Never define ~Player inline:
+           so putting ~daPly_c first costs nothing and pins the key function to
+           the destructor. src/game/player/d_a_ply_methods.cpp defines it out of line,
+           so that TU alone emits _ZTV7daPly_c, and ov002/daPly_c.json
+           externalizes the copy to the ROM table. Never define ~daPly_c inline:
            key-function status would pass to InitResources, and the retail D0/D1
            order comes from the out-of-line definition (see its comment there).
-           Player() is defined in the same file; the ROM homes only its C1. --- */
-    Player();
-    virtual ~Player();                  /* slots 16, 17 */
+           daPly_c() is defined in the same file; the ROM homes only its C1. --- */
+    daPly_c();
+    virtual ~daPly_c();                 /* slots 16, 17 */
     virtual s32  InitResources();       /* slot  0 */
     virtual s32  CleanupResources();    /* slot  3 */
     virtual s32  Behavior();            /* slot  6 */
@@ -785,7 +785,7 @@ struct Player : dActor_c {
     int HasFinishedTalking();
     int HasNoCap();
     int Heal(int amt);
-    /* Unnamed parameters: a named one advances @NNN in every Player.h consumer. */
+    /* Unnamed parameters: a named one advances @NNN in every daPly_c.h consumer. */
     int Hurt(const Vector3 &, u32, Fix12i, u8, u8, u8);
     int IsAnim(unsigned int a);
     int IsBeingShotOutOfCannon();
@@ -1011,7 +1011,7 @@ struct Player : dActor_c {
     s32 St_Null_Main();
     unsigned int GetBodyModelID(unsigned int a, bool b_) const;
     void BlowAway(short v);
-    /* Unnamed parameters: a named one advances @NNN in every Player.h consumer. */
+    /* Unnamed parameters: a named one advances @NNN in every daPly_c.h consumer. */
     void Bounce(Fix12i);
     void SpinBounce(Fix12i);
     void EnterWhirlpool();
@@ -1024,14 +1024,14 @@ struct Player : dActor_c {
     void OpenBigDoor();
     void PlayMammaMiaSound();
     void RegisterEggCoinCount(unsigned int count, bool b2, bool b3);
-    /* Unnamed parameters: a named one advances @NNN in every Player.h consumer. */
+    /* Unnamed parameters: a named one advances @NNN in every daPly_c.h consumer. */
     void SetAnim(u32, int, Fix12i, u16);
     void SetNewHatCharacter(unsigned int p1, unsigned int p2, bool p3);
     void SetRealCharacter(unsigned int chr_);
     void TurnOffToonShading(unsigned int j);
     int Unk_020ca488();
 
-    /* Player commands of the Kuppa script (ov002 0x020bccfc..0x020bd828).
+    /* daPly_c commands of the Kuppa script (ov002 0x020bccfc..0x020bd828).
        func_ov002_020bd664 dispatches a command record to one of fourteen of
        these through a table of pointers to members, all of one signature:
        the command's parameter bytes and its begin and end frame.
@@ -1061,15 +1061,15 @@ struct Player : dActor_c {
        layer id being started or ended. Ending always clears the layer; with
        the other layer empty it stops the music outright, otherwise it switches
        to the other layer only if the id is the one playing and differs from
-       it. Unnamed, like the declarations below, so Player.h consumers keep
+       it. Unnamed, like the declarations below, so daPly_c.h consumers keep
        their @NNN numbering. */
     void EndStateMusic(u32);
     void StartStateMusic(u32);
     void EndPowerupMusic(u32);
     void StartPowerupMusic(u32);
-    /* Player state helpers in the 0x020d2f24..0x020db8d8 span (method review
-       020d2f24-020db8d8). Address-named Player methods, verified against the
-       ROM bodies; parameters stay unnamed so the 258 Player.h consumers keep
+    /* daPly_c state helpers in the 0x020d2f24..0x020db8d8 span (method review
+       020d2f24-020db8d8). Address-named daPly_c methods, verified against the
+       ROM bodies; parameters stay unnamed so the 258 daPly_c.h consumers keep
        byte-identical objects (see the Kuppa note above). */
     void func_ov002_020d4748();
     int func_ov002_020d5ed0();
@@ -1220,23 +1220,23 @@ struct Player : dActor_c {
    not line up and this would refuse to compile. */
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Player_size_must_be_0x768[sizeof(struct Player) == 0x768 ? 1 : -1];
-typedef char Player_Models_size_must_be_0x1d0[sizeof(Player::Models) == 0x1d0 ? 1 : -1];
-typedef char Player_State_size_must_be_0x18[sizeof(Player::State) == 0x18 ? 1 : -1];
+typedef char Player_size_must_be_0x768[sizeof(struct daPly_c) == 0x768 ? 1 : -1];
+typedef char Player_Models_size_must_be_0x1d0[sizeof(daPly_c::Models) == 0x1d0 ? 1 : -1];
+typedef char Player_State_size_must_be_0x18[sizeof(daPly_c::State) == 0x18 ? 1 : -1];
 #endif
 
-/* Offsets seen through this-pointer but far outside the object (sizeof(Player)
- * is 0x768). These are NOT Player fields and must not be typed as such.
+/* Offsets seen through this-pointer but far outside the object (sizeof(daPly_c)
+ * is 0x768). These are NOT daPly_c fields and must not be typed as such.
  *
  *   0x4eb0, 0x4eb4, 0x4ee5  -- FIXED. The symbol was moved, which is what the
  *     earlier revision of this note said the repair had to be; the offsets were
- *     never Player's to type. Kept as history because the diagnosis is reusable.
+ *     never daPly_c's to type. Kept as history because the diagnosis is reusable.
  *
  *     ov002 and ov006 overlap in address space (ov002 0x020AD660..0x0210D9A0,
  *     ov006 0x020BFEC0..0x02140260), and 0x020e17f8 falls inside both.
- *     _ZN6Player16St_WallJump_InitEv had been attached to the ov006 copy (size
+ *     _ZN7daPly_c16St_WallJump_InitEv had been attached to the ov006 copy (size
  *     0x5c), so that file decompiled unrelated ov006 code while claiming to be
- *     a Player method -- hence the nonsense offsets. It now names the ov002
+ *     a daPly_c method -- hence the nonsense offsets. It now names the ov002
  *     copy (size 0xb0), and the ov006 one is DrawAimMarker again.
  *
  *     FOUR INDEPENDENT LINES OF EVIDENCE agreed, which is what made the move
@@ -1249,7 +1249,7 @@ typedef char Player_State_size_must_be_0x18[sizeof(Player::State) == 0x18 ? 1 : 
  *     St_WallJump_Main (0x020e1714 +0xe4, ending exactly at 0x020e17f8) and
  *     immediately before St_BackFlip_Init; Init/Main pairs are adjacent
  *     throughout this overlay. (3) Its draft names its own shadow struct
- *     `Player` and touches nothing above 0x71b. (4) Its body adds 0x8000 --
+ *     `daPly_c` and touches nothing above 0x71b. (4) Its body adds 0x8000 --
  *     half a turn -- to the facing angle, copies it to the previous angle, sets
  *     anim 0x28 and a launch speed and plays a character voice. That is a wall
  *     jump.
@@ -1263,17 +1263,17 @@ typedef char Player_State_size_must_be_0x18[sizeof(Player::State) == 0x18 ? 1 : 
  *     and unlike WallJump its ov002 source byte-matches, so it is now a real
  *     method.
  *
- *     EXPECT MORE. The 0x0210a1xx-0x0210a3xx table is Player state pointers;
+ *     EXPECT MORE. The 0x0210a1xx-0x0210a3xx table is daPly_c state pointers;
  *     any ov006 symbol its loads land on is a candidate for the same repair.
  *
  *   St_Null_Init is the SAME DEFECT, found the same way. ov006 carries
- *     _ZN6Player12St_Null_InitEv at 0x020cac30 size 0x6c and ov002 carries an
+ *     _ZN7daPly_c12St_Null_InitEv at 0x020cac30 size 0x6c and ov002 carries an
  *     unnamed func_ov002_020cac30 of size 0x8 at the same address. ov002
  *     reaches it by `kind:load ... module:overlay(2)` from 0x0210a17c -- the
  *     same pointer-to-member region as above -- while ov006 reaches its own
  *     copy by two direct arm_calls. An eight-byte body is exactly what a state
  *     called Null should be. Expect more of these: the whole 0x0210a1xx-0x0210a3xx
- *     table is Player state pointers, and any ov006 symbol its loads land on
+ *     table is daPly_c state pointers, and any ov006 symbol its loads land on
  *     is a candidate.
  *
  *   0x62ad, 0x62af  -- still unexplained; source not yet traced. Needs semantic
@@ -1284,8 +1284,8 @@ typedef char Player_State_size_must_be_0x18[sizeof(Player::State) == 0x18 ? 1 : 
  *
  * ST_WAIT, St_EndingFly_Main, St_InYoshiMouth_Cleanup, St_WallJump_Init and
  * TryExitCharacterDoorWithIntro were declared here until this commit, while
- * each of their sources already said, in terms, "NOT a Player method" and
- * "detached from Player.h". The header was the last thing still making the
+ * each of their sources already said, in terms, "NOT a daPly_c method" and
+ * "detached from daPly_c.h". The header was the last thing still making the
  * claim. Nothing called them through the declaration -- every caller in the
  * tree spells the mangled name in its own `extern` -- so removing them is
  * codegen-neutral, and the eligible name list is unchanged by it.
@@ -1294,9 +1294,9 @@ typedef char Player_State_size_must_be_0x18[sizeof(Player::State) == 0x18 ? 1 : 
  * misattribution, and it is NOT declared here for that reason. Three sources
  * disagree about what it even is: this header called it `void ST_WAIT()`,
  * ov006/symbols.txt calls it `kind:function(size=0x68)` at 0x02110154, and
- * four migrated Player methods -- CanWarp, TryTalkToDoor, TryTalkToKeyDoor,
- * St_WaitQuicksand_Main -- use `_ZN6Player7ST_WAITE` as a Player::State
- * OBJECT, passing its address to Player::IsState alongside
+ * four migrated daPly_c methods -- CanWarp, TryTalkToDoor, TryTalkToKeyDoor,
+ * St_WaitQuicksand_Main -- use `_ZN7daPly_c7ST_WAITE` as a daPly_c::State
+ * OBJECT, passing its address to daPly_c::IsState alongside
  * data_ov002_0211013c. 0x02110154 is 0x0211013c + 0x18, exactly one State
  * apart. Do not resolve this from the arithmetic: ov002 and ov006 share that
  * RAM window, the byte compare wildcards every relocated word, so both

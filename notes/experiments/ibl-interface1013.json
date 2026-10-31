@@ -4,7 +4,7 @@
   "base_commit": "ee8618f8233ab228954057e3ebe079fd2936c1b8",
   "scope": "Iron Ball spawner real nearest-player and Spawn interfaces",
   "source": "src/actors/daIbl_c.cpp",
-  "change": "Use ClosestPlayer() returning Player*, dActor_c::Spawn() returning daIbl_c*, and direct child mDispenser assignment; remove redundant raw C declarations.",
+  "change": "Use ClosestPlayer() returning daPly_c*, dActor_c::Spawn() returning daIbl_c*, and direct child mDispenser assignment; remove redundant raw C declarations.",
   "production_ownership": "Existing16-function text-only promoted TU. No init/data/BSS claim, no new enrollment or policy. Complete emitted metadata is separately verified before externalization.",
   "flat_boundaries": "Existing POD stack snapshot and borrowed inherited position/angle spans retained. Direct component snapshot spelling changes codegen; no compiler-wall claim is made. No extra Vector3 lifecycle is introduced.",
   "proof": {
@@ -202,7 +202,7 @@
           {
             "off": 116,
             "type": 2,
-            "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "sym": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             "addr": 33620272,
             "add": 0
           },
@@ -258,7 +258,7 @@
           {
             "off": 84,
             "type": 2,
-            "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "sym": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
             "addr": 33620308,
             "add": 0
           },
@@ -625,7 +625,7 @@
       "kind": "correctness",
       "location": "src/actors/player.cpp Vector destructor imports",
       "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
-      "summary": "The five omitted Player Vector imports are covered."
+      "summary": "The five omitted daPly_c Vector imports are covered."
     },
     "RCV-SHADOW-01": {
       "disposition": "fixed",
@@ -648,7 +648,7 @@
       "id": "RCV2908-02",
       "kind": "correctness",
       "location": "src/actors/player.cpp and static-destructor registration callers",
-      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local daPly_c declarations and calls.",
       "summary": "Registration carries object and callback addresses as pointers."
     },
     "RCV2908-03": {

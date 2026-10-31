@@ -64,10 +64,10 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER7daPly_c",
       "address": "0x021310fc",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER6Player.cpp",
+      "legacy_source": "src/_ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER7daPly_c.cpp",
       "ordinal": 4
     },
     {

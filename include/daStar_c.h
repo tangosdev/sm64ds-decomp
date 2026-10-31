@@ -37,7 +37,7 @@
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
 
-struct Player;
+struct daPly_c;
 
 /* The shadow's matrix (a bare 4x3: a real Matrix4x3 member would drag
    Vector3's destructor into ~daStar_c). tx/ty/tz are the position >> 3. */
@@ -134,7 +134,8 @@ struct daStar_c : dEnemyBase_c {
     s32  mGroundY;                /* 0x42c -- func_ov002_020e7d08's downward probe from 50.0 above the star: the hit, or 0x7fffffff */
     u32  mSoundObjID;             /* 0x430 -- uniqueID of the sound object func_ov002_020e6fbc spawned, 0 if none */
     u32  mMarkerID;               /* 0x434 -- uniqueID of the STARBASE marker (daStarBase_c) this star is linked to */
-    Player *mPlayer;              /* 0x438 -- the player that touched it (set by Collect, func_ov002_020e7090, OnTurnIntoEgg) */
+    /* Set by Collect, func_ov002_020e7090 and OnTurnIntoEgg. */
+    daPly_c *mPlayer;             /* 0x438 -- the player that touched it */
     s32  mKind;                   /* 0x43c -- a Kind */
     union {
         s32  mState;              /* 0x440 -- a State */
@@ -194,7 +195,7 @@ struct daStar_c : dEnemyBase_c {
     virtual ~daStar_c();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
-    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
 
     void AddStarMarker();
     void func_ov002_020e7104(int r1);

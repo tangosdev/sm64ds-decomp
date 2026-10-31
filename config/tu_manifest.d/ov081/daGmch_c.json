@@ -288,10 +288,10 @@
       "ordinal": 34
     },
     {
-      "symbol": "_ZN8daGmch_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8daGmch_c13OnTurnIntoEggER7daPly_c",
       "address": "0x02127a7c",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN8Moneybag13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN8Moneybag13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 35
     },
     {
@@ -591,7 +591,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj' differs between the legacy file that used to hold func_ov081_02127558 and the one that held _ZN8daGmch_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
     "The 8 RAW notes above describe what `tubuild create` produced. That output was NOT used: at 36 members the generated preamble is unusable, so the merged source was hand-assembled from the 36 shards plus src/d_a_gmch.c in ROM-ascending order. Read the file's own header comment for what was and was not reconciled.",
     "MEASURED, and it is the one thing in this TU that is not a shard's own spelling: `#include \"common.h\"` sits BEFORE daGmch_c.h. common.h and math/Matrix.h both define Matrix4x3 under the single MATRIX4X3_DEFINED guard and whichever is seen first stands. daGmch_c.h reaches math/Matrix.h through dExtSimpleModel_c.h, so without that line ordinal 34 (_ZN8daGmch_c13InitResourcesEv) sees the structured Matrix3x3+Vector3 spelling, splits `mMatrix = IDENTITY_MATRIX4X3` into a 9-word ldm/stm plus a CSE tail and comes out 0x1f0 against the cartridge's 0x1d4 -- 35/36. The shards reached the flat s32[12] spelling through decl_common.h -> common.h; this include replaces that route and restores 36/36.",
-    "decl_common.h is deliberately NOT included. It declares 7 of this TU's 26 auto-named members and 3 of those 7 contradict the byte-matched definitions: func_ov081_02126950 as (void*, void*) against (int*, void*), func_ov081_02127708 as int(char*) against void(C*), and func_ov081_0212777c as (void*, int) against (char*, int). Including it would be three `illegal function overloading` errors pointed at the definitions rather than at the header, which is the ov002/Player and ov006/dScMgLuigi_c precedent.",
+    "decl_common.h is deliberately NOT included. It declares 7 of this TU's 26 auto-named members and 3 of those 7 contradict the byte-matched definitions: func_ov081_02126950 as (void*, void*) against (int*, void*), func_ov081_02127708 as int(char*) against void(C*), and func_ov081_0212777c as (void*, int) against (char*, int). Including it would be three `illegal function overloading` errors pointed at the definitions rather than at the header, which is the ov002/daPly_c and ov006/dScMgLuigi_c precedent.",
     "Static-initializer fold: src/unnamed/ov081/__sinit_ov081_021284f0.c is retired; its five file handles (model 0x2fd, animations 0x300/0x301/0x2fe/0x2ff in construction order), six registration nodes, eighteen PMF literals, the nine {enter, update} state pairs at 0x02128f40 and the draw-offset Vector3 at 0x02128ef8 are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. The offset stays a real Vector3: brace init is constant initialization -- .data image, no .init action, no registration -- so a one-slot GmchDrawReg sentinel's ctor emits the three stores and the declared-ahead Vector3 earns only the registration, whose reference lands on _ZN7Vector3D1Ev directly (this TU's own vague-linkage copy is the pre-existing deadstrip-duplicate). The sentinel's 1-byte bss is a homeless deadstrip. EnterState1 is the table's lone void-returning half and is cast to the int StatePmf. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_d_a_gmch.cpp. Emitted temps need no defined_symbol_renames on this base (@1070-@1074/@1110 nodes, @1076-@1080 literals are all unused).",
     "HISTORICAL PACKAGING OBSERVATION (prior worker, not a current validation result): LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
     "Native metadata continuation: leaf _ZTS8daGmch_c, _ZTI8daGmch_c and complete _ZTV8daGmch_c are no longer deadstrip-data; ancestor ABI passengers retain their canonical providers. The public vtable symbol stays at0x02128c04 while the native object begins at0x02128bfc and occupies132bytes. The existing18PMF constants,712-byte initializer,ctor and268-byte BSS remain compiled by this TU. Source reconstruction remains partial: inherited include ordering, Fix12 bridges, raw state views/model cache, EnterState1 return-type PMF cast and GmchDrawReg sentinel are unchanged. Current complete-ROM proof and exact base are recorded in the new experiment; earlier packaging observations are historical.",
@@ -2256,7 +2256,7 @@
       "source": "0x02128c50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daGmch_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8daGmch_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
       "target_module": "overlay(81)",
       "target_address": "0x02127a7c"
@@ -2336,7 +2336,7 @@
       "source": "0x02128c70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
       "target_module": "main",
       "target_address": "0x02010130"

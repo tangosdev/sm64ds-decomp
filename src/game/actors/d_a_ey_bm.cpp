@@ -3,7 +3,7 @@
  *
  * It flies straight at 10.0 along the pitch and yaw it spawned with
  * (mPrevAngleX / mPrevAngleY) and bursts (particle 0x45) when it touches
- * ground or a wall, when it hurts a Mario (Player::Hurt, not while he is
+ * ground or a wall, when it hurts a Mario (daPly_c::Hurt, not while he is
  * vanished), or after 150 frames.
  *
  * ov071 is mixed (COFFIN / SCUTTLEBUG / MR_I / BIG_MR_I / MR_I_PROJECTILE).
@@ -23,7 +23,7 @@
  * - DaEyBmVector3Words, not Vector3: a Vector3 stack local would
  *   instantiate its vague-linkage D1 into this TU. EyBmVec3's
  *   declared-not-defined destructor is that D1's alias.
- * - Player::Hurt stays mangled: by-value Fix12<int> is wall 6az.
+ * - daPly_c::Hurt stays mangled: by-value Fix12<int> is wall 6az.
  * - The UpdateDiscreteNoLava veneer stays because
  *   the named method is WRONG-DEST (ROM 0x02038420).
  * - data_ov071_021230b8 is this TU's sinit-constructed bss;
@@ -37,7 +37,7 @@
 #include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
@@ -181,8 +181,8 @@ void daEyBm_c::UpdateShadow() {
 }
 
 /*
- * 0x02121ba4, size 0xc8. Player::Hurt retains the measured by-value Fix12
- * ABI seam; Player itself and all accessed fields are the real type. */
+ * 0x02121ba4, size 0xc8. daPly_c::Hurt retains the measured by-value Fix12
+ * ABI seam; daPly_c itself and all accessed fields are the real type. */
 // @symbol _ZN8daEyBm_c10HurtPlayerEv
 
 void daEyBm_c::HurtPlayer() {
@@ -197,7 +197,7 @@ void daEyBm_c::HurtPlayer() {
     if (mdCcAcPos_c.hitFlags & 0x8000)
         return;
 
-    Player *player = (Player *)found;
+    daPly_c *player = (daPly_c *)found;
     if (player->mIsVanish)
         return;
 

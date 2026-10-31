@@ -45,7 +45,7 @@ struct daNknk_c : dEnemyBase_c {
     s32             mSafePosX;               /* 0x3a8 */
     s32             mSafePosY;               /* 0x3ac */
     s32             mSafePosZ;               /* 0x3b0 */
-    Player         *mClosestPlayer;          /* 0x3b4 */
+    daPly_c *mClosestPlayer;                 /* 0x3b4 */
     s32             mPlayerDist;             /* 0x3b8 */
     s32             mAnimSpeed;              /* 0x3bc */
     s16             mAimAngle;               /* 0x3c0 */
@@ -63,7 +63,7 @@ struct daNknk_c : dEnemyBase_c {
     virtual ~daNknk_c() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
-    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

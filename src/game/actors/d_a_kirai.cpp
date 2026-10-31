@@ -24,7 +24,7 @@ enum daKirai_c_AssetId { ASSET_KOOPA_BOMB_BMD = 0x0382 };
 #include "daKirai_c.h"
 #include "common.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Particle__System.h"
 #include "math/MtxStack.h"
 
@@ -160,7 +160,7 @@ void daKirai_c::Rearm() {
 // @symbol _ZN9daKirai_c10StateSpentEv
 void daKirai_c::StateSpent() {
     Vector3 v;
-    Player *player;
+    daPly_c *player;
     daKirai_c *bestActor;
     daKirai_c *actor;
     int best;
@@ -265,7 +265,7 @@ void daKirai_c::StateArmed() {
     hurtPos.x = mPosX;
     hurtPos.y = mPosY;
     hurtPos.z = mPosZ;
-    ((Player *)a)->Hurt(hurtPos, 2, 0xc000, 1, 0, 1);
+    ((daPly_c *)a)->Hurt(hurtPos, 2, 0xc000, 1, 0, 1);
     Disarm();
 }
 

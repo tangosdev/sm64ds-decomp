@@ -92,8 +92,8 @@
       "id": "BAKUBAKU-CONTACT-CONTRACT-1015",
       "kind": "correctness",
       "location": "src/game/actors/d_a_bakubaku.cpp:021113fc and Hurt declaration",
-      "reason": "The declaration is int(Player*,void*,u32,int,u8,u8,u8); all seven arguments and discarded result remain. Existing collision-owner validity assumptions are unchanged; no null branch is introduced. The current header native Fix12<int> by-value call remains pending. Configured mangled text does not prove original type spelling or uniquely prove u8.",
-      "summary": "Both contact paths check the actual dActor_c actorID before the Player cast; the local Hurt declaration agrees with its current definition."
+      "reason": "The declaration is int(daPly_c*,void*,u32,int,u8,u8,u8); all seven arguments and discarded result remain. Existing collision-owner validity assumptions are unchanged; no null branch is introduced. The current header native Fix12<int> by-value call remains pending. Configured mangled text does not prove original type spelling or uniquely prove u8.",
+      "summary": "Both contact paths check the actual dActor_c actorID before the daPly_c cast; the local Hurt declaration agrees with its current definition."
     },
     "BAKUBAKU-HANDLE-FIELDS-001": {
       "disposition": "fixed",
@@ -118,7 +118,7 @@
       "id": "BAKUBAKU-NATIVE-LOCALS-1015",
       "kind": "reconstruction",
       "location": "src/game/actors/d_a_bakubaku.cpp:02111e24/02111830/02111620",
-      "reason": "Wander has two vectors, Dive has five, Surface has three. The splash workspace becomes three named objects reflecting its position, forward offset and rotated offset roles; no original variable names or array spelling are claimed. Every component is assigned before use and duplicate Z stores, initialization order, calls and values remain. New C++ object lifetimes are real; complete emitted lifecycle/cleanup and ordinary object bytes are unchanged. Surface snapshots actual Player scalar subobjects through a character view of the enclosing object, not a fabricated vector or cross-member scalar array.",
+      "reason": "Wander has two vectors, Dive has five, Surface has three. The splash workspace becomes three named objects reflecting its position, forward offset and rotated offset roles; no original variable names or array spelling are claimed. Every component is assigned before use and duplicate Z stores, initialization order, calls and values remain. New C++ object lifetimes are real; complete emitted lifecycle/cleanup and ordinary object bytes are unchanged. Surface snapshots actual daPly_c scalar subobjects through a character view of the enclosing object, not a fabricated vector or cross-member scalar array.",
       "summary": "Ten automatic vector stand-ins become actual Vector3 objects across all three movement methods."
     },
     "BAKUBAKU-PROVENANCE-1015": {
@@ -137,7 +137,7 @@
       "location": "src/game/actors/d_a_bakubaku.cpp shared fields, helpers, resource handles and state installer",
       "next_action": "Continue the separately scoped shared type/interface/state reconstruction with current full consumer proof; preserve the documented boundaries until then.",
       "owner": "codex-bakubaku-native-vectors-root-coordinator1015",
-      "reason": "The new Player representation bridge retains verified offsets0x5c/0x60/0x64. Other inherited casts over flat actor/spawn/target positions, the target-copy scalar walk in02111254, common.h Matrix4x3 aggregate copies, unsigned timer views, StateFn read-back and local resource lifecycle aliases remain unchanged. BakuVec3 static globals retain their existing storage ownership. Native Fix12 calls and shared helper prototype unification remain separate; this is not full class or original-source recovery.",
+      "reason": "The new daPly_c representation bridge retains verified offsets0x5c/0x60/0x64. Other inherited casts over flat actor/spawn/target positions, the target-copy scalar walk in02111254, common.h Matrix4x3 aggregate copies, unsigned timer views, StateFn read-back and local resource lifecycle aliases remain unchanged. BakuVec3 static globals retain their existing storage ownership. Native Fix12 calls and shared helper prototype unification remain separate; this is not full class or original-source recovery.",
       "summary": "Shared scalar/vector/matrix/PMF and handle lifecycle interfaces remain partial under issue3806."
     },
     "BAKUBAKU-SCALAR-003": {

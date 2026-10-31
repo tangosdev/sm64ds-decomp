@@ -83,7 +83,7 @@
     "Vector3_16": "Actual common.h POD of three signed16-bit components, six bytes; distinct from Vector3s. No speculative alias, destructor or helper was added.",
     "initialization": "Translation Vec3_Asr writesXYZ before translation; drift in initializedXYZ then z changed, dp writtenXYZ before distance; collision halfword velocity and hurt position writtenXYZ before use.",
     "flat_boundary": "The actor and player scalar members are not recast as a real Vector3 subobject; existing helper/scalar views remain partial.",
-    "Hurt": "Matches current Player.cpp int(Player*,void*,u32,int,u8,u8,u8) scalar definition; no unique original ABI type-spelling inference."
+    "Hurt": "Matches current d_a_ply_methods.cpp int(daPly_c*,void*,u32,int,u8,u8,u8) scalar definition; no unique original ABI type-spelling inference."
   },
   "whole_object_proof": {
     "compiler": "2004/b56 using official unchanged build_pin.flags_for(source)",
@@ -760,9 +760,9 @@
       "id": "YUREI-HURT-CONTRACT-01",
       "kind": "correctness",
       "disposition": "fixed",
-      "location": "src/game/actors/d_a_yurei_mucho.cpp:Player::Hurt scalar declaration",
+      "location": "src/game/actors/d_a_yurei_mucho.cpp:daPly_c::Hurt scalar declaration",
       "summary": "The local Hurt bridge now agrees with its current reconstructed definition.",
-      "reason": "Actual Player.cpp defines int(Player*,void*,u32,int,u8,u8,u8). The previous void return, const-void position and unsigned trailing words disagree. The new declaration follows the definition, still discards the result, and preserves arguments2/0xc000/1/0/1. Whole-object identity and zero-new declaration gates pass. No unique original signature or native Fix12 call recovery is claimed."
+      "reason": "Actual d_a_ply_methods.cpp defines int(daPly_c*,void*,u32,int,u8,u8,u8). The previous void return, const-void position and unsigned trailing words disagree. The new declaration follows the definition, still discards the result, and preserves arguments2/0xc000/1/0/1. Whole-object identity and zero-new declaration gates pass. No unique original signature or native Fix12 call recovery is claimed."
     },
     {
       "id": "YUREI-CURRENT-PROVENANCE-01",
@@ -809,9 +809,9 @@
       "function-authors.json",
       "include/dEnemyBase_c.h",
       "include/decl_common.h",
-      "src/game/player/Player.cpp"
+      "src/game/player/d_a_ply_methods.cpp"
     ],
-    "obligation": "No Yurei write path in retained144; shared dependency overlap still requires eventual fresh composition and proof. This proposal does not finish or shrink full144, nativeYegg3/308, Heap, Player lifecycle or ARM7."
+    "obligation": "No Yurei write path in retained144; shared dependency overlap still requires eventual fresh composition and proof. This proposal does not finish or shrink full144, nativeYegg3/308, Heap, daPly_c lifecycle or ARM7."
   },
   "evidence": {
     "build/yurei-native-local-vectors1015/baseline/proof.json": {
@@ -919,7 +919,7 @@
     "Formal independent acceptance",
     "Complete class/ABI/field/storage reconstruction",
     "Public push/PR/private validation/merge",
-    "Completion of retained Chomp20, Player lifecycle, full144, nativeYegg3/308, Heap or remainingARM7 work"
+    "Completion of retained Chomp20, daPly_c lifecycle, full144, nativeYegg3/308, Heap or remainingARM7 work"
   ],
   "historical_original_epoch": {
     "output_commit": "3b5d6bd7e447aee1e808c651068d263b11864930",

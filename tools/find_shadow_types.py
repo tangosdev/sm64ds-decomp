@@ -36,8 +36,8 @@ none, which is how this ended up being a tool instead of a regex.
 
 USAGE
 -----
-    python tools/find_shadow_types.py src/game/player/Player.cpp
-    python tools/find_shadow_types.py src/game/player/Player.cpp --twins --format json
+    python tools/find_shadow_types.py src/game/player/d_a_ply_methods.cpp
+    python tools/find_shadow_types.py src/game/player/d_a_ply_methods.cpp --twins --format json
     git ls-files 'src/**/*.cpp' | python tools/find_shadow_types.py --files-from -
 
 Always exits 0: this is a survey, not a gate.

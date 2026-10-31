@@ -56,10 +56,10 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN15daObjIceBlock_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN15daObjIceBlock_c15OnHitByMegaCharER7daPly_c",
       "address": "0x02127ccc",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN15daObjIceBlock_c15OnHitByMegaCharER6Player.cpp",
+      "legacy_source": "src/_ZN15daObjIceBlock_c15OnHitByMegaCharER7daPly_c.cpp",
       "ordinal": 3
     },
     {

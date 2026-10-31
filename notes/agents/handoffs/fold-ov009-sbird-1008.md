@@ -25,7 +25,7 @@ conversion.
 - `d_a_s_bird.cpp`: `func_ov009_021116ec` / `func_ov009_021115d8` converted
   from `extern "C"` helpers to `daSBird_c` members (PMF ordinals 0/1 of the
   same `data_ov009_02113c48` table), fully memberized; 8/8 TEXT-VERIFIED.
-  The player's position stays an opaque `p2 + 0x5c` read -- `Player` is
+  The player's position stays an opaque `p2 + 0x5c` read -- `daPly_c` is
   incomplete in this TU and pulling the header in is a different campaign.
 - `include/daSBird_c.h`: four member declarations under the virtuals.
   Helper names are not recovered, so members keep their addresses (S33):

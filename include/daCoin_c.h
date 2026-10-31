@@ -106,7 +106,7 @@ struct daCoin_c : dActor_c {
     virtual s32  Behavior();         /* slot  6 */
     virtual s32  Render();           /* slot  9 */
     virtual s32  OnYoshiTryEat();         /* slot 18 */
-    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
 
     /* Per-frame helpers and the nine state handlers the behavior table
      * (data_ov002_0210dc70) dispatches through. The ROM names no symbol for
@@ -119,9 +119,9 @@ struct daCoin_c : dActor_c {
     void func_ov002_020b1384();
     void func_ov002_020b13e0();
     void func_ov002_020b14d8();
-    void func_ov002_020b1674(Player *player);
-    void func_ov002_020b16c4(Player *player);
-    void func_ov002_020b1884(Player *player);
+    void func_ov002_020b1674(daPly_c *player);
+    void func_ov002_020b16c4(daPly_c *player);
+    void func_ov002_020b1884(daPly_c *player);
     int func_ov002_020b19dc();
     void func_ov002_020b1a60();
     void func_ov002_020b1ad4();

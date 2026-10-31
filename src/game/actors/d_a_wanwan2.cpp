@@ -48,7 +48,7 @@
  *   include/decl_common.h declares them that way and check_decl_agreement
  *   compares the two. func_ov100_02143aa4 and func_ov100_02143ae0 are the
  *   state pair's members, called through ChompPmfSelf rather than as methods.
- * - Player::Hurt, which takes a Fix12<int> parameter, stays spelled as a
+ * - daPly_c::Hurt, which takes a Fix12<int> parameter, stays spelled as a
  *   mangled extern-C free function.
  * - func_ov100_02143b68 reaches the link positions and the link models'
  *   translations through two raw char pointers that start at the chomp,
@@ -78,7 +78,7 @@
 #include "SharedFilePtr.h"
 #include "PathPtr.h"
 #include "dBgCh_Lin.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "daStar_c.h"
 #include "dActor_c.h"
 #include "dCc_c.h"
@@ -112,7 +112,7 @@ enum {
     daWanwan2_SND_COIN_SPAWN  = 0x3a    /* Behavior's COIN spawn (played whether or not Spawn returned an actor) */
 };
 
-/* Three plain words retained for the Player::Hurt ABI bridge and chain-link
+/* Three plain words retained for the daPly_c::Hurt ABI bridge and chain-link
    arithmetic below; the collision offset uses the real Vector3 interface. */
 struct Vec3i { s32 x, y, z; };
 
@@ -257,7 +257,7 @@ extern "C" int func_ov100_02143370(char *self)
    at the actor whose uniqueID is in mdCcAcPos_c.otherOwner, if it still
    exists. Any of these hits sets mHaltTimer to 90 and the scale to 2.0,
    which Behavior eases back to 1.0: the explosion bit, the mega-character bit,
-   or the egg bit when that actor is a YOSHI_EGG. Otherwise, a Player who is
+   or the egg bit when that actor is a YOSHI_EGG. Otherwise, a daPly_c who is
    not vanished (mIsVanish) is hurt from the chomp's position. Was a C
    source; its `enum Bool` comparison temporaries are kept. */
 enum Bool { FALSE, TRUE };
@@ -265,7 +265,7 @@ enum Bool { FALSE, TRUE };
 extern "C" void func_ov100_0214344c(daWanwan2_c *self)
 {
     Vector3 v;
-    Player *other;
+    daPly_c *other;
 
     int flags;
     u32 id;
@@ -276,7 +276,7 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
     self->mdCcAcPos_c.SetPosRelativeToActor(v);
     id = self->mdCcAcPos_c.otherOwner;
     if (id == 0) return;
-    other = static_cast<Player *>(dActor_c::FindWithID(id));
+    other = static_cast<daPly_c *>(dActor_c::FindWithID(id));
     if (other == 0) return;
     flags = self->mdCcAcPos_c.hitFlags;
     if (flags & daWanwan2_HIT_EXPLOSION) {
@@ -616,7 +616,7 @@ int daWanwan2_c::Render()
    (0x190000) the index advances (back to 0 at mNumPathNodes) and the next
    node is fetched; mTargetAngle is the horizontal angle to the node,
    mPrevAngleY eases toward it and mAngleY copies mPrevAngleY. The model
-   matrices are rebuilt, and the collision body is updated only when a Player
+   matrices are rebuilt, and the collision body is updated only when a daPly_c
    exists and is not vanished. */
 int daWanwan2_c::Behavior()
 {
@@ -714,7 +714,7 @@ int daWanwan2_c::Behavior()
         func_ov100_02143b68((char *)this);
         mdCcAcPos_c.Clear();
 
-        Player *p = ClosestPlayer();
+        daPly_c *p = ClosestPlayer();
         if (p != 0 && p->mIsVanish == 0) {
             mdCcAcPos_c.Update();
         }

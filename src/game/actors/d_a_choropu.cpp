@@ -4,7 +4,7 @@ struct Callback;
 }
 struct Vector3_16f;
 /* Monty Mole (daChoropu_c) and the rock it throws (daChoro_Rock_c), ov080.
- * The mole stays underground until the nearest Player is 250..1500 units
+ * The mole stays underground until the nearest daPly_c is 250..1500 units
  * away and it holds the turn, then emerges, throws, leaps, and dives,
  * passing the turn on. A group's knock-backs (mTimesHit) spawn a 1-Up
  * (actor 0x114) at 7. Behavior indexes data_ov080_02128438 by mState.
@@ -20,7 +20,7 @@ struct Vector3_16f;
 // leftovers:
 // - func_ov080_02124418 stays free. Its first argument is a daChoro_Rock_c,
 //   so it is not a daChoropu_c method.
-// - Player::Hurt and Player::Bounce retain scalar mangled declarations for
+// - daPly_c::Hurt and daPly_c::Bounce retain scalar mangled declarations for
 //   their by-value Fix12 parameters. Throw's spawn id stays
 //   `py ? 0x137 : 0x137`.
 // - LAUND() in func_ov080_02124088 keeps the cylinder flags, mFlags and
@@ -32,7 +32,7 @@ struct Vector3_16f;
 //   0x2d1, rock model 0x2d6, animations 0x2d2..0x2d5.
 // - SetAnim's flag word is 0 in InitResources and 0x40000000 in the state
 //   handlers. Collision words 0x200000 (mole) and 0x200004 (rock), and
-//   Player::Hurt's (2, 0xc000, 1, 0, 1) / (1, 0xc000, 1, 0, 1), are still
+//   daPly_c::Hurt's (2, 0xc000, 1, 0, 1) / (1, 0xc000, 1, 0, 1), are still
 //   literals. Sound ids 0xd2, 0xd5, 0x116, 0x1d and particles 0x29, 0x2a,
 //   0x2b are named only by when they fire.
 // - pad_0d0 is untouched. data_ov080_0212767c and data_ov080_021276c4
@@ -55,7 +55,7 @@ enum daChoropu_c_AssetId {
 #include "decl_Player.h"
 #include "SharedFilePtr.h"
 #include "dCc_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
@@ -179,9 +179,9 @@ void daChoropu_c::func_ov080_02123860()
 /* State 4 (Wait) update handler (table row 4, data_ov080_02127f98).
  *
  * dExtFrameCtrl_c file 0x2d3 (data_ov080_021283d0). Plays the animation out and then
- * goes to state 5 (Leap); it goes there early when the nearest Player is within a
+ * goes to state 5 (Leap); it goes there early when the nearest daPly_c is within a
  * quarter turn (< 0x4000 = 90 degrees) of the way the mole faces (mAngleY) and
- * less than 500 units (0x1f4000) away horizontally. With no Player it just waits for the
+ * less than 500 units (0x1f4000) away horizontally. With no daPly_c it just waits for the
  * animation to end. */
 void daChoropu_c::func_ov080_02123924()
 {
@@ -192,7 +192,7 @@ void daChoropu_c::func_ov080_02123924()
         return;
     }
     {
-        Player *p = ClosestPlayer();
+        daPly_c *p = ClosestPlayer();
         Vector3 v;
         Fix12i *q;
         if (p == 0) return;
@@ -220,9 +220,9 @@ void daChoropu_c::func_ov080_02123924()
  * 10 units (0xa000) above its position, with the angle triple (mAngleX, mAngleY +
  * 0x400, mAngleZ) and the mole's area. The rock is then given horizontal speed
  * 30 units/frame (0x1e000) and vertical speed 4 units (0x4000) plus 4% of the
- * distance to the nearest Player (that distance capped at 600 units = 0x258000),
+ * distance to the nearest daPly_c (that distance capped at 600 units = 0x258000),
  * and the sound effect 0xd2 plays at the mole.
- * When the animation finishes: Player closer than 1000 units (0x3e8000) -> state 5
+ * When the animation finishes: daPly_c closer than 1000 units (0x3e8000) -> state 5
  * (Leap), otherwise state 4 (Wait). */
 void daChoropu_c::func_ov080_02123a34()
 {
@@ -302,7 +302,7 @@ void daChoropu_c::func_ov080_02123a34()
  * When the animation finishes, the effect ID is cleared and the next state is picked:
  *   - mGroupMode == 2: random, one in three each: state 3 (ThrowRock), 4 (Wait),
  *     5 (Leap);
- *   - otherwise state 3 when there is no Player or the Player is within a quarter turn
+ *   - otherwise state 3 when there is no daPly_c or the daPly_c is within a quarter turn
  *     (< 0x4000) of the way the mole faces, state 4 (Wait) when it is behind. */
 void daChoropu_c::func_ov080_02123c24()
 {
@@ -358,7 +358,7 @@ void daChoropu_c::func_ov080_02123c24()
     }
 
     {
-        Player *player = ClosestPlayer();
+        daPly_c *player = ClosestPlayer();
         if (player == 0) {
             mState = daChoropu_ST_THROW_ROCK;
             mAnmModel.SetAnim((BCA_File *)data_ov080_021283e0.filePtr, 0x40000000, 0x1000, 0);
@@ -388,16 +388,16 @@ void daChoropu_c::func_ov080_02123c24()
 // @symbol _ZN11daChoropu_c19func_ov080_02123eccEv
 /* State 1 (Hidden) update handler (table row 1, data_ov080_02127f88).
  *
- * The mole is underground. Nothing happens unless the nearest Player is within 1500
- * units (0x5dc000) horizontally (no Player counts as exactly 1500, so no) and this
+ * The mole is underground. Nothing happens unless the nearest daPly_c is within 1500
+ * units (0x5dc000) horizontally (no daPly_c counts as exactly 1500, so no) and this
  * mole holds the turn (mHasTurn == 1). Then:
- *   - Player 250 units (0xfa000) or more away: start emerging -- state 2, animation
- *     file 0x2d4, face the Player (mAngleY and mPrevAngleY), enable the collision
+ *   - daPly_c 250 units (0xfa000) or more away: start emerging -- state 2, animation
+ *     file 0x2d4, face the daPly_c (mAngleY and mPrevAngleY), enable the collision
  *     cylinder, set the mFlags bit, sound effect 0x116 at the mole;
- *   - Player closer than 250 units: stay hidden and pass the turn on (func_ov080_02124360). */
+ *   - daPly_c closer than 250 units: stay hidden and pass the turn on (func_ov080_02124360). */
 void daChoropu_c::func_ov080_02123ecc()
 {
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     int dist;
     if (p == 0) dist = 0x5dc000;
     else
@@ -407,7 +407,7 @@ void daChoropu_c::func_ov080_02123ecc()
     if (dist >= 0xfa000) {
         mState = daChoropu_ST_EMERGE;
         mAnmModel.SetAnim((BCA_File *)data_ov080_021283d8.filePtr, 0x40000000, 0x1000, 0);
-        Player *p2 = ClosestPlayer();
+        daPly_c *p2 = ClosestPlayer();
         mAngleY = Vec3_HorzAngle(&mPos, &p2->mPos);
         {
             u32 *a = (u32 *)((int)&mdCcAc_c.flags);
@@ -459,7 +459,7 @@ void daChoropu_c::func_ov080_02123fcc()
 
 // @symbol _ZN11daChoropu_c19func_ov080_02124088Ev
 /* The mole has been knocked back underground (called from func_ov080_02124208 on a
- * hit, a stomp, or contact while the Player is Metal or Mega).
+ * hit, a stomp, or contact while the daPly_c is Metal or Mega).
  *
  * Back to state 1 (Hidden) with animation file 0x2d4 at frame 0, collision cylinder
  * disabled, mFlags bit cleared, sound effect 0xd5 at the mole, and a dust puff
@@ -549,24 +549,24 @@ void daChoropu_c::func_ov080_02124088()
  * hit flags (mdCcAc_c.hitFlags):
  *   - any bit of 0x66fe0, the vulnerability mask InitResources registers: the mole is
  *     knocked underground (func_ov080_02124088);
- *   - otherwise nothing unless bit 0x400000 (the Player) is set;
- *   - Player stomped the mole (JumpedOnByPlayer): knocked underground, then
- *     Player::Bounce is called with 0x28000 (40.0 read as a Fix12);
- *   - Player is Vanish (mIsVanish): no effect;
- *   - Player is Metal (mIsMetal): knocked underground;
- *   - hit by a Mega Player (bit 0x10): sound effect 0x1d, IncMegaKillCount, knocked
+ *   - otherwise nothing unless bit 0x400000 (the daPly_c) is set;
+ *   - daPly_c stomped the mole (JumpedOnByPlayer): knocked underground, then
+ *     daPly_c::Bounce is called with 0x28000 (40.0 read as a Fix12);
+ *   - daPly_c is Vanish (mIsVanish): no effect;
+ *   - daPly_c is Metal (mIsMetal): knocked underground;
+ *   - hit by a Mega daPly_c (bit 0x10): sound effect 0x1d, IncMegaKillCount, knocked
  *     underground;
- *   - anything else: Player::Hurt, with the mole's position and the arguments
+ *   - anything else: daPly_c::Hurt, with the mole's position and the arguments
  *     (2, 0xc000, 1, 0, 1), which are not decoded here. */
 void daChoropu_c::func_ov080_02124208()
 {
-    Player *p;
+    daPly_c *p;
     unsigned int id = mdCcAc_c.otherOwner;
 
     if (id == 0)
         return;
 
-    p = (Player *)dActor_c::FindWithID(id);
+    p = (daPly_c *)dActor_c::FindWithID(id);
     if (p == 0)
         return;
 
@@ -720,8 +720,8 @@ s32 daChoropu_c::Behavior()
 // @symbol _ZN14daChoro_Rock_c8BehaviorEv
 /* The rock's per-frame update (vtable slot 6).
  *
- * If the Player touches the rock (otherOwner found, hitFlags bit 0x400000) it is hurt
- * with Player::Hurt (arguments (1, 0xc000, 1, 0, 1), not decoded here -- the mole
+ * If the daPly_c touches the rock (otherOwner found, hitFlags bit 0x400000) it is hurt
+ * with daPly_c::Hurt (arguments (1, 0xc000, 1, 0, 1), not decoded here -- the mole
  * passes 2 for the first one) when it is Metal, or when it is not Vanish. On the
  * ground (mWithMeshClsn.IsOnGround) a big rock (mIsSmall == 0) first spawns two
  * small rocks (actor 0x137, spawn parameter 1) at its own position, each with a
@@ -735,7 +735,7 @@ s32 daChoro_Rock_c::Behavior()
 
     u32 id = mdCcAc_c.otherOwner;
     if (id != 0) {
-        Player *player = (Player *)FindWithID(id);
+        daPly_c *player = (daPly_c *)FindWithID(id);
         if (player != 0 && (mdCcAc_c.hitFlags & daChoropu_HIT_PLAYER)) {
             if (player->mIsMetal) {
                 Vector3 pos;

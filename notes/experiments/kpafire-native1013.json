@@ -4,7 +4,7 @@
   "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3762",
   "coordinator": "codex-kpafire-native-coordinator1013",
   "source_completion": "partial",
-  "summary": "Use existing native actor, collision and Player interfaces at 32 Bowser fire call sites and remove eight duplicate mangled declarations. Source-only continuation; no headers, manifest, ownership or policies change.",
+  "summary": "Use existing native actor, collision and daPly_c interfaces at 32 Bowser fire call sites and remove eight duplicate mangled declarations. Source-only continuation; no headers, manifest, ownership or policies change.",
   "source": "src/actors/daKpaFire_c.cpp",
   "source_sha256": "b1422ba0c990c5cd29e4f51e9e6e4b5c7e5021886905374f9b057fffd2566a2d",
   "producer_sessions": [
@@ -26,7 +26,7 @@
     "_ZNK10dBgCh_Actr10IsOnGroundEv": 3,
     "_ZN8dActor_c15FindWithActorIDEjPS_": 1,
     "_ZN8dActor_c10FindWithIDEj": 2,
-    "_ZN6Player4BurnEv": 1
+    "_ZN7daPly_c4BurnEv": 1
   },
   "predecessor_tasks": [
     "bowserfire-cpp1013"
@@ -95,7 +95,7 @@
       "disposition": "fixed",
       "location": "notes/experiments/kpafire-native1013.json",
       "summary": "Current-main ancestry repaired by composing actual607 while preserving historicalffb2 proof.",
-      "reason": "The changed TextureSequence header is actually consumed through Player.h; fresh current objects and complete metadata/storage/typed graphs are identical, and scoped current gates pass. Historical global build is not represented as current."
+      "reason": "The changed TextureSequence header is actually consumed through daPly_c.h; fresh current objects and complete metadata/storage/typed graphs are identical, and scoped current gates pass. Historical global build is not represented as current."
     },
     {
       "disposition": "fixed",
@@ -549,8 +549,8 @@
           "before": "9c61119c5d5b5467b9b2c81c2645eec22db0adb9",
           "current": "dc35f608718ce03f9e0be91dcab71463d80b2be2",
           "consumer_chain": [
-            "src/actors/daKpaFire_c.cpp includes Player.h",
-            "include/Player.h:32 includes TextureSequence.h"
+            "src/actors/daKpaFire_c.cpp includes daPly_c.h",
+            "include/daPly_c.h:32 includes TextureSequence.h"
           ],
           "change": "Three BTP_File field names and explanatory comments; actual header is consumed and fresh objects must be measured."
         }
@@ -659,7 +659,7 @@
       "id": "KPFN-004",
       "kind": "correctness",
       "location": "notes/experiments/kpafire-native1013.json",
-      "reason": "The changed TextureSequence header is actually consumed through Player.h; fresh current objects and complete metadata/storage/typed graphs are identical, and scoped current gates pass. Historical global build is not represented as current.",
+      "reason": "The changed TextureSequence header is actually consumed through daPly_c.h; fresh current objects and complete metadata/storage/typed graphs are identical, and scoped current gates pass. Historical global build is not represented as current.",
       "summary": "Current-main ancestry repaired by composing actual607 while preserving historicalffb2 proof."
     },
     "KPFN-PROV-001": {

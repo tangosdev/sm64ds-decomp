@@ -16,7 +16,7 @@
 
 #include "daObjLava_c.h"
 #include "SpawnInfo.h"
-#include "Player.h"
+#include "daPly_c.h"
 
 enum { kLavaBubbleEffect = 0xb7 };
 
@@ -49,7 +49,7 @@ s32 daObjLava_c::InitResources() {
 s32 daObjLava_c::Behavior() {
     /* The ROM forms &player->mPosX once and loads all three words off it, which
      * is what taking the position as a Vector3 does; three separate member
-     * loads off the Player pointer keep the 0x5c/0x60/0x64 offsets instead. */
+     * loads off the daPly_c pointer keep the 0x5c/0x60/0x64 offsets instead. */
     Vector3 *pos = &ClosestPlayer()->mPos;
     mEffectHandle = func_02022c3c(mEffectHandle, kLavaBubbleEffect, pos->x, pos->y, pos->z, 0);
     return 1;

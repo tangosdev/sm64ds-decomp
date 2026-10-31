@@ -271,7 +271,7 @@ int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
 }
 
 /* ROM ordinal 8 -- ov002 0x020b5f9c. The mesh callback's real body: when the
- * touching actor is the Player (actorID 0xbf) it becomes mRider and the
+ * touching actor is the daPly_c (actorID 0xbf) it becomes mRider and the
  * timeout reloads to 5. The `eq` staging is load-bearing: `if (actorID ==
  * 0xbf)` folds to a 0x1c body; the ROM's 0x28 keeps the widened bool. */
 // @symbol _ZN17daObjFloatBoard_c9OnStoodOnEP8dActor_c

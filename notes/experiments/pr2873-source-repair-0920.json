@@ -1274,7 +1274,7 @@
           {
             "off": 116,
             "type": 2,
-            "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "sym": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             "addr": 33620272,
             "add": 0
           },
@@ -1330,7 +1330,7 @@
           {
             "off": 84,
             "type": 2,
-            "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "sym": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
             "addr": 33620308,
             "add": 0
           },
@@ -2045,7 +2045,7 @@
           },
           {
             "offset": 116,
-            "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "sym": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             "addend": 0
           },
           {
@@ -2085,7 +2085,7 @@
           },
           {
             "offset": 84,
-            "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "sym": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
             "addend": 0
           },
           {

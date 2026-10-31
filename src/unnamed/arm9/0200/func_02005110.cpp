@@ -2,7 +2,7 @@
 #include "types.h"
 #include "cstd.h"
 #include "dCamera_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "math/CalcLib.h"
 
 extern "C" {
@@ -43,7 +43,7 @@ int func_02005110(dCamera_c *cam) {
         aim.x = eye.x;
         aim.y = eye.y;
         aim.z = eye.z;
-        if (((Player *)cam->mTargetPlayer)->mOwlFarCamera != 0) {
+        if (((daPly_c *)cam->mTargetPlayer)->mOwlFarCamera != 0) {
             eyeDist = 0xd0000;
         }
         horzAngle = cam->mTargetPlayer->mAngleY;

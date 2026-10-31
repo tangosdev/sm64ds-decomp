@@ -5,7 +5,7 @@
 #include "dBgActor_c.h"
 #include "dBgW_KcMbg.h"
 
-struct Player;
+struct daPly_c;
 
 /* daObjHatenaSwitch_c is the ROM-proven class identity: the ov002 RTTI at
  * 0x02108e14 names this type and dBgActor_c as its sole base. The factory
@@ -22,7 +22,7 @@ struct daObjHatenaSwitch_c : dBgActor_c {
     u8 mPressedThisFrame;               /* 0x71a */
     u8 mTalking;                        /* 0x71b */
     u16 mSoundDelay;                    /* 0x71c */
-    Player *mTalkingPlayer;             /* 0x720 */
+    daPly_c *mTalkingPlayer;            /* 0x720 */
 
     /* Inline plus the out-of-line InitResources key function makes mwccarm
      * emit retail D1 then D0 without a retained D2 or forcing helper. */

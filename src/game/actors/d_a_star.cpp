@@ -63,7 +63,7 @@ enum daStar_c_AssetId {
 #include "dBgCh_Lin.h"
 #include "dBgCh_Gnd.h"
 #include "decl_Actor.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Message.h"
 #include "SaveData.h"
 #include "SharedFilePtr.h"
@@ -230,7 +230,7 @@ extern StarModelFilePtr data_ov002_0211093c;
 extern StarAnimationFileHandle data_ov002_02110924;
 extern StarAnimationFileHandle data_ov002_02110964;
 extern SharedFilePtr data_ov002_0210d9a8;
-/* Numbering pin: func_ov002_020d718c is now a Player member (see Player.h);
+/* Numbering pin: func_ov002_020d718c is now a daPly_c member (see daPly_c.h);
    no call in this TU uses the free spelling anymore. The declaration stays,
    spelled exactly as it was, because each named parameter advances mwccarm's
    @NNN counter: removing or un-naming it renumbers this TU's .data temps
@@ -1295,7 +1295,7 @@ int daStar_c::func_ov002_020ea3a4() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c19func_ov002_020ea100Ev
 /* STATE_COLLECT_BEGIN: the player has touched the star. func_ov002_020e73ac
- * gives the talk state and Player::Unk_020c9e5c asks whether the player is in
+ * gives the talk state and daPly_c::Unk_020c9e5c asks whether the player is in
  * the no-control state of that kind. If it is, the sound object is spawned (mode 1 for talk states 1 and 2,
  * mode 2 for 0), the star jumps to 30.0 above the player, is shown at scale
  * 1.0 (3.0 for a mega player), and plays the pose animation (another one under
@@ -1314,7 +1314,7 @@ struct VObj {
 }
 
 void daStar_c::func_ov002_020ea100() {
-    Player *common;
+    daPly_c *common;
     u8 state;
 
     common = mPlayer;
@@ -1441,7 +1441,7 @@ void daStar_c::func_ov002_020ea06c() {
  * (func_ov002_020e8244) and finishes the collection. For the Power Star
  * outside VS, star id 0, kind 9 and the levels func_ov002_020e9630 accepts
  * read the answer to the message into mBits.answer (sound 0x57 for answer 1,
- * 0x5c for 2) and, once Player::Unk_020c9e5c no longer reports the player in
+ * 0x5c for 2) and, once daPly_c::Unk_020c9e5c no longer reports the player in
  * that no-control state, move to STATE_SAVE_MESSAGE. Other stars only keep
  * advancing the animation here, except a marker-placed star (home state 9) and
  * star id 8, which call func_ov002_020e8618 (it finishes once the animation
@@ -1696,7 +1696,7 @@ void daStar_c::func_ov002_020e9840() {
 
     {
         int r0 = (data_0209f2d8 == 1) ? 1 : 0;
-        Player *r3 = static_cast<Player *>(actor->mHitActor);
+        daPly_c *r3 = static_cast<daPly_c *>(actor->mHitActor);
         if (r0 == 0) return;
         if (r3 == 0) return;
 
@@ -1882,7 +1882,7 @@ void daStar_c::func_ov002_020e9448() {
  * A kind 6 star with a live marker then calls the marker's Collect. */
 void daStar_c::func_ov002_020e930c() {
     void* o;
-    Player *b;
+    daPly_c *b;
     int flags;
     unsigned int id;
 
@@ -1890,7 +1890,7 @@ void daStar_c::func_ov002_020e930c() {
     if (id == 0) return;
     o = dActor_c::FindWithID(id);
     if (o == 0) return;
-    b = (Player *)o;
+    b = (daPly_c *)o;
 
     flags = mdCc_c.hitFlags;
     if (flags & 0x400000) {
@@ -1941,9 +1941,9 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
     if (found) {
         ((daStarBase_c *)((char *)found))->LinkSilverStarAndStarMarker((char *)0);
     }
-    mPlayer = (Player *)p;
+    mPlayer = (daPly_c *)p;
 
-    if (((Player *)p)->IsOnShell() != 0) {
+    if (((daPly_c *)p)->IsOnShell() != 0) {
         int b = (actorID == ACTOR_SILVER_STAR);
         if (b) {
             mState = STATE_SPIN_AND_END;
@@ -1970,22 +1970,22 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
                 if (!t2) {
                     if (mHomeState != STATE_WAIT_MARKER) {
                         if (mStarID == 0) {
-                            sb = ((Player *)p)->SetNoControlState(r4, 0x186, 0);
+                            sb = ((daPly_c *)p)->SetNoControlState(r4, 0x186, 0);
                             Message::PrepareTalk();
                             r5 = 1;
                         } else if (func_ov002_020e9630() != 0) {
-                            sb = ((Player *)p)->SetNoControlState(r4, 0x187, 0);
+                            sb = ((daPly_c *)p)->SetNoControlState(r4, 0x187, 0);
                             Message::PrepareTalk();
                             r5 = 1;
                         } else {
-                            sb = ((Player *)p)->SetNoControlState(r4, -1, 0);
+                            sb = ((daPly_c *)p)->SetNoControlState(r4, -1, 0);
                         }
                         goto after_sc;
                     }
                 }
             }
         }
-        sb = ((Player *)p)->SetNoControlState(r4, -1, 0);
+        sb = ((daPly_c *)p)->SetNoControlState(r4, -1, 0);
     after_sc:;
 
         if (sb == 0) {
@@ -1997,7 +1997,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
             if (!b1) {
                 Event::SetBit(0x1e);
             } else {
-                GiveVsStars(((Player *)p)->mPlayerNo, 1);
+                GiveVsStars(((daPly_c *)p)->mPlayerNo, 1);
             }
         }
         if (r4 == 0) {
@@ -2027,8 +2027,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
                     int rec = SaveData::GetCoinRecord(lvl);
                     if (rec < NumCoins()) {
                         SaveData::SetCoinRecordIfHigher(
-                            lvl,
-                            (u8)(data_0209f358[((Player *)p)->mPlayerNo] & 0xff));
+                            lvl, (u8)(data_0209f358[((daPly_c *)p)->mPlayerNo] & 0xff));
                     }
                 }
             }
@@ -2041,7 +2040,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
     }
     func_02012790(0x2d);
     mState = STATE_COLLECT_BEGIN;
-    mPlayer = (Player *)p;
+    mPlayer = (daPly_c *)p;
     {
         int b4 = (data_0209f2d8 == 1);
         if (!b4) {
@@ -2055,7 +2054,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
     {
         int b5 = (actorID == ACTOR_STAR);
         if (b5 && r4 != 0) {
-            ((Player *)p)->Heal(0x880);
+            ((daPly_c *)p)->Heal(0x880);
         }
     }
     func_ov002_020e9464();
@@ -2070,7 +2069,7 @@ s32 daStar_c::OnYoshiTryEat() {
     return 4;
 }
 
-// @symbol _ZN8daStar_c13OnTurnIntoEggER6Player
+// @symbol _ZN8daStar_c13OnTurnIntoEggER7daPly_c
 /* daStar_c::OnTurnIntoEgg -- vtable slot 19, verified against ov002 relocs.txt:
  * _ZTV8daStar_c (0x0210ab3c) + 0x4c -> 0x020e8edc, exactly this placeholder's
  * former address (former name func_ov002_020e8edc). The ROM body is a
@@ -2078,8 +2077,7 @@ s32 daStar_c::OnYoshiTryEat() {
  * `this`/`player` straight through unchanged.
  * Matched byte-for-byte with mwccarm 2004/b56 (ov002).
  */
-void daStar_c::OnTurnIntoEgg(Player &player)
-{
+void daStar_c::OnTurnIntoEgg(daPly_c &player) {
     return func_ov002_020e8e80((int)&player);
 }
 
@@ -2094,7 +2092,7 @@ void daStar_c::func_ov002_020e8e80(int a) {
     if (marker != 0)
         marker->LinkSilverStarAndStarMarker(0);
 
-    mPlayer = (Player *)a;
+    mPlayer = (daPly_c *)a;
     func_ov002_020e9464();
     mFlags &= ~0x40000;
     func_ov002_020e8ef0((void *)a);
@@ -3089,7 +3087,7 @@ void daStarBase_c::SpawnRedCoinStarIfNecessary()
  * popup 200.0 above the player. Sets the relink flag and picks a marker with
  * func_ov002_020e7554. */
 void daStar_c::func_ov002_020e7218(char* player, int gate) {
-    Player *a = (Player *)player;
+    daPly_c *a = (daPly_c *)player;
     if (gate == 0) {
         struct Vector3 pos[2];
         bool b;
@@ -3182,15 +3180,15 @@ void daStar_c::func_ov002_020e7104(int r1){
  * spawns the sound object, stops the star, records the star as collected and
  * plays sound 0x2d. */
 void daStar_c::func_ov002_020e7090(int arg) {
-    mPlayer = (Player *)arg;
-  mPlayer->mFlags |= CUTSCENE_FLAG;
-  mFlags |= CUTSCENE_FLAG;
-  data_0209b454 |= CUTSCENE_FLAG;
-  func_ov002_020e6fbc(0);
-  mSoundObjMode = 1;
-  func_ov002_020e9464();
-  CollectStarInCurLevel(mStarID);
-  func_02012790(0x2d);
+    mPlayer = (daPly_c *)arg;
+    mPlayer->mFlags |= CUTSCENE_FLAG;
+    mFlags |= CUTSCENE_FLAG;
+    data_0209b454 |= CUTSCENE_FLAG;
+    func_ov002_020e6fbc(0);
+    mSoundObjMode = 1;
+    func_ov002_020e9464();
+    CollectStarInCurLevel(mStarID);
+    func_02012790(0x2d);
 }
 
 /* -------------------------------------------------------------------------- */

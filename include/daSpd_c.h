@@ -1,5 +1,5 @@
-#ifndef SCUTTLEBUG_H
-#define SCUTTLEBUG_H
+#ifndef DASPD_C_H
+#define DASPD_C_H
 
 #include "types.h"
 #include "dActor_c.h"
@@ -10,9 +10,9 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   daSpd_c_classInit  fBase_c::operator new(940 = 0x3ac), dActor_c::dActor_c(), stores _ZTV10Scuttlebug,
+ *   daSpd_c_classInit  fBase_c::operator new(940 = 0x3ac), dActor_c::dActor_c(), stores _ZTV7daSpd_c,
  *                 then the four members below in this order.
- *   ~Scuttlebug   the same members destroyed in reverse, then ~dActor_c.
+ *   ~daSpd_c   the same members destroyed in reverse, then ~dActor_c.
  *
  * SIZE 0x3ac is the factory's own literal, and the trailing byte fields close exactly on it.
  *
@@ -24,14 +24,10 @@
  * object for the SPIDER registry profile at 0x02122c08.
  */
 
-/* The ROM's RTTI name for this class is daSpd_c (_ZTI7daSpd_c), while the
- * established function-symbol view spells its methods as Scuttlebug.  Scuttlebug
- * is the compiler-facing compatibility name; config/arm9/overlays/ov071/symbols.txt
- * deliberately aliases its vtable view (_ZTV10Scuttlebug) to the cartridge's
- * _ZTV7daSpd_c address.  The alias is vtable-only: _ZTS/_ZTI are named under the
- * cartridge spelling alone.  d_a_spd.cpp compiles this class with RTTI off so
- * the inline destructor does not emit homeless _ZTS10Scuttlebug / _ZTI10Scuttlebug. */
-struct Scuttlebug : dActor_c {
+/* ROM RTTI: _ZTS7daSpd_c 0x02122bf0, _ZTI7daSpd_c 0x02122bfc, vtable
+ * _ZTV7daSpd_c 0x02122c2c. d_a_spd.cpp emits all three and the manifest
+ * compares them against the cartridge. */
+struct daSpd_c : dActor_c {
     /* Actor this bug copies its pose from, then clears when it lets go. */
     dActor_c *mParent;                       /* 0x0d0 */
     dExtAnmModel_c mAnmModel;                /* 0x0d4 */
@@ -39,7 +35,7 @@ struct Scuttlebug : dActor_c {
     dCcAc_c mdCcAc_c;  /* 0x160 */
     dBgCh_Actr mWithMeshClsn;              /* 0x194 */
     /* Drop-shadow matrix, flat words. A Matrix4x3 member would run ~Vector3
-       from ~Scuttlebug, and the structured spelling breaks the store. */
+       from ~daSpd_c, and the structured spelling breaks the store. */
     s32 mShadowMtx[12];                      /* 0x350 */
     /* Current row of data_ov071_02122fa8. Two pointer-to-member calls. */
     void *mStateRow;                         /* 0x380 */
@@ -63,12 +59,11 @@ struct Scuttlebug : dActor_c {
 
     /* Inline: mwcc emits D1 then D0 and no D2, which is the cartridge pair
        (0x0211f000, 0x0211f048). The body stays on this line so the header
-       field walk still sees the brace. d_a_spd.cpp compiles the class with
-       RTTI off, so the coined name does not emit _ZTI10Scuttlebug. */
-    virtual ~Scuttlebug() {} /* slots 16 (D1), 17 (D0) */
+       field walk still sees the brace. */
+    virtual ~daSpd_c() {} /* slots 16 (D1), 17 (D0) */
 
     virtual int   OnYoshiTryEat();               /* slot 18 */
-    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
     virtual int   OnAimedAtWithEgg();            /* slot 29 */
 
     int Behavior();
@@ -109,13 +104,12 @@ struct Scuttlebug : dActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Scuttlebug_size_must_be_0x3ac[sizeof(Scuttlebug) == 0x3ac ? 1 : -1];
+typedef char Scuttlebug_size_must_be_0x3ac[sizeof(daSpd_c) == 0x3ac ? 1 : -1];
 #endif
 
-/* OnYoshiTryEat is the key function once ~Scuttlebug is inline, so d_a_spd.cpp
- * emits _ZTV10Scuttlebug and the manifest externalizes it: RTTI off leaves a
- * zero typeinfo word where retail has _ZTI7daSpd_c. This declaration is the
- * public address point. */
-extern int _ZTV10Scuttlebug[];
+/* OnYoshiTryEat is the key function once ~daSpd_c is inline, so d_a_spd.cpp
+ * emits _ZTV7daSpd_c (compared against the cartridge and discarded by the
+ * manifest). This declaration is the public address point. */
+extern int _ZTV7daSpd_c[];
 
-#endif /* SCUTTLEBUG_H */
+#endif /* DASPD_C_H */

@@ -53,7 +53,7 @@ enum daObjKi_Hasira_c_AssetId { ASSET_KI_HASIRA_BMD = 0x063d, ASSET_KI_HASIRA_KC
 
 #include "daObjKi_Hasira_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
@@ -135,7 +135,7 @@ s32 daObjKi_Hasira_c::Behavior() {
     if (offScreen)
         return 1;
 
-    Player *target = mTarget;
+    daPly_c *target = mTarget;
     if (target != 0) {
         s32 *p = &target->mPosX;
         targetPos.x = p[0];

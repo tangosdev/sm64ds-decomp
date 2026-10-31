@@ -75,7 +75,7 @@
  *
  * THE SIGNATURES ARE NOT dActor_c.h's, whatever this banner used to say.  Both
  * were copied from include/dActor_c.h's slots 27/28 back when nothing in this
- * branch declared them, and both have now come off.  Slot 27's `Player &` went
+ * branch declared them, and both have now come off.  Slot 27's `daPly_c &` went
  * when the base declared 27: neither body reads a second argument register.
  * Slot 28's `dActor_c &other` goes in this commit, on dScMgBase_c's evidence
  * alone -- its body at ov004:0x020af04c writes r1 (`add r1, r4, #0x4000`)

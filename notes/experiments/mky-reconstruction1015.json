@@ -12,7 +12,7 @@
   },
   "changes": [
     "Typed 16-byte entry/update PMF descriptor; all 22 targets return int and results remain discarded.",
-    "Recovered Player pointers at 0xd0 and 0x3a8, signed path index, substate and reset countdown names. Names are inferred.",
+    "Recovered daPly_c pointers at 0xd0 and 0x3a8, signed path index, substate and reset countdown names. Names are inferred.",
     "Ordinary PathPtr GetNode/NumNodes calls and bone-5 indexing.",
     "Native dBgPi copy construction/destruction replaces both shadow result layouts and manual vtable/destructor operations.",
     "Typed cap actor +0xd0 write and Matrix4x3 pointer result; removed dead shadows/declarations and state7 pointer laundering."
@@ -361,16 +361,16 @@
       "all_22_adjustments_zero": true
     },
     "mouth_writer": {
-      "definition": "src/game/player/Player.cpp:17389",
+      "definition": "src/game/player/d_a_ply_methods.cpp:17389",
       "symbol": "func_ov002_020d7030",
       "address": "0x020d7030",
       "size": "0x5c",
       "behavior": [
         "sets target actor mFlags bit 0x20000",
         "stores first argument at target+0xd0",
-        "stores target at first_argument+0x360 (Player::mObjInMouth)"
+        "stores target at first_argument+0x360 (daPly_c::mObjInMouth)"
       ],
-      "player_caller": "Player::func_ov002_020d6998 at Player.cpp:17191 passes self as first argument",
+      "player_caller": "daPly_c::func_ov002_020d6998 at d_a_ply_methods.cpp:17191 passes self as first argument",
       "monkey_reader": "daMky_c::func_ov030_02111bc4 copies mEatingPlayer into mPlayer under flag0x20000",
       "other_mPlayer_writers": [
         "ClosestPlayer()",

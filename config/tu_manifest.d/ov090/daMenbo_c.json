@@ -196,10 +196,10 @@
       "ordinal": 21
     },
     {
-      "symbol": "_ZN9daMenbo_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN9daMenbo_c13OnTurnIntoEggER7daPly_c",
       "address": "0x02132620",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN9daMenbo_c13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN9daMenbo_c13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 22
     },
     {

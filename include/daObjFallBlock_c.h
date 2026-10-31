@@ -154,7 +154,7 @@ struct daObjFallBlock_c : dBgActor_c {
        virtual, and the override keyword isn't required to re-add it. */
     s32 Behavior();                               /* slot  6 */
     s32 Render();                                 /* slot  9 */
-    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero

@@ -12,7 +12,7 @@
 #include "decl_common.h"
 #include "daBgSnmHed_c.h"
 #include "SpawnInfo.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dExtAnmTexPat_c.h"
 #include "dBgCh_Gnd.h"
@@ -204,7 +204,7 @@ int daBgSnmHed_c::State0() {
         return 1;
     }
     if (DecIfAbove0_Byte(&mStateTimer) == 0) {
-        Player *player = ClosestPlayer();
+        daPly_c *player = ClosestPlayer();
         if (Vec3_HorzDist(&mPos, &player->mPos) < 0x118000 && player->StartTalk(*this, true) != 0) {
             mTalkPlayer = player;
             SetState(1);

@@ -5,7 +5,7 @@
 #include "dBgActor_c.h"
 #include "dCcAc_c.h"
 
-struct Player;
+struct daPly_c;
 
 /* Ice block (profile ICE_BLOCK_LL). Fire melts it -- it shrinks over 30
  * frames and is gone -- and an explosion or a mega character shatters it;
@@ -37,7 +37,7 @@ struct daObjIceBlock_c : dBgActor_c {
     virtual s32 CleanupResources();
     virtual s32 Behavior();
     virtual s32 Render();
-    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
     virtual void Kill();                          /* slot 31 */
 
     void ReleaseStar();

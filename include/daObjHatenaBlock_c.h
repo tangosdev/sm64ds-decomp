@@ -64,7 +64,7 @@ struct daObjHatenaBlock_c : dBgActor_c {
     void OnGroundPounded(dActor_c &other);     /* slot 21 */
     int OnAttacked1(dActor_c &other);          /* slot 22 */
     void OnKicked(dActor_c &other);            /* slot 24 */
-    void OnHitByMegaChar(Player &player);      /* slot 27 */
+    void OnHitByMegaChar(daPly_c &player);     /* slot 27 */
     int OnHitFromUnderneath(dActor_c &other);  /* slot 28 */
 
     /* func_ov102_* helpers keep linker names -- no semantic names are known.

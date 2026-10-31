@@ -63,21 +63,21 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN9daLuigi_c13ExecuteMirrorEP6Player",
+      "symbol": "_ZN9daLuigi_c13ExecuteMirrorEP7daPly_c",
       "address": "0x02111288",
       "size": "0x00000034",
       "legacy_source": "src/func_ov055_02111288.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN9daLuigi_c11EnterMirrorEP6Player",
+      "symbol": "_ZN9daLuigi_c11EnterMirrorEP7daPly_c",
       "address": "0x021112bc",
       "size": "0x00000008",
       "legacy_source": "src/func_ov055_021112bc.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player",
+      "symbol": "_ZN9daLuigi_c8SetStateEP12daLuigiStateP7daPly_c",
       "address": "0x021112c4",
       "size": "0x00000054",
       "legacy_source": "src/func_ov055_021112c4.cpp",
@@ -241,7 +241,7 @@
       "source": "0x02111a94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daLuigi_c11EnterMirrorEP6Player",
+      "symbol": "_ZN9daLuigi_c11EnterMirrorEP7daPly_c",
       "addend": 0,
       "target_module": "ov055",
       "target_address": "0x021112bc"
@@ -251,7 +251,7 @@
       "source": "0x02111a9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daLuigi_c13ExecuteMirrorEP6Player",
+      "symbol": "_ZN9daLuigi_c13ExecuteMirrorEP7daPly_c",
       "addend": 0,
       "target_module": "ov055",
       "target_address": "0x02111288"

@@ -51,7 +51,7 @@ enum d_a_fish_AssetId {
 
 #include "daFish_c.h"
 #include "common.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -218,7 +218,7 @@ void daFish_c::StateWaitForPlayer() {
     int n;
     int i;
     unsigned int kind;
-    Player *player;
+    daPly_c *player;
 
     player = this->ClosestPlayer();
     if (player == 0)
@@ -314,7 +314,7 @@ void daFish_c::StateIdle() {
         this->mAnmModel.speed = 0x1000;
     }
 
-    Player *p = this->ClosestPlayer();
+    daPly_c *p = this->ClosestPlayer();
     if (p) {
         s16 ang = Vec3_HorzAngle(&this->mPos, &p->mPos);
         if (ApproachLinear(this->mPrevAngleY, ang, 0x400) != 0) {
@@ -341,7 +341,7 @@ void daFish_c::StateIdle() {
 // @symbol _ZN8daFish_c9StateFleeEv
 /* Fish state 4: flee from the player until far enough away. */
 void daFish_c::StateFlee() {
-    Player *pl;
+    daPly_c *pl;
     Vector3 v;
     if (this->mStateTimer == 0) {
         this->mMaxSpeed = (RandomIntInternal(&data_0209e650) & 0x3fff) + 0xd000;

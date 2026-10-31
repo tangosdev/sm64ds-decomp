@@ -30,7 +30,7 @@ struct daObjKm2_Agaru_c : dBgActor_c {
     virtual s32 Render();
 
     /* The mesh's stood-on callback (ov045 0x021114c8, installed with
-       func_020393c4) and the test it forwards to (0x021114a8): a Player
+       func_020393c4) and the test it forwards to (0x021114a8): a daPly_c
        aboard sets mStoodOn. */
     void OnStoodOn(dActor_c *);
     static void StoodOnCallback(void *, daObjKm2_Agaru_c *, dActor_c *);

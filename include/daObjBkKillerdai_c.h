@@ -4,7 +4,7 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-struct Player;
+struct daPly_c;
 
 /* Bullet Bill launcher. The tail word is the unique ID of the bill it
  * last fired: InitResources clears it, Behavior hands it to FindWithID.
@@ -34,7 +34,7 @@ struct daObjBkKillerdai_c : dBgActor_c {
     virtual s32 CleanupResources();               /* slot  3 */
     virtual s32 Behavior();                       /* slot  6 */
     virtual s32 Render();                         /* slot  9 */
-    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
     /* dBgActor_c's own slot, overridden here: _ZTV18daObjBkKillerdai_c+0x7c relocates
        to 0x02126e58 while _ZTV10dBgActor_c+0x7c relocates to _ZN10dBgActor_c4KillEv. An
        override, so it adds no slot and no field. */

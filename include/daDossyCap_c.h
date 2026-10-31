@@ -43,7 +43,7 @@
  * registry profile.
  */
 struct daDossyCap_c : dActor_c {
-    /* Used both as a Player* (Behavior chases it through +0x360) and as a raw
+    /* Used both as a daPly_c* (Behavior chases it through +0x360) and as a raw
        word copied into the spawned cap actor's own 0xd0. Kept s32 as the flat
        header had it; the pointer reads go through explicit casts. */
     s32                mEatingPlayer;           /* 0x0d0 */

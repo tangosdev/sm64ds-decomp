@@ -21,7 +21,7 @@
  *
  * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
  * names -- dActor_c ends at exactly 0x0d0. The first derived word is
- * the Player pointer written by the mouth/grab machinery and read by
+ * the daPly_c pointer written by the mouth/grab machinery and read by
  * func_ov030_02111bc4 when the mouth-state flag is set. Consumers that used the old duplicated names
  * were repointed to the inherited dActor_c/fBase_c names: mActorID ->
  * actorID, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
@@ -51,7 +51,7 @@ struct daMky_c : dActor_c {
     };
 
     /* Member names below are inferred from use, not recovered identifiers. */
-    Player *mEatingPlayer; /* 0x0d0 -- player holding this actor in its mouth */
+    daPly_c *mEatingPlayer; /* 0x0d0 -- player holding this actor in its mouth */
     /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0xd4 -- a relocation the ROM build
        checks. */
     dExtAnmModel_c mAnmModel; /* 0x0d4 */
@@ -89,7 +89,7 @@ struct daMky_c : dActor_c {
     s32 mPathNode;               /* 0x3a0 -- 02111b20 GetNode index */
     /* 021141a8 stores &data_ov030_02115e0c[idx]; 02114170/02114134 call through. */
     StateFunctions *mStateDesc; /* 0x3a4 */
-    Player *mPlayer;            /* 0x3a8 -- closest/contact player or mEatingPlayer copy */
+    daPly_c *mPlayer;           /* 0x3a8 -- closest/contact player or mEatingPlayer copy */
     /* The cap-thief group. Only actor 0x10b (the MONKEY_THIEF profile) runs it: it reads the
        closest player's fBase_c::param1 (the character number, guarded < 3) into
        mCapPlayerNo, spawns actor 0x10d -- Mario's lost cap -- with
@@ -107,7 +107,7 @@ struct daMky_c : dActor_c {
     u8  mActionTimer;       /* 0x3c6 -- EnterState10 arms 0x1e; DecIfAbove0_Byte */
     u8 mSubState;           /* 0x3c7 -- this TU switches on it; not padding */
     u8  mHasSpawnedCap;     /* 0x3c8 */
-    u8 mPlayerWasOwnCharacter; /* 0x3c9 -- state 3 update: Player mCharacter == param1 */
+    u8 mPlayerWasOwnCharacter; /* 0x3c9 -- state 3 update: daPly_c mCharacter == param1 */
     u8  mAnimIdx;           /* 0x3ca -- 02111a00 indexes data_ov030_02115bc8 */
     u8 mResetTimer;         /* 0x3cb -- counts down from 0x96 before perch-reset checks */
 
@@ -163,7 +163,7 @@ struct daMky_c : dActor_c {
     virtual s32  Render();           /* slot  9 */
     virtual void OnPendingDestroy();      /* slot 12 */
     virtual s32  OnYoshiTryEat();         /* slot 18 */
-    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

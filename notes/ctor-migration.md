@@ -301,7 +301,7 @@ Disassembled, all three allocating-labelled functions share one shape:
 | label | prologue |
 |---|---|
 | `_ZN10dScStage_cC3Ev` 0x0202e088 | `ldr r0, [pc]` → `bl fBase_c::op new` → `movs r4,r0; beq ret` → construct |
-| `_ZN6PlayerC3Ev` 0x020e6c0c | same, then `bl` Player's own ctor |
+| `_ZN7daPly_cC3Ev` 0x020e6c0c | same, then `bl` daPly_c's own ctor |
 | `_ZN9dCamera_cC1Ev` 0x0200e444 | same, construction fully inline |
 
 Three tells, each individually fatal to the constructor reading:
@@ -318,7 +318,7 @@ Three tells, each individually fatal to the constructor reading:
 
 Corroboration already in-tree:
 `config/name-roundtrip-baseline.json` records that a TU claiming
-`_ZN6PlayerC3Ev` emitted `['_ZN6PlayerC1Ev', '_ZN6PlayerC2Ev']` — ask the
+`_ZN7daPly_cC3Ev` emitted `['_ZN7daPly_cC1Ev', '_ZN7daPly_cC2Ev']` — ask the
 pinned compiler for a C3 and it hands you the ordinary pair, because **C3
 has no source form under 2004/b56** and never did here. The labels were
 project-assigned guesses about intent, and they guessed "constructor" for
@@ -339,7 +339,7 @@ p->T::T();                        -> illegal use of type-name
 ```
 
 So a folded factory is **not writable as real C++ under this toolchain**,
-period. `Camera_Spawn`, `dScStage_c`'s and `Player`'s factories stay hand-written
+period. `Camera_Spawn`, `dScStage_c`'s and `daPly_c`'s factories stay hand-written
 `.c` files — like fBase_c's constructor, a permanent asm-or-C transcription,
 with the reason recorded here so nobody retries the recipe hoping for a
 different answer. What IS recoverable from them is knowledge, not code:

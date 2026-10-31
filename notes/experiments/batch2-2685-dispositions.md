@@ -60,11 +60,11 @@ not present them yet. Each stays as written; none is claimed to be impossible.
 
 | id | location | field / access | owning surface | issue | next owner |
 | --- | --- | --- | --- | --- | --- |
-| B2-RF-01 | `src/game/actors/d_a_bombking.cpp:37` | `Player+8`, `+0x6ce`, `+0xc8`; `dCamera_c+0x114`/`+0x154` | Player, dCamera_c | #2479 | unassigned |
-| B2-RF-02 | `src/game/actors/d_a_mip.cpp:75` | `Player+8`, `+0x6d9`, `+0x6ce` | Player | #2414 | unassigned |
-| B2-RF-03 | `src/game/actors/d_a_mky.cpp:22` | `Player+8`, cap `+0xc8` | Player, cap class | #2410 | unassigned |
-| B2-RF-04 | `src/game/actors/d_a_sanbo.cpp:65` | `Player+8` | Player | #2477, #2558 | unassigned |
-| B2-RF-05 | `src/game/actors/d_a_wanwan.cpp:31` | `ClosestPlayer()+0x6fb` byte | Player | none filed | none |
+| B2-RF-01 | `src/game/actors/d_a_bombking.cpp:37` | `daPly_c+8`, `+0x6ce`, `+0xc8`; `dCamera_c+0x114`/`+0x154` | daPly_c, dCamera_c | #2479 | unassigned |
+| B2-RF-02 | `src/game/actors/d_a_mip.cpp:75` | `daPly_c+8`, `+0x6d9`, `+0x6ce` | daPly_c | #2414 | unassigned |
+| B2-RF-03 | `src/game/actors/d_a_mky.cpp:22` | `daPly_c+8`, cap `+0xc8` | daPly_c, cap class | #2410 | unassigned |
+| B2-RF-04 | `src/game/actors/d_a_sanbo.cpp:65` | `daPly_c+8` | daPly_c | #2477, #2558 | unassigned |
+| B2-RF-05 | `src/game/actors/d_a_wanwan.cpp:31` | `ClosestPlayer()+0x6fb` byte | daPly_c | none filed | none |
 | B2-RF-06 | `src/game/actors/d_a_obj_bk_dossunbar.cpp:19` | `unk_0a4` is `dActor_c` X speed, not this class's field | dActor_c | none filed | none |
 | B2-RF-07 | `src/game/actors/d_a_wanwan.cpp:34` | `(Vector3 *)&mPosX` / `&mScaleX`; `Pos()` not on this branch's `dActor_c` | dActor_c | #2566 | @andrewboudreau |
 | B2-RF-08 | `src/game/actors/d_a_s_cre.cpp:13` | `Pos()` written as a leaf overlay of `mPosX/Y/Z` | dActor_c | #2566 | @andrewboudreau |
@@ -72,10 +72,10 @@ not present them yet. Each stays as written; none is claimed to be impossible.
 
 **B2-RF-05, B2-RF-06 and B2-RF-09 do not yet satisfy `deferred`.** That
 disposition requires a named issue and next owner. Until one exists for the
-Player byte-field surface, the `dActor_c` `unk_0a4` speed field and the
+daPly_c byte-field surface, the `dActor_c` `unk_0a4` speed field and the
 `data_0209f32c` global, those three are `deferred` in intent and `open` by the
-letter of the rule. The Player offsets recur across B2-RF-01..05, so one issue
-covering the Player field surface would close four of them at once.
+letter of the rule. The daPly_c offsets recur across B2-RF-01..05, so one issue
+covering the daPly_c field surface would close four of them at once.
 
 ## C. Retained interface dependencies (`deferred`)
 

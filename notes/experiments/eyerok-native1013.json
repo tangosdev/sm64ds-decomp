@@ -4,10 +4,10 @@
   "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
   "base_commit": "ffb2e5f15f4ebdabca35840976fd4e0c247e9e7c",
   "producer_session": "codex-eyerok-native-producer1013",
-  "scope": "Use native dActor_c::Spawn for both IWANTE hands and return new Eyerok() for the factory; remove obsolete raw declarations and correct class/RTTI descriptions.",
+  "scope": "Use native dActor_c::Spawn for both IWANTE hands and return new daIwante_c() for the factory; remove obsolete raw declarations and correct class/RTTI descriptions.",
   "completion": "partial",
-  "source": "src/actors/Eyerok.cpp",
-  "manifest": "config/tu_manifest.d/ov066/Eyerok.json",
+  "source": "src/actors/daIwante_c.cpp",
+  "manifest": "config/tu_manifest.d/ov066/daIwante_c.json",
   "source_sha256": "ccd727297d21b464a1c2cb64907dea0e79d82aa574ba183f8d01e3bf2409ea9a",
   "manifest_sha256": "24ee8d238bac887c00708b17e7a67fe798c7c048d46a3d3be8169cf029d13ed6",
   "production_inputs": "Pinned current main and actual merged production tooling; no private override or shared-header/symbol-ledger edit.",
@@ -216,8 +216,8 @@
     "historical_tool1c": "1c1b6279ab77cd9ae0da481fccf5959cd30cfe19",
     "actual_objisolate": "C:\\tmp\\sm64ds-eyerok-native1013\\tools\\objisolate.py",
     "private_tool_override": false,
-    "source": "src/actors/Eyerok.cpp",
-    "manifest": "config/tu_manifest.d/ov066/Eyerok.json",
+    "source": "src/actors/daIwante_c.cpp",
+    "manifest": "config/tu_manifest.d/ov066/daIwante_c.json",
     "input_mapping_count": 22,
     "initializer_bytes": 1960,
     "initializer_typed_edges": 149,
@@ -234,7 +234,7 @@
     "bss_bytes": 744,
     "metadata": [
       {
-        "symbol": "_ZTV6Eyerok",
+        "symbol": "_ZTV10daIwante_c",
         "bytes": 136,
         "blind": 0,
         "differing_offsets": [
@@ -249,7 +249,7 @@
       }
     ],
     "currentmain_refusals": {
-      "unmodified_manifest": "intact TU preparation refused: ov066/Eyerok compiler-only output: unlicensed function _ZN10dBgActor_cD2Ev has no compiler_only_output policy; unlicensed function _ZN7Vector3C1Ev has no compiler_only_output policy; unlicensed function _ZN9Matrix4x3D1Ev has no compiler_only_output policy",
+      "unmodified_manifest": "intact TU preparation refused: ov066/daIwante_c compiler-only output: unlicensed function _ZN10dBgActor_cD2Ev has no compiler_only_output policy; unlicensed function _ZN7Vector3C1Ev has no compiler_only_output policy; unlicensed function _ZN9Matrix4x3D1Ev has no compiler_only_output policy",
       "mapped_manifest_currentmain_tool": null
     },
     "source_sha256": "ccd727297d21b464a1c2cb64907dea0e79d82aa574ba183f8d01e3bf2409ea9a",
@@ -273,7 +273,7 @@
     "candidate_metadata_equal_to_baseline": true
   },
   "manifest_pairing": "Unchanged main source plus its unchanged manifest prepares normally. Combined native candidate with old manifest refuses three unlicensed lifecycle emissions. The measured 22 input-name mappings and exact compiler-output policies restore ordinary production. Complete ELF files differ structurally; every surviving named symbol, body, storage property and all 756 prepared edges equal baseline. Canonical names, addresses, bindings and storage remain unchanged.",
-  "metadata_limit": "RTTI off emits no _ZTI/_ZTS for the coined Eyerok name. The vtable preamble typeinfo word is zero instead of retail daIwante_c typeinfo 0x0211ad24; this inherited unowned-table mismatch is unchanged. All 128 slot bytes (32 entries) reproduce with zero blind words. Existing externalization keeps the complete retail table; this report does not claim complete emitted metadata equality.",
+  "metadata_limit": "RTTI off emits no _ZTI/_ZTS for the coined daIwante_c name. The vtable preamble typeinfo word is zero instead of retail daIwante_c typeinfo 0x0211ad24; this inherited unowned-table mismatch is unchanged. All 128 slot bytes (32 entries) reproduce with zero blind words. Existing externalization keeps the complete retail table; this report does not claim complete emitted metadata equality.",
   "native_factory_probe": {
     "adopted": true,
     "factory_bytes": 168,
@@ -383,7 +383,7 @@
     "owner": "root enemy-cleanup coordinator / codex-eyerok-native-producer1013",
     "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
     "items": [
-      "Coined Eyerok identity and RTTI-off metadata boundary remain.",
+      "Coined daIwante_c identity and RTTI-off metadata boundary remain.",
       "Raw actor/player/dust-position walks, EVec3/M48/Vec4 scaffolding, PMF/state representation, scalar Fix12 ABI declarations and unnamed helpers remain partial."
     ]
   },
@@ -400,8 +400,8 @@
     "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
   },
   "git_input_blobs": {
-    "src/actors/Eyerok.cpp": "c33e9c304c2978529c0179682c81493cd15988ee",
-    "config/tu_manifest.d/ov066/Eyerok.json": "9b0b5afe9bbb9e0bbb96f7f2319dd9e946ad7664"
+    "src/actors/daIwante_c.cpp": "c33e9c304c2978529c0179682c81493cd15988ee",
+    "config/tu_manifest.d/ov066/daIwante_c.json": "9b0b5afe9bbb9e0bbb96f7f2319dd9e946ad7664"
   },
   "hash_qualification": "source_sha256 and manifest_sha256 record Windows working-file bytes; git_input_blobs and tested_build_trees bind normalized committed inputs.",
   "workflow_gates": {

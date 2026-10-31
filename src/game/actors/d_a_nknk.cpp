@@ -12,7 +12,7 @@
 
 // leftovers:
 // - Particle::System::New / SetSelfDestructFlag, dExtAnmModel_c::SetAnim,
-//   dBgCh_Actr::Init, dActor_c::IsTooFarAwayFromPlayer, Player::Bounce /
+//   dBgCh_Actr::Init, dActor_c::IsTooFarAwayFromPlayer, daPly_c::Bounce /
 //   Hurt and Particle::RunningSlidingDustAt stay mangled. Each passes Fix12<int>
 //   by value (notes/mwccarm-codegen.md 6az), or the header declaration
 //   does not mangle to the ROM symbol. func_0201267c is the bank-3
@@ -53,7 +53,7 @@ enum d_a_nknk_AssetId {
 #include "decl_common.h"
 #include "decl_Enemy.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "decl_ActorBase.h"
 #include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
@@ -147,13 +147,12 @@ s32 daNknk_c::OnYoshiTryEat() {
   return 5;
 }
 
-// @symbol _ZN8daNknk_c13OnTurnIntoEggER6Player
+// @symbol _ZN8daNknk_c13OnTurnIntoEggER7daPly_c
 /* daNknk_c::OnTurnIntoEgg -- vtable slot 19, verified against ov062 relocs.txt:
  * _ZTV8daNknk_c (0x0211dab4) + 0x4c -> 0x02119628, exactly this placeholder's
  * former address (former name func_ov062_02119628).
  */
-void daNknk_c::OnTurnIntoEgg(Player &player)
-{
+void daNknk_c::OnTurnIntoEgg(daPly_c &player) {
     if (mCoinType == 3) {
         if (OnYoshiTryEat() == 6 && !player.IsCollectingCap()) {
             player.RegisterEggCoinCount(0, 0, 1);
@@ -795,15 +794,20 @@ void daNknk_c::func_ov062_021180d4() {
 
 // @symbol _ZN8daNknk_c19func_ov062_02118058Ev
 void daNknk_c::func_ov062_02118058() {
-  Player *o = mClosestPlayer;
-  int d = mPlayerDist;
-  if(o!=0) d=Vec3_Dist(&mPosX, &o->mPosX);
-  if(d>=0x12c000) return;
-  int s=GetSubtraction(mAimAngle, mPrevAngleY);
-  if(s>=0x3000) return;
-  if(mKoopaVariant==1) mState=1;
-  else mState=3;
-  func_ov062_02117994(3);
+    daPly_c *o = mClosestPlayer;
+    int d = mPlayerDist;
+    if (o != 0)
+        d = Vec3_Dist(&mPosX, &o->mPosX);
+    if (d >= 0x12c000)
+        return;
+    int s = GetSubtraction(mAimAngle, mPrevAngleY);
+    if (s >= 0x3000)
+        return;
+    if (mKoopaVariant == 1)
+        mState = 1;
+    else
+        mState = 3;
+    func_ov062_02117994(3);
 }
 
 // @symbol _ZN8daNknk_c19func_ov062_02118004Ei
@@ -844,7 +848,7 @@ void daNknk_c::func_ov062_02117c98()
         v.x = (s16)-0x2000;
         v.y = (s16)turnAround;
         v.z = (s16)turnAround;
-        KillByInvincibleChar(v, *(Player *)found, 0x46000);
+        KillByInvincibleChar(v, *(daPly_c *)found, 0x46000);
         return;
     }
     if (flags & 0x22400) {
@@ -884,7 +888,7 @@ void daNknk_c::func_ov062_02117c98()
             return;
         }
     } else {
-        Player *player = (Player *)found;
+        daPly_c *player = (daPly_c *)found;
         struct { Vec3 sv; Vec3 hv; } L;
         int isPlayer;
         isPlayer = (player->actorID == 0xbf /* PLAYER */) ? 1 : turnAround;
@@ -921,7 +925,7 @@ void daNknk_c::func_ov062_02117c98()
                 mScaleZ = 0x1000;
                 func_0201267c(0x113, &mCamSpacePos);
             }
-            ((Player *)found)->Bounce(0x28000);
+            ((daPly_c *)found)->Bounce(0x28000);
             return;
         }
         if (player->mIsVanish != 0)
@@ -994,7 +998,7 @@ dActor_c *daNknk_c::func_ov062_02117b9c() {
 // @symbol _ZN8daNknk_c19func_ov062_02117b60Ev
 int daNknk_c::func_ov062_02117b60()
 {
-    Player *target = mClosestPlayer;
+    daPly_c *target = mClosestPlayer;
     if (!target) return 0x61a8000;
     return Vec3_Dist(&mPosX, &target->mPosX);
 }

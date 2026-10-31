@@ -46,7 +46,7 @@ enum daC_Jugem_c_AssetId {
 #include "daC_Jugem_c.h"
 #include "common.h"
 #include "dActor_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dCamera_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
@@ -234,7 +234,7 @@ int daC_Jugem_c::StateIntroMain() {
             mVertSpeed = 0;
             mSpeedZ = 0;
             mAngleX = 0;
-            Player *player = ClosestPlayer();
+            daPly_c *player = ClosestPlayer();
             if (player != 0) {
                 func_ov002_020c3e8c(player);
                 data_0209caa0[2] |= 0x80;
@@ -327,7 +327,7 @@ int daC_Jugem_c::StateApproachInit()
    the long approach. */
 int daC_Jugem_c::StateBobMain()
 {
-    Player *pl = ClosestPlayer();
+    daPly_c *pl = ClosestPlayer();
     if (pl == 0) return 1;
 
     mTimer += 1;
@@ -394,7 +394,7 @@ int daC_Jugem_c::StateBobInit()
    0x14 and 0x28..0xee, player angles snapped at 0xf0. */
 int daC_Jugem_c::StateGuideMain()
 {
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     if (p == 0)
         return 1;
     mTimer += 1;
@@ -445,7 +445,7 @@ int daC_Jugem_c::StateGuideInit()
    him, then move on to StateGuide. */
 int daC_Jugem_c::StateTurnMain()
 {
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     if (!p) return 1;
     {
         short v = mAngleY;
@@ -495,7 +495,7 @@ int daC_Jugem_c::StateTurnInit()
    last beat hands off to StateTurn. */
 int daC_Jugem_c::StateArriveMain()
 {
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     if (p == 0)
         return 1;
     {
@@ -538,7 +538,7 @@ int daC_Jugem_c::StateArriveInit()
     typedef struct Vector3 { int x, y, z; } Vector3;
     Vector3 look, pos;
     dCamera_c *cam;
-    Player* player;
+    daPly_c *player;
     mTargetX = -0x5a0000;
     mTargetY = 0x1c0000;
     mTargetZ = 0x1a66000;
@@ -650,7 +650,7 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     typedef struct Vector3 { int x, y, z; } Vector3;
     Vector3 in;
     Vector3 out;
-    Player *p;
+    daPly_c *p;
 
     p = ClosestPlayer();
     if (p == 0) {
@@ -707,7 +707,7 @@ int daC_Jugem_c::StateFlyToPlayerInit()
 #pragma opt_common_subs off
 int daC_Jugem_c::StateHiddenMain()
 {
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     if (p != 0) {
         V3 v = *(V3 *)&p->mPosX;
         if ((data_0209caa0[2] & 0x10000) != 0 &&
@@ -749,7 +749,7 @@ int daC_Jugem_c::StateHoverMain()
     Vector3 in, out, plpos;
     dCamera_c *cam;
     ::Vector3 *src;
-    Player *p;
+    daPly_c *p;
 
     cam = (dCamera_c *)data_0209f318;
     in.x = 0; in.y = 0; in.z = 0;
@@ -831,7 +831,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
     struct Vector3 off;
     struct Vector3 pp;
     struct Vector3 t;
-    Player *pl;
+    daPly_c *pl;
     int p1, p2;
     signed char lvl;
     struct Vector3 *ps;

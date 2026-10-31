@@ -38,7 +38,7 @@ struct daObjSlIceBlock_c : dBgActor_c {
     int InitResources();
     int Render();
 
-    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

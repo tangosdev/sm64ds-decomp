@@ -35,7 +35,7 @@ struct System {
  * section per function in the reverse of source order.
  *
  * Known limits:
- * - Player::Hurt and Particle::System::New stay mangled: each takes Fix12<int> by value
+ * - daPly_c::Hurt and Particle::System::New stay mangled: each takes Fix12<int> by value
  *   (notes/mwccarm-codegen.md 6az). Particle::System::New is declared
  *   with the seven arguments its call sites pass.
  * - data_ov102_0214d70c is this TU's .rodata pair of model-file handles
@@ -48,9 +48,9 @@ struct System {
  * - The manifest pins eight @NNN statics (@721..@735), so the count of
  *   named locals, named parameters, labels and unnamed struct types
  *   ahead of __sinit is load-bearing. Including a header moves it
- *   (measured: Player.h +94, the first pin becomes @815; Sound.h +15), so
- *   Player and Sound stay reached through local mangled externs and
- *   Player::mIsAirborne stays the raw 0x6de read.
+ *   (measured: daPly_c.h +94, the first pin becomes @815; Sound.h +15), so
+ *   daPly_c and Sound stay reached through local mangled externs and
+ *   daPly_c::mIsAirborne stays the raw 0x6de read.
  * - dBgCh_Gnd.h adds 9 to the count. Including it let five mangled
  *   dBgCh_Gnd externs (7 named parameters), a `surface` local in
  *   func_ov102_0214c7fc and an unnamed struct type for `dir` in
@@ -66,7 +66,7 @@ struct System {
 
 #include "common.h"
 #include "daShl_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 
@@ -407,7 +407,7 @@ int daShl_c::func_ov102_0214cf98(dActor_c *player)
 {
     if (mCarrier != 0)
         return 0;
-    mCarrier = static_cast<Player *>(player);
+    mCarrier = static_cast<daPly_c *>(player);
     if (mState != &data_ov102_0214ea48)
         func_ov102_0214d1f8(&data_ov102_0214ea48);
     return 1;
@@ -458,7 +458,7 @@ void daShl_c::func_ov102_0214ce60()
    ridden. */
 void daShl_c::func_ov102_0214cbec()
 {
-    Player *player;
+    daPly_c *player;
     s32 hit;
     u32 id;
     Vector3 v1, v2;
@@ -466,7 +466,7 @@ void daShl_c::func_ov102_0214cbec()
     id = mdCc_c.otherOwner;
     if (id == 0)
         return;
-    player = static_cast<Player *>(dActor_c::FindWithID(id));
+    player = static_cast<daPly_c *>(dActor_c::FindWithID(id));
     if (!player)
         return;
 

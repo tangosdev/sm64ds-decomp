@@ -39,7 +39,7 @@
 #include "daObjFlMaruta_c.h"
 #include "daObj_volcanoCannon_c.h"
 #include "daObjFl_Ring_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 
 struct Vector3_16f;
 
@@ -136,7 +136,7 @@ daObj_volcanoCannon_c::~daObj_volcanoCannon_c()
 extern "C" void func_ov022_02112654(daObj_volcanoCannon_c *c) {
     if (c->mCylinderClsn.otherOwner == 0)
         return;
-    Player *a = static_cast<Player *>(dActor_c::FindWithID(c->mCylinderClsn.otherOwner));
+    daPly_c *a = static_cast<daPly_c *>(dActor_c::FindWithID(c->mCylinderClsn.otherOwner));
     if (a == 0) return;
     unsigned int b = ((dActor_c *)a)->actorID == 0xbf;
     if (b == 0) return;

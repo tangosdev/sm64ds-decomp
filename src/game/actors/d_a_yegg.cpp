@@ -11,8 +11,8 @@ struct Vector3_16f;
  * in daYegg_c.h), and the state number is mState: func_ov002_020ed63c installs
  * a state and runs its enter, func_ov002_020ed684 runs the current execute
  * from Behavior. An egg in state 0 trails the player (mPlayer;
- * func_ov002_020ed0d4, func_ov002_020ed5b0); Player::St_YoshiPower_Init takes
- * one from the Player's held-object queue, sets its 0x100 flag bit and enters
+ * func_ov002_020ed0d4, func_ov002_020ed5b0); daPly_c::St_YoshiPower_Init takes
+ * one from the daPly_c's held-object queue, sets its 0x100 flag bit and enters
  * state 1, where it homes on the nearest actor not yet targeted
  * (func_ov002_020edb3c), and on contact or
  * after five payouts it bursts (func_ov002_020edca4), paying out coins, a
@@ -44,8 +44,8 @@ struct Vector3_16f;
  * last-wins over the whole file.
  *
  * The twenty-four self-first helpers are real daYegg_c members; the two
- * called from Player code (func_ov002_020ed63c by St_YoshiPower_Init,
- * func_ov002_020edca4 by Player.cpp) stay free. All keep their address-based
+ * called from daPly_c code (func_ov002_020ed63c by St_YoshiPower_Init,
+ * func_ov002_020edca4 by d_a_ply_methods.cpp) stay free. All keep their address-based
  * names; the comments say what each does, not what the original called it.
  *
  * Actor targeting uses dActor_c's existing virtual interfaces: slot 30 returns
@@ -67,12 +67,12 @@ struct Vector3_16f;
  * - this list is representative, not exhaustive: the flag and mask
  *   literals (mFlags 0x40000/0x10000000/0x8, the hit flags 0x8000/0x26fe0,
  *   the cylinder words 0x202000/0x200002/0xa08000) are also left numeric, and
- *   the extern-C Fix12 callees include SpawnCoins, Player::Hurt,
+ *   the extern-C Fix12 callees include SpawnCoins, daPly_c::Hurt,
  *   Particle::NewSimple and RunningSlidingDustAt as well.
  * - the particle, sound, shadow and animation-file arguments are
  *   numeric (0x3f..0x42, 0x2c, 0x93, 0x103, the two shared animation files)
  *   and the egg's flag bits 0x100/0x400/0x2000 are named by use only. The IDs'
- *   names are not recovered. 0x100 is set by Player::St_YoshiPower_Init (on the
+ *   names are not recovered. 0x100 is set by daPly_c::St_YoshiPower_Init (on the
  *   egg it takes from the held-object queue); who sets 0x400 and 0x2000 is not
  *   recovered. The "idle" and "moving" animation names say when the code
  *   picks each file, not recovered names.
@@ -86,7 +86,7 @@ struct Vector3_16f;
 #include "nitro/fx/fx.h"
 #include "common.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dBgCh_Gnd.h"
 #include "dActor_c.h"
 #include "dBgCh_Actr.h"
@@ -141,7 +141,7 @@ void func_ov002_020ed63c(daYegg_c *c, int i);
 void func_ov002_020edca4(daYegg_c *self);
 
 /* Data. 0x0210e6b0 and 0x0210eb78 are the two shared animation file
-   handles; Player.cpp's static initializer constructs both. */
+   handles; d_a_ply_methods.cpp's static initializer constructs both. */
 extern SharedFilePtr data_ov002_0210e6b0;
 extern SharedFilePtr data_ov002_0210eb78;
 extern s16 data_ov002_021000a8[];
@@ -159,8 +159,8 @@ extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
    ov079's function there is daBtn_c's hit reaction, which takes the body and
    the actor that hit it -- the call's (actor, egg). */
 extern int RandomIntInternal(int *seed);
-/* Numbering pins: func_ov002_020d5f98/020d6048 are now Player members (see
-   Player.h) and no call in this TU uses these free spellings anymore. The
+/* Numbering pins: func_ov002_020d5f98/020d6048 are now daPly_c members (see
+   daPly_c.h) and no call in this TU uses these free spellings anymore. The
    declarations stay, spelled exactly as they were, because each named
    parameter advances mwccarm's @NNN counter: removing or un-naming them
    renumbers this TU's .data temps and rotates __sinit_d_a_yegg.cpp's pool
@@ -206,7 +206,7 @@ extern void UnloadBlueCoinModel(void *self);
  * store and five destructor calls, every one a consequence of
  * `struct daYegg_c : dEnemyBase_c` and the four members that declaration
  * types, destroyed in reverse declaration order, then dEnemyBase_c; the
- * class adds no member with a destructor of its own -- a Player pointer and
+ * class adds no member with a destructor of its own -- a daPly_c pointer and
  * scalars. D0 is the same destruction followed by the inherited actor-heap
  * operator delete. Being the first out-of-line virtual, it makes this file the
  * key function's home, so the vtable and RTTI are emitted here too. */
@@ -444,10 +444,10 @@ void daYegg_c::func_ov002_020ec978() {
 /* State 2 (WOBBLE), execute. While mWobbling is set it steps the X and Z tilt
  * (mAngleX, mAngleZ) toward 0 by 0x400 a frame (a 64th of a turn) and clears
  * mWobbling once the X tilt and the Y angle are both 0. Otherwise it asks
- * func_ov002_020d5f98 about the Player; on a yes, it sets the tilt from
+ * func_ov002_020d5f98 about the daPly_c; on a yes, it sets the tilt from
  * the answer (b times two entries of the s16 table at 0x021000a8, indexed by
  * a*2) and sets mWobbling. Then, every frame: destroys the egg if
- * func_ov002_020d6048 says no for the Player, clears and updates the
+ * func_ov002_020d6048 says no for the daPly_c, clears and updates the
  * cylinder, moves the egg when it is not on the ground, and runs the ground
  * collision. */
 void daYegg_c::func_ov002_020ec9c4() {
@@ -742,16 +742,16 @@ void daYegg_c::func_ov002_020ecfc8() {
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 /* recovered: shared common types, renamed to Class_Method */
 /* (obsolete provenance) daWarpkun_c::Kill - recovered from vtable slot identity */
-/* State 0 (FOLLOW_PLAYER), execute. `com` is the followed Player. Each call:
- *  - copies the Player's 0xa4/0xa8/0xac words and its horizontal speed;
+/* State 0 (FOLLOW_PLAYER), execute. `com` is the followed daPly_c. Each call:
+ *  - copies the daPly_c's 0xa4/0xa8/0xac words and its horizontal speed;
  *  - while mHoldFreezeTimer is zero (nothing in this file sets it nonzero, so every
  *    call) rebuilds the hold target and the goal angles. The target is the
- *    Player's position plus the vector (0, 0, mHoldOffsetZ = -104 units)
- *    rotated by the egg's eased angles. If the Player's word at +0x37c or
+ *    daPly_c's position plus the vector (0, 0, mHoldOffsetZ = -104 units)
+ *    rotated by the egg's eased angles. If the daPly_c's word at +0x37c or
  *    func_ov002_020cf700 or func_ov002_020d0d2c is nonzero, the goal X/Z
- *    angles are the Player's when the egg is on the ground and -0x4000 (a
- *    quarter turn) and 0 when it is not. Otherwise they are the Player's, and
- *    the goal Y angle becomes the direction from the Player's previous to its
+ *    angles are the daPly_c's when the egg is on the ground and -0x4000 (a
+ *    quarter turn) and 0 when it is not. Otherwise they are the daPly_c's, and
+ *    the goal Y angle becomes the direction from the daPly_c's previous to its
  *    current position when those are at least 0x5000 (5 units) apart
  *    horizontally;
  *  - eases mPos toward the hold target (Math_Function_0203b14c: a third of
@@ -762,18 +762,18 @@ void daYegg_c::func_ov002_020ecfc8() {
  *  - sets the animation: the moving one (file 0x0210e6b0) when mHorzSpeed is
  *    nonzero, else the idle one (0x0210eb78), at a speed of 1.0 to 2.0 that
  *    grows with mHorzSpeed and saturates at 0x20000 (32 units); the speed is
- *    0 while the Player's mIsAirborne is set;
+ *    0 while the daPly_c's mIsAirborne is set;
  *  - for the variant func_ov002_020ec654 calls zero, rewrites the 0xa4/0xac
  *    words as absolute values capped at 0x20000 (32 units) and tilts mAngleX
  *    (negative) and mAngleZ by up to 0xe39 (20 degrees) in proportion to
  *    them; for the other variant it runs func_ov002_020ed738 instead;
  *  - clears the cylinder, and runs the discrete ground collision unless the
- *    Player's mIsNoControl is set or the Player is 0x190000 (400 units) or
+ *    daPly_c's mIsNoControl is set or the daPly_c is 0x190000 (400 units) or
  *    more away. */
 void daYegg_c::func_ov002_020ed0d4()
 {
     struct Vector3 in, out;
-    Player* com;
+    daPly_c *com;
     int* p;
     volatile struct Vector3 t1, t2;
     struct Vector3 v1, v2;
@@ -927,7 +927,7 @@ void daYegg_c::func_ov002_020ed0d4()
 // into both the goal angles and the eased angles.
 void daYegg_c::func_ov002_020ed5b0()
 {
-    Player* src;
+    daPly_c *src;
     int* sp;
     short* m;
     src = mPlayer;
@@ -956,7 +956,7 @@ void daYegg_c::func_ov002_020ed5b0()
 /* ROM ordinal 19 -- func_ov002_020ed63c, 0x020ed63c, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ed63c
-/* Switches to state `i` and runs that state's enter handler. Player's
+/* Switches to state `i` and runs that state's enter handler. daPly_c's
  * St_YoshiPower_Init calls it with state 1 on the egg it holds. */
 extern "C" void func_ov002_020ed63c(daYegg_c *c, int i) { c->mState = i; int j = c->mState; (c->*data_ov002_02110a5c[j].pmf[0])(); }
 
@@ -1004,8 +1004,8 @@ ret0:
  * quarter of the remaining angle, at most 0x1000 (a 16th of a turn) a call
  * (UpdateAngle). On the ground the pair comes from the floor normal
  * (func_02010844 evaluated at the Y angle and at the Y angle minus 0x4000, a
- * quarter turn). In the air it is the Player's own X and Z angles when mState
- * is 0 and there is a Player, and 0 otherwise. */
+ * quarter turn). In the air it is the daPly_c's own X and Z angles when mState
+ * is 0 and there is a daPly_c, and 0 otherwise. */
 void daYegg_c::func_ov002_020ed738() {
     short e4 = 0;
     short e6 = 0;
@@ -1017,7 +1017,7 @@ void daYegg_c::func_ov002_020ed738() {
         e6 = func_02010844(this, &n, (short)(mAngleY - 0x4000));
     } else {
         if (mState == 0) {
-            Player* p = mPlayer;
+            daPly_c *p = mPlayer;
             if (p != 0) {
                 e4 = p->mAngleX;
                 e6 = p->mAngleZ;
@@ -1032,7 +1032,7 @@ void daYegg_c::func_ov002_020ed738() {
 /* ROM ordinal 23 -- func_ov002_020ed7f8, 0x020ed7f8, size 0x1a0 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daYegg_c19func_ov002_020ed7f8Ev
-/* Drop shadow, called from Behavior. Skipped when the followed Player's
+/* Drop shadow, called from Behavior. Skipped when the followed daPly_c's
  * mOpacity is below 1. It probes the floor with a dBgCh_Gnd from 0x28000 (40
  * units) above the egg (its +0x44 is the floor height, dBgCh_Gnd's clsnY);
  * r5 is the egg's height over that floor when one was found (the probe's start
@@ -1041,8 +1041,8 @@ void daYegg_c::func_ov002_020ed738() {
  * units). It fills mShadowMtx with a Y rotation and the position >> 3, then
  * draws the shadow, cylinder or cuboid by the variant bit, unless the egg's
  * flags have 0x40000 (dActor_c.h lists 0x020000 / 0x040000 as yoshi-mouth
- * states written by actor code), or the Player's word at +0x37c is nonzero, or either of
- * func_ov002_020cf700 / func_ov002_020d0d2c says so for the Player. */
+ * states written by actor code), or the daPly_c's word at +0x37c is nonzero, or either of
+ * func_ov002_020cf700 / func_ov002_020d0d2c says so for the daPly_c. */
 void daYegg_c::func_ov002_020ed7f8()
 {
     Vector3 v;
@@ -1086,8 +1086,8 @@ void daYegg_c::func_ov002_020ed7f8()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daYegg_c19func_ov002_020ed998Ev
 /* Places the egg's model matrix, called from Behavior. With
- * daYegg_FLAG_ATTACHED set and a Player, it copies the 12-word matrix
- * pointed to by the Player's mCarryMatrix, shifts
+ * daYegg_FLAG_ATTACHED set and a daPly_c, it copies the 12-word matrix
+ * pointed to by the daPly_c's mCarryMatrix, shifts
  * its translation by (0x3f, 9, 0xb) and applies a ZXY rotation of
  * (-0x49f5, -0xc17, -0x293f), then moves the egg's mPos to the resulting
  * translation << 3 and returns; matrix units are mPos >> 3 throughout.
@@ -1133,7 +1133,7 @@ void daYegg_c::func_ov002_020ed998()
 /* Target search. If five actors have already been targeted it bursts the egg
  * (for the variant func_ov002_020ec654 calls zero) and returns 0. Otherwise it
  * walks the actor list for the nearest actor, closer than `best` (the
- * caller's range), that is not the egg or the followed Player, has profile
+ * caller's range), that is not the egg or the followed daPly_c, has profile
  * bit 0x10000000 and not the off-screen bit 0x8, is not in mTargetedIds and,
  * for the other variant, answers nonzero to vtable slot 20. The winner's
  * uniqueID is appended to mTargetedIds, becomes mTargetId and bumps
@@ -1208,11 +1208,11 @@ end:
 /* The burst. Does nothing if mBurstDone is already set. Otherwise it pays out
  * (func_ov002_020ec728), and when the star bit is set gives up the tracked
  * star slot and spawns a SILVER_STAR (param1 0x10) 40 units above the egg,
- * which func_ov002_020e7218 then takes together with the Player. It then
+ * which func_ov002_020e7218 then takes together with the daPly_c. It then
  * starts four particle effects (ids 0x3f to 0x42) at the egg, marks the egg
  * for destruction, plays Sound::PlayCharVoice id 0x103 at its camera-space
- * position and sets mBurstDone. Stays a free function: Player.cpp calls it
- * on its held object, and Player is not deslopped here. */
+ * position and sets mBurstDone. Stays a free function: d_a_ply_methods.cpp calls it
+ * on its held object, and daPly_c is not deslopped here. */
 extern "C" {
 void func_ov002_020edca4(daYegg_c* self)
 {
@@ -1265,18 +1265,18 @@ void func_ov002_020edca4(daYegg_c* self)
 /* Contact handling, run each frame the egg is flying. The actor that touched
  * the egg's cylinder is looked up from the cylinder's otherOwner
  * (mdCcAc_c.otherOwner, +0x134); the answer is 0 and nothing happens if
- * there is none or it is the followed Player. When it is some other actor of
- * type PLAYER (any Player-type actor except the followed one):
+ * there is none or it is the followed daPly_c. When it is some other actor of
+ * type PLAYER (any daPly_c-type actor except the followed one):
  * if the cylinder's hit flags (mdCcAc_c.hitFlags, +0x130) have bit 0x8000 the
  * egg enters state 3 and returns 1; if none of the bits 0x26fe0 are set, the
- * Player is hurt (Player::Hurt at the egg's position with 1, 12 units in
+ * daPly_c is hurt (daPly_c::Hurt at the egg's position with 1, 12 units in
  * Fix12, 1, 0, 1). When the touched actor is one of the six burst actors
  * (BOMBKING, HOLHEI, KURIKING, KURIBO_L, WANWAN, WANWAN2) the egg bursts and
  * returns 1. When it is the actor currently sought (mTargetId) the egg pays
  * out, re-enters state 1 and returns 1. Any other case returns 0. */
 int daYegg_c::func_ov002_020eddc4()
 {
-    Player *actor;
+    daPly_c *actor;
     struct dActor_c* other;
     u32 id;
     u32 flags;
@@ -1285,7 +1285,7 @@ int daYegg_c::func_ov002_020eddc4()
     id = mdCcAc_c.otherOwner;
     if (id == 0) goto fail;
 
-    actor = static_cast<Player *>(dActor_c::FindWithID(id));
+    actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
     if (actor == 0) goto fail;
 
     if (actor == (struct dActor_c*)mPlayer) goto fail;
@@ -1351,7 +1351,7 @@ int daYegg_c::CleanupResources()
 // @symbol _ZN8daYegg_c6RenderEv
 /* recovered: named members + shared header, real C++ method -- vtable slot 9 */
 /* Draws the egg's model unless it is hidden: skipped when mFlags has 0x40000,
-   when the followed Player is inside a cannon, or when the Player's opacity
+   when the followed daPly_c is inside a cannon, or when the daPly_c's opacity
    is below 1. */
 int daYegg_c::Render()
 {
@@ -1372,9 +1372,9 @@ int daYegg_c::Render()
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 /* Per-frame update: runs the current state's execute handler and advances the
- * model animation. In every state but 1 the egg takes the followed Player's
- * opacity; while that opacity is below 10 it is also pinned to the Player's
- * position plus the vector (0, 0, -104 units) rotated by the Player's angles.
+ * model animation. In every state but 1 the egg takes the followed daPly_c's
+ * opacity; while that opacity is below 10 it is also pinned to the daPly_c's
+ * position plus the vector (0, 0, -104 units) rotated by the daPly_c's angles.
  * In state 1 it is fully opaque (31). Then it places the model matrix
  * (func_ov002_020ed998), draws the drop shadow (func_ov002_020ed7f8), moves to
  * the next payout slot once the current one is paid, and bursts when all five

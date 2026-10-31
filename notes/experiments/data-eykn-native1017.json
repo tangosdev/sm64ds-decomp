@@ -184,7 +184,7 @@
       "reason": "Current source retains the scalar Fix12 call bridges and measured method-form differences documented beside this TU. FindEgg is already called as an inherited method; that part of the older wording is historical. This data slice changes none of those caller forms.",
       "summary": "Fix12-by-value call bridges remain.",
       "historical_predecessor_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3141",
-      "historical_predecessor_reason": "Accepted as partial. Only DropShadowRadHeight was measured and no experiment artifact is committed, so this is deferred, not compiler_constraint. FindEgg reason checked: it needs Scuttlebug.cpp or decl_Actor.h, outside this task's resources.",
+      "historical_predecessor_reason": "Accepted as partial. Only DropShadowRadHeight was measured and no experiment artifact is committed, so this is deferred, not compiler_constraint. FindEgg reason checked: it needs daSpd_c.cpp or decl_Actor.h, outside this task's resources.",
       "historical_predecessor_summary": "8 Fix12-by-value mangled bridges and FindEgg remain"
     },
     {

@@ -1,7 +1,7 @@
 {
   "task_id": "snowball-native-interfaces1014",
   "tested_base": "85c0c53d72e4a15537f1162272383752f63a2fd1",
-  "scope": "Six native call sites across three existing interfaces; actor identity established before Player downcast; exact owning scalar Hurt declaration corrects return and byte flags. No shared header edit.",
+  "scope": "Six native call sites across three existing interfaces; actor identity established before daPly_c downcast; exact owning scalar Hurt declaration corrects return and byte flags. No shared header edit.",
   "source_completion": "partial",
   "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3834",
   "next_owner": "Snowball source producer and enemy reconstruction coordinator",
@@ -26,8 +26,8 @@
       "kind": "correctness",
       "disposition": "fixed",
       "location": "src/actors/daSnowball_c.cpp: func_ov081_02125fb8",
-      "summary": "The old contact path casts the lookup result to Player before checking its actor identity.",
-      "reason": "Keep a dActor_c receiver through lookup/null and actorID191 check, then create the Player pointer only inside the identified-player branch. ActorID enum comparison shape and all retail bytes are preserved.",
+      "summary": "The old contact path casts the lookup result to daPly_c before checking its actor identity.",
+      "reason": "Keep a dActor_c receiver through lookup/null and actorID191 check, then create the daPly_c pointer only inside the identified-player branch. ActorID enum comparison shape and all retail bytes are preserved.",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3834",
       "owner": "Snowball source producer and enemy reconstruction coordinator"
     },
@@ -37,7 +37,7 @@
       "disposition": "fixed",
       "location": "src/actors/daSnowball_c.cpp: local Hurt import",
       "summary": "The local Hurt import incorrectly declares void return and three u32 flags against its owning int/u8/u8/u8 definition.",
-      "reason": "Use exactly int(Player*,void*,u32,int,u8,u8,u8) from Player.cpp. The existing Player.h lacks a Hurt member; a direct member-call probe fails with undefined identifier Hurt. Explicit local reason retains the scalar C ABI without speculative header recovery. All four measured baseline disagreements disappear; no new disagreements and literal raw object unchanged.",
+      "reason": "Use exactly int(daPly_c*,void*,u32,int,u8,u8,u8) from d_a_ply_methods.cpp. The existing daPly_c.h lacks a Hurt member; a direct member-call probe fails with undefined identifier Hurt. Explicit local reason retains the scalar C ABI without speculative header recovery. All four measured baseline disagreements disappear; no new disagreements and literal raw object unchanged.",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3834",
       "owner": "Snowball source producer and enemy reconstruction coordinator"
     },
@@ -57,7 +57,7 @@
       "disposition": "fixed",
       "location": "config/tu_manifest.d/ov081/daSnowball_c.json: notes[3], Uniquifier resync",
       "summary": "Current-tense manifest note names the pre-cleanup compiler inputs instead of the measured candidate inputs.",
-      "reason": "Fixed notes[3] to distinguish pre-cleanup @716/@718 history from measured current @714/@716 inputs targeting unchanged @701/@703. Actual current1b928 control/candidate compiled under merged Player.h; complete raw/prepared objects and all graphs equal retained85c proof. Fresh17strict0blind/full metadata/storage, literal14/14stock, scoped/global declarations/statics and actual106-module full-ROM pass atff1fb50. Original rejected finding and failed-review identity remain explicit.",
+      "reason": "Fixed notes[3] to distinguish pre-cleanup @716/@718 history from measured current @714/@716 inputs targeting unchanged @701/@703. Actual current1b928 control/candidate compiled under merged daPly_c.h; complete raw/prepared objects and all graphs equal retained85c proof. Fresh17strict0blind/full metadata/storage, literal14/14stock, scoped/global declarations/statics and actual106-module full-ROM pass atff1fb50. Original rejected finding and failed-review identity remain explicit.",
       "evidence": {
         "tested_commit": "0c21c71a05e0fca89554282e46d63220d19616bf",
         "tested_base": "85c0c53d72e4a15537f1162272383752f63a2fd1",
@@ -205,7 +205,7 @@
         "scout_base": "bbf3e7a337cc6f1ac1120eac48ff1352733abcbd",
         "current_base": "bbf3e7a337cc6f1ac1120eac48ff1352733abcbd"
       },
-      "src/actors/Player.cpp": {
+      "src/actors/daPly_c.cpp": {
         "scout_base": "7a23d28e06330f60ea1ef9ec47b1ce1d75ed38e9",
         "current_base": "7a23d28e06330f60ea1ef9ec47b1ce1d75ed38e9"
       },
@@ -239,7 +239,7 @@
   "hurt_contract": {
     "final_source_sha256": "b43bf35b8bf9d37f9dfb9f32c04af609cc333e3ee9e94925cf634cbe9d4e0c93",
     "raw_sha256": "355bc5c571e8295188698522d480e7304a5016d4efa62487be2a5eafb8f8b1ff",
-    "actual_owner_signature": "int(Player*,void*,u32,int,u8,u8,u8)",
+    "actual_owner_signature": "int(daPly_c*,void*,u32,int,u8,u8,u8)",
     "raw_equal_already_proved_candidate": true,
     "payload_original_type_not_claimed": true
   },
@@ -249,7 +249,7 @@
     "new": [],
     "removed": [
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "return",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -257,12 +257,12 @@
         "got": "void",
         "want": "int",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "param",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -270,12 +270,12 @@
         "got": "#5 unsigned int",
         "want": "#5 unsigned char",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "param",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -283,12 +283,12 @@
         "got": "#6 unsigned int",
         "want": "#6 unsigned char",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "param",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -296,14 +296,14 @@
         "got": "#7 unsigned int",
         "want": "#7 unsigned char",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       }
     ],
     "baseline_Hurt_findings": [
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "return",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -311,12 +311,12 @@
         "got": "void",
         "want": "int",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "param",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -324,12 +324,12 @@
         "got": "#5 unsigned int",
         "want": "#5 unsigned char",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "param",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -337,12 +337,12 @@
         "got": "#6 unsigned int",
         "want": "#6 unsigned char",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "param",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -350,9 +350,9 @@
         "got": "#7 unsigned int",
         "want": "#7 unsigned char",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       }
     ],
     "candidate_Hurt_findings": [],
@@ -451,7 +451,7 @@
     "new": [],
     "removed": [
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "return",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -459,12 +459,12 @@
         "got": "void",
         "want": "int",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "param",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -472,12 +472,12 @@
         "got": "#5 unsigned int",
         "want": "#5 unsigned char",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "param",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -485,12 +485,12 @@
         "got": "#6 unsigned int",
         "want": "#6 unsigned char",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "kind": "param",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
@@ -498,18 +498,18 @@
         "got": "#7 unsigned int",
         "want": "#7 unsigned char",
         "basis": "definition",
-        "ref_file": "src/actors/Player.cpp",
+        "ref_file": "src/actors/daPly_c.cpp",
         "ref_line": 18941,
-        "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+        "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
       }
     ],
     "positive_candidate_declaration": {
-      "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+      "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
       "file": "src/actors/daSnowball_c.cpp",
       "line": 72,
       "ret": "int",
       "params": [
-        "Player *",
+        "daPly_c *",
         "void *",
         "unsigned int",
         "int",
@@ -521,12 +521,12 @@
       "linkage": "C"
     },
     "positive_owner_definition": {
-      "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
-      "file": "src/actors/Player.cpp",
+      "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
+      "file": "src/actors/daPly_c.cpp",
       "line": 18941,
       "ret": "int",
       "params": [
-        "Player *",
+        "daPly_c *",
         "void *",
         "unsigned int",
         "int",
@@ -959,7 +959,7 @@
         {
           "off": 116,
           "type": 2,
-          "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+          "sym": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
           "addr": 33620272,
           "add": 0
         },
@@ -1015,7 +1015,7 @@
         {
           "off": 84,
           "type": 2,
-          "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+          "sym": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
           "addr": 33620308,
           "add": 0
         },
@@ -1361,7 +1361,7 @@
   "direct_member_probe": {
     "historical_base": "efd33df972c9475494a18548d0248454c0e2668f",
     "result": "compile failed: undefined identifier Hurt",
-    "qualification": "Historical efd direct-member probe failed because Player.h had no Hurt declaration. Current1b928 Player.h adds native Swing only and still has no Hurt member. Fresh current-source declaration comparison positively verifies the exact local scalar C ABI against owning Player.cpp; no claim that the entire new header is invariant.",
+    "qualification": "Historical efd direct-member probe failed because daPly_c.h had no Hurt declaration. Current1b928 daPly_c.h adds native Swing only and still has no Hurt member. Fresh current-source declaration comparison positively verifies the exact local scalar C ABI against owning d_a_ply_methods.cpp; no claim that the entire new header is invariant.",
     "artifact": "C:/tmp/sm64ds-klepto-scout1014/build/snowball-native-scout1014/contract-probe.log"
   },
   "historical_original_85c_acceptance_scope": "All existing85c proof and checkpoint fields below remain historical; independent review rejected0c21 only for stale notes[3] compiler-name provenance. Current1b928 rework evidence is recorded separately after fresh gates.",
@@ -1485,7 +1485,7 @@
         "canonical_target": "arm9:0x020072c0",
         "canonical_complete_equal": true
       },
-      "header_change": "Only existing native Player Swing declaration merged; no Hurt declaration. Actual current compiler output unchanged, no inference from unchanged layout alone."
+      "header_change": "Only existing native daPly_c Swing declaration merged; no Hurt declaration. Actual current compiler output unchanged, no inference from unchanged layout alone."
     },
     "declaration_delta": {
       "tested_base": "1b928ef30070f1d6ce9be77a9a8a3f7797de4196",
@@ -1494,7 +1494,7 @@
       "new": [],
       "removed": [
         {
-          "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+          "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
           "kind": "return",
           "file": "src/actors/daSnowball_c.cpp",
           "line": 72,
@@ -1502,12 +1502,12 @@
           "got": "void",
           "want": "int",
           "basis": "definition",
-          "ref_file": "src/actors/Player.cpp",
+          "ref_file": "src/actors/daPly_c.cpp",
           "ref_line": 18941,
-          "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+          "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
         },
         {
-          "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+          "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
           "kind": "param",
           "file": "src/actors/daSnowball_c.cpp",
           "line": 72,
@@ -1515,12 +1515,12 @@
           "got": "#5 unsigned int",
           "want": "#5 unsigned char",
           "basis": "definition",
-          "ref_file": "src/actors/Player.cpp",
+          "ref_file": "src/actors/daPly_c.cpp",
           "ref_line": 18941,
-          "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+          "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
         },
         {
-          "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+          "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
           "kind": "param",
           "file": "src/actors/daSnowball_c.cpp",
           "line": 72,
@@ -1528,12 +1528,12 @@
           "got": "#6 unsigned int",
           "want": "#6 unsigned char",
           "basis": "definition",
-          "ref_file": "src/actors/Player.cpp",
+          "ref_file": "src/actors/daPly_c.cpp",
           "ref_line": 18941,
-          "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+          "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
         },
         {
-          "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+          "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
           "kind": "param",
           "file": "src/actors/daSnowball_c.cpp",
           "line": 72,
@@ -1541,18 +1541,18 @@
           "got": "#7 unsigned int",
           "want": "#7 unsigned char",
           "basis": "definition",
-          "ref_file": "src/actors/Player.cpp",
+          "ref_file": "src/actors/daPly_c.cpp",
           "ref_line": 18941,
-          "ref": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+          "ref": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
         }
       ],
       "positive_candidate_declaration": {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
         "file": "src/actors/daSnowball_c.cpp",
         "line": 72,
         "ret": "int",
         "params": [
-          "Player *",
+          "daPly_c *",
           "void *",
           "unsigned int",
           "int",
@@ -1564,12 +1564,12 @@
         "linkage": "C"
       },
       "positive_owner_definition": {
-        "symbol": "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj",
-        "file": "src/actors/Player.cpp",
+        "symbol": "_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj",
+        "file": "src/actors/daPly_c.cpp",
         "line": 18941,
         "ret": "int",
         "params": [
-          "Player *",
+          "daPly_c *",
           "void *",
           "unsigned int",
           "int",
@@ -1772,7 +1772,7 @@
           {
             "off": 116,
             "type": 2,
-            "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "sym": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             "addr": 33620272,
             "add": 0
           },
@@ -1828,7 +1828,7 @@
           {
             "off": 84,
             "type": 2,
-            "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "sym": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
             "addr": 33620308,
             "add": 0
           },

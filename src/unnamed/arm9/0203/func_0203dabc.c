@@ -5,7 +5,7 @@ struct E17 {
     char _rest[0x24 - 8];
 };
 extern struct E17 data_020a1154[];
-/* Player idx's touch sample (x, y, touch, validity at +0x4); func_0203bb60
+/* daPly_c idx's touch sample (x, y, touch, validity at +0x4); func_0203bb60
    and the DSMT scene read it. */
 int *func_0203dabc(int idx) {
     return &data_020a1154[idx].touchSample;

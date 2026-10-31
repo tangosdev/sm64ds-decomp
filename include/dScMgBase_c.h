@@ -313,7 +313,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            coordinates through r1 from 0x020af2a0 onwards, and dScMgSlot1_c's
            override at ov006:0x0210c4dc zeroes r0/r1 for SetSubBg1Offset.  No
            second argument register is live on entry to either.  dActor_c.h:144
-           spells `Player &player` and include/dScMgSlot1_c.h had copied it.
+           spells `daPly_c &player` and include/dScMgSlot1_c.h had copied it.
          overrides: SIX tables, TWO declarations.  dScMgD3DBase_c's own body at
            ov006:0x020e6d98 backs its table and all four of its children's;
            dScMgSlot1_c has its own at ov006:0x0210c4dc.

@@ -595,7 +595,7 @@
       "kind": "correctness",
       "location": "src/minigames/d_s_mg_trampoline2.cpp:250,702,793",
       "reason": "Both active callers use the actual void(void) ov006 definitions. Configured overlay(6) calls at 0x02123bfc/0x02123c00 and fresh strict relocated proof retain the already-correct numeric targets; this is not a claimed WRONG-DEST repair.",
-      "summary": "Counterfeit returned Player and wrong ov006 helper prototype removed."
+      "summary": "Counterfeit returned daPly_c and wrong ov006 helper prototype removed."
     },
     {
       "disposition": "fixed",
@@ -638,7 +638,7 @@
       "kind": "reconstruction",
       "location": "src/minigames/d_s_mg_trampoline2.cpp:86,96,406,1136,1686; include/dScMgTrampoline2_c.h:44",
       "owner": "codex-humanizer-integrator-20260908",
-      "reason": "The real Model::Render slot 5 and SharedFilePtr::Release interfaces exist; no local compiler-barrier claim justifies treating the fake six-slot receiver or replacement class as final. Manual construction and six reverse cleanup calls preserve observed ownership but do not establish original component types. The address-sharing Player-like constructor alias remains a free bridge, not a claim of Player membership.",
+      "reason": "The real Model::Render slot 5 and SharedFilePtr::Release interfaces exist; no local compiler-barrier claim justifies treating the fake six-slot receiver or replacement class as final. Manual construction and six reverse cleanup calls preserve observed ownership but do not establish original component types. The address-sharing daPly_c-like constructor alias remains a free bridge, not a claim of daPly_c membership.",
       "summary": "Model/SharedFilePtr, base/Particle bridges, raw components and manual array lifecycle remain partial reconstruction."
     },
     {
@@ -659,7 +659,7 @@
       "kind": "correctness",
       "location": "src/minigames/d_s_mg_trampoline2.cpp:250,702,793",
       "reason": "Both active callers use the actual void(void) ov006 definitions. Configured overlay(6) calls at 0x02123bfc/0x02123c00 and fresh strict relocated proof retain the already-correct numeric targets; this is not a claimed WRONG-DEST repair.",
-      "summary": "Counterfeit returned Player and wrong ov006 helper prototype removed."
+      "summary": "Counterfeit returned daPly_c and wrong ov006 helper prototype removed."
     },
     {
       "disposition": "fixed",
@@ -702,7 +702,7 @@
       "kind": "reconstruction",
       "location": "src/minigames/d_s_mg_trampoline2.cpp:86,96,406,1136,1686; include/dScMgTrampoline2_c.h:44",
       "owner": "codex-trampoline2-wave-tables1017",
-      "reason": "The real Model::Render slot 5 and SharedFilePtr::Release interfaces exist; no local compiler-barrier claim justifies treating the fake six-slot receiver or replacement class as final. Manual construction and six reverse cleanup calls preserve observed ownership but do not establish original component types. The address-sharing Player-like constructor alias remains a free bridge, not a claim of Player membership. Historical issue2497 and predecessor ownership are preserved in historical_findings; issue4058 continues this partial reconstruction.",
+      "reason": "The real Model::Render slot 5 and SharedFilePtr::Release interfaces exist; no local compiler-barrier claim justifies treating the fake six-slot receiver or replacement class as final. Manual construction and six reverse cleanup calls preserve observed ownership but do not establish original component types. The address-sharing daPly_c-like constructor alias remains a free bridge, not a claim of daPly_c membership. Historical issue2497 and predecessor ownership are preserved in historical_findings; issue4058 continues this partial reconstruction.",
       "summary": "Model/SharedFilePtr, base/Particle bridges, raw components and manual array lifecycle remain partial reconstruction."
     },
     {

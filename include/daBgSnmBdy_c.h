@@ -69,7 +69,7 @@ struct daBgSnmBdy_c : dActor_c {
         StateFunc behavior;
     };
     StateEntry *mState;                 /* 0x38c */
-    Player *mTalkPlayer;                /* 0x390 */
+    daPly_c *mTalkPlayer;               /* 0x390 */
     s32 mStateValue;                    /* 0x394 */
     s32 mRadius;                        /* 0x398 */
     u32 mSoundID;                       /* 0x39c */

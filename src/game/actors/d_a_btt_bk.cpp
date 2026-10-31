@@ -32,7 +32,7 @@ enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
 #include "dBgCh_Gnd.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
 
@@ -90,7 +90,7 @@ s32 daBttBk_c::OnYoshiTryEat() {
 /* Collision reaction, run from state 0's update: a carrier found by
  * func_02010304 is stored in mCarrier and enters state 1; otherwise, against
  * actor id 0xbf, mFlags bit 17 enters state 2 and a hitFlags bit 4 contact
- * breaks the crate (Player::IncMegaKillCount, dust, five coins). */
+ * breaks the crate (daPly_c::IncMegaKillCount, dust, five coins). */
 // @symbol _ZN9daBttBk_c15HandleCollisionEv
 void daBttBk_c::HandleCollision() {
     if (mdCcAc_c.otherOwner == 0)
@@ -114,7 +114,7 @@ void daBttBk_c::HandleCollision() {
     }
     if ((mdCcAc_c.hitFlags & 0x10) == 0)
         return;
-    ((Player *)other)->IncMegaKillCount();
+    ((daPly_c *)other)->IncMegaKillCount();
     Vector3 v;
     Vector3 v2;
     Vector3 v3;
@@ -399,8 +399,8 @@ int daBttBk_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN9daBttBk_c13OnTurnIntoEggER6Player
-void daBttBk_c::OnTurnIntoEgg(Player &player) {
+// @symbol _ZN9daBttBk_c13OnTurnIntoEggER7daPly_c
+void daBttBk_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap()) {
         GivePlayerCoins(player, 5, 0);
     }

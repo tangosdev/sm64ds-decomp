@@ -673,7 +673,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held _ZN10daHolhei_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold daHolhei_c_ChangeState and the one that held daHolhei_c_ChangeState; kept the first, the other is commented out for review",
     "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src/game/actors/d_a_holhei.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py.",
-    "S21 rename Chuckya -> daHolhei_c from ROM _ZTS10daHolhei_c before promotion. Coined C name daHolhei_c_ChangeState: class ownership, PMF dispatch, inbound calls and codegen proven; original English name and (C*, PMF*) vs (void*, void*) parameter types are not. Player::Hurt keeps a scalar-slot wrapper (Fix12<int> by value, wall 6az). Factory is return new daHolhei_c(); this TU emits the vtable. CONVERTED identities were rewritten onto dest#symbol, never --update.",
+    "S21 rename Chuckya -> daHolhei_c from ROM _ZTS10daHolhei_c before promotion. Coined C name daHolhei_c_ChangeState: class ownership, PMF dispatch, inbound calls and codegen proven; original English name and (C*, PMF*) vs (void*, void*) parameter types are not. daPly_c::Hurt keeps a scalar-slot wrapper (Fix12<int> by value, wall 6az). Factory is return new daHolhei_c(); this TU emits the vtable. CONVERTED identities were rewritten onto dest#symbol, never --update.",
     "Static initializer folded: the model and five animation handles gain declared constructors and destructors, and the two Vector3 carry offsets and the ten two-PMF state records are real definitions in d_a_holhei.cpp, replacing the handwritten src/unnamed/ov062/__sinit_ov062_0211cf30.cpp. mwcc emits __sinit_d_a_holhei.cpp (0x3a8), its .ctor word, the twenty PMF literals and the eight registration nodes itself; all are byte- and relocation-identical to retail. Ownership: the ov062 .ctor words run in .text TU order (0x0211d8cc holhei, 0x0211d8d0 d_a_nknk, 0x0211d8d4 d_a_r_nk, 0x0211d8d8 d_a_r_flag), and this initializer constructs asset 0x327 (the Chuckya model) and fills the records only this TU's daHolhei_c_ChangeState reads. Naming a handler in a record needs a member, so the thirteen extern \"C\" handlers that took daHolhei_c *self are now daHolhei_c members; each reproduces its retail body byte for byte (match.py), and their symbols.txt rows and attribution overrides take the mangled names. The same change licenses the TU's whole .data run 0x0211d900..0x0211da5c (PMF literals, _ZTI/_ZTS, the new typed g_profile_HOLHEI and the vtable, whose storage starts at 0x0211d9d8) and makes it intact-object. The carry-offset array data_ov062_0211df10 is the TU's last .bss object, so symbols.txt gives it an explicit size (0x18) and sizes the three interior labels it covers to zero: data_ov062_0211df14 and data_ov062_0211df18 stay because dsd resolves func_ov062_02116edc's pool words for the y and z fields to them, and data_ov062_0211df1c stays for the initializer's element-1 pool word (0x0211d258); the manifest records that word as data_ov062_0211df10 + 0xc, as mwcc emits it.",
     "Collision property member calls replace local helper declarations. Reconciled 28 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (96 sections, 328 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
@@ -2597,7 +2597,7 @@
       "source": "0x0211da2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010154"
@@ -2677,7 +2677,7 @@
       "source": "0x0211da4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010130"

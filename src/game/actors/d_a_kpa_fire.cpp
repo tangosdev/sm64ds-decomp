@@ -23,7 +23,7 @@
  * FIRE_PARAM packs variant in bits 0..2 and the sub-variant in bits 4..5.
  *
  * Actor creation, lookup, movement and destruction use the native
- * interfaces, as do the ground predicate and Player::Burn. Spawn still
+ * interfaces, as do the ground predicate and daPly_c::Burn. Spawn still
  * views the base actor's contiguous scalar position/angle fields as
  * vectors; that inherited flat-field layout is not reconstructed here.
  *
@@ -51,7 +51,7 @@
 #include "dBgCh_Gnd.h"
 #include "dActor_c.h"
 #include "daKpa_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SaveData.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
@@ -214,7 +214,7 @@ int daKpaFire_c::InitResources()
  * data_ov060_0211afb4 table, bump mFrameCount, then -- while gravity is still
  * on -- step the mesh collision and, for every variant but the bouncing one,
  * stop the fall (speed and accel zero) the first frame it is on the ground.
- * Then the Player-burn check, the shadow update, and the cylinder's Clear /
+ * Then the daPly_c-burn check, the shadow update, and the cylinder's Clear /
  * Update. Always returns 1. */
 int daKpaFire_c::Behavior()
 {
@@ -378,7 +378,7 @@ void daKpaFire_c::func_ov060_021172e0() {
     }
 
     {
-        Player *player = this->ClosestPlayer();
+        daPly_c *player = this->ClosestPlayer();
         daKpa_c* koopa;
         if (player != 0 && player->param1 == 3 &&
             (koopa = (daKpa_c*)dActor_c::FindWithActorID(ACTOR_KOOPA, 0)) != 0 &&
@@ -802,14 +802,14 @@ void daKpaFire_c::func_ov060_021167c8() {
 // @symbol _ZN11daKpaFire_c19func_ov060_02116740Ev
 /* Burn the player the fire's cylinder touched. Reads mdCcAc_c.otherOwner (the
  * dCc_c field Clear zeroes; here it is used as an actor uniqueID, 0 for none)
- * and looks that actor up; if it is the Player (actor id 0xbf = ACTOR_PLAYER)
- * and neither Player::mIsMetal nor Player::mIsVanish is set it calls
- * Player::Burn. */
+ * and looks that actor up; if it is the daPly_c (actor id 0xbf = ACTOR_PLAYER)
+ * and neither daPly_c::mIsMetal nor daPly_c::mIsVanish is set it calls
+ * daPly_c::Burn. */
 void daKpaFire_c::func_ov060_02116740() {
     unsigned int id = ((daKpaFire_c *)this)->mdCcAc_c.otherOwner;
     if (id == 0)
         return;
-    Player *player = (Player *)dActor_c::FindWithID(id);
+    daPly_c *player = (daPly_c *)dActor_c::FindWithID(id);
     if (player == 0) return;
     /* Measured: folding this temp into `if (player->actorID != ACTOR_PLAYER)`
        makes the function 12 bytes shorter than the ROM size, 0x88. */

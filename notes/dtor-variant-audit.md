@@ -66,7 +66,7 @@ the vtable that references it, which also names what it should have been:
 | `_ZN5SceneD2Ev` | `dScBoot_c` slot 16 | `_ZN9dScBoot_cD1Ev` | **no — wrong class** |
 | `_ZN10dScStage_cD2Ev` | `dScStage_c` slot 16 | `_ZN10dScStage_cD1Ev` | yes |
 | `_ZN5EnemyD2Ev` | `dEnemyBase_c` slot 16 | `_ZN5EnemyD1Ev` | yes |
-| `_ZN6PlayerD2Ev` | `daPly_c` slot 16 | `_ZN6PlayerD1Ev` | yes |
+| `_ZN7daPly_cD2Ev` | `daPly_c` slot 16 | `_ZN7daPly_cD1Ev` | yes |
 | `_ZN8PlatformD2Ev` | `dBgActor_c` slot 16 | `_ZN8PlatformD1Ev` | yes |
 | `_ZN8PathLiftD2Ev` | `dPathLiftActor_c` slot 16 | `_ZN8PathLiftD1Ev` | yes |
 | `_ZN16MeshColliderBaseD2Ev` | `dBgW` slot 0 | `_ZN16MeshColliderBaseD1Ev` | yes |
@@ -109,7 +109,7 @@ picks pilots from the per-class backlog. Both are affected:
   10; plus the dFader_c family's three genuine D2s that carry no D2 name at all
   (`func_02017838`, `func_020177c4`, and `_ZN5ColorD1Ev`). The category was never
   measuring what it claimed.
-- **Five of the plan's six pilot classes are affected** — Scene, dScStage_c, Player,
+- **Five of the plan's six pilot classes are affected** — Scene, dScStage_c, daPly_c,
   Enemy and Platform all show `D2:1` in `--by-class`, and all five of those are
   impostors. The one category Phase 2 most wanted to settle is the one whose
   membership was least reliable.

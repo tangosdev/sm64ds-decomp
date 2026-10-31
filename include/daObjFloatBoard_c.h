@@ -46,7 +46,7 @@
  *          present and back to 0 when there is not.
  *   0x334  the bob offset, 10 * sin(phase).
  *   0x338  the bob phase, stepped 0xa00 a frame.
- *   0x33c  the rider: the Player standing on the board, stored by the mesh
+ *   0x33c  the rider: the daPly_c standing on the board, stored by the mesh
  *          callback OnStoodOn (which also reloads the timeout to 5).
  *          Behavior reads the rider's position through it and tilts the board
  *          toward the horizontal bearing.

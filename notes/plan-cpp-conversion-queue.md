@@ -216,7 +216,7 @@ python tools/mangle.py src/game/actors/d_a_obj_km2_fall_block.cpp \
 **Entry:** S2 green, and the S2 bracket showed no enrollment loss.
 Add one method declaration to `include/<Class>.h` inside the existing `#ifdef __cplusplus`
 block, then do the S2 edit. Representative classes: `daObjRc_Tikuwa_c`, `FlameChomp`,
-`Scuttlebug`, `dScEntry_c`, `dScTitle_c`, `daPgBby_c`. Two classes have no header at all
+`daSpd_c`, `dScEntry_c`, `dScTitle_c`, `daPgBby_c`. Two classes have no header at all
 (`daObjCloset_c` + one more) — drop those files; that is header-reconstruction work.
 
 **Why a separate stage:** a header edit has blast radius through every includer, and
@@ -379,7 +379,7 @@ appears there, S2/S3 must be re-scoped as merge work.)
 | destructors — D0/D1/D2 | 259 dtor-only + every `~X()` | out of scope by instruction. Every stage is constructed to avoid becoming a key-function TU, the only route by which destructor form could leak in. S2's non-virtual triad declarations exist precisely to keep that door shut |
 | constructors | 54 | zero ever migrated in this tree. A research spike, not throughput |
 | `main` @0x20049f0 | 2,927 | not a TU; the un-segmented remainder of arm9 |
-| [ov002](../config/arm9/overlays/ov002/symbols.txt) Player @0x20bd828 | 613 | swallower; 4 incomplete members; `opt_common_subs` in 13 |
+| [ov002](../config/arm9/overlays/ov002/symbols.txt) daPly_c @0x20bd828 | 613 | swallower; 4 incomplete members; `opt_common_subs` in 13 |
 | [ov007](../config/arm9/overlays/ov007/symbols.txt) @0x20b72a0 / @0x20ad660 | 389 + 123 | no class label, low boundaries, **zero sinits so no witness is constructible**. Where the map knows least and looks most confident |
 | [ov004](../config/arm9/overlays/ov004/symbols.txt) @0x20b42c0 | 107 | unattributed, low/low, swallower. *13 S1 files are [ov004](../config/arm9/overlays/ov004/symbols.txt) but from other, non-swallower ranges — S1 harvests files, not TUs, so this exclusion does not cost them* |
 | `#pragma opt_*` TUs | ~92 TUs | file-global, last-wins. **But a pragma blocks the *merge*, not a file-level conversion** — a per-file gate is unaffected by a sibling's pragma, so S1/S2 deliberately do convert individual members of pragma-blocked TUs |

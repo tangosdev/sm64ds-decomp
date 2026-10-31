@@ -46,7 +46,7 @@ struct Vector3_16f;
  *  - Callees known only by address, whose purpose this file does not establish:
  *    func_020092c4, func_0200fa04, func_ov002_020c56f0,
  *    func_02038408, func_02011d50, func_02011cfc. Likewise the trailing arguments
- *    of Player::Hurt and Sound::ChangeMusicVolume, the KOOPAFIRE spawn-parameter
+ *    of daPly_c::Hurt and Sound::ChangeMusicVolume, the KOOPAFIRE spawn-parameter
  *    bits and bit 0x400 of the tail's mFlags are given as numbers.
  *  - Animation indices stay numbers (only the idle pose, 0x10, is named);
  *    Bowser_Anim lists where each one is used.
@@ -123,7 +123,7 @@ enum daKpa_c_AssetId {
 #include "daKpaFire_c.h"
 #include "daKpa2Bg_c.h"
 #include "daKirai_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "daObjKey_c.h"
 #include "types.h"
 #include "decl_common.h"
@@ -150,34 +150,43 @@ enum daKpa_c_AssetId {
  * handler for each state is named on its own header below. A state with no
  * writer in this file (0x12) is reached only through the table. */
 enum Bowser_State {
-    BOWSER_STATE_IDLE = 0,            /* stand, then pick the next state (variant decides how) */
-    BOWSER_STATE_THROWN = 1,          /* set when the tail grabs him and again when he is released; handler runs after release */
-    BOWSER_STATE_RECOVER = 2,         /* entered 1000 units below the arena: hidden, then launched back up toward the centre */
-    BOWSER_STATE_PLAY_ANIM_0F = 3,    /* animation 0xf, then idle */
-    BOWSER_STATE_DEFEATED = 4,        /* set when mHealth reaches 0; the multi-step defeat sequence */
-    BOWSER_STATE_INTRO_WAIT = 5,      /* initial state; stands idle until Player::StartTalk succeeds */
-    BOWSER_STATE_INTRO = 6,           /* animations, then the intro message */
-    BOWSER_STATE_CHARGE = 7,          /* run at the target (animations 0x18..0x1a) */
-    BOWSER_STATE_FIRE_BREATH = 8,     /* spawns KOOPAFIRE (actor 0x118) every 5th frame */
-    BOWSER_STATE_FIREBALLS = 9,       /* mFireballShots (1..3) fireballs */
-    BOWSER_STATE_PLAY_ANIM_1B = 0xa,  /* animation 0x1b, then BOWSER_STATE_TURN_IN_PLACE; entered when a charge leaves the floor */
+    BOWSER_STATE_IDLE = 0, /* stand, then pick the next state (variant decides how) */
+    BOWSER_STATE_THROWN =
+        1, /* set when the tail grabs him and again when he is released; handler runs after release */
+    BOWSER_STATE_RECOVER =
+        2, /* entered 1000 units below the arena: hidden, then launched back up toward the centre */
+    BOWSER_STATE_PLAY_ANIM_0F = 3, /* animation 0xf, then idle */
+    BOWSER_STATE_DEFEATED = 4,     /* set when mHealth reaches 0; the multi-step defeat sequence */
+    BOWSER_STATE_INTRO_WAIT = 5,  /* initial state; stands idle until daPly_c::StartTalk succeeds */
+    BOWSER_STATE_INTRO = 6,       /* animations, then the intro message */
+    BOWSER_STATE_CHARGE = 7,      /* run at the target (animations 0x18..0x1a) */
+    BOWSER_STATE_FIRE_BREATH = 8, /* spawns KOOPAFIRE (actor 0x118) every 5th frame */
+    BOWSER_STATE_FIREBALLS = 9,   /* mFireballShots (1..3) fireballs */
+    BOWSER_STATE_PLAY_ANIM_1B =
+        0xa, /* animation 0x1b, then BOWSER_STATE_TURN_IN_PLACE; entered when a charge leaves the floor */
     BOWSER_STATE_TURN_IN_PLACE = 0xb, /* mAngleY += 0x200 per frame until mTimer reaches 0x3e */
-    BOWSER_STATE_HURT_HOP = 0xc,      /* knocked back; set after a spike bomb hit that leaves mHealth above 0 */
-    BOWSER_STATE_JUMP = 0xd,          /* jump and land; the landing effect func_ov060_02115b0c shakes the ground (variant 2) */
-    BOWSER_STATE_TURN_TO_TARGET = 0xe, /* turn mAngleY toward mAngleToTarget while animations 0x13, 0x11, 0x12 play */
-    BOWSER_STATE_ANIM_CHAIN = 0xf,    /* animations 8, 6, 7 in turn, then idle */
-    BOWSER_STATE_VANISH_DASH = 0x10,  /* fade out, dash invisibly at the target, fade in */
-    BOWSER_STATE_HOP = 0x11,          /* hop forward at mHorzSpeed 25.0; the variant-0 idle pick chooses it when he faces a target 1500 or more units away */
+    BOWSER_STATE_HURT_HOP =
+        0xc, /* knocked back; set after a spike bomb hit that leaves mHealth above 0 */
+    BOWSER_STATE_JUMP =
+        0xd, /* jump and land; the landing effect func_ov060_02115b0c shakes the ground (variant 2) */
+    BOWSER_STATE_TURN_TO_TARGET =
+        0xe, /* turn mAngleY toward mAngleToTarget while animations 0x13, 0x11, 0x12 play */
+    BOWSER_STATE_ANIM_CHAIN = 0xf,   /* animations 8, 6, 7 in turn, then idle */
+    BOWSER_STATE_VANISH_DASH = 0x10, /* fade out, dash invisibly at the target, fade in */
+    BOWSER_STATE_HOP =
+        0x11, /* hop forward at mHorzSpeed 25.0; the variant-0 idle pick chooses it when he faces a target 1500 or more units away */
     BOWSER_STATE_WAIT_ANIM_END = 0x12, /* wait for the current animation to end, then idle */
-    BOWSER_STATE_ARENA_TILT = 0x13    /* tilts the KOOPA2BG arena (actor 0xa6) for a few frames, see func_ov060_02112bfc */
+    BOWSER_STATE_ARENA_TILT =
+        0x13 /* tilts the KOOPA2BG arena (actor 0xa6) for a few frames, see func_ov060_02112bfc */
 };
 
 /* daKpa_c::mHoldState, the index into the table at data_ov060_0211aeb4. */
 enum Bowser_HoldState {
-    BOWSER_HOLD_NONE = 0,             /* normal: run the state table */
-    BOWSER_HOLD_HELD = 1,             /* a Player has grabbed the tail and is swinging Bowser by it */
-    BOWSER_HOLD_RELEASE_NOW = 2,      /* the tail's flag bit 0x400 was set: let go at once */
-    BOWSER_HOLD_RELEASE_AFTER_ANIM = 3 /* the Player no longer holds an object or the hold countdown ran out: let go once the animation ends */
+    BOWSER_HOLD_NONE = 0,        /* normal: run the state table */
+    BOWSER_HOLD_HELD = 1,        /* a daPly_c has grabbed the tail and is swinging Bowser by it */
+    BOWSER_HOLD_RELEASE_NOW = 2, /* the tail's flag bit 0x400 was set: let go at once */
+    BOWSER_HOLD_RELEASE_AFTER_ANIM =
+        3 /* the daPly_c no longer holds an object or the hold countdown ran out: let go once the animation ends */
 };
 
 /* daKpa_c::mCondFlags. The low byte is recomputed every frame by
@@ -193,9 +202,10 @@ enum Bowser_CondFlag {
 
 /* daKpaTail_c::mState: the index into the table at data_ov060_0211ae9c. */
 enum BowserTail_State {
-    BOWSER_TAIL_FREE = 0,             /* waiting for a Player to grab it */
-    BOWSER_TAIL_COOLDOWN = 1,         /* after a release: back to FREE once mTimer passes 0x1e (30 frames) */
-    BOWSER_TAIL_HOLDING = 2           /* a Player is holding it (mHeldPlayer) */
+    BOWSER_TAIL_FREE = 0, /* waiting for a daPly_c to grab it */
+    BOWSER_TAIL_COOLDOWN =
+        1,                  /* after a release: back to FREE once mTimer passes 0x1e (30 frames) */
+    BOWSER_TAIL_HOLDING = 2 /* a daPly_c is holding it (mHeldPlayer) */
 };
 
 /* Actor IDs, from symbols/actor_debug_names.tsv. */
@@ -213,18 +223,19 @@ enum Bowser_ActorID {
 
 /* Sound IDs, named by where this file plays them. */
 enum Bowser_Sound {
-    BOWSER_SND_FOOTFALL = 0xb0,       /* Sound::Play(3, ..) in the footfall window */
-    BOWSER_SND_LEAP = 0xb1,           /* hop, jump, knockback, rise out of a fall */
-    BOWSER_SND_GRABBED = 0xb2,        /* a Player grabs the tail and starts swinging Bowser */
-    BOWSER_SND_B5 = 0xb5,             /* when the fire breath starts its second animation, and at frame 8 of animation 8 in the animation chain */
-    BOWSER_SND_LAND = 0xb6,           /* touching down after a jump */
-    BOWSER_SND_TALK_START = 0xb7,     /* the intro message appears */
-    BOWSER_SND_VANISH = 0xb9,         /* start of the vanish-and-dash fade */
-    BOWSER_SND_SHRINK_LOOP = 0xba,    /* PlayLong while he shrinks in the defeat sequence */
-    BOWSER_SND_DEFEATED = 0xbb,       /* the key is spawned after the defeat sequence */
-    BOWSER_SND_LAND_SOFT = 0xbd,      /* landing dust in func_ov060_02115a84 */
-    BOWSER_SND_FIREBALL = 0x122,      /* a fireball is spawned (func_ov060_021140c0) */
-    BOWSER_SND_FIRE_LOOP = 0x180      /* PlayLong while he breathes fire */
+    BOWSER_SND_FOOTFALL = 0xb0, /* Sound::Play(3, ..) in the footfall window */
+    BOWSER_SND_LEAP = 0xb1,     /* hop, jump, knockback, rise out of a fall */
+    BOWSER_SND_GRABBED = 0xb2,  /* a daPly_c grabs the tail and starts swinging Bowser */
+    BOWSER_SND_B5 =
+        0xb5, /* when the fire breath starts its second animation, and at frame 8 of animation 8 in the animation chain */
+    BOWSER_SND_LAND = 0xb6,        /* touching down after a jump */
+    BOWSER_SND_TALK_START = 0xb7,  /* the intro message appears */
+    BOWSER_SND_VANISH = 0xb9,      /* start of the vanish-and-dash fade */
+    BOWSER_SND_SHRINK_LOOP = 0xba, /* PlayLong while he shrinks in the defeat sequence */
+    BOWSER_SND_DEFEATED = 0xbb,    /* the key is spawned after the defeat sequence */
+    BOWSER_SND_LAND_SOFT = 0xbd,   /* landing dust in func_ov060_02115a84 */
+    BOWSER_SND_FIREBALL = 0x122,   /* a fireball is spawned (func_ov060_021140c0) */
+    BOWSER_SND_FIRE_LOOP = 0x180   /* PlayLong while he breathes fire */
 };
 
 /* dCc_c::flags bits this file touches (see include/dCc_c.h). */
@@ -246,7 +257,7 @@ enum Bowser_Anim {
 };
 
 /* Remaining local views and scalar ABI bridges from the legacy shards.
- * Native actor, Player and collision interfaces use the existing headers. */
+ * Native actor, daPly_c and collision interfaces use the existing headers. */
 /* Bowser's hold/state tables at data_ov060_0211aeb4 / 0211aed4 use
  * daKpa_c member pointers. The separate tail state table at
  * data_ov060_0211ae9c uses KpaTailState / daKpaTail_c member pointers. */
@@ -763,8 +774,8 @@ int daKpaTail_c::Behavior()
 // @symbol _ZN7daKpa_c8BehaviorEv
 /*
 One frame of Bowser, in order: advance the random state once (result unused);
-find the closest Player and record the angle and the horizontal distance to him
-(no Player: angle = his own facing, distance 0x7fffffff); func_ov060_02112434
+find the closest daPly_c and record the angle and the horizontal distance to him
+(no daPly_c: angle = his own facing, distance 0x7fffffff); func_ov060_02112434
 (condition flags, hold-state handler, opacity fade); func_ov060_02111a28
 (footfall effects); copy mAngleY to mPrevAngleY; advance the model animation at
 mAnimSpeed; func_ov060_0211577c (model matrix, foot points, shadow); store this
@@ -894,10 +905,10 @@ BOWSER_STATE_ARENA_TILT, switch his body collider on and stop; if he is defeated
 stop. Otherwise switch his body collider on as well (func_ov060_021123a0 with 1)
 and look for a grab: the tail's collider must report an owner and the grab bit
 (hitFlags & 0x1000), that actor must not be collecting a cap, and
-Player::TryGrab(tail) must succeed. On a grab the Player is given Bowser's three
+daPly_c::TryGrab(tail) must succeed. On a grab the daPly_c is given Bowser's three
 angles (current and previous), the tail goes to BOWSER_TAIL_HOLDING and records
-the Player, Bowser's body collider is switched off, Bowser goes to
-BOWSER_HOLD_HELD with the Player in mGrabbedPlayer, and the hold countdown starts
+the daPly_c, Bowser's body collider is switched off, Bowser goes to
+BOWSER_HOLD_HELD with the daPly_c in mGrabbedPlayer, and the hold countdown starts
 at 0x96 (150 frames). */
 void daKpaTail_c::func_ov060_02115d68(){
     daKpa_c *bowser = (daKpa_c *)dActor_c::FindWithID(this->mBowserUniqueID);
@@ -910,7 +921,7 @@ skip_13:
     bowser->func_ov060_021123a0(1);
     if (this->mdCcAc_c.otherOwner == 0) return;
     if (!(this->mdCcAc_c.hitFlags & 0x1000)) return;
-    Player *player = static_cast<Player *>(dActor_c::FindWithID(this->mdCcAc_c.otherOwner));
+    daPly_c *player = static_cast<daPly_c *>(dActor_c::FindWithID(this->mdCcAc_c.otherOwner));
     if (!player) return;
     if (player->IsCollectingCap())
         return;
@@ -953,17 +964,17 @@ void daKpaTail_c::func_ov060_02115d50(){
 Tail state BOWSER_TAIL_HOLDING (2), per frame. If Bowser is in
 BOWSER_STATE_ARENA_TILT, switch his body collider on and go to BOWSER_TAIL_FREE
 (the code then carries on with the checks below). If the tail's own mFlags has
-bit 0x400, go to cooldown, forget the Player and tell Bowser to let go at once
+bit 0x400, go to cooldown, forget the daPly_c and tell Bowser to let go at once
 (BOWSER_HOLD_RELEASE_NOW); that path returns without touching the tail's
-collider. Otherwise, with a Player held: if the Player no longer holds an object
-(Player::mHeldObj == 0) he is dropped; else a non-zero Player::mAngleYSpeed
+collider. Otherwise, with a daPly_c held: if the daPly_c no longer holds an object
+(daPly_c::mHeldObj == 0) he is dropped; else a non-zero daPly_c::mAngleYSpeed
 refills mHoldCountdown to 0x96 (150) and a zero one counts it down, dropping the
-Player when it reaches 0. A drop (Player::DropActor) puts the tail in cooldown
+daPly_c when it reaches 0. A drop (daPly_c::DropActor) puts the tail in cooldown
 and Bowser in BOWSER_HOLD_RELEASE_AFTER_ANIM. Every other path ends by switching
 the tail's collider off. */
 void daKpaTail_c::func_ov060_02115c1c(){
     daKpa_c *bowser;
-    Player *held;
+    daPly_c *held;
     int cond;
 
     bowser = (daKpa_c *)dActor_c::FindWithID(this->mBowserUniqueID);
@@ -1227,8 +1238,8 @@ int daKpa_c::func_ov060_021156ec(){
 // @symbol _ZN7daKpa_c19func_ov060_02115518Ev
 /*
 The intro conversation, one step per mTalkStep (nothing happens without a target
-Player). Step 0: Player::StartTalk(this, 1); when it succeeds, mState becomes
-BOWSER_STATE_INTRO and the step advances. Step 1: once Player::GetTalkState() is
+daPly_c). Step 0: daPly_c::StartTalk(this, 1); when it succeeds, mState becomes
+BOWSER_STATE_INTRO and the step advances. Step 1: once daPly_c::GetTalkState() is
 0, show message data_ov060_0211a4e0[mVariantID] (0xcc, 0xce or 0xd0 in the ROM) at
 a point 200 units out along mAngleY and 200 units up (the sin/cos table scaled
 by 0xc8, Y + 0xc8000); when that succeeds, advance and play sound 0xb7. Step 2:
@@ -1236,7 +1247,7 @@ when GetTalkState() returns -1, go to BOWSER_STATE_JUMP for variant 1 and
 BOWSER_STATE_IDLE otherwise, advance, set mCutsceneStep to 4 and run
 func_ov060_02111f08 once (its step 4 clears bit 0x8 of Camera::mFlags). */
 void daKpa_c::func_ov060_02115518(){
-    Player *player = this->mTargetPlayer;
+    daPly_c *player = this->mTargetPlayer;
     if (player == 0)
     {
         return;
@@ -1421,7 +1432,7 @@ the target, BOWSER_STATE_TURN_TO_TARGET; if he is, and DistToCPlayer() <
 0x514000 (1300 units), a draw modulo 10 below mVanishChance picks
 BOWSER_STATE_VANISH_DASH (mVanishChance then drops to 3 if it was above 3, else
 to 1) and anything else picks BOWSER_STATE_FIREBALLS (mVanishChance back to 5);
-if the Player is farther away, BOWSER_STATE_CHARGE, upgraded to
+if the daPly_c is farther away, BOWSER_STATE_CHARGE, upgraded to
 BOWSER_STATE_JUMP on a draw below 5 when mDistToCenter is between 0x1f4000 (500
 units) and 0x5dc000 (1500 units). Every path except the cleared-toggle one sets
 the toggle. */
@@ -1477,7 +1488,7 @@ Choose an attack for variant 2, called from func_ov060_02115060. If he faces the
 target: with DistToCPlayer() < 0x3e8000 (1000 units), a draw modulo 10 below 4
 picks BOWSER_STATE_FIREBALLS, else a second draw below 8 picks
 BOWSER_STATE_FIRE_BREATH, else BOWSER_STATE_ANIM_CHAIN (mFireTimer is cleared and
-mAnimSpeed set to 0x1000 on all three); with the Player farther away a draw below
+mAnimSpeed set to 0x1000 on all three); with the daPly_c farther away a draw below
 5 picks BOWSER_STATE_JUMP, else BOWSER_STATE_CHARGE. If he does not face the
 target, BOWSER_STATE_TURN_TO_TARGET. */
 void daKpa_c::func_ov060_021150d0(){
@@ -1956,8 +1967,8 @@ int daKpa_c::func_ov060_0211469c(){
 /*
 Jump landing check. If the floor collider says he is on the ground: zero both
 speeds, call func_0200fa04 with his position, play animation 0xc once, play sound
-0xb6; for variant 0 also call func_ov002_020c56f0 with the target Player and
-(mDistToTarget >= 0x352000, 850 units) when that Player is not in the air; return
+0xb6; for variant 0 also call func_ov002_020c56f0 with the target daPly_c and
+(mDistToTarget >= 0x352000, 850 units) when that daPly_c is not in the air; return
 1. Otherwise return 0. */
 int daKpa_c::func_ov060_021145d4(){
     struct Vector3 v;
@@ -2123,8 +2134,8 @@ void daKpa_c::func_ov060_021142b4(){
 // @symbol _ZN7daKpa_c19func_ov060_021140c0Ev
 /*
 State BOWSER_STATE_FIREBALLS (9). On the first frame choose mFireballShots: 3 if
-the target Player has 4 or fewer health (Player::GetHealth), else a random 1 to 3
-(also when there is no Player). When animation 0x14 (data_ov060_0211abe0 is entry
+the target daPly_c has 4 or fewer health (daPly_c::GetHealth), else a random 1 to 3
+(also when there is no daPly_c). When animation 0x14 (data_ov060_0211abe0 is entry
 0x14 of the animation table) will cross frame 5, spawn a fireball (SpawnFireball,
 horizontal speed 0x1e000 = 30.0, second Fix12 argument 0xa000) at his position
 plus 0xe8 (232) units out along mAngleY and 0x58000 (88 units) up, with sound
@@ -2134,7 +2145,7 @@ otherwise start animation 0x14; then restart the animation from frame 0. */
 void daKpa_c::func_ov060_021140c0(){
     int new_var;
     if (this->mTimer == 0) {
-        Player *player = this->mTargetPlayer;
+        daPly_c *player = this->mTargetPlayer;
         if (player == 0 || player->GetHealth() > 4) {
             s32 rnd = RandomIntInternal(&data_0209e650);
             u32 hi = ((u32)rnd) >> 16;
@@ -2700,10 +2711,10 @@ void daKpa_c::func_ov060_021134ac(){
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daKpa_c19func_ov060_02113404Ev
 /*
-Defeat step 2: wait for the Player. func_ov060_02112350 runs first. Returns 1
+Defeat step 2: wait for the daPly_c. func_ov060_02112350 runs first. Returns 1
 when the current animation is animation 3 (data_ov060_0211ac60 is entry 3 of the
-animation table), a target Player exists, he is within 0x258000 (600 units)
-horizontally and the Player's facing differs from the angle to the Player by
+animation table), a target daPly_c exists, he is within 0x258000 (600 units)
+horizontally and the daPly_c's facing differs from the angle to the daPly_c by
 more than 0x6000 (135 degrees), that is, he is looking toward Bowser; otherwise
 0. mStepCounter is cleared on every call. */
 int daKpa_c::func_ov060_02113404(){
@@ -2821,7 +2832,7 @@ Defeat conversation and shrink for variants 0 and 1 (defeat step 3). mStepCounte
 is the phase: while it is 0 or 1 the conversation runs by mTalkStep, then
 func_ov060_021132a4 runs each frame and, when it returns 1,
 func_ov060_02113260 and func_ov060_021135fc run and this returns 1. Talk step 0:
-Player::StartTalk(this, 1); on success change the music volume (0x14, 0x15666)
+daPly_c::StartTalk(this, 1); on success change the music volume (0x14, 0x15666)
 and advance. Step 1: once GetTalkState() is 0, show message 0xcd (variant 0) or
 0xcf at his position; advance on success. Step 2: when GetTalkState() returns -1,
 move to the next phase, advance, play animation 4 once, stop the loaded music
@@ -2883,7 +2894,7 @@ int daKpa_c::func_ov060_021130c0(){
 // @symbol _ZN7daKpa_c19func_ov060_02112ee0Ev
 /*
 Defeat conversation and fade-out for variant 2 (defeat step 0xa). mStepCounter is
-the phase as in func_ov060_021130c0. Talk step 0: Player::StartTalk(this, 1).
+the phase as in func_ov060_021130c0. Talk step 0: daPly_c::StartTalk(this, 1).
 Step 1: once GetTalkState() is 0, show message 0xd1, or 0xd2 when NumStars()
 is 0x96 (150); when that succeeds also call Message::PrepareTalk. Step 2: when
 GetTalkState() returns -1, stop the loaded music layer (0x3c), run func_ov060_021135fc (the star), move
@@ -3082,8 +3093,8 @@ int daKpa_c::func_ov060_02112ba8(){
 /*
 Hold state BOWSER_HOLD_NONE (0), the normal per-frame handler, called through the
 hold table by func_ov060_02112434. Clears mHoldStep. Unless he is defeated, if the
-body collider names an owner that is a Player (actorID 0xbf), hurt him
-(Player::Hurt at Bowser's position, arguments 2, 0x8000, 1, 0, 1). Then call the
+body collider names an owner that is a daPly_c (actorID 0xbf), hurt him
+(daPly_c::Hurt at Bowser's position, arguments 2, 0x8000, 1, 0, 1). Then call the
 handler for mState from the table at data_ov060_0211aed4 (each row is a slot and
 a packed target; target bit 0 selects a call through the vtable slot, the rest
 is the this-adjustment), count mTimer, and on a state change reset mStep and
@@ -3102,7 +3113,7 @@ void daKpa_c::func_ov060_021128c0(){
     this->mHoldStep = 0;
     u32 id;
     if (this->mState != BOWSER_STATE_DEFEATED && (id = this->mdCcAcPos_c.otherOwner) != 0) {
-        Player *f = static_cast<Player *>(dActor_c::FindWithID(id));
+        daPly_c *f = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (f != 0) {
             int b = (((dActor_c *)f)->actorID == BOWSER_ACTOR_PLAYER);
             if (b) {
@@ -3184,14 +3195,14 @@ void daKpa_c::func_ov060_021128c0(){
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daKpa_c19func_ov060_02112724Ev
 /*
-Hold state BOWSER_HOLD_HELD (1): a Player has grabbed the tail and swings him
+Hold state BOWSER_HOLD_HELD (1): a daPly_c has grabbed the tail and swings him
 around. BOWSER_COND_BREATHING is cleared. By mHoldStep: 0 switches the body collider
 off, plays sound 0xb2, sets BOWSER_STATE_THROWN, starts animation 0xa and resets
 mAnimSpeed, advance; 1 starts animation 9 (looping) once animation 0xa reaches
 its last frame, and advances; 2 does nothing. Every frame: mSwingSpeed = the
-grabbed Player's mAngleYSpeed, mAngleX = -|mSwingSpeed| (used directly as an angle),
-mAngleY = the Player's mAngleY, and his position is the Player's plus 0xa0 (160)
-units out along the Player's facing (X and Z) and 0x18000 (24 units) up minus
+grabbed daPly_c's mAngleYSpeed, mAngleX = -|mSwingSpeed| (used directly as an angle),
+mAngleY = the daPly_c's mAngleY, and his position is the daPly_c's plus 0xa0 (160)
+units out along the daPly_c's facing (X and Z) and 0x18000 (24 units) up minus
 160 * sin(mAngleX) (Y). */
 void daKpa_c::func_ov060_02112724(){
     int v;
@@ -3377,8 +3388,8 @@ void daKpa_c::func_ov060_021123dc(){
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daKpa_c19func_ov060_021123c8Ev
 /*
-Called when the tail lets go of a Player: set mBounceOnLand (func_ov060_021128c0
-then bounces him when he next hits the ground) and forget the grabbed Player. */
+Called when the tail lets go of a daPly_c: set mBounceOnLand (func_ov060_021128c0
+then bounces him when he next hits the ground) and forget the grabbed daPly_c. */
 void daKpa_c::func_ov060_021123c8(){
     this->mBounceOnLand = 1;
     this->mGrabbedPlayer = 0;
@@ -3420,14 +3431,14 @@ void daKpa_c::func_ov060_02112350(){
 /*
 The intro camera, one step per mCutsceneStep, run each frame by the two intro
 states and once more by the conversation. Returns 1 at once when there is no
-Player, and otherwise only when step 3 completes. Step 0: Camera::SetFlag_3; aim
-the camera at the Player's position with Y replaced by Bowser's own (kept in
+daPly_c, and otherwise only when step 3 completes. Step 0: Camera::SetFlag_3; aim
+the camera at the daPly_c's position with Y replaced by Bowser's own (kept in
 mCamLookAt); place the camera 0.625 times the horizontal distance to that point
 away from Bowser, at the angle toward it minus 0x2000 (45 degrees), and 0xc8000
 (200 units) above him (kept in mCamPos); Camera::SetPos. Step 1: func_020092c4
-on the look-at; count frames the Player is not in the air (the count resets
+on the look-at; count frames the daPly_c is not in the air (the count resets
 while he is) and go on once it exceeds 0x1e (30). Step 2: ease the camera
-position toward a spot at 0.375 times the horizontal distance to the Player (at least 0x1f4000 = 500 units) at the
+position toward a spot at 0.375 times the horizontal distance to the daPly_c (at least 0x1f4000 = 500 units) at the
 angle minus 0x1000 (22.5 degrees) by 0x4000 (4.0) per frame per axis, and the
 look-at X and Z toward Bowser's by 0x1e000 (30.0); go on when func_020092c4 on
 the look-at returns non-zero. Step 3: ease the look-at, by 0xa000 (10.0) per
@@ -3436,7 +3447,7 @@ return 1 when func_020092c4 returns non-zero. Step 4: clear bit 0x8 of
 Camera::mFlags. */
 int daKpa_c::func_ov060_02111f08(){
     dCamera_c* cam = (dCamera_c *)data_0209f318;
-    Player* player = this->ClosestPlayer();
+    daPly_c *player = this->ClosestPlayer();
     struct Vector3 sp;
     struct Vector3* pv;
     int dist;

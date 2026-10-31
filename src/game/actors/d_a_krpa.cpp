@@ -40,7 +40,7 @@ enum d_a_krpa_AssetId { ASSET_KERONPA_BMD = 0x0351 };
 #include "daKrpa_c.h"
 #include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
@@ -324,7 +324,7 @@ void daKrpa_c::UpdateModelAndShadow() {
 
 // @symbol _ZN8daKrpa_c18TrackClosestPlayerEv
 void daKrpa_c::TrackClosestPlayer() {
-    Player *player = this->ClosestNonVanishPlayer();
+    daPly_c *player = this->ClosestNonVanishPlayer();
     if (!player) {
         this->mPlayer = 0;
         return;
@@ -347,7 +347,7 @@ void daKrpa_c::HandlePlayerHit() {
     int isPlayer = (found->actorID == 0xbf);
     if (isPlayer == 0)
         return;
-    Player *player = (Player *)found;
+    daPly_c *player = (daPly_c *)found;
     int beingEaten = ((this->mFlags & 0x20000) != 0);
     if (beingEaten != 0) {
         this->ChangeState(2);

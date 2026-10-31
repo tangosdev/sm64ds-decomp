@@ -7,7 +7,7 @@
 #include "dExtAnmTexPat_c.h"
 
 /* 1-Up logo popup -- ov002/daObj1UpLogo_c, profile OBJ_1UPLOGO (331 / 0x14b).
- * Player::IncMegaKillCount spawns one as actor 0x14b. Direct base dActor_c.
+ * daPly_c::IncMegaKillCount spawns one as actor 0x14b. Direct base dActor_c.
  * Size 0x150 is the factory's operator new. Same rise-and-pop as the score
  * popup (daObjNumber_c) next to it in this overlay.
  *

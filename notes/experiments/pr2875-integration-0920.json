@@ -90,7 +90,7 @@
       "location": "config/tu_manifest.d/ov006/dScMgMemory2_c.json notes[0]; source comments preceding OnGroundPounded/OnTurnIntoEgg/OnYoshiTryEat",
       "summary": "Remaining narration claims typed player PMF use and explicit C linkage not present in this source.",
       "required": "Qualify the first note to distinguish typed main/result/round/card arrays from player-table ownership proven by sinit. Remove stale tu_create comments saying real C++ method definitions were given explicit C linkage. Preserve actual method bodies and the second ownership note.",
-      "evidence": "TU declares only data021423c0/3e0/42408/42440 typed member tables. Player data021423a8 exists in __sinit_ov006_021314e4 as Pair[3]; no typed player-table declaration or dispatcher in this TU. All three real method definitions have C++ member linkage and emitted native mangled names.",
+      "evidence": "TU declares only data021423c0/3e0/42408/42440 typed member tables. daPly_c data021423a8 exists in __sinit_ov006_021314e4 as Pair[3]; no typed player-table declaration or dispatcher in this TU. All three real method definitions have C++ member linkage and emitted native mangled names.",
       "reason": "Stale C-linkage comments removed and typed table claims qualified to actual main/result/round/card arrays,with player ownership recorded separately."
     },
     {

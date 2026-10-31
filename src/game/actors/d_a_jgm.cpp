@@ -23,7 +23,7 @@
  * - mSpawnPosX stays punned: daJgm_c stores it as three scalars.
  * - dBgCh_Actr_UpdateDiscreteNoLava_veneer stays: the named
  *   UpdateDiscreteNoLava method is WRONG-DEST (ROM 0x02038420).
- * - Player::Bounce / Hurt stay mangled: each takes Fix12<int> by value
+ * - daPly_c::Bounce / Hurt stay mangled: each takes Fix12<int> by value
  *   (6az).
  * - dActor_c::IsTooFarAwayFromPlayer and cstd::fdiv have no header decl,
  *   so they are declared locally.
@@ -66,7 +66,7 @@ enum d_a_jgm_AssetId {
 #include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "SurfaceInfo.h"
@@ -192,9 +192,8 @@ extern "C" SpawnInfo<daJgm_c> g_profile_JUGEM = {
     0x01000000
 };
 
-// @symbol _ZN7daJgm_c13OnTurnIntoEggER6Player
-void daJgm_c::OnTurnIntoEgg(Player &player)
-{
+// @symbol _ZN7daJgm_c13OnTurnIntoEggER7daPly_c
+void daJgm_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap())
         GivePlayerCoins(player, 5, 0);
     else
@@ -327,7 +326,7 @@ s32 daJgm_c::UpdateHoverState()
     mHorzSpeed = 0xc000;
     if (DecIfAbove0_Byte(&mTimer) == 0) {
         /* Nested on purpose: one flat && chain is 12 bytes shorter. */
-        Player *p = ClosestNonVanishPlayer();
+        daPly_c *p = ClosestNonVanishPlayer();
         if (p != 0) {
             if (p->mPosY < mPosY && Vec3_HorzDist(&mPos, &p->mPos) < 0x190000 && CountSpinies() < 4)
                 SetState(1);
@@ -643,7 +642,7 @@ void daJgm_c::HandlePlayerCollision()
         return;
     }
 
-    Player *player = (Player *)other;
+    daPly_c *player = (daPly_c *)other;
     if ((mdCcAcPos_c.hitFlags & 0x66fe0)
         || BumpedUnderneathByPlayer(*player) != 0
         || player->IsOnShell() != 0
@@ -694,7 +693,7 @@ void daJgm_c::DieAndDropCoins()
 // @symbol _ZN7daJgm_c12UpdateFlightEv
 void daJgm_c::UpdateFlight() {
     /* The goto is kept: the goto-free if/else emits 4 more bytes. */
-    Player *p = ClosestNonVanishPlayer();
+    daPly_c *p = ClosestNonVanishPlayer();
     s32 *target;
     int chaseRange;
     if (p != 0) {

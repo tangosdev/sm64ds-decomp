@@ -82,7 +82,7 @@ struct daJgm_c : dActor_c {
     virtual s32  Render();              /* slot 9 */
     virtual void OnPendingDestroy();    /* slot 12 */
     virtual int  OnYoshiTryEat();       /* slot 18 */
-    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
     virtual int  OnAimedAtWithEgg();    /* slot 29 */
 
 private:
