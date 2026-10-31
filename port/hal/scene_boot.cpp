@@ -7777,6 +7777,11 @@ static void port_title_state_trace(int frame)
 extern "C" void func_02023498(void);
 extern "C" void func_0201a4bc(void);
 static unsigned g_loopin2_sc_p17, g_loopin2_sc_p7;
+/* KNOWNRESET1: the solo latch test below reads the local record and raises the ROM's word; the window's scene loop seats the
+   answer (tests/walk_window.cpp port_scene_soft_reset). Null in every target without a window. */
+extern "C" int func_0203dae4(int idx);
+extern "C" unsigned char data_020a0e44[4];   /* hal/comms_seam.cpp */
+extern "C" void (*port_scene_soft_reset_hook)(int frame, int was_up) = 0;
 
 /* run hunt8, lane SCENEINTERP1: SMOOTH MOTION ON THE SCENE PATH.
    tests/walk_window.cpp's windowed scene loop installs this hook (it is null
@@ -7865,13 +7870,26 @@ extern "C" void port_scene_tick(int frame, int tick_game)
         if (tick_game) {
             data_0209d50c = 0x17;
             ++g_loopin2_sc_p17;
+            /* KNOWNRESET1: SINGLE PLAYER (no transport), func_0203bc7c's latch test on the local record, the one part of that
+               builder the solo scene loop was missing (src/unnamed/arm9/0203/func_0203bc7c.c: the word from func_0203dae4, both
+               opposing-direction pairs dropped, then data_020a0e44 = (keys == 0x30c)). Its PadData stores are not run: the scene
+               loop's own store (tests/walk_window.cpp scene_host_input_frame) still owns PadData here, and a session's fan-out
+               keeps the ROM's whole builder as before. */
+            if (!port::comms_transport()) {
+                unsigned short keys = (unsigned short)func_0203dae4(0);
+                if ((keys & 0x30) == 0x30) keys = (unsigned short)(keys & ~0x30);
+                if ((keys & 0xc0) == 0xc0) keys = (unsigned short)(keys & ~0xc0);
+                data_020a0e44[0] = keys == 0x30c ? 1 : 0;
+            }
+            const int sc_latch_before = data_0209f1e0[0] != 0;
             func_02023498();
+            if (port_scene_soft_reset_hook)
+                port_scene_soft_reset_hook(frame, sc_latch_before);
             static int sc_latch_was;
             if ((data_0209f1e0[0] != 0) != sc_latch_was) {
                 sc_latch_was = data_0209f1e0[0] != 0;
                 std::fprintf(stderr, "[loopin2] scene f%d: the soft-reset latch "
-                             "data_0209f1e0 is %s on the scene loop (only a "
-                             "session's fan-out can raise it here)\n", frame,
+                             "data_0209f1e0 is %s on the scene loop\n", frame,
                              sc_latch_was ? "UP" : "down again");
                 std::fflush(stderr);
             }
