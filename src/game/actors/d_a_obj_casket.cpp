@@ -49,7 +49,7 @@ struct CasketState {
 
 /* Resource handles this TU's static initializer constructs. File IDs and
  * widths are the ROM's; constructor/destructor addresses are aliased in
- * the manifest (Eyerok idiom). */
+ * the manifest (daIwante_c idiom). */
 struct CasketModelFilePtr : SharedFilePtr {
     CasketModelFilePtr(u32 fileID);
     ~CasketModelFilePtr();

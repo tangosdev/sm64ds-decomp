@@ -7674,3 +7674,19 @@ arm9	0x02063648	func_02063648	WM_SetGameInfo	pret's pokediamond WM_etc.s: WM_Che
 arm9	0x0205b6b0	func_0205b6b0	SND_DestroyWaveArc	pret's pokediamond SND_bank.c: clears and flushes every link chained from the wave archive's topLink
 arm9	0x0205b6f4	func_0205b6f4	SND_DestroyBank	pret's pokediamond SND_bank.c: unchains each of the bank's four wave-archive links from its archive
 arm9	0x0205b78c	func_0205b78c	SND_AssignWaveArc	pret's pokediamond SND_bank.c: unchains the bank's link at index from its old archive and chains it at the new archive's head
+ov066	0x02115ee0	_ZN6EyerokD1Ev	_ZN10daIwante_cD1Ev	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x02115f84	_ZN6EyerokD0Ev	_ZN10daIwante_cD0Ev	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x02119654	_ZN6Eyerok16CleanupResourcesEv	_ZN10daIwante_c16CleanupResourcesEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x021197a0	_ZN6Eyerok16OnPendingDestroyEv	_ZN10daIwante_c16OnPendingDestroyEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x021197a4	_ZN6Eyerok6RenderEv	_ZN10daIwante_c6RenderEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x02119838	_ZN6Eyerok8BehaviorEv	_ZN10daIwante_c8BehaviorEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x02119ce8	_ZN6Eyerok13InitResourcesEv	_ZN10daIwante_c13InitResourcesEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x0211ad64	_ZTV6Eyerok	_ZTV10daIwante_c	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov071	0x0211f000	_ZN10ScuttlebugD1Ev	_ZN7daSpd_cD1Ev	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x0211f048	_ZN10ScuttlebugD0Ev	_ZN7daSpd_cD0Ev	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x02120308	_ZN10Scuttlebug16CleanupResourcesEv	_ZN7daSpd_c16CleanupResourcesEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x02120338	_ZN10Scuttlebug16OnPendingDestroyEv	_ZN7daSpd_c16OnPendingDestroyEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x0212033c	_ZN10Scuttlebug6RenderEv	_ZN7daSpd_c6RenderEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x02120398	_ZN10Scuttlebug8BehaviorEv	_ZN7daSpd_c8BehaviorEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x021203f8	_ZN10Scuttlebug13InitResourcesEv	_ZN7daSpd_c13InitResourcesEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x02122c2c	_ZTV10Scuttlebug	_ZTV7daSpd_c	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched

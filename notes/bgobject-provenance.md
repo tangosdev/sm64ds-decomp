@@ -236,15 +236,15 @@ offset 0. Both are spelled `static_cast<Animation *>(&member)` now.
 
 ---
 
-## Eyerok (`include/Eyerok.h`, [ov066](../config/arm9/overlays/ov066/symbols.txt), size 0x874)
+## daIwante_c (`include/daIwante_c.h`, [ov066](../config/arm9/overlays/ov066/symbols.txt), size 0x874)
 
 The largest recovery in this pass: reading `InitResources` and `Behavior` as named
 members turned **every remaining `pad_` run in the class** into an evidenced field,
 and the class now closes on 0x874 by field span instead of only by the factory's
 `operator new` literal.
 
-Bodies read: `src/_ZN6Eyerok13InitResourcesEv.cpp`,
-`src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp`, `src/Eyerok_Spawn.cpp`, and `Behavior`,
+Bodies read: `src/_ZN10daIwante_c13InitResourcesEv.cpp`,
+`src/_ZN10daIwante_c16OnAimedAtWithEggEv.cpp`, `src/Eyerok_Spawn.cpp`, and `Behavior`,
 `Render` and `CleanupResources`, which used to be one file each and are now
 members of the promoted `src/game/actors/d_a_iwante.cpp`.
 
@@ -518,7 +518,7 @@ The promoted header derives from `dBgActor_c` directly and owns two complete
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x320 | `mState` | `Behavior` ([src/game/actors/d_a_obj_ewb_ice.cpp](../src/game/actors/d_a_obj_ewb_ice.cpp)) reads the WORD here as a pointer, tests `*(p + 8)` and calls the pointer-to-member pair at `p + 8` through `this`. The same shape `Eyerok`'s own 0x48c has. `InitResources` installs it through `func_ov073_021223a4(this, &data_ov073_021234b0)`. Declared type left `u8`. |
+| 0x320 | `mState` | `Behavior` ([src/game/actors/d_a_obj_ewb_ice.cpp](../src/game/actors/d_a_obj_ewb_ice.cpp)) reads the WORD here as a pointer, tests `*(p + 8)` and calls the pointer-to-member pair at `p + 8` through `this`. The same shape `daIwante_c`'s own 0x48c has. `InitResources` installs it through `func_ov073_021223a4(this, &data_ov073_021234b0)`. Declared type left `u8`. |
 | 0x32c | `mVariant` | `InitResources` sets `0`/`1`/`2` for actorID `0xaa`/`0xab`/`0xac` and then uses it as the row index into all three 0xc-stride ov073 tables — `data_ov073_021231bc` (model), `...1c0` (KCL), `...1c4` (CLPS). `CleanupResources` indexes the first two again to `Release()` them. Was inside `pad_321`. |
 | 0x32d | `mSpawnIndex` | `InitResources` copies the value of a per-variant global counter (`data_ov073_02123424` for `0xab`, `...3420` for `0xac`) and then increments that counter — a serial number among the arena pieces of this variant. Was inside `pad_321`. |
 
@@ -546,7 +546,7 @@ gives them. `0x56c` is zeroed and never read in a matched body; it stays `unk_`.
 `short *a = (short *)(((int)this) + 0x8c);` and friends. Spelling those three
 statements as `mAngleX = mAngleX + mAngleXSpeed;` costs the function its size
 (`999 word(s) differ`) — the same "integer-first address materialisation is the
-ROM's own" result `Eyerok`'s `mDustCounter` produced. The raw form stays.
+ROM's own" result `daIwante_c`'s `mDustCounter` produced. The raw form stays.
 
 In the C twin, `unk_08e` was repointed to `mAngleY`.
 

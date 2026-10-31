@@ -42,7 +42,7 @@ answers.**
 |---|---|---|
 | **codegen** | the member compiles as a method but the bytes move | usually unfixable here; leave it C |
 | **scope** | it byte-matches, but an unpromoted shard still calls the C name | let `mwldarm` enumerate it -- `dScMgCurling2_c`: 29/29 byte-neutral, 12 refused |
-| **naming** | the member has an auto-generated `func_ovNNN_*` name, so renaming it *is* real progress | the rename must reach `symbols.txt` in the same commit, and every external namer must move with it -- [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug`: all 27 still-unrenamed members |
+| **naming** | the member has an auto-generated `func_ovNNN_*` name, so renaming it *is* real progress | the rename must reach `symbols.txt` in the same commit, and every external namer must move with it -- [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`daSpd_c`: all 27 still-unrenamed members |
 
 Reporting "10/37" without naming the wall is not a result. The three are not
 interchangeable: a scope wall is enumerated for you by the linker, a naming wall
@@ -69,7 +69,7 @@ reads prose: `mwccarm` strips comments, `tiers.py` blanks them before scoring, a
 completely ungated.
 
 This is the **most common defect the reviewer finds**, and it has hit both of the two
-most recent classes: five wrong counts across [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug`'s manifest notes,
+most recent classes: five wrong counts across [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`daSpd_c`'s manifest notes,
 facts file and PR body, and three in one comment block shipped inside
 the Luigi TU (`d_s_mg_luigi.cpp` at that revision).
 
@@ -81,7 +81,7 @@ So, before you hand off:
   definitions carrying 58 symbols; 55 mangled, 3 C-named; 10 file-scope regions"
   makes the next drift visible; "the two regions below" hides it.
 * **A negative claim from a search is unproven until you state the search's case,
-  scope and encoding.** [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug` shipped "nothing named Scuttlebug or
+  scope and encoding.** [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`daSpd_c` shipped "nothing named daSpd_c or
   Spider exists anywhere in this cartridge" from a case-sensitive scan; lowercase
   `spider` is in `overlay_0000.bin` as two asset paths and `SPIDER` is in
   `arm9_dec.bin`. The class name really was coined -- the stated reason was not.
@@ -374,7 +374,7 @@ that owns the key function. `_ZTV` frequently escapes because somebody added a
 coined alias row for it — honest for a vtable, and **not available for `_ZTS`**,
 whose *content* is the length-prefixed name (`"5Koopa"` where the cartridge
 holds `"8daNknk_c"`). Three separate classes hit this in one day (`Koopa`,
-`Scuttlebug`, `KingBobOmb`); `class_rename.py` counts **125** in this state. The
+`daSpd_c`, `KingBobOmb`); `class_rename.py` counts **125** in this state. The
 unblock is the rename, as its own change. The promoted precedent [ov029](../../../config/arm9/overlays/ov029/symbols.txt)/`daObjWcObj01_c`
 carries an **empty** `externalized_output` and licenses all 13 of its RTTI
 records as `deadstrip-data`.
@@ -441,7 +441,7 @@ about renaming, and this is the reconciliation:
 - **Your range does not own the key function** → the TU emits no vtable and no
   RTTI at all, so the tree's coined spelling never reaches a manifest. Keep it.
   Renaming is a `class_rename` campaign, not a promotion. (`Goomboss` kept
-  `Goomboss` over the cartridge's `daKuriKing_c`; `Eyerok` kept `Eyerok` over
+  `Goomboss` over the cartridge's `daKuriKing_c`; `daIwante_c` kept `daIwante_c` over
   `daIwante_c`.)
 - **Your range does own the key function** → the TU emits `_ZTI`/`_ZTS`/`_ZTV`
   for its own class, and those rows **must** carry the ROM's RTTI spelling.
@@ -453,10 +453,10 @@ about renaming, and this is the reconciliation:
 
 **And the inline-destructor lever can CREATE this blocker out of nothing.**
 Inlining moves the key function to the first out-of-line virtual declared. On
-[ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug` that pulled the key function *into* the claimed range — which
+[ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`daSpd_c` that pulled the key function *into* the claimed range — which
 is what the writer wanted for emission order, and it is also what turned a
 harmless coined name into a hard refusal. The TU then emitted
-`_ZTI10Scuttlebug` / `_ZTS10Scuttlebug`, which no `symbols.txt` anywhere names,
+`_ZTI7daSpd_c` / `_ZTS7daSpd_c`, which no `symbols.txt` anywhere names,
 and both dispositions refuse:
 ```text
     deadstrip-data -> "declared compiler-only data but has no configured ROM
@@ -476,7 +476,7 @@ for `_ZTI`/`_ZTS`.
 **Do not "fix" this by adding an alias, and understand why the temptation is
 dangerous: faking it passes every gate you can run locally.** `deadstrip-data`'s
 home check is a **name lookup**, and the byte comparison is deferred to
-`rombuild`. Giving `_ZTS10Scuttlebug` a home address would produce a green
+`rombuild`. Giving `_ZTS7daSpd_c` a home address would produce a green
 `verify` and a genuine 13-versus-12-byte mismatch downstream. The refusal is
 correct; the fix is the rename, as its own reviewable change.
 
@@ -628,7 +628,7 @@ mwccarm 2004/b56 behaviours, not style preferences.
   `return 0 if text_verified else 1` — so a run that prints `PROMOTION REFUSED`,
   for unlicensed output or a compiler-only policy refusal, still **exits 0**.
   Only a compile failure or a byte/reloc failure gives 1. Read the console text;
-  never gate on `$?` alone here. (Measured on [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`Scuttlebug`: two refused
+  never gate on `$?` alone here. (Measured on [ov071](../../../config/arm9/overlays/ov071/symbols.txt)/`daSpd_c`: two refused
   runs, both exit 0.)
 
   **Two more things that run does not say out loud.** The manifest's
@@ -835,8 +835,8 @@ align your spellings to it, rather than assuming the header will collide with
 you on its own.
 
 **But a `decl_common.h` return type can cost you the match, and then the header
-is what gives way.** Measured on [ov066](../../../config/arm9/overlays/ov066/symbols.txt)/`Eyerok`: `decl_common.h:2730` types
-[func_ov066_02119454](../../../src/game/actors/d_a_iwante.cpp) (ROM ordinal 52 used to assemble `Eyerok`) as `void(void*, void*)` and the ROM function returns a
+is what gives way.** Measured on [ov066](../../../config/arm9/overlays/ov066/symbols.txt)/`daIwante_c`: `decl_common.h:2730` types
+[func_ov066_02119454](../../../src/game/actors/d_a_iwante.cpp) (ROM ordinal 52 used to assemble `daIwante_c`) as `void(void*, void*)` and the ROM function returns a
 value — declaring it `int` MATCHes, declaring it `void` does not. That TU
 excludes the header and declares every symbol the header would have supplied.
 So: include it and align *by default*, but when a spelling it dictates breaks a

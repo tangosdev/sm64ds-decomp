@@ -481,7 +481,7 @@
   },
   "blockers_for_the_writer": [
     "PMF NAME COUPLING (the real one). 18 of the 26 auto-named members are reachable ONLY through pointer-to-member records in unowned .data, which dsd resolves by symbol NAME. Renaming any of those 18 is one edit, not two: the mangled name must land in config/arm9/overlays/ov081/symbols.txt in the same commit or the record links as 0. No stage-2 or stage-3 byte gate detects it.",
-    "THE CEILING IS NAME RECOVERY, NOT CODEGEN. All 26 unconverted members carry auto-generated func_ov081_* names; only the 10 vtable overrides already carry mangled names. This is the ov071/Scuttlebug wall, not the dScMgCurling2_c one. A realistic conversion target is 10/36 for free, and anything beyond that is a coordinated naming pass. The 9-state x 2-handler table recovered above is the evidence base for naming the 18.",
+    "THE CEILING IS NAME RECOVERY, NOT CODEGEN. All 26 unconverted members carry auto-generated func_ov081_* names; only the 10 vtable overrides already carry mangled names. This is the ov071/daSpd_c wall, not the dScMgCurling2_c one. A realistic conversion target is 10/36 for free, and anything beyond that is a coordinated naming pass. The 9-state x 2-handler table recovered above is the evidence base for naming the 18.",
     "COINED NAME + LENGTH COINCIDENCE. 'Moneybag' and 'daGmch_c' are both 8 characters, so a wrongly-named TU emits _ZTS/_ZTI of exactly the right SIZE and the wrong CONTENT. Fine on the declared text-only route; silently fatal on intact-object.",
     "A member function cannot sit inside an extern \"C\" { } region, so the one file-scope region must go after the last surviving func_* member."
   ],

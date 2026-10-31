@@ -180,7 +180,7 @@ daSetSE_c	DONE	include\daSetSE_c.h	dActor_c	0	ov002	7
 daSldMng_c	DONE	include\daSldMng_c.h	dActor_c	0	ov019	4
 daSnmBth_c	DONE	include\daSnmBth_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov027	8
 daSoundObj_c	DONE	include\daSoundObj_c.h	dActor_c	0	ov002	4
-daSpd_c	DONE	include\Scuttlebug.h  [alias: header uses pre-rename name]	dActor_c	0	ov071	10
+daSpd_c	DONE	include\daSpd_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov071	10
 daStarBase_c	DONE	include\daStarBase_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	9
 daStarGate_c	DONE	include\StarDoor.h  [alias: header uses pre-rename name]	dActor_c	0	ov100	7
 daTgz_c	DONE	include\daTgz_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov077	10
@@ -218,7 +218,7 @@ daObjSwdoor_c	DONE	include\daObjSwdoor_c.h	dBgActor_c	2	ov002	3
 daObjUkiyuka_c	DONE	include\daObjUkiyuka_c.h	dBgActor_c	2	ov002	4
 daDgr_c	DONE	include\daDgr_c.h	dBgActor_c	0	ov025	6
 daDpLift_c	DONE	include\daDpLift_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov025	6
-daIwante_c	DONE	include\Eyerok.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov066	8
+daIwante_c	DONE	include\daIwante_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov066	8
 daKpa2Bg_c	DONE	include\daKpa2Bg_c.h	dBgActor_c	0	ov060	6
 daKpa3Bg_c	DONE	include\daKpa3Bg_c.h	dBgActor_c	0	ov060	6
 daLinelift2_c	DONE	include\daLinelift2_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov091	6

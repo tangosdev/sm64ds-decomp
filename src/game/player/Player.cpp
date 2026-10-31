@@ -8006,7 +8006,7 @@ int Player::CanEnterDoor(unsigned char door) {
     if (IsState(*(State *)data_ov002_0211013c) || IsState(*(State *)data_ov002_02110154) ||
         IsState(*(State *)data_ov002_0211022c) || IsState(*(State *)data_ov002_0211043c)) {
         /* Yoshi with something in his mouth cannot take a door. If its
-           OnYoshiTryEat() code is 6 (enemies such as daKrb_c and Scuttlebug,
+           OnYoshiTryEat() code is 6 (enemies such as daKrb_c and daSpd_c,
            and the small crate daObjBlockS_c) or 1 (daBttBk_c, or another
            Player), he spits it out first; any other code (4 for a coin, a
            cap, a key or a star; 5; ...) just refuses the door. */

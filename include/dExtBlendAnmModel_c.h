@@ -63,7 +63,7 @@ struct dExtBlendAnmModel_c : dExtAnmModel_c {
 
     /* DECLARED, defined out of line in src/engine/model/d_ext_model.cpp
      * as real C++ -- complete-object context for every ROM caller (it is a
-     * member subobject in daKing_Donketu_c/Eyerok/daJango_c/daMoray_c...), hence C1.
+     * member subobject in daKing_Donketu_c/daIwante_c/daJango_c/daMoray_c...), hence C1.
      * Body is empty; blendWeight and mBlendBuffer are initialised through the init
      * list so their stores land where the ROM has them. */
 

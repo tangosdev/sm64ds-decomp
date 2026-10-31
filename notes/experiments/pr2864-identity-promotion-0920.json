@@ -903,7 +903,7 @@
       ],
       [
         "_ZN6Player17SetNoControlStateEhih",
-        "src/actors/Eyerok.cpp",
+        "src/actors/daIwante_c.cpp",
         "return:void"
       ],
       [
