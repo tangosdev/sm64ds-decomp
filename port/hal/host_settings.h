@@ -490,6 +490,10 @@ int host_setting_set_keep_lives(int on);
 /* RABBIT1: FixOriginalBugs, bool, ON by default. 1 applies the port's fixes for the cartridge's own bugs (the glowing rabbits name their rank by catch order, English only); 0 is the cartridge's text byte for byte. Live; SM64DS_FIX_ORIGINAL_BUGS=0/1 overrides the file. */
 int host_setting_fix_original_bugs(void);
 int host_setting_set_fix_original_bugs(int on);
+/* CAMCOLL1: CameraCollision, bool, ON by default. 1 = the analog and free camera's eye stops at walls, floors and ceilings (0.9.3);
+   0 = it passes through them like 0.9.2. The DS camera is the ROM's either way. Live; SM64DS_CAMERA_COLLISION=0/1 overrides the file. */
+int host_setting_camera_collision(void);
+int host_setting_set_camera_collision(int on);
 /* PROFILE1: the Adventure Online profile, owned by the game (settings.json OnlineName, OnlineBodyColor, OnlineShoeColor). The name is letters, digits and single spaces, trimmed, 16 bytes at most; "" until the player has set one once (the popup shows until then). The colours are the player's Yoshi BODY and SHOES as six hex digits each, freely picked in the popup; host_setting_online_colours answers 1 once they are set (a settings.json with the old OnlineYoshiColor index maps it to its pair once and writes the new keys). host_setting_launcher_nick is the launcher's Nickname (cleaned the same way), only the popup's first suggestion. The set writes both at once and flushes. */
 #define HOST_ONLINE_COLORS 8
 void host_online_name_clean(const char *in, char *out, size_t cap);
