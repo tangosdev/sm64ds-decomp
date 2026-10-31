@@ -102,6 +102,10 @@ struct MenuPiece {
      selected while it owns the mouse focus, and pressed while the real stylus is held on it. A touch hostimg piece maps a
      click proportionally into its source rect s (the ROM's own box), not 1:1. */
   uint8_t hl;
+  /* SAVEDIM1: fade_own = a piece drawn after engine A's fade (MENU_STAGE_POST_FADE) that takes that fade itself, through
+     MenuSources.bm_apply: an SRC_TOP_HOSTROW pixel by the verdict it carried out of the compositor (alpha FF taken, FE not), any
+     other source as taken. The level-clear recipe lc: its lifted lettering keeps the ROM's verdict at its new rows. */
+  uint8_t fade_own;
   /* ASSET4 (appended): nodraw = a touch-only piece (maps clicks, draws nothing). has_ex / ex = a keycover piece skips the 3D pixels
      inside the DS source rect ex (so a whole-layer piece never contains another piece's element, here the wrench). */
   uint8_t nodraw, has_ex; DsRect ex;

@@ -17,8 +17,13 @@
  *               byte identity with the 0.5.x picture is the gate.
  *   HOTSPOTS    the ROM's own three touch boxes, LC_Update case 3: DS rows 0x28, 0x50, 0x78,
  *               0x20 tall, any column (src/_ZN5Stage9LC_UpdateEv.cpp:175, :196, :217).
- *   STAGE       PRE_FADE: drawn before engine A's fade, so the ROM's own -7 dim on the finished
- *               picture reaches the plates and the lettering exactly as it always did.
+ *   STAGE       POST_FADE, and each piece takes engine A's fade itself (MenuPiece.fade_own, SAVEDIM1):
+ *               the plates as the 3D under them does (the ROM's dim on the finished picture, as
+ *               when they were drawn before the fade), the lifted lettering by the verdict each
+ *               pixel carried out of the compositor. LC_Update case 2 leaves BG3 and OBJ out of
+ *               the dim (src/game/stages/d_s_stage_methods.cpp:520), so the course name,
+ *               CLEAR! / COMPLETE!, CONGRATULATIONS and the coin total stay bright at their new
+ *               rows, as on the cartridge, while the 3D scene dims.
  *   VARIANT     1 + (new coin record) + 2 * (castle / secret-course star): the two ROM flags
  *               the band rows depend on, so build() is pure and the selftest can ask for any.
  *   DRIVER      ROM_CURSOR: up/down move the ROM's chosen plate (data_0209f2e0) through the
@@ -82,6 +87,13 @@ const int kCoinRow1Rec = 0xa0;
 /* A castle star or secret course (SublevelToLevel >= 0xf) places the total 0x10 rows higher
    (src/_ZN5Stage6RenderEv.cpp:146). */
 const int kCoinHighShift = 0x10;
+/* THE BOSS COURSES (levels 0xf..0x14: the Bowser arenas and the three key courses, Goomboss Battle among them): LC_Render also
+   draws the CONGRATULATIONS lettering as an OBJ at DS y 0x38, glyph rows 50..62 (src/game/stages/d_s_stage_methods.cpp:388), and
+   the course name and CLEAR! sit under it on BG3 (rows 67..78 and 84..94). The text block of such a course is lifted from the row
+   above the lettering with both layers, so the three lines keep the cartridge's order and spacing, and it lands just under the
+   HUD's top row of counters (DS rows 0..17, a few rows clear of them) instead of at the very top. */
+const int kBossTextRow0 = 47;
+const int kBossTextDst = 20;
 
 /* the geometry, exactly swap_geom_for's */
 struct LcGeom {
@@ -94,14 +106,15 @@ struct LcGeom {
 
 LcGeom g_geom;                   /* the last build's, for the trace and the selftest */
 
-void lc_geom_for(int w, int h, LcGeom *o, int record, int high)
+void lc_geom_for(int w, int h, LcGeom *o, int record, int high, int boss)
 {
     LcGeom g;
     memset(&g, 0, sizeof g);
     if (w < 8 || h < 8) { *o = g; return; }
     /* the bands follow the rows the glyphs are on: DS row r is the first host row at or after r * h / 192 */
     auto hrow = [h](int r) { return (r * h + SUB_H - 1) / SUB_H; };
-    g.t_h = hrow(kTextRow1) - hrow(kTextRow0);
+    const int tr0 = boss ? kBossTextRow0 : kTextRow0;
+    g.t_h = hrow(kTextRow1) - hrow(tr0);
     const int cr0 = (record ? kCoinRow0Rec : kCoinRow0) - (high ? kCoinHighShift : 0);
     const int cr1 = (record ? kCoinRow1Rec : kCoinRow1) - (high ? kCoinHighShift : 0);
     g.c_h = hrow(cr1) - hrow(cr0);
@@ -112,10 +125,10 @@ void lc_geom_for(int w, int h, LcGeom *o, int record, int high)
         g.t_h = h / 3;
         g.c_h = h / 3;
     }
-    g.ty_src = hrow(kTextRow0);
+    g.ty_src = hrow(tr0);
     if (g.ty_src + g.t_h > h) g.ty_src = h - g.t_h;
     if (g.ty_src < 0) g.ty_src = 0;
-    g.ty_dst = 0;
+    g.ty_dst = boss ? hrow(kBossTextDst) : 0;
     g.cy_src = hrow(cr0);
     if (g.cy_src + g.c_h > h) g.cy_src = h - g.c_h;
     if (g.cy_src < 0) g.cy_src = 0;
@@ -126,7 +139,7 @@ void lc_geom_for(int w, int h, LcGeom *o, int record, int high)
     if (g.cy_src > g.ty_src && g.cy_src < g.ty_src + g.t_h)
         g.t_lift_h = g.cy_src - g.ty_src;
     /* THE MIDDLE, AND THE PLATES IN IT: the largest fraction that fits with 256:112 kept */
-    const int my0 = g.t_h, mh = g.cy_dst - my0;
+    const int my0 = g.ty_dst + g.t_h, mh = g.cy_dst - my0;
     if (mh < 4) { *o = g; return; }
     int num, den;
     if ((long long)w * kMenuRows <= (long long)mh * SUB_W) {
@@ -205,31 +218,40 @@ int up_lc(int scene_id)
         return 0;
     }
     const int record = data_0209f2b0 != 0;
-    const int high = SublevelToLevel(data_02092124) >= 0xf;
-    return 1 + record + 2 * high;
+    const int lvl = SublevelToLevel(data_02092124);
+    const int high = lvl >= 0xf;
+    return 1 + record + 2 * high + 4 * (lvl >= 0xf && lvl < 0x15);
 }
 
 void build_lc(int variant, MenuLayout *L)
 {
-    const int record = (variant - 1) & 1, high = ((variant - 1) >> 1) & 1;
+    const int record = (variant - 1) & 1, high = ((variant - 1) >> 1) & 1, boss = ((variant - 1) >> 2) & 1;
     LcGeom g;
-    lc_geom_for(L->w, L->h, &g, record, high);
+    lc_geom_for(L->w, L->h, &g, record, high, boss);
     g_geom = g;
     if (g.pnum <= 0) return;               /* no room: nothing is composed (np stays 0, so the recipe is not live) */
 
     /* the course-clear lettering, BG3, from its source rows to the top of the picture */
     MenuPiece t = menu_piece_make(SRC_TOP_HOSTROW, 0, g.ty_src, L->w, g.t_lift_h, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
     t.layers = MENU_L_BG3;
+    t.fade_own = 1;
+    if (boss) {
+        /* the CONGRATULATIONS OBJ travels with the name and CLEAR! (it stayed behind before and CLEAR! landed on it) */
+        t.layers = MENU_L_BG3 | MENU_L_OBJ;
+        t.lden = 1; t.lnum = 1;
+        t.fx = 0; t.fy = (short)g.ty_dst; t.fw = (short)L->w; t.fh = (short)g.t_lift_h;
+    }
     menu_add_piece(L, t);
     /* the coin total, OBJ, from its source rows to the very bottom */
     MenuPiece c = menu_piece_make(SRC_TOP_HOSTROW, 0, g.cy_src, L->w, g.c_h, MENU_AX_L, MENU_AY_B, 0, 0, 1, 1);
     c.layers = MENU_L_OBJ;
+    c.fade_own = 1;
     menu_add_piece(L, c);
     /* SHELF1 (S4): the plates wait for the end of the port's dim ease (the cartridge dims and shows them in one tick) */
     if (dim_progress() < 255) {
         L->hide_owners = MENU_L_BG2;
         L->backdrop = MENU_BACKDROP_TOP_AS_IS;
-        L->stage = MENU_STAGE_PRE_FADE;
+        L->stage = MENU_STAGE_POST_FADE;
         return;
     }
     /* the three plates, BG0 | BG1 of engine B, placed and sampled by the legacy rational */
@@ -238,13 +260,14 @@ void build_lc(int variant, MenuLayout *L)
     p.key_backdrop = 1;
     p.row_ok = menu_plate_row;
     p.touch = 1;
+    p.fade_own = 1;
     p.fx = (short)g.px; p.fy = (short)g.py; p.fw = (short)g.pw; p.fh = (short)g.ph;
     p.lnum = g.pnum; p.lden = g.pden;
     const int pi = menu_add_piece(L, p);
     for (int b = 0; b < 3; ++b) menu_add_hotspot(L, pi, 0, kMenuFirstRow + b * 0x28, SUB_W, 0x20, b);
     L->hide_owners = MENU_L_BG2;           /* "TOUCH TO SELECT", which the compose has never drawn */
     L->backdrop = MENU_BACKDROP_TOP_AS_IS;
-    L->stage = MENU_STAGE_PRE_FADE;
+    L->stage = MENU_STAGE_POST_FADE;
 }
 
 /* The ROM reads the menu with a pad only in LC_Update's case 3 and only when no wait is running: the
@@ -445,6 +468,13 @@ void build_lc2(int variant, MenuLayout *L)
         fbh = U(kMenuRows) / 2;
         plates_h = fbh;
     }
+    /* the ROM's own status box ("Saving file..." / "File saved.") that takes the plates' place while the save runs: drawn at a whole
+       number of host pixels per DS pixel, the nearest to 2/3 of a DS pixel's size and never under one (the DS font is one pixel thin,
+       and a box drawn under 1:1 dropped whole columns of it: at RenderScale 1 "File saved." lost the F's stem). The same size as
+       before at RenderScale 3. Where the box is taller than the plates and a gap (RenderScale 1), the column keeps room for it the
+       whole time, so nothing moves when the save starts. */
+    const int boxk = ((4 * L->unum + 3 * L->uden) / (6 * L->uden)) > 1 ? (4 * L->unum + 3 * L->uden) / (6 * L->uden) : 1;
+    if (80 * boxk - U(9) > plates_h) plates_h = 80 * boxk - U(9);         /* U(9) = g4, the gap over the plates */
     const int g1 = U(3), g2 = high ? 0 : U(3), g3 = U(5), g4 = U(9);
     int T = hA + g2 + hB + g3 + hCoin + g4 + plates_h;
     if (record) T += hBan + g1;
@@ -520,13 +550,13 @@ void build_lc2(int variant, MenuLayout *L)
         menu_add_piece(L, ar);
     }
     if (saving) {
-        /* the ROM's own "Saving file..." box, bottom screen (56,40,144,80, the same box the pause menu's save shows), at 2/3 where the plates were */
+        /* the ROM's own "Saving file..." box, bottom screen (56,40,144,80, the same box the pause menu's save shows), where the plates were */
         MenuPiece sp = menu_piece_make(SRC_SUB, 56, 40, 144, 80, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
         sp.layers = MENU_L_BG0 | MENU_L_BG1 | MENU_L_OBJ;   /* the box and its text; never the minimap behind it */
         sp.key_backdrop = 1;
-        const int sw = U(144) * 2 / 3, sh2 = U(80) * 2 / 3;
+        const int sw = 144 * boxk, sh2 = 80 * boxk;                      /* boxk host px per DS px (above) */
         sp.fx = (short)((W - sw) / 2); sp.fy = (short)(py0 + (plates_h - sh2) / 2); sp.fw = (short)sw; sp.fh = (short)sh2;
-        sp.lnum = 2 * L->unum; sp.lden = 3 * L->uden;
+        sp.lnum = boxk; sp.lden = 1;
         menu_add_piece(L, sp);
     }
     L->no_focus_paint = 1;                 /* the lit plank and the arrow are the selection */
@@ -562,7 +592,8 @@ extern "C" void hal_lc_trace(int w, int h, int frame, int composed)
     /* the rectangles are computed fresh for this line, from this frame's ROM flags, exactly as the old swap trace
        did every frame (g_geom is only the last BUILD's, and a frame that is not composed builds nothing) */
     LcGeom g;
-    lc_geom_for(w, h, &g, data_0209f2b0 != 0, data_0209f20c != 0 && SublevelToLevel(data_02092124) >= 0xf);
+    const int lvl = data_0209f20c != 0 ? SublevelToLevel(data_02092124) : 0;
+    lc_geom_for(w, h, &g, data_0209f2b0 != 0, lvl >= 0xf, lvl >= 0xf && lvl < 0x15);
     fprintf(stderr, "[compose] f%d f20c=%d f2d4=%d f2e0=%d composed=%d picture "
             "%dx%d text 0,%d %dx%d from row %d  plates %d,%d %dx%d "
             "(%d/%d)  coins 0,%d %dx%d from row %d\n", frame, now[0],

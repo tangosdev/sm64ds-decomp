@@ -121,7 +121,7 @@ void menu_lc2_facts(MenuFacts *f);
 const MenuRecipe g_menu_recipes[] = {
     { "lc2",      menu_lc2_up, menu_lc2_build, menu_lc2_rom_cursor, MENU_KEY_ONE_SCREEN_MENUS, MENU_DRV_ROM_CURSOR, 0, 8,
       menu_lc_pad_ok, menu_lc2_facts },
-    { "lc",       menu_lc_up, menu_lc_build, menu_lc_rom_cursor, MENU_KEY_SAVE_MENU_ON_TOP, MENU_DRV_ROM_CURSOR, 0, 4,
+    { "lc",       menu_lc_up, menu_lc_build, menu_lc_rom_cursor, MENU_KEY_SAVE_MENU_ON_TOP, MENU_DRV_ROM_CURSOR, 0, 8,
       menu_lc_pad_ok },
     { "pause",    menu_pause_up, menu_pause_build, menu_pause_cursor, MENU_KEY_ONE_SCREEN_MENUS, MENU_DRV_MIXED, MENU_RF_PAD_B_BACK, 8,
       menu_pause_pad_ok, menu_pause_facts },
