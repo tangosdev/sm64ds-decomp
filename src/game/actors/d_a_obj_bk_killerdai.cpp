@@ -41,7 +41,7 @@
 #include "daObjBkKillerdai_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Particle__System.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
@@ -113,8 +113,8 @@ void daObjBkKillerdai_c::Kill() {
     MarkForDestruction();
 }
 
-// @symbol _ZN18daObjBkKillerdai_c15OnHitByMegaCharER6Player
-void daObjBkKillerdai_c::OnHitByMegaChar(Player &player) {
+// @symbol _ZN18daObjBkKillerdai_c15OnHitByMegaCharER7daPly_c
+void daObjBkKillerdai_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     KillByMegaChar(player);
     mAngleY = mPrevAngleY;
@@ -144,7 +144,7 @@ s32 daObjBkKillerdai_c::Behavior() {
     if (UpdateKillByMegaChar(0x2000, 0, 0, 0xc8000))
         return 1;
     if (!dActor_c::FindWithID(mSpawnedUniqueID)) {
-        Player *player = ClosestPlayer();
+        daPly_c *player = ClosestPlayer();
         int dist = Vec3_HorzDist(&mPos, &player->mPos);
         s16 ang = Vec3_HorzAngle(&mPos, &player->mPos);
         if (AngleDiff(ang, mAngleY) < 0x2000 && dist > 0x320000 && dist < 0x5dc000) {

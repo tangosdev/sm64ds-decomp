@@ -49,10 +49,10 @@ enum {
  *   state  handler                 what it does
  *   0 SETUP       func_ov080_02123fcc  collision off, collect the group's partners, go to 1
  *   1 HIDDEN      func_ov080_02123ecc  underground; starts emerging when it has the turn and
- *                                      the Player is 250..1500 units away
+ *                                      the daPly_c is 250..1500 units away
  *   2 EMERGE      func_ov080_02123c24  animation 0x2d4, cylinder grows; then picks 3, 4 or 5
  *   3 THROW_ROCK  func_ov080_02123a34  animation 0x2d5; spawns a daChoro_Rock_c on frame 10
- *   4 WAIT        func_ov080_02123924  animation 0x2d3; to 5 when it ends or the Player is close
+ *   4 WAIT        func_ov080_02123924  animation 0x2d3; to 5 when it ends or the daPly_c is close
  *   5 LEAP        func_ov080_02123860  animation 0x2d2; cylinder height curve peaks at 288
  *                                      units, collision off from frame 15; back to 1
  */

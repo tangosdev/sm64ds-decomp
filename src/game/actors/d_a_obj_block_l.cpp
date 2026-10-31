@@ -23,7 +23,7 @@
  */
 
 #include "daObjBlockL_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dActor_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
@@ -137,10 +137,10 @@ bool daObjBlockL_c::HasNonzeroAngleX() {
     return mAngleX != 0;
 }
 
-// @symbol _ZN13daObjBlockL_c15OnHitByMegaCharER6Player
+// @symbol _ZN13daObjBlockL_c15OnHitByMegaCharER7daPly_c
 /* Vtable slot 27. player.IncMegaKillCount() then this class's own Kill
  * (slot 31) through an unqualified virtual call. */
-void daObjBlockL_c::OnHitByMegaChar(Player &player) {
+void daObjBlockL_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Kill();
 }
@@ -464,7 +464,7 @@ int daObjBlockL_c::InitResources() {
     mPrevEventBit = Event::GetBit(mEventID);
 
     {
-        Player *pl = ClosestPlayer();
+        daPly_c *pl = ClosestPlayer();
         if (pl != 0 && pl->IsEnteringLevel() != 0) {
             if (IsActorID(this, 0x11) && HasNonzeroAngleX()) {
                 if (data_0209f2f8 == 1)

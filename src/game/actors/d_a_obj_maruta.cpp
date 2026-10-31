@@ -37,7 +37,7 @@
 
 #include "common.h"
 #include "daObjMaruta_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "dBgW.h"
@@ -94,13 +94,13 @@ void daObjMaruta_c_EmitDestructor(daObjMaruta_c *p) {
     p->~daObjMaruta_c();
 }
 
-// @symbol _ZN13daObjMaruta_c15OnHitByMegaCharER6Player
+// @symbol _ZN13daObjMaruta_c15OnHitByMegaCharER7daPly_c
 /* Vtable slot 27, and this class's KEY FUNCTION: the destructor is inline in
    the class body, so the first out-of-line virtual declared anchors
    _ZTV13daObjMaruta_c and the RTTI chain, and this TU is where it is defined.
    dBgActor_c::KillByMegaChar is non-virtual, so the unqualified call is the
    direct `bl` the ROM has. */
-void daObjMaruta_c::OnHitByMegaChar(Player &player) {
+void daObjMaruta_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     func_02012694(0x1e, &mCamSpacePosX);
     KillByMegaChar(player);

@@ -20,7 +20,7 @@
  * and no level load is pending, the script ends.
  *
  * Commands 0..3 drive a player (the command is the character) through
- * Player's own command table; 4 drives the camera's; 0x12 and up drive a
+ * daPly_c's own command table; 4 drives the camera's; 0x12 and up drive a
  * daDemo_c cutscene actor whose param1 is the command. ProcessKuppaScript
  * handles the rest itself.
  *
@@ -50,7 +50,7 @@
 #include "dActor_c.h"
 #include "dFdColor_c.h"
 #include "dScene_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "PlayerInput.h"
 #include "SaveData.h"
 #include "Sound.h"
@@ -4478,7 +4478,7 @@ int RunPlayerCommand(u8 *command, int first, int last) {
         if (player == 0)
             return 0;
     }
-    return ((Player *)player)->func_ov002_020bd664(command, first, last);
+    return ((daPly_c *)player)->func_ov002_020bd664(command, first, last);
 }
 
 /* Spawns a player (actor 0xbf) for a character the script needs but the game
@@ -4705,7 +4705,7 @@ void RunStarCameraScript(s32 setting) {
     RunKuppaScript(data_020876e4[setting]);
 }
 
-/* Player::St_EndingFly_Main starts it once the take-off animation ends. */
+/* daPly_c::St_EndingFly_Main starts it once the take-off animation ends. */
 void StartEndingCutscene() {
     RunKuppaScript(data_02088610);
 }

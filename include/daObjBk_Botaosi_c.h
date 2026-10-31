@@ -61,7 +61,7 @@ struct daObjBk_Botaosi_c : dBgActor_c {
 
     virtual int OnAttacked2(dActor_c &other);     /* slot 23 */
     virtual void OnKicked(dActor_c &other);       /* slot 24 */
-    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

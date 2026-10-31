@@ -64,7 +64,7 @@
       {"slot": 16, "target": "0x02115ee0", "symbol": "_ZN6SnufitD1Ev",                "inherited_name": "complete-object destructor (D1)"},
       {"slot": 17, "target": "0x02115f28", "symbol": "_ZN6SnufitD0Ev",                "inherited_name": "deleting destructor (D0)"},
       {"slot": 18, "target": "0x02116f40", "symbol": "_ZN6Snufit13OnYoshiTryEatEv",   "inherited_name": "dActor_c::OnYoshiTryEat"},
-      {"slot": 19, "target": "0x02116f14", "symbol": "_ZN6Snufit13OnTurnIntoEggER6Player", "inherited_name": "dActor_c::OnTurnIntoEgg"},
+      {"slot": 19, "target": "0x02116f14", "symbol": "_ZN6Snufit13OnTurnIntoEggER7daPly_c", "inherited_name": "dActor_c::OnTurnIntoEgg"},
       {"slot": 29, "target": "0x02116f0c", "symbol": "_ZN6Snufit16OnAimedAtWithEggEv", "inherited_name": "dActor_c::OnAimedAtWithEgg"}
     ],
     "own_slot_count": 10,
@@ -87,7 +87,7 @@
       {"slot": 24, "target": "0x0201013c", "symbol": "arm9 _ZN8dActor_c8OnKickedERS_"},
       {"slot": 25, "target": "0x02010138", "symbol": "arm9 _ZN8dActor_c8OnPushedERS_"},
       {"slot": 26, "target": "0x02010134", "symbol": "arm9 _ZN8dActor_c24OnHitByCannonBlastedCharERS_"},
-      {"slot": 27, "target": "0x02010130", "symbol": "arm9 _ZN8dActor_c15OnHitByMegaCharER6Player"},
+      {"slot": 27, "target": "0x02010130", "symbol": "arm9 _ZN8dActor_c15OnHitByMegaCharER7daPly_c"},
       {"slot": 28, "target": "0x0201012c", "symbol": "arm9 _ZN8dActor_c19OnHitFromUnderneathERS_"},
       {"slot": 30, "target": "0x020100dc", "symbol": "arm9 _ZN8dActor_c25OnAimedAtWithEggReturnVecEv"}
     ],
@@ -132,7 +132,7 @@
     {"ordinal": 17, "address": "0x02116b84", "size": "0x28c", "symbol": "_ZN6Snufit8BehaviorEv",             "legacy_source": "src/_ZN6Snufit8BehaviorEv.cpp",             "lines": 110, "role": "vtable slot 6"},
     {"ordinal": 18, "address": "0x02116e10", "size": "0xfc",  "symbol": "_ZN6Snufit13InitResourcesEv",       "legacy_source": "src/_ZN6Snufit13InitResourcesEv.cpp",       "lines": 47,  "role": "vtable slot 0"},
     {"ordinal": 19, "address": "0x02116f0c", "size": "0x8",   "symbol": "_ZN6Snufit16OnAimedAtWithEggEv",    "legacy_source": "src/_ZN6Snufit16OnAimedAtWithEggEv.cpp",    "lines": 11,  "role": "vtable slot 29"},
-    {"ordinal": 20, "address": "0x02116f14", "size": "0x2c",  "symbol": "_ZN6Snufit13OnTurnIntoEggER6Player", "legacy_source": "src/_ZN6Snufit13OnTurnIntoEggER6Player.cpp", "lines": 16, "role": "vtable slot 19"},
+    {"ordinal": 20, "address": "0x02116f14", "size": "0x2c",  "symbol": "_ZN6Snufit13OnTurnIntoEggER7daPly_c", "legacy_source": "src/_ZN6Snufit13OnTurnIntoEggER7daPly_c.cpp", "lines": 16, "role": "vtable slot 19"},
     {"ordinal": 21, "address": "0x02116f40", "size": "0x8",   "symbol": "_ZN6Snufit13OnYoshiTryEatEv",       "legacy_source": "src/_ZN6Snufit13OnYoshiTryEatEv.cpp",       "lines": 7,   "role": "vtable slot 18"}
   ],
   "shard_totals": {"shards": 22, "total_lines": 684, "cpp_shards": 15, "c_shards": 7},
@@ -172,7 +172,7 @@
       {"offset": "0x3d8", "width": "4", "evidence": "Behavior `add r2,r4,#0x3d8; ldr r0,[r2]; add r0,r0,#0x200; str r0,[r2]`, then re-reads it, sign-extends the low 16 bits and uses them as an index into arm9 data_02082214. A 32-bit counter read as a 16-bit angle, advanced 0x200 per frame."},
       {"offset": "0x3dc", "width": "4", "evidence": "func_ov065_02116588 does `str #0,[r4,#0x3dc]`; func_ov065_02116364 does `ldr r0,[r6,#0x3dc]; cmp r0,#3; bge` and later `add r3,r6,#0x3dc; str r2,[r3]`. A small counter. NOTE: include/Snufit.h currently spells 0x3dc as `pad_3dc[0x8]`; the cartridge reads and writes it."}
     ],
-    "measurement": "Every immediate load/store and ADD-immediate in the 0x1068-byte run was decoded and grouped by displacement (base registers r13/r15 excluded). The complete set of displacements >= 0x100 seen is: 0x100 0x107 0x108 0x10a 0x10c 0x110 0x130 0x134 0x144 0x200 0x300 0x314 0x31c 0x350 0x358 0x35c 0x364 0x38c 0x3bc 0x3c0 0x3c4 0x3c8 0x3cc 0x3d0 0x3d4 0x3d8 0x3dc, plus 0x6f9/0x6fb (on a Player* returned by arm9 0x02010ad8, not on this) and 0xb4000 (a constant addend, not a field). 0x314/0x31c/0x350/0x358/0x35c fall inside the dExtAnmModel_c subobject; 0x100..0x10c inside dEnemyBase_c."
+    "measurement": "Every immediate load/store and ADD-immediate in the 0x1068-byte run was decoded and grouped by displacement (base registers r13/r15 excluded). The complete set of displacements >= 0x100 seen is: 0x100 0x107 0x108 0x10a 0x10c 0x110 0x130 0x134 0x144 0x200 0x300 0x314 0x31c 0x350 0x358 0x35c 0x364 0x38c 0x3bc 0x3c0 0x3c4 0x3c8 0x3cc 0x3d0 0x3d4 0x3d8 0x3dc, plus 0x6f9/0x6fb (on a daPly_c* returned by arm9 0x02010ad8, not on this) and 0xb4000 (a constant addend, not a field). 0x314/0x31c/0x350/0x358/0x35c fall inside the dExtAnmModel_c subobject; 0x100..0x10c inside dEnemyBase_c."
   },
   "data_band": {
     "owned_by_this_class": "0x0211cb20..0x0211cc20 (0x100 bytes), the first 0x100 bytes of ov065's .data (which starts at 0x0211cb20). 0x0211cc20 begins the next class's identical block.",

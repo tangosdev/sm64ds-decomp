@@ -27,7 +27,7 @@ enum daFRing_c_AssetId {
 
 #include "decl_common.h"
 #include "daFRing_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
@@ -93,7 +93,7 @@ s32 daFRing_c::Render() {
 // @symbol _ZN9daFRing_c8BehaviorEv
 s32 daFRing_c::Behavior() {
     mFrame++;
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     unsigned int frame = mFrame;
     int reach = frame * 0x22;
     if (player != 0 && frame < 0x46 && player->mIsAirborne == 0) {

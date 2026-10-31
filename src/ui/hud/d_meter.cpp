@@ -82,7 +82,7 @@ enum dMeter_c_AssetId {
 #include "dFdBrightness_c.h"
 #include "types.h"
 #include "decl_Player.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dCamera_c.h"
 #include "dScStage_c.h"
 #include "PlayerInput.h"
@@ -325,8 +325,8 @@ int dMeter_c::InitResources() {
     data_ov002_02111184 = 0;
     {
         u8 idx = *(volatile u8 *)&data_0209f250;
-        data_ov002_0211117c[0] = ((Player *)((idx ? (void *volatile *)data_0209f394
-                                                  : (void *volatile *)data_0209f394)[idx]))
+        data_ov002_0211117c[0] = ((daPly_c *)((idx ? (void *volatile *)data_0209f394
+                                                   : (void *volatile *)data_0209f394)[idx]))
                                      ->GetHealth();
     }
     if (data_ov002_0211117c[0] == 8) {
@@ -546,7 +546,7 @@ s32 dMeter_c::CleanupResources() {
 // @symbol _ZN8dMeter_c17UpdateHealthMeterEv
 void dMeter_c::UpdateHealthMeter() {
     int chr = data_0209f250;
-    Player *player = (Player *)data_0209f394[chr];
+    daPly_c *player = (daPly_c *)data_0209f394[chr];
     unsigned int health = (data_02092144[chr] >> 8) & 0xff;
     if ((unsigned char)(data_0209f2c4 | data_0209f20c | data_0209f294) != 0)
         return;
@@ -668,7 +668,7 @@ void dMeter_c::UpdateHealthMeter() {
 /* ROM ordinal 12 -- dMeter_c::RenderHealthMeter(), 0x020fcfec, size 0x22c */
 // @symbol _ZN8dMeter_c17RenderHealthMeterEv
 void dMeter_c::RenderHealthMeter() {
-    if (((Player *)data_0209f394[data_0209f250])->IsInsideOfCannon())
+    if (((daPly_c *)data_0209f394[data_0209f250])->IsInsideOfCannon())
         return;
 
     if (GetOwnerLanguage() == 5) {
@@ -1024,7 +1024,7 @@ void dMeter_c::RenderCameraButtons() {
 // @symbol _ZN8dMeter_c15RenderLifeCountEv
 void dMeter_c::RenderLifeCount() {
     unsigned char idx = data_0209f250;
-    Player *player = (Player *)data_0209f394[idx];
+    daPly_c *player = (daPly_c *)data_0209f394[idx];
     unsigned char state = data_ov002_02111178;
 
     if (state >= 3 && state < 6) {

@@ -106,7 +106,7 @@ struct daJango_c : dEnemyBase_c {
        The 20.0 vector is turned by a -0x4000 pitch, so the leg to the far node
        starts as a climb. */
     u8 mRiseToFarNode; /* 0x446 */
-    /* Set to 1 just before func_ov062_0211b51c calls Player::Hurt; the next
+    /* Set to 1 just before func_ov062_0211b51c calls daPly_c::Hurt; the next
        func_ov062_0211c218 (circling state entry) zeroes mStateTimer and clears
        it. Set even if Hurt does nothing. */
     u8                           mHitPlayer;            /* 0x447 */

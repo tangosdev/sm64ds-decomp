@@ -34,7 +34,7 @@
 #include "types.h"
 #include "common.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "math/CalcLib.h"
 
@@ -105,8 +105,8 @@ _ZN24daPropeller_Heyho_Fire_cD0Ev(daPropeller_Heyho_Fire_c *thiz) {
    character"). */
 void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
     dActor_c *otherActor;
-    Player *player;
-    int isPlayer; /* Preserve the observed widened comparison before the Player cast. */
+    daPly_c *player;
+    int isPlayer; /* Preserve the observed widened comparison before the daPly_c cast. */
     int flags;
     Vector3 v;
 
@@ -121,7 +121,7 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
     if (isPlayer == 0) {
         return;
     }
-    player = static_cast<Player *>(otherActor);
+    player = static_cast<daPly_c *>(otherActor);
     if (player->mIsVanish != 0) {
         return;
     }

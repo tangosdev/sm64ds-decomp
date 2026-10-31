@@ -124,9 +124,9 @@ void Func_02048eb4();
 void Func_02048ec4();
 void Func_02048ee4();
 
-/* The override layer Player drives: SetMusic(playerNo, music) installs a track
+/* The override layer daPly_c drives: SetMusic(playerNo, music) installs a track
    (Sound.cpp ignores any player but the local one), and Sound::EndMusic takes
-   it back off again. Player keeps two of these (mStateMusic and mPowerupMusic)
+   it back off again. daPly_c keeps two of these (mStateMusic and mPowerupMusic)
    and lets whichever survives restart when the other ends.
 
    The parameters are unnamed on purpose: a named parameter in this declaration

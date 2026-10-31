@@ -682,8 +682,8 @@ void dExtAnm2Model_c::Func_020162C4(u32 animFile, int flags, Fix12i speed, u16 s
     }
 }
 
-/* Pose bone `bone` from the second animation at its current frame. Player
-   calls it on a body model with bone 8; the int `self` keeps Player's
+/* Pose bone `bone` from the second animation at its current frame. daPly_c
+   calls it on a body model with bone 8; the int `self` keeps daPly_c's
    declaration and this definition in agreement. */
 // @symbol func_020162a4
 extern "C" void func_020162a4(int self, int bone) {

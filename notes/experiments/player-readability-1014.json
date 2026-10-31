@@ -1,7 +1,7 @@
 {
   "task": "player-readable1014",
   "source_base": "132347a5a8d617de18c0de31b0b598788fa08329",
-  "source": "src/game/player/Player.cpp",
+  "source": "src/game/player/d_a_ply_methods.cpp",
   "source_git_blob": "05810f9c4e729e79f3d576f5297910ce8fcf5fec",
   "scope": {
     "module": "ov002",
@@ -274,7 +274,7 @@
   "passes": [
     {
       "pass": 1,
-      "purpose": "Replace raw Player and inherited scalar field accesses with existing declared members of the same width and signedness.",
+      "purpose": "Replace raw daPly_c and inherited scalar field accesses with existing declared members of the same width and signedness.",
       "accepted_scalar_accesses": 676,
       "functions": 125
     },
@@ -288,7 +288,7 @@
   ],
   "state_objects": {
     "count": 71,
-    "evidence": "Player::State is three 8-byte PMFs. Every listed object has lo, hi and tail initialized by __sinit_ov002_021019d0.c and is passed to the same IsState/ChangeState symbol as before. Semantic state names are not inferred.",
+    "evidence": "daPly_c::State is three 8-byte PMFs. Every listed object has lo, hi and tail initialized by __sinit_ov002_021019d0.c and is passed to the same IsState/ChangeState symbol as before. Semantic state names are not inferred.",
     "objects": [
       "data_ov002_0210ffec",
       "data_ov002_02110004",
@@ -373,7 +373,7 @@
   },
   "production": {
     "enrollment": "config/arm9/overlays/ov002/delinks.txt: complete .text 0x020bccfc..0x020e67a8; same entry in generated stock config.",
-    "preparation": "Existing Player manifest policy removes six compiler-only empty destructors, including a separately owned Vector3 destructor duplicate. Policy is unchanged.",
+    "preparation": "Existing daPly_c manifest policy removes six compiler-only empty destructors, including a separately owned Vector3 destructor duplicate. Policy is unchanged.",
     "prepared_object_sha256": "285238d9b2627e66076e7f73d947bb9346188968fb7d3c5d0c87e42152da23d6",
     "final_prepared_object_equals_object_consumed_by_rombuild": true
   },
@@ -429,7 +429,7 @@
     },
     "private_ci": "Not run; no PR created by this task.",
     "prepush_linkcheck": {
-      "command": "python tools/prepush_linkcheck.py --files src/game/player/Player.cpp --json build/player-readable/linkcheck.json",
+      "command": "python tools/prepush_linkcheck.py --files src/game/player/d_a_ply_methods.cpp --json build/player-readable/linkcheck.json",
       "verdicts": {
         "VERIFIED": 612
       },
@@ -440,21 +440,21 @@
   },
   "measured_retained_forms": [
     {
-      "symbol": "_ZN6Player19func_ov002_020be3b0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020be3b0Ev",
       "old": "*(u16*)(((long long)(int)((char *)this + 0x73c)))",
       "new": "this->mCapFlags",
       "before_size": 1740,
       "after_size": 1680
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020be3b0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020be3b0Ev",
       "old": "*(u8*)(((long long)(int)((char *)this + 0x718)))",
       "new": "this->mLoadedResourceFlags",
       "before_size": 1740,
       "after_size": 1720
     },
     {
-      "symbol": "_ZN6Player21St_StuckInGround_MainEv",
+      "symbol": "_ZN7daPly_c21St_StuckInGround_MainEv",
       "old": "*(u8*)(((int)((char*)this) + 0x6e5))",
       "new": "this->mStateWork",
       "before_size": 392,
@@ -468,21 +468,21 @@
       "after_size": 220
     },
     {
-      "symbol": "_ZN6Player17St_LedgeHang_MainEv",
+      "symbol": "_ZN7daPly_c17St_LedgeHang_MainEv",
       "old": "*(u8*)(((int)((char*)this) + 0x6e3))",
       "new": "this->mStateStep",
       "before_size": 528,
       "after_size": 516
     },
     {
-      "symbol": "_ZN6Player17St_SlideKick_MainEv",
+      "symbol": "_ZN7daPly_c17St_SlideKick_MainEv",
       "old": "*(u8*)(((int)((char*)this) + 0x6e3))",
       "new": "this->mStateStep",
       "before_size": 528,
       "after_size": 516
     },
     {
-      "symbol": "_ZN6Player11St_Fly_MainEv",
+      "symbol": "_ZN7daPly_c11St_Fly_MainEv",
       "old": "*(u8 *)(((int)c + 0x70c))",
       "new": "this->mStateArg",
       "before_size": 1164,
@@ -496,32 +496,32 @@
       "resolution": "Retain that one cast around the typed controller base reference; other frame accesses use the controller interface."
     },
     {
-      "symbol": "_ZN6Player6IsAnimEj",
+      "symbol": "_ZN7daPly_c6IsAnimEj",
       "trial": "Direct pointer comparison and direct boolean return.",
       "before_size": 96,
       "after_size": 84,
       "resolution": "Keep integer comparison and explicit 1/0 result; use ModelAnim::file."
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c8b78Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c8b78Ev",
       "trial": "Implicit ModelAnim pointer to controller base pointer conversion.",
       "before_size": 312,
       "after_size": 316,
-      "resolution": "Use a non-null base reference. The native controller, Player and ShowMessage interfaces then match; local shadow Player/fBase types are removed."
+      "resolution": "Use a non-null base reference. The native controller, daPly_c and ShowMessage interfaces then match; local shadow daPly_c/fBase types are removed."
     }
   ],
   "remaining_source_work": [
-    "This sweep is complete within its evidence-backed readability scope; Player class reconstruction is still partial. Issue #3785 remains applicable.",
-    "GetBodyModelID can return 4 for metal, but Player.h declares mBodyModels[4] and unk_0ec as a byte plus padding. Existing indexed users predate this change. New animation rewrites retain an explicit slot load instead of adding out-of-bounds indexing. Resolve the shared layout with allocation/lifecycle evidence in a separate consumer-validated change.",
-    "The script actor slot at +0x72c is inside pad_729 in Player.h. Its Spawn producer and angle/position accesses establish dActor_c use here; the slot retains its raw offset and has no invented semantic member name.",
+    "This sweep is complete within its evidence-backed readability scope; daPly_c class reconstruction is still partial. Issue #3785 remains applicable.",
+    "GetBodyModelID can return 4 for metal, but daPly_c.h declares mBodyModels[4] and unk_0ec as a byte plus padding. Existing indexed users predate this change. New animation rewrites retain an explicit slot load instead of adding out-of-bounds indexing. Resolve the shared layout with allocation/lifecycle evidence in a separate consumer-validated change.",
+    "The script actor slot at +0x72c is inside pad_729 in daPly_c.h. Its Spawn producer and angle/position accesses establish dActor_c use here; the slot retains its raw offset and has no invented semantic member name.",
     "Numeric animation IDs, address-named state objects, unknown fields and unknown helpers are unchanged semantically. Reusing an existing field name is not a new claim to have recovered its historical spelling.",
     "Scalar Fix12 SetAnim/particle/music bridges, opaque resource/actor views, raw vector-pointer boundaries and compiler-sensitive copy/reload forms remain. Not every remaining cast has been proven necessary.",
-    "Lifecycle methods, vtable/RTTI definitions and static initializer ownership remain outside Player.cpp. The source-file boundary is not claimed as a recovered historical filename boundary."
+    "Lifecycle methods, vtable/RTTI definitions and static initializer ownership remain outside d_a_ply_methods.cpp. The source-file boundary is not claimed as a recovered historical filename boundary."
   ],
   "validation_limits": [
     "Byte identity proves the generated program for the pinned compiler; it does not by itself prove source completeness or historical spelling.",
-    "The stock build includes retail-gap bytes. All 612 enrolled Player functions were also checked individually, and the final prepared Player object equals the production input.",
-    "Whole-tree data inventory still reports one differing _ZTV10dCcAcPos_c symbol from two unchanged destructor sources, 1519 partial symbols and 21 unnamed symbols. Player emits no non-text allocated data; this task does not claim to resolve those unrelated inventory results.",
+    "The stock build includes retail-gap bytes. All 612 enrolled daPly_c functions were also checked individually, and the final prepared daPly_c object equals the production input.",
+    "Whole-tree data inventory still reports one differing _ZTV10dCcAcPos_c symbol from two unchanged destructor sources, 1519 partial symbols and 21 unnamed symbols. daPly_c emits no non-text allocated data; this task does not claim to resolve those unrelated inventory results.",
     "The production command used --no-rom: it compared all linked modules but did not package a candidate NDS image or run gameplay tests.",
     "The two source passes were performed by the producer. Independent verifier acceptance and current-main integration remain separate gates."
   ]

@@ -36,7 +36,7 @@ Restricted to TUs with both ends hard, not a swallower, not in an under-segmente
 **UNION: 1,167 `.c` files provably C++**, of which **293** sit inside the mergeable safe pool.
 Top modules by transitively promoted files: [ov006](../config/arm9/overlays/ov006/symbols.txt) 489, [ov002](../config/arm9/overlays/ov002/symbols.txt) 38, [ov100](../config/arm9/overlays/ov100/symbols.txt) 35, [ov071](../config/arm9/overlays/ov071/symbols.txt) 28, [ov072](../config/arm9/overlays/ov072/symbols.txt) 23.
 
-If you drop the confidence filter and trust every boundary incl. swallowers the number is 4,010 — **DO NOT use that number**; the swallowers (main 2,927 files, [ov002](../config/arm9/overlays/ov002/symbols.txt) Player 613) dominate it.
+If you drop the confidence filter and trust every boundary incl. swallowers the number is 4,010 — **DO NOT use that number**; the swallowers (main 2,927 files, [ov002](../config/arm9/overlays/ov002/symbols.txt) daPly_c 613) dominate it.
 
 Other buckets: dtor-only 259 (out of scope by user's instruction) | suggestive S1 (`extern _ZTV` + hand vptr store, defines nothing) 103 | weak, calls a mangled callee only 2,036 | pure C 4,266.
 
@@ -76,7 +76,7 @@ Composition: 171/173 are mixed `.c`+`.cpp`, 2 all-`.cpp`, 0 all-`.c`. 811 `.c` +
 
 Blocked pool: 214 TUs. Traps, in descending attractiveness:
 - `main` @0x20049f0 (2,927 files) — NOT a TU, it is the un-segmented remainder of arm9. Do not touch.
-- [ov002](../config/arm9/overlays/ov002/symbols.txt) @0x20bd828 Player (613) — medium/high, 4 incomplete, `opt_common_subs` in 13 members.
+- [ov002](../config/arm9/overlays/ov002/symbols.txt) @0x20bd828 daPly_c (613) — medium/high, 4 incomplete, `opt_common_subs` in 13 members.
 - [ov007](../config/arm9/overlays/ov007/symbols.txt) @0x20b72a0 (389) / @0x20ad660 (123) — no class label, low boundaries, ZERO sinits so no witness is constructible. [ov007](../config/arm9/overlays/ov007/symbols.txt) is where the map knows least and looks most confident.
 - [ov006](../config/arm9/overlays/ov006/symbols.txt) `dScMg*` family — newly attractive after regeneration, but carries `#pragma opt_*` on up to 35 members in one TU. TUs carrying `#pragma opt_*` CANNOT be merged as-is.
 - [ov004](../config/arm9/overlays/ov004/symbols.txt) @0x20b42c0 (107) — unattributed, low/low, swallower.

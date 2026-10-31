@@ -27,7 +27,7 @@
  * mShadowMat, and only common.h's flat s32 m[12] is that twelve-word copy.
  *
  * deslop leftovers:
- * - Player::Hurt (HurtPlayer): not declared on Player.h.
+ * - daPly_c::Hurt (HurtPlayer): not declared on daPly_c.h.
  * - dBgCh_Actr_UpdateContinuous_Veneer (UpdateGroundCollision): retail
  *   bl is 0x020383fc, the veneer, not UpdateContinuous at 0x020366b4.
  * - GetFloorResult returns an existing polygon through void *. The local
@@ -55,7 +55,7 @@
 #include "daBgSnmHed_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dBgPi.h"
 #include "Sound.h"
 #include "dClipper.h"
@@ -298,7 +298,7 @@ int daBgSnmBdy_c::InitState0()
 // @symbol _ZN12daBgSnmBdy_c6State0Ev
 int daBgSnmBdy_c::State0()
 {
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (Vec3_HorzDist(&mPosX, &player->mPosX) < 0x10e000) {
         if (player->StartTalk(*this, 1)) {
             mTalkPlayer = player;
@@ -554,7 +554,7 @@ int daBgSnmBdy_c::HurtPlayer()
         pos.x = mPosX;
         pos.y = mPosY;
         pos.z = mPosZ;
-        static_cast<Player *>(actor)->Hurt(pos, 2, 0xc000, 1, 0, 1);
+        static_cast<daPly_c *>(actor)->Hurt(pos, 2, 0xc000, 1, 0, 1);
     }
     return 1;
 }

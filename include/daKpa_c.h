@@ -26,7 +26,7 @@
  * gone from this half: `mAnimation` at 0x124 is 0x0d4 + 0x50, the dExtFrameCtrl_c base
  * inside dExtAnmModel_c, and `unk_130` at 0x130 is 0x0d4 + 0x5c. Both were declared as
  * siblings of a `u8 mAnmModel` marker whose pad stopped short of the real object.
- * Same shape as Player's two dExtAnmModel_c members.
+ * Same shape as daPly_c's two dExtAnmModel_c members.
  *
  * sizeof is 0x454, which is not inferred from the fields: daKpa_c_classInit asks
  * fBase_c::operator new for 1108 bytes -- and the last declared field, mSoundID,
@@ -62,10 +62,10 @@ struct daKpa_c : dActor_c {
        whatever hit it. */
     dCcAcPos_c mdCcAcPos_c;   /* 0x360 */
     /* A POINTER, not an s32. daKpa_c::Behavior assigns it straight from
-       dActor_c::ClosestPlayer(), so it is a Player *; dActor_c.h's forward
-       declaration of Player is enough for the member. */
-    Player *mTargetPlayer;  /* 0x3a0 */
-    Player *mGrabbedPlayer; /* 0x3a4 -- the Player holding the tail; null when nobody does */
+       dActor_c::ClosestPlayer(), so it is a daPly_c *; dActor_c.h's forward
+       declaration of daPly_c is enough for the member. */
+    daPly_c *mTargetPlayer;  /* 0x3a0 */
+    daPly_c *mGrabbedPlayer; /* 0x3a4 -- the daPly_c holding the tail; null when nobody does */
     /* uniqueID of the KOOPATAIL actor (ID 278) that InitResources spawns. */
     s32 mTailUniqueID;            /* 0x3a8 */
     /* uniqueID of the KOOPA2BG actor (ID 166) found with FindWithActorID. The
@@ -95,7 +95,7 @@ struct daKpa_c : dActor_c {
     s32 mFootPosBY;           /* 0x3e4 */
     s32 mFootPosBZ;           /* 0x3e8 */
     s32 mDistToTarget;            /* 0x3ec -- horizontal distance to mTargetPlayer, 0x7fffffff if none */
-    /* Copy of a halfword at +0x69c of the Player holding the tail, refreshed every
+    /* Copy of a halfword at +0x69c of the daPly_c holding the tail, refreshed every
        frame while held; its magnitude sets his tilt and, on release, his launch
        speed. */
     s32 mSwingSpeed;          /* 0x3f0 */
@@ -270,7 +270,7 @@ struct daKpa_c {
     /* The C++ half types this dActor_c*; C translation units have no dActor_c
        declaration in scope here, so it is spelt void* -- same width, same slot. */
     void *mTargetPlayer;            /* 0x3a0 */
-    void *mGrabbedPlayer;         /* 0x3a4 -- the Player holding the tail; null when nobody does */
+    void *mGrabbedPlayer; /* 0x3a4 -- the daPly_c holding the tail; null when nobody does */
     /* uniqueID of the KOOPATAIL actor (ID 278) that InitResources spawns. */
     s32 mTailUniqueID;            /* 0x3a8 */
     /* uniqueID of the KOOPA2BG actor (ID 166) found with FindWithActorID. The
@@ -300,7 +300,7 @@ struct daKpa_c {
     s32 mFootPosBY;           /* 0x3e4 */
     s32 mFootPosBZ;           /* 0x3e8 */
     s32 mDistToTarget;            /* 0x3ec -- horizontal distance to mTargetPlayer, 0x7fffffff if none */
-    /* Copy of a halfword at +0x69c of the Player holding the tail, refreshed every
+    /* Copy of a halfword at +0x69c of the daPly_c holding the tail, refreshed every
        frame while held; its magnitude sets his tilt and, on release, his launch
        speed. */
     s32 mSwingSpeed;          /* 0x3f0 */

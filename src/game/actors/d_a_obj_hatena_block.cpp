@@ -130,7 +130,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "types.h"
 #include "daObjHatenaBlock_c.h"
 #include "dBgCh_Gnd.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "SaveData.h"
@@ -736,12 +736,12 @@ void daObjHatenaBlock_c::func_ov102_02149d80() {
 // @symbol _ZN18daObjHatenaBlock_c19func_ov102_02149cccEv
 /* STATE_IDLE update routine. Returns without effect for a HATENA_BLOCK while
    SAVE_FLAGS1_BIT31 is clear. Otherwise, when the closest player is mega
-   (Player::mIsMega), less than 0xc8000 (200 units) away horizontally and
+   (daPly_c::mIsMega), less than 0xc8000 (200 units) away horizontally and
    below the block (mPosY is greater than the player's), treats it as a hit
    by a mega character: virtual OnHitByMegaChar. */
 void daObjHatenaBlock_c::func_ov102_02149ccc()
 {
-    Player *player;
+    daPly_c *player;
     if (!(data_0209caa0[1] & SAVE_FLAGS1_BIT31)) {
         int b = (int)(actorID == ACTOR_HATENA_BLOCK);
         if (b)
@@ -962,12 +962,11 @@ void daObjHatenaBlock_c::OnKicked(dActor_c &other)
     func_ov102_02149da8(STATE_BOUNCING);
 }
 
-// @symbol _ZN18daObjHatenaBlock_c15OnHitByMegaCharER6Player
+// @symbol _ZN18daObjHatenaBlock_c15OnHitByMegaCharER7daPly_c
 /* Hit by a mega player: the same accept test as OnGroundPounded; when
-   accepted, counts the hit (Player::IncMegaKillCount), records the player's
+   accepted, counts the hit (daPly_c::IncMegaKillCount), records the player's
    param1 and starts the bounce. */
-void daObjHatenaBlock_c::OnHitByMegaChar(Player &player)
-{
+void daObjHatenaBlock_c::OnHitByMegaChar(daPly_c &player) {
     if (mState == STATE_BOUNCING) return;
     if (func_ov102_02149078() != 0) return;
     player.IncMegaKillCount();

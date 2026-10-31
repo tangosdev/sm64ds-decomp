@@ -48,7 +48,7 @@ enum d_a_hyuhyu_AssetId {
 
 #include "common.h"
 #include "daHyuhyu_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SaveData.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
@@ -145,8 +145,8 @@ int daHyuhyu_c::OnYoshiTryEat() {
     return 4;
 }
 
-// @symbol _ZN10daHyuhyu_c13OnTurnIntoEggER6Player
-void daHyuhyu_c::OnTurnIntoEgg(Player &player) {
+// @symbol _ZN10daHyuhyu_c13OnTurnIntoEggER7daPly_c
+void daHyuhyu_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 
@@ -285,7 +285,7 @@ int daHyuhyu_c::StateWaitInit() {
    cool-down is over, that player is within 1000.0, and the signed bearing
    returned by Vec3_HorzAngle is below 0x1000. */
 int daHyuhyu_c::StateWaitMain() {
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
 
     if (player != 0) {
         Vector3 target;
@@ -320,7 +320,7 @@ int daHyuhyu_c::StateBlowMain() {
     Vector3 pos;
     Vector3 target;
     dActor_c *gust;
-    Player *player;
+    daPly_c *player;
     s16 heading;
 
     pos.x = mPosX;
@@ -415,11 +415,11 @@ int daHyuhyu_c::StateGustFlyMain() {
 void daHyuhyu_c::HandleCylinderHit() {
     u32 hitFlags;
     u32 id = mdCcAc_c.otherOwner;
-    Player *player;
+    daPly_c *player;
 
     if (id == 0)
         return;
-    player = (Player *)dActor_c::FindWithID(id);
+    player = (daPly_c *)dActor_c::FindWithID(id);
     if (mVariant == 0) {
         hitFlags = mdCcAc_c.hitFlags;
         if ((hitFlags & 0x40000) != 0) {

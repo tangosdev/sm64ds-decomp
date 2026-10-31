@@ -2,7 +2,7 @@
  * real base and real member type by hand.
  *
  * class daKpaTail_c: Bowser's tail (actor ID 278, spawned by daKpa_c::InitResources).
- * A Player who grabs it is held by it while Bowser's own hold handler runs (see
+ * A daPly_c who grabs it is held by it while Bowser's own hold handler runs (see
  * d_a_kpa.cpp). Its resource, behavior and state-worker functions are real
  * methods defined in d_a_kpa.cpp.
  *
@@ -16,7 +16,7 @@
  *     dActor_c   0x000 + 0x0d0 = 0x0d0   -> pad_0d0
  *     dCcAc_c    0x0d4 + 0x034 = 0x108   -> mBowserUniqueID
  *
- * The last 0x10 bytes (0x108..0x118) are Bowser's uniqueID, the Player the tail
+ * The last 0x10 bytes (0x108..0x118) are Bowser's uniqueID, the daPly_c the tail
  * is holding, a three-state dispatch index, and two halfword counters. Each is
  * named from how daKpaTail_c's own state workers (func_ov060_02115b84 and its
  * three callees, in d_a_kpa.cpp) read and write it.
@@ -47,17 +47,17 @@ struct daKpaTail_c : dActor_c {
        dActor_c::FindWithID and puts the tail 0x8c units from his position, in
        the direction of his previous facing angle plus 0x8000. */
     u32 mBowserUniqueID;                                /* 0x108 */
-    /* The Player this tail has grabbed (set by the grab check, cleared on release
+    /* The daPly_c this tail has grabbed (set by the grab check, cleared on release
        or when the hold times out); null when nothing is held. */
-    Player *mHeldPlayer; /* 0x10c */
+    daPly_c *mHeldPlayer; /* 0x10c */
     /* Index into the three-entry state table: 0 free (watching for a grab),
-       1 cooldown after a release, 2 holding a Player. */
+       1 cooldown after a release, 2 holding a daPly_c. */
     s32 mState;                                         /* 0x110 */
     /* Frames since the last state change; the cooldown state ends when it
        passes 0x1e (30 frames, half a second at 60 fps). */
     u16 mTimer;                                         /* 0x114 */
-    /* Frames of hold left: set to 0x96 (150) while the held Player's
-       mAngleYSpeed is non-zero; otherwise it counts down, and at 0 the Player
+    /* Frames of hold left: set to 0x96 (150) while the held daPly_c's
+       mAngleYSpeed is non-zero; otherwise it counts down, and at 0 the daPly_c
        is dropped. */
     u16 mHoldCountdown;                                 /* 0x116 */
 

@@ -82,7 +82,7 @@
     {"slot": 9,  "address": "0x02112068", "size": "0x28",  "symbol": "_ZN19daObjBk_Dossunbar_c6RenderEv", "inherited_name": "fBase_c::Render", "base_default": "0x02043af0"},
     {"slot": 16, "address": "0x02111ba0", "size": "0x44",  "symbol": "_ZN19daObjBk_Dossunbar_cD1Ev", "inherited_name": "dBgActor_c::~dBgActor_c (D1)", "base_default": "0x020ee42c"},
     {"slot": 17, "address": "0x02111be4", "size": "0x58",  "symbol": "_ZN19daObjBk_Dossunbar_cD0Ev", "inherited_name": "dBgActor_c::~dBgActor_c (D0)", "base_default": "0x020ee464"},
-    {"slot": 27, "address": "0x02111cb8", "size": "0x28",  "symbol": "_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player", "inherited_name": "dActor_c::OnHitByMegaChar(Player&)", "base_default": "0x02010130"},
+    {"slot": 27, "address": "0x02111cb8", "size": "0x28",  "symbol": "_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER7daPly_c", "inherited_name": "dActor_c::OnHitByMegaChar(daPly_c&)", "base_default": "0x02010130"},
     {"slot": 31, "address": "0x02111c3c", "size": "0x7c",  "symbol": "_ZN19daObjBk_Dossunbar_c4KillEv", "inherited_name": "dBgActor_c::Kill", "base_default": "0x020ee55c"}
   ],
   "override_count": 8,
@@ -195,7 +195,7 @@
       {"ordinal": 0,  "address": "0x02111ba0", "size": "0x44",  "symbol": "_ZN19daObjBk_Dossunbar_cD1Ev", "legacy_source": "src/_ZN19daObjBk_Dossunbar_cD1Ev.cpp"},
       {"ordinal": 1,  "address": "0x02111be4", "size": "0x58",  "symbol": "_ZN19daObjBk_Dossunbar_cD0Ev", "legacy_source": "src/_ZN19daObjBk_Dossunbar_cD0Ev.cpp"},
       {"ordinal": 2,  "address": "0x02111c3c", "size": "0x7c",  "symbol": "_ZN19daObjBk_Dossunbar_c4KillEv", "legacy_source": "src/_ZN19daObjBk_Dossunbar_c4KillEv.cpp"},
-      {"ordinal": 3,  "address": "0x02111cb8", "size": "0x28",  "symbol": "_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player", "legacy_source": "src/_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player.cpp"},
+      {"ordinal": 3,  "address": "0x02111cb8", "size": "0x28",  "symbol": "_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER7daPly_c", "legacy_source": "src/_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER7daPly_c.cpp"},
       {"ordinal": 4,  "address": "0x02111ce0", "size": "0x48",  "symbol": "func_ov015_02111ce0", "legacy_source": "src/func_ov015_02111ce0.cpp", "role": "state 6 EXECUTE"},
       {"ordinal": 5,  "address": "0x02111d28", "size": "0x24",  "symbol": "func_ov015_02111d28", "legacy_source": "src/func_ov015_02111d28.c", "role": "state 6 ENTER"},
       {"ordinal": 6,  "address": "0x02111d4c", "size": "0x40",  "symbol": "func_ov015_02111d4c", "legacy_source": "src/func_ov015_02111d4c.c", "role": "state 5 EXECUTE"},

@@ -54,7 +54,7 @@ extern "C" dScMgMemory_cState sMemoryResultTable[];
 extern "C" dScMgMemory_cState sMemoryStateTable[];
 extern dScMgMemory_cState sMemoryRoundTable[];
 extern dScMgMemory_cCardState sMemoryCardTable[];
-/* Player markers use the int-argument handlers, like the card handlers. */
+/* daPly_c markers use the int-argument handlers, like the card handlers. */
 extern "C" dScMgMemory_cPlayerState sMemoryPlayerTable[];
 
 namespace GX {

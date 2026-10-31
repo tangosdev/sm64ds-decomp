@@ -23,7 +23,7 @@
  * emits D1 then D0; D2 has no ROM home. Both vtables are keyed here.
  * common.h comes first so InitResources' mShadowMat copy stays twelve words.
  */
-/* leftovers: Player::Hurt and Player::Bounce stay mangled externs. This file
+/* leftovers: daPly_c::Hurt and daPly_c::Bounce stay mangled externs. This file
  * calls them, and each symbol takes Fix12<int> by value. GetWallResult is
  * not a dBgCh_Actr method; the call is dBgCh_Actr_UpdateContinuous_Veneer,
  * not UpdateContinuous. data_ov020_02114aa0 and 02114ab8 are model handles,
@@ -36,7 +36,7 @@
 #include "daBook_c.h"
 #include "daBookGen_c.h"
 #include "daTrsTrap_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "SurfaceInfo.h"
 #include "dCc_c.h"
@@ -186,7 +186,7 @@ extern "C" daBookGen_c *_ZN11daBookGen_cD0Ev(daBookGen_c *thiz)
  * from the book to the player, mAimRoll a constant quarter turn. */
 void daBook_c::func_ov020_021112b0()
 {
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (!player)
         return;
     Vector3 *playerPos = &player->mPos;
@@ -245,7 +245,7 @@ void daBook_c::func_ov020_02111340()
 
 // @symbol _ZN8daBook_c19func_ov020_02111418Ev
 /* What a flying book does about whatever func_ov020_021115ac found. Returns 1
- * when the book is gone. The first count handed to Player::Hurt is 0 for a
+ * when the book is gone. The first count handed to daPly_c::Hurt is 0 for a
  * metal player, 2 for KILLER_BOOK and 1 otherwise; touching the player also
  * clears mCoinType, so no blue coin drops. */
 int daBook_c::func_ov020_02111418()
@@ -290,7 +290,7 @@ int daBook_c::func_ov020_02111418()
 int daBook_c::func_ov020_021115ac()
 {
     u32 id;
-    Player *found;
+    daPly_c *found;
     int t;
     volatile int t1, t2;
     (void)&t1; (void)&t2;
@@ -298,7 +298,7 @@ int daBook_c::func_ov020_021115ac()
     id = mdCcAcPos_c.otherOwner;
     if (id == 0)
         return HIT_NONE;
-    found = static_cast<Player *>(dActor_c::FindWithID(id));
+    found = static_cast<daPly_c *>(dActor_c::FindWithID(id));
     if (found == 0)
         return HIT_NONE;
 
@@ -649,7 +649,7 @@ void daBook_c::func_ov020_02111ee0()
 void daBook_c::func_ov020_02111fc4()
 {
     Vector3 v;
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     {
         int* s = &p->mPosX;
         v.x = s[0];
@@ -796,7 +796,7 @@ int daBook_c::Behavior()
 int daBookGen_c::Behavior()
 {
     if (mSpawnTimer > 0x28) {
-        Player *player = ClosestPlayer();
+        daPly_c *player = ClosestPlayer();
         if (player != 0) {
 
             Vector3 tmp;

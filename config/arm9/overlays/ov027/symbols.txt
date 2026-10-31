@@ -1,6 +1,6 @@
 _ZN17daObjSlIceBlock_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN17daObjSlIceBlock_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-_ZN17daObjSlIceBlock_c15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x0211123c
+_ZN17daObjSlIceBlock_c15OnHitByMegaCharER7daPly_c kind:function(arm,size=0x28) addr:0x0211123c
 _ZN17daObjSlIceBlock_c16CleanupResourcesEv kind:function(arm,size=0x50) addr:0x02111264
 _ZN17daObjSlIceBlock_c6RenderEv kind:function(arm,size=0x50) addr:0x021112b4
 _ZN17daObjSlIceBlock_c8BehaviorEv kind:function(arm,size=0x13c) addr:0x02111304
@@ -38,7 +38,7 @@ _ZN21SnowmanBreathParticle12CheckSnowmanEv kind:function(arm,size=0x74) addr:0x0
 _ZN21SnowmanBreathParticle14UpdatePositionEv kind:function(arm,size=0x74) addr:0x021123b0
 _ZN21SnowmanBreathParticle6RenderEv kind:function(arm,size=0x5c) addr:0x02112424
 _ZN21SnowmanBreathParticle8BehaviorEv kind:function(arm,size=0x64) addr:0x02112480
-_ZN21SnowmanBreathParticle8TrySpawnER6Player kind:function(arm,size=0xc4) addr:0x021124e4
+_ZN21SnowmanBreathParticle8TrySpawnER7daPly_c kind:function(arm,size=0xc4) addr:0x021124e4
 _ZN21SnowmanBreathParticleC1Ev kind:function(arm,size=0x70) addr:0x021125a8
 _ZN10daSnmBth_c15IsPlayerInRangeEv kind:function(arm,size=0xe8) addr:0x02112618
 _ZN10daSnmBth_c16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x02112700

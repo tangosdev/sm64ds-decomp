@@ -56,7 +56,7 @@ struct daObjPile_c : dBgActor_c {
        registers differently for `int` vs `void` even with r0 untouched) --
        measured with tools/mangle.py, not assumed. */
     void OnGroundPounded(dActor_c &other); /* slot 21 */
-    void OnHitByMegaChar(Player &player);  /* slot 27 */
+    void OnHitByMegaChar(daPly_c &player); /* slot 27 */
 
     /* Non-virtual; coined names. NotifyTagPileGone (ov091 0x02133498) tells
        the linked KINOKO_TAG its pile is gone. Sink (0x021334b8) drops the

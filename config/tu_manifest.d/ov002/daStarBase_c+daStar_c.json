@@ -348,10 +348,10 @@
       "ordinal": 43
     },
     {
-      "symbol": "_ZN8daStar_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8daStar_c13OnTurnIntoEggER7daPly_c",
       "address": "0x020e8edc",
       "size": "0x0000000c",
-      "legacy_source": "src/_ZN8daStar_c13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN8daStar_c13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 44
     },
     {

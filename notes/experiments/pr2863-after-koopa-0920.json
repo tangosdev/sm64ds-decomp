@@ -271,7 +271,7 @@
       "blind": 0
     },
     {
-      "name": "_ZN7daTgz_c13OnTurnIntoEggER6Player",
+      "name": "_ZN7daTgz_c13OnTurnIntoEggER7daPly_c",
       "module": "ov077",
       "addr": "0x02126194",
       "verdict": "VERIFIED",

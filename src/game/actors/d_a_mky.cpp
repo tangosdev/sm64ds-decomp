@@ -50,7 +50,7 @@
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Actr.h"
 #include "SaveData.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "daObjMarioCap_c.h"
 #include "dCamera_c.h"
 #include "SurfaceInfo.h"
@@ -261,7 +261,7 @@ int daMky_c::func_ov030_02111b20()
 // @symbol _ZN7daMky_c19func_ov030_02111bc4Ev
 int daMky_c::func_ov030_02111bc4()
 {
-    Player *player;
+    daPly_c *player;
 
     if (IsBeingEaten(this) && this->mState != 2) {
         this->mPlayer = mEatingPlayer;
@@ -282,7 +282,7 @@ int daMky_c::func_ov030_02111bc4()
         return 1;
     }
 
-    player = (Player *)dActor_c::FindWithID(this->mdCcAc_c.otherOwner);
+    player = (daPly_c *)dActor_c::FindWithID(this->mdCcAc_c.otherOwner);
     if (player == 0 || !IsPlayerActor(player))
         return 0;
 
@@ -525,7 +525,7 @@ int daMky_c::func_ov030_02112578()
     extern void *gMonkeyJumpEdAnimationFile[];
     extern void *gMonkeyRunAnimationFile[];
     dActor_c *cage = dActor_c::FindWithActorID(0x67, 0);
-    Player *player = this->ClosestPlayer();
+    daPly_c *player = this->ClosestPlayer();
     s32 v[3];
     *(s32 *)((u8 *)v + 0) = 0x981;
     *(s32 *)((u8 *)v + 4) = 0x77a;
@@ -720,7 +720,7 @@ int daMky_c::EnterState7()
     int *py;
     int *pz;
     struct Vector3 v;
-    Player *other;
+    daPly_c *other;
     u16 ang;
     s16 s;
     int mul = 0x4b000;
@@ -789,7 +789,7 @@ int daMky_c::func_ov030_02112da0()
     switch (this->mSubState) {
     case 0: {
         if (IsInYoshiMouth(this)) {
-            Player *s = this->mPlayer;
+            daPly_c *s = this->mPlayer;
             int *p = &s->mPosX;
             int x = *p;
             u8 *st = &this->mSubState;
@@ -813,7 +813,7 @@ int daMky_c::func_ov030_02112da0()
             }
         }
         {
-            Player *s = this->mPlayer;
+            daPly_c *s = this->mPlayer;
             u8 val = 0x3c;
             int *p = &s->mPosX;
             this->mPosX = *p;
@@ -947,7 +947,7 @@ int daMky_c::func_ov030_02113324()
     this->mPrevAngleY = this->mAngleY;
 
     if (!IsFlagSet(this, 0x100) || IsFlagSet(this, 0x2000)) {
-        Player *other = this->mPlayer;
+        daPly_c *other = this->mPlayer;
         Vector3 v;
         int oy = other->mPosY;
         int oz = other->mPosZ;
@@ -1065,19 +1065,19 @@ int daMky_c::func_ov030_021136b0()
     case 0:
         if (this->mHasSpawnedCap != 0) {
             {
-                Player *p = this->mPlayer;
+                daPly_c *p = this->mPlayer;
                 int t = (p->mCharacter == p->param1);
                 t = (t != 0);
                 this->mPlayerWasOwnCharacter = t;
             }
             if (this->mPlayerWasOwnCharacter == 0) {
-                Player *p = this->mPlayer;
+                daPly_c *p = this->mPlayer;
                 p->mHasNoCap = 1;
             } else {
                 SaveData::PlayerLoseCap();
             }
             {
-                Player *p = this->mPlayer;
+                daPly_c *p = this->mPlayer;
                 void *spawned;
                 this->mCapPlayerNo = p->param1;
                 msg = this->mAreaId;
@@ -1151,7 +1151,7 @@ int daMky_c::func_ov030_021136b0()
         if (!IsFlagSet(this, 0x100)) {
             if (this->mHasSpawnedCap != 0) {
                 if (this->mPlayerWasOwnCharacter == 0) {
-                    Player *p = this->mPlayer;
+                    daPly_c *p = this->mPlayer;
                     p->SetNewHatCharacter(p->mCharacter, 0, 0);
                 }
                 this->mPrevState = 1;
@@ -1173,7 +1173,7 @@ int daMky_c::func_ov030_021136b0()
         break;
     }
     case 4: {
-        Player *p = this->mPlayer;
+        daPly_c *p = this->mPlayer;
         if (p->mIsMetal == 0 &&
             p->mIsVanish == 0 &&
             p->mHasWings == 0) {
@@ -1214,7 +1214,7 @@ int daMky_c::EnterState3()
     if (mHasSpawnedCap == 0 && SaveData::HasPlayerLostCap()) {
         mSubState = 5;
     } else {
-        Player *p = this->mPlayer;
+        daPly_c *p = this->mPlayer;
         if (p->mIsMetal != 0 ||
             p->mIsVanish != 0 ||
             p->mHasWings != 0) {
@@ -1256,7 +1256,7 @@ int daMky_c::EnterState2() {
     typedef short s16;
 
     extern void *gMonkeyJumpStAnimationFile;
-    Player *p;
+    daPly_c *p;
 
     p = this->mPlayer;
     if (p == 0)
@@ -1291,7 +1291,7 @@ int daMky_c::func_ov030_02113d20()
     typedef short s16;
 
     extern void *gMonkeyRunAnimationFile;
-    Player *p;
+    daPly_c *p;
     Fix12i dist;
     s16 angle;
     int onWall;
@@ -1498,7 +1498,7 @@ s32 daMky_c::Behavior()
 {
     if (IsTooFarAwayFromPlayer(0x5dc000) != 0 && mState != 8) {
         if (IsUkikiThief(this) && mHasSpawnedCap == 0 && SaveData::HasPlayerLostCap() != 0) {
-            Player *pl = ClosestPlayer();
+            daPly_c *pl = ClosestPlayer();
             unsigned cp = pl->param1;
             if (cp < 3) {
                 dActor_c *spawned;
@@ -1553,7 +1553,7 @@ s32 daMky_c::InitResources()
     mResetTimer = 0x96;
     if (IsUkikiThief(this)) {
         if (SaveData::HasPlayerLostCap() != 0) {
-            Player *player = ClosestPlayer();
+            daPly_c *player = ClosestPlayer();
             if (player->param1 < 3) {
                 dActor_c *spawned;
                 mCapPlayerNo = player->param1;
@@ -1574,13 +1574,12 @@ s32 daMky_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN7daMky_c13OnTurnIntoEggER6Player
+// @symbol _ZN7daMky_c13OnTurnIntoEggER7daPly_c
 /* Vtable slot 19.  The cartridge's twelve bytes at this address are a linker
  * long-branch veneer to _ZN7fBase_c18MarkForDestructionEv in arm9 -- r0 still
- * holds `this` at the jump and the Player& is dropped -- so the source form
+ * holds `this` at the jump and the daPly_c& is dropped -- so the source form
  * that reproduces it is a one-line forwarding member with no return. */
-void daMky_c::OnTurnIntoEgg(Player &player)
-{
+void daMky_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 

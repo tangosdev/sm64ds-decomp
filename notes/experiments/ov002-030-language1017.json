@@ -128,7 +128,7 @@
       "source_after": "src/unnamed/ov002/func_ov002_020e69c0.c",
       "status": "reservation_blocked",
       "classification": "standalone_cpp_candidate",
-      "reason": "Rotates 32-entry unsigned-short palette by two entries. No object layout or lifecycle. Player manifest calls it a tail helper in the same original TU, not a TU boundary. Enrollment file reserved by enemy-switch-tu-1003; no override requested or applied.",
+      "reason": "Rotates 32-entry unsigned-short palette by two entries. No object layout or lifecycle. daPly_c manifest calls it a tail helper in the same original TU, not a TU boundary. Enrollment file reserved by enemy-switch-tu-1003; no override requested or applied.",
       "remaining_work": "No measured C++ barrier; generated decl_common.h prototype has unused void* argument while definition has none."
     },
     {
@@ -164,7 +164,7 @@
       "source_after": "src/unnamed/ov002/func_ov002_020e6b3c.c",
       "status": "retained_c",
       "classification": "class_or_layout_reconstruction_needed",
-      "reason": "Clears per-material texture parameters through shadow structs A/B and raw object+8 access. Player header identifies use.",
+      "reason": "Clears per-material texture parameters through shadow structs A/B and raw object+8 access. daPly_c header identifies use.",
       "remaining_work": "Renaming does not recover model/material interface; no measured C++ barrier."
     },
     {
@@ -227,7 +227,7 @@
       "source_after": "src/unnamed/ov002/func_ov002_020f02c8.c",
       "status": "reservation_blocked",
       "classification": "standalone_cpp_candidate",
-      "reason": "Switch maps surface class to sliding acceleration; Player header corroborates semantics. Enrollment file reserved by enemy-switch-tu-1003; no override requested or applied.",
+      "reason": "Switch maps surface class to sliding acceleration; daPly_c header corroborates semantics. Enrollment file reserved by enemy-switch-tu-1003; no override requested or applied.",
       "remaining_work": "No calls or object lifecycle; no measured C++ barrier."
     },
     {
@@ -236,7 +236,7 @@
       "source_after": "src/unnamed/ov002/func_ov002_020f030c.c",
       "status": "reservation_blocked",
       "classification": "standalone_cpp_candidate",
-      "reason": "Switch maps surface class to sliding loss factor; Player header corroborates semantics. Enrollment file reserved by enemy-switch-tu-1003; no override requested or applied.",
+      "reason": "Switch maps surface class to sliding loss factor; daPly_c header corroborates semantics. Enrollment file reserved by enemy-switch-tu-1003; no override requested or applied.",
       "remaining_work": "No calls or object lifecycle; no measured C++ barrier."
     },
     {
@@ -272,7 +272,7 @@
       "source_after": "src/unnamed/ov002/__sinit_ov002_021019d0.c",
       "status": "retained_c",
       "classification": "static_cpp_initialization_reconstruction_needed",
-      "reason": "2405-line Player resources, PMF/state tables, vectors and destructor registrations.",
+      "reason": "2405-line daPly_c resources, PMF/state tables, vectors and destructor registrations.",
       "remaining_work": "Large typed-resource and storage-ownership work. SharedFilePtr header is opaque/empty; cannot instantiate it as eight bytes without layout recovery."
     },
     {

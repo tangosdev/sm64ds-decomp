@@ -291,10 +291,10 @@
       "ordinal": 35
     },
     {
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "address": "0x02010130",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN8dActor_c15OnHitByMegaCharER6Player.cpp",
+      "legacy_source": "src/_ZN8dActor_c15OnHitByMegaCharER7daPly_c.cpp",
       "ordinal": 36
     },
     {
@@ -347,10 +347,10 @@
       "ordinal": 43
     },
     {
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
       "address": "0x02010154",
       "size": "0x0000000c",
-      "legacy_source": "src/_ZN8dActor_c13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN8dActor_c13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 44
     },
     {
@@ -368,10 +368,10 @@
       "ordinal": 46
     },
     {
-      "symbol": "_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3",
+      "symbol": "_ZN8dActor_c11UpdateCarryER7daPly_cRK7Vector3",
       "address": "0x02010180",
       "size": "0x00000130",
-      "legacy_source": "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp",
+      "legacy_source": "src/_ZN8dActor_c11UpdateCarryER7daPly_cRK7Vector3.cpp",
       "ordinal": 47
     },
     {
@@ -438,17 +438,17 @@
       "ordinal": 56
     },
     {
-      "symbol": "_ZN8dActor_c24BumpedUnderneathByPlayerER6Player",
+      "symbol": "_ZN8dActor_c24BumpedUnderneathByPlayerER7daPly_c",
       "address": "0x02010518",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp",
+      "legacy_source": "src/_ZN8dActor_c24BumpedUnderneathByPlayerER7daPly_c.cpp",
       "ordinal": 57
     },
     {
-      "symbol": "_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player",
+      "symbol": "_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR7daPly_c",
       "address": "0x0201054c",
       "size": "0x00000080",
-      "legacy_source": "src/_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player.cpp",
+      "legacy_source": "src/_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR7daPly_c.cpp",
       "ordinal": 58
     },
     {
@@ -459,10 +459,10 @@
       "ordinal": 59
     },
     {
-      "symbol": "_ZN8dActor_c15GivePlayerCoinsER6Playerhj",
+      "symbol": "_ZN8dActor_c15GivePlayerCoinsER7daPly_chj",
       "address": "0x0201061c",
       "size": "0x000000f8",
-      "legacy_source": "src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp",
+      "legacy_source": "src/_ZN8dActor_c15GivePlayerCoinsER7daPly_chj.cpp",
       "ordinal": 60
     },
     {
@@ -814,7 +814,7 @@
   "notes": [
     "HAND-ASSEMBLED. tu_map.py has no candidate for this range (see boundary_evidence item 2), so `tubuild.py create` could not be used; the schema still comes from tubuild.build_manifest_entry.",
     "Reconciliation is documented in the source file's own header comment. Summary: shadow type names dropped in favour of real headers, globals/prototypes given one spelling each, one local type renamed (RaycastGroundPod), and a handful of casts and field renames that follow from those. Nothing changes what a function does.",
-    "include/dActor_c.h gained `struct Matrix4x3;`, `void UntrackInDeathTable();` and `Matrix4x3 *UpdateCarry(Player &, const Vector3 &);` -- all non-virtual, so the 0xd0 size assertion and the 31 vtable slots are unchanged and ~dActor_c() is still the key function.",
+    "include/dActor_c.h gained `struct Matrix4x3;`, `void UntrackInDeathTable();` and `Matrix4x3 *UpdateCarry(daPly_c &, const Vector3 &);` -- all non-virtual, so the 0xd0 size assertion and the 31 vtable slots are unchanged and ~dActor_c() is still the key function.",
     "TAIL FOLD: the six shards at 0x020112c8..0x02011654 are this TU. Default codegen emits D2, D0, D1 from one ~dActor_c(). One constructor emits C1 and C2, and an unreachable Vector3s[2] places _ZN8Vector3sD1Ev between them. Union dtors and dBase D2 in that slot are deadstripped. The vtable and RTTI records are deadstrip-data at their existing homes, so the link keeps the retail table.",
     "ONE unlicensed .text body remains: _ZN7Vector3D1Ev, 4 bytes, STB_LOPROC, already defined at arm9:0x020072c0, declared deadstrip-duplicate below. It is emitted because include/types.h gives Vector3 an inline empty destructor and this TU instantiates Vector3 arrays; the same body comes out of the legacy per-function objects today.",
     "include/dActor_c.h's three new declarations were re-verified against the tree: all 1,126 src/ files that transitively include dActor_c.h were rebuilt under build_pin.verify. 1,124 reproduce; the 2 that do not (_ZN15daObjMarioCap_c13InitResourcesEv, _ZN7daIbl_c13InitResourcesEv) fail identically with the header reverted and carry no `complete` marker, so they are neither enrolled nor this change's.",

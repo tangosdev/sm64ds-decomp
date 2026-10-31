@@ -38,7 +38,7 @@
  */
 #include "daLuigi_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 
@@ -54,7 +54,7 @@ struct Vec3 {
     int x, y, z;
 };
 
-#define CurrentPlayer() ((Player *)data_0209f394[data_0209f250])
+#define CurrentPlayer() ((daPly_c *)data_0209f394[data_0209f250])
 
 /* Material bits func_02016acc clears and func_02016b24 sets. The reflected
  * player render applies the same pair around its draw. */
@@ -107,7 +107,7 @@ unsigned int func_0201277c(unsigned int soundID);
  * mIsBalloon, mIsMega and mScaleY. The definition takes char *. */
 void func_ov002_020e4374(char *player, int *depth, int *radius);
 /* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)] as int. */
-int func_ov002_020e496c(Player *player);
+int func_ov002_020e496c(daPly_c *player);
 
 void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
 void MulMat3x3Mat3x3(const int *a, const int *b, int *dst);
@@ -168,7 +168,7 @@ int daLuigi_c::InitResources() {
 // @symbol _ZN9daLuigi_c8BehaviorEv
 int daLuigi_c::Behavior() {
     int depth, radius;
-    Player *player;
+    daPly_c *player;
 
     if (data_ov055_02111b68 & kReqReset) {
         data_ov055_02111b6c = 0;
@@ -191,7 +191,7 @@ int daLuigi_c::Behavior() {
 
 // @symbol _ZN9daLuigi_c6RenderEv
 int daLuigi_c::Render() {
-    Player *player;
+    daPly_c *player;
     dExtSimpleModel_c *body;
     ModelComponents *comps;
     BMD_File *file;
@@ -249,21 +249,21 @@ int daLuigi_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player
-int daLuigi_c::SetState(daLuigiState *state, Player *player) {
+// @symbol _ZN9daLuigi_c8SetStateEP12daLuigiStateP7daPly_c
+int daLuigi_c::SetState(daLuigiState *state, daPly_c *player) {
     mState = state;
     if (mState->enter == 0)
         return 1;
     return (this->*mState->enter)(player);
 }
 
-// @symbol _ZN9daLuigi_c11EnterMirrorEP6Player
-int daLuigi_c::EnterMirror(Player *player) {
+// @symbol _ZN9daLuigi_c11EnterMirrorEP7daPly_c
+int daLuigi_c::EnterMirror(daPly_c *player) {
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c13ExecuteMirrorEP6Player
-int daLuigi_c::ExecuteMirror(Player *player) {
+// @symbol _ZN9daLuigi_c13ExecuteMirrorEP7daPly_c
+int daLuigi_c::ExecuteMirror(daPly_c *player) {
     /* One base, read x then z then y. Direct mPosX / mPosZ / mPosY
      * differ (same size). */
     int *pos = &player->mPosX;

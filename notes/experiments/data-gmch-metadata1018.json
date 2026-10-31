@@ -259,8 +259,8 @@
       "id": "onturnintoegg-src-tu-redeclaration",
       "kind": "correctness",
       "location": "src_tu/actors/Actor.cpp:1140, src_tu/actors/Koopa+KoopaSmall.cpp:347, src_tu/actors/Lakitu.cpp:88, src_tu/actors/Spiny.cpp:88",
-      "reason": "Fixed, reproduced independently at 3be726fe78f2739fa0c2e44100a157fdfa035aa5 rather than accepted. All four definitions read 'void ...::OnTurnIntoEgg(Player &player)' at exactly the cited lines (Actor.cpp:1140, Koopa+KoopaSmall.cpp:347, Lakitu.cpp:88, Spiny.cpp:88). The objective test is the compile gate, since a redeclaration cannot compile: 'python tools/check_src_tu_compiles.py' exits 0 with 170/170 at the candidate and 0 with 169/169 at base control c52f63ca5342b2701006db5022146e93afc305e4. Set-differencing the --json unit lists both ways gives DROPPED=[] and ADDED=['ov002/da1up_c'], so nothing regressed. 'python tools/tubuild.py verify' on all four is 97/97, 39/39, 32/32, 34/34 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, so the return type is not load-bearing in emitted code.",
-      "summary": "The header contract moved OnTurnIntoEgg(Player&) to void, but four byte-verified promoted translation units still defined it as int, so mwccarm rejected them as redeclarations and the whole-tree compile gate went red."
+      "reason": "Fixed, reproduced independently at 3be726fe78f2739fa0c2e44100a157fdfa035aa5 rather than accepted. All four definitions read 'void ...::OnTurnIntoEgg(daPly_c &player)' at exactly the cited lines (Actor.cpp:1140, Koopa+KoopaSmall.cpp:347, Lakitu.cpp:88, Spiny.cpp:88). The objective test is the compile gate, since a redeclaration cannot compile: 'python tools/check_src_tu_compiles.py' exits 0 with 170/170 at the candidate and 0 with 169/169 at base control c52f63ca5342b2701006db5022146e93afc305e4. Set-differencing the --json unit lists both ways gives DROPPED=[] and ADDED=['ov002/da1up_c'], so nothing regressed. 'python tools/tubuild.py verify' on all four is 97/97, 39/39, 32/32, 34/34 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, so the return type is not load-bearing in emitted code.",
+      "summary": "The header contract moved OnTurnIntoEgg(daPly_c&) to void, but four byte-verified promoted translation units still defined it as int, so mwccarm rejected them as redeclarations and the whole-tree compile gate went red."
     },
     {
       "disposition": "fixed",
@@ -268,7 +268,7 @@
       "kind": "provenance",
       "location": "notes/agents/handoffs/issue-2411-humanizer-2.md, sections 'Contract correction' and 'Source and host proof'",
       "reason": "Fixed, read at the candidate 3be726fe78f2739fa0c2e44100a157fdfa035aa5 rather than taken from a commit message. The phrase now survives in the file only inside an explicit retraction at lines 59-70, which names the earlier revision's claim as wrong, states that a whole-tree compile falsified it, and records the measured readings (exit 1 at 156/160 on candidate 848da2bb8, exit 0 at 159/159 on task base 26f54f8fc). No unretracted assertion of matching headers remains.",
-      "summary": "The handoff asserted that the 24 void OnTurnIntoEgg(Player&) overrides landed 'with matching headers'. That was false: the header change touched no file under src_tu/, four promoted TUs still said int, and a whole-tree compile falsified the claim."
+      "summary": "The handoff asserted that the 24 void OnTurnIntoEgg(daPly_c&) overrides landed 'with matching headers'. That was false: the header change touched no file under src_tu/, four promoted TUs still said int, and a whole-tree compile falsified the claim."
     },
     {
       "disposition": "deferred",
@@ -293,7 +293,7 @@
       "id": "queue-rows-stale-from-branch-edits",
       "kind": "correctness",
       "location": "notes/data/tu-promotion-queue.tsv, rows Crate / Coin / daGmch_c",
-      "reason": "Fixed, and re-derived rather than accepted. The TSV diff for this commit changes exactly five total_lines cells and nothing else: Crate 1431 to 1427, Coin 1148 to 1147, daGmch_c 1119 to 1120, ChiefChilly 1992 to 1993, Player 26798 to 26799. I re-derived the three branch-caused ones from the tree by counting lines of each file at both commits: src/_ZN5Crate13OnTurnIntoEggER6Player.cpp 42 to 38 (-4), src/_ZN4Coin13OnTurnIntoEggER6Player.cpp 24 to 23 (-1), src/actors/daGmch_c.cpp 1119 to 1120 (+1); each file delta equals its row delta exactly. At the candidate python tools/queue_audit.py prints that the queue agrees with the tree and --check exits 0 with zero rows disagreeing. Verified the fix is confined: the diff for this commit touches only the TSV and the handoff, and is empty over tools/, config/, src/, src_tu/, include/ and symbols/actor_renames.tsv.",
+      "reason": "Fixed, and re-derived rather than accepted. The TSV diff for this commit changes exactly five total_lines cells and nothing else: Crate 1431 to 1427, Coin 1148 to 1147, daGmch_c 1119 to 1120, ChiefChilly 1992 to 1993, daPly_c 26798 to 26799. I re-derived the three branch-caused ones from the tree by counting lines of each file at both commits: src/_ZN5Crate13OnTurnIntoEggER7daPly_c.cpp 42 to 38 (-4), src/_ZN4Coin13OnTurnIntoEggER7daPly_c.cpp 24 to 23 (-1), src/actors/daGmch_c.cpp 1119 to 1120 (+1); each file delta equals its row delta exactly. At the candidate python tools/queue_audit.py prints that the queue agrees with the tree and --check exits 0 with zero rows disagreeing. Verified the fix is confined: the diff for this commit touches only the TSV and the handoff, and is empty over tools/, config/, src/, src_tu/, include/ and symbols/actor_renames.tsv.",
       "summary": "Three tu-promotion-queue rows disagreed with the tree because this branch changed the line counts of the files they measure, and the rows were not refreshed."
     },
     {
@@ -301,7 +301,7 @@
       "id": "queue-audit-residue-miscited-as-preexisting",
       "kind": "provenance",
       "location": "notes/agents/handoffs/issue-2411-humanizer-2.md, the queue-rows bullet",
-      "reason": "Fixed as a retraction, not a rewording. The retracted sentence about the rows not being this branch to move no longer greps anywhere in the tree. The replacement explicitly says the earlier revision was wrong for three of the five, separates the true premise (the stated cells are unchanged from main) from the false conclusion, and states the rows were stale precisely because this branch edits moved the files they measure and are now refreshed. I reproduced its two load-bearing numbers independently: at base bdcb1df7d3d071ab46d79e6538fec176efa78780 exactly 2 rows disagree and at the candidate the fix leaves 0, and by running --write at a restored base control I confirmed the two are exactly ChiefChilly and Player. I also confirmed the pre-existing attribution to main 9b8cb8add by measurement: that commit moved src/_ZN11ChiefChillyD1Ev.cpp from 22 to 23 lines and src/_ZN6PlayerD1Ev.cpp from 35 to 36, the +1 seen in each row. One imprecision remains and is disclosed rather than passed over: the bullet attributes that staleness to edits to include/ChiefChilly.h and include/Player.h, whereas total_lines is summed over src/ files only, so the cells actually moved on the two D1Ev.cpp sources; 9b8cb8add did edit both the headers and those sources, so the statement is true as written and the commit attribution and direction of responsibility are correct, but the named mechanism is the wrong half of the commit. The merge-ordering correction in the same section is factually right: git log shows 587f156e3 has parents 6bf546d78 and c52f63ca5 and it is the oldest of the repair branch own commits, so the merge did precede every repair.",
+      "reason": "Fixed as a retraction, not a rewording. The retracted sentence about the rows not being this branch to move no longer greps anywhere in the tree. The replacement explicitly says the earlier revision was wrong for three of the five, separates the true premise (the stated cells are unchanged from main) from the false conclusion, and states the rows were stale precisely because this branch edits moved the files they measure and are now refreshed. I reproduced its two load-bearing numbers independently: at base bdcb1df7d3d071ab46d79e6538fec176efa78780 exactly 2 rows disagree and at the candidate the fix leaves 0, and by running --write at a restored base control I confirmed the two are exactly ChiefChilly and daPly_c. I also confirmed the pre-existing attribution to main 9b8cb8add by measurement: that commit moved src/_ZN11ChiefChillyD1Ev.cpp from 22 to 23 lines and src/_ZN7daPly_cD1Ev.cpp from 35 to 36, the +1 seen in each row. One imprecision remains and is disclosed rather than passed over: the bullet attributes that staleness to edits to include/ChiefChilly.h and include/daPly_c.h, whereas total_lines is summed over src/ files only, so the cells actually moved on the two D1Ev.cpp sources; 9b8cb8add did edit both the headers and those sources, so the statement is true as written and the commit attribution and direction of responsibility are correct, but the named mechanism is the wrong half of the commit. The merge-ordering correction in the same section is factually right: git log shows 587f156e3 has parents 6bf546d78 and c52f63ca5 and it is the oldest of the repair branch own commits, so the merge did precede every repair.",
       "summary": "The handoff reported all five remaining disagreeing rows as inherited from main and therefore not this branch to move; measured at main only two of the five disagree there, and the other three were this branch own doing."
     },
     {
@@ -344,7 +344,7 @@
       "id": "RCV2908-02",
       "kind": "correctness",
       "location": "src/actors/player.cpp and static-destructor registration callers",
-      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local daPly_c declarations and calls.",
       "summary": "Registration carries object and callback addresses as pointers."
     },
     {
@@ -393,7 +393,7 @@
       "kind": "correctness",
       "location": "src/actors/player.cpp Vector destructor imports",
       "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
-      "summary": "The five omitted Player Vector imports are covered."
+      "summary": "The five omitted daPly_c Vector imports are covered."
     },
     {
       "disposition": "fixed",
@@ -436,7 +436,7 @@
       "location": "src/actors/daMip_c.cpp:138,140,166,182,187; src/actors/daMky_c.cpp:180,182; src/actors/daKrb_c.cpp:119-120,162,167,190,194-195",
       "original_local_record": {
         "disposition": "open",
-        "evidence": "Confirmed definitions: Mip ApproachAngle returns int, Animation::LoadFile char*, func02013944 void, func02022a4c u32; Mip declares different results. Mip ApplyOpacity prototype/call includes an extra argument versus the genuine this+u32 method. Mky ClearGroundFlag/Clear are genuine void methods but global declarations return int. Krb ReleaseCap/RespawnIfHasCap return dActor_c*, KillByInvincibleChar is void, Player::Hurt is int; its declarations disagree. DecIfAbove0 byte/short return narrow unsigned values and Math_Function0203b14c returns int. Inventory is saved separately; each repair requires actual caller/ABI proof. Final bounded pass also confirms Player::DropActor actual int (Mip and four Mky locals), Sound::PlaySub actual bool (Mip int/Mky void) and Particle::System::New actual integer handle (Mip void*).",
+        "evidence": "Confirmed definitions: Mip ApproachAngle returns int, Animation::LoadFile char*, func02013944 void, func02022a4c u32; Mip declares different results. Mip ApplyOpacity prototype/call includes an extra argument versus the genuine this+u32 method. Mky ClearGroundFlag/Clear are genuine void methods but global declarations return int. Krb ReleaseCap/RespawnIfHasCap return dActor_c*, KillByInvincibleChar is void, daPly_c::Hurt is int; its declarations disagree. DecIfAbove0 byte/short return narrow unsigned values and Math_Function0203b14c returns int. Inventory is saved separately; each repair requires actual caller/ABI proof. Final bounded pass also confirms daPly_c::DropActor actual int (Mip and four Mky locals), Sound::PlaySub actual bool (Mip int/Mky void) and Particle::System::New actual integer handle (Mip void*).",
         "id": "DA2878-04",
         "introduced": false,
         "kind": "correctness",
@@ -471,7 +471,7 @@
       "id": "GMCH-HURT-API-CONTRACT-01",
       "kind": "correctness",
       "location": "src/game/actors/d_a_gmch.cpp: local Hurt declaration and CheckPlayerContact",
-      "reason": "Uses int(Player*,void*,u32,int,u8,u8,u8) in the existing extern-C block, matching src/game/player/Player.cpp. Existing call flags1/0/1 and discarded result unchanged; complete caller/object bytes and typed destinations preserved. No native Fix12 API or unique original signature claim.",
+      "reason": "Uses int(daPly_c*,void*,u32,int,u8,u8,u8) in the existing extern-C block, matching src/game/player/d_a_ply_methods.cpp. Existing call flags1/0/1 and discarded result unchanged; complete caller/object bytes and typed destinations preserved. No native Fix12 API or unique original signature claim.",
       "summary": "Local Hurt return/receiver/flag-width declaration now agrees with the actual existing definition."
     },
     {

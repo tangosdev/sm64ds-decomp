@@ -218,10 +218,10 @@ void daObjFallBlock_c::ApplyModelXyz() {
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player
+// @symbol _ZN16daObjFallBlock_c15OnHitByMegaCharER7daPly_c
 /* `player` is never read, matching the ROM body, which only ever takes the
    one (`this`) argument. */
-void daObjFallBlock_c::OnHitByMegaChar(Player &player) {
+void daObjFallBlock_c::OnHitByMegaChar(daPly_c &player) {
     if (mRespawnDelay != 0)
         return;
     Kill();

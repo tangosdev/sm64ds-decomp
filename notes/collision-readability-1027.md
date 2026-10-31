@@ -14,7 +14,7 @@ The class identities already have ROM RTTI evidence in their headers.
 | --- | --- | --- |
 | arm9 020354b0 | `dBgCh::IsDetectingOrdinary` | Filter's fallback accepts ordinary surfaces only when mask 1 is set. |
 | arm9 0203547c | `dBgCh::IsDetectingWater` | Filter checks mask 2 for CLPS water bit 5. |
-| arm9 0203543c | `dBgCh::IsDetectingToxic` | Filter checks mask 8 for CLPS toxic bit 25; Player uses that surface predicate to update its toxic height. |
+| arm9 0203543c | `dBgCh::IsDetectingToxic` | Filter checks mask 8 for CLPS toxic bit 25; daPly_c uses that surface predicate to update its toxic height. |
 | arm9 02035468 | `dBgCh::EnableCameraMode` | Camera query initializer 0200897c always sets mask 4 after updating vanish behavior. |
 | arm9 0203545c | `dBgCh::IsCameraMode` | The filter uses mask 4 to reject CLPS bit 24 and accept bit 26. |
 | arm9 02037e2c | `CLPS::IsCameraPassThrough` | Paired camera-mode filter branch rejects these surfaces. |
@@ -32,7 +32,7 @@ would be a separate ABI/code-generation change. Both endpoint getters return
 `lineEnd = GetEnd()` followed by `Vector3 startPoint = GetStart()` reproduces
 the original local/temporary stack slots and call destinations exactly.
 
-The camera setup caller uses `dCamera_c`, `Player`, and `dBgCh` headers.
+The camera setup caller uses `dCamera_c`, `daPly_c`, and `dBgCh` headers.
 On the publication base it already lives in the promoted `d_camera.cpp`;
 this change replaces its remaining raw camera-mode helper call in that TU.
 Math calls use `math/CalcLib.h`, and the query/collider deallocators use

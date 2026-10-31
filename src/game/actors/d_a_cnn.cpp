@@ -46,7 +46,7 @@
  *   data_ov002_0210da38), the state table (data_ov098_0213c8fc, .bss) and the
  *   particle rotation (data_ov098_0213c63c) are unnamed rows this TU does not
  *   own; func_ov002_020df300 / func_ov002_020df34c and func_ov102_0214ae1c
- *   are unnamed Player / Bob-omb helpers.
+ *   are unnamed daPly_c / Bob-omb helpers.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -55,7 +55,7 @@ enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 #include "common.h"
 #include "daCnn_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
@@ -94,14 +94,14 @@ extern s16 data_02082214[];
 extern int data_0209e650;
 
 /* local extern: arm9/ov002/ov102 C helpers with no shared header yet. The
-   two Player helpers are defined in Player.cpp, the Bob-omb one in
+   two daPly_c helpers are defined in d_a_ply_methods.cpp, the Bob-omb one in
    d_a_bmb.cpp. */
 extern "C" {
 int AngleDiff(int a, int b);
 short GetAngleToCamera(int playerNo);
 
-int func_ov002_020df300(Player *player);
-int func_ov002_020df34c(Player *player);
+int func_ov002_020df300(daPly_c *player);
+int func_ov002_020df34c(daPly_c *player);
 void func_ov102_0214ae1c(dActor_c *bomb);
 }
 
@@ -272,7 +272,7 @@ void daCnn_c::StateFire() {
        read through an opaque pointer into a volatile copy. Written as plain
        member expressions the block schedules differently and grows 4 bytes. */
     volatile int vel[3];
-    Player *closest;
+    daPly_c *closest;
     int timer;
 
     if (mTimer != 0)
@@ -392,7 +392,7 @@ void daCnn_c::StateWaitForRider() {
         return;
     int isPlayer = other->actorID == kPlayerActorID;
     if (isPlayer) {
-        Player *player = (Player *)other;
+        daPly_c *player = (daPly_c *)other;
         dActor_c *held = (dActor_c *)player->mHeldObj;
         if (held != 0) {
             int isBobOmb = held->actorID == kBobOmbActorID;
@@ -427,7 +427,7 @@ void daCnn_c::StateLoad() {
     Vector3 quakePos;
 
     if (mLoadStep < 4) {
-        Player *rider;
+        daPly_c *rider;
         int x, y, z;
         /* z first (statement order) colors y into r2 like the ROM */
         z = mPosZ;

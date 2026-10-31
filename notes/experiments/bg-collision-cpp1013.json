@@ -9,10 +9,10 @@
   "change": "Compile func_ov002_020eea84 as C++ with C linkage, retaining its two-word ceiling snapshot via int[2] and using native actor/collision/Sound APIs and existing actor fields.",
   "receiver": {
     "type": "dBgCh_Actr",
-    "caller": "Player::mMeshClsn at +0x380",
+    "caller": "daPly_c::mMeshClsn at +0x380",
     "evidence": [
-      "src/actors/Player.cpp caller passes c+0x380 and c",
-      "include/Player.h mMeshClsn field at0x380"
+      "src/actors/daPly_c.cpp caller passes c+0x380 and c",
+      "include/daPly_c.h mMeshClsn field at0x380"
     ],
     "tu_placement": "Existing medium-confidence adjacency/subject placement; no new dBgActor method claim."
   },
@@ -174,7 +174,7 @@
       "location": "src/actors/dBgActor_c.cpp:func_ov002_020eea84",
       "kind": "reconstruction",
       "disposition": "deferred",
-      "detail": "Ceiling shadow snapshot and query wrappers, C-linkage raw pointer boundary and scalar Player::Hurt Fix12 ABI remain measured boundaries.",
+      "detail": "Ceiling shadow snapshot and query wrappers, C-linkage raw pointer boundary and scalar daPly_c::Hurt Fix12 ABI remain measured boundaries.",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3784",
       "owner": "codex-bg-collision-coordinator1013"
     }

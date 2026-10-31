@@ -1,6 +1,6 @@
 //cpp
 #include "dCamera_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 
 extern "C" {
 
@@ -12,7 +12,7 @@ int func_02009138(dCamera_c *cam, int dist);
  * in the current mode (func_0200bec4, with its mFlags 0x20000 argument), then
  * pull the eye to distance 0x80000 (func_02009138). */
 int func_02005098(dCamera_c *cam) {
-    Player *player = (Player *)cam->mTargetPlayer;
+    daPly_c *player = (daPly_c *)cam->mTargetPlayer;
     func_0200bec4((char *)cam, (int *)&player->mPos, player->mGroundY, (char *)cam->mMode, 0x20000);
     func_02009138(cam, 0x80000);
     return 1;

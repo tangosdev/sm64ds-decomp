@@ -1114,7 +1114,7 @@
    "src/func_ov014_0211250c.c",
    "src/func_ov014_02112788.c"
   ],
-  "src/game/player/Player.cpp": [
+  "src/game/player/d_a_ply_methods.cpp": [
    "src/Player_AdvanceAnims.cpp",
    "src/Player_DisableInteraction.c",
    "src/Player_ScaleByCharFactor.c",

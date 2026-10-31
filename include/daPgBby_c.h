@@ -7,7 +7,7 @@
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 
-struct Player;
+struct daPly_c;
 
 /* PENGUIN_BABY -- ov072/daPgBby_c, the lost baby penguin of Cool, Cool
  * Mountain that the player carries back to its mother.
@@ -53,7 +53,7 @@ struct daPgBby_c : dActor_c {
 
     /* The player whose Yoshi has the penguin in its mouth; state 5's enter
        step places the penguin in front of it and clears it. */
-    Player *mEatingPlayer;          /* 0x0d0 */
+    daPly_c *mEatingPlayer;         /* 0x0d0 */
     dExtAnmModel_c mAnmModel;       /* 0x0d4 */
     dExtShadowModel_c mShadowModel;       /* 0x138 */
     dCcAc_c mCylClsn;               /* 0x160 */
@@ -64,7 +64,7 @@ struct daPgBby_c : dActor_c {
     s32 mSpawnPosY;                 /* 0x354 */
     s32 mSpawnPosZ;                 /* 0x358 */
     State *mState;                  /* 0x35c -- current {enter, update} pair */
-    Player *mCarrier;               /* 0x360 -- the player holding it */
+    daPly_c *mCarrier;              /* 0x360 -- the player holding it */
     /* Lazily filled with FindWithActorID(0x101, 0) and never cleared.
        Actor 0x101 (257) is PENGUIN_MOTHER (notes/ead-debug-name-crossref.md). */
     dActor_c *mMother;              /* 0x364 */
@@ -101,7 +101,7 @@ struct daPgBby_c : dActor_c {
     virtual s32  Render();                      /* slot  9 */
     virtual void OnPendingDestroy();            /* slot 12 */
     virtual s32  OnYoshiTryEat();               /* slot 18 */
-    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
 
     /* Declared last and inline so class instantiation emits the retail D1/D0
        pair in that order, with no separate D2 body. */

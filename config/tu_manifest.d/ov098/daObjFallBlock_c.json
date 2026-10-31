@@ -79,10 +79,10 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN16daObjFallBlock_c15OnHitByMegaCharER7daPly_c",
       "address": "0x0213a284",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player.cpp",
+      "legacy_source": "src/_ZN16daObjFallBlock_c15OnHitByMegaCharER7daPly_c.cpp",
       "ordinal": 8
     },
     {
@@ -336,7 +336,7 @@
       "src/func_ov098_0213a148.c",
       "src/_ZN16daObjFallBlock_c4KillEv.cpp",
       "src/func_ov098_0213a23c.c",
-      "src/_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player.cpp",
+      "src/_ZN16daObjFallBlock_c15OnHitByMegaCharER7daPly_c.cpp",
       "src/func_ov098_0213a2cc.c",
       "src/_ZN16daObjFallBlock_c6RenderEv.cpp",
       "src/_ZN16daObjFallBlock_c8BehaviorEv.cpp"

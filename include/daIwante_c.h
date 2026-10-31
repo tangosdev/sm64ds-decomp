@@ -72,7 +72,7 @@ struct daIwante_c : dBgActor_c {
     EyerokState *mState;                                    /* 0x48c */
     /* The player locked for the talk state's dialogue (func_ov066_0211903c):
        the message before the fight and the one after it. */
-    Player *mTalkPlayer;                                    /* 0x490 */
+    daPly_c *mTalkPlayer; /* 0x490 */
     /* Per-state scratch; most enter handlers clear both (the dormant enter
        handler does nothing). mStateWork0: attacking-hand toggle (02118cdc),
        stomp count (pattern 8), 20-frame stand-down counter (pattern 5),

@@ -255,10 +255,10 @@
       "ordinal": 29
     },
     {
-      "symbol": "_ZN9daPgBby_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN9daPgBby_c13OnTurnIntoEggER7daPly_c",
       "address": "0x02121fa0",
       "size": "0x0000000c",
-      "legacy_source": "src/_ZN9daPgBby_c13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN9daPgBby_c13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 30
     },
     {
@@ -2056,7 +2056,7 @@
       "source": "0x02122afc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
       "target_module": "main",
       "target_address": "0x02010130"
@@ -2236,7 +2236,7 @@
       "source": "0x02122adc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPgBby_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN9daPgBby_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
       "target_module": "overlay(72)",
       "target_address": "0x02121fa0"

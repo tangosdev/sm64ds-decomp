@@ -28,7 +28,7 @@ struct daObjFire_c : dActor_c {
     virtual int InitResources();                /* slot  0 */
     virtual int Behavior();                     /* slot  6 */
     virtual s32 OnYoshiTryEat();                /* slot 18 */
-    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

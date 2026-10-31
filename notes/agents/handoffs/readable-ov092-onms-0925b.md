@@ -37,7 +37,7 @@ This document describes this commit. The queue records its immutable output SHA.
 | E6 | InitResources | `mMeshCollider.SetFile(file, mClsnMat, scale, mAngleY, clps)` with a `Fix12<int>` local | DIFF, 3 relocation destinations wrong. Reverted. |
 | E7 | InitResources | `int stk[3]` replaced by `Vector3 offset` for the bridge | 22/22. Adopted. |
 | E8 | StateKnocked | `volatile int saved[3]` replaced by `Vector3 saved` | 22/22. Adopted. |
-| E9 | StateKnocked | Player position read as `o->mPosX` and so on, with no `int *p` | DIFF. Reverted; one comment. |
+| E9 | StateKnocked | daPly_c position read as `o->mPosX` and so on, with no `int *p` | DIFF. Reverted; one comment. |
 | E10 | StateBounce | The escaped `struct Frame { Vector3 tmp, eq, dust; }` replaced by three plain Vector3 locals | 22/22, and the object no longer contains the local `Frame` destructor. Adopted. |
 | E11 | StateBounce | `if (mVertAccel == 0) return 0;` | DIFF. Reverted; one comment. |
 | E12 | StateBounce | `if (mWithMeshClsn.IsOnGround() == 0) return 0;` | DIFF. Reverted; covered by the E11 comment. |

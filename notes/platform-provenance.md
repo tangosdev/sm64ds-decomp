@@ -271,7 +271,7 @@ A real `dBgActor_c` subclass ([ov095](../config/arm9/overlays/ov095/symbols.txt)
 
 | offset | name | evidence |
 |---|---|---|
-| 0x320 | `mRider` | [daUdlift_c::LatchRider](../src/game/actors/d_a_udlift.cpp) stores the colliding actor here; `Behavior` passes it to `Player::IsInAir` and clears it when the rider leaves |
+| 0x320 | `mRider` | [daUdlift_c::LatchRider](../src/game/actors/d_a_udlift.cpp) stores the colliding actor here; `Behavior` passes it to `daPly_c::IsInAir` and clears it when the rider leaves |
 | 0x324 | `mClosestPlayer` | `= dActor_c::ClosestPlayer()` every frame |
 | 0x328 | `mVariant` | 0 / 1 / 2 from `actorID` 0x20 / 0x21 / 0x83; indexes [data_ov095_02136f68](../config/arm9/overlays/ov095/symbols.txt) (model), [data_ov095_02136f74](../config/arm9/overlays/ov095/symbols.txt) (collider) and [data_ov095_021375a4](../config/arm9/overlays/ov095/symbols.txt) (CLPS) |
 | 0x32c | `mState` | the index into the [data_ov095_02137910](../config/arm9/overlays/ov095/symbols.txt) pointer-to-member table `Behavior` dispatches |

@@ -915,7 +915,7 @@
         {
           "offset": 624,
           "type": 2,
-          "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+          "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
           "addend": 0,
           "targetSection": "SHN_UNDEF",
           "module": "arm9",
@@ -1045,7 +1045,7 @@
         {
           "offset": 656,
           "type": 2,
-          "symbol": "_ZN18daObjHatenaBlock_c15OnHitByMegaCharER6Player",
+          "symbol": "_ZN18daObjHatenaBlock_c15OnHitByMegaCharER7daPly_c",
           "addend": 0,
           "targetSection": 170,
           "module": "ov102",

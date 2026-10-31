@@ -52,7 +52,7 @@ enum daObjBk_Lift_c_AssetId { ASSET_BK_LIFT01_BMD = 0x0599, ASSET_BK_LIFT01_KCL 
 #include "common.h"
 
 #include "daObjBk_Lift_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -264,10 +264,10 @@ void daObjBk_Lift_c::UpdateShadow() {
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x190000, 0x28000, 0x258000, 0xf);
 }
 
-// @symbol _ZN14daObjBk_Lift_c15OnHitByMegaCharER6Player
-/* Slot 27. Player::IncMegaKillCount is a real method, and the trailing
+// @symbol _ZN14daObjBk_Lift_c15OnHitByMegaCharER7daPly_c
+/* Slot 27. daPly_c::IncMegaKillCount is a real method, and the trailing
    unqualified Kill() reaches this class's own slot-31 override. */
-void daObjBk_Lift_c::OnHitByMegaChar(Player &player) {
+void daObjBk_Lift_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Kill();
 }

@@ -27,7 +27,7 @@
  * sound) when its 200-frame mStateTimer expires, when its mesh collision
  * reports ground, or on a contact. Contacts are only handled on frames where
  * one of the x/z velocity words at 0x0a4/0x0ac is non-zero. A contact with the
- * player calls Player::Hurt, plays the sound and bursts; a metal player makes
+ * player calls daPly_c::Hurt, plays the sound and bursts; a metal player makes
  * it burst without Hurt; a vanished player is ignored (no burst).
  *
  * What stays:
@@ -48,7 +48,7 @@
 
 #include "decl_common.h"
 #include "daSnowball_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
 #include "math/CalcLib.h"
@@ -85,7 +85,7 @@ enum { PTCL_SNOWBALL_BURST = 0x11c };
 /* Sound id handed to func_02012694, the bank-3 wrapper (it calls
  * Sound::Play(3, id, pos)). Played at the camera-space position (mCamSpacePosX)
  * on two of the four burst paths: timer expiry or mesh-collision ground in the
- * update helper, and after Player::Hurt in the contact handler. The two
+ * update helper, and after daPly_c::Hurt in the contact handler. The two
  * hit-flag / metal-player bursts are silent. Only the number is known here. */
 enum { SND3_SNOWBALL_BURST = 0x3c };
 
@@ -112,10 +112,10 @@ enum { SNOWBALL_HIT_BIT_0x10 = 0x10, SNOWBALL_HIT_BIT_0x40000 = 0x40000 };
  *   - hitFlags has the 0x10 or the 0x40000 bit: burst.
  *   - the other actor is the player: ignore it entirely while the player is
  *     vanished (mIsVanish), burst without hurting while the player is metal
- *     (mIsMetal == 1), else call Player::Hurt, play the burst sound and burst.
+ *     (mIsMetal == 1), else call daPly_c::Hurt, play the burst sound and burst.
  *   - anything else: nothing.
  * "Burst" is a particle at the snowball's position plus MarkForDestruction; only
- * the Player::Hurt path also plays the sound. */
+ * the daPly_c::Hurt path also plays the sound. */
 void daSnowball_c::HandleContact() {
     dActor_c *other;
     int flags;
@@ -134,7 +134,7 @@ void daSnowball_c::HandleContact() {
     {
         SnowballBool eq = (SnowballBool)(other->actorID == ACTOR_ID_PLAYER);
         if (eq != SNOWBALL_FALSE) {
-            Player *player = static_cast<Player *>(other);
+            daPly_c *player = static_cast<daPly_c *>(other);
             if (player->mIsVanish != 0)
                 return;
             if (player->mIsMetal == 1) {
@@ -276,7 +276,7 @@ int daSnowball_c::Behavior() {
     mAngleY = mPrevAngleY;
     UpdateModelMatrix();
     mdCcAc_c.Clear();
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (player != 0 && player->mIsVanish == 0)
         mdCcAc_c.Update();
     return 1;

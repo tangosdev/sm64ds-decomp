@@ -17,7 +17,7 @@ its redundant old declaration is removed so the experiment still compiles.
 Direct constructor and non-deleting destructor ABI views retain their receiver
 and pointer result. Array counts and strides use the runtime's unsigned types;
 result-discarding callback casts remain explicit at the measured array-runtime
-boundary. Static-destructor registration and Player's callers retain object and
+boundary. Static-destructor registration and daPly_c's callers retain object and
 callback addresses as pointers. Roulette passes its allocated scene to its base
 constructor. The existing source credit and build enrollment are unchanged.
 

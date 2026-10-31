@@ -31,7 +31,7 @@ enum Scuttlebug_AssetId {
 #include "common.h"
 #include "daSpd_c.h"
 #include "dBgCh_Gnd.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dExtFrameCtrl_c.h"
 #include "SurfaceInfo.h"
@@ -167,16 +167,16 @@ extern "C" daSpd_c *daSpd_c_classInit(void) {
 /* Pays the player mCoinCount coins (a cap coin if Yoshi is wearing the cap,
  * an egg coin otherwise). A child (param1 != 0) resets; the original dies. */
 
-// @symbol _ZN7daSpd_c13OnTurnIntoEggER6Player
-void daSpd_c::OnTurnIntoEgg(Player &player) {
+// @symbol _ZN7daSpd_c13OnTurnIntoEggER7daPly_c
+void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
     volatile int force_stack;
     void *p = &player;
     int *bp;
     int t;
-    if (((Player *)p)->IsCollectingCap())
-        GivePlayerCoins(*(Player *)p, mCoinCount, 0);
+    if (((daPly_c *)p)->IsCollectingCap())
+        GivePlayerCoins(*(daPly_c *)p, mCoinCount, 0);
     else
-        ((Player *)p)->RegisterEggCoinCount(mCoinCount, 0, 0);
+        ((daPly_c *)p)->RegisterEggCoinCount(mCoinCount, 0, 0);
     if (param1 != 0) {
         mCoinCount = 0;
         bp = (int *)&mFlags;
@@ -717,7 +717,7 @@ void daSpd_c::func_ov071_0211f498() {
 
 // @symbol _ZN7daSpd_c19func_ov071_0211f29cEv
 void daSpd_c::func_ov071_0211f29c() {
-    Player *hitPlayer;
+    daPly_c *hitPlayer;
     int b;
 
     if (FindEgg(mdCcAc_c) != 0) {
@@ -730,7 +730,7 @@ void daSpd_c::func_ov071_0211f29c() {
         unsigned int id = mdCcAc_c.otherOwner;
         if (id == 0)
             return;
-        hitPlayer = (Player *)dActor_c::FindWithID(id);
+        hitPlayer = (daPly_c *)dActor_c::FindWithID(id);
     }
     if (hitPlayer == 0)
         return;

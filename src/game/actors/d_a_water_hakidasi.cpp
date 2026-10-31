@@ -35,7 +35,7 @@
 
 #include "daWater_Hakidasi_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "daWater_Ring_c.h"
 #include "dExtSimpleModel_c.h"
 #include "Sound.h"
@@ -105,7 +105,7 @@ int daWater_Hakidasi_c::State0() {
     struct Vec3 rewardPos;
     struct Vec3 hitPos1;
     struct Vec3 hitPos2;
-    Player *player;
+    daPly_c *player;
     int dist;
     daWater_Ring_c *ring;
     int i;
@@ -123,7 +123,7 @@ int daWater_Hakidasi_c::State0() {
     int m1;
 
     player = ClosestPlayer();
-    if (player != 0 && player->mIsMetal == 0) { /* Player::mIsMetal */
+    if (player != 0 && player->mIsMetal == 0) { /* daPly_c::mIsMetal */
         dist = DistToCPlayer();
         if (dist < 0x3e8000) {
             dist = (0x3e8000 - dist) / 30;

@@ -173,10 +173,10 @@
       "ordinal": 18
     },
     {
-      "symbol": "_ZN12daBasabasa_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN12daBasabasa_c13OnTurnIntoEggER7daPly_c",
       "address": "0x02117eb4",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN12daBasabasa_c13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN12daBasabasa_c13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 19
     },
     {

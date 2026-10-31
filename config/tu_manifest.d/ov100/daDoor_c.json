@@ -63,21 +63,21 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144528EP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_02144528EP7daPly_c",
       "address": "0x02144528",
       "size": "0x000001d0",
       "legacy_source": "src/func_ov100_02144528.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_021446f8EP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_021446f8EP7daPly_c",
       "address": "0x021446f8",
       "size": "0x00000038",
       "legacy_source": "src/func_ov100_021446f8.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144730EP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_02144730EP7daPly_c",
       "address": "0x02144730",
       "size": "0x000001ec",
       "legacy_source": "src/func_ov100_02144730.cpp",
@@ -91,28 +91,28 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144950EP6Playeri",
+      "symbol": "_ZN8daDoor_c19func_ov100_02144950EP7daPly_ci",
       "address": "0x02144950",
       "size": "0x00000078",
       "legacy_source": "src/func_ov100_02144950.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_021449c8EP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_021449c8EP7daPly_c",
       "address": "0x021449c8",
       "size": "0x00000070",
       "legacy_source": "src/func_ov100_021449c8.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144a38EP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_02144a38EP7daPly_c",
       "address": "0x02144a38",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov100_02144a38.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144bf4EP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_02144bf4EP7daPly_c",
       "address": "0x02144bf4",
       "size": "0x00000070",
       "legacy_source": "src/func_ov100_02144bf4.cpp",
@@ -126,7 +126,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144c6cEP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_02144c6cEP7daPly_c",
       "address": "0x02144c6c",
       "size": "0x00000060",
       "legacy_source": "src/func_ov100_02144c6c.c",
@@ -140,7 +140,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144cf8EP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_02144cf8EP7daPly_c",
       "address": "0x02144cf8",
       "size": "0x0000028c",
       "legacy_source": "src/func_ov100_02144cf8.c",
@@ -175,28 +175,28 @@
       "ordinal": 19
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02145080EP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_02145080EP7daPly_c",
       "address": "0x02145080",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov100_02145080.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02145170EP6PlayerP7Vector3S3_",
+      "symbol": "_ZN8daDoor_c19func_ov100_02145170EP7daPly_cP7Vector3S3_",
       "address": "0x02145170",
       "size": "0x00000054",
       "legacy_source": "src/func_ov100_02145170.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_021451c4EPvP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_021451c4EPvP7daPly_c",
       "address": "0x021451c4",
       "size": "0x00000120",
       "legacy_source": "src/func_ov100_021451c4.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_021452e4EP6Player",
+      "symbol": "_ZN8daDoor_c19func_ov100_021452e4EP7daPly_c",
       "address": "0x021452e4",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov100_021452e4.c",
@@ -622,7 +622,7 @@
   "notes": [
     "Thirty-two-function unit 0x021443f4..0x021458d4: D1 and D0 from the out-of-line destructor, the twenty-four helpers func_ov100_02144468..func_ov100_021453d8, CleanupResources, OnPendingDestroy, Render, Behavior, InitResources, and the folded registry factory daDoor_c_classInit as `return new daDoor_c;`.",
     "Written in ROM order under `#pragma defer_codegen off`, which keeps D1 ahead of D0. None of the legacy shards carried a pragma.",
-    "The per-shard extern blocks are merged into one declaration per callee. Where shards disagreed (func_ov100_021453d8's argument types, the int/void* return of func_ov100_02145370, data_0209caa0 as bytes, words or a three-word struct, data_ov100_02148204 as bytes or a 16-byte entry) the TU keeps one spelling and casts at the call sites; every caller reproduces with it. The nine state tables are declared as the int include/decl_common.h gives two of them, and the helpers' Player calls are member calls through include/Player.h.",
+    "The per-shard extern blocks are merged into one declaration per callee. Where shards disagreed (func_ov100_021453d8's argument types, the int/void* return of func_ov100_02145370, data_0209caa0 as bytes, words or a three-word struct, data_ov100_02148204 as bytes or a 16-byte entry) the TU keeps one spelling and casts at the call sites; every caller reproduces with it. The nine state tables are declared as the int include/decl_common.h gives two of them, and the helpers' daPly_c calls are member calls through include/daPly_c.h.",
     "Eighteen of the helpers, InitResources and the factory were C sources; they compile as C++ here. Their stack vectors stay a plain three-word struct so they carry no destructor. The six static offsets are function-local Vector3s. InitResources copies the door matrix into both models through a twelve-word array struct (the struct-copy lever of notes/cpp-class-form.md).",
     "InitResources is now the real daDoor_c::InitResources method rather than a C free function taking the object explicitly; the redundant (u32) cast on the param1 shift is still what keeps the offset folded into both accesses.",
     "Fourteen helpers (func_ov100_02144468..func_ov100_02144cf8) are the enter/execute members of the door's nine states: pointer-to-member constants at ov100 0x021480d4..0x02148144, copied by the module's static initializer into the 16-byte tables data_ov100_021488a4..data_ov100_02148924. func_ov100_021453d8 stores a state at +0x140 and calls its enter half; Behavior calls the execute half.",

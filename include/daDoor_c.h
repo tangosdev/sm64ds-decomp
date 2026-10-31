@@ -5,7 +5,7 @@
 #include "dActor_c.h"
 #include "dExtAnmModel_c.h"
 
-class Player;
+class daPly_c;
 
 /* The plain warp door -- the leaf dActor_c child whose code is the ov100
  * linker unit 0x021443f4..0x021458d4, src/game/actors/d_a_door.cpp (its registry
@@ -129,7 +129,7 @@ struct daDoor_c : dActor_c {
     s8   mKeyModelIdx;            /* 0x144 -- key-model index */
     /* A countdown/phase byte. func_ov100_02144528 and func_ov100_02145080 tick
        it with DecIfAbove0_Byte and also set it directly (0x40 and 0x78 ticks,
-       or the 0/1 result of Player::TryExitWhiteDoorWithStar), and it is zeroed
+       or the 0/1 result of daPly_c::TryExitWhiteDoorWithStar), and it is zeroed
        when a swing starts. The comments in src/game/actors/d_a_door.cpp say what
        each does with it. */
     u8   mTimer;                  /* 0x145 */
@@ -152,28 +152,28 @@ struct daDoor_c : dActor_c {
     /* The helpers the state tables' pointer-to-member pairs name, and the
        ones those call: each takes the door as its implicit this exactly
        where the old C sources took it explicitly. The state record's
-       execute half always receives the player (as Player* or, where the
+       execute half always receives the player (as daPly_c* or, where the
        body only forwards it, the int the dispatch carries). The original
        names are not recovered; the addresses stand in. */
     int func_ov100_02144468(int p);         /* state 021488a4 execute */
     int func_ov100_021444e8(int a1);        /* state 02148924 execute */
-    int func_ov100_02144528(Player *pl);    /* state 02148904 execute */
-    void func_ov100_021446f8(Player *r1);   /* state 02148904 enter */
-    int func_ov100_02144730(Player *arg1);  /* states 021488f4/02148914 execute */
+    int func_ov100_02144528(daPly_c *pl);   /* state 02148904 execute */
+    void func_ov100_021446f8(daPly_c *r1);  /* state 02148904 enter */
+    int func_ov100_02144730(daPly_c *arg1); /* states 021488f4/02148914 execute */
     int func_ov100_0214491c();              /* state 02148914 enter */
-    int func_ov100_02144950(Player *pl, int unused); /* state 021488f4 enter */
-    int func_ov100_021449c8(Player *a2);    /* state 021488e4 execute */
-    int func_ov100_02144a38(Player *p);     /* state 021488e4 enter */
-    int func_ov100_02144bf4(Player *a2);    /* state 021488d4 execute */
+    int func_ov100_02144950(daPly_c *pl, int unused); /* state 021488f4 enter */
+    int func_ov100_021449c8(daPly_c *a2);             /* state 021488e4 execute */
+    int func_ov100_02144a38(daPly_c *p);              /* state 021488e4 enter */
+    int func_ov100_02144bf4(daPly_c *a2);             /* state 021488d4 execute */
     int func_ov100_02144c64();              /* state 021488d4 enter */
-    int func_ov100_02144c6c(Player *r1);    /* state 021488c4 execute */
+    int func_ov100_02144c6c(daPly_c *r1);   /* state 021488c4 execute */
     int func_ov100_02144ccc();              /* state 021488c4 enter */
-    int func_ov100_02144cf8(Player *b);     /* state 021488b4 execute */
-    int func_ov100_02145080(Player *arg1);  /* the exit timing */
-    void func_ov100_02145170(Player *pl, Vector3 *a, Vector3 *b); /* place the player */
-    int func_ov100_021451c4(void *r5, Player *r4);  /* send the player through */
-    int func_ov100_021452e4(Player *r1);    /* player inside the door's box */
-    Player *func_ov100_02145370();          /* the current player */
+    int func_ov100_02144cf8(daPly_c *b);    /* state 021488b4 execute */
+    int func_ov100_02145080(daPly_c *arg1); /* the exit timing */
+    void func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b); /* place the player */
+    int func_ov100_021451c4(void *r5, daPly_c *r4);                /* send the player through */
+    int func_ov100_021452e4(daPly_c *r1);     /* player inside the door's box */
+    daPly_c *func_ov100_02145370();           /* the current player */
     int func_ov100_021453d8(void *p, int a2); /* the state installer */
 };
 

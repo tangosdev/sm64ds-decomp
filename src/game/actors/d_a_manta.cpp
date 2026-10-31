@@ -22,7 +22,7 @@
  *   Dropping it loses the reload of dActor_c's z speed.
  * - Matrix4x3 stays decl_common.h's flat s32[12].
  *   UpdateModelAndRingPos indexes .m. common.h must not replace it.
- * - Player::Hurt stays mangled (Fix12 by value).
+ * - daPly_c::Hurt stays mangled (Fix12 by value).
  */
 
 #pragma defer_codegen off
@@ -33,7 +33,7 @@
 #include "daManta_c.h"
 #include "daWater_Ring_c.h"
 #include "PathPtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -122,7 +122,7 @@ void daManta_c::HurtTouchingPlayer() {
         hit.x = mPosX;
         hit.y = mPosY;
         hit.z = mPosZ;
-        ((Player *)actor)->Hurt(hit, 1, 0xc000, 1, 0, 1);
+        ((daPly_c *)actor)->Hurt(hit, 1, 0xc000, 1, 0, 1);
     }
 }
 

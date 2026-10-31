@@ -4,7 +4,7 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-struct Player;
+struct daPly_c;
 
 /**
  * Whomp's Fortress sliding bars (`dossunbar`). One class, two
@@ -27,7 +27,7 @@ struct daObjBk_Dossunbar_c : dBgActor_c {
     virtual s32 CleanupResources();
     virtual s32 Behavior();
     virtual s32 Render();
-    virtual void OnHitByMegaChar(Player &player);
+    virtual void OnHitByMegaChar(daPly_c &player);
     virtual void Kill();
 
     /* The seven-state cycle; Behavior runs the execute table. */

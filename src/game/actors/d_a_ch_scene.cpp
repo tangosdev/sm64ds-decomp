@@ -20,7 +20,7 @@
 #include "daChScene_c.h"
 #include "dScene_c.h"
 #include "dFdColor_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dCamera_c.h"
 #include "Sound.h"
 #include "math/CalcLib.h"
@@ -125,7 +125,7 @@ s32 daChScene_c::Behavior() {
         }
     } else {
         if (data_02092110 < 0) {
-            if (((Player *)player)->IsStateEnteringLevel() == 0) {
+            if (((daPly_c *)player)->IsStateEnteringLevel() == 0) {
                 MulVec3Mat4x3(&player->mPos, &mInvMat, &out2);
                 {
                     int a = out2.x;
@@ -142,12 +142,12 @@ s32 daChScene_c::Behavior() {
                                     mAngleZ = 1;
                                 }
                                 cam = data_0209f318;
-                                if (((Player *)player)->Unk_020c9e5c(7)) {
+                                if (((daPly_c *)player)->Unk_020c9e5c(7)) {
                                     LoadDestinationLevel();
                                     StartExitFaderWipe(6);
                                     ((dCamera_c *)cam)->SetFlag_3();
                                 } else {
-                                    ((Player *)player)->SetNoControlState(6, -1, 0);
+                                    ((daPly_c *)player)->SetNoControlState(6, -1, 0);
                                     if (mAngleX != 0) {
                                         dActor_c *o;
                                         LoadDestinationLevel();

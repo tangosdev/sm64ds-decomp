@@ -3807,7 +3807,7 @@ void dScMgBase_c::OnNewRecord()
 /* dScMgBase_c::CanEndState - vtable slot 19. Both the name and the signature are evidenced here: this
    body carries its own `recovered name:` above, and dScMgJump_c and
    dScMgBSC_c carry theirs. The parameter is an int, not dActor_c.h:132's
-   `Player &` -- see include/dScMgBase_c.h. The base ignores the mode. */
+   `daPly_c &` -- see include/dScMgBase_c.h. The base ignores the mode. */
 int dScMgBase_c::CanEndState(int /* mode */)
 {
     return 1;

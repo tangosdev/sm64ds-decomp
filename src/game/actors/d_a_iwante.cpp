@@ -98,7 +98,7 @@ enum Eyerok_AssetId {
 #include "decl_Message.h"
 #include "SharedFilePtr.h"
 #include "dExtAnmTexPat_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Message.h"
 #include "dCamera_c.h"
 #include "Sound.h"
@@ -170,7 +170,7 @@ enum {
     SE_DEFEAT_POOF = 0x146      /* a defeated hand is removed in a puff of dust */
 };
 
-/* Message ids for Player::ShowMessage in func_ov066_0211903c: 0xb8 is used
+/* Message ids for daPly_c::ShowMessage in func_ov066_0211903c: 0xb8 is used
  * while both hands are alive (the talk before the fight), 0xb9 once neither is. */
 enum {
     MSG_BEFORE_FIGHT = 0xb8,
@@ -445,14 +445,14 @@ daIwante_c::~daIwante_c() {}
  * the defeat state (data_ov066_0211b07c). Callers read the return value to tell
  * these apart. */
 int daIwante_c::func_ov066_0211603c() {
-    Player *actor;
+    daPly_c *actor;
     int flags;
     int hit;
     unsigned int id;
 
     id = mdCcAcPos_c.otherOwner;
     if (id != 0) {
-        actor = static_cast<Player *>(dActor_c::FindWithID(id));
+        actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (actor == 0)
             return 0;
 
@@ -723,7 +723,7 @@ int daIwante_c::func_ov066_02116a68() {
     /* Unused; sizes the frame to the ROM's 12 bytes (sub sp,#0xc). */
     volatile int dummy[3];
     (void)dummy;
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     int dist = p->mPosZ;
     int lo = (int)0xff3ae000;
     if (dist < lo) return lo;
@@ -882,7 +882,7 @@ int daIwante_c::func_ov066_02116db0() {
 
     case 1:
         if (mStateWork1 == 0) {
-            Player *p = ClosestPlayer();
+            daPly_c *p = ClosestPlayer();
             if (p != 0) {
                 EVec3 *pp = (EVec3 *)&p->mPosX;
                 mTargetPosX = pp->x;
@@ -1022,7 +1022,7 @@ int daIwante_c::func_ov066_021171b0() {
 
     switch (mSubState) {
     case 0: {
-        Player *p = ClosestPlayer();
+        daPly_c *p = ClosestPlayer();
         if (p == 0)
             break;
         {
@@ -1192,7 +1192,7 @@ int daIwante_c::func_ov066_021175e8() {
     switch (mSubState) {
     case 0:
         if (data_ov066_0211ae0c == mPartIdx) {
-            Player *p = ClosestPlayer();
+            daPly_c *p = ClosestPlayer();
             if (p != 0) {
                 EVec3 *pp = (EVec3 *)&p->mPosX;
                 mTargetPosX = pp->x;
@@ -1239,7 +1239,7 @@ int daIwante_c::func_ov066_021175e8() {
             mTimer1 = 0xa;
             mSubState = 7;
             if (func_ov066_02116a68() == 0) {
-                Player *p = ClosestPlayer();
+                daPly_c *p = ClosestPlayer();
                 if (p != 0) {
                     EVec3 *pp = (EVec3 *)&p->mPosX;
                     v.x = pp->x;
@@ -1384,7 +1384,7 @@ int daIwante_c::func_ov066_02117bf0() {
     switch (mSubState) {
     case 0:
         if (data_ov066_0211ae0c == mPartIdx) {
-            Player *p = ClosestPlayer();
+            daPly_c *p = ClosestPlayer();
             if (p != 0) {
                 EVec3 *pp = (EVec3 *)&p->mPosX;
                 mTargetPosX = pp->x;
@@ -1421,7 +1421,7 @@ int daIwante_c::func_ov066_02117bf0() {
         if (Vec3_HorzDist(&mPosX, &mTargetPosX) <= 0x28000) {
             mSubState = 6;
             if (func_ov066_02116a68() == 0) {
-                Player *p = ClosestPlayer();
+                daPly_c *p = ClosestPlayer();
                 if (p != 0) {
                     EVec3 *pp = (EVec3 *)&p->mPosX;
                     v.x = pp->x;
@@ -2052,7 +2052,7 @@ int daIwante_c::func_ov066_02118de0() {
  * It enters the matching body state and sets data_ov066_0211ae04 to the pattern
  * number, which is what the hands follow (func_ov066_021168ec). */
 int daIwante_c::func_ov066_02118e04() {
-    Player* p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     int coinFlip;
     int v;
 
@@ -2248,7 +2248,7 @@ int daIwante_c::func_ov066_02119398() {
     Vec4 sp;
     /* Reading p->mPosY and p->mPosZ directly makes this 4 bytes shorter;
        the pointer to the position triple is what matches. */
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     if (p != 0) {
         s32 *playerPos = &p->mPosX;
         int v1 = playerPos[1];
@@ -2752,7 +2752,7 @@ extern "C" void func_ov066_0211a2e4(void *a, int b)
     /* Unused; sizes the frame to the ROM's 12 bytes (sub sp,#0xc). */
     volatile int dummy[3];
     (void)dummy;
-    Player *p;
+    daPly_c *p;
     if (data_ov066_0211ae04 != PHASE_DORMANT) return;
     if (b == 0) return;
     p = ((dActor_c *)a)->ClosestPlayer();

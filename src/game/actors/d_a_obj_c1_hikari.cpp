@@ -31,7 +31,7 @@ enum d_a_obj_c1_hikari_AssetId { ASSET_C1_HIKARI_BMD = 0x05ad };
 
 #include "daObjC1Hikari_c.h"
 #include "Message.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
@@ -108,7 +108,7 @@ int daObjC1Hikari_c::Behavior() {
     HikariVec3 vIn2, vMid2, vRes2;
 
     if (mTalkPlayer != 0) {
-        Player *p;
+        daPly_c *p;
         if (!Sound::PlaySmallSecretSound(this, mSoundTimers))
             return 1;
         p = mTalkPlayer;
@@ -146,7 +146,7 @@ int daObjC1Hikari_c::Behavior() {
                     HikariVec3 *op = (HikariVec3 *)&o->mPosX;
                     hv = *op;
                     if (AngleDiff(Vec3_HorzAngle(&mPos, (const Vector3 *)&hv), mAngleY) < 0x4000) {
-                        Player *player = static_cast<Player *>(o);
+                        daPly_c *player = static_cast<daPly_c *>(o);
                         if (player->mSurfaceType == 0xd) {
                             if (player->StartTalk(*this, false)) {
                                 mTalkPlayer = player;

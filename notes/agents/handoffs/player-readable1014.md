@@ -1,8 +1,8 @@
 # Handoff: player-readable1014
 
-This commit improves readability in the production Player translation unit while
+This commit improves readability in the production daPly_c translation unit while
 preserving its entire pinned-compiler object. It completes two producer passes;
-it does not complete Player's class reconstruction or independent source review.
+it does not complete daPly_c's class reconstruction or independent source review.
 
 ## Identity and resumption
 
@@ -22,23 +22,23 @@ it does not complete Player's class reconstruction or independent source review.
 
 ## Changes and evidence
 
-The source scope is `src/game/player/Player.cpp`, ov002
+The source scope is `src/game/player/d_a_ply_methods.cpp`, ov002
 `[0x020bccfc, 0x020e67a8)`: 612 enrolled functions, 257 changed bodies.
 Headers, layouts, manifests, symbol names and attribution are unchanged.
 
 Pass one replaced 676 scalar offset accesses in 125 functions with existing
 members of the same width and signedness. Pass two replaced 581 mangled call
 sites, used typed state objects and animation interfaces, simplified repeated
-Player casts and integer pointer arithmetic where matching allowed, and removed
-obsolete declarations. The local stand-in Player/fBase classes in
+daPly_c casts and integer pointer arithmetic where matching allowed, and removed
+obsolete declarations. The local stand-in daPly_c/fBase classes in
 `func_ov002_020c8b78` are gone. The introductory comment now describes the current
 scope instead of repeating superseded migration counts.
 
 No new semantic state, animation or field names are asserted. All 71 typed
 address-named state objects have the three PMF records populated by
-`src/game/player/Player.cpp` (`__sinit_ov002_021019d0`). The script actor's type follows its
+`src/game/player/d_a_ply_methods.cpp` (`__sinit_ov002_021019d0`). The script actor's type follows its
 Spawn producer and dActor position/angle accesses; its slot stays unnamed.
-The original physical Player file boundary remains an inference.
+The original physical daPly_c file boundary remains an inference.
 
 [The experiment record](../../experiments/player-readability-1014.json) contains
 the changed ordinals, source blob, object hashes, measured failed simplifications
@@ -55,7 +55,7 @@ unresolved declarations; a remaining cast is not automatically necessary.
   existing compiler-only empty destructors. Applying the unchanged manifest
   policy produces SHA-256
   `285238d9b2627e66076e7f73d947bb9346188968fb7d3c5d0c87e42152da23d6`,
-  exactly the Player object consumed by the production build. Player emits no
+  exactly the daPly_c object consumed by the production build. daPly_c emits no
   non-text allocated data.
 - `config/arm9/overlays/ov002/delinks.txt` and the generated stock configuration
   both enroll this source as `complete` over the range above. This is a `src/`
@@ -76,13 +76,13 @@ unresolved declarations; a remaining cast is not automatically necessary.
 - `git diff --check`: exit 0.
 
 The ordinary pre-push gate command is
-`python tools/prepush_linkcheck.py --files src/game/player/Player.cpp --json build/player-readable/linkcheck.json`.
+`python tools/prepush_linkcheck.py --files src/game/player/d_a_ply_methods.cpp --json build/player-readable/linkcheck.json`.
 Its result is recorded in the experiment JSON alongside the fresh-object check.
 
 ## Limits and remaining work
 
 The most concrete layout concern found during the second pass is
-`GetBodyModelID()` returning 4 for metal while `Player.h` declares
+`GetBodyModelID()` returning 4 for metal while `daPly_c.h` declares
 `mBodyModels[4]` and a byte plus padding at `0x0ec`. New animation rewrites retain
 explicit slot loads instead of extending the existing out-of-bounds array idiom.
 Resolve this shared layout with allocation/lifecycle evidence and consumer
@@ -97,7 +97,7 @@ reconstruction scope; this readability sweep does not close it.
 The stock control and candidate both report the same nine pre-existing symbol
 check errors. The whole-tree data inventory still reports one differing
 `_ZTV10dCcAcPos_c` from two unchanged destructor sources, 1,519 partial symbols
-and 21 unnamed symbols. These are not resolved by the Player byte pass.
+and 21 unnamed symbols. These are not resolved by the daPly_c byte pass.
 The production run used `--no-rom`; no candidate NDS packaging, gameplay test,
 private PR CI, independent verifier acceptance or current-main composition is
 claimed here.

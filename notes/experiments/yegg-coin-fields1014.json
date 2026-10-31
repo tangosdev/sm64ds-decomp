@@ -77,11 +77,11 @@
       "kind": "reconstruction",
       "location": "src/actors/daYegg_c.cpp and include/daYegg_c.h",
       "owner": "codex-yegg-readable-producer1014 and codex-yegg-readable-coordinator1014 reconstruction followup",
-      "reason": "Candidate retains Fix12 scalar bridges and other raw/POD array-backed math workspaces, spawned-coin field writes, DOSUN byte, Player+0xc8 access, floor-result+4 view, unknown fields/numeric flags and address-based helper names. Existing two free Player-entry helpers and constructor/factory alias boundaries remain. Historic compiler measurements are not newly generalized; no original method/field/file identifiers recovered. New34strict/storage/metadata proof accepts this slice with existing ownership policy, not completion of every class or caller ABI.",
+      "reason": "Candidate retains Fix12 scalar bridges and other raw/POD array-backed math workspaces, spawned-coin field writes, DOSUN byte, daPly_c+0xc8 access, floor-result+4 view, unknown fields/numeric flags and address-based helper names. Existing two free daPly_c-entry helpers and constructor/factory alias boundaries remain. Historic compiler measurements are not newly generalized; no original method/field/file identifiers recovered. New34strict/storage/metadata proof accepts this slice with existing ownership policy, not completion of every class or caller ABI.",
       "summary": "Yegg remains a partial reconstructed class despite three genuine interface/lifetime replacements and intact owned TU storage."
     }
   },
-  "finding_continuation": "Four spawned-coin stores within YEGG-RECONSTRUCTION-01 are addressed here; preserve its full inherited dictionary and deferred disposition. Raw DOSUN/Player fields, math workspaces, helper names and other partial reconstruction remain.",
+  "finding_continuation": "Four spawned-coin stores within YEGG-RECONSTRUCTION-01 are addressed here; preserve its full inherited dictionary and deferred disposition. Raw DOSUN/daPly_c fields, math workspaces, helper names and other partial reconstruction remain.",
   "scope": "One Source file and this report. No header, manifest, symbol, policy, enrollment or matching-credit changes. Prior accepted Yegg history retained.",
   "review": "Producer evidence only. A distinct actual reviewer must claim and accept this exact final commit at the declared current base. The final report-only commit must retain all five tested production trees."
 }

@@ -102,10 +102,10 @@ This document describes this commit. The queue records its immutable output SHA.
   (the cartridge's own symbol is free, and it constructs rather than operates
   on an object). Calls into other classes: `Animation::Advance`/`Finished`,
   `ModelAnim::Render`/`Model::Render` (slot 5, virtual) and
-  `Player::IsOnShell`/`IncMegaKillCount` are now real method calls; **57**
+  `daPly_c::IsOnShell`/`IncMegaKillCount` are now real method calls; **57**
   `extern "C"` bridge declarations remain (was 61), every one a callee whose own
   header does not yet declare it as a method (`dActor_c::UpdatePos`,
-  `dCc_c::Clear`, `Player::Bounce`, `Player::Hurt`, ...). 50 of the 57 are rows
+  `dCc_c::Clear`, `daPly_c::Bounce`, `daPly_c::Hurt`, ...). 50 of the 57 are rows
   in the file-scope block; the remaining **7 sit at block scope inside the
   factory body** (`_ZN7fBase_cnwEj`, `_ZN8dActor_cC2Ev`, `_ZN9ModelAnimC1Ev`,
   `_ZN5ModelC1Ev`, `_ZN11ShadowModelC1Ev`, `_ZN7dCcAc_cC1Ev`,
@@ -121,8 +121,8 @@ This document describes this commit. The queue records its immutable output SHA.
   `Vec3_26e28` (the flat aggregate DetectRaycastClsn takes; `Vector3` has a
   declared destructor and is not one), the two pointer-to-member windows
   `C_27708`/`C_27744` that CallStateUpdate/CallStateEnter dispatch through, and
-  `Bca2` (the two-word BCA record two entry states read). Two Player-side reads
-  now go through `Player::actorID` and `Player::mIsMetal`.
+  `Bca2` (the two-word BCA record two entry states read). Two daPly_c-side reads
+  now go through `daPly_c::actorID` and `daPly_c::mIsMetal`.
 - Lifecycle, vtable/RTTI, initializer and data ownership: unchanged from the
   input. Out-of-line `~daGmch_c` under `#pragma defer_codegen off` emits D1, D0
   then a homeless D2 (licensed deadstrip); the destructor is the key function so
@@ -148,7 +148,7 @@ This document describes this commit. The queue records its immutable output SHA.
   the composed base; (2) bank or decline the +2 strict CONVERTED members
   (2698 -> 2700, unbanked, integration lane); (3) turn the remaining bridges
   into methods as their owning headers gain the declarations, `dActor_c::UpdatePos`,
-  `Player::Bounce` and `Player::Hurt` first since they are the most called;
+  `daPly_c::Bounce` and `daPly_c::Hurt` first since they are the most called;
   (4) a typed factory body, if a form reproduces the vptr store; (5) the two
   pointer-to-member windows, if a `daGmch_c` member-pointer spelling reproduces
   mwccarm's representation.

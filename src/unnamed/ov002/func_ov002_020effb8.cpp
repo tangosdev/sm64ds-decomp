@@ -6,8 +6,8 @@
  *   control points. Its one caller is arm9 func_02008b4c, the path
  *   interpolator.
  * - func_ov002_020f02c8, func_ov002_020f030c and func_ov002_020f035c: the
- *   per-surface slope tables Player.h describes (slide acceleration, slide
- *   loss factor, slope threshold). Player, daObjBlockS_c and
+ *   per-surface slope tables daPly_c.h describes (slide acceleration, slide
+ *   loss factor, slope threshold). daPly_c, daObjBlockS_c and
  *   daObjMarioCap_c call them.
  *
  * Not folded: neither neighbour calls or is called by any of the four, so

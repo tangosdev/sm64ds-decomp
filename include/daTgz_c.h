@@ -38,8 +38,8 @@ struct daTgz_c : dActor_c {
     /* PMF pair. func_ov077_02125e94 stores &gTgzStates[i] (d_a_tgz.cpp).
        func_ov077_02125e5c calls slot 0; func_ov077_02125e20 calls slot 1. */
     void *mStateDesc;                    /* 0x3d0 */
-    /* Player stored when a hit sends the Spiny into state 2. */
-    Player *mChasePlayer;                /* 0x3d4 */
+    /* daPly_c stored when a hit sends the Spiny into state 2. */
+    daPly_c *mChasePlayer; /* 0x3d4 */
     /* Render draws the still dExtSimpleModel_c in states 0 and 4 and the dExtAnmModel_c
        otherwise. Behavior keeps states 4 and 5 running however far the
        player is, and state 1 only once it is on the ground. */
@@ -62,7 +62,7 @@ struct daTgz_c : dActor_c {
     virtual ~daTgz_c();                  /* slots 16 (D1), 17 (D0) */
 
     virtual int   OnYoshiTryEat();               /* slot 18 */
-    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
     virtual int   OnAimedAtWithEgg();            /* slot 29 */
 
     int Behavior();

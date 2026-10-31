@@ -12,7 +12,7 @@
 #include "nitro/fx/fx.h"
 #include "daPeach_c.h"
 #include "dActor_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dExtFrameCtrl_c.h"
 #include "dCc_c.h"
@@ -132,7 +132,7 @@ void PeachDemandDeletingDtor(daPeach_c *peach) {
  * facing). Otherwise both target angles fall back to zero and she looks
  * straight ahead. The two ApproachLinear calls make the turn gradual. */
 void daPeach_c::UpdateLookAt() {
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (player == 0)
         return;
     Vector3 target;
@@ -318,7 +318,7 @@ int daPeach_c::InitState3() {
         if (a) {
             int match = (((dActor_c *)a)->actorID == 0xbf) ? 1 : 0;
             if (match != 0) {
-                mTalkPlayer = (Player *)a;
+                mTalkPlayer = (daPly_c *)a;
                 if (mTalkPlayer->StartTalk(*this, false)) {
                     SetState(1);
                 }

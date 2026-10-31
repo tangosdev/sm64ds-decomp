@@ -2,7 +2,7 @@
 /* daFPknBall_c (FPAKUN_BALL, actor 254): the fireball the fire piranha plant
  * spits. daFPkn_c hands it to dActor_c::SpawnFireball with param1 = 3. It
  * flies along its heading until it has covered mMaxDistance (1500 units),
- * burns a Player it touches, and is knocked away when its collider reports
+ * burns a daPly_c it touches, and is knocked away when its collider reports
  * hitFlags bit 0x10 (mega character, by dCc_c.h's unverified table).
  * On expiry, a wall or water it puffs into dust and destroys itself.
  * ov002 0x020f8858..0x020f934c, 10 functions; the last is the registry
@@ -27,7 +27,7 @@
 #pragma defer_codegen off
 
 #include "common.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SaveData.h"
 #include "Sound.h"
 #include "daFPknBall_c.h"
@@ -147,7 +147,7 @@ void daFPknBall_c::TryDropItem() {
             return;
     }
     {
-        Player *player = ClosestPlayer();
+        daPly_c *player = ClosestPlayer();
         char *koopa;
         if (player != 0 && player->param1 == 3 &&
             (koopa = (char *)dActor_c::FindWithActorID(ACTOR_KOOPA, 0)) != 0 &&
@@ -330,10 +330,10 @@ int daFPknBall_c::Behavior() {
                 }
                 {
                     enum Bool hitPlayer =
-                        (enum Bool)(((Player *)hitActor)->actorID == ACTOR_PLAYER);
-                    if (hitPlayer != FALSE && ((Player *)hitActor)->mIsMetal == 0 &&
-                        ((Player *)hitActor)->mIsVanish == 0) {
-                        ((Player *)hitActor)->Burn();
+                        (enum Bool)(((daPly_c *)hitActor)->actorID == ACTOR_PLAYER);
+                    if (hitPlayer != FALSE && ((daPly_c *)hitActor)->mIsMetal == 0 &&
+                        ((daPly_c *)hitActor)->mIsVanish == 0) {
+                        ((daPly_c *)hitActor)->Burn();
                         {
                             int x = mPosX;
                             dustPos2.x = x;

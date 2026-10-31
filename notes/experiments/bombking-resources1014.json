@@ -173,14 +173,14 @@
       "summary": "Small state initializers use already-declared scalar members."
     },
     {
-      "accepted_predecessor_reason": "The TU still includes Player.h and defines no counterfeit Player class. Main only changes a destructor helper comment in Player.h and changes inherited dActor_c::OnTurnIntoEgg from int to void; SnmBdy does not override that method. This fresh composed class and owned metadata compile and reproduce with those headers.",
+      "accepted_predecessor_reason": "The TU still includes daPly_c.h and defines no counterfeit daPly_c class. Main only changes a destructor helper comment in daPly_c.h and changes inherited dActor_c::OnTurnIntoEgg from int to void; SnmBdy does not override that method. This fresh composed class and owned metadata compile and reproduce with those headers.",
       "disposition": "fixed",
       "id": "SNM-05",
       "kind": "reconstruction",
-      "location": "src/actors/daBgSnmBdy_c.cpp:28-34; include/Player.h:43,698",
+      "location": "src/actors/daBgSnmBdy_c.cpp:28-34; include/daPly_c.h:43,698",
       "prior_review": "pr2445.review.md third finding, previously unnumbered; stable ID assigned here",
       "reason": "Unaffected historical finding retained with its prior disposition and issue ownership. This Bomb King-only three-file change does not edit Snowman Source, headers, ledgers or enrollment. No fresh whole-Snowman review is claimed. Accepted historical reason: Retained prior independent finding disposition at8f95 by exact source/header/manifest/full-diff invariance. Current-head class and reference proof pass. Live-main advance requires composition rework before final acceptance. Prior reason: Retain accepted predecessor pr2445-composition-0910 at3b71825d: exact source/header/manifest/handoff and ov072 symbol/enrollment blobs, plus every ov072 ledger record, are unchanged in8f95. Own composition audit and pinned producer shared-consumer proof show no new interaction. This carries its accepted source judgment and partial issue2476; it does not claim a new whole-Snowman source review.",
-      "summary": "The TU uses the real Player declaration."
+      "summary": "The TU uses the real daPly_c declaration."
     },
     {
       "accepted_predecessor_reason": "The larger raw state bodies, ABI calls and matrix adapter remain explicit unfinished reconstruction under issue2476. Complete source reading from independent accepted8e4b review is retained only after proving exact source/header/manifest invariance; fresh current-base proof passes. This review accepts bounded progress, not whole-class completion or a universal compiler barrier.",

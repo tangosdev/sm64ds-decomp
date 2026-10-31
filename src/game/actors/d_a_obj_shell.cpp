@@ -46,7 +46,7 @@ enum daObjShell_c_AssetId {
 };
 
 #include "daObjShell_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dCc_c.h"
 #include "Sound.h"
@@ -198,7 +198,7 @@ int daObjShell_c::Behavior() {
     mStateTimer++;
 
     if (mdCcAc_c.otherOwner != 0) {
-        Player *touched = static_cast<Player *>(dActor_c::FindWithID(mdCcAc_c.otherOwner));
+        daPly_c *touched = static_cast<daPly_c *>(dActor_c::FindWithID(mdCcAc_c.otherOwner));
         if (touched != 0) {
             int isPlayer = (int)(touched->actorID == ACTOR_PLAYER);
             if (isPlayer != 0) {

@@ -162,7 +162,7 @@
       "disposition": "deferred",
       "location": "src/actors/daManta_c.cpp#scalar externs,Behavior,func_ov090_02132b14",
       "summary": "Scalar Fixed12 ABI bridges and flat vector/matrix/path/speed views remain partial.",
-      "reason": "SetAnim, collision Init and Player::Hurt scalar seams, decl_common Matrix4x3, field-vector casts, path reinterpretations and inherited speed reload are outside this two-handle reconstruction. Existing native methods and ROM storage are preserved; no newly proven compiler exemption is asserted.",
+      "reason": "SetAnim, collision Init and daPly_c::Hurt scalar seams, decl_common Matrix4x3, field-vector casts, path reinterpretations and inherited speed reload are outside this two-handle reconstruction. Existing native methods and ROM storage are preserved; no newly proven compiler exemption is asserted.",
       "owner": "codex-manta-interfaces-coordinator1014",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2750"
     },

@@ -28,7 +28,7 @@ Ignored proof artifacts: build/eykn-canary.txt, eykn-original.o, eykn-native-com
 
 ## Remaining reconstruction
 
-This is a native-initializer cleanup, not a complete class/interface reconstruction. Existing Fix12 bridges, scalar Particle/Player/Sound boundaries, layout casts and other measured leftovers in the source remain. Their source/ABI reconstruction belongs to a later producer and requires consumer byte proof. RTTI/vtable records retain their existing exact externalization policies and ROM ownership. Do not interpret producer byte proof as independent source acceptance. Next action: independent review of the exact published candidate and base, plus private validate before any separately authorized integration.
+This is a native-initializer cleanup, not a complete class/interface reconstruction. Existing Fix12 bridges, scalar Particle/daPly_c/Sound boundaries, layout casts and other measured leftovers in the source remain. Their source/ABI reconstruction belongs to a later producer and requires consumer byte proof. RTTI/vtable records retain their existing exact externalization policies and ROM ownership. Do not interpret producer byte proof as independent source acceptance. Next action: independent review of the exact published candidate and base, plus private validate before any separately authorized integration.
 
 Commands (from the wired worktree):
 

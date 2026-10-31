@@ -89,8 +89,8 @@
  *   reads or writes byte 0x3f8.
  * - InitResourcesCommon does not write Tail::mState; where it is first set is
  *   not established here.
- * - Player::Hurt's literal arguments (0, 0x14000, 1, 0, 1) are not interpreted.
- * - Player::param1 == 2 in the hit reaction (the 50-unit rather than 40-unit
+ * - daPly_c::Hurt's literal arguments (0, 0x14000, 1, 0, 1) are not interpreted.
+ * - daPly_c::param1 == 2 in the hit reaction (the 50-unit rather than 40-unit
  *   knockback) is unexplained, as is hit flag 0x40000's identity.
  * - Surface types 1, 4, 5 and 0x13 (func_ov064_02116220) are unnamed.
  */
@@ -100,7 +100,7 @@
 #include "common.h"
 #include "dBgCh_Gnd.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -448,7 +448,7 @@ void daOts_c::func_ov064_02116bac(){
  *     and the bully turns about (mPrevAngleY = mAngleY + half a turn) at 40 units
  *     a frame;
  *   - a player with mIsVanish set is left alone; any other player is hurt
- *     (Player::Hurt) and the bully turns about at 20 units a frame (10 for the
+ *     (daPly_c::Hurt) and the bully turns about at 20 units a frame (10 for the
  *     Big Bully).
  * Every case except the outright kill and the mIsVanish exit leaves the actor in
  * STATE_KNOCKED_BACK with the hop counter cleared. PlayHitSound plays in the kill
@@ -456,7 +456,7 @@ void daOts_c::func_ov064_02116bac(){
  * is silent. */
 void daOts_c::func_ov064_02116754()
 {
-    Player *hitPlayer;
+    daPly_c *hitPlayer;
     s32 hitFlags;
     u32 id;
 
@@ -466,7 +466,7 @@ void daOts_c::func_ov064_02116754()
     if (id == 0)
         return;
 
-    hitPlayer = static_cast<Player *>(dActor_c::FindWithID(id));
+    hitPlayer = static_cast<daPly_c *>(dActor_c::FindWithID(id));
     if (!hitPlayer)
         return;
 

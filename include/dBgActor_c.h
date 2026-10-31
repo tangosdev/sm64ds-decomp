@@ -8,7 +8,7 @@
 #include "types.h"
 
 /* fwd */
-struct Player;
+struct daPly_c;
 struct player_;
 #ifdef __cplusplus
 
@@ -56,7 +56,7 @@ struct dBgActor_c : dActor_c {
      * vptr store, and the two member constructions in declaration order. */
     dBgActor_c();
 
-    void KillByMegaChar(Player &player_);
+    void KillByMegaChar(daPly_c &player_);
     void UpdateClsnPosAndRot();
     void UpdateModelPosAndRotY();
 

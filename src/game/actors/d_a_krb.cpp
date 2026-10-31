@@ -16,7 +16,7 @@
  * leftovers:
  * - dBgCh_Actr::Init stays mangled. Fix12i is a plain s32, so the
  *   header method mangles as int.
- * - Player::Hurt, Player::Bounce and dActor_c::IsTooFarAwayFromPlayer
+ * - daPly_c::Hurt, daPly_c::Bounce and dActor_c::IsTooFarAwayFromPlayer
  *   are not declared on those classes.
  * - dBgCh_Actr::GetFloorResult has no header member. UpdateCapPos is a
  *   header member but still needs the equal-arm ternary so the rotation
@@ -77,7 +77,7 @@ enum daKrb_c_AssetId {
 #include "SharedFilePtr.h"
 #include "decl_dCapEnemy_c.h"
 #include "dExtAnmMaterial_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "daKuriKing_c.h"
 #include "daStarBase_c.h"
 #include "math/Approach.h"
@@ -459,7 +459,7 @@ void daKrb_c::func_ov084_02129498() {
  * type (CLPS bits 19..23, CLPS::GetSurfaceType) is read. The Goomba is treated as
  * lost (coin and removal, and a respawn at mHomePos when it has a cap or is
  * REWARD_SILVER_STAR_IF_CURRENT) if the type is 1, 4, 5 or 0x13, or if it is
- * 6..9 (Player.h calls those the quicksand tiers) while the collision kind
+ * 6..9 (daPly_c.h calls those the quicksand tiers) while the collision kind
  * (CLPS bits 0..4, CLPS::func_02037e84) is 8. */
 void daKrb_c::func_ov084_021294d0() {
     daKrb_c *goomba = this;
@@ -852,7 +852,7 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
  * `flags` is hitFlags (the collision word at 0x1a0) and `other` the actor found
  * through otherOwner (0x1a4). Type ids are the debug-table profile numbers this
  * class is registered under -- 200 KURIBO, 201 KURIBO_S, 202 KURIBO_L, and 191
- * for a Player -- so `myType` is which of the three Goomba sizes WE are, not
+ * for a daPly_c -- so `myType` is which of the three Goomba sizes WE are, not
  * what hit us. mDeathState is set to the DEATH_* value for the hit, and
  * Behavior's mDeathState != 0 path plays it out. Hit-bit names are dCc_c.h's
  * best-effort table (HIT_*). In the order tested:
@@ -861,23 +861,23 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
  *      0x2000 (45 degrees) or 0x1800 (33.75 degrees).
  *   HIT_SPIN_OR_POUND: DEATH_STOMPED, scale reset to 1.0, SND_STOMPED.
  *   HIT_FIRE: DEATH_FIRE.
- *   For KURIBO_L the chain stops here and goes to its own Player test (below,
+ *   For KURIBO_L the chain stops here and goes to its own daPly_c test (below,
  *   without the metal and shell tests); KURIBO and KURIBO_S go on:
  *   0x20000: DEATH_HIT_20000, dCcAc_c flag bit 0 set (disabled).
  *   HIT_EGG | HIT_DIVE: DEATH_DIVE_OR_EGG.   HIT_EXPLOSION: DEATH_EXPLOSION.
  *   HIT_KICK | HIT_BREAKDANCE | HIT_SLIDE_KICK: DEATH_KICKED.
  *   HIT_PUNCH: DEATH_PUNCHED.
- *   Anything but HIT_YOSHI_TONGUE then reaches the Player test. For a Player
+ *   Anything but HIT_YOSHI_TONGUE then reaches the daPly_c test. For a daPly_c
  *   (actor 191): if it is metal (mIsMetal) the Goomba is killed (speed 65.0);
  *   if it is on a shell (IsOnShell) DEATH_DIVE_OR_EGG; if JumpedOnByPlayer, the
- *   Player bounces (40.0) and DEATH_STOMPED; if it is vanished (mIsVanish)
- *   nothing happens; otherwise, in STATE_WALK, the Player is hurt (knockback
+ *   daPly_c bounces (40.0) and DEATH_STOMPED; if it is vanished (mIsVanish)
+ *   nothing happens; otherwise, in STATE_WALK, the daPly_c is hurt (knockback
  *   12.0, or 5.0 for a king minion) and the Goomba either removes itself
  *   (KURIBO_S) or, when the hit carries HIT_PLAYER, goes to STATE_HOP_START
  *   (the others).
- *   KURIBO_L's own Player test: JumpedOnByPlayer gives DEATH_STOMPED; a
- *   vanished Player does nothing; in STATE_WALK it goes to STATE_HOP_START
- *   first and then hurts the Player only if the hit carries HIT_PLAYER.
+ *   KURIBO_L's own daPly_c test: JumpedOnByPlayer gives DEATH_STOMPED; a
+ *   vanished daPly_c does nothing; in STATE_WALK it goes to STATE_HOP_START
+ *   first and then hurts the daPly_c only if the hit carries HIT_PLAYER.
  * If a death state was chosen the cap is released. In every case the hit is
  * handed to func_ov002_020aea30, and the Goomba is turned half a turn when the
  * hit asked for it (turnAround). A king minion hit by a punch, kick, breakdance or
@@ -901,7 +901,7 @@ void daKrb_c::func_ov084_02129ed4() {
     Vector3 hurtOriginRepeat;
     Vector3 hurtOriginJumped;
     Vector3 capReleaseOnExit;
-    Player *other;
+    daPly_c *other;
     u32 flags;
     s32 turnAround;
     s32 hurtKnockback;
@@ -912,7 +912,7 @@ void daKrb_c::func_ov084_02129ed4() {
 
     id = goomba->mdCcAc_c.otherOwner;
     if (id == 0) return;
-    other = static_cast<Player *>(dActor_c::FindWithID(id));
+    other = static_cast<daPly_c *>(dActor_c::FindWithID(id));
     if (other == 0) return;
 
     flags = goomba->mdCcAc_c.hitFlags;
@@ -1579,19 +1579,18 @@ int daKrb_c::OnAimedAtWithEgg()
     return 0x14000;
 }
 
-// @symbol _ZN7daKrb_c13OnTurnIntoEggER6Player
+// @symbol _ZN7daKrb_c13OnTurnIntoEggER7daPly_c
 /* Yoshi turns the Goomba into an egg. A Goomba with a cap (mCapId < 6) or
  * REWARD_SILVER_STAR_IF_CURRENT is first put back at mHomePos. If
- * OnYoshiTryEat() is 6 (KURIBO): a Player that IsCollectingCap gets the coin
+ * OnYoshiTryEat() is 6 (KURIBO): a daPly_c that IsCollectingCap gets the coin
  * and the reward helper; otherwise the Goomba's coin and star state go to
  * RegisterEggCoinCount (b5 = it carries a plain coin, b4 = it carried a
  * silver star). If it is 4 (KURIBO_S) only the coin is given. Finally the
  * Goomba is removed (func_ov084_02129498). */
-void daKrb_c::OnTurnIntoEgg(Player &playerRef)
-{
+void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
     /* self is unused; deleting it drops @NNN numbers daKrb_c.json pins. */
     char *self = (char *)this;
-    Player *player = &playerRef;
+    daPly_c *player = &playerRef;
     int b5;
     bool b4;
 

@@ -4,7 +4,7 @@ extern void func_0203cbc0(void *ptr);
 /* The Itanium C++ ABI's __cxa_vec_delete(array, element_size,
    padding_size, destructor). The name is the compiler's: mwccarm compiles
    delete[] of a class with a destructor to __cxa_vec_delete(p,
-   sizeof(T), 8, T's destructor), the call Player.cpp and
+   sizeof(T), 8, T's destructor), the call d_a_ply_methods.cpp and
    d_s_stage_methods.cpp spell out. A null array does nothing. With a
    destructor, func_02073300 destroys the element count stored a word
    below the array (*(a - 4)). That is the ABI's __cxa_vec_dtor step, but

@@ -1,7 +1,7 @@
 # dActor_c leaf classes -- field-naming provenance
 
 Evidence for every `unk_NNN` renamed on a class whose immediate base is
-`dActor_c` (excluding `Player`, `daKpa_c` and `dBgActor_c`, which have their own
+`dActor_c` (excluding `daPly_c`, `daKpa_c` and `dBgActor_c`, which have their own
 notes). Naming is byte-neutral: nothing here changes a compiled byte, and every
 row was taken with `reproducing: 11,059`, `mismatching: 0`,
 `module fidelity: 106/106 exact` on both sides of the edit.

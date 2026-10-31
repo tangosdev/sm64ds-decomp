@@ -29,7 +29,7 @@
 #include "daObjAbuku_c.h"
 #include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
@@ -78,7 +78,7 @@ int daObjAbuku_c::Behavior() {
         if (found) {
             int b = (found->actorID == 0xbf);
             if (b) {
-                ((Player *)found)->Heal(0x300);
+                ((daPly_c *)found)->Heal(0x300);
                 Pop();
             }
         }
