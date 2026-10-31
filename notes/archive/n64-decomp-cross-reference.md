@@ -489,7 +489,7 @@ So **CLPS surface-type values 6-9 are the four quicksand types.** Corroborated o
 | Address | Name earned |
 |---------|-------------|
 | [`0x02037e58`](../../src/unnamed/arm9/0203/func_02037e58.c) | `CLPS::GetSlipperiness` |
-| [`0x02037e38`](../../src/func_02037e38.c) | `CLPS::GetSurfaceType` |
+| [`0x02037e38`](../../src/engine/collision/d_bg_ch_sph_crr_query.cpp) | `CLPS::GetSurfaceType` |
 | [ov002](../../config/arm9/overlays/ov002/symbols.txt):[`0x020f02c8`](../../src/unnamed/ov002/func_ov002_020effb8.cpp) | `GetSlideAccelForClass` |
 | [`0x020f030c`](../../src/unnamed/ov002/func_ov002_020effb8.cpp) | `GetSlideLossFactorForClass` |
 | [`0x020f035c`](../../src/unnamed/ov002/func_ov002_020effb8.cpp) | `FloorIsSlope` |
