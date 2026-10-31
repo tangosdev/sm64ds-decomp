@@ -1696,7 +1696,7 @@ int smooth_try_store(const SmoothVertex s[3], const GxRaw &ra, const GxRaw &rb,
 
 /* THE CRACK BOOK'S NOTE OF WHAT smooth_try DID (SM64DS_SMOOTH_CRACKS, ntr/smooth.h).
    Written only while the book is on; emit_tri hands it over with the corners. */
-struct CkNote { int curved, why, book, tf; float en[6][3]; };
+struct CkNote { int curved, why, book, tf, wseen; float en[6][3]; };
 CkNote g_ck;
 inline void ck_straight(int why) { g_ck.curved = 0; g_ck.why = why; }
 
@@ -1783,7 +1783,9 @@ inline uint32_t weld_keyx(uint32_t id) { return 0x200u | (id << 12); }
    the book has not changed since it was given (the epoch) and the check
    matches; a stream that does not line up looks a few places ahead, then asks
    the book. */
-struct WeldMemo { uint32_t check; uint32_t epoch; int result; uint32_t id; int out; };
+struct WeldMemo { uint32_t check; uint32_t epoch; int result; uint32_t id; int out; uint32_t bnd; uint16_t bs[3]; };
+uint32_t g_wm_bnd = 0;       // WELDALL1: the last weld_call's one-sided edges ...
+uint16_t g_wm_bs[3];         // ... and their records (smooth_weld_last_bnd)
 std::vector<WeldMemo> g_wm, g_wm_prev;
 std::vector<float> g_wm_out, g_wm_prev_out;   // 18 floats for each answer that changed something
 uint64_t g_wm_frame = ~0ull;
@@ -1802,6 +1804,8 @@ inline uint32_t weld_check(const int16_t p[3][3], const uint32_t n[3], int kind,
     return h;
 }
 inline int weld_memo_use(const WeldMemo &m, const std::vector<float> &outs, float wo[6][3], uint32_t *wid) {
+    g_wm_bnd = m.bnd;
+    std::memcpy(g_wm_bs, m.bs, sizeof g_wm_bs);
     if (m.result) {
         std::memcpy(wo, &outs[(size_t)m.out * 18], sizeof(float) * 18);
         *wid = m.id;
@@ -1812,13 +1816,16 @@ int weld_call(const int16_t p[3][3], const uint32_t n[3], int kind, const float 
               float wo[6][3], uint32_t *wid) {
     const uint32_t chk = weld_check(p, n, kind, en);
     const uint32_t ep = smooth_weld_epoch();
+    g_ck.wseen = 1;
     if (g_ip_replaying) {
         if (g_wm_cursor < g_wm.size() && g_wm[g_wm_cursor].check == chk && g_wm[g_wm_cursor].epoch == ep) {
             smooth_weld_memo_count(1);
             return weld_memo_use(g_wm[g_wm_cursor++], g_wm_out, wo, wid);
         }
         smooth_weld_memo_count(0);
-        return smooth_weld(p, n, kind, en, wo, wid);
+        const int rr = smooth_weld(p, n, kind, en, wo, wid);
+        g_wm_bnd = smooth_weld_last_bnd(g_wm_bs);
+        return rr;
     }
     const uint64_t f = smooth_frame_no();
     if (f != g_wm_frame) {
@@ -1827,7 +1834,7 @@ int weld_call(const int16_t p[3][3], const uint32_t n[3], int kind, const float 
         g_wm.clear(); g_wm_out.clear();
         g_wm_prev_cursor = 0;
     }
-    int r = -1;
+    int r = -1, prov = 0;
     for (size_t look = 0; look < 8 && g_wm_prev_cursor + look < g_wm_prev.size(); ++look) {
         const WeldMemo &m = g_wm_prev[g_wm_prev_cursor + look];
         if (m.check != chk) continue;
@@ -1841,9 +1848,14 @@ int weld_call(const int16_t p[3][3], const uint32_t n[3], int kind, const float 
     if (r < 0) {
         smooth_weld_memo_count(0);
         r = smooth_weld(p, n, kind, en, wo, wid);
+        prov = smooth_weld_provisional();
+        g_wm_bnd = smooth_weld_last_bnd(g_wm_bs);
     }
     WeldMemo m;
     m.check = chk; m.epoch = smooth_weld_epoch(); m.result = r; m.id = r ? *wid : 0; m.out = -1;
+    if (prov) m.epoch = ~smooth_weld_epoch();   /* WELDALL1: this picture's only */
+    m.bnd = g_wm_bnd;
+    std::memcpy(m.bs, g_wm_bs, sizeof m.bs);
     if (r) {
         m.out = (int)(g_wm_out.size() / 18);
         g_wm_out.insert(g_wm_out.end(), &wo[0][0], &wo[0][0] + 18);
@@ -1852,10 +1864,78 @@ int weld_call(const int16_t p[3][3], const uint32_t n[3], int kind, const float 
     return r;
 }
 
+/* WELDALL1: VIEW PARTNERS (ntr/smooth.h). Each one-sided edge of a curved
+   triangle is entered once a picture under its two view-space ends (1/64 of a
+   unit, the crack book's own grid); a second raw edge on the same key marks
+   the two as partners. Entries carry the picture they belong to, so the
+   table is never cleared. */
+struct ViewEdge { int32_t k[6]; uint32_t pic; uint16_t slot; };
+enum { VIEW_EDGE_N = 1 << 14, VIEW_PROBE = 8 };
+ViewEdge *g_view_edges = 0;
+inline int32_t view_q(float v) { return (int32_t)(v * 64.0f + (v >= 0.0f ? 0.5f : -0.5f)); }
+void weld_view_pair(const SmoothVertex s[3]) {
+    if (!g_wm_bnd) return;
+    if (!g_view_edges) {
+        g_view_edges = (ViewEdge *)std::calloc(VIEW_EDGE_N, sizeof(ViewEdge));
+        if (!g_view_edges) return;
+    }
+    const uint32_t pic = smooth_weld_pic();
+    static const int ca[3] = {0, 1, 2}, cb[3] = {1, 2, 0};
+    for (int k = 0; k < 3; ++k) {
+        if (!(g_wm_bnd & (1u << k)) || g_wm_bs[k] == 0xFFFF) continue;
+        int32_t a[3] = {view_q(s[ca[k]].x), view_q(s[ca[k]].y), view_q(s[ca[k]].z)};
+        int32_t b[3] = {view_q(s[cb[k]].x), view_q(s[cb[k]].y), view_q(s[cb[k]].z)};
+        const bool sw = a[0] != b[0] ? a[0] > b[0] : a[1] != b[1] ? a[1] > b[1] : a[2] > b[2];
+        int32_t key[6];
+        for (int q = 0; q < 3; ++q) { key[q] = sw ? b[q] : a[q]; key[3 + q] = sw ? a[q] : b[q]; }
+        uint32_t h = 2166136261u;
+        for (int q = 0; q < 6; ++q) { h ^= (uint32_t)key[q]; h *= 16777619u; h ^= h >> 13; }
+        for (int q = 0; q < VIEW_PROBE; ++q) {
+            ViewEdge &v = g_view_edges[(h + q) & (VIEW_EDGE_N - 1)];
+            if (v.pic != pic) {                    /* free for this picture */
+                std::memcpy(v.k, key, sizeof key);
+                v.pic = pic;
+                v.slot = g_wm_bs[k];
+                break;
+            }
+            if (std::memcmp(v.k, key, sizeof key) == 0) {
+                if (v.slot != g_wm_bs[k]) smooth_weld_partner(v.slot, g_wm_bs[k]);
+                break;
+            }
+        }
+    }
+}
+
+/* WELDALL1: a side that is drawn straight, entered in the weld book; when an
+   edge of it was kept curved for this picture (a curved neighbour drew it
+   before the book knew of this side) it is drawn bent along that edge, its
+   other edges straight, so the two still meet. 1 = drawn here. */
+int weld_straight(const int16_t wp[3][3], const uint32_t wn[3], const GxRaw *const wr[3],
+                  const SmoothVertex s[3], const SmoothPolicy &pol) {
+    float wo[6][3];
+    uint32_t wid = 0;
+    if (!weld_call(wp, wn, SMOOTH_WELD_STRAIGHT, 0, wo, &wid)) return 0;
+    if (smooth_weld_on() != 1 || smooth_weld_guarded()) return 0;
+    int level = pol.level;
+    if (level > SMOOTH_MAX_LEVEL) level = SMOOTH_MAX_LEVEL;
+    const int tf = 1 << level;
+    float ven[6][3];
+    if (tf <= 1 || !weld_view_en(wo, wr, s, ven)) { smooth_weld_conflict(); return 0; }
+    if (smooth_cracks_on()) {
+        g_ck.curved = 1; g_ck.book = 1; g_ck.tf = tf;
+        std::memcpy(g_ck.en, ven, sizeof ven);
+    }
+    smooth_store_count(SMOOTH_STORE_LIVE, 1);
+    float pts[SMOOTH_MAX_GRID * 3];
+    smooth_grid_positions_edges(s[0], s[1], s[2], ven, tf, pts);
+    smooth_emit_grid(pts, tf, s, 0);
+    return 1;
+}
+
 int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
                const GxRaw &ra, const GxRaw &rb, const GxRaw &rc) {
     const SmoothPolicy &pol = smooth_policy();
-    g_ck.curved = 0; g_ck.why = -1; g_ck.book = 0; g_ck.tf = 1;
+    g_ck.curved = 0; g_ck.why = -1; g_ck.book = 0; g_ck.tf = 1; g_ck.wseen = 0;
     const long long t_pre = smooth_prof_on() ? smooth_prof_ticks() : 0;
 
     /* A mode-3 polygon is a shadow volume. Its stencil protocol compares the
@@ -1975,7 +2055,7 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
                 if (tf > 1) smooth_topo_count(ov.cls == SMOOTH_CLASS_FACET
                                               ? SMOOTH_TOPO_FACET : SMOOTH_TOPO_FLATKEEP);
                 ck_straight(ov.cls == SMOOTH_CLASS_FACET ? SMOOTH_CKWHY_FACET : SMOOTH_CKWHY_BOOKFLAT);
-                if (weld) weld_call(wp, wn, SMOOTH_WELD_STRAIGHT, 0, wo, &wid);
+                if (weld && weld_straight(wp, wn, wr, s, pol)) return 1;
                 return 0;
             }
             int level = pol.level;
@@ -1989,9 +2069,13 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
             if (!g_ip_replaying) smooth_count(SMOOTH_COUNT_DEMAND, 1);
             smooth_topo_count(ov.cls == SMOOTH_CLASS_FAN ? SMOOTH_TOPO_FAN : SMOOTH_TOPO_BOX);
             uint32_t okeyx = 0;
-            if (weld && weld_call(wp, wn, SMOOTH_WELD_CURVED, ov.en, wo, &wid) && weld == 1 && !smooth_weld_guarded()) {
-                std::memcpy(ov.en, wo, sizeof ov.en);
-                okeyx = weld_keyx(wid);
+            if (weld) {
+                const int wr1 = weld_call(wp, wn, SMOOTH_WELD_CURVED, ov.en, wo, &wid);
+                if (weld == 1) weld_view_pair(s);
+                if (wr1 && weld == 1 && !smooth_weld_guarded()) {
+                    std::memcpy(ov.en, wo, sizeof ov.en);
+                    okeyx = weld_keyx(wid);
+                }
             }
             if (smooth_cracks_on()) {
                 const Mat *cm = mtx_for_gen(rc.mgen);
@@ -2049,14 +2133,14 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
         if (smooth_topo_cross(tp, ra.mgen, rb.mgen, rc.mgen)) {
             smooth_topo_count(SMOOTH_TOPO_FLATKEEP);
             ck_straight(SMOOTH_CKWHY_CROSSKEEP);
-            if (weld) weld_call(wp, wn, SMOOTH_WELD_STRAIGHT, 0, wo, &wid);
+            if (weld && weld_straight(wp, wn, wr, s, pol)) return 1;
             return 0;
         }
     }
     if (tf <= 1) {
         smooth_counters_for(why);
         ck_straight(why);
-        if (weld) weld_call(wp, wn, SMOOTH_WELD_STRAIGHT, 0, wo, &wid);
+        if (weld && weld_straight(wp, wn, wr, s, pol)) return 1;
         return 0;
     }
 
@@ -2073,8 +2157,12 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
     /* THE WELD (ntr/smooth.h): an edge this triangle shares with a piece
        whose normals differ there, or with a side drawn straight, is drawn by
        the edge's own rule, the same from both sides. Corners stay put. */
-    if (weld && ra.nrm && rb.nrm && rc.nrm &&
-        weld_call(wp, wn, SMOOTH_WELD_CURVED, 0, wo, &wid) && weld == 1 && !smooth_weld_guarded()) {
+    int wr2 = 0;
+    if (weld && ra.nrm && rb.nrm && rc.nrm) {
+        wr2 = weld_call(wp, wn, SMOOTH_WELD_CURVED, 0, wo, &wid);
+        if (weld == 1) weld_view_pair(s);
+    }
+    if (wr2 && weld == 1 && !smooth_weld_guarded()) {
         float ven[6][3];
         if (smooth_cracks_on()) {
             g_ck.book = 1;
@@ -2138,6 +2226,7 @@ void smooth_crack_book(const GxVertex &a, const GxVertex &b, const GxVertex &c,
     t.why = g_ck.why;
     t.book = g_ck.book;
     t.tf = g_ck.tf;
+    t.wseen = (uint32_t)g_ck.wseen;
     if (t.curved && g_ck.book) {
         std::memcpy(t.en, g_ck.en, sizeof t.en);
     } else if (t.curved) {
@@ -10173,6 +10262,7 @@ int gx_interp_begin(float alpha) {
     ++pic;
     g_ip_replaying = 1;
     g_wm_cursor = 0;          /* SMOOTHWELD1: the replay reads the tick's weld answers from the top */
+    smooth_weld_picture();    /* WELDALL1: an in-between is its own picture for the weld's per-picture answer */
     if (smooth_cracks_on()) smooth_crack_picture();
     uint32_t tmp[32];
     int last_group = -1;

@@ -622,6 +622,8 @@ struct SmoothCrackTri {
     uint32_t mg[3];
     uint32_t nrm[3];
     uint32_t pic;         // which picture of the tick (0 = the tick's own, then each in-between)
+    uint32_t wseen;       // WELDALL1: 1 = the triangle was entered in the weld book
+    uint32_t actor;       // WELDALL1: the actor whose Render drew it (class id), 0xFFFF none
 };
 int smooth_cracks_on();
 // A SmoothMotion in-between starts: the crack book pairs edges only within one picture.
@@ -653,6 +655,12 @@ void smooth_crack_tri(const SmoothCrackTri &t);
 //   * normals that agree exactly     -> left alone (every edge inside a mesh).
 // Corners never move: only the edge's inner control points change. A triangle
 // none of whose edges needs a rule returns 0 and is drawn exactly as before.
+// ONE ANSWER A PICTURE (WELDALL1): when a record changes while a picture is
+// drawn (a model coming into view meets its first neighbour, a book still
+// learning), the answer it gave before the change stands for the rest of that
+// picture, so a side drawn early and a side drawn late still meet; a side drawn
+// straight on an edge kept curved follows that curve for the picture. The
+// next picture draws every side by the record as it now stands.
 // SM64DS_SMOOTH_WELD=0 turns the book off.
 // ---------------------------------------------------------------------------
 int smooth_weld_on();
@@ -664,7 +672,10 @@ enum { SMOOTH_WELD_STRAIGHT = 0, SMOOTH_WELD_CURVED = 1 };
 // plain curved one (the authored normals are decoded from `nrm`). On a return
 // of 1, `out` holds the six normals to draw with, in the same spaces, a zero
 // vector meaning "this edge is straight", and `*id` a number that changes when
-// they do (for the shape store's key).
+// they do (for the shape store's key). A STRAIGHT side returns 1 only for this
+// picture, when an edge it shares was kept curved (a curved side drew it before
+// the record knew of this one): `out` then holds the kept normals on that edge
+// and zeros on the others, and the side is drawn bent along that edge only.
 int smooth_weld(const int16_t p[3][3], const uint32_t nrm[3], int kind,
                 const float (*en)[3], float out[6][3], uint32_t *id);
 // The picture counter smooth_frame_mark advances (once a tick).
@@ -683,6 +694,28 @@ int smooth_weld_guarded();
 void smooth_weld_scene_change();
 // Edges that met more sides than the book records (a fifth), since boot.
 uint64_t smooth_weld_overflow();
+// WELDALL1: an in-between picture starts (the tick's own picture starts at the
+// frame mark). Each edge gives one answer for the whole of one picture.
+void smooth_weld_picture();
+// WELDALL1: 1 when the last smooth_weld answer followed an edge's answer kept
+// for this picture that its record no longer gives: good for this picture only,
+// so it must not be reused in another (the replay memo stores it as stale).
+int smooth_weld_provisional();
+// WELDALL1: a side drawn straight could not follow an edge kept curved for this
+// picture (no matrix for it): the guard counts these.
+void smooth_weld_conflict();
+// WELDALL1: VIEW PARTNERS. Two pieces of a model can meet along an edge that
+// each stores at its own raw coordinates (a clam's two shells, a chest's lid,
+// each in its own bone's space), so the raw-keyed book never sees the two as
+// one edge. The geometry stage pairs the one-sided edges of curved triangles
+// by where they are drawn, once a picture; two raw edges drawn on top of each
+// other are marked, and from then on (until the book is emptied) both are
+// drawn straight on every side, like a crease. smooth_weld_last_bnd gives the
+// last answer's one-sided edges (bit k = edge k, corners k and k+1) and their
+// records; smooth_weld_pic the picture being drawn.
+uint32_t smooth_weld_pic();
+uint32_t smooth_weld_last_bnd(uint16_t slot[3]);
+void smooth_weld_partner(uint16_t a, uint16_t b);
 // The replay memo's own count (SM64DS_SMOOTH_WELD_STATS): an answer read back, or asked again.
 void smooth_weld_memo_count(int hit);
 

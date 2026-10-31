@@ -1380,6 +1380,7 @@ void smooth_prof_add(int bucket, long long dt_ns, unsigned n) {
 }
 
 // --- THE CRACK BOOK (smooth.h, SM64DS_SMOOTH_CRACKS) -----------------------
+void smooth_weld_dump_edge(const int16_t a[3], const int16_t b[3]);
 namespace {
 int g_cracks = -1;
 std::vector<SmoothCrackTri> g_ck_tris;
@@ -1431,12 +1432,13 @@ void ck_screen(const SmoothCrackTri &t, int i, float o[2]) {
     o[1] = (0.5f - t.clip[i][1] / w * 0.5f) * (float)active_h;
 }
 
+struct CkActorRow { int open[64]; int over1; float worst; CkActorRow() : over1(0), worst(0.0f) { memset(open, 0, sizeof open); } };
 struct CkHit {
     float px, units, sx, sy;
     int cause;     // index into ck_cause_name
     int e;         // the edge's slot in the edge list
 };
-enum { CK_STRAIGHT_BASE = 0, CK_BOOK = 40, CK_XMESH, CK_SPLITN, CK_SAMEN, CK_NCAUSE };
+enum { CK_STRAIGHT_BASE = 0, CK_BOOK = 40, CK_XMESH, CK_SPLITN, CK_SAMEN, CK_RAWDIFF, CK_NOWELD, CK_NCAUSE };
 const char *ck_cause_name(int c, char *buf) {
     if (c < CK_BOOK) { sprintf(buf, "straight_%s", ck_why_name(c)); return buf; }
     switch (c) {
@@ -1444,6 +1446,8 @@ const char *ck_cause_name(int c, char *buf) {
         case CK_XMESH: return "xmesh_splitn";
         case CK_SPLITN: return "splitn";
         case CK_SAMEN: return "samen";
+        case CK_RAWDIFF: return "rawdiff";
+        case CK_NOWELD: return "noweld";
         default: return "other";
     }
 }
@@ -1470,6 +1474,8 @@ void crack_report(uint64_t frame) {
     float worst_cause[CK_NCAUSE] = {0};
     std::vector<CkHit> hits;
     std::vector<const std::vector<CkSide> *> elist;
+    std::map<uint32_t, CkActorRow> ck_rows;     // WELDALL1: by actor pair (low id << 16 | high id)
+    std::map<uint32_t, int> ck_actor_tris;
     int shared = 0, with_curved = 0;
     for (std::map<std::pair<uint32_t, EKey>, std::vector<CkSide> >::const_iterator it = edges.begin();
          it != edges.end(); ++it) {
@@ -1503,8 +1509,25 @@ void crack_report(uint64_t frame) {
         const float ls = sqrtf((sa[0] - sb[0]) * (sa[0] - sb[0]) + (sa[1] - sb[1]) * (sa[1] - sb[1]));
         const float pxs = lv > 1e-12f ? ls / lv : 0.0f;
         const float gpx = worst * pxs;
+        /* WELDALL1: an edge with an end behind the eye, or off the picture,
+           cannot be measured in pixels and cannot be seen: not an opening. */
+        {
+            const float mx = (sa[0] + sb[0]) * 0.5f, my = (sa[1] + sb[1]) * 0.5f;
+            if (ta.clip[s[wa].a][2] <= 0.0f || ta.clip[s[wa].b][2] <= 0.0f ||
+                mx < 0.0f || my < 0.0f || mx > (float)active_w || my > (float)active_h) continue;
+        }
         int cause;
-        if (!ta.curved || !tb.curved) {
+        /* WELDALL1: two sides the weld cannot pair (their raw edges differ:
+           one view-space edge drawn from two different raw edges), or a side
+           the weld never saw. */
+        const bool rawsame =
+            (memcmp(ta.raw[s[wa].a], tb.raw[s[wb].a], 6) == 0 && memcmp(ta.raw[s[wa].b], tb.raw[s[wb].b], 6) == 0) ||
+            (memcmp(ta.raw[s[wa].a], tb.raw[s[wb].b], 6) == 0 && memcmp(ta.raw[s[wa].b], tb.raw[s[wb].a], 6) == 0);
+        if (!rawsame) {
+            cause = CK_RAWDIFF;
+        } else if (!ta.wseen || !tb.wseen) {
+            cause = CK_NOWELD;
+        } else if (!ta.curved || !tb.curved) {
             const SmoothCrackTri &st = !ta.curved ? ta : tb;
             cause = st.why >= 0 && st.why < CK_BOOK ? st.why : 39;
         } else if (ta.book || tb.book) {
@@ -1520,6 +1543,14 @@ void crack_report(uint64_t frame) {
         ++n_cause[cause];
         if (gpx > 1.0f) ++n_cause1[cause];
         if (gpx > worst_cause[cause]) worst_cause[cause] = gpx;
+        {
+            const uint32_t aa = ta.actor < tb.actor ? ta.actor : tb.actor;
+            const uint32_t ab = ta.actor < tb.actor ? tb.actor : ta.actor;
+            CkActorRow &r = ck_rows[(aa << 16) | ab];
+            ++r.open[cause];
+            if (gpx > 1.0f) ++r.over1;
+            if (gpx > r.worst) r.worst = gpx;
+        }
         CkHit h;
         h.px = gpx; h.units = worst; h.cause = cause; h.e = (int)elist.size();
         h.sx = (sa[0] + sb[0]) * 0.5f; h.sy = (sa[1] + sb[1]) * 0.5f;
@@ -1536,6 +1567,18 @@ void crack_report(uint64_t frame) {
             fprintf(stderr, "[smoothck] f%llu cause %-20s open %4d over1px %4d worst %.2f px  tjunction_only %d\n",
                     (unsigned long long)frame, ck_cause_name(c, nb), n_cause[c], n_cause1[c],
                     (double)worst_cause[c], n_tj[c]);
+    for (size_t i = 0; i < g_ck_tris.size(); ++i) ++ck_actor_tris[g_ck_tris[i].actor];
+    for (std::map<uint32_t, CkActorRow>::const_iterator it = ck_rows.begin(); it != ck_rows.end(); ++it) {
+        const uint32_t aa = it->first >> 16, ab = it->first & 0xFFFFu;
+        int tot = 0;
+        for (int c = 0; c < CK_NCAUSE; ++c) tot += it->second.open[c];
+        fprintf(stderr, "[smoothck] f%llu actor %u/%u tris %d/%d open %d over1px %d worst %.2f px causes",
+                (unsigned long long)frame, aa, ab, ck_actor_tris[aa], ck_actor_tris[ab], tot, it->second.over1,
+                (double)it->second.worst);
+        for (int c = 0; c < CK_NCAUSE; ++c)
+            if (it->second.open[c]) fprintf(stderr, " %s=%d", ck_cause_name(c, nb), it->second.open[c]);
+        fprintf(stderr, "\n");
+    }
     // the worst openings, with enough to find them in the picture
     std::vector<int> ord(hits.size());
     for (size_t i = 0; i < ord.size(); ++i) ord[i] = (int)i;
@@ -1552,11 +1595,15 @@ void crack_report(uint64_t frame) {
                 ck_cause_name(h.cause, nb), (int)s.size());
         for (size_t j = 0; j < s.size() && j < 4; ++j) {
             const SmoothCrackTri &t = g_ck_tris[s[j].tri];
-            fprintf(stderr, " [%s%s raw %d,%d,%d/%d,%d,%d mg %u/%u n %08x/%08x]",
+            fprintf(stderr, " [a%u%s %s%s raw %d,%d,%d/%d,%d,%d mg %u/%u n %08x/%08x]", t.actor, t.wseen ? "" : " noweld",
                     t.curved ? "curved" : ck_why_name(t.why), t.book ? "+book" : "",
                     t.raw[s[j].a][0], t.raw[s[j].a][1], t.raw[s[j].a][2],
                     t.raw[s[j].b][0], t.raw[s[j].b][1], t.raw[s[j].b][2],
                     t.mg[s[j].a], t.mg[s[j].b], t.nrm[s[j].a], t.nrm[s[j].b]);
+        }
+        if (getenv("SM64DS_SMOOTH_CRACKS_EDGE")) {
+            const SmoothCrackTri &t0 = g_ck_tris[s[0].tri];
+            smooth_weld_dump_edge(t0.raw[s[0].a], t0.raw[s[0].b]);
         }
         fprintf(stderr, "\n");
     }
@@ -1575,8 +1622,28 @@ int smooth_cracks_on() {
 uint32_t g_ck_pic = 0;
 void smooth_crack_picture() { ++g_ck_pic; }
 
+/* WELDALL1: which actor's Render is drawing, for the census. The ROM's list
+   walker (func_02043fdc) keeps the node it is running in data_020a4b68; the
+   node's owner (+8) is the actor, its class id the u16 at +0x0c. A build that
+   has no such global (a test exe without the game) reads a null instead. */
+extern "C" void *data_020a4b68;
+extern "C" void *g_smooth_ck_no_node = 0;
+#pragma comment(linker, "/alternatename:_data_020a4b68=_g_smooth_ck_no_node")
+namespace {
+uint32_t ck_actor_now() {
+    const unsigned char *node = (const unsigned char *)data_020a4b68;
+    if (!node) return 0xFFFFu;
+    const unsigned char *owner = *(const unsigned char *const *)(node + 8);
+    if (!owner) return 0xFFFEu;
+    return *(const uint16_t *)(owner + 0x0c);
+}
+}  // namespace
 void smooth_crack_tri(const SmoothCrackTri &t) {
-    if (g_ck_tris.size() < 400000) { g_ck_tris.push_back(t); g_ck_tris.back().pic = g_ck_pic; }
+    if (g_ck_tris.size() < 400000) {
+        g_ck_tris.push_back(t);
+        g_ck_tris.back().pic = g_ck_pic;
+        g_ck_tris.back().actor = ck_actor_now();
+    }
 }
 
 namespace { void topo_report(uint64_t frame); }
@@ -1771,6 +1838,7 @@ struct WeldFront {
     uint32_t gen;         // the book's generation the answer belongs to
     uint8_t kind, result;
     uint16_t slot[3];     // its three edges' records (0xFFFF = none)
+    uint8_t bnd;          // WELDALL1: which of its edges have this one side only (bit k)
     uint16_t ver[3];      // their versions, low 16 bits
 };
 struct TopoFast { int16_t p[9]; int idx; uint32_t epoch; int kind; };
@@ -2580,10 +2648,20 @@ struct WeldSide {
 enum { WELD_SIDES = 4 };
 struct WeldEdge {
     int16_t k[6];      // low end, high end (pos_gt order)
-    uint16_t used;     // 1 = slot holds an edge; | 2 = a side beyond WELD_SIDES came (overflow)
+    uint16_t used;     // 1 = slot holds an edge; | 2 = a side beyond WELD_SIDES came (overflow);
+                       // | 4 = another raw edge is drawn on top of it (WELDALL1, smooth_weld_partner)
     uint16_t nside;
     uint32_t ver;
     WeldSide side[WELD_SIDES];
+    /* THE PICTURE'S ANSWER (WELDALL1). When this record changes during a
+       picture, the answer it gave before the change is kept here for the
+       rest of that picture: a side drawn earlier in the picture already used
+       it, so every side drawn later uses it too and the two still meet. The
+       next picture draws every side by the new record. fstraight: the kept
+       answer is a straight edge; else fn holds the normal at each end. */
+    uint32_t fpic;
+    uint32_t fstraight;
+    float fn[2][3];
 };
 enum { WELD_EDGE_N = 1 << 16, WELD_PROBE = 64 };
 WeldEdge *g_weld_edges = 0;
@@ -2610,6 +2688,15 @@ uint32_t g_weld_flips = 0;        // a recorded side changed, or an edge overflo
 uint64_t g_ws_calls, g_ws_fast, g_ws_ver, g_ws_slow, g_wm_hit, g_wm_miss;
 uint64_t g_ws_overflow;            // edges that met a fifth side, since boot
 uint64_t g_ws_clears;              // books emptied by a scene change, since boot
+uint64_t g_ws_clear_full;          // WELDALL1: books emptied at 75 percent load, since boot
+uint64_t g_ws_clear_probe;         // WELDALL1: books emptied because a probe found no slot, since boot
+uint32_t g_weld_pic = 1;           // WELDALL1: the picture being drawn (ticks and in-betweens)
+uint32_t g_weld_last_bnd = 0;      // WELDALL1: the last answer's one-sided edges (bit k) ...
+uint16_t g_weld_last_slot[3];      // ... and its three edges' records
+uint64_t g_ws_partners;            // WELDALL1: raw edges found drawn on top of another, since boot
+uint32_t g_weld_conflicts = 0;     // WELDALL1: a straight side met an edge kept curved this picture
+uint64_t g_ws_frozen, g_ws_complied; // WELDALL1: answers kept at a change; sides that drew a kept answer
+int g_weld_provisional = 0;        // WELDALL1: the last answer used a kept one that the record no longer gives
 int g_weld_scene_pending = 0;
 
 inline uint32_t weld_fnv(const void *p, size_t n, uint32_t h = 2166136261u) {
@@ -2656,7 +2743,7 @@ int weld_slot(const int16_t lo[3], const int16_t hi[3]) {
         WeldEdge &e = g_weld_edges[(h + q) & (WELD_EDGE_N - 1)];
         if (!e.used) {
             memcpy(e.k, k, sizeof k);
-            e.used = 1; e.nside = 0; e.ver = 1;
+            e.used = 1; e.nside = 0; e.ver = 1; e.fpic = 0;
             ++g_weld_count;
             return (int)((h + q) & (WELD_EDGE_N - 1));
         }
@@ -2672,6 +2759,54 @@ const int kWeldSa[3] = {0, 2, 5}, kWeldSb[3] = {1, 3, 4};
 inline bool weld_same(const float a[3], const float b[3]) {
     return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
 }
+
+/* An edge's answer from its record as it stands: straight, or per end a
+   normal (the sides' sum when they differ, the first side's when they agree;
+   `weld` says which). Every side computes it from the same record and gets
+   the same bits. */
+void weld_edge_answer(const WeldEdge &e, bool &straight, float n[2][3], bool weld[2]) {
+    straight = (e.used & 6) != 0;
+    weld[0] = weld[1] = false;
+    for (int j = 0; j < e.nside; ++j)
+        if (e.side[j].kind != SMOOTH_WELD_CURVED) straight = true;
+    if (e.nside == 0) straight = true;
+    for (int end = 0; end < 2 && !straight; ++end) {
+        bool agree = true;
+        for (int j = 1; j < e.nside; ++j)
+            if (!weld_same(e.side[j].n[end], e.side[0].n[end])) agree = false;
+        if (agree) { memcpy(n[end], e.side[0].n[end], sizeof(float) * 3); continue; }
+        for (int a = 0; a < e.nside && !straight; ++a)
+            for (int b = a + 1; b < e.nside; ++b)
+                if (v_dot(e.side[a].n[end], e.side[b].n[end]) < (float)kCreaseCos) { straight = true; break; }
+        if (straight) break;
+        int ord[WELD_SIDES];
+        for (int j = 0; j < e.nside; ++j) ord[j] = j;
+        for (int a = 1; a < e.nside; ++a)
+            for (int b = a; b > 0 && e.side[ord[b]].id < e.side[ord[b - 1]].id; --b) {
+                const int t = ord[b]; ord[b] = ord[b - 1]; ord[b - 1] = t;
+            }
+        float sum[3] = {0.0f, 0.0f, 0.0f};
+        for (int j = 0; j < e.nside; ++j)
+            for (int q = 0; q < 3; ++q) sum[q] += e.side[ord[j]].n[end][q];
+        const float l = sqrtf(v_dot(sum, sum));
+        if (l < 1e-6f) { straight = true; break; }
+        for (int q = 0; q < 3; ++q) n[end][q] = sum[q] / l;
+        weld[end] = true;
+    }
+}
+
+/* Keep the record's answer for the rest of this picture, before it changes. */
+inline void weld_freeze(WeldEdge &e) {
+    if (e.fpic == g_weld_pic || e.nside == 0) return;
+    bool st; float n[2][3]; bool w[2];
+    weld_edge_answer(e, st, n, w);
+    e.fpic = g_weld_pic;
+    e.fstraight = st ? 1u : 0u;
+    if (!st) memcpy(e.fn, n, sizeof n);
+    ++g_ws_frozen;
+}
+
+
 
 }  // namespace
 
@@ -2703,8 +2838,17 @@ int weld_guard_hold() {
 }
 void weld_frame(uint64_t frame) {
     (void)frame;
-    const uint32_t moved = g_weld_flips - g_guard_ep;
-    const uint32_t grew = g_weld_epoch - g_guard_ep2;
+    /* WELDALL1: with one answer per edge per picture (weld_freeze), a book
+       that changes during a picture no longer parts the sides of a seam, so
+       churn and growth alone are harmless; what still parts them is a side
+       drawn straight on an edge kept curved. The guard now counts those.
+       SM64DS_SMOOTH_WELD_GUARD=old restores the churn and growth triggers. */
+    static int old_guard = -1;
+    if (old_guard < 0) { const char *e = getenv("SM64DS_SMOOTH_WELD_GUARD"); old_guard = (e && strcmp(e, "old") == 0) ? 1 : 0; }
+    const uint32_t moved = old_guard ? g_weld_flips - g_guard_ep : g_weld_conflicts;
+    const uint32_t grew = old_guard ? g_weld_epoch - g_guard_ep2 : 0u;
+    g_weld_conflicts = 0;
+    ++g_weld_pic;
     if (moved > g_guard_max) g_guard_max = moved;
     /* growth that does not stop: a mesh whose raw vertices move every tick
        (a model animated by vertex, a menu page) makes new edges every tick,
@@ -2728,13 +2872,16 @@ void weld_report(uint64_t frame) {
     if (!on || frame % 100) return;
     fprintf(stderr, "[smoothweld] f%llu calls %llu settled %llu reconfirmed %llu worked %llu "
             "edges %u epoch %u time %.3f ms a tick, replays read %llu asked %llu, overflow edges %llu, scene clears %llu, "
-            "churn max %u a tick, guarded ticks %llu\n",
+            "churn max %u a tick, guarded ticks %llu, full clears %llu, probe clears %llu, kept %llu complied %llu partners %llu\n",
             (unsigned long long)frame, (unsigned long long)g_ws_calls, (unsigned long long)g_ws_fast,
             (unsigned long long)g_ws_ver, (unsigned long long)g_ws_slow,
             g_weld_count, g_weld_epoch, g_ws_ns / 100.0 / 1e6,
             (unsigned long long)g_wm_hit, (unsigned long long)g_wm_miss,
             (unsigned long long)g_ws_overflow, (unsigned long long)g_ws_clears,
-            g_guard_max, (unsigned long long)g_guard_ticks);
+            g_guard_max, (unsigned long long)g_guard_ticks,
+            (unsigned long long)g_ws_clear_full, (unsigned long long)g_ws_clear_probe,
+            (unsigned long long)g_ws_frozen, (unsigned long long)g_ws_complied, (unsigned long long)g_ws_partners);
+    g_ws_frozen = g_ws_complied = 0;
     g_guard_max = 0;
     g_guard_ticks = 0;
     g_ws_calls = g_ws_fast = g_ws_ver = g_ws_slow = g_wm_hit = g_wm_miss = 0;
@@ -2744,9 +2891,51 @@ void weld_report(uint64_t frame) {
 uint64_t smooth_frame_no() { return g_counters.frames; }
 uint32_t smooth_weld_epoch() { return g_weld_epoch; }
 int smooth_weld_guarded() { return g_guard_hold > 0; }
+void smooth_weld_picture() { ++g_weld_pic; }
+void smooth_weld_conflict() { ++g_weld_conflicts; }
+uint32_t smooth_weld_pic() { return g_weld_pic; }
+uint32_t smooth_weld_last_bnd(uint16_t slot[3]) {
+    memcpy(slot, g_weld_last_slot, sizeof g_weld_last_slot);
+    return g_weld_last_bnd;
+}
+void smooth_weld_partner(uint16_t a, uint16_t b) {
+    if (!g_weld_edges || a >= WELD_EDGE_N || b >= WELD_EDGE_N || a == b) return;
+    const uint16_t sl[2] = {a, b};
+    for (int i = 0; i < 2; ++i) {
+        WeldEdge &e = g_weld_edges[sl[i]];
+        if (!e.used || (e.used & 4)) continue;
+        weld_freeze(e);
+        e.used |= 4;
+        ++e.ver;
+        ++g_weld_epoch;
+        ++g_ws_partners;
+    }
+}
+int smooth_weld_provisional() { return g_weld_provisional; }
 void smooth_weld_scene_change() { g_weld_scene_pending = 1; }
 uint64_t smooth_weld_overflow() { return g_ws_overflow; }
 void smooth_weld_memo_count(int hit) { if (hit) ++g_wm_hit; else ++g_wm_miss; }
+
+/* WELDALL1: the record of one raw edge, for the crack book's hit lines. */
+void smooth_weld_dump_edge(const int16_t a[3], const int16_t b[3]) {
+    if (!g_weld_edges) { fprintf(stderr, " {book empty}"); return; }
+    const bool gt = a[0] != b[0] ? a[0] > b[0] : a[1] != b[1] ? a[1] > b[1] : a[2] > b[2];
+    const int16_t *lo = gt ? b : a, *hi = gt ? a : b;
+    int16_t k[6] = {lo[0], lo[1], lo[2], hi[0], hi[1], hi[2]};
+    uint32_t h = weld_fnv(k, sizeof k) & (WELD_EDGE_N - 1);
+    for (int q = 0; q < WELD_PROBE; ++q) {
+        const WeldEdge &e = g_weld_edges[(h + q) & (WELD_EDGE_N - 1)];
+        if (!e.used) break;
+        if (memcmp(e.k, k, sizeof k) != 0) continue;
+        fprintf(stderr, " {edge used %u ver %u sides %u:", e.used, e.ver, e.nside);
+        for (int j = 0; j < e.nside; ++j)
+            fprintf(stderr, " %08x/k%u n(%.3f,%.3f,%.3f)(%.3f,%.3f,%.3f)", e.side[j].id, e.side[j].kind,
+                    e.side[j].n[0][0], e.side[j].n[0][1], e.side[j].n[0][2], e.side[j].n[1][0], e.side[j].n[1][1], e.side[j].n[1][2]);
+        fprintf(stderr, "}");
+        return;
+    }
+    fprintf(stderr, " {edge not in book}");
+}
 
 int smooth_weld_on() {
     if (g_weld_on < 0) {
@@ -2785,6 +2974,9 @@ inline int weld_front_answer(WeldFront &fw, const WeldOut &fo, uint32_t nh, int 
         ++g_ws_ver;
     }
     if (fw.result) { memcpy(out, fo.out, sizeof fo.out); *id = fo.id; }
+    g_weld_provisional = 0;
+    g_weld_last_bnd = fw.bnd;
+    memcpy(g_weld_last_slot, fw.slot, sizeof g_weld_last_slot);
     return fw.result;
 }
 }  // namespace
@@ -2851,7 +3043,7 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
         }
     }
 
-    if (g_weld_count > (uint32_t)(WELD_EDGE_N / 4 * 3)) weld_clear();
+    if (g_weld_count > (uint32_t)(WELD_EDGE_N / 4 * 3)) { weld_clear(); ++g_ws_clear_full; }
 
     /* The side's id: its corners in a fixed order and their normals, so the
        same triangle has the same id whichever way the list walks it. */
@@ -2885,7 +3077,7 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
         const int s = weld_slot(lo, hi);
         /* a full neighbourhood: empty the book (every answer kept against it
            goes with the generation) and draw this one as planned */
-        if (s < 0) { weld_clear(); return 0; }
+        if (s < 0) { weld_clear(); ++g_ws_clear_probe; g_weld_provisional = 0; g_weld_last_bnd = 0; return 0; }
         slot[k] = s;
         WeldEdge &e = g_weld_edges[s];
         WeldSide me;
@@ -2900,8 +3092,12 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
         int j = 0;
         while (j < e.nside && e.side[j].id != sid) ++j;
         if (j < e.nside) {
-            if (memcmp(&e.side[j], &me, sizeof me) != 0) { e.side[j] = me; ++e.ver; ++g_weld_epoch; ++g_weld_flips; }
+            if (memcmp(&e.side[j], &me, sizeof me) != 0) {
+                weld_freeze(e);
+                e.side[j] = me; ++e.ver; ++g_weld_epoch; ++g_weld_flips;
+            }
         } else if (e.nside < WELD_SIDES) {
+            weld_freeze(e);
             e.side[e.nside++] = me;
             ++e.ver;
             ++g_weld_epoch;
@@ -2909,6 +3105,7 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
             /* A FIFTH SIDE is not recorded. The edge is then drawn straight
                on every side (the rule below reads the flag), which is the
                one answer every side can agree on without knowing the fifth. */
+            weld_freeze(e);
             e.used |= 2;
             ++e.ver;
             ++g_weld_epoch;
@@ -2929,12 +3126,33 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
 
     /* DECIDE each edge, the same way from every side of it. */
     int result = 0;
+    bool provisional = false;
     if (kind == SMOOTH_WELD_CURVED) {
         memcpy(out, in, sizeof in);
         for (int k = 0; k < 3; ++k) {
             if (slot[k] < 0) continue;
             const WeldEdge &e = g_weld_edges[slot[k]];
-            bool straight = (e.used & 2) != 0;
+            if (e.fpic == g_weld_pic) {
+                /* THE PICTURE'S ANSWER: this edge changed after a side of it
+                   was drawn in this picture; draw what that side drew. */
+                const int sa = kWeldSa[k], sb = kWeldSb[k];
+                const int ea = lo_is_a[k] ? 0 : 1, eb = 1 - ea;
+                bool st; float fn[2][3]; bool fw[2];
+                weld_edge_answer(e, st, fn, fw);
+                if (e.fstraight) {
+                    memset(out[sa], 0, sizeof out[sa]);
+                    memset(out[sb], 0, sizeof out[sb]);
+                    result = 1;
+                    if (!st) provisional = true;
+                } else {
+                    for (int q = 0; q < 3; ++q) { out[sa][q] = e.fn[ea][q]; out[sb][q] = e.fn[eb][q]; }
+                    if (!weld_same(out[sa], in[sa]) || !weld_same(out[sb], in[sb])) result = 1;
+                    if (st || memcmp(fn, e.fn, sizeof fn) != 0) provisional = true;
+                }
+                ++g_ws_complied;
+                continue;
+            }
+            bool straight = (e.used & 6) != 0;
             if (e.nside < 2 && !straight) continue;
             for (int j = 0; j < e.nside; ++j)
                 if (e.side[j].kind != SMOOTH_WELD_CURVED) straight = true;
@@ -2979,6 +3197,24 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
             if (weld[ea]) { for (int q = 0; q < 3; ++q) out[sa][q] = w[ea][q]; result = 1; }
             if (weld[eb]) { for (int q = 0; q < 3; ++q) out[sb][q] = w[eb][q]; result = 1; }
         }
+    } else {
+        /* A SIDE DRAWN STRAIGHT on an edge kept curved for this picture (a
+           curved neighbour came first, the record learned of this side only
+           now): it follows the kept curve along that edge and keeps its other
+           edges straight, for this picture only. The next picture's record
+           makes the edge straight on both sides. */
+        memset(out, 0, sizeof(float) * 18);
+        for (int k = 0; k < 3; ++k) {
+            if (slot[k] < 0) continue;
+            const WeldEdge &e = g_weld_edges[slot[k]];
+            if (e.fpic != g_weld_pic || e.fstraight) continue;
+            const int sa = kWeldSa[k], sb = kWeldSb[k];
+            const int ea = lo_is_a[k] ? 0 : 1, eb = 1 - ea;
+            for (int q = 0; q < 3; ++q) { out[sa][q] = e.fn[ea][q]; out[sb][q] = e.fn[eb][q]; }
+            result = 1;
+            provisional = true;
+            ++g_ws_complied;
+        }
     }
 
     /* Keep the answer against the edges' versions as they stand now. */
@@ -2994,12 +3230,25 @@ int weld_impl(const int16_t p[3][3], const uint32_t nrm[3], int kind,
         w.ver[k] = slot[k] >= 0 ? (uint16_t)g_weld_edges[slot[k]].ver : 0;
     }
     w.result = (uint8_t)result;
+    w.bnd = 0;
+    if (kind == SMOOTH_WELD_CURVED)
+        for (int k = 0; k < 3; ++k)
+            if (slot[k] >= 0 && g_weld_edges[slot[k]].nside == 1 && !(g_weld_edges[slot[k]].used & 6))
+                w.bnd |= (uint8_t)(1u << k);
+    g_weld_last_bnd = w.bnd;
+    memcpy(g_weld_last_slot, w.slot, sizeof g_weld_last_slot);
     WeldOut wo;
     memset(&wo, 0, sizeof wo);
     if (result) {
         memcpy(wo.out, out, sizeof wo.out);
         wo.id = weld_fnv(out, sizeof wo.out);
         *id = wo.id;
+    }
+    g_weld_provisional = provisional ? 1 : 0;
+    if (provisional) {
+        /* an answer only this picture gives: never kept, the next picture asks again */
+        own->w.gen = 0;
+        return result;
     }
     memcpy(own->p, &p[0][0], sizeof own->p);
     own->w = w;
