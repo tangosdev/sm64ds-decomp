@@ -10892,11 +10892,48 @@ static int ip_measure_now(long long deadline)
    the tick's picture again and the page's tab strip slid once a tick. When the page has something moving it redraws its picture at the slot's
    place between the two ticks (hal/settings_page.cpp settings_page_picture). Off with Smooth Motion off or at 60 (g_ip_on, g_ip_rate_ok)
    and with SM64DS_SETPAGE_INTERP=0. */
+/* run after093, lane PAUSESLIDE1: the pause's own page slide (LB / RB, Q / E, the tabs: the planks, the tracker, the Career page) on every picture.
+   The pause stands the game still; a tick whose slide moves and whose 3D did not move (g_ip_still, the commit's own stats) snaps
+   (menu_snaps_tick), so these slots come here, and each draws the pause again at its own place between the two ticks: one-screen through the
+   menu's kept picture (hal/menu_compose.cpp hal_menu_between_picture), two-screen the host's Career sheet (hal/menu_recipe_pause.cpp).
+   Same gate as the settings page's: Smooth Motion on, FrameRate above 60 (or 0); SM64DS_PAUSE_INTERP=0 turns it off (before rows). */
+static int g_ip_still;
+extern "C" int menu_pause_between_live(void);
+extern "C" int menu_pause_rom_career_picture(uint32_t *px, double a);
+extern "C" int hal_menu_between_picture(uint32_t *px, int w, int h, double a);
+static int ps_on(void)
+{
+    static int on = -1;
+    if (on < 0) { const char *e = getenv("SM64DS_PAUSE_INTERP"); on = (e && e[0] == '0') ? 0 : 1; }
+    const int rate = port_frame_rate_target();
+    return on && g_ip_on > 0 && g_ip_rate_ok && (rate == 0 || rate > 60);
+}
+static int ps_snap_now(void) { return g_ip_still && ps_on() && menu_pause_between_live(); }
+static int ps_picture_now(int slot)
+{
+    if (!ps_on() || !g_present_fb || g_ip_tick_t0 <= 0 || g_ip_tick_len <= 0 || !menu_pause_between_live()) return 0;
+    double a = (double)(ip_qpc() - g_ip_tick_t0) / (double)g_ip_tick_len;
+    if (a < 0.0) a = 0.0;
+    if (a > 1.0) a = 1.0;
+    uint32_t *px = const_cast<uint32_t *>(&g_present_fb->px[0][0]);      /* the picture the tick drew (the level fb) */
+    const int drawn = hal_menu_between_picture(px, ntr::active_w, ntr::active_h, a) || menu_pause_rom_career_picture(px, a);
+#ifndef PORT_ROM_CLEAN
+    {   static int tr = -1, n;
+        if (tr < 0) tr = getenv("SM64DS_PAUSE_SLIDE_TRACE") ? 1 : 0;
+        if (tr) fprintf(stderr, "[ps-pic] n %d %s a %.3f f%d\n", ++n, drawn ? "drawn" : (slot ? "repeat" : "tick"), a, port_rom_frame());
+    }
+#endif
+    if (!drawn) return 0;
+    if (!g_ip_scene_tick) g_si_pic_tick = (unsigned)port_rom_frame();
+    si_pic('p', a, g_present_fb, g_present_stack);
+    present();
+    return 1;
+}
 static int sp_picture_now(int slot)
 {
     static int on = -1;
     if (on < 0) { const char *e = getenv("SM64DS_SETPAGE_INTERP"); on = (e && e[0] == '0') ? 0 : 1; }
-    if (!settings_page_open()) return 0;
+    if (!settings_page_open()) return ps_picture_now(slot);    /* PAUSESLIDE1: the pause's own slide */
     double a = 1.0;
     /* FrameRate 60 stays the picture it was, in a course too (its tick is 30 a second, so the pacer would make one picture between) */
     const int rate = port_frame_rate_target();
@@ -11236,6 +11273,7 @@ extern "C" int hal_menu_interp_mode(void);
    3D is zoomed to the wide frame (FILE2: the replay does not know that zoom). 0 with no menu up, so OFF is untouched. */
 static int menu_snaps_tick(void)
 {
+    if (ps_snap_now()) return 1;      /* PAUSESLIDE1: a still pause tick whose page slide moves draws its own pictures between ticks */
     if (!hal_menu_live()) return 0;
     /* MENUINTERP2: the replay knows the wide page (the frame's menu-wide answer and the sprite brackets are in its record), so a wide
        3D no longer snaps by itself; SM64DS_MENU_INTERP=3 is MENUFOLD1's rule, which did */
@@ -23558,6 +23596,7 @@ int main(void)
                                       ? 1 : 0;
             ntr::GxInterpStats ist;
             g_ip_tick_ok = ntr::gx_interp_commit(data_0209b3ec, ip_snapit, &ist);
+            g_ip_still = !ist.snap && !ist.unmatched && !ist.teleport && !ist.shape && ist.max_moved == 0.f && ist.eye_step == 0.f && ist.turn_deg == 0.f;   /* PAUSESLIDE1 */
             g_ip_snapwhy = g_ip_tick_ok ? 0 : (ip_slow ? 1 : (ip_snapit ? 2 : 3));
             ++g_ip_serial;
             g_ip_tick_shown = 0;

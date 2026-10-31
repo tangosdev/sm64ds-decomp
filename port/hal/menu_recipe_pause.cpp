@@ -38,6 +38,7 @@
 #include <chrono>
 #include <functional>
 #include <thread>
+#include <vector>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1163,11 +1164,96 @@ extern "C" void menu_pause_rom_input(unsigned keys, int mvalid, int mx, int my, 
 }
 
 /* the overlay (tests/walk_window.cpp main()): the upper screen's surface, w x h */
+static void ps_rc_keep(const uint32_t *px, int stride, int w, int h, int own);     /* PAUSESLIDE1, below */
 extern "C" void menu_pause_rom_career_draw(uint32_t *px, int stride, int w, int h)
 {
     if (!g_rc_live || !px || w < 64 || h < 64) return;
     g_rc_w = w; g_rc_h = h;
+    ps_rc_keep(px, stride, w, h, 0);       /* PAUSESLIDE1: the picture under the sheet, on a tick whose slide moves */
     pause_page_rom_draw(&g_rc, px, stride, w, h);
+    ps_rc_keep(px, stride, w, h, 1);       /* and the sheet's own picture over it */
+}
+
+/* ---- PAUSESLIDE1: the page slide on every picture ---------------------------------------------------------------------------
+   The pause stands the game still, so with Smooth Motion the pictures between two ticks only showed the tick's picture again and the page
+   slide (LB / RB, Q / E, the tabs) stepped once a tick (14 steps of 33 to 44 px at 144 Hz). A tick whose slide moves is now a snap
+   (tests/walk_window.cpp menu_snaps_tick, only while its 3D stood still) and each picture between ticks draws the pause again at its own place on
+   the slide: pg_a is that place (permille of the way from the tick before's place to this tick's), the one number pause_page_off reads.
+   One-screen: the recipe's layout is built again at pg_a (the planks' rects, the tracker, the Career sheet, the tabs) and drawn on the picture the
+   menu found (hal/menu_compose.cpp hal_menu_between_picture). Two-screen: the host's Career sheet over the upper screen, the same way here.
+   Input and click zones stay the tick's (a slide in flight eats every input). */
+namespace {
+int ps_moves(const PauseFacts *f) { return f->magic == PAUSE_FACTS_MAGIC && f->pg_from != f->pg_to && f->pg_e != f->pg_e0; }
+void ps_facts_at(PauseFacts *g, double a, int wide)
+{
+    g->pg_a = (int16_t)(a <= 0 ? 0 : (a >= 1 ? 1000 : (int)(a * 1000 + 0.5)));
+    int vis;
+    const int o = pause_page_off(g, PAUSE_PG_MAIN, &vis);      /* as pause_facts sets them for the tick */
+    g->slide_t1000 = wide ? 0 : (vis ? (o < 0 ? -o : o) : 1000);
+    if (o) g->dir = o < 0 ? -1 : 1;
+}
+int pause_between(const MenuLayout *t, MenuLayout *out, double a)
+{
+    if (!t->recipe || t->recipe->build != menu_pause_build || !ps_moves((const PauseFacts *)t->facts.blob) || !host_setting_smooth_motion()) return 0;
+    if (!out) return 1;
+    *out = *t;
+    ps_facts_at((PauseFacts *)out->facts.blob, a, g_wide_now);
+    const int focus = t->focus;
+    menu_layout_solve(out, t->recipe, t->variant, t->w, t->h);
+    out->focus = focus < out->nh ? focus : -1;
+    return 1;
+}
+struct PsReg { PsReg() { hal_menu_set_between_fn(pause_between); } } g_ps_reg;
+
+std::vector<uint32_t> g_rcb_under, g_rcb_own, g_rcb_fin;
+const uint32_t *g_rcb_px;
+int g_rcb_w, g_rcb_h, g_rcb_st, g_rcb_ok, g_rcb_fin_ok;
+void rcb_copy(std::vector<uint32_t> &v, const uint32_t *px, int stride, int w, int h)
+{
+    v.resize((size_t)w * h);
+    for (int y = 0; y < h; ++y) memcpy(&v[(size_t)y * w], px + (size_t)y * stride, (size_t)w * 4);
+}
+}  // namespace
+
+static void ps_rc_keep(const uint32_t *px, int stride, int w, int h, int own)
+{
+    if (!own) {
+        g_rcb_ok = 0;
+        if (!ps_moves(&g_rc) || !host_setting_smooth_motion()) { g_rcb_px = 0; return; }
+        rcb_copy(g_rcb_under, px, stride, w, h);
+        g_rcb_px = px; g_rcb_w = w; g_rcb_h = h; g_rcb_st = stride;
+        return;
+    }
+    if (g_rcb_px != px) return;
+    rcb_copy(g_rcb_own, px, stride, w, h);
+    g_rcb_ok = 1; g_rcb_fin_ok = 0;
+}
+
+/* a still pause tick whose page slide moves: its pictures between ticks are drawn here (tests/walk_window.cpp) */
+extern "C" int menu_pause_between_live(void)
+{
+    if (!host_setting_smooth_motion() || !slide_moving()) return 0;
+    if (g_rc_live) return g_rcb_ok && ps_moves(&g_rc);
+    return hal_menu_live() && is_main_page(g_last_variant);
+}
+
+/* the two-screen Career sheet at a (px is the picture the overlay drew on); 0 = nothing kept for this tick */
+extern "C" int menu_pause_rom_career_picture(uint32_t *px, double a)
+{
+    if (!g_rc_live || !g_rcb_ok || !px || g_rcb_px != px) return 0;
+    const int w = g_rcb_w, h = g_rcb_h, st = g_rcb_st;
+    if (!g_rcb_fin_ok) { rcb_copy(g_rcb_fin, px, st, w, h); g_rcb_fin_ok = 1; }
+    for (int y = 0; y < h; ++y) memcpy(px + (size_t)y * st, &g_rcb_under[(size_t)y * w], (size_t)w * 4);
+    PauseFacts f = g_rc;
+    ps_facts_at(&f, a, 1);
+    pause_page_rom_draw(&f, px, st, w, h);
+    for (int y = 0; y < h; ++y) {
+        uint32_t *row = px + (size_t)y * st;
+        const uint32_t *o = &g_rcb_own[(size_t)y * w], *fn = &g_rcb_fin[(size_t)y * w];
+        for (int x = 0; x < w; ++x)
+            if (o[x] != fn[x]) row[x] = fn[x];
+    }
+    return 1;
 }
 
 /* run after093, lane SEAMART1 (one-process plan M3c): hal/mods.cpp's relatch at the title changed which mods ship hd_ui/, so the planks-or-plates
