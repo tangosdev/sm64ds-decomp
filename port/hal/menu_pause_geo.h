@@ -276,6 +276,20 @@ inline PauseRect pause_rom_tab_rect(const PauseGeo &g, int side, int view)
     return r;
 }
 
+/* PAUSESCALE2: the castle card's own course arrows on the page view, in picture pixels. The page is the ROM's top screen where the ROM draws it
+   (DS 256 x 192, centred, h / 192 picture pixels per DS pixel); its arrows are top-screen cells beside the card at about x 15..28 and 227..240,
+   y 84..108 (they bob and slide out a few pixels when pressed), so the box is the room beside the card: x 4..31 / 224..251, y 76..116. */
+inline PauseRect pause_rom_card_arrow_rect(int w, int h, int side)
+{
+    const double k = h / 192.0;
+    const int nx = (int)((w - 256 * k) / 2);
+    const int x0 = side ? 224 : 4;
+    PauseRect r;
+    r.x = nx + pause_round(x0 * k); r.w = pause_round(28 * k);
+    r.y = pause_round(76 * k); r.h = pause_round(40 * k);
+    return r;
+}
+
 /* the dialog sheet (save prompt, saving, quit) that stands where the planks stand: its box for `kind` (PAUSE_V_*), the slide applied */
 inline PauseRect pause_dialog_rect(const PauseGeo &g, const PauseFacts *f, int kind)
 {

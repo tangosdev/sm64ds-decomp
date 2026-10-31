@@ -2702,10 +2702,12 @@ void poll_touch(void)
     /* THE MENU LAYER'S SYNTHESISED PRESS (a pad or key confirm on a touch hotspot): a separate single-producer queue,
        consumed here beside the forced tap and never through SKIP_MENU's globals. The layer is told whether a real
        stylus is held and refuses to start (or drops) a press while one is. */
+    int from_queue = 0;     /* PAUSESCALE2: the press below came from the menu layer's queue */
     {
         int qx = 0, qy = 0, qdown = 0;
         hal_menu_touch_real_held(down ? 1 : 0);
         if (hal_menu_touch_queue_poll(&qx, &qy, &qdown) && qdown) {
+            from_queue = 1;
             down = 1;
             sx = (unsigned char)qx;
             sy = (unsigned char)qy;
@@ -2732,7 +2734,7 @@ void poll_touch(void)
     /* SETMENU1: the in-game settings page takes the stylus (the press on the title's wrench / the pause menu's Options plate that opens
        it, and every touch while it is up): the ROM sees no press. Single player only, as the pad half is. */
     if (!port::comms_transport() && settings_page_hook_touch(down, sx, sy)) down = 0;
-    if (down && menu_pause_slide_busy()) down = 0;     /* PAUSE43FIX2: a click while a 4:3 pause slide runs is eaten */
+    if (down && menu_pause_slide_busy() && !(from_queue && menu_pause_rom_page_view())) down = 0;     /* PAUSE43FIX2: a click while a 4:3 pause slide runs is eaten (PAUSESCALE2: not the page view's own course-arrow press) */
 
     /* ASSET6: a stylus / click / queued press going into the ROM gives the title attract its hidden save words back first */
     if (down) { port_title_press_aim(&sx, &sy); port_title_press_seen(); }

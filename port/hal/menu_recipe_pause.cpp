@@ -287,6 +287,7 @@ int g_tab_hover = -1, g_tab_press = -1; /* the 4:3 edge tabs under / held by the
 /* the course paging, as a synthesised touch on the ROM's own arrow boxes (PS_Update.cpp :322-401: x < 0x38 / x >= 0xc8, y < 0x20) */
 void page_course(int dir)
 {
+    if (hal_menu_trace_on()) fprintf(stderr, "[pause-rom] course arrow %d (f248 %d f2f0 %d)\n", dir, (int)data_0209f248, (int)data_0209f2f0);
     if (data_0209f248 != 1 || data_0209f2f0) return;
     hal_menu_touch_queue_press(dir < 0 ? 0x1c : 0xe4, 0x10);
 }
@@ -1039,6 +1040,7 @@ extern "C" void menu_pause_hook_pad(uint16_t *pressed, int back)
 }
 
 int rom_career_eats(void);      /* CAREER1: below */
+extern "C" int menu_pause_rom_page_view(void);     /* PAUSESCALE2: below */
 
 /* OneScreenMenus OFF: no recipe is up, the ROM's own two-screen pause is on screen. The cartridge's pause has no pad cursor (PS_Update case 3: only a
    touch inside a plate picks it; the pad's Start / Select presses whatever plate data_0209f2e0 already names, IsButtonInputValid's special path
@@ -1052,6 +1054,8 @@ extern "C" void menu_pause_rom_pad(uint16_t *pressed)
         if (slide_busy_any()) { *pressed = 0; return; }
         if (k & MENU_PAD_START) { slide_reset(); set_chosen(0); *pressed = MENU_PAD_START; return; }     /* resumes at once */
         if (k & (MENU_PAD_CONFIRM | 0x0001)) slide_home();
+        else if ((k & (MENU_PAD_LEFT | MENU_PAD_RIGHT)) && menu_pause_rom_page_view() && pause_cursor_live())
+            page_course(k & MENU_PAD_LEFT ? -1 : 1);       /* PAUSESCALE2: the card view's Left / Right turn the course (the ROM's own arrow touch) */
         *pressed = 0;
         return;
     }
@@ -1171,6 +1175,15 @@ extern "C" void menu_pause_rom_input(unsigned keys, int mvalid, int mx, int my, 
     }
     if (!mdown || !mvalid) g_rc_press = -1;
     if (act && slide_busy_any()) act = 0;
+    if (view == 2 && down_edge && hal_menu_trace_on())
+        fprintf(stderr, "[pause-rom] card click %d,%d valid %d act %d busy %d live %d\n", mx, my, mvalid, act, slide_busy_any(), pause_cursor_live());
+    if (view == 2 && mvalid && down_edge && !act && !slide_busy_any() && pause_cursor_live()) {
+        /* PAUSESCALE2: a click on the card's own course arrows on the page view turns the course, through the ROM's own arrow touch (page_course) */
+        for (int side = 0; side < 2; ++side) {
+            const PauseRect r = pause_rom_card_arrow_rect(g_rc_w, g_rc_h, side);
+            if (mx >= r.x && mx < r.x + r.w && my >= r.y && my < r.y + r.h) page_course(side ? 1 : -1);
+        }
+    }
     if (act) slide_go(rom_ring_next(g_slide.page, act), act);
     /* the facts the overlay draws */
     PauseFacts *f = &g_rc;
