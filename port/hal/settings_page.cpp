@@ -640,6 +640,8 @@ const Row *patches_rows(int *n)
     g_patch_rows[k++] = Row{ R_NOTE, "Off is the DS: every file starts with 4 lives.", -1, -1, 0, 0, 0 };
     const int fb = sl_find("FixOriginalBugs");
     if (fb >= 0) g_patch_rows[k++] = Row{ R_CHECK, "Fix original bugs", fb, -1, 0, 0, 0 };
+    g_patch_rows[k++] = Row{ R_CHECK, "Wide drawing page", SL_WIDE_DRAWING, -1, 0, 0, 0 };
+    g_patch_rows[k++] = Row{ R_NOTE, "Off is the DS: the drawing page stays 4:3.", -1, -1, 0, 0, 0 };
     *n = k;
     return g_patch_rows;
 }

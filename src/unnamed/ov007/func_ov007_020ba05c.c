@@ -53,7 +53,11 @@ int func_ov007_020ba05c(void)
                 r5 = 0;
                 flag = 0;
                 cnt = *(u16 *)(o + 8);
+#ifdef _MSC_VER
+                y = *(s16 *)(r4 + 8);     /* host arm only: the wide drawing page's x runs past 0..255 (func_ov007_020c1db0 host arm) */
+#else
                 y = *(u16 *)(r4 + 8);
+#endif
                 x = *(u16 *)(r4 + 0xa);
                 if (cnt >= 2) {
                     int idx = cnt - 2;

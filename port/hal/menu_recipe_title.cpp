@@ -32,6 +32,7 @@
  */
 #include <chrono>
 #include "menu_compose.h"
+#include "host_settings.h"
 #include "settings_page.h"
 #include "menu_hostimg.h"
 #include "menu_online.h"
@@ -147,7 +148,7 @@ struct TitleFacts {
     int toy_v;                /* FACE1: the face press page's own frame counter (the page object's +0xc) PLUS ONE while top 4 / elem 0 is up, 0 = not the press page (a zeroed blob is not the press page) */
     int dd_live;              /* TITLE092 (3b): ticks since the drawing page's own picture became the page (1 on the first live tick), 0 = still the ROM's black hand-over frames */
     int sc_on;                /* TITLE092: this frame's 3D was drawn as the full-canvas scene (g_sc), and sc_T is its transform */
-    float sc_K, sc_Tx, sc_Ty;
+    float sc_K, sc_Tx, sc_Ty, sc_S;
     int pg_top, pg_elem;      /* NAME1: the ROM's top-state and element machine of this tick (-1 = not built) */
 };
 static_assert(sizeof(TitleFacts) <= ONL_FACTS_OFF, "TitleFacts must leave the tail of MenuFacts.blob to the online facts");
@@ -1393,8 +1394,9 @@ void toy_dest(const MenuLayout *L, float growth_t, int *ox, int *oy, int *ow, in
    whole 3D layer as a unit, keyed by coverage) and keeps only click-mapping twins for the touch areas.
    T = {K, Tx, Ty}: the DS box centre (128, 96) lands at the canvas centre + (Tx, Ty) canvas units, scaled K about it
    (canvas unit = window height / 192; Ty down). {1, 0, 0} is the DS layout. SM64DS_TITLE_WIDE=0 turns the whole thing off (the old cut
-   pieces draw); SM64DS_TITLE_SCENE=Kpermille,Tx,Ty tunes the main menu's. */
-struct SceneT { float K, Tx, Ty; };
+   pieces draw); SM64DS_TITLE_SCENE=Kpermille,Tx,Ty tunes the main menu's.
+   S: the x scale over the y scale (1 everywhere but the drawing page, whose DS canvas is the paper's whole rect, see scene_doodle). */
+struct SceneT { float K, Tx, Ty, S = 1.f; };
 struct SceneNow {              /* what this frame's callback answered; build reads it through TitleFacts */
     int on, variant, frame;
     SceneT T;
@@ -1446,17 +1448,6 @@ SceneT scene_toy(float growth_t)
     t.Ty = m.Ty + (27.8f - 96.f) * m.K - (ay - 96.f) * k;
     return t;
 }
-/* the drawing page: the strokes were traced at the toy's rest pose; the free-draw state grows the canvas to the DS canvas's own size,
-   centred (e3 ticks since it began) */
-SceneT scene_doodle(int e3)
-{
-    SceneT t = scene_toy(1.f);
-    if (e3 > 0) {
-        const float u = (float)(e3 - 8) / 26.f, g = u <= 0.f ? 0.f : u >= 1.f ? 1.f : u * u * (3.f - 2.f * u);
-        t.K = t.K + (1.f - t.K) * g; t.Tx *= (1.f - g); t.Ty *= (1.f - g);
-    }
-    return t;
-}
 /* the canvas in units: width, height (window / unit) */
 void scene_canvas_units(float *cw, float *ch)
 {
@@ -1464,16 +1455,51 @@ void scene_canvas_units(float *cw, float *ch)
     *cw = (float)ntr::active_w * 192.f / ph;
     *ch = (float)ntr::active_h * 192.f / ph;
 }
+/* DOODLEWIDE1: THE DRAWING PAGE'S CANVAS, at the DS pixel scale in both modes: the DS 256 x 192 canvas is the biggest 4:3 box at full height,
+   centred (K = the canvas height over 192, no x stretch), so the face's line art keeps its true shape. What differs is how much of the window
+   is paper (Patches tab, "Wide drawing page", settings.json WideDrawingPage, default on):
+     on   the paper is the whole window and every pixel of it is a stroke point: the touch twin's source rect runs past the DS screen (16:9
+          DS x -42..298, 21:9 -96..351), hal_menu_touch_inverse keeps that x for the title's own stylus reader (src/unnamed/ov007/
+          func_ov007_020c1db0.c host arm), and the ROM unprojects, stores and draws the point itself (func_ov007_020bfe4c, a linear map about
+          the screen centre with no bounds), so a stroke in a side strip is the ROM's own stroke;
+     off  the DS canvas: the paper only in the 4:3 box, the touch twin is that box (a drag past its edge holds at the edge, where the
+          paper ends).
+   At 4:3 the two are the same. DOODLEBOUNDS1 had stretched the DS canvas over the whole window instead (the face wider than the DS's by the
+   window's ratio over 4:3). The choice is latched when the page opens (dd_wide), so a change on the settings page applies at the next one. */
+SceneT scene_doodle(int e3)
+{
+    (void)e3;
+    float cw, ch;
+    scene_canvas_units(&cw, &ch);
+    SceneT t;
+    t.K = ch / 192.f; t.Tx = 0.f; t.Ty = 0.f; t.S = 1.f;
+    return t;
+}
+int g_dd_wide = -1;          /* the latched WideDrawingPage for the drawing page now open, -1 = no drawing page open */
+int dd_wide()
+{
+    if (g_dd_wide < 0) g_dd_wide = host_setting_wide_drawing() ? 1 : 0;
+    return g_dd_wide;
+}
+void dd_close() { g_dd_wide = -1; }
+/* the DS 4:3 box in picture pixels (full height, centred) */
+void dd_box(int w, int h, int *bx, int *bw)
+{
+    int b = (int)((float)h * 256.f / 192.f + 0.5f);
+    if (b > w) b = w;
+    *bw = b; *bx = (w - b) / 2;
+}
 void scene_xf(const SceneT &t, float cw, float ch, float xf[4])
 {
-    xf[0] = t.K; xf[1] = 2.f * t.Tx / cw; xf[2] = t.K; xf[3] = -2.f * t.Ty / ch;
+    xf[0] = t.K * t.S; xf[1] = 2.f * t.Tx / cw; xf[2] = t.K; xf[3] = -2.f * t.Ty / ch;
 }
 /* DS box rect -> host pixels under T for a layout (the touch twins of the scene's parts) */
 void scene_rect_host(const MenuLayout *L, const SceneT &t, int sx, int sy, int sw, int sh, short *ox, short *oy, short *ow, short *oh)
 {
     const float u = (float)L->unum / (float)L->uden;
-    const float x0 = (float)L->w * 0.5f + (t.Tx + ((float)sx - 128.f) * t.K) * u, y0 = (float)L->h * 0.5f + (t.Ty + ((float)sy - 96.f) * t.K) * u;
-    const float x1 = x0 + (float)sw * t.K * u, y1 = y0 + (float)sh * t.K * u;
+    const float kx = t.K * t.S;
+    const float x0 = (float)L->w * 0.5f + (t.Tx + ((float)sx - 128.f) * kx) * u, y0 = (float)L->h * 0.5f + (t.Ty + ((float)sy - 96.f) * t.K) * u;
+    const float x1 = x0 + (float)sw * kx * u, y1 = y0 + (float)sh * t.K * u;
     *ox = (short)(x0 + 0.5f); *oy = (short)(y0 + 0.5f);
     *ow = (short)((int)(x1 + 0.5f) - (int)(x0 + 0.5f)); *oh = (short)((int)(y1 + 0.5f) - (int)(y0 + 0.5f));
 }
@@ -1488,7 +1514,7 @@ void scene_e3_step(int top, int elem, int frame)
 
 /* TITLE092: this tick's 3D is the full-canvas scene (facts), and its transform */
 bool scene_now() { return t_f && t_f->wide3d && t_f->sc_on; }
-SceneT scene_of_facts() { SceneT t; t.K = t_f->sc_K; t.Tx = t_f->sc_Tx; t.Ty = t_f->sc_Ty; return t; }
+SceneT scene_of_facts() { SceneT t; t.K = t_f->sc_K; t.Tx = t_f->sc_Tx; t.Ty = t_f->sc_Ty; t.S = t_f->sc_S; return t; }
 /* the whole 3D layer as ONE element (the layer is a unit, the scene the ROM drew, not a rect of a finished screen): the window-sized
    copy of the frame's 3D picture keyed by what the 3D engine wrote */
 MenuPiece scene_layer(const MenuLayout *L)
@@ -1920,6 +1946,28 @@ int paper3_mode()
     return m;
 }
 
+/* DOODLEWIDE1: with the wide drawing page off, the window outside the DS 4:3 box is the port's own gap colour (Display tab, the colour the
+   port puts beside the DS picture everywhere else), plain, at the paper's own fade */
+void dd_margin_draw(const MenuLayout *L, int piece, uint32_t *dst, int w, int h, int stride)
+{
+    const MenuPiece &P = L->p[piece];
+    const unsigned c = host_setting_gap_color() & 0xffffffu;
+    const int a = P.alpha == 0 ? 256 : P.alpha;
+    const int x0 = P.fx, x1 = P.fx + P.fw;
+    for (int y = 0; y < h; ++y) {
+        uint32_t *row = dst + (size_t)y * stride;
+        for (int x = 0; x < w; ++x) {
+            if (x >= x0 && x < x1) { x = x1 - 1; continue; }
+            if (a >= 256) { row[x] = 0xFF000000u | c; continue; }
+            const uint32_t o = row[x];
+            const unsigned r = (((o >> 16) & 255) * (256 - a) + ((c >> 16) & 255) * a) >> 8;
+            const unsigned g = (((o >> 8) & 255) * (256 - a) + ((c >> 8) & 255) * a) >> 8;
+            const unsigned b = ((o & 255) * (256 - a) + (c & 255) * a) >> 8;
+            row[x] = 0xFF000000u | (r << 16) | (g << 8) | b;
+        }
+    }
+}
+
 void build_doodle(MenuLayout *L)
 {
     const int w = L->w, h = L->h;
@@ -1939,17 +1987,27 @@ void build_doodle(MenuLayout *L)
         sn.bg = 1; sn.snap = 1; sn.lden = 1; sn.lnum = 1; sn.fx = 0; sn.fy = 0; sn.fw = (short)w; sn.fh = (short)h;
         menu_add_piece(L, sn);
     }
+    /* DOODLEWIDE1: the paper is the whole window with the wide drawing page, else only the DS 4:3 box (the scene path; the old cut path keeps
+       the whole window) */
+    int px0 = 0, pw = w;
+    if (scene_now() && !dd_wide()) dd_box(w, h, &px0, &pw);
     if (e > 0) {
         MenuPiece pp = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
-        pp.bg = 1; pp.paper = 1; pp.lden = 1; pp.lnum = 1; pp.fx = 0; pp.fy = 0; pp.fw = (short)w; pp.fh = (short)h;
+        pp.bg = 1; pp.paper = 1; pp.lden = 1; pp.lnum = 1; pp.fx = (short)px0; pp.fy = 0; pp.fw = (short)pw; pp.fh = (short)h;
         const int a = e >= DD_HF ? 255 : 255 * e / DD_HF;
         pp.alpha = (uint8_t)(a >= 255 ? 0 : (a < 1 ? 1 : a));
         menu_add_piece(L, pp);
+        if (pw < w) {      /* DOODLEWIDE1: the margins beside the DS box (fx / fw = the box, the callback fills the rest) */
+            MenuPiece mg = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+            mg.bg = 1; mg.fixdest = 1; mg.fx = (short)px0; mg.fy = 0; mg.fw = (short)pw; mg.fh = (short)h;
+            mg.alpha = pp.alpha; mg.custom = dd_margin_draw;
+            menu_add_piece(L, mg);
+        }
     }
     const int e3 = t_f ? t_f->e3 : 0;      /* FACE3: the free-draw state (the ROM's element machine 3, after the pencil) */
     if (e3 > 0 && paper3_mode() == 1) {    /* the page's own green paper fades in over the cream one (0.3 s) */
         MenuPiece pg = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
-        pg.bg = 1; pg.paper = 2; pg.lden = 1; pg.lnum = 1; pg.fx = 0; pg.fy = 0; pg.fw = (short)w; pg.fh = (short)h;
+        pg.bg = 1; pg.paper = 2; pg.lden = 1; pg.lnum = 1; pg.fx = (short)px0; pg.fy = 0; pg.fw = (short)pw; pg.fh = (short)h;
         const int a = e3 >= DD_XF ? 255 : 255 * e3 / DD_XF;
         pg.alpha = (uint8_t)(a >= 255 ? 0 : (a < 1 ? 1 : a));
         menu_add_piece(L, pg);
@@ -1957,7 +2015,7 @@ void build_doodle(MenuLayout *L)
     const int e3o = t_f ? t_f->e3o : 0;
     if (e3 == 0 && e3o > 0 && e3o < DD_XF && paper3_mode() == 1) {    /* the hand button: the green paper fades back to the drawing page's cream (0.3 s) */
         MenuPiece pg = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
-        pg.bg = 1; pg.paper = 2; pg.lden = 1; pg.lnum = 1; pg.fx = 0; pg.fy = 0; pg.fw = (short)w; pg.fh = (short)h;
+        pg.bg = 1; pg.paper = 2; pg.lden = 1; pg.lnum = 1; pg.fx = (short)px0; pg.fy = 0; pg.fw = (short)pw; pg.fh = (short)h;
         const int a = 255 - 255 * e3o / DD_XF;
         pg.alpha = (uint8_t)(a < 1 ? 1 : a);
         menu_add_piece(L, pg);
@@ -1985,7 +2043,18 @@ void build_doodle(MenuLayout *L)
         if (e < DD_XF) { const int a = 255 * e / DD_XF; sc.alpha = (uint8_t)(a < 1 ? 1 : a); }      /* 3b: the page's own parts fade in with the paper, they do not pop */
         menu_add_piece(L, sc);
         const int th = 192;           /* INTROCARD092: the whole DS stylus surface (the buttons are added after it and win the hit); it ended at row 130 / 146, so a drag stopped at about half the window */
-        menu_add_piece(L, scene_twin(L, T, 0, 0, 256, th));
+        MenuPiece tw = scene_twin(L, T, 0, 0, 256, th);
+        /* DOODLEWIDE1: the paper's own rect, set rather than solved (scene_rect_host's layout unit is not the scene's where the 4:3 box is not
+           the picture's full height, 21:9: 2.29 vs 2.0 px). The DS canvas is h / 192 picture pixels per DS pixel, centred, so the whole window
+           is DS x 128 -/+ 96 w / h: the wide twin's source rect runs past 0..255 and hal_menu_touch_inverse keeps that x for the ROM's stylus
+           reader. Off: the DS box itself. */
+        if (dd_wide()) {
+            const int sw = (int)(192.f * (float)w / (float)(h > 0 ? h : 1) + 0.5f);
+            tw.s.x = (short)(128 - sw / 2); tw.s.w = (short)(sw > 256 ? sw : 256);
+            if (sw <= 256) tw.s.x = 0;
+        }
+        tw.fx = (short)px0; tw.fy = 0; tw.fw = (short)pw; tw.fh = (short)h;
+        menu_add_piece(L, tw);
         MenuPiece yo = menu_piece_make(SRC_TOP_PIC, kYo.x, kYo.y, kYo.w, kYo.h, MENU_AX_L, MENU_AY_B, 0, 0, 1, 1);
         yo.touch = 1; yo.nodraw = 1;
         menu_add_piece(L, yo);
@@ -2128,7 +2197,7 @@ void menu_title_facts(MenuFacts *f)
     tf.wz = tf.wide3d ? g_file_wz : 0;
     if (hal_menu_trace_on()) { static int lw = -1; if (tf.wz != lw) { lw = tf.wz; fprintf(stderr, "[filewide] zoom permille %d (active %dx%d present %dx%d)\n", tf.wz, ntr::active_w, ntr::active_h, ntr::present_w(), ntr::present_h()); } }
     tf.sc_on = (tf.wide3d && g_sc.on && data_ov007_0210342c && g_sc.frame + 1 >= data_ov007_0210342c[0]) ? 1 : 0;   /* the callback ran in this tick's Render (the counter moved on once since) */
-    tf.sc_K = g_sc.T.K; tf.sc_Tx = g_sc.T.Tx; tf.sc_Ty = g_sc.T.Ty;
+    tf.sc_K = g_sc.T.K; tf.sc_Tx = g_sc.T.Tx; tf.sc_Ty = g_sc.T.Ty; tf.sc_S = g_sc.T.S;
     tf.toy_v = 0;
     {
         static int last_v = -1, last_e = 0, dd_chain = 0, dd_e = 0, was_dd = 0, out_e = 0, dd_live_c = 0;
@@ -2386,6 +2455,7 @@ bool title_scene_cb(float xf[4])
     scene_e3_step(top, elem, fr);
     SceneT T = { 1.f, 0.f, 0.f };
     const bool pc = pc_assets_ready();
+    if (v != V_DOODLE) dd_close();      /* DOODLEWIDE1: the drawing page is not open: a change on the settings page applies at the next one */
     switch (v) {
     case V_ATTRACT:
         break;
@@ -2409,11 +2479,12 @@ bool title_scene_cb(float xf[4])
         else T = scene_doodle(0);                                   /* the hand-over frames: the drawing page's rest pose */
         break;
     case V_DOODLE:
+        (void)dd_wide();     /* DOODLEWIDE1: latch the setting as the page opens */
         /* TITLEART1: without the HD UI mod the head you press is drawn at the DS layout (the press page above), so the drawing page is drawn at that
            same layout {1, 0, 0}: the ROM's line art then lies on the head it replaces, as on the DS (FACE1 measured the strokes over the press page's
            rest pose), and the crossfade from the press page's held frame no longer jumps from a big head to a small outline. The touch twins and the
            sprite placement read this same transform, so a stroke lands under the pointer. The HD page keeps its own (the head the main menu drew). */
-        T = pc ? scene_doodle(g_sc.e3) : T;
+        T = scene_doodle(g_sc.e3);      /* DOODLEBOUNDS1: HD UI on or off, the DS canvas is the paper's rect (see scene_doodle) */
         break;
     default:
         return false;

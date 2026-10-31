@@ -17,6 +17,10 @@ typedef struct T {
 
 extern void func_0205f040(void);
 extern void func_0205efc0(void *c);
+#ifdef _MSC_VER
+/* host arm only: the wide drawing page's stylus x past the DS screen (port/hal/menu_compose.cpp port_menu_touch_wide_x) */
+extern int port_menu_touch_wide_x(int cx, int y);
+#endif
 
 void func_ov007_020c1db0(T *a, Vec4 *b)
 {
@@ -33,6 +37,11 @@ void func_ov007_020c1db0(T *a, Vec4 *b)
     } else {
         a->v0 = *b;
     }
+#ifdef _MSC_VER
+    /* host arm only: the sample (the panel read or the title's own record, func_ov007_020b7090) takes the wide drawing page's x */
+    if (a->v0.c != 0)
+        a->v0.a = (u16)port_menu_touch_wide_x(a->v0.a, a->v0.b);
+#endif
     a->v8 = a->v0;
 
     if (*(volatile unsigned int *)&a->f2c & 1) {
