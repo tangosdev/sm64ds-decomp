@@ -1852,10 +1852,15 @@ void load_once(void)
                 g_online_body = (unsigned)host_online_rgb_parse(hb);
                 g_online_shoes = (unsigned)host_online_rgb_parse(hs);
                 g_online_have = 1;
+                /* the old classic cells name the cartridge Yoshi the game now draws from these (vspal::vs_classic_alias): show those */
+                if (g_online_body == 0x208B20u) g_online_body = 0x31A431u;
+                if (g_online_body == 0x6AACE6u) g_online_body = 0x4A52B4u;
+                if (g_online_shoes == 0x9C089Cu) g_online_shoes = 0xB410B4u;
+                if (g_online_shoes == 0x31AC00u) g_online_shoes = 0x31BD08u;
             } else {
                 /* a settings.json from before the picker holds the index of the old eight fixed pairs: map it once, the next read writes the new keys */
                 static const char *const kOld[HOST_ONLINE_COLORS][2] = {
-                    { "208B20", "E66218" }, { "FF3139", "004AFF" }, { "6AACE6", "9C089C" }, { "FFCD00", "31AC00" },
+                    { "31A431", "E66218" }, { "FF3139", "004AFF" }, { "4A52B4", "B410B4" }, { "FFCD00", "31BD08" },
                     { "FF7FBF", "8A1F5C" }, { "20D8E0", "0E5E7A" }, { "8A4FD8", "3A1A7A" }, { "FF8A1E", "7A3A10" } };
                 const int yc = json_int(text, "OnlineYoshiColor", -1);
                 if (yc >= 0 && yc < HOST_ONLINE_COLORS) {
