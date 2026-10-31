@@ -384,7 +384,7 @@ bool      g_cp_smoothed;
 int       g_cp_box[4];           /* x0 y0 x1 y1 of the pixels the card drew in */
 int       g_cp_cw, g_cp_ch, g_cp_px0, g_cp_py0, g_cp_pw, g_cp_ph;
 uint32_t  g_cp_clear, g_cp_outside;
-int       g_cp_fade, g_cp_evy, g_cp_white;
+int       g_cp_fade, g_cp_evy, g_cp_white;   /* PAINTFADE1: g_cp_evy / g_cpt_evy / g_ipo_evy are in 1/256 steps (EVY * 256) */
 int       g_cpt_fade, g_cpt_evy, g_cpt_white, g_cpt_shown3d, g_cpt_clear_opaque, g_cpt_mask_stride;
 /* run hunt8, lane INTERPFIX1: a fade in motion between two ticks. The next
    pictures between ticks take this coefficient and colour instead of the
@@ -3664,17 +3664,18 @@ inline uint32_t cp_combine(uint32_t ov, uint32_t base, bool cov)
     return base;
 }
 
-inline uint32_t cp_fade(uint32_t p, int evy, int white)
+inline uint32_t cp_fade(uint32_t p, int e256, int white)
 {
+    /* PAINTFADE1: the coefficient in 1/256 steps, as comp_ps reads it (EVY * 256 is the 5-bit rule exactly) */
     int r = (int)((p >> 16) & 0xFFu), g = (int)((p >> 8) & 0xFFu), b = (int)(p & 0xFFu);
     if (white) {
-        r += ((255 - r) * evy) >> 4;
-        g += ((255 - g) * evy) >> 4;
-        b += ((255 - b) * evy) >> 4;
+        r += ((255 - r) * e256) >> 12;
+        g += ((255 - g) * e256) >> 12;
+        b += ((255 - b) * e256) >> 12;
     } else {
-        r -= (r * evy) >> 4;
-        g -= (g * evy) >> 4;
-        b -= (b * evy) >> 4;
+        r -= (r * e256) >> 12;
+        g -= (g * e256) >> 12;
+        b -= (b * e256) >> 12;
     }
     return 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
 }
@@ -4133,7 +4134,7 @@ void *cp_compose(const uint32_t *overlay, int stride_px)
             (g_cp_shown3d ? 16u : 0u) | (g_cp_clear_opaque ? 32u : 0u) |
             (g_lay_live ? (g_lay_post ? 128u : 64u) : 0u) |
             ((g_lay_live && g_lay_two) ? 256u : 0u);
-    u[11] = (uint32_t)g_cp_evy;
+    u[11] = (uint32_t)g_cp_evy;          /* PAINTFADE1: 1/256 steps, as comp_ps reads it */
     g_ctx->Unmap(g_comp_cb, 0);
     /* run hunt8, lane FADEINTERP1: the fade this tick was composited with, kept
        for the pictures drawn between ticks (cp_compose_inter) */
@@ -4222,7 +4223,7 @@ void *cp_compose_inter(const uint32_t *overlay, int stride_px)
     u[9] = g_cp_outside;
     const bool ipo = g_ipo_on != 0;
     const int  f_on = ipo ? (g_ipo_evy > 0) : g_cpt_fade;
-    const int  f_evy = ipo ? g_ipo_evy : g_cpt_evy;
+    const int  f_evy = ipo ? g_ipo_evy : g_cpt_evy;   /* PAINTFADE1: both in 1/256 steps */
     const int  f_white = ipo ? g_ipo_white : g_cpt_white;
     const bool f_mask = f_on && g_cpt_fade && g_cpt_mask;   /* the tick's own mask, when it had a fade */
     u[10] = (g_cp_smoothed ? 1u : 0u) | (g_cpt_shown3d ? 16u : 0u) |
@@ -5172,7 +5173,16 @@ extern "C" void port_gpu_card_set_mask(const unsigned char *mask, int stride,
 extern "C" void port_gpu_card_set_fade(int evy, int white)
 {
     if (!g_cp_held) return;
-    g_cp_evy = evy < 0 ? 0 : (evy > 16 ? 16 : evy);
+    g_cp_evy = (evy < 0 ? 0 : (evy > 16 ? 16 : evy)) * 256;   /* PAINTFADE1: kept in 1/256 steps */
+    g_cp_white = white ? 1 : 0;
+    g_cp_fade = g_cp_evy > 0 ? 1 : 0;
+}
+
+/* run after093, lane PAINTFADE1: the tick's fade at a colour fader's own precision (1/256 steps, 0..4096) */
+extern "C" void port_gpu_card_set_fade256(int e256, int white)
+{
+    if (!g_cp_held) return;
+    g_cp_evy = e256 < 0 ? 0 : (e256 > 4096 ? 4096 : e256);
     g_cp_white = white ? 1 : 0;
     g_cp_fade = g_cp_evy > 0 ? 1 : 0;
 }
@@ -5234,7 +5244,15 @@ extern "C" void *port_gpu_card_compose_inter(const unsigned int *overlay, int st
 extern "C" void port_gpu_card_inter_fade(int evy, int white)
 {
     g_ipo_on = 1;
-    g_ipo_evy = evy < 0 ? 0 : (evy > 16 ? 16 : evy);
+    g_ipo_evy = (evy < 0 ? 0 : (evy > 16 ? 16 : evy)) * 256;   /* PAINTFADE1: kept in 1/256 steps */
+    g_ipo_white = white ? 1 : 0;
+}
+
+/* run after093, lane PAINTFADE1: the same with the coefficient in 1/256 steps (a colour fader between two ticks, at its own precision) */
+extern "C" void port_gpu_card_inter_fade256(int e256, int white)
+{
+    g_ipo_on = 1;
+    g_ipo_evy = e256 < 0 ? 0 : (e256 > 4096 ? 4096 : e256);
     g_ipo_white = white ? 1 : 0;
 }
 
@@ -5631,6 +5649,8 @@ void *port_gpu_card_retained_view(int) { return 0; }
 void *port_gpu_card_compose_inter(const unsigned int *, int) { return 0; }
 int port_gpu_card_fade_recorded(void) { return 0; }
 void port_gpu_card_inter_fade(int, int) {}
+void port_gpu_card_inter_fade256(int, int) {}
+void port_gpu_card_set_fade256(int, int) {}
 void port_gpu_card_inter_cut(const int *, const int *) {}
 void port_gpu_card_inter_cut_closing(int) {}
 void port_gpu_card_inter_fade_off(void) {}
