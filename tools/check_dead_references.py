@@ -30,6 +30,9 @@ Prose surfaces only:
   - `.claude/skills/**/*.md`
   - comments in repository `.c`, `.cc`, `.cpp`, `.h`, and `.hpp` files
 
+This checkout only: a nested worktree under `.claude/worktrees/` is another branch's
+checkout, and nothing in it is scanned (`NESTED_CHECKOUTS`).
+
 In those it finds repo-rooted path references -- a token whose first segment is a real
 top-level directory of this repo (`tools/`, `notes/`, `include/`, `src/`, ...) -- and
 asks whether the path resolves in the working tree.
@@ -143,6 +146,21 @@ UNSCANNED_CITERS = ("src_tu/",)
 
 SKIP_DIRS = {".git", "build", "extracted", "__pycache__", ".mypy_cache",
              ".pytest_cache", "node_modules", ".venv", "venv"}
+
+# `.claude/worktrees/<name>` is ANOTHER CHECKOUT of this repo, on another branch --
+# not part of this one. Its copies of src/ and include/ carry whatever prose that
+# branch carries: a shard citation main has already healed, a path that exists only
+# there, a comment written before a rename landed. Every citer branch in
+# `_prose_targets` is prefix-gated except the C/C++ one, which matches a `.c` or `.h`
+# ANYWHERE under the root, so those checkouts walked straight in. Measured on main at
+# `d0ce25d477` with four agent worktrees on disk: 23,595 dead references reported, of
+# which 23,593 came from the worktrees and 2 from the repo itself, over 387,146 scan
+# targets taking two minutes. A gate that reads another branch's comments measures
+# that branch, and the number it prints cannot be acted on from here.
+#
+# Reference TARGETS are unaffected: a reference is only parsed when its first segment
+# is in TOPDIRS, and `.claude` is not, so no nested copy ever resolved a path for us.
+NESTED_CHECKOUTS = {".claude/worktrees"}
 CODE_SUFFIXES = (".c", ".cc", ".cpp", ".h", ".hpp")
 
 PATH_RE = re.compile(r"(?<![\w./\\-])((?:[A-Za-z0-9_.+\-]+/)+[A-Za-z0-9_.+\-]+)(?![\w-])")
@@ -156,14 +174,20 @@ HELP_KWARGS = {"help", "epilog", "description", "usage"}
 NUL = bytes([0])
 
 
+def _walk_dirs(dirs, rel_base):
+    """Prune `os.walk`'s dir list in place: generated trees and nested checkouts."""
+    dirs[:] = [d for d in dirs if d not in SKIP_DIRS
+               and (d if rel_base == "." else f"{rel_base}/{d}") not in NESTED_CHECKOUTS]
+
+
 # --------------------------------------------------------------------------- scan
 
 def _prose_targets(root=None):
     root = REPO if root is None else pathlib.Path(root)
     out = []
     for base, dirs, files in os.walk(root):
-        dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
         rel_base = pathlib.Path(base).relative_to(root).as_posix()
+        _walk_dirs(dirs, rel_base)
         for f in files:
             rel = f if rel_base == "." else f"{rel_base}/{f}"
             if rel.startswith(UNSCANNED_CITERS):
@@ -340,8 +364,8 @@ def _tree_paths(root=REPO):
     """Paths PRESENT ON DISK. Worktree-dependent -- see `_git_ignored`."""
     paths = set()
     for base, dirs, names in os.walk(root):
-        dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
         rel_base = pathlib.Path(base).relative_to(root).as_posix()
+        _walk_dirs(dirs, rel_base)
         if rel_base != ".":
             paths.add(rel_base)
         for n in names:
