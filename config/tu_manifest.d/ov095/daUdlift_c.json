@@ -115,14 +115,14 @@
       "ordinal": 10
     },
     {
-      "symbol": "_ZN10daUdlift_c10LatchRiderEP6Player",
+      "symbol": "_ZN10daUdlift_c10LatchRiderEP7daPly_c",
       "address": "0x02136764",
       "size": "0x00000024",
       "legacy_source": "src/func_ov095_02136764.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN10daUdlift_c15OnMeshClsnTouchEPvPS_P6Player",
+      "symbol": "_ZN10daUdlift_c15OnMeshClsnTouchEPvPS_P7daPly_c",
       "address": "0x02136788",
       "size": "0x00000014",
       "legacy_source": "src/func_ov095_02136788.c",

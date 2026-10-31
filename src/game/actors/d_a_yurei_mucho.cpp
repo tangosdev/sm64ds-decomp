@@ -17,8 +17,8 @@
  *   player position copies. Plain Matrix4x3 / Vector3 assignment
  *   scalarizes.
  * - dExtAnmModel_c::SetAnim, dCcAc_c::Init, dBgCh_Actr::Init,
- *   DropShadowRadHeight, KillByInvincibleChar, SpawnCoins, Player::Hurt
- *   and Player::Bounce retain scalar ABI declarations. Native fixed-point
+ *   DropShadowRadHeight, KillByInvincibleChar, SpawnCoins, daPly_c::Hurt
+ *   and daPly_c::Bounce retain scalar ABI declarations. Native fixed-point
  *   call reconstruction remains separate work; the handoff records the
  *   measured Init alternatives. Hurt follows its current scalar definition.
  * - pad_3e2 is unobserved.
@@ -29,7 +29,7 @@
 #include "common.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
@@ -135,15 +135,14 @@ s32 daYurei_Mucho_c::OnYoshiTryEat()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player
+// @symbol _ZN15daYurei_Mucho_c13OnTurnIntoEggER7daPly_c
 /* dActor_c vtable slot 19, confirmed by address: _ZTV15daYurei_Mucho_c
  * (0x0211cba4) + 0x4c -> 0x02116f14.
  *
  * The `R6Player` reference spelling in the mangled name is a coined guess: a
  * reference and a pointer generate identical ARM for this body, so the bytes
  * cannot distinguish them. */
-void daYurei_Mucho_c::OnTurnIntoEgg(Player &player)
-{
+void daYurei_Mucho_c::OnTurnIntoEgg(daPly_c &player) {
     GivePlayerCoins(player, (unsigned char)(mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();
 }
@@ -257,7 +256,7 @@ int daYurei_Mucho_c::Behavior()
     }
     mdCcAc_c.Clear();
     {
-        Player *p = ClosestPlayer();
+        daPly_c *p = ClosestPlayer();
         if (p != 0 && p->mIsVanish == 0) {
             mdCcAc_c.Update();
         }
@@ -382,7 +381,7 @@ int daYurei_Mucho_c::func_ov065_02116744()
 {
     Vector3 in;
     Vector3 dp;
-    Player *pl;
+    daPly_c *pl;
     int *pos;
 
     in.x = 0;
@@ -445,7 +444,7 @@ int daYurei_Mucho_c::func_ov065_0211672c()
 int daYurei_Mucho_c::func_ov065_021165d8()
 {
     short pitch = 0;
-    Player *p = ClosestNonVanishPlayer();
+    daPly_c *p = ClosestNonVanishPlayer();
     if (p != 0) {
         Vector3 tmp;
         *(V3A *)&tmp = *(V3A *)&p->mPosX;
@@ -502,7 +501,7 @@ short daYurei_Mucho_c::func_ov065_02116588()
 int daYurei_Mucho_c::func_ov065_02116364()
 {
     V3Quint L;
-    Player *pl = ClosestNonVanishPlayer();
+    daPly_c *pl = ClosestNonVanishPlayer();
     if (pl != 0) {
         *(V3A *)(int)(&L.pp) = *(V3A *)(int)(&pl->mPosX);
         L.tgt = L.pp;
@@ -596,13 +595,13 @@ void daYurei_Mucho_c::func_ov065_02115ff0()
 {
     Vector3_16 v;
     Vector3 hv;
-    Player *p;
+    daPly_c *p;
     int flags;
     unsigned int id;
 
     id = mdCcAc_c.otherOwner;
     if (id == 0) return;
-    p = (Player *)dActor_c::FindWithID(id);
+    p = (daPly_c *)dActor_c::FindWithID(id);
     if (p == 0) return;
     flags = (int)mdCcAc_c.hitFlags;
 

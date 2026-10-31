@@ -590,7 +590,7 @@
       "kind": "correctness",
       "location": "src/game/stages/d_s_stage_methods.cpp",
       "reason": "Prospectively assigned ID for the prior non-queue independent a317 accepted finding; no historical queue ID is asserted. The repaired source chain remains preserved by complete final-path blob comparison; final Stage changes are exactly main's two u8 mLevelEntryDone reads. Current expanded strict proof covers all1933 entries. The later wing naming-prose finding is recorded separately below.",
-      "summary": "Stage Player/SaveData/SDK structured typed paths preserved from newer main"
+      "summary": "Stage daPly_c/SaveData/SDK structured typed paths preserved from newer main"
     },
     {
       "disposition": "fixed",

@@ -133,7 +133,7 @@ This document describes this commit. The queue records its immutable output SHA.
   stay `extern "C"` func_ov098 functions over `daWbm_c *`; member spellings
   would coin seven mangled names, so that is left as separate work. ABI
   bridges: dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight,
-  Player::Hurt and Particle::System::NewSimple stay mangled externs (Fix12 by
+  daPly_c::Hurt and Particle::System::NewSimple stay mangled externs (Fix12 by
   value, wall 6az); ModelBase::SetFile stays mangled because
   `include/ModelBase.h` declares it void and InitResources reads its result.
 - Layout: every access to this class goes through named fields; there are no
@@ -212,7 +212,7 @@ gates ran.
   14 consolidated with credit intact, 0 changed, 0 lost.
 - `python tools/check_decl_agreement.py --changed 787633e5e7`: exit 1 at
   first, with 14 disagreements from the new file. Three were fixed in the
-  source (Player::Hurt's return and u8 flags, NewSimple's `void *` return,
+  source (daPly_c::Hurt's return and u8 flags, NewSimple's `void *` return,
   DropShadowRadHeight's u8 opacity; 14/14 still MATCH). The rest were banked
   in place: the dBgCh_Actr::Init row re-keyed from the retired InitResources
   file, new file keys for Vec3_Asr and `data_ov098_0213c930`, and

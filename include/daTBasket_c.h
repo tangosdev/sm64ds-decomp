@@ -7,7 +7,7 @@
  *
  * Big Boo's Haunt furniture: the bouncing cage that plays the secret chime
  * while airborne and lets a grounded player jump inside it
- * (Player::JumpIntoBooCage). The class name is the ROM's own: _ZTS11daTBasket_c
+ * (daPly_c::JumpIntoBooCage). The class name is the ROM's own: _ZTS11daTBasket_c
  * at ov063:0x0211e750, with _ZTI11daTBasket_c reaching _ZTI12dEnemyBase_c, so
  * the direct base is dEnemyBase_c. The member shape is da1up_c's exactly --
  * same four types at the same four offsets -- which is what a shared

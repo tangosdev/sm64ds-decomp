@@ -1,22 +1,22 @@
 {
-  "id": "ov002/Player",
+  "id": "ov002/daPly_c",
   "module": "ov002",
-  "source": "src/game/player/Player.cpp",
-  "promoted_source": "src/game/player/Player.cpp",
+  "source": "src/game/player/d_a_ply_methods.cpp",
+  "promoted_source": "src/game/player/d_a_ply_methods.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "HISTORY, SUPERSEDED BY THE SCRIPT-COMMAND FOLD (last boundary_evidence entry): PARTIAL RUN, 344 of 600. tu_map calls 0x020bd828..0x020e6a08 one contiguous linker run of 600 function(s) (build/tu_map.json, tools/tu_map.py). This TU licenses 0x020bd828..0x020d3b9c, 344 function(s), ROM ordinals 0..343. The other 256 keep their own shards and their own delinks.txt entries.",
-    "class label(s): Player",
-    "EDGE 1 (the only edge, at the TOP) -- a sourceless hole splits the run. ROM ordinal 344, func_ov002_020d3b9c (0x020d3b9c), has a shard (src/unnamed/ov002/func_ov002_020d3b9c.c) that is a NONMATCHING banner (div 50 of 360 words) and no delinks.txt entry, so no .text claim can cross it: a `complete` delink block cannot contain a hole. Ordinals 0..343 are the LARGEST segment the holes leave and are the side taken. History: this entry first licensed ordinals 0..300 (hole at 301, then a sourceless range); ordinals 301..343 (43 shards, all `complete`, contiguous, 0x020cfea4..0x020d3b9c, class Player: St_LedgeGrab/LedgeHang/WallSlide/Crawl/Crouch/HoldHeavy/HoldLight/WaitQuicksand/Wait/TurnAround/Walk plus their file-local helpers) were folded in later, as their own commit, once they matched.",
-    "HISTORY, SUPERSEDED BY THE TAIL FOLD (last boundary_evidence entry): Why the next segments are NOT folded, each by its own blocker. Run ordinals 344..599: 344 func_ov002_020d3b9c is NONMATCHING (div 50/360). Segment 345..429 (0x020d413c..0x020d9fec, 85 fns) is ended at 430 by _ZN6Player19St_SwingPlayer_MainEv (NONMATCHING, div 8/241, no delinks entry). Segment 431..469 (0x020da3b0..0x020dc560, 39 fns) is ended at 470 by func_ov002_020dc560, which matches under 2004/b56 but carries no `complete` marker and no delinks entry (blocker: not enrolled; its baseline symbolCheckErrors name ITCM symbols, check eligibility before enrolling). Segment 471..599 (0x020dc740..0x020e6a08, 129 fns) holds the key function (D1 0x020e6858, D0 0x020e67a8) and the vtable owner. All four are the same original TU as this one interrupted by unmatched functions, not separate TUs, so splitting them into their own TUs would assert a false boundary; they stay shards until the three holes (d3b9c, SwingPlayer_Main, dc560) are matched and enrolled, after which a single widening can span them. Segment sizes now: 0..343 = 344 (TAKEN), 471..599 = 129, 345..429 = 85, 431..469 = 39.",
+    "class label(s): daPly_c",
+    "EDGE 1 (the only edge, at the TOP) -- a sourceless hole splits the run. ROM ordinal 344, func_ov002_020d3b9c (0x020d3b9c), has a shard (src/unnamed/ov002/func_ov002_020d3b9c.c) that is a NONMATCHING banner (div 50 of 360 words) and no delinks.txt entry, so no .text claim can cross it: a `complete` delink block cannot contain a hole. Ordinals 0..343 are the LARGEST segment the holes leave and are the side taken. History: this entry first licensed ordinals 0..300 (hole at 301, then a sourceless range); ordinals 301..343 (43 shards, all `complete`, contiguous, 0x020cfea4..0x020d3b9c, class daPly_c: St_LedgeGrab/LedgeHang/WallSlide/Crawl/Crouch/HoldHeavy/HoldLight/WaitQuicksand/Wait/TurnAround/Walk plus their file-local helpers) were folded in later, as their own commit, once they matched.",
+    "HISTORY, SUPERSEDED BY THE TAIL FOLD (last boundary_evidence entry): Why the next segments are NOT folded, each by its own blocker. Run ordinals 344..599: 344 func_ov002_020d3b9c is NONMATCHING (div 50/360). Segment 345..429 (0x020d413c..0x020d9fec, 85 fns) is ended at 430 by _ZN7daPly_c19St_SwingPlayer_MainEv (NONMATCHING, div 8/241, no delinks entry). Segment 431..469 (0x020da3b0..0x020dc560, 39 fns) is ended at 470 by func_ov002_020dc560, which matches under 2004/b56 but carries no `complete` marker and no delinks entry (blocker: not enrolled; its baseline symbolCheckErrors name ITCM symbols, check eligibility before enrolling). Segment 471..599 (0x020dc740..0x020e6a08, 129 fns) holds the key function (D1 0x020e6858, D0 0x020e67a8) and the vtable owner. All four are the same original TU as this one interrupted by unmatched functions, not separate TUs, so splitting them into their own TUs would assert a false boundary; they stay shards until the three holes (d3b9c, SwingPlayer_Main, dc560) are matched and enrolled, after which a single widening can span them. Segment sizes now: 0..343 = 344 (TAKEN), 471..599 = 129, 345..429 = 85, 431..469 = 39.",
     "HISTORY, SUPERSEDED BY THE SCRIPT-COMMAND FOLD (last boundary_evidence entry): EDGE 0 (the bottom) is the linker run's own start, 0x020bd828 -- not a boundary this TU chose. The claim begins where the run begins.",
-    "SUPERSEDED BY THE DESTRUCTOR TAIL: this note originally said D0 0x020e67a8 and D1 0x020e6858 were the first functions above this TU's .text end. They are now ordinals 612 and 613 inside 0x020bccfc..0x020e6a08. Out-of-line Player::~Player() is the key function. #pragma RTTI off suppresses _ZTI6Player and _ZTS6Player. _ZTV6Player is emitted and externalized to ov002:0x0210a83c; D2 is deadstripped.",
+    "SUPERSEDED BY THE DESTRUCTOR TAIL: this note originally said D0 0x020e67a8 and D1 0x020e6858 were the first functions above this TU's .text end. They are now ordinals 612 and 613 inside 0x020bccfc..0x020e6a08. Out-of-line daPly_c::~daPly_c() is the key function. _ZTV7daPly_c, _ZTI7daPly_c and _ZTS7daPly_c are emitted and compared as deadstrip-data against ov002:0x0210a83c/0x0210a56c/0x0210a554; D2 is deadstripped.",
     "The three near-miss recoveries this claim depends on landed FIRST, as their own commit with their own `complete` markers (compound-assign field-address CSE in func_ov002_020c70ac and func_ov002_020e2664; pointer-vs-int parameter typing in func_ov002_020d0948). Only func_ov002_020c70ac and func_ov002_020e2664's sibling recovery sit inside this range; the third is above it and was recovered because it was measured in the same pass.",
-    "SCRIPT-COMMAND FOLD (EDGE 0 moved down to 0x020bccfc): the 17 one-function shards that filled 0x020bccfc..0x020bd828 are now ROM ordinals 0..16 of this TU, which licenses 0x020bccfc..0x020d3b9c, 361 functions. They are the Player half of the Kuppa-script interpreter. Ownership, per function, not by adjacency: (1) func_ov002_020bd664 is reached only from arm9 RunPlayerCommand (arm_call at 0x0200e5f0), the player-command branch of ProcessKuppaScript (cmd <= 3), which passes the actor FindScriptPlayer finds in the player table data_0209f394 / by gKuppaScriptPlayerIDs unique ID, or SpawnScriptPlayer spawns as actor 0xbf. It calls through an ARM/Itanium pointer-to-member sequence (adj word, asr #1, virtual bit) on that object, i.e. a Player member function. (2) Its 14-entry table is copied from 14 eight-byte {ptr,adj} records in ov002 .data, and the relocations from those records name exactly 14 of the shards: 0x0210a14c->020bd600, 0x0210a124->020bd4e0, 0x0210a054->020bd4c8, 0x0210a0dc->020bd4ac, 0x0210a534->020bd480, 0x0210a0b4->020bd45c, 0x0210a094->020bd438, 0x0210a40c->020bd3a0, 0x0210a474->020bd354, 0x0210a44c->020bd250, 0x0210a3fc->020bd20c, 0x0210a3c4->020bcd38, 0x0210a064->020bcd18, 0x0210a36c->020bccfc; no other reference to any of them exists. Those records sit in the same stride-8 region as the State tables. (3) The other two are reached only from inside Player: func_ov002_020bd06c from func_ov002_020bd20c (0x020bd22c), func_ov002_020bcdf0 from Player::St_Wait_Main (0x020d2584). (4) Every body reads and writes Player's own field space (0x69c, 0x6ae, 0x6d8/0x6d9, 0x6e5, 0x6ff, 0x71a, 0x727/0x728 script step, 0x72c spawned prop, 0x743) and calls Player members (SetAnim, Hurt, IsState, ChangeState, FinishedAnim, GetBodyModelID). (5) The dispatcher's function-local static guard is 0x0210e158, inside the run of Player guard words 0x0210e14c/0x0210e150/0x0210e154/0x0210e15c that Player members at 0x020c4748, 0x020c8b44, 0x020c8c9c and 0x020c4ea8 use: one TU's .bss. Below the run, ov002/daObjCannonShutter_c is a complete TU (.text/.init/.ctor/.bss) whose daObjCannonShutter_c_classInit ends exactly at 0x020bccfc, so nothing of another class straddles the edge; none of the 17 touches daObjCannonShutter_c, and the lowest, func_ov002_020bccfc, is table entry 13 of the Player dispatcher. FORM: 16 are Player members named by address (func_ov002_<addr>), declared in include/Player.h with UNNAMED parameters -- named parameters renumbered @NNN locals in 33 of the header's 258 consumers, unnamed ones leave all 258 objects byte-identical (raw mwccarm compile of every tools/affected_src.py consumer, before/after sha256 and symbol tables). symbols.txt carries their mangled names; dsd resolves the .data pointer-to-member records by name. func_ov002_020bcdf0 retains its free C-linkage entry and unmangled name, now compiled as C++: an array-backed two-word AnimEntry27 preserves the retail stack snapshot. Player and animation-controller calls use existing native interfaces; measured scalar Fix12 ABI bridges and the inherited particle-X volatile read remain. The dispatcher's function-local static table is spelled the way this file spells its other statics, as externs of its guard data_ov002_0210e158 and table data_ov002_02110794, so the TU still emits no .bss (the shard's local `table$8`/`_ZGVtable$8` were the two names config/unresolved-baseline.json carried for it).",
-    "TAIL FOLD (EDGE 1 moved up from 0x020d3b9c to 0x020e67a8): the three holes the superseded \"Why the next segments are NOT folded\" entry named are closed, so the four segments it listed are one span again and are folded as ROM ordinals 361..611 (251 functions), which licenses 0x020bccfc..0x020e67a8, 612 functions. (1) func_ov002_020d3b9c (ordinal 361) now reproduces the cartridge under 2004/b56 (0 of 360 bytes differ); the matching body lands on its own as a standalone one-function source and is folded here verbatim, with its stick/mode accessor helpers at file scope ahead of it. The NONMATCHING draft src/unnamed/ov002/func_ov002_020d3b9c.c is retired by this fold. (2) Player::St_SwingPlayer_Main (0x020d9fec) matched and was enrolled before this fold. (3) func_ov002_020dc560 (ordinal 487) already byte-matched; it had no `complete` marker. Folded, it is verified like every other member, including tools/reloc_audit.py check_destinations(), which is the check the superseded entry asked for before enrolling it. It calls func_01ff99a4 and func_01ff98f4, two interior entry points of the soft-float routine src/unnamed/arm9/01ff/func_01ff97d8.c, which is one enrolled hand-asm block spanning 0x01ff97d8..0x01ffa344. mwccarm 2004/b56 cannot export a second symbol from one asm block (measured and recorded in config/rombuild-exclude.txt for func_01ffa440), and that block cannot be split at those addresses: 36 of its branches cross 0x01ff98f4, 0x01ff99a4, 0x01ff9d40 or 0x01ff9e2c into shared exception tails. So no object defines the two names; tools/lcf_interior.py, run by rombuild.py and by tubuild.py linkcheck, adds `func_01ff98f4 = 0x01ff98f4;` and `func_01ff99a4 = 0x01ff99a4;` to the linker command file because Player.o imports them and nothing defines them, and the calls resolve to those absolute definitions (ITCM never moves, so the symbols.txt address is the linked address). An earlier revision of this fold stopped at 0x020dc560 for want of exactly those two symbols. EDGE 1 stops at 0x020e67a8 and not at the run end 0x020e6a08 because the last five functions of the run are the destructor tail: Player D0 (0x020e67a8), D1 (0x020e6858), C1 (0x020e68f4), Player::OnYoshiTryEat (0x020e69b8) and func_ov002_020e69c0. The cartridge orders D0 below D1, the order mwccarm gives an INLINE destructor that something forces out of line; include/Player.h declares `virtual ~Player();` out of line and it is the key function, so defining it here would make this TU emit _ZTV6Player and Player's RTTI and would need a header edit that reaches all of its consumers. Those five stay one-function sources; a later widening that solves the destructor can take them and the vtable together. Same original TU, not a boundary: the fold makes no claim that 0x020e67a8 is where the original file ended.",
-    "DESTRUCTOR TAIL (EDGE 1 moved up from 0x020e67a8 to the run end 0x020e6a08) and the static initializer. Measured on 2004/b56 before the splice: an out-of-line Player::~Player() {} emits three .text sections in order D2 (0x9c), D0 (0xb0), D1 (0x9c), plus _ZTV6Player and _ZTI6Player/_ZTS6Player. The cartridge has no D2 and no Player RTTI: the vtable typeinfo word at 0x0210a838 relocates to _ZTI7daPly_c (0x0210a56c), whose name string is 7daPly_c. deadstrip is refused for a homeless _ZT*, so this definition is compiled under #pragma RTTI off, which emits no _ZTI6Player or _ZTS6Player and a zero typeinfo word in the vtable preamble. Under #pragma defer_codegen off the variants come out D1, D0, D2; defer_codegen is on for this definition only, which emits D2, D0, D1, and it is turned back off before C1. D2 is deadstripped. _ZTV6Player (0x84, preamble plus 31 slots) is deadstrip-data at ov002:0x0210a83c: the 124 slot bytes match and the retail table stays the linked copy. D0 and D1 bytes and relocations match the enrolled bodies. C1 and OnYoshiTryEat are the enrolled bodies. func_ov002_020e69c0 keeps its C bytes with a void* parameter so it agrees with the call in this file. __sinit_ov002_021019d0 is the enrolled C body under #pragma cplusplus off, placed in .init by #pragma define_section; a standalone compile of that wrapping is byte-identical and relocation-identical to the .c object (0x5470, 1841 relocs) with and without #pragma defer_codegen off. This job is the sanctioned exception to the fold-worker Skip Player rule and to the pool exclusion of ov002_021019d0."
+    "SCRIPT-COMMAND FOLD (EDGE 0 moved down to 0x020bccfc): the 17 one-function shards that filled 0x020bccfc..0x020bd828 are now ROM ordinals 0..16 of this TU, which licenses 0x020bccfc..0x020d3b9c, 361 functions. They are the daPly_c half of the Kuppa-script interpreter. Ownership, per function, not by adjacency: (1) func_ov002_020bd664 is reached only from arm9 RunPlayerCommand (arm_call at 0x0200e5f0), the player-command branch of ProcessKuppaScript (cmd <= 3), which passes the actor FindScriptPlayer finds in the player table data_0209f394 / by gKuppaScriptPlayerIDs unique ID, or SpawnScriptPlayer spawns as actor 0xbf. It calls through an ARM/Itanium pointer-to-member sequence (adj word, asr #1, virtual bit) on that object, i.e. a daPly_c member function. (2) Its 14-entry table is copied from 14 eight-byte {ptr,adj} records in ov002 .data, and the relocations from those records name exactly 14 of the shards: 0x0210a14c->020bd600, 0x0210a124->020bd4e0, 0x0210a054->020bd4c8, 0x0210a0dc->020bd4ac, 0x0210a534->020bd480, 0x0210a0b4->020bd45c, 0x0210a094->020bd438, 0x0210a40c->020bd3a0, 0x0210a474->020bd354, 0x0210a44c->020bd250, 0x0210a3fc->020bd20c, 0x0210a3c4->020bcd38, 0x0210a064->020bcd18, 0x0210a36c->020bccfc; no other reference to any of them exists. Those records sit in the same stride-8 region as the State tables. (3) The other two are reached only from inside daPly_c: func_ov002_020bd06c from func_ov002_020bd20c (0x020bd22c), func_ov002_020bcdf0 from daPly_c::St_Wait_Main (0x020d2584). (4) Every body reads and writes daPly_c's own field space (0x69c, 0x6ae, 0x6d8/0x6d9, 0x6e5, 0x6ff, 0x71a, 0x727/0x728 script step, 0x72c spawned prop, 0x743) and calls daPly_c members (SetAnim, Hurt, IsState, ChangeState, FinishedAnim, GetBodyModelID). (5) The dispatcher's function-local static guard is 0x0210e158, inside the run of daPly_c guard words 0x0210e14c/0x0210e150/0x0210e154/0x0210e15c that daPly_c members at 0x020c4748, 0x020c8b44, 0x020c8c9c and 0x020c4ea8 use: one TU's .bss. Below the run, ov002/daObjCannonShutter_c is a complete TU (.text/.init/.ctor/.bss) whose daObjCannonShutter_c_classInit ends exactly at 0x020bccfc, so nothing of another class straddles the edge; none of the 17 touches daObjCannonShutter_c, and the lowest, func_ov002_020bccfc, is table entry 13 of the daPly_c dispatcher. FORM: 16 are daPly_c members named by address (func_ov002_<addr>), declared in include/daPly_c.h with UNNAMED parameters -- named parameters renumbered @NNN locals in 33 of the header's 258 consumers, unnamed ones leave all 258 objects byte-identical (raw mwccarm compile of every tools/affected_src.py consumer, before/after sha256 and symbol tables). symbols.txt carries their mangled names; dsd resolves the .data pointer-to-member records by name. func_ov002_020bcdf0 retains its free C-linkage entry and unmangled name, now compiled as C++: an array-backed two-word AnimEntry27 preserves the retail stack snapshot. daPly_c and animation-controller calls use existing native interfaces; measured scalar Fix12 ABI bridges and the inherited particle-X volatile read remain. The dispatcher's function-local static table is spelled the way this file spells its other statics, as externs of its guard data_ov002_0210e158 and table data_ov002_02110794, so the TU still emits no .bss (the shard's local `table$8`/`_ZGVtable$8` were the two names config/unresolved-baseline.json carried for it).",
+    "TAIL FOLD (EDGE 1 moved up from 0x020d3b9c to 0x020e67a8): the three holes the superseded \"Why the next segments are NOT folded\" entry named are closed, so the four segments it listed are one span again and are folded as ROM ordinals 361..611 (251 functions), which licenses 0x020bccfc..0x020e67a8, 612 functions. (1) func_ov002_020d3b9c (ordinal 361) now reproduces the cartridge under 2004/b56 (0 of 360 bytes differ); the matching body lands on its own as a standalone one-function source and is folded here verbatim, with its stick/mode accessor helpers at file scope ahead of it. The NONMATCHING draft src/unnamed/ov002/func_ov002_020d3b9c.c is retired by this fold. (2) daPly_c::St_SwingPlayer_Main (0x020d9fec) matched and was enrolled before this fold. (3) func_ov002_020dc560 (ordinal 487) already byte-matched; it had no `complete` marker. Folded, it is verified like every other member, including tools/reloc_audit.py check_destinations(), which is the check the superseded entry asked for before enrolling it. It calls func_01ff99a4 and func_01ff98f4, two interior entry points of the soft-float routine src/unnamed/arm9/01ff/func_01ff97d8.c, which is one enrolled hand-asm block spanning 0x01ff97d8..0x01ffa344. mwccarm 2004/b56 cannot export a second symbol from one asm block (measured and recorded in config/rombuild-exclude.txt for func_01ffa440), and that block cannot be split at those addresses: 36 of its branches cross 0x01ff98f4, 0x01ff99a4, 0x01ff9d40 or 0x01ff9e2c into shared exception tails. So no object defines the two names; tools/lcf_interior.py, run by rombuild.py and by tubuild.py linkcheck, adds `func_01ff98f4 = 0x01ff98f4;` and `func_01ff99a4 = 0x01ff99a4;` to the linker command file because daPly_c.o imports them and nothing defines them, and the calls resolve to those absolute definitions (ITCM never moves, so the symbols.txt address is the linked address). An earlier revision of this fold stopped at 0x020dc560 for want of exactly those two symbols. EDGE 1 stops at 0x020e67a8 and not at the run end 0x020e6a08 because the last five functions of the run are the destructor tail: daPly_c D0 (0x020e67a8), D1 (0x020e6858), C1 (0x020e68f4), daPly_c::OnYoshiTryEat (0x020e69b8) and func_ov002_020e69c0. The cartridge orders D0 below D1, the order mwccarm gives an INLINE destructor that something forces out of line; include/daPly_c.h declares `virtual ~daPly_c();` out of line and it is the key function, so defining it here would make this TU emit _ZTV7daPly_c and daPly_c's RTTI and would need a header edit that reaches all of its consumers. Those five stay one-function sources; a later widening that solves the destructor can take them and the vtable together. Same original TU, not a boundary: the fold makes no claim that 0x020e67a8 is where the original file ended.",
+    "DESTRUCTOR TAIL (EDGE 1 moved up from 0x020e67a8 to the run end 0x020e6a08) and the static initializer. Measured on 2004/b56 before the splice: an out-of-line daPly_c::~daPly_c() {} emits three .text sections in order D2 (0x9c), D0 (0xb0), D1 (0x9c), plus _ZTV7daPly_c and _ZTI7daPly_c/_ZTS7daPly_c. The cartridge has no D2. While the class was spelled Player its RTTI had no cartridge home (the vtable's typeinfo word at 0x0210a838 relocates to _ZTI7daPly_c, 0x0210a56c, whose name string is 7daPly_c), so the definition was compiled under #pragma RTTI off; since the rename to the cartridge spelling the pragma is gone and _ZTI7daPly_c/_ZTS7daPly_c are compared as deadstrip-data. Under #pragma defer_codegen off the variants come out D1, D0, D2; defer_codegen is on for this definition only, which emits D2, D0, D1, and it is turned back off before C1. D2 is deadstripped. _ZTV7daPly_c (0x84, preamble plus 31 slots) is deadstrip-data at ov002:0x0210a83c: the 124 slot bytes match and the retail table stays the linked copy. D0 and D1 bytes and relocations match the enrolled bodies. C1 and OnYoshiTryEat are the enrolled bodies. func_ov002_020e69c0 keeps its C bytes with a void* parameter so it agrees with the call in this file. __sinit_ov002_021019d0 is the enrolled C body under #pragma cplusplus off, placed in .init by #pragma define_section; a standalone compile of that wrapping is byte-identical and relocation-identical to the .c object (0x5470, 1841 relocs) with and without #pragma defer_codegen off. This job is the sanctioned exception to the fold-worker Skip daPly_c rule and to the pool exclusion of ov002_021019d0."
   ],
   "sections": [
     {
@@ -37,21 +37,21 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN6Player19func_ov002_020bccfcEPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bccfcEPhii",
       "address": "0x020bccfc",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bccfc.c",
       "ordinal": 0
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bcd18EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bcd18EPhii",
       "address": "0x020bcd18",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bcd18.c",
       "ordinal": 1
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bcd38EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bcd38EPhii",
       "address": "0x020bcd38",
       "size": "0x000000b8",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bcd38.c",
@@ -65,101 +65,101 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd06cEj",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd06cEj",
       "address": "0x020bd06c",
       "size": "0x000001a0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd06c.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd20cEPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd20cEPhii",
       "address": "0x020bd20c",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd20c.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd250EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd250EPhii",
       "address": "0x020bd250",
       "size": "0x00000104",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd250.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd354EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd354EPhii",
       "address": "0x020bd354",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd354.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd3a0EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd3a0EPhii",
       "address": "0x020bd3a0",
       "size": "0x00000098",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd3a0.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd438EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd438EPhii",
       "address": "0x020bd438",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd438.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd45cEPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd45cEPhii",
       "address": "0x020bd45c",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd45c.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd480EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd480EPhii",
       "address": "0x020bd480",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd480.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd4acEPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd4acEPhii",
       "address": "0x020bd4ac",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd4ac.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd4c8EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd4c8EPhii",
       "address": "0x020bd4c8",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd4c8.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd4e0EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd4e0EPhii",
       "address": "0x020bd4e0",
       "size": "0x00000120",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd4e0.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd600EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd600EPhii",
       "address": "0x020bd600",
       "size": "0x00000064",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd600.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bd664EPhii",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd664EPhii",
       "address": "0x020bd664",
       "size": "0x000001c4",
       "legacy_source": "src/unnamed/ov002/func_ov002_020bd664.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN6Player8CanPauseEv",
+      "symbol": "_ZN7daPly_c8CanPauseEv",
       "address": "0x020bd828",
       "size": "0x00000084",
-      "legacy_source": "src/_ZN6Player8CanPauseEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c8CanPauseEv.cpp",
       "ordinal": 17
     },
     {
@@ -170,105 +170,105 @@
       "ordinal": 18
     },
     {
-      "symbol": "_ZN6Player13EndStateMusicEj",
+      "symbol": "_ZN7daPly_c13EndStateMusicEj",
       "address": "0x020bd8c0",
       "size": "0x00000068",
       "legacy_source": "src/EndStateMusic.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN6Player15StartStateMusicEj",
+      "symbol": "_ZN7daPly_c15StartStateMusicEj",
       "address": "0x020bd928",
       "size": "0x0000005c",
       "legacy_source": "src/StartStateMusic.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN6Player15EndPowerupMusicEj",
+      "symbol": "_ZN7daPly_c15EndPowerupMusicEj",
       "address": "0x020bd984",
       "size": "0x00000068",
       "legacy_source": "src/EndPowerupMusic.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN6Player17StartPowerupMusicEj",
+      "symbol": "_ZN7daPly_c17StartPowerupMusicEj",
       "address": "0x020bd9ec",
       "size": "0x0000005c",
       "legacy_source": "src/StartPowerupMusic.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bda48Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020bda48Ev",
       "address": "0x020bda48",
       "size": "0x00000050",
       "legacy_source": "src/func_ov002_020bda48.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN6Player8HasNoCapEv",
+      "symbol": "_ZN7daPly_c8HasNoCapEv",
       "address": "0x020bda98",
       "size": "0x000000b8",
-      "legacy_source": "src/_ZN6Player8HasNoCapEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c8HasNoCapEv.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bdb50Ei",
+      "symbol": "_ZN7daPly_c19func_ov002_020bdb50Ei",
       "address": "0x020bdb50",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov002_020bdb50.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bdc18Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020bdc18Ev",
       "address": "0x020bdc18",
       "size": "0x00000040",
       "legacy_source": "src/func_ov002_020bdc18.c",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN6Player16IncMegaKillCountEv",
+      "symbol": "_ZN7daPly_c16IncMegaKillCountEv",
       "address": "0x020bdc58",
       "size": "0x000000d4",
-      "legacy_source": "src/_ZN6Player16IncMegaKillCountEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16IncMegaKillCountEv.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bdd2cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020bdd2cEv",
       "address": "0x020bdd2c",
       "size": "0x00000070",
       "legacy_source": "src/func_ov002_020bdd2c.c",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bdd9cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020bdd9cEv",
       "address": "0x020bdd9c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov002_020bdd9c.cpp",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN6Player14InitMetalWarioEv",
+      "symbol": "_ZN7daPly_c14InitMetalWarioEv",
       "address": "0x020bde14",
       "size": "0x000000dc",
-      "legacy_source": "src/_ZN6Player14InitMetalWarioEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14InitMetalWarioEv.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bdef0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020bdef0Ev",
       "address": "0x020bdef0",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov002_020bdef0.cpp",
       "ordinal": 31
     },
     {
-      "symbol": "_ZN6Player15InitVanishLuigiEv",
+      "symbol": "_ZN7daPly_c15InitVanishLuigiEv",
       "address": "0x020bdf4c",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN6Player15InitVanishLuigiEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15InitVanishLuigiEv.cpp",
       "ordinal": 32
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bdf8cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020bdf8cEv",
       "address": "0x020bdf8c",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov002_020bdf8c.c",
@@ -282,56 +282,56 @@
       "ordinal": 34
     },
     {
-      "symbol": "_ZN6Player18SetNewHatCharacterEjjb",
+      "symbol": "_ZN7daPly_c18SetNewHatCharacterEjjb",
       "address": "0x020be0f8",
       "size": "0x000000e8",
-      "legacy_source": "src/_ZN6Player18SetNewHatCharacterEjjb.cpp",
+      "legacy_source": "src/_ZN7daPly_c18SetNewHatCharacterEjjb.cpp",
       "ordinal": 35
     },
     {
-      "symbol": "_ZN6Player16SetRealCharacterEj",
+      "symbol": "_ZN7daPly_c16SetRealCharacterEj",
       "address": "0x020be1e0",
       "size": "0x00000144",
-      "legacy_source": "src/_ZN6Player16SetRealCharacterEj.cpp",
+      "legacy_source": "src/_ZN7daPly_c16SetRealCharacterEj.cpp",
       "ordinal": 36
     },
     {
-      "symbol": "_ZN6Player18TurnOffToonShadingEj",
+      "symbol": "_ZN7daPly_c18TurnOffToonShadingEj",
       "address": "0x020be324",
       "size": "0x0000008c",
-      "legacy_source": "src/_ZN6Player18TurnOffToonShadingEj.cpp",
+      "legacy_source": "src/_ZN7daPly_c18TurnOffToonShadingEj.cpp",
       "ordinal": 37
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020be3b0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020be3b0Ev",
       "address": "0x020be3b0",
       "size": "0x000006cc",
       "legacy_source": "src/func_ov002_020be3b0.c",
       "ordinal": 38
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bea7cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020bea7cEv",
       "address": "0x020bea7c",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020bea7c.c",
       "ordinal": 39
     },
     {
-      "symbol": "_ZN6Player15IsCollectingCapEv",
+      "symbol": "_ZN7daPly_c15IsCollectingCapEv",
       "address": "0x020bea94",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN6Player15IsCollectingCapEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15IsCollectingCapEv.cpp",
       "ordinal": 40
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020beabcEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020beabcEv",
       "address": "0x020beabc",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov002_020beabc.cpp",
       "ordinal": 41
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020beb38Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020beb38Ev",
       "address": "0x020beb38",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov002_020beb38.c",
@@ -366,24 +366,24 @@
       "ordinal": 46
     },
     {
-      "symbol": "_ZNK6Player14GetBodyModelIDEjb",
+      "symbol": "_ZNK7daPly_c14GetBodyModelIDEjb",
       "address": "0x020becc8",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZNK6Player14GetBodyModelIDEjb.cpp",
+      "legacy_source": "src/_ZNK7daPly_c14GetBodyModelIDEjb.cpp",
       "ordinal": 47
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020becf4Eii",
+      "symbol": "_ZN7daPly_c19func_ov002_020becf4Eii",
       "address": "0x020becf4",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov002_020becf4.cpp",
       "ordinal": 48
     },
     {
-      "symbol": "_ZN6Player12FinishedAnimEv",
+      "symbol": "_ZN7daPly_c12FinishedAnimEv",
       "address": "0x020bed98",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN6Player12FinishedAnimEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12FinishedAnimEv.cpp",
       "ordinal": 49
     },
     {
@@ -394,21 +394,21 @@
       "ordinal": 50
     },
     {
-      "symbol": "_ZN6Player6IsAnimEj",
+      "symbol": "_ZN7daPly_c6IsAnimEj",
       "address": "0x020beecc",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN6Player6IsAnimEj.cpp",
+      "legacy_source": "src/_ZN7daPly_c6IsAnimEj.cpp",
       "ordinal": 51
     },
     {
-      "symbol": "_ZN6Player7SetAnimEjiit",
+      "symbol": "_ZN7daPly_c7SetAnimEjiit",
       "address": "0x020bef2c",
       "size": "0x00000210",
-      "legacy_source": "src/_ZN6Player7SetAnimEji5Fix12IiEj.cpp",
+      "legacy_source": "src/_ZN7daPly_c7SetAnimEji5Fix12IiEj.cpp",
       "ordinal": 52
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bf13cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf13cEv",
       "address": "0x020bf13c",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov002_020bf13c.c",
@@ -429,7 +429,7 @@
       "ordinal": 55
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bf2d8Ei",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf2d8Ei",
       "address": "0x020bf2d8",
       "size": "0x00000034",
       "legacy_source": "src/func_ov002_020bf2d8.c",
@@ -450,31 +450,31 @@
       "ordinal": 58
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bf36cEPv",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf36cEPv",
       "address": "0x020bf36c",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov002_020bf36c.cpp",
       "ordinal": 59
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bf40cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf40cEv",
       "address": "0x020bf40c",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov002_020bf40c.c",
       "ordinal": 60
     },
     {
-      "symbol": "_ZN6Player4HealEi",
+      "symbol": "_ZN7daPly_c4HealEi",
       "address": "0x020bf4e4",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN6Player4HealEi.cpp",
+      "legacy_source": "src/_ZN7daPly_c4HealEi.cpp",
       "ordinal": 61
     },
     {
-      "symbol": "_ZN6Player9GetHealthEv",
+      "symbol": "_ZN7daPly_c9GetHealthEv",
       "address": "0x020bf548",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN6Player9GetHealthEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c9GetHealthEv.cpp",
       "ordinal": 62
     },
     {
@@ -485,7 +485,7 @@
       "ordinal": 63
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bf5e0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf5e0Ev",
       "address": "0x020bf5e0",
       "size": "0x00000220",
       "legacy_source": "src/func_ov002_020bf5e0.c",
@@ -499,140 +499,140 @@
       "ordinal": 65
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bf88cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf88cEv",
       "address": "0x020bf88c",
       "size": "0x00000080",
       "legacy_source": "src/func_ov002_020bf88c.c",
       "ordinal": 66
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bf90cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf90cEv",
       "address": "0x020bf90c",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov002_020bf90c.c",
       "ordinal": 67
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bf9d4Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf9d4Ev",
       "address": "0x020bf9d4",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov002_020bf9d4.cpp",
       "ordinal": 68
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bfa74Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020bfa74Ev",
       "address": "0x020bfa74",
       "size": "0x0000044c",
       "legacy_source": "src/func_ov002_020bfa74.cpp",
       "ordinal": 69
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020bfec0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020bfec0Ev",
       "address": "0x020bfec0",
       "size": "0x00000248",
       "legacy_source": "src/func_ov002_020bfec0.c",
       "ordinal": 70
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c0108Ei",
+      "symbol": "_ZN7daPly_c19func_ov002_020c0108Ei",
       "address": "0x020c0108",
       "size": "0x00000214",
       "legacy_source": "src/func_ov002_020c0108.c",
       "ordinal": 71
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c031cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c031cEv",
       "address": "0x020c031c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020c031c.cpp",
       "ordinal": 72
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c0364Ej",
+      "symbol": "_ZN7daPly_c19func_ov002_020c0364Ej",
       "address": "0x020c0364",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov002_020c0364.c",
       "ordinal": 73
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c0434Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c0434Ev",
       "address": "0x020c0434",
       "size": "0x00000078",
       "legacy_source": "src/func_ov002_020c0434.c",
       "ordinal": 74
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c04acEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c04acEv",
       "address": "0x020c04ac",
       "size": "0x00000034",
       "legacy_source": "src/func_ov002_020c04ac.c",
       "ordinal": 75
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c04e0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c04e0Ev",
       "address": "0x020c04e0",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov002_020c04e0.c",
       "ordinal": 76
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c0688Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c0688Ev",
       "address": "0x020c0688",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020c0688.cpp",
       "ordinal": 77
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c06fcEi",
+      "symbol": "_ZN7daPly_c19func_ov002_020c06fcEi",
       "address": "0x020c06fc",
       "size": "0x000005c0",
       "legacy_source": "src/func_ov002_020c06fc.c",
       "ordinal": 78
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c0cbcEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c0cbcEv",
       "address": "0x020c0cbc",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov002_020c0cbc.c",
       "ordinal": 79
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c0d90Ei",
+      "symbol": "_ZN7daPly_c19func_ov002_020c0d90Ei",
       "address": "0x020c0d90",
       "size": "0x00000224",
       "legacy_source": "src/func_ov002_020c0d90.c",
       "ordinal": 80
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c0fb4Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c0fb4Ev",
       "address": "0x020c0fb4",
       "size": "0x00000280",
       "legacy_source": "src/func_ov002_020c0fb4.c",
       "ordinal": 81
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c1234Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c1234Ev",
       "address": "0x020c1234",
       "size": "0x00000108",
       "legacy_source": "src/func_ov002_020c1234.cpp",
       "ordinal": 82
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c133cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c133cEv",
       "address": "0x020c133c",
       "size": "0x0000017c",
       "legacy_source": "src/func_ov002_020c133c.c",
       "ordinal": 83
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c14b8Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c14b8Ev",
       "address": "0x020c14b8",
       "size": "0x00000234",
       "legacy_source": "src/func_ov002_020c14b8.c",
       "ordinal": 84
     },
     {
-      "symbol": "_ZN6Player19SetFloorSurfaceInfoERK5dBgPi",
+      "symbol": "_ZN7daPly_c19SetFloorSurfaceInfoERK5dBgPi",
       "address": "0x020c16ec",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov002_020c16ec.c",
@@ -653,21 +653,21 @@
       "ordinal": 87
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c19d0Eii",
+      "symbol": "_ZN7daPly_c19func_ov002_020c19d0Eii",
       "address": "0x020c19d0",
       "size": "0x00000108",
       "legacy_source": "src/func_ov002_020c19d0.cpp",
       "ordinal": 88
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c1ad8Ei",
+      "symbol": "_ZN7daPly_c19func_ov002_020c1ad8Ei",
       "address": "0x020c1ad8",
       "size": "0x000001ac",
       "legacy_source": "src/func_ov002_020c1ad8.c",
       "ordinal": 89
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c1c84Ei",
+      "symbol": "_ZN7daPly_c19func_ov002_020c1c84Ei",
       "address": "0x020c1c84",
       "size": "0x000001c0",
       "legacy_source": "src/func_ov002_020c1c84.c",
@@ -681,21 +681,21 @@
       "ordinal": 91
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c1eb4Ei",
+      "symbol": "_ZN7daPly_c19func_ov002_020c1eb4Ei",
       "address": "0x020c1eb4",
       "size": "0x00000158",
       "legacy_source": "src/func_ov002_020c1eb4.cpp",
       "ordinal": 92
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c200cEi",
+      "symbol": "_ZN7daPly_c19func_ov002_020c200cEi",
       "address": "0x020c200c",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov002_020c200c.c",
       "ordinal": 93
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c2138Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c2138Ev",
       "address": "0x020c2138",
       "size": "0x00000138",
       "legacy_source": "src/func_ov002_020c2138.cpp",
@@ -709,77 +709,77 @@
       "ordinal": 95
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c231cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c231cEv",
       "address": "0x020c231c",
       "size": "0x0000028c",
       "legacy_source": "src/func_ov002_020c231c.c",
       "ordinal": 96
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c25a8Ei",
+      "symbol": "_ZN7daPly_c19func_ov002_020c25a8Ei",
       "address": "0x020c25a8",
       "size": "0x0000042c",
       "legacy_source": "src/func_ov002_020c25a8.c",
       "ordinal": 97
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c29d4Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c29d4Ev",
       "address": "0x020c29d4",
       "size": "0x00000134",
       "legacy_source": "src/func_ov002_020c29d4.cpp",
       "ordinal": 98
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c2b08Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c2b08Ev",
       "address": "0x020c2b08",
       "size": "0x000002b0",
       "legacy_source": "src/func_ov002_020c2b08.c",
       "ordinal": 99
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c2db8Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c2db8Ev",
       "address": "0x020c2db8",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov002_020c2db8.c",
       "ordinal": 100
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c2e78Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c2e78Ev",
       "address": "0x020c2e78",
       "size": "0x00000078",
       "legacy_source": "src/func_ov002_020c2e78.cpp",
       "ordinal": 101
     },
     {
-      "symbol": "_ZN6Player7CanWarpEv",
+      "symbol": "_ZN7daPly_c7CanWarpEv",
       "address": "0x020c2ef0",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN6Player7CanWarpEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c7CanWarpEv.cpp",
       "ordinal": 102
     },
     {
-      "symbol": "_ZN6Player7IsInAirEv",
+      "symbol": "_ZN7daPly_c7IsInAirEv",
       "address": "0x020c2f3c",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN6Player7IsInAirEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c7IsInAirEv.cpp",
       "ordinal": 103
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c2f64Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c2f64Ev",
       "address": "0x020c2f64",
       "size": "0x00000088",
       "legacy_source": "src/func_ov002_020c2f64.c",
       "ordinal": 104
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c2fecEPi",
+      "symbol": "_ZN7daPly_c19func_ov002_020c2fecEPi",
       "address": "0x020c2fec",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov002_020c2fec.c",
       "ordinal": 105
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c3148Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c3148Ev",
       "address": "0x020c3148",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020c3148.c",
@@ -793,52 +793,52 @@
       "ordinal": 107
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c37a4EPc",
+      "symbol": "_ZN7daPly_c19func_ov002_020c37a4EPc",
       "address": "0x020c37a4",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov002_020c37a4.cpp",
       "ordinal": 108
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c38a0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c38a0Ev",
       "address": "0x020c38a0",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov002_020c38a0.c",
       "ordinal": 109
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c3a48Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c3a48Ev",
       "address": "0x020c3a48",
       "size": "0x00000194",
       "legacy_source": "src/func_ov002_020c3a48.c",
       "ordinal": 110
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c3bdcEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c3bdcEv",
       "address": "0x020c3bdc",
       "size": "0x00000114",
       "legacy_source": "src/func_ov002_020c3bdc.c",
       "ordinal": 111
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c3cf0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c3cf0Ev",
       "address": "0x020c3cf0",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020c3cf0.c",
       "ordinal": 112
     },
     {
-      "symbol": "_ZN6Player17St_EndingFly_MainEv",
+      "symbol": "_ZN7daPly_c17St_EndingFly_MainEv",
       "address": "0x020c3d1c",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN6Player17St_EndingFly_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_EndingFly_MainEv.cpp",
       "ordinal": 113
     },
     {
-      "symbol": "_ZN6Player17St_EndingFly_InitEv",
+      "symbol": "_ZN7daPly_c17St_EndingFly_InitEv",
       "address": "0x020c3d6c",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN6Player17St_EndingFly_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_EndingFly_InitEv.cpp",
       "ordinal": 114
     },
     {
@@ -849,10 +849,10 @@
       "ordinal": 115
     },
     {
-      "symbol": "_ZN6Player21St_OpeningWakeUp_MainEv",
+      "symbol": "_ZN7daPly_c21St_OpeningWakeUp_MainEv",
       "address": "0x020c3dd0",
       "size": "0x000000bc",
-      "legacy_source": "src/_ZN6Player21St_OpeningWakeUp_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_OpeningWakeUp_MainEv.cpp",
       "ordinal": 116
     },
     {
@@ -863,17 +863,17 @@
       "ordinal": 117
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c3ea0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c3ea0Ev",
       "address": "0x020c3ea0",
       "size": "0x00000038",
       "legacy_source": "src/func_ov002_020c3ea0.c",
       "ordinal": 118
     },
     {
-      "symbol": "_ZN6Player21St_OpeningWakeUp_InitEv",
+      "symbol": "_ZN7daPly_c21St_OpeningWakeUp_InitEv",
       "address": "0x020c3ed8",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN6Player21St_OpeningWakeUp_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_OpeningWakeUp_InitEv.cpp",
       "ordinal": 119
     },
     {
@@ -891,101 +891,101 @@
       "ordinal": 121
     },
     {
-      "symbol": "_ZN6Player15St_Respawn_MainEv",
+      "symbol": "_ZN7daPly_c15St_Respawn_MainEv",
       "address": "0x020c3f40",
       "size": "0x00000148",
-      "legacy_source": "src/_ZN6Player15St_Respawn_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Respawn_MainEv.cpp",
       "ordinal": 122
     },
     {
-      "symbol": "_ZN6Player15St_Respawn_InitEv",
+      "symbol": "_ZN7daPly_c15St_Respawn_InitEv",
       "address": "0x020c4088",
       "size": "0x00000100",
-      "legacy_source": "src/_ZN6Player15St_Respawn_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Respawn_InitEv.cpp",
       "ordinal": 123
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c4188Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c4188Ev",
       "address": "0x020c4188",
       "size": "0x0000023c",
       "legacy_source": "src/func_ov002_020c4188.c",
       "ordinal": 124
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c43c4Ej",
+      "symbol": "_ZN7daPly_c19func_ov002_020c43c4Ej",
       "address": "0x020c43c4",
       "size": "0x00000100",
       "legacy_source": "src/func_ov002_020c43c4.c",
       "ordinal": 125
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c44c4Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c44c4Ev",
       "address": "0x020c44c4",
       "size": "0x0000029c",
       "legacy_source": "src/func_ov002_020c44c4.c",
       "ordinal": 126
     },
     {
-      "symbol": "_ZN6Player15St_Talk_CleanupEv",
+      "symbol": "_ZN7daPly_c15St_Talk_CleanupEv",
       "address": "0x020c4760",
       "size": "0x00000094",
-      "legacy_source": "src/_ZN6Player15St_Talk_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Talk_CleanupEv.cpp",
       "ordinal": 127
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c47f4Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c47f4Ev",
       "address": "0x020c47f4",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov002_020c47f4.cpp",
       "ordinal": 128
     },
     {
-      "symbol": "_ZN6Player12St_Talk_MainEv",
+      "symbol": "_ZN7daPly_c12St_Talk_MainEv",
       "address": "0x020c48e0",
       "size": "0x000002f8",
-      "legacy_source": "src/_ZN6Player12St_Talk_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Talk_MainEv.cpp",
       "ordinal": 129
     },
     {
-      "symbol": "_ZN6Player12St_Talk_InitEv",
+      "symbol": "_ZN7daPly_c12St_Talk_InitEv",
       "address": "0x020c4bd8",
       "size": "0x00000088",
-      "legacy_source": "src/_ZN6Player12St_Talk_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Talk_InitEv.cpp",
       "ordinal": 130
     },
     {
-      "symbol": "_ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh",
+      "symbol": "_ZN7daPly_c12ShowMessage2ER7fBase_cjPK7Vector3hh",
       "address": "0x020c4c60",
       "size": "0x00000260",
-      "legacy_source": "src/_ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh.cpp",
+      "legacy_source": "src/_ZN7daPly_c12ShowMessage2ER7fBase_cjPK7Vector3hh.cpp",
       "ordinal": 131
     },
     {
-      "symbol": "_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh",
+      "symbol": "_ZN7daPly_c11ShowMessageER7fBase_cjPK7Vector3hh",
       "address": "0x020c4ec0",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh.cpp",
+      "legacy_source": "src/_ZN7daPly_c11ShowMessageER7fBase_cjPK7Vector3hh.cpp",
       "ordinal": 132
     },
     {
-      "symbol": "_ZN6Player18HasFinishedTalkingEv",
+      "symbol": "_ZN7daPly_c18HasFinishedTalkingEv",
       "address": "0x020c4efc",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN6Player18HasFinishedTalkingEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18HasFinishedTalkingEv.cpp",
       "ordinal": 133
     },
     {
-      "symbol": "_ZN6Player12Unk_020c4f40Et",
+      "symbol": "_ZN7daPly_c12Unk_020c4f40Et",
       "address": "0x020c4f40",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN6Player12Unk_020c4f40Et.cpp",
+      "legacy_source": "src/_ZN7daPly_c12Unk_020c4f40Et.cpp",
       "ordinal": 134
     },
     {
-      "symbol": "_ZN6Player9StartTalkER7fBase_cb",
+      "symbol": "_ZN7daPly_c9StartTalkER7fBase_cb",
       "address": "0x020c4fa0",
       "size": "0x00000230",
-      "legacy_source": "src/_ZN6Player9StartTalkER7fBase_cb.cpp",
+      "legacy_source": "src/_ZN7daPly_c9StartTalkER7fBase_cb.cpp",
       "ordinal": 135
     },
     {
@@ -1003,45 +1003,45 @@
       "ordinal": 137
     },
     {
-      "symbol": "_ZN6Player12GetTalkStateEv",
+      "symbol": "_ZN7daPly_c12GetTalkStateEv",
       "address": "0x020c524c",
       "size": "0x00000070",
-      "legacy_source": "src/_ZN6Player12GetTalkStateEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12GetTalkStateEv.cpp",
       "ordinal": 138
     },
     {
-      "symbol": "_ZN6Player21St_StuckInGround_MainEv",
+      "symbol": "_ZN7daPly_c21St_StuckInGround_MainEv",
       "address": "0x020c52bc",
       "size": "0x00000188",
-      "legacy_source": "src/_ZN6Player21St_StuckInGround_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_StuckInGround_MainEv.cpp",
       "ordinal": 139
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c5444Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c5444Ev",
       "address": "0x020c5444",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov002_020c5444.cpp",
       "ordinal": 140
     },
     {
-      "symbol": "_ZN6Player21St_StuckInGround_InitEv",
+      "symbol": "_ZN7daPly_c21St_StuckInGround_InitEv",
       "address": "0x020c54e8",
       "size": "0x00000078",
-      "legacy_source": "src/_ZN6Player21St_StuckInGround_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_StuckInGround_InitEv.cpp",
       "ordinal": 141
     },
     {
-      "symbol": "_ZN6Player24St_BowserEarthquake_MainEv",
+      "symbol": "_ZN7daPly_c24St_BowserEarthquake_MainEv",
       "address": "0x020c5560",
       "size": "0x0000012c",
-      "legacy_source": "src/_ZN6Player24St_BowserEarthquake_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c24St_BowserEarthquake_MainEv.cpp",
       "ordinal": 142
     },
     {
-      "symbol": "_ZN6Player24St_BowserEarthquake_InitEv",
+      "symbol": "_ZN7daPly_c24St_BowserEarthquake_InitEv",
       "address": "0x020c568c",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN6Player24St_BowserEarthquake_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c24St_BowserEarthquake_InitEv.cpp",
       "ordinal": 143
     },
     {
@@ -1052,24 +1052,24 @@
       "ordinal": 144
     },
     {
-      "symbol": "_ZN6Player15St_DeadPit_MainEv",
+      "symbol": "_ZN7daPly_c15St_DeadPit_MainEv",
       "address": "0x020c5780",
       "size": "0x00000240",
-      "legacy_source": "src/_ZN6Player15St_DeadPit_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_DeadPit_MainEv.cpp",
       "ordinal": 145
     },
     {
-      "symbol": "_ZN6Player15St_DeadPit_InitEv",
+      "symbol": "_ZN7daPly_c15St_DeadPit_InitEv",
       "address": "0x020c59c0",
       "size": "0x00000308",
-      "legacy_source": "src/_ZN6Player15St_DeadPit_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_DeadPit_InitEv.cpp",
       "ordinal": 146
     },
     {
-      "symbol": "_ZN6Player14EnterWhirlpoolEv",
+      "symbol": "_ZN7daPly_c14EnterWhirlpoolEv",
       "address": "0x020c5cc8",
       "size": "0x00000010",
-      "legacy_source": "src/_ZN6Player14EnterWhirlpoolEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14EnterWhirlpoolEv.cpp",
       "ordinal": 147
     },
     {
@@ -1080,122 +1080,122 @@
       "ordinal": 148
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c5d0cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c5d0cEv",
       "address": "0x020c5d0c",
       "size": "0x00000054",
       "legacy_source": "src/func_ov002_020c5d0c.c",
       "ordinal": 149
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c5d60Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c5d60Ev",
       "address": "0x020c5d60",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020c5d60.c",
       "ordinal": 150
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c5decEi",
+      "symbol": "_ZN7daPly_c19func_ov002_020c5decEi",
       "address": "0x020c5dec",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020c5dec.cpp",
       "ordinal": 151
     },
     {
-      "symbol": "_ZN6Player15St_DeadHit_MainEv",
+      "symbol": "_ZN7daPly_c15St_DeadHit_MainEv",
       "address": "0x020c5e34",
       "size": "0x000001dc",
-      "legacy_source": "src/_ZN6Player15St_DeadHit_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_DeadHit_MainEv.cpp",
       "ordinal": 152
     },
     {
-      "symbol": "_ZN6Player15St_DeadHit_InitEv",
+      "symbol": "_ZN7daPly_c15St_DeadHit_InitEv",
       "address": "0x020c6010",
       "size": "0x0000006c",
-      "legacy_source": "src/_ZN6Player15St_DeadHit_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_DeadHit_InitEv.cpp",
       "ordinal": 153
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c607cEiiPi",
+      "symbol": "_ZN7daPly_c19func_ov002_020c607cEiiPi",
       "address": "0x020c607c",
       "size": "0x00000130",
       "legacy_source": "src/func_ov002_020c607c.cpp",
       "ordinal": 154
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c61acEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c61acEv",
       "address": "0x020c61ac",
       "size": "0x000002d0",
       "legacy_source": "src/func_ov002_020c61ac.c",
       "ordinal": 155
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c647cEi",
+      "symbol": "_ZN7daPly_c19func_ov002_020c647cEi",
       "address": "0x020c647c",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov002_020c647c.cpp",
       "ordinal": 156
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c6538Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c6538Ev",
       "address": "0x020c6538",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov002_020c6538.cpp",
       "ordinal": 157
     },
     {
-      "symbol": "_ZN6Player17St_Squish_CleanupEv",
+      "symbol": "_ZN7daPly_c17St_Squish_CleanupEv",
       "address": "0x020c65f8",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN6Player17St_Squish_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_Squish_CleanupEv.cpp",
       "ordinal": 158
     },
     {
-      "symbol": "_ZN6Player14St_Squish_MainEv",
+      "symbol": "_ZN7daPly_c14St_Squish_MainEv",
       "address": "0x020c662c",
       "size": "0x000002dc",
-      "legacy_source": "src/_ZN6Player14St_Squish_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_Squish_MainEv.cpp",
       "ordinal": 159
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c6908Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c6908Ev",
       "address": "0x020c6908",
       "size": "0x00000098",
       "legacy_source": "src/func_ov002_020c6908.cpp",
       "ordinal": 160
     },
     {
-      "symbol": "_ZN6Player14St_Squish_InitEv",
+      "symbol": "_ZN7daPly_c14St_Squish_InitEv",
       "address": "0x020c69a0",
       "size": "0x00000070",
-      "legacy_source": "src/_ZN6Player14St_Squish_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_Squish_InitEv.cpp",
       "ordinal": 161
     },
     {
-      "symbol": "_ZN6Player12Unk_020c6a10Ej",
+      "symbol": "_ZN7daPly_c12Unk_020c6a10Ej",
       "address": "0x020c6a10",
       "size": "0x000000cc",
-      "legacy_source": "src/_ZN6Player12Unk_020c6a10Ej.cpp",
+      "legacy_source": "src/_ZN7daPly_c12Unk_020c6a10Ej.cpp",
       "ordinal": 162
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c6adcEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c6adcEv",
       "address": "0x020c6adc",
       "size": "0x00000060",
       "legacy_source": "src/func_ov002_020c6adc.cpp",
       "ordinal": 163
     },
     {
-      "symbol": "_ZN6Player16St_Teleport_MainEv",
+      "symbol": "_ZN7daPly_c16St_Teleport_MainEv",
       "address": "0x020c6b3c",
       "size": "0x00000288",
-      "legacy_source": "src/_ZN6Player16St_Teleport_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_Teleport_MainEv.cpp",
       "ordinal": 164
     },
     {
-      "symbol": "_ZN6Player16St_Teleport_InitEv",
+      "symbol": "_ZN7daPly_c16St_Teleport_InitEv",
       "address": "0x020c6dc4",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN6Player16St_Teleport_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_Teleport_InitEv.cpp",
       "ordinal": 165
     },
     {
@@ -1206,42 +1206,42 @@
       "ordinal": 166
     },
     {
-      "symbol": "_ZN6Player21St_LevelEnter_CleanupEv",
+      "symbol": "_ZN7daPly_c21St_LevelEnter_CleanupEv",
       "address": "0x020c6f34",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN6Player21St_LevelEnter_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_LevelEnter_CleanupEv.cpp",
       "ordinal": 167
     },
     {
-      "symbol": "_ZN6Player18St_LevelEnter_MainEv",
+      "symbol": "_ZN7daPly_c18St_LevelEnter_MainEv",
       "address": "0x020c6f3c",
       "size": "0x000000a8",
-      "legacy_source": "src/_ZN6Player18St_LevelEnter_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_LevelEnter_MainEv.cpp",
       "ordinal": 168
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c6fe4Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c6fe4Ev",
       "address": "0x020c6fe4",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov002_020c6fe4.c",
       "ordinal": 169
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c70acEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c70acEv",
       "address": "0x020c70ac",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov002_020c70ac.c",
       "ordinal": 170
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c7194Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c7194Ev",
       "address": "0x020c7194",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020c7194.cpp",
       "ordinal": 171
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c71e0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c71e0Ev",
       "address": "0x020c71e0",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov002_020c71e0.cpp",
@@ -1255,252 +1255,252 @@
       "ordinal": 173
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c7350Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c7350Ev",
       "address": "0x020c7350",
       "size": "0x000002a0",
       "legacy_source": "src/func_ov002_020c7350.cpp",
       "ordinal": 174
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c75f0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c75f0Ev",
       "address": "0x020c75f0",
       "size": "0x00000248",
       "legacy_source": "src/func_ov002_020c75f0.c",
       "ordinal": 175
     },
     {
-      "symbol": "_ZN6Player18St_LevelEnter_InitEv",
+      "symbol": "_ZN7daPly_c18St_LevelEnter_InitEv",
       "address": "0x020c7838",
       "size": "0x00000484",
-      "legacy_source": "src/_ZN6Player18St_LevelEnter_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_LevelEnter_InitEv.cpp",
       "ordinal": 176
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c7cbcEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c7cbcEv",
       "address": "0x020c7cbc",
       "size": "0x00000114",
       "legacy_source": "src/func_ov002_020c7cbc.c",
       "ordinal": 177
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c7dd0Ei",
+      "symbol": "_ZN7daPly_c19func_ov002_020c7dd0Ei",
       "address": "0x020c7dd0",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov002_020c7dd0.cpp",
       "ordinal": 178
     },
     {
-      "symbol": "_ZN6Player15IsEnteringLevelEv",
+      "symbol": "_ZN7daPly_c15IsEnteringLevelEv",
       "address": "0x020c7e84",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN6Player15IsEnteringLevelEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15IsEnteringLevelEv.cpp",
       "ordinal": 179
     },
     {
-      "symbol": "_ZN6Player20IsStateEnteringLevelEv",
+      "symbol": "_ZN7daPly_c20IsStateEnteringLevelEv",
       "address": "0x020c7ed4",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN6Player20IsStateEnteringLevelEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c20IsStateEnteringLevelEv.cpp",
       "ordinal": 180
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c7f10Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c7f10Ev",
       "address": "0x020c7f10",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov002_020c7f10.cpp",
       "ordinal": 181
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c7ff8Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c7ff8Ev",
       "address": "0x020c7ff8",
       "size": "0x00000130",
       "legacy_source": "src/func_ov002_020c7ff8.c",
       "ordinal": 182
     },
     {
-      "symbol": "_ZN6Player20St_NoControl_CleanupEv",
+      "symbol": "_ZN7daPly_c20St_NoControl_CleanupEv",
       "address": "0x020c8128",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN6Player20St_NoControl_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c20St_NoControl_CleanupEv.cpp",
       "ordinal": 183
     },
     {
-      "symbol": "_ZN6Player17St_NoControl_MainEv",
+      "symbol": "_ZN7daPly_c17St_NoControl_MainEv",
       "address": "0x020c816c",
       "size": "0x00000344",
-      "legacy_source": "src/_ZN6Player17St_NoControl_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_NoControl_MainEv.cpp",
       "ordinal": 184
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c84b0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c84b0Ev",
       "address": "0x020c84b0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov002_020c84b0.c",
       "ordinal": 185
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c8540Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c8540Ev",
       "address": "0x020c8540",
       "size": "0x000001d4",
       "legacy_source": "src/func_ov002_020c8540.c",
       "ordinal": 186
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c8714Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c8714Ev",
       "address": "0x020c8714",
       "size": "0x00000268",
       "legacy_source": "src/func_ov002_020c8714.c",
       "ordinal": 187
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c897cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c897cEv",
       "address": "0x020c897c",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov002_020c897c.c",
       "ordinal": 188
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c8a4cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c8a4cEv",
       "address": "0x020c8a4c",
       "size": "0x00000108",
       "legacy_source": "src/func_ov002_020c8a4c.cpp",
       "ordinal": 189
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c8b54Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c8b54Ev",
       "address": "0x020c8b54",
       "size": "0x00000024",
       "legacy_source": "src/func_ov002_020c8b54.c",
       "ordinal": 190
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c8b78Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c8b78Ev",
       "address": "0x020c8b78",
       "size": "0x00000138",
       "legacy_source": "src/func_ov002_020c8b78.cpp",
       "ordinal": 191
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c8cb0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c8cb0Ev",
       "address": "0x020c8cb0",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020c8cb0.cpp",
       "ordinal": 192
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c8d14Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c8d14Ev",
       "address": "0x020c8d14",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov002_020c8d14.c",
       "ordinal": 193
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c8f0cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c8f0cEv",
       "address": "0x020c8f0c",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020c8f0c.cpp",
       "ordinal": 194
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c8f80Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c8f80Ev",
       "address": "0x020c8f80",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov002_020c8f80.cpp",
       "ordinal": 195
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c904cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c904cEv",
       "address": "0x020c904c",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov002_020c904c.c",
       "ordinal": 196
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9128Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9128Ev",
       "address": "0x020c9128",
       "size": "0x00000094",
       "legacy_source": "src/func_ov002_020c9128.cpp",
       "ordinal": 197
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c91bcEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c91bcEv",
       "address": "0x020c91bc",
       "size": "0x00000090",
       "legacy_source": "src/func_ov002_020c91bc.c",
       "ordinal": 198
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c924cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c924cEv",
       "address": "0x020c924c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov002_020c924c.c",
       "ordinal": 199
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9288Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9288Ev",
       "address": "0x020c9288",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020c9288.cpp",
       "ordinal": 200
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c92fcEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c92fcEv",
       "address": "0x020c92fc",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov002_020c92fc.c",
       "ordinal": 201
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c94a4Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c94a4Ev",
       "address": "0x020c94a4",
       "size": "0x000001b8",
       "legacy_source": "src/func_ov002_020c94a4.c",
       "ordinal": 202
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c965cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c965cEv",
       "address": "0x020c965c",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov002_020c965c.c",
       "ordinal": 203
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9718Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9718Ev",
       "address": "0x020c9718",
       "size": "0x00000054",
       "legacy_source": "src/func_ov002_020c9718.c",
       "ordinal": 204
     },
     {
-      "symbol": "_ZN6Player17St_NoControl_InitEv",
+      "symbol": "_ZN7daPly_c17St_NoControl_InitEv",
       "address": "0x020c976c",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN6Player17St_NoControl_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_NoControl_InitEv.cpp",
       "ordinal": 205
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c97e0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c97e0Ev",
       "address": "0x020c97e0",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020c97e0.c",
       "ordinal": 206
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c97f8Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c97f8Ev",
       "address": "0x020c97f8",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020c97f8.cpp",
       "ordinal": 207
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9840Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9840Ev",
       "address": "0x020c9840",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020c9840.cpp",
       "ordinal": 208
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c98a4Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c98a4Ev",
       "address": "0x020c98a4",
       "size": "0x00000068",
       "legacy_source": "src/func_ov002_020c98a4.cpp",
@@ -1521,28 +1521,28 @@
       "ordinal": 211
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9a04Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9a04Ev",
       "address": "0x020c9a04",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov002_020c9a04.c",
       "ordinal": 212
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9ac0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9ac0Ev",
       "address": "0x020c9ac0",
       "size": "0x00000050",
       "legacy_source": "src/func_ov002_020c9ac0.cpp",
       "ordinal": 213
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9b10Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9b10Ev",
       "address": "0x020c9b10",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020c9b10.c",
       "ordinal": 214
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9b5cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9b5cEv",
       "address": "0x020c9b5c",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020c9b5c.c",
@@ -1556,35 +1556,35 @@
       "ordinal": 216
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9c00Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9c00Ev",
       "address": "0x020c9c00",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020c9c00.c",
       "ordinal": 217
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9c4cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9c4cEv",
       "address": "0x020c9c4c",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020c9c4c.c",
       "ordinal": 218
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9cc0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9cc0Ev",
       "address": "0x020c9cc0",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov002_020c9cc0.c",
       "ordinal": 219
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9d1cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9d1cEv",
       "address": "0x020c9d1c",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020c9d1c.c",
       "ordinal": 220
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9d68Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9d68Ev",
       "address": "0x020c9d68",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov002_020c9d68.cpp",
@@ -1598,7 +1598,7 @@
       "ordinal": 222
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020c9e18Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9e18Ev",
       "address": "0x020c9e18",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020c9e18.c",
@@ -1612,10 +1612,10 @@
       "ordinal": 224
     },
     {
-      "symbol": "_ZN6Player12Unk_020c9e5cEh",
+      "symbol": "_ZN7daPly_c12Unk_020c9e5cEh",
       "address": "0x020c9e5c",
       "size": "0x00000298",
-      "legacy_source": "src/_ZN6Player12Unk_020c9e5cEh.cpp",
+      "legacy_source": "src/_ZN7daPly_c12Unk_020c9e5cEh.cpp",
       "ordinal": 225
     },
     {
@@ -1626,31 +1626,31 @@
       "ordinal": 226
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020ca108Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020ca108Ev",
       "address": "0x020ca108",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov002_020ca108.cpp",
       "ordinal": 227
     },
     {
-      "symbol": "_ZN6Player11OpenBigDoorEv",
+      "symbol": "_ZN7daPly_c11OpenBigDoorEv",
       "address": "0x020ca144",
       "size": "0x0000000c",
-      "legacy_source": "src/_ZN6Player11OpenBigDoorEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c11OpenBigDoorEv.cpp",
       "ordinal": 228
     },
     {
-      "symbol": "_ZN6Player12Unk_020ca150Eh",
+      "symbol": "_ZN7daPly_c12Unk_020ca150Eh",
       "address": "0x020ca150",
       "size": "0x00000068",
-      "legacy_source": "src/_ZN6Player12Unk_020ca150Eh.cpp",
+      "legacy_source": "src/_ZN7daPly_c12Unk_020ca150Eh.cpp",
       "ordinal": 229
     },
     {
-      "symbol": "_ZN6Player17SetNoControlStateEhih",
+      "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
       "address": "0x020ca1b8",
       "size": "0x000000b8",
-      "legacy_source": "src/_ZN6Player17SetNoControlStateEhih.cpp",
+      "legacy_source": "src/_ZN7daPly_c17SetNoControlStateEhih.cpp",
       "ordinal": 230
     },
     {
@@ -1661,66 +1661,66 @@
       "ordinal": 231
     },
     {
-      "symbol": "_ZN6Player15JumpIntoBooCageER7Vector3",
+      "symbol": "_ZN7daPly_c15JumpIntoBooCageER7Vector3",
       "address": "0x020ca2ac",
       "size": "0x00000098",
-      "legacy_source": "src/_ZN6Player15JumpIntoBooCageER7Vector3.cpp",
+      "legacy_source": "src/_ZN7daPly_c15JumpIntoBooCageER7Vector3.cpp",
       "ordinal": 232
     },
     {
-      "symbol": "_ZN6Player13TryTalkToDoorEh",
+      "symbol": "_ZN7daPly_c13TryTalkToDoorEh",
       "address": "0x020ca344",
       "size": "0x0000008c",
-      "legacy_source": "src/_ZN6Player13TryTalkToDoorEh.cpp",
+      "legacy_source": "src/_ZN7daPly_c13TryTalkToDoorEh.cpp",
       "ordinal": 233
     },
     {
-      "symbol": "_ZN6Player21IsOpeningDoorWithStarEv",
+      "symbol": "_ZN7daPly_c21IsOpeningDoorWithStarEv",
       "address": "0x020ca3d0",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN6Player21IsOpeningDoorWithStarEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21IsOpeningDoorWithStarEv.cpp",
       "ordinal": 234
     },
     {
-      "symbol": "_ZN6Player16TryTalkToKeyDoorEv",
+      "symbol": "_ZN7daPly_c16TryTalkToKeyDoorEv",
       "address": "0x020ca410",
       "size": "0x00000078",
-      "legacy_source": "src/_ZN6Player16TryTalkToKeyDoorEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16TryTalkToKeyDoorEv.cpp",
       "ordinal": 235
     },
     {
-      "symbol": "_ZN6Player12Unk_020ca488Ev",
+      "symbol": "_ZN7daPly_c12Unk_020ca488Ev",
       "address": "0x020ca488",
       "size": "0x00000010",
-      "legacy_source": "src/_ZN6Player12Unk_020ca488Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c12Unk_020ca488Ev.cpp",
       "ordinal": 236
     },
     {
-      "symbol": "_ZN6Player16TryEnterStarDoorER7Vector3s",
+      "symbol": "_ZN7daPly_c16TryEnterStarDoorER7Vector3s",
       "address": "0x020ca498",
       "size": "0x00000134",
-      "legacy_source": "src/_ZN6Player16TryEnterStarDoorER7Vector3s.cpp",
+      "legacy_source": "src/_ZN7daPly_c16TryEnterStarDoorER7Vector3s.cpp",
       "ordinal": 237
     },
     {
-      "symbol": "_ZN6Player12CanEnterDoorEh",
+      "symbol": "_ZN7daPly_c12CanEnterDoorEh",
       "address": "0x020ca5cc",
       "size": "0x0000013c",
-      "legacy_source": "src/_ZN6Player12CanEnterDoorEh.cpp",
+      "legacy_source": "src/_ZN7daPly_c12CanEnterDoorEh.cpp",
       "ordinal": 238
     },
     {
-      "symbol": "_ZN6Player17PlayMammaMiaSoundEv",
+      "symbol": "_ZN7daPly_c17PlayMammaMiaSoundEv",
       "address": "0x020ca708",
       "size": "0x0000001c",
-      "legacy_source": "src/_ZN6Player17PlayMammaMiaSoundEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17PlayMammaMiaSoundEv.cpp",
       "ordinal": 239
     },
     {
-      "symbol": "_ZN6Player24TryExitWhiteDoorWithStarEv",
+      "symbol": "_ZN7daPly_c24TryExitWhiteDoorWithStarEv",
       "address": "0x020ca724",
       "size": "0x00000068",
-      "legacy_source": "src/_ZN6Player24TryExitWhiteDoorWithStarEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c24TryExitWhiteDoorWithStarEv.cpp",
       "ordinal": 240
     },
     {
@@ -1731,24 +1731,24 @@
       "ordinal": 241
     },
     {
-      "symbol": "_ZN6Player16St_DebugFly_MainEv",
+      "symbol": "_ZN7daPly_c16St_DebugFly_MainEv",
       "address": "0x020ca7f4",
       "size": "0x000000dc",
-      "legacy_source": "src/_ZN6Player16St_DebugFly_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_DebugFly_MainEv.cpp",
       "ordinal": 242
     },
     {
-      "symbol": "_ZN6Player16St_DebugFly_InitEv",
+      "symbol": "_ZN7daPly_c16St_DebugFly_InitEv",
       "address": "0x020ca8d0",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN6Player16St_DebugFly_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_DebugFly_InitEv.cpp",
       "ordinal": 243
     },
     {
-      "symbol": "_ZN6Player12Unk_020ca8f8Ev",
+      "symbol": "_ZN7daPly_c12Unk_020ca8f8Ev",
       "address": "0x020ca8f8",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN6Player12Unk_020ca8f8Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c12Unk_020ca8f8Ev.cpp",
       "ordinal": 244
     },
     {
@@ -1766,31 +1766,31 @@
       "ordinal": 246
     },
     {
-      "symbol": "_ZN6Player15St_Null_CleanupEv",
+      "symbol": "_ZN7daPly_c15St_Null_CleanupEv",
       "address": "0x020cac20",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN6Player15St_Null_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Null_CleanupEv.cpp",
       "ordinal": 247
     },
     {
-      "symbol": "_ZN6Player12St_Null_MainEv",
+      "symbol": "_ZN7daPly_c12St_Null_MainEv",
       "address": "0x020cac28",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN6Player12St_Null_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Null_MainEv.cpp",
       "ordinal": 248
     },
     {
-      "symbol": "_ZN6Player12St_Null_InitEv",
+      "symbol": "_ZN7daPly_c12St_Null_InitEv",
       "address": "0x020cac30",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN6Player12St_Null_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Null_InitEv.cpp",
       "ordinal": 249
     },
     {
-      "symbol": "_ZN6Player21St_CameraZoom_CleanupEv",
+      "symbol": "_ZN7daPly_c21St_CameraZoom_CleanupEv",
       "address": "0x020cac38",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN6Player21St_CameraZoom_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_CameraZoom_CleanupEv.cpp",
       "ordinal": 250
     },
     {
@@ -1801,10 +1801,10 @@
       "ordinal": 251
     },
     {
-      "symbol": "_ZN6Player18St_CameraZoom_MainEv",
+      "symbol": "_ZN7daPly_c18St_CameraZoom_MainEv",
       "address": "0x020cad10",
       "size": "0x00000100",
-      "legacy_source": "src/_ZN6Player18St_CameraZoom_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_CameraZoom_MainEv.cpp",
       "ordinal": 252
     },
     {
@@ -1815,10 +1815,10 @@
       "ordinal": 253
     },
     {
-      "symbol": "_ZN6Player18St_CameraZoom_InitEv",
+      "symbol": "_ZN7daPly_c18St_CameraZoom_InitEv",
       "address": "0x020caef4",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN6Player18St_CameraZoom_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_CameraZoom_InitEv.cpp",
       "ordinal": 254
     },
     {
@@ -1829,24 +1829,24 @@
       "ordinal": 255
     },
     {
-      "symbol": "_ZN6Player10StartClimbEP5dCc_c",
+      "symbol": "_ZN7daPly_c10StartClimbEP5dCc_c",
       "address": "0x020caf98",
       "size": "0x000001c4",
       "legacy_source": "src/func_ov002_020caf98.cpp",
       "ordinal": 256
     },
     {
-      "symbol": "_ZN6Player17St_Headstand_MainEv",
+      "symbol": "_ZN7daPly_c17St_Headstand_MainEv",
       "address": "0x020cb15c",
       "size": "0x00000194",
-      "legacy_source": "src/_ZN6Player17St_Headstand_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_Headstand_MainEv.cpp",
       "ordinal": 257
     },
     {
-      "symbol": "_ZN6Player17St_Headstand_InitEv",
+      "symbol": "_ZN7daPly_c17St_Headstand_InitEv",
       "address": "0x020cb2f0",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN6Player17St_Headstand_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_Headstand_InitEv.cpp",
       "ordinal": 258
     },
     {
@@ -1871,24 +1871,24 @@
       "ordinal": 261
     },
     {
-      "symbol": "_ZN6Player16St_Climb_CleanupEv",
+      "symbol": "_ZN7daPly_c16St_Climb_CleanupEv",
       "address": "0x020cb568",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN6Player16St_Climb_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_Climb_CleanupEv.cpp",
       "ordinal": 262
     },
     {
-      "symbol": "_ZN6Player13St_Climb_MainEv",
+      "symbol": "_ZN7daPly_c13St_Climb_MainEv",
       "address": "0x020cb5bc",
       "size": "0x00000778",
-      "legacy_source": "src/_ZN6Player13St_Climb_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13St_Climb_MainEv.cpp",
       "ordinal": 263
     },
     {
-      "symbol": "_ZN6Player13St_Climb_InitEv",
+      "symbol": "_ZN7daPly_c13St_Climb_InitEv",
       "address": "0x020cbd34",
       "size": "0x00000174",
-      "legacy_source": "src/_ZN6Player13St_Climb_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13St_Climb_InitEv.cpp",
       "ordinal": 264
     },
     {
@@ -1913,10 +1913,10 @@
       "ordinal": 267
     },
     {
-      "symbol": "_ZN6Player9IsOnShellEv",
+      "symbol": "_ZN7daPly_c9IsOnShellEv",
       "address": "0x020cc140",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN6Player9IsOnShellEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c9IsOnShellEv.cpp",
       "ordinal": 268
     },
     {
@@ -1934,17 +1934,17 @@
       "ordinal": 270
     },
     {
-      "symbol": "_ZN6Player16St_Shell_CleanupEv",
+      "symbol": "_ZN7daPly_c16St_Shell_CleanupEv",
       "address": "0x020cc228",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN6Player16St_Shell_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_Shell_CleanupEv.cpp",
       "ordinal": 271
     },
     {
-      "symbol": "_ZN6Player13St_Shell_MainEv",
+      "symbol": "_ZN7daPly_c13St_Shell_MainEv",
       "address": "0x020cc27c",
       "size": "0x000003e4",
-      "legacy_source": "src/_ZN6Player13St_Shell_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13St_Shell_MainEv.cpp",
       "ordinal": 272
     },
     {
@@ -1955,52 +1955,52 @@
       "ordinal": 273
     },
     {
-      "symbol": "_ZN6Player13St_Shell_InitEv",
+      "symbol": "_ZN7daPly_c13St_Shell_InitEv",
       "address": "0x020cc780",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN6Player13St_Shell_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13St_Shell_InitEv.cpp",
       "ordinal": 274
     },
     {
-      "symbol": "_ZN6Player17St_HurtWater_MainEv",
+      "symbol": "_ZN7daPly_c17St_HurtWater_MainEv",
       "address": "0x020cc7d0",
       "size": "0x00000140",
-      "legacy_source": "src/_ZN6Player17St_HurtWater_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_HurtWater_MainEv.cpp",
       "ordinal": 275
     },
     {
-      "symbol": "_ZN6Player17St_HurtWater_InitEv",
+      "symbol": "_ZN7daPly_c17St_HurtWater_InitEv",
       "address": "0x020cc910",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN6Player17St_HurtWater_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_HurtWater_InitEv.cpp",
       "ordinal": 276
     },
     {
-      "symbol": "_ZN6Player23St_MetalWaterWater_MainEv",
+      "symbol": "_ZN7daPly_c23St_MetalWaterWater_MainEv",
       "address": "0x020cc9c0",
       "size": "0x0000027c",
-      "legacy_source": "src/_ZN6Player23St_MetalWaterWater_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c23St_MetalWaterWater_MainEv.cpp",
       "ordinal": 277
     },
     {
-      "symbol": "_ZN6Player23St_MetalWaterWater_InitEv",
+      "symbol": "_ZN7daPly_c23St_MetalWaterWater_InitEv",
       "address": "0x020ccc3c",
       "size": "0x00000090",
-      "legacy_source": "src/_ZN6Player23St_MetalWaterWater_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c23St_MetalWaterWater_InitEv.cpp",
       "ordinal": 278
     },
     {
-      "symbol": "_ZN6Player24St_MetalWaterGround_MainEv",
+      "symbol": "_ZN7daPly_c24St_MetalWaterGround_MainEv",
       "address": "0x020ccccc",
       "size": "0x00000404",
-      "legacy_source": "src/_ZN6Player24St_MetalWaterGround_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c24St_MetalWaterGround_MainEv.cpp",
       "ordinal": 279
     },
     {
-      "symbol": "_ZN6Player24St_MetalWaterGround_InitEv",
+      "symbol": "_ZN7daPly_c24St_MetalWaterGround_InitEv",
       "address": "0x020cd0d0",
       "size": "0x000000c0",
-      "legacy_source": "src/_ZN6Player24St_MetalWaterGround_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c24St_MetalWaterGround_InitEv.cpp",
       "ordinal": 280
     },
     {
@@ -2011,10 +2011,10 @@
       "ordinal": 281
     },
     {
-      "symbol": "_ZN6Player15St_Swim_CleanupEv",
+      "symbol": "_ZN7daPly_c15St_Swim_CleanupEv",
       "address": "0x020cd1e4",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN6Player15St_Swim_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Swim_CleanupEv.cpp",
       "ordinal": 282
     },
     {
@@ -2088,10 +2088,10 @@
       "ordinal": 292
     },
     {
-      "symbol": "_ZN6Player12St_Swim_MainEv",
+      "symbol": "_ZN7daPly_c12St_Swim_MainEv",
       "address": "0x020cd94c",
       "size": "0x000009d8",
-      "legacy_source": "src/_ZN6Player12St_Swim_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Swim_MainEv.cpp",
       "ordinal": 293
     },
     {
@@ -2102,10 +2102,10 @@
       "ordinal": 294
     },
     {
-      "symbol": "_ZN6Player12St_Swim_InitEv",
+      "symbol": "_ZN7daPly_c12St_Swim_InitEv",
       "address": "0x020ce550",
       "size": "0x000000a8",
-      "legacy_source": "src/_ZN6Player12St_Swim_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Swim_InitEv.cpp",
       "ordinal": 295
     },
     {
@@ -2172,7 +2172,7 @@
       "ordinal": 304
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020cede0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020cede0Ev",
       "address": "0x020cede0",
       "size": "0x000001a4",
       "legacy_source": "src/func_ov002_020cede0.cpp",
@@ -2207,17 +2207,17 @@
       "ordinal": 309
     },
     {
-      "symbol": "_ZN6Player20St_CeilingGrate_MainEv",
+      "symbol": "_ZN7daPly_c20St_CeilingGrate_MainEv",
       "address": "0x020cf398",
       "size": "0x00000324",
-      "legacy_source": "src/_ZN6Player20St_CeilingGrate_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c20St_CeilingGrate_MainEv.cpp",
       "ordinal": 310
     },
     {
-      "symbol": "_ZN6Player20St_CeilingGrate_InitEv",
+      "symbol": "_ZN7daPly_c20St_CeilingGrate_InitEv",
       "address": "0x020cf6bc",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN6Player20St_CeilingGrate_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c20St_CeilingGrate_InitEv.cpp",
       "ordinal": 311
     },
     {
@@ -2228,17 +2228,17 @@
       "ordinal": 312
     },
     {
-      "symbol": "_ZN6Player14St_OnWall_MainEv",
+      "symbol": "_ZN7daPly_c14St_OnWall_MainEv",
       "address": "0x020cf714",
       "size": "0x0000037c",
-      "legacy_source": "src/_ZN6Player14St_OnWall_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_OnWall_MainEv.cpp",
       "ordinal": 313
     },
     {
-      "symbol": "_ZN6Player14St_OnWall_InitEv",
+      "symbol": "_ZN7daPly_c14St_OnWall_InitEv",
       "address": "0x020cfa90",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN6Player14St_OnWall_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_OnWall_InitEv.cpp",
       "ordinal": 314
     },
     {
@@ -2291,24 +2291,24 @@
       "ordinal": 321
     },
     {
-      "symbol": "_ZN6Player17St_LedgeGrab_MainEv",
+      "symbol": "_ZN7daPly_c17St_LedgeGrab_MainEv",
       "address": "0x020d0824",
       "size": "0x0000008c",
-      "legacy_source": "src/_ZN6Player17St_LedgeGrab_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_LedgeGrab_MainEv.cpp",
       "ordinal": 322
     },
     {
-      "symbol": "_ZN6Player17St_LedgeGrab_InitEv",
+      "symbol": "_ZN7daPly_c17St_LedgeGrab_InitEv",
       "address": "0x020d08b0",
       "size": "0x0000007c",
-      "legacy_source": "src/_ZN6Player17St_LedgeGrab_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_LedgeGrab_InitEv.cpp",
       "ordinal": 323
     },
     {
-      "symbol": "_ZN6Player20St_LedgeHang_CleanupEv",
+      "symbol": "_ZN7daPly_c20St_LedgeHang_CleanupEv",
       "address": "0x020d092c",
       "size": "0x0000001c",
-      "legacy_source": "src/_ZN6Player20St_LedgeHang_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c20St_LedgeHang_CleanupEv.cpp",
       "ordinal": 324
     },
     {
@@ -2319,17 +2319,17 @@
       "ordinal": 325
     },
     {
-      "symbol": "_ZN6Player17St_LedgeHang_MainEv",
+      "symbol": "_ZN7daPly_c17St_LedgeHang_MainEv",
       "address": "0x020d0a44",
       "size": "0x00000210",
-      "legacy_source": "src/_ZN6Player17St_LedgeHang_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_LedgeHang_MainEv.cpp",
       "ordinal": 326
     },
     {
-      "symbol": "_ZN6Player17St_LedgeHang_InitEv",
+      "symbol": "_ZN7daPly_c17St_LedgeHang_InitEv",
       "address": "0x020d0c54",
       "size": "0x000000d8",
-      "legacy_source": "src/_ZN6Player17St_LedgeHang_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_LedgeHang_InitEv.cpp",
       "ordinal": 327
     },
     {
@@ -2340,31 +2340,31 @@
       "ordinal": 328
     },
     {
-      "symbol": "_ZN6Player17St_WallSlide_MainEv",
+      "symbol": "_ZN7daPly_c17St_WallSlide_MainEv",
       "address": "0x020d0d78",
       "size": "0x00000114",
-      "legacy_source": "src/_ZN6Player17St_WallSlide_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_WallSlide_MainEv.cpp",
       "ordinal": 329
     },
     {
-      "symbol": "_ZN6Player17St_WallSlide_InitEv",
+      "symbol": "_ZN7daPly_c17St_WallSlide_InitEv",
       "address": "0x020d0e8c",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN6Player17St_WallSlide_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_WallSlide_InitEv.cpp",
       "ordinal": 330
     },
     {
-      "symbol": "_ZN6Player13St_Crawl_MainEv",
+      "symbol": "_ZN7daPly_c13St_Crawl_MainEv",
       "address": "0x020d0ee0",
       "size": "0x0000024c",
-      "legacy_source": "src/_ZN6Player13St_Crawl_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13St_Crawl_MainEv.cpp",
       "ordinal": 331
     },
     {
-      "symbol": "_ZN6Player13St_Crawl_InitEv",
+      "symbol": "_ZN7daPly_c13St_Crawl_InitEv",
       "address": "0x020d112c",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN6Player13St_Crawl_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13St_Crawl_InitEv.cpp",
       "ordinal": 332
     },
     {
@@ -2389,52 +2389,52 @@
       "ordinal": 335
     },
     {
-      "symbol": "_ZN6Player14St_Crouch_MainEv",
+      "symbol": "_ZN7daPly_c14St_Crouch_MainEv",
       "address": "0x020d1354",
       "size": "0x0000028c",
-      "legacy_source": "src/_ZN6Player14St_Crouch_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_Crouch_MainEv.cpp",
       "ordinal": 336
     },
     {
-      "symbol": "_ZN6Player14St_Crouch_InitEv",
+      "symbol": "_ZN7daPly_c14St_Crouch_InitEv",
       "address": "0x020d15e0",
       "size": "0x000000dc",
-      "legacy_source": "src/_ZN6Player14St_Crouch_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_Crouch_InitEv.cpp",
       "ordinal": 337
     },
     {
-      "symbol": "_ZN6Player17St_HoldHeavy_MainEv",
+      "symbol": "_ZN7daPly_c17St_HoldHeavy_MainEv",
       "address": "0x020d16bc",
       "size": "0x000002ec",
-      "legacy_source": "src/_ZN6Player17St_HoldHeavy_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_HoldHeavy_MainEv.cpp",
       "ordinal": 338
     },
     {
-      "symbol": "_ZN6Player17St_HoldHeavy_InitEv",
+      "symbol": "_ZN7daPly_c17St_HoldHeavy_InitEv",
       "address": "0x020d19a8",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN6Player17St_HoldHeavy_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_HoldHeavy_InitEv.cpp",
       "ordinal": 339
     },
     {
-      "symbol": "_ZN6Player20St_HoldLight_CleanupEv",
+      "symbol": "_ZN7daPly_c20St_HoldLight_CleanupEv",
       "address": "0x020d19fc",
       "size": "0x00000020",
-      "legacy_source": "src/_ZN6Player20St_HoldLight_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c20St_HoldLight_CleanupEv.cpp",
       "ordinal": 340
     },
     {
-      "symbol": "_ZN6Player17St_HoldLight_MainEv",
+      "symbol": "_ZN7daPly_c17St_HoldLight_MainEv",
       "address": "0x020d1a1c",
       "size": "0x00000484",
-      "legacy_source": "src/_ZN6Player17St_HoldLight_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_HoldLight_MainEv.cpp",
       "ordinal": 341
     },
     {
-      "symbol": "_ZN6Player17St_HoldLight_InitEv",
+      "symbol": "_ZN7daPly_c17St_HoldLight_InitEv",
       "address": "0x020d1ea0",
       "size": "0x000000d8",
-      "legacy_source": "src/_ZN6Player17St_HoldLight_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_HoldLight_InitEv.cpp",
       "ordinal": 342
     },
     {
@@ -2445,17 +2445,17 @@
       "ordinal": 343
     },
     {
-      "symbol": "_ZN6Player21St_WaitQuicksand_MainEv",
+      "symbol": "_ZN7daPly_c21St_WaitQuicksand_MainEv",
       "address": "0x020d2184",
       "size": "0x000000a0",
-      "legacy_source": "src/_ZN6Player21St_WaitQuicksand_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_WaitQuicksand_MainEv.cpp",
       "ordinal": 344
     },
     {
-      "symbol": "_ZN6Player21St_WaitQuicksand_InitEv",
+      "symbol": "_ZN7daPly_c21St_WaitQuicksand_InitEv",
       "address": "0x020d2224",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN6Player21St_WaitQuicksand_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_WaitQuicksand_InitEv.cpp",
       "ordinal": 345
     },
     {
@@ -2480,17 +2480,17 @@
       "ordinal": 348
     },
     {
-      "symbol": "_ZN6Player15St_Wait_CleanupEv",
+      "symbol": "_ZN7daPly_c15St_Wait_CleanupEv",
       "address": "0x020d2378",
       "size": "0x0000008c",
-      "legacy_source": "src/_ZN6Player15St_Wait_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Wait_CleanupEv.cpp",
       "ordinal": 349
     },
     {
-      "symbol": "_ZN6Player12St_Wait_MainEv",
+      "symbol": "_ZN7daPly_c12St_Wait_MainEv",
       "address": "0x020d2404",
       "size": "0x0000099c",
-      "legacy_source": "src/_ZN6Player12St_Wait_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Wait_MainEv.cpp",
       "ordinal": 350
     },
     {
@@ -2522,10 +2522,10 @@
       "ordinal": 354
     },
     {
-      "symbol": "_ZN6Player12St_Wait_InitEv",
+      "symbol": "_ZN7daPly_c12St_Wait_InitEv",
       "address": "0x020d32bc",
       "size": "0x000001dc",
-      "legacy_source": "src/_ZN6Player12St_Wait_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Wait_InitEv.cpp",
       "ordinal": 355
     },
     {
@@ -2536,17 +2536,17 @@
       "ordinal": 356
     },
     {
-      "symbol": "_ZN6Player18St_TurnAround_MainEv",
+      "symbol": "_ZN7daPly_c18St_TurnAround_MainEv",
       "address": "0x020d34bc",
       "size": "0x000001e0",
-      "legacy_source": "src/_ZN6Player18St_TurnAround_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_TurnAround_MainEv.cpp",
       "ordinal": 357
     },
     {
-      "symbol": "_ZN6Player18St_TurnAround_InitEv",
+      "symbol": "_ZN7daPly_c18St_TurnAround_InitEv",
       "address": "0x020d369c",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN6Player18St_TurnAround_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_TurnAround_InitEv.cpp",
       "ordinal": 358
     },
     {
@@ -2557,10 +2557,10 @@
       "ordinal": 359
     },
     {
-      "symbol": "_ZN6Player12St_Walk_MainEv",
+      "symbol": "_ZN7daPly_c12St_Walk_MainEv",
       "address": "0x020d38c0",
       "size": "0x000002dc",
-      "legacy_source": "src/_ZN6Player12St_Walk_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Walk_MainEv.cpp",
       "ordinal": 360
     },
     {
@@ -2578,10 +2578,10 @@
       "ordinal": 362
     },
     {
-      "symbol": "_ZN6Player12St_Walk_InitEv",
+      "symbol": "_ZN7daPly_c12St_Walk_InitEv",
       "address": "0x020d4270",
       "size": "0x000002d0",
-      "legacy_source": "src/_ZN6Player12St_Walk_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Walk_InitEv.cpp",
       "ordinal": 363
     },
     {
@@ -2606,10 +2606,10 @@
       "ordinal": 366
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d4748Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020d4748Ev",
       "address": "0x020d4748",
       "size": "0x000004e8",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d4748Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d4748Ev.cpp",
       "ordinal": 367
     },
     {
@@ -2627,87 +2627,87 @@
       "ordinal": 369
     },
     {
-      "symbol": "_ZN6Player12St_Bonk_MainEv",
+      "symbol": "_ZN7daPly_c12St_Bonk_MainEv",
       "address": "0x020d4de8",
       "size": "0x000001a4",
-      "legacy_source": "src/_ZN6Player12St_Bonk_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Bonk_MainEv.cpp",
       "ordinal": 370
     },
     {
-      "symbol": "_ZN6Player12St_Bonk_InitEv",
+      "symbol": "_ZN7daPly_c12St_Bonk_InitEv",
       "address": "0x020d4f8c",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN6Player12St_Bonk_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Bonk_InitEv.cpp",
       "ordinal": 371
     },
     {
-      "symbol": "_ZN6Player8BlowAwayEs",
+      "symbol": "_ZN7daPly_c8BlowAwayEs",
       "address": "0x020d4fe4",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN6Player8BlowAwayEs.cpp",
+      "legacy_source": "src/_ZN7daPly_c8BlowAwayEs.cpp",
       "ordinal": 372
     },
     {
-      "symbol": "_ZN6Player16St_BurnLava_MainEv",
+      "symbol": "_ZN7daPly_c16St_BurnLava_MainEv",
       "address": "0x020d5038",
       "size": "0x00000264",
-      "legacy_source": "src/_ZN6Player16St_BurnLava_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_BurnLava_MainEv.cpp",
       "ordinal": 373
     },
     {
-      "symbol": "_ZN6Player16St_BurnLava_InitEv",
+      "symbol": "_ZN7daPly_c16St_BurnLava_InitEv",
       "address": "0x020d529c",
       "size": "0x0000009c",
-      "legacy_source": "src/_ZN6Player16St_BurnLava_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_BurnLava_InitEv.cpp",
       "ordinal": 374
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d5338Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020d5338Ev",
       "address": "0x020d5338",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d5338Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d5338Ev.cpp",
       "ordinal": 375
     },
     {
-      "symbol": "_ZN6Player16St_BurnFire_MainEv",
+      "symbol": "_ZN7daPly_c16St_BurnFire_MainEv",
       "address": "0x020d53ac",
       "size": "0x000003a4",
-      "legacy_source": "src/_ZN6Player16St_BurnFire_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_BurnFire_MainEv.cpp",
       "ordinal": 376
     },
     {
-      "symbol": "_ZN6Player16St_BurnFire_InitEv",
+      "symbol": "_ZN7daPly_c16St_BurnFire_InitEv",
       "address": "0x020d5750",
       "size": "0x00000088",
-      "legacy_source": "src/_ZN6Player16St_BurnFire_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_BurnFire_InitEv.cpp",
       "ordinal": 377
     },
     {
-      "symbol": "_ZN6Player4BurnEv",
+      "symbol": "_ZN7daPly_c4BurnEv",
       "address": "0x020d57d8",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN6Player4BurnEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c4BurnEv.cpp",
       "ordinal": 378
     },
     {
-      "symbol": "_ZN6Player19St_Electrocute_MainEv",
+      "symbol": "_ZN7daPly_c19St_Electrocute_MainEv",
       "address": "0x020d5834",
       "size": "0x0000017c",
-      "legacy_source": "src/_ZN6Player19St_Electrocute_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19St_Electrocute_MainEv.cpp",
       "ordinal": 379
     },
     {
-      "symbol": "_ZN6Player19St_Electrocute_InitEv",
+      "symbol": "_ZN7daPly_c19St_Electrocute_InitEv",
       "address": "0x020d59b0",
       "size": "0x0000006c",
-      "legacy_source": "src/_ZN6Player19St_Electrocute_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19St_Electrocute_InitEv.cpp",
       "ordinal": 380
     },
     {
-      "symbol": "_ZN6Player5ShockEj",
+      "symbol": "_ZN7daPly_c5ShockEj",
       "address": "0x020d5a1c",
       "size": "0x00000098",
-      "legacy_source": "src/_ZN6Player5ShockEj.cpp",
+      "legacy_source": "src/_ZN7daPly_c5ShockEj.cpp",
       "ordinal": 381
     },
     {
@@ -2732,10 +2732,10 @@
       "ordinal": 384
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d5ed0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020d5ed0Ev",
       "address": "0x020d5ed0",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d5ed0Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d5ed0Ev.cpp",
       "ordinal": 385
     },
     {
@@ -2746,10 +2746,10 @@
       "ordinal": 386
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d5f98EPhS0_",
+      "symbol": "_ZN7daPly_c19func_ov002_020d5f98EPhS0_",
       "address": "0x020d5f98",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d5f98EPhS0_.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d5f98EPhS0_.cpp",
       "ordinal": 387
     },
     {
@@ -2760,31 +2760,31 @@
       "ordinal": 388
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d6048Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020d6048Ev",
       "address": "0x020d6048",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d6048Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d6048Ev.cpp",
       "ordinal": 389
     },
     {
-      "symbol": "_ZN6Player23St_InYoshiMouth_CleanupEv",
+      "symbol": "_ZN7daPly_c23St_InYoshiMouth_CleanupEv",
       "address": "0x020d6084",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN6Player23St_InYoshiMouth_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c23St_InYoshiMouth_CleanupEv.cpp",
       "ordinal": 390
     },
     {
-      "symbol": "_ZN6Player20St_InYoshiMouth_MainEv",
+      "symbol": "_ZN7daPly_c20St_InYoshiMouth_MainEv",
       "address": "0x020d60b8",
       "size": "0x00000240",
-      "legacy_source": "src/_ZN6Player20St_InYoshiMouth_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c20St_InYoshiMouth_MainEv.cpp",
       "ordinal": 391
     },
     {
-      "symbol": "_ZN6Player20St_InYoshiMouth_InitEv",
+      "symbol": "_ZN7daPly_c20St_InYoshiMouth_InitEv",
       "address": "0x020d62f8",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN6Player20St_InYoshiMouth_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c20St_InYoshiMouth_InitEv.cpp",
       "ordinal": 392
     },
     {
@@ -2802,24 +2802,24 @@
       "ordinal": 394
     },
     {
-      "symbol": "_ZN6Player15St_Swallow_MainEv",
+      "symbol": "_ZN7daPly_c15St_Swallow_MainEv",
       "address": "0x020d6474",
       "size": "0x000001f8",
-      "legacy_source": "src/_ZN6Player15St_Swallow_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Swallow_MainEv.cpp",
       "ordinal": 395
     },
     {
-      "symbol": "_ZN6Player15St_Swallow_InitEv",
+      "symbol": "_ZN7daPly_c15St_Swallow_InitEv",
       "address": "0x020d666c",
       "size": "0x0000009c",
-      "legacy_source": "src/_ZN6Player15St_Swallow_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Swallow_InitEv.cpp",
       "ordinal": 396
     },
     {
-      "symbol": "_ZN6Player20RegisterEggCoinCountEjbb",
+      "symbol": "_ZN7daPly_c20RegisterEggCoinCountEjbb",
       "address": "0x020d6708",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN6Player20RegisterEggCoinCountEjbb.cpp",
+      "legacy_source": "src/_ZN7daPly_c20RegisterEggCoinCountEjbb.cpp",
       "ordinal": 397
     },
     {
@@ -2837,10 +2837,10 @@
       "ordinal": 399
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d6998Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020d6998Ev",
       "address": "0x020d6998",
       "size": "0x000002c8",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d6998Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d6998Ev.cpp",
       "ordinal": 400
     },
     {
@@ -2865,24 +2865,24 @@
       "ordinal": 403
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d708cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020d708cEv",
       "address": "0x020d708c",
       "size": "0x00000100",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d708cEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d708cEv.cpp",
       "ordinal": 404
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d718cEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020d718cEv",
       "address": "0x020d718c",
       "size": "0x00000014",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d718cEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d718cEv.cpp",
       "ordinal": 405
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d71a0Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020d71a0Ev",
       "address": "0x020d71a0",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d71a0Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d71a0Ev.cpp",
       "ordinal": 406
     },
     {
@@ -2893,10 +2893,10 @@
       "ordinal": 407
     },
     {
-      "symbol": "_ZN6Player21St_YoshiPower_CleanupEv",
+      "symbol": "_ZN7daPly_c21St_YoshiPower_CleanupEv",
       "address": "0x020d736c",
       "size": "0x000000c4",
-      "legacy_source": "src/_ZN6Player21St_YoshiPower_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_YoshiPower_CleanupEv.cpp",
       "ordinal": 408
     },
     {
@@ -2907,17 +2907,17 @@
       "ordinal": 409
     },
     {
-      "symbol": "_ZN6Player18St_YoshiPower_MainEv",
+      "symbol": "_ZN7daPly_c18St_YoshiPower_MainEv",
       "address": "0x020d7504",
       "size": "0x000009cc",
-      "legacy_source": "src/_ZN6Player18St_YoshiPower_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_YoshiPower_MainEv.cpp",
       "ordinal": 410
     },
     {
-      "symbol": "_ZN6Player18St_YoshiPower_InitEv",
+      "symbol": "_ZN7daPly_c18St_YoshiPower_InitEv",
       "address": "0x020d7ed0",
       "size": "0x00000200",
-      "legacy_source": "src/_ZN6Player18St_YoshiPower_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_YoshiPower_InitEv.cpp",
       "ordinal": 411
     },
     {
@@ -2942,31 +2942,31 @@
       "ordinal": 414
     },
     {
-      "symbol": "_ZN6Player13InitFireYoshiEv",
+      "symbol": "_ZN7daPly_c13InitFireYoshiEv",
       "address": "0x020d8228",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN6Player13InitFireYoshiEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13InitFireYoshiEv.cpp",
       "ordinal": 415
     },
     {
-      "symbol": "_ZN6Player21St_DizzyStars_CleanupEv",
+      "symbol": "_ZN7daPly_c21St_DizzyStars_CleanupEv",
       "address": "0x020d8274",
       "size": "0x00000018",
-      "legacy_source": "src/_ZN6Player21St_DizzyStars_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_DizzyStars_CleanupEv.cpp",
       "ordinal": 416
     },
     {
-      "symbol": "_ZN6Player18St_DizzyStars_MainEv",
+      "symbol": "_ZN7daPly_c18St_DizzyStars_MainEv",
       "address": "0x020d828c",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN6Player18St_DizzyStars_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_DizzyStars_MainEv.cpp",
       "ordinal": 417
     },
     {
-      "symbol": "_ZN6Player18St_DizzyStars_InitEv",
+      "symbol": "_ZN7daPly_c18St_DizzyStars_InitEv",
       "address": "0x020d82cc",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN6Player18St_DizzyStars_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_DizzyStars_InitEv.cpp",
       "ordinal": 418
     },
     {
@@ -3040,10 +3040,10 @@
       "ordinal": 428
     },
     {
-      "symbol": "_ZN6Player4HurtERK7Vector3jihhh",
+      "symbol": "_ZN7daPly_c4HurtERK7Vector3jihhh",
       "address": "0x020d8e70",
       "size": "0x00000348",
-      "legacy_source": "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp",
+      "legacy_source": "src/_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj.cpp",
       "ordinal": 429
     },
     {
@@ -3068,45 +3068,45 @@
       "ordinal": 432
     },
     {
-      "symbol": "_ZN6Player6BounceEi",
+      "symbol": "_ZN7daPly_c6BounceEi",
       "address": "0x020d932c",
       "size": "0x00000080",
-      "legacy_source": "src/_ZN6Player6BounceE5Fix12IiE.cpp",
+      "legacy_source": "src/_ZN7daPly_c6BounceE5Fix12IiE.cpp",
       "ordinal": 433
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d93acEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020d93acEv",
       "address": "0x020d93ac",
       "size": "0x00000120",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d93acEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d93acEv.cpp",
       "ordinal": 434
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d94ccEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020d94ccEv",
       "address": "0x020d94cc",
       "size": "0x00000188",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d94ccEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d94ccEv.cpp",
       "ordinal": 435
     },
     {
-      "symbol": "_ZN6Player15St_Hurt_CleanupEv",
+      "symbol": "_ZN7daPly_c15St_Hurt_CleanupEv",
       "address": "0x020d9654",
       "size": "0x00000018",
-      "legacy_source": "src/_ZN6Player15St_Hurt_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Hurt_CleanupEv.cpp",
       "ordinal": 436
     },
     {
-      "symbol": "_ZN6Player12St_Hurt_MainEv",
+      "symbol": "_ZN7daPly_c12St_Hurt_MainEv",
       "address": "0x020d966c",
       "size": "0x00000248",
-      "legacy_source": "src/_ZN6Player12St_Hurt_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Hurt_MainEv.cpp",
       "ordinal": 437
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020d98b4Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020d98b4Ev",
       "address": "0x020d98b4",
       "size": "0x000000f0",
-      "legacy_source": "src/_ZN6Player19func_ov002_020d98b4Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020d98b4Ev.cpp",
       "ordinal": 438
     },
     {
@@ -3131,17 +3131,17 @@
       "ordinal": 441
     },
     {
-      "symbol": "_ZN6Player12St_Hurt_InitEv",
+      "symbol": "_ZN7daPly_c12St_Hurt_InitEv",
       "address": "0x020d9b68",
       "size": "0x000000dc",
-      "legacy_source": "src/_ZN6Player12St_Hurt_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Hurt_InitEv.cpp",
       "ordinal": 442
     },
     {
-      "symbol": "_ZN6Player12GetHurtStateEv",
+      "symbol": "_ZN7daPly_c12GetHurtStateEv",
       "address": "0x020d9c44",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN6Player12GetHurtStateEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12GetHurtStateEv.cpp",
       "ordinal": 443
     },
     {
@@ -3159,52 +3159,52 @@
       "ordinal": 445
     },
     {
-      "symbol": "_ZN6Player22St_SwingPlayer_CleanupEv",
+      "symbol": "_ZN7daPly_c22St_SwingPlayer_CleanupEv",
       "address": "0x020d9fc4",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN6Player22St_SwingPlayer_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c22St_SwingPlayer_CleanupEv.cpp",
       "ordinal": 446
     },
     {
-      "symbol": "_ZN6Player19St_SwingPlayer_MainEv",
+      "symbol": "_ZN7daPly_c19St_SwingPlayer_MainEv",
       "address": "0x020d9fec",
       "size": "0x000003c4",
-      "legacy_source": "src/_ZN6Player19St_SwingPlayer_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19St_SwingPlayer_MainEv.cpp",
       "ordinal": 447
     },
     {
-      "symbol": "_ZN6Player19St_SwingPlayer_InitEv",
+      "symbol": "_ZN7daPly_c19St_SwingPlayer_InitEv",
       "address": "0x020da3b0",
       "size": "0x0000006c",
-      "legacy_source": "src/_ZN6Player19St_SwingPlayer_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19St_SwingPlayer_InitEv.cpp",
       "ordinal": 448
     },
     {
-      "symbol": "_ZN6Player25St_GrabBowserTail_CleanupEv",
+      "symbol": "_ZN7daPly_c25St_GrabBowserTail_CleanupEv",
       "address": "0x020da41c",
       "size": "0x0000001c",
-      "legacy_source": "src/_ZN6Player25St_GrabBowserTail_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c25St_GrabBowserTail_CleanupEv.cpp",
       "ordinal": 449
     },
     {
-      "symbol": "_ZN6Player22St_GrabBowserTail_MainEv",
+      "symbol": "_ZN7daPly_c22St_GrabBowserTail_MainEv",
       "address": "0x020da438",
       "size": "0x0000035c",
-      "legacy_source": "src/_ZN6Player22St_GrabBowserTail_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c22St_GrabBowserTail_MainEv.cpp",
       "ordinal": 450
     },
     {
-      "symbol": "_ZN6Player22St_GrabBowserTail_InitEv",
+      "symbol": "_ZN7daPly_c22St_GrabBowserTail_InitEv",
       "address": "0x020da794",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN6Player22St_GrabBowserTail_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c22St_GrabBowserTail_InitEv.cpp",
       "ordinal": 451
     },
     {
-      "symbol": "_ZN6Player9DropActorEv",
+      "symbol": "_ZN7daPly_c9DropActorEv",
       "address": "0x020da7f4",
       "size": "0x00000168",
-      "legacy_source": "src/_ZN6Player9DropActorEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c9DropActorEv.cpp",
       "ordinal": 452
     },
     {
@@ -3222,10 +3222,10 @@
       "ordinal": 454
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020daa74Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020daa74Ev",
       "address": "0x020daa74",
       "size": "0x000000a0",
-      "legacy_source": "src/_ZN6Player19func_ov002_020daa74Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020daa74Ev.cpp",
       "ordinal": 455
     },
     {
@@ -3236,10 +3236,10 @@
       "ordinal": 456
     },
     {
-      "symbol": "_ZN6Player7TryGrabER8dActor_c",
+      "symbol": "_ZN7daPly_c7TryGrabER8dActor_c",
       "address": "0x020daba0",
       "size": "0x00000114",
-      "legacy_source": "src/_ZN6Player7TryGrabER8dActor_c.cpp",
+      "legacy_source": "src/_ZN7daPly_c7TryGrabER8dActor_c.cpp",
       "ordinal": 457
     },
     {
@@ -3250,59 +3250,59 @@
       "ordinal": 458
     },
     {
-      "symbol": "_ZN6Player13St_Throw_MainEv",
+      "symbol": "_ZN7daPly_c13St_Throw_MainEv",
       "address": "0x020dae6c",
       "size": "0x00000168",
-      "legacy_source": "src/_ZN6Player13St_Throw_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13St_Throw_MainEv.cpp",
       "ordinal": 459
     },
     {
-      "symbol": "_ZN6Player13St_Throw_InitEv",
+      "symbol": "_ZN7daPly_c13St_Throw_InitEv",
       "address": "0x020dafd4",
       "size": "0x000000d0",
-      "legacy_source": "src/_ZN6Player13St_Throw_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13St_Throw_InitEv.cpp",
       "ordinal": 460
     },
     {
-      "symbol": "_ZN6Player17St_Thrown_CleanupEv",
+      "symbol": "_ZN7daPly_c17St_Thrown_CleanupEv",
       "address": "0x020db0a4",
       "size": "0x00000018",
-      "legacy_source": "src/_ZN6Player17St_Thrown_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_Thrown_CleanupEv.cpp",
       "ordinal": 461
     },
     {
-      "symbol": "_ZN6Player14St_Thrown_MainEv",
+      "symbol": "_ZN7daPly_c14St_Thrown_MainEv",
       "address": "0x020db0bc",
       "size": "0x0000022c",
-      "legacy_source": "src/_ZN6Player14St_Thrown_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_Thrown_MainEv.cpp",
       "ordinal": 462
     },
     {
-      "symbol": "_ZN6Player14St_Thrown_InitEv",
+      "symbol": "_ZN7daPly_c14St_Thrown_InitEv",
       "address": "0x020db2e8",
       "size": "0x00000080",
-      "legacy_source": "src/_ZN6Player14St_Thrown_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_Thrown_InitEv.cpp",
       "ordinal": 463
     },
     {
-      "symbol": "_ZN6Player18St_Grabbed_CleanupEv",
+      "symbol": "_ZN7daPly_c18St_Grabbed_CleanupEv",
       "address": "0x020db368",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN6Player18St_Grabbed_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_Grabbed_CleanupEv.cpp",
       "ordinal": 464
     },
     {
-      "symbol": "_ZN6Player15St_Grabbed_MainEv",
+      "symbol": "_ZN7daPly_c15St_Grabbed_MainEv",
       "address": "0x020db3bc",
       "size": "0x0000011c",
-      "legacy_source": "src/_ZN6Player15St_Grabbed_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Grabbed_MainEv.cpp",
       "ordinal": 465
     },
     {
-      "symbol": "_ZN6Player15St_Grabbed_InitEv",
+      "symbol": "_ZN7daPly_c15St_Grabbed_InitEv",
       "address": "0x020db4d8",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN6Player15St_Grabbed_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Grabbed_InitEv.cpp",
       "ordinal": 466
     },
     {
@@ -3341,10 +3341,10 @@
       "ordinal": 471
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020db8d8Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020db8d8Ev",
       "address": "0x020db8d8",
       "size": "0x00000134",
-      "legacy_source": "src/_ZN6Player19func_ov002_020db8d8Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_c19func_ov002_020db8d8Ev.cpp",
       "ordinal": 472
     },
     {
@@ -3418,31 +3418,31 @@
       "ordinal": 482
     },
     {
-      "symbol": "_ZN6Player17St_SlideKick_MainEv",
+      "symbol": "_ZN7daPly_c17St_SlideKick_MainEv",
       "address": "0x020dc1d0",
       "size": "0x00000210",
-      "legacy_source": "src/_ZN6Player17St_SlideKick_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_SlideKick_MainEv.cpp",
       "ordinal": 483
     },
     {
-      "symbol": "_ZN6Player17St_SlideKick_InitEv",
+      "symbol": "_ZN7daPly_c17St_SlideKick_InitEv",
       "address": "0x020dc3e0",
       "size": "0x000000ac",
-      "legacy_source": "src/_ZN6Player17St_SlideKick_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_SlideKick_InitEv.cpp",
       "ordinal": 484
     },
     {
-      "symbol": "_ZN6Player17St_SweepKick_MainEv",
+      "symbol": "_ZN7daPly_c17St_SweepKick_MainEv",
       "address": "0x020dc48c",
       "size": "0x00000084",
-      "legacy_source": "src/_ZN6Player17St_SweepKick_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_SweepKick_MainEv.cpp",
       "ordinal": 485
     },
     {
-      "symbol": "_ZN6Player17St_SweepKick_InitEv",
+      "symbol": "_ZN7daPly_c17St_SweepKick_InitEv",
       "address": "0x020dc510",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN6Player17St_SweepKick_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_SweepKick_InitEv.cpp",
       "ordinal": 486
     },
     {
@@ -3453,17 +3453,17 @@
       "ordinal": 487
     },
     {
-      "symbol": "_ZN6Player17St_ButtSlide_MainEv",
+      "symbol": "_ZN7daPly_c17St_ButtSlide_MainEv",
       "address": "0x020dc740",
       "size": "0x00000340",
-      "legacy_source": "src/_ZN6Player17St_ButtSlide_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_ButtSlide_MainEv.cpp",
       "ordinal": 488
     },
     {
-      "symbol": "_ZN6Player17St_ButtSlide_InitEv",
+      "symbol": "_ZN7daPly_c17St_ButtSlide_InitEv",
       "address": "0x020dca80",
       "size": "0x0000007c",
-      "legacy_source": "src/_ZN6Player17St_ButtSlide_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_ButtSlide_InitEv.cpp",
       "ordinal": 489
     },
     {
@@ -3474,45 +3474,45 @@
       "ordinal": 490
     },
     {
-      "symbol": "_ZN6Player20St_StomachSlide_MainEv",
+      "symbol": "_ZN7daPly_c20St_StomachSlide_MainEv",
       "address": "0x020dcc28",
       "size": "0x000004dc",
-      "legacy_source": "src/_ZN6Player20St_StomachSlide_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c20St_StomachSlide_MainEv.cpp",
       "ordinal": 491
     },
     {
-      "symbol": "_ZN6Player20St_StomachSlide_InitEv",
+      "symbol": "_ZN7daPly_c20St_StomachSlide_InitEv",
       "address": "0x020dd104",
       "size": "0x00000078",
-      "legacy_source": "src/_ZN6Player20St_StomachSlide_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c20St_StomachSlide_InitEv.cpp",
       "ordinal": 492
     },
     {
-      "symbol": "_ZN6Player12St_Dive_InitEv",
+      "symbol": "_ZN7daPly_c12St_Dive_InitEv",
       "address": "0x020dd17c",
       "size": "0x000000c4",
-      "legacy_source": "src/_ZN6Player12St_Dive_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Dive_InitEv.cpp",
       "ordinal": 493
     },
     {
-      "symbol": "_ZN6Player8IsDivingEv",
+      "symbol": "_ZN7daPly_c8IsDivingEv",
       "address": "0x020dd240",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN6Player8IsDivingEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c8IsDivingEv.cpp",
       "ordinal": 494
     },
     {
-      "symbol": "_ZN6Player17LostGrabbedObjectEv",
+      "symbol": "_ZN7daPly_c17LostGrabbedObjectEv",
       "address": "0x020dd26c",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN6Player17LostGrabbedObjectEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17LostGrabbedObjectEv.cpp",
       "ordinal": 495
     },
     {
-      "symbol": "_ZN6Player14IsFrontSlidingEv",
+      "symbol": "_ZN7daPly_c14IsFrontSlidingEv",
       "address": "0x020dd2b0",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN6Player14IsFrontSlidingEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14IsFrontSlidingEv.cpp",
       "ordinal": 496
     },
     {
@@ -3523,10 +3523,10 @@
       "ordinal": 497
     },
     {
-      "symbol": "_ZN6Player17St_PunchKick_MainEv",
+      "symbol": "_ZN7daPly_c17St_PunchKick_MainEv",
       "address": "0x020dd3c4",
       "size": "0x00000228",
-      "legacy_source": "src/_ZN6Player17St_PunchKick_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_PunchKick_MainEv.cpp",
       "ordinal": 498
     },
     {
@@ -3537,10 +3537,10 @@
       "ordinal": 499
     },
     {
-      "symbol": "_ZN6Player17St_PunchKick_InitEv",
+      "symbol": "_ZN7daPly_c17St_PunchKick_InitEv",
       "address": "0x020dd79c",
       "size": "0x00000088",
-      "legacy_source": "src/_ZN6Player17St_PunchKick_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_PunchKick_InitEv.cpp",
       "ordinal": 500
     },
     {
@@ -3572,24 +3572,24 @@
       "ordinal": 504
     },
     {
-      "symbol": "_ZN6Player22St_GroundPound_CleanupEv",
+      "symbol": "_ZN7daPly_c22St_GroundPound_CleanupEv",
       "address": "0x020dd9e0",
       "size": "0x00000018",
-      "legacy_source": "src/_ZN6Player22St_GroundPound_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c22St_GroundPound_CleanupEv.cpp",
       "ordinal": 505
     },
     {
-      "symbol": "_ZN6Player19St_GroundPound_MainEv",
+      "symbol": "_ZN7daPly_c19St_GroundPound_MainEv",
       "address": "0x020dd9f8",
       "size": "0x000003f8",
-      "legacy_source": "src/_ZN6Player19St_GroundPound_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19St_GroundPound_MainEv.cpp",
       "ordinal": 506
     },
     {
-      "symbol": "_ZN6Player19St_GroundPound_InitEv",
+      "symbol": "_ZN7daPly_c19St_GroundPound_InitEv",
       "address": "0x020dddf0",
       "size": "0x00000084",
-      "legacy_source": "src/_ZN6Player19St_GroundPound_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19St_GroundPound_InitEv.cpp",
       "ordinal": 507
     },
     {
@@ -3600,17 +3600,17 @@
       "ordinal": 508
     },
     {
-      "symbol": "_ZN6Player19St_TornadoSpin_MainEv",
+      "symbol": "_ZN7daPly_c19St_TornadoSpin_MainEv",
       "address": "0x020ddfdc",
       "size": "0x000002c4",
-      "legacy_source": "src/_ZN6Player19St_TornadoSpin_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19St_TornadoSpin_MainEv.cpp",
       "ordinal": 509
     },
     {
-      "symbol": "_ZN6Player19St_TornadoSpin_InitEv",
+      "symbol": "_ZN7daPly_c19St_TornadoSpin_InitEv",
       "address": "0x020de2a0",
       "size": "0x00000088",
-      "legacy_source": "src/_ZN6Player19St_TornadoSpin_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19St_TornadoSpin_InitEv.cpp",
       "ordinal": 510
     },
     {
@@ -3628,10 +3628,10 @@
       "ordinal": 512
     },
     {
-      "symbol": "_ZN6Player18St_Balloon_CleanupEv",
+      "symbol": "_ZN7daPly_c18St_Balloon_CleanupEv",
       "address": "0x020de3b4",
       "size": "0x0000001c",
-      "legacy_source": "src/_ZN6Player18St_Balloon_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c18St_Balloon_CleanupEv.cpp",
       "ordinal": 513
     },
     {
@@ -3642,24 +3642,24 @@
       "ordinal": 514
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020de428Ev",
+      "symbol": "_ZN7daPly_c19func_ov002_020de428Ev",
       "address": "0x020de428",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/ov002/func_ov002_020de428.c",
       "ordinal": 515
     },
     {
-      "symbol": "_ZN6Player15St_Balloon_MainEv",
+      "symbol": "_ZN7daPly_c15St_Balloon_MainEv",
       "address": "0x020de45c",
       "size": "0x00000450",
-      "legacy_source": "src/_ZN6Player15St_Balloon_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Balloon_MainEv.cpp",
       "ordinal": 516
     },
     {
-      "symbol": "_ZN6Player15St_Balloon_InitEv",
+      "symbol": "_ZN7daPly_c15St_Balloon_InitEv",
       "address": "0x020de8ac",
       "size": "0x000000bc",
-      "legacy_source": "src/_ZN6Player15St_Balloon_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Balloon_InitEv.cpp",
       "ordinal": 517
     },
     {
@@ -3670,24 +3670,24 @@
       "ordinal": 518
     },
     {
-      "symbol": "_ZN6Player16InitBalloonMarioEv",
+      "symbol": "_ZN7daPly_c16InitBalloonMarioEv",
       "address": "0x020dea00",
       "size": "0x000000b8",
-      "legacy_source": "src/_ZN6Player16InitBalloonMarioEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16InitBalloonMarioEv.cpp",
       "ordinal": 519
     },
     {
-      "symbol": "_ZN6Player17St_WindCarry_MainEv",
+      "symbol": "_ZN7daPly_c17St_WindCarry_MainEv",
       "address": "0x020deab8",
       "size": "0x00000154",
-      "legacy_source": "src/_ZN6Player17St_WindCarry_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_WindCarry_MainEv.cpp",
       "ordinal": 520
     },
     {
-      "symbol": "_ZN6Player17St_WindCarry_InitEv",
+      "symbol": "_ZN7daPly_c17St_WindCarry_InitEv",
       "address": "0x020dec0c",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN6Player17St_WindCarry_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_WindCarry_InitEv.cpp",
       "ordinal": 521
     },
     {
@@ -3698,52 +3698,52 @@
       "ordinal": 522
     },
     {
-      "symbol": "_ZN6Player21St_JumpQuicksand_MainEv",
+      "symbol": "_ZN7daPly_c21St_JumpQuicksand_MainEv",
       "address": "0x020dedf0",
       "size": "0x000000bc",
-      "legacy_source": "src/_ZN6Player21St_JumpQuicksand_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_JumpQuicksand_MainEv.cpp",
       "ordinal": 523
     },
     {
-      "symbol": "_ZN6Player21St_JumpQuicksand_InitEv",
+      "symbol": "_ZN7daPly_c21St_JumpQuicksand_InitEv",
       "address": "0x020deeac",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN6Player21St_JumpQuicksand_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_JumpQuicksand_InitEv.cpp",
       "ordinal": 524
     },
     {
-      "symbol": "_ZN6Player17St_Cannon_CleanupEv",
+      "symbol": "_ZN7daPly_c17St_Cannon_CleanupEv",
       "address": "0x020deefc",
       "size": "0x00000018",
-      "legacy_source": "src/_ZN6Player17St_Cannon_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_Cannon_CleanupEv.cpp",
       "ordinal": 525
     },
     {
-      "symbol": "_ZN6Player14St_Cannon_MainEv",
+      "symbol": "_ZN7daPly_c14St_Cannon_MainEv",
       "address": "0x020def14",
       "size": "0x000002f4",
-      "legacy_source": "src/_ZN6Player14St_Cannon_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_Cannon_MainEv.cpp",
       "ordinal": 526
     },
     {
-      "symbol": "_ZN6Player14St_Cannon_InitEv",
+      "symbol": "_ZN7daPly_c14St_Cannon_InitEv",
       "address": "0x020df208",
       "size": "0x00000080",
-      "legacy_source": "src/_ZN6Player14St_Cannon_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_Cannon_InitEv.cpp",
       "ordinal": 527
     },
     {
-      "symbol": "_ZN6Player16IsInsideOfCannonEv",
+      "symbol": "_ZN7daPly_c16IsInsideOfCannonEv",
       "address": "0x020df288",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN6Player16IsInsideOfCannonEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16IsInsideOfCannonEv.cpp",
       "ordinal": 528
     },
     {
-      "symbol": "_ZN6Player22IsBeingShotOutOfCannonEv",
+      "symbol": "_ZN7daPly_c22IsBeingShotOutOfCannonEv",
       "address": "0x020df2c4",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN6Player22IsBeingShotOutOfCannonEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c22IsBeingShotOutOfCannonEv.cpp",
       "ordinal": 529
     },
     {
@@ -3761,28 +3761,28 @@
       "ordinal": 531
     },
     {
-      "symbol": "_ZN6Player14St_Owl_CleanupEv",
+      "symbol": "_ZN7daPly_c14St_Owl_CleanupEv",
       "address": "0x020df3c8",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN6Player14St_Owl_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c14St_Owl_CleanupEv.cpp",
       "ordinal": 532
     },
     {
-      "symbol": "_ZN6Player11St_Owl_MainEv",
+      "symbol": "_ZN7daPly_c11St_Owl_MainEv",
       "address": "0x020df3ec",
       "size": "0x00000354",
-      "legacy_source": "src/_ZN6Player11St_Owl_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c11St_Owl_MainEv.cpp",
       "ordinal": 533
     },
     {
-      "symbol": "_ZN6Player11St_Owl_InitEv",
+      "symbol": "_ZN7daPly_c11St_Owl_InitEv",
       "address": "0x020df740",
       "size": "0x0000006c",
-      "legacy_source": "src/_ZN6Player11St_Owl_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c11St_Owl_InitEv.cpp",
       "ordinal": 534
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020df7acEv",
+      "symbol": "_ZN7daPly_c19func_ov002_020df7acEv",
       "address": "0x020df7ac",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/ov002/func_ov002_020df7ac.c",
@@ -3796,7 +3796,7 @@
       "ordinal": 536
     },
     {
-      "symbol": "_ZN6Player19func_ov002_020df840EPvP7Vector3",
+      "symbol": "_ZN7daPly_c19func_ov002_020df840EPvP7Vector3",
       "address": "0x020df840",
       "size": "0x000000b0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020df840.c",
@@ -3810,17 +3810,17 @@
       "ordinal": 538
     },
     {
-      "symbol": "_ZN6Player11St_Fly_MainEv",
+      "symbol": "_ZN7daPly_c11St_Fly_MainEv",
       "address": "0x020dfdf0",
       "size": "0x0000048c",
-      "legacy_source": "src/_ZN6Player11St_Fly_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c11St_Fly_MainEv.cpp",
       "ordinal": 539
     },
     {
-      "symbol": "_ZN6Player11St_Fly_InitEv",
+      "symbol": "_ZN7daPly_c11St_Fly_InitEv",
       "address": "0x020e027c",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN6Player11St_Fly_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c11St_Fly_InitEv.cpp",
       "ordinal": 540
     },
     {
@@ -3831,10 +3831,10 @@
       "ordinal": 541
     },
     {
-      "symbol": "_ZN6Player16InitWingFeathersEb",
+      "symbol": "_ZN7daPly_c16InitWingFeathersEb",
       "address": "0x020e03b8",
       "size": "0x000000c0",
-      "legacy_source": "src/_ZN6Player16InitWingFeathersEb.cpp",
+      "legacy_source": "src/_ZN7daPly_c16InitWingFeathersEb.cpp",
       "ordinal": 542
     },
     {
@@ -3852,17 +3852,17 @@
       "ordinal": 544
     },
     {
-      "symbol": "_ZN6Player12St_Land_MainEv",
+      "symbol": "_ZN7daPly_c12St_Land_MainEv",
       "address": "0x020e04ec",
       "size": "0x000003a0",
-      "legacy_source": "src/_ZN6Player12St_Land_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Land_MainEv.cpp",
       "ordinal": 545
     },
     {
-      "symbol": "_ZN6Player12St_Land_InitEv",
+      "symbol": "_ZN7daPly_c12St_Land_InitEv",
       "address": "0x020e088c",
       "size": "0x000001d8",
-      "legacy_source": "src/_ZN6Player12St_Land_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Land_InitEv.cpp",
       "ordinal": 546
     },
     {
@@ -3873,31 +3873,31 @@
       "ordinal": 547
     },
     {
-      "symbol": "_ZN6Player21St_SmallLaunchUp_MainEv",
+      "symbol": "_ZN7daPly_c21St_SmallLaunchUp_MainEv",
       "address": "0x020e0aa8",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN6Player21St_SmallLaunchUp_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_SmallLaunchUp_MainEv.cpp",
       "ordinal": 548
     },
     {
-      "symbol": "_ZN6Player21St_SmallLaunchUp_InitEv",
+      "symbol": "_ZN7daPly_c21St_SmallLaunchUp_InitEv",
       "address": "0x020e0adc",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN6Player21St_SmallLaunchUp_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_SmallLaunchUp_InitEv.cpp",
       "ordinal": 549
     },
     {
-      "symbol": "_ZN6Player17St_SlopeJump_MainEv",
+      "symbol": "_ZN7daPly_c17St_SlopeJump_MainEv",
       "address": "0x020e0b50",
       "size": "0x000000b4",
-      "legacy_source": "src/_ZN6Player17St_SlopeJump_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_SlopeJump_MainEv.cpp",
       "ordinal": 550
     },
     {
-      "symbol": "_ZN6Player17St_SlopeJump_InitEv",
+      "symbol": "_ZN7daPly_c17St_SlopeJump_InitEv",
       "address": "0x020e0c04",
       "size": "0x000000c8",
-      "legacy_source": "src/_ZN6Player17St_SlopeJump_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_SlopeJump_InitEv.cpp",
       "ordinal": 551
     },
     {
@@ -3908,17 +3908,17 @@
       "ordinal": 552
     },
     {
-      "symbol": "_ZN6Player22St_CrazedCrate_CleanupEv",
+      "symbol": "_ZN7daPly_c22St_CrazedCrate_CleanupEv",
       "address": "0x020e0d28",
       "size": "0x00000020",
-      "legacy_source": "src/_ZN6Player22St_CrazedCrate_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c22St_CrazedCrate_CleanupEv.cpp",
       "ordinal": 553
     },
     {
-      "symbol": "_ZN6Player19St_CrazedCrate_MainEv",
+      "symbol": "_ZN7daPly_c19St_CrazedCrate_MainEv",
       "address": "0x020e0d48",
       "size": "0x000001f0",
-      "legacy_source": "src/_ZN6Player19St_CrazedCrate_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19St_CrazedCrate_MainEv.cpp",
       "ordinal": 554
     },
     {
@@ -3929,17 +3929,17 @@
       "ordinal": 555
     },
     {
-      "symbol": "_ZN6Player19St_CrazedCrate_InitEv",
+      "symbol": "_ZN7daPly_c19St_CrazedCrate_InitEv",
       "address": "0x020e0fac",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN6Player19St_CrazedCrate_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c19St_CrazedCrate_InitEv.cpp",
       "ordinal": 556
     },
     {
-      "symbol": "_ZN6Player10SpinBounceEi",
+      "symbol": "_ZN7daPly_c10SpinBounceEi",
       "address": "0x020e1020",
       "size": "0x00000088",
-      "legacy_source": "src/_ZN6Player10SpinBounceE5Fix12IiE.cpp",
+      "legacy_source": "src/_ZN7daPly_c10SpinBounceE5Fix12IiE.cpp",
       "ordinal": 557
     },
     {
@@ -3950,108 +3950,108 @@
       "ordinal": 558
     },
     {
-      "symbol": "_ZN6Player15St_Spin_CleanupEv",
+      "symbol": "_ZN7daPly_c15St_Spin_CleanupEv",
       "address": "0x020e10d4",
       "size": "0x00000018",
-      "legacy_source": "src/_ZN6Player15St_Spin_CleanupEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c15St_Spin_CleanupEv.cpp",
       "ordinal": 559
     },
     {
-      "symbol": "_ZN6Player12St_Spin_MainEv",
+      "symbol": "_ZN7daPly_c12St_Spin_MainEv",
       "address": "0x020e10ec",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN6Player12St_Spin_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Spin_MainEv.cpp",
       "ordinal": 560
     },
     {
-      "symbol": "_ZN6Player12St_Spin_InitEv",
+      "symbol": "_ZN7daPly_c12St_Spin_InitEv",
       "address": "0x020e119c",
       "size": "0x0000009c",
-      "legacy_source": "src/_ZN6Player12St_Spin_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Spin_InitEv.cpp",
       "ordinal": 561
     },
     {
-      "symbol": "_ZN6Player16St_LongJump_MainEv",
+      "symbol": "_ZN7daPly_c16St_LongJump_MainEv",
       "address": "0x020e1238",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN6Player16St_LongJump_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_LongJump_MainEv.cpp",
       "ordinal": 562
     },
     {
-      "symbol": "_ZN6Player16St_LongJump_InitEv",
+      "symbol": "_ZN7daPly_c16St_LongJump_InitEv",
       "address": "0x020e127c",
       "size": "0x00000144",
-      "legacy_source": "src/_ZN6Player16St_LongJump_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_LongJump_InitEv.cpp",
       "ordinal": 563
     },
     {
-      "symbol": "_ZN6Player16St_SideFlip_MainEv",
+      "symbol": "_ZN7daPly_c16St_SideFlip_MainEv",
       "address": "0x020e13c0",
       "size": "0x0000026c",
-      "legacy_source": "src/_ZN6Player16St_SideFlip_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_SideFlip_MainEv.cpp",
       "ordinal": 564
     },
     {
-      "symbol": "_ZN6Player17St_WaterJump_InitEv",
+      "symbol": "_ZN7daPly_c17St_WaterJump_InitEv",
       "address": "0x020e162c",
       "size": "0x00000078",
-      "legacy_source": "src/_ZN6Player17St_WaterJump_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c17St_WaterJump_InitEv.cpp",
       "ordinal": 565
     },
     {
-      "symbol": "_ZN6Player21St_HeadstandJump_InitEv",
+      "symbol": "_ZN7daPly_c21St_HeadstandJump_InitEv",
       "address": "0x020e16a4",
       "size": "0x00000070",
-      "legacy_source": "src/_ZN6Player21St_HeadstandJump_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c21St_HeadstandJump_InitEv.cpp",
       "ordinal": 566
     },
     {
-      "symbol": "_ZN6Player16St_WallJump_MainEv",
+      "symbol": "_ZN7daPly_c16St_WallJump_MainEv",
       "address": "0x020e1714",
       "size": "0x000000e4",
-      "legacy_source": "src/_ZN6Player16St_WallJump_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_WallJump_MainEv.cpp",
       "ordinal": 567
     },
     {
-      "symbol": "_ZN6Player16St_WallJump_InitEv",
+      "symbol": "_ZN7daPly_c16St_WallJump_InitEv",
       "address": "0x020e17f8",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN6Player16St_WallJump_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_WallJump_InitEv.cpp",
       "ordinal": 568
     },
     {
-      "symbol": "_ZN6Player16St_BackFlip_InitEv",
+      "symbol": "_ZN7daPly_c16St_BackFlip_InitEv",
       "address": "0x020e18a8",
       "size": "0x000000e8",
-      "legacy_source": "src/_ZN6Player16St_BackFlip_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_BackFlip_InitEv.cpp",
       "ordinal": 569
     },
     {
-      "symbol": "_ZN6Player24St_SlideKickRecover_InitEv",
+      "symbol": "_ZN7daPly_c24St_SlideKickRecover_InitEv",
       "address": "0x020e1990",
       "size": "0x00000080",
-      "legacy_source": "src/_ZN6Player24St_SlideKickRecover_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c24St_SlideKickRecover_InitEv.cpp",
       "ordinal": 570
     },
     {
-      "symbol": "_ZN6Player16St_SideFlip_InitEv",
+      "symbol": "_ZN7daPly_c16St_SideFlip_InitEv",
       "address": "0x020e1a10",
       "size": "0x000000e8",
-      "legacy_source": "src/_ZN6Player16St_SideFlip_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16St_SideFlip_InitEv.cpp",
       "ordinal": 571
     },
     {
-      "symbol": "_ZN6Player12St_Fall_MainEv",
+      "symbol": "_ZN7daPly_c12St_Fall_MainEv",
       "address": "0x020e1af8",
       "size": "0x00000088",
-      "legacy_source": "src/_ZN6Player12St_Fall_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Fall_MainEv.cpp",
       "ordinal": 572
     },
     {
-      "symbol": "_ZN6Player12St_Fall_InitEv",
+      "symbol": "_ZN7daPly_c12St_Fall_InitEv",
       "address": "0x020e1b80",
       "size": "0x000000a0",
-      "legacy_source": "src/_ZN6Player12St_Fall_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Fall_InitEv.cpp",
       "ordinal": 573
     },
     {
@@ -4076,17 +4076,17 @@
       "ordinal": 576
     },
     {
-      "symbol": "_ZN6Player12St_Jump_MainEv",
+      "symbol": "_ZN7daPly_c12St_Jump_MainEv",
       "address": "0x020e2118",
       "size": "0x000001a8",
-      "legacy_source": "src/_ZN6Player12St_Jump_MainEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Jump_MainEv.cpp",
       "ordinal": 577
     },
     {
-      "symbol": "_ZN6Player12St_Jump_InitEv",
+      "symbol": "_ZN7daPly_c12St_Jump_InitEv",
       "address": "0x020e22c0",
       "size": "0x00000314",
-      "legacy_source": "src/_ZN6Player12St_Jump_InitEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c12St_Jump_InitEv.cpp",
       "ordinal": 578
     },
     {
@@ -4174,38 +4174,38 @@
       "ordinal": 590
     },
     {
-      "symbol": "_ZN6Player7IsStateERNS_5StateE",
+      "symbol": "_ZN7daPly_c7IsStateERNS_5StateE",
       "address": "0x020e308c",
       "size": "0x00000014",
-      "legacy_source": "src/_ZN6Player7IsStateERNS_5StateE.cpp",
+      "legacy_source": "src/_ZN7daPly_c7IsStateERNS_5StateE.cpp",
       "ordinal": 591
     },
     {
-      "symbol": "_ZN6Player11ChangeStateERNS_5StateE",
+      "symbol": "_ZN7daPly_c11ChangeStateERNS_5StateE",
       "address": "0x020e30a0",
       "size": "0x00000234",
-      "legacy_source": "src/_ZN6Player11ChangeStateERNS_5StateE.cpp",
+      "legacy_source": "src/_ZN7daPly_c11ChangeStateERNS_5StateE.cpp",
       "ordinal": 592
     },
     {
-      "symbol": "_ZN6Player16CleanupResourcesEv",
+      "symbol": "_ZN7daPly_c16CleanupResourcesEv",
       "address": "0x020e32d4",
       "size": "0x00000730",
-      "legacy_source": "src/_ZN6Player16CleanupResourcesEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16CleanupResourcesEv.cpp",
       "ordinal": 593
     },
     {
-      "symbol": "_ZN6Player16OnPendingDestroyEv",
+      "symbol": "_ZN7daPly_c16OnPendingDestroyEv",
       "address": "0x020e3a04",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN6Player16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c16OnPendingDestroyEv.cpp",
       "ordinal": 594
     },
     {
-      "symbol": "_ZN6Player6RenderEv",
+      "symbol": "_ZN7daPly_c6RenderEv",
       "address": "0x020e3a08",
       "size": "0x000003f8",
-      "legacy_source": "src/_ZN6Player6RenderEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c6RenderEv.cpp",
       "ordinal": 595
     },
     {
@@ -4265,17 +4265,17 @@
       "ordinal": 603
     },
     {
-      "symbol": "_ZN6Player8BehaviorEv",
+      "symbol": "_ZN7daPly_c8BehaviorEv",
       "address": "0x020e4d24",
       "size": "0x00000868",
-      "legacy_source": "src/_ZN6Player8BehaviorEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c8BehaviorEv.cpp",
       "ordinal": 604
     },
     {
-      "symbol": "_ZN6Player13InitResourcesEv",
+      "symbol": "_ZN7daPly_c13InitResourcesEv",
       "address": "0x020e558c",
       "size": "0x000003bc",
-      "legacy_source": "src/_ZN6Player13InitResourcesEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13InitResourcesEv.cpp",
       "ordinal": 605
     },
     {
@@ -4321,31 +4321,31 @@
       "ordinal": 611
     },
     {
-      "symbol": "_ZN6PlayerD0Ev",
+      "symbol": "_ZN7daPly_cD0Ev",
       "address": "0x020e67a8",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN6PlayerD0Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_cD0Ev.cpp",
       "ordinal": 612
     },
     {
-      "symbol": "_ZN6PlayerD1Ev",
+      "symbol": "_ZN7daPly_cD1Ev",
       "address": "0x020e6858",
       "size": "0x0000009c",
-      "legacy_source": "src/_ZN6PlayerD1Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_cD1Ev.cpp",
       "ordinal": 613
     },
     {
-      "symbol": "_ZN6PlayerC1Ev",
+      "symbol": "_ZN7daPly_cC1Ev",
       "address": "0x020e68f4",
       "size": "0x000000c4",
-      "legacy_source": "src/_ZN6PlayerC1Ev.cpp",
+      "legacy_source": "src/_ZN7daPly_cC1Ev.cpp",
       "ordinal": 614
     },
     {
-      "symbol": "_ZN6Player13OnYoshiTryEatEv",
+      "symbol": "_ZN7daPly_c13OnYoshiTryEatEv",
       "address": "0x020e69b8",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN6Player13OnYoshiTryEatEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c13OnYoshiTryEatEv.cpp",
       "ordinal": 615
     },
     {
@@ -8866,96 +8866,93 @@
     "Written by hand, not by tools/tubuild.py create: at the time of writing, create() raised AttributeError in build_manifest_entry the moment a member of the run had no legacy source, and this run has three such members; it also wrote the .cpp before crashing, so its output could not be trusted as a starting point. That defect has SINCE BEEN FIXED on main (#2315 makes create survive a sourceless member, #2323 makes it emit an // @symbol marker per member), so a future entry for this module need not be hand-written. The builder audited all 301 hand-written rows against the pre-promotion tree: ordinals contiguous 0..300, rows tile 0x020bd828..0x020cfea4 with no gap or overlap, and every legacy_source is both a file in the base tree and an exact-path entry in the base ov002 delinks.txt with the matching extension (173 .cpp, 128 .c).",
     "The source was assembled by a scoped generator that reuses tubuild's own split_legacy_source/unit_functions, because create()'s preamble merge does not scale to 301 members: it emits one merged file-scope declaration per ROM symbol, and 301 independent recoveries of one symbol disagree constantly. Measured instead, and used here: in mwccarm 2004/b56 a declaration written at BLOCK scope inside an `extern \"C\"` region gets C linkage, and two function bodies may declare one C symbol with different types. So every member keeps its own declarations inside its own body and no call site had to be rewritten to fit a merged spelling. The same is true of DATA declarations -- measured directly, contradicting the earlier belief that block-scope data redeclaration is rejected; only a file-scope redeclaration is. That matters for bytes, not just for tidiness: hoisting one canonical data declaration and casting each member's view back with a macro changed the codegen of six members, and the choice of which spelling became canonical depended on which other members were present.",
     "Only what a function body cannot hold is hoisted: a namespace, a class with static or declared-but-undefined members, and any type named in a member's own signature. Those tags are made unique per member. `struct Sound` and `namespace Sound` were the one true conflict and were resolved to the namespace spelling, which mangles identically.",
-    "PRAGMA, measured with the delete-outright control first, and RE-MEASURED by the builder at the shipped revision -- the writer's counts predate the three near-miss recoveries in this branch and no longer reproduce. The shard for ordinal 35, _ZN6Player7SetAnimEji5Fix12IiEj, carries `#pragma opt_propagation off`. Under default deferred codegen that pragma is FILE-GLOBAL: it costs 46 other members their match (255/301 with it file-global, 300/301 with it simply deleted). Bracketing it in #pragma push/pop buys back nothing at all -- also 300/301, byte-identical to deleting it -- because with codegen deferred the state that binds is the state at end of file. `#pragma defer_codegen off` plus a ROM-ASCENDING source order makes the bracket bind positionally and recovers ordinal 35 as well: 301/301, which is what this entry's verification block records. Deleting only `defer_codegen off` still scores 300/301 on bytes, but the emitted .text order reverses (300 out-of-order ordinal pairs) and the pre-link object audit refuses with `licensed .text functions are not emitted in ROM address order`; the byte compare alone would not have caught it. That is why this file is written low address first, the opposite of the default deferred-codegen convention.",
+    "PRAGMA, measured with the delete-outright control first, and RE-MEASURED by the builder at the shipped revision -- the writer's counts predate the three near-miss recoveries in this branch and no longer reproduce. The shard for ordinal 35, _ZN7daPly_c7SetAnimEji5Fix12IiEj, carries `#pragma opt_propagation off`. Under default deferred codegen that pragma is FILE-GLOBAL: it costs 46 other members their match (255/301 with it file-global, 300/301 with it simply deleted). Bracketing it in #pragma push/pop buys back nothing at all -- also 300/301, byte-identical to deleting it -- because with codegen deferred the state that binds is the state at end of file. `#pragma defer_codegen off` plus a ROM-ASCENDING source order makes the bracket bind positionally and recovers ordinal 35 as well: 301/301, which is what this entry's verification block records. Deleting only `defer_codegen off` still scores 300/301 on bytes, but the emitted .text order reverses (300 out-of-order ordinal pairs) and the pre-link object audit refuses with `licensed .text functions are not emitted in ROM address order`; the byte compare alone would not have caught it. That is why this file is written low address first, the opposite of the default deferred-codegen convention.",
     "Two members needed a source change to survive the C-to-C++ language flip, both the same construct and both from the known scalarization family: a two-int struct copy (`*(Pair2i *)dst = *(Pair2i *)(p + k)`) that C compiles as load/load/store/store and C++ scalarizes into load/store/load/store. The array-wrapper view (`struct P2w { int w[2]; }; *(P2w *)dst = *(P2w *)(p + k);`) restores the ROM's shape exactly, in func_ov002_020c14b8 and func_ov002_020c25a8. Three other spellings were measured and rejected first (two scalar locals: 4 words wrong; copy through a named temporary: 12 bytes too long). The builder diffed all 301 shipped bodies against their pre-promotion shards and found a SECOND change family this note omitted: func_ov002_020c6fe4 and func_ov002_020c897c each do arithmetic on a `void **` load, `*(void**)(c + id*4 + 0xdc) + 0x50`, which is a GNU extension C accepts under -gccext and C++ does not; both casts became `char **`. Byte-neutral -- the address arithmetic is identical -- but an edit. Apart from those four members and the local struct TAG renames that hoisting forces (Vector3 -> Vec3i, V3 -> V3a/V3b, Obj -> ObjHS and Obj2fec, State -> State3i, Camera -> CameraRaw), no body was rewritten.",
     "All 301 members reproduce the cartridge byte-for-byte; none is NONMATCHING and none carries an asm body.",
-    "WIDENED to ordinals 0..343 (43 members, 0x020cfea4..0x020d3b9c) by the same member format as the first 301: per-member block-scope declarations inside the extern \"C\" body, ROM-ascending, `#pragma defer_codegen off` unchanged. Three members (func_ov002_020d0580, func_ov002_020d06c0, func_ov002_020d2e74) had declared a LOCAL shadow `struct Player`; with the real Player.h type in scope that clashes with their `Player *` parameter, so the shadow was dropped (calls resolve to Player::GetHealth/IsInAir, which mangle to the same ROM symbols) and func_ov002_020d2e74 reads its fields through a file-local `PlayerView` cast. Ten members needed ROM-symbol declarations that their shards took from include/decl_common.h; decl_common.h is NOT included here (it redeclares dozens of symbols this file already declares with other types: 'redeclared' / 'illegal function overloading'), so each member declares what it uses, copied verbatim from the header row. decl_Animation.h and Sound.h are included; they conflict with nothing. func_ov002_020d12b0 takes u8*, so its two callers cast to u8* instead of char*.",
-    "WIDENED to ordinals 0..611 (251 members, 0x020d3b9c..0x020e67a8) in the same member format: per-member block-scope declarations inside the extern \"C\" body, ROM-ascending, `#pragma defer_codegen off` unchanged. tools/tubuild.py verify: 612/612 MATCH, objisolate clean, relocation destinations clean, emission ROM-ascending. The fold landed in two steps, ordinals 361..486 first and 487..611 once the ITCM interior entry points func_ov002_020dc560 calls became linkable (boundary_evidence, TAIL FOLD). Source changes the fold forced, each measured: (a) func_ov002_020d6dac, func_ov002_020d71ec and func_ov002_020d9dcc first went in as C under `#pragma cplusplus off`, the precedent being func_ov002_020bcdf0, because as C++ they differed by 10, 5 and 29 words. All three now compile as C++ inside extern \"C\" { }: the two-int struct copies in 020d6dac and 020d71ec go through a single-array wrapper (`struct P2 { int w[2]; }`, as in func_ov002_020c14b8), which restores C's load/load/store/store block copy, and 020d9dcc spells its state test `(int)(x == 0xbf) == 0`, because widening the bool to long long (the C shard's spelling) hoists the early return's 0 ahead of the branch. func_ov002_020bcdf0 is the one C body left. (b) Local shadow types that stood in for the real class were dropped where Player.h is in scope: the `struct State` / `typedef struct State State` stand-ins resolve to Player::State; func_ov002_020df34c and func_ov002_020e2ea0 lose a shadow Player whose IsState/ChangeState calls now bind the real members (same ROM symbols); Player::St_CrazedCrate_Cleanup loses its field-view Player, and its write of the byte at 0x6e1 is spelled mJumpComboStage. Block-scope declarations of names that Player.h already declares as class members are dropped from Player:: member bodies; func_ov002_020d85fc calls Player::TryGrab as a member, and func_ov002_020d06c0, Player::St_SideFlip_Main and Player::Behavior call Player::IsState as a member (byte-identical; once IsState is defined in this file, a mangled call that opens a source line reads as a hand-spelled definition to tools/langmode_audit.py). (c) include/Player.h gains the missing declaration `int St_CrazedCrate_Cleanup();`, which the shard had supplied through its shadow class; adding a non-virtual member declaration changes no consumer's layout. (d) C spellings C++ rejects: a parameter named `this` (func_ov002_020d4d88) became `self`; two `char *c = self;` gained a cast (func_ov002_020d8360); func_ov002_020d4c30 drops its shadow `struct Sound` (Sound.h is included) and an unused shadow `Particle::System`, and its extern \"C\" NewSimple declaration leaves the `Particle` namespace it sat in, so the call names the ROM symbol directly; func_ov002_020e2c84 gained the prototype its shard used implicitly; Player::St_Fly_Main's extern prototypes lost parameter names its body's `#define c` would rewrite; the `enum { false, true };` stand-ins were dropped. (e) Types with a user destructor are hoisted to file scope with TU-unique names (PVec, PVec869c, PVec8944, Vector3e968) so their vague-linkage D1s are licensed by compiler_only_output rows; the remaining local shadow structs keep C linkage under unique tags. Player::InitResources keeps the inline asm block its shard carried. Baselines: the member definitions sit inside `extern \"C\" { }`, which tools/check_decl_agreement.py does not index, so retiring a shard removes its declarations from that gate's plurality vote; the resulting flips are banked in config/decl-agreement-baseline.json. Converted identities of retired shards are rewritten onto src/game/player/Player.cpp#symbol.",
-    "DESTRUCTOR TAIL: ordinals 612..616 (0x020e67a8..0x020e6a08) and __sinit_ov002_021019d0 (.init 0x021019d0..0x02106e40). ~Player() is the key function, with defer_codegen on for that definition only so the variants emit D2, D0, D1, and with RTTI off so no Player RTTI record is emitted. D2 is deadstripped. _ZTV6Player is deadstrip-data at ov002:0x0210a83c. No header edit.",
+    "WIDENED to ordinals 0..343 (43 members, 0x020cfea4..0x020d3b9c) by the same member format as the first 301: per-member block-scope declarations inside the extern \"C\" body, ROM-ascending, `#pragma defer_codegen off` unchanged. Three members (func_ov002_020d0580, func_ov002_020d06c0, func_ov002_020d2e74) had declared a LOCAL shadow `struct daPly_c`; with the real daPly_c.h type in scope that clashes with their `daPly_c *` parameter, so the shadow was dropped (calls resolve to daPly_c::GetHealth/IsInAir, which mangle to the same ROM symbols) and func_ov002_020d2e74 reads its fields through a file-local `PlayerView` cast. Ten members needed ROM-symbol declarations that their shards took from include/decl_common.h; decl_common.h is NOT included here (it redeclares dozens of symbols this file already declares with other types: 'redeclared' / 'illegal function overloading'), so each member declares what it uses, copied verbatim from the header row. decl_Animation.h and Sound.h are included; they conflict with nothing. func_ov002_020d12b0 takes u8*, so its two callers cast to u8* instead of char*.",
+    "WIDENED to ordinals 0..611 (251 members, 0x020d3b9c..0x020e67a8) in the same member format: per-member block-scope declarations inside the extern \"C\" body, ROM-ascending, `#pragma defer_codegen off` unchanged. tools/tubuild.py verify: 612/612 MATCH, objisolate clean, relocation destinations clean, emission ROM-ascending. The fold landed in two steps, ordinals 361..486 first and 487..611 once the ITCM interior entry points func_ov002_020dc560 calls became linkable (boundary_evidence, TAIL FOLD). Source changes the fold forced, each measured: (a) func_ov002_020d6dac, func_ov002_020d71ec and func_ov002_020d9dcc first went in as C under `#pragma cplusplus off`, the precedent being func_ov002_020bcdf0, because as C++ they differed by 10, 5 and 29 words. All three now compile as C++ inside extern \"C\" { }: the two-int struct copies in 020d6dac and 020d71ec go through a single-array wrapper (`struct P2 { int w[2]; }`, as in func_ov002_020c14b8), which restores C's load/load/store/store block copy, and 020d9dcc spells its state test `(int)(x == 0xbf) == 0`, because widening the bool to long long (the C shard's spelling) hoists the early return's 0 ahead of the branch. func_ov002_020bcdf0 is the one C body left. (b) Local shadow types that stood in for the real class were dropped where daPly_c.h is in scope: the `struct State` / `typedef struct State State` stand-ins resolve to daPly_c::State; func_ov002_020df34c and func_ov002_020e2ea0 lose a shadow daPly_c whose IsState/ChangeState calls now bind the real members (same ROM symbols); daPly_c::St_CrazedCrate_Cleanup loses its field-view daPly_c, and its write of the byte at 0x6e1 is spelled mJumpComboStage. Block-scope declarations of names that daPly_c.h already declares as class members are dropped from daPly_c:: member bodies; func_ov002_020d85fc calls daPly_c::TryGrab as a member, and func_ov002_020d06c0, daPly_c::St_SideFlip_Main and daPly_c::Behavior call daPly_c::IsState as a member (byte-identical; once IsState is defined in this file, a mangled call that opens a source line reads as a hand-spelled definition to tools/langmode_audit.py). (c) include/daPly_c.h gains the missing declaration `int St_CrazedCrate_Cleanup();`, which the shard had supplied through its shadow class; adding a non-virtual member declaration changes no consumer's layout. (d) C spellings C++ rejects: a parameter named `this` (func_ov002_020d4d88) became `self`; two `char *c = self;` gained a cast (func_ov002_020d8360); func_ov002_020d4c30 drops its shadow `struct Sound` (Sound.h is included) and an unused shadow `Particle::System`, and its extern \"C\" NewSimple declaration leaves the `Particle` namespace it sat in, so the call names the ROM symbol directly; func_ov002_020e2c84 gained the prototype its shard used implicitly; daPly_c::St_Fly_Main's extern prototypes lost parameter names its body's `#define c` would rewrite; the `enum { false, true };` stand-ins were dropped. (e) Types with a user destructor are hoisted to file scope with TU-unique names (PVec, PVec869c, PVec8944, Vector3e968) so their vague-linkage D1s are licensed by compiler_only_output rows; the remaining local shadow structs keep C linkage under unique tags. daPly_c::InitResources keeps the inline asm block its shard carried. Baselines: the member definitions sit inside `extern \"C\" { }`, which tools/check_decl_agreement.py does not index, so retiring a shard removes its declarations from that gate's plurality vote; the resulting flips are banked in config/decl-agreement-baseline.json. Converted identities of retired shards are rewritten onto src/game/player/d_a_ply_methods.cpp#symbol.",
+    "DESTRUCTOR TAIL: ordinals 612..616 (0x020e67a8..0x020e6a08) and __sinit_ov002_021019d0 (.init 0x021019d0..0x02106e40). ~daPly_c() is the key function, with defer_codegen on for that definition only so the variants emit D2, D0, D1. D2 is deadstripped. _ZTV7daPly_c, _ZTI7daPly_c and _ZTS7daPly_c are deadstrip-data at ov002:0x0210a83c/0x0210a56c/0x0210a554. No header edit.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree's stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the owned .text and .init ranges identical.",
-    "REAL CONSTRUCTOR: _ZN6PlayerC1Ev (ordinal 614) is Player::Player() {}, compiled from embedded members instead of a hand-spelled free function. The retail body keeps this in r5 and this + 0xdc in r4 across the five model/animation member constructors (r4 + 0x14, + 0x98, + 0x100, + 0x150, + 0x178) while the shadow model, both dCcAcPos_c and the dBgCh_Actr are built off r5. That second anchor is the inlined implicit constructor of a nested sub-object whose `this` is Player + 0xdc, so include/Player.h groups 0x0dc..0x2ac as `struct Models { ... } mModels;`. Measured on 2004/b56: with the members flat the definition comes out 0xc0 (one anchor, 32 of 49 words differ); with the sub-object it is 0xc4 and byte-identical, and D0/D1 still match because the inlined Models destructor folds into this-relative offsets. An anonymous `struct { ... };` instead constructs the members twice. The sub-object must cover 0x0dc..0x27c; whether the two saved-texparam arrays (0x27c..0x2ac) belong to it is not settled by the bytes (both extents match); they are grouped with the models they save state for. C2 and the out-of-line Models D1 are deadstripped (compiler_only_output)."
+    "REAL CONSTRUCTOR: _ZN7daPly_cC1Ev (ordinal 614) is daPly_c::daPly_c() {}, compiled from embedded members instead of a hand-spelled free function. The retail body keeps this in r5 and this + 0xdc in r4 across the five model/animation member constructors (r4 + 0x14, + 0x98, + 0x100, + 0x150, + 0x178) while the shadow model, both dCcAcPos_c and the dBgCh_Actr are built off r5. That second anchor is the inlined implicit constructor of a nested sub-object whose `this` is daPly_c + 0xdc, so include/daPly_c.h groups 0x0dc..0x2ac as `struct Models { ... } mModels;`. Measured on 2004/b56: with the members flat the definition comes out 0xc0 (one anchor, 32 of 49 words differ); with the sub-object it is 0xc4 and byte-identical, and D0/D1 still match because the inlined Models destructor folds into this-relative offsets. An anonymous `struct { ... };` instead constructs the members twice. The sub-object must cover 0x0dc..0x27c; whether the two saved-texparam arrays (0x27c..0x2ac) belong to it is not settled by the bytes (both extents match); they are grouped with the models they save state for. C2 and the out-of-line Models D1 are deadstripped (compiler_only_output)."
   ],
   "compiler_only_output": [
     {
-      "symbol": "_ZN6PlayerD2Ev",
+      "symbol": "_ZN7daPly_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "Out-of-line ~Player under a deferred-codegen bracket emits D2, then D0, then D1. The cartridge has D0 at 0x020e67a8 and D1 at 0x020e6858 and no Player D2. D2 is homeless and is deadstripped; D0 and D1 stay in retail order."
+      "reason": "Out-of-line ~daPly_c under a deferred-codegen bracket emits D2, then D0, then D1. The cartridge has D0 at 0x020e67a8 and D1 at 0x020e6858 and no daPly_c D2. D2 is homeless and is deadstripped; D0 and D1 stay in retail order."
     },
     {
-      "symbol": "_ZN6PlayerC2Ev",
+      "symbol": "_ZN7daPly_cC2Ev",
       "disposition": "deadstrip",
-      "reason": "Base-subobject constructor emitted beside C1 by the one out-of-line Player::Player(). Nothing derives from Player, so the one retail caller, daPly_c_classInit (0x020e6c0c), calls C1 at 0x020e68f4; the cartridge has no C2 and nothing in this object references it. Discarded."
+      "reason": "Base-subobject constructor emitted beside C1 by the one out-of-line daPly_c::daPly_c(). Nothing derives from daPly_c, so the one retail caller, daPly_c_classInit (0x020e6c0c), calls C1 at 0x020e68f4; the cartridge has no C2 and nothing in this object references it. Discarded."
     },
     {
-      "symbol": "_ZN6Player6ModelsD1Ev",
+      "symbol": "_ZN7daPly_c6ModelsD1Ev",
       "disposition": "deadstrip",
-      "reason": "The implicit destructor of the nested Player::Models sub-object (0x0dc..0x2ac). ~Player destroys those members inline, as the retail D0 and D1 do, but the TU also emits this vague-linkage copy out of line (0x68, STB_LOPROC). No relocation in this object names it, no symbols.txt has a home for it, and the licensed bodies reproduce the cartridge without it."
+      "reason": "The implicit destructor of the nested daPly_c::Models sub-object (0x0dc..0x2ac). ~daPly_c destroys those members inline, as the retail D0 and D1 do, but the TU also emits this vague-linkage copy out of line (0x68, STB_LOPROC). No relocation in this object names it, no symbols.txt has a home for it, and the licensed bodies reproduce the cartridge without it."
     },
     {
-      "symbol": "_ZTV6Player",
+      "symbol": "_ZTV7daPly_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x0210a83c",
-      "reason": "The out-of-line destructor is the key function, so this TU emits the vtable for the coined Player class. The cartridge owns the record at ov002:0x0210a83c (31 slots; its typeinfo word relocates to _ZTI7daPly_c); it is compared word-for-word and stripped."
+      "reason": "The out-of-line destructor is the key function, so this TU emits daPly_c's vtable. The cartridge owns the record at ov002:0x0210a83c (31 slots); romdata_check compares it word-for-word, relocations resolved, and the copy is stripped."
     },
     {
-      "symbol": "_ZTI6Player",
+      "symbol": "_ZTI7daPly_c",
       "disposition": "deadstrip-data",
-      "canonical_symbol": "_ZTI7daPly_c",
       "canonical_module": "ov002",
       "canonical_address": "0x0210a56c",
-      "reason": "Player's typeinfo under the project spelling. The cartridge names the class daPly_c, and ~600 enrolled files still spell it Player, so the record is retargeted onto _ZTI7daPly_c (ov002:0x0210a56c) and compared word-for-word, relocations resolved, before it is discarded."
+      "reason": "Emitted with the vtable for the same key-function reason; the cartridge's single-inheritance record is ov002:0x0210a56c (abi si-class vptr, _ZTS7daPly_c, base _ZTI8dActor_c), compared word-for-word before the copy is discarded."
     },
     {
-      "symbol": "_ZTS6Player",
+      "symbol": "_ZTS7daPly_c",
       "disposition": "deadstrip-data",
-      "canonical_symbol": "_ZTS7daPly_c",
       "canonical_module": "ov002",
       "canonical_address": "0x0210a554",
-      "proof": "import",
-      "reason": "Player's type-name string. Its text is the project spelling, not the cartridge's \"7daPly_c\", so it is not byte-compared; the retargeted _ZTI6Player record above relocates to the cartridge string _ZTS7daPly_c (ov002:0x0210a554), and this coined section is discarded."
+      "reason": "The emitted type-name string equals the cartridge's record at ov002:0x0210a554 (the class carries the ROM's own daPly_c spelling), so the copy is discarded after proof."
     },
     {
       "symbol": "_ZTI8dActor_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e390",
-      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x0208e390, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside daPly_c's own RTTI. The cartridge keeps its canonical copy at arm9:0x0208e390, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
     },
     {
       "symbol": "_ZTS8dActor_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e384",
-      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x0208e384, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside daPly_c's own RTTI. The cartridge keeps its canonical copy at arm9:0x0208e384, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
     },
     {
       "symbol": "_ZTI7dBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e78",
-      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside daPly_c's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
     },
     {
       "symbol": "_ZTS7dBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e54",
-      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside daPly_c's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
     },
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086d70",
-      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside daPly_c's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
     },
     {
       "symbol": "_ZTS7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
-      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside daPly_c's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
     },
     {
       "symbol": "_ZN7Vector3D1Ev",
@@ -8972,7 +8969,7 @@
     {
       "symbol": "_ZN4PVecD1Ev",
       "disposition": "deadstrip",
-      "reason": "Player::St_YoshiPower_Main keeps a three-int stack vector whose empty user destructor (~X() {}) is the codegen lever its shard matched with. The shard declared the type at its own file scope; folded, it is given a TU-unique name so the vague-linkage D1 this row licenses has a stable symbol. The D1 (4 bytes, bx lr) is homeless: no symbols.txt names it, the retail link discarded it, and the licensed bodies reproduce the cartridge byte-for-byte without it."
+      "reason": "daPly_c::St_YoshiPower_Main keeps a three-int stack vector whose empty user destructor (~X() {}) is the codegen lever its shard matched with. The shard declared the type at its own file scope; folded, it is given a TU-unique name so the vague-linkage D1 this row licenses has a stable symbol. The D1 (4 bytes, bx lr) is homeless: no symbols.txt names it, the retail link discarded it, and the licensed bodies reproduce the cartridge byte-for-byte without it."
     },
     {
       "symbol": "_ZN8PVec869cD1Ev",
@@ -8995,15 +8992,15 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov002-Player/Player.o (gitignored)",
+    "object": "build/tu/ov002-daPly_c/d_a_ply_methods.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 624,
     "functions_declared": 624,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN6PlayerD2Ev",
-        "_ZN6PlayerC2Ev",
-        "_ZN6Player6ModelsD1Ev",
+        "_ZN7daPly_cD2Ev",
+        "_ZN7daPly_cC2Ev",
+        "_ZN7daPly_c6ModelsD1Ev",
         "_ZN7Vector3D1Ev",
         "_ZN6V3QuadD1Ev",
         "_ZN4PVecD1Ev",
@@ -9014,11 +9011,11 @@
       "deadstripped": [
         "_ZN11Vector3e968D1Ev",
         "_ZN4PVecD1Ev",
-        "_ZN6Player6ModelsD1Ev",
-        "_ZN6PlayerC2Ev",
-        "_ZN6PlayerD2Ev",
         "_ZN6V3QuadD1Ev",
         "_ZN7Vector3D1Ev",
+        "_ZN7daPly_c6ModelsD1Ev",
+        "_ZN7daPly_cC2Ev",
+        "_ZN7daPly_cD2Ev",
         "_ZN8PVec869cD1Ev",
         "_ZN8PVec8944D1Ev"
       ],
@@ -9036,13 +9033,41 @@
         1205,
         1206,
         1840,
-        1841
+        1841,
+        1842,
+        1843,
+        1844,
+        1845,
+        1846,
+        1847,
+        1848,
+        1849,
+        1850,
+        1851,
+        1852,
+        1853
       ],
       "data": [
-        "_ZTV6Player"
+        "_ZTV7daPly_c",
+        "_ZTI7daPly_c",
+        "_ZTS7daPly_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
       ],
       "dataExternalized": [
-        "_ZTV6Player"
+        "_ZTI7dBase_c",
+        "_ZTI7daPly_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS7dBase_c",
+        "_ZTS7daPly_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7daPly_c"
       ],
       "canonicalDuplicates": []
     },
@@ -9056,7 +9081,7 @@
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
       "result": "scratch-data-verified",
-      "scratch": "build/tu/ov002-Player/link (gitignored)",
+      "scratch": "build/tu/ov002-daPly_c/link (gitignored)",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -9227,77 +9252,77 @@
     {
       "from": "_ZGVsLevelIntroOff$4413",
       "to": "_ZGVsLevelIntroOff$4424",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 2 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 2 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "@4416",
       "to": "@4427",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 2 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 2 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "sLevelIntroOff$4413",
       "to": "sLevelIntroOff$4424",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 2 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 2 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "_ZGVsTalkOff$4635",
       "to": "_ZGVsTalkOff$4648",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "@4638",
       "to": "@4651",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "sTalkOff$4635",
       "to": "sTalkOff$4648",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "_ZGVsAnchorOff$6209",
       "to": "_ZGVsAnchorOff$6223",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "@6212",
       "to": "@6226",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "sAnchorOff$6209",
       "to": "sAnchorOff$6223",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "_ZGVsDoorMsgOff$6237",
       "to": "_ZGVsDoorMsgOff$6251",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "@6240",
       "to": "@6254",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "sDoorMsgOff$6237",
       "to": "sDoorMsgOff$6251",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "_ZGVsStarDoorOff$6902",
       "to": "_ZGVsStarDoorOff$6917",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "@6905",
       "to": "@6920",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
       "from": "sStarDoorOff$6902",
       "to": "sStarDoorOff$6917",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in Player.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     }
   ],
   "relocations": [
@@ -24757,7 +24782,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "_ZN6Player7ST_WAITE",
+      "symbol": "_ZN7daPly_c7ST_WAITE",
       "target_module": "ov002",
       "target_address": "0x02110154"
     },
@@ -24977,7 +25002,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "_ZN6Player6ST_OWLE",
+      "symbol": "_ZN7daPly_c6ST_OWLE",
       "target_module": "ov002",
       "target_address": "0x02110244"
     },

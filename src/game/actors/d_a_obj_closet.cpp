@@ -36,7 +36,7 @@
  */
 
 #include "daObjCloset_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Message.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -101,7 +101,7 @@ s32 daObjCloset_c::Behavior() {
     volatile Vec3Raw selfPos, frontPos, playerPos;
     Vec3Raw actorPos;
     volatile Vec3Raw colliderPos;
-    Player *target = mTalkingPlayer;
+    daPly_c *target = mTalkingPlayer;
 
     if (target) {
         /* Copied and never read. volatile keeps the stores. */
@@ -193,8 +193,8 @@ s32 daObjCloset_c::Behavior() {
             angleToActor = Vec3_HorzAngle((struct Vec3Raw *)&mPosX, &actorPos);
             diff = AngleDiff(angleToActor, mAngleY);
             if (diff < kQuarterTurn) {
-                if (((Player *)actor)->StartTalk(*this, 0) != 0) {
-                    mTalkingPlayer = (Player *)actor;
+                if (((daPly_c *)actor)->StartTalk(*this, 0) != 0) {
+                    mTalkingPlayer = (daPly_c *)actor;
                     break;
                 }
             }

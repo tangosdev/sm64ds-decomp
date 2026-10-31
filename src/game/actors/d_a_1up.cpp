@@ -65,7 +65,7 @@ struct System {
  * own definition -- and `func_ov002_020d0d2c(void *)` and `Vec3_Asr`,
  * both already in the decl region above; the header's other ~1900
  * catch-all spellings would only add overloading-conflict surface
- * against them. ov002/Player and ov006/dScMgPanel_c, the two largest
+ * against them. ov002/daPly_c and ov006/dScMgPanel_c, the two largest
  * promoted TUs, exclude it for the same reason.
  *
  * 35 OF THE 38 SYMBOLS ARE MEMBERS, written as 34 `da1up_c::` definitions
@@ -134,7 +134,7 @@ struct System {
 #include "da1up_c.h"
 #include "dBgCh_Actr.h"
 #include "dBgCh_Gnd.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
@@ -314,7 +314,7 @@ void da1up_c::func_ov002_020aefb8() {
 /* Steering toward the player, called from state 1 of type 7. Takes the closest
    player; if there is one, builds the vector to it -- the aim point is the
    player's y lowered by 80 units (0x50000) when func_ov002_020d0d2c says the
-   player is in one of two Player states and raised by 120 units (0x78000)
+   player is in one of two daPly_c states and raised by 120 units (0x78000)
    otherwise -- and steps mPrevAngleY toward the horizontal bearing and
    mPrevAngleX toward the pitch (cstd::atan2(horizontal length, height
    difference)), at most 0x1000 (22.5 degrees) per frame each. mVertSpeed and
@@ -326,7 +326,7 @@ void da1up_c::func_ov002_020af0c0() {
     extern short data_02082214[];
     /* Forward: ordinal 11 sits above this one in ROM order. */
 
-    Player* p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     if(p != 0){
         Vector3 diff;
         Vector3 ppos;
@@ -361,11 +361,11 @@ void da1up_c::func_ov002_020af0c0() {
    every frame); it is looked up with dActor_c::FindWithID and returned only
    when hitFlags bit 0x400000 is set -- the "player" bit of the table in
    include/dCc_c.h, a best-effort reading there that the callers' use of the
-   result as a Player agrees with. */
-Player *da1up_c::func_ov002_020af1dc() {
-    Player *r = 0;
+   result as a daPly_c agrees with. */
+daPly_c *da1up_c::func_ov002_020af1dc() {
+    daPly_c *r = 0;
     unsigned int id = mdCcAc_c.otherOwner;
-    if (id && (r = (Player *)dActor_c::FindWithID(id)) && (mdCcAc_c.hitFlags & CC_HIT_PLAYER))
+    if (id && (r = (daPly_c *)dActor_c::FindWithID(id)) && (mdCcAc_c.hitFlags & CC_HIT_PLAYER))
         return r;
     return 0;
 }
@@ -420,11 +420,11 @@ int da1up_c::func_ov002_020af248(int n) {
    ordinals 19 and 22 retain the player lookup result and its null test. */
 extern "C" {
 void GiveLives(int count);
-void func_ov002_020bdf8c(Player* player);
+void func_ov002_020bdf8c(daPly_c *player);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c13OnTurnIntoEggER6Player
+// @symbol _ZN7da1up_c13OnTurnIntoEggER7daPly_c
 /* Vtable slot 19, verified against config/arm9/overlays/ov002/relocs.txt:
    _ZTV7da1up_c (0x021083c8) + 0x4c relocates to 0x020af2b0, this address.
    Collects the mushroom for `player` (the hook for a mushroom being turned
@@ -432,10 +432,9 @@ void func_ov002_020bdf8c(Player* player);
    func_ov002_020af684 with target 5 and 7, the same hand-off their touch
    handlers make. Otherwise a 1-Up (actorID 276) plays sound 0x6e, gives one
    life, spawns the 1UP logo actor (331) 180 units (0xb4000) above itself and
-   removes itself; any other actor ID calls Player::func_ov002_020bdf8c on
+   removes itself; any other actor ID calls daPly_c::func_ov002_020bdf8c on
    `player` and removes itself. */
-void da1up_c::OnTurnIntoEgg(Player &player)
-{
+void da1up_c::OnTurnIntoEgg(daPly_c &player) {
     if (mMushroomType == MUSHROOM_SPIN_TRIGGER_FOR_5) {
         return func_ov002_020af684(MUSHROOM_HIDDEN_FLEE, &player);
     }
@@ -472,12 +471,12 @@ s32 da1up_c::OnYoshiTryEat()
 /* The touch-collection step, called from every behaviour except types 6, 8, 9,
    10, 11 and 12. Does nothing unless func_ov002_020af1dc finds a player touching
    the cylinder. Then: the Mega Mushroom (actorID 277) calls
-   Player::func_ov002_020bdf8c on that player; the 1-Up (actorID 276) plays sound
+   daPly_c::func_ov002_020bdf8c on that player; the 1-Up (actorID 276) plays sound
    0x6e, gives one life and spawns the 1UP logo actor (331) 180 units (0xb4000)
    above itself; either way the mushroom then removes itself. */
 void da1up_c::func_ov002_020af3a8() {
 
-    Player *r = func_ov002_020af1dc();
+    daPly_c *r = func_ov002_020af1dc();
     if (r == 0)
         return;
 
@@ -599,7 +598,7 @@ void da1up_c::func_ov002_020af4ec() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af684EiP6Player
+// @symbol _ZN7da1up_c19func_ov002_020af684EiP7daPly_c
 /* Shared with the egg-turn hook and dispatch indices 8 and 6. This helper
    finishes by killing the actor and returns no value. Its callers use the same
    void contract; the lookup result in ordinals 19 and 22 is still needed as
@@ -612,8 +611,8 @@ void da1up_c::func_ov002_020af4ec() {
    playing sound 0x12 when the player is underwater and 0x11 otherwise -- the
    same calls and sounds dActor_c::GivePlayerCoins makes for a single coin.
    Always ends by removing the mushroom. */
-void da1up_c::func_ov002_020af684(int target, Player* player) {
-    Player* p = player;
+void da1up_c::func_ov002_020af684(int target, daPly_c *player) {
+    daPly_c *p = player;
     dActor_c* found = 0;
     for (;;) {
         found = dActor_c::FindWithActorID(actorID, found);
@@ -728,7 +727,7 @@ void da1up_c::func_ov002_020af908() {
    hands off to func_ov002_020af684 with target 7 (a waiting type 7 loses one
    from its mUnlockCount). */
 void da1up_c::func_ov002_020af924() {
-    Player *r = func_ov002_020af1dc();
+    daPly_c *r = func_ov002_020af1dc();
     if (!r)
         return;
     func_ov002_020af684(7, r);
@@ -797,7 +796,7 @@ void da1up_c::func_ov002_020afa50() {
    hands off to func_ov002_020af684 with target 5 (a waiting type 5 loses one
    from its mUnlockCount). */
 void da1up_c::func_ov002_020afa6c() {
-    Player *r = func_ov002_020af1dc();
+    daPly_c *r = func_ov002_020af1dc();
     if (!r)
         return;
     func_ov002_020af684(5, r);
@@ -966,7 +965,7 @@ void da1up_c::func_ov002_020afd10() {
    a turn (0x8000), runs the touch check, and goes to state 2 when the floor
    collision reports a wall or the player is not within 3000 units. */
 void da1up_c::func_ov002_020afde4() {
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     if (p) {
         mPrevAngleY = Vec3_HorzAngle(&mPos, &p->mPos) + 0x8000;
     }

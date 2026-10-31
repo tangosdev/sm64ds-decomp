@@ -29,7 +29,7 @@ local interfaces. The state helper now returns void; its sole recorded caller
 discards the result. A `short` angle local and actual `GetSubtraction` member call
 avoid the redundant argument sign extension while preserving the ROM comparison.
 The other corrected declarations use the actual pinned scalar returns, pointer
-views and widths for sound, Player Hurt/Bounce, SetAnim and DropShadow.
+views and widths for sound, daPly_c Hurt/Bounce, SetAnim and DropShadow.
 
 The genuine fixed-point SetAnim and DropShadow member alternatives were compiled
 as valid full-TU probes. They grow the affected functions; exact attempted source

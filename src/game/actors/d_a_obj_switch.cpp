@@ -34,7 +34,7 @@ enum daObjSwitch_c_AssetId {
 
 #include "common.h"
 #include "daObjSwitch_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "daStar_c.h"
@@ -130,7 +130,7 @@ extern "C" void func_ov002_020baa98(void *collider, daObjSwitch_c *self, dActor_
  * enough, and the player must be within 0x98 units of the switch. */
 extern "C" void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other)
 {
-    Player *player = static_cast<Player *>(other);
+    daPly_c *player = static_cast<daPly_c *>(other);
     unsigned int isPlayer = other->actorID == 0xbf;
     if (isPlayer == 0) return;
     if (player->mIsUnderwater != 0) {

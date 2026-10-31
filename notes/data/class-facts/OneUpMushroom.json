@@ -82,7 +82,7 @@
       {"slot": 16, "address": "0x020aee40", "name": "~da1up_c (D1)",    "current_symbol": "_ZN13OneUpMushroomD1Ev",                "size": "0x48"},
       {"slot": 17, "address": "0x020aee88", "name": "~da1up_c (D0)",    "current_symbol": "_ZN13OneUpMushroomD0Ev",                "size": "0x5c"},
       {"slot": 18, "address": "0x020af3a0", "name": "OnYoshiTryEat",    "current_symbol": "_ZN13OneUpMushroom13OnYoshiTryEatEv",   "size": "0x8",  "body": "mov r0,#4; bx lr", "note": "returns 4"},
-      {"slot": 19, "address": "0x020af2b0", "name": "OnTurnIntoEgg",    "current_symbol": "_ZN13OneUpMushroom13OnTurnIntoEggER6Player", "size": "0xf0"}
+      {"slot": 19, "address": "0x020af2b0", "name": "OnTurnIntoEgg",    "current_symbol": "_ZN13OneUpMushroom13OnTurnIntoEggER7daPly_c", "size": "0xf0"}
     ],
     "inherited": [
       {"slot": 1,  "address": "0x02011268", "module": "arm9", "target": "_ZN8dActor_c19BeforeInitResourcesEv"},
@@ -103,7 +103,7 @@
       {"slot": 24, "address": "0x0201013c", "module": "arm9", "target": "_ZN8dActor_c8OnKickedERS_"},
       {"slot": 25, "address": "0x02010138", "module": "arm9", "target": "_ZN8dActor_c8OnPushedERS_"},
       {"slot": 26, "address": "0x02010134", "module": "arm9", "target": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_"},
-      {"slot": 27, "address": "0x02010130", "module": "arm9", "target": "_ZN8dActor_c15OnHitByMegaCharER6Player"},
+      {"slot": 27, "address": "0x02010130", "module": "arm9", "target": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c"},
       {"slot": 28, "address": "0x0201012c", "module": "arm9", "target": "_ZN8dActor_c19OnHitFromUnderneathERS_"},
       {"slot": 29, "address": "0x02010124", "module": "arm9", "target": "_ZN8dActor_c16OnAimedAtWithEggEv"},
       {"slot": 30, "address": "0x020100dc", "module": "arm9", "target": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv"}
@@ -253,7 +253,7 @@
       "0x020aed18 _ZN12dEnemyBase_cD2Ev",
       "0x020aed98 _ZN12dEnemyBase_cC2Ev",
       "0x020bdf8c func_ov002_020bdf8c",
-      "0x020bf4e4 _ZN6Player4HealEi",
+      "0x020bf4e4 _ZN7daPly_c4HealEi",
       "0x020d0d2c func_ov002_020d0d2c",
       "0x020ff040 data_ov002_020ff040 (InitResources literal)",
       "0x020ff050 data_ov002_020ff050 (InitResources literal)",
@@ -308,7 +308,7 @@
     "manifest_dir": "config/tu_manifest.d/ov002/ (no da1up_c.json or OneUpMushroom.json yet)",
     "sibling_oracle": "config/tu_manifest.d/ov002/daBar_c.json -- status promoted, text-only, 8 functions, run 0x020b05d0..0x020b0748, immediately ABOVE this run in address order. Its include/daBar_c.h is the model for the inline-dtor + InitResources-key-function source form.",
     "converted_baseline_entries_that_will_change": [
-      "src/_ZN13OneUpMushroom13OnTurnIntoEggER6Player.cpp",
+      "src/_ZN13OneUpMushroom13OnTurnIntoEggER7daPly_c.cpp",
       "src/_ZN13OneUpMushroom13OnYoshiTryEatEv.cpp",
       "src/_ZN13OneUpMushroom16OnPendingDestroyEv.cpp",
       "src/_ZN13OneUpMushroomD0Ev.cpp",

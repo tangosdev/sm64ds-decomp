@@ -510,7 +510,7 @@
       "id": "RCV2908-02",
       "kind": "correctness",
       "location": "src/actors/player.cpp and static-destructor registration callers",
-      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local daPly_c declarations and calls.",
       "summary": "Registration carries object and callback addresses as pointers."
     },
     {
@@ -559,7 +559,7 @@
       "kind": "correctness",
       "location": "src/actors/player.cpp Vector destructor imports",
       "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
-      "summary": "The five omitted Player Vector imports are covered."
+      "summary": "The five omitted daPly_c Vector imports are covered."
     },
     {
       "disposition": "fixed",

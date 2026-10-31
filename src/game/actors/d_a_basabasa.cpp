@@ -26,7 +26,7 @@ enum daBasabasa_c_AssetId {
 #include "common.h"
 #include "daBasabasa_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
@@ -85,13 +85,13 @@ daBasabasa_c::~daBasabasa_c() {}
 // @symbol _ZN12daBasabasa_c10CheckTouchEv
 /* Reacts to whatever the collision cylinder touched this frame. */
 void daBasabasa_c::CheckTouch() {
-    Player *p;
+    daPly_c *p;
     int flags;
     int isPlayer;
 
     if (mdCcAc_c.otherOwner == 0)
         return;
-    p = (Player *)dActor_c::FindWithID(mdCcAc_c.otherOwner);
+    p = (daPly_c *)dActor_c::FindWithID(mdCcAc_c.otherOwner);
     if (p == 0)
         return;
     flags = mdCcAc_c.hitFlags;
@@ -268,7 +268,7 @@ int daBasabasa_c::EnterChase() {
 // @symbol _ZN12daBasabasa_c11ExecuteDropEv
 int daBasabasa_c::ExecuteDrop() {
     int floorY, posY;
-    Player *p;
+    daPly_c *p;
     mPrevAngleY += 0x1000;
     p = ClosestPlayer();
     posY = mPosY;
@@ -299,7 +299,7 @@ int daBasabasa_c::EnterDrop() {
 
 // @symbol _ZN12daBasabasa_c12ExecutePerchEv
 int daBasabasa_c::ExecutePerch() {
-    Player *p = ClosestNonVanishPlayer();
+    daPly_c *p = ClosestNonVanishPlayer();
     if (p) {
         Vector3 v;
         /* One base pointer: reading p->mPosX and so on directly compiles differently. */
@@ -428,7 +428,7 @@ int daBasabasa_c::Behavior() {
     }
     mdCcAc_c.Clear();
     {
-        Player *p = ClosestPlayer();
+        daPly_c *p = ClosestPlayer();
         if (p != 0 && p->mIsVanish == 0) {
             mdCcAc_c.Update();
         }
@@ -472,8 +472,8 @@ s32 daBasabasa_c::OnAimedAtWithEgg() {
     return 0;
 }
 
-// @symbol _ZN12daBasabasa_c13OnTurnIntoEggER6Player
-void daBasabasa_c::OnTurnIntoEgg(Player &player) {
+// @symbol _ZN12daBasabasa_c13OnTurnIntoEggER7daPly_c
+void daBasabasa_c::OnTurnIntoEgg(daPly_c &player) {
     GivePlayerCoins(player, (unsigned char)(mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();
 }

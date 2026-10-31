@@ -737,7 +737,7 @@ they cost minutes; discover them after and each is a cycle.
   **But "hand-curate one declaration per symbol" is the wrong next step, and at
   real size it is unworkable.** 301 independent recoveries of one symbol
   disagree constantly, and forcing a single spelling rewrites call sites.
-  Measured on [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`Player` (301 members): in mwccarm 2004/b56 a declaration
+  Measured on [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`daPly_c` (301 members): in mwccarm 2004/b56 a declaration
   written at **block scope inside an `extern "C"` region gets C linkage**, and
   two function bodies may declare one C symbol with **different types**. So keep
   every member's declarations **inside its own body** and merge nothing. Hoist
@@ -788,7 +788,7 @@ they cost minutes; discover them after and each is a cycle.
 - **Canonicalising a DATA declaration is a codegen hazard, exactly like merging
   a shared `struct`.** Hoisting one canonical data declaration and casting each
   member's view back with a macro **changed the codegen of six members** on
-  `Player` — and which spelling became canonical depended on which *other*
+  `daPly_c` — and which spelling became canonical depended on which *other*
   members happened to be in the file. Moving the data declarations back to block
   scope recovered all six. The role file named the struct case as a hazard and
   said nothing about data; they are the same hazard.
@@ -848,7 +848,7 @@ rule, not a default.** `decl_common.h` declares 10 of [ov006](../../../config/ar
 members and **7 of the 10 contradict the byte-matched shard**, two of them on
 the return type. Including it makes each an `illegal function overloading`
 error against code that already matches. That TU excluded the header (the [ov002](../../../config/arm9/overlays/ov002/symbols.txt)
-`Player` precedent) and gave the four class-method members their `decl_common`
+`daPly_c` precedent) and gave the four class-method members their `decl_common`
 declarations at block scope instead — **and that half did not link**; they had
 to move to a file-scope `extern "C"` region, for the reason measured above.
 Excluding the header does not free you from giving a C++-named member's
@@ -1139,7 +1139,7 @@ measured on [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgHanac
   **Why the bracket alone is not enough, stated precisely: with codegen
   deferred, the state that binds is the state at END OF FILE.** So a `push` /
   `opt_X off` / `pop` bracket restores the *other* members but cannot give the
-  bracketed member its own setting. The full chain, measured on [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`Player`
+  bracketed member its own setting. The full chain, measured on [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`daPly_c`
   (301 members, one `#pragma opt_propagation off` at ordinal 35):
 
   | configuration | result |
@@ -1153,7 +1153,7 @@ measured on [ov006](../../../config/arm9/overlays/ov006/symbols.txt)/`dScMgHanac
   While codegen is deferred the bracket binds to nothing, so it is worth **zero**
   members — not "buys back the casualties but not its own". An earlier revision of
   this file printed 250 / 293 / 294 here and glossed a "294-vs-301 gap"; those
-  figures do not reproduce. Re-measured on the shipped [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`Player` TU.
+  figures do not reproduce. Re-measured on the shipped [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`daPly_c` TU.
 
   **The ROM-ascending rewrite is not optional when you adopt it.** Same class,
   same bytes, three configurations:

@@ -118,9 +118,9 @@ struct daTrs_c : dCapEnemy_c {
     dExtShadowModel_c                mShadowModel2;               /* 0x45c */
     /* Refreshed from ClosestPlayer every Behavior; the angle/distance below
        are measured against it. */
-    Player *mClosestPlayer;    /* 0x484 */
+    daPly_c *mClosestPlayer; /* 0x484 */
     /* The player this Boo is talking to (02117b0c StartTalk/GetTalkState). */
-    Player *mTalkPlayer;       /* 0x488 */
+    daPly_c *mTalkPlayer; /* 0x488 */
     /* Scratch for FindWithID results; every user clears it after the use. */
     dActor_c *mFoundActor;     /* 0x48c */
     /* uniqueID of the 0xd/0xe Big Boo, resolved by 02119c58 by scanning the
@@ -230,7 +230,7 @@ struct daTrs_c : dCapEnemy_c {
        does with its star marker (02118b98); 2 is special in 02119bb0. */
     s32 mDeathMode;            /* 0x5a4 */
     s32 unk_5a8;               /* 0x5a8 -- written 0xa/0, no reader recovered */
-    /* Hurt damage passed to Player::Hurt (data_ov063_0211e1ec[mVariant]). */
+    /* Hurt damage passed to daPly_c::Hurt (data_ov063_0211e1ec[mVariant]). */
     u32 mHurtDamage;           /* 0x5ac */
     s16 mAngleToPlayer;        /* 0x5b0 -- Vec3_HorzAngle each Behavior */
     s16 unk_5b2;               /* 0x5b2 -- yaw snapshot, no reader recovered */

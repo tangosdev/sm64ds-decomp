@@ -25,7 +25,7 @@
  *   w0 & 0x1f            CLPS::func_02037e84     collision kind
  *   w0 & 0x20            SurfaceInfo_TestFlag0x20   water
  *   (w0 >> 6)  & 0x3f    CLPS::func_02037e68
- *   (w0 >> 12) & 0x7     CLPS::GetFloorClass     Player.h's slipperiness class
+ *   (w0 >> 12) & 0x7     CLPS::GetFloorClass     daPly_c.h's slipperiness class
  *   (w0 >> 15) & 0xf     CLPS::func_02037e48
  *   (w0 >> 19) & 0x1f    CLPS::GetSurfaceType    dBgCh::ShouldPassThrough
  *                                                Impl special-cases 0x11 and 0x14
@@ -41,7 +41,7 @@
  *
  * The six the player's floor update reads are const members. Two of them
  * have names: dBgCh::ShouldPassThroughImpl and the player both treat
- * GetSurfaceType's value as the surface type, and include/Player.h traces
+ * GetSurfaceType's value as the surface type, and include/daPly_c.h traces
  * GetFloorClass's value through five slope and slide tables. The other four
  * keep their addresses as names, because nothing yet says what they mean. The
  * water and toxic tests still take a raw word pointer; the camera tests

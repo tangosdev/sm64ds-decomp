@@ -302,7 +302,7 @@ Pilot targets — highest unmigrated count *and* an existing reconstructed heade
 | class | unmigrated | kinds |
 |---|---|---|
 | `Actor` | 65 | `C1:1 C2:1 D0:1 D1:1 D2:1 method:60` |
-| `Player` | 48 | `C1:1 C3:1 D0:1 D2:1 method:44` |
+| `daPly_c` | 48 | `C1:1 C3:1 D0:1 D2:1 method:44` |
 | `dScStage_c` | 25 | `C3:1 D0:1 D2:1 method:22` |
 | `Scene` | 23 | `D0:1 D1:1 D2:1 method:20` |
 | `Heap` | 19 | `C1:1 D0:1 D1:1 D2:1 method:15` |
@@ -319,7 +319,7 @@ files that do not include it. Nor does Scene carry one of each variant: `_ZN5Sce
 `dScBoot_c`'s D1 (`notes/dtor-variant-audit.md`). Pick the pilot from `--by-class` output
 that has been through that audit. `Actor` is the prize (65 files, base of the actor hierarchy) and also the
 widest blast radius in the tree: take it third or fourth, once the procedure is boring.
-Note that `Actor`, `Player`, `dScStage_c` and `Heap` each carry a ctor variant, which is Phase 5
+Note that `Actor`, `daPly_c`, `dScStage_c` and `Heap` each carry a ctor variant, which is Phase 5
 research — split those files out of the slice rather than letting them block it.
 
 Heed the runbook's warning on the C side: a polymorphic class needs an explicit

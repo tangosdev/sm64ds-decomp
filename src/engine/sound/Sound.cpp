@@ -23,7 +23,7 @@
  *   sound handle raw; the table-side alloc/link/unlink/find sites use the
  *   typed SndRegTable view below.
  * - func_02013078 reads the player object raw (+0x706 flag byte, +0x60 word);
- *   Player.h is out of scope for this TU.
+ *   daPly_c.h is out of scope for this TU.
  */
 #include "types.h"
 #include "Sound.h"

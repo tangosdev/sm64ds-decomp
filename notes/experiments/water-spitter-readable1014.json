@@ -17,7 +17,7 @@
     "include/daWater_Hakidasi_c.h",
     "notes/experiments/water-spitter-readable1014.json"
   ],
-  "change": "Use existing Player metal/position members and factory-evidenced daWater_Ring_c members; include Model.h and consume its static void* LoadFile API with discarded result. Remove the replaced namespace shadow and duplicate scalar typedef. The review continuation corrects two header comments only. No header fields, typedefs, layout or signatures, manifest, config, names, enrollment or policy changed.",
+  "change": "Use existing daPly_c metal/position members and factory-evidenced daWater_Ring_c members; include Model.h and consume its static void* LoadFile API with discarded result. Remove the replaced namespace shadow and duplicate scalar typedef. The review continuation corrects two header comments only. No header fields, typedefs, layout or signatures, manifest, config, names, enrollment or policy changed.",
   "source_completion": "partial",
   "remaining_reconstruction": [
     {
@@ -55,7 +55,7 @@
       "location": "src/actors/daWater_Hakidasi_c.cpp:class helpers / ring velocity fields",
       "kind": "reconstruction",
       "disposition": "deferred",
-      "summary": "Address-derived member names and unknown fields remain. Existing unk_0a4/unk_0ac spellings were retained without guessed semantics. Real Player is the current reconstructed class view, not proof of an original class-name spelling.",
+      "summary": "Address-derived member names and unknown fields remain. Existing unk_0a4/unk_0ac spellings were retained without guessed semantics. Real daPly_c is the current reconstructed class view, not proof of an original class-name spelling.",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3848",
       "owner": "class coordinator; next explicitly claimed producer",
       "reason": "Retained reconstruction work outside this reviewed field/API and header-provenance cleanup; tracked on issue3848 with the existing concrete owner. No unique original spelling or universal compiler impossibility is claimed."

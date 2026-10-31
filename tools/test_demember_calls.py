@@ -169,7 +169,7 @@ def test_a_call_that_never_matched_still_stops_the_file():
 
 # ------------------------------------------------------- the implicit-`this` shape
 
-# Player::St_Land_Init (src/game/player/Player.cpp) in miniature: the body IS a Player member, and
+# Player::St_Land_Init (src/game/player/d_a_ply_methods.cpp) in miniature: the body IS a Player member, and
 # calls its sibling with no receiver at all.
 IMPLICIT = """\
 struct Player {

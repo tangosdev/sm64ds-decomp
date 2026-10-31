@@ -225,7 +225,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `pad_460`, `pad_46c`); `mState` at `0x364`, which is really a pointer to a
   state record but is kept an opaque `s32` because `Behavior` compares it by
   address against four [ov085](../../../config/arm9/overlays/ov085/symbols.txt) objects; **`mTalkingPlayer` at `0x45c`, which the
-  header's own comment documents as "A Player *" while declaring it `s32`, and
+  header's own comment documents as "A daPly_c *" while declaring it `s32`, and
   which the body then round-trips through `*(void **)&mTalkingPlayer` at three
   sites** — it was missing from the previous list entirely and is the cheapest
   correct field recovery left in the class; the `daMip_cSelf` shadow struct the

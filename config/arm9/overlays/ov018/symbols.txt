@@ -1,6 +1,6 @@
 _ZN14daObjSm_Lift_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN14daObjSm_Lift_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-_ZN14daObjSm_Lift_c15OnHitByMegaCharER6Player kind:function(arm,size=0x3c) addr:0x0211123c
+_ZN14daObjSm_Lift_c15OnHitByMegaCharER7daPly_c kind:function(arm,size=0x3c) addr:0x0211123c
 _ZN14daObjSm_Lift_c20UpdateModelTransformEv kind:function(arm,size=0x84) addr:0x02111278
 _ZN14daObjSm_Lift_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021112fc
 _ZN14daObjSm_Lift_c6RenderEv kind:function(arm,size=0x28) addr:0x02111340
@@ -38,7 +38,7 @@ _ZN8daSCre_c8BehaviorEv kind:function(arm,size=0x5c) addr:0x02112730
 daSCre_c_classInit kind:function(arm,size=0x30) addr:0x0211278c
 _ZN15daObjIceBoard_cD1Ev kind:function(arm,size=0x44) addr:0x021127bc
 _ZN15daObjIceBoard_cD0Ev kind:function(arm,size=0x58) addr:0x02112800
-_ZN15daObjIceBoard_c15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x02112858
+_ZN15daObjIceBoard_c15OnHitByMegaCharER7daPly_c kind:function(arm,size=0x28) addr:0x02112858
 _ZN15daObjIceBoard_c4KillEv kind:function(arm,size=0x60) addr:0x02112880
 _ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c kind:function(arm,size=0x44) addr:0x021128e0
 _ZN15daObjIceBoard_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112924

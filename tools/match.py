@@ -159,7 +159,7 @@ def memoize_compiles(enabled=True):
 
     For a caller that checks ONE fixed tree. pr_linkcheck builds one object per owned
     symbol, and reloc_audit.winning_object hands each of those a fresh temp copy of the
-    source -- so a translation unit owning 612 functions (src/game/player/Player.cpp)
+    source -- so a translation unit owning 612 functions (src/game/player/d_a_ply_methods.cpp)
     was compiled 612+ times, once per symbol, for the same bytes every time. Under Wine
     on the validator that was a 40-minute link check for a one-file PR.
 

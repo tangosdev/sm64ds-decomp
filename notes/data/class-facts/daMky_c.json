@@ -265,7 +265,7 @@
         "module": "ov030",
         "own": true,
         "interface": "OnTurnIntoEgg",
-        "symbol": "_ZN5Ukiki13OnTurnIntoEggER6Player",
+        "symbol": "_ZN5Ukiki13OnTurnIntoEggER7daPly_c",
         "is_veneer": true
       },
       {
@@ -330,7 +330,7 @@
         "module": "arm9",
         "own": false,
         "interface": "OnHitByMegaChar",
-        "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player"
+        "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c"
       },
       {
         "slot": 28,
@@ -478,10 +478,10 @@
       "address": "0x021145d4",
       "size": "0xc",
       "name": "OnTurnIntoEgg",
-      "symbol": "_ZN5Ukiki13OnTurnIntoEggER6Player",
+      "symbol": "_ZN5Ukiki13OnTurnIntoEggER7daPly_c",
       "is_veneer": true,
       "body": "ldr ip,[pc]; bx ip; .word 0x02043824",
-      "note": "CORRECTION vs the previous scout file, which listed this as an ordinary override body. These 12 bytes are a linker long-branch VENEER, not a function body. The literal 0x02043824 is _ZN7fBase_c18MarkForDestructionEv in arm9. r0 still holds `this` at the jump, so the effective behaviour is fBase_c::MarkForDestruction(this) and the Player& argument is dropped. The existing shard src/_ZN5Ukiki13OnTurnIntoEggER6Player.cpp already models this as `{ MarkForDestruction(); }` (note: it has no return statement despite an `int` return type). Whether the original source wrote a one-line forwarding member or something else is an INFERENCE -- the veneer shape is the only ROM-proven part."
+      "note": "CORRECTION vs the previous scout file, which listed this as an ordinary override body. These 12 bytes are a linker long-branch VENEER, not a function body. The literal 0x02043824 is _ZN7fBase_c18MarkForDestructionEv in arm9. r0 still holds `this` at the jump, so the effective behaviour is fBase_c::MarkForDestruction(this) and the daPly_c& argument is dropped. The existing shard src/_ZN5Ukiki13OnTurnIntoEggER7daPly_c.cpp already models this as `{ MarkForDestruction(); }` (note: it has no return statement despite an `int` return type). Whether the original source wrote a one-line forwarding member or something else is an INFERENCE -- the veneer shape is the only ROM-proven part."
     }
   ],
   "text_run": {

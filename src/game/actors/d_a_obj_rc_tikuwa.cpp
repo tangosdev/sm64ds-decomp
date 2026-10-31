@@ -160,7 +160,7 @@ s32 daObjRc_Tikuwa_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* dBgW's collision callback body (ov036 0x02111ca4): an actor with actor ID
- * 0xbf (the Player) on the block sets mHadClsn. */
+ * 0xbf (the daPly_c) on the block sets mHadClsn. */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjRc_Tikuwa_c9OnStoodOnEP8dActor_c
 void daObjRc_Tikuwa_c::OnStoodOn(dActor_c *other) {

@@ -169,7 +169,7 @@
       "slot": 19,
       "address": "0x02136cd0",
       "size": "0x40",
-      "symbol": "_ZN5Pokey13OnTurnIntoEggER6Player",
+      "symbol": "_ZN5Pokey13OnTurnIntoEggER7daPly_c",
       "inherited_name": "OnTurnIntoEgg",
       "declared_in": "dActor_c",
       "note": "head-only branch on [this+0xc]==0xf0"
@@ -624,7 +624,7 @@
           "func_ov096_021365d4",
           "func_ov096_02136754"
         ],
-        "note": "largest function in the class; owns all 7 cross-overlay calls into ov002 Player"
+        "note": "largest function in the class; owns all 7 cross-overlay calls into ov002 daPly_c"
       },
       {
         "address": "0x02135e2c",
@@ -782,7 +782,7 @@
     "arm9",
     "ov002"
   ],
-  "modules_evidence": "164 outbound relocations from the daSanbo_c text run: 116 module:main (arm9), 41 module:overlay(96) (self), 7 module:overlay(2). All 7 ov002 rows come from func_ov096_02135948 and target Player methods: _ZN6Player9IsOnShellEv (0x020cc140), _ZN6Player16IncMegaKillCountEv (0x020bdc58), and _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj (0x020d8e70, x5).",
+  "modules_evidence": "164 outbound relocations from the daSanbo_c text run: 116 module:main (arm9), 41 module:overlay(96) (self), 7 module:overlay(2). All 7 ov002 rows come from func_ov096_02135948 and target daPly_c methods: _ZN7daPly_c9IsOnShellEv (0x020cc140), _ZN7daPly_c16IncMegaKillCountEv (0x020bdc58), and _ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj (0x020d8e70, x5).",
   "existing_tree_state": {
     "header": "include/Pokey.h EXISTS (83 lines) and is CORRECT where it overlaps the ROM. I re-derived its load-bearing claims from the cartridge independently and every one held: sizeof 0x3b0; dExtSimpleModel_c@0xd4 / ShadowModel@0x124 / dCcAc_c@0x14c / dBgCh_Actr@0x180 with each member abutting the next exactly (0xd4+0x50=0x124, +0x28=0x14c, +0x34=0x180, +0x1bc=0x33c); mRootPos at 0x36c/370/374; mState at 0x38c tested against 2 and 5; mHead 0x390; mNextSegment 0x394 walked by OnPendingDestroy; unk_3a8 written with strb. Its head/segment 0xf0/0xf1 story is confirmed independently by the ACTOR_SPAWN_TABLE indices.",
     "header_caveats": [

@@ -119,7 +119,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - Compiler experiments (each re-verified 14/14 or measured to fail): the
   model-matrix update through a `Matrix4x3 &` local compiles to 0x54 against
   the ROM's 0x48, so it spells `casket->mModel.mat4x3` at each store; copying
-  the closest player's position straight off `Player::mPosX..mPosZ` compiles
+  the closest player's position straight off `daPly_c::mPosX..mPosZ` compiles
   `func_ov071_021221bc`(current [_ZN13daObjCasket_c12St_Wait_MainEv](../../../src/game/actors/d_a_obj_casket.cpp)) to 0x1f0 against 0x1f4, so the copy stays through a
   `Vector3` pointer, with a one-line note. The legacy factory seam also
   matches, but emits no `_ZN10dBgActor_cD2Ev`; the `new` form was kept and the

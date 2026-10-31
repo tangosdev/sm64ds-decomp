@@ -53,10 +53,10 @@ struct Callback;
  *   0xe / 0x13a / 0x13b have no names in the tree.
  * Leftover: what func_02035638 tests beyond being a sibling of IsOnWall, what
  *   func_ov002_020ef228 / func_ov002_020e496c compute, the result of
- *   func_ov002_020f030c (Player.h names it a slide loss factor; the value
+ *   func_ov002_020f030c (daPly_c.h names it a slide loss factor; the value
  *   is discarded here), the extra arguments of Math_Function_0203b14c and
  *   IsClsnInRangeOnScreen, the 0x199 passed to dBgW_KcMbg::SetFile, and what
- *   Player::Hurt's trailing arguments select.
+ *   daPly_c::Hurt's trailing arguments select.
  * Leftover: the SurfaceInfo inside a dBgCh_Actr result is reached as
  *   `(char *)fr + 4`.
  * Leftover: the state names STATE_IN_MOUTH and STATE_SPIT_OUT rest on how the
@@ -80,7 +80,7 @@ enum daObjBlockS_c_AssetId {
 #include "decl_common.h"
 #include "daObjBlockS_c.h"
 #include "dActor_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "dBgCh_Actr.h"
@@ -126,7 +126,7 @@ enum {
 
 /* The word at 0x0d0 is dBgActor_c's pad, not a member of this class; the
    other actor headers name it mEatingPlayer. */
-#define BLOCKS_EATING_PLAYER(o) (*(Player **)((char *)(o) + 0xd0))
+#define BLOCKS_EATING_PLAYER(o) (*(daPly_c **)((char *)(o) + 0xd0))
 
 extern "C" {
 extern u32 data_0209b454;
@@ -159,7 +159,7 @@ typedef void BgchInitAt_(char *thiz, char *actor, int b, int d, void *v, int f);
 extern int SurfaceInfo_TestFlag0x20(int *p);
 extern int func_ov002_020ef228(void *c, int arg);
 extern int func_ov002_020f030c(int x);
-extern int func_ov002_020e496c(Player *c);
+extern int func_ov002_020e496c(daPly_c *c);
 extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 
 
@@ -301,7 +301,7 @@ void daObjBlockS_c::func_ov098_02138238()
         t4 = flags2 & ACTOR_FLAG_YOSHI_MOUTH_A;
         t4 = t4 != 0;
         if (t4 == 0) {
-            Player *p = BLOCKS_EATING_PLAYER(this);
+            daPly_c *p = BLOCKS_EATING_PLAYER(this);
             if (p != 0) {
                 int *src = (int *)&p->mPosX;
                 mPosX = src[0];
@@ -432,7 +432,7 @@ void daObjBlockS_c::func_ov098_021384fc()
  * dCc_c flags bit 0x2000 on the first cylinder. */
 void daObjBlockS_c::func_ov098_021385e0()
 {
-    Player *obj;
+    daPly_c *obj;
     short angle;
     int idx;
     int xw, zw;
@@ -505,7 +505,7 @@ void daObjBlockS_c::func_ov098_02138734()
 // @symbol _ZN13daObjBlockS_c19func_ov098_02138818Ev
 /* STATE_THROWN, enter. Zeroes the sink offset and target and launches the
  * crate: the player in mHoldingPlayer picks an index (its param1, which
- * daMky_c compares with Player::mCharacter, clamped to 4; 0 when nobody
+ * daMky_c compares with daPly_c::mCharacter, clamped to 4; 0 when nobody
  * holds the crate) into two four-word tables copied from
  * data_ov098_0213c4e0 (horizontal speed: 40, 40, 80, 30 units) and
  * data_ov098_0213c4f0 (vertical speed: 20, 20, 20, 15 units); an index of 4
@@ -515,7 +515,7 @@ void daObjBlockS_c::func_ov098_02138818()
 {
     BlockSW4 arr1;
     BlockSW4 arr2;
-    Player *p;
+    daPly_c *p;
     u32 idx;
 
     mClsnYOffsetTarget = 0;
@@ -556,7 +556,7 @@ void daObjBlockS_c::func_ov098_021388bc()
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (mWithMeshClsn.IsOnGround() != 0) {
         if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) != 0) {
-            Player *p = mHoldingPlayer;
+            daPly_c *p = mHoldingPlayer;
             if (p != 0) {
                 p->DropActor();
                 Kill();
@@ -782,15 +782,15 @@ void daObjBlockS_c::func_ov098_02138e08()
  * and, if that other actor is the PLAYER profile:
  *   hit bits 0x380 (kick / breakdance / slide kick) or 0x10 (mega
  *                                              character)  kill the crate;
- *   hit bit 0x1000 (grab)                       Player::TryGrab, and on
+ *   hit bit 0x1000 (grab)                       daPly_c::TryGrab, and on
  *                                              success mHoldingPlayer is set
  *                                              and the crate is CARRIED;
  *   otherwise, in STATE_THROWN, a hit on any player other than mPrevHolder
- *   calls Player::Hurt with the crate's position, 1, 0xc000 (12 units),
+ *   calls daPly_c::Hurt with the crate's position, 1, 0xc000 (12 units),
  *   1, 0, 1; what those arguments select is not recovered here. */
 void daObjBlockS_c::func_ov098_02138e6c()
 {
-    Player *a;
+    daPly_c *a;
     u32 fl;
     int b;
 
@@ -820,7 +820,7 @@ void daObjBlockS_c::func_ov098_02138e6c()
         Kill();
     }
 
-    a = static_cast<Player *>(dActor_c::FindWithID(mdCcAcPos_c1.otherOwner));
+    a = static_cast<daPly_c *>(dActor_c::FindWithID(mdCcAcPos_c1.otherOwner));
     if (a == 0) return;
     {
         int bf = (int)(((dActor_c *)a)->actorID == ACTOR_PLAYER);
@@ -933,7 +933,7 @@ void daObjBlockS_c::func_ov098_021390ec()
  * crate is airborne or it left early (see below).
  *
  * Reads the floor under the crate. Surface type 6..9 (the quicksand tiers,
- * include/Player.h) sets mClsnYOffsetTarget to 30 / 45 / 60 / 100 units
+ * include/daPly_c.h) sets mClsnYOffsetTarget to 30 / 45 / 60 / 100 units
  * (0x1e000 / 0x2d000 / 0x3c000 / 0x64000); when the 100 unit tier is reached
  * and mClsnYOffset has caught up with it the crate goes to STATE_BROKEN
  * (returns 0). mClsnYOffset then eases toward the target by 0.5 unit per
@@ -943,7 +943,7 @@ void daObjBlockS_c::func_ov098_021390ec()
  * units per frame (-0xb000) calls Kill, and the step carries on.
  *
  * The slide: CopyNormalTo fills mFloorNormalX/Y/Z, n is the floor's CLPS
- * floor class (CLPS::GetFloorClass; include/Player.h calls it the slipperiness class),
+ * floor class (CLPS::GetFloorClass; include/daPly_c.h calls it the slipperiness class),
  * hl its slide acceleration (func_ov002_020f02c8). a1 is the current
  * velocity (mHorzSpeed along mPrevAngleY, through the sin / cos table at
  * data_02082214), a2 is hl in the direction atan2 of the normal's x and z
@@ -953,7 +953,7 @@ void daObjBlockS_c::func_ov098_021390ec()
  * / normalY + 8 units); mSpeedX / mSpeedZ sit either side of mVertSpeed and
  * are treated here as its x and z companions, which this file does not
  * otherwise confirm. When func_ov002_020f035c(n, mFloorNormalY) (the
- * per-class slope test, include/Player.h) is nonzero, the crate is nearly
+ * per-class slope test, include/daPly_c.h) is nonzero, the crate is nearly
  * level (|mAngleX| and |mAngleZ| below 0x10) and mHorzSpeed is above 5 units
  * (0x5000), sound bank 0x51 plays if mVertSpeed is above 10 units and
  * mVertSpeed is then clamped to a limit derived from the speed. Friction
@@ -1167,7 +1167,7 @@ void daObjBlockS_c::func_ov098_021397c8()
  * ground. */
 void daObjBlockS_c::func_ov098_02139850()
 {
-    Player *obj = mHoldingPlayer;
+    daPly_c *obj = mHoldingPlayer;
     int b;
 
     if (obj == 0) goto other;
@@ -1400,14 +1400,13 @@ int daObjBlockS_c::OnYoshiTryEat()
     return 6;
 }
 
-// @symbol _ZN13daObjBlockS_c13OnTurnIntoEggER6Player
+// @symbol _ZN13daObjBlockS_c13OnTurnIntoEggER7daPly_c
 /* Slot 19. Pays out three coins the first time only, tracked by mCoinsPaid:
  * handed over directly if the player is mid cap-collect, otherwise banked on
  * the egg. Either way the crate goes to STATE_BROKEN. The shared actor hook
  * returns void, so the method ends after the state change with no invented
  * result. */
-void daObjBlockS_c::OnTurnIntoEgg(Player &player)
-{
+void daObjBlockS_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap()) {
         if (mCoinsPaid != 1) {
             ((dActor_c *)this)->GivePlayerCoins(player, 3, 0);

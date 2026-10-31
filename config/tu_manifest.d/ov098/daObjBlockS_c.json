@@ -281,10 +281,10 @@
       "ordinal": 34
     },
     {
-      "symbol": "_ZN13daObjBlockS_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN13daObjBlockS_c13OnTurnIntoEggER7daPly_c",
       "address": "0x02139e78",
       "size": "0x0000008c",
-      "legacy_source": "src/_ZN13daObjBlockS_c13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN13daObjBlockS_c13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 35
     },
     {
@@ -994,12 +994,12 @@
     {
       "from": "@1529",
       "to": "@1560",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its Player & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED)"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED)"
     },
     {
       "from": "@1530",
       "to": "@1561",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its Player & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED)"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED)"
     }
   ]
 }

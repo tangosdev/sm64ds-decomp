@@ -34,7 +34,7 @@
         "kind": "reconstruction",
         "location": "src/actors/daYegg_c.cpp and include/daYegg_c.h",
         "owner": "codex-yegg-readable-producer1014 and codex-yegg-readable-coordinator1014 reconstruction followup",
-        "reason": "Candidate retains Fix12 scalar bridges and other raw/POD array-backed math workspaces, spawned-coin field writes, DOSUN byte, Player+0xc8 access, floor-result+4 view, unknown fields/numeric flags and address-based helper names. Existing two free Player-entry helpers and constructor/factory alias boundaries remain. Historic compiler measurements are not newly generalized; no original method/field/file identifiers recovered. New34strict/storage/metadata proof accepts this slice with existing ownership policy, not completion of every class or caller ABI.",
+        "reason": "Candidate retains Fix12 scalar bridges and other raw/POD array-backed math workspaces, spawned-coin field writes, DOSUN byte, daPly_c+0xc8 access, floor-result+4 view, unknown fields/numeric flags and address-based helper names. Existing two free daPly_c-entry helpers and constructor/factory alias boundaries remain. Historic compiler measurements are not newly generalized; no original method/field/file identifiers recovered. New34strict/storage/metadata proof accepts this slice with existing ownership policy, not completion of every class or caller ABI.",
         "summary": "Yegg remains a partial reconstructed class despite three genuine interface/lifetime replacements and intact owned TU storage."
       }
     }
@@ -117,7 +117,7 @@
     "history": [
       "ca232c8ef3 memberified24 self-first helpers",
       "6c236e3939 folded the initializer",
-      "11817624cd adopted Player calls",
+      "11817624cd adopted daPly_c calls",
       "notes/agents/handoffs/issue-2492-cup-source-review.md records the integer Virtual50/020edc28 actor-family contract"
     ],
     "independent_review_required": true,
@@ -270,9 +270,9 @@
     }
   ],
   "remaining_reconstruction": [
-    "Existing scalar ABI spellings of Fix12-valued callees, including ModelAnim/collision initialization, shadow/particle helpers, SpawnCoins and Player::Hurt, remain unchanged and qualified; no class-valued universal compiler-wall assertion added.",
-    "The raw spawned-coin fields, DOSUN byte, Player+0xc8 word, floor-result+4 view, array-backed matrices/vectors and address-based helper identifiers remain partial.",
-    "The existing two externally called free Player-entry helpers and constructor/factory alias boundaries remain; this slice adds no fake method identity or new mangled helper.",
+    "Existing scalar ABI spellings of Fix12-valued callees, including ModelAnim/collision initialization, shadow/particle helpers, SpawnCoins and daPly_c::Hurt, remain unchanged and qualified; no class-valued universal compiler-wall assertion added.",
+    "The raw spawned-coin fields, DOSUN byte, daPly_c+0xc8 word, floor-result+4 view, array-backed matrices/vectors and address-based helper identifiers remain partial.",
+    "The existing two externally called free daPly_c-entry helpers and constructor/factory alias boundaries remain; this slice adds no fake method identity or new mangled helper.",
     "No original source filename or method/field identifiers recovered by byte equality; Source judgment remains separate from ROM correctness."
   ],
   "next_action": "Another actual agent performs formal Source/current-base acceptance of exact final commit and literal resource/report coverage before coordinator public action.",
@@ -496,7 +496,7 @@
     "source_physical_sha256": "0ee6537267098a45b4b781d4909bdc9f80efa26de5c6468ebfad78615db9d908",
     "changes": [
       "Borrow the actual dBgPi floor result and call its inherited surface.CopyNormalTo, retaining the existing void-pointer API boundary.",
-      "Load the existing Player mCarryMatrix member while retaining the M48 copy view, guard, volatile workspace and ordering.",
+      "Load the existing daPly_c mCarryMatrix member while retaining the M48 copy view, guard, volatile workspace and ordering.",
       "Remove only the corresponding stale raw-offset and padding descriptions."
     ],
     "unchanged_scope": "No shared header, manifest, compiler policy, callee declaration, layout or lifecycle change. Remaining Yegg reconstruction is partial.",
@@ -619,7 +619,7 @@
       "kind": "reconstruction",
       "location": "src/actors/daYegg_c.cpp and include/daYegg_c.h",
       "owner": "codex-yegg-readable-producer1014 and codex-yegg-readable-coordinator1014 reconstruction followup",
-      "reason": "Candidate retains Fix12 scalar bridges and other raw/POD array-backed math workspaces, spawned-coin field writes, DOSUN byte, Player+0xc8 access, floor-result+4 view, unknown fields/numeric flags and address-based helper names. Existing two free Player-entry helpers and constructor/factory alias boundaries remain. Historic compiler measurements are not newly generalized; no original method/field/file identifiers recovered. New34strict/storage/metadata proof accepts this slice with existing ownership policy, not completion of every class or caller ABI.",
+      "reason": "Candidate retains Fix12 scalar bridges and other raw/POD array-backed math workspaces, spawned-coin field writes, DOSUN byte, daPly_c+0xc8 access, floor-result+4 view, unknown fields/numeric flags and address-based helper names. Existing two free daPly_c-entry helpers and constructor/factory alias boundaries remain. Historic compiler measurements are not newly generalized; no original method/field/file identifiers recovered. New34strict/storage/metadata proof accepts this slice with existing ownership policy, not completion of every class or caller ABI.",
       "summary": "Yegg remains a partial reconstructed class despite three genuine interface/lifetime replacements and intact owned TU storage."
     },
     "remaining_reconstruction_current_disposition": "partial/deferred; these two reads are resolved in this candidate, while all other recorded limitations remain",
@@ -657,8 +657,8 @@
       "func_ov002_020ed6cc uses &mPos as the second Vec3_HorzDist operand.",
       "func_ov002_020edca4 passes &self->mCamSpacePos to PlayCharVoice."
     ],
-    "pending_PR3995": "Its Player.h and mClimbClsn Source changes are not adopted.",
-    "typed_receiver_evidence": "The existing floor-result getter returns a borrowed dBgPi; its inherited dBgPc::surface is used directly. The Player inherits the already-declared Matrix4x3* mCarryMatrix at0xc8; its load retains the original M48 copy view, guards and volatile accesses. No header or object-lifetime reconstruction is added.",
+    "pending_PR3995": "Its daPly_c.h and mClimbClsn Source changes are not adopted.",
+    "typed_receiver_evidence": "The existing floor-result getter returns a borrowed dBgPi; its inherited dBgPc::surface is used directly. The daPly_c inherits the already-declared Matrix4x3* mCarryMatrix at0xc8; its load retains the original M48 copy view, guards and volatile accesses. No header or object-lifetime reconstruction is added.",
     "fresh_proof": {
       "compiler": "2004/b56",
       "control_compiles": 1,

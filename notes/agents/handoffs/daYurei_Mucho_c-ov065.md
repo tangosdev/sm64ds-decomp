@@ -169,7 +169,7 @@ The five-Vector3 stack aggregate in [func_ov065_02116364](../../../src/game/acto
 name, `V3Quint`. As an unnamed local class mwccarm mangles its implicit
 destructor with a file-and-counter tag that moves whenever the file moves, so the
 manifest row licensing it would not have survived the move out of `src_tu/`. The
-emitted bytes are unchanged. Same remedy as `V3Quad` in [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`Player`.
+emitted bytes are unchanged. Same remedy as `V3Quad` in [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`daPly_c`.
 
 ## Reconstruction dimensions
 

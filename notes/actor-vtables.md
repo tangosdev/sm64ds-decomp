@@ -2,13 +2,13 @@
 
 Recovered from the ROM, not inferred. Every slot in all four tables resolves to a named
 function — through [config/arm9/symbols.txt](../config/arm9/symbols.txt) for the first three, and additionally through
-[arm9/overlays/ov002/symbols.txt](../config/arm9/overlays/ov002/symbols.txt) for Player, which lives in an overlay. None is a
+[arm9/overlays/ov002/symbols.txt](../config/arm9/overlays/ov002/symbols.txt) for daPly_c, which lives in an overlay. None is a
 thunk, none is a secondary vtable, and there is no address-point offset — CodeWarrior 1.2
 emits no RTTI header, so the address stored into `[this+0x0]` *is* slot 0.
 
 ## The hierarchy
 
-    ActorBase  →  ActorDerived  →  Actor  →  Player
+    ActorBase  →  ActorDerived  →  Actor  →  daPly_c
 
 `Actor` does **not** derive from `ActorBase` directly. `src/_ZN5ActorC2Ev.cpp` calls
 `ActorBase::ActorBase`, stores `&data_0208e4b8`, then immediately overwrites it with
@@ -28,10 +28,10 @@ Actor's C2/D2 bytes.
 | `ActorBase` | `_ZTV9ActorBase` | 18 | `data_02099edc` | [arm9](../config/arm9/symbols.txt) |
 | `ActorDerived` | `_ZTV12ActorDerived` | 18 | `data_0208e4b8` | [arm9](../config/arm9/symbols.txt) |
 | `Actor` | `_ZTV5Actor` | 31 | `data_0208e3a4` | [arm9](../config/arm9/symbols.txt) |
-| `Player` | `_ZTV6Player` | 31 | `data_ov002_0210a83c` | [ov002](../config/arm9/overlays/ov002/symbols.txt) |
+| `daPly_c` | `_ZTV7daPly_c` | 31 | `data_ov002_0210a83c` | [ov002](../config/arm9/overlays/ov002/symbols.txt) |
 
 The `data_` names are kept as aliases, not replaced: 45 `src/` files reference the three
-arm9 ones and 3 reference Player's. `eligible.py` drops any file with an unresolvable
+arm9 ones and 3 reference daPly_c's. `eligible.py` drops any file with an unresolvable
 reference, and gap objects import carved-out symbols weakly — so a stale name links silently
 to zero rather than erroring.
 
@@ -72,7 +72,7 @@ still point at ActorBase. Then thirteen of its own:
 | # | target |
 |---:|---|
 | 18 | `OnYoshiTryEat` |
-| 19 | `OnTurnIntoEgg(Player&)` |
+| 19 | `OnTurnIntoEgg(daPly_c&)` |
 | 20 | `Virtual50` |
 | 21 | `OnGroundPounded(Actor&)` |
 | 22 | `OnAttacked1(Actor&)` |
@@ -80,7 +80,7 @@ still point at ActorBase. Then thirteen of its own:
 | 24 | `OnKicked(Actor&)` |
 | 25 | `OnPushed(Actor&)` |
 | 26 | `OnHitByCannonBlastedChar(Actor&)` |
-| 27 | `OnHitByMegaChar(Player&)` |
+| 27 | `OnHitByMegaChar(daPly_c&)` |
 | 28 | `OnHitFromUnderneath(Actor&)` |
 | 29 | `OnAimedAtWithEgg` |
 | 30 | `OnAimedAtWithEggReturnVec` |
@@ -120,48 +120,48 @@ gap-object data supplied from the ROM, never compiled, so neither gate sees it:
 Until each slot is exercised by a virtual call inside a byte-checked file, this table is
 the only record of the order.
 
-## Player — 0x0210a83c ([ov002](../config/arm9/overlays/ov002/symbols.txt)), 31 slots
+## daPly_c — 0x0210a83c ([ov002](../config/arm9/overlays/ov002/symbols.txt)), 31 slots
 
-Player derives **directly from Actor**: `_ZN6PlayerC1Ev` calls `_ZN5ActorC2Ev` and then
-stores one vptr, and `_ZN6PlayerD2Ev` stores one vptr and calls `_ZN5ActorD2Ev`. One store,
+daPly_c derives **directly from Actor**: `_ZN7daPly_cC1Ev` calls `_ZN5ActorC2Ev` and then
+stores one vptr, and `_ZN7daPly_cD2Ev` stores one vptr and calls `_ZN5ActorD2Ev`. One store,
 not two — unlike `Actor`, which has an inlined intermediate base.
 
 The table is Actor's 31 slots with **eight overridden** and **no new virtuals**:
 
 | # | override |
 |---:|---|
-| 0 | `Player::InitResources` |
-| 3 | `Player::CleanupResources` |
-| 6 | `Player::Behavior` |
-| 9 | `Player::Render` |
-| 12 | `Player::OnPendingDestroy` |
-| 16 | `~Player` (D2 by config naming; the complete-object destructor) |
-| 17 | `~Player` (D0) |
-| 18 | `Player::OnYoshiTryEat` |
+| 0 | `daPly_c::InitResources` |
+| 3 | `daPly_c::CleanupResources` |
+| 6 | `daPly_c::Behavior` |
+| 9 | `daPly_c::Render` |
+| 12 | `daPly_c::OnPendingDestroy` |
+| 16 | `~daPly_c` (D2 by config naming; the complete-object destructor) |
+| 17 | `~daPly_c` (D0) |
+| 18 | `daPly_c::OnYoshiTryEat` |
 
 Everything else still points at `Actor` or `ActorBase`.
 
 The 31-slot extent is not symbol-boundary luck: the word after slot 30 is `0x00000014`,
 which is not a code address, and fix12 state-table data follows.
 
-**No key-function tax.** Because Player only overrides, `~Player()` can be declared first
+**No key-function tax.** Because daPly_c only overrides, `~daPly_c()` can be declared first
 and become the key function — and its destructor TUs define `extern "C"` free functions
-under the mangled names, never `Player::~Player`. One caveat to preserve: `~Player` must
+under the mangled names, never `daPly_c::~daPly_c`. One caveat to preserve: `~daPly_c` must
 never be defined *anywhere, including inline*, or key-function status shifts to `Behavior`,
 which **is** a real method, and a duplicate vtable gets emitted.
 
-`_ZN6PlayerC3Ev` is the allocating constructor — `ActorBase::operator new(0x768)` then C1 —
-so **`sizeof(Player)` is 0x768**. There is no C2 because nothing derives from Player, and
+`_ZN7daPly_cC3Ev` is the allocating constructor — `ActorBase::operator new(0x768)` then C1 —
+so **`sizeof(daPly_c)` is 0x768**. There is no C2 because nothing derives from daPly_c, and
 the absent D1 is a labelling artifact: D1 and D2 are the same function for a most-derived
 class.
 
-### Names that are not Player
+### Names that are not daPly_c
 
-Eight symbols matched `_ZN6Player*` but belong to other overlays — seven in [ov006](../config/arm9/overlays/ov006/symbols.txt), one in
+Eight symbols matched `_ZN7daPly_c*` but belong to other overlays — seven in [ov006](../config/arm9/overlays/ov006/symbols.txt), one in
 [ov007](../config/arm9/overlays/ov007/symbols.txt) — community labels applied to another class's bytes at a shared RAM address. They are
-listed in the commit that detached them from `Player.h`. Measured against `sizeof(Player)`
+listed in the commit that detached them from `daPly_c.h`. Measured against `sizeof(daPly_c)`
 = 0x768, they read offsets like 0x4eb0 and 0x62ad, thousands of bytes past the end of the
-object. Do not treat a `_ZN6Player*` name as proof of module membership; check which
+object. Do not treat a `_ZN7daPly_c*` name as proof of module membership; check which
 `symbols.txt` owns the address.
 
 ## Platform — 0x0210ae30 ([ov002](../config/arm9/overlays/ov002/symbols.txt)), 32 slots

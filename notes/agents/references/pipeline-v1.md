@@ -102,7 +102,7 @@ region goes after the last surviving `func_*` member.
 An earlier version of this file **parked** every class whose name was not read from
 the cartridge's RTTI. That rule is withdrawn: it was stricter than the project's own
 practice and it retroactively condemned merged work. Ten classes with coined names
-have already shipped -- `Player`, `Goomboss`, `daIwante_c`, `ActorDerived`,
+have already shipped -- `daPly_c`, `Goomboss`, `daIwante_c`, `ActorDerived`,
 `ActorBase_SceneNode`, and five `Mg*` minigame classes.
 
 **The standard is disclosure, not abstention.** Promote the class; record the name as

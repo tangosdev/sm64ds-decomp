@@ -28,7 +28,7 @@
     "fold-tails-ov065-ov091-0930c",
     "widen-ov003-ov073-0928"
   ],
-  "historical_scope": "CHILLY-NATIVE-001 remains the accepted class partial finding on OPEN3775. Thirteen native-destructor-repair findings are retained verbatim as historical broad lifecycle/shared-header/Player/Slot/tooling work; none is asserted as newly repaired Chief code. Actual output diff proves that task wrote this Chief TU. Widen cancelled after main landings; fold task DONE; neither carries Source finding dictionaries.",
+  "historical_scope": "CHILLY-NATIVE-001 remains the accepted class partial finding on OPEN3775. Thirteen native-destructor-repair findings are retained verbatim as historical broad lifecycle/shared-header/daPly_c/Slot/tooling work; none is asserted as newly repaired Chief code. Actual output diff proves that task wrote this Chief TU. Widen cancelled after main landings; fold task DONE; neither carries Source finding dictionaries.",
   "inherited_findings": {
     "CHILLY-NATIVE-001": {
       "disposition": "deferred",
@@ -80,7 +80,7 @@
       "id": "RCV2908-02",
       "kind": "correctness",
       "location": "src/actors/player.cpp and static-destructor registration callers",
-      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local daPly_c declarations and calls.",
       "summary": "Registration carries object and callback addresses as pointers."
     },
     "RCV2908-03": {
@@ -129,7 +129,7 @@
       "kind": "correctness",
       "location": "src/actors/player.cpp Vector destructor imports",
       "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
-      "summary": "The five omitted Player Vector imports are covered."
+      "summary": "The five omitted daPly_c Vector imports are covered."
     },
     "STALE-ARRAY-RUNTIME-TEST": {
       "disposition": "fixed",
@@ -231,7 +231,7 @@
       "id": "RCV2908-02",
       "kind": "correctness",
       "location": "src/actors/player.cpp and static-destructor registration callers",
-      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local daPly_c declarations and calls.",
       "summary": "Registration carries object and callback addresses as pointers."
     },
     {
@@ -280,7 +280,7 @@
       "kind": "correctness",
       "location": "src/actors/player.cpp Vector destructor imports",
       "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
-      "summary": "The five omitted Player Vector imports are covered."
+      "summary": "The five omitted daPly_c Vector imports are covered."
     },
     {
       "disposition": "fixed",

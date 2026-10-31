@@ -8,7 +8,7 @@
 `notes/tu-reconstruction-pilot-report.md`); this run promoted it to
 `src/runtime/actor/d_actor.cpp`.
 
-Engine target -- allowed under the current sweep (Player remains
+Engine target -- allowed under the current sweep (daPly_c remains
 excluded). Nothing else claims it: no live worktree, branch, or open PR.
 
 ## Partition (daObjKuruma_c precedent, AGENTS.md destructor row)
@@ -43,7 +43,7 @@ restored shards re-emit it: `romdata_check` verifies `_ZTV8dActor_c`
   definitions so the converted ratchet scores members, not the whole file.
 - Readability ports recovered from the retired shards (they were built
   from a newer snapshot than the staged file): `BumpedUnderneathByPlayer`
-  uses `Player` members, `HorzAngleToCPlayer`/`HorzAngleToFPlayer` use
+  uses `daPly_c` members, `HorzAngleToCPlayer`/`HorzAngleToFPlayer` use
   named position fields, and `DetectRaycastClsn` takes the real
   `dBgCh_Lin` member form (ctor/dtor are out-of-line, so the member
   spelling emits identical calls) -- all re-verified byte-exact.

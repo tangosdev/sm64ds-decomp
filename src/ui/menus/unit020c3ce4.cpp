@@ -118,7 +118,7 @@ int func_ov007_020c3d40(const char *name, int n) {
 }
 
 // @symbol func_ov007_020c3d1c
-/* NOT a Player method: it reads no fields, it only calls the free hook. */
+/* NOT a daPly_c method: it reads no fields, it only calls the free hook. */
 void func_ov007_020c3d1c(void *self) {
     data_ov007_02103254(self);
 }

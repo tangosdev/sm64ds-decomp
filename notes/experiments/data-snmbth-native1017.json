@@ -239,7 +239,7 @@
           },
           {
             "offset": 84,
-            "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
             "addend": 0,
             "target_module": "arm9",
             "target_address": "0x2010154",
@@ -303,7 +303,7 @@
           },
           {
             "offset": 116,
-            "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             "addend": 0,
             "target_module": "arm9",
             "target_address": "0x2010130",
@@ -451,7 +451,7 @@
       "kind": "correctness",
       "location": "src/actors/player.cpp Vector destructor imports",
       "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
-      "summary": "The five omitted Player Vector imports are covered."
+      "summary": "The five omitted daPly_c Vector imports are covered."
     },
     {
       "disposition": "fixed",
@@ -474,7 +474,7 @@
       "id": "RCV2908-02",
       "kind": "correctness",
       "location": "src/actors/player.cpp and static-destructor registration callers",
-      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local daPly_c declarations and calls.",
       "summary": "Registration carries object and callback addresses as pointers."
     },
     {
@@ -503,7 +503,7 @@
     },
     {
       "id": "SNMBTH-ABI-001",
-      "location": "src/game/actors/d_a_snm_bth.cpp imported Particle, Sound, dCcPos and Player contracts",
+      "location": "src/game/actors/d_a_snm_bth.cpp imported Particle, Sound, dCcPos and daPly_c contracts",
       "summary": "Existing raw ABI declarations remain partial.",
       "reason": "Fix12<int> by-value compiler constraints and existing raw callback views are unchanged; no shared header agreement is asserted.",
       "kind": "reconstruction",

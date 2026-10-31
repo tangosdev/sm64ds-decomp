@@ -50,10 +50,10 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN17daObjSlIceBlock_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN17daObjSlIceBlock_c15OnHitByMegaCharER7daPly_c",
       "address": "0x0211123c",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN17daObjSlIceBlock_c15OnHitByMegaCharER6Player.cpp",
+      "legacy_source": "src/_ZN17daObjSlIceBlock_c15OnHitByMegaCharER7daPly_c.cpp",
       "ordinal": 2
     },
     {

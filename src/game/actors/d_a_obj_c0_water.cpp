@@ -26,7 +26,7 @@
  * - data_0209caa0[2] & 0x80000 is the same group flag
  *   daObjC0_Switch_c::OnGroundPounded writes; this water drains when it is
  *   set. data_0209f32c is the arm9 water-height word this TU publishes.
- * - no Player.h.
+ * - no daPly_c.h.
  * - homeless _ZN10dBgActor_cD2Ev from the inline dtor chain (deadstrip).
  */
 

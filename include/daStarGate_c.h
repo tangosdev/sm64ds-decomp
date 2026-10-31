@@ -4,7 +4,7 @@
 #include "dExtCommonModel_c.h"
 #include "dActor_c.h"
 
-struct Player;
+struct daPly_c;
 
 /* Six-byte configuration selected by param1. The member spellings are
    lineage-supported; its stride and every access are ROM-proven. */
@@ -29,7 +29,7 @@ struct daStarGate_c : dActor_c {
     /* The exact nested type spelling is lineage-supported rather than ROM
        text. Its layout is ROM-proven: two 8-byte CodeWarrior PTMFs. */
     struct State {
-        typedef bool (daStarGate_c::*StateFunc)(Player *player);
+        typedef bool (daStarGate_c::*StateFunc)(daPly_c *player);
 
         StateFunc init;
         StateFunc main;
@@ -52,19 +52,19 @@ struct daStarGate_c : dActor_c {
     /* The English method names and pointer parameter spellings below are
        lineage-supported reconstructions. The class ownership, argument count,
        PTMF ABI, and call graph are proven by the ROM. */
-    bool ChangeState(State *nextState, Player *player);
-    Player *CalculateRelativePlayerPos();
-    bool IsInFrontOfPlayer(Player *player);
-    void TryOpenDoor(Player *player);
+    bool ChangeState(State *nextState, daPly_c *player);
+    daPly_c *CalculateRelativePlayerPos();
+    bool IsInFrontOfPlayer(daPly_c *player);
+    void TryOpenDoor(daPly_c *player);
 
-    bool St_OpenClose_Init(Player *player);
-    bool St_OpenClose_Main(Player *player);
-    bool St_StayClosed_Main(Player *player);
-    bool St_Wait_Main(Player *player);
-    bool St_TalkingToPlayer_Init(Player *player);
-    bool St_TalkingToPlayer_Main(Player *player);
-    bool St_Unlocking_Init(Player *player);
-    bool St_Unlocking_Main(Player *player);
+    bool St_OpenClose_Init(daPly_c *player);
+    bool St_OpenClose_Main(daPly_c *player);
+    bool St_StayClosed_Main(daPly_c *player);
+    bool St_Wait_Main(daPly_c *player);
+    bool St_TalkingToPlayer_Init(daPly_c *player);
+    bool St_TalkingToPlayer_Main(daPly_c *player);
+    bool St_Unlocking_Init(daPly_c *player);
+    bool St_Unlocking_Main(daPly_c *player);
 
     /* These state names come from later source lineage. Their addresses,
        contents, and use as five separate state descriptors are ROM-proven. */

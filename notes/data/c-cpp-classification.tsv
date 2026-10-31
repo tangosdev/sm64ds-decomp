@@ -571,7 +571,7 @@ src/_ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c.c	P3-mangled-
 src/_ZN10SphereClsnC1Ev.c	P3-mangled-method-only	arm9		SphereClsn	_ZN10SphereClsnC1Ev	1		True		-
 src/_ZN10SphereClsnD1Ev.c	DTOR-ONLY	arm9	dBgCh_SphCrr	SphereClsn/dBgCh_SphCrr	_ZN10SphereClsnD1Ev	1		True	_ZTV10SphereClsn	-
 src/_ZN12daStarBase_cD0Ev.c	DTOR-ONLY	ov002	daStarBase_c	daStarBase_c/daStarBase_c	_ZN12daStarBase_cD0Ev	1		True		-
-src/_ZN10dBgActor_c14KillByMegaCharER6Player.c	P3-mangled-method-only	ov002		dBgActor_c	_ZN10dBgActor_c14KillByMegaCharER6Player	1		True		-
+src/_ZN10dBgActor_c14KillByMegaCharER7daPly_c.c	P3-mangled-method-only	ov002		dBgActor_c	_ZN10dBgActor_c14KillByMegaCharER7daPly_c	1		True		-
 src/_ZN10dBgActor_cC2Ev.c	P3-mangled-method-only	ov002		dBgActor_c	_ZN10dBgActor_cC2Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN10dFdDummy_c11AdvanceFadeEv.c	P1-vtable+mangled	arm9	dFdDummy_c	dFdDummy_c	vtable dFdDummy_c slot 2 @0x201721c | _ZN10dFdDummy_c11AdvanceFadeEv	1		True		-
 src/_ZN10dFdDummy_cD0Ev.c	DTOR-ONLY	arm9	dFdDummy_c	dFdDummy_c	_ZN10dFdDummy_cD0Ev	1		True		-
@@ -666,7 +666,7 @@ src/_ZN12WithMeshClsnC1Ev.c	P3-mangled-method-only	arm9		WithMeshClsn	_ZN12WithM
 src/_ZN12WithMeshClsnD1Ev.c	DTOR-ONLY	arm9	dBgCh_Actr	WithMeshClsn/dBgCh_Actr	_ZN12WithMeshClsnD1Ev	1		True		-
 src/_ZN12WorkElevator8BehaviorEv.c	P3-mangled-method-only			WorkElevator	_ZN12WorkElevator8BehaviorEv	0		True		NONMATCHING-draft;not-in-delinks
 src/_ZN12WorkElevatorD0Ev.c	DTOR-ONLY	ov021	daObjCvNewsLift_c	WorkElevator/daObjCvNewsLift_c	_ZN12WorkElevatorD0Ev	1		True	_ZTV10dBgActor_c/_ZTV12WorkElevator	-
-src/_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player.c	P3-mangled-method-only	ov004		dEnemyBase_c	_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player	1		True		-
+src/_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_c.c	P3-mangled-method-only	ov004		dEnemyBase_c	_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_c	1		True		-
 src/_ZN12dEnemyBase_cD2Ev.cpp	DTOR-ONLY	ov002		dEnemyBase_c	_ZN12dEnemyBase_cD2Ev	1		True		-
 src/_ZN12dScStarSel_c13InitResourcesEv.c	P3-mangled-method-only			dScStarSel_c	_ZN12dScStarSel_c13InitResourcesEv	0		True		NONMATCHING-draft;not-in-delinks
 src/_ZN12dScStarSel_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov003	dScStarSel_c	dScStarSel_c	vtable dScStarSel_c slot 12 @0x20ae6f0 | _ZN12dScStarSel_c16OnPendingDestroyEv	1		True		-
@@ -890,7 +890,7 @@ src/_ZN4cstd16reciprocal_asyncE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	_ZN
 src/cstd_atan2.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd5atan2E5Fix12IiES1_	1		False		by-value-class-param;no-header:cstd
 src/_ZN11daDonketu_cD0Ev.c	DTOR-ONLY	ov064	daDonketu_c	daDonketu_c/daDonketu_c	_ZN11daDonketu_cD0Ev	1		True	_ZTV11daDonketu_c	-
 src/_ZN11daObjKumo_cD0Ev.c	DTOR-ONLY	ov039	daObjKumo_c	daObjKumo_c/daObjKumo_c	_ZN11daObjKumo_cD0Ev	1		True		-
-src/_ZN5Crate13OnTurnIntoEggER6Player.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 19 @0x2139e78 | _ZN5Crate13OnTurnIntoEggER6Player	1		True		-
+src/_ZN5Crate13OnTurnIntoEggER7daPly_c.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 19 @0x2139e78 | _ZN5Crate13OnTurnIntoEggER7daPly_c	1		True		-
 src/_ZN5Crate13OnYoshiTryEatEv.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 18 @0x2139e64 | _ZN5Crate13OnYoshiTryEatEv	1		True		-
 src/_ZN5Crate4KillEv.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 31 @0x2139070 | _ZN5Crate4KillEv	1		True		-
 src/_ZN8dFader_cD2Ev.c	DTOR-ONLY	arm9		dFader_c	_ZN8dFader_cD2Ev	1		True		-

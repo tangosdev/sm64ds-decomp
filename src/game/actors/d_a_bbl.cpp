@@ -14,7 +14,7 @@
  */
 
 #include "daBbl_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
@@ -121,7 +121,7 @@ int daBbl_c::Behavior() {
         u32 otherID = mdCcAc_c.otherOwner;
         if (otherID != 0) {
             if ((mdCcAc_c.hitFlags & 0x8000) == 0) {
-                Player *other = static_cast<Player *>(dActor_c::FindWithID(otherID));
+                daPly_c *other = static_cast<daPly_c *>(dActor_c::FindWithID(otherID));
                 if (other != 0) {
                     int isPlayer = (other->actorID == 0xbf);
                     if (isPlayer)

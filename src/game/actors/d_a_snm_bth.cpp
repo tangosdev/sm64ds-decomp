@@ -28,7 +28,7 @@ struct Vector3_16f;
 #include "SharedFilePtr.h"
 #include "types.h"
 #include "dExtSimpleModel_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SaveData.h"
 #include "SpawnInfo.h"
 
@@ -105,7 +105,7 @@ void SnowmanBreathParticle::HitPlayer()
         return;
     Particle::System::NewSimple(0x100, mPos.x, mPos.y, mPos.z);
 
-    Player *player = (Player *)actor;
+    daPly_c *player = (daPly_c *)actor;
     if (player->mIsMetal)
         return;
     if (player->mIsMega)
@@ -196,9 +196,8 @@ void SnowmanBreathParticle::Behavior()
     mCollider.Update();
 }
 
-// @symbol _ZN21SnowmanBreathParticle8TrySpawnER6Player
-int SnowmanBreathParticle::TrySpawn(Player &player)
-{
+// @symbol _ZN21SnowmanBreathParticle8TrySpawnER7daPly_c
+int SnowmanBreathParticle::TrySpawn(daPly_c &player) {
     s32 angle;
     if (mTimer != 0)
         return 0;
@@ -229,7 +228,7 @@ SnowmanBreathParticle::SnowmanBreathParticle()
 // @symbol _ZN10daSnmBth_c15IsPlayerInRangeEv
 int daSnmBth_c::IsPlayerInRange()
 {
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     mTalkPlayer = player;
 
     Vector3 playerPos;

@@ -41,7 +41,7 @@ enum daDsn_c_AssetId {
 };
 
 #include "daDsn_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
 
@@ -189,12 +189,12 @@ int daDsn_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN7daDsn_c15OnHitByMegaCharER6Player
+// @symbol _ZN7daDsn_c15OnHitByMegaCharER7daPly_c
 /* Vtable slot 27. Credit the mega kill, burst particle 0x48 at the
    actor position plus OnAimedAtWithEgg's height (real virtual call),
    poof, remove, and play bank-3 sound 0x1e at the camera-space position.
    func_02012694 is that veneer (src/engine/sound/Sound.cpp -> Sound::Play). */
-void daDsn_c::OnHitByMegaChar(Player &player) {
+void daDsn_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Vector3 poofPos;
     poofPos.x = mPosX;

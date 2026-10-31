@@ -76,7 +76,7 @@ struct daObjMaruta_c : dBgActor_c {
        the implicit destructor bodies. The cartridge orders D0 below D1, which
        no admissible source form reproduces, so those two bodies stay in their
        enrolled shards and this TU's copies are licensed deadstrip-duplicate. */
-    void OnHitByMegaChar(Player &player); /* void, see include/daObjPile_c.h */
+    void OnHitByMegaChar(daPly_c &player); /* void, see include/daObjPile_c.h */
 
     /* Slot 9, this class's own override. Not `virtual` -- fBase_c already
        declares it virtual, and re-adding the keyword here is a style

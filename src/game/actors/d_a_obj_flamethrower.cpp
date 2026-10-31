@@ -41,7 +41,7 @@
 
 #include "daObjFlamethrower_c.h"
 #include "decl_common.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
@@ -294,7 +294,7 @@ int daObjFlamethrower_c::Behavior() {
                         else
                             isPlayer = no;
                         if (isPlayer != 0)
-                            ((Player *)other)->Burn();
+                            ((daPly_c *)other)->Burn();
                     }
                 }
                 part[0] = ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x;

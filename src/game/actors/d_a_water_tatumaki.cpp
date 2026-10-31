@@ -57,7 +57,7 @@ enum daWater_Tatumaki_c_AssetId {
 #include "daWater_Tatumaki_c.h"
 #include "dActor_c.h"
 #include "common.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dExtAnmTexSRT_c.h"
 #include "private/mtx43.h"
@@ -132,7 +132,7 @@ int daWater_Tatumaki_c::StateDrag() {
     Vector3 target;
     Vector3 offset;
     volatile s32 spilled[3]; /* stored, never read; the compare uses y in r1 */
-    Player *player;
+    daPly_c *player;
 
     target.x = 0;
     target.y = 0;
@@ -184,7 +184,7 @@ int daWater_Tatumaki_c::StateDrag() {
 // @symbol _ZN18daWater_Tatumaki_c13InitStateDragEv
 /* Drag, on entry: start the orbit where the player is standing. */
 int daWater_Tatumaki_c::InitStateDrag() {
-    Player *player = this->ClosestPlayer();
+    daPly_c *player = this->ClosestPlayer();
     if (player) {
         const Vector3 *playerPos = &player->mPos;
         Vector3 pos;
@@ -208,7 +208,7 @@ int daWater_Tatumaki_c::InitStateDrag() {
 /* Spin, each frame: catch a player who has reached the centre, otherwise
    draw a non-metal player inward. The pull is stronger when they are closer. */
 int daWater_Tatumaki_c::StateSpin() {
-    Player *player = this->ClosestPlayer();
+    daPly_c *player = this->ClosestPlayer();
     if (player != 0) {
         Vector3 pos;
         {

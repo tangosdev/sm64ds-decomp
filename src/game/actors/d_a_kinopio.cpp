@@ -42,7 +42,7 @@
 #include "common.h"
 #include "daKinopio_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Message.h"
 #include "dCc_c.h"
 #include "dBgCh_Gnd.h"
@@ -215,7 +215,7 @@ void daKinopio_c::St_Talk_Main()
         playerPos.z = pos[2];
     }
     angleToPlayer = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &playerPos);
-    talkState = ((Player *)player)->GetTalkState();
+    talkState = ((daPly_c *)player)->GetTalkState();
     switch (talkState) {
     case 0: {
         if (ApproachLinear(mAngleY, angleToPlayer, 0x800) == 0)
@@ -236,7 +236,7 @@ void daKinopio_c::St_Talk_Main()
             messagePos.z = z;
             (void)x;
         }
-        ((Player *)player)->ShowMessage(*this, (u32)(s16)messageID, &messagePos, 0, 0);
+        ((daPly_c *)player)->ShowMessage(*this, (u32)(s16)messageID, &messagePos, 0, 0);
         return;
     }
     case 1:
@@ -271,7 +271,7 @@ void daKinopio_c::St_Talk_Main()
                 SpawnSoundObj(1);
                 {
                     u32 param = 0x13;
-                    u8 character = ((Player *)player)->mCharacter;
+                    u8 character = ((daPly_c *)player)->mCharacter;
                     dActor_c::Spawn(
                         0x10d, param | ((u32)character << 8),
                         playerPos, 0, mAreaId, -1);
@@ -308,7 +308,7 @@ void daKinopio_c::St_Idle_Main()
     if (!IsPlayerActor((dActor_c *)actor))
         return;
 
-    mTalkPlayer = (Player *)actor;
+    mTalkPlayer = (daPly_c *)actor;
     if (mTalkPlayer->StartTalk(*this, 0) == 0)
         return;
 
@@ -462,7 +462,7 @@ int daKinopio_c::Behavior()
     RunState();
     mAnmModel.UpdateVerts();
 
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (player != 0) {
         s32 threshold = 0xfa000;
         if (data_0209f2f8 == 0x32)
@@ -580,7 +580,7 @@ int daKinopio_c::InitResources()
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9a0);
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
         if (func_02013a44() != 0) {
-            Player *player = ClosestPlayer();
+            daPly_c *player = ClosestPlayer();
             if (player != 0) {
                 u32 k = 0xd;
                 u8 character = player->mCharacter;

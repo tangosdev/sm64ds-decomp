@@ -31,7 +31,7 @@
     "Replace all 20 local vector stand-ins with the existing genuine Vector3 type across the forward-chain, backward-chain, blend, and contact helpers.",
     "Replace six WanwanVec pointer declarations with Vector3 views of the actual seven-element mLinkPos and mLinkDelta arrays; remove the local POD twin.",
     "Use an unsigned 32-bit address cursor for the backward traversal and convert to Vector3* only at valid element addresses 6 through 0. The last integer decrement is never converted to a pointer.",
-    "Agree the existing Player::Hurt scalar bridge with its current definition: int return, void* position, u8 trailing flags. Arguments and discarded result remain the same. This does not recover the original by-value Fix12 ABI."
+    "Agree the existing daPly_c::Hurt scalar bridge with its current definition: int return, void* position, u8 trailing flags. Arguments and discarded result remain the same. This does not recover the original by-value Fix12 ABI."
   ],
   "scope": {
     "source": "src/game/actors/d_a_wanwan.cpp",
@@ -632,7 +632,7 @@
     },
     "MEM2875-07": {
       "disposition": "fixed",
-      "evidence": "TU declares only data021423c0/3e0/42408/42440 typed member tables. Player data021423a8 exists in __sinit_ov006_021314e4 as Pair[3]; no typed player-table declaration or dispatcher in this TU. All three real method definitions have C++ member linkage and emitted native mangled names.",
+      "evidence": "TU declares only data021423c0/3e0/42408/42440 typed member tables. daPly_c data021423a8 exists in __sinit_ov006_021314e4 as Pair[3]; no typed player-table declaration or dispatcher in this TU. All three real method definitions have C++ member linkage and emitted native mangled names.",
       "id": "MEM2875-07",
       "kind": "provenance",
       "location": "config/tu_manifest.d/ov006/dScMgMemory2_c.json notes[0]; source comments preceding OnGroundPounded/OnTurnIntoEgg/OnYoshiTryEat",
@@ -790,7 +790,7 @@
       "id": "WANWAN-HURT-DECL-001",
       "kind": "reconstruction",
       "disposition": "fixed",
-      "location": "src/game/actors/d_a_wanwan.cpp:Player::Hurt scalar declaration",
+      "location": "src/game/actors/d_a_wanwan.cpp:daPly_c::Hurt scalar declaration",
       "summary": "Agree the existing scalar bridge with its current definition.",
       "reason": "int return and u8 trailing flags agree; same constant arguments and whole object retained. Native Fix12 interface remains under inherited finding WANWAN-NATIVE-003."
     }

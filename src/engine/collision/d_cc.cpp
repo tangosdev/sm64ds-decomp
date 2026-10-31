@@ -4,7 +4,7 @@
  * Process() walks the global list whose head is listHead, finds pairs
  * whose flags interlock, and writes per-node pushback; the two file-static
  * helpers resolve a flag-8 hit's owner to the player actor and hand it the
- * collider through Player::StartClimb.
+ * collider through daPly_c::StartClimb.
  * mwccarm emits .text in reverse source order, so the definitions below run
  * ROM-descending.
  *
@@ -21,7 +21,7 @@
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "math/CalcLib.h"
-#include "Player.h"
+#include "daPly_c.h"
 
 // @symbol _ZN5dCc_cC2Ev
 /* C2, the base-subobject constructor. The vptr store is the compiler's; the
@@ -98,7 +98,7 @@ static inline int IsPlayer(dActor_c *actor) {
 extern "C" void func_02014f5c(dCc_c *self, u32 id) {
     dActor_c *actor = dActor_c::FindWithID(id);
     if (actor && IsPlayer(actor))
-        static_cast<Player *>(actor)->StartClimb(self);
+        static_cast<daPly_c *>(actor)->StartClimb(self);
 }
 
 // @symbol func_02014f44

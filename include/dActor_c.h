@@ -40,7 +40,7 @@ struct Vector3_16 {
 
 #ifdef __cplusplus
 
-struct Player;
+struct daPly_c;
 struct Vector3;
 struct dCc_c;
 /* Only ever named through a pointer below; the definition lives in common.h /
@@ -183,8 +183,8 @@ struct dActor_c : dBase_c {
 
     /* The 24 unnamed parameters in this class, each left off because a name
        would cost an @NNN number that the vector overlays above spend instead:
-         Player & / dActor_c &: slots 19 and 21-28, BumpedUnderneathByPlayer,
-           JumpedOnByPlayer's Player, GivePlayerCoins;
+         daPly_c & / dActor_c &: slots 19 and 21-28, BumpedUnderneathByPlayer,
+           JumpedOnByPlayer's daPly_c, GivePlayerCoins;
          dCc_c & / dCc_c *: FindEgg, FindExplosionActor, MakeVanishLuigiWork,
            JumpedOnByPlayer, UpdatePos, UpdatePosWithOnlySpeed;
          dExtShadowModel_c &: DropShadowScaleXYZ, DropShadowRadHeight;
@@ -204,7 +204,7 @@ struct dActor_c : dBase_c {
 
     /* --- new slots, 18..30, in declaration order. Do not reorder. --- */
     virtual int  OnYoshiTryEat();                      /* slot 18 */
-    virtual void OnTurnIntoEgg(Player &);              /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &);             /* slot 19 */
     virtual int  Virtual50();                          /* slot 20 -- vtable+0x50 */
     /* Slots 21, 24 and 27 return void, NOT int. Nothing in the tree reads them,
        so only an override with early returns can tell the difference -- and one
@@ -216,7 +216,7 @@ struct dActor_c : dBase_c {
     virtual void OnKicked(dActor_c &);                 /* slot 24 */
     virtual int OnPushed(dActor_c &);                  /* slot 25 */
     virtual int OnHitByCannonBlastedChar(dActor_c &);  /* slot 26 */
-    virtual void OnHitByMegaChar(Player &);            /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &);           /* slot 27 */
     virtual int OnHitFromUnderneath(dActor_c &);       /* slot 28 */
     virtual int  OnAimedAtWithEgg();                   /* slot 29 */
     /* Returns a Vector3 by value, and the ROM says so: 0x020100dc writes x/y/z
@@ -230,9 +230,9 @@ struct dActor_c : dBase_c {
        both ends in globals; the rest read that cache, which is why each calls
        ClosestPlayer first and then returns a global rather than its result.
        BeforeBehavior clears the cache at the top of every frame. */
-    Player *ClosestPlayer();
-    Player *ClosestNonVanishPlayer();
-    Player *FarthestPlayer();
+    daPly_c *ClosestPlayer();
+    daPly_c *ClosestNonVanishPlayer();
+    daPly_c *FarthestPlayer();
     s32     DistToCPlayer();
 
     /* maxDist is a whole-unit distance, not a fix12 one: it is shifted into
@@ -260,12 +260,12 @@ struct dActor_c : dBase_c {
 
     /* Integrates mHorzSpeed along mAngleY and applies gravity. */
     void UpdatePosWithHorzSpeedAndAng();
-    int BumpedUnderneathByPlayer(Player &);
+    int BumpedUnderneathByPlayer(daPly_c &);
     int  GetSubtraction(short a, short b);
 
     /* Rebuilds the scratch matrix at 0x020a0e68 from the carrying player's hand
        transform, writes this actor's own position out of it, and returns it. */
-    Matrix4x3 *UpdateCarry(Player &player, const Vector3 &vec);
+    Matrix4x3 *UpdateCarry(daPly_c &player, const Vector3 &vec);
 
     /* The cylinder-collision group. Everything here reads a dCc_c the caller
        already has; see include/dCc_c.h for the layout.
@@ -279,7 +279,7 @@ struct dActor_c : dBase_c {
     dActor_c *FindEgg(dCc_c &);            /* hitFlags 0x2000 */
     dActor_c *FindExplosionActor(dCc_c &); /* hitFlags 0x4000 */
     void MakeVanishLuigiWork(dCc_c &);
-    int JumpedOnByPlayer(dCc_c &, Player &);
+    int JumpedOnByPlayer(dCc_c &, daPly_c &);
     void UpdatePos(dCc_c *);
     void UpdatePosWithOnlySpeed(dCc_c *);
 
@@ -310,7 +310,7 @@ struct dActor_c : dBase_c {
     void TrackInDeathTable();
     void UntrackInDeathTable();
     /* Returns the spawned daSoundObj_c: r0 is Spawn's result at the return,
-       and daStar_c and Player keep or test it. */
+       and daStar_c and daPly_c keep or test it. */
     dActor_c *SpawnSoundObj(u32 soundObjParam);
     s32  GetWaterHeightWDW();
     bool DetectRaycastClsn(Vector3 &start, Vector3 &end, bool storeHitPos);
@@ -329,12 +329,12 @@ struct dActor_c : dBase_c {
 
     /* SpawnNumber puts up actor 0x14a, the floating score popup, and makes it
        follow `owner`. packLowNibble squeezes value into a nibble and tags it
-       0x10. GivePlayerCoins takes Player by reference and then null-tests it --
+       0x10. GivePlayerCoins takes daPly_c by reference and then null-tests it --
        the mangled name says R6Player and the null test is real, so the source
        has to say both. */
     dActor_c *SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
                        u16 delay, dActor_c *owner);
-    void GivePlayerCoins(Player &, u8 count, u32 coinKind);
+    void GivePlayerCoins(daPly_c &, u8 count, u32 coinKind);
     dActor_c *ClosestWithActorID(u32 actorID);
 
     /* areaID and deathTableID are s8/s16 and the symbol must say so: the body
@@ -461,7 +461,7 @@ struct dActor_c {
    this header's own field list computes -- it is not independent ROM evidence --
    but it holds the two spellings to each other, catches a field retyped without
    shrinking the pad after it, and gives tools/check_header_offsets.py the base
-   size it refuses to guess when checking include/Player.h. */
+   size it refuses to guess when checking include/daPly_c.h. */
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dActor_c_size_must_be_0xd0[sizeof(struct dActor_c) == 0xd0 ? 1 : -1];

@@ -6,7 +6,7 @@
 #include "dExtSimpleModel_c.h"
 #include "dCcAc_c.h"
 
-struct Player;
+struct daPly_c;
 
 /* The cannon (CANNON profile). The cartridge's RTTI names the class daCnn_c:
  * _ZTS at ov098 0x0213c664 reads "7daCnn_c", and the _ZTI at 0x0213c670 is
@@ -35,7 +35,7 @@ struct daCnn_c : dActor_c {
     u8 pad_0d0[0x4];          /* 0x0d0 */
     dExtSimpleModel_c mModel; /* 0x0d4 */
     dCcAc_c mdCcAc_c;         /* 0x124 */
-    Player *mPlayer;          /* 0x158 -- the player riding the load sequence */
+    daPly_c *mPlayer;         /* 0x158 -- the player riding the load sequence */
     s32 mSpawnPosX;           /* 0x15c */
     s32 mSpawnPosY;           /* 0x160 */
     s32 mSpawnPosZ;           /* 0x164 */

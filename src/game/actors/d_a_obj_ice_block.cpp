@@ -31,7 +31,7 @@
 enum d_a_obj_ice_block_AssetId { ASSET_ICE_BLOCK_LL_BMD = 0x045a, ASSET_ICE_BLOCK_LL_KCL = 0x045b };
 
 #include "daObjIceBlock_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "daStar_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
@@ -196,8 +196,8 @@ void daObjIceBlock_c::Kill() {
     MarkForDestruction();
 }
 
-// @symbol _ZN15daObjIceBlock_c15OnHitByMegaCharER6Player
-void daObjIceBlock_c::OnHitByMegaChar(Player &player) {
+// @symbol _ZN15daObjIceBlock_c15OnHitByMegaCharER7daPly_c
+void daObjIceBlock_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Kill();
 }

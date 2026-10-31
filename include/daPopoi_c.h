@@ -65,9 +65,9 @@ enum {
  *   record (data_ov077_...)   enter / update               what it does
  *   02127ce8  Wander          02126cd4 / 02126ad0          random heading, walks; home pull, chase trigger
  *   02127cf8  Pause           02126a84 / 02126a50          stands still 70 frames, then back to Wander
- *   02127d08  Chase           02126930 / 0212679c          turns toward the Player; gives up to Pause
+ *   02127d08  Chase           02126930 / 0212679c          turns toward the daPly_c; gives up to Pause
  *   02127d18  TurnAway        02126a04 / 021269a8          turns a quarter turn after the ahead probe fires (only in level 0x2a)
- *   02127cd8  Grab            02126758 / 02126640          plays its animation; launches the Player; then Pause
+ *   02127cd8  Grab            02126758 / 02126640          plays its animation; launches the daPly_c; then Pause
  */
 struct daPopoi_StateRecord;
 
@@ -81,11 +81,11 @@ struct daPopoi_c : dEnemyBase_c {
     /* The current state's record; see the table above. Installed by
        func_ov077_02126d5c, which also runs the record's enter handler. */
     struct daPopoi_StateRecord  *mState;                /* 0x3fc */
-    /* The Player the sensor was touching when func_ov077_02126528 entered the Grab
+    /* The daPly_c the sensor was touching when func_ov077_02126528 entered the Grab
        state. Zero from InitResources; cleared by func_ov077_02126640 once its launch
        call returns nonzero. If Grab ends (animation Finished) without a launch it is
        left set. */
-    Player                      *mCaughtPlayer;         /* 0x400 */
+    daPly_c *mCaughtPlayer; /* 0x400 */
     /* InitResources copies the actor's own position here once; nothing in this
        file writes it again. Behavior snaps the actor back to it when it falls
        below the water height, and the Wander/Chase handlers measure their
@@ -103,7 +103,7 @@ struct daPopoi_c : dEnemyBase_c {
     s32                          unk_41c;               /* 0x41c -- only ever zeroed (Wander and Chase enter) */
     /* The heading mPrevAngleY is stepped toward (ApproachLinear); Behavior then
        copies mPrevAngleY into mAngleY. Wander enter picks a random multiple of
-       0x1000, Chase update sets the heading to the Player, TurnAway enter sets
+       0x1000, Chase update sets the heading to the daPly_c, TurnAway enter sets
        mAngleY + 0x4000. */
     s16                          mTargetAngleY;         /* 0x420 */
     /* Chase's per-frame angle step toward mTargetAngleY; Chase enter zeroes it
@@ -112,7 +112,7 @@ struct daPopoi_c : dEnemyBase_c {
     u8  pad_424[0x2];
     /* A countdown (DecIfAbove0_Short in Behavior). TurnAway sets it to 30 frames
        when it finishes; while it is nonzero the Wander update skips the test for
-       a Player to chase. */
+       a daPly_c to chase. */
     u16                          mCooldown;             /* 0x426 */
     /* Sound::PlayLong's return, fed back on the next call (daPopoi_SND_MOVE_LOOP). */
     u32                          mSoundHandle;          /* 0x428 */
@@ -134,7 +134,7 @@ struct daPopoi_c : dEnemyBase_c {
        updates); 1 = blocked, with the position rolled back. Only casts rays in
        level 0x2a. */
     int  func_ov077_02126300();
-    /* Sensor scan for a Player to grab; installs the Grab state. Behavior only. */
+    /* Sensor scan for a daPly_c to grab; installs the Grab state. Behavior only. */
     void func_ov077_02126528();
     /* State installer: stores the record in mState and runs its enter handler. */
     int  func_ov077_02126d5c(daPopoi_StateRecord *next);

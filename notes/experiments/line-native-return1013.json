@@ -89,7 +89,7 @@
     "Run strict linkcheck for _ZN9dBgCh_Lin10GetClsnPosEv at0x020375d0,size0x1c,arm9; run expanded TU and full-ROM gates before publication."
   ],
   "caller_work": {
-    "native_cpp_callers": "Actr, Camera, Coin, water objects 01/06 and Player; actual canonical Vector3 returns, first-use initialization and scratch lifetime changes preserve bytes.",
+    "native_cpp_callers": "Actr, Camera, Coin, water objects 01/06 and daPly_c; actual canonical Vector3 returns, first-use initialization and scratch lifetime changes preserve bytes.",
     "c_bridge": "func_02008cb4 remains C: only its two collision results use the actual canonical Vector3 aggregate-return type. Other scratch vectors keep the existing Vec3 and helper prototypes, with two explicit legacy pointer views. The existing ray storage wrapper remains a documented partial reconstruction.",
     "partial_scope": "Other raw field views, POD copies, manual ray lifecycles and unnamed functions remain as before; this does not complete those classes.",
     "compiler_bindings": "Refresh anonymous local names onto unchanged canonical bindings for Coin and both water objects; license only the canonical 4-byte Vector3 destructor duplicate in Camera and both water objects."
@@ -100,7 +100,7 @@
     "src/actors/daCoin_c.cpp",
     "src/game/actors/d_a_obj_wc_obj01.cpp",
     "src/game/actors/d_a_obj_wc_obj06.cpp",
-    "src/actors/Player.cpp",
+    "src/actors/daPly_c.cpp",
     "src/unnamed/arm9/0200/func_02008cb4.c",
     "src/unnamed/arm9/0200/func_02009e70.cpp",
     "src/engine/collision/dBgCh_Lin.cpp"

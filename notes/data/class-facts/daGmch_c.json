@@ -155,9 +155,9 @@
     {
       "slot": 19,
       "address": "0x02127a7c",
-      "symbol": "_ZN8Moneybag13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8Moneybag13OnTurnIntoEggER7daPly_c",
       "size": "0x60",
-      "base_slot_held": "_ZN8dActor_c13OnTurnIntoEggER6Player (0x02010154)"
+      "base_slot_held": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c (0x02010154)"
     },
     {
       "slot": 29,

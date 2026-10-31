@@ -22,7 +22,7 @@
 #include "dBgCh_Actr.h"
 #include "dBgCh_Gnd.h"
 #include "dActor_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 
 extern "C" {
 
@@ -81,7 +81,7 @@ extern "C" void func_02037318(dBgCh_Actr *clsn) {
     clsn->mFlags &= ~0x100;
     if (clsn->IsOnGround() == 0)
         return;
-    if (((Player *)clsn->mActor)->IsInAir())
+    if (((daPly_c *)clsn->mActor)->IsInAir())
         return;
     clsn->mFlags |= 0x100;
     src = &clsn->mSphereClsn.mFloorNormal.x;
@@ -102,7 +102,8 @@ extern "C" void func_020371fc(char *self)
     if ((clsn->mFlags & 0x100) == 0) return;
     if (clsn->mGroundNormal.y >= 0xf20)
         return;
-    if (((Player *)clsn->mActor)->IsInAir()) return;
+    if (((daPly_c *)clsn->mActor)->IsInAir())
+        return;
     {
         Vector3 probe;
         Vector3 *actorPos = &clsn->mActor->mPos;

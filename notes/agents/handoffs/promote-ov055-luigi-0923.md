@@ -22,7 +22,7 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - Class/TU/symbol and module-qualified ROM scope: `daLuigi_c`, [ov055](../../../config/arm9/overlays/ov055/symbols.txt) `.text`
   `0x021111a0..0x02111860`, 11 functions: D1, D0, [func_ov055_02111264](../../../src/game/actors/d_a_luigi.cpp)(ROM Ordinal 2),
-  [func_ov055_02111288](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c13ExecuteMirrorEP6Player](../../../src/game/actors/d_a_luigi.cpp), ROM Ordinal 3), [func_ov055_021112bc](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c11EnterMirrorEP6Player](../../../src/game/actors/d_a_luigi.cpp), ROM Ordinal 4), [func_ov055_021112c4](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player](../../../src/game/actors/d_a_luigi.cpp), ROM Ordinal 5),
+  [func_ov055_02111288](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c13ExecuteMirrorEP7daPly_c](../../../src/game/actors/d_a_luigi.cpp), ROM Ordinal 3), [func_ov055_021112bc](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c11EnterMirrorEP7daPly_c](../../../src/game/actors/d_a_luigi.cpp), ROM Ordinal 4), [func_ov055_021112c4](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c8SetStateEP12daLuigiStateP7daPly_c](../../../src/game/actors/d_a_luigi.cpp), ROM Ordinal 5),
   `CleanupResources`, `OnPendingDestroy`, `Render`, `Behavior`, `InitResources`.
 - Reserved source/header/config surfaces actually touched:
   - `include/daLuigi_c.h`, renamed from the MirrorLuigi header.
@@ -37,7 +37,7 @@ This document describes this commit. The queue records its immutable output SHA.
   its vtable at `0x02111ae0`, the address the tree called `_ZTV11MirrorLuigi`.
   The state table at `0x02111a94` holds two words, which relocate to `0x021112bc` and
   `0x02111288`.[ __sinit_ov055_021118d4](../../../src/unnamed/ov055/__sinit_ov055_021118d4.c) copies it to `0x02111b70`, and `InitResources`
-  passes that copy to [func_ov055_021112c4](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player](../../../src/game/actors/d_a_luigi.cpp)). [ov063](../../../config/arm9/overlays/ov063/symbols.txt) calls [func_ov055_02111264](../../../src/game/actors/d_a_luigi.cpp).
+  passes that copy to [func_ov055_021112c4](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c8SetStateEP12daLuigiStateP7daPly_c](../../../src/game/actors/d_a_luigi.cpp)). [ov063](../../../config/arm9/overlays/ov063/symbols.txt) calls [func_ov055_02111264](../../../src/game/actors/d_a_luigi.cpp).
 - Lineage evidence or structural inference: the state setter, the two-callback table and
   the mirror callback (it negates X and the Y angle) are inferred from the code.
 - Hypothesized names/filenames, explicitly not recovered facts:
@@ -132,7 +132,7 @@ All checks ran in `C:/tmp/promote-ov055-luigi-0923` on this branch, base `eb8f46
     - Two new keys:
       - [data_ov055_02111b70](../../../config/arm9/overlays/ov055/symbols.txt) is now typed `daLuigiState`, against `decl_common`'s
         `void *`.
-      - The [func_ov055_021112c4](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player](../../../src/game/actors/d_a_luigi.cpp)) definition takes `char *` where `decl_common` declares
+      - The [func_ov055_021112c4](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c8SetStateEP12daLuigiStateP7daPly_c](../../../src/game/actors/d_a_luigi.cpp)) definition takes `char *` where `decl_common` declares
         `int`. `decl_common` is a shared header outside this reservation.
   - `check_dead_references`: exit 0, none new.
   - `tiers_ratchet --check`: exit 0, PASS. Baseline 2993, current 3029. The unbanked

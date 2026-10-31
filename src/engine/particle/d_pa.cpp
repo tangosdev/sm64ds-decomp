@@ -35,7 +35,7 @@
 
 extern "C" {
 /* local extern: no header in include/ declares these (dClipper.h only
- * mentions the clipper instance, Player.h only the water height). */
+ * mentions the clipper instance, daPly_c.h only the water height). */
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern Matrix4x3 data_0209b41c;

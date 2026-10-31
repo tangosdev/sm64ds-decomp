@@ -89,7 +89,7 @@
     {"slot": 14, "word": "0x0204349c", "name": "_ZN7fBase_c9Virtual38Ejj"},
     {"slot": 15, "word": "0x02043494", "name": "_ZN7fBase_c13OnHeapCreatedEv"},
     {"slot": 18, "word": "0x02010160", "name": "_ZN8dActor_c13OnYoshiTryEatEv"},
-    {"slot": 19, "word": "0x02010154", "name": "_ZN8dActor_c13OnTurnIntoEggER6Player"},
+    {"slot": 19, "word": "0x02010154", "name": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c"},
     {"slot": 20, "word": "0x0201014c", "name": "_ZN8dActor_c9Virtual50Ev"},
     {"slot": 21, "word": "0x02010148", "name": "_ZN8dActor_c15OnGroundPoundedERS_"},
     {"slot": 22, "word": "0x02010144", "name": "_ZN8dActor_c11OnAttacked1ERS_"},
@@ -97,7 +97,7 @@
     {"slot": 24, "word": "0x0201013c", "name": "_ZN8dActor_c8OnKickedERS_"},
     {"slot": 25, "word": "0x02010138", "name": "_ZN8dActor_c8OnPushedERS_"},
     {"slot": 26, "word": "0x02010134", "name": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_"},
-    {"slot": 27, "word": "0x02010130", "name": "_ZN8dActor_c15OnHitByMegaCharER6Player"},
+    {"slot": 27, "word": "0x02010130", "name": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c"},
     {"slot": 28, "word": "0x0201012c", "name": "_ZN8dActor_c19OnHitFromUnderneathERS_"},
     {"slot": 30, "word": "0x020100dc", "name": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv"}
   ],
@@ -409,7 +409,7 @@
       "0x45c": "Behavior updates the two dCcAc_c colliders when enabled; dCcAcPos_c additionally requires state2. All three Clear calls are unconditional.",
       "0x45d": "State1 reads and updates this byte around two Sound::PlaySub calls; original meaning and name remain unknown.",
       "0x460": "ClosestPlayer result stored/read by0212f204;0212f1d0 dereferences it.",
-      "0x464": "Player distance or0x7fffffff sentinel, compared by state handlers.",
+      "0x464": "daPly_c distance or0x7fffffff sentinel, compared by state handlers.",
       "0x46c": "Widened player byte+0x6de; selects state distance thresholds. Meaning remains unproved.",
       "0x474": "State6 particle handle read/write through Particle::System::New; other states clear it.",
       "0x478": "State1 sound handle read/write through Sound::PlayLong; reset by InitResources and state changes."

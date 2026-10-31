@@ -35,7 +35,7 @@ enum daObjCasket_c_AssetId { ASSET_CASKET_BMD = 0x05b4, ASSET_CASKET_KCL = 0x05b
 #include "daObjCasket_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 
@@ -222,7 +222,7 @@ void daObjCasket_c::St_Wait_Main() {
         Sound::PlayBank3(0x5a, mCamSpacePos);
     } else {
         Vector3 *playerPosPtr;
-        Player *closest = ClosestPlayer();
+        daPly_c *closest = ClosestPlayer();
         if (closest == 0)
             return;
         /* Through a pointer: copied straight off the player, it is one instruction short. */

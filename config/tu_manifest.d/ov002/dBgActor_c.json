@@ -34,10 +34,10 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN10dBgActor_c14KillByMegaCharER6Player",
+      "symbol": "_ZN10dBgActor_c14KillByMegaCharER7daPly_c",
       "address": "0x020ee4b0",
       "size": "0x000000ac",
-      "legacy_source": "src/_ZN10dBgActor_c14KillByMegaCharER6Player.cpp",
+      "legacy_source": "src/_ZN10dBgActor_c14KillByMegaCharER7daPly_c.cpp",
       "ordinal": 2
     },
     {

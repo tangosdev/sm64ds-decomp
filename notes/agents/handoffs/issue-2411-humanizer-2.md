@@ -52,8 +52,8 @@ in [the preceding handoff](issue-2411.md).
 
 ## Contract correction
 
-The actor `OnTurnIntoEgg(Player&)` base and 24 named overrides now return `void`,
-across the headers, the host shim, and the three remaining Player `Obj::v19`
+The actor `OnTurnIntoEgg(daPly_c&)` base and 24 named overrides now return `void`,
+across the headers, the host shim, and the three remaining daPly_c `Obj::v19`
 caller views.
 
 An earlier revision of this section claimed those overrides returned `void` "with
@@ -74,7 +74,7 @@ That repair is a source-consistency fix; it is not new evidence about the
 original return type, and the caveats stated later in this section still apply
 unchanged. It rests on the same reasoning as the rest of the contract: all four
 bodies already fell off the end with no return statement, and the only slot-19
-dispatch site, `Player::St_YoshiPower_Main`, models the callee as
+dispatch site, `daPly_c::St_YoshiPower_Main`, models the callee as
 `virtual void v19(char *)` and invokes it as a bare statement, so no caller
 consumes a value from them.
 
@@ -91,7 +91,7 @@ original type spelling. The pre-edit census found 21 nonempty fallthrough hook
 bodies, one empty body, and three bodies forwarding calls (OneUp also falls
 through), with zero constant/computed non-call return expressions. All 25 ROM
 exit patterns support `void` without deleting meaningful register writes. Five
-observed Player calls overwrite `r0` before using an outgoing result. Unused `r0`
+observed daPly_c calls overwrite `r0` before using an outgoing result. Unused `r0`
 alone does not prove an original return type. The ARM immediate-slot scan does
 not cover Thumb, computed slots or a complete indirect-call graph.
 
@@ -144,14 +144,14 @@ either way; only the narration was wrong.
 
   | row | old cell | refreshed | source file | lines base → here |
   |---|---|---|---|---|
-  | `Crate` | 1431 | **1427** | `src/_ZN5Crate13OnTurnIntoEggER6Player.cpp` | 42 → 38 |
+  | `Crate` | 1431 | **1427** | `src/_ZN5Crate13OnTurnIntoEggER7daPly_c.cpp` | 42 → 38 |
   | `Coin` | 1148 | **1147** | `Coin::OnTurnIntoEgg` (since folded into `src/game/actors/d_a_coin.cpp`) | 24 → 23 |
   | `daGmch_c` | 1119 | **1120** | `src/game/actors/d_a_gmch.cpp` | 1119 → 1120 |
 
   Each row delta matches its file delta exactly, so these three are this
-  branch's to move. `daKing_Donketu_c` (1992 → **1993**) and `Player`
+  branch's to move. `daKing_Donketu_c` (1992 → **1993**) and `daPly_c`
   (26798 → **26799**) genuinely are pre-existing: `main`'s own `b3342da8f`
-  edited `include/daKing_Donketu_c.h` and `include/Player.h` without refreshing the
+  edited `include/daKing_Donketu_c.h` and `include/daPly_c.h` without refreshing the
   queue file, and they are the two rows base already disagrees on. All five
   were refreshed by one `python tools/queue_audit.py --write` pass, which
   rewrote only the derived columns of `notes/data/tu-promotion-queue.tsv` and
@@ -203,7 +203,7 @@ The ROM source/header checkpoint is `0bd25ab41afb60de40047305dbab5d0d746557e5`.
 Subsequent edits remove the obsolete HAL constructor wrapper, mark its
 abort-only trap `[[noreturn]]`, update this handoff/manifest prose, and — added
 in the repair described above — change the return type of four
-`OnTurnIntoEgg(Player&)` definitions under `src_tu/` from `int` to `void`. That
+`OnTurnIntoEgg(daPly_c&)` definitions under `src_tu/` from `int` to `void`. That
 last edit is the only change to the ROM source tree since the checkpoint; the
 header tree and the production ownership declarations are unchanged from it, and
 each of the four affected TUs was re-verified byte-for-byte (see below).
@@ -211,7 +211,7 @@ Independent verification must still pin the final candidate.
 
 - `build/humanizer-contract-targeted.json`: **34 VERIFIED**, empty diffs, blind 0.
   This passes each source explicitly to normal linkcheck: 25 hooks, three OneUp
-  helpers, Key's helper, and five observed Player callers.
+  helpers, Key's helper, and five observed daPly_c callers.
 - `build/humanizer-contract-tus.json`: all **251 functions MATCH** across eight
   edited promoted TUs, clean relocation type/addend and destinations, with expected
   ROM emission order. Seven runs exit 0. Propeller's promotion audit exits 1 for

@@ -24,7 +24,7 @@ struct System {
 #pragma opt_common_subs off
 
 #include "daPgRcer_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "SurfaceInfo.h"
 #include "dBgPi.h"
@@ -253,7 +253,7 @@ int daPgRcer_c::func_ov019_02112168()
 {
     if (DecIfAbove0_Byte(&mTalkWaitTimer))
         return 1;
-    Player *pl = ClosestPlayer();
+    daPly_c *pl = ClosestPlayer();
     if (pl == 0)
         return 1;
     int radius = mdCcAc_c.radius;
@@ -407,7 +407,7 @@ int daPgRcer_c::func_ov019_0211197c() {
                 }
             }
             {
-                Player *o = mTalkPlayer;
+                daPly_c *o = mTalkPlayer;
                 const Vector3 *p = &o->mPos;
                 Vector3 v;
                 v.x = p->x;
@@ -444,7 +444,7 @@ int daPgRcer_c::func_ov019_0211197c() {
                 }
             }
             {
-                Player *o = mTalkPlayer;
+                daPly_c *o = mTalkPlayer;
                 const Vector3 *p = &o->mPos;
                 Vector3 v;
                 v.x = p->x;
@@ -680,7 +680,7 @@ void daPgRcer_c::func_ov019_021112b8()
 {
     if (mPlayerCheated != 0)
         return;
-    Player *t = mTalkPlayer;
+    daPly_c *t = mTalkPlayer;
     if (t->mIsAirborne != 0) {
         int vertSpeed = t->mVertSpeed;
         int terminalVel = t->mTerminalVelocity;

@@ -44,7 +44,7 @@
 
 #include "daPicGate_c.h"
 #include "common.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
 #include "private/Ov080Mat.h"
@@ -232,7 +232,7 @@ void daPicGate_c::func_ov080_021256f8()
     Vec3 b;
     Vec3 ob;
     Vec3 oa;
-    Player *r5;
+    daPly_c *r5;
     int x, y;
     int lim;
     u32 raw;

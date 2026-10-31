@@ -25,7 +25,7 @@
  *    destructor and Matrix4x3's embedded Vector3 change the frame.
  */
 #include "dCapEnemy_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "decl_Enemy.h"
 /* _ZTV11dCapEnemy_c is already declared here. A local extern would be a new
@@ -231,7 +231,7 @@ int dCapEnemy_c::GetCapState() {
     unsigned char val = *(unsigned char *)&data_0209f2d8;
     int check = (val == 1) ? 1 : 0;
     if (check == 0) {
-        Player *p = ClosestPlayer();
+        daPly_c *p = ClosestPlayer();
         if (p != 0) {
             int s = mCapId & 7;
             int ps = p->param1;
@@ -258,7 +258,7 @@ int dCapEnemy_c::DestroyIfCapNotNeeded()
 {
   if (mCapId >= 6) return 1;
   if ((int)(data_0209f2d8 == 1) != 0) return 1;
-  Player *p = ClosestPlayer();
+  daPly_c *p = ClosestPlayer();
   if (p == 0) { func_02005ed8(); return 0; }
   if (mCapId != p->mCharacter) return 1;
   func_02005ed8();
@@ -282,14 +282,14 @@ int dCapEnemy_c::func_02005e28()
     if (b != 0) {
         n = data_0208a0e0;
         for (i = 0; i < n; i++) {
-            Player *p = (Player *)data_0209f394[i];
+            daPly_c *p = (daPly_c *)data_0209f394[i];
             if (p != 0) {
                 if (p->param1 == mCapId) return 1;
             }
         }
         return 0;
     } else {
-        Player *p = ClosestPlayer();
+        daPly_c *p = ClosestPlayer();
         int r1;
         if (p != 0) r1 = p->param1;
         else r1 = mCapId;

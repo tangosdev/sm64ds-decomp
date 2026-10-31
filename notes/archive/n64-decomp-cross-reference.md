@@ -61,7 +61,7 @@ This is a data table in the ROM image. It cannot be a hallucination.
 
 ### 2.2 Gravity / terminal velocity
 
-`Player::ChangeState` (0x020e30a0) resets the pair on every transition:
+`daPly_c::ChangeState` (0x020e30a0) resets the pair on every transition:
 
 ```arm
 020e31c0  mov r2, #0x4000     ; 4.0
@@ -73,11 +73,11 @@ This is a data table in the ROM image. It cannot be a hallucination.
 ```
 
 N64 [src/game/mario_step.c:576-578](https://github.com/n64decomp/sm64/blob/master/src/game/mario_step.c#L576-L578) — `vel[1] -= 4.0f`, clamp `-75.0f`. `-75.0` is arbitrary
-tuning, not a natural constant. Re-emitted at 8 other Player sites.
+tuning, not a natural constant. Re-emitted at 8 other daPly_c sites.
 
 ### 2.3 Wing-cap flutter — same gate, same numbers
 
-DS [St_Shell_Main](../../src/game/player/Player.cpp) (ROM ordinal 255) 0x020cc5cc-0x020cc5ec: `mHasWings` AND descending AND A-held →
+DS [St_Shell_Main](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 255) 0x020cc5cc-0x020cc5ec: `mHasWings` AND descending AND A-held →
 `mVertAccel = -2.0`, `mTerminalVelocity = -37.5`.
 
 N64 `mario_step.c`:[566](https://github.com/n64decomp/sm64/blob/master/src/game/mario_step.c#L566)-[574](https://github.com/n64decomp/sm64/blob/master/src/game/mario_step.c#L574) — `MARIO_WING_CAP && vel[1] < 0.0f && (input & INPUT_A_DOWN)`
@@ -125,7 +125,7 @@ cross-check. Low confidence on its own (round numbers), but useful.
 
 | System | N64 | SM64DS |
 |---|---|---|
-| Action state | `u32` ID packing group + 22 `ACT_FLAG_*` bits, `switch (action & ACT_GROUP_MASK)` | `State*` at `Player+0x370`/`+0x374`/`+0x378`, Metrowerks pointer-to-member dispatch; 0x18-byte `{Init, Main, Cleanup}` descriptors in [ov002](../../config/arm9/overlays/ov002/symbols.txt) **.bss** (runtime-constructed, not statically readable); flags in a separate `u16` at `+0x6ce` |
+| Action state | `u32` ID packing group + 22 `ACT_FLAG_*` bits, `switch (action & ACT_GROUP_MASK)` | `State*` at `daPly_c+0x370`/`+0x374`/`+0x378`, Metrowerks pointer-to-member dispatch; 0x18-byte `{Init, Main, Cleanup}` descriptors in [ov002](../../config/arm9/overlays/ov002/symbols.txt) **.bss** (runtime-constructed, not statically readable); flags in a separate `u16` at `+0x6ce` |
 | Collision broadphase | 16×16 XZ grid, ±0x2000, pre-sorted floor/ceil/wall lists | **KCL octree** (Mario Kart DS lineage), 1 bit/axis descent, one triangle list per leaf, classified at query time |
 | Floor threshold | `normal.y > 0.01` | `normal.y > 0` (`cmp r0,#0; ble` @ 0x01ffd5cc) |
 | Point-in-triangle | 3× 2D XZ cross products, no tolerance | KCL 3D edge-plane dots + prism `length`, ±0x20000 tolerance |
@@ -161,10 +161,10 @@ a documented contamination vector worth a policy note. *This was not verified �
 
 ## 5. Defects found along the way (actionable)
 
-1. **`Player::St_WallJump_Init` ([src/game/player/Player.cpp](../../src/game/player/Player.cpp)) is misattributed.** Its own banner admits it is
-   *"NOT a Player method"*; it dereferences `this+0x4eb0`, `+0x4eb4`, `+0x4ee5` — ~0x4700 bytes
-   past the end of a 0x768-byte `Player`. The real `St_WallJump_Main` is in [ov002](../../config/arm9/overlays/ov002/symbols.txt); this one is in
-   [ov006](../../config/arm9/overlays/ov006/symbols.txt). **The bad assumption has already leaked into `include/Player.h:536-540`** as a footnote
+1. **`daPly_c::St_WallJump_Init` ([src/game/player/d_a_ply_methods.cpp](../../src/game/player/d_a_ply_methods.cpp)) is misattributed.** Its own banner admits it is
+   *"NOT a daPly_c method"*; it dereferences `this+0x4eb0`, `+0x4eb4`, `+0x4ee5` — ~0x4700 bytes
+   past the end of a 0x768-byte `daPly_c`. The real `St_WallJump_Main` is in [ov002](../../config/arm9/overlays/ov002/symbols.txt); this one is in
+   [ov006](../../config/arm9/overlays/ov006/symbols.txt). **The bad assumption has already leaked into `include/daPly_c.h:536-540`** as a footnote
    about "offsets far outside the object." Anything trusting that note is building on a bad symbol.
 
 2. **Binary angles being read as fx12.** `0x4000` is 90°, `0x8000` is 180° — *not* 4.0 and 8.0.
@@ -180,7 +180,7 @@ a documented contamination vector worth a policy note. *This was not verified �
 4. **[src/AngleDiff.c](../../src/AngleDiff.c)** has no header comment, no `@symbol` line, no matching claim — unlike every
    neighbour in the math set. Lowest-confidence file in that group.
 
-5. **`Player::ChangeState` ([src/game/player/Player.cpp](../../src/game/player/Player.cpp))** declares a local `struct State` and a
+5. **`daPly_c::ChangeState` ([src/game/player/d_a_ply_methods.cpp](../../src/game/player/d_a_ply_methods.cpp))** declares a local `struct State` and a
    `struct C3;` inside the .cpp, and writes fields through `*(State**)((char*)&self->unk_378)`
    casts. The ROM confirms the 0x18/3-PMF layout, so the *shape* is right — but this is an
    un-recovered type re-declared per-file instead of living in a header.
@@ -195,8 +195,8 @@ a documented contamination vector worth a policy note. *This was not verified �
 | `data_02082214` | `FX_SinCosTable_` — 0x1000 interleaved fx16 sin/cos pairs, 0x4000 bytes, ends 0x02086214 | *NitroSDK* standard |
 | [data_ov002_0210a59c](../../config/arm9/overlays/ov002/symbols.txt) | `sJumpVelocities` / `sPlayerJumpComboVelY` | rodata {42.0, 52.0, 69.0} |
 | [data_ov002_0210a5a8](../../config/arm9/overlays/ov002/symbols.txt) | jump-combo animation IDs | rodata {0x53, 0x4f, 0x4b} |
-| [func_ov002_020e28d4](../../src/game/player/Player.cpp) | `Player::UpdateAirMovement` — cf. N64 `update_air_with_turn` (`mario_actions_airborne.c:186`) | long-jump drag special case + 16.0/2.0 backwards drag + `ApproachLinear` on `mHorzSpeed` |
-| [func_ov002_020bf2d8](../../src/game/player/Player.cpp) (ROM ordinal 39 used to assemble `Player.cpp`) | `Player_SetVertSpeedByCharFactor` (sibling of `Player_ScaleByCharFactor` @0x020bf30c) | scales arg by per-char factor → `+0xa8` |
+| [func_ov002_020e28d4](../../src/game/player/d_a_ply_methods.cpp) | `daPly_c::UpdateAirMovement` — cf. N64 `update_air_with_turn` (`mario_actions_airborne.c:186`) | long-jump drag special case + 16.0/2.0 backwards drag + `ApproachLinear` on `mHorzSpeed` |
+| [func_ov002_020bf2d8](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 39 used to assemble `d_a_ply_methods.cpp`) | `Player_SetVertSpeedByCharFactor` (sibling of `Player_ScaleByCharFactor` @0x020bf30c) | scales arg by per-char factor → `+0xa8` |
 | `func_02037e38` | `CLPS::GetType` | the only CLPS getter used in a jump-table dispatch ([ov098](../../config/arm9/overlays/ov098/symbols.txt) @0x02139264) |
 | 0x02037e14–0x02037e90 | eight more CLPS bitfield getters | 3-instruction accessors, bit extents recovered |
 
@@ -242,9 +242,9 @@ This is the best-evidenced scope of the investigation, because **vtables are rea
 structures**: a wrong class name breaks the relocation link, so it cannot be hallucinated.
 
 `notes/actor-vtables.md` records `_ZTV9ActorBase` (18 slots), `_ZTV12ActorDerived` (18),
-`_ZTV5Actor` (31), `_ZTV6Player` (31, [ov002](../../config/arm9/overlays/ov002/symbols.txt)) recovered byte-for-byte from `symbols.txt`/`relocs.txt`
+`_ZTV5Actor` (31), `_ZTV7daPly_c` (31, [ov002](../../config/arm9/overlays/ov002/symbols.txt)) recovered byte-for-byte from `symbols.txt`/`relocs.txt`
 — every slot resolves to a named function, none is a thunk. Hierarchy is
-`ActorBase → ActorDerived → Actor → Player` (`Actor` is *not* a direct child of `ActorBase`,
+`ActorBase → ActorDerived → Actor → daPly_c` (`Actor` is *not* a direct child of `ActorBase`,
 confirmed from the double-vptr-store in `_ZN5ActorC2Ev`).
 
 | | N64 | SM64DS |
@@ -359,8 +359,8 @@ N64 derives a 4-value floor class from surface ID + area terrain type ([mario_ge
 resemblance to N64's [TERRAIN_MASK 0x0007](https://github.com/n64decomp/sm64/blob/master/include/surface_terrains.h#L186) is a coincidence of arity. DS artists author
 slipperiness per-triangle instead of deriving it.
 
-`Player::SetFloorSurfaceInfo` @ `0x020c16ec` unpacks CLPS into the Player; the class lands at
-`+0x658`. `Player::GetFloorClass` @ `0x020c031c` then applies **N64's crawl override, exactly**:
+`daPly_c::SetFloorSurfaceInfo` @ `0x020c16ec` unpacks CLPS into the daPly_c; the class lands at
+`+0x658`. `daPly_c::GetFloorClass` @ `0x020c031c` then applies **N64's crawl override, exactly**:
 
 ```c
 if (IsState(0x02110514 /* St_Crawl */) && floorNormalY > 0x800 /* 0.5f */ && class == 0) class = 2;
@@ -398,12 +398,12 @@ all 103 overlays plus arm9. Slope accel pool at `0x20c067c`/`0x80`/`0x84` = `0x5
 
 ### 9.3 Slope accel and sliding
 
-`Player::ApplySlopeAccel` @ `0x020c04e0` is [apply_slope_accel](https://github.com/n64decomp/sm64/blob/master/src/game/mario_actions_moving.c#L283) line for line — steepness via
+`daPly_c::ApplySlopeAccel` @ `0x020c04e0` is [apply_slope_accel](https://github.com/n64decomp/sm64/blob/master/src/game/mario_actions_moving.c#L283) line for line — steepness via
 `Vec3_HorzLen(floorNormal)`, `AngleDiff(floorAngle, moveYaw)`, the slope gate, the 4-way switch,
 the `±0x4000` sign flip. One DS addition: accel is scaled by `clamp(forwardVel − 19.0, 1.0, 1.5)`,
 a no-op at speeds ≤ 20.
 
-`Player::UpdateSliding` @ `0x020c06fc` fuses N64's [update_sliding](https://github.com/n64decomp/sm64/blob/master/src/game/mario_actions_moving.c#L219) + [update_sliding_angle](https://github.com/n64decomp/sm64/blob/master/src/game/mario_actions_moving.c#L159).
+`daPly_c::UpdateSliding` @ `0x020c06fc` fuses N64's [update_sliding](https://github.com/n64decomp/sm64/blob/master/src/game/mario_actions_moving.c#L219) + [update_sliding_angle](https://github.com/n64decomp/sm64/blob/master/src/game/mario_actions_moving.c#L159).
 Exact carries: the [`0x52` lossFactor term](https://github.com/n64decomp/sm64/blob/master/src/game/mario_actions_moving.c#L159) (= [N64's `0.02f`](https://github.com/n64decomp/sm64/blob/master/src/game/mario_actions_moving.c#L239)), [the `100.0` forward-vel cap](https://github.com/n64decomp/sm64/blob/master/src/game/mario_actions_moving.c#L210), the
 [`!mario_floor_is_slope(m) && m->forwardVel * m->forwardVel < stopSpeed * stopSpeed` → `vel = 0` stop test](https://github.com/n64decomp/sm64/blob/master/src/game/mario_actions_moving.c#L275). Same caller set as N64
 (butt slide, stomach slide, slide kick, crouch, thrown, land).
@@ -411,12 +411,12 @@ Exact carries: the [`0x52` lossFactor term](https://github.com/n64decomp/sm64/bl
 **Two N64 quirks were deliberately removed:**
 1. **The 10k-glitch guard is gone.** No `if (forward < 0.0f && forwardVel >= 0.0f) forward *= 0.5f + 0.5f*forwardVel/100.0f`. DS uses `forward` raw.
 2. **The trig-derivative rotation hack is gone** — N64's asymmetric `slideVelX/Z` cross-update plus
-   renormalize is replaced by a [direct angular delta at `+0x69c`](../../include/Player.h)([l:295](https://github.com/tangosdev/sm64ds-decomp/blob/main/include/Player.h#L295)) (`sideward/16`, or bucketed by
+   renormalize is replaced by a [direct angular delta at `+0x69c`](../../include/daPly_c.h)([l:295](https://github.com/tangosdev/sm64ds-decomp/blob/main/include/daPly_c.h#L295)) (`sideward/16`, or bucketed by
    stick magnitude up to ≈4.2°/frame). N64's effective ≈2.86°/frame sits inside DS's range.
 
 ### 9.4 Deceleration — the table is N64's, halved
 
-`Player::GetSlopeDecelCoef` @ `0x020bf56c` returns `baseDecel × factor[class]`:
+`daPly_c::GetSlopeDecelCoef` @ `0x020bf56c` returns `baseDecel × factor[class]`:
 
 | class | DS | N64 | |
 |---|---|---|---|
@@ -469,15 +469,15 @@ approached at 0.5/frame. Render position is built as `pos.y − this[0x5f4]` (`t
 | normal | **60.0** | **60.0** (type 8) |
 | deep → terminal | 160.0 → [ACT_QUICKSAND_DEATH](https://github.com/n64decomp/sm64/blob/master/include/sm64.h#L350) | 100.0 (type 9) → `Crate_SetState(6)` |
 
-So **CLPS surface-type values 6-9 are the four quicksand types.** Corroborated on the `Player` side:
-`0x020c2ab8` clears the quicksand flag when the surface type ([mSurfaceType](../../include/Player.h), `+0x664`) is outside `6..9`.
+So **CLPS surface-type values 6-9 are the four quicksand types.** Corroborated on the `daPly_c` side:
+`0x020c2ab8` clears the quicksand flag when the surface type ([mSurfaceType](../../include/daPly_c.h), `+0x664`) is outside `6..9`.
 
 ### 9.7 Search traps confirmed the hard way
 
 - **`cos(5°) = 0xFF0` has zero literal-pool hits ROM-wide** — it is `0xFF ror 28`, a valid ARM
   rotated immediate, so it is emitted as a `mov`. Same for slide accels `0x5000`/`0x7000`/`0xA000`/
   `0x8000`. A pool-word-only scan reports "absent" and is wrong. Scan `mov`/`orr` immediates too.
-- An earlier pass reported `0x1B33` existed only in `Player::Render` and concluded slope accel was
+- An earlier pass reported `0x1B33` existed only in `daPly_c::Render` and concluded slope accel was
   absent. **Refuted** — it is at `0x020c0684`, inside `ApplySlopeAccel` (`0x020c04e0`–`0x020c0688`).
   The error was resolving an address to the nearest *grepped* symbol instead of bisecting the
   sorted symbol table.
@@ -493,21 +493,21 @@ So **CLPS surface-type values 6-9 are the four quicksand types.** Corroborated o
 | [ov002](../../config/arm9/overlays/ov002/symbols.txt):[`0x020f02c8`](../../src/unnamed/ov002/func_ov002_020effb8.cpp) | `GetSlideAccelForClass` |
 | [`0x020f030c`](../../src/unnamed/ov002/func_ov002_020effb8.cpp) | `GetSlideLossFactorForClass` |
 | [`0x020f035c`](../../src/unnamed/ov002/func_ov002_020effb8.cpp) | `FloorIsSlope` |
-| [`0x020c031c`](../../src/game/player/Player.cpp) (ROM ordinal 55) | `Player::GetFloorClass` |
-| [`0x020c04e0`](../../src/game/player/Player.cpp) (ROM ordinal 59; currently [`_ZN6Player19func_ov002_020c04e0Ev`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::ApplySlopeAccel` |
-| [`0x020c06fc`](../../src/game/player/Player.cpp) (ROM ordinal 61) | `Player::UpdateSliding` |
-| [`0x020bf56c`](../../src/game/player/Player.cpp) (ROM ordinal 46; currently [`func_ov002_020bf56c`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::GetSlopeDecelCoef` |
-| [`0x020c16ec`](../../src/game/player/Player.cpp) (ROM ordinal 68) | `Player::SetFloorSurfaceInfo` |
-| [`0x020d4d88`](../../src/game/player/Player.cpp) | `Player::UpdateGroundSpeed` |
-| [`0x020d3b9c`](../../src/game/player/Player.cpp) | `Player::UpdateWalkingSpeed` |
-| [`0x020d45c0`](../../src/game/player/Player.cpp) | `Player::Walk_UpdateRunDustFx` |
-| [`0x020d413c`](../../src/game/player/Player.cpp) | `Player::Walk_UpdateBodyLean` |
-| [`0x020bf30c`](../../src/game/player/Player.cpp) (ROM ordinal 40; currently [`Player_ScaleByCharFactor`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::ScaleSpeedByCharacter` |
-| [`0x020c29d4`](../../src/game/player/Player.cpp) (ROM ordinal 81; currently [`_ZN6Player19func_ov002_020c29d4Ev`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::UpdateQuicksandFlag` |
+| [`0x020c031c`](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 55) | `daPly_c::GetFloorClass` |
+| [`0x020c04e0`](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 59; currently [`_ZN7daPly_c19func_ov002_020c04e0Ev`](../../config/tu_manifest.d/ov002/daPly_c.json)) | `daPly_c::ApplySlopeAccel` |
+| [`0x020c06fc`](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 61) | `daPly_c::UpdateSliding` |
+| [`0x020bf56c`](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 46; currently [`func_ov002_020bf56c`](../../config/tu_manifest.d/ov002/daPly_c.json)) | `daPly_c::GetSlopeDecelCoef` |
+| [`0x020c16ec`](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 68) | `daPly_c::SetFloorSurfaceInfo` |
+| [`0x020d4d88`](../../src/game/player/d_a_ply_methods.cpp) | `daPly_c::UpdateGroundSpeed` |
+| [`0x020d3b9c`](../../src/game/player/d_a_ply_methods.cpp) | `daPly_c::UpdateWalkingSpeed` |
+| [`0x020d45c0`](../../src/game/player/d_a_ply_methods.cpp) | `daPly_c::Walk_UpdateRunDustFx` |
+| [`0x020d413c`](../../src/game/player/d_a_ply_methods.cpp) | `daPly_c::Walk_UpdateBodyLean` |
+| [`0x020bf30c`](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 40; currently [`Player_ScaleByCharFactor`](../../config/tu_manifest.d/ov002/daPly_c.json)) | `daPly_c::ScaleSpeedByCharacter` |
+| [`0x020c29d4`](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 81; currently [`_ZN7daPly_c19func_ov002_020c29d4Ev`](../../config/tu_manifest.d/ov002/daPly_c.json)) | `daPly_c::UpdateQuicksandFlag` |
 | [ov098](../../config/arm9/overlays/ov098/symbols.txt):[`0x02139228`](../../src/game/actors/d_a_obj_block_s.cpp) (ROM ordinal 25; currently [`func_ov098_02139228`](../../config/tu_manifest.d/ov098/daObjBlockS_c.json)) | `Crate::UpdateQuicksand` |
-| [ov002](../../config/arm9/overlays/ov002/symbols.txt):`0x02110514` | `St_Crawl` state descriptor (data; [symbols/verified.tsv](../../symbols/verified.tsv) names it `_ZN6Player8ST_CRAWLE`) |
+| [ov002](../../config/arm9/overlays/ov002/symbols.txt):`0x02110514` | `St_Crawl` state descriptor (data; [symbols/verified.tsv](../../symbols/verified.tsv) names it `_ZN7daPly_c8ST_CRAWLE`) |
 
-**Player offsets recovered:**
+**daPly_c offsets recovered:**
 
 | Offset | Description |
 |--------|-------------|
@@ -515,15 +515,15 @@ So **CLPS surface-type values 6-9 are the four quicksand types.** Corroborated o
 | `+0x94` | moveYaw |
 | `+0x98` | forwardVel |
 | `+0xa8` | velY |
-| `+0x554/558/55c` | floorNormal xyz (fx12, already rescaled from KCL's 0x400) - [mFloorNormalX; mFloorNormalY; mFloorNormalZ](../../include/Player.h) |
-| `+0x644` | floorHeight - [mGroundY](../../include/Player.h) |
-| `+0x658` | floorClass - [mFloorClass](../../include/Player.h) |
-| `+0x65c/660/664/66c/670` | CLPS fields - [mClpsBits15_18; mClpsBits6_11; mSurfaceType; mGroundSoundType; mClpsWord1Lo](../../include/Player.h) |
-| `+0x690` | quicksand Y offset - [unk_690](../../include/Player.h) |
-| `+0x69a` | floorAngle - [mFloorAngle](../../include/Player.h) |
-| `+0x69c` | slide-yaw delta - [mAngleYSpeed](../../include/Player.h) |
-| `+0x6ba` | quicksandDepth - [unk_6ba](../../include/Player.h) |
-| `+0x6d2` | intendedYaw - [mDesiredAngleY](../../include/Player.h) |
+| `+0x554/558/55c` | floorNormal xyz (fx12, already rescaled from KCL's 0x400) - [mFloorNormalX; mFloorNormalY; mFloorNormalZ](../../include/daPly_c.h) |
+| `+0x644` | floorHeight - [mGroundY](../../include/daPly_c.h) |
+| `+0x658` | floorClass - [mFloorClass](../../include/daPly_c.h) |
+| `+0x65c/660/664/66c/670` | CLPS fields - [mClpsBits15_18; mClpsBits6_11; mSurfaceType; mGroundSoundType; mClpsWord1Lo](../../include/daPly_c.h) |
+| `+0x690` | quicksand Y offset - [unk_690](../../include/daPly_c.h) |
+| `+0x69a` | floorAngle - [mFloorAngle](../../include/daPly_c.h) |
+| `+0x69c` | slide-yaw delta - [mAngleYSpeed](../../include/daPly_c.h) |
+| `+0x6ba` | quicksandDepth - [unk_6ba](../../include/daPly_c.h) |
+| `+0x6d2` | intendedYaw - [mDesiredAngleY](../../include/daPly_c.h) |
 
 ---
 

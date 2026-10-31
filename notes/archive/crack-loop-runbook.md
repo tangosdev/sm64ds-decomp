@@ -196,7 +196,7 @@ SFA-decomp pragma technique does not transfer; the ordering floor stays hand-fix
   the expensive part is the Opus first pass on a thrice-drained band.
 - **0x400-0x800 round 3 on Opus->Fable (2026-07-02, m2c drafts, sims 0.27-0.60):
   Opus 5/12 at 182K/landed but BIG targets (~6.5KB, ~140 tok/byte incl. the 39-entry
-  PMF table func_02008550 and Player::St_MetalWaterGround_Main); then Fable retry
+  PMF table func_02008550 and daPly_c::St_MetalWaterGround_Main); then Fable retry
   4/4 at 52K/landed** - including TWO Opus-declared floors (store-emission order,
   decl-order-proof coloring swap; levers now in mwccarm-codegen 6g 2026-07-02) and
   the real-C++-vtable misshape (sec 5). TRIAGE UPDATE: on LARGE functions, promote
