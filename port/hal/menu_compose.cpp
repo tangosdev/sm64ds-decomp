@@ -2529,6 +2529,47 @@ static void cost_window(const char *name, int variant, double us)
 }
 
 extern "C" int port_wipe_cut_picture(uint32_t *dst, int w, int h, int stride);   /* ntr/ppu_sub.cpp */
+/* PAUSESLIDE1: THE PICTURES BETWEEN TICKS OF A MENU THAT MOVES THERE. The pause stands the game still, so a tick of its page slide is a snap
+   (tests/walk_window.cpp menu_snaps_tick) and the pacer's slots only showed the tick's picture again: the slide stepped once a tick. A tick whose
+   layout moves (g_btw_fn) keeps the picture its pieces were drawn on (under) and the picture right after them (own); a slot then puts `under`
+   back, draws the menu again from the layout built at its own place (the swap in hal_menu_present, a re-draw between ticks only) and lays
+   back where the tick's finished picture is not the menu's own (what the host drew after the menu: a toast, the pointer). */
+static int (*g_btw_fn)(const MenuLayout *tick, MenuLayout *out, double a);
+static MenuLayout g_btw_L, g_btw_tick;
+static std::vector<uint32_t> g_btw_under, g_btw_own, g_btw_fin;
+static const uint32_t *g_btw_px;
+static unsigned g_btw_serial;
+static int g_btw_w, g_btw_h, g_btw_st, g_btw_fin_ok;
+static void btw_copy(std::vector<uint32_t> &v, const uint32_t *px, int stride, int w, int h)
+{
+    v.resize((size_t)w * h);
+    for (int y = 0; y < h; ++y) memcpy(&v[(size_t)y * w], px + (size_t)y * stride, (size_t)w * 4);
+}
+static void btw_put(const std::vector<uint32_t> &v, uint32_t *px, int stride, int w, int h)
+{
+    for (int y = 0; y < h; ++y) memcpy(px + (size_t)y * stride, &v[(size_t)y * w], (size_t)w * 4);
+}
+void hal_menu_set_between_fn(int (*fn)(const MenuLayout *tick, MenuLayout *out, double a)) { g_btw_fn = fn; }
+extern "C" int hal_menu_relift(unsigned int *dst, int w, int h);      /* hal/sub_screen.cpp */
+int hal_menu_between_picture(uint32_t *px, int w, int h, double a)
+{
+    const MenuDecision &D = g_dd;
+    if (!D.live || !px || !g_btw_px || g_btw_serial != D.serial || g_btw_px != px || g_btw_w != w || g_btw_h != h || g_btw_st != stride_of(w)) return 0;
+    const int st = g_btw_st;
+    if (!g_btw_fin_ok) { btw_copy(g_btw_fin, px, st, w, h); g_btw_fin_ok = 1; }
+    btw_put(g_btw_under, px, st, w, h);
+    hal_menu_set_relift_alpha(a);
+    const int drawn = hal_menu_relift((unsigned int *)px, w, h);
+    hal_menu_set_relift_alpha(1.0);
+    if (!drawn) { btw_put(g_btw_fin, px, st, w, h); return 0; }
+    for (int y = 0; y < h; ++y) {
+        uint32_t *row = px + (size_t)y * st;
+        const uint32_t *o = &g_btw_own[(size_t)y * w], *f = &g_btw_fin[(size_t)y * w];
+        for (int x = 0; x < w; ++x)
+            if (o[x] != f[x]) row[x] = f[x];
+    }
+    return 1;
+}
 void hal_menu_present(uint32_t *dst, int w, int h, int stage)
 {
     MenuDecision &D = g_dd;
@@ -2578,6 +2619,13 @@ void hal_menu_present(uint32_t *dst, int w, int h, int stage)
         }
         if (again) { menu_layout_dest(&D.L); amended = 1; }
     }
+    /* PAUSESLIDE1: a tick whose layout moves between ticks keeps the picture under its pieces; a re-draw between ticks draws the layout built at
+       its own place (the tick's comes back after the draw, so the decision and the touch inverse never see an in-between's layout) */
+    const int btw_keep = !g_in_relift && !g_layer_mode && g_btw_fn && g_btw_fn(&D.L, 0, 1.0);
+    if (btw_keep) btw_copy(g_btw_under, dst, stride_of(w), w, h);
+    else if (!g_in_relift) g_btw_px = 0;
+    const int btw_swap = g_in_relift && g_btw_fn && g_btw_fn(&D.L, &g_btw_L, g_relift_alpha);
+    if (btw_swap) { g_btw_tick = D.L; D.L = g_btw_L; }
     /* LOGOFADE1: the glide piece (the intro's big logo on its trip to the top left) is drawn at this picture's own place: the tick's own
        picture at its fx, fy, fw, fh, a picture between ticks a of the way from the tick before (g_relift_alpha, ARROWSLOW1's fraction).
        Set from the piece every picture, so the bound layout's rect is never left at an in-between's place. */
@@ -2666,6 +2714,8 @@ void hal_menu_present(uint32_t *dst, int w, int h, int stage)
         for (int i = 0; i < D.L.np; ++i) if (!(i < MENU_MAX_PIECES && g_turn_hide[i])) menu_piece_draw(&D.L, i, S, dst, w, h);      /* FLIPSMOOTH1 */
     }
     turn_restore(D.L);      /* FLIPSMOOTH1 */
+    if (btw_swap) D.L = g_btw_tick;     /* PAUSESLIDE1 */
+    if (btw_keep) { btw_copy(g_btw_own, dst, stride_of(w), w, h); g_btw_px = dst; g_btw_w = w; g_btw_h = h; g_btw_st = stride_of(w); g_btw_serial = D.serial; g_btw_fin_ok = 0; }
     g_rep.enable = 0; g_rep.valid = 0;
     /* MGEXIT1: the wipe (the minigames' star and circle) is cut into the finished picture once, about its centre; the two source screens were
        not cut while this recipe is live (ntr::wipe_suppressed), because the recipe moves their pieces */

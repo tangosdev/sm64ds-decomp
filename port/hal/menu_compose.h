@@ -483,6 +483,12 @@ void host_menu_cursor_sound_flush(void);
 /* FIELDUI1 (U2): a surface with its own ROM cursor sound (the title family, whose ROM plays its own D-pad move sound) installs a hook
    here: the flush asks it first and a nonzero answer means it played the sound (the generic 0x12e is then not played). */
 extern int (*g_menu_cursor_snd_hook)(void);
+/* PAUSESLIDE1: a recipe whose pieces move between ticks (the pause's page slide) builds its layout at a picture's own place. fn(tick, out, a):
+   0 = this layout does not move between ticks; with out null it only answers; else out = tick's layout built a of the way from the tick before
+   (0) to the tick (1). hal_menu_between_picture redraws the bound menu on the picture it was drawn on, at a, and lays back what was drawn over
+   it after the tick's draw; 0 when the tick kept no picture for it (nothing moves, a layer draw, another picture). */
+void hal_menu_set_between_fn(int (*fn)(const MenuLayout *tick, MenuLayout *out, double a));
+int  hal_menu_between_picture(uint32_t *px, int w, int h, double a);
 #ifdef __cplusplus
 }
 #endif
