@@ -421,9 +421,7 @@ static inline int IsOffScreen(dActor_c *actor) {
  * D2 next to the ROM's D1/D0 pair (deadstripped: the cartridge has no
  * daIwante_c D2). The deallocation in D0 is an inline operator delete,
  * inherited from dActor_c. */
-daIwante_c::~daIwante_c()
-{
-}
+daIwante_c::~daIwante_c() {}
 
 // @symbol _ZN10daIwante_c19func_ov066_0211603cEv
 /* Hit check for a hand. The hitter is mdCcAcPos_c.otherOwner, a uniqueID
@@ -446,8 +444,7 @@ daIwante_c::~daIwante_c()
  * data_ov066_0211abe4 is set to -3, SE_HAND_DEFEATED plays and the hand enters
  * the defeat state (data_ov066_0211b07c). Callers read the return value to tell
  * these apart. */
-int daIwante_c::func_ov066_0211603c()
-{
+int daIwante_c::func_ov066_0211603c() {
     Player *actor;
     int flags;
     int hit;
@@ -528,8 +525,7 @@ int daIwante_c::func_ov066_0211603c()
  * means is not known here; func_ov066_0211632c clears it), radius and height
  * 0x64000 (100.0 each), and the volume's offset from the hand,
  * data_ov066_0211ad18, to (0, 0x20000, -0x10000) = (0, 32.0, -16.0). */
-void daIwante_c::func_ov066_021162e8()
-{
+void daIwante_c::func_ov066_021162e8() {
     mdCcAcPos_c.flags |= 2;
     mdCcAcPos_c.radius = 0x64000;
     mdCcAcPos_c.height = 0x64000;
@@ -543,8 +539,7 @@ void daIwante_c::func_ov066_021162e8()
  * handler: clears the 0x2 flags bit, radius 0x9c000 (156.0), height 0x164000 (356.0),
  * and the offset becomes (+0x55000 = +85.0 for hand 2, -85.0 otherwise;
  * -0xc0000 = -192.0; 0x80000 = 128.0). */
-void daIwante_c::func_ov066_0211632c()
-{
+void daIwante_c::func_ov066_0211632c() {
     mdCcAcPos_c.flags &= ~2;
     mdCcAcPos_c.radius = 0x9c000;
     mdCcAcPos_c.height = 0x164000;
@@ -562,8 +557,7 @@ void daIwante_c::func_ov066_0211632c()
  * 2) / ae9c and mTexTimer is re-armed to 0x32 + 2 * (0..15) frames (50..80);
  * otherwise it switches back to ae3c / aebc for 8 frames. mTexPhase flips each
  * time. */
-void daIwante_c::func_ov066_02116390()
-{
+void daIwante_c::func_ov066_02116390() {
     DecIfAbove0_Short(&mTexTimer);
     if (mTexTimer != 0)
         return;
@@ -595,8 +589,7 @@ void daIwante_c::func_ov066_02116390()
  * bit is set, the
  * animation in data_ov066_0211ae64 (hand 2) / ae44 is started, and mStateWork1
  * becomes 1. The pattern states only call the hit check once mStateWork1 is 1. */
-void daIwante_c::func_ov066_021164ec()
-{
+void daIwante_c::func_ov066_021164ec() {
     if (mStateWork1 != 0) return;
     if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) != 0)
         return;
@@ -618,8 +611,7 @@ void daIwante_c::func_ov066_021164ec()
  * with the texture pattern from ae3c / aebc, sets the animation speed to 0x1000
  * (1.0), clears the vulnFlags bits func_ov066_021164ec armed except
  * HIT_SPIN_OR_GROUND_POUND, and sets mFlags to 0. */
-void daIwante_c::func_ov066_021165cc()
-{
+void daIwante_c::func_ov066_021165cc() {
     if (mPartIdx == PART_HAND_2) {
         mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae54.filePtr, 4, 0x40000000, 0x1000, 0);
         mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
@@ -643,8 +635,7 @@ void daIwante_c::func_ov066_021165cc()
  * callbacks and enables it. The animation then starts at its last frame
  * (GetFrameCount() - 1, as a 20.12 value) and runs backwards (speed -0x1000 =
  * -1.0). */
-void daIwante_c::func_ov066_021166c8()
-{
+void daIwante_c::func_ov066_021166c8() {
 
     if (mPartIdx == PART_HAND_2) {
         mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae54.filePtr, 4, 0x40000000, 0x1000, 0);
@@ -685,8 +676,7 @@ void daIwante_c::func_ov066_021166c8()
 /* Body-side wait used by the pick states: sub-state 0 waits for both hands to have
  * reported in (data_ov066_0211ae0c == HANDS_BOTH), then clears it and moves to
  * sub-state 1. Returns 0 while waiting, 1 afterwards. */
-int daIwante_c::func_ov066_021168b0()
-{
+int daIwante_c::func_ov066_021168b0() {
     if (mSubState == 0) {
         if (data_ov066_0211ae0c != HANDS_BOTH) return 0;
         mSubState = 1;
@@ -702,8 +692,7 @@ int daIwante_c::func_ov066_021168b0()
  * returned. From the waiting state, once the phase is a pattern number, the hand
  * enters that pattern's state (4: b08c, 5: b0bc, 6: b0ec, 7: afec, 8: b01c,
  * 9: b04c) and the phase is returned. Otherwise 0. */
-int daIwante_c::func_ov066_021168ec()
-{
+int daIwante_c::func_ov066_021168ec() {
     unsigned char m;
     if (mVertAccel != 0) return 0;
     m = data_ov066_0211ae04;
@@ -730,8 +719,7 @@ int daIwante_c::func_ov066_021168ec()
  * player). Returns -0xc52000 (-3154.0) if Z is below that, else -0xb50000
  * (-2896.0) if Z is below that, else 0 if Z is at or above -0xa68000 (-2664.0),
  * else -0xa68000. The decision state tests for the first two values. */
-int daIwante_c::func_ov066_02116a68()
-{
+int daIwante_c::func_ov066_02116a68() {
     /* Unused; sizes the frame to the ROM's 12 bytes (sub sp,#0xc). */
     volatile int dummy[3];
     (void)dummy;
@@ -753,8 +741,7 @@ int daIwante_c::func_ov066_02116a68()
  * otherwise; Z by +128.0), it spawns the huge landing dust at that shifted spot
  * and plays SE_LANDING at the object's own cached camera-space position
  * (mCamSpacePosX, which the shift does not change), and restores the position. */
-void daIwante_c::func_ov066_02116ac4(int strength)
-{
+void daIwante_c::func_ov066_02116ac4(int strength) {
     /* Saved through stack slots; non-volatile locals make this 24 bytes
        shorter. */
     volatile int s0, s1, s2;
@@ -781,8 +768,7 @@ void daIwante_c::func_ov066_02116ac4(int strength)
  * between -0xf01000 (-3841.0) and -0x73a000 (-1850.0), the upper bound raised by
  * 0x8c000 (140.0) when a hand is gone. When a bound is hit the position is
  * clamped, mHorzSpeed is zeroed and 1 is returned; otherwise 0. */
-int daIwante_c::func_ov066_02116b78()
-{
+int daIwante_c::func_ov066_02116b78() {
     int b1 = 0x320;
     int lo = -0x320;
     int ip = mPartIdx;
@@ -827,8 +813,7 @@ int daIwante_c::func_ov066_02116b78()
  * hand's mHorzSpeed is zeroed. When the animation finishes it spawns particles
  * 0x7c and 0x7d at the hand, a triple poof of dust, plays SE_DEFEAT_POOF and
  * marks the actor for destruction. */
-int daIwante_c::func_ov066_02116c6c()
-{
+int daIwante_c::func_ov066_02116c6c() {
     if ((unsigned int)((unsigned int)(mBlendAnmModel.currFrame << 4) >> 0x10) > 0xc) {
         mHorzSpeed = 0;
     }
@@ -852,8 +837,7 @@ int daIwante_c::func_ov066_02116c6c()
 /* Defeat state, enter handler: clears the work words, timer and sub-state, sets
  * mHorzSpeed to -0xa000 (-10.0) and starts the animation in data_ov066_0211aea4
  * (hand 2) / ae8c. */
-int daIwante_c::func_ov066_02116d14()
-{
+int daIwante_c::func_ov066_02116d14() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -885,8 +869,7 @@ int daIwante_c::func_ov066_02116d14()
  *   4  return to the rest position at 55.0 per frame, angle 0; on arrival the
  *      position is snapped and data_ov066_0211ae08 is set to 2 -> 5.
  *   5  waits for the phase to leave PATTERN_9, then back to the waiting state. */
-int daIwante_c::func_ov066_02116db0()
-{
+int daIwante_c::func_ov066_02116db0() {
     EVec3 in, out;
     s16 ang;
     int r;
@@ -1003,8 +986,7 @@ int daIwante_c::func_ov066_02116db0()
 
 // @symbol _ZN10daIwante_c19func_ov066_02117190Ev
 /* Pattern 9, hand enter handler: clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_02117190()
-{
+int daIwante_c::func_ov066_02117190() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1036,8 +1018,7 @@ int daIwante_c::func_ov066_02117190()
  *      arrival clear data_ov066_0211ae0c, snap to rest, data_ov066_0211ae08 += 1
  *      -> 5.
  *   5  waits for the phase to leave PATTERN_8, then back to the waiting state. */
-int daIwante_c::func_ov066_021171b0()
-{
+int daIwante_c::func_ov066_021171b0() {
 
     switch (mSubState) {
     case 0: {
@@ -1165,8 +1146,7 @@ int daIwante_c::func_ov066_021171b0()
 // @symbol _ZN10daIwante_c19func_ov066_021175bcEv
 /* Pattern 8, hand enter handler: clears the work words, mTimer1,
  * data_ov066_0211ae00 and the sub-state. */
-int daIwante_c::func_ov066_021175bc()
-{
+int daIwante_c::func_ov066_021175bc() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1206,8 +1186,7 @@ int daIwante_c::func_ov066_021175bc()
  *      clear this hand's bit in data_ov066_0211ae0c, snap to rest,
  *      data_ov066_0211ae08 += 1 (and once more if a hand is gone) -> 8.
  *   8  waits for the phase to leave PATTERN_7, then back to the waiting state. */
-int daIwante_c::func_ov066_021175e8()
-{
+int daIwante_c::func_ov066_021175e8() {
     EVec3 v;
 
     switch (mSubState) {
@@ -1368,8 +1347,7 @@ int daIwante_c::func_ov066_021175e8()
 
 // @symbol _ZN10daIwante_c19func_ov066_02117bd0Ev
 /* Pattern 7, hand enter handler: clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_02117bd0()
-{
+int daIwante_c::func_ov066_02117bd0() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1400,8 +1378,7 @@ int daIwante_c::func_ov066_02117bd0()
  *      bit in data_ov066_0211ae0c, snap to rest, data_ov066_0211ae08 += 1 (and
  *      once more if a hand is gone) -> 7.
  *   7  waits for the phase to leave PATTERN_6, then back to the waiting state. */
-int daIwante_c::func_ov066_02117bf0()
-{
+int daIwante_c::func_ov066_02117bf0() {
     EVec3 v;
 
     switch (mSubState) {
@@ -1548,8 +1525,7 @@ int daIwante_c::func_ov066_02117bf0()
 
 // @symbol _ZN10daIwante_c19func_ov066_02118168Ev
 /* Pattern 6, hand enter handler: clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_02118168()
-{
+int daIwante_c::func_ov066_02118168() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1573,8 +1549,7 @@ int daIwante_c::func_ov066_02118168()
  *   4  when the animation finishes, restore the hit volume and collision file,
  *      data_ov066_0211ae08 += 1 -> 5.
  *   5  waits for the phase to leave PATTERN_5, then back to the waiting state. */
-int daIwante_c::func_ov066_02118188()
-{
+int daIwante_c::func_ov066_02118188() {
 
     switch (mSubState) {
     case 0:
@@ -1687,8 +1662,7 @@ int daIwante_c::func_ov066_02118188()
 
 // @symbol _ZN10daIwante_c19func_ov066_021184c0Ev
 /* Pattern 5, hand enter handler: clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_021184c0()
-{
+int daIwante_c::func_ov066_021184c0() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1709,8 +1683,7 @@ int daIwante_c::func_ov066_021184c0()
  * jumps (mVertSpeed 0x64000 = 100.0, mVertAccel -0x14000 = -20.0) -> 1.
  * Sub-state 1: on landing, snap to rest, landing effect, clear this hand's bit
  * in data_ov066_0211ae0c -> 0. */
-int daIwante_c::func_ov066_021184e0()
-{
+int daIwante_c::func_ov066_021184e0() {
     if (func_ov066_021168ec() != 0 && func_ov066_021168ec() != 4) {
         mFlags = 0;
         func_ov066_021162e8();
@@ -1745,8 +1718,7 @@ int daIwante_c::func_ov066_021184e0()
 
 // @symbol _ZN10daIwante_c19func_ov066_021185e4Ev
 /* Pattern 4, hand enter handler: clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_021185e4()
-{
+int daIwante_c::func_ov066_021185e4() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1774,8 +1746,7 @@ int daIwante_c::func_ov066_02118604() {
 // @symbol _ZN10daIwante_c19func_ov066_02118658Ev
 /* Waiting state, enter handler for a hand: clears the work words, timer and
  * sub-state. */
-int daIwante_c::func_ov066_02118658()
-{
+int daIwante_c::func_ov066_02118658() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1793,8 +1764,7 @@ int daIwante_c::func_ov066_02118658()
  * within 20.0 of the rest X/Z and the animation has finished, its collision is
  * enabled, its bit is ORed into data_ov066_0211ae0c and it enters the waiting
  * state (data_ov066_0211b06c). */
-int daIwante_c::func_ov066_02118678()
-{
+int daIwante_c::func_ov066_02118678() {
     if (mStateWork0 == 0) {
         if (data_ov066_0211ae04 == PHASE_RISE) {
             mBlendAnmModel.speed = 0x1000;
@@ -1835,8 +1805,7 @@ int daIwante_c::func_ov066_02118678()
 /* Rise state, hand enter handler: starts the animation in data_ov066_0211ae74
  * (hand 2) / ae7c with the texture pattern from ae3c / aebc, freezes it
  * (speed 0) and clears the work words. */
-int daIwante_c::func_ov066_021187c8()
-{
+int daIwante_c::func_ov066_021187c8() {
     if (mPartIdx == PART_HAND_2) {
         mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae74.filePtr, 4, 0x40000000, 0x1000, 0);
         mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
@@ -1856,8 +1825,7 @@ int daIwante_c::func_ov066_021187c8()
  * talk state (data_ov066_0211b0ac). Otherwise, once the completion count
  * data_ov066_0211ae08 is 2 or more it sets PHASE_REST and returns to the decision
  * state (data_ov066_0211b0cc). */
-int daIwante_c::func_ov066_021188b0()
-{
+int daIwante_c::func_ov066_021188b0() {
     if (data_ov066_0211abe0 == 0) {
         mTimer2 = 0x64;
         func_ov066_02119454(&data_ov066_0211b0ac);
@@ -1873,8 +1841,7 @@ int daIwante_c::func_ov066_021188b0()
 // @symbol _ZN10daIwante_c19func_ov066_02118934Ev
 /* Body state while a pattern runs, enter handler: clears the work words, timer
  * and sub-state. */
-int daIwante_c::func_ov066_02118934()
-{
+int daIwante_c::func_ov066_02118934() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1899,8 +1866,7 @@ s32 daIwante_c::func_ov066_02118954() {
 
 // @symbol _ZN10daIwante_c19func_ov066_021189a0Ev
 /* Pattern 9, body enter handler: clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_021189a0()
-{
+int daIwante_c::func_ov066_021189a0() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1913,8 +1879,7 @@ int daIwante_c::func_ov066_021189a0()
  * in, picks data_ov066_0211ae0c from the top bit of a random number (0: hand 2,
  * 1: hand 1), resets mPickCount and enters the pattern-running state
  * (data_ov066_0211b03c). */
-int daIwante_c::func_ov066_021189c0()
-{
+int daIwante_c::func_ov066_021189c0() {
     if (func_ov066_021168b0() == 0) return 1;
     if ((((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1f) & 1) == 0)
         data_ov066_0211ae0c = PART_HAND_2;
@@ -1927,8 +1892,7 @@ int daIwante_c::func_ov066_021189c0()
 
 // @symbol _ZN10daIwante_c19func_ov066_02118a30Ev
 /* Pattern 8, body enter handler: clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_02118a30()
-{
+int daIwante_c::func_ov066_02118a30() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1961,8 +1925,7 @@ s32 daIwante_c::func_ov066_02118a50() {
 
 // @symbol _ZN10daIwante_c19func_ov066_02118b08Ev
 /* Pattern 7, body enter handler: clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_02118b08()
-{
+int daIwante_c::func_ov066_02118b08() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -1990,8 +1953,7 @@ s32 daIwante_c::func_ov066_02118b28() {
 
 // @symbol _ZN10daIwante_c19func_ov066_02118be0Ev
 /* Pattern 6, body enter handler: clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_02118be0()
-{
+int daIwante_c::func_ov066_02118be0() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -2019,8 +1981,7 @@ s32 daIwante_c::func_ov066_02118c00() {
 
 // @symbol _ZN10daIwante_c19func_ov066_02118cb8Ev
 /* Pattern 5, body enter handler: like the others, but mTimer1 starts at 30. */
-int daIwante_c::func_ov066_02118cb8()
-{
+int daIwante_c::func_ov066_02118cb8() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 30;
@@ -2067,8 +2028,7 @@ int daIwante_c::func_ov066_02118cdc() {
 
 // @symbol _ZN10daIwante_c19func_ov066_02118de0Ev
 /* Pattern 4, body enter handler: like the others, but mTimer1 starts at 30. */
-int daIwante_c::func_ov066_02118de0()
-{
+int daIwante_c::func_ov066_02118de0() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 30;
@@ -2091,8 +2051,7 @@ int daIwante_c::func_ov066_02118de0()
  *   coin flip 0 / 1                      -> PATTERN_7 (affc) / PATTERN_6 (afdc)
  * It enters the matching body state and sets data_ov066_0211ae04 to the pattern
  * number, which is what the hands follow (func_ov066_021168ec). */
-int daIwante_c::func_ov066_02118e04()
-{
+int daIwante_c::func_ov066_02118e04() {
     Player* p = ClosestPlayer();
     int coinFlip;
     int v;
@@ -2150,8 +2109,7 @@ int daIwante_c::func_ov066_02118e04()
 
 // @symbol _ZN10daIwante_c19func_ov066_0211901cEv
 /* Decision state, enter handler: clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_0211901c()
-{
+int daIwante_c::func_ov066_0211901c() {
     mStateWork0 = 0;
     mStateWork1 = 0;
     mTimer1 = 0;
@@ -2266,8 +2224,7 @@ int daIwante_c::func_ov066_0211903c() {
 // @symbol _ZN10daIwante_c19func_ov066_02119348Ev
 /* Talk state, enter handler: disables the body's collision (mMeshCollider2) if it
  * is enabled, then clears the work words, timer and sub-state. */
-int daIwante_c::func_ov066_02119348()
-{
+int daIwante_c::func_ov066_02119348() {
     if (mMeshCollider2.IsEnabled() != 0) {
         mMeshCollider2.Disable();
     }
@@ -2287,8 +2244,7 @@ int daIwante_c::func_ov066_02119348()
  * 0, the phase becomes PHASE_RISE and the body enters the talk state
  * (data_ov066_0211b0ac). */
 struct Vec4 { int a, b, self, d; ~Vec4(){} };
-int daIwante_c::func_ov066_02119398()
-{
+int daIwante_c::func_ov066_02119398() {
     Vec4 sp;
     /* Reading p->mPosY and p->mPosZ directly makes this 4 bytes shorter;
        the pointer to the position triple is what matches. */
@@ -2312,8 +2268,7 @@ int daIwante_c::func_ov066_02119398()
 
 // @symbol _ZN10daIwante_c19func_ov066_0211944cEv
 /* Dormant state, enter handler: does nothing. */
-int daIwante_c::func_ov066_0211944c()
-{
+int daIwante_c::func_ov066_0211944c() {
     return 1;
 }
 
@@ -2322,8 +2277,7 @@ int daIwante_c::func_ov066_0211944c()
  * pairs (8 bytes each: enter handler at +0, run handler at +8, filled in by
  * __sinit_ov066_0211a418). It is stored in mState (+0x48c) and the enter handler
  * is called on the object unless that first word is null. */
-int daIwante_c::func_ov066_02119454(void *pv)
-{
+int daIwante_c::func_ov066_02119454(void *pv) {
     mState = (EyerokState *)pv;
     if (*(int *)&mState->enter == 0)
         return 1;
@@ -2333,8 +2287,7 @@ int daIwante_c::func_ov066_02119454(void *pv)
 // @symbol _ZN10daIwante_c19func_ov066_021194a4Ev
 /* Refresh the collision matrix mClsnMat2 from the object (rotation about Y by
  * mAngleY, translation = position) and hand it to dBgW_KcMbg::Transform. */
-void daIwante_c::func_ov066_021194a4()
-{
+void daIwante_c::func_ov066_021194a4() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
     mClsnMat2.t.x = mPosX;
     mClsnMat2.t.y = mPosY;
@@ -2349,8 +2302,7 @@ void daIwante_c::func_ov066_021194a4()
  * +0x64000 (+100.0; -100.0 for hand 1), mPosY - 0x8000 (8.0 lower), mPosZ +
  * 0xa0000 (160.0), each >> 3, passed to dActor_c::DropShadowRadHeight with
  * radius 0x140000 (320.0) and height 0x258000 (600.0). */
-void daIwante_c::func_ov066_021194fc()
-{
+void daIwante_c::func_ov066_021194fc() {
     int v[3];
     Vec3_Asr(v, &mPosX, 3);
     Matrix4x3_FromTranslation(data_020a0e68, v[0], v[1], v[2]);
@@ -2382,8 +2334,7 @@ void daIwante_c::func_ov066_021194fc()
 /* Disables the collision if it is still enabled; the body (mPartIdx 0) alone
  * then releases the 22 shared files InitResources loaded: 3 models, 4 texture
  * patterns, 10 animations and 5 collision files. */
-int daIwante_c::CleanupResources()
-{
+int daIwante_c::CleanupResources() {
     if (mMeshCollider2.IsEnabled())
         mMeshCollider2.Disable();
     if (mPartIdx == PART_MAIN) {
@@ -2416,16 +2367,13 @@ int daIwante_c::CleanupResources()
 // @symbol _ZN10daIwante_c16OnPendingDestroyEv
 /* daIwante_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
-void daIwante_c::OnPendingDestroy()
-{
-}
+void daIwante_c::OnPendingDestroy() {}
 
 // @symbol _ZN10daIwante_c6RenderEv
 /* Body: draws mModel2, only during PHASE_DORMANT. Hands: not drawn during
  * PHASE_DORMANT; afterwards the texture pattern is updated from the model data
  * and mBlendAnmModel is drawn. */
-int daIwante_c::Render()
-{
+int daIwante_c::Render() {
     if (mPartIdx == PART_MAIN) {
         if (data_ov066_0211ae04 == PHASE_DORMANT) {
             mModel2.Render(0);
@@ -2437,7 +2385,6 @@ int daIwante_c::Render()
     mBlendAnmModel.Render(0);
     return 1;
 }
-
 
 /* Bracketed, and it binds only because of the file-top
  * `#pragma defer_codegen off`: with codegen deferred (mwccarm 2004/b56s
@@ -2469,8 +2416,7 @@ int daIwante_c::Render()
 /* Vtable slot 6. EVec3 is a local plain-int triple (stack temps); callees whose
  * ROM symbols carry by-value/ref class parameters keep their literal mangled
  * extern "C" spellings. */
-int daIwante_c::Behavior()
-{
+int daIwante_c::Behavior() {
     char *c = (char *)this;
 
     DecIfAbove0_Short(&mTimer1);
@@ -2550,7 +2496,8 @@ int daIwante_c::Behavior()
             u32 id1 = 0x13b;
             int z0 = 0;
             for (; i < 0x14; i++) {
-                if (((daIwante_c *)cur)->mDustPos[0].x != 0 || ((daIwante_c *)cur)->mDustPos[0].y != 0 ||
+                if (((daIwante_c *)cur)->mDustPos[0].x != 0 ||
+                    ((daIwante_c *)cur)->mDustPos[0].y != 0 ||
                     ((daIwante_c *)cur)->mDustPos[0].z != 0) {
                     mDustParticle1[i] = Particle::System::New(
                         mDustParticle1[i], id0, ((daIwante_c *)cur)->mDustPos[0].x,
@@ -2611,7 +2558,6 @@ int daIwante_c::Behavior()
     return 1;
 }
 
-
 #pragma opt_strength_reduction on
 #pragma opt_common_subs on
 
@@ -2634,8 +2580,7 @@ int daIwante_c::Behavior()
  * 0x32000 (50.0) toward -Z; the matching collision file is loaded;
  * mHitPoints = 3; data_ov066_0211ae00 = 0; it enters the rise state
  * (data_ov066_0211b05c). */
-int daIwante_c::InitResources()
-{
+int daIwante_c::InitResources() {
     char *c = (char *)((void *)this);
     Vector3 v;
     Vector3 w;
@@ -2786,8 +2731,7 @@ int daIwante_c::InitResources()
 /* Slot 29, attributed by the vtable: _ZTV10daIwante_c + 4*29 = 0x0211ad64 + 0x74
    = 0x0211ade8, and config/arm9/overlays/ov066/relocs.txt relocates
    0x0211ade8 -> 0x0211a2dc. The body is a constant: 163840 (0x28000). */
-int daIwante_c::OnAimedAtWithEgg()
-{
+int daIwante_c::OnAimedAtWithEgg() {
     return 163840;
 }
 
@@ -2845,8 +2789,7 @@ extern "C" void func_ov066_0211a35c(void *a, void *b, void *c)
  * allocation size, vtable identity, and the IWANTE registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Eyerok_Spawn. */
-extern "C" daIwante_c *daIwante_c_classInit(void)
-{
+extern "C" daIwante_c *daIwante_c_classInit(void) {
     return new daIwante_c();
 }
 
