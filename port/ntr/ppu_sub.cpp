@@ -1872,10 +1872,10 @@ static inline bool mghr_aff_span(int pa, int pb, int pc, int pd, int w, int h, i
     lo = (int)a; hi = (int)b;
     return true;
 }
-ObjPixel g_hr_obj[192][256];
+ObjPixel (*const g_hr_obj)[256] = (ObjPixel (*)[256])std::calloc(192, sizeof(ObjPixel[256]));   /* heap, not static: see wm_arm7.cpp ipc_restore_ptr */
 uint8_t g_hr_objwin[192][256];
 uint8_t g_hr_oidx[192][256];        /* the OAM entry that holds each g_hr_obj pixel (the tie rule across the two passes) */
-ObjPixel g_hr_obj0[192][256];       /* the entries with nothing finer to show, drawn once a scan-out */
+ObjPixel (*const g_hr_obj0)[256] = (ObjPixel (*)[256])std::calloc(192, sizeof(ObjPixel[256]));       /* the entries with nothing finer to show, drawn once a scan-out */
 uint8_t g_hr_objwin0[192][256], g_hr_oidx0[192][256];
 uint8_t g_hr_sens[128];             /* entry i has something finer to show (hr_rows) */
 
@@ -2224,8 +2224,8 @@ void hr_build(const SubFramebuffer &fb, uint32_t dispcnt, const uint8_t *skip)
         uint8_t needrow[192];
         /* ONCE A SCAN-OUT: the entries with nothing finer to show at phase 0 over every row a phase may draw, and every BG
            with nothing finer to show sampled once per such row (hr_bg_axes 0: every phase reads the same texel) */
-        static uint32_t bcol[4][192][256];
-        static uint8_t bok[4][192][256];
+        static uint32_t (*const bcol)[192][256] = (uint32_t (*)[192][256])std::calloc(4, sizeof(uint32_t[192][256]));   /* heap: the image must end below 0x12000000 */
+        static uint8_t (*const bok)[192][256] = (uint8_t (*)[192][256])std::calloc(4, sizeof(uint8_t[192][256]));
         int bgfix[4];
         for (int bg = 0; bg < 4; ++bg) bgfix[bg] = bgs[bg].kind != BG_OFF && !hr_bg_axes(bgs[bg], bg);
         for (int y = 0; y < 192; ++y) needrow[y] = rx1[y] > rx0[y] ? 1 : 0;

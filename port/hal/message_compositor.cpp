@@ -3521,7 +3521,7 @@ static uint32_t *g_mghr_scr;               /* the picture under the 2D (replay m
 static uint32_t *g_mghr_pre_under;         /* the pre-smoothing copy under the 2D, same rows */
 static uint8_t g_mghr_sens[128];
 static int g_mghr_bb[4];                   /* DS box of the sensitive entries, one pixel of margin: x0 y0 x1 y1 */
-static Cell g_mghr_bg[192][256];           /* g_a after the BG loop, before the sprites */
+static Cell (*const g_mghr_bg)[256] = (Cell (*)[256])std::calloc(192, sizeof(Cell[256]));   /* heap, not static: see wm_arm7.cpp ipc_restore_ptr */           /* g_a after the BG loop, before the sprites */
 static long g_mghr_half;                   /* composites sampled at half phases (the cost cap) */
 static long g_mghr_n[5];                   /* composites refined, sprites, host px changed, refused by a gate, cells resolved again */
 static double g_mghr_ms, g_mghr_seg[4];    /* under copy, the cells without, sample, decide */
@@ -3752,7 +3752,8 @@ static void mghr_a_upscale(ntr::Framebuffer &fb, uint32_t *pre, int margin)
     ++g_mghr_up_n;
     g_mghr_up_ms += std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
 }
-static Cell g_mghr_wo[192][256], g_mghr_keep[192][256];
+static Cell (*const g_mghr_wo)[256] = (Cell (*)[256])std::calloc(192, sizeof(Cell[256])),
+            (*const g_mghr_keep)[256] = (Cell (*)[256])std::calloc(192, sizeof(Cell[256]));   /* heap, as g_mghr_bg */
 /* after the blit (the plain path only, see the banner) */
 static void mghr_a_end(ntr::Framebuffer &fb, uint32_t dispcnt, const Windows &win, const Blend &bl, bool shown3d, bool honour3d,
                        int p3d, const uint8_t *cover, uint32_t *pre, int margin)
