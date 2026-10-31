@@ -8896,7 +8896,66 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x0210a83c",
-      "reason": "The out-of-line destructor emits the vtable for the coined Player class; retail RTTI names daPly_c. RTTI off suppresses _ZTI/_ZTS and emits a zero typeinfo preamble word where retail relocates 0x0210a838 to _ZTI7daPly_c. All 124 slot bytes (31 entries) match. This policy externalizes the table to ov002:0x0210a83c; licensed spans remain .text and .init."
+      "reason": "The out-of-line destructor is the key function, so this TU emits the vtable for the coined Player class. The cartridge owns the record at ov002:0x0210a83c (31 slots; its typeinfo word relocates to _ZTI7daPly_c); it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTI6Player",
+      "disposition": "deadstrip-data",
+      "canonical_symbol": "_ZTI7daPly_c",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210a56c",
+      "reason": "Player's typeinfo under the project spelling. The cartridge names the class daPly_c, and ~600 enrolled files still spell it Player, so the record is retargeted onto _ZTI7daPly_c (ov002:0x0210a56c) and compared word-for-word, relocations resolved, before it is discarded."
+    },
+    {
+      "symbol": "_ZTS6Player",
+      "disposition": "deadstrip-data",
+      "canonical_symbol": "_ZTS7daPly_c",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210a554",
+      "proof": "import",
+      "reason": "Player's type-name string. Its text is the project spelling, not the cartridge's \"7daPly_c\", so it is not byte-compared; the retargeted _ZTI6Player record above relocates to the cartridge string _ZTS7daPly_c (ov002:0x0210a554), and this coined section is discarded."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x0208e390, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x0208e384, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Base-class typeinfo record, emitted with weak linkage beside Player's own RTTI. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this entry's licensed ranges; romdata_check compares the emitted copy, relocations applied, before production isolation discards it."
     },
     {
       "symbol": "_ZN7Vector3D1Ev",
