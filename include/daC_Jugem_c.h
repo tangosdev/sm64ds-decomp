@@ -16,7 +16,7 @@
  *     0x218 dExtShadowModel_c          0x28    -> 0x240
  *     0x240 shadow matrix              0x30    -> 0x270
  *     0x270 shadow matrix              0x30    -> 0x2a0
- *     0x2a0 Player* (who he talks to)   0x4    -> 0x2a4
+ *     0x2a0 daPly_c* (who he talks to)   0x4    -> 0x2a4
  *
  * The factory calls fBase_c::operator new(744), so 0x2e8 is this class's
  * sizeof. SM64DS proves it as daC_Jugem_c through RTTI, allocation size and
@@ -47,7 +47,7 @@ struct daC_Jugem_c : dEnemyBase_c {
     dExtShadowModel_c            mShadowModel2;         /* 0x218 */
     ShadowMat                    mShadowMat1;           /* 0x240 */
     ShadowMat                    mShadowMat2;           /* 0x270 */
-    Player                      *mTalkPlayer;           /* 0x2a0 */
+    daPly_c                      *mTalkPlayer;           /* 0x2a0 */
     s32                          mTargetX;              /* 0x2a4 */
     s32                          mTargetY;              /* 0x2a8 */
     s32                          mTargetZ;              /* 0x2ac */

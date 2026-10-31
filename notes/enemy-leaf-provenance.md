@@ -159,11 +159,11 @@ Left `unk_`:
 
   0x390 WAS in this list and does not belong here: the whole-TU merge put the
   bodies that read it in front of the same reader for the first time. It is now
-  `mCarrier`, a `Player *`, on the strength of what is done to it —
-  `func_ov102_0214b53c` passes it as the `Player &` argument of
-  `dActor_c::UpdateCarry(Player &, Vector3 const &)` and calls
-  `Player::IsFrontSliding` and `Player::LostGrabbedObject` on it,
-  `func_ov102_0214ae1c` calls `Player::DropActor` and `Player::Hurt` on it and then
+  `mCarrier`, a `daPly_c *`, on the strength of what is done to it —
+  `func_ov102_0214b53c` passes it as the `daPly_c &` argument of
+  `dActor_c::UpdateCarry(daPly_c &, Vector3 const &)` and calls
+  `daPly_c::IsFrontSliding` and `daPly_c::LostGrabbedObject` on it,
+  `func_ov102_0214ae1c` calls `daPly_c::DropActor` and `daPly_c::Hurt` on it and then
   clears it, `func_ov102_0214b3f0` is the setter and `func_ov102_0214b3b8` the
   clearer. "No reader anywhere in the tree" was true only of the five shards this
   section had read.

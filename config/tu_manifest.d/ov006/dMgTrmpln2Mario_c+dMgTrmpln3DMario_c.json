@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "WHOLE UNIT. build/tu_map.json ov006 calls 0x020c8dd4..0x020cd744 one contiguous linker run of 88 functions; every function already had a complete delinks entry and a byte-matching one-function source, so there is no hole.",
     "LOWER EDGE: the unit at 0x020c8a30..0x020c8dd4 (sprite pool, ends with the 4-byte record constructor at 0x020c8dd0). UPPER EDGE: 0x020cd744 is where the next run starts; the last function of this unit is TrmpObjAdapter_Construct (size 0x18).",
-    "WHAT IT IS: dMgTrmpln2Mario_c (D1 0x020ca604, constructor 0x020ca78c, Trmp2Mario_Construct, formerly misfiled as _ZN6Player29TryExitCharacterDoorWithIntroEv) and dMgTrmpln3DMario_c (D1 0x020ccfc8, constructor 0x020cd12c) with their helpers. ROM RTTI: _ZTI17dMgTrmpln2Mario_c 0x0213b250, _ZTI18dMgTrmpln3DMario_c 0x0213b244, adapter classes dMgTrmpObjAdapter_c / dMgTrmpRingObjAdapter_c alongside. The 'Player' class label in tu_map comes only from that misnamed constructor symbol."
+    "WHAT IT IS: dMgTrmpln2Mario_c (D1 0x020ca604, constructor 0x020ca78c, Trmp2Mario_Construct, formerly misfiled as _ZN7daPly_c29TryExitCharacterDoorWithIntroEv) and dMgTrmpln3DMario_c (D1 0x020ccfc8, constructor 0x020cd12c) with their helpers. ROM RTTI: _ZTI17dMgTrmpln2Mario_c 0x0213b250, _ZTI18dMgTrmpln3DMario_c 0x0213b244, adapter classes dMgTrmpObjAdapter_c / dMgTrmpRingObjAdapter_c alongside. The 'daPly_c' class label in tu_map comes only from that misnamed constructor symbol."
   ],
   "sections": [
     {
@@ -226,7 +226,7 @@
       "symbol": "_ZN17dMgTrmpln2Mario_cC1Ev",
       "address": "0x020ca78c",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN6Player29TryExitCharacterDoorWithIntroEv.cpp",
+      "legacy_source": "src/_ZN7daPly_c29TryExitCharacterDoorWithIntroEv.cpp",
       "ordinal": 27
     },
     {

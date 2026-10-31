@@ -39,7 +39,7 @@ struct daBgSnmHed_c : dActor_c {
         StateFunc behavior;
     };
     StateEntry *mState;  /* 0x328 */
-    Player *mTalkPlayer; /* 0x32c */
+    daPly_c *mTalkPlayer; /* 0x32c */
     s32 mStateValue;     /* 0x330 */
     u8 mSubstate;        /* 0x334 */
     u8 mStateTimer;      /* 0x335 */

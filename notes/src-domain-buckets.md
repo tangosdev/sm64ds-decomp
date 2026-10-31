@@ -83,8 +83,8 @@ a rendering primitive, not gameplay logic and not UI text/menus. That's
   - `memory/`, `math/` — no dedicated `notes/*.md` yet; placeholders only.
   - `graphics/` — `fader/` is the one populated example (see above). `dFader_c` was
     moved here from the engine layer.
-  - `audio/` — `_ZN5Sound6Player...` classes exist (`srcpath.py`'s `class_of` docstring
-    cites `Sound::Player` as a real symbol, grouped under outer component `Sound`). No
+  - `audio/` — `_ZN5Sound7daPly_c...` classes exist (`srcpath.py`'s `class_of` docstring
+    cites `Sound::daPly_c` as a real symbol, grouped under outer component `Sound`). No
     dedicated `notes/*.md` yet.
   - `filesystem/` — no dedicated note yet; placeholder.
 - `game/` — actors and game-flow state driven by the spawn table or scene logic.
@@ -137,6 +137,6 @@ The promoted class TUs that used to sit in the top-level actors directory (223 f
 `src/game/actors/` batch were filed into the buckets above in one rename-only change:
 actors to `src/game/actors/` as `d_a_*.cpp`, scenes to `src/game/stages/`, minigame
 scenes and helpers to `src/minigames/`, actor base classes to `src/runtime/actor/`, HUD
-classes to `src/ui/hud/`, `Player` to `src/game/player/`. The old top-level actors directory no longer exists.
+classes to `src/ui/hud/`, `daPly_c` to `src/game/player/`. The old top-level actors directory no longer exists.
 Directory reorganization is still the project's lowest-priority goal, behind byte-match
 accuracy and portability.

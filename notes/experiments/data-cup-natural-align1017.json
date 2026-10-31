@@ -350,7 +350,7 @@
     },
     {
       "disposition": "fixed",
-      "evidence": "TU declares only data021423c0/3e0/42408/42440 typed member tables. Player data021423a8 exists in __sinit_ov006_021314e4 as Pair[3]; no typed player-table declaration or dispatcher in this TU. All three real method definitions have C++ member linkage and emitted native mangled names.",
+      "evidence": "TU declares only data021423c0/3e0/42408/42440 typed member tables. daPly_c data021423a8 exists in __sinit_ov006_021314e4 as Pair[3]; no typed player-table declaration or dispatcher in this TU. All three real method definitions have C++ member linkage and emitted native mangled names.",
       "id": "MEM2875-07",
       "kind": "provenance",
       "location": "config/tu_manifest.d/ov006/dScMgMemory2_c.json notes[0]; source comments preceding OnGroundPounded/OnTurnIntoEgg/OnYoshiTryEat",
@@ -372,8 +372,8 @@
       "id": "MG0930-PROV01",
       "kind": "provenance",
       "location": "src/actors/dScMgSmartball_c.cpp:1939",
-      "reason": "Independently inspected current baseline and candidate Smartball helper comment at src/minigames/d_s_mg_smartball.cpp:1803. It describes object fixed-point2D coordinates and distance checks; the obsolete Player/mangled-helper/src-only narrative is absent. The current helper is a native cMgSmartball_pakkun_c::CheckBall member. This correction predates the Cup input and its entire source file is unchanged; no new Smartball repair or whole-class acceptance is claimed.",
-      "summary": "Collision-helper comment describes a mangled Player helper and a src-only migration, but the current helper is func_ov006_02110244 in a production promotion.",
+      "reason": "Independently inspected current baseline and candidate Smartball helper comment at src/minigames/d_s_mg_smartball.cpp:1803. It describes object fixed-point2D coordinates and distance checks; the obsolete daPly_c/mangled-helper/src-only narrative is absent. The current helper is a native cMgSmartball_pakkun_c::CheckBall member. This correction predates the Cup input and its entire source file is unchanged; no new Smartball repair or whole-class acceptance is claimed.",
+      "summary": "Collision-helper comment describes a mangled daPly_c helper and a src-only migration, but the current helper is func_ov006_02110244 in a production promotion.",
       "inherited_disposition": "open"
     },
     {

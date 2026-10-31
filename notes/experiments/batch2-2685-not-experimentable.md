@@ -82,13 +82,13 @@
 
 ### Fields/names belong elsewhere, cross-TU callers (10, incl. partials)
 
-- `src/actors/daBombking_c.cpp:37` (Player/dCamera_c/data part) — Player+8/+0x6ce/+0xc8 on Player, dCamera_c+0x114/154 on dCamera_c, data_ov078_*/func_02035550 ownership.
-- `src/actors/daMip_c.cpp:75` (Player/data/S14 part) — Player+8/+0x6d9/+0x6ce on Player, data_ov085_* handles, S14 (matrix part DISPROVED via Extra11).
-- `src/actors/daMky_c.cpp:22` (Player/data/factory part) — Player+8/cap+0xc8 on those classes, data_ov030_* handles, factories in other files (matrix part DISPROVED via Extra10).
-- `src/actors/daSanbo_c.cpp:65` (Player/data/S14/veneer part) — Player+8 on Player, data_ov096_*/state records, S14, func_02038414 veneer naming.
+- `src/actors/daBombking_c.cpp:37` (daPly_c/dCamera_c/data part) — daPly_c+8/+0x6ce/+0xc8 on daPly_c, dCamera_c+0x114/154 on dCamera_c, data_ov078_*/func_02035550 ownership.
+- `src/actors/daMip_c.cpp:75` (daPly_c/data/S14 part) — daPly_c+8/+0x6d9/+0x6ce on daPly_c, data_ov085_* handles, S14 (matrix part DISPROVED via Extra11).
+- `src/actors/daMky_c.cpp:22` (daPly_c/data/factory part) — daPly_c+8/cap+0xc8 on those classes, data_ov030_* handles, factories in other files (matrix part DISPROVED via Extra10).
+- `src/actors/daSanbo_c.cpp:65` (daPly_c/data/S14/veneer part) — daPly_c+8 on daPly_c, data_ov096_*/state records, S14, func_02038414 veneer naming.
 - `src/game/actors/d_a_obj_bk_dossunbar.cpp:19` — unk_0a4 is dActor_c X speed, not this class's field.
-- `src/game/actors/d_a_pg_mthr.cpp:37` — talk/message/func_0201267c names with callees, held-actor slots on Player.
-- `src/game/actors/d_a_wanwan.cpp:31` (Player part) — +0x6fb byte name belongs on Player (Stump part DISPROVED via Extra13).
+- `src/game/actors/d_a_pg_mthr.cpp:37` — talk/message/func_0201267c names with callees, held-actor slots on daPly_c.
+- `src/game/actors/d_a_wanwan.cpp:31` (daPly_c part) — +0x6fb byte name belongs on daPly_c (Stump part DISPROVED via Extra13).
 - `src/game/actors/d_a_wanwan.cpp:34` — Pos() not on this branch's dActor_c, needs shared-header decl (issue #2566).
 - `src/game/actors/d_a_s_cre.cpp:13` — Pos() leaf overlay, the shared dActor_c::Pos() boundary is issue #2566, not this branch.
 - `src/game/actors/d_a_bakubaku.cpp:37` — water height + particle/sound helper names belong with callees.
@@ -121,7 +121,7 @@
 ### Generic wall 6az / S8/S15, no per-TU size predicted (5 partials + 2 full)
 
 - `src/actors/daBombking_c.cpp:37` (wall part) — BlendModelAnim/SetAnim/Spawn wall ref, no sizes; wall pinned by Exp1/2/5.
-- `src/actors/daMip_c.cpp:75` (wall part) — SetAnim wall ref, no sizes (see also Player/data/S14 above).
+- `src/actors/daMip_c.cpp:75` (wall part) — SetAnim wall ref, no sizes (see also daPly_c/data/S14 above).
 - `src/actors/daMky_c.cpp:19` — SetAnim wall ref, no sizes.
 - `src/actors/daSanbo_c.cpp:65` (wall part) — Init/DropShadow/Spawn wall ref, no sizes.
 - `src/game/actors/d_a_bakubaku.cpp:24` — SetAnim wall ref + dBgCh Undefined link claim (link needs full link, not match.py bytes).

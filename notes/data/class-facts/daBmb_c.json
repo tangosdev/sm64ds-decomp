@@ -127,10 +127,10 @@
     {
       "slot": 19,
       "address": "0x0214adc8",
-      "inherited_slot_name": "OnTurnIntoEgg(Player&)",
+      "inherited_slot_name": "OnTurnIntoEgg(daPly_c&)",
       "declared_by": "dActor_c",
-      "symbol": "_ZN6BobOmb13OnTurnIntoEggER6Player",
-      "shard": "src/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp"
+      "symbol": "_ZN6BobOmb13OnTurnIntoEggER7daPly_c",
+      "shard": "src/_ZN6BobOmb13OnTurnIntoEggER7daPly_c.cpp"
     },
     {
       "slot": 29,
@@ -583,7 +583,7 @@
       "from": "0x0214c328",
       "to": "0x020ada40",
       "relocs_says": "overlays(2,4)",
-      "resolved": "ov002 _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE (size 0x100)",
+      "resolved": "ov002 _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_c5Fix12IiE (size 0x100)",
       "why": "ov002/symbols.txt names that exact address as a dEnemyBase_c method and daBmb_c derives from dEnemyBase_c; ov004's row for the same address is a bare Mg_SetSessionBest of a different size (0xbc). ov002 and ov004 are alternates in one overlay slot."
     },
     {
@@ -700,7 +700,7 @@
     "The profile's numeric id. 'BOMBHEI' appears as ASCII twice in extracted/arm9_dec.bin (file offsets 0x8b8c0 and 0x8c21c) and case-folded 'bombhei' 24 times across arm9_dec and several overlays, but I did not resolve which index of the profile-name table it occupies.",
     "Whether the four Vector3 statics at 0x0214ea18/24/30/3c are one Vector3[4] or four separate named objects. The 12-byte stride is consistent with both, and mwcc's per-object registration calls in __sinit_ov102_0214de70 do not settle it.",
     "The three Vector3 statics at 0x0214ea24, 0x0214ea30 and 0x0214ea3c: constructed by this TU's sinit but read by no .text anywhere in the module. Whether they are dead constants or reached by a path I did not find is not established.",
-    "The parameter TYPES inside every mangled name quoted here (e.g. OnTurnIntoEgg(Player&)) come from include/dActor_c.h, not from the ROM. Mangled parameter types in this tree are guesses.",
+    "The parameter TYPES inside every mangled name quoted here (e.g. OnTurnIntoEgg(daPly_c&)) come from include/dActor_c.h, not from the ROM. Mangled parameter types in this tree are guesses.",
     "Whether mwcc will actually emit _ZN7Vector3D1Ev for this TU -- the 12th compiler_only_output row both oracles needed. That is a stage-4 compile-and-inventory question, not a ROM fact."
   ]
 }

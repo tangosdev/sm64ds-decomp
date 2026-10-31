@@ -208,10 +208,10 @@
       "ordinal": 23
     },
     {
-      "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c",
       "address": "0x021204ec",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 24
     },
     {
@@ -807,7 +807,7 @@
       "source": "0x021231b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x021204ec"
@@ -887,7 +887,7 @@
       "source": "0x021231d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010130"
@@ -1986,7 +1986,7 @@
           "src/_ZN19daPropeller_Heyho_c8BehaviorEv.cpp",
           "src/_ZN19daPropeller_Heyho_c13InitResourcesEv.cpp",
           "src/_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv.cpp",
-          "src/_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player.cpp",
+          "src/_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c.cpp",
           "src/_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv.cpp",
           "src/FlyGuy_Spawn.c"
         ],
@@ -2161,7 +2161,7 @@
           },
           {
             "ordinal": 24,
-            "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+            "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c",
             "identical": true,
             "relocCount": 2,
             "differences": []
@@ -2364,7 +2364,7 @@
             "size": "0x00000008"
           },
           {
-            "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+            "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c",
             "section": ".text",
             "size": "0x0000002c"
           },
@@ -2438,7 +2438,7 @@
         "externalizedTextSymbols": [
           "daPropeller_Heyho_c_classInit",
           "_ZN19daPropeller_Heyho_c13InitResourcesEv",
-          "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+          "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c",
           "_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv",
           "_ZN19daPropeller_Heyho_c16CleanupResourcesEv",
           "_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv",
@@ -2770,7 +2770,7 @@
           "src/_ZN19daPropeller_Heyho_c8BehaviorEv.cpp",
           "src/_ZN19daPropeller_Heyho_c13InitResourcesEv.cpp",
           "src/_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv.cpp",
-          "src/_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player.cpp",
+          "src/_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c.cpp",
           "src/_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv.cpp",
           "src/FlyGuy_Spawn.c"
         ],
@@ -2945,7 +2945,7 @@
           },
           {
             "ordinal": 24,
-            "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+            "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c",
             "identical": true,
             "relocCount": 2,
             "differences": []
@@ -3148,7 +3148,7 @@
             "size": "0x00000008"
           },
           {
-            "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+            "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c",
             "section": ".text",
             "size": "0x0000002c"
           },
@@ -3222,7 +3222,7 @@
         "externalizedTextSymbols": [
           "daPropeller_Heyho_c_classInit",
           "_ZN19daPropeller_Heyho_c13InitResourcesEv",
-          "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+          "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c",
           "_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv",
           "_ZN19daPropeller_Heyho_c16CleanupResourcesEv",
           "_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv",

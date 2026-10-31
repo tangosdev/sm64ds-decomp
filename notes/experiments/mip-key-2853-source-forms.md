@@ -29,11 +29,11 @@ Each listed improvement and the combined source reproduces all 15 relocated func
 
 - Replace the padded `MipKeyHost` with `int (daObj_Mip_Key_c::*)()` and a state
   containing `enter` and `execute`. Store `MipKeyState *mState` at 0x188 and
-  `Player *mPlayer` at 0x18c. Invoke `(this->*mState->execute)()` directly.
+  `daPly_c *mPlayer` at 0x18c. Invoke `(this->*mState->execute)()` directly.
 - Replace the fabricated model vtable call with `mModel.Render(0)`; use
-  `mAngleY += 0x500`, real Model/ShadowModel initialization, Player conversation
+  `mAngleY += 0x500`, real Model/ShadowModel initialization, daPly_c conversation
   methods, `ClosestPlayer`, `MarkForDestruction` and `UpdatePosWithOnlySpeed`.
-- Use dCamera_c::mFlags, Player::mStateFlags, the actual SharedFilePtr object and
+- Use dCamera_c::mFlags, daPly_c::mStateFlags, the actual SharedFilePtr object and
   Message static methods. These compile without the old raw camera offset and
   mangled free-call spellings. Generic global placeholders elsewhere remain an
   explicit declaration-integration boundary, not proof these types are universal.

@@ -178,19 +178,19 @@ extern "C" {
 // @symbol func_02048e94
 void func_02048e94(void) {
     data_02099fb0 = 4;
-    Sound::Player::SetPlayableSeqCount(9, 4);
+    Sound::daPly_c::SetPlayableSeqCount(9, 4);
 }
 
 // @symbol func_02048e74
 void func_02048e74(void) {
     data_02099fb0 = 4;
-    Sound::Player::SetPlayableSeqCount(9, 4);
+    Sound::daPly_c::SetPlayableSeqCount(9, 4);
 }
 
 // @symbol func_02048e54
 void func_02048e54(void) {
     data_02099fb0 = 4;
-    Sound::Player::SetPlayableSeqCount(9, 4);
+    Sound::daPly_c::SetPlayableSeqCount(9, 4);
 }
 
 // @symbol func_02048d80

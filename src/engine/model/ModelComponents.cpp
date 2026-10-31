@@ -33,7 +33,7 @@
  *   the shard's Node renamed: the bone-record Node already lives here.
  * - MeshPart/MeshEntry are func_02044534's Part/Entry renamed: func_0204488c's
  *   same-named records differ. Vec3w is the array view for the ROM's ldm-shaped
- *   3-word copy (the Player P2w precedent); the scalar spelling scalarizes.
+ *   3-word copy (the daPly_c P2w precedent); the scalar spelling scalarizes.
  * - func_02044534/0204488c keep their local Mtx43/Vec3 spellings (common.h's
  *   Matrix4x3 is a flat m[12] with no r0..r3 rows), so Render's calls and the
  *   three MulMat4x3Mat4x3 sites carry reinterpret casts that emit no code.

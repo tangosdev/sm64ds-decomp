@@ -8,7 +8,7 @@
  * - common.h stays before daGmch_c.h. InitResources assigns
  *   IDENTITY_MATRIX4X3 into mMatrix; the .r/.t Matrix4x3 spelling is
  *   0x1f0 against the ROM's 0x1d4. decl_common.h is not included.
- * - Player::Bounce and Player::Hurt stay mangled (Fix12<int> by value).
+ * - daPly_c::Bounce and daPly_c::Hurt stay mangled (Fix12<int> by value).
  * - GetFloorResult / GetWallResult return the raw word; a dBgPi* return
  *   disagrees with the definitions, so the callers still cast.
  *   TouchesWater and cstd::fdiv are the const method and the divide.
@@ -46,7 +46,7 @@ enum daGmch_c_AssetId {
 #include "common.h"
 #include "daGmch_c.h"
 #include "dBgCh_Gnd.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtFrameCtrl_c.h"
@@ -254,10 +254,10 @@ void daGmch_c::SpawnCoinsAndDie()
 // @symbol _ZN8daGmch_c18CheckPlayerContactEv
 /* The actor found through mdCcAc_c.otherOwner is only acted on when its
    actorID is ACTOR_PLAYER, so it is typed as one.  Bounce and Hurt stay
-   bridges: Player.h does not declare them yet. */
+   bridges: daPly_c.h does not declare them yet. */
 void daGmch_c::CheckPlayerContact()
 {
-    Player *player;
+    daPly_c *player;
     int cmp;
 
     if (FindEgg(mdCcAc_c) != 0) {
@@ -270,7 +270,7 @@ void daGmch_c::CheckPlayerContact()
         unsigned int otherID = mdCcAc_c.otherOwner;
         if (otherID == 0)
             return;
-        player = (Player *)dActor_c::FindWithID(otherID);
+        player = (daPly_c *)dActor_c::FindWithID(otherID);
     }
     if (player == 0)
         return;
@@ -895,11 +895,11 @@ int daGmch_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c13OnTurnIntoEggER6Player
+// @symbol _ZN8daGmch_c13OnTurnIntoEggER7daPly_c
 /* Vtable slot 19.  Gives the player 5 coins -- as cap-collection coins if Yoshi
    is wearing the cap, otherwise as egg coins -- then kills this actor and
    tracks it in the death table. */
-void daGmch_c::OnTurnIntoEgg(Player &player)
+void daGmch_c::OnTurnIntoEgg(daPly_c &player)
 {
     if (player.IsCollectingCap())
         GivePlayerCoins(player, 5, 0);

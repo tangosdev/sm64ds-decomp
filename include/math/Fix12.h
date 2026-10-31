@@ -5,7 +5,7 @@
  *
  * CORRECTED 2026-10-22. This comment used to justify the template as
  * "reconstructed from its own mangled symbols: 5Fix12IiE in e.g.
- * dExtShadowModel_c::InitModel and Player::SetAnim". That argument is
+ * dExtShadowModel_c::InitModel and daPly_c::SetAnim". That argument is
  * circular: the ROM is stripped and carries no function symbol table, and a
  * census over arm9 and all 105 overlays found ZERO `_Z...` strings and ZERO
  * occurrences of `5Fix12IiE` (notes/mwccarm-codegen.md section 6az). Every

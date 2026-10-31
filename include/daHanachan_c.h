@@ -65,7 +65,7 @@ struct daHanachan_c : dEnemyBase_c {
     /* The fields below close on the ROM's `new daHanachan_c` size; see tools/opnew_sizes.py.
        Every name here is coined from how the state functions use the field. */
     s32 mState;                                      /* 0x8c4 -- index into the state table */
-    Player *mPlayer;                                 /* 0x8c8 -- the player being talked to or hit */
+    daPly_c *mPlayer;                                 /* 0x8c8 -- the player being talked to or hit */
     Vector3 mHomePos;                                /* 0x8cc -- spawn position */
     s16 mTargetAngleY;                               /* 0x8d8 -- mSegmentRot[0].y turns towards it */
     u8  mStateTimer;                                 /* 0x8da */

@@ -75,7 +75,7 @@ request. Raw local evidence and private compiler objects remain untracked. The
 declaration blocker is retained; `formal_acceptance: false`.
 
 The six helper backports correct the state helper's void return, angle-result
-width, Player damage/bounce declarations, animation start-frame width, sound
+width, daPly_c damage/bounce declarations, animation start-frame width, sound
 position declarations and shadow opacity. Available native ApproachLinear,
 ModelBase and actor calls replace their hand-spelled bridges. The actual
 collision-update veneer destination and current GetWallResult int return remain.

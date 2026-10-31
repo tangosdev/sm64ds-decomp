@@ -45,10 +45,10 @@ struct Callback;
  * - Unrecovered meanings: mFlags bits 0x100, 0x400, 0x2000, 0x4000 and
  *   0x4000000 as this class uses them, hit-flag bit 0x8000000 and bits
  *   0x2000/0x4000000 of mdCcAc_c.flags, the global words data_0209b454,
- *   data_0209d660, data_0209d6bc and data_0209f284, the Player::Hurt
+ *   data_0209d660, data_0209d6bc and data_0209f284, the daPly_c::Hurt
  *   arguments after the first two, and what the player-side calls
  *   func_ov002_020bec84 and func_ov002_020bec9c test and start.
- * - The Player helpers stay mangled scalar externs (Fix12<int>-by-value
+ * - The daPly_c helpers stay mangled scalar externs (Fix12<int>-by-value
  *   member form is the 6az wall).
  * - SignPost_ClsnFile / SignPost_ModelFile keep their coined BSS names
  *   (historical, like the Spawn aliases).
@@ -69,7 +69,7 @@ enum daObjTatefuda_c_AssetId {
 #include "dActor_c.h"
 #include "Sound.h"
 #include "dBgActor_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "decl_common.h"
@@ -150,7 +150,7 @@ extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, F
 extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(struct Matrix4x3* m, int x, int y, int z);
 extern struct Matrix4x3 data_020a0e68;
-extern char *func_ov002_020e496c(Player *p);
+extern char *func_ov002_020e496c(daPly_c *p);
 extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern void Vec3_Lsl(struct Vec3 *d, struct Vec3 *s, int sh);
@@ -294,7 +294,7 @@ int daObjTatefuda_c::InitResources()
  * What it does, in order:
  *  1. If this sign's mFlags bit 0x4000000 and the same bit of the global word
  *     data_0209b454 are both set while a player holds it, tell that player to
- *     let go (Player::DropActor).
+ *     let go (daPly_c::DropActor).
  *  2. If there is a holder, mFlags bit 0x4000 is set and the holder's
  *     mCarryMatrix is non-zero: put the sign on the holder (AttachToHolder), clip radius
  *     0x20000 (32 units), and set mFlags bit 0x4000000. Otherwise clip radius
@@ -531,7 +531,7 @@ void daObjTatefuda_c::InitThrown()
  * eighth of a turn); move it (dActor_c::UpdatePos); if it touched the ground, a
  * wall or water, Kill it and stop. Otherwise, if the collider reports an
  * actor that is a player and is not the last holder, hurt that player
- * (Player::Hurt with 1, 0xc000 -- 12.0 as Fix12 -- and 1/0/1 for the rest, which
+ * (daPly_c::Hurt with 1, 0xc000 -- 12.0 as Fix12 -- and 1/0/1 for the rest, which
  * are not named here); slow the horizontal speed toward 0 by 0x555 (about
  * 0.33 unit) per frame; keep the mesh collider off; and once the sign is off
  * screen (mFlags bit 8) and more than 0x7d0000 (2000 units) from the player,
@@ -540,7 +540,7 @@ void daObjTatefuda_c::Thrown()
 {
     int b;
     struct Vector3 vec;
-    Player *found;
+    daPly_c *found;
     unsigned id;
 
     {
@@ -559,7 +559,7 @@ void daObjTatefuda_c::Thrown()
     /* otherOwner: the uniqueID of the actor whose collider this one touched. */
     id = mdCcAc_c.otherOwner;
     if (id != 0) {
-        found = static_cast<Player *>(dActor_c::FindWithID(id));
+        found = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (found != 0) {
             if (found != mLastHolder) {
                 b = ((dActor_c *)found)->actorID;
@@ -595,7 +595,7 @@ void daObjTatefuda_c::Thrown()
  * over to mLastHolder (mHoldingPlayer becomes 0). No callees. */
 void daObjTatefuda_c::InitDropped()
 {
-    Player *other;
+    daPly_c *other;
     int* py;
     Vec3* src;
     mHorzSpeed = 0;
@@ -672,7 +672,7 @@ void daObjTatefuda_c::InitTalk()
  * func_ov002_020bec9c(player, 0, 0, 0x1000, 0)): when
  * func_ov002_020bec84(player, n) is non-zero for n = 1 or 0 it calls
  * func_ov002_020bec9c(player, 2, ...); for n = 2 it calls (player, 3, ...); for
- * n = 3 it shows the message. The last two also wait on Player::FinishedAnim. A talk state other than 0 or 1 sends the sign back to
+ * n = 3 it shows the message. The last two also wait on daPly_c::FinishedAnim. A talk state other than 0 or 1 sends the sign back to
  * IDLE through SetState.
  *
  * The reading spot is the sign's own position pushed 0x5a000 (90 units), or
@@ -696,7 +696,7 @@ void daObjTatefuda_c::Talk()
     struct Vector3 msgPos;
     struct Vector3 tgt;
     struct Vector3 plPos;
-    Player *player;
+    daPly_c *player;
     u16 msgId;
     u8 *talkStep;
     s32 scale;
@@ -836,7 +836,7 @@ void daObjTatefuda_c::Talk()
  * in (mPoundsLeft != 0), the other actor must be the player, and the player must
  * lie within 0x4000 (a quarter turn) of the sign's facing: AngleDiff is the
  * absolute 16-bit difference. Then the player is remembered in mTalkingPlayer
- * (before Player::StartTalk is tried, so it stays set if that refuses) and, on
+ * (before daPly_c::StartTalk is tried, so it stays set if that refuses) and, on
  * success, the sign enters TALK. Returns 1 only in that case. */
 int daObjTatefuda_c::TryStartTalk() {
     unsigned int id = mdCcAc_c.otherOwner;
@@ -847,7 +847,7 @@ int daObjTatefuda_c::TryStartTalk() {
     if (mPoundsLeft == 0)
         return 0;
     {
-        Player *other = static_cast<Player *>(dActor_c::FindWithID(id));
+        daPly_c *other = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (other == 0)
             goto fail;
         {
@@ -880,14 +880,14 @@ int daObjTatefuda_c::TryStartTalk() {
  * the other actor's param1 must be 2 and it must lie MORE than 0x4000 (a
  * quarter turn) from the sign's facing (behind it, where the talk check wants
  * it in front), hit-flag bit 0x1000 (grab, in that table) must be set, and
- * Player::TryGrab must accept; then the player becomes mHoldingPlayer and the
+ * daPly_c::TryGrab must accept; then the player becomes mHoldingPlayer and the
  * sign enters CARRIED. */
 void daObjTatefuda_c::CheckGrabOrBreak() {
-    Player *other;
+    daPly_c *other;
     unsigned int id = mdCcAc_c.otherOwner;
     if (id == 0)
         return;
-    other = static_cast<Player *>(dActor_c::FindWithID(id));
+    other = static_cast<daPly_c *>(dActor_c::FindWithID(id));
     if (other == 0)
         return;
     {
@@ -956,19 +956,19 @@ void daObjTatefuda_c::Kill()
     Reset();
 }
 
-// @symbol _ZN15daObjTatefuda_c15OnHitByMegaCharER6Player
+// @symbol _ZN15daObjTatefuda_c15OnHitByMegaCharER7daPly_c
 /* daObjTatefuda_c::OnHitByMegaChar -- vtable slot 27, ov002 0x020bb374.
  * reloc: _ZTV15daObjTatefuda_c+0x6c -> 0x020bb374, _ZTV10dBgActor_c+0x6c ->
  * 0x02010130 (different, real override).
  *
  * SIGNATURE FROM include/dActor_c.h's OWN SLOT 27, `virtual void
- * OnHitByMegaChar(Player &player)` -- `int` until daObjPile_c::OnHitByMegaChar
+ * OnHitByMegaChar(daPly_c &player)` -- `int` until daObjPile_c::OnHitByMegaChar
  * proved it wrong tree-wide (36bc6d1df). Same body shape
  * src/game/actors/d_a_obj_maruta.cpp records for its own
  * slot 27: dBgActor_c::KillByMegaChar is non-virtual, so the unqualified
  * call is already the direct `bl` the ROM has. mAngleY = mPrevAngleY is
  * dActor_c's own field pair (include/dActor_c.h, 0x08e/0x094). */
-void daObjTatefuda_c::OnHitByMegaChar(Player &player)
+void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player)
 {
     player.IncMegaKillCount();
     func_02012694(0x1d, &mCamSpacePosX);
@@ -988,8 +988,8 @@ void daObjTatefuda_c::OnHitByMegaChar(Player &player)
  * mPoundCooldown and mRespawnDelay were undescribed padding until this method's body
  * proved they are read/written. `other` is read at +0x703, past dActor_c's
  * own span -- same raw-offset reading daObjPile_c::OnGroundPounded records
- * for its own slot 21; Player.h names that byte mIsMega, so the read is
- * spelt through a Player & here. A param1 of 2 or a non-zero mIsMega makes
+ * for its own slot 21; daPly_c.h names that byte mIsMega, so the read is
+ * spelt through a daPly_c & here. A param1 of 2 or a non-zero mIsMega makes
  * the pound take every pound left at once (the sign sinks mPoundsLeft * 0x2d
  * = 45 units per pound, as `<< 12` Fix12, and mPoundsLeft becomes 0); otherwise
  * it takes one (0x2d000 = 45 units, mPoundsLeft - 1) and starts the 0xf-frame
@@ -999,7 +999,7 @@ void daObjTatefuda_c::OnGroundPounded(dActor_c &other)
     if (mPoundsLeft == 0) return;
     if (mPoundCooldown != 0) return;
     Sound::PlayBank3(0x62, mCamSpacePos);
-    if (other.param1 == 2 || ((Player &)other).mIsMega != 0) {
+    if (other.param1 == 2 || ((daPly_c &)other).mIsMega != 0) {
         mPosY -= (mPoundsLeft * 0x2d) << 12;
         mPoundsLeft = 0;
         ((dBgActor_c *)this)->UpdateModelPosAndRotY();

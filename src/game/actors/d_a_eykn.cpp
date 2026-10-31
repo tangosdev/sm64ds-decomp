@@ -6,7 +6,7 @@
  * gEyknStates.
  *
  * deslop leftovers:
- * - Player::Hurt stays a scalar extern; Player.h does not declare it.
+ * - daPly_c::Hurt stays a scalar extern; daPly_c.h does not declare it.
  * - func_0201267c is the bank-3 veneer around Sound::Play. Sound::Play(3,
  *   id, Vector3 &) is +4 a call: St_Die_Init 0xd4->0xd8, St_Attack_Main
  *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePosX
@@ -59,7 +59,7 @@
 #include "types.h"
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "Particle__System.h"
 #include "dBgCh_Gnd.h"
@@ -285,7 +285,7 @@ int daEykn_c::StartEyeAnim()
  * field of view and with a clear line of sight, and starts the attack. */
 void daEykn_c::LookForPlayer()
 {
-    Player *p = ClosestNonVanishPlayer();
+    daPly_c *p = ClosestNonVanishPlayer();
     if (p == 0)
         return;
     if (Vec3_Dist(&mPos, &p->mPos) > kWatchRange)
@@ -331,7 +331,7 @@ idCheck:
 
     if (mdCcAcPos_c.otherOwner == 0) return;
 
-    Player *f = static_cast<Player *>(FindWithID(mdCcAcPos_c.otherOwner));
+    daPly_c *f = static_cast<daPly_c *>(FindWithID(mdCcAcPos_c.otherOwner));
     if (f == 0) return;
 
     int isPlayer = (int)(f->actorID == kPlayer);
@@ -523,7 +523,7 @@ int daEykn_c::St_Attack_Main()
     s16 ang;
 
     {
-        Player *pl;
+        daPly_c *pl;
         s32 py;
         s32 pz;
         s32 yoff;
@@ -550,7 +550,7 @@ int daEykn_c::St_Attack_Main()
     }
 
     if (mSubState == 7) {
-        Player *pl2;
+        daPly_c *pl2;
         s32 py2;
         s32 pz2;
         s32 yoff2;
@@ -619,7 +619,7 @@ int daEykn_c::St_Attack_Main()
     UpdateEyeAnim();
 
     {
-        Player *p3;
+        daPly_c *p3;
         s32 y3;
         s32 z3;
         s32 yoff3;

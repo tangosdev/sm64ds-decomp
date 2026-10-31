@@ -55,7 +55,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "Sound.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "G2x.h"
 #include "nitro/hw/registers.h"
 #include "dScene_c.h"
@@ -2609,12 +2609,12 @@ void dScStage_c::PS_Update() {
 #pragma opt_common_subs on
 
 // @symbol func_02029408
-/* Can the current player pause? Forwards to Player::CanPause on the active
+/* Can the current player pause? Forwards to daPly_c::CanPause on the active
  * entry of the live player list (data_0209f394, indexed by data_0209f250).
  * dScStage_c polls it before opening the pause menu. */
 
 extern "C" int func_02029408(void) {
-    return ((Player *)data_0209f394[data_0209f250])->CanPause();
+    return ((daPly_c *)data_0209f394[data_0209f250])->CanPause();
 }
 
 // @symbol _ZN10dScStage_c7PS_InitEv
@@ -3060,7 +3060,7 @@ void dScStage_c::RenderVsModeCountdown() {
     int i;
     for (i = 0; i < 4; i++) {
         if (data_0209f394[i]) {
-            int t = (((Player *)data_0209f394[i])->mLevelEntryDone != 0);
+            int t = (((daPly_c *)data_0209f394[i])->mLevelEntryDone != 0);
             if (t == 1)
                 count++;
         }
@@ -3251,7 +3251,7 @@ extern "C" void GiveCoins(int idx, int amount) {
 }
 
 // @symbol GiveHealth
-/* Returns the clamped health, which Player::GiveHealth hands straight back. */
+/* Returns the clamped health, which daPly_c::GiveHealth hands straight back. */
 extern "C" int GiveHealth(int idx, int amt) {
     int v;
     data_02092144[idx] += amt;
@@ -4020,7 +4020,7 @@ int dScStage_c::Render() {
         int playerIndex = 0;
         int playerCount = data_0209f21c;
         for (; playerIndex < playerCount; playerIndex++) {
-            Player *player = (Player *)data_0209f394[playerIndex];
+            daPly_c *player = (daPly_c *)data_0209f394[playerIndex];
             if (player != 0) {
                 u8 playerFlags = player->mHasWings;
                 int *position = (int *)((long long)(int)&player->mPosX);
@@ -4106,7 +4106,7 @@ int dScStage_c::Behavior() {
                 for (i = 0; i < 4; i++) {
                     char *p = (char *)data_0209f394[i];
                     if (p != 0) {
-                        int t = (((Player *)p)->mLevelEntryDone != 0) ? 1 : 0;
+                        int t = (((daPly_c *)p)->mLevelEntryDone != 0) ? 1 : 0;
                         if (t == 1)
                             cnt++;
                     }
@@ -4539,8 +4539,8 @@ int dScStage_c::CleanupResources() {
         if (mode == 1)
             resetSequenceCounts = 1;
         if (resetSequenceCounts) {
-            Sound::Player::SetPlayableSeqCount(2, 2);
-            Sound::Player::SetPlayableSeqCount(3, 1);
+            Sound::daPly_c::SetPlayableSeqCount(2, 2);
+            Sound::daPly_c::SetPlayableSeqCount(3, 1);
         }
     }
     return 1;
@@ -4606,9 +4606,9 @@ int dScStage_c::InitResources() {
         u8 mode = data_0209f2d8;
         int isVsMode = (mode == 1) ? 1 : 0;
         if (isVsMode) {
-            Sound::Player::SetPlayableSeqCount(2, 5);
+            Sound::daPly_c::SetPlayableSeqCount(2, 5);
             int sequenceCount = 3;
-            Sound::Player::SetPlayableSeqCount(sequenceCount, sequenceCount);
+            Sound::daPly_c::SetPlayableSeqCount(sequenceCount, sequenceCount);
         }
         dScene_c::Initialise3dGraphics();
         Enable3dEngines();

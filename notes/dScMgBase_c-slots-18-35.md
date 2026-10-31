@@ -150,7 +150,7 @@ all thirteen names 18..30 agree with the `recovered name:` comments on this clas
 ```c
 /* --- new slots, 18..30, in declaration order. Do not reorder. --- */
 virtual int  OnYoshiTryEat();                      /* slot 18 */
-virtual int  OnTurnIntoEgg(Player &player);        /* slot 19 */
+virtual int  OnTurnIntoEgg(daPly_c &player);        /* slot 19 */
 virtual int  Virtual50();                          /* slot 20 -- vtable+0x50 */
 /* Slots 21, 24 and 27 return void, NOT int. Nothing in the tree reads them,
    so only an override with early returns can tell the difference -- and one
@@ -162,7 +162,7 @@ virtual int  OnAttacked2(dActor_c &other);              /* slot 23 */
 virtual void OnKicked(dActor_c &other);                 /* slot 24 */
 virtual int  OnPushed(dActor_c &other);                 /* slot 25 */
 virtual int  OnHitByCannonBlastedChar(dActor_c &other); /* slot 26 */
-/* The `Player &` this block proposed for slot 27 was dActor_c.h's and is
+/* The `daPly_c &` this block proposed for slot 27 was dActor_c.h's and is
    MEASURED WRONG: both real bodies open `mov r4, r0` and then write r1 before
    reading it, so no second argument register is live on entry. Declared and
    landed as the no-parameter form. */
@@ -182,7 +182,7 @@ virtual int  OnAimedAtWithEgg();                        /* slot 29 */
 virtual int  OnAimedAtWithEggReturnVec();               /* slot 30 */
 ```
 
-The parameter *types* are `dActor_c &` / `Player &` on that branch; on this one the
+The parameter *types* are `dActor_c &` / `daPly_c &` on that branch; on this one the
 legacy sources pass raw `char *` / `void *`. The type does not change the slot's arity,
 but it does change the mangled name — so settle it before renaming the [ov004](../config/arm9/overlays/ov004/symbols.txt) bodies,
 not after.

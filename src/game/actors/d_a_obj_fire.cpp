@@ -21,7 +21,7 @@
 
 #include "daObjFire_c.h"
 #include "SpawnInfo.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Particle__System.h"
 
 extern "C" {
@@ -85,8 +85,8 @@ s32 daObjFire_c::OnYoshiTryEat() {
     return 5;
 }
 
-// @symbol _ZN11daObjFire_c13OnTurnIntoEggER6Player
-void daObjFire_c::OnTurnIntoEgg(Player &player) {}
+// @symbol _ZN11daObjFire_c13OnTurnIntoEggER7daPly_c
+void daObjFire_c::OnTurnIntoEgg(daPly_c &player) {}
 
 // @symbol _ZN11daObjFire_c13InitResourcesEv
 int daObjFire_c::InitResources() {
@@ -145,7 +145,7 @@ int daObjFire_c::Behavior() {
             if (actor != 0) {
                 if (IsPlayerActor(actor)) {
                     if ((mdCcAc_c.hitFlags & 0x8000) == 0) {
-                        ((Player *)actor)->Burn();
+                        ((daPly_c *)actor)->Burn();
                     }
                 }
             }

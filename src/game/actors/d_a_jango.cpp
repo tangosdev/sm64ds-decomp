@@ -38,7 +38,7 @@
  *     header.
  *   - mStateParam, mLeaveDelay, mRiseToFarNode and mPathPickTick are named
  *     from the behaviour described at the header; sound ids 0xa / 0xee / 0xef and particle 0x7e
- *     are named only by where they are played; Player::Hurt's last three
+ *     are named only by where they are played; daPly_c::Hurt's last three
  *     arguments are not decoded; the level ids 0x10, 0x18 and 0x19 are not
  *     named.
  *   - the state record at data_ov062_0211e16c (RISE: b880 / b800) is not
@@ -68,7 +68,7 @@ extern "C" int AngleDiff(int a, int b);
 #include "SharedFilePtr.h"
 #include "decl_SaveData.h"
 #include "SaveData.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dExtBlendAnmModel_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "daObjMarioCap_c.h"
@@ -294,7 +294,7 @@ static inline int IsOffScreen(dActor_c *actor) {
     return (actor->mFlags & 8) != 0;
 }
 
-static inline int IsNoControl(Player *player) {
+static inline int IsNoControl(daPly_c *player) {
     return player->mIsNoControl != 0;
 }
 
@@ -334,7 +334,7 @@ int daJango_c::InitResources()
 {
     void *bmd;
     dActor_c *spawned;
-    Player *pl;
+    daPly_c *pl;
 
     bmd = dExtSimpleModel_c::LoadFile(data_ov062_0211e0fc); /* jango.bmd */
     mBlendAnmModel.SetFile((BMD_File *)bmd, 1, -1);
@@ -394,7 +394,7 @@ int daJango_c::InitResources()
         mPosZ = mPathNodePosZ;
         func_ov062_0211c658(JANGO_STATE_FLY_PATH);
     } else {
-        pl = (Player *)data_0209f394;
+        pl = (daPly_c *)data_0209f394;
         /* No star: if the player has already lost the cap (and param1 is not 3),
            start out holding a cap object, spawned with the player's mCharacter
            shifted left 8. (func_ov062_0211b51c builds the same shape from
@@ -812,7 +812,7 @@ int daJango_c::func_ov062_0211bd10()
 {
     s16 angV;
     s16 angD;
-    Player *player;
+    daPly_c *player;
     int ppos[3];
     Vector3 node;
     int thr;
@@ -995,7 +995,7 @@ int func_ov062_0211ba84(char *c)
     Vector3 hv;
     Vector3 vv;
     s16 pitch;
-    Player *player;
+    daPly_c *player;
     daJango_c &actor = *(daJango_c *)c;
     int tx, ty, tz;
 
@@ -1174,14 +1174,14 @@ int daJango_c::func_ov062_0211b800() {
       mCharacter differs from param1, else SaveData::PlayerLoseCap, returning if
       the cap was already lost), spawn a cap object holding param1 << 8,
       hold it and enter CIRCLE. Then, whether or not a cap was taken, set
-      mHitPlayer, call Player::Hurt (pass-through arguments: the first flag is
+      mHitPlayer, call daPly_c::Hurt (pass-through arguments: the first flag is
       set for the silver-star variant or param1 == 3, 0xc000 is 12.0 as fix12; the
       other three are not decoded here) and, if that took effect, set
       mTimer = 30 and enter CIRCLE. */
 extern "C" {
 int daJango_c::func_ov062_0211b51c()
 {
-    Player *pl;
+    daPly_c *pl;
     dActor_c *sp;
     Vector3 pos;
     unsigned int flag;
@@ -1197,7 +1197,7 @@ int daJango_c::func_ov062_0211b51c()
 
     id = mdCcAc_c1.otherOwner;
     if (id != 0) {
-        pl = (Player *)dActor_c::FindWithID((unsigned int)id);
+        pl = (daPly_c *)dActor_c::FindWithID((unsigned int)id);
         if (pl == 0)
             return (int)pl;
         fl = mdCcAc_c1.hitFlags;
@@ -1217,7 +1217,7 @@ int daJango_c::func_ov062_0211b51c()
     id = mdCcAc_c2.otherOwner;
     if (id == 0)
         return id;
-    pl = (Player *)dActor_c::FindWithID((unsigned int)id);
+    pl = (daPly_c *)dActor_c::FindWithID((unsigned int)id);
     if (pl == 0)
         return (int)pl;
     isPlayer = (enum Bool)(pl->actorID == ACTOR_PLAYER);
@@ -1291,7 +1291,7 @@ int daJango_c::func_ov062_0211b51c()
    mPathNodeIndex and returns 1. */
 int daJango_c::func_ov062_0211b3ac()
 {
-    Player* player;
+    daPly_c* player;
     Vector3 node;
     Vector3 best;
     Vector3 ppos;

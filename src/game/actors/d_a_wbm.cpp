@@ -33,7 +33,7 @@
  * not reorder.
  *
  * leftovers:
- * - Player::Hurt and Particle::System::NewSimple stay mangled. Each takes
+ * - daPly_c::Hurt and Particle::System::NewSimple stay mangled. Each takes
  *   Fix12<int> by value (wall 6az).
  * - The hit check and the placement helper are members but keep their
  *   func_ov098_* address names.
@@ -54,7 +54,7 @@ enum daWbm_c_AssetId {
 #include "common.h"
 #include "daWbm_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -287,7 +287,7 @@ void daWbm_c::StateFall()
 void daWbm_c::StateDrop()
 {
     Vector3 spawnPos;
-    Player *player;
+    daPly_c *player;
     s32 angle;
     s32 speed;
     u32 uangle;
@@ -360,7 +360,7 @@ void daWbm_c::StateBounce()
     } else if (state == 1) {
         int approach = ApproachLinear(mSquashScale, 0x1000, mSquashSpeed);
         if (approach != 0) {
-            Player *player;
+            daPly_c *player;
             mBouncePhase++;
             mVertSpeed = (mBounceCount << 13) + 0x30000;
             mHorzSpeed = 0x6000;
@@ -399,7 +399,7 @@ int daWbm_c::func_ov098_0213b6e0()
     Vector3 pos;
     u32 otherID = mdCcAc_c.otherOwner;
     if (otherID != 0) {
-        Player *other = static_cast<Player *>(dActor_c::FindWithID(otherID));
+        daPly_c *other = static_cast<daPly_c *>(dActor_c::FindWithID(otherID));
         if (other != 0) {
             u16 actorID = other->actorID;
             /* Tested as a flag first: tested inline, or as a switch, the

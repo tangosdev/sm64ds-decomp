@@ -37,7 +37,7 @@
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
 
-struct Player;
+struct daPly_c;
 
 struct daRNk_c : dEnemyBase_c {
     dCcAc_c         mdCcAc_c;                        /* 0x110 */
@@ -54,7 +54,7 @@ struct daRNk_c : dEnemyBase_c {
        stores it, and STATE_RACE looks the flag up with it. */
     s32             mFlagID;                         /* 0x394 */
     /* The closest player, as of the last time STATE_WAIT_FOR_PLAYER looked. */
-    Player *        mPlayer;                         /* 0x398 */
+    daPly_c *        mPlayer;                         /* 0x398 */
     /* Where InitResources found Koopa. Written once; nothing in this file
        reads it back. */
     Vector3         mSpawnPos;                       /* 0x39c */

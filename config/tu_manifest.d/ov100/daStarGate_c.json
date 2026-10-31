@@ -56,73 +56,73 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+      "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c",
       "address": "0x02145948",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN12daStarGate_c18St_StayClosed_MainEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+      "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c",
       "address": "0x02145988",
       "size": "0x0000012c",
-      "legacy_source": "src/_ZN12daStarGate_c17St_OpenClose_MainEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+      "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c",
       "address": "0x02145ab4",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN12daStarGate_c17St_OpenClose_InitEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+      "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c",
       "address": "0x02145b10",
       "size": "0x0000006c",
-      "legacy_source": "src/_ZN12daStarGate_c17St_Unlocking_MainEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+      "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c",
       "address": "0x02145b7c",
       "size": "0x00000020",
-      "legacy_source": "src/_ZN12daStarGate_c17St_Unlocking_InitEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c",
       "address": "0x02145b9c",
       "size": "0x00000090",
-      "legacy_source": "src/_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c",
       "address": "0x02145c2c",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+      "symbol": "_ZN12daStarGate_c12St_Wait_MainEP7daPly_c",
       "address": "0x02145c58",
       "size": "0x000001b8",
-      "legacy_source": "src/_ZN12daStarGate_c12St_Wait_MainEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c12St_Wait_MainEP7daPly_c.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+      "symbol": "_ZN12daStarGate_c11TryOpenDoorEP7daPly_c",
       "address": "0x02145e10",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN12daStarGate_c11TryOpenDoorEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c11TryOpenDoorEP7daPly_c.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+      "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c",
       "address": "0x02145e74",
       "size": "0x0000008c",
-      "legacy_source": "src/_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c.cpp",
       "ordinal": 11
     },
     {
@@ -133,10 +133,10 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+      "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c",
       "address": "0x02145f68",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player.cpp",
+      "legacy_source": "src/_ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c.cpp",
       "ordinal": 13
     },
     {
@@ -443,7 +443,7 @@
       "source": "0x02148334",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+      "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02145948"
@@ -453,7 +453,7 @@
       "source": "0x0214833c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+      "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02145988"
@@ -463,7 +463,7 @@
       "source": "0x02148344",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02145b9c"
@@ -473,7 +473,7 @@
       "source": "0x0214834c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+      "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02145b7c"
@@ -483,7 +483,7 @@
       "source": "0x02148354",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+      "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02145ab4"
@@ -493,7 +493,7 @@
       "source": "0x0214835c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+      "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02145b10"
@@ -503,7 +503,7 @@
       "source": "0x02148364",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02145c2c"
@@ -513,7 +513,7 @@
       "source": "0x0214836c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+      "symbol": "_ZN12daStarGate_c12St_Wait_MainEP7daPly_c",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02145c58"
@@ -763,7 +763,7 @@
       "source": "0x02148418",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010154"
@@ -843,7 +843,7 @@
       "source": "0x02148438",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010130"
@@ -1477,18 +1477,18 @@
         "substitutedObjectPaths": [
           "src/_ZN12daStarGate_cD1Ev.cpp",
           "src/_ZN12daStarGate_cD0Ev.cpp",
-          "src/_ZN12daStarGate_c18St_StayClosed_MainEP6Player.cpp",
-          "src/_ZN12daStarGate_c17St_OpenClose_MainEP6Player.cpp",
-          "src/_ZN12daStarGate_c17St_OpenClose_InitEP6Player.cpp",
-          "src/_ZN12daStarGate_c17St_Unlocking_MainEP6Player.cpp",
-          "src/_ZN12daStarGate_c17St_Unlocking_InitEP6Player.cpp",
-          "src/_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player.cpp",
-          "src/_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player.cpp",
-          "src/_ZN12daStarGate_c12St_Wait_MainEP6Player.cpp",
-          "src/_ZN12daStarGate_c11TryOpenDoorEP6Player.cpp",
-          "src/_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player.cpp",
+          "src/_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c12St_Wait_MainEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c11TryOpenDoorEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c.cpp",
           "src/_ZN12daStarGate_c26CalculateRelativePlayerPosEv.cpp",
-          "src/_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player.cpp",
+          "src/_ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c.cpp",
           "src/_ZN12daStarGate_c16CleanupResourcesEv.cpp",
           "src/_ZN12daStarGate_c16OnPendingDestroyEv.cpp",
           "src/_ZN12daStarGate_c6RenderEv.cpp",
@@ -1571,7 +1571,7 @@
           },
           {
             "ordinal": 2,
-            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c",
             "identical": true,
             "relocCount": 3,
             "differences": [],
@@ -1579,7 +1579,7 @@
           },
           {
             "ordinal": 3,
-            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c",
             "identical": true,
             "relocCount": 13,
             "differences": [],
@@ -1587,7 +1587,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c",
             "identical": true,
             "relocCount": 5,
             "differences": [],
@@ -1595,7 +1595,7 @@
           },
           {
             "ordinal": 5,
-            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -1603,7 +1603,7 @@
           },
           {
             "ordinal": 6,
-            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c",
             "identical": true,
             "relocCount": 1,
             "differences": [],
@@ -1611,7 +1611,7 @@
           },
           {
             "ordinal": 7,
-            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c",
             "identical": true,
             "relocCount": 7,
             "differences": [],
@@ -1619,7 +1619,7 @@
           },
           {
             "ordinal": 8,
-            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c",
             "identical": true,
             "relocCount": 2,
             "differences": [],
@@ -1627,7 +1627,7 @@
           },
           {
             "ordinal": 9,
-            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP7daPly_c",
             "identical": true,
             "relocCount": 13,
             "differences": [],
@@ -1635,7 +1635,7 @@
           },
           {
             "ordinal": 10,
-            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP7daPly_c",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -1643,7 +1643,7 @@
           },
           {
             "ordinal": 11,
-            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c",
             "identical": true,
             "relocCount": 1,
             "differences": [],
@@ -1659,7 +1659,7 @@
           },
           {
             "ordinal": 13,
-            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c",
             "identical": true,
             "relocCount": 0,
             "differences": [],
@@ -2137,52 +2137,52 @@
             "size": "0x00000044"
           },
           {
-            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c",
             "section": ".text",
             "size": "0x00000040"
           },
           {
-            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c",
             "section": ".text",
             "size": "0x0000012c"
           },
           {
-            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c",
             "section": ".text",
             "size": "0x0000005c"
           },
           {
-            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c",
             "section": ".text",
             "size": "0x0000006c"
           },
           {
-            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c",
             "section": ".text",
             "size": "0x00000020"
           },
           {
-            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c",
             "section": ".text",
             "size": "0x00000090"
           },
           {
-            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c",
             "section": ".text",
             "size": "0x0000002c"
           },
           {
-            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP7daPly_c",
             "section": ".text",
             "size": "0x000001b8"
           },
           {
-            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP7daPly_c",
             "section": ".text",
             "size": "0x00000064"
           },
           {
-            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c",
             "section": ".text",
             "size": "0x0000008c"
           },
@@ -2192,7 +2192,7 @@
             "size": "0x00000068"
           },
           {
-            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c",
             "section": ".text",
             "size": "0x00000054"
           },
@@ -2293,17 +2293,17 @@
           83
         ],
         "externalizedTextSymbols": [
-          "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+          "_ZN12daStarGate_c12St_Wait_MainEP7daPly_c",
           "_ZN12daStarGate_c13InitResourcesEv",
           "_ZN12daStarGate_c16CleanupResourcesEv",
           "_ZN12daStarGate_c16OnPendingDestroyEv",
-          "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
-          "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
-          "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
-          "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
-          "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
-          "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
-          "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+          "_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c",
+          "_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c",
+          "_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c",
+          "_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c",
+          "_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c",
+          "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c",
+          "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c",
           "_ZN12daStarGate_c6RenderEv",
           "_ZN12daStarGate_c8BehaviorEv",
           "_ZN12daStarGate_cD0Ev",
@@ -2344,9 +2344,9 @@
           "$d",
           "$d",
           "$d",
-          "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
-          "_ZN12daStarGate_c11TryOpenDoorEP6Player",
-          "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+          "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c",
+          "_ZN12daStarGate_c11TryOpenDoorEP7daPly_c",
+          "_ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c",
           "_ZN12daStarGate_c26CalculateRelativePlayerPosEv"
         ],
         "liveSections": [
@@ -2733,18 +2733,18 @@
         "substitutedObjectPaths": [
           "src/_ZN12daStarGate_cD1Ev.cpp",
           "src/_ZN12daStarGate_cD0Ev.cpp",
-          "src/_ZN12daStarGate_c18St_StayClosed_MainEP6Player.cpp",
-          "src/_ZN12daStarGate_c17St_OpenClose_MainEP6Player.cpp",
-          "src/_ZN12daStarGate_c17St_OpenClose_InitEP6Player.cpp",
-          "src/_ZN12daStarGate_c17St_Unlocking_MainEP6Player.cpp",
-          "src/_ZN12daStarGate_c17St_Unlocking_InitEP6Player.cpp",
-          "src/_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player.cpp",
-          "src/_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player.cpp",
-          "src/_ZN12daStarGate_c12St_Wait_MainEP6Player.cpp",
-          "src/_ZN12daStarGate_c11TryOpenDoorEP6Player.cpp",
-          "src/_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player.cpp",
+          "src/_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c12St_Wait_MainEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c11TryOpenDoorEP7daPly_c.cpp",
+          "src/_ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c.cpp",
           "src/_ZN12daStarGate_c26CalculateRelativePlayerPosEv.cpp",
-          "src/_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player.cpp",
+          "src/_ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c.cpp",
           "src/_ZN12daStarGate_c16CleanupResourcesEv.cpp",
           "src/_ZN12daStarGate_c16OnPendingDestroyEv.cpp",
           "src/_ZN12daStarGate_c6RenderEv.cpp",
@@ -2827,7 +2827,7 @@
           },
           {
             "ordinal": 2,
-            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c",
             "identical": true,
             "relocCount": 3,
             "differences": [],
@@ -2835,7 +2835,7 @@
           },
           {
             "ordinal": 3,
-            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c",
             "identical": true,
             "relocCount": 13,
             "differences": [],
@@ -2843,7 +2843,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c",
             "identical": true,
             "relocCount": 5,
             "differences": [],
@@ -2851,7 +2851,7 @@
           },
           {
             "ordinal": 5,
-            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -2859,7 +2859,7 @@
           },
           {
             "ordinal": 6,
-            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c",
             "identical": true,
             "relocCount": 1,
             "differences": [],
@@ -2867,7 +2867,7 @@
           },
           {
             "ordinal": 7,
-            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c",
             "identical": true,
             "relocCount": 7,
             "differences": [],
@@ -2875,7 +2875,7 @@
           },
           {
             "ordinal": 8,
-            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c",
             "identical": true,
             "relocCount": 2,
             "differences": [],
@@ -2883,7 +2883,7 @@
           },
           {
             "ordinal": 9,
-            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP7daPly_c",
             "identical": true,
             "relocCount": 13,
             "differences": [],
@@ -2891,7 +2891,7 @@
           },
           {
             "ordinal": 10,
-            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP7daPly_c",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -2899,7 +2899,7 @@
           },
           {
             "ordinal": 11,
-            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c",
             "identical": true,
             "relocCount": 1,
             "differences": [],
@@ -2915,7 +2915,7 @@
           },
           {
             "ordinal": 13,
-            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c",
             "identical": true,
             "relocCount": 0,
             "differences": [],
@@ -3393,52 +3393,52 @@
             "size": "0x00000044"
           },
           {
-            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c",
             "section": ".text",
             "size": "0x00000040"
           },
           {
-            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c",
             "section": ".text",
             "size": "0x0000012c"
           },
           {
-            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c",
             "section": ".text",
             "size": "0x0000005c"
           },
           {
-            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c",
             "section": ".text",
             "size": "0x0000006c"
           },
           {
-            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c",
             "section": ".text",
             "size": "0x00000020"
           },
           {
-            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c",
             "section": ".text",
             "size": "0x00000090"
           },
           {
-            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c",
             "section": ".text",
             "size": "0x0000002c"
           },
           {
-            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP7daPly_c",
             "section": ".text",
             "size": "0x000001b8"
           },
           {
-            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP7daPly_c",
             "section": ".text",
             "size": "0x00000064"
           },
           {
-            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c",
             "section": ".text",
             "size": "0x0000008c"
           },
@@ -3448,7 +3448,7 @@
             "size": "0x00000068"
           },
           {
-            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c",
             "section": ".text",
             "size": "0x00000054"
           },
@@ -3549,17 +3549,17 @@
           83
         ],
         "externalizedTextSymbols": [
-          "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+          "_ZN12daStarGate_c12St_Wait_MainEP7daPly_c",
           "_ZN12daStarGate_c13InitResourcesEv",
           "_ZN12daStarGate_c16CleanupResourcesEv",
           "_ZN12daStarGate_c16OnPendingDestroyEv",
-          "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
-          "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
-          "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
-          "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
-          "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
-          "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
-          "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+          "_ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c",
+          "_ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c",
+          "_ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c",
+          "_ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c",
+          "_ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c",
+          "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c",
+          "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c",
           "_ZN12daStarGate_c6RenderEv",
           "_ZN12daStarGate_c8BehaviorEv",
           "_ZN12daStarGate_cD0Ev",
@@ -3600,9 +3600,9 @@
           "$d",
           "$d",
           "$d",
-          "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
-          "_ZN12daStarGate_c11TryOpenDoorEP6Player",
-          "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+          "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c",
+          "_ZN12daStarGate_c11TryOpenDoorEP7daPly_c",
+          "_ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c",
           "_ZN12daStarGate_c26CalculateRelativePlayerPosEv"
         ],
         "liveSections": [

@@ -51,7 +51,7 @@ enum daObjSeesaw_c_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Sound.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 
@@ -124,7 +124,7 @@ int daObjSeesaw_c::GetActorWeight(dActor_c *other) {
     unsigned isPlayer = (unsigned)(other->actorID == ACTOR_PLAYER);
     if (isPlayer == 0)
         return scale;
-    if (((Player *)other)->mIsMega != 0)
+    if (((daPly_c *)other)->mIsMega != 0)
         scale = kMegaPoundScale;
     return scale;
 }

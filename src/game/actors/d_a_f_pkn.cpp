@@ -20,7 +20,7 @@
  * and RTTI.
  */
 /* leftovers:
- * - Player::Hurt / Bounce stay mangled. Each takes Fix12<int> by value
+ * - daPly_c::Hurt / Bounce stay mangled. Each takes Fix12<int> by value
  *   and the member spelling of those calls stops matching.
  * - CheckClsnHits, StateGrow and StateSpit keep their int locals and
  *   gotos. The direct spelling at each of those sites stops matching.
@@ -32,7 +32,7 @@
 #include "daFPkn_c.h"
 #include "daPkn_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
@@ -321,7 +321,7 @@ void daFPkn_c::CheckClsnHits()
         hitter = dActor_c::FindWithID(mdCcAc_c.otherOwner);
         if (hitter == 0)
             goto second;
-        ((Player *)hitter)->IncMegaKillCount();
+        ((daPly_c *)hitter)->IncMegaKillCount();
         func_02012694(SND_MEGA_KILL, &mCamSpacePos);
         goto second;
     }
@@ -332,19 +332,19 @@ void daFPkn_c::CheckClsnHits()
     cmp = (int)(hitter->actorID == ACTOR_PLAYER);
     if (cmp == 0)
         goto second;
-    if (((Player *)hitter)->mIsMetal != 0) {
+    if (((daPly_c *)hitter)->mIsMetal != 0) {
         Sound::PlayBank0(SND_HIT_S, mCamSpacePos);
         goto activate_path;
     }
     cmp = (int)(actorID == ACTOR_FIREPAKUN_S);
     if (cmp != 0) {
-        if (JumpedOnByPlayer(mdCcAc_c, *(Player *)hitter) != 0) {
+        if (JumpedOnByPlayer(mdCcAc_c, *(daPly_c *)hitter) != 0) {
             Sound::PlayBank0(SND_JUMPED_ON, mCamSpacePos);
-            ((Player *)hitter)->Bounce(0x28000);
+            ((daPly_c *)hitter)->Bounce(0x28000);
             goto activate_path;
         }
     }
-    if (((Player *)hitter)->mIsVanish != 0)
+    if (((daPly_c *)hitter)->mIsVanish != 0)
         goto second;
     cmp = (int)(actorID == ACTOR_FIREPAKUN);
     if (cmp != 0)
@@ -352,7 +352,7 @@ void daFPkn_c::CheckClsnHits()
     pos1.x = mPosX;
     pos1.y = mPosY;
     pos1.z = mPosZ;
-    ((Player *)hitter)->Hurt(pos1, 2, 0xc000, 1, 0, 1);
+    ((daPly_c *)hitter)->Hurt(pos1, 2, 0xc000, 1, 0, 1);
 
 second:
     otherId = mdCcAcPos_c.otherOwner;
@@ -368,7 +368,7 @@ second:
     hitBits = mdCcAcPos_c.hitFlags & HIT_DAMAGE;
     if (hitBits != 0) {
         if ((hitBits & HIT_MEGA_CHARACTER) != 0) {
-            ((Player *)hitter)->IncMegaKillCount();
+            ((daPly_c *)hitter)->IncMegaKillCount();
             func_02012694(SND_MEGA_KILL, &mCamSpacePos);
         } else {
             cmp = (int)(actorID == ACTOR_FIREPAKUN);
@@ -388,20 +388,20 @@ second:
         return;
     }
 
-    if (((Player *)hitter)->mIsMetal != 0)
+    if (((daPly_c *)hitter)->mIsMetal != 0)
         return;
-    if (((Player *)hitter)->mIsVanish != 0)
+    if (((daPly_c *)hitter)->mIsVanish != 0)
         return;
     pos2.x = mPosX;
     pos2.y = mPosY;
     pos2.z = mPosZ;
-    ((Player *)hitter)->Hurt(pos2, 2, 0xc000, 1, 0, 1);
+    ((daPly_c *)hitter)->Hurt(pos2, 2, 0xc000, 1, 0, 1);
 }
 
 // @symbol _ZN8daFPkn_c9StateGrowEv
 void daFPkn_c::StateGrow()
 {
-    Player *player;
+    daPly_c *player;
     Vector3 playerPos;
     short targetAngle;
     dActor_c *spawned;
@@ -452,7 +452,7 @@ void daFPkn_c::StateSpit()
     Vector3 pos;
     s16 targetAngle;
     int cmp;
-    Player *player;
+    daPly_c *player;
 
     if (ApproachLinear(mScale, mMaxScale, mScaleRate) == 0)
         goto cold;  /* the ROM places this branch last */
@@ -510,7 +510,7 @@ void daFPkn_c::StateWait()
     Vector3 coinPos;
     Vector3 coinPos2;
     daFPkn_c *leader;
-    Player *player;
+    daPly_c *player;
     int dist;
     int cmp;
 
@@ -828,8 +828,8 @@ s32 daFPkn_c::OnAimedAtWithEgg() {
     return reach;
 }
 
-// @symbol _ZN8daFPkn_c13OnTurnIntoEggER6Player
-void daFPkn_c::OnTurnIntoEgg(Player &player)
+// @symbol _ZN8daFPkn_c13OnTurnIntoEggER7daPly_c
+void daFPkn_c::OnTurnIntoEgg(daPly_c &player)
 {
     GivePlayerCoins(player, 1, 0);
     KillAndTrackInDeathTable();

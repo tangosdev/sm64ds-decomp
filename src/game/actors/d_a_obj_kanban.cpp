@@ -10,7 +10,7 @@
  *
  * What stays: Vec3_ApproachHorz / AngleDiff have no shared header.
  * What stays: func_ov002_020bec9c is still the linker name of the
- *   Player SetAnim wrapper owned by the Player TU. Naming belongs there.
+ *   daPly_c SetAnim wrapper owned by the daPly_c TU. Naming belongs there.
  * What stays: data_02082214 is the shared arm9 sine table.
  * What stays: the (s16)mMessageID / (u16 *)&mAngleY casts are
  *   load-bearing (sign-extends / zero-extends the halfword load).
@@ -21,7 +21,7 @@ enum daObjKanban_c_AssetId { ASSET_OBJ_KANBAN_BMD = 0x0474 };
 
 #include "daObjKanban_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
@@ -76,7 +76,7 @@ int daObjKanban_c::Render() {
 
 // @symbol _ZN13daObjKanban_c8BehaviorEv
 int daObjKanban_c::Behavior() {
-    Player *tgt = mTalkingPlayer;
+    daPly_c *tgt = mTalkingPlayer;
     Vector3 mine, pos, tpos;
 
     if (tgt != 0) {
@@ -150,8 +150,8 @@ int daObjKanban_c::Behavior() {
                     opos.y = pO[1];
                     opos.z = pO[2];
                     if (AngleDiff(Vec3_HorzAngle(&mPos, &opos), mAngleY) < 0x4000) {
-                        if (((Player *)other)->StartTalk(*this, 0))
-                            mTalkingPlayer = (Player *)other;
+                        if (((daPly_c *)other)->StartTalk(*this, 0))
+                            mTalkingPlayer = (daPly_c *)other;
                     }
                 }
             }

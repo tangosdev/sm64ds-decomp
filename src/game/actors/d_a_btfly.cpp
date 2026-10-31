@@ -29,8 +29,8 @@
  * - State7 mFlutterPhase: named += is 0x234 vs 0x258. The phase load is
  *   ldrsh plus a zero-extend shift (ldrh of the field is shorter), and the
  *   adds take the int-cast address, not add #0x300.
- * - State7 Player::Hurt: method form is 0x264 vs 0x258 (+0xc). Fix12<int>
- *   by value. Player.h does not declare Hurt.
+ * - State7 daPly_c::Hurt: method form is 0x264 vs 0x258 (+0xc). Fix12<int>
+ *   by value. daPly_c.h does not declare Hurt.
  * - State7 UpdateContinuous(): WRONG-DEST. ROM calls
  *   dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc).
  * - State7 func_02035638 is mClsnFlags & 0x10. No method; IsOnGround is
@@ -57,7 +57,7 @@ enum daBtfly_c_AssetId {
 #include "decl_common.h"
 #include "decl_Actor.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 
@@ -149,7 +149,7 @@ void daBtfly_c::State7()
 
     ApproachLinear(mHorzSpeed, 0x14000, 0x1000);
 
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (player != 0) {
         ApproachLinear(mPrevAngleY, HorzAngleToCPlayer(), 0x320);
         ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &player->mPos), 0x320);
@@ -182,7 +182,7 @@ void daBtfly_c::State7()
                 pos.x = mPosX;
                 pos.y = mPosY;
                 pos.z = mPosZ;
-                ((Player *)hit)->Hurt(pos, 2, 0xc000, 1, 0, 1);
+                ((daPly_c *)hit)->Hurt(pos, 2, 0xc000, 1, 0, 1);
             }
         }
     }
@@ -344,7 +344,7 @@ void daBtfly_c::State3()
 // @symbol _ZN9daBtfly_c6State2Ev
 void daBtfly_c::State2()
 {
-    Player *player;
+    daPly_c *player;
     Vector3 v;
     Vector3 d;
 
@@ -416,7 +416,7 @@ void daBtfly_c::State1()
     if (IsPlayerInRange(0x3e8) == 0)
         return;
     mState = 2;
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     mPrevAngleY = Vec3_HorzAngle(&mPosX, &p->mPosX);
 }
 

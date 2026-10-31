@@ -46,7 +46,7 @@ enum daMoray_c_AssetId {
 #include "PathPtr.h"
 #include "dExtFrameCtrl_c.h"
 #include "dExtSimpleModel_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "math/Approach.h"
 
 #pragma defer_codegen off
@@ -295,7 +295,7 @@ void daMoray_c::func_ov016_02111284()
     hv.x = this->mPosX;
     hv.y = this->mPosY;
     hv.z = this->mPosZ;
-    ((Player *)p)->Hurt(hv, 3, 0xc000, 1, 0, 1);
+    ((daPly_c *)p)->Hurt(hv, 3, 0xc000, 1, 0, 1);
 }
 
 /* Retreat execute. When the timer set by the retreat init runs out, stops,
@@ -478,7 +478,7 @@ int daMoray_c::func_ov016_02111994()
 // @symbol _ZN9daMoray_c19func_ov016_021119ecEv
 int daMoray_c::func_ov016_021119ec()
 {
-    Player *player;
+    daPly_c *player;
     Vector3 playerPos;
     Vector3 local;
     Vector3 world;
@@ -717,7 +717,7 @@ s32 daMoray_c::Behavior()
         star = FindWithID(starUniqueID);
         if (star != 0) {
             if (mVariant == 1) {
-                Player *player = ClosestPlayer();
+                daPly_c *player = ClosestPlayer();
                 if (player != 0 && Vec3_Dist(&mStarPos, &player->mPos) < 0xfa000) {
                     star->MarkForDestruction();
                     /* 0x40 releases the STAR; InitResources spawned it held (| 0x50). */

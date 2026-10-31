@@ -31,7 +31,7 @@ struct System {
  *   called by name.
  * - func_ov089_02131df4: one control arm (mState != 7) size 0x110 -> 0xe8
  *   (-0x28). The ROM has both copies.
- * - LoadKeyModels / UnloadKeyModels are C by necessity: daDoor_c, Player and the
+ * - LoadKeyModels / UnloadKeyModels are C by necessity: daDoor_c, daPly_c and the
  *   bosses call them by name.
  * - StateFlyToCenter / StateStarJump: the Fix12<int> calls (Particle::System::New,
  *   ApproachLinear, Sound::ChangeMusicVolume) go by symbol for the same reason
@@ -49,7 +49,7 @@ struct System {
  *   func_ov089_02131df4 are members under those addresses; the cartridge
  *   records no names for them.
  * - LoadKeyModels and UnloadKeyModels stay C. The first parameter is the
- *   kind, and daDoor_c, Player and the bosses call them by name.
+ *   kind, and daDoor_c, daPly_c and the bosses call them by name.
  * - func_ov002_020c3dbc stays a call into ov002.
  * - The Fix12<int>-by-value calls, the UpdateContinuous veneer, both
  *   control arms in func_ov089_02131df4, the u16* state timer, the s32*
@@ -73,7 +73,7 @@ enum daObjKey_c_AssetId {
 #include "common.h"
 #include "decl_common.h"
 #include "daObjKey_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dCamera_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
@@ -292,7 +292,7 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
 
 /* UnloadKeyModels, 0x021310cc */
 // @symbol UnloadKeyModels
-/* daDoor_c, Player and the bosses that drop a key call these two by name. */
+/* daDoor_c, daPly_c and the bosses that drop a key call these two by name. */
 extern "C" void UnloadKeyModels(int kind)
 {
     if (kind >= 8)
@@ -438,7 +438,7 @@ void daObjKey_c::StateFlyToCenter()
                 break;
             if ((mdCcAcPos_c.hitFlags & HIT_PLAYER) == 0)
                 break;
-            func_ov089_02131dcc((Player &)*found);
+            func_ov089_02131dcc((daPly_c &)*found);
             return;
         }
     }
@@ -483,7 +483,7 @@ void daObjKey_c::StateStarJump()
         {
             Vector3 *lookAt;
             Vector3 *pos;
-            Player *player;
+            daPly_c *player;
             s32 *playerPos;
             mFlags |= FLAG_CAM_TAKEOVER;
             data_0209b454 |= FLAG_CAM_TAKEOVER;
@@ -591,7 +591,7 @@ void daObjKey_c::StateStarJump()
                 return;
             if ((mdCcAcPos_c.hitFlags & HIT_PLAYER) == 0)
                 return;
-            func_ov089_02131df4((Player &)*found);
+            func_ov089_02131df4((daPly_c &)*found);
             mStep++;
             return;
         }
@@ -683,28 +683,28 @@ void daObjKey_c::StateDrop()
                 return;
             if ((mdCcAcPos_c.hitFlags & HIT_PLAYER) == 0)
                 return;
-            func_ov089_02131df4((Player &)*found);
+            func_ov089_02131df4((daPly_c &)*found);
             mStep++;
             return;
         }
     }
 }
 
-// @symbol _ZN10daObjKey_c19func_ov089_02131dccER6Player
+// @symbol _ZN10daObjKey_c19func_ov089_02131dccER7daPly_c
 /* Last-star path. Hands the collector to ov002 and removes the star. */
-void daObjKey_c::func_ov089_02131dcc(Player &player)
+void daObjKey_c::func_ov089_02131dcc(daPly_c &player)
 {
     func_ov002_020c3dbc(&player);
     Event::SetBit(EVENT_KEY);
     MarkForDestruction();
 }
 
-// @symbol _ZN10daObjKey_c19func_ov089_02131df4ER6Player
-void daObjKey_c::func_ov089_02131df4(Player &p)
+// @symbol _ZN10daObjKey_c19func_ov089_02131df4ER7daPly_c
+void daObjKey_c::func_ov089_02131df4(daPly_c &p)
 {
-    Player *player = &p;
+    daPly_c *player = &p;
 
-    /* Word 1, bit (2 << kind): already collected. 1 asks dScStage_c/dMeter/Player
+    /* Word 1, bit (2 << kind): already collected. 1 asks dScStage_c/dMeter/daPly_c
      * for the new-star fanfare; 0 suppresses it. Kind 7 takes neither arm.
      * One arm is shorter (0x110 -> 0xe8); the ROM has both. */
     if (data_0209caa0[1] & (2 << mState))
@@ -735,8 +735,8 @@ void daObjKey_c::func_ov089_02131df4(Player &p)
     }
 }
 
-// @symbol _ZN10daObjKey_c13OnTurnIntoEggER6Player
-void daObjKey_c::OnTurnIntoEgg(Player &player)
+// @symbol _ZN10daObjKey_c13OnTurnIntoEggER7daPly_c
+void daObjKey_c::OnTurnIntoEgg(daPly_c &player)
 {
     /* The flag keeps the ROM's moveq and movne pair. */
     unsigned isKey = (actorID == ACTOR_OBJ_KEY);
@@ -814,7 +814,7 @@ int daObjKey_c::Behavior()
 
     if (animID != 0) {
         if (animID == ANIM_CARRY) {
-            Player *player = mPlayer;
+            daPly_c *player = mPlayer;
             if (player != 0) {
                 /* Through a pointer: player->mPosX folds the offset into each load. */
                 s32 *pos = &player->mPosX;

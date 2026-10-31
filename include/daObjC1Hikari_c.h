@@ -19,7 +19,7 @@ struct daObjC1Hikari_c : dActor_c {
     u8 pad_0d0[4];                    /* 0x0d0 */
     dExtSimpleModel_c mModel;         /* 0x0d4 */
     dCcAcPos_c mCylinder;             /* 0x124 */
-    Player *mTalkPlayer;              /* 0x164 */
+    daPly_c *mTalkPlayer;              /* 0x164 */
     u16 mSoundTimers[2];              /* 0x168 */
 
     /* Inline so InitResources can own the vtable and emit retail's D1 then D0

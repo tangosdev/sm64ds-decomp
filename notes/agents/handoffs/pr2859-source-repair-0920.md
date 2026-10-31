@@ -16,7 +16,7 @@ source review and current-main composition acceptance remain pending.
 
 RNK-01/02 fix false production/provenance statements and remove 18 deleted-file
 references. RNK-03 gives all 16 non-destructor definitions unique symbol markers.
-RNK-04 corrects two word-sized coordinate fields and the Player pointer without
+RNK-04 corrects two word-sized coordinate fields and the daPly_c pointer without
 moving fields or changing the 0x3e0 class size. RNK-05 gives the TU and both Timer
 consumers the actual Timer class and call contracts; both consumer objects remain
 identical. RNK-07 fixes the s16 atan2 result together with the real short/short
@@ -26,7 +26,7 @@ were inventoried against actual definitions; return and scalar-width defects wer
 corrected and rebuilt.
 
 RNK-06 remains partial. Real Vector3, SharedFilePtr, native member-function-pointer
-dispatch, references, and real Player/actor/animation/collision methods replace
+dispatch, references, and real daPly_c/actor/animation/collision methods replace
 substantial scaffolding. Eleven address-named helpers still have raw field views;
 scalar fixed-point bridges and mixed external handle-data views remain. The
 experiment record distinguishes measured particle/scale nonmatches from invalid

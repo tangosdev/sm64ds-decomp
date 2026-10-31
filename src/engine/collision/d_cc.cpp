@@ -19,22 +19,20 @@
 #include "dActor_c.h"
 #include "nitro/fx/fx.h"
 #include "cstd.h"
+#include "math/CalcLib.h"
 
-struct Player;
+struct daPly_c;
 struct Arg;
 
 extern "C" {
 /* local extern: the collider-list head. decl_common.h's copy is `void*`; the
    real type is the node pointer every method here reads. */
 extern dCc_c *data_0209cee8;
-/* local extern: no header declares the C vector helpers; src/Vec3_HorzLen.cpp
-   defines it with this signature. */
-extern Fix12i Vec3_HorzLen(const Vector3 *v);
-/* local extern: no header declares it; the definition lives in Player.cpp
+/* local extern: no header declares it; the definition lives in d_a_ply_methods.cpp
    (extern "C", takes its collider param as its file-local `Arg` scaffold --
    arg->m2() is vtable slot 2, our GetPos, and it tests the flags word at
    +0x18). */
-int func_ov002_020caf98(struct Player *player, struct Arg *clsn);
+int func_ov002_020caf98(struct daPly_c *player, struct Arg *clsn);
 }
 
 // @symbol _ZN5dCc_cC2Ev
@@ -104,7 +102,7 @@ void dCc_c::Unlink() {
 /* Resolve a collider hit owner and notify it only when it is the player.
  * IsPlayer returns int: the ROM materialises the 0/1 before testing it, and a
  * bool predicate or a direct compare folds that away. self is a dCc_c; the
- * Player notifier reads it through its local Arg view (the flags word at
+ * daPly_c notifier reads it through its local Arg view (the flags word at
  * +0x18 and the m2() position). */
 #define PLAYER_ACTOR_ID 0xbf
 static inline int IsPlayer(dActor_c *actor) {
@@ -114,7 +112,7 @@ static inline int IsPlayer(dActor_c *actor) {
 extern "C" void func_02014f5c(dCc_c *self, u32 id) {
     dActor_c *player = dActor_c::FindWithID(id);
     if (player && IsPlayer(player))
-        func_ov002_020caf98((Player *)player, (Arg *)self);
+        func_ov002_020caf98((daPly_c *)player, (Arg *)self);
 }
 
 // @symbol func_02014f44

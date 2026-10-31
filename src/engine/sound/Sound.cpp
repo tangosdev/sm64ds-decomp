@@ -23,7 +23,7 @@
  *   sound handle raw; the table-side alloc/link/unlink/find sites use the
  *   typed SndRegTable view below.
  * - func_02013078 reads the player object raw (+0x706 flag byte, +0x60 word);
- *   Player.h is out of scope for this TU.
+ *   daPly_c.h is out of scope for this TU.
  */
 #include "types.h"
 #include "Sound.h"
@@ -946,7 +946,7 @@ extern "C" void DisableSoundPlayersForCredits(void)
     s32 zero;
     zero = 0;
     for (i = 0; i < 10; i++)
-        Sound::Player::SetPlayableSeqCount(data_0208e448[i].playerID, zero);
+        Sound::daPly_c::SetPlayableSeqCount(data_0208e448[i].playerID, zero);
 }
 
 // @symbol func_02011c8c
@@ -954,7 +954,7 @@ extern "C" void func_02011c8c(void)
 {
     u32 i;
     for (i = 0; i < 10; i++)
-        Sound::Player::SetPlayableSeqCount(data_0208e448[i].playerID, data_0208e448[i].maxSeq);
+        Sound::daPly_c::SetPlayableSeqCount(data_0208e448[i].playerID, data_0208e448[i].maxSeq);
 }
 
 // @symbol func_02011c54

@@ -63,7 +63,7 @@ Remaining compiler-testable Leftovers:
   illegal C++); billboard member/static func form (explicitly
   "unmeasured", linkage change alters symbol identity).
 - Spelling-only / untouched bytes: cam_tag + billboard pad_0d0, sld_mng
-  unk_0d0/pad_0d7; abuku Player::Heal (include choice, same mangling).
+  unk_0d0/pad_0d7; abuku daPly_c::Heal (include choice, same mangling).
 - Non-codegen rationale: warpkun SetRanges S13 half (decl placement);
   warpkun height-local (aliasing correctness); sound_obj
   SoundObjectCallbackOwner shadow (type naming); sound_obj PlaySub 6az

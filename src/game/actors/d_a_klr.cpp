@@ -9,7 +9,7 @@
  * rises for 90 frames before bursting. Behavior runs the state out of a
  * pointer-to-member table and resolves the cylinder's hit: a mega character
  * destroys it outright, a qualifying attack knocks it into state 1, and a
- * player who is not wearing the vanish cap (Player::mIsVanish) takes the
+ * player who is not wearing the vanish cap (daPly_c::mIsVanish) takes the
  * hit and does the same.
  *
  * daKlr_c_classInit is reconstructed (RTTI daKlr_c, KILLER registry).
@@ -29,7 +29,7 @@
 #include "daKlr_c.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "dBgPi.h"
 #include "dBgCh_Actr.h"
@@ -108,7 +108,7 @@ s32 daKlr_c::Behavior() {
     if (id != 0) {
         flags = mCylClsn.hitFlags;
         if (flags & 0x10) {
-            ((Player *)FindWithID(id))->IncMegaKillCount();
+            ((daPly_c *)FindWithID(id))->IncMegaKillCount();
             Particle::System::NewSimple(kBurstParticle, mPosX, mPosY, mPosZ);
             MarkForDestruction();
             func_02012694(0x78, &mCamSpacePos);
@@ -120,12 +120,12 @@ s32 daKlr_c::Behavior() {
             if (o != 0) {
                 int isPlayer = o->actorID == kPlayerActorID;
                 if (isPlayer) {
-                    if (!((Player *)o)->mIsVanish) {
+                    if (!((daPly_c *)o)->mIsVanish) {
                         Vector3 pos;
                         pos.x = mPosX;
                         pos.y = mPosY;
                         pos.z = mPosZ;
-                        ((Player *)o)->Hurt(pos, 3, 0xc000, 1, 0, 1);
+                        ((daPly_c *)o)->Hurt(pos, 3, 0xc000, 1, 0, 1);
                         mState = 1;
                         Sound::PlayBank0(0xb5, mCamSpacePos);
                     }

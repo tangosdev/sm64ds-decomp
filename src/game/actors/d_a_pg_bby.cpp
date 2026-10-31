@@ -11,7 +11,7 @@
  */
 #include "daPgBby_c.h"
 #include "SpawnInfo.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Actr.h"
@@ -72,8 +72,8 @@ extern "C" daPgBby_c *daPgBby_c_classInit()
     return new daPgBby_c();
 }
 
-// @symbol _ZN9daPgBby_c13OnTurnIntoEggER6Player
-void daPgBby_c::OnTurnIntoEgg(Player &player)
+// @symbol _ZN9daPgBby_c13OnTurnIntoEggER7daPly_c
+void daPgBby_c::OnTurnIntoEgg(daPly_c &player)
 {
     MarkForDestruction();
 }
@@ -188,7 +188,7 @@ int daPgBby_c::func_ov072_02121c94()
    walking away when it comes near and back when it wanders off. */
 int daPgBby_c::func_ov072_02121a84()
 {
-    Player *player;
+    daPly_c *player;
     int dist;
     short angle;
     int frame;
@@ -325,7 +325,7 @@ int daPgBby_c::func_ov072_021217ac()
             goto animate;
     }
     {
-        Player *carrier = mCarrier;
+        daPly_c *carrier = mCarrier;
         Vector3 from;
         int y = carrier->mPosY;
         int z = carrier->mPosZ;
@@ -461,7 +461,7 @@ int daPgBby_c::func_ov072_02121368()
 {
     Vector3 from;
     Vector3 *fromp;
-    Player *eater;
+    daPly_c *eater;
     s32 *posX;
     s32 *posY;
     s32 *posZ;
@@ -661,11 +661,11 @@ int daPgBby_c::func_ov072_02120f14()
    state 2 when the player grabs it. */
 int daPgBby_c::func_ov072_02120e50()
 {
-    Player *a;
+    daPly_c *a;
     int isType;
     int flag;
     if (mCylClsn.otherOwner == 0) return 0;
-    a = static_cast<Player *>(dActor_c::FindWithID(mCylClsn.otherOwner));
+    a = static_cast<daPly_c *>(dActor_c::FindWithID(mCylClsn.otherOwner));
     if (a == 0 || (isType = (a->actorID == 0xbf)) == 0) return 0;
     flag = ((mFlags & 0x20000) != 0);
     if (flag) {
@@ -682,7 +682,7 @@ int daPgBby_c::func_ov072_02120e50()
 /* A diving player nearby startles it into state 1. */
 void daPgBby_c::func_ov072_02120e20()
 {
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (player->IsDiving()) func_ov072_02121d50(1);
 }
 

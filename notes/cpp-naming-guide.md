@@ -8,7 +8,7 @@ The compiler (`mwccarm`) uses the standard Itanium C++ ABI for mangling symbols.
 
 *   `_Z` - Mangled name prefix. All C++ symbols start with this.
 *   `N...E` - Nested name sequence (used for classes/namespaces). The `N` begins the nesting, `E` ends it.
-*   **Length-Prefixed Names:** Identifiers are prefixed by their length in characters (e.g., `6Player` for `Player`).
+*   **Length-Prefixed Names:** Identifiers are prefixed by their length in characters (e.g., `6Player` for `daPly_c`).
 
 ### Type Codes (Arguments & Returns)
 *   `v` = `void`
@@ -36,7 +36,7 @@ The compiler (`mwccarm`) uses the standard Itanium C++ ABI for mangling symbols.
 *   `S_`, `S0_`, `S1_` = Substitutions (used to compress repeated types or names in the signature).
 
 ### Real Game Examples
-*   `_ZN6Player11St_Owl_MainEv` &rarr; `Player::St_Owl_Main(void)`
+*   `_ZN7daPly_c11St_Owl_MainEv` &rarr; `daPly_c::St_Owl_Main(void)`
 *   `_ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_` &rarr; `Actor::SetRanges(Fix12<int>, Fix12<int>, Fix12<int>, Fix12<int>)`
     *   *Note the `S1_` substituting the `Fix12<int>` type to save space.*
 *   `_Z14ApproachLinearR7Vector3RKS_5Fix12IiE` &rarr; `ApproachLinear(Vector3&, const Vector3&, Fix12<int>)`
@@ -162,7 +162,7 @@ The project provides Python tools to help you work with C++ names and symbols:
     make a guessed signature a checked condition.
     `python tools/mangle.py scratch.cpp --expect _ZN13OneUpMushroom8BehaviorEv`
 *   **Browse Classes:** Use the C++ indexer to find all known methods for a class.
-    `python tools/cpp_index.py --class Player`
+    `python tools/cpp_index.py --class daPly_c`
 *   **Rename Files:** If you deduce a function's real name and update the ledger, safely rename the source file and update its references (run dry-run first).
     `python tools/cpp_rename.py --dry-run`
 *   **Cross-Check:** You can also use standard `c++filt` from GNU binutils to demangle standard Itanium names.
@@ -171,7 +171,7 @@ The project provides Python tools to help you work with C++ names and symbols:
 
 When decompiling, you will frequently encounter these top classes. The number of matched methods (as of recent metrics) indicates how pervasive they are:
 
-*   **Player** (246 methods) - Extremely complex state machines (`St_*_Init`, `St_*_Main`).
+*   **daPly_c** (246 methods) - Extremely complex state machines (`St_*_Init`, `St_*_Main`).
 *   **Actor** (81 methods) - Base behaviors, spawning patterns.
 *   **dScStage_c** (44 methods)
 *   **Heap** (31 methods)

@@ -36,15 +36,15 @@ struct System {
  *   mWithMeshClsn.mRadius / mHeight. Inlining them drops the call.
  * - func_ov102_0214b53c keeps the volatile stack pins and reads the eating
  *   player (mEatingPlayer, not the carrier): mPos, mAngleX/Y/Z, the matrix at
- *   +0x5ec and the halfwords at +0x580/+0x582/+0x584, which Player.cpp fills
- *   from bone 15's rotX/rotY/rotZ. Those two slots are still pad on Player.
+ *   +0x5ec and the halfwords at +0x580/+0x582/+0x584, which d_a_ply_methods.cpp fills
+ *   from bone 15's rotX/rotY/rotZ. Those two slots are still pad on daPly_c.
  * - ov078/daBombking_c writes mHurtDamage and mDetonate by those names.
  */
 
 #include "common.h"
 #include "daBmb_c.h"
 #include "SpawnInfo.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
@@ -296,7 +296,7 @@ int daBmb_c::Behavior()
                 v[0] = -0x2000;
                 v[1] = 0;
                 v[2] = 0;
-                KillByInvincibleChar(*(Vector3_16 *)v, *(Player *)other, 0x32000);
+                KillByInvincibleChar(*(Vector3_16 *)v, *(daPly_c *)other, 0x32000);
                 UpdatePos(&mdCc_c);
                 UpdateWMClsn(mWithMeshClsn, 0);
                 mdCc_c.Clear();
@@ -449,7 +449,7 @@ void func_ov102_0214bf64(void *ov)
             ApproachLinear(o->mHorzSpeed, 0x10000, 0x1000);
             s16 target = Vec3_HorzAngle(&o->mPos, &o->mChasePlayer->mPos);
             if (o->mVariant == 3) {
-                /* Player::mGrabbedByActor: stop turning toward a held player. */
+                /* daPly_c::mGrabbedByActor: stop turning toward a held player. */
                 int b = (o->mChasePlayer->mGrabbedByActor != 0);
                 if (b)
                     target = o->mPrevAngleY;
@@ -478,7 +478,7 @@ void func_ov102_0214beb4(void *cv)
 
     self->mState = 1;
     self->mTurnCount += 1;
-    Player *o = self->mChasePlayer;
+    daPly_c *o = self->mChasePlayer;
     if (o == 0) {
         *(short *)&self->mTargetAngY =
             Vec3_HorzAngle((const Vector3 *)&self->mPosX, (const Vector3 *)&self->mHomePosX);
@@ -624,7 +624,7 @@ void func_ov102_0214bc20(char *c) {
 
     Quad a1 = data_ov102_0214e514;
     Quad a2 = data_ov102_0214e524;
-    Player *p = self->mCarrier;
+    daPly_c *p = self->mCarrier;
     int idx = 0;
     if (p != 0) {
         idx = p->param1;
@@ -746,7 +746,7 @@ void daBmb_c::State5()
 
 // @symbol _ZN7daBmb_c19func_ov102_0214b988Ev
 void daBmb_c::func_ov102_0214b988() {
-    Player *pl;
+    daPly_c *pl;
     struct Vector3 v;
 
     mChasePlayer = 0;
@@ -777,7 +777,7 @@ extern "C" {
 
 // @symbol func_ov102_0214b53c
 void func_ov102_0214b53c(char *c) {
-    extern void *func_ov002_020e496c(Player * c);
+    extern void *func_ov002_020e496c(daPly_c * c);
     extern void Math_Function_0203b14c(void *out, int a1, int a2, int a3, int a4);
     extern void Matrix4x3_FromRotationY(void *m, int angle);
     extern void MulMat4x3Mat4x3(void *a, void *b, void *out);
@@ -804,7 +804,7 @@ void func_ov102_0214b53c(char *c) {
         self->mAnmModel.mat4x3 = *((Matrix4x3 *)src);
     } else {
         int haveMtx = (int)((self->mFlags & 0x4000) != 0);
-        Player *player0;
+        daPly_c *player0;
         if (((haveMtx != 0) && ((player0 = self->mCarrier) != 0)) && (player0->mCarryMatrix != 0)) {
             char *ret = (char *)func_ov002_020e496c(player0);
             u8 idx = 0;
@@ -874,7 +874,7 @@ void func_ov102_0214b53c(char *c) {
             if (haveShadow != 0) {
                 char *obj = (char *)self->mEatingPlayer;
                 if (obj != 0) {
-                    char *pos = (char *)&((Player *)obj)->mPos;
+                    char *pos = (char *)&((daPly_c *)obj)->mPos;
                     int dx = *((int *)pos);
                     int gbase = (int)&data_020a0e68;
                     dead.x = dx;
@@ -896,7 +896,7 @@ void func_ov102_0214b53c(char *c) {
                         Vec3_LslInPlace((Vector3 *)pPos, 3);
                     }
                     char *p2 = (char *)self->mEatingPlayer;
-                    Player *eater = (Player *)p2;
+                    daPly_c *eater = (daPly_c *)p2;
                     u16 a8c = *((volatile u16 *)&eater->mAngleX); /* pin angle loads */
                     u16 a8e = *((volatile u16 *)&eater->mAngleY);
                     tmp[1] = a8e;
@@ -959,7 +959,7 @@ void func_ov102_0214b444(void *cv)
     {
         int b2 = (self->mFlags & 0x4000) != 0;
         if (b2) {
-            Player *p = self->mCarrier;
+            daPly_c *p = self->mCarrier;
             if (p != 0) {
                 if (*(int *)((char *)&p->mClipResult + 4) != 0)
                     v = p->mPosY;
@@ -995,7 +995,7 @@ void func_ov102_0214b3f0(void *c, int a1) {
     if (h > 4u) goto do_call;
     if (h != 0u) return;
 do_call:
-    self->mCarrier = (Player *)a1;
+    self->mCarrier = (daPly_c *)a1;
     func_ov102_0214bd20(c);
 }
 
@@ -1221,7 +1221,7 @@ void func_ov102_0214ae1c(void *cv) {
                 w.x = self->mPosX;
                 w.y = self->mPosY;
                 w.z = self->mPosZ;
-                ((Player *)a)->Hurt(*(Vector3 *)&w, self->mHurtDamage, 0xc000, 1, 0, 1);
+                ((daPly_c *)a)->Hurt(*(Vector3 *)&w, self->mHurtDamage, 0xc000, 1, 0, 1);
             }
         }
     }
@@ -1243,8 +1243,8 @@ void func_ov102_0214ae1c(void *cv) {
  * Vtable slot 19.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c13OnTurnIntoEggER6Player
-void daBmb_c::OnTurnIntoEgg(Player &player)
+// @symbol _ZN7daBmb_c13OnTurnIntoEggER7daPly_c
+void daBmb_c::OnTurnIntoEgg(daPly_c &player)
 {
     if (mCoinType == 1) {
         Sound::PlayBank3(0x11, mCamSpacePos);
@@ -1312,7 +1312,7 @@ extern "C" {
 int func_ov102_0214ab1c(void *selfv) {
 
     daBmb_c *self = (daBmb_c *)selfv;
-    Player *player;
+    daPly_c *player;
 
     int eatState = self->UpdateYoshiEat(self->mWithMeshClsn);
     if (eatState == 0) {

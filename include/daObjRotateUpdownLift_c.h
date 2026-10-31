@@ -91,7 +91,7 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
     /* Slot 27, dActor_c's combat-callback override (include/dActor_c.h).
        Attributed by the vtable: 0x02134cc8 -> 0x021310fc
        (config/arm9/overlays/ov091/relocs.txt). */
-    void OnHitByMegaChar(Player &player);   /* slot 27 */
+    void OnHitByMegaChar(daPly_c &player);   /* slot 27 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

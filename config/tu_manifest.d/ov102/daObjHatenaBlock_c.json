@@ -157,10 +157,10 @@
       "ordinal": 15
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN18daObjHatenaBlock_c15OnHitByMegaCharER7daPly_c",
       "address": "0x02149710",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN18daObjHatenaBlock_c15OnHitByMegaCharER6Player.cpp",
+      "legacy_source": "src/_ZN18daObjHatenaBlock_c15OnHitByMegaCharER7daPly_c.cpp",
       "ordinal": 16
     },
     {
@@ -2850,7 +2850,7 @@
       "source": "0x214e4c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
       "target_module": "main",
       "target_address": "0x2010154"
@@ -2980,7 +2980,7 @@
       "source": "0x214e4e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN18daObjHatenaBlock_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149710"

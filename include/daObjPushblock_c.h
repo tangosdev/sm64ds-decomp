@@ -20,7 +20,7 @@
 #include "dBgCh_Actr.h"
 
 struct dActor_c;
-struct Player;
+struct daPly_c;
 
 struct daObjPushblock_c : dBgActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x320 */
@@ -53,11 +53,11 @@ struct daObjPushblock_c : dBgActor_c {
        dActor_c's own methods but not here. */
     int OnPushed(dActor_c &other);         /* slot 25 */
 
-    /* Slot 27, dActor_c's own OnHitByMegaChar(Player&). Attributed the same way:
+    /* Slot 27, dActor_c's own OnHitByMegaChar(daPly_c&). Attributed the same way:
        _ZTV16daObjPushblock_c carries 0x020b8d14 at slot 27 -- vtable + 0x6c -- where
        _ZTV10dBgActor_c carries dActor_c's generic 0x02010124. Confirmed with
-       tools/mangle.py: _ZN16daObjPushblock_c15OnHitByMegaCharER6Player. */
-    void OnHitByMegaChar(Player &player);  /* slot 27 */
+       tools/mangle.py: _ZN16daObjPushblock_c15OnHitByMegaCharER7daPly_c. */
+    void OnHitByMegaChar(daPly_c &player);  /* slot 27 */
 
     /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). Attributed
        the same way: _ZTV16daObjPushblock_c carries 0x020b8c9c at slot 31 -- vtable +

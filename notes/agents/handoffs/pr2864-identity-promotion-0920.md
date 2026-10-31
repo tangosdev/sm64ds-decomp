@@ -49,7 +49,7 @@ not canonical C++ prototype agreement or proof that every native form must fail.
 Declaration reconciliation removes 172 retired or proven healed fingerprints,
 including 57 matrix diagnostics, and carries seven exact existing shard findings
 to the promoted path. Five independently reproduced unchanged-main fingerprints
-are separately grandfathered: three Player SetNoControlState return views and
+are separately grandfathered: three daPly_c SetNoControlState return views and
 two [ov090](../../../config/arm9/overlays/ov090/symbols.txt) resource views. They remain unresolved, plurality-based debt. All 3744
 unaffected symbol records preserve their original order and text; no whole-tree
 re-bank or scanner change is used. Four old matrix pointer views also remain.

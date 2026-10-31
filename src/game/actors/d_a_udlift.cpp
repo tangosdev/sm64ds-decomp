@@ -68,7 +68,7 @@ enum daUdlift_c_AssetId {
 
 #include "daUdlift_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "math/Approach.h"
 
@@ -144,18 +144,18 @@ extern "C" daUdlift_c *daUdlift_c_classInit_RC_RIFT02()
     return new daUdlift_c();
 }
 
-// @symbol _ZN10daUdlift_c15OnMeshClsnTouchEPvPS_P6Player
+// @symbol _ZN10daUdlift_c15OnMeshClsnTouchEPvPS_P7daPly_c
 /* The mesh collider's touch callback is (collider, owner, other); the lift
  * only needs the back two, so this veneer drops the first argument. Its
  * address is stored at dBgW+0x1c, so it is a static member. */
-void daUdlift_c::OnMeshClsnTouch(void *collider, daUdlift_c *self, Player *player) {
+void daUdlift_c::OnMeshClsnTouch(void *collider, daUdlift_c *self, daPly_c *player) {
     self->LatchRider(player);
 }
 
-// @symbol _ZN10daUdlift_c10LatchRiderEP6Player
+// @symbol _ZN10daUdlift_c10LatchRiderEP7daPly_c
 /* If the touching actor is the player (0xbf), hold it as mRider and mark
  * the lift ridden this frame. */
-void daUdlift_c::LatchRider(Player *player) {
+void daUdlift_c::LatchRider(daPly_c *player) {
     int isPlayer = (int)(player->actorID == 0xbf);
     if (isPlayer) {
         mRider = player;
@@ -260,7 +260,7 @@ int daUdlift_c::CleanupResources()
  * middle last frame, and travels there if not. */
 void daUdlift_c::StateWait()
 {
-    Player *player;
+    daPly_c *player;
     int middleY;
 
     if (mIsAtBottom == 0) {

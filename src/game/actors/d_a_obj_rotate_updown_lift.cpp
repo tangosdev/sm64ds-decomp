@@ -49,7 +49,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 #pragma defer_codegen off
 
 #include "daObjRotateUpdownLift_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -216,10 +216,10 @@ void daObjRotateUpdownLift_c::Kill()
 }
 
 // 0x021310fc (0x64)
-// @symbol _ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER6Player
+// @symbol _ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER7daPly_c
 /* HS_UPDOWN_LIFT ignores the hit. The others count it, play 0x1e, and
    snap yaw back to the previous angle. */
-void daObjRotateUpdownLift_c::OnHitByMegaChar(Player &player)
+void daObjRotateUpdownLift_c::OnHitByMegaChar(daPly_c &player)
 {
     unsigned short id = actorID;
     int isHs = (id == 0x1e);

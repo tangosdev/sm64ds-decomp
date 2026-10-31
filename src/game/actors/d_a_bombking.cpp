@@ -38,7 +38,7 @@
 #include "dBgCh_Gnd.h"
 #include "decl_common.h"
 #include "decl_Message.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dCamera_c.h"
 #include "Message.h"
 #include "nitro/fx/fx.h"
@@ -51,7 +51,7 @@ s16 atan2(s32, s32);
 
 /* Remaining reconstruction views. Reconciled by hand against include/: every type
  * the real headers already define (Vector3, Matrix4x3, Fix12<int>, u8/u16/s16,
- * dActor_c, fBase_c, Player, BMD_File, dExtBlendAnmModel_c) was DROPPED here -- the
+ * dActor_c, fBase_c, daPly_c, BMD_File, dExtBlendAnmModel_c) was DROPPED here -- the
  * generated preamble redefined all of them. The shapes below are surviving
  * views from the legacy shards, not evidence of original local classes. */
 
@@ -120,7 +120,7 @@ BombkingAnimFile gBombkingWalk2AnimationFile(ASSET_BOMBKING_WALK2_BCA);
 BombkingAnimFile gBombkingStartAnimationFile(ASSET_BOMBKING_START_BCA);
 
 /* Carry offsets for the held player: func_ov078_02125f8c uses the second
- * when Player::param1 is 2. */
+ * when daPly_c::param1 is 2. */
 Vector3 data_ov078_0212711c[2] = {
     Vector3(0x2c000, -0x19000, 0x34000),
     Vector3(0x44000, -0x19000, 0x34000),
@@ -202,7 +202,7 @@ extern void func_0200fa8c(void *c, int a);
 extern void func_ov102_0214b384(void* a, int b);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int Vec3_HorzLen(void* v);
-extern int func_ov002_020db5f4(Player *c, dActor_c *arg);
+extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern void func_0200d8c8(void* cam, void* v, int strength);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
@@ -323,7 +323,7 @@ int daBombking_c::func_ov078_02123aa0()
 {
     short ang = Vec3_HorzAngle(&this->mPosX, &this->mHomePosX);
     if (func_ov078_02123804() == 1) return 1;
-    Player *p = this->ClosestPlayer();
+    daPly_c *p = this->ClosestPlayer();
     if (p != 0) {
         struct Vec3 v = *(struct Vec3 *)&p->mPosX;
         if (Vec3_Dist(&this->mArenaPosX, &v) < 0x640000) {
@@ -547,7 +547,7 @@ int daBombking_c::func_ov078_021240a0() {
             ApproachAngle(&k->mPrevAngleY, k->HorzAngleToCPlayer(), 5, 0x1000, 0x200);
             k->mAngleY = k->mPrevAngleY;
             if (AngleDiff(k->HorzAngleToCPlayer(), k->mAngleY) < 0x1000) {
-                Player *pl = k->mTalkingPlayer;
+                daPly_c *pl = k->mTalkingPlayer;
                 if (pl->StartTalk(*(fBase_c *)c, 1) != 0) {
                     msg = 0;
                     if (data_0209f220[0] == 1) {
@@ -602,7 +602,7 @@ int daBombking_c::func_ov078_021240a0() {
         if (k->mVertSpeed < 0) {
             unsigned int id = k->mdCcAcPos_c.otherOwner;
             if (id != 0) {
-                Player *a = static_cast<Player *>(dActor_c::FindWithID(id));
+                daPly_c *a = static_cast<daPly_c *>(dActor_c::FindWithID(id));
                 if (a != 0) {
                     int b = (int)(a->actorID == 0xbf);
                     if (b != 0) {
@@ -682,7 +682,7 @@ int daBombking_c::func_ov078_02124520()
     Vector3 tmp;
     Vector3 dust;
     dCamera_c *cam;
-    Player *player;
+    daPly_c *player;
     int *pp;
     s16 ang;
 
@@ -812,7 +812,7 @@ int daBombking_c::func_ov078_021247bc()
     }
 
     if (this->mWithMeshClsn.IsOnGround() != 0) {
-        Player *pl = this->ClosestPlayer();
+        daPly_c *pl = this->ClosestPlayer();
         if (pl != 0) {
             *(struct M3 *)&D = *(struct M3 *)&pl->mPosX;
             if (Vec3_Dist(&this->mArenaPosX, &D) > 0x640000 ||
@@ -841,7 +841,7 @@ int daBombking_c::func_ov078_021247bc()
         }
 
         if (((dExtFrameCtrl_c *)&this->mBlendAnmModel)->Finished() != 0) {
-            Player *pl2 = this->mTalkingPlayer;
+            daPly_c *pl2 = this->mTalkingPlayer;
             unsigned short m;
             E.x = this->mPosX;
             E.y = this->mPosY;
@@ -949,7 +949,7 @@ int daBombking_c::func_ov078_02124cf4()
         KingBobOmb_SetState(&data_ov078_021270ec);
         goto done;
     }
-    Player *other = this->mTalkingPlayer;
+    daPly_c *other = this->mTalkingPlayer;
     if (other == 0) goto done;
     if ((unsigned short)(other->mStateFlags & 0x800) != 0) goto done;
     if (other->StartTalk(*(fBase_c *)this, 1) == 0) goto done;
@@ -1006,7 +1006,7 @@ int daBombking_c::func_ov078_02124f28()
     }
 
     {
-        Player *obj = this->mHeldActor;
+        daPly_c *obj = this->mHeldActor;
         if (obj == 0) {
             KingBobOmb_SetState(&data_ov078_0212708c);
             return 1;
@@ -1048,7 +1048,7 @@ flags:
         this->mdCcAcPos_c.flags &= ~2;
         KingBobOmb_SetState(&data_ov078_0212708c);
         {
-            Player *p = this->mHeldActor;
+            daPly_c *p = this->mHeldActor;
             if (p != 0) {
                 if (p->param1 == 2) {
                     this->mVertSpeed = 0x32000;
@@ -1083,7 +1083,7 @@ int daBombking_c::func_ov078_021250f8()
 {
     struct Vector3 in, out, v[2];
     dActor_c *target;
-    Player *player;
+    daPly_c *player;
 
     if (func_ov078_02123804() == 1) {
         func_ov078_02123864();
@@ -1191,7 +1191,7 @@ int daBombking_c::func_ov078_02125350()
 
 int daBombking_c::func_ov078_02125448()
 {
-    Player *p;
+    daPly_c *p;
     dActor_c *a;
     int isType;
     int index;
@@ -1233,7 +1233,7 @@ int daBombking_c::func_ov078_02125448()
             if (a != 0) {
                 isType = (int)(a->actorID == 0xbf);
                 if (isType != 0) {
-                    Player *player = static_cast<Player *>(a);
+                    daPly_c *player = static_cast<daPly_c *>(a);
                     if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) > 0x2800) {
                         if ((this->mdCcAcPos_c2.hitFlags & 0x1000) != 0) {
                             this->mFlags |= 0x80;
@@ -1361,7 +1361,7 @@ int daBombking_c::func_ov078_021258e4()
 // @symbol _ZN12daBombking_c19func_ov078_02125950Ev
 int daBombking_c::func_ov078_02125950()
 {
-    Player *target = this->mTalkingPlayer;
+    daPly_c *target = this->mTalkingPlayer;
     int *src = &target->mPosX;
     Vector3 v;
     int t = src[0];
@@ -1397,7 +1397,7 @@ int daBombking_c::func_ov078_021259ec()
     int dist;
     struct Vector3 ppos;
     struct Vector3 v;
-    Player *player;
+    daPly_c *player;
     unsigned int b;
 
     if (this->mMusicLayer3 == 1) {
@@ -1496,7 +1496,7 @@ void daBombking_c::func_ov078_02125c98() {
   }
   int b = (this->mFlags & 0x4000) != 0;
   if (b) {
-    Player *p = this->mHeldActor;
+    daPly_c *p = this->mHeldActor;
     if (p != 0)
       h = p->mPosY;
   }
@@ -1566,7 +1566,7 @@ void daBombking_c::func_ov078_02125de0()
 
 
 void daBombking_c::func_ov078_02125f8c(){
-    Player *player = mHeldActor;
+    daPly_c *player = mHeldActor;
     int idx = 0;
     if (player == 0) return;
     if (player->param1 == 2) idx = 1;

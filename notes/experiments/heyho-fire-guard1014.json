@@ -16,10 +16,10 @@
     "src/actors/daPropeller_Heyho_Fire_c.cpp",
     "notes/experiments/heyho-fire-guard1014.json"
   ],
-  "change": "Keep FindWithID result as dActor_c until actorID 0xbf establishes the Player boundary, then use Player. Match the local Hurt scalar bridge to its current reconstructed int/Player*/void*/u32/int/u8/u8/u8 definition and document the Fix12 exception. Correct inherited prose to call address-derived helpers current configured linker names.",
+  "change": "Keep FindWithID result as dActor_c until actorID 0xbf establishes the daPly_c boundary, then use daPly_c. Match the local Hurt scalar bridge to its current reconstructed int/daPly_c*/void*/u32/int/u8/u8/u8 definition and document the Fix12 exception. Correct inherited prose to call address-derived helpers current configured linker names.",
   "source_completion": "partial",
   "evidence_classification": {
-    "guard": "Retail arm9 spawn table 0x02090864 slot191 points to ov002 profile0x0210a704 (factory0x020e6c0c, packed0x001200bf); registry name at0x0208f858 is PLAYER. Player is the existing source view, not a recovered original class-name claim.",
+    "guard": "Retail arm9 spawn table 0x02090864 slot191 points to ov002 profile0x0210a704 (factory0x020e6c0c, packed0x001200bf); registry name at0x0208f858 is PLAYER. daPly_c is the existing source view, not a recovered original class-name claim.",
     "arity": "Helper remains void with one receiver parameter; Hurt retains seven ABI arguments and its result remains discarded. int and trailing u8 spellings follow the actual reconstructed definition, not a unique deduction from mangling.",
     "fields": "Existing fields were already named; no shadow-field cleanup or new class layout is claimed.",
     "boundaries": "No header, config, manifest, name, enrollment or production-policy changes."
@@ -48,7 +48,7 @@
       "location": "src/actors/daPropeller_Heyho_Fire_c.cpp:82",
       "kind": "reconstruction",
       "disposition": "deferred",
-      "summary": "Hurt retains an explicitly justified scalar bridge because Player.h supplies no corresponding member and the retail symbol contains a by-value Fix12 type. The bridge now agrees with the current reconstructed definition; the jjj mangling does not uniquely prove u8 source parameters.",
+      "summary": "Hurt retains an explicitly justified scalar bridge because daPly_c.h supplies no corresponding member and the retail symbol contains a by-value Fix12 type. The bridge now agrees with the current reconstructed definition; the jjj mangling does not uniquely prove u8 source parameters.",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3844",
       "owner": "class coordinator; future explicitly claimed producer"
     },
@@ -261,14 +261,14 @@
     "files": 3298,
     "hurt_declarations": 49,
     "definition": {
-      "file": "src/actors/Player.cpp",
+      "file": "src/actors/daPly_c.cpp",
       "line": 18941,
-      "signature": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+      "signature": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
     },
     "candidate": {
       "file": "src/actors/daPropeller_Heyho_Fire_c.cpp",
       "line": 84,
-      "signature": "int (Player *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
+      "signature": "int (daPly_c *, void *, unsigned int, int, unsigned char, unsigned char, unsigned char)"
     },
     "candidate_agrees": true,
     "remaining_hurt_findings_elsewhere": 151,

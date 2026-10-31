@@ -131,7 +131,7 @@ enum daObjMarioCap_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "daObjMarioCap_c.h"
 #include "decl_common.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "SaveData.h"
 #include "Sound.h"
@@ -668,8 +668,8 @@ s32 daObjMarioCap_c::OnYoshiTryEat() {
  * (SetNoControlState(8) then SetNewHatCharacter, but with 1 where the touch
  * passes 0 as the second argument) and starts the 0x8012 animation, then binds
  * the cap to that player and enters the taken state. */
-// @symbol _ZN15daObjMarioCap_c13OnTurnIntoEggER6Player
-void daObjMarioCap_c::OnTurnIntoEgg(Player &player)
+// @symbol _ZN15daObjMarioCap_c13OnTurnIntoEggER7daPly_c
+void daObjMarioCap_c::OnTurnIntoEgg(daPly_c &player)
 {
     if (player.SetNoControlState(8, -1, 0) == 1) {
         player.SetNewHatCharacter(mModelIndex & 0xff, 1, 0);
@@ -1099,7 +1099,7 @@ int daObjMarioCap_c::InitTaken()
     {
         unsigned b = (data_0209f2d8[0] == 1);
         if (b == 0) {
-            Player *p = mPlayer;
+            daPly_c *p = mPlayer;
             if (p->mCharacter == 3) {
                 if (mModelIndex == (int)p->param1) {
                     struct Vector3 v;
@@ -1125,11 +1125,11 @@ int daObjMarioCap_c::InitTaken()
 /* df54's per-frame function: the taken state. Removes the cap when the
  * timer set by the enter function runs out; binds the nearest player if there
  * is none yet. Otherwise it copies the player's angles and position every
- * frame. mTakenStep 1: once Player::SetNoControlState(0xf) succeeds, hands
+ * frame. mTakenStep 1: once daPly_c::SetNoControlState(0xf) succeeds, hands
  * the hat over (SetNewHatCharacter), plays the animation data_ov002_0210de38
  * and moves to step 2; step 2: removes the cap when that animation has
  * finished. With mTakenStep 0: plays data_ov002_0210de30 when
- * Player::Unk_020c9e5c(8) says 1, and when it has finished removes the cap,
+ * daPly_c::Unk_020c9e5c(8) says 1, and when it has finished removes the cap,
  * first spawning a new OBJ_MARIO_CAP at mHomePos if mType is 4. Returns 1. */
 // @symbol _ZN15daObjMarioCap_c5TakenEv
 int daObjMarioCap_c::Taken() {
@@ -1219,7 +1219,7 @@ int daObjMarioCap_c::InitAnim()
 
     state = mType;
     if (state == 0xa || state == 0xf) {
-        Player* closest = ClosestPlayer();
+        daPly_c* closest = ClosestPlayer();
         if (closest != 0) {
             s16* src = &closest->mAngleX;
             mPrevAngleX = src[0];
@@ -1324,14 +1324,14 @@ int daObjMarioCap_c::Dormant()
 
 /* The touch check shared by the states that let the player pick the cap up.
  * If the cap is against a wall, reflects mPrevAngleY off the wall normal.
- * Then it proceeds only if the collider's other owner is a Player (actor ID
+ * Then it proceeds only if the collider's other owner is a daPly_c (actor ID
  * kActorPlayer), hitFlags bit 0x8000 is clear, the player is not collecting
  * a cap, and it is not a player with param1 3 that has an object in its
  * mouth. Types 6/7 then turn that player into vanish-Luigi and types 8/9
  * into metal-Wario, removing the cap; with an override matrix set, any other
  * nonzero type is ignored; if the save says the cap was lost, the cap goes
  * to the taken state with mTakenStep 1; otherwise, once
- * Player::SetNoControlState(8) succeeds, it hands over the hat
+ * daPly_c::SetNoControlState(8) succeeds, it hands over the hat
  * (SetNewHatCharacter(mModelIndex)), copies the player's angles and enters
  * the taken state. */
 // @symbol _ZN15daObjMarioCap_c10CheckTouchEv
@@ -1349,7 +1349,7 @@ void daObjMarioCap_c::CheckTouch()
 
     if (mdCcAc_c.otherOwner == 0) return;
 
-    mPlayer = (Player *)dActor_c::FindWithID(mdCcAc_c.otherOwner);
+    mPlayer = (daPly_c *)dActor_c::FindWithID(mdCcAc_c.otherOwner);
     if (mPlayer == 0) return;
 
     {
@@ -1393,7 +1393,7 @@ void daObjMarioCap_c::CheckTouch()
 
     {
         /* `a = b ? a : a` through a V16 is the MATCH form. */
-        Player* found = mPlayer;
+        daPly_c* found = mPlayer;
         int a = *(u16*)&found->mAngleX;
         int b = *(u16*)&found->mAngleY;
         a = b ? a : a;

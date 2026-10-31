@@ -82,7 +82,7 @@ ratchet and the committed scoped declaration check pass. The ledger-only
 successor changes no compiler, header, source, manifest, symbol or enrollment input.
 
 The earlier uncommitted-merge declaration check selected the old ancestry scope
-and reported ten Player caller discrepancies. The actual committed composition
+and reported ten daPly_c caller discrepancies. The actual committed composition
 selects three files and passes; none of those ten entries is added to the ledger.
 The narrower CI promotion-flag audit is checked separately from the known-stale
 full queue audit. Independent Source acceptance and its follow-up issue remain

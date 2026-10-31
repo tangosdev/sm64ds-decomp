@@ -21,7 +21,7 @@
   },
   "changes": [
     "Both matrix helpers compile as C++ after deleting four C-mode pragmas. Existing free C-linkage symbols are preserved.",
-    "Use Player::IsFrontSliding, Player::LostGrabbedObject and the native short-reference ApproachLinear overload; remove three obsolete local mangled declarations. Both Talk call sites are updated as well.",
+    "Use daPly_c::IsFrontSliding, daPly_c::LostGrabbedObject and the native short-reference ApproachLinear overload; remove three obsolete local mangled declarations. Both Talk call sites are updated as well.",
     "Retain the measured twelve-word array copy view for block copies. Correct stale source and header comments; header tokens outside comments are identical.",
     "Refresh twelve existing manifest compiler-local input names; canonical identities and all other production policies remain unchanged."
   ],

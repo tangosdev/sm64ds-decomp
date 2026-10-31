@@ -4,12 +4,12 @@
  * address first); do not reorder.
  *
  * What the actor does, as far as these functions show: it wanders around the
- * spot it spawned at; when the Player comes within 1000 units of that spot (and
+ * spot it spawned at; when the daPly_c comes within 1000 units of that spot (and
  * is not Metal or Mega and GetHurtState() is negative) it chases; when its
- * sensor touches the Player it enters the Grab state, which launches them
- * (func_ov002_020db674 sets the Player's heading, horizontal speed 0x28000 and
- * vertical speed 0x70000, then calls Player::ChangeState with
- * data_ov002_02110094, which symbols/verified.tsv names _ZN6Player7ST_HURTE).
+ * sensor touches the daPly_c it enters the Grab state, which launches them
+ * (func_ov002_020db674 sets the daPly_c's heading, horizontal speed 0x28000 and
+ * vertical speed 0x70000, then calls daPly_c::ChangeState with
+ * data_ov002_02110094, which symbols/verified.tsv names _ZN7daPly_c7ST_HURTE).
  * It is driven by a five-record state table of {enter, update} PMF pairs on
  * this class, described with the fields in include/daPopoi_c.h; the state names
  * there and in the comments below say what the handlers do, they are not
@@ -53,7 +53,7 @@ enum daPopoi_c_AssetId {
 #include "types.h"
 #include "daPopoi_c.h"
 #include "dExtSimpleModel_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "SurfaceInfo.h"
 #include "dBgCh_Lin.h"
@@ -127,13 +127,13 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 }
 
-/* Actor ID daPopoi_ACTOR_PLAYER (0xbf) is the Player. These int-returning
+/* Actor ID daPopoi_ACTOR_PLAYER (0xbf) is the daPly_c. These int-returning
  * predicates are what make the ROM materialize 0/1 before testing it. */
 static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == daPopoi_ACTOR_PLAYER;
 }
 
-static inline int IsNoControl(Player *player) {
+static inline int IsNoControl(daPly_c *player) {
     return player->mIsNoControl != 0;
 }
 
@@ -198,7 +198,7 @@ struct daPopoi_StateRecord { int (daPopoi_c::*enter)(); int (daPopoi_c::*update)
  * spawn position and the frame ends. Otherwise: count down mStateTimer and
  * mCooldown, run the current state's update handler, UpdatePos with the sensor
  * (mdCcAcPos_c), measure the slope under the feet, undo the step if it would go
- * off a ledge or onto steep ground, refresh the model matrix, look for a Player to
+ * off a ledge or onto steep ground, refresh the model matrix, look for a daPly_c to
  * grab (unless already in Grab), then refresh both collision objects and step the
  * animation. */
 int daPopoi_c::Behavior()
@@ -254,7 +254,7 @@ int daPopoi_c::Behavior()
     func_ov077_02126dac();
 
     /* On the ground and not already in Grab (data_ov077_02127cd8): see whether the
-     * sensor is touching a Player to grab. */
+     * sensor is touching a daPly_c to grab. */
     if (mWithMeshClsn.IsOnGround() && mState != (daPopoi_StateRecord *)data_ov077_02127cd8) {
         func_ov077_02126528();
     }
@@ -370,14 +370,14 @@ int daPopoi_c::func_ov077_02126cd4(){
  *     (raw fixed point, so it tapers from 1.0 over the last 99 frames);
  *   - mStateTimer == 0 -> Pause (data_ov077_02127cf8), return;
  *   - mCooldown nonzero -> return;
- *   - otherwise take the nearest Player; if that Player is within 1000 units
+ *   - otherwise take the nearest daPly_c; if that daPly_c is within 1000 units
  *     (0x3e8000) of the HOME position (not of the actor), is not Metal or Mega,
  *     and GetHurtState() is negative -> Chase (data_ov077_02127d08).
  * Always returns 1. */
 int daPopoi_c::func_ov077_02126ad0()
 {
     int dist;
-    Player* player;
+    daPly_c* player;
     struct Vector3 pp;
 
     dist = Vec3_Dist(&mPosX, &mHomePosX);
@@ -497,7 +497,7 @@ int daPopoi_c::func_ov077_02126930(){
  *   - distance from the actor to its home position;
  *   - the ahead probe firing -> TurnAway, return;
  *   - against a wall -> position restored from mSavedPos;
- *   - nearest Player (if any): the target heading becomes the direction to them;
+ *   - nearest daPly_c (if any): the target heading becomes the direction to them;
  *   - the heading is stepped toward mTargetAngleY by mTurnRate, and mTurnRate is
  *     itself stepped toward 0x600 (8.4 degrees) by 0x100 -- so the turn tightens
  *     over the first few frames of a chase;
@@ -513,7 +513,7 @@ int daPopoi_c::func_ov077_0212679c()
     struct Vector3 pv;
     struct Vector3 *pp;
     int dist;
-    Player *p;
+    daPly_c *p;
     unsigned short spd;
 
     dist = Vec3_Dist((void *)&mPosX, (void *)&mHomePosX);
@@ -571,27 +571,27 @@ int daPopoi_c::func_ov077_02126758(){
  * d_a_tgz.cpp), so it is daPopoi_c's.
  * While mCaughtPlayer is set: re-seat the
  * sensor (mdCcAcPos_c) at the (0, 0, 44 units) offset data_ov077_02127a5c; then,
- * if the sensor's otherOwner names an actor, and that actor is the caught Player, and
- * the Player is not Metal, not Mega, not mIsNoControl and has a negative
+ * if the sensor's otherOwner names an actor, and that actor is the caught daPly_c, and
+ * the daPly_c is not Metal, not Mega, not mIsNoControl and has a negative
  * GetHurtState(), launch them with func_ov002_020db674 (horizontal speed 0x28000 = 40
  * units/frame, vertical speed 0x70000 = 112 units/frame, heading argument mAngleY +
- * 0x8000; the callee stores that argument as the Player's mPrevAngleY and the argument
- * + 0x8000 as the Player's mAngleY, so the Player ends up facing this actor's heading,
- * and puts the Player in ST_HURT). If that call returns nonzero, mCaughtPlayer = 0 and
+ * 0x8000; the callee stores that argument as the daPly_c's mPrevAngleY and the argument
+ * + 0x8000 as the daPly_c's mAngleY, so the daPly_c ends up facing this actor's heading,
+ * and puts the daPly_c in ST_HURT). If that call returns nonzero, mCaughtPlayer = 0 and
  * daPopoi_SND_THROW_PLAYER plays at the actor's position.
  * Whether or not anything was caught, once the animation has Finished the state goes
  * to Pause (data_ov077_02127cf8). Returns 1. */
 int daPopoi_c::func_ov077_02126640()
 {
     Vector3 v;
-    Player *a;
+    daPly_c *a;
     if (mCaughtPlayer != 0) {
         v.x = data_ov077_02127a5c.x;
         v.y = data_ov077_02127a5c.y;
         v.z = data_ov077_02127a5c.z;
         mdCcAcPos_c.SetPosRelativeToActor(v);
         if (mdCcAcPos_c.otherOwner != 0) {
-            a = (Player *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+            a = (daPly_c *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
             if (a != 0) {
                 if (a == mCaughtPlayer) {
                     if (a->mIsMetal == 0) {
@@ -617,23 +617,23 @@ int daPopoi_c::func_ov077_02126640()
     return 1;
 }
 
-/* Looks for a Player to grab; called from Behavior while on the ground and not
+/* Looks for a daPly_c to grab; called from Behavior while on the ground and not
  * already in Grab. Re-seats the sensor (mdCcAcPos_c) at the (0, 0, 44 units) offset
  * data_ov077_02127a5c, then returns without doing anything unless: the sensor's
  * otherOwner is nonzero and names a live actor; that actor's actorID is PLAYER; it is
  * not Metal and not Mega; mIsNoControl is zero; GetHurtState() is negative; and
- * IsCollectingCap() is zero. If every test passes, mCaughtPlayer = that Player and
+ * IsCollectingCap() is zero. If every test passes, mCaughtPlayer = that daPly_c and
  * the Grab state (data_ov077_02127cd8) is installed. */
 void daPopoi_c::func_ov077_02126528()
 {
     Vector3 v;
-    Player *a;
+    daPly_c *a;
     v.x = data_ov077_02127a5c.x;
     v.y = data_ov077_02127a5c.y;
     v.z = data_ov077_02127a5c.z;
     mdCcAcPos_c.SetPosRelativeToActor(v);
     if (mdCcAcPos_c.otherOwner == 0) return;
-    a = (Player *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+    a = (daPly_c *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
     if (a == 0) return;
     if (!IsPlayerActor(a))
         return;

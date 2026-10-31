@@ -5,7 +5,7 @@
 #include "dCcPos_c.h"
 #include "math/Matrix.h"
 
-struct Player;
+struct daPly_c;
 
 /* One collision-bearing breath particle. The constructor/destructor calls in
  * the ROM prove composition, not inheritance: dCcPos_c lives at offset zero,
@@ -36,7 +36,7 @@ struct SnowmanBreathParticle {
     void UpdatePosition();
     void Render();
     void Behavior();
-    int TrySpawn(Player &player);
+    int TrySpawn(daPly_c &player);
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -64,7 +64,7 @@ struct daSnmBth_c : dActor_c {
        `defer_codegen off`; the cartridge has D1 then D0. Same as
        daSpd_c's and daIwante_c's shadow matrices. */
     s32 mInvModelMat[12];                  /* 0x1394 */
-    Player *mTalkPlayer;                   /* 0x13c4 */
+    daPly_c *mTalkPlayer;                   /* 0x13c4 */
     s32 mTalkTimer;                        /* 0x13c8 */
     u32 mSoundHandle;                      /* 0x13cc */
     u8 mTalkDone;                          /* 0x13d0 */

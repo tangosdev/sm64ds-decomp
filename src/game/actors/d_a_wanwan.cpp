@@ -9,7 +9,7 @@
 /* leftovers: the chain helpers and the twelve state handlers stay extern "C"
  * free functions under their func_ov014_* address names; the rows of
  * data_ov014_0211476c reach the handlers through 8-byte PMF descriptors.
- * g_profile_WANWAN is not this file's data. Player::Hurt stays mangled:
+ * g_profile_WANWAN is not this file's data. daPly_c::Hurt stays mangled:
  * it takes Fix12<int> by value. The factory constructs the real class, including its two
  * Vector3[7] arrays. The four resource handles keep address names;
  * their definitions drive this file's static initializer.
@@ -20,7 +20,7 @@
 #include "daObjPile_c.h"
 #include "daObjWanwanShutter_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dCamera_c.h"
 #include "Sound.h"
 #include "dCc_c.h"
@@ -570,7 +570,7 @@ void func_ov014_02112114(daWanwan_c *c) {
             v.x = c->mPosX;
             v.y = c->mPosY;
             v.z = c->mPosZ;
-            ((Player *)other)->Hurt(v, 3, 0xc000, 1, 0, 1);
+            ((daPly_c *)other)->Hurt(v, 3, 0xc000, 1, 0, 1);
         }
     }
 
@@ -756,7 +756,7 @@ extern "C" void func_ov014_02111ca8(daWanwan_c *c) {
  * in this body; the two-argument definition ignores it. */
 extern "C" void func_ov014_02111b70(daWanwan_c *c) {
     int tgt[3];
-    Player *player;
+    daPly_c *player;
     int a;
     int i;
     int v;

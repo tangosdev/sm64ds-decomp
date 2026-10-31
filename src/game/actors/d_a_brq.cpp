@@ -4,7 +4,7 @@
  * It circles its spawn point -- radius 180.0 when param1 bit 1 is set,
  * otherwise 360.0, its direction set by param1 bit 0 -- bobbing and pulsing
  * in size, with its loop sound playing. Once its 15-frame start timer runs
- * out, a Mario who touches it is shocked (Player::Shock) and it rests for 60
+ * out, a Mario who touches it is shocked (daPly_c::Shock) and it rests for 60
  * frames (state 0) before circling again. A hit with collider flag 0x10
  * defeats it instead: it counts a mega kill, flies off tumbling and poofs on
  * landing or after 45 frames (state 2).
@@ -39,7 +39,7 @@
 #include "Sound.h"
 #include "Particle__System.h"
 #include "dBgCh_Gnd.h"
-#include "Player.h"
+#include "daPly_c.h"
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
@@ -399,7 +399,7 @@ s32 daBrq_c::HandlePlayerCollision() {
     if (other == 0 || !IsPlayerActor(other))
         return 0;
 
-    Player *player = (Player *)other;
+    daPly_c *player = (daPly_c *)other;
     if (player->mIsVanish != 0)
         return 0;
 

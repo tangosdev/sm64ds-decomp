@@ -89,7 +89,7 @@
       "attribution.json",
       "config/arm9/symbols.txt",
       "function-authors.json",
-      "include/Player.h",
+      "include/daPly_c.h",
       "include/dActor_c.h",
       "include/dEnemyBase_c.h",
       "include/dExtFrameCtrl_c.h",
@@ -942,7 +942,7 @@
       "location": "src/actors/player.cpp Vector destructor imports",
       "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
       "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
-      "summary": "The five omitted Player Vector imports are covered."
+      "summary": "The five omitted daPly_c Vector imports are covered."
     },
     {
       "disposition": "fixed",
@@ -967,7 +967,7 @@
       "id": "RCV2908-02",
       "kind": "correctness",
       "location": "src/actors/player.cpp and static-destructor registration callers",
-      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local daPly_c declarations and calls.",
       "review_scope": "Inherited historical disposition, preserved verbatim. The present candidate changes only the Iron Ball spawner interfaces; it does not re-certify unrelated historical repair measurements.",
       "summary": "Registration carries object and callback addresses as pointers."
     },
@@ -1003,7 +1003,7 @@
       "id": "IBL-INTERFACE-1013-NATIVE",
       "kind": "reconstruction",
       "location": "src/actors/daIbl_c.cpp:func_ov100_02142b90 and deleted externs",
-      "reason": "ClosestPlayer returns Player*. Spawn is the genuine static dActor_c interface with signed area/death-table parameters. IRONBALL actor 220 maps to daIbl_c, making the child downcast and direct mDispenser store consistent with the existing factory, RTTI and class layout. Both redundant local externs are removed. Complete raw and production objects remain identical, with exact canonical callees independently verified.",
+      "reason": "ClosestPlayer returns daPly_c*. Spawn is the genuine static dActor_c interface with signed area/death-table parameters. IRONBALL actor 220 maps to daIbl_c, making the child downcast and direct mDispenser store consistent with the existing factory, RTTI and class layout. Both redundant local externs are removed. Complete raw and production objects remain identical, with exact canonical callees independently verified.",
       "summary": "Nearest-player lookup and spawning use existing class declarations and typed pointers."
     },
     {
@@ -1037,8 +1037,8 @@
       "kind": "reconstruction",
       "disposition": "fixed",
       "location": "src/game/actors/d_a_ibl.cpp:func_ov100_02142b90",
-      "summary": "The spawner constructs a real automatic Vector3 and no longer fabricates a Vec3i object over Player fields.",
-      "reason": "The local XYZ components are initialized before use. Actual Player scalar subobjects are read through a character view of the enclosing object at verified offsets0x5c/0x60/0x64; no cross-member scalar array is formed. Native direct named loads and const-reference loads measured392B instead of396B; the preserved whole-object representation bridge gives exact396B and complete raw/prepared identity. This does not reconstruct Player position as a grouped Vector3."
+      "summary": "The spawner constructs a real automatic Vector3 and no longer fabricates a Vec3i object over daPly_c fields.",
+      "reason": "The local XYZ components are initialized before use. Actual daPly_c scalar subobjects are read through a character view of the enclosing object at verified offsets0x5c/0x60/0x64; no cross-member scalar array is formed. Native direct named loads and const-reference loads measured392B instead of396B; the preserved whole-object representation bridge gives exact396B and complete raw/prepared identity. This does not reconstruct daPly_c position as a grouped Vector3."
     },
     {
       "id": "IBL-HURT-CONTRACT-1015",
@@ -1046,7 +1046,7 @@
       "disposition": "fixed",
       "location": "src/game/actors/d_a_ibl.cpp:local Hurt declaration",
       "summary": "The local Hurt bridge agrees with the actual current definition.",
-      "reason": "Declaration is int(Player*,void*,u32,int,u8,u8,u8), replacing void/Vector3*/u32 flag disagreement. ActorID guard precedes the existing Player cast; all seven arguments and discarded result remain. Native by-value Fix12 call reconstruction is still pending; the configured mangled spelling does not prove a unique original scalar type."
+      "reason": "Declaration is int(daPly_c*,void*,u32,int,u8,u8,u8), replacing void/Vector3*/u32 flag disagreement. ActorID guard precedes the existing daPly_c cast; all seven arguments and discarded result remain. Native by-value Fix12 call reconstruction is still pending; the configured mangled spelling does not prove a unique original scalar type."
     },
     {
       "id": "IBL-LIFECYCLE-PROVENANCE-1015",
@@ -1062,7 +1062,7 @@
       "disposition": "deferred",
       "location": "src/game/actors/d_a_ibl.cpp inherited fields, Spawn, M48 and Behavior",
       "summary": "Shared flat-field, scalar ABI, aggregate-copy and manual state boundaries remain partial.",
-      "reason": "The new Player byte bridge retains raw offsets. Existing Spawn casts over this actor's flat position/angle fields, other base scalar views, M48 matrix copying, scalar helper bridges and manual PMF dispatch/mixed handler returns are unchanged and not original-type proof. Ibl remains a legacy text-only owner; ROM-supplied State/PMF/resource data and separate startup ownership are not newly claimed. Koopa Source and manifest remain literal; the retained full144 packet must compose its Koopa-manifest work onto this accepted lineage rather than overwrite it.",
+      "reason": "The new daPly_c byte bridge retains raw offsets. Existing Spawn casts over this actor's flat position/angle fields, other base scalar views, M48 matrix copying, scalar helper bridges and manual PMF dispatch/mixed handler returns are unchanged and not original-type proof. Ibl remains a legacy text-only owner; ROM-supplied State/PMF/resource data and separate startup ownership are not newly claimed. Koopa Source and manifest remain literal; the retained full144 packet must compose its Koopa-manifest work onto this accepted lineage rather than overwrite it.",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3812",
       "owner": "codex-ibl-native-object-boundaries-root-coordinator1015",
       "next_action": "Continue the separately owned shared field/interface/state reconstruction with complete current consumer and byte proof; retain this documented bridge until then."
@@ -1086,7 +1086,7 @@
     }
   ],
   "preserved_failed_probes": [
-    "Native direct named Player loads392B vs396B; exact failure remains in native-group proof accepting=false.",
+    "Native direct named daPly_c loads392B vs396B; exact failure remains in native-group proof accepting=false.",
     "Actual const scalar references give the same392B.",
     "No original-layout inference or compiler impossibility follows from these two bounded controls."
   ],
@@ -1190,7 +1190,7 @@
         "attribution.json",
         "config/arm9/symbols.txt",
         "function-authors.json",
-        "include/Player.h",
+        "include/daPly_c.h",
         "include/dActor_c.h",
         "include/dEnemyBase_c.h",
         "include/dExtFrameCtrl_c.h",

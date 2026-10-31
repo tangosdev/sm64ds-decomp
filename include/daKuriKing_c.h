@@ -65,7 +65,7 @@ struct daKuriKing_c : dEnemyBase_c {
     dExtAnmTexSRT_c mTextureTransformer;          /* 0x3f8 */
     dBgCh_Actr mWithMeshClsn;                   /* 0x40c */
     /* ClosestPlayer, kept for StartTalk / ShowMessage / GetTalkState. */
-    Player *mTalkPlayer;                          /* 0x5c8 */
+    daPly_c *mTalkPlayer;                          /* 0x5c8 */
     s32 mState;            /* 0x5cc */
     /* InitResources copies mPosX/mPosY/mPosZ into these three once, right after
        the collision cylinders are sized, and nothing writes them again. */

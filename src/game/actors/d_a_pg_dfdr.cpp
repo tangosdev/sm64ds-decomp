@@ -36,7 +36,7 @@ enum daPgDfdr_c_AssetId {
 
 #include "common.h"
 #include "daPgDfdr_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "dExtAnmTexPat_c.h"

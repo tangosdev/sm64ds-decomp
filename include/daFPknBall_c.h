@@ -6,7 +6,7 @@
 /* daFPknBall_c (FPAKUN_BALL, actor 254): the fireball the fire piranha plant
  * (daFPkn_c) spits. As daFPkn_c spawns it (variant 3) it keeps its heading
  * for a fixed distance, where other variants steer toward the closest player.
- * It burns a Player it touches (Player::Burn) and dies in a puff of dust when
+ * It burns a daPly_c it touches (daPly_c::Burn) and dies in a puff of dust when
  * it runs out of range, hits a wall or touches water.
  *
  * Derives from dEnemyBase_c, on the evidence of its own destructor:
@@ -45,7 +45,7 @@ struct daFPknBall_c : dEnemyBase_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x144 */
     dExtShadowModel_c mShadowModel; /* 0x300 */
     Matrix4x3 mShadowMat;           /* 0x328 -- translation only; the ball's position >> 3 */
-    struct Player *mTargetPlayer;   /* 0x358 -- ClosestPlayer, refreshed every Behavior */
+    struct daPly_c *mTargetPlayer;   /* 0x358 -- ClosestPlayer, refreshed every Behavior */
     s32 mTargetSpeed; /* 0x35c -- what mHorzSpeed approaches; dActor_c.h names SpawnFireball's fourth argument targetSpeed; daFPkn_c passes 0xa000 */
     s32 mDistanceFlown; /* 0x360 -- sum of mHorzSpeed each frame */
     s32 mMaxDistance;   /* 0x364 -- 0x5dc000 (1500 units) from InitResources */

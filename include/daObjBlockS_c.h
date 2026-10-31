@@ -27,13 +27,13 @@
 #include "dExtSimpleModel_c.h"
 #include "dBgW_KcMbg.h"
 
-/* Player is only ever pointed at from here, so a declaration is enough --
+/* daPly_c is only ever pointed at from here, so a declaration is enough --
  * no definition is pulled in. The typedef keeps the member spelled the
  * same in C and in C++; the guard is common.h's idiom for the same job. */
 #ifndef PLAYER_FWD_DECLARED
 #define PLAYER_FWD_DECLARED
-struct Player;
-typedef struct Player Player;
+struct daPly_c;
+typedef struct daPly_c daPly_c;
 #endif
 
 #ifdef __cplusplus
@@ -47,7 +47,7 @@ struct daObjBlockS_c : dBgActor_c {
     dBgCh_Actr mWithMeshClsn;   /* 0x320 */
     /* Face normal of the floor under the crate, fix12 (1.0 == 0x1000): the
        target of SurfaceInfo::CopyNormalTo in the slide step, read back as
-       three words. The same shape Player keeps at 0x554. */
+       three words. The same shape daPly_c keeps at 0x554. */
     s32 mFloorNormalX;          /* 0x4dc */
     s32 mFloorNormalY;          /* 0x4e0 */
     s32 mFloorNormalZ;          /* 0x4e4 */
@@ -72,13 +72,13 @@ struct daObjBlockS_c : dBgActor_c {
     s32 mState;                 /* 0x560 -- a State */
     dCcAcPos_c mdCcAcPos_c1;    /* 0x564 */
     dCcAcPos_c mdCcAcPos_c2;    /* 0x5a4 */
-    /* The ROM loads this WORD and passes it to _ZN6Player9DropActorEv as that function's
-       `this`, which is an object address, so the word is a Player *. Behavior drops the
+    /* The ROM loads this WORD and passes it to _ZN7daPly_c9DropActorEv as that function's
+       `this`, which is an object address, so the word is a daPly_c *. Behavior drops the
        actor through it when data_0209b454 and mFlags both have bit 0x4000000 set
        (daObjKey_c names that mFlags bit a camera takeover), so it is the player
        currently carrying the crate. It says nothing about the rest of the marker's span, which stays explicit
        padding. Was a u8 marker. */
-    Player *mHoldingPlayer;     /* 0x5e4 */
+    daPly_c *mHoldingPlayer;     /* 0x5e4 */
     /* The actor that last let go of the crate: copied from mHoldingPlayer when
        it is thrown and from the 0x0d0 word when it is spat out. The thrown
        state's hit test will not hurt it. */
@@ -88,7 +88,7 @@ struct daObjBlockS_c : dBgActor_c {
        Y when nothing is found. mPosY minus this is the shadow's drop height. */
     s32 mGroundY;               /* 0x5ec */
     /* Depth, fix12, that mClsnYOffset is easing toward. Set from the floor's
-       surface type 6..9 (30 / 45 / 60 / 100 units; include/Player.h calls
+       surface type 6..9 (30 / 45 / 60 / 100 units; include/daPly_c.h calls
        those the quicksand tiers) and zeroed on entering every state
        except STATE_IDLE. */
     s32 mClsnYOffsetTarget;     /* 0x5f0 */
@@ -112,7 +112,7 @@ struct daObjBlockS_c : dBgActor_c {
 
     /* --- vtable, own overrides --- */
     virtual int  OnYoshiTryEat();                      /* slot 18 */
-    virtual void OnTurnIntoEgg(Player &player);         /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player);         /* slot 19 */
     virtual void OnGroundPounded(dActor_c &other);      /* slot 21 */
     virtual void Kill();                                /* slot 31 */
 
@@ -222,7 +222,7 @@ struct daObjBlockS_c {
     s32 mdCcAcPos_c2_posX;      /* 0x5d8 */
     s32 mdCcAcPos_c2_posY;      /* 0x5dc */
     s32 mdCcAcPos_c2_posZ;      /* 0x5e0 */
-    Player *mHoldingPlayer;     /* 0x5e4 */
+    daPly_c *mHoldingPlayer;     /* 0x5e4 */
     void *mPrevHolder;          /* 0x5e8 */
     s32 mGroundY;               /* 0x5ec */
     s32 mClsnYOffsetTarget;     /* 0x5f0 */

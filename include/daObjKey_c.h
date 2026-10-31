@@ -15,7 +15,7 @@
  *     0x220 dCcAcPos_c    0x40    -> 0x260
  *     0x260 dBgCh_Actr    0x1bc   -> 0x41c
  *
- * The first own field is at 0x110, a pointer to the Player collecting the key.
+ * The first own field is at 0x110, a pointer to the daPly_c collecting the key.
  * The factory calls fBase_c::operator new(0x470), so sizeof is 0x470. It backs
  * the OBJ_KEY registry profile, whose descriptor at 0x02132b68 is
  * reconstructed as g_profile_OBJ_KEY; the factory and profile spellings are
@@ -32,7 +32,7 @@
 struct daObjKey_c : dEnemyBase_c {
     /* No member name here is a recovered symbol; "coined" marks names given
        from the field's uses in this class's code. */
-    Player      *mPlayer;           /* 0x110 coined: the Player collecting the key */
+    daPly_c      *mPlayer;           /* 0x110 coined: the daPly_c collecting the key */
     dExtAnmModel_c mAnmModel;       /* 0x114 */
     dExtSimpleModel_c mModel;       /* 0x178 */
     dExtShadowModel_c mShadowModel;       /* 0x1c8 */
@@ -55,7 +55,7 @@ struct daObjKey_c : dEnemyBase_c {
     virtual ~daObjKey_c();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
-    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void  OnTurnIntoEgg(daPly_c &player); /* slot 19 */
 
     int Behavior();
     int CleanupResources();
@@ -71,8 +71,8 @@ struct daObjKey_c : dEnemyBase_c {
     /* The address is the method name. The actor was the first parameter. */
     void func_ov089_02130fb4(Vector3 *target, int height); /* 0x02130fb4 */
     void func_ov089_0213115c(int anim);                    /* 0x0213115c */
-    void func_ov089_02131dcc(Player &player);              /* 0x02131dcc */
-    void func_ov089_02131df4(Player &player);              /* 0x02131df4 */
+    void func_ov089_02131dcc(daPly_c &player);              /* 0x02131dcc */
+    void func_ov089_02131df4(daPly_c &player);              /* 0x02131df4 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

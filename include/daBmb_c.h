@@ -54,12 +54,12 @@ struct daBmb_c : dEnemyBase_c {
     dExtShadowModel_c                  mShadowModel;          /* 0x364 */
     /* 0214b988 stores ClosestPlayer here after the notice-angle test;
        0214ad14 stores it unconditionally. Arm 0 chases this pointer. */
-    Player                      *mChasePlayer;          /* 0x38c */
-    /* The Player carrying this Bob-omb, or 0. 0214b53c passes it to
+    daPly_c                      *mChasePlayer;          /* 0x38c */
+    /* The daPly_c carrying this Bob-omb, or 0. 0214b53c passes it to
        UpdateCarry and calls IsFrontSliding / LostGrabbedObject; 0214ae1c
        calls DropActor and Hurt, then clears it; 0214b3f0 sets it and
        0214b3b8 clears it. InitResources zeroes it. */
-    Player                      *mCarrier;              /* 0x390 */
+    daPly_c                      *mCarrier;              /* 0x390 */
     /* Twelve words, not a Matrix4x3: this header is included by files that
        do not pull common.h. InitResources copies IDENTITY_MATRIX4X3 here.
        0214b444 writes the translation at [9..11] before the shadow drop. */
@@ -72,7 +72,7 @@ struct daBmb_c : dEnemyBase_c {
     /* Behavior skips the body at 5, the egg hand-off is 4, the wall bounce
        is allowed only at 0. 0214b03c dispatches arms 0..5. */
     s32                          mState;                /* 0x3dc */
-    /* Hurt damage: the third argument of the Player::Hurt calls in
+    /* Hurt damage: the third argument of the daPly_c::Hurt calls in
        func_ov102_0214ae1c. InitResources stores 2. ov078/daBombking_c
        writes 0 for its own bob-ombs. */
     s32 mHurtDamage; /* 0x3e0 */
@@ -118,7 +118,7 @@ struct daBmb_c : dEnemyBase_c {
     virtual ~daBmb_c() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 -- key function */
-    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void  OnTurnIntoEgg(daPly_c &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

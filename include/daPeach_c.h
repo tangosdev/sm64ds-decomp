@@ -7,7 +7,7 @@
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 
-struct Player;
+struct daPly_c;
 
 /* The cartridge RTTI names this class daPeach_c: the word at 0x0212ffbc loads
  * the __si_class_type_info record at 0x0212ff90, whose name string at
@@ -48,7 +48,7 @@ struct daPeach_c : dActor_c {
     StateEntry *mState;                 /* 0x0350 */
     s32 mStateValue;                    /* 0x0354 */
     u32 unk_358;                        /* 0x0358 */
-    Player *mTalkPlayer;                /* 0x035c */
+    daPly_c *mTalkPlayer;                /* 0x035c */
     s16 mLookVertAngle;                 /* 0x0360 */
     s16 mLookHorzAngle;                 /* 0x0362 */
     s16 mTargetLookVertAngle;           /* 0x0364 */

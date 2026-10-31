@@ -17,7 +17,7 @@
  * `|= 1`. It is not one: 0x2d0 + 0x18 lands inside mdCcAc_c, and
  * dCc_c::flags is at 0x18 and is documented as "bit 0 makes Update
  * bail" -- which is exactly what setting bit 0 does. It was the sub-object's
- * own field all along, the same mistake as Player's `mBodyClsnFlags`.
+ * own field all along, the same mistake as daPly_c's `mBodyClsnFlags`.
  *
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  *

@@ -12,7 +12,7 @@
  *   read is folded into the add and the stores above it.
  * - The follow target's position is read through &mPos. Naming that
  *   actor's mPosX/Y/Z DIFFs.
- * - SetFollowTarget is Player::IncMegaKillCount's attach helper; that
+ * - SetFollowTarget is daPly_c::IncMegaKillCount's attach helper; that
  *   caller passes a null owner.
  */
 
@@ -67,7 +67,7 @@ extern OneUpLogoTexSeqFilePtr data_ov002_02110a9c; /* BTP */
 daObj1UpLogo_c::~daObj1UpLogo_c() {}
 
 // @symbol _ZN14daObj1UpLogo_c15SetFollowTargetEP8dActor_c
-/* Player::IncMegaKillCount's attach helper. Not a vtable slot. The only
+/* daPly_c::IncMegaKillCount's attach helper. Not a vtable slot. The only
  * caller passes a null owner. */
 void daObj1UpLogo_c::SetFollowTarget(dActor_c *owner) {
     if (owner == 0)

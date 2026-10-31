@@ -5,7 +5,7 @@
  * a frame, and goes out in a poof (func_ov070_02121c8c) after 105 frames or
  * against a wall. It will not run off a ledge: a step that finds no ground
  * within 50.0 below is undone (func_ov070_02121be4). A Mario it touches is
- * burnt (Player::Burn) unless he is vanished.
+ * burnt (daPly_c::Burn) unless he is vanished.
  *
  * _ZTS8daKpFr_c 0x0212340c. _ZTI8daKpFr_c 0x02123418.
  * _ZTV8daKpFr_c 0x02123448. The inline destructor in the header is the key
@@ -32,7 +32,7 @@
 #include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SurfaceInfo.h"
 #include "math/Approach.h"
 
@@ -166,7 +166,7 @@ extern short Vec3_HorzAngle(void* v0, void* v1);
 }
 // @symbol _ZN8daKpFr_c19func_ov070_02121f18Ev
 int daKpFr_c::func_ov070_02121f18() {
-  Player* player;
+  daPly_c* player;
   if (DecIfAbove0_Byte(&mStateTimer) == 0)
     func_ov070_02121c8c();
   player = ClosestNonVanishPlayer();
@@ -252,7 +252,7 @@ extern "C" void func_02012694(int id, void *pos);
 // @symbol _ZN8daKpFr_c19func_ov070_02121cbcEv
 void daKpFr_c::func_ov070_02121cbc(){
   dActor_c* found;
-  Player* player;
+  daPly_c* player;
   int b;
   unsigned int id = mdCcAc_c.otherOwner;
   if (id == 0) return;
@@ -260,7 +260,7 @@ void daKpFr_c::func_ov070_02121cbc(){
   if (found == 0) return;
   b = (int)(found->actorID == 0xbf);
   if (b == 0) return;
-  player = (Player*)found;
+  player = (daPly_c*)found;
   b = (int)((mFlags & 0x20000) != 0);
   if (b != 0) {
     func_ov070_02122044(1);

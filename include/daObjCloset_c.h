@@ -66,11 +66,11 @@ struct daObjCloset_c : dActor_c {
        _ZN10dCcAcPos_cC1Ev / _ZN10dCcAcPos_cD1Ev pair the factory and the
        destructor run over the array -- relocations the ROM build checks. */
     dCcAcPos_c mColliders[5]; /* 0x0d4 */
-    /* The Player currently being talked to, or null. Behavior only ever fills
+    /* The daPly_c currently being talked to, or null. Behavior only ever fills
        it from dActor_c::FindWithID(mColliders[i].otherOwner) after checking that
-       actor's actorID is 0xbf, and only when Player::StartTalk accepts; it
+       actor's actorID is 0xbf, and only when daPly_c::StartTalk accepts; it
        clears it again when the talk ends. */
-    Player *mTalkingPlayer; /* 0x214 */
+    daPly_c *mTalkingPlayer; /* 0x214 */
     /* Latch so the "menu" / "saving" jingle plays once per talk rather than
        once per frame: set the frame func_02012790 is called, cleared with
        mTalkingPlayer. */

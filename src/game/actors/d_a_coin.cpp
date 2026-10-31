@@ -18,7 +18,7 @@
 //   GetClsnPos keeps the free (res, self) spelling: the real member returns
 //   Vector3 by value. GetWallResult and GetFloorResult have no header member.
 //   dBgCh_Lin and dBgPi C1/D1 run on raw char buffers.
-// - func_ov002_020b18f0 stays a free extern "C": GiveCoins passes a Player,
+// - func_ov002_020b18f0 stays a free extern "C": GiveCoins passes a daPly_c,
 //   not a coin.
 // - DiscreteNoLava_veneer keeps a local extern. Its definition drops the r0
 //   it forwards.
@@ -34,7 +34,7 @@
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 #include "dExtSimpleModel_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "daStar_c.h"
 #include "daStarBase_c.h"
 #include "daObjBlockL_c.h"
@@ -357,8 +357,8 @@ void daCoin_c::func_ov002_020b14d8()
 }
 
 /* Blue coin picked up: 5 coins and 0x500 health for the player. */
-// @symbol _ZN8daCoin_c19func_ov002_020b1674EP6Player
-void daCoin_c::func_ov002_020b1674(Player *player)
+// @symbol _ZN8daCoin_c19func_ov002_020b1674EP7daPly_c
+void daCoin_c::func_ov002_020b1674(daPly_c *player)
 {
     mDisappearTimer = 0;
     KillAndTrackInDeathTable();
@@ -372,9 +372,9 @@ void daCoin_c::func_ov002_020b1674(Player *player)
  * also counts the red coin, puts up the running total as a score popup and plays
  * sound 0x2f + total. When the eighth is collected it spawns a STAR (0xb2) 120
  * units above the coin's STARBASE and hands that marker over to the star. */
-// @symbol _ZN8daCoin_c19func_ov002_020b16c4EP6Player
+// @symbol _ZN8daCoin_c19func_ov002_020b16c4EP7daPly_c
 #define LAUNDER(p) ((int)(p))
-void daCoin_c::func_ov002_020b16c4(Player *player)
+void daCoin_c::func_ov002_020b16c4(daPly_c *player)
 {
     volatile Vector3 unusedPos; /* written but never read; the ROM stores it */
     Vector3 starPos;
@@ -438,8 +438,8 @@ void daCoin_c::func_ov002_020b16c4(Player *player)
 
 /* Yellow coin picked up: same sound choice as the red coin, 1 coin and 0x100
  * health. */
-// @symbol _ZN8daCoin_c19func_ov002_020b1884EP6Player
-void daCoin_c::func_ov002_020b1884(Player *player)
+// @symbol _ZN8daCoin_c19func_ov002_020b1884EP7daPly_c
+void daCoin_c::func_ov002_020b1884(daPly_c *player)
 {
     mDisappearTimer = 0;
     KillAndTrackInDeathTable();
@@ -451,7 +451,7 @@ void daCoin_c::func_ov002_020b1884(Player *player)
     player->Heal(0x100);
 }
 
-/* Hundred-coin star. Takes the Player (GiveCoins calls it with the player
+/* Hundred-coin star. Takes the daPly_c (GiveCoins calls it with the player
  * number's entry already counted): unless event bit 0x1f is set, the level is
  * below 0xf and the player's coin total has reached 100, spawns a STAR (0xb2,
  * param 0x20) 300 units above the player, sets the event bit and gives the
@@ -464,7 +464,7 @@ void func_ov002_020b18f0(char* self)
     extern short data_0209f358[];
     extern int SublevelToLevel(int);
 
-    Player* player = (Player*)self;
+    daPly_c* player = (daPly_c*)self;
     daStar_c* star;
     struct Vector3 spawnPos;
     struct Vector3* playerPos;
@@ -495,7 +495,7 @@ int daCoin_c::func_ov002_020b19dc()
 {
     unsigned int playerID = mdCc_c.otherOwner;
     if (playerID != 0) {
-        Player *player = (Player *)dActor_c::FindWithID(playerID);
+        daPly_c *player = (daPly_c *)dActor_c::FindWithID(playerID);
         if (player != 0) {
             if (mdCc_c.hitFlags & 0x400000) {
                 mDisappearTimer = 0;
@@ -545,7 +545,7 @@ void daCoin_c::func_ov002_020b1ad4()
 {
     extern signed char data_0209f2f8;
 
-    Player *player;
+    daPly_c *player;
     int range;
     int speed;
 
@@ -1073,8 +1073,8 @@ flagsDone:;
     return 1;
 }
 
-// @symbol _ZN8daCoin_c13OnTurnIntoEggER6Player
-void daCoin_c::OnTurnIntoEgg(Player &player)
+// @symbol _ZN8daCoin_c13OnTurnIntoEggER7daPly_c
+void daCoin_c::OnTurnIntoEgg(daPly_c &player)
 {
     /* Vtable slot 19. Each path hands the payout to a helper. */
     int coinType = mCoinType;

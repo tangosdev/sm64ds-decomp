@@ -45,7 +45,7 @@ struct System {
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Lin.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "math/Approach.h"
 
@@ -247,8 +247,8 @@ void func_ov090_021310b4(daMenbo_c *c)
         func_ov002_020aea30(c, p, 0);
         return;
     }
-    if (c->JumpedOnByPlayer(*(dCc_c *)&c->mdCcAcPos_c, *(Player *)p)) {
-        ((Player *)p)->Bounce(0x28000);
+    if (c->JumpedOnByPlayer(*(dCc_c *)&c->mdCcAcPos_c, *(daPly_c *)p)) {
+        ((daPly_c *)p)->Bounce(0x28000);
         c->mDeathState = 1;
         func_ov002_020aea30(c, p, 0);
         return;
@@ -266,7 +266,7 @@ void func_ov090_021310b4(daMenbo_c *c)
         hv[0] = 0x1000;
         hv[1] = 0;
         hv[2] = 0;
-        c->KillByInvincibleChar(*(Vector3_16 *)hv, *(Player *)p, 0);
+        c->KillByInvincibleChar(*(Vector3_16 *)hv, *(daPly_c *)p, 0);
         func_02012694(0x1d, &c->mCamSpacePos);
         return;
     }
@@ -278,7 +278,7 @@ void func_ov090_021310b4(daMenbo_c *c)
     }
     if (!IsPlayerActor(p))
         return;
-    if (((Player *)p)->mIsMetal == 1 || ((Player *)p)->IsOnShell() == 1) {
+    if (((daPly_c *)p)->mIsMetal == 1 || ((daPly_c *)p)->IsOnShell() == 1) {
         cv.x = c->mPosX;
         cv.y = c->mPosY;
         cv.z = c->mPosZ;
@@ -290,7 +290,7 @@ void func_ov090_021310b4(daMenbo_c *c)
     hurt.x = c->mPosX;
     hurt.y = c->mPosY;
     hurt.z = c->mPosZ;
-    ((Player *)p)->Hurt(hurt, 2, 0xc000, 1, 0, 1);
+    ((daPly_c *)p)->Hurt(hurt, 2, 0xc000, 1, 0, 1);
 }
 
 #pragma opt_common_subs on
@@ -340,7 +340,7 @@ void func_ov090_02131378(daMenbo_c *c)
  * anchor and sets the patrol speed. */
 int func_ov090_021314a0(daMenbo_c *c)
 {
-    Player *p = c->ClosestNonVanishPlayer();
+    daPly_c *p = c->ClosestNonVanishPlayer();
     if (p != 0 && AngleDiff(c->mPrevAngleY, c->HorzAngleToCPlayer()) < 0x2000) {
         int *sv = &p->mPosX;
         int v[3];
@@ -804,7 +804,7 @@ int daMenbo_c::Behavior()
     func_ov090_021310b4(this);
     mdCcAcPos_c.Clear();
     {
-        Player *p = ClosestPlayer();
+        daPly_c *p = ClosestPlayer();
         if (p != 0 && p->mIsVanish == 0)
             mdCcAcPos_c.Update();
     }
@@ -915,8 +915,8 @@ s32 daMenbo_c::OnAimedAtWithEgg()
     return 0x20000;
 }
 
-// @symbol _ZN9daMenbo_c13OnTurnIntoEggER6Player
-void daMenbo_c::OnTurnIntoEgg(Player &player)
+// @symbol _ZN9daMenbo_c13OnTurnIntoEggER7daPly_c
+void daMenbo_c::OnTurnIntoEgg(daPly_c &player)
 {
     GivePlayerCoins(player, (unsigned char)(mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();

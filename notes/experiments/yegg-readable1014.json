@@ -72,7 +72,7 @@
     "history": [
       "ca232c8ef3 memberified24 self-first helpers",
       "6c236e3939 folded the initializer",
-      "11817624cd adopted Player calls",
+      "11817624cd adopted daPly_c calls",
       "notes/agents/handoffs/issue-2492-cup-source-review.md records the integer Virtual50/020edc28 actor-family contract"
     ],
     "independent_review_required": true
@@ -389,9 +389,9 @@
     }
   },
   "remaining_reconstruction": [
-    "Existing scalar ABI spellings of Fix12-valued callees, including ModelAnim/collision initialization, shadow/particle helpers, SpawnCoins and Player::Hurt, remain unchanged and qualified; no class-valued universal compiler-wall assertion added.",
-    "The raw spawned-coin fields, DOSUN byte, Player+0xc8 word, floor-result+4 view, array-backed matrices/vectors and address-based helper identifiers remain partial.",
-    "The existing two externally called free Player-entry helpers and constructor/factory alias boundaries remain; this slice adds no fake method identity or new mangled helper.",
+    "Existing scalar ABI spellings of Fix12-valued callees, including ModelAnim/collision initialization, shadow/particle helpers, SpawnCoins and daPly_c::Hurt, remain unchanged and qualified; no class-valued universal compiler-wall assertion added.",
+    "The raw spawned-coin fields, DOSUN byte, daPly_c+0xc8 word, floor-result+4 view, array-backed matrices/vectors and address-based helper identifiers remain partial.",
+    "The existing two externally called free daPly_c-entry helpers and constructor/factory alias boundaries remain; this slice adds no fake method identity or new mangled helper.",
     "No original source filename or method/field identifiers recovered by byte equality; Source judgment remains separate from ROM correctness."
   ],
   "private_evidence": [

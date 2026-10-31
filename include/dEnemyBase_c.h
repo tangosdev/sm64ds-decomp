@@ -11,7 +11,7 @@
 /* fwd */
 struct dCc_c;
 struct dExtAnmModel_c;
-struct Player;
+struct daPly_c;
 struct Vector3_16;
 struct dBgCh_Actr;
 struct a1_;
@@ -41,7 +41,7 @@ struct dEnemyBase_c : dActor_c {
        read them, and `X : dEnemyBase_c` cannot compile unless they exist. The counts
        are how many of dEnemyBase_c's 51 subclasses declare each -- 0x100 is in
        twenty-eight of them, which is not a coincidence. */
-    Player *mEatingPlayer;        /* 0x0d0 -- 4 subclasses */
+    daPly_c *mEatingPlayer;        /* 0x0d0 -- 4 subclasses */
     s32 mFloorNormalX;            /* 0x0d4 */
     s32 mFloorNormalY;            /* 0x0d8 */
     s32 mFloorNormalZ;            /* 0x0dc */
@@ -164,8 +164,8 @@ struct dEnemyBase_c : dActor_c {
            every actor overlay's relocs.txt records this call as the ambiguous
            `module:overlays(2,4)`. What disambiguates it is not the config but the
            code: the ov002 body at the same address consumes r0/r1/r2 exactly as
-           (enemy, Vector3_16 &, Player &) -- Vec3_HorzAngle(player + 0x5c,
-           &this->pos), then Player::IncMegaKillCount(player) -- while ov004's
+           (enemy, Vector3_16 &, daPly_c &) -- Vec3_HorzAngle(player + 0x5c,
+           &this->pos), then daPly_c::IncMegaKillCount(player) -- while ov004's
            only unambiguous callers are inside ov004 itself. The name moved to
            ov002 0x020ada40; ov004's function is `Mg_SetSessionBest` again.
 
@@ -192,7 +192,7 @@ struct dEnemyBase_c : dActor_c {
            the bytes cannot tell a by-value Fix12<int> from a scalar, and the
            scalar lets the definition be a real method (notes/mwccarm-codegen.md
            6az). */
-    void KillByInvincibleChar(const Vector3_16 &spin_, Player &player_, Fix12i unused_);
+    void KillByInvincibleChar(const Vector3_16 &spin_, daPly_c &player_, Fix12i unused_);
 };
 
 /* Makes dEnemyBase_c's size a claim the compiler enforces, and makes every header

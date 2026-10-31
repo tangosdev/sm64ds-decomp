@@ -27,7 +27,7 @@
 #include "types.h"
 #include "CapIconMgr.h"
 #include "dActor_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 
 extern "C" {
@@ -36,7 +36,7 @@ extern unsigned char data_ov002_02111154[];
 extern unsigned char data_0208a0e0;
 extern signed char data_02092114;
 extern int data_0209f3e8[];
-/* The Player*[] array. The shards disagreed scalar-vs-array; the array
+/* The daPly_c*[] array. The shards disagreed scalar-vs-array; the array
  * spelling gives the same ldr for both uses ([0] = first element). */
 extern void *data_0209f394[];
 extern unsigned char data_0209f284;
@@ -102,7 +102,7 @@ void func_ov001_020aaf40(void)
     }
 
     {
-        Player *pl = (Player *)data_0209f394[0];
+        daPly_c *pl = (daPly_c *)data_0209f394[0];
         if (pl->HasNoCap() && !pl->IsCollectingCap()) {
             func_ov001_020aadac();
             gCapIconDispatchLocked = 1;
@@ -138,7 +138,7 @@ void func_ov001_020aadac(void) {
             }
             sl = (int *)((dCapIcon_c *)sl)->mNext;
         }
-        if (i1 != ((Player *)fp)->mCharacter) {
+        if (i1 != ((daPly_c *)fp)->mCharacter) {
             gCapIconDispatchFlags[i1] |= 2;
         }
     }
@@ -175,7 +175,7 @@ void func_ov001_020aaa54(void)
     unsigned sp4;
     int typ;
     int spc;
-    Player *player = (Player *)data_0209f394[0];
+    daPly_c *player = (daPly_c *)data_0209f394[0];
     int zero = 0;
     int three = 3;
     void* z1 = 0;
@@ -313,13 +313,13 @@ int func_ov001_020aa960(int x, char* arg){
         return 0;
     if (v & 0x40)
         return 0;
-    if (x == ((Player *)arg)->mCharacter)
+    if (x == ((daPly_c *)arg)->mCharacter)
         return 0;
     if (func_ov001_020aa79c(x))
         return 0;
     if ((gCapIconRequestFlags[x] & 3) == 2)
         return 0;
-    if (!((Player *)arg)->IsCollectingCap() && x == *(int *)(arg + 8) &&
+    if (!((daPly_c *)arg)->IsCollectingCap() && x == *(int *)(arg + 8) &&
         (gCapIconRequestFlags[x] & 3))
         return 0;
     return 1;
@@ -338,9 +338,9 @@ int func_ov001_020aa858(int self, char* a, int b, int d)
     if (d != 0) return 0;
     void* p = data_0209f394[0];
     if (k != 4) {
-        if (((Player *)p)->IsCollectingCap()) return 0;
+        if (((daPly_c *)p)->IsCollectingCap()) return 0;
     }
-    if (!((Player *)p)->IsCollectingCap()) {
+    if (!((daPly_c *)p)->IsCollectingCap()) {
         if (self == *(int*)((char*)p+8)) return 0;
     }
     return 1;
@@ -355,7 +355,7 @@ int func_ov001_020aa7b8(void* self, char* a)
     for (i = 0; i < ((unsigned char *)&data_0208a0e0)[0]; i++) {
         void* p = data_0209f394[i];
         if (p == 0) continue;
-        if (((Player *)p)->IsCollectingCap()) return 0;
+        if (((daPly_c *)p)->IsCollectingCap()) return 0;
         if (self == *(void**)((char*)p+8)) return 0;
     }
     return 1;
@@ -518,7 +518,7 @@ void func_ov001_020aa420(void) {
             if (i == player->field8) break;
             player = 0;
         }
-        if (player != 0 && ((Player *)player)->IsCollectingCap() != 0) {
+        if (player != 0 && ((daPly_c *)player)->IsCollectingCap() != 0) {
             func_ov001_020aa6e4(i, maxPriority, (int *)sp10);
         }
     }

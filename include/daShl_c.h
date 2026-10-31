@@ -51,7 +51,7 @@ struct daShl_c : dEnemyBase_c {
     s16 mSpawnAngleY;          /* 0x3bc */
     u8  pad_3be[0x2];
     /* The player riding or holding the shell. */
-    Player *mCarrier; /* 0x3c0 */
+    daPly_c *mCarrier; /* 0x3c0 */
     /* dExtSimpleModel_c index, 0 or 1, off bit 0 of param1. Behavior gives index 0 a
        per-frame splash/trail pass the other does not get. */
     u8  mModelIndex;           /* 0x3c4 */

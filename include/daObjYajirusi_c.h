@@ -4,7 +4,7 @@
 #include "types.h"
 #include "dBgW_KcMbg.h"
 
-struct Player;
+struct daPly_c;
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
@@ -68,7 +68,7 @@ struct daObjYajirusi_c {
     int InitResources();
     int Render();
     int OnAttacked1(dActor_c &other);
-    void OnHitByMegaChar(Player &player);
+    void OnHitByMegaChar(daPly_c &player);
     void Kill();
 
     /* INHERITED, AND THEREFORE THE PORT'S TO BIND. Kill() calls both of these
@@ -130,7 +130,7 @@ struct daObjYajirusi_c : dBgActor_c {
        bytes cannot distinguish them. Class ownership, slot identity, bodies
        and relocations are proven; the exact original spelling is not. */
     virtual int  OnAttacked1(dActor_c &other);      /* slot 22 */
-    virtual void OnHitByMegaChar(Player &player);   /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &player);   /* slot 27 */
     /* THE VTABLE SAYS SO. _ZTV15daObjYajirusi_c is ov098 0x0213c3d8 and the word
        at +0x7c relocates to ov098 0x02137ccc, while _ZTV10dBgActor_c carries
        _ZN10dBgActor_c4KillEv at the same slot -- so this is this class's own

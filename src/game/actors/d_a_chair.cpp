@@ -35,7 +35,7 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 #include "daChair_c.h"
 #include "SharedFilePtr.h"
 #include "SurfaceInfo.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dBgCh_Actr.h"
 #include "Sound.h"
 #include "cstd.h"
@@ -225,7 +225,7 @@ void daChair_c::State1() {
     int targetPos[4];
     dActor_c *target;
     short delta;
-    Player *player;
+    daPly_c *player;
     int wobble;
     int *av;
     unsigned short *p39e;
@@ -383,7 +383,7 @@ void daChair_c::State2() {
         isPlayer = (int)(actor->actorID == kPlayerActorId);
         if (isPlayer == 0)
             return;
-        isPlayer = ((Player *)actor)->mIsVanish;
+        isPlayer = ((daPly_c *)actor)->mIsVanish;
         if (isPlayer != 0)
             return;
         {
@@ -391,7 +391,7 @@ void daChair_c::State2() {
             pos.x = mPosX;
             pos.y = mPosY;
             pos.z = mPosZ;
-            ((Player *)actor)->Hurt(*(Vector3 *)&pos, 2, 0xc000, 1, 0, 1);
+            ((daPly_c *)actor)->Hurt(*(Vector3 *)&pos, 2, 0xc000, 1, 0, 1);
         }
     }
 }

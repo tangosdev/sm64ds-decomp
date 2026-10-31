@@ -21,7 +21,7 @@ enum daObjHeart_c_AssetId { ASSET_OBJ_HEART_BMD = 0x0470, ASSET_OBJ_HEART_WAIT_B
 
 #include "common.h"
 #include "daObjHeart_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "math/CalcLib.h"
@@ -93,7 +93,7 @@ s32 daObjHeart_c::Behavior() {
                         scaled -= 8;
                         amount = (scaled / 4 + 1) << 8;
                     }
-                    ((Player *)other)->Heal(amount);
+                    ((daPly_c *)other)->Heal(amount);
                     Sound::PlayBank3(0x61, mCamSpacePos);
                 }
             }

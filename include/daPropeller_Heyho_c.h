@@ -88,7 +88,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
        [func_ov070_0211fa80 / func_ov070_0211f694 / func_ov070_0211f62c /
         func_ov070_0211f100, in src/game/actors/d_a_propeller_heyho.cpp] */
     s32                          mStateStep;            /* 0x3d8 */
-    /* Set 1 by 0211f100 when a contact that called Player::Hurt starts the
+    /* Set 1 by 0211f100 when a contact that called daPly_c::Hurt starts the
        02123528 animation during the dive state; only the dive init (0211fa80)
        clears it. 0211f694 only reads it. Dive's finished-anim path only
        returns to wander while this is 1.
@@ -112,7 +112,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     virtual ~daPropeller_Heyho_c() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
-    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void  OnTurnIntoEgg(daPly_c &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

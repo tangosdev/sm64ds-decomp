@@ -20,7 +20,7 @@ enum d_a_obj_ks_water_AssetId { ASSET_KS_MIZU_BMD = 0x0689, ASSET_KS_MIZU_KCL = 
  * What stays:
  * - data_ov017_02111c80 / 02111c88 / 02111a60 / 02111a94 KCL / BMD / BTA / CLPS
  *   handles; this TU consumes them, overlay .bss/.data owns them.
- * - no Player.h.
+ * - no daPly_c.h.
  * - homeless _ZN10dBgActor_cD2Ev from the inline dtor chain (deadstrip).
  *
  * Consolidated from these legacy one-function sources (ROM address order):

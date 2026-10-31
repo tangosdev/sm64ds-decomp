@@ -580,7 +580,7 @@
       "source": "0x02108ea8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010154"
@@ -660,7 +660,7 @@
       "source": "0x02108ec8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010130"

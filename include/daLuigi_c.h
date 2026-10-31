@@ -32,7 +32,7 @@
 #include "dExtAnmTexPat_c.h"
 #include "math/Matrix.h"
 
-struct Player;
+struct daPly_c;
 struct daLuigiState;
 
 struct daLuigi_c : dActor_c {
@@ -57,9 +57,9 @@ struct daLuigi_c : dActor_c {
     /* Coined names. SetState (0x021112c4) enters a state; EnterMirror
        (0x021112bc) and ExecuteMirror (0x02111288) are the one state, which
        mirrors the player's position and facing. */
-    int SetState(daLuigiState *state, Player *player);
-    int EnterMirror(Player *player);
-    int ExecuteMirror(Player *player);
+    int SetState(daLuigiState *state, daPly_c *player);
+    int EnterMirror(daPly_c *player);
+    int ExecuteMirror(daPly_c *player);
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -71,7 +71,7 @@ typedef char daLuigi_c_size_must_be_0x20c[sizeof(daLuigi_c) == 0x20c ? 1 : -1];
  * and `execute` every frame by Behavior. d_a_luigi.cpp defines the record;
  * the compiler copies the two pointer-to-member descriptors into it at
  * overlay load. daLuigiState and daLuigiStateFn are coined names. */
-typedef int (daLuigi_c::*daLuigiStateFn)(Player *player);
+typedef int (daLuigi_c::*daLuigiStateFn)(daPly_c *player);
 struct daLuigiState {
     daLuigiStateFn enter;
     daLuigiStateFn execute;

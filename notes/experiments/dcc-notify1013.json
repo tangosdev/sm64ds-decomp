@@ -8,7 +8,7 @@
   "source_sha256": "b10439581ecf9904ebb14dcd7f76007fb0ee76362f8893ef2e0327418669715b",
   "constructs_tested": 7,
   "bounded_experiment": "Four integer predicate forms reproduce the whole raw ELF. Tested bool and direct-guard forms emit 60 bytes rather than 72. This is not a compiler floor.",
-  "receiver": "Process passes dCc_c collider nodes. The existing Player notifier Arg view remains for hit flags and virtual GetPos; no unproved Player interface is introduced.",
+  "receiver": "Process passes dCc_c collider nodes. The existing daPly_c notifier Arg view remains for hit flags and virtual GetPos; no unproved daPly_c interface is introduced.",
   "whole_object": {
     "raw_identical": true,
     "prepared_identical": true,
@@ -50,7 +50,7 @@
       "id": "dcc-notifier-arg-view",
       "owner_task": "dcc-notify1013",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3791",
-      "description": "Existing Player notifier Arg scaffold and Process raw hitFlags accesses remain."
+      "description": "Existing daPly_c notifier Arg scaffold and Process raw hitFlags accesses remain."
     },
     {
       "id": "dcc-init-canonical-name",

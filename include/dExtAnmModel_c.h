@@ -74,7 +74,7 @@
  * MEASURED 2026-10-22.
  *
  * Two call sites could not follow: d_a_ots.cpp tail-forwards the result as an
- * int, and one Player.cpp body passes a non-constant startFrame. Each keeps a
+ * int, and one d_a_ply_methods.cpp body passes a non-constant startFrame. Each keeps a
  * scalar `local extern:` with its reason.
  */
 

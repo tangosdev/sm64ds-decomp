@@ -40,10 +40,10 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN13daObjMaruta_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN13daObjMaruta_c15OnHitByMegaCharER7daPly_c",
       "address": "0x02127058",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp",
+      "legacy_source": "src/_ZN13daObjMaruta_c15OnHitByMegaCharER7daPly_c.cpp",
       "ordinal": 2
     },
     {

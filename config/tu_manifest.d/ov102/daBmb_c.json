@@ -89,10 +89,10 @@
       "ordinal": 6
     },
     {
-      "symbol": "_ZN7daBmb_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN7daBmb_c13OnTurnIntoEggER7daPly_c",
       "address": "0x0214adc8",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN6BobOmb13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 7
     },
     {
@@ -571,7 +571,7 @@
       "source": "0x0214e5a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBmb_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN7daBmb_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214adc8"
@@ -651,7 +651,7 @@
       "source": "0x0214e5c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010130"
@@ -993,7 +993,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_0214c0b8' differs between the legacy file that used to hold func_ov102_0214aa18 and the one that held func_ov102_0214ad14; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header states: ONE file-scope extern \"C\" region carrying only what the C++-named members need, and every other member keeping its own independently-recovered spellings at BLOCK scope inside its own body, so two members are allowed to disagree about one symbol. No TUBUILD CONFLICT marker survives in the source. 35/35 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_0214b384' differs between the legacy file that used to hold func_ov102_0214ab1c and the one that held func_ov102_0214ad40; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header states: ONE file-scope extern \"C\" region carrying only what the C++-named members need, and every other member keeping its own independently-recovered spellings at BLOCK scope inside its own body, so two members are allowed to disagree about one symbol. No TUBUILD CONFLICT marker survives in the source. 35/35 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_0214c0b8' differs between the legacy file that used to hold func_ov102_0214aa18 and the one that held func_ov102_0214ad40; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header states: ONE file-scope extern \"C\" region carrying only what the C++-named members need, and every other member keeping its own independently-recovered spellings at BLOCK scope inside its own body, so two members are allowed to disagree about one symbol. No TUBUILD CONFLICT marker survives in the source. 35/35 byte-match.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_0214baa0' differs between the legacy file that used to hold _ZN7daBmb_c13OnTurnIntoEggER6Player and the one that held func_ov102_0214ae1c; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header states: ONE file-scope extern \"C\" region carrying only what the C++-named members need, and every other member keeping its own independently-recovered spellings at BLOCK scope inside its own body, so two members are allowed to disagree about one symbol. No TUBUILD CONFLICT marker survives in the source. 35/35 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov102_0214baa0' differs between the legacy file that used to hold _ZN7daBmb_c13OnTurnIntoEggER7daPly_c and the one that held func_ov102_0214ae1c; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header states: ONE file-scope extern \"C\" region carrying only what the C++-named members need, and every other member keeping its own independently-recovered spellings at BLOCK scope inside its own body, so two members are allowed to disagree about one symbol. No TUBUILD CONFLICT marker survives in the source. 35/35 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020ef228' differs between the legacy file that used to hold func_ov102_0214ae1c and the one that held func_ov102_0214b248; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header states: ONE file-scope extern \"C\" region carrying only what the C++-named members need, and every other member keeping its own independently-recovered spellings at BLOCK scope inside its own body, so two members are allowed to disagree about one symbol. No TUBUILD CONFLICT marker survives in the source. 35/35 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov102_0214aa18 and the one that held func_ov102_0214b444; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header states: ONE file-scope extern \"C\" region carrying only what the C++-named members need, and every other member keeping its own independently-recovered spellings at BLOCK scope inside its own body, so two members are allowed to disagree about one symbol. No TUBUILD CONFLICT marker survives in the source. 35/35 byte-match.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov102_0214ad14 and the one that held func_ov102_0214b988; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header states: ONE file-scope extern \"C\" region carrying only what the C++-named members need, and every other member keeping its own independently-recovered spellings at BLOCK scope inside its own body, so two members are allowed to disagree about one symbol. No TUBUILD CONFLICT marker survives in the source. 35/35 byte-match.",

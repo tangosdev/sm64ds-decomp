@@ -117,7 +117,7 @@ struct daDsn_c : daDsnBase_c {
     /* Slots 3 and 9 are daDsnBase_c's and are declared there -- see the note
        above. This class inherits both words. */
 
-    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
     virtual int OnAimedAtWithEgg();               /* slot 29 */
 };
 

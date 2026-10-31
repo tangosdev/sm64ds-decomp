@@ -173,15 +173,15 @@ declaration"), and it is neither virtual nor layout-affecting, so
 ## 7. `dActor_c` field widths -- the `0x080..0x0ab` block
 
 `0x080..0x08b` and the `0x098..0x0ab` block were bare padding and `u8`
-placeholders in `dActor_c.h`, while `Player.h` -- describing the same bytes --
-named them and typed them `s32`. Player is right, and the evidence is outside
-Player: `BooCage::InitResources` and `daPiano_c::InitResources` write `-0x4000`
+placeholders in `dActor_c.h`, while `daPly_c.h` -- describing the same bytes --
+named them and typed them `s32`. daPly_c is right, and the evidence is outside
+daPly_c: `BooCage::InitResources` and `daPiano_c::InitResources` write `-0x4000`
 and `-0x2000` to `0x09c` and `-0x46000` / `-0x3c000` to `0x0a0`, which are fix12
-gravity and terminal velocity, not bytes. `Player::St_Walk_Main` passes `0x098`
+gravity and terminal velocity, not bytes. `daPly_c::St_Walk_Main` passes `0x098`
 as a 32-bit argument.
 
 These were deliberately left wrong for a long time: nothing compiled against
-`dActor_c`'s copies, so no gate could prove a change either way. Once `Player`
+`dActor_c`'s copies, so no gate could prove a change either way. Once `daPly_c`
 inherits them, 62 files using `mHorzSpeed` and 49 using `mVertSpeed` resolve
 through this header, and a wrong width fails immediately.
 
@@ -388,7 +388,7 @@ visible: `and #0xf` then `orr #0x10`, so the value is squeezed into a nibble and
 tagged. `delay` is `ldrh` -- u16 -- and is written to the popup's own `0x14c`;
 callers pass 0 or `0x15`.
 
-`GivePlayerCoins` takes `Player` BY REFERENCE and then tests it against null,
+`GivePlayerCoins` takes `daPly_c` BY REFERENCE and then tests it against null,
 which the ROM does plainly (`movs r5, r1` into the argument, then a conditional
 return). That is not a contradiction to resolve away: the mangled name says
 `R6Player`, and the null test is real, so the source has to say both. `count` is
@@ -429,7 +429,7 @@ Read what they do and do not claim. `0xd0` is the size the header's own field li
 computes -- it is NOT independent ROM evidence that a `dActor_c` is `0xd0` bytes.
 What it buys is real all the same: the two spellings are held to each other, a
 field retyped without shrinking the pad after it stops compiling, and
-`include/Player.h` becomes checkable -- a derived struct's fields start at its
+`include/daPly_c.h` becomes checkable -- a derived struct's fields start at its
 base's size, and `tools/check_header_offsets.py` will not guess that number.
 
 ## 19. `dActor_c::BeforeBehavior` -- flag bits, and a dead lever

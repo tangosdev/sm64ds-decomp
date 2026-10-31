@@ -10,7 +10,7 @@
 #include "PathPtr.h"
 #include "dActor_c.h"
 
-struct Player;
+struct daPly_c;
 
 /* Cool Cool Mountain racing penguin. RTTI ov019:0x021132d0 names daPgRcer_c;
  * overlay_actors maps ov019 RACING_PENGUIN (259). Direct base is dActor_c
@@ -50,7 +50,7 @@ struct daPgRcer_c : dActor_c {
     s32 mPathNodeIndex;               /* 0x36c */
     daPgRcerState *mStateDesc;        /* 0x370 -- func_ov019_021122dc */
     s32 mAction;                      /* 0x374 -- state index 0..5 */
-    Player *mTalkPlayer;              /* 0x378 */
+    daPly_c *mTalkPlayer;              /* 0x378 */
     s32 mFallAccum;                   /* 0x37c -- |player vertSpeed| while airborne */
     s32 mPathDist;                    /* 0x380 -- remaining dist to current node */
     u32 mSlideSound;                  /* 0x384 -- Sound::PlayLong handle */

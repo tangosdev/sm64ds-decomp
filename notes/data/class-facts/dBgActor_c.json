@@ -46,7 +46,7 @@
   "inherited_unchanged_slots": "slots 0-15 and 18-30 still hold dActor_c's own words (all point into arm9); no other override.",
   "non_virtual": [
     {
-      "symbol": "_ZN10dBgActor_c14KillByMegaCharER6Player",
+      "symbol": "_ZN10dBgActor_c14KillByMegaCharER7daPly_c",
       "address": "0x020ee4b0",
       "size": "0xac"
     },

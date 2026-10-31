@@ -57,7 +57,7 @@
  *   daKuriKing_c has virtuals, so its own member pointers are wider than the
  *   8-byte records the sinit copies in.
  * - The remaining mangled calls that carry Fix12<int> (Particle::System::
- *   NewSimple, Player::Hurt, the Init family,
+ *   NewSimple, daPly_c::Hurt, the Init family,
  *   Earthquake, DropShadowRadHeight, cstd::atan2, Sound::ChangeMusicVolume)
  *   pass it as a raw int. The header form with Fix12<int> locals builds a
  *   stack temporary and changes size (021223bc goes 0x278 -> 0x288 through
@@ -92,7 +92,7 @@ enum daKuriKing_c_AssetId {
 #include "dExtAnmMaterial_c.h"
 #include "dExtAnmTexPat_c.h"
 #include "dBgCh_Gnd.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "daKrb_c.h"
 #include "dCamera_c.h"
 #include "Message.h"
@@ -356,7 +356,7 @@ int daKuriKing_c::func_ov074_0211f38c(){
     struct Vector3_16 spawnAngle;
     int radius;
     int spawnTarget;
-    Player* player;
+    daPly_c* player;
     spawnPos.x=0; spawnPos.y=0; spawnPos.z=0;
     spawnAngle.x=0; spawnAngle.y=0; spawnAngle.z=0;
     spawnPos.x=this->mPosX;
@@ -405,7 +405,7 @@ void daKuriKing_c::func_ov074_0211f5b8()
 {
     Vector3 vzero;
     Vector3 vmsg;
-    Player* player;
+    daPly_c* player;
     s32 state;
     dCamera_c* cam;
 
@@ -619,7 +619,7 @@ void daKuriKing_c::func_ov074_0211fc38()
         return;
     if (this->mSizeIndex != 0) goto detox;
     {
-        Player* player = this->ClosestPlayer();
+        daPly_c* player = this->ClosestPlayer();
         if (player->StartTalk(*this, 1) == 0) return;
         Message::PrepareTalk();
         if (func_ov074_02121a20(1) != 0 || func_ov074_02121a20(2) != 0) {
@@ -665,7 +665,7 @@ void daKuriKing_c::func_ov074_0211fd74()
 
 L90:;
     int spawnTarget = data_ov074_02122d80[this->mSizeIndex];
-    Player* pl = this->ClosestPlayer();
+    daPly_c* pl = this->ClosestPlayer();
     if (this->mSizeIndex == 1 && (int)pl->param1 != 3) spawnTarget = spawnTarget + 1;
 
     if (this->mAnmModel.Finished() == 0)
@@ -699,7 +699,7 @@ L90:;
     *spawnedCount = (u8)(*spawnedCount + 1);
     this->mTimer = 2;
 
-    Player* pl2 = this->ClosestPlayer();
+    daPly_c* pl2 = this->ClosestPlayer();
     int dv = 3;
     if ((int)pl2->param1 != 3) {
         if (this->mSizeIndex == 1) dv = 5;
@@ -792,8 +792,8 @@ extern "C" void func_ov074_021201ec(void)
  * Frames the boss for the opening conversation: pins the camera to a fixed
  * look-at/eye pair derived from the boss position, turns the closest player
  * around to face him (angle + 0x7fff), snaps the boss's own facing to
- * mDirection * 0x4500 + mWalkAngle, then runs the talk handshake. Player::StartTalk
- * and Player::ShowMessage each gate the rest of the tick, so a refused talk
+ * mDirection * 0x4500 + mWalkAngle, then runs the talk handshake. daPly_c::StartTalk
+ * and daPly_c::ShowMessage each gate the rest of the tick, so a refused talk
  * simply retries next frame; on success the music layer flips once (guarded
  * by mMusicStarted) and the state advances to 1.
  *
@@ -811,7 +811,7 @@ void daKuriKing_c::func_ov074_021201f0() {
     struct Ang16 ang;
     struct Vector3 look, pos;
     struct Vector3 msgpos[2];
-    Player* player;
+    daPly_c* player;
     dCamera_c* cam;
     short msg;
 
@@ -1223,7 +1223,7 @@ void daKuriKing_c::func_ov074_02120d74() {
         type = player->actorID;
         b = (int)(type == 0xbf);
         if (b != 0) {
-            Player *pl = (Player *)player;
+            daPly_c *pl = (daPly_c *)player;
             if (this->mHurtTimer == 0) {
                 if (!(flags & 0x26fe0) && *(u8 *)&pl->mIsTakingDamage == 0) {
                     if (cur == &this->mdCc_cs[2]) {

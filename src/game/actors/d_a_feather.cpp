@@ -2,7 +2,7 @@
 /* Wing cap feather (FEATHER 345) -- ov002/daFeather_c.
  *
  * The collectible feather that gives the player wings: Behavior hands any
- * touching player to Player::InitWingFeathers and destroys itself. Until
+ * touching player to daPly_c::InitWingFeathers and destroys itself. Until
  * then it sways down on mDriftSpeed/mSwayAngle float physics shared with the
  * sibling water bubble (daObjAbuku_c), blinking through its last 45 ground
  * frames before it pops.
@@ -30,7 +30,7 @@
 
 #include "common.h"
 #include "daFeather_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
@@ -114,7 +114,7 @@ int daFeather_c::Behavior() {
     {
         int b = (data_0209f2d8 == 1);
         if (!b) {
-            Player *p = ClosestPlayer();
+            daPly_c *p = ClosestPlayer();
             if (p->param1 != 0 || p->IsCollectingCap() != 0) {
                 SmallPoofDust();
                 MarkForDestruction();
@@ -168,7 +168,7 @@ int daFeather_c::Behavior() {
         if (a != 0) {
             int eq = (a->actorID == 0xbf);
             if (eq) {
-                ((Player *)a)->InitWingFeathers(true);
+                ((daPly_c *)a)->InitWingFeathers(true);
                 Particle::System::NewSimple(0xd2, mPosX, mPosY, mPosZ);
                 MarkForDestruction();
                 return 1;

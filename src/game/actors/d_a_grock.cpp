@@ -43,7 +43,7 @@ enum daGrock_c_AssetId { ASSET_CV_GORO_ROCK_BMD = 0x05d4 };
 
 #include "decl_common.h"
 #include "daGrock_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "dBgPi.h"
 #include "dBgCh_Actr.h"
@@ -159,7 +159,7 @@ void daGrock_c::HandleCylinderHit() {
     hit = mdCcAcPos_c.hitFlags;
     if ((hit & 0x10) != 0) {
         func_02012694(0x17a, &mCamSpacePos);
-        ((Player *)other)->IncMegaKillCount();
+        ((daPly_c *)other)->IncMegaKillCount();
         TriplePoofDust();
         Particle::System::NewSimple(0x67, mPosX, mPosY, mPosZ);
         SpawnStar();
@@ -170,7 +170,7 @@ void daGrock_c::HandleCylinderHit() {
     isPlayer = (int)(other->actorID == 0xbf);
     if (isPlayer == 0)
         return;
-    if (((Player *)other)->mIsVanish != 0)
+    if (((daPly_c *)other)->mIsVanish != 0)
         return;
 
     if ((hit & 0x3c0) != 0) {
@@ -193,7 +193,7 @@ void daGrock_c::HandleCylinderHit() {
         pos.x = mPosX;
         pos.y = mPosY;
         pos.z = mPosZ;
-        ((Player *)other)->Hurt(pos, 3, 0xc000, 1, 0, 1);
+        ((daPly_c *)other)->Hurt(pos, 3, 0xc000, 1, 0, 1);
     }
 }
 

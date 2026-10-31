@@ -82,7 +82,7 @@
       {"slot": 16, "target": "0x0212a6d4", "own": true,  "name": "~ (D1, complete)",       "declared_in": "fBase_c",  "impl": "_ZN6RabbitD1Ev"},
       {"slot": 17, "target": "0x0212a724", "own": true,  "name": "~ (D0, deleting)",       "declared_in": "fBase_c",  "impl": "_ZN6RabbitD0Ev"},
       {"slot": 18, "target": "0x0212cc18", "own": true,  "name": "OnYoshiTryEat",          "declared_in": "dActor_c", "impl": "_ZN6Rabbit13OnYoshiTryEatEv"},
-      {"slot": 19, "target": "0x02010154", "own": false, "name": "OnTurnIntoEgg",          "declared_in": "dActor_c", "impl": "_ZN8dActor_c13OnTurnIntoEggER6Player (arm9)"},
+      {"slot": 19, "target": "0x02010154", "own": false, "name": "OnTurnIntoEgg",          "declared_in": "dActor_c", "impl": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c (arm9)"},
       {"slot": 20, "target": "0x0201014c", "own": false, "name": "Virtual50",              "declared_in": "dActor_c", "impl": "_ZN8dActor_c9Virtual50Ev (arm9)"},
       {"slot": 21, "target": "0x02010148", "own": false, "name": "OnGroundPounded",        "declared_in": "dActor_c", "impl": "_ZN8dActor_c15OnGroundPoundedERS_ (arm9)"},
       {"slot": 22, "target": "0x02010144", "own": false, "name": "OnAttacked1",            "declared_in": "dActor_c", "impl": "_ZN8dActor_c11OnAttacked1ERS_ (arm9)"},
@@ -90,7 +90,7 @@
       {"slot": 24, "target": "0x0201013c", "own": false, "name": "OnKicked",               "declared_in": "dActor_c", "impl": "_ZN8dActor_c8OnKickedERS_ (arm9)"},
       {"slot": 25, "target": "0x02010138", "own": false, "name": "OnPushed",               "declared_in": "dActor_c", "impl": "_ZN8dActor_c8OnPushedERS_ (arm9)"},
       {"slot": 26, "target": "0x02010134", "own": false, "name": "OnHitByCannonBlastedChar","declared_in": "dActor_c","impl": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_ (arm9)"},
-      {"slot": 27, "target": "0x02010130", "own": false, "name": "OnHitByMegaChar",        "declared_in": "dActor_c", "impl": "_ZN8dActor_c15OnHitByMegaCharER6Player (arm9)"},
+      {"slot": 27, "target": "0x02010130", "own": false, "name": "OnHitByMegaChar",        "declared_in": "dActor_c", "impl": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c (arm9)"},
       {"slot": 28, "target": "0x0201012c", "own": false, "name": "OnHitFromUnderneath",    "declared_in": "dActor_c", "impl": "_ZN8dActor_c19OnHitFromUnderneathERS_ (arm9)"},
       {"slot": 29, "target": "0x02010124", "own": false, "name": "OnAimedAtWithEgg",       "declared_in": "dActor_c", "impl": "_ZN8dActor_c16OnAimedAtWithEggEv (arm9)"},
       {"slot": 30, "target": "0x020100dc", "own": false, "name": "OnAimedAtWithEggReturnVec","declared_in": "dActor_c","impl": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv (arm9)"}

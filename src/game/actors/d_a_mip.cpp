@@ -45,7 +45,7 @@ enum daMip_c_AssetId {
 #include "daMip_c.h"
 #include "common.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "PathPtr.h"
 #include "decl_Message.h"
 #include "Message.h"
@@ -74,7 +74,7 @@ int   SurfaceInfo_TestFlag0x20(void *);
    VALUE in their real declarations and mwccarm passes those differently at the
    call site. */
 
-/* Player / Message / Sound / SaveData */
+/* daPly_c / Message / Sound / SaveData */
 /* The return type is load-bearing: StateTalkMain tests it in an `if`, so the
    `void` spelling three of the four legacy files used cannot be the one. */
 
@@ -265,7 +265,7 @@ int daMip_c::TestWaterBelow()
 
 // @symbol _ZN7daMip_c10UpdateGrabEv
 /* Pick-up. otherOwner is the actor touching the cylinder; actor 0xbf is
-   Player. hitFlags 0x1000 is the grab bit. A rabbit already caught once
+   daPly_c. hitFlags 0x1000 is the grab bit. A rabbit already caught once
    (mCatchState) goes to Released instead of Caught. */
 void daMip_c::UpdateGrab()
 {
@@ -274,7 +274,7 @@ void daMip_c::UpdateGrab()
 
     unsigned int id = mdCcAc_c.otherOwner;
     if (id == 0) return;
-    Player *o = static_cast<Player *>(dActor_c::FindWithID(id));
+    daPly_c *o = static_cast<daPly_c *>(dActor_c::FindWithID(id));
     if (o == 0) return;
     if (!IsPlayerActor(o))
         return;
@@ -302,7 +302,7 @@ int daMip_c::StateSaveTalkMain()
     extern unsigned char data_0209d660;
     extern MipStatePair data_ov085_021306bc;
 
-    Player *player = mSaveTalkPlayer;
+    daPly_c *player = mSaveTalkPlayer;
     struct V3 vec;
     unsigned char gb;
     int state;
@@ -372,7 +372,7 @@ int daMip_c::StateTalkMain()
     struct V3 { int x, y, z; };
     extern MipStatePair data_ov085_021306bc;
 
-    Player *player;
+    daPly_c *player;
     int *pq;
     struct V3 pos;
     struct V3 pp;
@@ -434,11 +434,11 @@ int daMip_c::StateReleasedMain()
     extern MipStatePair data_ov085_021306dc;
 
     unsigned short h;
-    Player *o;
-    Player *cp;
+    daPly_c *o;
+    daPly_c *cp;
     int a;
     int flags;
-    Player *obj;
+    daPly_c *obj;
 
     obj = mTalkingPlayer;
     if (obj != 0) {
@@ -472,11 +472,11 @@ int daMip_c::StateReleasedMain()
     }
 
     if ((mdCcAc_c.hitFlags & 0x8000000) != 0) {
-        o = static_cast<Player *>(dActor_c::FindWithID(mdCcAc_c.otherOwner));
+        o = static_cast<daPly_c *>(dActor_c::FindWithID(mdCcAc_c.otherOwner));
         if (o != 0) {
             if (IsPlayerActor(o)) {
                 mSaveTalkPlayer = o;
-                o = static_cast<Player *>(mSaveTalkPlayer);
+                o = static_cast<daPly_c *>(mSaveTalkPlayer);
                 if (o->StartTalk(*this, 0) != 0) {
                     SetState(&data_ov085_021306dc);
                 }
@@ -517,7 +517,7 @@ int daMip_c::StateCaughtMain()
     extern u8 data_0209d660;
     extern u8 data_0209d6bc;
 
-    Player *pl;
+    daPly_c *pl;
     Vector3 pv;
     Vector3 pos;
     Vector3 pos7;
@@ -768,7 +768,7 @@ int daMip_c::StateFleeMain() {
     };
     extern MipStatePair data_ov085_0213069c;
 
-    Player *pl;
+    daPly_c *pl;
     struct V3Blk v;
     struct Vector3 pos;
     struct Vector3 node;
@@ -893,7 +893,7 @@ int daMip_c::StateFleeInit()
     int d0;
     struct Vector3 *src;
 
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     mActionStep = 0;
     if (p) {
         src = (struct Vector3 *)&p->mPosX;
@@ -959,7 +959,7 @@ int daMip_c::StateIdleMain()
     extern DaMipAnimationFilePtr data_ov085_021305c0;
     extern DaMipAnimationFilePtr data_ov085_021305c8;
 
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (player == 0) return 1;
 
     if (TestWaterBelow() == 1) {
@@ -1303,7 +1303,7 @@ int daMip_c::Behavior()
     extern MipStatePair data_ov085_021306dc;
 
     char* c = (char*)this;
-    Player *player;
+    daPly_c *player;
 
     if (data_0209f2f8 != 0x32) {
         if (mIsDisabled == 1) {
@@ -1339,7 +1339,7 @@ int daMip_c::Behavior()
         u32 talkStep = mTalkState;
         if (talkStep < 2) {
             if (IsInYoshiMouth(this) == 1) {
-                Player *talker = mTalkingPlayer;
+                daPly_c *talker = mTalkingPlayer;
                 if (talker != 0) {
                     if (talkStep == 0) {
                         Vec3Scratch pos;
@@ -1544,7 +1544,7 @@ int daMip_c::InitResources()
         if (player == 0)
             return 0;
         if (data_0209f2f8 != 0x32) {
-            if (mCharacterId != ((Player *)player)->mCharacter)
+            if (mCharacterId != ((daPly_c *)player)->mCharacter)
                 return 0;
         }
     }
@@ -1559,13 +1559,13 @@ int daMip_c::InitResources()
         closest = ClosestPlayer();
         if (closest != 0) {
             int v;
-            v = (s32)((Player *)closest)->param1;
+            v = (s32)((daPly_c *)closest)->param1;
             if (data_0209f2f8 == 0x32)
                 v = 1;
             if (func_02013890(mRabbitId, v) != 0 && data_ov085_021305ac < 8) {
                 u32 rnd = RandomIntInternal(&data_0209e650) >> 8;
                 if (NumStars() >= 0x51) {
-                    if ((s32)((Player *)closest)->param1 == 3) {
+                    if ((s32)((daPly_c *)closest)->param1 == 3) {
                         if ((rnd & 0xf) == 0)
                             mColorVariant = 5;
                     } else {
@@ -1573,7 +1573,7 @@ int daMip_c::InitResources()
                             mColorVariant = 5;
                     }
                 } else if (NumStars() >= 0x28) {
-                    if ((s32)((Player *)closest)->param1 == 3) {
+                    if ((s32)((daPly_c *)closest)->param1 == 3) {
                         if ((rnd & 0x1f) == 0)
                             mColorVariant = 5;
                     } else {

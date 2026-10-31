@@ -67,7 +67,7 @@
     {"slot": 16, "address": "0x0211f000", "size": "0x48",  "inherited_name": "dActor_c::~dActor_c() [D1]",   "base_impl": "0x02011374", "tree_symbol": "_ZN7daSpd_cD1Ev", "note": "the FIRST byte of ov071's .text"},
     {"slot": 17, "address": "0x0211f048", "size": "0x5c",  "inherited_name": "dActor_c::~dActor_c() [D0]",   "base_impl": "0x02011314", "tree_symbol": "_ZN7daSpd_cD0Ev"},
     {"slot": 18, "address": "0x0211f0a4", "size": "0x8",   "inherited_name": "dActor_c::OnYoshiTryEat()",    "base_impl": "0x02010160", "tree_symbol": "_ZN7daSpd_c13OnYoshiTryEatEv", "body": "mov r0, #6; bx lr", "note": "returns the constant 6"},
-    {"slot": 19, "address": "0x02120580", "size": "0x98",  "inherited_name": "dActor_c::OnTurnIntoEgg(Player&)", "base_impl": "0x02010154", "tree_symbol": "_ZN7daSpd_c13OnTurnIntoEggER6Player", "note": "the R6Player reference spelling is a GUESS -- a reference and a pointer generate identical ARM here. The base's arm9 symbol is spelt the same way, which is corroboration of style, not of the type."},
+    {"slot": 19, "address": "0x02120580", "size": "0x98",  "inherited_name": "dActor_c::OnTurnIntoEgg(daPly_c&)", "base_impl": "0x02010154", "tree_symbol": "_ZN7daSpd_c13OnTurnIntoEggER7daPly_c", "note": "the R6Player reference spelling is a GUESS -- a reference and a pointer generate identical ARM here. The base's arm9 symbol is spelt the same way, which is corroboration of style, not of the type."},
     {"slot": 29, "address": "0x0211f0ac", "size": "0x8",   "inherited_name": "dActor_c::OnAimedAtWithEgg()", "base_impl": "0x02010124", "tree_symbol": "_ZN7daSpd_c16OnAimedAtWithEggEv", "body": "mov r0, #0x32000; bx lr", "note": "returns 0x32000 = 204800 = 50 << 12, so very likely Fix12(50). The return TYPE is unproven; the tree declares int."}
   ],
   "override_count": 10,
@@ -84,7 +84,7 @@
   "shard_count_correction": {
     "queue_says": 36,
     "real": 37,
-    "why": "The 37th shard is src/d_a_spd.c, holding daSpd_c_classInit at 0x02120618 (size 0x50). tools/tu_map.py cuts on symbol NAME, and daSpd_c_classInit is spelt neither _ZN7daSpd_c... nor func_ov071_..., so it was never labelled and never counted -- even though _ZN7daSpd_c13OnTurnIntoEggER6Player ends at exactly 0x02120580 + 0x98 = 0x02120618, a ZERO-byte gap. ov071 puts each class's factory last in its own run; the promoted sibling daEyBm_c carries daEyBm_c_classInit the same way.",
+    "why": "The 37th shard is src/d_a_spd.c, holding daSpd_c_classInit at 0x02120618 (size 0x50). tools/tu_map.py cuts on symbol NAME, and daSpd_c_classInit is spelt neither _ZN7daSpd_c... nor func_ov071_..., so it was never labelled and never counted -- even though _ZN7daSpd_c13OnTurnIntoEggER7daPly_c ends at exactly 0x02120580 + 0x98 = 0x02120618, a ZERO-byte gap. ov071 puts each class's factory last in its own run; the promoted sibling daEyBm_c carries daEyBm_c_classInit the same way.",
     "consequence": "A promotion that folds only the 36 name-matched shards leaves a one-function hole inside a contiguous run and cannot produce a single `complete` span. Fold all 37."
   },
 
@@ -130,7 +130,7 @@
     {"offset": "0x39c", "size": 4, "type": null, "name": null, "name_status": "unproven", "proof": "word load/store in ELEVEN functions -- the hottest own field after the state pointer."},
     {"offset": "0x3a0", "type": null, "name": null, "name_status": "unproven", "proof": "word load/store and address taken, three functions."},
     {"offset": "0x3a8", "size": 2, "type": "s16 (halfword)", "name": "mTimer", "proof": "_ZN7daSpd_c8BehaviorEv does `add r0,r4,#0x3a8 ; bl 0x0203adbc` and 0x0203adbc is DecIfAbove0_Short in config/arm9/symbols.txt -- a short* parameter. Behavior discards the result. include/daSpd_c.h on this base declares `u8 mTimer` with `u8 pad_3a9[0x3]` after it; the ROM says halfword, and 0x3aa is a SEPARATE byte field, so that declaration is wrong in both halves."},
-    {"offset": "0x3aa", "size": 1, "type": "u8", "name": null, "name_status": "unproven", "proof": "ldrb/strb in three functions: func_ov071_0211f498 reads and writes it, _ZN7daSpd_c13InitResourcesEv writes it (`strb r2,[r4,#0x3aa]` @0x02120500), _ZN7daSpd_c13OnTurnIntoEggER6Player reads it twice and writes it once."},
+    {"offset": "0x3aa", "size": 1, "type": "u8", "name": null, "name_status": "unproven", "proof": "ldrb/strb in three functions: func_ov071_0211f498 reads and writes it, _ZN7daSpd_c13InitResourcesEv writes it (`strb r2,[r4,#0x3aa]` @0x02120500), _ZN7daSpd_c13OnTurnIntoEggER7daPly_c reads it twice and writes it once."},
     {"offset": "0x3ab", "size": 1, "type": "padding", "name": null, "proof": "never accessed; 0x3aa+1 = 0x3ab and the object ends at 0x3ac."}
   ],
   "fields_method": "This-relative accesses were collected by decoding all 37 functions with capstone, seeding the this-register set with r0 at entry, propagating through `mov`, and recording every `[thisreg,#imm]` load/store plus every `add rD,thisreg,#imm`. That is a heuristic for the register set, so a single-function offset is weaker evidence than a multi-function one; each offset above carries its witness count. The four member subobjects and the state pointer are proven independently and do not rest on the heuristic.",
@@ -218,7 +218,7 @@
   "unproven": [
     "The English names of all 25 auto-named func_ov071_* handlers and helpers inside this class's text run (config/arm9/overlays/ov071/symbols.txt holds 48 func_ov071_* symbols overlay-wide; 25 of them fall inside 0x0211f000..0x02120668). Their class ownership, bodies, call graph, PMF-table positions and ordering are proven; their names are not.",
     "The original spellings of daSpd_c_classInit (historical project alias Scuttlebug_Spawn) and Scuttlebug_SetState.",
-    "The parameter type in _ZN7daSpd_c13OnTurnIntoEggER6Player: R6Player asserts a reference and the bytes cannot distinguish a reference from a pointer.",
+    "The parameter type in _ZN7daSpd_c13OnTurnIntoEggER7daPly_c: R6Player asserts a reference and the bytes cannot distinguish a reference from a pointer.",
     "The return type of OnAimedAtWithEgg. 0x32000 = 50 << 12 smells like Fix12(50), but the ROM proves only the 32-bit constant.",
     "The types and names of every field marked name_status:unproven above -- 0x0d0, 0x350, 0x374, 0x378, 0x37c, 0x384, 0x388, 0x38c, 0x390, 0x394, 0x398, 0x39c, 0x3a0, 0x3aa.",
     "What mTimer expiring means. Behavior decrements it every frame and discards the result, so the meaning lives in a state handler that has not been read.",

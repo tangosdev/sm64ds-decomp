@@ -62,8 +62,8 @@ struct daOwl_c : dEnemyBase_c {
     dExtShadowModel_c mShadowModel;         /* 0x370 */
     Matrix4x3 mShadowMat;             /* 0x398 -- fed to DropShadowRadHeight */
     State *mCurrentState;             /* 0x3c8 */
-    struct Player *mRider;            /* 0x3cc -- the player being carried, else 0 */
-    struct Player *mTalkTarget;       /* 0x3d0 -- the player it faces and talks to */
+    struct daPly_c *mRider;            /* 0x3cc -- the player being carried, else 0 */
+    struct daPly_c *mTalkTarget;       /* 0x3d0 -- the player it faces and talks to */
     u8  mTalkState;                   /* 0x3d4 -- 0 idle, 1 talking, 2 talk finished */
     u8  pad_3d5[3];
     s32 mAnchorX;                     /* 0x3d8 -- hover anchor, returned to after a carry */

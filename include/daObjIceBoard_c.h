@@ -35,7 +35,7 @@ struct daObjIceBoard_c : dBgActor_c {
     virtual int Behavior();                        /* slot  6 */
     virtual int Render();                          /* slot  9 */
     virtual void OnGroundPounded(dActor_c &other); /* slot 21 */
-    virtual void OnHitByMegaChar(Player &player);  /* slot 27 */
+    virtual void OnHitByMegaChar(daPly_c &player);  /* slot 27 */
     virtual void Kill();                           /* slot 31 */
 
     virtual ~daObjIceBoard_c() {} /* slots 16, 17 */

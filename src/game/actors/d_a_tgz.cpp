@@ -47,7 +47,7 @@ struct Vector3_16f;
 #include "decl_common.h"
 #include "nitro/fx/fx.h"
 #include "daTgz_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "dBgCh_Gnd.h"
@@ -260,7 +260,7 @@ extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
 extern "C" void func_ov077_02124eb0(void *vc)
 {
     daTgz_c *self = (daTgz_c *)vc;
-    Player *player;
+    daPly_c *player;
     int b;
 
     if (self->FindEgg(self->mdCcAc_c) != 0) {
@@ -279,7 +279,7 @@ extern "C" void func_ov077_02124eb0(void *vc)
         unsigned int id = self->mdCcAc_c.otherOwner;
         if (id == 0)
             return;
-        player = (Player *)dActor_c::FindWithID(id);
+        player = (daPly_c *)dActor_c::FindWithID(id);
     }
     if (player == 0)
         return;
@@ -334,7 +334,7 @@ extern "C" void func_ov077_021250a8(void *vc)
     unsigned int id = self->mdCcAc_c.otherOwner;
     if (id == 0)
         return;
-    Player *player = (Player *)dActor_c::FindWithID(id);
+    daPly_c *player = (daPly_c *)dActor_c::FindWithID(id);
     if (player == 0)
         return;
     int b1 = (int)(player->actorID == 0xbf);
@@ -860,10 +860,10 @@ int daTgz_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN7daTgz_c13OnTurnIntoEggER6Player
+// @symbol _ZN7daTgz_c13OnTurnIntoEggER7daPly_c
 /* Vtable slot 19. Yoshi's egg is worth one coin -- paid directly while the
  * player is collecting a cap, otherwise counted as an egg coin. */
-void daTgz_c::OnTurnIntoEgg(Player &player)
+void daTgz_c::OnTurnIntoEgg(daPly_c &player)
 {
     if (player.IsCollectingCap())
         GivePlayerCoins(player, 1, 0);

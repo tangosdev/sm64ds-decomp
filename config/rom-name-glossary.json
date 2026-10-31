@@ -1031,7 +1031,7 @@
     "Ply": {
       "gloss": "player",
       "confidence": "high",
-      "note": "daPly_c = PLAYER(191); rtti_reconcile coined Player."
+      "note": "daPly_c = PLAYER(191); rtti_reconcile coined Player, since renamed to the RTTI spelling."
     },
     "Pic": {
       "gloss": "picture -- a painting",
@@ -1220,7 +1220,7 @@
     "ed": {
       "gloss": "ending",
       "confidence": "medium",
-      "note": "Player animations in the file table use the same prefix for the ending (ed_kiss_wait, ed_wave, ed_fly, peach_ed_*). edStarKiraCallback_c = the ending star's sparkle."
+      "note": "daPly_c animations in the file table use the same prefix for the ending (ed_kiss_wait, ed_wave, ed_fly, peach_ed_*). edStarKiraCallback_c = the ending star's sparkle."
     },
     "dokan": {
       "ja": "土管",

@@ -1,7 +1,7 @@
 //cpp
 /* Warp trigger volume (WARPKUN) -- ov002/daWarpkun_c.
  *
- * An invisible trigger: while a Player overlaps its cylinder, Behavior fires
+ * An invisible trigger: while a daPly_c overlaps its cylinder, Behavior fires
  * WarpPlayer for that player's number and the destination carried in the
  * spawn param, then latches mAngleY until the cylinder empties. mAngleY is
  * that warp-in-progress latch here, not an angle.
@@ -16,10 +16,10 @@
  */
 
 #include "daWarpkun_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "decl_common.h"
 
-/* actorID 0xbf is the Player: Behavior casts the hit actor to Player * and
+/* actorID 0xbf is the daPly_c: Behavior casts the hit actor to daPly_c * and
    reads mPlayerNo / CanWarp off it. No shared header names the id. */
 static const u16 kPlayerActorID = 0xbf;
 
@@ -55,7 +55,7 @@ s32 daWarpkun_c::InitResources() {
 }
 
 /* ROM ordinal 5 -- vtable slot 6. `mAngleY == 0' gates the warp; the found
-   actor's actorID/mPlayerNo are real Player members once cast. */
+   actor's actorID/mPlayerNo are real daPly_c members once cast. */
 // @symbol _ZN11daWarpkun_c8BehaviorEv
 s32 daWarpkun_c::Behavior() {
     u32 hitId = mdCcAc_c.otherOwner;
@@ -63,7 +63,7 @@ s32 daWarpkun_c::Behavior() {
         if (mAngleY == 0) {
             dActor_c *hit = dActor_c::FindWithID(hitId);
             if (hit != 0 && IsPlayerActor(hit)) {
-                Player *player = static_cast<Player *>(hit);
+                daPly_c *player = static_cast<daPly_c *>(hit);
                 if (IsPlayerWarping(player->mPlayerNo) != 0) {
                     mAngleY = 1;
                 } else if (player->CanWarp()) {

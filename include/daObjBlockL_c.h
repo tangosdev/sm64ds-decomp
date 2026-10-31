@@ -117,7 +117,7 @@ struct daObjBlockL_c : dBgActor_c {
     int OnAttacked1(dActor_c &other);       /* slot 22 */
     int OnAttacked2(dActor_c &other);       /* slot 23 */
     void OnKicked(dActor_c &other);         /* slot 24 */
-    void OnHitByMegaChar(Player &player);   /* slot 27 */
+    void OnHitByMegaChar(daPly_c &player);   /* slot 27 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

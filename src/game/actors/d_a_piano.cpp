@@ -25,7 +25,7 @@
 #include "daPiano_c.h"
 #include "daPiano_c_resources.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -285,7 +285,7 @@ void daPiano_c::InitStateAttack() {
 void daPiano_c::StateAttack() {
     extern s16 data_02082214[]; /* sine table: (angle >> 4) * 2 taps sin/cos */
 
-    Player *victim;
+    daPly_c *victim;
     int i;
     volatile Vector3 proj;
     Vector3 hurtPos;
@@ -315,9 +315,9 @@ void daPiano_c::StateAttack() {
     for (; i < 2; i++) {
         int id = this->mCylinderClsn[i].otherOwner;
         if (id != 0) {
-            victim = static_cast<Player *>(dActor_c::FindWithID((unsigned int)id));
+            victim = static_cast<daPly_c *>(dActor_c::FindWithID((unsigned int)id));
             if (victim != 0) {
-                /* The actor profile is PLAYER before the Player-specific call. */
+                /* The actor profile is PLAYER before the daPly_c-specific call. */
                 int isPlayer = (victim->actorID == 0xbf);
                 if (isPlayer) {
                     hurtPos.x = this->mPosX;

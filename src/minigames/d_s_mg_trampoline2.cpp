@@ -216,7 +216,7 @@ extern int sMgTextSpritesItalian[];
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for func_ov006_02123b24, NOT applied: extern void MultiStore16(unsigned short a, int b, int c); */
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov006_02123bf4, NOT applied: extern int _Z14ApproachLinearRiii(int &v, int a, int b); */
 /* Both callers use the existing ov006 helpers' void(void) contracts. The
- * unrelated Player::St_Null_Init at the same RAM address belongs to ov002. */
+ * unrelated daPly_c::St_Null_Init at the same RAM address belongs to ov002. */
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov006_02123cb4, NOT applied: extern int _Z14ApproachLinearRiii(int *v, int step, int rate); */
 /* TUBUILD CONFLICT -- alternate declaration of func_0203cc28, from the legacy file for func_ov006_02123cb4, NOT applied: extern void func_0203cc28(int *p, int angle); */
 /* TUBUILD CONFLICT -- alternate declaration of TrmpItem_Spawn, from the legacy file for func_ov006_02123cb4, NOT applied: extern char *TrmpItem_Spawn(int a0, int *a1, int a2, int a3); */

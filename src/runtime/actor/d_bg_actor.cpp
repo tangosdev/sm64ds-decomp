@@ -23,8 +23,8 @@
  * - dActor_c::Earthquake / Particle::System::NewSimple stay TU-local mangled
  *   calls: Fix12<int> by value (6az); typed shared-header decls of them are
  *   overload poison (S13).
- * - Player is only forward-declared here, so the closest player's position
- *   is read through a dActor_c cast rather than pulling in Player.h.
+ * - daPly_c is only forward-declared here, so the closest player's position
+ *   is read through a dActor_c cast rather than pulling in daPly_c.h.
  * - data_020a0e68 is the shared scratch matrix; no header owns it, TU-local.
  */
 /* dBgActor_c.h FIRST: it pulls common.h ahead of dExtSimpleModel_c.h, which is the
@@ -33,7 +33,7 @@
 #include "dBgW.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Actr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 
 /* ROM symbols with no header of their own. Spelled to agree with their
@@ -78,7 +78,7 @@ extern Matrix4x3 data_020a0e68;
  *   func_ov002_020eeca8  ceiling  -> OnHitFromUnderneath       (slot 28)
  *   func_ov002_020eea84  ceiling/wall hazards that hurt the player
  *
- * Callers are Player, daBmb_c and daObjBlockS_c. They take the mover as the
+ * Callers are daPly_c, daBmb_c and daObjBlockS_c. They take the mover as the
  * event's `other'. The two ray functions cast a line from 60 units above the
  * mover along its facing -- 100 units for OnAttacked2, 150 for OnKicked, 130
  * for either when the mover's param1 is 2 -- and copy the hit record out of
@@ -97,7 +97,7 @@ extern "C" {
    declared in dBgCh_Actr.h. */
 int func_02035638(void *clsn); /* mSphereClsn.flags & 0x10: the ceiling bit */
 int func_0203564c(int clsn);   /* mSphereClsn.GetUnderResult(): the ceiling hit */
-/* Player.cpp: sets 0x20 in Player::mStateFlags. */
+/* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(void *player);
 extern int data_02099368[];   /* dBgPi's vtable */
 extern short data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
@@ -311,7 +311,7 @@ extern "C" int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
 }
 
 // @symbol func_ov002_020eed24
-extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, Player *player) {
+extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     dBgPi *hit;
     dActor_c *owner;
     if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638(clsn)) {
@@ -345,7 +345,7 @@ extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
 /* Only for the player (actor ID 0xbf): a ceiling owned by actor ID 0x3a hurts
  * for 3, a wall owned by actor ID 0x139 hurts for 1 and plays sound 0xb5 at
  * that actor; both with knockback 0xc000. clsn is the mover's dBgCh_Actr
- * (Player::mMeshClsn at +0x380). The two-word struct copy of the CLPS keeps
+ * (daPly_c::mMeshClsn at +0x380). The two-word struct copy of the CLPS keeps
  * the ceiling-hit snapshot on the stack under 2004/b56 C++; the explicit
  * snapshot and the scalar Hurt ABI remain measured reconstruction
  * boundaries. */
@@ -383,7 +383,7 @@ extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
                     hurtFrom.y = from->y;
                     hurtFrom.z = from->z;
                 }
-                ((Player *)player)->Hurt(hurtFrom, 3, 0xc000, 1, 0, 1);
+                ((daPly_c *)player)->Hurt(hurtFrom, 3, 0xc000, 1, 0, 1);
                 ((dBgPi *)&hit)->dBgPi::~dBgPi();
                 return 1;
             }
@@ -402,7 +402,7 @@ extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
                     hurtFrom2.y = from->y;
                     hurtFrom2.z = from->z;
                 }
-                if (((Player *)player)->Hurt(hurtFrom2, 1, 0xc000, 1, 0, 1) != 0)
+                if (((daPly_c *)player)->Hurt(hurtFrom2, 1, 0xc000, 1, 0, 1) != 0)
                     Sound::PlayBank0(0xb5, owner->mCamSpacePos);
                 return 1;
             }
@@ -441,7 +441,7 @@ int dBgActor_c::IsClsnInRangeOnScreen(Fix12i radius, Fix12i yOffset) {
             center.y += mClipOffsetY;
         else
             center.y += yOffset;
-        Player *player = ClosestPlayer();
+        daPly_c *player = ClosestPlayer();
         int dist = Vec3_Dist(&center, &((dActor_c *)player)->mPos);
         if (dist > radius) {
             if (mMeshCollider.IsEnabled())
@@ -469,7 +469,7 @@ int dBgActor_c::IsClsnInRange(Fix12i radius, Fix12i yOffset) {
         center.y += mClipOffsetY;
     else
         center.y += yOffset;
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     int dist = Vec3_Dist(&center, &((dActor_c *)player)->mPos);
     if (dist > radius) {
         if (mMeshCollider.IsEnabled())
@@ -590,8 +590,8 @@ void dBgActor_c::Kill()
 /* Mega Mario's shockwave hits: shake the ground, arm the knockback flight
  * (20 u/frame away from the player, 30 up, gravity 2, 30-frame fuse), and
  * take the mesh collider out of the world. */
-// @symbol _ZN10dBgActor_c14KillByMegaCharER6Player
-void dBgActor_c::KillByMegaChar(Player &player)
+// @symbol _ZN10dBgActor_c14KillByMegaCharER7daPly_c
+void dBgActor_c::KillByMegaChar(daPly_c &player)
 {
     Vector3 v;
     v.x = mPosX;

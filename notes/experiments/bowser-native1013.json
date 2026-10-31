@@ -5,7 +5,7 @@
   "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3820",
   "coordinator": "codex-bowser-native-coordinator1013",
   "source_completion": "partial",
-  "summary": "Bowser and tail use existing native Player, actor and collision interfaces at61 call sites across21 APIs; redundant raw declarations and resolved conflict comments are removed. Anonymous input names are remeasured with canonical destinations unchanged.",
+  "summary": "Bowser and tail use existing native daPly_c, actor and collision interfaces at61 call sites across21 APIs; redundant raw declarations and resolved conflict comments are removed. Anonymous input names are remeasured with canonical destinations unchanged.",
   "sources": [
     "src/actors/daKpa_c.cpp",
     "include/daKpaTail_c.h"
@@ -23,14 +23,14 @@
     "handoff_sha256": "5ff373bac4c0ea5f369710fc9ef17b5cafb9d51dc68e47e873508e659cc145f3"
   },
   "native_call_sites": {
-    "_ZN6Player7IsInAirEv": 2,
-    "_ZN6Player9GetHealthEv": 1,
-    "_ZN6Player9DropActorEv": 1,
-    "_ZN6Player15IsCollectingCapEv": 1,
-    "_ZN6Player7TryGrabER8dActor_c": 1,
-    "_ZN6Player9StartTalkER7fBase_cb": 3,
-    "_ZN6Player12GetTalkStateEv": 6,
-    "_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh": 3,
+    "_ZN7daPly_c7IsInAirEv": 2,
+    "_ZN7daPly_c9GetHealthEv": 1,
+    "_ZN7daPly_c9DropActorEv": 1,
+    "_ZN7daPly_c15IsCollectingCapEv": 1,
+    "_ZN7daPly_c7TryGrabER8dActor_c": 1,
+    "_ZN7daPly_c9StartTalkER7fBase_cb": 3,
+    "_ZN7daPly_c12GetTalkStateEv": 6,
+    "_ZN7daPly_c11ShowMessageER7fBase_cjPK7Vector3hh": 3,
     "_ZN8dActor_c14GetSubtractionEss": 5,
     "_ZN8dActor_c13DistToCPlayerEv": 1,
     "_ZN8dActor_c13ClosestPlayerEv": 1,
@@ -116,7 +116,7 @@
       "disposition": "fixed",
       "location": "src/actors/daKpa_c.cpp",
       "summary": "61 native interface calls replace raw mangled boundaries.",
-      "reason": "Existing native bool, byte, reference and return contracts are used. Ignored DropActor int result remains ignored; shared target/held fields stay dActor_c pointers, with local Player identity casts."
+      "reason": "Existing native bool, byte, reference and return contracts are used. Ignored DropActor int result remains ignored; shared target/held fields stay dActor_c pointers, with local daPly_c identity casts."
     },
     {
       "id": "KPA-NATIVE-002",
@@ -3589,7 +3589,7 @@
         "disposition": "fixed",
         "location": "src/actors/daKpa_c.cpp",
         "summary": "61 native interface calls replace raw mangled boundaries.",
-        "reason": "Existing native bool, byte, reference and return contracts are used. Ignored DropActor int result remains ignored; shared target/held fields stay dActor_c pointers, with local Player identity casts."
+        "reason": "Existing native bool, byte, reference and return contracts are used. Ignored DropActor int result remains ignored; shared target/held fields stay dActor_c pointers, with local daPly_c identity casts."
       },
       {
         "id": "KPA-NATIVE-002",

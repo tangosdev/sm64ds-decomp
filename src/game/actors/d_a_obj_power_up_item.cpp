@@ -50,7 +50,7 @@ struct Callback;
 #include "dCc_c.h"
 #include "decl_common.h"
 #include "dBgCh_Gnd.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 
@@ -84,7 +84,7 @@ enum {
     ACTOR_MONKEY_STAR = 0x10c
 };
 
-/* A Player's param1, as the Init* calls it selects in CheckPickup
+/* A daPly_c's param1, as the Init* calls it selects in CheckPickup
  * imply (InitVanishLuigi, InitMetalWario, InitFireYoshi). */
 enum {
     CHARACTER_MARIO = 0,
@@ -320,7 +320,7 @@ void daObjPowerUpItem_c::UpdateState() {
 }
 
 /* Pickup. Looks up the actor whose id sits in the flower's collider
- * (mdCcAc_c.otherOwner) and, if it is a Player that is not collecting a cap,
+ * (mdCcAc_c.otherOwner) and, if it is a daPly_c that is not collecting a cap,
  * not holding a MONKEY_THIEF and (as Yoshi) not holding a MONKEY_STAR in its
  * mouth, gives it the power-up for its character and destroys the flower:
  * Mario gets wing feathers when this flower's param1 is 1 and a balloon
@@ -329,11 +329,11 @@ void daObjPowerUpItem_c::UpdateState() {
  * 0x64. */
 // @symbol _ZN18daObjPowerUpItem_c11CheckPickupEv
 void daObjPowerUpItem_c::CheckPickup() {
-    Player* player;
+    daPly_c* player;
     u32 id = mdCcAc_c.otherOwner;
     if (id == 0) return;
 
-    player = (Player*)dActor_c::FindWithID(id);
+    player = (daPly_c*)dActor_c::FindWithID(id);
     if (player == 0) return;
 
     {

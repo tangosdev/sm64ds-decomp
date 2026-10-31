@@ -93,10 +93,10 @@
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daHuwa_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8daHuwa_c13OnTurnIntoEggER7daPly_c",
       "address": "0x02123fd8",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN8daHuwa_c13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN8daHuwa_c13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 10
     },
     {

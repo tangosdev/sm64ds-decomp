@@ -18,7 +18,7 @@
 enum daObjSlIceBlock_c_AssetId { ASSET_SL_ICE_BROCK_BMD = 0x06b1, ASSET_SL_ICE_BROCK_KCL = 0x06b2 };
 
 #include "daObjSlIceBlock_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "dBgActor_c.h"
@@ -60,11 +60,11 @@ extern SlIceBlockClsnFileHandle data_ov027_02113be0;
  * dExtSimpleModel_c and dBgW_KcMbg, then dActor_c. */
 daObjSlIceBlock_c::~daObjSlIceBlock_c() {}
 
-// @symbol _ZN17daObjSlIceBlock_c15OnHitByMegaCharER6Player
+// @symbol _ZN17daObjSlIceBlock_c15OnHitByMegaCharER7daPly_c
 /* Same idiom as daObjBk_Dossunbar_c/daObjBk_Lift_c/daObjIceBoard_c: the
  * trailing unqualified Kill() dispatches virtually to the inherited
  * base implementation (this class does not override slot 31). */
-void daObjSlIceBlock_c::OnHitByMegaChar(Player &player) {
+void daObjSlIceBlock_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Kill();
 }

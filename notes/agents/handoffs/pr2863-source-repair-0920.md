@@ -37,7 +37,7 @@ SP2863-05 is fixed locally across the first seven reported contract families:
 - The short-reference `ApproachLinear` bridge returns `int`.
 - `func_02010844` returns `s32`; assignment still performs the needed short store.
 - `DetectRaycastClsn` uses the existing genuine member and reference interface.
-- The scalar `Player::Hurt` bridges return `int` and use three `u8` flags.
+- The scalar `daPly_c::Hurt` bridges return `int` and use three `u8` flags.
 - The scalar `ModelAnim::SetAnim` bridges take a `u16` start frame.
 - The scalar `DropShadowRadHeight` bridge takes `u8` opacity.
 

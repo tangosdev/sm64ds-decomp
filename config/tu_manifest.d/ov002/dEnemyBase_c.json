@@ -55,10 +55,10 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Playeri",
+      "symbol": "_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_ci",
       "address": "0x020ada40",
       "size": "0x00000100",
-      "legacy_source": "src/_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE.cpp",
+      "legacy_source": "src/_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_c5Fix12IiE.cpp",
       "ordinal": 2
     },
     {

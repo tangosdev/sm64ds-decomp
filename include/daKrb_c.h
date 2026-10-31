@@ -36,7 +36,7 @@ typedef char
  * original SM64DS member spellings are not preserved.
  */
 
-struct Player;
+struct daPly_c;
 
 struct daKrb_c : dCapEnemy_c {
     dCcAc_c mdCcAc_c;         /* 0x180 */
@@ -56,7 +56,7 @@ struct daKrb_c : dCapEnemy_c {
     Vector3 mStuckCheckPos; /* 0x428 */
     s32 mState;            /* 0x434 -- a State */
     /* Result of ClosestPlayer(), refreshed by func_ov084_02129cf4. */
-    Player *mClosestPlayer;    /* 0x438 */
+    daPly_c *mClosestPlayer;    /* 0x438 */
     /* uniqueID of the Goomba King for a king minion (stored by daKuriKing_c). */
     s32 mTargetUniqueID;    /* 0x43c */
     /* Distance to the target the Goomba reacts to (it chases or flees from the
@@ -127,7 +127,7 @@ struct daKrb_c : dCapEnemy_c {
     int Render();
 
     int OnYoshiTryEat();                        /* slot 18 */
-    void OnTurnIntoEgg(Player &player);          /* slot 19 */
+    void OnTurnIntoEgg(daPly_c &player);          /* slot 19 */
     int OnAimedAtWithEgg();                     /* slot 29 */
 
     void func_ov084_021290d4();
@@ -196,7 +196,7 @@ struct daKrb_c : dCapEnemy_c {
         DEATH_PUNCHED = 2,
         DEATH_KICKED = 3,        /* kick, breakdance or slide kick (hit bits 0x380) */
         DEATH_FIRE = 4,
-        DEATH_DIVE_OR_EGG = 5,   /* dive or egg hit (bits 0x2400), or touched by a Player for whom IsOnShell() is true */
+        DEATH_DIVE_OR_EGG = 5,   /* dive or egg hit (bits 0x2400), or touched by a daPly_c for whom IsOnShell() is true */
         DEATH_EXPLOSION = 6,
         DEATH_HIT_20000 = 7      /* hit bit 0x20000 (not in dCc_c.h's table), or a hit reported during the Yoshi-eat update or STATE_TUMBLE */
     };

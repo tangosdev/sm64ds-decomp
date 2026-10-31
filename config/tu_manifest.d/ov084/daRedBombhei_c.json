@@ -312,7 +312,7 @@
     "Historical tubuild create RAW warning (RESOLVED): _ZN14daRedBombhei_c19func_ov084_0212ce50Ev was initially carried from its legacy extern C block; the production TU now has a normal function definition with its includes and declarations at file scope.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: The TU uses short(const Vector3 *, const Vector3 *) consistently.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14daRedBombhei_c19func_ov084_0212c960Ei' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: The TU forward declaration and definition both use void(daRedBombhei_c *, int).",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player12GetTalkStateEv' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: Calls now use Player::GetTalkState from Player.h.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7daPly_c12GetTalkStateEv' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: Calls now use daPly_c::GetTalkState from daPly_c.h.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: The TU uses the C++ ApproachLinear(short &, short, short) declaration.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f2f8' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: The TU consistently declares the level value as s8.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c8b0Ev; kept the first during generation. Resolution: Calls now use dActor_c::FindWithID from dActor_c.h.",
@@ -1239,7 +1239,7 @@
       "source": "0x02130a84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010154"
@@ -1319,7 +1319,7 @@
       "source": "0x02130aa4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010130"

@@ -24,7 +24,7 @@ struct daObj_Mip_Key_c : dEnemyBase_c {
     dExtSimpleModel_c mModel;       /* 0x110 */
     dExtShadowModel_c mShadowModel; /* 0x160 */
     MipKeyState *mState;            /* 0x188 */
-    Player *mPlayer;                /* 0x18c */
+    daPly_c *mPlayer;                /* 0x18c */
     s32 unk_190;                    /* 0x190 */
     s32 mTalkState;                 /* 0x194 */
     s32 mWaitForTalk;               /* 0x198 */

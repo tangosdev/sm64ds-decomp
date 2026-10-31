@@ -8,7 +8,7 @@
    0x020a50ec). func_0204fc40 builds a NestedHeapIterator at +0x00 and another
    at +0x0c and sets mPlayableSeqCount to 1; func_0204f63c compares the first
    list's count against it before it takes a voice, and
-   Sound::Player::SetPlayableSeqCount writes it. The table's other users still
+   Sound::daPly_c::SetPlayableSeqCount writes it. The table's other users still
    declare it with shapes of their own. */
 struct SoundPlayerRecord {
     NestedHeapIterator mLists[2];   /* 0x000 */

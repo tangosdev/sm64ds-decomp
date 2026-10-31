@@ -61,7 +61,7 @@ struct daHuwa_c : dEnemyBase_c {
     virtual ~daHuwa_c();
 
     virtual s32 OnYoshiTryEat();                /* slot 18 */
-    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
     virtual s32 OnAimedAtWithEgg();             /* slot 29 */
 
     /* --- non-virtual --- */

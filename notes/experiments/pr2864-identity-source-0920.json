@@ -71,7 +71,7 @@
       {"symbol": "_ZN8daNknk_c8BehaviorEv", "module": "ov062", "address": "0x021190ec", "verdict": "VERIFIED", "blind": 0, "diffs": []},
       {"symbol": "_ZN8daNknk_c13InitResourcesEv", "module": "ov062", "address": "0x02119420", "verdict": "VERIFIED", "blind": 0, "diffs": []},
       {"symbol": "_ZN8daNknk_c16OnAimedAtWithEggEv", "module": "ov062", "address": "0x02119608", "verdict": "VERIFIED", "blind": 0, "diffs": []},
-      {"symbol": "_ZN8daNknk_c13OnTurnIntoEggER6Player", "module": "ov062", "address": "0x02119628", "verdict": "VERIFIED", "blind": 0, "diffs": []},
+      {"symbol": "_ZN8daNknk_c13OnTurnIntoEggER7daPly_c", "module": "ov062", "address": "0x02119628", "verdict": "VERIFIED", "blind": 0, "diffs": []},
       {"symbol": "_ZN8daNknk_c13OnYoshiTryEatEv", "module": "ov062", "address": "0x021196a8", "verdict": "VERIFIED", "blind": 0, "diffs": []},
       {"symbol": "daNknk_c_classInit_NOKONOKO_S", "module": "ov062", "address": "0x021196bc", "verdict": "VERIFIED", "blind": 0, "diffs": []},
       {"symbol": "daNknk_c_classInit_NOKONOKO", "module": "ov062", "address": "0x0211970c", "verdict": "VERIFIED", "blind": 0, "diffs": []}
@@ -99,7 +99,7 @@
       {"name": "_ZN8daNknk_c16CleanupResourcesEv", "size": 124, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 80},
       {"name": "_ZN8daNknk_c8BehaviorEv", "size": 820, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 85},
       {"name": "_ZN8daNknk_c16OnAimedAtWithEggEv", "size": 32, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 89},
-      {"name": "_ZN8daNknk_c13OnTurnIntoEggER6Player", "size": 128, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 90},
+      {"name": "_ZN8daNknk_c13OnTurnIntoEggER7daPly_c", "size": 128, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 90},
       {"name": "_ZN8daNknk_c13OnYoshiTryEatEv", "size": 20, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 92},
       {"name": "_ZN8daNknk_cD1Ev", "size": 72, "type": "STT_FUNC", "binding": "STB_LOPROC", "section": 22},
       {"name": "func_ov062_02117570", "size": 80, "type": "STT_FUNC", "binding": "STB_GLOBAL", "section": 26},
@@ -290,7 +290,7 @@
           {"off": 60, "type": 2, "sym": "_ZN7fBase_c9Virtual34Ejj", "addr": 33830268, "add": 0},
           {"off": 128, "type": 2, "sym": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv", "addr": 33620188, "add": 0},
           {"off": 120, "type": 2, "sym": "_ZN8dActor_c19OnHitFromUnderneathERS_", "addr": 33620268, "add": 0},
-          {"off": 116, "type": 2, "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player", "addr": 33620272, "add": 0},
+          {"off": 116, "type": 2, "sym": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c", "addr": 33620272, "add": 0},
           {"off": 112, "type": 2, "sym": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_", "addr": 33620276, "add": 0},
           {"off": 108, "type": 2, "sym": "_ZN8dActor_c8OnPushedERS_", "addr": 33620280, "add": 0},
           {"off": 104, "type": 2, "sym": "_ZN8dActor_c8OnKickedERS_", "addr": 33620284, "add": 0},
@@ -313,7 +313,7 @@
           {"off": 20, "type": 2, "sym": "_ZN8daNknk_c16CleanupResourcesEv", "addr": 34705156, "add": 0},
           {"off": 32, "type": 2, "sym": "_ZN8daNknk_c8BehaviorEv", "addr": 34705644, "add": 0},
           {"off": 124, "type": 2, "sym": "_ZN8daNknk_c16OnAimedAtWithEggEv", "addr": 34706952, "add": 0},
-          {"off": 84, "type": 2, "sym": "_ZN8daNknk_c13OnTurnIntoEggER6Player", "addr": 34706984, "add": 0},
+          {"off": 84, "type": 2, "sym": "_ZN8daNknk_c13OnTurnIntoEggER7daPly_c", "addr": 34706984, "add": 0},
           {"off": 80, "type": 2, "sym": "_ZN8daNknk_c13OnYoshiTryEatEv", "addr": 34707112, "add": 0},
           {"off": 72, "type": 2, "sym": "_ZN8daNknk_cD1Ev", "addr": 34698444, "add": 0}
         ]
@@ -398,7 +398,7 @@
         {"name": "func_ov084_0212af74", "module": "ov084", "addr": "0x0212af74", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "func_ov084_0212b2dc", "module": "ov084", "addr": "0x0212b2dc", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "_ZN7daKrb_c16OnAimedAtWithEggEv", "module": "ov084", "addr": "0x0212b30c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
-        {"name": "_ZN7daKrb_c13OnTurnIntoEggER6Player", "module": "ov084", "addr": "0x0212b344", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN7daKrb_c13OnTurnIntoEggER7daPly_c", "module": "ov084", "addr": "0x0212b344", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "_ZN7daKrb_c16CleanupResourcesEv", "module": "ov084", "addr": "0x0212b510", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "_ZN7daKrb_c16OnPendingDestroyEv", "module": "ov084", "addr": "0x0212b5b8", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "_ZN7daKrb_c6RenderEv", "module": "ov084", "addr": "0x0212b5bc", "verdict": "VERIFIED", "diffs": [], "blind": 0},
@@ -506,7 +506,7 @@
         {"name": "_ZN15daYurei_Mucho_c8BehaviorEv", "module": "ov065", "addr": "0x02116b84", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "_ZN15daYurei_Mucho_c13InitResourcesEv", "module": "ov065", "addr": "0x02116e10", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "_ZN15daYurei_Mucho_c16OnAimedAtWithEggEv", "module": "ov065", "addr": "0x02116f0c", "verdict": "VERIFIED", "diffs": [], "blind": 0},
-        {"name": "_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player", "module": "ov065", "addr": "0x02116f14", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN15daYurei_Mucho_c13OnTurnIntoEggER7daPly_c", "module": "ov065", "addr": "0x02116f14", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "_ZN15daYurei_Mucho_c13OnYoshiTryEatEv", "module": "ov065", "addr": "0x02116f40", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "daYurei_Mucho_c_classInit", "module": "ov065", "addr": "0x02116f48", "verdict": "VERIFIED", "diffs": [], "blind": 0}
       ],
@@ -583,7 +583,7 @@
         {"name": "_ZN19daPropeller_Heyho_c8BehaviorEv", "module": "ov070", "addr": "0x02120210", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "_ZN19daPropeller_Heyho_c13InitResourcesEv", "module": "ov070", "addr": "0x021203b4", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv", "module": "ov070", "addr": "0x021204e4", "verdict": "VERIFIED", "diffs": [], "blind": 0},
-        {"name": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player", "module": "ov070", "addr": "0x021204ec", "verdict": "VERIFIED", "diffs": [], "blind": 0},
+        {"name": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER7daPly_c", "module": "ov070", "addr": "0x021204ec", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv", "module": "ov070", "addr": "0x02120518", "verdict": "VERIFIED", "diffs": [], "blind": 0},
         {"name": "daPropeller_Heyho_c_classInit", "module": "ov070", "addr": "0x02120520", "verdict": "VERIFIED", "diffs": [], "blind": 0}
       ],
@@ -1506,8 +1506,8 @@
       "strict": {"name": "_ZN8daNknk_c16OnAimedAtWithEggEv", "module": "ov062", "addr": "0x02119608", "verdict": "VERIFIED", "diffs": [], "blind": 0}
     },
     {
-      "path": "src/_ZN5Koopa13OnTurnIntoEggER6Player.cpp",
-      "current_compiler_symbol": "_ZN8daNknk_c13OnTurnIntoEggER6Player",
+      "path": "src/_ZN5Koopa13OnTurnIntoEggER7daPly_c.cpp",
+      "current_compiler_symbol": "_ZN8daNknk_c13OnTurnIntoEggER7daPly_c",
       "compile_ok": true,
       "diagnostic": "",
       "isolation": {
@@ -1515,10 +1515,10 @@
         "drop": [],
         "externalise": [],
         "dead": [],
-        "referenced": ["_ZN6Player15IsCollectingCapEv", "_ZN6Player20RegisterEggCoinCountEjbb", "_ZN8dActor_c15GivePlayerCoinsER6Playerhj", "_ZN8dActor_c24KillAndTrackInDeathTableEv"],
+        "referenced": ["_ZN7daPly_c15IsCollectingCapEv", "_ZN7daPly_c20RegisterEggCoinCountEjbb", "_ZN8dActor_c15GivePlayerCoinsER7daPly_chj", "_ZN8dActor_c24KillAndTrackInDeathTableEv"],
         "error": null
       },
-      "strict": {"name": "_ZN8daNknk_c13OnTurnIntoEggER6Player", "module": "ov062", "addr": "0x02119628", "verdict": "VERIFIED", "diffs": [], "blind": 0}
+      "strict": {"name": "_ZN8daNknk_c13OnTurnIntoEggER7daPly_c", "module": "ov062", "addr": "0x02119628", "verdict": "VERIFIED", "diffs": [], "blind": 0}
     },
     {
       "path": "src/_ZN5Koopa13OnYoshiTryEatEv.cpp",
@@ -1561,7 +1561,7 @@
   "inherited_declaration_control": {
     "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
     "files": [
-      {"path": "src/_ZN6Player12St_Walk_InitEv.cpp", "same_non_line_ending_text": true},
+      {"path": "src/_ZN7daPly_c12St_Walk_InitEv.cpp", "same_non_line_ending_text": true},
       {"path": "src/unnamed/ov090/__sinit_ov090_02133f4c.c", "same_non_line_ending_text": true},
       {"path": "src/actors/daIwante_c.cpp", "same_non_line_ending_text": true},
       {"path": "src/actors/daPukupuku_c.cpp", "same_non_line_ending_text": true},
@@ -1574,9 +1574,9 @@
     "all_population_files_unchanged": true,
     "findings_before": [
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "return",
-        "file": "src/_ZN6Player12St_Walk_InitEv.cpp",
+        "file": "src/_ZN7daPly_c12St_Walk_InitEv.cpp",
         "line": 17,
         "decl": "void (void *, unsigned char, int, unsigned char)",
         "got": "void",
@@ -1587,7 +1587,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "return",
         "file": "src/actors/daIwante_c.cpp",
         "line": 177,
@@ -1600,7 +1600,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/func_ov002_020e8ef0.cpp",
         "line": 11,
@@ -1613,7 +1613,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/func_ov002_020e8ef0.cpp",
         "line": 11,
@@ -1626,7 +1626,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/func_ov065_021183c8.c",
         "line": 16,
@@ -1639,7 +1639,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/func_ov065_021183c8.c",
         "line": 16,
@@ -1652,7 +1652,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "return",
         "file": "src/game/actors/d_a_ch_scene.cpp",
         "line": 42,
@@ -1665,7 +1665,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/game/actors/d_a_ch_scene.cpp",
         "line": 42,
@@ -1678,7 +1678,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/game/actors/d_a_ch_scene.cpp",
         "line": 42,
@@ -1719,9 +1719,9 @@
     ],
     "findings_after": [
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "return",
-        "file": "src/_ZN6Player12St_Walk_InitEv.cpp",
+        "file": "src/_ZN7daPly_c12St_Walk_InitEv.cpp",
         "line": 17,
         "decl": "void (void *, unsigned char, int, unsigned char)",
         "got": "void",
@@ -1732,7 +1732,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "return",
         "file": "src/actors/daIwante_c.cpp",
         "line": 177,
@@ -1745,7 +1745,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/func_ov002_020e8ef0.cpp",
         "line": 11,
@@ -1758,7 +1758,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/func_ov002_020e8ef0.cpp",
         "line": 11,
@@ -1771,7 +1771,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/func_ov065_021183c8.c",
         "line": 16,
@@ -1784,7 +1784,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/func_ov065_021183c8.c",
         "line": 16,
@@ -1797,7 +1797,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "return",
         "file": "src/game/actors/d_a_ch_scene.cpp",
         "line": 42,
@@ -1810,7 +1810,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/game/actors/d_a_ch_scene.cpp",
         "line": 42,
@@ -1823,7 +1823,7 @@
         "ref": "int (void *, unsigned char, int, unsigned char)"
       },
       {
-        "symbol": "_ZN6Player17SetNoControlStateEhih",
+        "symbol": "_ZN7daPly_c17SetNoControlStateEhih",
         "kind": "param",
         "file": "src/game/actors/d_a_ch_scene.cpp",
         "line": 42,
