@@ -54,14 +54,14 @@
   },
   "shadow_decls": {
     "local_body_no_include": 77,
-    "local_body_no_include_cpp": 5,
+    "local_body_no_include_cpp": 7,
     "local_struct_body": 488,
-    "local_struct_body_cpp": 370,
+    "local_struct_body_cpp": 373,
     "pad_layout": 61
   },
   "totals": {
-    "c_extension": 987,
-    "cpp_extension": 740,
+    "c_extension": 981,
+    "cpp_extension": 746,
     "src_files": 1727
   }
 }
