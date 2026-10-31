@@ -2382,7 +2382,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c19BeforeInitResourcesEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20b0930"
     },
     {
@@ -2492,7 +2492,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16OnPendingDestroyEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20b04e8"
     },
     {
@@ -2562,7 +2562,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c11CanEndStateEi",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20b2994"
     },
     {
@@ -2582,7 +2582,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c10OnDealDoneEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20b298c"
     },
     {
@@ -2592,7 +2592,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16OnGraphCallback1Ev",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20ae198"
     },
     {
@@ -2602,7 +2602,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16OnGraphCallback0Ev",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20ae1a0"
     },
     {
@@ -2612,7 +2612,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16OnGraphCallback2Ev",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20ae140"
     },
     {
@@ -2622,7 +2622,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16OnGraphCallback3Ev",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20ae128"
     },
     {
@@ -2642,7 +2642,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c8OpenMenuEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20af27c"
     },
     {
@@ -2652,7 +2652,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c9CloseMenuEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20af04c"
     },
     {
@@ -2662,7 +2662,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c17SaveScreenForMenuEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20af094"
     },
     {
@@ -2672,7 +2672,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c21RestoreScreenFromMenuEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20aeed8"
     },
     {
@@ -2682,7 +2682,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c15InitSubScreenBgEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20b2880"
     },
     {
@@ -2692,7 +2692,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16InitMainScreenBgEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20b27f4"
     },
     {
@@ -2712,7 +2712,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c11PaintSquareEiiii",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x20ae3b4"
     },
     {
@@ -2722,7 +2722,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c12IsAltVariantEv",
       "addend": 0,
-      "target_module": "overlays(0,2,3,4,7)",
+      "target_module": "overlays(2,3,4,7)",
       "target_address": "0x20ad660"
     }
   ],

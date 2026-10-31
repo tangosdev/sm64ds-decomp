@@ -112,7 +112,7 @@ extern "C" void _ZN6Memory10DeallocateEPv(void *p) { Memory::Deallocate(p); }
 extern "C" {
 u32 data_0209d3bc; /* last fileID touched; the game's FS breadcrumb */
 
-/* ov0 handle -> FAT file id (data_ov000_020bd4b8 on the DS) */
+/* ov0 handle -> FAT file id (built from ov000's sAssetPaths on the DS) */
 u16 func_02018a24(u32 handle)
 {
     catalog_load();

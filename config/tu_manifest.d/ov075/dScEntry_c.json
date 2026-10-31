@@ -874,7 +874,7 @@
       "kind": "load",
       "symbol": "_ZTI9dThIcon_c",
       "addend": 0,
-      "target_module": "overlays(0,1)",
+      "target_module": "ov001",
       "target_address": "0x020ad478"
     },
     {

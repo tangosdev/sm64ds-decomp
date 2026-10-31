@@ -579,7 +579,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjDorifu_c8BehaviorEv",
       "addend": 0,
-      "target_module": "overlays(0,2)",
+      "target_module": "ov002",
       "target_address": "0x020b4bfc"
     },
     {
@@ -609,7 +609,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjDorifu_c6RenderEv",
       "addend": 0,
-      "target_module": "overlays(0,2)",
+      "target_module": "ov002",
       "target_address": "0x020b4bc4"
     },
     {

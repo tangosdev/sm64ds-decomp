@@ -19,8 +19,9 @@
 # --- rejected by mwldarm despite passing eligibility ---
 # _ZN17dExtShadowModel_c10InitCuboidEv / _ZN17dExtShadowModel_c12InitCylinderEv CAME OFF
 # THIS LIST. Their SetFile calls name the model-file globals at
-# 0x020ad524/0x020ad560 -- addresses past arm9's .bss that only the ov000/ov001
-# symbols.txt rows define (data_ov000_*). Spelling the references by their
+# 0x020ad524/0x020ad560 -- addresses past arm9's .bss that only the ov001
+# symbols.txt rows define (data_ov001_*; in ov000 they fall inside asset path
+# strings). Spelling the references by their
 # overlay names lets the link resolve them; both now live folded in
 # src/engine/model/d_ext_model.cpp, which also keeps their old arm9
 # data_020ad524/data_020ad560 spellings out of the source.
