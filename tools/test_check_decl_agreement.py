@@ -1029,12 +1029,12 @@ class RealTreeTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        if not (REPO / "src" / "__cxa_vec_ctor.cpp").exists():
-            raise unittest.SkipTest("src/__cxa_vec_ctor.cpp not in this tree")
+        if not (REPO / "src" / "lib" / "runtime" / "__cxa_vec_ctor.cpp").exists():
+            raise unittest.SkipTest("src/lib/runtime/__cxa_vec_ctor.cpp not in this tree")
         cls.aliases = CDA.scalar_typedefs(REPO)
 
     def test_the_definition_of_cxa_vec_ctor_parses(self):
-        rel = "src/__cxa_vec_ctor.cpp"
+        rel = "src/lib/runtime/__cxa_vec_ctor.cpp"
         text = (REPO / rel).read_text(encoding="utf-8", errors="replace")
         _decls, defs, _u = CDA.parse_file(rel, text, self.aliases)
         found = [d for d in defs if d.symbol == "__cxa_vec_ctor"]

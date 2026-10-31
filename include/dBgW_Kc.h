@@ -146,6 +146,10 @@ struct dBgW_Kc : dBgW {
     /* --- static --- */
     static char *LoadFile(SharedFilePtr &ptr);
     static void UpdateFileOffsets(KCL_File &file);
+    /* Geometry division guard: abs(value) <= 8. */
+    static bool IsNearZeroDivisor(int);
+    /* Line-query wall filter: -0xccc < normalY < 0x600 (strict). */
+    static bool IsWallNormal(Fix12i);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator

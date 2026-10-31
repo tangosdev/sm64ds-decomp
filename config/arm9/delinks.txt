@@ -3207,7 +3207,7 @@ src/ldexp.c:
     complete
     .text start:0x020708b4 end:0x02070b98
 
-src/ansi_fp.c:
+src/lib/msl/ansi_fp.c:
     complete
     .text start:0x02070b98 end:0x02071784
 
@@ -3335,7 +3335,7 @@ src/__register_global_object.c:
     complete
     .text start:0x020731dc end:0x020731fc
 
-src/NMWException.cpp:
+src/lib/runtime/NMWException.cpp:
     complete
     .text start:0x020731fc end:0x0207322c
 
@@ -3351,7 +3351,7 @@ src/__cxa_vec_delete.c:
     complete
     .text start:0x02073244 end:0x0207328c
 
-src/__cxa_vec_cleanup.cpp:
+src/lib/runtime/__cxa_vec_cleanup.cpp:
     complete
     .text start:0x0207328c end:0x02073300
 
@@ -3359,11 +3359,11 @@ src/unnamed/arm9/0207/func_02073300.cpp:
     complete
     .text start:0x02073300 end:0x020733a8
 
-src/__cxa_vec_ctor.cpp:
+src/lib/runtime/__cxa_vec_ctor.cpp:
     complete
     .text start:0x020733a8 end:0x02073470
 
-src/__cxa_vec_new.cpp:
+src/lib/runtime/__cxa_vec_new.cpp:
     complete
     .text start:0x02073470 end:0x02073534
 

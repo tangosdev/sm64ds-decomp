@@ -48,6 +48,9 @@ src/
     menus/
     messages/
   minigames/            <- populated: dScMg*_c, dMg*_c, d_s_mg_*, ov004 units
+  lib/
+    msl/                <- populated: ansi_fp.c (Metrowerks Standard Library)
+    runtime/            <- populated: NMWException.cpp, __cxa_vec_* (MWCC runtime)
   unnamed/
     <module>/           <- maturity gate, not a domain; see above
 ```
@@ -102,6 +105,19 @@ a rendering primitive, not gameplay logic and not UI text/menus. That's
   - `hud/`, `menus/` — no dedicated note yet; placeholders.
   - `messages/` — moved here from the engine layer.
 - `minigames/` — top-level, not nested under `game/`, per `notes/minigame-provenance.md`.
+- `lib/` — code the toolchain shipped, not EAD's: it would be in any mwccarm-built
+  game. The evidence is each file's own banner, which names the library source the
+  body matches.
+  - `msl/` — the Metrowerks Standard Library (C library). `ansi_fp.c` is MSL's
+    `ansi_fp.c` in reverse source order (the Petari and Spirit Tracks decomps).
+  - `runtime/` — the MWCC C++ runtime: exception handling (`NMWException.cpp`, after
+    the Wind Waker decomp's `NMWException.cp`) and the `__cxa_vec_*` array helpers
+    mwccarm calls by name for `new[]`/`delete[]`.
+  - NitroSDK is not here: it stays in `engine/<module>/` (`os/`, `mi/`, `fs/`, `snd/`,
+    `wm/`, ...), one directory per SDK module.
+  - A one-function source stays in `src/` root, where `srcpath` puts any named symbol
+    outside a TU, until it folds into a TU. The coined `cstd*.cpp` TUs stay in root
+    until their MSL file names are recovered, so they move once.
 
 **Adding a bucket this doc doesn't already list** needs the same bar: point at existing
 evidence (a census/provenance doc, the RTTI hierarchy, or `ACTOR_SPAWN_TABLE` membership)

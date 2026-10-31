@@ -544,12 +544,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@668",
+      "from": "@660",
       "to": "@77",
       "evidence": "emitted destructor-registration node name collides with the configured @600 on ov081 on main; @77 is unused everywhere and shorter than the original. Folding OnYoshiTryEat in (2026-10-12) shifted the per-TU @NNN uniquifier so mwcc now emits this node (the file-0x204 handle's, paired with gJumpBack02ModelFile in __sinit) as @646. Re-keyed +6 (from @660) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@667",
+      "from": "@659",
       "to": "@599",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, and folding OnYoshiTryEat in (2026-10-12) shifted it again, so mwcc emits this node (the file-0x203 handle's, paired with gJumpBack01ModelFile in __sinit) as @645 now; licensed under the existing pin @599. Re-keyed +6 (from @659) when dScMgBase_c.h gained Mg_DrawLine."
     }

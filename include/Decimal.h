@@ -1,7 +1,7 @@
 #ifndef DECIMAL_H
 #define DECIMAL_H
 
-/* MSL's decimal type, behind the conversions of src/ansi_fp.c (__ull2dec,
+/* MSL's decimal type, behind the conversions of src/lib/msl/ansi_fp.c (__ull2dec,
    __timesdec, __str2dec, __two_exp, __rounddec, __dorounddecup,
    __must_round, __num2dec) and printf.c's float2str and round_decimal.
    Before ansi_fp.c was one file, __timesdec carried this exact layout as a

@@ -205,12 +205,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@458",
+      "from": "@450",
       "to": "@137",
       "evidence": "compiler temporary; mwcc numbers it @403 per TU and ov029 daObjWc_Obj04_c (this batch) also defines a global @403, so the scratch link collides | re-keyed by __sinit relocation-site order after including Particle__System.h and the Break member conversion shifted the TU's @NNN uniquifier"
     },
     {
-      "from": "@459",
+      "from": "@451",
       "to": "@404",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @418 now; licensed under the existing pin @404 | re-keyed by __sinit relocation-site order after including Particle__System.h and the Break member conversion shifted the TU's @NNN uniquifier"
     }

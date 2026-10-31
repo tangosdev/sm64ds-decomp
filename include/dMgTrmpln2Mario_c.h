@@ -12,21 +12,22 @@
  * Built on dMgTrmpRingObjAdapter_c (its vtable 0x0213b2e0 ends in
  * dMgTrmpRingObjAdapter_c::Clear), which holds the jumper fields the drawn line writes
  * (TrmpLine_PushJumper in unit020cd744.cpp, whose `Cannon` view has the same
- * prefix). The constructor and the non-virtual destructor are the class's own,
- * out of line in src/minigames/d_mg_trmpln2_mario.cpp; the other helpers there
+ * prefix). The constructor, the non-virtual destructor and the four slot
+ * overrides are the class's own, out of line in
+ * src/minigames/d_mg_trmpln2_mario.cpp; GetPos, the first declared, is the key
+ * function, so that file emits this vtable and typeinfo. The other helpers there
  * are still free functions over a char* record (see that file's leftovers note)
- * and read this through its MARIO2() cast. The four slot overrides are declared
- * and not defined as methods: the slot functions are those helpers. Unnamed
+ * and read this through its MARIO2() cast. Unnamed
  * regions are read or written by one site at most, or sit inside an embedded
  * object; pad_68 is only ever stored 0 (two sites, no reader). */
 struct dMgTrmpln2Mario_c : dMgTrmpRingObjAdapter_c {
     dMgTrmpln2Mario_c();
     ~dMgTrmpln2Mario_c();
 
-    virtual Vector3 *GetPos();      /* Trmp2Mario_GetPos 0x020c8e88 */
-    virtual Vector3 *GetPrevPos();  /* Trmp2Mario_GetPrevPos 0x020c8e80 */
-    virtual Vector3 *GetVelocity(); /* Trmp2Mario_GetVelocity 0x020c8dd4 */
-    virtual int IsActive();         /* Trmp2Mario_Reset 0x020c8ddc */
+    virtual Vector3 *GetPos();      /* 0x020c8e88 */
+    virtual Vector3 *GetPrevPos();  /* 0x020c8e80 */
+    virtual Vector3 *GetVelocity(); /* 0x020c8dd4 */
+    virtual int IsActive();         /* 0x020c8ddc -- neither missed nor hidden */
 
     Vector3 mPos;           /* 0x24 */
     Vector3 mPrevPos;       /* 0x30 -- mPos before this frame's move */

@@ -199,12 +199,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@545",
+      "from": "@537",
       "to": "@54",
       "evidence": "mwcc numbers this model registration node @488 per TU; the pair's other node @489 collides with ov100's configured @489 on main, so both nodes take fresh sequential names no longer than the originals | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     },
     {
-      "from": "@546",
+      "from": "@538",
       "to": "@55",
       "evidence": "mwcc numbers this collision registration node @489 per TU and ov100 already owns @489 at 0x02148364 on main, so the batch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
     }

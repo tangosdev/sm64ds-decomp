@@ -71,6 +71,12 @@ struct dBgW_KcMbg : dBgW_Kc {
     void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12i scale, s16 angY, CLPS_Block &clps);
     void Transform(const Matrix4x3 &mat, s16 angY);
 
+    /* Current-frame coordinate conversions. Position transforms include the
+       uniform scale; direction conversion uses rotation only. */
+    void WorldToLocalPosition(const Vector3 &, Vector3 &);
+    void LocalToWorldPosition(const Vector3 &, Vector3 &);
+    void WorldToLocalDirection(const Vector3 &, Vector3 &);
+
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator
        delete on the class". Without this it emits the global `_ZdlPv`, which

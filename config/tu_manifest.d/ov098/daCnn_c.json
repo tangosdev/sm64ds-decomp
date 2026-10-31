@@ -564,7 +564,7 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@609",
+      "from": "@601",
       "to": "@445",
       "evidence": "mwcc numbers this destructor-registration node @483 per TU; another module's emitted object already carries @483 globally, so the scratch link would multiply-define it"
     }

@@ -83,9 +83,10 @@ void *dScEntry_c_classInit_ENTRY(void) {
 
 extern "C" {
 /* local extern: no header declares these arm9 vector and matrix helpers;
-   they take the Vector3 layout, spelled EntryMeshVec here (see its header). */
+   they take the Vector3 layout, spelled EntryMeshVec here (see its header).
+   SubVec3 is the exception: its definition takes Vector3, so the calls cast. */
 void InvMat4x3(Matrix4x3 *, Matrix4x3 *);
-void SubVec3(const EntryMeshVec *, const EntryMeshVec *, EntryMeshVec *);
+void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 void CrossVec3(const EntryMeshVec *, const EntryMeshVec *, EntryMeshVec *);
 void NormalizeVec3(const EntryMeshVec *, EntryMeshVec *);
 void Vec3_Sub(EntryMeshVec *, const EntryMeshVec *, const Vector3 *);
@@ -247,18 +248,19 @@ void EntryMesh::CalcNormals() {
             q[2] = z;
 
             if (j == 0)
-                SubVec3(&p->pos, &(p + 1)->pos, &ej);
+                SubVec3((Vector3 *)&p->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
             else if (j == mGridDim[0] - 1)
-                SubVec3(&(p - 1)->pos, &p->pos, &ej);
+                SubVec3((Vector3 *)&(p - 1)->pos, (Vector3 *)&p->pos, (Vector3 *)&ej);
             else
-                SubVec3(&(p - 1)->pos, &(p + 1)->pos, &ej);
+                SubVec3((Vector3 *)&(p - 1)->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
 
             if (i == 0)
-                SubVec3(&p->pos, &(p + mGridDim[1])->pos, &ei);
+                SubVec3((Vector3 *)&p->pos, (Vector3 *)&(p + mGridDim[1])->pos, (Vector3 *)&ei);
             else if (i == mGridDim[1] - 1)
-                SubVec3(&(p - mGridDim[1])->pos, &p->pos, &ei);
+                SubVec3((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&p->pos, (Vector3 *)&ei);
             else
-                SubVec3(&(p - mGridDim[1])->pos, &(p + mGridDim[1])->pos, &ei);
+                SubVec3((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&(p + mGridDim[1])->pos,
+                        (Vector3 *)&ei);
 
             CrossVec3(&ej, &ei, &n);
             n.z >>= 1;

@@ -128,8 +128,8 @@ extern int Vec3_HorzLen(const void *v);
 extern int LenVec3(void *v);
 extern void Vec3_Add(void *out, const void *a, const void *b);
 extern void Vec3_Sub(void *out, const void *a, const void *b);
-extern void AddVec3(void *a, const void *b, void *c);
-extern void SubVec3(void *a, const void *b, void *c);
+extern void AddVec3(void *a, void *b, void *c);
+extern void SubVec3(void *a, void *b, void *c);
 extern void Vec3_MulScalar(void *out, const void *in, int scale);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(int *v, int sh);
@@ -624,8 +624,8 @@ extern "C" {
 void func_0200d858(void *self, const struct Vector3 *offset)
 {
     struct dCamera_c *cam = (struct dCamera_c *)self;
-    AddVec3(&cam->lookAt, offset, &cam->lookAt);
-    AddVec3(&cam->pos, offset, &cam->pos);
+    AddVec3(&cam->lookAt, (void *)offset, &cam->lookAt);
+    AddVec3(&cam->pos, (void *)offset, &cam->pos);
 }
 }
 

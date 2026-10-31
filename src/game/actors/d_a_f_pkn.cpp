@@ -116,7 +116,7 @@ void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void MulMat4x3Mat4x3(const int *a, const int *b, int *d);
 void Vec3_LslInPlace(void *v, int sh);
-void SubVec3(Vec3 *a, Vec3 *b, Vec3 *c);
+void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 void LoadBlueCoinModel(void *c);
 void UnloadBlueCoinModel(void *);
 
@@ -251,7 +251,7 @@ void daFPkn_c::UpdateClsnOffset()
     mClsnOffset.y = ((Matrix4x3 *)data_020a0e68)->m[10];
     mClsnOffset.z = ((Matrix4x3 *)data_020a0e68)->m[11];
     Vec3_LslInPlace(&mClsnOffset, 3);
-    SubVec3((Vec3 *)&mClsnOffset, (Vec3 *)&mPosX, (Vec3 *)&mClsnOffset);
+    SubVec3((Vector3 *)&mClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mClsnOffset);
 
     scaledSinAcc0 = data_02082214[((u16)locals.acc[0] >> 4) * 2] * 0x32;
     sinAcc1 = data_02082214[((u16)locals.acc[1] >> 4) * 2];

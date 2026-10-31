@@ -2593,7 +2593,7 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@1156",
+      "from": "@1148",
       "to": "@1086",
       "evidence": "data-trampoline2-wave-tables1017: named local wave-record type shifts compiler-local destructor registration node from@1111 to@1110. Both are unique12-byte local NOBITS objects; identical64-byte initializer references the node at the same relocation offset/type/addend. Its configured canonicalidentity remains@1086. Complete71-definition proof permits only this exactsite-derived bijection and the random-position semanticrename. Re-keyed -1 (from @1156) when this TU's extern Mg_DrawLine was removed and dScMgBase_c.h gained Mg_DrawLine."
     }

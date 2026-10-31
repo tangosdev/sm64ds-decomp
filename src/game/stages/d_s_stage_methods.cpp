@@ -4879,7 +4879,7 @@ int dScStage_c::InitResources() {
         if (skipSubDisplayLayers == 0) {
             *p1 = (*p1 & ~0x1F00) | (data_0209d454 << 8);
         }
-        data_0209cee8 = 0;
+        dCc_c::listHead = 0;
         dExtShadowModel_c::CleanAll();
         data_02092110 = -1;
 

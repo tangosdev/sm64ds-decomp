@@ -1306,7 +1306,7 @@
   "undefined_symbol_aliases": [],
   "defined_symbol_renames": [
     {
-      "from": "@834",
+      "from": "@826",
       "to": "data_0209f388",
       "evidence": "compiler temp: the destructor-registration node for data_0209f43c. mwcc numbers it @834 here, and ov032 already defines @834, so it keeps the configured address name"
     }

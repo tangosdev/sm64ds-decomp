@@ -1442,32 +1442,32 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@556",
+      "from": "@548",
       "to": "@228",
       "evidence": "Compiler-local registration node at ov070:0x02123614; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and Player.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@557",
+      "from": "@549",
       "to": "@229",
       "evidence": "Compiler-local registration node at ov070:0x02123620; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and Player.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@558",
+      "from": "@550",
       "to": "@230",
       "evidence": "Compiler-local registration node at ov070:0x0212362c; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and Player.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@559",
+      "from": "@551",
       "to": "@232",
       "evidence": "Compiler-local registration node at ov070:0x02123638; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and Player.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@561",
+      "from": "@553",
       "to": "@233",
       "evidence": "Compiler-local registration node at ov070:0x02123644; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and Player.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@560",
+      "from": "@552",
       "to": "@234",
       "evidence": "Compiler-local registration node at ov070:0x02123650; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and Player.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     }

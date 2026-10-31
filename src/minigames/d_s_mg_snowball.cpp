@@ -122,7 +122,7 @@ void SetFog(int enable, int blend, int slope, int offset);
 extern "C" {
 extern void RenderOamBothScreens(int a, int b, int c, int d, int e, int f);
 extern int sSnowballBitSprites[];
-extern void AddVec3(Vec3 *a, Vec3 *b, Vec3 *dst);
+extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
 extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
 extern int Vec2_Len(int *p);
@@ -221,7 +221,7 @@ void dScMgSnowball_c::SnowSpray_UpdateAll() {
                 }
             }
             *(int *)(((int)rec + SNOW_OFF(mSprays[0].vz))) -= 0x200;
-            AddVec3((Vec3 *)pos, (Vec3 *)vel, (Vec3 *)pos);
+            AddVec3((Vector3 *)pos, (Vector3 *)vel, (Vector3 *)pos);
             if (((dScMgSnowball_c *)rec)->mSprays[0].vz < 0 &&
                 ((dScMgSnowball_c *)rec)->mSprays[0].z < 0) {
                 ((dScMgSnowball_c *)scene)->mSprays[i].active = 0;

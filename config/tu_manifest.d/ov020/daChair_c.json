@@ -534,7 +534,7 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@727",
+      "from": "@719",
       "to": "@678",
       "evidence": "compiler temp; the current source moves this TU's per-TU @NNN uniquifier, so mwcc emits it as @690 (was @691); licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

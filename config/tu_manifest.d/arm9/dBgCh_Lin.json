@@ -367,47 +367,6 @@
           "target_address": "0x0209921c"
         }
       ]
-    },
-    {
-      "symbol": "_ZTI8dM3dGLin",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x8",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0209927c",
-      "reason": "inherited vague-linkage RTTI copy, pulled in as the non-polymorphic dM3dGLin base record; canonical definition is arm9:0x0209927c",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi17__class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a774"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS8dM3dGLin",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02099284"
-        }
-      ]
-    },
-    {
-      "symbol": "_ZTS8dM3dGLin",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xa",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02099284",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is the cartridge's arm9:0x02099284 record",
-      "relocations": []
     }
   ],
   "compiler_only_output": [
@@ -427,13 +386,27 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "Vague-linkage copy of Vector3's trivial destructor, emitted because the Vector3 members are struct-copied. The canonical cartridge copy is arm9:0x020072c0; isolation discards this one."
+    },
+    {
+      "symbol": "_ZTI8dM3dGLin",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0209927c",
+      "reason": "Weak typeinfo of the non-polymorphic dM3dGLin base, emitted here because dBgCh_Lin's __vmi_class_type_info names it as base record 2. dM3dGLin has no vtable, so no TU of its own emits it. The cartridge record is arm9:0x0209927c, and romdata_check proves its two relocations (abi class vptr, _ZTS8dM3dGLin) before the copy is discarded."
+    },
+    {
+      "symbol": "_ZTS8dM3dGLin",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02099284",
+      "reason": "The emitted type-name string equals the cartridge's record at arm9:0x02099284 (the class carries the ROM's own dM3dGLin spelling), so the copy is discarded after proof."
     }
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-dBgCh_Lin/dBgCh_Lin.o (gitignored)",
+    "object": "build/tu/arm9-dBgCh_Lin/d_bg_ch_lin.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 9,
     "functions_declared": 9,
@@ -449,19 +422,29 @@
         "_ZN9dBgCh_LinD2Ev"
       ],
       "droppedSections": [
+        12,
+        13,
+        14,
         26,
         29,
         30,
         37,
         38
       ],
-      "data": [],
-      "dataExternalized": []
+      "data": [
+        "_ZTI8dM3dGLin",
+        "_ZTS8dM3dGLin"
+      ],
+      "dataExternalized": [
+        "_ZTI8dM3dGLin",
+        "_ZTS8dM3dGLin"
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 8 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 6 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },

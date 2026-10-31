@@ -60,7 +60,7 @@ extern FileTable data_ov064_0211adbc;
  * shared header yet. */
 extern "C" {
 void MulVec3Mat4x3(const Vector3 *v, const Matrix4x3 *m, Vector3 *dst);
-void AddVec3(const Vector3 *a, const Vector3 *b, Vector3 *dst);
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
 void func_020393d4(dBgW *bgw, void *fn);
 }
 

@@ -1,12 +1,8 @@
 //cpp
-/* leftovers:
- * func_020396dc, func_02039794, func_020397b8 and func_020397dc stay free
- * functions. The ITCM DetectClsn overrides call them by address.
- * func_020396dc turns a prism pointer into a triangle index,
- * func_02039794 classifies the slope band, func_020397b8 tests wall facing,
- * func_020397dc guards a near-zero divisor. The constructor is defined
- * before the destructor; their source order preserves the compiler's
- * lifecycle emission. The DetectClsn triple and the geometry slots live
+/* The ITCM query code uses the static divisor and wall-normal predicates.
+ * The prism-index and slope-classification helpers retain their existing
+ * free-function interfaces. The constructor precedes the destructor to
+ * preserve lifecycle emission order. DetectClsn and the geometry slots live
  * in d_bg_w_kc_itcm.cpp.
  */
 /* dBgW_Kc: static-mesh collider, the base KcMbg and KcMbgSclY share.
@@ -35,15 +31,15 @@ dBgW_Kc::dBgW_Kc() {
 // @symbol _ZN7dBgW_KcD1Ev
 dBgW_Kc::~dBgW_Kc() {}
 
-// @symbol func_020397dc
+// @symbol _ZN7dBgW_Kc17IsNearZeroDivisorEi
 /* True when a divisor is too close to zero to divide by (|value| <= 8). */
-extern "C" bool func_020397dc(int value) {
+bool dBgW_Kc::IsNearZeroDivisor(int value) {
     return value <= 8 && value >= -8;
 }
 
-// @symbol func_020397b8
+// @symbol _ZN7dBgW_Kc12IsWallNormalEi
 /* True when a face normal's y lies strictly inside the wall band. */
-extern "C" bool func_020397b8(int normalY) {
+bool dBgW_Kc::IsWallNormal(Fix12i normalY) {
     return normalY < 0x600 && normalY > -0xccc;
 }
 

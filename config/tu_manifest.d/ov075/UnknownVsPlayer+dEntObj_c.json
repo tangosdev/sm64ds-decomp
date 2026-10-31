@@ -1519,192 +1519,192 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1094",
+      "from": "@1086",
       "to": "@1016",
       "evidence": "mwcc emits this compiler temp as @1063; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1093 to @1095; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1095",
+      "from": "@1087",
       "to": "@1018",
       "evidence": "mwcc emits this compiler temp as @1064; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1094 to @1096; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1096",
+      "from": "@1088",
       "to": "@1020",
       "evidence": "mwcc emits this compiler temp as @1065; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1095 to @1097; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1097",
+      "from": "@1089",
       "to": "@1022",
       "evidence": "mwcc emits this compiler temp as @1066; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1096 to @1098; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1098",
+      "from": "@1090",
       "to": "@1024",
       "evidence": "mwcc emits this compiler temp as @1067; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1097 to @1099; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1102",
+      "from": "@1094",
       "to": "@1028",
       "evidence": "mwcc emits this compiler temp as @1071; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1101 to @1103; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1104",
+      "from": "@1096",
       "to": "@1030",
       "evidence": "mwcc emits this compiler temp as @1073; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1103 to @1105; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1110",
+      "from": "@1102",
       "to": "@1032",
       "evidence": "mwcc emits this compiler temp as @1079; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1109 to @1111; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1112",
+      "from": "@1104",
       "to": "@1033",
       "evidence": "mwcc emits this compiler temp as @1081; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1111 to @1113; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1114",
+      "from": "@1106",
       "to": "@1034",
       "evidence": "mwcc emits this compiler temp as @1083; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1113 to @1115; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1116",
+      "from": "@1108",
       "to": "@1035",
       "evidence": "mwcc emits this compiler temp as @1085; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1115 to @1117; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1118",
+      "from": "@1110",
       "to": "@1036",
       "evidence": "mwcc emits this compiler temp as @1087; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1117 to @1119; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1120",
+      "from": "@1112",
       "to": "@1037",
       "evidence": "mwcc emits this compiler temp as @1089; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1119 to @1121; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1122",
+      "from": "@1114",
       "to": "@1038",
       "evidence": "mwcc emits this compiler temp as @1091; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1121 to @1123; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1124",
+      "from": "@1116",
       "to": "@1039",
       "evidence": "mwcc emits this compiler temp as @1093; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1123 to @1125; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1126",
+      "from": "@1118",
       "to": "@1040",
       "evidence": "mwcc emits this compiler temp as @1095; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1125 to @1127; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1128",
+      "from": "@1120",
       "to": "@1041",
       "evidence": "mwcc emits this compiler temp as @1097; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1127 to @1129; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1130",
+      "from": "@1122",
       "to": "@1042",
       "evidence": "mwcc emits this compiler temp as @1099; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1129 to @1131; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1108",
+      "from": "@1100",
       "to": "@1077",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1107 now; licensed under the existing pin @1077 Current scalar-interface migration renumbers @1107 to @1109; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1131",
+      "from": "@1123",
       "to": "@1026",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1130 now; licensed under the existing pin @1100 Current scalar-interface migration renumbers @1130 to @1132; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1129",
+      "from": "@1121",
       "to": "@1068",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1128 now; licensed under the existing pin @1098 Current scalar-interface migration renumbers @1128 to @1130; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1135",
+      "from": "@1127",
       "to": "@1031",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1134 now; licensed under the existing pin @1104 Current scalar-interface migration renumbers @1134 to @1136; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1133",
+      "from": "@1125",
       "to": "@1029",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1132 now; licensed under the existing pin @1102 Current scalar-interface migration renumbers @1132 to @1134; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1100",
+      "from": "@1092",
       "to": "@1069",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1099 now; licensed under the existing pin @1069 Current scalar-interface migration renumbers @1099 to @1101; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1085",
+      "from": "@1077",
       "to": "@1054",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1084 now; licensed under the existing pin @1054 Current scalar-interface migration renumbers @1084 to @1086; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1086",
+      "from": "@1078",
       "to": "@1055",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1085 now; licensed under the existing pin @1055 Current scalar-interface migration renumbers @1085 to @1087; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1087",
+      "from": "@1079",
       "to": "@1056",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1086 now; licensed under the existing pin @1056 Current scalar-interface migration renumbers @1086 to @1088; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1106",
+      "from": "@1098",
       "to": "@1075",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1105 now; licensed under the existing pin @1075 Current scalar-interface migration renumbers @1105 to @1107; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1088",
+      "from": "@1080",
       "to": "@1057",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1087 now; licensed under the existing pin @1057 Current scalar-interface migration renumbers @1087 to @1089; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1089",
+      "from": "@1081",
       "to": "@1058",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1088 now; licensed under the existing pin @1058 Current scalar-interface migration renumbers @1088 to @1090; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1090",
+      "from": "@1082",
       "to": "@1059",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1089 now; licensed under the existing pin @1059 Current scalar-interface migration renumbers @1089 to @1091; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1091",
+      "from": "@1083",
       "to": "@1060",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1090 now; licensed under the existing pin @1060 Current scalar-interface migration renumbers @1090 to @1092; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1092",
+      "from": "@1084",
       "to": "@1061",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1091 now; licensed under the existing pin @1061 Current scalar-interface migration renumbers @1091 to @1093; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1093",
+      "from": "@1085",
       "to": "@1062",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1092 now; licensed under the existing pin @1062 Current scalar-interface migration renumbers @1092 to @1094; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1099",
+      "from": "@1091",
       "to": "@1098",
       "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1101",
+      "from": "@1093",
       "to": "@1100",
       "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1103",
+      "from": "@1095",
       "to": "@1102",
       "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1105",
+      "from": "@1097",
       "to": "@1104",
       "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

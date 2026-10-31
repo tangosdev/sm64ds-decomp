@@ -125,7 +125,7 @@ typedef struct { int w[3]; } Blk3;
 typedef struct { int w[4]; } Blk4;
 typedef struct { int x, y, z, w; } Vec4;
 
-extern void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
+extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 typedef struct { int w[2]; } Pair;
 extern Pair pmf_Heyho_MotionFlyIn;
 
@@ -146,13 +146,13 @@ void Heyho_StartMotionFlyIn(char *dst, char *src) {
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3(p, (Vec3 *)&sHeyho_StartMotionFlyIn_Right256, p);
+        AddVec3((Vector3 *)p, (Vector3 *)&sHeyho_StartMotionFlyIn_Right256, (Vector3 *)p);
     } else {
         Vec3 *q = (Vec3 *)&HEYHO(dst)->mPos;
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3(q, (Vec3 *)&sHeyho_StartMotionFlyIn_Left256, q);
+        AddVec3((Vector3 *)q, (Vector3 *)&sHeyho_StartMotionFlyIn_Left256, (Vector3 *)q);
     }
 
     HEYHO(dst)->mScale.x = 0x1400;
@@ -244,7 +244,7 @@ typedef struct { int w[3]; } Blk3;
 typedef struct { int w[4]; } Blk4;
 typedef struct { int x, y, z, w; } Vec4;
 
-extern void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
+extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 typedef struct { int w[2]; } Pair;
 extern Pair pmf_Heyho_MotionRegroup;
 
@@ -264,13 +264,13 @@ void Heyho_StartMotionRegroup(char *dst, char *src) {
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3(p, (Vec3 *)&sHeyho_StartMotionRegroup_Right256, p);
+        AddVec3((Vector3 *)p, (Vector3 *)&sHeyho_StartMotionRegroup_Right256, (Vector3 *)p);
     } else {
         Vec3 *q = (Vec3 *)&HEYHO(dst)->mPos;
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3(q, (Vec3 *)&sHeyho_StartMotionRegroup_Left256, q);
+        AddVec3((Vector3 *)q, (Vector3 *)&sHeyho_StartMotionRegroup_Left256, (Vector3 *)q);
     }
 
     HEYHO(dst)->mDelay = 8;
@@ -292,7 +292,7 @@ typedef struct { int x, y, z; } Vec3;
 
 struct Obj;
 
-extern void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
+extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern int LenVec3(Vec3 *v);
 extern int D3D_PlaySeAtX(int a, int b);
 extern void Heyho_StartMotionHover(char *p);
@@ -322,7 +322,7 @@ void Heyho_MotionRegroup(char *c) {
     dz = HEYHO(c)->mGoal.z - HEYHO(c)->mPos.z;
     HEYHO(c)->mVel.z = (int)((((long long)dz << 8) + 0x800) >> 12);
 
-    AddVec3((Vec3 *)&HEYHO(c)->mPos, (Vec3 *)&HEYHO(c)->mVel, (Vec3 *)&HEYHO(c)->mPos);
+    AddVec3((Vector3 *)&HEYHO(c)->mPos, (Vector3 *)&HEYHO(c)->mVel, (Vector3 *)&HEYHO(c)->mPos);
 
     vx = HEYHO(c)->mVel.x;
     if (vx < 0) vx = -vx;
@@ -454,7 +454,7 @@ typedef struct { int x, y, z; } Vec3;
 
 extern void Vec3_Sub(Vec3 *out, Vec3 *a, Vec3 *b);
 extern void Vec3_MulScalar(Vec3 *out, const Vec3 *in, int scale);
-extern void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
+extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void Heyho_SetIdle(char *self);
 
 void Heyho_MotionLeave(char *self) {
@@ -469,7 +469,8 @@ void Heyho_MotionLeave(char *self) {
     HEYHO(self)->mVel.x = scaled.x;
     HEYHO(self)->mVel.y = scaled.y;
     HEYHO(self)->mVel.z = scaled.z;
-    AddVec3((Vec3 *)&HEYHO(self)->mPos, (Vec3 *)&HEYHO(self)->mVel, (Vec3 *)&HEYHO(self)->mPos);
+    AddVec3((Vector3 *)&HEYHO(self)->mPos, (Vector3 *)&HEYHO(self)->mVel,
+            (Vector3 *)&HEYHO(self)->mPos);
     if (HEYHO(self)->mVel.x > 0)
         ApproachLinear(HEYHO(self)->mLean, 0x3000, 0x200);
     else
@@ -1952,8 +1953,8 @@ extern int Heyho_IsChasing(struct Obj* o);
 extern void Vec3_Sub(Vec3* out, Vec3* a, Vec3* b);
 extern int LenVec3(Vec3* v);
 extern int NormalizeVec3IfNonZero(Vec3* v);
-extern void AddVec3(Vec3* a, Vec3* b, Vec3* c);
-extern void SubVec3(Vec3* a, Vec3* b, Vec3* c);
+extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 
 void Heyho_SeparateAll(void)
 {
@@ -1986,8 +1987,8 @@ void Heyho_SeparateAll(void)
                     if (LenVec3(&v1) >= 0x12000) continue;
                     if (LenVec3(&v2) >= 0x100) continue;
                     if (NormalizeVec3IfNonZero(&v1) == 0) continue;
-                    AddVec3(pi, &v1, pi);
-                    SubVec3(pj, &v1, pj);
+                    AddVec3((Vector3 *)pi, (Vector3 *)&v1, (Vector3 *)pi);
+                    SubVec3((Vector3 *)pj, (Vector3 *)&v1, (Vector3 *)pj);
                     ((struct Obj *)sHeyhos)[t].separated = 1;
                     ((struct Obj *)sHeyhos)[j].separated = 1;
                 }

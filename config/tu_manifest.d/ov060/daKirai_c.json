@@ -764,27 +764,27 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@842",
+      "from": "@834",
       "to": "@707",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @727 now; licensed under the existing pin @707 | compiler temp; dropping the dead named-parameter hold declaration and including Particle__System.h and math/MtxStack.h in place of the local stubs move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@848",
+      "from": "@840",
       "to": "@713",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @733 now; licensed under the existing pin @713 | compiler temp; dropping the dead named-parameter hold declaration and including Particle__System.h and math/MtxStack.h in place of the local stubs move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@846",
+      "from": "@838",
       "to": "@711",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @731 now; licensed under the existing pin @711 | compiler temp; dropping the dead named-parameter hold declaration and including Particle__System.h and math/MtxStack.h in place of the local stubs move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@844",
+      "from": "@836",
       "to": "@709",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @729 now; licensed under the existing pin @709 | compiler temp; dropping the dead named-parameter hold declaration and including Particle__System.h and math/MtxStack.h in place of the local stubs move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@840",
+      "from": "@832",
       "to": "@705",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @725 now; licensed under the existing pin @705 | compiler temp; dropping the dead named-parameter hold declaration and including Particle__System.h and math/MtxStack.h in place of the local stubs move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     }

@@ -114,7 +114,7 @@ int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void  Vec3_LslInPlace(PknVec3 *v, int sh);
-void  SubVec3(PknVec3 *a, PknVec3 *b, PknVec3 *c);
+void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 void  Matrix4x3_FromTranslation(PknMtx43 *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationY(PknMtx43 *m, s16 ang);
 void  MulMat4x3Mat4x3(void *a, void *b, void *c);
@@ -779,7 +779,7 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.y = data_020a0e68.w[10];
     mHeadClsnOffset.z = data_020a0e68.w[11];
     Vec3_LslInPlace((PknVec3 *)&mHeadClsnOffset, 3);
-    SubVec3((PknVec3 *)&mHeadClsnOffset, (PknVec3 *)&mPosX, (PknVec3 *)&mHeadClsnOffset);
+    SubVec3((Vector3 *)&mHeadClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mHeadClsnOffset);
 
     mHeadClsnOffset.y -= data_02082214[((u16)ang[0] >> 4) << 1] * (s16)0x14 + 0x32000;
     mHeadClsnOffset.z += 0x32000;

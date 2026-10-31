@@ -98,6 +98,7 @@ Promoted C++ translation units are filed by what the class is
 | `src/runtime/actor/` | actor base classes (`dActor_c`, `dEnemyBase_c`, ...) | `d_actor.cpp`, ...; coined `ActorBase*` keep the class name |
 | `src/ui/hud/` | HUD classes (`dMeter_c`, `dMap_c`, cap icons) | `d_meter.cpp`, ...; coined `CapIconMgr` keeps its name |
 | `src/engine/<subsystem>/` | collision, model, sound, heap, ... | `d_bg_ch.cpp`, ...; coined classes (`ModelComponents`, `Heap`) keep the class name |
+| `src/lib/msl/`, `src/lib/runtime/` | toolchain library TUs: MSL C library, MWCC C++ runtime (NitroSDK stays in `src/engine/<module>/`) | the library's own file name (`ansi_fp.c`, `NMWException.cpp`) |
 
 **One rule for file names:** a class that has a ROM RTTI name is filed under its
 NSMBW-decomp snake_case spelling (`daFoo_c` -> `d_a_foo.cpp`, `dScFoo_c` ->

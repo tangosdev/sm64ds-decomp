@@ -52,8 +52,6 @@ extern "C" {
 /* Shared collider helpers, defined in the arm9 TU (src/engine/collision/d_bg_w_kc.cpp).
    local extern: they are free functions of that TU and no header declares them. */
 s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
-bool func_020397dc(int x);                      /* near-zero divisor guard */
-bool func_020397b8(int x);                      /* wall-facing test */
 int func_02039794(int x);                       /* slope-band classify */
 
 /* CLPS helpers (src/engine/collision/d_bg_ch_sph_crr_query.cpp): the entry
@@ -148,7 +146,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     cr.y = (s16)(MUL10(fn[2], (ea)[0]) - MUL10(fn[0], (ea)[2]));             \
     cr.z = (s16)(MUL10(fn[0], (ea)[1]) - MUL10(fn[1], (ea)[0]));             \
     t = MUL10(cr.x, en3[0]) + MUL10(cr.y, en3[1]) + MUL10(cr.z, en3[2]);   \
-    if (func_020397dc(t)) continue;                                           \
+    if (IsNearZeroDivisor(t)) continue;                                           \
     u = cstd::fdiv(tri->length, t) >> 2;                                \
     (out)[0] = (o0) + (s32)(((s64)cr.x * u) >> 14);                         \
     (out)[1] = (o1) + (s32)(((s64)cr.y * u) >> 14);                         \
@@ -167,13 +165,13 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    `nn` is their cosine, already formed by the dispatch. Solve the 2x2 for the
    point's coefficients in that basis, then hand the offset to the vertex tail.
 
-   `func_020397dc(den)` is the divisor guard: |den| <= 8 means the two edge
+   `IsNearZeroDivisor(den)` is the divisor guard: |den| <= 8 means the two edge
    normals are within a hair of parallel and the 2x2 is singular. The `>> 2` on
    the quotient is cstd::fdiv's Fix12 result brought back to the 0x400 scale. */
 #define VERTEX_BLOCK(nn, nnh, den, ea, eb, dotI, dotJ)                        \
     den = MUL10(nn, nn) - 0x400;                                              \
     den += (nnh) - (nnh);                                                     \
-    if (func_020397dc(den)) continue;                                         \
+    if (IsNearZeroDivisor(den)) continue;                                         \
     t = cstd::fdiv(MUL10(nn, dotJ) - (dotI), den) >> 2;                  \
     u = (dotJ) - MUL10(t, nn);                                                \
     vx = MUL10(t, (ea)[0]) + MUL10(u, (eb)[0]);                               \
@@ -188,7 +186,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    slope tolerance expressed as a fraction of the penetration. Only a floor
    (cls 0) that fails it gets the expensive path -- a real hypotenuse through
    the hardware sqrt, then the contact angle through cstd::fdiv, compared
-   against upAxis. func_020397dc guards the divisor: |x| <= 8 means near-zero,
+   against upAxis. IsNearZeroDivisor guards the divisor: |x| <= 8 means near-zero,
    so bail. */
 #define EDGE_FILTER(d, zval, hypv)                                                 \
     if (!(sphere.flags & 2)) {                                                     \
@@ -216,7 +214,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
             axisDot = DotVec3((const s32 *)&sn, (const Vector3 *)&upAxis);         \
             SqrtStart((u64)((s64)fh * fh + (s64)dh * dh), zval, k1);               \
             hypv = SQRT_RESULT;                                                    \
-            if (func_020397dc(hypv))                                               \
+            if (IsNearZeroDivisor(hypv))                                               \
                 continue;                                                          \
             if (axisDot > cstd::fdiv(fh, hypv))                                    \
                 continue;                                                          \
@@ -338,7 +336,8 @@ int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
             vtx = file->positions[tri->posIdx];
             dx = rawX - vtx[0];
             dz = rawZ - vtx[2];
-            if (func_020397dc(normal[1])) continue;   /* too steep to solve */
+            if (IsNearZeroDivisor(normal[1]))
+                continue; /* too steep to solve */
 
             /* Height of the plane under the probe, relative to vertex 0. */
             dy = -(cstd::fdiv((s32)(((s64)dx * normal[0]) >> 10)
@@ -1161,7 +1160,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
                         denom = (dotS - dotE) >> 4;
                         if (denom <= 0)
                             continue;
-                        if (func_020397dc(denom))
+                        if (IsNearZeroDivisor(denom))
                             continue;
                         t = cstd::fdiv(dotS >> 4, denom) << 4;
 
@@ -1199,7 +1198,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
                             GetSurfaceInfo(triIdx, pc.surface);
                             pc.surface.CopyNormalTo(normal);
                             if (!dBgCh::ShouldPassThroughImpl(this, pc.surface.clps, ray,
-                                                              func_020397b8(normal.y))) {
+                                                              IsWallNormal(normal.y))) {
                                 best.x = hit.x;
                                 best.y = hit.y;
                                 best.z = hit.z;

@@ -2,10 +2,7 @@
 #include "nitro/fx/fx.h"
 #include "Ov007Spring.h"
 
-/* SubVec3 still defines its vector as its own struct Vec3;
-   declared as defined, the call casts. */
-struct Vec3;
-extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
+extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void func_02053320(int s, int *a, int *b, int *out);
 extern int DotVec3(const Vector3 *a, const Vector3 *b);
 
@@ -22,7 +19,7 @@ void func_ov007_020c7d60(Ov007Link *link, int r5, int r4) {
     Vector3 v1, v2;
     int delta;
 
-    SubVec3((struct Vec3 *)link->from->target, (struct Vec3 *)link->to->target, (struct Vec3 *)&d);
+    SubVec3((Vector3 *)link->from->target, (Vector3 *)link->to->target, (Vector3 *)&d);
 
     /* x-first in source; mwccarm emits y-first loads (same as Vec3_DistSq) */
     sq = (s64)(d.x) * (d.x);

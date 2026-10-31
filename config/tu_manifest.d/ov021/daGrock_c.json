@@ -575,7 +575,7 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@975",
+      "from": "@967",
       "to": "@887",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the five rock helpers becoming members, and including SharedFilePtr.h, Particle__System.h, math/MtxStack.h and cstd.h in place of the local stubs, move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     }

@@ -1,4 +1,4 @@
-// cpp
+//cpp
 /* unit020be0dc -- ov007 unit 0x020be0dc..0x020bed60: 14 functions, .text only.
  *
  * The title menu's figures and the particle-tracking sprites that follow
@@ -58,6 +58,7 @@
 #include "types.h"
 #include "Ov007Model.h"
 #include "Ov007Figure.h"
+#include "Particle__System.h"
 
 extern "C" {
 
@@ -72,23 +73,6 @@ typedef struct Vec3Words {
 typedef struct Vec3sWords {
     s16 w[3];
 } Vec3sWords;
-
-/* The particle system func_ov007_020b7690 hands back, a Particle::System
- * (include/Particle__System.h): only the fields func_ov007_020beb80 writes,
- * under the header's names, plus the byte at 0x58 that the header leaves in
- * its padding. */
-typedef struct Ov007ParticleSystem {
-    u8 pad_00[0x1c];
-    /* 0x1c: bit 1 is the callback flag that suppresses spawning */
-    int callbackFlags;
-    Vector3 position; /* 0x20 */
-    u8 pad_2c[0x10];
-    Vector3s direction; /* 0x3c */
-    u8 pad_42[0xa];
-    int callbackVelocity; /* 0x4c */
-    u8 pad_50[8];
-    u8 spawnFrames; /* 0x58: 1..5, fewer the faster the figure moves */
-} Ov007ParticleSystem;
 
 /* One 0xc-byte particle tracking record of the kind func_0204dab4 fills (as
  * dPa_c's edStarKiraCallback_c::trackingRecords). func_0204dab4 claims a free
@@ -198,7 +182,7 @@ void func_ov007_020beb80(Ov007Figure *fig) {
     int *row = &bone0->r.m[6];
     int yaw;
     Vector3s motion;
-    Ov007ParticleSystem *sys;
+    Particle::System *sys;
     int frames;
     int vel;
     int speed;
@@ -211,7 +195,7 @@ void func_ov007_020beb80(Ov007Figure *fig) {
         fig->yaw = yaw;
         *(Vec3Words *)&fig->prevPos = *(Vec3Words *)pos;
     }
-    sys = (Ov007ParticleSystem *)func_ov007_020b7690(fig->particleIndex);
+    sys = (Particle::System *)func_ov007_020b7690(fig->particleIndex);
     {
         Ov007Model *m = fig->model;
         if (m->visible != 0 && (unsigned)m->boneAnim->state <= 1) {
@@ -347,23 +331,24 @@ int func_ov007_020be964(Ov007Figure *fig) {
     return *state;
 }
 
+/* from + (to - from) * t, with t a Q12 weight. */
+static inline int BlendFx(int from, int to, int t) {
+    return (int)(((s64)(0x1000 - t) * from + (s64)t * to) >> 12);
+}
+
 // @symbol func_ov007_020be8b8
 /* Fills the sixteen affine matrices with uniform scales: matrix i scales by
  * the reciprocal of a Q12 blend from 0x12c (i = 0) to 1 (i = 15). */
 void func_ov007_020be8b8(void) {
-    int sl;
-    for (sl = 0; sl < 0x10; sl++) {
-        char *base = (char *)SPRITES->affine;
-        int *e = (int *)(base + sl * 0x10);
-        int x = cstd::div(sl * 0x1000, 0xf);
-        int r3 = 0x1000 - x;
-        long long m = (long long)r3 * 0x12c;
-        int v = (int)((m + ((long long)x << 12)) >> 12);
-        v = func_02053200(v);
-        *(int *)(base + sl * 0x10) = v;
-        e[1] = 0;
-        e[2] = 0;
-        e[3] = v;
+    int i;
+    for (i = 0; i < 16; i++) {
+        int *m = SPRITES->affine[i];
+        int t = cstd::div(i * 0x1000, 15);
+        int scale = func_02053200(BlendFx(0x12c, 0x1000, t));
+        m[0] = scale;
+        m[1] = 0;
+        m[2] = 0;
+        m[3] = scale;
     }
 }
 
@@ -417,31 +402,31 @@ void func_ov007_020be7a8(void *pos, unsigned short *outX, unsigned short *outY, 
  * the tracking records (claiming new ones at the extra node's priority while
  * that node is visible), then every item shows while its record holds a
  * particle, at the record's screen point. */
-void func_ov007_020be684(void *a0, Ov007SpriteGroup *grp) {
+void func_ov007_020be684(void *system, Ov007SpriteGroup *grp) {
     int i;
-    int r3;
-    Ov007OamNode *q;
-    TrackingRecord *e;
-    Ov007SpriteItem *o;
+    int priority;
+    Ov007OamNode *extra;
+    TrackingRecord *rec;
+    Ov007SpriteItem *item;
 
-    q = grp->extra->node;
-    if (q->visible != 0)
-        r3 = q->priority;
+    extra = grp->extra->node;
+    if (extra->visible != 0)
+        priority = extra->priority;
     else
-        r3 = 4;
-    r3 = r3 & 0xff;
-    func_0204dab4(a0, SPRITES->tracking, *grp->layout, r3, (void *)&func_ov007_020be7a8);
+        priority = 4;
+    func_0204dab4(system, SPRITES->tracking, *grp->layout, (u8)priority,
+                  (void *)&func_ov007_020be7a8);
 
     for (i = 0; i < *grp->layout; i++) {
-        o = grp->items[i];
-        e = SPRITES->tracking + i;
-        o->node->visible = (e->particle != 0) ? 1 : 0;
-        o->node->x = e->screenX << 12;
-        o->node->y = e->screenY << 12;
-        o->node->priority = e->priority;
-        o->node->affineIndex = (e->lifeScale << 4) >> 0xc;
-        if (e->particle != 0)
-            func_ov007_020c3fe4(o);
+        item = grp->items[i];
+        rec = &SPRITES->tracking[i];
+        item->node->visible = (rec->particle != 0) ? 1 : 0;
+        item->node->x = rec->screenX << 12;
+        item->node->y = rec->screenY << 12;
+        item->node->priority = rec->priority;
+        item->node->affineIndex = (rec->lifeScale << 4) >> 0xc;
+        if (rec->particle != 0)
+            func_ov007_020c3fe4(item);
     }
 }
 
@@ -451,16 +436,11 @@ void func_ov007_020be684(void *a0, Ov007SpriteGroup *grp) {
  * animation 1 with an 8-pixel margin, the extra record animations 2 and 0
  * with a 0x20-pixel one. */
 void func_ov007_020be50c(void) {
-    Ov007SpriteBank **t;
-    Ov007SpriteGroup *n;
-    Ov007SpriteItem *e;
-    Ov007OamNode *ef0;
-    Ov007SpriteBank *t2;
-    int count;
+    Ov007SpriteBank **banks;
+    Ov007SpriteItem *item;
     int i;
-    int off;
 
-    t = WORK->display->spriteBanks;
+    banks = WORK->display->spriteBanks;
 
     SPRITES = (Ov007ParticleSprites *)func_ov007_020c3df4(0, sizeof(Ov007ParticleSprites));
     SPRITES->group = func_ov007_020c3f00(&data_ov007_020d7c6c, 2);
@@ -470,31 +450,18 @@ void func_ov007_020be50c(void) {
 
     func_ov007_020c3ee8(SPRITES->group, WORK->display->oamListSub);
 
-    n = SPRITES->group;
-    count = n->layout[0];
-    i = 0;
-    if (count > 0) {
-        off = i;
-        do {
-            e = n->items[i];
-            t2 = t[2];
-            ef0 = e->node;
-            ef0->anims[0] = &t2->anims[1];
-            e->margin = 8;
-            Sprite_SetAnimation(e->node, 0, 1, 0, 0);
-            func_0204dc84((char *)SPRITES->tracking + off);
-            n = SPRITES->group;
-            i++;
-            off += sizeof(TrackingRecord);
-            count = n->layout[0];
-        } while (i < count);
+    for (i = 0; i < SPRITES->group->layout[0]; i++) {
+        item = SPRITES->group->items[i];
+        item->node->anims[0] = &banks[2]->anims[1];
+        item->margin = 8;
+        Sprite_SetAnimation(item->node, 0, 1, 0, 0);
+        func_0204dc84((char *)&SPRITES->tracking[i]);
     }
 
-    e = n->extra;
-    e->node->anims[0] = &t[2]->anims[2];
-    ef0 = e->node;
-    ef0->anims[1] = &t[2]->anims[0];
-    e->margin = 0x20;
+    item = SPRITES->group->extra;
+    item->node->anims[0] = &banks[2]->anims[2];
+    item->node->anims[1] = &banks[2]->anims[0];
+    item->margin = 0x20;
 
     func_ov007_020be8b8();
 }
@@ -525,7 +492,7 @@ void func_ov007_020be3bc(void) {
         return;
     if (func_ov007_020b7690(1) == 0)
         return;
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         int *s = SPRITES->affine[i];
         GXOamAffine *d = (GXOamAffine *)(oam + i * 4);
         d->PA = (short)(s[0] >> 4);
@@ -535,8 +502,10 @@ void func_ov007_020be3bc(void) {
     }
 }
 
-/* bone 0's transform */
-#define BONE0 (fig->model->model->transforms)
+/* The figure's bone 0 transform. */
+static inline Matrix4x3 *Bone0(Ov007Figure *fig) {
+    return fig->model->model->transforms;
+}
 
 // @symbol func_ov007_020be0dc
 /* One frame: pins the extra node to the shown figure's bone 0 on screen
@@ -546,17 +515,18 @@ void func_ov007_020be3bc(void) {
  * visible. Returns whether it is shown. */
 int func_ov007_020be0dc(void) {
     int modelVisible = 0;
+    int shown;
     Ov007OamNode *node;
     void *system = 0;
     Ov007Figure *fig;
-    int val;
-    int sp4, sp8;
+    int particleIndex;
+    int screenX, screenY;
 
     node = SPRITES->group->extra->node;
     fig = func_ov007_020be850();
 
     if (fig == 0) {
-        val = data_ov007_02103230;
+        particleIndex = data_ov007_02103230;
     } else {
         u8 kind = fig->figureIndex;
         Vector3 *pos;
@@ -567,9 +537,8 @@ int func_ov007_020be0dc(void) {
                 Sprite_SetAnimation(node, 0, 1, 0, 0);
             break;
         case 1: {
-            Ov007AnimPlayer *y = fig->model->boneAnim;
-            int idv = y->frame;
-            if (idv >= 0x226) {
+            int frame = fig->model->boneAnim->frame;
+            if (frame >= 0x226) {
                 if (node->animIndex != 1)
                     Sprite_SetAnimation(node, 1, 1, 0, 0);
             } else {
@@ -579,30 +548,26 @@ int func_ov007_020be0dc(void) {
         } break;
         }
 
-        pos = &BONE0->t;
-        func_ov007_020bfd70(WORK->cameras[0], pos, &sp4, &sp8);
+        pos = &Bone0(fig)->t;
+        func_ov007_020bfd70(WORK->cameras[0], pos, &screenX, &screenY);
+
+        if (WORK->cameraPreset == 4)
+            screenY += 0x14b;
+        else
+            screenY += data_ov007_020d7c58[WORK->figureIndex];
 
         {
-            Ov007Work *P = WORK;
-            if (P->cameraPreset == 4) {
-                sp8 += 0x14b;
-            } else {
-                sp8 += data_ov007_020d7c58[P->figureIndex];
-            }
+            int x = (short)screenX << 0xc;
+            int y = (short)screenY << 0xc;
+            node->x = x;
+            node->y = y;
         }
 
         {
-            int t0 = (short)sp4 << 0xc;
-            int t1 = (short)sp8 << 0xc;
-            node->x = t0;
-            node->y = t1;
-        }
-
-        {
-            int *pp = &BONE0->r.m[6];
-            int d = func_020538b8(pp[0], pp[2]);
-            int e = cstd::div(d << 0xc, 0xffff);
-            unsigned int scale = ((e * 0x12) >> 0xc) & 0xff;
+            int *row = &Bone0(fig)->r.m[6];
+            int yaw = func_020538b8(row[0], row[2]);
+            int turn = cstd::div(yaw << 0xc, 0xffff);
+            unsigned int scale = ((turn * 0x12) >> 0xc) & 0xff;
             if (scale >= 0x12)
                 scale = 0x11;
             if (node->animIndex == 0)
@@ -620,12 +585,12 @@ int func_ov007_020be0dc(void) {
             node->priority = 3;
 
         modelVisible = fig->model->visible;
-        val = fig->particleIndex;
+        particleIndex = fig->particleIndex;
     }
 
-    data_ov007_02103230 = val;
-    if (val != -1)
-        system = func_ov007_020b7690(val);
+    data_ov007_02103230 = particleIndex;
+    if (particleIndex != -1)
+        system = func_ov007_020b7690(particleIndex);
 
     if (system != 0) {
         Ov007OamNode *q = SPRITES->group->root;
@@ -640,14 +605,12 @@ int func_ov007_020be0dc(void) {
 
     func_ov007_020c3fe4(SPRITES->group->extra);
 
-    {
-        int r0 = node->visible;
-        if (r0 != 0 && modelVisible != 0)
-            r0 = 1;
-        else
-            r0 = 0;
-        node->visible = r0;
-        return r0;
-    }
+    shown = node->visible;
+    if (shown != 0 && modelVisible != 0)
+        shown = 1;
+    else
+        shown = 0;
+    node->visible = shown;
+    return shown;
 }
 }

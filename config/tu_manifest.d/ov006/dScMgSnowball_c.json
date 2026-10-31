@@ -1043,87 +1043,87 @@
   "undefined_symbol_aliases": [],
   "defined_symbol_renames": [
     {
-      "from": "@2733",
+      "from": "@2725",
       "to": "@2723",
       "evidence": "mwcc numbers this PMF descriptor @2714. ov060 already defines @2714, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @2723. Re-keyed +2 (from @2723) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2725) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2735",
+      "from": "@2727",
       "to": "@2719",
       "evidence": "mwcc numbers this PMF descriptor @2716. ov002 already defines @2716, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @2725. Re-keyed +2 (from @2725) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2727) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2737",
+      "from": "@2729",
       "to": "@2721",
       "evidence": "mwcc numbers this PMF descriptor @2718. ov002 already defines @2718, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @2727. Re-keyed +2 (from @2727) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2729) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2749",
+      "from": "@2741",
       "to": "@2730",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2758 now; licensed under the existing pin @2730 Re-keyed +2 (from @2739) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2741) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2747",
+      "from": "@2739",
       "to": "@2728",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2756 now; licensed under the existing pin @2728 Re-keyed +2 (from @2737) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2739) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2745",
+      "from": "@2737",
       "to": "@2726",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2754 now; licensed under the existing pin @2726 Re-keyed +2 (from @2735) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2737) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2741",
+      "from": "@2733",
       "to": "@2722",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2750 now; licensed under the existing pin @2722 Re-keyed +2 (from @2731) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2733) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2739",
+      "from": "@2731",
       "to": "@2720",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2748 now; licensed under the existing pin @2720 Re-keyed +2 (from @2729) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2731) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2743",
+      "from": "@2735",
       "to": "@2724",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2752 now; licensed under the existing pin @2724 Re-keyed +2 (from @2733) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2735) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2753",
+      "from": "@2745",
       "to": "@2734",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2762 now; licensed under the existing pin @2734 Re-keyed +2 (from @2743) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2745) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2755",
+      "from": "@2747",
       "to": "@2736",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2764 now; licensed under the existing pin @2736 Re-keyed +2 (from @2745) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2747) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2751",
+      "from": "@2743",
       "to": "@2732",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2760 now; licensed under the existing pin @2732 Re-keyed +2 (from @2741) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2743) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2729",
+      "from": "@2721",
       "to": "@2725",
       "evidence": "compiler temp; the real constructor's inline Vector2 and SnowSpray structors shift this TU's per-TU @NNN uniquifier by 13, so mwcc emits it as @2738 now; licensed under the existing pin @2725 Re-keyed +2 (from @2719) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2721) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@2731",
+      "from": "@2723",
       "to": "@2727",
       "evidence": "compiler temp; the real constructor's inline Vector2 and SnowSpray structors shift this TU's per-TU @NNN uniquifier by 13, so mwcc emits it as @2740 now; licensed under the existing pin @2727 Re-keyed +2 (from @2721) when ResetScene gained the function-local static sUnitY: its guard and registration node take two uniquifiers ahead of the PMF descriptors; mapped by each descriptor's relocation targets, which are unchanged and in the same order. Re-keyed +6 (from @2723) when dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "_ZGVsUnitY$1578",
+      "from": "_ZGVsUnitY$1570",
       "to": "_ZGVsUnitY$1570",
       "evidence": "configured name kept; dScMgBase_c.h gained Mg_DrawLine and moved the emitted name from _ZGVsUnitY$1570 to _ZGVsUnitY$1578 (index-matched against origin/main)."
     },
     {
-      "from": "@1581",
+      "from": "@1573",
       "to": "@1573",
       "evidence": "configured name kept; dScMgBase_c.h gained Mg_DrawLine and moved the emitted name from @1573 to @1581 (index-matched against origin/main)."
     },
     {
-      "from": "sUnitY$1578",
+      "from": "sUnitY$1570",
       "to": "sUnitY$1570",
       "evidence": "configured name kept; dScMgBase_c.h gained Mg_DrawLine and moved the emitted name from sUnitY$1570 to sUnitY$1578 (index-matched against origin/main)."
     }

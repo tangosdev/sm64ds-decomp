@@ -558,12 +558,12 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@817",
+      "from": "@809",
       "to": "@701",
       "evidence": "Measured compiler input after removing the obsolete native actor-call declarations; exact section index, offset, size, binding, body and complete incoming/outgoing typed graph preserve this canonical descriptor identity."
     },
     {
-      "from": "@819",
+      "from": "@811",
       "to": "@703",
       "evidence": "Measured compiler input after removing the obsolete native actor-call declarations; exact section index, offset, size, binding, body and complete incoming/outgoing typed graph preserve this canonical descriptor identity."
     }

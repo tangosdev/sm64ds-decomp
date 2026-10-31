@@ -63,7 +63,7 @@ extern "C" {
 extern s16 data_02082214[];
 
 extern void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
-extern void AddVec3(BattanVector3 *, BattanVector3 *, BattanVector3 *);
+extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
 extern void func_0200fa04(dActor_c *, BattanVector3 *, int);
 
 /* The 8-byte store into the mesh collider's +0x18 callback slot. */
@@ -159,7 +159,7 @@ int daObjFm_Battan_c::Behavior() {
             offset.x = FX_MUL(sinY, -0x190000);
             cosY = data_02082214[((u16)mAngleY >> 4) * 2 + 1];
             offset.z = FX_MUL(cosY, -0x190000);
-            AddVec3(&offset, (BattanVector3 *)&mPosX, &offset);
+            AddVec3((Vector3 *)&offset, (Vector3 *)&mPosX, (Vector3 *)&offset);
 
             dustPos.x = offset.x;
             dustPos.y = offset.y;

@@ -8732,11 +8732,6 @@
         "return:int"
       ]
     },
-    "data_0209cee8": {
-      "src/engine/collision/d_cc.cpp": [
-        "return:dCc_c *"
-      ]
-    },
     "data_0209ceec": {
       "src/engine/model/d_ext_model.cpp": [
         "return:unsigned char"

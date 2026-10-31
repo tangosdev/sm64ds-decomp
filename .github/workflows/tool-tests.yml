@@ -401,7 +401,7 @@ jobs:
 #                                      job ever builds. Pure functions over verdict
 #                                      dicts and a stubbed main(); four honest
 #                                      skipTests need a git binary.
-#   test_prepush_linkcheck      (10)   prepush_linkcheck.py -- resolves a src file to
+#   test_prepush_linkcheck      (13)   prepush_linkcheck.py -- resolves a src file to
 #                                      EVERY function its committed delinks.txt range
 #                                      owns (srcpath.symbols_for), not only the one its
 #                                      filename spells, so a consolidated TU gets one

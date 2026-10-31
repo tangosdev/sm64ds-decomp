@@ -95,23 +95,10 @@ struct V3Quad { Vector3 a; Vector3 d; Vector3 e; Vector3 b; };
  * ways; it stays until Fix12<int> itself is reconstructed. */
 struct Fix12v { int v; Fix12v(int a) : v(a) {} };
 namespace Sound { void PlayBank0(unsigned int, const Vector3 &); }
-struct Ret { int pad; int y; };
-/* A shadow scaffold, and the one hoist C++ requires even without the extern
- * rule below: every virtual of a LOCAL class must be defined in the same body,
- * because a local class vtable can have nowhere else to come from.  Arg is
- * never constructed -- it exists only to give the call in
- * func_ov002_020caf98 the ROM vtable-slot shape -- so at file scope the
- * declarations are enough and no vtable is emitted on either compiler. */
-struct Arg {
- virtual void *m0();
- virtual void *m1();
- virtual struct Ret *m2();
-};
 /* Only ever an opaque pointer: the camera's extern, and func_ov002_020ceb7c's
  * parameter, which is a Player (it reads mPosY, mPlayerNo and mStateWork). */
 struct CameraRaw;
-/* The rest of this block is the same hoist for the same reason, and the tags
- * are unique in the same way.  A body may not declare `extern` with a
+/* The rest of this block is a hoist, and the tags are unique.  A body may not declare `extern` with a
  * function-local class type: a local class has no linkage, so the declaration
  * names an entity the type cannot describe.  mwccarm accepts it; the C++ rule
  * ([basic.link]) does not, and neither does the host front end.  Each shape
@@ -8404,26 +8391,31 @@ void func_ov002_020caf68(Player *self) {
 }
 }
 
-// @symbol func_ov002_020caf98
+// @symbol _ZN6Player10StartClimbEP5dCc_c
+/* dCc_c's player-hit callback (func_02014f5c) offers the player the collider
+ * it touched. Refuse while the climb cooldown runs or the player is riding a
+ * shell, already climbing, holding something, taking damage, out of control,
+ * underwater or mega, and refuse a collider carrying flag 0x400000. Otherwise
+ * store it in mClimbClsn and enter the climb state, first lifting a player
+ * more than 100 units below the collider's base to 100 below it. The name is
+ * coined. */
 extern "C" {
-int func_ov002_020caf98(Player *self, Arg *arg)
-{
+int Player::StartClimb(dCc_c *clsn) {
     extern Player::State data_ov002_0211013c;
     extern Player::State data_ov002_021105bc;
     extern Player::State data_ov002_0211031c;
     extern Player::State data_ov002_021101b4;
     extern Player::State data_ov002_021106dc;
-    extern int func_ov002_020e0478(void*);
-    extern int func_ov002_020e3078(void*, void*);
-    char *p = (char *)self;
+    extern int func_ov002_020e0478(void *);
+    extern int func_ov002_020e3078(void *, void *);
     int b354, b358;
 
-    if (self->IsState(data_ov002_0211013c) == 0 && self->mClimbCooldown == 0) {
-        b354 = (self->mRidingShell != 0);
-        if (b354 == 0 && self->mClimbClsn == 0) {
-            b358 = (self->mHeldObj != 0);
-            if (b358 == 0 && self->mIsTakingDamage == 0 && self->mIsNoControl == 0 &&
-                self->mIsUnderwater == 0 && self->mIsMega == 0) {
+    if (IsState(data_ov002_0211013c) == 0 && mClimbCooldown == 0) {
+        b354 = (mRidingShell != 0);
+        if (b354 == 0 && mClimbClsn == 0) {
+            b358 = (mHeldObj != 0);
+            if (b358 == 0 && mIsTakingDamage == 0 && mIsNoControl == 0 && mIsUnderwater == 0 &&
+                mIsMega == 0) {
                 goto cont;
             }
         }
@@ -8431,29 +8423,35 @@ int func_ov002_020caf98(Player *self, Arg *arg)
     return 0;
 
 cont:
-    if (self->IsInAir() != 0) goto state_check;
-    if (self->IsBeingShotOutOfCannon() != 0) goto state_check;
-    if (self->IsState(data_ov002_021105bc) != 0) goto state_check;
-    if (self->IsState(data_ov002_0211031c) != 0) goto state_check;
+    if (IsInAir() != 0)
+        goto state_check;
+    if (IsBeingShotOutOfCannon() != 0)
+        goto state_check;
+    if (IsState(data_ov002_021105bc) != 0)
+        goto state_check;
+    if (IsState(data_ov002_0211031c) != 0)
+        goto state_check;
 
-    if (func_ov002_020e0478(self) == 0) goto ret0a;
+    if (func_ov002_020e0478(this) == 0)
+        goto ret0a;
 
 state_check:
-    if (self->IsState(data_ov002_021101b4) != 0) {
-        if (func_ov002_020e3078(self, &data_ov002_021106dc) != 0) return 0;
+    if (IsState(data_ov002_021101b4) != 0) {
+        if (func_ov002_020e3078(this, &data_ov002_021106dc) != 0)
+            return 0;
     }
 
-    if (((dCc_c *)arg)->flags & 0x400000)
+    if (clsn->flags & 0x400000)
         return 0;
 
     {
-        Ret *r = arg->m2();
-        if (self->mPosY - r->y < -0x64000)
-            self->mPosY = r->y - 0x64000;
+        Vector3 &pos = clsn->GetPos();
+        if (mPosY - pos.y < -0x64000)
+            mPosY = pos.y - 0x64000;
     }
 
-    self->mClimbClsn = (dCc_c *)arg;
-    self->ChangeState(data_ov002_021106dc);
+    mClimbClsn = clsn;
+    ChangeState(data_ov002_021106dc);
     return 1;
 
 ret0a:

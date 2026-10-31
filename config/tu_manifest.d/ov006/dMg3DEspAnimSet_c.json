@@ -2051,52 +2051,52 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1795",
+      "from": "@1787",
       "to": "@1809",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1823 now; licensed under the existing pin @1809 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1792) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1786",
+      "from": "@1778",
       "to": "@1800",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1814 now; licensed under the existing pin @1800 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1783) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1787",
+      "from": "@1779",
       "to": "@1801",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1815 now; licensed under the existing pin @1801 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1784) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1788",
+      "from": "@1780",
       "to": "@1802",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1816 now; licensed under the existing pin @1802 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1785) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1789",
+      "from": "@1781",
       "to": "@1803",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1817 now; licensed under the existing pin @1803 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1786) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1790",
+      "from": "@1782",
       "to": "@1804",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1818 now; licensed under the existing pin @1804 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1787) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1791",
+      "from": "@1783",
       "to": "@1805",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1819 now; licensed under the existing pin @1805 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1788) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1792",
+      "from": "@1784",
       "to": "@1806",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1820 now; licensed under the existing pin @1806 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1789) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1793",
+      "from": "@1785",
       "to": "@1807",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1821 now; licensed under the existing pin @1807 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1790) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
     },
     {
-      "from": "@1794",
+      "from": "@1786",
       "to": "@1808",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1822 now; licensed under the existing pin @1808 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1791) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
     }

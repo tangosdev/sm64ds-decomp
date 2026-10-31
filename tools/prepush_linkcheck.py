@@ -14,6 +14,19 @@ Verdicts (from tools/linkcheck.py) and how they are treated:
   WRONG      a resolved reloc links to bytes that differ     -> BLOCK (false match)
   NO-REPRO   compiles to the right length, wrong bytes       -> BLOCK (false match)
   NO-SYM / NO-BIN / other                                    -> warn (environment/coverage)
+  NO-COMPILE the TU does not compile at all                    -> BLOCK (nothing else ran)
+
+NO-BIN IS WHY THE COMPILE CHECK EXISTS
+--------------------------------------
+linkcheck needs --bin/--base to place an overlay, so for an overlay source EVERY function
+comes back NO-BIN -- a coverage warning, correctly, because no bytes were compared. But a
+warning on every row means an overlay TU that does not COMPILE also reports nothing
+blocking: PR #4553 added a declaration to include/math/CalcLib.h that contradicted the
+local `Vec3_Asr(void *, void *, int)` in seven overlay actors, every one of them stopped
+compiling, and this gate said `0 blocking` while the validator failed the full ROM build.
+So each file is compiled once up front. A compile failure needs no ROM, no overlay base
+and no symbol table, it is never flaky, and nothing downstream of it can be trusted --
+hence BLOCK, for overlay and arm9 sources alike.
 
 Files carrying a `// NONMATCHING` banner are drafts by definition and are skipped.
 
@@ -41,6 +54,7 @@ import json
 import pathlib
 import subprocess
 import sys
+import tempfile
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
@@ -51,7 +65,10 @@ import srcpath  # noqa: E402
 # Fail closed. WRONG/NO-REPRO are false matches; ERROR means we could not get a verdict at
 # all, and a gate that waves through what it could not check is not a gate. BLIND and NO-SYM
 # stay warnings: those are symbol-coverage gaps, not evidence the bytes are wrong.
-BLOCKING = {"WRONG", "NO-REPRO", "ERROR"}
+BLOCKING = {"WRONG", "NO-REPRO", "ERROR", "NO-COMPILE"}
+
+# The pinned compiler the whole tree is matched against.
+VERSION = "2004/b56"
 
 
 def _load_symbol(name):
@@ -112,6 +129,37 @@ def _run_linkcheck(module, name, addr, size):
     return "ERROR", 0, []
 
 
+def _compiles(path):
+    """(ok, first_diagnostic) for `path` under the pinned compiler.
+
+    Separate from linkcheck on purpose: this answers "is this TU even valid C++ against
+    the headers in the working tree", which is the question a header edit actually
+    raises, and it is the only check here that an overlay source cannot dodge.
+    mwccarm is noisy about MWCIncludes and union members, so only lines that are not
+    warnings are reported back."""
+    import match
+
+    # A MISSING toolchain must not read as a broken file: match.compile_c returns None for
+    # both, and a gate that blocks every push on a box without mwccarm is worse than one
+    # that skips this check there.
+    if not (match.MW / VERSION / "mwccarm.exe").is_file():
+        return True, ""
+
+    src = REPO / path
+    # A path the diff names but the tree no longer has (a delete, or the old side of a
+    # rename) is not a compile failure; the symbol loop reports it as NO-SYM instead.
+    if not src.is_file():
+        return True, ""
+    with tempfile.TemporaryDirectory() as d:
+        staged = pathlib.Path(d) / src.name  # the basename is load-bearing: __sinit_<file>
+        staged.write_bytes(src.read_bytes())
+        flags = match.resolve_cpp_flags(src, match.DEFAULT_FLAGS)
+        obj = match.compile_c(staged, VERSION, flags)
+    if obj:
+        return True, ""
+    return False, "did not compile at %s" % VERSION
+
+
 def verify(path):
     """Run linkcheck for every function `path` owns. Returns a list of result dicts, one
     row per function -- a legacy one-function source still returns a list of exactly one,
@@ -130,6 +178,11 @@ def verify(path):
     reverify import failure, which happens once in a while when a whole batch runs back to
     back. It is not evidence the file is bad, so retry once before treating it as blocking;
     a genuinely broken file (WRONG / NO-REPRO) returns a real verdict on the first try."""
+    ok, why = _compiles(path)
+    if not ok:
+        return [{"file": path, "name": pathlib.Path(path).name,
+                 "verdict": "NO-COMPILE", "note": why}]
+
     rows = []
     for name in srcpath.symbols_for(path):
         sym = _load_symbol(name)

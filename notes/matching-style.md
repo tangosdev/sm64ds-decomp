@@ -437,12 +437,12 @@ offsets; block depth and scope-close order are irrelevant; and **compiler temps 
 all declared locals**. Therefore a ROM slot at the *top* of the frame that is used *first* cannot be
 a declared local -- it must be a temp, i.e. a C99 compound literal (`obj->v = (Vec3){0,0,0};`).
 Deriving the construct from a frame-layout contradiction beats permuting spellings.
-(`src/unnamed/ov007/func_ov007_020ca010.c`)
+(`func_ov007_020ca010` in `src/ui/menus/unit020c9a84.cpp`)
 
 **All-zero aggregate init triggers materialized-base stack zeroing.** `Vec3 v = {0,0,0};` gives
 `add rN,sp,#off; str r,[rN]; str r,[rN,#4]; str r,[rN,#8]`. Field assignments, a pointer local, an
 inlined `VecSet(&v,0,0,0)` and a `void*` helper all fold to `[sp,#off]`. A **non-zero** aggregate
-init instead emits a pool `ldm`/`stm` copy. (`src/unnamed/ov007/func_ov007_020ca010.c`)
+init instead emits a pool `ldm`/`stm` copy. (`func_ov007_020ca010` in `src/ui/menus/unit020c9a84.cpp`)
 
 **Pointer difference carries no conversion node.** To get a base-0 array stride offset into a
 register as an int, `(int)&((char(*)[0x24])0)[idx][0]` emits a surplus `add rX,rY,#0` that mwcc will

@@ -68,7 +68,6 @@ struct dPa_c {
 
         class fitWaterSimpleCallback_c : public simpleCallback_c {
         public:
-            virtual void SpawnParticles(Particle::System& system);
             virtual int OnUpdate(Particle::System& system, bool active);
         };
 
@@ -79,25 +78,21 @@ struct dPa_c {
 
             fitWaterCallback_c() : waterOffset(0x3000) {}
 
-            virtual void SpawnParticles(Particle::System& system);
             virtual int OnUpdate(Particle::System& system, bool active);
         };
 
         class checkWaterCallback_c : public callback_c {
         public:
-            virtual void SpawnParticles(Particle::System& system);
             virtual int OnUpdate(Particle::System& system, bool active);
         };
 
         class bubbleCallback_c : public simpleCallback_c {
         public:
-            virtual void SpawnParticles(Particle::System& system);
             virtual int OnUpdate(Particle::System& system, bool active);
         };
 
         class splashCallback_c : public simpleCallback_c {
         public:
-            virtual void SpawnParticles(Particle::System& system);
             virtual int OnUpdate(Particle::System& system, bool active);
         };
 
@@ -108,19 +103,16 @@ struct dPa_c {
 
             clipCallback_c() : enabled(1) {}
 
-            virtual void SpawnParticles(Particle::System& system);
             virtual int OnUpdate(Particle::System& system, bool active);
         };
 
         class cleanParticleCallback_c : public callback_c {
         public:
-            virtual void SpawnParticles(Particle::System& system);
             virtual int OnUpdate(Particle::System& system, bool done);
         };
 
         class checkWaterRippleCallback_c : public callback_c {
         public:
-            virtual void SpawnParticles(Particle::System& system);
             virtual int OnUpdate(Particle::System& system, bool active);
         };
     };

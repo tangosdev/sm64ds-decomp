@@ -449,12 +449,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@488",
+      "from": "@480",
       "to": "@423",
       "evidence": "mwcc numbers this destructor-registration node @419 per TU; ov035's daObjCtMecha10_c already licenses @419 globally, so the scratch link would multiply-define it"
     },
     {
-      "from": "@489",
+      "from": "@481",
       "to": "@424",
       "evidence": "mwcc numbers this destructor-registration node @420 per TU; ov035's daObjCtMecha10_c already licenses @420 globally, so the scratch link would multiply-define it"
     }

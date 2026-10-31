@@ -640,22 +640,22 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@797",
+      "from": "@789",
       "to": "@939",
       "evidence": "Compiler-local registration node at its original address 0x021149c8, given a unique short label so overlay globals cannot collide."
     },
     {
-      "from": "@798",
+      "from": "@790",
       "to": "@940",
       "evidence": "Compiler-local registration node at its original address 0x021149d4, given a unique short label so overlay globals cannot collide."
     },
     {
-      "from": "@799",
+      "from": "@791",
       "to": "@943",
       "evidence": "Compiler-local registration node at its original address 0x021149e0, given a unique short label so overlay globals cannot collide."
     },
     {
-      "from": "@800",
+      "from": "@792",
       "to": "@963",
       "evidence": "Compiler-local registration node at its original address 0x021149bc, given a unique short label so overlay globals cannot collide."
     }

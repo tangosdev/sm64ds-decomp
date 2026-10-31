@@ -622,12 +622,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@545",
+      "from": "@537",
       "to": "@449",
       "evidence": "mwcc numbers this destructor-registration node @436 per TU; ov100's daStarGate_c already licenses @436 globally, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after including math/MtxStack.h, math/CalcLib.h and Particle__System.h (and dropping dead local declarations) shifted the TU's @NNN uniquifier"
     },
     {
-      "from": "@546",
+      "from": "@538",
       "to": "@437",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @451 now; licensed under the existing pin @437 | re-keyed by __sinit relocation-site order after including math/MtxStack.h, math/CalcLib.h and Particle__System.h (and dropping dead local declarations) shifted the TU's @NNN uniquifier"
     }

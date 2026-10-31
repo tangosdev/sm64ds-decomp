@@ -648,12 +648,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@519",
+      "from": "@511",
       "to": "@383",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @399 now; licensed under the existing pin @383 | compiler temp; including Particle__System.h and math/MtxStack.h in place of the local stubs moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@520",
+      "from": "@512",
       "to": "@384",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @400 now; licensed under the existing pin @384 | compiler temp; including Particle__System.h and math/MtxStack.h in place of the local stubs moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     }

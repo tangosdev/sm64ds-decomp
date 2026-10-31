@@ -88,12 +88,13 @@ enum ChairSfxId {
  * table: one s16 sin, s16 cos pair per 16 angle units. */
 #define SINCOS_INDEX(angle) ((*(u16 *)&(angle) >> 4) * 2)
 
-/* local extern: arm9 C helpers with no shared header yet. Vec3_Sub and
-   AddVec3 take this file's Vec3, as their definitions take a plain triple. */
+/* local extern: arm9 C helpers with no shared header yet. Vec3_Sub still
+   takes this file's Vec3, as its definition takes a plain triple; AddVec3
+   takes Vector3 now (math/CalcLib.h declares it). */
 extern "C" {
 void func_0200f760(void *self, void *cyl);
 void Vec3_Sub(Vec3 *res, Vec3 *v0, Vec3 *v1);
-void AddVec3(Vec3 *dst, Vec3 *add, Vec3 *src);
+void AddVec3(Vector3 *dst, Vector3 *add, Vector3 *src);
 int AngleDiff(int a, int b);
 void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 }
@@ -368,7 +369,7 @@ void daChair_c::State2() {
         }
     }
 
-    AddVec3((Vec3 *)&mPosX, (Vec3 *)&mSpeedX, (Vec3 *)&mPosX);
+    AddVec3((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
 
     {
         u32 id = mCylinder.otherOwner;

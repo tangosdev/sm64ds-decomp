@@ -53,7 +53,7 @@ s32 Vec3_Dist(const Vector3 *, const Vector3 *);
 void Matrix4x3_FromRotationY(Matrix4x3 *, s16);
 void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, s16);
 void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *, s32, s32, s32);
-void AddVec3(const Vector3 *, const Vector3 *, Vector3 *);
+void AddVec3(Vector3 *, Vector3 *, Vector3 *);
 int DecIfAbove0_Byte(void *);
 s32 RandomIntInternal(s32 *);
 void Vec3_Asr(Vector3 *, Vector3 *, int);

@@ -483,19 +483,14 @@ extern "C" void func_02010da4(dActor_c *actor) {
 // @symbol _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c
 /* ROM ordinal 75 -- dActor_c::UpdatePosWithOnlySpeed(dCc_c *)
  * 0x02010d40  size 0x64 */
-/* AddVec3's own definition (src/AddVec3.c) spells its operands with this
-   three-int struct, not Vector3; declared to agree with it. */
-struct Vec3 {
-    s32 x, y, z;
-};
 extern "C" {
-void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 void func_02010da4(dActor_c *actor);
 }
 /* Adds the velocity (mSpeedX, mVertSpeed, mSpeedZ) to mPos, then the
    cylinder's horizontal push-out, then clamps to the world bounds. */
 void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
-    AddVec3((Vec3 *)&mPos, (Vec3 *)&mSpeedX, (Vec3 *)&mPos);
+    AddVec3(&mPos, (Vector3 *)&mSpeedX, &mPos);
     if (clsn != 0) {
         mPosX += clsn->pushback.x;
         mPosZ += clsn->pushback.z;

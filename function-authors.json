@@ -15315,7 +15315,7 @@
     },
     "ov002:0x020caf98": {
       "author": "aitddlabs",
-      "name": "func_ov002_020caf98"
+      "name": "_ZN6Player10StartClimbEP5dCc_c"
     },
     "ov002:0x020cb15c": {
       "author": "andrewboudreau",

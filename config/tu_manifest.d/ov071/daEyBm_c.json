@@ -496,7 +496,7 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@703",
+      "from": "@695",
       "to": "@660",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @674 now; licensed under the existing pin @660 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

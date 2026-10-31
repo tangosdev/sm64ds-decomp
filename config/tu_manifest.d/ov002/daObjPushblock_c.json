@@ -630,12 +630,12 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@831",
+      "from": "@823",
       "to": "@716",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Deleting the leaf operator new from daObjPushblock_c.h moved the emission from @730 to @724 (same entity: section 21, symbol index 23)"
     },
     {
-      "from": "@832",
+      "from": "@824",
       "to": "@717",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Deleting the leaf operator new from daObjPushblock_c.h moved the emission from @731 to @725 (same entity: section 14, symbol index 22)"
     }

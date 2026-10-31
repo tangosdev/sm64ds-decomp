@@ -3156,7 +3156,7 @@
     "src/game/player/Player.cpp#_ZN6Player16St_Climb_CleanupEv": "tangosdev",
     "src/game/player/Player.cpp#func_ov002_020bfec0": "noreply",
     "src/game/player/Player.cpp#_ZN6Player19func_ov002_020bfec0Ev": "noreply",
-    "src/game/player/Player.cpp#func_ov002_020caf98": "aitddlabs",
+    "src/game/player/Player.cpp#_ZN6Player10StartClimbEP5dCc_c": "aitddlabs",
     "src/game/player/Player.cpp#func_ov002_020c3ea0": "tangosdev",
     "src/game/player/Player.cpp#_ZN6Player19func_ov002_020c3ea0Ev": "tangosdev",
     "src/game/player/Player.cpp#func_ov002_020ce324": "ruspecial",

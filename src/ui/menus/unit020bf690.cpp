@@ -71,13 +71,6 @@ typedef struct Ov007Fade {
 
 typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
 
-/* Vector3's layout as a POD. A Vector3 local would make this object emit
- * Vector3's empty out-of-line destructor, which the ROM does not place in
- * this range. */
-typedef struct Ov007Point {
-    Fix12i x, y, z;
-} Ov007Point;
-
 extern Ov007Fade *data_ov007_02104bd8;
 extern const short data_02082214[];
 
@@ -144,19 +137,19 @@ void func_ov007_020bfc54(void) {
  * camera's view matrix. */
 void func_ov007_020bfbdc(void *self) {
     Ov007Camera *cam = (Ov007Camera *)self;
-    Ov007Model *o = FADE->model;
-    Ov007Point vec;
+    Ov007Model *model = FADE->model;
+    Vector3 vec;
     Matrix4x3 mat;
 
-    func_ov007_020bc47c(o);
-    o->rotX = (short)cstd::div(0x5a0000, 0x168);
-    o->visible = 0;
+    func_ov007_020bc47c(model);
+    model->rotX = (short)cstd::div(0x5a0000, 0x168);
+    model->visible = 0;
 
     vec.y = 0;
     vec.x = 0;
-    vec.z = 0xffffef9c;
+    vec.z = -0x1064;
     InvMat4x3((int *)&cam->viewMatrix, (int *)&mat);
-    MulVec3Mat4x3((Vector3 *)&vec, &mat, &o->pos);
+    MulVec3Mat4x3(&vec, &mat, &model->pos);
 }
 
 // @symbol func_ov007_020bfaf0
@@ -164,19 +157,19 @@ void func_ov007_020bfbdc(void *self) {
  * at its fovy, then updates it under the camera's view matrix and renders
  * it. */
 void func_ov007_020bfaf0(Ov007Camera *cam) {
-    Ov007Model *r4 = FADE->model;
-    if (r4->visible == 0)
+    Ov007Model *model = FADE->model;
+    if (model->visible == 0)
         return;
     unsigned int idx = cam->fovy >> 4;
     Fix12i t1 = FX_MUL(data_02082214[idx * 2], 0x1064);
-    Fix12i base = r4->scale.x * 0xd800 + 0x12c000;
+    Fix12i base = model->scale.x * 0xd800 + 0x12c000;
     Fix12i t2 = FX_MUL(base, t1);
     int denom = (short)data_02082214[idx * 2 + 1] * 0x60;
     Fix12i d = cstd::fdiv(t2, denom);
-    r4->scale.z = cstd::fdiv(d, 0x5000);
-    r4->scale.x = r4->scale.z;
-    func_ov007_020bc02c(r4, &cam->viewMatrix);
-    func_ov007_020bbff0(r4);
+    model->scale.z = cstd::fdiv(d, 0x5000);
+    model->scale.x = model->scale.z;
+    func_ov007_020bc02c(model, &cam->viewMatrix);
+    func_ov007_020bbff0(model);
 }
 
 // @symbol RequestScreenFade
@@ -195,138 +188,138 @@ void RequestScreenFade(int kind, int flags, void (*onEnd)(void)) {
  * and runs the transition forwards (flag 2) or backwards on the screens the
  * flags pick. */
 void func_ov007_020bf790(void) {
-    Ov007Fade *g = data_ov007_02104bd8;
-    Ov007Transition *r6 = g->transition;
-    int r5 = g->flags;
-    int state = g->request;
-    int r4 = 2;
+    Ov007Fade *fade = FADE;
+    Ov007Transition *tr = fade->transition;
+    int flags = fade->flags;
+    int kind = fade->request;
+    int screens = 2;
 
-    switch (state) {
+    switch (kind) {
     default:
         break;
     case 1:
-        r6->effect = 4;
-        r6->endAction = 1;
-        r6->curve = 0;
-        r6->planes = 0x3F;
-        r6->step = 0x3C;
-        r6->fx.brightness.from = 0x10;
-        r6->fx.brightness.to = 0;
+        tr->effect = 4;
+        tr->endAction = 1;
+        tr->curve = 0;
+        tr->planes = 0x3F;
+        tr->step = 0x3C;
+        tr->fx.brightness.from = 0x10;
+        tr->fx.brightness.to = 0;
         break;
     case 2:
-        r6->effect = 4;
-        r6->endAction = 1;
-        r6->curve = 0;
-        r6->planes = 0x3F;
-        r6->step = 0x3C;
-        r6->fx.brightness.from = -0x10;
-        r6->fx.brightness.to = 0;
+        tr->effect = 4;
+        tr->endAction = 1;
+        tr->curve = 0;
+        tr->planes = 0x3F;
+        tr->step = 0x3C;
+        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.to = 0;
         break;
     case 3:
-        r6->effect = 4;
-        r6->endAction = 0;
-        r6->curve = 0;
-        r6->planes = 0x2F;
-        r6->step = 0x3C;
-        r6->fx.brightness.from = -0x10;
-        r6->fx.brightness.to = 0;
+        tr->effect = 4;
+        tr->endAction = 0;
+        tr->curve = 0;
+        tr->planes = 0x2F;
+        tr->step = 0x3C;
+        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.to = 0;
         break;
     case 4:
-        r6->effect = 4;
-        r6->endAction = 0;
-        r6->curve = 0;
-        r6->planes = 0x3F;
-        r6->step = 0x100;
-        r6->fx.brightness.from = -0x10;
-        r6->fx.brightness.to = 0;
+        tr->effect = 4;
+        tr->endAction = 0;
+        tr->curve = 0;
+        tr->planes = 0x3F;
+        tr->step = 0x100;
+        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.to = 0;
         break;
     case 5:
-        r6->effect = 4;
-        r6->endAction = 1;
-        r6->curve = 0;
-        r6->planes = 0x3F;
-        r6->step = 0x3C;
-        r6->fx.brightness.from = 0;
-        r6->fx.brightness.to = 0;
+        tr->effect = 4;
+        tr->endAction = 1;
+        tr->curve = 0;
+        tr->planes = 0x3F;
+        tr->step = 0x3C;
+        tr->fx.brightness.from = 0;
+        tr->fx.brightness.to = 0;
         break;
     case 6:
-        r6->effect = 4;
-        r6->endAction = 1;
-        r6->curve = 0;
-        r6->planes = 0x3F;
-        r6->step = 0x1000;
-        r6->fx.brightness.from = -0x10;
-        r6->fx.brightness.to = -0x10;
+        tr->effect = 4;
+        tr->endAction = 1;
+        tr->curve = 0;
+        tr->planes = 0x3F;
+        tr->step = 0x1000;
+        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.to = -0x10;
         break;
     case 7:
-        r6->effect = 4;
-        r6->endAction = 1;
-        r6->curve = 0;
-        r6->planes = 0x2F;
-        r6->step = 0x1000;
-        r6->fx.brightness.from = -0x10;
-        r6->fx.brightness.to = -0x10;
+        tr->effect = 4;
+        tr->endAction = 1;
+        tr->curve = 0;
+        tr->planes = 0x2F;
+        tr->step = 0x1000;
+        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.to = -0x10;
         break;
     case 8:
-        r6->effect = 4;
-        r6->endAction = 1;
-        r6->curve = 0;
-        r6->planes = 0x3D;
-        r6->step = 0x100;
-        r6->fx.brightness.from = 0;
-        r6->fx.brightness.to = -9;
+        tr->effect = 4;
+        tr->endAction = 1;
+        tr->curve = 0;
+        tr->planes = 0x3D;
+        tr->step = 0x100;
+        tr->fx.brightness.from = 0;
+        tr->fx.brightness.to = -9;
         break;
     case 9:
-        r6->effect = 3;
-        r6->endAction = 1;
-        r6->curve = 0;
-        r6->step = 0x190;
-        r6->planes = 1;
-        r6->fx.alpha.planes2 = 0x14;
-        r6->fx.alpha.evaFrom = 0x10;
-        r6->fx.alpha.evaTo = 0;
-        r6->fx.alpha.evbFrom = 0;
-        r6->fx.alpha.evbTo = 0;
+        tr->effect = 3;
+        tr->endAction = 1;
+        tr->curve = 0;
+        tr->step = 0x190;
+        tr->planes = 1;
+        tr->fx.alpha.planes2 = 0x14;
+        tr->fx.alpha.evaFrom = 0x10;
+        tr->fx.alpha.evaTo = 0;
+        tr->fx.alpha.evbFrom = 0;
+        tr->fx.alpha.evbTo = 0;
         break;
     }
 
-    if (r5 & 1) {
-        int v;
-        Ov007ModelParts *a = (Ov007ModelParts *)data_ov007_02104bd8->model->model;
-        if (state == 1) {
-            v = 0x7FFF;
+    if (flags & 1) {
+        int color;
+        Ov007ModelParts *parts = (Ov007ModelParts *)FADE->model->model;
+        if (kind == 1) {
+            color = 0x7FFF;
         } else {
-            v = 0;
+            color = 0;
         }
-        v = v | (v << 0x10);
-        a->materials->diffuseAmbient = v;
-        a->materials->specularEmission = v;
-        data_ov007_02104bd8->model->visible = 1;
-        if (r5 & 2) {
+        color = color | (color << 0x10);
+        parts->materials->diffuseAmbient = color;
+        parts->materials->specularEmission = color;
+        FADE->model->visible = 1;
+        if (flags & 2) {
             func_ov007_020bdeb0(0x30);
         } else {
             func_ov007_020bdeb0(0x31);
         }
     } else {
-        if (r5 & 4) {
-            r4 = 1;
-        } else if (!(r5 & 8)) {
-            r4 |= 1;
+        if (flags & 4) {
+            screens = 1;
+        } else if (!(flags & 8)) {
+            screens |= 1;
         }
-        data_ov007_02104bd8->model->visible = 0;
+        FADE->model->visible = 0;
     }
 
-    if (r5 & 0x10) {
+    if (flags & 0x10) {
         G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3F, 0);
     }
 
-    if (r5 & 2) {
-        func_ov007_020c86a8(r6, r4);
+    if (flags & 2) {
+        func_ov007_020c86a8(tr, screens);
     } else {
-        func_ov007_020c8688(r6, r4);
+        func_ov007_020c8688(tr, screens);
     }
 
-    data_ov007_02104bd8->transition->onEnd = data_ov007_02104bd8->onEnd;
+    FADE->transition->onEnd = FADE->onEnd;
 }
 
 // @symbol func_ov007_020bf690
@@ -335,34 +328,34 @@ void func_ov007_020bf790(void) {
  * transition holds at its end it hides the model, clears flag 1 and, for a
  * reversed run, restores full brightness-down. */
 void func_ov007_020bf690(void) {
-    Ov007Fade *g = data_ov007_02104bd8;
-    Ov007Transition *obj6 = g->transition;
-    int flags = g->flags;
-    int did = 0;
-    if (g->request != 0) {
+    Ov007Fade *fade = FADE;
+    Ov007Transition *tr = fade->transition;
+    int flags = fade->flags;
+    int started = 0;
+    if (fade->request != 0) {
         func_ov007_020bf790();
-        data_ov007_02104bd8->request = did;
-        did = 1;
+        FADE->request = 0;
+        started = 1;
     }
-    func_ov007_020c8498(obj6);
+    func_ov007_020c8498(tr);
     if ((flags & 1) == 0)
         return;
-    int v = obj6->t;
-    if (did == 0 && (flags & 2) != 0) {
+    int progress = tr->t;
+    if (started == 0 && (flags & 2) != 0) {
         G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, 0);
     }
-    if (obj6->reversed != 0)
-        v = 0x1000 - v;
-    data_ov007_02104bd8->model->scale.z = v;
-    data_ov007_02104bd8->model->scale.x = data_ov007_02104bd8->model->scale.z;
-    if (obj6->state != 3)
+    if (tr->reversed != 0)
+        progress = 0x1000 - progress;
+    FADE->model->scale.z = progress;
+    FADE->model->scale.x = FADE->model->scale.z;
+    if (tr->state != 3)
         return;
-    data_ov007_02104bd8->model->visible = 0;
+    FADE->model->visible = 0;
     {
-        const Ov007Fade *gr = data_ov007_02104bd8;
-        data_ov007_02104bd8->flags = gr->flags & ~1;
+        const Ov007Fade *cur = FADE;
+        FADE->flags = cur->flags & ~1;
     }
-    if (obj6->reversed == 0)
+    if (tr->reversed == 0)
         return;
     G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, -0x10);
 }

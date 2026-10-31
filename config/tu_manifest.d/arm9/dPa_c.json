@@ -272,6 +272,126 @@
       "symbol": "_ZTVN5dPa_c7level_c15scaleCallback_cE",
       "disposition": "deadstrip-data",
       "reason": "key functions defined in this TU drag in scaleCallback_c's vtable; the ROM owns the record at 0x0208f414, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTIN5dPa_c7level_c26checkWaterRippleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in checkWaterRippleCallback_c's typeinfo; the ROM owns the record at 0x0208f30c, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTSN5dPa_c7level_c26checkWaterRippleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in checkWaterRippleCallback_c's typeinfo name; the ROM owns the record at 0x0208f638, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTVN5dPa_c7level_c26checkWaterRippleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in checkWaterRippleCallback_c's vtable; the ROM owns the record at 0x0208f424, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTIN5dPa_c7level_c20checkWaterCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in checkWaterCallback_c's typeinfo; the ROM owns the record at 0x0208f324, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTSN5dPa_c7level_c20checkWaterCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in checkWaterCallback_c's typeinfo name; the ROM owns the record at 0x0208f568, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTVN5dPa_c7level_c20checkWaterCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in checkWaterCallback_c's vtable; the ROM owns the record at 0x0208f3f4, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTIN5dPa_c7level_c16bubbleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in bubbleCallback_c's typeinfo; the ROM owns the record at 0x0208f330, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTSN5dPa_c7level_c16bubbleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in bubbleCallback_c's typeinfo name; the ROM owns the record at 0x0208f4d4, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTVN5dPa_c7level_c16bubbleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in bubbleCallback_c's vtable; the ROM owns the record at 0x0208f3a4, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTIN5dPa_c7level_c16splashCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in splashCallback_c's typeinfo; the ROM owns the record at 0x0208f348, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTSN5dPa_c7level_c16splashCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in splashCallback_c's typeinfo name; the ROM owns the record at 0x0208f4f8, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTVN5dPa_c7level_c16splashCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in splashCallback_c's vtable; the ROM owns the record at 0x0208f3e4, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTIN5dPa_c7level_c14clipCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in clipCallback_c's typeinfo; the ROM owns the record at 0x0208f36c, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTSN5dPa_c7level_c14clipCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in clipCallback_c's typeinfo name; the ROM owns the record at 0x0208f48c, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTVN5dPa_c7level_c14clipCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in clipCallback_c's vtable; the ROM owns the record at 0x0208f434, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTIN5dPa_c7level_c24fitWaterSimpleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in fitWaterSimpleCallback_c's typeinfo; the ROM owns the record at 0x0208f378, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTSN5dPa_c7level_c24fitWaterSimpleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in fitWaterSimpleCallback_c's typeinfo name; the ROM owns the record at 0x0208f60c, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTVN5dPa_c7level_c24fitWaterSimpleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in fitWaterSimpleCallback_c's vtable; the ROM owns the record at 0x0208f444, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTIN5dPa_c7level_c23cleanParticleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in cleanParticleCallback_c's typeinfo; the ROM owns the record at 0x0208f384, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTSN5dPa_c7level_c23cleanParticleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in cleanParticleCallback_c's typeinfo name; the ROM owns the record at 0x0208f5e0, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTVN5dPa_c7level_c23cleanParticleCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in cleanParticleCallback_c's vtable; the ROM owns the record at 0x0208f464, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTIN5dPa_c7level_c18fitWaterCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in fitWaterCallback_c's typeinfo; the ROM owns the record at 0x0208f390, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTSN5dPa_c7level_c18fitWaterCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in fitWaterCallback_c's typeinfo name; the ROM owns the record at 0x0208f540, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTVN5dPa_c7level_c18fitWaterCallback_cE",
+      "disposition": "deadstrip-data",
+      "reason": "key functions defined in this TU drag in fitWaterCallback_c's vtable; the ROM owns the record at 0x0208f454, it is compared word-for-word and stripped."
     }
   ],
   "notes": [

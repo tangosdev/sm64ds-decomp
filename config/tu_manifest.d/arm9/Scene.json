@@ -676,5 +676,17 @@
       "target_module": "arm9",
       "target_address": "0x02074edc"
     }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@323",
+      "to": "@331",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    },
+    {
+      "from": "@324",
+      "to": "@332",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+    }
   ]
 }
