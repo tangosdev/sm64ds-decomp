@@ -625,6 +625,44 @@ int g_look_pad_taken;
    action that already held it in a file that never named the key. */
 int g_cc_key_taken;
 int g_cc_pad_taken;
+/* LLLSHELL1: THE CAMERA TURN AND TILT DEFAULTS GIVE WAY TOO. A player who moved
+   Attack onto E (the camera-right default) got both on every press: the DS
+   camera stepped right with its whoosh and the red arrow while he held Attack
+   on the Koopa shell. A turn / tilt binding the file never named, and the
+   player never set on the page, is unbound while a gameplay action (the
+   movement keys up to Look; the pad's Jump up to Look) holds the same key or
+   button; it comes back if that action moves off it. A camera binding the
+   player named keeps doubling up, as before. Bit i of a mask = named. */
+const int CAM_YIELD_KEY[4] = { HOST_KEY_CAM_LEFT, HOST_KEY_CAM_RIGHT, HOST_KEY_CAM_UP, HOST_KEY_CAM_DOWN };
+const int CAM_YIELD_PAD[2] = { HOST_PAD_CAM_LEFT, HOST_PAD_CAM_RIGHT };
+unsigned g_cam_key_named, g_cam_pad_named;
+int g_cam_key_taken[4], g_cam_pad_taken[2];   /* index + 1 of the action holding the default */
+void cam_turn_yield(void)
+{
+    for (int j = 0; j < 4; ++j) {
+        const int a = CAM_YIELD_KEY[j];
+        g_cam_key_taken[j] = 0;
+        if (g_cam_key_named & (1u << a)) continue;
+        g_key[a] = KEY_BIND[a].dflt;
+        for (int i = 0; i <= HOST_KEY_LOOK; ++i)
+            if (g_key[i] == g_key[a]) { g_cam_key_taken[j] = i + 1; g_key[a] = 0; break; }
+    }
+    for (int j = 0; j < 2; ++j) {
+        const int a = CAM_YIELD_PAD[j];
+        g_cam_pad_taken[j] = 0;
+        if (g_cam_pad_named & (1u << a)) continue;
+        g_pad[a] = PAD_BIND[a].dflt;
+        for (int i = 0; i <= HOST_PAD_LOOK; ++i)
+            if (g_pad[i] & g_pad[a]) { g_cam_pad_taken[j] = i + 1; g_pad[a] = 0; break; }
+    }
+}
+void cam_turn_named_from(const char *text)
+{
+    for (int j = 0; j < 4; ++j)
+        if (json_value(text, KEY_BIND[CAM_YIELD_KEY[j]].name)) g_cam_key_named |= 1u << CAM_YIELD_KEY[j];
+    for (int j = 0; j < 2; ++j)
+        if (json_value(text, PAD_BIND[CAM_YIELD_PAD[j]].name)) g_cam_pad_named |= 1u << CAM_YIELD_PAD[j];
+}
 
 /* ---- THE LIVE CONTROL KEYS (run menu1, lane SETLIVE1) ---------------------
    Six numbers the in-game settings page changes while the game runs, all
@@ -1565,6 +1603,7 @@ void load_once(void)
     g_look_pad_taken = 0;
     g_cc_key_taken = 0;
     g_cc_pad_taken = 0;
+    g_cam_key_named = g_cam_pad_named = 0;   /* LLLSHELL1 */
     g_gap_on = 1;
     g_gap_fill = 1;
     g_audio_quality = 1;
@@ -1774,6 +1813,9 @@ void load_once(void)
                     g_pad[HOST_PAD_CAM_CENTER] = 0;
                     break;
                 }
+        /* LLLSHELL1: the turn / tilt defaults, by the same rule (see cam_turn_yield) */
+        cam_turn_named_from(text);
+        cam_turn_yield();
         /* the screen gap. Each key is read against its OWN default, so a file
            that sets one of the four and none of the others is honoured for
            the one it set. */
@@ -2151,6 +2193,16 @@ void load_once(void)
                         "button 0x%04x is already %s (%s)\n",
                 (unsigned)PAD_BIND[HOST_PAD_CAM_CENTER].dflt,
                 PAD_BIND[g_cc_pad_taken - 1].name, path);
+    for (int j = 0; j < 4; ++j)   /* LLLSHELL1 */
+        if (g_cam_key_taken[j])
+            fprintf(stderr, "[settings] %s left unbound: its default key 0x%02x is already %s (%s)\n",
+                    KEY_BIND[CAM_YIELD_KEY[j]].name, (unsigned)KEY_BIND[CAM_YIELD_KEY[j]].dflt,
+                    KEY_BIND[g_cam_key_taken[j] - 1].name, path);
+    for (int j = 0; j < 2; ++j)
+        if (g_cam_pad_taken[j])
+            fprintf(stderr, "[settings] %s left unbound: its default button 0x%04x is already %s (%s)\n",
+                    PAD_BIND[CAM_YIELD_PAD[j]].name, (unsigned)PAD_BIND[CAM_YIELD_PAD[j]].dflt,
+                    PAD_BIND[g_cam_pad_taken[j] - 1].name, path);
     if (!g_gap_on || g_gap_fill != 1 || g_gap_color != 0xFF000000u ||
         g_gap_peek)
         fprintf(stderr, "[settings] MinigameGap %s, fill %s #%06x, peek %s "
@@ -2396,6 +2448,15 @@ int reload_controls(const char *text)
         if (mouse_vk_ok(m)) CTL_SET(g_mouse[i], m);
     }
     CTL_SET(g_camera_stick_zoom, json_bool(text, "CameraStickZoom", g_camera_stick_zoom));
+    {   /* LLLSHELL1: the turn / tilt defaults follow a gameplay key moved on or off them (cam_turn_yield) */
+        int was_k[4], was_p[2];
+        for (int j = 0; j < 4; ++j) was_k[j] = g_key[CAM_YIELD_KEY[j]];
+        for (int j = 0; j < 2; ++j) was_p[j] = g_pad[CAM_YIELD_PAD[j]];
+        cam_turn_named_from(text);
+        cam_turn_yield();
+        for (int j = 0; j < 4; ++j) if (was_k[j] != g_key[CAM_YIELD_KEY[j]]) changed = 1;
+        for (int j = 0; j < 2; ++j) if (was_p[j] != g_pad[CAM_YIELD_PAD[j]]) changed = 1;
+    }
 #undef CTL_SET
     g_run_key = g_key[HOST_KEY_RUN];
     g_run_pad = g_pad[HOST_PAD_RUN];
@@ -3356,6 +3417,9 @@ extern "C" int host_setting_set_key(int action, int vk)
     }
     if (g_key[action] == vk) return 1;
     g_key[action] = vk;
+    for (int j = 0; j < 4; ++j)   /* LLLSHELL1: a camera turn / tilt key the player set is his; then re-derive the rest */
+        if (CAM_YIELD_KEY[j] == action) g_cam_key_named |= 1u << action;
+    cam_turn_yield();
     if (action == HOST_KEY_RUN) {
         g_run_key = vk;
         queue_int("RunButtonKey", vk);
@@ -3398,6 +3462,9 @@ extern "C" int host_setting_set_pad(int action, int mask)
     }
     if (g_pad[action] == mask) return 1;
     g_pad[action] = mask;
+    for (int j = 0; j < 2; ++j)   /* LLLSHELL1: as host_setting_set_key */
+        if (CAM_YIELD_PAD[j] == action) g_cam_pad_named |= 1u << action;
+    cam_turn_yield();
     if (action == HOST_PAD_RUN) {
         g_run_pad = mask;
         queue_int("RunButtonPad", mask);
