@@ -1,11 +1,10 @@
 //cpp
-/* Scuttlebug, the spider enemy. ROM RTTI is daSpd_c; vtable 0x02122c2c.
+/* daSpd_c, the spider enemy. ROM RTTI is daSpd_c; vtable 0x02122c2c.
  * daSpd_c_classInit is a reconstructed name (alias Scuttlebug_Spawn).
- * ~Scuttlebug is inline in the header, so this TU emits D1 then D0
- * (0x0211f000, 0x0211f048) and no D2. The class keeps the coined name.
- * RTTI off suppresses _ZTI10Scuttlebug / _ZTS10Scuttlebug. The emitted
- * vtable's typeinfo word is zero, not _ZTI7daSpd_c, so that table is
- * externalized to retail _ZTV10Scuttlebug.
+ * ~daSpd_c is inline in the header, so this TU emits D1 then D0
+ * (0x0211f000, 0x0211f048) and no D2. OnYoshiTryEat is the key function,
+ * so this TU emits _ZTV/_ZTI/_ZTS7daSpd_c; the manifest compares them
+ * against the cartridge's copies and discards them.
  *
  * Source is REVERSE of ROM order (highest address first). Do not reorder.
  *
@@ -23,9 +22,6 @@
 
 /* common.h first: its flat Matrix4x3 must win the guard; InitResources'
  * whole-matrix store at +0x350 only reproduces with that spelling. */
-/* Before the class header: an inline ~Scuttlebug is the vague-linkage pair,
- * and RTTI must already be off when that header is parsed. */
-#pragma RTTI off
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum Scuttlebug_AssetId {
     ASSET_SPIDER_BMD = 0x0425,
@@ -33,7 +29,7 @@ enum Scuttlebug_AssetId {
 };
 
 #include "common.h"
-#include "Scuttlebug.h"
+#include "daSpd_c.h"
 #include "dBgCh_Gnd.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
@@ -57,7 +53,7 @@ typedef struct { int x, y, z; } Vec3;
  * at arm9:0x020a0e68 are used: whole-block assignment, never by field. */
 typedef struct Mtx43 { int w[12]; } Mtx43;
 
-typedef void (Scuttlebug::*PMF)();
+typedef void (daSpd_c::*PMF)();
 
 /* One row of the state table at ov071:0x02122fa8: enter handler, then the
  * per-frame run handler. The static initializer copies it from .data words. */
@@ -164,16 +160,15 @@ PMF data_ov071_02122fa8[18] = {
 };
 
 // @symbol daSpd_c_classInit
-extern "C" Scuttlebug *daSpd_c_classInit(void) {
-    return new Scuttlebug();
+extern "C" daSpd_c *daSpd_c_classInit(void) {
+    return new daSpd_c();
 }
 
 /* Pays the player mCoinCount coins (a cap coin if Yoshi is wearing the cap,
  * an egg coin otherwise). A child (param1 != 0) resets; the original dies. */
 
-// @symbol _ZN10Scuttlebug13OnTurnIntoEggER6Player
-void Scuttlebug::OnTurnIntoEgg(Player &player)
-{
+// @symbol _ZN7daSpd_c13OnTurnIntoEggER6Player
+void daSpd_c::OnTurnIntoEgg(Player &player) {
     volatile int force_stack;
     void *p = &player;
     int *bp;
@@ -194,9 +189,8 @@ void Scuttlebug::OnTurnIntoEgg(Player &player)
     }
 }
 
-// @symbol _ZN10Scuttlebug13InitResourcesEv
-int Scuttlebug::InitResources()
-{
+// @symbol _ZN7daSpd_c13InitResourcesEv
+int daSpd_c::InitResources() {
     void *mf = dExtSimpleModel_c::LoadFile(data_ov071_02122f80);
     ((dExtModel_c *)(&mAnmModel))->SetFile((BMD_File *)mf, 1, -1);
     dExtFrameCtrl_c::LoadFile(gSpiderWalkAnimationFile);
@@ -229,9 +223,8 @@ int Scuttlebug::InitResources()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug8BehaviorEv
-int Scuttlebug::Behavior()
-{
+// @symbol _ZN7daSpd_c8BehaviorEv
+int daSpd_c::Behavior() {
     DecIfAbove0_Short((char *)&mTimer);
     func_ov071_02120278();
     MakeVanishLuigiWork(mdCcAc_c);
@@ -243,9 +236,8 @@ int Scuttlebug::Behavior()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug6RenderEv
-int Scuttlebug::Render()
-{
+// @symbol _ZN7daSpd_c6RenderEv
+int daSpd_c::Render() {
     int flag = (mFlags & 0x40000) ? 1 : 0;
     if (flag) goto ret;
     if (!mState) goto ret;
@@ -260,16 +252,13 @@ call:
 
 /* Empty: the override exists only to occupy vtable slot 12. */
 
-// @symbol _ZN10Scuttlebug16OnPendingDestroyEv
-void Scuttlebug::OnPendingDestroy()
-{
-}
+// @symbol _ZN7daSpd_c16OnPendingDestroyEv
+void daSpd_c::OnPendingDestroy() {}
 
 /* Releases the two shared files. Never touches `this`. */
 
-// @symbol _ZN10Scuttlebug16CleanupResourcesEv
-int Scuttlebug::CleanupResources()
-{
+// @symbol _ZN7daSpd_c16CleanupResourcesEv
+int daSpd_c::CleanupResources() {
     data_ov071_02122f80.Release();
     gSpiderWalkAnimationFile.Release();
     return 1;
@@ -277,32 +266,28 @@ int Scuttlebug::CleanupResources()
 
 /* Points mStateRow at one row of the table and tail-calls its entry handler. */
 
-// @symbol _ZN10Scuttlebug8SetStateEi
-void Scuttlebug::SetState(int idx)
-{
+// @symbol _ZN7daSpd_c8SetStateEi
+void daSpd_c::SetState(int idx) {
     mStateRow = (ScuttlebugStateRow *)data_ov071_02122fa8 + idx;
     func_ov071_021202b4();
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_021202b4Ev
-void Scuttlebug::func_ov071_021202b4()
-{
+// @symbol _ZN7daSpd_c19func_ov071_021202b4Ev
+void daSpd_c::func_ov071_021202b4() {
     PMF *p = (PMF *)mStateRow;
     (this->**p)();
 }
 
 /* Call the state's per-frame handler, one slot further into the row. */
 
-// @symbol _ZN10Scuttlebug19func_ov071_02120278Ev
-void Scuttlebug::func_ov071_02120278()
-{
+// @symbol _ZN7daSpd_c19func_ov071_02120278Ev
+void daSpd_c::func_ov071_02120278() {
     PMF *p = (PMF *)mStateRow + 1;
     (this->**p)();
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_02120200Ev
-int Scuttlebug::func_ov071_02120200()
-{
+// @symbol _ZN7daSpd_c19func_ov071_02120200Ev
+int daSpd_c::func_ov071_02120200() {
     int *p = (int *)&mFlags;
     int z;
     short ang;
@@ -324,17 +309,15 @@ int Scuttlebug::func_ov071_02120200()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_021201b4Ev
-int Scuttlebug::func_ov071_021201b4()
-{
+// @symbol _ZN7daSpd_c19func_ov071_021201b4Ev
+int daSpd_c::func_ov071_021201b4() {
     if (mTimer) return 1;
     if (DistToCPlayer() < 0x5dc000) SetState(1);
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_02120130Ev
-int Scuttlebug::func_ov071_02120130()
-{
+// @symbol _ZN7daSpd_c19func_ov071_02120130Ev
+int daSpd_c::func_ov071_02120130() {
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x3e000;
     mHorzSpeed = 0x16000;
@@ -347,9 +330,8 @@ int Scuttlebug::func_ov071_02120130()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_02120028Ev
-int Scuttlebug::func_ov071_02120028()
-{
+// @symbol _ZN7daSpd_c19func_ov071_02120028Ev
+int daSpd_c::func_ov071_02120028() {
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -381,9 +363,8 @@ int Scuttlebug::func_ov071_02120028()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211ff84Ev
-int Scuttlebug::func_ov071_0211ff84()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211ff84Ev
+int daSpd_c::func_ov071_0211ff84() {
     if (Vec3_Dist(&mPos, (Vector3 *)&mAnchorX) > 0x5dc000) {
         SetState(5);
         return 1;
@@ -397,9 +378,8 @@ int Scuttlebug::func_ov071_0211ff84()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211fee4Ev
-int Scuttlebug::func_ov071_0211fee4()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211fee4Ev
+int daSpd_c::func_ov071_0211fee4() {
     mAngleY = (short)(mAngleY + 0x2bc);
     mPrevAngleY = mAngleY;
     mAnmModel.Advance();
@@ -416,9 +396,8 @@ int Scuttlebug::func_ov071_0211fee4()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211fe38Ev
-int Scuttlebug::func_ov071_0211fe38()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211fe38Ev
+int daSpd_c::func_ov071_0211fe38() {
     int *p3a0 = &mLeapDist;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -435,9 +414,8 @@ int Scuttlebug::func_ov071_0211fe38()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211fd58Ev
-int Scuttlebug::func_ov071_0211fd58()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211fd58Ev
+int daSpd_c::func_ov071_0211fd58() {
     mAnmModel.Advance();
     int *p = &mLeapDist;
     *p -= 0xf000;
@@ -459,9 +437,8 @@ int Scuttlebug::func_ov071_0211fd58()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211fcd4Ev
-int Scuttlebug::func_ov071_0211fcd4()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211fcd4Ev
+int daSpd_c::func_ov071_0211fcd4() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = -0x4000;
@@ -473,9 +450,8 @@ int Scuttlebug::func_ov071_0211fcd4()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211fc60Ev
-int Scuttlebug::func_ov071_0211fc60()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211fc60Ev
+int daSpd_c::func_ov071_0211fc60() {
     mAnmModel.Advance();
     if (mWithMeshClsn.IsOnGround()) {
         mTimer = 0x3c;
@@ -489,9 +465,8 @@ int Scuttlebug::func_ov071_0211fc60()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211fbf4Ev
-int Scuttlebug::func_ov071_0211fbf4()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211fbf4Ev
+int daSpd_c::func_ov071_0211fbf4() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0x4000;
@@ -501,9 +476,8 @@ int Scuttlebug::func_ov071_0211fbf4()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211fb24Ev
-int Scuttlebug::func_ov071_0211fb24()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211fb24Ev
+int daSpd_c::func_ov071_0211fb24() {
     short ang = Vec3_HorzAngle(&mPos, (Vector3 *)&mAnchorX);
     ApproachLinear(mAngleY, ang, 0x2bc);
     mPrevAngleY = mAngleY;
@@ -522,17 +496,15 @@ int Scuttlebug::func_ov071_0211fb24()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211fb0cEv
-int Scuttlebug::func_ov071_0211fb0c()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211fb0cEv
+int daSpd_c::func_ov071_0211fb0c() {
     mHorzSpeed = 0;
     mState = 6;
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211fa54Ev
-int Scuttlebug::func_ov071_0211fa54()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211fa54Ev
+int daSpd_c::func_ov071_0211fa54() {
     int b0 = (int)((mFlags & 0x40000) != 0);
     if (b0 != 0) {
         int *src = &((dActor_c *)mParent)->mPosX;
@@ -563,9 +535,8 @@ done:
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211f8d0Ev
-int Scuttlebug::func_ov071_0211f8d0()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211f8d0Ev
+int daSpd_c::func_ov071_0211f8d0() {
     Vector3 *pos;
     Vector3 v;
     int zero;
@@ -639,9 +610,8 @@ int Scuttlebug::func_ov071_0211f8d0()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211f7d4Ev
-int Scuttlebug::func_ov071_0211f7d4()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211f7d4Ev
+int daSpd_c::func_ov071_0211f7d4() {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     mAngleX = mAngleX + 0x1000;
     if (mWithMeshClsn.JustHitGround()) {
@@ -669,9 +639,8 @@ int Scuttlebug::func_ov071_0211f7d4()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211f6f8Ev
-int Scuttlebug::func_ov071_0211f6f8()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211f6f8Ev
+int daSpd_c::func_ov071_0211f6f8() {
     Sound::PlayBank0(9, mCamSpacePos);
     mFlags &= ~1;
     mHorzSpeed = 0xa000;
@@ -687,9 +656,8 @@ int Scuttlebug::func_ov071_0211f6f8()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211f694Ev
-int Scuttlebug::func_ov071_0211f694()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211f694Ev
+int daSpd_c::func_ov071_0211f694() {
     mAngleX = mAngleX - 0x1000;
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
@@ -699,9 +667,8 @@ int Scuttlebug::func_ov071_0211f694()
     return 1;
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211f524Ev
-void Scuttlebug::func_ov071_0211f524()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211f524Ev
+void daSpd_c::func_ov071_0211f524() {
     int b = (int)((mFlags & 0x40000) != 0);
     if (b) {
         if (mState == 0)
@@ -731,9 +698,8 @@ void Scuttlebug::func_ov071_0211f524()
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0xa0000, dh, 0xf);
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211f498Ev
-void Scuttlebug::func_ov071_0211f498()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211f498Ev
+void daSpd_c::func_ov071_0211f498() {
     Vec3 v;
     v.x = mPosX;
     v.y = mPosY;
@@ -749,9 +715,8 @@ void Scuttlebug::func_ov071_0211f498()
     ((fBase_c *)this)->MarkForDestruction();
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211f29cEv
-void Scuttlebug::func_ov071_0211f29c()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211f29cEv
+void daSpd_c::func_ov071_0211f29c() {
     Player *hitPlayer;
     int b;
 
@@ -815,9 +780,8 @@ void Scuttlebug::func_ov071_0211f29c()
     }
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211f148EP10dBgCh_Actr
-void Scuttlebug::func_ov071_0211f148(dBgCh_Actr *w)
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211f148EP10dBgCh_Actr
+void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
     Vector3 pos;
     Vector3 normal;
     Vector3 wallnormal;
@@ -855,9 +819,8 @@ void Scuttlebug::func_ov071_0211f148(dBgCh_Actr *w)
     }
 }
 
-// @symbol _ZN10Scuttlebug19func_ov071_0211f0b4Ev
-void Scuttlebug::func_ov071_0211f0b4()
-{
+// @symbol _ZN7daSpd_c19func_ov071_0211f0b4Ev
+void daSpd_c::func_ov071_0211f0b4() {
     dActor_c *p;
     Fix12i d;
     short ang;
@@ -875,18 +838,15 @@ void Scuttlebug::func_ov071_0211f0b4()
 
 /* Vtable slot 29. Ignores `this` and returns a constant. */
 
-// @symbol _ZN10Scuttlebug16OnAimedAtWithEggEv
-int Scuttlebug::OnAimedAtWithEgg()
-{
+// @symbol _ZN7daSpd_c16OnAimedAtWithEggEv
+int daSpd_c::OnAimedAtWithEgg() {
     return 204800;
 }
 
 /* Vtable slot 18. First non-inline virtual, so this is the key function:
  * the vtable is emitted with it and externalized (see the banner). */
 
-// @symbol _ZN10Scuttlebug13OnYoshiTryEatEv
-int Scuttlebug::OnYoshiTryEat()
-{
+// @symbol _ZN7daSpd_c13OnYoshiTryEatEv
+int daSpd_c::OnYoshiTryEat() {
     return 6;
 }
-

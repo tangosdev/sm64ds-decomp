@@ -105,7 +105,7 @@ Do that, per class, byte-verifying each. Then re-run the census and the clean sw
 
 The 29: `BobOmb BooCage daKpa_c daKpaFire_c daObjFl_Puzzle_c daPropeller_Heyho_Fire_c Coffin FlyGuy Goomba
 Koopa daJgm_c daC_Jugem_c daPiano_c MrI MrI_Projectile OneUpMushroom daPeach_c
-RotatingClockHand Scuttlebug daObjTatefuda_c daBgSnmBdy_c daBgSnmHed_c Snufit Spindrift dScStage_c
+RotatingClockHand daSpd_c daObjTatefuda_c daBgSnmBdy_c daBgSnmHed_c Snufit Spindrift dScStage_c
 daBasabasa_c TtcConveyorBeltLarge WaterBomb daYegg_c`
 
 ## 6. Gates -- run all of them, and know what each cannot see

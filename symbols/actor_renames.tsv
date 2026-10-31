@@ -7681,3 +7681,19 @@ arm9	0x0205b78c	func_0205b78c	SND_AssignWaveArc	pret's pokediamond SND_bank.c: u
 ov002	0x020caf98	func_ov002_020caf98	_ZN6Player10StartClimbEP5dCc_c	coined member Player::StartClimb(dCc_c *): dCc_c's player-hit callback func_02014f5c passes it the player (r0) and the collider (r1); it tests the collider's flags word, reads its position through vtable slot 2 (GetPos), stores it in mClimbClsn and enters the climb state 0x021106dc, the state St_Climb_Cleanup and St_Headstand_Main treat as the climb
 arm9	0x020397dc	func_020397dc	_ZN7dBgW_Kc17IsNearZeroDivisorEi	inferred static KCL predicate; ITCM geometry division or line-query surface filtering establishes its use; threshold boundaries preserved
 arm9	0x020397b8	func_020397b8	_ZN7dBgW_Kc12IsWallNormalEi	inferred static KCL predicate; ITCM geometry division or line-query surface filtering establishes its use; threshold boundaries preserved
+ov066	0x02115ee0	_ZN6EyerokD1Ev	_ZN10daIwante_cD1Ev	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x02115f84	_ZN6EyerokD0Ev	_ZN10daIwante_cD0Ev	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x02119654	_ZN6Eyerok16CleanupResourcesEv	_ZN10daIwante_c16CleanupResourcesEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x021197a0	_ZN6Eyerok16OnPendingDestroyEv	_ZN10daIwante_c16OnPendingDestroyEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x021197a4	_ZN6Eyerok6RenderEv	_ZN10daIwante_c6RenderEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x02119838	_ZN6Eyerok8BehaviorEv	_ZN10daIwante_c8BehaviorEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x02119ce8	_ZN6Eyerok13InitResourcesEv	_ZN10daIwante_c13InitResourcesEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x0211ad64	_ZTV6Eyerok	_ZTV10daIwante_c	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov071	0x0211f000	_ZN10ScuttlebugD1Ev	_ZN7daSpd_cD1Ev	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x0211f048	_ZN10ScuttlebugD0Ev	_ZN7daSpd_cD0Ev	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x02120308	_ZN10Scuttlebug16CleanupResourcesEv	_ZN7daSpd_c16CleanupResourcesEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x02120338	_ZN10Scuttlebug16OnPendingDestroyEv	_ZN7daSpd_c16OnPendingDestroyEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x0212033c	_ZN10Scuttlebug6RenderEv	_ZN7daSpd_c6RenderEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x02120398	_ZN10Scuttlebug8BehaviorEv	_ZN7daSpd_c8BehaviorEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x021203f8	_ZN10Scuttlebug13InitResourcesEv	_ZN7daSpd_c13InitResourcesEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
+ov071	0x02122c2c	_ZTV10Scuttlebug	_ZTV7daSpd_c	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched

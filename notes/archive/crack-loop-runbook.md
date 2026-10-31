@@ -203,7 +203,7 @@ SFA-decomp pragma technique does not transfer; the ordering floor stays hand-fix
   floor-labeled misses at div<=8 too - they are 97-99% matched and Fable's 60+-attempt
   grind cracked 2/2 of them; park only deep cascades (div 27/32/91 all stayed parked).
   Fable promotion tier record so far: 9/9 across two batches.
-- **WRONG-DEST salvage (2026-07-02, [func_ov066_02119ce8](../../config/arm9/overlays/ov066/symbols.txt), `_ZN6Eyerok13InitResourcesEv`, see [Eyerok.json](../../config/tu_manifest.d/ov066/Eyerok.json)):** when the land link-gate
+- **WRONG-DEST salvage (2026-07-02, [func_ov066_02119ce8](../../config/arm9/overlays/ov066/symbols.txt), `_ZN10daIwante_c13InitResourcesEv`, see [daIwante_c.json](../../config/tu_manifest.d/ov066/daIwante_c.json)):** when the land link-gate
   rejects an agent MATCH with `WRONG-DEST reloc` and the function stores/loads two
   same-shaped globals (e.g. two zero-stores), the agent likely swapped the symbols -
   swap them in the source, re-run abverify (still MATCH), then land via a synthesized

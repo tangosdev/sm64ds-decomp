@@ -574,7 +574,7 @@ int daYurei_Mucho_c::func_ov065_02116328()
 // @symbol _ZN15daYurei_Mucho_c19func_ov065_021162c0Ev
 /* State main hook at 0x0211d660 +0x08.
  *
- * CORRECTED HERE. The retired shard func_ov065_021162c0.c called `_ZN6EyerokD0Ev`, which is
+ * CORRECTED HERE. The retired shard func_ov065_021162c0.c called `_ZN10daIwante_cD0Ev`, which is
  * ov066's name for 0x02115f84. This module's own name for that address is
  * func_ov065_02115f84, the death helper two ordinals below, and ov065 is the
  * module this branch links in. match.py wildcards every relocated word, so the

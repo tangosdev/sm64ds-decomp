@@ -634,7 +634,7 @@
           "diffs": []
         },
         {
-          "file": "src/actors/Scuttlebug.cpp",
+          "file": "src/actors/daSpd_c.cpp",
           "name": "__sinit_Scuttlebug.cpp",
           "module": "ov071",
           "addr": "0x21226ac",
@@ -724,7 +724,7 @@
           "diffs": []
         },
         {
-          "file": "src/actors/Eyerok.cpp",
+          "file": "src/actors/daIwante_c.cpp",
           "name": "daIwante_c_classInit",
           "module": "ov066",
           "addr": "0x211a370",
@@ -733,7 +733,7 @@
           "diffs": []
         },
         {
-          "file": "src/actors/Eyerok.cpp",
+          "file": "src/actors/daIwante_c.cpp",
           "name": "__sinit_Eyerok.cpp",
           "module": "ov066",
           "addr": "0x211a418",
@@ -1371,7 +1371,7 @@
           "files": [
             "src/actors/daStar_c.cpp",
             "src/actors/daObjHatenaBlock_c.cpp",
-            "src/actors/Scuttlebug.cpp",
+            "src/actors/daSpd_c.cpp",
             "src/actors/daTgz_c.cpp",
             "src/actors/daCoin_c.cpp",
             "src/actors/daBgSnmBdy_c.cpp",
@@ -1407,7 +1407,7 @@
             "--files",
             "src/actors/daStar_c.cpp",
             "src/actors/daObjHatenaBlock_c.cpp",
-            "src/actors/Scuttlebug.cpp",
+            "src/actors/daSpd_c.cpp",
             "src/actors/daTgz_c.cpp",
             "src/actors/daCoin_c.cpp",
             "src/actors/daBgSnmBdy_c.cpp",
@@ -1451,7 +1451,7 @@
           "id": 6,
           "tree": "C:/tmp/sm64ds-player-stock1013-06",
           "files": [
-            "src/actors/Eyerok.cpp",
+            "src/actors/daIwante_c.cpp",
             "src/actors/daMky_c.cpp",
             "src/game/actors/d_a_btn.cpp",
             "src/actors/daC_Jugem_c.cpp",
@@ -1485,7 +1485,7 @@
             "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
             "tools/prepush_linkcheck.py",
             "--files",
-            "src/actors/Eyerok.cpp",
+            "src/actors/daIwante_c.cpp",
             "src/actors/daMky_c.cpp",
             "src/game/actors/d_a_btn.cpp",
             "src/actors/daC_Jugem_c.cpp",

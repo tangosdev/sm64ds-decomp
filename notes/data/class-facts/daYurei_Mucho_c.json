@@ -262,7 +262,7 @@
     "queue_row": "Snufit  22  684  ov065  has_header=yes  already_promoted=no  blockers=compiler-only:>=11  sibling_oracle=daObjCtMecha05_c  promotion_route=text-only",
     "header": "include/Snufit.h already exists and is complete enough to compile against; most of its field layout is confirmed above. Two corrections it needs: `pad_3c0[0xc]` is three live words, and `pad_3dc[0x8]` covers a live word at 0x3dc. Its `State` declaration spells +0x00 as `u8 pad_00[0x8]` -- that is a SECOND pointer-to-member, invoked by func_ov065_0211691c the moment a state is installed.",
     "manifest_path_to_create": "config/tu_manifest.d/ov065/Snufit.json",
-    "output_path": "src/actors/Snufit.cpp -- this is the live convention. The two most recent promotions at this base, ov071/Scuttlebug and ov006/dScMgLuigi_c, both use src/actors/<Class>.cpp for `source` and `promoted_source`. The oracle daObjCtMecha05_c uses the older src/game/actors/ path; do not copy that field from it.",
+    "output_path": "src/actors/Snufit.cpp -- this is the live convention. The two most recent promotions at this base, ov071/daSpd_c and ov006/dScMgLuigi_c, both use src/actors/<Class>.cpp for `source` and `promoted_source`. The oracle daObjCtMecha05_c uses the older src/game/actors/ path; do not copy that field from it.",
     "ov065_siblings_at_this_base": {
       "promoted": ["daObjCtMecha03_c", "daObjCtMecha04_c", "daObjCtMecha05_c"],
       "text-verified": ["daObjCtKaitendai_c"],

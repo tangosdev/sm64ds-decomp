@@ -320,14 +320,14 @@ Source: `daESwitch_c::InitResources` and `daESwitch_c::Behavior` in
 
 Source: `daDossyCap_c::Behavior` in `src/game/actors/d_a_dossy.cpp`.
 
-## Scuttlebug -- include/Scuttlebug.h
+## daSpd_c -- include/daSpd_c.h
 
 | offset | new name | evidence |
 | --- | --- | --- |
 | 0x3a8 | `mTimer` | counted down once per frame at the top of `Behavior` with `DecIfAbove0_Short` -- as a HALFWORD, though the generated header typed the slot `u8`. The result is discarded there, so the name says "a timer" and no more. The header now declares it `s16`, and `0x3aa` alongside it is a separate live `u8`, not padding. |
 
 Source: `src/game/actors/d_a_spd.cpp`, which absorbed the one-function
-`Behavior` file when ov071/Scuttlebug was promoted into a single
+`Behavior` file when ov071/daSpd_c was promoted into a single
 translation unit.
 
 ## daKpaTail_c -- include/daKpaTail_c.h

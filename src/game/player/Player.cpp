@@ -7993,7 +7993,7 @@ int Player::CanEnterDoor(unsigned char door) {
     if (IsState(*(State *)data_ov002_0211013c) || IsState(*(State *)data_ov002_02110154) ||
         IsState(*(State *)data_ov002_0211022c) || IsState(*(State *)data_ov002_0211043c)) {
         /* Yoshi with something in his mouth cannot take a door. If its
-           OnYoshiTryEat() code is 6 (enemies such as daKrb_c and Scuttlebug,
+           OnYoshiTryEat() code is 6 (enemies such as daKrb_c and daSpd_c,
            and the small crate daObjBlockS_c) or 1 (daBttBk_c, or another
            Player), he spits it out first; any other code (4 for a coin, a
            cap, a key or a star; 5; ...) just refuses the door. */
@@ -24682,12 +24682,11 @@ void func_ov002_020e6780(char *raw)
 /* Out-of-line ~Player is the key function. defer_codegen on for this
  * definition only: under defer_codegen off the variants come out D1, D0, D2,
  * and the cartridge order is D0 then D1. With deferred codegen they come out
- * D2, D0, D1, and the following function stays after them. RTTI stays off
- * from here on, which suppresses _ZTI6Player and _ZTS6Player and writes a
- * zero typeinfo word in the vtable preamble. Retail relocates 0x0210a838 to
- * _ZTI7daPly_c. The 124 slot bytes reproduce. D2 is not in the cartridge. */
+ * D2, D0, D1, and the following function stays after them. The vtable's
+ * typeinfo and type name come out as _ZTI6Player / _ZTS6Player; the manifest
+ * compares them against the cartridge's _ZTI7daPly_c / _ZTS7daPly_c. D2 is
+ * not in the cartridge. */
 #pragma defer_codegen on
-#pragma RTTI off
 
 // @symbol _ZN6PlayerD0Ev
 // @symbol _ZN6PlayerD1Ev

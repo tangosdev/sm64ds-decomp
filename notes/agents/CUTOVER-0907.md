@@ -175,7 +175,7 @@ against a measured D1/D0 address justification. Wave 25 re-declares the cap
 destructor out of line, and wave 29 does the same to `daDgr_c` while also dropping
 `main`'s richer Wiggler field decode.
 
-**Corrected prose, and one corrected declaration.** `cpp/Eyerok-tu-build` would
+**Corrected prose, and one corrected declaration.** `cpp/daIwante_c-tu-build` would
 restore a `0x4b0 -> 0x4ac` size claim that `main` re-measured and explicitly
 retracted; `main`'s comment now records the size as UNCHANGED at `0x4b0` and says so
 in as many words. `cpp/Player-tu-build` would drop a `char*` local and the codegen
