@@ -51,7 +51,7 @@ struct System {
 }
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
+void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void *m, int angleY);

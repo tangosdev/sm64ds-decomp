@@ -2685,76 +2685,31 @@
     "Vec3_Add": {
       "src/engine/view/d_camera.cpp": [
         "param:#2 const void *",
-        "param:#3 const void *",
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
+        "param:#3 const void *"
       ],
-      "src/game/actors/d_a_klr.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
+      "src/game/actors/d_a_demo.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *",
+        "param:#3 Vec3 *"
       ],
-      "src/game/actors/d_a_obj_bk_botaosi.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/game/actors/d_a_obj_block_s.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/game/actors/d_a_obj_casket.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
+      "src/game/actors/d_a_obj_c1_hikari.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *",
+        "param:#3 Vec3 *"
       ],
       "src/game/actors/d_a_obj_flamethrower.cpp": [
         "param:#1 int *",
         "param:#2 int *",
         "param:#3 int *"
       ],
-      "src/game/actors/d_a_obj_kurumajiku.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
-      ],
-      "src/game/actors/d_a_red_bombhei.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
-      ],
       "src/game/actors/d_a_yegg.cpp": [
         "param:#2 const void *",
         "param:#3 const void *"
       ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/runtime/actor/d_bg_actor.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/runtime/actor/d_cap_enemy_arm9.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
-      ],
-      "src/unnamed/ov002/func_ov002_020d8944.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/unnamed/arm9/0200/func_02005110.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
+      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *",
+        "param:#3 Vec3 *"
       ]
     },
     "Vec3_ApproachHorz": {
