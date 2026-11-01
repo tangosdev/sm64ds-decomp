@@ -3457,6 +3457,87 @@
         "matchesStockRom": true
       },
       "linkerOutput": null
+    },
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov075-dScEntry_c/d_s_entry.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 16,
+    "functions_declared": 16,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10dScEntry_cD2Ev",
+        "_ZN10dScEntry_c15graphCallback_cC2Ev",
+        "_ZN10dScEntry_c6icon_cD0Ev",
+        "_ZN10dScEntry_c6icon_cD2Ev",
+        "_ZN12OamAnimationD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dScEntry_c15graphCallback_cC2Ev",
+        "_ZN10dScEntry_c6icon_cD0Ev",
+        "_ZN10dScEntry_c6icon_cD2Ev",
+        "_ZN10dScEntry_cD2Ev",
+        "_ZN12OamAnimationD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        13,
+        14,
+        15,
+        16,
+        18,
+        32,
+        33,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146
+      ],
+      "data": [
+        "_ZTI8dScene_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI9dThIcon_c",
+        "_ZTS9dThIcon_c",
+        "_ZTIN8dGraph_c10callback_cE",
+        "_ZTSN8dGraph_c10callback_cE"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTI9dThIcon_c",
+        "_ZTIN8dGraph_c10callback_cE",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTS9dThIcon_c",
+        "_ZTSN8dGraph_c10callback_cE"
+      ],
+      "canonicalDuplicates": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
     }
   },
   "bss": [
