@@ -287,7 +287,7 @@ void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
     int t;
     int half;
 
-    t = (*(volatile u16 *)&other->actorID == 0xbf);
+    t = (other->actorID == 0xbf);
     if (t != 0) {
         Vector3 *position = &other->mPos;
         mHitPosX = position->x;

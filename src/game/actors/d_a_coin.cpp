@@ -414,13 +414,13 @@ void daCoin_c::func_ov002_020b16c4(daPly_c *player) {
     if (marker == 0) return;
     markerPos = (Vector3 *)LAUNDER(&marker->mPosX);
     x = markerPos->x;
-    *(volatile int *)&starPos.x = x;
+    starPos.x = x;
     y = markerPos->y;
-    *(volatile int *)&starPos.y = y;
+    starPos.y = y;
     z = markerPos->z;
-    *(volatile int *)&starPos.z = z;
+    starPos.z = z;
     y += 0x78000;
-    *(volatile int *)&starPos.y = y;
+    starPos.y = y;
     star = (daStar_c *)dActor_c::Spawn(
         0xb2, mSpawnFilter | 0x40, starPos, 0, marker->mAreaId, -1);
     if (star == 0) return;

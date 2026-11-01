@@ -3741,7 +3741,7 @@ void dScStage_c::RenderModel() {
                 u8 materialId = *materialIds;
                 BMD_Material *material = &components->materials[materialId];
                 materialIds++;
-                u32 flagsTest = *(volatile u32 *)&material->flags;
+                u32 flagsTest = material->flags;
                 if ((flagsTest & 0x1f0000) == 0x1f0000) {
                     u32 *flags = &material->flags;
                     *flags &= ~0x80000000;
