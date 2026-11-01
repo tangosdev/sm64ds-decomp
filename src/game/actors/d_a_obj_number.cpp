@@ -51,7 +51,7 @@ extern SharedFilePtr data_ov002_0210d9a8;
 extern int data_0209b454;
 
 /* local extern: defined below; no header declares it. */
-extern "C" void func_ov002_020f0918(daObjNumber_c *self, dActor_c *owner);
+extern "C" daObjNumber_c *func_ov002_020f0918(daObjNumber_c *self, dActor_c *owner);
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -208,10 +208,12 @@ s32 daObjNumber_c::CleanupResources() {
 /* dActor_c::SpawnNumber's attach helper. Not a vtable slot; the only
  * inbound call is arm9 SpawnNumber, so the func_ name stays. Parameters
  * are this popup and the owner SpawnNumber was given -- uniqueID at
- * owner+4, follow offset is this mPosY minus the owner's. */
-extern "C" void func_ov002_020f0918(daObjNumber_c *self, dActor_c *owner) {
+ * owner+4, follow offset is this mPosY minus the owner's. Returns self
+ * (r0 is never touched), which SpawnNumber hands back. */
+extern "C" daObjNumber_c *func_ov002_020f0918(daObjNumber_c *self, dActor_c *owner) {
     if (!owner)
-        return;
+        return self;
     self->mOwnerUniqueID = owner->uniqueID;
     self->mFollowOffsetY = self->mPosY - owner->mPosY;
+    return self;
 }
