@@ -6,7 +6,7 @@
     .bss        start:0x0210d9a0 end:0x021111a0 kind:bss align:32
 src/runtime/actor/d_enemy_base.cpp:
     complete
-    .text start:0x020ad660 end:0x020aedbc
+    .text start:0x020ad838 end:0x020aedbc
     .init start:0x02100938 end:0x02100adc
     .ctor start:0x021080d4 end:0x021080d8
     .data start:0x02108140 end:0x021081c0
@@ -336,9 +336,12 @@ src/game/actors/d_a_propeller_heyho_fire.cpp:
     .ctor start:0x02108134 end:0x02108138
     .bss start:0x02111190 end:0x021111a0
 
-src/unnamed/ov002/__sinit_ov002_02100560.cpp:
+src/game/actors/ov002_handles.cpp:
     complete
+    .text start:0x020ad660 end:0x020ad838
     .init start:0x02100560 end:0x02100938
+    .ctor start:0x021080d0 end:0x021080d4
+    .bss start:0x0210d9a0 end:0x0210db80
 
 
 
