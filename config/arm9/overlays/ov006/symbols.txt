@@ -2175,7 +2175,7 @@ __sinit_d_s_mg_coin.cpp kind:function(arm,size=0x284) addr:0x0213014c
 __sinit_d_s_mg_cup.cpp kind:function(arm,size=0xdc) addr:0x021303d0
 __sinit_d_s_mg_curling.cpp kind:function(arm,size=0x2ac) addr:0x021304ac
 __sinit_d_s_mg_curling2.cpp kind:function(arm,size=0x2ac) addr:0x02130758
-__sinit_ov006_02130a04 kind:function(arm,size=0x4) addr:0x02130a04
+__sinit_d_s_mg_d3d_base.cpp kind:function(arm,size=0x4) addr:0x02130a04
 __sinit_d_mg3d_esp_anim_set.cpp kind:function(arm,size=0x3f0) addr:0x02130a08
 __sinit_d_s_mg_hanachan_methods.cpp kind:function(arm,size=0xa4) addr:0x02130df8
 __sinit_d_s_mg_jump_methods.cpp kind:function(arm,size=0x64) addr:0x02130e9c
@@ -2206,7 +2206,7 @@ __sinit_d_s_mg_snowball.cpp kind:function(arm,size=0x18c) addr:0x021333e0
 .p__sinit_d_s_mg_cup.cpp kind:data(word) addr:0x0213358c
 .p__sinit_d_s_mg_curling.cpp kind:data(word) addr:0x02133590
 .p__sinit_d_s_mg_curling2.cpp kind:data(word) addr:0x02133594
-.p__sinit_ov006_02130a04 kind:data(word) addr:0x02133598
+.p__sinit_d_s_mg_d3d_base.cpp kind:data(word) addr:0x02133598
 .p__sinit_d_mg3d_esp_anim_set.cpp kind:data(word) addr:0x0213359c
 .p__sinit_d_s_mg_hanachan_methods.cpp kind:data(word) addr:0x021335a0
 .p__sinit_d_s_mg_jump_methods.cpp kind:data(word) addr:0x021335a4
