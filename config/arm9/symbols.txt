@@ -4938,7 +4938,7 @@ data_020a0db0 kind:bss addr:0x020a0db0
 data_020a0db4 kind:bss addr:0x020a0db4
 data_020a0db8 kind:bss addr:0x020a0db8
 data_020a0dbc kind:bss addr:0x020a0dbc
-@18 kind:bss addr:0x020a0dc0
+@20 kind:bss addr:0x020a0dc0
 @19 kind:bss addr:0x020a0dcc
 data_020a0dd8 kind:bss addr:0x020a0dd8
 data_020a0de0 kind:bss addr:0x020a0de0

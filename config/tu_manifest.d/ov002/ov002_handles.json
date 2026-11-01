@@ -220,168 +220,168 @@
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "@247",
+      "symbol": "@299",
       "address": "0x0210da60",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@248",
+      "symbol": "@301",
       "address": "0x0210da6c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@256",
+      "symbol": "@309",
       "address": "0x0210da78",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@249",
+      "symbol": "@302",
       "address": "0x0210da84",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@176",
+      "symbol": "@288",
       "address": "0x0210da90",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@250",
+      "symbol": "@303",
       "address": "0x0210da9c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@257",
+      "symbol": "@310",
       "address": "0x0210daa8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@269",
+      "symbol": "@313",
       "address": "0x0210dab4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@177",
+      "symbol": "@289",
       "address": "0x0210dac0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@178",
+      "symbol": "@290",
       "address": "0x0210dacc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@251",
+      "symbol": "@304",
       "address": "0x0210dad8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@179",
+      "symbol": "@291",
       "address": "0x0210dae4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@180",
+      "symbol": "@292",
       "address": "0x0210daf0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@252",
+      "symbol": "@305",
       "address": "0x0210dafc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@258",
+      "symbol": "@311",
       "address": "0x0210db08",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@181",
+      "symbol": "@293",
       "address": "0x0210db14",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@244",
+      "symbol": "@294",
       "address": "0x0210db20",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@254",
+      "symbol": "@306",
       "address": "0x0210db2c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@245",
+      "symbol": "@297",
       "address": "0x0210db38",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@246",
+      "symbol": "@298",
       "address": "0x0210db44",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@255",
+      "symbol": "@308",
       "address": "0x0210db50",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@268",
+      "symbol": "@312",
       "address": "0x0210db5c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@270",
+      "symbol": "@314",
       "address": "0x0210db68",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@271",
+      "symbol": "@318",
       "address": "0x0210db74",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -409,123 +409,123 @@
   "defined_symbol_renames": [
     {
       "from": "@100",
-      "to": "@176",
-      "evidence": "emitted @100 collides with another module; @176 is unused and the same length"
+      "to": "@288",
+      "evidence": "emitted @100 collides with another module; @288 is unused and the same length"
     },
     {
       "from": "@101",
-      "to": "@177",
-      "evidence": "emitted @101 collides with another module; @177 is unused and the same length"
+      "to": "@289",
+      "evidence": "emitted @101 collides with another module; @289 is unused and the same length"
     },
     {
       "from": "@102",
-      "to": "@178",
-      "evidence": "emitted @102 collides with another module; @178 is unused and the same length"
+      "to": "@290",
+      "evidence": "emitted @102 collides with another module; @290 is unused and the same length"
     },
     {
       "from": "@103",
-      "to": "@179",
-      "evidence": "emitted @103 collides with another module; @179 is unused and the same length"
+      "to": "@291",
+      "evidence": "emitted @103 collides with another module; @291 is unused and the same length"
     },
     {
       "from": "@104",
-      "to": "@180",
-      "evidence": "emitted @104 collides with another module; @180 is unused and the same length"
+      "to": "@292",
+      "evidence": "emitted @104 collides with another module; @292 is unused and the same length"
     },
     {
       "from": "@105",
-      "to": "@181",
-      "evidence": "emitted @105 collides with another module; @181 is unused and the same length"
+      "to": "@293",
+      "evidence": "emitted @105 collides with another module; @293 is unused and the same length"
     },
     {
       "from": "@106",
-      "to": "@244",
-      "evidence": "emitted @106 collides with another module; @244 is unused and the same length"
+      "to": "@294",
+      "evidence": "emitted @106 collides with another module; @294 is unused and the same length"
     },
     {
       "from": "@107",
-      "to": "@245",
-      "evidence": "emitted @107 collides with another module; @245 is unused and the same length"
+      "to": "@297",
+      "evidence": "emitted @107 collides with another module; @297 is unused and the same length"
     },
     {
       "from": "@108",
-      "to": "@246",
-      "evidence": "emitted @108 collides with another module; @246 is unused and the same length"
+      "to": "@298",
+      "evidence": "emitted @108 collides with another module; @298 is unused and the same length"
     },
     {
       "from": "@109",
-      "to": "@247",
-      "evidence": "emitted @109 collides with another module; @247 is unused and the same length"
+      "to": "@299",
+      "evidence": "emitted @109 collides with another module; @299 is unused and the same length"
     },
     {
       "from": "@110",
-      "to": "@248",
-      "evidence": "emitted @110 collides with another module; @248 is unused and the same length"
+      "to": "@301",
+      "evidence": "emitted @110 collides with another module; @301 is unused and the same length"
     },
     {
       "from": "@111",
-      "to": "@249",
-      "evidence": "emitted @111 collides with another module; @249 is unused and the same length"
+      "to": "@302",
+      "evidence": "emitted @111 collides with another module; @302 is unused and the same length"
     },
     {
       "from": "@112",
-      "to": "@250",
-      "evidence": "emitted @112 collides with another module; @250 is unused and the same length"
+      "to": "@303",
+      "evidence": "emitted @112 collides with another module; @303 is unused and the same length"
     },
     {
       "from": "@113",
-      "to": "@251",
-      "evidence": "emitted @113 collides with another module; @251 is unused and the same length"
+      "to": "@304",
+      "evidence": "emitted @113 collides with another module; @304 is unused and the same length"
     },
     {
       "from": "@114",
-      "to": "@252",
-      "evidence": "emitted @114 collides with another module; @252 is unused and the same length"
+      "to": "@305",
+      "evidence": "emitted @114 collides with another module; @305 is unused and the same length"
     },
     {
       "from": "@115",
-      "to": "@254",
-      "evidence": "emitted @115 collides with another module; @254 is unused and the same length"
+      "to": "@306",
+      "evidence": "emitted @115 collides with another module; @306 is unused and the same length"
     },
     {
       "from": "@116",
-      "to": "@255",
-      "evidence": "emitted @116 collides with another module; @255 is unused and the same length"
+      "to": "@308",
+      "evidence": "emitted @116 collides with another module; @308 is unused and the same length"
     },
     {
       "from": "@117",
-      "to": "@256",
-      "evidence": "emitted @117 collides with another module; @256 is unused and the same length"
+      "to": "@309",
+      "evidence": "emitted @117 collides with another module; @309 is unused and the same length"
     },
     {
       "from": "@118",
-      "to": "@257",
-      "evidence": "emitted @118 collides with another module; @257 is unused and the same length"
+      "to": "@310",
+      "evidence": "emitted @118 collides with another module; @310 is unused and the same length"
     },
     {
       "from": "@119",
-      "to": "@258",
-      "evidence": "emitted @119 collides with another module; @258 is unused and the same length"
+      "to": "@311",
+      "evidence": "emitted @119 collides with another module; @311 is unused and the same length"
     },
     {
       "from": "@120",
-      "to": "@268",
-      "evidence": "emitted @120 collides with another module; @268 is unused and the same length"
+      "to": "@312",
+      "evidence": "emitted @120 collides with another module; @312 is unused and the same length"
     },
     {
       "from": "@121",
-      "to": "@269",
-      "evidence": "emitted @121 collides with another module; @269 is unused and the same length"
+      "to": "@313",
+      "evidence": "emitted @121 collides with another module; @313 is unused and the same length"
     },
     {
       "from": "@122",
-      "to": "@270",
-      "evidence": "emitted @122 collides with another module; @270 is unused and the same length"
+      "to": "@314",
+      "evidence": "emitted @122 collides with another module; @314 is unused and the same length"
     },
     {
       "from": "@123",
-      "to": "@271",
-      "evidence": "emitted @123 collides with another module; @271 is unused and the same length"
+      "to": "@318",
+      "evidence": "emitted @123 collides with another module; @318 is unused and the same length"
     }
   ],
   "undefined_symbol_aliases": [
@@ -572,145 +572,145 @@
       "evidence": "mwcc emits the ctor-table word local; symbols.txt cannot record a local"
     },
     {
-      "symbol": "@247",
+      "symbol": "@299",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210da60"
     },
     {
-      "symbol": "@248",
+      "symbol": "@301",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210da6c"
     },
     {
-      "symbol": "@256",
+      "symbol": "@309",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210da78"
     },
     {
-      "symbol": "@249",
+      "symbol": "@302",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210da84"
     },
     {
-      "symbol": "@176",
+      "symbol": "@288",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210da90"
     },
     {
-      "symbol": "@250",
+      "symbol": "@303",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210da9c"
     },
     {
-      "symbol": "@257",
+      "symbol": "@310",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210daa8"
     },
     {
-      "symbol": "@269",
+      "symbol": "@313",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210dab4"
     },
     {
-      "symbol": "@177",
+      "symbol": "@289",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210dac0"
     },
     {
-      "symbol": "@178",
+      "symbol": "@290",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210dacc"
     },
     {
-      "symbol": "@251",
+      "symbol": "@304",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210dad8"
     },
     {
-      "symbol": "@179",
+      "symbol": "@291",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210dae4"
     },
     {
-      "symbol": "@180",
+      "symbol": "@292",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210daf0"
     },
     {
-      "symbol": "@252",
+      "symbol": "@305",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210dafc"
     },
     {
-      "symbol": "@258",
+      "symbol": "@311",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210db08"
     },
     {
-      "symbol": "@181",
+      "symbol": "@293",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210db14"
     },
     {
-      "symbol": "@244",
+      "symbol": "@294",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210db20"
     },
     {
-      "symbol": "@254",
+      "symbol": "@306",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210db2c"
     },
     {
-      "symbol": "@245",
+      "symbol": "@297",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210db38"
     },
     {
-      "symbol": "@246",
+      "symbol": "@298",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210db44"
     },
     {
-      "symbol": "@255",
+      "symbol": "@308",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210db50"
     },
     {
-      "symbol": "@268",
+      "symbol": "@312",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210db5c"
     },
     {
-      "symbol": "@270",
+      "symbol": "@314",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210db68"
     },
     {
-      "symbol": "@271",
+      "symbol": "@318",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x0210db74"
@@ -1222,7 +1222,7 @@
       "source": "0x02100820",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@176",
+      "symbol": "@288",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da90"
@@ -1242,7 +1242,7 @@
       "source": "0x02100828",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@177",
+      "symbol": "@289",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210dac0"
@@ -1262,7 +1262,7 @@
       "source": "0x02100834",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@178",
+      "symbol": "@290",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210dacc"
@@ -1282,7 +1282,7 @@
       "source": "0x02100840",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@179",
+      "symbol": "@291",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210dae4"
@@ -1302,7 +1302,7 @@
       "source": "0x0210084c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@180",
+      "symbol": "@292",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210daf0"
@@ -1322,7 +1322,7 @@
       "source": "0x02100858",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@181",
+      "symbol": "@293",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db14"
@@ -1342,7 +1342,7 @@
       "source": "0x02100864",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@244",
+      "symbol": "@294",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db20"
@@ -1362,7 +1362,7 @@
       "source": "0x02100870",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@245",
+      "symbol": "@297",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db38"
@@ -1382,7 +1382,7 @@
       "source": "0x0210087c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@246",
+      "symbol": "@298",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db44"
@@ -1402,7 +1402,7 @@
       "source": "0x02100888",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@247",
+      "symbol": "@299",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da60"
@@ -1422,7 +1422,7 @@
       "source": "0x02100894",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@248",
+      "symbol": "@301",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da6c"
@@ -1442,7 +1442,7 @@
       "source": "0x021008a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@249",
+      "symbol": "@302",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da84"
@@ -1462,7 +1462,7 @@
       "source": "0x021008ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@250",
+      "symbol": "@303",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da9c"
@@ -1482,7 +1482,7 @@
       "source": "0x021008b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@251",
+      "symbol": "@304",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210dad8"
@@ -1502,7 +1502,7 @@
       "source": "0x021008c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@252",
+      "symbol": "@305",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210dafc"
@@ -1522,7 +1522,7 @@
       "source": "0x021008d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@254",
+      "symbol": "@306",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db2c"
@@ -1542,7 +1542,7 @@
       "source": "0x021008dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@255",
+      "symbol": "@308",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db50"
@@ -1562,7 +1562,7 @@
       "source": "0x021008e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@256",
+      "symbol": "@309",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da78"
@@ -1582,7 +1582,7 @@
       "source": "0x021008f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@257",
+      "symbol": "@310",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210daa8"
@@ -1612,7 +1612,7 @@
       "source": "0x02100904",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@258",
+      "symbol": "@311",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db08"
@@ -1632,7 +1632,7 @@
       "source": "0x02100910",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@268",
+      "symbol": "@312",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db5c"
@@ -1652,7 +1652,7 @@
       "source": "0x0210091c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@269",
+      "symbol": "@313",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210dab4"
@@ -1672,7 +1672,7 @@
       "source": "0x02100928",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@270",
+      "symbol": "@314",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db68"
@@ -1692,7 +1692,7 @@
       "source": "0x02100934",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@271",
+      "symbol": "@318",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db74"
