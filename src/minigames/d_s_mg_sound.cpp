@@ -172,7 +172,7 @@ extern int sSoundScrollRowLength[];
  * array is retained without asserting its original purpose or declared bound. */
 extern const u16 sSoundNoteClosingTimes[8] = {2, 2, 3, 4, 4, 4, 4, 4};
 void Presenter_PlayCheerLoop(char *p);
-void func_02012174(u32 bank, u32 id);
+unsigned int func_02012174(u32 bank, u32 id);
 extern const u16 sSoundNoteOpeningTimes[8] = {2, 2, 3, 4, 4, 4, 6, 4};
 /* Parallel playback selectors and sound IDs retain all 42 stored entries.
  * Some entries are not exercised by the current deal logic. */

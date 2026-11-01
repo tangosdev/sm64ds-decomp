@@ -60,7 +60,7 @@ extern "C" {
 /* arm9 scalar ABI and unnamed helpers; see the remaining work above. */
 extern unsigned int RandomIntInternal(void *seed);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void ApproachAngle(void *p, short target, int a, int b, int limit);
+extern int ApproachAngle(void *p, short target, int a, int b, int limit);
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern short Vec3_VertAngle(const void *a, const void *b);
 extern int Vec3_Dist(const void *a, const void *b);

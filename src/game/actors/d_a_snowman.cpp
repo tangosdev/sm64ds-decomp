@@ -90,7 +90,7 @@ extern s16 data_ov081_021289a4;
 extern s16 data_ov081_021289a6;
 extern s16 data_ov081_021289a8;
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
-extern void ApproachAngle(void *p, int target, int a, int b, int c);
+extern int ApproachAngle(void *p, int target, int a, int b, int c);
 extern int AngleDiff(int a, int b);
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 /* Sound::Play(3, id, pos) — PlayBank3. This TU calls the wrapper. */
@@ -103,7 +103,7 @@ extern unsigned d_a_snowmanNewHold(unsigned a, unsigned b, int c, int d, int e, 
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(struct Vector3 *v);
 extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
-extern void Vec3_MulScalar(struct Vector3 *out, struct Vector3 *in, int s);
+extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -118,7 +118,7 @@ extern int atan2_hold_d_a_snowman_1(int a, int b);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern int Vec3_HorzLen(void *v);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void MulVec3Mat4x3(void *a, void *m, void *b);
+extern void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 }
 
 /* File handles the static initializer constructs. The two models use

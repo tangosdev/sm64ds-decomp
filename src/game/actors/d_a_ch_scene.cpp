@@ -31,7 +31,7 @@ extern "C" {
    TU's narrow spelling; the definition's wider one is a codegen change. */
 void LoadLevel(s8 levelID, u8 entranceID, s8 starID, u32 d, s8 e);
 void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
-void InvMat4x3(void *in, void *out);
+int InvMat4x3(void *in, void *out);
 void StartExitFaderWipe(int);
 int IsStarCollectedInLevel(signed char levelID, int starID);
 }

@@ -162,7 +162,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void MulMat4x3Mat4x3(void *a, void *b, void *out);
-extern void Vec3_LslInPlace(void *v, int sh);
+extern int *Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
 
 /* Parameter names keep this TU's @NNN. */

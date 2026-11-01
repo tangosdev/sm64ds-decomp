@@ -474,7 +474,7 @@ extern "C" {
 int daPly_c::func_ov002_020bd4e0(unsigned char *data, int beginFrame, int endFrame) {
     extern void func_0203db0c(int idx, unsigned short val);
     extern short ReadUnalignedShort(unsigned char *p);
-    extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
+    extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
     extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     extern char data_0209f4a6[];
     extern char data_0209f4a0[];
@@ -3816,7 +3816,7 @@ void func_ov002_020c3160(daPly_c *self, Fix12i *out) {
 extern "C" {
 void daPly_c::func_ov002_020c37a4(char *arg) {
     extern void MulVec3Mat4x3(void *, void *, void *);
-    extern void Vec3_MulScalar(void *, void *, int s);
+    extern void Vec3_MulScalar(Vector3 *, const Vector3 *, int s);
     extern void Vec3_RotateYAndTranslate(void *, void *, int ang, void *);
     extern u32 PlayerNewHold4(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                               void *callback);
@@ -4467,7 +4467,7 @@ extern "C" {
 int daPly_c::func_ov002_020c47f4() {
     typedef int Fix12i;
     extern short Vec3_VertAngle(const Vector3* v1, const Vector3* v0);
-    extern short Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
+    extern short Vec3_HorzAngle(const void *v0, const void *v1);
     extern int ApproachAngle(void*, short targetAngle, short invFactor, short maxDelta, short minDelta);
     Vector3 vec;
     int r, a;
@@ -10104,7 +10104,7 @@ int func_ov002_020ce5f8(char* c) {
     extern int func_ov002_020ceb54(void*);
     extern void func_ov002_020ce8bc(void*, int arg);
     extern void func_ov002_020ceb7c(void*);
-    extern void MulVec3Mat4x3(void*, void*, void*);
+    extern void MulVec3Mat4x3(void *, void *, void *);
     extern void* Vec3_LslInPlace(void*, int sh);
     extern u32 func_020229f0(int x, int y, int z);
     extern int data_0209f32c;
@@ -15366,7 +15366,7 @@ struct PVec { int x, y, z; PVec() {} ~PVec() {} };
 extern "C" {
 int daPly_c::St_YoshiPower_Main() {
     extern void func_ov002_020d71ec(char*, int);
-    extern void MulVec3Mat4x3(void*, void*, void*);
+    extern void MulVec3Mat4x3(void *, void *, void *);
     extern void Vec3_MulScalarInPlace(void*, int);
     extern void func_ov002_020d8118(daPly_c *);
     extern int func_ov002_020e0ccc(char*, void*);
@@ -15937,7 +15937,7 @@ int func_ov002_020d8360(void *self, void *other, unsigned int flags)
 // @symbol func_ov002_020d853c
 extern "C" {
 int func_ov002_020d853c(daPly_c *player, char *o) {
-    extern short Vec3_HorzAngle(void *v0, void *v1);
+    extern short Vec3_HorzAngle(const void *v0, const void *v1);
     extern int AngleDiff(int a, int b);
     extern daPly_c::State data_ov002_02110574;
     extern unsigned short data_ov002_0210a5dc[];
@@ -16098,7 +16098,7 @@ extern "C" {
 int func_ov002_020d8944(void *self, daPly_c *enemy, daPly_c *v1) {
     s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     int AngleDiff(int a, int b);
-    void Vec3_Add(Vector3 * out, Vector3 * a, Vector3 * b);
+    void Vec3_Add(Vector3 * out, const Vector3 *a, const Vector3 *b);
     void Vec3_Asr(Vector3 * d, Vector3 * s, int sh);
     void PlayerNewSimpleHold12(unsigned int id, int x, int y, int z);
     extern int func_ov002_020d8944(void *self, char *enemy, char *v1);
@@ -16281,7 +16281,7 @@ void func_ov002_020d8d10(struct Self *self, Vector3 *pos) {
 extern "C" {
 int daPly_c::Hurt(const Vector3 &a, u32 b, Fix12i dmg, u8 arg4, u8 arg5, u8 arg6) {
     extern void func_ov002_020d5cec(char* c);
-    extern s16 Vec3_HorzAngle(const void* v0, const void* v1);
+    extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     extern void PlayerNewSimpleHold13(u32 id, int a, int b, int cc);
     extern int func_ov002_020d91e0(char* thiz, int damage, int doPre);
     extern daPly_c::State data_ov002_02110094;
@@ -16741,7 +16741,7 @@ int daPly_c::St_Hurt_Main() {
 extern "C" {
 void daPly_c::func_ov002_020d98b4() {
     extern void MulVec3Mat4x3(void *a, void *b, Vector3 *out);
-    extern void Vec3_MulScalar(Vector3 * out, Vector3 * in, int s);
+    extern void Vec3_MulScalar(Vector3 * out, const Vector3 *in, int s);
     extern u32 PlayerNewHold14(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
     int t = this->func_ov002_020beb38();
@@ -17975,7 +17975,7 @@ extern "C" {
 void daPly_c::func_ov002_020db8d8() {
     extern unsigned char data_0209f2d8;
     extern void MulVec3Mat4x3(void *out, void *mtx, void *vec);
-    extern void Vec3_MulScalar(void *out, void *vec, int s);
+    extern void Vec3_MulScalar(Vector3 * out, const Vector3 *vec, int s);
     extern void func_ov002_020dc174(char *c, const Vector3 *pos, Fix12i reach, Fix12i height,
                                     u32 flags, u32 a6);
     char *self = (char*)this;

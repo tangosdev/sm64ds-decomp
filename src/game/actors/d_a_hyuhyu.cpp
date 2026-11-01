@@ -69,7 +69,7 @@ extern int data_0209e650;                    /* random seed */
 /* C helpers with no shared header. */
 extern "C" {
 void func_ov002_020aea30(void *self, void *actor, void *collision);
-void func_02012694(u32 id, void *pos);
+void func_02012694(u32 id, const Vector3 *pos);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 int RandomIntInternal(int *seed);
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);

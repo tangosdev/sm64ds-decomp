@@ -64,7 +64,7 @@ int AngleDiff(int a, int b);
 void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
 int DecIfAbove0_Byte(u8 *p);
 int DecIfAbove0_Short(u16 *p);
-int Vec3_HorzDist(void *a, void *b);
+int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 
 /* local extern: d_bg_w.cpp defines it and no header declares it. */
 void func_020393c4(int *p, int v);

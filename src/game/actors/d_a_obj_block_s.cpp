@@ -170,7 +170,7 @@ extern s32 Vec3_HorzLen(const Vector3 *v0);
 extern void Vec3_MulScalarInPlace(int *v, int s);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Math_Function_0203b14c(char *dst, int a, int b, int c, int d);
+extern int Math_Function_0203b14c(char *dst, int a, int b, int c, int d);
 
 void Crate_SetState(daObjBlockS_c *c, int i);
 }

@@ -115,7 +115,7 @@ void Matrix4x3_FromRotationY(void *m, int angle);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void MulMat4x3Mat4x3(const int *a, const int *b, int *d);
-void Vec3_LslInPlace(void *v, int sh);
+int *Vec3_LslInPlace(void *v, int sh);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 void LoadBlueCoinModel(void *c);
 void UnloadBlueCoinModel(void *);

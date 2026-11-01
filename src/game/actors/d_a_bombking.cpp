@@ -190,7 +190,7 @@ extern void func_02011cfc(void);
 extern "C" {
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern int Vec3_Dist(const void* a, const void* b);
-extern void ApproachAngle(void *p, int target, int a, int b, int c);
+extern int ApproachAngle(void *p, int target, int a, int b, int c);
 extern int RandomIntInternal(int* seed);
 extern int data_0209e650;
 extern void Matrix4x3_FromRotationY(void *m, int angle);

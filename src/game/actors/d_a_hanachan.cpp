@@ -127,7 +127,7 @@ extern void *d_a_hanachanNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, const void *
 extern int func_ov002_020c51d0(void *, void *);
 extern unsigned char data_ov034_0211433c[];
 extern s32 data_ov034_021138d8[];
-extern void func_020092c4(void *arg0, void *out, void *target);
+extern int func_020092c4(void *arg0, void *out, void *target);
 extern u32 data_ov034_02113828[];
 extern s16 data_02082214[];
 extern void *data_0209f318;

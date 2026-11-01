@@ -126,7 +126,7 @@ void func_01ffb098(void *collider);
 void func_01ffb0a4(void *collider);
 void func_01ffb0b0(void *collider);
 void func_01ffb0bc(void *);
-void func_0200fa04(void *c, void *v, int b);
+int func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(int a, void *p);

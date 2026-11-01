@@ -59,7 +59,7 @@ extern void func_020485f0(int a0, int a1);
 extern void func_02048528(int a0, int a1);
 extern void func_0204f9c4(int a, int b);
 extern void func_0204f958(int a, int b);
-extern void func_0204fa2c(int *g, int z);
+extern int func_0204fa2c(int *g, int z);
 extern void func_0204f94c(void *p);
 extern void NNS_SndPlayerMoveVolume(int a, int b, int c); // local extern: untyped handle
 extern void func_0204f070(void);
@@ -72,7 +72,7 @@ extern void func_02049cd8(void *a, int b, int mode);
 extern void func_02048f34(void *owner);
 extern int func_0201a9ec(int *c);
 extern int func_02051918(unsigned int id, int arg);
-extern void func_0201a96c(int *c, int s);
+extern unsigned char func_0201a96c(int *c, int s);
 extern int func_02051fb4(void *g, unsigned int x);
 extern void func_02049764(void);
 extern void func_0204921c(int *g, int v);

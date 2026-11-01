@@ -148,7 +148,7 @@ void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 a);
 void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *o);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *o);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *o);
-void Vec3_LslInPlace(Vector3 *v, s32 sh);
+int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern void Vec3_Asr(void* d, void* s, int sh);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void hold_d_a_dossy(void *self, void *kcl, void *mtx, Fix12i r, short s, void *clps);

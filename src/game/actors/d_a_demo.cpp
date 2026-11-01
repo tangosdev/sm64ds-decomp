@@ -520,7 +520,7 @@ extern int data_ov002_0210b614;
 extern int data_ov002_0210b958;
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
+extern int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
 extern void func_0201f138(void);
 extern void func_0201ef38(void);
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);

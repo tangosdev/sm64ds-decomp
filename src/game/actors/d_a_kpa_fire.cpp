@@ -123,7 +123,7 @@ void d_a_kpa_fireNewSimpleHold(u32 id, Fix12i x, Fix12i y, Fix12i z);
 extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
 
 extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
-extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
+extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern int RandomIntInternal(int* seed);
 extern int data_0209e650[];          /* RNG_STATE (symbols/verified.tsv) */

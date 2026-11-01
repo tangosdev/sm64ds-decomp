@@ -4,11 +4,11 @@
 
 extern "C" {
 
-extern void OS_ReceiveMessage(void *a, void **out, int c);
+extern int OS_ReceiveMessage(void *a, void **out, int c);
 /* MI_DmaCopy32 */
 extern void DMASyncWordTransfer(u32 dmaNo, const void *src, void *dest, u32 size);
 extern int PXI_SendWordByFifo(u32 a, u32 c, u32 b);
-extern void OS_SendMessage(void *a, void *b, int c);
+extern int OS_SendMessage(void *a, void *b, int c);
 
 extern void *data_020a89b0;
 

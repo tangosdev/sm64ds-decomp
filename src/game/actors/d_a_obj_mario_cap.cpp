@@ -228,13 +228,13 @@ extern "C" {
 void  func_02013a88(void);
 short func_02010844(void *self, void *v, short angle);
 void  func_020167a4(void *p);
-void  func_ov002_020f030c(int x);
+int func_ov002_020f030c(int x);
 
 unsigned short DecIfAbove0_Short(unsigned short *p);
 
 int   Vec3_HorzLen(void *v);
 void  Vec3_MulScalarInPlace(void *v, int s);
-void  Vec3_Add(void *out, void *a, void *b);
+void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *out, Vector3 *v, int shift);
 
 void  Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);

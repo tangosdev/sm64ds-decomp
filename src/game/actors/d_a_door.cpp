@@ -213,7 +213,7 @@ void func_ov100_02145070(int v);
 extern "C" {
 /* func_0201277c(id) plays a sound id with no position, as func_02012790
    does (Sound.h); func_02012694(id, pos) plays it at a position. */
-void func_0201277c(int a);
+unsigned int func_0201277c(int a);
 int func_02012694(int a, void *b);
 unsigned char DecIfAbove0_Byte(void *p);
 int DecIfAbove0_Short(void *p);

@@ -89,7 +89,7 @@ struct CoinFlagBits {
  * does not mangle them a second time. */
 extern "C" {
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
+extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(void *v);
 extern int LenVec3(void* v);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);

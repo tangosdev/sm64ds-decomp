@@ -73,7 +73,7 @@ struct RotateBlockCollisionFilePtr : SharedFilePtr {
 
 extern "C" {
 extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
-extern void MulVec3Mat4x3(void *src, void *mtx, void *dst);
+extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 extern void AddVec3(void *a, void *b, void *c);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);

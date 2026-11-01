@@ -57,7 +57,7 @@ extern "C" {
 void func_02012694(int a, void *b);
 void Matrix4x3_FromRotationXYZExt(void *mtx, int x, int y, int z);
 int AngleDiff(int a, int b);
-void Vec3_Sub(void *out, void *a, void *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(void *v);
 
 void func_020393d4(int *p, int v);

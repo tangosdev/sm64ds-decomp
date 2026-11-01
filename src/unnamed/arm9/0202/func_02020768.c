@@ -1,5 +1,5 @@
 extern int func_0202044c(char *thiz, int idx);
-extern void func_0202043c(char *thiz);
+extern int func_0202043c(char *thiz);
 
 extern int data_0208ee44;
 

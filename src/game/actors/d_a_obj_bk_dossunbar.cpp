@@ -99,7 +99,7 @@ extern CLPS_Block *data_ov015_0211453c;
 /* local extern: arm9 math and MeshCollider helpers with no shared header. */
 extern "C" {
 void Math_Function_0203b0fc(int *p, int target, int scale, int max);
-void Math_Function_0203b14c(int *p, int target, int scale, int max, int extra);
+int Math_Function_0203b14c(int *p, int target, int scale, int max, int extra);
 void func_01ffb0a4(dBgW_Kc *self);
 void func_01ffb07c(dBgW_Kc *self, const Vector3 *v);
 void func_020393d4(dBgW *self, void *fn);

@@ -1666,7 +1666,7 @@ extern "C" extern int func_0203d524(int *a, int *b);
 extern "C" extern void D3D_PlaySePannedLoop(int a0, int a1, int a2);
 extern "C" extern void TrmpLine_PointDistance(char *sl, void *arg1, Vector3 *r2);
 extern "C" extern void TrmpLine_SetStateSettle(char *p);
-extern "C" extern void Vec3_MulScalar(Vector3 *out, Vector3 *in, int scale);
+extern "C" extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern "C" extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
 extern "C" {
@@ -1878,7 +1878,7 @@ namespace s020d01e0 {
  */
 extern "C" {
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(Vector3 *out, Vector3 *in, int s);
+extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalarInPlace(int *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);

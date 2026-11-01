@@ -3,7 +3,7 @@
 #include "CP15.h"
 
 extern "C" {
-extern void func_ov007_020be0dc(void *c);
+extern int func_ov007_020be0dc(void *c);
 extern void DMASyncFillTransfer(unsigned int ch, void *dst, unsigned int val, unsigned int n);
 extern int func_ov007_020c0b20(Ov007OamList *list, void *oam, int slot);
 extern void func_ov007_020be3bc(void);

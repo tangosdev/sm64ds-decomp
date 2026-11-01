@@ -44,7 +44,7 @@ extern ItemTagAction data_ov002_0210dd30[];
 
 /* arm9 / ov002 C helpers with no shared header. */
 extern "C" {
-extern s32 Vec3_Dist(const void *a, const void *b);
+extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void LoadSilverStarAndNumber();
 }
 

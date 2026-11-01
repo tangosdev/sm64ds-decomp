@@ -34,7 +34,7 @@ extern s32 func_02040a84(void);
 extern void func_02040a5c(void);
 extern s32 func_0203fd64(void);
 extern void func_02042778(void);
-extern void func_0203f604(void);
+extern void *func_0203f604(void);
 extern void func_0203f644(void);
 
 extern u8 data_02099e1c;

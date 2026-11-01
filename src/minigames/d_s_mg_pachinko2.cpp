@@ -70,12 +70,12 @@ extern "C" {
 
 /* --- shared ov004, main and library helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-extern void Mg_RenderSpriteBothScaled(int a, int b, int c, int d, int e, int f, int g);
+extern int Mg_RenderSpriteBothScaled(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern int Mg_GetSubmittedScore(void);
 extern int Mg_IsNewRecord(void);
 extern int Mg_GetTopRecord(void);
-extern void Mg_DrawTopLeftCounter(void);
+extern int Mg_DrawTopLeftCounter(void);
 extern void Mg_DrawTopRightCounter(int, int);
 extern void Mg_DrawTopCenterCounter(int a0);
 extern void Mg_SubmitScore(int self);
