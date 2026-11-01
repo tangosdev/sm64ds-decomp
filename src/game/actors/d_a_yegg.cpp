@@ -278,7 +278,7 @@ int daYegg_c::func_ov002_020ec654() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daYegg_c19func_ov002_020ec670Ei
 /* What the egg did to the wall it hit. `arg` is the egg's dBgCh_Actr as an
- * integer; func_0203567c turns it into a dBgPi, whose collision ID names the
+ * integer; dBgCh_Actr::GetSphereResult turns it into a dBgPi, whose collision ID names the
  * actor owning the surface hit. Returns without doing anything if there is no
  * such ID or actor. A DOSUN gets its byte at +0x3a2 set to 1; a BATAN or
  * BATANKING is handed the egg through daBtn_c's hit reaction. Any other actor
@@ -289,7 +289,7 @@ void daYegg_c::func_ov002_020ec670(int arg)
     struct dActor_c* actor;
     u16 type;
 
-    cr = func_0203567c((dBgCh_Actr *)arg);
+    cr = ((dBgCh_Actr *)arg)->GetSphereResult();
     if (cr->GetClsnID() == -1)
         return;
 

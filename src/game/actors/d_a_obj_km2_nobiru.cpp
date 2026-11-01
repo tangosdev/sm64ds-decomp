@@ -45,10 +45,6 @@ struct NobiruClsnFileHandle : SharedFilePtr {
 extern NobiruClsnFileHandle PoleLift_ClsnFile;
 extern NobiruModelFileHandle PoleLift_ModelFile;
 
-extern "C" {
-extern s32 func_0203aad0(dBgW_KcMbgSclY *);
-}
-
 // @symbol _ZN17daObjKm2_Nobiru_cD1Ev
 // @symbol _ZN17daObjKm2_Nobiru_cD0Ev
 daObjKm2_Nobiru_c::~daObjKm2_Nobiru_c() {}
@@ -84,9 +80,9 @@ void daObjKm2_Nobiru_c::OnPendingDestroy() {}
 int daObjKm2_Nobiru_c::Render() {
     Vector3 scale;
     scale.x = 0x1000;
-    /* The scale is read through func_0203aad0, because the direct
+    /* The scale is read through GetScaleY, because the direct
      * mCollider.scaleY load makes Render differ. */
-    scale.y = func_0203aad0(&mCollider);
+    scale.y = mCollider.GetScaleY();
     scale.z = 0x1000;
     mModel.Render(&scale);
     return 1;
@@ -94,16 +90,16 @@ int daObjKm2_Nobiru_c::Render() {
 
 // @symbol _ZN17daObjKm2_Nobiru_c8BehaviorEv
 int daObjKm2_Nobiru_c::Behavior() {
-    /* The scale is read through func_0203aad0, because the direct
+    /* The scale is read through GetScaleY, because the direct
      * mCollider.scaleY load makes Behavior differ. */
-    s32 scaleY = func_0203aad0(&mCollider);
+    s32 scaleY = mCollider.GetScaleY();
     if (mGrowing) {
         mCollider.SetScaleY(scaleY + 8);
-        if (func_0203aad0(&mCollider) > 0x1000)
+        if (mCollider.GetScaleY() > 0x1000)
             mGrowing = 0;
     } else {
         mCollider.SetScaleY(scaleY - 8);
-        if (func_0203aad0(&mCollider) < 0x800)
+        if (mCollider.GetScaleY() < 0x800)
             mGrowing = 1;
     }
     return 1;

@@ -104,7 +104,6 @@ int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3, int a4, i
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
 int   SurfaceInfo_TestFlag0x20(const SurfaceInfo *p);
-void  func_0203558c(void *self);
 int   func_02035638(u8 *p);
 void  func_02035684(int *p, int v);
 
@@ -845,7 +844,7 @@ int daMenbo_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     mWithMeshClsn.Init((dActor_c *)(int)this, 0xc8000, 0, 0, 0);
-    func_0203558c(&mWithMeshClsn);
+    mWithMeshClsn.SetNoUpdatePosYFlag();
 
     mCoinType = 1;
     mExtraCoinCount = 2;

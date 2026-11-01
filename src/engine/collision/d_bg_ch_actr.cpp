@@ -37,13 +37,6 @@ int  func_02039794(int x);
 int  SurfaceInfo_TestFlag0x20(int *p);
 
 /* This TU's own workers, defined below. */
-int func_0203553c(dBgCh_Actr *self);  /* (mFlags & 0x4000) == 0 -- water-tracking bit */
-void func_02035550(dBgCh_Actr *self); /* mFlags |= 0x4000 */
-int func_020355a0(dBgCh_Actr *self);  /* (mFlags & 0x800) == 0 */
-int func_020355dc(dBgCh_Actr *self);  /* mFlags & 0x400 */
-void func_020356d4(dBgCh_Actr *self); /* mFlags |= 0x40 -- left ground */
-int func_02035764(dBgCh_Actr *self);  /* mFlags & 0x200 */
-void func_0203573c(dBgCh_Actr *self); /* mFlags |= 0x20 -- just hit ground */
 void func_020371b0(dBgCh_Actr *clsn, s32 wasOnGround); /* floor-result commit */
 }
 
@@ -132,7 +125,7 @@ extern "C" void func_020371fc(char *self)
    transition. */
 extern "C" void func_020371b0(dBgCh_Actr *clsn, s32 wasOnGround) {
     if (wasOnGround == 0)
-        func_0203573c(clsn);
+        clsn->SetJustHitGroundFlag();
     func_02038234((int)clsn->GetFloorResult(), (int)clsn->mActor);
     clsn->SetGroundFlag();
     if (clsn->GetLimMovFlag() == 0)
@@ -149,7 +142,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     struct Vector3 *pos = &mActor->mPos;
     struct Vector3 *prev = &mActor->mPrevPos;
 
-    if (IsOnGround() && func_020355a0(this) && ShouldUpdatePos()) {
+    if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos()) {
         func_02038324((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
                       mAngPtr);
     }
@@ -182,7 +175,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
         return;
     if (IsOnGround())
         return;
-    func_020356d4(this);
+    SetLeftGroundFlag();
 }
 
 // @symbol _ZN10dBgCh_Actr22UpdateDiscreteNoLava_2Ev
@@ -224,7 +217,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
         return;
     if (IsOnGround())
         return;
-    func_020356d4(this);
+    SetLeftGroundFlag();
 }
 
 /* func_02036acc is UpdateContinuous's free twin: the same wall/floor probing
@@ -249,7 +242,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
     pos = &a->mPos;
     prev = &a->mPrevPos;
 
-    if (self->IsOnGround() && func_020355a0(self) && self->ShouldUpdatePos())
+    if (self->IsOnGround() && self->IsFlag800Clear() && self->ShouldUpdatePos())
         func_02038324((void *)self->mSphereClsn.GetFloorResult(), (int)pos,
                       self->mSphereClsn.mMotionAngPtr, self->mAngPtr);
 
@@ -326,7 +319,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
     sphere.z = pos->z;
     sphere.y += height;
     self->mSphereClsn.SetObjAndSphere(sphere, self->mRadius, self->mActor);
-    if (func_0203553c(self) == 0)
+    if (self->IsWaterTrackFlagClear() == 0)
         self->mSphereClsn.flags |= 0x40;
     self->mSphereClsn.mMaxNormalY = self->mScale;
     if (pos->y - prev->y > 0)
@@ -357,7 +350,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
         }
     }
     if (onGround && self->IsOnGround() == 0)
-        func_020356d4(self);
+        self->SetLeftGroundFlag();
 }
 
 #pragma opt_common_subs on
@@ -380,7 +373,7 @@ void dBgCh_Actr::UpdateContinuous()
     pos = &a->mPos;
     prev = &a->mPrevPos;
 
-    if (IsOnGround() && func_020355a0(this) && ShouldUpdatePos())
+    if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos())
         func_02038324((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
                       mAngPtr);
 
@@ -457,7 +450,7 @@ void dBgCh_Actr::UpdateContinuous()
     sphere.z = pos->z;
     sphere.y += height;
     mSphereClsn.SetObjAndSphere(sphere, mRadius, mActor);
-    if (func_0203553c(this) == 0)
+    if (IsWaterTrackFlagClear() == 0)
         mSphereClsn.flags |= 0x40;
     mSphereClsn.mMaxNormalY = mScale;
     if (pos->y - prev->y > 0)
@@ -488,7 +481,7 @@ void dBgCh_Actr::UpdateContinuous()
         }
     }
     if (onGround && IsOnGround() == 0)
-        func_020356d4(this);
+        SetLeftGroundFlag();
 }
 
 #pragma opt_common_subs on
@@ -611,7 +604,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
         }
     }
     if (onGround && IsOnGround() == 0)
-        func_020356d4(this);
+        SetLeftGroundFlag();
 }
 
 #pragma opt_common_subs on
@@ -639,7 +632,7 @@ void dBgCh_Actr::UpdateExtraContinous()
     pos = &actor->mPos;
     prev = &actor->mPrevPos;
 
-    if (IsOnGround() && func_020355a0(this))
+    if (IsOnGround() && IsFlag800Clear())
         func_02038324((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
                       mAngPtr);
 
@@ -758,7 +751,7 @@ void dBgCh_Actr::UpdateExtraContinous()
         mSphereClsn.SetObjAndSphere(sphere, mRadius, mActor);
 
         mSphereClsn.mMaxNormalY = mScale;
-        if (func_02035764(this))
+        if (TestFlag200())
             mSphereClsn.flags |= 2;
         if (pos->y - prev->y > 0)
             mSphereClsn.flags |= 0x20;
@@ -795,7 +788,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                 pos->y = pos->y + disp->y;
             pos->z = pos->z + disp->z;
 
-            if (func_020355dc(this)) {
+            if (TestFlag400()) {
                 Vector3 top;
                 V3D(top, pos, (height << 1))
                 Vector3 foot;
@@ -881,7 +874,7 @@ void dBgCh_Actr::UpdateExtraContinous()
         }
 
         if (wasOnGround && !IsOnGround())
-            func_020356d4(this);
+            SetLeftGroundFlag();
     }
 }
 
@@ -924,32 +917,28 @@ void dBgCh_Actr::StopDetectingWater()
     ((dBgCh *)&mSphereClsn)->StopDetectingWater();
 }
 
-// @symbol func_02035800
-extern "C" void func_02035800(dBgCh_Actr *self)
-{
-    self->mRaycastLine.StartIgnoringVanishSurfaces();
-    self->mSphereClsn.StartIgnoringVanishSurfaces();
+// @symbol _ZN10dBgCh_Actr27StartIgnoringVanishSurfacesEv
+void dBgCh_Actr::StartIgnoringVanishSurfaces() {
+    mRaycastLine.StartIgnoringVanishSurfaces();
+    mSphereClsn.StartIgnoringVanishSurfaces();
 }
 
-// @symbol func_020357e0
-extern "C" void func_020357e0(dBgCh_Actr *self)
-{
-    self->mRaycastLine.StopIgnoringVanishSurfaces();
-    self->mSphereClsn.StopIgnoringVanishSurfaces();
+// @symbol _ZN10dBgCh_Actr26StopIgnoringVanishSurfacesEv
+void dBgCh_Actr::StopIgnoringVanishSurfaces() {
+    mRaycastLine.StopIgnoringVanishSurfaces();
+    mSphereClsn.StopIgnoringVanishSurfaces();
 }
 
-// @symbol func_020357c0
-extern "C" void func_020357c0(dBgCh_Actr *self)
-{
-    self->mRaycastLine.StartIgnoringType14Walls();
-    self->mSphereClsn.StartIgnoringType14Walls();
+// @symbol _ZN10dBgCh_Actr24StartIgnoringType14WallsEv
+void dBgCh_Actr::StartIgnoringType14Walls() {
+    mRaycastLine.StartIgnoringType14Walls();
+    mSphereClsn.StartIgnoringType14Walls();
 }
 
-// @symbol func_020357a0
-extern "C" void func_020357a0(dBgCh_Actr *self)
-{
-    self->mRaycastLine.StopIgnoringType14Walls();
-    self->mSphereClsn.StopIgnoringType14Walls();
+// @symbol _ZN10dBgCh_Actr23StopIgnoringType14WallsEv
+void dBgCh_Actr::StopIgnoringType14Walls() {
+    mRaycastLine.StopIgnoringType14Walls();
+    mSphereClsn.StopIgnoringType14Walls();
 }
 
 // @symbol func_02035798
@@ -957,19 +946,19 @@ extern "C" void func_02035798(dBgCh_Actr *self, Fix12i scale) {
     self->mScale = scale;
 }
 
-// @symbol func_02035784
-extern "C" void func_02035784(dBgCh_Actr *self) {
-    self->mFlags |= 0x200;
+// @symbol _ZN10dBgCh_Actr10SetFlag200Ev
+void dBgCh_Actr::SetFlag200() {
+    mFlags |= 0x200;
 }
 
-// @symbol func_02035770
-extern "C" void func_02035770(dBgCh_Actr *self) {
-    self->mFlags &= ~0x200;
+// @symbol _ZN10dBgCh_Actr12ClearFlag200Ev
+void dBgCh_Actr::ClearFlag200() {
+    mFlags &= ~0x200;
 }
 
-// @symbol func_02035764
-extern "C" int func_02035764(dBgCh_Actr *self) {
-    return self->mFlags & 0x200;
+// @symbol _ZN10dBgCh_Actr11TestFlag200Ev
+int dBgCh_Actr::TestFlag200() {
+    return mFlags & 0x200;
 }
 
 // @symbol _ZN10dBgCh_Actr19ClearAllGroundFlagsEv
@@ -978,9 +967,9 @@ void dBgCh_Actr::ClearAllGroundFlags()
     mFlags &= ~0x70;
 }
 
-// @symbol func_0203573c
-extern "C" void func_0203573c(dBgCh_Actr *self) {
-    self->mFlags |= 0x20;
+// @symbol _ZN10dBgCh_Actr20SetJustHitGroundFlagEv
+void dBgCh_Actr::SetJustHitGroundFlag() {
+    mFlags |= 0x20;
 }
 
 // @symbol _ZN10dBgCh_Actr22ClearJustHitGroundFlagEv
@@ -1015,14 +1004,14 @@ s32 dBgCh_Actr::IsOnGround() const
     return mFlags & 0x10;
 }
 
-// @symbol func_020356d4
-extern "C" void func_020356d4(dBgCh_Actr *self) {
-    self->mFlags |= 0x40;
+// @symbol _ZN10dBgCh_Actr17SetLeftGroundFlagEv
+void dBgCh_Actr::SetLeftGroundFlag() {
+    mFlags |= 0x40;
 }
 
-// @symbol func_020356c8
-extern "C" int func_020356c8(dBgCh_Actr *self) {
-    return self->mFlags & 0x40;
+// @symbol _ZN10dBgCh_Actr18TestLeftGroundFlagEv
+int dBgCh_Actr::TestLeftGroundFlag() {
+    return mFlags & 0x40;
 }
 
 // @symbol _ZN10dBgCh_Actr13SetLimMovFlagEv
@@ -1056,9 +1045,9 @@ extern "C" void func_02035684(int *p, int v)
     p[7] = v;   /* mHeight */
 }
 
-// @symbol func_0203567c
-extern "C" dBgPi *func_0203567c(dBgCh_Actr *self) {
-    return &self->mSphereClsn; /* its dBgPi base, at +0x10 */
+// @symbol _ZN10dBgCh_Actr15GetSphereResultEv
+dBgPi *dBgCh_Actr::GetSphereResult() {
+    return &mSphereClsn; /* its dBgPi base, at +0x10 */
 }
 
 // @symbol _ZNK10dBgCh_Actr14GetFloorResultEv
@@ -1109,39 +1098,39 @@ s32 dBgCh_Actr::TouchesWater() const
     return SurfaceInfo_TestFlag0x20((int *)&mSphereClsn.surface);
 }
 
-// @symbol func_020355fc
-extern "C" void func_020355fc(dBgCh_Actr *self) {
-    self->mFlags |= 0x400;
+// @symbol _ZN10dBgCh_Actr10SetFlag400Ev
+void dBgCh_Actr::SetFlag400() {
+    mFlags |= 0x400;
 }
 
-// @symbol func_020355e8
-extern "C" void func_020355e8(dBgCh_Actr *self) {
-    self->mFlags &= ~0x400;
+// @symbol _ZN10dBgCh_Actr12ClearFlag400Ev
+void dBgCh_Actr::ClearFlag400() {
+    mFlags &= ~0x400;
 }
 
-// @symbol func_020355dc
-extern "C" int func_020355dc(dBgCh_Actr *self) {
-    return self->mFlags & 0x400;
+// @symbol _ZN10dBgCh_Actr11TestFlag400Ev
+int dBgCh_Actr::TestFlag400() {
+    return mFlags & 0x400;
 }
 
-// @symbol func_020355c8
-extern "C" void func_020355c8(dBgCh_Actr *self) {
-    self->mFlags &= ~0x800;
+// @symbol _ZN10dBgCh_Actr12ClearFlag800Ev
+void dBgCh_Actr::ClearFlag800() {
+    mFlags &= ~0x800;
 }
 
-// @symbol func_020355b4
-extern "C" void func_020355b4(dBgCh_Actr *self) {
-    self->mFlags |= 0x800;
+// @symbol _ZN10dBgCh_Actr10SetFlag800Ev
+void dBgCh_Actr::SetFlag800() {
+    mFlags |= 0x800;
 }
 
-// @symbol func_020355a0
-extern "C" int func_020355a0(dBgCh_Actr *self) {
-    return (self->mFlags & 0x800) == 0;
+// @symbol _ZN10dBgCh_Actr14IsFlag800ClearEv
+int dBgCh_Actr::IsFlag800Clear() {
+    return (mFlags & 0x800) == 0;
 }
 
-// @symbol func_0203558c
-extern "C" void func_0203558c(dBgCh_Actr *self) {
-    self->mFlags |= 0x1000;
+// @symbol _ZN10dBgCh_Actr19SetNoUpdatePosYFlagEv
+void dBgCh_Actr::SetNoUpdatePosYFlag() {
+    mFlags |= 0x1000;
 }
 
 // @symbol _ZNK10dBgCh_Actr16ShouldUpdatePosYEv
@@ -1158,12 +1147,12 @@ s32 dBgCh_Actr::ShouldUpdatePos() const
     return (mFlags & 0x2000) == 0;
 }
 
-// @symbol func_02035550
-extern "C" void func_02035550(dBgCh_Actr *self) {
-    self->mFlags |= 0x4000;
+// @symbol _ZN10dBgCh_Actr17SetWaterTrackFlagEv
+void dBgCh_Actr::SetWaterTrackFlag() {
+    mFlags |= 0x4000;
 }
 
-// @symbol func_0203553c
-extern "C" int func_0203553c(dBgCh_Actr *self) {
-    return (self->mFlags & 0x4000) == 0;
+// @symbol _ZN10dBgCh_Actr21IsWaterTrackFlagClearEv
+int dBgCh_Actr::IsWaterTrackFlagClear() {
+    return (mFlags & 0x4000) == 0;
 }
