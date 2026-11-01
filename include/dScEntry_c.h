@@ -143,7 +143,6 @@ struct dScEntry_c::graphCallback_c : dGraph_c::callback_c {
     void *compressedBg2Screen; /* 0x04 */
     dScEntry_c *entryScene;    /* 0x08 -- the scene whose icons GraphCallback2 renders */
     s32 bg2ScreenBase;         /* 0x0c - BG2 screen block, written to bits 8..12 */
-    u8 unk_010[0x1c];          /* 0x10 */
 
     graphCallback_c();
     virtual int GraphCallback2();
@@ -156,7 +155,7 @@ typedef char dScEntry_c_Step_size_must_be_0x8[sizeof(dScEntry_c::Step) == 0x8 ? 
 typedef char dScEntry_c_StepSet_size_must_be_0x18[sizeof(dScEntry_c::StepSet) == 0x18 ? 1 : -1];
 typedef char icon_c_size_must_be_0x24[sizeof(dScEntry_c::icon_c) == 0x24 ? 1 : -1];
 typedef char dScEntry_oam_animation_size_must_be_0x2c[sizeof(OamAnimation) == 0x2c ? 1 : -1];
-typedef char dScEntry_graphCallback_c_size_must_be_0x2c[sizeof(dScEntry_c::graphCallback_c) == 0x2c
+typedef char dScEntry_graphCallback_c_size_must_be_0x10[sizeof(dScEntry_c::graphCallback_c) == 0x10
                                                             ? 1
                                                             : -1];
 #endif

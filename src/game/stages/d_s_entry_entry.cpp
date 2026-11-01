@@ -78,7 +78,7 @@ void *dScEntry_c_classInit_ENTRY(void) {
 /* EntryMesh: the entry-menu grid mesh dEntObj_c keeps at +0xe80
  * (include/private/ov075_entry_mesh.h). dEntObj_c::Init calls Init,
  * its Behavior and Render call Behavior and Render, which run the
- * {init, behavior, render} handler row __sinit_ov075_0211c51c builds:
+ * {init, behavior, render} handler row this file's static initializer builds:
  * InitGrid, UpdateRipple and DrawGrid. */
 
 extern "C" {
@@ -106,9 +106,14 @@ void func_0203cbc0(void *);
    declared per consumer (d_ext_model.cpp, d_ent_obj.cpp). */
 extern Matrix4x3 data_0209b3ec;
 extern short data_02082214[];
-/* The mesh's texture file handle (file 0x8418) and its handler row, both
-   built by __sinit_ov075_0211c51c. */
-extern SharedFilePtr EntryMeshTextureFile;
+/* File 0x8418. The ctor and dtor are func_020178cc / func_020178b4; this
+   TU does not define them. The handler row is filled by the static
+   initializer those two objects emit. */
+struct EntryMeshTexture : SharedFilePtr {
+    EntryMeshTexture(unsigned int fileID);
+    ~EntryMeshTexture();
+};
+extern EntryMeshTexture EntryMeshTextureFile;
 extern EntryMeshHandler EntryMeshHandlers[3];
 
 #define reg_G3_TEXIMAGE_PARAM (*(volatile u32 *)0x040004a8)
@@ -557,3 +562,11 @@ int EntryMesh::Init(const Vector3 *pos, int angleY) {
     CalcMatrix();
     return 1;
 }
+
+EntryMeshTexture EntryMeshTextureFile(0x8418);
+
+extern "C" EntryMeshHandler EntryMeshHandlers[3] = {
+    &EntryMesh::InitGrid,
+    &EntryMesh::UpdateRipple,
+    &EntryMesh::DrawGrid,
+};

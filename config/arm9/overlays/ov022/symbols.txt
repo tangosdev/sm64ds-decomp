@@ -104,8 +104,8 @@ __sinit_d_a_obj_fl_seesaw.cpp kind:function(arm,size=0x68) addr:0x02112e58
 __sinit_d_a_obj_fl_ukiyuka.cpp kind:function(arm,size=0xb8) addr:0x02112ec0
 __sinit_d_a_obj_fl_uki_ki.cpp kind:function(arm,size=0x6c) addr:0x02112f78
 __sinit_d_a_obj_fl_fall_block.cpp kind:function(arm,size=0x6c) addr:0x02112fe4
-__sinit_ov022_02113050 kind:function(arm,size=0x6c) addr:0x02113050
-__sinit_d_a_obj_fl_maruta.cpp kind:function(arm,size=0x3c) addr:0x021130bc
+__sinit_d_a_obj_fl_maruta.cpp kind:function(arm,size=0x6c) addr:0x02113050
+__sinit_d_a_obj_volcano_cannon.cpp kind:function(arm,size=0x3c) addr:0x021130bc
 .p__sinit_d_a_obj_fl_ring.cpp kind:data(word) addr:0x021130f8
 .p__sinit_d_a_obj_fl_koma_d.cpp kind:data(word) addr:0x021130fc
 .p__sinit_d_a_obj_fl_block.cpp kind:data(word) addr:0x02113100
@@ -114,8 +114,8 @@ __sinit_d_a_obj_fl_maruta.cpp kind:function(arm,size=0x3c) addr:0x021130bc
 .p__sinit_d_a_obj_fl_ukiyuka.cpp kind:data(word) addr:0x0211310c
 .p__sinit_d_a_obj_fl_uki_ki.cpp kind:data(word) addr:0x02113110
 .p__sinit_d_a_obj_fl_fall_block.cpp kind:data(word) addr:0x02113114
-.p__sinit_ov022_02113050 kind:data(word) addr:0x02113118
-.p__sinit_d_a_obj_fl_maruta.cpp kind:data(word) addr:0x0211311c
+.p__sinit_d_a_obj_fl_maruta.cpp kind:data(word) addr:0x02113118
+.p__sinit_d_a_obj_volcano_cannon.cpp kind:data(word) addr:0x0211311c
 data_ov022_02113140 kind:data(any) addr:0x02113140
 data_ov022_02113144 kind:data(any) addr:0x02113144
 data_ov022_02113148 kind:data(any) addr:0x02113148
@@ -291,6 +291,6 @@ data_ov022_02114648 kind:bss addr:0x02114648
 @358 kind:bss addr:0x0211465c
 gFlLogModelFile kind:bss addr:0x02114668
 gFlLogCollisionFile kind:bss addr:0x02114670
-data_ov022_02114678 kind:bss addr:0x02114678
-data_ov022_02114684 kind:bss addr:0x02114684
+@415 kind:bss addr:0x02114678
+@416 kind:bss addr:0x02114684
 data_ov022_02114690 kind:bss addr:0x02114690

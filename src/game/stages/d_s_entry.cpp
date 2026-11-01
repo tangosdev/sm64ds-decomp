@@ -86,17 +86,24 @@ extern OamAttr *data_ov075_0211cb64[];
 extern OamAttr data_ov075_0211c720[];
 extern OamAttr data_ov075_0211c730[];
 extern OamAttr *data_ov075_0211c954[];
-extern short data_ov075_0211d72c[];
 extern short data_ov075_0211d72e[];
-extern short data_ov075_0211d740[];
 extern short data_ov075_0211d742[];
-extern short data_ov075_0211d754[];
 extern short data_ov075_0211d756[];
-extern short data_ov075_0211d948[];
 extern short data_ov075_0211d94a[];
 }
 
 #define SH(base, i) (*(short*)((char*)(base) + (i)*4))
+
+struct EntryPair {
+    short w;
+    short h;
+    EntryPair(int pw, int ph) : w((short)pw), h((short)ph) {}
+    ~EntryPair();
+};
+extern "C" EntryPair data_ov075_0211d948[];
+extern "C" EntryPair data_ov075_0211d72c[];
+extern "C" EntryPair data_ov075_0211d740[];
+extern "C" EntryPair data_ov075_0211d754[];
 
 extern "C" void func_ov075_021160dc(dScEntry_c *scene);
 
@@ -634,3 +641,101 @@ OamAttr *data_ov075_0211cb64[8] = {data_ov075_0211c890, data_ov075_0211d144, dat
                                    data_ov075_0211d18c, data_ov075_0211c708, data_ov075_0211d1d4,
                                    data_ov075_0211c6f0, data_ov075_0211d21c};
 }
+
+#pragma defer_codegen on
+/* Width/height pairs and the step sets __sinit installs. One Pair type, so
+   every pair registers the same empty destructor. Groups of five are what
+   makes the language stores schedule like the ROM. Definition order is the
+   static-init order. */
+extern dScEntry_c::Step data_ov075_0211c6f8;
+extern dScEntry_c::Step data_ov075_0211c700;
+extern dScEntry_c::Step data_ov075_0211c718;
+extern dScEntry_c::Step data_ov075_0211c728;
+extern dScEntry_c::Step data_ov075_0211c738;
+extern dScEntry_c::Step data_ov075_0211c740;
+extern dScEntry_c::Step data_ov075_0211c748;
+extern dScEntry_c::Step data_ov075_0211c750;
+extern dScEntry_c::Step data_ov075_0211c758;
+extern dScEntry_c::Step data_ov075_0211c760;
+extern dScEntry_c::Step data_ov075_0211c768;
+extern dScEntry_c::Step data_ov075_0211c770;
+extern dScEntry_c::Step data_ov075_0211c780;
+extern dScEntry_c::Step data_ov075_0211c798;
+extern dScEntry_c::Step data_ov075_0211c7a0;
+extern dScEntry_c::Step data_ov075_0211c7a8;
+extern dScEntry_c::Step data_ov075_0211c7b0;
+extern dScEntry_c::Step data_ov075_0211c7b8;
+extern dScEntry_c::Step data_ov075_0211c7c8;
+extern dScEntry_c::Step data_ov075_0211c7d8;
+extern dScEntry_c::Step data_ov075_0211c7e8;
+extern dScEntry_c::Step data_ov075_0211c7f0;
+extern dScEntry_c::Step data_ov075_0211c800;
+extern dScEntry_c::Step data_ov075_0211c808;
+extern dScEntry_c::Step data_ov075_0211c810;
+extern dScEntry_c::Step data_ov075_0211c818;
+extern dScEntry_c::Step data_ov075_0211c820;
+extern dScEntry_c::Step data_ov075_0211c828;
+extern dScEntry_c::Step data_ov075_0211c830;
+extern dScEntry_c::Step data_ov075_0211c838;
+extern dScEntry_c::Step data_ov075_0211c840;
+extern dScEntry_c::Step data_ov075_0211c848;
+extern dScEntry_c::Step data_ov075_0211c850;
+extern dScEntry_c::Step data_ov075_0211c858;
+extern dScEntry_c::Step data_ov075_0211c860;
+extern dScEntry_c::Step data_ov075_0211c868;
+extern dScEntry_c::Step data_ov075_0211c878;
+extern dScEntry_c::Step data_ov075_0211c888;
+extern dScEntry_c::Step data_ov075_0211c898;
+extern dScEntry_c::Step data_ov075_0211c8a0;
+extern dScEntry_c::Step data_ov075_0211c8a8;
+extern dScEntry_c::Step data_ov075_0211c8b8;
+extern dScEntry_c::Step data_ov075_0211c8c0;
+extern dScEntry_c::Step data_ov075_0211c8c8;
+extern dScEntry_c::Step data_ov075_0211c8d0;
+extern dScEntry_c::Step data_ov075_0211c8d8;
+
+dScEntry_c::graphCallback_c data_ov075_0211d71c;
+extern "C" EntryPair data_ov075_0211d948[14] __attribute__((aligned(4))) = {
+    EntryPair(0x80, 0x10), EntryPair(0x3c, 0x10), EntryPair(0x1c, 0x10), EntryPair(8, 0x10),
+    EntryPair(8, 0x10),    EntryPair(0x20, 0x10), EntryPair(0x30, 0x10), EntryPair(0x20, 0x20),
+    EntryPair(0x28, 0x10), EntryPair(0x58, 0x10), EntryPair(0x78, 0x10), EntryPair(0x20, 0x10),
+    EntryPair(0xa, 0x10),  EntryPair(0, 0)};
+extern "C" EntryPair data_ov075_0211d72c[5] __attribute__((aligned(4))) = {
+    EntryPair(0x20, 0x10), EntryPair(0x18, 0x10), EntryPair(0x1c, 0x10), EntryPair(0x1c, 0x10),
+    EntryPair(0x20, 0x10)};
+extern "C" EntryPair data_ov075_0211d740[5] __attribute__((aligned(4))) = {
+    EntryPair(0x30, 0x10), EntryPair(0x30, 0x10), EntryPair(0x30, 0x10), EntryPair(0x30, 0x10),
+    EntryPair(0x18, 0x10)};
+extern "C" EntryPair data_ov075_0211d754[5] __attribute__((aligned(4))) = {
+    EntryPair(0x20, 0x10), EntryPair(0x20, 0x10), EntryPair(0x28, 0x10), EntryPair(0x20, 0x10),
+    EntryPair(0x30, 0x10)};
+
+dScEntry_c::StepSet EntryDelaySteps = {0, data_ov075_0211c8d0, 0};
+dScEntry_c::StepSet EntryFadeOutSteps = {data_ov075_0211c700, data_ov075_0211c750, 0};
+dScEntry_c::StepSet data_ov075_0211d888 = {data_ov075_0211c850, data_ov075_0211c828,
+                                           data_ov075_0211c8c8};
+dScEntry_c::StepSet data_ov075_0211d8a0 = {data_ov075_0211c6f8, data_ov075_0211c7d8, 0};
+dScEntry_c::StepSet data_ov075_0211d8d0 = {data_ov075_0211c8c0, data_ov075_0211c8d8,
+                                           data_ov075_0211c718};
+dScEntry_c::StepSet data_ov075_0211d900 = {data_ov075_0211c7b0, data_ov075_0211c8b8, 0};
+dScEntry_c::StepSet data_ov075_0211d918 = {data_ov075_0211c878, data_ov075_0211c760,
+                                           data_ov075_0211c780};
+dScEntry_c::StepSet EntryPlayerSelectIntroSteps = {data_ov075_0211c810, data_ov075_0211c7e8, 0};
+dScEntry_c::StepSet EntryCourseSelectSteps = {data_ov075_0211c768, data_ov075_0211c898,
+                                              data_ov075_0211c738};
+dScEntry_c::StepSet EntryMatchLoadingSteps = {data_ov075_0211c8a8, data_ov075_0211c840, 0};
+dScEntry_c::StepSet data_ov075_0211d7c8 = {0, data_ov075_0211c7b8, 0};
+dScEntry_c::StepSet data_ov075_0211d7e0 = {data_ov075_0211c728, data_ov075_0211c830,
+                                           data_ov075_0211c860};
+dScEntry_c::StepSet data_ov075_0211d810 = {data_ov075_0211c818, data_ov075_0211c770,
+                                           data_ov075_0211c888};
+dScEntry_c::StepSet data_ov075_0211d870 = {data_ov075_0211c858, data_ov075_0211c808,
+                                           data_ov075_0211c798};
+dScEntry_c::StepSet data_ov075_0211d8b8 = {data_ov075_0211c7a8, data_ov075_0211c7c8, 0};
+dScEntry_c::StepSet data_ov075_0211d8e8 = {data_ov075_0211c7f0, data_ov075_0211c748, 0};
+dScEntry_c::StepSet data_ov075_0211d930 = {data_ov075_0211c8a0, 0, 0};
+dScEntry_c::StepSet data_ov075_0211d798 = {data_ov075_0211c758, data_ov075_0211c740,
+                                           data_ov075_0211c7a0};
+dScEntry_c::StepSet data_ov075_0211d7f8 = {data_ov075_0211c868, data_ov075_0211c800,
+                                           data_ov075_0211c838};
+dScEntry_c::StepSet data_ov075_0211d828 = {data_ov075_0211c848, data_ov075_0211c820, 0};

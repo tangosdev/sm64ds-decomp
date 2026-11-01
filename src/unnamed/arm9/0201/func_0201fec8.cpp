@@ -1,3 +1,8 @@
+//cpp
+/* Link start. This is the only writer of data_0209e64c. The actor RNG
+   data_0209e650 is the next bss word, so the seed lives here. Actors only
+   read it. */
+extern "C" {
 extern unsigned char data_0209e64c;
 extern char data_0209d574[];
 extern unsigned char data_0208f274;
@@ -43,3 +48,20 @@ void func_0201fec8(void)
     func_0201a96c(data_0209d574, saved);
     data_0209e64c = 1;
 }
+}
+
+/* One s32 seeded to 1. The empty destructor is func_0201973c, already
+   defined in func_020196cc.c, so this declaration is not emitted. */
+#ifndef SM64DS_PLATFORM_PC
+extern "C" void func_0203b9b4(int *p, int v);
+
+struct LevelRng {
+    int value;
+    LevelRng() {
+        func_0203b9b4(&value, 1);
+    }
+    ~LevelRng();
+};
+
+LevelRng data_0209e650;
+#endif
