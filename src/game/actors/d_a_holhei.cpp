@@ -19,7 +19,7 @@
  * - func_ov062_02116d28 reloads mHeld before each pos word.
  *   func_ov062_02116a08 copies the player's position through one int
  *   pointer; three separate pl->mPos loads change the code.
- * - func_ov062_02116e80 hands &mHoldMtx out through this object's
+ * - BuildHoldMatrix hands &mHoldMtx out through this object's
  *   mCarryMatrix; a grabbed actor's mCarryMatrix gates the hold path.
  * - func_ov062_021165e8 keeps a volatile Vector3 so the player's position
  *   occupies that stack slot.
@@ -71,11 +71,8 @@ extern signed char data_0209f2f8;
 extern int AngleDiff(int a, int b);
 extern unsigned int RandomIntInternal(void* s);
 
-extern int func_ov062_02115f84(daHolhei_c *self);
 void func_ov062_02116010(daHolhei_c *self);
-void func_ov062_02116e80(daHolhei_c *self);
 void func_ov062_02116dbc(daHolhei_c *self);
-extern void func_ov062_02116edc(daHolhei_c *self);
 }
 
 /* Resource handles owned by this TU. The static initializer constructs the
@@ -112,7 +109,7 @@ HolheiAnimFile gHoruheiThrowAnimationFile(ASSET_HORUHEI_THROW_BCA);
 HolheiAnimFile gHoruheiWalkAnimationFile(ASSET_HORUHEI_WALK_BCA);
 
 /* Where a carried actor sits, indexed by its param1 == 2 in
-   func_ov062_02116edc. */
+   HomeCarryOffset. */
 Vector3 data_ov062_0211df10[2] = {
     Vector3(0x2c000, -0x14000, -0x78000),
     Vector3(0x44000, -0x14000, -0x78000),
@@ -271,7 +268,7 @@ int daHolhei_c::Behavior()
         mCarryOffsX = 0;
         mCarryOffsY = 0;
         mCarryOffsZ = 0;
-        func_ov062_02116e80(this);
+        BuildHoldMatrix();
         func_ov062_02116dbc(this);
     }
     return 1;
@@ -282,7 +279,7 @@ int daHolhei_c::Render()
 {
     dActor_c *held = mHeld;
     if (held != 0 && IsFlagSet(this, 0x4000) && held->mCarryMatrix != 0)
-        func_ov062_02116edc(this);
+        HomeCarryOffset();
     /* dExtAnmModel_c overrides Render; the ROM calls dExtSimpleModel_c::Render on this member. */
     mModel.dExtSimpleModel_c::Render((const Vector3 *)0);
     return 1;
@@ -307,30 +304,28 @@ int daHolhei_c::CleanupResources()
 
 /* Home the carry offset toward the param1-selected Vector3, then publish
    the carried matrix onto the model. */
-// @symbol func_ov062_02116edc
-extern "C" void func_ov062_02116edc(daHolhei_c *self) {
+// @symbol _ZN10daHolhei_c15HomeCarryOffsetEv
+void daHolhei_c::HomeCarryOffset() {
     int idx = 0;
-    if (self->mHeld->param1 == 2)
+    if (mHeld->param1 == 2)
         idx = 1;
-    Math_Function_0203b14c(&self->mCarryOffsX, data_ov062_0211df10[idx].x, 0x800, 0x3e8000, 4);
-    Math_Function_0203b14c(&self->mCarryOffsY, data_ov062_0211df10[idx].y, 0x800, 0x3e8000, 4);
-    Math_Function_0203b14c(&self->mCarryOffsZ, data_ov062_0211df10[idx].z, 0x800, 0x3e8000, 4);
-    void *r = self->UpdateCarry(*self->mHeld, *(Vector3 *)&self->mCarryOffsX);
+    Math_Function_0203b14c(&mCarryOffsX, data_ov062_0211df10[idx].x, 0x800, 0x3e8000, 4);
+    Math_Function_0203b14c(&mCarryOffsY, data_ov062_0211df10[idx].y, 0x800, 0x3e8000, 4);
+    Math_Function_0203b14c(&mCarryOffsZ, data_ov062_0211df10[idx].z, 0x800, 0x3e8000, 4);
+    void *r = UpdateCarry(*mHeld, *(Vector3 *)&mCarryOffsX);
     struct M12w { int w[12]; };
-    *(M12w *)&self->mModel.mat4x3 = *(M12w *)r;
+    *(M12w *)&mModel.mat4x3 = *(M12w *)r;
 }
 
 /* Bone 3's transform times the model's yaw, stored where a holder looks. */
-// @symbol func_ov062_02116e80
-extern "C" void func_ov062_02116e80(daHolhei_c *self) {
-    Matrix4x3_FromRotationY(&self->mModel.mat4x3, self->mAngleY);
-    self->mModel.mat4x3.m[9] = self->mPosX >> 3;
-    self->mModel.mat4x3.m[10] = self->mPosY >> 3;
-    self->mModel.mat4x3.m[11] = self->mPosZ >> 3;
-    MulMat4x3Mat4x3(&self->mModel.data.transforms[3],
-                    &self->mModel.mat4x3,
-                    &self->mHoldMtx);
-    self->mCarryMatrix = &self->mHoldMtx;
+// @symbol _ZN10daHolhei_c15BuildHoldMatrixEv
+void daHolhei_c::BuildHoldMatrix() {
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    mModel.mat4x3.m[9] = mPosX >> 3;
+    mModel.mat4x3.m[10] = mPosY >> 3;
+    mModel.mat4x3.m[11] = mPosZ >> 3;
+    MulMat4x3Mat4x3(&mModel.data.transforms[3], &mModel.mat4x3, &mHoldMtx);
+    mCarryMatrix = &mHoldMtx;
 }
 
 /* Shadow under this actor. Off the ground the radius grows. */
@@ -420,7 +415,7 @@ int daHolhei_c::func_ov062_02116a08() {
 
     Vec3_Dist(&mPosX, &mHomePosX);
 
-    r = func_ov062_02115f84(this);
+    r = ClassifyObstruction();
     if (r != 0 || mEdgeStop == 1) {
         if (r != 2)
             ::daHolhei_c_ChangeState(this, &data_ov062_0211df00);
@@ -476,7 +471,7 @@ int daHolhei_c::func_ov062_02116894() {
     if (*(unsigned short *)&mStateTimer != 0)
         return 1;
     if (mHorzSpeed != 0) {
-        if (func_ov062_02115f84(this) != 0 || mEdgeStop == 1) {
+        if (ClassifyObstruction() != 0 || mEdgeStop == 1) {
             mTargetAngY = (s16)(mPrevAngleY - 0x2000);
         } else {
             mPrevAngleY = mTargetAngY;
@@ -537,7 +532,7 @@ int daHolhei_c::func_ov062_021165e8()
     struct Vector3* pp;
 
     player = ClosestPlayer();
-    r = func_ov062_02115f84(this);
+    r = ClassifyObstruction();
     if (r != 0 || mEdgeStop == 1) {
         if (r != 2)
             ::daHolhei_c_ChangeState(this, &data_ov062_0211df00);
@@ -763,16 +758,16 @@ extern "C" void func_ov062_02116010(daHolhei_c *self)
 }
 
 /* 1 on a wall, 2 on a slope steeper than 0x1000, else 0. */
-// @symbol func_ov062_02115f84
-extern "C" int func_ov062_02115f84(daHolhei_c *self) {
+// @symbol _ZN10daHolhei_c19ClassifyObstructionEv
+int daHolhei_c::ClassifyObstruction() {
     Vector3 v;
     short slope = 0;
-    if (self->mMeshClsn.IsOnGround()) {
-        dBgPi *floor = self->mMeshClsn.GetFloorResult();
+    if (mMeshClsn.IsOnGround()) {
+        dBgPi *floor = mMeshClsn.GetFloorResult();
         floor->surface.CopyNormalTo(v);
-        slope = func_02010844(self, &v, self->mAngleY);
+        slope = func_02010844(this, &v, mAngleY);
     }
-    if (self->mMeshClsn.IsOnWall())
+    if (mMeshClsn.IsOnWall())
         return 1;
     if (slope < 0)
         slope = (short)-slope;

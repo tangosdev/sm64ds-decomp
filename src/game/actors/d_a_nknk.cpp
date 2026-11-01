@@ -1074,7 +1074,7 @@ void daNknk_c::func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned in
         pos.z = mPosZ;
         iscb = actorID == 0xcb;
         k = iscb ? 0xf : 0xa;
-        *(volatile int *)&pos.y = pos.y + (k << 12); /* pin y add dest */
+        pos.y = pos.y + (k << 12);
         if (h <= a2) {
             int i2, i1, v, w;
             idx = (unsigned short)ang >> 4;

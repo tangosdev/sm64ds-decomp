@@ -513,7 +513,6 @@ void dScMgCurling_c::Bit_RunKindB(int idx) {
 }
 
 #pragma push
-#pragma opt_propagation off
 // @symbol _ZN14dScMgCurling_c12Bit_PickKindEi
 void dScMgCurling_c::Bit_PickKind(int idx) {
     unsigned roll = (unsigned)RandomIntInternal(&data_0209d4b8);
@@ -1562,7 +1561,6 @@ void dScMgCurling_c::ResetHouse() {
 }
 
 #pragma push
-#pragma opt_strength_reduction off
 // @symbol _ZN14dScMgCurling_c11ClearStonesEv
 /* Zeroes the five stones, the five score popups and the aim fields, and
  * resets the score. */

@@ -405,7 +405,6 @@ void Slot3_StateJudge(char *c) {
 // the functions between them. Measured -- this member DIFFs without them and
 // the members outside them DIFF with them applied file-wide.
 #pragma opt_strength_reduction off
-#pragma opt_loop_invariants off
 // @symbol Slot3_StateSpin
 extern "C" { /* .c-derived member: C linkage for the whole block */
 /* Indexed address construction is byte-sensitive: direct member indexing
@@ -487,7 +486,6 @@ void Slot3_StateSpin(char *c) {
 }
 }
 
-#pragma opt_loop_invariants on
 #pragma opt_strength_reduction on
 
 // @symbol Slot3_StateIntro
@@ -531,10 +529,6 @@ void Slot3_StateIntro(char *p) {
 }
 }
 
-// Bracketed, not file-global: with #pragma defer_codegen off these bind to
-// the functions between them. Measured -- this member DIFFs without them and
-// the members outside them DIFF with them applied file-wide.
-#pragma opt_strength_reduction off
 // @symbol _ZN12dScMgSlot3_c10StartRoundEi
 void dScMgSlot3_c::StartRound(int mode) {
     char *c = (char *)this;
@@ -642,7 +636,6 @@ void dScMgSlot3_c::StartRound(int mode) {
     }
 }
 
-#pragma opt_strength_reduction on
 
 // Bracketed, not file-global: with #pragma defer_codegen off these bind to
 // the functions between them. Measured -- this member DIFFs without them and
@@ -1214,7 +1207,6 @@ void dScMgSlot1_c::StartRound(int i) {
     mState = 0;
 }
 
-#pragma opt_strength_reduction off
 // @symbol _ZN12dScMgSlot1_c6RenderEv
 /* dScMgSlot1_c::Render -- the recovered symbol at this address
    (_ZN3OAM7SECONDSE, i.e. "OAM::SECONDS") was a name-recovery-heuristic
@@ -1273,7 +1265,6 @@ s32 dScMgSlot1_c::Render() {
     return 1;
 }
 
-#pragma opt_strength_reduction on
 
 // @symbol _ZN12dScMgSlot1_c8BehaviorEv
 /* Mario Slot's per-frame state machine (vtable slot 6). Byte-exact since

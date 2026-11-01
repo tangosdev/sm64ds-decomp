@@ -22,9 +22,9 @@
  * - func_0201267c and PlayBank3 are the bank-3 wrappers.
  *   func_02012790 is Sound::Play2D(2, id). func_020383f0 and
  *   dBgCh_Actr_UpdateContinuous_Veneer are the tail-call veneers the
- *   bl targets. func_0203567c returns its argument plus 0x30;
+ *   bl targets. dBgCh_Actr::GetSphereResult returns its argument plus 0x30;
  *   GetFloorResult is the previous symbol, and this TU still calls
- *   func_0203567c. DetectClsnSlot0 only queries collider slot zero.
+ *   dBgCh_Actr::GetSphereResult. DetectClsnSlot0 only queries collider slot zero.
  *   func_02037f44 returns word 8 of the record it is handed. Real
  *   dBgPi copy construction avoids the unwanted default-constructor call.
  * - Native Matrix4x3 copies use common.h's shared flat representation.
@@ -499,7 +499,7 @@ int daMky_c::func_ov030_02112400()
         }
     } else {
         if (this->mWithMeshClsn.IsOnGround()) {
-            dBgPi res = *func_0203567c(&mWithMeshClsn);
+            dBgPi res = *mWithMeshClsn.GetSphereResult();
             if (res.GetClsnID() == -1 || func_02037f44(&res) == 0) {
                 func_ov030_021141a8(0);
             }
@@ -686,7 +686,7 @@ int daMky_c::func_ov030_02112a84()
     if (this->mWithMeshClsn.JustHitGround() || this->mWithMeshClsn.IsOnGround()) {
         this->mVertSpeed = 0;
         if (IsUkikiThief(this)) {
-            dBgPi res = *func_0203567c(&mWithMeshClsn);
+            dBgPi res = *mWithMeshClsn.GetSphereResult();
             if (res.GetClsnID() != 0xffffffff)
                 func_ov030_021141a8(9);
             else

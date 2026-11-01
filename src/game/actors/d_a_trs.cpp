@@ -118,7 +118,6 @@ void LoadBlueCoinModel(void *self);
 void UnloadBlueCoinModel(void *o);
 unsigned NumStars(void);
 int IsStarCollectedInCurLevel(int n);
-void func_02035800(void *self);
 void Matrix4x3_FromTranslation(void *m, s32 x, s32 y, s32 z);
 void MulMat4x3Mat4x3(void *a, void *b, void *dst);
 void SubVec3(void *a, void *b, void *dst);
@@ -3513,7 +3512,7 @@ int daTrs_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     mOpacity = 0xff;
-    func_02035800(&mWithMeshClsn);
+    mWithMeshClsn.StartIgnoringVanishSurfaces();
     mState = 0;
     unk_5b2 = mPrevAngleY;
     mWobblePhase = 0;

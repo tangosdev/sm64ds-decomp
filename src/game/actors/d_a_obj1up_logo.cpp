@@ -138,9 +138,7 @@ s32 daObj1UpLogo_c::Behavior() {
             pos.y = otherY + (mFollowOffsetY + (mPosY - mStartPos.y));
         }
     }
-    /* Volatile: a plain pos.z >> 3 is folded into the stores above. */
-    Matrix4x3_FromTranslation(&mModel.mat4x3, pos.x >> 3, pos.y >> 3,
-                              (*(volatile s32 *)&pos.z) >> 3);
+    Matrix4x3_FromTranslation(&mModel.mat4x3, pos.x >> 3, pos.y >> 3, pos.z >> 3);
     return 1;
 }
 

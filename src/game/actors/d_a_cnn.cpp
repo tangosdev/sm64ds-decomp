@@ -45,7 +45,7 @@
  * Leftover: the model file handles (data_ov098_0213c8e8, data_ov098_0213c91c,
  *   data_ov002_0210da38), the state table (data_ov098_0213c8fc, .bss) and the
  *   particle rotation (data_ov098_0213c63c) are unnamed rows this TU does not
- *   own; func_ov002_020df300 / func_ov002_020df34c and func_ov102_0214ae1c
+ *   own; func_ov002_020df300 / daPly_c::TryEnterCannonState and func_ov102_0214ae1c
  *   are unnamed daPly_c / Bob-omb helpers.
  */
 
@@ -101,7 +101,6 @@ int AngleDiff(int a, int b);
 short GetAngleToCamera(int playerNo);
 
 int func_ov002_020df300(daPly_c *player);
-int func_ov002_020df34c(daPly_c *player);
 void func_ov102_0214ae1c(dActor_c *bomb);
 }
 
@@ -401,7 +400,7 @@ void daCnn_c::StateWaitForRider() {
                 return;
             }
         }
-        if (func_ov002_020df34c(player) == 0)
+        if (player->TryEnterCannonState() == 0)
             return;
         mState = 3;
         mLoadStep = 0;
