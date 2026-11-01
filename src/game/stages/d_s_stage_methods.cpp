@@ -2763,7 +2763,7 @@ int dScStage_c::graphCallback_c::GraphCallback1() {
    a single ldm/stm block move and a struct copy of four named fields
    scalarizes. */
 extern "C" void UpdateMinimap(MinimapDesc *desc, u32 a, u32 b, u32 c, u32 d) {
-    *(MinimapDesc *)(((long long)(int)&data_0209f3c4.matrix)) = *desc;
+    *(MinimapDesc *)(&data_0209f3c4.matrix) = *desc;
     data_0209f3c4.originX = a;
     data_0209f3c4.originY = b;
     data_0209f3c4.targetX = c;
@@ -4023,7 +4023,7 @@ int dScStage_c::Render() {
             daPly_c *player = (daPly_c *)data_0209f394[playerIndex];
             if (player != 0) {
                 u8 playerFlags = player->mHasWings;
-                int *position = (int *)((long long)(int)&player->mPosX);
+                int *position = (int *)(&player->mPosX);
                 positionXor ^= (u8)(position[2] ^ (position[0] ^ position[1]));
                 playerFlagBits |= (u8)((playerFlags & 1) << playerIndex);
             }

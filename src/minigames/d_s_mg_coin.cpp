@@ -1091,7 +1091,7 @@ void dScMgCoin_c::Block_StateDropOnCoin(int index) {
    random direction, and over a coin of that row still worth at most two
    (five when IsAltVariant says so) it claims the coin, adds one to its value
    and starts to rise (state 3). */
-#define LB(a) (*(unsigned char *)(((long long)(int)(a))))
+#define LB(a) (*(unsigned char *)(a))
 
 void dScMgCoin_c::Block_StateWander(int i) {
     char *c = (char *)this;
@@ -1423,7 +1423,7 @@ void dScMgCoin_c::Phase_StateResult() {
    other player scored, then enters the result phase with 0xc0 frames. */
 void dScMgCoin_c::Phase_StateScoreDelay() {
     if (mCountdown != 0) {
-        int *p = (int *)(int)(((long long)(int)&mCountdown));
+        int *p = (int *)(int)(&mCountdown);
         *p = *p - 1;
         if (mCountdown < 0)
             mCountdown = 0;
