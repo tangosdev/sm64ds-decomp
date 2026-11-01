@@ -66,11 +66,11 @@ src/game/stages/d_s_entry_methods.cpp:
 src/game/stages/d_s_entry_entry.cpp:
     complete
     .text start:0x0211a854 end:0x0211b524
+    .init start:0x0211c51c end:0x0211c5a4
+    .ctor start:0x0211c5ac end:0x0211c5b0
+    .data.entry_tail start:0x0211d34c end:0x0211d364
+    .bss start:0x0211d980 end:0x0211d9ac
 
 src/unnamed/ov075/__sinit_ov075_0211bb00.c:
     complete
     .init start:0x0211bb00 end:0x0211c51c
-
-src/unnamed/ov075/__sinit_ov075_0211c51c.c:
-    complete
-    .init start:0x0211c51c end:0x0211c5a4

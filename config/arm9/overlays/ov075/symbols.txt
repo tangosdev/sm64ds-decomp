@@ -151,10 +151,10 @@ sVsPlayerExitX kind:data(any) addr:0x0211b594
 data_ov075_0211b5d4 kind:data(any) addr:0x0211b5d4
 __sinit_d_ent_obj.cpp kind:function(arm,size=0x520) addr:0x0211b5e0
 __sinit_ov075_0211bb00 kind:function(arm,size=0xa1c) addr:0x0211bb00
-__sinit_ov075_0211c51c kind:function(arm,size=0x88) addr:0x0211c51c
+__sinit_d_s_entry_entry.cpp kind:function(arm,size=0x88) addr:0x0211c51c
 .p__sinit_d_ent_obj.cpp kind:data(word) addr:0x0211c5a4
 .p__sinit_ov075_0211bb00 kind:data(word) addr:0x0211c5a8
-.p__sinit_ov075_0211c51c kind:data(word) addr:0x0211c5ac
+.p__sinit_d_s_entry_entry.cpp kind:data(word) addr:0x0211c5ac
 @1032 kind:data(any) addr:0x0211c5c0
 @1040 kind:data(any) addr:0x0211c5c8
 @1077 kind:data(any) addr:0x0211c5d0
@@ -330,9 +330,10 @@ data_ov075_0211d290 kind:data(any) addr:0x0211d290 ambiguous
 data_ov075_0211d2ac kind:data(any) addr:0x0211d2ac
 _ZTV10dScEntry_c kind:data(any) addr:0x0211d304
 data_ov075_0211d304 kind:data(any) addr:0x0211d304
-data_ov075_0211d34c kind:data(any) addr:0x0211d34c
-data_ov075_0211d354 kind:data(any) addr:0x0211d354
-data_ov075_0211d35c kind:data(any) addr:0x0211d35c
+@849 kind:data(any) addr:0x0211d34c
+@984 kind:data(any) addr:0x0211d354
+@851 kind:data(any) addr:0x0211d35c
+data_ov075_0211d364 kind:data(any) addr:0x0211d364
 data_ov075_0211d374 kind:data(any) addr:0x0211d374 ambiguous
 data_ov075_0211d380 kind:bss addr:0x0211d380
 data_ov075_0211d384 kind:bss addr:0x0211d384
@@ -468,6 +469,7 @@ data_ov075_0211d974 kind:bss addr:0x0211d974
 data_ov075_0211d978 kind:bss addr:0x0211d978
 data_ov075_0211d97c kind:bss addr:0x0211d97c
 EntryMeshTextureFile kind:bss addr:0x0211d980
-EntryMeshTextureFileLink kind:bss addr:0x0211d988
+@962 kind:bss addr:0x0211d988
 EntryMeshHandlers kind:bss addr:0x0211d994
+data_ov075_0211d9ac kind:bss addr:0x0211d9ac
 data_ov075_0211d9bc kind:bss addr:0x0211d9bc ambiguous
