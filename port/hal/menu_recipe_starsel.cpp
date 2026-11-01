@@ -33,6 +33,7 @@
 #include <stdlib.h>
 
 #include "char_strip.h"
+#include "menu_starsel_plate_art.h"
 
 extern "C" {
 int  SublevelToLevel(int);
@@ -46,6 +47,7 @@ extern short data_ov003_020b1774[];
 extern short data_ov003_020b1764[];
 extern int data_0208ee44;
 extern unsigned char data_0209caa0[];
+extern unsigned char data_ov003_020b169c[];
 }
 
 /* Message::DisplayStarNameForStarSelect, the static the ROM's Behavior calls when the selection changes (declared the way
@@ -77,7 +79,138 @@ int up_starsel(int scene_id)
    (x_i - 8 .. x_i + 7, y < 0x28: :187) and on the star that is already selected to the head's box (func_ov003_020ae358.c:
    x 0x58..0xa7, y within 0x28 of the byte at +0x12b), so a second click (or a double click) starts the act, as the head
    did. The pieces are touch-only host rectangles (nodraw) mapped proportionally into those boxes. */
-const int kStarDx10 = 348, kStarCy = 32, kStarHalfW = 17, kStarY0 = 8, kStarY1 = 58;
+const int kStarDx10 = 348, kStarCy = 32, kStarHalfW = 17, kStarY0 = 8, kStarY1 = 55;
+
+/* STARSEL3: YOSHI'S CAPS ROW AS SPRITES. The ROM draws each cap as two engine-B sprites, the speech bubble then the cap
+   (Render :565-585, OAM::RenderSub at CHAR_X / CHAR_Y), and the "TOUCH ME" head (case 3, OAM::Render at 0x80, PANEL_Y) before them.
+   STARSEL2 lifted a screen rectangle around each bubble, so whatever else engine B drew there came along: the head, which grows to
+   1.5x when a star is picked (Render :517-530), showed inside the boxes (Thunder). Here each cap is lifted as its own OAM entry
+   (MenuPiece.oam_on), found in engine B's OAM each tick, and drawn on Tango's plate; nothing else on the lower screen can reach it.
+   Kept in MenuFacts.blob from kCapsAt on. */
+struct SsCaps {
+    uint8_t cap_oam[3];      /* per character (0 Mario, 1 Luigi, 2 Wario): its cap's OAM index + 1, 0 = not found */
+    int16_t cap_box[3][4];   /* that entry's box on the lower screen, DS pixels (x, y, w, h) */
+    uint8_t cur_oam;         /* the ROM's caps-row cursor (data_ov001_020abd80, Render :508-510) + 1, 0 = not drawn */
+    int16_t cur_box[4];
+    uint8_t cursor_mode, char_cursor, cursor_on, strip_mode;   /* +0x133, +0x134, +0x135, +0x130 */
+    uint16_t bright_b;       /* engine B's MASTER_BRIGHT (0x0400106C): the plates fade with the sprites they carry */
+};
+const int kCapsAt = 64;
+
+/* one engine-B OAM entry's box (attr0 y / shape / affine, attr1 x / size), false when it is hidden */
+bool sub_obj_box(int i, int16_t box[4], int *area)
+{
+    const volatile uint16_t *e = (const volatile uint16_t *)(uintptr_t)(0x07000400u + (unsigned)i * 8u);
+    const unsigned a0 = e[0], a1 = e[1];
+    const bool affine = (a0 & 0x100u) != 0;
+    if (!affine && (a0 & 0x200u)) return false;
+    static const uint8_t kW[3][4] = { { 8, 16, 32, 64 }, { 16, 32, 32, 64 }, { 8, 8, 16, 32 } };
+    static const uint8_t kH[3][4] = { { 8, 16, 32, 64 }, { 8, 8, 16, 32 }, { 16, 32, 32, 64 } };
+    const unsigned shape = a0 >> 14, size = a1 >> 14;
+    if (shape > 2) return false;
+    int w = kW[shape][size], h = kH[shape][size];
+    if (affine && (a0 & 0x200u)) { w *= 2; h *= 2; }
+    int y = (int)(a0 & 0xffu), x = (int)(a1 & 0x1ffu);
+    if (y >= 192) y -= 256;
+    if (x >= 256) x -= 512;
+    box[0] = (int16_t)x; box[1] = (int16_t)y; box[2] = (int16_t)w; box[3] = (int16_t)h;
+    *area = w * h;
+    return true;
+}
+
+/* the smallest shown entry whose box holds (px, py), among indices [lo, hi); -1 none */
+int sub_obj_at(int px, int py, int lo, int hi, int16_t box[4])
+{
+    int best = -1, best_area = 1 << 30;
+    for (int i = lo; i < hi && i < 128; ++i) {
+        int16_t b[4];
+        int a;
+        if (!sub_obj_box(i, b, &a)) continue;
+        if (px < b[0] || px >= b[0] + b[2] || py < b[1] || py >= b[1] + b[3]) continue;
+        if (a < best_area) { best = i; best_area = a; memcpy(box, b, sizeof b); }
+    }
+    return best;
+}
+
+/* the strip slot of character c: dScStarSel_c::func_ov003_020adec0 (src/game/stages/d_s_star_sel_methods.cpp:147), the slot the ROM's own
+   touch on that cap writes to CHAR_CURSOR (func_ov003_020ae358 :376) */
+int rom_slot_of(const unsigned char *o, int c)
+{
+    const int mode = o[0x130];
+    if (mode == 4) {
+        for (int i = 0; i < 3; ++i) if (data_ov003_020b169c[i] == c) return i;
+    } else if (mode >= 2) {
+        const unsigned unl = *(const unsigned *)(data_0209caa0 + 8);
+        int slot = 0;
+        for (int other = 0; other < 3; ++other)
+            if ((unl >> other) & 1) { if (other == c) return slot; ++slot; }
+    }
+    return 0;
+}
+
+/* the cap the caps row's cursor is on: dScStarSel_c::func_ov003_020adf50 (:178) */
+int rom_char_at_cursor(const unsigned char *o)
+{
+    const int mode = o[0x130];
+    if (mode == 4) return data_ov003_020b169c[o[0x134]];
+    if (mode >= 2) {
+        const unsigned unl = *(const unsigned *)(data_0209caa0 + 8);
+        int slot = 0;
+        for (int c = 0; c < 3; ++c)
+            if ((unl >> c) & 1) { if (slot == o[0x134]) return c; ++slot; }
+    }
+    return 0;
+}
+
+void caps_facts(const unsigned char *o, MenuFacts *f)
+{
+    SsCaps K;
+    memset(&K, 0, sizeof K);
+    K.cursor_mode = o[0x133]; K.char_cursor = o[0x134]; K.cursor_on = o[0x135]; K.strip_mode = o[0x130];
+    K.bright_b = *(volatile unsigned short *)0x0400106Cu;
+    int hi = 128;
+    for (int c = 0; c < 3; ++c) {
+        if (!((f->blob[7] >> c) & 1) || f->blob[c] == 0) continue;
+        /* the cap sits in the bubble's upper part (measured: centre CHAR_X, CHAR_Y - 8); the bubble holds the same point and is larger */
+        const int i = sub_obj_at(f->blob[c], f->blob[3 + c] - 8, 0, 128, K.cap_box[c]);
+        if (i >= 0) { K.cap_oam[c] = (uint8_t)(i + 1); if (i < hi) hi = i; }
+    }
+    if (K.cursor_on && K.cursor_mode == 1) {
+        const int c = rom_char_at_cursor(o);
+        if (c >= 0 && c < 3 && f->blob[c]) {
+            /* RenderSub(data_ov001_020abd80, CHAR_X - 0x24, CHAR_Y - 8): drawn before the head and the caps */
+            const int i = sub_obj_at(f->blob[c] - 0x24, f->blob[3 + c] - 8, 0, hi, K.cur_box);
+            if (i >= 0) K.cur_oam = (uint8_t)(i + 1);
+        }
+    }
+    memcpy(f->blob + kCapsAt, &K, sizeof K);
+#ifndef PORT_ROM_CLEAN
+    {
+        static int dump = -1;
+        if (dump < 0) dump = getenv("SM64DS_SS3_OAM") ? 1 : 0;
+        static unsigned last = 0;
+        unsigned sig = 0;
+        for (int c = 0; c < 3; ++c) sig = sig * 131u + K.cap_oam[c] * 7u + (unsigned)K.cap_box[c][0] * 3u + (unsigned)K.cap_box[c][1];
+        sig = sig * 131u + K.cur_oam + K.cursor_mode * 1000u + K.char_cursor * 100000u + (unsigned)K.cur_box[0] * 17u;
+        if (dump && sig != last) {
+            last = sig;
+            fprintf(stderr, "[ss3] caps oam: mario %d (%d,%d %dx%d) luigi %d (%d,%d %dx%d) wario %d (%d,%d %dx%d) cursor %d (%d,%d %dx%d) mode %d slot %d on %d bright %04x\n",
+                    K.cap_oam[0] - 1, K.cap_box[0][0], K.cap_box[0][1], K.cap_box[0][2], K.cap_box[0][3],
+                    K.cap_oam[1] - 1, K.cap_box[1][0], K.cap_box[1][1], K.cap_box[1][2], K.cap_box[1][3],
+                    K.cap_oam[2] - 1, K.cap_box[2][0], K.cap_box[2][1], K.cap_box[2][2], K.cap_box[2][3],
+                    K.cur_oam - 1, K.cur_box[0], K.cur_box[1], K.cur_box[2], K.cur_box[3], K.cursor_mode, K.char_cursor, K.cursor_on, K.bright_b);
+            for (int i = 0; i < 128; ++i) {
+                int16_t b[4];
+                int a;
+                if (sub_obj_box(i, b, &a))
+                    fprintf(stderr, "[ss3]   oam %3d box (%d,%d %dx%d) attr %04x %04x %04x\n", i, b[0], b[1], b[2], b[3],
+                            ((const volatile uint16_t *)(uintptr_t)(0x07000400u + i * 8u))[0], ((const volatile uint16_t *)(uintptr_t)(0x07000400u + i * 8u))[1],
+                            ((const volatile uint16_t *)(uintptr_t)(0x07000400u + i * 8u))[2]);
+            }
+        }
+    }
+#endif
+}
 
 /* MENUSPLIT1: everything build_starsel needs from the live scene object, read once per tick by the decide step */
 void starsel_facts(MenuFacts *f)
@@ -104,6 +237,7 @@ void starsel_facts(MenuFacts *f)
     for (int i = 0; i < 3; ++i) { f->blob[i] = ob(o, 0x124 + i); f->blob[3 + i] = ob(o, 0x128 + i); }
     f->blob[6] = (data_0209caa0[0x41] == 3 && ob(o, 0x130) > 1 && !f->spare[4]) ? 1 : 0;
     f->blob[7] = (unsigned char)(*(int *)(data_0209caa0 + 8) & 7);
+    if (f->blob[6]) caps_facts((const unsigned char *)o, f);
 #ifndef PORT_ROM_CLEAN
     {
         static unsigned last = 0xffffffffu;
@@ -126,6 +260,7 @@ void starsel_facts(MenuFacts *f)
    - the mouse over a star selects it (the ROM's own selection change, without the touch edge that would start the act).
    Added to the pressed word only; the ROM reads the keys itself (native driver). */
 extern "C" void port_host_keys_clear(unsigned short mask);   /* hal/scene_boot.cpp */
+void starsel_hover(unsigned char *o);
 extern "C" unsigned char data_020a0e40;
 extern "C" int data_020a0e58[];
 void starsel_keys(uint16_t *pressed, int)
@@ -141,6 +276,7 @@ void starsel_keys(uint16_t *pressed, int)
         *hh = (unsigned short)(*hh & ~0x0001u);
         port_host_keys_clear(0x0001);
     }
+    starsel_hover(o);
     if (o[0x133] == 1) return;                                      /* the character row: the ROM's own keys */
     const bool charrow = o[0x130] > 1 && data_0209caa0[0x41] == 3;
     uint16_t k = *pressed;
@@ -155,26 +291,56 @@ void starsel_keys(uint16_t *pressed, int)
         if (yfix && charrow && o[0x135] == 2 && o[0x133] == 0 && (k & 0x000fu)) o[0x133] = 2;
     }
     *pressed = k;
-    {
-        static unsigned seen;
-        int hx, hy;
-        unsigned st;
-        if (o[0x139] == 0 && hal_menu_hover_box(&hx, &hy, &st) && st != seen) {
-            seen = st;
-            const int n = o[0x114], cur = o[0x115];
-            for (int i = 0; i < n && i < 8; ++i) {
-                int sx = (int)o[0x11a + i] - 8;
-                if (sx < 0) sx = 0;
-                if (sx > 240) sx = 240;
-                if (i != cur && ((o[0x131] >> i) & 1) && sx == hx && hy == 0) {
-                    o[0x115] = (unsigned char)i;
-                    o[0x133] = 0;
-                    o[0x117] = (unsigned char)(data_0208ee44 * 3);
-                    host_menu_cursor_sound();
-                    Message::DisplayStarNameForStarSelect((unsigned int)i);
-                    break;
-                }
+}
+
+/* THE MOUSE OVER A STAR OR A CAP puts the ROM's cursor on it, the way the pad would (no pick: a click or the confirm does that).
+   A star: the ROM's own selection change (+0x115, the star name, CURSOR_MODE 0), without the touch edge that would start the act.
+   STARSEL3: a cap of Yoshi's caps row (Thunder: hovering the caps did not move the cursor): CURSOR_MODE 1 and CHAR_CURSOR = that cap's strip
+   slot, which is where Down then Left / Right put it (Behavior :205-243, func_ov003_020ae358 sect2) and what the ROM's own touch on the cap
+   writes (func_ov003_020ae358 :376); a confirm then picks it (Behavior :87-98). A pointer that wakes the screen wakes it the way the first
+   press does (+0x135 = 2, see starsel_keys).
+   THE SOUND: hal_menu_hover plays the cursor sound once when the pointer arrives on another hotspot; nothing here plays it again (the
+   recipe's own second request used to land on the next tick: two sounds for one hover onto a star). */
+void starsel_hover(unsigned char *o)
+{
+    static unsigned seen;
+    int hx, hy;
+    unsigned st;
+    if (o[0x139] != 0 || !hal_menu_hover_box(&hx, &hy, &st) || st == seen) return;
+    seen = st;
+    if (data_0209caa0[0x41] == 3 && o[0x130] > 1 && !port_char_strip_up()) {     /* the caps row is drawn (starsel_facts blob[6]) */
+        const unsigned unl = *(const unsigned *)(data_0209caa0 + 8);
+        for (int c = 0; c < 3; ++c) {
+            if (!((unl >> c) & 1) || o[0x124 + c] == 0) continue;
+            if (hx != o[0x124 + c] - 24 || hy != o[0x128 + c] - 23) continue;
+            const int slot = rom_slot_of(o, c);
+            if (o[0x133] != 1 || o[0x134] != slot) {
+                o[0x133] = 1;
+                o[0x134] = (unsigned char)slot;
+                if (o[0x135] == 0) o[0x135] = 2;
+#ifndef PORT_ROM_CLEAN
+                fprintf(stderr, "[ss3] hover: cap of character %d -> cursor mode 1, slot %d\n", c, slot);
+#endif
             }
+            return;
+        }
+    }
+    const int n = o[0x114], cur = o[0x115];
+    for (int i = 0; i < n && i < 8; ++i) {
+        int sx = (int)o[0x11a + i] - 8;
+        if (sx < 0) sx = 0;
+        if (sx > 240) sx = 240;
+        if (((o[0x131] >> i) & 1) && sx == hx && hy == 0) {
+            if (i != cur || o[0x133] != 0) {
+                o[0x115] = (unsigned char)i;
+                o[0x133] = 0;
+                o[0x117] = (unsigned char)(data_0208ee44 * 3);
+                if (i != cur) Message::DisplayStarNameForStarSelect((unsigned int)i);
+#ifndef PORT_ROM_CLEAN
+                fprintf(stderr, "[ss3] hover: star %d -> selected, cursor mode 0\n", i);
+#endif
+            }
+            return;
         }
     }
 }
@@ -222,36 +388,166 @@ void starsel2_layout(MenuLayout *L)
     L->lift_owners = MENU_L_BG2 | MENU_L_BG3 | MENU_L_OBJ;
 }
 
-/* STARSEL2: the caps row's bubbles, lifted from the lower screen's sprites (OBJ only, the backdrop keyed out) at 2/3 size into the band under
-   the stars: Luigi's bubble under star 2, Mario's under star 4, Wario's under star 6 (Tango's picture), centred on canvas x 58 / 128 / 198
-   (the 7-star row's stars 2 / 4 / 6). CHAR_X / CHAR_Y are per character (i = 0 Mario, 1 Luigi, 2 Wario). A bubble the ROM left at x 0 is one
-   InitResources never placed (measured: a save with all three has Mario at x 92, Luigi at 164 and Wario at 0, strip mode 3; the cartridge
-   draws that one at the lower screen's corner, mostly off it) and is left out. Each rect holds the bubble and the ROM's cursor left of it, so the cursor shows
-   when the row has it. Touch pieces: a click on a bubble is the ROM's own touch on it. */
-const int kCapBoxL = 40, kCapBoxR = 26, kCapBoxT = 22, kCapBoxB = 22, kCapRowY = 51;
+/* STARSEL3 (Tango 10-31): YOSHI'S CAPS ROW ON PLATES. The ROM's caps row is a speech bubble per cap on the lower screen (Render :565-585). STARSEL2
+   lifted each bubble at 2/3 size into the band under the stars; the bubbles are tall (their tails), so the row touched the stars' points above and
+   the star's name below. Now each cap sits on Tango's plate (hal/menu_starsel_plate_art.h: the bubble's body without the tail), drawn at a
+   whole-number scale so its pixels stay square, and the cap is its own sprite lifted at the same scale and centred on the plate. Luigi's plate
+   under star 2, Mario's under star 4, Wario's under star 6, as before. The plate is centred on DS row kPlateCy (the band between the selected
+   star's lowest point, row 52.6, and the star name's first row, 80) and is about 18 DS rows tall (kPlateRows), so a clear gap stays above and
+   below at every window size.
+   CHAR_X / CHAR_Y are per character (i = 0 Mario, 1 Luigi, 2 Wario). A cap the ROM left at x 0 is one InitResources never placed (a file with
+   three characters places two caps) and is left out.
+   TOUCH: one touch-only rect per plate, mapped proportionally into the bubble's body on the lower screen (CHAR_X - 24 .. + 24, CHAR_Y - 23 .. + 7),
+   inside the ROM's own touch box for that cap (func_ov003_020ae358 :376: x within CHAR_X - 0x18 .. + 0x18, y within CHAR_Y - 0x18 .. + 0x13), so
+   a click is the ROM's own touch on the cap. Its hotspot box is that body rect, which is how starsel_hover recognises it.
+   THE CURSOR: when the ROM's cursor is on the caps row (CURSOR_MODE 1) its own sprite (Render :508-510, left of the bubble) is lifted too and
+   placed left of the plate at the same distance, scaled like the plate. */
+const int kCapBodyDx = 24, kCapBodyDy = 23, kPlateCy10 = 665, kPlateRows10 = 180;
+const int kCapSlotX[3] = { 58, 128, 198 };          /* the 7-star row's stars 2 / 4 / 6 */
+const int kCapOrder[3] = { 1, 0, 2 };               /* Luigi, Mario, Wario, left to right */
+
+struct CapGeom { int n; int c[3]; int x[3], y[3]; int s; };   /* per shown cap: character, plate corner in host pixels; s = host pixels per art pixel */
+
+void caps_geom(const MenuLayout *L, CapGeom *g)
+{
+    memset(g, 0, sizeof *g);
+    const MenuFacts &F = L->facts;
+    if (!F.starsel_valid || !F.blob[6] || L->uden <= 0) return;
+    /* the whole-number scale nearest to kPlateRows DS rows: s = round(rows * unit / art height), at least 1 */
+    const long long UN = L->unum, UD = L->uden;
+    int s = (int)((2LL * kPlateRows10 * UN + (long long)kCapPlateH * 10 * UD) / (2LL * kCapPlateH * 10 * UD));
+    if (s < 1) s = 1;
+    g->s = s;
+    const int pw = kCapPlateW * s, ph = kCapPlateH * s;
+    const int cy = (int)((long long)kPlateCy10 * UN / (10 * UD));
+    for (int k = 0; k < 3; ++k) {
+        const int c = kCapOrder[k];
+        if (!((F.blob[7] >> c) & 1) || F.blob[c] == 0) continue;
+        int sx = kCapSlotX[k];
+        if (F.starsel_n == 7) sx = F.starsel_x[2 * k + 1];          /* the row's own star column (the same numbers) */
+        const int cx = L->w / 2 + (int)((long long)(sx - 128) * UN / UD);
+        g->c[g->n] = c; g->x[g->n] = cx - pw / 2; g->y[g->n] = cy - ph / 2;
+        ++g->n;
+    }
+}
+
+/* the plates: the art pixel by pixel at s x s host pixels, faded the way engine B's MASTER_BRIGHT fades the sprites on them (the scan-out's
+   law, hal/sub_screen.cpp menu_backdrop_px_of) */
+void starsel3_plates(const MenuLayout *L, int, uint32_t *dst, int w, int h, int stride)
+{
+    CapGeom g;
+    caps_geom(L, &g);
+    if (!g.n) return;
+    SsCaps K;
+    memcpy(&K, L->facts.blob + kCapsAt, sizeof K);
+    const unsigned mode = (K.bright_b >> 14) & 3u;
+    int f = (int)(K.bright_b & 0x1fu);
+    if (f > 16) f = 16;
+    if (mode != 1 && mode != 2) f = 0;
+    uint32_t pal[8], src[8];
+    int np = 0;
+    const int s = g.s;
+    for (int j = 0; j < g.n; ++j) {
+        for (int ay = 0; ay < kCapPlateH; ++ay) {
+            for (int ax = 0; ax < kCapPlateW; ++ax) {
+                const uint32_t a = kCapPlateArt[ay * kCapPlateW + ax];
+                if (!(a >> 24)) continue;
+                uint32_t c = a;
+                if (f) {
+                    int q = -1;
+                    for (int t = 0; t < np; ++t) if (src[t] == a) { q = t; break; }
+                    if (q < 0) {
+                        int r = (int)((a >> 16) & 0xff), gg = (int)((a >> 8) & 0xff), b = (int)(a & 0xff);
+                        if (mode == 1) { r += (255 - r) * f / 16; gg += (255 - gg) * f / 16; b += (255 - b) * f / 16; }
+                        else { r -= r * f / 16; gg -= gg * f / 16; b -= b * f / 16; }
+                        q = np < 8 ? np++ : 7;
+                        src[q] = a; pal[q] = 0xff000000u | (unsigned)r << 16 | (unsigned)gg << 8 | (unsigned)b;
+                    }
+                    c = pal[q];
+                }
+                const int x0 = g.x[j] + ax * s, y0 = g.y[j] + ay * s;
+                for (int yy = y0; yy < y0 + s; ++yy) {
+                    if (yy < 0 || yy >= h) continue;
+                    uint32_t *row = dst + (size_t)yy * stride;
+                    for (int xx = x0; xx < x0 + s; ++xx) if (xx >= 0 && xx < w) row[xx] = c;
+                }
+            }
+        }
+    }
+}
+
+/* the character the caps row's cursor slot stands for (func_ov003_020adf50 on the facts) */
+int caps_char_of_slot(const MenuFacts &F, int slot, int mode)
+{
+    if (mode == 4) return data_ov003_020b169c[slot & 3];
+    int n = 0;
+    for (int c = 0; c < 3; ++c)
+        if ((F.blob[7] >> c) & 1) { if (n == slot) return c; ++n; }
+    return 0;
+}
+
 void starsel2_caps(MenuLayout *L)
 {
+    CapGeom g;
+    caps_geom(L, &g);
+    if (!g.n) return;
     const MenuFacts &F = L->facts;
-    if (!F.starsel_valid || !F.blob[6]) return;
-    static const int order[3] = { 1, 0, 2 }, slot_x[3] = { 58, 128, 198 };
-    for (int k = 0; k < 3; ++k) {
-        const int c = order[k];
-        if (!((F.blob[7] >> c) & 1) || F.blob[c] == 0) continue;
-        int sx = F.blob[c] - kCapBoxL, sy = F.blob[3 + c] - kCapBoxT, sw = kCapBoxL + kCapBoxR, sh = kCapBoxT + kCapBoxB;
-        if (sx < 0) { sw += sx; sx = 0; }
-        if (sy < 0) { sh += sy; sy = 0; }
-        if (sx + sw > 256) sw = 256 - sx;
-        if (sy + sh > 192) sh = 192 - sy;
-        if (sw <= 0 || sh <= 0) continue;
-        /* the piece is centred on the canvas by MENU_AX_C; move it so the bubble's own centre (CHAR_X) lands on the slot */
-        const int bub = F.blob[c] - sx;                       /* the bubble's centre inside the rect, DS pixels */
-        const int dx = (slot_x[k] - 128) - ((2 * bub - sw) * 2) / (2 * 3);
-        MenuPiece p = menu_piece_make(SRC_SUB, sx, sy, sw, sh, MENU_AX_C, MENU_AY_T, dx, kCapRowY, 2, 3);
-        p.layers = MENU_L_OBJ;
-        p.key_backdrop = 1;
-        p.touch = 1;
-        const int pi = menu_add_piece(L, p);
-        if (pi >= 0) menu_add_hotspot(L, pi, sx, sy, sw, sh, -1);
+    SsCaps K;
+    memcpy(&K, F.blob + kCapsAt, sizeof K);
+    const int s = g.s, pw = kCapPlateW * s, ph = kCapPlateH * s;
+    {
+        MenuPiece pl = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+        pl.bg = 1; pl.lden = 1; pl.lnum = 1; pl.fx = 0; pl.fy = 0; pl.fw = (short)L->w; pl.fh = (short)L->h;
+        pl.custom = starsel3_plates;
+        menu_add_piece(L, pl);
+    }
+    const int cur_char = (K.cur_oam && K.cursor_mode == 1) ? caps_char_of_slot(F, K.char_cursor, K.strip_mode) : -1;
+    for (int j = 0; j < g.n; ++j) {
+        const int c = g.c[j];
+        /* the touch rect: the plate, mapped into the bubble's body on the lower screen */
+        const int bx = F.blob[c] - kCapBodyDx, by = F.blob[3 + c] - kCapBodyDy;
+        MenuPiece t = menu_piece_make(SRC_HOSTIMG, bx, by, 2 * kCapBodyDx, kCapPlateH, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+        t.nodraw = 1; t.touch = 1; t.lden = 1; t.lnum = 1;
+        t.fx = (short)g.x[j]; t.fy = (short)g.y[j]; t.fw = (short)pw; t.fh = (short)ph;
+        const int ti = menu_add_piece(L, t);
+        if (ti >= 0) menu_add_hotspot(L, ti, bx, by, 2 * kCapBodyDx, kCapPlateH, -1);
+        /* the cap: its own sprite, s host pixels per DS pixel, centred on the plate */
+        if (K.cap_oam[c]) {
+            const int16_t *b = K.cap_box[c];
+            int sx = b[0], sy = b[1], sw = b[2], sh = b[3];
+            if (sx < 0) { sw += sx; sx = 0; }
+            if (sy < 0) { sh += sy; sy = 0; }
+            if (sx + sw > 256) sw = 256 - sx;
+            if (sy + sh > 192) sh = 192 - sy;
+            if (sw > 0 && sh > 0) {
+                MenuPiece p = menu_piece_make(SRC_SUB, sx, sy, sw, sh, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+                p.layers = MENU_L_OBJ; p.oam_on = 1; p.oam_lo = p.oam_hi = (uint8_t)(K.cap_oam[c] - 1);
+                p.key_backdrop = 1; p.bg = 1; p.fixdest = 1;
+                /* the sprite's whole cell centred on the plate (the cap art sits in its cell as the ROM drew it) */
+                p.fx = (short)(g.x[j] + pw / 2 - (b[2] * s) / 2 + (sx - b[0]) * s);
+                p.fy = (short)(g.y[j] + ph / 2 - (b[3] * s) / 2 + (sy - b[1]) * s);
+                p.fw = (short)(sw * s); p.fh = (short)(sh * s);
+                menu_add_piece(L, p);
+            }
+        }
+        /* the ROM's cursor, when it is on this cap: left of the plate, as far from it as from the bubble's body on the DS */
+        if (c == cur_char) {
+            const int16_t *b = K.cur_box;
+            int sx = b[0], sy = b[1], sw = b[2], sh = b[3];
+            if (sx < 0) { sw += sx; sx = 0; }
+            if (sy < 0) { sh += sy; sy = 0; }
+            if (sx + sw > 256) sw = 256 - sx;
+            if (sy + sh > 192) sh = 192 - sy;
+            if (sw > 0 && sh > 0) {
+                MenuPiece p = menu_piece_make(SRC_SUB, sx, sy, sw, sh, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+                p.layers = MENU_L_OBJ; p.oam_on = 1; p.oam_lo = p.oam_hi = (uint8_t)(K.cur_oam - 1);
+                p.key_backdrop = 1; p.bg = 1; p.fixdest = 1;
+                p.fx = (short)(g.x[j] + (sx - bx) * s);
+                p.fy = (short)(g.y[j] + (sy - by) * s);
+                p.fw = (short)(sw * s); p.fh = (short)(sh * s);
+                menu_add_piece(L, p);
+            }
+        }
     }
 }
 
