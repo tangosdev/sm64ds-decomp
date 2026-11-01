@@ -1252,3 +1252,20 @@ void Deallocate(void *ptr)
 
 }
 
+/* Zero Vector3 immediately after GAME_HEAP_PTR. Vector3(x, y, z) scalarizes,
+ * and a type derived from Vector3 would emit ~Vector3 into this object, so
+ * the stores are a file-local type. Its destructor is aliased to ~Vector3. */
+#ifndef _MSC_VER
+struct VecOff {
+    int x, y, z;
+    VecOff(int px, int py, int pz, int) {
+        x = px;
+        y = py;
+        z = pz;
+    }
+    ~VecOff();
+};
+typedef char VecOff_size_must_be_0xc[sizeof(VecOff) == 0xc ? 1 : -1];
+
+VecOff data_020a0ebc(0, 0, 0, 0);
+#endif

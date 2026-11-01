@@ -3094,7 +3094,7 @@ __sinit_d_bg_w_kc.cpp kind:function(arm,size=0x38) addr:0x02074fe4
 __sinit_d_bg_w_kc_mbg.cpp kind:function(arm,size=0x38) addr:0x0207501c
 __sinit_Vec3_ApproachHorz.cpp kind:function(arm,size=0x60) addr:0x02075054
 __sinit_020750b4 kind:function(arm,size=0x4) addr:0x020750b4
-__sinit_020750b8 kind:function(arm,size=0x34) addr:0x020750b8
+__sinit_Heap.cpp kind:function(arm,size=0x34) addr:0x020750b8
 __sinit_020750ec kind:function(arm,size=0x30) addr:0x020750ec
 __sinit_0207511c kind:function(arm,size=0x34) addr:0x0207511c
 __sinit_02075150 kind:function(arm,size=0x4) addr:0x02075150
@@ -3225,7 +3225,7 @@ __ptmf_null kind:data(any) addr:0x02086b58
 .p__sinit_d_bg_w_kc_mbg.cpp kind:data(word) addr:0x02086b9c
 .p__sinit_Vec3_ApproachHorz.cpp kind:data(word) addr:0x02086ba0
 .p__sinit_020750b4 kind:data(word) addr:0x02086ba4
-.p__sinit_020750b8 kind:data(word) addr:0x02086ba8
+.p__sinit_Heap.cpp kind:data(word) addr:0x02086ba8
 .p__sinit_020750ec kind:data(word) addr:0x02086bac
 .p__sinit_0207511c kind:data(word) addr:0x02086bb0
 .p__sinit_02075150 kind:data(word) addr:0x02086bb4
@@ -4963,7 +4963,7 @@ ROOT_HEAP_ARENA_ID kind:bss addr:0x020a0ea4
 data_020a0ea8 kind:bss addr:0x020a0ea8
 data_020a0eac kind:bss addr:0x020a0eac
 GAME_HEAP_PTR kind:bss addr:0x020a0eac
-data_020a0eb0 kind:bss addr:0x020a0eb0
+@1260 kind:bss addr:0x020a0eb0
 data_020a0ebc kind:bss addr:0x020a0ebc
 data_020a0ec8 kind:bss addr:0x020a0ec8
 data_020a0ed0 kind:bss addr:0x020a0ed0
