@@ -8938,8 +8938,10 @@ What each one needed beyond §6df:
 - Three owners are unpromoted shard runs:
   - `__sinit_02074dc4` is folded into `src/Timer.cpp` (`__sinit_Timer.cpp`): RngSeed `data_0209d4b8` plus the Timer `data_0209d4c8`.
   - `__sinit_02074e0c`: `func_0201aa18`/`func_0201aaec`, between IRQ2 and Message2.
-  - `__sinit_02074e44`: `data_0209e650`, next to `data_0209e64c` of the unpromoted
-    0x0201fec8..0x02020820 run.
+  - `__sinit_02074e44` is folded into `src/unnamed/arm9/0201/func_0201fec8.cpp`
+    (`__sinit_func_0201fec8.cpp`): the actor RNG `data_0209e650`, the bss word
+    after `data_0209e64c`, which that function is the only writer of. The rest
+    of 0x0201fec8..0x02020820 stays unpromoted shards.
 - `__sinit_02074e84` (`dScStage_c`'s graph callback `data_0209f3c4` and the `dClipper`
   `data_0209f43c`) is interleaved with six other `dScStage_c` statics (0x0209f394..0x0209f40c).
   A single `.bss` claim would have to define all of them in order.

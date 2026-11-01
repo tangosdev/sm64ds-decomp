@@ -617,9 +617,12 @@ src/ui/messages/_ZN7Message8LoadTextEv.cpp:
     complete
     .text start:0x0201fe08 end:0x0201fec8
 
-src/unnamed/arm9/0201/func_0201fec8.c:
+src/unnamed/arm9/0201/func_0201fec8.cpp:
     complete
     .text start:0x0201fec8 end:0x0201ffcc
+    .init start:0x02074e44 end:0x02074e80
+    .ctor start:0x02086b80 end:0x02086b84
+    .bss start:0x0209e650 end:0x0209e660
 
 src/unnamed/arm9/0201/func_0201ffcc.c:
     complete
@@ -3386,10 +3389,6 @@ src/unnamed/arm9/0207/__sinit_02074dc0.c:
 src/unnamed/arm9/0207/__sinit_02074e0c.c:
     complete
     .init start:0x02074e0c end:0x02074e44
-
-src/unnamed/arm9/0207/__sinit_02074e44.c:
-    complete
-    .init start:0x02074e44 end:0x02074e80
 
 src/unnamed/arm9/0207/__sinit_02074e80.c:
     complete

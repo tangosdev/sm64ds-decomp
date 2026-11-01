@@ -8924,7 +8924,7 @@
       "src/unnamed/arm9/0201/func_020199a4.c": [
         "return:char []"
       ],
-      "src/unnamed/arm9/0201/func_0201fec8.c": [
+      "src/unnamed/arm9/0201/func_0201fec8.cpp": [
         "return:char []"
       ],
       "src/unnamed/arm9/0201/func_0201ffcc.c": [
@@ -8995,26 +8995,110 @@
       "src/game/actors/d_a_bakubaku.cpp": [
         "return:int []"
       ],
+      "src/game/actors/d_a_basabasa.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_bombking.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_book.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_btfly.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_choropu.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_cnn.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_demo.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_donketu.cpp": [
+        "return:int"
       ],
       "src/game/actors/d_a_dsn_base.cpp": [
         "return:int []"
       ],
+      "src/game/actors/d_a_f_pkn_ball.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_fish.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_grock.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_hanachan.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_holhei.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_hyuhyu.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_iwante.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_jango.cpp": [
+        "return:int"
       ],
       "src/game/actors/d_a_king_donketu.cpp": [
         "return:unsigned short"
       ],
+      "src/game/actors/d_a_kpa.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_kpa_fire.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_krb.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_kuri_king.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_menbo.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_nknk.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_ct_kaitendai.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_ct_mecha03.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_ct_mecha04.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_ct_mecha05.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_ct_mecha08.cpp": [
+        "return:int"
       ],
       "src/game/actors/d_a_obj_ct_mecha09.cpp": [
         "return:int []"
       ],
+      "src/game/actors/d_a_obj_ct_mecha10.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_obj_ct_mecha11.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_obj_ct_rotate_block.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_fl_maruta.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_hatena_block.cpp": [
+        "return:int"
       ],
       "src/game/actors/d_a_owl.cpp": [
         "return:int []"
@@ -9028,11 +9112,65 @@
       "src/game/actors/d_a_pukupuku.cpp": [
         "return:int []"
       ],
+      "src/game/actors/d_a_s_bird.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_sanbo.cpp": [
         "return:int []"
       ],
+      "src/game/actors/d_a_snm_bth.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_snowman.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_star.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_tgz.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_trs.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_yegg.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_yurei_mucho.cpp": [
         "return:int []"
+      ],
+      "src/game/stages/d_ent_obj.cpp": [
+        "return:int"
+      ],
+      "src/game/stages/d_s_stage_methods.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_mg_jump3d_mario.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_mg_trmpln2_mario.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_bsc.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_card.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_cup.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_hanachan_methods.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_jump_methods.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_m_carlo.cpp": [
+        "return:int"
       ],
       "src/minigames/d_s_mg_m_carlo2.cpp": [
         "return:int []"
@@ -9040,8 +9178,29 @@
       "src/minigames/d_s_mg_roulette_methods.cpp": [
         "return:int []"
       ],
+      "src/minigames/d_s_mg_slots.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_trampoline.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_trampoline2.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mini_gm.cpp": [
+        "return:int"
+      ],
+      "src/minigames/unit020b2c84.cpp": [
+        "return:int"
+      ],
+      "src/minigames/unit020bfec0.cpp": [
+        "return:int"
+      ],
       "src/runtime/actor/d_actor.cpp": [
         "return:int []"
+      ],
+      "src/runtime/actor/d_enemy_base.cpp": [
+        "return:int"
       ]
     },
     "data_0209e674": {
@@ -16875,7 +17034,7 @@
         "param:#2 unsigned char",
         "return:unsigned char"
       ],
-      "src/unnamed/arm9/0201/func_0201fec8.c": [
+      "src/unnamed/arm9/0201/func_0201fec8.cpp": [
         "param:#1 char *",
         "param:#2 int",
         "return:void"
@@ -16898,7 +17057,7 @@
       "src/unnamed/arm9/0201/func_020199a4.c": [
         "return:void"
       ],
-      "src/unnamed/arm9/0201/func_0201fec8.c": [
+      "src/unnamed/arm9/0201/func_0201fec8.cpp": [
         "return:int"
       ],
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
