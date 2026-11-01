@@ -1521,11 +1521,6 @@
         "param:#3 unsigned int"
       ]
     },
-    "NoOpDestructor": {
-      "src/unnamed/arm9/0207/__sinit_02075054.c": [
-        "kind:data"
-      ]
-    },
     "NormalizeVec3": {
       "src/engine/collision/d_bg_w_kc_mbg_scl_y.cpp": [
         "param:#1 Vector3 *",
@@ -9773,11 +9768,6 @@
       ],
       "src/ui/hud/d_map.cpp": [
         "return:unsigned int"
-      ]
-    },
-    "data_020a0dbc": {
-      "src/unnamed/arm9/0207/__sinit_02075054.c": [
-        "return:short []"
       ]
     },
     "data_020a0df8": {

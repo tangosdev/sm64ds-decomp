@@ -8,13 +8,29 @@
   "boundary_evidence": [
     "ApproachLinear(Vector3&, const Vector3&, Fix12i) at 0x0203b89c joins Vec3_ApproachHorz. The scalar ApproachLinear overloads are a different run.",
     "TOP EDGE: Vec3_HorzAngle ends at 0x0203b7dc and is the previous file.",
-    "BOTTOM EDGE: func_0203b958 begins at 0x0203b958 and is the next file."
+    "BOTTOM EDGE: func_0203b958 begins at 0x0203b958 and is the next file.",
+    "INIT: __sinit_02075054 (0x02075054..0x020750b4) stores two short pairs, data_020a0dbc = (0, 0) then data_020a0db8 = (1, 1), and registers NoOpDestructor for each. This is the last arm9 C++ TU before that destructor, and it had no initializer. The trampoline scenes read data_020a0dbc as their touch origin."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0203b7dc",
       "end": "0x0203b958"
+    },
+    {
+      "name": ".init",
+      "start": "0x02075054",
+      "end": "0x020750b4"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02086ba0",
+      "end": "0x02086ba4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020a0db8",
+      "end": "0x020a0dd8"
     }
   ],
   "functions": [
@@ -34,12 +50,189 @@
     }
   ],
   "data": [],
-  "bss": [],
-  "compiler_only_output": [],
-  "notes": [
-    "Vec3_ApproachHorz matched as extern \"C\" inside this C++ file. ApproachLinear is a real C++ definition; its step is a scalar Fix12i (mangled i), not Fix12<int> (notes/mwccarm-codegen.md 6az)."
+  "bss": [
+    {
+      "symbol": "data_020a0db8",
+      "address": "0x020a0db8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "file-scope Short2 (1, 1). Retail __sinit_02075054 stores both halves and passes this address to the second __register_global_object."
+    },
+    {
+      "symbol": "data_020a0dbc",
+      "address": "0x020a0dbc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "file-scope Short2 (0, 0), the trampoline touch origin. Retail stores it first. d_s_mg_trampoline.cpp and d_s_mg_trampoline2.cpp still declare it by this name."
+    },
+    {
+      "symbol": "@18",
+      "address": "0x020a0dc0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration node for data_020a0dbc. mwcc emits @60, which ov056 already defines, so it is renamed to the unused same-length @18."
+    },
+    {
+      "symbol": "@19",
+      "address": "0x020a0dcc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration node for data_020a0db8. mwcc emits @61, which ov026 already defines, so it is renamed to the unused same-length @19. The next symbol is data_020a0dd8."
+    }
   ],
-  "production_mode": "text-only",
+  "init": [
+    {
+      "symbol": "__sinit_Vec3_ApproachHorz.cpp",
+      "address": "0x02075054",
+      "size": "0x60",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated initializer for the two Short2 objects, raw-byte-identical to retail __sinit_02075054 (two strh pairs, two registrations, one shared destructor pool word)"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_Vec3_ApproachHorz.cpp",
+      "address": "0x02086ba0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "constructor-table word relocates to __sinit_Vec3_ApproachHorz.cpp, as retail .p__sinit_02075054 does"
+    }
+  ],
+  "compiler_only_output": [],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN6Short2D1Ev",
+      "canonical_symbol": "NoOpDestructor",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203b98c",
+      "evidence": "file-local destructor. Retail registers NoOpDestructor (arm9 0x0203b98c, four bytes, bx lr) for both pairs. Defining ~Short2 here would emit that body into this object."
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_Vec3_ApproachHorz.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; the configured relocation destination is global"
+    },
+    {
+      "symbol": ".p__sinit_Vec3_ApproachHorz.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table word local; symbols.txt cannot record a local"
+    },
+    {
+      "symbol": "@18",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "the registration node is a configured relocation destination at 0x020a0dc0"
+    },
+    {
+      "symbol": "@19",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "the registration node is a configured relocation destination at 0x020a0dcc"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@60",
+      "to": "@18",
+      "evidence": "ov056 defines @60 as a global. @18 is unused in every symbols.txt and the same length."
+    },
+    {
+      "from": "@61",
+      "to": "@19",
+      "evidence": "ov026 defines @61 as a global. @19 is unused in every symbols.txt and the same length."
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02075074",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02075090",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x020750a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020a0dbc",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020a0dbc"
+    },
+    {
+      "section": ".init",
+      "source": "0x020750a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "NoOpDestructor",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203b98c"
+    },
+    {
+      "section": ".init",
+      "source": "0x020750a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@18",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020a0dc0"
+    },
+    {
+      "section": ".init",
+      "source": "0x020750ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020a0db8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020a0db8"
+    },
+    {
+      "section": ".init",
+      "source": "0x020750b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@19",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020a0dcc"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02086ba0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_Vec3_ApproachHorz.cpp",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02075054"
+    }
+  ],
+  "notes": [
+    "Vec3_ApproachHorz matched as extern \"C\" inside this C++ file. ApproachLinear is a real C++ definition; its step is a scalar Fix12i (mangled i), not Fix12<int> (notes/mwccarm-codegen.md 6az).",
+    "Static initializer folded: data_020a0dbc (0, 0) and data_020a0db8 (1, 1) are file-scope Short2 values. mwcc emits __sinit_Vec3_ApproachHorz.cpp. ~Short2 is aliased to NoOpDestructor. The nodes move from @60 and @61 to @18 and @19."
+  ],
+  "production_mode": "intact-object",
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
@@ -57,9 +250,116 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-Vec3_ApproachHorz/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0203b7dc",
+        "end": "0x0203b958",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0203b7dc",
+          "end": "0x0203b958",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02075054",
+          "end": "0x020750b4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02086ba0",
+          "end": "0x02086ba4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020a0db8",
+          "end": "0x020a0dd8",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 8
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              15
+            ],
+            "desired": [
+              15
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              13
+            ],
+            "desired": [
+              13
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              8
+            ],
+            "desired": [
+              5,
+              6,
+              7,
+              8
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   }
 }

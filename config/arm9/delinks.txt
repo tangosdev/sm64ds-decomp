@@ -1027,6 +1027,9 @@ src/Vec3_HorzAngle.cpp:
 src/Vec3_ApproachHorz.cpp:
     complete
     .text start:0x0203b7dc end:0x0203b958
+    .init start:0x02075054 end:0x020750b4
+    .ctor start:0x02086ba0 end:0x02086ba4
+    .bss start:0x020a0db8 end:0x020a0dd8
 
 src/unnamed/arm9/0203/func_0203b958.c:
     complete
@@ -3393,10 +3396,6 @@ src/unnamed/arm9/0207/__sinit_02074e0c.c:
 src/unnamed/arm9/0207/__sinit_02074e80.c:
     complete
     .init start:0x02074e80 end:0x02074e84
-
-src/unnamed/arm9/0207/__sinit_02075054.c:
-    complete
-    .init start:0x02075054 end:0x020750b4
 
 src/unnamed/arm9/0207/__sinit_020750b4.c:
     complete
