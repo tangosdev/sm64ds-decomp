@@ -226,6 +226,7 @@ jobs:
             tools.test_match_provenance \
             tools.test_message_bank \
             tools.test_nearmiss_db \
+            tools.test_pad_layout_audit \
             tools.test_pgate \
             tools.test_premerge_check \
             tools.test_port_refcheck \
@@ -385,6 +386,13 @@ jobs:
 #                                      runs every pass, apply_eval up/down coverage, and
 #                                      the match.py rotation-parity fixture (was 30
 #                                      documented here / 30 actual before this change).
+#   test_pad_layout_audit        (14)   pad_layout_audit.py -- which array members count
+#                                      as padding (an `[0x2]` size is not an offset
+#                                      comment) and which src/ structs count as copies
+#                                      of a header class: namespaces must agree, nested
+#                                      and anonymous structs never count, `extern "C"`
+#                                      is not nesting. langmode_audit ratchets that
+#                                      shadow count.
 #   test_pgate                    (7)   pgate.py -- prepush_linkcheck.py's threaded
 #                                      twin resolves a file to every function its
 #                                      committed delinks.txt range owns the same way,
