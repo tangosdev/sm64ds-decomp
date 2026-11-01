@@ -431,7 +431,7 @@ int func_ov070_0211ffa8(daPropeller_Heyho_c* c){
 extern "C" {
 typedef short s16;
 
-extern int Vec3_Dist(void *a, void *b);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(void *a, void *b);
@@ -527,7 +527,7 @@ extern void ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(void *a, void *m, void *out);
-extern int Vec3_Dist(void *a, void *b);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern unsigned int RandomIntInternal(void *seed);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 

@@ -356,7 +356,7 @@ extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void MulVec3Mat4x3(void *a, void *m, void *b);
 extern int RandomIntInternal(int *seed);
 extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
-extern int Vec3_Dist(const void *a, const void *b);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(void *d, void *s, int sh);
 extern int Vec3_HorzDist(const void *a, const void *b);
 extern s16 Vec3_HorzAngle(const void *a, const void *b);

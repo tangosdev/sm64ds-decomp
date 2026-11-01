@@ -117,7 +117,7 @@ extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
 unsigned short DecIfAbove0_Short(unsigned short *p);
 extern unsigned int RandomIntInternal(void *s);
-extern int Vec3_Dist(void *a, void *b);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern int func_02010844(void *unused, Vector3 *v, s16 angle);
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);

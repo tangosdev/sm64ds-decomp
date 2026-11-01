@@ -101,7 +101,7 @@ struct JugemVec3 {
 extern "C" {
 
 /* math / vector helpers -- no shared header declares these */
-int   Vec3_Dist(const void *a, const void *b);
+int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int   Vec3_HorzDist(const void *a, const void *b);
 s16   Vec3_HorzAngle(const void *a, const void *b);
 s16   Vec3_VertAngle(const void *a, const void *b);

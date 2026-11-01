@@ -179,7 +179,7 @@ extern void d_a_yeggRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
 extern void d_a_yeggPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern int Vec3_HorzDist(const void *a, const void *b);
-extern int Vec3_Dist(const void *a, const void *b);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Add(void *out, const void *a, const void *b);
 extern void MulVec3Mat4x3(const void *in, const void *m, void *out);
 extern void func_0203568c(void *p, int v);

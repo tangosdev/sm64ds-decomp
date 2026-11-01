@@ -83,7 +83,7 @@ extern u8 data_0209f220;
 extern "C" {
 int DecIfAbove0_Byte(u8 *p);
 int IsStarCollectedInCurLevel(int starID);
-int Vec3_Dist(void *a, void *b);
+int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void func_020393c4(dBgW *collider, void *callback);
 void func_020393d4(dBgW *collider, void *callback);
 }
