@@ -8907,6 +8907,9 @@
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "return:int"
       ],
+      "src/unnamed/arm9/0201/func_0201a054.cpp": [
+        "return:char []"
+      ],
       "src/unnamed/arm9/0201/func_020199a4.c": [
         "return:char []"
       ],
@@ -8915,9 +8918,6 @@
       ],
       "src/unnamed/arm9/0201/func_0201ffcc.c": [
         "return:char []"
-      ],
-      "src/unnamed/arm9/0207/__sinit_02074e0c.c": [
-        "return:int []"
       ]
     },
     "data_0209d65c": {
@@ -9084,6 +9084,9 @@
         "return:int"
       ],
       "src/game/actors/d_a_obj_hatena_block.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_volcano_cannon.cpp": [
         "return:int"
       ],
       "src/game/actors/d_a_owl.cpp": [
@@ -17049,16 +17052,6 @@
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "param:#1 int *",
         "return:int"
-      ]
-    },
-    "func_0201aa18": {
-      "src/unnamed/arm9/0207/__sinit_02074e0c.c": [
-        "return:void"
-      ]
-    },
-    "func_0201aaec": {
-      "src/unnamed/arm9/0207/__sinit_02074e0c.c": [
-        "kind:data"
       ]
     },
     "func_0201cebc": {
