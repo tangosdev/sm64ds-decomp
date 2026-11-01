@@ -14309,6 +14309,21 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
         if (!mon && W.MonitorFromWindow_)
             mon = W.MonitorFromWindow_(0, MONITOR_DEFAULTTOPRIMARY);
         if (mon && W.GetMonitorInfoA_ && W.GetMonitorInfoA_(mon, &mi)) {
+#ifndef PORT_ROM_CLEAN
+            /* SM64DS_TEST_WORK_AREA=<w>x<h> (proof instrument, dev builds only):
+               the work area this placement measures is that size at the same
+               corner, so a desk monitor can stand in for a small screen (a
+               Steam Deck's 1280x800 under its desktop panel). */
+            if (const char *ta = getenv("SM64DS_TEST_WORK_AREA")) {
+                int tw = 0, th = 0;
+                if (sscanf(ta, "%dx%d", &tw, &th) == 2 && tw > 0 && th > 0) {
+                    mi.rcWork.right = mi.rcWork.left + tw;
+                    mi.rcWork.bottom = mi.rcWork.top + th;
+                    fprintf(stderr, "[win] SM64DS_TEST_WORK_AREA: measuring a "
+                            "%dx%d work area\n", tw, th);
+                }
+            }
+#endif
             wx = mi.rcWork.left + (mi.rcWork.right - mi.rcWork.left - ww) / 2;
             wy = mi.rcWork.top + (mi.rcWork.bottom - mi.rcWork.top - wh) / 2;
             /* A window TALLER than the work area centres to a negative origin
@@ -14396,6 +14411,16 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
                                    GetModuleHandleA(0), 0);
     if (!hwnd)
         return 0;
+    /* What the window manager actually made, which is not always what was
+       asked for (it caps a frame bigger than the screen on its own): the
+       measured client, so a report shows the real size beside the asked one. */
+    {
+        RECT made = {0, 0, 0, 0};
+        if (W.GetClientRect_ && W.GetClientRect_(hwnd, &made))
+            fprintf(stderr, "[win] made: client %ldx%ld (asked %ldx%ld frame)\n",
+                    (long)(made.right - made.left), (long)(made.bottom - made.top),
+                    (long)(r.right - r.left), (long)(r.bottom - r.top));
+    }
     if (hf_defer) {
         g_hf_hwnd = hwnd;
         g_hf_show = show >= 0 ? show : (g_hf_in_zoom && !g_hf_in_full) ? SW_SHOWMAXIMIZED : SW_SHOWNORMAL;
