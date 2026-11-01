@@ -1,8 +1,5 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
+#include "Particle__System.h"
 /* daStar_c / daStarBase_c -- the Power Star, the silver star, and the marker
  * that spawns one.
  *
@@ -180,13 +177,7 @@ extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_02082214[];
 extern void func_02012694(int a, void* p);
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int id, int a, int b, int d);
 
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern "C" void SubVec3(Vector3* a, Vector3* b, Vector3* c);
 extern "C" void AddVec3(Vector3* a, Vector3* b, Vector3* c);

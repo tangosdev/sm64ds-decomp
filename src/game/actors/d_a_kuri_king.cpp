@@ -98,6 +98,7 @@ enum daKuriKing_c_AssetId {
 #include "Message.h"
 #include "nitro/fx/fx.h"
 #include "cstd.h"
+#include "Particle__System.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -136,11 +137,7 @@ extern "C" u16 DecIfAbove0_Short(u16* p);
 extern "C" s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern "C" s16 data_02082214[];
 extern "C" void func_02012694(u32 a, void* b);
-namespace Particle {
-struct System {
-    static void NewSimple(u32 id, int x, int y, int z);
-};
-}
+
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. */
 namespace Sound {
 void StopLoadedMusic_Layer3();

@@ -1,8 +1,5 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
+#include "Particle__System.h"
 /* The snowman's breath. Fifty SnowmanBreathParticle members sit in this
  * file because their functions sit between the actor's destructor and its
  * other methods. .text 0x021120c4..0x02112b14.
@@ -12,8 +9,6 @@ struct Vector3_16f;
  * defer_codegen off: D1 0x021120c4, D0 0x02112104, D2 deadstripped.
  */
 // leftovers:
-// - Particle::System::New and NewSimple stay mangled. This TU passes
-//   Fix12<int> by value.
 // - SnowmanBreathParticle is a coined name. ov027 has no type string for
 //   the member struct.
 // - mInvModelMat stays flat words. A Matrix4x3 member reorders the
@@ -41,13 +36,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
 extern "C" {
-namespace Particle {
-struct System {
-    static void NewSimple(u32, s32, s32, s32);
 
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 s32 Vec3_Dist(const Vector3 *, const Vector3 *);
 void Matrix4x3_FromRotationY(Matrix4x3 *, s16);

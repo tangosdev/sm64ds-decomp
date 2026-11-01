@@ -44,6 +44,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -180,11 +181,7 @@ extern int data_02092138;
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void func_02012694(int a, void *p);
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int id, int x, int y, int z);
-};
-}
+
 extern void func_02011cfc(void);
 }
 extern "C" {

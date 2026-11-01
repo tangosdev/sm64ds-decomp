@@ -53,6 +53,7 @@ enum daGmch_c_AssetId {
 #include "SharedFilePtr.h"
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
+#include "Particle__System.h"
 
 
 /* Actor ids are from symbols/actor_debug_names.tsv. */
@@ -158,11 +159,7 @@ extern void   Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void   Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern void   Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
 extern int DecIfAbove0_Byte(void *p);
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int n, int a, int b, int c);
-};
-}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
 }
