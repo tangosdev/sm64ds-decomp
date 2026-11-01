@@ -1139,7 +1139,6 @@ void daYegg_c::func_ov002_020ed998()
  * uniqueID is appended to mTargetedIds, becomes mTargetId and bumps
  * mTargetedCount; the winner is returned, or 0 if none qualified. `a1` is
  * not used. */
-#pragma opt_strength_reduction off
 int daYegg_c::func_ov002_020edb3c(int a1, int best)
 {
     dActor_c *found;
@@ -1197,7 +1196,6 @@ end:
     }
     return (int)found;
 }
-#pragma opt_strength_reduction on
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- func_ov002_020edca4, 0x020edca4, size 0x120 */
@@ -1448,7 +1446,6 @@ int daYegg_c::Behavior()
  * numbers. It then clears the targeted-ID list, seeds both angle triples from
  * the actor's own angles, arms mStallTimer, loads the blue-coin model if the
  * egg pays one and tracks a star slot if it pays the star. */
-#pragma opt_strength_reduction off
 int daYegg_c::InitResources()
 {
     int idx;
@@ -1522,7 +1519,6 @@ int daYegg_c::InitResources()
         mStarSlot = TrackStar(0, 1);
     return 1;
 }
-#pragma opt_strength_reduction on
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- daYegg_c_classInit, 0x020ee3d8, size 0x54 */

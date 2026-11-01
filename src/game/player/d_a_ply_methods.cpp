@@ -1422,7 +1422,6 @@ int daPly_c::IsAnim(unsigned int a) {
    The block stays so the hand-spelled callees keep C linkage. The method
    itself still mangles as the daPly_c member. */
 extern "C" {
-#pragma opt_propagation off
 void daPly_c::SetAnim(u32 animId, int flags, Fix12i speed, u16 startFrame) {
     extern u8 data_0209f2d8;
     extern SharedFilePtr *data_ov002_020ff480[];
@@ -14280,7 +14279,6 @@ int daPly_c::Shock(unsigned int j) {
 
 // @symbol func_ov002_020d5ab4
 #pragma push
-#pragma opt_strength_reduction off
 extern "C" {
 int func_ov002_020d5ab4(daPly_c *p) {
     typedef long long s64;
@@ -14651,7 +14649,6 @@ int func_ov002_020d6334(daPly_c *o, int val) {
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 #pragma push
-#pragma opt_strength_reduction off
 extern "C" {
 void func_ov002_020d6368(char *self)
 {
@@ -16876,7 +16873,6 @@ int daPly_c::GetHurtState() {
 // @symbol func_ov002_020d9c70
 #pragma push
 #pragma opt_common_subs off
-#pragma opt_strength_reduction off
 extern "C" {
 void func_ov002_020d9c70(char *o)
 {
@@ -19257,7 +19253,6 @@ int daPly_c::St_GroundPound_Cleanup() {
  * the camera, and skips the upper particles in shallow water.
  */
 #pragma push
-#pragma opt_strength_reduction off
 #pragma opt_common_subs off
 extern "C" {
 int daPly_c::St_GroundPound_Main() {
@@ -22473,7 +22468,6 @@ int daPly_c::ChangeState(daPly_c::State &state) {
    comes from daPly_c.h. */
 #pragma push
 #pragma opt_common_subs off
-#pragma opt_strength_reduction off
 extern "C" {
 int daPly_c::CleanupResources() {
     enum { false_, true_ };
@@ -23868,10 +23862,7 @@ Ld0:
 // @symbol func_ov002_020e5948
 /* defined in src/game/actors/d_a_obj1up_logo.cpp */
 #pragma push
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
 #pragma opt_propagation off
-#pragma opt_loop_invariants off
 extern "C" {
 void func_ov002_020e5948(void* arg0)
 {

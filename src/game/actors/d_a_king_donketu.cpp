@@ -115,7 +115,6 @@ enum daKing_Donketu_c_AssetId {
 };
 
 #pragma defer_codegen off
-#pragma opt_loop_invariants off
 
 #include "common.h"
 #include "daKing_Donketu_c.h"

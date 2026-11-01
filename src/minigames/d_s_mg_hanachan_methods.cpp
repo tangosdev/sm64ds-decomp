@@ -1444,7 +1444,6 @@ void Wiggler_StepSegmentsC(Wiggler *wiggler) {
 
 // @symbol _ZN15dScMgHanachan_c7Wiggler13CheckOffLeftAEv
 #pragma push
-#pragma opt_strength_reduction off
 void dScMgHanachan_c::Wiggler::CheckOffLeftA() {
     Wiggler *self = (Wiggler *)this;
     int i;
@@ -1605,7 +1604,6 @@ void Wiggler_StartBounce(char *raw, int) {
 
 // @symbol _ZN15dScMgHanachan_c7Wiggler13CheckOffLeftBEv
 #pragma push
-#pragma opt_strength_reduction off
 void dScMgHanachan_c::Wiggler::CheckOffLeftB() {
     Wiggler *self = (Wiggler *)this;
     int i;
@@ -1800,7 +1798,6 @@ s32 dScMgHanachan_c::CleanupResources() {
 
 // @symbol _ZN15dScMgHanachan_c6RenderEv
 #pragma push
-#pragma opt_common_subs off
 s32 dScMgHanachan_c::Render() {
     char *raw = (char *)this;
     int i;

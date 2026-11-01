@@ -1813,7 +1813,6 @@ void dScMgAmida_c::SetupRound() {
 // @symbol _ZN12dScMgAmida_c11RenderBoardEv
 #pragma push
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 void dScMgAmida_c::RenderBoard() {
     void *scene = (void *)this;
     typedef struct {
@@ -1889,7 +1888,6 @@ void dScMgAmida_c::RenderBoard() {
 // @symbol _ZN12dScMgAmida_c14RenderBoardAltEv
 #pragma push
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 void dScMgAmida_c::RenderBoardAlt() {
     int noPalette = -1;
     int i;
@@ -1915,7 +1913,6 @@ void dScMgAmida_c::RenderBoardAlt() {
  * bytes larger than the ROM (0x2ac vs 0x2a0) and rombuild drops to 102/106. */
 #pragma push
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 s32 dScMgAmida_c::Render() {
     char *raw = (char *)this;
 
@@ -1981,7 +1978,6 @@ s32 dScMgAmida_c::Render() {
 
 // @symbol _ZN12dScMgAmida_c8BehaviorEv
 #pragma push
-#pragma opt_strength_reduction off
 s32 dScMgAmida_c::Behavior() {
     char *raw = (char *)this;
     int piece;

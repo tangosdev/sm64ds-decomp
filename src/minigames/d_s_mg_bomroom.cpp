@@ -202,7 +202,6 @@ void dScMgBomroom_c::Marker_DrawAll() {
 
 // @symbol _ZN14dScMgBomroom_c16Marker_UpdateAllEv
 #pragma push
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::Marker_UpdateAll() {
     int i;
@@ -236,7 +235,6 @@ void dScMgBomroom_c::Marker_Show(int idx) {
  * with strength reduction off, so each carries its own bracket. */
 // @symbol _ZN14dScMgBomroom_c14Marker_HideAllEv
 #pragma push
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::Marker_HideAll() {
     int slot;
@@ -418,7 +416,6 @@ void dScMgBomroom_c::PenGate_StateShut(int index) {
 
 // @symbol _ZN14dScMgBomroom_c17PenGate_UpdateAllEv
 #pragma push
-#pragma opt_strength_reduction off
 
 typedef void (dScMgBomroom_c::*PMF)(int);
 extern "C" PMF sBomroomPenGateStateTable[];
@@ -435,7 +432,6 @@ void dScMgBomroom_c::PenGate_UpdateAll() {
 
 // @symbol _ZN14dScMgBomroom_c15PenGate_ShowAllEv
 #pragma push
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::PenGate_ShowAll() {
     void * p = (void *)this;
@@ -471,7 +467,6 @@ void dScMgBomroom_c::PenGate_Open(int index) {
 
 // @symbol _ZN14dScMgBomroom_c15PenGate_HideAllEv
 #pragma push
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::PenGate_HideAll() {
     int slot;
@@ -519,7 +514,6 @@ void dScMgBomroom_c::HatchPanel_StateHeld() {}
 // @symbol _ZN14dScMgBomroom_c23HatchPanel_StateAnimateEi
 #pragma push
 #pragma opt_common_subs off
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::HatchPanel_StateAnimate(int index) {
     mHatchPanels[index].timer += 1;
@@ -550,7 +544,6 @@ void dScMgBomroom_c::HatchPanel_StateIdle(int index) {
 
 // @symbol _ZN14dScMgBomroom_c20HatchPanel_UpdateAllEv
 #pragma push
-#pragma opt_strength_reduction off
 
 typedef void (dScMgBomroom_c::*PMF)(int);
 extern "C" PMF sBomroomHatchPanelStateTable[];
@@ -567,7 +560,6 @@ void dScMgBomroom_c::HatchPanel_UpdateAll() {
 
 // @symbol _ZN14dScMgBomroom_c18HatchPanel_ShowAllEv
 #pragma push
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::HatchPanel_ShowAll() {
     void * p = (void *)this;
@@ -587,7 +579,6 @@ void dScMgBomroom_c::HatchPanel_ShowAll() {
 
 // @symbol _ZN14dScMgBomroom_c18HatchPanel_HideAllEv
 #pragma push
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::HatchPanel_HideAll() {
     int slot;
@@ -621,7 +612,6 @@ void dScMgBomroom_c::DrawRemaining() {
 
 // @symbol _ZN14dScMgBomroom_c16CountSortedBombsEv
 #pragma push
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::CountSortedBombs() {
     int plain, colored, i;
@@ -871,7 +861,6 @@ void dScMgBomroom_c::Bomb_CheckGrab(int index) {
 
 // @symbol _ZN14dScMgBomroom_c14Bomb_PushApartEi
 #pragma push
-#pragma opt_common_subs off
 
 void dScMgBomroom_c::Bomb_PushApart(int index) {
     char* raw = (char*)this;
@@ -1059,7 +1048,6 @@ void dScMgBomroom_c::DrawBombs() {
 // @symbol _ZN14dScMgBomroom_c18CheckColorCompleteEv
 #pragma push
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 
 void dScMgBomroom_c::CheckColorComplete() {
     void * raw = (void *)this;
@@ -1124,7 +1112,6 @@ void dScMgBomroom_c::BombMarch_LinedUp() {}
 
 // @symbol _ZN14dScMgBomroom_c16BombMarch_ToLineEi
 #pragma push
-#pragma opt_common_subs off
 
 void dScMgBomroom_c::BombMarch_ToLine(int index) {
     int off = index << 6;
@@ -1178,9 +1165,7 @@ void dScMgBomroom_c::BombMarch_Offscreen() {}
 
 // @symbol _ZN14dScMgBomroom_c14BombMarch_ExitEi
 #pragma push
-#pragma opt_strength_reduction off
 #pragma opt_common_subs off
-
 void dScMgBomroom_c::BombMarch_Exit(int index) {
     int color, x;
     {
@@ -1213,8 +1198,6 @@ void dScMgBomroom_c::BombMarch_Exit(int index) {
 
 // @symbol _ZN14dScMgBomroom_c16BombMarch_ToGateEi
 #pragma push
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
 
 void dScMgBomroom_c::BombMarch_ToGate(int index) {
     int color, x, z, tx, ty;
@@ -1364,7 +1347,6 @@ void dScMgBomroom_c::Bomb_StateChainDelay(int idx) {
  * whether it is over its own pen. With nothing held (mHeldColor is 0xff) the
  * bomb goes back to state 1 instead. */
 #pragma push
-#pragma opt_common_subs off
 
 void dScMgBomroom_c::Bomb_StateHeld(int idx) {
     if (mHeldColor == 0xff) {
@@ -1510,7 +1492,6 @@ void dScMgBomroom_c::UpdateBombs() {
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-#pragma opt_loop_invariants off
 
 void dScMgBomroom_c::SpawnBombs()
 {
@@ -1833,7 +1814,6 @@ void dScMgBomroom_c::ClearBombs() {
 
 // @symbol _ZN14dScMgBomroom_c15RoundEnd_FinishEv
 #pragma push
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::RoundEnd_Finish() {
     int j;
@@ -1946,7 +1926,6 @@ int dScMgBomroom_c::AnyBombMarching() {
 
 // @symbol _ZN14dScMgBomroom_c20RoundEnd_WaitLinedUpEv
 #pragma push
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::RoundEnd_WaitLinedUp() {
     UpdateBombs();
