@@ -1427,6 +1427,13 @@ void gw_on_ident(const unsigned char *buf, int n, int seat) {
             z.bro_mask = (unsigned short)((buf[at] | (buf[at + 1] << 8)) & 0x1ff);
             for (int i = 0; i < 9; ++i)
                 z.bro_bgr[i] = (unsigned short)(buf[at + 2 + 2 * i] | (buf[at + 3 + 2 * i] << 8));
+            static unsigned short said[kHubMaxSeats];
+            if (said[seat] != (unsigned short)(z.bro_mask | 0x8000u)) {
+                said[seat] = (unsigned short)(z.bro_mask | 0x8000u);
+                std::fprintf(stderr, "[ghost] seat %d identity (%d bytes) carries bro colours: mask %03x, Mario %04x %04x %04x, "
+                             "Luigi %04x %04x %04x, Wario %04x %04x %04x\n", seat, n, z.bro_mask, z.bro_bgr[0], z.bro_bgr[1],
+                             z.bro_bgr[2], z.bro_bgr[3], z.bro_bgr[4], z.bro_bgr[5], z.bro_bgr[6], z.bro_bgr[7], z.bro_bgr[8]);
+            }
         }
     }
     z.build_id = h.build_id;
@@ -2093,6 +2100,11 @@ void gw_send_ident(unsigned now) {
                 buf[len + 3 + 2 * i] = (unsigned char)(bgr[i] >> 8);
             }
             len += kGwBroBlock;
+            static unsigned short said;
+            if (said != (unsigned short)(mask | 0x8000u)) {
+                said = (unsigned short)(mask | 0x8000u);
+                std::fprintf(stderr, "[ghost] my identity (%d bytes) carries bro colours: mask %03x\n", len, mask);
+            }
         }
     }
     if (len < 24) len = 24;
