@@ -1,11 +1,12 @@
 //cpp
 /* The constructor precedes the destructor definition. C2 and D2 have no
- * cartridge home. func_0203aa10, func_0203aa74 and func_0203aad0 retain
- * their address names and C linkage; DetectClsn and GetNormal call them
- * by address, and daObjKm2_Nobiru_c reads scaleY through func_0203aad0.
+ * cartridge home. ToWorldSpace, ToColliderSpace and GetScaleY are the
+ * non-virtual members DetectClsn and GetNormal call by address, and
+ * daObjKm2_Nobiru_c reads scaleY through GetScaleY.
  * SetFile and SetScaleY are real methods taking the scale as a scalar
- * Fix12i, which is what the bytes pass. func_0203aa74 multiplies y by invScaleY after the parent's inverse
- * matrix; func_0203aa10 applies scaleY before the parent's scaled matrix.
+ * Fix12i, which is what the bytes pass. ToColliderSpace multiplies y by
+ * invScaleY after the parent's inverse matrix; ToWorldSpace applies scaleY
+ * before the parent's scaled matrix.
  */
 /* dBgW_KcMbgSclY: mesh collider stretched in y (Snowman's body, lift
  * chains). Type name 0x02099474, typeinfo 0x02099468, vtable 0x02099490.
@@ -19,11 +20,6 @@
 #include "nitro/fx/fx.h"
 
 extern "C" {
-/* This TU's own free helpers, called from the members below. */
-void func_0203aa10(dBgW_KcMbgSclY *self, Vector3 *v, Vector3 *res);
-void func_0203aa74(dBgW_KcMbgSclY *self, Vector3 *v, Vector3 *res);
-s32 func_0203aad0(dBgW_KcMbgSclY *self);
-
 /* Shared math workers.
    local extern: no header in include/ declares them. */
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
@@ -62,17 +58,17 @@ void dBgW_KcMbgSclY::SetScaleY(Fix12i newScaleY) {
     invScaleY = func_02053200(scaleY);
 }
 
-// @symbol func_0203aad0
-extern "C" s32 func_0203aad0(dBgW_KcMbgSclY *self) {
-    return self->scaleY;
+// @symbol _ZN14dBgW_KcMbgSclY9GetScaleYEv
+s32 dBgW_KcMbgSclY::GetScaleY() {
+    return scaleY;
 }
 
 /* World -> collider space: the parent's inverse-scale matrix, then a divide
  * out of the y stretch. */
-// @symbol func_0203aa74
-extern "C" void func_0203aa74(dBgW_KcMbgSclY *self, Vector3 *worldPos, Vector3 *localPos) {
-    MulVec3Mat4x3(worldPos, &self->invScaledMat, localPos);
-    Fix12i inverseVerticalScale = self->invScaleY;
+// @symbol _ZN14dBgW_KcMbgSclY15ToColliderSpaceEP7Vector3S1_
+void dBgW_KcMbgSclY::ToColliderSpace(Vector3 *worldPos, Vector3 *localPos) {
+    MulVec3Mat4x3(worldPos, &invScaledMat, localPos);
+    Fix12i inverseVerticalScale = invScaleY;
     if (inverseVerticalScale == 0x1000)
         return;
     localPos->y = FX_MUL(localPos->y, inverseVerticalScale);
@@ -80,17 +76,17 @@ extern "C" void func_0203aa74(dBgW_KcMbgSclY *self, Vector3 *worldPos, Vector3 *
 
 /* Collider -> world space: fold the y stretch in first, then the parent's
  * scaled matrix. */
-// @symbol func_0203aa10
-extern "C" void func_0203aa10(dBgW_KcMbgSclY *self, Vector3 *localPos, Vector3 *worldPos) {
+// @symbol _ZN14dBgW_KcMbgSclY12ToWorldSpaceEP7Vector3S1_
+void dBgW_KcMbgSclY::ToWorldSpace(Vector3 *localPos, Vector3 *worldPos) {
     Vector3 scaledPos;
     scaledPos.x = localPos->x;
     scaledPos.y = localPos->y;
     scaledPos.z = localPos->z;
-    if (self->scaleY != 0x1000) {
-        Fix12i verticalScale = self->scaleY;
+    if (scaleY != 0x1000) {
+        Fix12i verticalScale = scaleY;
         scaledPos.y = FX_MUL(scaledPos.y, verticalScale);
     }
-    MulVec3Mat4x3(&scaledPos, &self->newScaledMat, worldPos);
+    MulVec3Mat4x3(&scaledPos, &newScaledMat, worldPos);
 }
 
 // @symbol _ZN14dBgW_KcMbgSclY9Virtual08Ev
@@ -114,8 +110,8 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Gnd &ground) {
     }
     lineEnd.y -= probeHeight;
 
-    func_0203aa74(this, &probePos, &localStart);
-    func_0203aa74(this, &lineEnd, &localEnd);
+    ToColliderSpace(&probePos, &localStart);
+    ToColliderSpace(&lineEnd, &localEnd);
 
     dBgCh_Lin ray;
     ray.SetObjAndLine(localStart, localEnd, 0);
@@ -125,7 +121,7 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Gnd &ground) {
     if (hit != 0) {
         Vector3 clsnPos = ray.GetClsnPos();
         Vector3 worldPos;
-        func_0203aa10(this, &clsnPos, &worldPos);
+        ToWorldSpace(&clsnPos, &worldPos);
         (dBgPi &)ground = (dBgPi &)ray;
         ground.clsnY = worldPos.y;
         ground.hasClsn = 1;
@@ -154,7 +150,7 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
     int hit;
 
     sphere.GetCentre(centre);
-    func_0203aa74(this, &centre, &localCentre);
+    ToColliderSpace(&centre, &localCentre);
 
     inverseScale = invScale;
     localRadius = FX_MUL(sphere.radius, inverseScale);
@@ -212,8 +208,8 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
 int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray) {
     Vector3 start, end, worldPos;
 
-    func_0203aa74(this, &ray.start, &start);
-    func_0203aa74(this, &ray.lineEnd, &end);
+    ToColliderSpace(&ray.start, &start);
+    ToColliderSpace(&ray.lineEnd, &end);
 
     u8 hadClsn = ray.hasClsn;
     data_020a0d0c.SetObjAndLine(start, end, 0);
@@ -224,7 +220,7 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray) {
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
         Fix12i dist = data_020a0d0c.clsnDist;
-        func_0203aa10(this, &data_020a0d60, &worldPos);
+        ToWorldSpace(&data_020a0d60, &worldPos);
         ray.SetClsnPos(worldPos);
         ray.clsnDist = dist;
         /* the dBgPi base sub-object, at +0x10 */

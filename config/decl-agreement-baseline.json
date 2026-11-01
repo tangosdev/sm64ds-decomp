@@ -20330,13 +20330,6 @@
         "param:#2 unsigned int"
       ]
     },
-    "func_ov064_0211929c": {
-      "src/unnamed/ov064/func_ov064_021192bc.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "return:int"
-      ]
-    },
     "func_ov065_02119210": {
       "include/decl_common.h": [
         "param:#1 int"
