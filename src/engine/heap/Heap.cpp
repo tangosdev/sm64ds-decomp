@@ -1258,7 +1258,7 @@ void Deallocate(void *ptr)
 #ifndef _MSC_VER
 struct VecOff {
     int x, y, z;
-    VecOff(int px, int py, int pz, int) {
+    VecOff(int px, int py, int pz) {
         x = px;
         y = py;
         z = pz;
@@ -1267,5 +1267,5 @@ struct VecOff {
 };
 typedef char VecOff_size_must_be_0xc[sizeof(VecOff) == 0xc ? 1 : -1];
 
-VecOff data_020a0ebc(0, 0, 0, 0);
+VecOff data_020a0ebc(0, 0, 0);
 #endif
