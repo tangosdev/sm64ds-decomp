@@ -99,7 +99,11 @@ int pause_variant(void)
     int v = 0;
     switch (st) {
     case 0: case 1: v = V_CASTLE; break;
-    case 2: case 3: v = V_COURSE; break;
+    /* PAUSEAIR2: the tick the pause opens, Behavior runs PS_Init and PS_Update case 2 together, so this (asked at the end of that tick) sees
+       state 2 with case 2's answer already in data_0209f1ec: 3 for the plates, 0xb for the reduced pause. Reading it here gives the air page
+       from the first picture on, where filing all of state 2 as the course page showed the course planks for one tick first. */
+    case 2: v = data_0209f1ec == 0xb ? V_AIR : V_COURSE; break;
+    case 3: v = V_COURSE; break;
     case 4: case 5: v = 0; break;      /* VS pause: the ROM draws its own until a real lobby proof exists (PAUSEFIX1 F3) */
     case 7: case 8: v = data_0209f218 ? V_CTL_SEL : V_CTL; break;
     case 9: case 0xa: v = V_OPT; break;
