@@ -18,3 +18,17 @@ Fix12i Vec2_Len(const Vec2 *v) {
     return cstd::sqrt((u64)sq);
 }
 }
+
+/* Zero 2D origin. Retail __sinit_020750ec stores both words and registers
+   NullDestructor_0203d47c, the empty ~Vector2. */
+#ifndef SM64DS_PLATFORM_PC
+struct ZeroVector2 {
+    int x;
+    int y;
+
+    ZeroVector2() : x(0), y(0) {}
+    ~ZeroVector2();
+};
+
+ZeroVector2 data_020a0ec8;
+#endif

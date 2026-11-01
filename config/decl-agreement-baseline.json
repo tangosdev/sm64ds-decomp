@@ -1590,11 +1590,6 @@
         "param:#1 Jump3DVec *"
       ]
     },
-    "NullDestructor_0203d47c": {
-      "src/unnamed/arm9/0207/__sinit_020750ec.c": [
-        "kind:data"
-      ]
-    },
     "NumStars": {
       "src/game/actors/d_a_mugen_bgm.cpp": [
         "return:unsigned int"

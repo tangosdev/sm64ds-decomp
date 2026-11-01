@@ -1250,6 +1250,9 @@ src/unnamed/arm9/0203/func_0203d5dc.cpp:
 src/Vec2_Len.cpp:
     complete
     .text start:0x0203d614 end:0x0203d630
+    .init start:0x020750ec end:0x0207511c
+    .ctor start:0x02086bac end:0x02086bb0
+    .bss start:0x020a0ec8 end:0x020a0edc
 
 src/unnamed/arm9/0203/func_0203d630.c:
     complete
@@ -3405,10 +3408,6 @@ src/unnamed/arm9/0207/__sinit_02074e80.c:
 src/unnamed/arm9/0207/__sinit_020750b4.c:
     complete
     .init start:0x020750b4 end:0x020750b8
-
-src/unnamed/arm9/0207/__sinit_020750ec.c:
-    complete
-    .init start:0x020750ec end:0x0207511c
 
 src/unnamed/arm9/0207/__sinit_02075150.c:
     complete
