@@ -79,7 +79,7 @@ extern CLPS_Block data_ov063_0211ebd8;
 extern "C" {
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
+void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 unsigned short DecIfAbove0_Short(unsigned short *p);
