@@ -139,13 +139,17 @@ src/engine/sound/Sound.cpp:
     .ctor start:0x02086b6c end:0x02086b70
     .bss start:0x0209b53c end:0x0209ba84
 
-src/GetLevelPart.c:
+src/GetLevelPart.cpp:
     complete
     .text start:0x02013548 end:0x02013558
+    .init start:0x02074dbc end:0x02074dc0
+    .ctor start:0x02086b70 end:0x02086b74
 
-src/SublevelToLevel.c:
+src/SublevelToLevel.cpp:
     complete
     .text start:0x02013558 end:0x02013568
+    .init start:0x02074dc0 end:0x02074dc4
+    .ctor start:0x02086b74 end:0x02086b78
 
 src/engine/save/SaveData.cpp:
     complete
@@ -709,9 +713,11 @@ src/IsPlayerWarping.c:
     complete
     .text start:0x02020414 end:0x0202043c
 
-src/unnamed/arm9/0202/func_0202043c.c:
+src/unnamed/arm9/0202/func_0202043c.cpp:
     complete
     .text start:0x0202043c end:0x0202044c
+    .init start:0x02074e80 end:0x02074e84
+    .ctor start:0x02086b84 end:0x02086b88
 
 src/unnamed/arm9/0202/func_0202044c.c:
     complete
@@ -3375,14 +3381,6 @@ src/typeinfo.cpp:
     complete
     .text start:0x0207359c end:0x020736f4
 
-src/unnamed/arm9/0207/__sinit_02074dbc.c:
-    complete
-    .init start:0x02074dbc end:0x02074dc0
-
-src/unnamed/arm9/0207/__sinit_02074dc0.c:
-    complete
-    .init start:0x02074dc0 end:0x02074dc4
-
 src/unnamed/arm9/0207/__sinit_02074e0c.c:
     complete
     .init start:0x02074e0c end:0x02074e44
@@ -3390,10 +3388,6 @@ src/unnamed/arm9/0207/__sinit_02074e0c.c:
 src/unnamed/arm9/0207/__sinit_02074e44.c:
     complete
     .init start:0x02074e44 end:0x02074e80
-
-src/unnamed/arm9/0207/__sinit_02074e80.c:
-    complete
-    .init start:0x02074e80 end:0x02074e84
 
 src/unnamed/arm9/0207/__sinit_02075054.c:
     complete
