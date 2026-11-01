@@ -75,6 +75,7 @@ import asm_policy  # noqa: E402
 import delaunder  # noqa: E402
 import demangle as D  # noqa: E402
 import msvc_arms  # noqa: E402
+import pad_layout_audit  # noqa: E402
 import srcpath as SP  # noqa: E402
 
 
@@ -567,6 +568,11 @@ def audit():
         "local_body_no_include": tot(no_include),
         "local_body_no_include_cpp": no_include["cpp"],
         "pad_layout": tot(pad),
+        # A file-scope src/ struct named like a file-scope include/ struct: a private
+        # copy of a class the headers already describe. The two counts above are per
+        # FILE and cannot tell a helper struct from a copy of `Particle::System`;
+        # pad_layout_audit parses the bodies and names each one (`--list shadows`).
+        "header_shadows": pad_layout_audit.audit()["header_shadows"],
     }
     r["codegen_hacks"] = {"inline_asm": tot(asm_files),
                           "launder_or_forced": tot(launder),
@@ -612,6 +618,7 @@ RATCHET = [
     ("shadow_decls", "local_struct_body"),
     ("shadow_decls", "local_body_no_include"),
     ("shadow_decls", "pad_layout"),
+    ("shadow_decls", "header_shadows"),
     ("codegen_hacks", "inline_asm"),
     ("codegen_hacks", "launder_or_forced"),
     ("codegen_hacks", "launder_sites"),
@@ -661,6 +668,8 @@ def summary(r):
                f"   ({sd['local_body_no_include_cpp']} in .cpp)"
                "  invisible to affected_src.py")
     out.append(f"    char pad[0x..] layout    {sd['pad_layout']:6d}")
+    out.append(f"    copy of a header class   {sd['header_shadows']:6d}"
+               "   pad_layout_audit.py --list shadows")
     out.append("")
     out.append("codegen hacks")
     out.append(f"    inline asm               {ch['inline_asm']:6d}")

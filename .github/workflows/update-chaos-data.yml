@@ -22,6 +22,8 @@ on:
       - "tools/chaos_db_ci.py"
       - "tools/chaosviewer.config.json"
       - "tools/langmode_audit.py"
+      # pad_layout_audit.py computes langmode's header_shadows, so editing it re-banks.
+      - "tools/pad_layout_audit.py"
       # tiers.py renders the README tier block, so editing it must republish.
       # The LINKED stamp needs no line of its own:
       # config/** already covers config/port_linkage.json.
