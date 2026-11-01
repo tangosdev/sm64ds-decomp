@@ -2316,12 +2316,12 @@ void scene_sprite_xf(char *o);
    same translation the drawing page's pencil gets in scene_sprite_xf. The plates and the page stay centred; at 4:3 the translation
    is zero and nothing is set. file_back_shift_units() is the one number the sprite, the cursor arrow and the touch piece share. */
 static bool file_back_obj(int x, int y) { return x >= 180 && y >= 136; }
-/* ANCHOR1 (design, Tango's choice): SM64DS_FILEOPT_EDGE=1 mirrors the FILE OPTIONS plank to the window's LEFT edge with the back arrow's inset (4 units),
-   so the bottom row balances the moved back arrow. Default off: the plank stays centred with the plates. */
+/* ANCHOR1 / FILEOPT2 (Tango's choice): the FILE OPTIONS plank is mirrored to the window's LEFT edge with the back arrow's inset (4 units),
+   so the bottom row balances the moved back arrow. On by default; SM64DS_FILEOPT_EDGE=0 keeps it centred with the plates (tests). */
 static bool fileopt_edge_on()
 {
     static int v = -1;
-    if (v < 0) { const char *e = getenv("SM64DS_FILEOPT_EDGE"); v = (e && *e && *e != '0') ? 1 : 0; }
+    if (v < 0) { const char *e = getenv("SM64DS_FILEOPT_EDGE"); v = (e && *e == '0') ? 0 : 1; }
     return v != 0;
 }
 static bool fileopt_obj(int x, int y) { return x >= 28 && x <= 156 && y >= 136; }       /* the plank's object (id 1c) and its cursor sit inside its DS box */
@@ -2650,7 +2650,7 @@ void file_pages_build(int variant, MenuLayout *L)
     if (variant == V_FILES) menu_online_add_tint(L, onl_facts_of(L));      /* NAME1: the online file select keeps the green over its water */
     int ip_fo = -1;
     if (split && fileopt_edge_on()) {
-        /* the knob: the lower left is cut into the part left of the plank, the part between the plank and the arrow's corner (both centred, so the
+        /* FILE OPTIONS on the left edge: the lower left is cut into the part left of the plank, the part between the plank and the arrow's corner (both centred, so the
            old plank place maps to nothing), and the plank's own piece on the window's left edge (DS x 24 .. 160, its left edge 4 units in) */
         MenuPiece a = pg; a.s.x = 0; a.s.y = 133; a.s.w = 24; a.s.h = 59; a.ax = MENU_AX_C; a.ay = MENU_AY_T; a.dx = (short)(0 + 12 - 128); a.dy = 133;
         ip_lo = menu_add_piece(L, a);
@@ -2709,7 +2709,7 @@ void file_pages_build(int variant, MenuLayout *L)
         ar.bg = 1; ar.hostimg = MENU_IMG_ARROW_ORANGE; ar.lden = 1; ar.lnum = 1; ar.fw = (short)dw; ar.fh = (short)dh;
         ar.fx = (short)(L->w / 2 + (g_oa_x - 11 - 128) * un / ud);
         if (ip_bk >= 0 && file_back_obj(g_oa_x, g_oa_y + 8)) ar.fx = (short)(ar.fx + (L->w - 256 * un / ud) / 2);      /* ANCHOR1: the cursor arrow points at the back arrow where it is now */
-        else if (ip_bk >= 0 && fileopt_edge_on() && fileopt_obj(g_oa_x, g_oa_y + 8)) ar.fx = (short)(ar.fx - ((L->w - 256 * un / ud) / 2 + 24 * un / ud));      /* ... and at the FILE OPTIONS plank where the knob put it */
+        else if (ip_bk >= 0 && fileopt_edge_on() && fileopt_obj(g_oa_x, g_oa_y + 8)) ar.fx = (short)(ar.fx - ((L->w - 256 * un / ud) / 2 + 24 * un / ud));      /* ... and at the FILE OPTIONS plank on the left edge */
         ar.fy = (short)((g_oa_y - 8) * un / ud + (L->h - 192 * un / ud) / 2);
         menu_add_piece(L, ar);
     }
