@@ -153,6 +153,11 @@ struct dBgCh_Actr : dBgCh {
     int TestLeftGroundFlag();    /* mFlags & 0x40 */
     void SetJustHitGroundFlag(); /* mFlags |= 0x20 */
     dBgPi *GetSphereResult();    /* mSphereClsn as its dBgPi base */
+    /* Both the raycast line and the sphere collider take the flag. */
+    void StartIgnoringVanishSurfaces();
+    void StopIgnoringVanishSurfaces();
+    void StartIgnoringType14Walls();
+    void StopIgnoringType14Walls();
 
     /* --- const accessors, 0x02035564..0x02035727. `const` is not a style
            choice here: these mangle _ZNK, and without it the compiler emits

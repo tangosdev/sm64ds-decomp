@@ -19270,17 +19270,6 @@
         "return:int"
       ]
     },
-    "func_ov002_020da9d4": {
-      "src/_ZN7daPly_c13St_Throw_MainEv.cpp": [
-        "return:void"
-      ],
-      "src/_ZN7daPly_c15St_Grabbed_InitEv.cpp": [
-        "return:void"
-      ],
-      "src/unnamed/ov002/func_ov002_020d91e0.c": [
-        "return:void"
-      ]
-    },
     "func_ov002_020daa74": {
       "src/_ZN7daPly_c13St_Throw_MainEv.cpp": [
         "return:void"
@@ -19386,11 +19375,6 @@
       ],
       "src/_ZN7daPly_c17St_SlopeJump_InitEv.cpp": [
         "return:int"
-      ]
-    },
-    "func_ov002_020e2ea0": {
-      "src/unnamed/ov002/func_ov002_020e2c84.c": [
-        "param:#1 char *"
       ]
     },
     "func_ov002_020e3078": {

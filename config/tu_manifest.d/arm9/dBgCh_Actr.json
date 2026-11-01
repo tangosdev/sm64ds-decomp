@@ -286,28 +286,28 @@
       "ordinal": 37
     },
     {
-      "symbol": "func_020357a0",
+      "symbol": "_ZN10dBgCh_Actr23StopIgnoringType14WallsEv",
       "address": "0x020357a0",
       "size": "0x00000020",
       "legacy_source": "src/func_020357a0.c",
       "ordinal": 38
     },
     {
-      "symbol": "func_020357c0",
+      "symbol": "_ZN10dBgCh_Actr24StartIgnoringType14WallsEv",
       "address": "0x020357c0",
       "size": "0x00000020",
       "legacy_source": "src/func_020357c0.c",
       "ordinal": 39
     },
     {
-      "symbol": "func_020357e0",
+      "symbol": "_ZN10dBgCh_Actr26StopIgnoringVanishSurfacesEv",
       "address": "0x020357e0",
       "size": "0x00000020",
       "legacy_source": "src/func_020357e0.c",
       "ordinal": 40
     },
     {
-      "symbol": "func_02035800",
+      "symbol": "_ZN10dBgCh_Actr27StartIgnoringVanishSurfacesEv",
       "address": "0x02035800",
       "size": "0x00000020",
       "legacy_source": "src/func_02035800.c",

@@ -917,32 +917,28 @@ void dBgCh_Actr::StopDetectingWater()
     ((dBgCh *)&mSphereClsn)->StopDetectingWater();
 }
 
-// @symbol func_02035800
-extern "C" void func_02035800(dBgCh_Actr *self)
-{
-    self->mRaycastLine.StartIgnoringVanishSurfaces();
-    self->mSphereClsn.StartIgnoringVanishSurfaces();
+// @symbol _ZN10dBgCh_Actr27StartIgnoringVanishSurfacesEv
+void dBgCh_Actr::StartIgnoringVanishSurfaces() {
+    mRaycastLine.StartIgnoringVanishSurfaces();
+    mSphereClsn.StartIgnoringVanishSurfaces();
 }
 
-// @symbol func_020357e0
-extern "C" void func_020357e0(dBgCh_Actr *self)
-{
-    self->mRaycastLine.StopIgnoringVanishSurfaces();
-    self->mSphereClsn.StopIgnoringVanishSurfaces();
+// @symbol _ZN10dBgCh_Actr26StopIgnoringVanishSurfacesEv
+void dBgCh_Actr::StopIgnoringVanishSurfaces() {
+    mRaycastLine.StopIgnoringVanishSurfaces();
+    mSphereClsn.StopIgnoringVanishSurfaces();
 }
 
-// @symbol func_020357c0
-extern "C" void func_020357c0(dBgCh_Actr *self)
-{
-    self->mRaycastLine.StartIgnoringType14Walls();
-    self->mSphereClsn.StartIgnoringType14Walls();
+// @symbol _ZN10dBgCh_Actr24StartIgnoringType14WallsEv
+void dBgCh_Actr::StartIgnoringType14Walls() {
+    mRaycastLine.StartIgnoringType14Walls();
+    mSphereClsn.StartIgnoringType14Walls();
 }
 
-// @symbol func_020357a0
-extern "C" void func_020357a0(dBgCh_Actr *self)
-{
-    self->mRaycastLine.StopIgnoringType14Walls();
-    self->mSphereClsn.StopIgnoringType14Walls();
+// @symbol _ZN10dBgCh_Actr23StopIgnoringType14WallsEv
+void dBgCh_Actr::StopIgnoringType14Walls() {
+    mRaycastLine.StopIgnoringType14Walls();
+    mSphereClsn.StopIgnoringType14Walls();
 }
 
 // @symbol func_02035798
