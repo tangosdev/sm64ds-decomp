@@ -189,7 +189,7 @@ extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 extern "C" int data_0209e650;
 extern "C" int RandomIntInternal(int* seed);
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern int Vec3_Dist(const void *a, const void *b);
 extern int ApproachAngle(s16 *cur, s16 target, int div, int band, int maxStep);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(Vector3 *v);

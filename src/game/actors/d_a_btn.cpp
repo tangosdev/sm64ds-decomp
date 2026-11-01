@@ -111,7 +111,7 @@ void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Vec3_Asr(void *d, void *s, int sh);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+int Vec3_Dist(void *a, void *b);
 s16 Vec3_HorzAngle(const void *a, const void *b);
 int Vec3_HorzDist(const void *a, const void *b);
 

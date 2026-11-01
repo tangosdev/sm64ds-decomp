@@ -163,7 +163,7 @@ void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *
 int func_ov002_020df7f4(void *c);
 int func_02012694(int a, void *pos);
 int ApproachAngle(short *p, int target, int a, int b, int c);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+int Vec3_Dist(const void *a, const void *b);
 short Vec3_HorzAngle(const void *a, const void *b);
 short Vec3_VertAngle(const void *a, const void *b);
 unsigned int RandomIntInternal(void *seed);
