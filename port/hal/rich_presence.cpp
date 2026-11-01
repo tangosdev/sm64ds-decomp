@@ -72,7 +72,9 @@ std::atomic<int> g_scene{-2};   /* -2 nothing yet, -1 a course, else the menu / 
 std::atomic<int> g_started{0};
 
 struct CourseName { int id; const char *name; };
-/* retail course names by ROM level id (the same ids as walk_window.cpp's debug
+/* retail course names by ROM level id, as the cartridge's own course list
+   spells them (data/message/msg_data_eng.bin, the block from " 1 BOB-OMB
+   BATTLEFIELD"; course per level from SUBLEVEL_LEVEL_TABLE at 0x02075298) (the same ids as walk_window.cpp's debug
    level select, whose derivation is written beside port_level_table[] in
    hal/level_boot.cpp). An id not listed says "In a course". */
 const CourseName kCourses[] = {
@@ -96,7 +98,7 @@ const CourseName kCourses[] = {
     { 18, "Dire, Dire Docks" },
     { 19, "Snowman's Land" },
     { 20, "Snowman's Land, Igloo" },
-    { 21, "Dire, Dire Docks, City" },
+    { 21, "Wet-Dry World" },
     { 22, "Tall, Tall Mountain" },
     { 23, "Tall, Tall Mountain Slide" },
     { 24, "Tiny-Huge Island, Huge" },
@@ -104,23 +106,23 @@ const CourseName kCourses[] = {
     { 26, "Tiny-Huge Island, Cave" },
     { 27, "Tick Tock Clock" },
     { 28, "Rainbow Ride" },
-    { 30, "Secret Aquarium" },
-    { 31, "Wing Cap Tower" },
-    { 32, "Vanish Cap Under the Moat" },
-    { 33, "Metal Cap Switch" },
-    { 34, "Wing Mario Over the Rainbow" },
+    { 30, "The Secret Aquarium" },
+    { 31, "? Switch" },
+    { 32, "The Secret Under the Moat" },
+    { 33, "Behind the Waterfall" },
+    { 34, "Over the Rainbows" },
     { 35, "Bowser in the Dark World" },
     { 36, "Bowser in the Dark World, Boss" },
     { 37, "Bowser in the Fire Sea" },
     { 38, "Bowser in the Fire Sea, Boss" },
     { 39, "Bowser in the Sky" },
     { 40, "Bowser in the Sky, Boss" },
-    { 44, "Mario's Key Course" },
-    { 45, "Mario's Key Arena" },
-    { 46, "Luigi's Key Course" },
-    { 47, "Luigi's Key Arena" },
-    { 48, "Wario's Key Course" },
-    { 49, "Wario's Key Arena" },
+    { 44, "Goomboss Battle" },
+    { 45, "Goomboss Battle, Boss" },
+    { 46, "Big Boo Battle" },
+    { 47, "Big Boo Battle, Boss" },
+    { 48, "Chief Chilly Challenge" },
+    { 49, "Chief Chilly Challenge, Boss" },
     { 50, "Rec Room" },
 };
 
