@@ -158,7 +158,6 @@ dScMg3DEsp_c::~dScMg3DEsp_c()
 /* ---- dMg3DEspAnimSet_c ------------------------------------------------- */
 
 #pragma push
-#pragma opt_strength_reduction off
 
 struct Obj_777c {
     void* vt;
@@ -648,7 +647,6 @@ void dScMg3DEsp_c::SlotDampen(int i) {
 
 #pragma push
 #pragma opt_common_subs off
-#pragma opt_strength_reduction off
 // @symbol _ZN12dScMg3DEsp_c8SlotKickEi
 void dScMg3DEsp_c::SlotKick(int i)
 {
@@ -810,7 +808,6 @@ void dScMg3DEsp_c::UpdateSlots() {
 }
 
 #pragma push
-#pragma opt_strength_reduction off
 // @symbol _ZN12dScMg3DEsp_c10ResetSlotsEv
 void dScMg3DEsp_c::ResetSlots() {
     int i;

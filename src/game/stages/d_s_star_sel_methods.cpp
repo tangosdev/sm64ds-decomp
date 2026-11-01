@@ -956,7 +956,6 @@ enum ZN12dScStarSel_c13InitResourcesEv_AssetId {
  * arms, which is what keeps the value in the register the ternary lands in (r3)
  * and lets the loop's +0x23 temp take a fresh r1. */
 #pragma push
-#pragma opt_loop_invariants off
 
 extern "C" {
 void Enable3dEngines(void);

@@ -2803,7 +2803,6 @@ void Trmp3DMario_StateWalkIn(int *c) {
 }
 }
 #pragma push
-#pragma optimize_for_size on
 // ---- Trmp3DMario_EnterWalkIn
 namespace ns_020cc9fc {
 extern "C" {}
@@ -3109,7 +3108,6 @@ void Trmp3DMario_StartAll(void) {
 }
 }
 #pragma push
-#pragma opt_common_subs off
 // ---- Trmp3DMario_DrawAll
 namespace ns_020cd270 {
 extern "C" {

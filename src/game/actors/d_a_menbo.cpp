@@ -810,7 +810,6 @@ int daMenbo_c::Behavior()
     }
     return 1;
 }
-#pragma opt_common_subs off
 
 // @symbol _ZN9daMenbo_c13InitResourcesEv
 /* dExtSimpleModel_c, four anims, both collision volumes, then the water line.

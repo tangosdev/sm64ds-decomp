@@ -10,7 +10,6 @@ extern unsigned char data_0209d4f8;
 extern int data_0209d518;
 extern OSThread data_0209d5b8;
 
-#pragma opt_common_subs off
 #pragma opt_propagation off
 int func_0201a244(AsyncJobCallback callback, int argument, int priority, int stackBase,
                   int stackSize) {

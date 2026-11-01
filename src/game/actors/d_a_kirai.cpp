@@ -155,7 +155,6 @@ void daKirai_c::Rearm() {
 
 /* Spent: wait until every sibling has gone off, then re-arm whichever bomb
    (this one or a sibling) is nearest the player. */
-#pragma opt_strength_reduction off
 #pragma opt_common_subs off
 // @symbol _ZN9daKirai_c10StateSpentEv
 void daKirai_c::StateSpent() {
@@ -205,7 +204,6 @@ void daKirai_c::StateSpent() {
     bestActor->Rearm();
 }
 #pragma opt_common_subs on
-#pragma opt_strength_reduction on
 
 /* Exploding: swell, fade and rise for 0x1c frames, then disarm. */
 // @symbol _ZN9daKirai_c14StateExplodingEv
