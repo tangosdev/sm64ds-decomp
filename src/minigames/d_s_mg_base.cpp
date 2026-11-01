@@ -3910,7 +3910,11 @@ dScMgBase_c::~dScMgBase_c()
  * followed by the class-specific operator delete. Each is spelled here in
  * terms of the one host destructor, called qualified so it is a direct call.
  * mwccarm never defines _MSC_VER, so nothing here reaches the cartridge
- * object. */
+ * object. These two definitions stay: MSVC will not emit the Itanium D2
+ * and D0 from ~dScMgBase_c(), and the host calls those symbols. The MgFx
+ * state tables are already &MgFx::UpdateDrift and &MgFx::UpdateFlyTo;
+ * sMgFxUpdateTable is .bss in the ROM, which is where a pointer-to-member
+ * initializer lands. */
 extern "C" dScMgBase_c *_ZN11dScMgBase_cD2Ev(dScMgBase_c *thiz)
 {
     thiz->dScMgBase_c::~dScMgBase_c();
