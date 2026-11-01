@@ -100,7 +100,7 @@ int ContinueKuppaScriptIfNecessary();
 void ResetKuppaScript();
 
 /* daDemo_c's and the camera's command dispatchers. */
-void func_ov002_020f7d74(daDemo_c *demo, u8 *command, int first, int last);
+int func_ov002_020f7d74(daDemo_c *demo, u8 *command, int first, int last);
 int func_02008550(dCamera_c *camera, u8 *command, int first, int last);
 void func_0201f32c(int messageID);
 void LoadLevelNoReturn(int levelID, u32 entrance, u32 arg2, u32 arg3);

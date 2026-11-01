@@ -45,7 +45,7 @@ extern int func_0203d974(void);
 extern int func_0205117c(int a);
 extern int func_0203d7d4(int a);
 extern int func_02048a1c(int *a0, int kind, int id);
-extern void func_02048a18(int x, int y);
+extern int func_02048a18(int x, int y);
 extern void func_02048af4(void *p, int b, int c);
 extern void func_02048d80(void *obj, int *p);
 extern void func_02048c30(void *a, int b, int c);
@@ -837,11 +837,12 @@ extern "C" int func_02011ee4(void *c)
 }
 
 // @symbol func_02011e94
-extern "C" void func_02011e94(int *out)
-{
+extern "C" void *func_02011e94(int *out) {
     int r = func_02051074(data_0209b498);
-    func_020511d4(data_0209b498, r, 0, 0, 0);
-    if (out != 0) *out = r;
+    void *block = (void *)func_020511d4(data_0209b498, r, 0, 0, 0);
+    if (out != 0)
+        *out = r;
+    return block;
 }
 
 // @symbol Player_PlaySoundEffect

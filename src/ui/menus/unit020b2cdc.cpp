@@ -84,7 +84,7 @@ extern short data_ov007_020d7de8[];
 extern short data_ov007_020d7dea[];
 
 extern int func_ov007_020b79e4(void);
-extern void func_ov007_020bdeb0(int a);
+extern int func_ov007_020bdeb0(int a);
 extern int func_ov007_020c1da0(int i);
 extern void func_ov007_020c2090(Ov007Pad *pad);
 extern void func_ov007_020c3d1c(void *self);

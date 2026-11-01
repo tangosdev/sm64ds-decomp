@@ -71,7 +71,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ax);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern void MulVec3Mat4x3(const void *in, const void *m, void *out);
 extern void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
-extern void func_02012694(int id, void *v);
+extern int func_02012694(int id, void *v);
 extern int data_020a0e68[];
 extern int data_0209e650[];
 extern short data_02082214[];

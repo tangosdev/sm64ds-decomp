@@ -529,7 +529,9 @@ void Ov004_Deallocate(void *ptr)
 namespace s20adc68 {
 extern "C" {
 extern int LoadFile(void);
-void Ov004_LoadFile(void) { LoadFile(); }
+void *Ov004_LoadFile(void) {
+    return (void *)LoadFile();
+}
 }
 }
 
@@ -3121,7 +3123,7 @@ namespace s20b19f0 {
 extern "C" {
 s32 GetGameLanguage(void);
 void RenderOamMainScreen(int a, int b, int c, int d, int e);
-void Mg_DrawNumber(int a, int b, void *c, int d, int e, int f, int g);
+int Mg_DrawNumber(int a, int b, void *c, int d, int e, int f, int g);
 /* Draws sprite word 8 at (0x20, 0xc) and `value`, starting at x
    0x48, through Mg_DrawNumber. */
 int Mg_DrawTopLeftCounter(void* value){
@@ -3137,7 +3139,7 @@ namespace s20b1a5c {
 extern "C" {
 s32 GetGameLanguage(void);
 void RenderOamMainScreen(int a, int b, int c, int d, int e);
-void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
+int Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern int sMgCounterMaxByDigits[];
 /* Draws a0, capped at sMgCounterMaxByDigits[a1], right-aligned at (0xf4,
    0xc), and sprite word 4 to its left at an x that a1 sets. */
@@ -3610,7 +3612,7 @@ extern "C" {
 extern void Mg_DisableAllBanks(void);
 extern void Mg_ResetBgOffsets(void);
 extern s32 GetGameLanguage(void);
-extern void Ov004_LoadFile(int id);
+extern void *Ov004_LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Ov004_Deallocate(void *p);
 extern void Mg_ResetOverlays(void);

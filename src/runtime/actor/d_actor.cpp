@@ -1201,7 +1201,7 @@ Vector3 dActor_c::OnAimedAtWithEggReturnVec()
 /* local extern: defined in d_a_obj_number.cpp, which has no header for it. It
    returns void there; the ROM tail-calls it, so SpawnNumber returns whatever
    it leaves in r0. */
-extern "C" void func_ov002_020f0918(daObjNumber_c *number, dActor_c *owner);
+extern "C" dActor_c *func_ov002_020f0918(daObjNumber_c *number, dActor_c *owner);
 /* Spawns actor 0x14a, daObjNumber_c, the number that pops up over an actor. */
 dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble, u16 delay,
                                 dActor_c *owner) {

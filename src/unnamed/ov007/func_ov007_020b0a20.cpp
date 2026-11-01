@@ -45,7 +45,7 @@ extern void func_ov007_020be980(Ov007Figure *fig, int anim, int a2);
 extern int func_ov007_020be964(Ov007Figure *fig);
 extern void func_ov007_020c0638(void *layer, int x, int y, unsigned short tile);
 extern void func_ov007_020b797c(void);
-extern void func_ov007_020bdeb0(int idx);
+extern int func_ov007_020bdeb0(int idx);
 extern void func_ov007_020bde70(int idx, int arg);
 extern void func_ov007_020b131c(void);
 

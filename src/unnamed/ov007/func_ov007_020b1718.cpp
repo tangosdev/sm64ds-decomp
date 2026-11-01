@@ -35,7 +35,7 @@ typedef struct Vec3Words {
  * movge first and rotates the block's coloring.
  */
 
-extern void func_ov007_020bdeb0(int a);
+extern int func_ov007_020bdeb0(int a);
 extern void func_ov007_020b257c(void);
 extern void func_ov007_020b2454(void *a, void *b);
 extern void func_ov007_020bce70(short n, int frames);
