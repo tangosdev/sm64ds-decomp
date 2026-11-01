@@ -1,5 +1,5 @@
-extern int FS_Init(int);
-extern int func_02017e60(void);
+extern void FS_Init(int);
+extern void func_02017e60(void);
 
 /* Bring up the file system at boot (func_0201a054): FS_Init is
    NitroSDK's FS_Init (once only, guarded by data_020a8058), here with DMA

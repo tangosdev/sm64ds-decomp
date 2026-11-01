@@ -70,7 +70,7 @@ extern "C" {
     int OS_GetArenaLo(u32 arena);
     int OS_GetArenaHi(u32 arena);
     int OS_InitAlloc(u32 arena, int lo, int hi, int maxHeaps);
-    int OS_SetArenaLo(u32 arena, int lo);
+    void OS_SetArenaLo(u32 arena, int lo);
     void *OS_AllocFromArenaLo(u32 arena, int size, int align);
 }
 

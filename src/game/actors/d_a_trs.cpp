@@ -146,7 +146,7 @@ extern Matrix4x3 data_020a0e68;
 /* local extern: func_ov063_02118b2c returns what func_0201267c leaves in
    r0 -- a tail call -- which Sound.h's void declaration cannot spell. */
 namespace tail_267c {
-extern "C" int func_0201267c(u32, const void *);
+extern "C" void func_0201267c(u32, const void *);
 }
 
 /* The seven file handles __sinit_ov063_0211e29c constructs. SharedFilePtr
@@ -186,7 +186,7 @@ int RandomIntInternal(int *seed);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
 int func_020092c4(void *cam, void *out, void *target);
-int func_02012694(int a, void *p, ...);
+void func_02012694(int a, void *p, ...);
 u16 func_0201277c(int a);
 extern s16 data_02082214[];
 extern void *data_0209f318;

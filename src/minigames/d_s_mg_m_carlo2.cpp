@@ -56,7 +56,7 @@ extern unsigned char data_0209d454;
 extern unsigned char data_0209d45c;
 
 int  RandomIntInternal(void* seed);
-int  RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 int  GetGameLanguage(void);
 int  LoadFile(int handle);

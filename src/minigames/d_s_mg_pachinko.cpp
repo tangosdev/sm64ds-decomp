@@ -178,7 +178,7 @@ extern "C" {
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawBigNumber(int x, int y, int h, int a, int b, int c, int d);
 extern int  Mg_GetSubmittedScore(void);
-extern int  Mg_DrawTopRightCounter(int a, int b);
+extern void Mg_DrawTopRightCounter(int a, int b);
 extern int  Mg_GetTopRecord(void);
 extern int  Mg_DrawTopLeftCounter(int score);
 extern void Mg_SubmitScore(int self);

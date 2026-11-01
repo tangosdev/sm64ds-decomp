@@ -1143,7 +1143,7 @@ void daObjHatenaBlock_c::func_ov102_02149288(){
    spawned, func_ov102_0214ad14 (daBmb_c: stores ClosestPlayer as its chase
    target) and func_ov102_0214b384(a, 0x3c) (daBmb_c.h: only shortens the
    fuse). Callers discard the result of that helper. */
-extern "C" void* func_ov102_0214b384(void*, int);
+extern "C" void func_ov102_0214b384(void *, int);
 void daObjHatenaBlock_c::func_ov102_02149220() {
     Vector3 v;
     func_ov102_02149684((int *)&v, this);

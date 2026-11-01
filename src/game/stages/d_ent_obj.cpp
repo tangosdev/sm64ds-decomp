@@ -107,7 +107,7 @@ void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-int func_0201251c(int a, int b, void *pos, int c);
+void func_0201251c(int a, int b, void *pos, int c);
 unsigned int func_02012174(unsigned int a, unsigned int b);
 void func_020167a4(void *model);
 long long __aeabi_uidiv(unsigned int n, int d);

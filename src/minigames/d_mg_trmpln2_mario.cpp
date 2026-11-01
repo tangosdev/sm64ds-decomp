@@ -1684,7 +1684,7 @@ void Trmp3DMario_ApplyGravity(char *o) {
 // ---- Trmp3DMario_StateKnockedOut
 namespace ns_020cb16c {
 extern "C" {
-extern int Trmp3DMario_EnterOffstage(void *c);
+extern void Trmp3DMario_EnterOffstage(void *c);
 // @symbol Trmp3DMario_StateKnockedOut
 void Trmp3DMario_StateKnockedOut(int *c) {
     if (MARIO3D(c)->mPos.y >= -0x120000)
@@ -3180,7 +3180,7 @@ void Trmp3DMario_UpdateAll(void) {
 // ---- Trmp3DMario_ResetAll
 namespace ns_020cd424 {
 extern "C" {
-extern int Trmp3DMario_SetTuning(int sz);
+extern void Trmp3DMario_SetTuning(int sz);
 extern void Trmp3DMario_SetSpawnHeight(int n);
 extern void Trmp3DMario_EnterOffstage(char *c);
 extern void Trmp3DMario_UpdateMatrix(char *o);

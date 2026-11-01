@@ -45,7 +45,7 @@ extern int func_0203d974(void);
 extern int func_0205117c(int a);
 extern int func_0203d7d4(int a);
 extern int func_02048a1c(int *a0, int kind, int id);
-extern int func_02048a18(int x, int y);
+extern void func_02048a18(int x, int y);
 extern void func_02048af4(void *p, int b, int c);
 extern void func_02048d80(void *obj, int *p);
 extern void func_02048c30(void *a, int b, int c);

@@ -1,4 +1,4 @@
-extern int func_0205e280(char *c);
+extern void func_0205e280(char *c);
 
 int func_0205e7e0(unsigned int *thiz, unsigned char *out)
 {
