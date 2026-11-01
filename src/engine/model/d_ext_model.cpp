@@ -142,9 +142,10 @@ extern dExtShadowModel_c *data_0209cef4;
 extern u8 data_0209ceec;
 /* The two shadow model files live in the shared overlay-0/1 region: arm9's own
  * symbols.txt rows for 0x020ad524/0x020ad560 sit past .bss and name nothing
- * the link defines, so the ov000 spelling is the resolvable one. */
-extern BMD_File data_ov000_020ad524;
-extern BMD_File data_ov000_020ad560;
+ * the link defines. In overlay 0 both addresses fall inside asset path
+ * strings, so the objects are overlay 1's .data. */
+extern BMD_File data_ov001_020ad524;
+extern BMD_File data_ov001_020ad560;
 /* local extern: no header declares these; the shadow scale matrix and the two
    opacity passes RenderAll draws with */
 void func_0203c178(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz);
@@ -832,12 +833,12 @@ int dExtShadowModel_c::DoSetFile(char *file, int a, int b) {
 
 // @symbol _ZN17dExtShadowModel_c10InitCuboidEv
 int dExtShadowModel_c::InitCuboid() {
-    return SetFile(&data_ov000_020ad524, 1, -1);
+    return SetFile(&data_ov001_020ad524, 1, -1);
 }
 
 // @symbol _ZN17dExtShadowModel_c12InitCylinderEv
 int dExtShadowModel_c::InitCylinder() {
-    return SetFile(&data_ov000_020ad560, 1, -1);
+    return SetFile(&data_ov001_020ad560, 1, -1);
 }
 
 /* MEASURED 2026-10-26: a real method reproduces 0x02015e64/0x58 exactly. The

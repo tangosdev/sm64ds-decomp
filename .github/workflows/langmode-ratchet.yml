@@ -45,6 +45,7 @@ on:
       - "tools/langmode_audit.py"
       - "tools/demangle.py"
       - "tools/msvc_arms.py"
+      - "tools/pad_layout_audit.py"
       - "langmode-baseline.json"
       - ".github/workflows/langmode-ratchet.yml"
   workflow_dispatch:

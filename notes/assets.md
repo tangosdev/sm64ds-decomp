@@ -26,7 +26,7 @@ The first command writes two deliberately separate ID layers:
 
 That distinction matters. Calls such as `LoadFile(0x40a)` and the arguments used to
 construct `SharedFilePtr` are runtime handles, not FAT/FNT indices. The game maps
-handles below `0x8000` through the table at [data_ov000_020bd4b8](../config/arm9/overlays/ov000/symbols.txt); confusing the two number spaces gives convincing but incorrect asset names. The source-reference
+handles below `0x8000` through the path table `sAssetPaths` in [InitializeAssetHandleTable.c](../src/runtime/filesystem/InitializeAssetHandleTable.c); confusing the two number spaces gives convincing but incorrect asset names. The source-reference
 report therefore resolves against `AssetHandle.h`, while `NitroFileId.h` is for
 low-level filesystem work.
 
