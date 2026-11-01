@@ -1,11 +1,5 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
+#include "Particle__System.h"
 /*
  * The two player-controlled Mario classes of the trampoline minigames,
  * dMgTrmpln2Mario_c and dMgTrmpln3DMario_c, with their helpers and the
