@@ -10005,6 +10005,9 @@
     "data_ov002_0210da28": {
       "src/game/actors/d_a_star.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_obj_number.cpp": [
+        "return:SharedFilePtr"
       ]
     },
     "data_ov002_0210da38": {
