@@ -1,0 +1,1747 @@
+{
+  "about": "Tango's bro colour labels as the tangOS Studio palette editor shows them: its automatic families (cluster_families: rig part + colour, from the cartridge's nine bro BMDs) with his renames and hand overrides from the Studio's exports/palettes/groups.json (v4) applied, exactly as load_all + rebuild_families do. 'families' is every palette entry's final label; 'seam_blends' are entries the Studio lifts out of every family because they sit on a seam and recolour by following one family (darkened by 'darkness'). Read by port/tools/gen_vs_char_groups.py.",
+  "version": 1,
+  "bros": {
+    "mario": {
+      "renames": [
+        {
+          "auto": "arms+hands white",
+          "name": "Gloves"
+        },
+        {
+          "auto": "eyes blue",
+          "name": "Eye color"
+        },
+        {
+          "auto": "head red",
+          "name": "Hat"
+        },
+        {
+          "auto": "shoes tan",
+          "name": "Shoes"
+        },
+        {
+          "auto": "torso yellow",
+          "name": "Buttons"
+        },
+        {
+          "auto": "torso+arms red",
+          "name": "Undershirt"
+        },
+        {
+          "auto": "torso+legs+shoes blue",
+          "name": "Overalls"
+        }
+      ],
+      "pal_len": {
+        "data/player/mario_model.bmd:mario_body_pl": 336,
+        "data/player/mario_head_cap.bmd:mario_eye_1_pl": 96,
+        "data/player/mario_head_cap.bmd:mario_eye_2_pl": 104,
+        "data/player/mario_head_cap.bmd:mario_eye_3_pl": 48,
+        "data/player/mario_head_cap.bmd:mario_eye_4_pl": 56,
+        "data/player/mario_head_cap.bmd:mario_head_pl": 256,
+        "data/player/mario_head_nocap.bmd:mario_eye_1_pl": 104,
+        "data/player/mario_head_nocap.bmd:mario_eye_2_pl": 96,
+        "data/player/mario_head_nocap.bmd:mario_eye_3_pl": 48,
+        "data/player/mario_head_nocap.bmd:mario_eye_4_pl": 48,
+        "data/player/mario_head_nocap.bmd:mario_head_n_pl": 168
+      },
+      "families": [
+        {
+          "name": "head tan",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_eye_1_pl": [89],
+              "mario_head_pl": [6, 8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31, 44, 45, 54, 58, 59, 88, 89, 90, 92, 96, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 174, 175, 176, 177, 178, 179, 192, 193, 194, 195, 252, 254, 255]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_head_n_pl": [6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 24, 25, 26, 28, 30, 32, 38, 40, 42, 44, 46, 48, 50, 54, 56, 57, 58, 59, 60, 64, 66, 67, 68, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 86, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 102, 103, 104, 105, 106, 107, 118, 130, 150, 164]
+            }
+          }
+        },
+        {
+          "name": "Hat",
+          "part": "head",
+          "renamed": true,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_head_pl": [0, 1, 2, 3, 4, 5, 7, 17, 18, 19, 20, 21, 22, 23, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 47, 48, 49, 51, 52, 53, 57, 67, 68, 69, 70, 71, 72, 73, 81, 82, 83, 84, 85, 86, 87, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 118, 119, 120, 121, 132, 133, 134, 135, 136, 137, 138, 139, 150, 151, 152, 153, 154, 155, 166, 167, 168, 169, 170, 171, 172, 173, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 197, 201, 224, 225, 245, 253]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_head_n_pl": [131, 148, 152, 153, 162]
+            }
+          }
+        },
+        {
+          "name": "head black",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_eye_1_pl": [2, 3, 5, 7, 10, 11],
+              "mario_head_pl": [204, 205, 206, 207, 208, 209, 210, 211, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 233, 234, 235, 236, 237, 238, 239, 240, 241, 248, 249, 250, 251]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_eye_1_pl": [1, 2, 3, 7, 11],
+              "mario_head_n_pl": [39, 41, 43, 109, 110, 112, 113, 114, 115, 116, 117, 119, 120, 121, 123, 124, 125, 126, 127, 128, 129, 133, 139, 140, 141, 142, 143, 144, 145, 147, 151, 159, 160, 161, 163, 165, 166]
+            }
+          }
+        },
+        {
+          "name": "head white",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_head_pl": [16, 32, 36, 46, 50, 62, 63, 66]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_head_n_pl": [111, 149, 167]
+            }
+          }
+        },
+        {
+          "name": "head brown",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_head_pl": [55, 56, 60, 61, 74, 75, 76, 77, 78, 79, 80, 91, 93, 94, 95, 97, 196, 198, 199, 200, 202, 203, 212, 226, 227, 228, 229, 230, 231, 232, 242, 243, 244, 246, 247]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_head_n_pl": [0, 1, 2, 3, 4, 5, 7, 19, 21, 23, 27, 29, 31, 33, 34, 35, 36, 37, 45, 47, 49, 51, 52, 53, 55, 61, 62, 63, 65, 69, 70, 71, 73, 85, 87, 101, 108, 122, 134, 135, 136, 137, 138, 146, 154, 155, 156, 157, 158]
+            }
+          }
+        },
+        {
+          "name": "head gray",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_head_pl": [65]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_head_n_pl": [132]
+            }
+          }
+        },
+        {
+          "name": "eyes tan",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_eye_1_pl": [0, 1, 4, 6, 8, 9, 12, 13, 14, 15, 16, 17, 20, 21, 24, 25, 26, 27, 28, 29, 32, 33, 42, 43, 44, 45, 47, 48, 49, 53, 56, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88],
+              "mario_eye_2_pl": [0, 2, 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 33, 34, 38, 40, 44, 45, 46, 47, 48, 49, 50, 55, 56, 60, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97],
+              "mario_eye_3_pl": [0, 2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45],
+              "mario_eye_4_pl": [0, 2, 4, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 34, 36, 37, 38, 40, 42, 44, 45, 46, 47, 48, 49]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_eye_1_pl": [0, 4, 5, 6, 8, 9, 10, 12, 13, 14, 15, 16, 17, 21, 24, 25, 26, 27, 28, 29, 32, 33, 42, 43, 44, 45, 47, 48, 49, 53, 56, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
+              "mario_eye_2_pl": [0, 2, 3, 4, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 25, 26, 27, 28, 29, 31, 32, 36, 38, 42, 43, 44, 45, 46, 47, 48, 53, 54, 58, 59, 60, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95],
+              "mario_eye_3_pl": [0, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45],
+              "mario_eye_4_pl": [0, 2, 4, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 30, 32, 33, 34, 36, 38, 40, 41, 42, 43, 44, 45]
+            }
+          }
+        },
+        {
+          "name": "eyes dark red",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_eye_2_pl": [1, 5],
+              "mario_eye_3_pl": [1, 5],
+              "mario_eye_4_pl": [3, 39, 41, 43]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_eye_2_pl": [5, 11, 23],
+              "mario_eye_3_pl": [1, 5, 13],
+              "mario_eye_4_pl": [1, 3, 5, 11, 35, 37, 39]
+            }
+          }
+        },
+        {
+          "name": "Eye color",
+          "part": "eyes",
+          "renamed": true,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_eye_1_pl": [19, 22, 23, 35, 36, 38, 51, 52, 54, 55, 57],
+              "mario_eye_2_pl": [43, 53, 57, 59]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_eye_1_pl": [22, 34, 51, 54, 55],
+              "mario_eye_2_pl": [41, 51, 55, 57]
+            }
+          }
+        },
+        {
+          "name": "eyes black",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_eye_1_pl": [90, 91, 92, 93, 94, 95],
+              "mario_eye_2_pl": [9],
+              "mario_eye_3_pl": [3, 27],
+              "mario_eye_4_pl": [1, 5, 13, 21]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_eye_1_pl": [100, 101, 102, 103],
+              "mario_eye_2_pl": [1, 9],
+              "mario_eye_3_pl": [27],
+              "mario_eye_4_pl": [17]
+            }
+          }
+        },
+        {
+          "name": "eyes blue 2",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_eye_2_pl": [36, 37, 39, 52, 54]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_eye_1_pl": [23, 36, 37, 39, 50],
+              "mario_eye_2_pl": [34, 35, 37, 50, 52]
+            }
+          }
+        },
+        {
+          "name": "eyes gray",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_eye_1_pl": [39],
+              "mario_eye_2_pl": [35, 42, 51, 58],
+              "mario_eye_4_pl": [31, 33, 35]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_eye_1_pl": [38, 46],
+              "mario_eye_2_pl": [33, 40, 49, 56],
+              "mario_eye_4_pl": [27, 29, 31]
+            }
+          }
+        },
+        {
+          "name": "eyes white",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_eye_1_pl": [18, 34, 50],
+              "mario_eye_2_pl": [15, 32, 63, 98, 99, 100, 101, 102, 103],
+              "mario_eye_3_pl": [46, 47],
+              "mario_eye_4_pl": [50, 51, 52, 53, 54, 55]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_eye_1_pl": [18, 20, 52],
+              "mario_eye_2_pl": [30, 61],
+              "mario_eye_3_pl": [46, 47],
+              "mario_eye_4_pl": [46, 47]
+            }
+          }
+        },
+        {
+          "name": "eyes dark blue",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/mario_head_cap.bmd": {
+              "mario_eye_1_pl": [41],
+              "mario_eye_2_pl": [41]
+            },
+            "data/player/mario_head_nocap.bmd": {
+              "mario_eye_1_pl": [41],
+              "mario_eye_2_pl": [39]
+            }
+          }
+        },
+        {
+          "name": "Buttons",
+          "part": "torso",
+          "renamed": true,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [164, 166, 178, 180]
+            }
+          }
+        },
+        {
+          "name": "hands red",
+          "part": "hands",
+          "renamed": false,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [23, 251, 257, 278, 279, 307, 313]
+            }
+          }
+        },
+        {
+          "name": "Shoes",
+          "part": "shoes",
+          "renamed": true,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [234, 235, 236, 237, 238, 239, 240, 241, 264, 265, 266, 267, 268, 292, 293, 294, 295, 296, 297, 320, 321]
+            }
+          }
+        },
+        {
+          "name": "Undershirt",
+          "part": "torso+arms",
+          "renamed": true,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [3, 4, 5, 7, 8, 18, 19, 20, 21, 24, 25, 26, 27, 28, 31, 32, 33, 35, 36, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 62, 63, 68, 69, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 93, 98, 99, 100, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 117, 119, 122, 124, 125, 126, 130, 131, 132, 133, 140, 141, 142, 143, 144, 148, 149, 150, 151, 152, 153, 154, 160, 168, 169, 170, 171, 172, 173, 183, 184, 185, 189]
+            }
+          }
+        },
+        {
+          "name": "Overalls",
+          "part": "torso+legs+shoes",
+          "renamed": true,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [1, 2, 6, 29, 30, 34, 37, 60, 61, 64, 65, 71, 73, 90, 91, 92, 94, 95, 101, 102, 103, 116, 118, 120, 121, 127, 128, 129, 134, 135, 136, 137, 138, 139, 145, 146, 147, 155, 156, 157, 158, 159, 161, 162, 163, 165, 167, 174, 175, 176, 177, 179, 181, 182, 188, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229]
+            }
+          }
+        },
+        {
+          "name": "Gloves",
+          "part": "arms+hands",
+          "renamed": true,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [22, 248, 249, 250, 252, 253, 254, 255, 256, 280, 281, 282, 283, 284, 285, 306, 308, 309, 310, 311, 312, 326, 327]
+            }
+          }
+        },
+        {
+          "name": "other red",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [0, 10, 11, 12, 14, 16, 17, 38, 39, 40, 42, 44, 45, 46, 47, 58, 59, 66, 67, 88, 89, 96, 97, 187, 275, 277, 301, 302, 328, 329]
+            }
+          }
+        },
+        {
+          "name": "other tan",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [230, 231, 232, 233, 242, 258, 259, 260, 261, 262, 263, 286, 287, 288, 289, 290, 291, 298, 314, 315, 316, 317, 318, 319, 322]
+            }
+          }
+        },
+        {
+          "name": "other black",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [243, 245, 247, 269, 270, 271, 272, 273, 299, 300, 303, 305, 323, 324, 325]
+            }
+          }
+        },
+        {
+          "name": "other dark blue",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [9, 13, 15, 41, 43, 186, 218, 219]
+            }
+          }
+        },
+        {
+          "name": "other white",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [330, 331, 332, 333, 334, 335]
+            }
+          }
+        },
+        {
+          "name": "other gray",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/mario_model.bmd": {
+              "mario_body_pl": [274, 304]
+            }
+          }
+        }
+      ],
+      "seam_blends": [
+        {
+          "file": "data/player/mario_head_cap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 30,
+          "follows": "eyes tan",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/mario_head_cap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 31,
+          "follows": "eyes tan",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/mario_head_cap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 37,
+          "follows": "Eye color",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/mario_head_cap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 40,
+          "follows": "eyes tan",
+          "darkness": 0.3993
+        },
+        {
+          "file": "data/player/mario_head_cap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 46,
+          "follows": "eyes tan",
+          "darkness": 0.9895
+        },
+        {
+          "file": "data/player/mario_head_cap.bmd",
+          "pal": "mario_head_pl",
+          "index": 64,
+          "follows": "head white",
+          "darkness": 0.8445
+        },
+        {
+          "file": "data/player/mario_head_cap.bmd",
+          "pal": "mario_head_pl",
+          "index": 223,
+          "follows": "Hat",
+          "darkness": 0.4046
+        },
+        {
+          "file": "data/player/mario_head_nocap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 19,
+          "follows": "eyes blue 2",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/mario_head_nocap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 30,
+          "follows": "eyes tan",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/mario_head_nocap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 31,
+          "follows": "eyes tan",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/mario_head_nocap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 35,
+          "follows": "eyes blue 2",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/mario_head_nocap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 40,
+          "follows": "eyes tan",
+          "darkness": 0.3853
+        },
+        {
+          "file": "data/player/mario_head_nocap.bmd",
+          "pal": "mario_eye_1_pl",
+          "index": 57,
+          "follows": "eyes dark blue",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/mario_model.bmd",
+          "pal": "mario_body_pl",
+          "index": 70,
+          "follows": "Overalls",
+          "darkness": 0.823
+        },
+        {
+          "file": "data/player/mario_model.bmd",
+          "pal": "mario_body_pl",
+          "index": 123,
+          "follows": "Overalls",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/mario_model.bmd",
+          "pal": "mario_body_pl",
+          "index": 244,
+          "follows": "other black",
+          "darkness": 0.2391
+        },
+        {
+          "file": "data/player/mario_model.bmd",
+          "pal": "mario_body_pl",
+          "index": 246,
+          "follows": "Gloves",
+          "darkness": 0.4394
+        },
+        {
+          "file": "data/player/mario_model.bmd",
+          "pal": "mario_body_pl",
+          "index": 276,
+          "follows": "other gray",
+          "darkness": 1.0
+        }
+      ],
+      "blend_pairs": []
+    },
+    "luigi": {
+      "renames": [
+        {
+          "auto": "body dark blue",
+          "name": "Overalls"
+        },
+        {
+          "auto": "body green",
+          "name": "Undershirt"
+        },
+        {
+          "auto": "eyes blue",
+          "name": "Eye color"
+        },
+        {
+          "auto": "hands white",
+          "name": "Gloves"
+        },
+        {
+          "auto": "head dark green",
+          "name": "Hat"
+        },
+        {
+          "auto": "head light blue",
+          "name": "white"
+        },
+        {
+          "auto": "shoes brown",
+          "name": "Shoes"
+        },
+        {
+          "auto": "torso yellow",
+          "name": "Buttons"
+        }
+      ],
+      "pal_len": {
+        "data/player/luigi_model.bmd:luigi_body_1_pl": 288,
+        "data/player/luigi_model.bmd:luigi_body_2_pl": 280,
+        "data/player/luigi_head_cap.bmd:luigi_eye_1_pl": 80,
+        "data/player/luigi_head_cap.bmd:luigi_eye_2_pl": 80,
+        "data/player/luigi_head_cap.bmd:luigi_eye_3_pl": 40,
+        "data/player/luigi_head_cap.bmd:luigi_eye_4_pl": 88,
+        "data/player/luigi_head_cap.bmd:luigi_eye_5_pl": 48,
+        "data/player/luigi_head_cap.bmd:luigi_head_1_pl": 160,
+        "data/player/luigi_head_cap.bmd:luigi_head_2_pl": 152,
+        "data/player/luigi_head_nocap.bmd:luigi_eye_1_pl": 80,
+        "data/player/luigi_head_nocap.bmd:luigi_eye_2_pl": 80,
+        "data/player/luigi_head_nocap.bmd:luigi_eye_3_pl": 40,
+        "data/player/luigi_head_nocap.bmd:luigi_eye_4_pl": 88,
+        "data/player/luigi_head_nocap.bmd:luigi_head_n_pl": 216
+      },
+      "families": [
+        {
+          "name": "head tan",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_head_1_pl": [60, 61, 62, 63, 64, 65, 66, 67, 72, 73, 78, 79, 80, 81, 86, 87, 88, 89, 90, 91, 92, 94, 102, 103, 104, 105, 106, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 130, 131, 132, 133, 134, 135, 136, 137, 138, 140, 141, 142, 143, 144, 145, 146, 148, 149, 150, 151, 152, 153, 154, 155],
+              "luigi_head_2_pl": [6, 54, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 74, 75, 78, 79, 80, 81, 82, 83, 84, 90, 91, 92, 96, 97, 98, 99, 100, 102, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 118, 120, 121, 122, 123, 124, 125, 126, 127, 128, 130, 131, 132, 133, 134, 136, 137, 138, 139, 140, 141, 142, 143, 144]
+            },
+            "data/player/luigi_head_nocap.bmd": {
+              "luigi_head_n_pl": [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 44, 45, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 98, 99, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 116, 117, 118, 119, 120, 122, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 152, 153, 154, 155, 156, 157, 158, 159, 160, 162, 163, 166, 168, 169, 170, 171, 172, 173, 174, 176, 178, 179, 180, 182, 183, 184, 185, 186, 187, 188, 189, 190, 192, 193, 194, 196, 197, 202, 203, 204, 205, 206, 208, 210, 212, 213]
+            }
+          }
+        },
+        {
+          "name": "Hat",
+          "part": "head",
+          "renamed": true,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_head_1_pl": [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 21, 23, 25, 26, 27, 29, 31, 33, 35, 36, 37, 39, 41, 43, 45, 46, 47, 48, 49, 51, 53, 54, 55, 56, 57, 58, 59, 68, 69, 70, 71, 74, 75, 76, 77, 82, 83, 84, 85, 96, 97, 98, 99, 100, 101, 108, 109],
+              "luigi_head_2_pl": [0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 15, 17, 20, 21, 23, 24, 27, 29, 30, 31, 33, 35, 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 60, 61, 62, 63, 70, 71, 72, 73, 76, 77, 86, 87, 88, 89, 94, 95]
+            },
+            "data/player/luigi_head_nocap.bmd": {
+              "luigi_head_n_pl": [59, 73, 100, 164, 177, 181, 191, 198, 207, 211]
+            }
+          }
+        },
+        {
+          "name": "head white",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_head_1_pl": [1, 12, 22, 24, 30, 42, 44, 156, 157, 158, 159],
+              "luigi_head_2_pl": [1, 12, 16, 18, 19, 22, 25, 28, 38, 55, 146, 147, 148, 149, 150, 151]
+            },
+            "data/player/luigi_head_nocap.bmd": {
+              "luigi_head_n_pl": [7, 11, 43, 47, 83, 121, 151, 167, 175, 201, 209, 214, 215]
+            }
+          }
+        },
+        {
+          "name": "head black",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_head_1_pl": [93, 95, 107, 129, 139, 147],
+              "luigi_head_2_pl": [85, 93, 101, 103, 117, 119, 129, 135, 145]
+            },
+            "data/player/luigi_head_nocap.bmd": {
+              "luigi_head_n_pl": [97, 101, 115, 123, 139, 161, 165, 195, 200]
+            }
+          }
+        },
+        {
+          "name": "white",
+          "part": "head",
+          "renamed": true,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_head_1_pl": [18, 20, 28, 32, 34, 38, 40, 50, 52]
+            },
+            "data/player/luigi_head_nocap.bmd": {
+              "luigi_head_n_pl": [199]
+            }
+          }
+        },
+        {
+          "name": "head gray",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_head_2_pl": [32, 34, 36]
+            }
+          }
+        },
+        {
+          "name": "eyes tan",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_eye_1_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19, 20, 21, 23, 24, 26, 27, 28, 30, 31, 34, 40, 41, 46, 47, 48, 52, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75],
+              "luigi_eye_2_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 38, 42, 43, 44, 45, 47, 48, 50, 54, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77],
+              "luigi_eye_3_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33],
+              "luigi_eye_4_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 56, 58, 60, 62, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81],
+              "luigi_eye_5_pl": [0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 17, 18, 20, 21, 22, 23, 26, 28, 33, 34, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46]
+            },
+            "data/player/luigi_head_nocap.bmd": {
+              "luigi_eye_1_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19, 20, 21, 23, 24, 26, 27, 28, 30, 31, 34, 40, 41, 46, 47, 48, 52, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75],
+              "luigi_eye_2_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 38, 42, 43, 44, 45, 47, 48, 50, 54, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77],
+              "luigi_eye_3_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33],
+              "luigi_eye_4_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 56, 58, 60, 62, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
+            }
+          }
+        },
+        {
+          "name": "eyes white",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_eye_1_pl": [13, 18, 22, 32, 44, 76, 77, 78, 79],
+              "luigi_eye_2_pl": [15, 34, 46, 78, 79],
+              "luigi_eye_3_pl": [34, 35, 36, 37, 38, 39],
+              "luigi_eye_4_pl": [15, 55, 82, 83, 84, 85, 86, 87],
+              "luigi_eye_5_pl": [3, 9, 15, 19, 31, 32, 35, 47]
+            },
+            "data/player/luigi_head_nocap.bmd": {
+              "luigi_eye_1_pl": [13, 44, 76, 77, 78, 79],
+              "luigi_eye_2_pl": [15, 34, 46, 78, 79],
+              "luigi_eye_3_pl": [34, 35, 36, 37, 38, 39],
+              "luigi_eye_4_pl": [15, 55, 82, 83, 84, 85, 86, 87]
+            }
+          }
+        },
+        {
+          "name": "Eye color",
+          "part": "eyes",
+          "renamed": true,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_eye_1_pl": [25, 33, 35, 37, 38, 39, 42, 45, 50, 51],
+              "luigi_eye_2_pl": [37, 49, 52, 53],
+              "luigi_eye_5_pl": [24, 25, 27, 29, 30]
+            },
+            "data/player/luigi_head_nocap.bmd": {
+              "luigi_eye_1_pl": [22, 25, 32, 33, 35, 37, 38, 39, 42, 45, 50, 51],
+              "luigi_eye_2_pl": [37, 49, 52, 53]
+            }
+          }
+        },
+        {
+          "name": "eyes dark blue",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_eye_1_pl": [49, 53],
+              "luigi_eye_2_pl": [39, 40, 41, 51],
+              "luigi_eye_5_pl": [16, 37]
+            },
+            "data/player/luigi_head_nocap.bmd": {
+              "luigi_eye_1_pl": [18, 49, 53],
+              "luigi_eye_2_pl": [39, 40, 41, 51]
+            }
+          }
+        },
+        {
+          "name": "eyes gray",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_head_cap.bmd": {
+              "luigi_eye_1_pl": [29, 36],
+              "luigi_eye_2_pl": [55],
+              "luigi_eye_4_pl": [57, 59, 61, 63]
+            },
+            "data/player/luigi_head_nocap.bmd": {
+              "luigi_eye_1_pl": [29, 36],
+              "luigi_eye_2_pl": [55],
+              "luigi_eye_4_pl": [57, 59, 61, 63]
+            }
+          }
+        },
+        {
+          "name": "Buttons",
+          "part": "torso",
+          "renamed": true,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [136, 138, 160, 162]
+            }
+          }
+        },
+        {
+          "name": "Gloves",
+          "part": "hands",
+          "renamed": true,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [16, 18, 19, 21, 22, 23, 42, 44, 45, 46, 47, 48, 49, 66, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 94, 95, 96, 97, 98, 99, 100, 101, 102, 120, 121, 277]
+            }
+          }
+        },
+        {
+          "name": "hands light blue",
+          "part": "hands",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [20]
+            }
+          }
+        },
+        {
+          "name": "Shoes",
+          "part": "shoes",
+          "renamed": true,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [144, 146, 148, 149, 150, 151, 168, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 186, 187, 188, 189, 196, 198, 199, 200, 201, 202, 203, 208, 209, 219, 223, 225]
+            }
+          }
+        },
+        {
+          "name": "shoes dark green",
+          "part": "shoes",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [222, 224]
+            }
+          }
+        },
+        {
+          "name": "torso+shoes dark green",
+          "part": "torso+shoes",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [9, 51, 111, 125, 131, 139]
+            }
+          }
+        },
+        {
+          "name": "Undershirt",
+          "part": "body",
+          "renamed": true,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [0, 2, 4, 5, 6, 8, 10, 11, 12, 14, 17, 26, 28, 30, 31, 32, 36, 37, 38, 50, 52, 54, 55, 60, 61, 62, 64, 67, 80, 86, 87, 88, 90, 92, 93, 104, 105, 108, 112, 114, 116, 118, 124, 132, 133, 140, 141, 142, 143, 152, 156, 164, 166, 167, 212, 214, 232, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 250, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 264, 265, 266, 267, 268, 269, 270, 271, 272, 276, 278, 279, 280, 281]
+            }
+          }
+        },
+        {
+          "name": "Overalls",
+          "part": "body",
+          "renamed": true,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [1, 3, 7, 13, 15, 27, 29, 33, 40, 41, 53, 56, 57, 63, 65, 82, 83, 89, 91, 106, 107, 109, 110, 115, 117, 119, 126, 127, 128, 129, 130, 134, 135, 137, 145, 153, 154, 155, 157, 158, 159, 161, 163, 165, 169, 180, 181, 183, 184, 185, 190, 191, 192, 193, 194, 195, 197, 206, 207, 210, 211, 213, 215, 228, 229, 230, 231, 233, 246, 247, 248, 249, 251, 263, 273, 274, 275]
+            }
+          }
+        },
+        {
+          "name": "other green",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [34, 35, 58, 59, 78, 84, 85],
+              "luigi_body_2_pl": [0, 1, 2, 3, 4, 5, 6, 8, 10, 11, 12, 14, 24, 26, 30, 31, 34, 35, 36, 37, 38, 40, 43, 52, 53, 54, 55, 58, 59, 60, 61, 62, 64, 67, 76, 77, 78, 82, 83, 84, 85, 86, 88, 90, 91, 102, 103, 106, 110, 111, 112, 114, 124, 125, 130, 131, 132, 133, 142, 146, 154, 156, 157, 200, 202, 210, 212, 214, 224, 226, 227, 228, 230, 231, 232, 233, 234, 235, 236, 237, 242, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 256, 257, 258, 259, 260, 262, 263, 266, 268, 269, 270, 271, 272, 273, 274, 275]
+            }
+          }
+        },
+        {
+          "name": "other light blue",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_2_pl": [7, 13, 15, 27, 29, 32, 41, 45, 56, 57, 63, 69, 80, 81, 87, 89, 93, 104, 105, 107, 108, 113, 115, 117, 120, 121, 122, 123, 126, 127, 135, 143, 144, 145, 147, 148, 149, 151, 153, 155, 159, 171, 172, 173, 180, 181, 183, 192, 193, 194, 195, 198, 199, 201, 203, 216, 217, 218, 219, 220, 221, 222, 223, 225, 238, 239, 240, 241, 243, 255, 261, 264, 265, 267]
+            }
+          }
+        },
+        {
+          "name": "other yellow",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [122, 204, 205, 217, 221, 227],
+              "luigi_body_2_pl": [128, 134, 136, 138, 139, 140, 141, 150, 152, 158, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 174, 175, 176, 177, 178, 179, 182, 184, 185, 186, 187, 188, 189, 190, 191, 196, 197, 205, 207, 209, 211, 213, 215]
+            }
+          }
+        },
+        {
+          "name": "other white",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [24, 147, 216, 218, 220, 282, 283, 284, 285, 286, 287],
+              "luigi_body_2_pl": [16, 17, 18, 19, 20, 22, 23, 33, 42, 44, 46, 47, 48, 66, 68, 70, 72, 74, 92, 94, 96, 98, 100, 101, 118, 137, 204, 206, 208, 229, 276, 277, 278, 279]
+            }
+          }
+        },
+        {
+          "name": "other gray",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_2_pl": [21, 49, 50, 51, 71, 73, 75, 95, 97, 99]
+            }
+          }
+        },
+        {
+          "name": "other dark teal",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_2_pl": [9, 28, 39, 65, 79, 116]
+            }
+          }
+        },
+        {
+          "name": "other dark green",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [25, 123],
+              "luigi_body_2_pl": [25, 119, 129]
+            }
+          }
+        },
+        {
+          "name": "other dark teal 2",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/luigi_model.bmd": {
+              "luigi_body_1_pl": [182],
+              "luigi_body_2_pl": [109, 170]
+            }
+          }
+        }
+      ],
+      "seam_blends": [
+        {
+          "file": "data/player/luigi_head_cap.bmd",
+          "pal": "luigi_eye_1_pl",
+          "index": 43,
+          "follows": "eyes tan",
+          "darkness": 0.5733
+        },
+        {
+          "file": "data/player/luigi_head_cap.bmd",
+          "pal": "luigi_head_2_pl",
+          "index": 14,
+          "follows": "head white",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/luigi_head_cap.bmd",
+          "pal": "luigi_head_2_pl",
+          "index": 26,
+          "follows": "Hat",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/luigi_head_nocap.bmd",
+          "pal": "luigi_eye_1_pl",
+          "index": 43,
+          "follows": "eyes tan",
+          "darkness": 0.5733
+        },
+        {
+          "file": "data/player/luigi_model.bmd",
+          "pal": "luigi_body_1_pl",
+          "index": 39,
+          "follows": "Overalls",
+          "darkness": 0.9775
+        },
+        {
+          "file": "data/player/luigi_model.bmd",
+          "pal": "luigi_body_1_pl",
+          "index": 43,
+          "follows": "Gloves",
+          "darkness": 0.6306
+        },
+        {
+          "file": "data/player/luigi_model.bmd",
+          "pal": "luigi_body_1_pl",
+          "index": 79,
+          "follows": "Overalls",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/luigi_model.bmd",
+          "pal": "luigi_body_1_pl",
+          "index": 81,
+          "follows": "Overalls",
+          "darkness": 0.9998
+        },
+        {
+          "file": "data/player/luigi_model.bmd",
+          "pal": "luigi_body_1_pl",
+          "index": 103,
+          "follows": "Gloves",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/luigi_model.bmd",
+          "pal": "luigi_body_1_pl",
+          "index": 113,
+          "follows": "Overalls",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/luigi_model.bmd",
+          "pal": "luigi_body_1_pl",
+          "index": 226,
+          "follows": "Undershirt",
+          "darkness": 0.6335
+        }
+      ],
+      "blend_pairs": []
+    },
+    "wario": {
+      "renames": [
+        {
+          "auto": "arms+hands white",
+          "name": "Gloves"
+        },
+        {
+          "auto": "head orange 2",
+          "name": "Hat"
+        },
+        {
+          "auto": "shoes dark green",
+          "name": "Shoes"
+        },
+        {
+          "auto": "shoes yellow",
+          "name": "jh4"
+        },
+        {
+          "auto": "torso yellow",
+          "name": "Undershirt"
+        },
+        {
+          "auto": "torso+hands+shoes purple",
+          "name": "Overalls"
+        }
+      ],
+      "pal_len": {
+        "data/player/wario_model.bmd:wario_body_pl": 256,
+        "data/player/wario_head_cap.bmd:wario_eye_1_pl": 104,
+        "data/player/wario_head_cap.bmd:wario_eye_2_pl": 104,
+        "data/player/wario_head_cap.bmd:wario_eye_3_pl": 48,
+        "data/player/wario_head_cap.bmd:wario_eye_4_pl": 104,
+        "data/player/wario_head_cap.bmd:wario_head_pl": 496,
+        "data/player/wario_head_nocap.bmd:wario_eye_1_pl": 88,
+        "data/player/wario_head_nocap.bmd:wario_eye_2_pl": 96,
+        "data/player/wario_head_nocap.bmd:wario_eye_3_pl": 56,
+        "data/player/wario_head_nocap.bmd:wario_eye_4_pl": 88,
+        "data/player/wario_head_nocap.bmd:wario_head_m_pl": 416
+      },
+      "families": [
+        {
+          "name": "head orange",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_head_pl": [15, 22, 147, 149, 151, 152, 153, 156, 157, 160, 161, 165, 178, 182, 185, 186, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 334, 338, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_head_m_pl": [0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 56, 57, 58, 59, 60, 61, 62, 64, 65, 66, 71, 73, 75, 77, 79, 81, 83, 87, 88, 92, 97, 99, 100, 101, 102, 103, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 174, 175, 176, 178, 180, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 232, 233, 234, 236, 237, 238, 240, 241, 242, 244, 245, 246, 247, 248, 249, 254, 258, 272, 273, 274, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411]
+            }
+          }
+        },
+        {
+          "name": "Hat",
+          "part": "head",
+          "renamed": true,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_head_pl": [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 19, 20, 21, 24, 26, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 56, 58, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 81, 83, 88, 90, 92, 93, 94, 95, 96, 97, 99, 104, 108, 109, 110, 113, 114, 115, 116, 117, 118, 119, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 141, 143, 145, 150, 164, 168, 172, 176, 180, 187]
+            }
+          }
+        },
+        {
+          "name": "head light pink",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_head_pl": [169, 173, 177, 181, 306, 330, 332, 333, 340, 341, 342, 343, 344, 345, 346, 348, 349, 350, 351, 384, 388, 389, 390, 392, 393, 424, 462, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_head_m_pl": [69, 85, 89, 93, 218, 250, 252, 253, 260, 261, 262, 263, 264, 265, 266, 268, 269, 270, 271, 300, 304, 305, 306, 308, 309, 340, 378, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395]
+            }
+          }
+        },
+        {
+          "name": "head gray",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_head_pl": [18, 50, 57, 80, 124, 154, 155, 158, 159, 162, 166, 167, 170, 171, 174, 175, 179, 183, 189, 193, 198, 199, 201, 207, 209, 211]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_head_m_pl": [68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 90, 94, 95, 96, 98, 105, 109, 113, 114, 115, 117, 123, 125, 127]
+            }
+          }
+        },
+        {
+          "name": "head white",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_head_pl": [1, 23, 84, 100, 111, 112, 140, 144, 184, 188, 190, 192, 195, 196, 200, 202, 203, 204, 206, 208, 212, 214, 215, 339, 347, 391, 465, 469]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_head_m_pl": [5, 15, 29, 55, 63, 67, 104, 106, 108, 111, 112, 116, 118, 119, 120, 122, 124, 128, 130, 131, 259, 267, 275, 307, 381, 385, 412, 413, 414, 415]
+            }
+          }
+        },
+        {
+          "name": "head black",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_head_pl": [331, 335, 337, 385, 386, 387, 422, 423, 425, 426, 427, 428, 429, 430, 431, 432, 434, 435, 463, 466, 467]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_head_m_pl": [173, 177, 181, 231, 235, 239, 243, 251, 255, 257, 301, 302, 303, 338, 339, 341, 342, 343, 344, 345, 346, 347, 348, 350, 351, 379, 382, 383]
+            }
+          }
+        },
+        {
+          "name": "head blue",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_head_pl": [25, 29, 55, 59, 61, 85, 86, 87, 89, 91, 101, 102, 103, 105, 106, 107, 121, 125]
+            }
+          }
+        },
+        {
+          "name": "head dark pink",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_eye_1_pl": [73],
+              "wario_head_pl": [468]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_head_m_pl": [384]
+            }
+          }
+        },
+        {
+          "name": "head dark green",
+          "part": "head",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_head_pl": [433, 464]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_head_m_pl": [349, 380]
+            }
+          }
+        },
+        {
+          "name": "eyes tan",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_eye_1_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 22, 24, 26, 28, 29, 30, 31, 32, 33, 34, 36, 37, 41, 56, 58, 60, 61, 62, 63, 64, 65, 67, 68, 69, 72, 77, 79, 81, 83, 84, 86, 87, 88, 90, 91, 92, 93, 94, 95, 96, 97],
+              "wario_eye_2_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 22, 23, 24, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 38, 39, 40, 42, 43, 44, 46, 47, 48, 49, 51, 52, 55, 56, 58, 59, 60, 62, 63, 64, 65, 66, 67, 69, 70, 71, 74, 78, 79, 81, 83, 85, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 99],
+              "wario_eye_3_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47],
+              "wario_eye_4_pl": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 22, 24, 26, 28, 29, 30, 31, 32, 33, 34, 36, 37, 55, 56, 58, 60, 61, 62, 63, 64, 65, 67, 68, 69, 71, 72, 76, 77, 79, 81, 83, 84, 86, 87, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_eye_1_pl": [0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 19, 20, 22, 23, 24, 25, 26, 28, 29, 47, 48, 50, 52, 53, 54, 55, 56, 57, 59, 60, 61, 64, 69, 71, 73, 77, 78, 79, 80, 82, 83, 84, 85, 86, 87],
+              "wario_eye_2_pl": [0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 12, 13, 14, 16, 17, 18, 20, 21, 22, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 36, 37, 38, 40, 43, 44, 45, 47, 48, 49, 50, 51, 52, 54, 56, 58, 59, 60, 61, 62, 63, 65, 66, 67, 70, 75, 77, 79, 83, 84, 85, 87, 88, 89, 90, 91, 92, 93],
+              "wario_eye_3_pl": [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14, 16, 17, 18, 19, 20, 22, 23, 24, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49],
+              "wario_eye_4_pl": [0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 19, 20, 22, 23, 24, 25, 26, 28, 29, 33, 47, 48, 50, 52, 53, 54, 55, 56, 57, 59, 60, 61, 65, 69, 71, 73, 77, 78, 79, 80, 82, 83, 84, 85, 86, 87]
+            }
+          }
+        },
+        {
+          "name": "eyes black",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_eye_1_pl": [13, 17, 21, 25, 27, 39, 43, 51, 59],
+              "wario_eye_2_pl": [17, 21, 29, 41, 57, 61],
+              "wario_eye_3_pl": [9, 11, 13, 19, 21, 25, 27, 29],
+              "wario_eye_4_pl": [13, 17, 21, 25, 27, 39, 41, 43, 51, 59]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_eye_1_pl": [11, 13, 17, 21, 35, 43, 51, 63],
+              "wario_eye_2_pl": [11, 15, 19, 23, 27, 39, 41, 57],
+              "wario_eye_3_pl": [9, 11, 21, 27],
+              "wario_eye_4_pl": [11, 13, 17, 21, 35, 43, 51]
+            }
+          }
+        },
+        {
+          "name": "eyes white",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_eye_1_pl": [23, 42, 46, 50, 66, 78, 82, 98, 99, 100, 101, 102, 103],
+              "wario_eye_2_pl": [68, 72, 80, 100, 101, 102, 103],
+              "wario_eye_4_pl": [23, 42, 46, 50, 66, 70, 82, 100, 101, 102, 103]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_eye_1_pl": [5, 30, 34, 38, 40, 42, 62, 70, 74],
+              "wario_eye_2_pl": [5, 68, 76, 94, 95],
+              "wario_eye_3_pl": [50, 51, 52, 53, 54, 55],
+              "wario_eye_4_pl": [5, 34, 38, 40, 42, 62, 66, 70, 74]
+            }
+          }
+        },
+        {
+          "name": "eyes gray",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_eye_1_pl": [40, 44, 49, 53, 76, 80, 85],
+              "wario_eye_2_pl": [50, 54, 75, 82, 86],
+              "wario_eye_4_pl": [38, 40, 44, 45, 47, 49, 53, 73, 75, 80, 85]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_eye_1_pl": [32, 44, 65, 75],
+              "wario_eye_2_pl": [42, 46, 71, 74, 78, 81],
+              "wario_eye_4_pl": [30, 32, 36, 37, 39, 41, 44, 63, 64, 67, 68, 72, 75]
+            }
+          }
+        },
+        {
+          "name": "eyes light teal",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_eye_1_pl": [52, 54, 57, 71, 75, 89],
+              "wario_eye_2_pl": [73, 77, 90],
+              "wario_eye_4_pl": [52, 54, 57, 89]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_eye_1_pl": [45, 46, 49, 76, 81],
+              "wario_eye_2_pl": [55, 64, 69, 73, 80, 82, 86],
+              "wario_eye_4_pl": [45, 46, 49, 76, 81]
+            }
+          }
+        },
+        {
+          "name": "eyes dark red",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_eye_1_pl": [35],
+              "wario_eye_2_pl": [13, 25, 37, 45, 53],
+              "wario_eye_3_pl": [23],
+              "wario_eye_4_pl": [35]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_eye_1_pl": [27, 31],
+              "wario_eye_2_pl": [53],
+              "wario_eye_3_pl": [7, 15],
+              "wario_eye_4_pl": [27, 31]
+            }
+          }
+        },
+        {
+          "name": "eyes light blue",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_eye_1_pl": [38, 48],
+              "wario_eye_2_pl": [76, 84],
+              "wario_eye_4_pl": [48, 78]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_eye_1_pl": [66, 67],
+              "wario_eye_2_pl": [72]
+            }
+          }
+        },
+        {
+          "name": "eyes light teal 2",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_cap.bmd": {
+              "wario_eye_1_pl": [70, 74],
+              "wario_eye_4_pl": [74]
+            },
+            "data/player/wario_head_nocap.bmd": {
+              "wario_eye_1_pl": [58],
+              "wario_eye_4_pl": [58]
+            }
+          }
+        },
+        {
+          "name": "eyes brown",
+          "part": "eyes",
+          "renamed": false,
+          "members": {
+            "data/player/wario_head_nocap.bmd": {
+              "wario_eye_2_pl": [35],
+              "wario_eye_3_pl": [13, 25]
+            }
+          }
+        },
+        {
+          "name": "Undershirt",
+          "part": "torso",
+          "renamed": true,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [0, 14, 15, 18, 19, 21, 42, 43, 46, 47, 50, 51, 52, 53, 54, 55, 59, 68, 69, 76, 77, 78, 79, 82, 83, 84, 85, 86, 87, 91, 92, 93, 94, 95, 96, 97, 99, 100, 101, 103, 104, 105, 107, 109, 110, 111, 112, 113, 116, 117, 119, 120, 121, 122, 123, 125, 126, 127, 135, 137, 138, 139, 143, 154, 155, 172, 173, 174, 176, 177]
+            }
+          }
+        },
+        {
+          "name": "torso pink",
+          "part": "torso",
+          "renamed": false,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [36, 66, 164, 171]
+            }
+          }
+        },
+        {
+          "name": "hands light blue",
+          "part": "hands",
+          "renamed": false,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [128, 146, 214, 215, 221, 222, 223]
+            }
+          }
+        },
+        {
+          "name": "hands orange",
+          "part": "hands",
+          "renamed": false,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [35, 211, 213, 218, 219]
+            }
+          }
+        },
+        {
+          "name": "jh4",
+          "part": "shoes",
+          "renamed": true,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [3, 4, 5, 6, 9, 10, 11, 13, 17, 22, 23, 180, 232, 236, 237, 238, 240, 241, 242, 243, 244, 246]
+            }
+          }
+        },
+        {
+          "name": "Shoes",
+          "part": "shoes",
+          "renamed": true,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [181, 182, 183, 185, 186, 187, 189, 198, 199, 200, 201, 202, 203, 224, 225, 227, 233, 234, 239, 245, 248, 249]
+            }
+          }
+        },
+        {
+          "name": "Overalls",
+          "part": "torso+hands+shoes",
+          "renamed": true,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [7, 8, 44, 45, 48, 49, 80, 88, 89, 98, 106, 114, 118, 124, 129, 130, 131, 134, 140, 141, 144, 145, 147, 148, 149, 150, 151, 152, 153, 156, 157, 158, 159, 160, 161, 162, 163, 167, 170, 175, 178, 179, 184, 188, 192, 193, 197]
+            }
+          }
+        },
+        {
+          "name": "Gloves",
+          "part": "arms+hands",
+          "renamed": true,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [2, 20, 24, 28, 29, 32, 56, 57, 166, 190, 194, 195, 196, 204, 205, 206, 207, 208, 209, 210, 212, 220, 228, 229, 230, 231, 250, 251, 252, 253, 254]
+            }
+          }
+        },
+        {
+          "name": "torso+arms+hands red",
+          "part": "torso+arms+hands",
+          "renamed": false,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [1, 12, 34, 63, 132, 133, 136, 142, 165, 191, 226]
+            }
+          }
+        },
+        {
+          "name": "other yellow",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [25, 27, 30, 31, 33, 38, 39, 40, 41, 64, 65, 67, 71, 73, 75, 168, 169, 255]
+            }
+          }
+        },
+        {
+          "name": "other gray",
+          "part": "other",
+          "renamed": false,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [26, 60, 61, 62, 70, 74]
+            }
+          }
+        }
+      ],
+      "seam_blends": [
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_eye_1_pl",
+          "index": 45,
+          "follows": "eyes black",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_eye_1_pl",
+          "index": 47,
+          "follows": "eyes black",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_eye_1_pl",
+          "index": 55,
+          "follows": "eyes black",
+          "darkness": 0.5758
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 27,
+          "follows": "Hat",
+          "darkness": 0.6943
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 60,
+          "follows": "head blue",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 82,
+          "follows": "Hat",
+          "darkness": 0.9818
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 98,
+          "follows": "head orange",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 120,
+          "follows": "head blue",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 122,
+          "follows": "head orange",
+          "darkness": 0.893
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 123,
+          "follows": "Hat",
+          "darkness": 0.7292
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 142,
+          "follows": "Hat",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 146,
+          "follows": "head white",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 148,
+          "follows": "Hat",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 163,
+          "follows": "head orange",
+          "darkness": 0.5687
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 191,
+          "follows": "head white",
+          "darkness": 0.9117
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 194,
+          "follows": "head white",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 197,
+          "follows": "head orange",
+          "darkness": 0.9255
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 205,
+          "follows": "head white",
+          "darkness": 0.755
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 210,
+          "follows": "head gray",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 213,
+          "follows": "head white",
+          "darkness": 0.8508
+        },
+        {
+          "file": "data/player/wario_head_cap.bmd",
+          "pal": "wario_head_pl",
+          "index": 336,
+          "follows": "head black",
+          "darkness": 0.722
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_eye_1_pl",
+          "index": 33,
+          "follows": "eyes dark red",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_eye_1_pl",
+          "index": 36,
+          "follows": "eyes white",
+          "darkness": 0.8721
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_eye_1_pl",
+          "index": 37,
+          "follows": "eyes black",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_eye_1_pl",
+          "index": 39,
+          "follows": "eyes black",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_eye_1_pl",
+          "index": 41,
+          "follows": "eyes black",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_eye_1_pl",
+          "index": 68,
+          "follows": "eyes tan",
+          "darkness": 0.9615
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_eye_1_pl",
+          "index": 72,
+          "follows": "eyes tan",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_head_m_pl",
+          "index": 91,
+          "follows": "head light pink",
+          "darkness": 0.575
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_head_m_pl",
+          "index": 107,
+          "follows": "head white",
+          "darkness": 0.9117
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_head_m_pl",
+          "index": 110,
+          "follows": "head white",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_head_m_pl",
+          "index": 121,
+          "follows": "head white",
+          "darkness": 0.755
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_head_m_pl",
+          "index": 126,
+          "follows": "head gray",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_head_m_pl",
+          "index": 129,
+          "follows": "head white",
+          "darkness": 0.8508
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_head_m_pl",
+          "index": 179,
+          "follows": "head orange",
+          "darkness": 0.18
+        },
+        {
+          "file": "data/player/wario_head_nocap.bmd",
+          "pal": "wario_head_m_pl",
+          "index": 256,
+          "follows": "head black",
+          "darkness": 0.722
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 16,
+          "follows": "Undershirt",
+          "darkness": 0.8775
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 37,
+          "follows": "Undershirt",
+          "darkness": 0.7911
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 58,
+          "follows": "Undershirt",
+          "darkness": 0.8236
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 72,
+          "follows": "other gray",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 81,
+          "follows": "Undershirt",
+          "darkness": 0.5588
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 90,
+          "follows": "Overalls",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 102,
+          "follows": "Overalls",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 108,
+          "follows": "Overalls",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 115,
+          "follows": "Undershirt",
+          "darkness": 0.6144
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 216,
+          "follows": "Gloves",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 217,
+          "follows": "hands orange",
+          "darkness": 1.0
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 235,
+          "follows": "Shoes",
+          "darkness": 0.6787
+        },
+        {
+          "file": "data/player/wario_model.bmd",
+          "pal": "wario_body_pl",
+          "index": 247,
+          "follows": "Shoes",
+          "darkness": 0.697
+        }
+      ],
+      "blend_pairs": []
+    }
+  }
+}
