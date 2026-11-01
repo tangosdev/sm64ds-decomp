@@ -1,15 +1,18 @@
+//cpp
 #include "types.h"
+/* local extern: no header declares std::terminate. The default-case call
+ * passes the opcode and the 0x80 test. std::terminate() takes neither, so
+ * that call uses the function address cast to void (*)(int, int). The cast
+ * is still a direct bl, and r1 stays live from the test, which pins the
+ * opcode byte to r0. An ellipsis declaration links to a different symbol.
+ * The file stays .c: delinks.txt names this path, and //cpp is what the
+ * build uses to compile it as C++. */
+namespace std {
+void terminate();
+}
+extern "C" {
 extern void *func_02071910(void *a, void *b);
 extern void func_02072dac(void *x, void *b);
-/* Unprototyped on purpose: the two call sites pass different argument lists.
- * The default-case call keeps the 0x80 test result live in r1 at zero cost
- * (r1 is untouched between the dispatch and the call), which is what pins the
- * entry-loop opcode byte to r0. This is std::terminate, spelled by its
- * mangled name: std::terminate() takes no arguments, and the
- * argument-less call does not match. A C++ file would need the same
- * mangled-name spelling (extern "C" _ZSt9terminatev(...) also matches),
- * so the file gains nothing from C++ and stays C. */
-extern void _ZSt9terminatev();
 extern void func_02071864(void *a, void *b);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern u8 *func_02071a50(u8 *p, int *out);
@@ -39,7 +42,7 @@ int func_020729f4(char *c) {
         x = func_02071910(p18, c);
         func_02072dac(x, c);
         if ((*((int *)(c + 4))) == 0) {
-            _ZSt9terminatev();
+            std::terminate();
         }
         func_02071864(p18, c);
         if ((*((u8 **)(c + 8))) == 0) {
@@ -143,7 +146,7 @@ int func_020729f4(char *c) {
     case 1:
     case 14:
     default:
-        _ZSt9terminatev(op & 0x1f, m);
+        (*(void (*)(int, int))(void (*)())std::terminate)(op & 0x1f, m);
         break;
     }
 
@@ -163,4 +166,5 @@ tail:
         } while (op == 1);
     }
     return op;
+}
 }
