@@ -3273,18 +3273,11 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     extern void func_02037318(void*);
     extern void func_020357e0(void*);
     extern void func_02035800(void*);
-    extern void func_02035770(void*);
-    extern void func_02035784(void*);
     extern void func_020357a0(void*);
     extern void func_020357c0(void*);
-    extern void func_020355e8(void*);
-    extern void func_020355fc(void*);
-    extern void func_020355c8(void*);
-    extern void func_020355b4(void*);
     extern void func_ov002_020eed24(void*, void*);
     extern int func_02035638(void*);
     extern void func_020371fc(void *);
-    extern int func_020356c8(void*);
     extern void func_ov002_020cef84(void*);
     extern int func_ov002_020d0580(void*);
     extern daPly_c::State data_ov002_02110514;
@@ -3315,24 +3308,24 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     if (mIsVanish)
         func_02035800(&mMeshClsn);
 
-    func_02035770(&mMeshClsn);
+    mMeshClsn.ClearFlag200();
 
     if (mIsMega)
-        func_02035784(&mMeshClsn);
+        mMeshClsn.SetFlag200();
 
     func_020357a0(&mMeshClsn);
 
     if (c->IsState(data_ov002_02110514))
         func_020357c0(&mMeshClsn);
 
-    func_020355e8(&mMeshClsn);
+    mMeshClsn.ClearFlag400();
 
     {
         int b2;
         b2 = mRidingShell;
         b2 = (b2 != 0);
         if (b2)
-            func_020355fc(&mMeshClsn);
+            mMeshClsn.SetFlag400();
     }
 
     mMeshClsn.ClearLimMovFlag();
@@ -3340,10 +3333,10 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     if (c->IsState(data_ov002_021100f4) && mVertSpeed > 0)
         mMeshClsn.SetLimMovFlag();
 
-    func_020355c8(&mMeshClsn);
+    mMeshClsn.ClearFlag800();
 
     if (c->IsState(data_ov002_021102ec))
-        func_020355b4(&mMeshClsn);
+        mMeshClsn.SetFlag800();
 
     func_020383e4(&mMeshClsn);
 
@@ -3403,7 +3396,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         mIsAirborne = 0;
         mIsInAirState = 0;
     } else {
-        if (func_020356c8(&mMeshClsn))
+        if (mMeshClsn.TestLeftGroundFlag())
             mPeakY = mPosY;
         mIsAirborne = 1;
         mLandSoundPlayed = 0;

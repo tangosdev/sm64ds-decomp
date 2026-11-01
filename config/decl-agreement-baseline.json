@@ -7216,7 +7216,6 @@
         "return:unsigned int"
       ]
     },
-
     "_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE": {
       "src/game/actors/d_a_bg_snm_bdy.cpp": [
         "arity:3"
@@ -17028,19 +17027,6 @@
       "src/unnamed/ov002/func_ov002_020eea84.c": [
         "param:#1 char *",
         "return:char *"
-      ]
-    },
-    "func_0203567c": {
-      "include/dBgCh_Actr.h": [
-        "param:#1 struct dBgCh_Actr *"
-      ],
-      "src/unnamed/ov002/func_ov002_020eeca8.cpp": [
-        "param:#1 void *",
-        "return:void *"
-      ],
-      "src/unnamed/ov002/func_ov002_020eed24.cpp": [
-        "param:#1 void *",
-        "return:void *"
       ]
     },
     "func_02037f44": {
