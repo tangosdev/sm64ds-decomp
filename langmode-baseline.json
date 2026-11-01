@@ -53,6 +53,7 @@
     "unmigrated_total": 4
   },
   "shadow_decls": {
+    "header_shadows": 117,
     "local_body_no_include": 61,
     "local_body_no_include_cpp": 6,
     "local_struct_body": 462,
