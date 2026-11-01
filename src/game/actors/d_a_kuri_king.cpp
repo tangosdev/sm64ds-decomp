@@ -128,7 +128,7 @@ union KuriKingFreeState {
 };
 
 extern "C" void Matrix4x3_FromRotationY(void* m, short ang);
-extern "C" void MulVec3Mat4x3(void* a, void* m, void* b);
+extern "C" void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 extern "C" char* data_0209f318;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" int data_0209e650;

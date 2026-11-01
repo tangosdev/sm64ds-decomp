@@ -344,7 +344,7 @@ void Aea30C::func_ov002_020ae87c(dActor_c* a, dBgCh_Actr*)
     func_ov002_020ae8b8(this, a);
 }
 
-extern "C" s16 Vec3_HorzAngle(const void *v0, const void *v1);
+extern "C" s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 
 // @symbol _ZN6Aea30C19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae844(dActor_c* a, dBgCh_Actr*)

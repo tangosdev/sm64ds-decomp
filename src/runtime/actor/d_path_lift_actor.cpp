@@ -74,11 +74,11 @@ extern s16 data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
 extern u16 DecIfAbove0_Short(u16 *p);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern void Vec3_Sub(void *out, void *a, void *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(void *v);
 extern short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
-extern void Vec3_MulScalar(void *out, void *v, int s);
+extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void SubVec3(void *a, void *b, void *out);
 /* Sound.cpp: plays sound `id' at a camera-space position. */
 void func_02012694(unsigned int id, const Vector3 *camSpacePos);

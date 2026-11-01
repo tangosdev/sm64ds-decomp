@@ -118,7 +118,7 @@ extern int atan2_hold_d_a_snowman_1(int a, int b);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern int Vec3_HorzLen(void *v);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void MulVec3Mat4x3(void *a, void *m, void *b);
+extern void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 }
 
 /* File handles the static initializer constructs. The two models use

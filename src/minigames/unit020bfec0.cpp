@@ -59,7 +59,7 @@ struct Sound {
 void CopyToViewMat(const Matrix4x3 *);
 
 extern "C" {
-void MulVec3Mat4x3(void *, void *, void *);
+void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *, short);
 void Matrix4x3_FromQuaternion(void *, void *);
 void MulVec3Mat3x3(void *, void *, void *);
@@ -78,12 +78,12 @@ void Quaternion_Normalize(void *);
 void Quaternion_SLerp(void *, void *, int, void *);
 int RandomIntInternal(int *);
 void SubVec3(void *, void *, void *);
-void Vec3_Add(void *, void *, void *);
-short Vec3_HorzAngle(const void *, const void *);
+void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
+short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 short Vec3_VertAngle(const void *, const void *);
-void Vec3_MulScalar(void *, void *, int);
+void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
 void Vec3_MulScalarInPlace(int *, int);
-void Vec3_Sub(void *, void *, void *);
+void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void SharedFilePtr_Construct_TexSeq(void *, unsigned int);
 void SharedFilePtr_Destruct_Anim(void *);
 void SharedFilePtr_Destruct_TexSeq(void *);

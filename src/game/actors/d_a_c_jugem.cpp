@@ -102,10 +102,10 @@ extern "C" {
 
 /* math / vector helpers -- no shared header declares these */
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
-int   Vec3_HorzDist(const void *a, const void *b);
-s16   Vec3_HorzAngle(const void *a, const void *b);
+int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+s16   Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 s16   Vec3_VertAngle(const void *a, const void *b);
-void  Vec3_Sub(void *out, const void *a, const void *b);
+void  Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int sh);
 int   Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
 int   LenVec3(const void *v);
@@ -115,7 +115,7 @@ void  Matrix4x3_FromRotationY(void *m, int angY);
 void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
-void  MulVec3Mat4x3(const void *v, const void *m, void *out);
+void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 
 /* local extern: each of these real members takes a Fix12<int> BY VALUE,
    which mwccarm passes differently at the call site than the loose scalar

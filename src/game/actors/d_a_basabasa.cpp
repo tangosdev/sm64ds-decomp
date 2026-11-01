@@ -58,7 +58,7 @@ struct BasabasaAnimationFileHandle : SharedFilePtr {
 extern "C" {
 void func_ov002_020aea30(void *self, void *actor, void *collision);
 void func_02012694(unsigned int id, const Vector3 *pos);
-void MulVec3Mat4x3(const void *in, const void *m, void *out);
+void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 }
 

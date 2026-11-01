@@ -150,7 +150,7 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * earns its registered destructor instead of constant initialization. */
 extern "C" {
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern s16    Vec3_HorzAngle(const void *a, const void *b);
+extern s16    Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern unsigned int RandomIntInternal(int *seed);
 extern int    func_02038414(void *clsn);
 extern void   Matrix4x3_FromRotationY(void *m, int angle);

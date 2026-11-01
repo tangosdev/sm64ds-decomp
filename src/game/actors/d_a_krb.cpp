@@ -223,7 +223,7 @@ extern int data_0209e650;
 extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
 extern int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
 extern int Vec3_HorzLen(const Vector3 *v);
-extern int Vec3_HorzDist(void *a, void *b);
+extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern unsigned char DecIfAbove0_Byte(void *p);
 extern unsigned short DecIfAbove0_Short(void *p);
 extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);

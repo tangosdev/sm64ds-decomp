@@ -118,13 +118,13 @@ extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 unsigned short DecIfAbove0_Short(unsigned short *p);
 extern unsigned int RandomIntInternal(void *s);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern short Vec3_HorzAngle(void *a, void *b);
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int func_02010844(void *unused, Vector3 *v, s16 angle);
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 void func_02012694(int a, void *b, int c);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
-extern void MulVec3Mat4x3(void *in, void *m, void *out);
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 }
 
 /* Actor ID daPopoi_ACTOR_PLAYER (0xbf) is the daPly_c. These int-returning

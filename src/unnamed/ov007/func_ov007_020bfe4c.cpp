@@ -6,7 +6,7 @@
 extern "C" {
 
 extern void InvMat4x3(void *dst, void *out);
-extern void MulVec3Mat4x3(void *v, void *m, void *res);
+extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 extern short data_02082214[];
 
 /* Unprojects the screen point (a, b), in 20.12 pixels, at depth c through

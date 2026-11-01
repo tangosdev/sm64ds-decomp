@@ -101,7 +101,7 @@ extern void func_ov002_020aea30(void* self, void* attacker, dBgCh_Actr* collisio
 extern "C" void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
-extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern SharedFilePtr* data_ov062_0211ced8[2];
 extern SharedFilePtr* data_ov062_0211cee0[2];

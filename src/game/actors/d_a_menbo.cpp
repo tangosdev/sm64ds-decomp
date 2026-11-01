@@ -83,7 +83,7 @@ typedef int LocFix12;
 extern "C" {
 
 void  MulMat4x3Mat4x3(Matrix4x3 *a, Matrix4x3 *b, Matrix4x3 *out);
-void  MulVec3Mat4x3(const Vector3 *v, const void *m, Vector3 *out);
+void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void  Matrix4x3_FromRotationY(void *m, s16 angle);
 void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);

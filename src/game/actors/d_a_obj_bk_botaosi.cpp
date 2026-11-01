@@ -83,7 +83,7 @@ extern "C" {
 int AngleDiff(int a, int b);
 int IsStarCollectedInCurLevel(int starID);
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
+void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 

@@ -177,7 +177,7 @@ extern int RandomIntInternal(int* seed);
 extern int data_0209e650;
 extern void *data_0209f318;
 extern unsigned char IsAreaShowing(int idx);
-extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_02082214[];
 extern void func_02012694(int a, void* p);
 namespace Particle {

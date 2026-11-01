@@ -432,12 +432,12 @@ extern "C" {
 typedef short s16;
 
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern short Vec3_HorzAngle(void *a, void *b);
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(void *a, void *b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void MulVec3Mat4x3(void *in, void *m, void *out);
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern int data_020a0e68[];
@@ -521,12 +521,12 @@ int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
 // @symbol func_ov070_0211fae4
 extern "C" {
 
-extern short Vec3_HorzAngle(void *v0, void *v1);
+extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern short Vec3_VertAngle(void *v1, void *v0);
 extern void ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void MulVec3Mat4x3(void *a, void *m, void *out);
+extern void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *out);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern unsigned int RandomIntInternal(void *seed);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
@@ -681,7 +681,7 @@ extern int Vec3_Dist(void* a, void* b);
 extern u16 DecIfAbove0_Short(u16* p);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* mF, s16 angX);
-extern void MulVec3Mat4x3(void* v, void* m, void* res);
+extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 }
 
 // @symbol _ZN19daPropeller_Heyho_c19func_ov070_0211f6e0Ev
@@ -863,7 +863,7 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
-short Vec3_HorzAngle(void* a, void* b);
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 /* (ApproachAngle: this file's own int-target view, namespace ApproachAngleInt above) */
 short Vec3_VertAngle(void* a, void* b);
 void func_02012694(int a, void* p);

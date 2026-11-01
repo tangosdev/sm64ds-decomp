@@ -209,7 +209,7 @@ extern char gPFlowerCloseModelFile[];
 extern CLPS_Block data_ov002_0210d954;
 
 extern int RandomIntInternal(int *seed);
-extern int Vec3_HorzDist(const void *a, const void *b);
+extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int DecIfAbove0_Short(void *p);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
