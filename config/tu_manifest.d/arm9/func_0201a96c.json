@@ -47,7 +47,7 @@
       "symbol": "data_0209d528",
       "address": "0x0209d528",
       "size": "0xc",
-      "evidence": "compiler-generated destructor-registration node for data_0209d574. mwcc emits it as @58, which ov002 already defines, so the configured address name is kept. Retail __sinit passes it as the third __register_global_object argument.",
+      "evidence": "compiler-generated destructor-registration node for data_0209d574. mwcc emits it as @52, which ov002 already defines, so the configured address name is kept. Retail __sinit passes it as the third __register_global_object argument.",
       "binding": "STB_GLOBAL"
     },
     {
@@ -76,7 +76,7 @@
       "address": "0x02074e0c",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated static initializer for data_0209d574. The instruction words match retail __sinit_02074e0c; the five relocations are func_0201aa18, func_020731dc, the alarm, func_0201aaec and the node."
+      "evidence": "compiler-generated static initializer for data_0209d574. The instruction words match retail __sinit_02074e0c; the five relocations are func_0201aa18, __register_global_object, the alarm, func_0201aaec and the node."
     }
   ],
   "ctor": [
@@ -91,10 +91,10 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "__register_global_object",
-      "canonical_symbol": "func_020731dc",
+      "canonical_symbol": "__register_global_object",
       "canonical_module": "arm9",
       "canonical_address": "0x020731dc",
-      "evidence": "mwcc __register_global_object is the retail call to func_020731dc"
+      "evidence": "mwcc __register_global_object is the retail call to __register_global_object"
     },
     {
       "symbol": "_ZN13WatchdogAlarmD1Ev",
@@ -126,9 +126,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@58",
+      "from": "@52",
       "to": "data_0209d528",
-      "evidence": "compiler temp: the destructor-registration node for data_0209d574. mwcc numbers it @58, which ov002 already defines, so it keeps its configured address name"
+      "evidence": "compiler temp: the destructor-registration node for data_0209d574. mwcc numbers it @52, which ov002 already defines, so it keeps its configured address name"
     }
   ],
   "relocations": [
@@ -147,7 +147,7 @@
       "source": "0x02074e28",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020731dc",
+      "symbol": "__register_global_object",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020731dc"

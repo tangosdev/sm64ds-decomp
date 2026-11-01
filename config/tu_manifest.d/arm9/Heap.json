@@ -636,10 +636,10 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "__register_global_object",
-      "canonical_symbol": "func_020731dc",
+      "canonical_symbol": "__register_global_object",
       "canonical_module": "arm9",
       "canonical_address": "0x020731dc",
-      "evidence": "mwcc __register_global_object is the retail call to func_020731dc"
+      "evidence": "mwcc __register_global_object is the retail call to __register_global_object"
     },
     {
       "symbol": "_ZN6VecOffD1Ev",
@@ -1138,7 +1138,7 @@
       "source": "0x020750e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_020731dc",
+      "symbol": "__register_global_object",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020731dc"

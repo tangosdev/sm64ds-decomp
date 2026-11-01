@@ -54,7 +54,13 @@
       "evidence": "constructor-table word relocates to __sinit_func_02040384.cpp, as retail .p__sinit_02075150 does"
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "sEmptyInit",
+      "disposition": "deadstrip",
+      "reason": "One-byte file-local object whose empty constructor is what makes mwcc emit the bx lr initializer. The initializer does not reference the object, the cartridge has no symbol for it, and leaving the byte in .bss would shift every later symbol. The word at data_020a0df4 stays a gap: this file is linked after cstd_sqrt.cpp, whose .bss is at a higher address."
+    }
+  ],
   "undefined_symbol_aliases": [],
   "symbol_binding_rewrites": [
     {

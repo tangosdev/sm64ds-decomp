@@ -87,10 +87,10 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "__register_global_object",
-      "canonical_symbol": "func_020731dc",
+      "canonical_symbol": "__register_global_object",
       "canonical_module": "arm9",
       "canonical_address": "0x020731dc",
-      "evidence": "mwcc's static-init registration call; retail loads func_020731dc from the pool at 0x02075110"
+      "evidence": "mwcc's static-init registration call; retail loads __register_global_object from the pool at 0x02075110"
     },
     {
       "symbol": "_ZN11ZeroVector2D1Ev",
@@ -136,7 +136,7 @@
       "source": "0x02075110",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_020731dc",
+      "symbol": "__register_global_object",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020731dc"
