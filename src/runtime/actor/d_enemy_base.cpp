@@ -384,7 +384,7 @@ typedef int (dEnemyBase_c::*DeathPMF)(dBgCh_Actr &);
 extern DeathPMF data_ov002_0210dbc0[];
 
 extern "C" {
-extern void DecIfAbove0_Short(unsigned short *p);
+extern unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
 // @symbol _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr

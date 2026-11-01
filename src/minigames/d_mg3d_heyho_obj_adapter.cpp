@@ -1386,7 +1386,7 @@ namespace n020c4f68 {
 extern "C" {
 struct S{int w[2];};
 extern struct S pmf_Heyho_MotionHitSpin;
-extern void D3D_PlaySeAtX(int a, int b);
+extern int D3D_PlaySeAtX(int a, int b);
 void Heyho_StartMotionHitSpin(int *c) {
     HEYHO(c)->mPhase = 0;
     D3D_PlaySeAtX(0x1c8, HEYHO(c)->mPos.x);

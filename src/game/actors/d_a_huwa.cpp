@@ -66,7 +66,7 @@ extern int func_ov002_020e10a8(void *);
 
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-void Vec3_LslInPlace(Vector3 *v, int shift);
+int *Vec3_LslInPlace(Vector3 *v, int shift);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 }

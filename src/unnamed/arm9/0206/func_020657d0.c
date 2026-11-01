@@ -8,7 +8,7 @@ struct S657 {
     void *obj;       /* +0x10 */
     char rest[0x88]; /* +0x14 .. 0x9c */
 };
-extern void func_02065af0(struct S657 *s);
+extern int func_02065af0(struct S657 *s);
 void func_020657d0(u16 id, void *obj)
 {
     struct S657 s;

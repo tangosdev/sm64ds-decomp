@@ -5,7 +5,7 @@
 
 extern "C" {
 
-extern void InvMat4x3(void *dst, void *out);
+extern int InvMat4x3(void *dst, void *out);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 extern short data_02082214[];
 

@@ -433,7 +433,7 @@ typedef short s16;
 
 extern int Vec3_Dist(void *a, void *b);
 extern short Vec3_HorzAngle(void *a, void *b);
-extern void ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
+extern int ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(void *a, void *b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
@@ -523,7 +523,7 @@ extern "C" {
 
 extern short Vec3_HorzAngle(void *v0, void *v1);
 extern short Vec3_VertAngle(void *v1, void *v0);
-extern void ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
+extern int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(void *a, void *m, void *out);
@@ -949,7 +949,7 @@ extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, Fix12i c,
                                                void *f, void *g);
 extern "C" u32 d_a_propeller_heyhoNewUnkCallback818Hold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
                                                         const Vector3_16f *f);
-extern "C" void ApproachAngle(short* v, short a, int b, int c, int d);
+extern "C" int ApproachAngle(short *v, short a, int b, int c, int d);
 
 /* Knocked main. While mStateStep is non-zero (normally a fire hit; the
  * mega-character hit leaves it unchanged) it refreshes the effects 0x13a and

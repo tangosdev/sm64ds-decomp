@@ -1,4 +1,4 @@
-extern void func_0201aa18();
+extern void *func_0201aa18();
 extern void __register_global_object();
 extern int data_0209d574[];
 extern int func_0201aaec[];

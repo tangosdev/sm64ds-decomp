@@ -12,7 +12,7 @@ extern void OS_GetOwnerInfo(unsigned char *dst);
 extern void func_0203db64(char *a, char *b);
 extern int func_0203daac(void);
 extern void func_0201a9fc(char *c);
-extern void func_0201a96c(char *self, int newVal);
+extern unsigned char func_0201a96c(char *self, int newVal);
 
 void func_0201fec8(void)
 {

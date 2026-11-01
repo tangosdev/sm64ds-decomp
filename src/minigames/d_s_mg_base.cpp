@@ -528,7 +528,7 @@ void Ov004_Deallocate(void *ptr)
 // @symbol Ov004_LoadFile
 namespace s20adc68 {
 extern "C" {
-extern void LoadFile(void);
+extern int LoadFile(void);
 void Ov004_LoadFile(void) { LoadFile(); }
 }
 }

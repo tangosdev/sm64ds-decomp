@@ -19,7 +19,7 @@ extern unsigned int func_02018ac4(void *p);
 extern void DecompressLZ16(void *src, void *dst);
 extern void CpuCopy8(void *a, void *b, unsigned int c);
 extern void Crash(void);
-extern void FS_CloseFile(struct Obj *a);
+extern int FS_CloseFile(struct Obj *a);
 extern void func_02018770(void);
 
 /* Read the whole open file (more than 8 bytes, or crash) into a new heap

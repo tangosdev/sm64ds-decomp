@@ -228,7 +228,7 @@ extern "C" {
 void  func_02013a88(void);
 short func_02010844(void *self, void *v, short angle);
 void  func_020167a4(void *p);
-void  func_ov002_020f030c(int x);
+int func_ov002_020f030c(int x);
 
 unsigned short DecIfAbove0_Short(unsigned short *p);
 

@@ -60,7 +60,7 @@ extern void Mg_SetTopScreenYOffset(int n);
 extern int data_0209d4b8;
 extern s16 data_02082214[];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-void Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
+int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 /* Plain screen-space vectors used at the scalar C ABI boundary. */
 typedef struct V2 {
     int x;

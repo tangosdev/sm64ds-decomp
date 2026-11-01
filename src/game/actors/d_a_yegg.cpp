@@ -186,8 +186,8 @@ extern void func_0203568c(void *p, int v);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int radius, int height, void *a, void *b);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void Math_Function_0203b14c(void *ptr, int target, int rate, int limit, int step);
-extern void ApproachAngle(void *cur, short target, int divisor, int band, int maxStep);
+extern int Math_Function_0203b14c(void *ptr, int target, int rate, int limit, int step);
+extern int ApproachAngle(void *cur, short target, int divisor, int band, int maxStep);
 extern short func_02010844(void *unused, void *v, short angle);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_FromTranslation(M48 *m, int x, int y, int z);

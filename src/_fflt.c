@@ -17,7 +17,7 @@
 // this block, which is the tell that these are one hand-written assembly file.
 
 extern int func_0207322c(void);
-extern void func_0206ddcc(void);
+extern float func_0206ddcc(void);
 
 asm float _fflt(int value)
 {

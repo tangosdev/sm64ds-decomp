@@ -224,7 +224,7 @@ extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, int ang);
 extern void MulMat4x3Mat4x3(void *d, void *a, void *b);
 extern void SubVec3(void *d, void *a, void *b);
-extern void Vec3_LslInPlace(void *v, int sh);
+extern int *Vec3_LslInPlace(void *v, int sh);
 extern void AddVec3(void *d, void *a, void *b);
 extern void LoadKeyModels(int idx);
 /* Parameter names keep this TU's @NNN. */

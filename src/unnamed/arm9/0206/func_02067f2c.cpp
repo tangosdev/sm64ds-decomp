@@ -4,7 +4,7 @@
 
 extern "C" {
 
-extern void func_020688fc(u32 dest, u32 src, u32 arg2);
+extern int func_020688fc(u32 dest, u32 src, u32 arg2);
 
 /* func_02067f2c - flush destination buffer, drain write buffer, then call DMA transfer */
 void func_02067f2c(u32 size, u32 arg1, u32 dest)

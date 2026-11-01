@@ -29,8 +29,8 @@
 // runtime block, not compiled C.
 
 extern int func_0207322c(void);
-extern void func_0206ddcc(void);
-extern void func_0206dd30(void);
+extern float func_0206ddcc(void);
+extern float func_0206dd30(void);
 extern void _fsub_core(void);
 
 asm float _fadd(float a, float b)

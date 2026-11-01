@@ -14,7 +14,7 @@
  * Parameters: r0=u16, r1=u32, r2=const void* src, r3=u32
  */
 extern void MultiCopy_Int(const void *src, void *dst, u32 size);  /* 0x0205a490 */
-extern void func_02065af0(void *pkt);
+extern int func_02065af0(void *pkt);
 
 struct Pkt02065788 {
     u32 field00;       /* 0x00: constant 6 */

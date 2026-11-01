@@ -6,7 +6,7 @@
 extern "C" {
 
 extern int WM_CheckStateEx(int a, int b);
-extern void WmCheckParentParameter(void *o);
+extern int WmCheckParentParameter(void *o);
 extern void WM_SetCallbackTable(int i, int val);
 extern int WM_SendCommand(int a, int b, void *c);
 

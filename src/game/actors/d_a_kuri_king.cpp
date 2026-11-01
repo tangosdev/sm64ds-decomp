@@ -170,7 +170,7 @@ extern "C" s16 atan2_hold_d_a_kuri_king_1(s32 y, s32 x);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern "C" s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern "C" void MulMat4x3Mat4x3(void* out, void* a, void* b);
-extern "C" void Vec3_LslInPlace(void* v, int n);
+extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern "C" struct Matrix4x3 data_020a0e68;
 extern "C" struct Matrix4x3 IDENTITY_MATRIX4X3;
 /* Parameter names keep this TU's @NNN. */

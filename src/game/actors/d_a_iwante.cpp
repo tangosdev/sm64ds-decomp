@@ -361,7 +361,7 @@ extern void Vec3_Asr(void *d, void *s, int sh);
 extern int Vec3_HorzDist(const void *a, const void *b);
 extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern void func_0200d8c8(void *cam, void *v, int strength);
-extern void func_020092c4(void *cam, void *out, void *target);
+extern int func_020092c4(void *cam, void *out, void *target);
 extern void func_02011cfc(void);
 extern void func_02011d2c(void);
 extern void func_02012694(int a, void *p);

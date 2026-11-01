@@ -1,5 +1,5 @@
 #include "nitro/fs/overlay.h"
-extern void FS_UnloadOverlay(int a, int b);
+extern int FS_UnloadOverlay(int a, int b);
 extern int func_0203d7b8(void);
 
 /* A loaded-overlay slot (see func_02017e60.c). */

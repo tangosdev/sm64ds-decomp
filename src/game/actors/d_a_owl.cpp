@@ -177,7 +177,7 @@ void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
 void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
 int IsStarCollectedInCurLevel(int);
-void DecIfAbove0_Short(void *);
+unsigned short DecIfAbove0_Short(void *);
 }
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
