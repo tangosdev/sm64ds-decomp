@@ -8502,6 +8502,21 @@
         "return:int"
       ]
     },
+    "data_ov075_0211c800": {
+      "src/game/stages/d_s_entry.cpp": [
+        "return:dScEntry_c::Step"
+      ]
+    },
+    "data_ov075_0211d72c": {
+      "src/game/stages/d_s_entry_methods.cpp": [
+        "return:short []"
+      ]
+    },
+    "data_ov075_0211d740": {
+      "src/game/stages/d_s_entry_methods.cpp": [
+        "return:short []"
+      ]
+    },
     "func_020383e4": {
       "include/dBgCh_Actr.h": [
         "param:#1 struct dBgCh_Actr *"
@@ -13709,15 +13724,7 @@
         "return:void *"
       ]
     },
-    "data_ov075_0211d650": {
-      "src/unnamed/ov075/__sinit_ov075_0211bb00.c": [
-        "return:void * []"
-      ]
-    },
     "data_ov075_0211d71c": {
-      "src/unnamed/ov075/__sinit_ov075_0211bb00.c": [
-        "return:char []"
-      ],
       "src/_ZN10dScEntry_c17EnterCourseSelectEv.cpp": [
         "return:int"
       ],

@@ -44,6 +44,9 @@ src/game/stages/d_ent_obj.cpp:
 src/game/stages/d_s_entry.cpp:
     complete
     .text start:0x02115ab8 end:0x021165b0
+    .init start:0x0211bb00 end:0x0211c51c
+    .ctor start:0x0211c5a8 end:0x0211c5ac
+    .bss start:0x0211d5c0 end:0x0211d980
     .data.entry_sprites0 start:0x211c6f0 end:0x211c6f8
     .data.entry_sprites1 start:0x211c708 end:0x211c710
     .data.entry_sprites2 start:0x211c720 end:0x211c728
@@ -70,7 +73,3 @@ src/game/stages/d_s_entry_entry.cpp:
     .ctor start:0x0211c5ac end:0x0211c5b0
     .data.entry_tail start:0x0211d34c end:0x0211d364
     .bss start:0x0211d980 end:0x0211d9ac
-
-src/unnamed/ov075/__sinit_ov075_0211bb00.c:
-    complete
-    .init start:0x0211bb00 end:0x0211c51c
