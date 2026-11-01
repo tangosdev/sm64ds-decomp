@@ -7136,7 +7136,7 @@ ov075	0x0211b3d8	func_ov075_0211b3d8	_ZN9EntryMesh6RenderEv	EntryMesh::Render: r
 ov075	0x0211b418	func_ov075_0211b418	_ZN9EntryMesh8BehaviorEv	EntryMesh::Behavior: runs the handler row's behavior entry; was a free function taking the mesh pointer, now a member folded into d_s_entry_entry.cpp; same address, same body
 ov075	0x0211b458	func_ov075_0211b458	_ZN9EntryMesh4InitEPK7Vector3i	EntryMesh::Init: allocates the grid, loads its texture, runs the init handler and places the mesh; was a free function taking the mesh pointer, now a member folded into d_s_entry_entry.cpp; same address, same body
 ov075	0x0211d980	data_ov075_0211d980	EntryMeshTextureFile	the entry-menu mesh's shared texture file handle (file 0x8418), constructed by __sinit_ov075_0211c51c and loaded by EntryMesh::Init; storage unchanged
-ov075	0x0211d988	data_ov075_0211d988	EntryMeshTextureFileLink	the destructor-chain link __sinit_ov075_0211c51c registers for EntryMeshTextureFile; storage unchanged
+ov075	0x0211d988	data_ov075_0211d988	@962	the destructor-chain link __sinit_d_s_entry_entry.cpp registers for EntryMeshTextureFile; storage unchanged
 ov075	0x0211d994	data_ov075_0211d994	EntryMeshHandlers	the EntryMesh handler row (InitGrid, UpdateRipple, DrawGrid) that EntryMesh::Init, Behavior and Render call through; storage and initialization unchanged
 arm9	0x0200e494	func_0200e494	RunDemoCommand	KuppaScript command 0x12 and up: finds or spawns the daDemo_c whose param1 is the command and runs the record through it
 arm9	0x0200e4e4	func_0200e4e4	SpawnDemoActor	KuppaScript: spawns daDemo_c (actor 0x160) with a param1 into the first free slot of gDemoActorIDs

@@ -60,9 +60,7 @@ static inline int IsOffScreen(dActor_c *actor) {
 /* One out-of-line definition; D1 and D0 in cartridge order. The body is
  * empty: vptr store, dCcAc_c member teardown and base chain from the
  * class layout; D0's deallocation is the inline operator delete. */
-daObj_volcanoCannon_c::~daObj_volcanoCannon_c()
-{
-}
+daObj_volcanoCannon_c::~daObj_volcanoCannon_c() {}
 
 // @symbol func_ov022_02112654
 /* Burns Mario (actor type 0xbf) if the actor the flame's cylinder last hit
@@ -71,9 +69,11 @@ extern "C" void func_ov022_02112654(daObj_volcanoCannon_c *c) {
     if (c->mCylinderClsn.otherOwner == 0)
         return;
     daPly_c *a = static_cast<daPly_c *>(dActor_c::FindWithID(c->mCylinderClsn.otherOwner));
-    if (a == 0) return;
+    if (a == 0)
+        return;
     unsigned int b = ((dActor_c *)a)->actorID == 0xbf;
-    if (b == 0) return;
+    if (b == 0)
+        return;
     a->Burn();
     c->MarkForDestruction();
 }
@@ -116,8 +116,7 @@ extern "C" int func_ov022_02112710(daObj_volcanoCannon_c *c) {
 // @symbol _ZN21daObj_volcanoCannon_c11ChangeStateEPNS_5StateE
 /* The state record contains two pointer-to-member callbacks; the
  * transition stores the record and runs its init. */
-int daObj_volcanoCannon_c::ChangeState(State *state)
-{
+int daObj_volcanoCannon_c::ChangeState(State *state) {
     mState = state;
     if (mState->init == 0)
         return 1;
@@ -128,16 +127,14 @@ int daObj_volcanoCannon_c::ChangeState(State *state)
 /* Vtable slot 3. Hands its slot back to the daObjFl_Ring_c that spawned
  * it, by decrementing the ring's live-flame count.
  * mSpawner is null for a flame that was never registered. */
-int daObj_volcanoCannon_c::CleanupResources()
-{
+int daObj_volcanoCannon_c::CleanupResources() {
     if (mSpawner)
         ((daObjFl_Ring_c *)mSpawner)->mSpawnCount -= 1;
     return 1;
 }
 
 // @symbol _ZN21daObj_volcanoCannon_c8BehaviorEv
-int daObj_volcanoCannon_c::Behavior()
-{
+int daObj_volcanoCannon_c::Behavior() {
     DecIfAbove0_Short(&mKillTimer);
     if (mState->behavior != 0)
         (this->*mState->behavior)();
@@ -152,8 +149,7 @@ int daObj_volcanoCannon_c::Behavior()
 }
 
 // @symbol _ZN21daObj_volcanoCannon_c13InitResourcesEv
-int daObj_volcanoCannon_c::InitResources()
-{
+int daObj_volcanoCannon_c::InitResources() {
     mTerminalVelocity = -0xc8000;
     mCylinderClsn.Init(this, 0x1e000, 0x1e000, 0x200002, 0);
     ChangeState((State *)&data_ov022_02114690);
