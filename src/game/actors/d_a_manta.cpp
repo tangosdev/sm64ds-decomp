@@ -87,7 +87,7 @@ extern unsigned char data_0209f2d8;
 /* local extern: arm9 vector helpers with no shared header yet. */
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(Vector3 *v);
 short Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);

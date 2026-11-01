@@ -3392,64 +3392,33 @@
       ]
     },
     "Vec3_Sub": {
-      "src/Vec3_VertAngle.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
+      "src/Vec3_ApproachHorz.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *",
+        "param:#3 Vec3 *"
       ],
       "src/engine/view/d_camera.cpp": [
         "param:#2 const void *",
-        "param:#3 const void *",
-        "param:#1 int *",
-        "param:#2 const int *",
-        "param:#3 const int *",
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
-      ],
-      "src/game/actors/d_a_book.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/game/actors/d_a_btfly.cpp": [
-        "param:#1 Vector3 *"
+        "param:#3 const void *"
       ],
       "src/game/actors/d_a_c_jugem.cpp": [
         "param:#2 const void *",
         "param:#3 const void *"
       ],
-      "src/game/actors/d_a_ch_room.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
+      "src/game/actors/d_a_chair.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *",
+        "param:#3 Vec3 *"
       ],
-      "src/game/actors/d_a_fish.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
+      "src/game/actors/d_a_demo.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *",
+        "param:#3 Vec3 *"
       ],
-      "src/game/actors/d_a_jango.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/game/actors/d_a_kuri_king.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
-      ],
-      "src/game/actors/d_a_linelift2.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
-      ],
-      "src/game/actors/d_a_manta.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
+      "src/game/actors/d_a_king_donketu.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *",
+        "param:#3 Vec3 *"
       ],
       "src/game/actors/d_a_mip.cpp": [
         "param:#2 const void *",
@@ -3459,21 +3428,6 @@
         "param:#1 int *",
         "param:#2 int *",
         "param:#3 int *"
-      ],
-      "src/game/actors/d_a_obj_ewm_ice_block.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/game/actors/d_a_obj_fl_amilift.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/game/actors/d_a_obj_wl_polelift.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
       ],
       "src/game/actors/d_a_ots.cpp": [
         "param:#1 int *",
@@ -3485,55 +3439,24 @@
         "param:#2 OwlVec *",
         "param:#3 OwlVec *"
       ],
-      "src/game/actors/d_a_red_bombhei.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
+      "src/game/actors/d_a_piano.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *",
+        "param:#3 Vec3 *"
       ],
-      "src/game/actors/d_a_shark.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
+      "src/game/stages/d_s_entry_entry.cpp": [
+        "param:#1 EntryMeshVec *",
+        "param:#2 const EntryMeshVec *"
       ],
-      "src/game/actors/d_a_snowman.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/game/actors/d_a_star_gate.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
+      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *",
+        "param:#3 Vec3 *"
       ],
       "src/minigames/d_mg_jump3d_mario.cpp": [
         "param:#1 Jump3DVec *",
         "param:#2 Jump3DVec *",
         "param:#3 Jump3DVec *"
-      ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/runtime/actor/d_enemy_base.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
-      ],
-      "src/ui/hud/d_map.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/game/stages/d_s_entry_entry.cpp": [
-        "param:#1 EntryMeshVec *",
-        "param:#2 const EntryMeshVec *",
-        "param:#3 const Vector3 *"
-      ],
-      "src/unnamed/arm9/0200/func_02005110.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
       ]
     },
     "Vec3_VertAngle": {

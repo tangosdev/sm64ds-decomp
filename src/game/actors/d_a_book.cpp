@@ -91,7 +91,7 @@ typedef struct { int x, y, z; } Vec3;
 
 extern "C" {
 short atan2_hold_d_a_book_1(int, int);
-void Vec3_Sub(Vector3 *d, Vector3 *a, Vector3 *b);
+void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
 int  Vec3_HorzLen(const Vector3 *);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16  Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);

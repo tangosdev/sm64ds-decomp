@@ -9,7 +9,7 @@ extern "C" {
 
 extern void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
 extern int *Vec3_AsrInPlace(int *v, int sh);
-extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalarInPlace(int *v, int s);
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int func_020091f8(dCamera_c *cam, Vector3 *lookAt, int angleY, int angleX);
