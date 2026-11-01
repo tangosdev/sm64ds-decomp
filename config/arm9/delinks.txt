@@ -1549,7 +1549,6 @@ src/unnamed/arm9/0204/func_02040384.cpp:
     .text start:0x02040384 end:0x02040388
     .init start:0x02075150 end:0x02075154
     .ctor start:0x02086bb4 end:0x02086bb8
-    .bss start:0x020a0df4 end:0x020a0df8
 
 src/unnamed/arm9/0204/func_02040388.c:
     complete

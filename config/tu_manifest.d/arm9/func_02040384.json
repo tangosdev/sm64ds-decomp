@@ -23,11 +23,6 @@
       "name": ".ctor",
       "start": "0x02086bb4",
       "end": "0x02086bb8"
-    },
-    {
-      "name": ".bss",
-      "start": "0x020a0df4",
-      "end": "0x020a0df8"
     }
   ],
   "functions": [
@@ -40,15 +35,7 @@
     }
   ],
   "data": [],
-  "bss": [
-    {
-      "symbol": "data_020a0df4",
-      "address": "0x020a0df4",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "file-scope EmptyInit. The constructor body is empty, so the initializer is bx lr. The word is padding between data_020a0df0 and data_020a0df8."
-    }
-  ],
+  "bss": [],
   "init": [
     {
       "symbol": "__sinit_func_02040384.cpp",
@@ -97,7 +84,7 @@
     }
   ],
   "notes": [
-    "Folded __sinit_02075150. One EmptyInit global, empty inline constructor, no destructor, so no registration node."
+    "Folded __sinit_02075150. The EmptyInit object is static and deadstripped, so data_020a0df4 stays a gap. An empty inline constructor, no destructor, no registration node."
   ],
   "production_mode": "intact-object",
   "verification": {
@@ -141,17 +128,11 @@
           "end": "0x02086bb8",
           "differingBytes": 0,
           "firstDiff": null
-        },
-        {
-          "section": ".bss",
-          "start": "0x020a0df4",
-          "end": "0x020a0df8",
-          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 4
+          "LICENSED": 3
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -175,15 +156,6 @@
             ],
             "desired": [
               7
-            ]
-          },
-          {
-            "section": ".bss",
-            "original": [
-              5
-            ],
-            "desired": [
-              5
             ]
           }
         ],
