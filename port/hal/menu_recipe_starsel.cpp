@@ -118,10 +118,11 @@ bool sub_obj_box(int i, int16_t box[4], int *area)
     return true;
 }
 
-/* the smallest shown entry whose box holds (px, py), among indices [lo, hi); -1 none */
+/* the smallest shown entry whose box holds (px, py), among indices [lo, hi), no larger than 32 x 32 (the caps and the cursor are 16 x 16; the
+   head's quarters are 64 x 64 and the bubbles 32 x 32 or 16 x 32, larger than the cap they hold); -1 none */
 int sub_obj_at(int px, int py, int lo, int hi, int16_t box[4])
 {
-    int best = -1, best_area = 1 << 30;
+    int best = -1, best_area = 32 * 32 + 1;
     for (int i = lo; i < hi && i < 128; ++i) {
         int16_t b[4];
         int a;
@@ -238,6 +239,17 @@ void starsel_facts(MenuFacts *f)
     f->blob[6] = (data_0209caa0[0x41] == 3 && ob(o, 0x130) > 1 && !f->spare[4]) ? 1 : 0;
     f->blob[7] = (unsigned char)(*(int *)(data_0209caa0 + 8) & 7);
     if (f->blob[6]) caps_facts((const unsigned char *)o, f);
+#ifndef PORT_ROM_CLEAN
+    {   /* STARSEL3 proof rows: the pick the ROM made (Behavior :80-98 / func_ov003_020ae358: ANIM_MODE +0x139, PICKED_CHAR +0x132) */
+        static int last = -1;
+        const int now = ob(o, 0x139) | ob(o, 0x132) << 8;
+        if (now != last && getenv("SM64DS_SS3_OAM")) {
+            last = now;
+            fprintf(stderr, "[ss3] pick state: anim mode %d, picked character %d, cursor mode %d, slot %d, star %d\n", ob(o, 0x139), ob(o, 0x132),
+                    ob(o, 0x133), ob(o, 0x134), ob(o, 0x115) + 1);
+        }
+    }
+#endif
 #ifndef PORT_ROM_CLEAN
     {
         static unsigned last = 0xffffffffu;
