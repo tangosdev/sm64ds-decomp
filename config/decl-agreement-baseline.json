@@ -450,11 +450,6 @@
         "param:#3 void *"
       ]
     },
-    "DeathTable_GetBit": {
-      "src/runtime/actor/d_actor.cpp": [
-        "return:int"
-      ]
-    },
     "DecIfAbove0_Byte": {
       "src/game/actors/d_a_gmch.cpp": [
         "return:int"
@@ -7913,8 +7908,7 @@
       ],
       "src/unnamed/arm9/0207/func_02072168.cpp": [
         "param:#1 int",
-        "param:#2 int",
-        "return:int"
+        "param:#2 int"
       ]
     },
     "__cxa_vec_cleanup": {
@@ -16562,11 +16556,7 @@
     },
     "func_0201834c": {
       "src/unnamed/arm9/0201/func_020182bc.c": [
-        "param:#1 int *",
-        "return:int"
-      ],
-      "src/unnamed/arm9/0201/func_0201818c.cpp": [
-        "return:int"
+        "param:#1 int *"
       ]
     },
     "func_020184e0": {
@@ -17659,14 +17649,6 @@
         "param:#2 BMD_File *"
       ]
     },
-    "func_02046564": {
-      "src/engine/model/d_ext_model.cpp": [
-        "return:unsigned int"
-      ],
-      "src/unnamed/arm9/0201/func_02016e70.c": [
-        "return:unsigned int"
-      ]
-    },
     "func_02046590": {
       "src/unnamed/arm9/0204/func_02046b64.c": [
         "param:#1 const struct Table *"
@@ -17674,11 +17656,6 @@
       "src/unnamed/arm9/0204/func_020470e8.c": [
         "param:#1 const struct Table *",
         "return:short"
-      ]
-    },
-    "func_020469e0": {
-      "src/engine/model/d_ext_model.cpp": [
-        "return:unsigned int"
       ]
     },
     "func_020469e8": {
@@ -17946,8 +17923,7 @@
     },
     "func_02051074": {
       "src/engine/sound/Sound.cpp": [
-        "param:#1 int",
-        "return:int"
+        "param:#1 int"
       ]
     },
     "func_020510a4": {
@@ -18142,14 +18118,12 @@
     },
     "OS_GetArenaLo": {
       "src/engine/heap/Heap.cpp": [
-        "param:#1 unsigned int",
-        "return:int"
+        "param:#1 unsigned int"
       ]
     },
     "OS_GetArenaHi": {
       "src/engine/heap/Heap.cpp": [
-        "param:#1 unsigned int",
-        "return:int"
+        "param:#1 unsigned int"
       ]
     },
     "OS_InitAlloc": {
@@ -18291,8 +18265,7 @@
         "param:#6 int",
         "param:#7 int",
         "param:#8 int",
-        "param:#9 int",
-        "return:int"
+        "param:#9 int"
       ]
     },
     "TP_RequestAutoSamplingStartAsync": {
@@ -18815,8 +18788,7 @@
     },
     "func_0206e3dc": {
       "src/nds_vprintf.c": [
-        "param:#2 int",
-        "return:int"
+        "param:#2 int"
       ]
     },
     "func_0206e450": {
@@ -20560,8 +20532,7 @@
     },
     "func_02045ad8": {
       "src/game/stages/d_s_entry_entry.cpp": [
-        "arity:1",
-        "return:int"
+        "arity:1"
       ]
     },
     "func_02020028": {
@@ -20722,8 +20693,7 @@
     },
     "func_0205e904": {
       "src/engine/fs/FS_Overlay.cpp": [
-        "param:#1 unsigned int",
-        "return:unsigned int"
+        "param:#1 unsigned int"
       ]
     },
     "func_0206cf98": {

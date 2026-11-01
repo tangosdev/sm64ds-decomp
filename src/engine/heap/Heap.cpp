@@ -67,8 +67,8 @@ extern "C" {
     extern u32   ROOT_HEAP_ARENA_ID;            /* 0x020a0ea4 */
     extern Heap* data_020a0e9c;                 /* the root heap; unnamed */
 
-    int OS_GetArenaLo(u32 arena);
-    int OS_GetArenaHi(u32 arena);
+    unsigned int OS_GetArenaLo(u32 arena);
+    unsigned int OS_GetArenaHi(u32 arena);
     int OS_InitAlloc(u32 arena, int lo, int hi, int maxHeaps);
     void OS_SetArenaLo(u32 arena, int lo);
     void *OS_AllocFromArenaLo(u32 arena, int size, int align);
