@@ -6,16 +6,16 @@
   "base_commit": "607576acc557a318d5f813f8a0813bc86f03d140",
   "accepted_predecessor": "0e7ec60e0725ab3e437ee96add1a78bdbdd11f6f",
   "tested_checkpoint": "3f6aec49259cb361ba3fa8edd4fba5a8a970e6b5",
-  "scope": "Compose the accepted Eyerok native hand Spawn and native factory cleanup with current main. Source, manifest and historical report remain byte-for-byte identical Git blobs to the predecessor; this report adds current-context evidence only.",
+  "scope": "Compose the accepted daIwante_c native hand Spawn and native factory cleanup with current main. Source, manifest and historical report remain byte-for-byte identical Git blobs to the predecessor; this report adds current-context evidence only.",
   "completion": "partial",
   "composition": "Merge accepted predecessor into actual current main; no header, tool, symbol-ledger, Source or manifest adaptations.",
-  "input_changes": "Between historical ffb2 and current607, the only header/tool/Eyerok Source/manifest input change is TextureSequence.h: BTP_File fields unk_04, unk_0c, unk_20 become texRecords, palRecords, seqRecords, with comments updated and widths/order/layout unchanged.",
+  "input_changes": "Between historical ffb2 and current607, the only header/tool/daIwante_c Source/manifest input change is TextureSequence.h: BTP_File fields unk_04, unk_0c, unk_20 become texRecords, palRecords, seqRecords, with comments updated and widths/order/layout unchanged.",
   "unchanged_blobs": {
-    "src/actors/Eyerok.cpp": {
+    "src/actors/daIwante_c.cpp": {
       "accepted": "c33e9c304c2978529c0179682c81493cd15988ee",
       "current": "c33e9c304c2978529c0179682c81493cd15988ee"
     },
-    "config/tu_manifest.d/ov066/Eyerok.json": {
+    "config/tu_manifest.d/ov066/daIwante_c.json": {
       "accepted": "9b0b5afe9bbb9e0bbb96f7f2319dd9e946ad7664",
       "current": "9b0b5afe9bbb9e0bbb96f7f2319dd9e946ad7664"
     },
@@ -151,7 +151,7 @@
   },
   "current_global_full_rom": {
     "run": false,
-    "qualification": "Current607 Source, complete ordinary prepared object and all owned code/data/storage/callbacks were remeasured. Full raw and prepared container identity establishes unchanged Eyerok output. No current global full-ROM result is claimed."
+    "qualification": "Current607 Source, complete ordinary prepared object and all owned code/data/storage/callbacks were remeasured. Full raw and prepared container identity establishes unchanged daIwante_c output. No current global full-ROM result is claimed."
   },
   "workflow_gates": {
     "literal_range": "607576acc557a318d5f813f8a0813bc86f03d140..3f6aec49259cb361ba3fa8edd4fba5a8a970e6b5",
@@ -192,7 +192,7 @@
       "id": "EYEROK-METADATA-001",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
       "kind": "reconstruction",
-      "location": "src/actors/Eyerok.cpp: RTTI pragma; config/tu_manifest.d/ov066/Eyerok.json: vtable policy",
+      "location": "src/actors/daIwante_c.cpp: RTTI pragma; config/tu_manifest.d/ov066/daIwante_c.json: vtable policy",
       "owner": "root enemy-cleanup coordinator / codex-eyerok-native-producer1013",
       "reason": "Whole emitted 136-byte vtable equals prior emitted copy, but typeinfo +4 is zero versus retail 0x0211ad24. All 128 slot bytes match. Existing externalization preserves the canonical retail table; no complete emitted metadata equality.",
       "summary": "Coined identity and RTTI-off emitted metadata remain partial."
@@ -201,7 +201,7 @@
       "disposition": "fixed",
       "id": "EYEROK-NATIVE-001",
       "kind": "reconstruction",
-      "location": "src/actors/Eyerok.cpp: Eyerok::InitResources",
+      "location": "src/actors/daIwante_c.cpp: daIwante_c::InitResources",
       "reason": "The obsolete mangled local declaration and void-pointer return casts are removed. Complete caller bodies and typed destinations strictly verify.",
       "summary": "Both hand spawns use the existing typed dActor_c::Spawn interface."
     },
@@ -209,15 +209,15 @@
       "disposition": "fixed",
       "id": "EYEROK-NATIVE-002",
       "kind": "reconstruction",
-      "location": "src/actors/Eyerok.cpp: daIwante_c_classInit",
+      "location": "src/actors/daIwante_c.cpp: daIwante_c_classInit",
       "reason": "Real class members, Vector3[20] at +0x4dc with stride 12, complete callbacks and unchanged native teardown establish lifecycle identity. Complete 168-byte factory and all 12 raw typed edges accounted for.",
-      "summary": "Native new Eyerok() replaces the raw allocation and manual construction chain."
+      "summary": "Native new daIwante_c() replaces the raw allocation and manual construction chain."
     },
     "EYEROK-POLICY-001": {
       "disposition": "fixed",
       "id": "EYEROK-POLICY-001",
       "kind": "provenance",
-      "location": "config/tu_manifest.d/ov066/Eyerok.json",
+      "location": "config/tu_manifest.d/ov066/daIwante_c.json",
       "reason": "Both new deadstrip predicates pass individually against complete incoming graphs and private sections; no arbitrary equal-empty-body alias. Vector3 constructor canonical identity also follows real member-array/destructor pairing. All 22 registration mappings measured; owned rows and addresses unchanged.",
       "summary": "Lifecycle dispositions and local registration identities have direct ownership proof."
     },
@@ -225,16 +225,16 @@
       "disposition": "fixed",
       "id": "EYEROK-PROV-001",
       "kind": "provenance",
-      "location": "src/actors/Eyerok.cpp; notes/experiments/eyerok-native1013.json",
+      "location": "src/actors/daIwante_c.cpp; notes/experiments/eyerok-native1013.json",
       "reason": "Original candidate author thread 01a135f6-ffe2-7f12-a948-096399c6745c and actual prior writers remain attributed. Live task has no inherited finding IDs; none invented or discarded.",
-      "summary": "Class-name and RTTI prose accurately distinguishes coined Eyerok from retail daIwante and preserves source lineage."
+      "summary": "Class-name and RTTI prose accurately distinguishes coined daIwante_c from retail daIwante and preserves source lineage."
     },
     "EYEROK-RECON-001": {
       "disposition": "deferred",
       "id": "EYEROK-RECON-001",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
       "kind": "reconstruction",
-      "location": "src/actors/Eyerok.cpp: raw views and helper interfaces",
+      "location": "src/actors/daIwante_c.cpp: raw views and helper interfaces",
       "owner": "root enemy-cleanup coordinator / codex-eyerok-native-producer1013",
       "reason": "Actor/player/dust-position walks, EVec3/M48/Vec4 scaffolding, scalar Fix12 ABI declarations and unnamed helpers remain outside this accepted slice. No new compiler impossibility is claimed.",
       "summary": "Raw object walks and scalar ABI scaffolding remain partially reconstructed."
@@ -244,7 +244,7 @@
       "id": "EYEROK-RESOURCE-001",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3817",
       "kind": "reconstruction",
-      "location": "src/actors/Eyerok.cpp: resource wrappers and PMF/state representation",
+      "location": "src/actors/daIwante_c.cpp: resource wrappers and PMF/state representation",
       "owner": "root enemy-cleanup coordinator / codex-eyerok-native-producer1013",
       "reason": "Existing two-word SharedFilePtr-derived wrappers and PMF/state representation remain unchanged; strict byte and storage proof does not establish complete C++ reconstruction.",
       "summary": "Resource and state interfaces remain partial."

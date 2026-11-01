@@ -116,7 +116,7 @@ mwcc's own D1/D0 vptr stores both write.
 
 ### A wrong callee the byte gate could not see
 
-The retired shard `func_ov065_021162c0.c`(ROM Ordinal 4 used to assemble `daYurei_Mucho_c.cpp`, see [daYurei_Mucho_c.json](../../../config/tu_manifest.d/ov065/daYurei_Mucho_c.json)) called `_ZN6EyerokD0Ev` -- [ov066](../../../config/arm9/overlays/ov066/symbols.txt)'s name
+The retired shard `func_ov065_021162c0.c`(ROM Ordinal 4 used to assemble `daYurei_Mucho_c.cpp`, see [daYurei_Mucho_c.json](../../../config/tu_manifest.d/ov065/daYurei_Mucho_c.json)) called `_ZN10daIwante_cD0Ev` -- [ov066](../../../config/arm9/overlays/ov066/symbols.txt)'s name
 for address 0x02115f84. In [ov065](../../../config/arm9/overlays/ov065/symbols.txt) that address is [func_ov065_02115f84](../../../src/game/actors/d_a_yurei_mucho.cpp)(ROM Ordinal 2), the death
 helper two ordinals below, and [ov065](../../../config/arm9/overlays/ov065/symbols.txt) is the module this branch links. The ROM's
 own `bl 0x02115f84` at 0x02116314 decides it. `match.py` wildcards the relocated
@@ -169,7 +169,7 @@ The five-Vector3 stack aggregate in [func_ov065_02116364](../../../src/game/acto
 name, `V3Quint`. As an unnamed local class mwccarm mangles its implicit
 destructor with a file-and-counter tag that moves whenever the file moves, so the
 manifest row licensing it would not have survived the move out of `src_tu/`. The
-emitted bytes are unchanged. Same remedy as `V3Quad` in [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`Player`.
+emitted bytes are unchanged. Same remedy as `V3Quad` in [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`daPly_c`.
 
 ## Reconstruction dimensions
 

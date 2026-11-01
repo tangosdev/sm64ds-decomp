@@ -19,7 +19,7 @@
 enum daObjTbox_c_AssetId { ASSET_T_BOX_BMD = 0x04a6, ASSET_T_BOX_OPEN_BCA = 0x04a7 };
 
 #include "daObjTbox_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "math/CalcLib.h"
@@ -134,7 +134,7 @@ void daObjTbox_c::State0() {
     if (mStateTimer != 0)
         return;
 
-    Player *player = (Player *)FindWithID(id);
+    daPly_c *player = (daPly_c *)FindWithID(id);
     if (player == 0)
         return;
 
@@ -208,7 +208,7 @@ void daObjTbox_c::InitState1() {
 void daObjTbox_c::State1() {
     mAnmModel.Advance();
     if (((u32)(mAnmModel.currFrame << 4) >> 0x10) == 0x14) {
-        Player *player = ClosestPlayer();
+        daPly_c *player = ClosestPlayer();
 
         Vector3 spawnPos;
         spawnPos.x = mPosX;

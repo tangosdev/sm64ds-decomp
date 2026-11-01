@@ -34,7 +34,7 @@ The penguin no longer needs raw angle/action-step macros. Path, dialog and
 collision-normal locals use `Vector3`; collision-result accessors, angle/speed
 approach functions and looping sound use native interfaces. The approach
 prototypes were checked against `src/ApproachAngle.cpp`, including the `int`
-return of `ApproachLinear(int&, int, int)`. Player position views avoid integer
+return of `ApproachLinear(int&, int, int)`. daPly_c position views avoid integer
 pointer arithmetic; replacing them with separate member loads shrank the race
 function from 988 to 980 bytes, so the grouped view stays.
 

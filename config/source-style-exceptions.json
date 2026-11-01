@@ -126,8 +126,8 @@
       "rule": "raw-offset",
       "match": "(u8*)(p+0x711",
       "count": 1,
-      "reason": "Player.h names the byte at 0x711 only `pad_711`; its role is not recovered, so the read keeps the offset rather than inventing a field name. Follow-up: name Player 0x711 once its role is proved.",
-      "evidence": "include/Player.h:392 `u8 pad_711[0x1];`; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
+      "reason": "daPly_c.h names the byte at 0x711 only `pad_711`; its role is not recovered, so the read keeps the offset rather than inventing a field name. Follow-up: name daPly_c 0x711 once its role is proved.",
+      "evidence": "include/daPly_c.h:392 `u8 pad_711[0x1];`; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
     },
     {
       "path": "src/game/stages/d_s_entry_methods.cpp",
@@ -354,12 +354,12 @@
       "evidence": "include/cMgSmartball_object_c.h documents per-reader signedness across0x031..0x033; cMgSmartball_wing_c::GetAngle casts the named byte storage. Fresh b56 compile preserves the entire production-prepared Smartball object byte-for-byte versus a317608eec;132/132 owned strict function checks VERIFIED; build/review3955-smartball-proof/proof.json."
     },
     {
-      "path": "src/game/player/Player.cpp",
+      "path": "src/game/player/d_a_ply_methods.cpp",
       "rule": "handspelled-member",
       "match": "_ZN13SharedFilePtr9ConstructEj",
       "count": 295,
       "reason": "__sinit_ov002_021019d0 is the enrolled C initializer under #pragma cplusplus off, so SharedFilePtr::Construct cannot be spelled as a member call. Follow-up: keep this initializer in C until a C++ spelling reproduces the same .init bytes.",
-      "evidence": "Retired src/unnamed/ov002/__sinit_ov002_021019d0.c, folded into src/game/player/Player.cpp; ov002/Player .init 0x021019d0 size 0x5470 TEXT-VERIFIED"
+      "evidence": "Retired src/unnamed/ov002/__sinit_ov002_021019d0.c, folded into src/game/player/d_a_ply_methods.cpp; ov002/daPly_c .init 0x021019d0 size 0x5470 TEXT-VERIFIED"
     },
     {
       "path": "src/_ZN10dScEntry_c17RenderWaitingTextEv.cpp",
@@ -946,12 +946,12 @@
       "evidence": "src/game/actors/d_a_obj_rotate_updown_lift.cpp: `return _ZN8dActor_c18DropShadowScaleXYZER17dExt...(...)` in an int-returning caller; tubuild verify TEXT-VERIFIED"
     },
     {
-      "path": "src/game/player/Player.cpp",
+      "path": "src/game/player/d_a_ply_methods.cpp",
       "rule": "raw-offset",
       "match": "(Matrix4x3*)(c+0x5bc",
       "count": 1,
-      "reason": "func_ov002_020e444c is still a char *c offset-view function, and Player declares no member at 0x5bc (the drop-shadow matrix). The member call needs a Matrix4x3 &, so the view is cast at the call; the offset was already spelled `c + 0x5bc` on main. Follow-up: name the Matrix4x3 at Player+0x5bc in the layout pass, then this becomes `player->DropShadowRadHeight(player->mShadowModel, player->m<name>, ...)`.",
-      "evidence": "origin/main:src/game/player/Player.cpp passes `c + 0x5bc` to the mangled extern; batch 5 member call"
+      "reason": "func_ov002_020e444c is still a char *c offset-view function, and daPly_c declares no member at 0x5bc (the drop-shadow matrix). The member call needs a Matrix4x3 &, so the view is cast at the call; the offset was already spelled `c + 0x5bc` on main. Follow-up: name the Matrix4x3 at daPly_c+0x5bc in the layout pass, then this becomes `player->DropShadowRadHeight(player->mShadowModel, player->m<name>, ...)`.",
+      "evidence": "origin/main:src/game/player/d_a_ply_methods.cpp passes `c + 0x5bc` to the mangled extern; batch 5 member call"
     },
     {
       "path": "src/game/actors/d_a_kinopio.cpp",

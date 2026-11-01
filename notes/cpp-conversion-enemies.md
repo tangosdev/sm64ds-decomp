@@ -145,7 +145,7 @@ records such a call as the ambiguous `module:overlays(2,4)`. Two `dEnemyBase_c`
 names had landed on the [ov004](../config/arm9/overlays/ov004/symbols.txt) side.
 
 `KillByInvincibleChar` was on [ov004](../config/arm9/overlays/ov004/symbols.txt) 0x020ada40, which reads only r0 and range-checks it as a scalar. The [ov002](../config/arm9/overlays/ov002/symbols.txt) body at the same address is the method:
-`Vec3_HorzAngle(player + 0x5c, &this->pos)`, then `Player::IncMegaKillCount`. Its
+`Vec3_HorzAngle(player + 0x5c, &this->pos)`, then `daPly_c::IncMegaKillCount`. Its
 arity was refuted too -- all 19 `bl`s to the address were disassembled, and the
 split IS the proof: the four inside [ov004](../config/arm9/overlays/ov004/symbols.txt) leave r3 alone, all 15 outside it materialise a fourth argument. [ov081](../config/arm9/overlays/ov081/symbols.txt) 0x02123988 passes the return of vtable slot *29, OnAimedAtWithEgg* -- which this method's own body then calls again itself, so
 the parameter is handed over and never read. Type from the ROM's sibling

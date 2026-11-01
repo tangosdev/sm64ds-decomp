@@ -1570,8 +1570,8 @@
       "coverage": {
         "range": "2c689bff2c9b839582f90438da718a82b19ff207..87457bcf4376f635eea96e0dde513f29cdcd55c3",
         "files": [
-          "src/_ZN10ScuttlebugD0Ev.cpp",
-          "src/_ZN10ScuttlebugD1Ev.cpp",
+          "src/_ZN7daSpd_cD0Ev.cpp",
+          "src/_ZN7daSpd_cD1Ev.cpp",
           "src/_ZN10dScEntry_c13InitResourcesEv.cpp",
           "src/_ZN10dScEntry_c16CleanupResourcesEv.cpp",
           "src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp",
@@ -1603,10 +1603,10 @@
           "src/_ZN12dScStarSel_c13InitResourcesEv.cpp",
           "src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp",
           "src/_ZN12dScStarSel_c8BehaviorEv.cpp",
-          "src/_ZN6Player13OnYoshiTryEatEv.cpp",
-          "src/_ZN6PlayerC1Ev.cpp",
-          "src/_ZN6PlayerD0Ev.cpp",
-          "src/_ZN6PlayerD1Ev.cpp",
+          "src/_ZN7daPly_c13OnYoshiTryEatEv.cpp",
+          "src/_ZN7daPly_cC1Ev.cpp",
+          "src/_ZN7daPly_cD0Ev.cpp",
+          "src/_ZN7daPly_cD1Ev.cpp",
           "src/_ZN8dActor_cC1Ev.cpp",
           "src/_ZN8dActor_cC2Ev.cpp",
           "src/_ZN8dActor_cD0Ev.cpp",
@@ -1619,9 +1619,9 @@
           "src/actors/ActorBase_SceneNode.cpp",
           "src/actors/ActorDerived.cpp",
           "src/actors/CapIconMgr.cpp",
-          "src/actors/Eyerok.cpp",
-          "src/actors/Player.cpp",
-          "src/actors/Scuttlebug.cpp",
+          "src/actors/daIwante_c.cpp",
+          "src/actors/daPly_c.cpp",
+          "src/actors/daSpd_c.cpp",
           "src/actors/StarCamera_Spawn.cpp",
           "src/actors/dActor_c.cpp",
           "src/actors/dBgActor_c.cpp",
@@ -1973,7 +1973,7 @@
           {
             "index": 0,
             "files": [
-              "src/actors/Player.cpp",
+              "src/actors/daPly_c.cpp",
               "src/actors/daObjSwdoor_c.cpp",
               "src/game/actors/d_a_obj_km3_kaitendai.cpp",
               "src/game/actors/d_a_obj_ki_ita.cpp",
@@ -2020,7 +2020,7 @@
               "src/engine/view/dView_c.cpp",
               "src/_ZN10dScStage_c10CheckInputEv.cpp",
               "src/_ZN10dScStage_c22RenderModelTransparentEv.cpp",
-              "src/_ZN6Player13OnYoshiTryEatEv.cpp",
+              "src/_ZN7daPly_c13OnYoshiTryEatEv.cpp",
               "src/actors/StarCamera_Spawn.cpp"
             ],
             "nominal_symbols": 637
@@ -2060,7 +2060,7 @@
               "src/game/actors/d_a_s_bird_head.cpp",
               "src/_ZN10dScStage_c10LoadSkyboxEv.cpp",
               "src/_ZN10dScStage_c23LoadTextureTransformersEv.cpp",
-              "src/_ZN6PlayerC1Ev.cpp",
+              "src/_ZN7daPly_cC1Ev.cpp",
               "src/d_a_ply.cpp"
             ],
             "nominal_symbols": 637
@@ -2100,7 +2100,7 @@
               "src/game/actors/d_a_s_cre.cpp",
               "src/_ZN10dScStage_c11GetSkyboxIDEv.cpp",
               "src/_ZN10dScStage_c7LoadFogEv.cpp",
-              "src/_ZN6PlayerD0Ev.cpp",
+              "src/_ZN7daPly_cD0Ev.cpp",
               "src/d_s_entry_entry.cpp"
             ],
             "nominal_symbols": 637
@@ -2142,7 +2142,7 @@
               "src/_ZN10dScEntry_c16CleanupResourcesEv.cpp",
               "src/_ZN10dScStage_c11RenderModelEv.cpp",
               "src/_ZN10dScStage_c8CanPauseEv.cpp",
-              "src/_ZN6PlayerD1Ev.cpp",
+              "src/_ZN7daPly_cD1Ev.cpp",
               "src/d_s_entry_result.cpp"
             ],
             "nominal_symbols": 637
@@ -2181,7 +2181,7 @@
               "src/game/actors/d_a_obj_km1_kurumajiku.cpp",
               "src/game/actors/d_a_sld_mng.cpp",
               "src/actors/dCapEnemy_c.cpp",
-              "src/_ZN10ScuttlebugD0Ev.cpp",
+              "src/_ZN7daSpd_cD0Ev.cpp",
               "src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp",
               "src/_ZN10dScStage_c14GraphCallback1Ev.cpp",
               "src/_ZN10dScStage_c9LoadModelEv.cpp",
@@ -2224,7 +2224,7 @@
               "src/game/actors/d_a_obj_km2_fall_block.cpp",
               "src/game/actors/daObjFl_Fall_Block_c.cpp",
               "src/minigames/d_s_mg_hanachan.cpp",
-              "src/_ZN10ScuttlebugD1Ev.cpp",
+              "src/_ZN7daSpd_cD1Ev.cpp",
               "src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp",
               "src/_ZN10dScStage_c14GraphCallback2Ev.cpp",
               "src/_ZN10dScStage_c9RenderFogEv.cpp",
@@ -2237,10 +2237,10 @@
             "index": 7,
             "files": [
               "src/actors/dScMgSound_c.cpp",
-              "src/actors/Eyerok.cpp",
+              "src/actors/daIwante_c.cpp",
               "src/actors/dMgState_c.cpp",
               "src/actors/daObjHatenaBlock_c.cpp",
-              "src/actors/Scuttlebug.cpp",
+              "src/actors/daSpd_c.cpp",
               "src/actors/daYegg_c.cpp",
               "src/game/actors/d_a_propeller_heyho.cpp",
               "src/actors/daObjFl_Coin_c.cpp",
@@ -3590,7 +3590,7 @@
           "diffs": []
         },
         {
-          "file": "src/actors/Eyerok.cpp",
+          "file": "src/actors/daIwante_c.cpp",
           "name": "daIwante_c_classInit",
           "module": "ov066",
           "addr": "0x211a370",
@@ -3599,7 +3599,7 @@
           "diffs": []
         },
         {
-          "file": "src/actors/Eyerok.cpp",
+          "file": "src/actors/daIwante_c.cpp",
           "name": "__sinit_Eyerok.cpp",
           "module": "ov066",
           "addr": "0x211a418",
@@ -3617,7 +3617,7 @@
           "diffs": []
         },
         {
-          "file": "src/actors/Scuttlebug.cpp",
+          "file": "src/actors/daSpd_c.cpp",
           "name": "__sinit_Scuttlebug.cpp",
           "module": "ov071",
           "addr": "0x21226ac",
@@ -4095,7 +4095,7 @@
         },
         {
           "file": "src/actors/daDoor_c.cpp",
-          "name": "_ZN8daDoor_c19func_ov100_02144a38EP6Player",
+          "name": "_ZN8daDoor_c19func_ov100_02144a38EP7daPly_c",
           "module": "ov100",
           "addr": "0x2144a38",
           "verdict": "BLIND-3",
@@ -4104,7 +4104,7 @@
         },
         {
           "file": "src/actors/daDoor_c.cpp",
-          "name": "_ZN8daDoor_c19func_ov100_021451c4EPvP6Player",
+          "name": "_ZN8daDoor_c19func_ov100_021451c4EPvP7daPly_c",
           "module": "ov100",
           "addr": "0x21451c4",
           "verdict": "BLIND-2",

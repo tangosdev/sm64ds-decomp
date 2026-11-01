@@ -698,7 +698,7 @@
           },
           {
             "offset": 84,
-            "target": "_ZN9daSanbo_c13OnTurnIntoEggER6Player",
+            "target": "_ZN9daSanbo_c13OnTurnIntoEggER7daPly_c",
             "module": "ov096",
             "address": "0x2136cd0"
           },
@@ -746,7 +746,7 @@
           },
           {
             "offset": 116,
-            "target": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "target": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             "module": "arm9",
             "address": "0x2010130"
           },

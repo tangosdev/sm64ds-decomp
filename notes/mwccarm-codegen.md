@@ -71,7 +71,7 @@ the member is reached." That is wrong, and the correction matters because it tur
 an unexplained wall into an ordinary one.
 
 **A by-value class parameter that a body never reads costs nothing.**
-`dEnemyBase_c::KillByInvincibleChar` takes `(const Vector3_16 &, Player &,
+`dEnemyBase_c::KillByInvincibleChar` takes `(const Vector3_16 &, daPly_c &,
 Fix12<int>)`, reads only the first two, and reproduces ov002 0x020ada40 exactly as
 a real C++ method -- no homing, no prologue change. Homing is emitted in response
 to a use, not by the calling convention. On `IsGoingOffCliff`, which has two such
@@ -174,7 +174,7 @@ Two things follow, and both are general, not specific to these two symbols:
   per symbol rather than inheriting.
 - **`include/math/Fix12.h`'s justification is circular** and has been corrected
   with this change. It read "reconstructed from its own mangled symbols:
-  `5Fix12IiE` in e.g. `dExtShadowModel_c::InitModel` and `Player::SetAnim`" --
+  `5Fix12IiE` in e.g. `dExtShadowModel_c::InitModel` and `daPly_c::SetAnim`" --
   but the census recorded above found zero `_Z...` strings and zero `5Fix12IiE`
   in arm9 and all 105 overlays. Those names are ours; they cannot be evidence for
   the type they contain.
@@ -354,15 +354,15 @@ sources, 1,492 functions, not just the call-site holders. 1,486 match; the other
 that noise on any wide actor-file change and check it against base rather than
 assuming it is yours.
 
-### BATCH 5: Player's Hurt, Bounce and SpinBounce (2026-10-26)
+### BATCH 5: daPly_c's Hurt, Bounce and SpinBounce (2026-10-26)
 
 | old symbol | new symbol | addr/size |
 |---|---|---|
-| `_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj` | `_ZN6Player4HurtERK7Vector3jihhh` | ov002 0x020d8e70/0x348 |
-| `_ZN6Player6BounceE5Fix12IiE` | `_ZN6Player6BounceEi` | ov002 0x020d932c/0x80 |
-| `_ZN6Player10SpinBounceE5Fix12IiE` | `_ZN6Player10SpinBounceEi` | ov002 0x020e1020/0x88 |
+| `_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj` | `_ZN7daPly_c4HurtERK7Vector3jihhh` | ov002 0x020d8e70/0x348 |
+| `_ZN7daPly_c6BounceE5Fix12IiE` | `_ZN7daPly_c6BounceEi` | ov002 0x020d932c/0x80 |
+| `_ZN7daPly_c10SpinBounceE5Fix12IiE` | `_ZN7daPly_c10SpinBounceEi` | ov002 0x020e1020/0x88 |
 
-All three are real `Player::` methods now, declared in `include/Player.h` with
+All three are real `daPly_c::` methods now, declared in `include/daPly_c.h` with
 their parameters unnamed. Every caller in `src/` calls them as members.
 
 - **`Hurt`'s last three parameters are `u8`, not `u32`.** The old name said
@@ -374,7 +374,7 @@ their parameters unnamed. Every caller in `src/` calls them as members.
   hurt origin in a local struct of their own (`DaJgmVector3Words`, `Vec3i`,
   `int[3]`), not a `Vector3`. `*(Vector3 *)&v` binds the reference to the
   same address the old `&v` passed, so the bytes do not change.
-- **Including `Player.h` only renumbers labels.** `d_a_shl.cpp` held its calls
+- **Including `daPly_c.h` only renumbers labels.** `d_a_shl.cpp` held its calls
   on the claim that the header "is +94". That number is @NNN labels, not bytes:
   with the header included, every function matches and only the
   `defined_symbol_renames[].from` keys in its manifest move.
@@ -393,7 +393,7 @@ cost, for whoever does the other 53 symbols:
   every `ns_*` namespace, and unit020bfec0 reaches its anim through raw record
   offsets -- so a method call cannot bind and only the symbol name changed there.
   `d_a_ots.cpp` tail-forwards SetAnim's r0 as `func_ov064_02116560`'s own `int`
-  result, which needs the int-returning spelling. One `Player.cpp` body
+  result, which needs the int-returning spelling. One `d_a_ply_methods.cpp` body
   (`St_YoshiPower_Main`) passes a NON-CONSTANT startFrame, and narrowing
   `(currFrame << 4) >> 0x10` to the real `u16` costs +0x10 there.
 - **The `u16` startFrame is the one real codegen risk, and it is rare.** 383 of
@@ -541,8 +541,8 @@ concurrent `tubuild verify` is reading. Stop it, or re-verify anything it
 overlapped, serially.
 
 The gates, once converted: `source_style` needs 10 exceptions (the 7 kept
-externs, Kinopio's two casts, and one `Player` cast at an undeclared
-`Player+0x5bc` matrix) instead of the 123 the respell-only cut needed;
+externs, Kinopio's two casts, and one `daPly_c` cast at an undeclared
+`daPly_c+0x5bc` matrix) instead of the 123 the respell-only cut needed;
 `check_decl_agreement`'s baseline SHRINKS by ~300 lines, because the externs
 that disagreed with the definitions are gone. Two config traps from the
 respell-only cut still bite:
@@ -576,7 +576,7 @@ every one of them with a definition in `src/`:
 
 `ApproachLinear`, `LoadMinimapChangeObject`, `dBgCh_SphCrr::SetObjAndSphere`,
 `dCc_c::Init`, `dCcAcPos_c::Init`, `dCcAc_c::Init`, `G3i::PerspectiveW_`,
-`Player::Bounce`, `Player::SpinBounce`, `Player::Hurt`,
+`daPly_c::Bounce`, `daPly_c::SpinBounce`, `daPly_c::Hurt`,
 `dMap_c::GetPosFromMinimapPos`, `dEnemyBase_c::KillByInvincibleChar`, and
 `dBgActor_c::UpdateKillByMegaChar`, which is the measured genuine wall and stays.
 
@@ -930,7 +930,7 @@ Additions from the 2026-07-04/05 overnight runs (credit: Fable refine agents):
 - **Shift-form is a coloring lever (2026-07-10).** `(unsigned short)((unsigned int)x >> 12)`
   vs `((unsigned int)(x << 4)) >> 16` extract the same field but color differently; the
   cast-then-shift form flipped a 10-div residual that survived all 24 decl-order
-  permutations (_ZN6Player11St_Owl_MainEv). Same family as the (short)x<<12 lever below.
+  permutations (_ZN7daPly_c11St_Owl_MainEv). Same family as the (short)x<<12 lever below.
 - **Big-offset placement: let the compiler split, don't pre-offset (2026-07-10).** For
   cluster offsets like base+0x52c4, a pre-offset pointer (`p = c + 0x5000`) hoists the add
   to block entry; writing raw large offsets off the ORIGINAL base makes mwccarm emit its
@@ -1071,7 +1071,7 @@ pre-writeback (func_ov073_021215cc, func_ov102_0214ae1c).
 sitting in three VERIFIED corpus files all along (func_0200d064, func_ov006_020ded00,
 and tonight's func_ov007_020c9f10, whose agent mined it from the corpus). Confirmed
 on two freshly-retired floor drafts: both byte-MATCH on first application
-(func_ov072_0211f9c4, Player::St_Squish_Init). A mechanical sweep applies it across
+(func_ov072_0211f9c4, daPly_c::St_Squish_Init). A mechanical sweep applies it across
 the whole backlog - see the crack-loop runbook. The floor sections above remain
 correct about PLAIN C forms; the laundered form escapes them.
 
@@ -1274,7 +1274,7 @@ Three levers surfaced cracking the 0x100-0x280 spread band (21/30 landed):
   Assigning a masked value into a declared `u16` local (then using it) produces the
   and-then-shift-pair narrowing idiom; doing the mask inline collapses to `ands`. Use the
   named-local spelling when the target shows the three-instruction narrowing.
-  (_ZN6Player17St_SlideKick_MainEv.)
+  (_ZN7daPly_c17St_SlideKick_MainEv.)
 
 New floor shapes confirmed (route to permuter/hand-fix, stop grinding from C): the
 **SMULL RdLo/RdHi register swap** and the **mul-destination-register choice** inside
@@ -3661,11 +3661,11 @@ rotates (pragma / booster / multi-def). The 6bb open-angle spec tightens once
 more: the missing construct must seal a shift-def from propagation while keeping
 named-block-scope rank - nothing in c99+gccext reaches that intersection.
 
-## 6bc. The vcall SPELLING is a callee-saved homing-rank lever (Player::CanEnterDoor, div 13->0, 2026-08-07)
+## 6bc. The vcall SPELLING is a callee-saved homing-rank lever (daPly_c::CanEnterDoor, div 13->0, 2026-08-07)
 
 The pret-idiom note (6e area) already records that C++ virtual dispatch loads the
 vptr before homing `this` where a C function-pointer cast homes first - a PROLOGUE
-ORDER effect. It is also an ALLOCATOR RANK effect: on _ZN6Player12CanEnterDoorEh
+ORDER effect. It is also an ALLOCATOR RANK effect: on _ZN7daPly_c12CanEnterDoorEh
 (0x020ca5cc, the door-crash NONMATCHING), every source form spelling the +0x48
 vcall as a C fn-ptr cast (`(*(T**)(c+0x360))->vtbl[0x48/4](...)`) homed the args
 this=r4/door=r5, a global 13-word rename against the ROM; respelling ONLY the
@@ -7183,7 +7183,7 @@ reproduced in a 15-instruction toy, `_abwork/crkh/toyprobe.py`:
                                   (now in src/minigames/d_mg3d_esp_anim_set.cpp)
   Both are the final `else` of an if / else-if / else chain, so the jumped-over arm is the
   else-if body and contains that arm's own test. The multi-predecessor precedents 6u names
-  (src/unnamed/ov007/func_ov007_020b1f2c.cpp, func_ov002_020d85fc in src/game/player/Player.cpp) are `&&` chains.
+  (src/unnamed/ov007/func_ov007_020b1f2c.cpp, func_ov002_020d85fc in src/game/player/d_a_ply_methods.cpp) are `&&` chains.
   Found by disassembling every matched src/ file's ROM range and looking for a forward
   conditional branch into a <=7-instruction block ending in a return whose only predecessor is
   that branch: 16 hits in the whole corpus.
@@ -7801,7 +7801,7 @@ global-ish web, not a fresh name).
 
 ### 6ct addendum: two rows where the receiver reproduces the ROM's colouring, or has nothing to grip, and the row does not close (run link100 wave 12, lane W12-4, 2026-09-13)
 
-`_ZN6Player19St_SwingPlayer_MainEv` (ov002 0x020d9fec, 0x3c4; stored 8, stands). Roles in
+`_ZN7daPly_c19St_SwingPlayer_MainEv` (ov002 0x020d9fec, 0x3c4; stored 8, stands). Roles in
 +0x11c..+0x178, ROM / ours: `av` (the loaded angular speed) ip / r3; `diff` (the s16
 difference, the `asr` at +0x138) r3 / r1; `step` (the shifted value at +0x150 and +0x158)
 r3 / r3. In the ROM `diff` and `step` are ONE web across the if-converted arms (the lt arm

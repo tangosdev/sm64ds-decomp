@@ -195,7 +195,7 @@ already uses for `src/game/actors/d_a_obj_abuku.cpp`:
 | `_ZN7daBmb_cD1Ev` | tangosdev |
 | `_ZN7daBmb_cD0Ev` | tangosdev |
 | `_ZN7daBmb_c16OnAimedAtWithEggEv` | tangosdev |
-| `_ZN7daBmb_c13OnTurnIntoEggER6Player` | tangosdev |
+| `_ZN7daBmb_c13OnTurnIntoEggER7daPly_c` | tangosdev |
 | `_ZN7daBmb_c16CleanupResourcesEv` | tangosdev |
 | `_ZN7daBmb_c6RenderEv` | tangosdev |
 | `_ZN7daBmb_c8BehaviorEv` | lunavyqo |

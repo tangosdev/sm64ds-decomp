@@ -23,7 +23,7 @@ enum d_a_obj_ice_board_AssetId {
 };
 
 #include "daObjIceBoard_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
@@ -140,12 +140,12 @@ void daObjIceBoard_c::Kill() {
     MarkForDestruction();
 }
 
-// @symbol _ZN15daObjIceBoard_c15OnHitByMegaCharER6Player
+// @symbol _ZN15daObjIceBoard_c15OnHitByMegaCharER7daPly_c
 /* daObjIceBoard_c::OnHitByMegaChar -- vtable slot 27, ov018 0x02112858.
  *
- * Player::IncMegaKillCount is a real method, and the trailing unqualified
+ * daPly_c::IncMegaKillCount is a real method, and the trailing unqualified
  * Kill() reaches this class's own slot-31 override. */
-void daObjIceBoard_c::OnHitByMegaChar(Player &player) {
+void daObjIceBoard_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Kill();
 }

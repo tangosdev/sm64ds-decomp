@@ -13,7 +13,7 @@ were scattered shards owned by the same class:
   `func_ov002_020b5b98`, loads model + KCL and registers the mesh
   callbacks.
 - `0x020b5f9c` -- the mesh-collision callback: if the touching actor's
-  `actorID` is 0xbf (Player) it is stored in `mRider` and `mRiderTimeout`
+  `actorID` is 0xbf (daPly_c) it is stored in `mRider` and `mRiderTimeout`
   reloads to 5.
 - `0x020b5fc4` -- the registration thunk `0x020b5e58` stores into the mesh
   collider's callback slot. The callback ABI hands it an extra leading

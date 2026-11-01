@@ -4,12 +4,12 @@
   "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
   "base_commit": "08b118098ecb7ce86b85f1215886a4618e268a86",
   "workflow_commit": "18af52b49b9fb5663d417bdfa86109b7b157aaa3",
-  "source": "src/actors/Player.cpp",
+  "source": "src/actors/daPly_c.cpp",
   "source_sha256": "b0781ffde951ead1db39a7fca80d1f7d01255c7129b845016a0d8a3728a8a321",
-  "manifest": "config/tu_manifest.d/ov002/Player.json",
+  "manifest": "config/tu_manifest.d/ov002/daPly_c.json",
   "manifest_sha256": "cedd711451b7e760295a4b54509576c1d6b0f940dc886fe4069c3f94006aa0ce",
-  "change": "Compile Player script-animation helper func_ov002_020bcdf0 as C++ with C linkage. Use an actual int[2] animation entry to preserve the retail stack snapshot and native Player, frame-controller and Sound calls and existing fields.",
-  "receiver": "Player, established by St_Wait_Main call and existing script-command evidence; original free C-linkage entry preserved.",
+  "change": "Compile daPly_c script-animation helper func_ov002_020bcdf0 as C++ with C linkage. Use an actual int[2] animation entry to preserve the retail stack snapshot and native daPly_c, frame-controller and Sound calls and existing fields.",
+  "receiver": "daPly_c, established by St_Wait_Main call and existing script-command evidence; original free C-linkage entry preserved.",
   "production": {
     "mode": "ordinary text-only promoted TU",
     "range": [
@@ -38,7 +38,7 @@
       "int[2]",
       "unsigned[2]"
     ],
-    "native_api_models": "Player methods, existing fields, real dExtFrameCtrl_c base reference and WillHitFrame all strict-match",
+    "native_api_models": "daPly_c methods, existing fields, real dExtFrameCtrl_c base reference and WillHitFrame all strict-match",
     "new_volatile": false,
     "new_assembly": false,
     "dummy_declarations": false,

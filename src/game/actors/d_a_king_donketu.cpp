@@ -34,7 +34,7 @@
  *                                  to 1 and returns to ..3320.
  *   ..3320     ..05f0    ..03ac    waypoint hops, counting landings.
  *   ..3340     ..0390    ..00e0    leap toward mSpawnPos; while falling it
- *                                  calls Player::Unk_020c6a10 on the player
+ *                                  calls daPly_c::Unk_020c6a10 on the player
  *                                  touching it if the boss is the higher.
  *   ..3380     ..0098    ..005c    pose until the animation finishes, then
  *                                  back to the chase.
@@ -77,7 +77,7 @@
  *   takes C*. The sixteen state labels are descriptions; the sinit owns
  *   the records. The header's 0x504 size wrap stays.
  * - dExtBlendAnmModel_c::SetAnim, Particle::System::New / NewSimple,
- *   RunningSlidingDustAt, Player::Hurt, Sound::ChangeMusicVolume and
+ *   RunningSlidingDustAt, daPly_c::Hurt, Sound::ChangeMusicVolume and
  *   DropShadowRadHeight stay mangled (Fix12<int> by value).
  *   NewSimple and the layer-3 sound calls retain their local declarations.
  *   FromUniqueID is followed by a store at sys+0x44, which is still pad_042
@@ -125,7 +125,7 @@ enum daKing_Donketu_c_AssetId {
 #include "Particle__System.h"
 #include "SaveData.h"
 #include "Message.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dCamera_c.h"
 #include "dBgCh_Lin.h"
 #include "nitro/fx/fx.h"
@@ -483,7 +483,7 @@ void daKing_Donketu_c::func_ov073_0211f494(void *pb)
        coin counts into mCoinsSpawned and the one that takes it past 0x1e also
        spawns a SCALEUP_KINOKO and resets the count. Then the boss goes to
        ..33a0 unless it is already in ..33a0 or ..33d0.
-     - With no hit, Player::Hurt is tried on the other actor. If it hurt: a
+     - With no hit, daPly_c::Hurt is tried on the other actor. If it hurt: a
        particle 0x8a at the other actor's position, and in ..33d0
        SND_HIT_REGISTERED plays and the function returns 1. Elsewhere the boss turns mPrevAngleY by half a turn
        (0x8000), plays SND_REVERSE_AFTER_HURT, goes to ..3360 with mPhase 2,
@@ -515,7 +515,7 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
     {
         int isBf = (int)(target->actorID == ACTOR_PLAYER);
         if (isBf == 1) {
-            if (((Player *)target)->mIsMega != 0) {
+            if (((daPly_c *)target)->mIsMega != 0) {
                 s32 flags = c->mdCcAcPos_c.hitFlags & 0x107e0;
                 if (flags) {
                     c->mHorzSpeed = 0x41000;
@@ -531,8 +531,8 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
                 }
             }
             if (hit == 0) {
-                if ((c->mdCcAcPos_c.hitFlags & 0x70) || (((Player *)target)->mIsMetal != 0)
-                    || (c->JumpedOnByPlayer(c->mdCcAcPos_c, *(Player *)target) != 0)) {
+                if ((c->mdCcAcPos_c.hitFlags & 0x70) || (((daPly_c *)target)->mIsMetal != 0) ||
+                    (c->JumpedOnByPlayer(c->mdCcAcPos_c, *(daPly_c *)target) != 0)) {
                     c->func_ov073_0211f494(c);
                     c->mHorzSpeed = 0x20000;
                     hit = 1;
@@ -610,7 +610,7 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
         v2.x = c->mPosX;
         v2.y = c->mPosY;
         v2.z = c->mPosZ;
-        if (((Player *)target)->Hurt(v2, 0, 0x14000, 1, 0, 1) == 0)
+        if (((daPly_c *)target)->Hurt(v2, 0, 0x14000, 1, 0, 1) == 0)
             goto done0;
     }
     {
@@ -711,7 +711,7 @@ int daKing_Donketu_c::func_ov073_0211fbec()
 // @symbol _ZN16daKing_Donketu_c19func_ov073_0211fbf4Ev
 int daKing_Donketu_c::func_ov073_0211fbf4() {
     daKing_Donketu_c *c = this;
-    Player *pl = c->mTalkPlayer;
+    daPly_c *pl = c->mTalkPlayer;
     c->mSoundHandle = Sound::PlayLong(c->mSoundHandle, 3, 0x170, *(Vector3 *)&c->mCamSpacePos, 0);
     ((dCamera_c *)data_0209f318)->SetFlag_3();
     c->func_ov073_0211f144();
@@ -739,7 +739,7 @@ int daKing_Donketu_c::func_ov073_0211fc78() {
     daKing_Donketu_c *c = this;
     struct Vector3 msgpos[2];
     struct Vector3 la, ps, in, out;
-    Player* player;
+    daPly_c *player;
     dCamera_c* cam;
 
     player = c->ClosestPlayer();
@@ -818,7 +818,7 @@ int daKing_Donketu_c::func_ov073_0211fe84()
 int daKing_Donketu_c::func_ov073_0211fe8c() {
     daKing_Donketu_c *c = this;
     struct Vector3 look, pos, in, out;
-    Player* player;
+    daPly_c *player;
     dCamera_c* cam;
 
     c->mSoundHandle = Sound::PlayLong(c->mSoundHandle, 3, 0x170, *(Vector3 *)&c->mCamSpacePos, 0);
@@ -909,7 +909,7 @@ int daKing_Donketu_c::func_ov073_02120098() {
    x/z velocity words mSpeedX / mSpeedZ are set to 50.0 (0x32000) when
    mHitsRemaining is 2, else 30.0 (0x1e000), along that angle. While falling,
    if the actor touching the boss is the player and the boss is the higher,
-   Player::Unk_020c6a10(1) is called on it. On the ground the motion is
+   daPly_c::Unk_020c6a10(1) is called on it. On the ground the motion is
    zeroed, the camera is shaken (0x1388000) and SND_HOP_LANDING plays (once,
    while mStateScratch is 0). With mHitsRemaining 1 and mEdgeRecovered clear the boss
    then waits 0x82 frames (counted in mStateScratch) before ..3380; otherwise
@@ -966,7 +966,7 @@ int daKing_Donketu_c::func_ov073_021200e0()
                     if (eq != FALSE) {
                         Vec3 pos = *(Vec3*)&actor->mPosX;
                         if (mPosY > pos.y) {
-                            ((Player *)actor)->Unk_020c6a10(1);
+                            ((daPly_c *)actor)->Unk_020c6a10(1);
                         }
                     }
                 }
@@ -1539,7 +1539,7 @@ int daKing_Donketu_c::func_ov073_02120ed0() {
         if ((unsigned short)c->mStateTimer != 0)
             break;
         if (c->mPhase == 2) {
-            Player *p = c->ClosestPlayer();
+            daPly_c *p = c->ClosestPlayer();
             if (p != 0) {
                 int t;
                 if (p->GetHurtState() == 4)
@@ -1604,7 +1604,7 @@ int daKing_Donketu_c::func_ov073_0212128c()
     struct Vector3 la;
     struct Vector3 ps;
     void* cam;
-    Player* player;
+    daPly_c *player;
 
     cam = data_0209f318;
     player = c->mTalkPlayer;
@@ -1656,10 +1656,10 @@ int daKing_Donketu_c::func_ov073_02121388() {
     struct Vector3 vmsg;
     struct Vector3 la;
     struct Vector3 ps;
-    Player* player;
+    daPly_c *player;
     void* cam;
     int msg;
-    Player* p;
+    daPly_c *p;
 
     player = c->ClosestPlayer();
     if (player == 0) return 1;

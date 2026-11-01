@@ -22,7 +22,7 @@
 // The name is the compiler's: mwccarm emits a call to __cxa_vec_new for
 // `new T[n]` of a class with a constructor and a destructor (a probe of
 // `new T[7]` compiled with the ROM's flags leaves __cxa_vec_new undefined),
-// and the parameters and cookie are the Itanium C++ ABI's. Player.cpp and
+// and the parameters and cookie are the Itanium C++ ABI's. d_a_ply_methods.cpp and
 // dScStage_c::InitResources call it by name because their element
 // constructors are passed by address.
 //

@@ -59,7 +59,7 @@ enum daSnowman_c_AssetId {
 #include "SharedFilePtr.h"
 #include "PathPtr.h"
 #include "SaveData.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "math/Approach.h"
 
@@ -213,7 +213,7 @@ void daSnowman_c::func_ov081_02124134()
    after 40 frames of that topples over. */
 void daSnowman_c::func_ov081_0212423c(int idx)
 {
-    Player *player;
+    daPly_c *player;
     struct Vector3 v;
     int ang;
     int off;
@@ -281,7 +281,7 @@ void daSnowman_c::func_ov081_021243cc()
 
     u32 id = this->mdCcAcPos_c.otherOwner;
     if (id == 0) return;
-    Player *found = (Player *)dActor_c::FindWithID(id);
+    daPly_c *found = (daPly_c *)dActor_c::FindWithID(id);
     if (found == 0) return;
 
     int hit;
@@ -312,7 +312,7 @@ void daSnowman_c::func_ov081_021243cc()
             vv.x = (s16)-0x1200;
             vv.y = 0;
             vv.z = 0;
-            KillByInvincibleChar(vv, *(Player *)found, 0);
+            KillByInvincibleChar(vv, *(daPly_c *)found, 0);
             func_02012694(0x1d, &this->mCamSpacePosX);
             hit = 1;
         }
@@ -343,7 +343,7 @@ int daSnowman_c::func_ov081_021245e8()
     this->mClosestPlayerIdx = -1;
     if ((int)data_0209f21c[0] > 0) {
         do {
-            Player *obj = (Player *)data_0209f394[i];
+            daPly_c *obj = (daPly_c *)data_0209f394[i];
             if (obj != 0) {
                 int dist;
                 int *s = &obj->mPosX;   /* one base pointer; see 0212423c */
@@ -525,7 +525,7 @@ int daSnowman_c::func_ov081_02124b98()
 {
     Vector3 in, out, v[2];
     dActor_c *target;
-    Player *player;
+    daPly_c *player;
 
     if (this->mSnowballID != 0) {
         target = dActor_c::FindWithID(this->mSnowballID);
@@ -927,7 +927,7 @@ int daSnowman_c::Render()
 // @symbol _ZN11daSnowman_c8BehaviorEv
 int daSnowman_c::Behavior()
 {
-    Player *p;
+    daPly_c *p;
     dActor_c *cap;
     if (mType == 3) {
         switch (mCapPhase) {

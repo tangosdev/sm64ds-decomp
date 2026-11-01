@@ -1,4 +1,4 @@
-# PR #3227: Player reference parameter
+# PR #3227: daPly_c reference parameter
 
 Input: `dbd94c7c483db1b6c5603c7ec2a680b46461643e`.
 Task: `pr3227-player-reference`. Producer/integration owner: `codex-pr3227-reference`.
@@ -6,20 +6,20 @@ Independent reviewer: `kpa3_review`. Endpoint: push to existing PR #3227; no mer
 
 ## Scope and authorization
 
-Change [func_ov002_020d7430](../../../src/game/player/Player.cpp) to take `Player&`, update its two source callers, and
+Change [func_ov002_020d7430](../../../src/game/player/d_a_ply_methods.cpp) to take `daPly_c&`, update its two source callers, and
 remove its obsolete char* declaration from include/decl_common.h. The user
 explicitly confirmed this exact prepared patch, including the scoped header edit
 while `jump-contract-repair-0918` reserves that header. That task's branch and
 reservation remain untouched. No other shared-header declarations change.
 
-The existing Player method passes *this directly. The remaining legacy free
+The existing daPly_c method passes *this directly. The remaining legacy free
 function caller converts its char* at that call boundary. The callee retains a
 char* view solely for its existing Hurt, state and address-named helper bridges.
 C linkage preserves the enrolled symbol name. No layout, symbol/config identity,
 attribution, enrollment, or baseline exception changes are needed.
 
-Completion is partial: this exposes the evidenced Player object in the signature;
-it does not complete the legacy caller, shared Player fields, or engine bridges.
+Completion is partial: this exposes the evidenced daPly_c object in the signature;
+it does not complete the legacy caller, shared daPly_c fields, or engine bridges.
 The prior handoff pr3227-player-caller.md records those inherited limitations.
 
 ## Verification
@@ -27,9 +27,9 @@ The prior handoff pr3227-player-caller.md records those inherited limitations.
 The prepared patch's three functions independently passed the pinned compiler's
 linked-byte probe before application: VERIFIED, diffs [], blind 0 for each:
 
-- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [func_ov002_020d6790](../../../src/game/player/Player.cpp): 0x020d6790, size 0x208.
-- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [func_ov002_020d7430](../../../src/game/player/Player.cpp): 0x020d7430, size 0xd4.
-- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [Player::St_YoshiPower_Main](../../../src/game/player/Player.cpp): 0x020d7504, size 0x9cc.
+- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [func_ov002_020d6790](../../../src/game/player/d_a_ply_methods.cpp): 0x020d6790, size 0x208.
+- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [func_ov002_020d7430](../../../src/game/player/d_a_ply_methods.cpp): 0x020d7430, size 0xd4.
+- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [daPly_c::St_YoshiPower_Main](../../../src/game/player/d_a_ply_methods.cpp): 0x020d7504, size 0x9cc.
 
 Applied production declaration check:
 `python tools/check_decl_agreement.py --changed dbd94c7c483db1b6c5603c7ec2a680b46461643e`

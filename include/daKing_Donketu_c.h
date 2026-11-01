@@ -64,7 +64,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        (..3330) and the second cut scene (..33e0) store their ClosestPlayer
        result here, and the states that wait out a talk (..3350, ..3410) ask
        it for its talk state. */
-    Player *mTalkPlayer;                                   /* 0x3e4 */
+    daPly_c *mTalkPlayer; /* 0x3e4 */
     /* Two eight-entry waypoint sets, both seeded with the boss's own position by
        InitResources and refilled by daObjEwbIce_c::StateReport_Update. The steering helpers
        (func_ov073_021203ac / _02120610) index one of them with mWaypointCursor

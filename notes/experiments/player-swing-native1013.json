@@ -8,11 +8,11 @@
   },
   "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
   "status": "Producer gates passed on the frozen current-base checkpoint; independent Source acceptance required.",
-  "change": "Define the existing swing-state body as int Player::St_SwingPlayer_Main() with a real nonvirtual Player.h declaration and an adjacent @symbol annotation recognized by the declaration collector. The local char* view binds to this; no forwarding wrapper or symbol alias is added.",
-  "source": "src/actors/Player.cpp",
-  "header": "include/Player.h",
-  "manifest": "config/tu_manifest.d/ov002/Player.json",
-  "symbol": "_ZN6Player19St_SwingPlayer_MainEv",
+  "change": "Define the existing swing-state body as int daPly_c::St_SwingPlayer_Main() with a real nonvirtual daPly_c.h declaration and an adjacent @symbol annotation recognized by the declaration collector. The local char* view binds to this; no forwarding wrapper or symbol alias is added.",
+  "source": "src/actors/daPly_c.cpp",
+  "header": "include/daPly_c.h",
+  "manifest": "config/tu_manifest.d/ov002/daPly_c.json",
+  "symbol": "_ZN7daPly_c19St_SwingPlayer_MainEv",
   "address": "ov002:0x020d9fec",
   "size_bytes": 964,
   "inherited_findings": [
@@ -21,7 +21,7 @@
       "id": "PLAYERANIM-ABI-001",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
       "kind": "reconstruction",
-      "location": "src/actors/Player.cpp:328",
+      "location": "src/actors/daPly_c.cpp:328",
       "owner": "codex-player-anim-coordinator1013",
       "reason": "Accept the narrowly scoped C++ language/API improvement as partial. The three pre-existing scalar bridges preserve the external raw fixed-point ABI; native signatures and their codegen remain future matching work.",
       "summary": "Scalar mangled SetAnim and particle Fix12 ABI bridges remain."
@@ -31,7 +31,7 @@
       "id": "PLAYERANIM-RAWVIEWS-002",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
       "kind": "reconstruction",
-      "location": "src/actors/Player.cpp:376",
+      "location": "src/actors/daPly_c.cpp:376",
       "owner": "codex-player-anim-coordinator1013",
       "reason": "The new real ModelAnim-to-dExtFrameCtrl_c base adjustment is supported by the existing +0x50 layout. The inherited frame read/cast chain and prop pointer at +0x72c are not presented as reconstructed interfaces; retain their cleanup under the class continuation.",
       "summary": "Selected frame-controller, camera-space vector and spawned-prop accesses retain raw views and casts."
@@ -41,7 +41,7 @@
       "id": "PLAYERANIM-VOLATILE-003",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
       "kind": "reconstruction",
-      "location": "src/actors/Player.cpp:391",
+      "location": "src/actors/daPly_c.cpp:391",
       "owner": "codex-player-anim-coordinator1013",
       "reason": "Independent ROM inspection confirms the store at020bcf98 and reload fromsp+20 at020bcfb8 before the particle call. Independently removing only this expression emits604rather than636bytes. Accept its retention as deferred reconstruction; neither the producer report nor this review claims the original source used volatile.",
       "summary": "Inherited volatile X load is a retained reconstruction device, not established original intent."
@@ -51,13 +51,13 @@
       "id": "PLAYERANIM-BOUNDARY-004",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3785",
       "kind": "reconstruction",
-      "location": "src/actors/Player.cpp:321",
+      "location": "src/actors/daPly_c.cpp:321",
       "owner": "codex-player-anim-coordinator1013",
-      "reason": "The Player receiver is supported by St_Wait_Main and existing layout. An actual two-int entry models the snapshot naturally and restores C++ codegen; only equality tests and the unsigned SetAnim conversion use its ID, so changing local storage from unsigned field to int bits introduces no different comparison. No original array representation or original helper name is claimed. Genuine member signature/table naming remain deferred.",
+      "reason": "The daPly_c receiver is supported by St_Wait_Main and existing layout. An actual two-int entry models the snapshot naturally and restores C++ codegen; only equality tests and the unsigned SetAnim conversion use its ID, so changing local storage from unsigned field to int bits introduces no different comparison. No original array representation or original helper name is claimed. Genuine member signature/table naming remain deferred.",
       "summary": "Free C-linkage char-pointer entry and array-backed AnimEntry27 table remain partial."
     }
   ],
-  "historical_scope": "The four inherited findings and notes/experiments/player-anim-copy-cpp1013.json retain their original script-animation scope. This state-member change does not complete Player reconstruction or resolve unrelated raw/Fix12/lifecycle work.",
+  "historical_scope": "The four inherited findings and notes/experiments/player-anim-copy-cpp1013.json retain their original script-animation scope. This state-member change does not complete daPly_c reconstruction or resolve unrelated raw/Fix12/lifecycle work.",
   "historical_predecessor": {
     "task": "player-anim-copy-cpp1013",
     "accepted_commit": "06045911b387715e1432aac071d0ebceb19705ec",
@@ -77,7 +77,7 @@
     "native_definition": {
       "definition": "int (<this>)",
       "is_member": true,
-      "symbol": "_ZN6Player19St_SwingPlayer_MainEv",
+      "symbol": "_ZN7daPly_c19St_SwingPlayer_MainEv",
       "line": 19765,
       "manifest_unchanged": true,
       "historical_report_unchanged": true,
@@ -86,14 +86,14 @@
     "whole_player_object": {
       "base": "da2ee4ed5574f03eeb805fdb4de647740dfa2561",
       "checkpoint": "0e8009a587e115270f2855f6f434fd747d1b855f",
-      "source": "src/actors/Player.cpp",
-      "manifest": "config/tu_manifest.d/ov002/Player.json",
+      "source": "src/actors/daPly_c.cpp",
+      "manifest": "config/tu_manifest.d/ov002/daPly_c.json",
       "compiler": "2004/b56",
       "strict_functions": 612,
       "blind": 0,
       "diffs": [],
       "target": {
-        "name": "_ZN6Player19St_SwingPlayer_MainEv",
+        "name": "_ZN7daPly_c19St_SwingPlayer_MainEv",
         "module": "ov002",
         "addr": "0x020d9fec",
         "verdict": "VERIFIED",
@@ -275,7 +275,7 @@
         },
         {
           "file": "src/actors/daDoor_c.cpp",
-          "name": "_ZN8daDoor_c19func_ov100_02144a38EP6Player",
+          "name": "_ZN8daDoor_c19func_ov100_02144a38EP7daPly_c",
           "module": "ov100",
           "addr": "0x2144a38",
           "verdict": "BLIND-3",
@@ -284,7 +284,7 @@
         },
         {
           "file": "src/actors/daDoor_c.cpp",
-          "name": "_ZN8daDoor_c19func_ov100_021451c4EPvP6Player",
+          "name": "_ZN8daDoor_c19func_ov100_021451c4EPvP7daPly_c",
           "module": "ov100",
           "addr": "0x21451c4",
           "verdict": "BLIND-2",
@@ -634,7 +634,7 @@
           "diffs": []
         },
         {
-          "file": "src/actors/Scuttlebug.cpp",
+          "file": "src/actors/daSpd_c.cpp",
           "name": "__sinit_Scuttlebug.cpp",
           "module": "ov071",
           "addr": "0x21226ac",
@@ -724,7 +724,7 @@
           "diffs": []
         },
         {
-          "file": "src/actors/Eyerok.cpp",
+          "file": "src/actors/daIwante_c.cpp",
           "name": "daIwante_c_classInit",
           "module": "ov066",
           "addr": "0x211a370",
@@ -733,7 +733,7 @@
           "diffs": []
         },
         {
-          "file": "src/actors/Eyerok.cpp",
+          "file": "src/actors/daIwante_c.cpp",
           "name": "__sinit_Eyerok.cpp",
           "module": "ov066",
           "addr": "0x211a418",
@@ -1091,7 +1091,7 @@
           "id": 1,
           "tree": "C:/tmp/sm64ds-player-stock1013-01",
           "files": [
-            "src/actors/Player.cpp"
+            "src/actors/daPly_c.cpp"
           ],
           "expected_rows": 612,
           "head": "0e8009a587e115270f2855f6f434fd747d1b855f",
@@ -1106,7 +1106,7 @@
             "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
             "tools/prepush_linkcheck.py",
             "--files",
-            "src/actors/Player.cpp",
+            "src/actors/daPly_c.cpp",
             "--json",
             "build/player-stock1013/result.json"
           ],
@@ -1304,8 +1304,8 @@
             "src/actors/daFPknBall_c.cpp",
             "src/game/actors/d_a_ch_scene.cpp",
             "src/actors/daObjKanban_c.cpp",
-            "src/_ZN6Player13OnYoshiTryEatEv.cpp",
-            "src/_ZN6PlayerD0Ev.cpp",
+            "src/_ZN7daPly_c13OnYoshiTryEatEv.cpp",
+            "src/_ZN7daPly_cD0Ev.cpp",
             "src/d_a_ply.cpp"
           ],
           "expected_rows": 463,
@@ -1340,8 +1340,8 @@
             "src/actors/daFPknBall_c.cpp",
             "src/game/actors/d_a_ch_scene.cpp",
             "src/actors/daObjKanban_c.cpp",
-            "src/_ZN6Player13OnYoshiTryEatEv.cpp",
-            "src/_ZN6PlayerD0Ev.cpp",
+            "src/_ZN7daPly_c13OnYoshiTryEatEv.cpp",
+            "src/_ZN7daPly_cD0Ev.cpp",
             "src/d_a_ply.cpp",
             "--json",
             "build/player-stock1013/result.json"
@@ -1371,7 +1371,7 @@
           "files": [
             "src/actors/daStar_c.cpp",
             "src/actors/daObjHatenaBlock_c.cpp",
-            "src/actors/Scuttlebug.cpp",
+            "src/actors/daSpd_c.cpp",
             "src/actors/daTgz_c.cpp",
             "src/actors/daCoin_c.cpp",
             "src/actors/daBgSnmBdy_c.cpp",
@@ -1388,8 +1388,8 @@
             "src/game/actors/daObjPushblock_c.cpp",
             "src/game/actors/d_a_obj_c1_hikari.cpp",
             "src/game/actors/d_a_warpkun.cpp",
-            "src/_ZN6PlayerC1Ev.cpp",
-            "src/_ZN6PlayerD1Ev.cpp",
+            "src/_ZN7daPly_cC1Ev.cpp",
+            "src/_ZN7daPly_cD1Ev.cpp",
             "src/unnamed/arm9/0202/func_02029408.cpp"
           ],
           "expected_rows": 463,
@@ -1407,7 +1407,7 @@
             "--files",
             "src/actors/daStar_c.cpp",
             "src/actors/daObjHatenaBlock_c.cpp",
-            "src/actors/Scuttlebug.cpp",
+            "src/actors/daSpd_c.cpp",
             "src/actors/daTgz_c.cpp",
             "src/actors/daCoin_c.cpp",
             "src/actors/daBgSnmBdy_c.cpp",
@@ -1424,8 +1424,8 @@
             "src/game/actors/daObjPushblock_c.cpp",
             "src/game/actors/d_a_obj_c1_hikari.cpp",
             "src/game/actors/d_a_warpkun.cpp",
-            "src/_ZN6PlayerC1Ev.cpp",
-            "src/_ZN6PlayerD1Ev.cpp",
+            "src/_ZN7daPly_cC1Ev.cpp",
+            "src/_ZN7daPly_cD1Ev.cpp",
             "src/unnamed/arm9/0202/func_02029408.cpp",
             "--json",
             "build/player-stock1013/result.json"
@@ -1451,7 +1451,7 @@
           "id": 6,
           "tree": "C:/tmp/sm64ds-player-stock1013-06",
           "files": [
-            "src/actors/Eyerok.cpp",
+            "src/actors/daIwante_c.cpp",
             "src/actors/daMky_c.cpp",
             "src/game/actors/d_a_btn.cpp",
             "src/actors/daC_Jugem_c.cpp",
@@ -1485,7 +1485,7 @@
             "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
             "tools/prepush_linkcheck.py",
             "--files",
-            "src/actors/Eyerok.cpp",
+            "src/actors/daIwante_c.cpp",
             "src/actors/daMky_c.cpp",
             "src/game/actors/d_a_btn.cpp",
             "src/actors/daC_Jugem_c.cpp",
@@ -1734,9 +1734,9 @@
     "port": "7f94d11db1302e785eb3cdff9d5f7d8416f4ee33"
   },
   "input_git_blobs": {
-    "src/actors/Player.cpp": "7d4b09d6401306634f10167ceb3860a40d77fcd4",
-    "include/Player.h": "93f59e0022d8c031a4c789059f88a33578e1de35",
-    "config/tu_manifest.d/ov002/Player.json": "b777c3595ddf37eb4c51a61158bb4b763241c28e",
+    "src/actors/daPly_c.cpp": "7d4b09d6401306634f10167ceb3860a40d77fcd4",
+    "include/daPly_c.h": "93f59e0022d8c031a4c789059f88a33578e1de35",
+    "config/tu_manifest.d/ov002/daPly_c.json": "b777c3595ddf37eb4c51a61158bb4b763241c28e",
     "notes/experiments/player-anim-copy-cpp1013.json": "4574b3d43d8984d386b2cd28221805852596424b"
   },
   "report_only_finalization": "Only this report changes after the tested checkpoint; build/player-swing-native1013/final-binding.json checks all five build trees and exact final changed paths.",

@@ -16,7 +16,7 @@
  * 814); this TU only loads and releases them.
  *
  * Notes (measured spellings that do not match):
- * - HandleCylinderHit: Player::Hurt with Fix12<int> knockback: 0x210 -> 0x21c
+ * - HandleCylinderHit: daPly_c::Hurt with Fix12<int> knockback: 0x210 -> 0x21c
  *   (+12). SpinBounce with Fix12<int>: 0x210 -> 0x21c (+12).
  * - The 0/1 the ROM materializes in HandleCylinderHit, UpdateModelTransform
  *   and Render comes from the int-returning IsPlayerActor / IsInYoshiMouth
@@ -33,7 +33,7 @@ enum daHuwa_c_AssetId { ASSET_HUWAHUWA_MODEL_BMD = 0x032d, ASSET_HUWAHUWA_MOVE_B
 #include "common.h"
 #include "decl_Enemy.h"
 #include "daHuwa_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -60,7 +60,7 @@ extern HuwaModelFilePtr gHuwahuwaModelModelFile;
 extern HuwaAnimationFileHandle gHuwahuwaMoveAnimationFile;
 
 /* C helpers with no shared header: the arm9 vector routines and
- * func_ov002_020e10a8, Player::IsState of the state SpinBounce enters. */
+ * func_ov002_020e10a8, daPly_c::IsState of the state SpinBounce enters. */
 extern "C" {
 extern int func_ov002_020e10a8(void *);
 
@@ -146,14 +146,14 @@ void daHuwa_c::KillWithCoins() {
 }
 
 /* Cylinder hits. Slot 29 is OnAimedAtWithEgg; called through dActor_c so it
- * stays a virtual call. func_ov002_020e10a8 is Player::IsState of the state
+ * stays a virtual call. func_ov002_020e10a8 is daPly_c::IsState of the state
  * SpinBounce enters. */
 // @symbol _ZN8daHuwa_c17HandleCylinderHitEv
 void daHuwa_c::HandleCylinderHit() {
     dActor_c *other;
     unsigned int id;
     int flags;
-    Player *player;
+    daPly_c *player;
     Vector3_16 knock;
     Vector3 pos;
 
@@ -171,7 +171,7 @@ void daHuwa_c::HandleCylinderHit() {
         knock.y = 0;
         knock.z = 0;
         height = OnAimedAtWithEgg();
-        KillByInvincibleChar(knock, *(Player *)other, height);
+        KillByInvincibleChar(knock, *(daPly_c *)other, height);
         return;
     }
 
@@ -183,7 +183,7 @@ void daHuwa_c::HandleCylinderHit() {
     if (!IsPlayerActor(other))
         return;
 
-    player = (Player *)other;
+    player = (daPly_c *)other;
     if (player->mIsMetal != 0 || player->IsOnShell() != 0 || (mdCcAc_c.hitFlags & kHitFire) != 0) {
         KillWithCoins();
         return;
@@ -279,7 +279,7 @@ int daHuwa_c::Behavior() {
 
     switch (mState) {
     case kStateChase: {
-        Player *player;
+        daPly_c *player;
         ApproachLinear(mHorzSpeed, 0x4000, 0x1000);
         player = ClosestPlayer();
         if (player != 0) {
@@ -341,8 +341,8 @@ int daHuwa_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN8daHuwa_c13OnTurnIntoEggER6Player
-void daHuwa_c::OnTurnIntoEgg(Player &player) {
+// @symbol _ZN8daHuwa_c13OnTurnIntoEggER7daPly_c
+void daHuwa_c::OnTurnIntoEgg(daPly_c &player) {
     if (!player.IsCollectingCap())
         player.RegisterEggCoinCount(3, 0, 0);
     else

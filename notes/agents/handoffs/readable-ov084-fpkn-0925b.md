@@ -30,7 +30,7 @@ This document describes this commit. The queue records its immutable output SHA.
 | E4 | UpdateClsnOffset | E3 with compound assignments, no `v`, no `flag` | DIFF |
 | E5 | UpdateClsnOffset | E3 without the `px`, `py`, `pz` pointer launders | 18/18. Adopted. |
 | E6 | UpdateClsnOffset | E5 with `if (actorID == 0xfb)` in place of the int flag | DIFF |
-| E7 | CheckClsnHits | Named fields; real `dActor_c::FindWithID`, `JumpedOnByPlayer`, `dEnemyBase_c::SpawnCoin`, `KillAndTrackInDeathTable`, `Player::IncMegaKillCount`, `Sound::PlayBank0`; gotos kept | 18/18, undefined symbols unchanged. Adopted. |
+| E7 | CheckClsnHits | Named fields; real `dActor_c::FindWithID`, `JumpedOnByPlayer`, `dEnemyBase_c::SpawnCoin`, `KillAndTrackInDeathTable`, `daPly_c::IncMegaKillCount`, `Sound::PlayBank0`; gotos kept | 18/18, undefined symbols unchanged. Adopted. |
 | E8 | CheckClsnHits | E7 with the two flag-pointer blocks written `mdCcAc_c.flags \|= 1; mFlags &= ~0x10000000;` | 18/18. Adopted. |
 | E9 | CheckClsnHits | E8 with the `t` int flags replaced by direct actorID compares | DIFF, one relocation destination wrong |
 | E10 | CheckClsnHits | Goto-free form: a `hit` flag and nested ifs | DIFF, one relocation destination wrong |
@@ -43,7 +43,7 @@ This document describes this commit. The queue records its immutable output SHA.
 | E17 | StateSpit | E16 with the `b` int flags replaced by direct actorID compares | DIFF, one relocation destination wrong |
 | E18 | StateWait | Named fields, the group leader typed `daFPkn_c *`; real `FindWithID`, `Spawn`, `DistToCPlayer`, `ClosestPlayer`, `KillAndTrackInDeathTable`, `TrackInDeathTable`, `Animation::Finished`, `ApproachLinear` | 18/18, undefined symbols unchanged. Adopted. |
 | E19 | StateWait | E18 with `mAngleY += mSpinSpeed` in place of the `short *` temporary | 18/18. Adopted. |
-| E20 | StateWait | E19 with a `Player *` local in place of reusing `int dist` for ClosestPlayer | 18/18. Adopted. |
+| E20 | StateWait | E19 with a `daPly_c *` local in place of reusing `int dist` for ClosestPlayer | 18/18. Adopted. |
 | E21 | StateWait | E20 with the `b` int flags replaced by direct actorID compares | DIFF, two relocation destinations wrong |
 | E22 | StateInit | Named fields, the members typed `daFPkn_c *`, real `dActor_c::FindWithActorID` | 18/18. Adopted. |
 | E23 | StateInit | E22 with `while ((p = FindWithActorID(0xfb, p)) != 0)` | DIFF |
@@ -56,7 +56,7 @@ This document describes this commit. The queue records its immutable output SHA.
 | E30 | InitResources | `if (actorID == 0xfc) ... else if (actorID == 0xfd)` without `id` and `cond` | DIFF |
 | E31 | InitResources | `id` kept, `cond` dropped | DIFF |
 | E32 | Declarations | `data_ov084_02130e04` declared as `PknSharedFile` and read as `.file`; the local copy of `include/decl_common.h`'s `data_ov084_02130e1c` removed | 18/18, relocations identical. Adopted. |
-| E33 | CheckClsnHits | `Vector3` locals for the two `Player::Hurt` positions in place of `int[3]` | 18/18. Adopted. |
+| E33 | CheckClsnHits | `Vector3` locals for the two `daPly_c::Hurt` positions in place of `int[3]` | 18/18. Adopted. |
 | E34 | SpawnDeathSmoke | `#include "Particle__System.h"`, `Particle::System::FromUniqueID` and `System::callbackScale` in place of the C-linkage bridge and the raw `+ 0x50` store | 18/18, undefined symbols unchanged. Adopted. |
 
 Every DIFF row was reverted. Where it leaves a codegen-forced form in the source (E6, E9, E10, E12, E13, E15, E17, E21, E23 to E31), that form carries one short comment.
@@ -70,9 +70,9 @@ Self-audit of the base, numbered R1 to R24. Issue #3148 lists categories rather 
 | R1 | 1 | extern "C" helpers and state bodies | The nine helpers `func_ov084_0212d2dc` to `0212e4e0` are C-linkage free functions over a `char *` receiver, defined inside one `extern "C"` block | Fixed | E0 and the per-function rows: members under coined names, symbols.txt rows, manifest symbol fields and attribution keys renamed in place. Only `bl` from inside the run reaches them. |
 | R2 | 1 | extern "C" helpers | `include/decl_common.h` still declares six of the old names (`func_ov084_0212d564`, `0212d86c`, `0212dc30`, `0212ddbc`, `0212e010`, `0212e4e0`) | Still deferred | Off limits (held by `jump-contract-repair-0918`). The declarations are unused: `grep` finds no caller in `src/`, and check_decl_agreement reports no new disagreement. Owner: next producer on #3148. |
 | R3 | 1 | extern "C" helpers | StateGrow calls daPkn_c's `func_ov084_0212ec04` with a `(char *)` cast | Still deferred | `include/decl_common.h` declares it `(char *, int)`; daPkn_c's handoff keeps it C-linkage for that reason. Owner: next producer on #3148. |
-| R4 | 3 | mangled bridges | C-linkage bridges for `dActor_c::FindWithID`, `FindWithActorID`, `ClosestPlayer`, `DistToCPlayer`, `JumpedOnByPlayer`, `Spawn`, `KillAndTrackInDeathTable`, `TrackInDeathTable`, `fBase_c::MarkForDestruction`, `dEnemyBase_c::SpawnCoin`, `Player::IncMegaKillCount`, `Animation::Finished`, `WillHitFrame`, `Sound::PlayBank0`, `ApproachLinear` (int and short), `Particle::System::FromUniqueID` | Fixed | E7, E11, E14, E18, E22, E34. The undefined-symbol set is unchanged. |
+| R4 | 3 | mangled bridges | C-linkage bridges for `dActor_c::FindWithID`, `FindWithActorID`, `ClosestPlayer`, `DistToCPlayer`, `JumpedOnByPlayer`, `Spawn`, `KillAndTrackInDeathTable`, `TrackInDeathTable`, `fBase_c::MarkForDestruction`, `dEnemyBase_c::SpawnCoin`, `daPly_c::IncMegaKillCount`, `Animation::Finished`, `WillHitFrame`, `Sound::PlayBank0`, `ApproachLinear` (int and short), `Particle::System::FromUniqueID` | Fixed | E7, E11, E14, E18, E22, E34. The undefined-symbol set is unchanged. |
 | R5 | 3 | mangled bridges | `ModelAnim::SetAnim`, `dCcAc_c::Init`, `dCcAcPos_c::Init` | Partially fixed | SetAnim is now measured (E24) and its comment says so. The two Init calls were not remeasured; the base comment claiming they DIFF is replaced by the file header's list of Fix12 bridges. Owner: next producer on #3148. |
-| R6 | 3 | mangled bridges | `Particle::System::New`, `dActor_c::SpawnFireball`, `SpawnCoins`, `Player::Hurt`, `Player::Bounce` | Still deferred | Each symbol carries `Fix12<int>` by value (the same wall as E24); `include/Player.h` declares neither Hurt nor Bounce and is a shared header. Not measured. Owner: next producer on #3148. |
+| R6 | 3 | mangled bridges | `Particle::System::New`, `dActor_c::SpawnFireball`, `SpawnCoins`, `daPly_c::Hurt`, `daPly_c::Bounce` | Still deferred | Each symbol carries `Fix12<int>` by value (the same wall as E24); `include/daPly_c.h` declares neither Hurt nor Bounce and is a shared header. Not measured. Owner: next producer on #3148. |
 | R7 | 2 | unk_ fields | `unk_1f4`, `unk_21c`, `unk_21d`, `unk_224`, `unk_228`, and the pads `pad_218` and `pad_221` that the helpers read as fields | Fixed | Coined names from their uses (see Lineage); 0x218 typed `s16`, 0x221 typed `s8` with `pad_222[2]` after it. The size assertion still holds. |
 | R8 | 2 | unk_ fields | `unk_108`, now written by name in CheckClsnHits (raw `0x108` at base) | Still deferred | Declared in `include/dEnemyBase_c.h`, a shared header outside this reservation. Owner: next producer on #3148. |
 | R9 | 4 | raw offsets | Every helper reads `this` through raw offsets | Fixed | No raw `this` offset remains in the TU (E2, E3, E7, E11, E14, E18, E22). |

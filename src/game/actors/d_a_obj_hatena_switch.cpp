@@ -36,7 +36,7 @@ enum d_a_obj_hatena_switch_AssetId {
 #include "daObjHatenaSwitch_c.h"
 #include "SpawnInfo.h"
 #include "Message.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "Particle__System.h"
@@ -182,7 +182,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
     }
 
     if (mTalking != 0) {
-        Player *player = mTalkingPlayer;
+        daPly_c *player = mTalkingPlayer;
         if (player != 0) {
             switch (player->GetTalkState()) {
             case 0:
@@ -214,7 +214,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
                 break;
             }
         } else {
-            Player *player = ClosestPlayer();
+            daPly_c *player = ClosestPlayer();
             if (player->mIsAirborne == 0) {
                 if (player->StartTalk(*this, true) != 0)
                     mTalkingPlayer = player;

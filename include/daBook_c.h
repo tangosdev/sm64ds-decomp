@@ -54,7 +54,7 @@ struct daBook_c : dEnemyBase_c {
     u32                          mLinkedActorID;        /* 0x418 */
     /* The player that touched or hit this book. func_ov020_021115ac stores it;
        func_ov020_02111340 and the player-damage paths read it back. */
-    Player                      *mTouchedPlayer;        /* 0x41c */
+    daPly_c *mTouchedPlayer;                            /* 0x41c */
     s32                          mKind;                 /* 0x420 -- Kind */
     s32                          mState;                /* 0x424 -- State */
     /* mState as it was when Behavior diverted into STATE_YOSHI_SKID. */

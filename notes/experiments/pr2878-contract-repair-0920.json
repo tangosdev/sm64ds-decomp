@@ -40,8 +40,8 @@
             "u32   func_02022a4c(s32, s32, s32);"
           ],
           [
-            "void  _ZN6Player9DropActorEv(void *);",
-            "int   _ZN6Player9DropActorEv(void *);"
+            "void  _ZN7daPly_c9DropActorEv(void *);",
+            "int   _ZN7daPly_c9DropActorEv(void *);"
           ],
           [
             "int   _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32, u32, u32, s32, int);",
@@ -342,20 +342,20 @@
             "bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fx, int e);"
           ],
           [
-            "extern void _ZN6Player9DropActorEv(void *p);",
-            "extern int _ZN6Player9DropActorEv(void *p);"
+            "extern void _ZN7daPly_c9DropActorEv(void *p);",
+            "extern int _ZN7daPly_c9DropActorEv(void *p);"
           ],
           [
-            "extern void _ZN6Player9DropActorEv(char* p);",
-            "extern int _ZN6Player9DropActorEv(char* p);"
+            "extern void _ZN7daPly_c9DropActorEv(char* p);",
+            "extern int _ZN7daPly_c9DropActorEv(char* p);"
           ],
           [
-            "extern void _ZN6Player9DropActorEv(void* self);",
-            "extern int _ZN6Player9DropActorEv(void* self);"
+            "extern void _ZN7daPly_c9DropActorEv(void* self);",
+            "extern int _ZN7daPly_c9DropActorEv(void* self);"
           ],
           [
-            "extern void _ZN6Player9DropActorEv(void *self);",
-            "extern int _ZN6Player9DropActorEv(void *self);"
+            "extern void _ZN7daPly_c9DropActorEv(void *self);",
+            "extern int _ZN7daPly_c9DropActorEv(void *self);"
           ]
         ],
         "complete_object_equal": true,
@@ -709,7 +709,7 @@
             "blind": 0
           },
           {
-            "name": "_ZN7daMky_c13OnTurnIntoEggER6Player",
+            "name": "_ZN7daMky_c13OnTurnIntoEggER7daPly_c",
             "module": "ov030",
             "addr": "0x021145d4",
             "verdict": "VERIFIED",
@@ -736,12 +736,12 @@
             "dActor_c *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void* self);"
           ],
           [
-            "extern void* _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(",
-            "extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE("
+            "extern void* _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_c5Fix12IiE(",
+            "extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_c5Fix12IiE("
           ],
           [
-            "extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(",
-            "extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj("
+            "extern void _ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj(",
+            "extern int _ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj("
           ],
           [
             "extern int DecIfAbove0_Byte(void *p);",
@@ -963,7 +963,7 @@
             "blind": 0
           },
           {
-            "name": "_ZN7daKrb_c13OnTurnIntoEggER6Player",
+            "name": "_ZN7daKrb_c13OnTurnIntoEggER7daPly_c",
             "module": "ov084",
             "addr": "0x0212b344",
             "verdict": "VERIFIED",
@@ -1179,7 +1179,7 @@
         "strict_count": 1
       },
       {
-        "path": "src/_ZN6Player6RenderEv.cpp",
+        "path": "src/_ZN7daPly_c6RenderEv.cpp",
         "git_blob": "c5a39904688a4e79b5d857508d47639fbe4ce40c",
         "normalized_source_sha256": "46d539885aa43fbacbc4afb5626e2a592787f036c62b7a9ef29816958722cc61",
         "probe_input_identical": true,
@@ -1513,7 +1513,7 @@
       "strict_checks": 1
     },
     {
-      "source": "src/_ZN6Player6RenderEv.cpp",
+      "source": "src/_ZN7daPly_c6RenderEv.cpp",
       "source_sha256": "1bcda357776e8b47c13622c909ef5b778daf09404257e134f59e68c2243ae27f",
       "compiled_source_sha256": "46d539885aa43fbacbc4afb5626e2a592787f036c62b7a9ef29816958722cc61",
       "object_bytes": 2504,

@@ -29,7 +29,7 @@
       "kind": "correctness",
       "location": "Original fifteen direct native D1 declaration sites",
       "original_legacy_kind": "verification_dependency",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: All fifteen direct sites retain one receiver and pointer result; exact raw source matches the reviewed packet and all 1162 affected complete object pairs match.",
       "summary": "The original missing-receiver dependency is corrected in the actual candidate."
     },
     "NDT0922-02": {
@@ -38,7 +38,7 @@
       "kind": "correctness",
       "location": "tools/check_decl_agreement.py native receiver compatibility",
       "original_legacy_kind": "prior_proposal_objection",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: The reviewed checker is already on base and unchanged in this candidate; opaque storage compatibility remains bounded without asserting a false concrete receiver type.",
       "summary": "The rejected concrete receiver-type override remains absent."
     },
     "NDT0922-03": {
@@ -47,7 +47,7 @@
       "kind": "provenance",
       "location": "Historical native-destructor scratch replay encoding",
       "original_legacy_kind": "review_harness",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: All source/checker bindings use exact Git bytes and explicit UTF-8 decoding; the historical failure is retained as harness evidence, not a candidate defect.",
       "summary": "The prior BOM/default-decoding harness failure remains resolved."
     },
     "RCV-PACKET-01": {
@@ -55,7 +55,7 @@
       "id": "RCV-PACKET-01",
       "kind": "correctness",
       "location": "src/actors/player.cpp block-local registrar sites",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: Both declarations and calls retain pointer-valued object/destructor arguments and the existing registration-node pointer.",
       "summary": "Both previously omitted registrar sites are corrected."
     },
     "RCV-PACKET-02": {
@@ -63,7 +63,7 @@
       "id": "RCV-PACKET-02",
       "kind": "correctness",
       "location": "Complete lifecycle-family source census and declaration ledger",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: The checker is already merged. This candidate repairs the actual contracts and removes exactly 340 newly banked healed keys, preserving unrelated keys and the twelve Vector address-only rows.",
       "summary": "The scoped checker dependencies are repaired in source."
     },
     "RCV-PACKET-03": {
@@ -71,7 +71,7 @@
       "id": "RCV-PACKET-03",
       "kind": "correctness",
       "location": "Clipper C1/D1 entry views and static registration boundary",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: Typed pointer results and one receiver remain intact; the registration boundary carries the callback address without inventing a callable function prototype.",
       "summary": "Clipper signatures and opaque callback transport remain truthful."
     },
     "RCV-PACKET-04": {
@@ -79,15 +79,15 @@
       "id": "RCV-PACKET-04",
       "kind": "correctness",
       "location": "src/actors/player.cpp Vector destructor imports",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
-      "summary": "The five omitted Player Vector imports are covered."
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
+      "summary": "The five omitted daPly_c Vector imports are covered."
     },
     "RCV-SHADOW-01": {
       "disposition": "fixed",
       "id": "RCV-SHADOW-01",
       "kind": "correctness",
       "location": "src_tu/actors/dScMgSlot1_c+dScMgSlot3_c.cpp:843; include/decl_common.h",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: The successor deletes only the stale local void-result import. The existing header supplies the truthful pointer result and receiver; its sole call ignores the result. Base and repaired Slot objects are completely identical. All eight affected shadow objects compile, with seven raw-identical and one limited to six measured local symbol-name bytes.",
       "summary": "The corrected shared constructor interface exposed a contradictory duplicate in the Slot shadow TU."
     },
     "RCV2908-01": {
@@ -95,7 +95,7 @@
       "id": "RCV2908-01",
       "kind": "correctness",
       "location": "Direct non-deleting destructor declarations in the reviewed source set",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: The independent raw declaration review accounts for all fifteen original D1 sites in this exact source commit.",
       "summary": "Direct destructor receiver/result contracts are truthful."
     },
     "RCV2908-02": {
@@ -103,7 +103,7 @@
       "id": "RCV2908-02",
       "kind": "correctness",
       "location": "src/actors/player.cpp and static-destructor registration callers",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local daPly_c declarations and calls.",
       "summary": "Registration carries object and callback addresses as pointers."
     },
     "RCV2908-03": {
@@ -111,7 +111,7 @@
       "id": "RCV2908-03",
       "kind": "correctness",
       "location": "Constructor imports and array callback boundaries",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: The exact candidate contains 392 truthful constructor/Vector imports; repaired array counts/strides and callback conversions retain their measured ABI behavior. Native supersessions preserve current method batches.",
       "summary": "Adjacent lifecycle declarations and selected runtime interfaces are reconciled."
     },
     "RCV2908-04": {
@@ -119,7 +119,7 @@
       "id": "RCV2908-04",
       "kind": "provenance",
       "location": "src/minigames/d_s_mg_roulette.cpp and owned lifecycle handoff",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: Roulette explicitly supplies its receiver and no longer claims a missing native-constructor symbol proves new cannot link. The handoff states the bounded interface scope, current source-only publication and retained native-reconstruction/address-view limits.",
       "summary": "Source completion and ABI comments are accurate."
     },
     "STALE-ARRAY-RUNTIME-TEST": {
@@ -127,7 +127,7 @@
       "id": "STALE-ARRAY-RUNTIME-TEST",
       "kind": "correctness",
       "location": "tools/test_check_decl_agreement.py historical runtime fixtures",
-      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated Player, Clipper, Slot, packet or other classes is made. Historical accepted reason: The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
+      "reason": "Retain the accepted historical disposition from the native-destructor/receiver predecessor lineage. This narrow Chain Chomp Spawn diff does not change the lifecycle receiver/callback declarations, runtime helpers, checker fixtures, other classes, or shared headers covered by that finding. Current TU lifecycle/storage proof and scoped declaration ratchet pass, with no new disagreement. No new whole-review claim for unrelated daPly_c, Clipper, Slot, packet or other classes is made. Historical accepted reason: The already merged checker/tests retain isolated historical bad and corrected fixtures. The exact 40f4 successor ran all 226 tests with zero failures or skips.",
       "summary": "The stale live-source assertion is replaced by honest isolated controls."
     },
     "WANWAN2-FACTORY-1013-BOUNDARY": {

@@ -151,7 +151,7 @@
   },
   {
    "file": "notes/agents/handoffs/issue-2411-humanizer-2.md",
-   "ref": "src/_ZN5Crate13OnTurnIntoEggER6Player.cpp"
+   "ref": "src/_ZN5Crate13OnTurnIntoEggER7daPly_c.cpp"
   },
   {
    "file": "notes/agents/handoffs/issue-2411-humanizer-2.md",
@@ -559,14 +559,6 @@
   },
   {
    "file": "notes/agents/handoffs/readable-ov034-hanachan-0925.md",
-   "ref": "src/engine/model/Model.cpp"
-  },
-  {
-   "file": "notes/agents/handoffs/readable-ov034-hanachan-0925.md",
-   "ref": "src/engine/model/TextureSequence.cpp"
-  },
-  {
-   "file": "notes/agents/handoffs/readable-ov034-hanachan-0925.md",
    "ref": "tools/check_src_tu_compiles.py"
   },
   {
@@ -783,10 +775,6 @@
   },
   {
    "file": "notes/archive/n64-decomp-cross-reference.md",
-   "ref": "src/func_02037e38.c"
-  },
-  {
-   "file": "notes/archive/n64-decomp-cross-reference.md",
    "ref": "src/game/mario.c"
   },
   {
@@ -835,11 +823,11 @@
   },
   {
    "file": "notes/bgobject-provenance.md",
-   "ref": "src/_ZN6Eyerok13InitResourcesEv.cpp"
+   "ref": "src/_ZN10daIwante_c13InitResourcesEv.cpp"
   },
   {
    "file": "notes/bgobject-provenance.md",
-   "ref": "src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp"
+   "ref": "src/_ZN10daIwante_c16OnAimedAtWithEggEv.cpp"
   },
   {
    "file": "notes/bgobject-provenance.md",
@@ -1387,10 +1375,6 @@
   },
   {
    "file": "notes/sinit-wave-a-ownership.md",
-   "ref": "src/game/actors/daPiano_c/__sinit_ov063_0211e5fc.c"
-  },
-  {
-   "file": "notes/sinit-wave-a-ownership.md",
    "ref": "src/unnamed/ov002/__sinit_ov002_02100f84.c"
   },
   {
@@ -1412,10 +1396,6 @@
   {
    "file": "notes/tu-filename-reconstruction-pilot.md",
    "ref": "src/__sinit_ov020_02113674.c"
-  },
-  {
-   "file": "notes/tu-filename-reconstruction-pilot.md",
-   "ref": "src/d_s_mg_curling2.cpp"
   },
   {
    "file": "notes/tu-filename-reconstruction-pilot.md",

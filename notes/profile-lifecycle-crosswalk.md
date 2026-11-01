@@ -127,7 +127,7 @@ exactly fifteen bits are ever authored:
 | `0x00000200` | 5 | none recovered |
 | `0x00008000` | 6 | none recovered |
 | `0x00010000` | 3 | `BeforeBehavior`: defeats the global force-think override while the actor is invisible |
-| `0x00800000` | 19 | none recovered in core; `Player::St_Talk_*` sets and clears it at runtime |
+| `0x00800000` | 19 | none recovered in core; `daPly_c::St_Talk_*` sets and clears it at runtime |
 | `0x01000000` | 4 | none recovered |
 | `0x02000000` | 8 | none recovered |
 | `0x04000000` | 8 | none recovered in core; read by several unrelated actor `Behavior`s |

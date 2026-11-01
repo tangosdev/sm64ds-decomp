@@ -65,7 +65,7 @@ enum d_a_btn_AssetId {
 };
 
 #include "daBtn_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Message.h"
@@ -152,7 +152,7 @@ extern u8 data_0209f21c;
 extern u8 data_0209f220;
 extern signed char data_0209f2f8;
 extern int data_0209f318;
-extern Player *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern MatrixWords data_020a0e68;
 /* The king's collision mesh takes Whomp's Fortress's own CLPS block. The
    relocation's target address is shared by 15 level overlays; residency
@@ -397,7 +397,7 @@ int daBtn_c::InitResources()
         if (cnt > 0) {
             i = 0;
             do {
-                Player *v = data_0209f394[i];
+                daPly_c *v = data_0209f394[i];
                 mPlayers[i] = v;
                 i += 1;
             } while (i < cnt);
@@ -537,7 +537,7 @@ void daBtn_c::func_ov079_02125b44()
         switch (mSubState) {
         case 0:
             if (mNearestDist < 0x190000) {
-                Player *p = mPlayers[mNearestPlayer];
+                daPly_c *p = mPlayers[mNearestPlayer];
                 if (p->mPosY >= mPosY - 0xa000) {
                     if (p->StartTalk(*this, true) != 0) {
                         mSubState++;
@@ -559,7 +559,7 @@ void daBtn_c::func_ov079_02125b44()
                 int i;
                 int y;
                 {
-                    Player *p = mPlayers[mNearestPlayer];
+                    daPly_c *p = mPlayers[mNearestPlayer];
                     int *src = &p->mPosX;
                     pos[0] = src[0];
                     pos[1] = src[1];
@@ -706,7 +706,7 @@ void daBtn_c::func_ov079_021258fc()
    king back where and how it spawned, waiting (state 0). */
 void daBtn_c::func_ov079_021256d4()
 {
-    Player *r;
+    daPly_c *r;
 
     if (mAnmModel.file != ((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr) {
         if (mAnmModel.Finished() != 0) {
@@ -977,7 +977,7 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
             if (mResumeState == 0) return;
         }
         mPounded = 1;
-        mPounder = (Player *)other;
+        mPounder = (daPly_c *)other;
         return;
     }
     if (mCoinGiven != 0) return;
@@ -1261,7 +1261,7 @@ void daBtn_c::func_ov079_021246dc()
                 return;
             {
                 int idx = mNearestPlayer;
-                Player *other = mPlayers[idx];
+                daPly_c *other = mPlayers[idx];
                 Vector3 *op = &other->mPos;
                 unsigned short ang;
                 int i;
@@ -1393,7 +1393,7 @@ void daBtn_c::func_ov079_02124530()
 int daBtn_c::func_ov079_021243e0(int range)
 {
     Vector3 v;
-    Player *player;
+    daPly_c *player;
     int dist;
     int y;
 
@@ -1551,7 +1551,7 @@ void daBtn_c::func_ov079_02123f34()
     minDist2 = 0x7fffffff;
     minDist = 0x7fffffff;
     for (i = 0; i < 4; i++) {
-        Player *player = mPlayers[i];
+        daPly_c *player = mPlayers[i];
         const Vector3 *p;
         if (player == 0)
             continue;
@@ -1578,9 +1578,8 @@ void daBtn_c::func_ov079_02123f34()
     mTargetAngle = minAngle;
 }
 
-// @symbol _ZN7daBtn_c15OnHitByMegaCharER6Player
-void daBtn_c::OnHitByMegaChar(Player &player)
-{
+// @symbol _ZN7daBtn_c15OnHitByMegaCharER7daPly_c
+void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     if (mIsKing != 0) return;
     if (mDeathState == 8) return;
     player.IncMegaKillCount();
@@ -1638,7 +1637,9 @@ extern "C" void func_ov079_02123d4c(int* out, daBtn_c *self){
 int daBtn_c::func_ov079_02123bcc() {
     int v[6];
     int dist, rangle, idx, hc, hs, idx2, nx, nz;
-    Player *player; s32 *p; s16 cosv, sinv, sin2, cos2;
+    daPly_c *player;
+    s32 *p;
+    s16 cosv, sinv, sin2, cos2;
     int a0, a1, a2, raw, ang;
     player = mPlayers[mNearestPlayer];
     p = &player->mPosX;

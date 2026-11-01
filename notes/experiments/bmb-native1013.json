@@ -14,7 +14,7 @@
     "notes/experiments/bmb-native1013.json"
   ],
   "changes": [
-    "Replace the state-zero shadow with actual daBmb_c fields and typed Player access.",
+    "Replace the state-zero shadow with actual daBmb_c fields and typed daPly_c access.",
     "Use native ClosestPlayer and explicitly qualified frame-controller Advance calls in states 0, 1 and 3.",
     "Repair the three inaccurate identity/factory/allocator comments without changing header declarations."
   ],
@@ -53,11 +53,11 @@
     ],
     "broader_contract_actual_source_commit": "b9339491fc6c4153715f6e26b596cd5478be5ffa",
     "broader_contract_git_authorship": "commit b9339491fc6c4153715f6e26b596cd5478be5ffa\nAuthor:     andrewboudreau <andrewboudreau@gmail.com>\nAuthorDate: Mon Sep 7 15:18:33 2026 -0500\nCommit:     andrewboudreau <andrewboudreau@gmail.com>\nCommitDate: Mon Sep 7 15:18:33 2026 -0500\n\n    Correct actor egg-turn hooks and forwarding helpers to void\n",
-    "broader_contract_source_diff": "diff --git a/include/daBmb_c.h b/include/daBmb_c.h\nindex 421802fe26..0ba99d33e3 100644\n--- a/include/daBmb_c.h\n+++ b/include/daBmb_c.h\n@@ -114,7 +114,7 @@ struct daBmb_c : dEnemyBase_c {\n     virtual ~daBmb_c() {}\n \n     virtual s32   OnYoshiTryEat();         /* slot 18 -- key function */\n-    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */\n+    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */\n     virtual s32   OnAimedAtWithEgg();      /* slot 29 */\n \n     int Behavior();\ndiff --git a/src/actors/daBmb_c.cpp b/src/actors/daBmb_c.cpp\nindex 8b1153765c..2c181f139b 100644\n--- a/src/actors/daBmb_c.cpp\n+++ b/src/actors/daBmb_c.cpp\n@@ -1470,7 +1470,7 @@ void func_ov102_0214ae1c(void *cv) {\n  * ======================================================================== */\n \n // @symbol _ZN7daBmb_c13OnTurnIntoEggER6Player\n-int daBmb_c::OnTurnIntoEgg(Player &player)\n+void daBmb_c::OnTurnIntoEgg(Player &player)\n {\n     if (unk_108 == 1) {\n         Sound::PlayBank3(0x11, *(Vector3 *)&mCamSpacePosX);\n",
+    "broader_contract_source_diff": "diff --git a/include/daBmb_c.h b/include/daBmb_c.h\nindex 421802fe26..0ba99d33e3 100644\n--- a/include/daBmb_c.h\n+++ b/include/daBmb_c.h\n@@ -114,7 +114,7 @@ struct daBmb_c : dEnemyBase_c {\n     virtual ~daBmb_c() {}\n \n     virtual s32   OnYoshiTryEat();         /* slot 18 -- key function */\n-    virtual int   OnTurnIntoEgg(daPly_c &player); /* slot 19 */\n+    virtual void  OnTurnIntoEgg(daPly_c &player); /* slot 19 */\n     virtual s32   OnAimedAtWithEgg();      /* slot 29 */\n \n     int Behavior();\ndiff --git a/src/actors/daBmb_c.cpp b/src/actors/daBmb_c.cpp\nindex 8b1153765c..2c181f139b 100644\n--- a/src/actors/daBmb_c.cpp\n+++ b/src/actors/daBmb_c.cpp\n@@ -1470,7 +1470,7 @@ void func_ov102_0214ae1c(void *cv) {\n  * ======================================================================== */\n \n // @symbol _ZN7daBmb_c13OnTurnIntoEggER7daPly_c\n-int daBmb_c::OnTurnIntoEgg(daPly_c &player)\n+void daBmb_c::OnTurnIntoEgg(daPly_c &player)\n {\n     if (unk_108 == 1) {\n         Sound::PlayBank3(0x11, *(Vector3 *)&mCamSpacePosX);\n",
     "earlier_incorrect_inference_preserved": "Initial scout note excluded issue2411-humanizer2 based only on latest produced-artifact paths; actual base-to-output Source/header diff and b9339491 disprove that inference. This corrected terminal handoff supersedes it.",
     "actual_writer_lineage": {
       "git_log": [
-        "11817624cd47d439a8ec5998f6b23a9ccd81f59e lunavyqo Player ov002 020d2f24-020db8d8: rewrite 14 helpers as Player members",
+        "11817624cd47d439a8ec5998f6b23a9ccd81f59e lunavyqo daPly_c ov002 020d2f24-020db8d8: rewrite 14 helpers as daPly_c members",
         "69c35e06da0bba77911cd88d33323ea6842fee93 lunavyqo Restore main folds dropped by the merge: dExtShadowModel_c, BlendModelAnim, GXS.",
         "1ba8c17b27cbe0b104ef1ff2c39561aeef2d75f5 lunavyqo Rename ShadowModel to the ROM type name dExtShadowModel_c.",
         "ea7efda84ad8c066ffc184caffc59e2e22d6ec30 lunavyqo Rename Animation to the ROM type name dExtFrameCtrl_c.",
@@ -74,7 +74,7 @@
         "3fb9112674857aeadc7f594b4b5669315343567d Andrew Declare the Sound namespace in a header instead of per file (#2727)",
         "cb4aabbfa827a850231dfd6ef35b22e74aa07e5e lunavyqo Cleanup ov102/daBmb_c: Bob-omb",
         "60cc996d038b7c2d0948da033940faa19f1d2536 Tango Give three TUs one spelling per shared symbol and lift two local types",
-        "ce0eb39e2142a8d2bf0123a04fccb51ca98c3c8f Andrew Promote ov002/da1up_c under the ROM RTTI name and correct the actor OnTurnIntoEgg(Player&) contract to void (#2512)",
+        "ce0eb39e2142a8d2bf0123a04fccb51ca98c3c8f Andrew Promote ov002/da1up_c under the ROM RTTI name and correct the actor OnTurnIntoEgg(daPly_c&) contract to void (#2512)",
         "0033367fbfbe53e3da3a2784f197204026d95846 Andrew ov102: promote daBmb_c into one C++ TU under the cartridge's own RTTI name (#2434)"
       ],
       "function_author_counts": {
@@ -113,9 +113,9 @@
           "author": "tangosdev",
           "name": "func_ov102_0214ad40"
         },
-        "_ZN7daBmb_c13OnTurnIntoEggER6Player": {
+        "_ZN7daBmb_c13OnTurnIntoEggER7daPly_c": {
           "author": "tangosdev",
-          "name": "_ZN7daBmb_c13OnTurnIntoEggER6Player"
+          "name": "_ZN7daBmb_c13OnTurnIntoEggER7daPly_c"
         },
         "func_ov102_0214ae1c": {
           "author": "tangosdev",
@@ -238,7 +238,7 @@
         ],
         "diff_artifact": "build/bmb-independent/historical-bobomb-contribution.patch",
         "diff_sha256": "ba7279efedc8a33a3932ff53876bf886d37b5441cb6c9fe61d694031b447c925",
-        "change": "Exactly header and definition return type int->void for daBmb_c::OnTurnIntoEgg(Player&). Manifest unchanged.",
+        "change": "Exactly header and definition return type int->void for daBmb_c::OnTurnIntoEgg(daPly_c&). Manifest unchanged.",
         "current_main_landing": "ce0eb39e2142a8d2bf0123a04fccb51ca98c3c8f (#2512)",
         "session_qualification": "Task history includes11sessions, but this does not establish that each wrote Bobomb. b933 occurred during original codex-humanizer-oneup-20260907-01 producer lease; later producer sessions supplied revisions. Preserve history distinct from exact commit authorship."
       }
@@ -250,8 +250,8 @@
       "id": "onturnintoegg-src-tu-redeclaration",
       "kind": "correctness",
       "location": "src_tu/actors/Actor.cpp:1140, src_tu/actors/Koopa+KoopaSmall.cpp:347, src_tu/actors/Lakitu.cpp:88, src_tu/actors/Spiny.cpp:88",
-      "reason": "Re-checked at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c rather than carried on the verifier's word. All four definitions read void <Class>::OnTurnIntoEgg(Player &player) at exactly the cited lines, and the base declaration in include/dActor_c.h:144 reads virtual void OnTurnIntoEgg(Player &player); slot 19. A tree-wide grep for 'int OnTurnIntoEgg' returns exactly one hit, include/dScMgMemory_c.h:76 virtual int OnTurnIntoEgg(int mode);, which is the separate minigame (int) hierarchy the handoff explicitly keeps as int on the strength of 14 observed ov004 calls that consume the result -- a different overload, not a survivor of this repair. The objective test is compilation, since a redeclaration cannot compile: premerge_check ran the src-tu-refs gate on the merge tree and it passes on both sides, and check_src_tu_compiles is reported by the verifier at 170/170. Disposition unchanged: fixed.",
-      "summary": "Four byte-verified promoted translation units still defined OnTurnIntoEgg(Player&) as int after the header contract moved to void, so the whole-tree compile rejected them as redeclarations."
+      "reason": "Re-checked at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c rather than carried on the verifier's word. All four definitions read void <Class>::OnTurnIntoEgg(daPly_c &player) at exactly the cited lines, and the base declaration in include/dActor_c.h:144 reads virtual void OnTurnIntoEgg(daPly_c &player); slot 19. A tree-wide grep for 'int OnTurnIntoEgg' returns exactly one hit, include/dScMgMemory_c.h:76 virtual int OnTurnIntoEgg(int mode);, which is the separate minigame (int) hierarchy the handoff explicitly keeps as int on the strength of 14 observed ov004 calls that consume the result -- a different overload, not a survivor of this repair. The objective test is compilation, since a redeclaration cannot compile: premerge_check ran the src-tu-refs gate on the merge tree and it passes on both sides, and check_src_tu_compiles is reported by the verifier at 170/170. Disposition unchanged: fixed.",
+      "summary": "Four byte-verified promoted translation units still defined OnTurnIntoEgg(daPly_c&) as int after the header contract moved to void, so the whole-tree compile rejected them as redeclarations."
     },
     {
       "disposition": "fixed",
@@ -284,7 +284,7 @@
       "id": "queue-rows-stale-from-branch-edits",
       "kind": "correctness",
       "location": "notes/data/tu-promotion-queue.tsv, rows Crate / Coin / daGmch_c (plus da1up_c)",
-      "reason": "Measured on both trees rather than inferred. On the merge tree at 0befb1b8f5d4c832f7ab23ff9478c12f7e4f54b0, python tools/queue_audit.py --check exits 0 and prints 'queue agrees with the tree' -- 0 rows disagreeing. On the base control at bdcb1df7d3d071ab46d79e6538fec176efa78780 the same command exits 1 with 'total_lines: 2 row(s) disagree with the tree'. The --check form was used deliberately: the bare invocation exits 0 while printing the same disagreement line, and it was run here on the red base to confirm that trap still bites (bare exit 0 on a red base). The two base rows were named by running --write on the base control and reading the diff: ChiefChilly 1992 to 1993 and Player 26798 to 26799, then restored with git checkout -- and git status --porcelain confirmed empty. So the merge tree is green exactly where main alone is red, which is the fixed outcome, confirmed and not assumed. Disposition unchanged: fixed.",
+      "reason": "Measured on both trees rather than inferred. On the merge tree at 0befb1b8f5d4c832f7ab23ff9478c12f7e4f54b0, python tools/queue_audit.py --check exits 0 and prints 'queue agrees with the tree' -- 0 rows disagreeing. On the base control at bdcb1df7d3d071ab46d79e6538fec176efa78780 the same command exits 1 with 'total_lines: 2 row(s) disagree with the tree'. The --check form was used deliberately: the bare invocation exits 0 while printing the same disagreement line, and it was run here on the red base to confirm that trap still bites (bare exit 0 on a red base). The two base rows were named by running --write on the base control and reading the diff: ChiefChilly 1992 to 1993 and daPly_c 26798 to 26799, then restored with git checkout -- and git status --porcelain confirmed empty. So the merge tree is green exactly where main alone is red, which is the fixed outcome, confirmed and not assumed. Disposition unchanged: fixed.",
       "summary": "The branch's own edits to src/ files left queue total_lines cells stale, and an earlier revision wrote them off as pre-existing on main."
     },
     {
@@ -292,7 +292,7 @@
       "id": "queue-audit-residue-miscited-as-preexisting",
       "kind": "provenance",
       "location": "notes/agents/handoffs/issue-2411-humanizer-2.md, the queue-rows bullet",
-      "reason": "Re-read the bullet at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c. It now retracts the earlier claim in terms, says plainly that it was wrong for three of the five, gives the per-row table (Crate 1431 to 1427, Coin 1148 to 1147, daGmch_c 1119 to 1120) with each row delta matched to its source-file line delta, and keeps only ChiefChilly and Player as pre-existing -- which the base control independently confirms are exactly the two rows main is red on. ONE RESIDUAL IMPRECISION, settled here as clearing without a new finding. The bullet attributes the ChiefChilly/Player staleness to main's 9b8cb8add editing include/ChiefChilly.h and include/Player.h. That is the wrong half of the commit: queue_audit derives total_lines by summing lines over the delinks-resolved source paths of the row's range, which are src/ paths only, and no include/ path appears in config/arm9/delinks.txt, so a header edit cannot move the cell. The same commit 9b8cb8add also edited src/_ZN11ChiefChillyD1Ev.cpp and src/_ZN6PlayerD1Ev.cpp, and those are what moved the numbers: measured with git show 9b8cb8add^:<path> piped to wc -l against git show 9b8cb8add:<path>, 22 to 23 and 35 to 36, which are exactly the +1 deltas the two rows need. The commit attribution and the direction of responsibility are therefore both correct and independently verified; 9b8cb8add is an ancestor of both bdcb1df7d and the branch's merge-base c52f63ca5, so it is genuinely main's. Only the named mechanism is wrong. It moves no number, changes no gate verdict and does not affect this branch's attribution, and under source_review a provenance finding may not be deferred, so raising it would require a corrective commit that mode verify forbids -- converting a wrong noun into a hard publish refusal. It clears as-is and is recorded here so the next writer touching this bullet fixes the sentence. Disposition unchanged: fixed.",
+      "reason": "Re-read the bullet at 9c03a19a7480548cac5aad7fa9fa53405cb2fe2c. It now retracts the earlier claim in terms, says plainly that it was wrong for three of the five, gives the per-row table (Crate 1431 to 1427, Coin 1148 to 1147, daGmch_c 1119 to 1120) with each row delta matched to its source-file line delta, and keeps only ChiefChilly and daPly_c as pre-existing -- which the base control independently confirms are exactly the two rows main is red on. ONE RESIDUAL IMPRECISION, settled here as clearing without a new finding. The bullet attributes the ChiefChilly/daPly_c staleness to main's 9b8cb8add editing include/ChiefChilly.h and include/daPly_c.h. That is the wrong half of the commit: queue_audit derives total_lines by summing lines over the delinks-resolved source paths of the row's range, which are src/ paths only, and no include/ path appears in config/arm9/delinks.txt, so a header edit cannot move the cell. The same commit 9b8cb8add also edited src/_ZN11ChiefChillyD1Ev.cpp and src/_ZN7daPly_cD1Ev.cpp, and those are what moved the numbers: measured with git show 9b8cb8add^:<path> piped to wc -l against git show 9b8cb8add:<path>, 22 to 23 and 35 to 36, which are exactly the +1 deltas the two rows need. The commit attribution and the direction of responsibility are therefore both correct and independently verified; 9b8cb8add is an ancestor of both bdcb1df7d and the branch's merge-base c52f63ca5, so it is genuinely main's. Only the named mechanism is wrong. It moves no number, changes no gate verdict and does not affect this branch's attribution, and under source_review a provenance finding may not be deferred, so raising it would require a corrective commit that mode verify forbids -- converting a wrong noun into a hard publish refusal. It clears as-is and is recorded here so the next writer touching this bullet fixes the sentence. Disposition unchanged: fixed.",
       "summary": "The handoff attributed all five stale queue rows to main; three were the branch's own."
     }
   ],
@@ -722,12 +722,12 @@
       },
       {
         "old_shadow": "chase+0x35c",
-        "actual_owner_field": "Player::mGrabbedByActor",
+        "actual_owner_field": "daPly_c::mGrabbedByActor",
         "offset": "0x35c"
       },
       {
         "old_shadow": "chase+0x5c",
-        "actual_owner_field": "Player inherited mPosX/mPosY/mPosZ",
+        "actual_owner_field": "daPly_c inherited mPosX/mPosY/mPosZ",
         "offset": "0x5c/0x60/0x64"
       }
     ],
@@ -746,10 +746,10 @@
       "DecIfAbove0_Short(u16*) and _Z14ApproachLinearRiii(int&,int,int) unchanged.",
       "Vec3_HorzAngle(const Vector3*,const Vector3*) and Vec3_Dist(const Vector3*,const Vector3*) retain exact C symbols/targets; local shadow argument types are replaced by the existing real type, with borrowed scalar-triplet views.",
       "ApproachLinear(short&,short,short), func_ov102_0214b988(void*) and func_ov102_0214beb4(void*) unchanged.",
-      "ClosestPlayer actual dActor_c member returns Player*. ModelAnim frame-controller Advance explicitly selects dExtFrameCtrl_c::Advance at its existing base subobject.",
+      "ClosestPlayer actual dActor_c member returns daPly_c*. ModelAnim frame-controller Advance explicitly selects dExtFrameCtrl_c::Advance at its existing base subobject.",
       "All other helper interfaces, scalar Fix12 seams, global declarations and configuration policies remain unchanged. The class header changes comments only; complete raw/prepared 277/266-edge equality checks every destination."
     ],
-    "receiver_evidence": "daBmb_c::func_ov102_0214b03c dispatches case0 as func_ov102_0214bf64(this); every replaced field agrees with include/daBmb_c.h, inherited dActor fields, and Player::mGrabbedByActor. Complete unchanged raw/normal objects prove all emitted offsets and destinations remain identical.",
+    "receiver_evidence": "daBmb_c::func_ov102_0214b03c dispatches case0 as func_ov102_0214bf64(this); every replaced field agrees with include/daBmb_c.h, inherited dActor fields, and daPly_c::mGrabbedByActor. Complete unchanged raw/normal objects prove all emitted offsets and destinations remain identical.",
     "failed_optional_probe": "build/enemy-leaf-scout1013/rejected-position-copy.json",
     "owned_storage_qualification": "Six owned data records total213 bytes inside the complete216-byte .data claim; ordinary preparation verifies the full claim including padding. No owned init/ctor/BSS. Raw/normal container and full277/266-edge identity cover all emitted storage; all11metadata records240bytes including vtable preambles independently match retail with zero blind words."
   },

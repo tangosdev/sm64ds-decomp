@@ -10,7 +10,7 @@
 //   daRNk_c.h says which handler is which.
 // - SetAnim, PlaySub and DropShadowRadHeight stay mangled. Their symbols
 //   carry 5Fix12IiE, and the scalar signatures are what these calls need.
-// - Player::Unk_020c4f40(0x5a), the 0x1f PlaySub pairs, sounds 0x4d and
+// - daPly_c::Unk_020c4f40(0x5a), the 0x1f PlaySub pairs, sounds 0x4d and
 //   0xec, and DropShadowRadHeight's last argument 0xf are named only by
 //   when this TU uses them.
 // - unk_3aa is written and never read here.
@@ -33,7 +33,7 @@ enum daRNk_c_AssetId {
 #include "daRNk_c.h"
 #include "daRFlag_c.h"
 #include "daIbl_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "types.h"
 #include "common.h"
 #include "Timer.h"
@@ -51,7 +51,7 @@ enum {
     kIronBallActorId = 0xdc     /* IRONBALL: daIbl_c, the rolling iron ball */
 };
 
-/* Message IDs handed to Player::ShowMessage, named by when each is shown
+/* Message IDs handed to daPly_c::ShowMessage, named by when each is shown
    rather than by their text. LEVEL_ID 0x18 (kAltLevelID) uses different
    message IDs for the offer and the result, and a 36-unit cruise speed. */
 enum {
@@ -338,7 +338,7 @@ void daRNk_c::func_ov062_0211aac0(){
 // @symbol _ZN7daRNk_c19func_ov062_0211a9c4Ev
 /* STATE_WAIT_FOR_PLAYER. Count mStateTimer down first (a declined offer sets
    it to 60 frames). Then look for the closest player; if there is one within
-   200 units and Player::StartTalk accepts, find
+   200 units and daPly_c::StartTalk accepts, find
    the race flag, remember its ID, arm it (mHasTouchedFlag = 0; the flag
    starts at 0xff, disarmed), turn
    toward the player and go to STATE_OFFER_RACE. */
@@ -471,7 +471,7 @@ void daRNk_c::func_ov062_0211a740()
 
 // @symbol _ZN7daRNk_c19func_ov062_0211a1f4Ev
 /* STATE_RACE.
- *   step 0  wait for Player::Unk_020c4f40(0x5a) to report non-zero
+ *   step 0  wait for daPly_c::Unk_020c4f40(0x5a) to report non-zero
  *   step 1  two PlaySub calls (arguments unidentified) bracket a wait for the
  *           talk to finish (talk state -1); then the race starts: sound,
  *           race music, mIsRacing, the run-start animation, the course timer
@@ -792,7 +792,7 @@ void daRNk_c::func_ov062_02119be0() {
         this->mAngleY = this->mPrevAngleY;
         return;
     case 7: {
-        Player *p = this->mPlayer;
+        daPly_c *p = this->mPlayer;
         if (p->param1 == 0)
             msg = MSG_CHAT_MARIO;
         else

@@ -153,9 +153,9 @@ failure did not discard either set of findings.
   `InitState3` writes `mSubstate = 0`, `mStateValue = 3`. Both retain `return 1`.
   The named members already existed at +0x3a2/+0x3a0/+0x394 with the observed
   byte/halfword/word widths; no header or fabricated return was needed.
-- **SNM-05 fixed.** The fabricated local complete one-method `struct Player`
+- **SNM-05 fixed.** The fabricated local complete one-method `struct daPly_c`
   and its unsupported header-conflict explanation are removed. The TU includes
-  the actual `Player.h`, whose `Player : dActor_c` declares the same StartTalk
+  the actual `daPly_c.h`, whose `daPly_c : dActor_c` declares the same StartTalk
   member. This direct inclusion passes; no compiler obstacle is claimed.
 
 All four source hypotheses were first compiled separately from exact input
@@ -164,13 +164,13 @@ all four hypotheses each passed every one of the 29 exact function symbols under
 `2004/b56`, not only the edited methods. Their combination also passed 29/29,
 zero blind bytes, empty diffs and exact requested sizes. No failed hypothesis was
 encountered in this bounded set. The applied combined source only closes the
-extra blank line before `#include "Player.h"`; final source was compiled again.
+extra blank line before `#include "daPly_c.h"`; final source was compiled again.
 
 | Probe from a9cf281 | Exact change | Result |
 | --- | --- | --- |
 | control | No source change | 29/29 strict |
 | profile | Rename only descriptor fields and correct its comment | 29/29 strict |
-| player-header | Replace local Player definition/comment with Player.h | 29/29 strict |
+| player-header | Replace local daPly_c definition/comment with daPly_c.h | 29/29 strict |
 | initstate1 | Replace only its three raw scalar writes with named members | 29/29 strict |
 | initstate3 | Replace only its two raw scalar writes with named members | 29/29 strict |
 | combined | Apply the four disjoint changes together | 29/29 strict |
@@ -245,7 +245,7 @@ manifest copy. No source changed after these gates began.
   **29/29 VERIFIED**, exact sizes, zero blind bytes and empty diffs. One fresh
   `2004/b56` object supplies all symbols. `strict.json` records source/object
   hashes and every result. The class header has one consumer, this TU; no header
-  was edited. The new Player include is covered by this complete source proof.
+  was edited. The new daPly_c include is covered by this complete source proof.
 - `python tools/tubuild.py --manifest
   build/pr2445-rework-gates-20260908/tu_manifest.gate.json linkcheck
   ov072/daBgSnmBdy_c -j8`: exit 0, **SCRATCH-DATA-VERIFIED**. All 3,892 text bytes

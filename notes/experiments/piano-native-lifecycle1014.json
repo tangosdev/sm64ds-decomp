@@ -14,7 +14,7 @@
     "config/tu_manifest.d/ov063/daPiano_c.json",
     "notes/experiments/piano-native-lifecycle1014.json"
   ],
-  "change": "Use genuine new daPiano_c() in the existing registry factory, real Vector3 local objects in the three former PianoVec3 helper bodies, and inherited u16 actorID at0xc before the Player-specific hit call. Delete manual factory construction/vptr and unused ctor imports. Preserve all volatile qualifiers/order and existing pragmas. Correct stale factory, local-vector, actor-ID and matched-sound-helper prose.",
+  "change": "Use genuine new daPiano_c() in the existing registry factory, real Vector3 local objects in the three former PianoVec3 helper bodies, and inherited u16 actorID at0xc before the daPly_c-specific hit call. Delete manual factory construction/vptr and unused ctor imports. Preserve all volatile qualifiers/order and existing pragmas. Correct stale factory, local-vector, actor-ID and matched-sound-helper prose.",
   "source_completion": "partial",
   "scoped_goal_completion": "Native factory/local vectors/actorID implemented and producer-proved; independent formal review pending. Full class and unrelated native3/308/full144/Heap work remain unfinished.",
   "class_identity": "Existing retail RTTI daPiano_c and PIANO profile/factory linkage are retained, not newly coined. Existing class size0x6e4 and member order are unchanged. Real Vector3 locals introduce the corresponding C++ object lifetimes; byte equality does not prove unique original local types or source syntax.",
@@ -63,7 +63,7 @@
         "id": "RCV2908-02",
         "kind": "correctness",
         "location": "src/actors/player.cpp and static-destructor registration callers",
-        "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+        "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local daPly_c declarations and calls.",
         "summary": "Registration carries object and callback addresses as pointers."
       },
       "RCV2908-03": {
@@ -112,7 +112,7 @@
         "kind": "correctness",
         "location": "src/actors/player.cpp Vector destructor imports",
         "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
-        "summary": "The five omitted Player Vector imports are covered."
+        "summary": "The five omitted daPly_c Vector imports are covered."
       },
       "STALE-ARRAY-RUNTIME-TEST": {
         "disposition": "fixed",
@@ -152,7 +152,7 @@
       "id": "PIANO-FIX12-INTERFACES",
       "kind": "reconstruction",
       "disposition": "deferred",
-      "summary": "Matched scalar declarations remain for animation, collision initialization, mesh SetFile, Player Hurt and DropShadow interfaces. Issue2720 explicitly leaves its items5/6 outside this cleanup; applicable shared class follow-ups include3791,3801 and3784.",
+      "summary": "Matched scalar declarations remain for animation, collision initialization, mesh SetFile, daPly_c Hurt and DropShadow interfaces. Issue2720 explicitly leaves its items5/6 outside this cleanup; applicable shared class follow-ups include3791,3801 and3784.",
       "location": "src/game/actors/d_a_piano.cpp local extern block and calls",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2720",
       "owner": "codex-piano-native-root-coordinator1014; next explicitly claimed producer",

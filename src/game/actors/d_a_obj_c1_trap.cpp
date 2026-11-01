@@ -31,7 +31,7 @@ enum d_a_obj_c1_trap_AssetId { ASSET_C1_TRAP_BMD = 0x05af, ASSET_C1_TRAP_KCL = 0
 
 #include "daObjC1_Trap_c.h"
 #include "SpawnInfo.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
@@ -302,7 +302,7 @@ daObjC1_Trap_c *daObjC1_Trap_c::GetSpawner() {
 // @symbol _ZN14daObjC1_Trap_c11StateClosedEv
 
 void daObjC1_Trap_c::StateClosed() {
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (!player)
         return;
     if (player->IsEnteringLevel()) {

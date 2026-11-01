@@ -60,7 +60,7 @@ struct daHolhei_c : dEnemyBase_c {
     u8          pad_3f6[2];    /* 0x3f6 */
     /* Actor being held, or the player holding this. +0xc8 on that actor is
        still an unnamed dActor_c gap; Behavior and Render read it raw. */
-    Player *mHeld; /* 0x3f8 */
+    daPly_c *mHeld; /* 0x3f8 */
     /* func_ov062_02116e80 builds this from bone 3 and stores its address at
        this+0xc8, the same unnamed gap. */
     Matrix4x3   mHoldMtx;      /* 0x3fc */

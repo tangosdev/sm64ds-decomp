@@ -75,7 +75,7 @@ because `main` moved. A second pass compared **the class's own files** — its a
 source, its `tu_manifest.d` entry, its header — and read 14 landed, 8 differing, and
 39 adding class files `main` does not have.
 
-`dScMgTeresa_c`, `Goomboss` and `Player` all read as unbanked under the loose test
+`dScMgTeresa_c`, `Goomboss` and `daPly_c` all read as unbanked under the loose test
 and are byte-identical to `main` under the strict one. **Diff the class files, not
 the aggregates.** The aggregates are the integration lane's problem.
 
@@ -175,10 +175,10 @@ against a measured D1/D0 address justification. Wave 25 re-declares the cap
 destructor out of line, and wave 29 does the same to `daDgr_c` while also dropping
 `main`'s richer Wiggler field decode.
 
-**Corrected prose, and one corrected declaration.** `cpp/Eyerok-tu-build` would
+**Corrected prose, and one corrected declaration.** `cpp/daIwante_c-tu-build` would
 restore a `0x4b0 -> 0x4ac` size claim that `main` re-measured and explicitly
 retracted; `main`'s comment now records the size as UNCHANGED at `0x4b0` and says so
-in as many words. `cpp/Player-tu-build` would drop a `char*` local and the codegen
+in as many words. `cpp/daPly_c-tu-build` would drop a `char*` local and the codegen
 comment explaining why the int-typed parameter costs a literal-pool load instead of
 a folded offset. Sharpest of the three is `cpp/dScMgSound_c-tu-build`: `main`
 corrected one shared forward declaration from a K&R `extern int f()` to

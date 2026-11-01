@@ -59,10 +59,10 @@ struct daObjMarioCap_c : dEnemyBase_c {
     s32 mStateEntry;                            /* 0x3bc */
     /* The player this cap is bound to: whoever touched it, or the nearest
        player (ClosestPlayer) for the types that start bound. Read as a
-       Player*; the touch check stores FindWithID's result here before it
-       tests the actor ID, so it can briefly hold a non-Player actor after a
+       daPly_c*; the touch check stores FindWithID's result here before it
+       tests the actor ID, so it can briefly hold a non-daPly_c actor after a
        failed touch. */
-    Player *mPlayer;                            /* 0x3c0 */
+    daPly_c *mPlayer; /* 0x3c0 */
     /* Where InitResources found the cap; the taken state respawns a
        TYPE_RESPAWNING cap here. */
     s32 mHomePosX;                              /* 0x3c4 */
@@ -80,7 +80,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
     /* Which character's cap this is, 0..2 (param1 bits 8..11; 3 and up make
        InitResources fail). Indexes the model table data_ov002_020ff0ac and the
        per-character cap-icon list, and is what the pickup hands to
-       Player::SetNewHatCharacter. */
+       daPly_c::SetNewHatCharacter. */
     s32 mModelIndex;                            /* 0x3f4 */
     u8  pad_3f8[0x4];
     /* Direction the floor under the cap slopes toward: atan2 of the floor
@@ -104,7 +104,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
        only set for caps with an icon, such a cap is never dormant. Otherwise it is handed to dCapIcon_c::func_ov001_020ab228,
        which keeps it in the icon's mIconKind. */
     u8  mIconKind;                              /* 0x400 */
-    /* Step of the taken state: 1 = waiting for Player::SetNoControlState(0xf)
+    /* Step of the taken state: 1 = waiting for daPly_c::SetNoControlState(0xf)
        to succeed (set for TYPE_START_TAKEN and when the touch finds the player
        has lost the cap), 2 = the hat has been handed over, waiting for the
        animation to end. 0 for an ordinary pickup. */
@@ -150,7 +150,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
     int InitResources();
     int Render();
     void OnPendingDestroy();
-    void OnTurnIntoEgg(Player &player);  /* slot 19, ov002 0x020b81e0 */
+    void OnTurnIntoEgg(daPly_c &player); /* slot 19, ov002 0x020b81e0 */
 
     /* Once-a-frame render-matrix update and drop-shadow placement. */
     void UpdateMatrix();
@@ -159,7 +159,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
        layout is spelled by the .cpp's file-local stand-ins. */
     int EnterState(void *rec);
     /* The pickup check shared by the states that let the player take the cap:
-       reflects off walls, validates the collider owner is a Player, hands the
+       reflects off walls, validates the collider owner is a daPly_c, hands the
        hat over and enters the taken state. */
     void CheckTouch();
 
@@ -194,12 +194,12 @@ struct daObjMarioCap_c : dEnemyBase_c {
                                     Once the player has finished taking it, the taken-state
                                     handler spawns a fresh OBJ_MARIO_CAP with the current
                                     param1 at mHomePos */
-        TYPE_VANISH_LUIGI_A = 6, /* touch calls Player::InitVanishLuigi and removes the cap;
+        TYPE_VANISH_LUIGI_A = 6, /* touch calls daPly_c::InitVanishLuigi and removes the cap;
                                     just runs the touch check */
         TYPE_VANISH_LUIGI_B = 7, /* the touch acts like 6, but this one has a 210 / 120 frame
                                     countdown (game mode 1 / others), slides, blinks and
                                     expires */
-        TYPE_METAL_WARIO_A = 8,  /* touch calls Player::InitMetalWario and removes the cap;
+        TYPE_METAL_WARIO_A = 8,  /* touch calls daPly_c::InitMetalWario and removes the cap;
                                     just runs the touch check */
         TYPE_METAL_WARIO_B = 9,  /* the touch acts like 8, with the same countdown, slide
                                     and blink as 7 */

@@ -317,7 +317,7 @@
       "blind": 0
     },
     {
-      "symbol": "_ZN7daTgz_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN7daTgz_c13OnTurnIntoEggER7daPly_c",
       "address": "0x02126194",
       "size": "0x00000060",
       "verdict": "VERIFIED",

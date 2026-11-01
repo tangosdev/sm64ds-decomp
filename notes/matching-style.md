@@ -420,7 +420,7 @@ your target before starting.**
   struct PVec { s32 x, y, z; ~PVec() {} };
   ```
   Probed and rejected as the cause first: 4-byte structs, non-POD classes, `Vector3`-by-value,
-  varargs, 7-arg models. It is not a struct-ABI effect. (`func_ov002_020d869c` in `src/game/player/Player.cpp`)
+  varargs, 7-arg models. It is not a struct-ABI effect. (`func_ov002_020d869c` in `src/game/player/d_a_ply_methods.cpp`)
 - Where the ROM keeps several apparently-dead stores to locals, wrap **all the locals in one
   enclosing struct whose address is taken**. That blocks SROA/register promotion for the whole
   aggregate so the dead stores survive, while store-to-load forwarding still supplies the registers.

@@ -55,7 +55,7 @@ _ZN7daMky_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0211422c
 _ZN7daMky_c6RenderEv kind:function(arm,size=0x48) addr:0x02114230
 _ZN7daMky_c8BehaviorEv kind:function(arm,size=0x100) addr:0x02114278
 _ZN7daMky_c13InitResourcesEv kind:function(arm,size=0x25c) addr:0x02114378
-_ZN7daMky_c13OnTurnIntoEggER6Player kind:function(arm,size=0xc) addr:0x021145d4
+_ZN7daMky_c13OnTurnIntoEggER7daPly_c kind:function(arm,size=0xc) addr:0x021145d4
 daMky_c_classInit_MONKEY_STAR kind:function(arm,size=0x58) addr:0x021145e0
 daMky_c_classInit_MONKEY_THIEF kind:function(arm,size=0x58) addr:0x02114638
 data_ov030_02114690 kind:data(any) addr:0x02114690

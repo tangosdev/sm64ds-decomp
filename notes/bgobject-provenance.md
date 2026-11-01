@@ -70,12 +70,12 @@ Formerly the coined `Crate`. Bodies read: `InitResources`, `Behavior`, `Render`,
 | 0x4e8/0x4ec/0x4f0 | `mHomePosX/Y/Z` | `InitResources` copies `mPosX/mPosY/mPosZ` into them once; `Behavior` passes `&mHomePosX` as the second `Vector3 *` of `Vec3_HorzDist(&mPosX, …)`. A spawn position kept to measure drift. |
 | 0x500/0x502/0x504 | `mHomeAngleX/Y/Z` | `InitResources` copies `mAngleX/mAngleY/mAngleZ` into them, in the same run as the position triple above. |
 | 0x560 | `mState` | `Crate_SetState(c, i)` writes `i` to 0x560 and immediately dispatches [data_ov098_0213c878](../config/arm9/overlays/ov098/symbols.txt)[i], a table of pointer-to-member functions — so 0x560 is the state index into that table. `Render` short-circuits on `mState == 6`, the value `Kill`, `OnTurnIntoEgg` and the two destruction paths in `Behavior` all park the crate at. |
-| 0x5e4 | `mHoldingPlayer` | already typed `Player *`; `Behavior` calls `Player::DropActor()` on it when the pause bit `0x4000000` of `data_0209b454` is set and the crate's own `mFlags & 0x4000000` is set. Only a carrying player can be made to drop the actor. |
+| 0x5e4 | `mHoldingPlayer` | already typed `daPly_c *`; `Behavior` calls `daPly_c::DropActor()` on it when the pause bit `0x4000000` of `data_0209b454` is set and the crate's own `mFlags & 0x4000000` is set. Only a carrying player can be made to drop the actor. |
 | 0x5f4 | `mClsnYOffset` | `Behavior`'s only use: the crate's own position minus this value in Y is what both `dCcAcPos_c` members' `pos` are set to each frame. A vertical offset from the model origin to the collision origin. |
 | 0x5fc | `mParticleHandle1` | `Behavior` passes the field as the first argument of `Particle::System::New(u32, u32, …)` and stores the returned pointer straight back into it — a handle the particle system reads and rewrites. Effect id `0x13a`. |
 | 0x600 | `mParticleHandle2` | same shape, through `Particle::System::NewUnkCallback818`, effect id `0x13b`. |
 | 0x606 | `mBreakTimer` | `Behavior` runs the whole break sequence under `if (0x606 != 0)`: `DecIfAbove0_Byte(&0x606)` once a frame, spawning the two particles while it is still above zero, and on the frame it reaches zero poofing dust and setting state 6. `OnYoshiTryEat` returns 0 (inedible) while it is nonzero and 6 otherwise. A countdown to destruction, not a flag. |
-| 0x607 | `mCoinsPaid` | `OnTurnIntoEgg` pays three coins only when it is not already `1`, then sets it to `1`, on both the `Player::IsCollectingCap` branch (`dActor_c::GivePlayerCoins(…, 3, 0)`) and the egg branch (`Player::RegisterEggCoinCount(player, 3, …)`). A once-only latch. |
+| 0x607 | `mCoinsPaid` | `OnTurnIntoEgg` pays three coins only when it is not already `1`, then sets it to `1`, on both the `daPly_c::IsCollectingCap` branch (`dActor_c::GivePlayerCoins(…, 3, 0)`) and the egg branch (`daPly_c::RegisterEggCoinCount(player, 3, …)`). A once-only latch. |
 
 In the `#else` C twin only, three offsets that are `dActor_c`'s and are already named
 on the C++ side of the very same header were repointed to those names — the same
@@ -176,7 +176,7 @@ Bodies read: `src/game/actors/d_a_obj_tatefuda.cpp`,
 | 0x58f | `mPoundCooldown` | `OnGroundPounded` sets `0xf` on the soft-pound branch and returns early whenever it is nonzero; `Behavior` runs it down with `DecIfAbove0_Byte` once a frame. The gap between two successive pounds. |
 | 0x590 | `mHidden` | `Render` returns without drawing while it is nonzero; `Behavior` skips the collision-range check while it is nonzero and clears it under the same "player is far away" condition that respawns a pounded-in sign. |
 | 0x591 | `mRespawnDelay` | `OnGroundPounded` sets `0x1e` on both branches; `Behavior` requires `DecIfAbove0_Byte(&mRespawnDelay) == 0` **and** `DistToCPlayer > 0x7d0000` before it will restore the sign or clear `mHidden`. |
-| 0x59c | `mHoldingPlayer` | already typed `Player *`; `Behavior` calls `Player::DropActor()` on it through a pause, and `Behavior`/`Render` both read `player + 0xc8` through it. Same shape as `daObjBlockS_c`'s 0x5e4. |
+| 0x59c | `mHoldingPlayer` | already typed `daPly_c *`; `Behavior` calls `daPly_c::DropActor()` on it through a pause, and `Behavior`/`Render` both read `player + 0xc8` through it. Same shape as `daObjBlockS_c`'s 0x5e4. |
 
 In the `#else` C twin only: `0x09c` → `mVertAccel` and `0x0a0` →
 `mTerminalVelocity` (`InitResources` writes `-0x2000` / `-0x3c000` to them through the
@@ -236,15 +236,15 @@ offset 0. Both are spelled `static_cast<Animation *>(&member)` now.
 
 ---
 
-## Eyerok (`include/Eyerok.h`, [ov066](../config/arm9/overlays/ov066/symbols.txt), size 0x874)
+## daIwante_c (`include/daIwante_c.h`, [ov066](../config/arm9/overlays/ov066/symbols.txt), size 0x874)
 
 The largest recovery in this pass: reading `InitResources` and `Behavior` as named
 members turned **every remaining `pad_` run in the class** into an evidenced field,
 and the class now closes on 0x874 by field span instead of only by the factory's
 `operator new` literal.
 
-Bodies read: `src/_ZN6Eyerok13InitResourcesEv.cpp`,
-`src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp`, `src/Eyerok_Spawn.cpp`, and `Behavior`,
+Bodies read: `src/_ZN10daIwante_c13InitResourcesEv.cpp`,
+`src/_ZN10daIwante_c16OnAimedAtWithEggEv.cpp`, `src/Eyerok_Spawn.cpp`, and `Behavior`,
 `Render` and `CleanupResources`, which used to be one file each and are now
 members of the promoted `src/game/actors/d_a_iwante.cpp`.
 
@@ -291,7 +291,7 @@ re-verified. Two were rejected by the ROM and are documented in place:
 Bodies read: `_ZN16daObjPushblock_c13InitResourcesEv`,
 `_ZN16daObjPushblock_c8BehaviorEv`, `_ZN16daObjPushblock_c6RenderEv`,
 `_ZN16daObjPushblock_c8OnPushedER8dActor_c`, `_ZN16daObjPushblock_c4KillEv`, and
-`_ZN16daObjPushblock_c15OnHitByMegaCharER6Player`.
+`_ZN16daObjPushblock_c15OnHitByMegaCharER7daPly_c`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -506,7 +506,7 @@ Bodies read in the promoted class TU: `daObjHatenaSwitch_c::InitResources`,
 | 0x324 | `mStaticMeshCollider` | the first of the switch's two `dBgW_KcMbg`s. `InitResources` gives it CLPS block `data_ov002_0210d8b4` and points `mActiveMeshCollider` at it when the saved bit `data_0209caa0[1] & 0x80000000` is clear; `Behavior` re-points `mActiveMeshCollider` at `mMovingMeshCollider` on the frame the switch fires, and back at this one whenever that bit is clear. So this is the collider that is live before the switch has been used. |
 | 0x718 | `mPressTimer` | `InitResources` sets `8`; `OnGroundPounded` sets `0`; `Behavior` runs `DecIfAbove0_Byte(&mPressTimer)` only while `mPressedThisFrame` is set, and the frame it reaches zero is the frame the switch fires. When `mPressedThisFrame` is clear it is re-armed to `8`. A countdown to activation, not a state. |
 | 0x71a | `mPressedThisFrame` | gates that countdown, and the last statement of every `Behavior` clears it. No matched body sets it — the setter is in un-decompiled collision code — but "cleared once a frame and read only as a gate" is what a one-frame latch is. |
-| 0x71b | `mTalking` | set to `1` on the frame the switch fires, immediately after the four `Particle::System::NewSimple` calls; gates the whole `Player::GetTalkState` / `Message::PrepareTalk` / `Player::ShowMessage` / `Message::EndTalk` block, and is cleared together with `mTalkingPlayer` when `Player::HasFinishedTalking` returns nonzero. |
+| 0x71b | `mTalking` | set to `1` on the frame the switch fires, immediately after the four `Particle::System::NewSimple` calls; gates the whole `daPly_c::GetTalkState` / `Message::PrepareTalk` / `daPly_c::ShowMessage` / `Message::EndTalk` block, and is cleared together with `mTalkingPlayer` when `daPly_c::HasFinishedTalking` returns nonzero. |
 | 0x71c | `mSoundDelay` | armed with `0x4b` on the frame the talk starts and run down by `DecIfAbove0_Short`; on the frame it reaches zero `Behavior` calls `Sound::PlaySub(0x20, 0x7f, 0, 0x8777, 0)`. |
 
 The promoted header derives from `dBgActor_c` directly and owns two complete
@@ -518,7 +518,7 @@ The promoted header derives from `dBgActor_c` directly and owns two complete
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x320 | `mState` | `Behavior` ([src/game/actors/d_a_obj_ewb_ice.cpp](../src/game/actors/d_a_obj_ewb_ice.cpp)) reads the WORD here as a pointer, tests `*(p + 8)` and calls the pointer-to-member pair at `p + 8` through `this`. The same shape `Eyerok`'s own 0x48c has. `InitResources` installs it through `func_ov073_021223a4(this, &data_ov073_021234b0)`. Declared type left `u8`. |
+| 0x320 | `mState` | `Behavior` ([src/game/actors/d_a_obj_ewb_ice.cpp](../src/game/actors/d_a_obj_ewb_ice.cpp)) reads the WORD here as a pointer, tests `*(p + 8)` and calls the pointer-to-member pair at `p + 8` through `this`. The same shape `daIwante_c`'s own 0x48c has. `InitResources` installs it through `func_ov073_021223a4(this, &data_ov073_021234b0)`. Declared type left `u8`. |
 | 0x32c | `mVariant` | `InitResources` sets `0`/`1`/`2` for actorID `0xaa`/`0xab`/`0xac` and then uses it as the row index into all three 0xc-stride ov073 tables — `data_ov073_021231bc` (model), `...1c0` (KCL), `...1c4` (CLPS). `CleanupResources` indexes the first two again to `Release()` them. Was inside `pad_321`. |
 | 0x32d | `mSpawnIndex` | `InitResources` copies the value of a per-variant global counter (`data_ov073_02123424` for `0xab`, `...3420` for `0xac`) and then increments that counter — a serial number among the arena pieces of this variant. Was inside `pad_321`. |
 
@@ -546,7 +546,7 @@ gives them. `0x56c` is zeroed and never read in a matched body; it stays `unk_`.
 `short *a = (short *)(((int)this) + 0x8c);` and friends. Spelling those three
 statements as `mAngleX = mAngleX + mAngleXSpeed;` costs the function its size
 (`999 word(s) differ`) — the same "integer-first address materialisation is the
-ROM's own" result `Eyerok`'s `mDustCounter` produced. The raw form stays.
+ROM's own" result `daIwante_c`'s `mDustCounter` produced. The raw form stays.
 
 In the C twin, `unk_08e` was repointed to `mAngleY`.
 

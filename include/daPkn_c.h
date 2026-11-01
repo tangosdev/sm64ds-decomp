@@ -53,11 +53,11 @@ struct daPkn_c : dEnemyBase_c {
     /* Field names from here down are coined from how the code uses them. */
     u8              mSubSoundFadedOut;  /* 0x45d -- set once the sub-sound 0x36 fade to 0 is accepted */
     u8              pad_45e[0x2];
-    Player         *mClosestPlayer;     /* 0x460 -- dActor_c::ClosestPlayer, refreshed every frame */
+    daPly_c *mClosestPlayer; /* 0x460 -- dActor_c::ClosestPlayer, refreshed every frame */
     s32             mPlayerDist;        /* 0x464 -- distance to it, 0x7fffffff with none */
     s16             mTargetAngleY;      /* 0x468 -- yaw toward player; rewritten every frame */
     u8              pad_46a[0x2];
-    s32             mPlayerAirborne;    /* 0x46c -- copy of its Player::mIsAirborne */
+    s32 mPlayerAirborne;                /* 0x46c -- copy of its daPly_c::mIsAirborne */
     s32             mParticleHandle;    /* 0x470 */
     s32             mParticleHandle2;   /* 0x474 */
     s32             mLoopSoundHandle;   /* 0x478 -- Sound::PlayLong handle; Behavior zeroes it on a state change */

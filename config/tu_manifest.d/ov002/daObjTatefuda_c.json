@@ -96,10 +96,10 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN15daObjTatefuda_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN15daObjTatefuda_c15OnHitByMegaCharER7daPly_c",
       "address": "0x020bb374",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN15daObjTatefuda_c15OnHitByMegaCharER6Player.cpp",
+      "legacy_source": "src/_ZN15daObjTatefuda_c15OnHitByMegaCharER7daPly_c.cpp",
       "ordinal": 8
     },
     {

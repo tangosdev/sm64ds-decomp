@@ -305,10 +305,10 @@
       "disposition": "fixed",
       "id": "SNM-05",
       "kind": "reconstruction",
-      "location": "src/actors/daBgSnmBdy_c.cpp:28-34; include/Player.h:43,698",
+      "location": "src/actors/daBgSnmBdy_c.cpp:28-34; include/daPly_c.h:43,698",
       "prior_review": "pr2445.review.md third finding, previously unnumbered; stable ID assigned here",
-      "reason": "Whole-source/header read confirms real Player.h inclusion and no fabricated complete Player class. Exact final compile uses current inherited headers and reproduces every method;no unsupported header-conflict or compiler-wall excuse is accepted.",
-      "summary": "The TU uses the real Player declaration."
+      "reason": "Whole-source/header read confirms real daPly_c.h inclusion and no fabricated complete daPly_c class. Exact final compile uses current inherited headers and reproduces every method;no unsupported header-conflict or compiler-wall excuse is accepted.",
+      "summary": "The TU uses the real daPly_c declaration."
     },
     {
       "disposition": "deferred",
@@ -342,7 +342,7 @@
       "disposition": "fixed",
       "location": "src/game/actors/d_a_bg_snm_bdy.cpp:HurtPlayer and local Hurt declaration",
       "summary": "The scalar Hurt declaration agrees with its current reconstructed definition.",
-      "reason": "Use int(Player*,void*,u32,int,u8,u8,u8), preserving the actorID guard before the Player cast, all argument values and discarded result. The Fix12-by-value native method reconstruction remains partial; current definition agreement does not uniquely recover original parameter spelling."
+      "reason": "Use int(daPly_c*,void*,u32,int,u8,u8,u8), preserving the actorID guard before the daPly_c cast, all argument values and discarded result. The Fix12-by-value native method reconstruction remains partial; current definition agreement does not uniquely recover original parameter spelling."
     },
     {
       "id": "SNM-CURRENT-PROVENANCE-1015",

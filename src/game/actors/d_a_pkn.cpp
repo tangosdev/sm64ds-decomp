@@ -16,7 +16,7 @@ struct Vector3_16f;
  * D1 and D0 pair; `new` odr-uses the class so that pair is emitted here.
  *
  * deslop leftovers:
- * - Player::Hurt and Player::Bounce stay mangled extern "C" calls: each
+ * - daPly_c::Hurt and daPly_c::Bounce stay mangled extern "C" calls: each
  *   takes a Fix12<int> by value.
  * - UpdatePose still walks the PknMtx43/PknVec3 views: spelling the copies
  *   as Vector3/Matrix4x3 is emitted differently.
@@ -31,7 +31,7 @@ struct Vector3_16f;
 #include "common.h"
 #include "daPkn_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
@@ -407,20 +407,20 @@ void daPkn_c::StateBite()
             if (isPlayer != 0) {
                 flags = mdCcAc_c1.hitFlags;
                 if (flags & 0x10) {
-                    ((Player *)actor)->IncMegaKillCount();
+                    ((daPly_c *)actor)->IncMegaKillCount();
                     func_02012694(0x1d, &mCamSpacePosX);
                     Die();
                     return;
                 }
-                if (((Player *)actor)->mIsMetal != 0) {
+                if (((daPly_c *)actor)->mIsMetal != 0) {
                     Die();
                     return;
                 }
-                if (((Player *)actor)->mIsVanish == 0) {
+                if (((daPly_c *)actor)->mIsVanish == 0) {
                     pos1.x = mPosX;
                     pos1.y = mPosY;
                     pos1.z = mPosZ;
-                    ((Player *)actor)->Hurt(pos1, 3, 0xc000, 1, 0, 1);
+                    ((daPly_c *)actor)->Hurt(pos1, 3, 0xc000, 1, 0, 1);
                     return;
                 }
                 if ((flags & 0x40000) == 0)
@@ -446,12 +446,12 @@ void daPkn_c::StateBite()
             isPlayer = (int)(type == 0xbf);
             if (isPlayer != 0) {
                 if ((mdCcAc_c1.hitFlags & 0x10) != 0) {
-                    ((Player *)actor)->IncMegaKillCount();
+                    ((daPly_c *)actor)->IncMegaKillCount();
                     func_02012694(0x1d, &mCamSpacePosX);
                     Die();
                     return;
                 }
-                if (((Player *)actor)->mIsMetal != 0) {
+                if (((daPly_c *)actor)->mIsMetal != 0) {
                     Die();
                     return;
                 }
@@ -481,17 +481,17 @@ void daPkn_c::StateBite()
     if (isPlayer == 0)
         return;
     if ((mdCcAcPos_c.hitFlags & 0x10) != 0) {
-        ((Player *)actor)->IncMegaKillCount();
+        ((daPly_c *)actor)->IncMegaKillCount();
         func_02012694(0x1d, &mCamSpacePosX);
         Die();
         return;
     }
-    if (((Player *)actor)->mIsMetal != 0)
+    if (((daPly_c *)actor)->mIsMetal != 0)
         return;
     pos2.x = mPosX;
     pos2.y = mPosY;
     pos2.z = mPosZ;
-    ((Player *)actor)->Hurt(pos2, 3, 0xc000, 1, 0, 1);
+    ((daPly_c *)actor)->Hurt(pos2, 3, 0xc000, 1, 0, 1);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -626,7 +626,7 @@ void daPkn_c::TrackClosestPlayer()
 {
     Vector3 v;
     mClosestPlayer = ClosestPlayer();
-    Player *p = mClosestPlayer;
+    daPly_c *p = mClosestPlayer;
     if (p != 0) {
         /* Member by member: `v = *pos` emits a different copy. */
         Vector3 *pos = &p->mPos;
@@ -647,7 +647,7 @@ void daPkn_c::TrackClosestPlayer()
 /* Is the closest player moving fast enough to wake the plant? */
 int daPkn_c::PlayerMovingFast()
 {
-    Player *p = mClosestPlayer;
+    daPly_c *p = mClosestPlayer;
     if (p == 0) return 0;
     if (p->mVertSpeed > 0xa000) return 1;
     return p->mHorzSpeed > 0xa000;
@@ -660,14 +660,14 @@ int daPkn_c::PlayerMovingFast()
    `type == 0xbf` directly changes the code. */
 int daPkn_c::CheckHits()
 {
-    Player *actor;
+    daPly_c *actor;
     u32 flags;
     u16 type;
     u32 id;
 
     id = mdCcAc_c1.otherOwner;
     if (id != 0) {
-        actor = static_cast<Player *>(dActor_c::FindWithID(id));
+        actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (actor != 0) {
             type = actor->actorID;
             int t = (int)(type == 0xbf);
@@ -710,7 +710,7 @@ int daPkn_c::CheckHits()
 
     id = mdCcAc_c2.otherOwner;
     if (id != 0) {
-        actor = static_cast<Player *>(dActor_c::FindWithID(id));
+        actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (actor != 0) {
             type = actor->actorID;
             int t = (int)(type == 0xbf);

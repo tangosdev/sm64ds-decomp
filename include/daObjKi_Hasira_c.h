@@ -31,7 +31,7 @@
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
  */
-struct Player;
+struct daPly_c;
 
 struct daObjKi_Hasira_c : dBgActor_c {
     /* dBgActor_c ends at 0x31e (its own sizeof rounds 0x31e up to 0x320);
@@ -40,7 +40,7 @@ struct daObjKi_Hasira_c : dBgActor_c {
     u8 mTurnTimer;   /* 0x31f -- frames spent turning before the fall */
     s16 mFallSpeed;  /* 0x320 -- added to mAngleX each falling frame */
     s16 mFallAccel;  /* 0x322 -- grows by 4 each falling frame */
-    Player *mTarget; /* 0x324 -- ClosestPlayer, cached while waiting */
+    daPly_c *mTarget; /* 0x324 -- ClosestPlayer, cached while waiting */
 
     /* MEASURED -- DEFINED INLINE, EMPTY, AND DECLARED FIRST. The destructor is
        the key function, so the TU that defines it emits _ZTV16daObjKi_Hasira_c,

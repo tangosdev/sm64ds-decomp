@@ -1,9 +1,9 @@
-/* class Eyerok : dBgActor_c. Real C++ form.
+/* class daIwante_c : dBgActor_c. Real C++ form.
  *
  * Base and size from the factory (reconstructed name daIwante_c_classInit,
- * now `new Eyerok()` at the bottom of src/game/actors/d_a_iwante.cpp):
+ * now `new daIwante_c()` at the bottom of src/game/actors/d_a_iwante.cpp):
  * fBase_c::operator new(0x874), then
- * dBgActor_c::dBgActor_c(), then the _ZTV6Eyerok store. Two
+ * dBgActor_c::dBgActor_c(), then the _ZTV10daIwante_c store. Two
  * vtable stores in the destructor -- own, then dBgActor_c's -- confirming a
  * DIRECT dBgActor_c child, no intermediate. The apparent third store some
  * tooling flagged is `extern int _ZN7Vector3D1Ev[];` passed as a callback
@@ -42,8 +42,8 @@
  * factory daIwante_c_classInit (historical alias Eyerok_Spawn) constructs it
  * for the IWANTE registry profile.
  */
-#ifndef EYEROK_H
-#define EYEROK_H
+#ifndef DAIWANTE_C_H
+#define DAIWANTE_C_H
 #include "types.h"
 #include "dExtSimpleModel_c.h"
 #include "dBgW_KcMbg.h"
@@ -56,14 +56,14 @@
 /* Defined in d_a_iwante.cpp: the enter/run pointer-to-member pair. */
 struct EyerokState;
 
-struct Eyerok : dBgActor_c {
+struct daIwante_c : dBgActor_c {
     dCcAcPos_c mdCcAcPos_c;                                 /* 0x320 */
     dExtBlendAnmModel_c mBlendAnmModel;                     /* 0x360 */
     dExtSimpleModel_c mModel2;                              /* 0x3d0 */
     dExtShadowModel_c mShadowModel;                         /* 0x420 */
     dExtAnmTexPat_c mTextureSequence;                       /* 0x448 */
     /* Drop-shadow matrix, flat words. A Matrix4x3 member would run another
-       ~Vector3 from ~Eyerok. */
+       ~Vector3 from ~daIwante_c. */
     s32 mShadowMtx[12];                                     /* 0x45c */
     /* Behavior loads this word and calls through the pointer-to-member at
        +8 of what it points at, and compares it against &data_ov066_0211b07c --
@@ -72,7 +72,7 @@ struct Eyerok : dBgActor_c {
     EyerokState *mState;                                    /* 0x48c */
     /* The player locked for the talk state's dialogue (func_ov066_0211903c):
        the message before the fight and the one after it. */
-    Player *mTalkPlayer;                                    /* 0x490 */
+    daPly_c *mTalkPlayer; /* 0x490 */
     /* Per-state scratch; most enter handlers clear both (the dormant enter
        handler does nothing). mStateWork0: attacking-hand toggle (02118cdc),
        stomp count (pattern 8), 20-frame stand-down counter (pattern 5),
@@ -160,7 +160,7 @@ struct Eyerok : dBgActor_c {
     s32 mHandUniqueID2;                                     /* 0x870 */
 
     /* --- vtable --- */
-    virtual ~Eyerok();
+    virtual ~daIwante_c();
 
     int Behavior();
     int CleanupResources();
@@ -169,7 +169,7 @@ struct Eyerok : dBgActor_c {
     int Render();
 
     /* Slot 29, dActor_c's egg-aim callback (include/dActor_c.h). Attributed
-       by the vtable: _ZTV6Eyerok + 4*29 = 0x0211ad64 + 0x74 = 0x0211ade8;
+       by the vtable: _ZTV10daIwante_c + 4*29 = 0x0211ad64 + 0x74 = 0x0211ade8;
        config/arm9/overlays/ov066/relocs.txt confirms 0x0211ade8 -> 0x0211a2dc. */
     int OnAimedAtWithEgg();  /* slot 29 */
 
@@ -233,7 +233,7 @@ struct Eyerok : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Eyerok_size_must_be_0x874[sizeof(Eyerok) == 0x874 ? 1 : -1];
+typedef char Eyerok_size_must_be_0x874[sizeof(daIwante_c) == 0x874 ? 1 : -1];
 #endif
 
 #endif

@@ -33,7 +33,7 @@
 #include "daRedBombhei_c.h"
 #include "common.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dCamera_c.h"
 #include "dBgCh_Gnd.h"
 #include "SaveData.h"
@@ -218,7 +218,7 @@ s32 daRedBombhei_c::InitResources()
 s32 daRedBombhei_c::Behavior()
 {
     Vector3 playerPos;
-    Player *player;
+    daPly_c *player;
     func_ov084_0212c9a8();
     player = ClosestPlayer();
     if (player != 0) {
@@ -444,7 +444,7 @@ int daRedBombhei_c::func_ov084_0212ca60()
 // @symbol _ZN14daRedBombhei_c19func_ov084_0212c9f0Eih
 /* Opens message msgID on the talking player's screen, with the talk sound. */
 void daRedBombhei_c::func_ov084_0212c9f0(int msgID, u8 msgFlag) {
-    Player *player = this->mTalkPlayer;
+    daPly_c *player = this->mTalkPlayer;
     Vector3 pos;
     int x = this->mPosX;
     int z = this->mPosZ;
@@ -491,7 +491,7 @@ void daRedBombhei_c::func_ov084_0212c8b0()
         return;
     if (!IsPlayerActor(other))
         return;
-    this->mTalkPlayer = (Player *)other;
+    this->mTalkPlayer = (daPly_c *)other;
     if (this->mTalkPlayer->StartTalk(*this, false) == 0)
         return;
     func_ov084_0212c960(kStateTalk);
@@ -510,7 +510,7 @@ void daRedBombhei_c::func_ov084_0212c89c()
    message box to light the hint arrow on the pages that point somewhere. */
 void daRedBombhei_c::func_ov084_0212c508()
 {
-    Player *player = this->mTalkPlayer;
+    daPly_c *player = this->mTalkPlayer;
     int msgID = 0;
     int param = this->param1;
     s16 angle;
@@ -651,7 +651,7 @@ void daRedBombhei_c::func_ov084_0212c4a0()
 /* State 2 update: the cannon-opening cutscene, one step at a time. */
 void daRedBombhei_c::func_ov084_0212c1a0()
 {
-    Player *player = this->mTalkPlayer;
+    daPly_c *player = this->mTalkPlayer;
     dCamera_c *cam = data_0209f318;
     Vector3 playerPos;
     s16 angle;

@@ -30,13 +30,13 @@
  * do, not labels recovered from the cartridge.
  *
  *   0  enter func_ov002_020ed5b0, execute func_ov002_020ed0d4: sits on the
- *      followed Player (mPlayer) and eases toward a point offset from it.
+ *      followed daPly_c (mPlayer) and eases toward a point offset from it.
  *   1  enter func_ov002_020ecfc8, execute func_ov002_020ecf94: picks the nearest
  *      actor not yet targeted and flies at it, speed 100 units/frame.
  *   2  enter func_ov002_020ecad4, execute func_ov002_020ec9c4: speed zero; sets
- *      the X/Z tilt from a pair func_ov002_020d5f98 reads off the Player, then
+ *      the X/Z tilt from a pair func_ov002_020d5f98 reads off the daPly_c, then
  *      damps it back to level, and destroys the egg once func_ov002_020d6048
- *      says no for the Player.
+ *      says no for the daPly_c.
  *   3  enter func_ov002_020ec978, execute func_ov002_020ec938: speed zero with
  *      gravity on; bursts as soon as it is on the ground.
  */
@@ -50,9 +50,9 @@ enum daYegg_State {
 /* The egg's own bits in dActor_c::mFlags (+0x0b0). Nothing in this file sets
  * them; the names say what the egg does while each is set. */
 enum daYegg_Flag {
-    daYegg_FLAG_ATTACHED = 0x100,   /* rides the Player's matrix (func_ov002_020ed998) */
-    daYegg_FLAG_FLYING   = 0x400,   /* runs the flight logic in state 1 */
-    daYegg_FLAG_DROPPED  = 0x2000   /* state 1 gives way to state 3 */
+    daYegg_FLAG_ATTACHED = 0x100, /* rides the daPly_c's matrix (func_ov002_020ed998) */
+    daYegg_FLAG_FLYING = 0x400,   /* runs the flight logic in state 1 */
+    daYegg_FLAG_DROPPED = 0x2000  /* state 1 gives way to state 3 */
 };
 
 struct daYegg_c : dEnemyBase_c {
@@ -60,10 +60,10 @@ struct daYegg_c : dEnemyBase_c {
     dBgCh_Actr          mWithMeshClsn;          /* 0x144 */
     dExtAnmModel_c mAnmModel;                   /* 0x300 */
     dExtShadowModel_c         mShadowModel;           /* 0x364 */
-    /* The ROM loads this WORD and passes it to _ZN6Player16IsInsideOfCannonEv as that
-       function's `this`, which is an object address -- so the word is a Player *.
+    /* The ROM loads this WORD and passes it to _ZN7daPly_c16IsInsideOfCannonEv as that
+       function's `this`, which is an object address -- so the word is a daPly_c *.
        It is the actor the egg follows and reads its pose from. */
-    Player             *mPlayer;                /* 0x38c */
+    daPly_c *mPlayer; /* 0x38c */
     /* A 4x3 matrix of twelve words. It is the Matrix4x3 argument of both
        dActor_c::DropShadow* calls, so it is the drop shadow's transform; the
        shadow code builds it from mAngleY and mPos >> 3 (words 9..11 are the
@@ -79,14 +79,14 @@ struct daYegg_c : dEnemyBase_c {
     s32 mLastPosX;                              /* 0x3cc */
     s32 mLastPosY;                              /* 0x3d0 */
     s32 mLastPosZ;                              /* 0x3d4 */
-    /* Where state 0 eases mPos toward: the followed Player's position plus an
+    /* Where state 0 eases mPos toward: the followed daPly_c's position plus an
        offset rotated by mEasedAngle. */
     s32 mHoldTargetX;                           /* 0x3d8 */
     s32 mHoldTargetY;                           /* 0x3dc */
     s32 mHoldTargetZ;                           /* 0x3e0 */
     /* TWO s16 triples. State 0 (func_ov002_020ed0d4) steps the second toward the
        first with ApproachAngle and copies its Y into mAngleY; both are seeded
-       from mAngleX/Y/Z in InitResources and from the Player's angles in
+       from mAngleX/Y/Z in InitResources and from the daPly_c's angles in
        func_ov002_020ed5b0. */
     s16 mGoalAngleX;                            /* 0x3e4 */
     s16 mGoalAngleY;                            /* 0x3e6 */
@@ -99,7 +99,7 @@ struct daYegg_c : dEnemyBase_c {
        2.0-scale egg); Behavior treats 1 as its own case. */
     s32 mState;                                 /* 0x3f0 */
     /* -0x68000 (-104 units) every time state 0 runs: the Z of the offset vector
-       rotated by mEasedAngle and added to the Player's position. */
+       rotated by mEasedAngle and added to the daPly_c's position. */
     s32 mHoldOffsetZ;                           /* 0x3f4 */
     u8  pad_3f8[0x4];
     /* uniqueIDs of the actors func_ov002_020edb3c has already chosen as a target,

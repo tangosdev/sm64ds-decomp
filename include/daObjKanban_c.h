@@ -42,7 +42,7 @@ struct daObjKanban_c : dBgActor_c {
     int Render();
 
     /* Tail fields, named from Behavior's own reads and writes. */
-    Player *mTalkingPlayer; /* 0x360 */
+    daPly_c *mTalkingPlayer; /* 0x360 */
     u8 mState;              /* 0x364 */
     u8 pad_365;
     s16 mMessageID;         /* 0x366 */

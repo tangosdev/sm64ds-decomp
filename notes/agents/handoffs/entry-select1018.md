@@ -22,7 +22,7 @@ identifiers preserved in the ROM. The class identity is the already established
 Entry scene; this work makes no new original-TU-boundary claim.
 
 The initializer builds step set `0211d768` from the enter PMF at `0211c810`
-and the update PMF at `0211c7e8`. Player synchronization schedules this set;
+and the update PMF at `0211c7e8`. daPly_c synchronization schedules this set;
 the introduction subsequently schedules interactive selection set `0211d780`.
 The screen assets identify the UI: encoded `0x840a` is `en1.narc` member 10,
 `d_2d_battle_player_select_BG1_nsc.bin`; `0x980c` is the FGIS-language counterpart

@@ -3098,7 +3098,7 @@
           {
             "off": 116,
             "type": 2,
-            "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "sym": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             "addr": 33620272,
             "add": 0
           },
@@ -3147,7 +3147,7 @@
           {
             "off": 84,
             "type": 2,
-            "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "sym": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
             "addr": 33620308,
             "add": 0
           },
@@ -4998,7 +4998,7 @@
           },
           {
             "offset": 116,
-            "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "sym": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             "addend": 0
           },
           {
@@ -5033,7 +5033,7 @@
           },
           {
             "offset": 84,
-            "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "sym": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
             "addend": 0
           },
           {
@@ -5955,9 +5955,9 @@
     "source_state": "final source overlay descending local checkpoint dbec5f712",
     "exit_code": 1,
     "remaining_diagnostics": [
-      "_ZN6Player17SetNoControlStateEhih return at src/_ZN6Player12St_Walk_InitEv.cpp",
-      "_ZN6Player17SetNoControlStateEhih return at src/actors/Eyerok.cpp",
-      "_ZN6Player17SetNoControlStateEhih return at src/game/actors/d_a_ch_scene.cpp"
+      "_ZN7daPly_c17SetNoControlStateEhih return at src/_ZN7daPly_c12St_Walk_InitEv.cpp",
+      "_ZN7daPly_c17SetNoControlStateEhih return at src/actors/daIwante_c.cpp",
+      "_ZN7daPly_c17SetNoControlStateEhih return at src/game/actors/d_a_ch_scene.cpp"
     ],
     "disposition": "Same three original preflight diagnostics at old source base. Coordinator reports already accepted current-main records. No producer bank edits; root must preserve actual current-main baseline and rerun committed scoped gate. daStarBase_c new mismatch is resolved."
   },

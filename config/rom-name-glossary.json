@@ -679,9 +679,9 @@
       "note": "The English is misleading: daSnowman_c = debug string SNOWMAN(223) = MR_BLIZZARD in overlay_actors.md ov081 (files snowman/snowman_model.bmd, snow_ball.bmd). The big snowman is daBgSnwmn_c."
     },
     "Spd": {
-      "gloss": "spider -- Scuttlebug",
+      "gloss": "spider -- daSpd_c",
       "confidence": "high",
-      "note": "daSpd_c = SPIDER(255) = SCUTTLEBUG, ov071; model dir data/enemy/spider; build/rtti_reconcile.json coined name Scuttlebug."
+      "note": "daSpd_c = SPIDER(255) = SCUTTLEBUG, ov071; model dir data/enemy/spider; build/rtti_reconcile.json coined name daSpd_c."
     },
     "Btfly": {
       "gloss": "butterfly",
@@ -871,9 +871,9 @@
     },
     "Iwante": {
       "ja": "岩手",
-      "gloss": "rock hands -- Eyerok",
+      "gloss": "rock hands -- daIwante_c",
       "confidence": "high",
-      "note": "daIwante_c = IWANTE(176) = EYEROK, ov066; files iwante_lhand/iwante_rhand.bmd; rtti_reconcile coined Eyerok. iwa (rock) + te (hand)."
+      "note": "daIwante_c = IWANTE(176) = EYEROK, ov066; files iwante_lhand/iwante_rhand.bmd; rtti_reconcile coined daIwante_c. iwa (rock) + te (hand)."
     },
     "Grock": {
       "ja": "ゴロ岩",
@@ -1031,7 +1031,7 @@
     "Ply": {
       "gloss": "player",
       "confidence": "high",
-      "note": "daPly_c = PLAYER(191); rtti_reconcile coined Player."
+      "note": "daPly_c = PLAYER(191); rtti_reconcile coined Player, since renamed to the RTTI spelling."
     },
     "Pic": {
       "gloss": "picture -- a painting",
@@ -1220,7 +1220,7 @@
     "ed": {
       "gloss": "ending",
       "confidence": "medium",
-      "note": "Player animations in the file table use the same prefix for the ending (ed_kiss_wait, ed_wave, ed_fly, peach_ed_*). edStarKiraCallback_c = the ending star's sparkle."
+      "note": "daPly_c animations in the file table use the same prefix for the ending (ed_kiss_wait, ed_wave, ed_fly, peach_ed_*). edStarKiraCallback_c = the ending star's sparkle."
     },
     "dokan": {
       "ja": "土管",

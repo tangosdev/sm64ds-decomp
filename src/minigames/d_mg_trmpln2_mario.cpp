@@ -14,7 +14,7 @@ struct System {
  *
  * ROM evidence: D1 0x020ca604 and constructor 0x020ca78c of
  * dMgTrmpln2Mario_c (the constructor was misfiled as
- * _ZN6Player29TryExitCharacterDoorWithIntroEv: it stores vptr
+ * _ZN7daPly_c29TryExitCharacterDoorWithIntroEv: it stores vptr
  * _ZTV17dMgTrmpln2Mario_c and constructs a dExtAnmModel_c at +0x78);
  * D1 0x020ccfc8 and constructor 0x020cd12c of dMgTrmpln3DMario_c;
  * _ZTI17dMgTrmpln2Mario_c 0x0213b250, _ZTI18dMgTrmpln3DMario_c 0x0213b244,
@@ -1212,15 +1212,15 @@ dMgTrmpln2Mario_c::~dMgTrmpln2Mario_c() {
 }
 // ---- Trmp2Mario_Construct
 /* dMgTrmpln2Mario_c's constructor, ov006 0x020ca78c. It was filed as
- * _ZN6Player29TryExitCharacterDoorWithIntroEv; it is not a Player method.
+ * _ZN7daPly_c29TryExitCharacterDoorWithIntroEv; it is not a daPly_c method.
  *
  * The shape is a constructor, not a state handler: it calls a base routine,
  * stores a vptr into [this+0], then runs a member constructor at this+0x78.
- * Player's own constructors are _ZN6PlayerC1Ev / C3Ev in ov002, and Player's
- * dExtAnmModel_c members live at 0xf0 and 0x174 -- not 0x78, which on a real Player is
+ * daPly_c's own constructors are _ZN7daPly_cC1Ev / C3Ev in ov002, and daPly_c's
+ * dExtAnmModel_c members live at 0xf0 and 0x174 -- not 0x78, which on a real daPly_c is
  * dActor_c's mCamSpacePosY.
  *
- * This file was the only evidence for Player.h's `mAnmModel2` at 0x078, so
+ * This file was the only evidence for daPly_c.h's `mAnmModel2` at 0x078, so
  * that field can now be dropped and the offset returned to dActor_c.
  *
  * The vptr it stores, 0x0213b2e0, is dMgTrmpln2Mario_c's vtable address point
@@ -1229,7 +1229,7 @@ dMgTrmpln2Mario_c::~dMgTrmpln2Mario_c() {
  * IsActive and dMgTrmpRingObjAdapter_c::Clear. 0x0213b2c4 is the same
  * for dMgTrmpln3DMario_c.
  *
- * Detached from Player.h; see SlotB2_Hide.cpp.
+ * Detached from daPly_c.h; see SlotB2_Hide.cpp.
  */
 
 /* The ring adapter base and mAnmModel are constructed before the (empty) body. */
@@ -1426,11 +1426,11 @@ void Trmp2Mario_DrawAll(void) {
 // ---- Trmp2Mario_UpdateAll
 namespace ns_020cac30 {
 /* ov006, 0x020cac30, size 0x6c. Held the name
- * _ZN6Player12St_Null_InitEv until that symbol was moved to ov002, where an
+ * _ZN7daPly_c12St_Null_InitEv until that symbol was moved to ov002, where an
  * eight-byte `return 1` sits at the same shared address and is reached from
- * ov002's Player::State pointer-to-member table. This function is reached
+ * ov002's daPly_c::State pointer-to-member table. This function is reached
  * instead by two direct arm_calls from ov006 (module:overlay(6)) and touches
- * no Player field, so nothing here was ever Player's. Back to a placeholder
+ * no daPly_c field, so nothing here was ever daPly_c's. Back to a placeholder
  * name until its own class is identified.
  */
 extern "C" {

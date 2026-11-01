@@ -3,7 +3,7 @@
   "base": "e54d313d932f908937b82a3d3e84482d3d460b9c",
   "checkpoint": "a13b3f84f1eef2df67364cc1784f06c386f72767",
   "status": "Production byte/object and required static gates passed with explicit stock collector limitation. Independent Source acceptance remains separate.",
-  "source_completion": "Scoped opaque object contract repair; SharedFilePtr layout, initializer C++ migration and Player raw views remain partial.",
+  "source_completion": "Scoped opaque object contract repair; SharedFilePtr layout, initializer C++ migration and daPly_c raw views remain partial.",
   "issue_dependency": "https://github.com/tangosdev/sm64ds-decomp/issues/3169",
   "issue_context": "Focused prerequisite for the dActor dust continuation: its declaration gate exposed these four existing foreign disagreements. This does not claim the initializer belongs to dActor_c.",
   "producer": {
@@ -28,7 +28,7 @@
     ],
     "unchanged": [
       "Native Luigi interfaces and Source",
-      "Player.cpp and SharedFilePtr.h",
+      "d_a_ply_methods.cpp and SharedFilePtr.h",
       "all headers, manifests, symbol ledgers, storage ownership, compiler policies and declaration baseline",
       "all constructor/destructor registration destinations and initializer instruction bytes"
     ]
@@ -558,7 +558,7 @@
     ],
     "before_disagreements": 7533,
     "after_disagreements": 7529,
-    "source_benefit": "C initializer now declares four opaque SharedFilePtr objects and passes their addresses. Native Luigi APIs, object storage ownership, SharedFilePtr layout/header and raw Player views remain unchanged.",
+    "source_benefit": "C initializer now declares four opaque SharedFilePtr objects and passes their addresses. Native Luigi APIs, object storage ownership, SharedFilePtr layout/header and raw daPly_c views remain unchanged.",
     "scope": "Claimed initializer only; actual production Source and actual base control compiled under current unchanged tools/policies.",
     "temporary_source_metadata": "Candidate keeps the actual initializer basename; compile flags/version come from the actual enrolled Source path. Ordinary retarget/isolation uses that exact Source identity with unchanged current tools/config.",
     "direct_contracts": {
@@ -675,8 +675,8 @@
     {
       "id": "FILEHANDLES-LAYOUT-002",
       "status": "deferred",
-      "scope": "SharedFilePtr layout and unmodified Player/Luigi raw views",
-      "finding": "SharedFilePtr.h still intentionally declares methods without recovered fields. Luigi retains LoadedSharedFile view; Player retains block-local char[]/int[] views and offset/index accesses. The fifth animation handle data_ov002_0210eaa0 remains outside this four-object repair. No full shared-resource reconstruction is claimed.",
+      "scope": "SharedFilePtr layout and unmodified daPly_c/Luigi raw views",
+      "finding": "SharedFilePtr.h still intentionally declares methods without recovered fields. Luigi retains LoadedSharedFile view; daPly_c retains block-local char[]/int[] views and offset/index accesses. The fifth animation handle data_ov002_0210eaa0 remains outside this four-object repair. No full shared-resource reconstruction is claimed.",
       "next_action": "Reserve complete layout and consumer fanout before broader native shared-resource migration.",
       "owner": "root coordinator",
       "issue_dependency": "https://github.com/tangosdev/sm64ds-decomp/issues/3169"
@@ -693,7 +693,7 @@
     "src/unnamed/ov002/__sinit_ov002_021019d0.c": "9daa7eae32b97d5f7c1ddd2ea4381d04fae17b87",
     "include/SharedFilePtr.h": "4cf9477fa21821a8c400546d4be6a4ebebe7c2be",
     "src/actors/daLuigi_c.cpp": "7cdb421d80fccd7b6c51b186a4b8d37fd41ba0c8",
-    "src/actors/Player.cpp": "7a23d28e06330f60ea1ef9ec47b1ce1d75ed38e9",
+    "src/actors/daPly_c.cpp": "7a23d28e06330f60ea1ef9ec47b1ce1d75ed38e9",
     "config/arm9/overlays/ov002/delinks.txt": "e712de4581162c453513b472a46397fedfa4ee55",
     "config/arm9/overlays/ov002/symbols.txt": "1e03d840bd0e0a67c2d2046e6477e222c7889360",
     "config/decl-agreement-baseline.json": "15bc3797f5966bef13ba9e4ffddcf8ac0538a736"

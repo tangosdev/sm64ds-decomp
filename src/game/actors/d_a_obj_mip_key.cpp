@@ -13,7 +13,7 @@
 #include "daObj_Mip_Key_c.h"
 #include "common.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dCamera_c.h"
 #include "Message.h"
 #include "Sound.h"
@@ -73,7 +73,7 @@ void daObj_Mip_Key_c::FinishConversation() {
 
 int daObj_Mip_Key_c::StateCarried() {
     daObj_Mip_Key_c *self = this;
-    Player *other = self->mPlayer;
+    daPly_c *other = self->mPlayer;
     unsigned char mode;
     int *playerPos;
 
@@ -200,7 +200,7 @@ int daObj_Mip_Key_c::StateLoose() {
     Vector3 v;
     Vector3 out;
     Vector3 pp;
-    Player *player;
+    daPly_c *player;
     int zero;
     Vector3 *ppos;
 

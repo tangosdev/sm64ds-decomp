@@ -29,7 +29,7 @@
  *   dBgCh_Actr::UpdateDiscreteNoLava_2 (func_ov096_02136434,
  *   func_ov096_021360c4, func_ov096_02135e2c).
  *   - Particle::System::New, NewUnkCallback818, NewSimple,
- *   RunningSlidingDustAt and Player::Hurt take Fix12 by value
+ *   RunningSlidingDustAt and daPly_c::Hurt take Fix12 by value
  *   (func_ov096_02136434, func_ov096_02135948, func_ov096_02136134,
  *   func_ov096_021365d4).
  *   - func_ov096_02135e2c copies the floor and wall collision normals;
@@ -58,7 +58,7 @@ enum daSanbo_c_AssetId {
 #include "SharedFilePtr.h"
 #include "SpawnInfo.h"
 #include "decl_common.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
@@ -118,10 +118,9 @@ extern "C" daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void)
     return new daSanbo_c();
 }
 
-// @symbol _ZN9daSanbo_c13OnTurnIntoEggER6Player
+// @symbol _ZN9daSanbo_c13OnTurnIntoEggER7daPly_c
 /* Only the head pays out a coin. Every piece then destroys itself. */
-void daSanbo_c::OnTurnIntoEgg(Player &player)
-{
+void daSanbo_c::OnTurnIntoEgg(daPly_c &player) {
     int flag = (actorID == SANBO_HEAD);
     if (flag)
         GivePlayerCoins(player, 1, 2);
@@ -706,7 +705,7 @@ void daSanbo_c::func_ov096_02135948()
 
     flags = mdCcAc_c.hitFlags;
     if (!(flags & 0x8000)) {
-        Player *player = (Player *)other;
+        daPly_c *player = (daPly_c *)other;
 
         if (flags & 0x40000) {
             x = mPosX;
@@ -781,7 +780,7 @@ void daSanbo_c::func_ov096_02135948()
 // @symbol _ZN9daSanbo_c19func_ov096_021358c8Ev
 void daSanbo_c::func_ov096_021358c8()
 {
-    Player *player = ClosestNonVanishPlayer();
+    daPly_c *player = ClosestNonVanishPlayer();
     void *target;
     int dist;
     short ang;

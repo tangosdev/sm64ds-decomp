@@ -98,7 +98,7 @@ This document describes this commit. The queue records its immutable output SHA.
   emits the real table, and it compares equal to the cartridge — so what the
   gate caught was the declaration site. The declaration moved to
   `include/daMip_c.h` beside the class, which is what the landed sibling
-  `include/Scuttlebug.h` does for the identical factory seam, and the type
+  `include/daSpd_c.h` does for the identical factory seam, and the type
   changed to `int[]` so it agrees with the spelling `include/decl_common.h`
   already carries. The counts return to 165/168 and the bytes do not move: the
   TU still verifies 32/32.
@@ -118,7 +118,7 @@ This document describes this commit. The queue records its immutable output SHA.
   records that restriction, and is cited correctly above — so `fBase_c` cannot
   expose that allocator under the natural spelling at all. The mangled call is
   therefore the only way to reach the allocator the ROM actually used.
-  Scuttlebug retains the same seam for the same reason, but it records this
+  daSpd_c retains the same seam for the same reason, but it records this
   different and correct measurement; it does **not** record the "no global
   `operator new`" claim this document previously attributed to it.
 
@@ -225,7 +225,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `pad_460`, `pad_46c`); `mState` at `0x364`, which is really a pointer to a
   state record but is kept an opaque `s32` because `Behavior` compares it by
   address against four [ov085](../../../config/arm9/overlays/ov085/symbols.txt) objects; **`mTalkingPlayer` at `0x45c`, which the
-  header's own comment documents as "A Player *" while declaring it `s32`, and
+  header's own comment documents as "A daPly_c *" while declaring it `s32`, and
   which the body then round-trips through `*(void **)&mTalkingPlayer` at three
   sites** — it was missing from the previous list entirely and is the cheapest
   correct field recovery left in the class; the `daMip_cSelf` shadow struct the

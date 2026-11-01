@@ -1190,7 +1190,7 @@
             0
           ],
           "116": [
-            "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             2,
             0
           ],
@@ -1280,7 +1280,7 @@
             0
           ],
           "84": [
-            "_ZN9daPgBby_c13OnTurnIntoEggER6Player",
+            "_ZN9daPgBby_c13OnTurnIntoEggER7daPly_c",
             2,
             0
           ],

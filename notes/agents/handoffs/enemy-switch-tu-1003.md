@@ -73,7 +73,7 @@ claims and worktrees are untouched.
 
 - [attribution.json](../../../attribution.json): add twelve exact path#symbol credit overrides. Together with
   the Scene input, all thirty-three consolidated functions retain their credit.
-- [config/converted-baseline.json](../../../config/converted-baseline.json): migrate five existing enemy member identities;
+- `config/converted-baseline.json`: migrate five existing enemy member identities;
   preserve all eighteen previously migrated Scene identities.
 - [symbols/actor_renames.tsv](../../../symbols/actor_renames.tsv): correct ten method rows to the cartridge class names,
   preserving each former name in the why column.

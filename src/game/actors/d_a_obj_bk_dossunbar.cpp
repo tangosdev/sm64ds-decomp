@@ -29,7 +29,7 @@
 
 #include "daObjBk_Dossunbar_c.h"
 #include "Sound.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Particle__System.h"
@@ -312,8 +312,8 @@ void daObjBk_Dossunbar_c::ExecuteTravelOut() {
     ChangeState(0);
 }
 
-// @symbol _ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player
-void daObjBk_Dossunbar_c::OnHitByMegaChar(Player &player) {
+// @symbol _ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER7daPly_c
+void daObjBk_Dossunbar_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Kill();
 }

@@ -16,9 +16,9 @@
  * - The eight helpers stay func_ov100_02141fb0 .. 02142b90. Behavior
  *   reads gIblKindHandlers by hand, through two-word records, rather
  *   than calling a pointer-to-member.
- * - Player::Hurt stays mangled: it takes Fix12<int> by value. The local
+ * - daPly_c::Hurt stays mangled: it takes Fix12<int> by value. The local
  *   Hurt declaration agrees with the current scalar definition.
- * - The spawner copies Player position through a byte view of the whole object
+ * - The spawner copies daPly_c position through a byte view of the whole object
  *   into a real Vector3. The inherited position fields remain separate scalars.
  * - Spawn still borrows this actor's flat position and angle fields through
  *   the existing reference interface; those base fields are not vector objects.
@@ -39,7 +39,7 @@
 #include "common.h"
 #include "SharedFilePtr.h"
 #include "SpawnInfo.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dExtSimpleModel_c.h"
 #include "dActor_c.h"
 #include "dBgCh_Actr.h"
@@ -171,22 +171,22 @@ s32 daIbl_c::OnAimedAtWithEgg()
 
 // @symbol _ZN7daIbl_c19func_ov100_02141fb0Ev
 /* Contact check, shared by every handler. mdCcAc_c.otherOwner is the uniqueID
-   of the actor that touched the ball; when that is a Player (actor 191) who is
+   of the actor that touched the ball; when that is a daPly_c (actor 191) who is
    not vanished (mIsVanish), mdCcAc_c.hitFlags decides what happens:
      - the mega-character bit: the ball is lifted by OnAimedAtWithEgg's answer
        (130 units), handed to KillByInvincibleChar (which starts the
        mDeathState 8 knock-away that func_ov002_020ad660 then steps), and its
        ground flag is cleared;
      - an attack bit (punch, kick, breakdance, slide kick, per dCc_c.h's
-       best-effort and unproven bit table): when the Player's
+       best-effort and unproven bit table): when the daPly_c's
        param1 is 2 (read here as its character index; index 2 is Wario in
        SaveData's unlock-bit order) the ball breaks up (particle, poof, MarkForDestruction, break
        sound); any other character only gets the not-broken sound;
-     - any other contact hurts the Player (Player::Hurt, given the ball's
+     - any other contact hurts the daPly_c (daPly_c::Hurt, given the ball's
        position). */
 void daIbl_c::func_ov100_02141fb0()
 {
-    Player *a;
+    daPly_c *a;
     u32 fl;
     u32 id = mdCcAc_c.otherOwner;
 
@@ -197,7 +197,7 @@ void daIbl_c::func_ov100_02141fb0()
         int b = (actor->actorID == daIbl_ACTOR_PLAYER);
         if (b == 0) return;
     }
-    a = static_cast<Player *>(actor);
+    a = static_cast<daPly_c *>(actor);
     if (a->mIsVanish != 0) return;
     fl = mdCcAc_c.hitFlags;
     if ((fl & daIbl_HIT_MEGA) != 0) {
@@ -679,7 +679,7 @@ void daIbl_c::func_ov100_02142b90()
 {
     Vector3 pos;
     u16 *timer = (u16 *)&mStateTimer;
-    Player *pl;
+    daPly_c *pl;
     int r1;
 
     if (*timer != 0) {
@@ -695,7 +695,7 @@ void daIbl_c::func_ov100_02142b90()
 
     {
         /* dActor_c still declares these as separate s32 subobjects at
-           0x5c/0x60/0x64. Read them through the whole Player representation;
+           0x5c/0x60/0x64. Read them through the whole daPly_c representation;
            this creates neither a vector view nor an array over those fields.
            Direct named loads lose the shared address under 2004/b56. */
         const unsigned char *coords = reinterpret_cast<const unsigned char *>(pl) + 0x5c;

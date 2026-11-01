@@ -31,7 +31,7 @@ struct Vector3_16f;
  *
  * deslop leftovers:
  * - DropShadowRadHeight, dCcAcPos_c::Init, dCcAc_c::Init, dBgCh_Actr::Init,
- *   UpdateCapPos, dExtAnmModel_c::SetAnim, SpawnFireball, Player::
+ *   UpdateCapPos, dExtAnmModel_c::SetAnim, SpawnFireball, daPly_c::
  *   Bounce/Hurt, KillByInvincibleChar and the Sound/Particle/dCamera_c calls
  *   retain scalar or opaque boundaries. UpdateCapPos has a shared reference
  *   declaration, but the direct call currently changes two argument-address
@@ -64,7 +64,7 @@ enum daTrs_c_AssetId {
 #include "daTBasket_c.h"
 #include "daTrsIcon_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "dCamera_c.h"
 #include "dBgCh_Gnd.h"
@@ -313,7 +313,7 @@ void daTrs_c::func_ov063_021160d4() {
 int daTrs_c::func_ov063_02116190() {
 
     int vec[3];
-    Player* p;
+    daPly_c *p;
 
     if (this->mBooFlags.limitZ) {
         p = ClosestPlayer();
@@ -965,7 +965,7 @@ void daTrs_c::func_ov063_02117650() {
     }
 
     {
-        int *pp = (int *)&((Player *)p)->mPosX;
+        int *pp = (int *)&((daPly_c *)p)->mPosX;
         ppos.x = pp[0];
         ppos.y = pp[1];
         ppos.z = pp[2];
@@ -1010,7 +1010,7 @@ void daTrs_c::func_ov063_021177b0() {
         unsigned short flags = *(unsigned short*)&this->mBooFlags;
 
         if (((unsigned)(flags << 21)) >> 31) {
-            Player* pl = ClosestPlayer();
+            daPly_c *pl = ClosestPlayer();
             if (pl != 0) {
                 Vec3 v;
                 Vec3 mid;
@@ -1118,7 +1118,7 @@ void daTrs_c::func_ov063_02117b0c() {
 
     switch (this->mSubState) {
     case 0:
-        this->mTalkPlayer = (Player *)ClosestPlayer();
+        this->mTalkPlayer = (daPly_c *)ClosestPlayer();
         if (!this->mTalkPlayer->StartTalk(*(fBase_c *)(this), 1))
             return;
         {
@@ -1148,7 +1148,7 @@ void daTrs_c::func_ov063_02117b0c() {
         }
         {
             void *pl = (void *)this->mTalkPlayer;
-            unsigned m = (unsigned)(int)data_ov063_0211e1c8[((Player *)pl)->param1];
+            unsigned m = (unsigned)(int)data_ov063_0211e1c8[((daPly_c *)pl)->param1];
             if (!this->mClosestPlayer->ShowMessage(*(fBase_c *)(this), m, (const Vector3 *)(v), 0, 2))
                 return;
             func_0201277c(0x151);
@@ -1188,7 +1188,7 @@ void daTrs_c::func_ov063_02117cdc() {
     cam = (dCamera_c *)data_0209f318;
     switch (this->mSubState) {
     case 0:
-        this->mTalkPlayer = (Player *)ClosestPlayer();
+        this->mTalkPlayer = (daPly_c *)ClosestPlayer();
         if (this->mTalkPlayer->mPosX <= -0x2bc000) {
             return;
         }
@@ -1266,13 +1266,13 @@ void daTrs_c::func_ov063_02117cdc() {
             this->mStateTimer = 0;
         }
         {
-            Player *d = this->mTalkPlayer;
+            daPly_c *d = this->mTalkPlayer;
             d->mAngleX = v[0];
             d->mAngleY = v[1];
             d->mAngleZ = v[2];
         }
         {
-            Player *d = this->mTalkPlayer;
+            daPly_c *d = this->mTalkPlayer;
             d->mPrevAngleX = v[0];
             d->mPrevAngleY = v[1];
             d->mPrevAngleZ = v[2];
@@ -2010,7 +2010,7 @@ void daTrs_c::func_ov063_0211934c() {
     st = this->mSubState;
     switch (st) {
     case 0:
-        if (((Player *)r4)->StartTalk(*(fBase_c *)(this), 1) == 0)
+        if (((daPly_c *)r4)->StartTalk(*(fBase_c *)(this), 1) == 0)
             return;
         {
             u8 *q = (u8 *)&this->mSubState;
@@ -2029,9 +2029,9 @@ void daTrs_c::func_ov063_0211934c() {
         }
         found = (void *)this->mFoundActor;
         if (found != 0 && ((daTrs_c *)found)->mBooDefeatCount == 5) {
-            ((Player *)r4)->ShowMessage(*(fBase_c *)(this), 0xb5, &this->mPos, 0, 2);
+            ((daPly_c *)r4)->ShowMessage(*(fBase_c *)(this), 0xb5, &this->mPos, 0, 2);
         } else {
-            ((Player *)r4)->ShowMessage(*(fBase_c *)(this), 0xb4, &this->mPos, 0, 2);
+            ((daPly_c *)r4)->ShowMessage(*(fBase_c *)(this), 0xb4, &this->mPos, 0, 2);
         }
         this->mFoundActor = 0;
         {
@@ -2404,16 +2404,15 @@ void daTrs_c::func_ov063_02119e38(int a1, short a2, int a3) {
     this->mVertSpeed = 0;
 
     {
-      Player *p = this->mClosestPlayer;
-      if (p->mIsAirborne == 0) {
-        int myY = this->mPosY;
-        int otherY = p->mPosY;
-        int dy = myY - otherY;
-        if ((a1 << 0xc) < dy && dy < 0x1f4000 &&
-            (this->mHomePosY - myY) < 0xfa000) {
-          this->mVertSpeed = func_ov063_0211a0a8((int)this, myY, otherY, 0xa000, 0x2000);
+        daPly_c *p = this->mClosestPlayer;
+        if (p->mIsAirborne == 0) {
+            int myY = this->mPosY;
+            int otherY = p->mPosY;
+            int dy = myY - otherY;
+            if ((a1 << 0xc) < dy && dy < 0x1f4000 && (this->mHomePosY - myY) < 0xfa000) {
+                this->mVertSpeed = func_ov063_0211a0a8((int)this, myY, otherY, 0xa000, 0x2000);
+            }
         }
-      }
     }
 
     func_ov063_0211a030(0xa000 - this->mSpeedJitter,a3);
@@ -2462,7 +2461,7 @@ extern "C" int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4) {
 int daTrs_c::func_ov063_0211a0dc() {
 
     dActor_c *actor;
-    Player *player;
+    daPly_c *player;
     u32 id;
     Vec3 v1, v2;
 
@@ -2476,7 +2475,7 @@ int daTrs_c::func_ov063_0211a0dc() {
         this->mdCcAcPos_c.flags |= 1;
         found = (void *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
         if (found) {
-            this->mTalkPlayer = (Player *)found;
+            this->mTalkPlayer = (daPly_c *)found;
 
             {
                 int isBf = (int)(((dActor_c *)found)->actorID == TRS_ID_PLAYER);
@@ -2496,13 +2495,13 @@ int daTrs_c::func_ov063_0211a0dc() {
         goto ret0;
     if (!(this->mdCcAcPos_c.hitFlags & 0x400000))
         goto ret0;
-    player = static_cast<Player *>(actor);
+    player = static_cast<daPly_c *>(actor);
     if (player->mIsVanish != 0)
         return 0;
 
     if (player->mIsMetal != 0) {
         this->mdCcAcPos_c.flags |= 1;
-        this->mTalkPlayer = (Player *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+        this->mTalkPlayer = (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
         return 1;
     }
 
@@ -2549,12 +2548,12 @@ found_kind:
             found2 = (void *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
             if (!found2)
                 goto ret0;
-            this->mTalkPlayer = (Player *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+            this->mTalkPlayer = (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
 
             v[0] = -0x2000;
             v[1] = 0;
             v[2] = 0;
-            KillByInvincibleChar(*(Vector3_16 *)v, *(Player *)found2, 0);
+            KillByInvincibleChar(*(Vector3_16 *)v, *(daPly_c *)found2, 0);
 
             {
                 s16* ap = (s16*)&this->mAngleY;
@@ -3165,7 +3164,7 @@ int daTrs_c::Behavior()
         v = (((mFlags) & 0x40000) ? 1 : 0);
         if (v != 0) {
             u8 st = mTalkStep;
-            Player *pl = (Player *)mEatingPlayer;
+            daPly_c *pl = (daPly_c *)mEatingPlayer;
             switch (st) {
             case 0:
                 if (pl->ShowMessage(*this, 0x15a, 0, 0, 2) != 0) {
@@ -3192,7 +3191,7 @@ block_39:
 
     {
         mClosestPlayer = ClosestPlayer();
-        Player *plr = mClosestPlayer;
+        daPly_c *plr = mClosestPlayer;
         if (plr != 0) {
             s32 *pp = &plr->mPosX;
             pv.x = pp[0];
@@ -3348,7 +3347,7 @@ int daTBasket_c::Behavior()
                 dActor_c *touched = dActor_c::FindWithID(id);
                 if (touched != 0) {
                     if ((mdCcAc_c.hitFlags & 0x400000) != 0)
-                        ((Player *)touched)->JumpIntoBooCage(mPos);
+                        ((daPly_c *)touched)->JumpIntoBooCage(mPos);
                 }
             }
         }
@@ -3377,7 +3376,7 @@ int daTrs_c::InitResources()
     int cond;
     int tmp598;
     dActor_c *spawned;
-    Player *pp;
+    daPly_c *pp;
 
     *(u16 *)&mBooFlags = 0;
     mSpawnedActorID = 0;

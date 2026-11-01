@@ -78,7 +78,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `notes/data/c-cpp-classification.tsv`, `notes/data/tu-merge-candidates.json`,
   `notes/experiments/pr2873-integration-0920.json`,
   `notes/experiments/pr2874-integration-0920.json`,
-  `notes/data/class-facts/Scuttlebug.json` and `notes/handoff-marker-typing.md`
+  `notes/data/class-facts/daSpd_c.json` and `notes/handoff-marker-typing.md`
   (all historical or out of scope). Its one-line rewrite of
   `notes/converted-tier.md` was reverted too; that line was fixed by hand
   afterwards, as above.
@@ -108,7 +108,7 @@ This document describes this commit. The queue records its immutable output SHA.
   writes the model matrix from the actor's angles and position.
 ---
 - Factory: folded. Its [delinks](../../../config/arm9/overlays/ov071/delinks.txt) entry abutted `InitResources` with a zero-byte gap,
-  [ov071](../../../config/arm9/overlays/ov071/symbols.txt) ends each class run with its `classInit`, and the promoted Scuttlebug TU
+  [ov071](../../../config/arm9/overlays/ov071/symbols.txt) ends each class run with its `classInit`, and the promoted daSpd_c TU
   in the same overlay folds its factory the same way. It is now `return new
   daObjCasket_c();`, which matched on the first compile and replaces the legacy
   C seam (raw `_ZN7fBase_cnwEj`, `_ZN10dBgActor_cC2Ev` and vptr store).
@@ -119,7 +119,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - Compiler experiments (each re-verified 14/14 or measured to fail): the
   model-matrix update through a `Matrix4x3 &` local compiles to 0x54 against
   the ROM's 0x48, so it spells `casket->mModel.mat4x3` at each store; copying
-  the closest player's position straight off `Player::mPosX..mPosZ` compiles
+  the closest player's position straight off `daPly_c::mPosX..mPosZ` compiles
   `func_ov071_021221bc`(current [_ZN13daObjCasket_c12St_Wait_MainEv](../../../src/game/actors/d_a_obj_casket.cpp)) to 0x1f0 against 0x1f4, so the copy stays through a
   `Vector3` pointer, with a one-line note. The legacy factory seam also
   matches, but emits no `_ZN10dBgActor_cD2Ev`; the `new` form was kept and the

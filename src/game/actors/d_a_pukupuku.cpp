@@ -39,7 +39,7 @@
 
 #include "common.h"
 #include "daPukupuku_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dExtFrameCtrl_c.h"
 #include "decl_common.h"
@@ -153,7 +153,7 @@ int daPukupuku_c::Behavior() {
     CheckPlayerHit();
     mdCcAcPos_c.Clear();
     {
-        Player *p = ClosestPlayer();
+        daPly_c *p = ClosestPlayer();
         if (p != 0 && p->mIsVanish == 0) {
             mdCcAcPos_c.Update();
         }
@@ -262,7 +262,7 @@ void daPukupuku_c::CheckPlayerHit() {
         if (id == 0)
             return;
         {
-            Player *a = (Player *)dActor_c::FindWithID(id);
+            daPly_c *a = (daPly_c *)dActor_c::FindWithID(id);
             int b = (int)(a->actorID == 0xbf);
             if (b == 0)
                 return;

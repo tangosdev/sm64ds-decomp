@@ -74,7 +74,7 @@ The source and this handoff are prepared for draft-PR publication at the user's
 request. Raw local evidence and private compiler objects remain untracked. The
 declaration blocker is retained; `formal_acceptance: false`.
 
-The twelve helper backports correct Player damage flags/return, ground-angle
+The twelve helper backports correct daPly_c damage flags/return, ground-angle
 return width, particle return type, animation start-frame width, shadow opacity,
 sound declarations and their nine coordinate arguments. The local POD Vector3
 is preserved where required. The false daJgm_c kill/vtable comment is replaced

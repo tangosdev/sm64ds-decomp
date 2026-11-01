@@ -110,21 +110,21 @@
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1674EP6Player",
+      "symbol": "_ZN8daCoin_c19func_ov002_020b1674EP7daPly_c",
       "address": "0x020b1674",
       "size": "0x00000050",
       "legacy_source": "src/func_ov002_020b1674.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b16c4EP6Player",
+      "symbol": "_ZN8daCoin_c19func_ov002_020b16c4EP7daPly_c",
       "address": "0x020b16c4",
       "size": "0x000001c0",
       "legacy_source": "src/func_ov002_020b16c4.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1884EP6Player",
+      "symbol": "_ZN8daCoin_c19func_ov002_020b1884EP7daPly_c",
       "address": "0x020b1884",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov002_020b1884.c",
@@ -222,10 +222,10 @@
       "ordinal": 25
     },
     {
-      "symbol": "_ZN8daCoin_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8daCoin_c13OnTurnIntoEggER7daPly_c",
       "address": "0x020b2a34",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN8daCoin_c13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/_ZN8daCoin_c13OnTurnIntoEggER7daPly_c.cpp",
       "ordinal": 26
     },
     {
@@ -374,7 +374,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020b1328' differs between the legacy file that used to hold func_ov002_020b10a0 and the one that held func_ov002_020b16c4; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c24KillAndTrackInDeathTableEv' differs between the legacy file that used to hold func_ov002_020b10a0 and the one that held func_ov002_020b1884; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank3EjRK7Vector3' differs between the legacy file that used to hold func_ov002_020b16c4 and the one that held func_ov002_020b1884; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player4HealEi' differs between the legacy file that used to hold func_ov002_020b16c4 and the one that held func_ov002_020b1884; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7daPly_c4HealEi' differs between the legacy file that used to hold func_ov002_020b16c4 and the one that held func_ov002_020b1884; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8daStar_c13AddStarMarkerEv' differs between the legacy file that used to hold func_ov002_020b16c4 and the one that held func_ov002_020b18f0; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov002_020b16c4 and the one that held func_ov002_020b18f0; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov002_020b10e4 and the one that held func_ov002_020b19dc; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
@@ -913,7 +913,7 @@
       "source": "0x02108838",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daCoin_c13OnTurnIntoEggER6Player",
+      "symbol": "_ZN8daCoin_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020b2a34"
@@ -993,7 +993,7 @@
       "source": "0x02108858",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02010130"

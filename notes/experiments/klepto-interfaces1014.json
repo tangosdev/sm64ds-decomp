@@ -81,7 +81,7 @@
       "id": "RCV2908-02",
       "kind": "correctness",
       "location": "src/actors/player.cpp and static-destructor registration callers",
-      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local Player declarations and calls.",
+      "reason": "The actual candidate preserves repaired pointer/pointer/node contracts, including both block-local daPly_c declarations and calls.",
       "summary": "Registration carries object and callback addresses as pointers."
     },
     {
@@ -130,7 +130,7 @@
       "kind": "correctness",
       "location": "src/actors/player.cpp Vector destructor imports",
       "reason": "All five are present in the independent raw census; all 22 original parser-omitted declarations remain accounted for without broadening the checker into block-local parsing.",
-      "summary": "The five omitted Player Vector imports are covered."
+      "summary": "The five omitted daPly_c Vector imports are covered."
     },
     {
       "disposition": "fixed",
@@ -205,91 +205,91 @@
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "NDT0922-02",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "NDT0922-03",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "RCV2908-01",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "RCV2908-02",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "RCV2908-03",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "RCV2908-04",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "RCV-PACKET-01",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "RCV-PACKET-02",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "RCV-PACKET-03",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "RCV-PACKET-04",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "STALE-ARRAY-RUNTIME-TEST",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "RCV-SHADOW-01",
       "historical_task": "native-destructor-repair-0922",
       "historical_phase": "done",
       "historical_commit": "40f4c0d473e8f3a9a8b57b85532bd18b3edc0f1a",
-      "scope": "Historical dictionary retained verbatim. Shared lifecycle/Player/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
+      "scope": "Historical dictionary retained verbatim. Shared lifecycle/daPly_c/tooling findings retain their original broad scope; none is asserted as a fresh Klepto fix."
     },
     {
       "id": "KLEPTO-SWOOP-001",
@@ -1199,7 +1199,7 @@
         {
           "off": 116,
           "type": 2,
-          "sym": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+          "sym": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
           "addr": 33620272,
           "add": 0
         },
@@ -1255,7 +1255,7 @@
         {
           "off": 84,
           "type": 2,
-          "sym": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+          "sym": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
           "addr": 33620308,
           "add": 0
         },

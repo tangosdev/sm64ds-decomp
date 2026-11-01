@@ -598,7 +598,7 @@
           [
             116,
             2,
-            "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             0
           ],
           [
@@ -646,7 +646,7 @@
           [
             84,
             2,
-            "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
             0
           ],
           [
@@ -1454,7 +1454,7 @@
           [
             116,
             2,
-            "_ZN8dActor_c15OnHitByMegaCharER6Player",
+            "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
             0
           ],
           [
@@ -1502,7 +1502,7 @@
           [
             84,
             2,
-            "_ZN8dActor_c13OnTurnIntoEggER6Player",
+            "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
             0
           ],
           [
@@ -2553,11 +2553,11 @@
           "section": ".data",
           "source": "0x021123e8",
           "type": 2,
-          "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+          "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
           "kind": "load",
           "addend": 0,
           "expectedType": "R_ARM_ABS32",
-          "expectedSymbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+          "expectedSymbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
           "expectedAddend": 0,
           "expectedEmittedAddend": 0,
           "expectedModules": [
@@ -2745,11 +2745,11 @@
           "section": ".data",
           "source": "0x021123c8",
           "type": 2,
-          "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+          "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
           "kind": "load",
           "addend": 0,
           "expectedType": "R_ARM_ABS32",
-          "expectedSymbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+          "expectedSymbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
           "expectedAddend": 0,
           "expectedEmittedAddend": 0,
           "expectedModules": [

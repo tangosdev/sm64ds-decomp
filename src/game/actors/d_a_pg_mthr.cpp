@@ -34,7 +34,7 @@ enum d_a_pg_mthr_AssetId {
 #include "dExtFrameCtrl_c.h"
 #include "SurfaceInfo.h"
 #include "dBgPi.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "dBgCh_Actr.h"
 #include "Sound.h"
 #include "cstd.h"
@@ -112,7 +112,7 @@ extern PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile;
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern Player *func_ov018_021118fc(daPgMthr_c *self);
+extern daPly_c *func_ov018_021118fc(daPgMthr_c *self);
 extern PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile;
 extern PgMthrAnimFileResHandle gPenguinWait1AnimationFile;
 extern PgMthrState data_ov018_02113c4c[3];
@@ -247,9 +247,9 @@ int daPgMthr_c::func_ov018_021122ec()
 // @symbol _ZN10daPgMthr_c19func_ov018_02112234Ev
 int daPgMthr_c::func_ov018_02112234()
 {
-    Player *toucher;
+    daPly_c *toucher;
     dActor_c *held;
-    Player *near;
+    daPly_c *near;
 
     if (mGaveStar != 0)
         func_ov018_02111b3c();
@@ -469,7 +469,7 @@ void func_ov018_02111bf0(void *cv, void *wv)
 // @symbol _ZN10daPgMthr_c19func_ov018_02111b3cEv
 void daPgMthr_c::func_ov018_02111b3c()
 {
-    Player *p = ClosestPlayer();
+    daPly_c *p = ClosestPlayer();
     dActor_c *held;
 
     if (p == 0)
@@ -539,7 +539,7 @@ void daPgMthr_c::func_ov018_02111a48(char *b)
 void daPgMthr_c::func_ov018_02111968(void *found, char *heldRaw)
 {
     dActor_c *held = (dActor_c *)heldRaw;
-    Player *who = (Player *)found;
+    daPly_c *who = (daPly_c *)found;
 
     if (held) {
         int baby = held->actorID == ACTOR_BABY_PENGUIN;
@@ -573,15 +573,15 @@ talk:
 }
 
 extern "C" {
-Player *func_ov018_021118fc(daPgMthr_c *self) {
-    Player *newToucher = 0;
+daPly_c *func_ov018_021118fc(daPgMthr_c *self) {
+    daPly_c *newToucher = 0;
     if (self->mdCcAc_c.hitFlags & HIT_TOUCH) {
         struct dActor_c *a = dActor_c::FindWithID(self->mdCcAc_c.otherOwner);
         if (a) {
             int ok = (a->actorID == ACTOR_PLAYER) ? 1 : (int)newToucher;
             if (ok) {
                 if (a != self->mLastPlayer)
-                    newToucher = static_cast<Player *>(a);
+                    newToucher = static_cast<daPly_c *>(a);
                 self->mLastPlayer = a;
             }
         }

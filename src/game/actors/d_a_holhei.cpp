@@ -32,7 +32,7 @@
 #include "common.h"
 #include "daHolhei_c.h"
 #include "SharedFilePtr.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "SurfaceInfo.h"
 #include "dBgPi.h"
 #include "Sound.h"
@@ -53,7 +53,7 @@ extern "C" {
 extern short func_02010844(void* unused, Vector3* v, short angle);
 extern void func_02012694(int a, void *p);
 extern int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
-extern int func_ov002_020db5f4(Player *c, dActor_c *arg);
+extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern int func_ov002_020db54c(int p, int a, int b, int s);
 extern void func_0200d8c8(void* cam, void* v, int strength);
 extern int data_02092138;
@@ -531,7 +531,7 @@ int daHolhei_c::func_ov062_02116784() {
 // @symbol _ZN10daHolhei_c19func_ov062_021165e8Ev
 int daHolhei_c::func_ov062_021165e8()
 {
-    Player* player;
+    daPly_c *player;
     int r;
     volatile struct Vector3 pos;
     struct Vector3* pp;
@@ -725,7 +725,7 @@ extern "C" void func_ov062_02116010(daHolhei_c *self)
         v.x = 0x1000;
         v.y = 0;
         v.z = 0;
-        self->KillByInvincibleChar(v, *(Player *)a, 0);
+        self->KillByInvincibleChar(v, *(daPly_c *)a, 0);
         func_02012694(0x125, &self->mCamSpacePosX);
         return;
     }
@@ -740,7 +740,7 @@ extern "C" void func_ov062_02116010(daHolhei_c *self)
         return;
     if (!IsPlayerActor(a))
         return;
-    Player *player = static_cast<Player *>(a);
+    daPly_c *player = static_cast<daPly_c *>(a);
     angle = self->HorzAngleToCPlayer();
     angle = AngleDiff(angle, self->mAngleY);
     if (angle > 0x2000) {

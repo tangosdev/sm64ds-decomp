@@ -46,7 +46,7 @@ enum daObjPile_c_AssetId { ASSET_PILE_BMD = 0x0481, ASSET_PILE_KCL = 0x0482 };
 
 #include "decl_common.h"
 #include "daObjPile_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "daObjKinokoTag_c.h"
@@ -141,8 +141,8 @@ void daObjPile_c::Sink(int flag) {
     NotifyTagPileGone();
 }
 
-// @symbol _ZN11daObjPile_c15OnHitByMegaCharER6Player
-void daObjPile_c::OnHitByMegaChar(Player &player) {
+// @symbol _ZN11daObjPile_c15OnHitByMegaCharER7daPly_c
+void daObjPile_c::OnHitByMegaChar(daPly_c &player) {
     if (mBusy)
         return;
     if (&player == 0)
@@ -167,7 +167,7 @@ void daObjPile_c::OnGroundPounded(dActor_c &other) {
         return;
     Sound::PlayBank3(0x62, mCamSpacePos);
     int f = 0;
-    if (other.param1 == 2 || ((Player &)other).mIsMega != 0)
+    if (other.param1 == 2 || ((daPly_c &)other).mIsMega != 0)
         f = 1;
     Sink(f);
 }
@@ -189,7 +189,7 @@ s32 daObjPile_c::Render() {
 
 // @symbol _ZN11daObjPile_c8BehaviorEv
 s32 daObjPile_c::Behavior() {
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (mStepsLeft == 3 && GetBitInDeathTable() == 0 && player->mPosY < mPosY + 0x64000) {
         /* The player is less than 100 units above the pile: watch how far it
            circles the pile, and drop coins once the summed turn passes three

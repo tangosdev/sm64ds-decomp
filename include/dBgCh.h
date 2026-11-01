@@ -39,7 +39,7 @@
  *
  * 0x20 and 0x40 run the other way: SET, they let the query pass through a
  * surface. 0x20 covers CLPS surface type 0x11. Every setter is a vanish
- * case: Player sets it while mIsVanish, the camera's line query while its
+ * case: daPly_c sets it while mIsVanish, the camera's line query while its
  * owner is a vanished PLAYER (func_0200897c), and daTrs_c (the Boo) always,
  * hence "vanish surfaces". 0x40 covers surface type 0x14, tested only when
  * the hit faces as a wall; nothing names that type, so the member names

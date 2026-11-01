@@ -7,7 +7,7 @@
   ],
   "class": "daIbl_c",
   "changes": [
-    "Replace the local void-pointer FindWithID bridge with native dActor_c::FindWithID; inspect the base actor ID before downcasting to Player.",
+    "Replace the local void-pointer FindWithID bridge with native dActor_c::FindWithID; inspect the base actor ID before downcasting to daPly_c.",
     "Call mPathPtr.FromID and mPathPtr.NumNodes through the genuine existing PathPtr interface.",
     "Remove obsolete FindWithID/FromID local declarations and the unused generated decl_PathPtr include."
   ],
@@ -17,7 +17,7 @@
     "include/daIbl_c.h: PathPtr mPathPtr at 0x3f4, s32 mNumPathNodes at 0x3d4"
   ],
   "source_review": {
-    "lookup": "Null and actor-ID checks precede Player downcast; existing contact behavior preserved.",
+    "lookup": "Null and actor-ID checks precede daPly_c downcast; existing contact behavior preserved.",
     "path": "Receiver is the existing PathPtr member; unsigned node count assignment retains the old word representation in signed mNumPathNodes.",
     "remaining": "Other raw bridges, scalar path-node storage, PMF dispatch, matrix copies and Fix12 ABI boundaries remain unchanged. No claim of complete class reconstruction.",
     "no_shared_changes": true

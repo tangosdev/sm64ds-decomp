@@ -155,7 +155,7 @@ int daOnms_c::StateBounce()
     Vector3 eq;
     Vector3 dust;
 
-    Player *player = ClosestPlayer();
+    daPly_c *player = ClosestPlayer();
     if (player != 0) {
         if (func_ov002_020de328(player) != 0) {
             mdCcAcPos_c.vulnFlags |= 0x400000;
@@ -478,7 +478,7 @@ void daOnms_c::CheckPlayerHit()
         Launch(o, 0);
     } else if (f & (0x80 | 0x100 | 0x200)) {
         Launch(o, 1);
-    } else if (BumpedUnderneathByPlayer(*(Player *)o) != 0) {
+    } else if (BumpedUnderneathByPlayer(*(daPly_c *)o) != 0) {
         if (o->mPosY > mPosY - 0x64000)
             Launch(o, 2);
     }

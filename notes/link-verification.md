@@ -60,7 +60,7 @@ the two checker behaviors above, taking WRONG from 57 to 1. The fixes were mecha
 symbol repoints (rename the wrong identifier to the canonical name of the address the ROM
 uses) verified per function with `linkcheck` (not WRONG, still reproduces) and the byte
 oracle, reverting any that perturbed codegen. Shapes fixed: data symbols resolving to the
-wrong overlay, swapped pointer pairs (e.g. `Player`'s ctor/dtor callback pair registered in
+wrong overlay, swapped pointer pairs (e.g. `daPly_c`'s ctor/dtor callback pair registered in
 the wrong order), and `__sinit` initializers registering wrong data pointers. The two
 `_ZThn80_N9Animation{D0,D1}Ev` thunks were re-identified as `dExtAnm2Model_c`'s secondary-base
 thunks (they branch to `_ZN15dExtAnm2Model_cD{0,1}Ev`) and renamed.

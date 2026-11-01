@@ -10,7 +10,7 @@ Original fetched input/workflow: `8d5689cb92452c46d0ce9888dbbecef6b839bccc`. Ref
 
 ## Result
 
-The state pointer now names a real 16-byte pair of int-returning member pointers. All 22 retail PMF records and initializer assignments were checked: zero adjustments and matching entry/update targets. The mouth writer in Player establishes the Player pointer at actor +0xd0. The actor's other player field is fed by that pointer, ClosestPlayer, or a guarded Player contact. Fields/substate/countdown names are reconstruction choices, not recovered identifiers; the class size remains 0x3cc.
+The state pointer now names a real 16-byte pair of int-returning member pointers. All 22 retail PMF records and initializer assignments were checked: zero adjustments and matching entry/update targets. The mouth writer in daPly_c establishes the daPly_c pointer at actor +0xd0. The actor's other player field is fed by that pointer, ClosestPlayer, or a guarded daPly_c contact. Fields/substate/countdown names are reconstruction choices, not recovered identifiers; the class size remains 0x3cc.
 
 Ordinary PathPtr calls, typed bone indexing and both real dBgPi copy constructions reproduce the existing code. The collision-result shadows, manual vptr stores/manual destructor calls and unused fake classes disappear. State7 uses the real Vector3 and ordinary address expressions. The cap +0xd0 write uses its real inherited field; the existing scalar declaration there still requires a pointer-to-integer cast.
 

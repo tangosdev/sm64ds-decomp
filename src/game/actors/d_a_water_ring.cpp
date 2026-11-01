@@ -22,7 +22,7 @@
 #include "daWater_Ring_c.h"
 #include "SharedFilePtr.h"
 #include "dExtAnmTexSRT_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
@@ -88,7 +88,7 @@ void daWater_Ring_c::CheckPlayerPass() {
     if ((mRingType == 1 && ((mPrevPlayerAngle >> 16) & 1) != ((HorzAngleToCPlayer() >> 16) & 1)) ||
         mRingType != 1) {
         if (mRingType == 1)
-            static_cast<Player *>(other)->Heal(0x100);
+            static_cast<daPly_c *>(other)->Heal(0x100);
         mTextureTransformer.speed = 0x4000;
         SetState(&data_ov064_0211c944);
     } else {

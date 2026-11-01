@@ -37,7 +37,7 @@
  * the byte gate: 91/91 members reproduce the cartridge.
  *
  *  - Shadow types dropped for the real header's: dActor_c, Vector3, Vector3_16,
- *    Matrix4x3, dCc_c, Player, Sound, Heap, and `typedef int Fix12`
+ *    Matrix4x3, dCc_c, daPly_c, Sound, Heap, and `typedef int Fix12`
  *    (types.h has a Fix12<T> TEMPLATE, so that typedef is not even legal here).
  *    Field names follow: deathTableId -> mDeathTableID, flags -> mFlags, camSpacePos
  *    -> mCamSpacePosX, pos -> mPosX, speed -> mSpeedX, areaID -> mAreaId.
@@ -60,7 +60,7 @@
  *
  * include/dActor_c.h gained three declarations for this file: a `struct Matrix4x3;`
  * forward declaration, `void UntrackInDeathTable();` and
- * `Matrix4x3 *UpdateCarry(Player &, const Vector3 &);`. All three are
+ * `Matrix4x3 *UpdateCarry(daPly_c &, const Vector3 &);`. All three are
  * NON-VIRTUAL, so the class layout, its 0xd0 size assertion and its 31 vtable
  * slots are untouched, and ~dActor_c() is still the key function. */
 
@@ -73,7 +73,7 @@
 #include "SpawnInfo.h"
 #include "decl_common.h"
 #include "dActor_c.h"
-#include "Player.h"
+#include "daPly_c.h"
 #include "common.h"
 #include "dCc_c.h"
 #include "dBgCh_Lin.h"
@@ -588,14 +588,13 @@ extern int data_0208e37c;           /* distance to the cached farthest player */
 extern unsigned char data_0209f21c; /* number of players */
 extern void *data_0209f394[];       /* the player table */
 }
-Player *dActor_c::ClosestPlayer()
-{
+daPly_c *dActor_c::ClosestPlayer() {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
         data_0208e37c = 0x80000000;
         int i;
         for (i = 0; i < data_0209f21c; i++) {
-            Player *player = (Player *)data_0209f394[i];
+            daPly_c *player = (daPly_c *)data_0209f394[i];
             if (!player)
                 continue;
             int dist = Vec3_Dist(&mPos, &player->mPos);
@@ -609,21 +608,20 @@ Player *dActor_c::ClosestPlayer()
             }
         }
     }
-    return (Player *)data_0209b458;
+    return (daPly_c *)data_0209b458;
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8dActor_c22ClosestNonVanishPlayerEv
 /* ROM ordinal 69 -- dActor_c::ClosestNonVanishPlayer()
  * 0x02010a08  size 0xd0 */
-Player *dActor_c::ClosestNonVanishPlayer()
-{
+daPly_c *dActor_c::ClosestNonVanishPlayer() {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
         data_0208e37c = 0x80000000;
         int i;
         for (i = 0; i < data_0209f21c; i++) {
-            Player *player = (Player *)data_0209f394[i];
+            daPly_c *player = (daPly_c *)data_0209f394[i];
             if (!player)
                 continue;
             if (player->mIsVanish)
@@ -639,7 +637,7 @@ Player *dActor_c::ClosestNonVanishPlayer()
             }
         }
     }
-    return (Player *)data_0209b458;
+    return (daPly_c *)data_0209b458;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -685,10 +683,9 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
 // @symbol _ZN8dActor_c14FarthestPlayerEv
 /* ROM ordinal 65 -- dActor_c::FarthestPlayer()
  * 0x02010958  size 0x24 */
-Player *dActor_c::FarthestPlayer()
-{
+daPly_c *dActor_c::FarthestPlayer() {
     ClosestPlayer();
-    return (Player *)data_0209b450;
+    return (daPly_c *)data_0209b450;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -804,16 +801,15 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angl
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c15GivePlayerCoinsER6Playerhj
-/* ROM ordinal 60 -- dActor_c::GivePlayerCoins(Player &, unsigned char, unsigned int)
+// @symbol _ZN8dActor_c15GivePlayerCoinsER7daPly_chj
+/* ROM ordinal 60 -- dActor_c::GivePlayerCoins(daPly_c &, unsigned char, unsigned int)
  * 0x0201061c  size 0xf8 */
 extern "C" {
 extern u32 data_02075238[]; /* coins each kind is worth */
 extern u16 data_02075230[]; /* actor ID of the coin each kind spawns */
 void GiveCoins(s32 playerNo, s32 amount); /* 0x0202a7b8 */
 }
-void dActor_c::GivePlayerCoins(Player &player, u8 count, u32 coinKind)
-{
+void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
     if (&player == 0)
         return;
     if (count == 0)
@@ -865,11 +861,10 @@ extern "C" void func_020105cc(dActor_c *actor, u32 flags) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player
-/* ROM ordinal 58 -- dActor_c::JumpedOnByPlayer(dCc_c &, Player &)
+// @symbol _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR7daPly_c
+/* ROM ordinal 58 -- dActor_c::JumpedOnByPlayer(dCc_c &, daPly_c &)
  * 0x0201054c  size 0x80 */
-int dActor_c::JumpedOnByPlayer(dCc_c &clsn, Player &player)
-{
+int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
     volatile s32 pad[4];
     s32 vel = player.mVertSpeed;
 
@@ -888,11 +883,10 @@ int dActor_c::JumpedOnByPlayer(dCc_c &clsn, Player &player)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c24BumpedUnderneathByPlayerER6Player
-/* ROM ordinal 57 -- dActor_c::BumpedUnderneathByPlayer(Player &)
+// @symbol _ZN8dActor_c24BumpedUnderneathByPlayerER7daPly_c
+/* ROM ordinal 57 -- dActor_c::BumpedUnderneathByPlayer(daPly_c &)
  * 0x02010518  size 0x34 */
-int dActor_c::BumpedUnderneathByPlayer(Player &player)
-{
+int dActor_c::BumpedUnderneathByPlayer(daPly_c &player) {
     if (player.mIsAirborne != 0 && player.mVertSpeed > 0
         && player.mPosY < mPosY)
         return 1;
@@ -906,7 +900,7 @@ int dActor_c::BumpedUnderneathByPlayer(Player &player)
  * 0x020104dc  size 0x3c */
 bool dActor_c::IsPlayerInRange(s32 maxDist)
 {
-    Player *closest = ClosestPlayer();
+    daPly_c *closest = ClosestPlayer();
 
     return Vec3_Dist(&mPos, &closest->mPos) < (maxDist << 12);
 }
@@ -920,7 +914,7 @@ bool dActor_c::IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDis
     pos.x = posX;
     pos.y = posY;
     pos.z = posZ;
-    Player *closest = ClosestPlayer();
+    daPly_c *closest = ClosestPlayer();
     return Vec3_Dist(&pos, &closest->mPos) < (maxDist << 12);
 }
 
@@ -930,7 +924,7 @@ bool dActor_c::IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDis
  * 0x0201045c  size 0x3c */
 bool dActor_c::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
 {
-    Player *closest = ClosestPlayer();
+    daPly_c *closest = ClosestPlayer();
 
     return Vec3_Dist(&pos, &closest->mPos) < (maxDist << 12);
 }
@@ -1007,7 +1001,7 @@ extern "C" void *func_02010304(dActor_c *target, dCc_c *clsn) {
     dActor_c *found;
     if (id != 0 && (found = dActor_c::FindWithID(id)) != 0 && (clsn->hitFlags & 0x1000)) {
         int isPlayer = found->actorID == 0xbf;
-        if (isPlayer && ((Player *)found)->TryGrab(*target))
+        if (isPlayer && ((daPly_c *)found)->TryGrab(*target))
             return found;
     }
     return 0;
@@ -1032,11 +1026,11 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3
-/* ROM ordinal 47 -- dActor_c::UpdateCarry(Player &, Vector3 const &)
+// @symbol _ZN8dActor_c11UpdateCarryER7daPly_cRK7Vector3
+/* ROM ordinal 47 -- dActor_c::UpdateCarry(daPly_c &, Vector3 const &)
  * 0x02010180  size 0x130 */
 extern "C" {
-void *func_ov002_020e496c(Player *p); /* the player's current mBodyModels entry */
+void *func_ov002_020e496c(daPly_c *p); /* the player's current mBodyModels entry */
 void MulMat4x3Mat4x3(Matrix4x3 *m1, Matrix4x3 *m0, Matrix4x3 *mF);
 void Matrix4x3_FromTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *mF, short x, short y, short z);
@@ -1045,8 +1039,7 @@ void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
 void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
 extern Matrix4x3 data_020a0e68;
 }
-Matrix4x3 *dActor_c::UpdateCarry(Player &player, const Vector3 &vec)
-{
+Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
     t.x = 0;
     t.y = 0;
@@ -1100,11 +1093,10 @@ int dActor_c::OnYoshiTryEat()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13OnTurnIntoEggER6Player
-/* ROM ordinal 44 -- dActor_c::OnTurnIntoEgg(Player &)
+// @symbol _ZN8dActor_c13OnTurnIntoEggER7daPly_c
+/* ROM ordinal 44 -- dActor_c::OnTurnIntoEgg(daPly_c &)
  * 0x02010154  size 0xc */
-void dActor_c::OnTurnIntoEgg(Player &player)
-{
+void dActor_c::OnTurnIntoEgg(daPly_c &player) {
     KillAndTrackInDeathTable();
 }
 
@@ -1166,12 +1158,10 @@ int dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c15OnHitByMegaCharER6Player
-/* ROM ordinal 36 -- dActor_c::OnHitByMegaChar(Player &)
+// @symbol _ZN8dActor_c15OnHitByMegaCharER7daPly_c
+/* ROM ordinal 36 -- dActor_c::OnHitByMegaChar(daPly_c &)
  * 0x02010130  size 0x4 */
-void dActor_c::OnHitByMegaChar(Player &player)
-{
-}
+void dActor_c::OnHitByMegaChar(daPly_c &player) {}
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8dActor_c19OnHitFromUnderneathERS_
@@ -1661,7 +1651,7 @@ extern "C" int func_0200f7f0(dActor_c *actor, u16 *counter) {
  * 0x0200f7a8  size 0x48 */
 void dActor_c::MakeVanishLuigiWork(dCc_c &clsn)
 {
-    Player *player;
+    daPly_c *player;
 
     clsn.flags &= ~2;
 
@@ -1680,7 +1670,7 @@ void dActor_c::MakeVanishLuigiWork(dCc_c &clsn)
 /* MakeVanishLuigiWork again, as a free function taking the cylinder by
    pointer; the ROM keeps both copies. */
 extern "C" void func_0200f760(dActor_c *actor, dCc_c *clsn) {
-    Player *player;
+    daPly_c *player;
 
     clsn->flags &= ~2;
     player = actor->ClosestPlayer();
