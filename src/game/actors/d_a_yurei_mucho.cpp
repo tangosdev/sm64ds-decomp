@@ -61,9 +61,9 @@ extern "C" {
 extern unsigned int RandomIntInternal(void *seed);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern int ApproachAngle(void *p, short target, int a, int b, int limit);
-extern short Vec3_HorzAngle(const void *a, const void *b);
-extern short Vec3_VertAngle(const void *a, const void *b);
-extern int Vec3_Dist(const void *a, const void *b);
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -388,9 +388,8 @@ int daYurei_Mucho_c::func_ov065_02116744()
     in.y = 0;
     in.z = 0;
 
-    if (Vec3_Dist(&mPosX, &mHomePosX) > 0x1f4000 ||
-        mWithMeshClsn.IsOnWall() != 0) {
-        mTargetAngle = Vec3_HorzAngle(&mPosX, &mHomePosX);
+    if (Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
+        mTargetAngle = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
         if ((u16)mStateTimer < 0x14)
             mStateTimer = 0x14;
     }
@@ -414,7 +413,7 @@ int daYurei_Mucho_c::func_ov065_02116744()
         dp.y = pos[1];
         dp.z = pos[2];
 
-        if (Vec3_Dist(&mPosX, &dp) < 0x3e8000) {
+        if (Vec3_Dist(&mPos, &dp) < 0x3e8000) {
             mStateTimer = 0x14;
             func_ov065_0211691c(&data_ov065_0211d680);
         }
@@ -453,13 +452,13 @@ int daYurei_Mucho_c::func_ov065_021165d8()
         a.x = tmp.x;
         a.y = tmp.y;
         a.z = tmp.z;
-        mTargetAngle = Vec3_HorzAngle(&mPosX, &a);
+        mTargetAngle = Vec3_HorzAngle(&mPos, &a);
         Vector3 b;
         b.x = tmp.x;
         b.y = tmp.y;
         b.z = tmp.z;
-        pitch = Vec3_VertAngle(&mPosX, &b);
-        if (Vec3_Dist(&mPosX, &tmp) >= 0x1f4000) {
+        pitch = Vec3_VertAngle(&mPos, &b);
+        if (Vec3_Dist(&mPos, &tmp) >= 0x1f4000) {
             mSpeedX = 0;
             mVertSpeed = 0;
             mSpeedZ = 0;
@@ -505,7 +504,7 @@ int daYurei_Mucho_c::func_ov065_02116364()
     if (pl != 0) {
         *(V3A *)(int)(&L.pp) = *(V3A *)(int)(&pl->mPosX);
         L.tgt = L.pp;
-        mTargetAngle = Vec3_HorzAngle(&mPosX, &L.tgt);
+        mTargetAngle = Vec3_HorzAngle(&mPos, &L.tgt);
         ApproachAngle(&mPrevAngleY, mTargetAngle, 1, 0x500, 0x500);
 
         if ((((u32)mAnmModel.currFrame << 4) >> 16) >= 0xf && (u16)mStateTimer == 0 &&
@@ -538,7 +537,7 @@ int daYurei_Mucho_c::func_ov065_02116364()
             L.d.x = dsrc[0];
             L.d.y = dsrc[1];
             L.d.z = dsrc[2];
-            if (Vec3_Dist(&mPosX, &L.d) > 0x3e8000) {
+            if (Vec3_Dist(&mPos, &L.d) > 0x3e8000) {
                 mStateTimer = 0;
                 func_ov065_0211691c(&data_ov065_0211d670);
             } else {

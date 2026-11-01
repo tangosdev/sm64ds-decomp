@@ -106,9 +106,9 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 /* math / vector helpers. (ApproachLinear, from math/Approach.h, returns whether
    it arrived, and that is load-bearing: St_Talk_Main tests the result to decide
    whether the turn has finished.) */
-s16 Vec3_HorzAngle(const void *a, const void *b);
-s16 Vec3_VertAngle(const void *a, const void *b);
-s32 Vec3_HorzDist(const void *a, const void *b);
+s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s32 AngleDiff(s32 a, s32 b);
 void Matrix4x3_FromRotationY(void *m, int angY);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 ang);
@@ -474,7 +474,7 @@ int daKinopio_c::Behavior()
         playerPos.y = psrc->y;
         playerPos.z = psrc->z;
 
-        s32 horzDist = Vec3_HorzDist(&mPosX, &playerPos);
+        s32 horzDist = Vec3_HorzDist(&mPos, &playerPos);
 
         Vector3 lookTarget;
         lookTarget.y = playerPos.y;
@@ -482,8 +482,8 @@ int daKinopio_c::Behavior()
         lookTarget.z = playerPos.z;
         lookTarget.y = playerPos.y + 0x1e000;
 
-        s16 yawToPlayer = Vec3_HorzAngle(&mPosX, &lookTarget);
-        s16 pitchToPlayer = Vec3_VertAngle(&mPosX, &lookTarget);
+        s16 yawToPlayer = Vec3_HorzAngle(&mPos, &lookTarget);
+        s16 pitchToPlayer = Vec3_VertAngle(&mPos, &lookTarget);
 
         if (horzDist < 0x190000)
             mTargetOpacity = 0xff;

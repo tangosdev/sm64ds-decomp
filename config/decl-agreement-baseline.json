@@ -2573,10 +2573,6 @@
         "param:#2 int *",
         "param:#3 int *"
       ],
-      "src/game/actors/d_a_yegg.cpp": [
-        "param:#2 const void *",
-        "param:#3 const void *"
-      ],
       "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *",
@@ -2735,26 +2731,6 @@
       ]
     },
     "Vec3_Dist": {
-      "src/_ZN9dBgCh_Lin10DetectClsnEv.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_iwante.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/runtime/actor/d_actor.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
-        "param:#1 Vec3 *",
-        "param:#2 Vec3 *"
-      ],
-      "src/game/actors/d_a_bg_snm_bdy.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_bombking.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2763,7 +2739,11 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_gmch.cpp": [
+      "src/game/actors/d_a_holhei.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
+      ],
+      "src/game/actors/d_a_iwante.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ],
@@ -2775,14 +2755,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_mky.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_obj_block_item_tag.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_owl.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2791,31 +2763,9 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_yegg.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_yurei_mucho.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/engine/view/d_camera.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *",
-        "param:#1 const struct Vector3 *",
-        "param:#2 const struct Vector3 *"
-      ],
-      "src/game/actors/d_a_holhei.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/unnamed/arm9/0203/func_0203842c.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/_ZN7daPly_c19func_ov002_020d708cEv.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
+      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *"
       ]
     },
     "Vec3_DivScalarInPlace": {
@@ -2835,10 +2785,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_bg_snm_bdy.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_bombking.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2855,10 +2801,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_gmch.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_hanachan.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2868,10 +2810,6 @@
         "param:#2 const void *"
       ],
       "src/game/actors/d_a_iwante.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_kinopio.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ],
@@ -2898,32 +2836,12 @@
       "src/game/actors/d_a_trs.cpp": [
         "arity:3"
       ],
-      "src/game/actors/d_a_yegg.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_yurei_mucho.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/minigames/unit020bfec0.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/runtime/actor/d_enemy_base.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ]
     },
     "Vec3_HorzDist": {
-      "src/engine/view/d_camera.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_bg_snm_bdy.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_btn.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2940,10 +2858,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_kinopio.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_mip.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2951,14 +2865,6 @@
       "src/game/actors/d_a_obj_c1_trap.cpp": [
         "param:#1 const TrapVector3 *",
         "param:#2 const TrapVector3 *"
-      ],
-      "src/game/actors/d_a_obj_fl_amilift.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_obj_hatena_block.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
       ],
       "src/game/actors/d_a_sanbo.cpp": [
         "param:#1 const void *",
@@ -2969,10 +2875,6 @@
         "param:#2 const Vec3 *"
       ],
       "src/game/actors/d_a_trs.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_yegg.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ]
@@ -3217,6 +3119,10 @@
       ]
     },
     "Vec3_VertAngle": {
+      "src/engine/view/d_camera.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
+      ],
       "src/game/actors/d_a_bombking.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -3233,37 +3139,15 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_peach.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_shark.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
-      ],
-      "src/game/actors/d_a_yurei_mucho.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/minigames/unit020bfec0.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/engine/view/d_camera.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *",
-        "param:#1 const struct Vector3 *",
-        "param:#2 const struct Vector3 *"
-      ],
-      "src/game/actors/d_a_kinopio.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
       ],
       "src/game/actors/d_a_wanwan.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/_ZN7daPly_c19func_ov002_020d708cEv.cpp": [
+      "src/minigames/unit020bfec0.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ]

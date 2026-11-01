@@ -46,7 +46,7 @@ typedef struct {
 /* local extern: no header declares these two. */
 extern "C" {
 int AngleDiff(int, int);
-short Vec3_VertAngle(const void *a, const void *b);
+short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 }
 
 /* ov085 statics. data_ov085_0212f280 keeps include/decl_common.h's
@@ -141,7 +141,7 @@ void daPeach_c::UpdateLookAt() {
     int dist = Vec3_HorzDist(&mPos, &target);
     target.y = target.y - 0x1e000;
     short yaw = Vec3_HorzAngle(&mPos, &target);
-    short pitch = Vec3_VertAngle(&mPosX, &target);
+    short pitch = Vec3_VertAngle(&mPos, &target);
     if (dist < 0x15e000 && AngleDiff(yaw, mAngleY) < 0x3000) {
         mTargetLookVertAngle = pitch;
         mTargetLookHorzAngle = mAngleY - yaw;
