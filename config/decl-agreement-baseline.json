@@ -9852,7 +9852,7 @@
       "src/game/actors/d_a_yurei_mucho.cpp": [
         "return:int []"
       ],
-      "src/game/actors/ov002_handles.cpp": [
+      "src/ov002_handles.cpp": [
         "return:char"
       ],
       "src/minigames/d_s_mg_jump2.cpp": [

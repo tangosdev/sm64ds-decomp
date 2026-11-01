@@ -336,7 +336,7 @@ src/game/actors/d_a_propeller_heyho_fire.cpp:
     .ctor start:0x02108134 end:0x02108138
     .bss start:0x02111190 end:0x021111a0
 
-src/game/actors/ov002_handles.cpp:
+src/ov002_handles.cpp:
     complete
     .text start:0x020ad660 end:0x020ad838
     .init start:0x02100560 end:0x02100938

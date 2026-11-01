@@ -1,8 +1,8 @@
 {
   "id": "ov002/ov002_handles",
   "module": "ov002",
-  "source": "src/game/actors/ov002_handles.cpp",
-  "promoted_source": "src/game/actors/ov002_handles.cpp",
+  "source": "src/ov002_handles.cpp",
+  "promoted_source": "src/ov002_handles.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",
@@ -38,14 +38,14 @@
       "symbol": "func_ov002_020ad660",
       "address": "0x020ad660",
       "size": "0x1d8",
-      "legacy_source": "src/game/actors/ov002_handles.cpp",
+      "legacy_source": "src/ov002_handles.cpp",
       "ordinal": 0
     },
     {
       "symbol": "__sinit_ov002_handles.cpp",
       "address": "0x02100560",
       "size": "0x3d8",
-      "legacy_source": "src/game/actors/ov002_handles.cpp",
+      "legacy_source": "src/ov002_handles.cpp",
       "ordinal": 1
     }
   ],
