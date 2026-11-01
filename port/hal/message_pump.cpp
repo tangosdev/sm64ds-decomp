@@ -194,10 +194,17 @@ static void port_peach_jingle_tick(void)
         /* what the game wants the music at: its own target while the box is up (read before this tick overrides it), the full level once the box is closed */
         if (!open) s_vol = 0x7f;
         else if (data_0208e42c != 0x7f) s_vol = data_0208e42c;
-        if (s_player < 0 && s_age >= 1 && s_age <= 20) {   /* the sound queue starts the sequence a tick after the call: the player that is newly sounding is the tune's */
+        if (s_player < 0 && s_age >= 1 && s_age <= 20) {
+            /* the sound queue starts the sequence a tick after the call. The tune's player is the newly sounding one that starts at offset 0 of
+               its own file: a sound effect started on the same tick (the box's own open sound, a button sound) is an entry inside a SEQARC and
+               starts further in, so it is never taken for the tune (taking one cut the tune off after 21 frames). */
             const unsigned fresh = sd_seq_player_mask() & ~s_mask0;
-            for (int p = 0; p < SD_SEQ_PLAYERS && s_player < 0; ++p)
-                if ((fresh >> p) & 1u && sd_seq_active(p)) s_player = p;
+            if (fresh) {
+                SdSeqPos pos[SD_SEQ_PLAYERS];
+                sd_seq_snapshot(pos);
+                for (int p = 0; p < SD_SEQ_PLAYERS && s_player < 0; ++p)
+                    if ((fresh >> p) & 1u && sd_seq_active(p) && pos[p].startOff == 0) s_player = p;
+            }
             if (s_player >= 0) fprintf(stderr, "[peach] the tune is on sequence player %d\n", s_player);
         }
         const bool over = s_player >= 0 ? (s_age > 20 && !sd_seq_active(s_player)) || s_age >= PEACH_MAX : s_age >= PEACH_CAP;
