@@ -17759,12 +17759,6 @@
         "param:#2 const Vector3 *"
       ]
     },
-    "func_02048a18": {
-      "src/engine/sound/Sound.cpp": [
-        "arity:2",
-        "return:int"
-      ]
-    },
     "func_02048af4": {
       "src/engine/sound/Sound.cpp": [
         "param:#2 int"
@@ -19347,11 +19341,6 @@
     "func_ov002_020f030c": {
       "src/game/actors/d_a_obj_mario_cap.cpp": [
         "return:void"
-      ]
-    },
-    "func_ov002_020f0918": {
-      "src/runtime/actor/d_actor.cpp": [
-        "return:dActor_c *"
       ]
     },
     "Mg_GetLastRecordRank": {
