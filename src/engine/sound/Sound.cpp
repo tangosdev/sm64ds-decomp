@@ -39,7 +39,7 @@ extern "C" {
 /* Foreign callees. */
 extern int func_02051f1c(void *a, u32 b, int c);
 extern int func_02051e60(int a, int b, int c, int d, int e, int f);
-extern int func_02051074(int a);
+extern unsigned int func_02051074(int a);
 extern int func_020511d4(int a, int b, int c, int d, int e);
 extern int func_0203d974(void);
 extern int func_0205117c(int a);

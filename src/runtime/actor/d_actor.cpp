@@ -1541,7 +1541,7 @@ extern "C" int func_0200fa04(int actor, Vector3 *pos, int doRaycast) {
 /* ROM ordinal 11 -- dActor_c::GetBitInDeathTable()
  * 0x0200f9f4  size 0x10 */
 extern "C" {
-int DeathTable_GetBit(int id);
+unsigned int DeathTable_GetBit(int id);
 }
 int dActor_c::GetBitInDeathTable()
 {
