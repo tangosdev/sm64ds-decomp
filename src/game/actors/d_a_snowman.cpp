@@ -100,7 +100,7 @@ extern unsigned char data_0209f21c[];
 extern void *data_0209f394[];
 extern unsigned d_a_snowmanNewHold(unsigned a, unsigned b, int c, int d, int e, const void *f,
                                    void *g);
-extern void Vec3_Sub(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(struct Vector3 *v);
 extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);

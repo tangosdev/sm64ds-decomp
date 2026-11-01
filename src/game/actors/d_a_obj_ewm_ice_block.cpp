@@ -38,7 +38,7 @@ int fdiv(int a, int b);
 
 extern "C" {
 extern SharedFilePtr *data_ov056_02113314[];
-extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);

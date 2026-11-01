@@ -80,7 +80,7 @@ struct Vec3 { int x, y, z; };
 #define ICON_Y_VISIBLE(y) ((u16)((y) + 0x10) < 0xe0)
 
 extern "C" {
-extern void Vec3_Sub(struct Vector3* out, struct Vector3* a, struct Vector3* b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern signed char data_0209f2f8;
 extern u8 data_0209f220;
 extern u32 data_0209caa0[];

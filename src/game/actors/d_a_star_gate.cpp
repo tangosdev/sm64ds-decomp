@@ -56,7 +56,7 @@ unsigned char NumStars(void);
 int func_ov100_02144f84(void);
 void SetTouchScreenDelay(void);
 int AngleDiff(int a, int b);
-void Vec3_Sub(Vector3* out, Vector3* a, Vector3* b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 u8 IsAreaShowing(int areaID);
 void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 }

@@ -519,7 +519,7 @@ namespace s020ce108 {
 // @symbol TrmpItem_ReflectOffLine
 
 extern "C" {
-extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
@@ -821,7 +821,7 @@ done:
 namespace s020ce8a0 {
 // @symbol TrmpItem_ProjectOnLine
 
-extern "C" void Vec3_Sub(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);
+extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" int DotVec3(struct Vector3 *a, struct Vector3 *b);
 
 typedef TrampolineObjectCallbacks Obj;
@@ -1658,7 +1658,7 @@ struct TrampolineContactView : TrampolineObjectCallbacks {
     u16 contactState;   // +0x18: cleared by callback slot 4
 };
 
-extern "C" extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
+extern "C" extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" extern int DotVec3(Vector3 *a, Vector3 *b);
 extern "C" extern void Vec2_Sub(int *o, int *a, int *b);
@@ -1879,7 +1879,7 @@ namespace s020d01e0 {
 extern "C" {
 extern void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
-extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalarInPlace(int *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
