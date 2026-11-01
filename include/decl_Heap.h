@@ -20,9 +20,8 @@
 extern "C" {
 #endif
 
-extern u32 _ZN5mHeap6Heap_t7_SizeofEPv(void*, void*);
-extern void _ZN5mHeap6Heap_t10ReallocateEPvj(void*, void*, unsigned int);
-extern void _ZN5mHeap6Heap_t6RescueEv(int);
+/* mHeap::Heap_t::_Sizeof, Reallocate and Rescue are declared in Heap.h.
+   No translation unit includes this header to call the Itanium names. */
 
 
 #ifdef __cplusplus

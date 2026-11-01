@@ -115,8 +115,8 @@ extern const char data_02086a30;
 extern int func_0206da18(void); /* IRQ::SetIRQState(false) entry */
 extern int func_0206d9cc(void); /* IRQ::SetFIQState(false) entry */
 /* local extern: IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry
- * labels inside func_0206d9cc and func_0206da18. func_0206d868 hands them the
- * saved word unnormalised; a bool parameter adds the `!= 0` the ROM lacks. */
+ * labels inside func_0206d9cc and func_0206da18. Calling them measured
+ * func_0206d868 0x28 -> 0x40; the saved word is passed unnormalised. */
 extern void _ZN3IRQ11SetFIQStateEb(int state);
 extern void _ZN3IRQ11SetIRQStateEb(int state);
 extern u32 func_0206dab4(u32 value, void *lock);

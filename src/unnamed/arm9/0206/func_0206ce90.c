@@ -1,5 +1,6 @@
 #include "types.h"
 #include "nitro/os/spinLock.h"
+/* This file stays C. IRQ::SetFIQState(bool) measured func_0206d868 0x28 -> 0x40. */
 extern void _ZN3IRQ11SetFIQStateEb(s32 state);
 extern void _ZN3IRQ11SetIRQStateEb(s32 state);
 

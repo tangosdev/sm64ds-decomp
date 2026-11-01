@@ -2,6 +2,7 @@
 #include "nitro/os/spinLock.h"
 extern int func_0206da18(void);
 extern int func_0206d9cc(void);
+/* This file stays C. IRQ::SetFIQState(bool) measured func_0206d868 0x28 -> 0x40. */
 extern void _ZN3IRQ11SetFIQStateEb(int x); /* 0x0206d9dc, inside func_0206d9cc */
 extern void _ZN3IRQ11SetIRQStateEb(int x); /* 0x0206da28, inside func_0206da18 */
 /* One try at the cartridge lock, with IRQ and FIQ disabled first (the

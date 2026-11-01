@@ -60,8 +60,6 @@
  * safe to improve. Offsets, widths and vtable slots are pinned by the bytes.
  */
 #ifdef __cplusplus
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
-
 namespace Memory {
 void operator_delete2(void *);
 }

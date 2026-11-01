@@ -596,6 +596,12 @@ char *cMgSmartball_wing_c_Construct(char *self, int x, int y, int *src) {
     v[0] = src[0];
     v[1] = src[1];
     cMgSmartball_object_c_Construct(self, x, y, v);
+    /* Leftover vptr stores. Copying the first word of a scratch
+       cMgSmartball_object_c grew cMgSmartball_object_c_Construct from 0x60
+       to 0x64 (.text 0xc268 to 0xc26c). A constructor whose body is those
+       same field stores is byte-identical 0x60, reloc included, but mwccarm
+       emits it twice, as C1 and C2, under the Itanium names, so the licensed
+       cMgSmartball_*_Construct symbol disappears. Every store below stays. */
     *(void **)(self) = (void *)&_ZTV19cMgSmartball_wing_c[2];
     ((cMgSmartball_object_c *)self)->mRadius = 0x18000;
     *(short *)(self + 0x32) = 0;

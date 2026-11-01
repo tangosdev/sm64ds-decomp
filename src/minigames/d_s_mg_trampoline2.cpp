@@ -42,7 +42,6 @@ enum d_s_mg_trampoline2_AssetId {
 #include "Particle__System.h"
 #include "TrmpItem.h"
 #include "Trmp2Spinner.h"
-#define _ZTV18dScMgTrampoline2_c _ZTV18dScMgTrampoline2_c_decl_common_shadow
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "Sound.h"
@@ -50,7 +49,6 @@ enum d_s_mg_trampoline2_AssetId {
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
 #define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
-#undef _ZTV18dScMgTrampoline2_c
 
 /* P2, S2 and the forward declarations below are local stand-ins for types
  * that have no header yet (issue #2497). C has no reader left (the spinner
@@ -234,9 +232,14 @@ extern int sMgTextSpritesItalian[];
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_021245a8, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
 
 dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void);
-/* The four non-static state methods. A pointer to member does not convert
-   to the int word a descriptor holds. StateDone is static, so the
-   descriptor below names it directly. */
+/* The four non-static state methods. A pointer-to-member initializer
+   (`&dScMgTrampoline2_c::StateIntro` and the same for StatePlay,
+   StateResults, StateWaitExit) was measured on this TU: the four symbols
+   move from .data to .bss (+0x20), and __sinit_d_s_mg_trampoline2.cpp grows
+   from 0x40 to 0xc0. .text stayed 0x2494. The ROM keeps these four in
+   .data, so the mangled externs stay. StateDone is static, so the
+   descriptor below names it directly. A pointer to member does not convert
+   to the int word a descriptor holds. */
 extern "C" void _ZN18dScMgTrampoline2_c13StateWaitExitEv(void); /* local extern: PMF -> int */
 extern "C" void _ZN18dScMgTrampoline2_c12StateResultsEv(void);  /* local extern: PMF -> int */
 extern "C" void _ZN18dScMgTrampoline2_c9StatePlayEv(void);      /* local extern: PMF -> int */
