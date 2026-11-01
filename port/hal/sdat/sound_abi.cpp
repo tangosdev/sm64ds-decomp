@@ -35,8 +35,17 @@ int  Sound_PlayIfNotActive(int a, int b, int c, int d);
 // unwritten stack slot, and the effect kept sounding for whatever
 // that word happened to say.
 // PORT_HOST_ABI: ARM r3 argument ride-through (stop fade, 0).
+// LLLARROW1: this is the camera's one call (the turn whoosh 0x43, played while
+// cam+0x154 & 0x60). In the stepped camera that bit stays latched after a
+// short turn until the eye catches up, so the whoosh kept restarting for a
+// whole shell ride; with no camera input held it is not restarted (the handle
+// is kept as is). port_cam_turn_quiet in hal/camera_bridges.cpp has the rule.
+extern void *data_0209f318;   /* the live Camera */
+int port_cam_turn_quiet(void *cam);
 int hal_Sound_PlayIfNotActive_ridethrough(int a, int b, int c)
 {
+    if (c == 0x43 && port_cam_turn_quiet(data_0209f318))
+        return a;
     return Sound_PlayIfNotActive(a, b, c, 0);
 }
 
