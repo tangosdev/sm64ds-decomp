@@ -1064,9 +1064,12 @@ src/unnamed/arm9/0203/func_0203bb14.c:
     complete
     .text start:0x0203bb14 end:0x0203bb5c
 
-src/unnamed/arm9/0203/func_0203bb5c.c:
+src/unnamed/arm9/0203/func_0203bb5c.cpp:
     complete
     .text start:0x0203bb5c end:0x0203bb60
+    .init start:0x020750b4 end:0x020750b8
+    .ctor start:0x02086ba4 end:0x02086ba8
+    .bss start:0x020a0df0 end:0x020a0df4
 
 src/unnamed/arm9/0203/func_0203bb60.c:
     complete
@@ -1541,9 +1544,12 @@ src/unnamed/arm9/0204/func_020402a0.c:
     complete
     .text start:0x020402a0 end:0x02040384
 
-src/unnamed/arm9/0204/func_02040384.c:
+src/unnamed/arm9/0204/func_02040384.cpp:
     complete
     .text start:0x02040384 end:0x02040388
+    .init start:0x02075150 end:0x02075154
+    .ctor start:0x02086bb4 end:0x02086bb8
+    .bss start:0x020a0df4 end:0x020a0df8
 
 src/unnamed/arm9/0204/func_02040388.c:
     complete
@@ -3399,10 +3405,3 @@ src/typeinfo.cpp:
     complete
     .text start:0x0207359c end:0x020736f4
 
-src/unnamed/arm9/0207/__sinit_020750b4.c:
-    complete
-    .init start:0x020750b4 end:0x020750b8
-
-src/unnamed/arm9/0207/__sinit_02075150.c:
-    complete
-    .init start:0x02075150 end:0x02075154
