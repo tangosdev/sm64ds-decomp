@@ -107,31 +107,33 @@ int main(void)
     /* 5. the baked group table is well formed: every record has a positive
        count, non-negative indices, a known char and category, and the indices
        within one (char,file,pal) record are unique. Also assert the coverage
-       facts the report states: buttons is empty for all; shoes only Wario. */
+       facts the generator reports (BROCOLOR1, from the cartridge files):
+       buttons and gloves are empty; every bro has hat, overalls and shoes;
+       each record's main entry is one of its members. */
     {
-        int bad = 0, buttons = 0, marioshoes = 0, luigishoes = 0, warioshoes = 0;
+        int bad = 0, buttons = 0, have[3][vscg::CAT_COUNT] = {};
         for (int i = 0; i < vscg::kVscGroupCount; ++i) {
             const vscg::Group *g = &vscg::kVscGroups[i];
             if (g->chr < 0 || g->chr > 2) ++bad;
             if (g->cat < 0 || g->cat >= vscg::CAT_COUNT) ++bad;
             if (g->count <= 0 || !g->idx || !g->file || !g->pal) ++bad;
+            int main_in = 0;
             for (int a = 0; a < g->count; ++a) {
                 if (g->idx[a] < 0) ++bad;
+                if (g->idx[a] == g->main) main_in = 1;
                 for (int b = a + 1; b < g->count; ++b)
                     if (g->idx[a] == g->idx[b]) ++bad;
             }
-            if (g->cat == vscg::CAT_BUTTONS) ++buttons;
-            if (g->cat == vscg::CAT_SHOES) {
-                if (g->chr == 0) ++marioshoes;
-                if (g->chr == 1) ++luigishoes;
-                if (g->chr == 2) ++warioshoes;
-            }
+            if (!main_in) ++bad;
+            if (g->cat == vscg::CAT_BUTTONS || g->cat == vscg::CAT_GLOVES) ++buttons;
+            if (g->chr >= 0 && g->chr <= 2 && g->cat >= 0 && g->cat < vscg::CAT_COUNT) have[g->chr][g->cat] = 1;
         }
         ok("group table records are well formed", bad == 0);
-        ok("buttons has no records for any bro (flagged gap)", buttons == 0);
-        ok("shoes has no records for Mario/Luigi (flagged gap)",
-           marioshoes == 0 && luigishoes == 0);
-        ok("shoes has a record for Wario", warioshoes > 0);
+        ok("gloves and buttons have no records", buttons == 0);
+        int all = 1;
+        for (int c = 0; c < 3; ++c)
+            all &= have[c][vscg::CAT_HAT_UNDERSHIRT] & have[c][vscg::CAT_OVERALLS] & have[c][vscg::CAT_SHOES];
+        ok("every bro has hat, overalls and shoes records", all == 1);
     }
 
     /* 6. the drawn shade (YOSHICOLOR1): with a main index in the group the pick
