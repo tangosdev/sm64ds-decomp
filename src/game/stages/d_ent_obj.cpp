@@ -110,7 +110,7 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
 int func_0201251c(int a, int b, void *pos, int c);
 unsigned int func_02012174(unsigned int a, unsigned int b);
 void func_020167a4(void *model);
-long long __aeabi_uidiv(unsigned int n, int d);
+long long __aeabi_uidiv(unsigned int n, unsigned int d);
 
 extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;

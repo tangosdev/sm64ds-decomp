@@ -53,11 +53,11 @@ extern u8 data_ov002_0210cb70[];
 extern u16 data_ov002_0210cb88[];
 extern u16 data_ov002_0210cbf4[];
 
-void func_0202af80(void *entries, u32 count);
-void func_0202b044(void *entries, u32 count);
-void func_0202b060(void *entries, u32 count);
-void func_0202b090(void *entries, u32 count);
-void func_0202b0c4(void *entries, u32 count);
+void func_0202af80(void *entries, s32 count);
+void func_0202b044(void *entries, s32 count);
+void func_0202b060(void *entries, s32 count);
+void func_0202b090(void *entries, s32 count);
+void func_0202b0c4(void *entries, s32 count);
 void func_0202b0e0(LVL_Overlay::StandardEntry *e, int count);
 void StartEntranceFaderWipe(int index);
 

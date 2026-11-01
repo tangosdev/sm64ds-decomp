@@ -12,10 +12,10 @@ struct Obj {
     unsigned int bottom; /* 0x24 */
 };
 
-extern int myFS_ReadFile(void *a, unsigned int b, unsigned int c);
+extern int myFS_ReadFile(void *a, int b, int c);
 extern int FS_CloseFile(void *a);
 extern void func_02018770(void);
-extern int func_02018568(unsigned int a);
+extern int func_02018568(int a);
 
 /* Read up to n bytes of the open file into buf (cache-maintained around the
    read), close it and unload any archive the open mounted. The length read,

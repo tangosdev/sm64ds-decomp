@@ -75,7 +75,7 @@ extern void func_02072dac(int a, char *s);
 extern void func_02071864(char *c, char *s);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
-extern unsigned int __aeabi_uidiv(int a, int b);
+extern unsigned int __aeabi_uidiv(unsigned int a, unsigned int b);
 
 void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
     int saved = 0;

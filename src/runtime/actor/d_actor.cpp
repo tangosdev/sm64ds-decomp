@@ -1228,7 +1228,7 @@ extern u8 data_0209f220[]; /* the star index this mission was entered for */
 extern s8 data_0209f2f8[]; /* the current sublevel id */
 extern dActor_c *STAR_MARKERS[12]; /* 0x0209f40c */
 void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
-int IsStarCollectedInCurLevel(u32 starIdx);
+int IsStarCollectedInCurLevel(s32 starIdx);
 }
 s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
 {

@@ -47,7 +47,7 @@ extern "C" {
 extern void func_0204f934(int **);
 extern void func_0204f94c(int *);
 extern int func_0204fa2c(int *, int);
-extern int func_02051f1c(int *, int, int);
+extern int func_02051f1c(int *, unsigned int, int);
 extern int func_020531a4(int);
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3d1c(void *);

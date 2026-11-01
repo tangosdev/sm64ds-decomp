@@ -97,7 +97,7 @@ int   AngleDiff(int a, int b);
 int   ApproachAngle(s16 *cur, int target, int divisor, int band, int maxStep);
 u16   DecIfAbove0_Short(u16 *p);
 int   RandomIntInternal(int *seed);
-void  func_02012694(int id, const Vector3 *pos);
+void func_02012694(unsigned int id, const Vector3 *pos);
 
 int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3, int a4, int a5, int a6);
 

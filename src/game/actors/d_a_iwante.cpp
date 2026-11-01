@@ -364,7 +364,7 @@ extern void func_0200d8c8(void *cam, void *v, int strength);
 extern int func_020092c4(void *cam, void *out, void *target);
 extern void func_02011cfc(void);
 extern void func_02011d2c(void);
-extern void func_02012694(int a, void *p);
+extern void func_02012694(unsigned int a, void *p);
 extern void func_020393c4(void *p, void *v);
 extern void func_020393d4(void *p, void *v);
 extern void func_020398fc(void *p);

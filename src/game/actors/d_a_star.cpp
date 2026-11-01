@@ -179,7 +179,7 @@ extern void *data_0209f318;
 extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_02082214[];
-extern void func_02012694(int a, void* p);
+extern void func_02012694(unsigned int a, void *p);
 namespace Particle {
 struct System {
     static void NewSimple(unsigned int id, int a, int b, int d);

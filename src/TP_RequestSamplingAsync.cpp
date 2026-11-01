@@ -7,8 +7,7 @@
 
 extern "C" {
 
-int PXI_SendWordByFifo(int cmd, int a, int b);
-
+int PXI_SendWordByFifo(unsigned int cmd, unsigned int a, unsigned int b);
 
 void TP_RequestSamplingAsync(void) {
     unsigned int saved = IRQ::Disable();

@@ -179,7 +179,7 @@ extern struct M12 data_020a0e68;
 extern int data_02092138;
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
-extern void func_02012694(int a, void *p);
+extern void func_02012694(unsigned int a, void *p);
 namespace Particle {
 struct System {
     static void NewSimple(unsigned int id, int x, int y, int z);
@@ -198,7 +198,7 @@ extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
 extern short Vec3_VertAngle(const void *a, const void *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void func_0200fa8c(void *c, int a);
-extern void func_ov102_0214b384(void* a, int b);
+extern void func_ov102_0214b384(void *a, unsigned int b);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int Vec3_HorzLen(void* v);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);

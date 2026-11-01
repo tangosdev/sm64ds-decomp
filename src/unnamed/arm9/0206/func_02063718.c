@@ -18,8 +18,8 @@ extern int func_02065bc0(void);
 extern int func_02065bd0(void);
 extern int func_02064f54(char *q, int a, int b, int c, int d);
 extern void func_020647fc(char *a, int b, void *c, int d);
-extern int func_02064e18(char *q, int a, int b, int c, int d);
-extern int func_02064cd8(char *q, int a, int b, int c, int d);
+extern int func_02064e18(char *q, int a, int b, unsigned int c, unsigned int d);
+extern int func_02064cd8(char *q, int a, int b, unsigned int c, unsigned int d);
 extern int func_02064a94(char *q, int a, int b, char *c, int d);
 
 int func_02063718(char *p, char *q)

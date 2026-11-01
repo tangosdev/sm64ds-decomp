@@ -79,7 +79,7 @@ int FS_CloseFile(void *a);
 void CpuCopy8(void *a, void *b, unsigned int c);
 void func_02018770(void);
 void Crash(void);
-int myFS_ReadFile(void *a, void *b, unsigned int c);
+int myFS_ReadFile(void *a, void *b, int c);
 }
 
 #ifndef _MSC_VER

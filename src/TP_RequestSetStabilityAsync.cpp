@@ -7,7 +7,7 @@
 #include "IRQ.h"
 #include "nitro/spi/tp.h"
 extern "C" {
-int PXI_SendWordByFifo(int a, int b, int c);
+int PXI_SendWordByFifo(unsigned int a, unsigned int b, unsigned int c);
 }
 extern "C" void TP_RequestSetStabilityAsync(int a, int b) {
     unsigned int irq = IRQ::Disable();

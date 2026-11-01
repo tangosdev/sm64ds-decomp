@@ -4,8 +4,8 @@ typedef struct Ctx {
     int arg;
 } Ctx;
 
-extern void func_020499bc(int a, int b, int c, Ctx *ctx);
-extern void func_020497a0(int a, int b, int c, Ctx *ctx);
+extern void func_020499bc(int a, int b, unsigned int c, Ctx *ctx);
+extern void func_020497a0(int a, int b, unsigned int c, Ctx *ctx);
 
 /* The sound-capture effect callback. func_02049cd8 passes it to
    func_020507e0 (StartEffect-shaped: buffer, size, format, 32000 Hz,

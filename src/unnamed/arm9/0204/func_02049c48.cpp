@@ -8,7 +8,7 @@ extern "C" {
    effect state at data_020a4c70 and store the kind under the IRQ lock, and
    for kind 1 send SNDi_SetSurroundDecay(0x3000) as func_02049cd8 does. */
 
-extern void MultiStore16(unsigned short val, void* dest, unsigned int size);
+extern void MultiStore16(unsigned short val, void *dest, int size);
 extern void SNDi_SetSurroundDecay(int val);
 
 extern int data_020a4c64;       // linked to 0x020a4c64

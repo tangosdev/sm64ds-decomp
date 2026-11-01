@@ -49,7 +49,7 @@ extern int AddSpikeBomb(void *p);
 extern int Vec3_HorzLen(const Vector3 *v);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-extern void func_02012694(int a, void *b);
+extern void func_02012694(unsigned int a, void *b);
 }
 
 extern KiraiModelFilePtr data_ov060_0211b1c4;

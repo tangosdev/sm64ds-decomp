@@ -79,7 +79,7 @@ extern void func_02046234(void *model, void *value);
 extern void func_ov007_020b3edc(int idx);
 extern void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020b7708(int idx, void *pos);
-extern void func_ov007_020bbf98(void *model, int lights);
+extern void func_ov007_020bbf98(void *model, unsigned int lights);
 extern void func_ov007_020bc53c(Ov007Model *model);
 extern void func_ov007_020bc5fc(Ov007Model *model, void *files, int count);
 extern void func_ov007_020bc658(Ov007Model *model, void *files, int count);

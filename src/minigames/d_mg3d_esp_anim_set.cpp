@@ -100,7 +100,7 @@ extern EspAnimSetModelFilePtr gEspIrieModelFile;
 
 extern Matrix4x3 data_020a0e68;
 void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-void func_02046208(char* a, int b, int c);
+void func_02046208(char *a, unsigned int b, int c);
 int func_020179b4(void* r0, void* r1, int r2);
 s16 atan2_hold_d_mg3d_esp_anim_set_1(s32 y, s32 x);
 int RandomIntInternal(int *seed);

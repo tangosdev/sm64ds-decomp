@@ -7,7 +7,7 @@ struct FSFileID {
 };
 
 extern void FS_InitFile(int *s);
-extern void func_02018598(struct FSFileID *c, unsigned int arg);
+extern void func_02018598(struct FSFileID *c, int arg);
 extern int myFS_OpenFileFast(int a, struct FSFileID v);
 extern int LoadArchive(int idx);
 extern void Crash(void);

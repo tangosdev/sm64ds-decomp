@@ -105,7 +105,7 @@ int   RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void  Matrix4x3_FromRotationY(void *m, int ang);
-void  func_02012694(int a, void *p);
+void func_02012694(unsigned int a, void *p);
 
 void  func_ov080_02124418(daChoro_Rock_c *t);
 }
