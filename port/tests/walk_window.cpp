@@ -14271,6 +14271,7 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
        absent. */
     RECT r = stacked ? RECT{0, 0, win_px_1(stw), win_px_1(sth)}
                      : RECT{0, 0, win_px(ntr::active_w), win_px(ntr::active_h)};
+    const int want_cw = r.right - r.left, want_ch = r.bottom - r.top;
     W.AdjustWindowRect_(&r, WS_OVERLAPPEDWINDOW, FALSE);
     /* ---- WHERE IT OPENS (port mod, Tango's ask: "can it open center screen")
        CW_USEDEFAULT IS NOT A POSITION. It asks Windows for the next slot in
@@ -14299,7 +14300,7 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
        CW_USEDEFAULT and the behaviour that shipped before this. */
     int wx = CW_USEDEFAULT, wy = CW_USEDEFAULT;
     {
-        const int ww = r.right - r.left, wh = r.bottom - r.top;
+        int ww = r.right - r.left, wh = r.bottom - r.top;
         HMONITOR mon = 0;
         POINT cur;
         MONITORINFO mi;
@@ -14324,6 +14325,44 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
                 }
             }
 #endif
+            /* THE FRAME FITS THE WORK AREA (run after093, lane DECK2). The
+               client is the default extent times ZOOM, and on a wide RenderScale
+               run that is 2048x1152 whatever the screen is, so on a Steam
+               Deck's 1280x800 the frame asked for was 2054x1179. Windows and
+               Wine both cut such a frame down to the screen plus a border
+               (WM_GETMINMAXINFO's largest tracking size), never to the work
+               area, so the window covered the whole screen, its bottom rows
+               ran under the desktop's panel and its right edge past the screen.
+               A frame larger than the work area now shrinks to fit it, the
+               client keeping its shape (present() fits the picture into
+               whatever client it gets, so the picture is the same picture,
+               smaller). A frame that already fits is not touched, which is
+               every desktop monitor at the shipped sizes. */
+            {
+                const long aw = mi.rcWork.right - mi.rcWork.left;
+                const long ah = mi.rcWork.bottom - mi.rcWork.top;
+                const int bw = ww - want_cw, bh = wh - want_ch;
+                const long mcw = aw - bw, mch = ah - bh;
+                if ((ww > aw || wh > ah) && want_cw > 0 && want_ch > 0 &&
+                    mcw > 0 && mch > 0) {
+                    long ncw, nch;
+                    if (mcw * want_ch <= mch * want_cw) {
+                        ncw = mcw;
+                        nch = mcw * want_ch / want_cw;
+                    } else {
+                        nch = mch;
+                        ncw = mch * want_cw / want_ch;
+                    }
+                    r = RECT{0, 0, (LONG)ncw, (LONG)nch};
+                    W.AdjustWindowRect_(&r, WS_OVERLAPPEDWINDOW, FALSE);
+                    fprintf(stderr, "[win] a %dx%d frame (client %dx%d) is "
+                            "bigger than the %ldx%ld work area: the client "
+                            "shrinks to %ldx%ld, same shape\n", ww, wh,
+                            want_cw, want_ch, aw, ah, ncw, nch);
+                    ww = r.right - r.left;
+                    wh = r.bottom - r.top;
+                }
+            }
             wx = mi.rcWork.left + (mi.rcWork.right - mi.rcWork.left - ww) / 2;
             wy = mi.rcWork.top + (mi.rcWork.bottom - mi.rcWork.top - wh) / 2;
             /* A window TALLER than the work area centres to a negative origin
