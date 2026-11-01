@@ -33,7 +33,7 @@ namespace cstd {
 int fdiv(s32, s32);
 }
 extern "C" {
-void MulVec3Mat4x3(const Vector3 *v, const Matrix4x3 *m, Vector3 *res);
+void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 void CrossVec3(Vector3 *a, Vector3 *b, Vector3 *result);
 void NormalizeVec3(Vector3 *src, Vector3 *dst);
 }

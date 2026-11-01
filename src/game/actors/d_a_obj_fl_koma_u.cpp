@@ -59,7 +59,7 @@ extern FileTable data_ov064_0211adbc;
 /* local extern: arm9 vector helpers and the dBgW callback store, with no
  * shared header yet. */
 extern "C" {
-void MulVec3Mat4x3(const Vector3 *v, const Matrix4x3 *m, Vector3 *dst);
+void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
 void func_020393d4(dBgW *bgw, void *fn);
 }
