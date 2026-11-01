@@ -1189,8 +1189,6 @@ extern void _ZN5Sound19LoadGroupAndSetBankEii(int, int);
 extern void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int);
 extern void _ZN5Sound6Player19SetPlayableSeqCountEii(int, int);
 extern void _ZN6Memory10DeallocateEPv(void*);
-extern void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void*, void*);
-extern void _ZN6Memory16operator_delete2EPv(void*);
 extern void data_ov007_020cd72c(void*);
 extern void data_ov052_02111e84(void*);
 extern void data_ov054_02111238(void*);

@@ -37,12 +37,8 @@
 
 #include "fListNode.h"
 
-/* The actor heap and its deallocator, for the inline operator delete at the end
-   of the class. data_020a0eac is the heap every actor is allocated from. Spelt
-   exactly as include/decl_common.h and include/dActor_c.h spell them -- the
-   honest Heap* second parameter would put two incompatible extern "C"
-   declarations of one name in a single TU, which mwcc rejects. */
-extern "C" void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void *, void *);
+/* The actor heap, for the inline operator delete at the end of the class.
+   data_020a0eac is the heap every actor is allocated from. */
 extern "C" void *data_020a0eac;
 #include "Memory.h"
 

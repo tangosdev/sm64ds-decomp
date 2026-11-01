@@ -39,8 +39,6 @@
 
 struct dActor_c;
 
-extern "C" void _ZN6Memory16operator_delete2EPv(void *);
-
 namespace Memory {
 void operator_delete2(void *);
 }
