@@ -188,13 +188,13 @@ struct System {
 extern void func_02011cfc(void);
 }
 extern "C" {
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern short Vec3_HorzAngle(const void* a, const void* b);
 extern int Vec3_Dist(const void* a, const void* b);
 extern void ApproachAngle(void *p, int target, int a, int b, int c);
 extern int RandomIntInternal(int* seed);
 extern int data_0209e650;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
 extern short Vec3_VertAngle(const void *a, const void *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void func_0200fa8c(void *c, int a);

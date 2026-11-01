@@ -99,7 +99,7 @@ extern "C" {
 /* -- other modules -- */
 void  LoadBlueCoinModel(void *c);
 void  UnloadBlueCoinModel(void *c);
-void  func_02012694(u32 id, const Vector3 *pos);
+void  func_02012694(u32 id, void *pos);
 void  func_020105cc(void *thiz, u32 flags);
 
 

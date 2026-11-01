@@ -82,11 +82,11 @@ int   SurfaceInfo_TestFlag0x20(void *);
 
 
 /* maths and the still-unnamed helpers */
-s16   Vec3_HorzAngle(const Vector3 *, const Vector3 *);
-s32   Vec3_HorzDist(const Vector3 *, const Vector3 *);
+s16   Vec3_HorzAngle(const void *, const void *);
+s32   Vec3_HorzDist(const void *, const void *);
 s32   Vec3_Dist(const void *, const void *);
-void  Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
-void  Vec3_MulScalar(Vector3 *, const Vector3 *, int);
+void  Vec3_Sub(void *, const void *, const void *);
+void  Vec3_MulScalar(void *, const void *, int);
 void  Vec3_Asr(void *, void *, int);
 void  SubVec3(void *, void *, void *);
 s32   LenVec3(const void *);
@@ -97,7 +97,7 @@ void  Matrix4x3_FromRotationY(void *, int);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
 void  MulMat4x3Mat4x3(void *, void *, void *);
 void  MulMat3x3Mat3x3(void *, void *, void *);
-void  MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
+void  MulVec3Mat4x3(const void *, const void *, void *);
 /* Unsigned, and that is measured: InitResources shifts the result right by 8
    and the ROM uses LSR. Declared `int`, the same expression comes out ASR. */
 u32   RandomIntInternal(int *);

@@ -73,9 +73,9 @@ int fdiv(int numerator, int denominator);
  * sec 6). Each is the most complete of the spellings the retired one-function
  * shards carried. */
 extern "C" {
-int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
-int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+int   Vec3_Dist(const void *a, const void *b);
+int   Vec3_HorzDist(const void *a, const void *b);
+short Vec3_HorzAngle(const void *a, const void *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 unsigned short DecIfAbove0_Short(unsigned short *timer);
 void  Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);

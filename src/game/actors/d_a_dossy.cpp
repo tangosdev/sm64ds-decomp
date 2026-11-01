@@ -156,8 +156,8 @@ extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i r, Fix12i h, void *p, void *q);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern int Vec3_HorzDist(void* a, void* b);
+extern short Vec3_HorzAngle(void* a, void* b);
 extern int AngleDiff(int a, int b);
 extern u16 DecIfAbove0_Short(void *counter);
 

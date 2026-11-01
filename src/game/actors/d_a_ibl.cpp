@@ -109,7 +109,7 @@ void func_02038414(void *p);
 int atan2_hold_d_a_ibl_1(int y, int x);
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
 int Vec3_HorzLen(void *v);
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+int Vec3_HorzDist(const void *a, const void *b);
 int Vec3_Equal(void *a, void *b);
 
 extern int IDENTITY_MATRIX4X3[];

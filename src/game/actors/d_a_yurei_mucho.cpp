@@ -61,15 +61,15 @@ extern "C" {
 extern unsigned int RandomIntInternal(void *seed);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void ApproachAngle(void *p, short target, int a, int b, int limit);
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern short Vec3_HorzAngle(const void *a, const void *b);
 extern short Vec3_VertAngle(const void *a, const void *b);
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern int Vec3_Dist(const void *a, const void *b);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ax);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+extern void MulVec3Mat4x3(const void *in, const void *m, void *out);
 extern void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
 extern int func_02012694(int id, void *v);
 extern int data_020a0e68[];

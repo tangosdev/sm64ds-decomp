@@ -90,7 +90,7 @@ extern int data_0209e650;
    file-local Vec3, and this TU passes raw field addresses. */
 extern "C" {
 extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern void Vec3_Sub(void *out, void *a, void *b);
 extern s32 LenVec3(void *v);
 }
 

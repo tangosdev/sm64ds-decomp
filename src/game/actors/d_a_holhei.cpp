@@ -60,7 +60,7 @@ extern int data_02092138;
 extern void* data_0209f318;
 extern int ApproachAngle(void* angle, int target, int a, int b, int c);
 extern int data_0209e650[];
-extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
+extern s16 Vec3_HorzAngle(const void* v0, const void* v1);
 extern int Vec3_Dist(const void* a, const void* b);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_FromRotationY(struct Matrix4x3 *mF, s16 angY);

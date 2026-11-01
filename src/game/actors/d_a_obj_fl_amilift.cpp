@@ -66,7 +66,7 @@ struct KCL_File;
 struct CLPS_Block;
 
 extern "C" {
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+int Vec3_HorzDist(const void *a, const void *b);
 extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
 void func_020393d4(void *p, void *v);

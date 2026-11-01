@@ -125,7 +125,7 @@ void SubVec3(void *a, void *b, void *dst);
 void func_0200f760(void *thiz, void *cyl);
 u8 IsAreaShowing(s8 idx);
 s16 Vec3_HorzAngle(const void *a, const void *b, ...);
-s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+s32 Vec3_HorzDist(const void *a, const void *b);
 u16 DecIfAbove0_Short(void *p);
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
@@ -223,7 +223,7 @@ extern int data_ov063_0211e1d0[];
 extern int data_0209b490[];
 extern u8 data_0209d660;
 extern short data_ov063_0211e7e0[];
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern void Vec3_Add(void * out, void * a, void * b);
 }
 
 /* Actor ids this file spawns, finds or compares (the names are the ones in

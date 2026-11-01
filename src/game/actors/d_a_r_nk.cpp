@@ -178,7 +178,7 @@ extern unsigned int func_0201277c(unsigned int id);
 extern signed char data_0209f2f8;   /* LEVEL_ID */
 extern s8 data_ov002_02111184;      /* DISPLAY_TIMER: nonzero shows the course timer */
 extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
-extern void func_02012694(u32 a, const Vector3 *b);
+extern void func_02012694(u32 a, void *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
 extern Timer data_0209d4c8;         /* TIME_TIMER: the course timer */
 extern void Vec3_Asr(void *destination, void *source, int shift);

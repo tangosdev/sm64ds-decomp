@@ -162,7 +162,7 @@ int daKpFr_c::func_ov070_02121fb0()
 
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
+extern short Vec3_HorzAngle(void* v0, void* v1);
 }
 // @symbol _ZN8daKpFr_c19func_ov070_02121f18Ev
 int daKpFr_c::func_ov070_02121f18() {

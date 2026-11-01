@@ -219,7 +219,7 @@ unsigned char DecIfAbove0_Byte(void *p);
 int DecIfAbove0_Short(void *p);
 int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(void *res, void *translation, short angY, void *v);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+void Vec3_Sub(void *out, void *a, void *b);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
