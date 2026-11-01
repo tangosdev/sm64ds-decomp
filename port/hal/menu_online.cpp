@@ -32,6 +32,7 @@ namespace ntr { namespace backup { void select_online(int on); } }
 extern "C" {
 unsigned char func_ov007_020cc600(int arg);   /* src/game/stages/d_s_dsmt.cpp: the title's client command dispatcher; 20 = read the three files again (allocates a fresh 0xcc byte block) */
 int port_title_elem_boxes(int *slot, int *id, int *x0, int *y0, int *x1, int *y1, int max);
+void func_ov007_020bdeb0(int idx);   /* the title scene's own sound call (overlay 7) */
 }
 
 namespace {
@@ -344,6 +345,18 @@ void menu_online_pad_frame(int kind, int cursor)
     if (g.padfocus && cursor != g.pf_cur) g.padfocus = 0;     /* the mouse moved the ROM cursor */
 }
 
+/* DPADSND1: A STEP THE HOST TAKES SOUNDS LIKE THE ROM'S. The pad graph below takes the D-pad away from the ROM on the file select (and for the ? on the
+   online title), so the ROM's own step never runs and neither does its sound. The cartridge's sounds for these keys: the first key with the cursor
+   hidden shows it on file A with func_ov007_020bdeb0(3) (src/unnamed/ov007/func_ov007_020b3190.c, state 5), and a step that changes the cursor's
+   target plays func_ov007_020bdeb0(4), or 5 while the struct's +8 word is 2 (src/unnamed/ov007/func_ov007_020b3708.c); a step against an edge
+   changes nothing and plays nothing. The mouse hover already plays the same move sound (hal/menu_recipe_title.cpp title_cursor_snd). */
+static void step_sound(int idx)
+{
+    if (hal_menu_trace_on()) fprintf(stderr, "[padnav] step sound func_ov007_020bdeb0(%d)\n", idx);
+    func_ov007_020bdeb0(idx);
+}
+static int move_sound_idx(void) { return data_ov007_02103360 && *(int *)(data_ov007_02103360 + 8) == 2 ? 5 : 4; }
+
 static void rom_cursor_to(int id)
 {
     if (!data_ov007_02103360) return;
@@ -371,16 +384,16 @@ int menu_online_dir(int kind, int cursor, unsigned dirs)
         if (!g.on) return 0;
         if (g.padfocus == ONL_PF_HELP) {
             if (hal_menu_trace_on()) fprintf(stderr, "[padnav] title: focus 100 (the ?), step 0x%x -> %d\n", d, d == 0x20 ? 7 : d == 0x80 ? 2 : 100);
-            if (d == 0x20) { g.padfocus = 0; rom_cursor_to(7); }
-            else if (d == 0x80) { g.padfocus = 0; rom_cursor_to(2); }
+            if (d == 0x20) { g.padfocus = 0; rom_cursor_to(7); step_sound(move_sound_idx()); }
+            else if (d == 0x80) { g.padfocus = 0; rom_cursor_to(2); step_sound(move_sound_idx()); }
             return 1;
         }
-        if (cursor == 7 && d == 0x10) { g.padfocus = ONL_PF_HELP; g.pf_cur = cursor; if (hal_menu_trace_on()) fprintf(stderr, "[padnav] title: focus 7 (wrench), step 0x10 -> 100 (the ?)\n"); return 1; }
+        if (cursor == 7 && d == 0x10) { g.padfocus = ONL_PF_HELP; g.pf_cur = cursor; if (hal_menu_trace_on()) fprintf(stderr, "[padnav] title: focus 7 (wrench), step 0x10 -> 100 (the ?)\n"); step_sound(move_sound_idx()); return 1; }
         return 0;
     }
     if (kind != 2) return 0;
     int node = g.padfocus ? g.padfocus : cursor;
-    if (!g.padfocus && (cursor == 255 || cursor < 0)) { rom_cursor_to(14); return 1; }
+    if (!g.padfocus && (cursor == 255 || cursor < 0)) { rom_cursor_to(14); step_sound(3); return 1; }
     if (!g.padfocus && cursor != 14 && cursor != 15 && cursor != 16 && cursor != 20 && cursor != 21) return 0;
     int next = -1;
     switch (node) {          /* ROM elements: 14 / 15 / 16 files, 21 FILE OPTIONS, 20 the back arrow (the order of the page's hotspots, hal/menu_recipe_title.cpp fids) */
@@ -396,6 +409,7 @@ int menu_online_dir(int kind, int cursor, unsigned dirs)
     if (hal_menu_trace_on()) fprintf(stderr, "[padnav] file select: focus %d, step 0x%x -> %d%s\n", node, d, next >= 0 ? next : node, next >= 0 ? "" : " (edge, stays)");
     if (next >= 100) { g.padfocus = next; g.pf_cur = cursor; }
     else if (next >= 0) { g.padfocus = 0; rom_cursor_to(next); }
+    if (next >= 0 && next != node) step_sound(move_sound_idx());
     return 1;
 }
 
