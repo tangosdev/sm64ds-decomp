@@ -1,6 +1,5 @@
 #include "Ov007BinFile.h"
 
-#pragma opt_strength_reduction off
 void func_ov007_020c9a2c(Ov007BinFile *f, int file) {
     Ov007BinFileHeader *base;
     int i;

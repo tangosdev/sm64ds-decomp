@@ -53,7 +53,6 @@ void func_0206ce20(struct CardBusState* s){
 
 extern "C" {
 #pragma optimize_for_size on
-#pragma opt_common_subs off
 // @symbol func_0206cd9c
 void func_0206cd9c(struct CardBusState *s)
 {
@@ -107,7 +106,6 @@ void __assert(const char* file, const char* expr, const char* func, int line)
  * state the register helper above leaks. Lowest address in the TU, so it
  * goes last for reverse-source emission. */
 #pragma push
-#pragma optimize_for_size on
 #pragma opt_common_subs on
 // @symbol func_0206ccd8
 extern "C" void func_0206ccd8(int fmt, ...)

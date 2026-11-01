@@ -130,7 +130,6 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Gnd &ground) {
 }
 
 // @symbol _ZN14dBgW_KcMbgSclY10DetectClsnER12dBgCh_SphCrr
-#pragma opt_common_subs off
 
 int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
     Vector3 centre;
@@ -197,7 +196,6 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
     return hit;
 }
 
-#pragma opt_common_subs on
 
 /* A vertically-scaled mesh collider cannot be tested against a world-space
  * segment directly, so both endpoints are transformed into collider space,

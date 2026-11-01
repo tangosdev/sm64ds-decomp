@@ -719,7 +719,6 @@ void daDemo_c::func_ov002_020f1fcc()
    backend. */
 extern "C" struct OamAttr *data_ov002_0210be1c[];
 #pragma opt_strength_reduction off
-#pragma opt_loop_invariants off
 
 void daDemo_c::func_ov002_020f20f4() {
     int i = 0;
@@ -760,7 +759,6 @@ void daDemo_c::func_ov002_020f20f4() {
     }
 }
 #pragma opt_strength_reduction on
-#pragma opt_loop_invariants on
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov002_020f2210, 0x020f2210, size 0x130 */

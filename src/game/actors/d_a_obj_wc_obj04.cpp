@@ -98,7 +98,6 @@ int daObjWc_Obj04_c::InitResources() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjWc_Obj04_c8BehaviorEv
-#pragma optimize_for_size on
 int daObjWc_Obj04_c::Behavior() {
     mMeshCollider.SetClipRadius(0x100000);
 
@@ -205,7 +204,6 @@ void daObjWc_Obj04_c::UpdateClsnMatrix() {
  */
 
 /* Closes the `optimize_for_size on` opened above. */
-#pragma optimize_for_size off
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj04.cpp
    from these: one ctor veneer plus destructor registration per handle. */

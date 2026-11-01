@@ -1398,7 +1398,6 @@ void dScMgLuigi_c::PlaceBoardLayout() {
 }
 
 #pragma push
-#pragma opt_propagation off
 // @symbol _ZN12dScMgLuigi_c16PlaceNextPictureEv
 /* One picture per call, or a whole fixed board. character and targetFirst
    stay as pointers: character selection and the final capacity test reload them.

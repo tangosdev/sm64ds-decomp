@@ -1,7 +1,6 @@
 #include "types.h"
 #include "Ov007Pad.h"
 
-#pragma opt_strength_reduction off
 /* Reads the keys (KEYINPUT and the ARM7's X/Y, or *src when given) into the
  * pad, honours inputLock, sets the three axes and steps each button's held
  * and released frame counts. */

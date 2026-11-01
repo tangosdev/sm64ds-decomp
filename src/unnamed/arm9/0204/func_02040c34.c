@@ -29,7 +29,6 @@ extern int data_020a0f88;
 extern char data_020a1fc0[];
 extern char data_02082158[];
 
-#pragma opt_strength_reduction off
 void func_02040c34(int isParent, int port, int stateCallback, int allocFunc, int allocArg) {
     FileShareWork *G = (FileShareWork *)data_020a1fc0;
     unsigned int state = _ZN3IRQ7DisableEv();

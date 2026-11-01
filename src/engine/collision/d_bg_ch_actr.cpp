@@ -225,7 +225,6 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
    func_02038824 detection variants. The ROM keeps its unmangled name, so it
    stays extern "C". */
 
-#pragma opt_common_subs off
 
 // @symbol func_02036acc
 extern "C" void func_02036acc(dBgCh_Actr *self) {
@@ -353,9 +352,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
         self->SetLeftGroundFlag();
 }
 
-#pragma opt_common_subs on
 
-#pragma opt_common_subs off
 
 // @symbol _ZN10dBgCh_Actr16UpdateContinuousEv
 void dBgCh_Actr::UpdateContinuous()
@@ -484,9 +481,7 @@ void dBgCh_Actr::UpdateContinuous()
         SetLeftGroundFlag();
 }
 
-#pragma opt_common_subs on
 
-#pragma opt_common_subs off
 
 // @symbol _ZN10dBgCh_Actr22UpdateContinuousNoLavaEv
 void dBgCh_Actr::UpdateContinuousNoLava()
@@ -607,7 +602,6 @@ void dBgCh_Actr::UpdateContinuousNoLava()
         SetLeftGroundFlag();
 }
 
-#pragma opt_common_subs on
 
 /* Vector copy (V3C) and copy-with-Y-offset (V3D) through scalar temporaries:
    the ROM loads z, y, x in that order before storing, which a plain struct
@@ -615,7 +609,6 @@ void dBgCh_Actr::UpdateContinuousNoLava()
 #define V3D(v, p, dy) { s32 _x, _y, _z; _z = (p)->z; _y = (p)->y; _x = (p)->x; _y = _y + (dy); (v).x = _x; (v).y = _y; (v).z = _z; }
 #define V3C(v, p) { s32 _x, _y, _z; _z = (p)->z; _y = (p)->y; _x = (p)->x; (v).x = _x; (v).y = _y; (v).z = _z; }
 
-#pragma opt_common_subs off
 
 // @symbol _ZN10dBgCh_Actr20UpdateExtraContinousEv
 /* The full three-result variant: raycast first for wall/floor/ceiling, then
@@ -878,7 +871,6 @@ void dBgCh_Actr::UpdateExtraContinous()
     }
 }
 
-#pragma opt_common_subs on
 
 // @symbol _ZN10dBgCh_Actr12Unk_0203589cEv
 void dBgCh_Actr::Unk_0203589c()

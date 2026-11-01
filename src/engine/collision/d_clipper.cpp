@@ -44,7 +44,6 @@ static inline int PlaneDistance(const ClipperPlane &n, long long x, long long y,
     return FX_MUL(z, n.z) + (FX_MUL(x, n.x) + FX_MUL(y, n.y));
 }
 
-#pragma opt_propagation off
 // @symbol _ZN8dClipper10ClipSphereER7Vector3iPh
 int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
     if (cachedPlane != 0) {
@@ -119,7 +118,6 @@ int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
         return 0x7FFFFFFF;
     }
 }
-#pragma opt_propagation on
 
 // @symbol _ZN8dClipper16TransformAndClipER9Matrix4x3R7Vector3iS3_
 int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i radius,

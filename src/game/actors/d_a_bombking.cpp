@@ -1183,8 +1183,6 @@ int daBombking_c::func_ov078_02125350()
 
 
 #pragma push
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c19func_ov078_02125448Ev
 

@@ -128,8 +128,6 @@ s32 daObjKurumajiku_c::Behavior() {
    the collision mesh from the descendant's resource record, then spawn four
    riders of the given actor id at the axle and keep their uniqueIDs in
    mMountedActorIds for Behavior to carry. */
-#pragma push
-#pragma opt_strength_reduction off
 int daObjKurumajiku_c::InitResourcesFrom(Resources *resources, unsigned int riderActorID) {
     int i;
     void *file;
@@ -148,4 +146,3 @@ int daObjKurumajiku_c::InitResourcesFrom(Resources *resources, unsigned int ride
     }
     return 1;
 }
-#pragma pop

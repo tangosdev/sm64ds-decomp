@@ -7,7 +7,6 @@
 
 extern "C" {
 
-#pragma opt_common_subs off
 #pragma opt_strength_reduction off
 
 extern short data_02082214[];

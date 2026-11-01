@@ -50,7 +50,6 @@ extern int func_02067604(void *a, void *b);
 extern void MBi_MakeGameInfo(void *dst, void *src, void *extra);
 extern void MB_AddGameInfo(void *n);
 
-#pragma opt_strength_reduction off
 
 /* NitroSDK MB_RegisterFile(game_reg, buf): file a game registry and its ROM
  * image in the first free mFiles slot (refusing a 17th file or the same

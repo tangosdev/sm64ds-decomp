@@ -206,7 +206,6 @@ void daPiano_c::InitStateSearch() {
     this->mHorzSpeed = 0;
 }
 
-#pragma opt_strength_reduction off
 // @symbol _ZN9daPiano_c11StateSearchEv
 /* State-0 body, run every frame: scan the player slots for a moving target
  * within 500.0 and attack it; otherwise refresh the idle cylinder sweep
@@ -277,7 +276,6 @@ void daPiano_c::InitStateAttack() {
     this->mAttackTimer = 30;
 }
 
-#pragma opt_strength_reduction off
 // @symbol _ZN9daPiano_c11StateAttackEv
 /* State-1 body, run every frame: lunge at the target and bite any player
  * caught by the cylinders. Gives up (back to state 0) when the target is

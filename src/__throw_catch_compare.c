@@ -7,7 +7,6 @@
    matches the catch type puts its offset in *out. Otherwise the pointer
    and reference qualifiers are matched (the catch may add K and V, never
    drop them) and the rest compared. Returns 1 on a match, 0 otherwise. */
-#pragma opt_loop_invariants off
 static inline int IsQualifiedPtr(unsigned char ca, unsigned char *p) {
     return ((ca == 'P') || (ca == 'R')) && (ca == (*p));
 }
