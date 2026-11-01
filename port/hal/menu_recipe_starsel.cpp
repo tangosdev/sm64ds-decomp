@@ -384,7 +384,7 @@ const SsBand kSsBands[] = {
     {  72,  94,   0, 256,  19, MENU_AX_C },    /* SCORE, the coin and the record (rows 95..110) */
     {  94, 158,  40, 216,  16, MENU_AX_C },    /* the course medal and its number (rows 112..171) */
     { 158, 171,  40, 216,  14, MENU_AX_C },    /* the course name: the middle of the bottom row (rows 172..185) */
-    { 171, 192,   2,  96,   0, MENU_AX_L },    /* the lives counter, against the left edge */
+    { 171, 192,   0,  96,   0, MENU_AX_L },    /* the lives counter, against the left edge: from DS column 0, so its ink keeps the ROM's 2-column margin, the star total's on the right (STARSEL3, Tango) */
     { 171, 192, 160, 254,   0, MENU_AX_R },    /* the star total, against the right edge */
 };
 
