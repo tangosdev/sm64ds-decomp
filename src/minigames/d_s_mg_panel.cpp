@@ -1796,7 +1796,7 @@ void dScMgPanel_c::Scene_StateResult() {
         /* scene + 0x4ec0 is mResultTimer, laundered. `&mResultTimer` in place
            of `scene + off` leaves `off` dead, and dropping it renumbers @NNN. */
         off = 0x4ec0;
-        tp = (u16 *)(int)((long long)(int)(scene + off) & 0xFFFFFFFFFFFFFFFFLL);
+        tp = (u16 *)(int)((long long)(int)(scene + off));
         /* flags[0xfe6] is mSolved; `&mSolved` moves this code. */
         flags = (u8 *)(scene + 0x4000);
         *tp = *tp - 1;
@@ -1843,7 +1843,7 @@ void dScMgPanel_c::Scene_StateResult() {
         u16 *ip;
         /* scene + 0x4ec6 is mScrollFrames, laundered the same way. */
         inc = 0x4ec6;
-        ip = (u16 *)(int)((long long)(unsigned)(scene + inc) & 0xFFFFFFFFFFFFFFFFLL);
+        ip = (u16 *)(int)((long long)(unsigned)(scene + inc));
         *ip = *ip + 1;
     }
 }
