@@ -2290,16 +2290,18 @@ bool dScEntry_c::BeforeInitResources() {
  * results. Explicit function-pointer casts mark that runtime ABI
  * boundary. */
 extern "C" {
-/* local extern: the factory runs the base constructor over fresh operator new
-   storage and stores the vptrs itself; C++ has no call spelling for a C2. */
+/* local extern: fBase_c::fBase_c() is rejected as a type name, so there is
+   no call spelling of this C2. The ENTRY factory's new dScEntry_c measured
+   the same hand-written chain and did not match. */
 extern void *_ZN7fBase_cC2Ev(void *);
 extern void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,
                            void (*ctor)(void *), void (*dtor)(void *));
 
 extern char data_0208e4b8[];
 extern char _ZTV10dScEntry_c[];
-/* local extern: __cxa_vec_ctor takes the element constructor and destructor
-   by address, and C++ cannot take a constructor's or destructor's address. */
+/* local extern: __cxa_vec_ctor takes these addresses. The constructors and
+   destructors do not convert to function pointers (illegal conversion from
+   an unknown type). A static member's address would. */
 extern dScEntry_c::icon_c *_ZN10dScEntry_c6icon_cD1Ev(dScEntry_c::icon_c *object);
 extern dScEntry_c::icon_c *_ZN10dScEntry_c6icon_cC1Ev(dScEntry_c::icon_c *object);
 extern OamAnimation *_ZN12OamAnimationD1Ev(OamAnimation *object);

@@ -4455,9 +4455,9 @@ extern "C" void ResetInput(void) {
 extern "C" {
 void EndKuppaScript(void);
 void UnloadArchive(int);
-// local extern: the fader array's destructor is passed by address to
-// __cxa_vec_delete here and to __cxa_vec_new in InitResources, which member
-// syntax cannot express.
+// local extern: __cxa_vec_delete takes dFdWipe_c::~dFdWipe_c by address.
+// That destructor does not convert to a function pointer (illegal
+// conversion). A static member's address would.
 void _ZN9dFdWipe_cD1Ev(void *thiz);
 }
 
@@ -4594,8 +4594,8 @@ u32 func_0203dad4(void);
 void func_0203b9b4(int *p, int v);
 void *__cxa_vec_new(int a, int b, int c, void *ctor, void *dtor);
 void func_ov001_020ab2e4(void);
-// local extern: the fader array's constructor is passed by address to
-// __cxa_vec_new, which member syntax cannot express.
+// local extern: __cxa_vec_new takes dFdWipe_c::dFdWipe_c by address.
+// A constructor's name is not a function pointer (expected '(').
 void *_ZN9dFdWipe_cC1Ev(void *thiz);
 }
 

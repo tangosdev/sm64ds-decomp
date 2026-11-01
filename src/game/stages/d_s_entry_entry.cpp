@@ -16,8 +16,8 @@
 /* The array runtime passes each element address and ignores lifecycle results.
  * Explicit function-pointer casts mark that runtime ABI boundary. */
 extern "C" {
-/* local extern: the factory runs the base constructor over fresh operator new
-   storage and stores the vptrs itself; C++ has no call spelling for a C2. */
+/* local extern: fBase_c::fBase_c() is rejected as a type name, so there is
+   no call spelling of this C2. A constructor is what emits it. */
 extern void *_ZN7fBase_cC2Ev(void *);
 extern void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,
                            void (*ctor)(void *), void (*dtor)(void *));
@@ -32,8 +32,9 @@ extern char data_0208e4b8[];
 extern char _ZTV8dScene_c[];
 extern char _ZTV10dScEntry_c[];
 extern struct P2 data_02086b58;
-/* local extern: __cxa_vec_ctor takes the element constructor and destructor
-   by address, and C++ cannot take a constructor's or destructor's address. */
+/* local extern: __cxa_vec_ctor takes these addresses. The constructors and
+   destructors do not convert to function pointers (illegal conversion from
+   an unknown type). A static member's address would. */
 extern dScEntry_c::icon_c *_ZN10dScEntry_c6icon_cD1Ev(dScEntry_c::icon_c *object);
 extern dScEntry_c::icon_c *_ZN10dScEntry_c6icon_cC1Ev(dScEntry_c::icon_c *object);
 extern OamAnimation *_ZN12OamAnimationD1Ev(OamAnimation *object);
@@ -51,6 +52,9 @@ void *dScEntry_c_classInit_ENTRY(void) {
         struct P2 v;
         _ZN7fBase_cC2Ev(p);
         *(char **)p = data_0208e4b8;
+        /* leftover: new dScEntry_c is 0xb4 bytes against this factory's 0xf4.
+           It does emit the C2 and these vptr stores, and it does not copy
+           the three null step pointers. */
         *(char **)p = _ZTV8dScene_c;
         {
             unsigned char *flags = &((dScEntry_c *)p)->pauseFlags;
