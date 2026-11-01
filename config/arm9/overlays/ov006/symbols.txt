@@ -4787,7 +4787,7 @@ sRouletteRacerGoal kind:bss addr:0x021428d4
 @274 kind:bss addr:0x02142a68
 @279 kind:bss addr:0x02142a74
 @280 kind:bss addr:0x02142a80
-@415 kind:bss addr:0x02142a8c
+@285 kind:bss addr:0x02142a8c
 @281 kind:bss addr:0x02142a98
 sRouletteStrips kind:bss addr:0x02142aa4
 sRouletteTiles kind:bss addr:0x02142ab4

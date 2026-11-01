@@ -602,11 +602,11 @@
       "evidence": "registration node of one sRouletteTiles element (emitted @409)"
     },
     {
-      "symbol": "@415",
+      "symbol": "@285",
       "address": "0x02142a8c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "registration node of one sRouletteTiles element (emitted @415)"
+      "evidence": "registration node of one sRouletteTiles element (emitted @415, renamed; ov022 owns @415)"
     },
     {
       "symbol": "@281",
@@ -1214,6 +1214,11 @@
   ],
   "defined_symbol_renames": [
     {
+      "from": "@415",
+      "to": "@285",
+      "evidence": "mwcc emits @415, already defined in ov022. @285 is unused and no longer."
+    },
+    {
       "from": "@373",
       "to": "@249",
       "evidence": "mwcc emits @373, already defined in another module. @249 is unused and no longer."
@@ -1611,7 +1616,7 @@
       "evidence": "registration node is a configured relocation destination at 0x02142a80"
     },
     {
-      "symbol": "@415",
+      "symbol": "@285",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x02142a8c"
@@ -2299,7 +2304,7 @@
       "source": "0x021327e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@415",
+      "symbol": "@285",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142a8c"
