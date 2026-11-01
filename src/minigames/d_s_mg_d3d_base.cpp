@@ -29,10 +29,15 @@ typedef struct Oam {
 
 extern "C" {
 
-/* ov006's own data. */
-extern void *sD3DSubObjPalette;
-extern void *sMgSubCamera;
-extern Oam sD3DOamShadow[];
+/* ov006's own data. These six objects are this file's .bss
+ * (0x02141a40..0x02141e54). The OAM shadow is a C++ array, so mwcc emits
+ * __sinit_d_s_mg_d3d_base.cpp as a bare bx lr and one .ctor word. */
+int sMgCurCamera;
+void *sD3DSubObjPalette;
+void *sMgSubCamera;
+void *sMgMainCamera;
+void *sD3DLanguageFile;
+Oam sD3DOamShadow[128];
 extern unsigned char sD3DSoundPanOffsets[];
 
 /* arm9 / ov004 globals with no project header. */

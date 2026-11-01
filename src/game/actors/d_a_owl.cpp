@@ -564,8 +564,8 @@ void daOwl_c::func_ov094_021362e0()
     if (mRider == 0)
         return;
     *(volatile Fix12i *)&v.x = z;
-    *(volatile Fix12i *)&v.y = z;
-    *(volatile Fix12i *)&v.z = z;
+    v.y = z;
+    v.z = z;
     m = mRider;
     data_020a0e68 = *m->mCarryMatrix;
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3000, z, z);

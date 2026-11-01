@@ -1503,7 +1503,7 @@ void Wiggler_StartPathA(Obj *self, int n) {
         base.y = (int)((((long long)rA << 16) + 0x800) >> 12) + FX_MUL(rB, 0xb0000);
 
         for (; i < 5; i++) {
-            int bx = *(volatile int *)&base.x;
+            int bx = base.x;
             self->seg[i].x = bx;
             self->seg[i].y = *(volatile int *)&base.y;
             if (self->aim < 0)

@@ -11622,7 +11622,7 @@
       "factory_module": "ov022",
       "factory_address": "0x02112918",
       "current_factory_name": "daObj_volcanoCannon_c_classInit",
-      "current_factory_file": "src/game/actors/d_a_obj_fl_maruta.cpp",
+      "current_factory_file": "src/game/actors/d_a_obj_volcano_cannon.cpp",
       "proposed_factory_name": "daObj_volcanoCannon_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "alloc_size": "0x0000011c",

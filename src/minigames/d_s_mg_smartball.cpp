@@ -4691,7 +4691,7 @@ void dScMgSmartball_c::SpawnObjects() {
     Mg_SubmitScore(0);
 
     for (int i = 0; i < 0xd; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpBalls));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpBalls;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4703,7 +4703,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 8; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpAnas));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpAnas;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4715,7 +4715,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 0x19; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpKinokos));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpKinokos;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4727,7 +4727,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 3; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPropellers));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpPropellers;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4739,7 +4739,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 6; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpDokans));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpDokans;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4751,7 +4751,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 3; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPakkuns));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpPakkuns;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4763,7 +4763,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 2; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPushSwitches));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpPushSwitches;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4921,8 +4921,7 @@ void dScMgSmartball_c::SpawnObjects() {
                 p = cMgSmartball_kinoko_c_Construct((char *)p, (int)c, (int)j, (int *)&tmp);
             }
             {
-                void **slot =
-                    (void **)(((long long)(int)((dScMgSmartball_c *)(c + j * 4))->mpKinokos));
+                void **slot = (void **)((dScMgSmartball_c *)(c + j * 4))->mpKinokos;
                 *slot = p;
                 if (*slot != 0)
                     ((cMgSmartball_kinoko_c *)*slot)->mVariant = 0;
@@ -4966,8 +4965,7 @@ void dScMgSmartball_c::SpawnObjects() {
                 p = cMgSmartball_kinoko_c_Construct((char *)p, (int)c, n, (int *)&tmp);
             }
             {
-                void **slot =
-                    (void **)(((long long)(int)((dScMgSmartball_c *)(c + n * 4))->mpKinokos));
+                void **slot = (void **)((dScMgSmartball_c *)(c + n * 4))->mpKinokos;
                 *slot = p;
                 if (*slot != 0)
                     ((cMgSmartball_kinoko_c *)*slot)->mVariant = 1;

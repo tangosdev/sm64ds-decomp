@@ -359,11 +359,11 @@ int daRedBombhei_c::func_ov084_0212cae0()
                 int z = lookAtDone;
                 *(volatile int *)&offset.x = z;
                 *(volatile int *)&targetLookAt.x = dx;
-                *(volatile int *)&offset.y = z;
+                offset.y = z;
                 *(volatile int *)&targetLookAt.y = dy;
                 int dz = *(volatile int *)&sum.z;
-                *(volatile int *)&offset.z = z;
-                *(volatile int *)&targetLookAt.z = dz;
+                offset.z = z;
+                targetLookAt.z = dz;
             }
             MulVec3Mat4x3(&targetPos, &data_020a0e68, &offset);
             Vec3_Add(&sum2, &shutter->mPos, &offset);
