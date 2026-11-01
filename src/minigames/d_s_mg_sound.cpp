@@ -124,7 +124,7 @@ extern Pmf pmf_dScMgSound_c_Pop12_Fly;
 extern Pmf pmf_dScMgSound_c_Pop12_Finish;
 
 extern "C" {
-extern int Hud_RenderSprite(int a, int b, int c, int d, int e);
+extern void Hud_RenderSprite(int a, int b, int c, int d, int e);
 extern int sSoundWinSpriteBSprites[];
 /* WinSpriteB reads indices 0 through 2; the fourth stored value is unused here. */
 extern const u16 sSoundWinSpriteBTimes[4] = {50, 3, 3, 50};

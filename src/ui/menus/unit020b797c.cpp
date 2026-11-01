@@ -125,7 +125,7 @@ extern void MultiCopy32Bytes(int *src, int *dst, int len);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void MultiStore32Bytes(unsigned val, int *dst, int len);
 
-extern void func_ov007_020bdeb0(int sound);
+extern int func_ov007_020bdeb0(int sound);
 extern void func_ov007_020c0308(unsigned short *dst, int b, int c);
 extern void func_ov007_020c1d78(int i);
 extern void func_ov007_020c1d8c(int i);

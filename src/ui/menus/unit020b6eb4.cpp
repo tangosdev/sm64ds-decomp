@@ -82,7 +82,7 @@ extern void func_ov007_020bd500(void);
 extern void func_ov007_020bd5a8(void);
 extern void func_ov007_020bd648(int mode);
 extern void func_ov007_020bd960(void);
-extern void *func_ov007_020bdebc(void);
+extern int *func_ov007_020bdebc(void);
 extern void func_ov007_020bdf60(void);
 extern void func_ov007_020be00c(void);
 extern void func_ov007_020be47c(void);

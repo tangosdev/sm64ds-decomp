@@ -11,7 +11,7 @@ extern void func_ov007_020b7d94(int kind);
 extern void func_ov007_020b2614(int anim, int startFrame, int fadeFrames);
 extern void func_ov007_020c1d8c(int i);
 extern int func_ov007_020b79c8(void);
-extern void func_ov007_020bdeb0(int a);
+extern int func_ov007_020bdeb0(int a);
 extern void func_ov007_020b7a44(void);
 extern int func_ov007_020b79e4(void);
 extern void func_ov007_020aec94(int a);

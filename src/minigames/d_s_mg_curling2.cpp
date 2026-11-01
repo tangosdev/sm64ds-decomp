@@ -87,7 +87,7 @@ extern int Mg_DrawTopLeftCounter(void *self);
 extern void Mg_DrawTopRightCounter(int a, int b);
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
-extern int Mg_RenderSpriteBoth(int a, int b, int c, int d, int e);
+extern void Mg_RenderSpriteBoth(int a, int b, int c, int d, int e);
 extern void func_02012718(int id, int v);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, s16 h);

@@ -798,7 +798,7 @@ fBase_c *func_02042ffc(u32 actorID, fBase_c *parent, u32 param1, int unk012) {
 
 /* Create a process at the root of the scene tree. */
 // @symbol func_02042fe4
-void func_02042fe4(int actorID, u32 param1, int unk012) {
-    func_02043098(actorID, 0, param1, unk012);
+int func_02042fe4(int actorID, u32 param1, int unk012) {
+    return (int)func_02043098(actorID, 0, param1, unk012);
 }
 }

@@ -49,7 +49,7 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
 void func_02012694(int soundID, void *position, ...);
 void Vec3_RotateYAndTranslate(Vector3 *out, void *m, short angle, Vector3 *in);
 void ChangeArea(int areaID);
-int ShowArea(int areaID);
+void ShowArea(int areaID);
 int func_ov100_02145014(void);
 void func_ov100_02145070(int value);
 unsigned char NumStars(void);

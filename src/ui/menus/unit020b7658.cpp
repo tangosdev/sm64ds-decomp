@@ -44,9 +44,9 @@
 
 extern "C" {
 
-extern int func_02049f58(void *);
-extern int func_02049ee8(void *, void *);
-extern int func_02049d78(void *, void *);
+extern void func_02049f58(void *);
+extern void func_02049ee8(void *, void *);
+extern void func_02049d78(void *, void *);
 extern void func_0204a0dc(void *, void *);
 extern void func_0204a028(void *, void *);
 extern char *func_0204a4c8(char *(*alloc)(int), int, int, int, unsigned short);

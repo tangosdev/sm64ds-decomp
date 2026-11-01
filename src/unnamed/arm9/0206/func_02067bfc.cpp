@@ -29,7 +29,7 @@ extern void FS_InitFile(int *s);
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, unsigned int image_top,
                              unsigned int image_bottom, unsigned int file_index);
-extern int CpuCopy8(void *a, void *b, int c);
+extern void CpuCopy8(void *a, void *b, int c);
 extern int func_0205d368(int *o, int r1, int sel);
 extern int FS_CloseFile(char *self);
 extern void func_02067b68(void *s, unsigned int start, unsigned int end, int flag);

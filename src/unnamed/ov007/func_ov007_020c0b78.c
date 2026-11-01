@@ -8,7 +8,7 @@ struct E8 {
     int a, b;
 };
 
-extern int func_ov007_020c0eb0(struct E8 *, unsigned short *, int, int, int, int, int, int);
+extern void func_ov007_020c0eb0(struct E8 *, unsigned short *, int, int, int, int, int, int);
 extern void func_ov007_020c0d70(Ov007OamNode *node, Ov007CellAnim *anim);
 extern int func_ov007_020c0b78(struct E8 *oam, Ov007OamNode *node, int x, int y, int shownIn,
                                unsigned char priorityIn, int mosaicIn, int slot);

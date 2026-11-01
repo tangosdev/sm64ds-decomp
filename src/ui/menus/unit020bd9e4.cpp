@@ -64,9 +64,9 @@ extern int *data_ov007_02104bb8;
 extern int *data_ov007_02104bbc;
 
 // @symbol func_ov007_020be098
-void func_ov007_020be098(int idx) {
+int func_ov007_020be098(int idx) {
     func_0204f94c(&data_ov007_02104bbc[idx]);
-    func_02051f1c(&data_ov007_02104bbc[idx], 2, data_ov007_02103134[idx]);
+    return func_02051f1c(&data_ov007_02104bbc[idx], 2, data_ov007_02103134[idx]);
 }
 
 // @symbol func_ov007_020be00c
@@ -104,7 +104,8 @@ void func_ov007_020bdf60(void) {
 }
 
 // @symbol func_ov007_020bdebc
-void func_ov007_020bdebc(void) {
+int *func_ov007_020bdebc(void) {
+    int *arr;
     int i;
     int sound;
     for (i = 0; i < 4; i++) {
@@ -123,14 +124,16 @@ void func_ov007_020bdebc(void) {
                 }
             }
         }
-        data_ov007_02104bb8[i] = 0;
+        arr = data_ov007_02104bb8;
+        arr[i] = 0;
     }
+    return arr;
 }
 
 // @symbol func_ov007_020bdeb0
 /* Tail-call veneer: ldr ip, [pc]; bx ip; .word func_ov007_020be098. */
-void func_ov007_020bdeb0(int idx) {
-    func_ov007_020be098(idx);
+int func_ov007_020bdeb0(int idx) {
+    return func_ov007_020be098(idx);
 }
 
 // @symbol func_ov007_020bde70

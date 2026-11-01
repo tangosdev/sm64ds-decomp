@@ -415,7 +415,7 @@ int Mg_GetSessionBest(void) {
 namespace s20adb1c {
 extern "C" {
 extern int Mg_GetSessionBest(void);
-extern int Mg_SetSessionBest(int);
+extern void Mg_SetSessionBest(int);
 extern MgEntry gMgMenuRow;
 /* Submits a score: stores it in mSubmittedScore (outside scoring mode 5, capped
    at the menu row's scoreCap when that is nonzero) and passes it to
@@ -529,7 +529,9 @@ void Ov004_Deallocate(void *ptr)
 namespace s20adc68 {
 extern "C" {
 extern int LoadFile(void);
-void Ov004_LoadFile(void) { LoadFile(); }
+void *Ov004_LoadFile(void) {
+    return (void *)LoadFile();
+}
 }
 }
 
@@ -549,7 +551,7 @@ void *Ov004_LoadFileByPath(const char *path)
 namespace s20adc80 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern int Mg_RenderSpriteOnNoMtx(int,int,int,long long);
+extern void Mg_RenderSpriteOnNoMtx(int, int, int, long long);
 }
 }
 /* State 1's draw: word 2 of the current language's entry in
@@ -3120,8 +3122,8 @@ void Mg_DrawRecordRow(int a0, int x, int y, int val)
 namespace s20b19f0 {
 extern "C" {
 s32 GetGameLanguage(void);
-int RenderOamMainScreen(int a, int b, int c, int d, int e);
-int Mg_DrawNumber(int a, int b, void* c, int d, int e, int f, int g);
+void RenderOamMainScreen(int a, int b, int c, int d, int e);
+int Mg_DrawNumber(int a, int b, void *c, int d, int e, int f, int g);
 /* Draws sprite word 8 at (0x20, 0xc) and `value`, starting at x
    0x48, through Mg_DrawNumber. */
 int Mg_DrawTopLeftCounter(void* value){
@@ -3136,7 +3138,7 @@ int Mg_DrawTopLeftCounter(void* value){
 namespace s20b1a5c {
 extern "C" {
 s32 GetGameLanguage(void);
-int RenderOamMainScreen(int a, int b, int c, int d, int e);
+void RenderOamMainScreen(int a, int b, int c, int d, int e);
 int Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern int sMgCounterMaxByDigits[];
 /* Draws a0, capped at sMgCounterMaxByDigits[a1], right-aligned at (0xf4,
@@ -3307,7 +3309,7 @@ void Mg_RenderSpriteOnNoMtx(void* a0, int a1, int a2, int a3, int a4){
 namespace s20b1de8 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern int Mg_RenderSpriteOnNoMtx(int, int, int, int, int);
+extern void Mg_RenderSpriteOnNoMtx(int, int, int, int, int);
 
 /* Draws sprite word 2 at (r0, r1) through Mg_RenderSpriteOnNoMtx. */
 void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3) {

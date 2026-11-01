@@ -79,7 +79,7 @@ struct ArrowSignFileColumn {
 /* local extern: see the banner; the port builds this TU for the host. */
 extern "C" {
 void Matrix4x3_FromRotationY(void *mtx, int angle);
-int func_02012694(int id, void *pos);
+void func_02012694(int id, void *pos);
 }
 
 namespace Particle {

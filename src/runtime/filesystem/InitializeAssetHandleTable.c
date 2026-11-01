@@ -9,7 +9,7 @@ extern int func_0201a9ec(int *timer);
 extern int func_02018a58(int count);
 extern int func_020189f0(int path);
 extern void func_02018a40(unsigned handle, int fileId);
-extern int func_0201a9fc(int *timer);
+extern void func_0201a9fc(int *timer);
 extern int func_0201a96c(int *timer, int suspended);
 
 enum { ASSET_HANDLE_COUNT = 0x80a, ASSET_LOOKUP_PRIORITY = 0x1f };

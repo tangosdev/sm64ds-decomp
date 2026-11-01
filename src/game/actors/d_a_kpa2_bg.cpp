@@ -54,7 +54,7 @@ extern CLPS_Block data_ov046_021115bc;
 extern "C" {
 int Sound_PlayIfNotActive(int handle, int a, int b, int c);
 void Vec3_Asr(void *dst, void *src, int shift);
-int func_020393d4(void *, void *);
+void func_020393d4(void *, void *);
 }
 
 // @symbol _ZN10daKpa2Bg_cD1Ev

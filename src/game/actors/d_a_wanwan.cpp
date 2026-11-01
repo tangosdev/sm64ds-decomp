@@ -105,7 +105,7 @@ int fdiv(int a, int b);
 }
 
 namespace call3_267c {
-extern "C" int func_0201267c(int id, void *pos, int unused);
+extern "C" void func_0201267c(int id, void *pos, int unused);
 }
 
 #define SetChompAnim(self, bca) \

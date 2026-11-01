@@ -152,7 +152,7 @@ extern "C" {
 extern Fix12i Vec3_Dist(const void *a, const void *b);
 extern s16    Vec3_HorzAngle(const void *a, const void *b);
 extern unsigned int RandomIntInternal(int *seed);
-extern int    func_02038414(void *clsn);
+extern void func_02038414(void *clsn);
 extern void   Matrix4x3_FromRotationY(void *m, int angle);
 extern void   Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void   Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);

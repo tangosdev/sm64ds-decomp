@@ -837,11 +837,12 @@ extern "C" int func_02011ee4(void *c)
 }
 
 // @symbol func_02011e94
-extern "C" void func_02011e94(int *out)
-{
+extern "C" void *func_02011e94(int *out) {
     int r = func_02051074(data_0209b498);
-    func_020511d4(data_0209b498, r, 0, 0, 0);
-    if (out != 0) *out = r;
+    void *block = (void *)func_020511d4(data_0209b498, r, 0, 0, 0);
+    if (out != 0)
+        *out = r;
+    return block;
 }
 
 // @symbol Player_PlaySoundEffect
