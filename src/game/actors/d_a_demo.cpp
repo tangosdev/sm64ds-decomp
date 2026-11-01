@@ -4748,6 +4748,10 @@ struct DemoTexSeqFile {
 };
 
 extern "C" {
+/* Flat {address, 0} words in .data. A pointer-to-member initializer is
+   copied out of .bss by __sinit (data_ov002_0210b678 left .data and @4347
+   disappeared). (int)&daDemo_c::func_ov002_... does not compile: these
+   handlers are non-static, and a pointer to member does not convert to int. */
 /* local extern: descriptor word is the function address as an int */
 extern int _ZN8daDemo_c19func_ov002_020f79c0EPvi(daDemo_c *, void *,
                                                  int); /* local extern: descriptor address */

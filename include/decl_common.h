@@ -1174,16 +1174,7 @@ extern void Vec3_AsrInPlace(void*, int);
 extern void WarpPlayer(int, int);
 extern void _Z19UnloadLevelOverlaysi(int);
 extern void _ZN4dBgW7DisableEv(void*);
-extern void _ZN2GX10EndLoadTexEv(void);
-extern void _ZN2GX12BeginLoadTexEv(void);
-extern void _ZN2GX15DisableAllBanksEv(void);
-extern void _ZN2GX15SetGraphicsModeEiii(int, int, int);
-extern void _ZN2GX6DispOnEv(void);
-extern void _ZN2GX7LoadTexEPKvjj(const void*, u32, u32);
-extern void _ZN3G3X13SetClearColorEtiiib(u16, int, int, int, int);
-extern void _ZN3GXS15SetGraphicsModeEi(int);
-extern void _ZN3IRQ11DisableIRQsEj(unsigned int);
-extern void _ZN4CP1514FlushDataCacheEjj(unsigned int, unsigned int);
+
 extern void _ZN5Sound16LoadInitialGroupEi(int);
 extern void _ZN5Sound19LoadGroupAndSetBankEii(int, int);
 extern void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int);
