@@ -1517,9 +1517,8 @@ big_else:
             st2 = 0x11;
 LA:
         if (mBits.answer == 0) {
-            *(u16 *)(((int)&mStarFlags) & 0xFFFFFFFFFFFFFFFF) =
-                (*(u16 *)(((int)&mStarFlags) & 0xFFFFFFFFFFFFFFFF) & ~0xc00) |
-                ((data_0209d684 & 3) << 10);
+            *(u16 *)((int)&mStarFlags) =
+                (*(u16 *)((int)&mStarFlags) & ~0xc00) | ((data_0209d684 & 3) << 10);
             {
                 u32 b3 = mBits.answer;
                 if (b3 == 1) {
