@@ -1264,6 +1264,9 @@ src/unnamed/arm9/0203/func_0203d704.c:
 src/cstd_sqrt.cpp:
     complete
     .text start:0x0203d744 end:0x0203d7b8
+    .init start:0x0207511c end:0x02075150
+    .ctor start:0x02086bb0 end:0x02086bb4
+    .bss start:0x020a0edc end:0x020a0ef0
 
 src/unnamed/arm9/0203/func_0203d7b8.c:
     complete
@@ -3406,10 +3409,6 @@ src/unnamed/arm9/0207/__sinit_020750b4.c:
 src/unnamed/arm9/0207/__sinit_020750ec.c:
     complete
     .init start:0x020750ec end:0x0207511c
-
-src/unnamed/arm9/0207/__sinit_0207511c.c:
-    complete
-    .init start:0x0207511c end:0x02075150
 
 src/unnamed/arm9/0207/__sinit_02075150.c:
     complete

@@ -7384,11 +7384,7 @@
         "return:unsigned int"
       ]
     },
-    "_ZN8Vector3sD1Ev": {
-      "src/unnamed/arm9/0207/__sinit_0207511c.c": [
-        "kind:data"
-      ]
-    },
+
     "_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE": {
       "src/game/actors/d_a_bg_snm_bdy.cpp": [
         "arity:3"
@@ -9912,8 +9908,8 @@
       "src/game/actors/d_a_obj_hatena_block.cpp": [
         "return:char []"
       ],
-      "src/unnamed/arm9/0207/__sinit_0207511c.c": [
-        "return:short []"
+      "src/minigames/unit020bfec0.cpp": [
+        "return:Vector3_16"
       ]
     },
     "data_020a0f04": {
