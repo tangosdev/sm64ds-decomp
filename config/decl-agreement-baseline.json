@@ -7720,10 +7720,6 @@
         "param:#2 int",
         "param:#3 int",
         "param:#4 void *"
-      ],
-      "src/minigames/unit020bfec0.cpp": [
-        "param:#4 void *",
-        "return:void *"
       ]
     },
     "__cxa_vec_ctor": {
@@ -7734,11 +7730,6 @@
       "src/minigames/d_s_mg_smartball.cpp": [
         "param:#4 void *",
         "param:#5 void *"
-      ],
-      "src/minigames/unit020bfec0.cpp": [
-        "param:#4 void *",
-        "param:#5 void *",
-        "return:void *"
       ]
     },
     "dBgCh_Actr_UpdateContinuous_Veneer": {
