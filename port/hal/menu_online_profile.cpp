@@ -13,6 +13,7 @@
 #include "host_settings.h"
 #include "ui_text.h"
 #include "menu_hostimg.h"
+#include "vs_char_groups.h"
 #include <windows.h>
 #include <math.h>
 #include <stdio.h>
@@ -23,6 +24,7 @@ extern "C" int port_host_key_script(int vk);       /* tests/walk_window.cpp: SM6
 extern "C" void port_host_keys_clear(unsigned short mask);   /* hal/scene_boot.cpp */
 extern "C" void settings_page_press_sound(void);   /* hal/settings_page_hooks.cpp: the title's press sound (INPUTMATRIX1) */
 extern "C" int hal_window_focused(void);           /* hal/sub_screen.cpp */
+extern "C" const char *port_fs_catalog_path(unsigned file_id);   /* hal/fs.cpp: a ROM file id -> a readable path, or null */
 
 namespace {
 
@@ -37,7 +39,12 @@ struct Prof {
     int len;
     unsigned tick;
     unsigned char prev[256];
+    int chr;                    /* BROCOLOR1: 0 Yoshi, 1 Mario, 2 Luigi, 3 Wario */
+    unsigned bro[3][3];         /* the bros' picks, [bro][HAT OVERALLS SHOES] */
+    unsigned char broset[3][3]; /* ...which are set (unset = the cartridge's colour) */
+    int bro_dirty;              /* a bro pick changed since the popup opened (only then are the nine keys written) */
 } P;
+unsigned g_bumper_prev;         /* the shoulder keys last frame (edges only) */
 
 /* user32 is loaded by name, like every other reader of the keyboard in the port (tools/sdl_import_guard.py refuses a static USER32 import) */
 SHORT (WINAPI *p_GetAsyncKeyState)(int);
@@ -60,9 +67,44 @@ int key_down(int vk)
     return p_GetAsyncKeyState && hal_window_focused() && (p_GetAsyncKeyState(vk) & 0x8000) ? 1 : 0;
 }
 
+/* BROCOLOR1: the rows of the character on show. Yoshi: BODY, SHOES (P.col); a bro: HAT, OVERALLS, SHOES (P.bro, the cartridge's colour when unset). */
+const char *const kCharName[PROF_CHARS] = { "Yoshi", "Mario", "Luigi", "Wario" };
+int nrows() { return P.chr ? 3 : 2; }
+const char *row_name(int k)
+{
+    static const char *const kY[2] = { "BODY", "SHOES" }, *const kB[3] = { "HAT", "OVERALLS", "SHOES" };
+    return P.chr ? kB[k < 0 ? 0 : k > 2 ? 2 : k] : kY[k ? 1 : 0];
+}
+uint32_t row_colour(int k)
+{
+    if (!P.chr) return P.col[k ? 1 : 0];
+    const int b = P.chr - 1;
+    return P.broset[b][k] ? P.bro[b][k] : profile_bro_cart(b, k);
+}
+uint32_t cell_of(int k, int x, int y) { return P.chr ? profile_bro_cell(P.chr - 1, k, x, y) : profile_cell_colour(k, x, y); }
+void set_row(int k, uint32_t c)
+{
+    if (!P.chr) { P.col[k ? 1 : 0] = c; return; }
+    P.bro[P.chr - 1][k] = c;
+    P.broset[P.chr - 1][k] = 1;
+    P.bro_dirty = 1;
+}
+
 void log_name(const char *why)
 {
     fprintf(stderr, "[profile] %s: name \"%s\" body %06X shoes %06X\n", why, P.name, P.col[0], P.col[1]);
+}
+void log_bros(const char *why)
+{
+    fprintf(stderr, "[profile] %s bros:", why);
+    for (int b = 0; b < 3; ++b) {
+        fprintf(stderr, " %s", kCharName[b + 1]);
+        for (int k = 0; k < 3; ++k) {
+            if (P.broset[b][k]) fprintf(stderr, " %06X", P.bro[b][k]);
+            else fprintf(stderr, " -");
+        }
+    }
+    fprintf(stderr, "\n");
 }
 
 /* the grid's cell colours. Hues every 30 degrees from red; the four shades of a hue are (saturation, value) = (50%, 100%), (100%, 100%), (100%, 70%),
@@ -90,15 +132,25 @@ int find_cell(int which, uint32_t rgb, int *ox, int *oy)
 {
     for (int x = 0; x < PROF_COLS; ++x)
         for (int y = 0; y < PROF_ROWS; ++y)
-            if (profile_cell_colour(which, x, y) == rgb) { *ox = x; *oy = y; return 1; }
+            if (cell_of(which, x, y) == rgb) { *ox = x; *oy = y; return 1; }
     return 0;
 }
 
 void goto_pick(int which)
 {
+    if (which < 0) which = 0;
+    if (which > nrows() - 1) which = nrows() - 1;
     P.which = which;
     int x, y;
-    if (find_cell(which, P.col[which], &x, &y)) { P.cx = x; P.cy = y; }
+    if (find_cell(which, row_colour(which), &x, &y)) { P.cx = x; P.cy = y; }
+}
+
+/* BROCOLOR1: show another character (dir -1 / +1, wrapping); the rows follow it, the cursor goes to its first row's pick */
+void step_char(int dir, const char *how)
+{
+    P.chr = (P.chr + dir + PROF_CHARS) % PROF_CHARS;
+    goto_pick(0);
+    fprintf(stderr, "[profile] character %s (%s)\n", kCharName[P.chr], how);
 }
 
 void type_char(char c)
@@ -120,6 +172,10 @@ void finish(int ok)
         host_setting_set_online_profile(clean, P.col[0], P.col[1]);
         snprintf(P.name, sizeof P.name, "%s", clean);
         log_name("saved");
+        if (P.bro_dirty) {      /* BROCOLOR1: the nine bro keys, only when a bro pick changed */
+            host_setting_set_online_bros(P.bro, P.broset);
+            log_bros("saved");
+        }
     } else {
         fprintf(stderr, "[profile] back: nothing saved\n");
     }
@@ -143,11 +199,19 @@ void profile_open(int pending_slot)
     unsigned body = 0, shoes = 0;
     if (host_setting_online_colours(&body, &shoes)) { P.col[0] = body; P.col[1] = shoes; }
     else { P.col[0] = 0x31A431; P.col[1] = 0xE66218; }            /* nothing picked yet: the ROM's green Yoshi */
+    for (int b = 0; b < 3; ++b)                                     /* BROCOLOR1: the bros' saved picks */
+        for (int k = 0; k < 3; ++k) {
+            unsigned v = 0;
+            P.broset[b][k] = (unsigned char)host_setting_online_bro(b, k, &v);
+            P.bro[b][k] = P.broset[b][k] ? v : 0;
+        }
+    P.chr = 0;
     P.which = 0;
     goto_pick(0);
     /* keys already down when the popup opens type nothing */
     for (int vk = 0; vk < 256; ++vk) P.prev[vk] = (unsigned char)(key_down(vk) ? 1 : 0);
     fprintf(stderr, "[profile] popup open (file %d): name \"%s\" body %06X shoes %06X\n", pending_slot, P.name, P.col[0], P.col[1]);
+    log_bros("open");
 }
 
 int profile_active(void) { return P.open; }
@@ -163,6 +227,23 @@ uint32_t profile_cell_colour(int which, int col, int row)
     return hue_cell((col - 2) % 12, row);
 }
 
+/* BROCOLOR1: a bro row's cells. Column 0 = the cartridge Mario, Luigi and Wario colour of the row and the cartridge green Yoshi's (body green for
+   HAT and OVERALLS, boot orange for SHOES); the rest of the grid is the Yoshi grid's. */
+uint32_t profile_bro_cart(int bro, int cat)
+{
+    static const int kCat[3] = { vscg::CAT_HAT_UNDERSHIRT, vscg::CAT_OVERALLS, vscg::CAT_SHOES };
+    if (bro < 0 || bro > 2 || cat < 0 || cat > 2) return 0;
+    return vscg::kBroCart[bro][kCat[cat]];
+}
+uint32_t profile_bro_cell(int bro, int cat, int col, int row)
+{
+    (void)bro;
+    if (row < 0) row = 0;
+    if (row > 3) row = 3;
+    if (col <= 0) return row < 3 ? profile_bro_cart(row, cat) : (cat == 2 ? 0xE66218u : 0x31A431u);
+    return profile_cell_colour(0, col, row);
+}
+
 int profile_name_needed(void) { host_setting_online_colours(0, 0); return host_setting_online_name()[0] == 0; }      /* the colours read also maps an old index key once */
 const char *profile_saved_name(void) { return host_setting_online_name(); }
 
@@ -170,8 +251,11 @@ void profile_facts(ProfFacts *f)
 {
     memset(f, 0, sizeof *f);
     f->focus = P.focus;
-    f->body = P.col[0];
-    f->shoes = P.col[1];
+    f->chr = (unsigned char)P.chr;
+    for (int k = 0; k < nrows(); ++k) {
+        const uint32_t c = row_colour(k);
+        f->row[k][0] = (unsigned char)(c >> 16); f->row[k][1] = (unsigned char)(c >> 8); f->row[k][2] = (unsigned char)c;
+    }
     f->which = (unsigned char)P.which;
     f->cx = (unsigned char)P.cx;
     f->cy = (unsigned char)P.cy;
@@ -233,7 +317,7 @@ unsigned profile_pad(unsigned pressed, unsigned held)
         edge &= ~0x0002u;       /* Space is a typed space on the name row; pad A there does nothing */
     }
     if (!edge) return (pressed | held) & take;
-    const int old_focus = P.focus, old_cx = P.cx, old_cy = P.cy, old_which = P.which;
+    const int old_focus = P.focus, old_cx = P.cx, old_cy = P.cy, old_which = P.which, old_chr = P.chr;
     if (edge & 0x40) {
         if (P.focus == PROF_F_GRID) { if (P.cy > 0) --P.cy; else P.focus = PROF_F_ROW; }
         else if (P.focus == PROF_F_OK || P.focus == PROF_F_BACK) { P.focus = PROF_F_GRID; P.cy = PROF_ROWS - 1; }
@@ -244,26 +328,30 @@ unsigned profile_pad(unsigned pressed, unsigned held)
         else if (P.focus < PROF_F_OK) ++P.focus;
     }
     if (edge & 0x20) {
-        if (P.focus == PROF_F_ROW) goto_pick(0);                              /* left on the row label: BODY */
+        if (P.focus == PROF_F_CHAR) step_char(-1, "left");                   /* BROCOLOR1: left / right on the heads: the character */
+        else if (P.focus == PROF_F_ROW) goto_pick(P.which - 1);               /* left on the row labels: the row before */
         else if (P.focus == PROF_F_GRID) { if (P.cx > 0) --P.cx; }
         else if (P.focus == PROF_F_BACK) P.focus = PROF_F_OK;
     }
     if (edge & 0x10) {
-        if (P.focus == PROF_F_ROW) goto_pick(1);                              /* right on the row label: SHOES */
+        if (P.focus == PROF_F_CHAR) step_char(1, "right");
+        else if (P.focus == PROF_F_ROW) goto_pick(P.which + 1);               /* right on the row labels: the next row */
         else if (P.focus == PROF_F_GRID) { if (P.cx < PROF_COLS - 1) ++P.cx; }
         else if (P.focus == PROF_F_OK) P.focus = PROF_F_BACK;
     }
-    if (old_focus != P.focus || old_cx != P.cx || old_cy != P.cy || old_which != P.which)
-        fprintf(stderr, "[profile] focus %d row %s cell %d,%d\n", P.focus, P.which ? "SHOES" : "BODY", P.cx, P.cy);
+    if (old_focus != P.focus || old_cx != P.cx || old_cy != P.cy || old_which != P.which || old_chr != P.chr)
+        fprintf(stderr, "[profile] focus %d row %s cell %d,%d\n", P.focus, row_name(P.which), P.cx, P.cy);
     if (edge & 0x0008) { if (P.tick > 8) { finish(P.focus == PROF_F_BACK ? 0 : 1); return take; } }   /* Enter / Start: the focused button; OK from every other row */
     if (edge & 0x0002) {
         if (P.tick > 8) {
             if (P.focus == PROF_F_OK) { finish(1); return take; }
             if (P.focus == PROF_F_BACK) { finish(0); return take; }
-            if (P.focus == PROF_F_ROW) goto_pick(P.which ^ 1);                               /* A on the row label switches BODY / SHOES */
+            if (P.focus == PROF_F_CHAR) step_char(1, "A");                                   /* A on the heads: the next character */
+            if (P.focus == PROF_F_ROW) goto_pick((P.which + 1) % nrows());                  /* A on the row labels: the next row */
             if (P.focus == PROF_F_GRID) {                                                    /* A on a cell picks it for the row */
-                P.col[P.which] = profile_cell_colour(P.which, P.cx, P.cy);
-                fprintf(stderr, "[profile] %s picked: cell %d,%d = %06X\n", P.which ? "SHOES" : "BODY", P.cx, P.cy, P.col[P.which]);
+                set_row(P.which, cell_of(P.which, P.cx, P.cy));
+                fprintf(stderr, "[profile] %s%s%s picked: cell %d,%d = %06X\n", P.chr ? kCharName[P.chr] : "", P.chr ? " " : "", row_name(P.which), P.cx, P.cy,
+                        row_colour(P.which));
             }
         }
     }
@@ -278,18 +366,43 @@ int profile_touch(int sx, int sy, int edge)
     if (in(PROF_OK_X, PROF_OK_Y, PROF_OK_W, PROF_OK_H)) { if (P.tick > 8) finish(1); return 1; }
     if (in(PROF_BACK_X, PROF_BACK_Y, PROF_BACK_W, PROF_BACK_H)) { if (P.tick > 8) finish(0); return 1; }
     if (in(PROF_FIELD_X, PROF_FIELD_Y, PROF_FIELD_W, PROF_FIELD_H)) { P.focus = PROF_F_NAME; return 1; }
-    if (in(PROF_TAB0_X, PROF_TAB_Y, PROF_TAB_W, PROF_TAB_H)) { P.focus = PROF_F_ROW; goto_pick(0); return 1; }
-    if (in(PROF_TAB1_X, PROF_TAB_Y, PROF_TAB_W, PROF_TAB_H)) { P.focus = PROF_F_ROW; goto_pick(1); return 1; }
+    for (int k = 0; k < PROF_CHARS; ++k)                    /* BROCOLOR1: a head shows its character */
+        if (in(PROF_CHAR_X0 + k * PROF_CHAR_STEP, PROF_CHAR_Y, PROF_CHAR_S, PROF_CHAR_S)) {
+            P.focus = PROF_F_CHAR;
+            if (P.chr != k) { P.chr = k; goto_pick(0); fprintf(stderr, "[profile] character %s (click)\n", kCharName[P.chr]); }
+            return 1;
+        }
+    if (in(PROF_LB_X, PROF_CHAR_Y + (PROF_CHAR_S - PROF_HINT_H) / 2, PROF_HINT_W, PROF_HINT_H)) { P.focus = PROF_F_CHAR; step_char(-1, "click LB"); return 1; }
+    if (in(PROF_RB_X, PROF_CHAR_Y + (PROF_CHAR_S - PROF_HINT_H) / 2, PROF_HINT_W, PROF_HINT_H)) { P.focus = PROF_F_CHAR; step_char(1, "click RB"); return 1; }
+    if (!P.chr) {
+        if (in(PROF_TAB0_X, PROF_TAB_Y, PROF_TAB_W, PROF_TAB_H)) { P.focus = PROF_F_ROW; goto_pick(0); return 1; }
+        if (in(PROF_TAB1_X, PROF_TAB_Y, PROF_TAB_W, PROF_TAB_H)) { P.focus = PROF_F_ROW; goto_pick(1); return 1; }
+    } else {
+        for (int k = 0; k < 3; ++k)
+            if (in(PROF_TAB0_X + k * PROF_TAB3_STEP, PROF_TAB_Y, PROF_TAB3_W, PROF_TAB_H)) { P.focus = PROF_F_ROW; goto_pick(k); return 1; }
+    }
     if (in(PROF_GRID_X, PROF_GRID_Y, PROF_GRID_W, PROF_GRID_H)) {
         const int x = (sx - PROF_GRID_X) / PROF_CELL_STEPX, y = (sy - PROF_GRID_Y) / PROF_CELL_STEPY;
         if (x >= 0 && x < PROF_COLS && y >= 0 && y < PROF_ROWS) {
             P.cx = x; P.cy = y; P.focus = PROF_F_GRID;
-            P.col[P.which] = profile_cell_colour(P.which, x, y);
-            fprintf(stderr, "[profile] %s picked by click: cell %d,%d = %06X\n", P.which ? "SHOES" : "BODY", x, y, P.col[P.which]);
+            set_row(P.which, cell_of(P.which, x, y));
+            fprintf(stderr, "[profile] %s%s%s picked by click: cell %d,%d = %06X\n", P.chr ? kCharName[P.chr] : "", P.chr ? " " : "", row_name(P.which), x, y,
+                    row_colour(P.which));
         }
         return 1;
     }
     return 1;
+}
+
+/* BROCOLOR1: LB / Q the character before, RB / E the next (Q and E are letters while the name field has the focus) */
+extern "C" void menu_online_profile_bumpers(unsigned keys)
+{
+    const unsigned edge = keys & ~g_bumper_prev;
+    g_bumper_prev = keys;
+    if (!P.open || !edge || P.tick <= 8) return;
+    const int name = P.focus == PROF_F_NAME;
+    if ((edge & 1u) || (!name && (edge & 4u))) step_char(-1, (edge & 1u) ? "LB" : "Q");
+    else if ((edge & 2u) || (!name && (edge & 8u))) step_char(1, (edge & 2u) ? "RB" : "E");
 }
 
 int profile_back(void)
@@ -336,6 +449,141 @@ void frame(uint32_t *dst, int stride, int w, int h, int x0, int y0, int x1, int 
     fill(dst, stride, w, h, x1 - t, y0, x1, y1, rgb);
 }
 
+/* BROCOLOR1: THE FOUR HEADS are the cartridge's own character select portraits (the StarSel busts): data/2D_cad/d_2d_player_select_<name>_8bit_ncg
+   (file ids 150 Mario, 148 Luigi, 152 Wario, 154 Yoshi; the _ncl palette is the next id). Each _ncg is one LZ10 stream of 16384 bytes, a 128 x 128
+   sheet of 8 x 8 8-bit tiles, 16 a row, index 0 transparent, the bust in the top-left 80 x 80 (the frame lattice lies beyond it): the same read
+   hal/head_icons.cpp makes for the player list, kept here at full size. The HD UI mod carries no heads. Nothing is stored: the player's own files
+   are read once, on the first draw; a file that cannot be read leaves that head's box empty. Area-averaged to the box with the coverage as alpha. */
+const int kBust = 80;
+uint32_t g_bust[PROF_CHARS][kBust * kBust];     /* 0xAARRGGBB, straight alpha (0 or 255) */
+int g_bust_state[PROF_CHARS];                   /* 0 not tried, 1 ok, -1 failed */
+struct BustScaled { int size; uint32_t *px; } g_bust_scaled[PROF_CHARS];
+
+bool bust_read(const char *path, unsigned char **out, long *len)
+{
+    FILE *f = path ? fopen(path, "rb") : 0;
+    if (!f) return false;
+    fseek(f, 0, SEEK_END);
+    const long n = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    if (n < 8 || n > (1 << 20)) { fclose(f); return false; }
+    unsigned char *b = (unsigned char *)malloc((size_t)n);
+    const bool ok = b && fread(b, 1, (size_t)n, f) == (size_t)n;
+    fclose(f);
+    if (!ok) { free(b); return false; }
+    *out = b;
+    *len = n;
+    return true;
+}
+bool bust_lz10(const unsigned char *s, long n, unsigned char *dst, long want)
+{
+    if (n < 4 || s[0] != 0x10) return false;
+    const long size = s[1] | (s[2] << 8) | (s[3] << 16);
+    if (size != want) return false;
+    long o = 4, d = 0;
+    while (d < size) {
+        if (o >= n) return false;
+        const unsigned flags = s[o++];
+        for (int k = 0; k < 8 && d < size; ++k) {
+            if (flags & (0x80u >> k)) {
+                if (o + 2 > n) return false;
+                const unsigned x = ((unsigned)s[o] << 8) | s[o + 1];
+                o += 2;
+                const long len = (long)(x >> 12) + 3, disp = (long)(x & 0xfff) + 1;
+                if (disp > d) return false;
+                for (long i = 0; i < len && d < size; ++i, ++d) dst[d] = dst[d - disp];
+            } else {
+                if (o >= n) return false;
+                dst[d++] = s[o++];
+            }
+        }
+    }
+    return true;
+}
+const uint32_t *bust(int c)
+{
+    if (c < 0 || c >= PROF_CHARS) return 0;
+    if (!g_bust_state[c]) {
+        static const unsigned kNcg[PROF_CHARS] = { 154, 150, 148, 152 };     /* Yoshi Mario Luigi Wario */
+        static unsigned char tiles[16384];
+        unsigned char *g = 0, *l = 0;
+        long gn = 0, ln = 0;
+        g_bust_state[c] = -1;
+        if (bust_read(port_fs_catalog_path(kNcg[c]), &g, &gn) && bust_read(port_fs_catalog_path(kNcg[c] + 1), &l, &ln) && ln >= 512 &&
+            bust_lz10(g, gn, tiles, 16384)) {
+            for (int y = 0; y < kBust; ++y)
+                for (int x = 0; x < kBust; ++x) {
+                    const unsigned idx = tiles[((y >> 3) * 16 + (x >> 3)) * 64 + (y & 7) * 8 + (x & 7)];
+                    const unsigned v = l[idx * 2] | ((unsigned)l[idx * 2 + 1] << 8);
+                    g_bust[c][y * kBust + x] = idx ? (0xFF000000u | (((v & 31) * 255 / 31) << 16) | ((((v >> 5) & 31) * 255 / 31) << 8) |
+                                                      (((v >> 10) & 31) * 255 / 31)) : 0;
+                }
+            g_bust_state[c] = 1;
+            fprintf(stderr, "[profile] head %d: the cartridge's portrait (file %u)\n", c, kNcg[c]);
+        } else {
+            fprintf(stderr, "[profile] head %d: portrait file %u not readable, box left empty\n", c, kNcg[c]);
+        }
+        free(g);
+        free(l);
+    }
+    return g_bust_state[c] > 0 ? g_bust[c] : 0;
+}
+/* the bust area-averaged to size x size, premultiplied 0xAARRGGBB, cached per size */
+const uint32_t *bust_scaled(int c, int size)
+{
+    const uint32_t *src = bust(c);
+    if (!src || size < 4 || size > 1024) return 0;
+    BustScaled &b = g_bust_scaled[c];
+    if (b.px && b.size == size) return b.px;
+    free(b.px);
+    b.px = (uint32_t *)malloc((size_t)size * size * 4);
+    b.size = size;
+    if (!b.px) return 0;
+    for (int oy = 0; oy < size; ++oy)
+        for (int ox = 0; ox < size; ++ox) {
+            const double x0 = (double)ox * kBust / size, x1 = (double)(ox + 1) * kBust / size;
+            const double y0 = (double)oy * kBust / size, y1 = (double)(oy + 1) * kBust / size;
+            double r = 0, g = 0, bl = 0, a = 0, area = 0;
+            for (int sy = (int)y0; sy < kBust && sy < y1; ++sy)
+                for (int sx = (int)x0; sx < kBust && sx < x1; ++sx) {
+                    const double wx = (sx + 1 < x1 ? sx + 1 : x1) - (sx > x0 ? sx : x0);
+                    const double wy = (sy + 1 < y1 ? sy + 1 : y1) - (sy > y0 ? sy : y0);
+                    const double wt = wx * wy;
+                    const uint32_t v = src[sy * kBust + sx];
+                    area += wt;
+                    if (!(v >> 24)) continue;
+                    a += wt;
+                    r += wt * ((v >> 16) & 255); g += wt * ((v >> 8) & 255); bl += wt * (v & 255);
+                }
+            if (area <= 0) area = 1;
+            const unsigned A = (unsigned)(a / area * 255 + 0.5);
+            b.px[oy * size + ox] = (A << 24) | ((unsigned)(r / area + 0.5) << 16) | ((unsigned)(g / area + 0.5) << 8) | (unsigned)(bl / area + 0.5);
+        }
+    return b.px;
+}
+/* src over dst, premultiplied; dim 0..255 fades the picture toward the plate colour underneath (256 = full) */
+void blit_bust(uint32_t *dst, int stride, int w, int h, int x0, int y0, const uint32_t *px, int size, int keep)
+{
+    for (int y = 0; y < size; ++y) {
+        const int dy = y0 + y;
+        if (dy < 0 || dy >= h) continue;
+        for (int x = 0; x < size; ++x) {
+            const int dx = x0 + x;
+            if (dx < 0 || dx >= w) continue;
+            const uint32_t v = px[y * size + x];
+            const unsigned a = ((v >> 24) * (unsigned)keep) >> 8;
+            if (!a) continue;
+            uint32_t &d = dst[(size_t)dy * stride + dx];
+            const unsigned na = 255 - a;
+            const unsigned r = (((v >> 16) & 255) * (unsigned)keep >> 8) + ((d >> 16) & 255) * na / 255;
+            const unsigned g = (((v >> 8) & 255) * (unsigned)keep >> 8) + ((d >> 8) & 255) * na / 255;
+            const unsigned b = ((v & 255) * (unsigned)keep >> 8) + (d & 255) * na / 255;
+            d = 0xFF000000u | ((r > 255 ? 255 : r) << 16) | ((g > 255 ? 255 : g) << 8) | (b > 255 ? 255 : b);
+        }
+    }
+}
+inline uint32_t rgb_of(const unsigned char *c) { return ((uint32_t)c[0] << 16) | ((uint32_t)c[1] << 8) | c[2]; }
+
 }  // namespace
 
 void menu_online_profile_draw(const MenuLayout *L, const OnlFacts *of, uint32_t *dst, int w, int h, int stride)
@@ -371,18 +619,49 @@ void menu_online_profile_draw(const MenuLayout *L, const OnlFacts *of, uint32_t 
         const int cx = (int)(tx + ui_text_width(f.name, fem)) + S(1);
         fill(dst, stride, w, h, cx, fy0 + S(4), cx + clampi(S(1), 1, 3), fy1 - S(4), 0x4A2208);
     }
-    ui_text_draw(&sf, (float)X(PROF_FIELD_X), (float)Y(45), "keyboard to change", 7.5f * (float)un / (float)ud, 0x9A7A4A, 255, 0);
-    /* the two row labels, each with its live swatch: the picked row has the frame (orange while the row label has the focus) */
-    for (int k = 0; k < 2; ++k) {
-        const int tx0 = X(k ? PROF_TAB1_X : PROF_TAB0_X), ty0 = Y(PROF_TAB_Y), tx1 = tx0 + S(PROF_TAB_W), ty1 = Y(PROF_TAB_Y + PROF_TAB_H);
+    {   /* BROCOLOR1: the hint moved up beside the label, right-aligned, to make room for the character row */
+        const char *hint = "keyboard to change";
+        const float hem = 7.5f * (float)un / (float)ud;
+        ui_text_draw(&sf, (float)X(PROF_FIELD_X + PROF_FIELD_W) - ui_text_width(hint, hem), (float)Y(14), hint, hem, 0x9A7A4A, 255, 0);
+    }
+    /* BROCOLOR1: the character row. LB and RB hints in the plank look either side; the heads on plates, the one on show raised and framed
+       (orange while the row has the focus), the others faded */
+    {
+        const int hy0 = Y(PROF_CHAR_Y + (PROF_CHAR_S - PROF_HINT_H) / 2), hy1 = Y(PROF_CHAR_Y + (PROF_CHAR_S - PROF_HINT_H) / 2 + PROF_HINT_H);
+        const float kem = 7.5f * (float)un / (float)ud;
+        for (int side = 0; side < 2; ++side) {
+            const int hx0 = X(side ? PROF_RB_X : PROF_LB_X), hx1 = X((side ? PROF_RB_X : PROF_LB_X) + PROF_HINT_W);
+            fill(dst, stride, w, h, hx0, hy0, hx1, hy1, 0xC8955A);
+            frame(dst, stride, w, h, hx0, hy0, hx1, hy1, clampi(S(1), 1, 4), 0x6B3A12);
+            const char *t = side ? "RB" : "LB";
+            ui_text_draw(&sf, (float)(hx0 + hx1) * 0.5f - ui_text_width(t, kem) * 0.5f, (float)(hy0 + hy1) * 0.5f + ui_text_cap_height(kem) * 0.5f, t, kem,
+                         0xFFF4D8, 255, 0);
+        }
+        for (int k = 0; k < PROF_CHARS; ++k) {
+            const int bx0 = X(PROF_CHAR_X0 + k * PROF_CHAR_STEP), by0 = Y(PROF_CHAR_Y);
+            const int bx1 = X(PROF_CHAR_X0 + k * PROF_CHAR_STEP + PROF_CHAR_S), by1 = Y(PROF_CHAR_Y + PROF_CHAR_S);
+            const int sel = f.chr == k;
+            fill(dst, stride, w, h, bx0, by0, bx1, by1, sel ? 0xFFF1CC : 0xE2CB97);
+            const int size = (bx1 - bx0) - 2 * clampi(S(1), 1, 4);
+            if (const uint32_t *px = bust_scaled(k, size))
+                blit_bust(dst, stride, w, h, bx0 + (bx1 - bx0 - size) / 2, by0 + (by1 - by0 - size) / 2, px, size, sel ? 256 : 150);
+            frame(dst, stride, w, h, bx0, by0, bx1, by1, clampi(S(sel ? 2 : 1), 1, 6), sel ? (f.focus == PROF_F_CHAR ? 0xD2641E : 0x4A2208) : 0x8A5A2A);
+        }
+    }
+    /* the row labels, each with its live swatch: two for Yoshi, three for a bro; the picked row has the frame (orange while the labels have the focus) */
+    const int nrow = f.chr ? 3 : 2;
+    static const char *const kLabY[2] = { "BODY", "SHOES" }, *const kLabB[3] = { "HAT", "OVERALLS", "SHOES" };
+    for (int k = 0; k < nrow; ++k) {
+        const int tx0 = f.chr ? X(PROF_TAB0_X + k * PROF_TAB3_STEP) : X(k ? PROF_TAB1_X : PROF_TAB0_X);
+        const int ty0 = Y(PROF_TAB_Y), tx1 = tx0 + S(f.chr ? PROF_TAB3_W : PROF_TAB_W), ty1 = Y(PROF_TAB_Y + PROF_TAB_H);
         const int sel = f.which == k;
         fill(dst, stride, w, h, tx0, ty0, tx1, ty1, sel ? 0xFFF1CC : 0xEBD7A6);
         frame(dst, stride, w, h, tx0, ty0, tx1, ty1, clampi(S(sel ? 2 : 1), 1, 6), sel ? (f.focus == PROF_F_ROW ? 0xD2641E : 0x4A2208) : 0x8A5A2A);
-        const char *lab = k ? "SHOES" : "BODY";
-        const float lem = 10.f * (float)un / (float)ud;
-        ui_text_draw(&sf, (float)(tx0 + S(6)), (float)(ty0 + ty1) * 0.5f + ui_text_cap_height(lem) * 0.5f, lab, lem, sel ? 0x4A2208 : 0x8A6A3A, 255, 0);
-        const int sx1 = tx1 - S(5), sx0 = sx1 - S(34);
-        fill(dst, stride, w, h, sx0, ty0 + S(3), sx1, ty1 - S(3), k ? f.shoes : f.body);
+        const char *lab = f.chr ? kLabB[k] : kLabY[k];
+        const float lem = (f.chr ? 8.f : 10.f) * (float)un / (float)ud;
+        ui_text_draw(&sf, (float)(tx0 + S(f.chr ? 4 : 6)), (float)(ty0 + ty1) * 0.5f + ui_text_cap_height(lem) * 0.5f, lab, lem, sel ? 0x4A2208 : 0x8A6A3A, 255, 0);
+        const int sx1 = tx1 - S(f.chr ? 3 : 5), sx0 = sx1 - S(f.chr ? 13 : 34);
+        fill(dst, stride, w, h, sx0, ty0 + S(3), sx1, ty1 - S(3), rgb_of(f.row[k]));
         frame(dst, stride, w, h, sx0, ty0 + S(3), sx1, ty1 - S(3), 1, 0x4A2208);
     }
     /* the grid: column 0 the ROM's classic colours for the row, column 1 white / greys / black, then twelve hues in four shades */
@@ -390,10 +669,10 @@ void menu_online_profile_draw(const MenuLayout *L, const OnlFacts *of, uint32_t 
         for (int y = 0; y < PROF_ROWS; ++y) {
             const int x0 = X(PROF_GRID_X + x * PROF_CELL_STEPX), y0 = Y(PROF_GRID_Y + y * PROF_CELL_STEPY);
             const int x1 = X(PROF_GRID_X + x * PROF_CELL_STEPX + PROF_CELL_W), y1 = Y(PROF_GRID_Y + y * PROF_CELL_STEPY + PROF_CELL_H);
-            const uint32_t c = profile_cell_colour(f.which, x, y);
+            const uint32_t c = f.chr ? profile_bro_cell(f.chr - 1, f.which, x, y) : profile_cell_colour(f.which, x, y);
             fill(dst, stride, w, h, x0, y0, x1, y1, c);
             frame(dst, stride, w, h, x0, y0, x1, y1, 1, 0x4A2208);
-            if (c == (f.which ? f.shoes : f.body)) {        /* the cell that is the row's current pick: a light inner mark with a dark edge */
+            if (c == rgb_of(f.row[f.which < 3 ? f.which : 0])) {     /* the cell that is the row's current pick: a light inner mark with a dark edge */
                 frame(dst, stride, w, h, x0 + S(2), y0 + S(2), x1 - S(2), y1 - S(2), clampi(S(1), 1, 3), 0xFFFFFF);
                 frame(dst, stride, w, h, x0 + S(1), y0 + S(1), x1 - S(1), y1 - S(1), 1, 0x000000);
             }
@@ -404,10 +683,11 @@ void menu_online_profile_draw(const MenuLayout *L, const OnlFacts *of, uint32_t 
         frame(dst, stride, w, h, x0 - S(2), y0 - S(2), x1 + S(2), y1 + S(2), clampi(S(2), 1, 5), 0xD2641E);
     }
     {
-        char hexs[48];
-        snprintf(hexs, sizeof hexs, "BODY %06X   SHOES %06X", f.body & 0xFFFFFF, f.shoes & 0xFFFFFF);
-        const float cem = 8.5f * (float)un / (float)ud;
-        ui_text_draw(&sf, (float)X(128) - ui_text_width(hexs, cem) * 0.5f, (float)Y(139), hexs, cem, 0x6B3A12, 255, 0);
+        char hexs[64];
+        if (f.chr) snprintf(hexs, sizeof hexs, "HAT %06X   OVERALLS %06X   SHOES %06X", rgb_of(f.row[0]), rgb_of(f.row[1]), rgb_of(f.row[2]));
+        else snprintf(hexs, sizeof hexs, "BODY %06X   SHOES %06X", rgb_of(f.row[0]), rgb_of(f.row[1]));
+        const float cem = (f.chr ? 7.5f : 8.5f) * (float)un / (float)ud;
+        ui_text_draw(&sf, (float)X(128) - ui_text_width(hexs, cem) * 0.5f, (float)Y(146), hexs, cem, 0x6B3A12, 255, 0);
     }
     if (f.focus == PROF_F_OK || f.focus == PROF_F_BACK) {
         const int bx = f.focus == PROF_F_OK ? PROF_OK_X : PROF_BACK_X, by = f.focus == PROF_F_OK ? PROF_OK_Y : PROF_BACK_Y;
@@ -456,8 +736,8 @@ void menu_online_profile_modal(MenuLayout *L, const OnlFacts *f)
     p.custom = profile_panel_cb;
     menu_add_piece(L, p);
     touch_box(L, PROF_FIELD_X, PROF_FIELD_Y, PROF_FIELD_W, PROF_FIELD_H);
-    touch_box(L, PROF_TAB0_X, PROF_TAB_Y, PROF_TAB_W, PROF_TAB_H);
-    touch_box(L, PROF_TAB1_X, PROF_TAB_Y, PROF_TAB_W, PROF_TAB_H);
+    touch_box(L, PROF_LB_X, PROF_CHAR_Y, PROF_RB_X + PROF_HINT_W - PROF_LB_X, PROF_CHAR_S);     /* BROCOLOR1: LB, the heads, RB */
+    touch_box(L, PROF_TAB0_X, PROF_TAB_Y, PROF_TAB1_X + PROF_TAB_W - PROF_TAB0_X, PROF_TAB_H);  /* the row labels (two or three across the same span) */
     touch_box(L, PROF_GRID_X, PROF_GRID_Y, PROF_GRID_W, PROF_GRID_H);
     const int un = L->unum, ud = L->uden;
     const int kinds[2] = { ONL_K_OK, ONL_K_BACK };

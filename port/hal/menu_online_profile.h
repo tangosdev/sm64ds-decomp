@@ -33,22 +33,30 @@ static const OnlineYoshiColor kOnlineYoshiColors[8] = {
 };
 
 /* focus rows of the popup */
-enum { PROF_F_NAME = 0, PROF_F_ROW = 1, PROF_F_GRID = 2, PROF_F_OK = 3, PROF_F_BACK = 4 };
+enum { PROF_F_NAME = 0, PROF_F_CHAR = 1, PROF_F_ROW = 2, PROF_F_GRID = 3, PROF_F_OK = 4, PROF_F_BACK = 5 };
 /* the picker grid: PROF_COLS columns x PROF_ROWS rows. Column 0 = the ROM's four classic colours (body or shoe set, by the row picked), column 1 = white,
    grey, dark grey, black, columns 2..13 = twelve hues (red at 0 degrees, every 30) each in four shades (light, pure, dark, darker). */
 #define PROF_COLS 14
 #define PROF_ROWS 4
 uint32_t profile_cell_colour(int which, int col, int row);      /* 0xRRGGBB of a grid cell; which 0 = BODY, 1 = SHOES */
+/* BROCOLOR1: the character row. The popup picks colours for four characters, in this order (Yoshi first, so it opens where it always did):
+   0 Yoshi (BODY, SHOES), 1 Mario, 2 Luigi, 3 Wario (HAT = cap and undershirt, OVERALLS, SHOES). LB / RB on the pad, Q / E on the keyboard (not
+   while the name field has the focus: there they are letters) and a click on a head change it. A bro row's grid is the same grid; its column 0
+   is the cartridge Mario, Luigi and Wario colour of that row and the cartridge green Yoshi's (hal/vs_char_groups.h kBroCart). */
+#define PROF_CHARS 4
+uint32_t profile_bro_cell(int bro, int cat, int col, int row);  /* bro 0 Mario 1 Luigi 2 Wario; cat 0 HAT 1 OVERALLS 2 SHOES */
+uint32_t profile_bro_cart(int bro, int cat);                   /* that bro's cartridge colour for the row */
 
 /* what the draw side needs (copied into OnlFacts by menu_online_facts) */
-struct ProfFacts {
-    uint32_t body, shoes;         /* 0xRRGGBB */
+struct ProfFacts {               /* 36 bytes: OnlFacts is exactly full at 160 (menu_online.h), so no word members */
     unsigned char focus;          /* PROF_F_* */
-    unsigned char which;          /* the row being picked: 0 BODY, 1 SHOES */
+    unsigned char which;          /* the row being picked: Yoshi 0 BODY 1 SHOES; a bro 0 HAT 1 OVERALLS 2 SHOES */
     unsigned char cx, cy;         /* the grid cell cursor */
     unsigned char caret;          /* blink phase, 0 / 1 */
+    unsigned char chr;            /* BROCOLOR1: 0 Yoshi, 1 Mario, 2 Luigi, 3 Wario (Yoshi has two rows, a bro three) */
     signed char pending;          /* the file waiting for the OK (0..2) or -1 */
     char name[20];
+    unsigned char row[3][3];      /* the live colour of each row, R G B (a bro row with no pick = its cartridge colour) */
 };
 
 /* the DS boxes of the popup (the hook and the pieces agree on them; a click maps proportionally into a piece's box) */
@@ -60,13 +68,23 @@ struct ProfFacts {
 #define PROF_FIELD_Y 18
 #define PROF_FIELD_W 200
 #define PROF_FIELD_H 18
-#define PROF_TAB_Y 49          /* the BODY and SHOES row labels, each with its live swatch */
-#define PROF_TAB_H 18
+#define PROF_CHAR_Y 40         /* BROCOLOR1: the character row: LB, the four heads, RB */
+#define PROF_CHAR_S 22         /* a head's box */
+#define PROF_CHAR_X0 75        /* the first head; one every PROF_CHAR_STEP */
+#define PROF_CHAR_STEP 28
+#define PROF_LB_X 45           /* the LB / RB hints beside the heads */
+#define PROF_RB_X 189
+#define PROF_HINT_W 22
+#define PROF_HINT_H 14
+#define PROF_TAB_Y 66          /* the row labels, each with its live swatch: two for Yoshi (BODY, SHOES), three for a bro (HAT, OVERALLS, SHOES) */
+#define PROF_TAB_H 16
 #define PROF_TAB0_X 28
 #define PROF_TAB1_X 130
 #define PROF_TAB_W 98
+#define PROF_TAB3_W 64         /* three labels: at PROF_TAB0_X + k * PROF_TAB3_STEP */
+#define PROF_TAB3_STEP 68
 #define PROF_GRID_X 24
-#define PROF_GRID_Y 74
+#define PROF_GRID_Y 87
 #define PROF_CELL_W 14
 #define PROF_CELL_H 12
 #define PROF_CELL_STEPX 15
@@ -74,11 +92,11 @@ struct ProfFacts {
 #define PROF_GRID_W (PROF_COLS * PROF_CELL_STEPX - 1)
 #define PROF_GRID_H (PROF_ROWS * PROF_CELL_STEPY - 1)
 #define PROF_OK_X 40
-#define PROF_OK_Y 148
+#define PROF_OK_Y 150
 #define PROF_OK_W 80
 #define PROF_OK_H 28
 #define PROF_BACK_X 136
-#define PROF_BACK_Y 148
+#define PROF_BACK_Y 150
 #define PROF_BACK_W 80
 #define PROF_BACK_H 28
 /* the NAME plank on the online file select */
@@ -101,6 +119,8 @@ int  profile_back(void);                                /* the back key / pad B:
 int  profile_backspace(void);                           /* Backspace: 1 = the popup took it (deleted a character, or went back from another row) */
 /* the popup finished: the owner (menu_online.cpp) closes the screen and, on ok with a pending file, starts the join */
 extern void menu_online_profile_done(int ok, int pending_slot);
+/* BROCOLOR1: the shoulder keys, held now: bit 0 LB, bit 1 RB, bit 2 Q, bit 3 E (tests/walk_window.cpp pause3_input reads them every frame) */
+extern "C" void menu_online_profile_bumpers(unsigned keys);
 
 /* ---- build / draw side ------------------------------------------------------------------------------------------ */
 void menu_online_profile_modal(MenuLayout *L, const OnlFacts *f);       /* the popup's pieces */
