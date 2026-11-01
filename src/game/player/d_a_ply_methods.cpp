@@ -6970,7 +6970,7 @@ int daPly_c::func_ov002_020c8d14() {
     } else {
         id = this->GetBodyModelID(param1 & 0xff, 0);
         if (mModels.mBodyModels[id]->WillHitFrame(2)) {
-            Particle::System::NewSimple(0x5e, v.x, v.y, *(volatile int *)&v.z);
+            Particle::System::NewSimple(0x5e, v.x, v.y, v.z);
         }
     }
 
@@ -7440,7 +7440,7 @@ void daPly_c::func_ov002_020c9a04() {
     Particle::System::NewSimple(0x5f, v.x, v.y, v.z);
 
     v.y = this->mPosY + FX_MUL(this->mScaleY, 0x50000);
-    Particle::System::NewSimple(0x60, v.x, v.y, *(volatile int *)&v.z);
+    Particle::System::NewSimple(0x60, v.x, v.y, v.z);
 }
 }
 
@@ -14675,7 +14675,7 @@ void func_ov002_020d6368(char *self)
     pos.x = pos.x - FX_MUL(data_02082214[a * 2], 0x14000);
 
     a = *(volatile unsigned short *)(&p->mAngleY) >> 4;
-    *(volatile int *)&pos.y = pos.y - FX_MUL(data_02082214[a * 2 + 1], 0x14000);
+    pos.y = pos.y - FX_MUL(data_02082214[a * 2 + 1], 0x14000);
 
     rotY = p->mAngleY;
     rot.x = zero;
@@ -17339,9 +17339,9 @@ int func_ov002_020da95c(char *c)
     int t = (p != 0);
     if (t == 0) return 0;
     ((dActor_c *)p)->mFlags &= ~0x800;
-    ((dActor_c *)*(volatile int *)&player->mHeldObj)->mFlags &= ~0x4000;
-    ((dActor_c *)*(volatile int *)&player->mHeldObj)->mFlags |= 0x1000;
-    ((dActor_c *)*(volatile int *)&player->mHeldObj)->mFlags &= ~0x100;
+    ((dActor_c *)player->mHeldObj)->mFlags &= ~0x4000;
+    ((dActor_c *)player->mHeldObj)->mFlags |= 0x1000;
+    ((dActor_c *)player->mHeldObj)->mFlags &= ~0x100;
     player->mHeldObj = 0;
     return 1;
 }
@@ -19337,7 +19337,7 @@ int daPly_c::St_GroundPound_Main() {
                             int y2 = mPosY + 0x3c000;
                             int xx = v.x;
                             int zz = v.z;
-                            *(volatile int*)&v.y = y2;
+                            v.y = y2;
                             Particle::System::NewSimple(0x59, xx, y2, zz);
                         }
                     } else if (param1 != 2) {
@@ -19800,7 +19800,7 @@ void daPly_c::InitBalloonMario() {
     v.z = mPosZ;
     v.y = mPosY + 0x50000;
     Particle::System::NewSimple(0xc5, v.x, v.y, v.z);
-    Particle::System::NewSimple(0xc6, v.x, v.y, *(volatile int *)&v.z);
+    Particle::System::NewSimple(0xc6, v.x, v.y, v.z);
 
     Sound::PlayBank0(0xd7, mCamSpacePos);
 }

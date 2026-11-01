@@ -240,8 +240,8 @@ void daChoropu_c::func_ov080_02123a34()
 
         ax = *(unsigned short *)&mAngleX;
         ay = *(unsigned short *)&mAngleY;
-        *(volatile short *)&v16.y = (short)ay;
-        *(volatile short *)&v16.x = (short)ax;
+        v16.y = (short)ay;
+        v16.x = (short)ax;
         {
             unsigned short z = *(unsigned short *)&mAngleZ;
             pAng->z = z;

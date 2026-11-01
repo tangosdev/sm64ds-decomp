@@ -253,9 +253,9 @@ void daPiano_c::StateSearch() {
         }
         tmp.z = z + FX_MUL(data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2 + 1], 0x24000);
 
-        this->mCylinderClsn[0].pos.x = *(volatile int *)&this->mPosX;
-        this->mCylinderClsn[0].pos.y = *(volatile int *)&this->mPosY;
-        this->mCylinderClsn[0].pos.z = *(volatile int *)&this->mPosZ;
+        this->mCylinderClsn[0].pos.x = this->mPosX;
+        this->mCylinderClsn[0].pos.y = this->mPosY;
+        this->mCylinderClsn[0].pos.z = this->mPosZ;
         this->mCylinderClsn[1].pos.x = tmp.x;
         this->mCylinderClsn[1].pos.y = tmp.y;
         this->mCylinderClsn[1].pos.z = tmp.z;
@@ -366,9 +366,9 @@ void daPiano_c::StateAttack() {
     }
     proj.z = z + FX_MUL(data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2 + 1], 0x24000);
 
-    this->mCylinderClsn[0].pos.x = *(volatile int *)&this->mPosX;
-    this->mCylinderClsn[0].pos.y = *(volatile int *)&this->mPosY;
-    this->mCylinderClsn[0].pos.z = *(volatile int *)&this->mPosZ;
+    this->mCylinderClsn[0].pos.x = this->mPosX;
+    this->mCylinderClsn[0].pos.y = this->mPosY;
+    this->mCylinderClsn[0].pos.z = this->mPosZ;
     this->mCylinderClsn[1].pos.x = proj.x;
     this->mCylinderClsn[1].pos.y = proj.y;
     this->mCylinderClsn[1].pos.z = proj.z;

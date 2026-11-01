@@ -137,7 +137,7 @@ void func_0204c304(Particle *self, ParticleSystem *sys, List *freelist) {
         p->basePosition = self->basePosition;
 
         {
-            int c = *(volatile int *)&self->scale;
+            int c = self->scale;
             int m = (c * self->animScale) >> 12;
             p->scale = (m * (def->scaleRatio + 1)) >> 6;
         }

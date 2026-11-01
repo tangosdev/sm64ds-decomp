@@ -1055,7 +1055,7 @@ void daStar_c::func_ov002_020ea90c() {
             int yv;
             v.x = pp->x;
             yv = pp->y;
-            *(volatile s32*)&v.y = yv;
+            v.y = yv;
             v.z = pp->z;
             v.y = yv + 0xc8000;
             /* By-value staging: the ROM caller copies v to its outgoing area
@@ -2566,9 +2566,8 @@ void daStar_c::func_ov002_020e81e0() {
     v.y = mPosY;
     v.z = mPosZ;
     v.y += 0xd000;
-    *(void **)&mParticle[0] =
-        (void *)Particle::System::New(*(volatile unsigned int *)&mParticle[0], 0x113,
-                                      *(volatile int *)&v.x, *(volatile int *)&v.y, v.z, 0, 0);
+    *(void **)&mParticle[0] = (void *)Particle::System::New(*(volatile unsigned int *)&mParticle[0],
+                                                            0x113, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
