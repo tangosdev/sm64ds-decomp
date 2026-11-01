@@ -461,6 +461,13 @@ struct BustScaled { int size; uint32_t *px; } g_bust_scaled[PROF_CHARS];
 
 bool bust_read(const char *path, unsigned char **out, long *len)
 {
+    /* a catalog path is relative to <asset root>/extracted/dsd/files, where hal/fs.cpp reads (player_list_paint.h's plist_rom_path) */
+    char full[600];
+    const char *root = getenv("SM64DS_ASSET_ROOT");
+    if (path && root && *root) {
+        snprintf(full, sizeof full, "%s/extracted/dsd/files/%s", root, path);
+        path = full;
+    }
     FILE *f = path ? fopen(path, "rb") : 0;
     if (!f) return false;
     fseek(f, 0, SEEK_END);
@@ -658,7 +665,12 @@ void menu_online_profile_draw(const MenuLayout *L, const OnlFacts *of, uint32_t 
         fill(dst, stride, w, h, tx0, ty0, tx1, ty1, sel ? 0xFFF1CC : 0xEBD7A6);
         frame(dst, stride, w, h, tx0, ty0, tx1, ty1, clampi(S(sel ? 2 : 1), 1, 6), sel ? (f.focus == PROF_F_ROW ? 0xD2641E : 0x4A2208) : 0x8A5A2A);
         const char *lab = f.chr ? kLabB[k] : kLabY[k];
-        const float lem = (f.chr ? 8.f : 10.f) * (float)un / (float)ud;
+        float lem = (f.chr ? 8.f : 10.f) * (float)un / (float)ud;
+        {   /* the label always ends before its swatch, whatever the font measures */
+            const float room = (float)(S(f.chr ? PROF_TAB3_W - 4 - 3 - 13 - 3 : PROF_TAB_W - 6 - 5 - 34 - 4));
+            const float tw = ui_text_width(lab, lem);
+            if (tw > room && tw > 0.f) lem *= room / tw;
+        }
         ui_text_draw(&sf, (float)(tx0 + S(f.chr ? 4 : 6)), (float)(ty0 + ty1) * 0.5f + ui_text_cap_height(lem) * 0.5f, lab, lem, sel ? 0x4A2208 : 0x8A6A3A, 255, 0);
         const int sx1 = tx1 - S(f.chr ? 3 : 5), sx0 = sx1 - S(f.chr ? 13 : 34);
         fill(dst, stride, w, h, sx0, ty0 + S(3), sx1, ty1 - S(3), rgb_of(f.row[k]));
@@ -686,7 +698,11 @@ void menu_online_profile_draw(const MenuLayout *L, const OnlFacts *of, uint32_t 
         char hexs[64];
         if (f.chr) snprintf(hexs, sizeof hexs, "HAT %06X   OVERALLS %06X   SHOES %06X", rgb_of(f.row[0]), rgb_of(f.row[1]), rgb_of(f.row[2]));
         else snprintf(hexs, sizeof hexs, "BODY %06X   SHOES %06X", rgb_of(f.row[0]), rgb_of(f.row[1]));
-        const float cem = (f.chr ? 7.5f : 8.5f) * (float)un / (float)ud;
+        float cem = (f.chr ? 7.5f : 8.5f) * (float)un / (float)ud;
+        {
+            const float room = (float)S(PROF_PANEL_W - 16), tw = ui_text_width(hexs, cem);
+            if (tw > room && tw > 0.f) cem *= room / tw;
+        }
         ui_text_draw(&sf, (float)X(128) - ui_text_width(hexs, cem) * 0.5f, (float)Y(146), hexs, cem, 0x6B3A12, 255, 0);
     }
     if (f.focus == PROF_F_OK || f.focus == PROF_F_BACK) {

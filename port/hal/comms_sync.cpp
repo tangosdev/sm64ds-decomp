@@ -86,6 +86,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "bro_colors.h"      // BROCOLOR1: port_bro_picks_for_body
 #include "vs_palette_gen.h"  // GHOSTLOOK1: the VS colour arithmetic, for a hub
                              // ghost in its player's own colours
 
@@ -754,6 +755,17 @@ enum : int {
        file's defaults, which name the tag but do not recolour the ghost. An
        identity from an older build carries flags 0 and is taken as before. */
     kGwIdentColours = 0x01,
+    /* BROCOLOR1: bit 1: after the name (zero padded to a multiple of 4) come
+       20 bytes of bro colours: a little-endian u16 mask (bit chr * 3 + row:
+       chr 0 Mario, 1 Luigi, 2 Wario; row 0 hat and undershirt, 1 overalls,
+       2 shoes) and nine little-endian BGR555 words in that order. The longest
+       identity is 20 + 24 + 20 = 64 bytes, the most the relay and every
+       reader take. An older reader takes the name by name_len, never reads
+       past it and leaves flag bits other than bit 0 unread, so it parses the
+       identity as before and draws that player's bros in the cartridge's
+       colours. A reader of this build that gets no bit 1 does the same. */
+    kGwIdentBros = 0x02,
+    kGwBroBlock = 20,
 };
 
 // GHOSTLOOK1: TWO TEST KNOBS for the smoothness measurement, both default to
@@ -854,6 +866,8 @@ struct GwSeat {
     char      name[kHubIdentNameMax + 1];
     unsigned char character, body[3], shoes[3];
     bool      colours;       // GHOSTLOOK1: body / shoes are the player's pick
+    unsigned short bro_mask;     // BROCOLOR1: the bro rows picked (kGwIdentBros), bit chr * 3 + row
+    unsigned short bro_bgr[9];   // ...and their colours, BGR555
     unsigned short pal_src[16];  // GHOSTLOOK1: the row 0 the colours were
     unsigned short pal_out[16];  // made from, and the row made from it with
     unsigned char  pal_body[3], pal_shoes[3];   // these colours
@@ -1133,6 +1147,9 @@ void gw_reset_seat(GwSeat &z, bool keep_ident) {
     std::memcpy(body, z.body, 3);
     std::memcpy(shoes, z.shoes, 3);
     const unsigned bid = z.build_id;
+    const unsigned short bmask = z.bro_mask;
+    unsigned short bbgr[9];
+    std::memcpy(bbgr, z.bro_bgr, sizeof bbgr);
     const bool he = z.have_epoch;
     const unsigned ep = z.epoch;
     // GHOSTCHAR1: the exit summary's per-seat pose counts run for the whole
@@ -1155,6 +1172,8 @@ void gw_reset_seat(GwSeat &z, bool keep_ident) {
         std::memcpy(z.body, body, 3);
         std::memcpy(z.shoes, shoes, 3);
         z.build_id = bid;
+        z.bro_mask = bmask;
+        std::memcpy(z.bro_bgr, bbgr, sizeof bbgr);
     }
 }
 
@@ -1400,6 +1419,16 @@ void gw_on_ident(const unsigned char *buf, int n, int seat) {
     /* GHOSTLOOK1: bit 0 only; the other flag bits stay unread (display data,
        design 6.2), so an identity from any build parses as it did */
     z.colours = (h.flags & kGwIdentColours) != 0;
+    /* BROCOLOR1: the bro block, when the flag says it is there and it fits */
+    z.bro_mask = 0;
+    {
+        const int at = (20 + (int)h.name_len + 3) & ~3;
+        if ((h.flags & kGwIdentBros) && at + kGwBroBlock <= n) {
+            z.bro_mask = (unsigned short)((buf[at] | (buf[at + 1] << 8)) & 0x1ff);
+            for (int i = 0; i < 9; ++i)
+                z.bro_bgr[i] = (unsigned short)(buf[at + 2 + 2 * i] | (buf[at + 3 + 2 * i] << 8));
+        }
+    }
     z.build_id = h.build_id;
     z.have_ident = true;
     ++g_gws.syni_recvd;
@@ -2010,6 +2039,27 @@ int gw_colour_row(GwSeat &z, void *a) {
     return pal;
 }
 
+// BROCOLOR1: my bro picks off settings.json (the profile popup writes them), as the wire carries them
+unsigned short gw_bgr555(unsigned rgb) {
+    return (unsigned short)(((rgb >> 19) & 31) | (((rgb >> 11) & 31) << 5) | (((rgb >> 3) & 31) << 10));
+}
+unsigned gw_rgb_of555(unsigned short w) {
+    const unsigned r = w & 31, g = (w >> 5) & 31, b = (w >> 10) & 31;
+    return (((r << 3) | (r >> 2)) << 16) | (((g << 3) | (g >> 2)) << 8) | ((b << 3) | (b >> 2));
+}
+void gw_my_bros(unsigned short *mask, unsigned short bgr[9]) {
+    *mask = 0;
+    for (int c = 0; c < 3; ++c)
+        for (int r = 0; r < 3; ++r) {
+            unsigned v = 0;
+            bgr[c * 3 + r] = 0;
+            if (host_setting_online_bro(c, r, &v)) {
+                *mask = (unsigned short)(*mask | (1u << (c * 3 + r)));
+                bgr[c * 3 + r] = gw_bgr555(v);
+            }
+        }
+}
+
 void gw_send_ident(unsigned now) {
     gw_me_read();
     unsigned char buf[64];
@@ -2030,6 +2080,21 @@ void gw_send_ident(unsigned now) {
     std::memcpy(buf, &h, sizeof h);
     std::memcpy(buf + 20, g_gw_me.name, (size_t)g_gw_me.name_len);
     int len = (20 + g_gw_me.name_len + 3) & ~3;
+    /* BROCOLOR1: the bro block, only when a bro row is picked (no pick sends the identity as before, byte for byte) */
+    {
+        unsigned short mask = 0, bgr[9];
+        gw_my_bros(&mask, bgr);
+        if (mask && len + kGwBroBlock <= (int)sizeof buf) {
+            buf[18] = (unsigned char)(buf[18] | kGwIdentBros);   /* HubIdentHead::flags */
+            buf[len] = (unsigned char)(mask & 0xff);
+            buf[len + 1] = (unsigned char)(mask >> 8);
+            for (int i = 0; i < 9; ++i) {
+                buf[len + 2 + 2 * i] = (unsigned char)(bgr[i] & 0xff);
+                buf[len + 3 + 2 * i] = (unsigned char)(bgr[i] >> 8);
+            }
+            len += kGwBroBlock;
+        }
+    }
     if (len < 24) len = 24;
     if (comms_hub_send(buf, len)) {
         ++g_gws.syni_sent;
@@ -4060,6 +4125,43 @@ void gw_body_probe() {
 // Only while the row still holds what the follower wrote, for the body it was
 // written for: a level load seats new bodies and uploads the file's rows again
 // before the next follower pass, and that frame draws the model's own row.
+// BROCOLOR1: the bro picks a body draws with (hal/bro_colors.h). The local body: my own picks, in an online
+// world (the hub), or solo with the dev knob SM64DS_BRO_COLORS_SOLO=1 (not in a kit build). A ghost: its
+// player's picks from the identity (kGwIdentBros). Both sides go through BGR555, so a ghost's picks and my
+// own draw the same words. Anything else: none, the cartridge's colours.
+extern "C" int port_bro_picks_for_body(void *body, port::bro::Picks *out) {
+    if (!body || !out) return 0;
+    const int me = (int)data_0209f250;
+    unsigned short mask = 0, bgr[9];
+    if (me >= 0 && me < kPortBodySlots && data_0209f394[me] == body) {
+        bool on = g_hub;
+#ifndef PORT_ROM_CLEAN
+        static int solo = -1;
+        if (solo < 0) solo = std::getenv("SM64DS_BRO_COLORS_SOLO") ? 1 : 0;
+        if (solo) on = true;
+#endif
+        if (!on) return 0;
+        gw_my_bros(&mask, bgr);
+    } else {
+        if (!g_hub) return 0;
+        int slot = -1;
+        for (int i = 0; i < kPortBodySlots; ++i)
+            if (data_0209f394[i] == body) { slot = i; break; }
+        const int s = slot >= 0 ? gw_seat_for_body(slot) : -1;
+        if (s < 0 || s >= kHubMaxSeats || !g_gw[s].have_ident) return 0;
+        mask = g_gw[s].bro_mask;
+        std::memcpy(bgr, g_gw[s].bro_bgr, sizeof bgr);
+    }
+    if (!mask) return 0;
+    for (int c = 0; c < 3; ++c)
+        for (int r = 0; r < 3; ++r) {
+            const bool on = (mask >> (c * 3 + r)) & 1;
+            out->set[c][r] = on ? 1 : 0;
+            out->rgb[c][r] = on ? gw_rgb_of555(bgr[c * 3 + r]) : 0;
+        }
+    return 1;
+}
+
 extern "C" int port_adventure_ghost_palette(int slot) {
     if (!g_hub || slot < 0 || slot >= kPortBodySlots) return -1;
     const int pal = g_gw_pal[slot];

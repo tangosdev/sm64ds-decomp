@@ -3272,7 +3272,9 @@ void bind_from_vram() {
     }
     const uint32_t pal_off = g_plttbase * (fmt == 2 ? 8u : 16u);
     d.pal = reinterpret_cast<const uint8_t *>(PLTT_SLOT_BASE + pal_off);
-    d.pal_len = 0x18000 - static_cast<int32_t>(pal_off);
+    /* BROCOLOR1: a base at 0x30000 or above is the port's own palette window (hal/bro_colors.cpp: a bro's
+       recoloured palette copy), never produced by game code; it reads the rest of the reserved VRAM */
+    d.pal_len = (pal_off >= 0x30000u ? 0x80000 : 0x18000) - static_cast<int32_t>(pal_off);
 
     TexKey key;
     key.name = (static_cast<uint64_t>(g_plttbase) << 32) | g_teximage;
