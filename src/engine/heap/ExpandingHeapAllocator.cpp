@@ -60,7 +60,7 @@
 
 extern "C" void MultiStore_Int(int val, void *dst, int len);
 /* local extern: the factory runs this constructor over storage that already
-   exists (see the leftovers above); a placement new would add a null test. */
+   exists. Placement new measured CreateExpandingHeapAllocator 0x4c -> 0x5c. */
 extern "C" ExpandingHeapAllocator *_ZN22ExpandingHeapAllocatorC1EPvj(
     ExpandingHeapAllocator *self, void *heapEnd, u32 flags);
 

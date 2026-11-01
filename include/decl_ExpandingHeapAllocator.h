@@ -20,10 +20,11 @@
 extern "C" {
 #endif
 
-extern unsigned int _ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi(void*, int);
-extern void _ZN22ExpandingHeapAllocator10DeallocateEPv(void*, void*);
-extern void*_ZN22ExpandingHeapAllocator16AllocateForwardsEjj(void*, u32, u32);
-extern void*_ZN22ExpandingHeapAllocator17AllocateBackwardsEjj(void*, u32, u32);
+/* ExpandingHeapAllocator::MaxAllocatableSize, Deallocate, AllocateForwards
+   and AllocateBackwards are declared in ExpandingHeapAllocator.h. No
+   translation unit includes this header to call the Itanium names. The
+   factory's constructor call stays in ExpandingHeapAllocator.cpp: placement
+   new measured it 0x4c -> 0x5c. */
 
 
 #ifdef __cplusplus

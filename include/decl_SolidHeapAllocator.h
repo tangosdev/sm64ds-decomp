@@ -20,12 +20,11 @@
 extern "C" {
 #endif
 
-extern unsigned int _ZN18SolidHeapAllocator10MemoryLeftEi(void*, int);
-extern void _ZN18SolidHeapAllocator10ResetStartEv(void*);
-extern void _ZN18SolidHeapAllocator5ResetEj(void*, unsigned int);
-extern void _ZN18SolidHeapAllocator8ResetEndEv(void*);
-extern void*_ZN18SolidHeapAllocator16AllocateForwardsEPvjj(void*, u32, u32);
-extern void*_ZN18SolidHeapAllocator17AllocateBackwardsEPvjj(void*, u32, u32);
+/* SolidHeapAllocator::MemoryLeft, ResetStart, Reset, ResetEnd,
+   AllocateForwards and AllocateBackwards are declared in
+   SolidHeapAllocator.h. No translation unit includes this header to call
+   the Itanium names. The factory's constructor call stays in
+   SolidHeapAllocator.cpp: placement new measured it 0x4c -> 0x5c. */
 
 
 #ifdef __cplusplus

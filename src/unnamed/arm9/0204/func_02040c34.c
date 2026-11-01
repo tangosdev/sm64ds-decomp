@@ -1,9 +1,9 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 
-/* local extern: IRQ::Disable/Restore and CP15's cache calls are C++ (IRQ.h,
-   CP15.h), and this file stays C: compiled as C++ the parent-area stores
-   CSE with `end` and come out 4 bytes longer. */
+/* local extern: IRQ::Disable/Restore and CP15::FlushAndInvalidateDataCache /
+   DrainWriteBuffer are C++ (IRQ.h, CP15.h). This file stays C: compiled as
+   C++ the parent-area stores CSE with `end` and come out 4 bytes longer. */
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern unsigned int _ZN3IRQ7RestoreEj(unsigned int);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int, unsigned int);
