@@ -66,9 +66,23 @@ void watcher_apply(int seat, unsigned char kind, unsigned char frame,
 void watcher_release(int seat);
 // DOORS9C: once per follow pass, after the last seat; gives back the door of any seat not driven lately.
 void watcher_end_pass();
+// PAINTTAG1: has this seat's ghost gone through a painting (or a floor hole,
+// or any EXIT volume) on this screen. The watcher runs the ROM exit's own
+// trigger (daChScene_c::Behavior, src/game/actors/d_a_ch_scene.cpp: inside
+// the box in the exit's local x / y, local z changes sign since last time)
+// on the ghost's drawn position against every EXIT actor (349) in this
+// level, and from that frame on answers true until the ghost is seen on the
+// side it came from again or the seat is released. pos is Fix12. Nothing on
+// the wire: an older sender is read the same way.
+// teleport: this sample is a snap (a level entry, a warp), not a step, so it
+// is no crossing; it only becomes the next frame's "last".
+bool paint_watch(int seat, const int pos[3], bool teleport);
+// The seat was not drawn this pass (gone, parked, another level): forget it.
+void paint_release(int seat);
 // Counters for the [ghost:exit] line.
 struct Stats {
     unsigned long long applied, released, no_door, yielded, restored, swept;
+    unsigned long long paint_in, paint_out, paint_frames;   // PAINTTAG1
 };
 const Stats &stats();
 

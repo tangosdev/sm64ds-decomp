@@ -874,6 +874,7 @@ struct GwSeat {
     bool      last_have;     // g_gw_last holds a sample drawn in my level / area
     int       last_lvl, last_area;
     unsigned  char_wait_ms;  // when its body first showed the wrong character
+    bool      paint;         // PAINTTAG1: through a painting on this screen (no tag)
     // GHOSTCHAR1: how this seat's ghost was posed, per follower frame
     // (gw_sample), for the exit summary. A "hold" is a frame with no newer
     // data to move to; the streak is how many of them ran back to back.
@@ -3140,6 +3141,15 @@ extern "C" int port_adventure_ghost_fade(int slot) {
     return o < i ? o : i;
 }
 
+// PAINTTAG1: 1 while a hub ghost is through a painting (or a floor hole, or
+// any EXIT volume) on this screen: tests/nametag.h draws no tag and no
+// bubble over him. 0 for every other body, so VS, solo and the rest of the
+// hub are untouched.
+extern "C" int port_adventure_ghost_tag_off(int slot) {
+    const int s = port_adventure_ghost_seat(slot);
+    return (s >= 0 && g_gw[s].paint) ? 1 : 0;
+}
+
 extern "C" unsigned port_adventure_ghost_rgb(int slot) {
     const int s = port_adventure_ghost_seat(slot);
     if (s < 0 || !g_gw[s].have_ident) return 0;
@@ -3273,6 +3283,9 @@ static void gw_exit_summary() {
                      "%llu, held back for the wrong character %llu, hub "
                      "drains during my star select %llu\n", g_gws.hid_frames,
                      g_gws.linger_frames, g_gws.char_holds, g_gws.drains);
+        std::fprintf(stderr, "[ghost:exit] paintings: %llu ghosts went through an "
+                     "exit on this screen, %llu came back out, %llu frames with "
+                     "the tag off\n", d.paint_in, d.paint_out, d.paint_frames);
     }
     std::fflush(stderr);
 }
@@ -3375,7 +3388,11 @@ void gw_follow() {
             }
         }
         if (!got) {
-            if (s >= 0) ghostdoor::watcher_release(s);
+            if (s >= 0) {
+                ghostdoor::watcher_release(s);
+                ghostdoor::paint_release(s);   // PAINTTAG1: seen again = a fresh look
+                g_gw[s].paint = false;
+            }
             gw_park_body(a);               // undriven: parked, not drawn
             continue;
         }
@@ -3394,6 +3411,11 @@ void gw_follow() {
             continue;
         }
         GwSeat &z = g_gw[s];
+        /* PAINTTAG1: has he gone through a painting (any EXIT volume) on this
+           screen. The body is drawn as before (the wall or the floor hides it,
+           as on the cartridge); only his tag goes (port_adventure_ghost_tag_off).
+           While he fades out in place the answer of his last drawn sample holds. */
+        if (!z.leaving) z.paint = ghostdoor::paint_watch(s, &sm.x, sm.teleport);
         if (!z.leaving) {
             g_gw_last[s] = sm;
             z.last_have = true;

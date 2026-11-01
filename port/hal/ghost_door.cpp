@@ -33,6 +33,8 @@ extern void *data_0209f394[];
 extern unsigned char data_0209f250;
 extern signed char data_02092120;     // the area shown (-1 none)
 extern signed char data_0209f2f8;     // the level
+extern signed char data_02092110;     // PAINTTAG1: the pending entrance (-1 none): every exit's gate
+void MulVec3Mat4x3(const void *in, const void *m, void *out);   // PAINTTAG1: the exit's local frame
 }
 
 namespace port {
@@ -497,6 +499,136 @@ void watcher_apply(int seat, unsigned char kind, unsigned char frame,
                          "cursor=%d/%d leaf=%d\n", comms_hub_now_ms(), seat,
                          (unsigned)kind, (unsigned)frame, d.door[k], f, n, k);
     }
+}
+
+// ---- PAINTTAG1: a ghost that went through a painting ------------------------
+// ON THE CARTRIDGE the player who jumps into a painting is taken by the EXIT
+// actor (349, daChScene_c): its Behavior (src/game/actors/d_a_ch_scene.cpp)
+// fires on the frame his position, in the exit's own local frame (the inverse
+// matrix at +0xd4), is inside the box (|x| <= +0x80, 0 <= y <= +0x84) and his
+// local z has changed sign since the frame before (+0x88 keeps the last z).
+// A wall painting then pins him up to 768 units behind its plane while he
+// falls, a floor hole lets him drop; either way the wall or the floor hides
+// him and the camera stays put until the load. Online the watcher still drew
+// the name tag over him, on top of everything, sliding down behind the wall.
+// The watcher runs that same test on the ghost's drawn position (the sender's
+// own body went through it 100 ms earlier) and keeps the answer until the
+// ghost is back on the side it came from (a refused course puts him back in
+// front of the painting) or the seat is released. The ROM's own gate comes
+// along: with an entrance pending (data_02092110 >= 0) no exit fires, so none
+// starts a hide either.
+namespace {
+enum { kExitActorId = 349, kPaintExits = 32, kExInv = 0xd4, kExHalfW = 0x80, kExHigh = 0x84,
+       /* THE SLACK. The ghost is drawn 100 ms behind its sender, between two of
+          his frames, so the sample that first shows him past the plane is not
+          the position the sender's own exit tested: measured on the castle's
+          Bob-omb painting (exit 0 of level 2), the jumper crossed at local
+          y 0..4 and one watcher's first sample past the plane read y -8, under
+          the box, and the hide never started. 64 units (about a stride) either
+          way on the box's sides and floor takes the in-between sample; the
+          plane itself and the sign test are the ROM's. */
+       kExSlack = 64 << 12 };
+struct PaintSeat {
+    int lvl, area;
+    const void *ex[kPaintExits];
+    int lastz[kPaintExits];
+    bool have[kPaintExits];
+    int in;          // the exit index he went through, -1 none
+};
+PaintSeat g_paint[kMaxSeats];
+bool g_paint_init = false;
+
+void paint_clear(PaintSeat &p) {
+    std::memset(&p, 0, sizeof p);
+    p.in = -1;
+    p.lvl = (int)data_0209f2f8;
+    p.area = (int)data_02092120;
+}
+
+bool paint_off_knob() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_GHOST_PAINTTAG_OFF");
+        v = (e && std::atoi(e) != 0) ? 1 : 0;
+    }
+    return v != 0;
+}
+bool paint_probe() {
+    static int v = -1;
+    if (v < 0) v = std::getenv("SM64DS_GHOST_PAINT_PROBE") ? 1 : 0;
+    return v != 0;
+}
+}  // namespace
+
+bool paint_watch(int seat, const int pos[3], bool teleport) {
+    if (seat < 0 || seat >= kMaxSeats || !pos || paint_off_knob()) return false;
+    if (!g_paint_init) {
+        for (int s = 0; s < kMaxSeats; ++s) paint_clear(g_paint[s]);
+        g_paint_init = true;
+    }
+    PaintSeat &p = g_paint[seat];
+    if (p.lvl != (int)data_0209f2f8 || p.area != (int)data_02092120) paint_clear(p);
+    const bool armed = data_02092110 < 0;
+    int n = 0;
+    for (void *a = _ZN8dActor_c4NextEPKS_(0); a && n < kPaintExits;
+         a = _ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)((const char *)a + 0x0c) != kExitActorId) continue;
+        if (p.ex[n] != a) {              // a new exit in this slot of the list
+            p.ex[n] = a;
+            p.have[n] = false;
+            if (p.in == n) p.in = -1;
+        }
+        int local[3];
+        MulVec3Mat4x3(pos, (const char *)a + kExInv, local);
+        if (paint_probe() && (local[2] >> 12) < 200 && (local[2] >> 12) > -200 &&
+            (local[0] >> 12) < 600 && (local[0] >> 12) > -600)
+            std::fprintf(stderr, "[gwpaint] t=%u seat=%d near exit %d local=%d,%d,%d "
+                         "last z %d have %d armed %d box %d x %d\n", comms_hub_now_ms(),
+                         seat, n, local[0] >> 12, local[1] >> 12, local[2] >> 12,
+                         p.lastz[n] >> 12, p.have[n] ? 1 : 0, armed ? 1 : 0,
+                         rd(a, kExHalfW) >> 12, rd(a, kExHigh) >> 12);
+        if (p.in == n) {
+            if (local[2] >= 0) {                 // back on the side he came from
+                p.in = -1;
+                ++g_stats.paint_out;
+                if (paint_probe())
+                    std::fprintf(stderr, "[gwpaint] t=%u seat=%d back out of exit %d "
+                                 "local=%d,%d,%d\n", comms_hub_now_ms(), seat, n,
+                                 local[0] >> 12, local[1] >> 12, local[2] >> 12);
+            }
+        } else if (p.in < 0 && armed && p.have[n] && !teleport) {
+            int ax = local[0] < 0 ? -local[0] : local[0];
+            if (ax <= rd(a, kExHalfW) + kExSlack && local[1] >= -kExSlack &&
+                local[1] <= rd(a, kExHigh) + kExSlack &&
+                (local[2] ^ p.lastz[n]) < 0 && local[2] < 0) {
+                /* INTO the exit only: whichever side the ROM's trigger saw him
+                   come from, its pull then drags him to local z -0x300000
+                   (mHorzSpeed), so "through" is the negative side. A sample
+                   that steps back out to the positive side (the level entry
+                   that puts a ghost in front of a painting) is no entry. */
+                p.in = n;
+                ++g_stats.paint_in;
+                if (paint_probe())
+                    std::fprintf(stderr, "[gwpaint] t=%u seat=%d through exit %d @%p "
+                                 "param=%08x local=%d,%d,%d last z %d box %d x %d\n",
+                                 comms_hub_now_ms(), seat, n, a, (unsigned)rd(a, 8),
+                                 local[0] >> 12, local[1] >> 12, local[2] >> 12,
+                                 p.lastz[n] >> 12, rd(a, kExHalfW) >> 12,
+                                 rd(a, kExHigh) >> 12);
+            }
+        }
+        p.lastz[n] = local[2];
+        p.have[n] = true;
+        ++n;
+    }
+    if (p.in >= n) p.in = -1;            // that exit is gone from the list
+    if (p.in >= 0) ++g_stats.paint_frames;
+    return p.in >= 0;
+}
+
+void paint_release(int seat) {
+    if (seat < 0 || seat >= kMaxSeats || !g_paint_init) return;
+    paint_clear(g_paint[seat]);
 }
 
 }  // namespace ghostdoor
