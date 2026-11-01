@@ -1371,10 +1371,6 @@
       ]
     },
     "MulVec3Mat4x3": {
-      "src/engine/collision/d_clipper.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const Matrix4x3 *"
-      ],
       "src/engine/view/d_camera.cpp": [
         "param:#2 const void *"
       ],
@@ -1409,22 +1405,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_obj_cannon_shutter.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const Matrix4x3 *"
-      ],
-      "src/game/actors/d_a_obj_ct_mecha05.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const Matrix4x3 *"
-      ],
-      "src/game/actors/d_a_obj_cv_news_lift.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const Matrix4x3 *"
-      ],
-      "src/game/actors/d_a_obj_fl_koma_u.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const Matrix4x3 *"
-      ],
       "src/game/actors/d_a_obj_flamethrower.cpp": [
         "param:#1 int *",
         "param:#3 int *"
@@ -1432,10 +1412,6 @@
       "src/game/actors/d_a_obj_kurumajiku.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_snm_bth.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const Matrix4x3 *"
       ],
       "src/game/actors/d_a_water_hakidasi.cpp": [
         "param:#1 Vec3 *",
@@ -1448,26 +1424,6 @@
       "src/game/actors/d_a_yurei_mucho.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
-      ],
-      "src/unnamed/arm9/0204/func_0204b460.c": [
-        "param:#1 Vec3 *",
-        "param:#2 int *",
-        "param:#3 Vec3 *"
-      ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
-        "param:#1 Vec3 *",
-        "param:#2 int *",
-        "param:#3 Vec3 *"
-      ],
-      "src/unnamed/arm9/0204/func_0204bbd8.c": [
-        "param:#1 Vec3 *",
-        "param:#2 int *",
-        "param:#3 Vec3 *"
-      ],
-      "src/unnamed/arm9/0204/func_0204be40.c": [
-        "param:#1 Vec3 *",
-        "param:#2 int *",
-        "param:#3 Vec3 *"
       ]
     },
     "MultiCopyHalf": {

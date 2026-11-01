@@ -57,7 +57,7 @@ void AddVec3(Vector3 *, Vector3 *, Vector3 *);
 int DecIfAbove0_Byte(void *);
 s32 RandomIntInternal(s32 *);
 void Vec3_Asr(Vector3 *, Vector3 *, int);
-void MulVec3Mat4x3(const Vector3 *, const Matrix4x3 *, Vector3 *);
+void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 void Vec3_LslInPlace(Vector3 *, int);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
