@@ -84,13 +84,6 @@ void StopLoadedMusic_Layer3(void);
 
 struct CLPS_Block;
 
-/* Carried from func_ov079_02123f34's legacy file, where it is load-bearing
-   (without it that loop is strength-reduced and every word differs). The
-   pragma is file-global last-wins under deferred codegen and a push/pop
-   bracket around the one function does not bind; file-wide it moves no
-   other member. */
-#pragma opt_strength_reduction off
-
 /* One 0x30-byte block copy. Matrix4x3's own assignment goes member by
    member through Vector3 and comes out longer. */
 struct MatrixWords { s32 w[12]; };

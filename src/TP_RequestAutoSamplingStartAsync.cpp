@@ -10,7 +10,6 @@ int PXI_SendWordByFifo(unsigned int a, unsigned int c, unsigned int b);
 }
 
 
-#pragma opt_strength_reduction off
 extern "C" void TP_RequestAutoSamplingStartAsync(unsigned int vcount, unsigned int frequency,
                                                  int samplingBufs, unsigned int bufSize) {
     unsigned int i;

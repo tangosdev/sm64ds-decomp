@@ -1,5 +1,4 @@
 #include "types.h"
-#pragma opt_loop_invariants off
 
 /* RFC 3174 SHA1Context, as func_0205e3d4.c and func_0205e89c.c spell it, with
  * the 32-bit block index this build stores. */

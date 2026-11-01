@@ -470,10 +470,9 @@ void __num2dec_internal(char *out, double x) {
 
 /* MSL __num2dec: convert x to a Decimal of at most f->digits significant
  * digits (capped at 32), then turn the digit values into ASCII. decform is
- * MSL's layout, as in float2str.c, which calls this. The pragma covers only
- * this function: it is the last one in the file. */
+ * MSL's layout, as in float2str.c, which calls this.
+ */
 // @symbol __num2dec
-#pragma opt_strength_reduction off
 void __num2dec(void *a0, double x, void *d) {
     int n;
     Decimal *c = (Decimal *)d;

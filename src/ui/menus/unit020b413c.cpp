@@ -60,7 +60,6 @@
 #include "Ov007Item.h"
 #include "Ov007Pad.h"
 
-#pragma opt_loop_invariants off
 
 /* The 0xc-byte item rows starting at data_ov007_020d77d8. Their columns
  * are separate ROM symbols (data_ov007_020d77d8 hit-box index,
