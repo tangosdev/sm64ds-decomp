@@ -138,6 +138,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "dCamera_c.h"
 #include "daShl_c.h"
 #include "nitro/fx/fx.h"
+#include "Particle__System.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -216,11 +217,7 @@ void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
 extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
                                       void *clps);
 extern void func_ov102_0214ad14(void *actor);
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned id, int x, int y, int z);
-};
-}
+
 
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
