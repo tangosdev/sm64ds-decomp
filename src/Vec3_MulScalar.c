@@ -1,7 +1,7 @@
 #include "nitro/fx/fx.h"
-typedef struct { int x, y, z; } Vec3_Fix12;
+#include "types.h"
 
-void Vec3_MulScalar(Vec3_Fix12 *out, const Vec3_Fix12 *in, int scale)
+void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale)
 {
     int rz = FX_MUL(in->z, scale);
     int ry = FX_MUL(in->y, scale);

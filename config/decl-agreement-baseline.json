@@ -3005,15 +3005,7 @@
       ]
     },
     "Vec3_HorzAngle": {
-      "src/_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_iwante.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/runtime/actor/d_enemy_base.cpp": [
+      "src/engine/view/d_camera.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ],
@@ -3029,6 +3021,10 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
+      "src/game/actors/d_a_btn.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
+      ],
       "src/game/actors/d_a_c_jugem.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -3041,27 +3037,31 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
+      "src/game/actors/d_a_holhei.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
+      ],
+      "src/game/actors/d_a_iwante.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
+      ],
+      "src/game/actors/d_a_kinopio.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
+      ],
       "src/game/actors/d_a_mip.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_mky.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
+      "src/game/actors/d_a_obj_c1_trap.cpp": [
+        "param:#1 const TrapVector3 *",
+        "param:#2 const TrapVector3 *"
       ],
       "src/game/actors/d_a_obj_closet.cpp": [
         "param:#1 const Vec3Raw *",
         "param:#2 const Vec3Raw *"
       ],
-      "src/game/actors/d_a_obj_sm_lift.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_owl.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_peach.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ],
@@ -3084,40 +3084,12 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/engine/view/d_camera.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *",
-        "param:#1 const struct Vector3 *",
-        "param:#2 const struct Vector3 *",
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
-      "src/game/actors/d_a_btn.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_holhei.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_kinopio.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_obj_c1_trap.cpp": [
-        "param:#1 const TrapVector3 *",
-        "param:#2 const TrapVector3 *"
-      ],
-      "src/_ZN7daPly_c19func_ov002_020d708cEv.cpp": [
+      "src/runtime/actor/d_enemy_base.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ]
     },
     "Vec3_HorzDist": {
-      "src/_ZN9dBgCh_Gnd10DetectClsnEv.cpp": [
-        "param:#1 Vec3 *",
-        "param:#2 Vec3 *"
-      ],
       "src/engine/view/d_camera.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -3162,18 +3134,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_obj_sm_lift.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_obj_tatefuda.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
-      "src/game/actors/d_a_peach.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_sanbo.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -3187,10 +3147,6 @@
         "param:#2 const void *"
       ],
       "src/game/actors/d_a_yegg.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/runtime/actor/d_path_lift_actor.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ]
@@ -3267,16 +3223,12 @@
       ]
     },
     "Vec3_MulScalar": {
-      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
-        "param:#1 Vec3 *",
-        "param:#1 Vector3 *",
-        "param:#2 Vec3 *",
-        "param:#2 Vector3 *",
-        "param:#2 const Vec3 *"
+      "src/Vec3_ApproachHorz.cpp": [
+        "param:#1 Vec3_Fix12 *",
+        "param:#2 const Vec3_Fix12 *"
       ],
-      "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *"
+      "src/engine/view/d_camera.cpp": [
+        "param:#2 const void *"
       ],
       "src/game/actors/d_a_demo.cpp": [
         "param:#1 Vec3 *",
@@ -3288,34 +3240,13 @@
       "src/game/actors/d_a_mip.cpp": [
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_obj_ewm_ice_block.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
-      "src/game/actors/d_a_snowman.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
       "src/game/actors/d_a_wanwan2.cpp": [
         "param:#2 const void *"
       ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#2 const Vector3 *"
-      ],
-      "src/engine/view/d_camera.cpp": [
-        "param:#2 const void *",
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *"
-      ],
-      "src/game/actors/d_a_obj_wl_polelift.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
-      "src/_ZN7daPly_c19func_ov002_020d98b4Ev.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
+      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
+        "param:#1 Vec3 *",
+        "param:#2 Vec3 *",
+        "param:#2 const Vec3 *"
       ]
     },
     "Vec3_MulScalarInPlace": {

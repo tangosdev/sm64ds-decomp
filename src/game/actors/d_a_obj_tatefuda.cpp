@@ -173,7 +173,7 @@ extern s16 data_02082214[];
 extern u8 data_0209d660;
 extern u8 data_0209d6bc;
 extern u8 data_0209f284;
-extern s32 Vec3_HorzDist(struct Vector3 *a, struct Vector3 *b);
+extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern void func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsigned short e);
 extern "C" unsigned int data_0209b454;

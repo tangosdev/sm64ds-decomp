@@ -51,7 +51,7 @@ extern "C" {
 u16 DecIfAbove0_Short(u16 *timer);
 void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 int LenVec3(Vector3 *v);
-void Vec3_MulScalar(Vector3 *out, Vector3 *a, int scale);
+void Vec3_MulScalar(Vector3 *out, const Vector3 *a, int scale);
 void SubVec3(Vector3 *out, Vector3 *a, Vector3 *b);
 void Matrix4x3_FromRotationY(void *mtx, int angleY);
 

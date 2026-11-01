@@ -1526,7 +1526,7 @@ extern "C" void Heyho_Update(struct Foo *c){
 namespace n020c4c54 {
 // @symbol Heyho_Draw
 
-extern "C" void Vec3_MulScalar(Vector3 *res, Vector3 *v, int scalar);
+extern "C" void Vec3_MulScalar(Vector3 *res, const Vector3 *v, int scalar);
 extern "C" void Heyho_Draw(int this_) {
     Vector3 v;
     int *p = HEYHO(this_)->mMotion;

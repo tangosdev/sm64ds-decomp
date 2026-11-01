@@ -103,7 +103,7 @@ extern unsigned d_a_snowmanNewHold(unsigned a, unsigned b, int c, int d, int e, 
 extern void Vec3_Sub(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);
 extern int LenVec3(struct Vector3 *v);
 extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
-extern void Vec3_MulScalar(struct Vector3 *out, struct Vector3 *in, int s);
+extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);

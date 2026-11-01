@@ -16741,7 +16741,7 @@ int daPly_c::St_Hurt_Main() {
 extern "C" {
 void daPly_c::func_ov002_020d98b4() {
     extern void MulVec3Mat4x3(void *a, void *b, Vector3 *out);
-    extern void Vec3_MulScalar(Vector3 * out, Vector3 * in, int s);
+    extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
     extern u32 PlayerNewHold14(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
     int t = this->func_ov002_020beb38();
