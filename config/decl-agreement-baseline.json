@@ -11662,11 +11662,6 @@
         "return:int []"
       ]
     },
-    "sRouletteTiles": {
-      "src/unnamed/ov006/__sinit_ov006_021322bc.c": [
-        "return:TileXY"
-      ]
-    },
     "sSoundPop10Table": {
       "src/unnamed/ov006/__sinit_ov006_02132970.c": [
         "return:Ent []"

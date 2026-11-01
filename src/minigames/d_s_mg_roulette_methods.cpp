@@ -41,6 +41,7 @@ enum dScMgRoulette_c_AssetId {
 
 #include "common.h"
 #include "types.h"
+#include "Vector2.h"
 #include "dScMgRoulette_c.h"
 #include "dExtSimpleModel_c.h"
 #include "decl_common.h"
@@ -72,9 +73,9 @@ struct Pair2W {
     int w[2];
 };
 
-/* The board's tile centres: sRouletteTiles holds x and
-   sRouletteTilePos the same array offset to y, stride 8. decl_common.h
-   types both as `char[]`, so every read casts. */
+/* The board's tile centres. sRouletteTiles is the Vector2 array below;
+   sRouletteTilePos is that array's y, stride 8. decl_common.h types the
+   y view as `char[]`, so every read casts. */
 struct TileXY {
     int x, y;
 };
@@ -152,6 +153,26 @@ void LoadBGPltt(const void *data, unsigned int offset, unsigned int size);
 void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
 }
 
+/* Thirty-seven tile centres. mwcc emits __sinit_d_s_mg_roulette_methods.cpp
+   from this array: each Vector2(x, y) is two stores and a ~Vector2()
+   registration, in this order. The centres are 20.12 positions. */
+Vector2 sRouletteTiles[37] = {
+    Vector2(0x70000, 0x24000), Vector2(0xa0000, 0x24000), Vector2(0xd0000, 0x24000),
+    Vector2(0x70000, 0x4c000), Vector2(0xa0000, 0x4c000), Vector2(0xd0000, 0x4c000),
+    Vector2(0x70000, 0x74000), Vector2(0xa0000, 0x74000), Vector2(0xd0000, 0x74000),
+    Vector2(0x70000, 0x9c000), Vector2(0xa0000, 0x9c000), Vector2(0xd0000, 0x9c000),
+    Vector2(0x88000, 0x24000), Vector2(0xb8000, 0x24000),
+    Vector2(0x88000, 0x4c000), Vector2(0xb8000, 0x4c000),
+    Vector2(0x88000, 0x74000), Vector2(0xb8000, 0x74000),
+    Vector2(0x88000, 0x9c000), Vector2(0xb8000, 0x9c000),
+    Vector2(0x70000, 0x38000), Vector2(0xa0000, 0x38000), Vector2(0xd0000, 0x38000),
+    Vector2(0x70000, 0x60000), Vector2(0xa0000, 0x60000), Vector2(0xd0000, 0x60000),
+    Vector2(0x70000, 0x88000), Vector2(0xa0000, 0x88000), Vector2(0xd0000, 0x88000),
+    Vector2(0x88000, 0x38000), Vector2(0xb8000, 0x38000),
+    Vector2(0x88000, 0x60000), Vector2(0xb8000, 0x60000),
+    Vector2(0x88000, 0x88000), Vector2(0xb8000, 0x88000),
+    Vector2(0x38000, 0x38000), Vector2(0x38000, 0x88000),
+};
 
 extern "C" {
 
@@ -167,12 +188,8 @@ void *LoadFile(int id);
 void DecompressLZ16(void *src, int dst);
 void Ov004_Deallocate(void *p);
 void FreeGfxSlotsById(int a);
-/* local extern: declared only in the sibling scene headers (dScMgAmida_c.h,
-   dScMgSmartball_c.h, ...), none of which this TU includes. */
-void NullDestructor_0203d47c(void);
 void Camera_UpdateMatrices(char *cam);
 
-void __register_global_object(void *object, void *destructor, void **node);
 void func_0203d680(Vec2_Fix12 *out, const Vec2_Fix12 *in, int scale);
 void *Ov004_LoadFile(int id);
 void Mg_LoseCredits(int c);
@@ -189,9 +206,10 @@ void Dealer_Draw(char *c);
 void Dealer_Update(Dealer *dealer);
 int Dealer_Load(char *c);
 
-extern int sRouletteResultsTimer;
+int sRouletteResultsTimer;
 extern int sRouletteResultIndex;
-extern char *sRouletteStrips[];
+char *sRouletteStrips[4];
+void *sRouletteLandedRacer;
 extern int data_020a0db0;
 extern s32 data_ov006_0212ed24[];
 extern void *sRouletteStripSprites[];
@@ -213,9 +231,6 @@ extern short data_ov006_0212ed88[];
 extern short data_ov006_0212ed8a[];
 extern short data_ov006_0212ed8c[];
 extern short data_ov006_0212ed8e[];
-extern int sRouletteRacerGoalGuard;
-extern int sRouletteRacerGoal[];
-extern void *sRouletteRacerGoalDtorRec;
 extern s32 sMgCoinRiseFrames;
 extern u16 gMgCoinsStatus;
 extern u8 data_0209d45c;
@@ -835,23 +850,11 @@ void RouletteRacer_MoveToTile(RacerPos *racer, int tile) {
 }
 
 // @symbol RouletteRacer_Init
-/* sRouletteRacerGoal is a function-local `static Vector2 goal(0xc000, 0xc000)`
-   spelled out by hand. Written that way it is byte-identical (measured
-   2026-10-25), but the compiler then emits the object, its guard and its
-   registration node as this TU's own .bss, and this text-only TU owns none:
-   the three sit at 0x021428cc/0x021428d4/0x02142948, among the
-   __sinit_ov006_021322bc globals' nodes. */
+/* First call builds the goal at (0xc000, 0xc000) and registers ~Vector2. */
 extern "C" {
 void RouletteRacer_Init(void *racer) {
-    int b = sRouletteRacerGoalGuard & 1;
-    if (b == 0) {
-        sRouletteRacerGoal[0] = 0xc000;
-        sRouletteRacerGoal[1] = 0xc000;
-        __register_global_object(sRouletteRacerGoal, (void *)NullDestructor_0203d47c,
-                                 &sRouletteRacerGoalDtorRec);
-        sRouletteRacerGoalGuard |= 1;
-    }
-    RouletteRacer_SetVelocityToward((int *)racer, sRouletteRacerGoal, 0x80);
+    static Vector2 sRouletteRacerGoal(0xc000, 0xc000);
+    RouletteRacer_SetVelocityToward((int *)racer, (int *)&sRouletteRacerGoal, 0x80);
     ((RouletteRacer *)racer)->state = 7;
 }
 }
@@ -955,8 +958,8 @@ void RouletteRacer_Update(RouletteRacer *racer) {
                 if (b == false)
                     goto no_table;
             use_table:
-                RouletteRacer_SetVelocityToward((int *)racer, (int *)&sRouletteTiles[type * 8],
-                                                0x100);
+                RouletteRacer_SetVelocityToward((int *)racer,
+                                                (int *)&((TileXY *)sRouletteTiles)[type], 0x100);
                 goto snd;
             no_table:
                 RouletteRacer_MoveToTile((RacerPos *)racer, type);

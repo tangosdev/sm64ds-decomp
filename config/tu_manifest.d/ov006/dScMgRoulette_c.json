@@ -20,6 +20,21 @@
       "name": ".text",
       "start": "0x0210788c",
       "end": "0x0210a400"
+    },
+    {
+      "name": ".init",
+      "start": "0x021322bc",
+      "end": "0x02132894"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021335cc",
+      "end": "0x021335d0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x021428c8",
+      "end": "0x02142bdc"
     }
   ],
   "functions": [
@@ -305,7 +320,316 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "sRouletteLandedRacer",
+      "address": "0x021428c8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "racer that has settled on a tile; Behavior clears it when a racer is placed"
+    },
+    {
+      "symbol": "sRouletteRacerGoalGuard",
+      "address": "0x021428cc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard of RouletteRacer_Init's function-local Vector2 (emitted _ZGVsRouletteRacerGoal$864)"
+    },
+    {
+      "symbol": "sRouletteResultsTimer",
+      "address": "0x021428d0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "frames left before the next payout strip is shown"
+    },
+    {
+      "symbol": "sRouletteRacerGoal",
+      "address": "0x021428d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "RouletteRacer_Init's function-local Vector2(0xc000, 0xc000) (emitted sRouletteRacerGoal$864)"
+    },
+    {
+      "symbol": "@176",
+      "address": "0x021428dc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @397)"
+    },
+    {
+      "symbol": "@177",
+      "address": "0x021428e8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @445)"
+    },
+    {
+      "symbol": "@448",
+      "address": "0x021428f4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @448)"
+    },
+    {
+      "symbol": "@451",
+      "address": "0x02142900",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @451)"
+    },
+    {
+      "symbol": "@178",
+      "address": "0x0214290c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @442)"
+    },
+    {
+      "symbol": "@436",
+      "address": "0x02142918",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @436)"
+    },
+    {
+      "symbol": "@430",
+      "address": "0x02142924",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @430)"
+    },
+    {
+      "symbol": "@179",
+      "address": "0x02142930",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @424)"
+    },
+    {
+      "symbol": "@180",
+      "address": "0x0214293c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @418)"
+    },
+    {
+      "symbol": "@181",
+      "address": "0x02142948",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of the function-local goal Vector2 (emitted @867)"
+    },
+    {
+      "symbol": "@244",
+      "address": "0x02142954",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @454)"
+    },
+    {
+      "symbol": "@245",
+      "address": "0x02142960",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @466)"
+    },
+    {
+      "symbol": "@246",
+      "address": "0x0214296c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @472)"
+    },
+    {
+      "symbol": "@247",
+      "address": "0x02142978",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @475)"
+    },
+    {
+      "symbol": "@478",
+      "address": "0x02142984",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @478)"
+    },
+    {
+      "symbol": "@385",
+      "address": "0x02142990",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @385)"
+    },
+    {
+      "symbol": "@248",
+      "address": "0x0214299c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @481)"
+    },
+    {
+      "symbol": "@249",
+      "address": "0x021429a8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @373)"
+    },
+    {
+      "symbol": "@250",
+      "address": "0x021429b4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @469)"
+    },
+    {
+      "symbol": "@251",
+      "address": "0x021429c0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @376)"
+    },
+    {
+      "symbol": "@252",
+      "address": "0x021429cc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @463)"
+    },
+    {
+      "symbol": "@254",
+      "address": "0x021429d8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @460)"
+    },
+    {
+      "symbol": "@255",
+      "address": "0x021429e4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @457)"
+    },
+    {
+      "symbol": "@256",
+      "address": "0x021429f0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @382)"
+    },
+    {
+      "symbol": "@257",
+      "address": "0x021429fc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @379)"
+    },
+    {
+      "symbol": "@258",
+      "address": "0x02142a08",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @388)"
+    },
+    {
+      "symbol": "@268",
+      "address": "0x02142a14",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @391)"
+    },
+    {
+      "symbol": "@269",
+      "address": "0x02142a20",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @394)"
+    },
+    {
+      "symbol": "@439",
+      "address": "0x02142a2c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @439)"
+    },
+    {
+      "symbol": "@270",
+      "address": "0x02142a38",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @400)"
+    },
+    {
+      "symbol": "@433",
+      "address": "0x02142a44",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @433)"
+    },
+    {
+      "symbol": "@271",
+      "address": "0x02142a50",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @403)"
+    },
+    {
+      "symbol": "@272",
+      "address": "0x02142a5c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @427)"
+    },
+    {
+      "symbol": "@274",
+      "address": "0x02142a68",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @406)"
+    },
+    {
+      "symbol": "@279",
+      "address": "0x02142a74",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @421)"
+    },
+    {
+      "symbol": "@280",
+      "address": "0x02142a80",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @409)"
+    },
+    {
+      "symbol": "@415",
+      "address": "0x02142a8c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @415)"
+    },
+    {
+      "symbol": "@281",
+      "address": "0x02142a98",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "registration node of one sRouletteTiles element (emitted @412)"
+    },
+    {
+      "symbol": "sRouletteStrips",
+      "address": "0x02142aa4",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four payout strips filled by RouletteStrip_LinkAll"
+    },
+    {
+      "symbol": "sRouletteTiles",
+      "address": "0x02142ab4",
+      "size": "0x128",
+      "binding": "STB_GLOBAL",
+      "evidence": "thirty-seven tile centres, Vector2 x/y, 20.12"
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold RouletteResults_Tick and the one that held RouletteBoard_StateSlow; kept the first, the other is commented out for review -- RESOLVED: one declaration, `int _Z14ApproachLinearRiii(int &v, int a, int b)`, which is the signature the mangled name itself proves (Riii). The three files that spelled the first parameter `int *` dereference at the call site; bytes unchanged.",
@@ -333,26 +657,29 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RouletteRacer_MoveToTile' differs between the legacy file that used to hold RouletteRacer_Update and the one that held _ZN15dScMgRoulette_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: it takes TWO parameters, `(RacerPos *self, int idx)`. Behavior's legacy file declared it one-parameter and called it with one argument; the cartridge at 0x02109d60 does `mov r0, r8; bl 0x210935c` with the tile type already live in r1 from the `ldrsh r1, [r1, #0xd4]` at 0x02109d08, so the second argument is real and simply free. Passing it explicitly costs nothing -- Behavior still matches byte for byte.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Camera_InitDealerView' differs between the legacy file that used to hold _ZN15dScMgRoulette_c6RenderEv and the one that held _ZN15dScMgRoulette_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one declaration, `void Camera_InitDealerView(char *)`; the two spellings were identical apart from the parameter name.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold RouletteBoard_Update and the one that held RouletteBoard_FreeModels; kept the first, the other is commented out for review -- RESOLVED: the two `struct Obj` were unrelated types. Renamed to `ObjV` (the 4-virtual subobject RouletteBoard_Update dispatches through) and `ResPair` (the two BMD file pointers RouletteBoard_FreeModels frees).",
-    "PROOF/SOURCE BINDING. verification.linkcheck was recorded against the shadow arrangement (source src_tu/actors/d_s_mg_roulette_methods.cpp, the 40 shard entries still in config/arm9/overlays/ov006/delinks.txt) -- the only arrangement in which linkcheck can run, since once the promoted src/ path is enrolled in delinks.txt tubuild routes the candidate to the intact-object production path, which refuses a text-only TU ('intact production requires one .text claim and at least one non-text claim'). Every promoted text-only entry in this module carries a pre-splice record for the same reason -- compare ov006/dScMgSingle3DBase_c and ov006/dScMgD3DBase_c, whose phase maps are identical to this one down to checkSymbols:false and the same nine baseline symbol errors. The source was edited AFTER that run (the two inert shard pragmas were removed, see boundary_evidence), so the binding was re-proved rather than assumed: compiling the TU with and without those pragma lines yields the SAME raw object, sha256 9569de726c9193c1b70f0414aee978a432b7124bcf187dfc4995ab533b565be3, 29744 bytes. The recorded link and ROM evidence is a function of that object, so it applies verbatim to the source that ships."
+    "PROOF/SOURCE BINDING. verification.linkcheck was recorded against the shadow arrangement (source src_tu/actors/d_s_mg_roulette_methods.cpp, the 40 shard entries still in config/arm9/overlays/ov006/delinks.txt) -- the only arrangement in which linkcheck can run, since once the promoted src/ path is enrolled in delinks.txt tubuild routes the candidate to the intact-object production path, which refuses a text-only TU ('intact production requires one .text claim and at least one non-text claim'). Every promoted text-only entry in this module carries a pre-splice record for the same reason -- compare ov006/dScMgSingle3DBase_c and ov006/dScMgD3DBase_c, whose phase maps are identical to this one down to checkSymbols:false and the same nine baseline symbol errors. The source was edited AFTER that run (the two inert shard pragmas were removed, see boundary_evidence), so the binding was re-proved rather than assumed: compiling the TU with and without those pragma lines yields the SAME raw object, sha256 9569de726c9193c1b70f0414aee978a432b7124bcf187dfc4995ab533b565be3, 29744 bytes. The recorded link and ROM evidence is a function of that object, so it applies verbatim to the source that ships.",
+    "SINIT FOLDED: __sinit_ov006_021322bc is this TU's __sinit_d_s_mg_roulette_methods.cpp. The thirty-seven tile centres are Vector2 sRouletteTiles[37], each registered with ~Vector2 (NullDestructor_0203d47c). Their 12-byte nodes interleave with sRouletteLandedRacer, sRouletteResultsTimer, sRouletteStrips and RouletteRacer_Init's function-local goal, so those objects are defined here and the .bss claim is 0x021428c8..0x02142bdc. sRouletteTilePos and the data_ov006_02142a* words stay symbols.txt labels inside the array."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgRoulette_c/dScMgRoulette_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgRoulette_c/d_s_mg_roulette_methods.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 40,
     "functions_declared": 40,
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
+      "requested": [
+        "_ZN13RouletteRacerD2Ev",
+        "_ZN7Vector2D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN13RouletteRacerD2Ev",
+        "_ZN7Vector2D1Ev"
+      ],
       "droppedSections": [
-        5,
-        6,
-        7,
         8,
         9,
-        10,
         11,
         12,
         13,
@@ -360,13 +687,19 @@
         15,
         16,
         17,
-        18,
-        19,
-        20,
-        21,
-        22,
         23,
-        24
+        24,
+        27,
+        28,
+        42,
+        43,
+        62,
+        64,
+        65,
+        66,
+        67,
+        73,
+        123
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -397,18 +730,29 @@
         "_ZTS7fBase_c",
         "_ZTS8dScene_c",
         "_ZTV15dScMgRoulette_c"
+      ],
+      "canonicalDuplicates": [
+        {
+          "symbol": "_ZN7Vector2D1Ev",
+          "canonicalSymbol": "NullDestructor_0203d47c",
+          "module": "arm9",
+          "address": "0x0203d47c",
+          "size": 4,
+          "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": 0
+        }
       ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov006-dScMgRoulette_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -416,7 +760,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -432,19 +776,301 @@
           "end": "0x0210a400",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x021322bc",
+          "end": "0x02132894",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021335cc",
+          "end": "0x021335d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x021428c8",
+          "end": "0x02142bdc",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 40
+          "LICENSED": 86
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              148
+            ],
+            "desired": [
+              148
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              146
+            ],
+            "desired": [
+              146
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              10,
+              18,
+              19,
+              20,
+              21,
+              22,
+              25,
+              26,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              63,
+              68
+            ],
+            "desired": [
+              7,
+              6,
+              5,
+              10,
+              58,
+              47,
+              49,
+              39,
+              45,
+              41,
+              40,
+              26,
+              51,
+              21,
+              38,
+              19,
+              32,
+              31,
+              30,
+              61,
+              29,
+              18,
+              33,
+              36,
+              35,
+              20,
+              37,
+              50,
+              22,
+              34,
+              60,
+              59,
+              44,
+              57,
+              46,
+              56,
+              48,
+              55,
+              25,
+              54,
+              52,
+              53,
+              63,
+              68
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                10,
+                18,
+                19,
+                20,
+                21,
+                22,
+                25,
+                26,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                63,
+                68
+              ],
+              "desired": [
+                7,
+                6,
+                5,
+                10,
+                58,
+                47,
+                49,
+                39,
+                45,
+                41,
+                40,
+                26,
+                51,
+                21,
+                38,
+                19,
+                32,
+                31,
+                30,
+                61,
+                29,
+                18,
+                33,
+                36,
+                35,
+                20,
+                37,
+                50,
+                22,
+                34,
+                60,
+                59,
+                44,
+                57,
+                46,
+                56,
+                48,
+                55,
+                25,
+                54,
+                52,
+                53,
+                63,
+                68
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                10,
+                18,
+                19,
+                20,
+                21,
+                22,
+                25,
+                26,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                63,
+                68
+              ]
+            }
+          ],
+          "symbolIndices": 44,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -454,7 +1080,7 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
       "linkerOutput": null
@@ -556,7 +1182,1577 @@
       "symbol": "_ZN13RouletteRacerD2Ev",
       "disposition": "deadstrip",
       "reason": "Base-object destructor emitted beside D1 by the out-of-line RouletteRacer::~RouletteRacer(). The cartridge carries only D1 at 0x021079c8 (size 0x4), directly followed by RouletteResults_Draw at 0x021079cc, and both the factory's __cxa_vec_ctor and the scene destructor's __cxa_vec_cleanup take the D1 address, so D2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN7Vector2D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "NullDestructor_0203d47c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d47c",
+      "reason": "sRouletteTiles and the function-local goal register ~Vector2(). include/Vector2.h defines that destructor inline, so this TU emits a 4-byte copy; the body is NullDestructor_0203d47c at 0x0203d47c."
     }
   ],
-  "externalized_output": []
+  "externalized_output": [],
+  "production_mode": "intact-object",
+  "init": [
+    {
+      "symbol": "__sinit_d_s_mg_roulette_methods.cpp",
+      "address": "0x021322bc",
+      "size": "0x5d8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated initializer of sRouletteTiles, raw-byte-identical to retail __sinit_ov006_021322bc"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_s_mg_roulette_methods.cpp",
+      "address": "0x021335cc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "constructor-table word relocates to __sinit_d_s_mg_roulette_methods.cpp"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@373",
+      "to": "@249",
+      "evidence": "mwcc emits @373, already defined in another module. @249 is unused and no longer."
+    },
+    {
+      "from": "@376",
+      "to": "@251",
+      "evidence": "mwcc emits @376, already defined in another module. @251 is unused and no longer."
+    },
+    {
+      "from": "@379",
+      "to": "@257",
+      "evidence": "mwcc emits @379, already defined in another module. @257 is unused and no longer."
+    },
+    {
+      "from": "@382",
+      "to": "@256",
+      "evidence": "mwcc emits @382, already defined in another module. @256 is unused and no longer."
+    },
+    {
+      "from": "@388",
+      "to": "@258",
+      "evidence": "mwcc emits @388, already defined in another module. @258 is unused and no longer."
+    },
+    {
+      "from": "@391",
+      "to": "@268",
+      "evidence": "mwcc emits @391, already defined in another module. @268 is unused and no longer."
+    },
+    {
+      "from": "@394",
+      "to": "@269",
+      "evidence": "mwcc emits @394, already defined in another module. @269 is unused and no longer."
+    },
+    {
+      "from": "@397",
+      "to": "@176",
+      "evidence": "mwcc emits @397, already defined in another module. @176 is unused and no longer."
+    },
+    {
+      "from": "@400",
+      "to": "@270",
+      "evidence": "mwcc emits @400, already defined in another module. @270 is unused and no longer."
+    },
+    {
+      "from": "@403",
+      "to": "@271",
+      "evidence": "mwcc emits @403, already defined in another module. @271 is unused and no longer."
+    },
+    {
+      "from": "@406",
+      "to": "@274",
+      "evidence": "mwcc emits @406, already defined in another module. @274 is unused and no longer."
+    },
+    {
+      "from": "@409",
+      "to": "@280",
+      "evidence": "mwcc emits @409, already defined in another module. @280 is unused and no longer."
+    },
+    {
+      "from": "@412",
+      "to": "@281",
+      "evidence": "mwcc emits @412, already defined in another module. @281 is unused and no longer."
+    },
+    {
+      "from": "@418",
+      "to": "@180",
+      "evidence": "mwcc emits @418, already defined in another module. @180 is unused and no longer."
+    },
+    {
+      "from": "@421",
+      "to": "@279",
+      "evidence": "mwcc emits @421, already defined in another module. @279 is unused and no longer."
+    },
+    {
+      "from": "@424",
+      "to": "@179",
+      "evidence": "mwcc emits @424, already defined in another module. @179 is unused and no longer."
+    },
+    {
+      "from": "@427",
+      "to": "@272",
+      "evidence": "mwcc emits @427, already defined in another module. @272 is unused and no longer."
+    },
+    {
+      "from": "@442",
+      "to": "@178",
+      "evidence": "mwcc emits @442, already defined in another module. @178 is unused and no longer."
+    },
+    {
+      "from": "@445",
+      "to": "@177",
+      "evidence": "mwcc emits @445, already defined in another module. @177 is unused and no longer."
+    },
+    {
+      "from": "@454",
+      "to": "@244",
+      "evidence": "mwcc emits @454, already defined in another module. @244 is unused and no longer."
+    },
+    {
+      "from": "@457",
+      "to": "@255",
+      "evidence": "mwcc emits @457, already defined in another module. @255 is unused and no longer."
+    },
+    {
+      "from": "@460",
+      "to": "@254",
+      "evidence": "mwcc emits @460, already defined in another module. @254 is unused and no longer."
+    },
+    {
+      "from": "@463",
+      "to": "@252",
+      "evidence": "mwcc emits @463, already defined in another module. @252 is unused and no longer."
+    },
+    {
+      "from": "@466",
+      "to": "@245",
+      "evidence": "mwcc emits @466, already defined in another module. @245 is unused and no longer."
+    },
+    {
+      "from": "@469",
+      "to": "@250",
+      "evidence": "mwcc emits @469, already defined in another module. @250 is unused and no longer."
+    },
+    {
+      "from": "@472",
+      "to": "@246",
+      "evidence": "mwcc emits @472, already defined in another module. @246 is unused and no longer."
+    },
+    {
+      "from": "@475",
+      "to": "@247",
+      "evidence": "mwcc emits @475, already defined in another module. @247 is unused and no longer."
+    },
+    {
+      "from": "@481",
+      "to": "@248",
+      "evidence": "mwcc emits @481, already defined in another module. @248 is unused and no longer."
+    },
+    {
+      "from": "@867",
+      "to": "@181",
+      "evidence": "mwcc emits @867, already defined in another module. @181 is unused and no longer."
+    },
+    {
+      "from": "_ZGVsRouletteRacerGoal$864",
+      "to": "sRouletteRacerGoalGuard",
+      "evidence": "function-local guard emitted as _ZGVsRouletteRacerGoal$864; the configured name is shorter"
+    },
+    {
+      "from": "sRouletteRacerGoal$864",
+      "to": "sRouletteRacerGoal",
+      "evidence": "function-local Vector2 emitted as sRouletteRacerGoal$864; the configured name is shorter"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_s_mg_roulette_methods.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a global at 0x021322bc"
+    },
+    {
+      "symbol": ".p__sinit_d_s_mg_roulette_methods.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table word local; symbols.txt cannot record a local"
+    },
+    {
+      "symbol": "sRouletteRacerGoal",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local Vector2 is a configured relocation destination at 0x021428d4"
+    },
+    {
+      "symbol": "sRouletteRacerGoalGuard",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local guard is a configured relocation destination at 0x021428cc"
+    },
+    {
+      "symbol": "@176",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021428dc"
+    },
+    {
+      "symbol": "@177",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021428e8"
+    },
+    {
+      "symbol": "@448",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021428f4"
+    },
+    {
+      "symbol": "@451",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142900"
+    },
+    {
+      "symbol": "@178",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x0214290c"
+    },
+    {
+      "symbol": "@436",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142918"
+    },
+    {
+      "symbol": "@430",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142924"
+    },
+    {
+      "symbol": "@179",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142930"
+    },
+    {
+      "symbol": "@180",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x0214293c"
+    },
+    {
+      "symbol": "@181",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142948"
+    },
+    {
+      "symbol": "@244",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142954"
+    },
+    {
+      "symbol": "@245",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142960"
+    },
+    {
+      "symbol": "@246",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x0214296c"
+    },
+    {
+      "symbol": "@247",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142978"
+    },
+    {
+      "symbol": "@478",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142984"
+    },
+    {
+      "symbol": "@385",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142990"
+    },
+    {
+      "symbol": "@248",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x0214299c"
+    },
+    {
+      "symbol": "@249",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021429a8"
+    },
+    {
+      "symbol": "@250",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021429b4"
+    },
+    {
+      "symbol": "@251",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021429c0"
+    },
+    {
+      "symbol": "@252",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021429cc"
+    },
+    {
+      "symbol": "@254",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021429d8"
+    },
+    {
+      "symbol": "@255",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021429e4"
+    },
+    {
+      "symbol": "@256",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021429f0"
+    },
+    {
+      "symbol": "@257",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x021429fc"
+    },
+    {
+      "symbol": "@258",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a08"
+    },
+    {
+      "symbol": "@268",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a14"
+    },
+    {
+      "symbol": "@269",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a20"
+    },
+    {
+      "symbol": "@439",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a2c"
+    },
+    {
+      "symbol": "@270",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a38"
+    },
+    {
+      "symbol": "@433",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a44"
+    },
+    {
+      "symbol": "@271",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a50"
+    },
+    {
+      "symbol": "@272",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a5c"
+    },
+    {
+      "symbol": "@274",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a68"
+    },
+    {
+      "symbol": "@279",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a74"
+    },
+    {
+      "symbol": "@280",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a80"
+    },
+    {
+      "symbol": "@415",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a8c"
+    },
+    {
+      "symbol": "@281",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "registration node is a configured relocation destination at 0x02142a98"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x021322e0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132300",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132320",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132340",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132360",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132380",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021323a0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021323c0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021323e0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132400",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132420",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132440",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132460",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132480",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021324a0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021324c0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021324e0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132500",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132520",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132540",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132560",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132580",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021325a0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021325c0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021325e0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132600",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132620",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132640",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132660",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132680",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021326a0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021326c0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021326e0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021326fc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213271c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132738",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132758",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "__register_global_object",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132768",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213276c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "NullDestructor_0203d47c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203d47c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132770",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@249",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021429a8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132774",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 8,
+      "target_module": "ov006",
+      "target_address": "0x02142abc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132778",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@251",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021429c0"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213277c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 16,
+      "target_module": "ov006",
+      "target_address": "0x02142ac4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132780",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@257",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021429fc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132784",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 24,
+      "target_module": "ov006",
+      "target_address": "0x02142acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132788",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@256",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021429f0"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213278c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 32,
+      "target_module": "ov006",
+      "target_address": "0x02142ad4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132790",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@385",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142990"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132794",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 40,
+      "target_module": "ov006",
+      "target_address": "0x02142adc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132798",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@258",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a08"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213279c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 48,
+      "target_module": "ov006",
+      "target_address": "0x02142ae4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@268",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a14"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 56,
+      "target_module": "ov006",
+      "target_address": "0x02142aec"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@269",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a20"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 64,
+      "target_module": "ov006",
+      "target_address": "0x02142af4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@176",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021428dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 72,
+      "target_module": "ov006",
+      "target_address": "0x02142afc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@270",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a38"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 80,
+      "target_module": "ov006",
+      "target_address": "0x02142b04"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@271",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a50"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 88,
+      "target_module": "ov006",
+      "target_address": "0x02142b0c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@274",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a68"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 96,
+      "target_module": "ov006",
+      "target_address": "0x02142b14"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@280",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a80"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 104,
+      "target_module": "ov006",
+      "target_address": "0x02142b1c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@281",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a98"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 112,
+      "target_module": "ov006",
+      "target_address": "0x02142b24"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@415",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a8c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 120,
+      "target_module": "ov006",
+      "target_address": "0x02142b2c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@180",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0214293c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 128,
+      "target_module": "ov006",
+      "target_address": "0x02142b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@279",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a74"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 136,
+      "target_module": "ov006",
+      "target_address": "0x02142b3c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@179",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142930"
+    },
+    {
+      "section": ".init",
+      "source": "0x021327fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 144,
+      "target_module": "ov006",
+      "target_address": "0x02142b44"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132800",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@272",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a5c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132804",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 152,
+      "target_module": "ov006",
+      "target_address": "0x02142b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132808",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@430",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142924"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213280c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 160,
+      "target_module": "ov006",
+      "target_address": "0x02142b54"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132810",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@433",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a44"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132814",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 168,
+      "target_module": "ov006",
+      "target_address": "0x02142b5c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132818",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@436",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142918"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213281c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 176,
+      "target_module": "ov006",
+      "target_address": "0x02142b64"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132820",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@439",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142a2c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132824",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 184,
+      "target_module": "ov006",
+      "target_address": "0x02142b6c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132828",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@178",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0214290c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213282c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 192,
+      "target_module": "ov006",
+      "target_address": "0x02142b74"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132830",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@177",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021428e8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132834",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 200,
+      "target_module": "ov006",
+      "target_address": "0x02142b7c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132838",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@448",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021428f4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213283c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 208,
+      "target_module": "ov006",
+      "target_address": "0x02142b84"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132840",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@451",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142900"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132844",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 216,
+      "target_module": "ov006",
+      "target_address": "0x02142b8c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132848",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@244",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142954"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213284c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 224,
+      "target_module": "ov006",
+      "target_address": "0x02142b94"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132850",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@255",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021429e4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132854",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 232,
+      "target_module": "ov006",
+      "target_address": "0x02142b9c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132858",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@254",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021429d8"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213285c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 240,
+      "target_module": "ov006",
+      "target_address": "0x02142ba4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132860",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@252",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021429cc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132864",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 248,
+      "target_module": "ov006",
+      "target_address": "0x02142bac"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132868",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@245",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142960"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213286c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 256,
+      "target_module": "ov006",
+      "target_address": "0x02142bb4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132870",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@250",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021429b4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132874",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 264,
+      "target_module": "ov006",
+      "target_address": "0x02142bbc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132878",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@246",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0214296c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213287c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 272,
+      "target_module": "ov006",
+      "target_address": "0x02142bc4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132880",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@247",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142978"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132884",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 280,
+      "target_module": "ov006",
+      "target_address": "0x02142bcc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132888",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@478",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142984"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213288c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sRouletteTiles",
+      "addend": 288,
+      "target_module": "ov006",
+      "target_address": "0x02142bd4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02132890",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@248",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0214299c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021335cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_s_mg_roulette_methods.cpp",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021322bc"
+    }
+  ]
 }
