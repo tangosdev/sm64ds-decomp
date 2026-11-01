@@ -292,7 +292,9 @@ dScMgHanachan_c::~dScMgHanachan_c() {}
  * above, so this spells out what the deleting destructor does in terms of
  * it: the D1 body, called qualified so it is a direct call, then the
  * class-specific operator delete. mwccarm never defines _MSC_VER, so
- * nothing here reaches the cartridge object. */
+ * nothing here reaches the cartridge object. This definition stays: MSVC
+ * will not emit the Itanium D0 from ~dScMgHanachan_c(), and the host calls
+ * that symbol. */
 extern "C" dScMgHanachan_c *_ZN15dScMgHanachan_cD0Ev(dScMgHanachan_c *thiz) {
     thiz->dScMgHanachan_c::~dScMgHanachan_c();
     dScMgHanachan_c::operator delete(thiz);
