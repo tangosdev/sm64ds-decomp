@@ -56,9 +56,9 @@ from:0x0211164c kind:load to:0x02113de8 module:overlay(22)
 from:0x02111650 kind:load to:0x021091d4 module:overlay(2)
 from:0x02111654 kind:load to:0x0210ae38 module:overlay(2)
 from:0x02111658 kind:load to:0x020a0eac module:main
-from:0x02111668 kind:load to:0x020b66a8 module:overlays(0,2)
+from:0x02111668 kind:load to:0x020b66a8 module:overlay(2)
 from:0x0211166c kind:load to:0x02113da4 module:overlay(22)
-from:0x02111680 kind:load to:0x020b676c module:overlays(0,2)
+from:0x02111680 kind:load to:0x020b676c module:overlay(2)
 from:0x02111684 kind:load to:0x02113da4 module:overlay(22)
 from:0x02111690 kind:arm_call to:0x02043444 module:main
 from:0x0211169c kind:arm_call to:0x020eea50 module:overlay(2)
@@ -195,7 +195,7 @@ from:0x02112014 kind:load to:0x0210912c module:overlay(2)
 from:0x02112018 kind:load to:0x0210ae38 module:overlay(2)
 from:0x0211201c kind:load to:0x020a0eac module:main
 from:0x02112038 kind:load to:0x021140d4 module:overlay(22)
-from:0x0211203c kind:load to:0x020b6424 module:overlays(0,2)
+from:0x0211203c kind:load to:0x020b6424 module:overlay(2)
 from:0x02112070 kind:arm_call to:0x020393a4 module:main
 from:0x02112088 kind:arm_call to:0x020393a4 module:main
 from:0x021120a4 kind:arm_call to:0x020b6584 module:overlay(2)
@@ -517,10 +517,10 @@ from:0x02113df0 kind:load to:0x02011244 module:main
 from:0x02113df4 kind:load to:0x0211165c module:overlay(22)
 from:0x02113df8 kind:load to:0x02011220 module:main
 from:0x02113dfc kind:load to:0x02011214 module:main
-from:0x02113e00 kind:load to:0x020b6718 module:overlays(0,2)
+from:0x02113e00 kind:load to:0x020b6718 module:overlay(2)
 from:0x02113e04 kind:load to:0x02010fd4 module:main
 from:0x02113e08 kind:load to:0x02010fc8 module:main
-from:0x02113e0c kind:load to:0x020b66f0 module:overlays(0,2)
+from:0x02113e0c kind:load to:0x020b66f0 module:overlay(2)
 from:0x02113e10 kind:load to:0x02010f78 module:main
 from:0x02113e14 kind:load to:0x02010f6c module:main
 from:0x02113e18 kind:load to:0x02043ac0 module:main
@@ -672,10 +672,10 @@ from:0x02114134 kind:load to:0x02011244 module:main
 from:0x02114138 kind:load to:0x02112020 module:overlay(22)
 from:0x0211413c kind:load to:0x02011220 module:main
 from:0x02114140 kind:load to:0x02011214 module:main
-from:0x02114144 kind:load to:0x020b6494 module:overlays(0,2)
+from:0x02114144 kind:load to:0x020b6494 module:overlay(2)
 from:0x02114148 kind:load to:0x02010fd4 module:main
 from:0x0211414c kind:load to:0x02010fc8 module:main
-from:0x02114150 kind:load to:0x020b646c module:overlays(0,2)
+from:0x02114150 kind:load to:0x020b646c module:overlay(2)
 from:0x02114154 kind:load to:0x02010f78 module:main
 from:0x02114158 kind:load to:0x02010f6c module:main
 from:0x0211415c kind:load to:0x02043ac0 module:main

@@ -300,7 +300,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjKuruma_c8BehaviorEv",
       "addend": 0,
-      "target_module": "overlays(0,2)",
+      "target_module": "ov002",
       "target_address": "0x020b6920"
     },
     {
@@ -330,7 +330,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjKuruma_c6RenderEv",
       "addend": 0,
-      "target_module": "overlays(0,2)",
+      "target_module": "ov002",
       "target_address": "0x020b68f8"
     },
     {

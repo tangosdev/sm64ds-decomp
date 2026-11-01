@@ -1282,7 +1282,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c12IsAltVariantEv",
       "addend": 0,
-      "target_module": "overlays(0,2,3,4,7)",
+      "target_module": "overlays(2,3,4,7)",
       "target_address": "0x020ad660"
     },
     {
@@ -1292,7 +1292,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c11PaintSquareEiiii",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020ae3b4"
     },
     {
@@ -1302,7 +1302,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16InitMainScreenBgEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020b27f4"
     },
     {
@@ -1312,7 +1312,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c15InitSubScreenBgEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020b2880"
     },
     {
@@ -1322,7 +1322,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c21RestoreScreenFromMenuEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020aeed8"
     },
     {
@@ -1332,7 +1332,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c17SaveScreenForMenuEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020af094"
     },
     {
@@ -1342,7 +1342,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c9CloseMenuEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020af04c"
     },
     {
@@ -1352,7 +1352,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c8OpenMenuEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020af27c"
     },
     {
@@ -1362,7 +1362,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16OnGraphCallback3Ev",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020ae128"
     },
     {
@@ -1372,7 +1372,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16OnGraphCallback2Ev",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020ae140"
     },
     {
@@ -1382,7 +1382,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16OnGraphCallback0Ev",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020ae1a0"
     },
     {
@@ -1392,7 +1392,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16OnGraphCallback1Ev",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020ae198"
     },
     {
@@ -1402,7 +1402,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c10OnDealDoneEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020b298c"
     },
     {
@@ -1412,7 +1412,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c11CanEndStateEi",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020b2994"
     },
     {
@@ -1422,7 +1422,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c16OnPendingDestroyEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020b04e8"
     },
     {
@@ -1432,7 +1432,7 @@
       "kind": "load",
       "symbol": "_ZN11dScMgBase_c19BeforeInitResourcesEv",
       "addend": 0,
-      "target_module": "overlays(0,4)",
+      "target_module": "ov004",
       "target_address": "0x020b0930"
     },
     {
