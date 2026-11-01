@@ -405,8 +405,9 @@ void starsel2_layout(MenuLayout *L)
    the star's name below. Now each cap sits on Tango's plate (hal/menu_starsel_plate_art.h: the bubble's body without the tail), drawn at a
    whole-number scale so its pixels stay square, and the cap is its own sprite lifted at the same scale and centred on the plate. Luigi's plate
    under star 2, Mario's under star 4, Wario's under star 6, as before. The plate is centred on DS row kPlateCy (the band between the selected
-   star's lowest point, row 52.6, and the star name's first row, 80) and is about 18 DS rows tall (kPlateRows), so a clear gap stays above and
-   below at every window size.
+   star's lowest point, row 51.3 measured over a whole turn at every aspect, and the star name's first row, 80) and is drawn at the largest
+   whole-number scale that fits between kPlateTop and kPlateBot (a clear gap under the selected star, drawn at a constant 1.25x and only
+   turning, and above the star name): at most 24 DS rows (22.5 at 768 high, 21.3 at 1080, 24 at 1440).
    CHAR_X / CHAR_Y are per character (i = 0 Mario, 1 Luigi, 2 Wario). A cap the ROM left at x 0 is one InitResources never placed (a file with
    three characters places two caps) and is left out.
    TOUCH: one touch-only rect per plate, mapped proportionally into the bubble's body on the lower screen (CHAR_X - 24 .. + 24, CHAR_Y - 23 .. + 7),
@@ -414,7 +415,7 @@ void starsel2_layout(MenuLayout *L)
    a click is the ROM's own touch on the cap. Its hotspot box is that body rect, which is how starsel_hover recognises it.
    THE CURSOR: when the ROM's cursor is on the caps row (CURSOR_MODE 1) its own sprite (Render :508-510, left of the bubble) is lifted too and
    placed left of the plate at the same distance, scaled like the plate. */
-const int kCapBodyDx = 24, kCapBodyDy = 23, kPlateCy10 = 665, kPlateRows10 = 180;
+const int kCapBodyDx = 24, kCapBodyDy = 23, kPlateTop10 = 538, kPlateBot10 = 778, kPlateCy10 = 658;
 const int kCapSlotX[3] = { 58, 128, 198 };          /* the 7-star row's stars 2 / 4 / 6 */
 const int kCapOrder[3] = { 1, 0, 2 };               /* Luigi, Mario, Wario, left to right */
 
@@ -425,9 +426,9 @@ void caps_geom(const MenuLayout *L, CapGeom *g)
     memset(g, 0, sizeof *g);
     const MenuFacts &F = L->facts;
     if (!F.starsel_valid || !F.blob[6] || L->uden <= 0) return;
-    /* the whole-number scale nearest to kPlateRows DS rows: s = round(rows * unit / art height), at least 1 */
+    /* the largest whole-number scale whose plate fits the band kPlateTop .. kPlateBot: s = floor(band rows * unit / art height), at least 1 */
     const long long UN = L->unum, UD = L->uden;
-    int s = (int)((2LL * kPlateRows10 * UN + (long long)kCapPlateH * 10 * UD) / (2LL * kCapPlateH * 10 * UD));
+    int s = (int)((long long)(kPlateBot10 - kPlateTop10) * UN / (10 * UD) / kCapPlateH);
     if (s < 1) s = 1;
     g->s = s;
     const int pw = kCapPlateW * s, ph = kCapPlateH * s;
