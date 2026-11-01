@@ -4686,7 +4686,7 @@ int daPly_c::ShowMessage2(fBase_c &actor_, unsigned int msg, const Vector3 *pos,
 finish:
     mStateWork = 0;
     mStateArg = d & 3;
-    *(u8 *)(((long long)(&mStateArg))) |= (e & 3) << 2;
+    *(u8 *)((long long)(&mStateArg)) |= (e & 3) << 2;
 
     /* First entry constructs it: guard, three stores, ~Vector3() registration. */
     static Vector3 sTalkOff(0, 0x64000, 0x64000);
@@ -5235,7 +5235,7 @@ int daPly_c::St_DeadPit_Init() {
 /* daPly_c::EnterWhirlpool() @ 0x20c5cc8 (ov002) -- tail-call veneer to daPly_c::func_ov002_020c5dec(int) (0x20c5dec) with r1=9.
  */
 void daPly_c::EnterWhirlpool() {
-    ((daPly_c *)(((void *)this)))->func_ov002_020c5dec(9);
+    ((daPly_c *)((void *)this))->func_ov002_020c5dec(9);
 }
 
 // @symbol func_ov002_020c5cd8
@@ -8233,7 +8233,7 @@ int daPly_c::St_CameraZoom_Main() {
             id = GetBodyModelID(param1 & 0xff, 0);
             /* currFrame of the body model's frame controller, kept split: the ROM adds
                +0x50 and stores at +8, and ->currFrame folds that to one +0x58. */
-            int q = (int)((*(dExtAnmModel_c *volatile *)&mModels.mBodyModels[id])) + 0x50;
+            int q = (int)(*(dExtAnmModel_c *volatile *)&mModels.mBodyModels[id]) + 0x50;
             ((dExtFrameCtrl_c *)q)->currFrame = 0;
             mPrevAngleY = mAngleY;
             return 1;
@@ -8461,7 +8461,7 @@ int func_ov002_020cb354(daPly_c *thisptr) {
     int idx = thisptr->GetBodyModelID(player->param1 & 0xff, 0);
     dExtAnmModel_c *m = player->mModels.mBodyModels[idx];
     /* q is the frame controller (+0x50); m->currFrame would fold +0x50 and +8. */
-    int* q = (int*)(((int)m + 0x50));
+    int *q = (int *)((int)m + 0x50);
     if ((int)((unsigned int)((((dExtFrameCtrl_c *)q)->currFrame) << 4) >> 0x10) < 8) {
         unsigned char f = player->mStateArg;
         if (f != 0) return f;
@@ -11386,17 +11386,17 @@ void func_ov002_020d0948(char* self)
     int base = (short)(player->mAngleY + 0x8000);
     if (player->mIsMega != 0) {
         int idx = (unsigned short)base >> 4;
-        int *p0 = (int *)(((long long)(int)(&p->mPosX)));
-        int *p1 = (int *)(((long long)(int)(&p->mPosY)));
-        int *p2 = (int *)(((long long)(int)(&p->mPosZ)));
+        int *p0 = (int *)(&p->mPosX);
+        int *p1 = (int *)(&p->mPosY);
+        int *p2 = (int *)(&p->mPosZ);
         *p0 = data_02082214[idx * 2] * 0x110 + *p0;
         *p1 = *p1 - 0x12c000;
         *p2 = data_02082214[idx * 2 + 1] * 0x110 + *p2;
     } else {
         int idx = (unsigned short)base >> 4;
-        int *p0 = (int *)(((long long)(int)(&p->mPosX)));
-        int *p1 = (int *)(((long long)(int)(&p->mPosY)));
-        int *p2 = (int *)(((long long)(int)(&p->mPosZ)));
+        int *p0 = (int *)(&p->mPosX);
+        int *p1 = (int *)(&p->mPosY);
+        int *p2 = (int *)(&p->mPosZ);
         *p0 = *p0 + (data_02082214[idx * 2] << 6);
         *p1 = *p1 - 0x64000;
         *p2 = *p2 + (data_02082214[idx * 2 + 1] << 6);
@@ -18508,7 +18508,7 @@ int daPly_c::St_SweepKick_Init() {
 }
 
 // @symbol func_ov002_020dc560
-#define ADDR(p) ((int *)(((long long)(int)(p))))
+#define ADDR(p) ((int *)(p))
 extern "C" {
 void func_ov002_020dc560(char *self)
 {
@@ -18962,15 +18962,13 @@ int daPly_c::IsDiving() {
 // @symbol _ZN7daPly_c17LostGrabbedObjectEv
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::LostGrabbedObject() {
-    return ((daPly_c *)(((void *)this)))->IsAnim(0x18) ||
-           ((daPly_c *)(((void *)this)))->IsAnim(0x8b);
+    return ((daPly_c *)((void *)this))->IsAnim(0x18) || ((daPly_c *)((void *)this))->IsAnim(0x8b);
 }
 
 // @symbol _ZN7daPly_c14IsFrontSlidingEv
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::IsFrontSliding() {
-    return ((daPly_c *)(((void *)this)))->IsAnim(0x43) ||
-           ((daPly_c *)(((void *)this)))->IsAnim(0x40);
+    return ((daPly_c *)((void *)this))->IsAnim(0x43) || ((daPly_c *)((void *)this))->IsAnim(0x40);
 }
 
 // @symbol func_ov002_020dd2f4
@@ -21622,10 +21620,10 @@ void func_ov002_020e1c20(char *c) {
                               (const Vector3 *)(&player->mCamSpacePosX), 0);
             player->mHorzSpeed = FX_MUL(player->mHorzSpeed, 0xf00);
             if ((player->mVertSpeed) < 0) {
-                int *p = (int *)(((long long)(&player->mVertSpeed)));
+                int *p = (int *)((long long)(&player->mVertSpeed));
                 *p = *p + 0xc00;
             } else {
-                int *p = (int *)(((long long)(&player->mVertSpeed)));
+                int *p = (int *)((long long)(&player->mVertSpeed));
                 *p = *p + 0x1000;
             }
             if ((player->mVertSpeed) < 0x11000) {
@@ -24614,7 +24612,7 @@ int *func_ov002_020e6bb0(void *model) {
     ModelMaterial *src;
     unsigned int i;
 
-    pp = (void **)(((long long)(int)((char *)model + 8)));
+    pp = (void **)((long long)(int)((char *)model + 8));
     res = (ModelMaterialRes *)pp[0];
     count = res->numMaterials;
     out = (int *)Memory::operator_new2(count << 2);
