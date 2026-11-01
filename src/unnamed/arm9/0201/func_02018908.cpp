@@ -5,7 +5,7 @@
 extern "C" {
 
 /* func_02018908 at 0x02018908 */
-extern void func_0204ee10(void *self);
+extern int func_0204ee10(void *self);
 
 void func_02018908(void *self, void *heap)
 {

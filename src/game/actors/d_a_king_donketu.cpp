@@ -230,7 +230,7 @@ extern "C" {
 int ChiefChilly_ChangeState(C *c, PMF *p);
 
 extern struct BCA_File *data_ov002_0210da30[2];
-extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(const void* in, void* m, void* out);
 extern void func_0200d8c8(void *cam, void *v, int strength);

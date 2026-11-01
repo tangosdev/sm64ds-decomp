@@ -32,10 +32,10 @@ struct Obj {
     unsigned short queue; /* 0x18 */
 };
 
-extern void FSi_SendCommand(UnkStruct_0205d4a0 *self, int a);
+extern int FSi_SendCommand(UnkStruct_0205d4a0 *self, int a);
 extern void OS_SleepThread(unsigned short *self);
 extern int FSi_ExecuteSyncCommand(Obj *);
-extern void func_0205d688(void *, int, int, int);
+extern int func_0205d688(void *, int, int, int);
 
 void func_0205d4a0(UnkStruct_0205d4a0 *self, int a, int b) {
     if (self->unk10 != 5) {

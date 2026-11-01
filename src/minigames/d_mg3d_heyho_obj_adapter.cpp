@@ -1386,7 +1386,7 @@ namespace n020c4f68 {
 extern "C" {
 struct S{int w[2];};
 extern struct S pmf_Heyho_MotionHitSpin;
-extern void D3D_PlaySeAtX(int a, int b);
+extern int D3D_PlaySeAtX(int a, int b);
 void Heyho_StartMotionHitSpin(int *c) {
     HEYHO(c)->mPhase = 0;
     D3D_PlaySeAtX(0x1c8, HEYHO(c)->mPos.x);
@@ -1526,7 +1526,7 @@ extern "C" void Heyho_Update(struct Foo *c){
 namespace n020c4c54 {
 // @symbol Heyho_Draw
 
-extern "C" void Vec3_MulScalar(Vector3 *res, Vector3 *v, int scalar);
+extern "C" void Vec3_MulScalar(Vector3 *res, const Vector3 *v, int scalar);
 extern "C" void Heyho_Draw(int this_) {
     Vector3 v;
     int *p = HEYHO(this_)->mMotion;

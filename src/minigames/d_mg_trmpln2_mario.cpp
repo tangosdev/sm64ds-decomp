@@ -296,7 +296,7 @@ extern int pmf_Trmp2Mario_StateHidden_5[2];
 extern int pmf_Trmp2Mario_StateRespawnWait[2];
 extern int pmf_Trmp2Mario_StateKnockedOut[2];
 extern void Trmp2Mario_EnterHidden(char *c);
-extern void D3D_PlaySeAtX(int a, int b);
+extern int D3D_PlaySeAtX(int a, int b);
 }
 
 // @symbol Trmp2Mario_EnterByKind
@@ -344,7 +344,7 @@ namespace ns_020c91ac {
 
 extern "C" {
 void Trmp2Mario_EnterFall(void *c);
-void D3D_PlaySeAtX(int a0, int a1);
+int D3D_PlaySeAtX(int a0, int a1);
 void Camera_ProjectToScreen16(void *a0, void *a1, short *a2);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 }
@@ -797,7 +797,7 @@ extern "C" {
 extern int sTrmp2GravityStep;
 extern int sTrmpSpeedScale;
 extern Pair pmf_Trmp2Mario_StateBounce;
-extern void D3D_PlaySeAtX(int a, int b);
+extern int D3D_PlaySeAtX(int a, int b);
 extern void Trmp2Mario_StateBounce(char *c);
 }
 
@@ -917,7 +917,7 @@ extern "C" void Trmp2Mario_StateMissed(char *c) {
 // ---- Trmp2Mario_EnterMissed
 namespace ns_020c9fe4 {
 extern "C" {
-extern void D3D_PlaySeAtX(int a, int b);
+extern int D3D_PlaySeAtX(int a, int b);
 extern int sTrmp2Lives[];
 extern double pmf_Trmp2Mario_StateMissed_2;
 void Trmp2Mario_EnterMissed(char *c);
@@ -2515,7 +2515,7 @@ void Trmp3DMario_StateMissed(char *c) {
 // ---- Trmp3DMario_EnterMissed
 namespace ns_020cc37c {
 extern "C" {
-extern void D3D_PlaySeAtX(int a, int b);
+extern int D3D_PlaySeAtX(int a, int b);
 extern int sTrmp3DLives[];
 extern double pmf_Trmp3DMario_StateMissed_2;
 void Trmp3DMario_EnterMissed(char *c);

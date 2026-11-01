@@ -104,7 +104,7 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void *m, s16 angY);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-void MulVec3Mat4x3(void *in, void *m, void *out);
+void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 
 /* local extern: retain the matched scalar ABI; native Fix12<int> calls remain pending. */
 /* Parameter names keep this TU's @NNN. */

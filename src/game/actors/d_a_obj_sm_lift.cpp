@@ -44,10 +44,10 @@ void Vec3_Asr(Vector3 *d, Vector3 *s, int n);
 void func_020393d4(int *p, int v);
 void func_020393c4(int *p, int v);
 int AngleDiff(int, int);
-void Math_Function_0203b14c(void *p, int a, int b, int c, int d);
+int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 void Vec3_Sub(void *out, void *a, void *b);
 int LenVec3(void *v);
-void Vec3_MulScalar(void *out, void *v, int scalar);
+void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int scalar);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 

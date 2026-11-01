@@ -85,7 +85,7 @@ extern "C" {
 /* local extern: no header declares these arm9 vector and matrix helpers;
    they take the Vector3 layout, spelled EntryMeshVec here (see its header).
    SubVec3 is the exception: its definition takes Vector3, so the calls cast. */
-void InvMat4x3(Matrix4x3 *, Matrix4x3 *);
+int InvMat4x3(Matrix4x3 *, Matrix4x3 *);
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 void CrossVec3(const EntryMeshVec *, const EntryMeshVec *, EntryMeshVec *);
 void NormalizeVec3(const EntryMeshVec *, EntryMeshVec *);

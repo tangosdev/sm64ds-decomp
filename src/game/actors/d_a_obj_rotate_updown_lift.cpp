@@ -139,7 +139,7 @@ void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void MulVec3Mat4x3(void *src, void *m, void *dst);
 void Vec3_Add(void *out, void *a, void *b);
 void Vec3_Sub(void *out, void *a, void *b);
-void Vec3_MulScalar(void *out, void *in, int scale);
+void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 void SubVec3(void *a, void *b, void *c);
 int LenVec3(void *v);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);

@@ -13,7 +13,7 @@ struct Obj {
 };
 
 extern int myFS_ReadFile(void *a, unsigned int b, unsigned int c);
-extern void FS_CloseFile(void *a);
+extern int FS_CloseFile(void *a);
 extern void func_02018770(void);
 extern int func_02018568(unsigned int a);
 

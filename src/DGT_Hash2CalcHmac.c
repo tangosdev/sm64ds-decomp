@@ -1,5 +1,5 @@
 extern int func_0205e89c(unsigned int *ctx);
-extern void func_0205e6e4(unsigned int *ctx, const unsigned char *data, int len);
+extern int func_0205e6e4(unsigned int *ctx, const unsigned char *data, int len);
 extern int func_0205e7e0(unsigned int *ctx, unsigned char *out);
 
 void DGT_Hash2CalcHmac(unsigned char *out, unsigned char *msg, int msglen, unsigned char *key,

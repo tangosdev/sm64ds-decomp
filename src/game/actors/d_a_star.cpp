@@ -177,7 +177,7 @@ extern int RandomIntInternal(int* seed);
 extern int data_0209e650;
 extern void *data_0209f318;
 extern unsigned char IsAreaShowing(int idx);
-extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_02082214[];
 extern void func_02012694(int a, void* p);
 namespace Particle {
@@ -193,7 +193,7 @@ extern "C" void AddVec3(Vector3* a, Vector3* b, Vector3* c);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
 extern void MulMat4x3Mat4x3(void* out, void* a, void* b);
-extern void Vec3_LslInPlace(void* v, int sh);
+extern int *Vec3_LslInPlace(void *v, int sh);
 extern struct M48 data_020a0e68;
 extern Mtx IDENTITY_MATRIX4X3;
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);

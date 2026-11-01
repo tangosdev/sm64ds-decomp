@@ -69,7 +69,7 @@ typedef struct { PMF enter, run; } ScuttlebugStateRow;
 extern "C" {
 
 short AngleDiff(short a, short b);
-void  DecIfAbove0_Short(void *p);
+unsigned short DecIfAbove0_Short(void *p);
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 

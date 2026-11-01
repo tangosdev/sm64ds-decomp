@@ -1,4 +1,4 @@
-extern void myFS_ConvertPathToFileID(void *, int);
+extern int myFS_ConvertPathToFileID(void *, int);
 /* the ROM archive (see func_02018598.c) */
 extern int data_0209d3b4;
 

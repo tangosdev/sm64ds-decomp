@@ -17,7 +17,7 @@
  * Parameters: r0=u16 type, r1=u32, r2=const void* src1, r3=u32, (stack)void* src2, (stack)u32 extra
  */
 extern void MultiCopy_Int(const void *src, void *dst, u32 size);  /* 0x0205a490 */
-extern void func_02065af0(void *pkt);
+extern int func_02065af0(void *pkt);
 
 struct Pkt02065730 {
     u32 field00;       /* 0x00: constant 4 */

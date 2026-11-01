@@ -9,7 +9,7 @@ extern void FS_InitFile(int *s);
 extern int myFS_OpenFile(void *file, const char *path);
 extern int myFS_ReadFile(int *s, void *buf, int n);
 extern int func_0204ee40(void *a, void *b, void *c);
-extern void FS_CloseFile(int *s);
+extern int FS_CloseFile(int *s);
 
 /* LoadArchive's loader: read the .narc at path whole into one heap block,
    after a 0x60-byte head, and mount it there under name (func_0204ee40).

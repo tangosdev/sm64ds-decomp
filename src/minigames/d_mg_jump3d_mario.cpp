@@ -79,7 +79,7 @@ void func_02016a14(void *self, int a);
 void func_02016a04(void *self, int a);
 int func_020179b4(SharedFilePtr *f, dExtModel_c *m, int extra);
 void Camera_ProjectToScreen16(void *cam, Jump3DVec *pos, short *out);
-void D3D_PlaySeAtX(int a, int b);
+int D3D_PlaySeAtX(int a, int b);
 void Puff_Spawn(int a, int b);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);

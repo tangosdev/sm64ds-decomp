@@ -16,8 +16,8 @@
 // outside the body. The six eors after the pool are the fallthrough into func_01ff8e10.
 
 extern int func_0207322c(void);
-extern void func_0206dd7c(void);
-extern void func_0206dcd4(void);
+extern double func_0206dd7c(void);
+extern double func_0206dcd4(void);
 
 asm double _dmul(double a, double b)
 {

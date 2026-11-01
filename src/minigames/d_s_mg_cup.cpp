@@ -133,7 +133,7 @@ extern u8 data_0209d454;
 extern int data_0208ee44;
 extern void Camera_InitPresenterView(char *);
 extern int Presenter_Load(char *);
-extern void LoadCompressedFileAt(int, int);
+extern unsigned int LoadCompressedFileAt(int, int);
 extern void *LoadFile(int);
 void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
 void Cup_Nothing(void);

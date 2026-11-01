@@ -123,7 +123,7 @@ extern void *GetViewObj(int idx);
 
 extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
 extern s16 Vec3_VertAngle(const void *v1, const void *v0);
-extern int Vec3_HorzDist(const void *a, const void *b);
+extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(const void *v);
 extern int LenVec3(void *v);
 extern void Vec3_Add(void *out, const void *a, const void *b);
@@ -135,7 +135,7 @@ extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(int *v, int sh);
 extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
 extern void MulVec3Mat4x3(void *dst, const void *src, void *out);
-extern s32 Vec3_Dist(const void *a, const void *b);
+extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationZ(void *m, int angle);
 extern void MulMat4x3Mat4x3(void *dst, const void *a, void *b);
 extern void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);

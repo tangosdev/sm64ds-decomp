@@ -57,7 +57,7 @@ extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern s32 LenVec3(Vector3 *value);
 extern s16 Vec3_VertAngle(Vector3 *a, Vector3 *b);
-extern void MulVec3Mat4x3(void *a, void *matrix, void *b);
+extern void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *matrix, Vector3 *b);
 }
 
 typedef daShark_c::StateFn SharkFn;

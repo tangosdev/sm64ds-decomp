@@ -49,7 +49,7 @@ typedef void (daBttBk_c::*PMF)();
 extern "C" {
 void *func_02010304(void *a, void *b);
 void Matrix4x3_ApplyInPlaceToTranslation(Mtx43 *m, int x, int y, int z);
-void Vec3_LslInPlace(Vector3 *v, int sh);
+int *Vec3_LslInPlace(Vector3 *v, int sh);
 void Matrix4x3_FromRotationY(void *m, int angle);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);

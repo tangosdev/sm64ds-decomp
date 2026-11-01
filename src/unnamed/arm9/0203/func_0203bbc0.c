@@ -1,5 +1,5 @@
 extern void TP_Init(void);
-extern void TP_GetUserInfo(void *p);
+extern int TP_GetUserInfo(void *p);
 extern void TP_SetCalibrateParam(void *p);
 extern void TP_RequestSetStabilityAsync(int a, int b);
 extern void TP_WaitBusy(int mask);

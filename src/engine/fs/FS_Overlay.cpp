@@ -72,7 +72,7 @@ int FS_OpenFileDirect(char *p_file, struct FSArchive *p_arc, u32 image_top, u32 
                       u32 file_index);
 int FS_ReadFile(void *s, void *b, int c);
 int FS_CloseFile(void *self);
-void func_0206cf98(int a, u32 b, u32 c);
+int func_0206cf98(int a, u32 b, u32 c);
 u32 func_0205e904(u32 newVal);
 void Crash(void);
 

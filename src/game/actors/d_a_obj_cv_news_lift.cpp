@@ -90,8 +90,8 @@ extern CLPS_Block data_ov021_02113a80;
 extern "C" {
 void Matrix4x3_FromQuaternion(const struct Quaternion *q, struct Matrix4x3 *mF);
 void Vec3_Asr(void *d, void *s, int sh);
-void InvMat4x3(struct Matrix4x3 *d, struct Matrix4x3 *s);
-void MulVec3Mat4x3(const Vector3 *src, const Matrix4x3 *mtx, Vector3 *dst);
+int InvMat4x3(struct Matrix4x3 *d, struct Matrix4x3 *s);
+void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
 void Quaternion_FromVector3(void *q, Vector3 *axis, Vector3 *v);
 void Quaternion_Normalize(void *q);
