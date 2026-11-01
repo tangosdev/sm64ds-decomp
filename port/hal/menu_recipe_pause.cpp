@@ -33,6 +33,7 @@
 #include "settings_live.h"
 #include "event_client.h"
 #include "career.h"
+#include "comms_seam.h"
 
 #include <atomic>
 #include <chrono>
@@ -54,6 +55,7 @@ extern unsigned char data_0209f218;    /* 1 = opened by Select: controller mode 
 extern unsigned char data_0209f2e0;    /* the selected plate */
 extern unsigned char data_0209f2b4;    /* how many plates */
 extern unsigned char data_0209f22c;    /* press hold ticks */
+extern int data_0208ee44;              /* ticks per game frame (2 at 30 fps): the ROM counts its waits down by it */
 extern unsigned char data_0209f244;    /* press flash ticks */
 extern unsigned char data_0209f300;    /* input lock after open */
 extern unsigned char data_0209f2c8;    /* the course the card shows */
@@ -875,6 +877,23 @@ int pause_art_present()
     return v;
 }
 
+/* PAUSEAIR2: THE AIR PAGE CLOSES AS SLOWLY AS THE COURSE PAGE. Every plate of the full pause confirms with the ROM's press wait: PS_Update
+   sel3_0 (and its siblings) sets data_0209f22c = data_0208ee44 << 3 together with the close (data_0209f2c4 = 2), PS_Update's head counts it
+   down and does nothing else while it runs, and Behavior's PS_Cleanup closes the pause on the first tick it reads 0: 8 game ticks with the
+   pressed plate on screen and the game still paused. State 0xb (the reduced pause) sets only the plate flash and the close, so the game ran
+   again on the very next tick. The cartridge's state machine is left as it is; this recipe, at the end of the tick in which case 0xb took the
+   press (the close is pending, no wait is running), starts the same wait the plates start, once per press. Only while the one-screen air page
+   is up (the classic two-screen pause and the VS pause keep the ROM's own close), and never in a lockstep session (no local ROM writes there). */
+int g_air_wait_set;
+void air_close_wait(int v)
+{
+    if (v != V_AIR || data_0209f248 != 0xb || data_0209f2c4 != 2) { g_air_wait_set = 0; return; }
+    if (g_air_wait_set || data_0209f22c != 0) return;
+    g_air_wait_set = 1;
+    if (port::comms_transport() != 0 && port::comms_fanout_active()) return;
+    data_0209f22c = (unsigned char)(data_0208ee44 << 3);
+}
+
 int pause_up(int scene_id)
 {
     int v = 0;
@@ -888,6 +907,7 @@ int pause_up(int scene_id)
         slide_reset();
     }
     g_last_variant = v;
+    air_close_wait(v);
     if (!v) {
         if (g_embed_set) { settings_page_set_embed(0); g_embed_set = 0; }
         g_tab_hover = g_tab_press = -1;
