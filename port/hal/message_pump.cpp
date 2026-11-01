@@ -131,19 +131,21 @@ void Message::Update()
     port_message_flush_engine_a_regs();
 }
 
-/* PEACHJINGLE1: the cartridge's NCS_BGM_PEACH (SDAT sequence 70, 7 s) when a star door's UNLOCK message opens.
-   The DS plays nothing there. The unlock state (Player func_ov002_020c8b78) ends in ShowMessage(0x188) for a star door (daDoor_c, TryTalkToDoor(0)) or
-   ShowMessage(0x29) for a big star gate (daStarGate_c, TryTalkToDoor(1)); the refusals ("It takes the power of N Stars", 0x19, 0x1a..0x1f) are other ids
-   and play nothing, and the key doors have no unlock text. The box opening (func_0201f32c) sets data_0209d660 and the id data_0209d6d4, so this watches
-   that edge once a frame.
+/* PEACHJINGLE1 / PEACHJINGLE2: the cartridge's NCS_BGM_PEACH (SDAT sequence 70, about 5 s) when a star QUOTA message opens, the box that comes
+   up by itself once the star count reaches a door's number ("You've recovered 3 Power Stars! Now you can open any door with a 3 on it.").
+   The DS plays nothing there. func_ov002_020c6e14 (src/game/player/Player.cpp) opens it: when the last star was a new one (data_0209f2ac) and
+   NumStars() is 1, 3, 8, 12, 30, 50 or 80 it shows data_ov002_020ff1a0[n] = message 0x178..0x17e. It runs from Player::func_ov002_020c71e0 when
+   the player lands back in the castle after a star exit, and from daStar_c's save-prompt state (step 4) after a star that does not end the
+   course. The door's own "Reacting to the Star Power" (0x188) and the gate's "The Power Stars have broken the lock" (0x29) play nothing, as on
+   the DS. The box opening (func_0201f32c) sets data_0209d660 and the id data_0209d6d4, so this watches that edge once a frame.
    HOW IT PLAYS. The cartridge files sequence 70 under the MAIN music player (like the two Lakitu tunes), so it takes the level music's place rather than
    mixing over it. The game's own way to do that and give the level music back is the temporary-music pair the cap power-ups use (Player.cpp, the
    invincibility / metal / wing tunes): Sound::SetMusic(player, id) swaps the id in, Sound::EndMusic(player, ..) puts the level's own id back and restarts
    it. Both ignore any player but the local one (data_0209f250), so nothing here reaches another player. It is not started while a boss layer (e444) or
    another temporary tune is up, and it is only ended if sequence 70 is still the current music (a level change or the game's own end of a tune that
-   replaced it leaves nothing for us to undo). The unlock state ducks the music to 20 of 127 every frame it runs, which would make the tune a whisper,
-   so the volume target is held at the level it had before while the tune plays and handed back when it ends. Audio only. Setting PeachJingle (default
-   on); off never calls into the sound code, so the audio is the DS's. */
+   replaced it leaves nothing for us to undo). While it plays the volume target is held at full so a duck under the box does not make the tune a
+   whisper; when it ends the target the game wants is handed back. Audio only. Setting PeachJingle (default on); off never calls into the sound code,
+   so the audio is the DS's. */
 extern "C" {
 extern unsigned char data_0209d660;      /* the box is open */
 extern short data_0209d6d4;              /* the open box's message id */
@@ -172,20 +174,24 @@ static void port_peach_jingle_tick(void)
         s_age = -1;
     }
     if (s_age < 0) {
-        if (edge && (id == 0x188 || id == 0x29) && host_setting_peach_jingle()
-            && data_0208e444 < 0 && data_0208e43c >= 0 && data_0209b4ac == data_0208e43c) {
+        const bool quota = edge && id >= 0x178 && id <= 0x17e;   /* data_ov002_020ff1a0: the 1 / 3 / 8 / 12 / 30 / 50 / 80 star messages */
+        const bool level_music = data_0208e444 < 0 && data_0208e43c >= 0 && data_0209b4ac == data_0208e43c;
+        if (quota && host_setting_peach_jingle() && !level_music)
+            fprintf(stderr, "[peach] star message 0x%x opened while the music is not the level's own (music %d, level %d, boss layer %d): no tune\n",
+                    id, data_0209b4ac, data_0208e43c, data_0208e444);
+        if (quota && host_setting_peach_jingle() && level_music) {
             s_vol = data_0208e42c;
             s_mask0 = sd_seq_player_mask();
             s_player = -1;
             _ZN5Sound8SetMusicEjj((unsigned)data_0209f250, PEACH_SEQ);
             if (data_0209b4ac == PEACH_SEQ) {
                 s_age = 0;
-                fprintf(stderr, "[peach] unlock message 0x%x opened: NCS_BGM_PEACH (sequence %d) in place of music %d, volume target was %d\n", id, PEACH_SEQ, data_0208e43c, s_vol);
+                fprintf(stderr, "[peach] star message 0x%x opened: NCS_BGM_PEACH (sequence %d) in place of music %d, volume target was %d\n", id, PEACH_SEQ, data_0208e43c, s_vol);
             }
         }
     }
     if (s_age >= 0) {
-        /* what the game wants the music at: its duck while the unlock box is up (read before this tick overrides it), the full level once the box is closed */
+        /* what the game wants the music at: its own target while the box is up (read before this tick overrides it), the full level once the box is closed */
         if (!open) s_vol = 0x7f;
         else if (data_0208e42c != 0x7f) s_vol = data_0208e42c;
         if (s_player < 0 && s_age >= 1 && s_age <= 20) {   /* the sound queue starts the sequence a tick after the call: the player that is newly sounding is the tune's */
@@ -196,7 +202,7 @@ static void port_peach_jingle_tick(void)
         }
         const bool over = s_player >= 0 ? (s_age > 20 && !sd_seq_active(s_player)) || s_age >= PEACH_MAX : s_age >= PEACH_CAP;
         if (!over) {
-            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, PEACH_FADE);   /* the unlock state's own duck runs earlier in the frame; this is what the sound tick sees */
+            _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, PEACH_FADE);   /* a duck set earlier in the frame is overridden; this is what the sound tick sees */
             ++s_age;
         } else {
             _ZN5Sound8EndMusicEjj((unsigned)data_0209f250, 0);
