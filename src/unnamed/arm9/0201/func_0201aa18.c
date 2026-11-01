@@ -1,7 +1,7 @@
 extern void *func_0201aad4(void *alarm);
 
-/* The watchdog alarm at data_0209d574 (constructed by __sinit_02074e0c, which
- * registers func_0201aaec to destroy it). It starts with a NitroSDK OSAlarm:
+/* The watchdog alarm at data_0209d574 (constructed by __sinit_func_0201a96c.cpp,
+ * which registers func_0201aaec to destroy it). It starts with a NitroSDK OSAlarm:
  * func_0201aad4 reaches OS_CreateAlarm, which clears the alarm's handler and
  * tag. Names follow the readers: func_0201a8b4, the
  * alarm handler, re-arms the alarm for what is left of limit since base,

@@ -560,6 +560,9 @@ src/unnamed/arm9/0201/func_0201a8b4.c:
 src/unnamed/arm9/0201/func_0201a96c.cpp:
     complete
     .text start:0x0201a96c end:0x0201a9ec
+    .init start:0x02074e0c end:0x02074e44
+    .ctor start:0x02086b7c end:0x02086b80
+    .bss start:0x0209d528 end:0x0209d5b8
 
 src/unnamed/arm9/0201/func_0201a9ec.c:
     complete
@@ -3388,10 +3391,6 @@ src/unnamed/arm9/0207/__sinit_02074dbc.c:
 src/unnamed/arm9/0207/__sinit_02074dc0.c:
     complete
     .init start:0x02074dc0 end:0x02074dc4
-
-src/unnamed/arm9/0207/__sinit_02074e0c.c:
-    complete
-    .init start:0x02074e0c end:0x02074e44
 
 src/unnamed/arm9/0207/__sinit_02074e80.c:
     complete
