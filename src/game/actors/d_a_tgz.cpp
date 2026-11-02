@@ -1,8 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
 /* daTgz_c -- the Spiny on the castle roof, ov077.
  *
  * Six PMF state records (func_ov077_02125e94 picks one). State 0 is the
@@ -45,6 +41,7 @@ struct Vector3_16f;
  *   overloading, so those four cast.
  */
 #include "decl_common.h"
+#include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "daTgz_c.h"
 #include "daPly_c.h"
@@ -125,13 +122,6 @@ void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 extern Matrix4x3 data_020a0e68;
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-namespace Particle {
-struct System {
-    static void *NewSimple(unsigned int id, int x, int y, int z);
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-    static void NewBigSplash(Fix12i, Fix12i, Fix12i);
-};
-}
 extern s16 data_02082214[];
 void func_02035684(int *p, int v);
 int RandomIntInternal(int *seed);

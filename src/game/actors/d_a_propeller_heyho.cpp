@@ -1,12 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-    static unsigned NewUnkCallback818(unsigned, unsigned, int, int, int, const ::Vector3_16f *);
-};
-}
 /* Fly Guy (PROPELLER_HEYHO), ov070. .text 0x0211f000..0x02120570,
  * inline destructor D1 then D0, plus the 25 functions below. It wanders
  * a home position, chases a player inside 1000 units, then dives or
@@ -42,6 +34,7 @@ enum d_a_propeller_heyho_AssetId {
 };
 
 #include "daPropeller_Heyho_c.h"
+#include "Particle__System.h"
 #include "SpawnInfo.h"
 #include "math/Approach.h"
 
@@ -944,7 +937,6 @@ short func_ov070_0211f450(daPropeller_Heyho_c *c) {
 extern "C" int func_ov070_0211f0a4(daPropeller_Heyho_c *c);
 typedef int Fix12i;
 
-struct Vector3_16f;
 extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e,
                                                void *f, void *g);
 extern "C" u32 d_a_propeller_heyhoNewUnkCallback818Hold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,

@@ -390,79 +390,84 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@942",
+      "from": "@998",
       "to": "@960",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@944",
+      "from": "@1000",
       "to": "@958",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@946",
+      "from": "@1002",
       "to": "@218",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it; the 0x02108160 pin is spelled @218 because daObjSwitch_c already pins @91 in ov002 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@948",
+      "from": "@1004",
       "to": "@985",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@950",
+      "from": "@1006",
       "to": "@987",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@952",
+      "from": "@1008",
       "to": "@956",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@956",
+      "from": "@1012",
       "to": "@952",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@958",
+      "from": "@1014",
       "to": "@950",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@960",
+      "from": "@1016",
       "to": "@986",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@964",
+      "from": "@1020",
       "to": "@944",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@966",
+      "from": "@1022",
       "to": "@942",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@968",
+      "from": "@1024",
       "to": "@948",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@940",
+      "from": "@996",
       "to": "@266",
       "evidence": "the compiler emits @967, which ov077 daJgm_c already defines as a global, so the pin is the unused @266"
     },
     {
-      "from": "@962",
+      "from": "@1018",
       "to": "@262",
       "evidence": "the compiler emits @989, which ov074 daKuriKing_c already defines as a global, so the pin is the unused @262"
     },
     {
-      "from": "@970",
+      "from": "@1026",
       "to": "@946",
       "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@1010",
+      "to": "@954",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ],
   "notes": [

@@ -1127,57 +1127,57 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@973",
+      "from": "@1025",
       "to": "@214",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     },
     {
-      "from": "@974",
+      "from": "@1026",
       "to": "@964",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     },
     {
-      "from": "@976",
+      "from": "@1028",
       "to": "@966",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     },
     {
-      "from": "@978",
+      "from": "@1030",
       "to": "@968",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     },
     {
-      "from": "@980",
+      "from": "@1032",
       "to": "@970",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     },
     {
-      "from": "@982",
+      "from": "@1034",
       "to": "@972",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     },
     {
-      "from": "@984",
+      "from": "@1036",
       "to": "@974",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     },
     {
-      "from": "@986",
+      "from": "@1038",
       "to": "@976",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     },
     {
-      "from": "@988",
+      "from": "@1040",
       "to": "@978",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     },
     {
-      "from": "@989",
+      "from": "@1041",
       "to": "@979",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     },
     {
-      "from": "@991",
+      "from": "@1043",
       "to": "@981",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged."
     }
