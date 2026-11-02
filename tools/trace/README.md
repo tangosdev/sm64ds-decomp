@@ -136,3 +136,106 @@ Addresses are EU (this repo's ROM): actor list head `0x0209b468` (node
 embedded at actor+0x50), `LOADED_LEVEL_OVL_ID 0x02092130`; layouts credited to
 SplattyDS/DynamicAllocationDecomp (see CREDITS.md), vtable slot semantics
 validated in `tools/actor_names.py`.
+
+## ask.py: pause and ask
+
+Runtime evidence for a field's meaning, gathered blind. At a pause the tool
+pokes a field, or a trigger breakpoint lets the game write it. It then advances
+a few frames and shows a before/after pair of the screen with the question
+"what changed?". Sham pauses are mixed in at random: no-op writes, writes of
+the same value, and flips of a bit believed unused. The key that says which
+pause was real lives in a separate file, and `score` unblinds it. Example:
+`specs/capicon_bit1.json` asks whether `dCapIcon_c::mFlags` bit 1 (`0x02`)
+draws the cap on a Goomba's head.
+
+Files: `ask.py` (CLI), `emusession.py` (one long-lived stub session plus a
+local RPC daemon), `emuwin.py` (launch, window capture, focus-free input,
+config swap), `uia_menu.ps1` (menu clicks by UI Automation), `specs/*.json`.
+Python 3.11 standard library only; tkinter is needed for human mode only.
+
+### A human session
+
+```sh
+# 0. close every melonDS window. The tool refuses to start if one is open.
+# 1. launch melonDS, load the savestate, hold the stub (leave this running)
+python tools/trace/ask.py serve --state C:/path/to/S3.ml --workdir C:/somewhere/outside/repo/emu
+# 2. in another shell: run the spec. A topmost popup asks each question.
+python tools/trace/ask.py run tools/trace/specs/capicon_bit1.json --mode human --out C:/somewhere/outside/repo/runs/r1
+# 3. unblind and tally (writes score.json; per-condition hit/miss/abstain)
+python tools/trace/ask.py score C:/somewhere/outside/repo/runs/r1
+# 4. detach, close melonDS, restore your melonDS.toml, delete the workdir
+python tools/trace/ask.py stop --kill --clean
+```
+
+The first launch of the installed `melonDS.exe` with the GDB stub on can raise
+a Windows Firewall prompt (the stub listens on a socket). Approve it once. The
+prompt is per executable path, so the tool always runs the installed exe and
+never copies it. During `run`, leave the melonDS window alone: input is posted
+to the window, so the window does not need focus. The popup shows only
+"A: before / B: after", the question, the choices, and a confidence row. It
+never shows the condition name, whether the pause was real, or any RAM values.
+
+Agent mode (`--mode agent`) writes the same `pairs/Qxx.png` images and an
+`answers.json` template. Fill in `answer` and `confidence` for each id, then run
+`score`. Do not open `key/` before scoring. `--mode none` only records data.
+`--answer-after MS` auto-answers the popup and screenshots it (`popup_Qxx.png`)
+as a smoke test. Those answers are tagged `"auto": true`, and `score` excludes
+them.
+
+Run directory layout: `pairs/` (blind images), `answers.json`, `key/key.json`
+(condition, real/sham, expected answer, located object, pokes with old/new
+values, pause trigger/pc/lr, before/after RAM snapshots), `key/log.jsonl`
+(every daemon event), `key/events.jsonl`, and `key/` raw shots.
+
+### Spec format (JSON)
+
+| key | meaning |
+|---|---|
+| `frame` | `{addr, module}`: a function that runs once per game frame. `step n` = run to its next hit n times. |
+| `residency` | overlay canaries (`{module, addr}`). A breakpoint whose overlay is swapped out is refused. |
+| `load_state_slot`, `settle_frames` | reload this savestate slot before the run, then step this many frames |
+| `locate` | `walk {heads, next, max}` plus `where` expressions. Finds the object (`obj`) for each event. |
+| `aim` | pokes applied before each event (for example, put the player 500 units in front of the subject so it stays framed) |
+| `fields` | `{name, expr, size}` snapshotted before and after (into the key, never into the pairs) |
+| `question` | `{text, choices}`. A choice containing "tell"/"unsure" counts as an abstention. |
+| `pause` | `{countdown: [lo, hi]}`: random frame count before a countdown pause |
+| `after_frames` | frames advanced between the poke and the "after" capture (default 4) |
+| `capture` | `{screen: top\|bottom\|both, settle_ms}` |
+| `conditions[]` | `{name, real, count, expect, prepare, prepare_frames, pokes, trigger, timeout, restore}` |
+| `triggers[]` | `{name, addr, module, obj, when, dump}`: a pause happens when the game itself reaches this address |
+| `probes[]` | the same as triggers plus `ret` (also log the return value) and `max_hits`. Log-and-continue, used by `probe`. |
+
+Expressions: `[addr]` = u32 read, `u8[..]` `u16[..]` `s8[..]` `s16[..]`
+`s32[..]`, `+ - * & |`, `== !=` (1/0), parentheses, and hex numbers. Names:
+`obj` / `node` / `r0..r15` / `sp` / `lr` / `pc`. A poke is
+`{expr, op: set|clear|flip|same|write, mask, value, size}`. `value` can be an
+expression (it can read RAM). `prepare` pokes put the field into a known state
+before the "before" capture. With `restore: true` (the default), every prepare
+and poke byte is written back after the "after" capture, so each event starts
+from the game's own state.
+
+### Why it does what it does
+
+- **One stub connection.** melonDS 1.1 accepts one GDB client per launch.
+  `serve` holds it and every other command talks to the daemon (`--rpc`,
+  default 3390). It sends a keepalive and detects a drop: a dead stub means
+  restarting melonDS.
+- **Request vs stop-packet race.** The stub closes the connection if a request
+  is sent while an asynchronous stop packet (a breakpoint hit) is in flight. It
+  expects the `+` acknowledgement for that stop first. With breakpoints armed,
+  `Session._pkt` therefore halts and drains (`_quiesce`), sends the request,
+  and resumes. A trigger that lands during the drain is kept as the next stop.
+- **Capture lag.** The DS 3D image lags the CPU by about one frame. A capture
+  taken right after a poke can show the old state. `after_frames` defaults to
+  4 (use at least 2). `shot` waits `settle_ms`, then re-captures until two
+  grabs match, because the halted window repaints late.
+- **Savestates** load through the File > Load state menu (UI Automation via
+  `uia_menu.ps1`) while the target runs. **Buttons and touch** are posted
+  window messages, so no focus is stolen and no global hotkeys fire.
+- **Config.** melonDS reads `melonDS.toml` from next to the exe (portable mode).
+  `serve` backs up your toml (and its sha256) into `--workdir`, writes one
+  with GDB on (ARM9 port 3333) and JIT off, and puts yours back after melonDS
+  exits. It deletes the backup only when the hashes match. After a crash, run
+  `ask.py restore-config --workdir <dir>`.
+- Keep run outputs and the work directory outside the repo. The ROM is copied
+  into the workdir as `game.nds`, and `stop --clean` deletes that copy.
