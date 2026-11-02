@@ -1,35 +1,14 @@
 //cpp
 #include "nitro/fx/fx.h"
 #include "cstd.h"
+#include "private/spl_particle_views.h"
 
 extern "C" {
 
-typedef struct ParticleNode ParticleNode;
+/* spl_particle_views.h's record, spelled again so the declaration gate reads
+ * TrackingRecord below as a struct tag */
+typedef struct ParticleElement ParticleElement;
 typedef struct TrackingRecord TrackingRecord;
-
-/* Particle::ParticleNode and Particle::System as include/Particle__System.h
- * names them; only the fields read here are spelled out. */
-typedef struct ParticleVec {
-    int x, y, z;
-} ParticleVec;
-
-struct ParticleNode {
-    ParticleNode *next;       /* 0x00 */
-    char pad_04[4];           /* 0x04 -- previous */
-    ParticleVec positionAsr3; /* 0x08 */
-    ParticleVec offsetAsr3;   /* 0x14 */
-    char pad_20[12];          /* 0x20 -- velocityAsr3 */
-    unsigned short lifetime;  /* 0x2c */
-    unsigned short age;       /* 0x2e */
-};
-
-typedef struct ParticleSystem {
-    char pad_00[8];
-    struct {
-        ParticleNode *head;
-        int count;
-    } particles; /* 0x08 */
-} ParticleSystem;
 
 /* One 0xc-byte tracking record (dPa_c's edStarKiraCallback_c::trackingRecords,
  * func_ov007_020be684's TrackingRecord): the callback writes the particle's
@@ -43,10 +22,10 @@ struct TrackingRecord {
      * this pass sees the particle */
     unsigned char flags;
     unsigned char pad_07;
-    ParticleNode *particle; /* 0x08 -- the tracked particle, 0 = free */
+    ParticleElement *particle; /* 0x08 -- the tracked particle, 0 = free */
 };
 
-typedef char ParticleNode_size_must_be_0x30[sizeof(ParticleNode) == 0x30 ? 1 : -1];
+typedef char ParticleElement_size_must_be_0x44[sizeof(ParticleElement) == 0x44 ? 1 : -1];
 typedef char TrackingRecord_size_must_be_0xc[sizeof(TrackingRecord) == 0xc ? 1 : -1];
 
 extern void func_0204dcc0(int *src, short *o1, short *o2, int *o3);
@@ -55,7 +34,7 @@ void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
     int sp[4];
     int i;
     int j;
-    ParticleNode *walk;
+    ParticleElement *walk;
     TrackingRecord *slot;
     TrackingRecord *p;
     int empty;
@@ -73,7 +52,7 @@ void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
         empty = -1;
 
         for (i = 0; i < count; i++) {
-            ParticleNode *n = buf[i].particle;
+            ParticleElement *n = buf[i].particle;
 
             if (n != 0) {
                 if (walk == n) {
@@ -97,9 +76,9 @@ void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
 
             scale = 0x1000 - cstd::div((int)walk->age << 12, walk->lifetime);
 
-            sp[1] = walk->offsetAsr3.x + walk->positionAsr3.x;
-            sp[2] = walk->offsetAsr3.y + walk->positionAsr3.y;
-            sp[3] = walk->offsetAsr3.z + walk->positionAsr3.z;
+            sp[1] = walk->offset.x + walk->basePosition.x;
+            sp[2] = walk->offset.y + walk->basePosition.y;
+            sp[3] = walk->offset.z + walk->basePosition.z;
 
             fn(&sp[1], &slot->screenX, &slot->screenY, &sp[0]);
 

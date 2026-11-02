@@ -22,16 +22,42 @@ struct TexAnim;   /* func_0204d150 */
 /* The particle definition's header (func_0204a730's PtclData; SPL's
  * SPLResourceHeader). */
 typedef struct PtclData {
-    u32 : 17;
+    u32 emissionType : 4;    /* bits 0-3 -- the emitter shape */
+    u32 drawType : 2;        /* 4-5 -- picks the per-particle draw routine */
+    u32 circleAxis : 2;      /* 6-7 -- 3: the system's own basis */
+    u32 hasScaleAnim : 1;    /* 8 */
+    u32 hasColorAnim : 1;    /* 9 */
+    u32 hasAlphaAnim : 1;    /* 10 */
+    u32 hasTexAnim : 1;      /* 11 -- rebind each particle's own texture */
+    u32 hasRotation : 1;     /* 12 -- random angular speed in [min, max] */
+    u32 randomInitAngle : 1; /* 13 */
+    u32 : 2;
+    u32 hasChildResource : 1;      /* bit 16 -- also draw the child particles */
     u32 polygonRotAxis : 2;        /* bits 17-18 -- data_02099fbc index */
     u32 polygonReferencePlane : 1; /* bit 19 -- data_02099fb4 index */
     u32 : 12;
-    char pad_04[0x12 - 4];
-    u16 color; /* 0x12 -- the particle's base colour, the colour ramp's middle stop */
-    char pad_14[0x20 - 0x14];
-    s16 aspectRatio; /* 0x20 -- x scale over y scale */
-    char pad_22[0x34 - 0x22];
-    u32 : 8;                   /* 0x34 -- loopFrames */
+    int rate;             /* 0x04 */
+    int emitRadius;       /* 0x08 -- System::emitRadius */
+    u16 axis[3];          /* 0x0c -- System::direction; read unsigned (ldrh) */
+    u16 color;            /* 0x12 -- the particle's base colour, the colour ramp's middle stop */
+    int callbackParam;    /* 0x14 -- System::callbackParam */
+    int callbackVelocity; /* 0x18 -- System::callbackVelocity */
+    int callbackScale;    /* 0x1c -- System::callbackScale */
+    s16 aspectRatio;      /* 0x20 -- x scale over y scale */
+    char pad_22[2];
+    s16 minRotation; /* 0x24 */
+    s16 maxRotation; /* 0x26 */
+    char pad_28[2];
+    u16 particleLifetime; /* 0x2a -- System::particleLifetime */
+    u8 scaleRandom;       /* 0x2c */
+    u8 lifetimeRandom;    /* 0x2d */
+    u8 velocityRandom;    /* 0x2e */
+    char pad_2f[1];
+    u8 emitInterval; /* 0x30 -- System::emitInterval */
+    u8 baseAlpha;    /* 0x31 */
+    char pad_32[1];
+    u8 texture;                /* 0x33 -- index into the manager's texture records */
+    u32 loopFrames : 8;        /* 0x34 */
     u32 dbbScale : 16;         /* bits 8-23 -- y stretch when flying across the view */
     u32 textureTileCountS : 2; /* bits 24-25 */
     u32 textureTileCountT : 2; /* bits 26-27 */
@@ -46,7 +72,7 @@ typedef struct PtclChildFlags {
     u16 rotationType : 2; /* bits 3-4 */
     u16 : 1;
     u16 useChildColor : 1;         /* bit 6 */
-    u16 : 2;                       /* bits 7-8 -- func_0204a5c8's drawType */
+    u16 drawType : 2;              /* bits 7-8 -- picks the child draw routine */
     u16 polygonRotAxis : 2;        /* bits 9-10 -- data_02099fbc index */
     u16 polygonReferencePlane : 1; /* bit 11 -- data_02099fb4 index */
     u16 : 4;
@@ -88,11 +114,38 @@ typedef struct PolygonIDs {
     u32 : 14;
 } PolygonIDs;
 
-/* Particle::System, named as func_0204c584.c's view. */
+/* One of a system's particle lists (Particle::ParticleList). */
+typedef struct ParticleList {
+    struct ParticleElement *head; /* 0x00 */
+    int count;                    /* 0x04 */
+} ParticleList;
+
+/* Particle::System (include/Particle__System.h), whose names this reuses. */
 typedef struct ParticleSystem {
-    char pad_00[0x18];
-    PtclDef *mDefinition; /* 0x18 */
-    char pad_1c[0x74 - 0x1c];
+    void *next;              /* 0x00 */
+    void *previous;          /* 0x04 */
+    ParticleList particles;  /* 0x08 */
+    ParticleList particles2; /* 0x10 -- the children */
+    PtclDef *mDefinition;    /* 0x18 */
+    int callbackFlags;       /* 0x1c */
+    Vector3 position;        /* 0x20 */
+    Vector3 velocity;        /* 0x2c */
+    u16 age;                 /* 0x38 */
+    s16 callbackValue;       /* 0x3a */
+    s16 direction[3];        /* 0x3c */
+    char pad_42[2];
+    int emitRadius;       /* 0x44 */
+    int callbackParam;    /* 0x48 */
+    int callbackVelocity; /* 0x4c */
+    int callbackScale;    /* 0x50 */
+    u16 particleLifetime; /* 0x54 */
+    char pad_56[2];
+    u8 emitInterval; /* 0x58 */
+    u8 baseAlpha;    /* 0x59 */
+    char pad_5a[0xe];
+    void *callback;        /* 0x68 */
+    int m6c;               /* 0x6c */
+    int m70;               /* 0x70 */
     PolygonIDs polygonIDs; /* 0x74 */
 } ParticleSystem;
 
@@ -106,26 +159,35 @@ typedef struct Visibility {
 /* Particle::Element (include/Particle__Element.h) and the fields past its
  * 0x30 bytes, named as in func_0204c584.c. */
 typedef struct ParticleElement {
-    char pad_00[8];        /* 0x00 -- the particle list link */
-    Vector3 basePosition;  /* 0x08 */
-    Vector3 offset;        /* 0x14 */
-    Vector3 velocity;      /* 0x20 */
-    u16 lifetime;          /* 0x2c */
-    u16 age;               /* 0x2e */
-    int scale;             /* 0x30 */
-    s16 animScale;         /* 0x34 */
-    u16 angle;             /* 0x36 */
-    s16 angularSpeed;      /* 0x38 */
-    u16 color;             /* 0x3a */
-    u16 loopTimeFactor;    /* 0x3c */
-    u16 lifeRateFactor;    /* 0x3e */
-    Visibility visibility; /* 0x40 */
-    u8 texture;            /* 0x42 -- the index of the particle's current texture */
+    struct ParticleElement *next;     /* 0x00 */
+    struct ParticleElement *previous; /* 0x04 */
+    Vector3 basePosition;             /* 0x08 */
+    Vector3 offset;                   /* 0x14 */
+    Vector3 velocity;                 /* 0x20 */
+    u16 lifetime;                     /* 0x2c */
+    u16 age;                          /* 0x2e */
+    int scale;                        /* 0x30 */
+    s16 animScale;                    /* 0x34 */
+    u16 angle;                        /* 0x36 */
+    s16 angularSpeed;                 /* 0x38 */
+    u16 color;                        /* 0x3a */
+    u16 loopTimeFactor;               /* 0x3c */
+    u16 lifeRateFactor;               /* 0x3e */
+    Visibility visibility;            /* 0x40 */
+    u8 texture;                       /* 0x42 -- the index of the particle's current texture */
 } ParticleElement;
+
+/* One 0x14-byte texture record: what func_0204af3c (texture, palette, size)
+ * binds. */
+typedef struct TextureView {
+    u32 pad[5];
+} TextureView;
 
 /* Particle::Manager (include/Particle__Manager.h is C++), named as there. */
 typedef struct ManagerView {
-    char pad_00[0x30];
+    char pad_00[0x20];
+    TextureView *mTextures; /* 0x20 */
+    char pad_24[0x30 - 0x24];
     u32 mPolygonAttr;               /* 0x30 */
     ParticleSystem *mCurrentSystem; /* 0x34 -- the system being drawn */
     int *mDrawMatrix;               /* 0x38 */
