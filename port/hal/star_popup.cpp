@@ -33,6 +33,7 @@ extern unsigned char data_02092110[];     // pending level change, <0 = none
 extern unsigned char data_0209f22c[];     // hold timer
 extern unsigned char data_0209f228;       // the star number the clear screen names
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
+void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 int _ZN8daStar_c19func_ov002_020e73acEv(char *star);      // the ROM's star classifier
 void ExitLevel(void);
 extern int data_0209d6fc[];               // the message bank (hal/message_boot.cpp): base, entries, info section
@@ -48,7 +49,7 @@ enum Mode { kNone, kParty, kCoop };
 enum : int { kKindStar = 1, kKindKey = 2 };
 enum : unsigned { kFlagExits = 1u };
 enum : int { kCtlStarPop = 0x1e };
-enum : unsigned { kCountMs = 5000, kShowAfterMs = 2500 };
+enum : unsigned { kCountMs = 5000, kShowAfterMs = 2500, kNoteMs = 4000 };
 enum : int { kSeenMax = 16, kPendMax = 8, kSeqMemory = 12, kLedgerMax = 4, kRecentMax = 8, kResendN = 6 };
 // STARGATE1: re-sends after the first send, ms from the event (the first copy goes out at +0, then these); a console that was
 // loading or in star select when the event arrived still gets one. The receiver de-duplicates by sequence number.
@@ -71,7 +72,8 @@ static_assert(sizeof(PopWire) == 8, "popup event is 8 bytes");
 struct Pending { bool used; unsigned t0; int idx; unsigned char buf[16]; int len; bool coop; PopWire w; };
 // An event that arrived while I was not in the collector's course and act yet (loading, star select): kept for kLedgerMs and
 // re-checked every frame.
-struct Ledger { bool used; int seat, kind, star, course, lvl, act; bool exits; unsigned t; };
+struct Ledger { bool used; int seat, kind, star, course, lvl, act; bool exits; unsigned t; bool arena; };
+// (arena: STAREXIT1, only a console in the collector's own level leaves for it)
 // Recent collections (mine and everyone's) for the single-collector guard.
 struct Recent { bool used; int key, star, kind; unsigned t; };
 struct Fake { bool used, done; int kind, exits; unsigned frame; };
@@ -91,6 +93,7 @@ struct State {
     SeqMem mem[kSeqMemory]; int nmem;
     bool counting; unsigned t_end; bool exit_pending; bool exit_key; int exit_star;
     char line[kStarPopupLines - 1][kStarPopupLineMax]; int nline;
+    bool note_only;                  // STAREXIT1: the lines are a note (no countdown, no exit)
     unsigned t_last;
     bool registered;
     StarPopupStats st;
@@ -147,7 +150,7 @@ void init_once() {
     }
     g.no_timeout = env_on("SM64DS_STAR_POPUP_NOTIMEOUT", false);
     if (const char *e = std::getenv("SM64DS_STAR_POPUP_STALE")) { const int f = std::atoi(e); if (f > 0) g.stale_frame = (unsigned)f; }
-    std::fprintf(stderr, "[starpop] on: enabled=%d\n", (int)g.enabled);
+    std::fprintf(stderr, "[starpop] on: enabled=%d only_collector=%d\n", (int)g.enabled, (int)env_on("SM64DS_ROOM_SOLOEXIT", true));
 }
 
 Mode mode_now() {
@@ -162,6 +165,24 @@ Mode mode_now() {
     // WPARTY2: a world room, while I am in a world party (kParty; rx adds the member test)
     if (k == kHubRoomWorld) return (world_party_active() && world_party_in_party()) ? kParty : kNone;
     return kNone;
+}
+
+// ---- STAREXIT1: the room rule "only the collector leaves" ------------------------------------------------------------------
+// The one place the rule lives. The launcher hands it over as SM64DS_ROOM_SOLOEXIT (lobby room setting "soloexit"; the coop and
+// world hand-offs put every request name into the environment), read on every event so an in-place hand-off to another room is
+// seen. A missing or empty name is ON (an older launcher sends none). star_popup_set_only_collector() overrides it (the in-game
+// lobby); -1 goes back to the environment.
+int g_only_override = -1;
+bool only_collector() {
+    if (g_only_override >= 0) return g_only_override != 0;
+    return env_on("SM64DS_ROOM_SOLOEXIT", true);
+}
+// A friend's star counts for me only where it is shared: coop always (the room shares one save), a party room when its stars are
+// shared and taken (hal/party_stars.cpp reads the same two names), a world party never (hal/party_stars.cpp takes party rooms only).
+bool star_shared_here(Mode m) {
+    if (m == kCoop) return true;
+    return comms_hub_room_kind() == kHubRoomParty && env_on("SM64DS_PARTY_SHARE_STARS", true) &&
+           env_on("SM64DS_PARTY_ACCEPT_STARS", true);
 }
 
 int my_seat() { return comms_hub_my_seat(); }
@@ -375,7 +396,7 @@ void clear_stale_d4b0() {
 }
 
 void clear_receiver() {
-    g.counting = false; g.exit_pending = false; g.nline = 0; g.t_end = 0;
+    g.counting = false; g.exit_pending = false; g.nline = 0; g.t_end = 0; g.note_only = false;
 }
 
 void toast(const char *name, int kind, int course, int star) {
@@ -421,6 +442,7 @@ void start_popup(const char *name, int kind, int course, int star) {
     }
     g.t_last = now;
     ++g.st.shown;
+    g.note_only = false;
     if (!g.counting && !g.exit_pending) {
         g.counting = true;
         g.t_end = now + kCountMs;
@@ -435,6 +457,43 @@ bool in_unit(int lvl, int act) {
     return lvl >= 0 && my_body() && act == (data_0209f220[0] & 0xf) && same_unit(lvl, (int)data_0209f2f8 & 0xff);
 }
 
+// STAREXIT1: a key's exit is for the boss room only: I stand in the collector's own level (the arena), not just its course.
+bool in_arena(int lvl) {
+    return lvl >= 0 && my_body() && lvl == ((int)data_0209f2f8 & 0xff);
+}
+
+// STAREXIT1: the popup's lines without the countdown (rule ON, a friend's star in my course and act). Never starts an exit.
+void note_line(const char *name, int kind, int course, int star) {
+    if (g.counting || g.exit_pending) { start_popup(name, kind, course, star); return; }   // an exit already runs: one more line
+    if (g.nline >= kStarPopupLines - 1) { std::memmove(g.line, g.line + 1, sizeof g.line[0] * (kStarPopupLines - 2)); --g.nline; }
+    char l[160];
+    describe(name, kind, course, star, l, sizeof l, false);
+    std::snprintf(g.line[g.nline], kStarPopupLineMax, "%s", l);
+    ++g.nline;
+    g.t_last = now_ms();
+    g.note_only = true;
+    ++g.st.shown;
+    ++g.st.notes;
+}
+
+// STAREXIT1, party with shared stars: a friend took star `star` of my course and act, so my copy of it goes, the way coop's
+// reconcile removes a collected star (hal/coop_world.cpp reconcile: KillAndTrackInDeathTable). A PowerStar (class 178) with that
+// star number (+0x49d, the number scan_local sends) that is not being collected right now (+0x440 != 5) and is not a silver / VS
+// star (the ROM's classifier, 2). The save bit itself arrives through hal/party_stars.cpp on a safe frame.
+int kill_local_star(int star) {
+    int n = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; ) {
+        char *next = (char *)_ZN8dActor_c4NextEPKS_(a);
+        if (*(const unsigned short *)(a + 0x0c) == 178 && *(const unsigned *)(a + 0x440) != 5u &&
+            (*(const unsigned char *)(a + 0x49d) & 7) == (star & 7) && _ZN8daStar_c19func_ov002_020e73acEv(a) != 2) {
+            _ZN8dActor_c24KillAndTrackInDeathTableEv(a);
+            ++n;
+        }
+        a = next;
+    }
+    return n;
+}
+
 // An event arrived from `seat`; the sender stood in `lvl` / `act` (lvl < 0 = unknown), course `course` (-1 unknown).
 void on_event(int seat, int kind, bool exits, int lvl, int act, int course, int star) {
     char name[24];
@@ -446,12 +505,32 @@ void on_event(int seat, int kind, bool exits, int lvl, int act, int course, int 
         return;
     }
     toast(name, kind, course, star);
-    const bool same = exits && in_unit(lvl, act);
+    // STAREXIT1: with the room rule ON only the collector leaves. A key still empties its boss room (an arena has no other
+    // way out); everyone else in the course gets the note and plays on.
+    const bool only = only_collector();
+    const bool arena = only && kind == kKindKey;
+    if (exits && only && !(arena && in_arena(lvl))) {
+        const Mode m = mode_now();
+        const bool unit = in_unit(lvl, act);
+        const bool shared = star_shared_here(m);
+        int killed = 0;
+        if (unit && (shared || arena)) note_line(name, kind, course, star);
+        if (unit && kind == kKindStar && shared && m == kParty) killed = kill_local_star(star);
+        std::fprintf(stderr, "[starpop] rx seat=%d kind=%d level=%d act=%d star=%d: only the collector leaves (unit=%d shared=%d "
+                     "note=%d removed=%d) wall=%lld\n", seat, kind, lvl, act, star, (int)unit, (int)shared,
+                     (int)(unit && (shared || arena)), killed, wall_ms());
+        if (arena && lvl >= 0) {            // I may be on my way into the arena: keep it, the ledger checks the level
+            for (Ledger &l : g.led)
+                if (!l.used) { l = { true, seat, kind, star, course, lvl, act, exits, now_ms(), true }; break; }
+        }
+        return;
+    }
+    const bool same = exits && (arena ? in_arena(lvl) : in_unit(lvl, act));
     if (!same) {
         if (g.log) std::fprintf(stderr, "[starpop] rx seat=%d kind=%d exits=%d same=0 -> toast wall=%lld\n", seat, kind, (int)exits, wall_ms());
         if (exits && lvl >= 0) {            // keep it: this console may still be loading or in star select
             for (Ledger &l : g.led)
-                if (!l.used) { l = { true, seat, kind, star, course, lvl, act, exits, now_ms() }; break; }
+                if (!l.used) { l = { true, seat, kind, star, course, lvl, act, exits, now_ms(), false }; break; }
         }
         return;
     }
@@ -466,7 +545,7 @@ void ledger_tick() {
     for (Ledger &l : g.led) {
         if (!l.used) continue;
         if ((unsigned)(now - l.t) > kLedgerMs) { l.used = false; continue; }
-        if (!in_unit(l.lvl, l.act)) continue;
+        if (l.arena ? !in_arena(l.lvl) : !in_unit(l.lvl, l.act)) continue;
         if (g.counting || g.exit_pending) { l.used = false; continue; }
         char name[24];
         seat_name(l.seat, name, sizeof name);
@@ -624,6 +703,12 @@ void star_popup_view(StarPopupView *out) {
 
 StarPopupStats star_popup_stats() { return g.st; }
 
+bool star_popup_only_collector() { return only_collector(); }
+void star_popup_set_only_collector(int on) {
+    g_only_override = on < 0 ? -1 : (on ? 1 : 0);
+    std::fprintf(stderr, "[starpop] only-the-collector-leaves rule set to %d (-1 = the room's SM64DS_ROOM_SOLOEXIT)\n", g_only_override);
+}
+
 }  // namespace port
 
 extern "C" void port_star_popup_frame(void) {
@@ -707,7 +792,8 @@ extern "C" void port_star_popup_frame(void) {
             }
         }
     }
-    if (!g.counting && !g.exit_pending && g.nline && (unsigned)(now - g.t_last) > kShowAfterMs + kCountMs) g.nline = 0;
+    if (!g.counting && !g.exit_pending && g.nline &&
+        (unsigned)(now - g.t_last) > (g.note_only ? (unsigned)kNoteMs : (unsigned)(kShowAfterMs + kCountMs))) { g.nline = 0; g.note_only = false; }
 }
 
 extern "C" int port_star_popup_stop_now(void) { return port::g.stop_flag ? 1 : 0; }

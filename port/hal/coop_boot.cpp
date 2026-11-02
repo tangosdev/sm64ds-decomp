@@ -1074,8 +1074,8 @@ struct LinePic {
 void (*g_lv_prev_hook)(void) = nullptr;
 bool g_lv_chained = false;
 
-/* The launcher's names (LobbyLaunch.cs): the same 43 hal/online_join.cpp clears at an online leave (its k_join_env 12 +
-   k_session_env 31, file-static there). */
+/* The launcher's names (LobbyLaunch.cs): the same 44 hal/online_join.cpp clears at an online leave (its k_join_env 12 +
+   k_session_env 32, file-static there). */
 const char *const k_coop_env[] = {
     "SM64DS_ADVENTURE", "SM64DS_COMMS_RELAY", "SM64DS_COMMS_CODE", "SM64DS_ROOM_KIND", "SM64DS_VOICE_ALLOWED", "SM64DS_HUB_SEAT",
     "SM64DS_PLAYER_NAME", "SM64DS_PLAYER_COLOR", "SM64DS_PLAYER_SHOES", "SM64DS_WORLD_NO", "SM64DS_JOIN_QUIET", "SM64DS_BOOT_FILE",
@@ -1083,6 +1083,7 @@ const char *const k_coop_env[] = {
     "SM64DS_HUB_PORT", "SM64DS_HUB_DELAY_MS", "SM64DS_PARTY", "SM64DS_PARTY_SHARE_STARS", "SM64DS_NETMODE",
     "SM64DS_COOP", "SM64DS_COOP_HOST", "SM64DS_COOP_SAVE", "SM64DS_COOP_SAVE_NAME", "SM64DS_COOP_TP",
     "SM64DS_ROOM_COLLISION", "SM64DS_ROOM_INTERACT", "SM64DS_ROOM_DAMAGE", "SM64DS_ROOM_TP", "SM64DS_ROOM_STARSHARE",
+    "SM64DS_ROOM_SOLOEXIT",
     "SM64DS_VS_PLAYERS", "SM64DS_VS_NAMES", "SM64DS_VS_COLORS", "SM64DS_VS_NETMODE", "SM64DS_SESSION_DIGEST",
     "SM64DS_SKIP_MENU", "SM64DS_VS_MAP", "SM64DS_VS_STAR_TARGET", "SM64DS_VS_KING_TARGET", "SM64DS_VS_LUIGI_INFECTION",
     "SM64DS_VS_LUIGI_SEED" };
