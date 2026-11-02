@@ -1948,8 +1948,7 @@ int daPly_c::func_ov002_020bfa74() {
         dir.x = FX_MUL(COS(vert), SIN(horz));
         dir.z = FX_MUL(COS(vert), COS(horz));
         func_ov002_020bf800(this, dir);
-        mSurfaceSoundHandle =
-            Sound::PlayLong(mSurfaceSoundHandle, 3, 0x90, mCamSpacePos, 0);
+        mSurfaceSoundHandle = Sound::PlayLong(mSurfaceSoundHandle, 3, 0x90, mCamSpacePos, 0);
         if (mIsMetal != 0 || mIsNoControl != 0 || func_ov002_020e0478(this) != 0) return 0;
         if (mIsAirborne == 0) {
             if (this->IsState(data_ov002_0211013c) || this->IsState(daPly_c::ST_WAIT) ||
@@ -2688,8 +2687,7 @@ void daPly_c::func_ov002_020c133c() {
     if (!func_ov002_020d82f0(this)) return;
     if (mIsAirborne != 0) return;
     if (this->GetHealth() <= 2)
-        mSurfaceSoundHandle =
-            Sound::PlayLong(mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
+        mSurfaceSoundHandle = Sound::PlayLong(mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
     if (mDamageTickTimer != 0) {
         mDamageTickTimer--;
         return;
@@ -13888,8 +13886,7 @@ int daPly_c::St_BurnLava_Main() {
                                                info.pos[2], (const Vector3_16f *)(info.vec), 0);
             mParticle2 = Particle::System::New(mParticle2, 0xbe, info.pos[0], info.pos[1],
                                                info.pos[2], (const Vector3_16f *)(info.vec), 0);
-            mLoopingSoundHandle =
-                Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
+            mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
         }
     }
 
@@ -14039,8 +14036,7 @@ int daPly_c::St_BurnFire_Main() {
                                            (const Vector3_16f *)(info.vec), 0);
         mParticle2 = Particle::System::New(mParticle2, 0xbe, info.pos[0], info.pos[1], info.pos[2],
                                            (const Vector3_16f *)(info.vec), 0);
-        mLoopingSoundHandle =
-            Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
+        mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
     }
 
     switch (mStateStep) {
@@ -17061,8 +17057,8 @@ int daPly_c::St_SwingPlayer_Main() {
                     id = 0x133;
                 mParticle1 = Particle::System::New((u32)mParticle1, id, *(int *)&v.x, *(int *)&v.y,
                                                    *(int *)&v.z, 0, 0);
-                mLoopingSoundHandle = Sound::PlayLong((u32)mLoopingSoundHandle, 0, 0x1c,
-                                                      mCamSpacePos, 0);
+                mLoopingSoundHandle =
+                    Sound::PlayLong((u32)mLoopingSoundHandle, 0, 0x1c, mCamSpacePos, 0);
             }
             if (this->mAngleYSpeed != 0)
                 this->mStateTimer = 0xa;
