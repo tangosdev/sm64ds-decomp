@@ -12,9 +12,25 @@ struct dActor_c;
  * helper writes the old list head into +0x10 and back-patches that
  * head's +0x0c. Unlink agrees.
  *
- * deslop leftovers:
- * - Bit 0 of mFlags is the cap bank (AddCap). Bit 1 is tested by
- *   GetCapState. Bit 2 means "not linked".
+ * mFlags, bit by bit. Each line says what kind of evidence backs it.
+ * - Bit 0: the cap bank (AddCap). Code-read only.
+ * - Bit 1: this node's cap is the real one. In the running game (2026-11-02,
+ *   EU ROM, tools/trace/ask.py), setting it on a Goomba's node made the cap
+ *   appear on its head and drop when stomped. Clearing it removed both.
+ *   Poking bits 3 and 5, or a same-value write, changed nothing. The map
+ *   icon and mSlot did not follow the poke. At level entry the manager sets
+ *   it on one node per unlocked character, and Unlink clears it.
+ *   GetCapState and dCapEnemy_c::UpdateCapPos test it.
+ * - Bit 2: not linked. The constructor and Unlink set it. Setting it at
+ *   runtime hid the cap even with bit 1 set, which matches UpdateCapPos
+ *   testing "bit 2 set or bit 1 clear".
+ * - Bit 3: passed over once by the manager's pick, eligible on the next
+ *   pass. Every runtime set of bit 1 on a kind-0 node came the frame after
+ *   bit 3. Nothing visible follows from it.
+ * The original source likely used bitfields, not masks:
+ * func_ov001_020aa420 has to read bits 0 and 3 as bitfields to match.
+ * The local bit views in the .cpp files name them bank, real, unlinked
+ * and skipped.
  */
 
 namespace Memory {
