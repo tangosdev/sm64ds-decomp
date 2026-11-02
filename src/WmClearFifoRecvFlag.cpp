@@ -1,6 +1,7 @@
 //cpp
 #include "types.h"
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
@@ -24,13 +25,13 @@ extern void Crash(void);
 extern void MultiCopyHalf(const void *src, void *dst, s32 count);
 extern int WM_Finish(void);
 extern void WmClearFifoRecvFlag(void);
-extern u32 *data_020a89ac;
+extern WMArm9Buf *data_020a89ac;
 extern BufT data_020a89ec;
 extern char data_020a8a00;
 
 /* NitroSDK wm_system.c's static WmReceiveFifo, the PXI receive callback
  * WM_Init installs for tag 0xa: msg is the WMCallback ARM7 left in the
- * fifo7to9 buffer (data_020a89ac[4]). Unless err, dispatch it to the
+ * fifo7to9 buffer. Unless err, dispatch it to the
  * indication callback, the port callback or the callback registered for
  * its API id, call WM_Finish after a successful WM_APIID_END (2), and
  * otherwise end in WmClearFifoRecvFlag. */
@@ -40,22 +41,21 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
     if (err != 0)
         return;
 
-    CP15::InvalidateDataCache(data_020a89ac[4], 0x100);
-    CP15::InvalidateDataCache(data_020a89ac[1], 0xa00);
+    CP15::InvalidateDataCache((u32)data_020a89ac->fifo7to9, 0x100);
+    CP15::InvalidateDataCache((u32)data_020a89ac->status, 0xa00);
 
     op = msg[0];
     if (op >= 0x25) {
         if (op == 0x80) {
             if (msg[1] == 0x13)
                 Crash();
-            if ((Handler)data_020a89ac[0x2a] != 0)
-                ((Handler)data_020a89ac[0x2a])(msg);
+            if ((Handler)data_020a89ac->indCallback != 0)
+                ((Handler)data_020a89ac->indCallback)(msg);
         } else if (op == 0x82) {
-            if ((data_020a89ac + msg[3])[0x2b] != 0) {
-                *(u32 *)((char *)msg + 0x1c) = (data_020a89ac + msg[3])[0x3b];
-                CP15::InvalidateDataCache(*(u32 *)(msg + 4),
-                                          *(u16 *)((char *)data_020a89ac[1] + 0x46));
-                ((Handler)(data_020a89ac + msg[3])[0x2b])(msg);
+            if (data_020a89ac->portCallbackTable[msg[3]] != 0) {
+                *(void **)((char *)msg + 0x1c) = data_020a89ac->portCallbackArgument[msg[3]];
+                CP15::InvalidateDataCache(*(u32 *)(msg + 4), data_020a89ac->status->mp_recvBufSize);
+                ((Handler)data_020a89ac->portCallbackTable[msg[3]])(msg);
             }
         } else if (op == 0x81) {
             msg[0] = 0xf;
@@ -65,15 +65,14 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
     } else {
         if (op == 0xe) {
             if ((u16)(msg[2] + 0xfff5) <= 1 && msg[1] == 0) {
-                CP15::InvalidateDataCache(*(u32 *)(msg + 4),
-                                          *(u16 *)((char *)data_020a89ac[1] + 0x46));
+                CP15::InvalidateDataCache(*(u32 *)(msg + 4), data_020a89ac->status->mp_recvBufSize);
             }
         }
 
         {
             u16 t = msg[0];
-            if ((Handler)(data_020a89ac + t)[5] != 0)
-                ((Handler)(data_020a89ac + t)[5])(msg);
+            if ((Handler)data_020a89ac->callbackTable[t] != 0)
+                ((Handler)data_020a89ac->callbackTable[t])(msg);
         }
 
         {
@@ -106,9 +105,9 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
                     MultiCopyHalf(p, &data_020a8a00, 6);
                     for (i = 0; i < 0x10; i++) {
                         data_020a89ec.w6 = i;
-                        if ((data_020a89ac + i)[0x2b] != 0) {
-                            data_020a89ec.d1c = (data_020a89ac + i)[0x3b];
-                            ((Handler)(data_020a89ac + i)[0x2b])(&data_020a89ec);
+                        if (data_020a89ac->portCallbackTable[i] != 0) {
+                            data_020a89ec.d1c = (u32)data_020a89ac->portCallbackArgument[i];
+                            ((Handler)data_020a89ac->portCallbackTable[i])(&data_020a89ec);
                         }
                     }
                 }
@@ -121,7 +120,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
         }
     }
 
-    CP15::InvalidateDataCache(data_020a89ac[4], 0x100);
+    CP15::InvalidateDataCache((u32)data_020a89ac->fifo7to9, 0x100);
     WmClearFifoRecvFlag();
 }
 

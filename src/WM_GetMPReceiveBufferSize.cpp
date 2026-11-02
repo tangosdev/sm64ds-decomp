@@ -1,5 +1,6 @@
 //cpp
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
@@ -14,27 +15,6 @@ extern int WM_CheckStateEx(int count, ...);
  * Field names follow the SDK's WMArm9Buf and WMStatus; only the fields this
  * function reads are spelled out. pparam is WMParentParam in this ROM's
  * layout (maxEntry at +0x0e, see include/WmWork.h's WmParentParam). */
-typedef struct WMStatus {
-    char pad_000[0x10];
-    int mp_flag; /* 0x010 -- 1 once MP has started */
-    char pad_014[0xd0];
-    struct {
-        char pad_00[0xe];
-        unsigned short maxEntry; /* 0x0f2 */
-    } pparam;                    /* 0x0e4 */
-    char pad_0f4[0x90];
-    unsigned short aid; /* 0x184 -- 0 for the parent */
-    char pad_186[0xa];
-    unsigned short mp_maxRecvSize; /* 0x190 */
-} WMStatus;
-
-typedef char WMStatus_view_size_must_be_0x194[sizeof(WMStatus) == 0x194 ? 1 : -1];
-
-typedef struct WMArm9Buf {
-    char pad_00[4];
-    WMStatus *status; /* 0x04 */
-} WMArm9Buf;
-
 int WM_GetMPReceiveBufferSize(void) {
     WMArm9Buf *h = (WMArm9Buf *)WM_GetSystemWork();
     WMStatus *p;
