@@ -428,8 +428,9 @@ void dScMgMemory2_c::CardFlyAway(int cardIndex) {
     if ((view->cards[cardIndex].x >> 12) > -0x18) {
         return;
     }
-    *((u8 *)view + cardIndex * 24 + 0x51bb) = 0;
-    *((u8 *)view + cardIndex * 24 + 0x51ba) = 0;
+    /* mCards[cardIndex].active and .visible; view->cards[cardIndex] shrinks the function. */
+    *((u8 *)view + cardIndex * 24 + MEMORY2_OFF(mCards[0].active)) = 0;
+    *((u8 *)view + cardIndex * 24 + MEMORY2_OFF(mCards[0].visible)) = 0;
 }
 
 void dScMgMemory2_c::CardFlipDown(int cardIndex) {
