@@ -1183,18 +1183,19 @@ void lab_seek(char *me) {
     // the ROM turns the stick's angle by the camera's (Player::Behavior: mDesiredAngleY = Ctrl angle + GetAngleToCamera),
     // so the D-pad is learned against the camera and re-aimed through it every frame
     const int cam = GetAngleToCamera(data_0209fc68[0] ? (int)data_0209f250 : 0) & 0xFFFF;
+    const int dyaw = *(const short *)(me + 0x6d2) & 0xFFFF;   // mDesiredAngleY: where the stick points this frame (the body turns later)
     switch (g.seek_phase) {
     case 0:                                     // hold UP: the body turns to the camera's forward
         pad_raw(kDsUp, g.seek_t == 0);
-        if (++g.seek_t >= 10) { g.seek_cup = (yaw - cam) & 0xFFFF; g.seek_t = 0; g.seek_phase = 1; }
+        if (++g.seek_t >= 10) { g.seek_cup = (dyaw - cam) & 0xFFFF; g.seek_t = 0; g.seek_phase = 1; }
         return;
     case 1: {                                   // hold LEFT: which way is left
         pad_raw(kDsLeft, g.seek_t == 0);
         if (++g.seek_t >= 10) {
-            const short d = (short)(yaw - cam - g.seek_cup);
+            const short d = (short)(dyaw - cam - g.seek_cup);
             g.seek_sign = d >= 0 ? 1 : -1;
             g.seek_t = 0; g.seek_phase = 2;
-            std::fprintf(stderr, "[phit] LAB seek: camera forward 0x%04x, left is %s\n", g.seek_cup, g.seek_sign > 0 ? "+0x4000" : "-0x4000");
+            std::fprintf(stderr, "[phit] LAB seek: stick up 0x%04x against the camera (cam 0x%04x, desired 0x%04x, body 0x%04x), left is %s\n", g.seek_cup, cam, dyaw, yaw, g.seek_sign > 0 ? "+0x4000" : "-0x4000");
         }
         return;
     }
