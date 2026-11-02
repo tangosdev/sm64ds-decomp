@@ -9,26 +9,6 @@
 #define DBGPI_H
 #include "dBgPc.h"
 
-#ifndef __cplusplus
-
-struct dBgPi {
-    void **vtable;          /* 0x000 */
-    struct dBgPc base;      /* 0x004 */
-    u16 triangleID;         /* 0x018 */
-    u16 colliderIdx;        /* 0x01a - slot in the collider table; 0x18 = none */
-    s32 clsnID;             /* 0x01c - the hitting collider's ownerUniqueID */
-    struct dActor_c *owner; /* 0x020 - the hitting collider's owner */
-    struct dBgW *collider;  /* 0x024 - the collider that produced this result */
-};
-
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dBgPi_size_must_be_0x28[sizeof(struct dBgPi) == 0x28 ? 1 : -1];
-#endif
-typedef struct dBgPi dBgPi;
-
-#else
-
 struct dActor_c;
 struct dBgW;
 
@@ -106,7 +86,5 @@ extern "C" struct dActor_c *func_02037f44(const dBgPi *);
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgPi_size_must_be_0x28[sizeof(struct dBgPi) == 0x28 ? 1 : -1];
 #endif
-
-#endif /* __cplusplus */
 
 #endif

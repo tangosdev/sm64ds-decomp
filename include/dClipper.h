@@ -6,13 +6,11 @@
 #define DCLIPPER_H
 #include "types.h"
 
-#ifdef __cplusplus
 struct Matrix4x3;
 #include "math/Fix12.h"
 namespace Memory {
 void operator_delete2(void *);
 }
-#endif
 
 /* Same 0xc coordinate layout as Vector3, but deliberately POD. A Vector3[4]
  * member makes mwccarm emit __cxa_vec_cleanup in dClipper's D1/D0; the cartridge's
@@ -22,14 +20,10 @@ struct ClipperPlane {
 };
 
 struct dClipper {
-#ifdef __cplusplus
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration.
        Vtable _ZTV8dClipper lives at 0x0208e730 (named in symbols.txt). The lone
        instance, data_0209f43c in bss, is a file-scope object of
        d_s_stage_methods.cpp; this header stays POD-planed and adds no method. */
-#else
-    u8  pad_000[0x4];       /* 0x00 - the vtable, written out for C */
-#endif
     /* The four clip-plane normals, written as a run by Func_0201559C: it builds
        the frustum's four corner vectors on the stack, cross-multiplies adjacent
        pairs into 0x004/0x010/0x01c/0x028 and normalises each in place. Four
@@ -43,7 +37,6 @@ struct dClipper {
     s32 mNearZ;            /* 0x050 */
     s32 mFarZ;            /* 0x054 */
     u16 mFovAngle;            /* 0x058 */
-#ifdef __cplusplus
     /* methods */
 
     /* Inline, as the cartridge's D0-below-D1 order requires: d_clipper.cpp
@@ -74,7 +67,6 @@ struct dClipper {
     void operator delete(void *ptr) {
         Memory::operator_delete2(ptr);
     }
-#endif
 };
 
 #endif
