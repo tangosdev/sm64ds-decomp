@@ -22,7 +22,7 @@ extern void func_02065bb0(int v);
  * bytes into queued_cmd), and set the two packet sizes less the 0xe-byte
  * header (func_02065ba0, func_02065bb0). func_02040c34 passes the file-share
  * packet sizes and func_020412f0, the file-share parent's callback. */
-void func_020652fc(int send_packet_size, int recv_packet_size, int callback) {
+void func_020652fc(int send_packet_size, int recv_packet_size, void (*callback)(char *)) {
     unsigned int saved = IRQ::Disable();
     int i;
     char *p;
@@ -43,7 +43,7 @@ void func_020652fc(int send_packet_size, int recv_packet_size, int callback) {
     ((WBTWork *)p)->system_cmd.command = 0;
     ((WBTWork *)p)->system_cmd.target_bmp = 0;
     ((WBTWork *)p)->system_cmd.peer_bmp = 0;
-    ((WBTWork *)p)->system_cmd.callback = (void (*)(char *))callback;
+    ((WBTWork *)p)->system_cmd.callback = callback;
     i = 0;
     do {
         /* p advances one WBTPeerRecord per pass: this walks peer[0..15]. */

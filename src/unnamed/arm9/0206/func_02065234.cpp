@@ -18,7 +18,7 @@ extern void func_02065bb0(int v);
  * stores -1 through func_02065a84 and sets both packet sizes to 0. The
  * callback becomes the system command's callback; func_02040c34
  * passes func_02040f30, the file-share child's. */
-void func_02065234(int callback) {
+void func_02065234(void (*callback)(void *)) {
     unsigned int saved = IRQ::Disable();
     int i;
     char *p;
