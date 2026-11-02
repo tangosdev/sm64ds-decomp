@@ -24,7 +24,9 @@ struct dActor_c;
  *   Poking bits 3 and 5, or a same-value write, changed nothing. The map
  *   icon and mSlot did not follow the poke. At level entry the manager sets
  *   it on one node per unlocked character, and Unlink clears it.
- *   GetCapState and dCapEnemy_c::UpdateCapPos test it.
+ *   GetCapState and dCapEnemy_c::UpdateCapPos test it. The same bit
+ *   pokes on a cap-carrying Boo (daTrs_c, Big Boo's Haunt) gave the same
+ *   result, blind 14/14, and bit 2 hid the Boo's cap too.
  * - Bit 2: not linked. The constructor and Unlink set it. Setting it at
  *   runtime hid the cap even with bit 1 set, which matches UpdateCapPos
  *   testing "bit 2 set or bit 1 clear".
