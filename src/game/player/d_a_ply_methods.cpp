@@ -22588,12 +22588,10 @@ int daPly_c::CleanupResources() {
     {
         if (mTrailPos != 0)
             delete[] mTrailPos;
-        int q = (int)mTrailFlags;
-        if (q != 0)
-            func_0203cbc0((void *)q);
-        q = mHeldObjQueue;
-        if (q != 0)
-            func_0203cbc0((void *)q);
+        if (mTrailFlags != 0)
+            func_0203cbc0(mTrailFlags);
+        if (mHeldObjQueue != 0)
+            func_0203cbc0((void *)mHeldObjQueue);
     }
     ((SharedFilePtr *)(data_ov002_020ff480[mCharFileBase + (param1 & 3)]))->Release();
     b = data_0209f2d8;

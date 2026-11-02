@@ -23,11 +23,10 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 //   free function -- mwccarm folds `angle / 0x20` into a `+= 0x800` induction
 //   accumulator in the two fan-response loops (53 words differ); the C front
 //   end keeps the divide sequence. Its callers call it by name.
-// - cMgSmartball_object_c_Construct returns a cMgSmartball_object_c into the
-//   caller's buffer. Each derived helper then calls that class's empty
-//   destructor, which stores its vtable word. SmartballObj_ElemDtor and
-//   SmartballObj_ElemCtor are the manager array element destructor and the
-//   empty final hook.
+// - cMgSmartball_object_c_Construct fills the object it is given. Each derived
+//   helper then calls that class's empty destructor, which stores its vtable
+//   word. SmartballObj_ElemDtor and SmartballObj_ElemCtor are the manager
+//   array element destructor and the empty final hook.
 // - The layout shadows are gone. The scene-side ones (Mgr, Mgr2, SArrays)
 //   were dScMgSmartball_c's fields; the object-side ones (Obj, Obj2, SBoard,
 //   Owl, C2, V2ab, A, S28, S24) were the cMgSmartball_*_c members they
@@ -313,27 +312,29 @@ extern int _ZTV19cMgSmartball_wing_c[];
 /* Local helper declarations. */
 /* These declarations also cover helpers called before their ROM-ordered definition. */
 extern "C" {
-cMgSmartball_wing_c *cMgSmartball_wing_c_Construct(cMgSmartball_wing_c *self, int x, int y,
-                                                   int *src);
-cMgSmartball_kinoko_c *cMgSmartball_kinoko_c_Construct(cMgSmartball_kinoko_c *self, int x, int y,
-                                                       int *src);
-cMgSmartball_pushswitch_c *cMgSmartball_pushswitch_c_Construct(cMgSmartball_pushswitch_c *c, int b,
-                                                               int d, int *s);
-cMgSmartball_board_c *cMgSmartball_board_c_Construct(cMgSmartball_board_c *c, int b, int d, int *s);
-cMgSmartball_pakkun_c *cMgSmartball_pakkun_c_Construct(cMgSmartball_pakkun_c *c, int b, int d,
-                                                       int *s);
-cMgSmartball_dokan_c *cMgSmartball_dokan_c_Construct(cMgSmartball_dokan_c *c, int b, int d, int *s);
-cMgSmartball_propeller_c *cMgSmartball_propeller_c_Construct(cMgSmartball_propeller_c *c, int b,
-                                                             int d, int *s);
-cMgSmartball_spring_c *cMgSmartball_spring_c_Construct(cMgSmartball_spring_c *c, int b, int d,
-                                                       int *s);
-cMgSmartball_ana_c *cMgSmartball_ana_c_Construct(cMgSmartball_ana_c *c, int b, int d, int *s);
-cMgSmartball_ball_c *cMgSmartball_ball_c_Construct(cMgSmartball_ball_c *c, int b, int d, int *s);
+cMgSmartball_wing_c *cMgSmartball_wing_c_Construct(cMgSmartball_wing_c *self, char *x, int y,
+                                                   V2 *src);
+cMgSmartball_kinoko_c *cMgSmartball_kinoko_c_Construct(cMgSmartball_kinoko_c *self, char *x, int y,
+                                                       V2 *src);
+cMgSmartball_pushswitch_c *cMgSmartball_pushswitch_c_Construct(cMgSmartball_pushswitch_c *c,
+                                                               char *b, int d, V2 *s);
+cMgSmartball_board_c *cMgSmartball_board_c_Construct(cMgSmartball_board_c *c, char *b, int d,
+                                                     V2 *s);
+cMgSmartball_pakkun_c *cMgSmartball_pakkun_c_Construct(cMgSmartball_pakkun_c *c, char *b, int d,
+                                                       V2 *s);
+cMgSmartball_dokan_c *cMgSmartball_dokan_c_Construct(cMgSmartball_dokan_c *c, char *b, int d,
+                                                     V2 *s);
+cMgSmartball_propeller_c *cMgSmartball_propeller_c_Construct(cMgSmartball_propeller_c *c, char *b,
+                                                             int d, V2 *s);
+cMgSmartball_spring_c *cMgSmartball_spring_c_Construct(cMgSmartball_spring_c *c, char *b, int d,
+                                                       V2 *s);
+cMgSmartball_ana_c *cMgSmartball_ana_c_Construct(cMgSmartball_ana_c *c, char *b, int d, V2 *s);
+cMgSmartball_ball_c *cMgSmartball_ball_c_Construct(cMgSmartball_ball_c *c, char *b, int d, V2 *s);
 void CopyObjectVel(int *a, int *b);
 void CopyObjectPos(int *a, int *b);
 void SmartballBall_UpdatePhysics(cMgSmartball_ball_c *self);
-cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, int a1, int a2,
-                                                   int *src);
+cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, char *a1, int a2,
+                                                   V2 *src);
 }
 
 /* Declarations this TU still needs from the shared common header, which is
@@ -354,11 +355,11 @@ extern void Mg_SetSharedState(int);
 
 extern "C" {
 void GetObjectDelta(void *a, char *b);
-cMgSmartball_object_c cMgSmartball_object_c_Construct(int a1, int a2, int *a3);
+cMgSmartball_object_c *cMgSmartball_object_c_Construct(cMgSmartball_object_c *o, char *a1, int a2,
+                                                       int *a3);
 }
-static inline void CallObjectConstruct(cMgSmartball_object_c *c, int a1, int a2, int *a3) {
-    typedef void (*Fn)(cMgSmartball_object_c *, int, int, int *);
-    ((Fn)cMgSmartball_object_c_Construct)(c, a1, a2, a3);
+static inline void CallObjectConstruct(cMgSmartball_object_c *c, char *a1, int a2, int *a3) {
+    cMgSmartball_object_c_Construct(c, a1, a2, a3);
 }
 
 #define FIX_MUL(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
@@ -599,11 +600,11 @@ void cMgSmartball_wing_c::RestoreInitial() {
 
 // @symbol cMgSmartball_wing_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_wing_c *cMgSmartball_wing_c_Construct(cMgSmartball_wing_c *self, int x, int y,
-                                                   int *src) {
+cMgSmartball_wing_c *cMgSmartball_wing_c_Construct(cMgSmartball_wing_c *self, char *x, int y,
+                                                   V2 *src) {
     int v[2];
-    v[0] = src[0];
-    v[1] = src[1];
+    v[0] = src->x;
+    v[1] = src->y;
     CallObjectConstruct(self, x, y, v);
     self->~cMgSmartball_wing_c();
     self->mRadius = 0x18000;
@@ -708,11 +709,11 @@ void cMgSmartball_pushswitch_c::RestoreInitial() {
 
 // @symbol cMgSmartball_pushswitch_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_pushswitch_c *cMgSmartball_pushswitch_c_Construct(cMgSmartball_pushswitch_c *c, int b,
-                                                               int d, int *s) {
+cMgSmartball_pushswitch_c *cMgSmartball_pushswitch_c_Construct(cMgSmartball_pushswitch_c *c,
+                                                               char *b, int d, V2 *s) {
     int tmp[2];
-    tmp[0] = s[0];
-    tmp[1] = s[1];
+    tmp[0] = s->x;
+    tmp[1] = s->y;
     CallObjectConstruct(c, b, d, tmp);
     c->~cMgSmartball_pushswitch_c();
     c->mRadius = 0x8000;
@@ -1335,11 +1336,11 @@ void cMgSmartball_board_c::ShuffleCells() {
 
 // @symbol cMgSmartball_board_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_board_c *cMgSmartball_board_c_Construct(cMgSmartball_board_c *c, int b, int d,
-                                                     int *s) {
+cMgSmartball_board_c *cMgSmartball_board_c_Construct(cMgSmartball_board_c *c, char *b, int d,
+                                                     V2 *s) {
     int tmp[2];
-    tmp[0] = s[0];
-    tmp[1] = s[1];
+    tmp[0] = s->x;
+    tmp[1] = s->y;
     CallObjectConstruct(c, b, d, tmp);
     c->~cMgSmartball_board_c();
     c->mRadius = 0x18000;
@@ -1616,11 +1617,11 @@ void cMgSmartball_slot_c::RestoreInitial() {
 
 // @symbol cMgSmartball_slot_c_Construct
 extern "C" {
-cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, int a1, int a2,
-                                                   int *src) {
+cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, char *a1, int a2,
+                                                   V2 *src) {
     int tmp[2];
-    tmp[0] = src[0];
-    tmp[1] = src[1];
+    tmp[0] = src->x;
+    tmp[1] = src->y;
     CallObjectConstruct(c, a1, a2, tmp);
     c->~cMgSmartball_slot_c();
     __cxa_vec_ctor(c->mReelOffset, 3, 8, func_0203d738, NullDestructor_0203d47c);
@@ -1831,11 +1832,11 @@ void cMgSmartball_pakkun_c::RestoreInitial() {
 
 // @symbol cMgSmartball_pakkun_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_pakkun_c *cMgSmartball_pakkun_c_Construct(cMgSmartball_pakkun_c *c, int b, int d,
-                                                       int *s) {
+cMgSmartball_pakkun_c *cMgSmartball_pakkun_c_Construct(cMgSmartball_pakkun_c *c, char *b, int d,
+                                                       V2 *s) {
     int tmp[2];
-    tmp[0] = s[0];
-    tmp[1] = s[1];
+    tmp[0] = s->x;
+    tmp[1] = s->y;
     CallObjectConstruct(c, b, d, tmp);
     c->~cMgSmartball_pakkun_c();
     c->mRadius = 0x14000;
@@ -1938,11 +1939,11 @@ void cMgSmartball_dokan_c::RestoreInitial() {
 
 // @symbol cMgSmartball_dokan_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_dokan_c *cMgSmartball_dokan_c_Construct(cMgSmartball_dokan_c *c, int b, int d,
-                                                     int *s) {
+cMgSmartball_dokan_c *cMgSmartball_dokan_c_Construct(cMgSmartball_dokan_c *c, char *b, int d,
+                                                     V2 *s) {
     int tmp[2];
-    tmp[0] = s[0];
-    tmp[1] = s[1];
+    tmp[0] = s->x;
+    tmp[1] = s->y;
     CallObjectConstruct(c, b, d, tmp);
     c->~cMgSmartball_dokan_c();
     c->mRadius = 0x20000;
@@ -2151,11 +2152,11 @@ void cMgSmartball_propeller_c::RestoreInitial() {
 
 // @symbol cMgSmartball_propeller_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_propeller_c *cMgSmartball_propeller_c_Construct(cMgSmartball_propeller_c *c, int b,
-                                                             int d, int *s) {
+cMgSmartball_propeller_c *cMgSmartball_propeller_c_Construct(cMgSmartball_propeller_c *c, char *b,
+                                                             int d, V2 *s) {
     int tmp[2];
-    tmp[0] = s[0];
-    tmp[1] = s[1];
+    tmp[0] = s->x;
+    tmp[1] = s->y;
     CallObjectConstruct(c, b, d, tmp);
     c->~cMgSmartball_propeller_c();
     c->mRadius = 0x20000;
@@ -2276,11 +2277,11 @@ void cMgSmartball_spring_c::RestoreInitial() {
 
 // @symbol cMgSmartball_spring_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_spring_c *cMgSmartball_spring_c_Construct(cMgSmartball_spring_c *c, int b, int d,
-                                                       int *s) {
+cMgSmartball_spring_c *cMgSmartball_spring_c_Construct(cMgSmartball_spring_c *c, char *b, int d,
+                                                       V2 *s) {
     int tmp[2];
-    tmp[0] = s[0];
-    tmp[1] = s[1];
+    tmp[0] = s->x;
+    tmp[1] = s->y;
     CallObjectConstruct(c, b, d, tmp);
     c->~cMgSmartball_spring_c();
     c->mRadius = 0x20000;
@@ -2371,10 +2372,10 @@ void cMgSmartball_ana_c::RestoreInitial() {
 
 // @symbol cMgSmartball_ana_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_ana_c *cMgSmartball_ana_c_Construct(cMgSmartball_ana_c *c, int b, int d, int *s) {
+cMgSmartball_ana_c *cMgSmartball_ana_c_Construct(cMgSmartball_ana_c *c, char *b, int d, V2 *s) {
     int tmp[2];
-    tmp[0] = s[0];
-    tmp[1] = s[1];
+    tmp[0] = s->x;
+    tmp[1] = s->y;
     CallObjectConstruct(c, b, d, tmp);
     c->~cMgSmartball_ana_c();
     c->mRadius = 0x10000;
@@ -2505,11 +2506,11 @@ void cMgSmartball_kinoko_c::RestoreInitial() {
 
 // @symbol cMgSmartball_kinoko_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_kinoko_c *cMgSmartball_kinoko_c_Construct(cMgSmartball_kinoko_c *self, int x, int y,
-                                                       int *src) {
+cMgSmartball_kinoko_c *cMgSmartball_kinoko_c_Construct(cMgSmartball_kinoko_c *self, char *x, int y,
+                                                       V2 *src) {
     int v[2];
-    v[0] = src[0];
-    v[1] = src[1];
+    v[0] = src->x;
+    v[1] = src->y;
     CallObjectConstruct(self, x, y, v);
     self->~cMgSmartball_kinoko_c();
     self->mRadius = 0x7000;
@@ -3882,10 +3883,10 @@ void cMgSmartball_ball_c::RestoreInitial() {
 
 // @symbol cMgSmartball_ball_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_ball_c *cMgSmartball_ball_c_Construct(cMgSmartball_ball_c *c, int b, int d, int *s) {
+cMgSmartball_ball_c *cMgSmartball_ball_c_Construct(cMgSmartball_ball_c *c, char *b, int d, V2 *s) {
     int tmp[2];
-    tmp[0] = s[0];
-    tmp[1] = s[1];
+    tmp[0] = s->x;
+    tmp[1] = s->y;
     CallObjectConstruct(c, b, d, tmp);
     c->~cMgSmartball_ball_c();
     c->mRadius = 0x8000;
@@ -3981,8 +3982,24 @@ void cMgSmartball_object_c::RestoreInitial() {
 
 // @symbol cMgSmartball_object_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-cMgSmartball_object_c cMgSmartball_object_c_Construct(int a1, int a2, int *a3) {
-    cMgSmartball_object_c o(a1, a2, a3);
+cMgSmartball_object_c *cMgSmartball_object_c_Construct(cMgSmartball_object_c *o, char *a1, int a2,
+                                                       int *a3) {
+    int lo, hi;
+    *(int *)o = (int)&_ZTV21cMgSmartball_object_c[2];
+    o->mpManager = (s32)a1;
+    o->mIndex = a2;
+    hi = a3[1];
+    lo = a3[0];
+    o->mInitial0 = lo;
+    o->mInitial1 = hi;
+    hi = a3[1];
+    lo = a3[0];
+    o->mCurrent0 = lo;
+    o->mCurrent1 = hi;
+    o->mRadius = 0;
+    o->mVel0 = 0;
+    o->mVel1 = 0;
+    o->mIsActive = 1;
     return o;
 }
 }
@@ -4915,7 +4932,7 @@ void dScMgSmartball_c::SpawnObjects() {
             cMgSmartball_kinoko_c *spawned = (cMgSmartball_kinoko_c *)::operator new(0x40);
             if (spawned != 0) {
                 V2 tmp = pos[j];
-                spawned = cMgSmartball_kinoko_c_Construct(spawned, (int)c, (int)j, (int *)&tmp);
+                spawned = cMgSmartball_kinoko_c_Construct(spawned, c, j, &tmp);
             }
             {
                 void **slot = (void **)((dScMgSmartball_c *)(c + j * 4))->mpKinokos;
@@ -4959,7 +4976,7 @@ void dScMgSmartball_c::SpawnObjects() {
                 int tx = pos[n].x;
                 tmp.x = tx;
                 tmp.y = ty;
-                spawned = cMgSmartball_kinoko_c_Construct(spawned, (int)c, n, (int *)&tmp);
+                spawned = cMgSmartball_kinoko_c_Construct(spawned, c, n, &tmp);
             }
             {
                 void **slot = (void **)((dScMgSmartball_c *)(c + n * 4))->mpKinokos;
@@ -5004,7 +5021,7 @@ void dScMgSmartball_c::SpawnObjects() {
                 cMgSmartball_ana_c *spawned = (cMgSmartball_ana_c *)::operator new(0x38);
                 if (spawned != 0) {
                     V2 tmp = pos[j];
-                    spawned = cMgSmartball_ana_c_Construct(spawned, (int)c, j, (int *)&tmp);
+                    spawned = cMgSmartball_ana_c_Construct(spawned, c, j, &tmp);
                 }
                 mpAnas[j] = spawned;
                 n = mAnaCount;
@@ -5026,7 +5043,7 @@ void dScMgSmartball_c::SpawnObjects() {
             spawned = (cMgSmartball_ball_c *)::operator new(0x12c);
             if (spawned != 0) {
                 V2 tmp = pos[j];
-                spawned = cMgSmartball_ball_c_Construct(spawned, (int)c, j, (int *)&tmp);
+                spawned = cMgSmartball_ball_c_Construct(spawned, c, j, &tmp);
             }
             mpBalls[j] = spawned;
         }
@@ -5071,7 +5088,7 @@ void dScMgSmartball_c::SpawnObjects() {
                 cMgSmartball_dokan_c *spawned = (cMgSmartball_dokan_c *)::operator new(0x34);
                 if (spawned != 0) {
                     V2 tmp = pos[j];
-                    spawned = cMgSmartball_dokan_c_Construct(spawned, (int)c, j, (int *)&tmp);
+                    spawned = cMgSmartball_dokan_c_Construct(spawned, c, j, &tmp);
                 }
                 mpDokans[j] = spawned;
                 n = mDokanCount;
@@ -5113,7 +5130,7 @@ void dScMgSmartball_c::SpawnObjects() {
                 cMgSmartball_pakkun_c *spawned = (cMgSmartball_pakkun_c *)::operator new(0x3c);
                 if (spawned != 0) {
                     V2 tmp = pos[j];
-                    spawned = cMgSmartball_pakkun_c_Construct(spawned, (int)c, j, (int *)&tmp);
+                    spawned = cMgSmartball_pakkun_c_Construct(spawned, c, j, &tmp);
                 }
                 mpPakkuns[j] = spawned;
                 n = mPakkunCount;
@@ -5155,7 +5172,7 @@ void dScMgSmartball_c::SpawnObjects() {
                     (cMgSmartball_propeller_c *)::operator new(0x78);
                 if (spawned != 0) {
                     V2 tmp = pos[j];
-                    spawned = cMgSmartball_propeller_c_Construct(spawned, (int)c, j, (int *)&tmp);
+                    spawned = cMgSmartball_propeller_c_Construct(spawned, c, j, &tmp);
                 }
                 mpPropellers[j] = spawned;
                 n = mPropellerCount;
@@ -5196,7 +5213,7 @@ void dScMgSmartball_c::SpawnObjects() {
             cMgSmartball_slot_c *spawned = (cMgSmartball_slot_c *)::operator new(0x88);
             if (spawned != 0) {
                 V2 tmp = pos[0];
-                spawned = cMgSmartball_slot_c_Construct(spawned, (int)c, (int)0, (int *)&tmp);
+                spawned = cMgSmartball_slot_c_Construct(spawned, c, 0, &tmp);
             }
             mpSlot = spawned;
         }
@@ -5235,7 +5252,7 @@ void dScMgSmartball_c::SpawnObjects() {
             cMgSmartball_board_c *spawned = (cMgSmartball_board_c *)::operator new(0x9c);
             if (spawned != 0) {
                 V2 tmp = pos[4];
-                spawned = cMgSmartball_board_c_Construct(spawned, (int)c, 0, (int *)&tmp);
+                spawned = cMgSmartball_board_c_Construct(spawned, c, 0, &tmp);
             }
             mpBoard = spawned;
         }
@@ -5275,7 +5292,7 @@ void dScMgSmartball_c::SpawnObjects() {
                     (cMgSmartball_pushswitch_c *)::operator new(0x38);
                 if (spawned != 0) {
                     V2 tmp = pos[j];
-                    spawned = cMgSmartball_pushswitch_c_Construct(spawned, (int)c, j, (int *)&tmp);
+                    spawned = cMgSmartball_pushswitch_c_Construct(spawned, c, j, &tmp);
                 }
                 mpPushSwitches[j] = spawned;
                 n = mPushSwitchCount;
@@ -5316,7 +5333,7 @@ void dScMgSmartball_c::SpawnObjects() {
             cMgSmartball_wing_c *spawned = (cMgSmartball_wing_c *)::operator new(0x88);
             if (spawned != 0) {
                 V2 tmp = pos[0];
-                spawned = cMgSmartball_wing_c_Construct(spawned, (int)c, (int)0, (int *)&tmp);
+                spawned = cMgSmartball_wing_c_Construct(spawned, c, 0, &tmp);
             }
             mpWing = spawned;
         }
@@ -6192,14 +6209,14 @@ s32 dScMgSmartball_c::InitResources() {
         i++;
     } while (i < 2);
     {
-        cMgSmartballPair r1;
+        V2 r1;
         cMgSmartball_spring_c *spawned;
-        r1.v0 = 0xec000;
-        r1.v1 = 0xa0000;
+        r1.x = 0xec000;
+        r1.y = 0xa0000;
         spawned = (cMgSmartball_spring_c *)::operator new(0x48);
         if (spawned != 0) {
-            cMgSmartballPair r2 = r1;
-            spawned = cMgSmartball_spring_c_Construct(spawned, (int)c, 0, &r2.v0);
+            V2 r2 = r1;
+            spawned = cMgSmartball_spring_c_Construct(spawned, c, 0, &r2);
         }
         mpSpring = spawned;
     }
