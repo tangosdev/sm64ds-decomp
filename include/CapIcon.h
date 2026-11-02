@@ -13,7 +13,11 @@ struct dActor_c;
  * head's +0x0c. Unlink agrees.
  *
  * mFlags, bit by bit. Each line says what kind of evidence backs it.
- * - Bit 0: the cap bank (AddCap). Code-read only.
+ * - Bit 0: a bank cap. AddCap sets it for p >= 3 (code-read). In the
+ *   running game (2026-11-02), setting it on a kind-0 Goomba's node while
+ *   its list was free made that node real on the next pass, in its own
+ *   slot, without the single-best pick. The cap appeared on that Goomba.
+ *   The bit alone, or a free list alone, did nothing.
  * - Bit 1: this node's cap is the real one. In the running game (2026-11-02,
  *   EU ROM, tools/trace/ask.py), setting it on a Goomba's node made the cap
  *   appear on its head and drop when stomped. Clearing it removed both.
