@@ -14405,11 +14405,6 @@
         "return:short"
       ]
     },
-    "func_02011d14": {
-      "src/game/actors/d_a_trs.cpp": [
-        "return:unsigned short"
-      ]
-    },
     "func_02011d50": {
       "include/decl_common.h": [
         "arity:1"

@@ -196,7 +196,7 @@ extern int LenVec3(int *v);
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
 extern "C" void func_ov055_02111264(void);
 extern int func_ov002_020c51d0(void *c, int *st);
-extern u16 func_02011d14(void);
+extern void func_02011d14(void);
 extern int data_ov008_02111b6c;
 extern int data_0209caa0[];
 extern s16 data_ov063_0211e1dc[];
