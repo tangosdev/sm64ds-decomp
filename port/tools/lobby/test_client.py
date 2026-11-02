@@ -1148,7 +1148,8 @@ def selftest_rooms(c):
                                    "settings": {"collision": 0, "damage": 1}})
     check("party: the create's settings ride the plan over the wire",
           status == 200 and pr["plan"]["settings"] == {
-              "collision": 0, "interact": 1, "damage": 1, "starshare": 1}, pr)
+              "collision": 0, "interact": 1, "damage": 1, "starshare": 1,
+              "soloexit": 1}, pr)
     status, g = c.post("join", {"v": 6, "game": GAME, "room": pr["room"],
                                 "nick": "tg"})
     check("party: a joiner's plan carries the same toggles",
