@@ -214,20 +214,6 @@ daYegg_c::~daYegg_c()
 {
 }
 
-#ifdef _MSC_VER
-/* The host uses the flat ROM D0 name, which MSVC never emits: it folds the
- * Itanium destructor variants into the one ~daYegg_c() above. This arm
- * spells out what the deleting destructor does -- the D1 body, called
- * qualified so it is a direct call, then the class-specific operator delete.
- * Nothing here reaches mwccarm. */
-extern "C" daYegg_c *_ZN8daYegg_cD0Ev(daYegg_c *thiz)
-{
-    thiz->daYegg_c::~daYegg_c();
-    daYegg_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov002_020ec610, 0x020ec610, size 0x18 */
 /* -------------------------------------------------------------------------- */

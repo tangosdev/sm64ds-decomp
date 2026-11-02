@@ -3902,31 +3902,4 @@ dScMgBase_c::~dScMgBase_c()
     gMgScene = 0;
 }
 
-#ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D2 AND D0 NAMES, AND MSVC NEVER EMITS THEM.
- * MSVC folds the Itanium destructor variants into the one ~dScMgBase_c()
- * above. Descendants tearing down a dScMgBase_c base subobject call the
- * base-object variant by its flat name; the deleting variant is the D1 body
- * followed by the class-specific operator delete. Each is spelled here in
- * terms of the one host destructor, called qualified so it is a direct call.
- * mwccarm never defines _MSC_VER, so nothing here reaches the cartridge
- * object. These two definitions stay: MSVC will not emit the Itanium D2
- * and D0 from ~dScMgBase_c(), and the host calls those symbols. The MgFx
- * state tables are already &MgFx::UpdateDrift and &MgFx::UpdateFlyTo;
- * sMgFxUpdateTable is .bss in the ROM, which is where a pointer-to-member
- * initializer lands. */
-extern "C" dScMgBase_c *_ZN11dScMgBase_cD2Ev(dScMgBase_c *thiz)
-{
-    thiz->dScMgBase_c::~dScMgBase_c();
-    return thiz;
-}
-
-extern "C" dScMgBase_c *_ZN11dScMgBase_cD0Ev(dScMgBase_c *thiz)
-{
-    thiz->dScMgBase_c::~dScMgBase_c();
-    dScMgBase_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 #pragma pop

@@ -109,19 +109,6 @@ extern unsigned char data_0209f2d8;
 /* Defined below as extern "C". Fix12-by-value, so it is not a method. */
 }
 
-#ifdef _MSC_VER
-/* The host has one ~dActor_c(). These are the ROM's flat D2 and D0 names. */
-extern "C" dActor_c *_ZN8dActor_cD2Ev(dActor_c *thiz) {
-    thiz->dActor_c::~dActor_c();
-    return thiz;
-}
-extern "C" dActor_c *_ZN8dActor_cD0Ev(dActor_c *thiz) {
-    thiz->dActor_c::~dActor_c();
-    dActor_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 /* The global actor list every dActor_c links its mActorListNode into: the
    first and last nodes. Its inline constructor empties it, so mwcc emits
    __sinit_d_actor.cpp to run that (was the handwritten __sinit_02074d90).

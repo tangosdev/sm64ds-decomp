@@ -204,21 +204,6 @@ extern AmidaRenderPeriods sAmidaRenderPeriods;
    adds the delete. */
 dScMgAmida_c::~dScMgAmida_c() {}
 
-#ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. MSVC
- * folds the Itanium destructor variants into the one ~dScMgAmida_c() above,
- * so this spells out what the deleting destructor does in terms of it: the
- * D1 body, called qualified so it is a direct call, then the class-specific
- * operator delete. mwccarm never defines _MSC_VER, so nothing here reaches
- * the cartridge object. This definition stays: MSVC will not emit the
- * Itanium D0 from ~dScMgAmida_c(), and the host calls that symbol. */
-extern "C" dScMgAmida_c *_ZN12dScMgAmida_cD0Ev(dScMgAmida_c *thiz) {
-    thiz->dScMgAmida_c::~dScMgAmida_c();
-    dScMgAmida_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 // @symbol _ZN18dScMgAmida_c_PieceD1Ev
 /* dScMgAmida_c_Piece's empty inline destructor (dScMgAmida_c.h), emitted
    here, after the class destructor that first uses it. */

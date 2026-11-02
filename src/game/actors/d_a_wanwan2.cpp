@@ -205,20 +205,6 @@ daWanwan2_c::~daWanwan2_c()
 {
 }
 
-#ifdef _MSC_VER
-/* The host needs the ROM's flat D0 name, and MSVC never emits it: it folds
- * the Itanium destructor variants into the one ~daWanwan2_c() above. This
- * arm spells out what the deleting destructor does -- the D1 body, called
- * qualified so it is a direct call, then the class-specific operator
- * delete. Nothing here reaches mwccarm. */
-extern "C" daWanwan2_c *_ZN11daWanwan2_cD0Ev(daWanwan2_c *thiz)
-{
-    thiz->daWanwan2_c::~daWanwan2_c();
-    daWanwan2_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov100_02143370
 /* The floor probe: a vertical line from 10 units above the chomp (0xa000) to
