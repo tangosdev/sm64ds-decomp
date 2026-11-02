@@ -966,16 +966,16 @@ void daPly_c::SetNewHatCharacter(unsigned int p1, unsigned int p2, bool p3) {
   func_ov002_020bdb50(p2);
   func_ov002_020bda48();
   if (this->IsState(data_ov002_02110604)) {
-    func_ov002_020d9c70(((char*)this));
-    func_ov002_020da95c(((char*)this));
-    this->ChangeState(data_ov002_0211013c);
+      func_ov002_020d9c70(this);
+      func_ov002_020da95c(this);
+      this->ChangeState(data_ov002_0211013c);
   }
   if (p3 == 0) {
     if (p1 != mCharacter) func_02012790(0xb);
     else func_02012790(0xc);
   }
   param1 = mHatCharacter;
-  func_ov002_020e6350(((char*)this));
+  func_ov002_020e6350(this);
   param1 = mPrevCharacter;
 }
 }
@@ -3082,7 +3082,7 @@ void daPly_c::func_ov002_020c1eb4(int dmg) {
         vec.y = 0;
         Particle::System::New(0, 0xc8, out.x, out.y, out.z, (const Vector3_16f *)(&vec), 0);
     }
-    func_ov002_020d91e0((char *)this, 0, 1);
+    func_ov002_020d91e0(this, 0, 1);
 }
 }
 
@@ -4009,12 +4009,12 @@ int daPly_c::St_EndingFly_Main() {
 extern "C" {
 int daPly_c::St_EndingFly_Init() {
     extern int Player_DisableInteraction(void*);
-  Player_DisableInteraction(((char*)this));
-  mIsControlDisabled=1;
-  mStatePhase=0;
-  mStateWork=mStatePhase;
-  this->SetAnim(0x54, 0x40000000, 0x1000, 0);
-  return 1;
+    Player_DisableInteraction(this);
+    mIsControlDisabled = 1;
+    mStatePhase = 0;
+    mStateWork = mStatePhase;
+    this->SetAnim(0x54, 0x40000000, 0x1000, 0);
+    return 1;
 }
 }
 
@@ -4049,7 +4049,7 @@ int daPly_c::St_OpeningWakeUp_Main() {
     case 3:
         break;
     }
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -4145,7 +4145,7 @@ int daPly_c::St_Respawn_Main() {
         }
         break;
     }
-    Player_AdvanceAnims(((char *)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -4587,7 +4587,7 @@ int daPly_c::St_Talk_Main() {
         break;
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -4598,7 +4598,7 @@ extern "C" {
 int daPly_c::St_Talk_Init() {
     extern int Player_DisableInteraction(void*);
   mIsControlDisabled=1;
-  Player_DisableInteraction(((char*)this));
+  Player_DisableInteraction(this);
   this->SetAnim(0x47, 0, 0x1000, 0);
   mAngleYSpeed=0;
   mHorzSpeed=0;
@@ -4891,7 +4891,7 @@ int daPly_c::St_StuckInGround_Main() {
         break;
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -4978,7 +4978,7 @@ int daPly_c::St_BowserEarthquake_Main() {
         }
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -5110,7 +5110,7 @@ int daPly_c::St_DeadPit_Main() {
         break;
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -5126,7 +5126,7 @@ int daPly_c::St_DeadPit_Init() {
     extern void Player_DisableInteraction(void*);
     extern void HitDeathPlane(int arg);
     extern void FUN_020299f4(void);
-    Player_ReleaseHeldActor(((char*)this));
+    Player_ReleaseHeldActor(this);
     if (*(char**)((char*)&mObjInMouth) != 0) {
         int b = (((dActor_c *)*(char **)((char *)&mObjInMouth))->actorID == 0xbf);
         if (b) {
@@ -5140,7 +5140,7 @@ int daPly_c::St_DeadPit_Init() {
         ((dActor_c *)mObjInMouth)->mFlags &= ~0x20000;
         *(char**)((char*)&mObjInMouth) = 0;
     }
-    Player_DisableInteraction(((char*)this));
+    Player_DisableInteraction(this);
     {
         int t = 0;
         mIsBodyClsnEnabled = t;
@@ -5332,7 +5332,7 @@ int daPly_c::St_DeadHit_Main() {
     }
 
     if (mStateWork != 1)
-        Player_AdvanceAnims(((char *)this));
+        Player_AdvanceAnims(this);
     mPrevVertSpeed = mVertSpeed;
     return 1;
 }
@@ -5347,14 +5347,14 @@ int daPly_c::St_DeadHit_Init() {
     extern char* data_0209f318;
     extern int data_ov002_0210a424[];
     extern void func_0200d89c(void*);
-  Player_DisableInteraction(((char*)this));
-  mIsBodyClsnEnabled=0;
-  int idx=mStateStep&1;
-  this->SetAnim(data_ov002_0210a424[idx], 0x40000000, 0x1000, 0);
-  mStateArg=0;
-  mStateWork=0;
-  func_0200d89c(data_0209f318);
-  return 1;
+    Player_DisableInteraction(this);
+    mIsBodyClsnEnabled = 0;
+    int idx = mStateStep & 1;
+    this->SetAnim(data_ov002_0210a424[idx], 0x40000000, 0x1000, 0);
+    mStateArg = 0;
+    mStateWork = 0;
+    func_0200d89c(data_0209f318);
+    return 1;
 }
 }
 
@@ -5576,7 +5576,7 @@ int daPly_c::St_Squish_Main() {
                 mStateStep = 2;
                 mStateArg = 1;
                 if (mIsMetal == 0) {
-                    if (func_ov002_020d91e0(((char *)this), 0x300, 1) != 0)
+                    if (func_ov002_020d91e0(this, 0x300, 1) != 0)
                         mStateArg = 2;
                 }
                 {
@@ -5610,7 +5610,7 @@ int daPly_c::St_Squish_Main() {
             return 1;
         if (func_ov002_020c647c(mAttachOffsetY) < 0) {
             if (mStateArg == 1) {
-                func_ov002_020db8bc(((char *)this), 1);
+                func_ov002_020db8bc(this, 1);
                 this->ChangeState(data_ov002_0211013c);
             } else {
                 (*(u8 *)(int)((char *)&mStateStep))++;
@@ -5626,7 +5626,7 @@ int daPly_c::St_Squish_Main() {
         if (mStateArg != 0)
             break;
         if (this->GetHealth() != 0) {
-            func_ov002_020db8bc(((char *)this), 1);
+            func_ov002_020db8bc(this, 1);
             this->ChangeState(data_ov002_0211013c);
         }
         if (data_ov002_0211117c != 0)
@@ -5641,7 +5641,7 @@ int daPly_c::St_Squish_Main() {
             mStateStep = 3;
             break;
         }
-        func_ov002_020db8bc(((char *)this), 1);
+        func_ov002_020db8bc(this, 1);
         this->ChangeState(data_ov002_0211013c);
         break;
     }
@@ -5711,11 +5711,12 @@ int daPly_c::Unk_020c6a10(unsigned int arg_) {
 
     if (!(mClsnFlags & 1)) return 0;
     if (this->IsState(data_ov002_021102ec)) return 0;
-    if (!func_ov002_020d82f0(((char*)this))) return 0;
+    if (!func_ov002_020d82f0(this))
+        return 0;
 
     flag = 1;
     if (mIsMetal == 0) {
-        if (func_ov002_020d91e0(((char*)this), arg << 8, 1))
+        if (func_ov002_020d91e0(this, arg << 8, 1))
             flag = 0;
     }
 
@@ -5827,7 +5828,7 @@ int daPly_c::St_Teleport_Main() {
         break;
     }
     G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x3f, mStateWork);
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -5837,13 +5838,13 @@ int daPly_c::St_Teleport_Main() {
 extern "C" {
 int daPly_c::St_Teleport_Init() {
     extern void Player_DisableInteraction(void*);
-  Player_DisableInteraction(((char*)this));
-  mStateWork=0;
-  mStateStep=0;
-  mHorzSpeed=0;
-  this->SetAnim(0x47, 0, 0x1000, 0);
-  Sound::PlayBank0(0x19, mCamSpacePos);
-  return 1;
+    Player_DisableInteraction(this);
+    mStateWork = 0;
+    mStateStep = 0;
+    mHorzSpeed = 0;
+    this->SetAnim(0x47, 0, 0x1000, 0);
+    Sound::PlayBank0(0x19, mCamSpacePos);
+    return 1;
 }
 }
 
@@ -6251,7 +6252,7 @@ int daPly_c::St_LevelEnter_Init() {
     }
 
     mKeyModelId = -1;
-    Player_DisableInteraction(((char*)this));
+    Player_DisableInteraction(this);
     mJumpComboStage = 0;
     mHorzSpeed = 0;
     mStateArg = 0;
@@ -6648,7 +6649,7 @@ int daPly_c::St_NoControl_Main() {
         break;
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -7315,8 +7316,8 @@ int daPly_c::St_NoControl_Init() {
     extern void (daPly_c::*data_ov002_02110884[])();
     mIsControlDisabled = 1;
     mStatePhase = 0;
-    Player_DisableInteraction(((char *)this));
-    Player_ReleaseHeldActor(((char *)this));
+    Player_DisableInteraction(this);
+    Player_ReleaseHeldActor(this);
     mRidingShell = 0;
     mHeldObj = 0;
     mGrabbedByActor = 0;
@@ -7988,7 +7989,7 @@ int daPly_c::St_DebugFly_Main() {
         this->ChangeState(data_ov002_0211013c);
     }
 
-    Player_AdvanceAnims(((char *)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -7998,7 +7999,7 @@ int daPly_c::St_DebugFly_Main() {
 extern "C" {
 int daPly_c::St_DebugFly_Init() {
     extern void Player_DisableInteraction(void*);
-    Player_DisableInteraction(((char *)this));
+    Player_DisableInteraction(this);
     mHorzSpeed = 0;
     mVertSpeed = 0;
     mVertAccel = 0;
@@ -8394,7 +8395,7 @@ int daPly_c::St_Headstand_Main() {
             this->SetAnim(0x1f, 0x40000000, 0x1000, 0);
             mStateStep = 4;
         }
-        func_ov002_020cc05c(((char*)this), mag);
+        func_ov002_020cc05c(this, mag);
         {
             s16* p = (s16*)((char*)&mAngleY);
             *p = *p + mAngleYSpeed;
@@ -8413,7 +8414,7 @@ int daPly_c::St_Headstand_Main() {
         break;
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -9040,7 +9041,7 @@ int daPly_c::St_Shell_Main() {
         s16 angleSave = mPrevAngleY;
         ApproachAngle((short*)((char*)&mPrevAngleY), target, 8, 0x800, 0x100);
         mAngleY = mPrevAngleY;
-        func_ov002_020cc660(((char*)this), angleSave);
+        func_ov002_020cc660(this, angleSave);
         {
             int spd = mHorzSpeed;
             int step = 0x1100;
@@ -9060,10 +9061,10 @@ int daPly_c::St_Shell_Main() {
                 mVertSpeed = (mHorzSpeed >> 2) + 0x2a000;
                 mIsAirborne = 1;
                 mLandSoundPlayed = 0;
-                func_ov002_020e25f0(((char*)this), 0);
+                func_ov002_020e25f0(this, 0);
                 return 1;
             } else if (*(u16*)((char*)data_0209f49c + off) & 0x400) {
-                if (func_ov002_020d674c(((char*)this))) {
+                if (func_ov002_020d674c(this)) {
                     this->ChangeState(data_ov002_0211004c);
                 } else {
                     mStateStep = 0;
@@ -9080,7 +9081,7 @@ int daPly_c::St_Shell_Main() {
         } else {
             mHeadRot[2] = 0;
             mSpineRot[2] = mHeadRot[2];
-            func_ov002_020e28d4(((char*)this), 0x1800, 0x800);
+            func_ov002_020e28d4(this, 0x1800, 0x800);
             mVertAccel = -0x4000;
             mTerminalVelocity = -0x4b000;
             if (mVertSpeed >= 0) {
@@ -9100,7 +9101,7 @@ int daPly_c::St_Shell_Main() {
     if (this->FinishedAnim() && this->IsAnim(0x35)) {
         this->SetAnim(0x34, 0, 0x1000, 0);
     }
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -9140,11 +9141,11 @@ void func_ov002_020cc660(char *self, int angle){
 extern "C" {
 int daPly_c::St_Shell_Init() {
     extern int Player_ReleaseHeldActor(void*);
-  Player_ReleaseHeldActor(((char*)this));
-  this->SetAnim(0x35, 0x40000000, 0x1000, 0);
-  mStateStep=0;
-  StartStateMusic(0x33);
-  return 1;
+    Player_ReleaseHeldActor(this);
+    this->SetAnim(0x35, 0x40000000, 0x1000, 0);
+    mStateStep = 0;
+    StartStateMusic(0x33);
+    return 1;
 }
 }
 
@@ -9159,10 +9160,10 @@ int daPly_c::St_HurtWater_Main() {
     extern daPly_c::State data_ov002_0211067c;
     extern daPly_c::State data_ov002_021106ac;
     extern int data_0209f32c[];
-    if (func_ov002_020cec2c(((char *)this)))
+    if (func_ov002_020cec2c(this))
         return 1;
     ApproachLinear(*((int *)((char *)&mHorzSpeed)), 0, 0x800);
-    int t = func_ov002_020ceaf4(((char *)this));
+    int t = func_ov002_020ceaf4(this);
     ApproachLinear(*((int *)((char *)&mVertSpeed)), t, 0x800);
     if (this->FinishedAnim()) {
         if ((mStateStep & 1) == 0) {
@@ -9189,8 +9190,8 @@ int daPly_c::St_HurtWater_Main() {
             mVertSpeed = 0;
         }
     }
-    func_ov002_020ceb7c(((char *)this));
-    Player_AdvanceAnims(((char *)this));
+    func_ov002_020ceb7c(this);
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -9355,7 +9356,8 @@ int daPly_c::St_MetalWaterGround_Main() {
     extern daPly_c::State data_ov002_0211067c;
     extern daPly_c::State data_ov002_021106c4;
     extern void func_ov002_020cd190(void*);
-    if(func_ov002_020cec2c(((char*)this))) return 1;
+    if (func_ov002_020cec2c(this))
+        return 1;
     int u703 = mIsMega;
     if((int)(data_0209f32c - 0x50000) < (int)(mPosY - 0xa000)){
         mIsUnderwater = 0;
@@ -9376,11 +9378,11 @@ int daPly_c::St_MetalWaterGround_Main() {
         this->ChangeState(data_ov002_0211067c);
         return 1;
     }
-    func_ov002_020cd190(((char*)this));
+    func_ov002_020cd190(this);
     int approach = 0;
     if(*(short*)((char*)&data_0209f4a0 + gActivePlayerSlot * 0x18) != 0){
         ApproachAngle((short*)((char*)&mPrevAngleY), mDesiredAngleY, 8, 0x1000, 0x80);
-        approach = func_ov002_020bf224(((char*)this), 0x14000, 0x1000);
+        approach = func_ov002_020bf224(this, 0x14000, 0x1000);
     }
     ApproachLinear(*((int *)((char *)&mHorzSpeed)), approach, 0x1000);
     mAngleY = mPrevAngleY;
@@ -9419,7 +9421,7 @@ int daPly_c::St_MetalWaterGround_Main() {
             func_0201251c(0, 0xaa, (void*)((char*)&mCamSpacePosX), mHorzSpeed);
         }
     }
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -10053,22 +10055,22 @@ extern "C" {
 int daPly_c::St_Swim_Init() {
     extern void Player_ReleaseHeldActor(void*);
     extern int data_0209f318[];
-  Player_ReleaseHeldActor(((char*)this));
-  Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
-  this->SetAnim(0xa7, 0x40000000, 0x1000, 0);
-  mStateStep=0;
-  mVertAccel=0;
-  mTerminalVelocity=-0xc000;
-  mIsUnderwater=1;
-  ((::dCamera_c *)*(void **)data_0209f318)->func_0200d768(mPlayerNo);
-  mPrevVertSpeed=mVertSpeed;
-  mHorzSpeed=0;
-  mVertSpeed=0;
-  mAngleYSpeed=0;
-  mStateWork=0;
-  mStateArg=0;
-  mJumpComboTimer=0;
-  return 1;
+    Player_ReleaseHeldActor(this);
+    Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
+    this->SetAnim(0xa7, 0x40000000, 0x1000, 0);
+    mStateStep = 0;
+    mVertAccel = 0;
+    mTerminalVelocity = -0xc000;
+    mIsUnderwater = 1;
+    ((::dCamera_c *)*(void **)data_0209f318)->func_0200d768(mPlayerNo);
+    mPrevVertSpeed = mVertSpeed;
+    mHorzSpeed = 0;
+    mVertSpeed = 0;
+    mAngleYSpeed = 0;
+    mStateWork = 0;
+    mStateArg = 0;
+    mJumpComboTimer = 0;
+    return 1;
 }
 }
 
@@ -10612,7 +10614,7 @@ int daPly_c::St_CeilingGrate_Main() {
     int r4;
     int spd;
 
-    r4 = func_ov002_020cf20c(((char*)this));
+    r4 = func_ov002_020cf20c(this);
     if (r4 == 0x80000000) {
         mPosX = mPreClsnPosX;
         mPosY = mPreClsnPosY;
@@ -10627,7 +10629,7 @@ int daPly_c::St_CeilingGrate_Main() {
             return 1;
         }
         if (*(u16*)((char*)data_0209f49e + idx) & 0x400) {
-            if (func_ov002_020d674c(((char*)this)) != 0)
+            if (func_ov002_020d674c(this) != 0)
                 this->ChangeState(data_ov002_0211004c);
             else
                 this->ChangeState(data_ov002_021105a4);
@@ -10642,7 +10644,7 @@ int daPly_c::St_CeilingGrate_Main() {
 
     switch (mStateStep) {
     case 0:
-        func_ov002_020cf384(((char*)this));
+        func_ov002_020cf384(this);
         if (this->FinishedAnim() != 0) {
             mStateStep = 1;
             this->SetAnim(data_ov002_0210a60c[mStateWork & 1], 0, 0x1000, 0);
@@ -10653,7 +10655,7 @@ int daPly_c::St_CeilingGrate_Main() {
                 break;
         }
     case 1:
-        func_ov002_020cf384(((char*)this));
+        func_ov002_020cf384(this);
         if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
             mStateWork ^= 1;
             mStateStep = 2;
@@ -10664,7 +10666,7 @@ int daPly_c::St_CeilingGrate_Main() {
         }
         break;
     case 2:
-        func_ov002_020cf2f8(((char*)this));
+        func_ov002_020cf2f8(this);
         spd = mHorzSpeed >> 3;
         if (spd < 0x800)
             spd = 0x800;
@@ -10686,7 +10688,7 @@ int daPly_c::St_CeilingGrate_Main() {
     }
 
     mPosY = r4 - 0x90000;
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -10697,11 +10699,11 @@ int daPly_c::St_CeilingGrate_Main() {
 extern "C" {
 int daPly_c::St_CeilingGrate_Init() {
     extern void func_ov002_020cf384(void*);
-  func_ov002_020cf384(((char*)this));
-  mStateStep=0;
-  mStateWork=0;
-  this->SetAnim(0x5b, 0x40000000, 0x1000, 0);
-  return 1;
+    func_ov002_020cf384(this);
+    mStateStep = 0;
+    mStateWork = 0;
+    this->SetAnim(0x5b, 0x40000000, 0x1000, 0);
+    return 1;
 }
 }
 
@@ -10738,12 +10740,12 @@ int daPly_c::St_OnWall_Main() {
     }
     u16 b1 = f & 4;
     if (b1 != 0) {
-        func_ov002_020cabe0(((char*)this));
+        func_ov002_020cabe0(this);
         return 1;
     }
     if (func_ov002_020c5244() != 0)
         return 1;
-    if (func_ov002_020d36d8(((char*)this), 0) != 0) {
+    if (func_ov002_020d36d8(this, 0) != 0) {
         mPrevAngleY = mAngleY;
         return 1;
     }
@@ -10771,7 +10773,7 @@ int daPly_c::St_OnWall_Main() {
         }
         ApproachLinear(*(short *)((char*)&mAngleY), (s16)a, 0x800);
         mPrevAngleY = a;
-        mHorzSpeed = func_ov002_020bf224(((char*)this), 0xa000, 0x2000);
+        mHorzSpeed = func_ov002_020bf224(this, 0xa000, 0x2000);
         func_ov002_020eee3c(&mMeshClsn, ((char *)this));
     } else {
         if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
@@ -10800,13 +10802,13 @@ int daPly_c::St_OnWall_Main() {
             if (spd < 0x400)
                 spd = 0x400;
             this->SetAnim(anim, 0, spd, 0);
-            func_ov002_020d4d88(((char*)this), func_ov002_020bf224(((char*)this), 0x6000, 0x1000), 0x1000);
+            func_ov002_020d4d88(this, func_ov002_020bf224(this, 0x6000, 0x1000), 0x1000);
         } else {
             mHorzSpeed = 0;
             this->SetAnim(0x5e, 0, 0x1000, 0);
         }
     }
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -11312,8 +11314,8 @@ int daPly_c::St_LedgeGrab_Main() {
         if (anim->WillHitFrame(0x1e))
             Sound::PlayBank0(mGroundSoundType + 0x40, mCamSpacePos);
     }
-  Player_AdvanceAnims(((char*)this));
-  return 1;
+    Player_AdvanceAnims(this);
+    return 1;
 }
 }
 
@@ -11444,7 +11446,7 @@ int daPly_c::St_LedgeHang_Main() {
         }
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -11545,8 +11547,8 @@ int daPly_c::St_WallSlide_Main() {
         }
     }
   end:
-  Player_AdvanceAnims(((char *)this));
-  return 1;
+      Player_AdvanceAnims(this);
+      return 1;
   }
 }
 
@@ -11595,7 +11597,8 @@ int daPly_c::St_Crawl_Main() {
         u8 idx = gActivePlayerSlot;
         int off = idx * 0x18;
         s16 val1 = *(s16*)((char*)data_0209f4a0 + off);
-        if (val1 >= 0x200 && ((*(u16*)((char*)data_0209f49c + off) & 0x400) != 0 || func_ov002_020d1164(((char*)this)) != 0)) {
+        if (val1 >= 0x200 && ((*(u16 *)((char *)data_0209f49c + off) & 0x400) != 0 ||
+                              func_ov002_020d1164(this) != 0)) {
             int id = this->GetBodyModelID(param1 & 0xff, 0);
             dExtAnmModel_c *anim = mModels.mBodyModels[id];
             if (anim->WillHitFrame(0xe) ||
@@ -11608,15 +11611,15 @@ int daPly_c::St_Crawl_Main() {
             dExtFrameCtrl_c *anim3 = reinterpret_cast<dExtFrameCtrl_c *>(
                 (long long)(int)&static_cast<dExtFrameCtrl_c &>(*mModels.mBodyModels[id3]));
             anim3->speed = shifted;
-            if (func_ov002_020d36d8(((char*)this), 1))
+            if (func_ov002_020d36d8(this, 1))
                 return 1;
-            int r4v = Player_ScaleByCharFactor(((char*)this), 0x8000);
-            int r2v = Player_ScaleByCharFactor(((char*)this), 0x1000);
-            a = func_ov002_020bf224(((char*)this), r4v, r2v);
+            int r4v = Player_ScaleByCharFactor(this, 0x8000);
+            int r2v = Player_ScaleByCharFactor(this, 0x1000);
+            a = func_ov002_020bf224(this, r4v, r2v);
             b = 0x1000;
             ApproachAngle((s16*)((char*)&mPrevAngleY), mDesiredAngleY, 0x10, 0x2000, 0x100);
             mAngleY = mPrevAngleY;
-            func_ov002_020c18b0(((char*)this), 0);
+            func_ov002_020c18b0(this, 0);
         } else {
             mHorzSpeed = 0;
             mStateStep = 5;
@@ -11632,8 +11635,8 @@ int daPly_c::St_Crawl_Main() {
         break;
     }
 
-    func_ov002_020d4d88(((char*)this), a, b);
-    Player_AdvanceAnims(((char*)this));
+    func_ov002_020d4d88(this, a, b);
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -11763,7 +11766,7 @@ int daPly_c::St_Crouch_Main() {
         }
         if (func_ov002_020d12b0(((u8*)this)))
             return 1;
-        func_ov002_020d1204(((char*)this));
+        func_ov002_020d1204(this);
         break;
     case 1:
         if ((*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x400) != 0
@@ -11771,7 +11774,7 @@ int daPly_c::St_Crouch_Main() {
             || func_ov002_020d1164(((char*)this)) != 0) {
             if (mHorzSpeed != 0) {
                 func_ov002_020c06fc(0x4000);
-                func_ov002_020dd2f4(((char*)this));
+                func_ov002_020dd2f4(this);
             } else {
                 if (mIsMega == 0) {
                     if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) >= 0x200) {
@@ -11791,7 +11794,7 @@ int daPly_c::St_Crouch_Main() {
         }
         if (func_ov002_020d12b0(((u8*)this)))
             return 1;
-        if (func_ov002_020d1204(((char*)this)) != 0)
+        if (func_ov002_020d1204(this) != 0)
             return 1;
         break;
     case 2:
@@ -11799,12 +11802,12 @@ int daPly_c::St_Crouch_Main() {
             this->ChangeState(data_ov002_0211013c);
             mCrouchTimer = 0xa;
         } else {
-            func_ov002_020d1204(((char*)this));
+            func_ov002_020d1204(this);
         }
         break;
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -11821,7 +11824,7 @@ int daPly_c::St_Crouch_Init() {
     }
     mStateTimer = 0x1e;
     if (*(unsigned short *)(data_0209f49c + gActivePlayerSlot * 0x18) & 2) {
-        if (func_ov002_020d1204(((char *)this)))
+        if (func_ov002_020d1204(this))
             return 1;
     }
     if (mStateStep == 0) {
@@ -11912,9 +11915,9 @@ int daPly_c::St_HoldHeavy_Main() {
                 var_r1 >>= 1;
             }
         } else {
-            var_r1 = func_ov002_020bf224(((char*)this), var_r1, 0);
+            var_r1 = func_ov002_020bf224(this, var_r1, 0);
         }
-        func_ov002_020d4d88(((char*)this), var_r1, 0x1000);
+        func_ov002_020d4d88(this, var_r1, 0x1000);
     }
 
     if (mHorzSpeed == 0) {
@@ -11931,11 +11934,11 @@ int daPly_c::St_HoldHeavy_Main() {
             this->SetAnim(data_ov002_020ff254[mStateWork + 2], 0, 0x1000, 0);
         }
     } else {
-        func_ov002_020d1f78(((char*)this), data_ov002_020ff254[mStateWork + 4]);
+        func_ov002_020d1f78(this, data_ov002_020ff254[mStateWork + 4]);
     }
 
 end:
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -12002,7 +12005,7 @@ int daPly_c::St_HoldLight_Main() {
         ApproachLinear(*((int *)((char *)&mHorzSpeed)), 0, 0x800);
         if (this->IsAnim(0x2f) || this->IsAnim(0x86)) {
             if (this->FinishedAnim()) {
-                if (func_ov002_020e0ccc(((char*)this), *(short**)((char*)&mHeldObj))) {
+                if (func_ov002_020e0ccc(this, *(short **)((char *)&mHeldObj))) {
                     return 1;
                 }
                 mPrevAngleY = mAngleY;
@@ -12023,12 +12026,12 @@ int daPly_c::St_HoldLight_Main() {
         goto end;
     }
 
-    if (func_ov002_020c5244(((char*)this))) {
+    if (func_ov002_020c5244(this)) {
         return 1;
     }
 
     if (mSinkDepth > 0x19000) {
-        Player_ReleaseHeldActor(((char*)this));
+        Player_ReleaseHeldActor(this);
         this->ChangeState(data_ov002_0211013c);
         return 1;
     }
@@ -12049,7 +12052,7 @@ int daPly_c::St_HoldLight_Main() {
             var_r4 = FX_MUL(var_r4, 0xa00);
         }
     } else {
-        var_r4 = func_ov002_020bf224(((char*)this), var_r4, 0);
+        var_r4 = func_ov002_020bf224(this, var_r4, 0);
     }
 
     mStateArg = 0;
@@ -12060,7 +12063,7 @@ int daPly_c::St_HoldLight_Main() {
         ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 8, 0x2000, 0x800);
     }
 
-    func_ov002_020d4d88(((char*)this), var_r4, 0x1000);
+    func_ov002_020d4d88(this, var_r4, 0x1000);
 
     {
         u16 flags = *(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18);
@@ -12074,7 +12077,7 @@ int daPly_c::St_HoldLight_Main() {
             return 1;
         }
         if (flags & 0x400) {
-            if (Player_ReleaseHeldActor(((char*)this))) {
+            if (Player_ReleaseHeldActor(this)) {
                 this->ChangeState(data_ov002_0211013c);
             }
             return 1;
@@ -12085,7 +12088,7 @@ int daPly_c::St_HoldLight_Main() {
         this->ChangeState(data_ov002_021101b4);
         return 1;
     }
-    if (func_ov002_020d9dcc(((char*)this))) {
+    if (func_ov002_020d9dcc(this)) {
         return 1;
     }
 
@@ -12109,11 +12112,11 @@ int daPly_c::St_HoldLight_Main() {
             this->SetAnim(animId, 0, 0x1000, 0);
         }
     } else {
-        func_ov002_020d1f78(((char*)this), 0x48);
+        func_ov002_020d1f78(this, 0x48);
     }
 
 end:
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -12254,8 +12257,8 @@ int daPly_c::St_WaitQuicksand_Main() {
   if(mSinkDepth>=0xb4000){
     if(func_ov002_020c5dec(3)) return 1;
   }
-  func_ov002_020d22ec(((char*)this),0);
-  Player_AdvanceAnims(((char*)this));
+  func_ov002_020d22ec(this, 0);
+  Player_AdvanceAnims(this);
   return 1;
 }
 }
@@ -12414,11 +12417,11 @@ int daPly_c::St_Wait_Main() {
                 goto blk0_35;
             }
             blk0_34:
-            func_ov002_020bcdf0(((char*)this));
-            goto blk0_36;
+                func_ov002_020bcdf0(this);
+                goto blk0_36;
         }
         blk0_35:
-        if (func_ov002_020d2fdc(((char*)this)) == 0) {
+            if (func_ov002_020d2fdc(this) == 0) {
             blk0_36:
             {
                 int idx0 = gActivePlayerSlot * 0x18;
@@ -12435,7 +12438,7 @@ int daPly_c::St_Wait_Main() {
                     func_ov002_020d22ec(((char*)this), thr0b);
                 }
             }
-        }
+            }
         break;
     }
 
@@ -12556,7 +12559,7 @@ int daPly_c::St_Wait_Main() {
             Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
             return 1;
         }
-        if (func_ov002_020d2da0(((char*)this))==1 || (unsigned short)(mStateFlags&4)!=0) {
+        if (func_ov002_020d2da0(this) == 1 || (unsigned short)(mStateFlags & 4) != 0) {
             this->SetAnim(0xb, 0x40000000, 0x1000, 0);
             mStateStep = 9;
         }
@@ -12574,7 +12577,7 @@ int daPly_c::St_Wait_Main() {
             mStateArg = 1;
         }
         if ((unsigned short)(mStateFlags&4) != 0) {
-            func_ov002_020cabe0(((char*)this));
+            func_ov002_020cabe0(this);
             return 1;
         }
         break;
@@ -12591,7 +12594,7 @@ int daPly_c::St_Wait_Main() {
 
     case 4: {
         if (mStatePhase == 0) {
-            func_ov002_020d2f24(((char*)this));
+            func_ov002_020d2f24(this);
             if (mMuteSleepVoice == 0 &&
                 mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(0xd)) {
                 Sound::PlayCharVoice(mCharacter, 0x2b, mCamSpacePos);
@@ -12605,9 +12608,9 @@ int daPly_c::St_Wait_Main() {
                 int b4b = (f2d8_4 == 2);
                 if (b4b != false) break;
             }
-            if (func_ov002_020d2da0(((char *)this)) == 1 || mSleepBubbleScaleX >= 0x3000 ||
+            if (func_ov002_020d2da0(this) == 1 || mSleepBubbleScaleX >= 0x3000 ||
                 mIsInShallowWater != 0 || (unsigned short)(mStateFlags & 4)) {
-                func_ov002_020d2e74(((char*)this));
+                func_ov002_020d2e74(this);
                 mSleepStage = 0;
                 this->SetAnim(8, 0x40000000, 0x1000, 0);
                 mStateStep = 9;
@@ -12617,7 +12620,7 @@ int daPly_c::St_Wait_Main() {
     }
 
     case 6: {
-        if (func_ov002_020d2da0(((char*)this)) == 1) {
+        if (func_ov002_020d2da0(this) == 1) {
             this->SetAnim(0x97, 0x40000000, 0x1000, 0);
             mStateStep = 9;
         }
@@ -12644,7 +12647,7 @@ int daPly_c::St_Wait_Main() {
     }
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -12923,9 +12926,9 @@ int daPly_c::St_TurnAround_Main() {
     if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
         angle = (s16)(raw + 0x8000);
         sel = (mHorzSpeed < 0) ? 0x1800 : 0x8000;
-        r5v = func_ov002_020bf56c(((char*)this), sel);
+        r5v = func_ov002_020bf56c(this, sel);
         ApproachAngle((s16*)((char*)&mPrevAngleY), angle, 0x10, 0x1000, 0x200);
-        tmp = Player_ScaleByCharFactor(((char*)this), 0x28000);
+        tmp = Player_ScaleByCharFactor(this, 0x28000);
         ApproachLinear(*((int *)((char *)&mHorzSpeed)), -tmp, r5v);
     } else {
         this->ChangeState(data_ov002_0211013c);
@@ -12950,7 +12953,7 @@ int daPly_c::St_TurnAround_Main() {
         mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, (int)((char*)&mCamSpacePosX), mHorzSpeed, 0);
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -13051,13 +13054,15 @@ int daPly_c::St_Walk_Main() {
         return 1;
     }
     if (func_ov002_020c5244()) return 1;
-    if (func_ov002_020d36d8(((char*)this), 0)) return 1;
+    if (func_ov002_020d36d8(this, 0))
+        return 1;
 
-    func_ov002_020d45c0(((char*)this));
+    func_ov002_020d45c0(this);
     short r5 = mPrevAngleY;
-    if (func_ov002_020d3b9c(((char*)this))) return 1;
+    if (func_ov002_020d3b9c(this))
+        return 1;
 
-    func_ov002_020d413c(((char*)this), r5);
+    func_ov002_020d413c(this, r5);
 
     if (mHorzSpeed == 0) {
         mAngleY = mPrevAngleY;
@@ -13077,7 +13082,7 @@ int daPly_c::St_Walk_Main() {
                 }
             } else {
                 if (this->IsAnim(0x37)) {
-                    func_ov002_020d4540(((char*)this));
+                    func_ov002_020d4540(this);
                 }
             }
         }
@@ -13103,7 +13108,7 @@ label_1f0:
         if (this->FinishedAnim() && this->IsAnim(0x9d)) {
             this->ChangeState(data_ov002_02110154);
             mStateWork = 1;
-            func_ov002_020cabe0(((char*)this));
+            func_ov002_020cabe0(this);
         }
         goto end;
     }
@@ -13120,7 +13125,7 @@ label_1f0:
 label_27c:
     this->ChangeState(data_ov002_02110154);
     mStateWork = 1;
-    func_ov002_020cabe0(((char*)this));
+    func_ov002_020cabe0(this);
     goto end;
 
 label_29c:
@@ -13128,7 +13133,7 @@ label_29c:
     mStateWork = 1;
 
 end:
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -13388,8 +13393,8 @@ int daPly_c::St_Walk_Init() {
         return 1;
     }
 
-    if (mHorzSpeed > Player_ScaleByCharFactor(((char *)this), 0x28000)) {
-        mHorzSpeed = Player_ScaleByCharFactor(((char *)this), 0x28000);
+    if (mHorzSpeed > Player_ScaleByCharFactor(this, 0x28000)) {
+        mHorzSpeed = Player_ScaleByCharFactor(this, 0x28000);
     }
     if (mHorzSpeed < -0xe000) {
         mHorzSpeed = -0xe000;
@@ -13422,12 +13427,12 @@ merge:
     mPeakY = mPosY;
     mStateWork = 0;
     mStateArg = 0;
-    if (mHorzSpeed > Player_ScaleByCharFactor(((char *)this), 0x24000)) {
+    if (mHorzSpeed > Player_ScaleByCharFactor(this, 0x24000)) {
         mStateArg = 1;
     }
     *(unsigned short *)((char *)&mStateFlags) &= ~0x100;
     mIsUnderwater = 0;
-    func_ov002_020d4540(((char *)this));
+    func_ov002_020d4540(this);
 
     ClearClimbCollider();
 
@@ -13436,7 +13441,7 @@ merge:
     mGrabbedByActor = 0;
     mStateStep = 0;
     mEatingPlayer = 0;
-    if (func_ov002_020e3078(((char *)this), data_ov002_02110154) != 0) {
+    if (func_ov002_020e3078(this, data_ov002_02110154) != 0) {
         mWalkTimer = 0x10;
         if (*(short *)((char *)&data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
             mPrevAngleY = mDesiredAngleY;
@@ -13786,7 +13791,7 @@ finishedanim:
     }
 tail:
     if (mStateWork == 0) {
-        Player_AdvanceAnims(((char*)this));
+        Player_AdvanceAnims(this);
     }
     mPrevVertSpeed = mVertSpeed;
 ret1:
@@ -13938,10 +13943,10 @@ int daPly_c::St_BurnLava_Init() {
   mVertSpeed=0x64000;
   mStateWork=0;
   mStateStep=0;
-  if(func_ov002_020e3078(((char*)this),data_ov002_021100f4)==0){
-    mStateArg=0;
+  if (func_ov002_020e3078(this, data_ov002_021100f4) == 0) {
+      mStateArg = 0;
   }
-  func_ov002_020d91e0(((char*)this),0x300,1);
+  func_ov002_020d91e0(this, 0x300, 1);
   Sound::PlayCharVoice(mCharacter, 0x23, mCamSpacePos);
   return 1;
 }
@@ -14122,10 +14127,12 @@ int daPly_c::Burn() {
 
     extern daPly_c::State data_ov002_021100dc;
     extern int func_ov002_020d82f0(void*);
-  if(func_ov002_020d82f0(((char*)this))==0) return 0;
-  if(mIsMetal || mIsUnderwater) return 0;
-  this->ChangeState(data_ov002_021100dc);
-  return 1;
+    if (func_ov002_020d82f0(this) == 0)
+        return 0;
+    if (mIsMetal || mIsUnderwater)
+        return 0;
+    this->ChangeState(data_ov002_021100dc);
+    return 1;
 }
 }
 
@@ -14231,16 +14238,19 @@ int daPly_c::Shock(unsigned int j) {
     extern daPly_c::State data_ov002_021100c4;
     extern int func_ov002_020d91e0(void* c, int a, int b, int d);
     extern int func_ov002_020d82f0(void*);
-  if (func_ov002_020d82f0(((char*)this)) == 0) return 0;
-  if (mIsMetal) j = 0;
-  mStateWork = 0;
-  if (func_ov002_020d91e0(((char*)this), j<<8, 1, 0)) mStateWork = 1;
-  if (mIsUnderwater) {
-    unsigned char* p = &this->mStateWork;
-    *p |= 2;
-  }
-  this->ChangeState(data_ov002_021100c4);
-  return 1;
+    if (func_ov002_020d82f0(this) == 0)
+        return 0;
+    if (mIsMetal)
+        j = 0;
+    mStateWork = 0;
+    if (func_ov002_020d91e0(this, j << 8, 1, 0))
+        mStateWork = 1;
+    if (mIsUnderwater) {
+        unsigned char *p = &this->mStateWork;
+        *p |= 2;
+    }
+    this->ChangeState(data_ov002_021100c4);
+    return 1;
 }
 }
 
@@ -14737,7 +14747,7 @@ int daPly_c::St_Swallow_Init() {
     if (*(void **)((char *)&mObjInMouth)) {
         void *o = *(void **)((char *)&mObjInMouth);
         if (((dActor_c *)o)->OnYoshiTryEat() == 4) {
-            Player_DisableInteraction(((char *)this));
+            Player_DisableInteraction(this);
         }
         int eq = ((dActor_c *)mObjInMouth)->actorID == 0xbf;
         if (eq != 0) {
@@ -16258,7 +16268,7 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, Fix12i dmg, u8 arg4, u8 arg5, u8 arg6
     void* p360;
     int hasCap;
 
-    if (func_ov002_020d82f0(((char *)this)) == 0) {
+    if (func_ov002_020d82f0(this) == 0) {
         return 0;
     }
 
@@ -17540,7 +17550,7 @@ int daPly_c::St_Throw_Main() {
     }
     if (this->FinishedAnim())
         this->ChangeState(data_ov002_0211013c);
-    Player_AdvanceAnims(((char *)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -18328,7 +18338,7 @@ int daPly_c::St_SlideKick_Main() {
     if (mIsAirborne == 0) {
         mIsSlidingOnGround = 1;
         func_ov002_020c06fc(0x4000);
-        func_ov002_020dd2f4(((char*)this));
+        func_ov002_020dd2f4(this);
     }
 
     if (mHorzSpeed != 0)
@@ -18391,13 +18401,13 @@ L18c:
         u32 w = ((dExtFrameCtrl_c *)((long long)(int)&(dExtFrameCtrl_c &)*anim))->currFrame;
         if ((u16)(w >> 12) < 4)
             goto L1d8;
-        func_ov002_020dbaec(((char*)this));
+        func_ov002_020dbaec(this);
         mAttackClsn.Clear();
         mAttackClsn.Update();
     }
 
 L1d8:
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     mPrevVertSpeed = mVertSpeed;
     return 1;
 }
@@ -18724,7 +18734,7 @@ int daPly_c::St_StomachSlide_Main() {
                 if (mSlideType == 0) arg = 0x8000;
                 func_ov002_020c06fc(arg);
             }
-            func_ov002_020dd2f4(((char*)this));
+            func_ov002_020dd2f4(this);
             if (this->IsState(data_ov002_021105bc) &&
                 (u16)(mStateFlags & 1)) {
                 func_ov002_020c0364(2);
@@ -18765,7 +18775,7 @@ int daPly_c::St_StomachSlide_Main() {
                     }
                 }
             }
-            func_ov002_020c18b0(((char*)this), 0);
+            func_ov002_020c18b0(this, 0);
         } else {
             if (this->IsState(data_ov002_0211031c)) {
                 mStatePhase = 1;
@@ -18775,17 +18785,17 @@ int daPly_c::St_StomachSlide_Main() {
                         mVertSpeed = 0x15000;
                     }
                 }
-                func_ov002_020e25f0(((char*)this), 0);
+                func_ov002_020e25f0(this, 0);
                 this->SetAnim(0x54, 0x40000000, 0x1000, 0);
             }
         }
-        func_ov002_020dba0c(((char*)this));
+        func_ov002_020dba0c(this);
         mAttackClsn.Clear();
         mAttackClsn.Update();
         goto end;
 
     case 1:
-        func_ov002_020dba0c(((char*)this));
+        func_ov002_020dba0c(this);
         mAttackClsn.Clear();
         mAttackClsn.Update();
         if (mIsAirborne == 0) {
@@ -18795,7 +18805,7 @@ int daPly_c::St_StomachSlide_Main() {
             this->SetAnim(0x43, 0x40000000, 0x1000, 0);
             goto end;
         }
-        func_ov002_020dc560(((char*)this));
+        func_ov002_020dc560(this);
         {
             u8* p = (u8*)((char*)&mStateStep);
             *p = (u8)(*p + 1);
@@ -18835,7 +18845,7 @@ int daPly_c::St_StomachSlide_Main() {
             goto end;
         }
         if (this->FinishedAnim()) {
-            if (func_ov002_020e0ccc(((char*)this), *(short**)((char*)&mHeldObj))) {
+            if (func_ov002_020e0ccc(this, *(short **)((char *)&mHeldObj))) {
                 return 1;
             }
             this->ChangeState(data_ov002_0211013c);
@@ -18850,7 +18860,7 @@ end:
         if (v >= 0x2aaa) v = 0x2aaa;
         ApproachLinear2(*((short *)((char *)&mAngleX)), v, 0x200);
     }
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     mStateArg = mSlideType;
     return 1;
 }
@@ -18966,7 +18976,7 @@ int daPly_c::St_PunchKick_Main() {
 
     if (st != 0) {
         if (st == 1) {
-            func_ov002_020dd5ec(((char*)this));
+            func_ov002_020dd5ec(this);
         }
     } else {
         if (mPunchKickCooldown == 0) {
@@ -18980,7 +18990,7 @@ int daPly_c::St_PunchKick_Main() {
             }
         }
 
-        func_ov002_020d8a50(((char*)this), mPunchKickStep);
+        func_ov002_020d8a50(this, mPunchKickStep);
 
         if (mIsAirborne != 0)
             goto end;
@@ -19488,7 +19498,7 @@ extern "C" {
 int daPly_c::St_TornadoSpin_Init() {
     extern int Player_ReleaseHeldActor(void *);
     extern int data_0209f318[];
-    Player_ReleaseHeldActor(((char *)this));
+    Player_ReleaseHeldActor(this);
     this->SetAnim(0x5f, 0, 0x1000, 0);
     mVertSpeed = 0;
     mVertAccel = 0;
@@ -19684,7 +19694,7 @@ int daPly_c::St_Balloon_Init() {
     extern int Player_ReleaseHeldActor(void *);
     extern int data_0209f318[];
     extern int data_ov002_0210e750[];
-    Player_ReleaseHeldActor(((char *)this));
+    Player_ReleaseHeldActor(this);
     mIsInAirState = 1;
     mIsFallScreaming = 0;
     if (mVertSpeed >= 0x10000)
@@ -19976,14 +19986,14 @@ int daPly_c::St_Cannon_Main() {
             Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
         if (mStateWork == 0)
             mAngleX = cstd::atan2(mHorzSpeed >> 8, mVertSpeed >> 8) - 0x4000;
-        Player_AdvanceAnims(((char*)this));
+        Player_AdvanceAnims(this);
         // fall through
     case 3:
         if (this->FinishedAnim()) {
             mStateStep = 1;
             this->ChangeState(data_ov002_02110214);
         }
-        Player_AdvanceAnims(((char*)this));
+        Player_AdvanceAnims(this);
         break;
     }
     return 1;
@@ -19996,21 +20006,21 @@ extern "C" {
 int daPly_c::St_Cannon_Init() {
     extern int Player_DisableInteraction(void*);
     extern int Player_ReleaseHeldActor(void*);
-  Player_DisableInteraction(((char*)this));
-  mIsUnderwater=0;
-  mIsInAirState=1;
-  mIsFallScreaming=0;
-  mIsAirborne=1;
-  mLandSoundPlayed=0;
-  Player_ReleaseHeldActor(((char*)this));
-  mStateStep=0;
-  this->SetAnim(0x73, 0, 0x1000, 0);
-  mVertAccel=-0x1200;
-  mOpacity=0;
-  mIsBodyClsnEnabled=0;
-  mStateWork=0;
-  mIsControlDisabled=1;
-  return 1;
+    Player_DisableInteraction(this);
+    mIsUnderwater = 0;
+    mIsInAirState = 1;
+    mIsFallScreaming = 0;
+    mIsAirborne = 1;
+    mLandSoundPlayed = 0;
+    Player_ReleaseHeldActor(this);
+    mStateStep = 0;
+    this->SetAnim(0x73, 0, 0x1000, 0);
+    mVertAccel = -0x1200;
+    mOpacity = 0;
+    mIsBodyClsnEnabled = 0;
+    mStateWork = 0;
+    mIsControlDisabled = 1;
+    return 1;
 }
 }
 
@@ -20186,7 +20196,7 @@ int daPly_c::St_Owl_Main() {
         this->SetAnim(0x58, 0, 0x1000, 0);
     }
     mPrevAngleY = mAngleY;
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -20671,16 +20681,16 @@ int daPly_c::St_Land_Main() {
         return 1;
     }
 
-    func_ov002_020e04a4(((char*)this));
+    func_ov002_020e04a4(this);
     u16 temp_r3 = mStateFlags;
 
     if ((u16)(temp_r3 & 0x40) == 0) {
         if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 2)
             || (u16)(temp_r3 & 0x100) != 0) {
             *(u16*)((char*)&mStateFlags) &= ~0x100;
-            if (func_ov002_020e3078(((char*)this), data_ov002_0211055c) != 0
-                && (*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x400)
-                && mHorzSpeed >= 0) {
+            if (func_ov002_020e3078(this, data_ov002_0211055c) != 0 &&
+                (*(u16 *)((char *)data_0209f49c + gActivePlayerSlot * 0x18) & 0x400) &&
+                mHorzSpeed >= 0) {
                 this->ChangeState(*reinterpret_cast<daPly_c::State *>(data_ov002_0211055c));
                 return 1;
             }
@@ -20694,22 +20704,20 @@ int daPly_c::St_Land_Main() {
             this->ChangeState(*reinterpret_cast<daPly_c::State *>(data_ov002_0211019c));
             return 1;
         }
-        if (func_ov002_020d5c6c(((char*)this)) != 0) {
+        if (func_ov002_020d5c6c(this) != 0) {
             return 1;
         }
         if (*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 1) {
-            return func_ov002_020dde74(((char*)this));
+            return func_ov002_020dde74(this);
         }
     } else {
         *(u16*)((char*)&mStateFlags) &= ~0x100;
     }
 
-    ApproachLinear(
-        *((int *)((char *)&mHorzSpeed)),
-        func_ov002_020bf224(((char *)this), Player_ScaleByCharFactor(((char *)this), 0x20000), 0),
-        0x4000);
+    ApproachLinear(*((int *)((char *)&mHorzSpeed)),
+                   func_ov002_020bf224(this, Player_ScaleByCharFactor(this, 0x20000), 0), 0x4000);
 
-    if (func_ov002_020e3078(((char*)this), data_ov002_0211052c) != 0) {
+    if (func_ov002_020e3078(this, data_ov002_0211052c) != 0) {
         mHorzSpeed = 0;
     }
 
@@ -20736,20 +20744,19 @@ int daPly_c::St_Land_Main() {
         }
         mPrevAngleY = mAngleY;
         this->ChangeState(data_ov002_0211013c);
-        if (this->IsState(data_ov002_0211013c) != 0
-            && mStateStep != 0
-            && mHorzSpeed >= Player_ScaleByCharFactor(((char*)this), 0x1c000)) {
+        if (this->IsState(data_ov002_0211013c) != 0 && mStateStep != 0 &&
+            mHorzSpeed >= Player_ScaleByCharFactor(this, 0x1c000)) {
             mSpineRot[2] = 0x4000;
         }
         return 1;
     }
 
-    if (func_ov002_020e3078(((char*)this), data_ov002_0211019c) == 0) {
+    if (func_ov002_020e3078(this, data_ov002_0211019c) == 0) {
         mHorzSpeed = 0;
     }
 
 tail:
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -20856,7 +20863,7 @@ int daPly_c::St_SmallLaunchUp_Main() {
   if(mIsAirborne==0){
     this->ChangeState(data_ov002_02110424);
   }
-  Player_AdvanceAnims(((char*)this));
+  Player_AdvanceAnims(this);
   return 1;
 }
 }
@@ -20904,7 +20911,7 @@ int daPly_c::St_SlopeJump_Main() {
             }
         }
     }
-    Player_AdvanceAnims(((char *)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -20917,7 +20924,8 @@ int daPly_c::St_SlopeJump_Init() {
     extern int func_ov002_020e2ad0(void*);
     extern int func_ov002_020e25f0(void*,int);
   mJumpedFromQuicksand=0;
-  if(func_ov002_020e2b6c(((char*)this))) return 1;
+  if (func_ov002_020e2b6c(this))
+      return 1;
   mIsInAirState=1;
   mIsFallScreaming=0;
   mJumpComboStage=0;
@@ -20925,11 +20933,11 @@ int daPly_c::St_SlopeJump_Init() {
   mLandSoundPlayed=0;
   this->SetAnim(0x53, 0x40000000, 0x1000, 0);
   mVertSpeed=0x2a000;
-  func_ov002_020e2ad0(((char*)this));
+  func_ov002_020e2ad0(this);
   if(mHorzSpeed>0){
       mHorzSpeed = FX_MUL(mHorzSpeed, 0xc00);
   }
-  func_ov002_020e25f0(((char*)this),0);
+  func_ov002_020e25f0(this, 0);
   return 1;
 }
 }
@@ -21059,7 +21067,7 @@ int daPly_c::St_CrazedCrate_Init() {
   mIsAirborne = 1;
   mLandSoundPlayed = 0;
   this->SetAnim(0x43, 0x40000000, 0x1000, 0);
-  func_ov002_020e0f38(((char*)this), mJumpComboStage);
+  func_ov002_020e0f38(this, mJumpComboStage);
   mPrevAngleY = mAngleY;
   *(int*)((char*)&mdCcAcPos_c.flags) |= 0x20;
   return 1;
@@ -21149,7 +21157,7 @@ int daPly_c::St_Spin_Init() {
   mTerminalVelocity = -0x10000;
   if (mStatePhase) {
     mVertSpeed = 0x50000;
-    func_ov002_020e25f0(((char*)this), 2);
+    func_ov002_020e25f0(this, 2);
   }
   int *p = (int *)&mdCcAcPos_c.flags;
   int old = *p;
@@ -21168,12 +21176,12 @@ int daPly_c::St_LongJump_Main() {
     extern int func_ov002_020e28d4(void*,int,int);
     extern int Player_AdvanceAnims(void*);
     extern daPly_c::State data_ov002_02110424;
-    func_ov002_020e28d4(((char *)this), 0x1800, 0x800);
+    func_ov002_020e28d4(this, 0x1800, 0x800);
     if (mIsAirborne == 0) {
         this->ChangeState(data_ov002_02110424);
     }
-  Player_AdvanceAnims(((char*)this));
-  return 1;
+    Player_AdvanceAnims(this);
+    return 1;
 }
 }
 
@@ -21249,9 +21257,9 @@ int daPly_c::St_SideFlip_Main() {
         if (mVertSpeed < 0) {
             mHorzSpeed = 0x12000;
         }
-        func_ov002_020e28d4(((char*)this), 0, 0x800);
+        func_ov002_020e28d4(this, 0, 0x800);
     } else {
-        func_ov002_020e28d4(((char*)this), 0x1800, 0x800);
+        func_ov002_020e28d4(this, 0x1800, 0x800);
     }
 
     if (mIsAirborne == 0) {
@@ -21264,7 +21272,7 @@ int daPly_c::St_SideFlip_Main() {
                     mPrevAngleY = mAngleY;
                 }
             }
-            if (func_ov002_020e2664(((char*)this))) {
+            if (func_ov002_020e2664(this)) {
                 return 1;
             }
         } else {
@@ -21300,7 +21308,7 @@ int daPly_c::St_SideFlip_Main() {
         }
     }
 
-    Player_AdvanceAnims(((char*)this));
+    Player_AdvanceAnims(this);
     return 1;
 }
 }
@@ -21320,7 +21328,7 @@ int daPly_c::St_WaterJump_Init() {
   mVertSpeed=0x2a000;
   mHorzSpeed=0x12000;
   Sound::PlayBank0(0x18, mCamSpacePos);
-  func_ov002_020e25f0(((char*)this),0);
+  func_ov002_020e25f0(this, 0);
   return 1;
 }
 }
@@ -22542,7 +22550,7 @@ int daPly_c::CleanupResources() {
     func_ov002_020bdd2c();
     func_ov002_020bdef0();
     func_ov002_020bdd9c();
-    func_ov002_020e032c(((char *)this));
+    func_ov002_020e032c(this);
     for (i = 0; i < 4; i++) {
         int j;
         VB *p = (VB *)mModels.mBodyModels[i];
@@ -23483,9 +23491,9 @@ after_player_slot:
     if (mIsControlDisabled == 0) {
         DecIfAbove0_Short(&mBalloonTimer);
         if (DecIfAbove0_Short(&mFireTimer) == 0)
-            func_ov002_020d80d0(((char *)this));
+            func_ov002_020d80d0(this);
         if (DecIfAbove0_Short(&mPowerupTimer) == 0) {
-            func_ov002_020e032c(((char *)this));
+            func_ov002_020e032c(this);
             func_ov002_020bdef0();
             func_ov002_020bdd9c();
         }
@@ -23497,7 +23505,7 @@ after_player_slot:
             mMouthHoldTimer = 0;
         }
         if (DecIfAbove0_Short(&mMouthHoldTimer) == 0 && mObjInMouth != 0)
-            func_ov002_020d6790(((char *)this));
+            func_ov002_020d6790(this);
     }
 
     {
@@ -23517,8 +23525,8 @@ after_player_slot:
     }
 
     func_ov002_020c2e78();
-    func_ov002_020ca940(((char *)this));
-    func_ov002_020d8158(((char *)this));
+    func_ov002_020ca940(this);
+    func_ov002_020d8158(this);
 
     {
         daPly_c::State *st = mState;
@@ -23554,7 +23562,7 @@ after_player_slot:
     }
 
     if (mIsInShallowWater != 0 && mIsUnderwater == 0 && mIsAirborne == 0)
-        func_ov002_020ce8bc(((char *)this), mHorzSpeed);
+        func_ov002_020ce8bc(this, mHorzSpeed);
 
     mPreClsnAngleY = mAngleY;
     *(u16 *)LAU((char *)&mStateFlags) &= ~0x440;
@@ -23606,7 +23614,7 @@ after_player_slot:
     }
 
     UpdateScaleAnim();
-    func_ov002_020d869c(((char *)this));
+    func_ov002_020d869c(this);
 
     {
         u16 t = mInvincibleTimer;
@@ -23627,7 +23635,7 @@ after_player_slot:
     else
         gActivePlayerSlot = data_0209f250;
 
-    func_ov002_020e4bb8(((char *)this));
+    func_ov002_020e4bb8(this);
 
     {
         s32 r2 = mTongueHitDist;
