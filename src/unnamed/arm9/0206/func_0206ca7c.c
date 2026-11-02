@@ -1,4 +1,5 @@
 #include "types.h"
+#include "private/debugger_block.h"
 struct Ring
 {
     u16 head;
@@ -6,11 +7,6 @@ struct Ring
     u16 tail;
 };
 
-struct Shared
-{
-    char pad[0x1c];
-    char *buf;
-};
 
 #pragma optimize_for_size on
 
@@ -21,7 +17,7 @@ struct Shared
    read-modify-write. func_0206cbc0 picks it when flag 4 is set. */
 void func_0206ca7c(struct Ring *r, int val)
 {
-    struct Shared *sh = (struct Shared *)0x027fff60;
+    struct DebuggerBlock *sh = (struct DebuggerBlock *)0x027fff60;
     u16 head = r->head;
     u16 next = (head + 1) & 0x3fff;
     u16 tail = *(volatile u16 *)&r->tail;
