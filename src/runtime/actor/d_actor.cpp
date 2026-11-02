@@ -734,7 +734,7 @@ extern s32 Vec3_HorzLen(Vector3 *v);
 }
 /* atan2 of v's horizontal length, projected onto heading `angle`, against
    v->y. The leading actor argument is unused. */
-extern "C" s32 func_02010844(void *actor, Vector3 *v, s16 angle) {
+extern "C" s16 func_02010844(void *actor, Vector3 *v, s16 angle) {
     s32 dir;
     s32 horzLen;
 

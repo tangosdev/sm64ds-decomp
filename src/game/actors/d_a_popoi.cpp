@@ -119,7 +119,7 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 extern unsigned int RandomIntInternal(void *s);
 extern int Vec3_Dist(void *a, void *b);
 extern short Vec3_HorzAngle(void *a, void *b);
-extern int func_02010844(void *unused, Vector3 *v, s16 angle);
+extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 void func_02012694(int a, void *b, int c);
 extern void Matrix4x3_FromRotationY(void *m, int angle);

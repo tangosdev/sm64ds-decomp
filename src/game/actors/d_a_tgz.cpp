@@ -113,7 +113,7 @@ void func_ov077_02125e94(daTgz_c *self, int state);
 
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
-s32 func_02010844(void *unused, Vector3 *v, s16 angle);
+s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 short Vec3_HorzAngle(void *a, void *b);
 void Vec3_Asr(void *dst, void *src, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
