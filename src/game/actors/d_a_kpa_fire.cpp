@@ -32,7 +32,7 @@
  *   the char * / unsigned char * decl_common.h declares. Their bodies
  *   compile as C++; 02117624 uses a POD matrix view for its block copy.
  * - Particle::System::callbackScale and callbackVelocity are named.
- *   The word at +0x44 sits in pad_042 and stays a raw store.
+ *   The word at +0x44 is Particle::System::emitRadius.
  * - DropShadowRadHeight's matrix is `mShadowMat`, raw `u8[0x30]` storage.
  *   daKpaFire_c.h has no Matrix4x3 member there.
  * - Sound 0x180, player param1 == 3, and the particle kind pairs are
@@ -830,7 +830,7 @@ void daKpaFire_c::func_ov060_02116740() {
  *
  * With resize non-zero each live particle is resized. callbackScale becomes
  * mFireScale as a halfword (0x7fff once mFireScale reaches 0x8000). Kind
- * 0x9a also writes the unnamed word at +0x44 and callbackVelocity from
+ * 0x9a also writes emitRadius and callbackVelocity from
  * mFireScale * 0x2800 and mFireScale * 0xa66.
  */
 void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
@@ -853,7 +853,7 @@ void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
         }
 
         if (kind == PARTICLE_SCALED_9A) {
-            *(int *)((char *)sys + 0x44) = FX_MUL((this->mFireScale), 0x2800);
+            sys->emitRadius = FX_MUL((this->mFireScale), 0x2800);
             sys->callbackVelocity = (short)FX_MUL((this->mFireScale), 0xa66);
         }
     }
@@ -875,7 +875,7 @@ void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
     if (kind != PARTICLE_SCALED_9A)
         return;
 
-    *(int *)((char *)sys + 0x44) = FX_MUL((this->mFireScale), 0x2800);
+    sys->emitRadius = FX_MUL((this->mFireScale), 0x2800);
     sys->callbackVelocity = (short)FX_MUL((this->mFireScale), 0xa66);
 }
 

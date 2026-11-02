@@ -406,16 +406,16 @@ void dScMgJump2_c::State_Idle() {}
 // @symbol _ZN12dScMgJump2_c8BehaviorEv
 /* Slot 6. mParticleID is a particle system's unique ID, handed to
  * NewUnkCallback818 and back each frame. The object FromUniqueID returns is
- * untyped, so its fields at 0x50 and 0x58 stay raw. Both Particle::System
+ * a Particle::System. Both Particle::System
  * calls keep their mangled spellings: declaring the real Fix12<int>
  * parameters changes how the call passes them. */
 s32 dScMgJump2_c::Behavior() {
     mParticleID =
         Particle::System::NewUnkCallback818(mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);
-    void *system = Particle::System::FromUniqueID(mParticleID);
+    Particle::System *system = Particle::System::FromUniqueID(mParticleID);
     if (system != 0) {
-        *(int *)((char *)system + 0x50) = 0x4000;
-        *(unsigned char *)((char *)system + 0x58) = 0x2c;
+        system->callbackScale = 0x4000;
+        system->emitInterval = 0x2c;
     }
     Jump2Popup_UpdateAll();
     {

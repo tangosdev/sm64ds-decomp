@@ -58,30 +58,45 @@ struct System {
        particles. */
     u32 callbackFlags;             /* 0x1c */
     Vector3 position;              /* 0x20 */
-    u8 pad_02c[0x0c];
+    /* Added to every particle's offset each frame (func_0204a730); the
+       spawn (func_0204ae2c) clears it. */
+    Vector3 velocity; /* 0x2c */
     /* func_0204a730 advances it; the update walk retires the system once it
        passes the definition's callbackValue. */
     u16 age; /* 0x38 */
     /* simpleCallback_c copies this value in both directions. */
     s16 callbackValue;             /* 0x3a */
     Vector3_16f direction;         /* 0x3c */
-    u8 pad_042[0x06];
+    u8 pad_042[0x02];
+    /* func_0204ae2c copies it from the definition and func_0204c584 scales
+       the spawn offset of every emitter shape by it. */
+    s32 emitRadius; /* 0x44 */
     /* Descriptive names for callback-owned, body-proven fields. */
     s32 callbackParam;             /* 0x48 */
     s32 callbackVelocity;          /* 0x4c */
     s32 callbackScale;             /* 0x50 */
-    u8 pad_054[0x04];
-    /* Written by its callers only: ov007's figure trail stores 1..5, fewer
-       the faster the figure moves, and the trampoline minigame ramps it. */
-    u8 spawnFrames; /* 0x58 */
-    u8 pad_059[0x03];
+    /* func_0204ae2c copies it from the definition; func_0204c584 seeds each
+       particle's lifetime from it. */
+    u16 particleLifetime; /* 0x54 */
+    u8 pad_056[0x02];
+    /* func_0204ae2c copies it from the definition and func_0204a730 spawns
+       when age % emitInterval == 0. Callers overwrite it: ov007's figure
+       trail stores 1..5, fewer the faster the figure moves, and the
+       trampoline minigame ramps it. */
+    u8 emitInterval; /* 0x58 */
+    /* func_0204ae2c copies it from the definition; func_0204c584 stores it
+       in each new particle's visibility. */
+    u8 baseAlpha; /* 0x59 */
+    u8 pad_05a[0x02];
     /* Two axes spanning the plane perpendicular to `direction`, rebuilt by
        func_0204cebc as cross products: basisU = direction x reference,
        basisV = direction x basisU. func_0204cd5c maps a 2D emitter offset
        onto that plane through them. */
     Vector3_16f basisU; /* 0x5c */
     Vector3_16f basisV; /* 0x62 */
-    u8 pad_068[0x0c];
+    /* func_0204a730 calls it each update when set; func_0204ae2c clears it. */
+    void (*callback)(void *); /* 0x68 */
+    u8 pad_06c[0x08];
     Flags flags;                   /* 0x74 */
 
     static System *FromUniqueID(u32 uniqueID);
