@@ -1,10 +1,15 @@
+//cpp
 #include "types.h"
 #include "nitro/os/spinLock.h"
+
+namespace IRQ {
+void SetFIQState(bool);
+void SetIRQState(bool);
+}
+
+extern "C" {
 extern int func_0206da18(void);
 extern int func_0206d9cc(void);
-/* This file stays C. IRQ::SetFIQState(bool) measured func_0206d868 0x28 -> 0x40. */
-extern void _ZN3IRQ11SetFIQStateEb(int x); /* 0x0206d9dc, inside func_0206d9cc */
-extern void _ZN3IRQ11SetIRQStateEb(int x); /* 0x0206da28, inside func_0206da18 */
 /* One try at the cartridge lock, with IRQ and FIQ disabled first (the
  * func_0206da18 / func_0206d9cc entries return the previous states). Returns
  * nonzero if the lock was taken with lock id 0x70, or if the main processor
@@ -42,9 +47,10 @@ int func_0206cee0(int *out) {
         }
         *out = f;
     } else {
-        _ZN3IRQ11SetFIQStateEb(v7);
-        _ZN3IRQ11SetIRQStateEb(v8);
+        ((void (*)(int))IRQ::SetFIQState)(v7);
+        ((void (*)(int))IRQ::SetIRQState)(v8);
         *out = 0;
     }
     return v6;
+}
 }
