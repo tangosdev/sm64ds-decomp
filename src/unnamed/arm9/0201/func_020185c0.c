@@ -1,14 +1,10 @@
 #include "private/arm9_archive_table.h"
 
-/* NitroSDK's FSFileID: the archive and the file id inside it. */
-struct FSFileID {
-    int arc;
-    int file_id;
-};
+#include "private/fs_views.h"
 
 extern void FS_InitFile(int *s);
-extern void func_02018598(struct FSFileID *c, int arg);
-extern int myFS_OpenFileFast(int a, struct FSFileID v);
+extern void func_02018598(FSFileID *c, int arg);
+extern int myFS_OpenFileFast(int a, FSFileID v);
 extern int LoadArchive(int idx);
 extern void Crash(void);
 extern int func_0204eda4(int file, char *archive, unsigned int index);
@@ -23,8 +19,8 @@ int func_020185c0(int file, unsigned int id) {
     FS_InitFile((int *)file);
 
     if (id < 0x8000) {
-        struct FSFileID arg;
-        struct FSFileID fileId;
+        FSFileID arg;
+        FSFileID fileId;
         func_02018598(&fileId, id);
         arg.arc = fileId.arc;
         arg.file_id = fileId.file_id;

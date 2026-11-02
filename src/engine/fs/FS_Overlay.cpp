@@ -36,14 +36,6 @@ typedef struct CARDRomRegion {
     u32 length;
 } CARDRomRegion;
 
-/* NitroSDK FSFileID: the archive and the file's index in it. It keeps its own
- * tag because src/LoadOverlay.c declares FS_GetOverlayFileID returning a
- * struct Pair. */
-struct Pair {
-    void *arc;
-    int file_id;
-};
-
 /* The __global_destructor_chain entries the runtime keeps for objects with
  * static storage. */
 struct MWiDestructorChain {
@@ -94,8 +86,8 @@ void FS_ClearOverlayImage(FSOverlayInfo *p_ovi) {
 
 // @symbol FS_GetOverlayFileID
 /* The overlay's FSFileID: the ROM archive and the header's file_id. */
-struct Pair FS_GetOverlayFileID(const FSOverlayInfo *p_ovi) {
-    struct Pair ret;
+FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi) {
+    FSFileID ret;
     ret.arc = &data_020a8074;
     ret.file_id = p_ovi->header.file_id;
     return ret;
