@@ -2680,7 +2680,7 @@ int cMgSmartball_ball_c::HitSwitches(int *arg) {
 }
 
 // @symbol _ZN19cMgSmartball_ball_c10HitPakkunsEPi
-extern "C" int cMgSmartball_ball_c::HitPakkuns(int *arg) {
+int cMgSmartball_ball_c::HitPakkuns(int *arg) {
     int buf[2];
     int i = 0;
     int *zero = 0;
@@ -4377,7 +4377,7 @@ void dScMgSmartball_c::UpdateDust() {
  * mDustVel[j * 8 + 4] each move bytes, and a struct-array view of either array
  * changes the frame and the loop's addressing and does not reproduce.
  */
-extern "C" void dScMgSmartball_c::SpawnDust(int *origin) {
+void dScMgSmartball_c::SpawnDust(int *origin) {
     char *c = (char *)this;
     int i;
     int j;
@@ -4459,7 +4459,7 @@ void dScMgSmartball_c::UpdateScores() {
 #pragma pop
 
 // @symbol _ZN16dScMgSmartball_c9EmitScoreEPiiii
-extern "C" void dScMgSmartball_c::EmitScore(int *src, int v2, int v3, int v5) {
+void dScMgSmartball_c::EmitScore(int *src, int v2, int v3, int v5) {
     int i;
     for (i = 0; i < 5; i++) {
         if (mPopupScore[i] > 0)
@@ -6008,12 +6008,10 @@ s32 dScMgSmartball_c::Behavior() {
 /* vtable slot 18 -- an override of
    dScMgBase_c::StartRound(int). The signature must repeat the base
    declaration exactly, or mwcc appends a slot instead of overriding. */
-extern "C" {
 void dScMgSmartball_c::StartRound(int /* arg */) {
     SpawnObjects();
     G2x::SetBlendAlpha((volatile unsigned short *)0x4000050, 0, 0x18, 4, 0xa);
     G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 0x18, 4, 0xa);
-}
 }
 
 // @symbol _ZN16dScMgSmartball_c15InitSubScreenBgEv
