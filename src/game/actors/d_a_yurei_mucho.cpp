@@ -671,8 +671,7 @@ void daYurei_Mucho_c::func_ov065_02115ff0()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c19func_ov065_02115f84Ev
 /* The death helper: poof, drop the coins, unregister. */
-void daYurei_Mucho_c::func_ov065_02115f84()
-{
+void daYurei_Mucho_c::func_ov065_02115f84() {
     Vector3 v;
     SmallPoofDust();
     v.x = mPosX;
@@ -682,7 +681,6 @@ void daYurei_Mucho_c::func_ov065_02115f84()
     KillAndTrackInDeathTable();
     func_02012694(0x11e, &mCamSpacePosX);
 }
-
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_cD1Ev

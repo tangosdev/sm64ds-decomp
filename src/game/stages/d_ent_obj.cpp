@@ -1075,10 +1075,7 @@ extern "C" UnknownVsPlayerStateRow data_ov075_0211d56c[10] = {
     {&UnknownVsPlayer::func_ov075_02114390}, {&UnknownVsPlayer::func_ov075_02114300},
 };
 extern "C" UnknownVsPlayerStateRow data_ov075_0211d53c[6] = {
-    {&UnknownVsPlayer::func_ov075_021142fc},
-    {&UnknownVsPlayer::func_ov075_0211427c},
-    {&UnknownVsPlayer::func_ov075_02114218},
-    {&UnknownVsPlayer::func_ov075_021141b8},
-    {&UnknownVsPlayer::func_ov075_021140e4},
-    {&UnknownVsPlayer::func_ov075_02114010},
+    {&UnknownVsPlayer::func_ov075_021142fc}, {&UnknownVsPlayer::func_ov075_0211427c},
+    {&UnknownVsPlayer::func_ov075_02114218}, {&UnknownVsPlayer::func_ov075_021141b8},
+    {&UnknownVsPlayer::func_ov075_021140e4}, {&UnknownVsPlayer::func_ov075_02114010},
 };
