@@ -396,6 +396,10 @@ typedef struct S6e06c {
     unsigned int b8rest:29;
     unsigned char fc;
     unsigned char fd;
+    char pad_0e[0x0a];
+    unsigned int position;   /* 0x18 */
+    char pad_1c[0x0c];
+    unsigned int buffer_len; /* 0x28 */
 } S6e06c;
 
 
@@ -419,24 +423,24 @@ int fflush(S6e06c *p)
         return 0;
 
     if (p->b8 >= 3)
-        *(unsigned int *)(((int)p + 8)) = (*(unsigned int *)(((int)p + 8)) & ~7) | 2;
+        p->b8 = 2;
 
     if (p->b8 == 2)
-        *(int *)((char *)p + 0x28) = 0;
+        p->buffer_len = 0;
 
     if (p->b8 != 1) {
-        *(unsigned int *)(((int)p + 8)) &= ~7;
+        p->b8 = 0;
         return 0;
     }
 
     if (__flush_buffer((char *)p, 0) != 0) {
         p->fd = 1;
-        *(int *)((char *)p + 0x28) = 0;
+        p->buffer_len = 0;
         return -1;
     }
-    *(unsigned int *)(((int)p + 8)) &= ~7;
-    *(int *)((char *)p + 0x18) = 0;
-    *(int *)((char *)p + 0x28) = 0;
+    p->b8 = 0;
+    p->position = 0;
+    p->buffer_len = 0;
     return 0;
 }
 #pragma pop

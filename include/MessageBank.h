@@ -16,6 +16,10 @@
  * stock BMG: the image holds "GSEM1gmb" and "1FNI" five times each, once per
  * western bank, and "MESGbmg1"/"INF1" appear nowhere. Do not "correct" them.
  *
+ * The message window (src/Message.cpp) also pins the entry array's 8-byte
+ * stride, MessageEntry's three fields and MessageInfoSection::messageCount;
+ * each is marked where it is declared.
+ *
  * EVERYTHING ELSE BELOW IS INFERRED from the BMG family, not from this game's
  * code -- no ROM function reads these fields. Marked (?) and worth confirming
  * against a bank before anything depends on it.
@@ -31,17 +35,19 @@ typedef struct MessageBankHeader {
 typedef struct MessageInfoSection {
     char magic[4];          /* 0x00 - "1FNI", confirmed in the image */
     u32 sectionSize;        /* 0x04 - pinned: the parser adds it to reach data */
-    u16 messageCount;       /* 0x08 - (?) */
+    u16 messageCount;       /* 0x08 - func_0201f32c refuses an index at or past it */
     u16 unk_0a;             /* 0x0a - (?) */
     u32 unk_0c;             /* 0x0c - (?) pads to the pinned 0x10 */
 } MessageInfoSection;
 
-/* (?) ENTIRELY INFERRED. The parser only computes where the entry array starts;
-   nothing in the ROM reads an element, so both the field split and the 8-byte
-   stride are BMG-family guesses. */
+/* One message's entry. The message window reads it at entries + idx * 8:
+   the text starts at data + 8 + textOffset, and the window is sized from
+   width and lineCount. */
 typedef struct MessageEntry {
-    u32 textOffset;
-    u8 info[4];
+    u32 textOffset; /* 0x00 - from the data section's payload */
+    u16 width;      /* 0x04 - box width in pixels: (width + 7) / 8 tile columns */
+    u8 lineCount;   /* 0x06 - text lines in the box; each is two tile rows */
+    u8 pad_07;      /* 0x07 - no reader */
 } MessageEntry;
 
 /* (?) INFERRED apart from the magic. "1TAD" occurs three times in the image,

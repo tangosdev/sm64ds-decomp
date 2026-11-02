@@ -2,6 +2,8 @@
 #include "types.h"
 #include "G2.h"
 #include "Heap.h"
+#include "fListNode.h"
+#include "fBase_c.h"
 
 extern "C" {
 
@@ -61,9 +63,8 @@ void ShowCrashScreen(void)
     if (rr != 0 && rr < 6)
         nds_printf(scr + 0x180, data_0208e58c, rr, func_020441bc(rr));
 
-    hp = (data_020a4b68 != 0)
-        ? *(u16 *)((char *)(*(void **)((char *)data_020a4b68 + 8)) + 0xc)
-        : *(u16 *)&data_020a4b50;
+    hp = (data_020a4b68 != 0) ? ((fLiNdBaPr_c *)data_020a4b68)->owner->actorID
+                              : *(u16 *)&data_020a4b50;
     if (hp != 0xffff) {
         int bb = data_020a4b4c;
         nds_printf(scr + 0x1c0, data_0208e59c, hp, bb, GetActorDebugName(hp));
@@ -102,8 +103,8 @@ void ShowCrashScreen(void)
 
     if (data_020a0e9c->Intact()) {
         int mx = data_020a0e9c->MaxAllocationUnitSize();
-        nds_printf(scr + 0x500, data_0208e610,
-            (*(int *)((char *)data_020a0e9c + 8) - mx) / 1024, mx / 1024);
+        nds_printf(scr + 0x500, data_0208e610, ((int)data_020a0e9c->heapSize - mx) / 1024,
+                   mx / 1024);
     } else {
         nds_print(scr + 0x500, data_0208e624);
     }
@@ -111,7 +112,7 @@ void ShowCrashScreen(void)
     if (((mHeap::Heap_t *)data_020a0eac)->Intact()) {
         int mx = ((mHeap::Heap_t *)data_020a0eac)->MaxAllocationUnitSize();
         nds_printf(scr + 0x540, data_0208e634,
-            (*(int *)((char *)data_020a0eac + 8) - mx) / 1024, mx / 1024);
+                   ((int)((mHeap::Heap_t *)data_020a0eac)->heapSize - mx) / 1024, mx / 1024);
     } else {
         nds_print(scr + 0x500, data_0208e648);
     }
