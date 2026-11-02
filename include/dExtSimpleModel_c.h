@@ -37,8 +37,6 @@
  * definition needed, and the declaration here had it right all along.
  */
 
-#ifdef __cplusplus
-
 struct SharedFilePtr;
 
 struct dExtSimpleModel_c : dExtModel_c {
@@ -93,22 +91,5 @@ struct dExtSimpleModel_c : dExtModel_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dExtSimpleModel_c_size_must_be_0x50[sizeof(dExtSimpleModel_c) == 0x50 ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for C translation units, vptr written out explicitly. */
-struct dExtSimpleModel_c {
-    void **vtable;                     /* 0x00 */
-    struct BMD_File *modelFile;        /* 0x04 */
-    struct ModelComponents data;       /* 0x08 */
-    struct Matrix4x3 mat4x3;           /* 0x1c */
-    void *transformsBuf;               /* 0x4c */
-};
-
-/* So an object header declaring a dExtSimpleModel_c member reads the same in both modes: C++
- * gets the class, C gets the flat stand-in above, and neither needs `struct`. */
-typedef struct dExtSimpleModel_c dExtSimpleModel_c;
-
-#endif /* __cplusplus */
 
 #endif /* DEXTSIMPLEMODEL_C_H */

@@ -23,8 +23,6 @@
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 
-#ifdef __cplusplus
-
 #include "dActor_c.h"
 
 struct daPgMthr_c : dActor_c {
@@ -88,66 +86,5 @@ struct daPgMthr_c : dActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MotherPenguin_size_must_be_0x38c[sizeof(daPgMthr_c) == 0x38c ? 1 : -1];
 #endif
-
-#else
-
-struct daPgMthr_c {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x10];
-    s32 mVertAccel;            /* 0x09c */
-    s32 mTerminalVelocity;            /* 0x0a0 */
-    u8  pad_0a4[0x30];
-    /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0xd4 -- a relocation the ROM build
-       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
-       stopped short of the object, so the member also takes over unk_0dc (+0x8 = data),
-       mAnimation (+0x50 = the dExtFrameCtrl_c base), which the header declared separately inside
-       it. */
-    dExtAnmModel_c mAnmModel; /* 0x0d4 */
-    /* dExtAnmTexPat_c member, named by the class's own destructor calling
-       dExtAnmTexPat_c's D1 at +0x138 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN10daPgMthr_cD0Ev, now in src/game/actors/d_a_pg_mthr.cpp] */
-    dExtAnmTexPat_c mTextureSequence; /* 0x138 */
-    /* dExtShadowModel_c member, named by the class's own destructor calling
-       dExtShadowModel_c's D1 at +0x14c -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN10daPgMthr_cD0Ev, now in src/game/actors/d_a_pg_mthr.cpp] */
-    dExtShadowModel_c mShadowModel;            /* 0x14c */
-    /* dCcAc_c member, named by the class's own destructor calling
-       dCcAc_c's D1 at +0x174 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN10daPgMthr_cD0Ev, now in src/game/actors/d_a_pg_mthr.cpp] */
-    dCcAc_c mdCcAc_c;            /* 0x174 */
-    /* dBgCh_Actr member, named by the class's own destructor calling
-       dBgCh_Actr's D1 at +0x1a8 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN10daPgMthr_cD0Ev, now in src/game/actors/d_a_pg_mthr.cpp] */
-    dBgCh_Actr mWithMeshClsn;            /* 0x1a8 */
-    s32 mHomePosX;            /* 0x364 */
-    s32 mHomePosY;            /* 0x368 */
-    s32 mHomePosZ;            /* 0x36c */
-    void *mState;             /* 0x370 */
-    s32 mPlayer;              /* 0x374 */
-    s32 mLastPlayer;          /* 0x378 */
-    s32 unk_37c;              /* 0x37c */
-    s16 mLookAngX;            /* 0x380 */
-    s16 mLookAngY;            /* 0x382 */
-    s16 mMessageId;           /* 0x384 */
-    u8  mGaveStar;            /* 0x386 */
-    u8  mHoldingBaby;         /* 0x387 */
-    u8  mTalkStep;            /* 0x388 */
-    u8  mTalkTimer;           /* 0x389 */
-    u8  pad_38a[2];
-};
-
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char MotherPenguin_size_must_be_0x38c[sizeof(struct daPgMthr_c) == 0x38c ? 1 : -1];
-#endif
-
-#endif /* __cplusplus */
 
 #endif

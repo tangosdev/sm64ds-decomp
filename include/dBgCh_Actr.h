@@ -63,8 +63,6 @@ struct dActor_c;
  *     mWithMeshClsn + 0x1bc. Nothing in matched code allocates by sizeof.
  */
 
-#ifdef __cplusplus
-
 #include "dBgCh_SphCrr.h"
 #include "dBgCh_Lin.h"
 
@@ -207,56 +205,5 @@ void func_020383f0(dBgCh_Actr *);                          /* UpdateContinuousNo
 void func_020383e4(dBgCh_Actr *);                          /* UpdateExtraContinous */
 void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *); /* UpdateDiscreteNoLava */
 }
-
-#else
-
-/* The C view is a compatibility shim for the .c translation units that have
-   not been converted yet, and it is deliberately field-for-field IDENTICAL to
-   what this header carried before the promotion -- including mFlags as a u8.
-   Widening it here changed the code those files generate and turned
-   UpdateContinuous from VERIFIED into 39 unresolvable relocations, i.e. from
-   "proven equal to the ROM" into "cannot be checked at all". The corrected
-   widths live on the C++ side above; a .c file inherits them when it is
-   converted, not before. */
-struct dBgCh_Actr {
-    u8  pad_000[0x10];      /* dBgCh base */
-    u32 mFlags;               /* 0x010 */
-    struct dActor_c * mActor; /* 0x014 */
-    s32 mRadius;            /* 0x018 */
-    s32 mHeight;            /* 0x01c */
-    u8  mSphereClsn;        /* 0x020 */
-    u8  pad_021[0x4b];
-    u8  mDisplacement;            /* 0x06c */
-    u8  pad_06d[0x23];
-    u8  mClsnFlags;         /* 0x090 */
-    u8  pad_091[0x97];
-    s32 mClsnScale;            /* 0x128 */
-    s32 unk_12c;            /* 0x12c */
-    s32 mAngPtr;            /* 0x130 */
-    u8  mRaycastLine;       /* 0x134 */
-    u8  pad_135[0x83];
-    s32 mScale;            /* 0x1b8 */
-};
-
-/* In C the tag alone is not a type name, so an owner header that embeds a
-   dBgCh_Actr BY VALUE -- which the cartridge's own destructors prove several do,
-   see tools/dtor_members.py -- cannot spell the member without this. The
-   definition and the typedef have to travel together: with the definition and no
-   typedef the embed gets `undefined identifier', and then the owner's size assert
-   gets `illegal constant expression' on top of it. */
-typedef struct dBgCh_Actr dBgCh_Actr;
-
-/* The C view substitutes for the C++ class only while it is the SAME SIZE. Once
-   an owner embeds one by value the two branches lay that owner out differently if
-   they ever disagree, and nothing else in the build compares them. Individual
-   widths differ between the two on purpose (see the note above the #else); the
-   total may not. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dBgCh_Actr_size_must_be_0x1bc[
-    sizeof(struct dBgCh_Actr) == 0x1bc ? 1 : -1];
-#endif
-
-#endif /* __cplusplus */
 
 #endif /* DBGCH_ACTR_H */

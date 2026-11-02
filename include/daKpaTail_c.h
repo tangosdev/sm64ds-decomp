@@ -24,17 +24,13 @@
  * sizeof is 0x118, which is not inferred from the fields: daKpaTail_c_classInit asks
  * fBase_c::operator new for 280 bytes.
  *
- * The position fields the generated header declared at 0x5c..0x64 are gone from
- * this half on purpose -- they are dActor_c's mPosX/mPosY/mPosZ and are inherited
- * now. The C half below still spells them, because a C translation unit has no
- * base class to inherit them from.
+ * The position fields the generated header declared at 0x5c..0x64 are gone on
+ * purpose -- they are dActor_c's mPosX/mPosY/mPosZ and are inherited now.
  */
 #ifndef DAKPATAIL_C_H
 #define DAKPATAIL_C_H
 #include "types.h"
 #include "dCcAc_c.h"
-
-#ifdef __cplusplus
 
 #include "dActor_c.h"
 
@@ -81,25 +77,5 @@ struct daKpaTail_c : dActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BowserTail_size_must_be_0x118[sizeof(daKpaTail_c) == 0x118 ? 1 : -1];
 #endif
-
-#else
-
-struct daKpaTail_c {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x6c];
-    /* dCcAc_c member, named by the class's own destructor calling
-       dCcAc_c's D1 at +0x0d4 -- a relocation the ROM build checks. */
-    dCcAc_c mdCcAc_c;     /* 0x0d4 */
-    u32 mBowserUniqueID;  /* 0x108 */
-    void *mHeldPlayer;    /* 0x10c */
-    s32 mState;           /* 0x110 */
-    u16 mTimer;           /* 0x114 */
-    u16 mHoldCountdown;   /* 0x116 */
-};
-
-#endif /* __cplusplus */
 
 #endif

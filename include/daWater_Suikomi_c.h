@@ -17,8 +17,6 @@
  * (historical alias WaterSuction_SpawnInfo) is its registry descriptor.
  */
 
-#ifdef __cplusplus
-
 #include "dEnemyBase_c.h"
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
@@ -59,34 +57,5 @@ struct daWater_Suikomi_c : dEnemyBase_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daWater_Suikomi_c_size_must_be_0x318[sizeof(daWater_Suikomi_c) == 0x318 ? 1 : -1];
 #endif
-
-#else
-
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
-struct daWater_Suikomi_c {
-    u8 pad_000[0x8];
-    s32 param1; /* 0x008 */
-    u8 pad_00c[0x80];
-    s16 mAngleX;     /* 0x08c */
-    s16 mAngleY;     /* 0x08e */
-    s16 mAngleZ;     /* 0x090 */
-    s16 mPrevAngleX; /* 0x092 */
-    s16 mPrevAngleY; /* 0x094 */
-    s16 mPrevAngleZ; /* 0x096 */
-    u8 pad_098[0x68];
-    u8 mStateTimer; /* 0x100 */
-    u8 pad_101[0xf];
-    /* dCcAcPos_c member, named by the class's own destructor calling
-       dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
-       checks. Was a u8 marker. [src/game/actors/d_a_water_suikomi.cpp] */
-    dCcAcPos_c mdCcAcPos_c; /* 0x110 */
-    u8 mWithMeshClsn;       /* 0x150 */
-    u8 pad_151[0x1c3];
-    s32 unk_314; /* 0x314 */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAWATER_SUIKOMI_C_H */

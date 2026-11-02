@@ -22,8 +22,6 @@
  * as g_profile_PUKUPUKU.
  */
 
-#ifdef __cplusplus
-
 #include "dEnemyBase_c.h"
 #include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
@@ -76,40 +74,5 @@ struct daPukupuku_c : dEnemyBase_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPukupuku_c_size_must_be_0x388[sizeof(daPukupuku_c) == 0x388 ? 1 : -1];
 #endif
-
-#else
-
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
-struct daPukupuku_c {
-    u8 pad_000[0x5c];
-    s32 mPosX; /* 0x05c */
-    s32 mPosY; /* 0x060 */
-    s32 mPosZ; /* 0x064 */
-    u8 pad_068[0x26];
-    s16 mAngleY; /* 0x08e */
-    u8 pad_090[0x4];
-    s16 mPrevAngleY; /* 0x094 */
-    u8 pad_096[0x1a];
-    u32 mFlags; /* 0x0b0 */
-    u8 pad_0b4[0x5c];
-    /* dCcAcPos_c member, named by the class's own destructor calling
-       dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN12daPukupuku_cD1Ev, now in src/game/actors/d_a_pukupuku.cpp] */
-    dCcAcPos_c mdCcAcPos_c; /* 0x110 */
-    /* dBgCh_Actr member, named by the class's own destructor calling
-       dBgCh_Actr's D1 at +0x150 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN12daPukupuku_cD1Ev, now in src/game/actors/d_a_pukupuku.cpp] */
-    dBgCh_Actr mWithMeshClsn; /* 0x150 */
-    u8 mAnmModel;             /* 0x30c */
-    u8 pad_30d[0x63];
-    void *mState;  /* 0x370 */
-    s32 mHomePosX; /* 0x374 */
-    s32 mHomePosY; /* 0x378 */
-    s32 mHomePosZ; /* 0x37c */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAPUKUPUKU_C_H */

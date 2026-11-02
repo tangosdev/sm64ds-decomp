@@ -38,8 +38,6 @@
  * position, this one returns its own field.
  */
 
-#ifdef __cplusplus
-
 #include "math/Fix12.h"
 
 struct dCcAcPos_c : dCcAc_c {
@@ -66,31 +64,5 @@ struct dCcAcPos_c : dCcAc_c {
 typedef char dCcAcPos_c_size_must_be_0x40[
     sizeof(dCcAcPos_c) == 0x40 ? 1 : -1];
 #endif
-
-#else
-
-struct dCcAcPos_c {
-    struct dCcAc_c base; /* 0x00 */
-    Vector3 pos;                    /* 0x34 */
-};
-
-/* In C the tag alone is not a type name, so an owner header that embeds a
-   dCcAcPos_c BY VALUE -- which the cartridge's own destructors prove several do,
-   see tools/dtor_members.py -- cannot spell the member without this. The
-   definition and the typedef have to travel together: with the definition and no
-   typedef the embed gets `undefined identifier', and then the owner's size assert
-   gets `illegal constant expression' on top of it. */
-typedef struct dCcAcPos_c dCcAcPos_c;
-
-/* The C view substitutes for the C++ class only while it is the SAME SIZE. Once
-   an owner embeds one by value the two branches lay that owner out differently if
-   they ever disagree, and nothing else in the build compares them. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dCcAcPos_c_size_must_be_0x40[
-    sizeof(struct dCcAcPos_c) == 0x40 ? 1 : -1];
-#endif
-
-#endif /* __cplusplus */
 
 #endif /* DCCACPOS_C_H */

@@ -26,8 +26,6 @@
  * (historical aliases RotatingCogSmall_Spawn and RotatingCogSmall_SpawnInfo).
  */
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 struct daObjCtMecha10_c : dBgActor_c {
@@ -55,36 +53,5 @@ struct daObjCtMecha10_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjCtMecha10_c_size_must_be_0x330[sizeof(daObjCtMecha10_c) == 0x330 ? 1 : -1];
 #endif
-
-#else
-
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
-struct daObjCtMecha10_c {
-    u8 pad_000[0xc];
-    u16 actorID; /* 0x00c */
-    u8 pad_00e[0x80];
-    s16 mAngleY; /* 0x08e */
-    u8 pad_090[0x44];
-    /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    dExtSimpleModel_c mModel; /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~daObjCtMecha10_c calls
-       _ZN10dBgW_KcMbgD1Ev at +0x124 (D0/D1), a relocation the ROM build checks;
-       recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
-       inlined base. */
-    dBgW_KcMbg mMovingMeshCollider; /* 0x124 */
-    u8 pad_2ec[0x32];
-    s16 mStepTimer;    /* 0x31e */
-    s16 mDirTimer;     /* 0x320 */
-    s16 mTargetAngleY; /* 0x322 */
-    s16 mAngleYStep;   /* 0x324 */
-    s16 unk_326;       /* 0x326 */
-    u8 pad_328[0x4];
-    s32 mRotationState; /* 0x32c */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJCTMECHA10_C_H */
