@@ -1031,4 +1031,22 @@
       "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x021402f0, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
     }
   ]
+,
+  "defined_symbol_renames": [
+    {
+      "from": "sAxis$658",
+      "to": "sAxis$543",
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin"
+    },
+    {
+      "from": "_ZGVsAxis$658",
+      "to": "_ZGVsAxis$543",
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin"
+    },
+    {
+      "from": "@661",
+      "to": "@546",
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin"
+    }
+  ]
 }
