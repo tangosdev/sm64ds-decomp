@@ -140,12 +140,6 @@ extern void Matrix4x3_FromRotationZ(void *m, int angle);
 extern void MulMat4x3Mat4x3(void *dst, const void *a, void *b);
 extern void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
 
-/* local extern: fBase_c::fBase_c() is rejected as a type name, so there is
-   no call spelling of this C2. The hand-written vptr stores stay with it. */
-extern void *_ZN7fBase_cC2Ev(void *self);
-/* _ZTV7dBase_c/_ZTV7dView_c/_ZTV9dCamera_c come from decl_common.h (int[]/u32
-   spellings); the stores below take their addresses explicitly. */
-
 /* Siblings inside this TU whose file-local decl spellings decl_common.h does
    not already pin. */
 extern void func_0200af20(dCamera_c *cam, Vector3 *v1, Vector3 *v2, short *out);
@@ -243,22 +237,10 @@ struct G3i {
 };
 
 /* @symbol dCamera_c_classInit
- * Allocation factory historically labelled as the dCamera_c constructor. Its first action
- * overwrites r0 with fBase_c::operator new(sizeof(dCamera_c)); a real
- * constructor must consume the incoming storage pointer. The three vptr
- * transitions are dBase_c -> dView_c -> dCamera_c, and the Matrix4x3 at +0x50
- * is dView_c's view matrix. */
-extern "C" dCamera_c *dCamera_c_classInit()
-{
-    dCamera_c *camera = (dCamera_c *)fBase_c::operator new(sizeof(dCamera_c));
-    if (camera) {
-        _ZN7fBase_cC2Ev(camera);
-        *(void ***)camera = (void **)&_ZTV7dBase_c;
-        *(void ***)camera = (void **)&_ZTV7dView_c;
-        Matrix4x3_LoadIdentity(&camera->viewMat);
-        *(void ***)camera = (void **)&_ZTV9dCamera_c;
-    }
-    return camera;
+ * Allocation factory. new dCamera_c is the fBase constructor, the dBase and
+ * dView vtables, the view-matrix clear, and the dCamera vtable. */
+extern "C" dCamera_c *dCamera_c_classInit() {
+    return new dCamera_c;
 }
 
 // @symbol _ZN9dCamera_c13InitResourcesEv
