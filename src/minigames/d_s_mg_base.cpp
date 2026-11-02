@@ -33,6 +33,7 @@
 #include "dScMgBase_c.h"
 #include "MgMenuRow.h"
 #include "dWipe_c.h"
+#include "dFdBrightness_c.h"
 #include "decl_common.h"
 #include "Sound.h"
 #include "types.h"
@@ -88,22 +89,13 @@ EntPMF sMgFxDrawTable[2] = {&MgFx::DrawSparkle, &MgFx::DrawFlyTo};
 int sMgSparkleSprites[16];
 }
 
-/* Local view of the installed screen fader at data_0209f5bc (a dFader_c,
- * see dMgState_c's view): slot 5 is IsAtStart, true while no fade runs.
- * This file calls it IsActive and uses it to gate input. */
-struct SceneVCall6 {
-    virtual int v0(); virtual int v1(); virtual int v2();
-    virtual int v3(); virtual int v4(); virtual int IsActive();
-};
-
-
 extern "C" {
 extern void *sMgWorkBuffer;
 extern void **data_0209d4a8;
 void Mg_UpdateMenu(char *c);
 void Banner_Update(char *c);
 void Mg_UpdateFx(char *c);
-extern SceneVCall6 *data_0209f5bc;
+extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
 extern unsigned short data_020a0e5a[];
 extern int data_0208ee44;
 extern void Mg_CommitRecords(void);
@@ -2380,7 +2372,7 @@ int dScMgBase_c::BeforeBehavior()
     if (dScene_c::BeforeBehavior() == 0)
         return 0;
 
-    if (data_0209f5bc->IsActive()) {
+    if (data_0209f5bc->IsAtStart()) {
         mode = gActivePlayerSlot;
         flags = data_020a0e5a[mode * 2];
         if ((flags & 8) || (flags & 4) || (flags & 1) || (flags & 2)) {
@@ -2427,7 +2419,7 @@ int dScMgBase_c::BeforeBehavior()
     }
 
     if (mRunDuringFade == 0) {
-        if (data_0209f5bc->IsActive() == 0)
+        if (data_0209f5bc->IsAtStart() == 0)
             return 0;
     }
 
