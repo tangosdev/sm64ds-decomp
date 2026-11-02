@@ -390,82 +390,82 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@942",
+      "from": "@941",
       "to": "@266",
       "evidence": "sinit reloc at 0x02100a94. The pin stays @266: ov077 daJgm_c already defines the old global."
     },
     {
-      "from": "@944",
+      "from": "@943",
       "to": "@960",
       "evidence": "sinit reloc at 0x02100a98"
     },
     {
-      "from": "@946",
+      "from": "@945",
       "to": "@958",
       "evidence": "sinit reloc at 0x02100aa0"
     },
     {
-      "from": "@948",
+      "from": "@947",
       "to": "@218",
       "evidence": "sinit reloc at 0x02100aa4. The 0x02108160 pin stays @218 because daObjSwitch_c already pins @91 in ov002."
     },
     {
-      "from": "@950",
+      "from": "@949",
       "to": "@985",
       "evidence": "sinit reloc at 0x02100aa8"
     },
     {
-      "from": "@952",
+      "from": "@951",
       "to": "@987",
       "evidence": "sinit reloc at 0x02100aac"
     },
     {
-      "from": "@954",
+      "from": "@953",
       "to": "@956",
       "evidence": "sinit reloc at 0x02100ab0"
     },
     {
-      "from": "@956",
+      "from": "@955",
       "to": "@954",
       "evidence": "sinit reloc at 0x02100ab4"
     },
     {
-      "from": "@958",
+      "from": "@957",
       "to": "@952",
       "evidence": "sinit reloc at 0x02100ab8"
     },
     {
-      "from": "@960",
+      "from": "@959",
       "to": "@950",
       "evidence": "sinit reloc at 0x02100abc"
     },
     {
-      "from": "@962",
+      "from": "@961",
       "to": "@986",
       "evidence": "sinit reloc at 0x02100ac0"
     },
     {
-      "from": "@966",
+      "from": "@965",
       "to": "@944",
       "evidence": "sinit reloc at 0x02100ac4"
     },
     {
-      "from": "@968",
+      "from": "@967",
       "to": "@942",
       "evidence": "sinit reloc at 0x02100ac8"
     },
     {
-      "from": "@970",
+      "from": "@969",
       "to": "@948",
       "evidence": "sinit reloc at 0x02100acc"
     },
     {
-      "from": "@972",
+      "from": "@971",
       "to": "@946",
       "evidence": "sinit reloc at 0x02100ad0"
     },
     {
-      "from": "@964",
+      "from": "@963",
       "to": "@262",
       "evidence": "sinit reloc at 0x02100ad8. The pin stays @262: ov074 daKuriKing_c already defines the old global."
     }

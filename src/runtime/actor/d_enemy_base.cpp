@@ -887,10 +887,17 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
         Vec3_Asr((Vector3 *)v, (Vector3 *)&mPosX, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, OnAimedAtWithEgg() >> 3, 0);
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-            mAngleX, mAngleY, mAngleZ);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);
-        anim.mat4x3 = *(Matrix4x3 *)&data_020a0e68;
+        /* Vector3's constructor makes Matrix4x3's own assignment copy the
+           rotation and the translation separately. A flat 12-word record
+           is the one copy this function's bytes are. */
+        {
+            struct M12 {
+                s32 m[12];
+            };
+            *(struct M12 *)&anim.mat4x3 = *(struct M12 *)&data_020a0e68;
+        }
     }
     return 1;
 }
