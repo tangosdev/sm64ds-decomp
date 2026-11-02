@@ -625,7 +625,6 @@ void daPly_c::EndStateMusic(u32 music) {
 }
 
 // @symbol _ZN7daPly_c15StartStateMusicEj
-extern "C" {
 void daPly_c::StartStateMusic(u32 music) {
     u32 other = mPowerupMusic;
     if (other == music) {
@@ -639,10 +638,8 @@ void daPly_c::StartStateMusic(u32 music) {
     mPlayingMusic = music;
     Sound::SetMusic(mPlayerNo, music);
 }
-}
 
 // @symbol _ZN7daPly_c15EndPowerupMusicEj
-extern "C" {
 void daPly_c::EndPowerupMusic(u32 music) {
     u32 other = mStateMusic;
     if (other == 0) {
@@ -655,10 +652,8 @@ void daPly_c::EndPowerupMusic(u32 music) {
     }
     mPowerupMusic = 0;
 }
-}
 
 // @symbol _ZN7daPly_c17StartPowerupMusicEj
-extern "C" {
 void daPly_c::StartPowerupMusic(u32 music) {
     u32 other = mStateMusic;
     if (other == music) {
@@ -671,7 +666,6 @@ void daPly_c::StartPowerupMusic(u32 music) {
     mPowerupMusic = music;
     mPlayingMusic = music;
     Sound::SetMusic(mPlayerNo, music);
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020bda48Ev
@@ -4705,7 +4699,6 @@ finish:
  * commit corrected it from jj to hh. While it said jj this function could not
  * be a real method at all: the compiler mangles FROM the declared types.
  */
-extern "C" {
 int daPly_c::ShowMessage(fBase_c &a_, unsigned int b, const Vector3 *v, unsigned char d_,
                          unsigned char e_) {
     if (this->ShowMessage2(a_, b, v, d_, e_)) {
@@ -4713,7 +4706,6 @@ int daPly_c::ShowMessage(fBase_c &a_, unsigned int b, const Vector3 *v, unsigned
         return 1;
     }
     return 0;
-}
 }
 
 // @symbol _ZN7daPly_c18HasFinishedTalkingEv
@@ -7816,10 +7808,8 @@ int daPly_c::TryTalkToDoor(unsigned char a) {
 
 // @symbol _ZN7daPly_c21IsOpeningDoorWithStarEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::IsOpeningDoorWithStar() {
     return this->Unk_020c9e5c(0xe) || this->GetTalkState() > 0;
-}
 }
 
 // @symbol _ZN7daPly_c16TryTalkToKeyDoorEv
@@ -7841,10 +7831,8 @@ int daPly_c::TryTalkToKeyDoor() {
 /* recovered: named members + shared header, real C++ method */
 /* daPly_c::Unk_020ca488() @ 0x20ca488 (ov002) -- tail-call veneer to daPly_c::Unk_020c9e5c(unsigned char) (0x20c9e5c) with r1=11.
  */
-extern "C" {
 int daPly_c::Unk_020ca488() {
     return this->Unk_020c9e5c(11);
-}
 }
 
 // @symbol _ZN7daPly_c16TryEnterStarDoorER7Vector3s
