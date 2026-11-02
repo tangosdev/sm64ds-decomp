@@ -1,0 +1,60 @@
+{
+ "name": "capicon_bit1",
+ "about": "dCapIcon_c::mFlags bit 1 (0x02) on a Goomba's cap-icon node: does it make the cap on the Goomba's head appear/disappear? Start from a savestate in Bob-omb Battlefield with a kind-1 (character-cap) Goomba on screen, e.g. S3_bob_next_to_luigi_goomba.ml, with the camera on the Goomba. Every condition first 'prepares' bit 1 (set or clear, held prepare_frames frames, shown in A) so the start state does not depend on what the game had; every written byte is restored after B. 'aim' (all events alike, before the countdown) puts the player 500 units -z of the Goomba facing +z so the camera frames it.",
+ "frame": {"addr": "0x020aaf40", "module": "ov001", "name": "capicon_tick"},
+ "residency": [{"module": "ov001", "addr": "0x020aaf40"}],
+ "locate": {
+  "walk": {"heads": ["[0x020ad634]", "[0x020ad638]", "[0x020ad63c]"], "next": "[node+0x10]", "max": 64},
+  "where": ["u16[[node+4]+0xc] == 200", "u8[node+0x19] == 1", "u8[node+0x18] == 1"]
+ },
+ "aim": [
+  {"expr": "[0x0209f394]+0x5c", "value": "[[obj+4]+0x5c]"},
+  {"expr": "[0x0209f394]+0x60", "value": "[[obj+4]+0x60]"},
+  {"expr": "[0x0209f394]+0x64", "value": "[[obj+4]+0x64] - 0x1f4000"},
+  {"expr": "[0x0209f394]+0x68", "value": "[[obj+4]+0x5c]"},
+  {"expr": "[0x0209f394]+0x6c", "value": "[[obj+4]+0x60]"},
+  {"expr": "[0x0209f394]+0x70", "value": "[[obj+4]+0x64] - 0x1f4000"},
+  {"expr": "[0x0209f394]+0x8e", "size": 2, "mask": "0xffff", "value": "0"}
+ ],
+ "fields": [
+  {"name": "mFlags", "expr": "obj+0x1b"},
+  {"name": "mSlot", "expr": "obj+0x14", "size": 4, "signed": true},
+  {"name": "char", "expr": "obj+0x18"},
+  {"name": "kind", "expr": "obj+0x19"},
+  {"name": "owner_capId", "expr": "[obj+4]+0x113"},
+  {"name": "owner_dormant", "expr": "[obj+4]+0x111"},
+  {"name": "owner_actorId", "expr": "[obj+4]+0xc", "size": 2}
+ ],
+ "question": {
+  "text": "Look at the Goomba(s) in A (before) and B (after). What happened to a cap on a Goomba's head?",
+  "choices": ["cap appeared", "cap disappeared", "no change", "can't tell"],
+  "confidence": ["high", "medium", "low"]
+ },
+ "capture": {"screen": "top", "settle_ms": 250},
+ "pause": {"countdown": [15, 45]},
+ "after_frames": 4,
+ "settle_frames": 10,
+ "conditions": [
+  {"name": "set_bit1", "real": true, "count": 3, "expect": "cap appeared",
+   "prepare": [{"expr": "obj+0x1b", "op": "clear", "mask": "0x02"}],
+   "pokes": [{"expr": "obj+0x1b", "op": "set", "mask": "0x02"}]},
+  {"name": "clear_bit1", "real": true, "count": 3, "expect": "cap disappeared",
+   "prepare": [{"expr": "obj+0x1b", "op": "set", "mask": "0x02"}],
+   "pokes": [{"expr": "obj+0x1b", "op": "clear", "mask": "0x02"}]},
+  {"name": "flip_bit5", "real": false, "count": 2, "expect": "no change",
+   "prepare": [{"expr": "obj+0x1b", "op": "clear", "mask": "0x02"}],
+   "pokes": [{"expr": "obj+0x1b", "op": "flip", "mask": "0x20"}]},
+  {"name": "sham_capoff", "real": false, "count": 2, "expect": "no change",
+   "prepare": [{"expr": "obj+0x1b", "op": "clear", "mask": "0x02"}],
+   "pokes": [{"expr": "obj+0x1b", "op": "same"}]},
+  {"name": "sham_capon", "real": false, "count": 2, "expect": "no change",
+   "prepare": [{"expr": "obj+0x1b", "op": "set", "mask": "0x02"}],
+   "pokes": [{"expr": "obj+0x1b", "op": "same"}]}
+ ],
+ "triggers": [
+  {"name": "best_set", "addr": "0x020aaca4", "module": "ov001", "obj": "r1-0x1b"},
+  {"name": "bank_set", "addr": "0x020aabb0", "module": "ov001", "obj": "r3-0x1b"},
+  {"name": "aadac_clear", "addr": "0x020aae08", "module": "ov001", "obj": "r1-0x1b"},
+  {"name": "aadac_set", "addr": "0x020aaec0", "module": "ov001", "obj": "r1-0x1b"}
+ ]
+}
