@@ -1,3 +1,5 @@
+#include "private/rom_header_view.h"
+
 extern void Crash(void);
 
 /* NitroSDK MbSegmentInfo: one row of a download file's segment table (same
@@ -9,22 +11,6 @@ typedef struct MbSegmentInfo {
     unsigned target : 1; /* 0x0c -- set for the ARM7 segment */
     unsigned rsv : 31;
 } MbSegmentInfo;
-
-/* A static module's load region in the ROM header: NitroSDK RomHeader's
- * main_ram_address/main_size (ARM9) and sub_ram_address/sub_size (ARM7)
- * pairs. */
-typedef struct RomStaticRegion {
-    unsigned ram_address; /* 0x00 */
-    unsigned size;        /* 0x04 */
-} RomStaticRegion;
-
-/* NitroSDK RomHeader, the two static modules' load regions read here. */
-typedef struct RomHeaderView {
-    unsigned char pad_00[0x28];
-    RomStaticRegion main; /* 0x28 -- ARM9 static */
-    unsigned char pad_30[0x38 - 0x30];
-    RomStaticRegion sub; /* 0x38 -- ARM7 static */
-} RomHeaderView;
 
 /* NitroSDK MBi_SetSegmentInfo(mrh, seg_type, seg_info, child_recv_buff_addr):
  * fill one segment row for func_020678a4 (MBi_MakeDownloadFileInfo). Segment

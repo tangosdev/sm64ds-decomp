@@ -1,20 +1,8 @@
 //cpp
 #include "Memory.h"
+#include "private/wm_views.h"
 
 extern "C" {
-
-/* NitroSDK WMBssDesc, cut to the two fields read here (the layout as a
-   pokeheartgold fork's wm_internal.h spells it). Two other views share
-   the layout: func_020672d0.c, which fills this one and splits ggid and
-   the ssid into halfwords the way this SDK writes them, and WmWork.h's
-   opaque 0xc0-byte WmBssDesc. They stay apart because their field types
-   differ, and the types choose the load and store widths. */
-typedef struct WMBssDesc {
-    unsigned char pad_00[0x36];
-    unsigned short channel; /* 0x36 */
-    unsigned char pad_38[0x10];
-    unsigned short tgid; /* 0x48 -- gameInfo.tgid */
-} WMBssDesc;
 
 /* MB_ReadMultiBootParentBssDesc */
 extern void func_020672d0(void *thiz, int parentMaxSize, int childMaxSize, int ksFlag, int csFlag);
@@ -56,7 +44,7 @@ void func_020408b0(unsigned short arg) {
         func_020672d0(data_020a0f54, 0x200, 0x20, 0, 1);
         desc = (WMBssDesc *)data_020a0f54;
         data_020a0f28 = desc->channel;
-        ++desc->tgid;
+        ++desc->gameInfo.tgid;
     }
     data_020a0f74 = Memory::Allocate(0x420, 0x20);
     data_020a0f80 = Memory::Allocate(0x100, 0x20);
