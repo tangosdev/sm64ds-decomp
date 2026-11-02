@@ -624,10 +624,6 @@
       "src/unnamed/arm9/0201/func_0201818c.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0201/func_0201834c.cpp": [
-        "param:#1 Obj *",
-        "return:void"
-      ],
       "src/unnamed/arm9/0201/func_02018934.cpp": [
         "param:#1 int *",
         "return:void"
@@ -4696,9 +4692,6 @@
         "return:void"
       ],
       "src/engine/fs/FS_Command.cpp": [
-        "return:void"
-      ],
-      "src/unnamed/arm9/0205/func_0205d3e4.cpp": [
         "return:void"
       ],
       "src/TP_CalcCalibrateParam.cpp": [
@@ -16188,7 +16181,7 @@
         "param:#2 void *"
       ],
       "src/unnamed/arm9/0201/func_0201834c.cpp": [
-        "param:#1 Obj *",
+        "param:#1 void *",
         "param:#2 void *"
       ],
       "src/unnamed/arm9/0201/func_020184e0.cpp": [
@@ -17670,20 +17663,11 @@
       ]
     },
     "FSi_SendCommand": {
-      "src/unnamed/arm9/0205/func_0205d3e4.cpp": [
-        "param:#1 UnkStruct_0205d4a0 *",
-        "return:void"
-      ],
       "src/unnamed/arm9/0205/func_0205d568.c": [
         "arity:4"
       ],
       "src/FSi_FindPath.c": [
         "param:#1 FSFile *"
-      ]
-    },
-    "FSi_ExecuteSyncCommand": {
-      "src/unnamed/arm9/0205/func_0205d3e4.cpp": [
-        "param:#1 struct Obj *"
       ]
     },
     "func_0205d4a0": {
@@ -17695,14 +17679,14 @@
     "func_0205d568": {
       "src/unnamed/arm9/0205/func_0205d518.c": [
         "arity:2"
+      ],
+      "src/engine/sound/SoundEngine.cpp": [
+        "param:#1 struct Node *"
       ]
     },
     "func_0205d688": {
       "src/FS_ReadFile.c": [
         "param:#1 int"
-      ],
-      "src/unnamed/arm9/0205/func_0205d3e4.cpp": [
-        "return:void"
       ]
     },
     "FSi_FindPath": {

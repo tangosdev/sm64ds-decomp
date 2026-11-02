@@ -1,34 +1,28 @@
 //cpp
 #include "CP15.h"
 #include "Memory.h"
+#include "private/fs_views.h"
+
+typedef struct FSFile FSFile;
 
 extern "C" {
 
-/* FSFile, the two words this reads: top and bottom of prop.file (at 0x1c),
-   the file's extent in its archive. bottom - top is its length
-   (FS_GetLength). */
-struct Obj {
-    char pad[0x20];
-    unsigned int top;    /* 0x20 */
-    unsigned int bottom; /* 0x24 */
-};
-
-extern int myFS_ReadFile(struct Obj *a, void *b, int c);
+extern int myFS_ReadFile(void *s, void *b, int c);
 extern int func_02018568(void *a);
 extern unsigned int func_02018ac4(void *p);
 extern void DecompressLZ16(void *src, void *dst);
 extern void CpuCopy8(void *a, void *b, unsigned int c);
 extern void Crash(void);
-extern int FS_CloseFile(struct Obj *a);
+extern int FS_CloseFile(void *self);
 extern void func_02018770(void);
 
 /* Read the whole open file (more than 8 bytes, or crash) into a new heap
    block: an LZ77-tagged file is decompressed into a block of its unpacked
    size, anything else copied. Closes the file, unloads any archive the open
    mounted, and with flag set flushes the result from the data cache. */
-unsigned int func_0201834c(struct Obj *self, int flag) {
+unsigned int func_0201834c(FSFile *self, int flag) {
     unsigned int result = 0;
-    unsigned int len = self->bottom - self->top;
+    unsigned int len = self->prop.file.bottom - self->prop.file.top;
     if (len > 8) {
         void *buf = Memory::Allocate(len, -4);
         CP15::FlushAndInvalidateDataCache((unsigned int)buf, len);
