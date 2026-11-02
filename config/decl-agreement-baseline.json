@@ -8038,7 +8038,7 @@
         "return:unsigned char []"
       ],
       "src/game/actors/d_a_door.cpp": [
-        "return:GlobCaa0"
+        "return:FileSaveData"
       ],
       "src/game/actors/d_a_mugen_bgm.cpp": [
         "return:unsigned char []"
