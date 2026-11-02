@@ -51,7 +51,7 @@ typedef struct { int x, y, z; } Vec3;
 
 /* Flat 0x30-byte matrix block, as func_ov071_0211f524 and the scratch matrix
  * at arm9:0x020a0e68 are used: whole-block assignment, never by field. */
-typedef struct Mtx43 { int w[12]; } Mtx43;
+#include "private/mtx43.h"
 
 typedef void (daSpd_c::*PMF)();
 

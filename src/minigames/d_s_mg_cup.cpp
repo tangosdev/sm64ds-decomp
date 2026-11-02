@@ -76,9 +76,7 @@ void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
 }
 
 struct OamAttr;
-struct OAM {
-    static OamAttr *Render(bool, OamAttr *, int, int, int, int, int, int);
-};
+#include "OAM.h"
 
 extern "C" {
 extern void CupFx_Move(char *p, int a, int b);

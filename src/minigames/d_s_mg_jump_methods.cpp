@@ -35,7 +35,7 @@ typedef void (C::*PMF)();
 struct C { char pad[0x5004]; PMF m; };
 
 /* Whole-matrix copies go through this so they stay one block move. */
-struct Mtx43 { int m[12]; };
+#include "private/mtx43.h"
 struct V3 { int w[3]; };
 
 /* Vtable shim for InitResources' last call, a virtual dispatch through slot

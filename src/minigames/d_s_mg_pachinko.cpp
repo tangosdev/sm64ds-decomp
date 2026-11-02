@@ -188,9 +188,7 @@ extern void SetBg2Offset(int a, int b);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern int  RandomIntInternal(int *seed);
 struct OamAttr;
-struct OAM {
-    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
-};
+#include "OAM.h"
 extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
 extern int  Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);
