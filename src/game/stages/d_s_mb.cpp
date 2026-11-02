@@ -247,7 +247,7 @@ void func_02034fbc(int unused) {
     void *h;
 
     LoadArchive(0);
-    h = (void *)func_0201a458();
+    h = func_0201a458();
     if (!(data_020a0c60 & 1)) {
         data_020a0c5c = ((mHeap::Heap_t *)h)->SetDefault();
         data_020a0c60 |= 1;

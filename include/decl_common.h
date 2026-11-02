@@ -770,7 +770,7 @@ extern int func_02013890(int, int);
 extern int func_02013a44(void);
 extern int func_02013c84(int, void*, int, void*);
 extern int func_0201a1bc(void);
-extern int func_0201a458(void);
+extern void *func_0201a458(void);
 extern void func_0201cfb8(unsigned short);
 extern int func_0201e220(int);
 extern int func_0201eaac();

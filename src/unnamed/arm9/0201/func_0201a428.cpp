@@ -3,8 +3,8 @@
 
 extern "C" {
 
-/* func_0201a458 -- create the root heap over 0x0211d9c0..0x02140d80 and store it in
- * data_0209d524. Both callers (func_02034fbc in d_s_mb.cpp and dScDSMT_c's result-6
+/* func_0201a458 -- create the root heap over 0x0211d9c0..0x02140d80, store it in
+ * data_0209d524 and return it (both callers use the result, like func_0201a3e4's). Both callers (func_02034fbc in d_s_mb.cpp and dScDSMT_c's result-6
  * path) load overlays 100 and 102 right after, and 0x02140d80 is where ov100 is
  * loaded, so the heap ends at OV100_TEXT_START. 0x0211d9c0 is where ov075 ends
  * (OV075_BSS_END); ov062/063/065 run past it and so cannot be resident beside this
@@ -17,9 +17,10 @@ extern char OV075_BSS_END;
 extern char OV100_TEXT_START;
 extern mHeap::Heap_t *data_0209d524;
 
-void func_0201a458(void) {
+void *func_0201a458(void) {
     data_0209d524 = mHeap::Heap_t::CreateRootHeap(
         &OV075_BSS_END, (unsigned int)(&OV100_TEXT_START - &OV075_BSS_END));
+    return data_0209d524;
 }
 
 /* Destroy the overlay-gap heap func_0201a458 made and forget it. */
