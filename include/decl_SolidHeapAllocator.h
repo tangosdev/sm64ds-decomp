@@ -26,7 +26,6 @@ extern "C" {
    the Itanium names. The factory's constructor call stays in
    SolidHeapAllocator.cpp: placement new measured it 0x4c -> 0x5c. */
 
-
 #ifdef __cplusplus
 }
 #endif

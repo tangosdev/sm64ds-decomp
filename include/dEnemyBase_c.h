@@ -121,7 +121,9 @@ struct dEnemyBase_c : dActor_c {
        dEnemyBase_c gained it, and following that instruction would have broken the D0
        route for 51 subclasses. See the long comment in dActor_c.h for why an inline
        member is what the ROM shows. */
-    void operator delete(void *ptr) { Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac); }
+    void operator delete(void *ptr) {
+        Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac);
+    }
 
     /* --- non-virtual --- */
     int AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_);

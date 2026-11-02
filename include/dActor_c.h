@@ -365,7 +365,9 @@ struct dActor_c : dBase_c {
        and inlines it only when it is found in the class itself or its IMMEDIATE
        base. Without this every dActor_c-derived D0 calls the global _ZdlPv,
        which exists nowhere in this image, and comes out short. */
-    void operator delete(void *ptr) { Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac); }
+    void operator delete(void *ptr) {
+        Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac);
+    }
 };
 
 #else

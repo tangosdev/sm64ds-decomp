@@ -39,7 +39,9 @@ struct dScene_c : dBase_c {
        base, and dScene_c's immediate base is dBase_c, which has none. This
        copy is also what all ten direct subclasses find as THEIR immediate
        base, so it unlocks their D0s too. */
-    void operator delete(void *ptr) { Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac); }
+    void operator delete(void *ptr) {
+        Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac);
+    }
 
     /* --- overrides, in _ZTV8dScene_c order. Signatures must match fBase_c's
            declarations exactly or these become new slots instead of overrides. --- */

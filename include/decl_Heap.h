@@ -23,7 +23,6 @@ extern "C" {
 /* mHeap::Heap_t::_Sizeof, Reallocate and Rescue are declared in Heap.h.
    No translation unit includes this header to call the Itanium names. */
 
-
 #ifdef __cplusplus
 }
 #endif
