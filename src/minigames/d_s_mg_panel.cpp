@@ -65,7 +65,6 @@ enum dScMgPanel_c_AssetId {
 #include "types.h"
 #include "dScMgPanel_c.h"
 #include "SpawnInfo.h"
-#include "private/ov006_m8c.h"
 
 #include "Sound.h"
 

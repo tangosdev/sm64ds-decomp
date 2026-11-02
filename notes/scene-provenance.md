@@ -166,7 +166,7 @@ not the same as the last field the object has. The trailing `pad_9c0[0x8]` and t
 `tools/check_header_offsets.py` walks them from `dScene_c`'s asserted 0x50.
 
 **`Particle::SysTracker`, embedded at `dScStage_c+0x50`.** Not its own header yet:
-`include/Particle.h` and `include/Particle__SysTracker.h` are two *separate*
+`Particle.h` (since retired, #4626) and `include/Particle__SysTracker.h` were two *separate*
 `gen_header.py` shadows of this same class. `src/engine/particle/Particle.cpp` writes
 fields through `struct Particle *self` up to `unk_818`, while
 `src/engine/particle/Particle.cpp` and `6UpdateEv.c` read `mManager`/`mContents`
