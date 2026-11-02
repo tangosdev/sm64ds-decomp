@@ -39,8 +39,8 @@
 
 /* The actor heap, for the inline operator delete at the end of the class.
    data_020a0eac is the heap every actor is allocated from. */
-extern "C" void *data_020a0eac;
 #include "Memory.h"
+extern "C" mHeap::Heap_t *data_020a0eac;
 
 struct fBase_c {
     /* Intrusive scene-graph node owned by every actor. */
@@ -166,7 +166,7 @@ struct fBase_c {
        CW inlines it from the class itself or its IMMEDIATE base -- which is why
        include/dActor_c.h carries its own copy. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac);
+        Memory::Deallocate(ptr, data_020a0eac);
     }
 };
 

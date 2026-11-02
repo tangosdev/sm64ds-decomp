@@ -23,7 +23,7 @@ struct outAngle_;
 struct ww_;
 /* data_020a0eac is the actor heap. operator delete passes it to
    Memory::Deallocate, the same way fBase_c and dActor_c do. */
-extern "C" void *data_020a0eac;
+extern "C" mHeap::Heap_t *data_020a0eac;
 
 struct dEnemyBase_c : dActor_c {
     /* DERIVES FROM dActor_c, at last -- this header used to restate dActor_c's whole
@@ -122,7 +122,7 @@ struct dEnemyBase_c : dActor_c {
        route for 51 subclasses. See the long comment in dActor_c.h for why an inline
        member is what the ROM shows. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac);
+        Memory::Deallocate(ptr, data_020a0eac);
     }
 
     /* --- non-virtual --- */

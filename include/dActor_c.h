@@ -51,7 +51,7 @@ struct dExtShadowModel_c;
 
 /* data_020a0eac is the heap every actor is allocated from. operator delete
    passes it to Memory::Deallocate, declared in Memory.h via fBase_c.h. */
-extern "C" void *data_020a0eac;
+extern "C" mHeap::Heap_t *data_020a0eac;
 
 struct dActor_c : dBase_c {
     /* The global actor list (data_0209b468) threads through every actor: the
@@ -366,7 +366,7 @@ struct dActor_c : dBase_c {
        base. Without this every dActor_c-derived D0 calls the global _ZdlPv,
        which exists nowhere in this image, and comes out short. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac);
+        Memory::Deallocate(ptr, data_020a0eac);
     }
 };
 
