@@ -821,7 +821,7 @@ int daWanwan2_c::InitResources()
 
     /* Raise it 100 units (0x64000). Preserve the ROM's materialized
        read-modify-write address for mPosY. */
-    *(s32 *)((int)this + 0x60) += 0x64000;
+    *(s32 *)((int)&mPosY) += 0x64000;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
