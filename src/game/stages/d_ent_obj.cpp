@@ -24,8 +24,7 @@
  *  - LAUNDER((char*)) stays on the mModel.data / mAnimation.data /
  *    mModel.mat4x3 alias reads in func_ov075_02114be4 -- the plain member
  *    read changes which value-numbering class mwcc folds them into.
- *  - VsBoneFile/VsBoneComponents/MatrixCopyWords stay file-layout shadows: the bone
- *    record offsets are measured, not the BMD/ModelComponents layouts.
+ *  - MatrixCopyWords stays a flat 12-word view for the Matrix4x3 copies.
  *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
  *    alongside `player`: folding it into `player->mFellOffThisFrame` drops a
  *    register and rewrites the whole function.
@@ -537,46 +536,24 @@ int UnknownVsPlayer::func_ov075_02114ac4(Vector3 *at, Vector3 *pos) {
 
 // @symbol _ZN15UnknownVsPlayer19func_ov075_02114b60Ev
 /* Put the model's bone translations back to the file's rest pose: bone 0,
- * then bones 2 onward (bone 1 keeps whatever the animation gave it). The
- * file's bone records are 0x40 bytes with the translation at +0x24; the
- * model's are 0x34 bytes with it at +0x20. */
-struct VsBoneFileRecord {
-    char _pad0[0x24];
-    int x, y, z;
-    char _pad30[0x10];
-};
-struct VsBoneRecord {
-    char _pad0[0x20];
-    int x, y, z;
-    char _pad2c[0x8];
-};
-struct VsBoneFile {
-    char _pad0[4];
-    u32 numBones;
-    VsBoneFileRecord *bones;
-};
-struct VsBoneComponents {
-    VsBoneFile *file;
-    char _pad0[4];
-    VsBoneRecord *bones;
-};
+ * then bones 2 onward (bone 1 keeps whatever the animation gave it). */
 void UnknownVsPlayer::func_ov075_02114b60() {
-    VsBoneComponents *components = (VsBoneComponents *)&mModel.data;
-    VsBoneRecord *destination;
-    VsBoneFile *file = components->file;
-    VsBoneRecord *bones = components->bones;
-    VsBoneFileRecord *sourceBones = file->bones;
-    VsBoneFileRecord *source;
+    ModelComponents *components = &mModel.data;
+    ModelBone *destination;
+    BMD_File *file = components->modelFile;
+    ModelBone *bones = components->bones;
+    BMD_Bone *sourceBones = file->bones;
+    BMD_Bone *source;
     s16 boneIndex;
-    bones->x = sourceBones->x;
-    bones->y = sourceBones->y;
-    bones->z = sourceBones->z;
+    bones->transX = sourceBones->transX;
+    bones->transY = sourceBones->transY;
+    bones->transZ = sourceBones->transZ;
     destination = bones + 2;
     source = sourceBones + 2;
     for (boneIndex = 2; boneIndex < file->numBones; boneIndex++) {
-        destination->x = source->x;
-        destination->y = source->y;
-        destination->z = source->z;
+        destination->transX = source->transX;
+        destination->transY = source->transY;
+        destination->transZ = source->transZ;
         destination++;
         source++;
     }

@@ -71,18 +71,6 @@ struct Node {
     int f24, f28, f2c;
 };
 
-struct Elem {
-    int f0, f4, f8;
-    int fc, f10, f14;
-    u16 f18, f1a, f1c, f1e;
-    int f20, f24, f28, f2c, f30;
-};
-
-struct G {
-    int f0, f4;
-    struct Elem* f8;
-    int fc;
-};
 
 typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct Mtx43 { Vec3 r0, r1, r2, r3; } Mtx43;
@@ -137,25 +125,23 @@ void func_0204488c(char *self, int index, int *color);
 }
 
 // @symbol func_020453c0
-/* Bone-tree walk at 0x020453c0. UpdateBones forwards here. Recurses on the
- * node's child and sibling slots and calls func_0204547c, which stays out. */
+/* Bone-tree walk at 0x020453c0. UpdateBones forwards here. Samples each
+ * bone's pose with func_0204547c (which stays out) from the model's
+ * animation, or from the bone's own override once one is met, ORs in the
+ * parent's scaled flag, and recurses on the node's child and sibling slots. */
 extern "C" {
-void func_020453c0(int *self, short *node, int *p2, int p3)
-{
+void func_020453c0(ModelComponents *self, short *node, int *p2, int p3) {
     int idx = node[0];
-    char *elem = (char*)self[2] + idx * 0x34;
-    int f2c = *(int*)(elem + 0x2c);
+    ModelBone *bone = &self->bones[idx];
     int *anim = p2;
     int frame = p3;
-    if (f2c != 0) {
-        anim = (int*)f2c;
-        frame = *(unsigned short*)(elem + 0x30);
+    if (bone->anim != 0) {
+        anim = (int *)bone->anim;
+        frame = bone->animFrame;
     }
     int mla = idx * 0x24 + anim[5];
-    unsigned short *dst;
-    func_0204547c(anim, mla, frame, elem);
-    dst = (unsigned short*)(int)(elem + 0x18);
-    *dst = (unsigned short)(*dst | *(unsigned short*)(elem + node[4] * 0x34 + 0x18));
+    func_0204547c(anim, mla, frame, bone);
+    bone->scaled |= bone[node[4]].scaled;
     if (node[5] != 0)
         func_020453c0(self, (short*)((char*)node + (node[5] << 6)), anim, frame);
     if (node[6] != 0)
@@ -169,7 +155,7 @@ void func_020453c0(int *self, short *node, int *p2, int p3)
  * (modelFile->bones), the BCA file, and the frame index. */
 void ModelComponents::UpdateBones(BCA_File *file, int frame)
 {
-    func_020453c0((int *)this, (short *)modelFile->bones, (int *)file, frame);
+    func_020453c0(this, (short *)modelFile->bones, (int *)file, frame);
 }
 
 // @symbol func_0204531c
@@ -235,27 +221,25 @@ void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
 
 // @symbol func_02045074
 extern "C" {
-void func_02045074(struct G *g, struct Node *n)
-{
+void func_02045074(ModelComponents *components, struct Node *n) {
     int m[12];
     int a = n->f0;
-    struct Elem *e = (struct Elem *)((char *)g->f8 + a * 0x34);
-    if (e->f18 == 0) {
-        func_02045178(m,
-            e->f1a, e->f1c, e->f1e,
-            e->f20, e->f24, e->f28);
+    ModelBone *bone = &components->bones[a];
+    if (bone->scaled == 0) {
+        func_02045178(m, bone->rotX, bone->rotY, bone->rotZ, bone->transX, bone->transY,
+                      bone->transZ);
     } else {
-        func_02048234(m,
-            e->fc, e->f10, e->f14,
-            e->f1a, e->f1c, e->f1e,
-            e->f20, e->f24, e->f28);
+        func_02048234(m, bone->scaleX, bone->scaleY, bone->scaleZ, bone->rotX, bone->rotY,
+                      bone->rotZ, bone->transX, bone->transY, bone->transZ);
     }
     {
-        int t = g->fc;
+        int t = (int)components->transforms;
         MulMat4x3Mat4x3(&m[0], (const int *)((a + n->f8) * 0x30 + t), (int *)(a * 0x30 + t));
     }
-    if (n->fa != 0) func_02045074(g, (struct Node *)((char *)n + n->fa * 0x40));
-    if (n->fc != 0) func_02045074(g, (struct Node *)((char *)n + n->fc * 0x40));
+    if (n->fa != 0)
+        func_02045074(components, (struct Node *)((char *)n + n->fa * 0x40));
+    if (n->fc != 0)
+        func_02045074(components, (struct Node *)((char *)n + n->fc * 0x40));
 }
 }
 
@@ -267,7 +251,7 @@ void func_02045074(struct G *g, struct Node *n)
 void ModelComponents::UpdateVertsUsingBones()
 {
     Matrix4x3_LoadIdentity(transforms);
-    func_02045074((struct G *)this, (struct Node *)modelFile->bones);
+    func_02045074(this, (struct Node *)modelFile->bones);
 }
 
 // @symbol func_02044f74
@@ -493,7 +477,7 @@ void func_0204488c(char* self, int index, int* color)
             *(volatile int*)0x4000454 = 0;
             Geometry_MatrixMultiply3x3(data_020a4bd0);
 
-            check = *(unsigned short*)((char*)*(void**)(self + 8) + fp_index * 0x34 + 0x18);
+            check = ((ModelComponents *)self)->bones[fp_index].scaled;
             if (check) {
                 func_020458a8((struct Matrix3x3_Vecs*)partMtx, (struct Matrix3x3_Vecs*)M);
                 Geometry_MatrixMultiply3x3(M);
