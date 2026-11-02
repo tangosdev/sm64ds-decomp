@@ -949,7 +949,7 @@ int g_fix_original_bugs = 1;
 int g_camera_collision = 1;
 /* WideDrawingPage (DOODLEWIDE1): 1 makes the title's drawing page as wide as the window at the DS pixel scale. Default 1. Read live (applied at the next page open). */
 int g_wide_drawing = 1;
-/* PeachJingle (PEACHJINGLE1): 1 plays the cartridge's own NCS_BGM_PEACH tune when a star door's unlock message opens. Default 1. Read live. */
+/* PeachJingle (PEACHJINGLE1): 1 plays the cartridge's own NCS_BGM_PEACH tune when a star quota message opens. Default 1. Read live. */
 int g_peach_jingle = 1;
 
 /* Aspect: the presentation ratio, WIDTH DIVIDED BY HEIGHT. 0 (the default) is
