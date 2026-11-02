@@ -7475,62 +7475,62 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLookTarget$3576",
+      "from": "_ZGVsLookTarget$3586",
       "to": "_ZGVsLookTarget$3570",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@3579",
+      "from": "@3589",
       "to": "@3573",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "sLookTarget$3576",
+      "from": "sLookTarget$3586",
       "to": "sLookTarget$3570",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "_ZGVsViewStart$3752",
+      "from": "_ZGVsViewStart$3762",
       "to": "_ZGVsViewStart$3746",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@3755",
+      "from": "@3765",
       "to": "@3749",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "sViewStart$3752",
+      "from": "sViewStart$3762",
       "to": "sViewStart$3746",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "_ZGVsViewEnd$3756",
+      "from": "_ZGVsViewEnd$3766",
       "to": "_ZGVsViewEnd$3750",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@3759",
+      "from": "@3769",
       "to": "@3753",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "sViewEnd$3756",
+      "from": "sViewEnd$3766",
       "to": "sViewEnd$3750",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "_ZGVsViewIdle$3760",
+      "from": "_ZGVsViewIdle$3770",
       "to": "_ZGVsViewIdle$3754",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@3763",
+      "from": "@3773",
       "to": "@3757",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "sViewIdle$3760",
+      "from": "sViewIdle$3770",
       "to": "sViewIdle$3754",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
