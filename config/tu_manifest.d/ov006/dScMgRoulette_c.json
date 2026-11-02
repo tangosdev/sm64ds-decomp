@@ -333,7 +333,7 @@
       "address": "0x021428cc",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "guard of RouletteRacer_Init's function-local Vector2 (emitted _ZGVsRouletteRacerGoal$864)"
+      "evidence": "guard of RouletteRacer_Init's function-local Vector2 (emitted _ZGVsRouletteRacerGoal$863)"
     },
     {
       "symbol": "sRouletteResultsTimer",
@@ -347,7 +347,7 @@
       "address": "0x021428d4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "RouletteRacer_Init's function-local Vector2(0xc000, 0xc000) (emitted sRouletteRacerGoal$864)"
+      "evidence": "RouletteRacer_Init's function-local Vector2(0xc000, 0xc000) (emitted sRouletteRacerGoal$863)"
     },
     {
       "symbol": "@176",
@@ -1359,19 +1359,19 @@
       "evidence": "mwcc emits @481, already defined in another module. @248 is unused and no longer."
     },
     {
-      "from": "@867",
+      "from": "@866",
       "to": "@181",
       "evidence": "mwcc emits @867, already defined in another module. @181 is unused and no longer."
     },
     {
-      "from": "_ZGVsRouletteRacerGoal$864",
+      "from": "_ZGVsRouletteRacerGoal$863",
       "to": "sRouletteRacerGoalGuard",
-      "evidence": "function-local guard emitted as _ZGVsRouletteRacerGoal$864; the configured name is shorter"
+      "evidence": "function-local guard emitted as _ZGVsRouletteRacerGoal$863; the configured name is shorter"
     },
     {
-      "from": "sRouletteRacerGoal$864",
+      "from": "sRouletteRacerGoal$863",
       "to": "sRouletteRacerGoal",
-      "evidence": "function-local Vector2 emitted as sRouletteRacerGoal$864; the configured name is shorter"
+      "evidence": "function-local Vector2 emitted as sRouletteRacerGoal$863; the configured name is shorter"
     }
   ],
   "symbol_binding_rewrites": [

@@ -15,8 +15,8 @@
  */
 
 // leftovers:
-// - The camera at 0x4660 stays an offset: it is the head of the base's
-//   pad_4660, which names nothing before mCameraEyeX.
+// - The camera is reached through the base's pad_4660, its head, as the
+//   sibling scenes do: nothing names the bytes before mCameraEyeX.
 // - Behavior keeps two raw spellings, each with its measured reason beside
 //   it: the four mMeter strips it adds racers to, and the reload of a
 //   racer's tile in phase 2.
@@ -265,7 +265,6 @@ void RouletteStrip_Draw(short *a0, int a1);
    palette, and the shared OBJ tiles and palettes for both engines. Then
    sets up the camera, the dealer and the board and starts the first round. */
 s32 dScMgRoulette_c::InitResources() {
-    char *raw = (char *)this;
     void *bgChars, *bgMap, *f6, *f5;
 
     Mg_SetTopScreenYOffset(0x20);
@@ -309,7 +308,7 @@ s32 dScMgRoulette_c::InitResources() {
     data_0209d454 = 0x15;
     *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
 
-    Camera_InitDealerView(raw + 0x4660);
+    Camera_InitDealerView((char *)pad_4660);
     if (Dealer_Load((char *)&mDealer) == 0)
         return 0;
     if (RouletteBoard_LoadModels((char *)&mBoard) == 0)
@@ -628,9 +627,9 @@ s32 dScMgRoulette_c::Render() {
                 mCameraEyeZ = f2;
             }
             mCameraAngle = angle;
-            Camera_UpdateMatrices(raw + 0x4660);
+            Camera_UpdateMatrices((char *)pad_4660);
         } else {
-            Camera_InitDealerView(raw + 0x4660);
+            Camera_InitDealerView((char *)pad_4660);
         }
         if (preset != 0)
             RouletteBoard_Draw((char *)&mBoard);

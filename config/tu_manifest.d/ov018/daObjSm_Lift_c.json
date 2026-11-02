@@ -651,12 +651,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@865",
+      "from": "@864",
       "to": "@772",
       "evidence": "compiler-local destructor-registration node for the model handle (0x02113bdc); the classInit fold advances mwcc's label counter by 28 and ov063 daPiano_c defines a global @800, so the compiled name is mapped back to the configured one | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | re-keyed by __sinit relocation-site order after including the shared math/Sound headers (their inline statics) shifted the TU's @NNN uniquifier"
     },
     {
-      "from": "@866",
+      "from": "@865",
       "to": "@773",
       "evidence": "compiler-local destructor-registration node for the collision handle (0x02113bd0); renumbered by the same classInit fold, mapped back to the configured name | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | re-keyed by __sinit relocation-site order after including the shared math/Sound headers (their inline statics) shifted the TU's @NNN uniquifier"
     }
