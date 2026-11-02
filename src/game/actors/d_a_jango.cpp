@@ -61,6 +61,7 @@ enum daJango_c_AssetId {
 #include "common.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 /* decl_common.h deliberately NOT included; the three names this TU needs
    from it are declared locally instead. */
 extern "C" int AngleDiff(int a, int b);
@@ -139,11 +140,6 @@ enum Bool { FALSE, TRUE };
 /* shadow struct 'BCA_File' */
 struct BCA_File;
 
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int id, int x, int y, int z);
-};
-}
 
 /* shadow typedef 'M48' */
 typedef struct { int w[12]; } M48;

@@ -1,9 +1,5 @@
 #include "types.h"
-struct Shared {
-    char pad[0x1c];
-    char *buf;
-};
-
+#include "private/debugger_block.h"
 struct Csl {
     int f0;
     int f4;
@@ -31,7 +27,7 @@ void func_0206ca7c(void *c, int b);
    (+8) counts them all. */
 void func_0206cbc0(struct Csl *sl, u8 *sb, int count)
 {
-    struct Shared *sh = (struct Shared *)0x027fff60;
+    struct DebuggerBlock *sh = (struct DebuggerBlock *)0x027fff60;
     void *base;
     void (*fn)(void *, int);
     int la[2];

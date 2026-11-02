@@ -1,9 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-void RunningSlidingDustAt(int, int, int);
-}
-struct Vector3_16f;
 /* daYegg_c -- the Yoshi egg (registry profile YOSHI_EGG).
  *
  * The egg a Yoshi carries and throws. The state table at 0x02110a5c holds
@@ -82,6 +77,7 @@ struct Vector3_16f;
 #pragma defer_codegen off
 
 #include "daYegg_c.h"
+#include "Particle__System.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "common.h"
@@ -168,13 +164,6 @@ extern int RandomIntInternal(int *seed);
 extern int func_ov002_020d5f98(void *c, unsigned char *a, unsigned char *b);
 extern int func_ov002_020d6048(void *c);
 extern s32 d_a_yeggNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, struct Vec3_16f *rot, void *cb);
-namespace Particle {
-struct System {
-    static void NewSimple(u32 a, int b, int c, int d);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 extern void d_a_yeggRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
 extern void d_a_yeggPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);

@@ -1,13 +1,14 @@
-struct T867bc { int key; char pad[0x24]; };
-extern struct T867bc data_020867bc[];
+#include "private/card_backup_spec.h"
 
-struct T867bc *func_02060398(int arg) {
-    struct T867bc *p = data_020867bc;
+extern struct CardBackupSpec data_020867bc[];
+
+struct CardBackupSpec *func_02060398(int arg) {
+    struct CardBackupSpec *p = data_020867bc;
     for (;;) {
-        if (p->key == arg) {
+        if (p->type == arg) {
             return p;
         }
-        if (p->key == 0) {
+        if (p->type == 0) {
             return 0;
         }
         p++;

@@ -59,6 +59,7 @@ enum daObjBk_Kabe_c_AssetId {
 #include "daObjBk_Kabe_c.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
 
 /* Two walls, one row each: model, KCL, then the CLPS block. */
 struct KabeFiles {
@@ -88,11 +89,6 @@ extern KabeFiles data_ov079_02128058[];
 
 /* Scalar ABI. Particle__System.h's NewSimple takes Fix12<int> by value, and
  * that spelling does not compile against the ints Kill passes (see above). */
-namespace Particle {
-struct System {
-    static void *NewSimple(u32 id, s32 x, s32 y, s32 z);
-};
-}
 
 enum {
     kBreakableActor = 0x30, /* BK_KABE00 */

@@ -14,10 +14,8 @@
 struct dBgPc {
     struct SurfaceInfo surface;    /* 0x00 */
 
-#ifdef __cplusplus
     dBgPc();
     ~dBgPc();
-#endif
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -113,7 +113,6 @@ struct SPS {
    `pointer + constant` arithmetic because every member spelling moved bytes. */
 #define SNOW_OFF(m) ((int)&((dScMgSnowball_c *)0)->m)
 #define pnew Particle::System::New
-#define pfromid(id) ((int *)Particle::System::FromUniqueID(id))
 
 namespace G3X {
 void SetFog(int enable, int blend, int slope, int offset);
@@ -1541,7 +1540,7 @@ s32 dScMgSnowball_c::Behavior() {
     unsigned short m;
     int gate;
     int id2, id1;
-    int *p;
+    Particle::System *p;
 
     if (mPromptBlinkCount == 0) {
         mPromptEnabled = 1;
@@ -1778,17 +1777,18 @@ s32 dScMgSnowball_c::Behavior() {
                     s.cc[2] = 0x20000;
                     id1 = pnew(0, 0xf1, s.cc[0] << 3, s.cc[1] << 3, s.cc[2] << 3, 0, 0);
                     id2 = pnew(0, 0xf2, s.cc[0] << 3, s.cc[1] << 3, s.cc[2] << 3, 0, 0);
-                    p = pfromid(id1);
+                    p = Particle::System::FromUniqueID(id1);
                     if (p != 0) {
-                        p[0x11] = 0xffff8222;
-                        p[0x12] = 0x2e14;
-                        p[0x13] = 0x29cf;
-                        p[0x14] = 0xc5f;
+                        /* 0x44 lies in Particle::System's unnamed pad_042. */
+                        ((int *)p)[0x44 / 4] = 0xffff8222;
+                        p->callbackParam = 0x2e14;
+                        p->callbackVelocity = 0x29cf;
+                        p->callbackScale = 0xc5f;
                     }
-                    p = pfromid(id2);
+                    p = Particle::System::FromUniqueID(id2);
                     if (p != 0) {
-                        p[0x12] = 0x4b17;
-                        p[0x14] = 0x3999;
+                        p->callbackParam = 0x4b17;
+                        p->callbackScale = 0x3999;
                     }
                     func_02012718(0x16b, mPosX);
                     mCrashTimer += 1;

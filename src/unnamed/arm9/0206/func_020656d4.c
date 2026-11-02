@@ -1,27 +1,19 @@
 #include "types.h"
+#include "private/arm9_wbt.h"
 extern void CpuCopy8(const void *src, void *dst, u32 size);  /* memcpy-like */
-extern int func_02065af0(void *pkt);
+extern int func_02065af0(int *thiz);
 
-struct Pkt {
-    u32 field00;       /* 0x00: constant 10 */
-    char pad04[4];     /* 0x04 */
-    u16 field08;       /* 0x08: arg0 */
-    char pad0a[6];     /* 0x0a */
-    u32 field10;       /* 0x10: arg3 */
-    char data14[9];    /* 0x14: copy dst (arg2 bytes from arg1) */
-    u8  field1d;       /* 0x1d: arg2 */
-    char rest[0xa0 - 0x1e];
-};
-
+/* NitroSDK WBT_PutUserData: queue a REQ_USER_DATA command (10) that sends
+ * the size bytes at data, at most 9, to the peers in target_bmp. */
 int func_020656d4(u16 arg0, const void *arg1, s32 arg2, u32 arg3)
 {
-    struct Pkt pkt;
+    WBTCommand cmd;
     if (arg2 < 0 || arg2 > 9)
         return 0;
-    pkt.field08 = arg0;
-    pkt.field00 = 10;
-    pkt.field10 = arg3;
-    CpuCopy8(arg1, pkt.data14, arg2);
-    pkt.field1d = (u8)arg2;
-    return func_02065af0(&pkt);
+    cmd.target_bmp = arg0;
+    cmd.command = 10;
+    cmd.callback = (void (*)(char *))arg3;
+    CpuCopy8(arg1, cmd.u.user_data.data, arg2);
+    cmd.u.user_data.size = (u8)arg2;
+    return func_02065af0((int *)&cmd);
 }

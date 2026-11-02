@@ -1,19 +1,13 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
+#include "private/fs_views.h"
 extern char data_020a2400[];
 extern char data_020a1fc0[];
 extern void func_02041224(char *thiz, int n);
 extern int func_020656d4(u16 arg0, const void *arg1, s32 arg2, u32 arg3);
 extern void func_02042160(void);
 
-/* The FSFile being read, with the names func_02040f30.cpp gives it: this
- * ROM's FSFile has its prop union at 0x1c and its arg union at 0x2c. */
-typedef struct FSFile {
-    char pad_00[0x28];
-    u32 pos; /* 0x28 -- prop.file.pos */
-    char pad_2c[8];
-    u32 len; /* 0x34 -- arg.readfile.len */
-} FSFile;
+typedef struct FSFile FSFile;
 
 /* The open request (kind 0) a child sends the parent: FileShareMsg's layout
  * (arm9_a1fc0_file_share.h), with the region's length and offset where the
@@ -36,10 +30,10 @@ void func_02041a00(FSFile *file) {
     int packetSize;
     int len;
     int pos;
-    func_02041224(data_020a2400, file->len);
+    func_02041224(data_020a2400, file->arg.readfile.len);
     FILE_SHARE_WORK->mReadRequest = (int)file;
-    len = file->len;
-    pos = file->pos;
+    len = file->arg.readfile.len;
+    pos = file->prop.file.pos;
     m.kind = 0;
     m.length = len;
     packetSize = FILE_SHARE_WORK->mParentPacketSize;

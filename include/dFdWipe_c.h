@@ -31,7 +31,6 @@
  * slot 2 -- AdvanceFade. Everything else is still dFdBrightness_c's.
  * LoadAndSetFile appears in no slot and is non-virtual.
  */
-#ifdef __cplusplus
 struct dFdWipe_c : dFdColor_c {
     dExtSimpleModel_c model; /* 0x10 -- constructed last by dFdWipe_c::dFdWipe_c */
 
@@ -49,16 +48,6 @@ struct dFdWipe_c : dFdColor_c {
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dFdWipe_c_size_must_be_0x60[sizeof(dFdWipe_c) == 0x60 ? 1 : -1];
-#endif
-#else
-struct dFdWipe_c {
-    void*  vtable;      /* 0x00 */
-    Fix12i currInterp;  /* 0x04 (from dFader_c) */
-    Fix12i speed;       /* 0x08 (from dFader_c) */
-    u16    color;       /* 0x0c (from dFdColor_c) */
-    u8     pad_00e[0x2];
-    dExtSimpleModel_c model; /* 0x010 */
-};
 #endif
 
 #endif /* DFDWIPE_C_H */

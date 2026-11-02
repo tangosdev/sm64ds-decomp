@@ -30,8 +30,6 @@
  * (historical alias Wiggler_SpawnInfo) is its registry descriptor.
  */
 
-#ifdef __cplusplus
-
 #include "dEnemyBase_c.h"
 #include "dExtAnmModel_c.h"
 #include "dExtAnmMaterial_c.h"
@@ -126,17 +124,5 @@ struct daHanachan_c : dEnemyBase_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daHanachan_c_size_must_be_0x8e8[sizeof(struct daHanachan_c) == 0x8e8 ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for a C translation unit, flat. */
-struct daHanachan_c {
-    u8  pad_000[0x708];
-    u8  mWithMeshClsn[0x1bc];      /* 0x708 */
-    /* trailing extent the ROM's `new daHanachan_c` literal proves; see tools/opnew_sizes.py */
-    u8 pad_8c4[0x24];
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAHANACHAN_C_H */

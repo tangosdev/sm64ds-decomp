@@ -9,16 +9,10 @@
  * Layout evidence (dBgW_Kc::DetectClsn(dBgCh_Gnd&) at 0x01ffd3f8, and the
  * KcMbg sibling): 0x38 = probe position, 0x44 = ray length in / hit height
  * out, 0x48 = has-collision byte, 0x4c = default probe height.
- *
- * The C branch below stays field-for-field identical to the C++ layout:
- * .c translation units reach into the 0x10 interior by the old member
- * spelling.
  */
 #ifndef DBGCH_GND_H
 #define DBGCH_GND_H
 #include "types.h"
-
-#ifdef __cplusplus
 
 #include "dBgCh.h"
 #include "dBgPi.h"
@@ -90,24 +84,5 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_Gnd_size_must_be_0x50[sizeof(dBgCh_Gnd) == 0x50 ? 1 : -1];
 #endif
-
-#else
-
-struct dBgCh_Gnd {
-    u8  pad_000[0x10];
-    u8  mBgPiBase;            /* 0x010 - first byte of the 0x28-byte dBgPi
-                                       the hit is written into; kept as a byte
-                                       because RaycastGroundC1/D1 spell it */
-    u8  pad_011[0x27];
-    Vector3 pos;            /* 0x038 */
-    Fix12i clsnY;           /* 0x044 */
-    u8  hasClsn;            /* 0x048 */
-    u8  pad_049[0x3];
-    Fix12i mProbeHeight; /* 0x04c */
-};
-
-typedef struct dBgCh_Gnd dBgCh_Gnd;
-
-#endif /* __cplusplus */
 
 #endif

@@ -1,6 +1,7 @@
 //cpp
 #include "types.h"
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
@@ -12,14 +13,7 @@ extern int OS_SendMessage(void *a, void *b, int c);
 
 extern void *data_020a89b0;
 
-typedef struct {
-    char pad0[0xc];
-    u32 field_c;
-    char pad10[0x550];
-    u16 field_560;
-} Ctx;
-
-extern Ctx *data_020a89ac;
+extern WMArm9Buf *data_020a89ac;
 
 int WM_SendCommand(short a0, unsigned short count, ...)
 {
@@ -31,10 +25,9 @@ int WM_SendCommand(short a0, unsigned short count, ...)
     OS_ReceiveMessage(&data_020a89b0, (void **)&buf, 1);
 
     if (count == 0) {
-        CP15::FlushDataCache(data_020a89ac->field_c, 0x100);
+        CP15::FlushDataCache((u32)data_020a89ac->fifo9to7, 0x100);
         CP15::InvalidateDataCache((u32)buf, 0x100);
-        DMASyncWordTransfer(data_020a89ac->field_560, (const void *)data_020a89ac->field_c, buf,
-                            0x100);
+        DMASyncWordTransfer(data_020a89ac->dmaNo, data_020a89ac->fifo9to7, buf, 0x100);
     }
 
     *(u16 *)buf = a0;

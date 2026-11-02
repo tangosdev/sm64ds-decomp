@@ -30,6 +30,7 @@
 #include "types.h"
 #include "IRQ.h"
 #include "private/arm9_a9db8_mb_parent.h"
+#include "private/mb_comm_child_block_header.h"
 
 extern "C" {
 
@@ -88,31 +89,6 @@ typedef struct MBCommParentBlockHeader {
     u16 fid;
     u16 seqno;
 } MBCommParentBlockHeader;
-
-/* NitroSDK MBCommChildBlockHeader, a child packet unpacked by func_02065c2c
- * (MBi_SetRecvBufferFromChild): the type byte, then either the block number a
- * child asks for (types 8 and 9) or one piece of its entry request (type 7,
- * which func_02065de4 files into mChildRequest). */
-typedef struct MBCommChildBlockHeader {
-    u8 type; /* 0x00 */
-    u8 pad1[1];
-    union {
-        struct {
-            u16 req; /* 0x02 */
-        } data;
-        struct {
-            u8 piece;      /* 0x02 */
-            u8 data[0x10]; /* 0x03 */
-            u8 pad2[1];
-        } req_data;
-    } u;
-} MBCommChildBlockHeader;
-
-#ifndef SM64DS_PLATFORM_PC
-/* The SDK packs it to 0x14: 2 + the 0x12-byte request piece. */
-typedef char
-    MBCommChildBlockHeader_size_must_be_0x14[sizeof(MBCommChildBlockHeader) == 0x14 ? 1 : -1];
-#endif
 
 /* NitroSDK MB_BlockInfo, one block's place as func_02067530
  * (pmd-sky's MBi_Get_BlockInfo) gives it. The tag is that file's. */

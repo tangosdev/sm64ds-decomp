@@ -86,8 +86,6 @@ class daPly_c;
  * registry profile.
  */
 
-#ifdef __cplusplus
-
 struct daDoor_c : dActor_c {
     u8  pad_0d0[0x4];
     /* Named by daDoor_c_classInit's own _ZN14dExtAnmModel_cC1Ev call at +0xd4 -- a
@@ -183,50 +181,5 @@ struct daDoor_c : dActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDoor_c_size_must_be_0x148[sizeof(daDoor_c) == 0x148 ? 1 : -1];
 #endif
-
-#else
-
-/* Flat layout for the C translation units, which can express neither the base
-   class nor the virtual functions -- the same split include/dActor_c.h and
-   include/dExtAnmModel_c.h already carry, and for the same reason.
-
-   This branch is what retired include/daDoor_c.h, the generated flat
-   placeholder this class used to be described by. That header restated
-   dActor_c's fields inline as pad_000[0x5c] + unk_05c/unk_060/... , so the
-   two spellings of one object could drift and the C sources could not see
-   that 0x05c..0x0cf is inherited storage dActor_c has already named. Nesting
-   the bases instead makes drift impossible: the offsets below are not
-   written down here at all, they are whatever dActor_c and dExtAnmModel_c say.
-
-   Every field daDoor_c.h named has a home: 0x05c/0x060/0x064 are
-   base.mPosX/Y/Z, 0x080/0x084/0x088 base.mScaleX/Y/Z, 0x08c/0x08e/0x090
-   base.mAngleX/Y/Z, 0x0a4/0x0a8/0x0ac base.mSpeedX/mVertSpeed/mSpeedZ,
-   0x0e8 mModel.data.transforms, and mState, mKeyModelIdx and mTimer are
-   this class's own. */
-struct daDoor_c {
-    struct dActor_c base;    /* 0x000..0x0cf */
-    u8  pad_0d0[0x4];
-    dExtAnmModel_c mModel;        /* 0x0d4..0x137 */
-    dExtSimpleModel_c *mKeyModel; /* 0x138 -- owned, see SIZE above */
-    void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */
-    void *mState;                 /* 0x140 -- the state pair, see SIZE above */
-    s8   mKeyModelIdx;            /* 0x144 -- key-model index */
-    u8   mTimer;                  /* 0x145 -- countdown byte */
-    u8   pad_146[0x2];
-};
-
-/* The C++ branch's assert, restated over the nested spelling: if either base
-   changes width the sum stops being 0x148 and this branch fails to compile,
-   which is the whole point of nesting them rather than restating offsets. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daDoor_c_size_must_be_0x148[sizeof(struct daDoor_c) == 0x148 ? 1 : -1];
-#endif
-
-/* So a source declaring a daDoor_c reads the same in both modes, the way
-   include/dExtAnmModel_c.h does it. */
-typedef struct daDoor_c daDoor_c;
-
-#endif /* __cplusplus */
 
 #endif /* DADOOR_C_H */

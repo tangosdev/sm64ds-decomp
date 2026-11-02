@@ -50,6 +50,7 @@
 #include "Particle__System.h"
 #include "CP15.h"
 #include "Memory.h"
+#include "private/particle_resource_header.h"
 
 extern "C" {
 void func_0203cbc0(void *p);
@@ -190,12 +191,11 @@ void SysTracker::Initialise()
         (u32 (*)(u32, u32))Texture::AllocPalVram);
 
     if (mResourceFile != data_02075f14) {
-        /* The resource file's +0x18 word is the size its buffer is trimmed
-           to; no header models that file. The (long long) widening is a
-           register-allocation lever: without it trimmedSize and heap trade
-           r4 and r5. */
+        /* The textures are in VRAM now; keep only the resource's resident
+           part. The (long long) widening is a register-allocation lever:
+           without it trimmedSize and heap trade r4 and r5. */
         Heap *heap = Memory::defaultHeapPtr;
-        u32 trimmedSize = (long long)*(u32 *)((char *)mResourceFile + 0x18);
+        u32 trimmedSize = (long long)((ParticleResourceHeader *)mResourceFile)->residentSize;
         heap->_Sizeof(mResourceFile);
         heap->Reallocate(mResourceFile, trimmedSize);
     }

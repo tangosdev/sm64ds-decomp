@@ -1124,7 +1124,8 @@ void dScMgAmida_c::StepWalkers() {
                                     mScore = 0x270f;
                                 }
                                 speedMode =
-                                    *(s32 *)((char *)sAmidaPatternSpeedUp + mPatternIndex * 0x1c);
+                                    sAmidaPatternSpeedUp[mPatternIndex *
+                                                         (sizeof(AmidaPattern) / sizeof(s32))];
                                 switch (speedMode) {
                                 case 0:
                                     break;

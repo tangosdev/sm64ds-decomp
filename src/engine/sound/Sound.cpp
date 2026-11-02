@@ -18,10 +18,6 @@
  *   the def takes short #4 and the site passes d untruncated.
  * - `int dd = (int)(((long long)d))' in func_02012468 is a no-op tower of
  *   unknown load-bearing status.
- * - The registry entry helpers (func_02011b38 and its two wrappers,
- *   func_02011aa0, func_02011a28) still address a node's +4 short and +8
- *   sound handle raw; the table-side alloc/link/unlink/find sites use the
- *   typed SndRegTable view below.
  * - func_02013078 reads the player object raw (+0x706 flag byte, +0x60 word);
  *   daPly_c.h is out of scope for this TU.
  */
@@ -174,9 +170,10 @@ extern "C" SoundPlayerDefault data_0208e448[10]; /* 0x0208e448 */
  * live entries by id&0xf. */
 typedef struct SndRegEntry {
     int id;                        /* unique id; 0 marks a free slot */
-    unsigned char pad4[2];
+    short fadeFrames;              /* 0x04 - fade-out passed to func_0204fa2c */
     unsigned char inUse;           /* in-use flag checked by the sweeps */
-    unsigned char pad7[5];
+    unsigned char pad7[1];
+    int handle;               /* 0x08 - the entry's NNSSndHandle */
     struct SndRegEntry *prev; /* 0x0c - bucket chain, toward the head */
     struct SndRegEntry *next; /* 0x10 - bucket chain, away from the head */
 } SndRegEntry;
@@ -633,10 +630,10 @@ extern "C" void func_0201251c(int a, int b, int c, int d)
 // @symbol Sound_PlayIfNotActive
 extern "C" int Sound_PlayIfNotActive(int a, int b, int c, int d)
 {
-    char *o = (char *)func_02011934((char *)&data_0209b53c, a);
+    SndRegEntry *o = (SndRegEntry *)func_02011934((char *)&data_0209b53c, a);
     if (o) {
-        *(unsigned char *)(o + 6) = 1;
-        return *(int *)o;
+        o->inUse = 1;
+        return o->id;
     }
     /* original TU declared func_0201186c's #4 as int (def is short):
        the call site passes d untruncated -- cast through an int-arity
@@ -652,12 +649,12 @@ extern "C" int func_02012468(int a, int b, int c, int d, int e, int f, int g, sh
 {
     int dd = (int)(((long long)d));
     int x;
-    char *p;
+    SndRegEntry *p;
 
     x = Sound_PlayIfNotActive(a, b, c, h);
-    p = (char *)func_02011934((char *)&data_0209b53c, x);
+    p = (SndRegEntry *)func_02011934((char *)&data_0209b53c, x);
     if (p != 0)
-        func_02012860(p + 8, dd, e, f, g);
+        func_02012860(&p->handle, dd, e, f, g);
     return x;
 }
 
@@ -687,11 +684,11 @@ int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
     if (func_02048a1c((int *)&pos, a, b) == 0)
         return 0;
 
-    char *slot = (char *)func_02011934((char *)&data_0209b53c, handle);
+    SndRegEntry *slot = (SndRegEntry *)func_02011934((char *)&data_0209b53c, handle);
     if (slot) {
-        *(char *)(slot + 6) = 1;
-        func_020123c8((int)(slot + 8), a, b, (int)&pos);
-        return *(int *)slot;
+        slot->inUse = 1;
+        func_020123c8((int)&slot->handle, a, b, (int)&pos);
+        return slot->id;
     }
 
     return data_0209b53c.func_0201179c(a, b, (int)&pos, e);
@@ -708,13 +705,13 @@ extern "C" int func_02012310(int handle, int sound, int arg)
 // @symbol func_0201226c
 extern "C" int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5)
 {
-    void *p;
+    SndRegEntry *p;
     if (func_02048a1c((int *)a3, a1, a2) == 0) return 0;
-    p = func_02011934((char *)&data_0209b53c, a0);
+    p = (SndRegEntry *)func_02011934((char *)&data_0209b53c, a0);
     if (p != 0) {
-        *(unsigned char *)((char *)p + 6) = 1;
-        func_02048c30((char *)p + 8, a3, a4);
-        return *(int *)p;
+        p->inUse = 1;
+        func_02048c30(&p->handle, a3, a4);
+        return p->id;
     }
     return func_020116c4((char *)&data_0209b53c, a1, a2, a3, a4, a5);
 }
@@ -722,20 +719,20 @@ extern "C" int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5)
 // @symbol func_02012194
 extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, int s1, short s2)
 {
-    char *e;
+    SndRegEntry *e;
     if (func_02048a1c((int *)s1, a1, a2) == 0) return 0;
-    e = (char *)func_02011934((char *)&data_0209b53c, (int)c);
+    e = (SndRegEntry *)func_02011934((char *)&data_0209b53c, (int)c);
     if (e != 0) {
-        char *slot = e + 8;
-        e[6] = 1;
+        int *slot = &e->handle;
+        e->inUse = 1;
         func_02048d80(slot, (int *)s1);
         NNS_SndPlayerSetTrackPitch(slot, a3, s0);
-        return *(int *)e;
+        return e->id;
     } else {
         char *n = (char *)data_0209b53c.func_0201179c(a1, a2, s1, s2);
-        char *e2 = (char *)func_02011934((char *)&data_0209b53c, (int)n);
+        SndRegEntry *e2 = (SndRegEntry *)func_02011934((char *)&data_0209b53c, (int)n);
         if (e2 != 0)
-            NNS_SndPlayerSetTrackPitch(e2 + 8, a3, s0);
+            NNS_SndPlayerSetTrackPitch(&e2->handle, a3, s0);
         return (int)n;
     }
 }
@@ -998,33 +995,35 @@ extern "C" void func_02011b7c(void)
 // @symbol func_02011b38
 extern "C" void func_02011b38(void *c, int a1, int a2, int a3, short a5)
 {
-    *(int *)c = a1;
-    *(short *)((char *)c + 4) = a5;
-    *(char *)((char *)c + 6) = 1;
-    *(int *)((char *)c + 0xc) = 0;
-    *(int *)((char *)c + 0x10) = 0;
-    Player_PlaySoundEffect((int)((char *)c + 8), a2, a3);
+    SndRegEntry *e = (SndRegEntry *)c;
+    e->id = a1;
+    e->fadeFrames = a5;
+    e->inUse = 1;
+    e->prev = 0;
+    e->next = 0;
+    Player_PlaySoundEffect((int)&e->handle, a2, a3);
 }
 
 // @symbol func_02011af8
 extern "C" void func_02011af8(void *c, int a1, int a2, int a3, int s0, short s1)
 {
     func_02011b38(c, a1, a2, a3, s1);
-    func_020123c8((int)((char *)c + 8), a2, a3, s0);
+    func_020123c8((int)&((SndRegEntry *)c)->handle, a2, a3, s0);
 }
 
 // @symbol func_02011ac4
 extern "C" void func_02011ac4(void *c, int a1, int a2, int a3, int s0, int s1, short s2)
 {
     func_02011b38(c, a1, a2, a3, s2);
-    func_02048c30((char *)c + 8, s0, s1);
+    func_02048c30(&((SndRegEntry *)c)->handle, s0, s1);
 }
 
 // @symbol func_02011aa0
 extern "C" int func_02011aa0(void *c)
 {
-    func_0204fa2c((int *)((char *)c + 8), *(short *)((char *)c + 4));
-    *(int *)c = 0;
+    SndRegEntry *e = (SndRegEntry *)c;
+    func_0204fa2c(&e->handle, e->fadeFrames);
+    e->id = 0;
     return 0;
 }
 
@@ -1046,11 +1045,11 @@ extern "C" void func_02011a5c(void *vc)
 // @symbol func_02011a28
 extern "C" void func_02011a28(char *c)
 {
-    char *p = c + 8;
+    SndRegEntry *p = ((SndRegTable *)c)->entries;
     int i;
     for (i = 0; i < 0x40; i++) {
-        func_0204f94c(p + 8);
-        p += 0x14;
+        func_0204f94c(&p->handle);
+        p++;
     }
 }
 

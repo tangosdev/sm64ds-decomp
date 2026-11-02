@@ -13,8 +13,9 @@
  * the same pragma lays .text down in source order, so this file is ROM-ascending.
  *
  * Notes:
- * - InitResources keeps the param1 mask, the yaw adjust, and the
- *   node-index add as offset writes. Naming them changed the function size.
+ * - InitResources keeps the param1 mask as an offset read, and the yaw
+ *   adjust and node-index add as writes through a pointer to the member.
+ *   Plain member arithmetic changed the function size.
  * - Vec3_Asr, AngleDiff, Vec3_Sub, LenVec3, Vec3_MulScalar, SubVec3 and
  *   Math_Function_0203b14c are arm9 C helpers no header declares yet.
  * The file ends with the mesh-collider hook HandlePlayerContact, the
@@ -112,7 +113,6 @@ s32 daObjSm_Lift_c::Render() {
 
 // @symbol _ZN14daObjSm_Lift_c8BehaviorEv
 int daObjSm_Lift_c::Behavior() {
-    char *self = (char *)this;
     Vector3 nodeA, nodeB, diff, scaled;
     s16 target;
     dActor_c *other;
@@ -207,7 +207,7 @@ int daObjSm_Lift_c::Behavior() {
                     mPauseTimer = 0x3c;
                     mMoving = 0;
                     mNodeStep = -1;
-                    int *pIdx3 = (int *)((unsigned)(int)self + 0x33c);
+                    int *pIdx3 = (int *)((unsigned)(int)&mNodeIndex);
                     *pIdx3 = *pIdx3 + (mNodeStep * 2);
                 }
             }
@@ -232,20 +232,20 @@ s32 daObjSm_Lift_c::InitResources() {
     if (mPathId == 0xff)
         return 0;
     void *f = dExtSimpleModel_c::LoadFile(gSmLiftModelFile);
-    ((dExtModel_c *)(c + 0xd4))->SetFile((BMD_File *)f, 1, -1);
+    ((dExtModel_c *)&mModel)->SetFile((BMD_File *)f, 1, -1);
     UpdateModelTransform();
     UpdateClsnPosAndRot();
     void *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
     mMeshCollider.SetFile((KCL_File *)kf, mClsnMat, 0x1000, mAngleY,
                           *(CLPS_Block *)data_ov018_02112f48);
-    func_020393d4((int *)(c + 0x124), (int)dBgW::UpdatePosWithTransform);
-    func_020393c4((int *)(c + 0x124), (int)&daObjSm_Lift_c::BeforeClsnCallback);
+    func_020393d4((int *)&mMeshCollider, (int)dBgW::UpdatePosWithTransform);
+    func_020393c4((int *)&mMeshCollider, (int)&daObjSm_Lift_c::BeforeClsnCallback);
     mPauseTimer = 0x3c;
     mBasePosX = mPosX;
     mBasePosY = mPosY;
     mBasePosZ = mPosZ;
     {
-        short *ang = (short *)(c + 0x8e);
+        short *ang = (short *)&mAngleY;
         *ang = *ang - 0x4000;
     }
     PathPtr p;
@@ -253,7 +253,7 @@ s32 daObjSm_Lift_c::InitResources() {
     mNodeCount = p.NumNodes();
     mNodeStep = 1;
     {
-        int *ip = (int *)(c + 0x33c);
+        int *ip = (int *)&mNodeIndex;
         *ip = *ip + mNodeStep;
     }
     mTouchingPlayer = 0;

@@ -60,24 +60,29 @@
 #include "Ov007Item.h"
 #include "Ov007Pad.h"
 
-
 /* The 0xc-byte item rows starting at data_ov007_020d77d8. Their columns
  * are separate ROM symbols (data_ov007_020d77d8 hit-box index,
  * data_ov007_020d77dc flags, data_ov007_020d77e0 sprite mode,
  * data_ov007_020d77e1 depth index), so each column is its own extern and
- * is indexed by id * 0xc. The flags: bit 0 never selectable, bit 1
+ * is indexed by id * 0xc; the two word columns are read a row at a time
+ * through the views below. The flags: bit 0 never selectable, bit 1
  * selectable before the fade-in ends. */
 typedef struct Ov007ItemFlags {
     u32 flags;
     char pad_04[8];
 } Ov007ItemFlags;
 
+typedef struct Ov007ItemHitBoxRow {
+    s32 hitBoxIndex; /* into data_ov007_020d78f8; doubled, into the size pairs */
+    char pad_04[8];
+} Ov007ItemHitBoxRow;
+
 /* Which of items 0x16 / 0x17 was picked: 1 while the choice is open,
  * 2 for 0x16, 3 for 0x17. */
 extern int data_ov007_02103428;
 
 extern Ov007ItemFlags data_ov007_020d77dc[];
-extern s32 data_ov007_020d77d8[];
+extern Ov007ItemHitBoxRow data_ov007_020d77d8[];
 extern u8 data_ov007_020d77e0[];
 extern u8 data_ov007_020d77e1[];
 extern Ov007ItemLayout data_ov007_020d76e8[];
@@ -95,6 +100,9 @@ extern u16 data_ov007_020d7608[];
 extern u16 data_ov007_020d7600[];
 extern u16 data_ov007_020d7628[];
 extern u16 data_ov007_020d7638[];
+/* the number sprites' screen x / y, 4-byte rows. func_ov007_020b42d8 reads
+ * them through one shared byte offset, index << 2: indexing the s16 arrays
+ * moves its register allocation. */
 extern s16 data_ov007_020d761c[];
 extern s16 data_ov007_020d761e[];
 extern u8 data_ov007_020d75f0[];
@@ -407,7 +415,7 @@ Ov007ItemView *func_ov007_020b4c04(int arg0) {
     u8 t;
 
     view = (Ov007ItemView *)func_ov007_020c3df4(0, 0x1c);
-    r5 = *(s32 *)((char *)data_ov007_020d77d8 + arg0 * 0xc);
+    r5 = data_ov007_020d77d8[arg0].hitBoxIndex;
     view->item = func_ov007_020aea6c(arg0, &data_ov007_020d76e8[arg0], &data_ov007_020d78f8[r5]);
     view->sprite = func_ov007_020c44e4(data_ov007_020d77e0[view->item->id * 0xc]);
     sprite = view->sprite;
@@ -419,10 +427,8 @@ Ov007ItemView *func_ov007_020b4c04(int arg0) {
     sprite->texRepeat = 3;
     sprite->texFlip = 0;
     sprite->texColor0 = 1;
-    sprite->width =
-        data_ov007_020d76a0[*(s32 *)((char *)data_ov007_020d77d8 + view->item->id * 0xc) * 2];
-    sprite->height =
-        data_ov007_020d76a1[*(s32 *)((char *)data_ov007_020d77d8 + view->item->id * 0xc) * 2];
+    sprite->width = data_ov007_020d76a0[data_ov007_020d77d8[view->item->id].hitBoxIndex * 2];
+    sprite->height = data_ov007_020d76a1[data_ov007_020d77d8[view->item->id].hitBoxIndex * 2];
     sprite->depth = data_ov007_020d7648[data_ov007_020d77e1[view->item->id * 0xc]];
     view->pad_08 = 0;
     view->slideTween = func_ov007_020c908c(&view->slideT);

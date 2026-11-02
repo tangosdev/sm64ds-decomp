@@ -21,7 +21,6 @@
  * dispatches slot 9 at [vt+0x24] and slot 8 at [vt+0x20] on a fader it has only
  * as a base pointer, which a non-virtual member makes impossible to express.
  */
-#ifdef __cplusplus
 struct dFdBrightness_c : dFader_c {
     /* Inline, and this is where the interpolator's initial state is set. The
        ROM's evidence is the order inside _ZN9dFdWipe_cC1Ev (0x02017480), the
@@ -64,13 +63,6 @@ inline dFdBrightness_c::dFdBrightness_c(Fix12i initial) { currInterp = initial; 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dFdBrightness_c_size_must_be_0xc[sizeof(dFdBrightness_c) == 0xc ? 1 : -1];
-#endif
-#else
-struct dFdBrightness_c {
-    void*  vtable;      /* 0x00 */
-    Fix12i currInterp;  /* 0x04 (from dFader_c) */
-    Fix12i speed;       /* 0x08 (from dFader_c) */
-};
 #endif
 
 #endif /* DFDBRIGHTNESS_C_H */

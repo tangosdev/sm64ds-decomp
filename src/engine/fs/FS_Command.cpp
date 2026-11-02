@@ -17,6 +17,9 @@
 #include "types.h"
 #include "IRQ.h"
 #include "nitro/os/thread.h"
+#include "private/fs_views.h"
+
+typedef struct FSFile FSFile;
 
 extern "C" {
 
@@ -32,35 +35,6 @@ extern "C" {
 #define FS_RESULT_PROC_ASYNC 6
 #define FS_RESULT_PROC_DEFAULT 7
 #define FS_RESULT_PROC_UNKNOWN 8
-
-typedef struct FSArchive FSArchive;
-typedef struct FSFile FSFile;
-
-typedef int (*FS_ARCHIVE_PROC_FUNC)(FSFile *p_file, int command);
-
-/* NitroSDK FSFile, this SDK's layout, as far as this file reads it. */
-struct FSFile {
-    FSFile *prev;   /* 0x00 -- link.prev */
-    FSFile *next;   /* 0x04 -- link.next */
-    FSArchive *arc; /* 0x08 */
-    u32 stat;       /* 0x0c */
-    int command;    /* 0x10 */
-    int error;      /* 0x14 */
-    u16 queue;      /* 0x18 -- OSThreadQueue: a synchronous caller sleeps here */
-};
-
-/* NitroSDK FSArchive, this SDK's layout, as far as this file reads it. */
-struct FSArchive {
-    char pad_00[0xc];
-    u16 sync_q; /* 0x0c -- OSThreadQueue: a synchronous caller waits here */
-    u16 stat_q; /* 0x0e */
-    u32 flag;   /* 0x10 */
-    char pad_14[0x34];
-    FS_ARCHIVE_PROC_FUNC proc; /* 0x48 */
-    u32 proc_flag;             /* 0x4c -- which commands go to proc */
-};
-
-typedef char FSArchive_size_must_be_0x50[sizeof(FSArchive) == 0x50 ? 1 : -1];
 
 extern int (*fsi_default_command[])(FSFile *p_file);
 

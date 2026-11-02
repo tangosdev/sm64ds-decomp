@@ -1,5 +1,6 @@
 #include "types.h"
 #include "nitro/os/thread.h"
+#include "private/player_input_record.h"
 extern void CpuCopy8(void *dst, void *src, int n);
 extern void func_0205a588(void *dst, int c, int n);
 extern void func_02042778(void);
@@ -29,18 +30,10 @@ typedef struct {
 extern u8 data_020a0ef0;
 extern u8 data_020a1064[];
 extern u8 data_020a0fec[];
-/* This console's input record (func_0203df40's Rec), as far as this reads. */
-typedef struct {
-    u8 pad_00[0x0c];
-    u16 flags; /* 0x0c */
-    u8 pad_0e[0x16];
-} Rec;
-extern Rec data_020a1040;
 extern u8 data_020a0fb8[];
 extern u8 data_020a0fa0[];
 extern Profile data_020a10fc;
 extern Profile data_020a10a4;
-extern u8 data_020a1154[];
 extern u8 data_020a0f08;
 extern u16 data_020a0f1c;
 extern u16 data_020a0f30;

@@ -1,4 +1,5 @@
 #include "types.h"
+#include "private/wm_views.h"
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
 /* On a download-play child, rebuild the parent's WMBssDesc from the copy
@@ -9,22 +10,7 @@ extern void CpuCopy8(const void *src, void *dst, unsigned int size);
  * first 0x3c bytes come over as-is; the game info is then filled in from
  * the arguments, with the parent's ggid and tgid taken from the first six
  * bytes of its SSID. Field names follow the SDK's WMBssDesc/WMGameInfo;
- * this SDK version writes ggid as two halfwords, so the view splits it. */
-typedef struct WMBssDesc {
-    u8 pad_00[0xc];
-    u16 ssid[0x10]; /* 0x0c -- u8[32] in the SDK */
-    u8 pad_2c[0x10];
-    u16 gameInfoLength; /* 0x3c */
-    u8 pad_3e[6];
-    struct {
-        u16 ggid[2];           /* 0x44 */
-        u16 tgid;              /* 0x48 */
-        u8 userGameInfoLength; /* 0x4a */
-        u8 attribute;          /* 0x4b */
-        u16 parentMaxSize;     /* 0x4c */
-        u16 childMaxSize;      /* 0x4e */
-    } gameInfo;
-} WMBssDesc;
+ * this SDK version writes ggid as two halfwords, so the shared view splits it. */
 
 void func_020672d0(char *thiz, int parentMaxSize, int childMaxSize, int ksFlag, int csFlag) {
     WMBssDesc *desc = (WMBssDesc *)thiz;

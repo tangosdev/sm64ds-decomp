@@ -1,19 +1,14 @@
 #include "types.h"
-struct S657 {
-    int kind;        /* +0 */
-    int pad4;        /* +4 */
-    u16 id;          /* +8 */
-    u16 pad_a;       /* +0xa */
-    char pad_c[4];   /* +0xc */
-    void *obj;       /* +0x10 */
-    char rest[0x88]; /* +0x14 .. 0x9c */
-};
-extern int func_02065af0(struct S657 *s);
+#include "private/arm9_wbt.h"
+extern int func_02065af0(int *thiz);
+
+/* NitroSDK WBT_RequestSync: queue a REQ_SYNC command (2) to the peers in
+ * id (target_bmp). */
 void func_020657d0(u16 id, void *obj)
 {
-    struct S657 s;
-    s.kind = 2;
-    s.id = id;
-    s.obj = obj;
-    func_02065af0(&s);
+    WBTCommand cmd;
+    cmd.command = 2;
+    cmd.target_bmp = id;
+    cmd.callback = (void (*)(char *))obj;
+    func_02065af0((int *)&cmd);
 }

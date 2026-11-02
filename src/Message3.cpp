@@ -120,9 +120,7 @@ extern int LoadFile(int handle);
    from a header; the literal name keeps the def's own scalar params. */
 extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int yOff, int palette,
                                  int priority, int scaleX, int scaleY, int rotation, int mode);
-struct OAM {
-    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
-};
+#include "OAM.h"
 
 void func_02031cd4(void *arg);
 int func_020321fc(void);

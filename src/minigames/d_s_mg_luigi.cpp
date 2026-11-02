@@ -693,7 +693,7 @@ void dScMgLuigi_c::DrawTimer() {
     if (mState < STATE_PLAY)
         return;
     language = GetGameLanguage();
-    DrawOamSprite(*(int *)((char *)sLuigiTextSpritesByLanguage[language] + 0xc), 0x80, 0x10, 0);
+    DrawOamSprite(sLuigiTextSpritesByLanguage[language][3], 0x80, 0x10, 0);
     Mg_DrawNumberRotated(0x80, 0x28, static_cast<u16>(mTime), 1, -1, 0x800, 0);
 }
 

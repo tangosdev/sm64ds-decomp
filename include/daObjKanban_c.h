@@ -24,8 +24,6 @@
  * as g_profile_KANBAN.
  */
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 #include "dCcAcPos_c.h"
 
@@ -52,25 +50,5 @@ struct daObjKanban_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKanban_c_size_must_be_0x368[sizeof(daObjKanban_c) == 0x368 ? 1 : -1];
 #endif
-
-#else
-
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
-struct daObjKanban_c {
-    u8  pad_000[0xd4];
-    /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    dExtSimpleModel_c mModel; /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~daObjKanban_c calls _ZN10dBgW_KcMbgD1Ev at
-       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x34];
-    u8  mdCcAcPos_c;            /* 0x320 */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJKANBAN_C_H */

@@ -1,13 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-    static void NewSimple(unsigned int, int, int, int);
-    static unsigned NewUnkCallback818(unsigned, unsigned, int, int, int, const ::Vector3_16f *);
-};
-}
 /**
  * Shared base for enemies and other actors that use the enemy collision,
  * death and Yoshi-eat handling.
@@ -64,6 +55,7 @@ struct System {
  *     recovered.
  */
 #include "dEnemyBase_c.h"
+#include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "decl_dBgPi.h"
 #include "dBgCh_Lin.h"
@@ -447,7 +439,6 @@ extern "C" int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
     return 1;
 }
 
-struct Vector3_16f;
 extern "C" {
 extern void *d_enemy_baseNewHold(unsigned int a, unsigned int b, int c, int d, int e, const void *f,
                                  void *g);

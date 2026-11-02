@@ -1,4 +1,5 @@
 #include "types.h"
+#include "private/spl_particle_views.h"
 /* Three-stop RGB555 colour ramp entry (SPL's SPLColorAnim). */
 struct ColorRamp {
     u16 startColor;
@@ -10,32 +11,10 @@ struct ColorRamp {
     u16 flags;
 };
 
-/* The particle definition's header (func_0204a730's PtclData; SPL's
- * SPLResourceHeader). 0x12 is the particle's base colour: the ramp runs
- * startColor -> color -> endColor, and func_0204c584 spawns a particle with
- * it (`color` there too; the ramp is its `colorAnim` view). */
-struct PtclData {
-    char pad0[0x12];
-    u16 color; /* 0x12 */
-};
-
-/* The particle definition (func_0204a730's PtclDef; SPL's SPLResource), whose
- * colorAnim slot registers this function as a particle callback. */
-struct PtclDef {
-    struct PtclData *data;       /* 0x00 */
-    void *scaleAnim;             /* 0x04 */
-    struct ColorRamp *colorAnim; /* 0x08 */
-};
-
-struct Particle {
-    char pad0[0x3a];
-    u16 color;
-};
-
 /* age is the particle's animation time, 0..255 (func_0204a730 passes its
  * life rate, or its loop time when the ramp loops). */
-void func_0204d294(struct Particle *ptcl, struct PtclDef *data, int age) {
-    struct PtclData *header = data->data;
+void func_0204d294(ParticleElement *ptcl, PtclDef *data, int age) {
+    PtclData *header = data->data;
     struct ColorRamp *ramp = data->colorAnim;
     u8 stop1 = ramp->stop1;
     u8 stop2 = ramp->stop2;

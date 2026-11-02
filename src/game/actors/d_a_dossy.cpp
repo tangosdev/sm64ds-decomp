@@ -74,17 +74,6 @@ s16 atan2(s32, s32);
 
 typedef enum { FALSE = 0, TRUE = 1 } BOOL;
 
-/* One 0x34-byte runtime pose record of mAnmModel.data.bones, filled by
-   UpdateBones (not BMD_Bone, 0x40, as the header types it). Same shape as
-   d_a_trs.cpp's file-local TrsBone, but the rotation is u16: the ROM reads
-   it with ldrh, and with s16 members func_ov065_02118838 stops matching. */
-struct DossyBone {
-    u8 pad_00[0x1a];
-    u16 rotX; /* 0x1a */
-    u16 rotY; /* 0x1c */
-    u16 rotZ; /* 0x1e */
-    u8 pad_20[0x14];
-};
 /* The spawned daObjMarioCap_c (actor 0x10d) seen only as far as
    dEnemyBase_c::mEatingPlayer, which daDossyCap_c::Behavior hands over.
    Including dEnemyBase_c.h instead renumbers this TU's @NNN pins by 26. */
@@ -93,7 +82,6 @@ struct MarioCapEatView : dActor_c {
 };
 
 #ifndef SM64DS_PLATFORM_PC
-typedef char DossyBone_size_must_be_0x34[sizeof(DossyBone) == 0x34 ? 1 : -1];
 typedef char MarioCapEatView_size_must_be_0xd4[sizeof(MarioCapEatView) == 0xd4 ? 1 : -1];
 #endif
 
@@ -507,11 +495,11 @@ void daDossy_c::func_ov065_02118838()
     three = 3;
     tbl = data_ov065_0211c078;
     for (i = 0; i < 7; i++) {
-        char *ent = (char *)mAnmModel.data.bones + *tbl * 0x34;
+        ModelBone *bone = &mAnmModel.data.bones[*tbl];
         {
-            u16 tz = ((DossyBone *)ent)->rotZ;
-            u16 ty = ((DossyBone *)ent)->rotY;
-            u16 tx = ((DossyBone *)ent)->rotX;
+            u16 tz = bone->rotZ;
+            u16 ty = bone->rotY;
+            u16 tx = bone->rotX;
             rot.x = tx;
             rot.y = ty;
             rot.z = tz;

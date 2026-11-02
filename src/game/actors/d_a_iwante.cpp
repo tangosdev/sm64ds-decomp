@@ -1,8 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
 /* daIwante_c, the two-handed pyramid boss (.text 0x02115ee0..0x0211a418,
  * 64 functions). ROM RTTI daIwante_c (_ZTS10daIwante_c ov066:0x0211ad30).
  *
@@ -103,6 +99,7 @@ enum Eyerok_AssetId {
 #include "dCamera_c.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 /* Actor ids, from symbols/actor_debug_names.tsv. */
 enum {
@@ -373,13 +370,6 @@ extern void func_020398fc(void *p);
 extern void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 }
 extern "C" {
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int a, int x, int y, int z);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 extern u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
 
 /* ---- the dBgW callback veneer (0x0211a35c), defined at the bottom of this

@@ -1080,11 +1080,9 @@ void daNknk_c::func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned in
             idx = (unsigned short)ang >> 4;
             i2 = idx * 2;
             i1 = i2 + 1;
-            i2 = i2 * 2;  /* byte offsets scaled in place: the ROM self-updates the register */
-            i1 = i1 * 2;
-            v = *(short *)((char *)data_02082214 + i2);
+            v = data_02082214[i2];
             v = pos.x - k * v;
-            w = *(short *)((char *)data_02082214 + i1);
+            w = data_02082214[i1];
             w = pos.z - k * w;
             pos.x = v;
             pos.z = w;
@@ -1093,10 +1091,8 @@ void daNknk_c::func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned in
             idx = (unsigned short)ang >> 4;
             i2 = idx * 2;
             i1 = i2 + 1;
-            i2 = i2 * 2;  /* mirrors the taken branch: scaled in place, load interleaved with the mla */
-            i1 = i1 * 2;
-            pos.x = k * *(short *)((char *)data_02082214 + i2) + pos.x;
-            pos.z = k * *(short *)((char *)data_02082214 + i1) + pos.z;
+            pos.x = k * data_02082214[i2] + pos.x;
+            pos.z = k * data_02082214[i1] + pos.z;
         }
         uid = Particle::System::New(0, 0xf9, pos.x, pos.y, pos.z, 0, 0);
         Particle::SetSelfDestructFlag(0xf9);

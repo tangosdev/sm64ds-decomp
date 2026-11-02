@@ -13,9 +13,15 @@ the name does not overclaim.
 
 ---
 
-## Particle::SysTracker — `include/Particle.h`, and the copy inside `include/dScStage_c.h`
+## Particle::SysTracker — `include/Particle__SysTracker.h`
 
-The struct is spelled `Particle` in `include/Particle.h` for historical
+> `Particle.h`, the flat C header spelling this section was written against,
+> lost its last includer and has been retired (#4570). Every field below is a
+> member of `Particle::SysTracker` in `include/Particle__SysTracker.h` under the
+> same name and offset; there the callback bank is typed with the real
+> `dPa_c::level_c::*Callback_c` classes, not a byte and padding.
+
+The struct is spelled `Particle` in `Particle.h` for historical
 reasons; the ROM's mangled names call it `Particle::SysTracker`. There is one
 instance and its address lives in the global `data_0209ee74`:
 `_ZN8Particle10SysTrackerC1Ev` writes it, `_ZN8Particle10SysTrackerD1Ev`
@@ -117,7 +123,7 @@ constructor variants are now generated from the real nested C++ class.
 is what `src/engine/particle/Particle.cpp` and
 `src/engine/particle/Particle.cpp` include. A later pass that owned the
 file finished it: its three fields now read `mResourceFile` / `mManager` /
-`mContents`, with the same types `include/Particle.h` carries, so all three
+`mContents`, with the same types `Particle.h` carried, so all three
 declarations of the class spell the head identically.
 
 Only the head is declared there, and that is deliberate — the two including
@@ -288,7 +294,7 @@ conservative name stands.
 
 `dScStage_c` is the playable level scene, and it had no `unk_` fields of its own:
 the thirty this pass was pointed at all belonged to the `Particle::SysTracker`
-embedded at 0x50, which is the same class as `include/Particle.h` and is
+embedded at 0x50, which is `Particle::SysTracker` (`include/Particle__SysTracker.h`) and is
 covered by the table at the top of this file. The two copies are kept identical
 by hand. (`include/Particle__SysTracker.h` is a third copy; it spelled `unk_`
 until a later pass that owned it collapsed its three fields onto these same

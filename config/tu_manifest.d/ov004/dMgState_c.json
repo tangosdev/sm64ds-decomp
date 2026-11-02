@@ -540,14 +540,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sEnterTable$187",
+      "from": "sEnterTable$216",
       "to": "sEnterTable$170",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187, and including dScMgBase_c.h in place of the TU-local Base view shifts it from $187 to $216; licensed under the existing pin"
     },
     {
-      "from": "_ZGVsEnterTable$187",
+      "from": "_ZGVsEnterTable$216",
       "to": "_ZGVsEnterTable$170",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187, and including dScMgBase_c.h in place of the TU-local Base view shifts it from $187 to $216; licensed under the existing pin"
     }
   ]
 }

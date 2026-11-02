@@ -37,7 +37,7 @@
 /* POD views preserve the retail aggregate copies. Matrix4x3 and Vector3 are
    available, but their non-POD copies change these two helpers' codegen; see
    the measured alternatives in the handoff. */
-typedef struct Mtx43 { int w[12]; } Mtx43;
+#include "private/mtx43.h"
 struct V3A { int w[3]; };
 
 /* func_ov065_02116364 builds a five-Vector3 aggregate on the stack. Leaving it

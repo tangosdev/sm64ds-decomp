@@ -31,6 +31,7 @@ enum daRNk_c_AssetId {
 };
 
 #include "daRNk_c.h"
+#include "Particle__System.h"
 #include "daRFlag_c.h"
 #include "daIbl_c.h"
 #include "daPly_c.h"
@@ -163,11 +164,6 @@ extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
 
 extern "C" {
 /* Positional sound at the actor's camera-space position (Sound::Play(3, id, pos)). */
-namespace Particle {
-struct System {
-    static void *NewSimple(unsigned int id, int x, int y, int z);
-};
-}
 extern short data_02082214[];   /* SINE_TABLE: {sin, cos} pairs in fix12, indexed by angle >> 4 */
 /* This scalar entry follows its C definition, including u16 startFrame.
    dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */

@@ -16,7 +16,6 @@ struct dActor_c;
  * - Bit 0 of mFlags is the cap bank (AddCap). Bit 1 is tested by
  *   GetCapState. Bit 2 means "not linked".
  */
-#ifdef __cplusplus
 
 namespace Memory {
 void operator_delete2(void *);
@@ -58,24 +57,6 @@ typedef dCapIcon_c CapIcon;
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dCapIcon_c_size_must_be_0x1c[sizeof(dCapIcon_c) == 0x1c ? 1 : -1];
-#endif
-
-#else
-
-struct CapIcon {
-    void **vtable;                /* 0x00 */
-    struct dActor_c *mOwner;      /* 0x04 */
-    u32 mOwnerUniqueID;           /* 0x08 */
-    struct CapIcon *mPrev;        /* 0x0c */
-    struct CapIcon *mNext;        /* 0x10 */
-    s32 mSlot;                    /* 0x14 */
-    u8 mCharacter;                /* 0x18 */
-    u8 mIconKind;                 /* 0x19 */
-    u8 mFlashFrames;              /* 0x1a */
-    u8 mFlags;                    /* 0x1b */
-};
-typedef struct CapIcon CapIcon;
-
 #endif
 
 #ifndef SM64DS_PLATFORM_PC

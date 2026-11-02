@@ -19,8 +19,8 @@
  * - The *(short*)&mSwayAngle increment: the cartridge sign-extends it
  *   (ldrsh) while the index below zero-extends (ldrh). The plain u16
  *   re-read holds the reload (volatile disproved, FEATHER-2713-01).
- * - dCamera_c+0x17c (data_0209f318): the halfword InitResources and Behavior
- *   add 0x4000 to; dCamera_c.h names nothing there.
+ * - dCamera_c::mAngleY (data_0209f318): the halfword InitResources and Behavior
+ *   add 0x4000 to.
  * - data_0209f2d8 game-mode flag, data_02082214 sin/cos table,
  *   data_020a0e68 scratch matrix, data_ov002_0210da58 file handle: ROM labels.
  * - g_profile_FEATHER stays carved (unowned) between the stripped _ZTI/_ZTS
@@ -31,6 +31,7 @@
 #include "common.h"
 #include "daFeather_c.h"
 #include "daPly_c.h"
+#include "dCamera_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
@@ -97,8 +98,8 @@ int daFeather_c::InitResources() {
     mAngleZ = -0x4000;
     b = (data_0209f2d8 == 1);
     if (!b) {
-        /* dCamera_c+0x17c, the same halfword Behavior re-reads every frame. */
-        mAngleY = *(s16 *)((char *)data_0209f318 + 0x17c) + 0x4000;
+        /* dCamera_c::mAngleY, the same halfword Behavior re-reads every frame. */
+        mAngleY = ((dCamera_c *)data_0209f318)->mAngleY + 0x4000;
     }
     mLifeTimer = 0xb4;
     mVertSpeed = 0x3000;
@@ -158,7 +159,7 @@ int daFeather_c::Behavior() {
     {
         int b = (data_0209f2d8 == 1);
         if (!b) {
-            mAngleY = *(s16 *)((char *)data_0209f318 + 0x17c) + 0x4000;
+            mAngleY = ((dCamera_c *)data_0209f318)->mAngleY + 0x4000;
         }
     }
 

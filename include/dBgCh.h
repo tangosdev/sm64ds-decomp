@@ -68,8 +68,6 @@
  * Same shape as the dBgW UpdatePos callbacks.
  */
 
-#ifdef __cplusplus
-
 #include "types.h"
 
 #include "Memory.h"
@@ -159,17 +157,5 @@ struct dBgCh {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_size_must_be_0x10[sizeof(dBgCh) == 0x10 ? 1 : -1];
 #endif
-
-#else
-
-struct dBgCh {
-    void **vtable;          /* 0x00 */
-    u8 mDetectFlags;        /* 0x04 */
-    u8 pad_005[0x3];
-    s32 mOwnerUniqueID;      /* 0x08 */
-    struct dActor_c *mOwner; /* 0x0c */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DBGCH_H */

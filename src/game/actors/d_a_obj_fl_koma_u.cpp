@@ -127,16 +127,16 @@ s32 daObjFl_KomaU_c::Behavior() {
         MulVec3Mat4x3(&in, &data_020a0e68, &out);
         AddVec3(&out, &mPos, &out);
 
-        /* Raw offsets from w, not cyl->pos / cyl->otherOwner. The member
+        /* Strided through w, not cyl->pos / cyl->otherOwner. The cyl
          * spelling makes mwccarm recompute the element address and Behavior
          * stops matching; cyl++ does the same. The (int)(long long)i round
          * trip and the pointer-local mAngleY decrement are instruction
          * selection: the plain forms stop matching. */
-        *(int *)(w + 0x390) = out.x;
-        *(int *)(w + 0x394) = out.y;
-        *(int *)(w + 0x398) = out.z;
+        ((daObjFl_KomaU_c *)w)->mColliders[0].pos.x = out.x;
+        ((daObjFl_KomaU_c *)w)->mColliders[0].pos.y = out.y;
+        ((daObjFl_KomaU_c *)w)->mColliders[0].pos.z = out.z;
 
-        id = *(u32 *)(w + 0x384);
+        id = ((daObjFl_KomaU_c *)w)->mColliders[0].otherOwner;
         if (id != 0) {
             actor = dActor_c::FindWithID(id);
             if (actor != 0) {

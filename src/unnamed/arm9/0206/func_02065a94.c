@@ -1,11 +1,12 @@
-struct Node65 { int key; char pad[0x24]; struct Node65 *next; };
+#include "private/wbt_block_info_list.h"
 
-extern struct Node65 *func_02065ae0(void);
+extern struct WBTBlockInfoList *func_02065ae0(void);
 
-struct Node65 *func_02065a94(int key) {
-    struct Node65 *p = func_02065ae0();
+struct WBTBlockInfoList *func_02065a94(int key) {
+    struct WBTBlockInfoList *p = func_02065ae0();
     while (p != 0) {
-        if (p->key == key) return p;
+        if (p->block_id == key)
+            return p;
         p = p->next;
     }
     return 0;

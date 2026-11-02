@@ -51,6 +51,7 @@
 #include "dExtAnmMaterial_c.h"
 #include "Memory.h"
 #include "Heap.h"
+#include "BCA_File.h"
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -165,14 +166,6 @@ void func_02046e28(ModelComponents *model, BMA_File *file, int frame);
 namespace cstd {
 int fdiv(int a, int b);
 }
-
-/* Only the header word the SetAnim paths read; dExtFrameCtrl_c::UpdateFileOffsets'
-   own TU spells the pointer fields instead. Nothing here reads the two bytes
-   ahead of the frame count, so they stay unnamed. */
-struct BCA_File {
-    u8 pad_00[2];
-    u16 numFrames; /* 0x02 */
-};
 
 /* 0xc-byte records in the common model data array at data_0209cefc, counted
    by data_0209cef8. func_02016e70 fills the two owned slots; the destructors

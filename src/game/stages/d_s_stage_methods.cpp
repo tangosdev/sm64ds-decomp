@@ -3667,18 +3667,6 @@ void dScStage_c::LoadSkybox() {
 }
 
 // @symbol _ZN10dScStage_c22RenderModelTransparentEv
-/* dExtSimpleModel_c's own vtable shape as far as the two RenderModel passes need it (six
-   slots: D1, D0, DoSetFile, UpdateVerts, Virtual10, Render), named to avoid
-   colliding with the real dExtModel_c (which has only three). */
-struct LocalModelVtableShape {
-    virtual void vf0();
-    virtual void vf1();
-    virtual void vf2();
-    virtual void vf3();
-    virtual void vf4();
-    virtual void Render(void *ctx);
-};
-
 struct Inner {
     char pad[0x30];
     u16 count;

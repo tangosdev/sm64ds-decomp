@@ -52,6 +52,7 @@ enum daObjSimpleBg_c_AssetId {
 #include "decl_common.h"
 #include "daObjSimpleBg_c.h"
 #include "SharedFilePtr.h"
+#include "private/clps_row.h"
 
 /* Six model handles construct through func_02017acc and destroy through
  * func_02017ab4. Six collision handles construct through func_02017b4c and
@@ -73,12 +74,6 @@ struct FileRow {
     u8 pad[8];
 };
 typedef char FileRow_size_must_be_0xc[sizeof(FileRow) == 0xc ? 1 : -1];
-
-struct ClpsRow {
-    CLPS_Block *block;
-    u8 pad[8];
-};
-typedef char ClpsRow_size_must_be_0xc[sizeof(ClpsRow) == 0xc ? 1 : -1];
 
 extern FileRow data_ov102_0214e188[];
 extern FileRow data_ov102_0214e18c[];

@@ -39,8 +39,6 @@
  * phase, not this header's problem.
  */
 
-#ifdef __cplusplus
-
 struct BCA_File;
 struct SharedFilePtr;
 
@@ -101,17 +99,5 @@ struct dExtFrameCtrl_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dExtFrameCtrl_c_size_must_be_0x10[sizeof(dExtFrameCtrl_c) == 0x10 ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for C translation units, vptr written out explicitly. */
-struct dExtFrameCtrl_c {
-    void **vtable;             /* 0x00 */
-    u32 numFramesAndFlags;     /* 0x04 */
-    s32 currFrame;             /* 0x08 */
-    s32 speed;                 /* 0x0c */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DEXTFRAMECTRL_C_H */

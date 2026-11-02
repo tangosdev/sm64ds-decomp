@@ -148,7 +148,9 @@ void *Thing::func_020441cc() {
 /* The pending lifecycle sequence fBase_c holds at +0x48. Slot 2 runs one
  * table entry and returns the new state; slot 3 is called on each entry
  * already run when the sequence is drained. The layout is ROM-proven; the
- * class name is not. */
+ * class name is not. fBase_c declares the member void *, nothing in the tree
+ * stores to it, and no ROM vtable or RTTI is tied to it, so v00..v08 and m3
+ * stay placeholders until the class is found. */
 struct Obj {
     virtual void v00();
     virtual void v04();

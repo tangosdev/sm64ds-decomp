@@ -50,8 +50,6 @@
  * names are a reading, not pinned by the ROM the way the offsets are.
  */
 
-#ifdef __cplusplus
-
 namespace Memory {
 void operator_delete2(void *ptr);
 }
@@ -135,24 +133,5 @@ struct dCc_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dCc_c_size_must_be_0x30[sizeof(dCc_c) == 0x30 ? 1 : -1];
 #endif
-
-#else
-
-struct dCc_c {
-    void **vtable;             /* 0x00 */
-    s32 radius;                /* 0x04 */
-    s32 height;                /* 0x08 */
-    s32 pushbackX;             /* 0x0c */
-    s32 pushbackY;             /* 0x10 */
-    s32 pushbackZ;             /* 0x14 */
-    u32 flags;                 /* 0x18 */
-    u32 vulnFlags;             /* 0x1c */
-    u32 hitFlags;              /* 0x20 */
-    u32 otherOwner;            /* 0x24 */
-    struct dCc_c *prev; /* 0x28 */
-    struct dCc_c *next; /* 0x2c */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DCC_C_H */

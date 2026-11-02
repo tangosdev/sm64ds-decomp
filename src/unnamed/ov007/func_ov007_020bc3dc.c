@@ -1,14 +1,8 @@
 #include "Ov007Model.h"
+#include "BCA_File.h"
 
-/* A partial C view of the BCA header: the tree only forward-declares the
- * tag, and its C++ reader, dExtFrameCtrl_c::UpdateFileOffsets, spells the
- * rest. The byte at +4 selects func_ov007_020c9214's loop mode
+/* The byte at +4 of the BCA header selects func_ov007_020c9214's loop mode
  * below: zero plays once, nonzero wraps. */
-struct BCA_File {
-    char pad_00[2];
-    unsigned short numFrames; /* 0x02 */
-    unsigned char looping;    /* 0x04 */
-};
 
 /* Unprototyped, as the tree has it: a prototype with the definition's short
  * parameters adds sign-extensions the ROM does not have. */

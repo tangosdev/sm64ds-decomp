@@ -193,10 +193,7 @@ void daPukupuku_c::UpdateModelMatrix() {
 
 // @symbol _ZN12daPukupuku_c8SetStateEPM10PukuStateCFivE
 /* Install a state record and run its enter routine, if it has one. */
-struct PukuStateC {
-    char pad[0x370];
-    PukuStatePMF *pp;
-};
+struct PukuStateC {};
 int daPukupuku_c::SetState(PukuStatePMF *p) {
     mState = p;
     PukuStatePMF *q = mState;

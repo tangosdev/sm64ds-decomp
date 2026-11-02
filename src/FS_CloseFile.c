@@ -1,18 +1,11 @@
+#include "private/fs_views.h"
+
 extern int FSi_SendCommand(void *self, int arg);
 
 /* NitroSDK FS_CloseFile: send FS_COMMAND_CLOSEFILE (8), then clear arc, set
  * command to FS_COMMAND_INVALID (0xc) and drop FS_FILE_STATUS_IS_FILE |
- * FS_FILE_STATUS_IS_DIR (0x30). Field names follow the SDK's FSFile, as
- * src/engine/fs/FS_Archive.cpp spells them; only the fields this function
- * touches. */
-typedef struct FSFile {
-    struct FSFile *prev;   /* 0x00 -- link.prev */
-    struct FSFile *next;   /* 0x04 -- link.next */
-    struct FSArchive *arc; /* 0x08 */
-    unsigned int stat;     /* 0x0c */
-    int command;           /* 0x10 */
-} FSFile;
-typedef char FSFile_size_must_be_0x14[sizeof(FSFile) == 0x14 ? 1 : -1];
+ * FS_FILE_STATUS_IS_DIR (0x30). */
+typedef struct FSFile FSFile;
 
 int FS_CloseFile(char *self)
 {

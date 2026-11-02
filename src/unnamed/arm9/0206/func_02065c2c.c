@@ -1,5 +1,6 @@
 #include "types.h"
 #include "private/arm9_a9db8_mb_parent.h"
+#include "private/mb_comm_child_block_header.h"
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern char *data_020a9db8;
 
@@ -8,21 +9,6 @@ extern char *data_020a9db8;
  * of the entry request (func_02065de4 assembles them); types 8 and 9 carry
  * a 16-bit request built from two bytes, and 9 also a piece of reserved
  * data. The header follows the SDK's MBCommChildBlockHeader. */
-typedef struct MBCommChildBlockHeader {
-    u8 type; /* 0x0 */
-    u8 pad_1;
-    union {
-        struct {
-            u16 req;        /* 0x2 */
-            u8 reserved[1]; /* 0x4 */
-        } data;
-        struct {
-            u8 piece;   /* 0x2 */
-            u8 data[1]; /* 0x3 */
-        } req_data;
-    } u;
-} MBCommChildBlockHeader;
-
 u8 *func_02065c2c(u8 *src, u8 *dst) {
     MBCommChildBlockHeader *hd = (MBCommChildBlockHeader *)dst;
     u8 *r4;

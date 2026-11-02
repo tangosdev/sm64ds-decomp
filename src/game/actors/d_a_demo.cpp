@@ -1,11 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /* daDemo_c -- the KuppaScript cutscene actor, registry profile 352 (0x160),
  * debug name DEMO.
  *
@@ -133,6 +126,7 @@ enum daDemo_c_AssetId {
 #include "dCamera_c.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 struct OamAttr;
 
@@ -233,9 +227,6 @@ typedef struct
   s32 y;
   s32 z;
 } Vec3;
-
-/* shadow struct 'Callback' */
-struct Callback;
 
 /* shadow typedef 'u8' */
 typedef unsigned char u8;

@@ -38,14 +38,26 @@
 struct BMD_Bone {
     u32 unk_00;
     void *unk_04;          /* 0x04 - file-relative, fixed up on load */
-    u8 pad_08[0x28];
+    u8 pad_08[0x1c];
+    /* 0x24 - rest-pose translation: func_020462d0 copies it into the runtime
+       ModelBone (dExtModel_c.h), and func_ov075_02114b60 and
+       func_ov002_020e640c copy it again to put animated bones back at rest */
+    s32 transX;
+    s32 transY;
+    s32 transZ;
     /* 0x30 - length of materialIds: bounds the material walks in
        dScStage_c::RenderModel and RenderModelTransparent */
     u16 numMaterials;
     u8 pad_32[0x2];
     u8 *materialIds;       /* 0x34 - per-bone material index list */
-    void *unk_38;          /* 0x38 - file-relative, fixed up on load */
-    u32 unk_3c;
+    /* 0x38 - file-relative, fixed up on load. Parallel to materialIds:
+       ModelComponents::Render draws displayListGroups[displayListIds[j]]
+       with materials[materialIds[j]] */
+    u8 *displayListIds;
+    /* 0x3c - bit 0 sends the bone through func_02044534 instead of
+       func_0204488c (ModelComponents::Render; read with ldrh) */
+    u16 flags;
+    u8 pad_3e[0x2];
 };
 
 /* One 0x10-byte display-list record. dExtSimpleModel_c::UpdateFileOffsets rebases the
@@ -72,7 +84,11 @@ struct BMD_Material {
     u8 pad_0c[0x14];
     u32 texImageParam;     /* 0x20 - ORed with the texture's flags by func_02046bbc */
     u32 flags;             /* 0x24 - bit 31 hides the material */
-    u8 pad_28[0x8];
+    /* 0x28/0x2c - func_020462d0 copies both into the runtime record at the
+       same offsets, and func_02044b30 writes them to DIF_AMB (0x040004c0)
+       and SPE_EMI (0x040004c4) */
+    u32 diffuseAmbient;
+    u32 specularEmission;
 };
 
 struct BMD_Texture {
@@ -92,7 +108,8 @@ struct BMD_Palette {
 };
 
 struct BMD_File {
-    u32 scaleShift;            /* 0x00 */
+    u8 scaleShift; /* 0x00 - ModelComponents::Render reads it with ldrb */
+    u8 pad_01[0x3];
     u32 numBones;              /* 0x04 */
     struct BMD_Bone *bones;    /* 0x08 - 0x40-byte records */
     u32 numDisplayListGroups;  /* 0x0c - bounds the loop over the table below */
@@ -104,8 +121,13 @@ struct BMD_File {
     u32 numMaterials;          /* 0x24 */
     struct BMD_Material *materials; /* 0x28 */
     void *unk_2c;              /* 0x2c - fixed up on load */
-    u32 unk_30;                /* 0x30 - guards the block below */
-    void *unk_34;              /* 0x34 - block of four pointers, all fixed up */
+    /* 0x30 - matrices past numBones in ModelComponents::transforms:
+       func_02046564 sizes transforms as numBones + this, and func_02044dc4
+       blends each one from bone matrices. Also guards the block below. */
+    u32 numWeightedMatrices;
+    /* 0x34 - the four-pointer skinning block func_02044dc4/func_02044e50
+       read (struct Sub in ModelComponents.cpp); all four fixed up on load */
+    void *skin;
 };
 
 #ifndef SM64DS_PLATFORM_PC

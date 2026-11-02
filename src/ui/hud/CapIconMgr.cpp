@@ -19,9 +19,9 @@
  *   mangled names for this module and callers cross TU boundaries.
  * - data_0209f394 / data_0209f3e8 keep linker names; their ownership and
  *   the player array's type remain outside this reconstruction.
- * - The CapNode overlay in func_ov001_020aa420 and the int* walks in
- *   func_ov001_020aadac are kept: byte-neutral retyping on dCapIcon_c was
- *   measured and left as the shard bodies wrote it.
+ * - func_ov001_020aa420 tests mFlags bits 0 and 3 as bitfields; a mask
+ *   test on the u8 shrinks the body by 8 bytes. The int* walks in
+ *   func_ov001_020aadac are kept as the shard bodies wrote them.
  */
 
 #include "types.h"
@@ -397,38 +397,20 @@ void func_ov001_020aa6b0(int* r0, int r1) {
 }
 
 void func_ov001_020aa420(void) {
+    /* dCapIcon_c::mFlags, read bit by bit */
     typedef struct {
         unsigned char b0 : 1;
-        unsigned char b1 : 1;
-        unsigned char b2 : 1;
+        unsigned char : 2;
         unsigned char b3 : 1;
-        unsigned char pad : 4;
-    } Flags;
+        unsigned char : 4;
+    } CapIconFlags;
 
-    typedef struct CapNode {
-        u8 pad0[4];
-        int field4;
-        int field8;
-        u8 padC[4];
-        struct CapNode *next;
-        int soundHandle;
-        u8 field18;
-        u8 field19;
-        u8 pad1A;
-        Flags flags;
-    } CapNode;
-
-    typedef struct CapRequest {
-        u8 pad0[8];
-        int field8;
-    } CapRequest;
-
-    CapRequest *player;
-    CapNode *best;
+    daPly_c *player;
+    dCapIcon_c *best;
     int handled;
     u8 *flagByte;
     u8 reqFlag;
-    CapNode *node;
+    dCapIcon_c *node;
     u8 maxPriority;
     int spC;
     int sp10;
@@ -444,7 +426,7 @@ void func_ov001_020aa420(void) {
 
     for (; i < 3; i++) {
         best = 0;
-        node = (CapNode *)gCapIconListHeads[i];
+        node = gCapIconListHeads[i];
         handled = (int)best;
         flagByte = &gCapIconRequestFlags[i];
         reqFlag = gCapIconRequestFlags[i];
@@ -452,11 +434,11 @@ void func_ov001_020aa420(void) {
         if (reqFlag == 0) {
             if (node != 0) {
                 do {
-                    ((dCapIcon_c *)node)->mFlags &= ~2;
-                    if (node->field19 == 1) {
+                    node->mFlags &= ~2;
+                    if (node->mIconKind == 1) {
                         *flagByte = 1;
                     }
-                    node = node->next;
+                    node = node->mNext;
                 } while (node != 0);
             }
             if (*flagByte == 0) {
@@ -466,7 +448,7 @@ void func_ov001_020aa420(void) {
             }
         }
 
-        node = *(CapNode *volatile *)&gCapIconListHeads[i];
+        node = *(dCapIcon_c *volatile *)&gCapIconListHeads[i];
 
         if (func_ov001_020aa79c(i) != 0) continue;
         if (*flagByte == 2) continue;
@@ -475,40 +457,40 @@ void func_ov001_020aa420(void) {
 
         if (node != 0) {
             do {
-                found = dActor_c::FindWithID(node->field8);
-                if (found != 0 || (int)found != node->field4) {
-                    if (node->flags.b0) {
-                        if (node->soundHandle == -1) {
-                            node->soundHandle = func_0202a8e0(node->field4, node->field18);
-                            ((dCapIcon_c *)node)->mFlags |= 2;
+                found = dActor_c::FindWithID(node->mOwnerUniqueID);
+                if (found != 0 || (int)found != (int)node->mOwner) {
+                    if (((CapIconFlags *)&node->mFlags)->b0) {
+                        if (node->mSlot == -1) {
+                            node->mSlot = func_0202a8e0((int)node->mOwner, node->mCharacter);
+                            node->mFlags |= 2;
                             func_ov001_020aa6b0((int *)node, 1);
                         }
                         handled = 1;
-                        maxPriority = node->field19;
-                    } else if (node->field19 != 0) {
-                        if (maxPriority < node->field19) {
-                            maxPriority = node->field19;
+                        maxPriority = node->mIconKind;
+                    } else if (node->mIconKind != 0) {
+                        if (maxPriority < node->mIconKind) {
+                            maxPriority = node->mIconKind;
                             best = node;
                         }
                     } else if (maxPriority == 0) {
-                        if (node->flags.b3) {
+                        if (((CapIconFlags *)&node->mFlags)->b3) {
                             best = node;
                         } else {
-                            ((dCapIcon_c *)node)->mFlags |= 8;
+                            node->mFlags |= 8;
                         }
                     }
                 } else {
-                    ((dCapIcon_c *)node)->Unlink();
+                    node->Unlink();
                 }
-                node = node->next;
+                node = node->mNext;
             } while (node != 0);
         }
 
         if (func_ov001_020aa7b8((void *)i, (char *)best) != 0) {
-            ((dCapIcon_c *)best)->mFlags |= 2;
-            best->soundHandle = func_0202a8e0(best->field4, best->field18);
+            best->mFlags |= 2;
+            best->mSlot = func_0202a8e0((int)best->mOwner, best->mCharacter);
             func_ov001_020aa6b0((int *)best, 1);
-            func_ov001_020aa6e4(i, best->field19, (int *)best);
+            func_ov001_020aa6e4(i, best->mIconKind, (int *)best);
             continue;
         }
 
@@ -516,11 +498,12 @@ void func_ov001_020aa420(void) {
 
         cnt = data_0208a0e0;
         for (idx = spC; idx < cnt; idx++) {
-            player = (CapRequest *)data_0209f394[idx];
-            if (i == player->field8) break;
+            player = (daPly_c *)data_0209f394[idx];
+            if (i == player->param1)
+                break;
             player = 0;
         }
-        if (player != 0 && ((daPly_c *)player)->IsCollectingCap() != 0) {
+        if (player != 0 && player->IsCollectingCap() != 0) {
             func_ov001_020aa6e4(i, maxPriority, (int *)sp10);
         }
     }

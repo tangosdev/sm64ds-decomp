@@ -1,11 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /* The MG_3DESP minigame scene (scene 0x185): dScMg3DEsp_c and
  * the two helper classes it embeds, dMg3DEspModel_c and dMg3DEspAnimSet_c.
  *
@@ -41,6 +34,7 @@ struct System {
 #pragma defer_codegen off
 
 #include "common.h"
+#include "Particle__System.h"
 #include "G2.h"
 #include "G2x.h"
 #include "GX.h"

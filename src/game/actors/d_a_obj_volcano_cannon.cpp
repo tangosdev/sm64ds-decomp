@@ -14,6 +14,7 @@
  */
 
 #include "decl_Actor.h"
+#include "Particle__System.h"
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_dCcAc_c.h"
@@ -23,16 +24,9 @@
 #include "daObjFl_Ring_c.h"
 #include "daPly_c.h"
 
-struct Vector3_16f;
 
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
-}
-namespace Particle {
-struct System {
-    static unsigned int NewUnkCallback818(unsigned int a, unsigned int b, Fix12i c, Fix12i d,
-                                          Fix12i e, const Vector3_16f *f);
-};
 }
 extern "C" {
 int RandomIntInternal(int *seed);

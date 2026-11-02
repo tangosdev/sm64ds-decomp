@@ -390,84 +390,84 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@941",
-      "to": "@266",
-      "evidence": "sinit reloc at 0x02100a94. The pin stays @266: ov077 daJgm_c already defines the old global."
-    },
-    {
-      "from": "@943",
+      "from": "@999",
       "to": "@960",
-      "evidence": "sinit reloc at 0x02100a98"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@945",
+      "from": "@1001",
       "to": "@958",
-      "evidence": "sinit reloc at 0x02100aa0"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@947",
+      "from": "@1003",
       "to": "@218",
-      "evidence": "sinit reloc at 0x02100aa4. The 0x02108160 pin stays @218 because daObjSwitch_c already pins @91 in ov002."
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it; the 0x02108160 pin is spelled @218 because daObjSwitch_c already pins @91 in ov002 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@949",
+      "from": "@1005",
       "to": "@985",
-      "evidence": "sinit reloc at 0x02100aa8"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@951",
+      "from": "@1007",
       "to": "@987",
-      "evidence": "sinit reloc at 0x02100aac"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@953",
+      "from": "@1009",
       "to": "@956",
-      "evidence": "sinit reloc at 0x02100ab0"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@955",
-      "to": "@954",
-      "evidence": "sinit reloc at 0x02100ab4"
-    },
-    {
-      "from": "@957",
+      "from": "@1013",
       "to": "@952",
-      "evidence": "sinit reloc at 0x02100ab8"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@959",
+      "from": "@1015",
       "to": "@950",
-      "evidence": "sinit reloc at 0x02100abc"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@961",
+      "from": "@1017",
       "to": "@986",
-      "evidence": "sinit reloc at 0x02100ac0"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@965",
+      "from": "@1021",
       "to": "@944",
-      "evidence": "sinit reloc at 0x02100ac4"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@967",
+      "from": "@1023",
       "to": "@942",
-      "evidence": "sinit reloc at 0x02100ac8"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@969",
+      "from": "@1025",
       "to": "@948",
-      "evidence": "sinit reloc at 0x02100acc"
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@971",
-      "to": "@946",
-      "evidence": "sinit reloc at 0x02100ad0"
+      "from": "@997",
+      "to": "@266",
+      "evidence": "the compiler emits @967, which ov077 daJgm_c already defines as a global, so the pin is the unused @266"
     },
     {
-      "from": "@963",
+      "from": "@1019",
       "to": "@262",
-      "evidence": "sinit reloc at 0x02100ad8. The pin stays @262: ov074 daKuriKing_c already defines the old global."
+      "evidence": "the compiler emits @989, which ov074 daKuriKing_c already defines as a global, so the pin is the unused @262"
+    },
+    {
+      "from": "@1027",
+      "to": "@946",
+      "evidence": "compiler temp; mwcc's per-TU @NNN uniquifier also counts this TU's named locals, so it emits the temp under this name; paired to its pin by the relocation sites that reference it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+    },
+    {
+      "from": "@1011",
+      "to": "@954",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ],
   "notes": [

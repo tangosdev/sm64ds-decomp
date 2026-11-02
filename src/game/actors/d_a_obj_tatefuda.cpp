@@ -1,7 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
 /* daObjTatefuda_c: the wooden signpost (TATEFUDA profile, ov002).
  *
  * The whole unit, ov002 .text 0x020badd0..0x020bc414, 29 functions: the
@@ -80,6 +77,7 @@ enum daObjTatefuda_c_AssetId {
 #include "dBgCh_Actr.h"
 #include "dCc_c.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
@@ -107,8 +105,6 @@ struct Sub041 {
 /* shadow enum 'Bool' */
 enum Bool { FALSE, TRUE };
 
-/* shadow struct 'Vector3_16f' */
-struct Vector3_16f;
 
 /* shadow struct 'BMD_File' */
 struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix4x3;
@@ -159,14 +155,6 @@ extern int data_ov002_020ff0d4[];
 extern int data_ov002_020ff0d8[];
 extern int data_ov002_020ff0dc[];
 extern "C" void func_02012694(unsigned int a, void *b);
-namespace Particle {
-struct System {
-    static void NewSimple(u32 id, Fix12i x, Fix12i y, Fix12i z);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-    static u32 NewUnkCallback818(u32, u32, int, int, int, const ::Vector3_16f *);
-};
-}
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern s16 data_02082214[];

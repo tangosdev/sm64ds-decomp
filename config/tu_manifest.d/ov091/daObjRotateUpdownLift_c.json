@@ -579,22 +579,22 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1010",
+      "from": "@1062",
       "to": "@776",
       "evidence": "mwcc numbers this registration node @1006 per TU and the fleet already defines a global @1006, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1011",
+      "from": "@1063",
       "to": "@659",
       "evidence": "mwcc numbers this registration node @1007 per TU and the fleet already defines a global @1007, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1012",
+      "from": "@1064",
       "to": "@656",
       "evidence": "mwcc numbers this registration node @1008 per TU and the fleet already defines a global @1008, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1013",
+      "from": "@1065",
       "to": "@639",
       "evidence": "mwcc numbers this registration node @1009 per TU and the fleet already defines a global @1009, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     }

@@ -45,7 +45,8 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
         BMD_Bone *b = file.bones + i;
         if (b->unk_04) b->unk_04 = REBASE(b->unk_04);
         if (b->materialIds) b->materialIds = (u8 *)REBASE(b->materialIds);
-        if (b->unk_38) b->unk_38 = REBASE(b->unk_38);
+        if (b->displayListIds)
+            b->displayListIds = (u8 *)REBASE(b->displayListIds);
     }
 
     if (file.displayListGroups)
@@ -81,10 +82,12 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
     }
 
     if (file.unk_2c) file.unk_2c = REBASE(file.unk_2c);
-    if (file.unk_30 == 0) return;
-    if (file.unk_34) file.unk_34 = REBASE(file.unk_34);
+    if (file.numWeightedMatrices == 0)
+        return;
+    if (file.skin)
+        file.skin = REBASE(file.skin);
     {
-        void **e = (void **)file.unk_34;
+        void **e = (void **)file.skin;
         if (e[0]) e[0] = REBASE(e[0]);
         if (e[1]) e[1] = REBASE(e[1]);
         if (e[2]) e[2] = REBASE(e[2]);
@@ -96,27 +99,18 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
 // @symbol func_02046590
 extern "C" int func_02046590(const void *tbl, const char *name)
 {
-    struct Entry {
-        const char *name;
-        char pad[0x2c];
-    };
-    struct Table {
-        char pad[0x24];
-        u32 count;
-        struct Entry *entries;
-    };
-    const struct Table *t = (const struct Table *)tbl;
-    u32 count = t->count;
+    const BMD_File *t = (const BMD_File *)tbl;
+    u32 count = t->numMaterials;
     u32 i = 0;
     if (i < count) {
-        struct Entry *entry = t->entries;
+        BMD_Material *entry = t->materials;
         while (1)
         {
             if (cstd::strcmp(entry->name, name) == 0)
                 return (int)i;
             i++;
-            entry = (struct Entry *)((char *)entry + 0x30);
-            if (i >= t->count)
+            entry = (BMD_Material *)((char *)entry + 0x30);
+            if (i >= t->numMaterials)
                 break;
         }
     }
@@ -127,13 +121,11 @@ extern "C" int func_02046590(const void *tbl, const char *name)
 // @symbol func_02046564
 extern "C" int func_02046564(void *p)
 {
-    struct S { int pad0; int a; char p8[0x24-8]; int c; char p28[0x30-0x28]; int b; };
-    struct A { char x[0x30]; };
-    struct S *s = (struct S *)p;
-    int a = s->a;
-    int b = s->b;
-    int c = s->c;
-    int t = (int)&((struct A *)0)[a + b];
+    BMD_File *s = (BMD_File *)p;
+    int a = s->numBones;
+    int b = s->numWeightedMatrices;
+    int c = s->numMaterials;
+    int t = (int)&((Matrix4x3 *)0)[a + b];
     t += c * 0x30;
     t += a * 0x34;
     return t;
@@ -292,8 +284,7 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
 // @symbol func_020462bc
 extern "C" void *func_020462bc(int *p)
 {
-    struct E { char _pad[0x30]; };
-    return &((struct E *)0)[p[1]];
+    return &((Matrix4x3 *)0)[p[1]];
 }
 
 // @symbol func_020462b4
@@ -305,10 +296,8 @@ extern "C" void func_020462b4(int *p, int v)
 // @symbol func_02046288
 extern "C" void func_02046288(void *self, void *value, int index)
 {
-    struct Element { char pad[0x24]; unsigned int flags; char pad2[0x30 - 0x24 - 4]; };
-    struct Obj { void *pad0; struct Element *arr; };
-    struct Obj *obj = (struct Obj *)self;
-    struct Element *e = &obj->arr[index];
+    ModelComponents *obj = (ModelComponents *)self;
+    BMD_Material *e = &obj->materials[index];
     unsigned int bits = (unsigned int)value;
     unsigned int *flags = (unsigned int *)(&e->flags);
     *flags &= ~0x30;
@@ -327,10 +316,8 @@ extern "C" void func_02046234(void *a, void *b)
 // @symbol func_02046208
 extern "C" void func_02046208(void *self, unsigned int value, int index)
 {
-    struct Element { char pad[0x24]; unsigned int flags; char pad2[0x30 - 0x24 - 4]; };
-    struct Obj { void *pad0; struct Element *arr; };
-    struct Obj *obj = (struct Obj *)self;
-    struct Element *e = &obj->arr[index];
+    ModelComponents *obj = (ModelComponents *)self;
+    BMD_Material *e = &obj->materials[index];
     unsigned int *flags = (unsigned int *)(&e->flags);
     *flags &= ~0x1f0000;
     *flags |= value << 16;
@@ -348,13 +335,11 @@ extern "C" void func_020461b4(void *a, unsigned int b)
 // @symbol func_02046120
 extern "C" void func_02046120(void *self, int a)
 {
-    struct Sub { char _pad[0x24]; int count; };
-    struct Obj { struct Sub *sub; char *data; };
-    struct Obj *obj = (struct Obj *)self;
+    ModelComponents *obj = (ModelComponents *)self;
     int i;
-    int n = obj->sub->count;
+    int n = obj->modelFile->numMaterials;
     for (i = 0; i < n; i++) {
-        volatile u32 *p = (volatile u32 *)((int)obj->data + i * 0x30 + 0x24);
+        volatile u32 *p = (volatile u32 *)&obj->materials[i].flags;
         *p &= 0xc0ffff0f;
         *p |= 0x40;
         *p |= 0x30;
@@ -366,13 +351,11 @@ extern "C" void func_02046120(void *self, int a)
 // @symbol func_02046088
 extern "C" void func_02046088(void *self, int a, int b)
 {
-    struct Sub { char _pad[0x24]; int count; };
-    struct Obj { struct Sub *sub; char *data; };
-    struct Obj *obj = (struct Obj *)self;
+    ModelComponents *obj = (ModelComponents *)self;
     int i;
-    int n = obj->sub->count;
+    int n = obj->modelFile->numMaterials;
     for (i = 0; i < n; i++) {
-        volatile u32 *p = (volatile u32 *)((int)obj->data + i * 0x30 + 0x24);
+        volatile u32 *p = (volatile u32 *)&obj->materials[i].flags;
         *p &= 0xc0ffff0f;
         *p |= b << 24;
         *p |= 0x80;
@@ -385,10 +368,8 @@ extern "C" void func_02046088(void *self, int a, int b)
 // @symbol func_0204605c
 extern "C" void func_0204605c(void *self, void *value, int index)
 {
-    struct Element { char pad[0x24]; unsigned int flags; char pad2[0x30 - 0x24 - 4]; };
-    struct Obj { void *pad0; struct Element *arr; };
-    struct Obj *obj = (struct Obj *)self;
-    struct Element *e = &obj->arr[index];
+    ModelComponents *obj = (ModelComponents *)self;
+    BMD_Material *e = &obj->materials[index];
     unsigned int bits = (unsigned int)value;
     unsigned int *flags = (unsigned int *)(&e->flags);
     *flags &= ~0x3f000000;
@@ -407,14 +388,12 @@ extern "C" void func_02046008(void *a, void *b)
 // @symbol func_02045fd4
 extern "C" void func_02045fd4(void *self, void *value, int index)
 {
-    struct Element { char pad[0x28]; unsigned int flags; char pad2[0x30 - 0x28 - 4]; };
-    struct Obj { void *pad0; struct Element *arr; };
-    struct Obj *obj = (struct Obj *)self;
-    struct Element *e = &obj->arr[index];
+    ModelComponents *obj = (ModelComponents *)self;
+    BMD_Material *e = &obj->materials[index];
     unsigned int bits = (unsigned int)value;
-    unsigned int *flags = (unsigned int *)(&e->flags);
-    *flags &= 0xffff8000;
-    *flags |= bits;
+    unsigned int *color = (unsigned int *)(&e->diffuseAmbient);
+    *color &= 0xffff8000;
+    *color |= bits;
 }
 
 // @symbol func_02045f80
@@ -429,14 +408,12 @@ extern "C" void func_02045f80(void *a, void *b)
 // @symbol func_02045f4c
 extern "C" void func_02045f4c(void *self, void *value, int index)
 {
-    struct Element { char pad[0x28]; unsigned int flags; char pad2[0x30 - 0x28 - 4]; };
-    struct Obj { void *pad0; struct Element *arr; };
-    struct Obj *obj = (struct Obj *)self;
-    struct Element *e = &obj->arr[index];
+    ModelComponents *obj = (ModelComponents *)self;
+    BMD_Material *e = &obj->materials[index];
     unsigned int bits = (unsigned int)value;
-    unsigned int *flags = (unsigned int *)(&e->flags);
-    *flags &= 0xffff;
-    *flags |= bits << 16;
+    unsigned int *color = (unsigned int *)(&e->diffuseAmbient);
+    *color &= 0xffff;
+    *color |= bits << 16;
 }
 
 // @symbol func_02045ef8
@@ -451,34 +428,19 @@ extern "C" void func_02045ef8(void *a, void *b)
 // @symbol func_02045ec4
 extern "C" void func_02045ec4(char *self, unsigned int value, int index)
 {
-    struct Element { char pad[0x2c]; unsigned int flags; char pad2[0x30 - 0x2c - 4]; };
-    struct Obj { void *pad0; struct Element *arr; };
-    struct Obj *obj = (struct Obj *)self;
-    struct Element *e = &obj->arr[index];
+    ModelComponents *obj = (ModelComponents *)self;
+    BMD_Material *e = &obj->materials[index];
     unsigned int bits = value;
-    unsigned int *flags = (unsigned int *)(&e->flags);
-    *flags &= 0xffff;
-    *flags |= bits << 16;
+    unsigned int *color = (unsigned int *)(&e->specularEmission);
+    *color &= 0xffff;
+    *color |= bits << 16;
 }
 
 // @symbol func_02045e70
 extern "C" void func_02045e70(char *self, void *arg1) {
-    struct Sub {
-        char _pad[0x24];
-        int count;
-    };
-    struct Element {
-        char pad[0x2c];
-        unsigned int flags;
-        char pad2[0x30 - 0x2c - 4];
-    };
-    struct Obj {
-        struct Sub *pad0;
-        struct Element *arr;
-    };
-    struct Obj *obj = (struct Obj *)self;
+    ModelComponents *obj = (ModelComponents *)self;
     int i;
-    int count = obj->pad0->count;
+    int count = obj->modelFile->numMaterials;
     for (i = 0; i < count; i++)
         func_02045ec4(self, (unsigned int)arg1, i);
 }
@@ -498,14 +460,9 @@ extern "C" void func_02045e44(void *self, unsigned int value, int index)
 // @symbol func_02045e2c
 extern "C" void func_02045e2c(int obj, int i, int a, short b)
 {
-    struct Elem {
-        char pad[0x2c];
-        int a;
-        short b;
-    };
-    struct Elem *e = (struct Elem *)(*(int *)(obj + 8) + i * 0x34);
-    e->a = a;
-    e->b = b;
+    ElemB *e = (ElemB *)(*(int *)(obj + 8) + i * 0x34);
+    e->f2c = a;
+    e->f30 = b;
 }
 
 

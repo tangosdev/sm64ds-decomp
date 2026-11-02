@@ -545,9 +545,9 @@ void dScMgSlot3_c::StartRound(int mode) {
         Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
     } else if (mode == 4) {
         if (mReelDifficulty < 5) {
-            *(int *)(int)(c + 0x5004) += 1;
+            mReelDifficulty += 1;
         }
-        *(int *)(int)(c + 0xbc) += 1;
+        mLevel += 1;
         if (mLevel > 0x270e) {
             mLevel = 0x270e;
         }
@@ -582,9 +582,9 @@ void dScMgSlot3_c::StartRound(int mode) {
         } else {
             for (i = 0; i < 3; i++) {
                 if ((u8)(((u32)RandomIntInternal(&data_0209e650) >> 16) & 1)) {
-                    *(u8 *)(c + i + 0x5040) = 1;
+                    mReelReverse[i] = 1;
                 } else {
-                    *(u8 *)(c + i + 0x5040) = 0;
+                    mReelReverse[i] = 0;
                 }
             }
         }
@@ -603,9 +603,9 @@ void dScMgSlot3_c::StartRound(int mode) {
             for (j = 0; j < 3; j++, w += 5) {
                 for (k = 0; k < mStripLength; k++) {
                     if (j == 1) {
-                        *(u8 *)(c + k + 0x5021) = mStripLength - k - 1;
+                        mReelStrip[1][k] = mStripLength - k - 1;
                     } else {
-                        *(u8 *)(w + k + 0x501c) = k;
+                        ((dScMgSlot3_c *)w)->mReelStrip[0][k] = k;
                     }
                 }
             }
@@ -619,10 +619,11 @@ void dScMgSlot3_c::StartRound(int mode) {
         int m2;
         char *w2 = c;
         for (j2 = 0; j2 < 3; j2++, w2 += 3) {
-            *(u8 *)(c + j2 + 0x502b) = 1;
-            *(u8 *)(c + j2 + 0x502e) = 0;
+            mReelSpinning[j2] = 1;
+            mReelStopped[j2] = 0;
             for (k2 = 0; k2 < 3; k2++) {
-                *(u8 *)(w2 + k2 + 0x5031) = mStripLength;
+                /* mResultSymbols[j2][k2]; a typed spelling grows the function. */
+                *(u8 *)(w2 + k2 + SLOT3_OFF(mResultSymbols)) = mStripLength;
             }
         }
         for (m2 = 0; m2 < 3; m2++) {

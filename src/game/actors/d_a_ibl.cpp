@@ -47,6 +47,7 @@
 #include "Sound.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 /* Actor IDs from symbols/actor_debug_names.tsv. */
 enum {
@@ -98,11 +99,6 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 extern "C" {
 /* Defined below. */
 
-namespace Particle {
-struct System {
-    static void NewSimple(u32 id, int x, int y, int z);
-};
-}
 void func_02012694(unsigned int a, void *p);
 void d_a_iblPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 void func_02038414(void *p);

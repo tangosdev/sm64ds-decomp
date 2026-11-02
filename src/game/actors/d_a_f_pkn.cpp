@@ -225,13 +225,13 @@ void daFPkn_c::UpdateClsnOffset()
     locals.acc[1] = 0;
     locals.acc[2] = 0;
     {
-        char *base = (char *)mAnmModel.data.bones;
+        ModelBone *bones = mAnmModel.data.bones;
         int i;
         for (i = 0; i < 5; i++) {
             u8* p = data_ov084_02130294 + i;
-            locals.acc[0] = (s16)(locals.acc[0] + *(s16*)(base + *p * 0x34 + 0x1a));
-            locals.acc[1] = (s16)(locals.acc[1] + *(s16*)(base + *p * 0x34 + 0x1c));
-            locals.acc[2] = (s16)(locals.acc[2] + *(s16*)(base + *p * 0x34 + 0x1e));
+            locals.acc[0] = (s16)(locals.acc[0] + (s16)bones[*p].rotX);
+            locals.acc[1] = (s16)(locals.acc[1] + (s16)bones[*p].rotY);
+            locals.acc[2] = (s16)(locals.acc[2] + (s16)bones[*p].rotZ);
         }
     }
 

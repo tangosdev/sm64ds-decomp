@@ -56,6 +56,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "decl_Platform.h"
 #include "nitro/fx/fx.h"
+#include "Particle__System.h"
 
 /* Plain 12-byte point. Vector3's destructor is empty but the type is not
    POD, and the copies below are three-word ldm/stm with no cleanup. */
@@ -148,11 +149,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
    &mMeshCollider. */
 void func_020393d4(int *collider, void *callback);
 
-namespace Particle {
-struct System {
-    static void *NewSimple(unsigned int id, int x, int y, int z);
-};
-}
 extern void hold_d_a_obj_rotate_updown_lift(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
                                             int scale, s16 angY, CLPS_Block *clps);
 }

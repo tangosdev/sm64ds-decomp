@@ -30,6 +30,7 @@
 /* dBgActor_c.h FIRST: it pulls common.h ahead of dExtSimpleModel_c.h, which is the
  * Matrix4x3-spelling rule its own header comment records. */
 #include "dBgActor_c.h"
+#include "Particle__System.h"
 #include "dBgW.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Actr.h"
@@ -44,11 +45,6 @@ extern "C" {
 void func_ov002_020ee5d0(dBgActor_c *self, int pivotY);
 
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-namespace Particle {
-struct System {
-    static void NewSimple(u32 id, Fix12i x, Fix12i y, Fix12i z);
-};
-}
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);

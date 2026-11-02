@@ -52,9 +52,6 @@
  * - data_ov002_0211117c[0]'s self-decrement in UpdateHealthMeter keeps the
  *   volatile self-read -- the ROM reloads the byte rather than reusing the
  *   value still live from the comparison above it.
- * - data_0209f49c is declared unsigned short[] (the plurality spelling) but
- *   read through a (u8 *) byte address: the ROM computes the 0x18-stride row
- *   in bytes, and u16 indexing folds an extra shift into the addressing mode.
  * - InitResources keeps two launders: the volatile pun on mVsTimer in the
  *   data_0209f2f8 == 0x2B branch (a plain member store emits different code)
  *   and the `idx ? table : table` conditional over a (void* volatile*) cast of
@@ -86,6 +83,7 @@ enum dMeter_c_AssetId {
 #include "dCamera_c.h"
 #include "dScStage_c.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 #include "Sound.h"
 #include "Event.h"
 
@@ -112,10 +110,9 @@ struct OamAttr;
 extern void *data_0209f394[];
 extern u8 data_ov002_02111180;
 extern void *data_0209f318;
-extern u8 data_0209f4ae[];
+extern ControllerInput data_0209f498[];
 extern int data_0208ee44;
 extern u32 data_0209b454;
-extern unsigned short data_0209f49c[];
 extern u8 data_0209d660;
 extern signed char data_0209f310[];
 /* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and
@@ -959,7 +956,7 @@ void dMeter_c::RenderSilverStars() {
  * never reads it, which is why the legacy source could spell it static. */
 void dMeter_c::RenderCameraButtons() {
     int idx = gActivePlayerSlot;
-    u8 mode = data_0209f4ae[idx * 0x18];
+    u8 mode = data_0209f498[idx].mode;
     dCamera_c *cam = (dCamera_c *)data_0209f318;
     u8 t = data_ov002_02111180;
 
@@ -971,14 +968,14 @@ void dMeter_c::RenderCameraButtons() {
 
     if (cam->mFlags & 0x1000) {
         if (mode == 0) {
-            if (*(u16 *)((u8 *)data_0209f49c + idx * 0x18) & 0x200) {
+            if (data_0209f498[idx].held & 0x200) {
                 OAM::RenderSub(&OAM::CAM_BUTTON_L_PRESSED, 0x19, 0xa5, -1, 1);
                 OAM::RenderSub(&OAM::CAM_BUTTON_L_PRESSED, 0xbf, 0xa5, -1, 1);
             } else {
                 OAM::RenderSub(&OAM::CAM_BUTTON_L, 0x19, 0xa5, -1, 1);
                 OAM::RenderSub(&OAM::CAM_BUTTON_L, 0xbf, 0xa5, -1, 1);
             }
-            if (*(u16 *)((u8 *)data_0209f49c + gActivePlayerSlot * 0x18) & 0x100) {
+            if (data_0209f498[gActivePlayerSlot].held & 0x100) {
                 OAM::RenderSub(&OAM::CAM_BUTTON_R_PRESSED, 0x41, 0xa5, -1, 1);
                 OAM::RenderSub(&OAM::CAM_BUTTON_R_PRESSED, 0xe7, 0xa5, -1, 1);
             } else {
@@ -986,12 +983,12 @@ void dMeter_c::RenderCameraButtons() {
                 OAM::RenderSub(&OAM::CAM_BUTTON_R, 0xe7, 0xa5, -1, 1);
             }
         } else if (mode == 2) {
-            if (*(u16 *)((u8 *)data_0209f49c + idx * 0x18) & 0x200) {
+            if (data_0209f498[idx].held & 0x200) {
                 OAM::RenderSub(&OAM::S_CAM_BUTTON_L_PRESSED, 0xbf, 0xad, -1, 1);
             } else {
                 OAM::RenderSub(&OAM::S_CAM_BUTTON_L, 0xbf, 0xad, -1, 1);
             }
-            if (*(u16 *)((u8 *)data_0209f49c + gActivePlayerSlot * 0x18) & 0x100) {
+            if (data_0209f498[gActivePlayerSlot].held & 0x100) {
                 OAM::RenderSub(&OAM::S_CAM_BUTTON_R_PRESSED, 0xe7, 0xad, -1, 1);
             } else {
                 OAM::RenderSub(&OAM::S_CAM_BUTTON_R, 0xe7, 0xad, -1, 1);

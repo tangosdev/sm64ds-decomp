@@ -64,7 +64,7 @@ void func_ov007_020bc02c(Ov007Model *m, void *other) {
     if (m->animTick != 0 || r4 != 0) {
         if (m->blendFrames > 0)
             func_ov007_020bc7dc(m);
-        if (*(int *)((char *)r5->modelFile + 0x30) != 0)
+        if (r5->modelFile->numWeightedMatrices != 0)
             func_02044dc4(r5);
     }
 

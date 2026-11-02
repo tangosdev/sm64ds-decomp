@@ -29,7 +29,6 @@
  * point as data_0208eb2c. The ROM RTTI name remains dFdColor_c. An override
  * takes its base's slot whatever order it is declared in, so this costs nothing.
  */
-#ifdef __cplusplus
 struct dFdColor_c : dFdBrightness_c {
     /* 0x0c. Only its zero/non-zero-ness is observed here: AdvanceFade picks a
        blend step of +0x10 when it is set and -0x10 when it is clear. What
@@ -61,16 +60,6 @@ inline dFdColor_c::dFdColor_c(Fix12i initial) : dFdBrightness_c(initial) { color
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dFdColor_c_size_must_be_0x10[sizeof(dFdColor_c) == 0x10 ? 1 : -1];
-#endif
-#else
-/* Spelled for remaining C consumers, which cannot express the virtuals and so
-   write out the vptr the compiler would place. */
-struct dFdColor_c {
-    void*  vtable;      /* 0x00 */
-    Fix12i currInterp;  /* 0x04 (from dFader_c) */
-    Fix12i speed;       /* 0x08 (from dFader_c) */
-    u16    color;     /* 0x0c */
-};
 #endif
 
 #endif /* DFDCOLOR_C_H */

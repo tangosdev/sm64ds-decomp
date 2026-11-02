@@ -2,70 +2,46 @@
 #pragma long_calls on
 #include "types.h"
 #include "IRQ.h"
+#include "private/fs_views.h"
+
+typedef struct FSFile FSFile;
 
 extern "C" {
 
-typedef struct UnkStruct_0205d4a0 {
-    char pad0[0x10];
-    int unk10;
-    char pad14[0x18];
-    int unk2c;
-    int unk30;
-    short unk34;
-    short unk36;
-} UnkStruct_0205d4a0;
-
-typedef struct Obj Obj;
-
-typedef struct Owner {
-    int pad[6];
-    Obj *cur; /* 0x18 */
-} Owner;
-
-struct Obj {
-    int f0;
-    int f4;
-    Owner *owner; /* 0x08 */
-    u32 flags;    /* 0x0c */
-    int f10;
-    int f14;              /* 0x14 */
-    unsigned short queue; /* 0x18 */
-};
-
-extern int FSi_SendCommand(UnkStruct_0205d4a0 *self, int a);
+extern int FSi_SendCommand(FSFile *self, int a);
 extern void OS_SleepThread(unsigned short *self);
-extern int FSi_ExecuteSyncCommand(Obj *);
+extern int FSi_ExecuteSyncCommand(FSFile *);
 extern int func_0205d688(void *, int, int, int);
 
-void func_0205d4a0(UnkStruct_0205d4a0 *self, int a, int b) {
-    if (self->unk10 != 5) {
-        self->unk34 = 0;
-        self->unk36 = 0;
+void func_0205d4a0(FSFile *self, int a, int b) {
+    if (self->command != 5) {
+        ((unsigned short *)&self->arg.readfile.len)[0] = 0;
+        ((unsigned short *)&self->arg.readfile.len)[1] = 0;
     }
-    self->unk2c = a;
-    self->unk30 = b;
+    self->arg.readfile.dst = (void *)a;
+    self->arg.readfile.len_org = b;
     FSi_SendCommand(self, 5);
 }
 
-int func_0205d3f4(Obj *t) {
+int func_0205d3f4(FSFile *t) {
     int woken = 0;
     u32 irq = IRQ::Disable();
-    int busy = (t->flags & 1) ? 1 : 0;
+    int busy = (t->stat & 1) ? 1 : 0;
     if ((int)((long long)busy) != 0) {
-        woken = (t->owner->cur != t) ? 1 : 0;
+        woken = (t->arc->list.next != t) ? 1 : 0;
         if (woken) {
-            *(u32 *)(int)((int)t + 0xc) |= 4;
+            t->stat |= 4;
         }
         do {
             OS_SleepThread(&t->queue);
-            busy = (t->flags & 1) ? 1 : 0;
+            busy = (t->stat & 1) ? 1 : 0;
         } while ((int)((long long)busy) != 0);
     }
     IRQ::Restore(irq);
     if (woken) {
         return FSi_ExecuteSyncCommand(t);
     }
-    return t->f14 == 0;
+    return t->error == 0;
 }
 
 void func_0205d3e4(void *a, int b, int c) {

@@ -111,9 +111,7 @@ void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int
 }
 
 struct OamAttr;
-struct OAM {
-    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
-};
+#include "OAM.h"
 
 namespace G2 {
 void *GetBG2CharPtr();
