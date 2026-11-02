@@ -1368,62 +1368,62 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1018",
+      "from": "@1070",
       "to": "@1010",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1019",
+      "from": "@1071",
       "to": "@1011",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1020",
+      "from": "@1072",
       "to": "@1012",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1021",
+      "from": "@1073",
       "to": "@1013",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1022",
+      "from": "@1074",
       "to": "@1014",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1023",
+      "from": "@1075",
       "to": "@1015",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1025",
+      "from": "@1077",
       "to": "@1017",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1027",
+      "from": "@1079",
       "to": "@1019",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1029",
+      "from": "@1081",
       "to": "@1021",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1031",
+      "from": "@1083",
       "to": "@1023",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1033",
+      "from": "@1085",
       "to": "@1025",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1035",
+      "from": "@1087",
       "to": "@1027",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }

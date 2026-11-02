@@ -73,6 +73,7 @@ enum d_a_btn_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. It
    sits outside the extern "C" block below, where the names would come out
@@ -130,11 +131,6 @@ int func_ov002_020dd8b8(void *c);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *c, void *d);
 extern void hold_d_a_btn(void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int id, int x, int y, int z);
-};
-}
 void d_a_btnEarthquakeHold(void *self, const void *v, int f);
 
 /* ---- data ---- */

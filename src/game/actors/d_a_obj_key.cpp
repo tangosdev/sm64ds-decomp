@@ -1,11 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /* daObjKey_c (ov089): OBJ_KEY is actor 0x11a (282) and LAST_STAR is 0x11b
  * (283); both factories install this vtable. param1 & 7 picks the kind: 7 uses
  * the power-star model (data_ov002_0211094c, file 0x8015) and StateStarJump; 3
@@ -80,6 +73,7 @@ enum daObjKey_c_AssetId {
 #include "Message.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 #pragma defer_codegen off
 

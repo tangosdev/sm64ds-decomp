@@ -535,57 +535,57 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1605",
+      "from": "@1661",
       "to": "@1500",
       "evidence": "mwcc numbers this registration node @1613 per TU and the fleet already defines a global @1613, so the scratch link would multiply-define it"
     },
     {
-      "from": "@1606",
+      "from": "@1662",
       "to": "@1501",
       "evidence": "mwcc numbers this registration node @1614 per TU and the fleet already defines a global @1614, so the scratch link would multiply-define it"
     },
     {
-      "from": "@1607",
+      "from": "@1663",
       "to": "@1502",
       "evidence": "mwcc numbers this registration node @1615 per TU and the fleet already defines a global @1615, so the scratch link would multiply-define it"
     },
     {
-      "from": "@1608",
+      "from": "@1664",
       "to": "@1503",
       "evidence": "mwcc numbers this registration node @1616 per TU and the fleet already defines a global @1616, so the scratch link would multiply-define it"
     },
     {
-      "from": "@1609",
+      "from": "@1665",
       "to": "@1504",
       "evidence": "mwcc numbers this registration node @1617 per TU and the fleet already defines a global @1617, so the scratch link would multiply-define it"
     },
     {
-      "from": "@1610",
+      "from": "@1666",
       "to": "@1505",
       "evidence": "mwcc numbers this registration node @1618 per TU and the fleet already defines a global @1618, so the scratch link would multiply-define it"
     },
     {
-      "from": "@1611",
+      "from": "@1667",
       "to": "@1506",
       "evidence": "mwcc numbers this registration node @1619 per TU and the fleet already defines a global @1619, so the scratch link would multiply-define it"
     },
     {
-      "from": "@1612",
+      "from": "@1668",
       "to": "@1507",
       "evidence": "mwcc numbers this registration node @1620 per TU and the fleet already defines a global @1620, so the scratch link would multiply-define it"
     },
     {
-      "from": "@1613",
+      "from": "@1669",
       "to": "@1508",
       "evidence": "mwcc numbers this registration node @1621 per TU and the fleet already defines a global @1621, so the scratch link would multiply-define it"
     },
     {
-      "from": "@1614",
+      "from": "@1670",
       "to": "@1509",
       "evidence": "mwcc numbers this registration node @1622 per TU and the fleet already defines a global @1622, so the scratch link would multiply-define it"
     },
     {
-      "from": "@1615",
+      "from": "@1671",
       "to": "@1510",
       "evidence": "mwcc numbers this registration node @1623 per TU and the fleet already defines a global @1623, so the scratch link would multiply-define it"
     }
