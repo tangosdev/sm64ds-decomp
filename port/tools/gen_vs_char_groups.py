@@ -30,10 +30,10 @@ of the family it follows; bro_groups.json holds no two-family blend.
 
 HELD BACK (lane BROSKIN1). bro_groups_keep.json lists entries that keep the
 cartridge colour although his labels put them in a picker row, each with its
-reason; his labels themselves are not edited. Today that is Wario's bare-arm
-skin, which the Studio clustered into his yellow shirt (Undershirt), so a HAT
-pick repainted his arms. A listed entry that is no longer in a picker label is
-an error, so the list cannot go stale silently.
+reason. It is empty today: Wario's bare-arm skin, which the Studio clustered
+into his yellow shirt, now sits in his N/A label in the Studio itself. A listed
+entry that is no longer in a picker label is an error, so the list cannot go
+stale silently.
 
 THE MAIN TONE. For each category in each palette the entry the most texels
 read is written as `main`: the pick lands exactly there and the rest of the
@@ -294,6 +294,8 @@ def emit(records, cart, kept):
     w("static const Kept kVscKeepCart[] = {")
     for k in kept:
         w('    { %d, "%s", "%s", %d },' % k)
+    if not kept:
+        w("    { -1, \"\", \"\", -1 },   /* none held back: a C++ array may not be empty */")
     w("};")
     w("static const int kVscKeepCartCount = %d;" % len(kept))
     w("")

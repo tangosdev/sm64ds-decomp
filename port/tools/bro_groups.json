@@ -1,5 +1,5 @@
 {
-  "about": "Tango's bro colour labels as the tangOS Studio palette editor shows them: its automatic families (cluster_families: rig part + colour, from the cartridge's nine bro BMDs) with his renames and hand overrides from the Studio's exports/palettes/groups.json (v5, saved 11-01) applied, exactly as load_all + rebuild_families do. 'families' is every palette entry's final label; 'seam_blends' are entries the Studio lifts out of every family because they sit on a seam and recolour by following one family (darkened by 'darkness'). Read by port/tools/gen_vs_char_groups.py.",
+  "about": "Tango's bro colour labels as the tangOS Studio palette editor shows them: its automatic families (cluster_families: rig part + colour, from the cartridge's nine bro BMDs) with his renames and hand overrides from the Studio's exports/palettes/groups.json (v5, saved 11-01, with the Wario fixes he asked for the same night: strap crossing, waistband, buttons and arm skin) applied, exactly as load_all + rebuild_families do. 'families' is every palette entry's final label; 'seam_blends' are entries the Studio lifts out of every family because they sit on a seam and recolour by following one family (darkened by 'darkness'). Read by port/tools/gen_vs_char_groups.py.",
   "version": 1,
   "bros": {
     "mario": {
@@ -1295,7 +1295,7 @@
           "renamed": true,
           "members": {
             "data/player/wario_model.bmd": {
-              "wario_body_pl": [0, 14, 15, 18, 19, 21, 42, 43, 46, 47, 50, 51, 52, 53, 54, 55, 59, 68, 69, 76, 77, 78, 79, 82, 83, 84, 85, 86, 87, 91, 92, 93, 94, 95, 96, 97, 99, 100, 101, 103, 104, 105, 109, 110, 111, 112, 113, 116, 117, 119, 120, 121, 122, 123, 125, 126, 127, 135, 137, 138, 139, 143, 154, 155, 172, 173, 174, 176, 177]
+              "wario_body_pl": [14, 15, 18, 19, 42, 43, 46, 47, 50, 51, 52, 53, 54, 55, 68, 69, 76, 77, 78, 79, 82, 83, 85, 86, 87, 91, 92, 93, 94, 95, 96, 97, 99, 100, 101, 103, 104, 105, 109, 110, 111, 112, 113, 115, 116, 117, 120, 121, 122, 123, 125, 126, 127, 135, 137, 138, 139, 143, 154, 155, 172, 173, 177]
             }
           }
         },
@@ -1305,7 +1305,7 @@
           "renamed": false,
           "members": {
             "data/player/wario_model.bmd": {
-              "wario_body_pl": [36, 66, 164, 171]
+              "wario_body_pl": [36, 66]
             }
           }
         },
@@ -1315,7 +1315,7 @@
           "renamed": false,
           "members": {
             "data/player/wario_model.bmd": {
-              "wario_body_pl": [132, 133, 146, 214, 215, 221, 222, 223]
+              "wario_body_pl": [128, 129, 132, 133, 146, 214, 215, 221, 222, 223]
             }
           }
         },
@@ -1355,7 +1355,7 @@
           "renamed": true,
           "members": {
             "data/player/wario_model.bmd": {
-              "wario_body_pl": [7, 8, 44, 45, 48, 49, 80, 88, 89, 98, 106, 107, 114, 118, 124, 128, 129, 130, 131, 134, 140, 141, 144, 145, 147, 148, 149, 150, 151, 152, 153, 156, 157, 158, 159, 160, 161, 162, 163, 167, 170, 175, 178, 179, 184, 188, 192, 193, 197]
+              "wario_body_pl": [7, 8, 44, 45, 48, 49, 80, 88, 89, 98, 106, 107, 108, 114, 118, 119, 124, 130, 131, 134, 136, 140, 141, 142, 144, 145, 147, 148, 149, 150, 151, 152, 153, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 167, 170, 171, 175, 178, 179, 184, 188, 192, 193, 197]
             }
           }
         },
@@ -1375,7 +1375,7 @@
           "renamed": false,
           "members": {
             "data/player/wario_model.bmd": {
-              "wario_body_pl": [1, 12, 34, 63, 136, 142, 165, 191, 226]
+              "wario_body_pl": [1, 12, 34, 63, 191, 226]
             }
           }
         },
@@ -1400,6 +1400,16 @@
           }
         },
         {
+          "name": "N/A",
+          "part": "custom",
+          "renamed": false,
+          "members": {
+            "data/player/wario_model.bmd": {
+              "wario_body_pl": [0, 16, 21, 58, 59, 84, 174, 176]
+            }
+          }
+        },
+        {
           "name": "Hat white",
           "part": "custom",
           "renamed": false,
@@ -1408,12 +1418,6 @@
               "wario_head_pl": [80, 124]
             }
           }
-        },
-        {
-          "name": "N/A",
-          "part": "custom",
-          "renamed": false,
-          "members": {}
         }
       ],
       "seam_blends": [
@@ -1672,23 +1676,9 @@
         {
           "file": "data/player/wario_model.bmd",
           "pal": "wario_body_pl",
-          "index": 16,
-          "follows": "Undershirt",
-          "darkness": 0.8775
-        },
-        {
-          "file": "data/player/wario_model.bmd",
-          "pal": "wario_body_pl",
           "index": 37,
           "follows": "Undershirt",
           "darkness": 0.7911
-        },
-        {
-          "file": "data/player/wario_model.bmd",
-          "pal": "wario_body_pl",
-          "index": 58,
-          "follows": "Undershirt",
-          "darkness": 0.8236
         },
         {
           "file": "data/player/wario_model.bmd",
@@ -1717,20 +1707,6 @@
           "index": 102,
           "follows": "Overalls",
           "darkness": 1.0
-        },
-        {
-          "file": "data/player/wario_model.bmd",
-          "pal": "wario_body_pl",
-          "index": 108,
-          "follows": "Overalls",
-          "darkness": 1.0
-        },
-        {
-          "file": "data/player/wario_model.bmd",
-          "pal": "wario_body_pl",
-          "index": 115,
-          "follows": "Undershirt",
-          "darkness": 0.6144
         },
         {
           "file": "data/player/wario_model.bmd",

@@ -1,13 +1,5 @@
 {
-  "about": "Palette entries that keep the cartridge colour although bro_groups.json puts them in a picker label. Read by port/tools/gen_vs_char_groups.py, which drops them from every picker row. Tango's Studio labels are not edited; each entry says why it is held back.",
+  "about": "Palette entries that keep the cartridge colour although bro_groups.json puts them in a picker label. Read by port/tools/gen_vs_char_groups.py, which drops them from every picker row. Empty since Wario's bare-arm skin, the one entry set listed here before, moved to his N/A label in the Studio itself.",
   "version": 1,
-  "keep_cartridge": [
-    {
-      "bro": "wario",
-      "file": "data/player/wario_model.bmd",
-      "pal": "wario_body_pl",
-      "index": [0, 16, 21, 58, 59, 84, 174, 176],
-      "why": "Wario's bare-arm skin: the Studio clustered it with his yellow shirt (auto family torso yellow, renamed Undershirt), so a HAT pick repainted his arms; 16 and 58 are seams on the edge of that skin."
-    }
-  ]
+  "keep_cartridge": []
 }

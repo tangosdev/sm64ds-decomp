@@ -159,7 +159,20 @@ int main(void)
                     if (g->idx[a] == e->index) ++kept_in;
             }
         }
-        ok("held-back entries are in no picker record", kept_in == 0 && vscg::kVscKeepCartCount > 0);
+        ok("held-back entries are in no picker record", kept_in == 0);
+        /* BROSKIN3: Wario's bare-arm skin now has its own cartridge label
+           (N/A) in the Studio, so the keep list is empty; the skin must still
+           be in no picker record. */
+        static const int kSkin[] = { 0, 16, 21, 58, 59, 84, 174, 176 };
+        int skin_in = 0;
+        for (int i = 0; i < vscg::kVscGroupCount; ++i) {
+            const vscg::Group *g = &vscg::kVscGroups[i];
+            if (g->chr != 2 || strcmp(g->pal, "wario_body_pl")) continue;
+            for (int a = 0; a < g->count; ++a)
+                for (int s = 0; s < (int)(sizeof kSkin / sizeof kSkin[0]); ++s)
+                    if (g->idx[a] == kSkin[s]) ++skin_in;
+        }
+        ok("Wario's arm skin is in no picker record", skin_in == 0);
     }
 
     /* 6. the drawn shade (YOSHICOLOR1): with a main index in the group the pick
