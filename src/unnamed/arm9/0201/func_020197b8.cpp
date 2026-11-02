@@ -54,7 +54,7 @@ void func_020197b8(void) {
         data_0209d50c = 2;   func_02019390();
         data_0209d50c = 0x16; func_0203bb60();
         data_0209d50c = 0x17; func_0203bc7c();
-        v = data_020a0e58[gActivePlayerSlot * 2];
+        v = *(unsigned short*)((char*)data_020a0e58 + (gActivePlayerSlot << 2));
         data_0209d534[data_0209d4e8] = v;
         data_0209d51c = v;
         data_0209d4e8 = (data_0209d4e8 + 1) & 0x1f;
