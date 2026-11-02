@@ -2139,7 +2139,7 @@ extern "C" void Trmp3DMario_BounceOffLineA(char *c) {
     if (alongLine < 0)
         alongLine = -alongLine;
     {
-        int *src = (int *)(c + 4);
+        int *src = (int *)&MARIO3D(c)->mContactNormal;
         tmp.x = src[0];
         tmp.y = src[1];
         tmp.z = src[2];
@@ -2365,7 +2365,7 @@ extern "C" void Trmp3DMario_BounceOffLineB(char *c) {
         alongLine = -alongLine;
 
     {
-        int *src = (int *)(c + 4);
+        int *src = (int *)&MARIO3D(c)->mContactNormal;
         tmp.x = src[0];
         tmp.y = src[1];
         tmp.z = src[2];
