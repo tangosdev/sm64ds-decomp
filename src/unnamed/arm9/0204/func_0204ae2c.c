@@ -2,6 +2,7 @@
 // @symbol func_0204ae2c
 /* recovered: shared common types */
 #include "common.h"
+#include "private/spl_particle_views.h"
 struct H2 {
     u16 a, b;
 };
@@ -12,65 +13,10 @@ struct H2 {
  * velocity, age and callback value, and seed the emitter from the
  * definition's header.
  *
- * File-local views; Particle__System.h and Particle__Manager.h are C++.
- * The System view reuses that header's names plus func_0204a730.c's
- * (velocity, age, emitInterval, callback) and func_0204c584.c's (emitRadius,
- * particleLifetime, baseAlpha). Header +0x12 is func_0204d294.c's color;
- * the other header fields are named for the System field this function seeds
- * from them. */
-typedef struct PtclData {
-    u8 pad_00[0x8];
-    int emitRadius;       /* 0x08 -- System::emitRadius */
-    u16 axis[3];          /* 0x0c -- System::direction; read unsigned (ldrh) */
-    u16 color;            /* 0x12 */
-    int callbackParam;    /* 0x14 -- System::callbackParam */
-    int callbackVelocity; /* 0x18 -- System::callbackVelocity */
-    int callbackScale;    /* 0x1c -- System::callbackScale */
-    u8 pad_20[0xa];
-    u16 particleLifetime; /* 0x2a -- System::particleLifetime */
-    u8 pad_2c[0x4];
-    u8 emitInterval; /* 0x30 -- System::emitInterval */
-    u8 baseAlpha;    /* 0x31 -- System::baseAlpha */
-} PtclData;
-
-typedef struct SystemDefinition {
-    PtclData *data; /* 0x00 */
-} SystemDefinition;
-
-typedef struct PtclList {
-    void *head; /* 0x00 */
-    int count;  /* 0x04 */
-} PtclList;
-
-/* Particle::System, named as func_0204c584.c's view. */
-struct ParticleSystem {
-    void *next;                    /* 0x00 */
-    void *previous;                /* 0x04 */
-    PtclList particles;            /* 0x08 */
-    PtclList particles2;           /* 0x10 */
-    SystemDefinition *mDefinition; /* 0x18 */
-    int callbackFlags;             /* 0x1c */
-    struct Vector3 position;       /* 0x20 */
-    struct Vector3 velocity;       /* 0x2c */
-    u16 age;                       /* 0x38 */
-    s16 callbackValue;             /* 0x3a */
-    s16 direction[3];              /* 0x3c */
-    char pad42[2];
-    int emitRadius;       /* 0x44 */
-    int callbackParam;    /* 0x48 */
-    int callbackVelocity; /* 0x4c */
-    int callbackScale;    /* 0x50 */
-    u16 particleLifetime; /* 0x54 */
-    char pad56[2];
-    u8 emitInterval; /* 0x58 */
-    u8 baseAlpha;    /* 0x59 */
-    char pad5a[0xe];
-    void *callback; /* 0x68 */
-    int m6c;        /* 0x6c */
-    int m70;        /* 0x70 */
-};
-
-void func_0204ae2c(struct ParticleSystem *o, void *p18, struct Vector3 *src3) {
+ * The views are include/private/spl_particle_views.h's; the definition
+ * header's fields are named for the System field this function seeds from
+ * them. */
+void func_0204ae2c(ParticleSystem *o, void *p18, struct Vector3 *src3) {
     o->mDefinition = p18;
     o->callbackFlags = 0;
     o->position = *src3;
