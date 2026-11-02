@@ -4690,7 +4690,7 @@ int dScStage_c::InitResources() {
         LoadTextNarcs();
         LoadArchive(0);
         if (data_0209f2f8 == 1) {
-            mHeap::Heap_t *previousHeap = ((mHeap::Heap_t *)data_020a0eac)->SetDefault();
+            mHeap::Heap_t *previousHeap = data_020a0eac->SetDefault();
             LoadArchive(7);
             previousHeap->SetDefault();
         }

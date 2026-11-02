@@ -1464,7 +1464,7 @@ void dScEntry_c::UpdateMatchLoading() {
 
 // @symbol _ZN10dScEntry_c19LoadCourseResourcesEi
 void dScEntry_c::LoadCourseResources(int course) {
-    mHeap::Heap_t *previousHeap = static_cast<mHeap::Heap_t *>(data_020a0eac)->SetDefault();
+    mHeap::Heap_t *previousHeap = data_020a0eac->SetDefault();
     LoadArchive(7);
     int selectedArchive = course + 2;
     unsigned int archive;

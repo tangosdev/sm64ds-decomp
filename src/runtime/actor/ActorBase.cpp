@@ -321,7 +321,7 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
     if (lifecycleState)
         func_02044334(lifecycleState);
     this->~fBase_c();   /* vtable+0x40 = slot 16 = D1 */
-    Memory::Deallocate(this, (Heap *)data_020a0eac);
+    Memory::Deallocate(this, data_020a0eac);
 }
 
 /* vtable slot 6. The default update succeeds without doing any work. */
@@ -634,7 +634,7 @@ bool fBase_c::OnHeapCreated()
  * process class lands here. */
 // @symbol _ZN7fBase_cnwEm
 void *fBase_c::operator new(size_t size) {
-    void *p = Memory::Allocate(size, -4, (Heap *)data_020a0eac);
+    void *p = Memory::Allocate(size, -4, data_020a0eac);
     if (!p)
         return 0;
     func_0206e2f8(p, 0, size);
