@@ -193,6 +193,34 @@ void (*port_level_camera_render_hook)(void *cam);
 extern "C" void (*port_level_camera_behavior_hook)(void *cam);
 void (*port_level_camera_behavior_hook)(void *cam);
 
+/* LLLARROW1: the turn arrow and whoosh of the stepped camera let go with the turn input.
+   The stepped camera (CamMode data_0208733c, func_0200bb28: the Lethal Lava Land start and levels 28 32 37 39) sets
+   cam+0x154 bit 0x20 or 0x40 on a turn press and clears it only when the eye's ApproachLinear (0x40000 a tick) reaches
+   its target (func_0200bb28:126-128); Camera::Behavior skips its per-tick clear of those bits in this one mode
+   (d_camera.cpp:267-270). On a fast shell ride the eye never catches up, so one short press kept the top-screen arrow
+   (Camera::Render, d_camera.cpp:418-422) and the turn whoosh 0x43 (func_02009e70's Sound_PlayIfNotActive) on for the
+   whole ride. The cartridge does the same (LLLSHELL1's romtrace rows); the port lets them go on purpose.
+   The bits themselves are NOT touched: func_0200bb28:69 reads them to hold off the next step, so the camera moves
+   exactly as on the cartridge. Only the arrow draw and the whoosh start ask this: 1 when the camera is in the stepped
+   mode, a bit is latched, no camera input is held (Ctrl held & 0x4300, the ROM's own camera-input mask: turn 0x100/0x200
+   from keys, pad, stick and the touch arrows, recentre 0x4000) and no recentre swing is still running (cam+0x1a0).
+   SM64DS_LLLARROW_OLD=1: tests only, the cartridge's latch. */
+extern "C" unsigned char data_0208733c[];
+extern "C" unsigned char data_0209f49c[];
+extern "C" unsigned char gActivePlayerSlot;
+extern "C" int port_cam_turn_quiet(void *cam)
+{
+    static int old = -1;
+    if (old < 0) old = getenv("SM64DS_LLLARROW_OLD") ? 1 : 0;
+    if (old || !cam) return 0;
+    const char *c = (const char *)cam;
+    if (*(void *const *)(c + 0x140) != (void *)data_0208733c) return 0;
+    if (!(*(const unsigned *)(c + 0x154) & 0x60u)) return 0;
+    if (*(const unsigned short *)(data_0209f49c + gActivePlayerSlot * 0x18) & 0x4300) return 0;
+    if (*(const unsigned short *)(c + 0x1a0) != 0) return 0;
+    return 1;
+}
+
 static int __fastcall cs_frame_behavior(void *s, void *)
 {
     if (port_actor_frame_camera_rom()) {
@@ -206,7 +234,12 @@ static int __fastcall cs_frame_behavior(void *s, void *)
 static int __fastcall cs_frame_render(void *s, void *)
 {
     if (port_actor_frame_camera_rom()) {
+        /* LLLARROW1: the stepped camera's latched turn bits are hidden from this one Render (the arrow draw) and put back */
+        unsigned *const cf = (unsigned *)((char *)s + 0x154);
+        const unsigned hide = port_cam_turn_quiet(s) ? (*cf & 0x60u) : 0u;
+        *cf &= ~hide;
         const int r = _ZN9dCamera_c6RenderEv(s);
+        *cf |= hide;
         if (port_level_camera_render_hook)
             port_level_camera_render_hook(s);
         return r;
