@@ -36,10 +36,7 @@ enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
 
-struct Mtx43 {
-    int a[12];
-};
-typedef char Mtx43_size_must_be_0x30[sizeof(Mtx43) == 0x30 ? 1 : -1];
+#include "private/mtx43.h"
 
 /* State-table rows are 8-byte mwcc pointer-to-member pairs. */
 typedef void (daBttBk_c::*PMF)();

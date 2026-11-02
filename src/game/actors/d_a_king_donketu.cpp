@@ -168,7 +168,7 @@ typedef struct { int x, y, z; } Vec3;
 
 enum Bool { FALSE, TRUE };
 
-typedef struct Mtx43 { Vec3 r0, r1, r2, t; } Mtx43;
+#include "private/mtx43.h"
 
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void M(void*); };
 

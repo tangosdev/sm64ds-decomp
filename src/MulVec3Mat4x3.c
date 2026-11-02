@@ -1,5 +1,4 @@
-typedef struct Vector3 { int x, y, z; } Vector3;
-typedef struct Matrix4x3 { int m[12]; } Matrix4x3;
+#include "common.h"
 
 void MulVec3Mat4x3(Vector3* v, Matrix4x3* m, Vector3* dst)
 {
