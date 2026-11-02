@@ -1,6 +1,6 @@
 # Resume: coordination reservation expiry, 2026-11-01
 
-Branch `tools/queue-expiry1101` adds a hard 24-hour reservation lifetime measured from task creation, regardless of claims or handoffs. Current clients filter expired tasks, fence expired receipts and atomically expire stale reservations during enqueue/amend. `expire-stale` provides an explicit sweep. Expiry marks tasks cancelled while preserving recorded phase, owner, worktree, outputs, history and Git ancestry; invalid timestamps fail closed. See `notes/agents/queue-v2.md` for the recovery procedure.
+This branch adds a hard 24-hour reservation lifetime measured from task creation, regardless of claims or handoffs. Current clients filter expired tasks, fence expired receipts and atomically expire stale reservations during enqueue/amend. `expire-stale` provides an explicit sweep. Expiry marks tasks cancelled while preserving recorded phase, owner, worktree, outputs, history and Git ancestry; invalid timestamps fail closed. See `notes/agents/queue-v2.md` for the recovery procedure.
 
 At the user's explicit request, the new `expire-stale` command ran once against the live queue and released 62 reservations on 2026-11-01. Post-check found zero eligible reservations remaining and retained the prior owner's worktree in the event. It does not remove or alter any worktree files. The separate claims.py range service is not covered.
 
