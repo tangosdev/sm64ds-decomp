@@ -72,21 +72,21 @@ THE MAPPING  (level id -> menu name)
   18  Dire Dire Docks       HIGH  water_land, ov026
   19  Snowman's Land        HIGH  snow_land, ov027
   20  Snowman's Igloo       HIGH* snow_kama, ov028
-  21  Dire Docks (City)     HIGH* water_city, ov029 (DDD second area)
+  21  Wet-Dry World         HIGH  water_city, ov029 (course 10)
   22  Tall Tall Mountain    HIGH  high_mt, ov030
   23  Tall Tall Mtn Slide   HIGH* high_slider, ov031
   24  Tiny-Huge Isle (Big)  HIGH* tibi_deka_d, ov032 (huge side)
   25  Tiny-Huge Isle (Sm)   HIGH* tibi_deka_t, ov033 (tiny side)
   26  Tiny-Huge Isle Cave   HIGH* tibi_deka_in, ov034
   27  Tick Tock Clock       HIGH  clock_tower, ov035
-  28  Rainbow Cruise        HIGH  rainbow_cruise, ov036
+  28  Rainbow Ride          HIGH  rainbow_cruise, ov036
   29  (none)                ----  NOT a stage (name handle past ROM handle space)
   30  Secret Aquarium       HIGH  suisou, ov038
-  31  Wing Cap Tower        MED   habatake, ov039 -- real stage, NOT mounted;
-                                  name from level_boot.cpp's own comment
-  32  Vanish Cap (Moat)     HIGH  horisoko, ov040
-  33  Metal Cap Switch      HIGH  metal_switch, ov041
-  34  Wing Mario Rainbow    HIGH  rainbow_mario, ov042
+  31  ? Switch              MED   habatake, ov039 -- real stage, NOT mounted;
+                                  course 23, the cartridge's "? SWITCH"
+  32  Secret Under Moat     HIGH  horisoko, ov040
+  33  Behind the Waterfall  HIGH  metal_switch, ov041
+  34  Over the Rainbows     HIGH  rainbow_mario, ov042
   35  Bowser: Dark World    HIGH  koopa1_map, ov043
   36  Bowser: Dark (boss)   HIGH* koopa1_boss, ov044 (fight arena)
   37  Bowser: Fire Sea      HIGH  koopa2_map, ov045
@@ -96,19 +96,30 @@ THE MAPPING  (level id -> menu name)
   41  (none)                ----  test_map_b, null asset handles -> not a stage
   42  (none)                ----  NOT a stage (name handle past ROM handle space)
   43  (none)                ----  NOT a stage (name handle past ROM handle space)
-  44  Mario's Key Course    HIGH  ex_m_map, ov052
-  45  Mario's Key Arena     HIGH  ex_mario, ov053
-  46  Luigi's Key Course    HIGH  ex_l_map, ov054
-  47  Luigi's Key Arena     HIGH  ex_luigi, ov055
-  48  Wario's Key Course    HIGH  ex_w_map, ov056
-  49  Wario's Key Arena     HIGH  ex_wario, ov057
+  44  Goomboss Battle       HIGH  ex_m_map, ov052 (Mario's key)
+  45  Goomboss (boss)       HIGH  ex_mario, ov053
+  46  Big Boo Battle        HIGH  ex_l_map, ov054 (Luigi's key)
+  47  Big Boo (boss)        HIGH  ex_luigi, ov055
+  48  Chief Chilly Chall.   HIGH  ex_w_map, ov056 (Wario's key)
+  49  Chief Chilly (boss)   HIGH  ex_wario, ov057
   50  Rec Room              HIGH  playroom, ov058
   51  (none)                ----  NOT a stage (name handle past ROM handle space)
 
+NAMES CHECKED AGAINST THE CARTRIDGE (run after093, lane SMALLFIX1)
+  The course names are the cartridge's own course list in
+  data/message/msg_data_eng.bin (messages 406..435, " 1 BOB-OMB BATTLEFIELD"
+  through "CASTLE SECRET STARS"), and each level's course is the byte in
+  SUBLEVEL_LEVEL_TABLE (0x02075298 + level id). Level 21 is course 10,
+  WET-DRY WORLD (it read "Dire Docks (City)"); 28 is RAINBOW RIDE; 31..34 are
+  courses 23..26 (? SWITCH, THE SECRET UNDER THE MOAT, BEHIND THE WATERFALL,
+  OVER THE RAINBOWS, where the old names were the N64 ones); 44..49 are
+  courses 18..20 (GOOMBOSS BATTLE, BIG BOO BATTLE, CHIEF CHILLY CHALLENGE).
+  The castle rows have no entry in that list (course 29 is "CASTLE SECRET
+  STARS") and keep their names.
+
 IDS THE OWNER MAY WANT TO CONFIRM / FILL
-  31 Wing Cap Tower  -- "habatake" is the wing-cap flying tower per
-     level_boot.cpp; it is not mounted, so the rendering is unverified. If the
-     retail English name differs, this is the one row to change.
+  31 ? Switch  -- "habatake", course 23 by SUBLEVEL_LEVEL_TABLE; it is not
+     mounted, so the rendering is unverified.
   29, 41, 42, 43, 51 -- left unnamed on purpose. The wave-C block in
      level_boot.cpp proves these carry name handles past the ROM's handle space
      (or null handles for 41/test_map_b), i.e. there is no course behind them.
@@ -192,3 +203,61 @@ CORRECTION (VS wiring lane, run vs1)
   ov037, ov050) named "VS map 1..4" by list position; the derivation is
   port/slice_vs.txt section 4. Level 41 (test_map_b, null asset handles)
   keeps the old verdict.
+
+==== SM64DS_DUMP_LEVEL_NAMES dump after the cartridge-name check (run after093, lane SMALLFIX1) ====
+
+[levelnames] 54 rows in the debug level select
+  row  0/54   0 Dev Test Map          ent  0 ov008 MOUNTED
+  row  1/54   1 Castle Grounds        ent  0 ov009 MOUNTED
+  row  2/54   2 Castle 1F             ent  0 ov010 MOUNTED
+  row  3/54   3 Castle Garden         ent  0 ov011 MOUNTED
+  row  4/54   4 Castle Basement       ent  0 ov012 MOUNTED
+  row  5/54   5 Castle 2F             ent  0 ov013 MOUNTED
+  row  6/54   6 Bob-omb Battlefield   ent  0 ov014 MOUNTED
+  row  7/54   7 Whomp's Fortress      ent  0 ov015 MOUNTED
+  row  8/54   8 Jolly Roger Bay       ent  0 ov016 MOUNTED
+  row  9/54   9 JRB Sunken Ship       ent  0 ov017 MOUNTED
+  row 10/54  10 Cool Cool Mountain    ent  0 ov018 MOUNTED
+  row 11/54  11 Cool Cool Mtn Slide   ent  0 ov019 MOUNTED
+  row 12/54  12 Big Boo's Haunt       ent  0 ov020 MOUNTED
+  row 13/54  13 Hazy Maze Cave        ent  0 ov021 MOUNTED
+  row 14/54  14 Lethal Lava Land      ent  0 ov022 MOUNTED
+  row 15/54  15 LLL Volcano           ent  0 ov023 MOUNTED
+  row 16/54  16 Shifting Sand Land    ent  0 ov024 MOUNTED
+  row 17/54  17 SSL Pyramid           ent  0 ov025 MOUNTED
+  row 18/54  18 Dire Dire Docks       ent  0 ov026 MOUNTED
+  row 19/54  19 Snowman's Land        ent  0 ov027 MOUNTED
+  row 20/54  20 Snowman's Igloo       ent  0 ov028 MOUNTED
+  row 21/54  21 Wet-Dry World         ent  0 ov029 MOUNTED
+  row 22/54  22 Tall Tall Mountain    ent  0 ov030 MOUNTED
+  row 23/54  23 Tall Tall Mtn Slide   ent  0 ov031 MOUNTED
+  row 24/54  24 Tiny-Huge Isle (Big)  ent  0 ov032 MOUNTED
+  row 25/54  25 Tiny-Huge Isle (Sm)   ent  0 ov033 MOUNTED
+  row 26/54  26 Tiny-Huge Isle Cave   ent  0 ov034 MOUNTED
+  row 27/54  27 Tick Tock Clock       ent  0 ov035 MOUNTED
+  row 28/54  28 Rainbow Ride          ent  0 ov036 MOUNTED
+  row 29/54  29 (unnamed)             ent  0 ov037 MOUNTED
+  row 30/54  30 Secret Aquarium       ent  0 ov038 MOUNTED
+  row 31/54  31 ? Switch              ent  0 ov039 MOUNTED
+  row 32/54  32 Secret Under Moat     ent  0 ov040 MOUNTED
+  row 33/54  33 Behind the Waterfall  ent  0 ov041 MOUNTED
+  row 34/54  34 Over the Rainbows     ent  0 ov042 MOUNTED
+  row 35/54  35 Bowser: Dark World    ent  0 ov043 MOUNTED
+  row 36/54  36 Bowser: Dark (boss)   ent  0 ov044 MOUNTED
+  row 37/54  37 Bowser: Fire Sea      ent  0 ov045 MOUNTED
+  row 38/54  38 Bowser: Fire (boss)   ent  0 ov046 MOUNTED
+  row 39/54  39 Bowser in the Sky     ent  0 ov047 MOUNTED
+  row 40/54  40 Bowser: Sky (boss)    ent  0 ov048 MOUNTED
+  row 41/54  41 (unnamed)             ent  0 ov049 not mounted
+  row 42/54  42 (unnamed)             ent  0 ov050 MOUNTED
+  row 43/54  43 (unnamed)             ent  0 ov051 MOUNTED
+  row 44/54  44 Goomboss Battle       ent  0 ov052 MOUNTED
+  row 45/54  45 Goomboss (boss)       ent  0 ov053 MOUNTED
+  row 46/54  46 Big Boo Battle        ent  0 ov054 MOUNTED
+  row 47/54  47 Big Boo (boss)        ent  0 ov055 MOUNTED
+  row 48/54  48 Chief Chilly Chall.   ent  0 ov056 MOUNTED
+  row 49/54  49 Chief Chilly (boss)   ent  0 ov057 MOUNTED
+  row 50/54  50 Rec Room              ent  0 ov058 MOUNTED
+  row 51/54  51 (unnamed)             ent  0 ov059 MOUNTED
+  row 52/54  <minigame menu -2>
+  row 53/54  <back to file select -1>

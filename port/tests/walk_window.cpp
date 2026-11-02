@@ -6309,31 +6309,31 @@ static const struct { short id; const char *name; } LEVEL_NAME[] = {
     { 18, "Dire Dire Docks"     },  /* water_land                            */
     { 19, "Snowman's Land"      },  /* snow_land                             */
     { 20, "Snowman's Igloo"     },  /* snow_kama                             */
-    { 21, "Dire Docks (City)"   },  /* water_city, DDD second area           */
+    { 21, "Wet-Dry World"       },  /* water_city, course 10                 */
     { 22, "Tall Tall Mountain"  },  /* high_mt                               */
     { 23, "Tall Tall Mtn Slide" },  /* high_slider                           */
     { 24, "Tiny-Huge Isle (Big)"},  /* tibi_deka_d, huge side                */
     { 25, "Tiny-Huge Isle (Sm)" },  /* tibi_deka_t, tiny side                */
     { 26, "Tiny-Huge Isle Cave" },  /* tibi_deka_in                          */
     { 27, "Tick Tock Clock"     },  /* clock_tower                           */
-    { 28, "Rainbow Cruise"      },  /* rainbow_cruise                        */
+    { 28, "Rainbow Ride"        },  /* rainbow_cruise                        */
     { 30, "Secret Aquarium"     },  /* suisou                                */
-    { 31, "Wing Cap Tower"      },  /* habatake -- NOT mounted; see .txt     */
-    { 32, "Vanish Cap (Moat)"   },  /* horisoko                              */
-    { 33, "Metal Cap Switch"    },  /* metal_switch                          */
-    { 34, "Wing Mario Rainbow"  },  /* rainbow_mario                         */
+    { 31, "? Switch"            },  /* habatake -- NOT mounted; see .txt     */
+    { 32, "Secret Under Moat"   },  /* horisoko                              */
+    { 33, "Behind the Waterfall"},  /* metal_switch                          */
+    { 34, "Over the Rainbows"   },  /* rainbow_mario                         */
     { 35, "Bowser: Dark World"  },  /* koopa1_map                            */
     { 36, "Bowser: Dark (boss)" },  /* koopa1_boss                           */
     { 37, "Bowser: Fire Sea"    },  /* koopa2_map                            */
     { 38, "Bowser: Fire (boss)" },  /* koopa2_boss                           */
     { 39, "Bowser in the Sky"   },  /* koopa3_map                            */
     { 40, "Bowser: Sky (boss)"  },  /* koopa3_boss                           */
-    { 44, "Mario's Key Course"  },  /* ex_m_map                              */
-    { 45, "Mario's Key Arena"   },  /* ex_mario                              */
-    { 46, "Luigi's Key Course"  },  /* ex_l_map                              */
-    { 47, "Luigi's Key Arena"   },  /* ex_luigi                              */
-    { 48, "Wario's Key Course"  },  /* ex_w_map                              */
-    { 49, "Wario's Key Arena"   },  /* ex_wario                              */
+    { 44, "Goomboss Battle"     },  /* ex_m_map                              */
+    { 45, "Goomboss (boss)"     },  /* ex_mario                              */
+    { 46, "Big Boo Battle"      },  /* ex_l_map                              */
+    { 47, "Big Boo (boss)"      },  /* ex_luigi                              */
+    { 48, "Chief Chilly Chall." },  /* ex_w_map                              */
+    { 49, "Chief Chilly (boss)" },  /* ex_wario                              */
     { 50, "Rec Room"            },  /* playroom                              */
 };
 enum { LEVEL_NAME_COUNT = (int)(sizeof LEVEL_NAME / sizeof LEVEL_NAME[0]) };
