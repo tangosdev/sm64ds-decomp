@@ -29,6 +29,8 @@
  *   - the `fl = fl ? fl : fl;` self-selects and the volatile k in case 0x10 pin
  *     flag webs; inherited from the 195->12 structural draft.
  */
+#include "private/throw_context.h"
+
 namespace std {
 void terminate();
 }
@@ -43,20 +45,6 @@ typedef void (*F1)(int);
  * rethrow at the same location, else destroy it), and func_02071ccc fills the
  * CatchInfo the same way that runtime's catch setup does ('*' pointer types
  * get a copied pointer). Names follow those roles. */
-typedef struct ThrowContext {
-    int mThrowType; /* 0x00 -- type string; func_02071ccc tests it for '*' */
-    int mLocation;  /* 0x04 -- thrown object; matched against a CatchInfo */
-    int mDtor;      /* 0x08 -- thrown object's destructor (case 0xd) */
-    char pad_0c[0x8];
-    char *mSP; /* 0x14 -- func_02071910: mFP + frame size after unwind */
-    /* 0x18 -- base for frame-relative operands; set from mSP, r7 or r11 by
-     * func_02071864 */
-    char *mFP;
-    /* 0x1c -- r0..r15; func_02071910 restores the saved registers here,
-     * mGPR[14] is the return address */
-    int mGPR[16];
-} ThrowContext;
-
 typedef struct ActionIterator {
     int mFuncStart;              /* 0x00 -- func_02072dac: start of the covered range */
     unsigned char *mActionTable; /* 0x04 -- null when no table covers the PC */

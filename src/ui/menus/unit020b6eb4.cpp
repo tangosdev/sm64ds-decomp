@@ -36,6 +36,7 @@
 #include "Ov007Work.h"
 #include "Ov007Display.h"
 #include "Ov007Settings.h"
+#include "private/arm_math_state.h"
 
 extern "C" {
 
@@ -49,10 +50,6 @@ typedef struct Ov007MenuHooks {
     int fileRelease;         /* 0x10: func_ov007_020b4100 */
     int (*callback)(int id); /* 0x14: becomes the work block's callback */
 } Ov007MenuHooks;
-
-typedef struct ARMMathState {
-    int pad[7];
-} ARMMathState;
 
 /* set while no entry point is running */
 extern int data_ov007_02103430;

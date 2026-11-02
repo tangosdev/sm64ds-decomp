@@ -18045,7 +18045,7 @@
         "return:int *"
       ],
       "src/unnamed/arm9/0206/func_02065a94.c": [
-        "return:Node65 *"
+        "return:WBTBlockInfoList *"
       ]
     },
     "func_02065af0": {
