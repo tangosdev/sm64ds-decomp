@@ -31,10 +31,11 @@
  *   already at +0x3a4 for dCcPos_c::Init. Folding the offset into the
  *   array pointer drops those 8 bytes.
  * - Behavior: mActiveFlames++ / -- encodes as ldrb [this, #0x465].
- *   The ROM read-modify-writes through a pooled address,
- *   ((char *)this + 0x400) + 0x65. The segment loop is the same
- *   shape as InitResources (this-based, stores at +0x3a4 / +0x104 /
- *   +0xf8). Those two spellings together were 0x454 against 0x470.
+ *   The ROM read-modify-writes through a computed address, which
+ *   `u8 *active = &mActiveFlames` reproduces. The segment loop is the
+ *   same shape as InitResources (this-based, stores at +0x3a4 /
+ *   +0x104 / +0xf8). Those two spellings together were 0x454 against
+ *   0x470.
  * - InitResources: dCcPos_c::Init with by-value Fix12<int> was 0x18c
  *   against 0x174. The call is the scalar Fix12i method.
  */
@@ -203,8 +204,8 @@ int daObjFlamethrower_c::Behavior() {
     switch (mState) {
     case 0:
         if (mActiveFlames != 0) {
-            /* Pooled address. mActiveFlames-- is ldrb [this, #0x465]. */
-            active = (u8 *)((self + 0x400) + 0x65);
+            /* Through its address. mActiveFlames-- is ldrb [this, #0x465]. */
+            active = &mActiveFlames;
             *active = (u8)(*active - 1);
         }
         if (DecIfAbove0_Short(&mTimer) == 0) {
@@ -214,7 +215,7 @@ int daObjFlamethrower_c::Behavior() {
         break;
     case 1:
         if ((int)mActiveFlames < (count - 1)) {
-            active = (u8 *)((self + 0x400) + 0x65);
+            active = &mActiveFlames;
             *active = (u8)(*active + 1);
         }
         if (DecIfAbove0_Short(&mTimer) == 0) {
