@@ -128,7 +128,9 @@ struct G {
     HeldIn held_in[kHubPartySeats];
     int ho_kind = 0, ho_cls = 0, ho_slot = -1, ho_eggs = 0; unsigned ho_last = 0;
     unsigned held_sent = 0, held_recv = 0, held_pins = 0, held_miss = 0;
-    unsigned mouth_miss = 0, eats_unstepped = 0;      // TONGUE1: hook passes the ROM mouth state left me off the eater's drawn body
+    unsigned mouth_miss = 0, eats_unstepped = 0;
+    bool held_off = false;        // SM64DS_PHIT_HELD=0, the CONTROL: no kHeldState out, nothing pinned (the friend looks empty-handed)
+    bool tongue_old = false;      // SM64DS_PHIT_TONGUE_OLD=1, the CONTROL: the tongue rules before TONGUE1 (state list, re-arm, no message gate)      // TONGUE1: hook passes the ROM mouth state left me off the eater's drawn body
     unsigned beat = 0;
     CarryV cv;      // I am carried
     CarryH ch;      // I carry
@@ -151,7 +153,8 @@ struct G {
     int lab_swing = 0; bool swing_done = false;     // LAB: force the holder's St_SwingPlayer this many frames into the hold (the pad's circular stick motion is not scripted; the arena rig does the same)
     unsigned forge_at = 0, eat_hold = 0;      // LAB: forge from this frame on; a longer eat hold for pictures
     // LAB (TONGUE1, SM64DS_PHIT_LAB_SEEK=<seat>[,<near>]): walk to that friend and use the tongue with the DS pad alone
-    int seek_seat = -1, seek_near = 200;
+    int seek_seat = -1, seek_near = 200, seek_cls = -1;   // seek_cls: obj:<class> walks to the nearest such object instead
+    unsigned seek_idle = 0;                              // frames walking without a press (a stale camera frame recalibrates)
     int seek_phase = 0; unsigned seek_t = 0; int seek_cup = 0, seek_sign = 1; unsigned seek_f = 0;
     unsigned long long seek_tongues = 0;
     // TONGUE1 counters: why a tongue did not say anything, and what the ROM's own gate said of each refused eat
@@ -175,7 +178,9 @@ void read_env() {
     r.check_busy = !env_flag(std::getenv("SM64DS_PHIT_NOBUSY"), false);
     // TONGUE1: no port re-arm after an eat. The cartridge's own gate already refuses the spat victim while its +0x708 is
     // set; the 150-frame re-arm refused tongues the ROM takes (7 of 18 refusals in MPJANK1's recipe).
-    r.check_eat_rearm = env_flag(std::getenv("SM64DS_PHIT_EAT_REARM"), false);
+    g.tongue_old = env_flag(std::getenv("SM64DS_PHIT_TONGUE_OLD"), false);
+    g.held_off = !env_flag(std::getenv("SM64DS_PHIT_HELD"), true);
+    r.check_eat_rearm = g.tongue_old || env_flag(std::getenv("SM64DS_PHIT_EAT_REARM"), false);
     // ROMSTATE9: the victim's own console runs the ROM's real St_InYoshiMouth (eat) and St_Grabbed / thrown (carry) by default;
     // SM64DS_ROOM_ROMSTATE=0 falls back to INTERACT9's synthetic holds (SM64DS_ROOM_EATVIS=0/1 still picks the eat alone)
     g.rom_eat = g.rom_grab = env_flag(std::getenv("SM64DS_ROOM_ROMSTATE"), true);
@@ -192,6 +197,7 @@ void read_env() {
     if (const char *e = std::getenv("SM64DS_PHIT_EATHOLD")) g.eat_hold = (unsigned)std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEEK")) {
         if (!std::strncmp(e, "any", 3)) { g.seek_seat = -2; std::sscanf(e + 3, ",%d", &g.seek_near); }
+        else if (!std::strncmp(e, "obj:", 4)) { g.seek_seat = -3; std::sscanf(e + 4, "%d,%d", &g.seek_cls, &g.seek_near); }
         else std::sscanf(e, "%d,%d", &g.seek_seat, &g.seek_near);
     }
     if (const char *e = std::getenv("SM64DS_PHIT_LAB")) {
@@ -281,7 +287,7 @@ bool me_busy(const char *me, bool grab = false) {
     g_busy_why = "inmouth";
     if (*(void *const *)(me + kInMouth)) return true;
     g_busy_why = "message";
-    if (me_in_message(me)) return true;
+    if (!g.tongue_old && me_in_message(me)) return true;
     g_busy_why = "level_state";
     if (data_0209f2d8[0] == 2) return true;
     g_busy_why = "cutscene";
@@ -350,6 +356,7 @@ void broadcast_attach(int holder, int state) {
 // is its spawn slot (+0xce) and class (+0x0c), the same pair coop_actors.cpp syncs it by. A player in my hands or mouth
 // rides kAttach instead; eggs are local spawns (+0x588, five following eggs), so only their count goes out.
 void held_send(char *me) {
+    if (g.held_off) return;
     int kind = 0, cls = 0, slot = -1, eggs = 0;
     const char *ho = ptrf(me, kHeldObj), *mo = ptrf(me, kMouthObj);
     const char *ob = mo ? mo : ho;
@@ -602,7 +609,7 @@ void eat_tick(char *me) {
         // TONGUE1: St_InYoshiMouth_Main copies the eater's body position into mine every walk. Off it three passes in a row
         // means my state is not stepping (a message holds me, the walk is frozen): spit now on both consoles rather than sit
         // hidden on my own spot for the whole hold.
-        if (in_state && ep && g.frame - g.hold.since() >= 2) {
+        if (!g.tongue_old && in_state && ep && g.frame - g.hold.since() >= 2) {
             int dp[3] = {0, 0, 0}, drawn = 0;
             const int nb = (int)data_0209f21c < 16 ? (int)data_0209f21c : 16;
             for (int i = 0; i < nb; ++i) if (data_0209f394[i] == ep) drawn = port_adventure_ghost_drawpos(i, dp);
@@ -868,7 +875,7 @@ void handle_claim(int attacker, unsigned ikind, unsigned counter, unsigned stamp
     m.busy = me_busy(me, ikind == kGrabCatch);
     m.eaten = g.hold.active() || g.cv.active;
     const char *rom_no = ikind == kEatClaim ? rom_eat_refusal(me) : nullptr;
-    if (ikind == kEatClaim) {
+    if (ikind == kEatClaim && !g.tongue_old) {
         // TONGUE1: a tongue asks what the cartridge asks (func_ov002_020d6c60's gate, rom_eat_refusal), plus the port-only
         // reasons my body cannot step a mouth state at all (a message, a script, a cutscene) and a hold I am already in.
         // The state list is not the ROM's: it refused tongues the cartridge takes (MPJANK1).
@@ -1139,19 +1146,33 @@ void pad_ctrl(unsigned short ctrl_mask, bool edge) {      // a Ctrl bit (0x0001 
 }
 enum : unsigned short { kDsRight = 0x10, kDsLeft = 0x20, kDsUp = 0x40, kDsDown = 0x80 };
 void lab_seek(char *me) {
-    if (g.seek_seat < 0 && g.seek_seat != -2) return;
+    if (g.seek_seat < 0 && g.seek_seat != -2 && g.seek_seat != -3) return;
     if (g.hold.active() || g.cv.active) return;
     int seat = g.seek_seat;
-    if (seat == -2) {                           // "any": the first friend seat with a fresh ghost (seats are not stable per run)
+    Seen s;
+    if (seat == -3) {                           // obj:<class>: the nearest synced object of that class; hands off while I hold anything
+        if (ptrf(me, kHeldObj) || ptrf(me, kMouthObj)) { g.seek_idle = 0; return; }
+        if (const int *q = *(int *const *)(me + 0x588)) for (int i = 0; i < 5; ++i) if (q[i]) return;
+        const int mx0 = *player::pos_x(me) >> 12, mz0 = *player::pos_z(me) >> 12;
+        double best = 1e18;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (*(const unsigned short *)(a + 0x0c) != (unsigned)g.seek_cls || *(const short *)(a + 0xce) < 0) continue;
+            const int ax = *(const int *)(a + 0x5c) >> 12, az = *(const int *)(a + 0x64) >> 12;
+            const double d = (double)horiz2(mx0, mz0, ax, az);
+            if (d < best) { best = d; s.x = ax; s.y = *(const int *)(a + 0x60) >> 12; s.z = az; }
+        }
+        if (best > 1e17) return;
+    } else if (seat == -2) {                           // "any": the first friend seat with a fresh ghost (seats are not stable per run)
         Seen t;
         for (int q = 0; q < kHubPartySeats && seat == -2; ++q)
             if (q != comms_hub_my_seat() && see(q, &t) && t.have_ghost) seat = q;
         if (seat == -2) return;
     }
-    Seen s;
-    if (!see(seat, &s) || !s.have_ghost || !s.in_level) return;
-    const Place mp = my_place();
-    if (s.at.level != mp.level || s.at.area != mp.area) return;
+    if (seat != -3) {
+        if (!see(seat, &s) || !s.have_ghost || !s.in_level) return;
+        const Place mp = my_place();
+        if (s.at.level != mp.level || s.at.area != mp.area) return;
+    }
     ++g.seek_f;
     const int mx = u(*player::pos_x(me)), mz = u(*player::pos_z(me));
     const int yaw = *(const short *)(me + kYawAngle) & 0xFFFF;
@@ -1174,9 +1195,15 @@ void lab_seek(char *me) {
     }
     case 2: {                                   // walk to him; near and facing him: the tongue
         int fe = (want - yaw) & 0xFFFF; if (fe > 0x8000) fe -= 0x10000;
+        if (++g.seek_idle >= 600) {             // ten seconds without a press: the camera turned since the last calibration
+            g.seek_idle = 0; g.seek_t = 0; g.seek_phase = 0;
+            std::fprintf(stderr, "[phit] LAB seek: no press in 600 frames, calibrating again (f=%u)\n", g.frame);
+            return;
+        }
         if (dist <= g.seek_near && fe > -0x1000 && fe < 0x1000 && g.state != kStYoshiPower) {
             pad_ctrl(0x0001, true);
             ++g.seek_tongues;
+            g.seek_idle = 0;
             std::fprintf(stderr, "[phit] LAB seek: tongue %llu at %d units, facing error 0x%x, f=%u\n", g.seek_tongues, (int)dist, fe & 0xFFFF, g.frame);
             g.seek_t = 0; g.seek_phase = 3;
             return;
@@ -1228,7 +1255,7 @@ int squash_scale_for_seat(int seat) {
     return 0x800;                                              // TUNE: half height
 }
 
-void held_after_follow() { if (g.on) held_after_follow_impl(); }
+void held_after_follow() { if (g.on && !g.held_off) held_after_follow_impl(); }
 
 int attached_holder(int victim_seat, int *kind) {
     if (!g.on || victim_seat < 0 || victim_seat >= kHubPartySeats) return -1;
