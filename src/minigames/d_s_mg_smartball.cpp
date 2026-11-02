@@ -23,12 +23,9 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 //   free function -- mwccarm folds `angle / 0x20` into a `+= 0x800` induction
 //   accumulator in the two fan-response loops (53 words differ); the C front
 //   end keeps the divide sequence. Its callers call it by name.
-// - The twelve constructor-shaped helpers (cMgSmartball_wing_c_Construct,
-//   cMgSmartball_pushswitch_c_Construct, cMgSmartball_board_c_Construct, cMgSmartball_slot_c_Construct,
-//   cMgSmartball_pakkun_c_Construct, cMgSmartball_dokan_c_Construct, cMgSmartball_propeller_c_Construct,
-//   cMgSmartball_spring_c_Construct, cMgSmartball_ana_c_Construct, cMgSmartball_kinoko_c_Construct,
-//   cMgSmartball_ball_c_Construct, cMgSmartball_object_c_Construct) stay free: they placement-
-//   construct objects they do not own. SmartballObj_ElemDtor and
+// - cMgSmartball_object_c_Construct returns a cMgSmartball_object_c into the
+//   caller's buffer. Each derived helper then calls that class's empty
+//   destructor, which stores its vtable word. SmartballObj_ElemDtor and
 //   SmartballObj_ElemCtor are the manager array element destructor and the
 //   empty final hook.
 // - The layout shadows are gone. The scene-side ones (Mgr, Mgr2, SArrays)
@@ -350,7 +347,11 @@ extern void Mg_SetSharedState(int);
 
 extern "C" {
 void GetObjectDelta(void *a, char *b);
-void cMgSmartball_object_c_Construct(char *c, int a1, int a2, int *a3);
+cMgSmartball_object_c cMgSmartball_object_c_Construct(int a1, int a2, int *a3);
+}
+static inline void CallObjectConstruct(char *c, int a1, int a2, int *a3) {
+    typedef void (*Fn)(char *, int, int, int *);
+    ((Fn)cMgSmartball_object_c_Construct)(c, a1, a2, a3);
 }
 
 #define FIX_MUL(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
@@ -595,14 +596,8 @@ char *cMgSmartball_wing_c_Construct(char *self, int x, int y, int *src) {
     int v[2];
     v[0] = src[0];
     v[1] = src[1];
-    cMgSmartball_object_c_Construct(self, x, y, v);
-    /* Leftover vptr stores. Copying the first word of a scratch
-       cMgSmartball_object_c grew cMgSmartball_object_c_Construct from 0x60
-       to 0x64 (.text 0xc268 to 0xc26c). A constructor whose body is those
-       same field stores is byte-identical 0x60, reloc included, but mwccarm
-       emits it twice, as C1 and C2, under the Itanium names, so the licensed
-       cMgSmartball_*_Construct symbol disappears. Every store below stays. */
-    *(void **)(self) = (void *)&_ZTV19cMgSmartball_wing_c[2];
+    CallObjectConstruct(self, x, y, v);
+    ((cMgSmartball_wing_c *)self)->~cMgSmartball_wing_c();
     ((cMgSmartball_object_c *)self)->mRadius = 0x18000;
     *(short *)(self + 0x32) = 0;
     return self;
@@ -707,8 +702,8 @@ int cMgSmartball_pushswitch_c_Construct(char *c, int b, int d, int *s) {
     int tmp[2];
     tmp[0] = s[0];
     tmp[1] = s[1];
-    cMgSmartball_object_c_Construct(c, b, d, tmp);
-    *(int *)c = (int)&_ZTV25cMgSmartball_pushswitch_c[2];
+    CallObjectConstruct(c, b, d, tmp);
+    ((cMgSmartball_pushswitch_c *)c)->~cMgSmartball_pushswitch_c();
     ((cMgSmartball_object_c *)c)->mRadius = 0x8000;
     return (int)c;
 }
@@ -1334,8 +1329,8 @@ int cMgSmartball_board_c_Construct(char *c, int b, int d, int *s) {
     int tmp[2];
     tmp[0] = s[0];
     tmp[1] = s[1];
-    cMgSmartball_object_c_Construct(c, b, d, tmp);
-    *(int *)c = (int)&_ZTV20cMgSmartball_board_c[2];
+    CallObjectConstruct(c, b, d, tmp);
+    ((cMgSmartball_board_c *)c)->~cMgSmartball_board_c();
     ((cMgSmartball_object_c *)c)->mRadius = 0x18000;
     return (int)c;
 }
@@ -1615,8 +1610,8 @@ void *cMgSmartball_slot_c_Construct(char *c, int a1, int a2, int *src) {
     int tmp[2];
     tmp[0] = src[0];
     tmp[1] = src[1];
-    cMgSmartball_object_c_Construct(c, a1, a2, tmp);
-    *(void ***)c = (void **)&_ZTV19cMgSmartball_slot_c[2];
+    CallObjectConstruct(c, a1, a2, tmp);
+    ((cMgSmartball_slot_c *)c)->~cMgSmartball_slot_c();
     __cxa_vec_ctor(((cMgSmartball_slot_c *)c)->mReelOffset, 3, 8, func_0203d738,
                    NullDestructor_0203d47c);
     __cxa_vec_ctor(((cMgSmartball_slot_c *)c)->mReelVel, 3, 8, func_0203d738,
@@ -1832,8 +1827,8 @@ int cMgSmartball_pakkun_c_Construct(char *c, int b, int d, int *s) {
     int tmp[2];
     tmp[0] = s[0];
     tmp[1] = s[1];
-    cMgSmartball_object_c_Construct(c, b, d, tmp);
-    *(int *)c = (int)&_ZTV21cMgSmartball_pakkun_c[2];
+    CallObjectConstruct(c, b, d, tmp);
+    ((cMgSmartball_pakkun_c *)c)->~cMgSmartball_pakkun_c();
     ((cMgSmartball_object_c *)c)->mRadius = 0x14000;
     return (int)c;
 }
@@ -1939,8 +1934,8 @@ int cMgSmartball_dokan_c_Construct(char *c, int b, int d, int *s) {
     int tmp[2];
     tmp[0] = s[0];
     tmp[1] = s[1];
-    cMgSmartball_object_c_Construct(c, b, d, tmp);
-    *(int *)c = (int)&_ZTV20cMgSmartball_dokan_c[2];
+    CallObjectConstruct(c, b, d, tmp);
+    ((cMgSmartball_dokan_c *)c)->~cMgSmartball_dokan_c();
     ((cMgSmartball_object_c *)c)->mRadius = 0x20000;
     return (int)c;
 }
@@ -2151,8 +2146,8 @@ int cMgSmartball_propeller_c_Construct(char *c, int b, int d, int *s) {
     int tmp[2];
     tmp[0] = s[0];
     tmp[1] = s[1];
-    cMgSmartball_object_c_Construct(c, b, d, tmp);
-    *(int *)c = (int)&_ZTV24cMgSmartball_propeller_c[2];
+    CallObjectConstruct(c, b, d, tmp);
+    ((cMgSmartball_propeller_c *)c)->~cMgSmartball_propeller_c();
     ((cMgSmartball_object_c *)c)->mRadius = 0x20000;
     return (int)c;
 }
@@ -2275,8 +2270,8 @@ int cMgSmartball_spring_c_Construct(char *c, int b, int d, int *s) {
     int tmp[2];
     tmp[0] = s[0];
     tmp[1] = s[1];
-    cMgSmartball_object_c_Construct(c, b, d, tmp);
-    *(int *)c = (int)&_ZTV21cMgSmartball_spring_c[2];
+    CallObjectConstruct(c, b, d, tmp);
+    ((cMgSmartball_spring_c *)c)->~cMgSmartball_spring_c();
     ((cMgSmartball_object_c *)c)->mRadius = 0x20000;
     return (int)c;
 }
@@ -2369,8 +2364,8 @@ int cMgSmartball_ana_c_Construct(char *c, int b, int d, int *s) {
     int tmp[2];
     tmp[0] = s[0];
     tmp[1] = s[1];
-    cMgSmartball_object_c_Construct(c, b, d, tmp);
-    *(int *)c = (int)&_ZTV18cMgSmartball_ana_c[2];
+    CallObjectConstruct(c, b, d, tmp);
+    ((cMgSmartball_ana_c *)c)->~cMgSmartball_ana_c();
     ((cMgSmartball_object_c *)c)->mRadius = 0x10000;
     return (int)c;
 }
@@ -2504,8 +2499,8 @@ char *cMgSmartball_kinoko_c_Construct(char *self, int x, int y, int *src) {
     int v[2];
     v[0] = src[0];
     v[1] = src[1];
-    cMgSmartball_object_c_Construct(self, x, y, v);
-    *(void **)(self) = (void *)&_ZTV21cMgSmartball_kinoko_c[2];
+    CallObjectConstruct(self, x, y, v);
+    ((cMgSmartball_kinoko_c *)self)->~cMgSmartball_kinoko_c();
     ((cMgSmartball_object_c *)self)->mRadius = 0x7000;
     ((cMgSmartball_kinoko_c *)self)->mVariant = 2;
     return self;
@@ -3881,8 +3876,8 @@ int cMgSmartball_ball_c_Construct(char *c, int b, int d, int *s) {
     int tmp[2];
     tmp[0] = s[0];
     tmp[1] = s[1];
-    cMgSmartball_object_c_Construct(c, b, d, tmp);
-    *(int *)c = (int)&_ZTV19cMgSmartball_ball_c[2];
+    CallObjectConstruct(c, b, d, tmp);
+    ((cMgSmartball_ball_c *)c)->~cMgSmartball_ball_c();
     ((cMgSmartball_object_c *)c)->mRadius = 0x8000;
     return (int)c;
 }
@@ -3976,23 +3971,9 @@ void cMgSmartball_object_c::RestoreInitial() {
 
 // @symbol cMgSmartball_object_c_Construct
 extern "C" { /* .c-derived member: C linkage for the whole block */
-void cMgSmartball_object_c_Construct(char *c, int a1, int a2, int *a3) {
-    int lo, hi;
-    *(int *)(c) = (int)&_ZTV21cMgSmartball_object_c[2];
-    ((cMgSmartball_object_c *)c)->mpManager = a1;
-    ((cMgSmartball_object_c *)c)->mIndex = a2;
-    hi = a3[1];
-    lo = a3[0];
-    ((cMgSmartball_object_c *)c)->mInitial0 = lo;
-    ((cMgSmartball_object_c *)c)->mInitial1 = hi;
-    hi = a3[1];
-    lo = a3[0];
-    ((cMgSmartball_object_c *)c)->mCurrent0 = lo;
-    ((cMgSmartball_object_c *)c)->mCurrent1 = hi;
-    ((cMgSmartball_object_c *)c)->mRadius = 0;
-    ((cMgSmartball_object_c *)c)->mVel0 = 0;
-    ((cMgSmartball_object_c *)c)->mVel1 = 0;
-    ((cMgSmartball_object_c *)c)->mIsActive = 1;
+cMgSmartball_object_c cMgSmartball_object_c_Construct(int a1, int a2, int *a3) {
+    cMgSmartball_object_c o(a1, a2, a3);
+    return o;
 }
 }
 

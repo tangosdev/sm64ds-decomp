@@ -13,11 +13,9 @@
  * destructor pair is what gets migrated first. There is nothing to migrate
  * here but real methods, and no operator delete is involved.
  *
- * CONSTRUCTED BY cMgSmartball_object_c_Construct, which is this class's C1/C2 in all
- * but name: it writes this vtable and then every field below. It is left as
- * a free function -- this tree has migrated zero constructors (langmode
- * audit: "C1: UNPROVEN, 0 migrated"), and proving that route is its own
- * piece of work, not a rider on this one.
+ * The inline constructor is what cMgSmartball_object_c_Construct returns into
+ * its caller's buffer. Callers that already hold storage cast that function
+ * to a four-argument call so the buffer pointer stays in r0.
  *
  * SIZE 0x34. The constructor's last write is the u8 at 0x30, which alone
  * would only give 0x31 rounded to 0x34; the upper bound comes from a child,
@@ -130,6 +128,24 @@ struct cMgSmartball_object_c {
                           independent flag to ana, a board cell to board.
                           43 files touch this span. */
     u8  unk_033;      /* 0x033 -- high byte of that angle; a board cell. */
+
+    cMgSmartball_object_c(int a1, int a2, int *a3) {
+        int lo, hi;
+        mpManager = a1;
+        mIndex = a2;
+        hi = a3[1];
+        lo = a3[0];
+        mInitial0 = lo;
+        mInitial1 = hi;
+        hi = a3[1];
+        lo = a3[0];
+        mCurrent0 = lo;
+        mCurrent1 = hi;
+        mRadius = 0;
+        mVel0 = 0;
+        mVel1 = 0;
+        mIsActive = 1;
+    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

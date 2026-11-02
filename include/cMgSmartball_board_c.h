@@ -67,6 +67,7 @@ struct cMgSmartball_board_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    ~cMgSmartball_board_c() {}
 
     /* Recovered helpers: AnyLineActive reports a line banner still in its
        score window (mLineTimer[i] > 0x168); PaintCell writes a claimed cell's

@@ -26,6 +26,7 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    ~cMgSmartball_ball_c() {}
 
     /* Recovered helpers. The state/query set gates the physics step: HasHit
        reads anyHit (0xcc -- SmartballBall_UpdatePhysics raises it when a
