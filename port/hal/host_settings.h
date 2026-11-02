@@ -516,6 +516,12 @@ const char *host_setting_launcher_nick(void);
 int host_setting_online_colours(unsigned *body, unsigned *shoes);
 int host_setting_set_online_profile(const char *name, unsigned body, unsigned shoes);
 int host_online_rgb_parse(const char *s);
+/* BROCOLOR1: the player's online colours for the bros, picked in the same popup (a character row above the grid). settings.json
+   OnlineMarioHat / OnlineMarioOveralls / OnlineMarioShoes, the same for Luigi and Wario: six hex digits each, absent or "" = the cartridge's
+   colour. chr 0 Mario, 1 Luigi, 2 Wario; cat 0 HAT (cap and undershirt), 1 OVERALLS, 2 SHOES. The get answers 1 when that one is set. The set
+   writes all nine at once (a 0 in set[][] writes "") and flushes. These are NOT the offline .pal mod keys (PaletteMario ...). */
+int host_setting_online_bro(int chr, int cat, unsigned *rgb);
+int host_setting_set_online_bros(const unsigned rgb[3][3], const unsigned char set[3][3]);
 
 /* Aspect: the presentation ratio, WIDTH DIVIDED BY HEIGHT. 0 (the default) is
    the explicit native sentinel -- the 4:3 window the port has always opened;

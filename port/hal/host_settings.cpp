@@ -935,6 +935,11 @@ int g_keep_lives = 0;
 int g_skip_opening = 0;
 char g_online_name[20];      /* PROFILE1: OnlineName, "" until the player set one */
 int g_online_have = 0;       /* PROFILE1: 1 once the player has picked colours (OnlineBodyColor / OnlineShoeColor, or the old OnlineYoshiColor index mapped) */
+unsigned g_online_bro[3][3];      /* BROCOLOR1: OnlineMarioHat ... OnlineWarioShoes, 0xRRGGBB */
+unsigned char g_online_bro_set[3][3];   /* ...and which are set (absent or "" = the cartridge's colour) */
+const char *const kOnlineBroKey[3][3] = { { "OnlineMarioHat", "OnlineMarioOveralls", "OnlineMarioShoes" },
+                                          { "OnlineLuigiHat", "OnlineLuigiOveralls", "OnlineLuigiShoes" },
+                                          { "OnlineWarioHat", "OnlineWarioOveralls", "OnlineWarioShoes" } };
 unsigned g_online_body, g_online_shoes;   /* 0xRRGGBB */
 int g_online_migrate = 0;    /* the old index key was mapped on this load: write the two new keys once */
 char g_launcher_nick[24];    /* PROFILE1: the launcher's Nickname key, read for the popup's first suggestion only */
@@ -1870,6 +1875,17 @@ void load_once(void)
                     g_online_migrate = 1;
                 }
             }
+            /* BROCOLOR1: the bros' online colours, one key per bro and row */
+            for (int c = 0; c < 3; ++c)
+                for (int k = 0; k < 3; ++k) {
+                    char hx[16];
+                    g_online_bro_set[c][k] = 0;
+                    g_online_bro[c][k] = 0;
+                    if (json_str(text, kOnlineBroKey[c][k], hx, sizeof hx) && host_online_rgb_parse(hx) >= 0) {
+                        g_online_bro[c][k] = (unsigned)host_online_rgb_parse(hx);
+                        g_online_bro_set[c][k] = 1;
+                    }
+                }
             g_launcher_nick[0] = '\0';
             if (json_str(text, "Nickname", nm, sizeof nm)) host_online_name_clean(nm, g_launcher_nick, sizeof g_launcher_nick);
         }
@@ -3781,6 +3797,30 @@ extern "C" int host_setting_set_online_profile(const char *name, unsigned body, 
     snprintf(q, sizeof q, "\"%s\"", clean);
     queue_save("OnlineName", q);
     online_colours_queue();
+    host_settings_save_flush();
+    return 1;
+}
+
+extern "C" int host_setting_online_bro(int chr, int cat, unsigned *rgb)
+{
+    load_once();
+    if (chr < 0 || chr > 2 || cat < 0 || cat > 2 || !g_online_bro_set[chr][cat]) return 0;
+    if (rgb) *rgb = g_online_bro[chr][cat];
+    return 1;
+}
+extern "C" int host_setting_set_online_bros(const unsigned rgb[3][3], const unsigned char set[3][3])
+{
+    load_once();
+    for (int c = 0; c < 3; ++c)
+        for (int k = 0; k < 3; ++k) {
+            char q[16];
+            g_online_bro_set[c][k] = set[c][k] ? 1 : 0;
+            g_online_bro[c][k] = set[c][k] ? (rgb[c][k] & 0xFFFFFFu) : 0;
+            if (set[c][k]) snprintf(q, sizeof q, "\"%06X\"", g_online_bro[c][k]);
+            else snprintf(q, sizeof q, "\"\"");
+            queue_save(kOnlineBroKey[c][k], q);
+        }
+    g_poll_flag = 1;
     host_settings_save_flush();
     return 1;
 }

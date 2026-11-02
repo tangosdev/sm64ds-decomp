@@ -22,6 +22,7 @@
 #include "TextureSequence.h"
 #include "Heap.h"
 #include "ModelAnim.h"
+#include "bro_colors.h"     /* BROCOLOR1: a bro in his player's own colours */
 
 #include "dsstate_seg.h"
 /* SYNC4: see the case for 0x020e0d28 inside player_states.inc. */
@@ -1925,7 +1926,25 @@ void hal_render_player_world(void *player)
         if (hid != 8 && hid != 9)
             ghost_stamp_one(st, 1, ((char **)(c + 0x154))[hid], pal);
     }
+    /* BROCOLOR1: a bro in his player's own colours (hal/bro_colors.h): the body's and the head's materials
+       pointed at recoloured copies of their palettes for this draw only. No picks (offline, solo, VS, an
+       online player who picked nothing or the cartridge's colours): nothing is stamped. */
+    port::bro::Stamp bst;
+    bst.n[0] = bst.n[1] = 0;
+    {
+        char *c = (char *)player;
+        const unsigned chr = (unsigned)*(int *)(c + 8) & 0xff;
+        port::bro::Picks bp;
+        if (chr < 3 && port_bro_picks_for_body(player, &bp) && port::bro::any(bp)) {
+            const unsigned id = _ZNK6Player14GetBodyModelIDEjb(c, chr, 0);
+            port::bro::stamp_model(bst, 0, (char *)((ModelAnim **)(c + 0xdc))[id], bp);
+            const unsigned hid = _ZN6Player19func_ov002_020becf4Eii(c, *(unsigned char *)(c + 0x6db), 1);
+            if (hid != 8 && hid != 9)
+                port::bro::stamp_model(bst, 1, ((char **)(c + 0x154))[hid], bp);
+        }
+    }
     hal_render_player_world_body(player);
+    port::bro::unstamp(bst);
     if (pal >= 0) ghost_unstamp(st);
     if (player != data_0209f394[data_0209f250] && slot >= 0 && slot < kPortBodySlots &&
         data_0209f394[slot] == player && port_adventure_hub_body(slot))

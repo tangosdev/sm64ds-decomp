@@ -2405,12 +2405,12 @@ u32 vs_colors_filter(unsigned fileID, u8 **data, u32 size)
 
    HAT + UNDERSHIRT ARE ONE CATEGORY (Tango's tie). The hat lives in the head
    BMD and the undershirt in the body BMD, so one picked colour drives a family
-   transform in each file, each shaded from its own ROM anchor. Mario has no hat
-   family in the Studio's grouping, so for Mario this category moves only his
-   undershirt; Wario has no undershirt family, so it moves only his hat. buttons
-   has NO grouping data for any bro (vs_char_groups.h flags the gap) so it is a
-   silent no-op today; shoes moves only Wario. Nothing is invented: the index
-   membership is exactly vs_char_groups.h, generated from groups.json.
+   transform in each file, each shaded from its own main tone. The membership
+   is vs_char_groups.h, generated from the cartridge files themselves
+   (port/tools/gen_vs_char_groups.py: every entry of every bro palette
+   classified by colour and by where its texels sit; run after093 BROCOLOR1).
+   Gloves and buttons have no entries: those two fields are accepted and do
+   nothing.
 
    WHY THIS IS A FILE MOD LIKE THE OTHERS. Each bro model is a served BMD with a
    named palette; recolouring by category is palette_try's shape -- find the
@@ -2670,9 +2670,10 @@ const char *vcc_recolor_group(u8 *d, u32 size, const vscg::Group *g,
         return "out of host memory";
     for (int i = 0; i < ncol; ++i)
         buf[i] = rd16(d, dp + (u32)i * 2);
-    /* the pick lands on the shade this file draws most (vs_char_palette_gen.h) */
-    const int main_idx = vspal::bmd_drawn_member(d, size, g->pal, g->idx,
-                                                 g->count);
+    /* the pick lands on the shade this file draws most: counted by the
+       generator from the cartridge textures (vs_char_groups.h `main`) */
+    (void)size;
+    const int main_idx = g->main;
     const char *why = vspal::char_recolor_palette(buf, ncol, g->idx, g->count,
                                                   target, main_idx);
     if (why) {

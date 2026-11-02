@@ -1,0 +1,5 @@
+{
+  "about": "Palette entries that keep the cartridge colour although bro_groups.json puts them in a picker label. Read by port/tools/gen_vs_char_groups.py, which drops them from every picker row. Empty since Wario's bare-arm skin, the one entry set listed here before, moved to his N/A label in the Studio itself.",
+  "version": 1,
+  "keep_cartridge": []
+}

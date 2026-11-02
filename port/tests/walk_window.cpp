@@ -7901,6 +7901,7 @@ static void cs_frame(int pad_live, const XPad *pad)
 extern "C" int menu_pause_input(unsigned keys, int mvalid, int mx, int my, int mdown);
 extern "C" int menu_pause_active(void);
 extern "C" void menu_pause_rom_input(unsigned keys, int mvalid, int mx, int my, int mdown);   /* CAREER1: hal/menu_recipe_pause.cpp */
+extern "C" void menu_online_profile_bumpers(unsigned keys);   /* BROCOLOR1: LB / RB / Q / E for the popup's character row */
 static void pause3_input(int pad_live, const XPad *pad)
 {
     if (!menu_pause_active()) {
@@ -7911,6 +7912,7 @@ static void pause3_input(int pad_live, const XPad *pad)
         if (pad_live && (pad->buttons & 0x0200)) k2 |= 2;
         if (key_live('Q')) k2 |= 4;
         if (key_live('E')) k2 |= 8;
+        menu_online_profile_bumpers(k2);   /* BROCOLOR1: the online profile popup's character row (hal/menu_online_profile.cpp) */
         int x2 = 0, y2 = 0;
         int m2 = hal_window_cursor_fb(&x2, &y2), d2 = g_mouse_left_down ? 1 : 0;
 #ifndef PORT_ROM_CLEAN
