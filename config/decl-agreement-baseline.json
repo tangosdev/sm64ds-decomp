@@ -16293,16 +16293,6 @@
         "param:#1 unsigned short"
       ]
     },
-    "func_0201e220": {
-      "include/decl_common.h": [
-        "return:int"
-      ]
-    },
-    "func_0201eaac": {
-      "include/decl_common.h": [
-        "return:int"
-      ]
-    },
     "func_0201ef50": {
       "src/game/actors/d_a_demo.cpp": [
         "param:#1 unsigned char"
@@ -17070,9 +17060,6 @@
       ]
     },
     "func_0204531c": {
-      "include/decl_common.h": [
-        "return:int"
-      ],
       "src/engine/model/d_ext_model.cpp": [
         "param:#1 ModelComponents *"
       ],
@@ -17271,9 +17258,6 @@
       ]
     },
     "func_02049f58": {
-      "include/decl_common.h": [
-        "return:int"
-      ],
       "src/ui/menus/unit020b7658.cpp": [
         "return:int"
       ]
@@ -18337,11 +18321,6 @@
         "param:#5 void *"
       ]
     },
-    "func_ov002_020ae968": {
-      "include/decl_common.h": [
-        "return:int"
-      ]
-    },
     "func_ov002_020b18f0": {
       "src/game/stages/d_s_stage_methods.cpp": [
         "param:#1 int"
@@ -18772,8 +18751,7 @@
     "Mg_DrawSpriteListEntry": {
       "include/decl_common.h": [
         "param:#2 void *",
-        "param:#3 void *",
-        "return:int"
+        "param:#3 void *"
       ]
     },
     "Mg_InitBrush": {
@@ -19515,11 +19493,6 @@
     "func_ov007_020c4f50": {
       "src/ui/menus/unit020b8f50.cpp": [
         "arity:5"
-      ]
-    },
-    "func_ov007_020c5188": {
-      "src/ui/menus/unit020b8f50.cpp": [
-        "return:int"
       ]
     },
     "func_ov007_020c55bc": {
