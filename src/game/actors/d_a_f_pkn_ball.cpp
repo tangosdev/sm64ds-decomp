@@ -18,8 +18,6 @@
 // - Behavior's position copies use the file-local POD Vec3F. types.h's
 //   Vector3 is not a POD.
 // - The Bool enum and the volatile sparkPos stay. Behavior needs both.
-// - Behavior adds virtual slot 29 to the spark's Y through the local Obj
-//   table. The header name OnAimedAtWithEgg does not fit that use.
 // - TryDropItem writes a byte at +0x42b on actor 279 so a second
 //   cap is not dropped. Nothing here names that field.
 // - mStateTimer is incremented through a u16 cast. The ROM loads it unsigned.
@@ -45,40 +43,6 @@ struct Vec3F {
     int x, y, z;
 };
 enum Bool { FALSE, TRUE };
-
-/* Only slot 29 is called; the rest keep it at the right vtable offset. */
-struct Obj {
-    virtual int m00();
-    virtual int m01();
-    virtual int m02();
-    virtual int m03();
-    virtual int m04();
-    virtual int m05();
-    virtual int m06();
-    virtual int m07();
-    virtual int m08();
-    virtual int m09();
-    virtual int m10();
-    virtual int m11();
-    virtual int m12();
-    virtual int m13();
-    virtual int m14();
-    virtual int m15();
-    virtual int m16();
-    virtual int m17();
-    virtual int m18();
-    virtual int m19();
-    virtual int m20();
-    virtual int m21();
-    virtual int m22();
-    virtual int m23();
-    virtual int m24();
-    virtual int m25();
-    virtual int m26();
-    virtual int m27();
-    virtual int m28();
-    virtual int m29();
-};
 
 /* Actor IDs, from symbols/actor_debug_names.tsv. */
 enum {
@@ -314,11 +278,11 @@ int daFPknBall_c::Behavior() {
                     sparkPos.y = mPosY;
                     sparkPos.z = mPosZ;
                     {
-                        int slot29 = ((Obj *)this)->m29();
+                        int aimHeight = OnAimedAtWithEgg();
                         int px, py, pz;
                         py = sparkPos.y;
                         px = sparkPos.x;
-                        py = py + slot29;
+                        py = py + aimHeight;
                         pz = sparkPos.z;
                         sparkPos.y = py;
                         Particle::System::NewSimple(0x43, px, py, pz);
