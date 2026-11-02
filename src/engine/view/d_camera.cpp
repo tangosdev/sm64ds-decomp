@@ -41,12 +41,7 @@
 #include "math/Approach.h"
 #include "PlayerInput.h"
 #include "PathPtr.h"
-struct Vector3_16f;
-namespace Particle {
-struct System {
-    static u32 NewWeather(u32, u32, Fix12i, Fix12i, Fix12i, const ::Vector3_16f *, u8);
-};
-}
+#include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 
