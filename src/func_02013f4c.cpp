@@ -13,7 +13,7 @@ extern void *data_020a0eac;
 
 extern void InitCrashScreen(void);
 extern void ShowCrashScreen(void);
-extern void OS_ResetSystem(int a);
+extern void OS_ResetSystem(unsigned int a);
 
 void func_02013f4c(void)
 {

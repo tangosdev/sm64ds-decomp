@@ -123,7 +123,7 @@ extern int func_02054d88(void);
 extern void *func_02054ea8(void);
 /* local extern: byte-forced spelling -- the definition is (s8, int); a s8
    parameter would emit a sign-extend of arg0 the ROM lacks. */
-extern int IsStarCollected(u32 a, u8 b);
+extern int IsStarCollected(s32 a, u8 b);
 extern int SublevelToLevel(int a);
 }
 namespace Sound {

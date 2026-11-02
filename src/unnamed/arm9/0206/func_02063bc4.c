@@ -14,7 +14,7 @@ typedef struct {
 extern int func_02065a74(void);
 extern Node65 *func_02065a94(int key);
 extern int func_0206491c(unsigned int key, int val);
-extern int func_02064888(int a, int b);
+extern int func_02064888(unsigned int a, int b);
 extern int func_02064d6c(int a, int b, int c, int d, int e, int f, int g);
 extern int func_02065bc0(void);
 extern void func_02064554(void *base, int a, int b, int c);

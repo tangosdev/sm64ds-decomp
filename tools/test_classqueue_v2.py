@@ -27,6 +27,9 @@ sys.path.insert(0, sys.argv[1])
 import classqueue_v2 as cq
 queue = cq.Queue(sys.argv[2])
 command = json.loads(sys.argv[3])
+fixed_now = command.pop('_now', None)
+if fixed_now:
+    cq.now = lambda: fixed_now
 barrier = pathlib.Path(sys.argv[4])
 participant = sys.argv[5]
 original = queue.save
@@ -676,6 +679,82 @@ class GitProtocolTest(unittest.TestCase):
         self.a.enqueue(spec, "adopt-review", self.coordinator(spec))
         with self.assertRaisesRegex(cq.QueueError, "different session"):
             self.claim(task_id="adopt-review", role="verifier", stage="verify", session="producer", input_commit=source)
+
+    def test_hard_24_hour_expiry_fences_owner_and_releases_resources(self):
+        with patch.object(cq, "now", return_value="2026-01-01T00:00:00+00:00"):
+            self.enqueue()
+            owner = self.claim()
+        # Reacquisition is blocked until the exact lifetime boundary.
+        with patch.object(cq, "now", return_value="2026-01-01T23:59:59+00:00"):
+            spec = self.spec("new-task", "class:A")
+            with self.assertRaisesRegex(cq.QueueError, "reserved"):
+                self.b.enqueue(spec, "new-too-early", self.coordinator(spec))
+        with patch.object(cq, "now", return_value="2026-01-02T00:00:00+00:00"):
+            output = self.scout_output()
+            with self.assertRaisesRegex(cq.QueueError, "expired"):
+                self.a.publish(owner, output, {}, "continue", "expired-publish")
+            spec = self.spec("new-task", "class:A")
+            self.b.enqueue(spec, "new-at-boundary", self.coordinator(spec))
+            old = self.a.read()[1]["tasks"]["task-a"]
+            self.assertEqual(old["phase"], "cancelled")
+            self.assertEqual(old["history"][-1]["action"], "expire")
+            self.assertEqual(old["history"][-1]["previous_owner"]["lease_id"], owner["lease_id"])
+            self.assertEqual(old["history"][-1]["previous_owner"]["worktree"], "test-worktree")
+            with self.assertRaisesRegex(cq.QueueError, "stale or foreign"):
+                self.a.release(owner, "expired-release", "done")
+
+    def test_expiry_preserves_offered_output_and_does_not_refresh_with_handoff(self):
+        with patch.object(cq, "now", return_value="2026-01-01T00:00:00+00:00"):
+            self.enqueue()
+            owner = self.claim()
+        with patch.object(cq, "now", return_value="2026-01-01T23:00:00+00:00"):
+            output = self.publish_scout(owner)
+        with patch.object(cq, "now", return_value="2026-01-02T00:00:00+00:00"):
+            self.assertEqual(self.a.next("writer"), [])
+            result = self.a.expire_stale("expire-offered")
+            self.assertEqual(result["expired"], ["task-a"])
+            self.assertEqual(self.a.expire_stale("expire-offered"), result)
+            task = self.a.read()[1]["tasks"]["task-a"]
+            self.assertEqual(task["outputs"][0]["commit"], output)
+            self.assertEqual(task["history"][-1]["previous_phase"], "offered")
+            self.assertEqual(self.a.git("cat-file", "-t", output).stdout.strip(), "commit")
+
+    def test_expiry_uses_creation_not_activity_and_preserves_newer_reservations(self):
+        with patch.object(cq, "now", return_value="2026-01-01T00:00:00+00:00"):
+            self.enqueue()
+        with patch.object(cq, "now", return_value="2026-01-01T23:30:00+00:00"):
+            self.claim()
+            self.enqueue(task_id="new", resource="class:Other")
+        with patch.object(cq, "now", return_value="2026-01-02T00:00:00+00:00"):
+            result = self.a.expire_stale("expiry-boundary")
+            self.assertEqual(result["expired"], ["task-a"])
+            state = self.a.read()[1]["tasks"]
+            self.assertEqual(state["new"]["phase"], "ready")
+
+    def test_expiry_and_overlapping_enqueue_use_atomic_compare_and_swap(self):
+        with patch.object(cq, "now", return_value="2026-01-01T00:00:00+00:00"):
+            self.enqueue()
+            owner = self.claim()
+        spec = self.spec("successor", "class:A")
+        receipt = self.coordinator(spec)
+        timestamp = "2026-01-02T00:00:00+00:00"
+        self.race({"action": "expire_stale", "request_id": "race-expire", "_now": timestamp},
+                  {"action": "enqueue", "spec": spec, "request_id": "race-enqueue",
+                   "coordinator_receipt": receipt, "_now": timestamp})
+        with patch.object(cq, "now", return_value=timestamp):
+            state = self.a.read()[1]["tasks"]
+            self.assertEqual(state["task-a"]["phase"], "cancelled")
+            if "successor" not in state:
+                self.b.enqueue(spec, "race-enqueue", receipt)
+            with self.assertRaisesRegex(cq.QueueError, "stale or foreign"):
+                self.a.release(owner, "race-stale-release", "done")
+
+    def test_invalid_reservation_times_do_not_release_resources(self):
+        for stamp in (None, "invalid", "2026-01-01T00:00:00"):
+            task = {"phase": "running", "created_at": stamp}
+            self.assertFalse(cq.reservation_expired(task, "2026-01-03T00:00:00+00:00"))
+        self.assertFalse(cq.reservation_expired({"phase": "done", "created_at": "2020-01-01T00:00:00+00:00"},
+                                                "2026-01-03T00:00:00+00:00"))
 
 
 class ResourceTest(unittest.TestCase):

@@ -91,7 +91,7 @@ void CrossVec3(const EntryMeshVec *, const EntryMeshVec *, EntryMeshVec *);
 void NormalizeVec3(const EntryMeshVec *, EntryMeshVec *);
 void Vec3_Sub(EntryMeshVec *, const EntryMeshVec *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
-int func_02045ad8(const void *);
+unsigned int func_02045ad8(const void *);
 unsigned int func_02045a50(const void *, unsigned int);
 /* local extern: the RTL divide, the geometry-engine matrix load and the
    BMD load through a file handle, declared only in decl_common.h, which

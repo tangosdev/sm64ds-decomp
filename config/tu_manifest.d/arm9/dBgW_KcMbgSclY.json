@@ -7,9 +7,9 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "CONTIGUOUS AND EXHAUSTIVE: 0x0203a4dc..0x0203abb0 is covered by exactly 13 config/arm9/symbols.txt function symbols with no gap and no overlap, all carrying `complete` in config/arm9/delinks.txt with a .text section and nothing else.",
-    "CLASS IDENTITY FROM ROM RTTI: _ZTS14dBgW_KcMbgSclY sits at arm9 0x02099474, _ZTI14dBgW_KcMbgSclY at 0x02099468 and the vtable address point at 0x02099490, naming the override set in this run (destructor pair, Virtual08, GetNormal, the DetectClsn triple) plus the free SetFile/SetScaleY and the three func_0203aa* scale helpers as one class's.",
+    "CLASS IDENTITY FROM ROM RTTI: _ZTS14dBgW_KcMbgSclY sits at arm9 0x02099474, _ZTI14dBgW_KcMbgSclY at 0x02099468 and the vtable address point at 0x02099490, naming the override set in this run (destructor pair, Virtual08, GetNormal, the DetectClsn triple) plus SetFile/SetScaleY and the three scale helpers ToColliderSpace, ToWorldSpace and GetScaleY as one class's.",
     "EMISSION ORDER: mwccarm 2004/b56 emits a TU's plain members in reverse source order and each lifecycle group in its fixed order. The ROM holds _ZN14dBgW_KcMbgSclYD0Ev (0x0203ab3c), D1 (0x0203ab68), then C1 (0x0203ab8c) -- the layout one destructor and one constructor definition at the head of the file produce, with the D2/C2 siblings emitted but discarded (nothing derives from SclY).",
-    "HELPERS ARE THIS TU'S OWN: func_0203aa74 transforms a Vector3 into collider space by invScaledMat (0x168) then divides out invScaleY (0x1cc); func_0203aa10 folds scaleY (0x1c8) into y then applies newScaledMat (0x134); func_0203aad0 reads scaleY. All three are called only inside the run except func_0203aad0, which daObjKm2_Nobiru_c reaches for its mCollider -- the same TU-local-worker placement every neighboring class shows.",
+    "HELPERS ARE THIS TU'S OWN: ToColliderSpace transforms a Vector3 into collider space by invScaledMat (0x168) then divides out invScaleY (0x1cc); ToWorldSpace folds scaleY (0x1c8) into y then applies newScaledMat (0x134); GetScaleY reads scaleY. All three are called only inside the run except GetScaleY, which daObjKm2_Nobiru_c reaches for its mCollider -- the same TU-local-worker placement every neighboring class shows.",
     "NEIGHBOURS ARE OTHER SUBJECTS: below, _ZN10dBgW_KcMbgC2Ev (0x0203a4b8..0x0203a4dc) is base class dBgW_KcMbg's last constructor, its own TU's. Above, func_0203abb0 (0x0203abb0..) opens dM3dGSph's helper block (the four accessors that lane's manifest renames to member spellings) before _ZN8dM3dGSphD2Ev at 0x0203ac1c."
   ],
   "sections": [
@@ -56,21 +56,21 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_0203aa10",
+      "symbol": "_ZN14dBgW_KcMbgSclY12ToWorldSpaceEP7Vector3S1_",
       "address": "0x0203aa10",
       "size": "0x00000064",
       "legacy_source": "src/func_0203aa10.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_0203aa74",
+      "symbol": "_ZN14dBgW_KcMbgSclY15ToColliderSpaceEP7Vector3S1_",
       "address": "0x0203aa74",
       "size": "0x0000005c",
       "legacy_source": "src/func_0203aa74.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_0203aad0",
+      "symbol": "_ZN14dBgW_KcMbgSclY9GetScaleYEv",
       "address": "0x0203aad0",
       "size": "0x00000008",
       "legacy_source": "src/func_0203aad0.c",
@@ -117,7 +117,7 @@
   "notes": [
     "Cartridge RTTI names the class dBgW_KcMbgSclY (_ZTS14dBgW_KcMbgSclY at arm9 0x02099474, _ZTI at 0x02099468, vtable address point 0x02099490). The licensed run is .text 0x0203a4dc..0x0203abb0 (13 functions): the override set, the three scale-space helpers, the scaleY read, SetScaleY, SetFile and the three lifecycle variants -- one TU the way the original engine file was almost certainly shaped.",
     "Deferred codegen emits the destructor group then the constructor group, and plain members in reverse source order, so the promoted file defines ctor and dtor first and then walks the ROM run backwards. Only D0, D1 and C1 are cartridge-retained: nothing derives from dBgW_KcMbgSclY, so the D2/C2 vague-linkage siblings are discarded by the linker.",
-    "func_0203aa10/74/d0 keep their func_ names. The first two are this collider's world<->collider transform workers called by raw address inside the family; func_0203aad0 is the scaleY read daObjKm2_Nobiru_c calls through its own extern. They are not vtable slots, so there is no honest member name to give them.",
+    "ToWorldSpace, ToColliderSpace and GetScaleY are non-virtual members: the first two are this collider's world<->collider transform workers, GetScaleY is the scaleY read daObjKm2_Nobiru_c calls. They are not vtable slots; the names say what each body does.",
     "SetFile and SetScaleY stay extern-C free definitions: both mangled names carry Fix12<int> by value (wall 6az), so no member spelling can link them. Their bodies read the real members -- SetFile chains to dBgW_KcMbg::SetFile then writes scaleY/invScaleY to 0x1000.",
     "#pragma opt_common_subs off wraps DetectClsn(dBgCh_SphCrr&) and nothing else: the six FMULs against `scale` are deliberately not CSE'd, and the pragma is restored before DetectClsn(dBgCh_Lin&) which was compiled without it."
   ],

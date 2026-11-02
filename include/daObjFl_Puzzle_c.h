@@ -45,7 +45,7 @@ struct daObjFl_Puzzle_c : dBgActor_c {
                              manager is gone or has no live coins */
     u8 mState;         /* 0x336 -- PIECE_STATE_* */
     u8 mType;          /* 0x337 -- param1 & 0xf: which model and script */
-    /* Set to 1 by func_ov064_0211929c (the collision callback registered in
+    /* Set to 1 by MarkTouchedByPlayer (the collision callback registered in
      * InitResources, via the func_ov064_021192bc thunk) when the other actor's
      * ID is 0xbf (PLAYER). Never cleared here. While set, the step driver
      * writes FLCOIN_FLAG_PLAYER_TOUCHED into the manager's flags each frame. */
@@ -73,6 +73,8 @@ struct daObjFl_Puzzle_c : dBgActor_c {
     void StateWait();
     void StateInit();
     void ShakeThenSlide(int dx, int dz, int slideTicks);
+    /* Collision-callback helper: raises mHadClsn when the other actor is the player. */
+    void MarkTouchedByPlayer(dActor_c *);
     void AdvanceStepScript();
     void UpdateClsnMatrix();
     void UpdateModelMatrix();

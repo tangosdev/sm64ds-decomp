@@ -49,6 +49,10 @@ struct dBgW_KcMbgSclY : dBgW_KcMbg {
     /* --- non-virtual --- */
     void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12i scale, s16 angY, CLPS_Block &clps);
     void SetScaleY(Fix12i scaleY);
+    s32 GetScaleY();
+    /* World to collider space, then collider back to world. */
+    void ToColliderSpace(Vector3 *, Vector3 *);
+    void ToWorldSpace(Vector3 *, Vector3 *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

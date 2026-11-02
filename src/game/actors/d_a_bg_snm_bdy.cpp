@@ -73,9 +73,9 @@ int fdiv(int numerator, int denominator);
  * sec 6). Each is the most complete of the spellings the retired one-function
  * shards carried. */
 extern "C" {
-int   Vec3_Dist(const void *a, const void *b);
-int   Vec3_HorzDist(const void *a, const void *b);
-short Vec3_HorzAngle(const void *a, const void *b);
+int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 unsigned short DecIfAbove0_Short(unsigned short *timer);
 void  Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
@@ -299,7 +299,7 @@ int daBgSnmBdy_c::InitState0()
 int daBgSnmBdy_c::State0()
 {
     daPly_c *player = ClosestPlayer();
-    if (Vec3_HorzDist(&mPosX, &player->mPosX) < 0x10e000) {
+    if (Vec3_HorzDist(&mPos, &player->mPos) < 0x10e000) {
         if (player->StartTalk(*this, 1)) {
             mTalkPlayer = player;
             SetState(1);
@@ -389,7 +389,7 @@ int daBgSnmBdy_c::State2()
     UpdateGroundCollision(&mWithMeshClsn);
     HurtPlayer();
     if (mPlayerReachedPath == 0) {
-        if (Vec3_Dist(&gBgSnmBdyReachPoint, &mTalkPlayer->mPosX) < 0x300000)
+        if (Vec3_Dist(&gBgSnmBdyReachPoint, &mTalkPlayer->mPos) < 0x300000)
             mPlayerReachedPath = 1;
     }
     return 1;
@@ -407,8 +407,8 @@ int daBgSnmBdy_c::InitState3()
 int daBgSnmBdy_c::State3() {
     switch (mSubstate) {
     case 0: {
-        int distToLanding = Vec3_HorzDist(&gBgSnmBdyLandingPoint, &mPosX);
-        UpdateAngle(mAngleY, Vec3_HorzAngle(&mPosX, &gBgSnmBdyLandingPoint), 2, 0x600);
+        int distToLanding = Vec3_HorzDist(&gBgSnmBdyLandingPoint, &mPos);
+        UpdateAngle(mAngleY, Vec3_HorzAngle(&mPos, &gBgSnmBdyLandingPoint), 2, 0x600);
         mPrevAngleY = mAngleY;
         Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
         mSoundID = Sound::PlayLong(mSoundID, 3, 0x8a, mCamSpacePos, 0);
@@ -565,8 +565,8 @@ int daBgSnmBdy_c::AdvancePath()
     Vector3 node;
     int numNodes;
     mPath.GetNode(node, mPathNode);
-    int dist = Vec3_HorzDist(&mPosX, &node);
-    UpdateAngle(mAngleY, Vec3_HorzAngle(&mPosX, &node), 2, 0x600);
+    int dist = Vec3_HorzDist(&mPos, &node);
+    UpdateAngle(mAngleY, Vec3_HorzAngle(&mPos, &node), 2, 0x600);
     mPrevAngleY = mAngleY;
     if (dist < mRadius) {
         numNodes = mPath.NumNodes();
@@ -588,13 +588,13 @@ void daBgSnmBdy_c::UpdateRollAngle()
 // @symbol _ZN12daBgSnmBdy_c18IsPlayerNearCenterEv
 int daBgSnmBdy_c::IsPlayerNearCenter()
 {
-    int bodyDist = Vec3_Dist(&gBgSnmBdyLandingPoint, &mPosX);
-    int playerDist = Vec3_Dist(&gBgSnmBdyLandingPoint, &mTalkPlayer->mPosX);
-    int bodyAngle = Vec3_HorzAngle(&gBgSnmBdyLandingPoint, &mPosX);
-    int playerAngle = Vec3_HorzAngle(&gBgSnmBdyLandingPoint, &mTalkPlayer->mPosX);
+    int bodyDist = Vec3_Dist(&gBgSnmBdyLandingPoint, &mPos);
+    int playerDist = Vec3_Dist(&gBgSnmBdyLandingPoint, &mTalkPlayer->mPos);
+    int bodyAngle = Vec3_HorzAngle(&gBgSnmBdyLandingPoint, &mPos);
+    int playerAngle = Vec3_HorzAngle(&gBgSnmBdyLandingPoint, &mTalkPlayer->mPos);
     int angleDiff = bodyAngle - playerAngle;
     if ((playerDist < bodyDist && AbsAngle((short)angleDiff) < 0x700) ||
-        Vec3_Dist(&gBgSnmBdyLandingPoint, &mTalkPlayer->mPosX) < 0x300000)
+        Vec3_Dist(&gBgSnmBdyLandingPoint, &mTalkPlayer->mPos) < 0x300000)
         return 1;
     return 0;
 }

@@ -113,7 +113,7 @@ typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int heig
 /* Sets daPly_c::mStateStep to 6 and stores this fish in mAttachedActor. */
 int func_ov002_020c5cd8(void *a, void *self);
 /* Sound::Play with bank 3. */
-void func_02012694(int a, void *p);
+void func_02012694(unsigned int a, void *p);
 /* Particle::System::New wrappers; they pass the tracker callbacks at
    +0x800 and +0x7f4. */
 u32 func_02022c80(u32, u32, Fix12i, Fix12i, Fix12i, const void *);

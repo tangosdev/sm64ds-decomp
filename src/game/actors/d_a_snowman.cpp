@@ -94,7 +94,7 @@ extern int ApproachAngle(void *p, int target, int a, int b, int c);
 extern int AngleDiff(int a, int b);
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 /* Sound::Play(3, id, pos) — PlayBank3. This TU calls the wrapper. */
-extern void func_02012694(int a, void *p);
+extern void func_02012694(unsigned int a, void *p);
 extern Vector3 data_ov081_02128998; /* cylinder offset (0, 0x1e000, 0) */
 extern unsigned char data_0209f21c[];
 extern void *data_0209f394[];

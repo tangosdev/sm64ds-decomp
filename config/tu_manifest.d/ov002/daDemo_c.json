@@ -229,7 +229,7 @@
       "ordinal": 26
     },
     {
-      "symbol": "func_ov002_020f2e30",
+      "symbol": "_ZN8daDemo_c9StaffRoll11StartCreditEi",
       "address": "0x020f2e30",
       "size": "0x00000070",
       "legacy_source": "src/func_ov002_020f2e30.c",

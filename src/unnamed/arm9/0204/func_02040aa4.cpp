@@ -42,8 +42,8 @@ void func_02040aa4(void) {
                 fn(ctxArg, 0, table);
                 IRQ::Restore(saved1);
             }
-            *(volatile int *)&work->mTable = 0;
-            *(volatile int *)&work->mTableSize = 0;
+            work->mTable = 0;
+            work->mTableSize = 0;
         }
 
         work->mState = 0;

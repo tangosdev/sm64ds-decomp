@@ -62,7 +62,7 @@ void MulMat4x3Mat4x3(const Matrix4x3 *m1, const Matrix4x3 *m0, Matrix4x3 *mF);
 /* local extern: no header declares it; data.transforms-bone walk in Virtual10 */
 void func_02045074(ModelComponents *data, BMD_Bone *bones);
 /* local extern: no header declares it; sizes the transforms buffer from the file */
-u32 func_02046564(BMD_File *file);
+int func_02046564(BMD_File *file);
 /* local extern: no header declares it; initializes ModelComponents over the file */
 void func_020462d0(ModelComponents *data, BMD_File *file, void *buffer);
 /* defined below; DoSetFile calls it */
@@ -85,7 +85,7 @@ void *func_0203cc0c(u32 size);
 void *LoadFile(u16 ov0ID);
 /* local extern: func_020469e0.c defines int(int *). The caller's shard
    matched this spelling (banked rows). */
-u32 func_020469e0(void *ptr);
+int func_020469e0(void *ptr);
 /* local extern: no header declares it; dExtModel_c's destructor frees the file.
    decl_common.h's copy is the same spelling; that catch-all does not count. */
 void Deallocate(void *ptr);
@@ -149,13 +149,13 @@ extern BMD_File data_ov001_020ad560;
 /* local extern: no header declares these; the shadow scale matrix and the two
    opacity passes RenderAll draws with */
 void func_0203c178(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz);
-void func_02046120(ModelComponents *data, u32 opacity);
-void func_02046088(ModelComponents *data, u32 opacity, int f);
+void func_02046120(ModelComponents *data, s32 opacity);
+void func_02046088(ModelComponents *data, s32 opacity, int f);
 /* local extern: the texture-animation helpers. Each Prepare's ROM body is a
    0xc long-call veneer (ldr ip, [pc]; bx ip); the registers pass through
    untouched, so the helper's own two-argument signature is the call surface. */
 void func_02046d50(BMD_File *model, BTP_File *file);
-void func_02046bbc(ModelComponents *model, BTP_File *file, int frame);
+void func_02046bbc(ModelComponents *model, BTP_File *file, unsigned int frame);
 void func_02046b64(BMD_File *model, BTA_File *file);
 void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 void func_020470e8(BMD_File *model, BMA_File *file);

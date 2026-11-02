@@ -1,5 +1,4 @@
 //cpp
-#include "Particle__System.h"
 /* The snowman's breath. Fifty SnowmanBreathParticle members sit in this
  * file because their functions sit between the actor's destructor and its
  * other methods. .text 0x021120c4..0x02112b14.
@@ -16,6 +15,7 @@
 // - IsPlayerInRange tests the box as one positive `&&` condition. The
 //   negated `||` form makes the function 4 bytes larger.
 
+#include "Particle__System.h"
 #pragma defer_codegen off
 
 #include "daSnmBth_c.h"
@@ -36,7 +36,6 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
 extern "C" {
-
 s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 s32 Vec3_Dist(const Vector3 *, const Vector3 *);
 void Matrix4x3_FromRotationY(Matrix4x3 *, s16);

@@ -18,12 +18,12 @@ extern int func_020186c0(unsigned int val);
 extern int func_02018568(int a);
 extern unsigned func_02018ac4(unsigned *p);
 extern void DecompressLZ16(void *src, void *dst);
-extern int func_020185c0(void *buf, int x);
+extern int func_020185c0(void *buf, unsigned int x);
 extern int FS_CloseFile(void *a);
 extern void CpuCopy8(int a, int b, unsigned int c);
 extern void func_02018770(void);
 extern unsigned int func_02018a24(unsigned int i);
-extern int func_0201834c(void *buf, int x);
+extern unsigned int func_0201834c(void *buf, int x);
 
 /* Load file id (an asset handle, or an archived file id) into a new heap
    block, as SharedFilePtr::Load does: a file resident in a mounted archive

@@ -61,10 +61,10 @@ struct daHolhei_c : dEnemyBase_c {
     /* Actor being held, or the player holding this. +0xc8 on that actor is
        still an unnamed dActor_c gap; Behavior and Render read it raw. */
     daPly_c *mHeld; /* 0x3f8 */
-    /* func_ov062_02116e80 builds this from bone 3 and stores its address at
+    /* BuildHoldMatrix builds this from bone 3 and stores its address at
        this+0xc8, the same unnamed gap. */
     Matrix4x3   mHoldMtx;      /* 0x3fc */
-    /* Behavior zeroes these. func_ov062_02116edc homes them toward the two
+    /* Behavior zeroes these. HomeCarryOffset homes them toward the two
        Vector3s at data_ov062_0211df10 and hands them to UpdateCarry. */
     s32         mCarryOffsX;   /* 0x42c */
     s32         mCarryOffsY;   /* 0x430 */
@@ -104,6 +104,12 @@ struct daHolhei_c : dEnemyBase_c {
     int func_ov062_02116bf8();
     int func_ov062_02116c78();
     void func_ov062_02116d28();
+    /* 1 on a wall, 2 on a slope steeper than 0x1000, else 0. */
+    int ClassifyObstruction();
+    /* Bone 3's transform times the model's yaw, stored where a holder looks. */
+    void BuildHoldMatrix();
+    /* Homes the carry offset toward the held actor's slot, then publishes the carried matrix. */
+    void HomeCarryOffset();
 };
 
 #ifndef SM64DS_PLATFORM_PC

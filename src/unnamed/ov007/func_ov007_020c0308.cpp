@@ -4,7 +4,6 @@
 extern "C" {
 /* Fills rows 32-entry rows of a BG screen with the tile numbers 0, 1, 2...
  * in palette (palette & 0xf). */
-#pragma opt_strength_reduction off
 void func_ov007_020c0308(u16 *screen, int rows, int palette) {
     u32 i = 0;
     u32 hi;

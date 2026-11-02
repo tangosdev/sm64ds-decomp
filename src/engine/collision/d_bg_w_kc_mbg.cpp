@@ -271,7 +271,6 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
 }
 
 // @symbol _ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr
-#pragma opt_common_subs off
 
 int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere) {
     Vector3 localCentre;
@@ -324,7 +323,6 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere) {
     return hit;
 }
 
-#pragma opt_common_subs on
 
 // @symbol _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin
 int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {

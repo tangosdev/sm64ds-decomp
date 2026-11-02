@@ -5,7 +5,7 @@
 
 extern "C" {
 
-extern void MultiStore_Int(u32 val, void *dst, u32 size);
+extern void MultiStore_Int(s32 val, void *dst, s32 size);
 
 /* Poison an unloaded overlay's RAM (UnloadOverlay): invalidate both caches
    over its code and bss, then fill them with 0xe6000010, an ARM undefined

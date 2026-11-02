@@ -23,8 +23,6 @@ struct Ctx {
    next call. Both buffers are then flushed from the data cache, since the
    sound hardware reads them. */
 
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
 
 void func_020499bc(s16 *left, s16 *right, unsigned int len, Ctx *ctx) {
     s16 carry[2];

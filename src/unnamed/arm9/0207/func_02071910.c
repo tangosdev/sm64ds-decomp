@@ -34,7 +34,6 @@ typedef char ThrowContext_args_pushed_must_be_at_0x6a[(int)&((ThrowContext *)0)-
                                                           : -1];
 #endif
 
-#pragma opt_strength_reduction off
 void* func_02071910(char* self)
 {
     ThrowContext *c = (ThrowContext *)self;

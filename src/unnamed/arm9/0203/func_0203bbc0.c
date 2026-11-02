@@ -5,7 +5,8 @@ extern void TP_RequestSetStabilityAsync(int a, int b);
 extern void TP_WaitBusy(int mask);
 extern int TP_CheckError(int mask);
 extern void Crash(void);
-extern void TP_RequestAutoSamplingStartAsync(int a, int b, void *p, int d);
+extern void TP_RequestAutoSamplingStartAsync(unsigned int a, unsigned int b, void *p,
+                                             unsigned int d);
 extern void *data_020a0de0;
 extern void *data_020a0df8;
 

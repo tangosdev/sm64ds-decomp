@@ -103,7 +103,7 @@ struct System {
     static void NewSimple(u32 id, int x, int y, int z);
 };
 }
-void func_02012694(int a, void *p);
+void func_02012694(unsigned int a, void *p);
 void d_a_iblPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 void func_02038414(void *p);
 int atan2_hold_d_a_ibl_1(int y, int x);

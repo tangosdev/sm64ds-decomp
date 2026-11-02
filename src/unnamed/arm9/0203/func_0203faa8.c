@@ -18,9 +18,8 @@ extern unsigned int data_020a0f60;
 struct WMStartMPCallback;
 extern void func_0203fdac(struct WMStartMPCallback *cb);
 
-extern int WM_StartMPEx(void *fn, unsigned int a, unsigned short b, unsigned int c,
-                        unsigned short s0, unsigned short s1, int z0, int z1, int z2, int z3,
-                        int one);
+extern int WM_StartMPEx(void *fn, int a, unsigned short b, int c, unsigned short s0,
+                        unsigned short s1, int z0, int z1, int z2, int z3, int one);
 
 int func_0203faa8(void)
 {

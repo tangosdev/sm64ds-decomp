@@ -127,7 +127,7 @@ extern void SetSubBg2Offset(s32 a, s32 b);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32  GetMinimapID(struct Obj *obj, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
-extern void UpdateMinimap(s32 *a, s32 b, s32 c, s32 d, s32 e);
+extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
 int *Vec3_DivScalarInPlace(struct Vec3 *v, int s);
 void Vec3_MulScalarInPlace(struct Vec3* v, int s);
 void Vec3_RotateYAndTranslate(struct Vec3* out, struct Vec3* in, short ang, struct Vec3* t);
@@ -374,7 +374,6 @@ void dMap_c::OnPendingDestroy()
     (void)this;
 }
 
-#pragma opt_strength_reduction off
 // @symbol _ZN6dMap_c6RenderEv
 int dMap_c::Render()
 {
@@ -551,7 +550,6 @@ int dMap_c::Render()
     return 1;
 }
 
-#pragma opt_strength_reduction on
 
 // @symbol _ZN6dMap_c8BehaviorEv
 /* One frame of the minimap: pick the map for the focus object, scroll and

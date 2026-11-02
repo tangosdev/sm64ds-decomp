@@ -198,7 +198,6 @@ int daWater_Hakidasi_c::State0() {
             if (hit != 0) {
                 if (mRingsPassed == 0) {
                     uid = hit->uniqueID;
-#pragma opt_strength_reduction off
                     for (i = 0; i < 0x14; i++) {
                         u32 slot = mSpawnedIDs[i];
                         if (slot == uid) {
@@ -268,7 +267,6 @@ int daWater_Hakidasi_c::State0() {
     return 1;
 }
 
-#pragma opt_strength_reduction on
 
 /* Enters the state: clears the passed ring, the ring head, the matched slot
  * and the spawned-ring buffer. */

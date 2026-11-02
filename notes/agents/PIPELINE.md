@@ -121,9 +121,11 @@ doing a long build report its running state at their next available checkpoint.
 
 Record milestone updates and actionable blockers on the issue. A blocker names
 the needed fact/action, its responsible role, and the exact artifact to inspect.
-No per-command issue chatter or API heartbeat spam is required. No elapsed-time
-threshold authorizes stealing a claim. A stopped session needs an explicit,
-evidence-preserving recovery.
+No per-command issue chatter or API heartbeat spam is required. Every reservation
+expires 24 hours after its creation, including a running lease or offered handoff.
+Use the current queue client and checkpoint before the deadline. Expiry fences the
+old receipt but preserves task history, commits and worktree files; recover unfinished
+work through an explicit successor with its evidence and predecessor lineage.
 
 ## Source quality and proof are separate
 

@@ -158,7 +158,7 @@ extern short data_ov002_020ff0d0[];
 extern int data_ov002_020ff0d4[];
 extern int data_ov002_020ff0d8[];
 extern int data_ov002_020ff0dc[];
-extern "C" void func_02012694(int a, void *b);
+extern "C" void func_02012694(unsigned int a, void *b);
 namespace Particle {
 struct System {
     static void NewSimple(u32 id, Fix12i x, Fix12i y, Fix12i z);

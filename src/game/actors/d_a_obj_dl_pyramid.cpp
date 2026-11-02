@@ -104,12 +104,9 @@ void daObjDlPyramid_c::FinishDescent() {
     v.z = mPosZ;
     v.y += 0xfa000;
     Particle::System::NewSimple(0x1f, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x20, *(volatile int *)&v.x, *(volatile int *)&v.y,
-                                *(volatile int *)&v.z);
-    Particle::System::NewSimple(0x21, *(volatile int *)&v.x, *(volatile int *)&v.y,
-                                *(volatile int *)&v.z);
-    Particle::System::NewSimple(0x22, *(volatile int *)&v.x, *(volatile int *)&v.y,
-                                *(volatile int *)&v.z);
+    Particle::System::NewSimple(0x20, v.x, v.y, v.z);
+    Particle::System::NewSimple(0x21, v.x, v.y, v.z);
+    Particle::System::NewSimple(0x22, v.x, v.y, v.z);
     MarkForDestruction();
     Event::SetBit(0xe);
     dMap_c::UpdateLevelSpecific();

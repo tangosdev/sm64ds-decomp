@@ -7,7 +7,6 @@
     else \
         *(u16 *)(a) = (*(u16 *)(a) & 0xff00) | ((v) & 0xff)
 
-#pragma opt_strength_reduction off
 #pragma optimize_for_size on
 
 extern int func_0206c90c(u64 d);

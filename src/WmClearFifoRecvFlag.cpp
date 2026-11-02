@@ -21,7 +21,7 @@ typedef struct {
 } BufT;
 
 extern void Crash(void);
-extern void MultiCopyHalf(const void *src, void *dst, u32 count);
+extern void MultiCopyHalf(const void *src, void *dst, s32 count);
 extern int WM_Finish(void);
 extern void WmClearFifoRecvFlag(void);
 extern u32 *data_020a89ac;

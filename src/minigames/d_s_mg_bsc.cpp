@@ -12,7 +12,6 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 
-#pragma opt_strength_reduction off
 
 #include "dScMgBSC_c.h"
 #include "dScMgCard_c.h"

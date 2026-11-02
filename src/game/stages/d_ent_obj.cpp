@@ -1,5 +1,4 @@
 //cpp
-#include "Particle__System.h"
 /* dEntObj_c and UnknownVsPlayer. ov075 0x02113ee0..0x02115ab8, 43 functions.
  *
  * The versus-mode entry scene's stage object: four player figures on the
@@ -34,6 +33,7 @@
  *    int[]-indexed spelling emits a different addressing pair.
  */
 
+#include "Particle__System.h"
 #include "dEntObj_c.h"
 #include "decl_common.h"
 #include "common.h"
@@ -104,7 +104,7 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
 int func_0201251c(int a, int b, void *pos, int c);
 unsigned int func_02012174(unsigned int a, unsigned int b);
 void func_020167a4(void *model);
-long long __aeabi_uidiv(unsigned int n, int d);
+long long __aeabi_uidiv(unsigned int n, unsigned int d);
 
 extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;

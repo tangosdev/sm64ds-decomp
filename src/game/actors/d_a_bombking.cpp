@@ -11,7 +11,7 @@
  * func_ov078_02125de0 stores the king's own as the member; the stores into
  * the held actor (there and in the throw helper) and the reads in Render and
  * Behavior still use the raw offset on that other actor.
- * func_02035550 is the call
+ * dBgCh_Actr::SetWaterTrackFlag is the call
  * that ORs 0x4000 into dBgCh_Actr::mFlags; inlining the or deletes the call.
  * func_02012694 plays bank 3 at mCamSpacePos. It is not Sound::PlayBank3
  * (that body is 0x02012664). func_0200d8c8 shakes the camera.
@@ -180,8 +180,7 @@ extern struct M12 data_020a0e68;
 extern int data_02092138;
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
-extern void func_02012694(int a, void *p);
-
+extern void func_02012694(unsigned int a, void *p);
 extern void func_02011cfc(void);
 }
 extern "C" {
@@ -195,7 +194,7 @@ extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
 extern short Vec3_VertAngle(const void *a, const void *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void func_0200fa8c(void *c, int a);
-extern void func_ov102_0214b384(void* a, int b);
+extern void func_ov102_0214b384(void *a, unsigned int b);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int Vec3_HorzLen(void* v);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
@@ -1180,8 +1179,6 @@ int daBombking_c::func_ov078_02125350()
 
 
 #pragma push
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c19func_ov078_02125448Ev
 
@@ -1744,7 +1741,7 @@ int daBombking_c::InitResources()
     mArenaPosY = 0x1060000;
     mArenaPosZ = 0xfee15000;
     mWithMeshClsn.Init(this, 0x190000, 0x190000, 0, 0);
-    func_02035550(&mWithMeshClsn);
+    mWithMeshClsn.SetWaterTrackFlag();
     mAnimSpeed = 1;
     mHealth = 3;
     mStarID = param1 & 0xf;

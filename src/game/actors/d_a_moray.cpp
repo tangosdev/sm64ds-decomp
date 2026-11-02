@@ -197,9 +197,9 @@ void daMoray_c::func_ov016_02111284()
     int idx;
     int *px;
 
-    *(volatile int *)&va.x = this->mPosX;
-    *(volatile int *)&va.y = this->mPosY;
-    *(volatile int *)&va.z = this->mPosZ;
+    va.x = this->mPosX;
+    va.y = this->mPosY;
+    va.z = this->mPosZ;
 
     vb.x = 0;
     vb.y = 0;
@@ -666,7 +666,6 @@ void daMoray_c::OnPendingDestroy()
 }
 
 #pragma push
-#pragma opt_strength_reduction off
 // @symbol _ZN9daMoray_c6RenderEv
 s32 daMoray_c::Render()
 {

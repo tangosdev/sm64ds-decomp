@@ -1,5 +1,4 @@
 //cpp
-#pragma opt_strength_reduction off
 
 #include "private/arm9_a1fc0_file_share.h"
 #include "IRQ.h"

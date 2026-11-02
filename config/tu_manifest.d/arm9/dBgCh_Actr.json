@@ -20,14 +20,14 @@
   ],
   "functions": [
     {
-      "symbol": "func_0203553c",
+      "symbol": "_ZN10dBgCh_Actr21IsWaterTrackFlagClearEv",
       "address": "0x0203553c",
       "size": "0x00000014",
       "legacy_source": "src/func_0203553c.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_02035550",
+      "symbol": "_ZN10dBgCh_Actr17SetWaterTrackFlagEv",
       "address": "0x02035550",
       "size": "0x00000014",
       "legacy_source": "src/func_02035550.c",
@@ -48,49 +48,49 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_0203558c",
+      "symbol": "_ZN10dBgCh_Actr19SetNoUpdatePosYFlagEv",
       "address": "0x0203558c",
       "size": "0x00000014",
       "legacy_source": "src/func_0203558c.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_020355a0",
+      "symbol": "_ZN10dBgCh_Actr14IsFlag800ClearEv",
       "address": "0x020355a0",
       "size": "0x00000014",
       "legacy_source": "src/func_020355a0.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_020355b4",
+      "symbol": "_ZN10dBgCh_Actr10SetFlag800Ev",
       "address": "0x020355b4",
       "size": "0x00000014",
       "legacy_source": "src/func_020355b4.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_020355c8",
+      "symbol": "_ZN10dBgCh_Actr12ClearFlag800Ev",
       "address": "0x020355c8",
       "size": "0x00000014",
       "legacy_source": "src/func_020355c8.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_020355dc",
+      "symbol": "_ZN10dBgCh_Actr11TestFlag400Ev",
       "address": "0x020355dc",
       "size": "0x0000000c",
       "legacy_source": "src/func_020355dc.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_020355e8",
+      "symbol": "_ZN10dBgCh_Actr12ClearFlag400Ev",
       "address": "0x020355e8",
       "size": "0x00000014",
       "legacy_source": "src/func_020355e8.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_020355fc",
+      "symbol": "_ZN10dBgCh_Actr10SetFlag400Ev",
       "address": "0x020355fc",
       "size": "0x00000014",
       "legacy_source": "src/func_020355fc.c",
@@ -153,7 +153,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_0203567c",
+      "symbol": "_ZN10dBgCh_Actr15GetSphereResultEv",
       "address": "0x0203567c",
       "size": "0x00000008",
       "legacy_source": "src/func_0203567c.c",
@@ -195,14 +195,14 @@
       "ordinal": 24
     },
     {
-      "symbol": "func_020356c8",
+      "symbol": "_ZN10dBgCh_Actr18TestLeftGroundFlagEv",
       "address": "0x020356c8",
       "size": "0x0000000c",
       "legacy_source": "src/func_020356c8.c",
       "ordinal": 25
     },
     {
-      "symbol": "func_020356d4",
+      "symbol": "_ZN10dBgCh_Actr17SetLeftGroundFlagEv",
       "address": "0x020356d4",
       "size": "0x00000014",
       "legacy_source": "src/func_020356d4.c",
@@ -244,7 +244,7 @@
       "ordinal": 31
     },
     {
-      "symbol": "func_0203573c",
+      "symbol": "_ZN10dBgCh_Actr20SetJustHitGroundFlagEv",
       "address": "0x0203573c",
       "size": "0x00000014",
       "legacy_source": "src/func_0203573c.c",
@@ -258,21 +258,21 @@
       "ordinal": 33
     },
     {
-      "symbol": "func_02035764",
+      "symbol": "_ZN10dBgCh_Actr11TestFlag200Ev",
       "address": "0x02035764",
       "size": "0x0000000c",
       "legacy_source": "src/func_02035764.c",
       "ordinal": 34
     },
     {
-      "symbol": "func_02035770",
+      "symbol": "_ZN10dBgCh_Actr12ClearFlag200Ev",
       "address": "0x02035770",
       "size": "0x00000014",
       "legacy_source": "src/func_02035770.c",
       "ordinal": 35
     },
     {
-      "symbol": "func_02035784",
+      "symbol": "_ZN10dBgCh_Actr10SetFlag200Ev",
       "address": "0x02035784",
       "size": "0x00000014",
       "legacy_source": "src/func_02035784.c",
@@ -286,28 +286,28 @@
       "ordinal": 37
     },
     {
-      "symbol": "func_020357a0",
+      "symbol": "_ZN10dBgCh_Actr23StopIgnoringType14WallsEv",
       "address": "0x020357a0",
       "size": "0x00000020",
       "legacy_source": "src/func_020357a0.c",
       "ordinal": 38
     },
     {
-      "symbol": "func_020357c0",
+      "symbol": "_ZN10dBgCh_Actr24StartIgnoringType14WallsEv",
       "address": "0x020357c0",
       "size": "0x00000020",
       "legacy_source": "src/func_020357c0.c",
       "ordinal": 39
     },
     {
-      "symbol": "func_020357e0",
+      "symbol": "_ZN10dBgCh_Actr26StopIgnoringVanishSurfacesEv",
       "address": "0x020357e0",
       "size": "0x00000020",
       "legacy_source": "src/func_020357e0.c",
       "ordinal": 40
     },
     {
-      "symbol": "func_02035800",
+      "symbol": "_ZN10dBgCh_Actr27StartIgnoringVanishSurfacesEv",
       "address": "0x02035800",
       "size": "0x00000020",
       "legacy_source": "src/func_02035800.c",

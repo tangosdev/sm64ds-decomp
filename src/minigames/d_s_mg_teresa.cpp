@@ -550,7 +550,6 @@ void dScMgTeresa_c::Reveal_StateFinish(int idx) {
 }
 
 #pragma push
-#pragma opt_common_subs off
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 // @symbol _ZN13dScMgTeresa_c22Reveal_StateDipAndRiseEi
 void dScMgTeresa_c::Reveal_StateDipAndRise(int i) {
@@ -606,7 +605,6 @@ void dScMgTeresa_c::Reveal_StateAnimate(int i) {
 }
 
 #pragma push
-#pragma opt_common_subs off
 // @symbol _ZN13dScMgTeresa_c19Reveal_StateSlideInEi
 void dScMgTeresa_c::Reveal_StateSlideIn(int i) {
     mReveal[i].frameTimer += 1;

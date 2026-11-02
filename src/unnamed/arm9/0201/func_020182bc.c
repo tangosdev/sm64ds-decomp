@@ -6,7 +6,7 @@ struct FSFileID {
 extern void FS_InitFile(int *s);
 extern int myFS_OpenFileFast(int buf, struct FSFileID ab);
 extern void Crash(void);
-extern int func_0201834c(int *buf, int x);
+extern unsigned int func_0201834c(int *buf, int x);
 extern int myFS_ConvertPathToFileID(void *out_file_id, const char *path);
 
 /* Load the file an FSFileID names (see func_0201834c); flush nonzero

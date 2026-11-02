@@ -18,7 +18,7 @@
  *                  the near and far range, with per-sound overrides) and its
  *                  pan from the position's x
  *   func_02048a1c  is the sound inside its audible range?
- *   func_02048a18  empty
+ *   func_02048a18  returns its first argument unchanged
  *   func_02048720  pick a free (or the weakest) voice slot for a sound
  *
  * Edges: func_02048234 below is a matrix builder ModelComponents calls, and
@@ -337,7 +337,9 @@ int func_02048a1c(Vector3 *pos, int kind, int id) {
 }
 
 // @symbol func_02048a18
-void func_02048a18(void) {}
+int func_02048a18(int a, int b) {
+    return a;
+}
 
 // @symbol func_02048908
 void func_02048908(void *obj, Vector3 *p) {

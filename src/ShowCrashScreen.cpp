@@ -10,7 +10,7 @@ extern char *GetStageDebugName(void);
 extern int func_020441bc(int i);
 extern int GetActorDebugName(unsigned int i);
 
-extern void nds_printt(void *dst, const char *fmt, u32 v);
+extern void nds_printt(void *dst, const char *fmt, s32 v);
 extern void nds_print(void *dst, const void *str);
 extern void nds_printf(void *dst, const char *fmt, ...);
 

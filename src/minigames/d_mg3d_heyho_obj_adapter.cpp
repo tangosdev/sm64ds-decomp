@@ -90,7 +90,7 @@ struct fBaseView {
 };
 namespace n020c6e4c {
 extern "C" void func_02016acc(dExtSimpleModel_c *m, unsigned int a);
-extern "C" void func_02016b24(char *m, int a);
+extern "C" void func_02016b24(char *m, unsigned int a);
 extern "C" void func_02016a14(char *m, int a);
 extern "C" void func_02016a04(char *m, int a);
 extern "C" void Heyho_UpdateMatrix(char *c);

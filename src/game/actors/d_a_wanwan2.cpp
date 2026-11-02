@@ -160,7 +160,7 @@ struct dCc_c;
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
 int __aeabi_idiv(int, int);
-void func_02012694(int, void *);
+void func_02012694(unsigned int, void *);
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);

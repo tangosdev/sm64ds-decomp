@@ -115,7 +115,6 @@ enum daKing_Donketu_c_AssetId {
 };
 
 #pragma defer_codegen off
-#pragma opt_loop_invariants off
 
 #include "common.h"
 #include "daKing_Donketu_c.h"
@@ -245,7 +244,7 @@ extern Fix12i Vec3_HorzLen(Vec3 *v);
 extern short data_02082214[];
 extern u16 data_0209e650;
 extern u16 DecIfAbove0_Short(void* p);
-extern void func_02012694(int a, void* b);
+extern void func_02012694(unsigned int a, void *b);
 extern int RandomIntInternal(u16* seed);
 }
 extern "C" {

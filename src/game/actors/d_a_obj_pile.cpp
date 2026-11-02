@@ -67,7 +67,7 @@ struct PileCollisionFilePtr : SharedFilePtr {
 /* local extern: no shared header declares these. */
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void func_02012694(int a, void *b);
+extern void func_02012694(unsigned int a, void *b);
 }
 
 /* This TU's two file handles: the pile model and its collision file.

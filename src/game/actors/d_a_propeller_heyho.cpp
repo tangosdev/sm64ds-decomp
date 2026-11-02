@@ -866,7 +866,7 @@ extern "C" {
 short Vec3_HorzAngle(void* a, void* b);
 /* (ApproachAngle: this file's own int-target view, namespace ApproachAngleInt above) */
 short Vec3_VertAngle(void* a, void* b);
-void func_02012694(int a, void* p);
+void func_02012694(unsigned int a, void *p);
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 }
@@ -994,7 +994,7 @@ extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern "C" {
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
-extern void func_02012694(int a, void* b);
+extern void func_02012694(unsigned int a, void *b);
 }
 
 /* Hit reaction, run once per frame outside the knocked state. Takes the colliding

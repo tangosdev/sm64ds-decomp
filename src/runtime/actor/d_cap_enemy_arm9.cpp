@@ -17,10 +17,8 @@
  * leftovers:
  *  - The 0x17f flags byte (mCapIcon.mFlags high byte) and the 0xf4 shadow
  *    flags word have no member names; the measured ldrb/launder forms stay.
- *    AddCap's mFlags &= ~1 and its mCapId store also keep the laundered
- *    pointer forms (`(long long)(int)&member`) -- plain member access there
- *    merges value-numbering classes and shortens the function by three
- *    words.
+ *    AddCap's mFlags &= ~1 and its mCapId store go through plain `&member`
+ *    pointers.
  *  - UpdateCapPos keeps CapVec/CapMtx POD shadows: Vector3's empty
  *    destructor and Matrix4x3's embedded Vector3 change the frame.
  */
@@ -100,12 +98,12 @@ int dCapEnemy_c::AddCap(unsigned int param)
         return;
     }
 
-    *(int *)(((long long)(int)&mFlags)) &= ~1;
+    *(int *)(&mFlags) &= ~1;
     mCapIcon.func_ov001_020ab228((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
 
     int result = func_02005e28();
     if (result != 0) {
-        unsigned char *p = (unsigned char *)(((long long)(int)&mCapId));
+        unsigned char *p = (unsigned char *)(&mCapId);
         result = *p | 0x80;
         *p = result;
     }

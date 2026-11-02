@@ -35,6 +35,10 @@ struct daObjNumber_c : dActor_c {
 
     virtual ~daObjNumber_c() {}
 
+    /* SpawnNumber hands the popup its owner: record the owner's uniqueID
+       and the vertical offset to follow it at. Returns this. */
+    daObjNumber_c *SetOwner(dActor_c *owner);
+
     virtual s32 InitResources();
     virtual s32 CleanupResources();
     virtual s32 Behavior();

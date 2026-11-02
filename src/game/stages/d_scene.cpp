@@ -81,7 +81,7 @@ extern u32 data_0209f5b8;
 
 extern int func_0203d9b4(void);
 
-extern int func_02013edc(u32 sceneID, u32 param, int a);
+extern int func_02013edc(s32 sceneID, s32 param, int a);
 
 extern dFdBrightness_c *data_0209d4ac;
 }

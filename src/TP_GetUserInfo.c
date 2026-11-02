@@ -2,8 +2,8 @@
  * on failure): the user calibration points in the NVRAM copy at
  * 0x027ffc80 + 0x58; 0 when all four raw coordinates are zero, else
  * whether TP_CalcCalibrateParam accepts them. */
-extern int TP_CalcCalibrateParam(int a0, int s58, int s5a, int b5c, int b5d, int s5e, int s60,
-                                 int b62, int b63);
+extern unsigned int TP_CalcCalibrateParam(int a0, int s58, int s5a, int b5c, int b5d, int s5e,
+                                          int s60, int b62, int b63);
 typedef struct {
     char pad[0x58];
     unsigned short s58;
