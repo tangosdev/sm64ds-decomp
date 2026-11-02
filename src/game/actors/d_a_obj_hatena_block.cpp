@@ -218,7 +218,6 @@ extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix,
                                       void *clps);
 extern void func_ov102_0214ad14(void *actor);
 
-
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
 void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src);

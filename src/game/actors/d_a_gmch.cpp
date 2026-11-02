@@ -55,7 +55,6 @@ enum daGmch_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
 
-
 /* Actor ids are from symbols/actor_debug_names.tsv. */
 enum {
     ACTOR_PLAYER = 191
