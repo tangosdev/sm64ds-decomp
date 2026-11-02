@@ -58,6 +58,7 @@ extern unsigned short data_020a0e58[];           // PadData[4]: {held, pressed},
 extern int data_020a0e5a[];                      // the split "pressed" symbol (same memory on the DS)
 extern unsigned short *data_0209214c[];          // CheckInput's three DS bit -> Ctrl bit maps
 void *_ZN8dActor_c4NextEPKS_(const void *prev);   // the actor list walk (coop_actors.cpp)
+unsigned port_stage_behavior_calls(void);       // the Stage behaviour count (hub_presence.cpp): still = a menu
 short GetAngleToCamera(int player_no);           // src/GetAngleToCamera.c: the stick angle is relative to this
 extern int data_0209fc68[];                      // nonzero: each player reads its own camera (Player::Behavior)
 }
@@ -156,7 +157,7 @@ struct G {
     unsigned forge_at = 0, eat_hold = 0;      // LAB: forge from this frame on; a longer eat hold for pictures
     // LAB (TONGUE1, SM64DS_PHIT_LAB_SEEK=<seat>[,<near>]): walk to that friend and use the tongue with the DS pad alone
     int seek_seat = -1, seek_near = 200, seek_cls = -1;   // seek_cls: obj:<class> walks to the nearest such object instead
-    unsigned seek_idle = 0;                              // frames walking without a press (a stale camera frame recalibrates)
+    unsigned seek_idle = 0, seek_from = 0, seek_beh = 0;   // seek_from: no seek before this frame                              // frames walking without a press (a stale camera frame recalibrates)
     int seek_phase = 0; unsigned seek_t = 0; int seek_cup = 0, seek_sign = 1; unsigned seek_f = 0;
     unsigned long long seek_tongues = 0;
     // TONGUE1 counters: why a tongue did not say anything, and what the ROM's own gate said of each refused eat
@@ -199,7 +200,7 @@ void read_env() {
     if (const char *e = std::getenv("SM64DS_PHIT_EATHOLD")) g.eat_hold = (unsigned)std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEEK")) {
         if (!std::strncmp(e, "any", 3)) { g.seek_seat = -2; std::sscanf(e + 3, ",%d", &g.seek_near); }
-        else if (!std::strncmp(e, "obj:", 4)) { g.seek_seat = -3; std::sscanf(e + 4, "%d,%d", &g.seek_cls, &g.seek_near); }
+        else if (!std::strncmp(e, "obj:", 4)) { g.seek_seat = -3; std::sscanf(e + 4, "%d,%d,%u", &g.seek_cls, &g.seek_near, &g.seek_from); }
         else std::sscanf(e, "%d,%d", &g.seek_seat, &g.seek_near);
     }
     if (const char *e = std::getenv("SM64DS_PHIT_LAB")) {
@@ -1150,6 +1151,12 @@ enum : unsigned short { kDsRight = 0x10, kDsLeft = 0x20, kDsUp = 0x40, kDsDown =
 void lab_seek(char *me) {
     if (g.seek_seat < 0 && g.seek_seat != -2 && g.seek_seat != -3) return;
     if (g.hold.active() || g.cv.active) return;
+    {   // only while my level runs: not on star select, not inside a message (the pad would page it, not walk)
+        const unsigned beh = port_stage_behavior_calls();
+        const bool running = beh != g.seek_beh;
+        g.seek_beh = beh;
+        if (!running || me_in_message(me) || g.frame < g.seek_from) return;
+    }
     int seat = g.seek_seat;
     Seen s;
     if (seat == -3) {                           // obj:<class>: the nearest synced object of that class; hands off while I hold anything
