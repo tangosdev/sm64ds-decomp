@@ -75,7 +75,7 @@ extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern int Mg_GetSubmittedScore(void);
 extern int Mg_IsNewRecord(void);
 extern int Mg_GetTopRecord(void);
-extern int Mg_DrawTopLeftCounter(void);
+extern void Mg_DrawTopLeftCounter(int score);
 extern void Mg_DrawTopRightCounter(int, int);
 extern void Mg_DrawTopCenterCounter(int a0);
 extern void Mg_SubmitScore(int self);
@@ -665,8 +665,7 @@ void dScMgPachinko2_c::DrawScore() {
 void dScMgPachinko2_c::DrawTopRecord() {
     if (mPhase < 2)
         return;
-    Mg_GetTopRecord();
-    Mg_DrawTopLeftCounter();
+    Mg_DrawTopLeftCounter(Mg_GetTopRecord());
 }
 
 // @symbol _ZN16dScMgPachinko2_c13StartRoundEndEi

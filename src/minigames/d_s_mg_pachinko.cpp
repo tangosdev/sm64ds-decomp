@@ -180,7 +180,7 @@ extern void Mg_DrawBigNumber(int x, int y, int h, int a, int b, int c, int d);
 extern int  Mg_GetSubmittedScore(void);
 extern void Mg_DrawTopRightCounter(int a, int b);
 extern int  Mg_GetTopRecord(void);
-extern int  Mg_DrawTopLeftCounter(int score);
+extern void Mg_DrawTopLeftCounter(int score);
 extern void Mg_SubmitScore(int self);
 extern int  func_020126e8(int a);
 extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
