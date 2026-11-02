@@ -100,7 +100,7 @@ void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-int func_0201251c(int a, int b, void *pos, int c);
+void func_0201251c(int a, int b, void *pos, int c);
 unsigned int func_02012174(unsigned int a, unsigned int b);
 void func_020167a4(void *model);
 long long __aeabi_uidiv(unsigned int n, unsigned int d);
@@ -241,38 +241,33 @@ void UnknownVsPlayer::func_ov075_021140e4() {
 /* Animation state 3: once the current animation finishes, switch to the
  * one in data_ov075_0211d3ec and drop to state 0. */
 // @symbol _ZN15UnknownVsPlayer19func_ov075_021141b8Ev
-int UnknownVsPlayer::func_ov075_021141b8() {
-    int finished = mModel.Finished();
-    if (!finished)
-        return finished;
+void UnknownVsPlayer::func_ov075_021141b8() {
+    if (!mModel.Finished())
+        return;
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d3ec.filePtr, 4, 0, 0x1000, 0);
     mAnimState = ANIM_NONE;
-    return 0;
 }
 
 /* Animation state 2: once the current one-shot finishes, start the next one
  * and hand over to state 3. */
 // @symbol _ZN15UnknownVsPlayer19func_ov075_02114218Ev
-int UnknownVsPlayer::func_ov075_02114218() {
-    int finished = mModel.Finished();
-    if (!finished)
-        return finished;
+void UnknownVsPlayer::func_ov075_02114218() {
+    if (!mModel.Finished())
+        return;
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d3a4.filePtr, 4, 0x40000000, 0x1000, 0);
     mAnimState = ANIM_WAIT_FOR_IDLE;
-    return 3;
 }
 
 /* Animation state 1: step sounds on frames 4 and 0x22 while walking. */
 // @symbol _ZN15UnknownVsPlayer19func_ov075_0211427cEv
-int UnknownVsPlayer::func_ov075_0211427c() {
+void UnknownVsPlayer::func_ov075_0211427c() {
     Vector3 screenPos;
-    if (mModel.WillHitFrame(4) == 0) {
-        int hit = mModel.WillHitFrame(0x22);
-        if (hit == 0)
-            return hit;
+    if (!mModel.WillHitFrame(4)) {
+        if (mModel.WillHitFrame(0x22) == 0)
+            return;
     }
     data_0209f43c.TransformAndClip(data_0209b3ec, mPosition, 0, screenPos);
-    return func_0201251c(0, 0x20, &screenPos, mSpeed);
+    func_0201251c(0, 0x20, &screenPos, mSpeed);
 }
 
 // @symbol _ZN15UnknownVsPlayer19func_ov075_021142fcEv
@@ -1081,9 +1076,9 @@ extern "C" UnknownVsPlayerStateRow data_ov075_0211d56c[10] = {
 };
 extern "C" UnknownVsPlayerStateRow data_ov075_0211d53c[6] = {
     {&UnknownVsPlayer::func_ov075_021142fc},
-    {(UnknownVsPlayerState)&UnknownVsPlayer::func_ov075_0211427c},
-    {(UnknownVsPlayerState)&UnknownVsPlayer::func_ov075_02114218},
-    {(UnknownVsPlayerState)&UnknownVsPlayer::func_ov075_021141b8},
+    {&UnknownVsPlayer::func_ov075_0211427c},
+    {&UnknownVsPlayer::func_ov075_02114218},
+    {&UnknownVsPlayer::func_ov075_021141b8},
     {&UnknownVsPlayer::func_ov075_021140e4},
     {&UnknownVsPlayer::func_ov075_02114010},
 };

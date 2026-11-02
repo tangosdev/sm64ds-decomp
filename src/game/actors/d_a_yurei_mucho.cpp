@@ -71,7 +71,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ax);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern void MulVec3Mat4x3(const void *in, const void *m, void *out);
 extern void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
-extern int func_02012694(unsigned int id, void *v);
+extern void func_02012694(unsigned int id, void *v);
 extern int data_020a0e68[];
 extern int data_0209e650[];
 extern short data_02082214[];
@@ -671,7 +671,7 @@ void daYurei_Mucho_c::func_ov065_02115ff0()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c19func_ov065_02115f84Ev
 /* The death helper: poof, drop the coins, unregister. */
-int daYurei_Mucho_c::func_ov065_02115f84()
+void daYurei_Mucho_c::func_ov065_02115f84()
 {
     Vector3 v;
     SmallPoofDust();
@@ -680,7 +680,7 @@ int daYurei_Mucho_c::func_ov065_02115f84()
     v.z = mPosZ;
     SpawnCoins(v, mExtraCoinCount + 1, 0xa000, 0);
     KillAndTrackInDeathTable();
-    return func_02012694(0x11e, &mCamSpacePosX);
+    func_02012694(0x11e, &mCamSpacePosX);
 }
 
 
