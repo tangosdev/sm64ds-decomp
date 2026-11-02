@@ -7,7 +7,24 @@
     "extern_vtable_classes": 19,
     "inline_asm": 5,
     "launder_or_forced": 54,
-    "launder_sites": 168
+    "launder_sites": 168,
+    "pragma_by_name": {
+      "opt_common_subs": 115,
+      "opt_dead_assignments": 3,
+      "opt_foldconstants": 1,
+      "opt_lifetimes": 5,
+      "opt_loop_invariants": 16,
+      "opt_prelinearize": 1,
+      "opt_propagation": 54,
+      "opt_strength_reduction": 86,
+      "optimize_for_size": 13
+    },
+    "pragma_files": 102,
+    "pragma_overrides": 294,
+    "pragma_resets": 1,
+    "pragma_resets_by_name": {
+      "opt_dead_assignments": 1
+    }
   },
   "exclusions": {
     "by_value_class_param": 0
