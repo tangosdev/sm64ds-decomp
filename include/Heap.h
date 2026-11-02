@@ -14,8 +14,7 @@
  * `mHeap::SolidHeap_t' (0x02099cf8) and `mHeap::ExpHeap_t' (0x02099cec). Every
  * member symbol is mangled against those names. `Heap', `SolidHeap' and
  * `ExpandingHeap' survive only as typedefs, the tree's older spelling, so the
- * C++ callers that say `Heap*' did not have to change with the rename; the C
- * spelling below has no mangling and keeps the old tag.
+ * C++ callers that say `Heap*' did not have to change with the rename.
  *
  * The namespace is not cosmetic: mwccarm writes the qualified name into the
  * class's type_info string, and a TU that emits this class's RTTI (the one that
@@ -133,15 +132,6 @@
  * FIELD MEANINGS ARE DOCUMENTED ON THE C++ SPELLING BELOW. They are kept off
  * these lines because that gate parses a trailing `/* 0xNN *[/]' and a comment
  * running onto the next line makes the field unparsed. */
-#ifndef __cplusplus
-struct Heap {
-    void* vtable;                   /* 0x00 */
-    void* heapStart;                /* 0x04 */
-    u32   heapSize;                 /* 0x08 */
-    struct Heap* parentHeap;        /* 0x0c */
-    u32   flags;                    /* 0x10 */
-};
-#else
 namespace Memory {
 void operator_delete2(void *);
 }
@@ -283,6 +273,5 @@ struct Heap_t {
 } /* namespace mHeap */
 
 typedef mHeap::Heap_t Heap;
-#endif
 
 #endif

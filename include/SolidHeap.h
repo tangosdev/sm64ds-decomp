@@ -65,26 +65,14 @@
 #include "Heap.h"
 
 /* SolidHeapAllocator is only ever pointed at from here, so a declaration is
- * enough -- no definition is pulled in. The typedef keeps the member spelled
- * the same in C and in C++; the guard is common.h's idiom for the same job. */
+ * enough -- no definition is pulled in. The guard is common.h's idiom for the
+ * same job. */
 #ifndef SOLIDHEAPALLOCATOR_FWD_DECLARED
 #define SOLIDHEAPALLOCATOR_FWD_DECLARED
 struct SolidHeapAllocator;
 typedef struct SolidHeapAllocator SolidHeapAllocator;
 #endif
 
-#ifndef __cplusplus
-/* Flat, because C has neither bases nor an implicit vptr. The first five
-   members are Heap's, repeated in its order; see include/Heap.h. */
-struct SolidHeap {
-    void* vtable;                   /* 0x00 */
-    void* heapStart;                /* 0x04 */
-    u32   heapSize;                 /* 0x08 */
-    struct Heap* parentHeap;        /* 0x0c */
-    u32   flags;                    /* 0x10 */
-    SolidHeapAllocator* allocator;  /* 0x14 */
-};
-#else
 namespace mHeap {
 
 struct SolidHeap_t : Heap_t {
@@ -122,6 +110,5 @@ struct SolidHeap_t : Heap_t {
 } /* namespace mHeap */
 
 typedef mHeap::SolidHeap_t SolidHeap;
-#endif
 
 #endif
