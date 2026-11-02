@@ -577,10 +577,11 @@ int daPly_c::func_ov002_020bd664(unsigned char *cmd, int beginFrame, int endFram
 // @symbol _ZN7daPly_c8CanPauseEv
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_0211067c;
+extern daPly_c::State data_ov002_021106ac;
+}
 int daPly_c::CanPause() {
 
-    extern daPly_c::State data_ov002_0211067c;
-    extern daPly_c::State data_ov002_021106ac;
     if (*(unsigned char *)((char *)&mIsUnderwater)) {
         if (this->IsState(data_ov002_0211067c))
             goto ret1a;
@@ -599,7 +600,6 @@ int daPly_c::CanPause() {
     return 1;
 ret0:
   return 0;
-}
 }
 
 // @symbol func_ov002_020bd8ac
@@ -2116,16 +2116,16 @@ int daPly_c::func_ov002_020c0108(int p1) {
 
 // @symbol _ZN7daPly_c19func_ov002_020c031cEv
 extern "C" {
+extern daPly_c::State data_ov002_02110514;
+}
 int daPly_c::func_ov002_020c031c() {
 
-    extern daPly_c::State data_ov002_02110514;
     int r4 = this->mFloorClass;
     if (this->IsState(data_ov002_02110514) && this->mFloorNormalY > 0x800) {
         if (r4 == 0)
             r4 = 2;
     }
     return r4;
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c0364Ej
@@ -3632,13 +3632,13 @@ void daPly_c::func_ov002_020c2e78() {
  * at.
  */
 extern "C" {
+extern daPly_c::State data_ov002_021102a4;
+}
 int daPly_c::CanWarp() {
 
-    extern daPly_c::State data_ov002_021102a4;
     if (this->IsState(ST_WAIT) || this->IsState(data_ov002_021102a4))
         return 1;
     return 0;
-}
 }
 
 // @symbol _ZN7daPly_c7IsInAirEv
@@ -4703,30 +4703,30 @@ int daPly_c::ShowMessage(fBase_c &a_, unsigned int b, const Vector3 *v, unsigned
 // @symbol _ZN7daPly_c18HasFinishedTalkingEv
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_0211046c;
+}
 int daPly_c::HasFinishedTalking() {
 
-    extern daPly_c::State data_ov002_0211046c;
     if (this->IsState(data_ov002_0211046c) && mStateStep == 3) {
         mStateStep = 4;
         return 1;
     }
     return 0;
 }
-}
 
 // @symbol _ZN7daPly_c12Unk_020c4f40Et
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_0211046c;
+}
 int daPly_c::Unk_020c4f40(unsigned short x) {
 
-    extern daPly_c::State data_ov002_0211046c;
     if (this->IsState(data_ov002_0211046c) && mStateStep == 3) {
         mStateWaitTimer = x;
         mStateStep = 5;
         return 1;
     }
     return 0;
-}
 }
 
 // @symbol _ZN7daPly_c9StartTalkER7fBase_cb
@@ -4818,9 +4818,10 @@ int func_ov002_020c5244(void)
 // @symbol _ZN7daPly_c12GetTalkStateEv
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_0211046c;
+}
 int daPly_c::GetTalkState() {
 
-    extern daPly_c::State data_ov002_0211046c;
     if (!this->IsState(data_ov002_0211046c))
         return -1;
     unsigned char v = mStateStep;
@@ -4831,7 +4832,6 @@ int daPly_c::GetTalkState() {
     if (v == 5 || v == 7)
         return 3;
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c21St_StuckInGround_MainEv
@@ -5229,11 +5229,12 @@ int daPly_c::func_ov002_020c5d0c() {
 
 // @symbol _ZN7daPly_c19func_ov002_020c5d60Ev
 extern "C" {
+extern daPly_c::State data_ov002_02110124;
+extern daPly_c::State data_ov002_02110064;
+}
 void daPly_c::func_ov002_020c5d60() {
     void* c = (void*)this;
 
-    extern daPly_c::State data_ov002_02110124;
-    extern daPly_c::State data_ov002_02110064;
     if (this->IsState(data_ov002_02110124)) {
         if (this->mStateStep == 1)
             return;
@@ -5243,13 +5244,13 @@ void daPly_c::func_ov002_020c5d60() {
   (this->mStateFlags) |= 0x400;
   this->func_ov002_020c5dec(1);
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020c5decEi
 extern "C" {
+extern daPly_c::State data_ov002_02110124;
+}
 int daPly_c::func_ov002_020c5dec(int r1) {
 
-    extern daPly_c::State data_ov002_02110124;
     if (r1 != 1) {
         if (this->mIsNoControl != 0)
             return 0;
@@ -5257,7 +5258,6 @@ int daPly_c::func_ov002_020c5dec(int r1) {
     this->mStateStep = (unsigned char)r1;
     this->ChangeState(data_ov002_02110124);
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c15St_DeadHit_MainEv
@@ -5714,16 +5714,16 @@ int daPly_c::Unk_020c6a10(unsigned int arg_) {
 
 // @symbol _ZN7daPly_c19func_ov002_020c6adcEv
 extern "C" {
+extern daPly_c::State data_ov002_021102a4;
+}
 int daPly_c::func_ov002_020c6adc() {
 
-    extern daPly_c::State data_ov002_021102a4;
     unsigned short v = (unsigned short)(mStateFlags & 8);
     if (v == 0)
         return 0;
     mStateFlags &= ~8;
     this->ChangeState(data_ov002_021102a4);
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c16St_Teleport_MainEv
@@ -5967,16 +5967,16 @@ void daPly_c::func_ov002_020c70ac() {
 
 // @symbol _ZN7daPly_c19func_ov002_020c7194Ev
 extern "C" {
+extern daPly_c::State data_ov002_02110214;
+}
 void daPly_c::func_ov002_020c7194() {
 
-    extern daPly_c::State data_ov002_02110214;
     if (this->FinishedAnim() == 0)
         return;
     mStateStep = 1;
     if (func_ov002_020c44c4() != 0)
         return;
     this->ChangeState(data_ov002_02110214);
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c71e0Ev
@@ -7971,15 +7971,15 @@ int daPly_c::St_DebugFly_Init() {
 // @symbol _ZN7daPly_c12Unk_020ca8f8Ev
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_0211064c;
+extern daPly_c::State data_ov002_02110664;
+}
 int daPly_c::Unk_020ca8f8() {
-    extern daPly_c::State data_ov002_0211064c;
-    extern daPly_c::State data_ov002_02110664;
     if (IsState(data_ov002_0211064c))
         return 1;
     if (IsState(data_ov002_02110664))
         return 2;
     return 0;
-}
 }
 
 // @symbol func_ov002_020ca940
@@ -8882,13 +8882,13 @@ void func_ov002_020cc05c(char *self)
 // @symbol _ZN7daPly_c9IsOnShellEv
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_02110304;
+}
 int daPly_c::IsOnShell() {
-    extern daPly_c::State data_ov002_02110304;
     if (IsState(data_ov002_02110304))
         return 1;
     *(int *)((char *)&mRidingShell) = 0;
     return 0;
-}
 }
 
 // @symbol func_ov002_020cc16c
@@ -13749,9 +13749,10 @@ int daPly_c::St_Bonk_Init() {
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_0211037c;
+}
 void daPly_c::BlowAway(short v) {
 
-    extern daPly_c::State data_ov002_0211037c;
     if (mIsMetal)
         return;
     if (mIsBalloon)
@@ -13759,7 +13760,6 @@ void daPly_c::BlowAway(short v) {
     mPrevAngleY = v;
     mAngleY = (short)(v + 0x8000);
     this->ChangeState(data_ov002_0211037c);
-}
 }
 
 // @symbol _ZN7daPly_c16St_BurnLava_MainEv
@@ -14379,16 +14379,16 @@ int func_ov002_020d600c(daPly_c *player) {
 
 // @symbol _ZN7daPly_c19func_ov002_020d6048Ev
 extern "C" {
+extern daPly_c::State data_ov002_02110064;
+}
 int daPly_c::func_ov002_020d6048() {
 
-    extern daPly_c::State data_ov002_02110064;
 
     if (this->IsState(data_ov002_02110064)) {
         if (this->mStateStep == 3)
             return 1;
     }
     return 0;
-}
 }
 
 // @symbol _ZN7daPly_c23St_InYoshiMouth_CleanupEv
@@ -15670,15 +15670,15 @@ void func_ov002_020d8158(char* c)
 // @symbol _ZN7daPly_c13InitFireYoshiEv
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_0211004c;
+}
 void daPly_c::InitFireYoshi() {
 
-    extern daPly_c::State data_ov002_0211004c;
     u16 *p = &this->mStateFlags;
     *p |= 0x1000;
     if (mObjInMouth == 0)
         return;
     this->ChangeState(data_ov002_0211004c);
-}
 }
 
 // @symbol _ZN7daPly_c21St_DizzyStars_CleanupEv
@@ -16759,13 +16759,12 @@ int daPly_c::St_Hurt_Init() {
 // @symbol _ZN7daPly_c12GetHurtStateEv
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_02110094;
+}
 int daPly_c::GetHurtState() {
-
-    extern daPly_c::State data_ov002_02110094;
     if (this->IsState(data_ov002_02110094))
         return mStateStep & 7;
     return -1;
-}
 }
 
 // @symbol func_ov002_020d9c70
@@ -18829,11 +18828,11 @@ int daPly_c::St_Dive_Init() {
 // @symbol _ZN7daPly_c8IsDivingEv
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_021105bc;
+}
 int daPly_c::IsDiving() {
 
-    extern daPly_c::State data_ov002_021105bc;
     return this->IsState(data_ov002_021105bc) != 0;
-}
 }
 
 // @symbol _ZN7daPly_c17LostGrabbedObjectEv
@@ -19937,25 +19936,25 @@ int daPly_c::St_Cannon_Init() {
 // @symbol _ZN7daPly_c16IsInsideOfCannonEv
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_021102d4;
+}
 int daPly_c::IsInsideOfCannon() {
 
-    extern daPly_c::State data_ov002_021102d4;
     if (!this->IsState(data_ov002_021102d4))
         return 0;
     return mStateStep != 2 ? 1 : 0;
-}
 }
 
 // @symbol _ZN7daPly_c22IsBeingShotOutOfCannonEv
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
+extern daPly_c::State data_ov002_021102d4;
+}
 int daPly_c::IsBeingShotOutOfCannon() {
 
-    extern daPly_c::State data_ov002_021102d4;
     if (!this->IsState(data_ov002_021102d4))
         return 0;
     return mStateStep == 2 ? 1 : 0;
-}
 }
 
 // @symbol func_ov002_020df300
