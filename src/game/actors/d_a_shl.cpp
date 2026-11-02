@@ -1,11 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /**
  * Koopa shell (profile SHELL) -- ov102/daShl_c.
  *
@@ -65,6 +58,7 @@ struct System {
  */
 
 #include "common.h"
+#include "Particle__System.h"
 #include "daShl_c.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"

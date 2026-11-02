@@ -1,8 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
 /* Production translation unit for ov063/daTrs_c.
  * 97 functions, .text 0x02115ee0..0x0211c600: the Boo (TERESA, actor 0xd1) and
  * Big Boo (BOSS_TERESA, 0xd2), both daTrs_c; the Boo cage (T_BASKET, 0xd4,
@@ -58,6 +54,7 @@ enum daTrs_c_AssetId {
 #pragma defer_codegen off
 
 #include "common.h"
+#include "Particle__System.h"
 #include "types.h"
 #include "dActor_c.h"
 #include "daTrs_c.h"
@@ -196,13 +193,6 @@ extern void func_020167a4(void *p);
 void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angle);
 extern int data_0209e650;
 extern int Vec3_Dist(const void* a, const void* b);
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int id, int x, int y, int z);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];

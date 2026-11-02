@@ -1246,39 +1246,104 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1287",
+      "from": "@1343",
       "to": "@1336",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1344 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho_Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1346 before -> @1344 after); licensed under the existing pin @1336"
     },
     {
-      "from": "@1288",
+      "from": "@1344",
       "to": "@1337",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1345 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho_Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1347 before -> @1345 after); licensed under the existing pin @1337. The six function-local Vector3s did not move this node: the sinit still relocates to @1288."
     },
     {
-      "from": "@167",
+      "from": "@223",
       "to": "@174",
       "evidence": "registration node of sHeyho_StartMotionFlyIn_Left256. FlyIn's pool word relocates to this node and to the Left256 storage. ov064 already defines @167, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @174."
     },
     {
-      "from": "@171",
+      "from": "@227",
       "to": "@175",
       "evidence": "registration node of sHeyho_StartMotionFlyIn_Right256. FlyIn's pool word relocates to this node. ov100 already defines @171, so this row maps it to the unused same-length @175."
     },
     {
-      "from": "@225",
+      "from": "@281",
       "to": "@241",
       "evidence": "registration node of sHeyho_StartMotionRegroup_Left256. ov080 defines the compiled @225 and ov006 unit020cd744 defines @235, so this maps it to the unused same-length @241."
     },
     {
-      "from": "@229",
+      "from": "@285",
       "to": "@242",
       "evidence": "registration node of sHeyho_StartMotionRegroup_Right256. ov070 defines the compiled @229 and ov006 unit020cd744 defines @236, so this maps it to the unused same-length @242."
     },
     {
-      "from": "@320",
+      "from": "@376",
       "to": "@243",
       "evidence": "registration node of sHeyho_React_Left256. ov006 unit020cd744 also defines the compiled @320, so this maps it to the unused same-length @243."
+    },
+    {
+      "from": "_ZGVsHeyho_React_Left256$373",
+      "to": "_ZGVsHeyho_React_Left256$317",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "_ZGVsHeyho_React_Right256$377",
+      "to": "_ZGVsHeyho_React_Right256$321",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "_ZGVsHeyho_StartMotionRegroup_Left256$278",
+      "to": "_ZGVsHeyho_StartMotionRegroup_Left256$222",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "_ZGVsHeyho_StartMotionFlyIn_Right256$224",
+      "to": "_ZGVsHeyho_StartMotionFlyIn_Right256$168",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "_ZGVsHeyho_StartMotionRegroup_Right256$282",
+      "to": "_ZGVsHeyho_StartMotionRegroup_Right256$226",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "_ZGVsHeyho_StartMotionFlyIn_Left256$220",
+      "to": "_ZGVsHeyho_StartMotionFlyIn_Left256$164",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "sHeyho_StartMotionFlyIn_Left256$220",
+      "to": "sHeyho_StartMotionFlyIn_Left256$164",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "sHeyho_StartMotionFlyIn_Right256$224",
+      "to": "sHeyho_StartMotionFlyIn_Right256$168",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "sHeyho_StartMotionRegroup_Left256$278",
+      "to": "sHeyho_StartMotionRegroup_Left256$222",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "sHeyho_StartMotionRegroup_Right256$282",
+      "to": "sHeyho_StartMotionRegroup_Right256$226",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "sHeyho_React_Left256$373",
+      "to": "sHeyho_React_Left256$317",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@380",
+      "to": "@324",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "sHeyho_React_Right256$377",
+      "to": "sHeyho_React_Right256$321",
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

@@ -1,9 +1,4 @@
 //cpp
-namespace Particle {
-struct System {
-    static void *NewSimple(unsigned, int, int, int);
-};
-}
 /* dMg3DHeyhoObjAdapter_c translation unit, ov006 0x020c4048..0x020c6f8c, text only: the class's
    base constructor (its vtable and RTTI stay at their ROM homes in the module's unowned .data)
    plus 49 Heyho-minigame helper functions (see config/tu_manifest.d/ov006/dMg3DHeyhoObjAdapter_c.json).
@@ -36,6 +31,7 @@ struct System {
      lean, size, separated, startVel*, range*, and CheckHitA's
      anchor/command. */
 #include "common.h"
+#include "Particle__System.h"
 #include "decl_common.h"
 #include "types.h"
 #include "nitro/fx/fx.h"

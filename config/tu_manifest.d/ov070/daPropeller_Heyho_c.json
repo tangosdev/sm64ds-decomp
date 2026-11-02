@@ -470,37 +470,37 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@935",
+      "from": "@991",
       "to": "@140",
       "evidence": "mwcc numbers this registration node @992 per TU and the fleet already defines a global @992, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@936",
+      "from": "@992",
       "to": "@141",
       "evidence": "mwcc numbers this registration node @993 per TU and the fleet already defines a global @993, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@937",
+      "from": "@993",
       "to": "@142",
       "evidence": "mwcc numbers this registration node @994 per TU and the fleet already defines a global @994, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@938",
+      "from": "@994",
       "to": "@143",
       "evidence": "mwcc numbers this registration node @995 per TU and the fleet already defines a global @995, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@939",
+      "from": "@995",
       "to": "@144",
       "evidence": "mwcc numbers this registration node @996 per TU and the fleet already defines a global @996, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@940",
+      "from": "@996",
       "to": "@145",
       "evidence": "mwcc numbers this registration node @997 per TU and the fleet already defines a global @997, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@941",
+      "from": "@997",
       "to": "@146",
       "evidence": "mwcc numbers this registration node @998 per TU and the fleet already defines a global @998, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

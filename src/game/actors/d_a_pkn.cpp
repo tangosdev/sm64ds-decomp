@@ -1,8 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
 /* daPkn_c (PAKUN / PIRANHA_PLANT 250), ov084 0x0212eaf0..0x02130174.
  *
  * RTTI names daPkn_c. Typeinfo at 0x02130bf8 points to the string at
@@ -29,6 +25,7 @@ struct Vector3_16f;
  */
 
 #include "common.h"
+#include "Particle__System.h"
 #include "daPkn_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
@@ -120,13 +117,6 @@ void  Matrix4x3_ApplyInPlaceToRotationY(PknMtx43 *m, s16 ang);
 void  MulMat4x3Mat4x3(void *a, void *b, void *c);
 
 void *d_a_pknNewHold(u32 handle, u32 id, int x, int y, int z, const void *f, void *cb);
-namespace Particle {
-struct System {
-    static void NewSimple(u32 id, int x, int y, int z);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 int d_a_pknPlaySubHold(u32 a, u32 b, u32 c, int t, int flag);
 }
 
