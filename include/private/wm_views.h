@@ -31,10 +31,11 @@ typedef struct WMStatus {
     char pad_186[0x18e - 0x186];
     unsigned short mp_maxSendSize; /* 0x18e */
     unsigned short mp_maxRecvSize; /* 0x190 */
-    char pad_192[0x194 - 0x192];
+    char pad_192[0x1f2 - 0x192];
+    unsigned short allowedChannel; /* 0x1f2 -- bit n-1 set when channel n is usable */
 } WMStatus;
 
-typedef char WMStatus_size_must_be_0x194[sizeof(WMStatus) == 0x194 ? 1 : -1];
+typedef char WMStatus_size_must_be_0x1f4[sizeof(WMStatus) == 0x1f4 ? 1 : -1];
 
 /* WM_Init carves the 0x1300-byte WM system buffer data_020a89ac into ARM7's
  * work area (WM7), the status block, the two FIFO blocks and these callback
@@ -55,5 +56,32 @@ typedef struct WMArm9Buf {
     char pad_140[0x560 - 0x140];
     unsigned short dmaNo; /* 0x560 -- the DMA channel WM_Init was given */
 } WMArm9Buf;
+
+/* NitroSDK WMBssDesc, the beacon record of a parent (0xc0 bytes: the SDK's
+ * WM_SIZE_BSSDESC). Names are the SDK's; this SDK build reads and writes the
+ * ssid and ggid as halfwords, so ssid is u16[16] where the public header has
+ * u8[32] and gameInfo.ggid is u16[2]; the types choose the load and store
+ * widths, so they stay as the code uses them. Only offsets the ROM's code
+ * reads are named. */
+typedef struct WMBssDesc {
+    unsigned char pad_00[0xc];
+    unsigned short ssid[0x10]; /* 0x0c -- u8[32] in the SDK */
+    unsigned char pad_2c[0xa];
+    unsigned short channel; /* 0x36 */
+    unsigned char pad_38[4];
+    unsigned short gameInfoLength; /* 0x3c */
+    unsigned char pad_3e[6];
+    struct {
+        unsigned short ggid[2];           /* 0x44 */
+        unsigned short tgid;              /* 0x48 */
+        unsigned char userGameInfoLength; /* 0x4a */
+        unsigned char attribute;          /* 0x4b */
+        unsigned short parentMaxSize;     /* 0x4c */
+        unsigned short childMaxSize;      /* 0x4e */
+    } gameInfo;
+    unsigned char pad_50[0xc0 - 0x50];
+} WMBssDesc;
+
+typedef char WMBssDesc_size_must_be_0xc0[sizeof(WMBssDesc) == 0xc0 ? 1 : -1];
 
 #endif

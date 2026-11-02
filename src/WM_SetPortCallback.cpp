@@ -1,19 +1,11 @@
 //cpp
 #include "IRQ.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
 extern int WMi_CheckInitialized(void);
 extern char *WM_GetSystemWork(void);
-
-/* WM_GetSystemWork's WMArm9Buf, the per-port tables this function fills,
- * with NitroSDK's names (WmDataSharingSetDataCallback, the data-sharing send callback,
- * looks its argument up in the second one by port). */
-typedef struct WMArm9Buf {
-    char pad_00[0xac];
-    void *portCallbackTable[16];    /* 0x0ac */
-    void *portCallbackArgument[16]; /* 0x0ec */
-} WMArm9Buf;
 
 /* NitroSDK wm_sync.c WM_SetPortCallback: store port's receive callback
  * and its argument, with interrupts off. ILLEGAL_STATE (3) before WM_Init

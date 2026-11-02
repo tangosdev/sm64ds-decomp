@@ -1,4 +1,5 @@
 //cpp
+#include "private/wm_views.h"
 
 namespace CP15 {
 void FlushDataCache(unsigned int a, unsigned int b);
@@ -28,15 +29,6 @@ struct WMStartScanReq {
     unsigned short bssid[3];       /* 0xa */
 };
 
-/* WM_GetSystemWork's WMArm9Buf. 0x0c is NitroSDK's fifo9to7, the ARM9 to
- * ARM7 request buffer (medium: the SDK's layout puts it here, between status
- * at 0x04 and the port callback tables at 0xac; WM_StartConnect writes its
- * request there the same way). Typed as the one request written here. */
-struct WMArm9Buf {
-    char pad_00[0xc];
-    WMStartScanReq *fifo9to7; /* 0x0c */
-};
-
 /* NitroSDK WM_StartScan(callback, param): in state IDLE, CLASS1 or SCAN
  * (2, 3, 5), check the scan parameter (a buffer and channel 1..14), flush
  * it, register the callback and send the START_SCAN request. Returns 2
@@ -55,7 +47,7 @@ int WM_StartScan(int a, char *b) {
     if (h < 1 || h > 0xe) return 6;
     CP15::FlushDataCache((unsigned int)b, 0x20);
     WM_SetCallbackTable(0xa, a);
-    req = ((WMArm9Buf *)WM_GetSystemWork())->fifo9to7;
+    req = (WMStartScanReq *)((WMArm9Buf *)WM_GetSystemWork())->fifo9to7;
     req->apiid = 0xa;
     req->channel = param->channel;
     req->scanBuf = param->scanBuf;
