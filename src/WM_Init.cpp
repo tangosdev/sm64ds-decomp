@@ -10,6 +10,7 @@
  * (WmReceiveFifo). */
 #include "types.h"
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
@@ -24,7 +25,7 @@ extern int OS_SendMessage(void *q, void *val, int flag);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 
 extern u16 data_020a89a8;
-extern int *data_020a89ac;
+extern WMArm9Buf *data_020a89ac;
 extern void *data_020a89b0; /* the free FIFO-buffer message queue */
 extern int data_020a89c4;
 extern char data_020a8a40[];
@@ -56,15 +57,15 @@ int WM_Init(void *buf, int ch) {
     CP15::InvalidateDataCache((unsigned int)buf, 0x1300);
     DMASyncFillTransfer(ch, buf, 0, 0x1300);
 
-    data_020a89ac = (int *)buf;
-    data_020a89ac[0] = (int)buf + 0x600;
-    data_020a89ac[1] = data_020a89ac[0] + 0x100;
-    data_020a89ac[3] = data_020a89ac[1] + 0xa00;
-    data_020a89ac[4] = data_020a89ac[3] + 0x100;
+    data_020a89ac = (WMArm9Buf *)buf;
+    data_020a89ac->WM7 = (void *)((int)buf + 0x600);
+    data_020a89ac->status = (WMStatus *)((int)data_020a89ac->WM7 + 0x100);
+    data_020a89ac->fifo9to7 = (void *)((int)data_020a89ac->status + 0xa00);
+    data_020a89ac->fifo7to9 = (void *)((int)data_020a89ac->fifo9to7 + 0x100);
 
     WmClearFifoRecvFlag();
-    *(u16 *)((char *)data_020a89ac + 0x560) = (u16)ch;
-    data_020a89ac[0x4f] = 0;
+    data_020a89ac->dmaNo = (u16)ch;
+    data_020a89ac->initCleared = 0;
 
     {
         int i;
