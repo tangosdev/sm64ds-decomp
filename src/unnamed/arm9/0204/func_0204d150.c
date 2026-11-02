@@ -1,4 +1,5 @@
 #include "types.h"
+#include "private/spl_particle_views.h"
 #pragma opt_strength_reduction off /* required: without it the match fails */
 
 /* The particle definition's texture animation (SPL's SPLTexAnim): up to eight
@@ -9,23 +10,9 @@ struct TexAnim {
     u8 step;        /* 0x9 */
 };
 
-/* The particle definition (func_0204a730's PtclDef; SPL's SPLResource). */
-struct PtclDef {
-    void *data;
-    void *scaleAnim;
-    void *colorAnim;
-    void *alphaAnim;
-    struct TexAnim *texAnim; /* 0x10 */
-};
-
-struct Particle {
-    char pad0[0x42];
-    u8 texture; /* 0x42 -- the index of the particle's current texture */
-};
-
 /* The texture animation callback (pret's SPL: SPLAnim_Texture): picks the
  * frame whose span holds lifeRate. */
-void func_0204d150(struct Particle *ptcl, struct PtclDef *def, int lifeRate) {
+void func_0204d150(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
     struct TexAnim *anim = def->texAnim;
     int i = 0;
     int end;
