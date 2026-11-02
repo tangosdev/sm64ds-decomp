@@ -51,7 +51,7 @@ struct HolheiState {
 
 extern "C" {
 extern short func_02010844(void* unused, Vector3* v, short angle);
-extern void func_02012694(int a, void *p);
+extern void func_02012694(unsigned int a, void *p);
 extern int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern void func_ov002_020db54c(int p, int a, int b, int s);

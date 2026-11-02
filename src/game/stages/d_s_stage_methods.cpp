@@ -4592,7 +4592,7 @@ int func_0203da9c(void);
 int func_0203da3c(void);
 u32 func_0203dad4(void);
 void func_0203b9b4(int *p, int v);
-void *__cxa_vec_new(int a, int b, int c, void *ctor, void *dtor);
+void *__cxa_vec_new(unsigned int a, unsigned int b, unsigned int c, void *ctor, void *dtor);
 void func_ov001_020ab2e4(void);
 // local extern: the fader array's constructor is passed by address to
 // __cxa_vec_new, which member syntax cannot express.

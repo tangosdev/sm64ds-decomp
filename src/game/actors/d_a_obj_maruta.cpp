@@ -54,7 +54,7 @@ struct ResourceDescriptor {
 typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
 extern "C" {
-void func_02012694(int a, void *b);
+void func_02012694(unsigned int a, void *b);
 void Matrix4x3_FromRotationXYZExt(void *mtx, int x, int y, int z);
 int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);

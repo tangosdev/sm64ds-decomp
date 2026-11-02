@@ -59,7 +59,7 @@ extern daSnowball_StateRec data_ov081_02128eb4;
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void func_02012694(int a0, void *a1);
+void func_02012694(unsigned int a0, void *a1);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 }
 

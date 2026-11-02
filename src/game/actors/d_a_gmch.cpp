@@ -149,8 +149,8 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * GmchDrawReg supplies the draw offset's .init stores so the plain Vector3
  * earns its registered destructor instead of constant initialization. */
 extern "C" {
-extern Fix12i Vec3_Dist(const void *a, const void *b);
-extern s16    Vec3_HorzAngle(const void *a, const void *b);
+extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern unsigned int RandomIntInternal(int *seed);
 extern void func_02038414(void *clsn);
 extern void   Matrix4x3_FromRotationY(void *m, int angle);
@@ -208,7 +208,7 @@ void daGmch_c::ChooseNextState()
     int curState;
 
     distC = DistToCPlayer();
-    dist = Vec3_Dist(&mPosX, &mSpawnPosX);
+    dist = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
     if (dist > 0x5dc000) {
         mNextState = 5;
     } else if (distC > 0x3e8000) {
@@ -294,7 +294,7 @@ void daGmch_c::CheckPlayerContact()
     }
 
     if (mdCcAc_c.hitFlags & HIT_MEGA_CHARACTER) {
-        mPrevAngleY = Vec3_HorzAngle(&player->mPosX, &mPosX);
+        mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
         mAngleY = (short)(mPrevAngleY + 0x8000);
         player->IncMegaKillCount();
         SetState(8);
@@ -549,13 +549,13 @@ int daGmch_c::EnterState6()
 // @symbol _ZN8daGmch_c12UpdateState5Ev
 int daGmch_c::UpdateState5()
 {
-    Fix12i distToSpawn = Vec3_Dist(&mPosX, &mSpawnPosX);
+    Fix12i distToSpawn = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
     if (distToSpawn < mHorzSpeed) {
-        mAngleY = Vec3_HorzAngle(&mPosX, &mSpawnPosX);
+        mAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mSpawnPosX);
         mPrevAngleY = mAngleY;
         mHorzSpeed = distToSpawn;
     } else {
-        ApproachLinear(mAngleY, Vec3_HorzAngle(&mPosX, &mSpawnPosX), 0x2bc);
+        ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, (Vector3 *)&mSpawnPosX), 0x2bc);
         mPrevAngleY = mAngleY;
     }
     mAnmModel.Advance();

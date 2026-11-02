@@ -13,7 +13,7 @@ struct Obj {
     unsigned int bottom; /* 0x24 */
 };
 
-extern int myFS_ReadFile(struct Obj *a, void *b, unsigned int c);
+extern int myFS_ReadFile(struct Obj *a, void *b, int c);
 extern int func_02018568(void *a);
 extern unsigned int func_02018ac4(void *p);
 extern void DecompressLZ16(void *src, void *dst);

@@ -77,8 +77,7 @@ void  Matrix4x3_FromRotationY(void *m, int angle);
 void  Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 
-void  func_02012694(int id, void *pos);
-
+void func_02012694(unsigned int id, void *pos);
 
 namespace Particle {
 struct System {

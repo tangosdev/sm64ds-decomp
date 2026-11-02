@@ -135,7 +135,7 @@ extern void Camera_InitPresenterView(char *);
 extern int Presenter_Load(char *);
 extern unsigned int LoadCompressedFileAt(int, int);
 extern void *LoadFile(int);
-void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
+void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride, void *ctor, void *dtor);
 void Cup_Nothing(void);
 void func_0203d738(void);
 }

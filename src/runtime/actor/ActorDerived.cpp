@@ -23,7 +23,7 @@
 #include "dBase_c.h"
 
 extern "C" {
-extern int func_02042fe4(int a, int b, int c);
+extern int func_02042fe4(int a, unsigned int b, int c);
 extern fBase_c *func_02042ffc(u32 actorID, fBase_c *parent);
 /* local extern: no header declares it; the next ROM entry's crash-forward
  * target, called only by the absorbed spin below. */

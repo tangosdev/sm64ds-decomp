@@ -18,7 +18,7 @@ extern void OSi_SendToPxi(u16 data);
 extern void OSi_ReloadRomData(void);
 extern void OSi_DoBoot(void);
 extern vu16 OSi_IsResetOccurred;
-extern void OSReadROMArea(u32 romOffset, u32 dest, u32 size);
+extern void OSReadROMArea(u32 romOffset, u32 dest, s32 size);
 
 /* OS_ResetSystem at 0x01ffdd98 (ITCM) -- NitroSDK soft reset, with OSi_DoResetSystem
  * inlined. Identified against pret/pokediamond's OS_reset.c, whose OS_ResetSystem and

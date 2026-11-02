@@ -109,7 +109,7 @@ enum {
 extern "C" {
 void func_02012694(u32 id, const Vector3 *pos);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-int IsStarCollectedInCurLevel(u32 flag);
+int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, void *self, int v);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);

@@ -127,7 +127,7 @@ extern void SetSubBg2Offset(s32 a, s32 b);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32  GetMinimapID(struct Obj *obj, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
-extern void UpdateMinimap(s32 *a, s32 b, s32 c, s32 d, s32 e);
+extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
 int *Vec3_DivScalarInPlace(struct Vec3 *v, int s);
 void Vec3_MulScalarInPlace(struct Vec3* v, int s);
 void Vec3_RotateYAndTranslate(struct Vec3* out, struct Vec3* in, short ang, struct Vec3* t);

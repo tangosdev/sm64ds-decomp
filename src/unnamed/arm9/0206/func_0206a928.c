@@ -31,7 +31,7 @@ extern char data_02086894[];
 extern char data_0208689c[];
 
 extern int func_0206ca44(const char *s);
-extern void func_0206c9f4(struct Stream *s, int n);
+extern void func_0206c9f4(struct Stream *s, unsigned int n);
 extern unsigned int func_0206c93c(unsigned int x, unsigned int base);
 extern int func_0206c8b4(u64 d);
 extern u64 func_0206c244(u64 d);

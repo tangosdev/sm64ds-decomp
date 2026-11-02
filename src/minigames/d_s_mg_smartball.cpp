@@ -224,7 +224,7 @@ extern void *Ov004_LoadFileByPath(void *p);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Ov004_Deallocate(void *p);
 
-extern void __cxa_vec_ctor(void *p, int a, int b, void *cb1, void *cb2);
+extern void __cxa_vec_ctor(void *p, unsigned int a, unsigned int b, void *cb1, void *cb2);
 extern void SetSubBg0Offset(int x, int y);
 extern void func_0203d738(void);
 extern char sSmartballPathBuf[];

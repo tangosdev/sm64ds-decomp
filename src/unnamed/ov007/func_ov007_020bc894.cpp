@@ -4,7 +4,7 @@
 
 extern "C" {
 extern void func_ov007_020c9110(void *);
-extern void func_02046bbc(void *, void *, int);
+extern void func_02046bbc(void *, void *, unsigned int);
 extern void func_020469e8(void *, void *, int);
 
 /* Ticks the model's bone, texture-sequence and texture-SRT players and

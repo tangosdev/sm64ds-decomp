@@ -64,7 +64,7 @@ typedef struct Vec3 { int x, y, z; } Vec3;
 int *Vec3_AsrInPlace(Vec3 *v, int n);
 /* Unnamed on purpose: see the @NNN note in the banner. */
 void MulVec3Mat4x3(Vec3 *, void *, void *);
-void func_02012694(int, void *);
+void func_02012694(unsigned int, void *);
 int CopyTexPalFromLevelModel(void *);
 
 extern u16 data_ov060_0211956c[];

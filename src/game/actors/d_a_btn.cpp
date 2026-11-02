@@ -122,7 +122,7 @@ void func_01ffb0bc(void *);
 int func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
-void func_02012694(int a, void *p);
+void func_02012694(unsigned int a, void *p);
 void func_020393c4(void *p, int v);
 void func_020393d4(void *p, void *v);
 int func_ov002_020dd8b8(void *c);

@@ -177,10 +177,10 @@ struct System {
 }
 extern void d_a_yeggRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
 extern void d_a_yeggPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
-extern s16 Vec3_HorzAngle(const void *a, const void *b);
+extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int Vec3_Dist(const void *a, const void *b);
-extern void Vec3_Add(void *out, const void *a, const void *b);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void MulVec3Mat4x3(const void *in, const void *m, void *out);
 extern void func_0203568c(void *p, int v);
 /* Parameter names keep this TU's @NNN. */
@@ -658,7 +658,7 @@ void daYegg_c::func_ov002_020ecd18()
                             return;
                         }
                     }
-                    mAngleY = Vec3_HorzAngle(&mPosX, &tmp);
+                    mAngleY = Vec3_HorzAngle(&mPos, &tmp);
                 }
                 Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
                 flag = 1;
@@ -809,14 +809,14 @@ void daYegg_c::func_ov002_020ed0d4()
                 t2.x = pt2[0];
                 t2.y = pt2[1];
                 t2.z = pt2[2];
-                Vec3_Add(&sumA, &com->mPosX, &out);
+                Vec3_Add(&sumA, &com->mPos, &out);
                 mHoldTargetX = sumA.x;
                 mHoldTargetY = sumA.y;
                 mHoldTargetZ = sumA.z;
             } else {
                 mGoalAngleX = -0x4000;
                 mGoalAngleZ = 0;
-                Vec3_Add(&sumB, &com->mPosX, &out);
+                Vec3_Add(&sumB, &com->mPos, &out);
                 mHoldTargetX = sumB.x;
                 mHoldTargetY = sumB.y;
                 mHoldTargetZ = sumB.z;
@@ -835,7 +835,7 @@ void daYegg_c::func_ov002_020ed0d4()
             if (Vec3_HorzDist(&v1, &v2) >= 0x5000) {
                 mGoalAngleY = Vec3_HorzAngle(&v1, &v2);
             }
-            Vec3_Add(&sumC, &com->mPosX, &out);
+            Vec3_Add(&sumC, &com->mPos, &out);
             mHoldTargetX = sumC.x;
             mHoldTargetY = sumC.y;
             mHoldTargetZ = sumC.z;
@@ -910,7 +910,7 @@ void daYegg_c::func_ov002_020ed0d4()
 
     mdCcAc_c.Clear();
     {
-        int dist = Vec3_Dist(&mPosX, &com->mPosX);
+        int dist = Vec3_Dist(&mPos, &com->mPos);
         if (mPlayer->mIsNoControl != 0) return;
         if (dist >= 0x190000) return;
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -1177,7 +1177,7 @@ loop:
         if (actor->Virtual50() == 0) goto next;
     }
     {
-        int d = Vec3_Dist(&mPosX, &actor->mPosX);
+        int d = Vec3_Dist(&mPos, &actor->mPos);
         if (d < best) {
             best = d;
             found = actor;
@@ -1405,7 +1405,7 @@ int daYegg_c::Behavior()
             ang = &mPlayer->mAngleX;
             Matrix4x3_FromRotationZXYExt(&data_020a0e68, ang[0], ang[1], ang[2]);
             MulVec3Mat4x3(&vin, &data_020a0e68, &vmid);
-            Vec3_Add(&vout, &mPlayer->mPosX, &vmid);
+            Vec3_Add(&vout, &mPlayer->mPos, &vmid);
             mPosX = vout.x;
             mPosY = vout.y;
             mPosZ = vout.z;

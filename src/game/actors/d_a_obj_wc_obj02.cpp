@@ -45,7 +45,7 @@ struct WcObj02CollisionFilePtr : SharedFilePtr {
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void func_02012694(int a, void *p);
+void func_02012694(unsigned int a, void *p);
 void func_020393d4(dBgW *bgw, void *fn);
 void func_020393c4(dBgW *bgw, void *fn);
 }

@@ -38,9 +38,9 @@ extern "C" {
 
 /* Foreign callees. */
 extern int func_02051f1c(void *a, u32 b, int c);
-extern int func_02051e60(int a, int b, int c, int d, int e, int f);
+extern int func_02051e60(int a, int b, int c, int d, unsigned int e, int f);
 extern unsigned int func_02051074(int a);
-extern int func_020511d4(int a, int b, int c, int d, int e);
+extern int func_020511d4(int a, unsigned int b, unsigned int c, unsigned int d, unsigned int e);
 extern int func_0203d974(void);
 extern int func_0205117c(int a);
 extern int func_0203d7d4(int a);
@@ -80,7 +80,7 @@ extern void func_020494cc(void *p, int s);
 extern void func_020490b0(void *p);
 extern void func_0204f03c(void);
 extern void *func_02050cdc(int a, int idx);
-extern int func_02048720(const Vector3 *v, unsigned int a, unsigned int b);
+extern int func_02048720(const Vector3 *v, int a, int b);
 extern void func_02048908(int x, const Vector3 *v);
 extern void func_02048e54(void);
 extern void func_02048e74(void);

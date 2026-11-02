@@ -445,7 +445,7 @@ extern void SetSubBg2Offset(int a, int b);
 extern PMF data_ov002_02110e24[];
 extern PMF data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
-extern void MultiCopyHalf(void *src, void *dst, unsigned int count);
+extern void MultiCopyHalf(void *src, void *dst, int count);
 extern int data_ov002_021002a0[];
 extern s16 data_02082214[];
 extern short atan2_hold_d_a_demo_1(int y, int x);

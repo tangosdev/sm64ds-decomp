@@ -186,7 +186,7 @@ void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
 int func_020092c4(void *cam, void *out, void *target);
 int func_02012694(int a, void *p, ...);
-u16 func_0201277c(int a);
+u16 func_0201277c(unsigned int a);
 extern s16 data_02082214[];
 extern void *data_0209f318;
 void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);

@@ -41,7 +41,7 @@ extern void MB_CommSetParentStateCallback(u32 val);
 extern void func_0203e9a8(u32 a0, int sel, int a2);
 extern int func_02068ae8(int param0);
 extern int func_02067e70(void *obj);
-extern int func_02067bfc(int a, void *b, int c);
+extern int func_02067bfc(int a, void *b, unsigned int c);
 extern int func_02067928(void *a, void *b);
 extern void func_0205a588(void *dst, int val, unsigned int size);
 extern int WM_ReadStatus(int *arg);

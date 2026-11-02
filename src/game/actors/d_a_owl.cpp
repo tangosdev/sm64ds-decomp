@@ -161,7 +161,7 @@ extern Matrix4x3 data_020a0e68;
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
 int func_ov002_020df7f4(void *c);
-void func_02012694(int a, void *pos);
+void func_02012694(unsigned int a, void *pos);
 int ApproachAngle(short *p, int target, int a, int b, int c);
 int Vec3_Dist(const void *a, const void *b);
 short Vec3_HorzAngle(const void *a, const void *b);
