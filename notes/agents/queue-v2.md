@@ -28,8 +28,8 @@ legacy `list`/`status`/`release` remain available for draining. Truly old binari
 remain vulnerable until cutover. Merely
 installing the new tool does not upgrade already running worktrees or sessions.
 
-No claims are automatically imported, deleted, expired, or stolen. This change
-does not unify the separate range service. It checks range overlap only among
+No legacy claims are automatically imported or deleted. V2 reservations expire after
+24 hours as described below. This change does not unify the separate range service. It checks range overlap only among
 resources explicitly registered in v2, and cannot infer aliases between a class,
 its TU, a shared header, and a ROM range. Declare all relevant resources.
 
@@ -163,8 +163,27 @@ Enqueue atomically reserves every declared resource for the task. Classes separa
 by `+` are individual resources; overlay-qualified class names normalize to bare
 class names. TU and file paths refer to the same resource and compare without case
 to match the Windows workspace. Ranges are `[start, end)` and compare only within
-the same module. Overlapping tasks are denied across all roles, even when the
-current task is awaiting handoff or its running lease has been released.
+the same module. Overlapping tasks are denied across all roles while the reservation
+is live, even when a handoff is offered or a running lease has been released.
+
+A reservation has a **hard 24-hour lifetime from its creation**, regardless of
+activity, claims, releases or handoffs. At or after the deadline the current client
+will not offer or accept its stages or permit its owner to publish. Enqueue and
+amend atomically expire stale reservations before checking conflicts; this also
+fences any old receipts in the durable state. To sweep without enqueueing:
+
+```powershell
+python tools/classqueue.py v2 expire-stale --request-id expire-UNIQUE-ID
+```
+
+Expiry marks the task cancelled and records its previous phase and owner in its
+history. It does not delete branches, worktrees, commits, published outputs or
+evidence. Local uncommitted files stay in their worktree; record or commit them
+and enqueue an explicit successor with the correct input and predecessor tasks.
+Expiry is not proof the work finished. Malformed or timezone-less creation dates
+fail closed and require investigation. All workers must upgrade to the current
+client: older clients do not enforce the deadline themselves until a sweep or an
+updated enqueue records the expiry. Clocks must be reasonably synchronized.
 The coordinator receipt is saved before enqueueing and is separate from a worker's
 claim receipt. Preserve it: only that credential can amend or cancel an idle task.
 
@@ -199,7 +218,7 @@ its Git ancestors** as parents of the state commit. Therefore artifacts remain
 fetchable after a source branch is deleted; do not publish commits containing
 private files. Normal source-branch publication remains a separate workflow step.
 
-An offered handoff retains the task's resource reservation. Its producer can no
+An offered handoff retains the task's resource reservation until its 24-hour deadline. Its producer can no
 longer publish or release that lease. The successor claims the exact offered stage
 and input with a fresh private receipt; this records `accepted_by`/`accepted_at`
 and fences the predecessor. A missed notification cannot erase the offer.
@@ -308,8 +327,8 @@ The single ref deliberately serializes short metadata transactions; it is suited
 to this small fleet, not a high-volume event service. Tasks, event history and
 idempotency records currently accumulate without compaction. Reads fetch the state
 and its retained artifacts; the cost grows with history. Files changed beyond
-declared resources are not detected. There are no heartbeat expiry, forced
-takeover, dynamic stage replacement, or administrative receipt recovery commands.
-A lost receipt needs explicit coordinator investigation; the
-client never infers abandonment from elapsed time. Establish the pilot's tasks
+declared resources are not detected. There is no heartbeat or renewal: the hard
+24-hour limit is not extended by activity. Expiry does not recover unpublished
+work or provide dynamic stage replacement. A lost receipt still needs explicit
+coordinator investigation before the deadline. Establish the pilot's tasks
 and preserve receipts before relying on it for the whole fleet.

@@ -135,7 +135,7 @@ extern void Camera_InitPresenterView(char *);
 extern int Presenter_Load(char *);
 extern unsigned int LoadCompressedFileAt(int, int);
 extern void *LoadFile(int);
-void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
+void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride, void *ctor, void *dtor);
 void Cup_Nothing(void);
 void func_0203d738(void);
 }
@@ -455,7 +455,6 @@ void dScMgCup_c::StateFinish() {
 
 // @symbol _ZN10dScMgCup_c11StateResultEv
 #pragma push
-#pragma opt_strength_reduction off
 void dScMgCup_c::StateResult() {
     int score;
     int i;
@@ -494,7 +493,6 @@ void dScMgCup_c::StateResult() {
 // @symbol _ZN10dScMgCup_c11StateSelectEv
 #pragma push
 #pragma opt_common_subs off
-#pragma opt_strength_reduction off
 void dScMgCup_c::StateSelect() {
     char *raw = (char *)this;
     int touchPressed = 0;
@@ -796,7 +794,6 @@ void dScMgCup_c::OnNewRecord() {
 }
 
 #pragma push
-#pragma opt_strength_reduction off
 #pragma opt_common_subs off
 void dScMgCup_c::StartRound(int msg) {
     int i;
@@ -901,7 +898,6 @@ s32 dScMgCup_c::Render() {
 /* Slot 6: runs the current state, then advances each cup's animation
    according to the duration stored in its current frame. */
 #pragma push
-#pragma opt_strength_reduction off
 s32 dScMgCup_c::Behavior() {
     char *raw = (char *)this;
     int cupIndex;

@@ -52,7 +52,7 @@ enum daShark_c_AssetId { ASSET_HOJIRO_BMD = 0x0325, ASSET_HOJIRO_SWIM_BCA = 0x03
 
 /* local extern: no shared header declares these. */
 extern "C" {
-extern void func_02012694(int, void *);
+extern void func_02012694(unsigned int, void *);
 extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern s32 LenVec3(Vector3 *value);

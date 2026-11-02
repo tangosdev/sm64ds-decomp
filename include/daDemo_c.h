@@ -253,6 +253,8 @@ struct daDemo_c : dActor_c {
 
         void func_ov002_020f26e0();
         void func_ov002_020f5b24();
+        /* Begin credit line n (1..0x14) in the first credit slot. */
+        void StartCredit(int);
     };
 
     u8 pad_0d0[4];          /* 0x0d0 */

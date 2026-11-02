@@ -221,7 +221,7 @@ extern void *Ov004_LoadFileByPath(void *p);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Ov004_Deallocate(void *p);
 
-extern void __cxa_vec_ctor(void *p, int a, int b, void *cb1, void *cb2);
+extern void __cxa_vec_ctor(void *p, unsigned int a, unsigned int b, void *cb1, void *cb2);
 extern void SetSubBg0Offset(int x, int y);
 extern void func_0203d738(void);
 extern char sSmartballPathBuf[];
@@ -1151,7 +1151,6 @@ void cMgSmartball_board_c::ClaimCell(int i) {
 
 // @symbol _ZN20cMgSmartball_board_c12SaveSnapshotEv
 #pragma push
-#pragma opt_strength_reduction off
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same pattern as every sibling in this family (the
  * base's copy is out-of-line and there is no bl here).
@@ -1383,7 +1382,6 @@ void cMgSmartball_slot_c::StartSpin() {
 
 // @symbol _ZN19cMgSmartball_slot_c10UpdateSpinEv
 #pragma push
-#pragma opt_strength_reduction off
 #pragma opt_common_subs off
 void cMgSmartball_slot_c::UpdateSpin() {
     int ib, ic;
@@ -1755,7 +1753,6 @@ void cMgSmartball_pakkun_c::Update() {
 
 // @symbol _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv
 #pragma push
-#pragma opt_strength_reduction off
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same idiom as every sibling. Then, while
  * mActionTimer is still counting down from a previous trigger, it just
@@ -1872,7 +1869,6 @@ void cMgSmartball_dokan_c::Update() {
 
 // @symbol _ZN20cMgSmartball_dokan_c12SaveSnapshotEv
 #pragma push
-#pragma opt_strength_reduction off
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- the base's is out-of-line at 0x02114724 and there is
  * no bl here, so the original repeated the two statements. Every sibling's
@@ -2407,7 +2403,6 @@ void cMgSmartball_kinoko_c::Update() {
 
 // @symbol _ZN21cMgSmartball_kinoko_c12SaveSnapshotEv
 #pragma push
-#pragma opt_strength_reduction off
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same idiom as every sibling. While mWasHit is set,
  * runs a one-shot transition (an effect/sound trigger, gated on mHitTimer
@@ -2735,7 +2730,6 @@ int cMgSmartball_ball_c::HitPropellers(int *pos) {
 
 // @symbol _ZN19cMgSmartball_ball_c10HitKinokosEPi
 #pragma push
-#pragma opt_strength_reduction off
 int cMgSmartball_ball_c::HitKinokos(int *pos) {
     int i;
     dScMgSmartball_c *base;
@@ -4678,7 +4672,7 @@ void dScMgSmartball_c::SpawnObjects() {
     Mg_SubmitScore(0);
 
     for (int i = 0; i < 0xd; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpBalls));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpBalls;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4690,7 +4684,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 8; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpAnas));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpAnas;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4702,7 +4696,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 0x19; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpKinokos));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpKinokos;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4714,7 +4708,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 3; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPropellers));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpPropellers;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4726,7 +4720,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 6; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpDokans));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpDokans;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4738,7 +4732,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 3; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPakkuns));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpPakkuns;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4750,7 +4744,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
     for (int i = 0; i < 2; i++) {
-        int **slot = (int **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPushSwitches));
+        int **slot = (int **)((dScMgSmartball_c *)(c + i * 4))->mpPushSwitches;
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -4908,8 +4902,7 @@ void dScMgSmartball_c::SpawnObjects() {
                 p = cMgSmartball_kinoko_c_Construct((char *)p, (int)c, (int)j, (int *)&tmp);
             }
             {
-                void **slot =
-                    (void **)(((long long)(int)((dScMgSmartball_c *)(c + j * 4))->mpKinokos));
+                void **slot = (void **)((dScMgSmartball_c *)(c + j * 4))->mpKinokos;
                 *slot = p;
                 if (*slot != 0)
                     ((cMgSmartball_kinoko_c *)*slot)->mVariant = 0;
@@ -4953,8 +4946,7 @@ void dScMgSmartball_c::SpawnObjects() {
                 p = cMgSmartball_kinoko_c_Construct((char *)p, (int)c, n, (int *)&tmp);
             }
             {
-                void **slot =
-                    (void **)(((long long)(int)((dScMgSmartball_c *)(c + n * 4))->mpKinokos));
+                void **slot = (void **)((dScMgSmartball_c *)(c + n * 4))->mpKinokos;
                 *slot = p;
                 if (*slot != 0)
                     ((cMgSmartball_kinoko_c *)*slot)->mVariant = 1;

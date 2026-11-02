@@ -134,6 +134,31 @@ struct dBgCh_Actr : dBgCh {
     void UpdateDiscreteNoLava_2();
     void Unk_0203589c(); /* mSphereClsn.ResetQuery() */
 
+    /* Flag helpers and the result accessor. Coined names: the ROM carries none
+       for non-virtual members. Parameter-less on purpose; a named parameter in
+       a class-scope declaration would renumber @NNN in every consumer TU. */
+    int TestFlag200();           /* mFlags & 0x200 */
+    void SetFlag200();           /* mFlags |= 0x200 */
+    void ClearFlag200();         /* mFlags &= ~0x200 */
+    int TestFlag400();           /* mFlags & 0x400 */
+    void SetFlag400();           /* mFlags |= 0x400 */
+    void ClearFlag400();         /* mFlags &= ~0x400 */
+    int IsFlag800Clear();        /* (mFlags & 0x800) == 0 */
+    void SetFlag800();           /* mFlags |= 0x800 */
+    void ClearFlag800();         /* mFlags &= ~0x800 */
+    void SetNoUpdatePosYFlag();  /* mFlags |= 0x1000 */
+    void SetWaterTrackFlag();    /* mFlags |= 0x4000 */
+    int IsWaterTrackFlagClear(); /* (mFlags & 0x4000) == 0 */
+    void SetLeftGroundFlag();    /* mFlags |= 0x40 */
+    int TestLeftGroundFlag();    /* mFlags & 0x40 */
+    void SetJustHitGroundFlag(); /* mFlags |= 0x20 */
+    dBgPi *GetSphereResult();    /* mSphereClsn as its dBgPi base */
+    /* Both the raycast line and the sphere collider take the flag. */
+    void StartIgnoringVanishSurfaces();
+    void StopIgnoringVanishSurfaces();
+    void StartIgnoringType14Walls();
+    void StopIgnoringType14Walls();
+
     /* --- const accessors, 0x02035564..0x02035727. `const` is not a style
            choice here: these mangle _ZNK, and without it the compiler emits
            _ZN and names symbols the ROM does not contain.
@@ -182,10 +207,6 @@ void func_020383f0(dBgCh_Actr *);                          /* UpdateContinuousNo
 void func_020383e4(dBgCh_Actr *);                          /* UpdateExtraContinous */
 void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *); /* UpdateDiscreteNoLava */
 }
-
-/* mSphereClsn as its dBgPi base: the result of the last query. Defined in
-   src/engine/collision/d_bg_ch_actr.cpp. */
-extern "C" dBgPi *func_0203567c(dBgCh_Actr *);
 
 #else
 

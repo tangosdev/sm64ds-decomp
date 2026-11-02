@@ -12,7 +12,7 @@ struct System {
  *
  * Remaining reconstruction:
  * - The scalar Fix12 animation, collision, sound and shadow interfaces
- *   retain their ABI declarations. opt_common_subs remains file-global.
+ *   retain their ABI declarations.
  * - Actor position and scale triples are scalar members in dActor_c;
  *   vector views retain their established layout and load grouping.
  * - SharedFilePtr has no shared field layout; LOADED reads its file word.
@@ -21,7 +21,6 @@ struct System {
  *   g_profile_PENGUIN_RACER are this TU's statics; mwcc emits their
  *   initializer, __sinit_d_a_pg_rcer.cpp (0x021127a4).
  */
-#pragma opt_common_subs off
 
 #include "daPgRcer_c.h"
 #include "daPly_c.h"

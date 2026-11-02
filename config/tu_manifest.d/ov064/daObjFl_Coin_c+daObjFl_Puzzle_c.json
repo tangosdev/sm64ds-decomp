@@ -10,7 +10,7 @@
     "HISTORY: contiguous linker run: 0x2118b50..0x211929c, 21 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjFl_Coin_c, daObjFl_Puzzle_c",
     "module sinit corroboration: 11 sinit(s) / 11 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "CLASSINIT TAIL FOLD (2026-10-09): the four one-function sources right of this run -- func_ov064_0211929c (0x20), func_ov064_021192bc (0x14), daObjFl_Coin_c_classInit (0x30) and daObjFl_Puzzle_c_classInit (0x30), 0x0211929c..0x02119330 -- abut its .text end with no gap and are now inside it. All four belong to this two-class TU: func_ov064_0211929c stores 1 to byte 0x338 of its first argument (daObjFl_Puzzle_c::mHadClsn, which the piece's Behavior reads) when the second argument's actor ID is 0xbf; func_ov064_021192bc is the collision callback this TU's daObjFl_Puzzle_c::InitResources installs in mMeshCollider and only forwards its last two arguments to func_ov064_0211929c (pooled long-call tail call); daObjFl_Coin_c_classInit allocates sizeof(daObjFl_Coin_c) (0xd8), runs dActor_c's base ctor and stores _ZTV14daObjFl_Coin_c; daObjFl_Puzzle_c_classInit allocates sizeof(daObjFl_Puzzle_c) (0x33c), runs dBgActor_c's base ctor and stores _ZTV16daObjFl_Puzzle_c. The next .text entry in ov064 delinks (src/game/actors/d_a_water_hakidasi.cpp) starts exactly at 0x02119330. Written at the top of the file, Puzzle factory first, because the TU emits .text in reverse source order. The TU no longer includes decl_common.h: its only uses were the `int func_ov064_021192bc()` prototype, which C++ cannot overload with the three-argument definition, and data_ov064_0211c198, now declared locally with the header's exact type."
+    "CLASSINIT TAIL FOLD (2026-10-09): the four one-function sources right of this run -- MarkTouchedByPlayer (0x20), func_ov064_021192bc (0x14), daObjFl_Coin_c_classInit (0x30) and daObjFl_Puzzle_c_classInit (0x30), 0x0211929c..0x02119330 -- abut its .text end with no gap and are now inside it. All four belong to this two-class TU: func_ov064_0211929c stores 1 to byte 0x338 of its first argument (daObjFl_Puzzle_c::mHadClsn, which the piece's Behavior reads) when the second argument's actor ID is 0xbf; func_ov064_021192bc is the collision callback this TU's daObjFl_Puzzle_c::InitResources installs in mMeshCollider and only forwards its last two arguments to func_ov064_0211929c (pooled long-call tail call); daObjFl_Coin_c_classInit allocates sizeof(daObjFl_Coin_c) (0xd8), runs dActor_c's base ctor and stores _ZTV14daObjFl_Coin_c; daObjFl_Puzzle_c_classInit allocates sizeof(daObjFl_Puzzle_c) (0x33c), runs dBgActor_c's base ctor and stores _ZTV16daObjFl_Puzzle_c. The next .text entry in ov064 delinks (src/game/actors/d_a_water_hakidasi.cpp) starts exactly at 0x02119330. Written at the top of the file, Puzzle factory first, because the TU emits .text in reverse source order. The TU no longer includes decl_common.h: its only uses were the `int func_ov064_021192bc()` prototype, which C++ cannot overload with the three-argument definition, and data_ov064_0211c198, now declared locally with the header's exact type."
   ],
   "sections": [
     {
@@ -183,7 +183,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "func_ov064_0211929c",
+      "symbol": "_ZN16daObjFl_Puzzle_c19MarkTouchedByPlayerEP8dActor_c",
       "address": "0x0211929c",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/ov064/func_ov064_0211929c.cpp",
@@ -977,77 +977,77 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@787",
+      "from": "@785",
       "to": "@1",
       "evidence": "emitted destructor-registration node name collides with the configured @700 on ov089 on main; @1 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@788",
+      "from": "@786",
       "to": "@2",
       "evidence": "emitted destructor-registration node name collides with the configured @701 on ov081 on main; @2 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@789",
+      "from": "@787",
       "to": "@3",
       "evidence": "emitted destructor-registration node name collides with the configured @702 on ov089 on main; @3 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@790",
+      "from": "@788",
       "to": "@4",
       "evidence": "emitted destructor-registration node name collides with the configured @703 on ov081 on main; @4 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@791",
+      "from": "@789",
       "to": "@5",
       "evidence": "emitted destructor-registration node name collides with the configured @704 on ov089 on main; @5 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@792",
+      "from": "@790",
       "to": "@6",
       "evidence": "emitted destructor-registration node name collides with the configured @705 on ov060 on main; @6 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@793",
+      "from": "@791",
       "to": "@7",
       "evidence": "emitted destructor-registration node name collides with the configured @706 on ov089 on main; @7 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@794",
+      "from": "@792",
       "to": "@8",
       "evidence": "emitted destructor-registration node name collides with the configured @707 on ov060 on main; @8 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@795",
+      "from": "@793",
       "to": "@9",
       "evidence": "emitted destructor-registration node name collides with the configured @708 on ov089 on main; @9 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@796",
+      "from": "@794",
       "to": "@10",
       "evidence": "emitted destructor-registration node name collides with the configured @709 on ov060 on main; @10 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@797",
+      "from": "@795",
       "to": "@11",
       "evidence": "emitted destructor-registration node name collides with the configured @710 on ov089 on main; @11 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@798",
+      "from": "@796",
       "to": "@12",
       "evidence": "emitted destructor-registration node name collides with the configured @711 on ov060 on main; @12 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@799",
+      "from": "@797",
       "to": "@13",
       "evidence": "emitted destructor-registration node name collides with the configured @712 on ov063 on main; @13 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@800",
+      "from": "@798",
       "to": "@14",
       "evidence": "emitted destructor-registration node name collides with the configured @713 on ov060 on main; @14 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     },
     {
-      "from": "@801",
+      "from": "@799",
       "to": "@15",
       "evidence": "emitted destructor-registration node name collides with the configured @714 on ov063 on main; @15 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
     }

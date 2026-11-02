@@ -219,6 +219,7 @@ jobs:
             tools.test_delaunder \
             tools.test_dsd_pin \
             tools.test_enroll \
+            tools.test_langmode_audit \
             tools.test_layout \
             tools.test_linkcheck \
             tools.test_match \

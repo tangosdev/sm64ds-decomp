@@ -21,9 +21,8 @@
  *   mPosX/Y/Z; reading the three fields directly DIFFs Behavior.
  * - Render's star walk keeps the `for (;;)` with a break: a `while`
  *   on the FindWithActorID result DIFFs.
- * - func_ov002_020f0918 keeps its func_ name and C linkage: not a vtable
- *   slot, and the only caller, arm9 dActor_c::SpawnNumber, tail-calls it
- *   and returns what it leaves in r0, through its own local extern.
+ * - SetOwner is a non-virtual member returning this: the only caller,
+ *   arm9 dActor_c::SpawnNumber, tail-calls it and returns the result.
  * - g_profile_OBJ_NUMBER is overlay .data, not licensed to this TU.
  */
 
@@ -49,9 +48,6 @@ extern SharedFilePtr data_ov002_0210d9e8;
 extern SharedFilePtr data_ov002_0210d9a8;
 
 extern int data_0209b454;
-
-/* local extern: defined below; no header declares it. */
-extern "C" daObjNumber_c *func_ov002_020f0918(daObjNumber_c *self, dActor_c *owner);
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -204,16 +200,14 @@ s32 daObjNumber_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020f0918
-/* dActor_c::SpawnNumber's attach helper. Not a vtable slot; the only
- * inbound call is arm9 SpawnNumber, so the func_ name stays. Parameters
- * are this popup and the owner SpawnNumber was given -- uniqueID at
- * owner+4, follow offset is this mPosY minus the owner's. Returns self
- * (r0 is never touched), which SpawnNumber hands back. */
-extern "C" daObjNumber_c *func_ov002_020f0918(daObjNumber_c *self, dActor_c *owner) {
+// @symbol _ZN13daObjNumber_c8SetOwnerEP8dActor_c
+/* dActor_c::SpawnNumber's attach step (coined name; formerly
+ * func_ov002_020f0918). Follows the owner by uniqueID, at this popup's
+ * height above it. Returns this, which SpawnNumber hands back. */
+daObjNumber_c *daObjNumber_c::SetOwner(dActor_c *owner) {
     if (!owner)
-        return self;
-    self->mOwnerUniqueID = owner->uniqueID;
-    self->mFollowOffsetY = self->mPosY - owner->mPosY;
-    return self;
+        return this;
+    mOwnerUniqueID = owner->uniqueID;
+    mFollowOffsetY = mPosY - owner->mPosY;
+    return this;
 }

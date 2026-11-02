@@ -61,6 +61,8 @@ struct daWanwan_c : dEnemyBase_c {
     int InitResources();
     int Render();
     void func_ov014_02111ebc(int i);
+    /* Starts the release cutscene once the stump is spent and the player accepts the lock. */
+    int TryStartReleaseCutscene();
     void func_ov014_02111f08();
 };
 

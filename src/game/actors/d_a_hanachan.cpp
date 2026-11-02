@@ -395,7 +395,6 @@ void daHanachan_c::StateDamageMain()
     SetState(6);
 }
 
-#pragma opt_strength_reduction off
 /* DAMAGE entry: hurt animation, flag 4 on the first cylinder set, one health lost. */
 // @symbol _ZN12daHanachan_c15StateDamageInitEv
 void daHanachan_c::StateDamageInit()
@@ -414,7 +413,6 @@ void daHanachan_c::StateDamageInit()
         mHealth--;
 }
 
-#pragma opt_strength_reduction on
 /* MOVE: wander and keep near home, checking player contact. Once defeated, fall away when a player comes near. */
 // @symbol _ZN12daHanachan_c13StateMoveMainEv
 void daHanachan_c::StateMoveMain()
@@ -542,7 +540,6 @@ void daHanachan_c::StateMoveStartMain()
         mStateTimer = 13;
 }
 
-#pragma opt_strength_reduction off
 /* MOVE_START entry: clear flag 4 on the first cylinder set. */
 // @symbol _ZN12daHanachan_c18StateMoveStartInitEv
 void daHanachan_c::StateMoveStartInit()
@@ -557,7 +554,6 @@ void daHanachan_c::StateMoveStartInit()
                           0x40000000, 0x1000, 0);
 }
 
-#pragma opt_strength_reduction on
 /* MOVE_STOP: when the intro talk ends, start the music and enter MOVE_START. */
 // @symbol _ZN12daHanachan_c17StateMoveStopMainEv
 void daHanachan_c::StateMoveStopMain()
@@ -682,7 +678,6 @@ void daHanachan_c::StateDemoWaitMain()
     ApproachLinear(mHorzSpeed, data_ov034_02114488[0], 0x1000);
 }
 
-#pragma opt_strength_reduction off
 /* DEMOWAIT entry: lay the body out in a line behind the head. */
 // @symbol _ZN12daHanachan_c17StateDemoWaitInitEv
 void daHanachan_c::StateDemoWaitInit()
@@ -737,7 +732,6 @@ void daHanachan_c::StateDemoWaitInit()
     }
 }
 
-#pragma opt_strength_reduction on
 /* Enters a state and runs its Init. */
 // @symbol _ZN12daHanachan_c8SetStateEi
 void daHanachan_c::SetState(int state)

@@ -149,13 +149,13 @@ extern BMD_File data_ov001_020ad560;
 /* local extern: no header declares these; the shadow scale matrix and the two
    opacity passes RenderAll draws with */
 void func_0203c178(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz);
-void func_02046120(ModelComponents *data, u32 opacity);
-void func_02046088(ModelComponents *data, u32 opacity, int f);
+void func_02046120(ModelComponents *data, s32 opacity);
+void func_02046088(ModelComponents *data, s32 opacity, int f);
 /* local extern: the texture-animation helpers. Each Prepare's ROM body is a
    0xc long-call veneer (ldr ip, [pc]; bx ip); the registers pass through
    untouched, so the helper's own two-argument signature is the call surface. */
 void func_02046d50(BMD_File *model, BTP_File *file);
-void func_02046bbc(ModelComponents *model, BTP_File *file, int frame);
+void func_02046bbc(ModelComponents *model, BTP_File *file, unsigned int frame);
 void func_02046b64(BMD_File *model, BTA_File *file);
 void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 void func_020470e8(BMD_File *model, BMA_File *file);

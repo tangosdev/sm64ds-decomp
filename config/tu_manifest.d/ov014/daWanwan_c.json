@@ -154,7 +154,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_ov014_02111f54",
+      "symbol": "_ZN10daWanwan_c23TryStartReleaseCutsceneEv",
       "address": "0x02111f54",
       "size": "0x00000064",
       "legacy_source": "src/func_ov014_02111f54.cpp",

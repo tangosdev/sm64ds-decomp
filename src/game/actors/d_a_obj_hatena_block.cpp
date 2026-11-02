@@ -138,6 +138,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "dCamera_c.h"
 #include "daShl_c.h"
 #include "nitro/fx/fx.h"
+#include "Particle__System.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -209,18 +210,13 @@ extern char gPFlowerCloseModelFile[];
 extern CLPS_Block data_ov002_0210d954;
 
 extern int RandomIntInternal(int *seed);
-extern int Vec3_HorzDist(const void *a, const void *b);
+extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int DecIfAbove0_Short(void *p);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
 extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
                                       void *clps);
 extern void func_ov102_0214ad14(void *actor);
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned id, int x, int y, int z);
-};
-}
 
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
@@ -750,7 +746,7 @@ void daObjHatenaBlock_c::func_ov102_02149ccc()
     player = ClosestPlayer();
     if (player->mIsMega == 0)
         return;
-    if (Vec3_HorzDist(&mPosX, &player->mPosX) >= 0xc8000)
+    if (Vec3_HorzDist(&mPos, &player->mPos) >= 0xc8000)
         return;
     if (mPosY <= player->mPosY)
         return;
@@ -1143,7 +1139,7 @@ void daObjHatenaBlock_c::func_ov102_02149288(){
    spawned, func_ov102_0214ad14 (daBmb_c: stores ClosestPlayer as its chase
    target) and func_ov102_0214b384(a, 0x3c) (daBmb_c.h: only shortens the
    fuse). Callers discard the result of that helper. */
-extern "C" void func_ov102_0214b384(void *, int);
+extern "C" void func_ov102_0214b384(void *, unsigned int);
 void daObjHatenaBlock_c::func_ov102_02149220() {
     Vector3 v;
     func_ov102_02149684((int *)&v, this);

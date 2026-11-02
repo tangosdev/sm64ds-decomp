@@ -206,7 +206,6 @@ void daPiano_c::InitStateSearch() {
     this->mHorzSpeed = 0;
 }
 
-#pragma opt_strength_reduction off
 // @symbol _ZN9daPiano_c11StateSearchEv
 /* State-0 body, run every frame: scan the player slots for a moving target
  * within 500.0 and attack it; otherwise refresh the idle cylinder sweep
@@ -253,9 +252,9 @@ void daPiano_c::StateSearch() {
         }
         tmp.z = z + FX_MUL(data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2 + 1], 0x24000);
 
-        this->mCylinderClsn[0].pos.x = *(volatile int *)&this->mPosX;
-        this->mCylinderClsn[0].pos.y = *(volatile int *)&this->mPosY;
-        this->mCylinderClsn[0].pos.z = *(volatile int *)&this->mPosZ;
+        this->mCylinderClsn[0].pos.x = this->mPosX;
+        this->mCylinderClsn[0].pos.y = this->mPosY;
+        this->mCylinderClsn[0].pos.z = this->mPosZ;
         this->mCylinderClsn[1].pos.x = tmp.x;
         this->mCylinderClsn[1].pos.y = tmp.y;
         this->mCylinderClsn[1].pos.z = tmp.z;
@@ -277,7 +276,6 @@ void daPiano_c::InitStateAttack() {
     this->mAttackTimer = 30;
 }
 
-#pragma opt_strength_reduction off
 // @symbol _ZN9daPiano_c11StateAttackEv
 /* State-1 body, run every frame: lunge at the target and bite any player
  * caught by the cylinders. Gives up (back to state 0) when the target is
@@ -366,9 +364,9 @@ void daPiano_c::StateAttack() {
     }
     proj.z = z + FX_MUL(data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2 + 1], 0x24000);
 
-    this->mCylinderClsn[0].pos.x = *(volatile int *)&this->mPosX;
-    this->mCylinderClsn[0].pos.y = *(volatile int *)&this->mPosY;
-    this->mCylinderClsn[0].pos.z = *(volatile int *)&this->mPosZ;
+    this->mCylinderClsn[0].pos.x = this->mPosX;
+    this->mCylinderClsn[0].pos.y = this->mPosY;
+    this->mCylinderClsn[0].pos.z = this->mPosZ;
     this->mCylinderClsn[1].pos.x = proj.x;
     this->mCylinderClsn[1].pos.y = proj.y;
     this->mCylinderClsn[1].pos.z = proj.z;

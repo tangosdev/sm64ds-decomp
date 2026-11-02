@@ -6,7 +6,7 @@ enum { false, true };
 extern int func_0203da3c(void);
 extern void func_02019e60(void);
 extern int func_0203d974(void);
-extern unsigned int func_02012790(int n);
+extern unsigned int func_02012790(unsigned int n);
 extern void func_02019dfc(void);
 extern void func_02011dc0(void);
 extern void func_02019ed0(void);

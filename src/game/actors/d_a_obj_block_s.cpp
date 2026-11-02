@@ -693,7 +693,7 @@ int daObjBlockS_c::func_ov098_02138bfc()
     void *a;
     unsigned short type;
     if (!func_02035638((unsigned char *)&mWithMeshClsn)) return 0;
-    r = func_0203567c(&mWithMeshClsn);
+    r = mWithMeshClsn.GetSphereResult();
     if (r->GetClsnID() == -1)
         return 0;
     a = dActor_c::FindWithID(r->GetClsnID());

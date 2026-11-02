@@ -92,7 +92,7 @@ struct AngleWords {
  * vanish Luigi (MakeVanishLuigiWork is the other copy). */
 extern "C" {
 extern void Vec3_Asr(void *dst, void *src, int n);
-extern void func_02012694(int id, void *pos);
+extern void func_02012694(unsigned int id, void *pos);
 extern int Vec3_HorzLen(void *v);
 extern void AddVec3(struct Vector3 *dst, struct Vector3 *a, struct Vector3 *b);
 extern void func_0200f760(void *self, void *cyl);

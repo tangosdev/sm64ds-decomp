@@ -33,6 +33,44 @@ def require(condition, message):
         raise QueueError(message)
 
 
+RESERVATION_LIFETIME = datetime.timedelta(hours=24)
+
+
+def reservation_expired(task, timestamp):
+    """A reservation has a hard 24-hour lifetime from its creation.
+
+    Missing, malformed, or timezone-less timestamps are not proof of expiry:
+    retain those reservations for explicit investigation rather than steal them.
+    """
+    if task.get("phase") in ("done", "cancelled"):
+        return False
+    try:
+        created = datetime.datetime.fromisoformat(task["created_at"].replace("Z", "+00:00"))
+        current = datetime.datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+        if created.utcoffset() is None or current.utcoffset() is None:
+            return False
+        return current - created >= RESERVATION_LIFETIME
+    except (KeyError, AttributeError, TypeError, ValueError, OverflowError):
+        return False
+
+
+def expire_reservations(state, timestamp):
+    """Fence expired owners and release resources without deleting task evidence."""
+    expired = []
+    for task in state["tasks"].values():
+        if not reservation_expired(task, timestamp):
+            continue
+        prior_owner = copy.deepcopy(task.get("owner"))
+        prior_phase = task["phase"]
+        task.setdefault("history", []).append({"action": "expire", "at": timestamp,
+                                                "previous_phase": prior_phase,
+                                                "previous_owner": prior_owner})
+        task["reservation_expired_at"] = timestamp
+        task.update(phase="cancelled", owner=None)
+        expired.append(task["task_id"])
+    return sorted(expired)
+
+
 def encoded(value):
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
@@ -265,6 +303,13 @@ class Queue:
                 retained.extend((proof["tested_commit"], proof["artifact_commit"]))
         return retained
 
+    def expire_stale(self, request_id):
+        """Release all reservations older than 24 hours in one atomic transaction."""
+        def operation(state):
+            timestamp = now()
+            return {"expired": expire_reservations(state, timestamp), "at": timestamp}, []
+        return self.transaction(request_id, {"expire_stale": True}, operation)
+
     def enqueue(self, spec, request_id, coordinator_receipt):
         spec = copy.deepcopy(spec)
         task_id = identifier(spec.get("task_id"))
@@ -325,6 +370,7 @@ class Queue:
                 except source_review.ReviewError as exc:
                     raise QueueError(str(exc)) from exc
             require(task_id not in state["tasks"], "task ID already exists; use a new follow-up ID")
+            expire_reservations(state, now())
             for other in state["tasks"].values():
                 if other["phase"] not in ("done", "cancelled") and overlaps(spec["resources"], other["resources"]):
                     raise QueueError("resources reserved by task " + other["task_id"])
@@ -363,6 +409,8 @@ class Queue:
         return sha
 
     def ready(self, task):
+        if reservation_expired(task, now()):
+            return None
         if task["phase"] not in ("ready", "offered"):
             return None
         index = task["stage_index"] + (task["phase"] == "offered")
@@ -452,6 +500,8 @@ class Queue:
         require(task["phase"] == "running" and held and
                 all(held.get(key) == value for key, value in supplied.items()),
                 "not the current running owner; stale or foreign receipt")
+        require(not reservation_expired(task, now()),
+                "reservation expired after 24 hours; preserve work and enqueue a continuation")
         return held
 
     def release(self, receipt, request_id, reason):
@@ -509,6 +559,9 @@ class Queue:
             require(task["phase"] in ("ready", "offered"),
                     "coordinator changes require an idle task; holder must release first")
             if action == "amend":
+                require(not reservation_expired(task, now()),
+                        "reservation expired after 24 hours; enqueue a continuation")
+                expire_reservations(state, now())
                 expanded = sorted(set(task["resources"] + additions))
                 for other in state["tasks"].values():
                     if other is not task and other["phase"] not in ("done", "cancelled"):
@@ -647,6 +700,8 @@ def main(argv=None, repo=None):
     nxt = sub.add_parser("next", help="list ready stages with verified inputs")
     nxt.add_argument("--role", required=True)
     sub.add_parser("list", help="read the durable state")
+    expire = sub.add_parser("expire-stale", help="release reservations 24 hours after creation")
+    expire.add_argument("--request-id", required=True)
     claim = sub.add_parser("claim", help="accept the next stage; save a private receipt")
     claim.add_argument("task_id")
     for arg in ("stage", "role", "session", "input-commit", "worktree", "receipt"):
@@ -685,6 +740,8 @@ def main(argv=None, repo=None):
         elif args.command == "list":
             sha, state = queue.read()
             result = {"state_commit": sha, **state}
+        elif args.command == "expire-stale":
+            result = queue.expire_stale(args.request_id)
         elif args.command == "claim":
             receipt = receipt_file(args.receipt, args.task_id, args.session)
             result = queue.claim(receipt, args.stage, args.role, args.input_commit, args.worktree)

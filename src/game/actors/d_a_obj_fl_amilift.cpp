@@ -66,7 +66,7 @@ struct KCL_File;
 struct CLPS_Block;
 
 extern "C" {
-int Vec3_HorzDist(const void *a, const void *b);
+int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
 void func_020393d4(void *p, void *v);
@@ -105,7 +105,7 @@ int daObjFl_Amilift_c::MoveAlongPath() {
     Vector3 b;
     int r;
     UpdatePos(0);
-    r = (Vec3_HorzDist(&mPosX, &mToX) < 0x69000) ? 0 : 0xa000;
+    r = (Vec3_HorzDist(&mPos, (Vector3 *)&mToX) < 0x69000) ? 0 : 0xa000;
     if (ApproachLinear(mHorzSpeed, r, 0x800) != 0 && r == 0) {
         mFromX = mToX;
         mFromY = mToY;

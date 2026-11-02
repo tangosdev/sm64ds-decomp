@@ -81,10 +81,6 @@ void dCapIcon_c::Unlink()
 }
 
 // @symbol _ZN10dCapIcon_c19func_ov001_020ab228EPciih
-/* CSE off is load-bearing: the cartridge re-issues the list-head load
- * across the store into mNext. The bracket binds because codegen is
- * not deferred here. */
-#pragma opt_common_subs off
 void dCapIcon_c::func_ov001_020ab228(char *a1, int idx, int a3,
                                     unsigned char a5)
 {
@@ -109,7 +105,6 @@ void dCapIcon_c::func_ov001_020ab228(char *a1, int idx, int a3,
         func_ov001_020aa6cc(idx);
     mSlot = -1;
 }
-#pragma opt_common_subs on
 #pragma defer_codegen on
 
 /* Deferred half, descending ROM order: ctor, dtor pair, then reset. The

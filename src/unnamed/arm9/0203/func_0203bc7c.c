@@ -1,6 +1,4 @@
 #include "types.h"
-#pragma opt_strength_reduction off
-#pragma opt_loop_invariants off
 typedef struct InputPair {
     u16 cur;
     u16 pressed;

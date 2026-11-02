@@ -1,0 +1,9 @@
+# Resume: coordination reservation expiry, 2026-11-01
+
+This branch adds a hard 24-hour reservation lifetime measured from task creation, regardless of claims or handoffs. Current clients filter expired tasks, fence expired receipts and atomically expire stale reservations during enqueue/amend. `expire-stale` provides an explicit sweep. Expiry marks tasks cancelled while preserving recorded phase, owner, worktree, outputs, history and Git ancestry; invalid timestamps fail closed. See `notes/agents/queue-v2.md` for the recovery procedure.
+
+At the user's explicit request, the new `expire-stale` command ran once against the live queue and released 62 reservations on 2026-11-01. Post-check found zero eligible reservations remaining and retained the prior owner's worktree in the event. It does not remove or alter any worktree files. The separate claims.py range service is not covered.
+
+The full test suite passed: 37 tests on disposable local bare remotes, including the hard boundary, preservation and expiry-vs-enqueue race (`build/queue-expiry-final-tests.log`). The five legacy queue tests also passed. `tools/check_python_names.py` and `git diff --check` passed. Rebase and rerun against current main before merge.
+
+An attempted hourly GitHub Actions workflow was rejected by automatic approval review because it would grant a recurring job repository write access. It was not added. The committed solution expires reservations when an updated client enqueues/amends or when `expire-stale` runs explicitly; it is not a background timer. Old pinned clients do not enforce expiry themselves until an updated client records a sweep. A periodic autonomous workflow would need an approved, appropriately scoped design and permissions; do not bypass the rejection. The tooling branch is separate from the particle source branch.

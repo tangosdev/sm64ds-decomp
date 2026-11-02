@@ -38,7 +38,6 @@ extern void Matrix4x3_LoadIdentity(void *mat);
  * sways it rocks about z and bobs in y, clearing the hook at a rest once
  * touched; while it rises it lifts quadratically to 30 units and clears the
  * hook at the top. The offset lands in bone 0's translation. */
-#pragma opt_common_subs off
 void func_ov007_020b0da0(Ov007Figure *figure) {
     Ov007Model *obj = figure->model;
     Ov007MenuState *st = WORK->states[1];

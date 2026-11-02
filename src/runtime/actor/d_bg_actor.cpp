@@ -315,7 +315,7 @@ extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     dBgPi *hit;
     dActor_c *owner;
     if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638(clsn)) {
-        hit = func_0203567c(clsn);
+        hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
             owner = dActor_c::FindWithID(hit->GetClsnID());
             if (owner) {
@@ -330,7 +330,7 @@ extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
 // @symbol func_ov002_020eeca8
 extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
     if (func_02035638(clsn)) {
-        dBgPi *hit = func_0203567c(clsn);
+        dBgPi *hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
             dActor_c *owner = dActor_c::FindWithID(hit->GetClsnID());
             if (owner != 0) {

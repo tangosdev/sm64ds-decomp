@@ -1198,9 +1198,6 @@ Vector3 dActor_c::OnAimedAtWithEggReturnVec()
 // @symbol _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_
 /* ROM ordinal 32 -- dActor_c::SpawnNumber(Vector3 const &, unsigned int, bool, unsigned short, dActor_c *)
  * 0x02010044  size 0x98 */
-/* local extern: defined in d_a_obj_number.cpp, which has no header for it. The
-   ROM tail-calls it, so SpawnNumber returns what it hands back (the popup). */
-extern "C" daObjNumber_c *func_ov002_020f0918(daObjNumber_c *number, dActor_c *owner);
 /* Spawns actor 0x14a, daObjNumber_c, the number that pops up over an actor. */
 dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble, u16 delay,
                                 dActor_c *owner) {
@@ -1216,7 +1213,7 @@ dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibbl
         return number;
 
     number->mDelay = delay;
-    return func_ov002_020f0918(number, owner);
+    return number->SetOwner(owner);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1228,7 +1225,7 @@ extern u8 data_0209f220[]; /* the star index this mission was entered for */
 extern s8 data_0209f2f8[]; /* the current sublevel id */
 extern dActor_c *STAR_MARKERS[12]; /* 0x0209f40c */
 void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
-int IsStarCollectedInCurLevel(u32 starIdx);
+int IsStarCollectedInCurLevel(s32 starIdx);
 }
 s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
 {

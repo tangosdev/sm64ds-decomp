@@ -1091,122 +1091,122 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1076",
+      "from": "@1128",
       "to": "@1045",
       "evidence": "mwcc emits this compiler temp as @1091; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1117 replaces @1107 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1045. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1078",
+      "from": "@1130",
       "to": "@1046",
       "evidence": "mwcc emits this compiler temp as @1093; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1119 replaces @1109 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1046. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1080",
+      "from": "@1132",
       "to": "@1047",
       "evidence": "mwcc emits this compiler temp as @1095; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1121 replaces @1111 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1047. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1082",
+      "from": "@1134",
       "to": "@1048",
       "evidence": "mwcc emits this compiler temp as @1097; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1123 replaces @1113 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1048. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1084",
+      "from": "@1136",
       "to": "@1049",
       "evidence": "mwcc emits this compiler temp as @1099; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1125 replaces @1115 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1049. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1086",
+      "from": "@1138",
       "to": "@1050",
       "evidence": "mwcc emits this compiler temp as @1101; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1127 replaces @1117 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1050. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1088",
+      "from": "@1140",
       "to": "@1051",
       "evidence": "mwcc emits this compiler temp as @1103; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1129 replaces @1119 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1051. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1090",
+      "from": "@1142",
       "to": "@1052",
       "evidence": "mwcc emits this compiler temp as @1105; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1131 replaces @1121 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1052. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1092",
+      "from": "@1144",
       "to": "@1053",
       "evidence": "mwcc emits this compiler temp as @1107; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1133 replaces @1123 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1053. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1094",
+      "from": "@1146",
       "to": "@1080",
       "evidence": "mwcc emits this compiler temp as @1109; batch renumber to unused same-length name, batch-mates ov016/daMoray_c and ov075/dEntObj_c promote the same temp names globally Native local Vector3/Hurt-contract continuation: compiler input @1135 replaces @1125 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1080. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1068",
+      "from": "@1120",
       "to": "@1083",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1099 now; licensed under the existing pin @1083 Native local Vector3/Hurt-contract continuation: compiler input @1109 replaces @1099 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1083. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1064",
+      "from": "@1116",
       "to": "@1079",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1095 now; licensed under the existing pin @1079 Native local Vector3/Hurt-contract continuation: compiler input @1105 replaces @1095 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1079. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1066",
+      "from": "@1118",
       "to": "@1081",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1097 now; licensed under the existing pin @1081 Native local Vector3/Hurt-contract continuation: compiler input @1107 replaces @1097 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1081. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1061",
+      "from": "@1113",
       "to": "@1076",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1092 now; licensed under the existing pin @1076 Native local Vector3/Hurt-contract continuation: compiler input @1102 replaces @1092 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1076. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1063",
+      "from": "@1115",
       "to": "@1078",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1094 now; licensed under the existing pin @1078 Native local Vector3/Hurt-contract continuation: compiler input @1104 replaces @1094 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1078. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1074",
+      "from": "@1126",
       "to": "@1073",
       "evidence": "Historical prior mapping note (retained verbatim; not a current input/canonical-name claim): compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1105 now; licensed under the existing pin @1089 Current measured mapping: @1115 -> @1073 at unchanged allocated coordinates and with complete typed edges preserved; see native Vector3 whole-object proof. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1072",
+      "from": "@1124",
       "to": "@1071",
       "evidence": "Historical prior mapping note (retained verbatim; not a current input/canonical-name claim): compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1103 now; licensed under the existing pin @1087 Current measured mapping: @1113 -> @1071 at unchanged allocated coordinates and with complete typed edges preserved; see native Vector3 whole-object proof. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1070",
+      "from": "@1122",
       "to": "@1085",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1101 now; licensed under the existing pin @1085 Native local Vector3/Hurt-contract continuation: compiler input @1111 replaces @1101 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1085. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1095",
+      "from": "@1147",
       "to": "@1110",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1126 now; licensed under the existing pin @1110 Native local Vector3/Hurt-contract continuation: compiler input @1136 replaces @1126 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1110. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1055",
+      "from": "@1107",
       "to": "@1070",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1086 now; licensed under the existing pin @1070 Native local Vector3/Hurt-contract continuation: compiler input @1096 replaces @1086 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1070. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1057",
+      "from": "@1109",
       "to": "@1072",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1088 now; licensed under the existing pin @1072 Native local Vector3/Hurt-contract continuation: compiler input @1098 replaces @1088 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1072. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1059",
+      "from": "@1111",
       "to": "@1074",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1090 now; licensed under the existing pin @1074 Native local Vector3/Hurt-contract continuation: compiler input @1100 replaces @1090 at identical allocated symbol coordinates, width and binding; whole-object typed graph proof preserves canonical @1074. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1056",
+      "from": "@1108",
       "to": "@1087",
       "evidence": "Native local Vector3/Hurt-contract continuation: input @1097 replaces @1087 at the same 12-byte NOBITS registration node, with unchanged coordinates, symbol attributes and all incoming/outgoing typed edges; preserves existing canonical name and binding rewrite. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1058",
+      "from": "@1110",
       "to": "@1089",
       "evidence": "Native local Vector3/Hurt-contract continuation: input @1099 replaces @1089 at the same 12-byte NOBITS registration node, with unchanged coordinates, symbol attributes and all incoming/outgoing typed edges; preserves existing canonical name and binding rewrite. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

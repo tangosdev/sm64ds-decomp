@@ -1,11 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /* dEntObj_c and UnknownVsPlayer. ov075 0x02113ee0..0x02115ab8, 43 functions.
  *
  * The versus-mode entry scene's stage object: four player figures on the
@@ -24,8 +17,8 @@ struct System {
  * the classInit factory, then UnknownVsPlayer's constructor.
  *
  * leftovers:
- *  - The Fix12-by-value member calls (dExtShadowModel_c::InitModel,
- *    Particle::System::New) keep measured scalar-extern spellings: spelled as
+ *  - The Fix12-by-value dExtShadowModel_c::InitModel call keeps its measured
+ *    scalar-extern spelling: spelled as
  *    the real member types, mwccarm homes the register arguments and the
  *    callers grow. G3i::PerspectiveW_ is the Fix12i method.
  *  - LAUNDER((char*)) stays on the mModel.data / mAnimation.data /
@@ -40,6 +33,7 @@ struct System {
  *    int[]-indexed spelling emits a different addressing pair.
  */
 
+#include "Particle__System.h"
 #include "dEntObj_c.h"
 #include "decl_common.h"
 #include "common.h"
@@ -110,7 +104,7 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
 int func_0201251c(int a, int b, void *pos, int c);
 unsigned int func_02012174(unsigned int a, unsigned int b);
 void func_020167a4(void *model);
-long long __aeabi_uidiv(unsigned int n, int d);
+long long __aeabi_uidiv(unsigned int n, unsigned int d);
 
 extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;

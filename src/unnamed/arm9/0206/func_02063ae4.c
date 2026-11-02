@@ -1,7 +1,7 @@
 #include "types.h"
 extern int func_02065a74(void);
-extern int func_0206491c(int a, int b);
-extern int func_02064888(int a, int b);
+extern int func_0206491c(unsigned int a, int b);
+extern int func_02064888(unsigned int a, int b);
 extern int func_02064c2c(int a, int b, int c, int d, int e, int f, int g);
 extern int func_02065bc0(void);
 

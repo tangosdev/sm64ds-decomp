@@ -340,7 +340,6 @@ void daBtfly_c::State3()
     mState = 1;
 }
 
-#pragma opt_common_subs off
 // @symbol _ZN9daBtfly_c6State2Ev
 void daBtfly_c::State2()
 {
@@ -408,7 +407,6 @@ void daBtfly_c::State2()
     mPosZ = mPrevPosZ;
 }
 
-#pragma opt_common_subs on
 
 // @symbol _ZN9daBtfly_c6State1Ev
 void daBtfly_c::State1()

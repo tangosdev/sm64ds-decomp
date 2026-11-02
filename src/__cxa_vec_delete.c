@@ -1,4 +1,4 @@
-extern void func_02073300(int a, int b, int c, int dtor);
+extern void func_02073300(int a, unsigned int b, unsigned int c, int dtor);
 extern void func_0203cbc0(void *ptr);
 
 /* The Itanium C++ ABI's __cxa_vec_delete(array, element_size,

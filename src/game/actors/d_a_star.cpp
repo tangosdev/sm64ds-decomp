@@ -1,8 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
 /* daStar_c / daStarBase_c -- the Power Star, the silver star, and the marker
  * that spawns one.
  *
@@ -48,6 +44,8 @@ struct Vector3_16f;
  * The address is the method name.
  *
  */
+
+#include "Particle__System.h"
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daStar_c_AssetId {
@@ -179,14 +177,7 @@ extern void *data_0209f318;
 extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_02082214[];
-extern void func_02012694(int a, void* p);
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int id, int a, int b, int d);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
+extern void func_02012694(unsigned int a, void *p);
 extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern "C" void SubVec3(Vector3* a, Vector3* b, Vector3* c);
 extern "C" void AddVec3(Vector3* a, Vector3* b, Vector3* c);
@@ -1055,7 +1046,7 @@ void daStar_c::func_ov002_020ea90c() {
             int yv;
             v.x = pp->x;
             yv = pp->y;
-            *(volatile s32*)&v.y = yv;
+            v.y = yv;
             v.z = pp->z;
             v.y = yv + 0xc8000;
             /* By-value staging: the ROM caller copies v to its outgoing area
@@ -1517,9 +1508,8 @@ big_else:
             st2 = 0x11;
 LA:
         if (mBits.answer == 0) {
-            *(u16 *)(((int)&mStarFlags) & 0xFFFFFFFFFFFFFFFF) =
-                (*(u16 *)(((int)&mStarFlags) & 0xFFFFFFFFFFFFFFFF) & ~0xc00) |
-                ((data_0209d684 & 3) << 10);
+            *(u16 *)((int)&mStarFlags) =
+                (*(u16 *)((int)&mStarFlags) & ~0xc00) | ((data_0209d684 & 3) << 10);
             {
                 u32 b3 = mBits.answer;
                 if (b3 == 1) {
@@ -2566,9 +2556,8 @@ void daStar_c::func_ov002_020e81e0() {
     v.y = mPosY;
     v.z = mPosZ;
     v.y += 0xd000;
-    *(void **)&mParticle[0] =
-        (void *)Particle::System::New(*(volatile unsigned int *)&mParticle[0], 0x113,
-                                      *(volatile int *)&v.x, *(volatile int *)&v.y, v.z, 0, 0);
+    *(void **)&mParticle[0] = (void *)Particle::System::New(*(volatile unsigned int *)&mParticle[0],
+                                                            0x113, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */

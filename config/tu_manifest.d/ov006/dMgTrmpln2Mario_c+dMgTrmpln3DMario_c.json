@@ -3362,64 +3362,134 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2155",
+      "from": "@2197",
+      "to": "@2141",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2198",
+      "to": "@2142",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2199",
+      "to": "@2143",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2200",
+      "to": "@2144",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2201",
+      "to": "@2145",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2202",
+      "to": "@2146",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2203",
+      "to": "@2147",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2204",
+      "to": "@2148",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2205",
+      "to": "@2149",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2206",
+      "to": "@2150",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2207",
+      "to": "@2151",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2208",
+      "to": "@2152",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2209",
+      "to": "@2153",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2210",
+      "to": "@2154",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+    },
+    {
+      "from": "@2211",
       "to": "@1094",
-      "evidence": "mwcc emits @2155; that name is already used in ov002, so it is renamed to the unused same-length @1094"
+      "evidence": "mwcc emits @2211; that name is already used in ov002, so it is renamed to the unused same-length @1094"
     },
     {
-      "from": "@2156",
+      "from": "@2212",
       "to": "@1096",
-      "evidence": "mwcc emits @2156; that name is already used in ov002, so it is renamed to the unused same-length @1096"
+      "evidence": "mwcc emits @2212; that name is already used in ov002, so it is renamed to the unused same-length @1096"
     },
     {
-      "from": "@2157",
+      "from": "@2213",
       "to": "@1106",
-      "evidence": "mwcc emits @2157; that name is already used in ov002, so it is renamed to the unused same-length @1106"
+      "evidence": "mwcc emits @2213; that name is already used in ov002, so it is renamed to the unused same-length @1106"
     },
     {
-      "from": "@2158",
+      "from": "@2214",
       "to": "@1108",
-      "evidence": "mwcc emits @2158; that name is already used in ov002, so it is renamed to the unused same-length @1108"
+      "evidence": "mwcc emits @2214; that name is already used in ov002, so it is renamed to the unused same-length @1108"
     },
     {
-      "from": "@2159",
+      "from": "@2215",
       "to": "@1112",
-      "evidence": "mwcc emits @2159; that name is already used in ov002, so it is renamed to the unused same-length @1112"
+      "evidence": "mwcc emits @2215; that name is already used in ov002, so it is renamed to the unused same-length @1112"
     },
     {
-      "from": "@2160",
+      "from": "@2216",
       "to": "@1114",
-      "evidence": "mwcc emits @2160; that name is already used in ov002, so it is renamed to the unused same-length @1114"
+      "evidence": "mwcc emits @2216; that name is already used in ov002, so it is renamed to the unused same-length @1114"
     },
     {
-      "from": "@2161",
+      "from": "@2217",
       "to": "@1130",
-      "evidence": "mwcc emits @2161; that name is already used in ov002, so it is renamed to the unused same-length @1130"
+      "evidence": "mwcc emits @2217; that name is already used in ov002, so it is renamed to the unused same-length @1130"
     },
     {
-      "from": "@2162",
+      "from": "@2218",
       "to": "@1132",
-      "evidence": "mwcc emits @2162; that name is already used in ov002, so it is renamed to the unused same-length @1132"
+      "evidence": "mwcc emits @2218; that name is already used in ov002, so it is renamed to the unused same-length @1132"
     },
     {
-      "from": "@2163",
+      "from": "@2219",
       "to": "@1134",
-      "evidence": "mwcc emits @2163; that name is already used in ov002, so it is renamed to the unused same-length @1134"
+      "evidence": "mwcc emits @2219; that name is already used in ov002, so it is renamed to the unused same-length @1134"
     },
     {
-      "from": "@2164",
+      "from": "@2220",
       "to": "@1135",
-      "evidence": "mwcc emits @2164; that name is already used in ov002, so it is renamed to the unused same-length @1135"
+      "evidence": "mwcc emits @2220; that name is already used in ov002, so it is renamed to the unused same-length @1135"
     },
     {
-      "from": "@2165",
+      "from": "@2221",
       "to": "@1136",
-      "evidence": "mwcc emits @2165; that name is already used in ov002, so it is renamed to the unused same-length @1136"
+      "evidence": "mwcc emits @2221; that name is already used in ov002, so it is renamed to the unused same-length @1136"
     },
     {
-      "from": "@2166",
+      "from": "@2222",
       "to": "@1142",
-      "evidence": "mwcc emits @2166; that name is already used in ov002, so it is renamed to the unused same-length @1142"
+      "evidence": "mwcc emits @2222; that name is already used in ov002, so it is renamed to the unused same-length @1142"
     }
   ],
   "symbol_binding_rewrites": [
