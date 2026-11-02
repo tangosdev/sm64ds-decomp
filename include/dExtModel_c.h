@@ -59,9 +59,48 @@
  * source file.
  */
 
-#ifdef __cplusplus
-
 struct BCA_File;
+
+/* One 0x34-byte runtime bone, the pose record ModelComponents::bones points
+   at (one per BMD_Bone; BMD_File.h's 0x40-byte file record is a different
+   type). func_020462d0 builds each from its file bone, the BCA sampler
+   func_0204547c overwrites the pose every frame, and func_02045074 turns it
+   into the bone's matrix. Visible to the C section below as well. */
+struct ModelBone {
+    u8 pad_00[0xc];
+    /* 0x0c - 0x1000 is 1.0; the file bone's scale, or the BCA's */
+    s32 scaleX;
+    s32 scaleY;
+    s32 scaleZ;
+    /* 0x18 - nonzero when this bone or an ancestor carries a scale.
+       func_020462d0 sets it from the file scale (any axis not 0x1000) and
+       func_0204547c from the BCA's scale tracks; each pass then ORs in the
+       parent's (func_020462d0 itself, func_020453c0 after sampling).
+       func_02045074 builds the matrix without scale when it is 0, and
+       func_0204488c passes a scaled bone's matrix through func_020458a8
+       before drawing */
+    u16 scaled;
+    /* 0x1a - binary angles, the file bone's << 4; read with ldrh */
+    u16 rotX;
+    u16 rotY;
+    u16 rotZ;
+    s32 transX; /* 0x20 */
+    s32 transY; /* 0x24 */
+    s32 transZ; /* 0x28 */
+    /* 0x2c/0x30 - an animation override, set by func_02045e2c: when anim is
+       non-null, func_020453c0 samples it at animFrame instead of the
+       model's own animation, and hands it on down the rest of its walk */
+    struct BCA_File *anim;
+    u16 animFrame;
+    u8 pad_32[0x2];
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char ModelBone_size_must_be_0x34[sizeof(struct ModelBone) == 0x34 ? 1 : -1];
+#endif
+
+#ifdef __cplusplus
 
 /* 0x14 bytes, at +0x8 of a dExtSimpleModel_c (embedded) or behind +0x8 of a dExtCommonModel_c
    or dExtShadowModel_c (pointer to a pool entry from func_02016e70). The runtime
@@ -70,7 +109,7 @@ struct BCA_File;
 struct ModelComponents {
     BMD_File *modelFile;        /* 0x00 */
     BMD_Material *materials;    /* 0x04 - 0x30-byte records, flags at +0x24 */
-    BMD_Bone *bones;            /* 0x08 */
+    ModelBone *bones;           /* 0x08 - one per BMD_File bone */
     Matrix4x3 *transforms;      /* 0x0c - one per bone */
     void *unk_10;               /* 0x10 */
 
@@ -179,7 +218,7 @@ typedef char dExtModel_c_size_must_be_0x8[sizeof(dExtModel_c) == 0x8 ? 1 : -1];
 struct ModelComponents {
     struct BMD_File *modelFile;        /* 0x00 */
     struct BMD_Material *materials;    /* 0x04 */
-    struct BMD_Bone *bones;            /* 0x08 */
+    struct ModelBone *bones;           /* 0x08 */
     struct Matrix4x3 *transforms;      /* 0x0c */
     void *unk_10;                      /* 0x10 */
 };

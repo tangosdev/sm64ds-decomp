@@ -64,24 +64,6 @@ enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 
 typedef void (daCnn_c::*State)();
 
-/* One 0x34-byte runtime bone of mModel.data.bones (ModelComponents types the
-   array as BMD_Bone, but the pose pass fills these). Extends
-   d_a_moray.cpp's MorayBone view (rotX/rotY/rotZ at 0x1a) with the
-   translation at 0x20: InitResources keeps the barrel bone's transY as its
-   rest height, and the barrel's recoil slides transY/transZ. */
-struct CnnBone {
-    u8 pad_00[0x1a];
-    s16 rotX;   /* 0x1a */
-    s16 rotY;   /* 0x1c */
-    s16 rotZ;   /* 0x1e */
-    s32 transX; /* 0x20 */
-    s32 transY; /* 0x24 */
-    s32 transZ; /* 0x28 */
-    u8 pad_2c[0x8];
-};
-#ifndef SM64DS_PLATFORM_PC
-typedef char CnnBone_size_must_be_0x34[sizeof(CnnBone) == 0x34 ? 1 : -1];
-#endif
 
 /* The cannon's model, and the water bomb's two (bomb and fragment), which
    InitResources preloads for the bombs it fires. */
@@ -155,7 +137,7 @@ extern "C" daCnn_c *daCnn_c_classInit() {
 int daCnn_c::InitResources() {
     BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov098_0213c8e8);
     mModel.SetFile(file, 1, -1);
-    mBarrelRestY = ((CnnBone *)mModel.data.bones)[1].transY;
+    mBarrelRestY = mModel.data.bones[1].transY;
     mVariant = param1 & 3;
     mTimer = 0;
     mPosY -= 0x50000;
@@ -529,12 +511,12 @@ void daCnn_c::StateLoad() {
 void daCnn_c::UpdateModel() {
     u16 pitch = mAngleX;
     s16 yaw = mAngleY;
-    CnnBone *bones;
+    ModelBone *bones;
     int idx;
 
     Matrix4x3_FromTranslation(&mModel.mat4x3, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
 
-    bones = (CnnBone *)mModel.data.bones;
+    bones = mModel.data.bones;
     idx = pitch >> 4;
 
     bones[0].rotY = yaw;

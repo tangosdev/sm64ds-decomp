@@ -38,7 +38,13 @@
 struct BMD_Bone {
     u32 unk_00;
     void *unk_04;          /* 0x04 - file-relative, fixed up on load */
-    u8 pad_08[0x28];
+    u8 pad_08[0x1c];
+    /* 0x24 - rest-pose translation: func_020462d0 copies it into the runtime
+       ModelBone (dExtModel_c.h), and func_ov075_02114b60 and
+       func_ov002_020e640c copy it again to put animated bones back at rest */
+    s32 transX;
+    s32 transY;
+    s32 transZ;
     /* 0x30 - length of materialIds: bounds the material walks in
        dScStage_c::RenderModel and RenderModelTransparent */
     u16 numMaterials;
