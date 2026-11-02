@@ -11,6 +11,8 @@
  * highest. OS_GetOwnerRtcOffset is not in this ROM: nothing calls it, so
  * the linker dropped it.
  */
+#include "private/nvram_config.h"
+
 extern void CpuCopy8(const void *src, void *dst, unsigned int size); /* MI_CpuCopy8 */
 extern void MultiCopyHalf(const void *src, void *dst, int size);     /* MIi_CpuCopy16 */
 
@@ -18,32 +20,6 @@ extern void MultiCopyHalf(const void *src, void *dst, int size);     /* MIi_CpuC
 void OS_GetMacAddress(unsigned char *macAddress) {
     CpuCopy8((void *)0x027ffcf4, macAddress, 6);
 }
-
-/* The firmware's user settings, which the boot code copies to 0x027ffc80:
- * pret's pokediamond userInfo.h NVRAMConfigData, cut down to what
- * OS_GetOwnerInfo reads. */
-typedef struct NVRAMConfigOwnerInfo {
-    unsigned char favouriteColour : 4; /* 0x00 */
-    unsigned char rsv : 4;
-    unsigned char birthdayMonth; /* 0x01 */
-    unsigned char birthdayDay;   /* 0x02 */
-    unsigned char pad;
-    unsigned short nickName[10];  /* 0x04 */
-    unsigned char nickNameLength; /* 0x18 */
-    unsigned char nickNameRsv;
-    unsigned short comment[26];  /* 0x1a */
-    unsigned char commentLength; /* 0x4e */
-    unsigned char commentRsv;
-} NVRAMConfigOwnerInfo; /* 0x50 */
-
-typedef struct NVRAMConfigData {
-    unsigned char version; /* 0x00 */
-    unsigned char pad;
-    NVRAMConfigOwnerInfo owner;  /* 0x02 */
-    unsigned char alarm[6];      /* 0x52, NVRAMConfigAlarm */
-    unsigned char tp[0xc];       /* 0x58, NVRAMConfigTpCalibData */
-    unsigned short language : 3; /* 0x64, the first field of NVRAMConfigOption */
-} NVRAMConfigData;
 
 /* The older SDK's 0x50-byte OSOwnerInfo: nickName and comment have no
  * terminator slot. */
