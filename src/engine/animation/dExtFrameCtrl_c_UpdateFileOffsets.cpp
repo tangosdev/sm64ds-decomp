@@ -4,26 +4,16 @@
  * 0x020469ac..0x020469e0. The four offsets in a freshly loaded BCA file
  * are file-relative; rebase them into pointers.
  *
- * leftovers: unk_08..unk_14 stay placeholders -- nothing in the tree reads
- * what they point at (SetAnim only needs numFrames, spelled the way
- * d_ext_model.cpp already types it).
+ * The four words are the scale, rotation and translation value arrays and
+ * the per-bone track table; see BCA_File.h for the evidence.
  */
 #include "dExtFrameCtrl_c.h"
-
-struct BCA_File {
-    u16 unk_00;
-    u16 numFrames;           /* 0x02 - what SetAnim reads */
-    u32 unk_04;
-    char *unk_08;            /* 0x08 - file-relative, fixed up here */
-    char *unk_0c;            /* 0x0c */
-    char *unk_10;            /* 0x10 */
-    char *unk_14;            /* 0x14 */
-};
+#include "BCA_File.h"
 
 void dExtFrameCtrl_c::UpdateFileOffsets(BCA_File &file)
 {
-    file.unk_08 = (char *)&file + (int)file.unk_08;
-    file.unk_0c = (char *)&file + (int)file.unk_0c;
-    file.unk_10 = (char *)&file + (int)file.unk_10;
-    file.unk_14 = (char *)&file + (int)file.unk_14;
+    file.scaleValues = (s32 *)((char *)&file + (int)file.scaleValues);
+    file.rotationValues = (s16 *)((char *)&file + (int)file.rotationValues);
+    file.translationValues = (s32 *)((char *)&file + (int)file.translationValues);
+    file.boneTracks = (BCA_BoneTrack *)((char *)&file + (int)file.boneTracks);
 }

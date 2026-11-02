@@ -1,6 +1,7 @@
 //cpp
 #include "types.h"
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
@@ -9,24 +10,8 @@ extern int WM_CheckStateEx(int a, int b, int c);
 
 /* NitroSDK WM_GetMPSendBufferSize(): 0 unless the system is a parent or a
  * child (states 7, 8) that has not started MP yet; otherwise mp_maxSendSize
- * rounded up to 32 bytes. The WMArm9Buf / WMStatus view follows
- * WM_GetMPReceiveBufferSize, the receive-size sibling that reads mp_flag the same way and
- * mp_maxRecvSize at 0x190. */
-typedef struct WMStatus {
-    char pad_000[0x10];
-    int mp_flag; /* 0x010 -- 1 once MP has started */
-    char pad_014[0x17a];
-    u16 mp_maxSendSize; /* 0x18e */
-    u16 mp_maxRecvSize; /* 0x190 */
-} WMStatus;
-
-typedef char WMStatus_size_must_be_0x194[sizeof(WMStatus) == 0x194 ? 1 : -1];
-
-typedef struct WMArm9Buf {
-    char pad_00[4];
-    WMStatus *status; /* 0x04 */
-} WMArm9Buf;
-
+ * rounded up to 32 bytes. WMArm9Buf / WMStatus are in
+ * include/private/wm_views.h. */
 u32 WM_GetMPSendBufferSize(void) {
     WMArm9Buf *r4;
     WMStatus *p;

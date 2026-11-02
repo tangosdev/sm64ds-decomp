@@ -1,10 +1,7 @@
 #include "private/arm9_a1fc0_file_share.h"
+#include "private/fs_views.h"
 
-/* The FSFile the command is for, with the names func_02041a00.c gives it. */
-typedef struct FSFile {
-    char pad_00[0x34];
-    unsigned int len; /* 0x34 -- arg.readfile.len */
-} FSFile;
+typedef struct FSFile FSFile;
 
 extern char data_020a1fc0[];
 extern void func_02041a00(FSFile *self);
@@ -21,7 +18,7 @@ int func_02042668(FSFile *self, int sel) {
     case 0:
         if (FILE_SHARE_WORK->mState != 2)
             return 5;
-        if (self->len == 0)
+        if (self->arg.readfile.len == 0)
             return 0;
         func_02041a00(self);
         return 6;

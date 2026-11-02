@@ -36,6 +36,8 @@
  *   functions, including func_ov002_020e6780 (decl_common.h spells the
  *   parameter char *) and func_ov002_020bcdf0. func_ov002_020e69c0 rotates
  *   data_ov002_0210a760, which has no recovered name.
+ * - The byte at 0x6da is written by InitResources and never read; it has no
+ *   honest name, so it stays a byte store.
  * - daPly_c:: methods with no body-local externs carry no extern "C"
  *   wrapper (60 sites); the rest keep it: the block gives C linkage to
  *   body-local externs, and hoisting them exposes S42 spelling drift.
@@ -1943,8 +1945,7 @@ int daPly_c::func_ov002_020bfa74() {
         dir.x = FX_MUL(COS(vert), SIN(horz));
         dir.z = FX_MUL(COS(vert), COS(horz));
         func_ov002_020bf800(this, dir);
-        mSurfaceSoundHandle =
-            Sound::PlayLong(mSurfaceSoundHandle, 3, 0x90, *(Vector3 *)&mCamSpacePosX, 0);
+        mSurfaceSoundHandle = Sound::PlayLong(mSurfaceSoundHandle, 3, 0x90, mCamSpacePos, 0);
         if (mIsMetal != 0 || mIsNoControl != 0 || func_ov002_020e0478(this) != 0) return 0;
         if (mIsAirborne == 0) {
             if (this->IsState(data_ov002_0211013c) || this->IsState(daPly_c::ST_WAIT) ||
@@ -2683,8 +2684,7 @@ void daPly_c::func_ov002_020c133c() {
     if (!func_ov002_020d82f0(this)) return;
     if (mIsAirborne != 0) return;
     if (this->GetHealth() <= 2)
-        mSurfaceSoundHandle =
-            Sound::PlayLong(mSurfaceSoundHandle, 2, 0x27, *(Vector3 *)&mCamSpacePos, 0);
+        mSurfaceSoundHandle = Sound::PlayLong(mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
     if (mDamageTickTimer != 0) {
         mDamageTickTimer--;
         return;
@@ -3586,12 +3586,12 @@ void daPly_c::func_ov002_020c2db8() {
     extern void func_02035798(void *, int);
     extern int func_ov002_020eea84(void *, void *);
     ((daPly_c *)(c))->func_ov002_020c14b8();
-    c[0x6e9] = 0;
+    mClsnFlags = 0;
     if (mSkipGroundUpdate != 0)
         return;
-    c[0x70e] = 0;
+    mSlideType = 0;
     if (mFloorClass == 5)
-        c[0x70e] = 1;
+        mSlideType = 1;
     if (((daPly_c *)(c))->func_ov002_020c231c() == 0) {
         func_02035798(&mMeshClsn, 0x1000);
         ((daPly_c *)(c))->func_ov002_020c25a8(0);
@@ -4086,7 +4086,7 @@ int daPly_c::St_OpeningWakeUp_Init() {
 extern "C" {
 void func_ov002_020c3f18(char* p) {
     extern void func_ov002_020d2e74(void*);
-    p[0x6e6] = 1;
+    ((daPly_c *)p)->mStatePhase = 1;
     func_ov002_020d2e74(p);
 }
 }
@@ -5007,8 +5007,8 @@ int func_ov002_020c56f0(unsigned char* c, unsigned char arg)
     extern daPly_c::State data_ov002_021103c4;
     extern int func_ov002_020c56f0(void*, int);
     if (func_ov002_020d82f0(c) == 0) return 0;
-    c[0x6e3] = arg;
-    if (c[0x6e3] == 0 && func_ov002_020d91e0((char*)c, 0x300, 1) != 0) {
+    ((daPly_c *)c)->mStateStep = arg;
+    if (((daPly_c *)c)->mStateStep == 0 && func_ov002_020d91e0((char *)c, 0x300, 1) != 0) {
         ((daPly_c *)c)->ChangeState(data_ov002_0211010c);
         return 1;
     }
@@ -5056,7 +5056,7 @@ int daPly_c::St_DeadPit_Main() {
         break;
     case 3: {
         func_ov002_020c0108(0);
-        u32 snd = Sound::PlayLong(mLoopingSoundHandle, 0, 0x10a, *(Vector3 *)&mCamSpacePosX, 0);
+        u32 snd = Sound::PlayLong(mLoopingSoundHandle, 0, 0x10a, mCamSpacePos, 0);
         int* p = (int*)((char*)&mSinkDepth);
         mLoopingSoundHandle = snd;
         *p += 0x5000;
@@ -6656,7 +6656,6 @@ int daPly_c::St_NoControl_Main() {
 // @symbol _ZN7daPly_c19func_ov002_020c84b0Ev
 extern "C" {
 unsigned char daPly_c::func_ov002_020c84b0() {
-    char *c = (char *)this;
     extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
     Vector3 v;
     short ang;
@@ -6670,7 +6669,7 @@ dummy_label_675641:;
     mHeadRot[0] = 0;
     mHeadRot[1] = 0;
     mHeadRot[0] = this->mAngleYSpeed;
-    c[0x742] = 3;
+    mHeadRotMode = 3;
     return 0;
 }
 }
@@ -7296,7 +7295,7 @@ void daPly_c::func_ov002_020c9718() {
     extern int func_ov002_020ceaf4(void*);
     extern int data_0209f32c;
     int r2;
-    if (self[0x706] == 0)
+    if (mIsUnderwater == 0)
         return;
     mVertSpeed = func_ov002_020ceaf4(self);
     r2 = data_0209f32c - 0x50000;
@@ -11717,8 +11716,8 @@ int func_ov002_020d12b0(u8 *self)
     extern int Player_ScaleByCharFactor(void *c, int a);
 
     if ((*(u16 *)(data_0209f49e + gActivePlayerSlot * 0x18) & 1) == 0) goto ret0;
-    if (self[0x703] != 0) {
-        self[0x6e2] = 2;
+    if (player->mIsMega != 0) {
+        player->mPunchKickStep = 2;
         ((daPly_c *)self)->ChangeState(data_ov002_02110574);
     } else {
         if (player->mHorzSpeed >= Player_ScaleByCharFactor(self, 0xa000)) {
@@ -13884,8 +13883,7 @@ int daPly_c::St_BurnLava_Main() {
                                                info.pos[2], (const Vector3_16f *)(info.vec), 0);
             mParticle2 = Particle::System::New(mParticle2, 0xbe, info.pos[0], info.pos[1],
                                                info.pos[2], (const Vector3_16f *)(info.vec), 0);
-            mLoopingSoundHandle =
-                Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, *(Vector3 *)&mCamSpacePosX, 0);
+            mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
         }
     }
 
@@ -14035,8 +14033,7 @@ int daPly_c::St_BurnFire_Main() {
                                            (const Vector3_16f *)(info.vec), 0);
         mParticle2 = Particle::System::New(mParticle2, 0xbe, info.pos[0], info.pos[1], info.pos[2],
                                            (const Vector3_16f *)(info.vec), 0);
-        mLoopingSoundHandle =
-            Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, *(Vector3 *)&mCamSpacePosX, 0);
+        mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
     }
 
     switch (mStateStep) {
@@ -16398,7 +16395,7 @@ extern "C" {
 void func_ov002_020d91b8(unsigned char *self, int a) {
     extern int data_ov002_020ff120[];
     daPly_c *player = (daPly_c *)self;
-    Sound::PlayCharVoice(self[0x6d9], data_ov002_020ff120[a & 1], player->mCamSpacePos);
+    Sound::PlayCharVoice(player->mCharacter, data_ov002_020ff120[a & 1], player->mCamSpacePos);
 }
 }
 
@@ -17057,8 +17054,8 @@ int daPly_c::St_SwingPlayer_Main() {
                     id = 0x133;
                 mParticle1 = Particle::System::New((u32)mParticle1, id, *(int *)&v.x, *(int *)&v.y,
                                                    *(int *)&v.z, 0, 0);
-                mLoopingSoundHandle = Sound::PlayLong((u32)mLoopingSoundHandle, 0, 0x1c,
-                                                      *(Vector3 *)&mCamSpacePosX, 0);
+                mLoopingSoundHandle =
+                    Sound::PlayLong((u32)mLoopingSoundHandle, 0, 0x1c, mCamSpacePos, 0);
             }
             if (this->mAngleYSpeed != 0)
                 this->mStateTimer = 0xa;
@@ -17846,9 +17843,9 @@ int func_ov002_020db674(char* c, int a1, int a2, int a3)
     p->mHorzSpeed = a1;
     p->mVertSpeed = a2;
     p->mHurtDamage = 0;
-    c[0x6e3] = 4;
-    c[0x6de] = 1;
-    c[0x6df] = 0;
+    p->mStateStep = 4;
+    p->mIsAirborne = 1;
+    p->mLandSoundPlayed = 0;
     ((daPly_c *)c)->ChangeState(data_ov002_02110094);
     return 1;
 }
@@ -20066,13 +20063,12 @@ int daPly_c::TryEnterCannonState() {
     extern daPly_c::State data_ov002_0210ffec;
     extern daPly_c::State data_ov002_021102d4;
     extern dCamera_c* data_0209f318;
-    unsigned char *p = (unsigned char *)this;
-    if (p[0x709] != 0 || func_ov002_020e0478(this) != 0 || IsState(data_ov002_0210ffec) != 0) {
+    if (mIsNoControl != 0 || func_ov002_020e0478(this) != 0 || IsState(data_ov002_0210ffec) != 0) {
         return 0;
     }
-    p[0x6e3] = 0;
+    mStateStep = 0;
     ChangeState(data_ov002_021102d4);
-    ((::dCamera_c *)data_0209f318)->func_0200d474(p[0x6d8]);
+    ((::dCamera_c *)data_0209f318)->func_0200d474(mPlayerNo);
     return 1;
 }
 }
@@ -20589,8 +20585,9 @@ void func_ov002_020e032c(unsigned char* c)
     extern unsigned char data_0209f2d8;
     extern int data_0209caa0;
     unsigned char st;
-    if (c[0x6ff] == 0) return;
-    c[0x6ff] = 0;
+    if (((daPly_c *)c)->mHasWings == 0)
+        return;
+    ((daPly_c *)c)->mHasWings = 0;
     st = data_0209f2d8;
     if ((int)(st == 1) == 0) {
         if (((&data_0209caa0)[2] & 0x80) == 0) return;
@@ -22749,7 +22746,6 @@ void daPly_c::OnPendingDestroy() {
 /* recovered: named members + shared header, real C++ method */
 #pragma push
 #pragma opt_common_subs off
-#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 extern "C" {
 int daPly_c::Render() {
     struct VObj {
@@ -22795,7 +22791,7 @@ int daPly_c::Render() {
                 int t2 = (data_0209f2d8 == 1);
                 if (t2 != false) {
                     if (param1 == 3) {
-                        int* p = (int*)AT(bodyMdl, 8);
+                        int *p = (int *)(int)&bodyMdl->data;
                         BMD_File *hdr = (BMD_File *)p[0];
                         char* rec = (char*)p[1];
                         u32 i2;
@@ -22837,7 +22833,7 @@ int daPly_c::Render() {
                     int t3 = (data_0209f2d8 == 1);
                     if (t3 != false) {
                         if (param1 == 3) {
-                            int *p = (int *)AT((char *)mModels.mHeadModels[i], 8);
+                            int *p = (int *)(int)&mModels.mHeadModels[i]->data;
                             BMD_File *hdr = (BMD_File *)p[0];
                             char* rec = (char*)p[1];
                             u32 i2;
@@ -22873,7 +22869,6 @@ int daPly_c::Render() {
     return 1;
 }
 }
-#undef AT
 #pragma pop
 
 // @symbol func_ov002_020e3e00
@@ -23030,7 +23025,7 @@ int func_ov002_020e3f90(char* self) {
             Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x600, -0x2600, 0);
         }
     }
-    *(struct M48*)(self + 0x5bc) = data_020a0e68;
+    *(struct M48 *)&player->mShadowMatrix = data_020a0e68;
     t = ((volatile struct M48*)&data_020a0e68)->w[9];
     t1 = ((volatile struct M48*)&data_020a0e68)->w[10];
     t2 = ((volatile struct M48*)&data_020a0e68)->w[11];
@@ -23105,7 +23100,7 @@ void func_ov002_020e444c(char *c)
         if (player->mIsBalloon != 0)
             y -= 0x70000;
         Matrix4x3_FromTranslation(&data_020a0e68, player->mPosX >> 3, y >> 3, player->mPosZ >> 3);
-        *(struct Matrix4x3 *)(c + 0x5bc) = data_020a0e68;
+        player->mShadowMatrix = data_020a0e68;
 
         {
             int out[3];
@@ -23169,7 +23164,7 @@ void func_ov002_020e444c(char *c)
         return;
 
     ((dActor_c *)c)
-        ->DropShadowRadHeight(player->mShadowModel, *(Matrix4x3 *)(c + 0x5bc), spC, sp8, 0xf);
+        ->DropShadowRadHeight(player->mShadowModel, player->mShadowMatrix, spC, sp8, 0xf);
 }
 }
 
@@ -23225,8 +23220,8 @@ extern "C" void func_ov002_020e4768(char* self)
             comp = player->mModels.mBodyModels[mid];
             MulMat4x3Mat4x3(&comp->data.transforms[14], data_020a0e68, data_020a0e68);
 
-            *(Mat43 *)player->pad_58c = *(Mat43 *)data_020a0e68;
-            player->mCarryMatrix = (Matrix4x3 *)player->pad_58c;
+            *(Mat43 *)&player->mHeldObjMatrix = *(Mat43 *)data_020a0e68;
+            player->mCarryMatrix = &player->mHeldObjMatrix;
         }
     }
 
@@ -23238,7 +23233,7 @@ extern "C" void func_ov002_020e4768(char* self)
     comp = player->mModels.mBodyModels[mid];
     MulMat4x3Mat4x3(&comp->data.transforms[15], data_020a0e68, data_020a0e68);
 
-    *(Mat43*)(self + 0x5ec) = *(Mat43*)data_020a0e68;
+    *(Mat43 *)&player->mHeadMatrix = *(Mat43 *)data_020a0e68;
 }
 }
 
@@ -24319,9 +24314,9 @@ void func_ov002_020e640c(char *c)
         }
     }
 
-    *(u16 *)(c + 0x580) = ((PlayerBone *)md)[15].rotX;
-    *(u16 *)(c + 0x582) = ((PlayerBone *)md)[15].rotY;
-    *(u16 *)(c + 0x584) = ((PlayerBone *)md)[15].rotZ;
+    player->mHeadBoneRot[0] = ((PlayerBone *)md)[15].rotX;
+    player->mHeadBoneRot[1] = ((PlayerBone *)md)[15].rotY;
+    player->mHeadBoneRot[2] = ((PlayerBone *)md)[15].rotZ;
 
     ((PlayerBone *)md)->transX = ((PlayerFileBone *)r4p)->transX;
     ((PlayerBone *)md)->transY = ((PlayerFileBone *)r4p)->transY;

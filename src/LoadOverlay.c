@@ -1,8 +1,8 @@
 #include "types.h"
 #include "nitro/fs/overlay.h"
+#include "private/fs_views.h"
 int func_0203d7b8(void);
-struct Pair;
-struct Pair FS_GetOverlayFileID(const FSOverlayInfo *p_ovi);
+FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi);
 void Crash(void);
 void FS_LoadOverlay(int a, int id);
 /* A loaded-overlay slot (see func_02017e60.c): the overlay id, 0xffffffff
@@ -13,17 +13,13 @@ struct OverlaySlot {
     u32 size;
 };
 extern struct OverlaySlot data_0209d3c4[12];
-struct Pair {
-    int a;
-    int b;
-};
 
 void LoadOverlay(int id) {
     u32 start;
     struct OverlaySlot *slot;
     u32 i;
     u32 total;
-    struct Pair pair;
+    FSFileID pair;
     FSOverlayInfo info;
     struct OverlaySlot *r;
     u32 end;

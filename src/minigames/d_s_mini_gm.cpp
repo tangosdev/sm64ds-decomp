@@ -41,9 +41,6 @@
  * Leftover: g_profile_MINIGAME lives outside this TU (S14).
  * Leftover: OAM::Render Fix12-by-value stays mangled (OAM.h, wall 6az).
  *   This TU's Render.
- * Leftover: TouchOwner is a local overlay of data_0209f5bc. Slot 5 is
- *   IsActive. UpdateGameSelect / MiniGm_SaveIfDirty call the named
- *   method; the other tap helpers still dispatch vt[5] by hand.
  * Leftover: inline destructor (out-of-line emits D0 before D1 plus a
  *   homeless D2).
  */
@@ -51,6 +48,7 @@
 #include "dScMiniGm_c.h"
 #include "MgMenuRow.h"
 #include "dWipe_c.h"
+#include "dFdBrightness_c.h"
 #include "types.h"
 #include "Sound.h"
 #include "OAM.h"
@@ -65,13 +63,6 @@
 struct MinigameSaveData;
 struct OamAttr;
 
-/* data_0209f5bc is the installed screen fader (a dFader_c). Every input
- * handler first asks its slot 5, IsAtStart, whether no fade is running;
- * three of them spell that call by hand through `(*(int(***)(...))g)[0x14/4]`. */
-struct TouchOwner {
-    virtual int v0(); virtual int v1(); virtual int v2();
-    virtual int v3(); virtual int v4(); virtual int IsActive();
-};
 struct TouchRec {
     u8 held;
     u8 edge;
@@ -97,7 +88,7 @@ extern u8 data_0209d45c;
 extern short data_0209d474[];
 extern short data_0209d494[];
 extern int data_0209e650;
-extern TouchOwner *data_0209f5bc;
+extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
@@ -841,9 +832,7 @@ extern "C" {
 void MiniGm_UpdateGroupTabs(char *self)
 {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    void* g = (void*)data_0209f5bc;
-    int (**vt)(void*) = *(int(***)(void*))g;
-    if (vt[5](g) == 0)
+    if (data_0209f5bc->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0)
         return;
@@ -938,10 +927,8 @@ extern "C" {
 void MiniGm_UpdatePageArrows(char *self)
 {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    int (**vt)(void*);
-    void *obj = (void*)data_0209f5bc;
-    vt = *(int(***)(void*))obj;
-    if (vt[5](obj) == 0) return;
+    if (data_0209f5bc->IsAtStart() == 0)
+        return;
     if (scene->mExiting != 0) return;
     if (scene->mPageFlipped == 1) return;
     if (scene->mPrevPageTimer > 0) return;
@@ -987,7 +974,8 @@ void dScMiniGm_c::UpdateGameSelect()
     int ok;
     int row;
 
-    if (data_0209f5bc->IsActive() == 0) return;
+    if (data_0209f5bc->IsAtStart() == 0)
+        return;
     if (mExiting != 0) return;
     if (mPageFlipped == 1) return;
     if (mPrevPageTimer > 0) return;
@@ -1050,9 +1038,8 @@ extern "C" {
 
 void MiniGm_UpdateExitButton(char *self) {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    void* g = (void*)data_0209f5bc;
-    int (**vt)(void*) = *(int(***)(void*))g;
-    if (vt[5](g) == 0) return;
+    if (data_0209f5bc->IsAtStart() == 0)
+        return;
     if (scene->mExiting != 0) return;
     if (scene->mPageFlipped == 1) return;
     if (scene->mPrevPageTimer > 0) return;
@@ -1080,8 +1067,8 @@ extern "C" {
 
 void MiniGm_UpdatePageScroll(char *self) {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    int* g = (int*)data_0209f5bc;
-    if ((*(int(***)(int*))g)[0x14/4](g) == 0) return;
+    if (data_0209f5bc->IsAtStart() == 0)
+        return;
     if (scene->mExiting != 0) return;
     if (scene->mPrevPageTimer > 0) return;
     if (scene->mNextPageTimer > 0) return;
@@ -1189,7 +1176,8 @@ void MiniGm_SetRecord(void *a0, int a1, int r2, int r3) {
 extern "C" void MiniGm_SaveIfDirty(char *self)
 {
     if (gMgSaveDirty != 1) return;
-    if (data_0209f5bc->IsActive() == 0) return;
+    if (data_0209f5bc->IsAtStart() == 0)
+        return;
     SaveData::SaveMinigames(&data_0209cae4);
     gMgSaveDirty = 0;
     data_0209f1d8 = 0;

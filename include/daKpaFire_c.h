@@ -65,8 +65,6 @@
 #define DAKPAFIRE_C_H
 #include "types.h"
 
-#ifdef __cplusplus
-
 #include "dEnemyBase_c.h"
 #include "dBgCh_Actr.h"
 #include "dCcAc_c.h"
@@ -134,46 +132,5 @@ struct daKpaFire_c : dEnemyBase_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKpaFire_c_size_must_be_0x38c[sizeof(daKpaFire_c) == 0x38c ? 1 : -1];
 #endif
-
-#else
-
-struct daKpaFire_c {
-    u8  pad_000[0x8];
-    s32 mParam;                     /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;                      /* 0x05c */
-    s32 mPosY;                      /* 0x060 */
-    s32 mPosZ;                      /* 0x064 */
-    u8  pad_068[0x34];
-    s32 mVertAccel;                 /* 0x09c */
-    s32 mTerminalVelocity;          /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 mVertSpeed;                 /* 0x0a8 */
-    u8  pad_0ac[0x64];
-    u8  mWithMeshClsn;              /* 0x110 */
-    u8  pad_111[0x1bb];
-    s32 mKpaUniqueID;               /* 0x2cc */
-    u8  mdCcAc_c;                   /* 0x2d0 */
-    u8  pad_2d1[0x33];
-    u8  mShadowModel;               /* 0x304 */
-    u8  pad_305[0x57];
-    s32 mVariant;                   /* 0x35c */
-    s32 mFireScale;                 /* 0x360 -- Fix12 */
-    s32 mGroundY;                   /* 0x364 */
-    s32 mShadowRadiusMul;           /* 0x368 -- integer multiplier; handlers store 0x10 */
-    s32 mLanded;                    /* 0x36c */
-    s32 mTickCount;                 /* 0x370 */
-    u16 mFrameCount;                /* 0x374 */
-    u16 mPhaseOffset;               /* 0x376 */
-    u8  mSubVariant;                /* 0x378 */
-    u8  mDropsShadow;               /* 0x379 -- zero only for variant 0 */
-    u8  pad_37a[0x2];
-    s32 mParticleHandle;            /* 0x37c */
-    s32 mParticleHandle2;           /* 0x380 */
-    s32 mSoundHandle;               /* 0x384 */
-    s32 mSoundID;                   /* 0x388 */
-};
-
-#endif /* __cplusplus */
 
 #endif

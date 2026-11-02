@@ -33,8 +33,6 @@
  * identical callee, identical call position.
  */
 
-#ifdef __cplusplus
-
 struct dExtCommonModel_c : dExtModel_c {
     ModelComponents *data;     /* 0x08 - pool entry from func_02016e70 */
     Matrix4x3 mat4x3;          /* 0x0c */
@@ -69,16 +67,5 @@ struct dExtCommonModel_c : dExtModel_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dExtCommonModel_c_size_must_be_0x3c[sizeof(dExtCommonModel_c) == 0x3c ? 1 : -1];
 #endif
-
-#else
-
-struct dExtCommonModel_c {
-    void **vtable;                     /* 0x00 */
-    struct BMD_File *modelFile;        /* 0x04 */
-    struct ModelComponents *data;      /* 0x08 */
-    struct Matrix4x3 mat4x3;           /* 0x0c */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DEXTCOMMONMODEL_C_H */

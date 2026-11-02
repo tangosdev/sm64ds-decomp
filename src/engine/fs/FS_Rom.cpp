@@ -23,6 +23,9 @@
 #include "types.h"
 #include "nitro/card/card_rom.h"
 #include "nitro/os/spinLock.h"
+#include "private/fs_views.h"
+
+typedef struct FSFile FSFile;
 
 extern "C" {
 
@@ -42,13 +45,6 @@ extern "C" {
 
 /* The ROM header's {offset, length} of the FNT and the FAT. */
 #define HW_ROM_HEADER_BUF 0x027ffe00
-
-typedef struct FSArchive FSArchive;
-typedef struct FSFile FSFile;
-
-typedef int (*FS_ARCHIVE_READ_FUNC)(FSArchive *p_arc, void *dst, u32 pos, u32 size);
-typedef int (*FS_ARCHIVE_WRITE_FUNC)(FSArchive *p_arc, const void *src, u32 pos, u32 size);
-typedef int (*FS_ARCHIVE_PROC_FUNC)(FSFile *p_file, int command);
 
 /* NitroSDK CARDRomRegion. */
 typedef struct CARDRomRegion {

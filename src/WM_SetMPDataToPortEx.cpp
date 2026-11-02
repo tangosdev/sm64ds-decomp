@@ -7,6 +7,7 @@
  * (6), then flushes the data and sends API 0xf (SET_MP_DATA) with pret's
  * argument order. */
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
@@ -14,25 +15,11 @@ extern int *WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int count, ...);
 extern int WM_SendCommand(int a, int b, int c, int d, int e, int f, int g, int h, int i);
 
-/* WM_GetSystemWork's WMArm9Buf and its WMStatus, the fields read here.
+/* WM_GetSystemWork's WMArm9Buf and its WMStatus (include/private/wm_views.h), the fields read here.
  * child_bitmap follows WM_GetLinkLevel and include/WmWork.h; mp_maxSendSize
  * is the SDK field just before WM_GetMPReceiveBufferSize's mp_maxRecvSize (0x190), and
  * WM_GetMPSendBufferSize rounds it up for the send-buffer size. 0x86 has no name in
  * any view yet, so it is only invalidated by offset below. */
-typedef struct WMStatus {
-    char pad_000[0x17e];
-    unsigned short child_bitmap; /* 0x17e -- connected children, by AID bit */
-    char pad_180[0x184 - 0x180];
-    unsigned short aid; /* 0x184 -- 0 for the parent */
-    char pad_186[0x18e - 0x186];
-    unsigned short mp_maxSendSize; /* 0x18e */
-} WMStatus;
-
-typedef struct WMArm9Buf {
-    char pad_00[4];
-    WMStatus *status; /* 0x04 */
-} WMArm9Buf;
-
 int WM_SetMPDataToPortEx(int p0, int p1, int p2, int p3, unsigned short p4, unsigned short p5,
                          unsigned short p6) {
     int maxSendSize;
@@ -57,7 +44,7 @@ int WM_SetMPDataToPortEx(int p0, int p1, int p2, int p3, unsigned short p4, unsi
     if (flag == 1) {
         CP15::InvalidateDataCache((unsigned int)&handle->status->child_bitmap, 2);
         x = handle->status->child_bitmap;
-        CP15::InvalidateDataCache((unsigned int)handle->status + 0x86, 2);
+        CP15::InvalidateDataCache((unsigned int)&handle->status->mp_readyBitmap, 2);
     }
 
     if (p2 == 0)

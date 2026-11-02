@@ -27,10 +27,8 @@
  * local redeclaration of a header member.
  */
 /* leftovers:
- * - Render is the member dExtModel_c.h declares; info/modules reach modelFile/
- *   materials through casts (the header models the BMD half, and Info/
- *   ModuleEntry are its render-half views at the same offsets). RenderNode is
- *   the shard's Node renamed: the bone-record Node already lives here.
+ * - Render is the member dExtModel_c.h declares; it walks modelFile->bones as
+ *   BMD_Bone and materials as BMD_Material (BMD_File.h).
  * - MeshPart/MeshEntry are func_02044534's Part/Entry renamed: func_0204488c's
  *   same-named records differ. Vec3w is the array view for the ROM's ldm-shaped
  *   3-word copy (the daPly_c P2w precedent); the scalar spelling scalarizes.
@@ -55,30 +53,15 @@ namespace CP15 {
 void FlushDataCache(void);
 }
 
+/* The four-pointer block at BMD_File::skin (UpdateFileOffsets rebases all
+   four). */
 struct Sub {
     unsigned char *bytes;
     unsigned short *halfs;
-    char pad8[4];
+    unsigned short *ranges; /* +8: {count, first} pairs, one per BMD_File::numWeightedMatrices
+                               matrix (func_02044dc4) */
     char *blk;
 };
-struct Self {
-    struct Inner *p0;
-    char pad[8];
-    char *m;
-};
-struct Inner {
-    char pad[0x34];
-    struct Sub *sub;
-};
-
-typedef struct {
-    char pad0[4];
-    u32 count;         /* +4 */
-    u32 param8;        /* +8 */
-    char padC[0x24];
-    u32 unk30;         /* +0x30 */
-    u32* matData;      /* +0x34 */
-} Obj;
 
 struct Node {
     s16 f0; s16 f2; s16 f4; s16 f6;
@@ -88,18 +71,6 @@ struct Node {
     int f24, f28, f2c;
 };
 
-struct Elem {
-    int f0, f4, f8;
-    int fc, f10, f14;
-    u16 f18, f1a, f1c, f1e;
-    int f20, f24, f28, f2c, f30;
-};
-
-struct G {
-    int f0, f4;
-    struct Elem* f8;
-    int fc;
-};
 
 typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct Mtx43 { Vec3 r0, r1, r2, r3; } Mtx43;
@@ -116,26 +87,6 @@ struct MeshEntry {
     struct MeshPart* part;
 };
 struct Matrix3x3_Vecs { struct Vector3 v0, v1, v2; };
-struct RenderNode {
-    u8 pad[0x30];
-    u16 innerCount;
-    u8 pad2[2];
-    u8* arrA;
-    u8* arrB;
-    u16 flags;
-    u8 pad3[2];
-};
-struct RenderInfo {
-    u8 field0;
-    u8 pad[3];
-    u32 count;
-    struct RenderNode* nodes;
-};
-struct RenderModule {
-    u8 pad[0x24];
-    u32 flags;
-    u8 pad2[8];
-};
 
 extern "C" {
 void Matrix4x3_LoadIdentity(Matrix4x3 *mat);
@@ -174,25 +125,23 @@ void func_0204488c(char *self, int index, int *color);
 }
 
 // @symbol func_020453c0
-/* Bone-tree walk at 0x020453c0. UpdateBones forwards here. Recurses on the
- * node's child and sibling slots and calls func_0204547c, which stays out. */
+/* Bone-tree walk at 0x020453c0. UpdateBones forwards here. Samples each
+ * bone's pose with func_0204547c (which stays out) from the model's
+ * animation, or from the bone's own override once one is met, ORs in the
+ * parent's scaled flag, and recurses on the node's child and sibling slots. */
 extern "C" {
-void func_020453c0(int *self, short *node, int *p2, int p3)
-{
+void func_020453c0(ModelComponents *self, short *node, int *p2, int p3) {
     int idx = node[0];
-    char *elem = (char*)self[2] + idx * 0x34;
-    int f2c = *(int*)(elem + 0x2c);
+    ModelBone *bone = &self->bones[idx];
     int *anim = p2;
     int frame = p3;
-    if (f2c != 0) {
-        anim = (int*)f2c;
-        frame = *(unsigned short*)(elem + 0x30);
+    if (bone->anim != 0) {
+        anim = (int *)bone->anim;
+        frame = bone->animFrame;
     }
     int mla = idx * 0x24 + anim[5];
-    unsigned short *dst;
-    func_0204547c(anim, mla, frame, elem);
-    dst = (unsigned short*)(int)(elem + 0x18);
-    *dst = (unsigned short)(*dst | *(unsigned short*)(elem + node[4] * 0x34 + 0x18));
+    func_0204547c(anim, mla, frame, bone);
+    bone->scaled |= bone[node[4]].scaled;
     if (node[5] != 0)
         func_020453c0(self, (short*)((char*)node + (node[5] << 6)), anim, frame);
     if (node[6] != 0)
@@ -206,7 +155,7 @@ void func_020453c0(int *self, short *node, int *p2, int p3)
  * (modelFile->bones), the BCA file, and the frame index. */
 void ModelComponents::UpdateBones(BCA_File *file, int frame)
 {
-    func_020453c0((int *)this, (short *)modelFile->bones, (int *)file, frame);
+    func_020453c0(this, (short *)modelFile->bones, (int *)file, frame);
 }
 
 // @symbol func_0204531c
@@ -272,27 +221,25 @@ void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
 
 // @symbol func_02045074
 extern "C" {
-void func_02045074(struct G *g, struct Node *n)
-{
+void func_02045074(ModelComponents *components, struct Node *n) {
     int m[12];
     int a = n->f0;
-    struct Elem *e = (struct Elem *)((char *)g->f8 + a * 0x34);
-    if (e->f18 == 0) {
-        func_02045178(m,
-            e->f1a, e->f1c, e->f1e,
-            e->f20, e->f24, e->f28);
+    ModelBone *bone = &components->bones[a];
+    if (bone->scaled == 0) {
+        func_02045178(m, bone->rotX, bone->rotY, bone->rotZ, bone->transX, bone->transY,
+                      bone->transZ);
     } else {
-        func_02048234(m,
-            e->fc, e->f10, e->f14,
-            e->f1a, e->f1c, e->f1e,
-            e->f20, e->f24, e->f28);
+        func_02048234(m, bone->scaleX, bone->scaleY, bone->scaleZ, bone->rotX, bone->rotY,
+                      bone->rotZ, bone->transX, bone->transY, bone->transZ);
     }
     {
-        int t = g->fc;
+        int t = (int)components->transforms;
         MulMat4x3Mat4x3(&m[0], (const int *)((a + n->f8) * 0x30 + t), (int *)(a * 0x30 + t));
     }
-    if (n->fa != 0) func_02045074(g, (struct Node *)((char *)n + n->fa * 0x40));
-    if (n->fc != 0) func_02045074(g, (struct Node *)((char *)n + n->fc * 0x40));
+    if (n->fa != 0)
+        func_02045074(components, (struct Node *)((char *)n + n->fa * 0x40));
+    if (n->fc != 0)
+        func_02045074(components, (struct Node *)((char *)n + n->fc * 0x40));
 }
 }
 
@@ -304,7 +251,7 @@ void func_02045074(struct G *g, struct Node *n)
 void ModelComponents::UpdateVertsUsingBones()
 {
     Matrix4x3_LoadIdentity(transforms);
-    func_02045074((struct G *)this, (struct Node *)modelFile->bones);
+    func_02045074(this, (struct Node *)modelFile->bones);
 }
 
 // @symbol func_02044f74
@@ -331,19 +278,21 @@ void func_02044f74(void *g, struct Node *n)
 
 // @symbol func_02044efc
 extern "C" {
-void func_02044efc(Obj *self) {
-    if (!self->unk30) return;
-    Matrix4x3 *matrices = (Matrix4x3 *)self->matData[3];
+void func_02044efc(BMD_File *self) {
+    if (!self->numWeightedMatrices)
+        return;
+    Matrix4x3 *matrices = (Matrix4x3 *)((struct Sub *)self->skin)->blk;
     Matrix4x3_LoadIdentity(matrices);
-    func_02044f74((void *)self, (struct Node *)self->param8);
-    u32 count = self->count;
+    func_02044f74((void *)self, (struct Node *)self->bones);
+    u32 count = self->numBones;
     u32 i = 0;
     if (i < count) {
         u32 byteOff = 0;
         do {
-            Matrix4x3 *mat = (Matrix4x3 *)((char *)((Matrix4x3 *)self->matData[3]) + byteOff);
+            Matrix4x3 *mat =
+                (Matrix4x3 *)((char *)((Matrix4x3 *)((struct Sub *)self->skin)->blk) + byteOff);
             InvMat4x3((int *)mat, (int *)mat);
-            count = self->count;
+            count = self->numBones;
             i++;
             byteOff += 0x30;
         } while (i < count);
@@ -354,33 +303,32 @@ void func_02044efc(Obj *self) {
 
 // @symbol func_02044e50
 extern "C" {
-void func_02044e50(struct Self *self, int count, int base, int *out)
-{
+void func_02044e50(ModelComponents *self, int count, int base, int *out) {
     int i;
-    struct Inner *in = self->p0;
+    BMD_File *in = self->modelFile;
     out[0] = 0; out[1] = 0; out[2] = 0; out[3] = 0;
     out[4] = 0; out[5] = 0; out[6] = 0; out[7] = 0;
     out[8] = 0; out[9] = 0; out[10] = 0; out[11] = 0;
     for (i = 0; i < count; i++) {
-        struct Sub *sub = in->sub;
+        struct Sub *sub = (struct Sub *)in->skin;
         int idx = base + i;
         unsigned short lh = sub->halfs[idx];
         unsigned char b = sub->bytes[idx];
-        func_02047218(self->m + lh * 0x30, sub->blk + lh * 0x30, out, b << 4);
+        func_02047218((char *)self->transforms + lh * 0x30, sub->blk + lh * 0x30, out, b << 4);
     }
 }
 }
 
 // @symbol func_02044dc4
 extern "C" {
-void func_02044dc4(struct Self *self) {
+void func_02044dc4(ModelComponents *self) {
     unsigned int i;
     int dst;
-    char *tbl;
-    tbl = *(char **)self;
-    dst = *(int *)(tbl + 4) * 0x30 + *(int *)((char *)self + 0xc);
-    for (i = 0; i < *(unsigned int *)(tbl + 0x30); i++) {
-        unsigned short *arr = *(unsigned short **)(*(char **)(tbl + 0x34) + 8);
+    BMD_File *tbl;
+    tbl = self->modelFile;
+    dst = tbl->numBones * 0x30 + (int)self->transforms;
+    for (i = 0; i < tbl->numWeightedMatrices; i++) {
+        unsigned short *arr = ((struct Sub *)tbl->skin)->ranges;
         func_02044e50(self, arr[2 * i], arr[2 * i + 1], (int *)dst);
         dst += 0x30;
     }
@@ -529,7 +477,7 @@ void func_0204488c(char* self, int index, int* color)
             *(volatile int*)0x4000454 = 0;
             Geometry_MatrixMultiply3x3(data_020a4bd0);
 
-            check = *(unsigned short*)((char*)*(void**)(self + 8) + fp_index * 0x34 + 0x18);
+            check = ((ModelComponents *)self)->bones[fp_index].scaled;
             if (check) {
                 func_020458a8((struct Matrix3x3_Vecs*)partMtx, (struct Matrix3x3_Vecs*)M);
                 Geometry_MatrixMultiply3x3(M);
@@ -714,7 +662,7 @@ void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
 
 // @symbol _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3
 void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec) {
-    data_020a4bd4 = 1u << (((RenderInfo *)modelFile)->field0 + 12);
+    data_020a4bd4 = 1u << (modelFile->scaleShift + 12);
     if (!mat) {
         data_020a4bd0 = &data_02082190;
     } else {
@@ -722,31 +670,32 @@ void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec) {
     }
 
     u32 i = 0;
-    RenderNode* node = ((RenderInfo *)modelFile)->nodes;
-    if (i < ((RenderInfo *)modelFile)->count) {
+    BMD_Bone *node = modelFile->bones;
+    if (i < modelFile->numBones) {
         do {
             if (node->flags & 1) {
-                for (int j = 0; j < node->innerCount; j++) {
-                    u8 idx = node->arrA[j];
-                    u32 hidden = ((((RenderModule *)materials)[idx].flags >> 31)) & 1;
+                for (int j = 0; j < node->numMaterials; j++) {
+                    u8 idx = node->materialIds[j];
+                    u32 hidden = ((materials[idx].flags >> 31)) & 1;
                     if (!hidden) {
                         ((void (*)(void *))func_02044b30)(this);
-                        func_02044534((char *)this, node->arrB[j], (Mtx43 *)mat, (Vec3 *)vec);
+                        func_02044534((char *)this, node->displayListIds[j], (Mtx43 *)mat,
+                                      (Vec3 *)vec);
                     }
                 }
             } else {
-                for (int j = 0; j < node->innerCount; j++) {
-                    u8 idx = *(volatile u8*)&node->arrA[j];
-                    RenderModule* m = (RenderModule *)materials;
+                for (int j = 0; j < node->numMaterials; j++) {
+                    u8 idx = *(volatile u8 *)&node->materialIds[j];
+                    BMD_Material *m = materials;
                     m += idx;
                     if (!(m->flags & 0x80000000)) {
                         ((void (*)(void *))func_02044b30)(this);
-                        func_0204488c((char *)this, node->arrB[j], (int *)vec);
+                        func_0204488c((char *)this, node->displayListIds[j], (int *)vec);
                     }
                 }
             }
             i++;
             node++;
-        } while (i < ((RenderInfo *)modelFile)->count);
+        } while (i < modelFile->numBones);
     }
 }

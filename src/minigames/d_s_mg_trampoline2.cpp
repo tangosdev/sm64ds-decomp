@@ -53,17 +53,7 @@ enum d_s_mg_trampoline2_AssetId {
 #undef _ZTV18dScMgTrampoline2_c
 
 /* P2, S2 and the forward declarations below are local stand-ins for types
- * that have no header yet (issue #2497). C has no reader left (the spinner
- * calls dExtSimpleModel_c::Render now), but deleting it renumbers the manifest-pinned
- * @1110 to @1109, so it stays. */
-struct C {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void v5(void *arg);
-};
+ * that have no header yet (issue #2497). */
 
 /* The cartridge's ctor/dtor imports are the functions the wrapper's aliases
  * name. */
@@ -856,7 +846,7 @@ s32 dScMgTrampoline2_c::Behavior() {
         Particle::System::NewUnkCallback818(mParticleID, 0xf0, 0x280000, 0x700000, -0x580000, 0);
     Particle::System *trail = Particle::System::FromUniqueID(mParticleID);
     if (trail != 0) {
-        trail->spawnFrames = mRamp >> 12;
+        trail->emitInterval = mRamp >> 12;
         ApproachLinear(mRamp, 0x14000, 0x200);
     }
     {

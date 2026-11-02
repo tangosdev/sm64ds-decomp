@@ -1,4 +1,5 @@
 #include "types.h"
+#include "private/spl_particle_views.h"
 
 typedef struct Node {
     struct Node *next;
@@ -9,75 +10,13 @@ typedef struct List {
     int count;
 } List;
 
-/* The particle's 0x40 halfword (SPL's visibility). */
-typedef struct Visibility {
-    u16 baseAlpha : 5;
-    u16 animAlpha : 5;
-    u16 rest : 6;
-} Visibility;
-
-/* Particle::Element (include/Particle__Element.h) and the fields past its
-   0x30 bytes, named as in func_0204c584 (the parent spawn). */
-typedef struct Particle {
-    u8 pad0[8];            /* 0x0 */
-    Vector3 basePosition;  /* 0x8 */
-    Vector3 offset;        /* 0x14 */
-    Vector3 velocity;      /* 0x20 */
-    u16 lifetime;          /* 0x2c */
-    u16 age;               /* 0x2e */
-    int scale;             /* 0x30 */
-    s16 animScale;         /* 0x34 */
-    u16 angle;             /* 0x36 */
-    s16 angularSpeed;      /* 0x38 */
-    u16 color;             /* 0x3a */
-    u16 loopTimeFactor;    /* 0x3c */
-    u16 lifeRateFactor;    /* 0x3e */
-    Visibility visibility; /* 0x40 */
-    u8 texture;            /* 0x42 */
-} Particle;
-
-/* The child record's flags (SPL's SPLChildResourceFlags). rotationType 0
-   starts a child unrotated, 1 copies the parent's angle, 2 also its angular
-   speed. useChildColor takes the record's color over the parent's. */
-typedef struct DefFlags {
-    u16 pad0 : 3;          /* bits 0-2 */
-    u16 rotationType : 2;  /* bits 3-4 */
-    u16 pad5 : 1;          /* bit 5 */
-    u16 useChildColor : 1; /* bit 6 */
-    u16 pad7 : 9;          /* bits 7-15 */
-} DefFlags;
-
-/* The child record (func_0204a730's PtclChild; SPL's SPLChildResource).
-   func_0204d104 reads endScale; func_0204a730 the emission delay and
-   interval at 0xd/0xe. */
-typedef struct Def {
-    DefFlags flags;   /* 0x0 */
-    s16 spread;       /* 0x2 -- random velocity spread */
-    s16 endScale;     /* 0x4 */
-    u16 lifetime;     /* 0x6 */
-    u8 velocityRatio; /* 0x8 -- a child inherits (velocityRatio + 1) / 256 of the velocity */
-    u8 scaleRatio;    /* 0x9 -- and (scaleRatio + 1) / 64 of the scale */
-    u16 color;        /* 0xa */
-    u8 count;         /* 0xc */
-    u8 padd[2];       /* 0xd */
-    u8 texture;       /* 0xf */
-} Def;
-
-/* Particle::SystemDefinition (include/Particle__Manager.h): child is the
-   0x14-byte child record, present when data's flags bit 16 is set. */
-typedef struct SystemDefinition {
-    void *data;   /* 0x00 */
-    void *opt[4]; /* 0x04 */
-    Def *child;   /* 0x14 */
-} SystemDefinition;
-
-/* Particle::System (include/Particle__System.h): the second particle list
-   holds the children. */
-typedef struct ParticleSystem {
+/* Particle::System (include/Particle__System.h) as the child spawn reads it:
+   the second particle list holds the children. */
+typedef struct SystemListView {
     u8 pad_00[0x10];
-    List children;                 /* 0x10 */
-    SystemDefinition *mDefinition; /* 0x18 */
-} ParticleSystem;
+    List children;        /* 0x10 */
+    PtclDef *mDefinition; /* 0x18 */
+} SystemListView;
 
 extern u32 data_020a4d30;
 
@@ -90,9 +29,9 @@ extern void func_0204d9a0(List *list, Node *node);
    and offset, the parent velocity scaled by velocityRatio plus a random
    spread, and the parent's animated scale times scaleRatio. The other fields
    come from the child record or the parent. */
-void func_0204c304(Particle *self, ParticleSystem *sys, List *freelist) {
-    Particle *p;
-    Def *def;
+void func_0204c304(ParticleElement *self, SystemListView *sys, List *freelist) {
+    ParticleElement *p;
+    PtclChild *def;
     int i;
     int eA, eB, eC, d1c;
     u32 rngA, rngC;
@@ -112,7 +51,7 @@ void func_0204c304(Particle *self, ParticleSystem *sys, List *freelist) {
     do {
         int ratio;
 
-        p = (Particle *)func_0204d958(freelist);
+        p = (ParticleElement *)func_0204d958(freelist);
         if (p == 0)
             return;
 

@@ -39,6 +39,7 @@
 #include "daLuigi_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
+#include "dCamera_c.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 
@@ -185,7 +186,7 @@ int daLuigi_c::Behavior() {
     func_ov002_020e4374((char *)player, &depth, &radius);
     DropShadowRadHeight(mShadowModel, mShadowMatrix, radius, depth, kShadowOpacity);
     /* dCamera_c::mFramedActor; this file does not include dCamera_c.h. */
-    *(daLuigi_c **)((char *)data_0209f318 + 0x114) = this;
+    ((dCamera_c *)data_0209f318)->mFramedActor = this;
     return 1;
 }
 

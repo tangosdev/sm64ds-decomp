@@ -52,8 +52,6 @@
  * ROM names them.
  */
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 struct ResourceDescriptor;
@@ -135,21 +133,5 @@ struct daObjGuragura_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjGuragura_c_size_must_be_0x350[sizeof(daObjGuragura_c) == 0x350 ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for a C translation unit, which has no base sub-object to
-   inherit dBgActor_c's fields from and so spells the layout flat. Same arrangement
-   as include/dBgActor_c.h. */
-struct daObjGuragura_c {
-    u8 pad_000[0x320];
-    s32 mTilt[4];       /* 0x320 */
-    s32 mTiltTarget[4]; /* 0x330 */
-    u8 pad_340[0xc];
-    u8 mBumped;      /* 0x34c */
-    u8 mSettleDelay; /* 0x34d */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJGURAGURA_C_H */

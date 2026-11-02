@@ -67,31 +67,6 @@ struct G2 {
     int w[2];
 };
 
-/* Vtable shim for InitResources' last call, a virtual dispatch through slot
- * 18 of this class's own table. Calling StartRound by name would compile
- * to a direct branch instead. */
-struct RoundStartCallbacks {
-    virtual void m00();
-    virtual void m04();
-    virtual void m08();
-    virtual void m0c();
-    virtual void m10();
-    virtual void m14();
-    virtual void m18();
-    virtual void m1c();
-    virtual void m20();
-    virtual void m24();
-    virtual void m28();
-    virtual void m2c();
-    virtual void m30();
-    virtual void m34();
-    virtual void m38();
-    virtual void m3c();
-    virtual void m40();
-    virtual void m44();
-    virtual void StartRound(int x);
-};
-
 /* File-scope objects at the end of this file construct the two model
  * handles (files 0x203 and 0x204). mwcc emits __sinit_d_s_mg_jump2.cpp
  * from those definitions. The wrapper name is local; the handle
@@ -252,7 +227,7 @@ s32 dScMgJump2_c::InitResources() {
     }
 
     Mg_SetTopScreenYOffset(0x10);
-    ((RoundStartCallbacks *)this)->StartRound(-1);
+    StartRound(-1);
     return 1;
 }
 
@@ -406,16 +381,16 @@ void dScMgJump2_c::State_Idle() {}
 // @symbol _ZN12dScMgJump2_c8BehaviorEv
 /* Slot 6. mParticleID is a particle system's unique ID, handed to
  * NewUnkCallback818 and back each frame. The object FromUniqueID returns is
- * untyped, so its fields at 0x50 and 0x58 stay raw. Both Particle::System
+ * a Particle::System. Both Particle::System
  * calls keep their mangled spellings: declaring the real Fix12<int>
  * parameters changes how the call passes them. */
 s32 dScMgJump2_c::Behavior() {
     mParticleID =
         Particle::System::NewUnkCallback818(mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);
-    void *system = Particle::System::FromUniqueID(mParticleID);
+    Particle::System *system = Particle::System::FromUniqueID(mParticleID);
     if (system != 0) {
-        *(int *)((char *)system + 0x50) = 0x4000;
-        *(unsigned char *)((char *)system + 0x58) = 0x2c;
+        system->callbackScale = 0x4000;
+        system->emitInterval = 0x2c;
     }
     Jump2Popup_UpdateAll();
     {

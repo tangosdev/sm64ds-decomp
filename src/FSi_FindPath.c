@@ -7,30 +7,9 @@
  * (p_dir_pos) rather than a file (p_file_id), and FS_COMMAND_FINDPATH (4) is
  * sent through FSi_SendCommand. */
 
-/* NitroSDK FSArchive, as far as this function reads it. */
-typedef struct FSArchive {
-    char pad_00[0x10];
-    int flag; /* 0x10 */
-} FSArchive;
+#include "private/fs_views.h"
 
-/* NitroSDK FSDirPos. */
-typedef struct FSDirPos {
-    FSArchive *arc; /* 0x00 */
-    short own_id;   /* 0x04 */
-    short index;    /* 0x06 */
-    int pos;        /* 0x08 */
-} FSDirPos;
-
-/* NitroSDK FSFile, as far as this function writes it. */
-typedef struct FSFile {
-    char pad_00[8];
-    FSArchive *arc; /* 0x08 */
-    char pad_0c[0x2c - 0xc];
-    FSDirPos pos;       /* 0x2c -- arg.findpath.pos */
-    char *path;         /* 0x38 -- arg.findpath.path */
-    int find_directory; /* 0x3c */
-    int result;         /* 0x40 -- the FSFileID or FSDirPos to fill */
-} FSFile;
+typedef struct FSFile FSFile;
 
 extern FSDirPos data_020a804c;
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
@@ -77,14 +56,14 @@ int FSi_FindPath(FSFile *p_dir, char *path, int p_file_id, int p_dir_pos) {
     }
 
     p_dir->arc = pos.arc;
-    p_dir->path = path;
-    p_dir->pos = pos;
+    p_dir->arg.findpath.path = path;
+    p_dir->arg.findpath.pos = pos;
     if (p_dir_pos != 0) {
-        p_dir->find_directory = 1;
-        p_dir->result = p_dir_pos;
+        p_dir->arg.findpath.find_directory = 1;
+        p_dir->arg.findpath.result = p_dir_pos;
     } else {
-        p_dir->find_directory = 0;
-        p_dir->result = p_file_id;
+        p_dir->arg.findpath.find_directory = 0;
+        p_dir->arg.findpath.result = p_file_id;
     }
     return FSi_SendCommand(p_dir, 4);
 }

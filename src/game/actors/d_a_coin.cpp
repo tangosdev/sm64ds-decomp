@@ -42,6 +42,7 @@
 #include "dBgCh_Actr.h"
 #include "Sound.h"
 #include "cstd.h"
+#include "Particle__System.h"
 
 /* Views of daObjBC_Switch_c.h and daObjFl_Coin_c.h, same member names and
    offsets: including either header renumbers this TU's @NNN labels. */
@@ -99,12 +100,6 @@ extern int GiveRedCoins(int i, int amt);
 extern s8 NumRedCoins(void);
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern int SurfaceInfo_TestFlag0x20(void* p);
-}
-namespace Particle {
-struct System {
-    static void NewBigSplash(int a, int b, int c);
-    static void *NewSimple(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
-};
 }
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *m, int angle);

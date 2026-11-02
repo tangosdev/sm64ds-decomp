@@ -46,6 +46,7 @@ enum daOnms_c_AssetId {
 #pragma defer_codegen off
 
 #include "daOnms_c.h"
+#include "Particle__System.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Sound.h"
@@ -105,11 +106,6 @@ void d_a_onmsEarthquakeHold(void *v, int f);
 void func_02012694(unsigned int id, const Vector3 *v);
 /* Stores mRadius: p[6] = value, the word at dBgCh_Actr + 0x18. */
 void func_0203568c(void *p, int v);
-namespace Particle {
-struct System {
-    static void *NewSimple(unsigned int a, int b, int cc, int d);
-};
-}
 s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s16 data_02082214[];

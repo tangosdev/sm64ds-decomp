@@ -7,7 +7,7 @@ extern "C" {
 /* FSFile, the two words this reads: top and bottom of prop.file (at 0x1c),
    the file's extent in its archive. bottom - top is its length
    (FS_GetLength). */
-struct Obj {
+struct FSFileView {
     char pad[0x20];
     unsigned int top;    /* 0x20 */
     unsigned int bottom; /* 0x24 */
@@ -30,7 +30,7 @@ extern unsigned int func_0201834c(void *buf, int x);
    is decompressed or copied out of it, anything else read through
    func_0201834c. flush nonzero flushes the result from the data cache. */
 int func_0201818c(unsigned int id, int flush) {
-    struct Obj obj;
+    struct FSFileView obj;
     char buf[0x44];
     int p = func_020186c0(id);
     if (p != 0) {

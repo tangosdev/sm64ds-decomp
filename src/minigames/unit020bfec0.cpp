@@ -40,6 +40,7 @@
 #include "cstd.h"
 #include "G2.h"
 #include "math/Approach.h"
+#include "dScMgBase_c.h"
 /* Typed access to a MascotWalker record from the char* helpers below. */
 #define WALKER(p) ((MascotWalker *)(p))
 /* Typed access to a Presenter record from the char* helpers below. */
@@ -1755,36 +1756,6 @@ void Dealer_StartShuffle(char *c, int unused, short a2, int a3) {
 }
 
 namespace s020c14bc {
-struct V {
-    virtual void v00();
-    virtual void v01();
-    virtual void v02();
-    virtual void v03();
-    virtual void v04();
-    virtual void v05();
-    virtual void v06();
-    virtual void v07();
-    virtual void v08();
-    virtual void v09();
-    virtual void v10();
-    virtual void v11();
-    virtual void v12();
-    virtual void v13();
-    virtual void v14();
-    virtual void v15();
-    virtual void v16();
-    virtual void v17();
-    virtual void v18();
-    virtual void v19();
-    virtual void v20();
-    virtual void OnDealDone(); /* slot 21 */
-};
-
-/* local extern: only slot 21, dScMgBase_c::OnDealDone, is called, through
-   the view V above. */
-extern "C" {
-extern V *gMgScene;
-}
 
 extern "C" void Dealer_StateShuffle(char *c) {
     if (DEALER(c)->mShuffleSoundPlayed == 0) {
@@ -1814,9 +1785,9 @@ extern "C" void Dealer_StateShuffle(char *c) {
 
     Sound::PlayBank2_2D(0x141);
     if (DEALER(c)->mShuffleLeft == DEALER(c)->mDealDoneAt) {
-        V *o = gMgScene;
-        if (o)
-            o->OnDealDone();
+        dScMgBase_c *scene = gMgScene;
+        if (scene)
+            scene->OnDealDone();
     }
 }
 }

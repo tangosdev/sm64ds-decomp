@@ -24,8 +24,6 @@
  * 0x02137484 is reconstructed as g_profile_BOMB_SEESAW.
  */
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 struct daObjSeesaw_c : dBgActor_c {
@@ -54,36 +52,5 @@ struct daObjSeesaw_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjSeesaw_c_size_must_be_0x328[sizeof(daObjSeesaw_c) == 0x328 ? 1 : -1];
 #endif
-
-#else
-
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
-struct daObjSeesaw_c {
-    u8 pad_000[0xc];
-    u16 actorID; /* 0x00c */
-    u8 pad_00e[0x7e];
-    s16 mAngleX; /* 0x08c */
-    s16 mAngleY; /* 0x08e */
-    u8 pad_090[0x20];
-    u32 mFlags; /* 0x0b0 */
-    u8 pad_0b4[0x20];
-    /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    dExtSimpleModel_c mModel; /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~daObjSeesaw_c calls _ZN10dBgW_KcMbgD1Ev at
-       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider; /* 0x124 */
-    u8 pad_2ec[0x32];
-    u8 mVariant; /* 0x31e */
-    u8 pad_31f[0x1];
-    s32 mTiltSound;       /* 0x320 */
-    s16 mAngleXSpeed;     /* 0x324 */
-    u8 mPoundedThisFrame; /* 0x326 */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJSEESAW_C_H */

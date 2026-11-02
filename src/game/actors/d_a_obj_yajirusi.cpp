@@ -48,6 +48,7 @@
  */
 
 #include "daObjYajirusi_c.h"
+#include "Particle__System.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -82,11 +83,6 @@ void Matrix4x3_FromRotationY(void *mtx, int angle);
 void func_02012694(unsigned int id, void *pos);
 }
 
-namespace Particle {
-struct System {
-    static void NewSimple(u32 id, Fix12i x, Fix12i y, Fix12i z);
-};
-}
 
 /* dExtSimpleModel_c, KCL and CLPS. Each column is its own symbol so the relocations
  * stay on 0x0213c380 / 0x0213c384 / 0x0213c388. */

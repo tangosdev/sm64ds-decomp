@@ -33,8 +33,6 @@
 #define DAKPA3BG_C_H
 #include "types.h"
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 struct daKpa3Bg_c : dBgActor_c {
@@ -68,20 +66,5 @@ struct daKpa3Bg_c : dBgActor_c {
 #ifndef SM64DS_PLATFORM_PC
 typedef char daKpa3Bg_c_size_must_be_0x32c[sizeof(daKpa3Bg_c) == 0x32c ? 1 : -1];
 #endif
-
-#else
-
-struct daKpa3Bg_c {
-    u8  pad_000[0x320];
-    s32 mKoopaUniqueId;   /* 0x320 */
-    u16 mTimer;           /* 0x324 */
-    u16 mPhase;           /* 0x326 */
-    u8  mState;           /* 0x328 */
-    u8  mVariant;         /* 0x329 */
-    u8  mActive;          /* 0x32a */
-    u8  mTouchedKoopa;    /* 0x32b */
-};
-
-#endif /* __cplusplus */
 
 #endif

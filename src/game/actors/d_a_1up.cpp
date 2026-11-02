@@ -1,12 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-    static void NewSimple(unsigned int, int, int, int);
-};
-}
 /* da1up_c -- the mushroom, in all fourteen of the ways it can behave.
  *
  * One class covers the 1-Up and the Mega Mushroom and the ways they are placed:
@@ -139,6 +131,7 @@ struct System {
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 /* Actor IDs, from the profile ids in symbols/actor_debug_names.tsv: 276 and
    277 are this class's two profiles, 331 is the 1UP logo it spawns. */

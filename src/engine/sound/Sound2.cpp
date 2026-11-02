@@ -32,20 +32,16 @@
 
 #include "types.h"
 #include "Sound.h"
+#include "nnsys/snd/player.h"
 
 extern "C" {
 
-/* The fields of a playing sound these functions read: the (kind, id) pair
-   Sound.cpp passes to func_02048a1c, and the voice priority. */
-typedef struct SoundHandle {
-    u8 pad_00[0x38];
-    u16 kind; /* 0x38 */
-    u16 id;   /* 0x3a */
-    u8 pad_3c;
-    u8 priority; /* 0x3d */
-} SoundHandle;
+/* A playing sound is an NNSSndHandle. Its NNSSndSeqPlayer carries the
+   (seqNo, seqArcIndex) pair Sound.cpp passes to func_02048a1c as (kind, id),
+   and the voice priority (prio).
 
-/* One voice slot: the sound handle and its last listener distance. */
+   One voice slot: the sound handle (the player pointer) and its last
+   listener distance. */
 typedef struct SoundSlot {
     void *obj;
     int dist;
@@ -62,12 +58,6 @@ extern SoundSlot data_020a4c08[];
 extern SoundSlot data_020a4bf8[];
 extern SoundSlot data_020a4bf0;
 
-/* The NNS_SndPlayer setters are nnsys/snd/player.h's, which take an
-   NNSSndHandle *. This file holds its handles untyped, so it keeps local
-   copies rather than cast at every call. */
-extern void NNS_SndPlayerSetVolume(void *obj, int volume);          // local extern: untyped handle
-extern void NNS_SndPlayerSetTrackPan(void *obj, int mask, int pan); // local extern: untyped handle
-extern void NNS_SndPlayerSetTrackPitch(void *obj, int a, int b);    // local extern: untyped handle
 extern int func_0204fa2c(int *obj, int v);
 extern void func_0204f934(int **slot);
 extern void func_0204f94c(void *slot);
@@ -194,15 +184,15 @@ void func_02048e54(void) {
 }
 
 // @symbol func_02048d80
-void func_02048d80(void *obj, Vector3 *p) {
+void func_02048d80(NNSSndHandle *handle, Vector3 *p) {
     int s = p->x >> 12;
     int hi = data_02099fac;
     int lo = data_02099fa8;
     int r1;
     int cur;
-    if (obj == 0)
+    if (handle == 0)
         return;
-    if (*(int *)obj == 0)
+    if (handle->player == 0)
         return;
     cur = func_02049018(p);
     if ((unsigned)cur >= (unsigned)hi)
@@ -211,24 +201,24 @@ void func_02048d80(void *obj, Vector3 *p) {
         r1 = 0x7f;
     else
         r1 = (hi - cur) * 0x7f / (hi - lo);
-    NNS_SndPlayerSetVolume(obj, r1);
+    NNS_SndPlayerSetVolume(handle, r1);
     s = s / 2;
     if (s > 0x3f)
         s = 0x3f;
     else if (s < -0x40)
         s = -0x40;
-    NNS_SndPlayerSetTrackPan(obj, data_02099fa4, s);
+    NNS_SndPlayerSetTrackPan(handle, data_02099fa4, s);
 }
 
 // @symbol func_02048c30
-void func_02048c30(int *self, Vector3 *p, int q) {
+void func_02048c30(NNSSndHandle *handle, Vector3 *p, int q) {
     int t;
     int a;
     int b = q >> 12;
     unsigned int n, lo, hi;
-    if (self == 0)
+    if (handle == 0)
         return;
-    if (*self == 0)
+    if (handle->player == 0)
         return;
     if (p != 0) {
         a = p->x >> 12;
@@ -242,7 +232,7 @@ void func_02048c30(int *self, Vector3 *p, int q) {
                 t = (int)((hi - n) * 0x7f) / (int)(hi - lo);
             }
         } else {
-            func_0204fa2c(self, 0);
+            func_0204fa2c((int *)handle, 0);
         }
     } else {
         t = 0x7f;
@@ -253,25 +243,25 @@ void func_02048c30(int *self, Vector3 *p, int q) {
     } else if (b <= 0x28) {
         t = t * (b * 103 / 40 + 0x18) / 0x7f;
     }
-    NNS_SndPlayerSetVolume(self, t);
+    NNS_SndPlayerSetVolume(handle, t);
     a = a / 2;
     if (a > 0x3f) {
         a = 0x3f;
     } else if (a < -0x40) {
         a = -0x40;
     }
-    NNS_SndPlayerSetTrackPan(self, data_02099fa4, a);
+    NNS_SndPlayerSetTrackPan(handle, data_02099fa4, a);
 }
 
 // @symbol func_02048af4
-void func_02048af4(int *self, Vector3 *p, int q) {
+void func_02048af4(NNSSndHandle *handle, Vector3 *p, int q) {
     int a = p->x >> 12;
     int b = q >> 12;
     unsigned int n, lo, hi;
     int t;
-    if (self == 0)
+    if (handle == 0)
         return;
-    if (*self == 0)
+    if (handle->player == 0)
         return;
     n = func_02049018(p);
     hi = data_02099fac;
@@ -287,18 +277,18 @@ void func_02048af4(int *self, Vector3 *p, int q) {
         } else if (b <= 0x28) {
             t = t * (b * 64 / 40 + 0x3f) / 0x7f;
         }
-        NNS_SndPlayerSetVolume(self, t);
-        NNS_SndPlayerSetTrackPitch(self, 3, (b - 0x28) * 2);
+        NNS_SndPlayerSetVolume(handle, t);
+        NNS_SndPlayerSetTrackPitch(handle, 3, (b - 0x28) * 2);
         a = a / 2;
         if (a > 0x3f) {
             a = 0x3f;
         } else if (a < -0x40) {
             a = -0x40;
         }
-        NNS_SndPlayerSetTrackPan(self, data_02099fa4, a);
+        NNS_SndPlayerSetTrackPan(handle, data_02099fa4, a);
         return;
     }
-    func_0204fa2c(self, 0);
+    func_0204fa2c((int *)handle, 0);
 }
 
 // @symbol func_02048a1c
@@ -347,19 +337,19 @@ void func_02048908(void *obj, Vector3 *p) {
     int den = data_02099fa8;
     int a = 0x7f;
     int b = 0;
-    SoundHandle *s;
+    NNSSndSeqPlayer *s;
     int typ, val;
     int cur, arg;
     int half;
 
     if (obj == 0)
         return;
-    s = *(SoundHandle **)obj;
+    s = *(NNSSndSeqPlayer **)obj;
     if (s == 0)
         return;
 
-    typ = s->kind;
-    val = s->id;
+    typ = s->seqNo;
+    val = s->seqArcIndex;
 
     if (typ == 3) {
         if (val >= 0x4b && val <= 0x4c) {
@@ -382,7 +372,7 @@ void func_02048908(void *obj, Vector3 *p) {
         arg = a;
     else
         arg = b + __aeabi_idiv((a - b) * (num - cur), num - den);
-    NNS_SndPlayerSetVolume(obj, arg);
+    NNS_SndPlayerSetVolume((NNSSndHandle *)obj, arg);
 
     half = p->x >> 12;
     half = half / 2;
@@ -390,7 +380,7 @@ void func_02048908(void *obj, Vector3 *p) {
         half = 0x3f;
     else if (half < -0x40)
         half = -0x40;
-    NNS_SndPlayerSetTrackPan(obj, data_02099fa4, half);
+    NNS_SndPlayerSetTrackPan((NNSSndHandle *)obj, data_02099fa4, half);
 }
 
 // @symbol func_02048720
@@ -452,7 +442,7 @@ void *func_02048720(Vector3 *v, int kind, int id) {
 
     if (pick < 0) {
         for (i = 0; i < count; i++) {
-            p = ((SoundHandle *)table[i].obj)->priority;
+            p = ((NNSSndSeqPlayer *)table[i].obj)->prio;
             if (best_pri > p) {
                 best_pri = p;
                 best_idx = i;
@@ -485,17 +475,17 @@ void *func_02048720(Vector3 *v, int kind, int id) {
 }
 
 // @symbol func_020485f0
-void func_020485f0(SoundHandle **slot, Vector3 *a) {
+void func_020485f0(NNSSndHandle *handle, Vector3 *a) {
     int r5 = a->x >> 12;
     unsigned int x;
     u16 r4;
     int v;
-    if (slot == 0)
+    if (handle == 0)
         return;
-    if (slot[0] == 0)
+    if (handle->player == 0)
         return;
     x = func_02049018(a);
-    r4 = ((SoundHandle *)slot[0])->id;
+    r4 = handle->player->seqArcIndex;
     if (r4 == 0x81) {
         if (x > 0x4b0)
             v = 0;
@@ -511,27 +501,27 @@ void func_020485f0(SoundHandle **slot, Vector3 *a) {
         else
             v = (int)(0x8bc - x) * 0x7f / 1236;
     }
-    NNS_SndPlayerSetVolume(slot, v);
+    NNS_SndPlayerSetVolume(handle, v);
     r5 = r5 >> 4;
     if (r5 > 0x3f)
         r5 = 0x3f;
     else if (r5 < -0x40)
         r5 = -0x40;
     if (r4 == 0x103) {
-        NNS_SndPlayerSetTrackPan(slot, 1, r5);
+        NNS_SndPlayerSetTrackPan(handle, 1, r5);
     } else {
-        NNS_SndPlayerSetTrackPan(slot, data_02099fa4, r5);
+        NNS_SndPlayerSetTrackPan(handle, data_02099fa4, r5);
     }
 }
 
 // @symbol func_02048528
-void func_02048528(SoundHandle **slot, Vector3 *a) {
+void func_02048528(NNSSndHandle *handle, Vector3 *a) {
     int r4 = a->x >> 12;
     unsigned int x;
     int v;
-    if (slot == 0)
+    if (handle == 0)
         return;
-    if (slot[0] == 0)
+    if (handle->player == 0)
         return;
     x = func_02049018(a);
     if (x >= 0x1f4) {
@@ -541,12 +531,12 @@ void func_02048528(SoundHandle **slot, Vector3 *a) {
     } else {
         v = (int)(0x1f4 - x) * 0x61 / 0x1e0 + 0x1e;
     }
-    NNS_SndPlayerSetVolume(slot, v);
+    NNS_SndPlayerSetVolume(handle, v);
     r4 = r4 >> 2;
     if (r4 > 0x3f)
         r4 = 0x3f;
     else if (r4 < -0x40)
         r4 = -0x40;
-    NNS_SndPlayerSetTrackPan(slot, data_02099fa4, r4);
+    NNS_SndPlayerSetTrackPan(handle, data_02099fa4, r4);
 }
 }

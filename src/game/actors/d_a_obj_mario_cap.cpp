@@ -169,16 +169,19 @@ struct McapStateRec { McapStatePmf enter; McapStatePmf exec; };
  * codegen, not decoration. Letting the PMF bind to the real dEnemyBase_c
  * makes mwccarm abort with an internal compiler error rather than a
  * diagnostic. */
-struct CapStateSelf { char pad[0x800]; };
+struct CapStateSelf {};
 typedef void (CapStateSelf::*CapStatePmf)();
-struct CapStateRec { char pad[8]; CapStatePmf fn; };
+struct CapStateRec {
+    CapStatePmf enter;
+    CapStatePmf fn;
+};
 
-/* EnterState's own view of the same slot, with the class shaped so
- * the member pointer it stores and immediately calls is laid out the way the
- * ROM's bytes read it. */
+/* EnterState's member pointers (the record's enter slot) return a result, so
+ * they get their own empty stand-in class; the record itself is stored in
+ * mStateEntry. */
 struct CapEnterSelf;
 typedef int (CapEnterSelf::*CapEnterPmf)();
-struct CapEnterSelf { char pad[0x3bc]; CapEnterPmf *pp; };
+struct CapEnterSelf {};
 
 /* Bit view of dCapIcon_c::mFlags. f1 is bit 1, the bit Behavior watches (the
  * one dCapIcon_c's GetCapState tests); f0 is the cap-bank bit. */
@@ -775,11 +778,10 @@ void daObjMarioCap_c::UpdateMatrix()
 // @symbol _ZN15daObjMarioCap_c10EnterStateEPv
 int daObjMarioCap_c::EnterState(void *rec)
 {
-    CapEnterSelf *c = (CapEnterSelf *)this;
-    c->pp = (CapEnterPmf *)rec;
-    CapEnterPmf *q = c->pp;
+    *(CapEnterPmf **)&mStateEntry = (CapEnterPmf *)rec;
+    CapEnterPmf *q = *(CapEnterPmf **)&mStateEntry;
     if (*q == 0) return 0;
-    return (c->**q)();
+    return (((CapEnterSelf *)this)->**q)();
 }
 
 /* df64's enter function: nothing to do. */

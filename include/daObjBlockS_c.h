@@ -36,8 +36,6 @@ struct daPly_c;
 typedef struct daPly_c daPly_c;
 #endif
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 #include "dBgCh_Actr.h"
 #include "dExtShadowModel_c.h"
@@ -161,81 +159,5 @@ struct daObjBlockS_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjBlockS_c_size_must_be_0x608[sizeof(daObjBlockS_c) == 0x608 ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for a C translation unit, flat. Kept for parity with the
- * rest of the family (include/daObjBlockL_c.h, include/daObjFallBlock_c.h)
- * even though no remaining C translation unit needs it. */
-struct daObjBlockS_c {
-    u8  pad_000[0xc];
-    u16 mActorID;               /* 0x00c */
-    u8  pad_00e[0x4e];
-    s32 mPosX;                  /* 0x05c */
-    s32 mPosY;                  /* 0x060 */
-    s32 mPosZ;                  /* 0x064 */
-    u8  pad_068[0x24];
-    s16 mAngleX;                /* 0x08c */
-    s16 mAngleY;                /* 0x08e */
-    s16 mAngleZ;                /* 0x090 */
-    u8  pad_092[0xa];
-    s32 mVertAccel;             /* 0x09c */
-    s32 mTerminalVelocity;      /* 0x0a0 */
-    u8  pad_0a4[0xc];
-    u32 mFlags;                 /* 0x0b0 */
-    u8  pad_0b4[0x1c];
-    s32 mEatingPlayer;          /* 0x0d0 */
-    /* dExtSimpleModel_c member. The cartridge's own ~daObjBlockS_c calls _ZN17dExtSimpleModel_cD1Ev at +0x0d4 (D0/D1), a
-       relocation the ROM build checks; recovered by tools/dtor_members.py. D1 and not
-       D2, so it is this type and not an inlined base. */
-    dExtSimpleModel_c mModel; /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~daObjBlockS_c calls _ZN10dBgW_KcMbgD1Ev at +0x124
-       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
-       D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider;   /* 0x124 */
-    u8  pad_2ec[0x34];
-    u8  mWithMeshClsn;          /* 0x320 */
-    u8  pad_321[0x1bb];
-    s32 mFloorNormalX;          /* 0x4dc */
-    s32 mFloorNormalY;          /* 0x4e0 */
-    s32 mFloorNormalZ;          /* 0x4e4 */
-    s32 mHomePosX;              /* 0x4e8 */
-    s32 mHomePosY;              /* 0x4ec */
-    s32 mHomePosZ;              /* 0x4f0 */
-    s32 mCarryOffsetX;          /* 0x4f4 */
-    s32 mCarryOffsetY;          /* 0x4f8 */
-    s32 mCarryOffsetZ;          /* 0x4fc */
-    s16 mHomeAngleX;            /* 0x500 */
-    s16 mHomeAngleY;            /* 0x502 */
-    s16 mHomeAngleZ;            /* 0x504 */
-    u8  pad_506[0x2];
-    u8  mShadowModel;           /* 0x508 */
-    u8  pad_509[0x57];
-    s32 mState;                 /* 0x560 */
-    u8  mdCcAcPos_c1;           /* 0x564 */
-    u8  pad_565[0x33];
-    s32 mdCcAcPos_c1_posX;      /* 0x598 */
-    s32 mdCcAcPos_c1_posY;      /* 0x59c */
-    s32 mdCcAcPos_c1_posZ;      /* 0x5a0 */
-    u8  mdCcAcPos_c2;           /* 0x5a4 */
-    u8  pad_5a5[0x33];
-    s32 mdCcAcPos_c2_posX;      /* 0x5d8 */
-    s32 mdCcAcPos_c2_posY;      /* 0x5dc */
-    s32 mdCcAcPos_c2_posZ;      /* 0x5e0 */
-    daPly_c *mHoldingPlayer;    /* 0x5e4 */
-    void *mPrevHolder;          /* 0x5e8 */
-    s32 mGroundY;               /* 0x5ec */
-    s32 mClsnYOffsetTarget;     /* 0x5f0 */
-    s32 mClsnYOffset;           /* 0x5f4 */
-    u32 mSlideSoundHandle;      /* 0x5f8 */
-    u32 mParticleHandle1;       /* 0x5fc */
-    u32 mParticleHandle2;       /* 0x600 */
-    u8  mBounceCount;           /* 0x604 */
-    u8  mWallCooldown;          /* 0x605 */
-    u8  mBreakTimer;            /* 0x606 */
-    u8  mCoinsPaid;             /* 0x607 */
-};
-
-#endif /* __cplusplus */
 
 #endif

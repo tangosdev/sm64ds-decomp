@@ -1,5 +1,6 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "private/spl_particle_views.h"
 
 /* File-local view of Particle::System (include/Particle__System.h is C++):
    the direction and the two axes perpendicular to it. */
@@ -21,45 +22,14 @@ typedef struct List {
     int count;
 } List;
 
-/* The particle definition's header (func_0204a730's PtclData; SPL's
- * SPLResourceHeader); the flag bits follow SPL's SPLResourceFlags, and
- * func_0204a730 registers the color/texture animation callbacks off bits 9
- * and 11. The three random bytes at 0x2c scale the base scale, lifetime and
- * initial velocities down by up to byte / 256. */
-typedef struct Def {
-    u32 emissionType : 4;    /* bits 0-3 -- the emitter shape */
-    u32 drawType : 2;        /* 4-5 */
-    u32 circleAxis : 2;      /* 6-7 -- 3: the system's own basis */
-    u32 hasScaleAnim : 1;    /* 8 */
-    u32 hasColorAnim : 1;    /* 9 */
-    u32 hasAlphaAnim : 1;    /* 10 */
-    u32 hasTexAnim : 1;      /* 11 */
-    u32 hasRotation : 1;     /* 12 -- random angular speed in [min, max] */
-    u32 randomInitAngle : 1; /* 13 */
-    u32 rest : 18;
-    int rate;          /* 0x4 */
-    u8 pad8[0xa];      /* 0x8 */
-    u16 color;         /* 0x12 */
-    u8 pad14[0x10];    /* 0x14 */
-    s16 minRotation;   /* 0x24 */
-    s16 maxRotation;   /* 0x26 */
-    u8 pad28[4];       /* 0x28 */
-    u8 scaleRandom;    /* 0x2c */
-    u8 lifetimeRandom; /* 0x2d */
-    u8 velocityRandom; /* 0x2e */
-    u8 pad2f[4];       /* 0x2f */
-    u8 textureIndex;   /* 0x33 */
-    u8 loopFrames;     /* 0x34 */
-} Def;
-
 /* The color animation (func_0204d294's ColorRamp; SPL's SPLColorAnim). */
-typedef struct ColorAnim {
+typedef struct ColorRamp {
     u16 startColor;           /* 0x0 */
     u16 endColor;             /* 0x2 */
     u8 pad[4];                /* 0x4 */
     u16 randomStartColor : 1; /* 0x8 bit 0 */
     u16 frest : 15;
-} ColorAnim;
+} ColorRamp;
 
 /* The texture animation (func_0204d150's TexAnim; SPL's SPLTexAnim). */
 typedef struct TexAnim {
@@ -69,70 +39,6 @@ typedef struct TexAnim {
     u32 randomizeInit : 1; /* bit 16 */
     u32 prest : 15;
 } TexAnim;
-
-/* Particle::SystemDefinition (include/Particle__Manager.h): `data` there;
- * func_0204a730's PtclDef. colorAnim and texAnim are read only when data's
- * hasColorAnim / hasTexAnim bits are set, and supply the spawned particle's
- * colour and texture. */
-typedef struct SystemDefinition {
-    Def *data; /* 0x00 */
-    u8 pad_04[4];
-    ColorAnim *colorAnim; /* 0x08 */
-    u8 pad_0c[4];
-    TexAnim *texAnim; /* 0x10 */
-} SystemDefinition;
-
-/* Particle::System (include/Particle__System.h), whose names this reuses.
- * Here callbackValue is the spawn-rate accumulator (data->rate is added each
- * call, whole units spawn, the 12-bit fraction stays). emitRadius scales the
- * spawn offset of every emitter shape. particleLifetime seeds each particle's
- * lifetime. baseAlpha follows emitInterval, as the two do in SPL's header,
- * and goes into the low five bits of each particle's visibility. */
-typedef struct ParticleSystem {
-    u8 pad_00[8];
-    List particles; /* 0x08 */
-    u8 pad_10[8];
-    SystemDefinition *mDefinition; /* 0x18 */
-    u8 pad_1c[4];
-    Vector3 position; /* 0x20 */
-    u8 pad_2c[0xe];
-    s16 callbackValue; /* 0x3a */
-    s16 direction[3];  /* 0x3c */
-    u8 pad_42[2];
-    int emitRadius;       /* 0x44 */
-    int callbackParam;    /* 0x48 */
-    int callbackVelocity; /* 0x4c */
-    int callbackScale;    /* 0x50 */
-    u16 particleLifetime; /* 0x54 */
-    u8 pad_56[2];
-    u8 emitInterval; /* 0x58 */
-    u8 baseAlpha;    /* 0x59 */
-} ParticleSystem;
-
-/* Particle::Element (include/Particle__Element.h) and the fields past its
- * 0x30 bytes that this spawn fills in. scale is seeded from the system's
- * callbackScale, angle from the randomInitAngle bit, color and texture as the
- * SystemDefinition note says. The names past 0x30 are the animation
- * callbacks' (func_0204d440 animScale, func_0204d294 color, func_0204d1b4
- * visibility, func_0204d150 texture) and func_0204a730's (angularSpeed and
- * the two 0xffff / frames factors). */
-typedef struct ParticleElement {
-    Node link;            /* 0x00 */
-    Vector3 basePosition; /* 0x08 */
-    Vector3 offset;       /* 0x14 */
-    Vector3 velocity;     /* 0x20 */
-    u16 lifetime;         /* 0x2c */
-    u16 age;              /* 0x2e */
-    int scale;            /* 0x30 */
-    s16 animScale;        /* 0x34 */
-    u16 angle;            /* 0x36 */
-    s16 angularSpeed;     /* 0x38 */
-    u16 color;            /* 0x3a */
-    u16 loopTimeFactor;   /* 0x3c */
-    u16 lifeRateFactor;   /* 0x3e */
-    u16 visibility;       /* 0x40 -- base alpha bits 0-4, animated alpha 5-9 */
-    u8 texture;           /* 0x42 */
-} ParticleElement;
 
 extern Vector3s data_02099fc4;
 extern void func_02053380(void *a, Vector3s *b);
@@ -223,8 +129,8 @@ void func_0204c584(u8 *self, List *list) {
     Vector3 vecC;
     Vector3 vecE;
     Vector3 nrm;
-    SystemDefinition *emitter;
-    Def *def;
+    PtclDef *emitter;
+    PtclData *def;
     ParticleElement *p;
     int acc;
     ParticleSystem *sys = (ParticleSystem *)self;
@@ -253,7 +159,7 @@ void func_0204c584(u8 *self, List *list) {
         p = (ParticleElement *)func_0204d958(list);
         if (p == 0)
             return;
-        func_0204d9a0(&sys->particles, (Node *)p);
+        func_0204d9a0((List *)&sys->particles, (Node *)p);
         switch (def->emissionType) {
         case 0:
             p->offset.z = d14;
@@ -333,7 +239,7 @@ void func_0204c584(u8 *self, List *list) {
         p->animScale = (s16)d1c;
         if (def->hasColorAnim && emitter->colorAnim->randomStartColor) {
             u32 s;
-            ColorAnim *anim;
+            ColorRamp *anim;
             s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
             data_020a4d30 = s;
             anim = emitter->colorAnim;
@@ -345,7 +251,7 @@ void func_0204c584(u8 *self, List *list) {
             p->color = def->color;
         }
         {
-            u16 *q = &p->visibility;
+            u16 *q = (u16 *)&p->visibility;
             *q = (u16)((*q & ~0x1f) | (sys->baseAlpha & 0x1f));
             *q = (u16)((*q & ~0x3e0) | 0x3e0);
         }
@@ -385,7 +291,7 @@ void func_0204c584(u8 *self, List *list) {
             } else if (hasTexAnim != 0 && !emitter->texAnim->randomizeInit) {
                 p->texture = emitter->texAnim->textures[0];
             } else {
-                p->texture = def->textureIndex;
+                p->texture = def->texture;
             }
         }
         p->loopTimeFactor = (u16)(0xffff / emitter->data->loopFrames);

@@ -1,5 +1,7 @@
 //cpp
 #include "types.h"
+#include "private/rom_header_view.h"
+#include "private/mb_views.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "IRQ.h"
 
@@ -18,31 +20,8 @@ extern u8 data_020a9d28;
  * longer. */
 #define MB_STEP(i) ((MbParentWork *)(data_020a9db8 + (i) * (int)sizeof(MbParentFile)))
 
-/* NitroSDK RomHeader, the two static modules' load regions (the same view as
- * func_020676e0.c's): the image's authentication code follows the 0x160-byte
- * header and the two static modules. */
-typedef struct RomStaticRegion {
-    u32 ram_address; /* 0x00 */
-    u32 size;        /* 0x04 */
-} RomStaticRegion;
-
-typedef struct RomHeaderView {
-    u8 pad_00[0x28];
-    RomStaticRegion main; /* 0x28 -- ARM9 static */
-    u8 pad_30[0x38 - 0x30];
-    RomStaticRegion sub; /* 0x38 -- ARM7 static */
-} RomHeaderView;
-
-/* The NitroSDK MBGameInfo tail written here (src/engine/mb/MB_GameInfo.c's MBGameInfo names
- * the fields before it): seqNoFixed takes the next value of the counter at
- * data_020a9d28, fileNo the file's mFiles index. The record sits at
- * mHeader + 0xe4, as MB_Parent.cpp reaches it. */
-typedef struct MBGameInfo {
-    u8 pad_000[0x4ab];
-    u8 seqNoFixed; /* 0x4ab */
-    u8 seqNoVolat; /* 0x4ac -- bumped by MB_UpdateGameInfoMember */
-    u8 fileNo;     /* 0x4ad */
-} MBGameInfo;
+/* The image's authentication code follows the 0x160-byte RomHeaderView and
+ * the two static modules. */
 
 extern int MBi_IsStarted(void);
 extern void func_020678a4(void *out, void *in, void *dst);

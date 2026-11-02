@@ -50,8 +50,9 @@
  *   - The .data member-pointer records keep their data_ov004_* names and
  *     are declared as dMgState_c::Callback; the comment on each extern names
  *     the member it points at.
- *   - Base (the scene) is a TU-local view and says why it retains a separate
- *     call shape. W2 preserves the two-word storage view of data_02086b58.
+ *   - The scene is gMgScene, a dScMgBase_c; the states call its StartRound,
+ *     CanEndState and OnNewRecord (slots 18-20) and read its mCredits.
+ *     W2 preserves the two-word storage view of data_02086b58.
  *   - mState doubles as the id passed to the scene's CanEndState and,
  *     through Mg_CallStartRound, to its StartRound. The `(void *)mState`
  *     spelling follows that helper's declaration.
@@ -108,6 +109,7 @@
  */
 
 #include "dMgState_c.h"
+#include "dScMgBase_c.h"
 #include "dScene_c.h"
 #include "dWipe_c.h"
 #include "PlayerInput.h"
@@ -119,37 +121,6 @@ namespace Sound {
 u32 PlayBank2_2D(u32);
 }
 
-/* The minigame scene at gMgScene, seen through the two virtuals
-   this unit calls and the one field it reads, under dScMgBase_c.h's names.
-   Including dScMgBase_c.h instead renumbers SetState's local static
-   (sEnterTable$184 becomes $208), and the manifest pins $184. Named
-   parameters declared above SetState move that number too (measured: one
-   name fewer gives $183), so these two views keep five between them. */
-struct Base {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void v5();
-    virtual void v6();
-    virtual void v7();
-    virtual void v8();
-    virtual void v9();
-    virtual void v10();
-    virtual void v11();
-    virtual void v12();
-    virtual void v13();
-    virtual void v14();
-    virtual void v15();
-    virtual void v16();
-    virtual void v17();
-    virtual void StartRound(int);      /* slot 18, reached via Mg_CallStartRound */
-    virtual int CanEndState(int mode); /* slot 19 */
-    virtual void OnNewRecord();        /* slot 20 */
-    char pad[0xa4];
-    s32 mCredits; /* 0x0a8 */
-};
 extern "C" {
 extern void FreeGfxSlotsById(int arg);
 extern int GetGameLanguage(void);
@@ -177,7 +148,6 @@ struct W2 {
 extern W2 data_02086b58; /* __ptmf_null's address: the null member pointer */
 extern dFdBrightness_c *data_0209f5bc;
 extern dWipe_c data_0209f61c;
-extern Base *gMgScene; /* local extern: seen through the TU-local Base view (see Base above) */
 extern int sMgTopScreenYOffset;
 extern int sMgBannerButtonsArmed;
 extern int gMgCoinsShowDelta;
@@ -371,7 +341,7 @@ void dMgState_c::RoundClear_Enter() {
 
 // @symbol _ZN10dMgState_c17RoundClear_UpdateEv
 void dMgState_c::RoundClear_Update() {
-    Base *scene = gMgScene;
+    dScMgBase_c *scene = gMgScene;
     if (data_0209f5bc->IsAtEnd()) {
         data_0209f5bc->SetBackwardTime(0x1e, 0);
         FreeGfxSlotsById(0x1d);
@@ -404,7 +374,7 @@ void dMgState_c::NextRound_Enter() {
 // @symbol _ZN10dMgState_c16NextRound_UpdateEv
 void dMgState_c::NextRound_Update() {
     if (data_0209f5bc->IsAtEnd() != 0) {
-        Base *scene = gMgScene;
+        dScMgBase_c *scene = gMgScene;
         if (scene == 0)
             return;
         if (scene->CanEndState(mState) == 0)
@@ -436,7 +406,7 @@ void dMgState_c::RoundBanner5_Enter() {
 // @symbol _ZN10dMgState_c19RoundBanner5_UpdateEv
 void dMgState_c::RoundBanner5_Update() {
     if (data_0209f5bc->IsAtEnd()) {
-        Base *scene = gMgScene;
+        dScMgBase_c *scene = gMgScene;
         if (scene == 0)
             return;
         if (scene->CanEndState(mState) == 0)
@@ -537,7 +507,7 @@ void dMgState_c::Win_Update() {
         return;
     if (mTimer != 0)
         return;
-    Base *scene = gMgScene;
+    dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
     if (scene->CanEndState(mState) == 0)
@@ -565,12 +535,12 @@ void dMgState_c::Lose_Update() {
     int state = mTimer;
     if (state > 0x64)
         return;
-    Base *p = gMgScene;
+    dScMgBase_c *p = gMgScene;
     int a8 = (p != 0) ? p->mCredits : 0;
     if (a8 == 0) {
         if (state != 0)
             return;
-        Base *q = gMgScene;
+        dScMgBase_c *q = gMgScene;
         if (q == 0)
             return;
         if (q->CanEndState(mState) == 0)
@@ -584,7 +554,7 @@ void dMgState_c::Lose_Update() {
     } else {
         if (state != 0)
             return;
-        Base *scene = gMgScene;
+        dScMgBase_c *scene = gMgScene;
         if (scene == 0)
             return;
         if (scene->CanEndState(mState) == 0)
@@ -644,7 +614,7 @@ void dMgState_c::LoseResume_Update() {
 
 // @symbol _ZN10dMgState_c17UpdateAfterHiddenEv
 void dMgState_c::UpdateAfterHidden() {
-    Base *g = gMgScene;
+    dScMgBase_c *g = gMgScene;
     int cond = g ? g->mCredits : 0;
     if (cond == 0) {
         g = gMgScene;
@@ -686,7 +656,7 @@ void dMgState_c::Tie_Enter() {
 
 // @symbol _ZN10dMgState_c20UpdateWaitThenResumeEv
 void dMgState_c::UpdateWaitThenResume() {
-    Base *scene;
+    dScMgBase_c *scene;
     if (mTimer != 0)
         return;
     scene = gMgScene;
@@ -720,7 +690,7 @@ void dMgState_c::RoundClearTop_Enter() {
 void dMgState_c::RoundClearTop_Update() {
     if (mTimer != 0)
         return;
-    Base *scene = gMgScene;
+    dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
     if (scene->CanEndState(mState) == 0)
@@ -779,7 +749,7 @@ void dMgState_c::ScoreThenRound_Enter() {
 // @symbol _ZN10dMgState_c21ScoreThenRound_UpdateEv
 void dMgState_c::ScoreThenRound_Update() {
     if (data_0209f5bc->IsAtEnd()) {
-        Base *scene = gMgScene;
+        dScMgBase_c *scene = gMgScene;
         if (scene == 0)
             return;
         if (scene->CanEndState(mState) == 0)
@@ -849,7 +819,7 @@ void dMgState_c::DigitsThenRound_Enter() {
 // @symbol _ZN10dMgState_c20UpdateFadeThenResumeEv
 void dMgState_c::UpdateFadeThenResume() {
     if (data_0209f5bc->IsAtEnd()) {
-        Base *scene = gMgScene;
+        dScMgBase_c *scene = gMgScene;
         if (scene == 0)
             return;
         if (scene->CanEndState(mState) == 0)
@@ -927,7 +897,7 @@ void dMgState_c::ResultsNewRecord_Enter() {
 void dMgState_c::ResultsNewRecord_Update() {
     int idx;
     int flag;
-    Base *scene;
+    dScMgBase_c *scene;
     int v;
     int s;
     int id;
@@ -981,7 +951,7 @@ void dMgState_c::GameOver_Enter() {
 // @symbol _ZN10dMgState_c15GameOver_UpdateEv
 void dMgState_c::GameOver_Update() {
     int x = mTimer;
-    Base *g = gMgScene;
+    dScMgBase_c *g = gMgScene;
     if (x != 0) {
         unsigned char idx = gActivePlayerSlot;
         int off = idx * 4;
@@ -1022,7 +992,7 @@ void dMgState_c::Finished_Enter() {
 // @symbol _ZN10dMgState_c15Finished_UpdateEv
 void dMgState_c::Finished_Update() {
     int x = mTimer;
-    Base *g = gMgScene;
+    dScMgBase_c *g = gMgScene;
     if (x != 0) {
         unsigned char idx = gActivePlayerSlot;
         int off = idx * 4;

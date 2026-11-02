@@ -1,48 +1,39 @@
 //cpp
 #include "types.h"
 #include "IRQ.h"
+#include "private/wbt_block_info_list.h"
 
 extern "C" {
 
-extern int *func_02065ae0(void);
+extern int func_02065ae0(void);
 extern void func_02065ad0(int v);
-struct Node
-{
-  int *key;
-  char pad[0x24];
-  struct Node *next;
-};
-struct Node *func_020657fc(int *key)
-{
+struct WBTBlockInfoList *func_020657fc(int *key) {
     u32 saved = (0, IRQ::Disable());
-    struct Node *head = (struct Node *)func_02065ae0();
-    struct Node *cur;
-    struct Node *prev;
+    struct WBTBlockInfoList *head = (struct WBTBlockInfoList *)func_02065ae0();
+    struct WBTBlockInfoList *cur;
+    struct WBTBlockInfoList *prev;
     if (head == 0) {
         IRQ::Restore(saved);
         return 0;
     }
-  if (head->key == key)
-  {
-    func_02065ad0((int) head->next);
-    IRQ::Restore(saved);
-    return head;
-  }
-  prev = head;
-  cur = prev->next;
-  while (cur != 0)
-  {
-    if (cur->key == key)
-    {
-      prev->next = cur->next;
-      IRQ::Restore(saved);
-      return cur;
+    if (head->block_id == (int)key) {
+        func_02065ad0((int)head->next);
+        IRQ::Restore(saved);
+        return head;
     }
-    prev = cur;
-    cur = cur->next;
-  }
+    prev = head;
+    cur = prev->next;
+    while (cur != 0) {
+        if (cur->block_id == (int)key) {
+            prev->next = cur->next;
+            IRQ::Restore(saved);
+            return cur;
+        }
+        prev = cur;
+        cur = cur->next;
+    }
 
-  IRQ::Restore(saved);
-  return 0;
+    IRQ::Restore(saved);
+    return 0;
 }
 }

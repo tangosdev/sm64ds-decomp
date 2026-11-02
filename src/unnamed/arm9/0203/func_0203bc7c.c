@@ -1,18 +1,15 @@
 #include "types.h"
-typedef struct InputPair {
-    u16 cur;
-    u16 pressed;
-} InputPair;
+#include "private/controller_input.h"
 
 extern unsigned char data_020a0e44;
 extern u16 data_020a0e48[4];
 extern u16 data_020a0e50[4];
-extern InputPair data_020a0e58[4];
+extern PadData data_020a0e58[4];
 
 extern u16 func_0203dae4(int idx);
 
 void func_0203bc7c(void) {
-    InputPair *p = data_020a0e58;
+    PadData *p = data_020a0e58;
     int i;
     data_020a0e44 = 0;
     for (i = 0; i < 4; i++) {
@@ -31,7 +28,7 @@ void func_0203bc7c(void) {
         p->pressed = keys & changed;
         data_020a0e48[i] = old & changed;
         data_020a0e50[i] = keys;
-        p->cur = keys;
+        p->held = keys;
         p++;
     }
 }

@@ -17,11 +17,12 @@ extern "C" {
  * touches. */
 typedef struct Ov007AnimPlayer {
     s32 state; /* 0x00: 0 playing; func_ov007_020c9110 sets 2 when a one-shot ends */
-    char pad_04[8];
+    s32 loopMode; /* 0x04 */
+    s32 flags;    /* 0x08 */
     /* 0x0c: index into the owner's animation table; -1 none. volatile:
      * the ROM re-reads it for each test below */
     volatile s16 anim;
-    char pad_0e[2];
+    s16 prevAnim;   /* 0x0e */
     u16 frame;      /* 0x10: the whole frame func_ov007_020c9110 last reached */
     u16 frameCount; /* 0x12 */
     s32 framePos;   /* 0x14: Q12; func_ov007_020c9110 advances it */
@@ -31,9 +32,20 @@ typedef struct Ov007AnimPlayer {
  * func_ov007_020bc02c and func_ov007_020bc434, only the slots this file
  * touches. */
 typedef struct Ov007Model {
-    char pad_00[0x18];
+    struct ModelComponents *model;    /* 0x00 */
+    struct Matrix4x3 *transforms;     /* 0x04 */
+    struct Matrix4x3 *nextTransforms; /* 0x08 */
+    void *blendBuffer;                /* 0x0c */
+    s32 numBoneAnims;                 /* 0x10 */
+    void **boneAnims;                 /* 0x14 */
     Ov007AnimPlayer *boneAnim; /* 0x18 */
-    char pad_1c[0x24];
+    s32 numTexSrtAnims;        /* 0x1c */
+    void **texSrtAnims;        /* 0x20 */
+    Ov007AnimPlayer *texSrtAnim; /* 0x24 */
+    s32 numTexSeqAnims;          /* 0x28 */
+    void **texSeqAnims;          /* 0x2c */
+    Ov007AnimPlayer *texSeqAnim; /* 0x30 */
+    Vector3 pos;                 /* 0x34 */
     Vector3 scale; /* 0x40: ModelComponents::Render's scale (func_ov007_020bbff0) */
 } Ov007Model;
 

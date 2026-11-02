@@ -38,6 +38,7 @@
 #include "decl_common.h"
 #include "Sound.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 #include "dFdBrightness_c.h"
 #include "G2.h"
 #include "GX.h"
@@ -66,7 +67,7 @@ extern "C" {
 extern u32 data_0209b2f4;
 extern char data_0209e674[];
 extern dFdBrightness_c *data_0209f5bc;
-extern u16 data_020a0e58[];
+extern PadData data_020a0e58[];
 extern u8 data_0209f2d8;
 /* The scene-wide colour fader, dScene_c's dFdColor_c in
    src/game/stages/d_scene.cpp. Element 6 is its u16 `color` at offset 0xc.
@@ -260,7 +261,7 @@ s32 dScTitle_c::CleanupResources() {
  * wrapping the index modulo 0x36. */
 // @symbol _ZN10dScTitle_c8BehaviorEv
 s32 dScTitle_c::Behavior() {
-    if (data_0209f5bc->IsAtStart() && ((data_020a0e58[1] & 9) | IsTouchStarted()) != 0) {
+    if (data_0209f5bc->IsAtStart() && ((data_020a0e58[0].pressed & 9) | IsTouchStarted()) != 0) {
         u32 i;
         s8 t;
         func_02012790(1);
@@ -281,16 +282,16 @@ s32 dScTitle_c::Behavior() {
             SCENE_FADE_COLOR = 0x7fff;
         }
     } else {
-        u16 v = data_020a0e58[0];
+        u16 v = data_020a0e58[0].held;
         if (v & 0x40) {
-            int h = data_020a0e58[1] & 0x40;
+            int h = data_020a0e58[0].pressed & 0x40;
             if (h != 0 || mRepeatDelay == 0) {
                 mRepeatDelay = h ? 8 : 2;
                 data_0209b2f4 += 0x35;
                 func_02012790(0);
             }
         } else if (v & 0x80) {
-            int h = data_020a0e58[1] & 0x80;
+            int h = data_020a0e58[0].pressed & 0x80;
             if (h != 0 || mRepeatDelay == 0) {
                 mRepeatDelay = h ? 8 : 2;
                 data_0209b2f4 += 1;

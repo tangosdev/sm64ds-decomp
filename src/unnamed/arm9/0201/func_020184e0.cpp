@@ -6,7 +6,7 @@ extern "C" {
 /* FSFile, the two words this reads: top and bottom of prop.file (at 0x1c),
    the file's extent in its archive. bottom - top is its length
    (FS_GetLength). */
-struct Obj {
+struct FSFileView {
     char pad[0x20];
     unsigned int top;    /* 0x20 */
     unsigned int bottom; /* 0x24 */
@@ -21,7 +21,7 @@ extern int func_02018568(int a);
    read), close it and unload any archive the open mounted. The length read,
    or 0 if the read came up short. The LZ77-tag test on the result is made
    and dropped: this path never decompresses. */
-int func_020184e0(struct Obj *self, unsigned int buf, unsigned int n) {
+int func_020184e0(struct FSFileView *self, unsigned int buf, unsigned int n) {
     int r;
     unsigned int len = self->bottom - self->top;
     if (len > n)

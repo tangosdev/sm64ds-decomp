@@ -1,15 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
-namespace Particle {
-struct System {
-    static void *NewSimple(unsigned, int, int, int);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /* Bob-omb (BOB_OMB 206 / BOMBHEI) -- ov102/daBmb_c.
  *
  * common.h FIRST. InitResources and the carry update copy twelve matrix words.
@@ -35,9 +24,9 @@ struct System {
  * - func_0203568c / func_02035684 are the out-of-line stores of
  *   mWithMeshClsn.mRadius / mHeight. Inlining them drops the call.
  * - func_ov102_0214b53c keeps the volatile stack pins and reads the eating
- *   player (mEatingPlayer, not the carrier): mPos, mAngleX/Y/Z, the matrix at
- *   +0x5ec and the halfwords at +0x580/+0x582/+0x584, which d_a_ply_methods.cpp fills
- *   from bone 15's rotX/rotY/rotZ. Those two slots are still pad on daPly_c.
+ *   player (mEatingPlayer, not the carrier): mPos, mAngleX/Y/Z, mHeadMatrix
+ *   and mHeadBoneRot, which d_a_ply_methods.cpp fills from bone 15's
+ *   rotX/rotY/rotZ.
  * - ov078/daBombking_c writes mHurtDamage and mDetonate by those names.
  */
 
@@ -51,6 +40,7 @@ struct System {
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "Particle__System.h"
 
 /* The three shared files this actor claims: ov002's model handle here and the
    two animation handles below.  InitResources loads them and
@@ -879,11 +869,10 @@ void func_ov102_0214b53c(char *c) {
                     int gbase = (int)&data_020a0e68;
                     dead.x = dx;
                     int dy = *((int *)(pos + 4));
-                    int off5ec = 0x5ec;
                     dead.y = dy;
                     int dz = *((int *)(pos + 8));
                     dead.z = dz;
-                    data_020a0e68 = *((Matrix4x3 *)((char *)self->mEatingPlayer + off5ec));
+                    data_020a0e68 = self->mEatingPlayer->mHeadMatrix;
                     {
                         /* pin mtx translation loads */
                         int tx = *(volatile int *)((char *)&data_020a0e68 + 0x24);
@@ -895,8 +884,7 @@ void func_ov102_0214b53c(char *c) {
                         p.y = ty;
                         Vec3_LslInPlace((Vector3 *)pPos, 3);
                     }
-                    char *p2 = (char *)self->mEatingPlayer;
-                    daPly_c *eater = (daPly_c *)p2;
+                    daPly_c *eater = self->mEatingPlayer;
                     u16 a8c = *((volatile u16 *)&eater->mAngleX); /* pin angle loads */
                     u16 a8e = *((volatile u16 *)&eater->mAngleY);
                     tmp[1] = a8e;
@@ -905,11 +893,11 @@ void func_ov102_0214b53c(char *c) {
                     x0 = *((volatile u16 *)&eater->mAngleZ);
                     s16 angY = (s16)tmp[1];
                     tmp[2] = (u16)x0;
-                    u16 v580 = *((volatile u16 *)(p2 + 0x580));
-                    tmp[4] = *((u16 *)(p2 + 0x582));
+                    u16 v580 = *((volatile u16 *)&eater->mHeadBoneRot[0]);
+                    tmp[4] = eater->mHeadBoneRot[1];
                     tmp[3] = v580;
                     s16 v582s = (s16)tmp[4];
-                    tmp[5] = *((u16 *)(p2 + 0x584));
+                    tmp[5] = eater->mHeadBoneRot[2];
                     int diff = (angY + 0x1800) - v582s;
                     tmp[1] = (u16)diff;
                     {

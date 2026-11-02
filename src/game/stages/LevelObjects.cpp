@@ -25,14 +25,16 @@
 #include "dBgW.h"
 #include "PathPtr.h"
 #include "Vector3s.h"
+#include "SaveData.h"
 
 /* The old per-loader files disagreed on four externs. One TU can keep
  * one spelling of each. */
 extern "C" {
 
-/* data_0209caa0 is bytes. LoadEntranceObjects indexes [0x41].
- * LoadClsnAndObjects reads word 2 through an int*. */
-extern u8 data_0209caa0[];
+/* data_0209caa0 is the live save block; its first 0x44 bytes are the
+ * current file. LoadEntranceObjects reads the character, LoadClsnAndObjects
+ * flags2. */
+extern int data_0209caa0[];
 
 /* data_0209f5c0 is the parent passed to dBase_c::Spawn. */
 extern fBase_c *data_0209f5c0;
@@ -84,28 +86,37 @@ struct DoorEntry { /* 0xc bytes. LoadDoorObjects. */
 };
 
 /* The overlay object as LoadClsnAndObjects reads it. LVL_Overlay.h
- * declares the nested tables and no data members. */
+ * declares the nested tables and no data members. d_s_stage_methods.cpp
+ * reads the same record through data_0209f340 as its LevelInfo: the model
+ * file at 0x08 (dScStage_c::LoadModel), the minimap files at 0x0c/0x0e
+ * (func_0202a980/func_0202a96c) and each area's texture animation and
+ * minimap. */
 struct LVL_Overlay_Layout {
     CLPS_Block *clps;                /* 0x00 */
     LVL_Overlay::ObjTable *objTable; /* 0x04 */
-    char pad_008[2];                 /* 0x08 */
+    u16 modelFileId;                 /* 0x08 */
     u16 kclFileId;                   /* 0x0a */
-    char pad_00c[4];                 /* 0x0c */
+    u16 minimapTilesFile;            /* 0x0c */
+    u16 minimapPaletteFile;          /* 0x0e */
     struct SubTbl {
-        LVL_Overlay::ObjTable *table;
-        char pad_004[8];
+        LVL_Overlay::ObjTable *table; /* 0x00 */
+        void *bta;                    /* 0x04 */
+        s8 minimapId;                 /* 0x08 */
+        char pad_009[3];
     } *subTables; /* 0x10 */
     u8 subCount;  /* 0x14 */
 };
+
+#define sCurrentFile (*(FileSaveData *)data_0209caa0)
 
 /* The loaders test the game mode as a 0/1 value. */
 static inline int IsGameMode(int mode) {
     return data_0209f2d8 == mode;
 }
 
-/* Game mode 0 with bit 0x80 of data_0209caa0 word 2 clear. */
+/* Game mode 0 with bit 0x80 of the current file's flags2 clear. */
 static inline int IntroAllowed() {
-    return IsGameMode(0) && (((int *)data_0209caa0)[2] & 0x80) == 0;
+    return IsGameMode(0) && (sCurrentFile.flags2 & 0x80) == 0;
 }
 
 /* Spawn simple actors, or hand a minimap-change sentinel to
@@ -196,7 +207,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
             u16 param = entry->param;
             entranceKind = (param >> 7) & 0xf;
 
-            int savedCharacter = data_0209caa0[0x41];
+            int savedCharacter = sCurrentFile.mCharacter;
             int playerCharacter = data_02092128[playerIndex];
             if (IsGameMode(1)) {
                 savedCharacter = 3;
@@ -382,27 +393,27 @@ void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param
     data_02092134 = *(int *)table.entries;
 }
 
-/* Walk the outer object table and dispatch each 8-byte entry to the category
+/* Walk the outer object table and dispatch each sub-table to the category
  * loader table at data_ov002_0210cbb8 -- whose fifteen entries are exactly the
  * fifteen functions above.
  *
  * Count is a u16 at offset 0 (unlike ObjSubTable's u8 at offset 1). Each entry
- * is 8 bytes; byte 0 packs a star filter in the top three bits and a handler index in
- * the low five. The entry is skipped unless the filter is 0 or equal to the
- * selected star at data_0209f220. */
+ * is the 8-byte ObjSubTable its loader takes; its byte 0 packs a star filter in
+ * the top three bits and a handler index in the low five. The entry is skipped
+ * unless the filter is 0 or equal to the selected star at data_0209f220. */
 // @symbol _Z11LoadObjectsRN11LVL_Overlay8ObjTableEaj
 void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
-    u8 *entry = (u8 *)table.entries;
+    LVL_Overlay::ObjSubTable *entry = (LVL_Overlay::ObjSubTable *)table.entries;
     int tableIndex;
     for (tableIndex = 0; tableIndex < (int)table.count; tableIndex++) {
-        u8 categoryAndStar = *entry;
+        u8 categoryAndStar = entry->categoryAndStar;
         int starFilter = (categoryAndStar >> 5) & 7;
         if (starFilter == 0 || starFilter == data_0209f220) {
             void (*loader)(void *, s8, unsigned int) = data_ov002_0210cbb8[categoryAndStar & 0x1f];
             if (loader != 0)
                 loader(entry, areaID, param);
         }
-        entry += 8;
+        entry++;
     }
 }
 

@@ -2,10 +2,9 @@
 
 #include "private/arm9_a1fc0_file_share.h"
 #include "IRQ.h"
+#include "private/fs_views.h"
 
 extern "C" {
-
-struct FSArchive;
 
 extern char data_02099e6c[]; /* "rom" */
 extern int data_020a1fc0;

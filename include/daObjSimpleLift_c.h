@@ -19,8 +19,6 @@
  * cartridge vtable; they are `new daObjSimpleLift_c()` and live in
  * src/game/actors/d_a_obj_simple_lift.cpp alongside the rest of the class. */
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 struct daObjSimpleLift_c : dBgActor_c {
@@ -50,34 +48,5 @@ struct daObjSimpleLift_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjSimpleLift_c_size_must_be_0x330[sizeof(daObjSimpleLift_c) == 0x330 ? 1 : -1];
 #endif
-
-#else
-
-/* The same object spelled flat, for any C translation unit that needs the
-   layout. The destructor this branch was originally written for is no longer
-   one of them: both variants are emitted from the promoted C++ TU. The header
-   has a single consumer today, src/game/actors/d_a_obj_simple_lift.cpp, and it takes
-   the C++ branch above. */
-struct daObjSimpleLift_c {
-    u8  pad_000[0xd4];
-    dExtSimpleModel_c mModel;                  /* 0x0d4 */
-    dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x32];
-    u8  mPauseTimer;            /* 0x31e */
-    u8  pad_31f[0x1];
-    s16 mMoveTimer;            /* 0x320 */
-    u8  mVariant;            /* 0x322 */
-    u8  pad_323[0x1];
-    s32 mBasePosX;            /* 0x324 */
-    s32 mBasePosY;            /* 0x328 */
-    s32 mBasePosZ;            /* 0x32c */
-};
-
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daObjSimpleLift_c_C_size_must_be_0x330[sizeof(struct daObjSimpleLift_c) == 0x330 ? 1 : -1];
-#endif
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJSIMPLELIFT_C_H */

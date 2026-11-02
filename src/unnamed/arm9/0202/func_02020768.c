@@ -4,13 +4,19 @@ extern int func_0202043c(char *thiz);
 extern int data_0208ee44;
 
 /* C view of include/OamAnimation.h's OamAnimation (a C++ class this C file
- * cannot include), with the header's names; only the fields read here. */
+ * cannot include), with the header's names; the header's names. */
 typedef struct OamAnimation {
-    unsigned char pad_00[0x14];
+    const void *frames; /* 0x00 */
+    int tile;           /* 0x04 */
+    int scaleX;         /* 0x08 */
+    int scaleY;         /* 0x0c */
+    int frameCount;     /* 0x10 */
     int frame;         /* 0x14 */
     int frameDuration; /* 0x18 */
     int elapsed;       /* 0x1c */
-    unsigned char pad_20[4];
+    short rotation;    /* 0x20 */
+    signed char palette;   /* 0x22 */
+    signed char priority;  /* 0x23 */
     unsigned char loops;   /* 0x24 */
     unsigned char enabled; /* 0x25 */
 } OamAnimation;

@@ -31,14 +31,14 @@ enum dScBoot_c_AssetId { ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN = 0x022d };
 #include "decl_common.h"
 #include "MessageBank.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 
 #pragma opt_common_subs off
 
 extern "C" {
 extern dFdBrightness_c *data_0209f5bc;
 extern u8 data_0209f1e8;
-extern u16 data_020a0e58[];
-extern u16 data_020a0e5a[];
+extern PadData data_020a0e58[];
 extern int data_0208ee44;
 extern u8 data_0209d454;
 extern u8 data_0209d45c;
@@ -159,8 +159,8 @@ s32 dScBoot_c::Behavior() {
     int frameStep;
 
     frameStep = data_0208ee44;
-    keysHeld = *(u16 *)((char *)data_020a0e58 + gActivePlayerSlot * 4);
-    keysPressed = *(u16 *)((char *)data_020a0e5a + gActivePlayerSlot * 4);
+    keysHeld = data_020a0e58[gActivePlayerSlot].held;
+    keysPressed = data_020a0e58[gActivePlayerSlot].pressed;
 
     if (data_0209f1e8 == 0) {
         data_0209f1e8 = (u8)func_0201a1bc();

@@ -1,11 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /* daMenbo_c -- Skeeter, the water strider on the lake.
  *
  * ov090 0x02130f00..0x0213269c, twenty-five functions, the last being the
@@ -48,6 +41,7 @@ struct System {
 #include "daPly_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off

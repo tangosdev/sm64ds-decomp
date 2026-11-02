@@ -1,3 +1,4 @@
+#include "private/arm9_a9db8_mb_parent.h"
 extern int func_0206736c(unsigned int idx, unsigned int addr, unsigned int size);
 extern void *data_020a9db8;
 
@@ -28,13 +29,6 @@ typedef struct MB_BlockInfoTable {
     unsigned short block_head[3];    /* 0x0c */
     unsigned short block_num;        /* 0x12 */
 } MB_BlockInfoTable;
-
-/* File-local mirror of include/private/arm9_a9db8_mb_parent.h's
- * MbParentWork, the one field read here. */
-typedef struct MbParentWork {
-    unsigned char pad_0000[0x1318];
-    unsigned int mBlockSize; /* 0x1318 */
-} MbParentWork;
 
 /* NitroSDK MBi_MakeBlockInfoTable(table, mdfi): lay the three segments out as
  * consecutive mBlockSize-byte blocks, refusing a segment func_0206736c

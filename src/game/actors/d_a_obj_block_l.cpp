@@ -11,8 +11,8 @@
  *   dBgActor_c::IsClsnInRangeOnScreen and dBgW_KcMbg::SetFile are member
  *   calls through their headers, which spell the Fix12 parameters as
  *   Fix12i, a plain s32 (notes/mwccarm-codegen.md 6az).
- * - the BigBrickBlockFileRow / ClpsRow resource tables stay file-local:
- *   no shared header owns those 0xc-stride rows yet.
+ * - the BigBrickBlockFileRow resource table stays file-local: no shared
+ *   header owns that 0xc-stride row yet (ClpsRow is private/clps_row.h).
  * - linkedActor + 0x3b0 is an unnamed byte on the mega character
  *   (actor 0x121); no header names it.
  * - data_0209f2f8 reads as the level ID and data_0209f220 as a star
@@ -32,16 +32,11 @@
 #include "Event.h"
 #include "daObjBlockItemTag_c.h"
 #include "Particle__System.h"
+#include "private/clps_row.h"
 
 /* File-local resource rows (see the header note above). */
 struct BigBrickBlockFileRow {
     SharedFilePtr *file;
-    u8 pad[8];
-};
-
-/* shadow struct 'ClpsRow' */
-struct ClpsRow {
-    CLPS_Block *block;
     u8 pad[8];
 };
 

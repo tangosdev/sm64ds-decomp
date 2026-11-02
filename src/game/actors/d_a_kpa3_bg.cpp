@@ -43,9 +43,10 @@
  *   Fix12<int> argument passed as a raw int.
  * - func_020393d4 stores dBgW::UpdatePosWithTransform.
  *   func_020393c4 stores the touch veneer func_ov060_021183f4.
- * - data_ov060_02119564 / 02119568 / 0211956c are one 0xc-byte stride
- *   (x, z, angle) split into three symbols so each relocation keeps
- *   its destination.
+ * - data_ov060_02119564 is the ten-row (x, z, angle) table. Its pool
+ *   words point at row 0's x, z and angle; the delinker named each of
+ *   those (02119564 / 02119568 / 0211956c), and the struct fields' base
+ *   plus addend resolve to the same three words.
  */
 
 #include "common.h"
@@ -67,10 +68,16 @@ void MulVec3Mat4x3(Vec3 *, void *, void *);
 void func_02012694(unsigned int, void *);
 int CopyTexPalFromLevelModel(void *);
 
-extern u16 data_ov060_0211956c[];
+/* One row per mVariant: where that platform piece sits (whole units,
+ * shifted to fix12 on use) and the angle it faces. */
+typedef struct Kpa3BgPieceSpot {
+    int x;
+    int z;
+    s16 angle;
+} Kpa3BgPieceSpot;
+
 extern s16 data_02082214[];
-extern int data_ov060_02119564[];
-extern int data_ov060_02119568[];
+extern Kpa3BgPieceSpot data_ov060_02119564[10];
 extern int data_0209b3ec;
 
 extern SharedFilePtr *data_ov060_02119514[];
@@ -269,7 +276,7 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
     Vec3 dust1;
     Vec3 dust2;
     u16 state;
-    int off;
+    int row;
     int ang;
     s16 mul;
     int bx, bz, k;
@@ -288,13 +295,12 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         v[0] = self->mPosX;
         v[1] = self->mPosY;
         v[2] = self->mPosZ;
-        off = self->mVariant * 0xc;
-        ang = *(u16 *)((char *)data_ov060_0211956c + off);
+        row = self->mVariant;
+        ang = (u16)data_ov060_02119564[row].angle;
         v[1] = yimm;
-        v[0] = (s16)data_02082214[(ang >> 4) * 2] * (s16)0x366
-            + (*(int *)((char *)data_ov060_02119564 + off) << 12);
-        v[2] = (s16)data_02082214[(ang >> 4) * 2 + 1] * (s16)0x366
-            + (*(int *)((char *)data_ov060_02119568 + self->mVariant * 0xc) << 12);
+        v[0] = (s16)data_02082214[(ang >> 4) * 2] * (s16)0x366 + (data_ov060_02119564[row].x << 12);
+        v[2] = (s16)data_02082214[(ang >> 4) * 2 + 1] * (s16)0x366 +
+               (data_ov060_02119564[self->mVariant].z << 12);
         Vec3_AsrInPlace((Vec3 *)v, 3);
         MulVec3Mat4x3((Vec3 *)v, &data_0209b3ec, &self->mCamSpacePosX);
         func_02012694(0xbc, &self->mCamSpacePosX);
@@ -316,11 +322,11 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
 
     state = self->mPhase;
     if (state % 2 == 0 && state < 0xe) {
-        off = self->mVariant * 0xc;
-        mul = *(s16 *)((char *)data_ov060_0211956c + off);
+        row = self->mVariant;
+        mul = data_ov060_02119564[row].angle;
         k = (6 - ((int)state >> 1)) * 0x122;
-        bx = *(int *)((char *)data_ov060_02119564 + off);
-        bz = *(int *)((char *)data_ov060_02119568 + off);
+        bx = data_ov060_02119564[row].x;
+        bz = data_ov060_02119564[row].z;
 
         a = ((int)(u16)(s16)(mul + 0x14b0) >> 4) * 2;
         x = k * (s16)data_02082214[a] + (bx << 12);

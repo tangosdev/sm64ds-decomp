@@ -1751,36 +1751,6 @@ void dScMgBomroom_c::HideExplodedBombs() {
 // @symbol _ZN14dScMgBomroom_c10ClearBombsEv
 /* Zeroes all 0x70 mBombs records: 11 words, 4
  * halfwords and 10 bytes each. */
-
-typedef struct {
-    u32 w0;      /* +0x00 */
-    u32 w1;
-    u32 w2;
-    u32 w3;
-    u32 w4;
-    u32 w5;
-    u32 w6;
-    u32 w7;
-    u32 w8;
-    u32 w9;
-    u32 w10;     /* +0x28 */
-    u16 h0;      /* +0x2c */
-    u16 h1;
-    u16 h2;
-    u16 h3;      /* +0x32 */
-    u8 b0;       /* +0x34 */
-    u8 b1;
-    u8 b2;
-    u8 b3;
-    u8 b4;       /* +0x38 */
-    u8 b5;       /* +0x39 */
-    u8 b6;       /* +0x3a */
-    u8 b7;       /* +0x3b */
-    u8 b8;       /* +0x3c */
-    u8 b9;       /* +0x3d */
-    char _pad[2];
-} Entry_893c; /* 0x40 */
-
 void dScMgBomroom_c::ClearBombs() {
     int i;
     for (i = 0; i < 0x70; i++) {

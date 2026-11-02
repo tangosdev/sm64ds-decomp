@@ -1,18 +1,11 @@
+#include "private/throw_context.h"
+
 extern void func_02072168(void *a, void *b, int d);
 extern void func_02071790(void *a, void *b, int x);
 
-/* File-local views of CodeWarrior's exception runtime, with the names
- * func_02072168.cpp gives them. CatchInfo's last three fields and the
- * ExSpecification fields follow the runtime's own CatchInfo and
- * ex_specification records, not a reader in this image (medium). */
-typedef struct ThrowContext {
-    int mThrowType; /* 0x00 -- type string */
-    int mLocation;  /* 0x04 -- thrown object */
-    int mDtor;      /* 0x08 -- thrown object's destructor */
-    char pad_0c[0xc];
-    char *mFP; /* 0x18 -- base for frame-relative operands */
-} ThrowContext;
-
+/* ThrowContext is the shared record (private/throw_context.h). CatchInfo's last
+ * three fields and the ExSpecification fields follow the runtime's own
+ * CatchInfo and ex_specification records, not a reader in this image (medium). */
 typedef struct ActionIterator {
     int mFuncStart; /* 0x00 -- start of the function the actions cover */
 } ActionIterator;

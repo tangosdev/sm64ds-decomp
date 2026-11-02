@@ -8,6 +8,13 @@
  *   last-wins for the whole file.
  * - Display is the only Message method here that takes this. The others are
  *   static and drive the globals around data_0209d660.
+ * - data_0209d708 is the bank's MessageEntry array (MessageBank.h). Where
+ *   indexing it by a runtime index swaps the base and index registers, the
+ *   entry is addressed as (char *)data_0209d708 + idx * 8 and read through
+ *   a MessageEntry cast.
+ *   data_0209d70c stays int * (decl_common.h spells it so); [1] is
+ *   MessageInfoSection::sectionSize. data_0209d6f0 stays u8 * for the same
+ *   reason (Message2.cpp) and is read back through a MessageEntry cast.
  * - data_0209d6f4 is volatile. DisplayCourseNameForStarSelect stores it twice
  *   in a row and both stores have to emit.
  * - IsStarCollected and Message::DisplayText stay local externs. The header
@@ -30,6 +37,7 @@
 #include "SaveData.h"
 #include "dScStage_c.h"
 #include "Sound.h"
+#include "MessageBank.h"
 
 namespace G2 {
 void *GetBG1ScrPtr(void);
@@ -44,12 +52,6 @@ u32 GetBG0ScrPtr(void);
 u32 GetBG1CharPtr(void);
 u32 GetBG1ScrPtr(void);
 }
-
-struct StarEntry {
-    int m0;
-    u16 m4;
-    u8 m6;
-};
 
 extern "C" {
 extern u8 data_0209d45c;
@@ -88,7 +90,7 @@ extern u8 data_0209d6cc;
 extern u8 data_0209d6d0;
 extern s16 data_0209d6d4;
 extern u16 data_0209d6e0;
-extern StarEntry *data_0209d708;
+extern MessageEntry *data_0209d708;
 extern u8 *data_0209d6f0;
 extern int *data_0209d70c;
 extern int data_0209d6fc;
@@ -425,7 +427,8 @@ extern "C" void func_0201d418(int p0, int p1) {
     char *base = (char*)data_0209d708;
     int n = (p1 >> 3) & 0xff;
     data_0209d6f0 = (u8*)(base + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] + *(int*)(base + idx * 8);
+    data_0209d6f4 =
+        data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
     data_0209d6bc = 0;
     do {
         func_0201b6f8(0);
@@ -469,7 +472,8 @@ extern "C" void Message_DrawLineBG2(void) {
     int idx = data_0209d6d4;
     char *base = (char*)data_0209d708;
     data_0209d6f0 = (u8*)(base + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] + *(int*)(base + idx * 8);
+    data_0209d6f4 =
+        data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
     func_0201b6f8(1);
     data_0209d65c = 0;
     n = ((data_0209d6b0 + 7) / 8) << 6;
@@ -501,7 +505,8 @@ extern "C" void Message_DrawCenteredLine(int a, int b)
     int cnt;
     int old;
     data_0209d6f0 = (u8*) (base + (idx * 8));
-    data_0209d6f4 = ((data_0209d6fc + 0x28) + data_0209d70c[1]) + (*((int *) (base + (idx * 8))));
+    data_0209d6f4 = ((data_0209d6fc + 0x28) + data_0209d70c[1]) +
+                    ((MessageEntry *)(base + (idx * 8)))->textOffset;
     new_var4 = 1;
     func_0201b6f8(new_var4);
     old = data_0209d6b0;
@@ -561,7 +566,7 @@ extern "C" void func_0201d850(u32 arg0)
     SetBg3Offset(0, 0);
 
     if (arg0 < 0xf) {
-        char *ep = (char *)(((int)data_0209d708 + 0x1468));
+        MessageEntry *ep = &data_0209d708[0x28d];
         s32 base;
         s32 num;
         s32 n;
@@ -569,8 +574,8 @@ extern "C" void func_0201d850(u32 arg0)
         u16 *p;
 
         data_0209d6f0 = (u8 *)ep;
-        base = data_0209d6fc + 0x28 + *(s32 *)((char *)data_0209d70c + 4);
-        data_0209d6f4 = base + *(s32 *)ep;
+        base = data_0209d6fc + 0x28 + data_0209d70c[1];
+        data_0209d6f4 = base + ep->textOffset;
         Message::LayoutLine();
         Message::AddChar(0x4d);
 
@@ -615,9 +620,8 @@ L_r4_else:
         data_0209d6f0 = (u8 *)(
             (char *)data_0209d708 + (arg0 + 0x196) * 8);
         {
-            s32 sum = data_0209d6fc + 0x28 +
-                *(s32 *)((char *)data_0209d70c + 4) +
-                *(s32 *)((char *)data_0209d708 + (arg0 + 0x196) * 8);
+            s32 sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
+                      ((MessageEntry *)((char *)data_0209d708 + (arg0 + 0x196) * 8))->textOffset;
             data_0209d6f4 = sum;
             data_0209d6f4 = sum + 3;
         }
@@ -667,19 +671,19 @@ L_r4_else:
         if (arg0 < 0xf) {
             if (data_0209f20c != 0) {
                 s32 off = arg0 * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)((char *)data_0209d708 + (off + data_0209f228) * 8);
+                data_0209d6f0 = (u8 *)&data_0209d708[off + data_0209f228];
             } else {
                 s32 off = arg0 * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)((char *)data_0209d708 + (off + data_0209f220) * 8);
+                data_0209d6f0 = (u8 *)&data_0209d708[off + data_0209f220];
             }
             var_r4 = 0x140;
         } else {
-            data_0209d6f0 = (u8 *)((char *)data_0209d708 + 0x10e8);
+            data_0209d6f0 = (u8 *)&data_0209d708[0x21d];
             var_r4 = 0x100;
         }
         {
-            s32 base = data_0209d6fc + 0x28 + *(s32 *)((char *)data_0209d70c + 4);
-            data_0209d6f4 = base + *(s32 *)data_0209d6f0;
+            s32 base = data_0209d6fc + 0x28 + data_0209d70c[1];
+            data_0209d6f4 = base + ((MessageEntry *)data_0209d6f0)->textOffset;
         }
         Message::LayoutLine();
         data_0209d65c = 0;
@@ -710,14 +714,14 @@ L_r4_else:
         s32 i;
 
         if ((arg0 < 0xf) || (arg0 >= 0x15)) {
-            data_0209d6f0 = (u8 *)((char *)data_0209d708 + 0x1460);
+            data_0209d6f0 = (u8 *)&data_0209d708[0x28c];
         } else {
-            data_0209d6f0 = (u8 *)((char *)data_0209d708 + 0x1598);
+            data_0209d6f0 = (u8 *)&data_0209d708[0x2b3];
         }
         data_0209d6b8 = 0;
         {
-            s32 base = data_0209d6fc + 0x28 + *(s32 *)((char *)data_0209d70c + 4);
-            data_0209d6f4 = base + *(s32 *)data_0209d6f0;
+            s32 base = data_0209d6fc + 0x28 + data_0209d70c[1];
+            data_0209d6f4 = base + ((MessageEntry *)data_0209d6f0)->textOffset;
         }
         Message::LayoutLine();
 
@@ -745,7 +749,7 @@ L_r4_else:
 
     data_0209d6b8 = 0;
     {
-        char *ep = (char *)(((int)data_0209d708 + 0x1470));
+        MessageEntry *ep = &data_0209d708[0x28e];
         s32 base;
         s32 n;
         s32 tile;
@@ -753,8 +757,8 @@ L_r4_else:
         s32 i;
 
         data_0209d6f0 = (u8 *)ep;
-        base = data_0209d6fc + 0x28 + *(s32 *)((char *)data_0209d70c + 4);
-        data_0209d6f4 = base + *(s32 *)ep;
+        base = data_0209d6fc + 0x28 + data_0209d70c[1];
+        data_0209d6f4 = base + ep->textOffset;
         Message::LayoutLine();
 
         n = (u8)((data_0209d6b0 + 7) / 8);
@@ -883,7 +887,8 @@ void Message::DisplayText(int t) {
     data_0209d668 = 0;
     data_0209d6a8 = 0;
     data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = base + 0x28 + data_0209d70c[1] + *(int*)((char*)data_0209d708 + idx * 8);
+    data_0209d6f4 = base + 0x28 + data_0209d70c[1] +
+                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
 
     p = func_02054d88() + 0x4000;
     li = 0;
@@ -972,7 +977,8 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
     data_0209d6c0 = 2;
     data_0209d6c4 = 1;
     data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] + *(int*)((char*)data_0209d708 + idx * 8);
+    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
+                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
     func_0201b6f8(0);
 
     data_0209d65c = (0x100 - (int)data_0209d6b0) / 2;
@@ -1009,7 +1015,8 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
 
     idx = data_0209d6d4;
     data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    sum = data_0209d6fc + 0x28 + data_0209d70c[1] + *(int*)((char*)data_0209d708 + idx * 8);
+    sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
+          ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
     data_0209d6f4 = sum;
     data_0209d6f4 = sum + 3;
     func_0201b6f8(0);
@@ -1052,11 +1059,11 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
 
     data_0209d6c0 = 1;
     {
-        StarEntry* e = (StarEntry*)(int)((char*)data_0209d708 + 0x1470);
+        MessageEntry *e = &data_0209d708[0x28e];
         data_0209d6f0 = (u8*)e;
         sum = data_0209d6fc + 0x28;
         sum += data_0209d70c[1];
-        sum += *(int*)e;
+        sum += e->textOffset;
         data_0209d6f4 = sum;
     }
     func_0201b6f8(0);
@@ -1120,8 +1127,8 @@ void Message::DisplaySaving(unsigned short n)
     int v87;
     int v43;
     unsigned w;
-    StarEntry* base;
-    StarEntry* entry;
+    MessageEntry *base;
+    MessageEntry *entry;
 
     data_0209d6d4 = (s16)n;
     func_0201eaac();
@@ -1139,18 +1146,19 @@ void Message::DisplaySaving(unsigned short n)
 
     idx = data_0209d6d4;
     base = data_0209d708;
-    entry = (StarEntry*)((char*)base + idx * 8);
+    entry = (MessageEntry *)((char *)base + idx * 8);
     data_0209d6f0 = (u8*)entry;
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] + *(int*)((char*)base + idx * 8);
+    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
+                    ((MessageEntry *)((char *)base + idx * 8))->textOffset;
 
-    w = entry->m4;
+    w = entry->width;
     w = w >> 3;
     data_0209d6a8 = (u8)((int)(w * 9 + 7) / 8);
     data_0209d650 = (u8)(((0x20 - ((int)data_0209d6a8 + 2)) / 2) << 3);
     data_0209d6d0 = (u8)v7f;
     v43 = 0x43;
     data_0209d6c8 = (u8)v43;
-    data_0209d6cc = (u8)(0x44 - (int)(((((int)entry->m6 << 1) + 1) << 3) / 2));
+    data_0209d6cc = (u8)(0x44 - (int)(((((int)entry->lineCount << 1) + 1) << 3) / 2));
     data_0209d658 = (u8)v7f;
     data_0209d64c = (u8)v43;
     data_0209d680 = 0;
@@ -1169,7 +1177,7 @@ void Message::DisplaySaving(unsigned short n)
 
     cols = data_0209d6a8;
     i = 0;
-    if ((cols * (int)((StarEntry*)data_0209d6f0)->m6) * 2 > 0) {
+    if ((cols * (int)((MessageEntry *)data_0209d6f0)->lineCount) * 2 > 0) {
         int last = cols - 1;
         do {
             rem = i % cols;
@@ -1177,7 +1185,7 @@ void Message::DisplaySaving(unsigned short n)
             if (last == rem)
                 scr += 0x40;
             i++;
-        } while (i < (cols * (int)((StarEntry*)data_0209d6f0)->m6) * 2);
+        } while (i < (cols * (int)((MessageEntry *)data_0209d6f0)->lineCount) * 2);
     }
 
     while (data_0209d6bc < 4)
@@ -1240,11 +1248,12 @@ extern "C" void func_0201ef50(int arg)
     data_0209d6d4 = (s16) (arg + 0x24e);
     idx = data_0209d6d4;
     data_0209d6f0 = (u8 *) (((char *) data_0209d708) + (idx * 8));
-    data_0209d6f4 = ((data_0209d6fc + 0x28) + data_0209d70c[1]) + (*((int *) (((char *) data_0209d708) + (idx * 8))));
+    data_0209d6f4 = ((data_0209d6fc + 0x28) + data_0209d70c[1]) +
+                    ((MessageEntry *)(((char *)data_0209d708) + (idx * 8)))->textOffset;
     data_0209d6a8 = 0x20;
     data_0209d680 = 0;
     data_0209d65c = 0;
-    b = *((u8 *) ((((char *) data_0209d708) + (idx * 8)) + 6));
+    b = ((MessageEntry *)(((char *)data_0209d708) + (idx * 8)))->lineCount;
     t = 0xc - b;
     sl = (u16) (t << 10);
     data_0209d6e0 = (s16) (t << 5);
@@ -1294,9 +1303,10 @@ extern "C" void func_0201f138(void)
     data_0209d660 = 0;
     data_0209d6c4 = 1;
     data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] + *(int*)((char*)data_0209d708 + idx * 8);
+    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
+                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
 
-    data_0209d6a8 = (u8)((((((StarEntry*)data_0209d6f0)->m4 / 8) * 9) + 7) / 8);
+    data_0209d6a8 = (u8)((((((MessageEntry *)data_0209d6f0)->width / 8) * 9) + 7) / 8);
     data_0209d680 = 0;
     data_0209d65c = 0;
 
@@ -1310,14 +1320,14 @@ extern "C" void func_0201f138(void)
 
     q = (u16 *)((char *)G2::GetBG3ScrPtr() + 0x42);
     div = data_0209d6a8;
-    cnt = div * ((StarEntry*)data_0209d6f0)->m6 * 2;
+    cnt = div * ((MessageEntry *)data_0209d6f0)->lineCount * 2;
     for (i = 0; i < cnt; i++) {
         rem = i % div;
         q[rem] = (u16)(i + 0x200);
         if (div - 1 == rem) {
             q += 0x20;
         }
-        cnt = div * ((StarEntry*)data_0209d6f0)->m6 * 2;
+        cnt = div * ((MessageEntry *)data_0209d6f0)->lineCount * 2;
     }
 
     bcPtr = &data_0209d6bc;
@@ -1331,7 +1341,7 @@ extern "C" void func_0201f138(void)
 // @symbol func_0201f32c
 extern "C" void func_0201f32c(int arg0)
 {
-    char *entry;
+    MessageEntry *entry;
     u8 disp;
     u8 f2d8_val;
     u8 disp2;
@@ -1348,7 +1358,7 @@ extern "C" void func_0201f32c(int arg0)
     volatile s32 spC;
     volatile s32 sp10;
 
-    if (*(u16 *)((char *)data_0209d70c + 8) <= (u16)arg0) {
+    if (((MessageInfoSection *)data_0209d70c)->messageCount <= (u16)arg0) {
         return;
     }
 
@@ -1370,14 +1380,14 @@ extern "C" void func_0201f32c(int arg0)
         }
     }
 
-    entry = (char *)data_0209d708 + data_0209d6d4 * 8;
+    entry = &data_0209d708[data_0209d6d4];
     data_0209d6f0 = (u8 *)entry;
     {
-        s32 ev = *(s32 *)entry;
-        s32 sum = data_0209d6fc + 0x28 + *(s32 *)((char *)data_0209d70c + 4);
+        s32 ev = entry->textOffset;
+        s32 sum = data_0209d6fc + 0x28 + data_0209d70c[1];
         data_0209d6f4 = sum + ev;
     }
-    data_0209d6a8 = (u8)((*(u16 *)(entry + 4) + 7) / 8);
+    data_0209d6a8 = (u8)((entry->width + 7) / 8);
 
     f2d8_val = data_0209f2d8;
     {
@@ -1388,7 +1398,7 @@ extern "C" void func_0201f32c(int arg0)
                 data_0209d650 = 0x10;
                 data_0209d6cc = 0x64;
                 data_0209d6d0 = (u8)((((data_0209d6a8 + 2) / 2) * 8) + 0xf);
-                data_0209d6c8 = (u8)((((*(u8 *)(entry + 6) * 2 + 1) * 8) / 2) + 0x63);
+                data_0209d6c8 = (u8)((((entry->lineCount * 2 + 1) * 8) / 2) + 0x63);
                 data_0209d658 = data_0209d6d0;
                 data_0209d64c = data_0209d6c8;
                 goto branchDone;
@@ -1400,14 +1410,14 @@ extern "C" void func_0201f32c(int arg0)
                 data_0209d650 = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
                 data_0209d6d0 = 0x7f;
                 data_0209d6cc = 0xa0;
-                data_0209d6c8 = (u8)((((*(u8 *)(entry + 6)) * 16) / 2) + 0x9f);
+                data_0209d6c8 = (u8)((((entry->lineCount) * 16) / 2) + 0x9f);
                 data_0209d658 = 0x7f;
                 data_0209d64c = data_0209d6c8;
             } else {
                 data_0209d650 = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
                 data_0209d6d0 = 0x7f;
                 data_0209d6c8 = 0x63;
-                data_0209d6cc = (u8)(0x64 - (((*(u8 *)(entry + 6) * 2 + 2) * 8) / 2));
+                data_0209d6cc = (u8)(0x64 - (((entry->lineCount * 2 + 2) * 8) / 2));
                 data_0209d658 = 0x7f;
                 data_0209d64c = 0x63;
                 if (func_0201fb4c() != 0) {
@@ -1475,7 +1485,7 @@ extern "C" void func_0201f32c(int arg0)
     {
         divisor = data_0209d6a8;
         i = 0;
-        if ((s32)(divisor * (*(u8 *)((char *)data_0209d6f0 + 6)) * 2) > 0) {
+        if ((s32)(divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2) > 0) {
             do {
                 s32 rem = i % divisor;
                 *(u16 *)((char *)var_r8 + rem * 2) = (u16)var_r7;
@@ -1484,7 +1494,7 @@ extern "C" void func_0201f32c(int arg0)
                 }
                 i++;
                 var_r7++;
-            } while (i < (s32)(divisor * (*(u8 *)((char *)data_0209d6f0 + 6)) * 2));
+            } while (i < (s32)(divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2));
         }
     }
 

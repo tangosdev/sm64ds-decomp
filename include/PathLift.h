@@ -18,8 +18,6 @@
  * one needed no new type at all. 0x320 + 3 * 0x50 = 0x410.
  */
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 #include "dExtSimpleModel_c.h"
 
@@ -93,39 +91,5 @@ struct dPathLiftActor_c : dBgActor_c {
 typedef char dPathLiftActor_c_size_must_be_0x450[
     sizeof(dPathLiftActor_c) == 0x450 ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for a C translation unit, flat. */
-struct dPathLiftActor_c {
-    u8  pad_000[0xc];
-    u16 actorID;            /* 0x00c */
-    u8  pad_00e[0xc6];
-    /* dExtSimpleModel_c member. The cartridge's own base destructor calls _ZN17dExtSimpleModel_cD1Ev at +0x0d4
-       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
-       D1 and not D2, so it is this type and not an inlined base. */
-    dExtSimpleModel_c mModel; /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's base destructor calls _ZN10dBgW_KcMbgD1Ev at
-       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x13c];
-    u16 mWaitTimer;         /* 0x428 */
-    u8  mAfterClsnRan;            /* 0x42a */
-    u8  mTriggerDelay;            /* 0x42b */
-    u8 mRespawnAfterFall;         /* 0x42c */
-    u8  pad_42d[0x3];
-    struct PathPtr mPath;    /* 0x430 */
-    s32 mCurrPathNode;      /* 0x438 */
-    s32 mPathDirection;     /* 0x43c */
-    s32 mPathSpeed;         /* 0x440 */
-    s32 mFallStartY;        /* 0x444 */
-    u8  mFallDelay;         /* 0x448 */
-    u8  mFallBounceTimer;   /* 0x449 */
-    s16 mFallAngle;         /* 0x44a */
-    s32 mState;             /* 0x44c */
-};
-
-#endif /* __cplusplus */
 
 #endif /* PATHLIFT_H */

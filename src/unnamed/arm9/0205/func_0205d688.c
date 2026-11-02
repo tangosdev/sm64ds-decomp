@@ -4,34 +4,10 @@
  * FSi_SendCommand. A synchronous caller (async == 0; FS_ReadFile)
  * marks the file FS_FILE_STATUS_SYNC (4) first, waits in func_0205d3f4
  * (FS_WaitAsync) and returns the bytes the position moved, or -1 on failure;
- * func_0205d3e4 (FS_ReadFileAsync) returns the clamped length at once. Field
- * names follow the SDK's FSFile, as src/engine/fs/FS_CommandDefault.cpp spells
- * them; only the
- * fields this function touches are spelled out. */
-typedef struct FSFileProp {
-    unsigned int own_id; /* 0x00 */
-    unsigned int top;    /* 0x04 */
-    unsigned int bottom; /* 0x08 */
-    unsigned int pos;    /* 0x0c */
-} FSFileProp;
+ * func_0205d3e4 (FS_ReadFileAsync) returns the clamped length at once. */
+#include "private/fs_views.h"
 
-typedef struct FSReadFileArg {
-    void *dst;            /* 0x00 */
-    unsigned int len_org; /* 0x04 -- the length asked for */
-    unsigned int len;     /* 0x08 -- the length after clamping */
-} FSReadFileArg;
-
-typedef struct FSFile {
-    char pad_00[0xc];
-    unsigned int stat; /* 0x0c */
-    char pad_10[0xc];
-    union {
-        FSFileProp file;
-    } prop; /* 0x1c */
-    union {
-        FSReadFileArg readfile;
-    } arg; /* 0x2c */
-} FSFile;
+typedef struct FSFile FSFile;
 
 extern int FSi_SendCommand(void *self, int a);
 extern int func_0205d3f4(void *self);

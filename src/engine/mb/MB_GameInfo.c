@@ -37,6 +37,7 @@
  * differently, and where it does, the existing names are kept.
  */
 #include "types.h"
+#include "private/mb_views.h"
 
 /* local extern: MI_Memory.c's asm fills and copies; no header declares them. */
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
@@ -62,30 +63,6 @@ typedef struct MBGameRegistry {
     int ggid;                     /* 0x14 */
     unsigned char maxPlayerNum;   /* 0x18 */
 } MBGameRegistry;
-
-typedef struct MBGameInfo {
-    /* fixed part, sent in 0x62-byte pieces */
-    char icon[0x220];           /* 0x000 -- MBIconInfo: palette, then char data */
-    char parent[0x16];          /* 0x220 -- MBUserInfo */
-    unsigned char maxPlayerNum; /* 0x236 */
-    unsigned char pad_237;
-    unsigned short gameName[0x30];         /* 0x238 */
-    unsigned short gameIntroduction[0x60]; /* 0x298 */
-    /* volatile part */
-    unsigned char nowPlayerNum; /* 0x358 */
-    unsigned char pad_359;
-    unsigned short nowPlayerFlag;         /* 0x35a -- bit 0 is the parent */
-    unsigned short changePlayerFlag;      /* 0x35c */
-    char member[15][0x16];                /* 0x35e -- MBUserInfo per child */
-    unsigned short broadcastedPlayerFlag; /* 0x4a8 -- bit i+1 set as child i is sent */
-    unsigned char dataAttr;               /* 0x4aa -- 1: icon unreadable, cleared */
-    unsigned char seqNoFixed;             /* 0x4ab */
-    unsigned char seqNoVolat;             /* 0x4ac -- bumped by MB_UpdateGameInfoMember */
-    unsigned char fileNo;                 /* 0x4ad -- six bits in the beacon */
-    char pad_4ae[2];
-    u32 ggid;                 /* 0x4b0 */
-    struct MBGameInfo *nextp; /* 0x4b4 */
-} MBGameInfo;
 
 typedef struct MbBeaconSendStatus {
     MBGameInfo *gameInfoListTop; /* 0x00 */
@@ -127,7 +104,6 @@ typedef struct MbBeacon {
 } MbBeacon;
 
 #ifndef SM64DS_PLATFORM_PC
-typedef char MBGameInfo_size_must_be_0x4b8[sizeof(MBGameInfo) == 0x4b8 ? 1 : -1];
 typedef char MbBeacon_size_must_be_0x70[sizeof(MbBeacon) == 0x70 ? 1 : -1];
 #endif
 
@@ -179,16 +155,16 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
     }
     info->ggid = src->ggid;
     if (parent) {
-        MultiCopyHalf(parent, info->parent, 0x16);
+        MultiCopyHalf(parent, info->fixed.parent, 0x16);
     }
-    info->maxPlayerNum = src->maxPlayerNum;
-    MultiCopyHalf(src->gameNamep, info->gameName,
+    info->fixed.maxPlayerNum = src->maxPlayerNum;
+    MultiCopyHalf(src->gameNamep, info->fixed.gameName,
                   (unsigned)(mystrlen(src->gameNamep) << 0x11) >> 0x10);
-    MultiCopyHalf(src->gameIntroductionp, info->gameIntroduction,
+    MultiCopyHalf(src->gameIntroductionp, info->fixed.gameIntroduction,
                   (unsigned)(mystrlen(src->gameIntroductionp) << 0x11) >> 0x10);
-    info->nowPlayerNum = 1;
-    info->nowPlayerFlag = 1;
-    info->broadcastedPlayerFlag = 1;
+    info->volat.nowPlayerNum = 1;
+    info->volat.nowPlayerFlag = 1;
+    info->volat.broadcastedPlayerFlag = 1;
 }
 
 // @symbol MBi_ReadIconInfo
@@ -240,14 +216,14 @@ void MB_UpdateGameInfoMember(char *self, void *src, unsigned int flags, int s) {
     int i;
     int cnt;
     cnt = 1;
-    MultiCopyHalf(src, gameInfo->member, 0x14a);
+    MultiCopyHalf(src, gameInfo->volat.member, 0x14a);
     for (i = 0; i < 0xf; i++) {
         if (flags & (2 << i))
             cnt = (cnt + 1) & 0xff;
     }
-    gameInfo->nowPlayerNum = (unsigned char)cnt;
-    gameInfo->nowPlayerFlag = (short)(flags | 1);
-    gameInfo->changePlayerFlag = (short)s;
+    gameInfo->volat.nowPlayerNum = (unsigned char)cnt;
+    gameInfo->volat.nowPlayerFlag = (short)(flags | 1);
+    gameInfo->volat.changePlayerFlag = (short)s;
     gameInfo->seqNoVolat += 1;
 }
 
@@ -455,7 +431,7 @@ void MBi_SendFixedBeacon(void) {
  * to state 5. The state loop calls it, and MBi_SendVolatBeacon calls it again
  * when that latched copy goes stale. */
 void MBi_InitSendVolatBeacon(void) {
-    data_020a9d2c.nowGameInfop->broadcastedPlayerFlag = 1;
+    data_020a9d2c.nowGameInfop->volat.broadcastedPlayerFlag = 1;
     data_020a9d2c.seqNoVolat = data_020a9d2c.nowGameInfop->seqNoVolat;
     data_020a9d2c.state = 5;
 }
@@ -495,23 +471,23 @@ void MBi_SendVolatBeacon(void) {
     seq = data_020a9d2c.beaconNo;
     data_020a9d2c.beaconNo = seq + 1;
     data_020a9d40.beaconNo = seq;
-    data_020a9d40.data.volat.nowPlayerNum = ptr->nowPlayerNum;
-    data_020a9d40.data.volat.nowPlayerFlag = ptr->nowPlayerFlag;
-    data_020a9d40.data.volat.changePlayerFlag = ptr->changePlayerFlag;
+    data_020a9d40.data.volat.nowPlayerNum = ptr->volat.nowPlayerNum;
+    data_020a9d40.data.volat.nowPlayerFlag = ptr->volat.nowPlayerFlag;
+    data_020a9d40.data.volat.changePlayerFlag = ptr->volat.changePlayerFlag;
 
     zero = 0;
     MultiStore16(zero, (char *)data_020a9d50, 0x58);
 
     ptr = data_020a9d2c.nowGameInfop;
-    mask = ptr->broadcastedPlayerFlag ^ ptr->nowPlayerFlag;
+    mask = ptr->volat.broadcastedPlayerFlag ^ ptr->volat.nowPlayerFlag;
     count = 0;
     dst = data_020a9d50;
     for (i = 0; i < 15; i++) {
         if (mask & (2 << i)) {
-            MultiCopyHalf(data_020a9d2c.nowGameInfop->member[i], dst, 0x16);
+            MultiCopyHalf(data_020a9d2c.nowGameInfop->volat.member[i], dst, 0x16);
             count++;
             dst += 0x16;
-            data_020a9d2c.nowGameInfop->broadcastedPlayerFlag |= 2 << i;
+            data_020a9d2c.nowGameInfop->volat.broadcastedPlayerFlag |= 2 << i;
             if (count == 4) {
                 break;
             }
@@ -526,7 +502,7 @@ void MBi_SendVolatBeacon(void) {
     data_020a9d40.data.volat.sum = func_02067ee4(data_020a9d48, 0x68);
 
     ptr = data_020a9d2c.nowGameInfop;
-    if (ptr->broadcastedPlayerFlag == ptr->nowPlayerFlag) {
+    if (ptr->volat.broadcastedPlayerFlag == ptr->volat.nowPlayerFlag) {
         data_020a9d2c.state = 1;
     }
 

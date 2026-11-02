@@ -22,8 +22,6 @@
 #include "types.h"
 #include "dBgW_KcMbg.h"
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 /* Enter/update pair installed at 0x320. Defined in the TU; a pointer is all
@@ -85,43 +83,5 @@ struct daObjEwbIce_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjEwbIce_c_size_must_be_0x33c[sizeof(daObjEwbIce_c) == 0x33c ? 1 : -1];
 #endif
-
-#else
-
-#include "dExtSimpleModel_c.h"
-
-/* The C spelling of the same object, flat. Retained for any leftover C
-   translation unit, same arrangement as include/dExtShadowModel_c.h. */
-struct daObjEwbIce_c {
-    u8 pad_000[0xc];
-    u16 mActorID; /* 0x00c */
-    u8 pad_00e[0x4e];
-    s32 mPosX; /* 0x05c */
-    s32 mPosY; /* 0x060 */
-    s32 mPosZ; /* 0x064 */
-    u8 pad_068[0x24];
-    s16 mAngleX; /* 0x08c */
-    s16 mAngleY; /* 0x08e */
-    s16 mAngleZ; /* 0x090 */
-    u8 pad_092[0x42];
-    dExtSimpleModel_c mModel; /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~daObjEwbIce_c calls _ZN10dBgW_KcMbgD1Ev at
-       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider; /* 0x124 */
-    u8 pad_2ec[0x34];
-    void *mState; /* 0x320 */
-    u8 pad_324[0x4];
-    s32 mWobbleAmp; /* 0x328 */
-    u8 mVariant;    /* 0x32c -- 0/1/2 from actorID 0xaa/0xab/0xac */
-    u8 mSpawnIndex; /* 0x32d */
-    u8 pad_32e[0x2];
-    u16 mTimer;       /* 0x330 */
-    u16 mWobblePhase; /* 0x332 */
-    s32 mBossID;      /* 0x334 */
-    s32 unk_338;      /* 0x338 */
-};
-
-#endif /* __cplusplus */
 
 #endif

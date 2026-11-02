@@ -1212,8 +1212,7 @@ extern "C" void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int stoneI
 void dScMgCurling2_c::StoneSpin(int stoneIndex) {
     char *o = (char *)this + stoneIndex * 0x30;
     int heading = ((dScMgCurling2_c *)o)->mStone[0].angle;
-    int tableOffset = (((heading >> 4) << 1) + 1) << 1;
-    int cosHeading = *(short *)((char *)data_02082214 + tableOffset);
+    int cosHeading = data_02082214[((heading >> 4) << 1) + 1];
     int speed = ((dScMgCurling2_c *)o)->mStone[0].speed;
     long long product = (long long)cosHeading * speed;
     int velocityX = (int)(((unsigned long long)(product + 0x800)) >> 12);

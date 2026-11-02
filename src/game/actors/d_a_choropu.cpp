@@ -1,8 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
 /* Monty Mole (daChoropu_c) and the rock it throws (daChoro_Rock_c), ov080.
  * The mole stays underground until the nearest daPly_c is 250..1500 units
  * away and it holds the turn, then emerges, throws, leaps, and dives,
@@ -57,6 +53,7 @@ enum daChoropu_c_AssetId {
 #include "dCc_c.h"
 #include "daPly_c.h"
 #include "Sound.h"
+#include "Particle__System.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
  * the state number at +0x17c. */
@@ -89,13 +86,6 @@ extern ChoropuStateRow data_ov080_02128438[6];
 #define LAUND(p) ((void*)(p))
 
 extern "C" {
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int id, int x, int y, int z);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 unsigned int d_a_choropuNewHold(unsigned int a, unsigned int b, int x, int y, int z, void *vel,
                                 void *cb);
 /* Parameter names keep this TU's @NNN. */

@@ -41,22 +41,9 @@
 #include "Ov007Camera.h"
 #include "Ov007Transition.h"
 #include "Ov007Model.h"
+#include "dExtModel_c.h"
 
 extern "C" {
-
-/* A BMD_Material's two colour words. */
-typedef struct Ov007MaterialColors {
-    char pad_00[0x28];
-    u32 diffuseAmbient;   /* 0x28 */
-    u32 specularEmission; /* 0x2c */
-} Ov007MaterialColors;
-
-/* ModelComponents' first two words, read through Ov007Model::model: BMD_File.h
- * leaves the material colour words unnamed (pad_28), so this view names them. */
-typedef struct Ov007ModelParts {
-    void *modelFile;                /* 0x00 */
-    Ov007MaterialColors *materials; /* 0x04 */
-} Ov007ModelParts;
 
 /* The 0x14-byte screen-fade record at data_ov007_02104bd8. */
 typedef struct Ov007Fade {
@@ -285,7 +272,7 @@ void func_ov007_020bf790(void) {
 
     if (flags & 1) {
         int color;
-        Ov007ModelParts *parts = (Ov007ModelParts *)FADE->model->model;
+        ModelComponents *parts = FADE->model->model;
         if (kind == 1) {
             color = 0x7FFF;
         } else {

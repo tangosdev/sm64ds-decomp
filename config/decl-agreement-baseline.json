@@ -624,10 +624,6 @@
       "src/unnamed/arm9/0201/func_0201818c.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0201/func_0201834c.cpp": [
-        "param:#1 Obj *",
-        "return:void"
-      ],
       "src/unnamed/arm9/0201/func_02018934.cpp": [
         "param:#1 int *",
         "return:void"
@@ -4698,9 +4694,6 @@
       "src/engine/fs/FS_Command.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0205/func_0205d3e4.cpp": [
-        "return:void"
-      ],
       "src/TP_CalcCalibrateParam.cpp": [
         "return:void"
       ],
@@ -8038,7 +8031,7 @@
         "return:unsigned char []"
       ],
       "src/game/actors/d_a_door.cpp": [
-        "return:GlobCaa0"
+        "return:FileSaveData"
       ],
       "src/game/actors/d_a_mugen_bgm.cpp": [
         "return:unsigned char []"
@@ -9203,29 +9196,9 @@
         "return:void *"
       ]
     },
-    "data_020a0e58": {
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:PadData []"
-      ],
-      "src/unnamed/arm9/0203/func_0203bc50.c": [
-        "return:short []"
-      ],
-      "src/unnamed/arm9/0203/func_0203bc7c.c": [
-        "return:InputPair []"
-      ],
-      "src/game/stages/d_s_entry_methods.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/KuppaScript.cpp": [
-        "return:unsigned char []"
-      ]
-    },
     "data_020a0e5a": {
       "src/_ZN7Message6UpdateEv.cpp": [
         "return:unsigned char"
-      ],
-      "src/game/stages/d_s_star_sel_methods.cpp": [
-        "return:unsigned short [][]"
       ]
     },
     "data_020a0e68": {
@@ -9470,6 +9443,9 @@
       ]
     },
     "data_020a1040": {
+      "include/private/player_input_record.h": [
+        "return:PlayerInputRecord"
+      ],
       "src/unnamed/arm9/0203/func_0203da4c.c": [
         "return:unsigned char []"
       ],
@@ -9478,9 +9454,6 @@
       ],
       "src/unnamed/arm9/0203/func_0203dafc.c": [
         "return:short []"
-      ],
-      "src/unnamed/arm9/0203/func_0203db64.c": [
-        "return:Rec"
       ],
       "src/unnamed/arm9/0203/func_0203df40.c": [
         "return:Rec"
@@ -9519,6 +9492,9 @@
       ]
     },
     "data_020a1154": {
+      "include/private/player_input_record.h": [
+        "return:PlayerInputRecord []"
+      ],
       "src/unnamed/arm9/0203/func_0203d8fc.c": [
         "return:unsigned short []"
       ],
@@ -16188,7 +16164,7 @@
         "param:#2 void *"
       ],
       "src/unnamed/arm9/0201/func_0201834c.cpp": [
-        "param:#1 Obj *",
+        "param:#1 void *",
         "param:#2 void *"
       ],
       "src/unnamed/arm9/0201/func_020184e0.cpp": [
@@ -17670,20 +17646,11 @@
       ]
     },
     "FSi_SendCommand": {
-      "src/unnamed/arm9/0205/func_0205d3e4.cpp": [
-        "param:#1 UnkStruct_0205d4a0 *",
-        "return:void"
-      ],
       "src/unnamed/arm9/0205/func_0205d568.c": [
         "arity:4"
       ],
       "src/FSi_FindPath.c": [
         "param:#1 FSFile *"
-      ]
-    },
-    "FSi_ExecuteSyncCommand": {
-      "src/unnamed/arm9/0205/func_0205d3e4.cpp": [
-        "param:#1 struct Obj *"
       ]
     },
     "func_0205d4a0": {
@@ -17695,20 +17662,26 @@
     "func_0205d568": {
       "src/unnamed/arm9/0205/func_0205d518.c": [
         "arity:2"
+      ],
+      "src/engine/sound/SoundEngine.cpp": [
+        "param:#1 struct Node *"
       ]
     },
     "func_0205d688": {
       "src/FS_ReadFile.c": [
         "param:#1 int"
-      ],
-      "src/unnamed/arm9/0205/func_0205d3e4.cpp": [
-        "return:void"
       ]
     },
     "FSi_FindPath": {
       "src/unnamed/arm9/0205/func_0205d644.c": [
         "param:#2 const char *",
         "param:#3 void *"
+      ]
+    },
+    "FS_LoadArchive": {
+      "src/engine/sound/SoundEngine.cpp": [
+        "param:#7 int (*)(FSArchive *, void *, unsigned int, unsigned int)",
+        "param:#8 int (*)(FSArchive *, const void *, unsigned int, unsigned int)"
       ]
     },
     "FS_Init": {
@@ -18045,7 +18018,7 @@
         "return:int *"
       ],
       "src/unnamed/arm9/0206/func_02065a94.c": [
-        "return:Node65 *"
+        "return:WBTBlockInfoList *"
       ]
     },
     "func_02065af0": {
@@ -20155,6 +20128,11 @@
     "WM_StartScan": {
       "src/engine/mb/MB_WmBase.cpp": [
         "param:#1 void *"
+      ]
+    },
+    "data_0209f498": {
+      "src/game/stages/d_s_stage_methods.cpp": [
+        "return:unsigned char []"
       ]
     }
   },

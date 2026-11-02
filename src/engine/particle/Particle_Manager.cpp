@@ -30,6 +30,7 @@
 #include "Particle__Behavior.h"
 #include "Particle__Manager.h"
 #include "Particle__System.h"
+#include "private/particle_resource_header.h"
 
 extern "C" {
 /* local extern: decl_common.h, a C catch-all, declares func_0204d958,
@@ -47,15 +48,6 @@ void func_0204a730(void *manager, void *system);
 #define REG_DISP3DCNT (*(volatile u16 *)0x04000060)
 
 typedef Particle::Manager::TextureEntry TextureEntry;
-
-/* The particle resource's file header. The definition records start at
-   +0x20, the texture records follow them. +0x18 is a size Particle.cpp
-   reads; no shared header models the file. */
-struct ResourceHeader {
-    u8 pad_000[8];
-    u16 numDefinitions; /* 0x08 */
-    u16 numTextures;    /* 0x0a */
-};
 
 /* SystemDefinition::Data::flags as func_0204a17c reads it. Each set bit means
    one more record follows the 0x38-byte Data record, in bit order. */
@@ -131,11 +123,11 @@ char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int a
 
 // @symbol func_0204a17c
 void func_0204a17c(Particle::Manager *manager, char *resource) {
-    int offset = 0x20;
+    int offset = sizeof(ParticleResourceHeader);
     int i;
 
-    manager->mNumDefinitions = ((ResourceHeader *)resource)->numDefinitions;
-    manager->mNumTextures = ((ResourceHeader *)resource)->numTextures;
+    manager->mNumDefinitions = ((ParticleResourceHeader *)resource)->numDefinitions;
+    manager->mNumTextures = ((ParticleResourceHeader *)resource)->numTextures;
     manager->mDefinitions = (Particle::SystemDefinition *)manager->allocator(
         manager->mNumDefinitions * sizeof(Particle::SystemDefinition));
 

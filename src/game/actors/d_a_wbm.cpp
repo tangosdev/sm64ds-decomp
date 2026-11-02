@@ -52,6 +52,7 @@ enum daWbm_c_AssetId {
 };
 
 #include "common.h"
+#include "Particle__System.h"
 #include "daWbm_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
@@ -92,11 +93,6 @@ u16 DecIfAbove0_Short(u16 *counter);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, s32 radius, s32 height, Vector3_16 *a,
                          Vector3_16 *b);
-namespace Particle {
-struct System {
-    static void *NewSimple(u32 id, s32 x, s32 y, s32 z);
-};
-}
 }
 
 /* The bomb's file-scope SharedFilePtr object, spelled through the same

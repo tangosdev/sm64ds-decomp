@@ -10,6 +10,7 @@
 #include "types.h"
 #include "CP15.h"
 #include "IRQ.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
@@ -65,26 +66,6 @@ typedef struct WMPortSendCallback {
     char pad2[0x1c - 0xc];
     u16 seqNo; /* 0x1c */
 } WMPortSendCallback;
-
-/* WM_GetSystemWork's WMArm9Buf and its WMStatus, as WM_GetMPReceiveBufferSize
- * views them; WM_SetPortCallback fills the per-port tables. 0x86 is a bitmap
- * of the children the parent's data sets wait for (pret's
- * WMi_GetMPReadyAIDs reads it); it has no name in any view yet, so it stays
- * padding and is read by offset. */
-typedef struct WMStatus {
-    char pad_000[0x10];
-    int mp_flag; /* 0x010 -- 1 once MP has started */
-    char pad_014[0x184 - 0x14];
-    u16 aid; /* 0x184 -- 0 for the parent */
-} WMStatus;
-
-typedef struct WMArm9Buf {
-    char pad_00[4];
-    WMStatus *status; /* 0x04 */
-    char pad_08[0xac - 0x8];
-    void *portCallbackTable[16];    /* 0x0ac */
-    void *portCallbackArgument[16]; /* 0x0ec */
-} WMArm9Buf;
 
 extern int WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int count, ...);
@@ -146,8 +127,8 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
     CP15::InvalidateDataCache((u32)&sys->status->aid, 2);
     aid = sys->status->aid;
     if (aid == 0) {
-        CP15::InvalidateDataCache((u32)sys->status + 0x86, 2);
-        childMask = *(u16 *)((u32)sys->status + 0x86);
+        CP15::InvalidateDataCache((u32)&sys->status->mp_readyBitmap, 2);
+        childMask = sys->status->mp_readyBitmap;
     }
 
     zero = 0;
@@ -258,8 +239,8 @@ int WM_StepDataSharing(u8 *self, u8 *sendData, u8 *receiveData) {
     CP15::InvalidateDataCache((u32)(&((WMArm9Buf *)result)->status->aid), 2);
     aid = ((WMArm9Buf *)result)->status->aid;
     if (aid == 0) {
-        CP15::InvalidateDataCache((u32)((WMArm9Buf *)result)->status + 0x86, 2);
-        childMask = *(u16 *)((u32)((WMArm9Buf *)result)->status + 0x86);
+        CP15::InvalidateDataCache((u32) & ((WMArm9Buf *)result)->status->mp_readyBitmap, 2);
+        childMask = ((WMArm9Buf *)result)->status->mp_readyBitmap;
     }
 
     state = dsInfo->state;
@@ -520,11 +501,11 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     saved = IRQ::Disable();
     slot = dsInfo->writeIndex;
     if (dsInfo->ds[slot].aidHeader == 0) {
-        CP15::InvalidateDataCache(*(u32 *)(ctx + 4) + 0x86, 2);
+        CP15::InvalidateDataCache((u32) & ((WMArm9Buf *)ctx)->status->mp_readyBitmap, 2);
 
         prevSlot = dsInfo->writeIndex;
         next = (u16)((prevSlot + 1) % 4);
-        mask = *(u16 *)(*(u32 *)(ctx + 4) + 0x86);
+        mask = ((WMArm9Buf *)ctx)->status->mp_readyBitmap;
         newSlot = (dsInfo->doubleMode == 1) ? (u16)((next + 1) % 4) : next;
 
         zero = 0;

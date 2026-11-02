@@ -1,8 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
 /* daKpa_c + daKpaTail_c -- Bowser and his tail, the ov060 boss-fight actors.
  * ROM span 0x02111900..0x02116484, 81 functions: both destructor pairs,
  * the shared fight helpers, both classes' resource/load/behavior/render
@@ -139,6 +135,7 @@ enum daKpa_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 /* -------------------------------------------------------------------------- */
 /* Names for the numbers this file uses. The values are the ROM's; the names are
@@ -365,13 +362,6 @@ extern void *d_a_kpaNewHold(unsigned a, unsigned b, int x, int y, int z, void *v
 extern void d_a_kpaChangeMusicVolumeHold(unsigned int a, int b);
 extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int kind, int x, int y, int z);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 extern int Vec3_HorzLen(const Vector3* v);
 extern int RandomIntInternal(int* seed);
 extern int data_0209e650;

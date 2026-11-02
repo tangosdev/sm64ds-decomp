@@ -1,11 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /* daPgRcer_c -- the Cool Cool Mountain racing penguin (PENGUIN_RACER).
  * The path comes from param1. A fall past 0x7d0000 or the cheat volume
  * sets mPlayerCheated; NumStars() == 0x96 selects the big penguin.
@@ -23,6 +16,7 @@ struct System {
  */
 
 #include "daPgRcer_c.h"
+#include "Particle__System.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "SurfaceInfo.h"

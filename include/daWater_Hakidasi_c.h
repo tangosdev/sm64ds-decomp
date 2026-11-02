@@ -17,8 +17,6 @@
  * registry profile.
  */
 
-#ifdef __cplusplus
-
 #include "dEnemyBase_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
@@ -77,54 +75,5 @@ struct daWater_Hakidasi_c : dEnemyBase_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daWater_Hakidasi_c_size_must_be_0x378[sizeof(daWater_Hakidasi_c) == 0x378 ? 1 : -1];
 #endif
-
-#else
-
-/* Retained legacy flat C view.
-   The current production actor TU uses the C++ class above and defines
-   a real C++ destructor. */
-struct daWater_Hakidasi_c {
-    u8 pad_000[0x8];
-    u32 param1; /* 0x008 */
-    u8 pad_00c[0x80];
-    /* 0x008..0x10f is the fBase_c/dBase_c/dActor_c/dEnemyBase_c chain restated flat.
-       Every name below is dActor_c.h's own (fBase_c.h's for param1); nothing here
-       is an independent claim, and the C++ branch above inherits them properly. */
-    s16 mAngleX;           /* 0x08c */
-    s16 mAngleY;           /* 0x08e */
-    s16 mAngleZ;           /* 0x090 */
-    s16 mPrevAngleX;       /* 0x092 */
-    s16 mPrevAngleY;       /* 0x094 */
-    s16 mPrevAngleZ;       /* 0x096 */
-    s32 mHorzSpeed;        /* 0x098 */
-    s32 mVertAccel;        /* 0x09c */
-    s32 mTerminalVelocity; /* 0x0a0 */
-    u8 pad_0a4[0x4];
-    s32 mVertSpeed; /* 0x0a8 */
-    u8 pad_0ac[0x4];
-    u32 mFlags;        /* 0x0b0 */
-    s32 mClipOffsetY;  /* 0x0b4 */
-    s32 mClipRadius;   /* 0x0b8 */
-    s32 mClipDistance; /* 0x0bc */
-    s32 mFarDistance;  /* 0x0c0 */
-    u8 mClipResult;    /* 0x0c4 */
-    u8 pad_0c5[0x7];
-    s8 mAreaId; /* 0x0cc */
-    u8 pad_0cd[0x1];
-    s16 mDeathTableID; /* 0x0ce */
-    u8 pad_0d0[0x30];
-    u8 mStateTimer; /* 0x100 */
-    u8 pad_101[0xf];
-    u8 mdCcAc_c; /* 0x110 */
-    u8 pad_111[0x33];
-    u8 mWithMeshClsn; /* 0x144 */
-    u8 pad_145[0x1bb];
-    void *mState; /* 0x300 */
-    u8 pad_304[0x10];
-    s32 mStarID;  /* 0x314 */
-    s32 mNoRings; /* 0x318 */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAWATER_HAKIDASI_C_H */

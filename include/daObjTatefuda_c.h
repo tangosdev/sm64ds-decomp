@@ -64,8 +64,6 @@ struct daPly_c;
 typedef struct daPly_c daPly_c;
 #endif
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 #include "dCcAc_c.h"
 #include "dExtShadowModel_c.h"
@@ -201,70 +199,5 @@ struct daObjTatefuda_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjTatefuda_c_size_must_be_0x5a4[sizeof(daObjTatefuda_c) == 0x5a4 ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for a C translation unit, which has no base sub-object to
-   inherit dBgActor_c's fields from and so spells the layout flat. Same
-   arrangement as include/dBgActor_c.h. */
-struct daObjTatefuda_c {
-    u8  pad_000[0x5c];
-    s32 mPosX;                       /* 0x05c */
-    s32 mPosY;                       /* 0x060 */
-    s32 mPosZ;                       /* 0x064 */
-    u8  pad_068[0x24];
-    s16 mAngleX;                     /* 0x08c */
-    s16 mAngleY;                     /* 0x08e */
-    s16 mAngleZ;                     /* 0x090 */
-    u8  pad_092[0xa];
-    s32 mVertAccel;                  /* 0x09c */
-    s32 mTerminalVelocity;           /* 0x0a0 */
-    u8  pad_0a4[0xc];
-    s32 mFlags;                      /* 0x0b0 */
-    u8  pad_0b4[0x20];
-    /* dExtSimpleModel_c member. The cartridge's own ~daObjTatefuda_c calls _ZN17dExtSimpleModel_cD1Ev at +0x0d4
-       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
-       D1 and not D2, so it is this type and not an inlined base. */
-    dExtSimpleModel_c mModel; /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~daObjTatefuda_c calls _ZN10dBgW_KcMbgD1Ev at
-       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider;        /* 0x124 */
-    u8  mClsnMat;                    /* 0x2ec */
-    u8  pad_2ed[0x33];
-    u8  mdCcAc_c;                    /* 0x320 */
-    u8  pad_321[0x33];
-    s32 mState;                      /* 0x354 */
-    u8  mShadowModel;                /* 0x358 */
-    u8  pad_359[0x27];
-    struct Matrix4x3 mShadowMat;     /* 0x380 */
-    s32 mHomePosX;                   /* 0x3b0 */
-    s32 mHomePosY;                   /* 0x3b4 */
-    s32 mHomePosZ;                   /* 0x3b8 */
-    s16 mHomeAngleX;                 /* 0x3bc */
-    s16 mHomeAngleY;                 /* 0x3be */
-    s16 mHomeAngleZ;                 /* 0x3c0 */
-    u8  pad_3c2[0x6];
-    /* dBgCh_Actr member. The cartridge's own ~daObjTatefuda_c calls _ZN10dBgCh_ActrD1Ev at
-       +0x3c8 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgCh_Actr mWithMeshClsn;        /* 0x3c8 */
-    u32 mParticleHandle1;            /* 0x584 */
-    u32 mParticleHandle2;            /* 0x588 */
-    u8  mBreakTimer;                 /* 0x58c */
-    u8  mTalkStep;                   /* 0x58d */
-    u8  mPoundsLeft;                 /* 0x58e */
-    u8  mPoundCooldown;              /* 0x58f */
-    u8  mHidden;                     /* 0x590 */
-    u8  mRespawnDelay;               /* 0x591 */
-    u8  pad_592[0x2];
-    u8  mFlagSeen;               /* 0x594 */
-    u8  pad_595[0x3];
-    daPly_c *mTalkingPlayer; /* 0x598 */
-    daPly_c *mHoldingPlayer; /* 0x59c */
-    daPly_c *mLastHolder;    /* 0x5a0 */
-};
-
-#endif /* __cplusplus */
 
 #endif

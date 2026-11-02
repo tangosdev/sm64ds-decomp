@@ -136,15 +136,6 @@ struct MorayRenderStep {
     s32 angleScale;
 };
 
-/* Runtime pose elem filled by UpdateBones, stride 0x34. Rotation angles
- * sit at 0x1a/0x1c/0x1e; Render bends rotZ. Not BMD_Bone (file stride 0x40). */
-struct MorayBone {
-    u8 pad_00[0x1a];
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    u8 pad_20[0x14];
-};
 
 extern "C" MorayRenderStep data_ov016_02114908[];
 
@@ -671,14 +662,14 @@ s32 daMoray_c::Render()
 {
     int i;
     MorayRenderStep *step;
-    MorayBone *bone;
+    ModelBone *bone;
 
     func_020167a4(&mBlendAnmModel);
-    bone = (MorayBone *)mBlendAnmModel.data.bones + 1;
+    bone = mBlendAnmModel.data.bones + 1;
     step = data_ov016_02114908;
     for (i = 1; i < 7; i++) {
         s16 movement = mSegmentAngle[i];
-        u16 *angle = (u16 *)&bone->rotZ;
+        u16 *angle = &bone->rotZ;
         *angle = *angle + (u16)(s16)(movement * step->angleScale);
         step++;
         bone++;

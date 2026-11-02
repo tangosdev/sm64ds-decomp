@@ -1,11 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /* daSnowman_c — Mr. Blizzard (SNOWMAN, registry id 0xdf).
  *
  * param1's low byte is the path, the next byte is the kind. Kind 0 walks
@@ -55,6 +48,7 @@ enum daSnowman_c_AssetId {
 #pragma defer_codegen off
 
 #include "common.h"
+#include "Particle__System.h"
 #include "daSnowman_c.h"
 #include "SharedFilePtr.h"
 #include "PathPtr.h"

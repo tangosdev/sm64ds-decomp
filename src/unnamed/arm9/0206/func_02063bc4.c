@@ -1,18 +1,9 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-
-/* NitroSDK WBTBlockInfoList, the field read here (the type keeps the name
- * func_02065a94's definition gives it). */
-typedef struct {
-    char pad[0x32];
-    /* 0x32 -- NitroSDK block_type: WBT_RegisterBlock (func_020658c0) sets
-     * 0 (COMMON) when it is given the block's data and 1 (USER) when it is
-     * not, so each packet has to be asked for with PREPARE_SEND_DATA */
-    u16 block_type;
-} Node65;
+#include "private/wbt_block_info_list.h"
 
 extern int func_02065a74(void);
-extern Node65 *func_02065a94(int key);
+extern struct WBTBlockInfoList *func_02065a94(int key);
 extern int func_0206491c(unsigned int key, int val);
 extern int func_02064888(unsigned int a, int b);
 extern int func_02064d6c(int a, int b, int c, int d, int e, int f, int g);
@@ -33,7 +24,7 @@ int func_02063bc4(void *base, int idx, int r8) {
         int r7;
         if (func_02065a74() == 0) r7 = 0xfffe; else r7 = 1;
         if (e->command == 4) {
-            Node65 *node = func_02065a94(e->block_id);
+            struct WBTBlockInfoList *node = func_02065a94(e->block_id);
             if (node != 0) {
                 int v = func_0206491c(e->block_id, e->seq_no);
                 if (node->block_type == 0) {

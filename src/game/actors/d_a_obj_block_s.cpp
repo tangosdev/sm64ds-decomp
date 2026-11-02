@@ -1,7 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
 /* daObjBlockS_c -- small breakable crate (BLOCK_S, ov098).
  * 37 functions, .text 0x02138040..0x02139f70, ending with classInit.
  * (registry profile BLOCK_S): it sits where it is placed, can be picked up
@@ -89,8 +86,7 @@ enum daObjBlockS_c_AssetId {
 #include "dCc_c.h"
 #include "Sound.h"
 #include "math/Approach.h"
-
-struct Vector3_16f;
+#include "Particle__System.h"
 
 /* Actor profile IDs this file compares against (symbols/actor_debug_names.tsv). */
 enum {
@@ -137,14 +133,6 @@ extern u8 DecIfAbove0_Byte(u8 *p);
 extern void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
 extern u32 d_a_obj_block_sNewUnkCallback818Hold(u32 a, u32 b, int c, int d, int e,
                                                 const Vector3_16f *v);
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int id, int x, int y, int z);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-    static u32 NewUnkCallback818(u32, u32, int, int, int, const Vector3_16f *);
-};
-}
 }
 namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);

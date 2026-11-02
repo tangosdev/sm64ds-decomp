@@ -30,7 +30,11 @@ typedef struct {
  * (include/Particle__System.h, Particle__Element.h, Particle__Manager.h are
  * C++). Only the fields this update loop touches are named. The definition
  * has NitroSDK SPL's SPLResource order (header, scale/color/alpha/texture
- * animations, child resource, behaviors), and the names follow SPL's. */
+ * animations, child resource, behaviors), and the names follow SPL's.
+ * UpdateData, UpdateChild and UpdateDef stay file-local, apart from
+ * include/private/spl_particle_views.h's PtclData, PtclChild and PtclDef:
+ * this loop reads the header word and the child flags as whole u32 / u16
+ * values, which the shared views spell as bitfields. */
 typedef struct PtclNode {
     struct PtclNode *next; /* 0x00 */
     void *prev;            /* 0x04 */
@@ -58,32 +62,32 @@ typedef struct {
     u16 emitterLifeTime; /* 0x28 -- emission stops once the system's age reaches it; 0 never stops */
     u8 pad_2a[0x8];
     u8 airResistance; /* 0x32 -- velocities scale by (airResistance + 0x180) / 0x200 each frame */
-} PtclData;
+} UpdateData;
 
 typedef struct {
     u16 flags; /* 0x00 */
     u8 pad_02[0xb];
     u8 emissionDelay; /* 0x0d -- children start (emissionDelay + 1) / 256 into the parent's life */
     u8 emissionInterval; /* 0x0e -- then every emissionInterval frames */
-} PtclChild;
+} UpdateChild;
 
 typedef struct {
-    PtclData *data;    /* 0x00 */
-    char *scaleAnim;   /* 0x04 */
-    char *colorAnim;   /* 0x08 */
-    char *alphaAnim;   /* 0x0c */
-    char *texAnim;     /* 0x10 */
-    PtclChild *child;  /* 0x14 */
-    Ent2 *behaviors;   /* 0x18 -- each adds its push into a particle's acceleration */
-    u16 behaviorCount; /* 0x1c */
-} PtclDef;
+    UpdateData *data;   /* 0x00 */
+    char *scaleAnim;    /* 0x04 */
+    char *colorAnim;    /* 0x08 */
+    char *alphaAnim;    /* 0x0c */
+    char *texAnim;      /* 0x10 */
+    UpdateChild *child; /* 0x14 */
+    Ent2 *behaviors;    /* 0x18 -- each adds its push into a particle's acceleration */
+    u16 behaviorCount;  /* 0x1c */
+} UpdateDef;
 
 typedef struct {
     void *next;          /* 0x00 */
     void *previous;      /* 0x04 */
     PtclList particles;  /* 0x08 */
     PtclList particles2; /* 0x10 */
-    PtclDef *def;        /* 0x18 */
+    UpdateDef *def;      /* 0x18 */
     s32 callbackFlags;   /* 0x1c */
     Vector3 position;    /* 0x20 */
     Vector3 velocity;    /* 0x2c -- added to every particle's offset each frame */
@@ -112,9 +116,9 @@ extern void func_0204d0b8(void *, void *, u32);
 
 void func_0204a730(void *arg0, void *self) {
 
-    PtclDef *sb;
+    UpdateDef *sb;
     void *next;
-    PtclChild *cfg;
+    UpdateChild *cfg;
     s32 spC;
     s32 sp10;
     s32 sp14;
@@ -128,7 +132,7 @@ void func_0204a730(void *arg0, void *self) {
     Ent1 table1[4];
     Ent1 tableB[4];
     s32 acc[3];
-    PtclData *data;
+    UpdateData *data;
     u32 bb;
     s32 i;
     s32 n;

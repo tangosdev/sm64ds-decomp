@@ -1,17 +1,14 @@
 /* Particle::SysTracker -- the game's single particle-engine owner, as a real
  * C++ class in its real namespace.
  *
- * This is the C++ spelling of the object that include/Particle.h still models
- * as a flat C `struct Particle` (kept for the thirteen C99 files that reach it
- * through that name and cannot see a namespace at all). It is the only C++
- * definition: dScStage_c (at +0x50) and dScMgSingle3DBase_c (at +0x471c) embed this
- * class directly. The two declarations agree field for field; only this one is
- * the class the ROM's mangled names actually describe, so the members whose
- * symbols are _ZN8Particle10SysTracker* are defined against it.
+ * This is the only declaration of the class. (A flat C header, Particle.h, used to model
+ * the same object as a flat C `struct Particle`, with each callback spelled as
+ * a byte plus padding; nothing included it any more and it was retired.)
+ * dScStage_c (at +0x50) and dScMgSingle3DBase_c (at +0x471c) embed this class
+ * directly, and the members whose symbols are _ZN8Particle10SysTracker* are
+ * defined against it.
  *
- * Per-field evidence: notes/system-provenance.md and include/Particle.h's own
- * header comment, which carries the full derivation of the callback bank. In
- * brief --
+ * Per-field evidence: notes/system-provenance.md. In brief --
  *   0x000 mResourceFile: Initialise stores either data_02075f14 in place or a
  *         heap buffer it fills with DecompressLZ16, then hands it to the
  *         manager via func_0204a17c; ~SysTracker frees it only in the second
@@ -27,7 +24,7 @@
  * Contents' extent is pinned from both ends: FindData indexes
  * `contents + 0x708 + (uniqueID & 0xf) * 4`, so the bucket array is sixteen
  * words at +0x708, and 0x708 + 16*4 = 0x748 lands exactly on the callback bank
- * that Particle.h's evidence places at object offset 0x750 = 0x8 + 0x748. The
+ * that the evidence below places at object offset 0x750 = 0x8 + 0x748. The
  * bucket entries are chained through a node whose unique ID is at +0x00 and
  * whose next pointer is at +0x18. The constructor's 0x40-entry walk from +0x8
  * to the bucket array at +0x708 proves the node's 0x1c stride.
@@ -36,6 +33,25 @@
  * func_020226fc pass 0x7d0 and 0x7e0 to System::New as the unique ID and
  * store its result back, with the callback four bytes above, exactly like
  * the other mSystemID_* slots.
+ *
+ * The tail of the object (0x750 onwards) is a bank of Particle::Callback
+ * subobjects, several of them preceded by a u32 "last system unique ID" slot.
+ * The pairing is proven three ways:
+ *   * Particle::System::New(uniqueID, effectID, x, y, z, dir, callback) is
+ *     called as New(*(u32*)(base+N), effect, ..., base+N+4) and its result is
+ *     stored back into *(u32*)(base+N) -- so slot N is the ID and N+4 is the
+ *     Callback. RunningSlidingDustAt uses 0x750/0x754, System::NewBigSplash
+ *     uses 0x768/0x76c, System::NewRipple uses 0x78c/0x790.
+ *   * The constructor zeroes exactly ten s32s in the tail -- 0x750, 0x75c,
+ *     0x768, 0x774, 0x780, 0x78c, 0x798, 0x7a4, 0x7b0, 0x7c0 -- and no
+ *     others, which is the same ten that sit four bytes below a Callback.
+ *   * Every Callback subobject is constructed by storing the base
+ *     dPa_c::level_c::callback_c vtable at 0x0208f3b4 and then overwriting it with a
+ *     derived one, which is exactly what dPa_c::level_c::simpleCallback_c's
+ *     own constructor does.
+ * Where no New* helper survives to name the effect, the field keeps its
+ * offset in the name: the claim is only "this is a Callback" / "this is a
+ * system-ID slot", which the evidence above does support.
  *
  * Field NAMES cannot change codegen. */
 #ifndef PARTICLE__SYSTRACKER_H
@@ -136,7 +152,7 @@ struct SysTracker {
 };
 
 /* tools/check_header_offsets.py does not parse a struct inside a namespace, so
-   these stand in for it: 0x81c is the whole object include/Particle.h models and
+   these stand in for it: 0x81c is the whole object and
    0x748 is Contents' span from FindData's +0x708 bucket array to the callback
    bank at object offset 0x750. */
 #ifndef SM64DS_PLATFORM_PC

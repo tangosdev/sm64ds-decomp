@@ -1,4 +1,5 @@
 #include "types.h"
+#include "private/rom_header_view.h"
 extern void func_020676e0(void *in, void *tbl, void *dst, void *recvCursor);
 extern void CpuCopy8(void *src, void *dst, u32 size);
 extern int data_0208685c[];
@@ -24,14 +25,6 @@ typedef struct MB_DownloadFileInfo {
     u8 auth_code[0x88];   /* 0x3c */
 } MB_DownloadFileInfo;
 
-/* The ROM header fields read here: the two entry points. */
-typedef struct RomHeaderView {
-    u8 pad_00[0x24];
-    u32 arm9EntryAddr; /* 0x24 */
-    u8 pad_28[0x34 - 0x28];
-    u32 arm7EntryAddr; /* 0x34 */
-} RomHeaderView;
-
 /* NitroSDK MBi_MakeDownloadFileInfo: fill a registered file's download
  * header from the ROM header at the start of its image, one segment row per
  * data_0208685c entry (ARM9 static, ARM7 static, ROM header), with ARM7
@@ -45,8 +38,8 @@ void func_020678a4(int *out, int *in, void *authCode) {
     MB_DownloadFileInfo *info = (MB_DownloadFileInfo *)out;
     RomHeaderView *rom = (RomHeaderView *)in;
     recvCursor = 0x22c0000;
-    info->arm9EntryAddr = rom->arm9EntryAddr;
-    info->arm7EntryAddr = rom->arm7EntryAddr;
+    info->arm9EntryAddr = rom->main_entry_address;
+    info->arm7EntryAddr = rom->sub_entry_address;
     seg = info->seg;
     t = data_0208685c;
     for (i = 0; i < 3; i++) {

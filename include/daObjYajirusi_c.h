@@ -21,8 +21,6 @@ struct daPly_c;
  * registry profile.
  */
 
-#ifdef __cplusplus
-
 #include "common.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
@@ -148,35 +146,5 @@ struct daObjYajirusi_c : dBgActor_c {
 typedef char daObjYajirusi_c_size_must_be_0x380[sizeof(daObjYajirusi_c) == 0x380 ? 1 : -1];
 
 #endif /* SM64DS_PLATFORM_PC && _MSC_VER */
-
-#else
-
-/* The C spelling of the same object, flat. Kept because the port builds
-   this header for the host, and the flat view cannot derive from dBgActor_c
-   without moving every field. Same arrangement as include/dExtShadowModel_c.h. */
-struct daObjYajirusi_c {
-    u8  pad_000[0xc];
-    u16 actorID;            /* 0x00c */
-    u8  pad_00e[0x80];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x44];
-    /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    dExtSimpleModel_c mModel; /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~daObjYajirusi_c calls _ZN10dBgW_KcMbgD1Ev
-       at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x34];
-    /* dExtShadowModel_c member, named by the class's own destructor calling
-       dExtShadowModel_c's D1 at +0x320 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN15daObjYajirusi_cD1Ev, now in src/game/actors/d_a_obj_yajirusi.cpp] */
-    dExtShadowModel_c mShadowModel;            /* 0x320 */
-    u8 mShadowMat[0x30];                       /* 0x348 */
-    u8 pad_378[0x4];
-    u8  mVariant;           /* 0x37c */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJYAJIRUSI_C_H */

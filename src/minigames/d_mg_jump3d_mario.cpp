@@ -42,6 +42,7 @@
 #pragma defer_codegen off
 
 #include "common.h"
+#include "Particle__System.h"
 #include "dMgJump3DMario_c.h"
 #include "SharedFilePtr.h"
 #include "OAM.h"
@@ -63,11 +64,6 @@ struct Mtx { int a, b, c, d; };
 extern "C" {
 
 /* Fix12<int> by value in the real signatures; see the banner. */
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int id, int x, int y, int z);
-};
-}
 void Sound_PlayBank1Panned(int a, int b, int c);
 void Vec3_Sub(Jump3DVec *out, Jump3DVec *a, Jump3DVec *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);

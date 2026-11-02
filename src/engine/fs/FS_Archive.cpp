@@ -27,6 +27,9 @@
 #include "types.h"
 #include "IRQ.h"
 #include "nitro/os/thread.h"
+#include "private/fs_views.h"
+
+typedef struct FSFile FSFile;
 
 extern "C" {
 
@@ -61,69 +64,6 @@ extern "C" {
 #define FS_ARCHIVE_NAME_LEN_MAX 3
 
 #define ALIGN_BYTE(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
-
-typedef struct FSArchive FSArchive;
-typedef struct FSFile FSFile;
-
-typedef int (*FS_ARCHIVE_READ_FUNC)(FSArchive *p_arc, void *dst, u32 pos, u32 size);
-typedef int (*FS_ARCHIVE_WRITE_FUNC)(FSArchive *p_arc, const void *src, u32 pos, u32 size);
-typedef int (*FS_ARCHIVE_PROC_FUNC)(FSFile *p_file, int command);
-
-/* NitroSDK FSFile, this SDK's layout. */
-struct FSFile {
-    FSFile *prev;      /* 0x00 -- link.prev */
-    FSFile *next;      /* 0x04 -- link.next */
-    FSArchive *arc;    /* 0x08 */
-    u32 stat;          /* 0x0c */
-    int command;       /* 0x10 */
-    int error;         /* 0x14 */
-    u16 queue;         /* 0x18 -- OSThreadQueue: a synchronous caller sleeps here */
-    char pad_1a[0x2a]; /* 0x1a -- prop and arg, unused here */
-};
-
-typedef char FSFile_size_must_be_0x44[sizeof(FSFile) == 0x44 ? 1 : -1];
-
-typedef struct FSFileLink {
-    FSFile *prev; /* 0x00 */
-    FSFile *next; /* 0x04 -- the command list's head */
-} FSFileLink;
-
-/* NitroSDK FSArchive, this SDK's layout. */
-struct FSArchive {
-    union {
-        char ptr[4];
-        u32 pack;
-    } name;                           /* 0x00 -- up to three characters, zero padded */
-    FSArchive *next;                  /* 0x04 */
-    FSArchive *prev;                  /* 0x08 */
-    u16 sync_q;                       /* 0x0c -- OSThreadQueue: a synchronous caller waits here */
-    u16 stat_q;                       /* 0x0e -- woken once a suspend takes effect */
-    u32 flag;                         /* 0x10 */
-    FSFileLink list;                  /* 0x14 */
-    u32 base;                         /* 0x1c */
-    u32 fat;                          /* 0x20 */
-    u32 fat_size;                     /* 0x24 */
-    u32 fnt;                          /* 0x28 */
-    u32 fnt_size;                     /* 0x2c */
-    u32 fat_bak;                      /* 0x30 */
-    u32 fnt_bak;                      /* 0x34 */
-    void *load_mem;                   /* 0x38 */
-    FS_ARCHIVE_READ_FUNC read_func;   /* 0x3c */
-    FS_ARCHIVE_WRITE_FUNC write_func; /* 0x40 */
-    FS_ARCHIVE_READ_FUNC table_func;  /* 0x44 */
-    FS_ARCHIVE_PROC_FUNC proc;        /* 0x48 */
-    u32 proc_flag;                    /* 0x4c -- which commands go to proc */
-};
-
-typedef char FSArchive_size_must_be_0x50[sizeof(FSArchive) == 0x50 ? 1 : -1];
-
-/* NitroSDK FSDirPos, the current directory. */
-typedef struct FSDirPos {
-    FSArchive *arc; /* 0x00 */
-    u16 own_id;     /* 0x04 */
-    u16 index;      /* 0x06 */
-    u32 pos;        /* 0x08 */
-} FSDirPos;
 
 extern FSArchive *data_020a8048;
 extern FSDirPos data_020a804c;
@@ -290,7 +230,7 @@ FSFile *FSi_NextCommand(FSArchive *p_arc) {
         FSFile *p, *q;
         p_arc->flag &= ~FS_ARCHIVE_FLAG_CANCELING;
         for (p = p_arc->list.next; p; p = q) {
-            q = p->next;
+            q = p->link.next;
             if (FS_IsCanceling(p)) {
                 if (p_arc->list.next == p)
                     p_arc->list.next = q;
@@ -539,7 +479,7 @@ int FS_UnloadArchive(FSArchive *p_arc) {
             FS_SuspendArchive(p_arc);
             p_arc->flag |= FS_ARCHIVE_FLAG_UNLOADING;
             for (p = p_arc->list.next; p; p = q) {
-                q = p->next;
+                q = p->link.next;
                 FSi_ReleaseCommand(p, FS_RESULT_CANCELED);
             }
             p_arc->list.next = 0;

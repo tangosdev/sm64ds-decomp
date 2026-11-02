@@ -56,9 +56,7 @@ enum dScGameOver_c_AssetId {
 #include "GX.h"
 #include "dScStage_c.h"
 #include "OamAttr.h"
-struct OAM {
-    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
-};
+#include "OAM.h"
 #include "SpawnInfo.h"
 #include "decl_common.h"
 #include "PlayerInput.h"

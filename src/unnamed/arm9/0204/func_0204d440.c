@@ -1,3 +1,5 @@
+#include "private/spl_particle_views.h"
+
 extern int __aeabi_idiv(int a, int b);
 
 /* The particle definition's scale animation (SPL's SPLScaleAnim): the scale
@@ -11,21 +13,9 @@ struct ScaleAnim {
     unsigned char out; /* 0x7 */
 };
 
-/* The particle definition (func_0204a730's PtclDef; SPL's SPLResource), whose
- * scaleAnim slot registers this function as a particle callback. */
-struct PtclDef {
-    void *data;                  /* 0x00 */
-    struct ScaleAnim *scaleAnim; /* 0x04 */
-};
-
-struct Particle {
-    char pad0[0x34];
-    short animScale; /* 0x34 -- the animated scale factor, 0x1000 = 1.0 */
-};
-
 /* The scale animation callback; pret's SPL names it SPLAnim_Scale. lifeRate
  * is the particle's animation time, 0..255. */
-void func_0204d440(struct Particle *ptcl, struct PtclDef *def, int lifeRate) {
+void func_0204d440(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
     struct ScaleAnim *anim = def->scaleAnim;
     unsigned char in = anim->in;
     unsigned char out = anim->out;

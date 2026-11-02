@@ -53,6 +53,7 @@
 
 #include "types.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 #include "Sound.h"
 #include "decl_common.h"
 #include "dScEntry_c.h"
@@ -103,7 +104,6 @@ void func_ov075_0211601c(dScEntry_c::graphCallback_c *, dScEntry_c *, int);
 extern dGraph_c::callback_c *data_0209d4a8;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-extern u8 data_0209f4ae[];
 extern s32 data_0208ee44;
 
 /* The scene manager Behavior polls through its slot 5. */
@@ -183,7 +183,6 @@ u8 func_020202dc(void);
 u8 func_020200b8(void);
 void func_02020078(u32 flags);
 void func_0202029c(u32 idx);
-extern u16 data_020a0e5a[];
 extern s8 data_ov075_0211c6ec[];
 extern u8 data_0209f2d8;
 extern u8 data_0209b2e4;
@@ -206,7 +205,8 @@ extern u8 data_0209fc50;
 extern u8 data_0209fc58;
 extern char data_0209ee90[];
 extern u8 data_0208ee3c;
-extern u8 data_020a0e58[];
+extern PadData data_020a0e58[];
+extern ControllerInput data_0209f498[];
 extern int data_ov075_0211c990[];
 extern int data_ov075_0211c97c[];
 extern int data_ov075_0211c9a4[];
@@ -604,9 +604,9 @@ int dScEntry_c::ArePlayersReady() {
 int dScEntry_c::CheckMenuConfirm(int player) {
     u16 pressed;
     if (player >= 0)
-        pressed = data_020a0e5a[player * 2];
+        pressed = data_020a0e58[player].pressed;
     else
-        pressed = data_020a0e5a[func_0203da9c() * 2];
+        pressed = data_020a0e58[func_0203da9c()].pressed;
     if (pressed != 0) {
         if (pressed & 0xc)
             return 1;
@@ -687,7 +687,7 @@ void dScEntry_c::UpdateSoundSettings() {
 
     if (TouchArea_Update((char *)&mIcons[5], -1) != 0 ||
         TouchArea_Update((char *)&mIcons[8], -1) != 0 ||
-        ((flags = data_020a0e5a[w << 1]) & 8) != 0 || (flags & 4) != 0 ||
+        ((flags = data_020a0e58[w].pressed) & 8) != 0 || (flags & 4) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 2)) {
         mIcons[5].Select();
         mSelectedIcon = 2;
@@ -860,8 +860,8 @@ void dScEntry_c::UpdateControlSettings() {
     int w = func_0203da9c();
 
     if (TouchArea_Update((char *)&mIcons[3], -1) != 0 ||
-        TouchArea_Update((char *)&mIcons[4], -1) != 0 || (data_020a0e5a[w << 1] & 8) != 0 ||
-        (data_020a0e5a[w << 1] & 4) != 0 || (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 3)) {
+        TouchArea_Update((char *)&mIcons[4], -1) != 0 || (data_020a0e58[w].pressed & 8) != 0 ||
+        (data_020a0e58[w].pressed & 4) != 0 || (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 3)) {
         int i;
         for (i = 0; i <= 2; i++) {
             if (mIcons[i].mOn != 0) {
@@ -944,7 +944,7 @@ void dScEntry_c::EnterControlSettings() {
     i = 0;
     p = (char *)mIcons;
     v = 0x30;
-    mSelectedIcon = data_0209f4ae[gActivePlayerSlot * 0x18];
+    mSelectedIcon = data_0209f498[gActivePlayerSlot].mode;
 
     for (; i <= 2; i++) {
         func_ov075_02115e8c(p, 0, 0, 0x80, (s16)v);
@@ -1330,7 +1330,7 @@ void dScEntry_c::UpdateResults() {
                 do {
                     bit = *p;
                     if (bit != 0) {
-                        acc |= *(u16 *)(data_020a0e58 + (i << 2) + 2) & 0xc;
+                        acc |= data_020a0e58[i].pressed & 0xc;
                         if (gTouchHeld[i << 2] != 0 && (gTouchHeld + (i << 2))[1] != 0)
                             bit = one;
                         else
@@ -1356,7 +1356,7 @@ void dScEntry_c::UpdateResults() {
                 mStepWork[3] = 1;
             }
         }
-        if ((data_020a0e5a[func_0203da9c() * 2] & ~0xc) != 0)
+        if ((data_020a0e58[func_0203da9c()].pressed & ~0xc) != 0)
             func_02012790(0xe);
     }
 
@@ -1558,10 +1558,10 @@ void dScEntry_c::UpdateCourseSelect() {
                 func_02020078(0);
                 func_02020124();
             } else {
-                if (data_020a0e5a[gActivePlayerSlot * 2] & 4) {
+                if (data_020a0e58[gActivePlayerSlot].pressed & 4) {
                     func_02020078(1);
                     func_02020124();
-                } else if (data_020a0e5a[gActivePlayerSlot * 2] & 8) {
+                } else if (data_020a0e58[gActivePlayerSlot].pressed & 8) {
                     func_02020078(2);
                     func_02020124();
                 }
@@ -1570,7 +1570,7 @@ void dScEntry_c::UpdateCourseSelect() {
         }
     }
     *(u16 *)0x4000050 = 0;
-    if (data_020a0e5a[func_0203da9c() * 2] & ~0xc) {
+    if (data_020a0e58[func_0203da9c()].pressed & ~0xc) {
         func_02012790(0xe);
     }
 }
@@ -2245,7 +2245,7 @@ s32 dScEntry_c::InitResources() {
                 }
                 {
                     int localPlayer = func_0203da9c();
-                    func_02020028(localPlayer, data_0209f4ae[gActivePlayerSlot * 0x18]);
+                    func_02020028(localPlayer, data_0209f498[gActivePlayerSlot].mode);
                 }
             }
         } else {

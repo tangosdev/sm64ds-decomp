@@ -24,22 +24,17 @@
 #include "CP15.h"
 #include "IRQ.h"
 #include "nitro/fs/overlay.h"
+#include "private/fs_views.h"
+
+typedef struct FSFile FSFile;
 
 extern "C" {
-
-struct FSArchive;
 
 /* NitroSDK CARDRomRegion. */
 typedef struct CARDRomRegion {
     u32 offset;
     u32 length;
 } CARDRomRegion;
-
-/* NitroSDK FSFileID: the archive and the file's index in it. */
-struct Pair {
-    void *arc;
-    int file_id;
-};
 
 /* The __global_destructor_chain entries the runtime keeps for objects with
  * static storage. */
@@ -53,7 +48,7 @@ enum Flag { F0, F1 };
 
 extern CARDRomRegion data_020a8064;    /* fsi_ovt9 */
 extern CARDRomRegion data_020a806c;    /* fsi_ovt7 */
-extern struct FSArchive data_020a8074; /* fsi_arc_rom */
+extern FSArchive data_020a8074;        /* fsi_arc_rom */
 extern void *data_0209a04c;            /* fsi_digest_key_ptr */
 extern int data_0209a050;              /* fsi_digest_key_len */
 /* The 20-byte digest func_0205db88 checks an attached table against, then
@@ -68,7 +63,7 @@ void func_0205a588(void *dst, int value, int size);
 void DGT_Hash2CalcHmac(void *out, void *msg, int msglen, void *key, int keylen);
 void MIi_UncompressBackward(void *bottom);
 void FS_InitFile(void *s);
-int FS_OpenFileDirect(char *p_file, struct FSArchive *p_arc, u32 image_top, u32 image_bottom,
+int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                       u32 file_index);
 int FS_ReadFile(void *s, void *b, int c);
 int FS_CloseFile(void *self);
@@ -91,8 +86,8 @@ void FS_ClearOverlayImage(FSOverlayInfo *p_ovi) {
 
 // @symbol FS_GetOverlayFileID
 /* The overlay's FSFileID: the ROM archive and the header's file_id. */
-struct Pair FS_GetOverlayFileID(const FSOverlayInfo *p_ovi) {
-    struct Pair ret;
+FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi) {
+    FSFileID ret;
     ret.arc = &data_020a8074;
     ret.file_id = p_ovi->header.file_id;
     return ret;
@@ -102,9 +97,9 @@ struct Pair FS_GetOverlayFileID(const FSOverlayInfo *p_ovi) {
 /* Pick the ARM9 or ARM7 overlay table region, bounds-check entry `id`,
  * open the table directly in the archive, read the 0x20-byte header, and
  * set the target. */
-int FSi_LoadOverlayInfoCore(FSOverlayInfo *p_ovi, int target, int id, struct FSArchive *arc,
+int FSi_LoadOverlayInfoCore(FSOverlayInfo *p_ovi, int target, int id, FSArchive *arc,
                             u32 offset_arm9, u32 len_arm9, u32 offset_arm7, u32 len_arm7) {
-    char file[0x48];
+    FSFile file;
     u32 pos;
     u32 offset;
     u32 length;
@@ -118,10 +113,10 @@ int FSi_LoadOverlayInfoCore(FSOverlayInfo *p_ovi, int target, int id, struct FSA
     pos = id << 5;
     if (pos >= length)
         return 0;
-    FS_InitFile(file);
-    FS_OpenFileDirect(file, arc, offset + pos, offset + length, -1);
-    FS_ReadFile(file, p_ovi, 0x20);
-    FS_CloseFile(file);
+    FS_InitFile(&file);
+    FS_OpenFileDirect((char *)&file, arc, offset + pos, offset + length, -1);
+    FS_ReadFile(&file, p_ovi, 0x20);
+    FS_CloseFile(&file);
     p_ovi->target = target;
     return 1;
 }
