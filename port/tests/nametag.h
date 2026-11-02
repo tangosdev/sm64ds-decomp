@@ -176,6 +176,7 @@ int port_adventure_ghost_stars(int slot);
 unsigned port_adventure_ghost_rgb(int slot);
 int port_adventure_ghost_fade(int slot);
 int port_adventure_ghost_drawpos(int slot, int out[3]);
+int port_adventure_ghost_tag_off(int slot);   /* PAINTTAG1: through a painting */
 /* the VS round's seat mask, the same on every console at the same frame
    (hal/comms_loopback.cpp; 0 = no VS carrier session, no information) */
 unsigned port_vs_seat_live_mask(void);
@@ -776,6 +777,10 @@ static int nt_collect(void)
         if (i != me && adventure && port_adventure_ghost_seat(i) >= 0 &&
             !port_adventure_ghost_drawpos(i, e.bp))
             continue;
+        /* PAINTTAG1: he jumped through a painting (or into a floor hole) on this
+           screen. On the cartridge the wall hides him from there to the load;
+           a tag drawn over everything would follow him down behind it. */
+        if (i != me && adventure && port_adventure_ghost_tag_off(i)) continue;
         const int wp[3] = {e.bp[0], e.bp[1] + NT_HEAD_UP, e.bp[2]};
         if (!nt_project(wp, &e.sx, &e.sy, &e.d)) continue;
         e.i = i;
