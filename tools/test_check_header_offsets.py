@@ -1332,5 +1332,78 @@ class NamedArrayBoundTests(unittest.TestCase):
         self.assertIn("a[ELSEWHERE_COUNT];", out)
 
 
+class DerivedVptrAndLocalAggregateTests(unittest.TestCase):
+    """A derived class that declares the hierarchy's first virtual over a base with
+    no vptr (dBgPi : dBgPc), and a field typed by a brace-free struct declared in the
+    same header (dClipper.h's ClipperPlane). Both used to be readable only through the
+    header's dead C arm, so removing that arm turned the gate red."""
+
+    def _run(self, *texts):
+        with tempfile.TemporaryDirectory(prefix="offset_vptr_") as tmp:
+            paths = []
+            for i, text in enumerate(texts):
+                stem = "Widget" if i == 0 else f"Widget{i}"
+                header = pathlib.Path(tmp) / (stem + ".h")
+                header.write_text(text.replace("Widget", stem), encoding="utf-8")
+                paths.append(str(header))
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                rc = C.main(paths)
+            return rc, out.getvalue()
+
+    def test_dbgpc_is_known_non_polymorphic(self):
+        # The cases below lean on the real tree's dBgPc: 0x14 bytes, no virtual.
+        self.assertFalse(C._is_polymorphic("dBgPc"))
+        self.assertTrue(C._is_polymorphic("NoSuchClassAnywhere"))
+
+    def test_first_virtual_over_a_plain_base_starts_after_the_vptr(self):
+        rc, out = self._run(
+            "struct Widget : dBgPc {\n"
+            "    u16 first; /* 0x018 */\n"
+            "    u16 second; /* 0x01a */\n"
+            "    virtual ~Widget();\n};\n")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("2 commented fields, 0 mismatched, 0 unparsed", out)
+
+    def test_the_old_start_offset_now_fails(self):
+        rc, out = self._run(
+            "struct Widget : dBgPc {\n"
+            "    u16 first; /* 0x014 */\n"
+            "    virtual ~Widget();\n};\n")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("MISMATCH", out)
+
+    def test_a_plain_derived_class_is_unchanged(self):
+        rc, out = self._run(
+            "struct Widget : dBgPc {\n"
+            "    u16 first; /* 0x014 */\n};\n")
+        self.assertEqual(rc, 0, out)
+
+    def test_a_local_aggregate_sizes_its_array(self):
+        rc, out = self._run(
+            "struct Plane { u32 x, y, z; };\n"
+            "struct Widget {\n"
+            "    Plane planes[2]; /* 0x000 */\n"
+            "    u8 tail; /* 0x018 */\n};\n")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("2 commented fields, 0 mismatched, 0 unparsed, struct spans 0x19", out)
+
+    def test_a_local_aggregate_does_not_leak_into_the_next_header(self):
+        rc, out = self._run(
+            "struct Plane { u32 x, y, z; };\n"
+            "struct Widget {\n    Plane p; /* 0x000 */\n};\n",
+            "struct Widget {\n    Plane p; /* 0x000 */\n    u8 tail; /* 0x00c */\n};\n")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("UNPARSED", out)
+
+    def test_a_bitfield_aggregate_is_not_learned(self):
+        rc, out = self._run(
+            "struct Flags { u16 a : 1; u16 b : 15; };\n"
+            "struct Widget {\n    Flags f; /* 0x000 */\n    u8 tail; /* 0x002 */\n};\n")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("UNPARSED", out)
+
+
+
 if __name__ == "__main__":
     unittest.main()
