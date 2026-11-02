@@ -59,8 +59,6 @@
  * as padding rather than described.
  */
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 #include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
@@ -122,20 +120,5 @@ typedef char daObjDorifu_c_size_must_be_0xdcc[sizeof(daObjDorifu_c) == 0xdcc ? 1
 typedef char daObjDorifu_Resource_size_must_be_0xc[
     sizeof(daObjDorifuResources) == 0xc ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for a C translation unit, which has no base sub-object to
-   inherit dBgActor_c's fields from and so spells the layout flat. Same
-   arrangement as include/dBgActor_c.h. */
-struct daObjDorifu_c {
-    u8  pad_000[0xdc8];
-    u8  mActivePlank;       /* 0xdc8 */
-    u8  mStepTimer;         /* 0xdc9 */
-    u8  mState;             /* 0xdca */
-    u8  mEventBit;          /* 0xdcb */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJDORIFU_C_H */

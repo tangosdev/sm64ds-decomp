@@ -5,8 +5,6 @@
 #include "dExtAnmModel_c.h"
 #include "dCcAc_c.h"
 
-#ifdef __cplusplus
-
 #include "dActor_c.h"
 
 /* The clam of Jolly Roger Bay and the sunken ship (profile OBJ_SHELL). It sits
@@ -53,29 +51,6 @@ struct daObjShell_c : dActor_c {
        its model. Called once, from InitResources. ROM name unrecovered. */
     void UpdateModelTransform();
 };
-
-#else
-
-/* Flat layout for the remaining C translation units. */
-struct daObjShell_c {
-    u8 pad_000[0x5c];
-    s32 mPosX; /* 0x05c */
-    s32 mPosY; /* 0x060 */
-    s32 mPosZ; /* 0x064 */
-    u8 pad_068[0xc];
-    /* dActor_c::mCamSpacePos -- dActor_c.h declares s32 here. The sound call in
-       Behavior takes its address, which is what pins it. */
-    s32 mCamSpacePosX; /* 0x074 */
-    u8 pad_078[0x5c];
-    dExtAnmModel_c mAnmModel; /* 0x0d4 */
-    dCcAc_c mdCcAc_c;         /* 0x138 */
-    u8 mState;                /* 0x16c */
-    u8 pad_16d[0x1];
-    u16 mStateTimer; /* 0x16e */
-    u16 mShutTimer;  /* 0x170 */
-};
-
-#endif
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

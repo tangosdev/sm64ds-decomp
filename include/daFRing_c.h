@@ -45,8 +45,6 @@
 #include "dExtAnmMaterial_c.h"
 #include "dExtAnmTexSRT_c.h"
 
-#ifdef __cplusplus
-
 #include "dActor_c.h"
 
 struct daFRing_c : dActor_c {
@@ -76,29 +74,5 @@ struct daFRing_c : dActor_c {
 #ifndef SM64DS_PLATFORM_PC
 typedef char daFRing_c_size_must_be_0x218[sizeof(daFRing_c) == 0x218 ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for a C translation unit, which has no base class to
-   inherit dActor_c's fields from and so spells the whole layout flat. */
-struct daFRing_c {
-    u8 pad_000[0x5c];
-    s32 mPosX; /* 0x05c */
-    s32 mPosY; /* 0x060 */
-    s32 mPosZ; /* 0x064 */
-    u8 pad_068[0x6c];
-    dExtAnmModel_c mAnmModel1;            /* 0x0d4 */
-    dExtAnmTexPat_c mTextureSequence1;    /* 0x138 */
-    dExtAnmMaterial_c mMaterialChanger1;  /* 0x14c */
-    dExtAnmTexSRT_c mTextureTransformer1; /* 0x160 */
-    dExtAnmModel_c mAnmModel2;            /* 0x174 */
-    dExtAnmTexPat_c mTextureSequence2;    /* 0x1d8 */
-    dExtAnmMaterial_c mMaterialChanger2;  /* 0x1ec */
-    dExtAnmTexSRT_c mTextureTransformer2; /* 0x200 */
-    u16 mFrame;                           /* 0x214 */
-    u8 pad_216[0x2];
-};
-
-#endif /* __cplusplus */
 
 #endif

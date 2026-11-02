@@ -30,8 +30,6 @@
 #define DBGCH_LIN_H
 #include "types.h"
 
-#ifdef __cplusplus
-
 #include "dBgCh.h"
 #include "dBgPi.h"
 #include "dM3dGLin.h"
@@ -128,42 +126,6 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
     void SetObjAndLine(const Vector3 &start, const Vector3 &end, dActor_c *actor);
     bool DetectClsn();
 };
-
-#else
-
-struct dBgCh_Lin {
-    u8  pad_000[0x10];
-    u8  mBgPiBase;            /* 0x010 - the dBgPi base starts here */
-    u8  pad_011[0x27];
-    /* NOT a bare Vector3, despite DetectClsn reading three words here: the
-       destructor destroys something at 0x38 via _ZN8dM3dGLinD2Ev, so a
-       sub-object lives here whose first member is the line start.
-
-       RECOVERED 2026-08-19. The type is the cartridge's own `dM3dGLin', named
-       in the ROM's RTTI (_ZTS8dM3dGLin at 0x02099284) and listed as a base of
-       dBgCh_Lin -- this class -- at offset 56 = 0x38. It is 0x18 bytes, two
-       Vector3: start at 0x38, end at 0x44. Non-polymorphic, so no vptr, and
-       _ZN8dM3dGLinD2Ev is a 4-byte `bx lr' -- the trivial base destructor. Its
-       RTTI lives in arm9, so the TYPE is not overlay-resident even though
-       those three method bodies are. See notes/collision-system.md.
-
-       Its two accessors are named BACKWARDS in some notes. Read the bodies:
-         dM3dGLin::GetEnd  a[0..2] = b[3..5]  -> reads 0x44  -> GetEnd
-         dM3dGLin::GetStart  a[0..2] = b[0..2]  -> reads 0x38  -> GetStart */
-    u8  mLineBase;            /* 0x038 -- dM3dGLin base: start 0x38, end 0x44 */
-    u8  pad_039[0x17];
-    u8  hasClsn;            /* 0x050 */
-    u8  pad_051[0x3];
-    Vector3 lineEnd;        /* 0x054 -- in: line end. out: collision point. */
-    Fix12i clsnDist;        /* 0x060 */
-    u8  mBoundSphere[0x14]; /* 0x064 - a dM3dGSph, see include/dM3dGSph.h.
-                               Sized bytes rather than the type because
-                               check_header_offsets cannot size a struct-typed
-                               member and goes UNPARSED, which blinds it to the
-                               rest of the header. */
-};
-
-#endif /* __cplusplus */
 
 /* The standalone stack object in dActor_c::DetectRaycastClsn pins both
    language views to 0x78. */

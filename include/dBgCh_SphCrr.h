@@ -7,16 +7,11 @@
  *     dBgPi    @ 0x10   polymorphic   (secondary block VTable_dBgPi_dBgCh_SphCrrThunk)
  *     dM3dGSph @ 0x38   polymorphic   (secondary block VTable_dM3dGSph_dBgCh_SphCrrThunk;
  *                                     this IS the query sphere below)
- *
- * The C branch below stays field-for-field identical to the C++ layout:
- * .c translation units reach into these interiors by the old member names.
  */
 #ifndef DBGCH_SPHCRR_H
 #define DBGCH_SPHCRR_H
 #include "types.h"
 #include "dBgPi.h"
-
-#ifdef __cplusplus
 
 #include "math/Fix12.h"
 #include "dBgCh.h"
@@ -156,43 +151,5 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
 typedef char dBgCh_SphCrr_size_must_be_0x110[
     sizeof(dBgCh_SphCrr) == 0x110 ? 1 : -1];
 #endif
-
-#else
-
-struct dBgCh_SphCrr {
-    u8  pad_000[0x10];
-    u8  mBgPiBase;            /* 0x010 */
-    u8  pad_011[0x27];
-    u8  mSphereBase;            /* 0x038 */
-    u8  pad_039[0x3];
-    Vector3 pos;            /* 0x03c */
-    Fix12i radius;          /* 0x048 */
-    Vector3 disp;           /* 0x04c */
-    Vector3 mPushOutMin;    /* 0x058 */
-    Vector3 mPushOutMax;    /* 0x064 */
-    u8  flags;              /* 0x070 - see the C++ branch; Actr's accessors
-                               call this byte their mClsnFlags home */
-    u8  pad_071[0x3];
-    struct dBgPi mClsnResult1; /* 0x074 */
-    struct dBgPi mClsnResult2; /* 0x09c */
-    struct dBgPi mClsnResult3; /* 0x0c4 */
-    s32 mWallRejectHalfExtent; /* 0x0ec - see the C++ branch */
-    u8 pad_0f0[0xc];
-    Vector3 mFloorNormal;  /* 0x0fc - see the C++ branch */
-    s32 mMaxNormalY;       /* 0x108 */
-    s32 mMotionAngPtr;     /* 0x10c - see the C++ branch: Init's Vector3_16 * */
-};
-
-typedef struct dBgCh_SphCrr dBgCh_SphCrr;
-
-/* Same pin on the C view -- the two branches must agree while anything can
-   still substitute one for the other. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dBgCh_SphCrr_c_size_must_be_0x110[
-    sizeof(struct dBgCh_SphCrr) == 0x110 ? 1 : -1];
-#endif
-
-#endif /* __cplusplus */
 
 #endif

@@ -6,8 +6,6 @@
 #define DAOBJCASKET_C_H
 #include "types.h"
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 /* NAME: daObjCasket_c is the cartridge's RTTI spelling. _ZTS at ov071
@@ -47,19 +45,6 @@ struct daObjCasket_c : dBgActor_c {
     void SetState(int state);
     void RunState();
 };
-
-#else
-
-/* Flat compatibility view for C translation units. */
-struct daObjCasket_c {
-    u8 pad_000[0x320];
-    s32 mState;         /* 0x320 */
-    u16 mStateTimer;    /* 0x324 */
-    s16 mAngleStep;     /* 0x326 */
-    u16 mBehaviorTimer; /* 0x328 */
-};
-
-#endif
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

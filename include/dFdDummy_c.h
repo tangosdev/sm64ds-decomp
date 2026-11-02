@@ -45,7 +45,6 @@
  * Dtor-pair slot index confirmed 0/1 (D1/D0), matching the dFader_c-family
  * convention (see dWipe_c.h), not Platform's 16/17.
  */
-#ifdef __cplusplus
 struct dFdDummy_c : dFdColor_c {
     dFdDummy_c();                                /* 0x02017278 */
     virtual ~dFdDummy_c();                       /* slots 0 (D1), 1 (D0) */
@@ -57,16 +56,6 @@ struct dFdDummy_c : dFdColor_c {
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dFdDummy_c_size_must_be_0x10[sizeof(dFdDummy_c) == 0x10 ? 1 : -1];
-#endif
-#else
-/* Spelled for remaining C consumers, which cannot express the virtuals and so
-   write out the vptr the compiler would place. */
-struct dFdDummy_c {
-    void*  vtable;      /* 0x00 */
-    Fix12i currInterp;  /* 0x04 (from dFader_c) */
-    Fix12i speed;       /* 0x08 (from dFader_c) */
-    u16    color;       /* 0x0c (from dFdColor_c) */
-};
 #endif
 
 #endif

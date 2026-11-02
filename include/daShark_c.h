@@ -28,8 +28,6 @@
  * g_profile_SHARK.
  */
 
-#ifdef __cplusplus
-
 #include "dEnemyBase_c.h"
 #include "dExtAnmModel_c.h"
 #include "dCcAcPos_c.h"
@@ -83,68 +81,5 @@ struct daShark_c : dEnemyBase_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daShark_c_size_must_be_0x3a0[sizeof(daShark_c) == 0x3a0 ? 1 : -1];
 #endif
-
-#else
-
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
-struct daShark_c {
-    u8 pad_000[0x8];
-    s32 mParam; /* 0x008 */
-    u8 pad_00c[0x50];
-    /* 0x05c..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s32 mPosX;         /* 0x05c */
-    s32 mPosY;         /* 0x060 */
-    s32 mPosZ;         /* 0x064 */
-    s32 mPrevPosX;     /* 0x068 */
-    s32 mPrevPosY;     /* 0x06c */
-    s32 mPrevPosZ;     /* 0x070 */
-    s32 mCamSpacePosX; /* 0x074 */
-    s32 mCamSpacePosY; /* 0x078 */
-    s32 mCamSpacePosZ; /* 0x07c */
-    s32 mScaleX;       /* 0x080 */
-    s32 mScaleY;       /* 0x084 */
-    s32 mScaleZ;       /* 0x088 */
-    s16 mAngleX;       /* 0x08c */
-    s16 mAngleY;       /* 0x08e */
-    s16 mAngleZ;       /* 0x090 */
-    s16 mPrevAngleX;   /* 0x092 */
-    s16 mPrevAngleY;   /* 0x094 */
-    s16 mPrevAngleZ;   /* 0x096 */
-    u8 pad_098[0x4];
-    s32 mVertAccel;        /* 0x09c */
-    s32 mTerminalVelocity; /* 0x0a0 */
-    u8 unk_0a4;            /* 0x0a4 */
-    u8 pad_0a5[0x3];
-    s32 mVertSpeed; /* 0x0a8 */
-    s32 mSpeedZ;    /* 0x0ac -- dActor_c::mSpeedZ (dActor_c.h). Was unk_0ac. */
-    u8 pad_0b0[0x50];
-    u8 mStateTimer; /* 0x100 */
-    u8 pad_101[0xf];
-    /* dCcAcPos_c member, named by the class's own destructor calling
-       dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9daShark_cD1Ev, now in src/game/actors/d_a_shark.cpp] */
-    dCcAcPos_c mdCcAcPos_c; /* 0x110 */
-    /* dBgCh_Actr member, named by the class's own destructor calling
-       dBgCh_Actr's D1 at +0x150 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9daShark_cD1Ev, now in src/game/actors/d_a_shark.cpp] */
-    dBgCh_Actr mWithMeshClsn; /* 0x150 */
-    /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0x30c -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    dExtAnmModel_c mAnmModel; /* 0x30c */
-    s32 mState;               /* 0x370 */
-    s32 mClsnOffsetX;         /* 0x374 */
-    s32 mClsnOffsetY;         /* 0x378 */
-    s32 mClsnOffsetZ;         /* 0x37c */
-    u8 pad_380[0x4];
-    s32 mSwingPhase;    /* 0x384 */
-    s32 mPathID;        /* 0x388 */
-    s32 mPathNodeCount; /* 0x38c */
-    s32 mPathNodeIdx;   /* 0x390 */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DASHARK_C_H */

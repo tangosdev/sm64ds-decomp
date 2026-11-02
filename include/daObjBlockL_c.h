@@ -36,8 +36,6 @@
 
 struct daObjSwitch_c;
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 struct daObjBlockL_c : dBgActor_c {
@@ -124,40 +122,5 @@ struct daObjBlockL_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjBlockL_c_size_must_be_0x330[sizeof(daObjBlockL_c) == 0x330 ? 1 : -1];
 #endif
-
-#else
-
-/* The C spelling of the same object, flat, retained for C translation units
-   that include this header. D0 and D1 are now compiler-generated from the real
-   C++ destructor definitions in their respective .cpp files. */
-struct daObjBlockL_c {
-    u8  pad_000[0xc];
-    u16 mActorId;            /* 0x00c */
-    u8  pad_00e[0xc6];
-    /* dExtSimpleModel_c member, named by the class's own destructor calling
-       dExtSimpleModel_c's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN13daObjBlockL_cD1Ev, now in src/game/actors/d_a_obj_block_l.cpp] */
-    dExtSimpleModel_c mModel; /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~daObjBlockL_c calls _ZN10dBgW_KcMbgD1Ev
-       at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x32];
-    u8  mBroken;            /* 0x31e */
-    u8  mPrevEventBit;            /* 0x31f */
-    u8  mEventID;            /* 0x320 */
-    u8  pad_321[0x1];
-    u8  mStarID;            /* 0x322 */
-    s8  mTrackStarID;            /* 0x323 */
-    /* daObjSwitch_c * -- Behavior follows dActor_c::FindWithActorID(0xb, ...)
-       until the returned actor's byte at +0x34e equals mEventID. daObjSwitch_c's
-       independently recovered mEventBit is exactly +0x34e; Render also reads
-       that same object's mTimer/mTimeLimit at +0x338/+0x33a. */
-    struct daObjSwitch_c *mSwitch;   /* 0x324 */
-    dActor_c *mLinkedActor;            /* 0x328 */
-    u8  pad_32c[0x4];
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJBLOCKL_C_H */

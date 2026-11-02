@@ -60,8 +60,6 @@
  * and enabled colliders live in the 0x18-entry table at data_020a0c80.
  */
 
-#ifdef __cplusplus
-
 struct dActor_c;
 struct dBgPi;
 struct dBgCh_Gnd;
@@ -183,21 +181,5 @@ extern "C" dBgW *data_020a0c80[];
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgW_size_must_be_0x20[sizeof(dBgW) == 0x20 ? 1 : -1];
 #endif
-
-#else
-
-struct dBgW {
-    void **vtable;            /* 0x00 */
-    struct dActor_c *owner;      /* 0x04 */
-    s32 ownerUniqueID;        /* 0x08 */
-    s32 clipRadius;           /* 0x0c */
-    s32 clipOffsetY;          /* 0x10 */
-    u8 slotIdx;               /* 0x14 */
-    u8 pad_15[3];
-    void *beforeClsnCallback; /* 0x18 */
-    void *stoodOnCallback;    /* 0x1c */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DBGW_H */

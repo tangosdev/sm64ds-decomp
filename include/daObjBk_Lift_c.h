@@ -14,8 +14,6 @@
  * is not independent evidence about the ROM.
  */
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 #include "dExtShadowModel_c.h"
 
@@ -61,52 +59,5 @@ struct daObjBk_Lift_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjBk_Lift_c_size_must_be_0x394[sizeof(daObjBk_Lift_c) == 0x394 ? 1 : -1];
 #endif
-
-#else
-
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/dExtShadowModel_c.h. */
-struct daObjBk_Lift_c {
-    u8 pad_000[0x8];
-    s32 mParam; /* 0x008 */
-    u8 pad_00c[0x50];
-    s32 mPosX; /* 0x05c */
-    s32 mPosY; /* 0x060 */
-    s32 mPosZ; /* 0x064 */
-    u8 pad_068[0x26];
-    s16 mAngleY; /* 0x08e */
-    u8 pad_090[0x4];
-    s16 mPrevAngleY; /* 0x094 */
-    u8 pad_096[0x2];
-    s32 mHorzSpeed; /* 0x098 */
-    u8 pad_09c[0x4];
-    s32 mTerminalVelocity; /* 0x0a0 */
-    u8 pad_0a4[0x4];
-    s32 mVertSpeed; /* 0x0a8 */
-    u8 pad_0ac[0x28];
-    /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    dExtSimpleModel_c mModel; /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~daObjBk_Lift_c calls _ZN10dBgW_KcMbgD1Ev at
-       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider; /* 0x124 */
-    u8 pad_2ec[0x34];
-    dExtShadowModel_c mShadowModel; /* 0x320 */
-    /* Same 0x30 bytes as the C++ mShadowMat. This half is not compiled. */
-    u8 pad_348[0x30];
-    s32 mFloorPosY;     /* 0x378 */
-    s32 mMinPosY;       /* 0x37c */
-    s32 mMaxPosY;       /* 0x380 */
-    s32 mShadowOffsetX; /* 0x384 */
-    s32 mShadowOffsetY; /* 0x388 */
-    s32 mSoundID;       /* 0x38c */
-    u8 mMoveTimer;      /* 0x390 */
-    u8 mJustSteppedOn;  /* 0x391 */
-    u8 mMove;           /* 0x392 */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJBK_LIFT_C_H */

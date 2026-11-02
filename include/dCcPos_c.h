@@ -30,8 +30,6 @@
  * where dCcAc_c's reads through its owner pointer.
  */
 
-#ifdef __cplusplus
-
 #include "math/Fix12.h"
 
 struct dCcPos_c : dCc_c {
@@ -56,14 +54,5 @@ struct dCcPos_c : dCc_c {
 typedef char dCcPos_c_size_must_be_0x3c[
     sizeof(dCcPos_c) == 0x3c ? 1 : -1];
 #endif
-
-#else
-
-struct dCcPos_c {
-    struct dCc_c base; /* 0x00 */
-    Vector3 pos;              /* 0x30 */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DCCPOS_C_H */

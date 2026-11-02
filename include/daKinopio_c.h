@@ -31,8 +31,6 @@
 
 #include "types.h"
 
-#ifdef __cplusplus
-
 #include "dActor_c.h"
 #include "dCcAc_c.h"
 #include "dExtAnmModel_c.h"
@@ -101,16 +99,6 @@ struct daKinopio_c : dActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKinopio_c_State_size_must_be_0x14[
     sizeof(daKinopio_c::State) == 0x14 ? 1 : -1];
-#endif
-
-#else
-
-/* No C source needs the reconstructed fields. Keep a flat compatibility
- * view so incidental C includes still agree on the allocation size. */
-struct daKinopio_c {
-    u8 bytes[0x210];
-};
-
 #endif
 
 #ifndef SM64DS_PLATFORM_PC

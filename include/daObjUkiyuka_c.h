@@ -47,8 +47,6 @@
  * Field NAMES are coined from what the code does; nothing in the ROM names them.
  */
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 struct daObjUkiyuka_c : dBgActor_c {
@@ -116,20 +114,5 @@ struct daObjUkiyuka_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjUkiyuka_c_size_must_be_0x32c[sizeof(daObjUkiyuka_c) == 0x32c ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for a C translation unit, which has no base sub-object to
-   inherit dBgActor_c's fields from and so spells the layout flat. Same arrangement
-   as include/dBgActor_c.h. */
-struct daObjUkiyuka_c {
-    u8 pad_000[0x320];
-    s32 mRestY;           /* 0x320 */
-    Fix12i mBobAmplitude; /* 0x324 */
-    s16 mBobPhase;        /* 0x328 */
-    u16 mRestTimer;       /* 0x32a */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJUKIYUKA_C_H */

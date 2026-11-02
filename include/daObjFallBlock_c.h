@@ -76,8 +76,6 @@
  * in the ROM names them.
  */
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 struct dBgW;
@@ -189,35 +187,5 @@ struct daObjFallBlock_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFallBlock_c_size_must_be_0x34c[sizeof(daObjFallBlock_c) == 0x34c ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for a C translation unit, which has no base sub-object to
-   inherit dBgActor_c's fields from and so spells the layout flat. Same arrangement
-   as include/dBgActor_c.h. */
-struct daObjFallBlock_c {
-    u8 pad_000[0x320];
-    s32 mRestPosX;     /* 0x320 */
-    s32 mRestPosY;     /* 0x324 */
-    s32 mRestPosZ;     /* 0x328 */
-    s32 mKillY;        /* 0x32c */
-    s32 mLinkedStarID; /* 0x330 -- POWER_STAR uniqueID */
-    s16 mShakeX;       /* 0x334 */
-    s16 mTiltVelZ;     /* 0x336 */
-    s16 mBobPhase;     /* 0x338 */
-    u16 mStateTimer;   /* 0x33a */
-    u8 mState;         /* 0x33c */
-    u8 pad_33d[0x1];
-    u8 mShakeRequested; /* 0x33e */
-    u8 mRespawnDelay;   /* 0x33f */
-    u8 mReady;          /* 0x340 */
-    u8 mGroupLinked;    /* 0x341 */
-    u8 mSuppressed;     /* 0x342 */
-    u8 pad_343[0x1];
-    struct daObjFallBlock_c *mPrevInGroup; /* 0x344 */
-    struct daObjFallBlock_c *mNextInGroup; /* 0x348 */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJFALLBLOCK_C_H */

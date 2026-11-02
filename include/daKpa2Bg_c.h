@@ -59,8 +59,6 @@
 #include "dExtSimpleModel_c.h"
 #include "dBgW_KcMbg.h"
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 
 struct daKpa2Bg_c : dBgActor_c {
@@ -98,32 +96,5 @@ struct daKpa2Bg_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKpa2Bg_c_size_must_be_0x570[sizeof(daKpa2Bg_c) == 0x570 ? 1 : -1];
 #endif
-
-#else
-
-/* The same object for a C translation unit, which has no base class to inherit
-   dBgActor_c's and dActor_c's fields from and so spells the whole layout flat. */
-struct daKpa2Bg_c {
-    u8 pad_000[0x8e];
-    s16 mAngleY; /* 0x08e */
-    u8 pad_090[0x44];
-    /* dExtSimpleModel_c member, named by the class's own destructor calling
-       dExtSimpleModel_c's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [src/game/actors/d_a_kpa2_bg.cpp] */
-    dExtSimpleModel_c mModel1;       /* 0x0d4 */
-    dBgW_KcMbg mMovingMeshCollider1; /* 0x124 */
-    u8 pad_2ec[0x32];
-    s16 mAngleXSpeed; /* 0x31e */
-    s16 mAngleYSpeed; /* 0x320 */
-    s16 mAngleZSpeed; /* 0x322 */
-    /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0x324 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    dExtSimpleModel_c mModel2;       /* 0x324 */
-    dBgW_KcMbg mMovingMeshCollider2; /* 0x374 */
-    u8 pad_53c[0x30];
-    s32 mSoundHandle; /* 0x56c */
-};
-
-#endif /* __cplusplus */
 
 #endif

@@ -10,7 +10,6 @@
 /* fwd */
 struct daPly_c;
 struct player_;
-#ifdef __cplusplus
 
 /* MEASURED -- MUST STAY FIRST, ahead of dExtSimpleModel_c.h. Matrix4x3 has two guarded
    spellings sharing the same 0x30 bytes; whichever a TU sees first stands, and
@@ -83,54 +82,6 @@ struct dBgActor_c : dActor_c {
 typedef char dBgActor_c_size_must_be_0x320[sizeof(dBgActor_c) == 0x320 ? 1 : -1];
 #endif
 
-#else
-
-/* The same object for a C translation unit, which has no base class to inherit
-   dActor_c's fields from and so spells the whole layout flat. */
-struct dBgActor_c {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0xc];
-    s32 mCamSpacePosX;           /* 0x074 */
-    s32 mCamSpacePosY;           /* 0x078 */
-    s32 mCamSpacePosZ;           /* 0x07c */
-    s32 mScaleX;                 /* 0x080 */
-    s32 mScaleY;                 /* 0x084 */
-    s32 mScaleZ;                 /* 0x088 */
-    s16 mAngleX;                 /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x4];
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x2];
-    s32 mHorzSpeed;            /* 0x098 */
-    s32 mVertAccel;            /* 0x09c */
-    s32 mTerminalVelocity;            /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 mVertSpeed;            /* 0x0a8 */
-    u8  pad_0ac[0x4];
-    u32 mFlags;             /* 0x0b0 */
-    s32 mClipOffsetY;       /* 0x0b4 */
-    s32 mClipRadius;        /* 0x0b8 */
-    u8  pad_0bc[0x18];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x1b];
-    u8  unk_0f0;            /* 0x0f0 */
-    u8  pad_0f1[0x23];
-    s32 unk_114;            /* 0x114 */
-    s32 unk_118;            /* 0x118 */
-    s32 unk_11c;            /* 0x11c */
-    u8  pad_120[0x4];
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1c7];
-    struct Matrix4x3 mClsnMat;    /* 0x2ec */
-    u8 mMegaKnockback;            /* 0x31c */
-    u8 mMegaKnockbackTimer;       /* 0x31d */
-    /* Ends at 0x31e; sizeof rounds to 0x320. See the C++ half. */
-};
-
-#endif /* __cplusplus */
 
 
 #endif

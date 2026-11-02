@@ -40,8 +40,6 @@
  * covers the C++ branch instead.
  */
 
-#ifdef __cplusplus
-
 namespace Memory {
 void operator_delete2(void *ptr);
 }
@@ -84,15 +82,5 @@ struct dM3dGSph {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dM3dGSph_size_must_be_0x14[sizeof(dM3dGSph) == 0x14 ? 1 : -1];
 #endif
-
-#else
-
-struct dM3dGSph {
-    void **vtable;          /* 0x00 */
-    Vector3 centre;         /* 0x04 */
-    Fix12i radius;          /* 0x10 */
-};
-
-#endif /* __cplusplus */
 
 #endif /* DM3DGSPH_H */

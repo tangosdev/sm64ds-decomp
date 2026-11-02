@@ -29,8 +29,6 @@
 #include "types.h"
 #include "dBgW_KcMbg.h"
 
-#ifdef __cplusplus
-
 #include "dBgActor_c.h"
 #include "dExtShadowModel_c.h"
 
@@ -98,63 +96,5 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjRotateUpdownLift_c_size_must_be_0x3a8[sizeof(daObjRotateUpdownLift_c) == 0x3a8 ? 1 : -1];
 #endif
-
-#else
-
-#include "dExtSimpleModel_c.h"
-
-/* The same object spelled flat, for the compiler-generated destructor, which
-   lives in a C translation unit and can never be migrated. */
-struct daObjRotateUpdownLift_c {
-    u8  pad_000[0x8];
-    s32 mSpawnParam;            /* 0x008 */
-    u16 mActorID;            /* 0x00c */
-    u8  pad_00e[0x4e];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0xc];
-    s32 mCamSpacePosX;           /* 0x074 */
-    s32 mCamSpacePosY;           /* 0x078 */
-    s32 mCamSpacePosZ;           /* 0x07c */
-    s32 mScaleX;                 /* 0x080 */
-    s32 mScaleY;                 /* 0x084 */
-    s32 mScaleZ;                 /* 0x088 */
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    u8  pad_092[0x1e];
-    u32 mFlags;             /* 0x0b0 */
-    u8  pad_0b4[0x18];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x7];
-    dExtSimpleModel_c mModel;            /* 0x0d4 */
-    dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x14];
-    u8  unk_300;            /* 0x300 */
-    u8  pad_301[0x1f];
-    u8  mShadowModel;            /* 0x320 */
-    u8  pad_321[0x57];
-    s32 mSoundHandle;            /* 0x378 */
-    s32 mGroundY;            /* 0x37c */
-    s16 mSpawnAngleX;            /* 0x380 */
-    s16 mSpawnAngleY;            /* 0x382 */
-    s16 mSpawnAngleZ;            /* 0x384 */
-    u8  pad_386[0x2];
-    s32 mBasePosX;            /* 0x388 */
-    s32 mBasePosY;            /* 0x38c */
-    s32 mBasePosZ;            /* 0x390 */
-    u8  mWaypointIndex;            /* 0x394 */
-    u8  mVariant;            /* 0x395 */
-    u8  pad_396[0x2];
-    s32 mPlatform0;            /* 0x398 */
-    s32 mPlatform1;            /* 0x39c */
-    u8  mIsDead;            /* 0x3a0 */
-    u8  pad_3a1[0x1];
-    s16 mPitchBase;            /* 0x3a2 */
-    s16 mPitchStep;            /* 0x3a4 */
-};
-
-#endif /* __cplusplus */
 
 #endif
