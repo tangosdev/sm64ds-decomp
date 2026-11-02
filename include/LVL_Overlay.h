@@ -25,7 +25,8 @@
  * the HIGH byte, so a u8 read at 0x01 of a 16-bit count would report zero for
  * every count below 256 -- which is every count. So ObjTable really does carry a
  * u16 at 0x00, ObjSubTable really does carry a u8 at 0x01, and offset 0x00 of an
- * ObjSubTable is something else that no loader in this family reads.
+ * ObjSubTable is something else: the category byte LoadObjects dispatches on
+ * (an ObjTable's entries are ObjSubTables), which no category loader reads.
  *
  * Both are 8 bytes with the entry pointer at 0x04: every loader reaches it as
  * `*(char **)(t + 4)'.
@@ -59,7 +60,9 @@ struct LVL_Overlay {
     };
 
     struct ObjSubTable {
-        u8    unk_000;          /* 0x00 -- not read by any loader in this family */
+        /* 0x00 -- the handler index (low five bits) and star filter (top
+           three); LoadObjects reads it, no category loader does */
+        u8 categoryAndStar;
         u8    count;            /* 0x01 -- 8-bit; see the banner */
         u8    pad_002[2];
         void* entries;          /* 0x04 */

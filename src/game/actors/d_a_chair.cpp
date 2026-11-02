@@ -17,13 +17,10 @@
 // - The ROM calls dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc), not
 //   UpdateContinuous. func_0201267c is Sound.h's bank-3 player, one past
 //   Sound::PlayBank3.
-// - GetWallResult is the member; the +4 SurfaceInfo and the CopyNormalTo
-//   reference pun stay. Vec3 POD twins (player copy, diff, normal, hurt
-//   pos): a Vector3 local emits its destructor call. player->mPosX by
-//   name changes State2's size.
-// - ST reads mStateTimer/mActionTimer through this+0x300, and the
-//   halfword increments use the int-cast form; the member forms change
-//   sizes.
+// - The wall normal goes through the CopyNormalTo reference pun. Vec3 POD
+//   twins (player copy, diff, normal, hurt pos): a Vector3 local emits its
+//   destructor call. Copying player->mPosX field by field changes State2's
+//   size.
 // - g_profile_CHAIR is not in this TU. data_ov020_02114af0 is the model
 //   handle.
 
@@ -60,16 +57,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 typedef struct {
     s32 x, y, z;
 } Vec3;
-
-/* mStateTimer at +0x9e and mActionTimer at +0xa0, addressed from
- * this+0x300 rather than from the fields. */
-typedef struct {
-    u8 _pad[0x9e];
-    u16 counter;
-    u16 timer;
-} State300;
-
-#define ST ((State300 *)((char *)this + 0x300))
 
 /* Actor IDs from the ROM's actor table. */
 enum ChairActorId {
@@ -229,13 +216,11 @@ void daChair_c::State1() {
     daPly_c *player;
     int wobble;
     int *av;
-    unsigned short *p39e;
 
     target = dActor_c::FindWithID(mTargetID);
     if (target != 0) {
-        /* int-cast address. The three words are loaded before either
-         * Vec3 call. */
-        av = (int *)(int)((char *)&target->mPosX);
+        /* The three words are loaded before either Vec3 call. */
+        av = (int *)&target->mPosX;
         targetPos[0] = *av;
         targetPos[1] = av[1];
         targetPos[2] = av[2];
@@ -273,9 +258,7 @@ void daChair_c::State1() {
         return;
     }
 
-    /* int-cast address, then a separate add. */
-    p39e = (unsigned short *)(int)((char *)&mStateTimer);
-    *p39e = (unsigned short)(*p39e + 1);
+    mStateTimer++;
     if (mStateTimer & 8) {
         if (mAngleX >= 0) {
             wobble = -4;
@@ -283,15 +266,8 @@ void daChair_c::State1() {
             func_0201267c(kSfxWobble, &mCamSpacePos);
             wobble = 4;
         }
-        /* int-cast address. */
-        {
-            int *px = (int *)(int)&mPosX;
-            *px = *px - (wobble << 12);
-        }
-        {
-            int *pz = (int *)(int)&mPosZ;
-            *pz = *pz - (wobble << 12);
-        }
+        mPosX -= wobble << 12;
+        mPosZ -= wobble << 12;
         mAngleZ = (short)(wobble * 0x32);
         mAngleX = mAngleZ;
     } else {
@@ -312,21 +288,21 @@ void daChair_c::State1() {
 // @symbol _ZN9daChair_c6State2Ev
 void daChair_c::State2() {
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
-    (*(u16 *)((int)&mStateTimer))++;
+    mStateTimer++;
 
-    if (ST->counter <= 0x46) {
-        if (ST->counter < 0x32)
+    if (mStateTimer <= 0x46) {
+        if (mStateTimer < 0x32)
             mVertSpeed = 0x6000;
         else
             mVertSpeed = 0;
         ApproachStateValue(&mAngleX, &mStateValue0, -0xfa0, 0xc8, 0x14, 2);
         ApproachStateValue(&mAngleZ, &mStateValue2, 0, 0, 0x14, 1);
-        if (ST->counter == 0x46)
+        if (mStateTimer == 0x46)
             func_0201267c(kSfxWindup, &mCamSpacePos);
     } else {
-        if (ST->timer != 0) {
-            (*(u16 *)((int)&mActionTimer))--;
-            if (ST->timer == 0) {
+        if (mActionTimer != 0) {
+            mActionTimer--;
+            if (mActionTimer == 0) {
                 dActor_c *player;
                 Vec3 *pp;
                 Vec3 playerPos;
@@ -336,9 +312,9 @@ void daChair_c::State2() {
                 player = ClosestPlayer();
                 if (player == 0)
                     return;
-                /* Copied through a plain vector. player->mPosX by name
-                 * changes the code size. */
-                pp = (Vec3 *)((char *)&player->mPosX);
+                /* Copied through a plain vector. Copying player->mPosX
+                 * field by field changes the code size. */
+                pp = (Vec3 *)&player->mPosX;
                 playerPos.x = pp->x;
                 playerPos.y = pp->y;
                 playerPos.z = pp->z;
@@ -351,18 +327,17 @@ void daChair_c::State2() {
                 mVertSpeed = FX_MUL(data_02082214[SINCOS_INDEX(mPrevAngleX)], -0x32000);
                 mSpeedZ = FX_MUL(reach, data_02082214[SINCOS_INDEX(mPrevAngleY) + 1]);
             } else {
-                if (ST->timer > 0x14) {
-                    /* (int)&mAngleY. mAngleY += 0x2710 changes the code size. */
-                    *(s16 *)((int)&mAngleY) += 0x2710;
+                if (mActionTimer > 0x14) {
+                    mAngleY += 0x2710;
                 }
             }
         } else {
             if (mWithMeshClsn.IsOnGround() != 0) {
                 Break();
             } else if (mWithMeshClsn.IsOnWall() != 0) {
-                void *wall = mWithMeshClsn.GetWallResult();
+                dBgPi *wall = mWithMeshClsn.GetWallResult();
                 Vec3 normal;
-                ((SurfaceInfo *)((char *)wall + 4))->CopyNormalTo((Vector3 &)normal);
+                wall->surface.CopyNormalTo((Vector3 &)normal);
                 if (GetSubtraction(mPrevAngleY, cstd::atan2(normal.x, normal.z)) > 0x4000)
                     Break();
             }
