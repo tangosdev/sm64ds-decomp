@@ -81,18 +81,6 @@ struct Vec3 { int x, y, z; };
  * has to carry its definition's name to agree. */
 typedef struct { int x, y, z; } Vec3_Fix12;
 
-/* One 0x30-byte BMD material, seen only as far as its DIF_AMB/SPE_EMI pair:
-   LoadTexture copies both into the Ov080Mat record that LoadMaterial pushes
-   to the G3 DIF_AMB/SPE_EMI ports. BMD_File.h still spells them pad_28. */
-struct PicGateMaterial {
-    u8 pad_00[0x28];
-    u32 difAmb; /* 0x28 */
-    u32 speEmi; /* 0x2c */
-};
-#ifndef SM64DS_PLATFORM_PC
-typedef char PicGateMaterial_size_must_be_0x30[sizeof(PicGateMaterial) == 0x30 ? 1 : -1];
-#endif
-
 namespace cstd {
 Fix12i fdiv(s32, s32);
 }
@@ -197,12 +185,12 @@ u8 *daPicGate_c::func_ov080_02125630(s32 i)
     unsigned char *fl = &data_ov080_0212869c[off];
     if (data_ov080_0212869c[off] == 0) {
         BMD_Texture *a;
-        PicGateMaterial *b;
+        BMD_Material *b;
         BMD_Palette *c;
         SharedFilePtr *sfp = data_ov080_0212775c[i];
         BMD_File *o = (BMD_File *)func_0201787c(sfp);
         a = o->textures;
-        b = (PicGateMaterial *)o->materials;
+        b = o->materials;
         c = o->palettes;
         int sz;
         e->texAddr = (int)dExtSimpleModel_c::LoadCompressedTextureToVram(a->data, a->size,
@@ -212,8 +200,8 @@ u8 *daPicGate_c::func_ov080_02125630(s32 i)
             e->pltAddr = (int)func_02045ad8(c->data, (unsigned int)sz);
         else
             e->pltAddr = (int)func_02045a50(c->data, (unsigned int)sz);
-        e->difAmb = b->difAmb;
-        e->speEmi = b->speEmi;
+        e->difAmb = b->diffuseAmbient;
+        e->speEmi = b->specularEmission;
         e->param = a->flags;
         *fl = 1;
         sfp->Release();
