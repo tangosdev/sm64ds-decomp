@@ -742,8 +742,6 @@ int dScMgBase_c::graphCallback_c::GraphCallback3()
     return 1;
 }
 
-namespace s20ae06c {
-extern "C" {
 // @symbol _ZN11dScMgBase_c15graphCallback_c14GraphCallback2Ev
 /* dScMgBase_c::graphCallback_c::GraphCallback2 -- slot 2.
  *
@@ -751,9 +749,6 @@ extern "C" {
  * +0x60) result rather than discarding it and reporting handled; it only
  * reports handled when no scene is registered.
  */
-}
-}
-
 int dScMgBase_c::graphCallback_c::GraphCallback2()
 {
     dScMgBase_c *p = mScene;
@@ -808,13 +803,8 @@ int dScMgBase_c::graphCallback_c::GraphCallback0()
    store, and mScene = 0 are the three writes the ROM body makes. */
 dScMgBase_c::graphCallback_c::graphCallback_c() : mScene(0) {}
 
-namespace s20ae128 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c16OnGraphCallback3Ev
 /* dScMgBase_c::OnGraphCallback3 - slot 25: nonzero while the menu is closed. */
-}
-}
-
 int dScMgBase_c::OnGraphCallback3()
 {
     return mMenuOpen == 0;
@@ -844,25 +834,15 @@ done:
     return 1;
 }
 
-namespace s20ae198 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c16OnGraphCallback1Ev
 /* dScMgBase_c::OnGraphCallback1 - slot 22 */
-}
-}
-
 int dScMgBase_c::OnGraphCallback1()
 {
     return 1;
 }
 
-namespace s20ae1a0 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c16OnGraphCallback0Ev
 /* dScMgBase_c::OnGraphCallback0 - slot 23 */
-}
-}
-
 int dScMgBase_c::OnGraphCallback0()
 {
     return 1;
@@ -2278,8 +2258,6 @@ void Mg_SetTopScreenYOffset(int v) { sMgTopScreenYOffset[0] = v; }
 }
 }
 
-namespace s20b04e0 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c14GetDisplayModeEv
 /* dScMgBase_c::GetDisplayMode - slot 26: which display layout the scene
  * uses. BeforeInitResources turns the 3D engines on for any nonzero answer.
@@ -2288,9 +2266,6 @@ extern "C" {
  * `return 2;` in dScMgD3DBase_c's.  Three distinct constants out of three
  * bodies is what makes the return type int rather than void, and it is why the
  * caller has to be able to tell the three apart. */
-}
-}
-
 int dScMgBase_c::GetDisplayMode()
 {
     return 0;

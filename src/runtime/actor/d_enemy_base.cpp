@@ -552,11 +552,6 @@ int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, Fix12i down, s16 maxSlope, b
 
 /* On a wall, reflect the heading off it; on a cliff edge (mCliffState), turn
    around; otherwise report that nothing was done. */
-extern "C" {
-/* ReflectAngle takes Fix12<int> by value -- the mwccarm 6az wall, runbook
-   section 7 -- so it stays extern "C" with scalars in those slots. */
-}
-
 // @symbol _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs
 int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr &clsn, short &outAngle) {
     if (clsn.IsOnWall()) {
