@@ -307,7 +307,7 @@ int EntryMesh::RippleHeight(int dist) {
     if (r2 < 0)
         r2 = 0;
     idx = (unsigned short)phase >> 4;
-    t = *(short *)((char *)data_02082214 + idx * 4);
+    t = data_02082214[idx * 2];
     return FX_MUL(t, r2);
 }
 
