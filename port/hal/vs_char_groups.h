@@ -7,7 +7,8 @@
  * buttons keep their slots for SM64DS_VS_CHAR_COLORS's grammar and are empty.
  * Each record is one labelled family's entries in one named palette; `main` is
  * the entry the most texels read (where a pick lands). kBroCart is each bro's
- * cartridge colour per category (the body file's main tone).
+ * cartridge colour per category (the body file's main tone). kVscKeepCart lists
+ * the entries held back from every row (port/tools/bro_groups_keep.json).
  *
  * COVERAGE (label palette entries / texels drawn with them):
  *   mario  hat_undershirt  Hat mario_head_pl 100/654, Hat mario_head_n_pl 5/16, Undershirt mario_body_pl 97/1188
@@ -16,7 +17,7 @@
  *   luigi  hat_undershirt  Hat luigi_head_1_pl 64/925, Hat luigi_head_2_pl 56/319, Hat luigi_head_n_pl 10/172, Undershirt luigi_body_1_pl 96/1113
  *   luigi  overalls        Overalls luigi_body_1_pl 81/1750
  *   luigi  shoes           Shoes luigi_body_1_pl 33/437
- *   wario  hat_undershirt  Hat wario_head_pl 117/733, Undershirt wario_body_pl 75/1271
+ *   wario  hat_undershirt  Hat wario_head_pl 117/733, Undershirt wario_body_pl 67/1121
  *   wario  overalls        Overalls wario_body_pl 50/1196
  *   wario  shoes           Shoes wario_body_pl 24/532
  */
@@ -118,12 +119,12 @@ static const int kIdx_11[117] = {
     131, 132, 133, 134, 135, 136, 137, 138, 139, 141, 142, 143, 145, 148, 150, 164,
     168, 172, 176, 180, 187
 };
-static const int kIdx_12[75] = {
-    0, 14, 15, 16, 18, 19, 21, 37, 42, 43, 46, 47, 50, 51, 52, 53,
-    54, 55, 58, 59, 68, 69, 76, 77, 78, 79, 81, 82, 83, 84, 85, 86,
-    87, 91, 92, 93, 94, 95, 96, 97, 99, 100, 101, 103, 104, 105, 107, 109,
-    110, 111, 112, 113, 115, 116, 117, 119, 120, 121, 122, 123, 125, 126, 127, 135,
-    137, 138, 139, 143, 154, 155, 172, 173, 174, 176, 177
+static const int kIdx_12[67] = {
+    14, 15, 18, 19, 37, 42, 43, 46, 47, 50, 51, 52, 53, 54, 55, 68,
+    69, 76, 77, 78, 79, 81, 82, 83, 85, 86, 87, 91, 92, 93, 94, 95,
+    96, 97, 99, 100, 101, 103, 104, 105, 107, 109, 110, 111, 112, 113, 115, 116,
+    117, 119, 120, 121, 122, 123, 125, 126, 127, 135, 137, 138, 139, 143, 154, 155,
+    172, 173, 177
 };
 static const int kIdx_13[50] = {
     7, 8, 44, 45, 48, 49, 80, 88, 89, 90, 98, 102, 106, 108, 114, 118,
@@ -149,11 +150,31 @@ static const Group kVscGroups[] = {
     { 1, 1, "data/player/luigi_model.bmd", "luigi_body_1_pl", 81, kIdx_9, 128, "Overalls" },
     { 1, 4, "data/player/luigi_model.bmd", "luigi_body_1_pl", 33, kIdx_10, 174, "Shoes" },
     { 2, 0, "data/player/wario_head_cap.bmd", "wario_head_pl", 117, kIdx_11, 0, "Hat" },
-    { 2, 0, "data/player/wario_model.bmd", "wario_body_pl", 75, kIdx_12, 112, "Undershirt" },
+    { 2, 0, "data/player/wario_model.bmd", "wario_body_pl", 67, kIdx_12, 112, "Undershirt" },
     { 2, 1, "data/player/wario_model.bmd", "wario_body_pl", 50, kIdx_13, 150, "Overalls" },
     { 2, 4, "data/player/wario_model.bmd", "wario_body_pl", 24, kIdx_14, 203, "Shoes" },
 };
 static const int kVscGroupCount = 15;
+
+/* entries that stay cartridge though a picker label holds them (bro_groups_keep.json) */
+struct Kept {
+    int         chr;
+    const char *file;
+    const char *pal;
+    int         index;
+};
+
+static const Kept kVscKeepCart[] = {
+    { 2, "data/player/wario_model.bmd", "wario_body_pl", 0 },
+    { 2, "data/player/wario_model.bmd", "wario_body_pl", 16 },
+    { 2, "data/player/wario_model.bmd", "wario_body_pl", 21 },
+    { 2, "data/player/wario_model.bmd", "wario_body_pl", 58 },
+    { 2, "data/player/wario_model.bmd", "wario_body_pl", 59 },
+    { 2, "data/player/wario_model.bmd", "wario_body_pl", 84 },
+    { 2, "data/player/wario_model.bmd", "wario_body_pl", 174 },
+    { 2, "data/player/wario_model.bmd", "wario_body_pl", 176 },
+};
+static const int kVscKeepCartCount = 8;
 
 /* 0xRRGGBB, [chr][cat]; 0 = no such category on that bro */
 static const unsigned kBroCart[3][CAT_COUNT] = {

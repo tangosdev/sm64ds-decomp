@@ -147,6 +147,19 @@ int main(void)
             if (want != g->cat) ++lab_bad;
         }
         ok("every record carries its row's Studio label", lab_bad == 0);
+        /* BROSKIN1: an entry held back in bro_groups_keep.json (Wario's arm
+           skin) is in no picker record of its palette. */
+        int kept_in = 0;
+        for (int k = 0; k < vscg::kVscKeepCartCount; ++k) {
+            const vscg::Kept *e = &vscg::kVscKeepCart[k];
+            for (int i = 0; i < vscg::kVscGroupCount; ++i) {
+                const vscg::Group *g = &vscg::kVscGroups[i];
+                if (g->chr != e->chr || strcmp(g->file, e->file) || strcmp(g->pal, e->pal)) continue;
+                for (int a = 0; a < g->count; ++a)
+                    if (g->idx[a] == e->index) ++kept_in;
+            }
+        }
+        ok("held-back entries are in no picker record", kept_in == 0 && vscg::kVscKeepCartCount > 0);
     }
 
     /* 6. the drawn shade (YOSHICOLOR1): with a main index in the group the pick
