@@ -72,3 +72,18 @@ extern "C" int Vec3_ApproachHorz(struct Vec3 *out, struct Vec3 *a, int maxStep) 
     }
     return 0;
 }
+
+/* (0, 0) is the trampoline touch origin. (1, 1) is the other pair.
+   File-local so the halfword stores stay in order and this TU does not
+   emit a destructor. ~Short2 aliases NoOpDestructor. */
+#ifndef SM64DS_PLATFORM_PC
+struct Short2 {
+    short x;
+    short y;
+    Short2(short px, short py) : x(px), y(py) {}
+    ~Short2();
+};
+
+Short2 data_020a0dbc(0, 0);
+Short2 data_020a0db8(1, 1);
+#endif

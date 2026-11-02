@@ -1634,6 +1634,10 @@
    "ref": "src/_ZN12CylinderClsn7ProcessEv.cpp"
   },
   {
+   "file": "tools/srcpath.py",
+   "ref": "src/unnamed/ov006"
+  },
+  {
    "file": "tools/stamp_provenance.py",
    "ref": "src/arm9/func_02001b44.c"
   },
@@ -1656,6 +1660,10 @@
   {
    "file": "tools/test_srcpath.py",
    "ref": "mods/X.c"
+  },
+  {
+   "file": "tools/test_srcpath.py",
+   "ref": "src/unnamed/ov006"
   },
   {
    "file": "tools/test_validate_merge.py",

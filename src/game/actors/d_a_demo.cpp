@@ -483,7 +483,6 @@ extern void func_ov002_020f37fc(char*);
 extern void func_ov002_020f2f9c(void *, int);
 extern void func_ov002_020f3954(char *);
 /* local extern dropped: decl_common.h already declares LoadFont(u8) */
-void func_ov002_020f2e30(StaffRoll *, int);
 extern PMF0 data_ov002_02110f9c[];
 extern void SetSubBg3Offset(int a, int b);
 extern int LoadFile(int handle);
@@ -720,7 +719,6 @@ void daDemo_c::func_ov002_020f1fcc()
    backend. */
 extern "C" struct OamAttr *data_ov002_0210be1c[];
 #pragma opt_strength_reduction off
-#pragma opt_loop_invariants off
 
 void daDemo_c::func_ov002_020f20f4() {
     int i = 0;
@@ -761,7 +759,6 @@ void daDemo_c::func_ov002_020f20f4() {
     }
 }
 #pragma opt_strength_reduction on
-#pragma opt_loop_invariants on
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov002_020f2210, 0x020f2210, size 0x130 */
@@ -1293,28 +1290,26 @@ extern "C" void func_ov002_020f2dd4(C2dd4* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- func_ov002_020f2e30, 0x020f2e30, size 0x70 */
+/* ROM ordinal 27 -- StartCredit, 0x020f2e30, size 0x70 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020f2e30
-/* func_ov002_020f2e30 at 0x020f2e30
+// @symbol _ZN8daDemo_c9StaffRoll11StartCreditEi
+/* StartCredit at 0x020f2e30
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020f2e30(StaffRoll *self, int n) {
+void StaffRoll::StartCredit(int n) {
     if (n == 0) return;
     if (n == 0x15) return;
-    self->credit[0].active = 1;
-    self->credit[0].step = 0;
-    self->credit[0].timer = 0;
-    self->credit[0].blendTimer = 0;
-    self->credit[0].blend = 0;
+    credit[0].active = 1;
+    credit[0].step = 0;
+    credit[0].timer = 0;
+    credit[0].blendTimer = 0;
+    credit[0].blend = 0;
     n = (n - 1) << 1;
-    self->credit[0].message = (unsigned char)n;
+    credit[0].message = (unsigned char)n;
     func_0201f108();
     func_0201ef50(n & 0xff);
     data_0209d454 |= 1;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3370,7 +3365,7 @@ void func_ov002_020f5efc(void) {
 // @symbol func_ov002_020f5f0c
 extern "C" void func_ov002_020f5f0c(C *c, int idx) {
     (c->*data_ov002_02110f9c[idx])();
-    func_ov002_020f2e30((StaffRoll *)c, idx);
+    ((StaffRoll *)c)->StartCredit(idx);
 }
 
 /* -------------------------------------------------------------------------- */

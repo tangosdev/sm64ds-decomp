@@ -19,7 +19,6 @@ typedef union {
 
 extern void Crash(void);
 
-#pragma opt_strength_reduction off
 void TPi_TpCallback(int a0, unsigned int a1, int a2) {
     u16 msg = (u16)a1;
     u32 bit = (u32)(msg & 0x7f00) << 8 >> 16;

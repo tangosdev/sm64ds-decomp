@@ -378,6 +378,32 @@ def by_value_class_args(info):
     return out
 
 
+# OPTIMIZER PRAGMAS (#821 claim 3). `#pragma opt_common_subs off` and friends steer the
+# allocator/scheduler the way a launder does, and no other audit counted them.
+# Counted: `opt_*`, `optimize_for_size`, `optimization_level`. Not counted: push/pop,
+# defer_codegen, long_calls, thumb, section, once -- they do not pick an optimizer pass.
+#
+# THE RULE. An *override* is any counted pragma whose value is not `reset`: it is a
+# setting, and every `off` needs an `on`/`reset` to close it. `reset` (the closing
+# half) is reported separately as `pragma_resets` and is never part of the ratchet.
+# An `on` that undoes an earlier `off` counts as an override like any other setting;
+# deliberately mechanical so the number cannot be moved by respelling a closer.
+# Masked with delaunder.code_mask: a comment or string naming a pragma is prose.
+OPT_PRAGMA = re.compile(
+    r"^[ \t]*#[ \t]*pragma[ \t]+(opt_\w+|optimize_for_size|optimization_level)"
+    r"(?:[ \t]+(\w+))?", re.M)
+
+
+def find_pragmas(text):
+    """[(pragma name, value or '')] for each optimizer pragma in real code."""
+    keep = delaunder.code_mask(text)
+    out = []
+    for m in OPT_PRAGMA.finditer(text):
+        if keep[text.index("#", m.start())]:
+            out.append((m.group(1), m.group(2) or ""))
+    return out
+
+
 def audit():
     srcs = tracked_sources()
     r = {
@@ -504,6 +530,8 @@ def audit():
     launder_sites = z()
     cv_launder, cv_launder_sites = z(), z()
     extern_vtable, extern_vtable_classes = z(), set()
+    pragma_files, pragma_sites, pragma_resets = z(), z(), z()
+    pragma_by_name, pragma_reset_by_name = {}, {}
     for p in srcs:
         try:
             t = _source_text(p)
@@ -556,6 +584,16 @@ def audit():
         # construction to every other check in this tree, which is why it is counted
         # here. Masked like the launder metric above: a comment naming `_ZTV` is prose,
         # and rewriting prose must not move a defect count.
+        prag = find_pragmas(t)
+        if prag:
+            over = [n for n, v in prag if v != "reset"]
+            for n, v in prag:
+                d = pragma_reset_by_name if v == "reset" else pragma_by_name
+                d[n] = d.get(n, 0) + 1
+            pragma_resets[k] += len(prag) - len(over)
+            if over:
+                pragma_files[k] += 1
+                pragma_sites[k] += len(over)
         found = _extern_vtable_classes(t)
         if found:
             extern_vtable[k] += 1
@@ -587,7 +625,14 @@ def audit():
                           # file count is the size of the debt. Both ratchet, because
                           # they can move independently -- a new file faking an
                           # already-faked class raises only the first.
-                          "extern_vtable_classes": len(extern_vtable_classes)}
+                          "extern_vtable_classes": len(extern_vtable_classes),
+                          # Optimizer-pragma overrides (see OPT_PRAGMA): settings that
+                          # are not `reset`, files carrying one, and the closers apart.
+                          "pragma_files": tot(pragma_files),
+                          "pragma_overrides": tot(pragma_sites),
+                          "pragma_resets": tot(pragma_resets),
+                          "pragma_by_name": dict(sorted(pragma_by_name.items())),
+                          "pragma_resets_by_name": dict(sorted(pragma_reset_by_name.items()))}
     return r
 
 
@@ -626,10 +671,13 @@ RATCHET = [
     ("codegen_hacks", "cv_launder_sites"),
     ("codegen_hacks", "extern_vtable"),
     ("codegen_hacks", "extern_vtable_classes"),
+    # Inert until a baseline carrying the keys is banked (--check skips absent keys).
+    ("codegen_hacks", "pragma_files"),
+    ("codegen_hacks", "pragma_overrides"),
 ]
 
 
-def summary(r):
+def summary(r, by_pragma=False):
     lm, sd, ch = r["language_mode"], r["shadow_decls"], r["codegen_hacks"]
     t = r["totals"]
     tot = lm["mangled_total"]
@@ -679,6 +727,11 @@ def summary(r):
                f"   ({ch['launder_sites']} site(s) in code)")
     out.append(f"    cv-qualifier launder     {ch['cv_launder']:6d}"
                f"   ({ch['cv_launder_sites']} site(s) in code)")
+    out.append(f"    #pragma opt override     {ch['pragma_files']:6d}"
+               f"   ({ch['pragma_overrides']} setting(s); {ch['pragma_resets']} reset(s) not counted)")
+    if by_pragma:
+        for n, c in ch["pragma_by_name"].items():
+            out.append(f"        {n:<28s}{c:6d}   (+{ch['pragma_resets_by_name'].get(n, 0)} reset)")
     return "\n".join(out)
 
 
@@ -690,6 +743,8 @@ def main():
                     help="compare against a banked report; exit 1 if any count rose")
     ap.add_argument("--full", action="store_true",
                     help="with --json: include per-class detail and file lists")
+    ap.add_argument("--by-pragma", action="store_true",
+                    help="per-pragma breakdown under the optimizer-pragma line")
     ap.add_argument("--by-class", action="store_true",
                     help="per-class backlog, worst first")
     ap.add_argument("--list", metavar="WHICH",
@@ -752,7 +807,7 @@ def main():
         print("langmode ratchet PASS")
         return 0
 
-    print(summary(r))
+    print(summary(r, args.by_pragma))
 
     if args.by_class:
         print("\nper-class backlog (worst first)")

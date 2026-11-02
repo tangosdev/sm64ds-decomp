@@ -35,7 +35,6 @@ void terminate();
 
 extern "C" {
 
-#pragma opt_loop_invariants off
 typedef void (*F2)(int, int);
 typedef void (*F1)(int);
 

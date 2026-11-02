@@ -6,7 +6,7 @@
  * (FL_COIN, 0xd8). daObjFl_Puzzle_c is a piece (FL_PUZZLE, 0x33c).
  * Typeinfo: _ZTI14daObjFl_Coin_c at 0x0211bf98, _ZTI16daObjFl_Puzzle_c at
  * 0x0211bfa4. The run ends with the piece's touch helper
- * func_ov064_0211929c, its collision callback func_ov064_021192bc and the
+ * MarkTouchedByPlayer, its collision callback func_ov064_021192bc and the
  * two registry factories; both g_profile rows live outside this file.
  *
  * Source order is the reverse of the ROM. mwccarm 2004/b56 emits one .text
@@ -24,7 +24,7 @@
  * tick along -X, +X, -Z or +Z for 4 ticks. A script ends in -1; a piece
  * taking the last entry (the byte after it is -1) rewinds the script and ORs
  * FLCOIN_FLAG_SCRIPT_WRAPPED into the manager's flags. A piece the player has
- * touched (mHadClsn, set by the collision callback func_ov064_0211929c on
+ * touched (mHadClsn, set by the collision callback MarkTouchedByPlayer on
  * actor 0xbf, PLAYER) keeps writing FLCOIN_FLAG_PLAYER_TOUCHED over them. The
  * manager moves to phase 1 on a frame where the flags are exactly both bits and
  * the player is within 1000 units, and then each WAIT-state piece spawns one
@@ -109,7 +109,6 @@ extern "C" {
 void func_020393c4(int *p, int v);
 /* The collision callback piece InitResources installs, and the touch helper
  * it forwards to; both are defined just below. */
-void func_ov064_0211929c(daObjFl_Puzzle_c *self, dActor_c *other);
 void func_ov064_021192bc(void *collider, daObjFl_Puzzle_c *self, dActor_c *other);
 }
 
@@ -148,16 +147,16 @@ extern "C" daObjFl_Coin_c *daObjFl_Coin_c_classInit(void) {
 #pragma long_calls on
 // @symbol func_ov064_021192bc
 extern "C" void func_ov064_021192bc(void *collider, daObjFl_Puzzle_c *self, dActor_c *other) {
-    func_ov064_0211929c(self, other);
+    self->MarkTouchedByPlayer(other);
 }
 #pragma pop
 
-// @symbol func_ov064_0211929c
+// @symbol _ZN16daObjFl_Puzzle_c19MarkTouchedByPlayerEP8dActor_c
 /* The player (actor 0xbf) touched the piece: raise mHadClsn. */
-extern "C" void func_ov064_0211929c(daObjFl_Puzzle_c *self, dActor_c *other) {
+void daObjFl_Puzzle_c::MarkTouchedByPlayer(dActor_c *other) {
     u8 isPlayer = other->actorID == 0xbf;
     if (isPlayer)
-        self->mHadClsn = 1;
+        mHadClsn = 1;
 }
 
 // @symbol _ZN14daObjFl_Coin_c13InitResourcesEv

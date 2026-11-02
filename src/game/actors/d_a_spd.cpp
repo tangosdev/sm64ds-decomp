@@ -338,12 +338,12 @@ int daSpd_c::func_ov071_02120028() {
         Vec3 v;
         int x, y, z;
         x = *(volatile int *)&mPosX;
-        *(volatile int *)&v.x = x;
+        v.x = x;
         y = *(volatile int *)&mPosY;
-        *(volatile int *)&v.y = y;
+        v.y = y;
         z = *(volatile int *)&mPosZ;
         y += 0x28000;
-        *(volatile int *)&v.z = z;
+        v.z = z;
         *(volatile int *)&v.y = y;
         Particle::System::NewSimple(0xb2, x, y, z);
         mVertSpeed = mVertSpeed * -0x28 / 100;

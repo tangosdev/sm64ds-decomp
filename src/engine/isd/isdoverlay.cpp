@@ -48,12 +48,12 @@
 #pragma opt_loop_invariants off
 #pragma optimize_for_size on
 
-/* LM and LM2 pass an address through a 64-bit integer. They are matching
- * levers carried over from the shards. The original source almost
+/* LM is a plain pointer cast; LM2 passes an address through a 64-bit
+ * integer. LM2 is a matching lever carried over from the shards. The original source almost
  * certainly wrote these updates as plain `+=` and `&=`. EB(t, n) is entry
  * n of table t, reached as entry 0 of a table based n entries further on,
  * which is the form the ROM's address arithmetic takes. */
-#define LM(x) ((int*)(long long)(int)(x))
+#define LM(x) ((int*)(x))
 #define EB(t, n) ((struct OverlayTable *)((char *)(t) + ((n) << 4)))
 #define LM2(x) ((int*)(long long)(unsigned)(x))
 

@@ -1397,11 +1397,6 @@
         "param:#1 int"
       ]
     },
-    "NoOpDestructor": {
-      "src/unnamed/arm9/0207/__sinit_02075054.c": [
-        "kind:data"
-      ]
-    },
     "NormalizeVec3": {
       "src/engine/collision/d_bg_w_kc_mbg_scl_y.cpp": [
         "param:#1 Vector3 *",
@@ -1469,11 +1464,6 @@
       ],
       "src/minigames/d_mg_jump3d_mario.cpp": [
         "param:#1 Jump3DVec *"
-      ]
-    },
-    "NullDestructor_0203d47c": {
-      "src/unnamed/arm9/0207/__sinit_020750ec.c": [
-        "kind:data"
       ]
     },
     "NumStars": {
@@ -7146,11 +7136,6 @@
         "return:unsigned int"
       ]
     },
-    "_ZN8Vector3sD1Ev": {
-      "src/unnamed/arm9/0207/__sinit_0207511c.c": [
-        "kind:data"
-      ]
-    },
     "_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE": {
       "src/game/actors/d_a_bg_snm_bdy.cpp": [
         "arity:3"
@@ -8062,6 +8047,21 @@
         "return:int"
       ]
     },
+    "data_ov075_0211c800": {
+      "src/game/stages/d_s_entry.cpp": [
+        "return:dScEntry_c::Step"
+      ]
+    },
+    "data_ov075_0211d72c": {
+      "src/game/stages/d_s_entry_methods.cpp": [
+        "return:short []"
+      ]
+    },
+    "data_ov075_0211d740": {
+      "src/game/stages/d_s_entry_methods.cpp": [
+        "return:short []"
+      ]
+    },
     "func_020383e4": {
       "include/dBgCh_Actr.h": [
         "param:#1 struct dBgCh_Actr *"
@@ -8466,17 +8466,17 @@
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "return:int"
       ],
+      "src/unnamed/arm9/0201/func_0201a054.cpp": [
+        "return:char []"
+      ],
       "src/unnamed/arm9/0201/func_020199a4.c": [
         "return:char []"
       ],
-      "src/unnamed/arm9/0201/func_0201fec8.c": [
+      "src/unnamed/arm9/0201/func_0201fec8.cpp": [
         "return:char []"
       ],
       "src/unnamed/arm9/0201/func_0201ffcc.c": [
         "return:char []"
-      ],
-      "src/unnamed/arm9/0207/__sinit_02074e0c.c": [
-        "return:int []"
       ]
     },
     "data_0209d65c": {
@@ -8540,26 +8540,113 @@
       "src/game/actors/d_a_bakubaku.cpp": [
         "return:int []"
       ],
+      "src/game/actors/d_a_basabasa.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_bombking.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_book.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_btfly.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_choropu.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_cnn.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_demo.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_donketu.cpp": [
+        "return:int"
       ],
       "src/game/actors/d_a_dsn_base.cpp": [
         "return:int []"
       ],
+      "src/game/actors/d_a_f_pkn_ball.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_fish.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_grock.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_hanachan.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_holhei.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_hyuhyu.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_iwante.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_jango.cpp": [
+        "return:int"
       ],
       "src/game/actors/d_a_king_donketu.cpp": [
         "return:unsigned short"
       ],
+      "src/game/actors/d_a_kpa.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_kpa_fire.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_krb.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_kuri_king.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_menbo.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_nknk.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_ct_kaitendai.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_ct_mecha03.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_ct_mecha04.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_ct_mecha05.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_ct_mecha08.cpp": [
+        "return:int"
       ],
       "src/game/actors/d_a_obj_ct_mecha09.cpp": [
         "return:int []"
       ],
+      "src/game/actors/d_a_obj_ct_mecha10.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_obj_ct_mecha11.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_obj_ct_rotate_block.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_fl_maruta.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_hatena_block.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_obj_volcano_cannon.cpp": [
+        "return:int"
       ],
       "src/game/actors/d_a_owl.cpp": [
         "return:int []"
@@ -8573,11 +8660,65 @@
       "src/game/actors/d_a_pukupuku.cpp": [
         "return:int []"
       ],
+      "src/game/actors/d_a_s_bird.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_sanbo.cpp": [
         "return:int []"
       ],
+      "src/game/actors/d_a_snm_bth.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_snowman.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_star.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_tgz.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_trs.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_yegg.cpp": [
+        "return:int"
+      ],
       "src/game/actors/d_a_yurei_mucho.cpp": [
         "return:int []"
+      ],
+      "src/game/stages/d_ent_obj.cpp": [
+        "return:int"
+      ],
+      "src/game/stages/d_s_stage_methods.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_mg_jump3d_mario.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_mg_trmpln2_mario.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_bsc.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_card.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_cup.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_hanachan_methods.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_jump_methods.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_m_carlo.cpp": [
+        "return:int"
       ],
       "src/minigames/d_s_mg_m_carlo2.cpp": [
         "return:int []"
@@ -8585,8 +8726,29 @@
       "src/minigames/d_s_mg_roulette_methods.cpp": [
         "return:int []"
       ],
+      "src/minigames/d_s_mg_slots.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_trampoline.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mg_trampoline2.cpp": [
+        "return:int"
+      ],
+      "src/minigames/d_s_mini_gm.cpp": [
+        "return:int"
+      ],
+      "src/minigames/unit020b2c84.cpp": [
+        "return:int"
+      ],
+      "src/minigames/unit020bfec0.cpp": [
+        "return:int"
+      ],
       "src/runtime/actor/d_actor.cpp": [
         "return:int []"
+      ],
+      "src/runtime/actor/d_enemy_base.cpp": [
+        "return:int"
       ]
     },
     "data_0209e674": {
@@ -9161,11 +9323,6 @@
         "return:unsigned int"
       ]
     },
-    "data_020a0dbc": {
-      "src/unnamed/arm9/0207/__sinit_02075054.c": [
-        "return:short []"
-      ]
-    },
     "data_020a0df8": {
       "src/unnamed/arm9/0203/func_0203bbc0.c": [
         "return:void *"
@@ -9254,6 +9411,9 @@
       "src/game/actors/d_a_yurei_mucho.cpp": [
         "return:int []"
       ],
+      "src/ov002_handles.cpp": [
+        "return:char"
+      ],
       "src/minigames/d_s_mg_jump2.cpp": [
         "return:int"
       ],
@@ -9308,8 +9468,8 @@
       "src/game/actors/d_a_obj_hatena_block.cpp": [
         "return:char []"
       ],
-      "src/unnamed/arm9/0207/__sinit_0207511c.c": [
-        "return:short []"
+      "src/minigames/unit020bfec0.cpp": [
+        "return:Vector3_16"
       ]
     },
     "data_020a0f04": {
@@ -11223,11 +11383,6 @@
     "sMemory2CardSprites": {
       "src/unnamed/ov006/__sinit_ov006_021314e4.c": [
         "return:int []"
-      ]
-    },
-    "sRouletteTiles": {
-      "src/unnamed/ov006/__sinit_ov006_021322bc.c": [
-        "return:TileXY"
       ]
     },
     "sSoundPop10Table": {
@@ -13277,15 +13432,7 @@
         "return:void *"
       ]
     },
-    "data_ov075_0211d650": {
-      "src/unnamed/ov075/__sinit_ov075_0211bb00.c": [
-        "return:void * []"
-      ]
-    },
     "data_ov075_0211d71c": {
-      "src/unnamed/ov075/__sinit_ov075_0211bb00.c": [
-        "return:char []"
-      ],
       "src/_ZN10dScEntry_c17EnterCourseSelectEv.cpp": [
         "return:int"
       ],
@@ -16258,7 +16405,7 @@
         "param:#2 unsigned char",
         "return:unsigned char"
       ],
-      "src/unnamed/arm9/0201/func_0201fec8.c": [
+      "src/unnamed/arm9/0201/func_0201fec8.cpp": [
         "param:#1 char *",
         "param:#2 int",
         "return:void"
@@ -16281,7 +16428,7 @@
       "src/unnamed/arm9/0201/func_020199a4.c": [
         "return:void"
       ],
-      "src/unnamed/arm9/0201/func_0201fec8.c": [
+      "src/unnamed/arm9/0201/func_0201fec8.cpp": [
         "return:int"
       ],
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
@@ -16292,16 +16439,6 @@
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "param:#1 int *",
         "return:int"
-      ]
-    },
-    "func_0201aa18": {
-      "src/unnamed/arm9/0207/__sinit_02074e0c.c": [
-        "return:void"
-      ]
-    },
-    "func_0201aaec": {
-      "src/unnamed/arm9/0207/__sinit_02074e0c.c": [
-        "kind:data"
       ]
     },
     "func_0201cebc": {
@@ -16346,7 +16483,7 @@
       ]
     },
     "func_0202044c": {
-      "src/unnamed/arm9/0202/func_0202043c.c": [
+      "src/unnamed/arm9/0202/func_0202043c.cpp": [
         "param:#1 int"
       ]
     },
@@ -16438,19 +16575,6 @@
       "src/unnamed/ov002/func_ov002_020eea84.c": [
         "param:#1 char *",
         "return:char *"
-      ]
-    },
-    "func_0203567c": {
-      "include/dBgCh_Actr.h": [
-        "param:#1 struct dBgCh_Actr *"
-      ],
-      "src/unnamed/ov002/func_ov002_020eeca8.cpp": [
-        "param:#1 void *",
-        "return:void *"
-      ],
-      "src/unnamed/ov002/func_ov002_020eed24.cpp": [
-        "param:#1 void *",
-        "return:void *"
       ]
     },
     "func_02037f44": {
@@ -18580,17 +18704,6 @@
         "return:int"
       ]
     },
-    "func_ov002_020da9d4": {
-      "src/_ZN7daPly_c13St_Throw_MainEv.cpp": [
-        "return:void"
-      ],
-      "src/_ZN7daPly_c15St_Grabbed_InitEv.cpp": [
-        "return:void"
-      ],
-      "src/unnamed/ov002/func_ov002_020d91e0.c": [
-        "return:void"
-      ]
-    },
     "func_ov002_020daa74": {
       "src/_ZN7daPly_c13St_Throw_MainEv.cpp": [
         "return:void"
@@ -18696,11 +18809,6 @@
       ],
       "src/_ZN7daPly_c17St_SlopeJump_InitEv.cpp": [
         "return:int"
-      ]
-    },
-    "func_ov002_020e2ea0": {
-      "src/unnamed/ov002/func_ov002_020e2c84.c": [
-        "param:#1 char *"
       ]
     },
     "func_ov002_020e3078": {
@@ -19644,13 +19752,6 @@
     "func_ov060_021183f4": {
       "src/game/actors/d_a_kpa3_bg.cpp": [
         "arity:0"
-      ]
-    },
-    "func_ov064_0211929c": {
-      "src/unnamed/ov064/func_ov064_021192bc.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "return:int"
       ]
     },
     "func_ov065_02119210": {

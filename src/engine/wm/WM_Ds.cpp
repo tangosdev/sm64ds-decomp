@@ -114,7 +114,6 @@ u16 *WmGetSharedDataAddress(WMDataSharingInfo *dsInfo, unsigned aidBitmap, u16 *
  * sends the first set (two in double mode); a child registers its own
  * receive callback and waits. */
 #pragma opt_common_subs off
-#pragma opt_strength_reduction off
 // @symbol WM_StartDataSharing
 int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int dataLength,
                         int doubleMode) {
@@ -219,7 +218,6 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
 
     return 0;
 }
-#pragma opt_strength_reduction on
 
 /* NitroSDK WM_StepDataSharing(dsInfo, sendData, receiveData): one frame of
  * data sharing. The parent (aid 0) resends a set the last send refused,
@@ -467,7 +465,6 @@ void WmDataSharingReceiveCallback_Child(WMPortRecvCallback *callback) {
  * (ds[writeIndex], or in double mode the next one), at that member's slot,
  * or zero the slot when there is no data. The bit then moves from the set's
  * aidHeader to its receivedBitmap. */
-#pragma opt_common_subs off
 // @symbol WmDataSharingReceiveData
 void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *data) {
     u16 mask = (u16)(1 << aid);
@@ -556,7 +553,6 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
         IRQ::Restore(saved);
     }
 }
-#pragma opt_common_subs on
 
 /* NitroSDK WM_GetSharedDataAddress: where member aid's data sits in a
  * received data set, or 0 for a null dsInfo or receiveData or when the set

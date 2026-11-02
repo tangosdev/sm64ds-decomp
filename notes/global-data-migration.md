@@ -300,7 +300,7 @@ the sole reference is:
  231  sole reference is an ordinary function file  (124 files)
 ```
 
-A [__sinit_ov002_02100560.cpp](../src/unnamed/ov002/__sinit_ov002_02100560.cpp) names dozens of bss symbols because it *constructs* them
+A [__sinit_ov002_02100560.cpp](../src/ov002_handles.cpp) names dozens of bss symbols because it *constructs* them
 — it is the compiler-synthesised static-initialiser TU, not the TU that **defined**
 them. "Referenced by exactly one file" is a proxy for ownership and for 91% of the set
 it is the *wrong* proxy. Those 2,421 must be excluded.

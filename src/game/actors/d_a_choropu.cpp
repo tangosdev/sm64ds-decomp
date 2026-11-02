@@ -86,7 +86,7 @@ extern ChoropuAnimationFilePtr data_ov080_021283d8;
 extern ChoropuAnimationFilePtr data_ov080_021283e0;
 extern ChoropuStateRow data_ov080_02128438[6];
 
-#define LAUND(p) ((void*)((((long long)(int)(p)))))
+#define LAUND(p) ((void*)(p))
 
 extern "C" {
 namespace Particle {
@@ -196,7 +196,7 @@ void daChoropu_c::func_ov080_02123924()
         Vector3 v;
         Fix12i *q;
         if (p == 0) return;
-        q = (Fix12i *)(((int)&p->mPosX));
+        q = (Fix12i *)((int)&p->mPosX);
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];
@@ -240,8 +240,8 @@ void daChoropu_c::func_ov080_02123a34()
 
         ax = *(unsigned short *)&mAngleX;
         ay = *(unsigned short *)&mAngleY;
-        *(volatile short *)&v16.y = (short)ay;
-        *(volatile short *)&v16.x = (short)ax;
+        v16.y = (short)ay;
+        v16.x = (short)ax;
         {
             unsigned short z = *(unsigned short *)&mAngleZ;
             pAng->z = z;
@@ -316,8 +316,8 @@ void daChoropu_c::func_ov080_02123c24()
     state = ((unsigned int)raw << 4) >> 16;   /* whole frame number */
 
     if (state == 6) {
-        u32 *p150 = (u32 *)(((int)&mdCcAc_c.flags));
-        u32 *pb0 = (u32 *)(((int)&mFlags));
+        u32 *p150 = (u32 *)((int)&mdCcAc_c.flags);
+        u32 *pb0 = (u32 *)((int)&mFlags);
         *p150 = *p150 & ~daChoropu_CC_DISABLED;
         *pb0 = *pb0 | daChoropu_FLAG_EMERGED;
     }
@@ -368,7 +368,7 @@ void daChoropu_c::func_ov080_02123c24()
             Vector3 pos;
             short horz;
             int diff;
-            int *pb = (int *)(((int)&player->mPosX));
+            int *pb = (int *)((int)&player->mPosX);
             pos.x = pb[0];
             pos.y = pb[1];
             pos.z = pb[2];
@@ -433,8 +433,8 @@ void daChoropu_c::func_ov080_02123ecc()
 void daChoropu_c::func_ov080_02123fcc()
 {
     {
-        u32 *p150 = (u32 *)(((int)&mdCcAc_c.flags));
-        u32 *pb0 = (u32 *)(((int)&mFlags));
+        u32 *p150 = (u32 *)((int)&mdCcAc_c.flags);
+        u32 *pb0 = (u32 *)((int)&mFlags);
         *p150 = *p150 | daChoropu_CC_DISABLED;
         *pb0 = *pb0 & ~daChoropu_FLAG_EMERGED;
     }

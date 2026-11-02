@@ -1,0 +1,212 @@
+{
+  "id": "arm9/func_02040384",
+  "module": "arm9",
+  "source": "src/unnamed/arm9/0204/func_02040384.cpp",
+  "promoted_source": "src/unnamed/arm9/0204/func_02040384.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "Empty WM callback at 0x02040384, between cstd_sqrt and fListNode. Its .init is the bare bx lr at 0x02075150, the slot after __sinit_0207511c and before fListNode."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02040384",
+      "end": "0x02040388"
+    },
+    {
+      "name": ".init",
+      "start": "0x02075150",
+      "end": "0x02075154"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02086bb4",
+      "end": "0x02086bb8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_02040384",
+      "address": "0x02040384",
+      "size": "0x4",
+      "legacy_source": "src/unnamed/arm9/0204/func_02040384.cpp",
+      "ordinal": 0
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "init": [
+    {
+      "symbol": "__sinit_func_02040384.cpp",
+      "address": "0x02075150",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated initializer, raw-byte-identical to retail __sinit_02075150 (bx lr, no relocations)"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_func_02040384.cpp",
+      "address": "0x02086bb4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "constructor-table word relocates to __sinit_func_02040384.cpp, as retail .p__sinit_02075150 does"
+    }
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "sEmptyInit",
+      "disposition": "deadstrip",
+      "reason": "One-byte file-local object whose empty constructor is what makes mwcc emit the bx lr initializer. The initializer does not reference the object, the cartridge has no symbol for it, and leaving the byte in .bss would shift every later symbol. The word at data_020a0df4 stays a gap: this file is linked after cstd_sqrt.cpp, whose .bss is at a higher address."
+    }
+  ],
+  "undefined_symbol_aliases": [],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_func_02040384.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; the configured relocation destination is global"
+    },
+    {
+      "symbol": ".p__sinit_func_02040384.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table word local; symbols.txt cannot record a local"
+    }
+  ],
+  "defined_symbol_renames": [],
+  "relocations": [
+    {
+      "section": ".ctor",
+      "source": "0x02086bb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_func_02040384.cpp",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02075150"
+    }
+  ],
+  "notes": [
+    "Folded __sinit_02075150. The EmptyInit object is static and deadstripped, so data_020a0df4 stays a gap. An empty inline constructor, no destructor, no registration node."
+  ],
+  "production_mode": "intact-object",
+  "verification": {
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-func_02040384/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02040384",
+        "end": "0x02040388",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02040384",
+          "end": "0x02040388",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02075150",
+          "end": "0x02075154",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02086bb4",
+          "end": "0x02086bb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 3
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              9
+            ],
+            "desired": [
+              9
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              7
+            ],
+            "desired": [
+              7
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    },
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-func_02040384/func_02040384.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 1,
+    "functions_declared": 1,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5
+      ],
+      "data": [
+        "sEmptyInit"
+      ],
+      "dataExternalized": [
+        "sEmptyInit"
+      ],
+      "canonicalDuplicates": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}
