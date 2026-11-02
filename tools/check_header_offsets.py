@@ -68,7 +68,10 @@ def learn_aggregates(*paths):
                 ptr = "*" in decls
                 w = 4 if ptr else SZ.get(typ)
                 a = 4 if ptr else ALIGN.get(typ)
-                if w is None:
+                # A type sized by a class assertion has a width but no learned
+                # alignment; refuse it rather than guess one.
+                # A bit-field (`u16 flag : 1;`) packs; this sum would not.
+                if w is None or a is None or ":" in decls:
                     off = None
                     break
                 for d in decls.split(","):
@@ -340,6 +343,49 @@ for _h in pathlib.Path(__file__).resolve().parents[1].joinpath("include").rglob(
             _last = int(_off, 16) + _w * _n
         if _last is not None and _cls not in DATA_SIZE:
             DATA_SIZE[_cls] = _last
+
+# Which include/ classes are POLYMORPHIC, i.e. carry a vptr somewhere.
+#
+# A derived class that declares the hierarchy's FIRST virtual over a base with no
+# vptr does not put its own fields at the base's data size: mwccarm places the new
+# vptr at 0x00 and the base sub-object after it, at 0x04. dBgPi : dBgPc is that
+# shape -- its header says so, and the C1/C2/D1 ROM bodies read triangleID at
+# 0x18 = 4 + sizeof(dBgPc). Starting at the base's data size reported every field
+# 4 bytes early.
+#
+# A class is polymorphic when its own body declares a virtual (or spells a literal
+# `vtable` field) or its base is polymorphic. Only bases whose definition is found
+# here are trusted to be NON-polymorphic; an unknown base is treated as
+# polymorphic, which keeps the old start offset rather than guessing a shift.
+_CLASS_BASE = {}
+_CLASS_VIRTUAL = {}
+for _h in pathlib.Path(__file__).resolve().parents[1].joinpath("include").rglob("*.h"):
+    _txt = _h.read_text(errors="replace")
+    for _cm in re.finditer(r"^struct (\w+)\s*(?::\s*(?:public\s+)?(\w+)\s*)?\{", _txt, re.M):
+        _cls = _cm.group(1)
+        if _cls in _CLASS_BASE:
+            continue
+        _body = _txt[_cm.end():]
+        _end = _body.find("\n};")
+        if _end != -1:
+            _body = _body[:_end]
+        _CLASS_BASE[_cls] = _cm.group(2)
+        _CLASS_VIRTUAL[_cls] = bool(
+            re.search(r"^\s*virtual\s", _body, re.M)
+            or re.search(r"^\s*[A-Za-z_][^;\n]*[ *]vtable\s*;", _body, re.M))
+
+
+def _is_polymorphic(cls, _seen=None):
+    """True unless `cls` and every base above it are known and declare no virtual."""
+    _seen = _seen or set()
+    if cls in _seen or cls not in _CLASS_BASE:
+        return True
+    _seen.add(cls)
+    if _CLASS_VIRTUAL[cls]:
+        return True
+    base = _CLASS_BASE[cls]
+    return base is not None and _is_polymorphic(base, _seen)
+
 
 KNOWN = REPO / "config" / "header-offset-known-issues.txt"
 
@@ -657,7 +703,11 @@ def main(argv, repo=None):
         return code
     rc = 0
     WAIVED = _known_issues()
+    base_sz, base_align = dict(SZ), dict(ALIGN)
     for path in paths:
+        # Forget the previous header's local aggregates (learn_aggregates below).
+        SZ.clear(); SZ.update(base_sz)
+        ALIGN.clear(); ALIGN.update(base_align)
         if pathlib.PurePath(path).as_posix() in WAIVED:
             print(f"{path}: WAIVED -- config/header-offset-known-issues.txt")
             continue
@@ -681,6 +731,11 @@ def main(argv, repo=None):
         expected = fp.stem
         all_lines = txt.splitlines()
         nested_names = _nested_names(all_lines)
+        # Brace-free aggregates declared in THIS header (dClipper.h's
+        # `struct ClipperPlane { Fix12i x, y, z; };`) size the fields that use
+        # them. Learned for this file only and forgotten after it: two headers
+        # may each declare a local helper of the same name and a different size.
+        learn_aggregates(fp)
         consts = header_constants(txt)
         for lineno, line in enumerate(all_lines, 1):
             if not started:
@@ -746,6 +801,11 @@ def main(argv, repo=None):
                         # aligned below, so a base whose padding is unused still puts
                         # the first own field exactly where sizeof would have.
                         off = DATA_SIZE.get(base, SZ[base])
+                        if (not _is_polymorphic(base)
+                                and _root_offset(all_lines, lineno) == 4):
+                            # This class declares the hierarchy's first virtual:
+                            # its vptr takes 0x00 and the base moves to 0x04.
+                            off += 4
                         derived_from = base
                 continue
             if in_comment:
