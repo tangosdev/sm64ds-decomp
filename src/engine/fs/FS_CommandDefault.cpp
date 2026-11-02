@@ -16,6 +16,9 @@
  * first). Its thread queues are 16-bit masks of thread ids.
  */
 #include "types.h"
+#include "private/fs_views.h"
+
+typedef struct FSFile FSFile;
 
 extern "C" {
 
@@ -33,49 +36,6 @@ extern "C" {
 
 #define FS_INVALID_ID 0x10000
 
-typedef struct FSArchive FSArchive;
-typedef struct FSFile FSFile;
-
-typedef int (*FS_ARCHIVE_READ_FUNC)(FSArchive *p_arc, void *dst, u32 pos, u32 size);
-typedef int (*FS_ARCHIVE_WRITE_FUNC)(FSArchive *p_arc, const void *src, u32 pos, u32 size);
-
-typedef struct FSFileLink {
-    FSFile *prev; /* 0x00 */
-    FSFile *next; /* 0x04 */
-} FSFileLink;
-
-/* NitroSDK FSArchive, this SDK's layout, as far as this file reads it. */
-struct FSArchive {
-    union {
-        char ptr[4];
-        u32 pack;
-    } name;                           /* 0x00 -- up to three characters, zero padded */
-    FSArchive *next;                  /* 0x04 */
-    FSArchive *prev;                  /* 0x08 */
-    u16 sync_q;                       /* 0x0c -- OSThreadQueue: a synchronous caller waits here */
-    u16 stat_q;                       /* 0x0e */
-    u32 flag;                         /* 0x10 */
-    FSFileLink list;                  /* 0x14 */
-    u32 base;                         /* 0x1c */
-    u32 fat;                          /* 0x20 */
-    u32 fat_size;                     /* 0x24 */
-    u32 fnt;                          /* 0x28 */
-    u32 fnt_size;                     /* 0x2c */
-    u32 fat_bak;                      /* 0x30 */
-    u32 fnt_bak;                      /* 0x34 */
-    void *load_mem;                   /* 0x38 */
-    FS_ARCHIVE_READ_FUNC read_func;   /* 0x3c */
-    FS_ARCHIVE_WRITE_FUNC write_func; /* 0x40 */
-    FS_ARCHIVE_READ_FUNC table_func;  /* 0x44 */
-};
-
-typedef struct FSDirPos {
-    FSArchive *arc; /* 0x00 */
-    u16 own_id;     /* 0x04 */
-    u16 index;      /* 0x06 */
-    u32 pos;        /* 0x08 */
-} FSDirPos;
-
 /* FSDirPos as its three words. The SDK's file is C, where an FSDirPos
  * assignment is a block move (ldm/stm); in C++ the same assignment copies
  * member by member, so the copies go through this view. */
@@ -86,11 +46,6 @@ typedef struct FSDirPosWords {
 static inline void FSi_CopyDirPos(FSDirPos *dst, const FSDirPos *src) {
     *(FSDirPosWords *)dst = *(const FSDirPosWords *)src;
 }
-
-typedef struct FSFileID {
-    FSArchive *arc; /* 0x00 */
-    u32 file_id;    /* 0x04 */
-} FSFileID;
 
 /* FSFileID as its two words, for the same reason. */
 typedef struct FSFileIDWords {
@@ -111,88 +66,7 @@ typedef struct FSDirEntry {
     u8 name[128];     /* 0x14 -- FS_FILE_NAME_MAX */
 } FSDirEntry;
 
-typedef struct FSSeekDirInfo {
-    FSDirPos pos;
-} FSSeekDirInfo;
-
-typedef struct FSReadDirInfo {
-    FSDirEntry *p_entry;
-    int skip_string;
-} FSReadDirInfo;
-
-typedef struct FSFindPathInfo {
-    FSDirPos pos;       /* 0x00 -- where the search starts */
-    const u8 *path;     /* 0x0c */
-    int find_directory; /* 0x10 */
-    union {
-        FSFileID *file;
-        FSDirPos *dir;
-    } result; /* 0x14 */
-} FSFindPathInfo;
-
-typedef struct FSGetPathInfo {
-    u8 *buf;       /* 0x00 */
-    u32 buf_len;   /* 0x04 */
-    u16 total_len; /* 0x08 -- 0 until measured */
-    u16 dir_id;    /* 0x0a */
-} FSGetPathInfo;
-
-typedef struct FSOpenFileFastInfo {
-    FSFileID id;
-} FSOpenFileFastInfo;
-
-typedef struct FSOpenFileDirectInfo {
-    u32 top;    /* 0x00 */
-    u32 bottom; /* 0x04 */
-    u32 index;  /* 0x08 */
-} FSOpenFileDirectInfo;
-
-typedef struct FSReadFileInfo {
-    void *dst;   /* 0x00 */
-    u32 len_org; /* 0x04 -- the length asked for */
-    u32 len;     /* 0x08 -- the length after clamping */
-} FSReadFileInfo;
-
-typedef struct FSWriteFileInfo {
-    const void *src; /* 0x00 */
-    u32 len_org;     /* 0x04 */
-    u32 len;         /* 0x08 */
-} FSWriteFileInfo;
-
-/* NitroSDK FSFile, this SDK's layout (0x44 bytes). */
-struct FSFile {
-    FSFileLink link; /* 0x00 */
-    FSArchive *arc;  /* 0x08 */
-    u32 stat;        /* 0x0c */
-    int command;     /* 0x10 */
-    int error;       /* 0x14 */
-    u16 queue[1];    /* 0x18 -- OSThreadQueue */
-    union {
-        struct {
-            u32 own_id; /* 0x1c */
-            u32 top;    /* 0x20 */
-            u32 bottom; /* 0x24 */
-            u32 pos;    /* 0x28 */
-        } file;
-        struct {
-            FSDirPos pos; /* 0x1c */
-            u32 parent;   /* 0x28 -- read from the root: the directory count */
-        } dir;
-    } prop; /* 0x1c */
-    union {
-        FSReadFileInfo readfile;
-        FSWriteFileInfo writefile;
-        FSSeekDirInfo seekdir;
-        FSReadDirInfo readdir;
-        FSFindPathInfo findpath;
-        FSGetPathInfo getpath;
-        FSOpenFileFastInfo openfilefast;
-        FSOpenFileDirectInfo openfiledirect;
-    } arg; /* 0x2c */
-};
-
 typedef char FSDirEntry_size_must_be_0x94[sizeof(FSDirEntry) == 0x94 ? 1 : -1];
-typedef char FSFile_size_must_be_0x44[sizeof(FSFile) == 0x44 ? 1 : -1];
 
 /* An FAT entry: the file's image range. */
 typedef struct FSArchiveFAT {
@@ -402,7 +276,8 @@ static inline int FSi_IsNameChar(int c) {
 // @symbol FSi_FindPathCommand
 int FSi_FindPathCommand(FSFile *p_dir) {
     int find_dir = p_dir->arg.findpath.find_directory;
-    const u8 *path = p_dir->arg.findpath.path;
+    /* Read unsigned, as the SDK's MI_ReadByte reads it: the build uses -char signed. */
+    const u8 *path = (const u8 *)p_dir->arg.findpath.path;
     u8 c;
     /* First the character that ended the component (nonzero: a separator
      * follows, so a directory is wanted), then the 0/1 the entry must match. */
@@ -465,13 +340,13 @@ int FSi_FindPathCommand(FSFile *p_dir) {
 
         if (find_dir != 0)
             return FS_RESULT_FAILURE;
-        FSi_CopyFileID(p_dir->arg.findpath.result.file, &entry.file_id);
+        FSi_CopyFileID((FSFileID *)p_dir->arg.findpath.result, &entry.file_id);
         return FS_RESULT_SUCCESS;
     }
 
     if (find_dir == 0)
         return FS_RESULT_FAILURE;
-    FSi_CopyDirPos(p_dir->arg.findpath.result.dir, &p_dir->prop.dir.pos);
+    FSi_CopyDirPos((FSDirPos *)p_dir->arg.findpath.result, &p_dir->prop.dir.pos);
     return FS_RESULT_SUCCESS;
 }
 

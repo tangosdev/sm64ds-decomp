@@ -17711,6 +17711,12 @@
         "param:#3 void *"
       ]
     },
+    "FS_LoadArchive": {
+      "src/engine/sound/SoundEngine.cpp": [
+        "param:#7 int (*)(FSArchive *, void *, unsigned int, unsigned int)",
+        "param:#8 int (*)(FSArchive *, const void *, unsigned int, unsigned int)"
+      ]
+    },
     "FS_Init": {
       "src/unnamed/arm9/0201/func_02018aa4.c": [
         "return:int"

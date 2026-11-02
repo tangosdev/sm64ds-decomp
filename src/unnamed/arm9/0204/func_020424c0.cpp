@@ -2,6 +2,9 @@
 #include "types.h"
 #include "CP15.h"
 #include "IRQ.h"
+#include "private/fs_views.h"
+
+typedef struct FSFile FSFile;
 
 extern "C" {
 
@@ -31,8 +34,6 @@ typedef struct {
     int size;
 } RomRegion;
 
-struct FSArchive;
-
 extern WorkInfo data_020a1fc0;
 extern char data_02099e6c[]; /* "rom" */
 
@@ -54,7 +55,7 @@ extern int FS_CloseFile(char *self);
 void func_020424c0(void) {
     int sizes[4];
     RomRegion *ptrs[4];
-    int local[18];
+    FSFile file;
     u32 sl;
     u32 irq;
     void *fp;
@@ -85,7 +86,7 @@ void func_020424c0(void) {
 
         sb = FS_FindArchive(data_02099e6c, 3);
         buf = (char *)fp + 4;
-        FS_InitFile(local);
+        FS_InitFile((int *)&file);
         j = 0;
 
         do {
@@ -99,9 +100,9 @@ void func_020424c0(void) {
             buf += 4;
             data0 = p->offset;
             end = roundedSize + data0;
-            FS_OpenFileDirect((char *)local, sb, data0, end, -1);
-            FS_ReadFile((int)local, (int)buf, roundedSize);
-            FS_CloseFile((char *)local);
+            FS_OpenFileDirect((char *)&file, sb, data0, end, -1);
+            FS_ReadFile((int)&file, (int)buf, roundedSize);
+            FS_CloseFile((char *)&file);
             buf += roundedSize;
             j++;
         } while (j < 4);

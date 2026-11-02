@@ -3,22 +3,13 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/arm9_wbt.h"
 #include "CP15.h"
-
-extern "C" {
+#include "private/fs_views.h"
 
 /* The FSFile a child read is for (FileShareWork.mReadRequest, set by
- * func_02041a00). This ROM's FSFile has its prop union at 0x1c and its arg
- * union at 0x2c (see src/engine/fs/FS_CommandDefault.cpp); names follow the
- * SDK's FSFile. */
-typedef struct FSFile {
-    char pad_00[8];
-    void *arc; /* 0x08 -- FS_NotifyArchiveAsyncEnd takes it */
-    char pad_0c[0x1c];
-    u32 pos; /* 0x28 -- prop.file.pos */
-    u32 dst; /* 0x2c -- arg.readfile.dst */
-    char pad_30[4];
-    u32 len; /* 0x34 -- arg.readfile.len */
-} FSFile;
+ * func_02041a00). */
+typedef struct FSFile FSFile;
+
+extern "C" {
 
 extern int func_02065a4c(int x);
 extern void func_02065788(u16 type, u32 arg1, const void *src, u32 arg3);
@@ -114,9 +105,10 @@ void func_02040f30(void *arg) {
                 return;
             }
             child->mReadRegion = m->mFileId;
-            child->mRecvBufTable[idx] = ((FSFile *)FILE_SHARE_WORK->mReadRequest)->dst;
+            child->mRecvBufTable[idx] =
+                (int)((FSFile *)FILE_SHARE_WORK->mReadRequest)->arg.readfile.dst;
             func_02065730((u16)1, child->mReadRegion, (const void *)child->mRecvBufTable,
-                          ((FSFile *)FILE_SHARE_WORK->mReadRequest)->len,
+                          ((FSFile *)FILE_SHARE_WORK->mReadRequest)->arg.readfile.len,
                           (const void *)child->mPacketBitmapTable, (u32)func_02040f30);
             return;
 
@@ -124,7 +116,7 @@ void func_02040f30(void *arg) {
             FSFile *p = (FSFile *)FILE_SHARE_WORK->mReadRequest;
             void *arc = p->arc;
             FILE_SHARE_WORK->mReadRequest = 0;
-            p->pos += p->len;
+            p->prop.file.pos += p->arg.readfile.len;
             FS_NotifyArchiveAsyncEnd(arc, 0);
             return;
         }

@@ -1,6 +1,8 @@
 #include "nitro/fs/overlay.h"
+#include "private/fs_views.h"
 
-struct FSArchive;
+typedef struct FSFile FSFile;
+
 /* NitroSDK CARDRomRegion. */
 struct CARDRomRegion {
     u32 offset;
@@ -8,8 +10,8 @@ struct CARDRomRegion {
 };
 
 extern void FS_InitFile(void *s);
-extern int myFS_OpenFileDirect(char *p_file, struct FSArchive *p_arc, u32 image_top,
-                               u32 image_bottom, u32 file_index);
+extern int myFS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
+                               u32 file_index);
 extern int myFS_ReadFile(void *s, void *b, int c);
 extern int FS_CloseFile(void *self);
 /* The ARM9 and ARM7 overlay tables when they are in memory: {address,
@@ -17,7 +19,7 @@ extern int FS_CloseFile(void *self);
 extern struct CARDRomRegion data_020a8064; /* fsi_ovt9 */
 extern struct CARDRomRegion data_020a806c; /* fsi_ovt7 */
 /* the archive func_02018cbc reads the table out of */
-extern struct FSArchive data_020a8074; /* fsi_arc_rom */
+extern FSArchive data_020a8074; /* fsi_arc_rom */
 extern void CpuCopy8(void *dst, void *src, int n);
 
 /* The card half of func_02018c00: read overlay table entry index (0x20
@@ -25,9 +27,9 @@ extern void CpuCopy8(void *dst, void *src, int n);
    from the cartridge header (ovt9Offset/ovt9Size or ovt7Offset/ovt7Size,
    header +0x50..+0x5c).
    0 past the end. */
-int func_02018cbc(FSOverlayInfo *info, int flag, int index, struct FSArchive *archive,
-                  u32 ovt9Offset, u32 ovt9Size, u32 ovt7Offset, u32 ovt7Size) {
-    char file[0x48];
+int func_02018cbc(FSOverlayInfo *info, int flag, int index, FSArchive *archive, u32 ovt9Offset,
+                  u32 ovt9Size, u32 ovt7Offset, u32 ovt7Size) {
+    FSFile file;
     u32 off;
     u32 base;
     u32 size;
@@ -41,10 +43,10 @@ int func_02018cbc(FSOverlayInfo *info, int flag, int index, struct FSArchive *ar
     off = index << 5;
     if (off >= size)
         return 0;
-    FS_InitFile(file);
-    myFS_OpenFileDirect(file, archive, base + off, base + size, -1);
-    myFS_ReadFile(file, &info->header, 0x20);
-    FS_CloseFile(file);
+    FS_InitFile(&file);
+    myFS_OpenFileDirect((char *)&file, archive, base + off, base + size, -1);
+    myFS_ReadFile(&file, &info->header, 0x20);
+    FS_CloseFile(&file);
     info->target = flag;
     return 1;
 }
