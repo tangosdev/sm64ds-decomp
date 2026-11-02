@@ -6,14 +6,9 @@
  * processor, RAM address, ROM offset and RAM size to func_0206d32c. */
 typedef struct FSFile FSFile;
 
-typedef struct Pair {
-    int a;
-    int b;
-} Pair;
-
 extern void FS_InitFile(void *s);
-extern Pair FS_GetOverlayFileID(const FSOverlayInfo *p_ovi);
-extern int myFS_OpenFileFast(void *a, Pair bc);
+extern FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi);
+extern int myFS_OpenFileFast(void *a, FSFileID bc);
 extern void FS_ClearOverlayImage(FSOverlayInfo *p_ovi);
 extern int myFS_ReadFile(void *a, int b, int c);
 extern int func_0206d32c(int target, unsigned int ramAddress, unsigned int romOffset,
@@ -22,7 +17,7 @@ extern int FS_CloseFile(void *self);
 
 int func_02018b64(FSOverlayInfo *ovi) {
     FSFile file;
-    Pair fileId;
+    FSFileID fileId;
 
     FS_InitFile(&file);
     fileId = FS_GetOverlayFileID(ovi);

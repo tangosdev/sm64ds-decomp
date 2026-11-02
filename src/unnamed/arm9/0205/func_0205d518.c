@@ -2,7 +2,7 @@
  * its own stack FSFileID in r0 and calls func_0205d644 without touching r1, so the
  * path its caller left there is the one that gets looked up. The one-argument call
  * was byte-exact and lost the path on any stack-argument host. */
-typedef struct { int a; int b; } FSFileID;
+#include "private/fs_views.h"
 
 extern int func_0205d644(FSFileID *out, const char *path);
 extern int func_0205d568(void *file, FSFileID id);
