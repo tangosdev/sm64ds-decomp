@@ -57,6 +57,7 @@ extern char data_0209f498[];                     // Stage::CheckInput's Ctrl[4],
 extern unsigned short data_020a0e58[];           // PadData[4]: {held, pressed}, the raw DS pad
 extern int data_020a0e5a[];                      // the split "pressed" symbol (same memory on the DS)
 extern unsigned short *data_0209214c[];          // CheckInput's three DS bit -> Ctrl bit maps
+void *_ZN8dActor_c4NextEPKS_(const void *prev);   // the actor list walk (coop_actors.cpp)
 }
 namespace port {
 int vs_arena_state_index(const void *body);
@@ -90,7 +91,9 @@ enum : unsigned {
     kRingFrames = 16,
     kAttachLife = 150,                          // an attach nobody refreshed or cleared dies after this
     kGrabAckWait = 20,
-    kAttachBeat = 30,                           // the victim repeats its attach this often
+    kAttachBeat = 30,
+    kHeldBeat = 30, kHeldLife = 90,             // TONGUE1: held state repeats each second, dies unrefreshed after three
+    kMouthPullFrames = 6, kParkUnits = 200000,  // a friend's mouthful: at the mouth for the pull, then out of sight                           // the victim repeats its attach this often
 };
 enum : unsigned {
     kFlagCarried = 0x100, kFlagHeldOut = 0x4000, kFlagGrabbable = 0x80, kFlagThrown = 0x400,
@@ -120,6 +123,11 @@ struct G {
     Attach att[kHubPartySeats];
     // I am eaten through the ROM's own mouth state (else the synthetic hold)
     bool rom_mouth = false;
+    // TONGUE1: what each friend holds (kHeldState in), what I last said I hold (out)
+    struct HeldIn { int kind = 0, cls = 0, slot = -1, eggs = 0; unsigned until = 0, since = 0; char *pinned = nullptr; };
+    HeldIn held_in[kHubPartySeats];
+    int ho_kind = 0, ho_cls = 0, ho_slot = -1, ho_eggs = 0; unsigned ho_last = 0;
+    unsigned held_sent = 0, held_recv = 0, held_pins = 0, held_miss = 0;
     unsigned mouth_miss = 0, eats_unstepped = 0;      // TONGUE1: hook passes the ROM mouth state left me off the eater's drawn body
     unsigned beat = 0;
     CarryV cv;      // I am carried
@@ -133,6 +141,7 @@ struct G {
     struct Later { int what = 0; int seat = 0; bool swing = false; int yaw = 0, speed = 0; };
     Later later[6]; int later_n = 0;
     int eat_ahead = 28, eat_up = 30, carry_ahead = 8, carry_up = 85;
+    int held_ahead = 30, held_up = 45;      // TONGUE1: a friend's carried object, units ahead of / above his feet (SM64DS_HELD_AT)
     // lab
     char forge_kind = 0; int forge_units = 0; bool forged = false;
     unsigned probe_frame = 0;
@@ -175,6 +184,7 @@ void read_env() {
     g.feedback = env_flag(std::getenv("SM64DS_PHIT_FEEDBACK"), true);
     if (const char *e = std::getenv("SM64DS_ATTACH_EAT")) std::sscanf(e, "%d,%d", &g.eat_ahead, &g.eat_up);
     if (const char *e = std::getenv("SM64DS_ATTACH_CARRY")) std::sscanf(e, "%d,%d", &g.carry_ahead, &g.carry_up);
+    if (const char *e = std::getenv("SM64DS_HELD_AT")) std::sscanf(e, "%d,%d", &g.held_ahead, &g.held_up);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_GATHER")) { g.gather = true; g.gather_dx = 150; g.gather_dz = 0; std::sscanf(e, "%d,%d", &g.gather_dx, &g.gather_dz); }
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_AT")) g.forge_at = (unsigned)std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEAT")) g.lab_seat = std::atoi(e);
@@ -332,6 +342,71 @@ void broadcast_attach(int holder, int state) {
     for (int seat = 0; seat < kHubPartySeats; ++seat) {
         if (seat == comms_hub_my_seat() || !party::seat_is_party(seat)) continue;
         send_wire(seat, kAttach, holder & 0xFFFF, state, 0, 0);
+    }
+}
+
+// ---- TONGUE1: what I hold, to every other seat ----------------------------------------------------------
+// The SYNG frame carries my body only: a friend sees my hands and mouth empty. The object's identity on every console
+// is its spawn slot (+0xce) and class (+0x0c), the same pair coop_actors.cpp syncs it by. A player in my hands or mouth
+// rides kAttach instead; eggs are local spawns (+0x588, five following eggs), so only their count goes out.
+void held_send(char *me) {
+    int kind = 0, cls = 0, slot = -1, eggs = 0;
+    const char *ho = ptrf(me, kHeldObj), *mo = ptrf(me, kMouthObj);
+    const char *ob = mo ? mo : ho;
+    if (ob && *(const unsigned short *)(ob + 0x0c) != 0xbf) {
+        kind = mo ? 2 : 1;
+        cls = *(const unsigned short *)(ob + 0x0c);
+        slot = *(const short *)(ob + 0xce);
+        if (cls >= 1024 || slot < 0) kind = cls = 0, slot = -1;     // a runtime spawn has no slot every console shares
+    }
+    if (const int *q = *(int *const *)(me + 0x588)) for (int i = 0; i < 5; ++i) if (q[i]) ++eggs;
+    const bool changed = kind != g.ho_kind || cls != g.ho_cls || slot != g.ho_slot || eggs != g.ho_eggs;
+    if (!changed && (!(kind || eggs) || g.frame - g.ho_last < (unsigned)kHeldBeat)) return;
+    g.ho_kind = kind; g.ho_cls = cls; g.ho_slot = slot; g.ho_eggs = eggs; g.ho_last = g.frame;
+    if (changed && g.log > 0)
+        std::fprintf(stderr, "[phit] held out f=%u: kind %d class %d slot %d eggs %d\n", g.frame, kind, cls, slot, eggs);
+    for (int seat = 0; seat < kHubPartySeats; ++seat) {
+        if (seat == comms_hub_my_seat() || !party::seat_is_party(seat)) continue;
+        if (send_wire(seat, kHeldState, slot & 0xFFFF, kind | (eggs << 4), cls, 0)) ++g.held_sent;
+    }
+}
+
+// After the follower posed every ghost: an object a friend holds sits at his DRAWN hands, one in his mouth goes into
+// it (at the mouth for the tongue's pull, then out of sight, the way the cartridge hides a mouthful). My copy's own
+// Behavior still runs from the pinned spot next walk; coop_actors' slave pin ran before the follower.
+char *held_find(int cls, int slot) {
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+        if (*(const unsigned short *)(a + 0x0c) == (unsigned)cls && *(const short *)(a + 0xce) == slot) return a;
+    return nullptr;
+}
+void held_after_follow_impl() {
+    char *me = my_body();
+    const int nb = (int)data_0209f21c < 16 ? (int)data_0209f21c : 16;
+    for (int seat = 0; seat < kHubPartySeats; ++seat) {
+        G::HeldIn &h = g.held_in[seat];
+        if (!h.kind) continue;
+        if (g.frame >= h.until) { std::fprintf(stderr, "[phit] held: seat %d went quiet, nothing pinned\n", seat); h = G::HeldIn(); continue; }
+        int dp[3] = {0, 0, 0}, drawn = 0; char *gb = nullptr;
+        for (int i = 0; i < nb && !drawn; ++i)
+            if (port_adventure_ghost_seat(i) == seat && data_0209f394[i] && data_0209f394[i] != me) {
+                gb = (char *)data_0209f394[i]; drawn = port_adventure_ghost_drawpos(i, dp);
+            }
+        if (!drawn || !gb) continue;
+        char *a = held_find(h.cls, h.slot);
+        if (!a || a == me) { if (++g.held_miss <= 8) std::fprintf(stderr, "[phit] held: no local class %d slot %d for seat %d\n", h.cls, h.slot, seat); continue; }
+        if (a != h.pinned) {
+            h.pinned = a;
+            std::fprintf(stderr, "[phit] held: pinning my class %d slot %d to seat %d's %s\n", h.cls, h.slot, seat, h.kind == 1 ? "hands" : "mouth");
+        }
+        const int yaw = *player::facing(gb) & 0xFFFF;
+        const int ahead = h.kind == 1 ? g.held_ahead : g.eat_ahead, up = h.kind == 1 ? g.held_up : g.eat_up;
+        const double ang = (double)yaw * 3.14159265358979323846 / 32768.0;
+        int *pos = (int *)(a + 0x5c);
+        pos[0] = dp[0] + (int)std::lround(std::sin(ang) * ahead) * 0x1000;
+        pos[2] = dp[2] + (int)std::lround(std::cos(ang) * ahead) * 0x1000;
+        pos[1] = dp[1] + up * 0x1000 + ((h.kind == 2 && g.frame - h.since > (unsigned)kMouthPullFrames) ? kParkUnits * 0x1000 : 0);
+        *(short *)(a + 0x8e) = (short)yaw;
+        ++g.held_pins;
     }
 }
 
@@ -884,6 +959,20 @@ void handle_reply(int seat, unsigned ik, int yaw, int x, int y, int z) {
         att_set(seat, yaw & 0xFFFF, st);
         break;
     }
+    case kHeldState: {
+        if (seat < 0 || seat >= kHubPartySeats) break;
+        const int v = u(x), kind = v & 0xF, eggs = (v >> 4) & 0xF, cls = u(y), slot = (short)yaw;
+        if (kind > 2 || eggs > 5 || cls < 0 || cls >= 1024) break;
+        G::HeldIn &h = g.held_in[seat];
+        ++g.held_recv;
+        if (h.kind != kind || h.cls != cls || h.slot != slot || h.eggs != eggs) {
+            std::fprintf(stderr, "[phit] held: seat %d now holds %s (class %d slot %d), eggs %d\n", seat,
+                         kind == 1 ? "an object in its hands" : kind == 2 ? "an object in its mouth" : "nothing", cls, slot, eggs);
+            h.since = g.frame; h.pinned = nullptr;
+        }
+        h.kind = kind; h.cls = cls; h.slot = slot; h.eggs = eggs; h.until = g.frame + kHeldLife;
+        break;
+    }
     default: break;
     }
 }
@@ -1114,6 +1203,7 @@ void exit_summary() {
     for (int v = 1; v < kVerdicts; ++v)
         if (g.st.refused_by[v & 15]) std::fprintf(stderr, "[phit:exit]   refused %s: %llu\n", verdict_name(v), g.st.refused_by[v & 15]);
     std::fprintf(stderr, "[phit:exit] eats began %llu, spat %llu, aborted %llu, spat early (mouth state not stepping) %u\n", g.st.eats_began, g.st.eats_spat, g.st.eats_aborted, g.eats_unstepped);
+    std::fprintf(stderr, "[phit:exit] held state: sent %u, received %u, pinned frames %u, no local copy %u\n", g.held_sent, g.held_recv, g.held_pins, g.held_miss);
     std::fflush(stderr);
 }
 
@@ -1137,6 +1227,8 @@ int squash_scale_for_seat(int seat) {
     if (seat < 0 || seat >= kHubPartySeats || !g.on || g.frame >= g.squash_until[seat]) return 0x1000;
     return 0x800;                                              // TUNE: half height
 }
+
+void held_after_follow() { if (g.on) held_after_follow_impl(); }
 
 int attached_holder(int victim_seat, int *kind) {
     if (!g.on || victim_seat < 0 || victim_seat >= kHubPartySeats) return -1;
@@ -1183,6 +1275,7 @@ extern "C" void port_party_hits_frame(void) {
     char *me = my_body();
     if (!me) return;
     track_pose(me);
+    held_send(me);
     {   // my position this frame, for the claims that name an age
         Pos3 &r = g.ring[g.frame % kRingFrames];
         r.x = u(*player::pos_x(me)); r.y = u(*player::pos_y(me)); r.z = u(*player::pos_z(me));

@@ -3782,6 +3782,7 @@ void gw_follow() {
                          (unsigned)sm.anim, sm.cursor >> 12, sm.y >> 12);
     }
     ghostdoor::watcher_end_pass();      // DOORS9C: a seat that was not driven lately gives its door back
+    port::party_hits::held_after_follow();   /* TONGUE1: what a friend holds sits at his drawn hands / mouth */
     if (shown_any) ++g_gws.shown_frames;
     if (in_cut) {
         ++g_gws.cut_frames;
