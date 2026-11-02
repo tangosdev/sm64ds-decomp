@@ -3125,10 +3125,10 @@ s32 GetGameLanguage(void);
 void RenderOamMainScreen(int a, int b, int c, int d, int e);
 /* Draws sprite word 8 at (0x20, 0xc) and `value`, starting at x
    0x48, through Mg_DrawNumber. */
-void Mg_DrawTopLeftCounter(int value){
-  int i = GetGameLanguage();
-  RenderOamMainScreen(sMgSpriteTables[i][8], 0x20, 0xc, -1, -1);
-  Mg_DrawNumber(0x48, 0xc, value, 1, -1, 2, 0xa);
+void Mg_DrawTopLeftCounter(int value) {
+    int i = GetGameLanguage();
+    RenderOamMainScreen(sMgSpriteTables[i][8], 0x20, 0xc, -1, -1);
+    Mg_DrawNumber(0x48, 0xc, value, 1, -1, 2, 0xa);
 }
 }
 }
