@@ -139,12 +139,6 @@ extern int data_ov063_0211e1ec[];
 extern Matrix4x3 data_020a0e68;
 }
 
-/* local extern: func_ov063_02118b2c returns what func_0201267c leaves in
-   r0 -- a tail call -- which Sound.h's void declaration cannot spell. */
-namespace tail_267c {
-extern "C" int func_0201267c(u32, const void *);
-}
-
 /* The seven file handles __sinit_ov063_0211e29c constructs. SharedFilePtr
  * declares no constructor of its own, so the model handles get the
  * model-file pair func_02017acc/func_02017ab4 and the animation handles get
@@ -182,7 +176,7 @@ int RandomIntInternal(int *seed);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
 int func_020092c4(void *cam, void *out, void *target);
-int func_02012694(int a, void *p, ...);
+void func_02012694(int a, void *p, ...);
 u16 func_0201277c(unsigned int a);
 extern s16 data_02082214[];
 extern void *data_0209f318;
@@ -1621,27 +1615,20 @@ void daTrs_c::func_ov063_021189f4() {
 
 
 // @symbol _ZN7daTrs_c19func_ov063_02118b2cEv
-int daTrs_c::func_ov063_02118b2c() {
-
-    int r;
-    this->mHorzSpeed = 0x5000;
-    r = func_ov063_0211a0dc();
+void daTrs_c::func_ov063_02118b2c() {
+    mHorzSpeed = 0x5000;
+    int r = func_ov063_0211a0dc();
     if (r == -1) {
-        this->mState = 2;
-        return 2;
+        mState = 2;
+        return;
     }
     if (r == 1) {
-        this->mState = 3;
-        return tail_267c::func_0201267c(0xc7, &this->mCamSpacePosX);
+        mState = 3;
+        func_0201267c(0xc7, &mCamSpacePos);
+        return;
     }
-    {
-        unsigned x = *(u16 *)&this->mStateTimer;
-        if (x > 0x64) {
-            x = 1;
-            this->mState = 1;
-        }
-        return x;
-    }
+    if ((u16)mStateTimer > 0x64)
+        mState = 1;
 }
 
 

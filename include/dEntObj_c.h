@@ -85,9 +85,9 @@ struct UnknownVsPlayer {
     void func_ov075_02114390(); /* 8 */
     void func_ov075_02114300(); /* 9 */
     /* The mAnimState handlers (data_ov075_0211d53c's indices). */
-    int func_ov075_0211427c();  /* 1 */
-    int func_ov075_02114218();  /* 2 */
-    int func_ov075_021141b8();  /* 3 */
+    void func_ov075_0211427c(); /* 1 */
+    void func_ov075_02114218(); /* 2 */
+    void func_ov075_021141b8(); /* 3 */
     void func_ov075_021140e4(); /* 4 */
     void func_ov075_02114010(); /* 5 */
     /* The empty handler both tables' unused indices point at. */

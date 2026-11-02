@@ -79,7 +79,7 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     int func_ov065_02116328();
     int func_ov065_021162c0();
     void func_ov065_02115ff0();
-    int func_ov065_02115f84();
+    void func_ov065_02115f84();
 };
 
 /* Inline destructor is the key function, so this TU emits the vtable. The
