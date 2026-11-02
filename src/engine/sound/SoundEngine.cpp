@@ -88,7 +88,7 @@ struct Elem {
     int x4;      
     int x8;      
 };
-struct Obj {
+struct ElemTable {
     char pad[0x1c];
     int count;           
     struct Elem arr[1];   
@@ -412,7 +412,7 @@ extern int FS_ReadFile(int a, int b, int c);
 extern struct HeapAllocator;
 extern void MultiStore_Int(int val, int *dst, int len);
 extern struct NestedHeapIterator;
-extern struct Obj;
+extern struct ElemTable;
 extern struct Obj1;
 /* local extern: these callers run the constructor over storage that already
    exists (and func_02051064 returns its r0), which C++ cannot spell without a
@@ -618,7 +618,7 @@ extern void func_02052208(void *obj);
 extern void func_02052234(void);
 extern void func_0205227c(void);
 extern void func_020522c4(void);
-extern struct Elem* func_020523e0(struct Obj* obj, int idx);
+extern struct Elem *func_020523e0(struct ElemTable *obj, int idx);
 extern int func_02052420(int *o);
 extern void func_02052438(char *self);
 extern int func_02052458(int *p);
@@ -669,7 +669,7 @@ extern "C" int func_02052420(int *o) {
 }
 
 // @symbol func_020523e0
-extern "C" struct Elem* func_020523e0(struct Obj* obj, int idx) {
+extern "C" struct Elem *func_020523e0(struct ElemTable *obj, int idx) {
     struct Elem* e;
     if (idx < 0) return 0;
     if ((u32)idx >= (u32)obj->count) return 0;
@@ -1457,16 +1457,16 @@ extern "C" int func_02050d2c(void) { return ((int)data_020a5bb8); }
 extern "C" void *func_02050cdc(int a, int idx)
 {
     int *p;
-    struct Obj *o;
+    struct ElemTable *o;
     struct Elem *e;
 
     p = ((int *(*)(int a))func_02050c14)(a);
     if (p == 0)
         return 0;
-    o = ((struct Obj *(*)(unsigned int i))func_020509b0)((unsigned int)*p);
+    o = ((struct ElemTable * (*)(unsigned int i)) func_020509b0)((unsigned int)*p);
     if (o == 0)
         return 0;
-    e = ((struct Elem *(*)(struct Obj *obj, int idx))func_020523e0)(o, idx);
+    e = ((struct Elem * (*)(struct ElemTable * obj, int idx)) func_020523e0)(o, idx);
     if (e == 0)
         return 0;
     return (char *)e + 4;
