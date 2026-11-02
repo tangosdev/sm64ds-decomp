@@ -9,45 +9,10 @@
 #include "Ov007LayerSlot.h"
 #include "Ov007Pad.h"
 #include "Ov007Figure.h"
+#include "Ov007Model.h"
 
 extern "C" {
 
-/* The 0x1c-byte animation player func_ov007_020c92ac allocates; names as in
- * func_ov007_020bc02c and func_ov007_020b1718, only the slots this file
- * touches. */
-typedef struct Ov007AnimPlayer {
-    s32 state; /* 0x00: 0 playing; func_ov007_020c9110 sets 2 when a one-shot ends */
-    s32 loopMode; /* 0x04 */
-    s32 flags;    /* 0x08 */
-    /* 0x0c: index into the owner's animation table; -1 none. volatile:
-     * the ROM re-reads it for each test below */
-    volatile s16 anim;
-    s16 prevAnim;   /* 0x0e */
-    u16 frame;      /* 0x10: the whole frame func_ov007_020c9110 last reached */
-    u16 frameCount; /* 0x12 */
-    s32 framePos;   /* 0x14: Q12; func_ov007_020c9110 advances it */
-} Ov007AnimPlayer;
-
-/* The 0xa0-byte model record func_ov007_020bc6d4 allocates; names as in
- * func_ov007_020bc02c and func_ov007_020bc434, only the slots this file
- * touches. */
-typedef struct Ov007Model {
-    struct ModelComponents *model;    /* 0x00 */
-    struct Matrix4x3 *transforms;     /* 0x04 */
-    struct Matrix4x3 *nextTransforms; /* 0x08 */
-    void *blendBuffer;                /* 0x0c */
-    s32 numBoneAnims;                 /* 0x10 */
-    void **boneAnims;                 /* 0x14 */
-    Ov007AnimPlayer *boneAnim; /* 0x18 */
-    s32 numTexSrtAnims;        /* 0x1c */
-    void **texSrtAnims;        /* 0x20 */
-    Ov007AnimPlayer *texSrtAnim; /* 0x24 */
-    s32 numTexSeqAnims;          /* 0x28 */
-    void **texSeqAnims;          /* 0x2c */
-    Ov007AnimPlayer *texSeqAnim; /* 0x30 */
-    Vector3 pos;                 /* 0x34 */
-    Vector3 scale; /* 0x40: ModelComponents::Render's scale (func_ov007_020bbff0) */
-} Ov007Model;
 
 extern int func_ov007_020aebac(void);
 extern void RequestScreenFade(int kind, int flags, void (*onEnd)(void));

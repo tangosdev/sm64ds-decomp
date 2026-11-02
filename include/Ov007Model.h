@@ -26,7 +26,10 @@ typedef struct Ov007AnimPlayer {
     /* 0x08: bit 0, set by func_ov007_020c9214: func_ov007_020c9110 skips
      * one advance and clears it, so the start frame is shown once */
     s32 flags;
-    s16 anim; /* 0x0c: index into the owner's animation table; -1 none */
+    /* 0x0c: index into the owner's animation table; -1 none. volatile:
+     * func_ov007_020b0a20 re-reads it for each of its three tests, and
+     * without it mwccarm caches the load and the function is 8 bytes short. */
+    volatile s16 anim;
     /* 0x0e: func_ov007_020c9214 moves the old anim here before it installs
      * the new one; no reader */
     s16 prevAnim;
