@@ -91,6 +91,7 @@
 #include "vs_char_palette_gen.h"
 #include "vs_char_groups.h"
 #include "mods.h"
+#include "mod_values.h"
 
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -167,12 +168,100 @@ void resolve_ids(void)
                         "catalog; the swap is off for this run\n");
 }
 
+/* ---- THE TWO CATALOG MODS (run after093, lane CHARPALG1) ----------------
+   "character-palettes" and "loves-me-swap" are the launcher's two old
+   built-in rows moved into the mod catalog, so they can be updated without a
+   game update. Each is a folder mod whose settings.json is the spec and whose
+   settings.values.json holds the player's values (hal/mod_values.h reads the
+   pair; a key missing from the values is the spec's default).
+
+   WHEN THE MOD IS ON (in the list hal/mods.cpp latched from EnabledMods) its
+   values are used INSTEAD of the old settings.json keys (PaletteMario,
+   PaletteLuigi, PaletteWario, PaletteYoshi; LovesMeCharacter). When it is
+   off, the old keys are read exactly as before, so an old launcher that still
+   writes them keeps working. Read once, like every Mods key, and again after
+   a relatch at the title (port_fs_mods_relatch_reset). */
+const char *const CM_PALETTES = "character-palettes";
+const char *const CM_LOVESME = "loves-me-swap";
+
+/* The mod's index in the latched list, or -1 when it is not on. */
+int cm_index(const char *id)
+{
+    for (int i = port_mods_count() - 1; i >= 0; --i) {
+        const char *m = port_mods_id(i);
+        if (m && strcmp(m, id) == 0)
+            return i;
+    }
+    return -1;
+}
+
+/* A small text file of the mod's folder, NUL-terminated, or 0. */
+char *cm_slurp(int mod, const char *name)
+{
+    char path[1100];
+    const char *dir = port_mods_folder(mod);
+    FILE *f;
+    long n;
+    char *t;
+    size_t got;
+    if (!dir)
+        return 0;
+    snprintf(path, sizeof path, "%s/%s", dir, name);
+    f = fopen(path, "rb");
+    if (!f)
+        return 0;
+    fseek(f, 0, SEEK_END);
+    n = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    if (n < 0 || n > 256 * 1024) {
+        fclose(f);
+        return 0;
+    }
+    t = (char *)malloc((size_t)n + 1);
+    if (!t) {
+        fclose(f);
+        return 0;
+    }
+    got = fread(t, 1, (size_t)n, f);
+    fclose(f);
+    t[got] = '\0';
+    return t;
+}
+
+/* loves-me-swap's `character`, as host_setting_lovesme_character's 1-based
+   index (0 = the ROM's Yoshi), or -1 when the mod is not on. */
+int cm_lovesme(void)
+{
+    const int i = cm_index(CM_LOVESME);
+    char v[64];
+    char *spec, *vals;
+    int src, idx;
+    if (i < 0)
+        return -1;
+    spec = cm_slurp(i, "settings.json");
+    vals = cm_slurp(i, "settings.values.json");
+    src = modval::value(spec, vals, "character", v, sizeof v);
+    free(spec);
+    free(vals);
+    idx = modval::lovesme_index(v);
+    if (src && !idx)
+        fprintf(stderr, "[mods] %s: character \"%s\" is not one this build "
+                        "knows; the minigame keeps Yoshi\n", CM_LOVESME, v);
+    fprintf(stderr, "[mods] %s on: character %s (%s); LovesMeCharacter is "
+                    "not read\n", CM_LOVESME, idx ? v : "Yoshi",
+            src == 2 ? "player's value" : src == 1 ? "default" : "none");
+    return idx;
+}
+
 /* The boot latch: -1 until first asked, then the setting as it was then. */
 int lovesme_character(void)
 {
     static int v = -1;
-    if (v < 0)
-        v = host_setting_lovesme_character();
+    if (v < 0) {
+        v = cm_lovesme();
+        if (v < 0)
+            v = host_setting_lovesme_character();
+    }
     return v;
 }
 
@@ -1815,14 +1904,108 @@ struct PcPal {
 struct PcPal g_pc[PC_COUNT];
 int g_pc_state;             /* 0 not tried, 1 loaded */
 
+/* ---- character-palettes, the catalog mod (run after093, lane CHARPALG1) ---
+   The same four answers as the keys above, read from the mod's settings
+   instead (see THE TWO CATALOG MODS near the top of this file) when the mod
+   is on: `mario` `luigi` `wario` `yoshi` each "Original", for Yoshi "Green"
+   "Red" "Blue" "Yellow", a palette name (the mod's own palettes/<name>.pal
+   first, through palette_open_named), or "Custom".
+
+   CUSTOM is the player's own colours, `<who>_hat` `<who>_overalls`
+   `<who>_shoes` for the bros and `yoshi_body`, "RRGGBB". They land on
+   exactly the palette entries an online pick lands on, with the same
+   arithmetic: the bros through the category table hal/vs_char_groups.h and
+   vspal::char_recolor_palette, group by group in the table's order, as
+   hal/bro_colors.cpp's copy_for recolours a body's palette copy; Yoshi
+   through vspal::vs_group_pick on the body group of row 0, as an online
+   Yoshi's own row is built (vs_palette_row, body only: the shoes stay the
+   cartridge's). A colour equal to the cartridge's own tone of that part (to
+   the DS's 5 bits a channel) is no pick, as it is online, so Custom with
+   the default colours serves the ROM's palettes untouched.
+
+   The difference from online is WHERE it is written: into the served file's
+   palette, like every other palette mod here, because solo has one body per
+   character file. That is also why Custom is SOLO ONLY: in a multiplayer
+   run (port_mods_multiplayer) every body wearing the file would wear it, so
+   Custom stands down and the room's picks (hal/bro_colors.cpp) are the only
+   colours, exactly as with no palette chosen. */
+struct CpMod {
+    int state;              /* 0 not read, 1 read */
+    int on;                 /* the mod is in the list */
+    char choice[PC_COUNT][96];
+    long rgb[PC_COUNT][3];  /* Custom colours, 0xRRGGBB; -1 = unset */
+};
+struct CpMod g_cpm;
+int g_pc_any = -1;
+
+const char *const CP_CHOICE_KEY[PC_COUNT] = { "mario", "luigi", "wario", "yoshi" };
+const char *const CP_PART_KEY[PC_COUNT][3] = {
+    { "mario_hat", "mario_overalls", "mario_shoes" },
+    { "luigi_hat", "luigi_overalls", "luigi_shoes" },
+    { "wario_hat", "wario_overalls", "wario_shoes" },
+    { "yoshi_body", 0, 0 },
+};
+
+void cp_mod_read(void)
+{
+    int i;
+    char *spec, *vals;
+    if (g_cpm.state)
+        return;
+    g_cpm.state = 1;
+    for (int c = 0; c < PC_COUNT; ++c)
+        for (int k = 0; k < 3; ++k)
+            g_cpm.rgb[c][k] = -1;
+    i = cm_index(CM_PALETTES);
+    if (i < 0)
+        return;
+    g_cpm.on = 1;
+    spec = cm_slurp(i, "settings.json");
+    vals = cm_slurp(i, "settings.values.json");
+    for (int c = 0; c < PC_COUNT; ++c) {
+        modval::value(spec, vals, CP_CHOICE_KEY[c], g_cpm.choice[c],
+                      sizeof g_cpm.choice[c]);
+        for (int k = 0; k < 3; ++k) {
+            char hex[16];
+            if (!CP_PART_KEY[c][k])
+                continue;
+            if (modval::value(spec, vals, CP_PART_KEY[c][k], hex, sizeof hex))
+                g_cpm.rgb[c][k] = modval::hex6(hex);
+            if (g_cpm.rgb[c][k] < 0 && hex[0])
+                fprintf(stderr, "[mods] %s: %s \"%s\" is not RRGGBB; that "
+                                "part keeps the cartridge's colour\n",
+                        CM_PALETTES, CP_PART_KEY[c][k], hex);
+        }
+    }
+    free(spec);
+    free(vals);
+    fprintf(stderr, "[mods] %s on: Mario %s, Luigi %s, Wario %s, Yoshi %s; "
+                    "the Palette keys are not read\n", CM_PALETTES,
+            g_cpm.choice[0][0] ? g_cpm.choice[0] : "Original",
+            g_cpm.choice[1][0] ? g_cpm.choice[1] : "Original",
+            g_cpm.choice[2][0] ? g_cpm.choice[2] : "Original",
+            g_cpm.choice[3][0] ? g_cpm.choice[3] : "Original");
+}
+
 /* The boot latch for "is this mod on at all", so the filter's per-file cost
-   stays one compare. */
+   stays one compare. With character-palettes on, any choice but Original;
+   otherwise any of the four keys, as before. */
 int pc_any(void)
 {
-    static int v = -1;
-    if (v < 0)
-        v = host_setting_character_palette_any();
-    return v;
+    if (g_pc_any < 0) {
+        cp_mod_read();
+        if (g_cpm.on) {
+            int row;
+            g_pc_any = 0;
+            for (int c = 0; c < PC_COUNT; ++c)
+                if (modval::choice_kind(g_cpm.choice[c], c == PC_YOSHI, &row)
+                        != modval::CP_ORIGINAL)
+                    g_pc_any = 1;
+        } else {
+            g_pc_any = host_setting_character_palette_any();
+        }
+    }
+    return g_pc_any;
 }
 
 /* Which character owns a resolved file id, or -1 for nobody's. */
@@ -1849,8 +2032,11 @@ int pc_name_is_plain(const char *v)
 }
 
 /* Build Yoshi's three records for VS row `row` out of the ROM's own body
-   palette. 1 on success; 0 leaves Yoshi on the ROM and sets *why. */
-int pc_build_yoshi(int row, const char **why)
+   palette. 1 on success; 0 leaves Yoshi on the ROM and sets *why.
+   character-palettes' Custom passes `body_pick` (0xRRGGBB, else -1): the
+   row is then row 0 with its body group recoloured the way an online pick
+   recolours it (vs_classic_alias, then vs_group_pick on the body group). */
+int pc_build_yoshi(int row, long body_pick, const char **why)
 {
     static const u16 kCount[3] = { 64, 16, 16 };
     static const u32 kOff[3] = { 0, 128, 160 };
@@ -1872,6 +2058,21 @@ int pc_build_yoshi(int row, const char **why)
         free(body);
         return 0;
     }
+    if (body_pick >= 0) {
+        /* a Custom body the cartridge's own drawn green is no pick */
+        vspal::u8 pk[3], al[3];
+        u16 m;
+        pk[0] = (vspal::u8)(body_pick >> 16);
+        pk[1] = (vspal::u8)(body_pick >> 8);
+        pk[2] = (vspal::u8)body_pick;
+        vspal::vs_classic_alias(pk, al);
+        memcpy(&m, body + dp + vspal::kBodyMain * 2, 2);
+        if ((vspal::rgb_word(al, m) & 0x7fff) == (m & 0x7fff)) {
+            free(body);
+            *why = "the body colour is the cartridge's own";
+            return 2;
+        }
+    }
     *why = "out of host memory";
     syn = (u8 *)malloc(64 * 2 + 16 * 2 + 16 * 2);
     pp = (struct PalPatch *)calloc(3, sizeof *pp);
@@ -1884,9 +2085,25 @@ int pc_build_yoshi(int row, const char **why)
     /* the body keeps rows 1..3 exactly as authored and only row 0 moves;
        each head file gets the chosen row on its own, 16 colors, in place */
     memcpy(syn, body + dp, 128);
-    memcpy(syn, body + dp + (u32)row * 32, 32);
-    memcpy(syn + 128, body + dp + (u32)row * 32, 32);
-    memcpy(syn + 160, body + dp + (u32)row * 32, 32);
+    if (body_pick >= 0) {
+        u16 r0[16], out[16];
+        vspal::u8 pick[3], alias[3];
+        memcpy(r0, body + dp, 32);
+        memcpy(out, r0, 32);
+        pick[0] = (vspal::u8)(body_pick >> 16);
+        pick[1] = (vspal::u8)(body_pick >> 8);
+        pick[2] = (vspal::u8)body_pick;
+        vspal::vs_classic_alias(pick, alias);
+        vspal::vs_group_pick(r0, vspal::kBodyIdx, 4, vspal::kBodyMain, alias,
+                             out);
+        memcpy(syn, out, 32);
+        memcpy(syn + 128, out, 32);
+        memcpy(syn + 160, out, 32);
+    } else {
+        memcpy(syn, body + dp + (u32)row * 32, 32);
+        memcpy(syn + 128, body + dp + (u32)row * 32, 32);
+        memcpy(syn + 160, body + dp + (u32)row * 32, 32);
+    }
     free(body);
     for (int i = 0; i < 3; ++i) {
         snprintf(pp[i].path, sizeof pp[i].path, "%s", kPath[i]);
@@ -1899,6 +2116,166 @@ int pc_build_yoshi(int row, const char **why)
     g_pc[PC_YOSHI].patch = pp;
     g_pc[PC_YOSHI].npatch = 3;
     return 1;
+}
+
+/* What the log lines and the filter call each character's palette by: the
+   old key's name, or the mod's setting. */
+const char *g_pc_label[PC_COUNT] = {
+    "PaletteMario", "PaletteLuigi", "PaletteWario", "PaletteYoshi",
+};
+const char *const CP_LOG_KEY[PC_COUNT] = {
+    "character-palettes mario", "character-palettes luigi",
+    "character-palettes wario", "character-palettes yoshi",
+};
+
+/* 0xRRGGBB to the DS's 5 bits a channel, for "is this the cartridge's own
+   colour" (hal/bro_colors.cpp's q555). */
+unsigned cp_q555(unsigned long rgb) { return (unsigned)(rgb & 0xF8F8F8u); }
+
+/* The picker row (0 hat + undershirt, 1 overalls, 2 shoes) a category of
+   hal/vs_char_groups.h answers to, or -1 (gloves, buttons: never picked). */
+int cp_row_of_cat(int cat)
+{
+    if (cat == vscg::CAT_HAT_UNDERSHIRT) return 0;
+    if (cat == vscg::CAT_OVERALLS) return 1;
+    if (cat == vscg::CAT_SHOES) return 2;
+    return -1;
+}
+
+/* Custom for a bro: one record per (file, palette) the category table names
+   for him with a real pick, each holding that palette's colours recoloured
+   group by group in the table's order. 1 built, 2 nothing to recolour (every
+   colour is the cartridge's), 0 refused with *why. */
+int pc_build_bro(int c, const char **why)
+{
+    struct Tgt { const char *file, *pal; u8 *data; u32 dp, sz; } t[8];
+    long pick[vscg::kVscGroupCount];
+    int nt = 0;
+    u32 total = 0, off = 0;
+    u8 *syn;
+    struct PalPatch *pp;
+
+    for (int g = 0; g < vscg::kVscGroupCount; ++g) {
+        const vscg::Group *G = &vscg::kVscGroups[g];
+        const int r = G->chr == c ? cp_row_of_cat(G->cat) : -1;
+        long v;
+        int have = 0;
+        pick[g] = -1;
+        if (r < 0)
+            continue;
+        v = g_cpm.rgb[c][r];
+        if (v < 0 || cp_q555((unsigned long)v) ==
+                         cp_q555(vscg::kBroCart[c][G->cat]))
+            continue;
+        pick[g] = v;
+        for (int k = 0; k < nt; ++k)
+            if (!strcmp(t[k].file, G->file) && !strcmp(t[k].pal, G->pal))
+                have = 1;
+        if (!have && nt < 8) {
+            t[nt].file = G->file;
+            t[nt].pal = G->pal;
+            t[nt].data = 0;
+            ++nt;
+        }
+    }
+    if (!nt) {
+        *why = "every colour is the cartridge's own";
+        return 2;
+    }
+    for (int k = 0; k < nt; ++k) {
+        u32 len = 0;
+        t[k].data = file_by_name(t[k].file, &len);
+        if (!t[k].data ||
+            !palette_named(t[k].data, len, t[k].pal, &t[k].dp, &t[k].sz) ||
+            t[k].sz < 2 || t[k].sz > 0x2000 || (t[k].sz & 1)) {
+            *why = t[k].data ? "a palette the colour table names is not in "
+                               "its file as this build knows it"
+                             : "a file the colour table names is not in this dump";
+            for (int q = 0; q <= k; ++q)
+                free(t[q].data);
+            return 0;
+        }
+        total += t[k].sz;
+    }
+    syn = (u8 *)malloc(total);
+    pp = (struct PalPatch *)calloc((size_t)nt, sizeof *pp);
+    if (!syn || !pp) {
+        free(syn);
+        free(pp);
+        for (int k = 0; k < nt; ++k)
+            free(t[k].data);
+        *why = "out of host memory";
+        return 0;
+    }
+    for (int k = 0; k < nt; ++k) {
+        vspal::u16 *w = (vspal::u16 *)(syn + off);
+        memcpy(w, t[k].data + t[k].dp, t[k].sz);
+        free(t[k].data);
+        for (int g = 0; g < vscg::kVscGroupCount; ++g) {
+            const vscg::Group *G = &vscg::kVscGroups[g];
+            vspal::u8 rgb[3];
+            const char *bad;
+            if (pick[g] < 0 || strcmp(G->file, t[k].file) ||
+                strcmp(G->pal, t[k].pal))
+                continue;
+            rgb[0] = (vspal::u8)(pick[g] >> 16);
+            rgb[1] = (vspal::u8)(pick[g] >> 8);
+            rgb[2] = (vspal::u8)pick[g];
+            bad = vspal::char_recolor_palette(w, (int)(t[k].sz / 2), G->idx,
+                                              G->count, rgb, G->main);
+            if (bad)
+                fprintf(stderr, "[mods] %s %s: %s\n", CP_LOG_KEY[c], G->pal,
+                        bad);
+        }
+        snprintf(pp[k].path, sizeof pp[k].path, "%s", t[k].file);
+        snprintf(pp[k].name, sizeof pp[k].name, "%s", t[k].pal);
+        pp[k].count = (u16)(t[k].sz / 2);
+        pp[k].colors = syn + off;
+        pp[k].file_id = resolve_file_by_name(pp[k].path);
+        off += t[k].sz;
+    }
+    g_pc[c].blob = syn;
+    g_pc[c].patch = pp;
+    g_pc[c].npatch = (unsigned)nt;
+    return 1;
+}
+
+/* character-palettes' Custom for character c. Solo only: see the block
+   comment at struct CpMod. */
+void pc_custom(int c)
+{
+    const char *why = "?";
+    int got;
+    if (port_mods_multiplayer()) {
+        fprintf(stderr, "[mods] %s Custom: off in multiplayer (solo only); "
+                        "%s wears the room's colours\n", CP_LOG_KEY[c],
+                PC_WHO[c]);
+        return;
+    }
+    if (c == PC_YOSHI)
+        got = pc_build_yoshi(0, g_cpm.rgb[c][0], &why);
+    else
+        got = pc_build_bro(c, &why);
+    if (got == 1) {
+        g_pc[c].active = 1;
+        if (c == PC_YOSHI)
+            fprintf(stderr, "[mods] %s Custom: body %06lX, %u record(s)\n",
+                    CP_LOG_KEY[c], (unsigned long)g_cpm.rgb[c][0],
+                    g_pc[c].npatch);
+        else
+            fprintf(stderr, "[mods] %s Custom: hat %06lX overalls %06lX "
+                            "shoes %06lX, %u record(s)\n", CP_LOG_KEY[c],
+                    (unsigned long)(g_cpm.rgb[c][0] & 0xFFFFFF),
+                    (unsigned long)(g_cpm.rgb[c][1] & 0xFFFFFF),
+                    (unsigned long)(g_cpm.rgb[c][2] & 0xFFFFFF),
+                    g_pc[c].npatch);
+    } else if (got == 2) {
+        fprintf(stderr, "[mods] %s Custom: %s; %s keeps the ROM's colors\n",
+                CP_LOG_KEY[c], why, PC_WHO[c]);
+    } else {
+        fprintf(stderr, "[mods] %s Custom REFUSED: %s; %s keeps the ROM's "
+                        "colors\n", CP_LOG_KEY[c], why, PC_WHO[c]);
+    }
 }
 
 void pc_load(void)
@@ -1918,38 +2295,58 @@ void pc_load(void)
                         "writing the same palettes would make the colors "
                         "depend on which one ran last\n", palette_combo());
 
+    cp_mod_read();
     for (int c = 0; c < PC_COUNT; ++c) {
-        const char *v = host_setting_character_palette(c);
+        const char *v;
+        const char *key = PC_KEY[c];
         char shown[1024];
         FILE *f;
         unsigned kept = 0, n;
-        if (!*v)
-            continue;
+        int row = -1;
 
-        if (c == PC_YOSHI) {
-            /* host_settings.cpp owns the four spellings and hands over the
-               row; a key that names a file answers -1 and falls through */
-            const int row = host_setting_yoshi_builtin_row();
-            if (row >= 0) {
-                const char *why = "?";
-                if (pc_build_yoshi(row, &why)) {
-                    g_pc[c].active = 1;
-                    fprintf(stderr, "[mods] PaletteYoshi %s: %u record(s) "
-                                    "from the game's own four-player colors "
-                                    "(row %d of %s)\n",
-                            v, g_pc[c].npatch, row, YOSHI_PAL);
-                } else {
-                    fprintf(stderr, "[mods] PaletteYoshi %s REFUSED: %s; "
-                                    "Yoshi keeps the ROM's colors\n", v, why);
-                }
+        g_pc_label[c] = PC_KEY[c];
+        if (g_cpm.on) {
+            /* character-palettes: its choice replaces the key outright */
+            int kind;
+            v = g_cpm.choice[c];
+            key = CP_LOG_KEY[c];
+            g_pc_label[c] = CP_LOG_KEY[c];
+            kind = modval::choice_kind(v, c == PC_YOSHI, &row);
+            if (kind == modval::CP_ORIGINAL)
+                continue;
+            if (kind == modval::CP_CUSTOM) {
+                pc_custom(c);
                 continue;
             }
+        } else {
+            v = host_setting_character_palette(c);
+            if (!*v)
+                continue;
+            /* host_settings.cpp owns the four spellings and hands over the
+               row; a key that names a file answers -1 and falls through */
+            if (c == PC_YOSHI)
+                row = host_setting_yoshi_builtin_row();
+        }
+
+        if (c == PC_YOSHI && row >= 0) {
+            const char *why = "?";
+            if (pc_build_yoshi(row, -1, &why) == 1) {
+                g_pc[c].active = 1;
+                fprintf(stderr, "[mods] %s %s: %u record(s) "
+                                "from the game's own four-player colors "
+                                "(row %d of %s)\n",
+                        key, v, g_pc[c].npatch, row, YOSHI_PAL);
+            } else {
+                fprintf(stderr, "[mods] %s %s REFUSED: %s; "
+                                "Yoshi keeps the ROM's colors\n", key, v, why);
+            }
+            continue;
         }
 
         if (!pc_name_is_plain(v)) {
             fprintf(stderr, "[mods] %s %s: a palette name is a plain file "
                             "name, not a path; %s keeps the ROM's colors\n",
-                    PC_KEY[c], v, PC_WHO[c]);
+                    key, v, PC_WHO[c]);
             continue;
         }
         f = palette_open_named(v, shown, sizeof shown);
@@ -1957,14 +2354,14 @@ void pc_load(void)
             fprintf(stderr, "[mods] %s %s: no palettes/%s.pal in an enabled mod, beside the "
                             "exe, the asset root, or the working directory; "
                             "%s keeps the ROM's colors\n",
-                    PC_KEY[c], v, v, PC_WHO[c]);
+                    key, v, v, PC_WHO[c]);
             continue;
         }
         n = palm_read(f, &g_pc[c].blob, &g_pc[c].patch);
         if (!n) {
             fprintf(stderr, "[mods] %s %s: %s is not a palmod blob this "
                             "build understands; %s keeps the ROM's colors\n",
-                    PC_KEY[c], v, shown, PC_WHO[c]);
+                    key, v, shown, PC_WHO[c]);
             continue;
         }
         /* keep only what is aimed at this character's own files, compacting
@@ -1975,7 +2372,7 @@ void pc_load(void)
             if (!p->file_id) {
                 fprintf(stderr, "[mods] %s %s: %s is not in this dump; that "
                                 "record is off for this run\n",
-                        PC_KEY[c], v, p->path);
+                        key, v, p->path);
                 continue;
             }
             if (pc_owner(p->file_id) != c)
@@ -1987,7 +2384,7 @@ void pc_load(void)
         g_pc[c].npatch = kept;
         g_pc[c].active = kept > 0;
         fprintf(stderr, "[mods] %s %s: %u of %u record(s) apply to %s (%s)\n",
-                PC_KEY[c], v, kept, n, PC_WHO[c], shown);
+                key, v, kept, n, PC_WHO[c], shown);
     }
 }
 
@@ -2010,10 +2407,10 @@ u32 character_palette_filter(unsigned fileID, u8 **data, u32 size)
             if (why)
                 fprintf(stderr, "[mods] %s: %s '%s' REFUSED: %s; served as "
                                 "the ROM has it\n",
-                        PC_KEY[c], p->path, p->name, why);
+                        g_pc_label[c], p->path, p->name, why);
             else
                 fprintf(stderr, "[mods] %s: %s '%s' recolored, %u colors\n",
-                        PC_KEY[c], p->path, p->name, p->count);
+                        g_pc_label[c], p->path, p->name, p->count);
         }
     }
     return size;
@@ -3019,6 +3416,10 @@ extern "C" void port_fs_mods_relatch_reset(void)
         g_pc[c].active = 0;
     }
     g_pc_state = 0;
+    /* CHARPALG1: character-palettes is read again from the new list (and
+       Custom asks again whether this run is multiplayer) */
+    memset(&g_cpm, 0, sizeof g_cpm);
+    g_pc_any = -1;
     /* SEAMCLEAN1: the lobby colours are read once per process (vsc_load); a hand-off that brings new ones after an earlier
        match must read them again, so the state goes back to "not read" and the patch is freed, like the two palette mods above */
     free(g_vsc_blob);
