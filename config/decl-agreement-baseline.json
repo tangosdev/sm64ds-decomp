@@ -9196,32 +9196,9 @@
         "return:void *"
       ]
     },
-    "data_020a0e58": {
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:PadData []"
-      ],
-      "src/unnamed/arm9/0203/func_0203bc50.c": [
-        "return:short []"
-      ],
-      "src/unnamed/arm9/0203/func_0203bc7c.c": [
-        "return:InputPair []"
-      ],
-      "src/game/stages/d_s_entry_methods.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/KuppaScript.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/game/stages/d_s_boot_methods.cpp": [
-        "return:PadData []"
-      ]
-    },
     "data_020a0e5a": {
       "src/_ZN7Message6UpdateEv.cpp": [
         "return:unsigned char"
-      ],
-      "src/game/stages/d_s_star_sel_methods.cpp": [
-        "return:unsigned short [][]"
       ]
     },
     "data_020a0e68": {

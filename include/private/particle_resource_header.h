@@ -6,9 +6,9 @@
 /* The particle resource file's header, as far as its readers use it.
  * Particle::SysTracker::Initialise (Particle.cpp) checks the first four
  * bytes against the data_0208f668 magic to tell a raw file from an
- * LZ-compressed one. func_0204a17c (Particle_Manager.cpp, which still
- * carries a local ResourceHeader with the two counts) reads the counts;
- * its definition records start at +0x20 and the texture records follow.
+ * LZ-compressed one. func_0204a17c (Particle_Manager.cpp) reads the
+ * counts; its definition records start right after this header and the
+ * texture records follow them.
  * Once func_0204a0dc has loaded the textures into VRAM, Initialise
  * reallocates the buffer down to residentSize. */
 typedef struct ParticleResourceHeader {
