@@ -2132,6 +2132,18 @@ const char *const CP_LOG_KEY[PC_COUNT] = {
    colour" (hal/bro_colors.cpp's q555). */
 unsigned cp_q555(unsigned long rgb) { return (unsigned)(rgb & 0xF8F8F8u); }
 
+/* A bro pick as it reaches the engine online: every pick travels as BGR555
+   and comes back as 8 bits a channel with the top bits copied down
+   (hal/comms_sync.cpp gw_bgr555 / gw_rgb_of555, "both sides go through
+   BGR555"), so the recolour starts from that colour, not the typed one. */
+unsigned long cp_wire555(unsigned long rgb)
+{
+    const unsigned r = (unsigned)(rgb >> 19) & 31, g = (unsigned)(rgb >> 11) & 31,
+                   b = (unsigned)(rgb >> 3) & 31;
+    return ((unsigned long)((r << 3) | (r >> 2)) << 16) |
+           ((unsigned long)((g << 3) | (g >> 2)) << 8) | ((b << 3) | (b >> 2));
+}
+
 /* The picker row (0 hat + undershirt, 1 overalls, 2 shoes) a category of
    hal/vs_char_groups.h answers to, or -1 (gloves, buttons: never picked). */
 int cp_row_of_cat(int cat)
@@ -2167,7 +2179,7 @@ int pc_build_bro(int c, const char **why)
         if (v < 0 || cp_q555((unsigned long)v) ==
                          cp_q555(vscg::kBroCart[c][G->cat]))
             continue;
-        pick[g] = v;
+        pick[g] = (long)cp_wire555((unsigned long)v);
         for (int k = 0; k < nt; ++k)
             if (!strcmp(t[k].file, G->file) && !strcmp(t[k].pal, G->pal))
                 have = 1;
