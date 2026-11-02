@@ -1,6 +1,7 @@
 //cpp
 #include "types.h"
 #include "private/rom_header_view.h"
+#include "private/mb_views.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "IRQ.h"
 
@@ -21,16 +22,6 @@ extern u8 data_020a9d28;
 
 /* The image's authentication code follows the 0x160-byte RomHeaderView and
  * the two static modules. */
-/* The NitroSDK MBGameInfo tail written here (src/engine/mb/MB_GameInfo.c's MBGameInfo names
- * the fields before it): seqNoFixed takes the next value of the counter at
- * data_020a9d28, fileNo the file's mFiles index. The record sits at
- * mHeader + 0xe4, as MB_Parent.cpp reaches it. */
-typedef struct MBGameInfo {
-    u8 pad_000[0x4ab];
-    u8 seqNoFixed; /* 0x4ab */
-    u8 seqNoVolat; /* 0x4ac -- bumped by MB_UpdateGameInfoMember */
-    u8 fileNo;     /* 0x4ad */
-} MBGameInfo;
 
 extern int MBi_IsStarted(void);
 extern void func_020678a4(void *out, void *in, void *dst);
