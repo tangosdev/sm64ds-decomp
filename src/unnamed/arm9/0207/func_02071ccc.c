@@ -1,19 +1,11 @@
 #include "types.h"
+#include "private/throw_context.h"
 
 /* CodeWarrior exception runtime: fill the handler's CatchInfo from the throw
- * context. Src is the ThrowContext and CatchInfo the catch record, both with
- * the names func_02072168.cpp and func_02071f1c.c give them; the Src tag stays
- * so the definition keeps agreeing with func_02071be8.cpp's declaration. A '*'
+ * context. ThrowContext is private/throw_context.h's and CatchInfo the catch record,
+ * with the name func_02072168.cpp and func_02071f1c.c give it. A '*'
  * type string marks a pointer catch: the handler gets a copy of the adjusted
  * pointer in mPointerCopy and mSublocation points at it. */
-typedef struct Src {
-    char *mThrowType; /* 0x00 -- type string */
-    int mLocation;    /* 0x04 -- thrown object */
-    int mDtor;        /* 0x08 -- thrown object's destructor */
-    char pad_0c[0xc];
-    char *mFP; /* 0x18 -- base for frame-relative operands */
-} Src;
-
 typedef struct CatchInfo {
     int mLocation;    /* 0x00 */
     char *mTypeInfo;  /* 0x04 */
@@ -22,10 +14,10 @@ typedef struct CatchInfo {
     int mPointerCopy; /* 0x10 */
 } CatchInfo;
 
-void func_02071ccc(Src *s, int off, int add) {
+void func_02071ccc(ThrowContext *s, int off, int add) {
     CatchInfo *info = (CatchInfo *)(s->mFP + off);
     info->mLocation = s->mLocation;
-    info->mTypeInfo = s->mThrowType;
+    info->mTypeInfo = (char *)s->mThrowType;
     info->mDtor = s->mDtor;
     if (*(u8 *)s->mThrowType != '*') {
         info->mSublocation = s->mLocation + add;

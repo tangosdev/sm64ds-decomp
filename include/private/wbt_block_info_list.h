@@ -8,9 +8,19 @@
  * node's total size is not evidenced. */
 struct WBTBlockInfoList {
     int block_id; /* 0x00 */
-    char pad_04[0x24];
+    /* 0x04 -- block size in bytes: func_0206491c divides it by the packet
+     * size to bound the packet number; func_020658c0 stores its fifth
+     * argument here */
+    int block_size;
+    /* 0x08 -- the SDK's user_id: the 0x20 bytes of user data
+     * WBT_RegisterBlock (func_020658c0) copies in */
+    char user_id[0x20];
     struct WBTBlockInfoList *next; /* 0x28 */
-    char pad_2c[0x6];
+    /* 0x2c -- the block's data; func_02064888 indexes it by packet */
+    char *data_ptr;
+    /* 0x30 -- WBT_RegisterBlock's last argument, the SDK's permission_bmp
+     * (the AIDs allowed to request the block); every caller passes 0 */
+    unsigned short permission_bmp;
     /* 0x32 -- WBT_RegisterBlock (func_020658c0) sets 0 (COMMON) when it is
      * given the block's data and 1 (USER) when it is not, so each packet has
      * to be asked for with PREPARE_SEND_DATA */
