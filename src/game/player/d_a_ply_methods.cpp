@@ -36,9 +36,6 @@
  *   functions, including func_ov002_020e6780 (decl_common.h spells the
  *   parameter char *) and func_ov002_020bcdf0. func_ov002_020e69c0 rotates
  *   data_ov002_0210a760, which has no recovered name.
- * - The hidden daPly_c fields at 0x580..0x584 (three u16), 0x5bc and 0x5ec
- *   (Matrix4x3) are still raw: include/daPly_c.h spells those ranges as
- *   padding. They keep their byte accesses until the header names them.
  * - The byte at 0x6da is written by InitResources and never read; it has no
  *   honest name, so it stays a byte store.
  * - daPly_c:: methods with no body-local externs carry no extern "C"
