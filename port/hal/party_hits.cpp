@@ -164,6 +164,9 @@ void read_env() {
     r.check_cooldown = !env_flag(std::getenv("SM64DS_PHIT_NOCOOLDOWN"), false);
     r.check_pos = !env_flag(std::getenv("SM64DS_PHIT_NOPOS"), false);
     r.check_busy = !env_flag(std::getenv("SM64DS_PHIT_NOBUSY"), false);
+    // TONGUE1: no port re-arm after an eat. The cartridge's own gate already refuses the spat victim while its +0x708 is
+    // set; the 150-frame re-arm refused tongues the ROM takes (7 of 18 refusals in MPJANK1's recipe).
+    r.check_eat_rearm = env_flag(std::getenv("SM64DS_PHIT_EAT_REARM"), false);
     // ROMSTATE9: the victim's own console runs the ROM's real St_InYoshiMouth (eat) and St_Grabbed / thrown (carry) by default;
     // SM64DS_ROOM_ROMSTATE=0 falls back to INTERACT9's synthetic holds (SM64DS_ROOM_EATVIS=0/1 still picks the eat alone)
     g.rom_eat = g.rom_grab = env_flag(std::getenv("SM64DS_ROOM_ROMSTATE"), true);
@@ -790,6 +793,18 @@ void handle_claim(int attacker, unsigned ikind, unsigned counter, unsigned stamp
     m.busy = me_busy(me, ikind == kGrabCatch);
     m.eaten = g.hold.active() || g.cv.active;
     const char *rom_no = ikind == kEatClaim ? rom_eat_refusal(me) : nullptr;
+    if (ikind == kEatClaim) {
+        // TONGUE1: a tongue asks what the cartridge asks (func_ov002_020d6c60's gate, rom_eat_refusal), plus the port-only
+        // reasons my body cannot step a mouth state at all (a message, a script, a cutscene) and a hold I am already in.
+        // The state list is not the ROM's: it refused tongues the cartridge takes (MPJANK1).
+        m.busy = true;
+        if (rom_no) g_busy_why = rom_no;
+        else if (me_in_message(me)) g_busy_why = "message";
+        else if (data_0209f2d8[0] == 2) g_busy_why = "level_state";
+        else if (*(const int *)data_0209fc48 != 0) g_busy_why = "cutscene";
+        else { g_busy_why = ""; m.busy = false; }
+        g_busy_state = port::vs_arena_state_index(me);
+    }
     Effect fx;
     const Verdict v = g.judge.judge(c, s, m, g.frame, &fx);
     log_verdict(c, v);
