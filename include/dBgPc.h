@@ -20,16 +20,6 @@ struct dBgPc {
 #endif
 };
 
-#ifdef __cplusplus
-/* Same constructor and destructor, for callers that still spell the calls
- * as functions. Placement new is the complete-object constructor. */
-#define dBgPc_Construct(self) (::new (static_cast<void *>(self)) dBgPc())
-#define dBgPc_Destroy(self) ((self)->~dBgPc())
-#else
-struct dBgPc *dBgPc_Construct(struct dBgPc *self);
-void dBgPc_Destroy(struct dBgPc *self);
-#endif
-
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgPc_size_must_be_0x14[sizeof(struct dBgPc) == 0x14 ? 1 : -1];

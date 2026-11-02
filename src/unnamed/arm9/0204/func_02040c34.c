@@ -4,6 +4,10 @@
 #include "IRQ.h"
 #include "CP15.h"
 
+static inline void FlushFileShareArea(char *base, unsigned int size) {
+    CP15::FlushAndInvalidateDataCache((unsigned int)base, size);
+}
+
 /* mFreeList is base+0x2700, the same address as `end`. A member store CSEs
  * with `end` and the function grows 4 bytes. (base+0x2000)+0x700 is the add
  * the ROM uses; the node's mFreeList and mReadyList updates below use it too.
@@ -43,7 +47,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
         IRQ::Restore(state);
 
         G->mIsParent = isParent;
-        G->mPort = (u16)port;
+        G->mPort = port;
         G->mSendRequest = 0;
         G->mSendBusy = 0;
         G->mState = 1;
@@ -63,33 +67,31 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
         if (G->mIsParent != 0) {
             {
                 char *base = (char *)G->mArea;
-                char *node;
-                char *next;
-                char *saved;
+                FileShareNode *node;
+                FileShareNode *next;
+                FileShareNode *saved;
                 char *zero;
-                char *end;
-                CP15::FlushAndInvalidateDataCache((int)base, sizeof(FileShareParentArea));
+                FileShareNode *end;
+                FlushFileShareArea(base, sizeof(FileShareParentArea));
                 CP15::DrainWriteBuffer();
-                saved = (char *)((FileShareParentArea *)base)->mNodes;
+                saved = (FileShareNode *)((FileShareParentArea *)base)->mNodes;
                 zero = 0;
                 node = saved;
-                next = node + FILE_SHARE_NODE_SIZE;
-                end = ((int)next & 1) ? (char *)((FileShareParentArea *)base)->mNodes[3]
-                                      : (char *)((FileShareParentArea *)base)->mNodes[3];
-                *(FileShareNode **)((base + 0x2000) + 0x700) = (FileShareNode *)saved;
+                next = node + 1;
+                end = ((int)next & 1) ? (FileShareNode *)((FileShareParentArea *)base)->mNodes[3]
+                                      : (FileShareNode *)((FileShareParentArea *)base)->mNodes[3];
+                *(FileShareNode **)((base + 0x2000) + 0x700) = saved;
                 if (next < end) {
                     do {
-                        ((FileShareNode *)node)->mNext =
-                            (FileShareNode *)(node + FILE_SHARE_NODE_SIZE);
-                        FS_InitFile((int *)((FileShareNode *)node)->mFile);
-                        ((FileShareNode *)node)->mRefCount = (int)zero;
-                        ((FileShareNode *)node)->mState = (int)zero;
-                        ((FileShareNode *)node)->mFileId =
-                            (((int)node + 0xcc00cc0) - (int)saved) / 0xcc0;
-                        node += FILE_SHARE_NODE_SIZE;
-                    } while (node + FILE_SHARE_NODE_SIZE < end);
+                        node->mNext = node + 1;
+                        FS_InitFile((int *)node->mFile);
+                        node->mRefCount = (int)zero;
+                        node->mState = (int)zero;
+                        node->mFileId = (((int)node + 0xcc00cc0) - (int)saved) / 0xcc0;
+                        node += 1;
+                    } while (node + 1 < end);
                 }
-                ((FileShareNode *)node)->mNext = 0;
+                node->mNext = 0;
                 ((FileShareParentArea *)base)->mReplyGroup = 0;
                 ((FileShareParentArea *)base)->mReplyPending = 0;
                 ((FileShareParentArea *)base)->mReplySending = 0;
@@ -102,7 +104,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
                 ((FileShareParentArea *)base)->mResizeChildren = 0;
                 ((FileShareParentArea *)base)->mBusyCount = 0;
                 ((FileShareParentArea *)base)->mNewPacketSize = G->mParentPacketSize;
-                CP15::FlushAndInvalidateDataCache((int)base, sizeof(FileShareParentArea));
+                FlushFileShareArea(base, sizeof(FileShareParentArea));
                 CP15::DrainWriteBuffer();
                 func_020652fc(G->mParentPacketSize, G->mChildPacketSize, (int)func_020412f0);
                 func_020424c0();
@@ -127,7 +129,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
             FileShareChildArea *arr = (FileShareChildArea *)base;
             int i;
             char *p;
-            CP15::FlushAndInvalidateDataCache((int)base, sizeof(FileShareChildArea));
+            FlushFileShareArea(base, sizeof(FileShareChildArea));
             CP15::DrainWriteBuffer();
             p = base + 0xc0;
             for (i = 0; i < 0x10; i++) {
@@ -144,7 +146,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
             G->mParentPacketSize = 0;
             func_020424c0();
             func_02041224(base, ((FileShareWork *)data_020a1fc0)->mTableSize);
-            CP15::FlushAndInvalidateDataCache((int)base, sizeof(FileShareChildArea));
+            FlushFileShareArea(base, sizeof(FileShareChildArea));
             CP15::DrainWriteBuffer();
             func_02065234((int)func_02040f30);
         }

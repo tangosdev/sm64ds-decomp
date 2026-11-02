@@ -22586,11 +22586,9 @@ int daPly_c::CleanupResources() {
         }
     }
     {
-        int q = (int)mTrailPos;
-        if (q != 0)
-            /* Array destruction discards the receiver result. */
-            delete[] (Vector3 *)q;
-        q = (int)mTrailFlags;
+        if (mTrailPos != 0)
+            delete[] mTrailPos;
+        int q = (int)mTrailFlags;
         if (q != 0)
             func_0203cbc0((void *)q);
         q = mHeldObjQueue;
