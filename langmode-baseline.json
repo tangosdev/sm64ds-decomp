@@ -70,11 +70,11 @@
     "unmigrated_total": 4
   },
   "shadow_decls": {
-    "header_shadows": 117,
+    "header_shadows": 108,
     "local_body_no_include": 65,
     "local_body_no_include_cpp": 13,
-    "local_struct_body": 472,
-    "local_struct_body_cpp": 379,
+    "local_struct_body": 471,
+    "local_struct_body_cpp": 378,
     "pad_layout": 59
   },
   "totals": {
