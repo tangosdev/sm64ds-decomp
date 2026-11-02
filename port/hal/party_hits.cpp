@@ -175,7 +175,10 @@ void read_env() {
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEAT")) g.lab_seat = std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SWING")) g.lab_swing = std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_EATHOLD")) g.eat_hold = (unsigned)std::atoi(e);
-    if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEEK")) std::sscanf(e, "%d,%d", &g.seek_seat, &g.seek_near);
+    if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEEK")) {
+        if (!std::strncmp(e, "any", 3)) { g.seek_seat = -2; std::sscanf(e + 3, ",%d", &g.seek_near); }
+        else std::sscanf(e, "%d,%d", &g.seek_seat, &g.seek_near);
+    }
     if (const char *e = std::getenv("SM64DS_PHIT_LAB")) {
         char kind[16] = {0}; int units = 0;
         if (std::sscanf(e, "forge:%15[a-z]:%d", kind, &units) == 2) {
@@ -1003,9 +1006,17 @@ void pad_ctrl(unsigned short ctrl_mask, bool edge) {      // a Ctrl bit (0x0001 
 }
 enum : unsigned short { kDsRight = 0x10, kDsLeft = 0x20, kDsUp = 0x40, kDsDown = 0x80 };
 void lab_seek(char *me) {
-    if (g.seek_seat < 0 || g.hold.active() || g.cv.active) return;
+    if (g.seek_seat < 0 && g.seek_seat != -2) return;
+    if (g.hold.active() || g.cv.active) return;
+    int seat = g.seek_seat;
+    if (seat == -2) {                           // "any": the first friend seat with a fresh ghost (seats are not stable per run)
+        Seen t;
+        for (int q = 0; q < kHubPartySeats && seat == -2; ++q)
+            if (q != comms_hub_my_seat() && see(q, &t) && t.have_ghost) seat = q;
+        if (seat == -2) return;
+    }
     Seen s;
-    if (!see(g.seek_seat, &s) || !s.have_ghost || !s.in_level) return;
+    if (!see(seat, &s) || !s.have_ghost || !s.in_level) return;
     const Place mp = my_place();
     if (s.at.level != mp.level || s.at.area != mp.area) return;
     ++g.seek_f;
