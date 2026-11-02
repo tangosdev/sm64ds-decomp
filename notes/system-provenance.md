@@ -15,13 +15,13 @@ the name does not overclaim.
 
 ## Particle::SysTracker — `include/Particle__SysTracker.h`
 
-> `include/Particle.h`, the flat C spelling this section was written against,
+> `Particle.h`, the flat C header spelling this section was written against,
 > lost its last includer and has been retired (#4570). Every field below is a
 > member of `Particle::SysTracker` in `include/Particle__SysTracker.h` under the
 > same name and offset; there the callback bank is typed with the real
 > `dPa_c::level_c::*Callback_c` classes, not a byte and padding.
 
-The struct is spelled `Particle` in `include/Particle.h` for historical
+The struct is spelled `Particle` in `Particle.h` for historical
 reasons; the ROM's mangled names call it `Particle::SysTracker`. There is one
 instance and its address lives in the global `data_0209ee74`:
 `_ZN8Particle10SysTrackerC1Ev` writes it, `_ZN8Particle10SysTrackerD1Ev`
@@ -123,7 +123,7 @@ constructor variants are now generated from the real nested C++ class.
 is what `src/engine/particle/Particle.cpp` and
 `src/engine/particle/Particle.cpp` include. A later pass that owned the
 file finished it: its three fields now read `mResourceFile` / `mManager` /
-`mContents`, with the same types `include/Particle.h` carries, so all three
+`mContents`, with the same types `Particle.h` carried, so all three
 declarations of the class spell the head identically.
 
 Only the head is declared there, and that is deliberate — the two including

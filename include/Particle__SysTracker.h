@@ -1,7 +1,7 @@
 /* Particle::SysTracker -- the game's single particle-engine owner, as a real
  * C++ class in its real namespace.
  *
- * This is the only declaration of the class. (include/Particle.h used to model
+ * This is the only declaration of the class. (A flat C header, Particle.h, used to model
  * the same object as a flat C `struct Particle`, with each callback spelled as
  * a byte plus padding; nothing included it any more and it was retired.)
  * dScStage_c (at +0x50) and dScMgSingle3DBase_c (at +0x471c) embed this class
