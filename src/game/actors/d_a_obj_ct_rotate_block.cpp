@@ -50,9 +50,14 @@ enum daObjCtRotateBlock_c_AssetId {
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 
-/* Per-variant records are 0xc bytes. The first word is a SharedFilePtr. */
-extern char data_ov065_0211cfd0[];
-extern char data_ov065_0211cfd4[];
+/* One record per mVariant: the base model's and the collision mesh's file
+ * handles, and the CLPS block SetFile gets with that mesh. */
+struct CtRotateBlockFiles {
+    SharedFilePtr *model;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
+};
+extern CtRotateBlockFiles data_ov065_0211cfd0[2];
 
 /* File-scope objects at the end of this file construct the six resource
  * handles (model files 0x5b6/0x5b9/0x5b8/0x5bb, collision files 0x5b7/
@@ -145,8 +150,8 @@ int daObjCtRotateBlock_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     ((SharedFilePtr *)data_ov065_0211c0a8[mVariant])->Release();
-    ((SharedFilePtr *)*(void **)(data_ov065_0211cfd0 + mVariant * 0xc))->Release();
-    ((SharedFilePtr *)*(void **)(data_ov065_0211cfd4 + mVariant * 0xc))->Release();
+    data_ov065_0211cfd0[mVariant].model->Release();
+    data_ov065_0211cfd0[mVariant].collision->Release();
     return 1;
 }
 
@@ -219,8 +224,7 @@ int daObjCtRotateBlock_c::InitResources() {
 
     u8 idx = mVariant;
     {
-        void *bmd = dExtSimpleModel_c::LoadFile(
-            *(SharedFilePtr *)*(void **)(data_ov065_0211cfd0 + idx * 0xc));
+        void *bmd = dExtSimpleModel_c::LoadFile(*data_ov065_0211cfd0[idx].model);
         mModel.SetFile((BMD_File *)bmd, 1, -1);
     }
 
@@ -238,17 +242,15 @@ int daObjCtRotateBlock_c::InitResources() {
 
     idx = mVariant;
     if (idx == 0) {
-        s32 oi = idx * 0xc;
-        void *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)*(void **)(data_ov065_0211cfd4 + oi));
+        void *kcl = dBgW_Kc::LoadFile(*data_ov065_0211cfd0[idx].collision);
         ((dBgW_KcMbg *)(&mMeshCollider))
             ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
-                                  *(CLPS_Block *)(*(void **)((char *)data_ov065_0211cfd8 + oi)));
+                                  *data_ov065_0211cfd0[idx].clps);
     } else {
-        s32 oi = idx * 0xc;
-        void *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)*(void **)(data_ov065_0211cfd4 + oi));
+        void *kcl = dBgW_Kc::LoadFile(*data_ov065_0211cfd0[idx].collision);
         ((dBgW_KcMbg *)(&mMeshCollider))
             ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
-                                  *(CLPS_Block *)(*(void **)((char *)data_ov065_0211cfd8 + oi)));
+                                  *data_ov065_0211cfd0[idx].clps);
     }
 
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);

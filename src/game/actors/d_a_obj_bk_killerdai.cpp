@@ -28,8 +28,8 @@
  * - Kill stores pos and dustPos memberwise; a Vector3 assignment does not
  *   match. Behavior widens mPosY through `long long` before the
  *   spawn-height add.
- * - The launcher's link to its bill is an unnamed word at +0x3dc; actor
- *   0xde has no header.
+ * - Actor 0xde is the bill, daKlr_c (g_profile_KILLER's id half reads
+ *   0xde); Behavior hands it this launcher through daKlr_c::mLauncher.
  * - data_0209f2f8 (level id), data_0209caa0 (per-level flags) and
  *   data_0209f220 (star flag) keep linker names; IsStarCollectedInCurLevel
  *   is a shared coined helper, naming belongs at its definition.
@@ -39,6 +39,7 @@
 
 #include "decl_common.h"
 #include "daObjBkKillerdai_c.h"
+#include "daKlr_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "daPly_c.h"
@@ -158,7 +159,7 @@ s32 daObjBkKillerdai_c::Behavior() {
             pos.y = y;
             dActor_c *spawned = dActor_c::Spawn(0xde, 0, pos, &mAngle, mAreaId, -1);
             mSpawnedUniqueID = spawned->uniqueID;
-            *(u32 *)((char *)spawned + 0x3dc) = (u32)this;
+            static_cast<daKlr_c *>(spawned)->mLauncher = this;
         }
     }
     IsClsnInRange(0, 0);
