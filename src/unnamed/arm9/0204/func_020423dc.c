@@ -1,26 +1,19 @@
 #include "types.h"
+#include "private/fs_views.h"
 
-/* NitroSDK FSArchive and FSFile, as src/engine/fs/FS_Archive.cpp lays them
-   out; this file only passes them on. */
-struct FSArchive;
-struct FSFile;
+typedef struct FSFile FSFile;
 
-typedef int (*FS_ARCHIVE_READ_FUNC)(struct FSArchive *p_arc, void *dst, u32 pos, u32 size);
-typedef int (*FS_ARCHIVE_WRITE_FUNC)(struct FSArchive *p_arc, const void *src, u32 pos, u32 size);
-typedef int (*FS_ARCHIVE_PROC_FUNC)(struct FSFile *p_file, int command);
-
-extern struct FSArchive *FS_FindArchive(const char *name, int name_len);
-extern int FS_UnloadArchive(struct FSArchive *p_arc);
-extern void FS_SetArchiveProc(struct FSArchive *p_arc, FS_ARCHIVE_PROC_FUNC proc, u32 flags);
-extern int FS_LoadArchive(struct FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt,
-                          u32 fnt_size, FS_ARCHIVE_READ_FUNC read_func,
-                          FS_ARCHIVE_WRITE_FUNC write_func);
+extern FSArchive *FS_FindArchive(const char *name, int name_len);
+extern int FS_UnloadArchive(FSArchive *p_arc);
+extern void FS_SetArchiveProc(FSArchive *p_arc, FS_ARCHIVE_PROC_FUNC proc, u32 flags);
+extern int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt, u32 fnt_size,
+                          FS_ARCHIVE_READ_FUNC read_func, FS_ARCHIVE_WRITE_FUNC write_func);
 extern void func_0205db88(int target, void *ptr, u32 size);
 
 extern char data_02099e6c[]; /* "rom" */
-extern int func_02042668(struct FSFile *p_file, int command);
-extern int func_020426f8(struct FSArchive *p_arc, void *dst, u32 pos, u32 size);
-extern int func_020426f0(struct FSArchive *p_arc, const void *src, u32 pos, u32 size);
+extern int func_02042668(FSFile *p_file, int command);
+extern int func_020426f8(FSArchive *p_arc, void *dst, u32 pos, u32 size);
+extern int func_020426f0(FSArchive *p_arc, const void *src, u32 pos, u32 size);
 
 struct Pair {
     int *f0;
@@ -41,7 +34,7 @@ struct Pair {
  * Returns the block's leading word. */
 int func_020423dc(int *r6) {
     int r5;
-    struct FSArchive *h;
+    FSArchive *h;
     int r3;
     struct Pair arr[4];
 

@@ -1,9 +1,10 @@
 //cpp
 #include "CP15.h"
+#include "private/fs_views.h"
+
+typedef struct FSFile FSFile;
 
 extern "C" {
-
-struct FSArchive;
 
 typedef struct {
     char pad00[0x20];
@@ -37,8 +38,7 @@ extern void func_02067b68(void *s, unsigned int start, unsigned int end, int fla
 extern char data_0209a080[];
 extern int *data_0209a07c;
 
-int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
-{
+int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
     int result;
     unsigned int remain;
     char *cur;
@@ -49,7 +49,7 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
     FSArchive *node;
     int *rgn;
     Args args;
-    int localbuf[17];
+    FSFile file;
 
     result = 0;
     if (c >= 0x160) {
@@ -59,7 +59,7 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
         ctx = b;
 
         if (a != 0) {
-            base = a->rd - a->wr;
+            base = a->prop.file.pos - a->prop.file.top;
             if (FS_ReadFile((int)a, (int)b, 0x160) < 0x160) {
                 remain = 0;
             }
@@ -69,11 +69,11 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
             if (ctx->f80 == 0) {
                 ctx->f80 = 0x1000000;
             }
-            FS_InitFile(localbuf);
+            FS_InitFile((int *)&file);
             node = FS_FindArchive(data_0209a080, 3);
-            FS_OpenFileDirect((char *)localbuf, node, 0, ctx->f80 + 0x88, -1);
-            a = (Ctx *)localbuf;
-            base = localbuf[10] - localbuf[8];
+            FS_OpenFileDirect((char *)&file, node, 0, ctx->f80 + 0x88, -1);
+            a = &file;
+            base = file.prop.file.pos - file.prop.file.top;
             CpuCopy8(ctx, cur, 0x160);
             *(unsigned int *)(cur + 0x60) |= 0x406000;
         }
@@ -102,7 +102,7 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
         func_0205d368((int *)a, base, 0);
 
         if (flag) {
-            FS_CloseFile((char *)localbuf);
+            FS_CloseFile((char *)&file);
             if (result) {
                 args.a = ctx->wr;
                 rgn = data_0209a07c;

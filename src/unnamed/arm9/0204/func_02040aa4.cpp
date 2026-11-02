@@ -2,6 +2,11 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 #include "IRQ.h"
+#include "private/fs_views.h"
+
+/* The FSFile a child read is in flight on (mReadRequest); only its archive is
+ * read here. */
+typedef struct FSFile FSFile;
 
 extern "C" {
 
@@ -14,13 +19,6 @@ extern char data_020a1fc0[];
 
 /* mAllocFunc: (arg, size, 0) allocates, (arg, 0, ptr) frees. */
 typedef void (*CallbackFn)(void *ctx, int zero, int val);
-
-/* The FSFile a child read is in flight on (mReadRequest); only its archive is
- * read here (NitroSDK FSFile.arc). */
-typedef struct FSFile {
-    char pad_00[8];
-    void *arc; /* 0x08 */
-} FSFile;
 
 /* Shut the file share down: free the card tables (mTable), and as a child
  * cancel the read in flight and free the receive work (mRecvWork). The
