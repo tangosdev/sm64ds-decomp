@@ -51,6 +51,11 @@ int func_ov002_020db5f4(char *victim, char *holder);              // victim: St_
 void func_ov002_020db54c(unsigned char *victim, int speed, int vert, short yaw);   // victim: thrown
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned id, int x, int y, int z);
 void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned id, const void *pos);
+int func_ov002_020d82f0(void *c);                // the ROM's "can be eaten / grabbed" gate (src/game/player/Player.cpp)
+extern char data_0209f498[];                     // Stage::CheckInput's Ctrl[4], stride 0x18 (vs_arena_eat.cpp rig_press)
+extern unsigned short data_020a0e58[];           // PadData[4]: {held, pressed}, the raw DS pad
+extern int data_020a0e5a[];                      // the split "pressed" symbol (same memory on the DS)
+extern unsigned short *data_0209214c[];          // CheckInput's three DS bit -> Ctrl bit maps
 }
 namespace port {
 int vs_arena_state_index(const void *body);
@@ -134,6 +139,14 @@ struct G {
     int lab_seat = -1;      // LAB: forge only toward this hub seat
     int lab_swing = 0; bool swing_done = false;     // LAB: force the holder's St_SwingPlayer this many frames into the hold (the pad's circular stick motion is not scripted; the arena rig does the same)
     unsigned forge_at = 0, eat_hold = 0;      // LAB: forge from this frame on; a longer eat hold for pictures
+    // LAB (TONGUE1, SM64DS_PHIT_LAB_SEEK=<seat>[,<near>]): walk to that friend and use the tongue with the DS pad alone
+    int seek_seat = -1, seek_near = 200;
+    int seek_phase = 0; unsigned seek_t = 0; int seek_cup = 0, seek_sign = 1; unsigned seek_f = 0;
+    unsigned long long seek_tongues = 0;
+    // TONGUE1 counters: why a tongue did not say anything, and what the ROM's own gate said of each refused eat
+    unsigned long long tongues = 0, tongue_sent = 0, unsent_far = 0, unsent_facing = 0, unsent_dy = 0, unsent_none = 0;
+    unsigned long long eat_rom_ok = 0, eat_rom_no = 0;
+    bool tongue_said = false;
     Stats st = {};
 } g;
 
@@ -162,6 +175,7 @@ void read_env() {
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEAT")) g.lab_seat = std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SWING")) g.lab_swing = std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_EATHOLD")) g.eat_hold = (unsigned)std::atoi(e);
+    if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEEK")) std::sscanf(e, "%d,%d", &g.seek_seat, &g.seek_near);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB")) {
         char kind[16] = {0}; int units = 0;
         if (std::sscanf(e, "forge:%15[a-z]:%d", kind, &units) == 2) {
@@ -248,6 +262,24 @@ bool me_busy(const char *me, bool grab = false) {
     if (*(const int *)data_0209fc48 != 0) return true;
     g_busy_why = "";
     return false;
+}
+
+// TONGUE1: what the cartridge itself asks before a Yoshi tongue takes a player (func_ov002_020d6c60, the VS arena's
+// own path): func_ov002_020d82f0 on the victim (no blink +0x6a0, not mega +0x703, no cap power +0x73c, not vanished
+// +0x6fb, both no-control bytes +0x708 / +0x709 clear), the victim holds nobody in its own mouth (+0x360), and the
+// mouth entry func_ov002_020d5f34 finds +0xd0 (mEatingPlayer) empty. Nothing about the state the body is in.
+// Returns 0 when the ROM would eat, else a short reason.
+const char *rom_eat_refusal(char *me) {
+    if (!func_ov002_020d82f0(me)) {
+        if (*(const unsigned short *)(me + 0x6a0)) return "rom_blink";
+        if (*(const unsigned char *)(me + 0x703)) return "rom_mega";
+        if (*(const unsigned short *)(me + 0x73c)) return "rom_capflags";
+        if (*(const unsigned char *)(me + 0x6fb)) return "rom_vanish";
+        return "rom_nocontrol";
+    }
+    if (*(void *const *)(me + kMouthObj)) return "rom_mouth_full";
+    if (*(void *const *)(me + kInMouth)) return "rom_in_a_mouth";
+    return nullptr;
 }
 
 bool see(int seat, Seen *s) {
@@ -480,6 +512,17 @@ void eat_tick(char *me) {
             std::fprintf(stderr, "[phit] mash f=%u count=%d phase=%d eater timer=%u step=%d state_is_mouth=%d\n", g.frame,
                          _ZN6Player19func_ov002_020beb38Ev(me), (int)*(unsigned char *)(me + 0x6f5), (unsigned)*(unsigned short *)(ep + kHoldTimer),
                          (int)*(unsigned char *)(me + 0x6e3), state_is(me, data_ov002_02110064) ? 1 : 0);
+    }
+    if (g.log > 0 && ((g.frame - g.hold.since()) % 5) == 0) {
+        // TONGUE1: where am I, and where is the eater DRAWN on this screen (the follower's pose; 0 = not drawn this pass)
+        char *ep = body_of_seat(eater);
+        int dp[3] = {0, 0, 0}, drawn = 0;
+        const int nb = (int)data_0209f21c < 16 ? (int)data_0209f21c : 16;
+        for (int i = 0; i < nb; ++i) if (ep && data_0209f394[i] == ep) drawn = port_adventure_ghost_drawpos(i, dp);
+        std::fprintf(stderr, "[phit] held f=%u +%u me (%d,%d,%d) opacity %u state %d | eater seat %d drawn %d at (%d,%d,%d) wire (%d,%d,%d)\n",
+                     g.frame, g.frame - g.hold.since(), u(*player::pos_x(me)), u(*player::pos_y(me)), u(*player::pos_z(me)),
+                     (unsigned)*(unsigned char *)(me + 0x6f5), port::vs_arena_state_index(me), eater, drawn,
+                     u(dp[0]), u(dp[1]), u(dp[2]), s.x, s.y, s.z);
     }
     const EatStep step = g.hold.tick(g.frame, in);
     if (step == kEatHolding) {
@@ -715,9 +758,16 @@ void handle_claim(int attacker, unsigned ikind, unsigned counter, unsigned stamp
     m.x = stamp ? hp.x : u(*player::pos_x(me)); m.y = stamp ? hp.y : u(*player::pos_y(me)); m.z = stamp ? hp.z : u(*player::pos_z(me));
     m.busy = me_busy(me, ikind == kGrabCatch);
     m.eaten = g.hold.active() || g.cv.active;
+    const char *rom_no = ikind == kEatClaim ? rom_eat_refusal(me) : nullptr;
     Effect fx;
     const Verdict v = g.judge.judge(c, s, m, g.frame, &fx);
     log_verdict(c, v);
+    if (ikind == kEatClaim) {
+        if (rom_no) ++g.eat_rom_no; else ++g.eat_rom_ok;
+        std::fprintf(stderr, "[phit] eat claim f=%u verdict %s, the ROM's own gate: %s (state %d, blink %u, 708 %u, 709 %u)\n", g.frame,
+                     verdict_name(v), rom_no ? rom_no : "would eat", port::vs_arena_state_index(me),
+                     (unsigned)*(unsigned short *)(me + 0x6a0), (unsigned)*(unsigned char *)(me + 0x708), (unsigned)*(unsigned char *)(me + 0x709));
+    }
     if (v != kOk) return;
     // A believed claim waits for the frame hook. The pump runs inside the frame's tick, BEFORE and around the
     // actor walk, so changing my body's state from here is unsafe (measured: the ROM's mouth state found its
@@ -800,9 +850,26 @@ void on_hit(int seat, const unsigned char *d, int len, void *) {
 }
 
 // ---- attacker side --------------------------------------------------------------------------------
+int g_tongue_why = 0;   // TONGUE1: the last reason a scan of this tongue did not send (1 far, 2 height, 3 facing)
 void track_pose(const char *me) {
     const int st = port::vs_arena_state_index(me);
-    if (st != g.state) { g.prev_state = g.state; g.state = st; g.in_state = 0; } else { ++g.in_state; }
+    if (st != g.state) {
+        if (g.state == kStYoshiPower && g.in_state >= kTongueFirst && !g.tongue_said) {
+            if (g_tongue_why == 1) ++g.unsent_far; else if (g_tongue_why == 2) ++g.unsent_dy;
+            else if (g_tongue_why == 3) ++g.unsent_facing; else ++g.unsent_none;
+        }
+        g.prev_state = g.state; g.state = st; g.in_state = 0;
+        if (st == kStYoshiPower) { ++g.tongues; g.tongue_said = false; g_tongue_why = 0; }
+    } else { ++g.in_state; }
+}
+// attacker_contact's own tests, with which one failed (0 = it reaches)
+int contact_why(unsigned ikind, int mx, int my, int mz, int myaw, int tx, int ty, int tz) {
+    const ReachRule r = reach_rule(ikind);
+    const long long dy = (long long)my - ty;
+    const int h = r.horiz - kLagAllow;
+    if (horiz2(mx, mz, tx, tz) > sq(h)) return 1;
+    if (dy < r.dy_lo || dy > r.dy_hi) return 2;
+    return attacker_contact(ikind, mx, my, mz, myaw, tx, ty, tz) ? 0 : 3;
 }
 
 unsigned stamp_for(const HubSeatInfo &si) {
@@ -878,6 +945,7 @@ void attacker_scan(char *me) {
         port::comms_sync_ghost_look(seat, &fanim, &fchar);
         if (kind == kMelee && g.grab_on && wario && !g.ch.active && ghost_tongue::is_hurt_anim(fanim)) kind = kGrabCatch;
         if (!attacker_contact((unsigned)kind, mx, my, mz, yaw, s.x, s.y, s.z)) {
+            if (ik == kEatClaim) g_tongue_why = contact_why((unsigned)kind, mx, my, mz, yaw, s.x, s.y, s.z);
             if (ik == kEatClaim && g.log > 0 && g.frame - g.probe_frame >= 4) {
                 // PROBE (item 7): why a tongue scan did not send, with the friend's character
                 g.probe_frame = g.frame;
@@ -896,7 +964,7 @@ void attacker_scan(char *me) {
         send_wire(seat, (unsigned)kind, yaw, mx, my, mz, stamp);
         g.send_frame[seat] = g.frame ? g.frame : 1;
         ++g.st.claims_sent;
-        if (kind == kEatClaim) g.book.sent(seat, g.frame);
+        if (kind == kEatClaim) { g.book.sent(seat, g.frame); g.tongue_said = true; ++g.tongue_sent; }
         if (kind == kStomp) {
             *(int *)(me + kVertSpeed) = kBounceUp;             // my own bounce, whatever the friend's console decides
             g.squash_until[seat] = g.frame + 20;
@@ -906,6 +974,92 @@ void attacker_scan(char *me) {
         if (g.log > 0) std::fprintf(stderr, "[phit] claim sent ik=%d -> seat %d stamp=%u (my %d,%d,%d; his %d,%d,%d)\n", kind, seat, stamp, mx, my, mz, s.x, s.y, s.z);
         return;                                                // one claim per frame
     }
+}
+
+// ---- LAB (TONGUE1): the seek pad -----------------------------------------------------------------
+// SM64DS_PHIT_LAB_SEEK=<seat>[,<near>]: this console walks its own body to that friend and uses the tongue, with
+// nothing but DS pad bits written into PadData before the actor walk (Stage::CheckInput builds the Ctrl block from
+// them at the top of the walk: vs_arena_eat.cpp rig_press says why the Ctrl words themselves are no use). No position,
+// speed or facing is written: the ROM's own walk turns and moves the body. The D-pad is camera-relative, so the
+// camera's forward is learned by holding UP (the body turns to it) and the handedness by holding LEFT once.
+void pad_raw(unsigned short ds, bool edge) {
+    const int slot = (int)data_0209f250;
+    if (slot < 0 || slot > 3) return;
+    data_020a0e58[slot * 2] |= ds;
+    if (edge) {
+        data_020a0e58[slot * 2 + 1] |= ds;
+        *(unsigned short *)((char *)data_020a0e5a + slot * 4) |= ds;
+    }
+}
+void pad_ctrl(unsigned short ctrl_mask, bool edge) {      // a Ctrl bit (0x0001 = attack) through CheckInput's own map
+    const int slot = (int)data_0209f250;
+    if (slot < 0 || slot > 3) return;
+    const unsigned char mode = *(unsigned char *)(data_0209f498 + slot * 0x18 + 0x16);
+    const unsigned short *map = data_0209214c[mode < 3 ? mode : 0];
+    unsigned short ds = 0;
+    for (int j = 0; j < 16; ++j)
+        if (map[j] & ctrl_mask) ds |= (unsigned short)(1u << j);
+    pad_raw(ds, edge);
+}
+enum : unsigned short { kDsRight = 0x10, kDsLeft = 0x20, kDsUp = 0x40, kDsDown = 0x80 };
+void lab_seek(char *me) {
+    if (g.seek_seat < 0 || g.hold.active() || g.cv.active) return;
+    Seen s;
+    if (!see(g.seek_seat, &s) || !s.have_ghost || !s.in_level) return;
+    const Place mp = my_place();
+    if (s.at.level != mp.level || s.at.area != mp.area) return;
+    ++g.seek_f;
+    const int mx = u(*player::pos_x(me)), mz = u(*player::pos_z(me));
+    const int yaw = *(const short *)(me + kYawAngle) & 0xFFFF;
+    const double dist = std::sqrt((double)horiz2(mx, mz, s.x, s.z));
+    const int want = angle_from_to(mx, mz, s.x, s.z);
+    switch (g.seek_phase) {
+    case 0:                                     // hold UP: the body turns to the camera's forward
+        pad_raw(kDsUp, g.seek_t == 0);
+        if (++g.seek_t >= 10) { g.seek_cup = yaw; g.seek_t = 0; g.seek_phase = 1; }
+        return;
+    case 1: {                                   // hold LEFT: which way is left
+        pad_raw(kDsLeft, g.seek_t == 0);
+        if (++g.seek_t >= 10) {
+            const short d = (short)(yaw - g.seek_cup);
+            g.seek_sign = d >= 0 ? 1 : -1;
+            g.seek_t = 0; g.seek_phase = 2;
+            std::fprintf(stderr, "[phit] LAB seek: camera forward 0x%04x, left is %s\n", g.seek_cup, g.seek_sign > 0 ? "+0x4000" : "-0x4000");
+        }
+        return;
+    }
+    case 2: {                                   // walk to him; near and facing him: the tongue
+        int fe = (want - yaw) & 0xFFFF; if (fe > 0x8000) fe -= 0x10000;
+        if (dist <= g.seek_near && fe > -0x1000 && fe < 0x1000 && g.state != kStYoshiPower) {
+            pad_ctrl(0x0001, true);
+            ++g.seek_tongues;
+            std::fprintf(stderr, "[phit] LAB seek: tongue %llu at %d units, facing error 0x%x, f=%u\n", g.seek_tongues, (int)dist, fe & 0xFFFF, g.frame);
+            g.seek_t = 0; g.seek_phase = 3;
+            return;
+        }
+        // the D-pad direction (8 of them) nearest the way to him, in the camera's frame
+        const short rel = (short)((want - g.seek_cup) * g.seek_sign);
+        const int k = (((int)rel + 0x1000) & 0xFFFF) / 0x2000;       // 0 up, 1 up-left, 2 left, ... 7 up-right
+        static const unsigned short dirs[8] = { kDsUp, kDsUp | kDsLeft, kDsLeft, kDsDown | kDsLeft, kDsDown, kDsDown | kDsRight, kDsRight, kDsUp | kDsRight };
+        // close in: a short press only turns the body (and steps it a little)
+        if (dist > g.seek_near * 0.6 || (g.seek_f & 3) == 0) pad_raw(dirs[k & 7], false);
+        return;
+    }
+    default:                                    // after a tongue: hands off for a second and a half
+        if (++g.seek_t >= 45) { g.seek_t = 0; g.seek_phase = (g.seek_tongues % 6) == 0 ? 0 : 2; }
+        return;
+    }
+}
+
+void exit_summary() {
+    std::fprintf(stderr, "[phit:exit] tongues %llu: claim sent %llu, unsent: out of reach %llu, height %llu, facing %llu, nothing to say %llu"
+                 " (seek pad tongues %llu)\n", g.tongues, g.tongue_sent, g.unsent_far, g.unsent_dy, g.unsent_facing, g.unsent_none, g.seek_tongues);
+    std::fprintf(stderr, "[phit:exit] claims in %llu: applied %llu, refused %llu; eat claims the ROM's own gate would take %llu, refuse %llu\n",
+                 g.st.claims_recv, g.st.claims_recv - g.st.refused, g.st.refused, g.eat_rom_ok, g.eat_rom_no);
+    for (int v = 1; v < kVerdicts; ++v)
+        if (g.st.refused_by[v & 15]) std::fprintf(stderr, "[phit:exit]   refused %s: %llu\n", verdict_name(v), g.st.refused_by[v & 15]);
+    std::fprintf(stderr, "[phit:exit] eats began %llu, spat %llu, aborted %llu\n", g.st.eats_began, g.st.eats_spat, g.st.eats_aborted);
+    std::fflush(stderr);
 }
 
 }  // namespace
@@ -965,6 +1119,7 @@ extern "C" void port_party_hits_frame(void) {
             const bool ok = coop_ctl_register(kCoopCtlSubtype, kCoopCtlSubtype, coop_sub, nullptr);
             std::fprintf(stderr, "[phit] coop SYNB 0x%02x %s\n", (unsigned)kCoopCtlSubtype, ok ? "registered" : "REGISTER FAILED");
         }
+        if (g.on) std::atexit(exit_summary);
         std::fprintf(stderr, "[phit] %s (room %d, interact %d, damage %d)\n", g.on ? "on" : "off: not a party/coop room or interactions off",
                      (int)rk, g.judge.tog.interact ? 1 : 0, g.judge.tog.damage ? 1 : 0);
     }
@@ -1002,6 +1157,7 @@ extern "C" void port_party_hits_prewalk(void) {
     char *me = my_body();
     if (!me) return;
     diag_links("prewalk-before", me);
+    lab_seek(me);                                 // LAB (TONGUE1): inert unless SM64DS_PHIT_LAB_SEEK
     if (g.hold.active() && g.rom_mouth) {
         if (char *ep = body_of_seat(g.hold.eater())) {
             if (state_is(me, data_ov002_02110064)) {
