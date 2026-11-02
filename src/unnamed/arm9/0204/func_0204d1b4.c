@@ -1,10 +1,13 @@
 #include "types.h"
+#include "private/spl_particle_views.h"
 extern int __aeabi_idiv(int a, int b);
 extern u32 data_020a4d30;
 
 /* The particle's 0x40 halfword (SPL's visibility): the base alpha in bits 0-4,
- * the animated alpha in bits 5-9. */
-struct Particle {
+ * the animated alpha in bits 5-9. This
+ * callback rewrites the halfword whole, so it keeps this view rather than
+ * spl_particle_views.h's ParticleElement, which spells it as bitfields. */
+struct ParticleAlphaView {
     char pad0[0x40];
     u16 visibility; /* 0x40 */
 };
@@ -28,17 +31,9 @@ struct AlphaAnim {
     u8 out;                  /* 0x5 */
 };
 
-/* The particle definition (func_0204a730's PtclDef; SPL's SPLResource). */
-struct PtclDef {
-    void *data;
-    void *scaleAnim;
-    void *colorAnim;
-    struct AlphaAnim *alphaAnim; /* 0x0c */
-};
-
 /* The alpha animation callback (pret's SPL: SPLAnim_Alpha). data_020a4d30 is
  * the particle code's random seed (the same LCG as func_0204c584). */
-void func_0204d1b4(struct Particle *ptcl, struct PtclDef *def, int lifeRate) {
+void func_0204d1b4(struct ParticleAlphaView *ptcl, PtclDef *def, int lifeRate) {
     struct AlphaAnim *anim = def->alphaAnim;
     int in = anim->in;
     int out = anim->out;
