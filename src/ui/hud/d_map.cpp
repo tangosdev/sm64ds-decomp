@@ -374,7 +374,6 @@ void dMap_c::OnPendingDestroy()
     (void)this;
 }
 
-#pragma opt_strength_reduction off
 // @symbol _ZN6dMap_c6RenderEv
 int dMap_c::Render()
 {
@@ -551,7 +550,6 @@ int dMap_c::Render()
     return 1;
 }
 
-#pragma opt_strength_reduction on
 
 // @symbol _ZN6dMap_c8BehaviorEv
 /* One frame of the minimap: pick the map for the focus object, scroll and

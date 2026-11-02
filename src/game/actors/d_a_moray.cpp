@@ -666,7 +666,6 @@ void daMoray_c::OnPendingDestroy()
 }
 
 #pragma push
-#pragma opt_strength_reduction off
 // @symbol _ZN9daMoray_c6RenderEv
 s32 daMoray_c::Render()
 {

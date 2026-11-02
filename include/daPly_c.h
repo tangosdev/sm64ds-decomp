@@ -230,7 +230,7 @@ struct daPly_c : dActor_c {
     State *mRequestedState;            /* 0x378 */
     /* The collider being climbed: StartClimb, reached from a dCc_c hit
        callback, stores it and enters St_Climb; St_Headstand_Main stands on its
-       top (+0x08 height); func_ov002_020caf68 clears it. Every access is a word. */
+       top (+0x08 height); ClearClimbCollider clears it. Every access is a word. */
     dCc_c *mClimbClsn; /* 0x37c */
     /* ~daPly_c calls _ZN10dBgCh_ActrD1Ev on this FIRST, and dBgCh_Actr
        asserts 0x1bc -- which closes exactly at mSpawnPosX. */
@@ -327,7 +327,7 @@ struct daPly_c : dActor_c {
        More than 0x64000 below it, func_ov002_020c133c hurts the player and
        St_Wait_Init plays anim 5. */
     s32 mToxicSurfaceY; /* 0x650 */
-    /* Yoshi's tongue against walls. func_ov002_020d6dac, run by the tongue
+    /* Yoshi's tongue against walls. TongueWallProbe, run by the tongue
        grab func_ov002_020d6998 (mHatCharacter 3), casts a dBgCh_Lin between
        two bones of mHeadModels[3] and stores func_02053274's distance from
        the first to the hit point here; Behavior scales that model's bone by
@@ -418,7 +418,7 @@ struct daPly_c : dActor_c {
     u16 mPowerupTimer;            /* 0x6ae */
     u16 mCrouchTimer;            /* 0x6b0 */
     /* Hold between two steps of the scale animation at mScaleAnimStep:
-       func_ov002_020db704 sets it to 10 when step 1 or 6 reaches its
+       UpdateScaleAnim sets it to 10 when step 1 or 6 reaches its
        target and moves on when Behavior has counted it down to 1. */
     u16 mScaleAnimTimer;            /* 0x6b2 */
     u16 mHoldHeavyTimer;            /* 0x6b4 */
@@ -522,7 +522,7 @@ struct daPly_c : dActor_c {
        ApproachAngle divisor is 0x10 - ramp / 2, so the longer a sharp turn is
        held, the faster the player swings round. */
     u16 mTurnRamp; /* 0x6f0 */
-    /* A squash-and-stretch on mScale, run each frame by func_ov002_020db704
+    /* A squash-and-stretch on mScale, run each frame by UpdateScaleAnim
        and started by func_ov002_020db8bc(kind), which sets the step to 1 and
        zeroes mScaleAnimTimer. Kinds 0 and 1 step mScaleY through the tables
        data_ov002_020ff2c0 / data_ov002_020ff230 with X and Z set to
@@ -674,7 +674,7 @@ struct daPly_c : dActor_c {
     dActor_c *mCapActor; /* 0x72c */
     /* A flight along the control points data_ov002_0210a8b8 ({speed, x, y,
        z} rows), a uniform cubic B-spline: func_ov002_020c3148 resets it,
-       func_ov002_020c3160 weights four rows from mSplinePoint by the basis
+       ComputeSplineWeights weights four rows from mSplinePoint by the basis
        at mSplineT (fx12), using mSplineSpan 1..5 to pick the clamped-end
        variants, and func_ov002_020c2fec advances mSplineT by the row's
        speed / 1000, moving to the next point at 0x1000. Driven by
@@ -1085,6 +1085,25 @@ struct daPly_c : dActor_c {
     void func_ov002_020d98b4();
     int func_ov002_020daa74();
     void func_ov002_020db8d8();
+
+    /* Non-virtual helpers that were free functions taking the player as `self`.
+       Coined names; parameters stay unnamed because a named parameter in a
+       class-scope declaration renumbers @NNN in every consumer TU. */
+    void ComputeSplineWeights(Fix12i *); /* func_ov002_020c3160 */
+    void ClearClimbCollider();           /* func_ov002_020caf68 */
+    void LeaveShellRide();               /* func_ov002_020cc1f4 */
+    void StartAnim0xAB();                /* func_ov002_020cd2c4 */
+    void StartAnim0xAE();                /* func_ov002_020cd308 */
+    void StartAnim0xAA();                /* func_ov002_020cd39c */
+    void StartAnim0xA9();                /* func_ov002_020cd3e0 */
+    void PlayLandingEffects();           /* func_ov002_020d4c30 */
+    int TongueWallProbe();               /* func_ov002_020d6dac */
+    void StartHurtFallAnim();            /* func_ov002_020d99a4 */
+    int DropHeldObj();                   /* func_ov002_020da9d4 */
+    void UpdateScaleAnim();              /* func_ov002_020db704 */
+    int TryEnterCannonState();           /* func_ov002_020df34c */
+    int TryEnterBigFallLanding();        /* func_ov002_020e2ea0 */
+    void PlayCharacterSound();           /* func_ov002_020e6330 */
 
     void func_ov002_020bda48();
     void func_ov002_020bdb50(int);

@@ -1788,62 +1788,62 @@
   "production_mode": "intact-object",
   "defined_symbol_renames": [
     {
-      "from": "@3061",
+      "from": "@3060",
       "to": "@3087",
       "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
     },
     {
-      "from": "@3062",
+      "from": "@3061",
       "to": "@3088",
       "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
     },
     {
-      "from": "@3063",
+      "from": "@3062",
       "to": "@3089",
       "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
     },
     {
-      "from": "@3064",
+      "from": "@3063",
       "to": "@3090",
       "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
     },
     {
-      "from": "@3065",
+      "from": "@3064",
       "to": "@3091",
       "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
     },
     {
-      "from": "@3066",
+      "from": "@3065",
       "to": "@3092",
       "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
     },
     {
-      "from": "@3067",
+      "from": "@3066",
       "to": "@3093",
       "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
     },
     {
-      "from": "_ZGVsSpawnOff$2360",
+      "from": "_ZGVsSpawnOff$2359",
       "to": "_ZGVsSpawnOff$2361",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@2366",
+      "from": "@2365",
       "to": "@2367",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@2368",
+      "from": "@2367",
       "to": "@2369",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "@2370",
+      "from": "@2369",
       "to": "@2371",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     },
     {
-      "from": "sSpawnOff$2360",
+      "from": "sSpawnOff$2359",
       "to": "sSpawnOff$2361",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
     }

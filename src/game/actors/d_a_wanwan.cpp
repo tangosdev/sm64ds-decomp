@@ -620,17 +620,17 @@ extern "C" void func_ov014_02111fb8(daWanwan_c *c) {
     c->HugeLandingDust(true);
 }
 
-// @symbol func_ov014_02111f54
+// @symbol _ZN10daWanwan_c23TryStartReleaseCutsceneEv
 /* Start the release cutscene when the stump's mStepsLeft is 0 and the player
  * accepts the no-control lock. */
-extern "C" int func_ov014_02111f54(daWanwan_c *self) {
-    daObjPile_c *stump = (daObjPile_c *)dActor_c::FindWithID((unsigned)self->mStumpUniqueID);
+int daWanwan_c::TryStartReleaseCutscene() {
+    daObjPile_c *stump = (daObjPile_c *)dActor_c::FindWithID((unsigned)mStumpUniqueID);
     if (stump->mStepsLeft != 0)
         goto fail;
-    if (self->ClosestPlayer()->SetNoControlState(4, -1, 0) == 0)
+    if (ClosestPlayer()->SetNoControlState(4, -1, 0) == 0)
         goto fail;
-    self->func_ov014_02111ebc(3);
-    self->mChainBroken = 1;
+    func_ov014_02111ebc(3);
+    mChainBroken = 1;
     return 1;
 fail:
     return 0;
@@ -729,7 +729,7 @@ extern "C" void func_ov014_02111dc4(daWanwan_c *c) {
 /* State 1 update. Tries the release, turns toward mTargetAngY, and on the
  * ground lunges (state 2) when the player is close and in front. */
 extern "C" void func_ov014_02111ca8(daWanwan_c *c) {
-    if (func_ov014_02111f54(c))
+    if (c->TryStartReleaseCutscene())
         return;
     ApproachAngle(&c->mAngleX, 0, 4, 0x200, 0x80);
     DecIfAbove0_Short(&c->mActionTimer);
@@ -792,7 +792,7 @@ extern "C" void func_ov014_02111b70(daWanwan_c *c) {
 // @symbol func_ov014_02111af0
 /* State 2 update: stretch the leash to kChainMax, then back to idle. */
 extern "C" int func_ov014_02111af0(daWanwan_c *c) {
-    int r = func_ov014_02111f54(c);
+    int r = c->TryStartReleaseCutscene();
     if (r)
         return r;
     if (Math_Function_0203b14c(&c->mChainExtension, kChainMax, 0x800, 0x10000, 0x800))

@@ -7,9 +7,7 @@
     else \
         *(u16 *)(a) = (*(u16 *)(a) & 0xff00) | ((v) & 0xff)
 
-#pragma opt_strength_reduction off
 #pragma optimize_for_size on
-#pragma opt_common_subs off
 
 extern int func_0206c8b4(u64 d);
 

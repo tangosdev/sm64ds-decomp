@@ -1,4 +1,3 @@
-#pragma opt_strength_reduction off
 #pragma optimize_for_size on
 /* Unsigned x / base for the formatter's radixes: shifts for 2, 8 and 16;
    for 10 a 0x1999 reciprocal multiply on the two half-words, then a

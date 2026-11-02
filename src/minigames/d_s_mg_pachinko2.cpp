@@ -198,7 +198,6 @@ void dScMgPachinko2_c::CupSlot_ResetAll() {
 // @symbol _ZN16dScMgPachinko2_c14Cup_PickTargetEi
 #pragma push
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Cup_PickTarget(int k) {
     /* Keep the index-before-offset address form for the pinned compiler. */
     char *scene = (char *)this;
@@ -249,7 +248,6 @@ void dScMgPachinko2_c::Cup_PickTarget(int k) {
 
 // @symbol _ZN16dScMgPachinko2_c15Cup_StateDecideEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c ::Cup_StateDecide(int n) {
     unsigned int random;
     int moveSideways;
@@ -315,7 +313,6 @@ void dScMgPachinko2_c ::Cup_StateDecide(int n) {
 
 // @symbol _ZN16dScMgPachinko2_c17Cup_StateHopRightEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c ::Cup_StateHopRight(int i) {
     int screenX;
 
@@ -386,7 +383,6 @@ void dScMgPachinko2_c ::Cup_StateHopRight(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c16Cup_StateHopLeftEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c ::Cup_StateHopLeft(int i) {
     int screenX;
 
@@ -513,7 +509,6 @@ void dScMgPachinko2_c::Cup_DrawAll() {
 
 // @symbol _ZN16dScMgPachinko2_c11Cup_ShowAllEv
 #pragma push
-#pragma opt_strength_reduction off
 void dScMgPachinko2_c::Cup_ShowAll() {
     int i;
     for (i = 0; i < 2; i++) {
@@ -735,7 +730,6 @@ void dScMgPachinko2_c::Paddle_DrawAll() {
 
 // @symbol _ZN16dScMgPachinko2_c14Paddle_HideAllEv
 #pragma push
-#pragma opt_strength_reduction off
 void dScMgPachinko2_c::Paddle_HideAll() {
     for (int i = 0; i < 3; i++) {
         if (mPaddles[i].active != 0) {
@@ -856,7 +850,6 @@ void dScMgPachinko2_c::Paddle_CheckBallHits(int idx) {
 
 // @symbol _ZN16dScMgPachinko2_c19Paddle_StateFlyAwayEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Paddle_StateFlyAway(int i) {
     int v;
     u8 state;
@@ -915,7 +908,6 @@ void dScMgPachinko2_c::Paddle_StateDropBalls(int idx) {
 
 // @symbol _ZN16dScMgPachinko2_c18Paddle_StateGatherEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c ::Paddle_StateGather(int i) {
     if (mPaddles[i].timer != 0) {
         mPaddles[i].timer--;
@@ -1027,7 +1019,6 @@ void dScMgPachinko2_c ::Paddle_StateSwing(int idx) {
 
 // @symbol _ZN16dScMgPachinko2_c24Paddle_StateFallToGroundEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c ::Paddle_StateFallToGround(int i) {
     int screenY;
     mPaddles[i].y += mPaddles[i].vy;
@@ -1052,7 +1043,6 @@ void dScMgPachinko2_c ::Paddle_StateFallToGround(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c23Paddle_StateKnockedDownEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c ::Paddle_StateKnockedDown(int i) {
     int distanceBelowHome;
     mPaddles[i].y += mPaddles[i].vy;
@@ -1073,7 +1063,6 @@ void dScMgPachinko2_c ::Paddle_StateKnockedDown(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c10Paddle_HitEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Paddle_Hit(int i) {
     if ((int)mPaddles[i].state >= 8)
         return;
@@ -1105,7 +1094,6 @@ void dScMgPachinko2_c::Paddle_Hit(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c17Paddle_StatePauseEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Paddle_StatePause(int i) {
     mPaddles[i].sound = Sound_PlayIfNotActive(mPaddles[i].sound, 2, 0x198, 0);
 
@@ -1125,7 +1113,6 @@ void dScMgPachinko2_c::Paddle_StatePause(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c17Paddle_StateCrossEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Paddle_StateCross(int i) {
     int v1;
     int v2;
@@ -1224,7 +1211,6 @@ void dScMgPachinko2_c::Paddle_StateCross(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c17Paddle_StateWeaveEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Paddle_StateWeave(int i) {
     int v;
     u8 flag;
@@ -1293,7 +1279,6 @@ void dScMgPachinko2_c::Paddle_StateWeave(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c17Paddle_StateOrbitEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Paddle_StateOrbit(int i) {
     {
         unsigned short angle = mPaddles[i].angle;
@@ -1319,7 +1304,6 @@ void dScMgPachinko2_c::Paddle_StateOrbit(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c19Paddle_StateBoxLoopEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Paddle_StateBoxLoop(int i) {
     int v;
     u8 state;
@@ -1409,7 +1393,6 @@ void dScMgPachinko2_c::Paddle_StateBoxLoop(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c17Paddle_StateSweepEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Paddle_StateSweep(int i) {
     int v;
     u8 flag;
@@ -1462,7 +1445,6 @@ void dScMgPachinko2_c::Paddle_StateSweep(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c19Paddle_StateDescendEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Paddle_StateDescend(int i) {
     int limit;
 
@@ -1905,7 +1887,6 @@ void dScMgPachinko2_c::DrawAimLine() {
 
 // @symbol _ZN16dScMgPachinko2_c10Ball_HitAtEiii
 #pragma push
-#pragma opt_strength_reduction off
 #pragma opt_common_subs off
 void dScMgPachinko2_c::Ball_HitAt(int x, int z, int d) {
     int i;
@@ -1955,7 +1936,6 @@ void dScMgPachinko2_c::Ball_ClearAll() {
 
 // @symbol _ZN16dScMgPachinko2_c12Ball_DrawAllEv
 #pragma push
-#pragma opt_strength_reduction off
 void dScMgPachinko2_c::Ball_DrawAll() {
     int i;
     for (i = 0; i < 0x30; i++) {
@@ -2137,7 +2117,6 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c16Ball_StateFlyingEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Ball_StateFlying(int i) {
     int idx;
     int velX, velY;
@@ -2226,7 +2205,6 @@ void dScMgPachinko2_c::Ball_StateFlying(int i) {
 
 // @symbol _ZN16dScMgPachinko2_c16Ball_StateTumbleEi
 #pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Ball_StateTumble(int i) {
     int v660, v664, t660;
     mBalls[i].x += mBalls[i].vx;
@@ -2415,7 +2393,6 @@ void dScMgPachinko2_c::UpdateNextBall() {
 
 // @symbol _ZN16dScMgPachinko2_c10ResetRoundEv
 #pragma push
-#pragma opt_strength_reduction off
 void dScMgPachinko2_c::ResetRound() {
     char *c = (char *)this;
     int i;

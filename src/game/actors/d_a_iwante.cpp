@@ -2397,7 +2397,6 @@ int daIwante_c::Render() {
  * ROM-descending arrangement, not this one.  Re-measured by negative control on
  * the shipped source.) */
 #pragma opt_common_subs off
-#pragma opt_strength_reduction off
 // @symbol _ZN10daIwante_c8BehaviorEv
 /* Per frame, for all three parts: count mTimer1 and mTimer2 down, then run the
  * current state's run handler (the second pointer-to-member of the descriptor
@@ -2558,7 +2557,6 @@ int daIwante_c::Behavior() {
     return 1;
 }
 
-#pragma opt_strength_reduction on
 #pragma opt_common_subs on
 
 // @symbol _ZN10daIwante_c13InitResourcesEv

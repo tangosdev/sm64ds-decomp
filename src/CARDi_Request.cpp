@@ -13,7 +13,6 @@ extern "C" int PXI_SendWordByFifo(unsigned int a, unsigned int c, unsigned int b
  * result is not TIMEOUT (4) or the retries run out, sleeping until ARM7
  * clears CARD_STAT_REQ. INIT also sends the request block's address.
  * Returns whether the request succeeded. */
-#pragma opt_loop_invariants off
 extern "C" int CARDi_Request(CARDiCommon *p, s32 req_type, s32 retry_count) {
     unsigned int saved;
     int r;

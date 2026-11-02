@@ -11,7 +11,7 @@
  * func_ov078_02125de0 stores the king's own as the member; the stores into
  * the held actor (there and in the throw helper) and the reads in Render and
  * Behavior still use the raw offset on that other actor.
- * func_02035550 is the call
+ * dBgCh_Actr::SetWaterTrackFlag is the call
  * that ORs 0x4000 into dBgCh_Actr::mFlags; inlining the or deletes the call.
  * func_02012694 plays bank 3 at mCamSpacePos. It is not Sound::PlayBank3
  * (that body is 0x02012664). func_0200d8c8 shakes the camera.
@@ -1183,8 +1183,6 @@ int daBombking_c::func_ov078_02125350()
 
 
 #pragma push
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c19func_ov078_02125448Ev
 
@@ -1747,7 +1745,7 @@ int daBombking_c::InitResources()
     mArenaPosY = 0x1060000;
     mArenaPosZ = 0xfee15000;
     mWithMeshClsn.Init(this, 0x190000, 0x190000, 0, 0);
-    func_02035550(&mWithMeshClsn);
+    mWithMeshClsn.SetWaterTrackFlag();
     mAnimSpeed = 1;
     mHealth = 3;
     mStarID = param1 & 0xf;

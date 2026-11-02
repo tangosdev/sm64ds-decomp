@@ -1216,7 +1216,6 @@ extern "C" extern void CrossVec3(const Vec3 *a, const Vec3 *b, Vec3 *out);
 extern "C" extern void NormalizeVec3(int *v, int *out);
 
 #pragma push
-#pragma opt_strength_reduction off
 extern "C" void TrmpLine_ComputeNormals(char *self) {
     Vec3 columnEdge;
     Vec3 rowEdge;
@@ -1686,7 +1685,6 @@ extern int sTrmpLinePushStrongPitchEnd;
 }
 
 #pragma push
-#pragma opt_common_subs off
 #pragma opt_propagation off
 // @symbol TrmpLine_PushJumper
 extern "C" int TrmpLine_PushJumper(char *c) {

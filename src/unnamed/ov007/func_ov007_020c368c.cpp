@@ -16,7 +16,6 @@ extern "C" {
    would corrupt the parameter. */
 // @symbol func_ov007_020c368c
 
-#pragma opt_propagation off
 void func_ov007_020c368c(Vector3_16 *v, int count, int clamp) {
     int i;
     int len2;
