@@ -55,7 +55,7 @@ void FlushAndInvalidateDataCache(unsigned int addr, unsigned int size);
 } // namespace CP15
 
 /* The card stream Load reads through; only the cursor and end words are known. */
-struct Obj {
+struct FileStream {
     char pad[0x20];
     unsigned int cur;
     unsigned int end;
@@ -123,7 +123,7 @@ void *SharedFilePtr::Load() {
             mem = Memory::Allocate(size);
             DecompressLZ16(q, mem);
         } else {
-            struct Obj obj;
+            struct FileStream obj;
             func_020185c0(&obj, fileID);
             size = obj.end - obj.cur;
             FS_CloseFile(&obj);
@@ -136,7 +136,7 @@ void *SharedFilePtr::Load() {
         return filePtr;
     }
 
-    struct Obj obj2;
+    struct FileStream obj2;
     void *cp;
     unsigned int csize;
     int raw;

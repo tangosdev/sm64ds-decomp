@@ -69,7 +69,7 @@ struct Node {
 
 /* Shadow of the scene's +0x68/+0x6c, which sit in dScMgBase_c padding.
    PaintSquare reads the layer; InitBrush writes both. */
-struct Obj {
+struct BrushLayerObj {
     unsigned char pad0[0x68];
     unsigned char brushOn;
     unsigned char pad1[3];
@@ -884,7 +884,7 @@ int dScMgTrampoline_c::OnGraphCallback0() {
 
 // @symbol _ZN17dScMgTrampoline_c9InitBrushEi
 void dScMgTrampoline_c::InitBrush(int layer) {
-    Obj *self = (Obj *)this;
+    BrushLayerObj *self = (BrushLayerObj *)this;
     volatile unsigned short t0;
     volatile unsigned short t1;
     int tile = 0x7000;
@@ -959,7 +959,7 @@ void dScMgTrampoline_c::PaintSquare(int x_base, int y, int val, int n) {
                 if (x >= 0 && x < 0x100) {
                     if (yy >= 0 && yy < 0xc0) {
                         void *ret;
-                        int mode = ((Obj *)raw)->bgLayer;
+                        int mode = ((BrushLayerObj *)raw)->bgLayer;
 
                         switch (mode) {
                         case 0:

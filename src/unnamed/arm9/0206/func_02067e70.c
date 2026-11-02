@@ -1,7 +1,7 @@
 extern int FS_ReadFile(void *obj, void *buf, int size);
 extern int func_0205d368(void *obj, int len, int sel);
 
-struct Obj {
+struct FSFileView {
     char pad[0x20];
     int f20;    /* 0x20 */
     char pad24[0x28 - 0x24];
@@ -15,8 +15,7 @@ struct G {
     int f3c;    /* 0x3c */
 };
 
-int func_02067e70(struct Obj *obj)
-{
+int func_02067e70(struct FSFileView *obj) {
     char buf[0x60];
     struct G *g = 0;
     int len;

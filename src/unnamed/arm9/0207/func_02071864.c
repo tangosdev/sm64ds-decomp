@@ -1,5 +1,5 @@
 #include "types.h"
-typedef struct Obj {
+typedef struct FlagBlockObj {
     int w0, w4, w8, wC, w10; /* 0x00 */
     int w14;                 /* 0x14 */
     int w18;                 /* 0x18 */
@@ -14,7 +14,7 @@ typedef struct Obj {
     u8 b6a;                  /* 0x6a */
     u8 b6b;                  /* 0x6b */
     u8 b6c;                  /* 0x6c */
-} Obj;
+} FlagBlockObj;
 
 typedef struct Wrap {
     int w0;
@@ -23,8 +23,7 @@ typedef struct Wrap {
 
 extern u8 *func_02071a50(u8 *src, int *dst);
 
-void func_02071864(Obj *t, Wrap *w)
-{
+void func_02071864(FlagBlockObj *t, Wrap *w) {
     u8 *data = w->data;
     unsigned int flags = data[0];
     int f40 = flags & 0x40;

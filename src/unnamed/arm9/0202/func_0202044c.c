@@ -11,7 +11,8 @@ typedef struct OamAnimFrame {
 typedef struct OamAnimation {
     const OamAnimFrame *frames; /* 0x00 */
     int tile;                   /* 0x04 */
-    unsigned char pad_08[8];
+    int scaleX;                 /* 0x08 */
+    int scaleY;                 /* 0x0c */
     int frameCount;    /* 0x10 */
     int frame;         /* 0x14 */
     int frameDuration; /* 0x18 */
