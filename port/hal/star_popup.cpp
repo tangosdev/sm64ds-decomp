@@ -37,6 +37,7 @@ void *_ZN8dActor_c4NextEPKS_(const void *prev);
 void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 int _ZN8daStar_c19func_ov002_020e73acEv(char *star);      // the ROM's star classifier
 void ExitLevel(void);
+void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigned unk);
 extern int data_0209d6fc[];               // the message bank (hal/message_boot.cpp): base, entries, info section
 extern int data_0209d708[];
 extern int data_0209d70c[];
@@ -719,6 +720,21 @@ void near_knob() {
     done = true;
 }
 
+// Proof knob SM64DS_STAR_POPUP_WARP=<frame>:<level>:<act>: <frame> frames after my body first stands anywhere, the game's own
+// level change call (hal/coop_world.cpp SM64DS_COOP_WARP is the same for coop rooms only), so a party row reaches a course
+// without a walk through a painting (STAREXIT1). Once.
+void warp_knob() {
+    static int fr = -2, lv = 0, ac = 1; static int t = 0;
+    if (fr == -2) {
+        const char *e = std::getenv("SM64DS_STAR_POPUP_WARP");
+        if (!e || std::sscanf(e, "%d:%d:%d", &fr, &lv, &ac) != 3 || fr < 0) fr = -1;
+    }
+    if (fr < 0 || !my_body() || ++t < fr) return;
+    fr = -1;
+    std::fprintf(stderr, "[starpop] WARP knob: to level %d act %d wall=%lld\n", lv, ac, wall_ms());
+    LoadLevelNoReturn((unsigned)lv, 0, (unsigned)ac, 1);
+}
+
 void new_level_check() {
     const int lv = data_0209f2f8, ac = data_0209f220[0];
     if (!g.have_key || lv != g.lvl || ac != g.act) {
@@ -785,6 +801,7 @@ extern "C" void port_star_popup_frame(void) {
     using namespace port;
     census();          // proof knobs, solo too
     near_knob();
+    warp_knob();
     if (!std::getenv("SM64DS_PARTY") && !std::getenv("SM64DS_COOP") &&
         !(world_party_active() && comms_hub_room_kind() == kHubRoomWorld)) return;
     init_once();
