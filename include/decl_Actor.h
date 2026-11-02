@@ -21,7 +21,6 @@ extern "C" {
 #endif
 
 extern void *_ZN8dActor_cC2Ev(void*);
-extern void _ZN8dActor_cD2Ev(void*);
 
 
 #ifdef __cplusplus

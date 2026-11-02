@@ -1054,8 +1054,6 @@ extern void Mg_DrawPrompt(void*);
 extern void Mg_DrawTopRightCounter(int, int);
 extern void Mg_DrawNumber(int, int, int, int, int, int, int);
 extern void Mg_DrawBigNumber(int, int, int, int, int, int, int);
-extern void _ZN11dScMgBase_cD2Ev(void*);
-extern void *_ZN11dScMgBase_cC2Ev(void*);
 extern void Mg_FreeBannerFiles(void);
 extern void Mg_LoadBannerFiles(void);
 extern void Banner_Draw(void*);
