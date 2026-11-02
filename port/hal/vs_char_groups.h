@@ -17,8 +17,8 @@
  *   luigi  hat_undershirt  Hat luigi_head_1_pl 64/925, Hat luigi_head_2_pl 56/319, Hat luigi_head_n_pl 10/172, Undershirt luigi_body_1_pl 96/1113
  *   luigi  overalls        Overalls luigi_body_1_pl 81/1750
  *   luigi  shoes           Shoes luigi_body_1_pl 33/437
- *   wario  hat_undershirt  Hat wario_head_pl 117/733, Undershirt wario_body_pl 67/1121
- *   wario  overalls        Overalls wario_body_pl 50/1196
+ *   wario  hat_undershirt  Hat wario_head_pl 117/733, Undershirt wario_body_pl 66/1114
+ *   wario  overalls        Overalls wario_body_pl 52/1230
  *   wario  shoes           Shoes wario_body_pl 24/532
  */
 #ifndef PORT_HAL_VS_CHAR_GROUPS_H
@@ -119,18 +119,18 @@ static const int kIdx_11[117] = {
     131, 132, 133, 134, 135, 136, 137, 138, 139, 141, 142, 143, 145, 148, 150, 164,
     168, 172, 176, 180, 187
 };
-static const int kIdx_12[67] = {
+static const int kIdx_12[66] = {
     14, 15, 18, 19, 37, 42, 43, 46, 47, 50, 51, 52, 53, 54, 55, 68,
     69, 76, 77, 78, 79, 81, 82, 83, 85, 86, 87, 91, 92, 93, 94, 95,
-    96, 97, 99, 100, 101, 103, 104, 105, 107, 109, 110, 111, 112, 113, 115, 116,
-    117, 119, 120, 121, 122, 123, 125, 126, 127, 135, 137, 138, 139, 143, 154, 155,
-    172, 173, 177
+    96, 97, 99, 100, 101, 103, 104, 105, 109, 110, 111, 112, 113, 115, 116, 117,
+    119, 120, 121, 122, 123, 125, 126, 127, 135, 137, 138, 139, 143, 154, 155, 172,
+    173, 177
 };
-static const int kIdx_13[50] = {
-    7, 8, 44, 45, 48, 49, 80, 88, 89, 90, 98, 102, 106, 108, 114, 118,
-    124, 129, 130, 131, 134, 140, 141, 144, 145, 147, 148, 149, 150, 151, 152, 153,
-    156, 157, 158, 159, 160, 161, 162, 163, 167, 170, 175, 178, 179, 184, 188, 192,
-    193, 197
+static const int kIdx_13[52] = {
+    7, 8, 44, 45, 48, 49, 80, 88, 89, 90, 98, 102, 106, 107, 108, 114,
+    118, 124, 128, 129, 130, 131, 134, 140, 141, 144, 145, 147, 148, 149, 150, 151,
+    152, 153, 156, 157, 158, 159, 160, 161, 162, 163, 167, 170, 175, 178, 179, 184,
+    188, 192, 193, 197
 };
 static const int kIdx_14[24] = {
     181, 182, 183, 185, 186, 187, 189, 198, 199, 200, 201, 202, 203, 224, 225, 227,
@@ -150,8 +150,8 @@ static const Group kVscGroups[] = {
     { 1, 1, "data/player/luigi_model.bmd", "luigi_body_1_pl", 81, kIdx_9, 128, "Overalls" },
     { 1, 4, "data/player/luigi_model.bmd", "luigi_body_1_pl", 33, kIdx_10, 174, "Shoes" },
     { 2, 0, "data/player/wario_head_cap.bmd", "wario_head_pl", 117, kIdx_11, 0, "Hat" },
-    { 2, 0, "data/player/wario_model.bmd", "wario_body_pl", 67, kIdx_12, 112, "Undershirt" },
-    { 2, 1, "data/player/wario_model.bmd", "wario_body_pl", 50, kIdx_13, 150, "Overalls" },
+    { 2, 0, "data/player/wario_model.bmd", "wario_body_pl", 66, kIdx_12, 112, "Undershirt" },
+    { 2, 1, "data/player/wario_model.bmd", "wario_body_pl", 52, kIdx_13, 150, "Overalls" },
     { 2, 4, "data/player/wario_model.bmd", "wario_body_pl", 24, kIdx_14, 203, "Shoes" },
 };
 static const int kVscGroupCount = 15;

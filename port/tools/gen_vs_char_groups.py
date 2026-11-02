@@ -22,8 +22,9 @@ The earlier hue-window classifier (lane BROCOLOR1) is gone.
 
 THE ROWS. HAT = his Hat + Undershirt (one pick, as he asked on 10-13),
 OVERALLS = Overalls, SHOES = Shoes. Everything else he labelled (Gloves,
-Buttons, Eye color, white, Wario's jh4) and every family he left unnamed keeps
-the cartridge colour. A seam entry the Studio lifts out of every family and
+Buttons, Eye color, white, Wario's jh4, Wario's Hat Blue and Hat white, which
+are the W badge on his cap and its white edge, kept like Mario's M) and every
+family he left unnamed keeps the cartridge colour. A seam entry the Studio lifts out of every family and
 recolours by following one family (bro_groups.json seam_blends) joins the row
 of the family it follows; bro_groups.json holds no two-family blend.
 
