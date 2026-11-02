@@ -283,13 +283,18 @@ int sublevel_of_course(int course) {
 }
 
 void stage_text(int course, int star, char *out, int cap) {
+    // STAREXIT1 S2: the star's own name, the one the coop and popup lines use (hal/star_popup.cpp star_title). The save bit
+    // IS the ROM's star number (SaveData CollectStar sets 1 << star; star 7 of Bob-omb Battlefield is Behind Chain-Chomp's
+    // Gate), so the old stage code "S<star + 1>" named the next star ("BOB S8"). The stage code stays as the fallback.
+    star_popup_star_name(course, star, out, cap);
+    if (out[0]) return;
     char code[16] = "";
     const int sub = sublevel_of_course(course);
-    if (sub >= 0) player_list_stage_code(sub, star + 1, code);
+    if (sub >= 0 && star >= 1) player_list_stage_code(sub, star, code);
     if (code[0] && std::strcmp(code, "---") != 0)
         std::snprintf(out, (size_t)cap, "%s", code);
     else
-        std::snprintf(out, (size_t)cap, "course %d star %d", course, star + 1);
+        std::snprintf(out, (size_t)cap, "course %d star %d", course, star);
 }
 
 void count_drop(PsDrop r) { ++g.st.dropped[r]; }

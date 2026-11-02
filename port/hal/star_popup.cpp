@@ -42,6 +42,8 @@ extern int data_0209d6fc[];               // the message bank (hal/message_boot.
 extern int data_0209d708[];
 extern int data_0209d70c[];
 void port_chat_system_line(const char *text);
+extern void *data_0209f40c[];             // the map-marker table: the actor each star / red coin icon follows (12)
+extern unsigned char data_0209f37c[];     // its marker kind
 }
 
 namespace port {
@@ -720,19 +722,58 @@ void near_knob() {
     done = true;
 }
 
-// Proof knob SM64DS_STAR_POPUP_WARP=<frame>:<level>:<act>: <frame> frames after my body first stands anywhere, the game's own
+// Proof knob SM64DS_STAR_POPUP_WARP=<frame>:<level>:<act>[;...] (up to 4 steps): <frame> frames of standing after the last step (or after my body first stands anywhere), the game's own
 // level change call (hal/coop_world.cpp SM64DS_COOP_WARP is the same for coop rooms only), so a party row reaches a course
 // without a walk through a painting (STAREXIT1). Once.
 void warp_knob() {
-    static int fr = -2, lv = 0, ac = 1; static int t = 0;
-    if (fr == -2) {
-        const char *e = std::getenv("SM64DS_STAR_POPUP_WARP");
-        if (!e || std::sscanf(e, "%d:%d:%d", &fr, &lv, &ac) != 3 || fr < 0) fr = -1;
+    struct Step { int fr, lv, ac; };
+    static Step st[4]; static int n = -1, k = 0, t = 0;
+    if (n < 0) {
+        n = 0;
+        if (const char *e = std::getenv("SM64DS_STAR_POPUP_WARP")) {
+            const char *p = e; int used = 0;
+            while (n < 4 && std::sscanf(p, "%d:%d:%d%n", &st[n].fr, &st[n].lv, &st[n].ac, &used) == 3 && st[n].fr >= 0) {
+                ++n; p += used;
+                if (*p != ';' && *p != ',') break;
+                ++p;
+            }
+        }
     }
-    if (fr < 0 || !my_body() || ++t < fr) return;
-    fr = -1;
-    std::fprintf(stderr, "[starpop] WARP knob: to level %d act %d wall=%lld\n", lv, ac, wall_ms());
-    LoadLevelNoReturn((unsigned)lv, 0, (unsigned)ac, 1);
+    if (k >= n || !my_body() || ++t < st[k].fr) return;
+    std::fprintf(stderr, "[starpop] WARP knob: to level %d act %d wall=%lld\n", st[k].lv, st[k].ac, wall_ms());
+    LoadLevelNoReturn((unsigned)st[k].lv, 0, (unsigned)st[k].ac, 1);
+    ++k;
+    t = 0;
+}
+
+// STAREXIT1 S1: a map marker whose actor is gone. The ROM never removes a star from under a player who stays in the level (the
+// collector leaves, so the level and its marker table go with it), so when a friend's star or red coin is removed on this
+// console (hal/coop_world.cpp reconcile, kill_local_star above) the bottom-screen map kept drawing its icon at the dead actor's
+// last position. A slot whose actor is no longer in the actor list, or whose address now holds another class, is emptied the
+// way dActor_c::UntrackStar does (SetStarMarker(slot, 0, 2)). Runs only in an online room; solo play never reaches it.
+void marker_sweep() {
+    static void *seen[12]; static unsigned short cls[12];
+    unsigned want = 0;
+    for (int i = 0; i < 12; ++i) if (data_0209f40c[i]) want |= 1u << i;
+    if (!want) return;
+    unsigned live = 0;
+    for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a && live != want; a = (const char *)_ZN8dActor_c4NextEPKS_(a))
+        for (int i = 0; i < 12; ++i)
+            if ((want >> i & 1u) && data_0209f40c[i] == (const void *)a) live |= 1u << i;
+    for (int i = 0; i < 12; ++i) {
+        if (!(want >> i & 1u)) { seen[i] = nullptr; continue; }
+        void *o = data_0209f40c[i];
+        bool ok = (live >> i & 1u) != 0;
+        const unsigned short c = ok ? *(const unsigned short *)((const char *)o + 0x0c) : 0;
+        if (ok && seen[i] == o && cls[i] != c) ok = false;          // the address was freed and reused by another actor
+        if (ok) { seen[i] = o; cls[i] = c; continue; }
+        std::fprintf(stderr, "[starpop] map marker %d (kind %u, class %u) dropped: its actor is gone wall=%lld\n", i,
+                     (unsigned)data_0209f37c[i], (unsigned)(seen[i] == o ? cls[i] : 0), wall_ms());
+        data_0209f40c[i] = nullptr;
+        data_0209f37c[i] = 2;
+        seen[i] = nullptr;
+        ++g.st.markers;
+    }
 }
 
 void new_level_check() {
@@ -789,6 +830,7 @@ void star_popup_view(StarPopupView *out) {
 
 StarPopupStats star_popup_stats() { return g.st; }
 
+void star_popup_star_name(int course, int star, char *out, int cap) { star_title(course, star, out, cap); }
 bool star_popup_only_collector() { return only_collector(); }
 void star_popup_set_only_collector(int on) {
     g_only_override = on < 0 ? -1 : (on ? 1 : 0);
@@ -813,6 +855,7 @@ extern "C" void port_star_popup_frame(void) {
         std::fprintf(stderr, "[starpop] coop wire %s\n", g.registered ? "registered" : "REFUSED");
     }
     new_level_check();
+    marker_sweep();
     for (Fake &f : g.fake)
         if (f.used && !f.done && g.frame >= f.frame && my_body()) {
             f.done = true;

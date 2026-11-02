@@ -64,7 +64,7 @@ void star_popup_view(StarPopupView *out);
 bool star_popup_party_rx(int seat, const unsigned char *d, int len);
 
 struct StarPopupStats {
-    unsigned long long tx, rx, shown, toast, exits, dropped, dup, notes;
+    unsigned long long tx, rx, shown, toast, exits, dropped, dup, notes, markers;
 };
 StarPopupStats star_popup_stats();
 
@@ -77,6 +77,8 @@ StarPopupStats star_popup_stats();
 // course gets the line and plays on. OFF: everyone in the course and act leaves (the behaviour above).
 // The in-game lobby sets the rule with star_popup_set_only_collector(0 / 1); -1 goes back to the environment.
 bool star_popup_only_collector();
+// The ROM's own name of a course star (message bank), as the popup and chat lines use it; empty when the bank is not loaded.
+void star_popup_star_name(int course, int star, char *out, int cap);
 void star_popup_set_only_collector(int on);
 
 }  // namespace port
