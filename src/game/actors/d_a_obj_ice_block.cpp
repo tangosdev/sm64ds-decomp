@@ -22,7 +22,6 @@
  * Notes:
  * - data_ov002_0210d8d4 is the CLPS block, in ov002 data this TU does not
  *   own.
- * - The particle system word at +0x44 has no member in Particle::System yet.
  * - daStar_c's unk_49f (written when the star is let go) lives on another
  *   class's header, which has not named it yet.
  */
@@ -121,13 +120,13 @@ s32 daObjIceBlock_c::Behavior() {
             if (handle != 0) {
                 Particle::System *sys = Particle::System::FromUniqueID(handle);
                 if (sys != 0)
-                    *(s32 *)((u8 *)sys + 0x44) = mScale * 0xf;
+                    sys->emitRadius = mScale * 0xf;
             }
             handle = mParticleHandle2;
             if (handle != 0) {
                 Particle::System *sys = Particle::System::FromUniqueID(handle);
                 if (sys != 0)
-                    *(s32 *)((u8 *)sys + 0x44) = mScale * 0xf;
+                    sys->emitRadius = mScale * 0xf;
             }
         }
         return 1;

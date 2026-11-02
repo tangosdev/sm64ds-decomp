@@ -846,7 +846,7 @@ s32 dScMgTrampoline2_c::Behavior() {
         Particle::System::NewUnkCallback818(mParticleID, 0xf0, 0x280000, 0x700000, -0x580000, 0);
     Particle::System *trail = Particle::System::FromUniqueID(mParticleID);
     if (trail != 0) {
-        trail->spawnFrames = mRamp >> 12;
+        trail->emitInterval = mRamp >> 12;
         ApproachLinear(mRamp, 0x14000, 0x200);
     }
     {

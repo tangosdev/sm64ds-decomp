@@ -221,7 +221,7 @@ void func_ov007_020beb80(Ov007Figure *fig) {
                 *(Vec3sWords *)&sys->direction = *(Vec3sWords *)&motion;
                 vel = (short)FX_MUL(speed, 0x460);
             }
-            sys->spawnFrames = (u8)(((frames << 2) >> 12) + 1);
+            sys->emitInterval = (u8)(((frames << 2) >> 12) + 1);
             sys->callbackVelocity = vel;
             sys->callbackFlags &= ~2;
             *(Vec3Words *)&sys->position = *(Vec3Words *)pos;
