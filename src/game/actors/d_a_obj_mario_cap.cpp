@@ -183,11 +183,11 @@ struct CapEnterSelf;
 typedef int (CapEnterSelf::*CapEnterPmf)();
 struct CapEnterSelf {};
 
-/* Bit view of dCapIcon_c::mFlags. f1 is bit 1, the bit Behavior watches (the
- * one dCapIcon_c's GetCapState tests); f0 is the cap-bank bit. */
+/* Bit view of dCapIcon_c::mFlags (bits documented in CapIcon.h). Behavior
+ * watches `real`, the bit dCapIcon_c's GetCapState tests. */
 struct Flags3eb {
-    u8 f0 : 1;
-    u8 f1 : 1;
+    u8 bank : 1;
+    u8 real : 1;
 };
 
 /* dEnemyBase_c declares mStateTimer as an s16, but the helpers below read and
@@ -517,7 +517,7 @@ int daObjMarioCap_c::InitResources()
 int daObjMarioCap_c::Behavior()
 {
     if (mIconKind != 0xff) {
-        if (((Flags3eb *)&mCapIcon.mFlags)->f1 == 0) {
+        if (((Flags3eb *)&mCapIcon.mFlags)->real == 0) {
             mDormant = 1;
         } else if (mDormant == 1) {
             mScaleX = 0;

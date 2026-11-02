@@ -1,0 +1,35 @@
+{
+ "name": "capstate_probe",
+ "about": "Probe-mode example (ask.py probe --aim): stomp the Luigi kind-1 Goomba (player teleported 250 units above it) and log what the cap-icon list and dCapEnemy_c::GetCapState do afterwards. GetCapState is only logged for dormant Goombas (mIsDormant != 0); its return value comes back as a 'ret' event.",
+ "frame": {"addr": "0x020aaf40", "module": "ov001", "name": "capicon_tick"},
+ "residency": [{"module": "ov001", "addr": "0x020aaf40"}],
+ "locate": {
+  "walk": {"heads": ["[0x020ad634]", "[0x020ad638]", "[0x020ad63c]"], "next": "[node+0x10]", "max": 64},
+  "where": ["u16[[node+4]+0xc] == 200", "u8[node+0x19] == 1", "u8[node+0x18] == 1"]
+ },
+ "aim": [
+  {"expr": "[0x0209f394]+0x5c", "value": "[[obj+4]+0x5c]"},
+  {"expr": "[0x0209f394]+0x60", "value": "[[obj+4]+0x60] + 0xfa000"},
+  {"expr": "[0x0209f394]+0x64", "value": "[[obj+4]+0x64]"},
+  {"expr": "[0x0209f394]+0x68", "value": "[[obj+4]+0x5c]"},
+  {"expr": "[0x0209f394]+0x6c", "value": "[[obj+4]+0x60] + 0xfa000"},
+  {"expr": "[0x0209f394]+0x70", "value": "[[obj+4]+0x64]"}
+ ],
+ "probes": [
+  {"name": "GetCapState", "addr": "0x02005fa0", "obj": "r0", "when": "u8[r0+0x111] != 0", "ret": true,
+   "dump": [["actor", "obj", 4], ["actorId", "obj+0xc", 2], ["dormant", "obj+0x111", 1], ["capId", "obj+0x113", 1],
+            ["iconFlags", "obj+0x17f", 1], ["iconSlot", "obj+0x178", 4], ["playerChar", "[0x0209f394]+0x6d9", 1]]},
+  {"name": "Link", "addr": "0x020ab228", "module": "ov001", "obj": "r0",
+   "dump": [["flags", "obj+0x1b", 1], ["ownerId", "r1+0xc", 2]]},
+  {"name": "Unlink", "addr": "0x020ab110", "module": "ov001", "obj": "r0",
+   "dump": [["flags", "obj+0x1b", 1], ["char", "obj+0x18", 1], ["kind", "obj+0x19", 1], ["owner", "obj+4", 4]]},
+  {"name": "best_set", "addr": "0x020aaca4", "module": "ov001", "obj": "r1-0x1b",
+   "dump": [["flags", "obj+0x1b", 1], ["char", "obj+0x18", 1], ["kind", "obj+0x19", 1]]},
+  {"name": "bank_set", "addr": "0x020aabb0", "module": "ov001", "obj": "r3-0x1b",
+   "dump": [["flags", "obj+0x1b", 1], ["char", "obj+0x18", 1], ["kind", "obj+0x19", 1]]},
+  {"name": "aadac_clear", "addr": "0x020aae08", "module": "ov001", "obj": "r1-0x1b",
+   "dump": [["flags", "obj+0x1b", 1], ["char", "obj+0x18", 1], ["kind", "obj+0x19", 1], ["owner", "obj+4", 4]]},
+  {"name": "aadac_set", "addr": "0x020aaec0", "module": "ov001", "obj": "r1-0x1b",
+   "dump": [["flags", "obj+0x1b", 1], ["char", "obj+0x18", 1], ["kind", "obj+0x19", 1], ["owner", "obj+4", 4]]}
+ ]
+}

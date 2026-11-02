@@ -118,12 +118,13 @@ void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
        through the literal pool (ldr r3,[pc] / ldrb r0,[r5,r3]) and the
        function grows a word; the cartridge folds it (ldrb r0,[r5,#0x17f]). */
     struct CapFlags {
-        unsigned char b0 : 1;
-        unsigned char b1 : 1;
-        unsigned char b2 : 1;
-        unsigned char b3to7 : 5;
+        unsigned char bank : 1;
+        unsigned char real : 1;
+        unsigned char unlinked : 1;
+        unsigned char rest : 5;
     };
-    if (((CapFlags *)&mCapIcon.mFlags)->b2 != 0 || ((CapFlags *)&mCapIcon.mFlags)->b1 == 0) {
+    if (((CapFlags *)&mCapIcon.mFlags)->unlinked != 0 ||
+        ((CapFlags *)&mCapIcon.mFlags)->real == 0) {
         if ((mCapId & 0xf) < 6) {
             mCapId |= 0x80;
         }

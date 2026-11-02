@@ -357,7 +357,7 @@ struct daTrs_c : dCapEnemy_c {
     void          func_ov063_0211873c();
     void          func_ov063_02118914();
     void          func_ov063_021189f4();
-    int           func_ov063_02118b2c();
+    void func_ov063_02118b2c();
     void          func_ov063_02118b98();
     void          func_ov063_02118cd8();
     void          func_ov063_02118ddc();

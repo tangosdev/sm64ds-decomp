@@ -101,7 +101,7 @@ int ContinueKuppaScriptIfNecessary();
 void ResetKuppaScript();
 
 /* daDemo_c's and the camera's command dispatchers. */
-int func_ov002_020f7d74(daDemo_c *demo, u8 *command, int first, int last);
+void func_ov002_020f7d74(daDemo_c *demo, u8 *command, int first, int last);
 int func_02008550(dCamera_c *camera, u8 *command, int first, int last);
 void func_0201f32c(int messageID);
 void LoadLevelNoReturn(int levelID, u32 entrance, u32 arg2, u32 arg3);
@@ -4434,6 +4434,9 @@ static inline int IsTouchJustBegun(u32 off) {
     return gTouchHeld[off] != 0 && *(gTouchHeld + off + 1) != 0;
 }
 
+/* Shaped like RunPlayerCommand, but the demo dispatcher returns nothing, so the
+ * success path falls off the end: the ROM loads 0 only on the spawn-failed
+ * return, and nothing reads the result. */
 int RunDemoCommand(u8 *command, int first, int last) {
     dActor_c *demo = FindDemoActor(command[1]);
     if (demo == 0) {
@@ -4441,7 +4444,7 @@ int RunDemoCommand(u8 *command, int first, int last) {
         if (demo == 0)
             return 0;
     }
-    return func_ov002_020f7d74((daDemo_c *)demo, command, first, last);
+    func_ov002_020f7d74((daDemo_c *)demo, command, first, last);
 }
 
 /* Spawns daDemo_c (actor 0x160) into the first free slot of gDemoActorIDs.

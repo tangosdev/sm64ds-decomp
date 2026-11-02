@@ -14466,15 +14466,10 @@
     },
     "func_0201251c": {
       "src/game/stages/d_ent_obj.cpp": [
-        "param:#3 void *",
-        "return:int"
+        "param:#3 void *"
       ]
     },
     "func_0201267c": {
-      "src/game/actors/d_a_trs.cpp": [
-        "param:#2 const void *",
-        "return:int"
-      ],
       "src/game/actors/d_a_wanwan.cpp": [
         "arity:3",
         "param:#1 int",
@@ -14492,11 +14487,7 @@
         "arity:3"
       ],
       "src/game/actors/d_a_trs.cpp": [
-        "arity:3",
-        "return:int"
-      ],
-      "src/game/actors/d_a_yurei_mucho.cpp": [
-        "return:int"
+        "arity:3"
       ]
     },
     "func_02012718": {
@@ -19954,11 +19945,6 @@
     "func_02008550": {
       "src/KuppaScript.cpp": [
         "param:#1 dCamera_c *"
-      ]
-    },
-    "func_ov002_020f7d74": {
-      "src/KuppaScript.cpp": [
-        "return:int"
       ]
     },
     "gRunningKuppaScript": {

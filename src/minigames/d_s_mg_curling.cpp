@@ -107,7 +107,7 @@ extern int Mg_IsNewRecord(void);
 extern void Mg_SetSharedState(int state);
 extern void Mg_SubmitScore(int score);
 extern int Mg_GetTopRecord(void);
-extern int Mg_DrawTopLeftCounter(int self);
+extern void Mg_DrawTopLeftCounter(int self);
 extern char *Ov004_LoadFileByPath(void *p);
 extern void Mg_SetTopScreenYOffset(int a);
 

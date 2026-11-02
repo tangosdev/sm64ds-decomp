@@ -3060,13 +3060,12 @@ namespace s20b19f0 {
 extern "C" {
 s32 GetGameLanguage(void);
 void RenderOamMainScreen(int a, int b, int c, int d, int e);
-int Mg_DrawNumber(int a, int b, void *c, int d, int e, int f, int g);
 /* Draws sprite word 8 at (0x20, 0xc) and `value`, starting at x
    0x48, through Mg_DrawNumber. */
-int Mg_DrawTopLeftCounter(void* value){
-  int i = GetGameLanguage();
-  RenderOamMainScreen(sMgSpriteTables[i][8], 0x20, 0xc, -1, -1);
-  return Mg_DrawNumber(0x48, 0xc, value, 1, -1, 2, 0xa);
+void Mg_DrawTopLeftCounter(int value) {
+    int i = GetGameLanguage();
+    RenderOamMainScreen(sMgSpriteTables[i][8], 0x20, 0xc, -1, -1);
+    Mg_DrawNumber(0x48, 0xc, value, 1, -1, 2, 0xa);
 }
 }
 }
@@ -3076,7 +3075,6 @@ namespace s20b1a5c {
 extern "C" {
 s32 GetGameLanguage(void);
 void RenderOamMainScreen(int a, int b, int c, int d, int e);
-int Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern int sMgCounterMaxByDigits[];
 /* Draws a0, capped at sMgCounterMaxByDigits[a1], right-aligned at (0xf4,
    0xc), and sprite word 4 to its left at an x that a1 sets. */

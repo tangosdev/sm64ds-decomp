@@ -399,9 +399,9 @@ void func_ov001_020aa6b0(int* r0, int r1) {
 void func_ov001_020aa420(void) {
     /* dCapIcon_c::mFlags, read bit by bit */
     typedef struct {
-        unsigned char b0 : 1;
+        unsigned char bank : 1;
         unsigned char : 2;
-        unsigned char b3 : 1;
+        unsigned char skipped : 1;
         unsigned char : 4;
     } CapIconFlags;
 
@@ -459,7 +459,7 @@ void func_ov001_020aa420(void) {
             do {
                 found = dActor_c::FindWithID(node->mOwnerUniqueID);
                 if (found != 0 || (int)found != (int)node->mOwner) {
-                    if (((CapIconFlags *)&node->mFlags)->b0) {
+                    if (((CapIconFlags *)&node->mFlags)->bank) {
                         if (node->mSlot == -1) {
                             node->mSlot = func_0202a8e0((int)node->mOwner, node->mCharacter);
                             node->mFlags |= 2;
@@ -473,7 +473,7 @@ void func_ov001_020aa420(void) {
                             best = node;
                         }
                     } else if (maxPriority == 0) {
-                        if (((CapIconFlags *)&node->mFlags)->b3) {
+                        if (((CapIconFlags *)&node->mFlags)->skipped) {
                             best = node;
                         } else {
                             node->mFlags |= 8;
