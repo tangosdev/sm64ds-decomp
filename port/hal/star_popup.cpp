@@ -9,6 +9,7 @@
 
 #include <windows.h>
 
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -649,6 +650,75 @@ void scan_local(Mode m) {
     }
 }
 
+// Proof knob SM64DS_STAR_POPUP_CENSUS=<every>: every <every> frames in a level, my body's position and every PowerStar's
+// (class 178) position, star number and take state, so a row can walk a scripted pad to a real star (STAREXIT1).
+void census() {
+    static int every = -1;
+    if (every < 0) { const char *e = std::getenv("SM64DS_STAR_POPUP_CENSUS"); every = (e && *e) ? std::atoi(e) : 0; }
+    static unsigned f = 0;
+    if (every <= 0 || (++f % (unsigned)every) != 0) return;
+    const char *me = (const char *)my_body();
+    if (!me) return;
+    const int *mp = (const int *)(me + 0x5c);
+    std::fprintf(stderr, "[starpop] census f=%u level=%d act=%d me=%d,%d,%d yaw=%04x", f, (int)data_0209f2f8, data_0209f220[0] & 0xf,
+                 mp[0] >> 12, mp[1] >> 12, mp[2] >> 12, (unsigned)(unsigned short)*(const short *)(me + 0x8e));
+    for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 178) continue;
+        const int *p = (const int *)(a + 0x5c);
+        std::fprintf(stderr, " star(n=%u st=%u at %d,%d,%d)", (unsigned)*(const unsigned char *)(a + 0x49d), *(const unsigned *)(a + 0x440),
+                     p[0] >> 12, p[1] >> 12, p[2] >> 12);
+    }
+    std::fprintf(stderr, " wall=%lld\n", wall_ms());
+}
+
+// Proof knob SM64DS_STAR_POPUP_NEAR=<level>:<frame>:<star n>:<dist>:<yaw hex>: <frame> frames into level <level>, put my body
+// <dist> units BEFORE PowerStar number <n> along <yaw> (yaw 0 = +z, 4000 = +x), on the star's height, facing it. It never
+// touches the star: the row's scripted pad walks the last <dist> units, so the ROM's own touch collects it (STAREXIT1).
+// <dist> 0 arms the touch stand-in instead (below). Retried every 60 frames from <frame>.
+void near_knob() {
+    static int lvl = -2, fr = 0, n = 0, dist = 0; static unsigned yaw = 0; static bool done = false;
+    if (lvl == -2) {
+        lvl = -1;
+        const char *e = std::getenv("SM64DS_STAR_POPUP_NEAR");
+        if (!e || std::sscanf(e, "%d:%d:%d:%d:%x", &lvl, &fr, &n, &dist, &yaw) != 5) lvl = -1;
+    }
+    static int cur = -1; static int t = 0;
+    if (lvl < 0 || done) return;
+    if ((int)data_0209f2f8 != cur) { cur = (int)data_0209f2f8; t = 0; }
+    char *me = (char *)my_body();
+    static int tries = 0;
+    if (cur != lvl || !me) return;
+    ++t;
+    if (t < fr || (t - fr) % 60 != 0) return;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 178 || *(const unsigned char *)(a + 0x49d) != (unsigned)n) continue;
+        const int *p = (const int *)(a + 0x5c);
+        if (dist == 0) {
+            // <dist> 0: the touch stand-in instead (hal/coop_world.cpp knob_star, hal/input_probe.cpp SM64DS_STAR_TRIGGER):
+            // the star's toucher word and touch flag, so the star's OWN collect handler runs. Re-armed every 60 frames, 8 tries.
+            if (*(const unsigned *)(a + 0x440) == 5u || tries >= 8) { done = true; return; }
+            *(unsigned *)(a + 0x134) = *(const unsigned *)(me + 4);
+            *(unsigned *)(a + 0x130) |= 0x400000;
+            ++tries;
+            std::fprintf(stderr, "[starpop] TOUCH knob: star %d (state %u) touch armed, try %d wall=%lld\n", n,
+                         *(const unsigned *)(a + 0x440), tries, wall_ms());
+            return;
+        }
+        const double r = (double)(yaw & 0xffff) * 6.283185307179586 / 65536.0;
+        int *mp = (int *)(me + 0x5c);
+        mp[0] = p[0] - (int)(std::sin(r) * dist * 4096.0);
+        mp[1] = p[1];
+        mp[2] = p[2] - (int)(std::cos(r) * dist * 4096.0);
+        *(short *)(me + 0x8e) = (short)yaw;
+        done = true;
+        std::fprintf(stderr, "[starpop] NEAR knob: me at %d,%d,%d yaw %04x, %d units before star %d at %d,%d,%d wall=%lld\n",
+                     mp[0] >> 12, mp[1] >> 12, mp[2] >> 12, yaw & 0xffff, dist, n, p[0] >> 12, p[1] >> 12, p[2] >> 12, wall_ms());
+        return;
+    }
+    std::fprintf(stderr, "[starpop] NEAR knob: no star %d in level %d\n", n, cur);
+    done = true;
+}
+
 void new_level_check() {
     const int lv = data_0209f2f8, ac = data_0209f220[0];
     if (!g.have_key || lv != g.lvl || ac != g.act) {
@@ -713,6 +783,8 @@ void star_popup_set_only_collector(int on) {
 
 extern "C" void port_star_popup_frame(void) {
     using namespace port;
+    census();          // proof knobs, solo too
+    near_knob();
     if (!std::getenv("SM64DS_PARTY") && !std::getenv("SM64DS_COOP") &&
         !(world_party_active() && comms_hub_room_kind() == kHubRoomWorld)) return;
     init_once();
