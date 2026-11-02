@@ -16,14 +16,14 @@ extern "C" {
 extern int WM_SetPortCallback(int a, int b, int c);
 extern void Crash(void);
 extern void FS_Init(int x);
-extern void FS_InitFile(int *s);
-extern void func_020652fc(int a, int b, int c);
+extern void FS_InitFile(void *s);
+extern void func_020652fc(int a, int b, void (*c)(char *));
 extern void func_020424c0(void);
 extern void func_0205a588(void *p, int v, int n);
 extern int func_020658c0(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
 extern void func_02042200(void);
 extern void func_02041224(char *thiz, int n);
-extern void func_02065234(int arg);
+extern void func_02065234(void (*arg)(void *));
 
 extern void func_020417d0(char *arg);
 extern void func_020412f0(char *arg);
@@ -31,14 +31,35 @@ extern void func_02040f30(void *arg);
 
 extern int data_020a0f84;
 extern int data_020a0f88;
-extern char data_020a1fc0[];
+extern FileShareWork data_020a1fc0;
 extern char data_02082158[];
 }
+
+/* Pointer table. FileShareChildArea spells these slots int. */
+struct ChildTables {
+    char *mBlockInfoTable[0x10];
+    int mRecvBufTable[0x10];
+    int mPacketBitmapTable[0x10];
+    unsigned char pad_0c0[0xbb0];
+    int mRecvWork;
+    int mMaxReadSize;
+    int mReadRegion;
+};
+
+/* mNodes is FileShareNode[3]. The shared header stores the bytes. */
+struct ParentNodes {
+    unsigned char mReplies[0x10][0xc];
+    FileShareNode mNodes[3];
+};
+
+typedef char ParentNodes_mNodes_must_be_0xc0[(int)&((ParentNodes *)0)->mNodes == 0xc0 ? 1 : -1];
+typedef char
+    ChildTables_mRecvWork_must_be_0xc70[(int)&((ChildTables *)0)->mRecvWork == 0xc70 ? 1 : -1];
 
 #pragma opt_strength_reduction off
 extern "C" void func_02040c34(int isParent, int port, int stateCallback, int allocFunc,
                               int allocArg) {
-    FileShareWork *G = (FileShareWork *)data_020a1fc0;
+    FileShareWork *G = &data_020a1fc0;
     unsigned int state = IRQ::Disable();
     if (data_020a0f84 != 0) {
         IRQ::Restore(state);
@@ -74,17 +95,17 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
                 FileShareNode *end;
                 FlushFileShareArea(base, sizeof(FileShareParentArea));
                 CP15::DrainWriteBuffer();
-                saved = (FileShareNode *)((FileShareParentArea *)base)->mNodes;
+                ParentNodes *nodes = (ParentNodes *)base;
+                saved = nodes->mNodes;
                 zero = 0;
                 node = saved;
                 next = node + 1;
-                end = ((int)next & 1) ? (FileShareNode *)((FileShareParentArea *)base)->mNodes[3]
-                                      : (FileShareNode *)((FileShareParentArea *)base)->mNodes[3];
+                end = ((int)next & 1) ? nodes->mNodes + 3 : nodes->mNodes + 3;
                 *(FileShareNode **)((base + 0x2000) + 0x700) = saved;
                 if (next < end) {
                     do {
                         node->mNext = node + 1;
-                        FS_InitFile((int *)node->mFile);
+                        FS_InitFile(node->mFile);
                         node->mRefCount = (int)zero;
                         node->mState = (int)zero;
                         node->mFileId = (((int)node + 0xcc00cc0) - (int)saved) / 0xcc0;
@@ -92,21 +113,22 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
                     } while (node + 1 < end);
                 }
                 node->mNext = 0;
-                ((FileShareParentArea *)base)->mReplyGroup = 0;
-                ((FileShareParentArea *)base)->mReplyPending = 0;
-                ((FileShareParentArea *)base)->mReplySending = 0;
-                ((FileShareParentArea *)base)->mReadyList = 0;
-                ((FileShareParentArea *)base)->mBusyList = 0;
+                FileShareParentArea *area = (FileShareParentArea *)base;
+                area->mReplyGroup = 0;
+                area->mReplyPending = 0;
+                area->mReplySending = 0;
+                area->mReadyList = 0;
+                area->mBusyList = 0;
                 G->mParentPacketSize = 0x200;
-                ((FileShareParentArea *)base)->mConnectedBitmap = 1;
-                ((FileShareParentArea *)base)->mOpenChildren = 0;
-                ((FileShareParentArea *)base)->mResizePending = 0;
-                ((FileShareParentArea *)base)->mResizeChildren = 0;
-                ((FileShareParentArea *)base)->mBusyCount = 0;
-                ((FileShareParentArea *)base)->mNewPacketSize = G->mParentPacketSize;
+                area->mConnectedBitmap = 1;
+                area->mOpenChildren = 0;
+                area->mResizePending = 0;
+                area->mResizeChildren = 0;
+                area->mBusyCount = 0;
+                area->mNewPacketSize = G->mParentPacketSize;
                 FlushFileShareArea(base, sizeof(FileShareParentArea));
                 CP15::DrainWriteBuffer();
-                func_020652fc(G->mParentPacketSize, G->mChildPacketSize, (int)func_020412f0);
+                func_020652fc(G->mParentPacketSize, G->mChildPacketSize, func_020412f0);
                 func_020424c0();
             }
             {
@@ -118,7 +140,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
                 /* mTableSize is read through data_020a1fc0, not G, here and in the
                    child branch: the G-> spelling comes out 8 bytes short */
                 func_020658c0(nd->mRegion, 0x20000, data_02082158, G->mTable,
-                              ((FileShareWork *)data_020a1fc0)->mTableSize, 0);
+                              data_020a1fc0.mTableSize, 0);
                 nd->mNext = *(FileShareNode **)((base + 0x2000) + 0x704);
                 *(FileShareNode **)((base + 0x2000) + 0x704) = nd;
                 nd->mRefCount = 1;
@@ -126,14 +148,14 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
             }
         } else {
             char *base = (char *)G->mArea;
-            FileShareChildArea *arr = (FileShareChildArea *)base;
+            ChildTables *arr = (ChildTables *)base;
             int i;
             char *p;
             FlushFileShareArea(base, sizeof(FileShareChildArea));
             CP15::DrainWriteBuffer();
             p = base + 0xc0;
             for (i = 0; i < 0x10; i++) {
-                arr->mBlockInfoTable[i] = (int)p;
+                arr->mBlockInfoTable[i] = p;
                 arr->mRecvBufTable[i] = 0;
                 arr->mPacketBitmapTable[i] = 0;
                 p += 0x28;
@@ -145,10 +167,10 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
             func_02041224(base, -1);
             G->mParentPacketSize = 0;
             func_020424c0();
-            func_02041224(base, ((FileShareWork *)data_020a1fc0)->mTableSize);
+            func_02041224(base, data_020a1fc0.mTableSize);
             FlushFileShareArea(base, sizeof(FileShareChildArea));
             CP15::DrainWriteBuffer();
-            func_02065234((int)func_02040f30);
+            func_02065234(func_02040f30);
         }
     }
     IRQ::Restore(state);
