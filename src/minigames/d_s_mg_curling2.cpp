@@ -83,7 +83,7 @@ extern void *Ov004_LoadFileByPath(const char *p);
 extern void Mg_RenderSubSpriteMtx(int a, int b, int c, int d);
 extern void Mg_SetTopScreenYOffset(int a);
 extern void Mg_SetSharedState(s32 state);
-extern int Mg_DrawTopLeftCounter(void *self);
+extern void Mg_DrawTopLeftCounter(int self);
 extern void Mg_DrawTopRightCounter(int a, int b);
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
@@ -1722,7 +1722,7 @@ void dScMgCurling2_c::StartRound(int /* arg */) {
 /* Slot 9. Per-frame draw: score marks, the throws counter, stones,
  * collision values, pieces and the drag cursor. */
 s32 dScMgCurling2_c::Render() {
-    Mg_DrawTopLeftCounter((void *)Mg_GetTopRecord());
+    Mg_DrawTopLeftCounter(Mg_GetTopRecord());
     DrawMarks();
     DrawCounter();
     DrawStones();
