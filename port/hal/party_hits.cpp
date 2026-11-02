@@ -32,6 +32,7 @@ extern signed char data_02092120;         // area
 extern int data_0209f220[];               // [0] & 0xff = act
 extern unsigned char data_0209f2d8[];     // game mode: 0 adventure / party / coop, 1 VS, 2 script (cutscene)
 extern unsigned char data_0209fc48[];     // (s32) cutscene
+extern unsigned char data_0209d660[];     // 1 while a message box is up (coop_tp.cpp)
 extern unsigned char data_ov002_0211013c[];   // the neutral state the ROM returns to (vs_arena_eat.cpp)
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const void *pos, unsigned dmg_units, int speed,
                                            unsigned char a4, unsigned char a5, unsigned char a6);
@@ -119,6 +120,7 @@ struct G {
     Attach att[kHubPartySeats];
     // I am eaten through the ROM's own mouth state (else the synthetic hold)
     bool rom_mouth = false;
+    unsigned mouth_miss = 0, eats_unstepped = 0;      // TONGUE1: hook passes the ROM mouth state left me off the eater's drawn body
     unsigned beat = 0;
     CarryV cv;      // I am carried
     CarryH ch;      // I carry
@@ -246,6 +248,12 @@ Place my_place() {
 // Can my body be hit / held right now? (the same set of reasons vs_arena_ref.cpp's my_body_may_act and the
 // referee's _hit use, plus a level in transition). `grab`: a Wario hold takes a STUNNED player, so the hurt
 // states and the knock's invincibility do not count against it.
+// TONGUE1: my own Player::Behavior does not run its state while a message sequence holds me (func_ov002_020c4188 returns
+// early on +0x71e, e.g. Bob-omb Battlefield's first-visit tutorial), and a message box freezes the actor walk
+// (actor_registry.cpp). Eaten then, the ROM mouth state never steps: hidden on my own spot until the spit.
+bool me_in_message(const char *me) {
+    return *(const unsigned char *)(me + 0x71e) != 0 || data_0209d660[0] != 0;
+}
 const char *g_busy_why = "";
 int g_busy_state = 0xFF;
 bool me_busy(const char *me, bool grab = false) {
@@ -259,6 +267,8 @@ bool me_busy(const char *me, bool grab = false) {
     if (!grab && (*(const unsigned char *)(me + 0x708) || *(const unsigned char *)(me + kNoControl))) return true;
     g_busy_why = "inmouth";
     if (*(void *const *)(me + kInMouth)) return true;
+    g_busy_why = "message";
+    if (me_in_message(me)) return true;
     g_busy_why = "level_state";
     if (data_0209f2d8[0] == 2) return true;
     g_busy_why = "cutscene";
@@ -406,6 +416,7 @@ void apply_effect(char *me, const Claim &c, const Effect &fx) {
 void eat_begin(char *me, const Claim &c) {
     g.lab_done = true;
     g.hold.begin(c.attacker, c.yaw, g.frame);
+    g.mouth_miss = 0;
     if (g.eat_hold) g.hold.set_frames(g.eat_hold, g.eat_hold + 45);
     ++g.st.eats_began;
     char *ep = body_of_seat(c.attacker);
@@ -509,6 +520,23 @@ void eat_tick(char *me) {
         if (!in_state && in.eater_present) {                       // the ROM's hold broke free by itself (mashing)
             eat_end(me, false, true);
             return;
+        }
+        // TONGUE1: St_InYoshiMouth_Main copies the eater's body position into mine every walk. Off it three passes in a row
+        // means my state is not stepping (a message holds me, the walk is frozen): spit now on both consoles rather than sit
+        // hidden on my own spot for the whole hold.
+        if (in_state && ep && g.frame - g.hold.since() >= 2) {
+            int dp[3] = {0, 0, 0}, drawn = 0;
+            const int nb = (int)data_0209f21c < 16 ? (int)data_0209f21c : 16;
+            for (int i = 0; i < nb; ++i) if (data_0209f394[i] == ep) drawn = port_adventure_ghost_drawpos(i, dp);
+            const int dx = (*player::pos_x(me) - dp[0]) >> 12, dz = (*player::pos_z(me) - dp[2]) >> 12;
+            if (drawn && (dx > 8 || dx < -8 || dz > 8 || dz < -8)) ++g.mouth_miss; else g.mouth_miss = 0;
+            if (g.mouth_miss >= 3) {
+                std::fprintf(stderr, "[phit] EAT the mouth state is not stepping (me %d,%d off the eater, 71e %u, message %u): spit now\n",
+                             dx, dz, (unsigned)*(unsigned char *)(me + 0x71e), (unsigned)data_0209d660[0]);
+                ++g.eats_unstepped;
+                eat_end(me, true);
+                return;
+            }
         }
         if (g.frame - g.beat >= (unsigned)kAttachBeat) { g.beat = g.frame; broadcast_attach(eater, 1); }
         if (g.log > 0 && ep && (g.frame % 20) == 0)
@@ -767,9 +795,10 @@ void handle_claim(int attacker, unsigned ikind, unsigned counter, unsigned stamp
     log_verdict(c, v);
     if (ikind == kEatClaim) {
         if (rom_no) ++g.eat_rom_no; else ++g.eat_rom_ok;
-        std::fprintf(stderr, "[phit] eat claim f=%u verdict %s, the ROM's own gate: %s (state %d, blink %u, 708 %u, 709 %u)\n", g.frame,
+        std::fprintf(stderr, "[phit] eat claim f=%u verdict %s, the ROM's own gate: %s (state %d, blink %u, 708 %u, 709 %u, 71e %u, message %u)\n", g.frame,
                      verdict_name(v), rom_no ? rom_no : "would eat", port::vs_arena_state_index(me),
-                     (unsigned)*(unsigned short *)(me + 0x6a0), (unsigned)*(unsigned char *)(me + 0x708), (unsigned)*(unsigned char *)(me + 0x709));
+                     (unsigned)*(unsigned short *)(me + 0x6a0), (unsigned)*(unsigned char *)(me + 0x708), (unsigned)*(unsigned char *)(me + 0x709),
+                     (unsigned)*(unsigned char *)(me + 0x71e), (unsigned)data_0209d660[0]);
     }
     if (v != kOk) return;
     // A believed claim waits for the frame hook. The pump runs inside the frame's tick, BEFORE and around the
@@ -1069,7 +1098,7 @@ void exit_summary() {
                  g.st.claims_recv, g.st.claims_recv - g.st.refused, g.st.refused, g.eat_rom_ok, g.eat_rom_no);
     for (int v = 1; v < kVerdicts; ++v)
         if (g.st.refused_by[v & 15]) std::fprintf(stderr, "[phit:exit]   refused %s: %llu\n", verdict_name(v), g.st.refused_by[v & 15]);
-    std::fprintf(stderr, "[phit:exit] eats began %llu, spat %llu, aborted %llu\n", g.st.eats_began, g.st.eats_spat, g.st.eats_aborted);
+    std::fprintf(stderr, "[phit:exit] eats began %llu, spat %llu, aborted %llu, spat early (mouth state not stepping) %u\n", g.st.eats_began, g.st.eats_spat, g.st.eats_aborted, g.eats_unstepped);
     std::fflush(stderr);
 }
 
