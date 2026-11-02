@@ -58,6 +58,8 @@ extern unsigned short data_020a0e58[];           // PadData[4]: {held, pressed},
 extern int data_020a0e5a[];                      // the split "pressed" symbol (same memory on the DS)
 extern unsigned short *data_0209214c[];          // CheckInput's three DS bit -> Ctrl bit maps
 void *_ZN8dActor_c4NextEPKS_(const void *prev);   // the actor list walk (coop_actors.cpp)
+short GetAngleToCamera(int player_no);           // src/GetAngleToCamera.c: the stick angle is relative to this
+extern int data_0209fc68[];                      // nonzero: each player reads its own camera (Player::Behavior)
 }
 namespace port {
 int vs_arena_state_index(const void *body);
@@ -1178,15 +1180,18 @@ void lab_seek(char *me) {
     const int yaw = *(const short *)(me + kYawAngle) & 0xFFFF;
     const double dist = std::sqrt((double)horiz2(mx, mz, s.x, s.z));
     const int want = angle_from_to(mx, mz, s.x, s.z);
+    // the ROM turns the stick's angle by the camera's (Player::Behavior: mDesiredAngleY = Ctrl angle + GetAngleToCamera),
+    // so the D-pad is learned against the camera and re-aimed through it every frame
+    const int cam = GetAngleToCamera(data_0209fc68[0] ? (int)data_0209f250 : 0) & 0xFFFF;
     switch (g.seek_phase) {
     case 0:                                     // hold UP: the body turns to the camera's forward
         pad_raw(kDsUp, g.seek_t == 0);
-        if (++g.seek_t >= 10) { g.seek_cup = yaw; g.seek_t = 0; g.seek_phase = 1; }
+        if (++g.seek_t >= 10) { g.seek_cup = (yaw - cam) & 0xFFFF; g.seek_t = 0; g.seek_phase = 1; }
         return;
     case 1: {                                   // hold LEFT: which way is left
         pad_raw(kDsLeft, g.seek_t == 0);
         if (++g.seek_t >= 10) {
-            const short d = (short)(yaw - g.seek_cup);
+            const short d = (short)(yaw - cam - g.seek_cup);
             g.seek_sign = d >= 0 ? 1 : -1;
             g.seek_t = 0; g.seek_phase = 2;
             std::fprintf(stderr, "[phit] LAB seek: camera forward 0x%04x, left is %s\n", g.seek_cup, g.seek_sign > 0 ? "+0x4000" : "-0x4000");
@@ -1209,7 +1214,7 @@ void lab_seek(char *me) {
             return;
         }
         // the D-pad direction (8 of them) nearest the way to him, in the camera's frame
-        const short rel = (short)((want - g.seek_cup) * g.seek_sign);
+        const short rel = (short)((want - cam - g.seek_cup) * g.seek_sign);
         const int k = (((int)rel + 0x1000) & 0xFFFF) / 0x2000;       // 0 up, 1 up-left, 2 left, ... 7 up-right
         static const unsigned short dirs[8] = { kDsUp, kDsUp | kDsLeft, kDsLeft, kDsDown | kDsLeft, kDsDown, kDsDown | kDsRight, kDsRight, kDsUp | kDsRight };
         // close in: a short press only turns the body (and steps it a little)
