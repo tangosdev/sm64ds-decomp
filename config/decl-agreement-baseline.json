@@ -9211,6 +9211,9 @@
       ],
       "src/KuppaScript.cpp": [
         "return:unsigned char []"
+      ],
+      "src/game/stages/d_s_boot_methods.cpp": [
+        "return:PadData []"
       ]
     },
     "data_020a0e5a": {
@@ -20148,6 +20151,11 @@
     "WM_StartScan": {
       "src/engine/mb/MB_WmBase.cpp": [
         "param:#1 void *"
+      ]
+    },
+    "data_0209f498": {
+      "src/game/stages/d_s_stage_methods.cpp": [
+        "return:unsigned char []"
       ]
     }
   },

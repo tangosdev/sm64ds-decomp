@@ -516,22 +516,22 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@633",
+      "from": "@666",
       "to": "data_ov079_0212831c",
       "evidence": "compiler temp mapped to 0x0212831c by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@634",
+      "from": "@667",
       "to": "data_ov079_02128328",
       "evidence": "compiler temp mapped to 0x02128328 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@635",
+      "from": "@668",
       "to": "data_ov079_02128334",
       "evidence": "compiler temp mapped to 0x02128334 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@636",
+      "from": "@669",
       "to": "data_ov079_02128310",
       "evidence": "compiler temp mapped to 0x02128310 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     }

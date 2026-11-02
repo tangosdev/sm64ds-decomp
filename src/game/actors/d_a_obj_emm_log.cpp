@@ -82,7 +82,7 @@ s32 daObjEmmLog_c::Behavior() {
     mMeshCollider.SetClipRadius(0x600000);
 
     int idx = (u16)mBobPhase >> 4;
-    int s = *(short *)((char *)data_02082214 + (idx << 2));
+    int s = data_02082214[idx * 2];
     int m = FX_MUL(mBobAmplitude, s);
     mPosY = mBasePosY + m;
 

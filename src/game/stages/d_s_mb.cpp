@@ -24,6 +24,7 @@
 #include "decl_common.h"
 #include "Heap.h"
 #include "OAM.h"
+#include "OamAttr.h"
 #include "Sound.h"
 #include "GX.h"
 
@@ -92,7 +93,7 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
 
     if (mEnabled != 0) {
         int language = GetLanguageIndex();
-        void *sprite = data_0208a0f8[language];
+        OamAttr *sprite = data_0208a0f8[language];
 
         if (mStillTimer == 0) {
             int spriteAngle = mSpinAngle;
@@ -117,12 +118,12 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
                     y = x;
                 }
 
-                OAM::Render(drawFlags[1], (OamAttr *)sprite, x, y, -1, -1, 0x1000, drawFlags[1]);
-                OAM::Render(one, (OamAttr *)sprite, x, y, -1, -1, 0x1000, drawFlags[2]);
+                OAM::Render(drawFlags[1], sprite, x, y, -1, -1, 0x1000, drawFlags[1]);
+                OAM::Render(one, sprite, x, y, -1, -1, 0x1000, drawFlags[2]);
 
-                if (*(u16 *)((char *)sprite + 6) == 0xffff)
+                if (sprite->attr3 == 0xffff)
                     break;
-                sprite = (char *)sprite + 8;
+                sprite++;
                 spriteAngle -= 0x2000;
             } while (1);
 
@@ -132,8 +133,8 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
                     mStillTimer = 0x78;
             }
         } else {
-            OAM::Render(0, (OamAttr *)sprite, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
-            OAM::RenderSub((OamAttr *)sprite, 0x80, 0x80);
+            OAM::Render(0, sprite, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::RenderSub(sprite, 0x80, 0x80);
             mStillTimer -= data_0208ee44;
             mSpinAngle = 0;
         }
