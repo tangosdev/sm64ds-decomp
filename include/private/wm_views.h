@@ -50,8 +50,9 @@ typedef struct WMArm9Buf {
     void *indCallback;              /* 0x0a8 -- the indication callback (op 0x80) */
     void *portCallbackTable[16];    /* 0x0ac */
     void *portCallbackArgument[16]; /* 0x0ec */
-    /* 0x13c: WM_Init zeroes one word here; nothing else in src/ names it */
-    char pad_12c[0x560 - 0x12c];
+    char pad_12c[0x13c - 0x12c];
+    int initCleared; /* 0x13c -- WM_Init zeroes it; nothing else in src/ touches it */
+    char pad_140[0x560 - 0x140];
     unsigned short dmaNo; /* 0x560 -- the DMA channel WM_Init was given */
 } WMArm9Buf;
 

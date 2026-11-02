@@ -65,7 +65,7 @@ int WM_Init(void *buf, int ch) {
 
     WmClearFifoRecvFlag();
     data_020a89ac->dmaNo = (u16)ch;
-    *(int *)((char *)data_020a89ac + 0x13c) = 0; /* unnamed word, see wm_views.h */
+    data_020a89ac->initCleared = 0;
 
     {
         int i;
