@@ -9470,6 +9470,9 @@
       ]
     },
     "data_020a1040": {
+      "include/private/player_input_record.h": [
+        "return:PlayerInputRecord"
+      ],
       "src/unnamed/arm9/0203/func_0203da4c.c": [
         "return:unsigned char []"
       ],
@@ -9478,9 +9481,6 @@
       ],
       "src/unnamed/arm9/0203/func_0203dafc.c": [
         "return:short []"
-      ],
-      "src/unnamed/arm9/0203/func_0203db64.c": [
-        "return:Rec"
       ],
       "src/unnamed/arm9/0203/func_0203df40.c": [
         "return:Rec"
@@ -9519,6 +9519,9 @@
       ]
     },
     "data_020a1154": {
+      "include/private/player_input_record.h": [
+        "return:PlayerInputRecord []"
+      ],
       "src/unnamed/arm9/0203/func_0203d8fc.c": [
         "return:unsigned short []"
       ],
