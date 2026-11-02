@@ -180,16 +180,6 @@ enum DoorSaveFlag {
    spawns beside the player. */
 enum { ACTOR_OBJ_KEY = 0x11a };
 
-/* data_0209caa0, the save data: the head of include/SaveData.h's SaveData, as
-   far as the door reads it. */
-struct GlobCaa0 {
-    int magic8000;       /* 0x000 */
-    unsigned int flags1; /* 0x004 */
-    unsigned int flags2; /* 0x008 */
-    u8 pad_00c[0x35];
-    u8 mCharacter; /* 0x041 -- current character */
-};
-
 /* One state: the 16-byte {enter, execute} pointer-to-member pair
    data_ov100_021488a4 .. data_ov100_02148924 are built from. The player is
    handed over as an int. */
@@ -263,7 +253,7 @@ extern daDoor_StatePmf data_ov100_02148134;
 extern daDoor_StatePmf data_ov100_0214813c;
 extern daDoor_StatePmf data_ov100_02148144;
 
-extern GlobCaa0 data_0209caa0;
+extern FileSaveData data_0209caa0; /* the live save file (include/SaveData.h) */
 /* The camera, and the player array indexed by the current player id. */
 extern char *data_0209f318;
 extern unsigned char data_0209f250;
