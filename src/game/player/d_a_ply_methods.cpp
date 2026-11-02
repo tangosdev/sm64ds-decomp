@@ -22430,8 +22430,6 @@ int daPly_c::CleanupResources() {
     enum { false_, true_ };
     struct VB { virtual void v0(); virtual void v1(); };
     void func_0203cbc0(void *p);
-    /* local extern: the registrar takes this D1 by address, which C++ cannot spell. */
-    void *_ZN7Vector3D1Ev(void *self);
     void func_ov002_020bebd4(char *c);
     void UnloadSilverStarAndNumber(void);
     void UnloadKeyModels(int n);
@@ -22537,7 +22535,6 @@ int daPly_c::CleanupResources() {
     extern char data_ov002_0210ec98[];
     extern char data_ov002_0210eca8[];
     extern char data_ov002_0210ecb8[];
-    extern void __cxa_vec_delete(void *, int, int, void (*)(void *));
     extern void func_ov002_020e032c(void*);
     int i;
     u32 b;
@@ -22592,7 +22589,7 @@ int daPly_c::CleanupResources() {
         int q = (int)mTrailPos;
         if (q != 0)
             /* Array destruction discards the receiver result. */
-            __cxa_vec_delete((void *)q, 0xc, 8, (void (*)(void *))_ZN7Vector3D1Ev);
+            delete[] (Vector3 *)q;
         q = (int)mTrailFlags;
         if (q != 0)
             func_0203cbc0((void *)q);

@@ -20,13 +20,14 @@ struct dBgPc {
 #endif
 };
 
-#ifndef __cplusplus
-/* Readable C spellings for the C++ ABI entry points used by generated
- * initialization and destruction code. */
-void *_ZN5dBgPcC1Ev(struct dBgPc *self);
-void _ZN5dBgPcD1Ev(struct dBgPc *self);
-#define dBgPc_Construct _ZN5dBgPcC1Ev
-#define dBgPc_Destroy   _ZN5dBgPcD1Ev
+#ifdef __cplusplus
+/* Same constructor and destructor, for callers that still spell the calls
+ * as functions. Placement new is the complete-object constructor. */
+#define dBgPc_Construct(self) (::new (static_cast<void *>(self)) dBgPc())
+#define dBgPc_Destroy(self) ((self)->~dBgPc())
+#else
+struct dBgPc *dBgPc_Construct(struct dBgPc *self);
+void dBgPc_Destroy(struct dBgPc *self);
 #endif
 
 #ifndef SM64DS_PLATFORM_PC
