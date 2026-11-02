@@ -22749,7 +22749,6 @@ void daPly_c::OnPendingDestroy() {
 /* recovered: named members + shared header, real C++ method */
 #pragma push
 #pragma opt_common_subs off
-#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 extern "C" {
 int daPly_c::Render() {
     struct VObj {
@@ -22795,7 +22794,7 @@ int daPly_c::Render() {
                 int t2 = (data_0209f2d8 == 1);
                 if (t2 != false) {
                     if (param1 == 3) {
-                        int* p = (int*)AT(bodyMdl, 8);
+                        int *p = (int *)(int)&bodyMdl->data;
                         BMD_File *hdr = (BMD_File *)p[0];
                         char* rec = (char*)p[1];
                         u32 i2;
@@ -22837,7 +22836,7 @@ int daPly_c::Render() {
                     int t3 = (data_0209f2d8 == 1);
                     if (t3 != false) {
                         if (param1 == 3) {
-                            int *p = (int *)AT((char *)mModels.mHeadModels[i], 8);
+                            int *p = (int *)(int)&mModels.mHeadModels[i]->data;
                             BMD_File *hdr = (BMD_File *)p[0];
                             char* rec = (char*)p[1];
                             u32 i2;
@@ -22873,7 +22872,6 @@ int daPly_c::Render() {
     return 1;
 }
 }
-#undef AT
 #pragma pop
 
 // @symbol func_ov002_020e3e00
@@ -23030,7 +23028,7 @@ int func_ov002_020e3f90(char* self) {
             Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x600, -0x2600, 0);
         }
     }
-    *(struct M48*)(self + 0x5bc) = data_020a0e68;
+    *(struct M48 *)&player->mShadowMatrix = data_020a0e68;
     t = ((volatile struct M48*)&data_020a0e68)->w[9];
     t1 = ((volatile struct M48*)&data_020a0e68)->w[10];
     t2 = ((volatile struct M48*)&data_020a0e68)->w[11];
@@ -23105,7 +23103,7 @@ void func_ov002_020e444c(char *c)
         if (player->mIsBalloon != 0)
             y -= 0x70000;
         Matrix4x3_FromTranslation(&data_020a0e68, player->mPosX >> 3, y >> 3, player->mPosZ >> 3);
-        *(struct Matrix4x3 *)(c + 0x5bc) = data_020a0e68;
+        player->mShadowMatrix = data_020a0e68;
 
         {
             int out[3];
@@ -23169,7 +23167,7 @@ void func_ov002_020e444c(char *c)
         return;
 
     ((dActor_c *)c)
-        ->DropShadowRadHeight(player->mShadowModel, *(Matrix4x3 *)(c + 0x5bc), spC, sp8, 0xf);
+        ->DropShadowRadHeight(player->mShadowModel, player->mShadowMatrix, spC, sp8, 0xf);
 }
 }
 
@@ -23225,8 +23223,8 @@ extern "C" void func_ov002_020e4768(char* self)
             comp = player->mModels.mBodyModels[mid];
             MulMat4x3Mat4x3(&comp->data.transforms[14], data_020a0e68, data_020a0e68);
 
-            *(Mat43 *)player->pad_58c = *(Mat43 *)data_020a0e68;
-            player->mCarryMatrix = (Matrix4x3 *)player->pad_58c;
+            *(Mat43 *)&player->mHeldObjMatrix = *(Mat43 *)data_020a0e68;
+            player->mCarryMatrix = &player->mHeldObjMatrix;
         }
     }
 
@@ -23238,7 +23236,7 @@ extern "C" void func_ov002_020e4768(char* self)
     comp = player->mModels.mBodyModels[mid];
     MulMat4x3Mat4x3(&comp->data.transforms[15], data_020a0e68, data_020a0e68);
 
-    *(Mat43*)(self + 0x5ec) = *(Mat43*)data_020a0e68;
+    *(Mat43 *)&player->mHeadMatrix = *(Mat43 *)data_020a0e68;
 }
 }
 
@@ -24319,9 +24317,9 @@ void func_ov002_020e640c(char *c)
         }
     }
 
-    *(u16 *)(c + 0x580) = ((PlayerBone *)md)[15].rotX;
-    *(u16 *)(c + 0x582) = ((PlayerBone *)md)[15].rotY;
-    *(u16 *)(c + 0x584) = ((PlayerBone *)md)[15].rotZ;
+    player->mHeadBoneRot[0] = ((PlayerBone *)md)[15].rotX;
+    player->mHeadBoneRot[1] = ((PlayerBone *)md)[15].rotY;
+    player->mHeadBoneRot[2] = ((PlayerBone *)md)[15].rotZ;
 
     ((PlayerBone *)md)->transX = ((PlayerFileBone *)r4p)->transX;
     ((PlayerBone *)md)->transY = ((PlayerFileBone *)r4p)->transY;

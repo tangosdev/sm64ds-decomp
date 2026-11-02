@@ -283,15 +283,23 @@ struct daPly_c : dActor_c {
        behind him, and speed/airborne/moving flags. No other reader in the ROM. */
     Vector3 *mTrailPos; /* 0x578 */
     u8 *mTrailFlags;    /* 0x57c */
-    u8  pad_580[0x8];
-    s32 mHeldObjQueue;            /* 0x588 */
-    u8  pad_58c[0x74];
-    /* Not a field of its own: byte 0x14 of the head Matrix4x3 at 0x5ec..0x61c
-       that func_ov002_020e4768 stores (body matrix times bone 15) and
-       d_a_bmb.cpp's func_ov102_0214b53c copies out. Nothing reads 0x600 alone;
-       the matrix still straddles pad_58c, this byte and pad_601. */
-    u8  unk_600;            /* 0x600 */
-    u8  pad_601[0x1b];
+    /* Body bone 15's (face_1) final rotation, copied out by func_ov002_020e640c
+       after mHeadRotMode is applied; d_a_bmb.cpp's func_ov102_0214b53c reads it
+       back from the player eating the bomb. Every access is an unsigned halfword. */
+    u16 mHeadBoneRot[3]; /* 0x580 */
+    u8 pad_586[0x2];
+    s32 mHeldObjQueue; /* 0x588 */
+    /* Where a held object rides: func_ov002_020e4768 stores body matrix times
+       bone 14's transform here while mHeldObj is set, and points mCarryMatrix
+       at it. */
+    struct Matrix4x3 mHeldObjMatrix; /* 0x58c */
+    /* The shadow's matrix: func_ov002_020e444c builds it from mPos (plus
+       mModelOffsetY) and passes it to DropShadowRadHeight; while grabbed, the
+       grab path stores the full body matrix here as well. */
+    struct Matrix4x3 mShadowMatrix; /* 0x5bc */
+    /* Body matrix times bone 15 (face_1), stored by func_ov002_020e4768;
+       d_a_bmb.cpp's func_ov102_0214b53c copies it out for the eating player. */
+    struct Matrix4x3 mHeadMatrix; /* 0x5ec */
     /* Yoshi's per-player material word for VS mode. func_ov002_020e5948 sets it
        to word +0x20 of material 0 of Yoshi's body model (GetBodyModelID(3))
        plus mPlayerNo * 2; the draw path copies it into word +0x20 of every
