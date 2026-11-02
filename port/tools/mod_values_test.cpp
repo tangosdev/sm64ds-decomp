@@ -108,7 +108,32 @@ static void test_lovesme()
     CHECK(modval::lovesme_index("") == 0);
 }
 
-int main()
+// With a path: the real settings.json of the character-palettes package. Every
+// key the game reads must have a string default there.
+static void test_package(const char *path)
+{
+    static char buf[1 << 16];
+    std::FILE *f = std::fopen(path, "rb");
+    CHECK(f != 0);
+    if (!f) return;
+    const size_t n = std::fread(buf, 1, sizeof buf - 1, f);
+    std::fclose(f);
+    buf[n] = '\0';
+    static const char *const kKeys[] = {
+        "mario", "luigi", "wario", "yoshi",
+        "mario_hat", "mario_overalls", "mario_shoes", "luigi_hat", "luigi_overalls", "luigi_shoes",
+        "wario_hat", "wario_overalls", "wario_shoes", "yoshi_body", 0 };
+    for (int i = 0; kKeys[i]; ++i) {
+        char out[64];
+        const int got = modval::spec_default(buf, kKeys[i], out, sizeof out);
+        CHECK(got);
+        if (i < 4) CHECK(got && !std::strcmp(out, "Original"));
+        else CHECK(got && modval::hex6(out) >= 0);
+        std::printf("  package %s = %s\n", kKeys[i], got ? out : "(none)");
+    }
+}
+
+int main(int argc, char **argv)
 {
     test_top_str();
     test_spec();
@@ -116,6 +141,7 @@ int main()
     test_hex6();
     test_choice();
     test_lovesme();
+    if (argc > 1) test_package(argv[1]);
     std::printf("mod_values_test: %s (%d failure%s)\n", g_fail ? "FAIL" : "PASS", g_fail, g_fail == 1 ? "" : "s");
     return g_fail ? 1 : 0;
 }
