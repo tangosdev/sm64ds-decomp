@@ -1,15 +1,4 @@
 //cpp
-namespace Particle {
-struct Callback;
-}
-struct Vector3_16f;
-namespace Particle {
-struct System {
-    static void *NewSimple(unsigned, int, int, int);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /* Bob-omb (BOB_OMB 206 / BOMBHEI) -- ov102/daBmb_c.
  *
  * common.h FIRST. InitResources and the carry update copy twelve matrix words.
@@ -51,6 +40,7 @@ struct System {
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "Particle__System.h"
 
 /* The three shared files this actor claims: ov002's model handle here and the
    two animation handles below.  InitResources loads them and

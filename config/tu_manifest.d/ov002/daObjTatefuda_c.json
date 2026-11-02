@@ -1204,62 +1204,62 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1074",
+      "from": "@1126",
       "to": "@1128",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1075",
+      "from": "@1127",
       "to": "@1129",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1077",
+      "from": "@1129",
       "to": "@1131",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1079",
+      "from": "@1131",
       "to": "@1133",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1081",
+      "from": "@1133",
       "to": "@2760",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1083",
+      "from": "@1135",
       "to": "@2156",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1085",
+      "from": "@1137",
       "to": "@2155",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1087",
+      "from": "@1139",
       "to": "@2161",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1089",
+      "from": "@1141",
       "to": "@2158",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1091",
+      "from": "@1143",
       "to": "@2159",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1093",
+      "from": "@1145",
       "to": "@2160",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@1095",
+      "from": "@1147",
       "to": "@2157",
       "evidence": "Compiler-local identity retained by section, offset, size, binding, bytes and relocation edges; native C++ helper calls shift the per-TU temporary names. Ordinary production preparation yields the same complete ELF as the prior source under 2004/b56. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     }

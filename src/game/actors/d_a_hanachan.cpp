@@ -1,12 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-void RunningSlidingDustAt(int, int, int);
-}
 /* daHanachan_c: the Wiggler (HANACHAN), ov034. Was coined Wiggler.
  *
  * _ZTS12daHanachan_c at 0x02114478, _ZTI at 0x0211445c (base
@@ -77,6 +69,7 @@ enum daHanachan_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 /* The file-scope resource handles. The model five use the plain SharedFilePtr
  * pair (func_02017acc / func_02017ab4), the animation twenty-five use

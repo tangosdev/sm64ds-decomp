@@ -1,11 +1,4 @@
 //cpp
-struct Vector3_16f;
-namespace Particle {
-struct Callback;
-struct System {
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
 /* daMip_c -- MIPS the rabbit (MIP). ov085.
  *
  * defer_codegen off lays .text down in source order. The destructor
@@ -55,6 +48,7 @@ enum daMip_c_AssetId {
 #include "Sound.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "Particle__System.h"
 
 namespace Sound {
 bool PlaySub(u32, u32, u32, int, bool);

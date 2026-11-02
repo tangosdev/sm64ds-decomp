@@ -802,32 +802,32 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@905",
+      "from": "@961",
       "to": "@592",
       "evidence": "mwcc numbers this PMF descriptor @905 per TU and other modules already define a global @905, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@907",
+      "from": "@963",
       "to": "@904",
       "evidence": "mwcc numbers this PMF descriptor @907 per TU and other modules already define a global @907, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@909",
+      "from": "@965",
       "to": "@591",
       "evidence": "mwcc numbers this PMF descriptor @909 per TU and other modules already define a global @909, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@911",
+      "from": "@967",
       "to": "@590",
       "evidence": "mwcc numbers this PMF descriptor @911 per TU and other modules already define a global @911, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@913",
+      "from": "@969",
       "to": "@21",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@915",
+      "from": "@971",
       "to": "@589",
       "evidence": "mwcc numbers this PMF descriptor @915 per TU and other modules already define a global @915, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier"
     }
