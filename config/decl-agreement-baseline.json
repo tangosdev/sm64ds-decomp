@@ -19950,11 +19950,6 @@
         "param:#1 dCamera_c *"
       ]
     },
-    "func_ov002_020f7d74": {
-      "src/KuppaScript.cpp": [
-        "return:int"
-      ]
-    },
     "gRunningKuppaScript": {
       "src/KuppaScript.cpp": [
         "return:unsigned char *"
