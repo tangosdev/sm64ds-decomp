@@ -4,12 +4,13 @@
 #include "IRQ.h"
 #include "dScene_c.h"
 #include "nitro/hw/registers.h"
+#include "private/controller_input.h"
 
 extern "C" {
 
 extern int data_0209d50c;
 extern unsigned char data_0209d4e8;
-extern unsigned short data_020a0e58[];
+extern PadData data_020a0e58[];
 extern unsigned short data_0209d534[];
 extern int data_0209d51c;
 extern int data_020a0db0;
@@ -54,7 +55,7 @@ void func_020197b8(void) {
         data_0209d50c = 2;   func_02019390();
         data_0209d50c = 0x16; func_0203bb60();
         data_0209d50c = 0x17; func_0203bc7c();
-        v = *(unsigned short*)((char*)data_020a0e58 + (gActivePlayerSlot << 2));
+        v = data_020a0e58[gActivePlayerSlot].held;
         data_0209d534[data_0209d4e8] = v;
         data_0209d51c = v;
         data_0209d4e8 = (data_0209d4e8 + 1) & 0x1f;

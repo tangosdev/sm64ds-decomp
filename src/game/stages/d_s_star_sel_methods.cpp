@@ -14,8 +14,8 @@
  *   push and a pop. Without it the star-row loop hoists its +0x23 step.
  * - The seven helpers stay func_ov003_*. Every caller is in this
  *   class, and the bodies only touch this object's fields.
- * - data_020a0e5a stays u16[][2]. The flat u16[i*2] form costs
- *   func_ov003_020ae358 seventeen words.
+ * - data_020a0e58 is PadData[], so the 4-byte record stride is in the
+ *   type. A flat u16[i*2] form costs func_ov003_020ae358 seventeen words.
  * - The bytes after the dExtSimpleModel_c pair stay offset macros. The header
  *   still holds that tail as opaque storage.
  *
@@ -38,6 +38,7 @@
 #include "G3i.h"
 #include "G2.h"
 #include "GX.h"
+#include "private/controller_input.h"
 
 /* Raw this-relative accessors, and the cosine table lookup used by Render. */
 #define FB(p, o) (*(u8 *)((u8 *)(p) + (o)))
@@ -110,8 +111,7 @@ extern unsigned char gTouchX[][4];
 // local extern: see above.
 extern unsigned char gTouchY[][4];
 extern int data_0208ee44;
-extern unsigned short data_020a0e5a[][2];
-extern u16 data_020a0e58[];
+extern PadData data_020a0e58[];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
 void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int, int);
 void Matrix4x3_FromTranslation(Matrix4x3 *, s32, s32, s32);
@@ -329,15 +329,15 @@ void dScStarSel_c::func_ov003_020ae238() {
 // CURSOR_MODE 1, CHAR_CURSOR to its strip slot, and PICKED_CHAR, data_02092128
 // and data_02092114 to the character, ANIM_MODE 2, and plays the same sound.
 //
-// With no record active, the d-pad half of the control word
-// data_020a0e58 moves the selection: REPEAT_TIMER counts down, and while it is
-// zero a held left/right steps CHAR_CURSOR within [0, STRIP_MODE - 2] and reloads
-// the timer with 0x10 or 8 depending on data_020a0e5a.
+// With no record active, the d-pad bits of data_020a0e58[0].held move the
+// selection: REPEAT_TIMER counts down, and while it is zero a held left/right
+// steps CHAR_CURSOR within [0, STRIP_MODE - 2] and reloads the timer with 0x10
+// or 8 depending on the active player's pressed word.
 //
 // Codegen note: the stride belongs in the TYPE, and the INDEX is what gets named.
 // The 4-byte records are declared `[][4]` so each read refolds its own scale
 // (`add r2, r4, r1, lsl #2`); flattening gTouchX/gTouchY to a bare `[]` with an
-// explicit `* 4` costs 17 words, and the same is true of data_020a0e5a. The last
+// explicit `* 4` costs 17 words, and the same is true of the PadData records. The last
 // six words were a register transposition between the `c + i` and record-row
 // address temps, and what closed it was naming the INDEX (`int ri`) for the second
 // record read instead of naming the row POINTER: a named row pointer welds both
@@ -391,7 +391,7 @@ void dScStarSel_c::func_ov003_020ae358() {
         return;
     }
     if (data_0209caa0[0x42] == 0) {
-        unsigned short ctrl = data_020a0e58[0];
+        unsigned short ctrl = data_020a0e58[0].held;
         if ((ctrl & 0x30) != 0) {
             unsigned short timer = REPEAT_TIMER(this);
             unsigned char next;
@@ -410,15 +410,15 @@ void dScStarSel_c::func_ov003_020ae358() {
             }
             next = CHAR_CURSOR(this);
             if (ctrl & 0x20) {
-                if (((data_020a0e58[1] & 0x20) != 0) || (timer == 0)) {
-                    REPEAT_TIMER(this) = (data_020a0e5a[idx][0] & 0x20) ? (0x10) : (8);
+                if (((data_020a0e58[0].pressed & 0x20) != 0) || (timer == 0)) {
+                    REPEAT_TIMER(this) = (data_020a0e58[idx].pressed & 0x20) ? (0x10) : (8);
                     if (CHAR_CURSOR(this) != 0) {
                         next = next - 1;
                     }
                 }
             } else if (ctrl & 0x10) {
-                if (((data_020a0e58[1] & 0x10) != 0) || (timer == 0)) {
-                    REPEAT_TIMER(this) = (data_020a0e5a[idx][0] & 0x10) ? (0x10) : (8);
+                if (((data_020a0e58[0].pressed & 0x10) != 0) || (timer == 0)) {
+                    REPEAT_TIMER(this) = (data_020a0e58[idx].pressed & 0x10) ? (0x10) : (8);
                     if (CHAR_CURSOR(this) != (STRIP_MODE(this) - 2)) {
                         next = next + 1;
                     }
@@ -751,8 +751,8 @@ s32 dScStarSel_c::Behavior() {
             }
             if (found == 0 && CURSOR_ON(this) == 2 && CURSOR_MODE(this) == 0 &&
                 data_0209caa0[0x42] == 0) {
-                if (data_020a0e58[0] & 0x20) {
-                    pressed = data_020a0e58[1] & 0x20;
+                if (data_020a0e58[0].held & 0x20) {
+                    pressed = data_020a0e58[0].pressed & 0x20;
                     if (pressed != 0 || PLATE_REPEAT_TIMER(this) == 0) {
                         PLATE_REPEAT_TIMER(this) = pressed ? 0x10 : 8;
                         if (cur != 0) {
@@ -764,8 +764,8 @@ s32 dScStarSel_c::Behavior() {
                             func_02012790(0x12e);
                         }
                     }
-                } else if (data_020a0e58[0] & 0x10) {
-                    pressed = data_020a0e58[1] & 0x10;
+                } else if (data_020a0e58[0].held & 0x10) {
+                    pressed = data_020a0e58[0].pressed & 0x10;
                     if (pressed != 0 || PLATE_REPEAT_TIMER(this) == 0) {
                         PLATE_REPEAT_TIMER(this) = pressed ? 0x10 : 8;
                         if (cur < PLATE_COUNT(this) - 1) {
@@ -792,9 +792,10 @@ s32 dScStarSel_c::Behavior() {
         if (SublevelToLevel(data_02092110) <= 0xe) {
             if (CURSOR_ON(this) == 0) {
                 if (IsButtonInputValid() != 0 ||
-                    (data_0209caa0[0x42] == 0 && (data_020a0e5a[gActivePlayerSlot][0] & 0xf0))) {
+                    (data_0209caa0[0x42] == 0 &&
+                     (data_020a0e58[gActivePlayerSlot].pressed & 0xf0))) {
                     func_02012790(0x12e);
-                    if (data_0209caa0[0x42] == 0 && (data_020a0e58[1] & 0x30)) {
+                    if (data_0209caa0[0x42] == 0 && (data_020a0e58[0].pressed & 0x30)) {
                         CURSOR_ON(this) = 1;
                     } else {
                         CURSOR_ON(this) = 2;
@@ -813,11 +814,11 @@ s32 dScStarSel_c::Behavior() {
                     }
                 }
             } else if (CURSOR_ON(this) == 1) {
-                if (data_020a0e58[1] != 0) {
+                if (data_020a0e58[0].pressed != 0) {
                     CURSOR_ON(this) = 2;
                 }
-            } else if (data_0209caa0[0x42] == 0 && (data_020a0e58[0] & 0xc0)) {
-                u16 keys = data_020a0e58[1];
+            } else if (data_0209caa0[0x42] == 0 && (data_020a0e58[0].held & 0xc0)) {
+                u16 keys = data_020a0e58[0].pressed;
                 if (keys & 0x40) {
                     if (CURSOR_MODE(this) != 0) {
                         CURSOR_MODE(this) -= 1;

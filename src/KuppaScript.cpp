@@ -52,6 +52,7 @@
 #include "dScene_c.h"
 #include "daPly_c.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 #include "SaveData.h"
 #include "Sound.h"
 
@@ -132,7 +133,7 @@ extern dFdBrightness_c *data_0209f5bc; /* SCENE_FADER */
 extern u8 data_0209d45c;               /* TOP_SCREEN_RELATED */
 extern u8 data_0209d66c;               /* set to close the open message */
 extern s8 data_02092110;               /* NEXT_LEVEL_ID */
-extern u8 data_020a0e58[];             /* BUTTON_INPUT_ARR, 4 bytes a player */
+extern PadData data_020a0e58[];        /* BUTTON_INPUT_ARR, one per player */
 extern dCamera_c *data_0209f318;       /* CAMERA */
 extern int data_ov002_02110aec;        /* WATERFALL_SOUNDS_DISABLED */
 
@@ -4599,7 +4600,7 @@ void ProcessKuppaScript() {
                 if (data_0209f5bc->IsBetweenStartAndEnd() == 0) {
                     u32 i = gActivePlayerSlot;
                     u32 off = i * 4;
-                    if (*(u16 *)(data_020a0e58 + i * 4 + 2) != 0 || IsTouchJustBegun(off)) {
+                    if (data_020a0e58[i].pressed != 0 || IsTouchJustBegun(off)) {
                         dScene_c::StartSceneFade(1, 0, 0);
                         Sound::StopLoadedMusic_Layer1(0x3c);
                     }
