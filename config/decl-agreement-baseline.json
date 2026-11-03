@@ -938,7 +938,7 @@
     },
     "Matrix3x3_LoadIdentity": {
       "src/unnamed/ov007/func_ov007_020c42f8.c": [
-        "arity:1"
+        "param:#1 Mat3 *"
       ]
     },
     "Matrix3x3_SetRotationZ": {
@@ -1130,29 +1130,6 @@
       ],
       "src/runtime/actor/d_cap_enemy_arm9.cpp": [
         "param:#1 CapMtx *"
-      ]
-    },
-    "Matrix4x3_LoadIdentity": {
-      "src/_ZN15ModelComponents21UpdateVertsUsingBonesEv.cpp": [
-        "arity:1"
-      ],
-      "src/engine/view/d_camera.cpp": [
-        "arity:1"
-      ],
-      "src/unnamed/arm9/0204/func_02044efc.c": [
-        "arity:1"
-      ],
-      "src/unnamed/ov007/func_ov007_020b0da0.cpp": [
-        "arity:1"
-      ],
-      "src/unnamed/ov007/func_ov007_020bc968.c": [
-        "arity:1"
-      ],
-      "src/unnamed/ov007/func_ov007_020c0128.cpp": [
-        "arity:1"
-      ],
-      "src/engine/model/ModelComponents.cpp": [
-        "arity:1"
       ]
     },
     "MulMat3x3Mat3x3": {
