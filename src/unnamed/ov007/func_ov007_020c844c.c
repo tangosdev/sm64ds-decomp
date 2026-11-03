@@ -2,7 +2,7 @@
 
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c83fc(void *o);
-extern short func_02053200(int x);
+extern int func_02053200(int x);
 
 /* Builds a follower that moves the Q12 position at p, with mass q (Q12):
  * invMass is its fixed-point reciprocal (func_02053200), 0x1000 directly
