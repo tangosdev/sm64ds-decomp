@@ -75,12 +75,12 @@ enum ChairSfxId {
  * table: one s16 sin, s16 cos pair per 16 angle units. */
 #define SINCOS_INDEX(angle) ((*(u16 *)&(angle) >> 4) * 2)
 
-/* local extern: arm9 C helpers with no shared header yet. Vec3_Sub still
-   takes this file's Vec3, as its definition takes a plain triple; AddVec3
-   takes Vector3 now (math/CalcLib.h declares it). */
+/* local extern: arm9 C helpers with no shared header yet. Vec3_Sub takes the
+   shared Vector3 interface; this TU keeps its local Vec3 POD views. AddVec3
+   also takes Vector3 (math/CalcLib.h declares it). */
 extern "C" {
 void func_0200f760(void *self, void *cyl);
-void Vec3_Sub(Vec3 *res, Vec3 *v0, Vec3 *v1);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *dst, Vector3 *add, Vector3 *src);
 int AngleDiff(int a, int b);
 void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
@@ -318,7 +318,7 @@ void daChair_c::State2() {
                 playerPos.x = pp->x;
                 playerPos.y = pp->y;
                 playerPos.z = pp->z;
-                Vec3_Sub(&diff, &playerPos, (Vec3 *)&mPosX);
+                Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&playerPos, (const Vector3 *)&mPosX);
                 mPrevAngleY = cstd::atan2(diff.x, diff.z);
                 mPrevAngleX = cstd::atan2(diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
                 /* mSpeedX / mSpeedZ: lateral velocity beside mVertSpeed. */
