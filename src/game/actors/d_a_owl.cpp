@@ -169,7 +169,7 @@ short Vec3_VertAngle(const void *a, const void *b);
 unsigned int RandomIntInternal(void *seed);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void MulVec3Mat4x3(void *dst, void *mat, void *src);
-void Vec3_Sub(OwlVec *out, OwlVec *a, OwlVec *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(OwlVec *v);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
@@ -484,7 +484,7 @@ int daOwl_c::func_ov094_02136024()
         pp.z = playerPos->z;
         mPosY = p->mGroundY + 0x190000;
         mTalkTarget = p;
-        Vec3_Sub(&d, selfpos, &pp);
+        Vec3_Sub((Vector3 *)&d, (const Vector3 *)selfpos, (const Vector3 *)&pp);
         if (LenVec3(&d) < 0x28000) {
             d.x = mPosX;
             d.y = mPosY;
