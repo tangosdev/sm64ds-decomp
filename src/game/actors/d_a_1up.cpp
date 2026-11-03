@@ -1044,11 +1044,6 @@ void da1up_c::func_ov002_020aff10() {
    is spelt as the shard that uses it recovered it; nothing above declares
    any of them, so nothing here overrides a recovered view. */
 extern "C" {
-namespace Particle {
-struct SystemHold {
-    static void NewSimple(unsigned int id, int x, int y, int z);
-};
-}
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, dActor_c *a, int r, int h, Vector3_16 *p, int q);
 int IsStarCollectedInCurLevel(int a);
