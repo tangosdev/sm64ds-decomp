@@ -130,6 +130,7 @@ unsigned g_star_frame = 0, g_star_next = 0; int g_star_tries = 0; unsigned long 
 bool g_star_done = true, g_star_spawned = false;   // SM64DS_COOP_STAR=<est frame>: the local player touches a PowerStar
 unsigned g_goto_frame = 0; int g_goto_id = -1; bool g_goto_done = false; int g_goto_tries = 0;
 unsigned g_place_frame = 0; int g_place_xyz[3] = {0, 0, 0}; bool g_place_on = false;   // SM64DS_COOP_PLACE (run after093, lane SEESAW1)
+int g_place_level = -1;   // SM64DS_COOP_PLACE ...:L, only in level L (run after093, lane WHOMPBACK1)
 int g_trace_id = -1; unsigned g_trace_every = 5; int g_trace_off = -1;   // SM64DS_COOP_TRACE (run after093, lane SEESAW1)
 struct WarpKnob { unsigned frame; int level; int act; bool done; };
 WarpKnob g_warp[4]; int g_nwarp = 0;
@@ -192,7 +193,8 @@ void read_env() {
         // F:x,y,z (world units): put the local player at that point ONCE, F frames after the group state is established in the
         // level, so a coop proof row can start a real scripted walk from solid ground. Unlike SM64DS_COOP_GOTO it never repeats.
         unsigned f = 0; int x = 0, y = 0, z = 0;
-        if (std::sscanf(pl, "%u:%i,%i,%i", &f, &x, &y, &z) == 4) { g_place_frame = f; g_place_xyz[0] = x; g_place_xyz[1] = y; g_place_xyz[2] = z; g_place_on = true; }
+        int lv = -1;
+        if (std::sscanf(pl, "%u:%i,%i,%i:%i", &f, &x, &y, &z, &lv) >= 4) { g_place_frame = f; g_place_xyz[0] = x; g_place_xyz[1] = y; g_place_xyz[2] = z; g_place_on = true; g_place_level = lv; }
     }
     if (const char *tr = std::getenv("SM64DS_COOP_TRACE")) {
         // ID[:EVERY[:OFF]]: every EVERY established frames print the local player's place and air flag, and the pose of each live
@@ -991,7 +993,7 @@ void tick_est(unsigned now) {
         if (!g_kill[i].done && g_est_frames >= g_kill[i].frame) { g_kill[i].done = true; knob_kill(g_kill[i]); }
     if (g_goto_id >= 0 && g_goto_tries < 6 && g_est_frames >= g_goto_frame + 90u * (unsigned)g_goto_tries) knob_goto(g_goto_id, g_goto_tries++);
     if (knobs_on && !g_star_done && g_est_frames >= g_star_frame) knob_star();
-    if (knobs_on && g_place_on && g_est_frames >= g_place_frame) {
+    if (knobs_on && g_place_on && g_est_frames >= g_place_frame && (g_place_level < 0 || (int)data_0209f2f8 == g_place_level)) {
         g_place_on = false;
         if (char *me = (char *)data_0209f394[data_0209f250 & 15]) {
             for (int q = 0; q < 3; ++q) *(int *)(me + 0x5c + 4 * q) = g_place_xyz[q] << 12;
