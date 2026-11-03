@@ -67,7 +67,9 @@ enum : int { kSeenMax = 16, kPendMax = 8, kSeqMemory = 12, kLedgerMax = 4, kRece
 const unsigned kResendAt[kResendN] = { 250, 700, 1500, 3000, 5000, 8000 };
 enum : unsigned { kLedgerMs = 8000, kGuardMs = 2000, kSoftMs = 4000, kForceMs = 12000 };
 // SYNX reserved word
-enum : unsigned { kXStar = 1u, kXKey = 2u, kXNoExit = 4u, kXGrand = 8u };   // kXGrand: STAREXIT2 (an old receiver drops bit 3)
+enum : unsigned { kXStar = 1u, kXKey = 2u, kXNoExit = 4u, kXGrand = 3u };
+// kXGrand (STAREXIT2) is the low two bits both set, a value no older sender makes: a 0.9.3.6 receiver drops it (its check wants
+// exactly 1 or 2) and the relay and comms_hub pass it (they police only bits above 2: reserved & ~7 == 0).
 
 #pragma pack(push, 1)
 struct PopWire {            // SYNB 0x1e payload, 8 B
@@ -661,7 +663,7 @@ void send_event(Mode m, int kind, bool exits, int star) {
         if (course < 0 || course > 29) course = 0;
         unsigned char b[kHubPartyStarBytes];
         if (hub_party_star_encode(course, star & 7, g.seq, b) != kHubPartyStarBytes) return;
-        const unsigned rsv = (kind == kKindKey ? kXKey : kXStar) | (kind == kKindGrand ? kXGrand : 0u) | (exits ? 0u : kXNoExit);
+        const unsigned rsv = (kind == kKindGrand ? kXGrand : kind == kKindKey ? kXKey : kXStar) | (exits ? 0u : kXNoExit);
         b[8] = (unsigned char)rsv; b[9] = 0;
         std::memcpy(p.buf, b, sizeof b); p.len = (int)sizeof b; p.coop = false;
         comms_hub_send(b, (int)sizeof b);
@@ -889,7 +891,7 @@ bool star_popup_party_rx(int seat, const unsigned char *d, int len) {
     init_once();
     const unsigned rsv = hub_rd16(d, 8);
     if (!g.enabled || mode_now() != kParty) return true;
-    if ((rsv & ~15u) || ((rsv & 3u) != kXStar && (rsv & 3u) != kXKey) || seat < 0 || seat >= 16 || seat == my_seat() ||
+    if ((rsv & ~7u) || (rsv & 3u) == 0u || seat < 0 || seat >= 16 || seat == my_seat() ||
         (comms_hub_room_kind() == kHubRoomWorld && !world_party_member(seat))) {
         ++g.st.dropped;
         return true;
@@ -900,7 +902,7 @@ bool star_popup_party_rx(int seat, const unsigned char *d, int len) {
     const bool pres = hub_presence_get(seat, &p, &age);
     const bool here = pres && age < 5000 && p.in_level();
     HubPartyStarWire pw; std::memcpy(&pw, d, sizeof pw);
-    on_event(seat, (rsv & kXGrand) ? kKindGrand : (rsv & kXKey) ? kKindKey : kKindStar, (rsv & kXNoExit) == 0, here ? p.level : -1, here ? p.act : -1,
+    on_event(seat, (rsv & 3u) == kXGrand ? kKindGrand : (rsv & 3u) == kXKey ? kKindKey : kKindStar, (rsv & kXNoExit) == 0, here ? p.level : -1, here ? p.act : -1,
              (int)pw.course, d[7]);
     return true;
 }
