@@ -35,10 +35,11 @@ extern FileShareWork data_020a1fc0;
 extern char data_02082158[];
 }
 
-typedef char FileShareParentArea_mNodes_must_be_0xc0[
-    (int)&((FileShareParentArea *)0)->mNodes == 0xc0 ? 1 : -1];
-typedef char FileShareChildArea_mRecvWork_must_be_0xc70[
-    (int)&((FileShareChildArea *)0)->mRecvWork == 0xc70 ? 1 : -1];
+typedef char
+    FileShareParentArea_mNodes_must_be_0xc0[(int)&((FileShareParentArea *)0)->mNodes == 0xc0 ? 1
+                                                                                             : -1];
+typedef char FileShareChildArea_mRecvWork_must_be_0xc70
+    [(int)&((FileShareChildArea *)0)->mRecvWork == 0xc70 ? 1 : -1];
 
 extern "C" void func_02040c34(int isParent, int port, int stateCallback, int allocFunc,
                               int allocArg) {
@@ -83,8 +84,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
                 zero = 0;
                 node = saved;
                 next = node + 1;
-                end = ((int)next & 1) ? nodes->mNodes + 3
-                                      : nodes->mNodes + 3;
+                end = ((int)next & 1) ? nodes->mNodes + 3 : nodes->mNodes + 3;
                 *(FileShareNode **)((base + 0x2000) + 0x700) = saved;
                 if (next < end) {
                     do {
