@@ -130,6 +130,14 @@ class Images:
             raise ValueError('%08x is outside %s' % (addr, mod))
         return d[off:off + n]
 
+    def marker_addr(self):
+        """Address of MARKER_TEXT in the arm9 image (4-aligned), or None."""
+        d = self.data('arm9')
+        k = d.find(MARKER_TEXT)
+        while k >= 0 and k % 4:
+            k = d.find(MARKER_TEXT, k + 1)
+        return None if k < 0 else self.mods['arm9'][0] + k
+
     def default_module(self, addr):
         base = self.mods['arm9'][0]
         if base <= addr < base + len(self.data('arm9')):
@@ -172,6 +180,14 @@ def savestate_ram(path, images=None):
 VERIFY_WINDOWS = ([(OVERLAY_TABLE, 0x48), (OVERLAY_TABLE + 0x48, 0x48), (0x0209caa0, 0x80), (0x0209f2c0, 0x80)]
                   + [(0x02090000 + k * 0x1000, 0x20) for k in range(0x12)]
                   + [(0x02100000 + k * 0x8000, 0x20) for k in range(0x58)])
+
+# The load marker: a RAM word that nothing writes and nothing reads while the game
+# runs, so a sentinel poked there survives until a savestate load overwrites it.
+# It is the start of the arm9 .rodata format string "ASSERTION FAILED  FILE=[%s]
+# LINE=[%d] ...", printed only when an assertion fails. It is found by content in
+# the arm9 image (Images.marker_addr), so another build of the ROM still works.
+MARKER_TEXT = b'ASSERTION FAILED'
+MARKER_XOR = 0xA5A55A5A
 
 
 # ---------------------------------------------------------------- expressions
@@ -835,6 +851,7 @@ class Daemon:
         self.quit = False
         self.kill_emu = False
         self.clean = False
+        self.emu_exited = None      # melonDS's exit code, if it exited while served
 
     # ---- ops: everything a client can ask for. Values are JSON-friendly.
     def op_status(self):
@@ -1013,23 +1030,51 @@ class Daemon:
         self.s.event({'ev': 'poke', 'addr': '%08x' % a, 'op': op, 'mask': mask, 'old': old, 'new': back})
         return {'addr': '%08x' % a, 'old': old, 'new': back, 'size': size}
 
-    def op_shot(self, path=None, which='top', settle_ms=250, stable_tries=6):
+    def op_shot(self, path=None, which='top', settle_ms=250, stable_tries=6, require_framed=None, env=None,
+                margin=8, dy=0):
         """Capture the DS screen(s). Waits settle_ms, then re-captures until two
-        consecutive grabs agree (the halted frame has been repainted)."""
+        consecutive grabs agree (the halted frame has been repainted).
+
+        require_framed (opt-in guard): an expression, or a list of them, for the
+        address of a Fix12 world position, as for op_project (e.g. "[obj+4]+0x5c"
+        with env {"obj": ...}). If any of them projects off the top screen (with
+        `margin` px of slack; `dy` lifts the point), nothing is captured and
+        NotFramed is raised, so a capture loop cannot waste shots on a subject
+        that is not in view."""
         import emuwin
+        framing = None
+        if require_framed:
+            pts = require_framed if isinstance(require_framed, list) else [require_framed]
+            framing = []
+            for p in pts:
+                r = self.op_project(pos=p, env=env, margin=margin, dy=dy)
+                framing.append({'pos': p, 'sx': r.get('sx'), 'sy': r.get('sy'), 'depth': r.get('depth'),
+                                'on_screen': r.get('on_screen'), 'why': r.get('why')})
+            bad = [f for f in framing if not f['on_screen']]
+            if bad:
+                self.s.event({'ev': 'shot_refused', 'path': path, 'framing': framing})
+                raise NotFramed('capture refused, target not framed: %s' % json.dumps(bad))
+        log = self.s.event
         time.sleep(float(settle_ms) / 1000.0)
-        prev = emuwin.capture_screens(self.window(), which)
+        prev = emuwin.capture_screens(self.window(), which, log=log)
+        retries = getattr(prev, 'retries', 0)
         stable = False
         for _ in range(int(stable_tries)):
             time.sleep(0.08)
-            cur = emuwin.capture_screens(self.window(), which)
+            cur = emuwin.capture_screens(self.window(), which, log=log)
+            retries += getattr(cur, 'retries', 0)
             if cur.diff_fraction(prev, tol=4) == 0.0:
                 stable = True
                 break
             prev = cur
         if path:
             prev.save_png(path)
-        return {'w': prev.w, 'h': prev.h, 'path': path, 'stable': stable}
+        out = {'w': prev.w, 'h': prev.h, 'path': path, 'stable': stable}
+        if retries:
+            out['capture_retries'] = retries
+        if framing is not None:
+            out['framing'] = framing
+        return out
 
     def op_press(self, buttons, ms=100):
         import emuwin
@@ -1060,7 +1105,7 @@ class Daemon:
 
     def _load_slot(self, slot, settle):
         import emuwin
-        out = emuwin.load_state_slot(self.pid, int(slot))
+        out = emuwin.load_state_slot(self.pid, int(slot), log=self.s.event)
         time.sleep(float(settle))
         self.s.event({'ev': 'load_state', 'slot': int(slot)})
         return out
@@ -1089,18 +1134,31 @@ class Daemon:
     def _verify_windows(self):
         return [self.s.read(a, n) for a, n in VERIFY_WINDOWS]
 
-    def op_load_state_file(self, path, slot=8, settle=1.0, verify=True, tries=2):
+    def op_load_state_file(self, path, slot=8, settle=1.0, verify=True, tries=2, marker=True, dry_run=False):
         """Load any savestate file: copy it over slot file game.ml<slot> and load
         that slot. serve creates every slot file before melonDS loads the ROM,
         because melonDS enables a Load state slot only if its file existed then.
 
-        verify: read VERIFY_WINDOWS before and after, and compare with the RAM
-        image inside the file. 'loaded' = after matches the file in more windows
-        than it matches before; 'indistinguishable' = before already matched the
-        file in every window that did not change to a third value meanwhile (the
-        load cannot be told from no load, e.g. reloading the state already
-        running); 'not_loaded' = some window kept a pre-load value the file does
-        not have."""
+        verify, marker check (gives the verdict): before the load, a sentinel
+        that differs from the file's value is written into the marker word
+        (MARKER_TEXT: nothing writes or reads it while the game runs). If the
+        word then holds the file's value, the load overwrote it: 'loaded'. If it
+        still holds the sentinel: 'not_loaded', and the game's own value is
+        written back. `marker` in the result holds the address and the values.
+
+        verify, RAM windows (kept for compatibility: window_verdict, differ,
+        match_file, match_before, match_file_all): read VERIFY_WINDOWS before and
+        after, and compare with the RAM image inside the file. 'loaded' = after
+        matches the file in more windows than it matches before;
+        'indistinguishable' = before already matched the file in every window
+        that did not change to a third value meanwhile; 'not_loaded' = some
+        window kept a pre-load value the file does not have. Nearby states share
+        most of these windows, so this can say 'indistinguishable' after a real
+        load. It decides the verdict only when the marker cannot (marker=False,
+        or no marker word in this ROM): see verdict_by.
+
+        dry_run: everything but the menu click (a self-test of the check: the
+        verdict must come back 'not_loaded' and the marker word be put back)."""
         import shutil
         path = os.path.abspath(path)
         dst = self.slot_path(slot)
@@ -1108,18 +1166,68 @@ class Daemon:
             shutil.copyfile(path, dst)
         file_ram = savestate_ram(path, self.s.images) if verify else None
         res = {'slot': int(slot), 'path': path}
+        if dry_run:
+            res['dry_run'] = True
         # the reads too run with nothing armed: fewer requests that can cross a stop
-        self._menu_unarmed(lambda: self._load_verified(res, file_ram, slot, settle, verify, tries))
+        self._menu_unarmed(lambda: self._load_verified(res, file_ram, slot, settle, verify, tries, marker,
+                                                       dry_run))
         self.s.event(dict(res, ev='load_state_file'))
         return res
 
-    def _load_verified(self, res, file_ram, slot, settle, verify, tries):
+    def _marker_poke(self, file_ram):
+        """Write a sentinel into the marker word. Returns the marker record, or None
+        when this ROM has no marker word."""
+        a = self.s.images.marker_addr()
+        if a is None:
+            return None
+        fv = int.from_bytes(file_ram(a, 4), 'little')
+        live = self.s.read_int(a, 4)
+        sentinel = fv ^ MARKER_XOR
+        if sentinel == live:
+            sentinel = fv ^ (MARKER_XOR >> 1)
+        self.s.write(a, sentinel.to_bytes(4, 'little'))
+        back = self.s.read_int(a, 4)
+        m = {'addr': '%08x' % a, 'file': '%08x' % fv, 'live_before': '%08x' % live, 'sentinel': '%08x' % sentinel}
+        if back != sentinel:
+            self.s.write(a, live.to_bytes(4, 'little'))
+            m.update(verdict='unusable', why='the sentinel did not stick (read back %08x)' % back)
+        return m
+
+    def _marker_check(self, m):
+        a = int(m['addr'], 16)
+        got = self.s.read_int(a, 4)
+        m['after'] = '%08x' % got
+        if got == int(m['file'], 16):
+            m['verdict'] = 'loaded'
+        elif got == int(m['sentinel'], 16):
+            m['verdict'] = 'not_loaded'
+            self.s.write(a, int(m['live_before'], 16).to_bytes(4, 'little'))   # the game's value back
+            m['put_back'] = True
+        else:
+            m.update(verdict='unknown', why='the word holds neither the file value nor the sentinel')
+        return m['verdict']
+
+    def _load_verified(self, res, file_ram, slot, settle, verify, tries, marker=True, dry_run=False):
         for attempt in range(int(tries)):
             pre = self._verify_windows() if verify else None
-            res['menu'] = self._load_slot(slot, settle)
+            mk = self._marker_poke(file_ram) if verify and marker else None
+            try:
+                if dry_run:
+                    time.sleep(float(settle))
+                    res['menu'] = 'dry run: no menu click'
+                else:
+                    res['menu'] = self._load_slot(slot, settle)
+            except Exception:
+                if mk is not None and 'verdict' not in mk:
+                    self._marker_check(mk)      # writes the game's value back if nothing loaded
+                raise
             if not verify:
                 res['verdict'] = 'unchecked'
                 break
+            if mk is not None:
+                if 'verdict' not in mk:
+                    self._marker_check(mk)
+                res['marker'] = mk
             post = self._verify_windows()
             want = [file_ram(a, n) for a, n in VERIFY_WINDOWS]
             differ = [i for i in range(len(want)) if pre[i] != want[i]]
@@ -1128,18 +1236,25 @@ class Daemon:
             res.update(attempt=attempt + 1, windows=len(want), differ=len(differ), match_file=k_file,
                        match_before=k_pre, match_file_all=sum(post[i] == want[i] for i in range(len(want))))
             if k_file > k_pre:
-                res['verdict'] = 'loaded'
-                break
-            if k_pre == 0:
+                wv = 'loaded'
+            elif k_pre == 0:
                 # before already matched the file wherever it was stable: every window that
                 # differed changed to neither value (a timer, say)
-                res['verdict'] = 'indistinguishable'
+                wv = 'indistinguishable'
+            else:
+                wv = 'not_loaded'
+            res['window_verdict'] = wv
+            mv = mk.get('verdict') if mk is not None else None
+            if mv in ('loaded', 'not_loaded'):
+                res.update(verdict=mv, verdict_by='marker')
+            else:
+                res.update(verdict=wv, verdict_by='windows')
+            if res['verdict'] != 'not_loaded':
                 break
-            res['verdict'] = 'not_loaded'
 
     def op_save_state(self, slot=1):
         import emuwin
-        return self._menu_unarmed(lambda: emuwin.save_state_slot(self.pid, int(slot)))
+        return self._menu_unarmed(lambda: emuwin.save_state_slot(self.pid, int(slot), log=self.s.event))
 
     def op_save_state_file(self, path, slot=8, timeout=30):
         """Save to slot <slot> through the File menu, wait until melonDS has written
@@ -1215,11 +1330,18 @@ class Daemon:
         except Exception as e:
             return {'id': req.get('id'), 'ok': False, 'error': '%s: %s' % (type(e).__name__, e)}
 
+    def listen(self):
+        """Bind the RPC port (serve() does it if this was not called first)."""
+        if getattr(self, '_ls', None) is None:
+            ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            ls.bind(('127.0.0.1', self.rpc_port))
+            ls.listen(4)
+            self._ls = ls
+        return self._ls
+
     def serve(self, keepalive=2.0):
-        ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        ls.bind(('127.0.0.1', self.rpc_port))
-        ls.listen(4)
+        ls = self.listen()
         clients = {}
         last_ka = time.time()
         while not self.quit:
@@ -1251,6 +1373,15 @@ class Daemon:
                         sock.sendall((json.dumps(resp) + '\n').encode())
                     except OSError:
                         pass
+            if self.proc is not None and self.proc.poll() is not None:
+                # the melonDS this daemon launched is gone (closed, or crashed: a savestate
+                # with another melonDS major version did that): nothing is left to serve, so
+                # stop, and `serve` puts the user's melonDS.toml back
+                self.s.dead = self.s.dead or 'melonDS exited (%s)' % self.proc.returncode
+                self.s.event({'ev': 'emu_exited', 'returncode': self.proc.returncode})
+                self.emu_exited = self.proc.returncode
+                self.quit = True
+                continue
             if self.s.dead:
                 continue
             try:
@@ -1260,9 +1391,6 @@ class Daemon:
                     last_ka = time.time()
             except StubDropped:
                 pass
-            if self.proc is not None and self.proc.poll() is not None and not self.s.dead:
-                self.s.dead = 'melonDS exited (%s)' % self.proc.returncode
-                self.s.event({'ev': 'emu_exited'})
         # teardown: clear breakpoints, detach (D) so the stub stays usable
         if not self.s.dead:
             try:
@@ -1284,6 +1412,10 @@ class Daemon:
 
 class RemoteError(RuntimeError):
     pass
+
+
+class NotFramed(RuntimeError):
+    """op_shot(require_framed=...) refused: the target projects off the top screen."""
 
 
 class Client:
