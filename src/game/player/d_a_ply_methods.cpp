@@ -253,7 +253,7 @@ AnimEntry27 data_ov002_0210a6bc[3] = {
     { 55, 0x40000000 },
     { 183, 0 },
 };
-int data_ov002_0210a6d4[6] = { 105, 106, 18, 20, 19, 21 };
+u32 data_ov002_0210a6d4[6] = { 105, 106, 18, 20, 19, 21 };
 int data_ov002_0210a6ec[6] = { 18, 20, 0, 0, 0, 0 };
 
 /* PLAYER's registry descriptor: the factory and the draw/update priorities
