@@ -165,11 +165,73 @@ int daPly_c::func_ov002_020bcd38(unsigned char *params, int beginFrame, int endF
 extern "C" {
 typedef struct { int w[2]; } AnimEntry27;
 
+extern AnimEntry27 data_ov002_02109ff4[];
+extern AnimEntry27 data_ov002_0210a61c[];
+extern AnimEntry27 data_ov002_0210a63c[];
+extern AnimEntry27 data_ov002_0210a1d4[];
+extern AnimEntry27 data_ov002_0210a64c[];
+extern AnimEntry27 data_ov002_0210a66c[];
+extern AnimEntry27 data_ov002_0210a67c[];
+extern AnimEntry27 data_ov002_0210a4bc[];
+extern AnimEntry27 data_ov002_0210a434[];
+extern AnimEntry27 data_ov002_0210a3dc[];
+extern AnimEntry27 data_ov002_0210a5ec[];
+extern AnimEntry27 data_ov002_0210a5fc[];
+extern AnimEntry27 data_ov002_0210a62c[];
+extern AnimEntry27 data_ov002_0210a6bc[];
+extern AnimEntry27 data_ov002_0210a65c[];
+extern AnimEntry27 data_ov002_0210e7b8[];
+
+/* w[0] is the SetAnim id, w[1] the value (0x40000000 or 0). */
+AnimEntry27 data_ov002_0210a720[4] = {
+    { 181, 0x40000000 },
+    { 180, 0x40000000 },
+    { 178, 0x40000000 },
+    { 179, 0 },
+};
+AnimEntry27 data_ov002_0210a740[4] = {
+    { 186, 0x40000000 },
+    { 71, 0x40000000 },
+    { 187, 0x40000000 },
+    { 188, 0 },
+};
+/* Halfword ramp between those lists and the index table. No relocation. */
+u16 data_ov002_0210a760[32] = {
+    0x3e1f, 0x3e1f, 0x3e1f, 0x3e1f,
+    0x3f1f, 0x3f1f, 0x3f1f, 0x3f1f,
+    0x43ff, 0x43ff, 0x43ff, 0x43ff,
+    0x4bef, 0x4bef, 0x4bef, 0x4bef,
+    0x7fef, 0x7fef, 0x7fef, 0x7fef,
+    0x7df0, 0x7df0, 0x7df0, 0x7df0,
+    0x7df8, 0x7df8, 0x7df8, 0x7df8,
+    0x69ff, 0x69ff, 0x69ff, 0x69ff,
+};
+
+AnimEntry27 *data_ov002_0210a7a0[] = {
+    data_ov002_02109ff4,
+    data_ov002_0210a61c,
+    data_ov002_0210a720,
+    data_ov002_0210a63c,
+    data_ov002_0210a1d4,
+    data_ov002_0210a64c,
+    data_ov002_0210a740,
+    data_ov002_0210a66c,
+    data_ov002_0210e7b8,
+    data_ov002_0210a67c,
+    data_ov002_0210a4bc,
+    data_ov002_0210a434,
+    data_ov002_0210a3dc,
+    data_ov002_0210a5ec,
+    data_ov002_0210a5fc,
+    data_ov002_0210a62c,
+    data_ov002_0210a6bc,
+    data_ov002_0210a65c,
+};
+
 // @symbol func_ov002_020bcdf0
 void func_ov002_020bcdf0(char *self)
 {
     daPly_c *player = reinterpret_cast<daPly_c *>(self);
-    extern AnimEntry27 *data_ov002_0210a7a0[];
     extern void PlayerNewSimpleHold(unsigned int id, int x, int y, int z);
     extern u32 PlayerNewHold(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                              void *callback);
@@ -25196,7 +25258,7 @@ void *data_ov002_0210f8a8[3];
 void *data_ov002_0210f8b4[3];
 void *data_ov002_0210f8c0[3];
 unsigned int data_ov002_0210e158;
-int data_ov002_0210e7b8[2];
+AnimEntry27 data_ov002_0210e7b8[1];
 }
 
 #pragma define_section initsec ".init" ".init" ".init" far_absolute RX
