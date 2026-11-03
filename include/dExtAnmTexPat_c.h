@@ -4,6 +4,7 @@
 #include "types.h"
 #include "dExtFrameCtrl_c.h"
 #include "math/Fix12.h"
+#include "private/BTP_File.h"
 
 /* dExtFrameCtrl_c child that drives BTP-file playback, vtable _ZTV15dExtAnmTexPat_c at 0x0208e7d4:
  * two slots, the destructor pair, nothing else. Update is a plain method;
@@ -44,25 +45,6 @@ struct ModelComponents;
 struct BMD_File;
 struct SharedFilePtr;
 
-/* Only the frame count and the header words UpdateFileOffsets touches are typed. texRecords
-   and palRecords are the name-lookup tables Prepare indexes -- 8-byte
-   { s16 resourceId; u16 pad; char *name; } records per func_02046d50's
-   Tbl view -- and seqRecords the 0xc-byte sequence table alongside them;
-   each holds file-relative offsets that UpdateFileOffsets rebases. */
-struct BTP_File {
-    u16 numFrames;             /* 0x00 - handed to SetAnimation by SetFile */
-    u16 numTexRecords;         /* 0x02 - 8-byte records at texRecords */
-    char *texRecords;          /* 0x04 - fixed up on load */
-    u16 numPalRecords;         /* 0x08 - 8-byte records at palRecords */
-    u16 pad_0a;
-    char *palRecords;          /* 0x0c */
-    char *unk_10;              /* 0x10 */
-    char *unk_14;              /* 0x14 */
-    char *unk_18;              /* 0x18 */
-    u16 numSeqRecords;         /* 0x1c - 0xc-byte records at seqRecords; the ROM reads a halfword */
-    u16 pad_1e;
-    char *seqRecords;          /* 0x20 */
-};
 struct dExtAnmTexPat_c : dExtFrameCtrl_c {
     BTP_File *file;           /* 0x10 */
 
