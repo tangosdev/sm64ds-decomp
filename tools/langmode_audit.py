@@ -126,12 +126,19 @@ def hand_spells_own_symbol(path, stem):
     those 8 classifications and nothing else across every `.cpp` in `src/` -- a pointer
     return type like `int *_ZN14daObjWc_Mizu_cD0Ev(int *t) {` still counts, because `*`
     is a declarator token and `(` is not.
+
+    Comments and strings are masked through `delaunder.code_mask`, as the launder,
+    pragma and `_ZTV` metrics are: a block-comment line naming the symbol let
+    `[^;{]*` run past `*/` into the next function's brace (d_s_mg_card.cpp).
     """
     try:
         t = _source_text(path)
     except OSError:
         return False
+    keep = delaunder.code_mask(t)
     for m in re.finditer(re.escape(stem) + r"\s*\([^;{]*\)\s*\{", t, re.S):
+        if not keep[m.start()]:
+            continue        # the symbol is named in a comment or a string, not defined
         line_start = t.rfind("\n", 0, m.start()) + 1
         line = t[line_start:m.start()]
         if line.lstrip().startswith(("//", "*", "/*")):
