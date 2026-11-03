@@ -1493,12 +1493,6 @@
         "param:#1 char *"
       ]
     },
-    "ObjectMessageIDToActualMessageID": {
-      "src/game/actors/d_a_kinopio.cpp": [
-        "param:#1 short",
-        "return:unsigned short"
-      ]
-    },
     "Player_AdvanceAnims": {
       "src/_ZN7daPly_c12St_Fall_MainEv.cpp": [
         "return:int"
