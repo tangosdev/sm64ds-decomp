@@ -170,6 +170,15 @@ struct DestructorChain { DestructorChain *next; void *destructor; void *object; 
 extern "C" {
 typedef struct { int w[2]; } AnimEntry27;
 
+/* Single-step animation scripts referenced from data_ov002_0210a7a0.
+ * They sit in the shared PMF band, so each keeps its own initialized input
+ * section (manifest routes .data.player_anim_0* to the retail addresses). */
+AnimEntry27 data_ov002_02109ff4[1] = { { 0xb3, 0 } };
+AnimEntry27 data_ov002_0210a1d4[1] = { { 0xb7, 0 } };
+AnimEntry27 data_ov002_0210a3dc[1] = { { 1, 0 } };
+AnimEntry27 data_ov002_0210a434[1] = { { 0xbc, 0 } };
+AnimEntry27 data_ov002_0210a4bc[1] = { { 0xbf, 0 } };
+
 /* Player animation scripts, frame windows, hurt tables, and body-model
  * pointer tables. All values and pointer targets are read by the state
  * handlers below; the three SharedFilePtr* arrays feed func_ov002_020e5948. */
@@ -270,16 +279,11 @@ SpawnInfo<daPly_c> g_profile_PLAYER = {
     0x02ee0000,
 };
 
-extern AnimEntry27 data_ov002_02109ff4[];
 extern AnimEntry27 data_ov002_0210a61c[];
 extern AnimEntry27 data_ov002_0210a63c[];
-extern AnimEntry27 data_ov002_0210a1d4[];
 extern AnimEntry27 data_ov002_0210a64c[];
 extern AnimEntry27 data_ov002_0210a66c[];
 extern AnimEntry27 data_ov002_0210a67c[];
-extern AnimEntry27 data_ov002_0210a4bc[];
-extern AnimEntry27 data_ov002_0210a434[];
-extern AnimEntry27 data_ov002_0210a3dc[];
 extern AnimEntry27 data_ov002_0210a5ec[];
 extern AnimEntry27 data_ov002_0210a5fc[];
 extern AnimEntry27 data_ov002_0210a62c[];
