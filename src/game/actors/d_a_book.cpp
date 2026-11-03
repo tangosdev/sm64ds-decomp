@@ -101,8 +101,6 @@ int  RandomIntInternal(void *p);
 void func_ov063_0211cae8(void *found, int mask);
 void func_0203568c(int *p, int v);
 void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
-void UnloadBlueCoinModel(void *);
-void LoadBlueCoinModel(void *c);
 void func_0200f760(void *a, void *b);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,
@@ -702,7 +700,7 @@ int daBook_c::CleanupResources()
     ((SharedFilePtr *)(&data_ov020_02114ab8))->Release();
     ((SharedFilePtr *)(&data_ov020_02114aa8))->Release();
     ((SharedFilePtr *)(&data_ov020_02114ab0))->Release();
-    UnloadBlueCoinModel(this);
+    UnloadBlueCoinModel();
     return 1;
 }
 
@@ -711,7 +709,7 @@ int daBookGen_c::CleanupResources()
 {
     ((SharedFilePtr *)&data_ov020_02114aa0)->Release();
     ((SharedFilePtr *)&data_ov020_02114ab8)->Release();
-    UnloadBlueCoinModel(this);
+    UnloadBlueCoinModel();
     return 1;
 }
 
@@ -810,7 +808,7 @@ int daBook_c::InitResources()
     dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa8);
     dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab0);
-    LoadBlueCoinModel(this);
+    LoadBlueCoinModel();
 
     if (mShadowModel.InitCylinder() == 0)
         return 0;
@@ -890,7 +888,7 @@ int daBookGen_c::InitResources()
     mSpawnTimer = 0;
     dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
     dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
-    LoadBlueCoinModel(this);
+    LoadBlueCoinModel();
     return 1;
 }
 
