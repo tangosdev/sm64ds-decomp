@@ -47,6 +47,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 
 #include "types.h"
 #include "G2.h"
+#include "private/controller_input.h"
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
 #include "dScStage_c.h"
@@ -255,10 +256,6 @@ struct LevelReturnEntry {
 };
 struct OvTbl {
     unsigned int t[7];
-};
-struct PadData {
-    u16 held;
-    u16 pressed;
 };
 /* The object at data_0209f5bc; only its slot-5 and slot-7 queries are called
    from this file. */
