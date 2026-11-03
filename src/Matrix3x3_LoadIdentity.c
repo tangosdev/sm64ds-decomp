@@ -8,23 +8,18 @@
 //   1 0 0
 //   0 1 0
 //   0 0 1
-// (1 is written as 0x1000: the DS has no floating point, so these are
-// fixed-point numbers with 12 fraction bits.)
-//
-// stmia stores two registers to memory and moves the pointer past them,
-// so the matrix is filled two entries at a time. r2 holds 1 and r1/r3
-// hold 0, so {r2, r3} writes "1, 0" and {r1, r3} writes "0, 0".
-// Nine entries don't split into pairs, so the bottom-right 1 is
-// written on its own first.
+// 1 is written as 0x1000: the DS has no floating point, so these are
+// fixed-point numbers with 12 fraction bits. Each stmia stores two
+// registers at m (r0) and moves it past them, two entries at a time.
 asm void Matrix3x3_LoadIdentity(Matrix3x3 *m)
 {
-    mov r2, #0x1000
-    str r2, [r0, #0x20]
-    mov r3, #0
-    stmia r0!, {r2, r3}
-    mov r1, #0
-    stmia r0!, {r1, r3}
-    stmia r0!, {r2, r3}
-    stmia r0!, {r1, r3}
+    mov r2, #0x1000         // r2 = 1
+    str r2, [r0, #0x20]     // m[8] = 1: nine entries don't pair up, so do this one first
+    mov r3, #0              // r3 = 0
+    stmia r0!, {r2, r3}     // m[0] = 1, m[1] = 0
+    mov r1, #0              // r1 = 0
+    stmia r0!, {r1, r3}     // m[2] = 0, m[3] = 0
+    stmia r0!, {r2, r3}     // m[4] = 1, m[5] = 0
+    stmia r0!, {r1, r3}     // m[6] = 0, m[7] = 0
     bx lr
 }
