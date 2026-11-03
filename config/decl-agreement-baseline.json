@@ -230,28 +230,23 @@
         "param:#1 char *"
       ]
     },
-    "Copy32Bytes": {
-      "src/engine/gx/G3X.cpp": [
-        "arity:2"
-      ]
-    },
     "Copy36Bytes": {
       "src/Geometry_MatrixMultiply3x3.c": [
-        "arity:2"
+        "param:#1 int *"
       ],
       "src/unnamed/arm9/0204/func_0204b460.c": [
-        "arity:2"
+        "param:#1 int *"
       ],
       "src/unnamed/arm9/0204/func_0204b81c.c": [
-        "arity:2"
+        "param:#1 int *"
       ],
       "src/unnamed/arm9/0205/func_0205532c.c": [
-        "arity:2"
+        "param:#1 int *"
       ]
     },
     "Copy48Bytes": {
       "src/InvMat4x3.cpp": [
-        "arity:2"
+        "param:#1 int *"
       ]
     },
     "Copy48BytesFixed": {
@@ -268,135 +263,73 @@
       ]
     },
     "CpuCopy8": {
-      "src/SharedFilePtr.cpp": [
-        "arity:3"
-      ],
-      "src/engine/save/SaveData.cpp": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0201/func_02018c00.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0203/func_0203db64.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0203/func_0203e9a8.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0204/func_02040014.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0204/func_020426f8.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_0206062c.cpp": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_0206071c.cpp": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02063ea8.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064554.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064674.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064a28.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064a94.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064b2c.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064bac.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064c2c.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064cd8.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064d6c.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064e18.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064eac.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064f54.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02064fe8.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_020656d4.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_020658c0.cpp": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02065c2c.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02065de4.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_020672d0.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_020678a4.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02067b68.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02067bfc.cpp": [
-        "arity:3",
-        "return:int"
+      "src/engine/mb/MB_WmBase.cpp": [
+        "param:#1 unsigned short *",
+        "param:#3 int"
       ],
       "src/unnamed/arm9/0201/func_0201818c.cpp": [
-        "arity:3"
+        "param:#1 int",
+        "param:#2 int"
       ],
-      "src/unnamed/arm9/0201/func_0201834c.cpp": [
-        "arity:3"
+      "src/unnamed/arm9/0201/func_02018c00.c": [
+        "param:#3 int"
       ],
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "arity:3"
+      "src/unnamed/arm9/0203/func_0203db64.c": [
+        "param:#3 int"
       ],
-      "src/CARDi_ReadFromCache.c": [
-        "arity:3"
+      "src/unnamed/arm9/0203/func_0203e9a8.c": [
+        "param:#1 int",
+        "param:#3 int"
       ],
-      "src/engine/fs/FS_CommandDefault.cpp": [
-        "arity:3"
+      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+        "param:#3 int"
       ],
-      "src/engine/mb/MB_Parent.cpp": [
-        "arity:3"
+      "src/unnamed/arm9/0204/func_02040014.c": [
+        "param:#3 int"
       ],
-      "src/engine/fs/FS_Archive.cpp": [
-        "arity:3"
+      "src/unnamed/arm9/0206/func_0206062c.cpp": [
+        "param:#1 int",
+        "param:#2 int"
       ],
-      "src/WM_StartConnect.cpp": [
-        "arity:3"
+      "src/unnamed/arm9/0206/func_02063ea8.c": [
+        "param:#1 int",
+        "param:#3 int"
       ],
-      "src/engine/os/OS_OwnerInfo.c": [
-        "arity:3"
+      "src/unnamed/arm9/0206/func_02064554.c": [
+        "param:#1 int",
+        "param:#2 int",
+        "param:#3 int"
       ],
-      "src/engine/fs/FS_Overlay.cpp": [
-        "arity:3"
+      "src/unnamed/arm9/0206/func_02064674.c": [
+        "param:#1 int",
+        "param:#2 int",
+        "param:#3 int"
       ],
-      "src/engine/mb/MB_WmBase.cpp": [
-        "arity:3"
+      "src/unnamed/arm9/0206/func_02064a28.c": [
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0206/func_02064b2c.c": [
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0206/func_02064c2c.c": [
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0206/func_02064d6c.c": [
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0206/func_02064f54.c": [
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0206/func_020658c0.cpp": [
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0206/func_02067bfc.cpp": [
+        "param:#3 int"
       ]
     },
     "CrossVec3": {
@@ -17486,50 +17419,61 @@
     },
     "func_0205a588": {
       "include/decl_common.h": [
-        "arity:3",
+        "param:#2 int",
+        "param:#3 int",
         "return:void *"
       ],
-      "src/engine/save/SaveData.cpp": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0201/func_02018a58.cpp": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0203/func_0203db64.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0204/func_02040c34.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_020647fc.c": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0206/func_02067b68.c": [
-        "arity:3"
-      ],
-      "src/ui/menus/unit020c3ce4.cpp": [
-        "arity:3"
-      ],
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "arity:3"
-      ],
-      "src/engine/mb/MB_Parent.cpp": [
-        "arity:3"
+      "src/WM_StartConnect.cpp": [
+        "param:#2 int"
       ],
       "src/engine/fs/FS_Archive.cpp": [
-        "arity:3"
-      ],
-      "src/WM_StartConnect.cpp": [
-        "arity:3"
+        "param:#2 int",
+        "param:#3 int"
       ],
       "src/engine/fs/FS_Overlay.cpp": [
-        "arity:3"
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/engine/mb/MB_Parent.cpp": [
+        "param:#2 int"
       ],
       "src/engine/mb/MB_WmBase.cpp": [
-        "arity:3"
+        "param:#2 int"
+      ],
+      "src/engine/save/SaveData.cpp": [
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/ui/menus/unit020c3ce4.cpp": [
+        "param:#1 int",
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0201/func_02018a58.cpp": [
+        "param:#2 int"
+      ],
+      "src/unnamed/arm9/0203/func_0203db64.c": [
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
+        "param:#2 int"
+      ],
+      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0204/func_02040c34.c": [
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0206/func_020647fc.c": [
+        "param:#1 int",
+        "param:#2 int",
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0206/func_02067b68.c": [
+        "param:#2 int"
       ]
     },
     "FSi_SendCommand": {

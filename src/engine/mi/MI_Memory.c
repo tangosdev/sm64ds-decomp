@@ -109,7 +109,7 @@ loop4:
 }
 
 /* MI_Copy32B */
-asm void Copy32Bytes(void)
+asm void Copy32Bytes(const void *src, void *dst)
 {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
@@ -121,7 +121,7 @@ asm void Copy32Bytes(void)
 }
 
 /* MI_Copy36B */
-asm void Copy36Bytes(void)
+asm void Copy36Bytes(const void *src, void *dst)
 {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
@@ -133,7 +133,7 @@ asm void Copy36Bytes(void)
 }
 
 /* MI_Copy48B */
-asm void Copy48Bytes(void)
+asm void Copy48Bytes(const void *src, void *dst)
 {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
@@ -150,7 +150,7 @@ asm void Copy48Bytes(void)
  * halfword and then a word with read-modify-write at the unaligned head and
  * tail (so the adjacent byte survives), replicates the fill byte across the
  * word, and runs a str-writeback word loop. */
-asm void func_0205a588(void)
+asm void func_0205a588(void *dst, u8 data, u32 size)
 {
     cmp r2, #0
     bxeq lr
@@ -201,7 +201,7 @@ L74:
  * write, then the copy runs as a halfword shift (when source and destination
  * parity differ) or a word+halfword bulk loop, closing with the same edge RMW
  * tail. */
-asm void CpuCopy8(void)
+asm void CpuCopy8(const void *src, void *dst, u32 size)
 {
     cmp r2, #0
     bxeq lr
