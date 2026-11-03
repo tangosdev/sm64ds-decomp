@@ -69,10 +69,10 @@ extern HakPmfSlot data_ov064_0211c2e4;
 extern HakPmfSlot data_ov064_0211c2dc;
 extern HakPmfTable data_ov064_0211c934;
 
-/* local extern: MulVec3Mat4x3 takes this TU's Vec3; no shared header
- * declares SublevelToLevel or IsStarCollected. */
+/* local extern: no shared header declares MulVec3Mat4x3 yet. Its definition
+ * takes Vector3 and Matrix4x3; State0's Vec3 values are local POD views. */
 extern "C" {
-extern void MulVec3Mat4x3(struct Vec3 *in, void *m, struct Vec3 *out);
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int SublevelToLevel(int);
 extern int IsStarCollected(int r0, int r1);
 }
@@ -135,7 +135,7 @@ int daWater_Hakidasi_c::State0() {
             delta.z = 0;
             Matrix4x3_FromRotationY(&data_020a0e68, (s16)(HorzAngleToCPlayer() + 0x8000));
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
-            MulVec3Mat4x3(&vec, &data_020a0e68, &delta);
+            MulVec3Mat4x3((Vector3 *)&vec, &data_020a0e68, (Vector3 *)&delta);
             playerPos = (int *)(int)M(&player->mPosX);
             px = playerPos[0];
             vec.x = px;
