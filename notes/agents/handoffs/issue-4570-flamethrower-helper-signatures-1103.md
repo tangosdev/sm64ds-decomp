@@ -1,11 +1,11 @@
-# Handoff: issue-4570-flamethrower-helper-signatures-1103
+# Handoff: issue-4570-flamethrower-helper-signatures-deadref-1103b
 
 This document describes this commit. The queue records its immutable output SHA.
 
 ## Identity and resumption
 
-- Issue URL, task ID, stage and session: https://github.com/tangosdev/sm64ds-decomp/issues/4570; `issue-4570-flamethrower-helper-signatures-1103`; producer; `codex-flamevec-1103` (Codex).
-- Source branch and previous accepted input SHA: `audit/flamethrower-vector-helper-signatures-1103`; input `8bcb5a981bde3dbe4375aab971226ccee72ee8e6`.
+- Issue URL, task ID, stage and session: https://github.com/tangosdev/sm64ds-decomp/issues/4570; `issue-4570-flamethrower-helper-signatures-deadref-1103b`; producer; `codex-flamevec-deadref-1103b` (Codex).
+- Source branch and input commit: producer branch recorded in the queue; input `2d41c609e293b9cb35f8b159bcca386802d72556`.
 - Original source base SHA and workflow/tool SHA: both `8bcb5a981bde3dbe4375aab971226ccee72ee8e6`. Active source-review policy workflow: `18af52b49b9fb5663d417bdfa86109b7b157aaa3`.
 - Separate evidence commits and required artifacts in this commit: none; source and handoff are included.
 - Next action, responsible role and blockers: verifier should independently review the source and recheck the exact TU, relocations and base. Integrator can compose after acceptance. No known blocker.
@@ -36,6 +36,9 @@ This document describes this commit. The queue records its immutable output SHA.
 - `python tools/source_style.py --base origin/main --files src/game/actors/d_a_obj_flamethrower.cpp`: exit 0; zero findings using clang-format 19.1.7.
 - `python tools/port_refcheck.py`: exit 0; 217 references resolve. No path or port reference changed.
 - `git diff --check`: clean before commit.
-- `python tools/prepush_linkcheck.py --range origin/main..HEAD` and `python tools/check_decl_agreement.py --changed origin/main`: run after the source commit; results are not embedded here.
+- `python tools/prepush_linkcheck.py --range origin/main..HEAD`: exit 0; 5 checked, 4 verified, 1 BLIND-1 classInit warning, 0 blockers. `python tools/check_decl_agreement.py --changed origin/main`: exit 0; no new declaration disagreements or local header redeclarations.
 - Shared-header consumer expansion: not applicable; no shared header changed.
 - Private validation: not yet run; PR validation is pending after publication.
+
+
+This successor changes only handoff metadata; source code is unchanged from tested source commit 2d41c609e293b9cb35f8b159bcca386802d72556.
