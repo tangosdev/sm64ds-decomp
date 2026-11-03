@@ -103,6 +103,7 @@
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
+#include "Particle__System.h"
 #include "math/Approach.h"
 namespace cstd {
 s16 atan2(s32, s32);
@@ -193,15 +194,6 @@ struct BullyResourceConfig {
 #define CONFIG(obj) ((BullyResourceConfig *)(obj)->mFileTable)
 #define CONFIG_BCA(obj, slot) ((BCA_File *)CONFIG(obj)->files[slot]->filePtr)
 
-/* Spelled and guarded exactly as include/Particle__System.h spells it, so this
- * TU agrees with that header if it is ever pulled in. Only ever used here as a
- * null pointer argument. */
-#ifndef VECTOR3_16F_DEFINED
-#define VECTOR3_16F_DEFINED
-struct Vector3_16f { s16 x, y, z; };
-#endif
-struct Callback {};
-
 /* ROM symbols with no header of their own. `extern` on every data declaration:
  * without it the block form defines rather than declares. */
 extern "C" {
@@ -209,16 +201,6 @@ extern s16 data_02082214[];
 extern void Vec3_Sub(int* out, int* a, int* b);
 extern int Vec3_HorzLen(int* v);
 extern int atan2_hold_d_a_ots_1(int a, int b);
-namespace Particle {
-struct Callback;
-struct System {
-    static void NewSimple(unsigned effect, int x, int y, int z);
-
-    static int New(unsigned, unsigned, int, int, int, const ::Vector3_16f *, Callback *);
-};
-}
-extern void *d_a_otsNewHold(u32 id, u32 param, Fix12i x, Fix12i y, Fix12i z, const Vector3_16f *pos,
-                            struct Callback *cb);
 extern void Matrix4x3_FromRotationY(void* m, short angle);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
@@ -822,12 +804,12 @@ int daOts_c::func_ov064_0211616c() {
         return 1;
     }
     this->mPosY = this->mPosY - 0x5000;
-    this->mParticle0 = (u32)Particle::System::New(
-        this->mParticle0, CONFIG(this)->particleId, tail().mHomePosX, tail().mHomePosY,
-        tail().mHomePosZ, (const Vector3_16f *)0, (Particle::Callback *)((struct Callback *)0));
-    this->mParticle1 = (u32)Particle::System::New(
-        this->mParticle1, CONFIG(this)->particleId + 1, tail().mHomePosX, tail().mHomePosY,
-        tail().mHomePosZ, (const Vector3_16f *)0, (Particle::Callback *)((struct Callback *)0));
+    this->mParticle0 =
+        (u32)Particle::System::New(this->mParticle0, CONFIG(this)->particleId, tail().mHomePosX,
+                                   tail().mHomePosY, tail().mHomePosZ, 0, 0);
+    this->mParticle1 =
+        (u32)Particle::System::New(this->mParticle1, CONFIG(this)->particleId + 1, tail().mHomePosX,
+                                   tail().mHomePosY, tail().mHomePosZ, 0, 0);
     return 0;
 }
 
