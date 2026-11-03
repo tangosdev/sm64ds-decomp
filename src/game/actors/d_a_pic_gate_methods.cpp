@@ -117,7 +117,6 @@ extern void func_0203cbc0(void *a);
 
 /* The cartridge's vtable label is the address point (slot 0), and the
    vtable itself is emitted with the destructor, outside this file. */
-extern int _ZTV11daPicGate_c[];
 namespace Memory { void *operator_new2(unsigned int size); }
 
 /* Call-site names. The state-table handlers keep their func_ov080_* names;

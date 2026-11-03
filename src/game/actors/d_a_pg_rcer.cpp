@@ -51,7 +51,6 @@ void func_ov019_021114ec(daPgRcer_c *self);
 
 }
 
-extern int _ZTV10daPgRcer_c[];
 
 /* Resource handles owned by this TU. The static initializer constructs the
    model, seven animations and three texture sequences and registers each

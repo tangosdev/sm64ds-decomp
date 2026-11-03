@@ -29,7 +29,6 @@ extern int data_ov022_02112c98[];
 /* One vtable declaration per class this TU installs, at namespace scope above
  * the factory that stores them (never inside extern "C"). */
 extern int _ZTV15daObjFlMaruta_c[];
-extern int _ZTV13daObjMaruta_c[];
 
 #pragma defer_codegen off
 

@@ -84,7 +84,6 @@ typedef char DaJgmVector3Words_size_must_be_0xc[
 
 struct DaJgmMatrixWords { int words[12]; };
 
-extern int _ZTV7daJgm_c[];
 
 /* File-scope objects at the end of this file construct the seven resource
  * handles (model files 0x34c/0x429/0x42a, animation files 0x34f/0x34d,
