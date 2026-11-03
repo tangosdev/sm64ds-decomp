@@ -21,6 +21,25 @@
 //   16  n entries of 4 bytes: kind (u8) | id (u16 LE) | age (u8, frames
 //       between the request and the send)
 //
+// MPSOUND2 adds entry kinds above 3, in groups that never split across frames.
+// An MPSOUND1 build skips each one alone (kind > 3, counted rx_bad) and keeps
+// playing the body sounds of the same frame; 0.9.3.6 drops the whole frame as
+// before. Positions are world units (Fix12 >> 12), s16 little endian.
+//   0x10|kind id age      a one-shot at a position, then the two below:
+//   0x48 x(s16) ylo       position, part 1
+//   0x49 yhi z(s16)       position, part 2
+//   0x20|kind id ctl      a loop is on (sent when it starts, again every 20
+//                         frames): ctl bits 0-1 the ROM entry (0 Sound::PlayLong,
+//                         1 func_0201226c, 2 func_02012194), bit 2 a position
+//                         follows, bits 4-7 the sender's loop slot; then:
+//   0x41 p0 (24 bits)     the entry's first extra argument
+//   0x42 p1(s16) p2(s8)   the other two
+//   (0x48, 0x49 if bit 2)
+//   0x30 slot 0 0         that loop ended
+// A loop is run on the listener every frame at the drawn body (or the sent
+// position) until its stop entry, or until 60 frames pass with no word for it
+// (a lost stop, a friend who left or crashed), or he leaves my level or area.
+//
 // The relay holds a seat to 8 chat datagrams a second, so this console sends
 // at most 4 sound frames a second (burst 2) and packs what is waiting into
 // one; chat and typing frames keep at least 2 a second.
@@ -34,9 +53,15 @@
 // own volume setting (SM64DS_VOLUME / settings Volume) applies; a muted game
 // stays silent.
 //
+// MPSOUND2: also the sounds his egg makes for him (the flight loop, the pop on
+// a wall; at the egg's own position) and his looping body sounds (sliding,
+// skidding, spinning: Sound::PlayLong and its siblings).
+//
 // KNOBS (off by default): SM64DS_MPSOUND=0 turns the whole feature off (no send,
 // no play); SM64DS_MPSOUND_LOG=1 a [msnd] line per sound captured, sent,
-// played or skipped (id, friend seat, distance, gain, volume);
+// played or skipped (id, friend seat, distance, gain, volume); =2 also a line
+// for every sound request and loop this console makes, with its callers;
+// SM64DS_MPSOUND_DROPSTOP=1 never sends a loop's stop (the timeout proof row);
 // SM64DS_MPSOUND_RIG=<frame> makes MY body ask for one jump voice and one
 // effect every 45 frames from that frame (the proof rows' sound source).
 #ifndef PORT_HAL_COOP_SOUND_H
@@ -54,6 +79,10 @@ extern void (*port_coop_sound_hook)(unsigned kind, unsigned id, const void *v);
 // set by port_coop_sound_frame; called by hal/adv_chat.cpp for a chat datagram
 // with flags 0x80 (nullable for the same reason)
 extern void (*port_chat_sound_rx)(int seat, const unsigned char *buf, int n);
+// MPSOUND2, set by port_coop_sound_frame; called from the host arms of Sound::PlayLong,
+// func_0201226c and func_02012194 (src/engine/sound/Sound.cpp) for every loop call
+extern void (*port_coop_sound_loop_hook)(int fn, unsigned handle, unsigned kind, unsigned id, const void *v,
+                                         int p0, int p1, int p2);
 }
 
 #endif

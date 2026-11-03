@@ -576,6 +576,17 @@ extern "C" void func_0201267c(unsigned int id, const Vector3 *v)
 /* run after093, lane MPSOUND1: set by port/hal/coop_sound.cpp on its first frame; null
    in every target that does not link it. Host only. */
 extern "C" { void (*port_coop_sound_hook)(unsigned int kind, unsigned int id, const void *v) = 0; }
+/* run after093, lane MPSOUND2: the looping sounds (PlayLong and its two siblings, one call
+   a frame keeps a loop alive) go to port/hal/coop_sound.cpp the same way. fn 0 = PlayLong,
+   1 = func_0201226c, 2 = func_02012194; p0..p2 are each one's extra arguments. A sound an
+   actor plays for a player (Yoshi's egg) names that player and the actor's world position
+   in the two words below for the length of the call (the actor's own _MSC_VER arm). */
+extern "C" {
+void (*port_coop_sound_loop_hook)(int fn, unsigned int handle, unsigned int kind, unsigned int id,
+                                  const void *v, int p0, int p1, int p2) = 0;
+const void *port_coop_sound_owner = 0;
+const void *port_coop_sound_at = 0;
+}
 #endif
 
 namespace Sound {
@@ -681,6 +692,11 @@ namespace Sound {
 // @symbol _ZN5Sound8PlayLongEjjjRK7Vector3s
 int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
 {
+#ifdef _MSC_VER
+    /* run after093, lane MPSOUND2: host only (port/hal/coop_sound.h) */
+    if (port_coop_sound_loop_hook)
+        port_coop_sound_loop_hook(0, handle, a, b, &pos, e, 0, 0);
+#endif
     if (func_02048a1c((int *)&pos, a, b) == 0)
         return 0;
 
@@ -706,6 +722,11 @@ extern "C" int func_02012310(int handle, int sound, int arg)
 extern "C" int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5)
 {
     void *p;
+#ifdef _MSC_VER
+    /* run after093, lane MPSOUND2: host only (port/hal/coop_sound.h) */
+    if (port_coop_sound_loop_hook)
+        port_coop_sound_loop_hook(1, a0, a1, a2, (const void *)a3, a4, a5, 0);
+#endif
     if (func_02048a1c((int *)a3, a1, a2) == 0) return 0;
     p = func_02011934(data_0209b53c, a0);
     if (p != 0) {
@@ -720,6 +741,11 @@ extern "C" int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5)
 extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, int s1, short s2)
 {
     char *e;
+#ifdef _MSC_VER
+    /* run after093, lane MPSOUND2: host only (port/hal/coop_sound.h) */
+    if (port_coop_sound_loop_hook)
+        port_coop_sound_loop_hook(2, (unsigned int)c, a1, a2, (const void *)s1, a3, s0, s2);
+#endif
     if (func_02048a1c((int *)s1, a1, a2) == 0) return 0;
     e = (char *)func_02011934(data_0209b53c, (int)c);
     if (e != 0) {
