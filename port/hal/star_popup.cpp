@@ -51,6 +51,11 @@ void func_ov002_020c3dbc(void *player);
 extern int data_ov002_0211058c[];
 void _ZN5Event6SetBitEj(unsigned b);
 void port_player_set_character(void *player, unsigned ch);   // hal/player_bridges.cpp: the character doors' own in-place swap
+// STAREXIT3: the two bytes Player::SetRealCharacter writes besides the body (src/game/player/Player.cpp:1224-1225): the
+// per-player table data_02092128[mPlayerNo] and the save file's character data_0209caa0[0x41] (spelled at its owner
+// data_0209cad2, [0x0f], as hal/player_bridges.cpp does). The next level's spawn reads the save byte (LoadEntranceObjects).
+extern unsigned char data_02092128[];
+extern unsigned char data_0209cad2[];
 }
 
 namespace port {
@@ -745,6 +750,11 @@ void census() {
     const int *mp = (const int *)(me + 0x5c);
     std::fprintf(stderr, "[starpop] census f=%u level=%d act=%d me=%d,%d,%d yaw=%04x", f, (int)data_0209f2f8, data_0209f220[0] & 0xf,
                  mp[0] >> 12, mp[1] >> 12, mp[2] >> 12, (unsigned)(unsigned short)*(const short *)(me + 0x8e));
+    // STAREXIT3: who my body is, the save file's character and my table byte, plus the ending's words (pending level change,
+    // the running Kuppa script, the stage mode)
+    std::fprintf(stderr, " chr body=%u save=%u tbl=%u lc=%d cut=%08x mode=%u", *(const unsigned *)(me + 8) & 0xffu, (unsigned)data_0209cad2[0x0f],
+                 (unsigned)data_02092128[*(const unsigned char *)(me + 0x6d8) & 0x3f], (int)(signed char)data_02092110[0], rd32(data_0209fc48),
+                 (unsigned)data_0209f2d8[0]);
     for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
         if (*(const unsigned short *)(a + 0x0c) != 178) continue;
         const int *p = (const int *)(a + 0x5c);
