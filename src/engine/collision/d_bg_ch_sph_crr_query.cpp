@@ -31,7 +31,7 @@ extern "C" {
 void func_02037e9c(CLPS *clps);
 void func_02037de8(SurfaceInfo *dst, const SurfaceInfo *src);
 int func_02038298(void *arg);
-void func_02036acc(void);
+void func_02036acc(dBgCh_Actr *self);
 extern CLPS data_020a0c78;
 }
 
@@ -411,9 +411,10 @@ extern "C" void func_02038414(void *self) {
 }
 
 // @symbol func_02038408
-/* func_02038408 @ 0x2038408 (arm9) -- tail-call veneer to func_02036acc (0x2036acc). */
-extern "C" void func_02038408(void) {
-    func_02036acc();
+/* func_02038408 @ 0x2038408 (arm9) -- tail-call veneer to func_02036acc (0x2036acc).
+ * r0 (the dBgCh_Actr) passes straight through to it. */
+extern "C" void func_02038408(dBgCh_Actr *self) {
+    func_02036acc(self);
 }
 
 // @symbol dBgCh_Actr_UpdateContinuous_Veneer
