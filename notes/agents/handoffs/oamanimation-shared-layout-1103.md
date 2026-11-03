@@ -23,13 +23,13 @@ type when it initializes the field.
   source-owned data claims reproduce; 106/106 modules exact; zero mismatches.
 - Declaration agreement has no new branch disagreements. Dead references,
   TU conflicts, and port references pass.
-- The header reaches seven source files; the full local build compiled all
-  affected consumers. A full prepush fanout check remains appropriate before
-  merging.
+- `python tools/prepush_linkcheck.py --range origin/main..HEAD`: 119 functions
+  checked, 117 verified, 2 nonblocking `BLIND` warnings on existing
+  `__sinit_d_s_entry*` functions, 0 blocking results. The seven-source header
+  fanout compiled and linked.
 
 ## Remaining review
 
 Independently inspect the shared C/C++ declaration and typed frame pointer,
-rerun focused linkchecks and the full build on the queued candidate SHA, and
-complete the header-consumer prepush check if time permits. Keep the PR draft
-until source review and hosted byte validation finish.
+then rerun focused linkchecks and the full build on the queued candidate SHA.
+Keep the PR draft until source review and hosted byte validation finish.
