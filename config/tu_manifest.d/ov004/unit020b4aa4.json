@@ -616,12 +616,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@201",
+      "from": "@202",
       "to": "data_ov004_020bfa28",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @199 now that dScMgBase_c.h declares Mg_DrawLine (+6 from @193; ov073 already defines @193). It is renamed to the configured name at 0x020bfa28. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+      "evidence": "compiler temp renumbered when unit020b4aa4.cpp uses shared Vec2i from ov006_ec4dc_obj.h; candidate ELF emits @202 for the 12-byte destructor-registration node. It is renamed to the configured name at 0x020bfa28. The initializer relocation and target are checked by the TU link proof."
     },
     {
-      "from": "__arraydtor$200",
+      "from": "__arraydtor$201",
       "to": "__arraydtor$192",
       "owned_function": {
         "module": "ov004",
@@ -631,7 +631,7 @@
         "raw_type": "STT_FUNC",
         "raw_binding": "STB_LOCAL"
       },
-      "evidence": "the sMgCoins array destructor thunk; mwccarm emits it as __arraydtor$200 once dScMgBase_c.h declares Mg_DrawLine and fBase_c.h includes Memory.h (+8 from __arraydtor$192); renamed onto the configured __arraydtor$192 at 0x020b67bc."
+      "evidence": "the sMgCoins array destructor thunk; after using shared Vec2i from ov006_ec4dc_obj.h, the candidate ELF emits it as __arraydtor$201. It is renamed onto the configured __arraydtor$192 at 0x020b67bc; TU verification checks its relocation destination."
     }
   ]
 }
