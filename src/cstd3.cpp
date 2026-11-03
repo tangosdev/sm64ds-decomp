@@ -26,7 +26,7 @@ int func_0206cf7c(int mask);
 /* local extern: no header declares it; func_0206ccd8 formats through it */
 void func_0206a928(void *a, int b, void *c, void *d);
 /* local extern: no header declares it; func_0206ccd8 stores it as the print callback */
-void func_0206cbc0(void);
+void func_0206cbc0(struct Csl *sl, u8 *sb, int count);
 }
 
 struct CardBusState {

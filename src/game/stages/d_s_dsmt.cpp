@@ -43,6 +43,7 @@
 #include "SaveData.h"
 #include "Heap.h"
 #include "decl_common.h"
+#include "nitro/spi/tp.h"
 #include "Memory.h"
 #include "GX.h"
 #include "math/CalcLib.h"
@@ -265,13 +266,10 @@ s32 dScDSMT_c::Behavior() {
         data_ov007_02103260 = -1;
     }
 
-    func_0203da9c();
     {
-        u16 *p = func_0203dabc();
-        int arg4;
-        func_0203da9c();
-        arg4 = func_0203dae4();
-        result = func_ov007_020b7090(p[0], p[1], p[2], p[3], arg4);
+        TPData *tp = func_0203dabc(func_0203da9c());
+        result = func_ov007_020b7090(tp->x, tp->y, tp->touch, tp->validity,
+                                     func_0203dae4(func_0203da9c()));
     }
 
     if ((unsigned int)(result - 3) <= 2) {

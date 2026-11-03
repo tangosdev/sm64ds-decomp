@@ -119,7 +119,7 @@ void MulMat4x3Mat4x3(void *a, void *b, void *out);
 /* game state */
 int func_020138dc(void);
 int func_02013a44(void);
-u16 ObjectMessageIDToActualMessageID(s16 id);
+int ObjectMessageIDToActualMessageID(s16 id);
 int IsStarCollectedInCurLevel(int starID);
 u8 NumStars(void);
 
@@ -156,8 +156,7 @@ daKinopio_c::~daKinopio_c()
 // @symbol _ZN11daKinopio_c12GetMessageIDEv
 /* Which line of dialogue this Toad says. The player's param1 (+8) shifts
  * the id per character; the 0x32 mode overrides it entirely. */
-u16 daKinopio_c::GetMessageID()
-{
+int daKinopio_c::GetMessageID() {
     int *player = (int *)mTalkPlayer;
     u16 messageID = mMessageID;
 
@@ -167,7 +166,7 @@ u16 daKinopio_c::GetMessageID()
         case 0x1c:
             return 0x134;
         case 0: {
-            int message = ObjectMessageIDToActualMessageID((s16)messageID);
+            int message = ObjectMessageIDToActualMessageID(messageID);
             int sum = message + player[2];
             return (u16)sum;
         }
@@ -180,10 +179,10 @@ u16 daKinopio_c::GetMessageID()
         int playerParam = player[2];
         int message = 0xb0a;
         message += playerParam;
-        return ObjectMessageIDToActualMessageID((s16)(u16)message);
+        return ObjectMessageIDToActualMessageID((u16)message);
     }
 
-    int message = ObjectMessageIDToActualMessageID((s16)messageID);
+    int message = ObjectMessageIDToActualMessageID(messageID);
     int sum = message + player[2];
     return (u16)sum;
 }

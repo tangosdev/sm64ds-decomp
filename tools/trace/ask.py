@@ -11,6 +11,9 @@ are mixed in at random. The key lives in a separate file; `score` unblinds.
   run     run an experiment spec (JSON): --mode human | agent | none
   score   unblind a finished run and tally the answers
   probe   arm a spec's probes (log-and-continue breakpoints) for N seconds
+  load-state / save-state   load any .ml file (verified against its RAM) / save one out
+  where   project an actor position onto the top screen (is it framed?)
+  overlays  the game's loaded-overlay table and the probes suspended for it
   ctl     one daemon op, e.g. `ctl step n=3`, `ctl read addr=0x020ad634 n=12`
   stop    detach cleanly (and --kill melonDS, --clean its work directory)
 
@@ -65,7 +68,7 @@ def cmd_serve(a):
     s = es.Session(images, port=a.port, log_path=os.path.join(a.logdir, 'session.jsonl'))
     stop = s.connect(timeout=90)
     s.cont()
-    d = es.Daemon(s, a.rpc, proc=proc, hwnd=hwnd, pid=pid)
+    d = es.Daemon(s, a.rpc, proc=proc, hwnd=hwnd, pid=pid, workdir=a.slot_dir if a.attach else a.workdir)
     print(json.dumps({'ready': True, 'pid': pid, 'rpc': a.rpc, 'stub': a.port, 'attach_stop': stop,
                       'workdir': None if a.attach else a.workdir}), flush=True)
     try:
@@ -152,6 +155,16 @@ def setup_bps(c, spec):
         c.add_bp(addr=p['addr'], role='probe', name=p['name'], module=p.get('module'), obj=p.get('obj'),
                  when=p.get('when'), dump=p.get('dump', []), ret=p.get('ret', False),
                  max_hits=p.get('max_hits', 0), arm=False)
+
+
+def framing(c, fc, env):
+    """Project the spec's frame_check point(s) for this event. All must be on screen."""
+    pts = fc['pos'] if isinstance(fc['pos'], list) else [fc['pos']]
+    res = []
+    for p in pts:
+        r = c.project(pos=p, env=env, margin=fc.get('margin', 8), dy=fc.get('dy', 0))
+        res.append({k: r.get(k) for k in ('sx', 'sy', 'depth', 'on_screen', 'why')})
+    return {'on_screen': all(r['on_screen'] for r in res), 'points': res}
 
 
 def check_residency(c, spec):
@@ -244,7 +257,12 @@ def cmd_run(a):
     logf = open(os.path.join(keyd, 'log.jsonl'), 'a', encoding='utf-8')
     ev0 = st['nevents']
 
-    if spec.get('load_state_slot') and not a.no_reload:
+    if spec.get('load_state_file') and not a.no_reload:
+        r = c.load_state_file(path=spec['load_state_file'])
+        logf.write(json.dumps({'ev': 'load_state_file', 'result': r}) + '\n')
+        if r.get('verdict') == 'not_loaded':
+            sys.exit('savestate did not load: %s' % r)
+    elif spec.get('load_state_slot') and not a.no_reload:
         c.load_state(slot=spec['load_state_slot'])
     setup_bps(c, spec)
     res = check_residency(c, spec)
@@ -262,8 +280,14 @@ def cmd_run(a):
                'how': 'pairs/<id>.png: left = A (before), right = B (after). Fill answer (one of choices) '
                       'and confidence for each id. Do not open key/ before scoring.',
                'answers': {}}
+    fc = spec.get('frame_check')
+    on_fail = (fc or {}).get('on_fail', 'skip')
+    requeue = int((fc or {}).get('requeue', len(plan)))   # off-screen skips are re-run at the end
     print(json.dumps({'run': out, 'events': len(plan), 'mode': a.mode}), flush=True)
-    for i, cname in enumerate(plan):
+    i = -1
+    while i + 1 < len(plan):
+        i += 1
+        cname = plan[i]
         qid = 'Q%02d' % (i + 1)
         cond = conds[cname]
         rec = {'ev': 'event', 'id': qid, 'condition': cname, 'real': bool(cond.get('real'))}
@@ -305,6 +329,26 @@ def cmd_run(a):
                 c.go()
                 print(json.dumps({'id': qid, 'status': 'skipped'}), flush=True)
                 continue
+            if fc and (obj is not None or not spec.get('locate')):
+                # framing check before anything is written: same for real and sham events
+                fr = framing(c, fc, env)
+                tries = 0 if cond.get('trigger') else int(fc.get('retries', 2))
+                while not fr['on_screen'] and tries > 0:
+                    tries -= 1
+                    c.step(n=int(fc.get('retry_frames', 20)))
+                    fr = framing(c, fc, env)
+                rec['framing_before'] = fr
+                if not fr['on_screen'] and on_fail == 'skip':
+                    rec['status'] = 'off_screen'
+                    logf.write(json.dumps(rec) + '\n')
+                    c.go()
+                    rq = requeue > 0
+                    if rq:
+                        requeue -= 1
+                        plan.append(cname)
+                    print(json.dumps({'id': qid, 'status': 'skipped', 'why': 'target off screen',
+                                      'requeued': rq}), flush=True)
+                    continue
 
             def do_pokes(lst):
                 return [c.poke(expr=p['expr'], op=p.get('op', 'set'), mask=p.get('mask', 0xff),
@@ -321,25 +365,41 @@ def cmd_run(a):
             rec['after'] = c.snapshot(fields=fields, env=env)
             apng = os.path.join(keyd, 'frames', qid + '_B.png')
             rec['shot_after'] = c.shot(path=apng, which=which, settle_ms=cap.get('settle_ms', 250))
+            if 'framing_before' in rec:
+                rec['framing_after'] = framing(c, fc, env)
             if cond.get('restore', True):
                 # put every written byte back to its value before this event, newest first
                 for p in reversed(rec['prepare'] + rec['pokes']):
                     c.poke(expr='0x' + p['addr'], op='write', mask=(1 << (8 * p['size'])) - 1,
                            value=p['old'], size=p['size'])
                 rec['restored'] = True
+            framed = rec.get('framing_before', {}).get('on_screen', True) and \
+                rec.get('framing_after', {}).get('on_screen', True)
+            if not framed and on_fail == 'skip':
+                rec['status'] = 'off_screen_after'
+                logf.write(json.dumps(rec) + '\n')
+                c.go()
+                if requeue > 0:
+                    requeue -= 1
+                    plan.append(cname)
+                print(json.dumps({'id': qid, 'status': 'skipped', 'why': 'target off screen in B'}), flush=True)
+                continue
             rec['expected'] = expected_answer(cond, rec['before'])
             pair = os.path.join(pairs, qid + '.png')
             compose_pair(bpng, apng, pair)
             rec['pair'] = pair
             rec['status'] = 'ok'
             key['events'][qid] = {k: rec[k] for k in ('condition', 'real', 'expected', 'obj', 'prepare', 'pokes',
-                                                      'pause', 'before', 'after') if k in rec}
+                                                      'pause', 'before', 'after', 'framing_before',
+                                                      'framing_after') if k in rec}
             if a.mode == 'human':
                 ans = ask_popup(qid, pair, q['text'], choices, confidences, a.answer_after,
                                 os.path.join(out, 'popup_%s.png' % qid) if a.answer_after is not None else None)
                 answers['answers'][qid] = ans
             elif a.mode == 'agent':
                 answers['answers'][qid] = {'answer': None, 'confidence': None}
+            if not framed:      # on_fail == 'flag': kept, but marked (the same for real and sham events)
+                answers['answers'].setdefault(qid, {})['framing_warning'] = "target projected off screen"
             logf.write(json.dumps(rec) + '\n')
             logf.flush()
             c.go()
@@ -483,6 +543,48 @@ def cmd_probe(a):
     print(json.dumps({'log': path, 'residency': res, 'counts': {'%s:%s' % k: v for k, v in counts.items()}}))
 
 
+# ---------------------------------------------------- savestates, framing, overlays
+def cmd_load_state(a):
+    c = es.Client(a.rpc)
+    r = c.load_state_file(path=os.path.abspath(a.file), slot=a.slot, settle=a.settle, verify=not a.no_verify)
+    print(json.dumps(r, indent=1))
+    if r.get('verdict') == 'not_loaded':
+        sys.exit(1)
+
+
+def cmd_save_state(a):
+    c = es.Client(a.rpc)
+    print(json.dumps(c.save_state_file(path=os.path.abspath(a.file), slot=a.slot), indent=1))
+
+
+def cmd_where(a):
+    """Project a position onto the top screen; --mark saves the screen with a cross there."""
+    c = es.Client(a.rpc)
+    env = {'obj': a.obj} if a.obj else None
+    r = c.project(pos=a.pos, env=env, margin=a.margin, dy=a.dy)
+    if a.mark:
+        import emuwin
+        shot = c.shot(path=a.mark, which='top', settle_ms=250)
+        if r.get('sx') is not None:
+            f = read_png(a.mark)
+            sc = f.w / float(es.TOP_W)
+            cx, cy = int(r['sx'] * sc), int(r['sy'] * sc)
+            px = bytearray(f.rgb)
+            for d in range(-14, 15):
+                for t in (-1, 0, 1):
+                    for (x, y) in ((cx + d, cy + t), (cx + t, cy + d)):
+                        if 0 <= x < f.w and 0 <= y < f.h:
+                            o = (y * f.w + x) * 3
+                            px[o:o + 3] = b'\xff\x00\xff'
+            emuwin.Frame(f.w, f.h, px).save_png(a.mark)
+        r['mark'] = shot
+    print(json.dumps(r, indent=1))
+
+
+def cmd_overlays(a):
+    print(json.dumps(es.Client(a.rpc).overlays(), indent=1))
+
+
 # ------------------------------------------------------------------ ctl, stop
 def cmd_ctl(a):
     c = es.Client(a.rpc)
@@ -524,6 +626,7 @@ def main():
     s.add_argument('--logdir', default=os.path.join(DEFAULT_WORKDIR, 'logs'))
     s.add_argument('--scale', type=int, default=2, help='window scale for captures')
     s.add_argument('--boot-wait', type=float, default=3.0)
+    s.add_argument('--slot-dir', help="with --attach: the folder holding the ROM and its .mlN slot files")
     s.set_defaults(fn=cmd_serve)
 
     r = sub.add_parser('run', help='run an experiment spec')
@@ -549,6 +652,29 @@ def main():
     p.add_argument('--out', required=True)
     p.add_argument('--aim', action='store_true', help="apply the spec's aim pokes once, after arming")
     p.set_defaults(fn=cmd_probe)
+
+    ls = sub.add_parser('load-state', help='load any melonDS .ml file (copied over a slot file) and verify it')
+    ls.add_argument('file')
+    ls.add_argument('--slot', type=int, default=8, help='slot file to copy over and load (default 8)')
+    ls.add_argument('--settle', type=float, default=1.0)
+    ls.add_argument('--no-verify', action='store_true')
+    ls.set_defaults(fn=cmd_load_state)
+
+    ss = sub.add_parser('save-state', help='save a state through a slot and copy it to FILE')
+    ss.add_argument('file')
+    ss.add_argument('--slot', type=int, default=8)
+    ss.set_defaults(fn=cmd_save_state)
+
+    w = sub.add_parser('where', help='project a world position onto the top screen')
+    w.add_argument('pos', help='expression for the address of a Fix12 Vector3, e.g. "[0x0209f394]+0x5c"')
+    w.add_argument('--obj', help='value for `obj` in the expression')
+    w.add_argument('--dy', default='0', help='Fix12 added to y (e.g. 0x50000 = 80 units up)')
+    w.add_argument('--margin', type=float, default=0)
+    w.add_argument('--mark', help='save the top screen here with a magenta cross at the projection')
+    w.set_defaults(fn=cmd_where)
+
+    o = sub.add_parser('overlays', help='loaded-overlay table and suspended probes')
+    o.set_defaults(fn=cmd_overlays)
 
     c = sub.add_parser('ctl', help='one daemon op: ctl <op> key=value ...')
     c.add_argument('op')

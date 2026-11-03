@@ -353,7 +353,7 @@ extern PmfEnt data_ov060_0211aeb4[];
  * third argument the callee does not take (a counter byte, and a value stored
  * on the line above); dropped here rather than widening the signature. */
 extern void func_02012694(unsigned int id, const Vector3 *v);
-void func_02038408(void* p);
+void func_02038408(dBgCh_Actr *self);
 
 extern PmfEnt data_ov060_0211aed4[];
 

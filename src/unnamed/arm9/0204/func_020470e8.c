@@ -2,7 +2,7 @@ typedef struct Table Table;
 typedef struct Entry { short val; char pad[2]; const char *name; char pad2[0x34]; } Entry;
 typedef struct Header { char pad[8]; unsigned short count; char pad2[2]; Entry *entries; } Header;
 
-extern short func_02046590(const Table *tbl, const char *name);
+extern int func_02046590(const Table *tbl, const char *name);
 
 /* dExtAnmMaterial_c::Prepare's body (see dExtAnmMaterial_c.h): give each
    of the material-animation file's 0x3c-byte entries the index of the

@@ -184,8 +184,54 @@ them.
 
 Run directory layout: `pairs/` (blind images), `answers.json`, `key/key.json`
 (condition, real/sham, expected answer, located object, pokes with old/new
-values, pause trigger/pc/lr, before/after RAM snapshots), `key/log.jsonl`
+values, pause trigger/pc/lr, before/after RAM snapshots, framing), `key/log.jsonl`
 (every daemon event), `key/events.jsonl`, and `key/` raw shots.
+
+### Savestates, framing, overlays
+
+```sh
+python tools/trace/ask.py load-state C:/path/to/any.ml     # load any .ml file, verified
+python tools/trace/ask.py save-state C:/path/to/out.ml     # save the running game to a file
+python tools/trace/ask.py where "[0x0209f394]+0x5c" --mark C:/tmp/where.png   # is it framed?
+python tools/trace/ask.py overlays                         # loaded overlays, suspended probes
+```
+
+- **Any savestate file loads.** melonDS enables a File > Load state slot only
+  if `game.mlN` existed when the ROM was loaded. `serve` therefore creates
+  zero-byte `game.ml1`..`game.ml8` before it starts melonDS, so every slot is
+  enabled. `load-state FILE` (spec key `load_state_file`) copies FILE over slot
+  8 and loads that slot. It then compares RAM windows before and after with
+  the RAM image inside the file (`MELN`/`NDSG`, main RAM at file offset 0x24).
+  The verdict is `loaded`, `indistinguishable` (the game already matched the
+  file, e.g. that state was running) or `not_loaded`, and `run` stops on
+  `not_loaded`. A plain `load_state slot=N` refuses an empty slot file instead
+  of clicking a disabled menu item. `save-state FILE` saves through slot 8,
+  waits until melonDS has finished writing it, and copies it out. Every
+  breakpoint is disarmed while a menu action runs and re-armed afterwards:
+  the RPC thread is busy driving the menu, so a probe hit would leave the
+  emulator halted and the UI deadlocked.
+- **Probes follow the overlay table.** A probe or trigger in an overlay is
+  armed only while the game's loaded-overlay table (`data_0209d3c4`, 12 slots
+  of `{s32 id, u32 start, u32 size}`, filled by `LoadOverlay` and freed by
+  `UnloadOverlay`; see `tools/overlay_residency.py`) lists that overlay.
+  Otherwise it is suspended. Overlays share load addresses (ov002 and ov003
+  both start at 0x020ad660), so without this a probe for one fires on the
+  other's code, and every hit costs a halt and a canary skip. The table is
+  re-read on every valid hit, on a canary skip, after a savestate load, and
+  every 0.25 s while running (`ovl_poll`). A newly loaded overlay can
+  therefore run for up to about 0.25 s before its probes come back. Events
+  `suspend`, `resume` and `overlays` go to the log.
+  `ctl overlay_suspend on=false` turns this off. arm9 and frame breakpoints
+  are never suspended.
+- **Framing check (coarse).** `where` / `ctl project` project a world point
+  (Fix12, as actors store it at `+0x5c`) onto the top screen. They use the
+  game's view matrix (`data_0209b3ec`, which `dView_c` fills from the camera's
+  `LookAt`, so it maps `pos >> 3`) and dClipper's projection (`data_0209f43c`:
+  aspect +0x4c, near +0x50, far +0x54, half-FOV +0x58). The viewport is
+  assumed to be the full 256x192 top screen. It is honest only to this level:
+  it projects one point, so it does not know the actor's size and does not
+  test occlusion. It uses the last frame the game rendered. `dy` lifts the
+  point (for example to a head) and `margin` asks for slack in pixels.
 
 ### Spec format (JSON)
 
@@ -193,9 +239,11 @@ values, pause trigger/pc/lr, before/after RAM snapshots), `key/log.jsonl`
 |---|---|
 | `frame` | `{addr, module}`: a function that runs once per game frame. `step n` = run to its next hit n times. |
 | `residency` | overlay canaries (`{module, addr}`). A breakpoint whose overlay is swapped out is refused. |
+| `load_state_file` | load this `.ml` file (any path) before the run, verified as for `load-state`. Takes precedence over `load_state_slot`. |
 | `load_state_slot`, `settle_frames` | reload this savestate slot before the run, then step this many frames |
 | `locate` | `walk {heads, next, max}` plus `where` expressions. Finds the object (`obj`) for each event. |
 | `aim` | pokes applied before each event (for example, put the player 500 units in front of the subject so it stays framed) |
+| `frame_check` | `{pos, margin=8, dy=0, on_fail: skip\|flag, retries=2, retry_frames=20, requeue}`. `pos` is an expression (or a list of them) for the address of a position, e.g. `"[obj+4]+0x5c"`. It is tested at the pause before any write, and again after the "after" capture. On `skip`, an event whose target projects off screen is dropped (no pair) and its condition goes again at the end of the plan, at most `requeue` times (default: the plan length). On `flag`, the pair is kept and its answer gets `framing_warning`. A countdown pause first steps `retries` x `retry_frames` frames looking for a framed moment; a trigger pause does not. The rule is the same for real and sham events. |
 | `fields` | `{name, expr, size}` snapshotted before and after (into the key, never into the pairs) |
 | `question` | `{text, choices}`. A choice containing "tell"/"unsure" counts as an abstention. |
 | `pause` | `{countdown: [lo, hi]}`: random frame count before a countdown pause |
@@ -224,7 +272,9 @@ from the game's own state.
   is sent while an asynchronous stop packet (a breakpoint hit) is in flight. It
   expects the `+` acknowledgement for that stop first. With breakpoints armed,
   `Session._pkt` therefore halts and drains (`_quiesce`), sends the request,
-  and resumes. A trigger that lands during the drain is kept as the next stop.
+  and resumes. A trigger that lands during the drain is kept as the next stop. A
+  breakpoint being removed counts as armed until its `z0` is answered, so
+  removing a busy probe while the game runs also drains first.
 - **Capture lag.** The DS 3D image lags the CPU by about one frame. A capture
   taken right after a poke can show the old state. `after_frames` defaults to
   4 (use at least 2). `shot` waits `settle_ms`, then re-captures until two

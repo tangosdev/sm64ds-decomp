@@ -33,7 +33,7 @@ extern u8 data_020a1780[];
 
 extern u8 MB_CommGetChildrenNumber(void);
 extern void func_0203f9d4(int a0, int a1);
-extern void func_0203e978(void);
+extern void func_0203e978(struct ChannelReply *reply);
 extern int OS_GetTickLo(void);
 extern int func_02068e4c(void *a, void *b, u16 c, u16 d, u16 e, int f);
 extern int func_02068dc8(int a, int b, int c);

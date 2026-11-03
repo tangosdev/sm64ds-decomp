@@ -15,12 +15,22 @@ What the session adds over rsp.py:
 - residency canaries: every breakpoint carries the 8 bytes its module image
   has at that address. A hit whose live bytes differ (another overlay is
   loaded at that address) is counted as a skip and continued, never reported.
+- overlay suspension: a probe or trigger in an overlay the game has not
+  loaded is taken out of the stub (`z0`) and put back (`Z0`) once the overlay
+  appears in the game's loaded-overlay table (OVERLAY_TABLE below). Without
+  it, every pass through whatever code sits at that address in another overlay
+  stops the target for a canary skip, and posted button presses get lost.
 - probes: log-and-continue breakpoints that dump registers and memory
   expressions, optionally catching the return value (a temporary breakpoint
   on lr, matched by sp).
 - address expressions: `r0+0x1b`, `[0x020ad634]+4`, `u8[[obj+4]+0x113]`, ...
+- framing: project(): an actor position through the live view matrix and the
+  clipper's field of view, to say whether it is on the top screen.
+- savestate files: any .ml file can be loaded (copied over a slot file that
+  melonDS has enabled) and saved out, with a RAM check that the load happened.
 """
 import json
+import math
 import os
 import re
 import select
@@ -35,6 +45,28 @@ from rsp import RspClient, RspError  # noqa: E402
 
 DEFAULT_RPC_PORT = 3390
 MAX_READ = 0x80          # longer `m` reads time out on the melonDS stub
+
+# EU addresses (this repo's ROM).
+# The game's loaded-overlay table: 12 slots of {s32 id (-1 = free), u32 start, u32 size}.
+# LoadOverlay (src/LoadOverlay.c) fills a slot before it calls FS_LoadOverlay;
+# UnloadOverlay (src/UnloadOverlay.c), func_02017e94 and func_02017e60 free them.
+OVERLAY_TABLE = 0x0209d3c4
+OVERLAY_SLOTS = 12
+# The live view matrix (Matrix4x3, Fix12): CopyToViewMat (src/engine/view/Graphics3D.cpp)
+# copies dView_c::viewMat here every time a view renders. dCamera_c::Render
+# (src/engine/view/d_camera.cpp) builds it with G3i::LookAt_ from positions shifted
+# right by 3, so it maps (world >> 3) to camera space, camera looking down -z.
+VIEW_MATRIX = 0x0209b3ec
+# The dClipper singleton (include/dClipper.h). dCamera_c::Render hands it the same
+# aspect / half field-of-view angle / near / far it gives G3i::PerspectiveW_
+# (func_0200d954), so it describes the projection the frame was drawn with.
+CLIPPER = 0x0209f43c
+CLIPPER_ASPECT, CLIPPER_NEAR, CLIPPER_FAR, CLIPPER_FOV = 0x4c, 0x50, 0x54, 0x58
+TOP_W, TOP_H = 256, 192
+# melonDS savestate: 'MELN' header, then section 'NDSG' whose payload starts with
+# the 4 MB main RAM (0x02000000) at file offset 0x24 (melonDS 1.1, checked
+# against the arm9 image in savestate_ram_offset).
+SAVESTATE_MAGIC = b'MELN'
 
 
 class StubDropped(RuntimeError):
@@ -103,6 +135,43 @@ class Images:
         if base <= addr < base + len(self.data('arm9')):
             return 'arm9'
         return None
+
+
+# ------------------------------------------------------------------ savestates
+def savestate_ram(path, images=None):
+    """(read(addr, n) -> bytes) over the main RAM inside a melonDS savestate file.
+
+    melonDS 1.1 keeps main RAM uncompressed at the start of the 'NDSG' section
+    (file offset 0x24). The offset is confirmed by finding arm9 .text bytes where
+    they belong; if they are not there, the file is searched for them."""
+    data = open(path, 'rb').read()
+    if data[:4] != SAVESTATE_MAGIC:
+        raise ValueError('%s is not a melonDS savestate' % path)
+    off = 0x24
+    if images is not None:
+        base = images.mods['arm9'][0]
+        probe = images.data('arm9')[0x8000:0x8040]
+        want = base + 0x8000 - 0x02000000
+        if data[off + want:off + want + 64] != probe:
+            k = data.find(probe)
+            if k < 0:
+                raise ValueError('main RAM not found in %s' % path)
+            off = k - want
+
+    def read(addr, n):
+        a = off + addr - 0x02000000
+        return data[a:a + n]
+    return read
+
+
+# Windows of RAM that tell two savestates apart: the loaded-overlay table, the
+# current save file block (data_0209caa0), the scene/level globals around the
+# player pointer (0x0209f394), a spread of arm9 .bss, and a spread of the heap
+# (actors, so two states of one level differ too). Windows that change every
+# frame match neither side after a load and drop out of the verdict.
+VERIFY_WINDOWS = ([(OVERLAY_TABLE, 0x48), (OVERLAY_TABLE + 0x48, 0x48), (0x0209caa0, 0x80), (0x0209f2c0, 0x80)]
+                  + [(0x02090000 + k * 0x1000, 0x20) for k in range(0x12)]
+                  + [(0x02100000 + k * 0x8000, 0x20) for k in range(0x58)])
 
 
 # ---------------------------------------------------------------- expressions
@@ -227,13 +296,22 @@ class Bp:
         self.max_hits = max_hits
         self.when = when            # expression; trigger/probe only fires when nonzero
         self.obj = obj              # expression for `obj` at the hit
-        self.armed = False
+        self.armed = False          # set in the stub right now
+        self.want = False           # asked to be armed (armed unless suspended)
+        self.suspended = False      # wanted, but held out: its overlay is not loaded
         self.hits = 0
         self.skips = 0
 
+    def overlay_id(self):
+        """The overlay number this breakpoint lives in, or None (arm9, itcm, unknown)."""
+        m = self.module
+        if m and m.startswith('ov') and m[2:].isdigit():
+            return int(m[2:])
+        return None
+
     def desc(self):
         return {'addr': '%08x' % self.addr, 'role': self.role, 'name': self.name, 'module': self.module,
-                'armed': self.armed, 'hits': self.hits, 'canary_skips': self.skips}
+                'armed': self.armed, 'suspended': self.suspended, 'hits': self.hits, 'canary_skips': self.skips}
 
 
 class Session:
@@ -253,6 +331,11 @@ class Session:
         self.dead = None
         self.last_io = time.time()
         self.log = open(log_path, 'a', encoding='utf-8') if log_path else None
+        self.loaded = None         # overlay ids in the game's table at the last read (None: unknown)
+        self.ovl_read_at = 0.0     # time of that read
+        self.ovl_poll = 0.25       # seconds between table reads while running (0: every chance)
+        self.ovl_suspend = True    # suspend probes/triggers whose overlay is not loaded
+        self._in_refresh = False
 
     # ------------------------------------------------------------ transport
     def connect(self, timeout=60.0):
@@ -279,6 +362,10 @@ class Session:
         stop = self.cli.stop_reason()      # melonDS halts the target on attach
         self.running = False
         self.event({'ev': 'attach', 'stop': stop})
+        try:
+            self.refresh_overlays()
+        except (RuntimeError, ValueError):
+            self.loaded = None
         return stop
 
     def _drop(self, e):
@@ -412,13 +499,12 @@ class Session:
         if bp.module:
             bp.canary = self.images.bytes_at(bp.module, bp.addr, 4 if bp.thumb else 8)
         old = self.bps.get(bp.addr)
-        if old and old.armed and not arm:
-            self._z(old, False)
         self.bps[bp.addr] = bp
-        if old and old.armed:
-            bp.armed = True
-        if arm and not bp.armed:
-            self._z(bp, True)
+        bp.armed = bool(old and old.armed)    # the stub holds one breakpoint per address
+        bp.want = bool(arm)
+        if bp.want and self._suspendable(bp):
+            self.maybe_refresh(force=True)      # the table may have changed since the last read
+        self._apply(bp)
         if bp.role == 'frame':
             self.frame = bp
         return bp
@@ -432,15 +518,118 @@ class Session:
 
     def arm(self, addr, on=True):
         bp = self.bps[addr & ~1]
+        bp.want = bool(on)
+        self._apply(bp)
+
+    # ------------------------------------------------------------ overlay residency
+    def _suspendable(self, bp):
+        return self.ovl_suspend and bp.role in ('probe', 'trigger') and bp.overlay_id() is not None
+
+    def _apply(self, bp):
+        """Arm or disarm bp in the stub: armed iff wanted and (not suspendable, or its
+        overlay is in the loaded-overlay table, or the table has not been read)."""
+        on = bp.want
+        if on and self._suspendable(bp) and self.loaded is not None and bp.overlay_id() not in self.loaded:
+            on = False
+        was = bp.suspended
+        bp.suspended = bp.want and not on
         if bp.armed != on:
             self._z(bp, on)
+        if bp.suspended != was:
+            self.event({'ev': 'suspend' if bp.suspended else 'resume', 'name': bp.name, 'module': bp.module,
+                        'addr': '%08x' % bp.addr})
+
+    def read_overlay_table(self):
+        """The game's loaded-overlay table as [(id, start, size)] for used slots."""
+        raw = self.read(OVERLAY_TABLE, OVERLAY_SLOTS * 12)
+        out = []
+        for i in range(OVERLAY_SLOTS):
+            oid, start, size = (int.from_bytes(raw[12 * i + 4 * k:12 * i + 4 * k + 4], 'little', signed=(k == 0))
+                                for k in range(3))
+            if oid >= 0 and size > 0:       # free slots are -1/0/0; all-zero before func_02017e60 runs
+                out.append((oid, start, size))
+        return out
+
+    def refresh_overlays(self):
+        """Re-read the loaded-overlay table and suspend / re-arm probes and triggers."""
+        ids = set(o[0] for o in self.read_overlay_table())
+        if ids != self.loaded:
+            self.event({'ev': 'overlays', 'loaded': sorted(ids)})
+        self.loaded = ids
+        self.ovl_read_at = time.time()
+        for bp in list(self.bps.values()):
+            if bp.role in ('probe', 'trigger'):
+                self._apply(bp)
+        return ids
+
+    def _watching(self):
+        return any(bp.want and self._suspendable(bp) for bp in self.bps.values())
+
+    def maybe_refresh(self, force=False):
+        """Refresh the overlay table if it is due and safe: the target is halted, or
+        nothing is armed (so no stop packet can cross the read)."""
+        if self._in_refresh or not self._watching():
+            return
+        if not force and time.time() - self.ovl_read_at < self.ovl_poll:
+            return
+        if self.running and self._any_armed():
+            return
+        self._in_refresh = True
+        try:
+            self.refresh_overlays()
+        finally:
+            self._in_refresh = False
 
     def remove_bp(self, addr):
-        bp = self.bps.pop(addr & ~1, None)
+        bp = self.bps.get(addr & ~1)
         if bp and bp.armed:
+            # clear it while it is still listed: _pkt quiesces only if something is armed,
+            # and the stop this breakpoint is about to send would cross the z0 request
             self._z(bp, False)
+        self.bps.pop(addr & ~1, None)
         if bp is self.frame:
             self.frame = None
+
+    # ------------------------------------------------------------ framing
+    def project(self, x, y, z, margin=0):
+        """Where a world position (Fix12 ints, as actors store it at +0x5c) lands on the
+        top screen, from the live view matrix and the clipper's projection.
+
+        Camera space is (pos >> 3) * VIEW_MATRIX (Nitro row-vector convention:
+        x' = x*m00 + y*m10 + z*m20 + m30); the camera looks down -z. The frustum is
+        dClipper's: half-height = depth * tan(fov), half-width = aspect * half-height
+        (dClipper::Func_0201559C builds its planes the same way). The viewport is
+        assumed to be the whole 256x192 top screen (the game writes 0xbfff0000).
+        Accuracy: this is the frame the game last rendered; the halted window shows
+        about one frame earlier still. It projects a point, so an actor partly
+        on screen can report off, and the reverse; use margin for slack."""
+        raw = self.read(VIEW_MATRIX, 48)
+        m = [int.from_bytes(raw[4 * i:4 * i + 4], 'little', signed=True) / 4096.0 for i in range(12)]
+        c = self.read(CLIPPER + CLIPPER_ASPECT, CLIPPER_FOV + 2 - CLIPPER_ASPECT)
+        aspect = int.from_bytes(c[0:4], 'little', signed=True) / 4096.0
+        near = int.from_bytes(c[4:8], 'little', signed=True) / 4096.0
+        far = int.from_bytes(c[8:12], 'little', signed=True) / 4096.0
+        fov = int.from_bytes(c[12:14], 'little')
+        p = [v / 4096.0 / 8.0 for v in (x, y, z)]
+        cam = [p[0] * m[j] + p[1] * m[3 + j] + p[2] * m[6 + j] + m[9 + j] for j in range(3)]
+        depth = -cam[2]
+        tan_half = math.tan(fov * 2.0 * math.pi / 65536.0)
+        out = {'cam': [round(v * 8.0, 2) for v in cam], 'depth': round(depth * 8.0, 2),
+               'fov_half_deg': round(fov * 360.0 / 65536.0, 2), 'aspect': round(aspect, 4),
+               'near': near * 8.0, 'far': far * 8.0, 'sx': None, 'sy': None,
+               'in_front': depth > near, 'on_screen': False,
+               'method': 'view matrix 0x%08x + clipper 0x%08x projection' % (VIEW_MATRIX, CLIPPER)}
+        if depth <= near or tan_half <= 0 or aspect <= 0:
+            out['why'] = 'behind the camera' if depth <= near else 'no projection set'
+            return out
+        sx = TOP_W / 2.0 * (1.0 + cam[0] / (depth * tan_half * aspect))
+        sy = TOP_H / 2.0 * (1.0 - cam[1] / (depth * tan_half))
+        out.update(sx=round(sx, 1), sy=round(sy, 1))
+        inside = (margin <= sx < TOP_W - margin) and (margin <= sy < TOP_H - margin)
+        out['on_screen'] = bool(inside and depth < far)
+        if not out['on_screen']:
+            out['why'] = 'beyond the far plane' if depth >= far else 'outside the screen'
+        return out
 
     def resident(self, module, addr=None, n=16):
         """Does live RAM at addr (default: the module's first word) match the image?"""
@@ -503,7 +692,10 @@ class Session:
             return 'hit', info
         if bp.canary is not None and self.read(pc, len(bp.canary)) != bp.canary:
             bp.skips += 1
+            if self._suspendable(bp) and time.time() - self.ovl_read_at > 0.05:
+                self.maybe_refresh(force=True)     # another overlay sits here: is ours gone?
             return 'go', None
+        self.maybe_refresh()
         env = self.env(regs)
         if bp.obj:
             try:
@@ -541,14 +733,16 @@ class Session:
                 self.rets[lr]['waits'].append({'sp': regs['sp'], 'name': bp.name, 'call': rec['n'],
                                                'addr': bp.addr, 'obj': env.get('obj')})
             if bp.max_hits and bp.hits >= bp.max_hits:
-                self._z(bp, False)
+                bp.want = False
+                self._apply(bp)
             return 'go', None
         # trigger
         info['dump'] = self._dump(bp, env)
         self.event({'ev': 'trigger', 'name': bp.name, 'pc': info['pc'], 'obj': info.get('obj'),
                     'lr': '%08x' % regs['lr'], 'dump': info['dump']})
         if bp.max_hits and bp.hits >= bp.max_hits:
-            self._z(bp, False)
+            bp.want = False
+            self._apply(bp)
         return 'hit', info
 
     def run(self, until, timeout):
@@ -564,8 +758,9 @@ class Session:
             rem = t_end - time.time()
             if rem <= 0:
                 return None
-            pkt = self.poll_stop(min(rem, 0.5))
+            pkt = self.poll_stop(min(rem, 0.1 if self._watching() else 0.5))
             if pkt is None:
+                self.maybe_refresh()      # only acts when nothing is armed (all suspended)
                 continue
             act, info = self._handle_stop(pkt)
             if act == 'hit' and until(info):
@@ -580,6 +775,7 @@ class Session:
             return
         pkt = self.poll_stop(0.0)
         if pkt is None:
+            self.maybe_refresh()
             return
         act, info = self._handle_stop(pkt)
         if act == 'hit' and info.get('role') == 'frame':
@@ -629,8 +825,9 @@ class Session:
 class Daemon:
     """Owns the Session (and optionally the melonDS process); serves JSON-lines RPC."""
 
-    def __init__(self, session, rpc_port=DEFAULT_RPC_PORT, proc=None, hwnd=None, pid=None):
+    def __init__(self, session, rpc_port=DEFAULT_RPC_PORT, proc=None, hwnd=None, pid=None, workdir=None):
         self.s = session
+        self.workdir = workdir      # holds game.nds and its game.mlN slot files (None: unknown)
         self.rpc_port = rpc_port
         self.proc = proc
         self.pid = pid if pid is not None else (proc.pid if proc else None)
@@ -696,6 +893,40 @@ class Daemon:
 
     def op_resident(self, module, addr=None):
         return self.s.resident(module, parse_int(addr) if addr is not None else None)
+
+    def op_overlays(self):
+        """The game's loaded-overlay table, and which probes/triggers are suspended."""
+        tab = self.s.read_overlay_table()
+        if not (self.s.running and self.s._any_armed()):
+            self.s.refresh_overlays()
+        return {'loaded': [{'id': o, 'module': 'ov%03d' % o, 'start': '%08x' % a, 'size': n} for o, a, n in tab],
+                'suspended': [b.name for b in self.s.bps.values() if b.suspended],
+                'suspend_enabled': self.s.ovl_suspend}
+
+    def op_overlay_suspend(self, on=True, poll=None):
+        """Turn overlay suspension on/off (off = every wanted breakpoint stays armed)."""
+        self.s.ovl_suspend = bool(on)
+        if poll is not None:
+            self.s.ovl_poll = float(poll)
+        for b in list(self.s.bps.values()):
+            if b.role in ('probe', 'trigger'):
+                self.s._apply(b)
+        return {'suspend_enabled': self.s.ovl_suspend, 'poll': self.s.ovl_poll}
+
+    def op_project(self, pos=None, xyz=None, env=None, margin=0, dy=0):
+        """Screen position of a world point. pos: expression for the address of a
+        Fix12 Vector3 (e.g. "[obj+4]+0x5c"); or xyz: [x, y, z] Fix12 ints. dy (Fix12)
+        is added to y, e.g. to test a point above an actor's feet."""
+        if xyz is None:
+            e = self._env(env)
+            a = self.s.ev(pos, e) & 0xffffffff
+            raw = self.s.read(a, 12)
+            xyz = [int.from_bytes(raw[4 * i:4 * i + 4], 'little', signed=True) for i in range(3)]
+        xyz = [parse_int(v) for v in xyz]
+        xyz[1] += parse_int(dy)
+        out = self.s.project(xyz[0], xyz[1], xyz[2], margin=float(margin))
+        out['world'] = xyz
+        return out
 
     def op_step(self, n=1, timeout=60):
         return self.s.step(parse_int(n), float(timeout))
@@ -812,21 +1043,126 @@ class Daemon:
         emuwin.touch(self.window(), int(x), int(y), int(ms))
         return True
 
+    def slot_path(self, slot):
+        if not self.workdir:
+            raise RuntimeError('the daemon does not know the ROM folder (serve --attach needs --slot-dir)')
+        return os.path.join(self.workdir, 'game.ml%d' % int(slot))
+
     def op_load_state(self, slot=1, settle=1.0):
         """Load a savestate slot through the File menu. The target must run while
         melonDS loads (a stub-halted emu thread would deadlock its UI)."""
         import emuwin
-        self.s.held = None
-        self.s.go()
+        if self.workdir:
+            p = self.slot_path(slot)
+            if not os.path.exists(p) or os.path.getsize(p) == 0:
+                raise RuntimeError('slot %d holds no savestate (%s); use load_state_file' % (int(slot), p))
+        return self._menu_unarmed(lambda: self._load_slot(slot, settle))
+
+    def _load_slot(self, slot, settle):
+        import emuwin
         out = emuwin.load_state_slot(self.pid, int(slot))
         time.sleep(float(settle))
         self.s.event({'ev': 'load_state', 'slot': int(slot)})
         return out
 
+    def _menu_unarmed(self, fn):
+        """Run a File-menu action with every breakpoint disarmed, then re-arm. The
+        RPC thread is busy driving the menu meanwhile, so a probe hit would leave the
+        emu thread halted and the melonDS UI deadlocked. Probes and triggers come back
+        through the overlay table (a load can change it); others as they were."""
+        self.s.held = None
+        was = [b for b in self.s.bps.values() if b.armed]
+        for b in was:
+            self.s._z(b, False)
+        self.s.go()
+        try:
+            return fn()
+        finally:
+            if self.s._watching():
+                self.s.refresh_overlays()       # nothing is armed: safe while running
+            for b in self.s.bps.values():
+                if b.role in ('probe', 'trigger'):
+                    self.s._apply(b)
+                elif b in was and b is not self.s.frame and not b.armed:
+                    self.s._z(b, True)
+
+    def _verify_windows(self):
+        return [self.s.read(a, n) for a, n in VERIFY_WINDOWS]
+
+    def op_load_state_file(self, path, slot=8, settle=1.0, verify=True, tries=2):
+        """Load any savestate file: copy it over slot file game.ml<slot> and load
+        that slot. serve creates every slot file before melonDS loads the ROM,
+        because melonDS enables a Load state slot only if its file existed then.
+
+        verify: read VERIFY_WINDOWS before and after, and compare with the RAM
+        image inside the file. 'loaded' = after matches the file in more windows
+        than it matches before; 'indistinguishable' = before already matched the
+        file in every window that did not change to a third value meanwhile (the
+        load cannot be told from no load, e.g. reloading the state already
+        running); 'not_loaded' = some window kept a pre-load value the file does
+        not have."""
+        import shutil
+        path = os.path.abspath(path)
+        dst = self.slot_path(slot)
+        if os.path.abspath(dst) != path:
+            shutil.copyfile(path, dst)
+        file_ram = savestate_ram(path, self.s.images) if verify else None
+        res = {'slot': int(slot), 'path': path}
+        # the reads too run with nothing armed: fewer requests that can cross a stop
+        self._menu_unarmed(lambda: self._load_verified(res, file_ram, slot, settle, verify, tries))
+        self.s.event(dict(res, ev='load_state_file'))
+        return res
+
+    def _load_verified(self, res, file_ram, slot, settle, verify, tries):
+        for attempt in range(int(tries)):
+            pre = self._verify_windows() if verify else None
+            res['menu'] = self._load_slot(slot, settle)
+            if not verify:
+                res['verdict'] = 'unchecked'
+                break
+            post = self._verify_windows()
+            want = [file_ram(a, n) for a, n in VERIFY_WINDOWS]
+            differ = [i for i in range(len(want)) if pre[i] != want[i]]
+            k_file = sum(post[i] == want[i] for i in differ)
+            k_pre = sum(post[i] == pre[i] for i in differ)
+            res.update(attempt=attempt + 1, windows=len(want), differ=len(differ), match_file=k_file,
+                       match_before=k_pre, match_file_all=sum(post[i] == want[i] for i in range(len(want))))
+            if k_file > k_pre:
+                res['verdict'] = 'loaded'
+                break
+            if k_pre == 0:
+                # before already matched the file wherever it was stable: every window that
+                # differed changed to neither value (a timer, say)
+                res['verdict'] = 'indistinguishable'
+                break
+            res['verdict'] = 'not_loaded'
+
     def op_save_state(self, slot=1):
         import emuwin
-        self.s.go()
-        return emuwin.save_state_slot(self.pid, int(slot))
+        return self._menu_unarmed(lambda: emuwin.save_state_slot(self.pid, int(slot)))
+
+    def op_save_state_file(self, path, slot=8, timeout=30):
+        """Save to slot <slot> through the File menu, wait until melonDS has written
+        the slot file (newer and no longer growing), and copy it to path."""
+        import shutil
+        src = self.slot_path(slot)
+        m0 = os.path.getmtime(src) if os.path.exists(src) else 0
+        out = self.op_save_state(slot)
+        t_end = time.time() + float(timeout)
+        last = -1
+        while True:
+            if time.time() > t_end:
+                raise RuntimeError('melonDS did not write %s within %ss' % (src, timeout))
+            if os.path.exists(src) and os.path.getmtime(src) > m0:
+                n = os.path.getsize(src)
+                if n > 0 and n == last:
+                    break
+                last = n
+            time.sleep(0.4)
+        os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+        shutil.copyfile(src, path)
+        self.s.event({'ev': 'save_state_file', 'slot': int(slot), 'path': os.path.abspath(path)})
+        return {'menu': out, 'path': os.path.abspath(path), 'bytes': os.path.getsize(path)}
 
     def op_reconnect(self):
         """Re-attach after a dropped connection (works when melonDS rebuilt its listener)."""
