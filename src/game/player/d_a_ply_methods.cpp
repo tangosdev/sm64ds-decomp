@@ -48,6 +48,7 @@
 #include "types.h"
 #include "common.h"
 #include "daPly_c.h"
+#include "SpawnInfo.h"
 #include "dExtAnm2Model_c.h"
 #include "PlayerInput.h"
 #include "SharedFilePtr.h"
@@ -75,6 +76,8 @@
 #include "Memory.h"
 #include "cstd.h"
 #include "math/Approach.h"
+
+extern "C" daPly_c *daPly_c_classInit();
 
 /* ---------------------------------------------------------------------------
  * Shadow types and ABI stand-ins that cannot live inside a function body.
@@ -164,6 +167,20 @@ int daPly_c::func_ov002_020bcd38(unsigned char *params, int beginFrame, int endF
  * Scalar SetAnim/particle ABI calls and the raw spawned-prop view remain. */
 extern "C" {
 typedef struct { int w[2]; } AnimEntry27;
+
+/* PLAYER's registry descriptor: the factory and the draw/update priorities
+ * the actor framework reads from data_020a4bb8[PLAYER]. */
+// @symbol g_profile_PLAYER
+SpawnInfo<daPly_c> g_profile_PLAYER = {
+    daPly_c_classInit,
+    191,        /* behavior priority */
+    18,         /* render priority */
+    0x00000002, /* actorFlags */
+    0x000fa000,
+    0x000fa000,
+    0x02ee0000,
+    0x02ee0000,
+};
 
 extern AnimEntry27 data_ov002_02109ff4[];
 extern AnimEntry27 data_ov002_0210a61c[];
