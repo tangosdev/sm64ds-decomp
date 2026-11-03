@@ -5988,12 +5988,10 @@ s32 dScMgSmartball_c::Behavior() {
 /* vtable slot 18 -- an override of
    dScMgBase_c::StartRound(int). The signature must repeat the base
    declaration exactly, or mwcc appends a slot instead of overriding. */
-extern "C" {
 void dScMgSmartball_c::StartRound(int /* arg */) {
     SpawnObjects();
     G2x::SetBlendAlpha((volatile unsigned short *)0x4000050, 0, 0x18, 4, 0xa);
     G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 0x18, 4, 0xa);
-}
 }
 
 // @symbol _ZN16dScMgSmartball_c15InitSubScreenBgEv

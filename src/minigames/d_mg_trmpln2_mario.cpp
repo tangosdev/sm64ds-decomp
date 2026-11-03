@@ -2800,7 +2800,6 @@ void Trmp3DMario_StateWalkIn(int *c) {
 #pragma push
 // ---- Trmp3DMario_EnterWalkIn
 namespace ns_020cc9fc {
-extern "C" {}
 struct G2 {
     int w[2];
 };
