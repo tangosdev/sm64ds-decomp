@@ -16,6 +16,7 @@
   {"expr": "[0x0209f394]+0x70", "value": "[[obj+4]+0x64] - 0x1f4000"},
   {"expr": "[0x0209f394]+0x8e", "size": 2, "mask": "0xffff", "value": "0"}
  ],
+ "frame_check": {"pos": "[obj+4]+0x5c", "margin": 8, "on_fail": "skip"},
  "fields": [
   {"name": "mFlags", "expr": "obj+0x1b"},
   {"name": "mSlot", "expr": "obj+0x14", "size": 4, "signed": true},

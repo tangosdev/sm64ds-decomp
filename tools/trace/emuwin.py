@@ -406,6 +406,7 @@ def find_melonds():
 
 
 BACKUP = 'melonDS.toml.user-backup'
+STATE_SLOTS = 8          # melonDS File > Load state / Save state slots 1..8
 
 
 def _sha(path):
@@ -470,6 +471,14 @@ def prepare_workdir(workdir, rom, state=None, slot=1, melonds=None, port=3333, s
         shutil.copy2(sav, os.path.join(workdir, 'game.sav'))
     if state:
         shutil.copy2(state, os.path.join(workdir, 'game.ml%d' % slot))
+    # melonDS enables a File > Load state slot only if its file exists when the ROM
+    # loads, and does not look again. So every slot file is created now (empty
+    # placeholder unless a state was copied there); load_state_file later copies a
+    # real state over one of them before loading it.
+    for k in range(1, STATE_SLOTS + 1):
+        p = os.path.join(workdir, 'game.ml%d' % k)
+        if not os.path.exists(p):
+            open(p, 'wb').close()
     return exe, game
 
 
