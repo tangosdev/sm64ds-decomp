@@ -53,7 +53,7 @@ extern EmmYukaFiles data_ov052_021125a0;
 void func_020393d4(int *bg, int cb);
 extern void hold_d_a_obj_emm_yuka(dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
                                   s16 angleY, CLPS_Block *clps);
-void Vec3_Sub(void *out, void *a, void *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(void *v);
 void Vec3_MulScalar(void *out, void *v, int s);
 void SubVec3(void *a, void *b, void *c);
@@ -117,7 +117,7 @@ int daObjEmmYuka_c::Behavior()
         mPath.GetNode(*(Vector3 *)&node, delta);
     }
     mPath.GetNode(*(Vector3 *)&prev, mNodeIndex);
-    Vec3_Sub(&diff, &mPosX, &prev);
+    Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&mPosX, (const Vector3 *)&prev);
     len = LenVec3(&diff);
     if (len == 0 || len <= mHorzSpeed) {
         Vec3_MulScalar(&scaled1, &diff, cstd::fdiv(mHorzSpeed, len));
