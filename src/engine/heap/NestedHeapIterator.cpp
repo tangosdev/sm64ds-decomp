@@ -86,6 +86,8 @@ extern "C" void func_0204df54(HeapAllocator* self, u32 magic, void* start,
     self->mFlags &= ~0xffu;
     self->mFlags |= flags & 0xffu;
 
+    /* Placement new measured func_0204df54 0x94 -> 0xa0. The address is
+       storage that already exists, and mwcc null-tests it. */
     _ZN18NestedHeapIteratorC1Ej(&self->mChildren, 4);
 
     if (data_020a4d34 == 0) {

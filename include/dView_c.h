@@ -4,6 +4,8 @@
 #include "dBase_c.h"
 #include "math/Matrix.h"
 
+extern "C" void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
+
 /* The shared 0x80-byte view base used by dCamera_c.
  *
  * RTTI names the class: _ZTS7dView_c at 0x02086e48 reads "7dView_c" and
@@ -12,10 +14,9 @@
  * immediately after the 0x50-byte base. dView_c overrides fBase_c's Render
  * and destructor slots; it adds no virtual slots of its own.
  *
- * The implicit default constructor is intentional. It lets derived
- * constructors generate the original fBase_c -> dBase_c -> dView_c vptr
- * sequence while leaving the matrix initialization to the derived class, as
- * dCamera_c's C1 bytes do.
+ * The constructor clears the view matrix. That call sits between the dView_c
+ * vtable store and the derived class's vtable store, which is where
+ * dCamera_c's factory leaves it.
  *
  * The destructor is inline because dCamera_c's ROM destructor inlines dView_c's
  * own vptr store before the already-inline dBase_c teardown. A declaration
@@ -25,6 +26,9 @@
 struct dView_c : dBase_c {
     Matrix4x3 viewMat; /* 0x50 */
 
+    dView_c() {
+        Matrix4x3_LoadIdentity(&viewMat);
+    }
     virtual ~dView_c() {}
     virtual s32 Render();
 };

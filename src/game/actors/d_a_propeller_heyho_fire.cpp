@@ -84,20 +84,6 @@ void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, short rx, short ry, short r
 /* Empty. D1 then D0 follow from the members. */
 daPropeller_Heyho_Fire_c::~daPropeller_Heyho_Fire_c() {}
 
-#ifdef _MSC_VER
-/* The host uses the flat ROM D0 name, which MSVC never emits: it folds the
- * Itanium destructor variants into the one ~daPropeller_Heyho_Fire_c()
- * above. This arm spells out what the deleting destructor does -- the D1
- * body, called qualified so it is a direct call, then the class-specific
- * operator delete. Nothing here reaches mwccarm. */
-extern "C" daPropeller_Heyho_Fire_c *
-_ZN24daPropeller_Heyho_Fire_cD0Ev(daPropeller_Heyho_Fire_c *thiz) {
-    thiz->daPropeller_Heyho_Fire_c::~daPropeller_Heyho_Fire_c();
-    daPropeller_Heyho_Fire_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 // @symbol _ZN24daPropeller_Heyho_Fire_c14CheckPlayerHitEv
 /* The player-hit test. otherOwner is the ID of whatever touched the hit
    cylinder. The hurt is skipped when the cylinder's hitFlags has bit 0x10

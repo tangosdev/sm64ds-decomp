@@ -160,15 +160,6 @@ daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c()
 {
 }
 
-#ifdef _MSC_VER
-extern "C" daObjRotateUpdownLift_c *_ZN23daObjRotateUpdownLift_cD0Ev(daObjRotateUpdownLift_c *thiz)
-{
-    thiz->daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c();
-    daObjRotateUpdownLift_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 // 0x02130fac (0xc4)
 // @symbol func_ov091_02130fac
 /* Put a killed lift back on its spawn node. The watcher calls this. */

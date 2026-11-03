@@ -223,7 +223,7 @@ struct dCamera_c : dView_c {
     /* The path node func_0200b0fc is past: cleared while mFlags bit 4 is set,
        then stepped as lookAt nears the next or previous node. */
     u8 mPathNode; /* 0x1a7 */
-    dCamera_c();
+    dCamera_c() {}
     virtual ~dCamera_c();
 
     /* fBase_c virtual overrides, in their inherited slots. */

@@ -2,36 +2,7 @@
  * replacing copies that were repeated in every file that called them. */
 #ifndef DECL_FADERCOLOR_H
 #define DECL_FADERCOLOR_H
-#include "common.h"
-
-
-/* C linkage. These declare ROM symbols by their exact final names, so a C++
-   translation unit including this header must not mangle them -- a bare
-   `void Foo(int);` seen from C++ emits _Z3Fooi, which exists nowhere. The file
-   still byte-matches, because match.py compares relocated words as wildcards, so
-   nothing catches it until the ROM link -- and eligible.py refuses to enroll a
-   file with unresolvable references, so the link never sees it either.
-
-   Verified safe: of the 1,644 function names declared across the decl_*.h
-   headers, 1,572 are themselves the ROM symbol and 0 exist ONLY in a mangled
-   form, so no declaration here relies on C++ mangling. The remaining 72 resolve
-   to neither spelling and are unresolvable with or without this guard. */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* AdvanceFade is a non-static member of dFdColor_c, so its receiver rides r0
-   like any other first argument. Declared `(void)` it still byte-matches, because
-   every caller happens to already hold the object in r0 and the compiler emits no
-   argument setup either way. It is still a dropped argument, and any host whose
-   calling convention makes the receiver explicit loses it. Named, per the
-   Heap::_Destroy precedent. */
-extern void _ZN10dFdColor_c11AdvanceFadeEv(void*);
-extern void _ZN10dFdColor_cD1Ev(void*);
-
-
-#ifdef __cplusplus
-}
-#endif
+/* dFdColor_c::AdvanceFade() and ~dFdColor_c() are declared in dFdColor_c.h.
+   Nothing calls the Itanium spellings. */
 
 #endif
