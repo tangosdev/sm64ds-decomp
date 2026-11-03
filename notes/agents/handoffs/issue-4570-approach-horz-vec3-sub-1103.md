@@ -1,11 +1,11 @@
-# Handoff: issue-4570-approach-horz-vec3-sub-1103
+# Handoff: issue-4570-approach-horz-vec3-sub-deadref-1103b
 
 This document describes this commit. The queue records its immutable output SHA.
 
 ## Identity and resumption
 
-- Issue URL, task ID, stage and session: https://github.com/tangosdev/sm64ds-decomp/issues/4570; `issue-4570-approach-horz-vec3-sub-1103`; producer; `codex-approachvec-1103` (Codex).
-- Source branch and previous accepted input SHA: `audit/approach-horz-vec3-sub-signature-1103`; input `8bcb5a981bde3dbe4375aab971226ccee72ee8e6`.
+- Issue URL, task ID, stage and session: https://github.com/tangosdev/sm64ds-decomp/issues/4570; `issue-4570-approach-horz-vec3-sub-deadref-1103b`; producer; `codex-approachvec-deadref-1103b` (Codex).
+- Source branch and input commit: producer branch recorded in the queue; input `09eb4bd4feb96a10fa8708c126f9ea1ff51be568`.
 - Original source base SHA and workflow/tool SHA: both `8bcb5a981bde3dbe4375aab971226ccee72ee8e6`. Active source-review policy workflow: `18af52b49b9fb5663d417bdfa86109b7b157aaa3`.
 - Separate evidence commits and required artifacts in this commit: none; source and handoff are included.
 - Next action, responsible role and blockers: verifier should review the local POD view and independently rerun TU, relocation and base checks. Integrator can compose after acceptance. No known blocker.
@@ -35,6 +35,9 @@ This document describes this commit. The queue records its immutable output SHA.
 - `python tools/rombuild.py -j16 --no-rom`: exit 0; 106/106 modules exact, zero mismatches; ROM-build analysis PASS.
 - `python tools/source_style.py --base origin/main --files src/Vec3_ApproachHorz.cpp`: exit 0; zero findings using clang-format 19.1.7.
 - `git diff --check`: clean before commit.
-- `python tools/prepush_linkcheck.py --range origin/main..HEAD` and `python tools/check_decl_agreement.py --changed origin/main`: run after the source commit; results are not embedded here.
+- `python tools/prepush_linkcheck.py --range origin/main..HEAD`: exit 0; 3 checked, 2 verified, 1 BLIND-1 __sinit warning, 0 blockers. `python tools/check_decl_agreement.py --changed origin/main`: exit 0; no new declaration disagreements or local header redeclarations.
 - Shared-header consumer expansion and port path check: no shared header or file path changed.
 - Private validation: not yet run; PR validation is pending after publication.
+
+
+This successor changes only handoff metadata; source code is unchanged from tested source commit 09eb4bd4feb96a10fa8708c126f9ea1ff51be568.
