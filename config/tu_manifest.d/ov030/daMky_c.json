@@ -1853,189 +1853,54 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2071",
+      "from": "@2061",
       "to": "@1144",
       "evidence": "mwcc emits @2061; that name is already used in another module, so it is renamed to the unused same-length @1144"
     },
     {
-      "from": "@2072",
+      "from": "@2062",
       "to": "@1146",
       "evidence": "mwcc emits @2062; that name is already used in another module, so it is renamed to the unused same-length @1146"
     },
     {
-      "from": "@2073",
+      "from": "@2063",
       "to": "@1148",
       "evidence": "mwcc emits @2063; that name is already used in another module, so it is renamed to the unused same-length @1148"
     },
     {
-      "from": "@2074",
+      "from": "@2064",
       "to": "@1150",
       "evidence": "mwcc emits @2064; that name is already used in another module, so it is renamed to the unused same-length @1150"
     },
     {
-      "from": "@2075",
+      "from": "@2065",
       "to": "@1152",
       "evidence": "mwcc emits @2065; that name is already used in another module, so it is renamed to the unused same-length @1152"
     },
     {
-      "from": "@2076",
+      "from": "@2066",
       "to": "@1154",
       "evidence": "mwcc emits @2066; that name is already used in another module, so it is renamed to the unused same-length @1154"
     },
     {
-      "from": "@2077",
+      "from": "@2067",
       "to": "@1159",
       "evidence": "mwcc emits @2067; that name is already used in another module, so it is renamed to the unused same-length @1159"
     },
     {
-      "from": "@2079",
+      "from": "@2069",
       "to": "@1161",
       "evidence": "mwcc emits @2069; that name is already used in another module, so it is renamed to the unused same-length @1161"
     },
     {
-      "from": "@2081",
+      "from": "@2071",
       "to": "@1163",
       "evidence": "mwcc emits @2071; that name is already used in another module, so it is renamed to the unused same-length @1163"
     },
     {
-      "from": "@2083",
+      "from": "@2073",
       "to": "@1169",
       "evidence": "mwcc emits @2073; that name is already used in another module, so it is renamed to the unused same-length @1169"
-    },
-    {
-      "from": "@2067",
-      "to": "@2057",
-      "evidence": "mwcc emits @2067 after dView_c and dCamera_c gained constructors; @2057 is the configured name"
-    },
-    {
-      "from": "@2068",
-      "to": "@2058",
-      "evidence": "mwcc emits @2068 after dView_c and dCamera_c gained constructors; @2058 is the configured name"
-    },
-    {
-      "from": "@2069",
-      "to": "@2059",
-      "evidence": "mwcc emits @2069 after dView_c and dCamera_c gained constructors; @2059 is the configured name"
-    },
-    {
-      "from": "@2070",
-      "to": "@2060",
-      "evidence": "mwcc emits @2070 after dView_c and dCamera_c gained constructors; @2060 is the configured name"
-    },
-    {
-      "from": "@2085",
-      "to": "@2075",
-      "evidence": "mwcc emits @2085 after dView_c and dCamera_c gained constructors; @2075 is the configured name"
-    },
-    {
-      "from": "@2087",
-      "to": "@2077",
-      "evidence": "mwcc emits @2087 after dView_c and dCamera_c gained constructors; @2077 is the configured name"
-    },
-    {
-      "from": "@2089",
-      "to": "@2079",
-      "evidence": "mwcc emits @2089 after dView_c and dCamera_c gained constructors; @2079 is the configured name"
-    },
-    {
-      "from": "@2091",
-      "to": "@2081",
-      "evidence": "mwcc emits @2091 after dView_c and dCamera_c gained constructors; @2081 is the configured name"
-    },
-    {
-      "from": "@2093",
-      "to": "@2083",
-      "evidence": "mwcc emits @2093 after dView_c and dCamera_c gained constructors; @2083 is the configured name"
-    },
-    {
-      "from": "@2095",
-      "to": "@2085",
-      "evidence": "mwcc emits @2095 after dView_c and dCamera_c gained constructors; @2085 is the configured name"
-    },
-    {
-      "from": "@2097",
-      "to": "@2087",
-      "evidence": "mwcc emits @2097 after dView_c and dCamera_c gained constructors; @2087 is the configured name"
-    },
-    {
-      "from": "@2099",
-      "to": "@2089",
-      "evidence": "mwcc emits @2099 after dView_c and dCamera_c gained constructors; @2089 is the configured name"
-    },
-    {
-      "from": "@2101",
-      "to": "@2091",
-      "evidence": "mwcc emits @2101 after dView_c and dCamera_c gained constructors; @2091 is the configured name"
-    },
-    {
-      "from": "@2103",
-      "to": "@2093",
-      "evidence": "mwcc emits @2103 after dView_c and dCamera_c gained constructors; @2093 is the configured name"
-    },
-    {
-      "from": "@2105",
-      "to": "@2095",
-      "evidence": "mwcc emits @2105 after dView_c and dCamera_c gained constructors; @2095 is the configured name"
-    },
-    {
-      "from": "@2107",
-      "to": "@2097",
-      "evidence": "mwcc emits @2107 after dView_c and dCamera_c gained constructors; @2097 is the configured name"
-    },
-    {
-      "from": "@2109",
-      "to": "@2099",
-      "evidence": "mwcc emits @2109 after dView_c and dCamera_c gained constructors; @2099 is the configured name"
-    },
-    {
-      "from": "@2111",
-      "to": "@2101",
-      "evidence": "mwcc emits @2111 after dView_c and dCamera_c gained constructors; @2101 is the configured name"
-    },
-    {
-      "from": "@2113",
-      "to": "@2103",
-      "evidence": "mwcc emits @2113 after dView_c and dCamera_c gained constructors; @2103 is the configured name"
-    },
-    {
-      "from": "@2115",
-      "to": "@2105",
-      "evidence": "mwcc emits @2115 after dView_c and dCamera_c gained constructors; @2105 is the configured name"
-    },
-    {
-      "from": "@2117",
-      "to": "@2107",
-      "evidence": "mwcc emits @2117 after dView_c and dCamera_c gained constructors; @2107 is the configured name"
-    },
-    {
-      "from": "@2119",
-      "to": "@2109",
-      "evidence": "mwcc emits @2119 after dView_c and dCamera_c gained constructors; @2109 is the configured name"
-    },
-    {
-      "from": "@2121",
-      "to": "@2111",
-      "evidence": "mwcc emits @2121 after dView_c and dCamera_c gained constructors; @2111 is the configured name"
-    },
-    {
-      "from": "@2144",
-      "to": "@2134",
-      "evidence": "mwcc emits @2144 after dView_c and dCamera_c gained constructors; @2134 is the configured name"
-    },
-    {
-      "from": "@2145",
-      "to": "@2135",
-      "evidence": "mwcc emits @2145 after dView_c and dCamera_c gained constructors; @2135 is the configured name"
-    },
-    {
-      "from": "@2146",
-      "to": "@2136",
-      "evidence": "mwcc emits @2146 after dView_c and dCamera_c gained constructors; @2136 is the configured name"
-    },
-    {
-      "from": "@2147",
-      "to": "@2137",
-      "evidence": "mwcc emits @2147 after dView_c and dCamera_c gained constructors; @2137 is the configured name"
     }
   ],
   "symbol_binding_rewrites": [
@@ -2486,9 +2351,9 @@
       "reason": "Vague-linkage Vector3 destructor. Vector3 carries a user-declared ~Vector3() (include/types.h) and this TU odr-uses several as function locals -- three in func_ov030_02111734 alone. One row however many objects: the emitted symbol is the single vague copy. arm9 owns the kept copy at 0x020072c0, four bytes of bx lr."
     },
     {
-      "symbol": "_ZN7daMky_c22Bundle$1015d_a_mky_cppD1Ev",
+      "symbol": "_ZN7daMky_c22Bundle$1005d_a_mky_cppD1Ev",
       "disposition": "deadstrip",
-      "reason": "The genuine shared dClipper header and native call renumber the same unreferenced four-byte Bundle destructor from945 to963. Complete seven-TU allocated payload/symbol/typed-relocation comparison preserves its body and attributes. It has no configured ROM home; admit only this exact compiler-local symbol. The native ground-query header/call now renumbers that same unreferenced four-byte destructor from963 to962. Complete-object payload, symbol attributes/order and typed-relocation comparison admits only this measured compiler-local rename; it adds no ROM home, alias or broader suppression. The file-local predicate inlines above it then move it to 981. Retiring the local five-named-parameter dExtAnmModel_c::SetAnim extern for the real member call frees five numbers and moves it to 976. Including the shared Sound.h for Sound::PlaySub, in place of a local namespace declaration, moves it from 964 to 974; the compiled object differs from the previous one only in that symbol name. Routing the scratch-matrix calls through math/MtxStack.h's inline statics, with by-reference transM/XYZrotM overloads, moves it to 1031. Taking the scalar/vector helpers from math/CalcLib.h and cstd::fdiv from cstd.h, with unnamed parameters in place of the named local declarations (ApproachLinear stays local), moves it to 1018. Taking the dBgCh_Actr update veneers from dBgCh_Actr.h, in place of the local declarations, moves it to 1016. Typing func_0203567c and func_02037f44 in dBgCh_Actr.h and dBgPi.h, in place of the local int declarations, moves it to 1014. Taking the Sound wrappers func_0201267c and func_02012790 from Sound.h, in place of the named local declarations, moves it to 1011. Batch 5 of the Fix12 rename (notes/mwccarm-codegen.md 6az) deletes this TU's named-parameter DropShadowRadHeight extern ahead of the Bundle class, so the compiler now numbers it 1005, not 1011. dView_c and dCamera_c gaining constructors moves that same destructor to 1015."
+      "reason": "The genuine shared dClipper header and native call renumber the same unreferenced four-byte Bundle destructor from945 to963. Complete seven-TU allocated payload/symbol/typed-relocation comparison preserves its body and attributes. It has no configured ROM home; admit only this exact compiler-local symbol. The native ground-query header/call now renumbers that same unreferenced four-byte destructor from963 to962. Complete-object payload, symbol attributes/order and typed-relocation comparison admits only this measured compiler-local rename; it adds no ROM home, alias or broader suppression. The file-local predicate inlines above it then move it to 981. Retiring the local five-named-parameter dExtAnmModel_c::SetAnim extern for the real member call frees five numbers and moves it to 976. Including the shared Sound.h for Sound::PlaySub, in place of a local namespace declaration, moves it from 964 to 974; the compiled object differs from the previous one only in that symbol name. Routing the scratch-matrix calls through math/MtxStack.h's inline statics, with by-reference transM/XYZrotM overloads, moves it to 1031. Taking the scalar/vector helpers from math/CalcLib.h and cstd::fdiv from cstd.h, with unnamed parameters in place of the named local declarations (ApproachLinear stays local), moves it to 1018. Taking the dBgCh_Actr update veneers from dBgCh_Actr.h, in place of the local declarations, moves it to 1016. Typing func_0203567c and func_02037f44 in dBgCh_Actr.h and dBgPi.h, in place of the local int declarations, moves it to 1014. Taking the Sound wrappers func_0201267c and func_02012790 from Sound.h, in place of the named local declarations, moves it to 1011. Batch 5 of the Fix12 rename (notes/mwccarm-codegen.md 6az) deletes this TU's named-parameter DropShadowRadHeight extern ahead of the Bundle class, so the compiler now numbers it 1005, not 1011. daMky_c does not parse those constructors, so this destructor stays 1005."
     },
     {
       "symbol": "_ZN11SurfaceInfoD1Ev",
