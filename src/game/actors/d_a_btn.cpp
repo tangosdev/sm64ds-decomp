@@ -1411,6 +1411,19 @@ void daBtn_c::func_ov079_02124530()
     mPosY += (mIsKing + 1) << 15;
 }
 
+#ifdef _MSC_VER
+/* run after093, lane WHOMPBACK1: the same coop fault SEESAW1 fixed in dBgActor_c::IsClsnInRange. In a coop room
+   ClosestPlayer answers the shared target seat, which can be a friend beyond the range, and the body's collider then
+   drops under (or around) the player standing at it. The host measures to the nearest of all players instead
+   (port_bg_range_player, hal/coop_target.cpp, which still calls ClosestPlayer first); with one player it is
+   ClosestPlayer. The DS side is untouched. */
+struct dBgActor_c;
+extern "C" Player *port_bg_range_player(dBgActor_c *self);
+#define BTN_RANGE_PLAYER(self) port_bg_range_player((dBgActor_c *)(void *)(self))
+#else
+#define BTN_RANGE_PLAYER(self) (self)->ClosestPlayer()
+#endif
+
 // @symbol _ZN7daBtn_c19func_ov079_021243e0Ei
 /* Keep the mesh collider enabled only near a player: always for a hidden
    body it is off, for the king outside state 0 it is on, otherwise it is on
@@ -1445,7 +1458,7 @@ int daBtn_c::func_ov079_021243e0(int range)
         range = radius << 3;
     }
 
-    player = ClosestPlayer();
+    player = BTN_RANGE_PLAYER(this);
     dist = Vec3_Dist(&v, &player->mPosX);
     if (dist > range) {
         if (mMovingMeshCollider.IsEnabled())
