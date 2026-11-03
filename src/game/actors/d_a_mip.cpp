@@ -79,7 +79,7 @@ int   SurfaceInfo_TestFlag0x20(void *);
 s16   Vec3_HorzAngle(const void *, const void *);
 s32   Vec3_HorzDist(const void *, const void *);
 s32   Vec3_Dist(const void *, const void *);
-void  Vec3_Sub(void *, const void *, const void *);
+void  Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void  Vec3_MulScalar(void *, const void *, int);
 void  Vec3_Asr(void *, void *, int);
 void  SubVec3(void *, void *, void *);
@@ -830,7 +830,8 @@ int daMip_c::StateFleeMain() {
     {
         s32 y = mPosY;
         node.y = y;
-        Vec3_Sub(&delta, &mPos, &node);
+        Vec3_Sub((::Vector3 *)&delta, (const ::Vector3 *)&mPos,
+                 (const ::Vector3 *)&node);
         len = LenVec3(&delta);
     }
     if ((len == 0) || (len <= lim)) {
