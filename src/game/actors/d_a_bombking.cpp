@@ -31,6 +31,7 @@
  * spells it flat as s32 m[12]. Helpers whole-struct-assign the shadow/hold
  * matrices through M12; only the flat spelling reproduces the block move. */
 #include "common.h"
+#include "math/CalcLib.h"
 #include "daBombking_c.h"
 #include "SpawnInfo.h"
 #include "daBmb_c.h"
@@ -43,7 +44,6 @@
 #include "Message.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
-#include "math/Approach.h"
 #include "Particle__System.h"
 namespace cstd {
 s16 atan2(s32, s32);
@@ -184,10 +184,6 @@ extern void func_02012694(unsigned int a, void *p);
 extern void func_02011cfc(void);
 }
 extern "C" {
-extern short Vec3_HorzAngle(const void* a, const void* b);
-extern int Vec3_Dist(const void* a, const void* b);
-extern int ApproachAngle(void *p, int target, int a, int b, int c);
-extern int RandomIntInternal(int* seed);
 extern int data_0209e650;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
@@ -196,7 +192,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void func_0200fa8c(void *c, int a);
 extern void func_ov102_0214b384(void *a, unsigned int b);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
-extern int Vec3_HorzLen(void* v);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern void func_0200d8c8(void* cam, void* v, int strength);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -316,12 +311,12 @@ int daBombking_c::func_ov078_02123a3c()
 
 int daBombking_c::func_ov078_02123aa0()
 {
-    short ang = Vec3_HorzAngle(&this->mPosX, &this->mHomePosX);
+    short ang = Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mHomePosX);
     if (func_ov078_02123804() == 1) return 1;
     daPly_c *p = this->ClosestPlayer();
     if (p != 0) {
         struct Vec3 v = *(struct Vec3 *)&p->mPosX;
-        if (Vec3_Dist(&this->mArenaPosX, &v) < 0x640000) {
+        if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&v) < 0x640000) {
             if (this->mArenaPosY - 0x64000 < v.y) {
                 KingBobOmb_SetState(data_ov078_0212703c);
                 return 1;
@@ -334,7 +329,7 @@ int daBombking_c::func_ov078_02123aa0()
     }
     ApproachAngle(&this->mPrevAngleY, ang, 5, 0x1000, 0x100);
     this->mAngleY = this->mPrevAngleY;
-    if (Vec3_Dist(&this->mPosX, &this->mHomePosX) < 0x32000) {
+    if (Vec3_Dist((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mHomePosX) < 0x32000) {
         KingBobOmb_SetState(data_ov078_0212710c);
     }
     return 1;
@@ -500,7 +495,7 @@ int daBombking_c::func_ov078_02123fb4()
 
 int daBombking_c::func_ov078_02124000()
 {
-    int ang = this->HorzAngleToCPlayer();
+    s16 ang = this->HorzAngleToCPlayer();
     ApproachAngle(&this->mPrevAngleY, ang, 1, 0x500, 0x500);
     this->mAngleY = this->mPrevAngleY;
     if (((dExtFrameCtrl_c *)&this->mBlendAnmModel)->Finished()) {
@@ -571,7 +566,7 @@ int daBombking_c::func_ov078_021240a0() {
             k->KingBobOmb_SetState(&data_ov078_0212702c);
             return 1;
         }
-        if (Vec3_Dist(&k->mArenaPosX, &k->mPosX) < 0x258000) {
+        if (Vec3_Dist((const Vector3 *)&k->mArenaPosX, (const Vector3 *)&k->mPosX) < 0x258000) {
             int r = RandomIntInternal(&data_0209e650);
             int d;
             r = ((unsigned)r >> 8) & 0xf;
@@ -588,7 +583,8 @@ int daBombking_c::func_ov078_021240a0() {
                 *p = (short)(*p + d);
             }
         } else {
-            k->mTargetAngY = Vec3_HorzAngle(&k->mPosX, &k->mArenaPosX);
+            k->mTargetAngY =
+                Vec3_HorzAngle((const Vector3 *)&k->mPosX, (const Vector3 *)&k->mArenaPosX);
         }
         k->mActionStep = 0;
         k->mVertSpeed = 0x1e000;
@@ -625,7 +621,8 @@ int daBombking_c::func_ov078_021243c0()
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
     this->mStateTimer = 0xc8;
-    this->mTargetAngY = Vec3_HorzAngle(&this->mPosX, &this->mArenaPosX);
+    this->mTargetAngY =
+        Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
     this->mHealth -= 1;
     this->mActionStep = 0;
     this->mVertSpeed = 0x28000;
@@ -767,9 +764,9 @@ int daBombking_c::func_ov078_021247bc()
     Vec3 E;
 
     if (this->mActionStep != 2) {
-        horz = Vec3_HorzAngle(&this->mPosX, &this->mArenaPosX);
+        horz = Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
         vert = Vec3_VertAngle(&this->mPosX, &this->mArenaPosX);
-        Vec3_Dist(&this->mPosX, &this->mArenaPosX);
+        Vec3_Dist((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
         vA.x = 0;
         vA.y = 0;
         vA.z = 0;
@@ -801,7 +798,7 @@ int daBombking_c::func_ov078_021247bc()
         vA.y = this->mPosY;
         vA.z = this->mPosZ;
         vA.y = this->mArenaPosY;
-        if (Vec3_Dist(&vA, &this->mArenaPosX) > 0x640000)
+        if (Vec3_Dist((const Vector3 *)&vA, (const Vector3 *)&this->mArenaPosX) > 0x640000)
             return 1;
         this->mActionStep = 1;
     }
@@ -810,7 +807,7 @@ int daBombking_c::func_ov078_021247bc()
         daPly_c *pl = this->ClosestPlayer();
         if (pl != 0) {
             *(struct M3 *)&D = *(struct M3 *)&pl->mPosX;
-            if (Vec3_Dist(&this->mArenaPosX, &D) > 0x640000 ||
+            if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&D) > 0x640000 ||
                 this->mArenaPosY - 0x64000 > D.y) {
                 this->mSpeedX = 0;
                 this->mVertSpeed = 0;
@@ -1008,7 +1005,7 @@ int daBombking_c::func_ov078_02124f28()
         }
         {
             struct Vec3 copy = *(struct Vec3 *)&obj->mPosX;
-            if (Vec3_Dist(&this->mArenaPosX, &copy) > 0x640000)
+            if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&copy) > 0x640000)
                 goto drop;
             if (this->mArenaPosY - 0xa000 <= copy.y)
                 goto flags;
@@ -1206,8 +1203,8 @@ int daBombking_c::func_ov078_02125448()
     p = this->ClosestPlayer();
     if (p != 0) {
         Vec3 v = *(const Vec3 *)&p->mPosX;
-        if (Vec3_Dist(&this->mArenaPosX, &v) > 0x640000
-            || (this->mArenaPosY - 0xa000) > v.y) {
+        if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&v) > 0x640000 ||
+            (this->mArenaPosY - 0xa000) > v.y) {
             this->mHorzSpeed = 0;
             KingBobOmb_SetState(data_ov078_021270fc);
             return 1;
@@ -1361,7 +1358,7 @@ int daBombking_c::func_ov078_02125950()
     v.x = t;
     v.y = src[1];
     v.z = src[2];
-    short ang = Vec3_HorzAngle(&this->mPosX, &v);
+    short ang = Vec3_HorzAngle((const Vector3 *)&this->mPosX, &v);
     ApproachLinear(this->mAngleY, ang, 0x800);
     this->mPrevAngleY = this->mAngleY;
     if (target->GetTalkState() == -1) {
