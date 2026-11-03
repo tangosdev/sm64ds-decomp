@@ -26,7 +26,7 @@ extern void func_02040820(void);
 extern void func_02040790(void);
 extern void func_02040c34(s32 a, s32 b, void *c, void *d, s32 e);
 extern s32 func_020406b4(void *a, void *b);
-extern u8 func_02040704(s32 a);
+extern int func_02040704(void);
 extern void *func_0204068c(u16 a);
 extern s32 func_0204271c(void *o);
 extern s32 func_02042748(void *a, void *b);
@@ -139,7 +139,6 @@ void func_0203ea5c(void) {
     u8 sp2c;
     s32 var_r2_2;
     Rec *var_r6;
-    s32 temp_r0_5;
     Rec *var_r5;
     u32 n75;
     s32 var_r2;
@@ -246,9 +245,8 @@ void func_0203ea5c(void) {
             sp8 = 0;
             break;
         }
-        temp_r0_5 = data_020a0f1c & 0x4000;
-        if (temp_r0_5 != 0) {
-            data_020a0f10 = func_02040704(temp_r0_5);
+        if (data_020a0f1c & 0x4000) {
+            data_020a0f10 = func_02040704();
             data_02099e18 = 0;
             sp4 = sp20;
             temp_r0_6 = func_0204068c(0U);
