@@ -7,7 +7,7 @@ extern "C" {
 
 extern int func_02065ae0(void);
 extern void func_02065ad0(int v);
-extern void CpuCopy8(void *a, void *b, int n);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int func_020658c0(struct WBTBlockInfoList *node, int blockId, void *userId, int dataPtr,
                   int dataSize, u16 permissionBmp) {

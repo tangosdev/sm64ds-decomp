@@ -7,7 +7,7 @@ extern u16 data_020a0fa0[][3];
 
 extern int Wireless_Reset(void);
 extern int func_0203faa8(void);
-extern void CpuCopy8(void *dst, void *src, int n);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int func_02042748(u16 *a, u16 *b);
 extern int WM_Disconnect(int self, unsigned int idx);
 

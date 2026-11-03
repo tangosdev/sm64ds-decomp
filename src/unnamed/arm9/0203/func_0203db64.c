@@ -1,7 +1,7 @@
 #include "types.h"
 #include "nitro/os/thread.h"
 #include "private/player_input_record.h"
-extern void CpuCopy8(void *dst, void *src, int n);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern void func_0205a588(void *dst, int c, int n);
 extern void func_02042778(void);
 extern void func_0203df40(void);
