@@ -42,6 +42,7 @@ extern int data_0209d6fc[];               // the message bank (hal/message_boot.
 extern int data_0209d708[];
 extern int data_0209d70c[];
 void port_chat_system_line(const char *text);
+char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const void *pos, const void *v16, int area, int f);
 }
 
 namespace port {
@@ -669,6 +670,11 @@ void census() {
         std::fprintf(stderr, " star(n=%u st=%u at %d,%d,%d)", (unsigned)*(const unsigned char *)(a + 0x49d), *(const unsigned *)(a + 0x440),
                      p[0] >> 12, p[1] >> 12, p[2] >> 12);
     }
+    for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 283) continue;      // STAREXIT2: the Grand Star (LAST_STAR)
+        const int *p = (const int *)(a + 0x5c);
+        std::fprintf(stderr, " grand(at %d,%d,%d dead=%u)", p[0] >> 12, p[1] >> 12, p[2] >> 12, (unsigned)*(const unsigned char *)(a + 0x0f));
+    }
     std::fprintf(stderr, " wall=%lld\n", wall_ms());
 }
 
@@ -676,6 +682,7 @@ void census() {
 // <dist> units BEFORE PowerStar number <n> along <yaw> (yaw 0 = +z, 4000 = +x), on the star's height, facing it. It never
 // touches the star: the row's scripted pad walks the last <dist> units, so the ROM's own touch collects it (STAREXIT1).
 // <dist> 0 arms the touch stand-in instead (below). Retried every 60 frames from <frame>.
+// STAREXIT2: <n> -1 is the Grand Star (class 283); my body keeps its own height (the star hovers above the floor).
 void near_knob() {
     static int lvl = -2, fr = 0, n = 0, dist = 0; static unsigned yaw = 0; static bool done = false;
     if (lvl == -2) {
@@ -692,9 +699,10 @@ void near_knob() {
     ++t;
     if (t < fr || (t - fr) % 60 != 0) return;
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
-        if (*(const unsigned short *)(a + 0x0c) != 178 || *(const unsigned char *)(a + 0x49d) != (unsigned)n) continue;
+        if (n == -1 ? *(const unsigned short *)(a + 0x0c) != 283
+                    : (*(const unsigned short *)(a + 0x0c) != 178 || *(const unsigned char *)(a + 0x49d) != (unsigned)n)) continue;
         const int *p = (const int *)(a + 0x5c);
-        if (dist == 0) {
+        if (dist == 0 && n != -1) {
             // <dist> 0: the touch stand-in instead (hal/coop_world.cpp knob_star, hal/input_probe.cpp SM64DS_STAR_TRIGGER):
             // the star's toucher word and touch flag, so the star's OWN collect handler runs. Re-armed every 60 frames, 8 tries.
             if (*(const unsigned *)(a + 0x440) == 5u || tries >= 8) { done = true; return; }
@@ -708,7 +716,7 @@ void near_knob() {
         const double r = (double)(yaw & 0xffff) * 6.283185307179586 / 65536.0;
         int *mp = (int *)(me + 0x5c);
         mp[0] = p[0] - (int)(std::sin(r) * dist * 4096.0);
-        mp[1] = p[1];
+        if (n != -1) mp[1] = p[1];
         mp[2] = p[2] - (int)(std::cos(r) * dist * 4096.0);
         *(short *)(me + 0x8e) = (short)yaw;
         done = true;
@@ -742,6 +750,28 @@ void warp_knob() {
     LoadLevelNoReturn((unsigned)st[k].lv, 0, (unsigned)st[k].ac, 1);
     ++k;
     t = 0;
+}
+
+// Proof knob SM64DS_STAR_POPUP_GRAND=<level>:<frame>:<x>:<y>:<z> (STAREXIT2): <frame> frames into level <level>, the Grand Star
+// (LAST_STAR, class 0x11b, parameter 7) at <x>,<y>,<z> (units) through the ROM's own spawn, the call Bowser's defeat makes
+// (src/game/actors/d_a_kpa.cpp: Spawn(BOWSER_ACTOR_LAST_STAR, 7, pos, 0, mAreaId, -1), 160 units above him). A stand-in for the
+// fight ONLY: the star then runs its own StateStarJump and is collected by its own touch. Once per level entry.
+void grand_knob() {
+    static int lvl = -2, fr = 0, x = 0, y = 0, z = 0; static int cur = -1, t = 0; static bool done = false;
+    if (lvl == -2) {
+        lvl = -1;
+        const char *e = std::getenv("SM64DS_STAR_POPUP_GRAND");
+        if (!e || std::sscanf(e, "%d:%d:%d:%d:%d", &lvl, &fr, &x, &y, &z) != 5) lvl = -1;
+    }
+    if (lvl < 0) return;
+    if ((int)data_0209f2f8 != cur) { cur = (int)data_0209f2f8; t = 0; done = false; }
+    const char *me = (const char *)my_body();
+    if (cur != lvl || !me || done || ++t < fr) return;
+    done = true;
+    const int pos[3] = { x * 4096, y * 4096, z * 4096 };
+    char *a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x11b, 7, pos, nullptr, (signed char)me[0xcc], -1);
+    std::fprintf(stderr, "[starpop] GRAND knob: Grand Star spawned at %d,%d,%d -> %p (level %d frame %d) wall=%lld\n", x, y, z, (void *)a,
+                 cur, t, wall_ms());
 }
 
 void new_level_check() {
@@ -812,6 +842,7 @@ extern "C" void port_star_popup_frame(void) {
     census();          // proof knobs, solo too
     near_knob();
     warp_knob();
+    grand_knob();
     if (!std::getenv("SM64DS_PARTY") && !std::getenv("SM64DS_COOP") &&
         !(world_party_active() && comms_hub_room_kind() == kHubRoomWorld)) return;
     init_once();
