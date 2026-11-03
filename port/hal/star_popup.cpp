@@ -44,6 +44,7 @@ extern int data_0209d70c[];
 void port_chat_system_line(const char *text);
 char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const void *pos, const void *v16, int area, int f);
 void _ZN7fBase_c18MarkForDestructionEv(char *c);
+extern unsigned char data_020a1164[];     // the per-player camera records (stride 0x24); +0 = the angle the stick is read against
 }
 
 namespace port {
@@ -683,7 +684,9 @@ void census() {
 // <dist> units BEFORE PowerStar number <n> along <yaw> (yaw 0 = +z, 4000 = +x), on the star's height, facing it. It never
 // touches the star: the row's scripted pad walks the last <dist> units, so the ROM's own touch collects it (STAREXIT1).
 // <dist> 0 arms the touch stand-in instead (below). Retried every 60 frames from <frame>.
-// STAREXIT2: <n> -1 is the Grand Star (class 283); my body keeps its own height (the star hovers above the floor).
+// STAREXIT2: <n> -1 is the Grand Star (class 283); my body keeps its own height (the star hovers above the floor), and <yaw>
+// is taken RELATIVE TO MY CAMERA: the ROM walks the body along (camera angle + stick angle), stick up being 0x8000, so <yaw> 0
+// puts me where a pushed-up stick walks straight at the star, whatever way the camera happens to face.
 void near_knob() {
     static int lvl = -2, fr = 0, n = 0, dist = 0; static unsigned yaw = 0; static bool done = false;
     if (lvl == -2) {
@@ -714,15 +717,22 @@ void near_knob() {
                          *(const unsigned *)(a + 0x440), tries, wall_ms());
             return;
         }
-        const double r = (double)(yaw & 0xffff) * 6.283185307179586 / 65536.0;
+        unsigned w = yaw;
+        if (n == -1) {
+            const int pi = (int)data_0209f250;
+            const unsigned cam = (pi >= 0 && pi < 16) ? *(const unsigned short *)(data_020a1164 + pi * 0x24) : 0u;
+            w = (cam + 0x8000u + yaw) & 0xffffu;
+            std::fprintf(stderr, "[starpop] NEAR knob: camera angle %04x, walk line %04x\n", cam, w);
+        }
+        const double r = (double)(w & 0xffff) * 6.283185307179586 / 65536.0;
         int *mp = (int *)(me + 0x5c);
         mp[0] = p[0] - (int)(std::sin(r) * dist * 4096.0);
         if (n != -1) mp[1] = p[1];
         mp[2] = p[2] - (int)(std::cos(r) * dist * 4096.0);
-        *(short *)(me + 0x8e) = (short)yaw;
+        *(short *)(me + 0x8e) = (short)w;
         done = true;
         std::fprintf(stderr, "[starpop] NEAR knob: me at %d,%d,%d yaw %04x, %d units before star %d at %d,%d,%d wall=%lld\n",
-                     mp[0] >> 12, mp[1] >> 12, mp[2] >> 12, yaw & 0xffff, dist, n, p[0] >> 12, p[1] >> 12, p[2] >> 12, wall_ms());
+                     mp[0] >> 12, mp[1] >> 12, mp[2] >> 12, w & 0xffff, dist, n, p[0] >> 12, p[1] >> 12, p[2] >> 12, wall_ms());
         return;
     }
     std::fprintf(stderr, "[starpop] NEAR knob: no star %d in level %d\n", n, cur);
