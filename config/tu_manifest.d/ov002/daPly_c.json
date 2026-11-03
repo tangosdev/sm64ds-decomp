@@ -9250,6 +9250,21 @@
   ],
   "defined_symbol_renames": [
     {
+      "from": "_ZGVsLevelIntroOff$4421",
+      "to": "_ZGVsLevelIntroOff$4424",
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
+    },
+    {
+      "from": "@4424",
+      "to": "@4427",
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
+    },
+    {
+      "from": "sLevelIntroOff$4421",
+      "to": "sLevelIntroOff$4424",
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
+    },
+    {
       "from": "_ZGVsTalkOff$4643",
       "to": "_ZGVsTalkOff$4648",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
