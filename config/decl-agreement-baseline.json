@@ -138,14 +138,6 @@
     "AngleDiff": {
       "src/_ZN7daPly_c15St_Balloon_MainEv.cpp": [
         "param:#2 short"
-      ],
-      "src/game/actors/d_a_spd.cpp": [
-        "param:#1 short",
-        "param:#2 short",
-        "return:short"
-      ],
-      "src/engine/view/d_camera_dtor.cpp": [
-        "return:short"
       ]
     },
     "ApproachAngle": {

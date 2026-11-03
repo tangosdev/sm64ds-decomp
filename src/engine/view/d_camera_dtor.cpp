@@ -39,9 +39,7 @@ extern void func_02007c14(Vector3 *res, const Vector3 *trans, int mag, short ang
 extern int func_02007cec(void *a, const Vector3 *b, int c);
 extern void func_02007d0c(Vector3 *self, const Vector3 *src, int sx, int sy, int sz);
 extern void Math_Function_0203b0fc(int *value, int target, int step, int max);
-/* local extern: AngleDiff is defined int; func_020071a8 compares its
-   result without sign-extending it, so it is declared short here. */
-extern short AngleDiff(int a, int b);
+extern int AngleDiff(int a, int b);
 }
 
 #ifdef _MSC_VER
@@ -84,8 +82,7 @@ void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarge
 
 // @symbol func_020071a8
 void func_020071a8(dCamera_c *cam, short ang, int threshold) {
-    short diff = AngleDiff(Vec3_HorzAngle(&cam->mTargetPos, &cam->pos), ang);
-    if (diff > threshold)
+    if (AngleDiff(Vec3_HorzAngle(&cam->mTargetPos, &cam->pos), ang) > threshold)
         cam->mOrbitTargetYaw = ang;
 }
 
