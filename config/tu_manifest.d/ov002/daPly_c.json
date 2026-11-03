@@ -37,7 +37,7 @@
     {
       "name": ".bss",
       "start": "0x0210e14c",
-      "end": "0x0210f8d8"
+      "end": "0x0210f914"
     }
   ],
   "functions": [
@@ -9046,6 +9046,41 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "func_ov002_020c8a4c's function-local static Vector3(0, 0, 0x12c000)"
+    },
+    {
+      "symbol": "data_ov002_0210f8d8",
+      "address": "0x0210f8d8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node for a Player SharedFilePtr; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f8e4",
+      "address": "0x0210f8e4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node for a Player SharedFilePtr; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f8f0",
+      "address": "0x0210f8f0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node for a Player SharedFilePtr; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f8fc",
+      "address": "0x0210f8fc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node for a Player SharedFilePtr; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f908",
+      "address": "0x0210f908",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node for a Player SharedFilePtr; zero-filled .bss, no constructor"
     }
   ],
   "init": [
@@ -9317,13 +9352,13 @@
         {
           "section": ".bss",
           "start": "0x0210e14c",
-          "end": "0x0210f8d8",
+          "end": "0x0210f914",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 1286
+          "LICENSED": 1291
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -9334,10 +9369,10 @@
           {
             "section": ".init",
             "original": [
-              1870
+              1875
             ],
             "desired": [
-              1870
+              1875
             ]
           },
           {
@@ -10038,13 +10073,18 @@
               1866,
               1867,
               1868,
-              1869
+              1869,
+              1870,
+              1871,
+              1872,
+              1873,
+              1874
             ],
             "desired": [
               278,
               406,
               412,
-              1868,
+              1873,
               291,
               1250,
               503,
@@ -10250,7 +10290,7 @@
               1450,
               1451,
               1452,
-              1869,
+              1874,
               1453,
               1454,
               1455,
@@ -10675,7 +10715,12 @@
               1865,
               1866,
               1867,
-              408
+              408,
+              1868,
+              1869,
+              1870,
+              1871,
+              1872
             ]
           }
         ],
@@ -11318,13 +11363,18 @@
                 1866,
                 1867,
                 1868,
-                1869
+                1869,
+                1870,
+                1871,
+                1872,
+                1873,
+                1874
               ],
               "desired": [
                 278,
                 406,
                 412,
-                1868,
+                1873,
                 291,
                 1250,
                 503,
@@ -11530,7 +11580,7 @@
                 1450,
                 1451,
                 1452,
-                1869,
+                1874,
                 1453,
                 1454,
                 1455,
@@ -11955,7 +12005,12 @@
                 1865,
                 1866,
                 1867,
-                408
+                408,
+                1868,
+                1869,
+                1870,
+                1871,
+                1872
               ],
               "slots": [
                 278,
@@ -12592,11 +12647,16 @@
                 1866,
                 1867,
                 1868,
-                1869
+                1869,
+                1870,
+                1871,
+                1872,
+                1873,
+                1874
               ]
             }
           ],
-          "symbolIndices": 635,
+          "symbolIndices": 640,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null

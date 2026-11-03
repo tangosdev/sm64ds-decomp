@@ -165,6 +165,8 @@ int daPly_c::func_ov002_020bcd38(unsigned char *params, int beginFrame, int endF
  * entry retains the retail two-word stack snapshot under 2004/b56 C++.
  * w[0] is the animation ID; w[1] is the signed animation parameter.
  * Scalar SetAnim/particle ABI calls and the raw spawned-prop view remain. */
+struct DestructorChain { DestructorChain *next; void *destructor; void *object; };
+
 extern "C" {
 typedef struct { int w[2]; } AnimEntry27;
 
@@ -25336,6 +25338,11 @@ void *data_ov002_0210f890[3];
 void *data_ov002_0210f8a8[3];
 void *data_ov002_0210f8b4[3];
 void *data_ov002_0210f8c0[3];
+DestructorChain data_ov002_0210f8d8;
+DestructorChain data_ov002_0210f8e4;
+DestructorChain data_ov002_0210f8f0;
+DestructorChain data_ov002_0210f8fc;
+DestructorChain data_ov002_0210f908;
 unsigned int data_ov002_0210e158;
 AnimEntry27 data_ov002_0210e7b8[1];
 }
@@ -25564,11 +25571,11 @@ unsigned short *func_ov002_020e6ad4(unsigned short *);
 /* Model, animation and texture-sequence file handles, by address. */
 
 /* __register_global_object chain nodes, one per handle. */
-extern void *data_ov002_0210f8d8[3];
-extern void *data_ov002_0210f8e4[3];
-extern void *data_ov002_0210f8f0[3];
-extern void *data_ov002_0210f8fc[3];
-extern void *data_ov002_0210f908[3];
+extern DestructorChain data_ov002_0210f8d8;
+extern DestructorChain data_ov002_0210f8e4;
+extern DestructorChain data_ov002_0210f8f0;
+extern DestructorChain data_ov002_0210f8fc;
+extern DestructorChain data_ov002_0210f908;
 extern void *data_ov002_0210f914[3];
 extern void *data_ov002_0210f920[3];
 extern void *data_ov002_0210f938[3];
@@ -26851,19 +26858,19 @@ void __sinit_ov002_021019d0(void) {
                              data_ov002_0210f8c0);
     data_ov002_0210ecf0.Construct(ASSET_SU_RUN_BCA);
     __register_global_object(&data_ov002_0210ecf0, (void *)SharedFilePtr_Destruct_Anim,
-                             data_ov002_0210f8d8);
+                             (void **)&data_ov002_0210f8d8);
     data_ov002_0210ece8.Construct(ASSET_SU_WAIT_BCA);
     __register_global_object(&data_ov002_0210ece8, (void *)SharedFilePtr_Destruct_Anim,
-                             data_ov002_0210f8e4);
+                             (void **)&data_ov002_0210f8e4);
     data_ov002_0210ece0.Construct(ASSET_SU_WALK_BCA);
     __register_global_object(&data_ov002_0210ece0, (void *)SharedFilePtr_Destruct_Anim,
-                             data_ov002_0210f8f0);
+                             (void **)&data_ov002_0210f8f0);
     data_ov002_0210ecd8.Construct(ASSET_SU_WALK_END_BCA);
     __register_global_object(&data_ov002_0210ecd8, (void *)SharedFilePtr_Destruct_Anim,
-                             data_ov002_0210f8fc);
+                             (void **)&data_ov002_0210f8fc);
     data_ov002_0210ecd0.Construct(ASSET_SU_WALK_START_BCA);
     __register_global_object(&data_ov002_0210ecd0, (void *)SharedFilePtr_Destruct_Anim,
-                             data_ov002_0210f908);
+                             (void **)&data_ov002_0210f908);
     data_ov002_0210ecc8.Construct(ASSET_SWIM_BCA);
     __register_global_object(&data_ov002_0210ecc8, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f914);
