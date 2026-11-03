@@ -996,17 +996,13 @@ extern "C" {
    `PaintSquare` is coined here from what the body does; it was `Virtual88`,
    after the +0x88 vtable offset. The cartridge names no method of this
    class. */
-extern "C" {
 extern int* func_02054efc(void);
 extern int* func_02054ea8(void);
 extern int* func_02054d88(void);
 extern void MultiCopy_Int(void* a, void* b, int n);
-}
 
-extern "C" {
 extern int sMgPaintWord;
 extern int sMgTopScreenYOffset;
-}
 }
 }
 
@@ -1305,9 +1301,7 @@ extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3)
 namespace s20aea78 {
 extern "C" {
 struct M { int _00, _01, _10, _11; };
-extern "C" {
 extern void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
-}
 
 struct BF { unsigned int lo:10; unsigned int hi:22; };
 struct S { int x; BF y; };
@@ -1336,7 +1330,6 @@ struct MgMenuPickView {
 
 // @symbol Mg_UpdateMenu
 namespace s20aeb24 {
-extern "C" {
 extern "C" {
 extern void func_0203b958(short* o, short* a, short* b);
 extern void func_02012dd0(int a);
@@ -1443,7 +1436,6 @@ after:
         self->CloseMenu();
         return;
     }
-}
 }
 }
 }
@@ -1698,7 +1690,6 @@ void dScMgBase_c::OpenMenu()
 // @symbol Mg_InitBrush
 namespace s20af2f8 {
 extern "C" {
-extern "C" {
 extern void MultiStore16(int val, int ptr, int n);
 extern int func_02054efc(void);
 extern int func_02054ea8(void);
@@ -1823,7 +1814,6 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
 
     GX::LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
     GXS::LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
-}
 }
 }
 }
@@ -2153,7 +2143,6 @@ extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int
 // @symbol RenderOamBothScreens
 namespace s20b0104 {
 extern "C" {
-extern "C" {
 extern int sMgTopScreenYOffset;
 void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, void *mtx) {
     dScMgBase_c *scene = gMgScene;
@@ -2176,11 +2165,9 @@ void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, v
 }
 }
 }
-}
 
 // @symbol Mg_RenderSpriteBothPalMtx
 namespace s20b023c {
-extern "C" {
 extern "C" {
 extern int sMgTopScreenYOffset;
 void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
@@ -2203,11 +2190,9 @@ void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
 }
 }
 }
-}
 
 // @symbol Mg_RenderSpriteBothMtx
 namespace s20b0380 {
-extern "C" {
 extern "C" {
 extern int sMgTopScreenYOffset;
 void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
@@ -2227,7 +2212,6 @@ void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
     }
     OAM::Render(0, (OamAttr *)a0, a1, a2 + 0xc0 + sMgTopScreenYOffset, -1, -1, (Matrix2x2 *)a3);
     OAM::Render(1, (OamAttr *)a0, a1, a2, -1, -1, (Matrix2x2 *)a3);
-}
 }
 }
 }

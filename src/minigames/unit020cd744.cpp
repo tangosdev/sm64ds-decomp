@@ -528,9 +528,7 @@ extern int DotVec3(const Vector3 *a, const Vector3 *b);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 
-extern "C" {
 extern Vector3 data_020a0ebc;
-}
 }
 
 typedef TrampolineObjectCallbacks Obj;
