@@ -154,7 +154,7 @@ void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, int a7
 s32 GetGameLanguage(void);
 void FreeGfxSlotsById(int arg);
 void Vec2_Sub(int *o, int *a, int *b);
-extern "C" void Ov004_Deallocate(void *p);
+extern void Ov004_Deallocate(void *p);
 u32 LoadCompressedFileAt(u16 fileID, void *target);
 void *Ov004_LoadFileByPath(void *p);
 void DecompressLZ16(void *src, void *dst);

@@ -99,8 +99,10 @@ extern void func_0200f760(void *self, void *cyl);
 extern int RandomIntInternal(int *seed);
 }
 
+struct LevelRng;
+
 extern s16 data_02082214[];
-extern int data_0209e650;
+extern LevelRng data_0209e650;
 extern GrockModelFilePtr data_ov021_02114a50;
 
 /* D1 stores this vtable, destroys the members in reverse declaration order,
@@ -344,7 +346,7 @@ int daGrock_c::Behavior() {
                 *spawned = (u8)(*spawned + 1);
                 *(u16 *)&mStateTimer = 0;
                 *(AngleWords *)&rot = *(AngleWords *)&mPrevAngleX;
-                rnd = (u32)RandomIntInternal(&data_0209e650);
+                rnd = (u32)RandomIntInternal((int *)&data_0209e650);
                 rot.y = rot.y + (rnd >> 16) % 0xc00;
                 if (mType == kGrockStarSpawner && mSpawnCount >= 5 && mStarRockOut == 0) {
                     daGrock_c *child;

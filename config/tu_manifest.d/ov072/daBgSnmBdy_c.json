@@ -1733,79 +1733,79 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@527",
+      "from": "@580",
       "to": "data_ov072_02122b28",
-      "evidence": "compiler temp mapped to 0x02122b28 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122b28 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x188, preserving the configured retail destination"
     },
     {
-      "from": "@529",
+      "from": "@582",
       "to": "data_ov072_02122750",
-      "evidence": "compiler temp mapped to 0x02122750 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122750 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x18c, preserving the configured retail destination"
     },
     {
-      "from": "@531",
+      "from": "@584",
       "to": "data_ov072_02122728",
-      "evidence": "compiler temp mapped to 0x02122728 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122728 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x190, preserving the configured retail destination"
     },
     {
-      "from": "@533",
+      "from": "@586",
       "to": "data_ov072_02122720",
-      "evidence": "compiler temp mapped to 0x02122720 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122720 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x194, preserving the configured retail destination"
     },
     {
-      "from": "@535",
+      "from": "@588",
       "to": "data_ov072_02122730",
-      "evidence": "compiler temp mapped to 0x02122730 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122730 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x198, preserving the configured retail destination"
     },
     {
-      "from": "@537",
+      "from": "@590",
       "to": "data_ov072_02122748",
-      "evidence": "compiler temp mapped to 0x02122748 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122748 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x19c, preserving the configured retail destination"
     },
     {
-      "from": "@539",
+      "from": "@592",
       "to": "data_ov072_02122738",
-      "evidence": "compiler temp mapped to 0x02122738 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122738 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1a0, preserving the configured retail destination"
     },
     {
-      "from": "@541",
+      "from": "@594",
       "to": "data_ov072_02122740",
-      "evidence": "compiler temp mapped to 0x02122740 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122740 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1a4, preserving the configured retail destination"
     },
     {
-      "from": "@543",
+      "from": "@596",
       "to": "data_ov072_02122778",
-      "evidence": "compiler temp mapped to 0x02122778 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122778 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1a8, preserving the configured retail destination"
     },
     {
-      "from": "@545",
+      "from": "@598",
       "to": "data_ov072_02122770",
-      "evidence": "compiler temp mapped to 0x02122770 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122770 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1b0, preserving the configured retail destination"
     },
     {
-      "from": "@547",
+      "from": "@600",
       "to": "data_ov072_02122758",
-      "evidence": "compiler temp mapped to 0x02122758 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122758 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1b4, preserving the configured retail destination"
     },
     {
-      "from": "@549",
+      "from": "@602",
       "to": "data_ov072_02122768",
-      "evidence": "compiler temp mapped to 0x02122768 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122768 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1b8, preserving the configured retail destination"
     },
     {
-      "from": "@551",
+      "from": "@604",
       "to": "data_ov072_02122760",
-      "evidence": "compiler temp mapped to 0x02122760 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122760 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1bc, preserving the configured retail destination"
     },
     {
-      "from": "@552",
+      "from": "@605",
       "to": "data_ov072_02122b34",
-      "evidence": "compiler temp mapped to 0x02122b34 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122b34 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1c8, preserving the configured retail destination"
     },
     {
-      "from": "@553",
+      "from": "@606",
       "to": "data_ov072_02122b4c",
-      "evidence": "compiler temp mapped to 0x02122b4c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02122b4c by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1dc, preserving the configured retail destination"
     }
   ],
   "undefined_symbol_aliases": [

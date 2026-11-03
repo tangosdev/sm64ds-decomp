@@ -98,7 +98,7 @@ extern int Vec3_Dist(void* a, void* b);
 /* Reconstructed receiver/attacker/nullable collision interface; the original
  * source prototype is not uniquely recoverable from the register traffic. */
 extern void func_ov002_020aea30(void* self, void* attacker, dBgCh_Actr* collision);
-extern "C" void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
+extern void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -108,8 +108,6 @@ extern SharedFilePtr* data_ov062_0211cee0[2];
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, int q);
-extern void LoadBlueCoinModel(void* c);
-extern void UnloadBlueCoinModel(void *c);
 
 /* local extern: math/CalcLib.h's spelling cannot be used here -- this TU's
    Vec3_Dist(void *, void *) would contradict that header's declaration of it. */
@@ -237,7 +235,7 @@ int daNknk_c::InitResources()
     mWithMeshClsn.StartDetectingWater();
 
     mCoinType = 3;
-    LoadBlueCoinModel(this);
+    LoadBlueCoinModel();
 
     return 1;
 }
@@ -400,7 +398,7 @@ int daNknk_c::CleanupResources()
   {
     data_ov062_0211cee8[i]->Release();
   }
-  UnloadBlueCoinModel(this);
+  UnloadBlueCoinModel();
   return 1;
 }
 

@@ -40,7 +40,7 @@ extern char *data_0209f318;
 
 /* arm9 / ov100 C helpers with no shared header. */
 extern "C" {
-void Vec3_Sub(int *out, int *a, int *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
 u32 NumStars(void);
 int func_ov100_02144f84(void);
@@ -87,7 +87,8 @@ int daMugenBGM_c::Behavior() {
     int diff[3];
     int rotated[3];
 
-    Vec3_Sub(diff, (int *)(data_0209f394[data_0209f250] + 0x5c), (int *)&mPosX);
+    Vec3_Sub((Vector3 *)diff, (const Vector3 *)(data_0209f394[data_0209f250] + 0x5c),
+             (const Vector3 *)&mPosX);
     Vec3_RotateYAndTranslate(rotated, data_020a0ebc, mAngleY, diff);
 
     if (param1 == 1) {

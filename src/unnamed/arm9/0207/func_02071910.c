@@ -11,8 +11,7 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-void* func_02071910(char* self)
-{
+void *func_02071910(char *self, void *) {
     ThrowContext *c = (ThrowContext *)self;
     int off = (c->mArgsPushed != 0) ? 0x10 : 0;
     int frameSize = c->mFrameSize;

@@ -204,10 +204,8 @@ int daKpFr_c::func_ov070_02121eb0() {
     return 1;
 }
 
-extern "C" {
 /* Fix12-by-value, notes/mwccarm-codegen.md 6az -- header method form homes the
    class args. */
-}
 // @symbol _ZN8daKpFr_c19func_ov070_02121e14Ev
 void daKpFr_c::func_ov070_02121e14() {
   int shadowDepth;

@@ -1266,12 +1266,10 @@ void dScMgPanel_c::ShowAllPanels() {
 }
 
 // @symbol _ZN12dScMgPanel_c6FlipAtEi
-extern "C" {
 /* Flip the faces in the 3x3 neighbourhood centred on panel `idx`, clipped at
    the board edges.  The same walk appears in Answer_StateFlipSolution,
    UpdateMoves and UpdateTouch; only this one touches the face
    table alone. */
-}
 void dScMgPanel_c::FlipAt(int index) {
     char *scene = (char *)this;
     int w = mWidth;
@@ -1299,7 +1297,6 @@ void dScMgPanel_c::FlipAt(int index) {
 }
 
 // @symbol _ZN12dScMgPanel_c10DealPuzzleEv
-extern "C" {
 /* Layout pass: reads the panel layout (x and y from the layout tables,
    face from the face table picked by IsAltVariant), draws mFlips random picks
    through FlipAt, and retries the whole thing until
@@ -1313,7 +1310,6 @@ extern "C" {
    on r8, cnt1 on r6 and the ded0 table pointer on r5; every other slot for j
    rotates loop 2 or loop 1. The pd/pe pointer locals keep the byte tables
    hoisted above the do-loop and the [idx4] reload inside it. */
-}
 void dScMgPanel_c::DealPuzzle() {
     extern int data_0209d4b8;
     extern u16 *sPanelPuzzleXPerMode[];

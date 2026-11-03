@@ -122,7 +122,7 @@ extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(const void *v);
 extern int LenVec3(void *v);
 extern void Vec3_Add(void *out, const void *a, const void *b);
-extern void Vec3_Sub(void *out, const void *a, const void *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void AddVec3(void *a, void *b, void *c);
 extern void SubVec3(void *a, void *b, void *c);
 extern void Vec3_MulScalar(void *out, const void *in, int scale);
@@ -1352,7 +1352,7 @@ body:
                     cam->mLookTargetPos.y = t.y;
                     cam->mLookTargetPos.z = t.z;
                 }
-                Vec3_Sub(&local, (Vec3 *)&cam->mLookTargetPos, a3);
+                Vec3_Sub((Vector3 *)&local, &cam->mLookTargetPos, (const Vector3 *)a3);
                 cam->mFocusDist = LenVec3(&local) >> 1;
                 g = data_0209f2f8;
                 v = (g == 0x2d);
@@ -1488,7 +1488,7 @@ extern "C" int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int ar
         } else if (hl > 0) {
             r5 += FX_MUL(hl, 0x400);
         }
-        Vec3_Sub(&sp38, &sp8, &cam->mLookAtOffset);
+        Vec3_Sub((Vector3 *)&sp38, (const Vector3 *)&sp8, &cam->mLookAtOffset);
         sl = Vec3_HorzLen(&sp38);
         {
             int f = sl;
@@ -3463,7 +3463,7 @@ void func_020089f8(void *self) {
     cam->mTargetPos.x = p->x;
     cam->mTargetPos.y = p->y;
     cam->mTargetPos.z = p->z;
-    Vec3_Sub(tmp, &cam->lookAt.x, &cam->mTargetPos.x);
+    Vec3_Sub((Vector3 *)tmp, (const Vector3 *)&cam->lookAt.x, (const Vector3 *)&cam->mTargetPos.x);
     cam->mLookAtOffset.x = tmp[0];
     cam->mLookAtOffset.y = tmp[1];
     cam->mLookAtOffset.z = tmp[2];

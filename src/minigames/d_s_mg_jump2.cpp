@@ -56,8 +56,6 @@ struct S3 {
     int w[3];
 };
 
-struct Vector3_16f;
-
 /* The state callback stored at 0x5004 (pad_5004 in the header). */
 typedef void (dScMgJump2_c::*dScMgJump2_cState)();
 
@@ -92,8 +90,6 @@ int GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern int data_020a0e68;
-unsigned int d_s_mg_jump2NewUnkCallback818Hold(unsigned int a, unsigned int b, int c, int d, int e,
-                                               const Vector3_16f *f);
 void Jump2Popup_UpdateAll(void);
 extern void *Jump3D_AllIdle(void *);
 extern void *Heyho_AllIdle(void *);

@@ -7841,3 +7841,5 @@ ov002	0x020bd9ec	_ZN6Player17StartPowerupMusicEj	_ZN7daPly_c17StartPowerupMusicE
 ov095	0x02136788	_ZN10daUdlift_c15OnMeshClsnTouchEPvPS_P6Player	_ZN10daUdlift_c15OnMeshClsnTouchEPvPS_P7daPly_c	class renamed from the coined Player to daPly_c; earlier rows left untouched
 ov095	0x02136764	_ZN10daUdlift_c10LatchRiderEP6Player	_ZN10daUdlift_c10LatchRiderEP7daPly_c	class renamed from the coined Player to daPly_c; earlier rows left untouched
 ov002	0x020caf98	_ZN6Player10StartClimbEP5dCc_c	_ZN7daPly_c10StartClimbEP5dCc_c	class renamed from the coined Player to daPly_c; earlier rows left untouched
+arm9	0x0200fe70	UnloadBlueCoinModel	_ZN8dActor_c19UnloadBlueCoinModelEv	coined free function -> dActor_c member: every caller passes this in r0 and the function sits among dActor_c methods; name still coined
+arm9	0x0200fe9c	LoadBlueCoinModel	_ZN8dActor_c17LoadBlueCoinModelEv	coined free function -> dActor_c member: every caller passes this in r0 and the function sits among dActor_c methods; name still coined

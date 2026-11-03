@@ -52,6 +52,7 @@ enum daSanbo_c_AssetId {
 };
 
 #include "common.h"
+#include "math/CalcLib.h"
 #include "daSanbo_c.h"
 #include "dBgPi.h"
 #include "types.h"
@@ -70,22 +71,16 @@ int fdiv(int, int);
 }
 
 extern "C" {
-extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern struct Matrix4x3 data_020a0e68;
-extern short Vec3_HorzAngle(const void* a, const void* b);
-extern int RandomIntInternal(void*);
 extern void d_a_sanboNewSimpleHold(unsigned int, int, int, int);
 extern int data_0209e650[];
 extern s16 data_02082214[];
-extern int Vec3_HorzDist(const void* a, const void* b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_02038414(void *p);
-void UnloadBlueCoinModel(void *);
-void LoadBlueCoinModel(void* actor);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int b, int c, void *v, int e);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -137,7 +132,7 @@ int daSanbo_c::InitResources()
         void *m = dExtSimpleModel_c::LoadFile(gSanboHeadModelFile);
         mModel.SetFile((BMD_File *)m, 1, 1);
         dExtSimpleModel_c::LoadFile(gSanboBodyModelFile);
-        LoadBlueCoinModel(this);
+        LoadBlueCoinModel();
         mInstantSprout = 1;
     } else {
         t = (actorID == SANBO_BODY);
@@ -231,21 +226,20 @@ void daSanbo_c::OnPendingDestroy()
 }
 
 // @symbol _ZN9daSanbo_c16CleanupResourcesEv
-int daSanbo_c::CleanupResources()
-{
-  int id = actorID;
-  int a = (id == SANBO_HEAD);
-  if (a) {
-    UnloadBlueCoinModel(this);
-    gSanboHeadModelFile.Release();
-    gSanboBodyModelFile.Release();
-  } else {
-    a = (id == SANBO_BODY);
+int daSanbo_c::CleanupResources() {
+    int id = actorID;
+    int a = (id == SANBO_HEAD);
     if (a) {
-      gSanboBodyModelFile.Release();
+        UnloadBlueCoinModel();
+        gSanboHeadModelFile.Release();
+        gSanboBodyModelFile.Release();
+    } else {
+        a = (id == SANBO_BODY);
+        if (a) {
+            gSanboBodyModelFile.Release();
+        }
     }
-  }
-  return 1;
+    return 1;
 }
 
 // @symbol _ZN9daSanbo_c19func_ov096_02136928Ei
@@ -409,7 +403,7 @@ int daSanbo_c::func_ov096_02136534()
         dActor_c::Spawn(0x122, 2, mPos, (Vector3_16 *)0, mAreaId, -1);
     }
     func_ov096_02135800();
-    mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPosX, &mPosX);
+    mPrevAngleY = Vec3_HorzAngle((const Vector3 *)&mHitActor->mPosX, (const Vector3 *)&mPosX);
     mVertSpeed = 0x14000;
     if (mHitActor->param1 == 2)
         mHorzSpeed = 0x28000;
@@ -539,7 +533,7 @@ int daSanbo_c::func_ov096_02136134()
     }
     Sound::PlayBank0(9, mCamSpacePos);
     func_ov096_02135800();
-    mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPosX, &mPosX);
+    mPrevAngleY = Vec3_HorzAngle((const Vector3 *)&mHitActor->mPosX, (const Vector3 *)&mPosX);
     rnd = RandomIntInternal(data_0209e650);
     mPrevAngleY = (s16)(mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
     mAngleY = (s16)(mPrevAngleY + 0x8000);
@@ -684,8 +678,9 @@ void daSanbo_c::func_ov096_02135948()
         int shove = (other->actorID == 0x135);
         if (shove) {
         radius = mdCcAc_c.radius;
-        if (Vec3_HorzDist(&mPosX, &other->mPosX) < radius + 0x1a9000) {
-            angle = Vec3_HorzAngle(&other->mPosX, &mPosX);
+        if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&other->mPosX) <
+            radius + 0x1a9000) {
+            angle = Vec3_HorzAngle((const Vector3 *)&other->mPosX, (const Vector3 *)&mPosX);
             index = ((unsigned short)angle >> 4) * 2;
             cs = data_02082214[index];
             dist = mdCcAc_c.radius + 0x1a9000;
@@ -787,7 +782,7 @@ void daSanbo_c::func_ov096_021358c8()
     int turn;
 
     if (player) {
-        dist = Vec3_HorzDist(&mRootPosX, &player->mPosX);
+        dist = Vec3_HorzDist((const Vector3 *)&mRootPosX, (const Vector3 *)&player->mPosX);
         if (dist < 0x3e8000)
             target = &player->mPosX;
         else
@@ -795,8 +790,8 @@ void daSanbo_c::func_ov096_021358c8()
     } else {
         target = &mRootPosX;
     }
-    dist = Vec3_HorzDist(&mPosX, target);
-    ang = Vec3_HorzAngle(&mPosX, target);
+    dist = Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)target);
+    ang = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)target);
     ApproachLinear(mAngleY, ang, (short)0x320);
     turn = func_ov096_02135878(dist);
     mPrevAngleY = (short)(mAngleY + turn);

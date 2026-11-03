@@ -2125,52 +2125,52 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1934",
+      "from": "@1932",
       "to": "@1944",
       "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1935",
+      "from": "@1933",
       "to": "@1945",
       "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1936",
+      "from": "@1934",
       "to": "@1946",
       "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1937",
+      "from": "@1935",
       "to": "@1947",
       "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1938",
+      "from": "@1936",
       "to": "@1948",
       "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1939",
+      "from": "@1937",
       "to": "@1949",
       "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1940",
+      "from": "@1938",
       "to": "@1950",
       "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1941",
+      "from": "@1939",
       "to": "@1951",
       "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1942",
+      "from": "@1940",
       "to": "@1952",
       "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1944",
+      "from": "@1942",
       "to": "@1954",
       "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

@@ -4,6 +4,7 @@
    exists only because this pragma turns exceptions back on. */
 #pragma exceptions on
 #include "types.h"
+#include "private/arm9_action_walk.h"
 
 namespace std {
 void terminate();
@@ -21,13 +22,13 @@ struct S72d90 {
     struct S21 p2;
 };
 
-extern unsigned char func_02072d90(struct S72d90 *c);
+extern unsigned char func_02072d90(struct ActionWalk *c);
 extern u8 *func_02071a50(u8 *p, int *out);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern int __throw_catch_compare(int a, int b, int c);
 extern int func_02071f88(void *a, void *list);
 extern void func_02071f1c(char *a, void *b, char *c, int d);
-extern int func_020729f4(struct S72d90 *c);
+extern int func_020729f4(struct ActionWalk *c);
 
 struct Tmp {
     int val;
@@ -69,9 +70,9 @@ int func_02071d3c(int *self, struct S6 *src, int flag)
 
     buf.p2 = *(struct S21 *)((char *)self + 0x1c);
 
-    state = func_02072d90(&buf);
+    state = func_02072d90((struct ActionWalk *)&buf);
 
-    for (;; state = func_020729f4(&buf)) {
+    for (;; state = func_020729f4((struct ActionWalk *)&buf)) {
         switch (state) {
         case 12:
         {
