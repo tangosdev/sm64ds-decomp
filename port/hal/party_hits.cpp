@@ -1175,7 +1175,11 @@ int contact_why(unsigned ikind, int mx, int my, int mz, int myaw, int tx, int ty
 
 unsigned stamp_for(const HubSeatInfo &si) {
     const int rtt = si.rtt_ms >= 0 ? si.rtt_ms : 100;
-    const unsigned ms = si.ghost_ms_ago + 75u + (unsigned)(rtt / 2);     // my view of him + the draw delay + the claim's flight
+    // How old, when he judges it, is the pose of his I just tested? His pose packet's trip to me (half the round trip), how
+    // long ago it arrived, the draw delay, and my claim's trip back to him (the other half). Leaving his packet's own trip
+    // out made a fleeing friend's judge pose about 150 ms too new at 400 ms ping, refusing hits that touched him on my
+    // screen. The 15-frame cap stays (the stamp is 4 bits), so a forged age still reaches no further back than before.
+    const unsigned ms = si.ghost_ms_ago + 75u + (unsigned)rtt;
     unsigned f = ms / 33u;
     return f > 15u ? 15u : f;
 }
