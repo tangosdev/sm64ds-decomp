@@ -221,14 +221,14 @@
       "ordinal": 25
     },
     {
-      "symbol": "UnloadBlueCoinModel",
+      "symbol": "_ZN8dActor_c19UnloadBlueCoinModelEv",
       "address": "0x0200fe70",
       "size": "0x0000002c",
       "legacy_source": "src/UnloadBlueCoinModel.c",
       "ordinal": 26
     },
     {
-      "symbol": "LoadBlueCoinModel",
+      "symbol": "_ZN8dActor_c17LoadBlueCoinModelEv",
       "address": "0x0200fe9c",
       "size": "0x0000002c",
       "legacy_source": "src/LoadBlueCoinModel.c",

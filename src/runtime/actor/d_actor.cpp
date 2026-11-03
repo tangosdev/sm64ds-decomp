@@ -1300,25 +1300,23 @@ s32 dActor_c::GetWaterHeightWDW()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol LoadBlueCoinModel
-/* ROM ordinal 27 -- LoadBlueCoinModel
+// @symbol _ZN8dActor_c17LoadBlueCoinModelEv
+/* ROM ordinal 27 -- dActor_c::LoadBlueCoinModel()
  * 0x0200fe9c  size 0x2c */
 extern "C" {
 extern SharedFilePtr data_ov002_0210da00; /* 0x0210da00 */
 extern SharedFilePtr data_ov002_0210d9c8; /* 0x0210d9c8 */
 }
-extern "C" void LoadBlueCoinModel(void)
-{
+void dActor_c::LoadBlueCoinModel() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210da00);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9c8);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol UnloadBlueCoinModel
-/* ROM ordinal 26 -- UnloadBlueCoinModel
+// @symbol _ZN8dActor_c19UnloadBlueCoinModelEv
+/* ROM ordinal 26 -- dActor_c::UnloadBlueCoinModel()
  * 0x0200fe70  size 0x2c */
-extern "C" void UnloadBlueCoinModel(void)
-{
+void dActor_c::UnloadBlueCoinModel() {
     data_ov002_0210da00.Release();
     data_ov002_0210d9c8.Release();
 }

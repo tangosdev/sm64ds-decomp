@@ -772,35 +772,6 @@
         "return:void"
       ]
     },
-    "LoadBlueCoinModel": {
-      "src/game/actors/d_a_book.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_eykn.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_f_pkn.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_krb.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_nknk.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_pkn.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_sanbo.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_trs.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_yegg.cpp": [
-        "arity:1"
-      ]
-    },
     "LoadCompressedFileAt": {
       "src/minigames/d_s_mg_amida.cpp": [
         "param:#1 int"
@@ -2362,35 +2333,6 @@
     "TouchArea_Update": {
       "src/_ZN10dScEntry_c18UpdateCourseSelectEv.cpp": [
         "return:unsigned char"
-      ]
-    },
-    "UnloadBlueCoinModel": {
-      "src/game/actors/d_a_book.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_eykn.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_f_pkn.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_krb.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_nknk.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_pkn.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_sanbo.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_trs.cpp": [
-        "arity:1"
-      ],
-      "src/game/actors/d_a_yegg.cpp": [
-        "arity:1"
       ]
     },
     "UpdateMinimap": {

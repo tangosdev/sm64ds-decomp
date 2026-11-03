@@ -1007,11 +1007,11 @@
     },
     "arm9:0x0200fe70": {
       "author": "tangosdev",
-      "name": "UnloadBlueCoinModel"
+      "name": "_ZN8dActor_c19UnloadBlueCoinModelEv"
     },
     "arm9:0x0200fe9c": {
       "author": "tangosdev",
-      "name": "LoadBlueCoinModel"
+      "name": "_ZN8dActor_c17LoadBlueCoinModelEv"
     },
     "arm9:0x0200fec8": {
       "author": "tangosdev",
