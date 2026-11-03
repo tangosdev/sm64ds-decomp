@@ -8,7 +8,7 @@ namespace std {
 void terminate();
 }
 extern "C" {
-extern void *func_02071910(void *a, void *b);
+extern void *func_02071910(char *a, void *b);
 extern void func_02072dac(void *x, void *b);
 extern void func_02071864(void *a, void *b);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
