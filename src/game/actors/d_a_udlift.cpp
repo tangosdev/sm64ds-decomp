@@ -226,12 +226,24 @@ int daUdlift_c::InitResources()
     return 1;
 }
 
+#ifdef _MSC_VER
+/* run after093, lane RIDERS1: the lift follows mClosestPlayer across the middle of its shaft and, at the end of a ride,
+   turns round when that player is on the other side. In a coop room ClosestPlayer answers the shared target seat, which
+   holds for a second and can be a friend at the other end, so the lift turned round under the player riding it. The
+   host asks port_bg_range_player (hal/coop_target.cpp), the ROM's own nearest-of-all-players loop with friends at their
+   drawn pose; it calls ClosestPlayer first, and with one player it is ClosestPlayer. The DS side is untouched. */
+extern "C" Player *port_bg_range_player(dBgActor_c *self);
+#define UDLIFT_PLAYER(self) port_bg_range_player((dBgActor_c *)(void *)(self))
+#else
+#define UDLIFT_PLAYER(self) (self)->ClosestPlayer()
+#endif
+
 // @symbol _ZN10daUdlift_c8BehaviorEv
 int daUdlift_c::Behavior()
 {
     int oldState;
 
-    mClosestPlayer = ClosestPlayer();
+    mClosestPlayer = UDLIFT_PLAYER(this);
     oldState = mState;
     (this->*data_ov095_02137910[oldState])();
     mStateTimer += 1;
