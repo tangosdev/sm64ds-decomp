@@ -5,10 +5,10 @@ This handoff describes the producer candidate. The queue records its immutable o
 ## Identity and resumption
 
 - Issue: https://github.com/tangosdev/sm64ds-decomp/issues/4570
-- Task: `issue-4570-minigame-sprite-vec2i-shared-1103b`; producer session `codex-minigamevec2i-1103c`.
-- Branch: `audit/minigame-sprite-vec2i-1103`.
-- Base/input and workflow/tool SHA: `8bcb5a981bde3dbe4375aab971226ccee72ee8e6` (`origin/main`).
-- Candidate status: exact-byte producer candidate, pending independent verification/source review and hosted PR validation.
+- Task: `issue-4570-minigame-sprite-vec2i-shared-1103c`, a handoff correction to the source output produced by `issue-4570-minigame-sprite-vec2i-shared-1103b` (`codex-minigamevec2i-1103c`); follow-up producer session `codex-minigamevec2i-followup-1103`.
+- Draft PR: https://github.com/tangosdev/sm64ds-decomp/pull/4712 (branch link is on the PR).
+- Source base: `8bcb5a981bde3dbe4375aab971226ccee72ee8e6` (`origin/main`); follow-up input: `eb5d443015cd00389f5bb2c5fe6b4b3803762292`; workflow/tool SHA: `8bcb5a981bde3dbe4375aab971226ccee72ee8e6`.
+- Candidate status: exact-byte source candidate with the hosted dead-reference path corrected; pending fresh exact-head checks, independent verification/source review, and hosted PR validation.
 - Next action: verifier should inspect the exact published source and manifest, rerun `tubuild` and ROM proof against the recorded base, and publish independent review evidence. The TU is not claimed promotable while `tubuild` reports an unlicensed `.text` section.
 - Build output and queue receipts remain ignored under `build/`; no uncommitted source changes are intended after the candidate commit.
 
@@ -36,4 +36,4 @@ All checks ran in `C:\tmp\sm64ds-minigamespritevec21103`, against the pinned `20
 - `python tools/check_tubuild_conflicts.py ov004/unit020b4aa4`: exit 0; no conflicts.
 - `python tools/port_refcheck.py`: exit 0; all 217 references resolve.
 - `python tools/source_style.py --base origin/main --patterns-only`: exit 0; zero findings. Formatting was not checked by this patterns-only run.
-- Range-scoped `prepush_linkcheck` and hosted private PR validation are pending the final commit.
+- `prepush_linkcheck.py --range origin/main..HEAD` passed on the source candidate before this documentation-only correction. Repeat it on the published follow-up head. Hosted private PR validation and independent source review are pending.
