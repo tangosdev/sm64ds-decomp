@@ -1251,74 +1251,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1212",
+      "from": "@1208",
       "to": "@2166",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x138, preserving the configured retail destination"
     },
     {
-      "from": "@1214",
+      "from": "@1210",
       "to": "@2163",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x140, preserving the configured retail destination"
     },
     {
-      "from": "@1216",
+      "from": "@1212",
       "to": "@2165",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x144, preserving the configured retail destination"
+    },
+    {
+      "from": "@1213",
+      "to": "@1156",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x148, preserving the configured retail destination"
+    },
+    {
+      "from": "@1215",
+      "to": "@1158",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x14c, preserving the configured retail destination"
     },
     {
       "from": "@1217",
-      "to": "@1156",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1160",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x150, preserving the configured retail destination"
     },
     {
       "from": "@1219",
-      "to": "@1158",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1162",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x154, preserving the configured retail destination"
     },
     {
       "from": "@1221",
-      "to": "@1160",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1164",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x158, preserving the configured retail destination"
     },
     {
       "from": "@1223",
-      "to": "@1162",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2162",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x15c, preserving the configured retail destination"
     },
     {
       "from": "@1225",
-      "to": "@1164",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@2164",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x160, preserving the configured retail destination"
     },
     {
       "from": "@1227",
-      "to": "@2162",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1170",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x164, preserving the configured retail destination"
     },
     {
       "from": "@1229",
-      "to": "@2164",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1172",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x168, preserving the configured retail destination"
     },
     {
       "from": "@1231",
-      "to": "@1170",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@1174",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x16c, preserving the configured retail destination"
     },
     {
       "from": "@1233",
-      "to": "@1172",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1235",
-      "to": "@1174",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@1237",
       "to": "@1176",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; removing the unused SystemHold declaration shifts this local number; baseline and candidate .rela.init both target it at +0x170, preserving the configured retail destination"
     }
   ]
 }
