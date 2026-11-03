@@ -16283,11 +16283,6 @@
         "param:#1 int"
       ]
     },
-    "func_02022260": {
-      "include/decl_common.h": [
-        "arity:0"
-      ]
-    },
     "func_02022774": {
       "src/game/actors/d_a_obj_flamethrower.cpp": [
         "param:#5 int"
@@ -16378,14 +16373,6 @@
         "param:#1 const struct dBgPi *"
       ]
     },
-    "func_02036acc": {
-      "src/unnamed/arm9/0203/func_02038408.c": [
-        "arity:0"
-      ],
-      "src/engine/collision/d_bg_ch_sph_crr_query.cpp": [
-        "arity:0"
-      ]
-    },
     "func_02037dc4": {
       "src/runtime/actor/d_actor.cpp": [
         "param:#1 SurfaceInfo *",
@@ -16401,11 +16388,6 @@
     "func_02038298": {
       "src/engine/collision/CLPS_BlockRef.cpp": [
         "arity:2"
-      ]
-    },
-    "func_02038408": {
-      "src/game/actors/d_a_kpa.cpp": [
-        "arity:1"
       ]
     },
     "func_02038414": {
@@ -16894,11 +16876,6 @@
     "func_0203db3c": {
       "src/WarpPlayer.c": [
         "param:#2 unsigned char"
-      ]
-    },
-    "func_0203e978": {
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "arity:0"
       ]
     },
     "func_0203f604": {
@@ -18041,11 +18018,6 @@
     "func_0206ca44": {
       "src/unnamed/arm9/0206/func_0206a928.c": [
         "param:#1 const char *"
-      ]
-    },
-    "func_0206cbc0": {
-      "src/cstd3.cpp": [
-        "arity:0"
       ]
     },
     "func_0206dc7c": {
