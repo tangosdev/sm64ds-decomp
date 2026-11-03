@@ -1,11 +1,11 @@
-# Handoff: pr-4718-hanachan-source-review
+# Handoff: pr-4718-hanachan-source-review2
 
 This document describes this commit. The queue records its immutable output SHA.
 
 ## Identity and resumption
 
-- Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/4718; `pr-4718-hanachan-source-review`; source producer `codex-audit-1103-pr4718` (Codex).
-- Source branch and previous accepted input SHA: `audit/hanachan-vec3-sub-signature-1103`; `76e2aed46eb35ebd944d1bf14e668e73fc3bad0a`.
+- Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/4718; `pr-4718-hanachan-source-review2`; source producer `codex-audit-1103-pr4718` (Codex).
+- Source branch and previous accepted input SHA: [feature branch](https://github.com/tangosdev/sm64ds-decomp/tree/audit/hanachan-vec3-sub-signature-1103); `76e2aed46eb35ebd944d1bf14e668e73fc3bad0a`.
 - Original source base SHA and installed workflow/tool SHA: `76e2aed46eb35ebd944d1bf14e668e73fc3bad0a`; `18af52b49b9fb5663d417bdfa86109b7b157aaa3`.
 - Separate evidence commits and required artifacts in this commit: none.
 - Next action, responsible role and blockers: independent source plausibility review of the exact PR head/base, then structured source-review evidence; role `humanizer`.
