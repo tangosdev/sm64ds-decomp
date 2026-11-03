@@ -35,11 +35,11 @@ extern FileShareWork data_020a1fc0;
 extern char data_02082158[];
 }
 
-#include "private/arm9_file_share_views.h"
-
-typedef char ParentNodes_mNodes_must_be_0xc0[(int)&((ParentNodes *)0)->mNodes == 0xc0 ? 1 : -1];
 typedef char
-    ChildTables_mRecvWork_must_be_0xc70[(int)&((ChildTables *)0)->mRecvWork == 0xc70 ? 1 : -1];
+    FileShareParentArea_mNodes_must_be_0xc0[(int)&((FileShareParentArea *)0)->mNodes == 0xc0 ? 1
+                                                                                             : -1];
+typedef char FileShareChildArea_mRecvWork_must_be_0xc70
+    [(int)&((FileShareChildArea *)0)->mRecvWork == 0xc70 ? 1 : -1];
 
 extern "C" void func_02040c34(int isParent, int port, int stateCallback, int allocFunc,
                               int allocArg) {
@@ -79,7 +79,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
                 FileShareNode *end;
                 FlushFileShareArea(base, sizeof(FileShareParentArea));
                 CP15::DrainWriteBuffer();
-                ParentNodes *nodes = (ParentNodes *)base;
+                FileShareParentArea *nodes = (FileShareParentArea *)base;
                 saved = nodes->mNodes;
                 zero = 0;
                 node = saved;
@@ -132,14 +132,14 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
             }
         } else {
             char *base = (char *)G->mArea;
-            ChildTables *arr = (ChildTables *)base;
+            FileShareChildArea *arr = (FileShareChildArea *)base;
             int i;
             char *p;
             FlushFileShareArea(base, sizeof(FileShareChildArea));
             CP15::DrainWriteBuffer();
             p = base + 0xc0;
             for (i = 0; i < 0x10; i++) {
-                arr->mBlockInfoTable[i] = p;
+                arr->mBlockInfoTable[i] = (int)p;
                 arr->mRecvBufTable[i] = 0;
                 arr->mPacketBitmapTable[i] = 0;
                 p += 0x28;
