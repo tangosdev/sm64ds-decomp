@@ -2,7 +2,6 @@
 
 - Task: `issue-4570-smartball-oam-shadow-1103`, issue [#4570](https://github.com/tangosdev/sm64ds-decomp/issues/4570).
 - Producer: `codex-smartball-oam-writer-1103b`.
-- Branch: `audit/main-scan-1103b`.
 - Tested base: `76e2aed46eb35ebd944d1bf14e668e73fc3bad0a` (`origin/main`).
 - Scope: `src/minigames/d_s_mg_smartball.cpp` only. No object layout, call site, or shared-header definition changed.
 
