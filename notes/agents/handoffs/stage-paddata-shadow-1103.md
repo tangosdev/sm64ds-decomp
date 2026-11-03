@@ -5,11 +5,11 @@ This document describes the producer candidate. The queue records its immutable 
 ## Identity and resumption
 
 - Issue: https://github.com/tangosdev/sm64ds-decomp/issues/4570
-- Task: `issue-4570-stage-paddata-shadow-1103`; producer session `codex-stagepad-shadow-1103`.
-- Branch: `audit/stage-paddata-shadow-1103`.
+- Task: `issue-4570-stage-paddata-shadow-1103b`, a documentation correction to the source output produced by `issue-4570-stage-paddata-shadow-1103` (`codex-stagepad-shadow-1103`).
+- Draft PR: https://github.com/tangosdev/sm64ds-decomp/pull/4711 (branch link is on the PR).
 - Base and input: `8bcb5a981bde3dbe4375aab971226ccee72ee8e6` (`origin/main`). Workflow/tool SHA: same commit.
-- Candidate status: verified source candidate, pending independent verifier/source review and hosted PR validation.
-- Next action: verifier should inspect the exact published candidate, repeat the relevant TU and ROM proof on base `8bcb5a981bde3dbe4375aab971226ccee72ee8e6`, then publish a queue verification. The TU's pre-existing unlicensed initializer remains a promotion blocker.
+- Candidate status: verified source candidate with the hosted dead-reference finding corrected; pending fresh exact-head checks, independent verification/source review, and hosted PR validation.
+- Next action: verifier should inspect the exact published candidate, repeat the relevant TU and ROM proof on base `8bcb5a981bde3dbe4375aab971226ccee72ee8e6`, then publish a queue verification. The TU's unlicensed initializer remains a promotion blocker.
 - No local-only source changes remain after the candidate commit. Build outputs and queue receipts remain ignored under `build/`.
 
 ## What changed and why
@@ -35,4 +35,4 @@ All commands ran in `C:\tmp\sm64ds-stagepad1103` against the pinned `2004/b56` t
 - `python tools/check_tubuild_conflicts.py arm9/dScStage_c`: exit 0; one manifest entry checked, no conflicts.
 - `python tools/port_refcheck.py`: exit 0; 217 references resolve.
 - `python tools/source_style.py --base origin/main --patterns-only`: exit 0; zero findings. Formatting was not checked by this patterns-only run.
-- Hosted private PR validation and an independent source review are pending.
+- The local pre-push linkcheck passed on the source candidate before the documentation-only correction. Repeat it against the published follow-up head. Hosted private PR validation and independent source review are pending.
