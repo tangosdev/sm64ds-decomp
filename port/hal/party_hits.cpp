@@ -133,6 +133,9 @@ struct G {
     int ho_kind = 0, ho_cls = 0, ho_slot = -1, ho_eggs = 0; unsigned ho_last = 0;
     unsigned held_sent = 0, held_recv = 0, held_pins = 0, held_miss = 0, held_drop = 0, held_owned = 0;
     unsigned mouth_miss = 0, eats_unstepped = 0;
+    bool lab_drop_nothing = false;   // LAB (TONGUEFIX2, SM64DS_PHIT_LAB_DROP_NOTHING=1): my one-shot "nothing" held message is not sent (a lost datagram)
+    unsigned lab_drop_until = 0;
+    unsigned att_claims = 0;         // TONGUEFIX2: claims I sent at a friend the attach book says sits in a mouth / hands
     bool held_off = false;        // SM64DS_PHIT_HELD=0, the CONTROL: no kHeldState out, nothing pinned (the friend looks empty-handed)
     bool tongue_old = false;      // SM64DS_PHIT_TONGUE_OLD=1, the CONTROL: the tongue rules before TONGUE1 (state list, re-arm, no message gate)      // TONGUE1: hook passes the ROM mouth state left me off the eater's drawn body
     unsigned beat = 0;
@@ -184,6 +187,7 @@ void read_env() {
     // set; the 150-frame re-arm refused tongues the ROM takes (7 of 18 refusals in MPJANK1's recipe).
     g.tongue_old = env_flag(std::getenv("SM64DS_PHIT_TONGUE_OLD"), false);
     g.held_off = !env_flag(std::getenv("SM64DS_PHIT_HELD"), true);
+    g.lab_drop_nothing = env_flag(std::getenv("SM64DS_PHIT_LAB_DROP_NOTHING"), false);
     r.check_eat_rearm = g.tongue_old || env_flag(std::getenv("SM64DS_PHIT_EAT_REARM"), false);
     // ROMSTATE9: the victim's own console runs the ROM's real St_InYoshiMouth (eat) and St_Grabbed / thrown (carry) by default;
     // SM64DS_ROOM_ROMSTATE=0 falls back to INTERACT9's synthetic holds (SM64DS_ROOM_EATVIS=0/1 still picks the eat alone)
@@ -373,9 +377,16 @@ void held_send(char *me) {
     if (const int *q = *(int *const *)(me + 0x588)) for (int i = 0; i < 5; ++i) if (q[i]) ++eggs;
     const bool changed = kind != g.ho_kind || cls != g.ho_cls || slot != g.ho_slot || eggs != g.ho_eggs;
     if (!changed && (!(kind || eggs) || g.frame - g.ho_last < (unsigned)kHeldBeat)) return;
+    const bool hold_ended = changed && g.ho_kind && !kind;
     g.ho_kind = kind; g.ho_cls = cls; g.ho_slot = slot; g.ho_eggs = eggs; g.ho_last = g.frame;
     if (changed && g.log > 0)
         std::fprintf(stderr, "[phit] held out f=%u: kind %d class %d slot %d eggs %d\n", g.frame, kind, cls, slot, eggs);
+    if (g.lab_drop_nothing && !kind) {
+        // LAB: the message that ends a hold is lost, and so is everything after it for five seconds (the egg count's
+        // one-second repeat would end the hold too), so the friend's console sees the hold go quiet
+        if (hold_ended) { g.lab_drop_until = g.frame + 150; std::fprintf(stderr, "[phit] LAB held out f=%u: the hold-ends message is dropped, and 150 frames after it\n", g.frame); }
+        if (g.frame < g.lab_drop_until) return;
+    }
     for (int seat = 0; seat < kHubPartySeats; ++seat) {
         if (seat == comms_hub_my_seat() || !party::seat_is_party(seat)) continue;
         if (send_wire(seat, kHeldState, slot & 0xFFFF, kind | (eggs << 4), cls, 0)) ++g.held_sent;
@@ -1150,6 +1161,14 @@ void attacker_scan(char *me) {
         send_wire(seat, (unsigned)kind, yaw, mx, my, mz, stamp);
         g.send_frame[seat] = g.frame ? g.frame : 1;
         ++g.st.claims_sent;
+        {   // proof (TONGUEFIX2): a claim at a friend the victim refuses as held (in a mouth / hands)
+            const Attach &at = g.att[seat];
+            char *vb = body_of_seat(seat);
+            const bool mine = vb && (ptrf(me, kMouthObj) == vb || ptrf(me, kHeldObj) == vb);
+            if (mine || (at.by >= 0 && g.frame < at.until))
+                std::fprintf(stderr, "[phit] claim sent at an attached friend #%u: ik=%d -> seat %d (%s by seat %d) f=%u\n", ++g.att_claims, kind, seat,
+                             mine ? "in my mouth / hands" : at.kind == 1 ? "in the mouth of" : "carried", mine ? comms_hub_my_seat() : at.by, g.frame);
+        }
         if (kind == kEatClaim) { g.book.sent(seat, g.frame); g.tongue_said = true; ++g.tongue_sent; }
         if (kind == kStomp) {
             *(int *)(me + kVertSpeed) = kBounceUp;             // my own bounce, whatever the friend's console decides
@@ -1284,6 +1303,7 @@ void exit_summary() {
         if (g.st.refused_by[v & 15]) std::fprintf(stderr, "[phit:exit]   refused %s: %llu\n", verdict_name(v), g.st.refused_by[v & 15]);
     std::fprintf(stderr, "[phit:exit] eats began %llu, spat %llu, aborted %llu, spat early (mouth state not stepping) %u\n", g.st.eats_began, g.st.eats_spat, g.st.eats_aborted, g.eats_unstepped);
     std::fprintf(stderr, "[phit:exit] held state: sent %u, received %u, pinned frames %u, no local copy %u, dropped %u, left alone as mine %u frames, coop publishes held back %u\n", g.held_sent, g.held_recv, g.held_pins, g.held_miss, g.held_drop, g.held_owned, coop_move_pin_skips());
+    std::fprintf(stderr, "[phit:exit] claims sent at an attached friend %u\n", g.att_claims);
     std::fflush(stderr);
 }
 
