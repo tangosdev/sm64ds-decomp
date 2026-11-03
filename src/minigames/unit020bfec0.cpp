@@ -2259,7 +2259,7 @@ extern "C" {
 extern Vector3 sMascotWalkerOffset;
 }
 extern "C" {
-extern "C" int pmf_MascotWalker_StateWalk_2[2];
+extern int pmf_MascotWalker_StateWalk_2[2];
 }
 
 extern "C" void MascotWalker_Update(C *c) {

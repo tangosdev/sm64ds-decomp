@@ -194,7 +194,7 @@ extern int LenVec3(int *v);
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
    state timer there, so the callee takes no object: ov055's free function at
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
-extern "C" void func_ov055_02111264(void);
+extern void func_ov055_02111264(void);
 extern int func_ov002_020c51d0(void *c, int *st);
 extern u16 func_02011d14(void);
 extern int data_ov008_02111b6c;

@@ -1478,10 +1478,10 @@ extern "C" {
    down.  It is not a Yoshi egg, and it does not return a vector -- see the
    slot-30 block in include/dScMgBase_c.h for the AAPCS measurement that
    refutes the `ReturnVec` in the name. */
-extern "C" u8 data_0209d45c;
-extern "C" u8 data_0209d454;
-extern "C" u8 data_0209d460;
-extern "C" u8 data_0209d458;
+extern u8 data_0209d45c;
+extern u8 data_0209d454;
+extern u8 data_0209d460;
+extern u8 data_0209d458;
 
 /* RETURN TYPE, MEASURED -- and it corrects the header's earlier `int`, which
    that slot's own evidence block called "a HINT".  Declaring this member `int`
@@ -1549,8 +1549,8 @@ extern "C" {
    re-enables the 3D engines only if the class's own GetDisplayMode
    says so. */
 
-extern "C" void func_02012e1c(char *c);
-extern "C" void Enable3dEngines();
+extern void func_02012e1c(char *c);
+extern void Enable3dEngines();
 
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
@@ -1592,13 +1592,13 @@ extern "C" {
    this module is dScMgBase_c::OnGraphCallback2, which reaches it only on a rising edge
    of mMenuOpen.  That is the three-item overlay menu going up, not a Yoshi egg.
    See the slot 29 block in include/dScMgBase_c.h for why the name is kept. */
-extern "C" void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern "C" void func_0201f32c(int arg0);
-extern "C" int GetGameLanguage(void);
-extern "C" void DecompressLZ16(void *src, void *dst);
+extern void MultiStore16(unsigned short val, char *dst, int nbytes);
+extern void func_0201f32c(int arg0);
+extern int GetGameLanguage(void);
+extern void DecompressLZ16(void *src, void *dst);
 
-extern "C" unsigned char data_0209d45c;
-extern "C" unsigned char data_0209d454;
+extern unsigned char data_0209d45c;
+extern unsigned char data_0209d454;
 
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
@@ -1932,8 +1932,8 @@ extern "C" {
 struct OamAttr;
 }
 typedef int Fix12i;
-extern "C" int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                      Fix12i e, int f);
+extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
+                                  Fix12i e, int f);
 
 extern "C" int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                         unsigned short a6) {
@@ -2023,8 +2023,8 @@ extern "C" {
 struct OamAttr;
 }
 typedef int Fix12i;
-extern "C" int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                      Fix12i e, int f);
+extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
+                                  Fix12i e, int f);
 
 extern "C" int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                          unsigned short a6) {
@@ -2118,8 +2118,8 @@ struct OamAttr;
 extern int sMgTopScreenYOffset;
 }
 typedef int Fix12i;
-extern "C" int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                      Fix12i e, int f);
+extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
+                                  Fix12i e, int f);
 
 extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int a3, int a4,
                                          Fix12i a5, int a6) {
@@ -2740,8 +2740,8 @@ void Mg_DrawPrompt(char* c)
 // @symbol Mg_DrawTally
 namespace s20b0e84 {
 extern "C" {
-extern "C" int GetGameLanguage(void);
-extern "C" void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+extern int GetGameLanguage(void);
+extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 
 static inline int sdiv4(int d) {
     int t = d + (int)((unsigned)(d >> 1) >> 0x1e);
