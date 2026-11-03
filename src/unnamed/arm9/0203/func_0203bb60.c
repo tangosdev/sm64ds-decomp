@@ -3,22 +3,18 @@
  * held), x and y, each truncated to a byte. */
 #include "types.h"
 #include "PlayerInput.h"
-struct R {
-    u16 x;        /* 0x0 */
-    u16 y;        /* 0x2 */
-    u16 touching; /* 0x4 */
-};
+#include "nitro/spi/tp.h"
 
-extern struct R *func_0203dabc(int idx);
+extern TPData *func_0203dabc(int idx);
 
 void func_0203bb60(void)
 {
     u8 *p = gTouchHeld;
     int i;
     for (i = 0; i < 4; i++) {
-        struct R *s = func_0203dabc(i);
-        p[1] = (u8)(s->touching ^ p[0]);
-        p[0] = (u8)s->touching;
+        TPData *s = func_0203dabc(i);
+        p[1] = (u8)(s->touch ^ p[0]);
+        p[0] = (u8)s->touch;
         p[2] = (u8)s->x;
         p[3] = (u8)s->y;
         p += 4;
