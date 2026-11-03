@@ -3,8 +3,8 @@
   "codegen_hacks": {
     "cv_launder": 3,
     "cv_launder_sites": 6,
-    "extern_vtable": 4,
-    "extern_vtable_classes": 15,
+    "extern_vtable": 2,
+    "extern_vtable_classes": 13,
     "inline_asm": 5,
     "launder_or_forced": 55,
     "launder_sites": 169,
