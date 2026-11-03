@@ -100,7 +100,7 @@ extern int data_ov034_021138c4[];
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern short data_ov034_02113820[];
 extern void **data_ov034_021138b0[];
-extern void Vec3_Sub(void *out, void *a, void *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(void *v);
 extern int Vec3_HorzDist(void *a, void *b);
 extern int RandomIntInternal(int *seed);
@@ -414,7 +414,7 @@ void daHanachan_c::StateMoveMain()
     int rnd;
     int v[3];
 
-    Vec3_Sub(v, &mPosX, &mHomePos);
+    Vec3_Sub((Vector3 *)v, (const Vector3 *)&mPosX, (const Vector3 *)&mHomePos);
     len = LenVec3(v);
 
     if (mDefeated != 0 && mFalling == 0) {
@@ -646,7 +646,7 @@ void daHanachan_c::StateDemoWaitMain()
     int len;
     daPly_c *player;
 
-    Vec3_Sub(&v, &mPosX, &mHomePos);
+    Vec3_Sub(&v, (const Vector3 *)&mPosX, (const Vector3 *)&mHomePos);
     len = LenVec3(&v);
     player = ClosestPlayer();
     if (player->mPosY > mPosY + 0x12c000) {
@@ -856,7 +856,7 @@ void daHanachan_c::UpdateSegments()
 
     for (; seg < 5; seg++, cur++, rotRow += 6, posRow += 0xc) {
         int off = (seg - 1) * 0xc;
-        Vec3_Sub(&diff, cur, (char *)&mSegmentPos[0] + off);
+        Vec3_Sub(&diff, cur, (const Vector3 *)((char *)&mSegmentPos[0] + off));
         if (NormalizeVec3IfNonZero(&diff) != 0) {
             Vec3_MulScalarInPlace(&diff, mSegmentSpacing[seg]);
         }
