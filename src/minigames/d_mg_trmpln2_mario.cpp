@@ -211,19 +211,12 @@ void Trmp2Mario_UpdateMatrix(char *self) {
 }
 // ---- Trmp2Mario_Update
 namespace ns_020c8f20 {
-struct Vector3_16f;
-struct Callback;
 typedef int Fix12;
-struct System {
-    static System *New(unsigned, unsigned, Fix12, Fix12, Fix12, const Vector3_16f *, Callback *);
-};
 
 extern "C" {
 extern void Trmp2Mario_ApplyGravity(char *o);
 extern void Trmp2Mario_UpdateMatrix(char *o);
 }
-System *System::New(unsigned, unsigned, Fix12, Fix12, Fix12, const Vector3_16f *, Callback *);
-
 typedef void (*PMF)(void *);
 struct Closure {
     int off;
@@ -1614,12 +1607,7 @@ void Trmp3DMario_UpdateMatrix(char *self) {
 }
 // ---- Trmp3DMario_Update
 namespace ns_020cb030 {
-struct Vector3_16f;
-struct Callback;
 typedef int Fix12;
-struct System {
-    static System *New(unsigned, unsigned, Fix12, Fix12, Fix12, const Vector3_16f *, Callback *);
-};
 
 extern "C" {
 /* The ROM's relocation at 0x020cb088 targets 0x020cb134, not 0x020c9024.
@@ -1628,8 +1616,6 @@ extern "C" {
 extern void Trmp3DMario_ApplyGravity(char *o);
 extern void Trmp3DMario_UpdateMatrix(char *o);
 }
-System *System::New(unsigned, unsigned, Fix12, Fix12, Fix12, const Vector3_16f *, Callback *);
-
 typedef void (*PMF)(void *);
 struct Closure {
     int off;
