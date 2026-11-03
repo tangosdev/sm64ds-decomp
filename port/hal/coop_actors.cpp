@@ -1009,6 +1009,14 @@ void coop_move_pinned(int slot, bool stay) {
     if (slot >= 0 && slot < kSlots && g_slot[slot].a) g_slot[slot].pin_lf = stay ? kPinStay : g_lf + 1;
 }
 
+void coop_move_unpin(int slot) {
+    if (slot >= 0 && slot < kSlots) g_slot[slot].pin_lf = 0;
+}
+
+bool coop_move_pin_stays(int slot) {
+    return slot >= 0 && slot < kSlots && g_slot[slot].a && g_slot[slot].pin_lf == kPinStay;
+}
+
 unsigned coop_move_pin_skips() { return g_pin_skips; }
 
 int coop_move_class_stats(CoopClassStat *out, int max) {
