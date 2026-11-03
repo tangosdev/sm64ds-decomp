@@ -128,7 +128,7 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 /* -- other modules -- */
 int  IsCannonOpenInCurLevel(void);
 void OpenCannonInCurLevel(void);
-int  ObjectMessageIDToActualMessageID(int);
+int ObjectMessageIDToActualMessageID(s16);
 int  IsStarCollected(int level, int star);
 int  SublevelToLevel(int sublevel);
 s8   NumRedCoins(void);
@@ -570,7 +570,7 @@ void daRedBombhei_c::func_ov084_0212c508()
                 this->mCannonOpened = 1;
                 func_ov084_0212c9f0(msg, 0);
             } else {
-                msg = ObjectMessageIDToActualMessageID((int)(s16)msgID);
+                msg = ObjectMessageIDToActualMessageID(msgID);
                 msg = msg + player->param1;
                 func_ov084_0212c9f0((u16)msg, 0);
             }

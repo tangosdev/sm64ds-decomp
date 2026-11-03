@@ -1574,7 +1574,7 @@ no:
 struct Pair { unsigned short v; unsigned short pad; };
 
 // @symbol ObjectMessageIDToActualMessageID
-extern "C" int ObjectMessageIDToActualMessageID(int id) {
+extern "C" int ObjectMessageIDToActualMessageID(s16 id) {
     int i;
     extern struct Pair data_0208eeec[];
     extern struct Pair data_0208eeee[];

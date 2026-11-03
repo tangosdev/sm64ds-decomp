@@ -85,7 +85,7 @@ struct daKinopio_c : dActor_c {
     virtual int Behavior();
     virtual int Render();
 
-    u16 GetMessageID();
+    int GetMessageID();
     void St_Talk_Main();
     void St_Talk_Init();
     void St_Idle_Main();

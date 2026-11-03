@@ -175,7 +175,7 @@ extern int IsButtonInputValid(void);
 extern int IsCannonOpenInCurLevel(void);
 extern int IsPlayerWarping(int);
 extern int LoadArchive(int);
-extern int ObjectMessageIDToActualMessageID(int);
+extern int ObjectMessageIDToActualMessageID(short);
 extern int SetPolygonID(void*, int);
 extern int SublevelToLevel(int);
 extern int VT[];
