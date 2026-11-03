@@ -108,6 +108,7 @@ struct CameraRaw;
  * declaration of the object. */
 struct Entry18 { s16 val; /* 0x0 */ char _pad[0x16]; };
 struct Anim2fec { short a; short x; short y; short z; };
+extern Anim2fec data_ov002_0210a8b8[];
 struct ObjTeleport { s16 x, y, z; u16 param; };
 struct State2i { int a; int b; };
 struct S18a { short f0; char pad[0x16]; };
@@ -3672,38 +3673,6 @@ void daPly_c::func_ov002_020c2f64() {
     }
     Sound::PlayBank0(this->mGroundSoundType + 0x40, mCamSpacePos);
 }
-
-/* Uniform cubic B-spline control points: {speed, x, y, z}.  The spline
-   evaluator blends four consecutive rows and advances by speed / 1000. */
-Anim2fec data_ov002_0210a8b8[27] = {
-    {20, 0, 713, -2970},
-    {30, 0, 680, -3500},
-    {40, 1000, 700, -4000},
-    {50, 2500, 750, -3500},
-    {50, 3500, 800, -2000},
-    {50, 4000, 850, 0},
-    {50, 3500, 900, 2000},
-    {50, 2000, 950, 3500},
-    {50, 0, 1000, 4000},
-    {50, -2000, 1050, 3500},
-    {50, -3500, 1100, 2000},
-    {50, -4000, 1150, 0},
-    {50, -3500, 1200, -2000},
-    {50, -2000, 1250, -3500},
-    {50, 0, 1300, -4000},
-    {50, 2000, 1350, -3500},
-    {50, 3500, 1400, -2000},
-    {50, 4000, 1450, 0},
-    {50, 3500, 1500, 2000},
-    {50, 2000, 1600, 3500},
-    {50, 0, 1700, 4000},
-    {50, -2000, 1800, 3500},
-    {50, -3500, 1900, 2000},
-    {30, -4000, 2000, 0},
-    {0, -3500, 2100, -2000},
-    {0, -2000, 2200, -3500},
-    {0, 0, 2300, -4000},
-};
 
 // @symbol _ZN7daPly_c19func_ov002_020c2fecEPi
 extern "C" {
