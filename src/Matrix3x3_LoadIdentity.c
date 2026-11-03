@@ -4,10 +4,18 @@
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
 #include "math/Matrix.h"
 
-// Loads the identity: nine 20.12 fixed-point words, 1.0 = 0x1000.
-// Nine is one too many for whole pairs, so the last 1.0 (m[8], +0x20) is
-// stored first while r0 still points at the start; four stmia pairs then
-// write m[0..7], (1,0),(0,0) twice.
+// Sets m to the identity matrix:
+//   1 0 0
+//   0 1 0
+//   0 0 1
+// (1 is written as 0x1000: the DS has no floating point, so these are
+// fixed-point numbers with 12 fraction bits.)
+//
+// stmia stores two registers to memory and moves the pointer past them,
+// so the matrix is filled two entries at a time. r2 holds 1 and r1/r3
+// hold 0, so {r2, r3} writes "1, 0" and {r1, r3} writes "0, 0".
+// Nine entries don't split into pairs, so the bottom-right 1 is
+// written on its own first.
 asm void Matrix3x3_LoadIdentity(Matrix3x3 *m)
 {
     mov r2, #0x1000
