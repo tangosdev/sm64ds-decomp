@@ -58,6 +58,7 @@
 #include "daPly_c.h"
 #include "dBgPi.h"
 #include "Sound.h"
+#include "Particle__System.h"
 #include "dClipper.h"
 #include "math/Approach.h"
 
@@ -83,9 +84,6 @@ void  func_0203568c(int *clsn, int radius);
 void  func_02035684(int *clsn, int height);
 
 
-}
-namespace Particle {
-void RunningSlidingDustAt(int x, int y, int z);
 }
 extern "C" {
 
