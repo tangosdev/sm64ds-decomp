@@ -128,7 +128,7 @@ struct G {
     // I am eaten through the ROM's own mouth state (else the synthetic hold)
     bool rom_mouth = false;
     // TONGUE1: what each friend holds (kHeldState in), what I last said I hold (out)
-    struct HeldIn { int kind = 0, cls = 0, slot = -1, eggs = 0; unsigned until = 0, since = 0; char *pinned = nullptr; };
+    struct HeldIn { int kind = 0, cls = 0, slot = -1, eggs = 0; unsigned until = 0, since = 0; char *pinned = nullptr; bool parked = false; int mode = 0; };   // mode: 1 pinned, 2 left alone as mine
     HeldIn held_in[kHubPartySeats];
     int ho_kind = 0, ho_cls = 0, ho_slot = -1, ho_eggs = 0; unsigned ho_last = 0;
     unsigned held_sent = 0, held_recv = 0, held_pins = 0, held_miss = 0, held_drop = 0, held_owned = 0;
@@ -412,8 +412,15 @@ void held_after_follow_impl() {
         if (a && coop_move_i_own(h.slot, (unsigned)h.cls)) {
             // I simulate and publish this one in coop sync: pinning it would overwrite the owner's pose and publish the
             // park spot to everyone. It stays mine; the holder's console shows it in his mouth / hands.
-            if (h.pinned != a) {
-                h.pinned = a;
+            if (h.parked && h.pinned == a) {
+                // ownership came to me while my copy sat parked out of sight: bring it back before coop sync publishes it
+                *(int *)(a + 0x60) -= kParkUnits * 0x1000;
+                h.parked = false;
+                std::fprintf(stderr, "[phit] held: class %d slot %d became MINE while parked, put back at %d,%d,%d\n",
+                             h.cls, h.slot, *(int *)(a + 0x5c) >> 12, *(int *)(a + 0x60) >> 12, *(int *)(a + 0x64) >> 12);
+            }
+            if (h.pinned != a || h.mode != 2) {
+                h.pinned = a; h.mode = 2;
                 std::fprintf(stderr, "[phit] held: class %d slot %d is MINE in coop sync, not pinned (seat %d's %s; my copy at %d,%d,%d)\n",
                              h.cls, h.slot, seat, h.kind == 1 ? "hands" : "mouth", *(int *)(a + 0x5c) >> 12, *(int *)(a + 0x60) >> 12, *(int *)(a + 0x64) >> 12);
             }
@@ -421,8 +428,8 @@ void held_after_follow_impl() {
             continue;
         }
         if (!a || a == me) { if (++g.held_miss <= 8) std::fprintf(stderr, "[phit] held: no local class %d slot %d for seat %d\n", h.cls, h.slot, seat); continue; }
-        if (a != h.pinned) {
-            h.pinned = a;
+        if (a != h.pinned || h.mode != 1) {
+            h.pinned = a; h.mode = 1;
             std::fprintf(stderr, "[phit] held: pinning my class %d slot %d to seat %d's %s\n", h.cls, h.slot, seat, h.kind == 1 ? "hands" : "mouth");
         }
         const int yaw = *player::facing(gb) & 0xFFFF;
@@ -431,7 +438,9 @@ void held_after_follow_impl() {
         int *pos = (int *)(a + 0x5c);
         pos[0] = dp[0] + (int)std::lround(std::sin(ang) * ahead) * 0x1000;
         pos[2] = dp[2] + (int)std::lround(std::cos(ang) * ahead) * 0x1000;
-        pos[1] = dp[1] + up * 0x1000 + ((h.kind == 2 && g.frame - h.since > (unsigned)kMouthPullFrames) ? kParkUnits * 0x1000 : 0);
+        h.parked = h.kind == 2 && g.frame - h.since > (unsigned)kMouthPullFrames;
+        pos[1] = dp[1] + up * 0x1000 + (h.parked ? kParkUnits * 0x1000 : 0);
+        coop_move_pinned(h.slot);                           // coop sync must not publish the pinned / parked pose
         *(short *)(a + 0x8e) = (short)yaw;
         ++g.held_pins;
     }
@@ -1003,7 +1012,13 @@ void handle_reply(int seat, unsigned ik, int yaw, int x, int y, int z) {
         if (h.kind != kind || h.cls != cls || h.slot != slot || h.eggs != eggs) {
             std::fprintf(stderr, "[phit] held: seat %d now holds %s (class %d slot %d), eggs %d\n", seat,
                          kind == 1 ? "an object in its hands" : kind == 2 ? "an object in its mouth" : "nothing", cls, slot, eggs);
-            h.since = g.frame; h.pinned = nullptr;
+            if (h.parked && h.pinned && h.slot >= 0) {
+                // the hold ended with my copy parked out of sight: it stays there, and coop sync keeps it unpublished
+                // until an owner's pose lands on it
+                coop_move_pinned(h.slot, true);
+                std::fprintf(stderr, "[phit] held: seat %d's hold ended, my class %d slot %d stays parked and unpublished\n", seat, h.cls, h.slot);
+            }
+            h.since = g.frame; h.pinned = nullptr; h.parked = false; h.mode = 0;
         }
         h.kind = kind; h.cls = cls; h.slot = slot; h.eggs = eggs; h.until = g.frame + kHeldLife;
         break;
@@ -1268,7 +1283,7 @@ void exit_summary() {
     for (int v = 1; v < kVerdicts; ++v)
         if (g.st.refused_by[v & 15]) std::fprintf(stderr, "[phit:exit]   refused %s: %llu\n", verdict_name(v), g.st.refused_by[v & 15]);
     std::fprintf(stderr, "[phit:exit] eats began %llu, spat %llu, aborted %llu, spat early (mouth state not stepping) %u\n", g.st.eats_began, g.st.eats_spat, g.st.eats_aborted, g.eats_unstepped);
-    std::fprintf(stderr, "[phit:exit] held state: sent %u, received %u, pinned frames %u, no local copy %u, dropped %u, left alone as mine %u frames\n", g.held_sent, g.held_recv, g.held_pins, g.held_miss, g.held_drop, g.held_owned);
+    std::fprintf(stderr, "[phit:exit] held state: sent %u, received %u, pinned frames %u, no local copy %u, dropped %u, left alone as mine %u frames, coop publishes held back %u\n", g.held_sent, g.held_recv, g.held_pins, g.held_miss, g.held_drop, g.held_owned, coop_move_pin_skips());
     std::fflush(stderr);
 }
 
