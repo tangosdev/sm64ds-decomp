@@ -1000,15 +1000,18 @@ void tick_est(unsigned now) {
     }
     if (g_trace_id >= 0 && (g_est_frames % g_trace_every) == 0) {
         const char *me = (const char *)data_0209f394[data_0209f250 & 15];
-        char line[512]; int n = 0; line[0] = 0;
+        char line[1024]; int n = 0; line[0] = 0;
         if (me) n += std::snprintf(line + n, sizeof line - n, "me (%d,%d,%d) air %d", *(const int *)(me + 0x5c) >> 12,
                                    *(const int *)(me + 0x60) >> 12, *(const int *)(me + 0x64) >> 12, (int)*(const unsigned char *)(me + 0x6de));
-        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && n < 400; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && n < 880; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
             if (*(const unsigned short *)(a + 0x0c) != (unsigned)g_trace_id || is_player_ptr(a)) continue;
             n += std::snprintf(line + n, sizeof line - n, " | cls %d slot %d ang %04x %04x %04x", g_trace_id, (int)*(const short *)(a + 0xce),
                                (unsigned)(unsigned short)*(const short *)(a + 0x8c), (unsigned)(unsigned short)*(const short *)(a + 0x8e),
                                (unsigned)(unsigned short)*(const short *)(a + 0x90));
             if (g_trace_off >= 0) n += std::snprintf(line + n, sizeof line - n, " f%03x %d", g_trace_off, (int)*(const short *)(a + g_trace_off));
+            // run after093, lane WHOMPBACK1: the actor's place and clip radius (world units), so a row can tell how far each player is
+            n += std::snprintf(line + n, sizeof line - n, " pos %d,%d,%d r %d", *(const int *)(a + 0x5c) >> 12, *(const int *)(a + 0x60) >> 12,
+                               *(const int *)(a + 0x64) >> 12, *(const int *)(a + 0xb8) >> 12);
         }
         std::fprintf(stderr, "[coop-trace] est %u t %u %s\n", g_est_frames, (unsigned)now, line);
     }
