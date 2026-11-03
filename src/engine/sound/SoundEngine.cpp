@@ -16,6 +16,7 @@
  *   sequencer member is not what these bodies share.
  */
 #include "types.h"
+#include "private/fs_views.h"
 #include "Sound.h"
 #include "SoundPlayerRecord.h"
 #include "NestedHeapIterator.h"
@@ -247,13 +248,7 @@ struct E1 : NNSSndSeqPlayer {
     int func_0204f600(int, int, int);
     void func_0204f5a0(int);
 };
-/* NitroSDK FSArchive (0x50 bytes, laid out in src/engine/fs/FS_Archive.cpp);
-   this file only passes its address on. */
-typedef struct FSArchive {
-    char opaque[0x50];
-} FSArchive;
-typedef int (*FS_ARCHIVE_READ_FUNC)(FSArchive *p_arc, void *dst, u32 pos, u32 size);
-typedef int (*FS_ARCHIVE_WRITE_FUNC)(FSArchive *p_arc, const void *src, u32 pos, u32 size);
+/* The sound archive embeds the shared NitroSDK FSArchive before its NARC view. */
 struct S82 {
     /* 0x00 */ FSArchive arc;
     /* 0x50 */ char *narc;         /* the file func_0204ef9c checked for 'NARC' */
