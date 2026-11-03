@@ -53,12 +53,7 @@
 #include "SaveData.h"
 #include "daPly_c.h"
 #include "daObjMarioCap_c.h"
-// Ukiki only reads the camera position. Parsing the inline view constructor
-// renumbers the pointer-to-member temps this file already emits under their
-// ROM names.
-#define MKY_CAMERA_CTORS_OFF
-#include "dCamera_c.h"
-#undef MKY_CAMERA_CTORS_OFF
+#include "private/mky_dcamera.h"
 #include "SurfaceInfo.h"
 #include "dBgCh_Lin.h"
 #include "dBgPi.h"

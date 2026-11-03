@@ -4,11 +4,7 @@
 #include "dBase_c.h"
 #include "math/Matrix.h"
 
-// daMky_c sets MKY_CAMERA_CTORS_OFF. It does not construct a view, and parsing
-// this constructor renumbers the temps its ROM data records are named with.
-#ifndef MKY_CAMERA_CTORS_OFF
 extern "C" void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
-#endif
 
 /* The shared 0x80-byte view base used by dCamera_c.
  *
@@ -30,11 +26,9 @@ extern "C" void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
 struct dView_c : dBase_c {
     Matrix4x3 viewMat; /* 0x50 */
 
-#ifndef MKY_CAMERA_CTORS_OFF
     dView_c() {
         Matrix4x3_LoadIdentity(&viewMat);
     }
-#endif
     virtual ~dView_c() {}
     virtual s32 Render();
 };
