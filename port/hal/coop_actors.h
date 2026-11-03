@@ -112,6 +112,9 @@ struct CoopClassStat {
     double pin_avg, pin_max;
 };
 int coop_move_class_stats(CoopClassStat *out, int max);
+// TONGUE1: true when the actor in spawn slot `slot` of class `cls` is synced here and THIS console owns it (it simulates
+// and publishes its pose). A friend's held-object pin must leave such an actor alone.
+bool coop_move_i_own(int slot, unsigned cls);
 
 // Validators (payload = after the 12-byte head). Exposed for the forged-input rows.
 bool coop_mover_batch_validate(const void *payload, int len);

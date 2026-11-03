@@ -991,6 +991,13 @@ struct Registrar {
 // ---------------------------------------------------------------------------
 CoopMoveStats coop_move_stats() { return g_st; }
 
+bool coop_move_i_own(int slot, unsigned cls) {
+    if (slot < 0 || slot >= kSlots || g_my < 0) return false;
+    const Slot &s = g_slot[slot];
+    if (!s.a || *(const unsigned short *)(s.a + 0x0c) != cls) return false;
+    return s.owner == g_my;
+}
+
 int coop_move_class_stats(CoopClassStat *out, int max) {
     int n = 0;
     for (int i = 0; i < g_nprof && n < max; ++i) {

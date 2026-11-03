@@ -7,6 +7,7 @@
 // attacker's console never writes a friend's body except the cosmetic scale).
 
 #include "party_hits.h"
+#include "coop_actors.h"
 #include "party_hits_core.h"
 #include "party.h"
 #include "comms_hub.h"
@@ -130,7 +131,7 @@ struct G {
     struct HeldIn { int kind = 0, cls = 0, slot = -1, eggs = 0; unsigned until = 0, since = 0; char *pinned = nullptr; };
     HeldIn held_in[kHubPartySeats];
     int ho_kind = 0, ho_cls = 0, ho_slot = -1, ho_eggs = 0; unsigned ho_last = 0;
-    unsigned held_sent = 0, held_recv = 0, held_pins = 0, held_miss = 0;
+    unsigned held_sent = 0, held_recv = 0, held_pins = 0, held_miss = 0, held_drop = 0, held_owned = 0;
     unsigned mouth_miss = 0, eats_unstepped = 0;
     bool held_off = false;        // SM64DS_PHIT_HELD=0, the CONTROL: no kHeldState out, nothing pinned (the friend looks empty-handed)
     bool tongue_old = false;      // SM64DS_PHIT_TONGUE_OLD=1, the CONTROL: the tongue rules before TONGUE1 (state list, re-arm, no message gate)      // TONGUE1: hook passes the ROM mouth state left me off the eater's drawn body
@@ -384,6 +385,10 @@ void held_send(char *me) {
 // After the follower posed every ghost: an object a friend holds sits at his DRAWN hands, one in his mouth goes into
 // it (at the mouth for the tongue's pull, then out of sight, the way the cartridge hides a mouthful). My copy's own
 // Behavior still runs from the pinned spot next walk; coop_actors' slave pin ran before the follower.
+bool is_body(const char *a) {
+    for (int i = 0; i < 16; ++i) if (data_0209f394[i] == a) return true;
+    return false;
+}
 char *held_find(int cls, int slot) {
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
         if (*(const unsigned short *)(a + 0x0c) == (unsigned)cls && *(const short *)(a + 0xce) == slot) return a;
@@ -403,6 +408,18 @@ void held_after_follow_impl() {
             }
         if (!drawn || !gb) continue;
         char *a = held_find(h.cls, h.slot);
+        if (a && is_body(a)) a = nullptr;                   // never a player / ghost body
+        if (a && coop_move_i_own(h.slot, (unsigned)h.cls)) {
+            // I simulate and publish this one in coop sync: pinning it would overwrite the owner's pose and publish the
+            // park spot to everyone. It stays mine; the holder's console shows it in his mouth / hands.
+            if (h.pinned != a) {
+                h.pinned = a;
+                std::fprintf(stderr, "[phit] held: class %d slot %d is MINE in coop sync, not pinned (seat %d's %s; my copy at %d,%d,%d)\n",
+                             h.cls, h.slot, seat, h.kind == 1 ? "hands" : "mouth", *(int *)(a + 0x5c) >> 12, *(int *)(a + 0x60) >> 12, *(int *)(a + 0x64) >> 12);
+            }
+            ++g.held_owned;
+            continue;
+        }
         if (!a || a == me) { if (++g.held_miss <= 8) std::fprintf(stderr, "[phit] held: no local class %d slot %d for seat %d\n", h.cls, h.slot, seat); continue; }
         if (a != h.pinned) {
             h.pinned = a;
@@ -972,7 +989,15 @@ void handle_reply(int seat, unsigned ik, int yaw, int x, int y, int z) {
     case kHeldState: {
         if (seat < 0 || seat >= kHubPartySeats) break;
         const int v = u(x), kind = v & 0xF, eggs = (v >> 4) & 0xF, cls = u(y), slot = (short)yaw;
-        if (kind > 2 || eggs > 5 || cls < 0 || cls >= 1024) break;
+        // a held object is a level object every console shares by slot: no runtime spawn (slot -1), never a player /
+        // ghost body (class 0xbf, those ride kAttach); "nothing" carries no object at all
+        const bool bad = kind > 2 || eggs > 5 || cls < 0 || cls >= 1024 ||
+                         (kind != 0 && (slot < 0 || cls == 0xbf || cls == 0)) || (kind == 0 && (slot != -1 || cls != 0));
+        if (bad) {
+            ++g.st.refused; ++g.st.refused_by[kBadKind & 15];
+            if (++g.held_drop <= 8) std::fprintf(stderr, "[phit] held: dropped from seat %d (kind %d class %d slot %d eggs %d)\n", seat, kind, cls, slot, eggs);
+            break;
+        }
         G::HeldIn &h = g.held_in[seat];
         ++g.held_recv;
         if (h.kind != kind || h.cls != cls || h.slot != slot || h.eggs != eggs) {
@@ -1243,7 +1268,7 @@ void exit_summary() {
     for (int v = 1; v < kVerdicts; ++v)
         if (g.st.refused_by[v & 15]) std::fprintf(stderr, "[phit:exit]   refused %s: %llu\n", verdict_name(v), g.st.refused_by[v & 15]);
     std::fprintf(stderr, "[phit:exit] eats began %llu, spat %llu, aborted %llu, spat early (mouth state not stepping) %u\n", g.st.eats_began, g.st.eats_spat, g.st.eats_aborted, g.eats_unstepped);
-    std::fprintf(stderr, "[phit:exit] held state: sent %u, received %u, pinned frames %u, no local copy %u\n", g.held_sent, g.held_recv, g.held_pins, g.held_miss);
+    std::fprintf(stderr, "[phit:exit] held state: sent %u, received %u, pinned frames %u, no local copy %u, dropped %u, left alone as mine %u frames\n", g.held_sent, g.held_recv, g.held_pins, g.held_miss, g.held_drop, g.held_owned);
     std::fflush(stderr);
 }
 
