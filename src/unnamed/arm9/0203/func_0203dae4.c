@@ -8,6 +8,6 @@ struct RecKeys {
 extern struct RecKeys data_020a1162[];
 
 /* daPly_c idx's held buttons (func_0203bc7c and the DSMT scene read them). */
-int func_0203dae4(int idx) {
+unsigned short func_0203dae4(int idx) {
     return data_020a1162[idx].keys;
 }
