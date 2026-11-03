@@ -37,6 +37,7 @@ enum Scuttlebug_AssetId {
 #include "SurfaceInfo.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
+#include "Particle__System.h"
 #include "cstd.h"
 #include "math/Approach.h"
 
@@ -78,12 +79,6 @@ void  Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 
 void func_02012694(unsigned int id, void *pos);
-
-namespace Particle {
-struct System {
-    static void NewSimple(unsigned int id, int x, int y, int z);
-};
-}
 
 /* dBgCh_Actr::Init's last two parameters are Vector3_16* (the S5_
  * back-references the pointer type). */
