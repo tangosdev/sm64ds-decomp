@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-extern void CpuCopy8(int a, void *b, int c);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int func_02065a74(void);
 extern void func_02064470(void *self, int code, int idx);
 extern void func_02064554(void *self, int sel, int idx, int a3);
@@ -61,7 +61,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
         for (;;) {
             switch (r6) {
             case 1:
-                CpuCopy8(r8, &peer->command, sp8);
+                CpuCopy8((const void *)r8, &peer->command, (unsigned int)sp8);
                 r8 += 1;
                 r7 += 1;
                 r6 = fp;
@@ -70,7 +70,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             {
                 u16 t;
                 int v;
-                CpuCopy8(r8, &peer->target_bmp, fp);
+                CpuCopy8((const void *)r8, &peer->target_bmp, (unsigned int)fp);
                 r8 += 2;
                 r7 += 2;
                 t = peer->target_bmp;
@@ -90,7 +90,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             case 3:
             {
                 u8 v;
-                CpuCopy8(r8, &peer->cmd_counter, sp1C);
+                CpuCopy8((const void *)r8, &peer->cmd_counter, (unsigned int)sp1C);
                 v = peer->command;
                 r8 += 1;
                 r7 += 1;
@@ -125,7 +125,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
                 break;
             }
             case 10:
-                CpuCopy8(r8, &peer->user_data_size, sp2C);
+                CpuCopy8((const void *)r8, &peer->user_data_size, (unsigned int)sp2C);
                 r8 += 1;
                 r7 += 1;
                 r6 = sp30;
@@ -136,7 +136,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
                 peer->state = 2;
                 return r7 + 9;
             case 4:
-                CpuCopy8(r8, &peer->num_of_list, fp);
+                CpuCopy8((const void *)r8, &peer->num_of_list, (unsigned int)fp);
                 r8 += 2;
                 r7 += 2;
                 if (peer->command == 3) {
@@ -146,8 +146,8 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             case 5:
             {
                 u8 v;
-                CpuCopy8(r8, &peer->peer_packet_size, 2);
-                CpuCopy8(r8 + 2, &peer->my_packet_size, 2);
+                CpuCopy8((const void *)r8, &peer->peer_packet_size, 2);
+                CpuCopy8((const void *)(r8 + 2), &peer->my_packet_size, 2);
                 if (func_02065a74() != 0) {
                     func_02065ba0(peer->my_packet_size);
                     func_02065bb0(peer->peer_packet_size);
@@ -171,7 +171,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             case 7:
             {
                 u8 v;
-                CpuCopy8(r8, &peer->block_id, r4);
+                CpuCopy8((const void *)r8, &peer->block_id, (unsigned int)r4);
                 v = peer->command;
                 r8 += 4;
                 r7 += 4;
@@ -211,7 +211,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             case 8:
             {
                 u8 v;
-                CpuCopy8(r8, &peer->seq_no, r4);
+                CpuCopy8((const void *)r8, &peer->seq_no, (unsigned int)r4);
                 v = peer->command;
                 r8 += 4;
                 r7 += 4;

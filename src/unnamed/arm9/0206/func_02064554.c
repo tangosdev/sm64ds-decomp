@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-extern void CpuCopy8(int a, int b, int c);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
 /* NitroSDK WBT (wireless block transfer): this raises a system callback for
  * the command a peer sent. `self` is the WBT work area; its system command
@@ -44,7 +44,7 @@ void func_02064554(int self, int sel, int idx, s16 a3)
             break;
         }
         o->u.user_data.size = v;
-        CpuCopy8(c->user_data, (int)o->u.user_data.data, o->u.user_data.size);
+        CpuCopy8((const void *)c->user_data, (void *)o->u.user_data.data, o->u.user_data.size);
     } break;
     case 12:
     case 14:
