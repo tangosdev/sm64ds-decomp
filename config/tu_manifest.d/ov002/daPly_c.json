@@ -9250,62 +9250,77 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsTalkOff$4646",
+      "from": "_ZGVsLevelIntroOff$4421",
+      "to": "_ZGVsLevelIntroOff$4424",
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
+    },
+    {
+      "from": "@4424",
+      "to": "@4427",
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
+    },
+    {
+      "from": "sLevelIntroOff$4421",
+      "to": "sLevelIntroOff$4424",
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
+    },
+    {
+      "from": "_ZGVsTalkOff$4643",
       "to": "_ZGVsTalkOff$4648",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
-      "from": "@4649",
+      "from": "@4646",
       "to": "@4651",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
-      "from": "sTalkOff$4646",
+      "from": "sTalkOff$4643",
       "to": "sTalkOff$4648",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
-      "from": "_ZGVsAnchorOff$6219",
+      "from": "_ZGVsAnchorOff$6216",
       "to": "_ZGVsAnchorOff$6223",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "@6222",
+      "from": "@6219",
       "to": "@6226",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "sAnchorOff$6219",
+      "from": "sAnchorOff$6216",
       "to": "sAnchorOff$6223",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "_ZGVsDoorMsgOff$6247",
+      "from": "_ZGVsDoorMsgOff$6244",
       "to": "_ZGVsDoorMsgOff$6251",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "@6250",
+      "from": "@6247",
       "to": "@6254",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "sDoorMsgOff$6247",
+      "from": "sDoorMsgOff$6244",
       "to": "sDoorMsgOff$6251",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "_ZGVsStarDoorOff$6912",
+      "from": "_ZGVsStarDoorOff$6909",
       "to": "_ZGVsStarDoorOff$6917",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "@6915",
+      "from": "@6912",
       "to": "@6920",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "sStarDoorOff$6912",
+      "from": "sStarDoorOff$6909",
       "to": "sStarDoorOff$6917",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     }
