@@ -56,6 +56,7 @@ void port_player_set_character(void *player, unsigned ch);   // hal/player_bridg
 // data_0209cad2, [0x0f], as hal/player_bridges.cpp does). The next level's spawn reads the save byte (LoadEntranceObjects).
 extern unsigned char data_02092128[];
 extern unsigned char data_0209cad2[];
+extern void (*port_sdat_frame_hook)(void);   // hal/sdat/consumer.cpp: one call per game frame, every loop (the title's too)
 }
 
 namespace port {
@@ -444,8 +445,15 @@ bool on_ending_flight(const char *b) { return b && *(void *const *)(b + 0x370) =
 // kKeepQuietFrames frames in a level other than the arena.
 // SM64DS_GRAND_KEEP=0 keeps the old behaviour (the swap's writes stand) and SM64DS_GRAND_KEEP=plain writes the bytes back
 // once right after the swap and never again, so a row can show either next to the fix in one exe. Test-only.
-enum : unsigned { kKeepQuietFrames = 120 };
-struct Keep { bool on, pending, changed; unsigned char save, tbl; int slot, from_level; unsigned quiet, writes; };
+enum : unsigned { kKeepQuietFrames = 120, kKeepNoBodyFrames = 120 };
+// It also ends when the ending is left another way (REVSTAREXIT3 note 2): the stage mode leaves 2 after the ending began (a file
+// started again: StartFile sets it 0), or somebody else wrote the save byte (a file was read), or the room is gone while I am no
+// longer in the ending (no body for kKeepNoBodyFrames frames, as at a title, or neither the ending mode, the ending flight nor a
+// pending level change). A credits scene's own load also has no body for a frame or two, which must not count. Then my own character goes back into both bytes if a level change window
+// left Mario there, unless a file read already replaced them, and the keep is cleared, so a later room in this process never sees
+// stale values. A room lost while the ending still runs here (mode 2, a body) keeps the keep running: the credits scenes still load
+// and still need Mario for their spawn.
+struct Keep { bool on, pending, changed, ending, room_lost_noted; unsigned char save, tbl, last; int slot, from_level; unsigned quiet, writes, windows, nobody; };
 Keep g_keep;
 int keep_mode() {
     static int m = -1;
@@ -458,27 +466,79 @@ int keep_mode() {
 void keep_write(bool mario) {
     data_0209cad2[0x0f] = mario ? 0 : g_keep.save;
     data_02092128[g_keep.slot] = mario ? 0 : g_keep.tbl;
+    g_keep.last = data_0209cad2[0x0f];
     ++g_keep.writes;
 }
+bool keep_room_alive() {
+    if (!comms_hub_active() || comms_hub_state() != kHubLive) return false;
+    if (std::getenv("SM64DS_COOP") || std::getenv("SM64DS_PARTY")) return true;
+    return world_party_active() && comms_hub_room_kind() == kHubRoomWorld;
+}
+// Clear the keep. own: put my own character back first, but only while the save byte is still the one I wrote last (a file read
+// since then owns both bytes).
+void keep_drop(const char *why, bool own) {
+    const bool mine = data_0209cad2[0x0f] == g_keep.last;
+    if (own && mine) keep_write(false);
+    std::fprintf(stderr, "[starpop] GRAND keep: dropped (%s; level %d, mode %u, body %s, %u writes): %s; save character %u, table[%d] %u"
+                 " wall=%lld\n", why, (int)data_0209f2f8, (unsigned)data_0209f2d8[0], my_body() ? "yes" : "none", g_keep.writes,
+                 own && mine ? "my own character written back" : mine ? "nothing written" : "the bytes were rewritten since (a file read): left alone",
+                 (unsigned)data_0209cad2[0x0f], g_keep.slot, (unsigned)data_02092128[g_keep.slot], wall_ms());
+    g_keep = Keep();
+}
+// The drop tests, also run from the per-frame sound hook (port_sdat_frame_hook, chained when the keep is first armed), because a
+// title reached in place runs its own loop where port_star_popup_frame is not called.
+bool keep_guard() {
+    if (!g_keep.on) return false;
+    if (data_0209cad2[0x0f] != g_keep.last) { keep_drop("the save byte was written by someone else", false); return false; }
+    const unsigned mode = data_0209f2d8[0];
+    if (mode == 2) g_keep.ending = true;
+    if (g_keep.ending && mode != 2) { keep_drop("the stage mode left the ending", true); return false; }
+    if (!keep_room_alive()) {
+        const char *b = (const char *)my_body();
+        const bool ending_now = mode == 2 || (signed char)data_02092110[0] >= 0 || (b && on_ending_flight(b));
+        const bool in_ending = ending_now && (b || g_keep.nobody < kKeepNoBodyFrames);
+        if (!in_ending) { keep_drop("the room is gone", true); return false; }
+        if (!g_keep.room_lost_noted) {
+            g_keep.room_lost_noted = true;
+            std::fprintf(stderr, "[starpop] GRAND keep: the room is gone but the ending runs on here (level %d): the keep stays wall=%lld\n",
+                         (int)data_0209f2f8, wall_ms());
+        }
+    }
+    return true;
+}
+void (*g_keep_prev_hook)(void) = nullptr;
+bool g_keep_chained = false;
+void keep_frame_hook() {
+    if (g_keep_prev_hook) g_keep_prev_hook();
+    if (g_keep.on) g_keep.nobody = my_body() ? 0 : g_keep.nobody + 1;   // once per frame in every loop
+    keep_guard();
+}
 void keep_tick() {
-    if (!g_keep.on) return;
+    if (!keep_guard()) return;
     const bool pend = (signed char)data_02092110[0] >= 0;
     if (pend != g_keep.pending)
         std::fprintf(stderr, "[starpop] GRAND keep: %s (level %d -> %d): save character %u, table[%d] %u wall=%lld\n",
                      pend ? "a level change is pending, Mario for its spawn" : "no level change pending, my own character back",
                      (int)data_0209f2f8, (int)(signed char)data_02092110[0], pend ? 0u : (unsigned)g_keep.save, g_keep.slot,
                      pend ? 0u : (unsigned)g_keep.tbl, wall_ms());
+#ifndef PORT_ROM_CLEAN
+    // Proof knob SM64DS_GRAND_KEEP_QUIT=<n> (dev only): at the start of the n-th level change window of the ending, end the coop
+    // room (the hub torn down, as a lost connection tears it down), so a row can end the room inside a window.
+    if (pend && !g_keep.pending) {
+        static int quit_n = -2;
+        if (quit_n == -2) { const char *e = std::getenv("SM64DS_GRAND_KEEP_QUIT"); quit_n = (e && *e) ? std::atoi(e) : -1; }
+        if (quit_n > 0 && ++g_keep.windows == (unsigned)quit_n) {
+            std::fprintf(stderr, "[starpop] GRAND keep: proof knob: the room ends in level change window %d wall=%lld\n", quit_n, wall_ms());
+            comms_hub_teardown("proof knob: the room ends inside a level change window");
+        }
+    }
+#endif
     g_keep.pending = pend;
     if (pend) { g_keep.changed = true; g_keep.quiet = 0; keep_write(true); return; }
     keep_write(false);
     const bool ending = rd32(data_0209fc48) != 0 || data_0209f2d8[0] == 2;
     if (g_keep.changed && (int)data_0209f2f8 != g_keep.from_level && !ending && my_body()) {
-        if (++g_keep.quiet >= kKeepQuietFrames) {
-            g_keep.on = false;
-            std::fprintf(stderr, "[starpop] GRAND keep: the ending is over (level %d, %u writes): save character %u, table[%d] %u, keep ended wall=%lld\n",
-                         (int)data_0209f2f8, g_keep.writes, (unsigned)data_0209cad2[0x0f], g_keep.slot,
-                         (unsigned)data_02092128[g_keep.slot], wall_ms());
-        }
+        if (++g_keep.quiet >= kKeepQuietFrames) keep_drop("the ending is over", true);
     } else {
         g_keep.quiet = 0;
     }
@@ -495,7 +555,8 @@ void ending_as_mario(char *b, const char *why) {
         g_keep = Keep();
         g_keep.on = true; g_keep.save = save0; g_keep.tbl = tbl0; g_keep.slot = slot; g_keep.from_level = (int)data_0209f2f8;
         keep_write(false);
-        if (km == 2) g_keep.on = false;
+        if (km == 2) g_keep = Keep();
+        if (!g_keep_chained) { g_keep_chained = true; g_keep_prev_hook = port_sdat_frame_hook; port_sdat_frame_hook = keep_frame_hook; }
     }
     std::fprintf(stderr, "[starpop] GRAND %s: my body was character %u, now %u for the ending; save character %u -> %u -> %u,"
                  " table[%d] %u -> %u -> %u (%s) wall=%lld\n", why, was, *(const unsigned *)(b + 8), (unsigned)save0, (unsigned)save1,
@@ -1011,6 +1072,8 @@ void star_popup_set_only_collector(int on) {
 extern "C" void port_star_popup_frame(void) {
     using namespace port;
     census();          // proof knobs, solo too
+    keep_tick();       // STAREXIT3: the saved character through the ending, before every return (the ending is no popup, and a
+                       // lost room must neither freeze nor leave it armed)
     near_knob();
     warp_knob();
     grand_knob();
@@ -1018,7 +1081,6 @@ extern "C" void port_star_popup_frame(void) {
         !(world_party_active() && comms_hub_room_kind() == kHubRoomWorld)) return;
     init_once();
     ++g.frame;
-    keep_tick();       // STAREXIT3: the saved character through the ending (before any return: the ending is no popup)
     const Mode m = mode_now();
     if (m == kNone) { if (g.counting || g.exit_pending || g.nline) clear_receiver(); return; }
     if (!g.registered && m == kCoop) {
