@@ -253,19 +253,25 @@ int daPly_c::func_ov002_020bcd38(unsigned char *params, int beginFrame, int endF
  * entry retains the retail two-word stack snapshot under 2004/b56 C++.
  * w[0] is the animation ID; w[1] is the signed animation parameter.
  * Scalar SetAnim/particle ABI calls and the raw spawned-prop view remain. */
-struct DestructorChain { DestructorChain *next; void *destructor; void *object; };
+struct DestructorChain {
+    DestructorChain *next;
+    void *destructor;
+    void *object;
+};
 
 extern "C" {
-typedef struct { int w[2]; } AnimEntry27;
+typedef struct {
+    int w[2];
+} AnimEntry27;
 
 /* Single-step animation scripts referenced from data_ov002_0210a7a0.
  * They sit in the shared PMF band, so each keeps its own initialized input
  * section (manifest routes .data.player_anim_0* to the retail addresses). */
-AnimEntry27 data_ov002_02109ff4[1] = { { 0xb3, 0 } };
-AnimEntry27 data_ov002_0210a1d4[1] = { { 0xb7, 0 } };
-AnimEntry27 data_ov002_0210a3dc[1] = { { 1, 0 } };
-AnimEntry27 data_ov002_0210a434[1] = { { 0xbc, 0 } };
-AnimEntry27 data_ov002_0210a4bc[1] = { { 0xbf, 0 } };
+AnimEntry27 data_ov002_02109ff4[1] = {{0xb3, 0}};
+AnimEntry27 data_ov002_0210a1d4[1] = {{0xb7, 0}};
+AnimEntry27 data_ov002_0210a3dc[1] = {{1, 0}};
+AnimEntry27 data_ov002_0210a434[1] = {{0xbc, 0}};
+AnimEntry27 data_ov002_0210a4bc[1] = {{0xbf, 0}};
 
 /* Player animation scripts, frame windows, hurt tables, and body-model
  * pointer tables. All values and pointer targets are read by the state
@@ -284,48 +290,48 @@ extern SharedFilePtr data_ov002_0210eb00;
 extern SharedFilePtr data_ov002_0210e790;
 extern SharedFilePtr data_ov002_0210e7f0;
 
-int data_ov002_0210a59c[3] = { 0x2a000, 0x34000, 0x45000 };
-int data_ov002_0210a5a8[3] = { 83, 79, 75 };
-int data_ov002_0210a5b4[3] = { 82, 81, 76 };
-int data_ov002_0210a5c0[3] = { 56, 57, 58 };
-u16 data_ov002_0210a5cc[8] = { 5, 7, 6, 8, 2, 6, 3, 13 };
-u16 data_ov002_0210a5dc[8] = { 5, 9, 6, 10, 2, 8, 0, 0 };
+int data_ov002_0210a59c[3] = {0x2a000, 0x34000, 0x45000};
+int data_ov002_0210a5a8[3] = {83, 79, 75};
+int data_ov002_0210a5b4[3] = {82, 81, 76};
+int data_ov002_0210a5c0[3] = {56, 57, 58};
+u16 data_ov002_0210a5cc[8] = {5, 7, 6, 8, 2, 6, 3, 13};
+u16 data_ov002_0210a5dc[8] = {5, 9, 6, 10, 2, 8, 0, 0};
 AnimEntry27 data_ov002_0210a5ec[2] = {
-    { 192, 0x40000000 },
-    { 0, 0 },
+    {192, 0x40000000},
+    {0, 0},
 };
 AnimEntry27 data_ov002_0210a5fc[2] = {
-    { 193, 0x40000000 },
-    { 0, 0 },
+    {193, 0x40000000},
+    {0, 0},
 };
-u32 data_ov002_0210a60c[4] = { 88, 87, 89, 90 };
+u32 data_ov002_0210a60c[4] = {88, 87, 89, 90};
 AnimEntry27 data_ov002_0210a61c[2] = {
-    { 178, 0x40000000 },
-    { 0, 0 },
+    {178, 0x40000000},
+    {0, 0},
 };
 AnimEntry27 data_ov002_0210a62c[2] = {
-    { 184, 0x40000000 },
-    { 185, 0 },
+    {184, 0x40000000},
+    {185, 0},
 };
 AnimEntry27 data_ov002_0210a63c[2] = {
-    { 182, 0x40000000 },
-    { 0, 0 },
+    {182, 0x40000000},
+    {0, 0},
 };
 AnimEntry27 data_ov002_0210a64c[2] = {
-    { 184, 0x40000000 },
-    { 185, 0 },
+    {184, 0x40000000},
+    {185, 0},
 };
 AnimEntry27 data_ov002_0210a65c[2] = {
-    { 190, 0x40000000 },
-    { 188, 0 },
+    {190, 0x40000000},
+    {188, 0},
 };
 AnimEntry27 data_ov002_0210a66c[2] = {
-    { 189, 0x40000000 },
-    { 190, 0 },
+    {189, 0x40000000},
+    {190, 0},
 };
 AnimEntry27 data_ov002_0210a67c[2] = {
-    { 1, 0x40000000 },
-    { 0, 0 },
+    {1, 0x40000000},
+    {0, 0},
 };
 SharedFilePtr *data_ov002_0210a68c[4] = {
     &data_ov002_0210ec50,
@@ -346,12 +352,12 @@ SharedFilePtr *data_ov002_0210a6ac[4] = {
     &data_ov002_0210e7f0,
 };
 AnimEntry27 data_ov002_0210a6bc[3] = {
-    { 54, 0x40000000 },
-    { 55, 0x40000000 },
-    { 183, 0 },
+    {54, 0x40000000},
+    {55, 0x40000000},
+    {183, 0},
 };
-u32 data_ov002_0210a6d4[6] = { 105, 106, 18, 20, 19, 21 };
-int data_ov002_0210a6ec[6] = { 18, 20, 0, 0, 0, 0 };
+u32 data_ov002_0210a6d4[6] = {105, 106, 18, 20, 19, 21};
+int data_ov002_0210a6ec[6] = {18, 20, 0, 0, 0, 0};
 
 /* PLAYER's registry descriptor: the factory and the draw/update priorities
  * the actor framework reads from data_020a4bb8[PLAYER]. */
@@ -381,50 +387,31 @@ extern AnimEntry27 data_ov002_0210e7b8[];
 
 /* w[0] is the SetAnim id, w[1] the value (0x40000000 or 0). */
 AnimEntry27 data_ov002_0210a720[4] = {
-    { 181, 0x40000000 },
-    { 180, 0x40000000 },
-    { 178, 0x40000000 },
-    { 179, 0 },
+    {181, 0x40000000},
+    {180, 0x40000000},
+    {178, 0x40000000},
+    {179, 0},
 };
 AnimEntry27 data_ov002_0210a740[4] = {
-    { 186, 0x40000000 },
-    { 71, 0x40000000 },
-    { 187, 0x40000000 },
-    { 188, 0 },
+    {186, 0x40000000},
+    {71, 0x40000000},
+    {187, 0x40000000},
+    {188, 0},
 };
 /* Halfword ramp between those lists and the index table. No relocation. */
 u16 data_ov002_0210a760[32] = {
-    0x3e1f, 0x3e1f, 0x3e1f, 0x3e1f,
-    0x3f1f, 0x3f1f, 0x3f1f, 0x3f1f,
-    0x43ff, 0x43ff, 0x43ff, 0x43ff,
-    0x4bef, 0x4bef, 0x4bef, 0x4bef,
-    0x7fef, 0x7fef, 0x7fef, 0x7fef,
-    0x7df0, 0x7df0, 0x7df0, 0x7df0,
-    0x7df8, 0x7df8, 0x7df8, 0x7df8,
-    0x69ff, 0x69ff, 0x69ff, 0x69ff,
+    0x3e1f, 0x3e1f, 0x3e1f, 0x3e1f, 0x3f1f, 0x3f1f, 0x3f1f, 0x3f1f, 0x43ff, 0x43ff, 0x43ff,
+    0x43ff, 0x4bef, 0x4bef, 0x4bef, 0x4bef, 0x7fef, 0x7fef, 0x7fef, 0x7fef, 0x7df0, 0x7df0,
+    0x7df0, 0x7df0, 0x7df8, 0x7df8, 0x7df8, 0x7df8, 0x69ff, 0x69ff, 0x69ff, 0x69ff,
 };
 
 AnimEntry27 *data_ov002_0210a7a0[] = {
-    data_ov002_02109ff4,
-    data_ov002_0210a61c,
-    data_ov002_0210a720,
-    data_ov002_0210a63c,
-    data_ov002_0210a1d4,
-    data_ov002_0210a64c,
-    data_ov002_0210a740,
-    data_ov002_0210a66c,
-    data_ov002_0210e7b8,
-    data_ov002_0210a67c,
-    data_ov002_0210a4bc,
-    data_ov002_0210a434,
-    data_ov002_0210a3dc,
-    data_ov002_0210a5ec,
-    data_ov002_0210a5fc,
-    data_ov002_0210a62c,
-    data_ov002_0210a6bc,
-    data_ov002_0210a65c,
+    data_ov002_02109ff4, data_ov002_0210a61c, data_ov002_0210a720, data_ov002_0210a63c,
+    data_ov002_0210a1d4, data_ov002_0210a64c, data_ov002_0210a740, data_ov002_0210a66c,
+    data_ov002_0210e7b8, data_ov002_0210a67c, data_ov002_0210a4bc, data_ov002_0210a434,
+    data_ov002_0210a3dc, data_ov002_0210a5ec, data_ov002_0210a5fc, data_ov002_0210a62c,
+    data_ov002_0210a6bc, data_ov002_0210a65c,
 };
-
 
 // @symbol func_ov002_020bcdf0
 void func_ov002_020bcdf0(char *self)
