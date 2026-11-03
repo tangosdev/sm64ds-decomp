@@ -107,7 +107,7 @@ extern "C" {
 void func_02020820(char *self, int *src, int arg2, int arg3, u8 arg5, u8 arg6)
 {
     OamAnimation *anim = (OamAnimation *)self;
-    anim->frames = (const void *)src[0];
+    anim->frames = (const OamAnimFrame *)src[0];
     anim->frameCount = src[1];
     func_0202043c((int)self);
     anim->palette = -1;
