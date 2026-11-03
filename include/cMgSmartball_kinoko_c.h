@@ -62,6 +62,7 @@ struct cMgSmartball_kinoko_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    ~cMgSmartball_kinoko_c() {}
 
     /* Recovered helper: the squared hit radius the ball's HitKinokos sweep
        compares a plane distance against -- mRadius * mRadius in fixed

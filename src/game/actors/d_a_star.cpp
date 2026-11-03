@@ -230,23 +230,7 @@ extern s32 IsStarCollected(s32 level, s32 idx);
  * one this file is bound to. The deallocation is an inline operator delete --
  * dEnemyBase_c's, reached because dEnemyBase_c is this class's IMMEDIATE base.
  */
-#ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. MSVC
- * folds the Itanium destructor variants into the one ~daStar_c() it emits,
- * so compiling the definition below as well would define that symbol twice.
- * This arm spells out, in terms of it, what the deleting destructor this
- * file is enrolled for does: the D1 body, called qualified so it is a direct
- * call even where a header declares the destructor virtual, then the
- * class-specific operator delete. Nothing here reaches mwccarm: it builds
- * the `#else` arm and emits the ROM bytes it always emitted, and the object
- * is byte-identical either way. */
-extern "C" daStar_c *_ZN8daStar_cD0Ev(daStar_c *thiz)
-{
-    thiz->daStar_c::~daStar_c();     /* the D1 body, through the one host symbol */
-    daStar_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
-    return thiz;
-}
-#else
+#ifndef _MSC_VER
 daStar_c::~daStar_c()
 {
 }

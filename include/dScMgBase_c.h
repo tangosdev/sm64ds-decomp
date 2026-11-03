@@ -29,7 +29,7 @@ struct dScMgBase_c : dScene_c {
        itself or its immediate base, so descendants cannot reach dScene_c's.
        Removing this breaks D0 for all 32 of them. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, (Heap *)data_020a0eac);
+        Memory::Deallocate(ptr, data_020a0eac);
     }
 
     /* --- overrides of dScene_c's own virtuals, same signature, in _ZTV order.

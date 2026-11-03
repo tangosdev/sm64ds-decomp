@@ -17,15 +17,9 @@
  * - The destructor, the key function, is in d_s_entry.cpp. This file
  *   defines no virtual the class declares first, so it emits no
  *   dScEntry_c vtable or typeinfo.
- * - OamAnimation() and icon_c() are written out of line. The
- *   cartridge's copies close the run after the RESULT factory, the
- *   place the inline copies a factory forces would land. Inline
- *   copies are not emitted here: the factories name the two
- *   constructors by their linker names, so nothing in C++ uses them.
- * - The factory keeps its hand-built construction. A `new dScEntry_c'
- *   would need the class constructor, which is not reconstructed.
- *   Its __cxa_vec_ctor calls take the icon_c and OamAnimation
- *   structors by address, which C++ cannot spell.
+ * - OamAnimation() and icon_c() stay out of line, closing the run
+ *   after the RESULT factory. Both profile factories are
+ *   `return new dScEntry_c`.
  * - The header names the entry object and shared step workspace. The
  *   extern "C" step callbacks take the scene as a dScEntry_c pointer and
  *   reach it through those members. The transition helpers use the
@@ -116,11 +110,6 @@ extern "C" dFdBrightness_c *data_0209f5bc;
 #include "dBase_c.h"
 #include "G2.h"
 #include "Message.h"
-
-/* The RESULT factory retains its two-word aggregate-copy schedule. */
-struct P2Copy {
-    int words[2];
-};
 
 extern "C" {
 int func_0203d974(void);
@@ -1475,7 +1464,7 @@ void dScEntry_c::UpdateMatchLoading() {
 
 // @symbol _ZN10dScEntry_c19LoadCourseResourcesEi
 void dScEntry_c::LoadCourseResources(int course) {
-    mHeap::Heap_t *previousHeap = static_cast<mHeap::Heap_t *>(data_020a0eac)->SetDefault();
+    mHeap::Heap_t *previousHeap = data_020a0eac->SetDefault();
     LoadArchive(7);
     int selectedArchive = course + 2;
     unsigned int archive;
@@ -2286,60 +2275,8 @@ bool dScEntry_c::BeforeInitResources() {
 }
 
 // @symbol dScEntry_c_classInit_RESULT
-/* The array runtime passes each element address and ignores lifecycle
- * results. Explicit function-pointer casts mark that runtime ABI
- * boundary. */
-extern "C" {
-/* local extern: the factory runs the base constructor over fresh operator new
-   storage and stores the vptrs itself; C++ has no call spelling for a C2. */
-extern void *_ZN7fBase_cC2Ev(void *);
-extern void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,
-                           void (*ctor)(void *), void (*dtor)(void *));
-
-extern char data_0208e4b8[];
-extern char _ZTV10dScEntry_c[];
-/* local extern: __cxa_vec_ctor takes the element constructor and destructor
-   by address, and C++ cannot take a constructor's or destructor's address. */
-extern dScEntry_c::icon_c *_ZN10dScEntry_c6icon_cD1Ev(dScEntry_c::icon_c *object);
-extern dScEntry_c::icon_c *_ZN10dScEntry_c6icon_cC1Ev(dScEntry_c::icon_c *object);
-extern OamAnimation *_ZN12OamAnimationD1Ev(OamAnimation *object);
-extern OamAnimation *_ZN12OamAnimationC1Ev(OamAnimation *object);
-
-/* Reconstructed source-style name: SM64DS proves dScEntry_c through RTTI,
- * allocation size, vtable identity, and the RESULT registry profile;
- * later EAD lineage supplies classInit. Exact original spelling is not
- * preserved. Historical alias: func_ov075_0211a740. */
-void *dScEntry_c_classInit_RESULT(void) {
-    /* The raw byte pointer preserves the ROM factory's address-expression
-       tree; typed member expressions fold five instructions in mwccarm.
-       Members cast through it (pauseFlags, the three steps, mIcons,
-       mOamAnimations) are byte-neutral. */
-    char *p = (char *)fBase_c::operator new(sizeof(dScEntry_c));
-    if (p) {
-        dScEntry_c::Step v;
-        _ZN7fBase_cC2Ev(p);
-        *(char **)p = data_0208e4b8;
-        *(char **)p = (char *)_ZTV8dScene_c;
-        {
-            unsigned char *flags = &((dScEntry_c *)p)->pauseFlags;
-            *flags |= 1;
-            *flags |= 4;
-        }
-        *(char **)p = _ZTV10dScEntry_c;
-        v = 0;
-        /* Keep the factory's aggregate-copy schedule for these three stores. */
-        *(struct P2Copy *)&((dScEntry_c *)p)->mEnterStep = *(struct P2Copy *)&v;
-        *(struct P2Copy *)&((dScEntry_c *)p)->mBehaviorStep = *(struct P2Copy *)&v;
-        *(struct P2Copy *)&((dScEntry_c *)p)->mRenderStep = *(struct P2Copy *)&v;
-        __cxa_vec_ctor(((dScEntry_c *)p)->mIcons, 9, sizeof(dScEntry_c::icon_c),
-                       (void (*)(void *))_ZN10dScEntry_c6icon_cC1Ev,
-                       (void (*)(void *))_ZN10dScEntry_c6icon_cD1Ev);
-        __cxa_vec_ctor(
-            ((dScEntry_c *)p)->mOamAnimations, 4, sizeof(((dScEntry_c *)p)->mOamAnimations[0]),
-            (void (*)(void *))_ZN12OamAnimationC1Ev, (void (*)(void *))_ZN12OamAnimationD1Ev);
-    }
-    return p;
-}
+extern "C" void *dScEntry_c_classInit_RESULT(void) {
+    return new dScEntry_c;
 }
 
 // @symbol _ZN12OamAnimationC1Ev

@@ -9344,6 +9344,9 @@
       "src/unnamed/arm9/0204/func_02040a94.c": [
         "return:int []"
       ],
+      "src/unnamed/arm9/0204/func_02040c34.c": [
+        "return:FileShareWork"
+      ],
       "src/unnamed/arm9/0204/func_020417d0.c": [
         "return:unsigned int []"
       ],

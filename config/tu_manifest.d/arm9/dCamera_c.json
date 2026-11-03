@@ -1877,19 +1877,19 @@
           {
             "section": ".init",
             "original": [
-              296
+              301
             ],
             "desired": [
-              296
+              301
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              294
+              299
             ],
             "desired": [
-              294
+              299
             ]
           },
           {
@@ -2028,6 +2028,21 @@
     }
   },
   "compiler_only_output": [
+    {
+      "symbol": "_ZN7dView_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor helper emitted because dCamera_c_classInit is return new dCamera_c and dView_c's constructor is inline. No symbols.txt entry, vague linkage, no inbound relocation."
+    },
+    {
+      "symbol": "_ZN7dBase_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor helper emitted because dCamera_c_classInit is return new dCamera_c. No symbols.txt entry, vague linkage, no inbound relocation."
+    },
+    {
+      "symbol": "_ZN9Matrix4x3D1Ev",
+      "disposition": "deadstrip",
+      "reason": "Empty destructor of the view matrix, emitted with the inlined dView_c constructor. No symbols.txt entry, vague linkage, no inbound relocation."
+    },
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",

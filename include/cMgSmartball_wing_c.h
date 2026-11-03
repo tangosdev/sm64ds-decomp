@@ -54,6 +54,7 @@ struct cMgSmartball_wing_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    ~cMgSmartball_wing_c() {}
 
     /* Recovered helpers: IsSettled reports the wing done (never triggered or
        angle at its 0x3000 limit); Trigger is the piranha's feed bump;

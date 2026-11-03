@@ -130,7 +130,6 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
  * out-of-line virtual, so this TU emits the vtable. The factory is
  * `return new daPropeller_Heyho_c()`, which calls the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). */
-extern int _ZTV19daPropeller_Heyho_c[];
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
