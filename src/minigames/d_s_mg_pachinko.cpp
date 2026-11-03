@@ -88,20 +88,6 @@ struct C2 {
     unsigned char state;
 };
 
-/* PachinkoFlyer_StateDescend's typed view of mFlyer from its y (0x5bb4).
-   `volatile` on y is needed: the ROM reloads it after the store. */
-typedef struct Ent {
-    volatile int y; /* 0x00 mFlyer[i].y (20.12) */
-    int vx;         /* 0x04 mFlyer[i].vx */
-    int vy;         /* 0x08 mFlyer[i].vy (20.12) */
-    char _padC[0x10];
-} Ent;
-
-typedef struct Obj {
-    char _pad0[0x5bb4]; /* 0x0000 */
-    Ent entries[8];     /* 0x5bb4 mFlyer[0].y */
-} Obj;
-
 /* The {code pointer, adjustment} records PachinkoPipe_UpdateAll,
    PachinkoBall_UpdateAll and PachinkoBobOmb_UpdateAll walk. */
 struct Ent7d0 { int a; int b; };
@@ -306,7 +292,7 @@ extern void PachinkoFlyer_CheckHits(char *c, int idx);
 extern void PachinkoFlyer_StateLeave(char *c, int i);
 extern void PachinkoFlyer_StatePause(char *c, int i);
 extern void PachinkoFlyer_StateCross(char *p, int i);
-extern void PachinkoFlyer_StateDescend(Obj *self, int i);
+extern void PachinkoFlyer_StateDescend(dScMgPachinko_c *self, int i);
 extern void PachinkoFlyer_StateWaiting(char *c, int idx);
 extern void PachinkoFlyer_Update(C2 *c);
 extern void PachinkoTarget_Choose(char *obj);
@@ -770,13 +756,13 @@ void PachinkoFlyer_StateCross(char *raw, int i) {
 /* Moves flyer i down: y += vy. While y is still below -0xc0 it slows
    (vy -= 0x60); once it reaches -0xc0 it snaps to -0xc0000 and stops.
    Then hands on to PachinkoFlyer_StateCross. */
-void PachinkoFlyer_StateDescend(Obj *self, int i) {
-    self->entries[i].y += self->entries[i].vy;
-    if (self->entries[i].y >> 12 >= -0xc0) {
-        self->entries[i].y = -0xc0000;
-        self->entries[i].vy = 0;
+void PachinkoFlyer_StateDescend(dScMgPachinko_c *self, int i) {
+    ((volatile int &)self->mFlyer[i].y) += self->mFlyer[i].vy;
+    if (((volatile int &)self->mFlyer[i].y) >> 12 >= -0xc0) {
+        ((volatile int &)self->mFlyer[i].y) = -0xc0000;
+        self->mFlyer[i].vy = 0;
     } else {
-        self->entries[i].vy -= 0x60;
+        self->mFlyer[i].vy -= 0x60;
     }
     PachinkoFlyer_StateCross((char *)self, i);
 }
