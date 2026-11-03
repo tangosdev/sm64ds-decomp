@@ -1,10 +1,5 @@
 #include "Ov007Model.h"
-
-/* The BTA header word this file reads, as dExtAnmTexSRT_c.h spells it: a
- * partial C view of a tag that header defines only for C++. */
-struct BTA_File {
-    unsigned short numFrames; /* 0x00 */
-};
+#include "private/BTA_File.h"
 
 /* Unprototyped, as in func_ov007_020bc3dc. */
 extern void func_ov007_020c9214();
