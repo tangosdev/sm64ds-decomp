@@ -1,6 +1,7 @@
 //cpp
 // @symbol daPly_c_classInit
 #include "daPly_c.h"
+#include "daPly_anim.h"
 
 /* Reconstructed source-style name: SM64DS proves daPly_c through RTTI,
  * allocation size, vtable identity, and the PLAYER registry profile;
@@ -9,8 +10,6 @@
 extern "C" daPly_c *daPly_c_classInit() {
     return new daPly_c;
 }
-
-struct Anim2fec { short a; short x; short y; short z; };
 
 /* Uniform cubic B-spline control points: {speed, x, y, z}.  The spline
    evaluator blends four consecutive rows and advances by speed / 1000. */

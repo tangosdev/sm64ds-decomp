@@ -53,6 +53,7 @@
 #include "types.h"
 #include "common.h"
 #include "daPly_c.h"
+#include "daPly_anim.h"
 #include "SpawnInfo.h"
 #include "dExtAnm2Model_c.h"
 #include "PlayerInput.h"
@@ -115,7 +116,6 @@ struct CameraRaw;
  * below is the body's own, moved out unchanged, and the body keeps its own
  * declaration of the object. */
 struct Entry18 { s16 val; /* 0x0 */ char _pad[0x16]; };
-struct Anim2fec { short a; short x; short y; short z; };
 extern Anim2fec data_ov002_0210a8b8[];
 struct ObjTeleport { s16 x, y, z; u16 param; };
 struct State2i { int a; int b; };
