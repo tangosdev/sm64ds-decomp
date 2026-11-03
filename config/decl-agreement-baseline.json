@@ -16209,11 +16209,6 @@
         "kind:data"
       ]
     },
-    "func_0201a458": {
-      "include/decl_common.h": [
-        "return:int"
-      ]
-    },
     "func_0201a5f8": {
       "src/game/stages/d_s_mb.cpp": [
         "param:#1 int"
