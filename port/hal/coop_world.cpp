@@ -1005,6 +1005,11 @@ void tick_est(unsigned now) {
         char line[1024]; int n = 0; line[0] = 0;
         if (me) n += std::snprintf(line + n, sizeof line - n, "me (%d,%d,%d) air %d", *(const int *)(me + 0x5c) >> 12,
                                    *(const int *)(me + 0x60) >> 12, *(const int *)(me + 0x64) >> 12, (int)*(const unsigned char *)(me + 0x6de));
+        // run after093, lane WHOMPBACK1: every player body slot's place as this console holds it (friends' bodies included)
+        for (int q = 0; q < 4 && n < 600; ++q)
+            if (const char *pb = (const char *)data_0209f394[q])
+                n += std::snprintf(line + n, sizeof line - n, " b%d(%d,%d,%d)", q, *(const int *)(pb + 0x5c) >> 12, *(const int *)(pb + 0x60) >> 12,
+                                   *(const int *)(pb + 0x64) >> 12);
         for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && n < 880; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
             if (*(const unsigned short *)(a + 0x0c) != (unsigned)g_trace_id || is_player_ptr(a)) continue;
             n += std::snprintf(line + n, sizeof line - n, " | cls %d slot %d ang %04x %04x %04x", g_trace_id, (int)*(const short *)(a + 0xce),
