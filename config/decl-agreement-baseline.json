@@ -16986,12 +16986,6 @@
         "param:#1 void *"
       ]
     },
-    "func_02040704": {
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
-        "arity:1",
-        "return:unsigned char"
-      ]
-    },
     "func_020408b0": {
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "param:#1 int"
