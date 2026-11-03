@@ -64,7 +64,7 @@ void star_popup_view(StarPopupView *out);
 bool star_popup_party_rx(int seat, const unsigned char *d, int len);
 
 struct StarPopupStats {
-    unsigned long long tx, rx, shown, toast, exits, dropped, dup, notes, markers;
+    unsigned long long tx, rx, shown, toast, exits, dropped, dup, notes;
 };
 StarPopupStats star_popup_stats();
 
