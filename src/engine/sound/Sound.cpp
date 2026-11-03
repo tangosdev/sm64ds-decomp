@@ -572,6 +572,12 @@ extern "C" void func_0201267c(unsigned int id, const Vector3 *v)
     Sound::Play(3, id, *v);
 }
 
+#ifdef _MSC_VER
+/* run after093, lane MPSOUND1: set by port/hal/coop_sound.cpp on its first frame; null
+   in every target that does not link it. Host only. */
+extern "C" { void (*port_coop_sound_hook)(unsigned int kind, unsigned int id, const void *v) = 0; }
+#endif
+
 namespace Sound {
 
 // @symbol _ZN5Sound9PlayBank3EjRK7Vector3
@@ -589,6 +595,14 @@ void PlayBank0(u32 id, const Vector3 &pos)
 // @symbol _ZN5Sound4PlayEjjRK7Vector3
 void Play(unsigned int j1, unsigned int j2, const Vector3 &v)
 {
+#ifdef _MSC_VER
+    /* run after093, lane MPSOUND1: every sound request, whichever wrapper made it
+       (PlayBank0, PlayCharVoice, the flat name), is shown to the party / coop
+       sound layer (port/hal/coop_sound.h), which sends the ones my own body asks
+       for. Host only; the DS side is untouched. */
+    if (port_coop_sound_hook)
+        port_coop_sound_hook(j1, j2, &v);
+#endif
     char *s = (char *)func_02050cdc(j1, j2);
     int t = *(unsigned char *)(s + 5);
     if (t == 9 || t == 2) {

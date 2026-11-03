@@ -275,6 +275,11 @@ void vs_arena_sound_request(unsigned kind, unsigned id, const void *v);
 // <near>,<far> or "off"). Party sounds (PSND1) reuse these.
 double vs_puppet_sfx_distance(const int me[3], const int src[3]);
 float vs_puppet_sfx_gain(const int me[3], const int src[3]);
+// MPSOUND1: the rule itself (true = the near..far range is on; near / far in
+// units) and the camera-vector length the ROM's own fade needs for a sound
+// `dist` units from my body (hal/coop_sound.cpp plays party / coop sounds with it).
+bool vs_puppet_sfx_rule(double *near_out, double *far_out);
+double vs_puppet_sfx_romdist(double dist);
 
 // ---------------------------------------------------------------------------
 // BODIES OF ABSENT SEATS. A seat with no console is taken out of play the way

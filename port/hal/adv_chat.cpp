@@ -15,6 +15,9 @@
 #include <cstring>
 
 extern "C" const char *port_vs_slot_name(int slot);   // hal/star_flow.cpp
+// run after093 lane MPSOUND1: a friend's sound frame goes here (hal/coop_sound.h). A
+// pointer, not a call: this file links into targets that do not take coop_sound.cpp.
+extern "C" { void (*port_chat_sound_rx)(int seat, const unsigned char *buf, int n) = 0; }
 
 namespace port {
 namespace {
@@ -31,6 +34,7 @@ enum : int {
 const unsigned kTagChat = 0x544e5953u;           // 'S','Y','N','T'
 // The 6.3 addendum's typing frame: flags bit0, exactly the 12-byte head.
 const unsigned char kFlagTyping = 0x01;
+const unsigned char kFlagSound = 0x80;    // MPSOUND1: a sound frame (hal/coop_sound.h)
 const unsigned kCopyAtMs[kCopies] = {0, 150, 500};
 
 // Sender: 1 message per 1.5 s, burst 3. Receiver: 1 per second per seat,
@@ -673,6 +677,9 @@ void pump_recv() {
             // THE TYPING FRAME (6.3 addendum). Only bit0 exists; it is exactly
             // the 12-byte head with text_len 0, state 0 or 1 in byte 10 and 0
             // in byte 11. Anything else is dropped and counted.
+            // MPSOUND1: flags 0x80 is a friend's sound frame (hal/coop_sound.h); a build
+            // without that file leaves the hook null and counts it here as before
+            if (h.flags == kFlagSound && port_chat_sound_rx) { port_chat_sound_rx(seat, buf, n); continue; }
             if (h.flags != kFlagTyping) { ++g.rx_bad_flags; continue; }
             if (n != kHeadBytes || h.text_len != 0 || buf[10] > 1 || buf[11] != 0) {
                 ++g.rx_typing_bad;

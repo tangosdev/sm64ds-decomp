@@ -668,6 +668,7 @@ void port_hub_presence_frame(void);
 void port_party_stars_frame(void);
 /* PLAYINT1: party / coop player interactions (hal/party_hits.cpp). Inert outside party / coop rooms. */
 void port_party_hits_frame(void);
+void port_coop_sound_frame(void);   /* hal/coop_sound.h (MPSOUND1) */
 void port_party_hits_prewalk(void);   /* INTERACT9: re-asserts the mouth / hands links right before the actor walk */
 void port_coop_save_frame(void);
 void port_coop_save_boot(void);
@@ -22334,6 +22335,7 @@ int main(void)
             port_coop_world_frame();   /* hook: COOPWORLD1, inert unless SM64DS_COOP */
             port_party_stars_frame();
             port_party_hits_frame();   /* hook: PLAYINT1, inert outside party / coop rooms */
+            port_coop_sound_frame();   /* hook: MPSOUND1, friends' sounds; inert outside party / coop rooms and world parties */
             port_star_popup_frame();   /* hook: STARPOP1, inert outside party / coop rooms */
             port_event_frame();        /* hook: EVENTS1, inert outside a live world hub */
             port_career_frame(game_ticked);   /* hook: CAREER1, the pause Career page's playtime (hal/career.h) */
