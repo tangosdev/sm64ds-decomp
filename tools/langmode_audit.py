@@ -127,23 +127,9 @@ def hand_spells_own_symbol(path, stem):
     return type like `int *_ZN14daObjWc_Mizu_cD0Ev(int *t) {` still counts, because `*`
     is a declarator token and `(` is not.
 
-    PROSE IS NOT A DEFINITION. The lstrip test below catches a mangled name in a
-    comment only when its line *starts* the comment; a block-comment continuation
-    line that begins with the symbol itself -- prose that names the ROM's symbol,
-    indented without a leading `*` -- slips past it. `[^;{]*` then runs on through
-    the closing `*/` and swallows the NEXT real function's signature and brace, so
-    the file is scored as hand-spelling a symbol it never defines.
-    `src/minigames/d_s_mg_card.cpp` did exactly that: a comment recording that `new`
-    inlines `_ZN12dMgCardObj_cC1Ev` matched 163 chars ending at
-    `dScMgCard_c_classInit()` + `{`, while the constructor is emitted implicitly and
-    appears nowhere as a definition.
-
-    So this metric is masked through `delaunder.code_mask` for the reason the launder,
-    pragma and `_ZTV` metrics are, stated at their call sites: a defect count must move
-    only when code does, never when prose is reworded. Testing the symbol occurrence
-    itself is enough -- a match that bridges a comment can only ever *begin* in one,
-    since a declaration's `;` already stops `[^;{]*`. Tree-wide this reclassifies that
-    one file and nothing else: one fall, zero rises.
+    Comments and strings are masked through `delaunder.code_mask`, as the launder,
+    pragma and `_ZTV` metrics are: a block-comment line naming the symbol let
+    `[^;{]*` run past `*/` into the next function's brace (d_s_mg_card.cpp).
     """
     try:
         t = _source_text(path)
