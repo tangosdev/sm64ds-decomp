@@ -83,7 +83,7 @@ short atan2_hold_d_a_wanwan_1(int y, int x);
 
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(void *out, void *a, void *b);
-void Vec3_Sub(void *out, void *a, void *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 void AddVec3(void *a, void *b, void *c);
 int Vec3_HorzLen(void *v);
@@ -507,7 +507,7 @@ void func_ov014_021122dc(daWanwan_c *c) {
     Vector3 diff;
     Vector3 scaled;
 
-    Vec3_Sub(&diff, &c->mPosX, &c->mLinkPos[0]);
+    Vec3_Sub(&diff, (const Vector3 *)&c->mPosX, &c->mLinkPos[0]);
     p = &c->mLinkPos[0];
     i = 0;
     do {
@@ -592,7 +592,7 @@ void func_ov014_02111fe0(daWanwan_c *c) {
     Vector3 out;
     int len;
     int lim;
-    Vec3_Sub(&v, &c->mPos, (Vector3 *)&c->mSpawnPosX);
+    Vec3_Sub(&v, &c->mPos, (const Vector3 *)&c->mSpawnPosX);
     len = LenVec3(&v);
     lim = c->mChainExtension * 7 + kRestLift;
     if (len <= lim)
