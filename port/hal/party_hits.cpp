@@ -141,6 +141,7 @@ struct G {
     bool lab_drop_nothing = false;   // LAB (TONGUEFIX2, SM64DS_PHIT_LAB_DROP_NOTHING=1): my one-shot "nothing" held message is not sent (a lost datagram)
     unsigned lab_drop_until = 0;
     unsigned att_claims = 0;         // TONGUEFIX2: claims I sent at a friend the attach book says sits in a mouth / hands
+    unsigned att_held_back = 0;      // TONGUEFIX2: claims not sent because the friend is held (the victim refuses them all)
     bool held_off = false;        // SM64DS_PHIT_HELD=0, the CONTROL: no kHeldState out, nothing pinned (the friend looks empty-handed)
     bool tongue_old = false;      // SM64DS_PHIT_TONGUE_OLD=1, the CONTROL: the tongue rules before TONGUE1 (state list, re-arm, no message gate)      // TONGUE1: hook passes the ROM mouth state left me off the eater's drawn body
     unsigned beat = 0;
@@ -1207,6 +1208,15 @@ void lab_gather(char *me) {
     *(int *)(me + kHorzSpeed) = 0; *(int *)(me + kVertSpeed) = 0;
 }
 
+// TONGUEFIX2: is this friend held in a mouth or hands? My own mouth / hands say it at once; the attach book (the victim's
+// own kAttach broadcast) says it for any holder. The victim's console judges the same thing as m.eaten.
+bool friend_is_held(char *me, int seat) {
+    char *vb = body_of_seat(seat);
+    if (vb && (ptrf(me, kMouthObj) == vb || ptrf(me, kHeldObj) == vb)) return true;
+    const Attach &at = g.att[seat];
+    return at.by >= 0 && g.frame < at.until;
+}
+
 void attacker_scan(char *me) {
     Pose p;
     p.state = g.state; p.prev_state = g.prev_state; p.frames_in_state = g.in_state;
@@ -1225,6 +1235,14 @@ void attacker_scan(char *me) {
         if (g.send_frame[seat] && g.frame - g.send_frame[seat] < (unsigned)kSendGapFrames) continue;
         Seen s;
         if (!see(seat, &s) || !s.have_ghost) continue;
+        if (!lab && g.judge.rules.check_busy && friend_is_held(me, seat)) {
+            // TONGUEFIX2: the friend sits in a mouth or hands (in mine, or another's by the attach book). His console
+            // refuses every claim then (m.eaten, victim_busy), so none is sent: a Yoshi holding a friend stood on him
+            // and sent a stomp claim a frame (HITLAG1: 26 in one row, all refused)
+            if (++g.att_held_back <= 4 || (g.att_held_back & 63) == 0)
+                std::fprintf(stderr, "[phit] claims to seat %d held back: the friend is held (#%u) f=%u\n", seat, g.att_held_back, g.frame);
+            continue;
+        }
         HubSeatInfo si; comms_hub_seat_info(seat, &si);
         const unsigned stamp = stamp_for(si);
         int kind = ik;
@@ -1406,7 +1424,7 @@ void exit_summary() {
         if (g.st.refused_by[v & 15]) std::fprintf(stderr, "[phit:exit]   refused %s: %llu\n", verdict_name(v), g.st.refused_by[v & 15]);
     std::fprintf(stderr, "[phit:exit] eats began %llu, spat %llu, aborted %llu, spat early (mouth state not stepping) %u\n", g.st.eats_began, g.st.eats_spat, g.st.eats_aborted, g.eats_unstepped);
     std::fprintf(stderr, "[phit:exit] held state: sent %u, received %u, pinned frames %u, no local copy %u, dropped %u, left alone as mine %u frames, coop publishes held back %u\n", g.held_sent, g.held_recv, g.held_pins, g.held_miss, g.held_drop, g.held_owned, coop_move_pin_skips());
-    std::fprintf(stderr, "[phit:exit] claims sent at an attached friend %u\n", g.att_claims);
+    std::fprintf(stderr, "[phit:exit] claims sent at an attached friend %u, held back (friend held) %u\n", g.att_claims, g.att_held_back);
     std::fflush(stderr);
 }
 
