@@ -67,6 +67,7 @@ enum daTrs_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 
 /* Views of three classes this Boo reaches through other actors' pointers.
    Their headers are not included because each one renumbers this file's
@@ -115,12 +116,8 @@ unsigned NumStars(void);
 int IsStarCollectedInCurLevel(int n);
 void Matrix4x3_FromTranslation(void *m, s32 x, s32 y, s32 z);
 void MulMat4x3Mat4x3(void *a, void *b, void *dst);
-void SubVec3(void *a, void *b, void *dst);
 void func_0200f760(void *thiz, void *cyl);
 u8 IsAreaShowing(s8 idx);
-s16 Vec3_HorzAngle(const void *a, const void *b, ...);
-s32 Vec3_HorzDist(const void *a, const void *b);
-u16 DecIfAbove0_Short(void *p);
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
 /* Parameter names keep this TU's @NNN. */
@@ -170,8 +167,6 @@ typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct Vec3_16 { s16 x, y, z; } Vec3_16;
 extern "C" {
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
-int RandomIntInternal(int *seed);
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
 int func_020092c4(void *cam, void *out, void *target);
 void func_02012694(int a, void *p, ...);
@@ -184,7 +179,6 @@ extern void Vec3_MulScalarInPlace(void *v, int s);
 extern void func_020167a4(void *p);
 void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angle);
 extern int data_0209e650;
-extern int Vec3_Dist(const void* a, const void* b);
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
@@ -283,8 +277,8 @@ void daTrs_c::func_ov063_021160d4() {
     this->mClsnOffX = data_020a0e68.m[9];
     this->mClsnOffY = inline_fn(10);
     this->mClsnOffZ = inline_fn(11);
-    SubVec3((Vec3 *)&this->mClsnOffX, (Vec3 *)&this->mPosX, (Vec3 *)&this->mClsnOffX);
-    SubVec3((Vec3 *)&this->mClsnOffX, (Vec3 *)&this->mClsnBaseX, (Vec3 *)&this->mClsnOffX);
+    SubVec3((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mPosX, (Vector3 *)&this->mClsnOffX);
+    SubVec3((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mClsnBaseX, (Vector3 *)&this->mClsnOffX);
     Vec3_MulScalarInPlace((Vec3 *)&this->mClsnOffX, 0x6800);
     p = (int *)&this->mClsnOffZ;
     *p += this->mClsnZBias;
@@ -305,7 +299,7 @@ int daTrs_c::func_ov063_02116190() {
         vec[0] = -0xbe000;
         vec[1] = (int)0xff66e000;
         vec[2] = 0xbe000;
-        if (Vec3_HorzDist(vec, &p->mPosX) >= 0x73a000)
+        if (Vec3_HorzDist((Vector3 *)vec, (Vector3 *)&p->mPosX) >= 0x73a000)
             return 1;
     }
     return 0;
@@ -585,7 +579,7 @@ void daTrs_c::func_ov063_02116a1c() {
     }
 
     this->mVertSpeed = 0;
-    ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&this->mPosX, &v, 0), 0x5a8);
+    ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle((Vector3 *)&this->mPosX, (Vector3 *)&v), 0x5a8);
     func_ov063_0211a964(1);
 }
 
@@ -794,7 +788,7 @@ void daTrs_c::func_ov063_02116fac() {
         fr.v.x = -0x3e8000;
         fr.v.y = 0;
         fr.v.z = -0xfa0000;
-        this->mTargetAngleY = Vec3_HorzAngle(&this->mPosX, &fr.v);
+        this->mTargetAngleY = Vec3_HorzAngle((Vector3 *)&this->mPosX, (Vector3 *)&fr.v);
         r4 = 0x1000;
         if (this->mAngleY == this->mTargetAngleY && this->mHorzSpeed == 0) {
             state = L8(this, 0x5cc);
@@ -836,7 +830,7 @@ void daTrs_c::func_ov063_02116fac() {
 
     if (this->mState != 4) {
         this->mVertSpeed = 0;
-        this->mTargetAngleY = Vec3_HorzAngle(&this->mPosX, &fr.v);
+        this->mTargetAngleY = Vec3_HorzAngle((Vector3 *)&this->mPosX, (Vector3 *)&fr.v);
     }
     ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, r4);
     func_ov063_0211a964(1);
@@ -1008,7 +1002,7 @@ void daTrs_c::func_ov063_021177b0() {
                     v.y = src[1];
                     v.z = src[2];
                 }
-                dist = Vec3_Dist(&this->mPosX, &v);
+                dist = Vec3_Dist((Vector3 *)&this->mPosX, (Vector3 *)&v);
                 if (this->mBooFlags.mirrored) {
                     mid.x = (v.x - this->mPosX) / 2;
                 } else {
@@ -1023,7 +1017,7 @@ void daTrs_c::func_ov063_021177b0() {
                 look.x = mid.x - scaled;
 
                 if (look.x <= (int)0xFF894000) {
-                    ang = Vec3_HorzAngle(&v, &this->mPosX);
+                    ang = Vec3_HorzAngle((Vector3 *)&v, (Vector3 *)&this->mPosX);
                     sn = data_02082214[(((unsigned short)ang >> 4) * 2) + 1];
                     t = (int)0xFF894000 - look.x;
                     mid.z = mid.z + FX_MUL(t, sn);
@@ -1235,7 +1229,7 @@ void daTrs_c::func_ov063_02117cdc() {
         w[1] = src[1];
         w[2] = src[2];
         w[0] = 0;
-        ang = Vec3_HorzAngle((int *)&this->mTalkPlayer->mPosX, w);
+        ang = Vec3_HorzAngle((Vector3 *)&this->mTalkPlayer->mPosX, (Vector3 *)w);
         q = (s16 *)&this->mTalkPlayer->mAngleX;
         v[0] = q[0];
         v[1] = q[1];
@@ -1329,7 +1323,7 @@ void daTrs_c::func_ov063_02117cdc() {
         w[1] = src[1];
         w[2] = src[2];
         w[0] = w[0] * neg;
-        this->mAngleY = Vec3_HorzAngle((int *)&this->mPosX, w);
+        this->mAngleY = Vec3_HorzAngle((Vector3 *)&this->mPosX, (Vector3 *)w);
         this->mPrevAngleY = this->mAngleY;
         func_0201277c(0x150);
         return;
@@ -1889,8 +1883,8 @@ void daTrs_c::func_ov063_02119074() {
 
             if (r != 0)
                 this->mPrevAngleY =
-                    Vec3_HorzAngle((Vec3 *)&this->mPosX,
-                                   (Vec3 *)&((dActor_c *)r)->mPosX);
+                    Vec3_HorzAngle((Vector3 *)&this->mPosX,
+                                   (Vector3 *)&((dActor_c *)r)->mPosX);
         } else {
             if (this->mVariant == 0xe)
                 func_ov063_02116244();
@@ -2304,10 +2298,10 @@ void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
 
     if (func_ov063_0211a8a4() == 0) goto reset;
 
-    if (Vec3_HorzDist((Vec3 *)&this->mPosX, (Vec3 *)&this->mHomePosX) >= this->mLeashDist) {
-        this->mTargetAngleY = Vec3_HorzAngle((Vec3 *)&this->mPosX, (Vec3 *)&this->mHomePosX);
+    if (Vec3_HorzDist((Vector3 *)&this->mPosX, (Vector3 *)&this->mHomePosX) >= this->mLeashDist) {
+        this->mTargetAngleY = Vec3_HorzAngle((Vector3 *)&this->mPosX, (Vector3 *)&this->mHomePosX);
         this->mStateTimer = 0;
-    } else if (Vec3_HorzDist((Vec3 *)&this->mHomePosX, (Vec3 *)&this->mClosestPlayer->mPosX) < this->mLeashDist) {
+    } else if (Vec3_HorzDist((Vector3 *)&this->mHomePosX, (Vector3 *)&this->mClosestPlayer->mPosX) < this->mLeashDist) {
         this->mTargetAngleY = this->mAngleToPlayer;
         this->mStateTimer = 0;
     } else {
@@ -2365,13 +2359,13 @@ void daTrs_c::func_ov063_02119e38(int a1, short a2, int a3) {
     }
 
     if (data_0209f2f8 == 3 &&
-        Vec3_HorzDist((Vec3*)&this->mHomePosX, (Vec3*)&this->mClosestPlayer->mPosX) > thresh) {
-      angle = Vec3_HorzAngle((Vec3*)&this->mPosX, (Vec3*)&this->mHomePosX);
+        Vec3_HorzDist((Vector3 *)&this->mHomePosX, (Vector3 *)&this->mClosestPlayer->mPosX) > thresh) {
+      angle = Vec3_HorzAngle((Vector3 *)&this->mPosX, (Vector3 *)&this->mHomePosX);
     } else {
-      if (Vec3_HorzDist((Vec3*)&this->mPosX, (Vec3*)&this->mClosestPlayer->mPosX) <= thresh)
+      if (Vec3_HorzDist((Vector3 *)&this->mPosX, (Vector3 *)&this->mClosestPlayer->mPosX) <= thresh)
         angle = this->mAngleToPlayer;
       else
-        angle = Vec3_HorzAngle((Vec3*)&this->mPosX, (Vec3*)&this->mHomePosX);
+        angle = Vec3_HorzAngle((Vector3 *)&this->mPosX, (Vector3 *)&this->mHomePosX);
     }
 
     ApproachLinear(this->mPrevAngleY, angle, a2);
