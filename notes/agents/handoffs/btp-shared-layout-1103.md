@@ -24,14 +24,16 @@ slice does not claim signedness beyond the observed 16-bit storage.
 - `func_02046bbc` (`arm9`, `0x02046bbc`, `0x194`): focused match passed.
 - `dExtAnmTexPat_c::UpdateFileOffsets` (`arm9`, `0x020468a0`, `0x10c`): focused match passed.
 - `func_ov007_020bc2e4` (`ov007`, `0x020bc2e4`, `0x48`): focused match passed.
+- Strict `linkcheck.py` returned `VERIFIED`, `diffs: []`, `blind: 0` for all three functions above.
 - `python tools/rombuild.py -j16 --no-rom`: 11,395 functions and 468 source-owned data claims reproduce; 106/106 modules exact; zero mismatches. Strict baseline control passed.
 - Declaration agreement has no new branch disagreements. Dead references, TU conflicts, and port references pass.
+- The local `prepush_linkcheck.py --range origin/main..HEAD` expanded the headers to 168 files and was stopped after a prolonged sequential run. Every row reported before stopping was nonblocking (`VERIFIED` or baseline `BLIND-*`). The exact-head hosted PR validation passed, including the affected-header consumer build.
 - `source_style.py` could not run because clang-format 19.1.7 is unavailable in this environment.
 
 ## Remaining review
 
-Run `python tools/prepush_linkcheck.py --range origin/main..HEAD` after the
-producer commit, inspect the resulting consumer/relocation evidence, and
-independently verify the exact output SHA through the queued `verify` stage.
+Independently verify the exact output SHA through the queued `verify` stage.
 The PR should remain draft and source acceptance should remain pending until
-that review and the hosted byte validation complete.
+that review completes. Hosted PR validation and all other currently reported CI
+checks pass on the exact producer head; do not infer merge or source-acceptance
+status from those checks.
