@@ -70,7 +70,7 @@
     "unmigrated_total": 3
   },
   "shadow_decls": {
-    "header_shadows": 14,
+    "header_shadows": 13,
     "local_body_no_include": 41,
     "local_body_no_include_cpp": 12,
     "local_struct_body": 421,
