@@ -990,6 +990,16 @@ void handle_claim(int attacker, unsigned ikind, unsigned counter, unsigned stamp
     m.at = my_place();
     const Pos3 hp = hist_pos(stamp);            // where I was when the attacker saw me (the claim's age in frames)
     m.x = stamp ? hp.x : u(*player::pos_x(me)); m.y = stamp ? hp.y : u(*player::pos_y(me)); m.z = stamp ? hp.z : u(*player::pos_z(me));
+    if (stamp) {
+        // HITLAG3: the stamp is whole frames, the attacker's test was not: also try my pose a frame newer and a frame older
+        // (still inside the 15-frame ring, so a forged stamp reaches no pose it could not already name)
+        const unsigned nb[2] = { stamp - 1u, stamp + 1u };
+        for (int i = 0; i < 2; ++i) {
+            if (nb[i] >= (unsigned)kRingFrames || nb[i] > g.frame) continue;
+            const Pos3 q = hist_pos(nb[i]);
+            m.near_x[m.near_n] = q.x; m.near_y[m.near_n] = q.y; m.near_z[m.near_n] = q.z; ++m.near_n;
+        }
+    }
     m.busy = me_busy(me, ikind == kGrabCatch);
     m.eaten = g.hold.active() || g.cv.active;
     const char *rom_no = ikind == kEatClaim ? rom_eat_refusal(me) : nullptr;
@@ -1176,11 +1186,16 @@ int contact_why(unsigned ikind, int mx, int my, int mz, int myaw, int tx, int ty
 unsigned stamp_for(const HubSeatInfo &si) {
     const int rtt = si.rtt_ms >= 0 ? si.rtt_ms : 100;
     // How old, when he judges it, is the pose of his I just tested? His pose packet's trip to me (half the round trip), how
-    // long ago it arrived, the draw delay, and my claim's trip back to him (the other half). Leaving his packet's own trip
-    // out made a fleeing friend's judge pose about 150 ms too new at 400 ms ping, refusing hits that touched him on my
-    // screen. The 15-frame cap stays (the stamp is 4 bits), so a forged age still reaches no further back than before.
-    const unsigned ms = si.ghost_ms_ago + 75u + (unsigned)rtt;
+    // long ago it arrived, and my claim's trip back to him (the other half). Leaving his packet's own trip out made a
+    // fleeing friend's judge pose about 150 ms too new at 400 ms ping, refusing hits that touched him on my screen. No draw
+    // delay: my contact test runs on his newest wire pose (attacker_scan), not on the body drawn behind it, and a fixed
+    // 75 ms here made him judge a pose two or three frames older than the one I tested, so a friend on the way down of a
+    // jump was 25 to 70 units higher there and the punch was refused for height, at any ping. At least one frame, so the
+    // claim always counts as stamped (the narrower slack). The 15-frame cap stays (the stamp is 4 bits), so a forged age
+    // still reaches no further back than before.
+    const unsigned ms = si.ghost_ms_ago + (unsigned)rtt;
     unsigned f = ms / 33u;
+    if (f < 1u) f = 1u;
     return f > 15u ? 15u : f;
 }
 
