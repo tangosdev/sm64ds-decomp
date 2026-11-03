@@ -16932,26 +16932,9 @@
         "arity:1"
       ]
     },
-    "func_0203dabc": {
-      "include/decl_common.h": [
-        "arity:0",
-        "return:unsigned short *"
-      ],
-      "src/unnamed/arm9/0203/func_0203bb60.c": [
-        "return:R *"
-      ]
-    },
     "func_0203dad4": {
       "src/game/stages/d_s_stage_methods.cpp": [
         "return:unsigned int"
-      ]
-    },
-    "func_0203dae4": {
-      "include/decl_common.h": [
-        "arity:0"
-      ],
-      "src/unnamed/arm9/0203/func_0203bc7c.c": [
-        "return:unsigned short"
       ]
     },
     "func_0203db3c": {
