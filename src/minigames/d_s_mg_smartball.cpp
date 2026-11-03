@@ -18,6 +18,8 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
  */
 
 // leftovers:
+// - OAM::Render uses the shared static declaration from OAM.h; this TU's
+//   ten-argument overload takes no OAM object.
 // - SmartballBall_UpdatePhysics (the ball per-frame physics) stays a free extern "C"
 //   function. Compiled as C++ -- as a cMgSmartball_ball_c member or a plain
 //   free function -- mwccarm folds `angle / 0x20` into a `+= 0x800` induction
@@ -49,6 +51,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "CP15.h"
 #include "cMgSmartball_wing_c.h"
 #include "OamAttr.h"
+#include "OAM.h"
 #include "cMgSmartball_pushswitch_c.h"
 #include "cMgSmartball_board_c.h"
 #include "types.h"
@@ -159,9 +162,6 @@ extern long long func_0203d5bc(int *p);
    their table entry the same way the other eighty do. */
 extern "C" void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern "C" struct OamAttr *sSmartballWingSprites[];
-struct OAM {
-    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
-};
 extern "C" void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y,
                                              s32 palette, s32 priority, Fix12i scaleX,
                                              Fix12i scaleY, s32 rotation, s32 mode);
