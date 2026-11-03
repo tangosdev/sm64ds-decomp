@@ -84,8 +84,6 @@ extern s16 data_02082214[];
 extern int Vec3_HorzDist(const void* a, const void* b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_02038414(void *p);
-void UnloadBlueCoinModel(void *);
-void LoadBlueCoinModel(void* actor);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int b, int c, void *v, int e);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -137,7 +135,7 @@ int daSanbo_c::InitResources()
         void *m = dExtSimpleModel_c::LoadFile(gSanboHeadModelFile);
         mModel.SetFile((BMD_File *)m, 1, 1);
         dExtSimpleModel_c::LoadFile(gSanboBodyModelFile);
-        LoadBlueCoinModel(this);
+        LoadBlueCoinModel();
         mInstantSprout = 1;
     } else {
         t = (actorID == SANBO_BODY);
@@ -231,21 +229,20 @@ void daSanbo_c::OnPendingDestroy()
 }
 
 // @symbol _ZN9daSanbo_c16CleanupResourcesEv
-int daSanbo_c::CleanupResources()
-{
-  int id = actorID;
-  int a = (id == SANBO_HEAD);
-  if (a) {
-    UnloadBlueCoinModel(this);
-    gSanboHeadModelFile.Release();
-    gSanboBodyModelFile.Release();
-  } else {
-    a = (id == SANBO_BODY);
+int daSanbo_c::CleanupResources() {
+    int id = actorID;
+    int a = (id == SANBO_HEAD);
     if (a) {
-      gSanboBodyModelFile.Release();
+        UnloadBlueCoinModel();
+        gSanboHeadModelFile.Release();
+        gSanboBodyModelFile.Release();
+    } else {
+        a = (id == SANBO_BODY);
+        if (a) {
+            gSanboBodyModelFile.Release();
+        }
     }
-  }
-  return 1;
+    return 1;
 }
 
 // @symbol _ZN9daSanbo_c19func_ov096_02136928Ei

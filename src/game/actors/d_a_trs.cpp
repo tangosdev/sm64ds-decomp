@@ -111,8 +111,6 @@ extern "C" {
 /* shared engine entry points without a header declaration */
 void LoadKeyModels(int n);
 void UnloadKeyModels(int n);
-void LoadBlueCoinModel(void *self);
-void UnloadBlueCoinModel(void *o);
 unsigned NumStars(void);
 int IsStarCollectedInCurLevel(int n);
 void Matrix4x3_FromTranslation(void *m, s32 x, s32 y, s32 z);
@@ -2942,7 +2940,7 @@ int daTrs_c::CleanupResources()
         mFoundActor = 0;
     }
     if (mCarriedID == TRS_ID_BLUE_COIN)
-        UnloadBlueCoinModel(this);
+        UnloadBlueCoinModel();
     else if (mCarriedID == TRS_ID_T_BASKET)
         data_ov063_0211edec.Release();
 
@@ -3434,7 +3432,7 @@ int daTrs_c::InitResources()
             mCarriedID = TRS_ID_RED_COIN;
         } else {
             mCarriedID = TRS_ID_BLUE_COIN;
-            LoadBlueCoinModel(this);
+            LoadBlueCoinModel();
         }
     }
 

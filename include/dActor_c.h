@@ -306,6 +306,12 @@ struct dActor_c : dBase_c {
     /* Returns the spawned daSoundObj_c: r0 is Spawn's result at the return,
        and daStar_c and daPly_c keep or test it. */
     dActor_c *SpawnSoundObj(u32 soundObjParam);
+    /* Load and release the blue coin's two shared files, for any actor that
+       can drop one. Neither touches `this`, but every caller still sets it up
+       in r0 (daEykn_c::InitResources misses without it), so these are
+       members, not free functions. */
+    void UnloadBlueCoinModel();
+    void LoadBlueCoinModel();
     s32  GetWaterHeightWDW();
     bool DetectRaycastClsn(Vector3 &start, Vector3 &end, bool storeHitPos);
 
