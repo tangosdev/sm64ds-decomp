@@ -204,8 +204,10 @@ struct daTrs_c : dCapEnemy_c {
        appears (02119074); 021189f4 hands it >> 0xc to Sound::PlaySub. */
     s32 mSavedMusicVolume;     /* 0x57c */
     s32 mDistToPlayer;         /* 0x580 -- Vec3_HorzDist each Behavior */
-    /* Live scale factor for the collision volume: 02116a1c multiplies
-       mClsnRadius/mClsnHeight by this into mdCcAcPos_c's words. */
+    /* The Boo's base scale. func_ov063_0211a964 sets mScaleX/Y/Z (what
+       Render draws) to this plus a wobble and sizes mdCcAcPos_c from them;
+       the appear path copies it in directly. Runtime (EU, blinded 7/7):
+       poking this resized the drawn Boo; a direct mScaleX write was undone. */
     s32 mClsnScale;            /* 0x584 */
     /* Per-chase randoms, redrawn by 02119894/02119960 whenever mStateTimer
        is 0. mSpeedJitter = (random 0..0xfff) * 5, taken off the 0xa000 speed
