@@ -45,13 +45,18 @@ void port_chat_system_line(const char *text);
 char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const void *pos, const void *v16, int area, int f);
 void _ZN7fBase_c18MarkForDestructionEv(char *c);
 extern unsigned char data_020a1164[];     // the per-player camera records (stride 0x24); +0 = the angle the stick is read against
+// STAREXIT2: the Grand Star collect (src/game/actors/d_a_obj_key.cpp daObjKey_c::func_ov089_02131dcc) and the state it puts the
+// collector in (St_EndingFly, src/game/player/Player.cpp func_ov002_020c3dbc)
+void func_ov002_020c3dbc(void *player);
+extern int data_ov002_0211058c[];
+void _ZN5Event6SetBitEj(unsigned b);
 }
 
 namespace port {
 namespace {
 
 enum Mode { kNone, kParty, kCoop };
-enum : int { kKindStar = 1, kKindKey = 2 };
+enum : int { kKindStar = 1, kKindKey = 2, kKindGrand = 3 };   // 3: STAREXIT2, the Grand Star (an old receiver drops it)
 enum : unsigned { kFlagExits = 1u };
 enum : int { kCtlStarPop = 0x1e };
 enum : unsigned { kCountMs = 5000, kShowAfterMs = 2500, kNoteMs = 4000 };
@@ -61,12 +66,12 @@ enum : int { kSeenMax = 16, kPendMax = 8, kSeqMemory = 12, kLedgerMax = 4, kRece
 const unsigned kResendAt[kResendN] = { 250, 700, 1500, 3000, 5000, 8000 };
 enum : unsigned { kLedgerMs = 8000, kGuardMs = 2000, kSoftMs = 4000, kForceMs = 12000 };
 // SYNX reserved word
-enum : unsigned { kXStar = 1u, kXKey = 2u, kXNoExit = 4u };
+enum : unsigned { kXStar = 1u, kXKey = 2u, kXNoExit = 4u, kXGrand = 8u };   // kXGrand: STAREXIT2 (an old receiver drops bit 3)
 
 #pragma pack(push, 1)
 struct PopWire {            // SYNB 0x1e payload, 8 B
     CoopKeyWire key;        // sender's level + act
-    uint8_t kind;           // 1 star, 2 key
+    uint8_t kind;           // 1 star, 2 key, 3 the Grand Star (STAREXIT2)
     uint8_t flags;          // bit0 the collector exits
     uint8_t star;           // star number 0..8
     uint8_t seq;
@@ -97,6 +102,8 @@ struct State {
     // receiver
     SeqMem mem[kSeqMemory]; int nmem;
     bool counting; unsigned t_end; bool exit_pending; bool exit_key; int exit_star;
+    bool exit_grand;                 // STAREXIT2: the exit is the Grand Star's (my body takes the ending flight)
+    bool grand_sent, grand_forced;   // STAREXIT2: this level: my own Grand Star event went out / I was put on the ending flight
     char line[kStarPopupLines - 1][kStarPopupLineMax]; int nline;
     bool note_only;                  // STAREXIT1: the lines are a note (no countdown, no exit)
     unsigned t_last;
@@ -345,6 +352,7 @@ void describe(const char *name, int kind, int course, int star, char *out, size_
     // The chat font has no brackets, so the course goes after "in" / "from".
     char c[64], st[48];
     course_title(course, c, sizeof c);
+    if (kind == kKindGrand) { std::snprintf(out, cap, "%s got the Grand Star", name); return; }   // STAREXIT2
     if (!full) {        // the popup: one short line (the chat line has the course)
         if (kind == kKindKey) std::snprintf(out, cap, "%s got the key", name);
         else {
@@ -401,7 +409,25 @@ void clear_stale_d4b0() {
 }
 
 void clear_receiver() {
-    g.counting = false; g.exit_pending = false; g.nline = 0; g.t_end = 0; g.note_only = false;
+    g.counting = false; g.exit_pending = false; g.nline = 0; g.t_end = 0; g.note_only = false; g.exit_grand = false;
+}
+
+// ---- STAREXIT2: the Grand Star -----------------------------------------------------------------------------------------------
+// The ROM's collect (daObjKey_c::func_ov089_02131dcc, the LAST_STAR arm of StateStarJump step 3) is three calls: the collector's
+// Player goes to St_EndingFly (func_ov002_020c3dbc), event bit EVENT_KEY (0x1d) is set, the star marks itself for destruction.
+// St_EndingFly flies the body out of the arena and the ROM then loads the ending (castle grounds). The collector's console runs
+// that untouched; a console told about it does the same three things with its own body and its own copy of the star.
+enum : unsigned { kEventKey = 0x1d };
+bool on_ending_flight(const char *b) { return b && *(void *const *)(b + 0x370) == (const void *)data_ov002_0211058c; }
+// My copies of the Grand Star (class 283), removed the way the ROM removes the collected one.
+int kill_grand() {
+    int n = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 283 || *(const unsigned char *)(a + 0x0f)) continue;
+        _ZN7fBase_c18MarkForDestructionEv(a);
+        ++n;
+    }
+    return n;
 }
 
 void toast(const char *name, int kind, int course, int star) {
@@ -453,8 +479,11 @@ void start_popup(const char *name, int kind, int course, int star) {
         g.t_end = now + kCountMs;
         g.exit_key = (kind == kKindKey);
         g.exit_star = (kind == kKindStar && star >= 1 && star <= 7) ? star : -1;   // the first star is the one the clear screen names
+        g.exit_grand = (kind == kKindGrand);
     } else if (kind == kKindKey) {
         g.exit_key = true;       // a key anywhere in the batch: use the key landing
+    } else if (kind == kKindGrand) {
+        g.exit_grand = true;     // the Grand Star wins over any other exit in the batch: it is the end of the game
     }
 }
 
@@ -510,6 +539,29 @@ void on_event(int seat, int kind, bool exits, int lvl, int act, int course, int 
         return;
     }
     toast(name, kind, course, star);
+    if (kind == kKindGrand) {
+        // STAREXIT2 (lead default): everyone in the final arena (the collector's own level) leaves with the collector, whatever the
+        // room rule: their popup counts down and their body takes the ending flight, and their copy of the star is gone. Elsewhere
+        // the room rule decides: ON = a note line, I stay; OFF = the chat line only (as any event outside my course and act).
+        // A party room without shared stars (or a world party) gets the chat line only: it is not their star.
+        const Mode m = mode_now();
+        const bool shared = star_shared_here(m);
+        const bool here = in_arena(lvl);
+        const char *me = (const char *)my_body();
+        int removed = 0;
+        const char *what = "chat only";
+        if (!exits || !shared) what = "not shared: chat only";
+        else if (here && on_ending_flight(me)) what = "already on the ending flight";
+        else if (here) { removed = kill_grand(); start_popup(name, kind, course, star); what = "in the arena: popup, countdown, ending"; }
+        else if (only_collector()) { note_line(name, kind, course, star); what = "elsewhere, rule on: note line, I stay"; }
+        std::fprintf(stderr, "[starpop] rx seat=%d GRAND level=%d (mine %d) shared=%d only=%d removed=%d: %s wall=%lld\n", seat, lvl,
+                     (int)data_0209f2f8, (int)shared, (int)only_collector(), removed, what, wall_ms());
+        if (exits && shared && !here && lvl >= 0) {     // I may be on my way into the arena: the ledger checks the level
+            for (Ledger &l : g.led)
+                if (!l.used) { l = { true, seat, kind, star, course, lvl, act, exits, now_ms(), true }; break; }
+        }
+        return;
+    }
     // STAREXIT1: with the room rule ON only the collector leaves. A key still empties its boss room (an arena has no other
     // way out); everyone else in the course gets the note and plays on.
     const bool only = only_collector();
@@ -554,6 +606,10 @@ void ledger_tick() {
         if (g.counting || g.exit_pending) { l.used = false; continue; }
         char name[24];
         seat_name(l.seat, name, sizeof name);
+        if (l.kind == kKindGrand) {
+            if (on_ending_flight((const char *)my_body())) { l.used = false; continue; }
+            std::fprintf(stderr, "[starpop] late Grand Star: %d removed wall=%lld\n", kill_grand(), wall_ms());
+        }
         start_popup(name, l.kind, l.course, l.star);
         std::fprintf(stderr, "[starpop] late event from seat %d now fits my course and act (%u ms after it arrived): popup wall=%lld\n", l.seat, now - l.t, wall_ms());
         l.used = false;
@@ -592,7 +648,7 @@ void send_event(Mode m, int kind, bool exits, int star) {
         if (course < 0 || course > 29) course = 0;
         unsigned char b[kHubPartyStarBytes];
         if (hub_party_star_encode(course, star & 7, g.seq, b) != kHubPartyStarBytes) return;
-        const unsigned rsv = (kind == kKindKey ? kXKey : kXStar) | (exits ? 0u : kXNoExit);
+        const unsigned rsv = (kind == kKindKey ? kXKey : kXStar) | (kind == kKindGrand ? kXGrand : 0u) | (exits ? 0u : kXNoExit);
         b[8] = (unsigned char)rsv; b[9] = 0;
         std::memcpy(p.buf, b, sizeof b); p.len = (int)sizeof b; p.coop = false;
         comms_hub_send(b, (int)sizeof b);
@@ -622,7 +678,7 @@ void on_ctl(int seat, int sub, const unsigned char *pl, int len, void *) {
     if (!g.enabled || mode_now() != kCoop) return;
     if (!pl || len != (int)sizeof(PopWire)) { ++g.st.dropped; return; }
     PopWire w; std::memcpy(&w, pl, sizeof w);
-    if (!coop_key_ok(w.key) || (w.kind != kKindStar && w.kind != kKindKey) || (w.flags & ~kFlagExits) || w.star > 8 ||
+    if (!coop_key_ok(w.key) || (w.kind != kKindStar && w.kind != kKindKey && w.kind != kKindGrand) || (w.flags & ~kFlagExits) || w.star > 8 ||
         seat < 0 || seat >= kCoopMaxSeats || seat == my_seat()) { ++g.st.dropped; return; }
     if (seen_seq(seat, w.seq)) return;
     on_event(seat, w.kind, (w.flags & kFlagExits) != 0, (int)w.key.level, (int)w.key.act, course_of((int)w.key.level), w.star);
@@ -631,6 +687,13 @@ void on_ctl(int seat, int sub, const unsigned char *pl, int len, void *) {
 void scan_local(Mode m) {
     void *me = my_body();
     if (!me) return;
+    // STAREXIT2: the Grand Star leaves no actor behind to watch (the collect marks it for destruction at the touch), so the
+    // collect is seen on my own body: it entered St_EndingFly, which only the Grand Star's collect hands out. Not when I was put
+    // there by a friend's event (grand_forced). Once per level.
+    if (!g.grand_sent && !g.grand_forced && on_ending_flight((const char *)me)) {
+        g.grand_sent = true;
+        send_event(m, kKindGrand, true, 0);
+    }
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
         const unsigned cls = *(const unsigned short *)(a + 0x0c);
         int kind = 0, star = 0;
@@ -798,6 +861,7 @@ void new_level_check() {
         if (g.have_key && g.armed && g.stop_kind == 3 && !g.stop_timer) { g.stop_timer = true; g.stop_at = now_ms() + (unsigned)g.stop_val; }
         g.have_key = true; g.lvl = lv; g.act = ac;
         g.nseen = 0;
+        g.grand_sent = false; g.grand_forced = false;
         if ((g.counting || g.exit_pending || g.nline) && g.log)
             std::fprintf(stderr, "[starpop] level changed (%d/%d): popup cleared\n", lv, ac);
         clear_receiver();
@@ -811,7 +875,7 @@ bool star_popup_party_rx(int seat, const unsigned char *d, int len) {
     init_once();
     const unsigned rsv = hub_rd16(d, 8);
     if (!g.enabled || mode_now() != kParty) return true;
-    if ((rsv & ~7u) || ((rsv & 3u) != kXStar && (rsv & 3u) != kXKey) || seat < 0 || seat >= 16 || seat == my_seat() ||
+    if ((rsv & ~15u) || ((rsv & 3u) != kXStar && (rsv & 3u) != kXKey) || seat < 0 || seat >= 16 || seat == my_seat() ||
         (comms_hub_room_kind() == kHubRoomWorld && !world_party_member(seat))) {
         ++g.st.dropped;
         return true;
@@ -822,7 +886,7 @@ bool star_popup_party_rx(int seat, const unsigned char *d, int len) {
     const bool pres = hub_presence_get(seat, &p, &age);
     const bool here = pres && age < 5000 && p.in_level();
     HubPartyStarWire pw; std::memcpy(&pw, d, sizeof pw);
-    on_event(seat, (rsv & kXKey) ? kKindKey : kKindStar, (rsv & kXNoExit) == 0, here ? p.level : -1, here ? p.act : -1,
+    on_event(seat, (rsv & kXGrand) ? kKindGrand : (rsv & kXKey) ? kKindKey : kKindStar, (rsv & kXNoExit) == 0, here ? p.level : -1, here ? p.act : -1,
              (int)pw.course, d[7]);
     return true;
 }
@@ -926,6 +990,24 @@ extern "C" void port_star_popup_frame(void) {
                                  (unsigned)data_0209d660[0], rd32(data_0209d4b0), (unsigned)data_0209f294[0], (unsigned)data_0209f2c4[0],
                                  (unsigned)data_0209f20c[0], rd32(data_0209b454), rd32(data_0209fc48), (unsigned)data_0209f22c[0],
                                  (unsigned)data_0209f2d8[0], wall_ms());
+                }
+            } else if (g.exit_grand) {
+                // STAREXIT2: the Grand Star's collect with my body (see kill_grand): the ending flight, the event bit, my copy gone.
+                char *me = (char *)my_body();
+                const int removed = kill_grand();
+                func_ov002_020c3dbc(me);
+                _ZN5Event6SetBitEj(kEventKey);
+                if (on_ending_flight(me)) {
+                    g.grand_forced = true;
+                    ++g.st.exits;
+                    g.armed = true;
+                    std::fprintf(stderr, "[starpop] EXIT GRAND from level %d: my body is on the ending flight (removed %d) after %u ms of waiting wall=%lld\n",
+                                 (int)data_0209f2f8, removed, waited, wall_ms());
+                    g.exit_pending = false; g.nline = 0; g.exit_grand = false;
+                } else if ((unsigned)(now - g.last_wait_log) > 1000u) {      // the state change was refused this frame: again next frame
+                    g.last_wait_log = now;
+                    std::fprintf(stderr, "[starpop] GRAND: the ending flight was refused (state %p), retrying wall=%lld\n",
+                                 me ? *(void **)(me + 0x370) : nullptr, wall_ms());
                 }
             } else {
                 landing_overrides(g.exit_key);
