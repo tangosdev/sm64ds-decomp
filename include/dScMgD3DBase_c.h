@@ -92,7 +92,7 @@ struct dScMgD3DBase_c : dScMgBase_c {
     /* Own copy, same reason dScMgBase_c has one -- unlocks D0 for the four
        descendants. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, (Heap *)data_020a0eac);
+        Memory::Deallocate(ptr, data_020a0eac);
     }
 
     /* --- overrides. 1, 2, 5, 7, 10 re-override slots dScMgBase_c already

@@ -80,12 +80,14 @@ typedef struct Vec2s {
     s16 x, y;
 } Vec2s;
 
-/* Eight-byte state descriptors. A namespace-scope pointer-to-member is not
-   static data on this class: the named object moves to .bss, __sinit grows
-   by 0xb4, a .ctor word appears, and the RELA lands on an anonymous temp.
-   StateDone is empty, so it is static and its address is an ordinary
-   function pointer (same mangling). The other four read members and stay
-   a raw (code, 0) pair. */
+/* Eight-byte state descriptors. A pointer-to-member initializer
+   (`TrampState pmf = &dScMgTrampoline_c::StateIntro` and the same for
+   StatePlay, StateResults, StateWaitExit) was measured on this TU: the four
+   symbols move from .data to .bss (0x20), __sinit_d_s_mg_trampoline.cpp
+   is emitted at size 0x94 with a .ctor word, and the (code, 0) words survive only as
+   anonymous .data temps that __sinit copies. .text stayed 0x1e10. The ROM
+   keeps these four in .data, so the mangled externs stay. StateDone is
+   empty, so it is static and its address is an ordinary function pointer. */
 struct P2 {
     int a, b;
 };
@@ -211,8 +213,9 @@ extern void TrmpLine_DrawAll(void);
 
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);
 /* The four non-static state methods. A pointer to member does not convert
-   to the int word a descriptor holds. StateDone is static, so the
-   descriptor below names it directly. */
+   to the int word a descriptor holds, and a pointer-to-member initializer
+   is not static .data (see the note above the P2 definition). StateDone is
+   static, so the descriptor below names it directly. */
 extern "C" void _ZN17dScMgTrampoline_c13StateWaitExitEv(void); /* local extern: PMF -> int */
 extern "C" void _ZN17dScMgTrampoline_c12StateResultsEv(void);  /* local extern: PMF -> int */
 extern "C" void _ZN17dScMgTrampoline_c9StatePlayEv(void);      /* local extern: PMF -> int */

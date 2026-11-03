@@ -339,19 +339,6 @@ daDoor_StateRecord data_ov100_021488a4 = {data_02086b58, data_ov100_02148114};
  * types in the header. */
 daDoor_c::~daDoor_c() {}
 
-#ifdef _MSC_VER
-/* The host needs the ROM's flat D0 name, and MSVC never emits it: it folds
- * the Itanium destructor variants into the one ~daDoor_c() above. This arm
- * spells out what the deleting destructor does -- the D1 body, called
- * qualified so it is a direct call, then the class-specific operator
- * delete. Nothing here reaches mwccarm. */
-extern "C" daDoor_c *_ZN8daDoor_cD0Ev(daDoor_c *thiz) {
-    thiz->daDoor_c::~daDoor_c();
-    daDoor_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov100_02144468, 0x02144468, size 0x80 */
 /* -------------------------------------------------------------------------- */

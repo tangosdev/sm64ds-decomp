@@ -437,7 +437,6 @@ extern void func_0204f460(NestedHeapIterator* self, HeapAllocator_204f460* node)
 extern void func_0204f4bc(struct E1 *obj);
 extern void* func_0204f504(int index, void* unk);
 extern void func_0204f558(struct E1 *self, int val);
-extern void _ZN2E113func_0204f5a0Ei(struct E1 *, int); /* local extern: PMF -> int */
 extern void func_0204f630(void);
 extern void *func_0204f63c(void **p, int idx, int r7);
 extern void func_0204f6f8(NNSSndHandle *handle, short a, short b);
@@ -2017,7 +2016,8 @@ extern "C" int func_0204fa3c(int owner, void *b, u32 c)
 // @symbol func_0204fa2c
 extern "C" int func_0204fa2c(int *p, int fade)
 {
-    return ((int (*)(u8 *thiz, int fade))_ZN2E113func_0204f5a0Ei)((u8 *)*p, fade);
+    /* void method, so there is no return: the call is a tail call and r0 is the callee's. */
+    ((struct E1 *)*p)->func_0204f5a0(fade);
 }
 
 // @symbol func_0204f9c4

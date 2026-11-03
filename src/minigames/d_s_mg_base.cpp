@@ -122,8 +122,6 @@ int Mg_GetSaveTable(void *scene);
 extern int *sMgSpriteTables[];
 }
 
-namespace s20ad660 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c12IsAltVariantEv
 /* dScMgBase_c::IsAltVariant - slot 35, the LAST slot of dScMgBase_c's own
    eighteen.  Twenty bytes, and the end of the 18-35 keystone range: with this
@@ -153,9 +151,6 @@ extern "C" {
    The rename had to be scoped: 0x020ad660 is an overlay load base, so ov000,
    ov002, ov003, ov004 and ov007 all have unrelated symbols at that address
    (ov003's is dScTitle_c's D1).  Only ov004's is this function. */
-}
-}
-
 int dScMgBase_c::IsAltVariant()
 {
     return (param1 & 0xff) != 0;
@@ -715,14 +710,9 @@ void Mg_SpawnFx(char *state, short timer, short pos, int *vecA, int *vecB, int *
 }
 }
 
-namespace s20ae03c {
-extern "C" {
 // @symbol _ZN11dScMgBase_c15graphCallback_c14GraphCallback3Ev
 /* dScMgBase_c::graphCallback_c::GraphCallback3 -- slot 3: calls the
    registered scene's OnGraphCallback3 (slot 25, +0x64) and reports handled. */
-}
-}
-
 int dScMgBase_c::graphCallback_c::GraphCallback3()
 {
     dScMgBase_c *p = mScene;
@@ -734,8 +724,6 @@ int dScMgBase_c::graphCallback_c::GraphCallback3()
     return 1;
 }
 
-namespace s20ae06c {
-extern "C" {
 // @symbol _ZN11dScMgBase_c15graphCallback_c14GraphCallback2Ev
 /* dScMgBase_c::graphCallback_c::GraphCallback2 -- slot 2.
  *
@@ -743,9 +731,6 @@ extern "C" {
  * +0x60) result rather than discarding it and reporting handled; it only
  * reports handled when no scene is registered.
  */
-}
-}
-
 int dScMgBase_c::graphCallback_c::GraphCallback2()
 {
     dScMgBase_c *p = mScene;
@@ -757,14 +742,9 @@ int dScMgBase_c::graphCallback_c::GraphCallback2()
     return p->OnGraphCallback2();
 }
 
-namespace s20ae0a4 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c15graphCallback_c14GraphCallback1Ev
 /* dScMgBase_c::graphCallback_c::GraphCallback1 -- slot 1: calls the
    registered scene's OnGraphCallback1 (slot 22, +0x58) and reports handled. */
-}
-}
-
 int dScMgBase_c::graphCallback_c::GraphCallback1()
 {
     dScMgBase_c *p = mScene;
@@ -776,14 +756,9 @@ int dScMgBase_c::graphCallback_c::GraphCallback1()
     return 1;
 }
 
-namespace s20ae0d4 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c15graphCallback_c14GraphCallback0Ev
 /* dScMgBase_c::graphCallback_c::GraphCallback0 -- slot 0: calls the
    registered scene's OnGraphCallback0 (slot 23, +0x5c) and reports handled. */
-}
-}
-
 int dScMgBase_c::graphCallback_c::GraphCallback0()
 {
     dScMgBase_c *p = mScene;
@@ -800,27 +775,17 @@ int dScMgBase_c::graphCallback_c::GraphCallback0()
    store, and mScene = 0 are the three writes the ROM body makes. */
 dScMgBase_c::graphCallback_c::graphCallback_c() : mScene(0) {}
 
-namespace s20ae128 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c16OnGraphCallback3Ev
 /* dScMgBase_c::OnGraphCallback3 - slot 25: nonzero while the menu is closed. */
-}
-}
-
 int dScMgBase_c::OnGraphCallback3()
 {
     return mMenuOpen == 0;
 }
 
-namespace s20ae140 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c16OnGraphCallback2Ev
 /* dScMgBase_c::OnGraphCallback2 - slot 24. When mMenuOpen differs from its latch
    mMenuScreenSaved, calls SaveScreenForMenu (slot 29) if the menu has opened or
    RestoreScreenFromMenu (slot 30) if it has closed, then latches it. */
-}
-}
-
 int dScMgBase_c::OnGraphCallback2()
 {
     int v2 = mMenuOpen;
@@ -836,25 +801,15 @@ done:
     return 1;
 }
 
-namespace s20ae198 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c16OnGraphCallback1Ev
 /* dScMgBase_c::OnGraphCallback1 - slot 22 */
-}
-}
-
 int dScMgBase_c::OnGraphCallback1()
 {
     return 1;
 }
 
-namespace s20ae1a0 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c16OnGraphCallback0Ev
 /* dScMgBase_c::OnGraphCallback0 - slot 23 */
-}
-}
-
 int dScMgBase_c::OnGraphCallback0()
 {
     return 1;
@@ -1690,15 +1645,10 @@ int dScMgBase_c::SaveScreenForMenu() {
     }
 }
 
-namespace s20af27c {
-extern "C" {
 // @symbol _ZN11dScMgBase_c8OpenMenuEv
 /* dScMgBase_c::OpenMenu - slot 27. Unless mMenuDisabled is set, opens
    the three-item overlay menu: items start at their slide-in positions,
    the prompt is disabled and nothing is highlighted. */
-}
-}
-
 void dScMgBase_c::OpenMenu()
 {
     if (mMenuDisabled != 0) return;
@@ -2270,8 +2220,6 @@ void Mg_SetTopScreenYOffset(int v) { sMgTopScreenYOffset[0] = v; }
 }
 }
 
-namespace s20b04e0 {
-extern "C" {
 // @symbol _ZN11dScMgBase_c14GetDisplayModeEv
 /* dScMgBase_c::GetDisplayMode - slot 26: which display layout the scene
  * uses. BeforeInitResources turns the 3D engines on for any nonzero answer.
@@ -2280,9 +2228,6 @@ extern "C" {
  * `return 2;` in dScMgD3DBase_c's.  Three distinct constants out of three
  * bodies is what makes the return type int rather than void, and it is why the
  * caller has to be able to tell the three apart. */
-}
-}
-
 int dScMgBase_c::GetDisplayMode()
 {
     return 0;
@@ -3891,28 +3836,5 @@ dScMgBase_c::~dScMgBase_c()
 {
     gMgScene = 0;
 }
-
-#ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D2 AND D0 NAMES, AND MSVC NEVER EMITS THEM.
- * MSVC folds the Itanium destructor variants into the one ~dScMgBase_c()
- * above. Descendants tearing down a dScMgBase_c base subobject call the
- * base-object variant by its flat name; the deleting variant is the D1 body
- * followed by the class-specific operator delete. Each is spelled here in
- * terms of the one host destructor, called qualified so it is a direct call.
- * mwccarm never defines _MSC_VER, so nothing here reaches the cartridge
- * object. */
-extern "C" dScMgBase_c *_ZN11dScMgBase_cD2Ev(dScMgBase_c *thiz)
-{
-    thiz->dScMgBase_c::~dScMgBase_c();
-    return thiz;
-}
-
-extern "C" dScMgBase_c *_ZN11dScMgBase_cD0Ev(dScMgBase_c *thiz)
-{
-    thiz->dScMgBase_c::~dScMgBase_c();
-    dScMgBase_c::operator delete(thiz);
-    return thiz;
-}
-#endif
 
 #pragma pop

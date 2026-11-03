@@ -20,10 +20,10 @@
 extern "C" {
 #endif
 
-extern void _ZN18NestedHeapIterator4InitEP13HeapAllocator(char*, char*);
-extern void _ZN18NestedHeapIterator8AddFirstEP13HeapAllocator(char*, char*);
+/* Init, AddFirst and Next are NestedHeapIterator methods in
+   NestedHeapIterator.h. The constructor call in NestedHeapIterator.cpp
+   stays this symbol: placement new measured func_0204df54 0x94 -> 0xa0. */
 extern void _ZN18NestedHeapIteratorC1Ej(void*, u32);
-extern void*_ZN18NestedHeapIterator4NextEP13HeapAllocator(void*, void*);
 
 
 #ifdef __cplusplus
