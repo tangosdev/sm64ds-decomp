@@ -109,7 +109,7 @@ extern void func_ov007_020c510c(char *c);
  * keeps this caller from truncating func_ov007_020c3be0's result, which the
  * ROM does not do. */
 extern void func_ov007_020c4e98(void *c, int a1, int a2, int a3, int a4, int a5, int a6);
-extern int func_ov007_020c5188(void *, int);
+extern void func_ov007_020c5188(void *, int);
 extern void func_ov007_020c5490(char *obj, int *m);
 extern void func_ov007_020c55bc(char *c, int a, int b);
 extern void func_ov007_020c56bc(char *c, int a, int b, int d, int e, int f);
