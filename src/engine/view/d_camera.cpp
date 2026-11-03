@@ -122,7 +122,7 @@ extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(const void *v);
 extern int LenVec3(void *v);
 extern void Vec3_Add(void *out, const void *a, const void *b);
-extern void Vec3_Sub(void *out, const void *a, const void *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void AddVec3(void *a, void *b, void *c);
 extern void SubVec3(void *a, void *b, void *c);
 extern void Vec3_MulScalar(void *out, const void *in, int scale);
@@ -134,12 +134,6 @@ extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationZ(void *m, int angle);
 extern void MulMat4x3Mat4x3(void *dst, const void *a, void *b);
 extern void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
-
-/* local extern: the factory runs the base constructor over fresh operator new
-   storage and stores the vptrs itself; C++ has no call spelling for a C2. */
-extern void *_ZN7fBase_cC2Ev(void *self);
-/* _ZTV7dBase_c/_ZTV7dView_c/_ZTV9dCamera_c come from decl_common.h (int[]/u32
-   spellings); the stores below take their addresses explicitly. */
 
 /* Siblings inside this TU whose file-local decl spellings decl_common.h does
    not already pin. */
@@ -238,22 +232,10 @@ struct G3i {
 };
 
 /* @symbol dCamera_c_classInit
- * Allocation factory historically labelled as the dCamera_c constructor. Its first action
- * overwrites r0 with fBase_c::operator new(sizeof(dCamera_c)); a real
- * constructor must consume the incoming storage pointer. The three vptr
- * transitions are dBase_c -> dView_c -> dCamera_c, and the Matrix4x3 at +0x50
- * is dView_c's view matrix. */
-extern "C" dCamera_c *dCamera_c_classInit()
-{
-    dCamera_c *camera = (dCamera_c *)fBase_c::operator new(sizeof(dCamera_c));
-    if (camera) {
-        _ZN7fBase_cC2Ev(camera);
-        *(void ***)camera = (void **)&_ZTV7dBase_c;
-        *(void ***)camera = (void **)&_ZTV7dView_c;
-        Matrix4x3_LoadIdentity(&camera->viewMat);
-        *(void ***)camera = (void **)&_ZTV9dCamera_c;
-    }
-    return camera;
+ * Allocation factory. new dCamera_c is the fBase constructor, the dBase and
+ * dView vtables, the view-matrix clear, and the dCamera vtable. */
+extern "C" dCamera_c *dCamera_c_classInit() {
+    return new dCamera_c;
 }
 
 // @symbol _ZN9dCamera_c13InitResourcesEv
@@ -1370,7 +1352,7 @@ body:
                     cam->mLookTargetPos.y = t.y;
                     cam->mLookTargetPos.z = t.z;
                 }
-                Vec3_Sub(&local, (Vec3 *)&cam->mLookTargetPos, a3);
+                Vec3_Sub((Vector3 *)&local, &cam->mLookTargetPos, (const Vector3 *)a3);
                 cam->mFocusDist = LenVec3(&local) >> 1;
                 g = data_0209f2f8;
                 v = (g == 0x2d);
@@ -1506,7 +1488,7 @@ extern "C" int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int ar
         } else if (hl > 0) {
             r5 += FX_MUL(hl, 0x400);
         }
-        Vec3_Sub(&sp38, &sp8, &cam->mLookAtOffset);
+        Vec3_Sub((Vector3 *)&sp38, (const Vector3 *)&sp8, &cam->mLookAtOffset);
         sl = Vec3_HorzLen(&sp38);
         {
             int f = sl;
@@ -3481,7 +3463,7 @@ void func_020089f8(void *self) {
     cam->mTargetPos.x = p->x;
     cam->mTargetPos.y = p->y;
     cam->mTargetPos.z = p->z;
-    Vec3_Sub(tmp, &cam->lookAt.x, &cam->mTargetPos.x);
+    Vec3_Sub((Vector3 *)tmp, (const Vector3 *)&cam->lookAt.x, (const Vector3 *)&cam->mTargetPos.x);
     cam->mLookAtOffset.x = tmp[0];
     cam->mLookAtOffset.y = tmp[1];
     cam->mLookAtOffset.z = tmp[2];

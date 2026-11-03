@@ -94,8 +94,6 @@ PknStatePMF data_ov084_02130e80[9] = {
 extern "C" {
 
 /* -- other modules -- */
-void  LoadBlueCoinModel(void *c);
-void  UnloadBlueCoinModel(void *c);
 void  func_02012694(u32 id, void *pos);
 void  func_020105cc(void *thiz, u32 flags);
 
@@ -162,7 +160,7 @@ int daPkn_c::InitResources()
     Vector3 v;
     for (i = 0; i < 6; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov084_021302f4[i]);
-    LoadBlueCoinModel(this);
+    LoadBlueCoinModel();
     dExtSimpleModel_c::LoadFile(data_ov084_02130dfc);
     dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
     if (mAnmModel.SetFile((BMD_File *)data_ov084_02130dfc.filePtr, 1, -1) == 0)
@@ -304,7 +302,7 @@ int daPkn_c::CleanupResources()
     data_ov084_02130dfc.Release();
     for (i = 0; i < 6; i++)
         data_ov084_021302f4[i]->Release();
-    UnloadBlueCoinModel(this);
+    UnloadBlueCoinModel();
     data_ov002_0210da38.Release();
     return 1;
 }

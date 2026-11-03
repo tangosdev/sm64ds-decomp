@@ -1,7 +1,7 @@
 //cpp
 #include "Memory.h"
 extern "C" {
-extern void func_0205a588(void *, int, unsigned int);
+extern void func_0205a588(void *, unsigned char, unsigned int);
 /* the asset handle table (see func_02018a24.c) and its entry count */
 extern void *data_0209d3b8;
 extern int data_0209d3b0;

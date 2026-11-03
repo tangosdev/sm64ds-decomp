@@ -46,8 +46,6 @@ struct HikariVec3 {
     s32 z;
 };
 
-struct Vec3;
-
 /* The beam's file-scope SharedFilePtr object, spelled through the same
    wrapper idiom the landed folds use: the handle's code is the veneer pair
    the cartridge already carries, so the wrapper gets no bodies of its own.
@@ -65,7 +63,7 @@ extern int data_0209caa0[];
 /* local extern: arm9 math and save helpers with no shared header. */
 extern "C" {
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-extern void Vec3_Add(Vec3 *out, Vec3 *a, Vec3 *b);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
 extern unsigned char NumStars(void);
 }
@@ -121,7 +119,7 @@ int daObjC1Hikari_c::Behavior() {
         vMid.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         MulVec3Mat4x3((Vector3 *)&vIn, &data_020a0e68, (Vector3 *)&vMid);
-        Vec3_Add((Vec3 *)&vRes, (Vec3 *)&mPosX, (Vec3 *)&vMid);
+        Vec3_Add((Vector3 *)&vRes, (const Vector3 *)&mPosX, (const Vector3 *)&vMid);
 
         switch (p->GetTalkState()) {
         case 0:
@@ -167,7 +165,7 @@ int daObjC1Hikari_c::Behavior() {
     vMid2.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MulVec3Mat4x3((Vector3 *)&vIn2, &data_020a0e68, (Vector3 *)&vMid2);
-    Vec3_Add((Vec3 *)&vRes2, (Vec3 *)&mPosX, (Vec3 *)&vMid2);
+    Vec3_Add((Vector3 *)&vRes2, (const Vector3 *)&mPosX, (const Vector3 *)&vMid2);
     mCylinder.pos.x = vRes2.x;
     mCylinder.pos.y = vRes2.y;
     mCylinder.pos.z = vRes2.z;

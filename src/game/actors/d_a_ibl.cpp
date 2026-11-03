@@ -143,20 +143,6 @@ daIbl_c::~daIbl_c()
 {
 }
 
-#ifdef _MSC_VER
-/* The host needs the ROM's flat D0 name, and MSVC never emits it: it folds
- * the Itanium destructor variants into the one ~daIbl_c() above. This arm
- * spells out what the deleting destructor does -- the D1 body, called
- * qualified so it is a direct call, then the class-specific operator
- * delete. Nothing here reaches mwccarm. */
-extern "C" daIbl_c *_ZN7daIbl_cD0Ev(daIbl_c *thiz)
-{
-    thiz->daIbl_c::~daIbl_c();
-    daIbl_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 // @symbol _ZN7daIbl_c16OnAimedAtWithEggEv
 /* Returns 0x82000 (130 units). func_ov100_02141fb0 adds it to the ball's Y
  * before KillByInvincibleChar. */

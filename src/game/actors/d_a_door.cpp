@@ -209,7 +209,7 @@ unsigned char DecIfAbove0_Byte(void *p);
 int DecIfAbove0_Short(void *p);
 int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(void *res, void *translation, short angY, void *v);
-void Vec3_Sub(void *out, void *a, void *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
@@ -338,19 +338,6 @@ daDoor_StateRecord data_ov100_021488a4 = {data_02086b58, data_ov100_02148114};
  * delete. All of it follows from `struct daDoor_c : dActor_c` and the member
  * types in the header. */
 daDoor_c::~daDoor_c() {}
-
-#ifdef _MSC_VER
-/* The host needs the ROM's flat D0 name, and MSVC never emits it: it folds
- * the Itanium destructor variants into the one ~daDoor_c() above. This arm
- * spells out what the deleting destructor does -- the D1 body, called
- * qualified so it is a direct call, then the class-specific operator
- * delete. Nothing here reaches mwccarm. */
-extern "C" daDoor_c *_ZN8daDoor_cD0Ev(daDoor_c *thiz) {
-    thiz->daDoor_c::~daDoor_c();
-    daDoor_c::operator delete(thiz);
-    return thiz;
-}
-#endif
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov100_02144468, 0x02144468, size 0x80 */
@@ -965,7 +952,7 @@ fail:
 daPly_c *daDoor_c::func_ov100_02145370() {
     Vec3i v;
     daPly_c *r5 = (daPly_c *)data_0209f394[data_0209f250];
-    Vec3_Sub(&v, &r5->mPosX, &mPosX);
+    Vec3_Sub((Vector3 *)&v, (const Vector3 *)&r5->mPosX, (const Vector3 *)&mPosX);
     Vec3_RotateYAndTranslate(&mScaleX, &data_020a0ebc, (short)(-mAngleY), &v);
     return r5;
 }

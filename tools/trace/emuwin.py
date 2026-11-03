@@ -19,6 +19,7 @@ import os
 import shutil
 import struct
 import subprocess
+import sys
 import time
 import zlib
 
@@ -162,8 +163,7 @@ class _BMIH(ctypes.Structure):
                 ('biClrUsed', wt.DWORD), ('biClrImportant', wt.DWORD)]
 
 
-def capture_client(hwnd):
-    """The window's client area as a Frame, rendered by DWM (no focus, no z-order)."""
+def _capture_once(hwnd):
     w, h = client_size(hwnd)
     if w <= 0 or h <= 0:
         raise RuntimeError('window has no client area (minimised?)')
@@ -192,6 +192,34 @@ def capture_client(hwnd):
         gdi32.DeleteObject(bmp)
         gdi32.DeleteDC(mem)
         user32.ReleaseDC(hwnd, hdc)
+
+
+CAPTURE_TRIES = 5        # a visible window has been seen to report an empty client area once
+CAPTURE_WAIT = 0.25      # seconds between those tries
+
+
+def capture_client(hwnd, tries=CAPTURE_TRIES, wait=CAPTURE_WAIT, log=None):
+    """The window's client area as a Frame, rendered by DWM (no focus, no z-order).
+
+    A window that is not minimised has once reported no client area (and a rerun
+    was fine), so a failed grab is retried up to `tries` times, `wait` s apart.
+    Each retry goes to stderr, and to log(rec) if given. A minimised window
+    fails at once: waiting does not restore it. frame.retries = retries used."""
+    for k in range(int(tries)):
+        if user32.IsIconic(hwnd):
+            raise RuntimeError('window has no client area: it is minimised (restore it)')
+        try:
+            f = _capture_once(hwnd)
+            f.retries = k
+            return f
+        except RuntimeError as e:
+            if k + 1 >= int(tries):
+                raise RuntimeError('%s (after %d tries)' % (e, k + 1))
+            rec = {'ev': 'capture_retry', 'attempt': k + 1, 'of': int(tries), 'err': str(e)}
+            if log:
+                log(rec)
+            print('emuwin: %s' % rec, file=sys.stderr, flush=True)
+            time.sleep(float(wait))
 
 
 def menubar_height(frame):
@@ -232,14 +260,17 @@ def fit_window(hwnd, scale=2):
     return mb
 
 
-def capture_screens(hwnd, which='top'):
-    f = capture_client(hwnd)
+def capture_screens(hwnd, which='top', log=None):
+    f = capture_client(hwnd, log=log)
     top, bot = screen_rects(f)
     if which == 'top':
-        return f.crop(*top)
-    if which == 'bottom':
-        return f.crop(*bot)
-    return f.crop(top[0], top[1], top[2], top[3] + bot[3])
+        out = f.crop(*top)
+    elif which == 'bottom':
+        out = f.crop(*bot)
+    else:
+        out = f.crop(top[0], top[1], top[2], top[3] + bot[3])
+    out.retries = f.retries
+    return out
 
 
 # ---------------------------------------------------------------------- input
@@ -306,26 +337,47 @@ def close_menus(pid=None):
     return len(pops)
 
 
-def menu(pid, path, timeout=30):
-    """Click a melonDS menu path, e.g. ['File', 'Load state', '1'], via UI Automation."""
+MENU_TRIES = 3           # "missing: Load state" on a first attempt has been seen; a retry worked
+MENU_RETRY_WAIT = 0.8
+
+
+def menu(pid, path, timeout=30, tries=MENU_TRIES, retry_wait=MENU_RETRY_WAIT, log=None):
+    """Click a melonDS menu path, e.g. ['File', 'Load state', '1'], via UI Automation.
+
+    A step that finds no item ("missing: <name>") clicked nothing at that level, so
+    the whole path is retried after retry_wait s (open menus are closed first), up
+    to `tries` attempts. Each retry goes to stderr, and to log(rec) if given. Any
+    other failure (or a timeout, after which the click may have landed) raises."""
     ps = os.path.join(HERE, 'uia_menu.ps1')
-    r = subprocess.run(['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', ps,
-                        '-ProcessId', str(pid), '-Path', '|'.join(path)],
-                       capture_output=True, text=True, timeout=timeout)
-    time.sleep(0.3)
-    close_menus(pid)
-    out = (r.stdout + r.stderr).strip()
-    if r.returncode != 0:
-        raise RuntimeError('menu %s failed: %s' % ('>'.join(path), out))
-    return out
+    notes = []
+    for attempt in range(1, int(tries) + 1):
+        r = subprocess.run(['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', ps,
+                            '-ProcessId', str(pid), '-Path', '|'.join(path)],
+                           capture_output=True, text=True, timeout=timeout)
+        time.sleep(0.3)
+        close_menus(pid)
+        out = (r.stdout + r.stderr).strip()
+        if r.returncode == 0:
+            return '\n'.join(notes + [out])
+        missing = [ln for ln in out.splitlines() if ln.startswith('missing:')]
+        if not missing or attempt >= int(tries):
+            raise RuntimeError('menu %s failed%s: %s' % (
+                '>'.join(path), ' after %d attempts' % attempt if attempt > 1 else '', out))
+        rec = {'ev': 'menu_retry', 'path': '>'.join(path), 'attempt': attempt, 'of': int(tries),
+               'why': missing[0]}
+        notes.append('retry: attempt %d of %d failed (%s)' % (attempt, int(tries), missing[0]))
+        if log:
+            log(rec)
+        print('emuwin: %s' % rec, file=sys.stderr, flush=True)
+        time.sleep(float(retry_wait))
 
 
-def load_state_slot(pid, slot):
-    return menu(pid, ['File', 'Load state', str(slot)])
+def load_state_slot(pid, slot, log=None):
+    return menu(pid, ['File', 'Load state', str(slot)], log=log)
 
 
-def save_state_slot(pid, slot):
-    return menu(pid, ['File', 'Save state', str(slot)])
+def save_state_slot(pid, slot, log=None):
+    return menu(pid, ['File', 'Save state', str(slot)], log=log)
 
 
 # --------------------------------------------------------------------- launch
@@ -494,6 +546,11 @@ def launch(workdir, exe=None, wait_window=30):
         if p.poll() is not None:
             raise RuntimeError('melonDS exited with %s' % p.returncode)
         time.sleep(0.25)
+    kill(p.pid)               # the caller never gets p: do not leave it running on the swapped config
+    try:
+        p.wait(15)
+    except Exception:
+        pass
     raise RuntimeError('melonDS window did not appear')
 
 

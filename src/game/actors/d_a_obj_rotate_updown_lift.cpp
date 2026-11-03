@@ -139,7 +139,7 @@ void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 ang);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void MulVec3Mat4x3(void *src, void *m, void *dst);
 void Vec3_Add(void *out, void *a, void *b);
-void Vec3_Sub(void *out, void *a, void *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 void SubVec3(void *a, void *b, void *c);
 int LenVec3(void *v);
@@ -159,15 +159,6 @@ extern void hold_d_a_obj_rotate_updown_lift(dBgW_KcMbg *self, KCL_File *file, co
 daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c()
 {
 }
-
-#ifdef _MSC_VER
-extern "C" daObjRotateUpdownLift_c *_ZN23daObjRotateUpdownLift_cD0Ev(daObjRotateUpdownLift_c *thiz)
-{
-    thiz->daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c();
-    daObjRotateUpdownLift_c::operator delete(thiz);
-    return thiz;
-}
-#endif
 
 // 0x02130fac (0xc4)
 // @symbol func_ov091_02130fac
@@ -414,7 +405,7 @@ int daObjRotateUpdownLift_c::Behavior()
     MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[prevIndex],
                   &data_020a0e68, &prev);
     Vec3_Add(&target, &mBasePosX, &cur);
-    Vec3_Sub(&remain, &mPosX, &target);
+    Vec3_Sub(&remain, (const Vector3 *)&mPosX, &target);
     Vec3_Sub(&edge, &cur, &prev);
     span = LenVec3(&edge);
     dist = LenVec3(&remain);

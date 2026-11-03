@@ -154,7 +154,7 @@ extern short data_ov002_020ff0d0[];
 extern int data_ov002_020ff0d4[];
 extern int data_ov002_020ff0d8[];
 extern int data_ov002_020ff0dc[];
-extern "C" void func_02012694(unsigned int a, void *b);
+extern void func_02012694(unsigned int a, void *b);
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern s16 data_02082214[];
@@ -164,20 +164,19 @@ extern u8 data_0209f284;
 extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern void func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsigned short e);
-extern "C" unsigned int data_0209b454;
-extern "C" void AttachToHolder(struct daObjTatefuda_c *self);
-extern "C" u8 DecIfAbove0_Byte(u8 *p);
-extern "C" void *d_a_obj_tatefudaNewHold(u32 a, u32 b, int c, int d, int e, const void *v,
-                                         void *cb);
-extern "C" u32 d_a_obj_tatefudaNewUnkCallback818Hold(u32 a, u32 b, int c, int d, int e,
-                                                     const Vector3_16f *v);
-extern "C" void RebuildModelMatrix(struct daObjTatefuda_c *self);
-extern "C" void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
-                                      CLPS_Block &b);
+extern unsigned int data_0209b454;
+extern void AttachToHolder(struct daObjTatefuda_c *self);
+extern u8 DecIfAbove0_Byte(u8 *p);
+extern void *d_a_obj_tatefudaNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
+extern u32 d_a_obj_tatefudaNewUnkCallback818Hold(u32 a, u32 b, int c, int d, int e,
+                                                 const Vector3_16f *v);
+extern void RebuildModelMatrix(struct daObjTatefuda_c *self);
+extern void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
+                                  CLPS_Block &b);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v,
                          Vector3_16 *v2);
-extern "C" CLPS_Block data_ov002_0210d714;
+extern CLPS_Block data_ov002_0210d714;
 }
 
 /* -------------------------------------------------------------------------- */

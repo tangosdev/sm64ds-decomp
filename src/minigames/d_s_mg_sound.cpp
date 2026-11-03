@@ -200,7 +200,7 @@ u16 sSoundNotePositions10[20] = {32, 32,  80, 32,  128, 32,  176, 32,  224, 32,
 u16 *sSoundNotePositions[3] = {sSoundNotePositions6, sSoundNotePositions8, sSoundNotePositions10};
 extern void Presenter_ResetPose(char *c);
 extern void Presenter_PlayCheer(void *c);
-extern "C" void Mg_DrawScoreTally(void *c, int a, int b, int d);
+extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 void FreeGfxSlotsById(int id);
 int LoadFile(int handle);
 void DecompressLZ16(int src, void *dst);

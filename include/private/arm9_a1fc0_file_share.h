@@ -95,7 +95,7 @@ typedef struct FileShareParentArea {
      * func_020412f0 fills it, func_02041d28 sets its file id, func_02041e14
      * sends it */
     unsigned char mReplies[0x10][0xc];
-    unsigned char mNodes[3][FILE_SHARE_NODE_SIZE]; /* 0x00c0 */
+    FileShareNode mNodes[3];                       /* 0x00c0 */
     FileShareNode *mFreeList;                      /* 0x2700 */
     FileShareNode *mReadyList;                     /* 0x2704 -- func_02041c2c searches it */
     FileShareNode *mBusyList; /* 0x2708 -- func_02042254 loads its state-1 nodes */

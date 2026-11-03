@@ -73,7 +73,7 @@ extern unsigned char data_0209f224;   /* last collected star id */
 extern void func_0205a588(void *dest, int value, int size);
 extern void CpuCopy8(void *dst, void *src, u32 count);
 extern void func_020139b8(void);      /* forward: called by func_02013a88 above its definition */
-extern "C" void func_0201361c(int n); /* forward: defined at the end of this file */
+extern void func_0201361c(int n);     /* forward: defined at the end of this file */
 /* local extern: src/SublevelToLevel.cpp is int(int), but these four callers match only as s8.
  * An int declaration widens each of them by 8 bytes. */
 extern s8 SublevelToLevel(s8 levelID);

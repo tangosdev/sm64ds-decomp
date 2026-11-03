@@ -80,12 +80,14 @@ typedef struct Vec2s {
     s16 x, y;
 } Vec2s;
 
-/* Eight-byte state descriptors. A namespace-scope pointer-to-member is not
-   static data on this class: the named object moves to .bss, __sinit grows
-   by 0xb4, a .ctor word appears, and the RELA lands on an anonymous temp.
-   StateDone is empty, so it is static and its address is an ordinary
-   function pointer (same mangling). The other four read members and stay
-   a raw (code, 0) pair. */
+/* Eight-byte state descriptors. A pointer-to-member initializer
+   (`TrampState pmf = &dScMgTrampoline_c::StateIntro` and the same for
+   StatePlay, StateResults, StateWaitExit) was measured on this TU: the four
+   symbols move from .data to .bss (0x20), __sinit_d_s_mg_trampoline.cpp
+   is emitted at size 0x94 with a .ctor word, and the (code, 0) words survive only as
+   anonymous .data temps that __sinit copies. .text stayed 0x1e10. The ROM
+   keeps these four in .data, so the mangled externs stay. StateDone is
+   empty, so it is static and its address is an ordinary function pointer. */
 struct P2 {
     int a, b;
 };
@@ -154,8 +156,8 @@ int TrmpLine_Create(Vec2s *a, Vec2s *b);
 
 void SetBg2Offset(int a, int b);
 int Mg_GetTopScreenYOffset(void);
-extern "C" unsigned char data_0209d45c;
-extern "C" void Mg_CommitRecords(void *scene);
+extern unsigned char data_0209d45c;
+extern void Mg_CommitRecords(void *scene);
 int GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
@@ -176,8 +178,8 @@ extern void TrmpLine_UpdateAll(void);
 extern int Trmp3DMario_IsOffstage(int *r0);
 extern void Trmp3DMario_EnterWalkIn(char *c);
 extern int RandomIntInternal(int *seed);
-extern "C" void Trmp3DMario_SetSpawnHeight(int n);
-extern "C" void Trmp3DMario_SetTuning(int a);
+extern void Trmp3DMario_SetSpawnHeight(int n);
+extern void Trmp3DMario_SetTuning(int a);
 void TrmpLine_CreateStartLineT1(void);
 extern s16 sTrmpIntroFromX;
 extern s16 sTrmpStartTouchX;
@@ -211,12 +213,13 @@ extern void TrmpLine_DrawAll(void);
 
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);
 /* The four non-static state methods. A pointer to member does not convert
-   to the int word a descriptor holds. StateDone is static, so the
-   descriptor below names it directly. */
-extern "C" void _ZN17dScMgTrampoline_c13StateWaitExitEv(void); /* local extern: PMF -> int */
-extern "C" void _ZN17dScMgTrampoline_c12StateResultsEv(void);  /* local extern: PMF -> int */
-extern "C" void _ZN17dScMgTrampoline_c9StatePlayEv(void);      /* local extern: PMF -> int */
-extern "C" void _ZN17dScMgTrampoline_c10StateIntroEv(void);    /* local extern: PMF -> int */
+   to the int word a descriptor holds, and a pointer-to-member initializer
+   is not static .data (see the note above the P2 definition). StateDone is
+   static, so the descriptor below names it directly. */
+extern void _ZN17dScMgTrampoline_c13StateWaitExitEv(void); /* local extern: PMF -> int */
+extern void _ZN17dScMgTrampoline_c12StateResultsEv(void);  /* local extern: PMF -> int */
+extern void _ZN17dScMgTrampoline_c9StatePlayEv(void);      /* local extern: PMF -> int */
+extern void _ZN17dScMgTrampoline_c10StateIntroEv(void);    /* local extern: PMF -> int */
 extern int sTrmpPuffEnglish[];
 extern int sTrmpPuffSpanish[];
 extern int sTrmpPuffFrench[];

@@ -185,8 +185,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(M48 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(M48 *m, int x, int y, int z);
 extern int func_ov002_020cf700(void *g);
 extern int func_ov002_020d0d2c(void *g);
-extern void LoadBlueCoinModel(void *self);
-extern void UnloadBlueCoinModel(void *self);
 }
 
 // @symbol _ZN8daYegg_cD1Ev
@@ -202,20 +200,6 @@ extern void UnloadBlueCoinModel(void *self);
 daYegg_c::~daYegg_c()
 {
 }
-
-#ifdef _MSC_VER
-/* The host uses the flat ROM D0 name, which MSVC never emits: it folds the
- * Itanium destructor variants into the one ~daYegg_c() above. This arm
- * spells out what the deleting destructor does -- the D1 body, called
- * qualified so it is a direct call, then the class-specific operator delete.
- * Nothing here reaches mwccarm. */
-extern "C" daYegg_c *_ZN8daYegg_cD0Ev(daYegg_c *thiz)
-{
-    thiz->daYegg_c::~daYegg_c();
-    daYegg_c::operator delete(thiz);
-    return thiz;
-}
-#endif
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov002_020ec610, 0x020ec610, size 0x18 */
@@ -1331,7 +1315,7 @@ int daYegg_c::CleanupResources()
     data_ov002_0210e6b0.Release();
     data_ov002_0210eb78.Release();
     if (func_ov002_020ec628() != 0)
-        UnloadBlueCoinModel(((void *)this));
+        UnloadBlueCoinModel();
     return 1;
 }
 
@@ -1503,7 +1487,7 @@ int daYegg_c::InitResources()
     mStallTimer = 0xf;
 
     if (func_ov002_020ec628() != 0)
-        LoadBlueCoinModel((char *)this);
+        LoadBlueCoinModel();
     if (func_ov002_020ec610() != 0)
         mStarSlot = TrackStar(0, 1);
     return 1;

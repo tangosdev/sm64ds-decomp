@@ -94,7 +94,7 @@ struct BtflyAnimationFilePtr : SharedFilePtr {
 extern "C" {
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 s16 Vec3_HorzAngle(const void *a, const void *b);
-void Vec3_Sub(Vector3 *out, void *a, void *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int Vec3_HorzLen(Vector3 *v);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -358,7 +358,7 @@ void daBtfly_c::State2()
         int py;
         int t;
         int five = 5;
-        Vec3_Sub(&d, &mPosX, &player->mPosX);
+        Vec3_Sub(&d, &mPos, &player->mPos);
         v.x = d.x;
         v.y = d.y;
         v.z = d.z;

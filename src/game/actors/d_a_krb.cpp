@@ -227,10 +227,8 @@ extern int Vec3_HorzDist(void *a, void *b);
 extern unsigned char DecIfAbove0_Byte(void *p);
 extern unsigned short DecIfAbove0_Short(void *p);
 extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
-extern void UnloadBlueCoinModel(void* p);
 extern s8 data_0209f2f8;
 void LoadSilverStarAndNumber(void);
-void LoadBlueCoinModel(void* c);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i cc, void *d, Fix12i e);
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
@@ -1643,7 +1641,7 @@ void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
 int daKrb_c::CleanupResources() {
     int i;
     if (mGoombaType == GOOMBA_LARGE)
-        UnloadBlueCoinModel(this);
+        UnloadBlueCoinModel();
     data_ov084_02130cf8.Release();
     for (i = 0; i < 7; ++i)
         sKuriboAnimationFiles[i]->Release();
@@ -1957,7 +1955,7 @@ int daKrb_c::InitResources() {
                 }
             } else {
                 mGoombaType = GOOMBA_LARGE;
-                LoadBlueCoinModel(c);
+                LoadBlueCoinModel();
             }
         }
     }

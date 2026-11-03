@@ -176,21 +176,6 @@ struct CommonModelData {
     void *buffer;                /* 0x08 */
 };
 
-#ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. MSVC
- * folds the Itanium destructor variants into the one ~dExtFrameCtrl_c() it
- * emits, so this arm spells out, in terms of the destructor defined
- * below, what the deleting destructor does: the D1 body, called
- * qualified so it is a direct call, then the class-specific operator
- * delete. It sits ahead of the class's definitions so no ROM symbol's
- * region claims it. Nothing here reaches mwccarm. */
-extern "C" dExtFrameCtrl_c *_ZN15dExtFrameCtrl_cD0Ev(dExtFrameCtrl_c *thiz) {
-    thiz->dExtFrameCtrl_c::~dExtFrameCtrl_c();
-    dExtFrameCtrl_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 /* ---------------------------------------------------------------------------
    dExtModel_c and dExtSimpleModel_c, 0x020169d8..0x02017168: the
    dExtSimpleModel_c run, the dExtModel_c edge interleaved with it, and the

@@ -3,13 +3,18 @@
 
 #include "types.h"
 
-/* A small OAM animation player used by the entry scene. The descriptive class
- * and member names are inferred from the data flow into OAM::Render; the
- * 0x2c-byte layout and its empty constructor/destructor are ROM-proven.
- */
-class OamAnimation {
-public:
-    const void *frames;          /* 0x00 */
+/* One entry of the frame table: the OAM attributes drawn for the frame and
+ * how many ticks it is shown. */
+typedef struct OamAnimFrame {
+    s32 tile;     /* 0x00 */
+    s32 duration; /* 0x04 */
+} OamAnimFrame;
+
+/* A small OAM animation player used by the entry scene. Names follow the
+ * data flow into OAM::Render; the 0x2c-byte layout and empty lifecycle are
+ * ROM-proven. This declaration is shared with the C animation helpers. */
+struct OamAnimation {
+    const OamAnimFrame *frames;  /* 0x00 */
     s32 tile;                    /* 0x04 */
     s32 scaleX;                  /* 0x08 */
     s32 scaleY;                  /* 0x0c */
@@ -30,13 +35,16 @@ public:
        unk_028. */
     s32 screen;
 
+#ifdef __cplusplus
     OamAnimation();
     ~OamAnimation();
+#endif
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char OamAnimation_size_must_be_0x2c[sizeof(OamAnimation) == 0x2c ? 1 : -1];
+typedef char OamAnimFrame_size_must_be_8[sizeof(OamAnimFrame) == 8 ? 1 : -1];
+typedef char OamAnimation_size_must_be_0x2c[sizeof(struct OamAnimation) == 0x2c ? 1 : -1];
 #endif
 
 #endif

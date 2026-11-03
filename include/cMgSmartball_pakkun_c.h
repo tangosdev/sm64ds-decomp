@@ -42,6 +42,7 @@ struct cMgSmartball_pakkun_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    ~cMgSmartball_pakkun_c() {}
 
     /* Recovered helper: the ball-vs-mouth region test -- checks the two head
        triangles and the swallow circle while the piranha's state allows. */

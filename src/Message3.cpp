@@ -29,6 +29,7 @@
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "Message.h"
+#include "MessageBank.h"
 #include "G2x.h"
 #include "G2.h"
 
@@ -139,17 +140,6 @@ void Message_DrawLineBG2VS(void);
 void func_020345b0(int arg0);
 void LoadFont3D(void);
 }
-
-/* The current message's 8-byte table entry (data_0209fd00 points into the
- * table at data_0209fd08, idx * 8). +4 is the box width in pixels
- * ((width + 7) / 8 tile columns into data_0209fc78) and +6 the number of text
- * lines; each line is two tile rows. Only the fields the readers touch are
- * spelled out. */
-struct MessageEntry {
-    s32 textOffset; /* 0x0 */
-    u16 width;      /* 0x4 */
-    u8 lineCount;   /* 0x6 */
-};
 
 /* The text cursor's current control record (data_0209fd0c). Bytes 3 and 4 are
  * a big-endian argument; 5 and 6 are the number-format mode and base. */

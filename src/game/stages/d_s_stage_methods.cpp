@@ -47,6 +47,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 
 #include "types.h"
 #include "G2.h"
+#include "private/controller_input.h"
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
 #include "dScStage_c.h"
@@ -255,10 +256,6 @@ struct LevelReturnEntry {
 };
 struct OvTbl {
     unsigned int t[7];
-};
-struct PadData {
-    u16 held;
-    u16 pressed;
 };
 /* The object at data_0209f5bc; only its slot-5 and slot-7 queries are called
    from this file. */
@@ -4443,10 +4440,6 @@ extern "C" void ResetInput(void) {
 extern "C" {
 void EndKuppaScript(void);
 void UnloadArchive(int);
-// local extern: the fader array's destructor is passed by address to
-// __cxa_vec_delete here and to __cxa_vec_new in InitResources, which member
-// syntax cannot express.
-void _ZN9dFdWipe_cD1Ev(void *thiz);
 }
 
 /* Destroy through vtable slot 1 (D0). */
@@ -4497,7 +4490,7 @@ int dScStage_c::CleanupResources() {
     data_0209f314 = 0;
     dScene_c::SetAndStopColorFader();
     data_0209d4b0 = 0;
-    __cxa_vec_delete(data_0209f324, 0x60, 8, _ZN9dFdWipe_cD1Ev);
+    delete[] (dFdWipe_c *)data_0209f324;
     data_0209f324 = 0;
     CleanCommonModelDataArr();
     mMeshCollider.Disable();
@@ -4580,11 +4573,7 @@ int func_0203da9c(void);
 int func_0203da3c(void);
 u32 func_0203dad4(void);
 void func_0203b9b4(int *p, int v);
-void *__cxa_vec_new(unsigned int a, unsigned int b, unsigned int c, void *ctor, void *dtor);
 void func_ov001_020ab2e4(void);
-// local extern: the fader array's constructor is passed by address to
-// __cxa_vec_new, which member syntax cannot express.
-void *_ZN9dFdWipe_cC1Ev(void *thiz);
 }
 
 int dScStage_c::InitResources() {
@@ -4686,7 +4675,7 @@ int dScStage_c::InitResources() {
         LoadTextNarcs();
         LoadArchive(0);
         if (data_0209f2f8 == 1) {
-            mHeap::Heap_t *previousHeap = ((mHeap::Heap_t *)data_020a0eac)->SetDefault();
+            mHeap::Heap_t *previousHeap = data_020a0eac->SetDefault();
             LoadArchive(7);
             previousHeap->SetDefault();
         }
@@ -4804,8 +4793,7 @@ int dScStage_c::InitResources() {
             faderFileIds = data_020755e0;
         }
 
-        data_0209f324 =
-            __cxa_vec_new(7, 0x60, 8, (void *)&_ZN9dFdWipe_cC1Ev, (void *)&_ZN9dFdWipe_cD1Ev);
+        data_0209f324 = new dFdWipe_c[7];
         int faderIndex = 0;
         int faderOffset = 0;
         do {

@@ -2366,117 +2366,117 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2240",
+      "from": "@2251",
       "to": "@2223",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2237 now; licensed under the existing pin @2223 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2241",
+      "from": "@2252",
       "to": "@2224",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2238 now; licensed under the existing pin @2224 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2242",
+      "from": "@2253",
       "to": "@2225",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2239 now; licensed under the existing pin @2225 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2243",
+      "from": "@2254",
       "to": "@2226",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2240 now; licensed under the existing pin @2226 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2244",
+      "from": "@2255",
       "to": "@2227",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2241 now; licensed under the existing pin @2227 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2245",
+      "from": "@2256",
       "to": "@2228",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2242 now; licensed under the existing pin @2228 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2246",
+      "from": "@2257",
       "to": "@2229",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2243 now; licensed under the existing pin @2229 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2247",
+      "from": "@2258",
       "to": "@2230",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2244 now; licensed under the existing pin @2230 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2248",
+      "from": "@2259",
       "to": "@2231",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2245 now; licensed under the existing pin @2231 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2250",
+      "from": "@2261",
       "to": "@2233",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2247 now; licensed under the existing pin @2233 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2252",
+      "from": "@2263",
       "to": "@2235",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @2249 now; licensed under the existing pin @2235 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2254",
+      "from": "@2265",
       "to": "@59",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2256",
+      "from": "@2267",
       "to": "@58",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2258",
+      "from": "@2269",
       "to": "@24",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2260",
+      "from": "@2271",
       "to": "@57",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2262",
+      "from": "@2273",
       "to": "@23",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2264",
+      "from": "@2275",
       "to": "@28",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2266",
+      "from": "@2277",
       "to": "@31",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2268",
+      "from": "@2279",
       "to": "@56",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2270",
+      "from": "@2281",
       "to": "@32",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2272",
+      "from": "@2283",
       "to": "@22",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2274",
+      "from": "@2285",
       "to": "@27",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     },
     {
-      "from": "@2276",
+      "from": "@2287",
       "to": "@29",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the SetCoinRecordIfHigher signature correction deletes this TU's local _ZN extern ahead of it, lowering the per-TU @NNN uniquifier"
     }

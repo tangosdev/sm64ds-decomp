@@ -87,8 +87,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
-
-struct Vec2i { int x, y; };
+#include "private/ov006_ec4dc_obj.h"
 
 /* One of the twenty records at sMgCoins. Positions are Fix12
    screen pixels (Coin_Draw draws at mPos >> 12). */
