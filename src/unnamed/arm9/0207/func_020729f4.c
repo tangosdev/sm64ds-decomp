@@ -13,16 +13,7 @@ extern void func_02072dac(void *x, void *b);
 extern void func_02071864(void *a, void *b);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern u8 *func_02071a50(u8 *p, int *out);
-
-/* Walk buffer shared with func_02072d90. The action iterator is the first
- * three words; the throw context func_02071910 reads begins at 0x18. */
-struct ActionWalk {
-    int mFuncStart;
-    u8 *mActionTable;
-    u8 *mAction;
-    char pad_0c[0xc];
-    char mThrow;
-};
+#include "private/arm9_action_walk.h"
 
 int func_020729f4(ActionWalk *c) {
     char *frame = &c->mThrow;

@@ -35,28 +35,12 @@ extern FileShareWork data_020a1fc0;
 extern char data_02082158[];
 }
 
-/* Pointer table. FileShareChildArea spells these slots int. */
-struct ChildTables {
-    char *mBlockInfoTable[0x10];
-    int mRecvBufTable[0x10];
-    int mPacketBitmapTable[0x10];
-    unsigned char pad_0c0[0xbb0];
-    int mRecvWork;
-    int mMaxReadSize;
-    int mReadRegion;
-};
-
-/* mNodes is FileShareNode[3]. The shared header stores the bytes. */
-struct ParentNodes {
-    unsigned char mReplies[0x10][0xc];
-    FileShareNode mNodes[3];
-};
+#include "private/arm9_file_share_views.h"
 
 typedef char ParentNodes_mNodes_must_be_0xc0[(int)&((ParentNodes *)0)->mNodes == 0xc0 ? 1 : -1];
 typedef char
     ChildTables_mRecvWork_must_be_0xc70[(int)&((ChildTables *)0)->mRecvWork == 0xc70 ? 1 : -1];
 
-#pragma opt_strength_reduction off
 extern "C" void func_02040c34(int isParent, int port, int stateCallback, int allocFunc,
                               int allocArg) {
     FileShareWork *G = &data_020a1fc0;
