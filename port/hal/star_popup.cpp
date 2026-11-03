@@ -50,6 +50,7 @@ extern unsigned char data_020a1164[];     // the per-player camera records (stri
 void func_ov002_020c3dbc(void *player);
 extern int data_ov002_0211058c[];
 void _ZN5Event6SetBitEj(unsigned b);
+void port_player_set_character(void *player, unsigned ch);   // hal/player_bridges.cpp: the character doors' own in-place swap
 }
 
 namespace port {
@@ -419,6 +420,18 @@ void clear_receiver() {
 // that untouched; a console told about it does the same three things with its own body and its own copy of the star.
 enum : unsigned { kEventKey = 0x1d };
 bool on_ending_flight(const char *b) { return b && *(void *const *)(b + 0x370) == (const void *)data_ov002_0211058c; }
+// The ending is Mario's. Its Kuppa script finds "player 0" through func_0200e6d8(0): the local body when its character
+// (param1, +8) is 0 = Mario, else a Mario the script spawned itself; a coop or party body that is Luigi, Wario or Yoshi finds
+// neither and the ending's first camera step (func_0200814c) reads through a null player as the ending level loads (c0000005,
+// measured with both consoles as Yoshi). On the cartridge only Mario reaches this arena. So the body on the ending flight is
+// made Mario first, through the doors' own swap (model, state and position carry across).
+void ending_as_mario(char *b, const char *why) {
+    if (!b || *(const unsigned *)(b + 8) == 0u) return;
+    const unsigned was = *(const unsigned *)(b + 8);
+    port_player_set_character(b, 0u);
+    std::fprintf(stderr, "[starpop] GRAND %s: my body was character %u, now %u for the ending wall=%lld\n", why, was,
+                 *(const unsigned *)(b + 8), wall_ms());
+}
 // My copies of the Grand Star (class 283), removed the way the ROM removes the collected one.
 int kill_grand() {
     int n = 0;
@@ -693,6 +706,7 @@ void scan_local(Mode m) {
     if (!g.grand_sent && !g.grand_forced && on_ending_flight((const char *)me)) {
         g.grand_sent = true;
         send_event(m, kKindGrand, true, 0);
+        ending_as_mario((char *)me, "collect");
     }
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
         const unsigned cls = *(const unsigned short *)(a + 0x0c);
@@ -995,6 +1009,7 @@ extern "C" void port_star_popup_frame(void) {
                 // STAREXIT2: the Grand Star's collect with my body (see kill_grand): the ending flight, the event bit, my copy gone.
                 char *me = (char *)my_body();
                 const int removed = kill_grand();
+                ending_as_mario(me, "exit");
                 func_ov002_020c3dbc(me);
                 _ZN5Event6SetBitEj(kEventKey);
                 if (on_ending_flight(me)) {
