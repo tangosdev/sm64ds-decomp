@@ -43,6 +43,7 @@ extern int data_0209d708[];
 extern int data_0209d70c[];
 void port_chat_system_line(const char *text);
 char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const void *pos, const void *v16, int area, int f);
+void _ZN7fBase_c18MarkForDestructionEv(char *c);
 }
 
 namespace port {
@@ -756,6 +757,8 @@ void warp_knob() {
 // (LAST_STAR, class 0x11b, parameter 7) at <x>,<y>,<z> (units) through the ROM's own spawn, the call Bowser's defeat makes
 // (src/game/actors/d_a_kpa.cpp: Spawn(BOWSER_ACTOR_LAST_STAR, 7, pos, 0, mAreaId, -1), 160 units above him). A stand-in for the
 // fight ONLY: the star then runs its own StateStarJump and is collected by its own touch. Once per level entry.
+// Bowser himself (BOWSER 279, BOWSER_TAIL 278, BOWSER_FIRE 280) is marked for destruction first, as if beaten: the knob runs
+// before the fight's own intro, and a live Bowser holds the player in his talk and stands where the star lands.
 void grand_knob() {
     static int lvl = -2, fr = 0, x = 0, y = 0, z = 0; static int cur = -1, t = 0; static bool done = false;
     if (lvl == -2) {
@@ -768,10 +771,15 @@ void grand_knob() {
     const char *me = (const char *)my_body();
     if (cur != lvl || !me || done || ++t < fr) return;
     done = true;
+    int gone = 0;
+    for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {
+        const unsigned c = *(const unsigned short *)(b + 0x0c);
+        if ((c == 278 || c == 279 || c == 280) && !*(const unsigned char *)(b + 0x0f)) { _ZN7fBase_c18MarkForDestructionEv(b); ++gone; }
+    }
     const int pos[3] = { x * 4096, y * 4096, z * 4096 };
     char *a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x11b, 7, pos, nullptr, (signed char)me[0xcc], -1);
-    std::fprintf(stderr, "[starpop] GRAND knob: Grand Star spawned at %d,%d,%d -> %p (level %d frame %d) wall=%lld\n", x, y, z, (void *)a,
-                 cur, t, wall_ms());
+    std::fprintf(stderr, "[starpop] GRAND knob: Bowser actors removed %d, Grand Star spawned at %d,%d,%d -> %p (level %d frame %d) wall=%lld\n",
+                 gone, x, y, z, (void *)a, cur, t, wall_ms());
 }
 
 void new_level_check() {
