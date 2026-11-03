@@ -17152,8 +17152,7 @@
         "param:#1 const struct Table *"
       ],
       "src/unnamed/arm9/0204/func_020470e8.c": [
-        "param:#1 const struct Table *",
-        "return:short"
+        "param:#1 const struct Table *"
       ]
     },
     "func_020469e8": {
