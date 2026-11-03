@@ -157,27 +157,27 @@ extern long long func_0203d5bc(int *p);
    argument int and two spell it a pointer, and of its call sites in this file
    all but two pass an int. The int spelling is kept and those two sites read
    their table entry the same way the other eighty do. */
-extern "C" void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-extern "C" struct OamAttr *sSmartballWingSprites[];
+extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+extern struct OamAttr *sSmartballWingSprites[];
 struct OAM {
     static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
 };
-extern "C" void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y,
-                                             s32 palette, s32 priority, Fix12i scaleX,
-                                             Fix12i scaleY, s32 rotation, s32 mode);
+extern void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
+                                         s32 priority, Fix12i scaleX, Fix12i scaleY, s32 rotation,
+                                         s32 mode);
 extern int Vec2_Len(Vec2 *v);
 /* Five of this helper's six recorded views spell the first and last arguments
    pointers and one spells them ints; the pointer view is kept. */
-extern "C" void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
-extern "C" int GetOwnerLanguage(void);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern int GetOwnerLanguage(void);
 extern OamAttr *sSmartballLineSpritesItalian[];
 extern OamAttr *sSmartballLineSpritesSpanish[];
 extern OamAttr *sSmartballLineSpritesGerman[];
 extern OamAttr *sSmartballLineSpritesFrench[];
 extern OamAttr *sSmartballLineSprites[];
 extern OamAttr *sSmartballCellSprites[];
-extern "C" s16 data_02082214[];
-extern "C" s32 sSmartballCellOrder[];
+extern s16 data_02082214[];
+extern s32 sSmartballCellOrder[];
 extern OamAttr *sSmartballCellRowSprites[];
 
 /* The two legacy views of this helper disagreed on the destination pointer
@@ -187,16 +187,16 @@ extern OamAttr *sSmartballCellRowSprites[];
    parameter is passed the same way either way, so this is a spelling choice,
    not a change of contract. */
 extern void MultiStore16(u16 val, void *dst, int nbytes);
-extern "C" void func_02012718(int a, int b);
+extern void func_02012718(int a, int b);
 extern struct W9 sSmartballCellStartOrder;
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
-extern "C" void *sSmartballSlotFrameSprite;
-extern "C" void *sSmartballSlotReelEndSprite;
-extern "C" void *sSmartballSlotReelLowerSprite;
-extern "C" void *sSmartballSlotReelUpperSprite;
-extern "C" void Vec2_Sub(int *o, int *a, int *b);
+extern void *sSmartballSlotFrameSprite;
+extern void *sSmartballSlotReelEndSprite;
+extern void *sSmartballSlotReelLowerSprite;
+extern void *sSmartballSlotReelUpperSprite;
+extern void Vec2_Sub(int *o, int *a, int *b);
 extern OamAttr *sSmartballDokanSprites[];
 extern OamAttr *sSmartballAnaSprites[];
 extern int func_020126e8(int a);
@@ -205,14 +205,14 @@ extern int func_0203d570(V2 *a, V2 *b);
 extern int func_0203d434(V2 *p);
 extern void func_0203d630(V2 *p, int scale);
 extern void func_0203d480(V2 *out, V2 *in);
-extern "C" int func_0203d524(V2 *a, V2 *b);
+extern int func_0203d524(V2 *a, V2 *b);
 extern int func_0203d4d0(void *p, int *a, int *b);
 extern OamAttr *sSmartballSparkSpritesAlt[];
 extern OamAttr *sSmartballSparkSprites[];
 extern void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
 extern void Mg_PlayJingle(void *c);
-extern "C" int Mg_GetSubmittedScore(void);
-extern "C" void Mg_SubmitScore(int self);
+extern int Mg_GetSubmittedScore(void);
+extern void Mg_SubmitScore(int self);
 extern s16 atan2_hold_d_s_mg_smartball_1(int y, int x);
 extern void Mg_SetTopScreenYOffset(int a);
 extern int OS_SPrintf(char *buffer, const char *format, ...);
