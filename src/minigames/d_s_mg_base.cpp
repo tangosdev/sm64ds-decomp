@@ -969,17 +969,13 @@ extern "C" {
    `PaintSquare` is coined here from what the body does; it was `Virtual88`,
    after the +0x88 vtable offset. The cartridge names no method of this
    class. */
-extern "C" {
 extern int* func_02054efc(void);
 extern int* func_02054ea8(void);
 extern int* func_02054d88(void);
 extern void MultiCopy_Int(void* a, void* b, int n);
-}
 
-extern "C" {
 extern int sMgPaintWord;
 extern int sMgTopScreenYOffset;
-}
 }
 }
 
@@ -1278,9 +1274,7 @@ extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3)
 namespace s20aea78 {
 extern "C" {
 struct M { int _00, _01, _10, _11; };
-extern "C" {
 extern void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
-}
 
 struct BF { unsigned int lo:10; unsigned int hi:22; };
 struct S { int x; BF y; };
@@ -1309,7 +1303,6 @@ struct MgMenuPickView {
 
 // @symbol Mg_UpdateMenu
 namespace s20aeb24 {
-extern "C" {
 extern "C" {
 extern void func_0203b958(short* o, short* a, short* b);
 extern void func_02012dd0(int a);
@@ -1419,7 +1412,6 @@ after:
 }
 }
 }
-}
 
 /* What SaveScreenForMenu and RestoreScreenFromMenu keep in the header's
    pad_228 while the menu is up. A file-local view: dScMgBase_c.h is shared
@@ -1451,10 +1443,10 @@ extern "C" {
    down.  It is not a Yoshi egg, and it does not return a vector -- see the
    slot-30 block in include/dScMgBase_c.h for the AAPCS measurement that
    refutes the `ReturnVec` in the name. */
-extern "C" u8 data_0209d45c;
-extern "C" u8 data_0209d454;
-extern "C" u8 data_0209d460;
-extern "C" u8 data_0209d458;
+extern u8 data_0209d45c;
+extern u8 data_0209d454;
+extern u8 data_0209d460;
+extern u8 data_0209d458;
 
 /* RETURN TYPE, MEASURED -- and it corrects the header's earlier `int`, which
    that slot's own evidence block called "a HINT".  Declaring this member `int`
@@ -1522,8 +1514,8 @@ extern "C" {
    re-enables the 3D engines only if the class's own GetDisplayMode
    says so. */
 
-extern "C" void func_02012e1c(char *c);
-extern "C" void Enable3dEngines();
+extern void func_02012e1c(char *c);
+extern void Enable3dEngines();
 
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
@@ -1565,13 +1557,13 @@ extern "C" {
    this module is dScMgBase_c::OnGraphCallback2, which reaches it only on a rising edge
    of mMenuOpen.  That is the three-item overlay menu going up, not a Yoshi egg.
    See the slot 29 block in include/dScMgBase_c.h for why the name is kept. */
-extern "C" void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern "C" void func_0201f32c(int arg0);
-extern "C" int GetGameLanguage(void);
-extern "C" void DecompressLZ16(void *src, void *dst);
+extern void MultiStore16(unsigned short val, char *dst, int nbytes);
+extern void func_0201f32c(int arg0);
+extern int GetGameLanguage(void);
+extern void DecompressLZ16(void *src, void *dst);
 
-extern "C" unsigned char data_0209d45c;
-extern "C" unsigned char data_0209d454;
+extern unsigned char data_0209d45c;
+extern unsigned char data_0209d454;
 
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
@@ -1667,7 +1659,6 @@ void dScMgBase_c::OpenMenu()
 
 // @symbol Mg_InitBrush
 namespace s20af2f8 {
-extern "C" {
 extern "C" {
 extern void MultiStore16(int val, int ptr, int n);
 extern int func_02054efc(void);
@@ -1796,7 +1787,6 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
 }
 }
 }
-}
 
 #pragma push
 #pragma opt_strength_reduction off
@@ -1902,8 +1892,8 @@ extern "C" {
 struct OamAttr;
 }
 typedef int Fix12i;
-extern "C" int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                      Fix12i e, int f);
+extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
+                                  Fix12i e, int f);
 
 extern "C" int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                         unsigned short a6) {
@@ -1993,8 +1983,8 @@ extern "C" {
 struct OamAttr;
 }
 typedef int Fix12i;
-extern "C" int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                      Fix12i e, int f);
+extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
+                                  Fix12i e, int f);
 
 extern "C" int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                          unsigned short a6) {
@@ -2088,8 +2078,8 @@ struct OamAttr;
 extern int sMgTopScreenYOffset;
 }
 typedef int Fix12i;
-extern "C" int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                      Fix12i e, int f);
+extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
+                                  Fix12i e, int f);
 
 extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int a3, int a4,
                                          Fix12i a5, int a6) {
@@ -2123,7 +2113,6 @@ extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int
 // @symbol RenderOamBothScreens
 namespace s20b0104 {
 extern "C" {
-extern "C" {
 extern int sMgTopScreenYOffset;
 void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, void *mtx) {
     dScMgBase_c *scene = gMgScene;
@@ -2146,11 +2135,9 @@ void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, v
 }
 }
 }
-}
 
 // @symbol Mg_RenderSpriteBothPalMtx
 namespace s20b023c {
-extern "C" {
 extern "C" {
 extern int sMgTopScreenYOffset;
 void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
@@ -2173,11 +2160,9 @@ void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
 }
 }
 }
-}
 
 // @symbol Mg_RenderSpriteBothMtx
 namespace s20b0380 {
-extern "C" {
 extern "C" {
 extern int sMgTopScreenYOffset;
 void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
@@ -2197,7 +2182,6 @@ void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
     }
     OAM::Render(0, (OamAttr *)a0, a1, a2 + 0xc0 + sMgTopScreenYOffset, -1, -1, (Matrix2x2 *)a3);
     OAM::Render(1, (OamAttr *)a0, a1, a2, -1, -1, (Matrix2x2 *)a3);
-}
 }
 }
 }
@@ -2707,8 +2691,8 @@ void Mg_DrawPrompt(char* c)
 // @symbol Mg_DrawTally
 namespace s20b0e84 {
 extern "C" {
-extern "C" int GetGameLanguage(void);
-extern "C" void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+extern int GetGameLanguage(void);
+extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 
 static inline int sdiv4(int d) {
     int t = d + (int)((unsigned)(d >> 1) >> 0x1e);

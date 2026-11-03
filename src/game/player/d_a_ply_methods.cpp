@@ -39,8 +39,13 @@
  * - The byte at 0x6da is written by InitResources and never read; it has no
  *   honest name, so it stays a byte store.
  * - daPly_c:: methods with no body-local externs carry no extern "C"
- *   wrapper (60 sites); the rest keep it: the block gives C linkage to
- *   body-local externs, and hoisting them exposes S42 spelling drift.
+ *   wrapper (104 sites); the remaining 306 keep it: the block gives C linkage
+ *   to body-local externs, and hoisting them exposes S42 spelling drift.
+ *   The wrapper never reaches the method itself -- [dcl.link]/4 makes a C
+ *   language linkage ignored for a class member's name and for the function
+ *   type of a member function -- so on a method that declares nothing in its
+ *   body it is inert, and mwccarm 2.0/b56 emits the identical object without
+ *   it (measured: whole-object SHA-256 unchanged over all 44 removals).
  */
 
 #pragma defer_codegen off

@@ -106,12 +106,12 @@ struct dExtSimpleModel_c { ~dExtSimpleModel_c(); };
 */
 
 extern "C" {
-extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
+extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
 extern Matrix4x3 data_020a0e68;
-extern "C" void Trmp2Spinner_UpdateMatrix(char *c);
+extern void Trmp2Spinner_UpdateMatrix(char *c);
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
-extern "C" Trampoline2ModelFilePtr sTrmp2StarModelFile;
+extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
 extern unsigned char *sTrmp2Spinners;
 extern void Trmp2Spinner_Update(char *obj);
@@ -127,7 +127,7 @@ extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *data_0209f5bc;
 extern int sTrmp2TouchBlocked;
 int TrmpLine_Create(u16 *a, u16 *b);
-extern "C" void Mg_CommitRecords(void);
+extern void Mg_CommitRecords(void);
 void func_0203cd80(int *m, short angle);
 int GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
@@ -171,7 +171,7 @@ extern s16 sTrmp2IntroToX;
 extern s16 sTrmpStartTouchY;
 extern short sTrmpStartTouchX;
 extern struct P2 pmf_dScMgTrampoline2_c_StateIntro;
-extern "C" void TrmpLine_ClearAll(u32 a);
+extern void TrmpLine_ClearAll(u32 a);
 extern volatile s16 data_020a0dbc[];
 extern void Camera_UpdateMatrices(void *cam);
 extern u8 data_0209d45c;
@@ -230,10 +230,10 @@ dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void);
    .data, so the mangled externs stay. StateDone is static, so the
    descriptor below names it directly. A pointer to member does not convert
    to the int word a descriptor holds. */
-extern "C" void _ZN18dScMgTrampoline2_c13StateWaitExitEv(void); /* local extern: PMF -> int */
-extern "C" void _ZN18dScMgTrampoline2_c12StateResultsEv(void);  /* local extern: PMF -> int */
-extern "C" void _ZN18dScMgTrampoline2_c9StatePlayEv(void);      /* local extern: PMF -> int */
-extern "C" void _ZN18dScMgTrampoline2_c10StateIntroEv(void);    /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c13StateWaitExitEv(void); /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c12StateResultsEv(void);  /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c9StatePlayEv(void);      /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c10StateIntroEv(void);    /* local extern: PMF -> int */
 
 /* Data owned by this production TU; the original TU grouping is inferred. */
 int sTrmp2TouchBlocked = 1;
