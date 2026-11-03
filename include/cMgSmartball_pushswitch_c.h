@@ -43,6 +43,7 @@ struct cMgSmartball_pushswitch_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    ~cMgSmartball_pushswitch_c() {}
 
     /* Recovered helpers: BallsClear is the release check SaveSnapshot runs
        (1 when no active ball is within 0x12000); CheckBall is the

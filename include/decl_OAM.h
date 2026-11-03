@@ -2,30 +2,9 @@
  * replacing copies that were repeated in every file that called them. */
 #ifndef DECL_OAM_H
 #define DECL_OAM_H
-#include "common.h"
-
-
-/* C linkage. These declare ROM symbols by their exact final names, so a C++
-   translation unit including this header must not mangle them -- a bare
-   `void Foo(int);` seen from C++ emits _Z3Fooi, which exists nowhere. The file
-   still byte-matches, because match.py compares relocated words as wildcards, so
-   nothing catches it until the ROM link -- and eligible.py refuses to enroll a
-   file with unresolvable references, so the link never sees it either.
-
-   Verified safe: of the 1,644 function names declared across the decl_*.h
-   headers, 1,572 are themselves the ROM symbol and 0 exist ONLY in a mangled
-   form, so no declaration here relies on C++ mangling. The remaining 72 resolve
-   to neither spelling and are unresolvable with or without this guard. */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern int _ZN3OAM11GetObjWidthEii(int, int);
-extern int _ZN3OAM12GetObjHeightEii(int, int);
-
-
-#ifdef __cplusplus
-}
-#endif
+/* OAM::GetObjWidth(int, int) and OAM::GetObjHeight(int, int) are static
+   members declared in OAM.h. Nothing includes this header. A C declaration
+   of the Itanium symbol is not that C++ name, and a second OAM definition
+   would disagree with OAM.h. */
 
 #endif

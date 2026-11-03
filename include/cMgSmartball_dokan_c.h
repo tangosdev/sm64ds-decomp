@@ -23,6 +23,7 @@ struct cMgSmartball_dokan_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 -- see the .cpp: a tail call */
+    ~cMgSmartball_dokan_c() {}
 
     /* Recovered helper: the ball-vs-pipe-mouth proximity test -- inside the
        x band and the z window the mouth opens on. */

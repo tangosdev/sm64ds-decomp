@@ -131,46 +131,6 @@
     },
     {
       "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN10dScEntry_c6icon_cC1Ev",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN10dScEntry_c6icon_cD1Ev",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN12OamAnimationC1Ev",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN12OamAnimationD1Ev",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN7fBase_cC2Ev",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
       "rule": "unknown-field",
       "match": "unk_287",
       "count": 1,

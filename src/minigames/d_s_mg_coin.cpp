@@ -228,20 +228,6 @@ CoinPmfEntry sCoinBagStateTable[4] = {{pmf_dScMgCoin_c_Bag_StateIdle},
    D2, and D0 adds the delete. */
 dScMgCoin_c::~dScMgCoin_c() {}
 
-#ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. MSVC
- * folds the Itanium destructor variants into the one ~dScMgCoin_c() above,
- * so this spells out what the deleting destructor does in terms of it: the
- * D1 body, called qualified so it is a direct call, then the class-specific
- * operator delete. mwccarm never defines _MSC_VER, so nothing here reaches
- * the cartridge object. */
-extern "C" dScMgCoin_c *_ZN11dScMgCoin_cD0Ev(dScMgCoin_c *thiz) {
-    thiz->dScMgCoin_c::~dScMgCoin_c();
-    dScMgCoin_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 // @symbol _ZN11dScMgCoin_c8Bag_DrawEv
 /* The hand cursor while the stylus is down: the sine table entry for the
    scene's angle becomes a unit-scale 2x2 rotation matrix [cos, sin; -sin,

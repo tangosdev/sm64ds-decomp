@@ -2,28 +2,7 @@
  * replacing copies that were repeated in every file that called them. */
 #ifndef DECL_DBGCH_ACTR_H
 #define DECL_DBGCH_ACTR_H
-#include "common.h"
-
-
-/* C linkage. These declare ROM symbols by their exact final names, so a C++
-   translation unit including this header must not mangle them -- a bare
-   `void Foo(int);` seen from C++ emits _Z3Fooi, which exists nowhere. The file
-   still byte-matches, because match.py compares relocated words as wildcards, so
-   nothing catches it until the ROM link -- and eligible.py refuses to enroll a
-   file with unresolvable references, so the link never sees it either.
-
-   Verified safe: of the 1,644 function names declared across the decl_*.h
-   headers, 1,572 are themselves the ROM symbol and 0 exist ONLY in a mangled
-   form, so no declaration here relies on C++ mangling. The remaining 72 resolve
-   to neither spelling and are unresolvable with or without this guard. */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern void *_ZN10dBgCh_ActrC1Ev(void*);
-
-#ifdef __cplusplus
-}
-#endif
+/* dBgCh_Actr::dBgCh_Actr() is declared in dBgCh_Actr.h. Nothing calls the
+   Itanium spelling. */
 
 #endif

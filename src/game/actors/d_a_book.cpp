@@ -151,35 +151,11 @@ daBook_c::~daBook_c()
 {
 }
 
-#ifdef _MSC_VER
-/* The host uses the flat ROM D0 name, which MSVC never emits: it folds the
- * Itanium destructor variants into the one ~daBook_c() above. This arm
- * spells out what the deleting destructor does -- the D1 body, called
- * qualified so it is a direct call, then the class-specific operator delete.
- * Nothing here reaches mwccarm. */
-extern "C" daBook_c *_ZN8daBook_cD0Ev(daBook_c *thiz)
-{
-    thiz->daBook_c::~daBook_c();
-    daBook_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 // @symbol _ZN11daBookGen_cD1Ev
 // @symbol _ZN11daBookGen_cD0Ev
 daBookGen_c::~daBookGen_c()
 {
 }
-
-#ifdef _MSC_VER
-/* Host D0, as for daBook_c above. */
-extern "C" daBookGen_c *_ZN11daBookGen_cD0Ev(daBookGen_c *thiz)
-{
-    thiz->daBookGen_c::~daBookGen_c();
-    daBookGen_c::operator delete(thiz);
-    return thiz;
-}
-#endif
 
 // @symbol _ZN8daBook_c19func_ov020_021112b0Ev
 /* Points the book at the closest player: mAimYaw and mAimPitch are the angles

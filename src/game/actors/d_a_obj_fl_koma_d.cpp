@@ -91,17 +91,3 @@ struct KomaDCollisionFilePtr : SharedFilePtr {
  * destructors; the registration nodes are compiler temporaries. */
 KomaDModelFilePtr gFlKomaDModelFile(ASSET_FL_KOMA_D_BMD);
 KomaDCollisionFilePtr gFlKomaDCollisionFile(ASSET_FL_KOMA_D_KCL);
-
-#ifdef _MSC_VER
-/* Host flat names. Not compiled into the cartridge object. */
-extern "C" daObjFl_Koma_D_c *_ZN16daObjFl_Koma_D_cD0Ev(daObjFl_Koma_D_c *thiz) {
-    thiz->daObjFl_Koma_D_c::~daObjFl_Koma_D_c();
-    daObjFl_Koma_D_c::operator delete(thiz);
-    return thiz;
-}
-
-extern "C" daObjFl_Koma_D_c *_ZN19RotatingPlatformLllD0Ev(daObjFl_Koma_D_c *thiz) {
-    delete thiz;
-    return thiz;
-}
-#endif

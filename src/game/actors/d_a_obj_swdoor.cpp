@@ -55,17 +55,7 @@ void func_020393d4(dBgW_KcMbg *clsn, void *fn);
  * D2 the image does not contain. A delete-expression for D0 because
  * dBgActor_c declares Kill, a key function reachable from this class. */
 
-#ifdef _MSC_VER
-/* MSVC needs this flat D0 entry. Call the actual class-body destructor
- * qualified so dispatch is direct, then use the class-specific deallocator.
- * The inline body includes member/base teardown; no separate flat D1 provider
- * is supplied by this branch. The mwccarm definition below is unchanged. */
-extern "C" daObjSwdoor_c *_ZN13daObjSwdoor_cD0Ev(daObjSwdoor_c *thiz) {
-    thiz->daObjSwdoor_c::~daObjSwdoor_c(); /* direct member/base teardown */
-    daObjSwdoor_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
-    return thiz;
-}
-#else
+#ifndef _MSC_VER
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
 void daObjSwdoor_c_EmitDeletingDestructor(daObjSwdoor_c *p) {
     delete p;
