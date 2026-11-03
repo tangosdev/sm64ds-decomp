@@ -5,9 +5,9 @@ This document describes the producer candidate. The queue records its immutable 
 ## Identity and resumption
 
 - Issue: https://github.com/tangosdev/sm64ds-decomp/issues/4570
-- Task: `issue-4570-stage-paddata-shadow-1103b`, a documentation correction to the source output produced by `issue-4570-stage-paddata-shadow-1103` (`codex-stagepad-shadow-1103`).
+- Task: `issue-4570-stage-paddata-shadow-1103b`, a documentation correction to the source output produced by `issue-4570-stage-paddata-shadow-1103` (`codex-stagepad-shadow-1103`); follow-up producer session `codex-stagepad-followup-1103`.
 - Draft PR: https://github.com/tangosdev/sm64ds-decomp/pull/4711 (branch link is on the PR).
-- Base and input: `8bcb5a981bde3dbe4375aab971226ccee72ee8e6` (`origin/main`). Workflow/tool SHA: same commit.
+- Source base: `8bcb5a981bde3dbe4375aab971226ccee72ee8e6` (`origin/main`); follow-up input: `c7f64e776967f05d8a2dd0999dbe7ae6618aa587`; workflow/tool SHA: `8bcb5a981bde3dbe4375aab971226ccee72ee8e6`.
 - Candidate status: verified source candidate with the hosted dead-reference finding corrected; pending fresh exact-head checks, independent verification/source review, and hosted PR validation.
 - Next action: verifier should inspect the exact published candidate, repeat the relevant TU and ROM proof on base `8bcb5a981bde3dbe4375aab971226ccee72ee8e6`, then publish a queue verification. The TU's unlicensed initializer remains a promotion blocker.
 - No local-only source changes remain after the candidate commit. Build outputs and queue receipts remain ignored under `build/`.
