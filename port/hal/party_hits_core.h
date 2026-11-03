@@ -139,6 +139,10 @@ struct Me {
     int x = 0, y = 0, z = 0;
     bool busy = false;           // the caller's "cannot be hit now" test (state / invuln / mouth / cutscene)
     bool eaten = false;          // I am already in somebody's mouth
+    // HITLAG3: my poses one frame either side of the stamped one (the stamp is the claim's age rounded to whole frames, so
+    // the pose the attacker tested can sit a frame off it). A claim reaches when any of them does.
+    int near_n = 0;
+    int near_x[2] = {}, near_y[2] = {}, near_z[2] = {};
 };
 struct Claim {
     int attacker = 0, victim = 0;
@@ -195,6 +199,12 @@ inline Effect effect_for(const Claim &c, const Me &me, const Toggles &t) {
 }
 
 // ---- the judge ------------------------------------------------------------------------------------
+// One pose of mine against the attacker's position: inside the kind's horizontal reach and its height window.
+inline bool pose_in_reach(const ReachRule &r, int ax, int ay, int az, int mx, int my, int mz) {
+    const long long dy = (long long)ay - my;
+    return horiz2(ax, az, mx, mz) <= sq(r.horiz) && dy >= r.dy_lo && dy <= r.dy_hi;
+}
+
 struct Counters {
     unsigned long long verdict[kVerdicts] = {};
     unsigned long long applied[kKinds] = {};
@@ -250,8 +260,11 @@ private:
             ReachRule r = reach_rule(c.ikind);
             if (c.stamp > 0 && r.horiz > kLagAllow) r.horiz -= (kLagAllow - kLagAllowStamped);   // a stamped claim needs less slack
             const int ax = rules.reach_claimed ? c.x : s.x, ay = rules.reach_claimed ? c.y : s.y, az = rules.reach_claimed ? c.z : s.z;
-            const long long dy = (long long)ay - me.y;
-            if (horiz2(ax, az, me.x, me.z) > sq(r.horiz) || dy < r.dy_lo || dy > r.dy_hi) return kOutOfReach;
+            if (!pose_in_reach(r, ax, ay, az, me.x, me.y, me.z)) {
+                bool any = false;
+                for (int i = 0; i < me.near_n && i < 2 && !any; ++i) any = pose_in_reach(r, ax, ay, az, me.near_x[i], me.near_y[i], me.near_z[i]);
+                if (!any) return kOutOfReach;
+            }
         }
         if (rules.check_busy && (me.busy || me.eaten)) return kVictimBusy;
         if (c.ikind == kEatClaim && rules.check_eat_rearm && last_eat_ && now - last_eat_ < (unsigned)kEatRearmFrames)
