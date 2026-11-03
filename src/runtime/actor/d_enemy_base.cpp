@@ -788,14 +788,6 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
    arity and this address's overlay; this member spent a long time spelled
    func_ov002_020ada40 because the mangled name was sitting on ov004's unrelated
    function at the same address. */
-extern "C" {
-namespace Particle {
-struct SystemHold {
-    static void NewSimple(unsigned int a, int x, int y, int z);
-};
-}
-}
-
 // @symbol _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_ci
 void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player, Fix12i) {
     mFlags &= ~0x10000001;
