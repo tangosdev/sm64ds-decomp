@@ -14388,23 +14388,6 @@
         "param:#1 char *"
       ]
     },
-    "func_02010844": {
-      "src/game/actors/d_a_holhei.cpp": [
-        "return:short"
-      ],
-      "src/game/actors/d_a_kpa.cpp": [
-        "return:short"
-      ],
-      "src/game/actors/d_a_obj_block_s.cpp": [
-        "return:short"
-      ],
-      "src/game/actors/d_a_obj_mario_cap.cpp": [
-        "return:short"
-      ],
-      "src/game/actors/d_a_yegg.cpp": [
-        "return:short"
-      ]
-    },
     "func_02011d14": {
       "src/game/actors/d_a_trs.cpp": [
         "return:unsigned short"
