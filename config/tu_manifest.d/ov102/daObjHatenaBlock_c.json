@@ -3174,252 +3174,252 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@759",
+      "from": "@769",
       "to": "@110",
       "evidence": "mwcc emits this compiler temp as @714; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@760",
+      "from": "@770",
       "to": "@111",
       "evidence": "mwcc emits this compiler temp as @715; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@761",
+      "from": "@771",
       "to": "@112",
       "evidence": "mwcc emits this compiler temp as @716; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@762",
+      "from": "@772",
       "to": "@113",
       "evidence": "mwcc emits this compiler temp as @717; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@763",
+      "from": "@773",
       "to": "@114",
       "evidence": "mwcc emits this compiler temp as @718; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@764",
+      "from": "@774",
       "to": "@115",
       "evidence": "mwcc emits this compiler temp as @719; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@765",
+      "from": "@775",
       "to": "@116",
       "evidence": "mwcc emits this compiler temp as @720; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@766",
+      "from": "@776",
       "to": "@117",
       "evidence": "mwcc emits this compiler temp as @721; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@768",
+      "from": "@778",
       "to": "data_ov102_0214e278",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@770",
+      "from": "@780",
       "to": "data_ov102_0214e260",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@772",
+      "from": "@782",
       "to": "data_ov102_0214e268",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@774",
+      "from": "@784",
       "to": "data_ov102_0214e258",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@776",
+      "from": "@786",
       "to": "data_ov102_0214e3a0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@778",
+      "from": "@788",
       "to": "data_ov102_0214e398",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@780",
+      "from": "@790",
       "to": "data_ov102_0214e388",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@782",
+      "from": "@792",
       "to": "data_ov102_0214e380",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@784",
+      "from": "@794",
       "to": "data_ov102_0214e378",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@786",
+      "from": "@796",
       "to": "data_ov102_0214e370",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@788",
+      "from": "@798",
       "to": "data_ov102_0214e368",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@790",
+      "from": "@800",
       "to": "data_ov102_0214e360",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@792",
+      "from": "@802",
       "to": "data_ov102_0214e358",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@794",
+      "from": "@804",
       "to": "data_ov102_0214e350",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@796",
+      "from": "@806",
       "to": "data_ov102_0214e348",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@798",
+      "from": "@808",
       "to": "data_ov102_0214e340",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@800",
+      "from": "@810",
       "to": "data_ov102_0214e320",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@802",
+      "from": "@812",
       "to": "data_ov102_0214e288",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@804",
+      "from": "@814",
       "to": "data_ov102_0214e338",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@806",
+      "from": "@816",
       "to": "data_ov102_0214e330",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@808",
+      "from": "@818",
       "to": "data_ov102_0214e280",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@810",
+      "from": "@820",
       "to": "data_ov102_0214e318",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@812",
+      "from": "@822",
       "to": "data_ov102_0214e2a8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@814",
+      "from": "@824",
       "to": "data_ov102_0214e2b0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@816",
+      "from": "@826",
       "to": "data_ov102_0214e270",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@818",
+      "from": "@828",
       "to": "data_ov102_0214e298",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@820",
+      "from": "@830",
       "to": "data_ov102_0214e2a0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@822",
+      "from": "@832",
       "to": "data_ov102_0214e2f8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@824",
+      "from": "@834",
       "to": "data_ov102_0214e2f0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@826",
+      "from": "@836",
       "to": "data_ov102_0214e2e8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@828",
+      "from": "@838",
       "to": "data_ov102_0214e390",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@830",
+      "from": "@840",
       "to": "data_ov102_0214e2d8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@832",
+      "from": "@842",
       "to": "data_ov102_0214e2d0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@834",
+      "from": "@844",
       "to": "data_ov102_0214e2c8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@836",
+      "from": "@846",
       "to": "data_ov102_0214e2c0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@838",
+      "from": "@848",
       "to": "data_ov102_0214e2b8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@840",
+      "from": "@850",
       "to": "data_ov102_0214e2e0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@842",
+      "from": "@852",
       "to": "data_ov102_0214e328",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@844",
+      "from": "@854",
       "to": "data_ov102_0214e310",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@846",
+      "from": "@856",
       "to": "data_ov102_0214e308",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@848",
+      "from": "@858",
       "to": "data_ov102_0214e300",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@850",
+      "from": "@860",
       "to": "data_ov102_0214e290",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

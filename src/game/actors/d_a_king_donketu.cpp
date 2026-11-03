@@ -238,9 +238,11 @@ extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void d_a_king_donketuNewSimpleHold(unsigned int id, int x, int y, int z);
 extern void *data_0209f318;
 extern struct Matrix4x3 data_020a0e68;
-extern void Vec3_Sub(Vec3 *out, Vec3 *a, Vec3 *b);
+/* Vec3_Sub is not declared by math/CalcLib.h; the shared implementation uses
+   Vector3, while this function keeps POD locals to avoid Vector3 construction. */
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_king_donketu_1(Fix12i y, Fix12i x);
-extern Fix12i Vec3_HorzLen(Vec3 *v);
+extern Fix12i Vec3_HorzLen(const Vector3 *v);
 extern short data_02082214[];
 extern u16 data_0209e650;
 extern u16 DecIfAbove0_Short(void* p);
@@ -435,12 +437,12 @@ void daKing_Donketu_c::func_ov073_0211f494(void *pb)
             vx = a->mdCcAcPos_c.radius;
             pp->y = y0 + h;
             pq->y = qy;
-            Vec3_Sub(&d, pq, pp);
+            Vec3_Sub((Vector3 *)&d, (const Vector3 *)pq, (const Vector3 *)pp);
         }
     }
     t.x = d.x; t.y = d.y; t.z = d.z;
     ay = cstd::atan2(t.x, t.z);
-    ax = cstd::atan2(t.y, Vec3_HorzLen(&t));
+    ax = cstd::atan2(t.y, Vec3_HorzLen((const Vector3 *)&t));
     ax = (int)((unsigned short)ax >> 4);
     ay = (int)((unsigned short)ay >> 4);
     cos_ax = data_02082214[ax * 2 + 1];

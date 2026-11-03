@@ -2,32 +2,7 @@
  * replacing copies that were repeated in every file that called them. */
 #ifndef DECL_PATHPTR_H
 #define DECL_PATHPTR_H
-#include "common.h"
-
-
-/* C linkage. These declare ROM symbols by their exact final names, so a C++
-   translation unit including this header must not mangle them -- a bare
-   `void Foo(int);` seen from C++ emits _Z3Fooi, which exists nowhere. The file
-   still byte-matches, because match.py compares relocated words as wildcards, so
-   nothing catches it until the ROM link -- and eligible.py refuses to enroll a
-   file with unresolvable references, so the link never sees it either.
-
-   Verified safe: of the 1,644 function names declared across the decl_*.h
-   headers, 1,572 are themselves the ROM symbol and 0 exist ONLY in a mangled
-   form, so no declaration here relies on C++ mangling. The remaining 72 resolve
-   to neither spelling and are unresolvable with or without this guard. */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern int _ZNK7PathPtr5LoopsEv(void*);
-extern int _ZNK7PathPtr8NumNodesEv(void*);
-extern unsigned int _ZNK7PathPtr9GetUnk004Ev(void*);
-extern unsigned int _ZNK7PathPtr13GetPullFactorEv(void*);
-
-
-#ifdef __cplusplus
-}
-#endif
+/* PathPtr::Loops(), NumNodes(), GetUnk004() and GetPullFactor() are
+   declared const in PathPtr.h. Nothing calls the Itanium spellings. */
 
 #endif

@@ -42,7 +42,6 @@ enum d_s_mg_trampoline2_AssetId {
 #include "Particle__System.h"
 #include "TrmpItem.h"
 #include "Trmp2Spinner.h"
-#define _ZTV18dScMgTrampoline2_c _ZTV18dScMgTrampoline2_c_decl_common_shadow
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "Sound.h"
@@ -50,7 +49,6 @@ enum d_s_mg_trampoline2_AssetId {
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
 #define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
-#undef _ZTV18dScMgTrampoline2_c
 
 /* P2, S2 and the forward declarations below are local stand-ins for types
  * that have no header yet (issue #2497). */
@@ -108,12 +106,12 @@ struct dExtSimpleModel_c { ~dExtSimpleModel_c(); };
 */
 
 extern "C" {
-extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
+extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
 extern Matrix4x3 data_020a0e68;
-extern "C" void Trmp2Spinner_UpdateMatrix(char *c);
+extern void Trmp2Spinner_UpdateMatrix(char *c);
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
-extern "C" Trampoline2ModelFilePtr sTrmp2StarModelFile;
+extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
 extern unsigned char *sTrmp2Spinners;
 extern void Trmp2Spinner_Update(char *obj);
@@ -129,7 +127,7 @@ extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *data_0209f5bc;
 extern int sTrmp2TouchBlocked;
 int TrmpLine_Create(u16 *a, u16 *b);
-extern "C" void Mg_CommitRecords(void);
+extern void Mg_CommitRecords(void);
 void func_0203cd80(int *m, short angle);
 int GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
@@ -173,7 +171,7 @@ extern s16 sTrmp2IntroToX;
 extern s16 sTrmpStartTouchY;
 extern short sTrmpStartTouchX;
 extern struct P2 pmf_dScMgTrampoline2_c_StateIntro;
-extern "C" void TrmpLine_ClearAll(u32 a);
+extern void TrmpLine_ClearAll(u32 a);
 extern volatile s16 data_020a0dbc[];
 extern void Camera_UpdateMatrices(void *cam);
 extern u8 data_0209d45c;
@@ -224,13 +222,18 @@ extern int sMgTextSpritesItalian[];
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_021245a8, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
 
 dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void);
-/* The four non-static state methods. A pointer to member does not convert
-   to the int word a descriptor holds. StateDone is static, so the
-   descriptor below names it directly. */
-extern "C" void _ZN18dScMgTrampoline2_c13StateWaitExitEv(void); /* local extern: PMF -> int */
-extern "C" void _ZN18dScMgTrampoline2_c12StateResultsEv(void);  /* local extern: PMF -> int */
-extern "C" void _ZN18dScMgTrampoline2_c9StatePlayEv(void);      /* local extern: PMF -> int */
-extern "C" void _ZN18dScMgTrampoline2_c10StateIntroEv(void);    /* local extern: PMF -> int */
+/* The four non-static state methods. A pointer-to-member initializer
+   (`&dScMgTrampoline2_c::StateIntro` and the same for StatePlay,
+   StateResults, StateWaitExit) was measured on this TU: the four symbols
+   move from .data to .bss (+0x20), and __sinit_d_s_mg_trampoline2.cpp grows
+   from 0x40 to 0xc0. .text stayed 0x2494. The ROM keeps these four in
+   .data, so the mangled externs stay. StateDone is static, so the
+   descriptor below names it directly. A pointer to member does not convert
+   to the int word a descriptor holds. */
+extern void _ZN18dScMgTrampoline2_c13StateWaitExitEv(void); /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c12StateResultsEv(void);  /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c9StatePlayEv(void);      /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c10StateIntroEv(void);    /* local extern: PMF -> int */
 
 /* Data owned by this production TU; the original TU grouping is inferred. */
 int sTrmp2TouchBlocked = 1;

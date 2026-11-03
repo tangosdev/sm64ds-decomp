@@ -543,11 +543,6 @@ int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, Fix12i down, s16 maxSlope, b
 
 /* On a wall, reflect the heading off it; on a cliff edge (mCliffState), turn
    around; otherwise report that nothing was done. */
-extern "C" {
-/* ReflectAngle takes Fix12<int> by value -- the mwccarm 6az wall, runbook
-   section 7 -- so it stays extern "C" with scalars in those slots. */
-}
-
 // @symbol _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs
 int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr &clsn, short &outAngle) {
     if (clsn.IsOnWall()) {
@@ -793,14 +788,6 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
    arity and this address's overlay; this member spent a long time spelled
    func_ov002_020ada40 because the mangled name was sitting on ov004's unrelated
    function at the same address. */
-extern "C" {
-namespace Particle {
-struct SystemHold {
-    static void NewSimple(unsigned int a, int x, int y, int z);
-};
-}
-}
-
 // @symbol _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_ci
 void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player, Fix12i) {
     mFlags &= ~0x10000001;
@@ -878,10 +865,17 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
         Vec3_Asr((Vector3 *)v, (Vector3 *)&mPosX, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, OnAimedAtWithEgg() >> 3, 0);
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-            mAngleX, mAngleY, mAngleZ);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);
-        anim.mat4x3 = *(Matrix4x3 *)&data_020a0e68;
+        /* Vector3's constructor makes Matrix4x3's own assignment copy the
+           rotation and the translation separately. A flat 12-word record
+           is the one copy this function's bytes are. */
+        {
+            struct M12 {
+                s32 m[12];
+            };
+            *(struct M12 *)&anim.mat4x3 = *(struct M12 *)&data_020a0e68;
+        }
     }
     return 1;
 }

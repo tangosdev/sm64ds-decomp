@@ -37,14 +37,10 @@
 
 #include "fListNode.h"
 
-/* The actor heap and its deallocator, for the inline operator delete at the end
-   of the class. data_020a0eac is the heap every actor is allocated from. Spelt
-   exactly as include/decl_common.h and include/dActor_c.h spell them -- the
-   honest Heap* second parameter would put two incompatible extern "C"
-   declarations of one name in a single TU, which mwcc rejects. */
-extern "C" void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void *, void *);
-extern "C" void *data_020a0eac;
+/* The actor heap, for the inline operator delete at the end of the class.
+   data_020a0eac is the heap every actor is allocated from. */
 #include "Memory.h"
+extern "C" mHeap::Heap_t *data_020a0eac;
 
 struct fBase_c {
     /* Intrusive scene-graph node owned by every actor. */
@@ -113,9 +109,13 @@ struct fBase_c {
     u8  unk_010;                              /* 0x10 */
     u8  unk_011;                              /* 0x11 */
     u8  unk_012;                              /* 0x12 */
-    /* 0x13. Bit 1 pauses this object's behaviour and bit 4 hides it; bits 2 and
-       8 are the effective versions, which the constructor seeds by OR-ing the
-       parent's 1|2 and 4|8 down. BeforeBehavior gates on 2, BeforeRender on 8. */
+    /* 0x13. Bit 1 pauses this object's children and bit 4 hides them; bits 2
+       and 8 are this object's own effective paused/hidden state, inherited from
+       the parent: the constructor seeds them by OR-ing the parent's 1|2 and 4|8
+       down, and func_02043880 recomputes them from the parent every frame.
+       BeforeBehavior gates on 2, BeforeRender on 8. Runtime (EU, blinded, 10/10):
+       setting the scene's bit 4 hid every object under it, while a Goomba's own
+       bit 4 changed nothing visible and its own bit 8 was recomputed back to 0. */
     u8  pauseFlags;                           /* 0x13 */
     Manager manager;                          /* 0x14 */
     /* Optional lifecycle-operation sequence. BeforeCleanupResources waits for
@@ -170,7 +170,7 @@ struct fBase_c {
        CW inlines it from the class itself or its IMMEDIATE base -- which is why
        include/dActor_c.h carries its own copy. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, (mHeap::Heap_t *)data_020a0eac);
+        Memory::Deallocate(ptr, data_020a0eac);
     }
 };
 

@@ -459,9 +459,9 @@ extern PMF data_ov002_02110eec[];
 extern int data_ov002_02100190[];
 extern int data_ov002_02100170[];
 extern PMF data_ov002_02110e64[];
-extern "C" void func_ov002_020f39ec(char* c, int i);
+extern void func_ov002_020f39ec(char *c, int i);
 extern PMF data_ov002_02110e7c[];
-extern "C" void func_ov002_020f5990(char* c);
+extern void func_ov002_020f5990(char *c);
 extern void func_ov002_020f5a6c(char* p);
 extern void func_ov002_020f396c(char* p);
 extern void func_ov002_020f30d4(char* p);
@@ -636,24 +636,6 @@ daDemo_c::~daDemo_c()
 }
 
 // @symbol _ZN8daDemo_cD0Ev
-#ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. MSVC
- * folds the Itanium destructor variants into the one ~daDemo_c() it
- * emits, which the class's D1 file already defines, so compiling the
- * definition below as well would define that symbol twice. This arm
- * spells out, in terms of it, what the deleting destructor this file is
- * enrolled for does: the D1 body, called qualified so it is a direct call
- * even where a header declares the destructor virtual, then the
- * class-specific operator delete. Nothing here reaches mwccarm: it builds
- * the `#else` arm and emits the ROM bytes it always emitted, and the
- * object is byte-identical either way. */
-extern "C" daDemo_c *_ZN8daDemo_cD0Ev(daDemo_c *thiz)
-{
-    thiz->daDemo_c::~daDemo_c();  /* the D1 body, through the one host symbol */
-    daDemo_c::operator delete(thiz);    /* the class-specific delete D0 ends with */
-    return thiz;
-}
-#endif
 /* the D0 deleting destructor this file is enrolled for emits from the
    ~daDemo_c definition at ordinal 0 below; objisolate keeps the
    variant this file's delinks entry names. */
@@ -4734,6 +4716,10 @@ struct DemoTexSeqFile {
 };
 
 extern "C" {
+/* Flat {address, 0} words in .data. A pointer-to-member initializer is
+   copied out of .bss by __sinit (data_ov002_0210b678 left .data and @4347
+   disappeared). (int)&daDemo_c::func_ov002_... does not compile: these
+   handlers are non-static, and a pointer to member does not convert to int. */
 /* local extern: descriptor word is the function address as an int */
 extern int _ZN8daDemo_c19func_ov002_020f79c0EPvi(daDemo_c *, void *,
                                                  int); /* local extern: descriptor address */

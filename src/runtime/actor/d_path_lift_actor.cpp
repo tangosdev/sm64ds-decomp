@@ -112,18 +112,7 @@ static inline int IsActorID(const dActor_c *actor, int id) {
  * the cartridge's D0-then-D1 order, which no deferred form reaches without a
  * D2 the image does not contain. */
 
-#ifdef _MSC_VER
-/* MSVC needs this flat D0 entry. Call the actual class-body destructor
- * qualified so dispatch is direct, then use the class-specific deallocator.
- * The inline body includes member/base teardown; no separate flat D1 provider
- * is supplied by this branch. The mwccarm definition below is unchanged. */
-extern "C" dPathLiftActor_c *_ZN16dPathLiftActor_cD0Ev(dPathLiftActor_c *thiz)
-{
-    thiz->dPathLiftActor_c::~dPathLiftActor_c();          /* direct member/base teardown */
-    dPathLiftActor_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
-    return thiz;
-}
-#else
+#ifndef _MSC_VER
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
 void dPathLiftActor_c_EmitDeletingDestructor(dPathLiftActor_c *p)
 {

@@ -52,7 +52,6 @@
 #include "math/Approach.h"
 #include "Particle__System.h"
 
-struct Callback;
 typedef struct { int x, y, z; } V3;
 
 /* One row of the state table: enter action (pmf[0]), per-frame update
@@ -96,8 +95,6 @@ int fdiv(int, int);
 
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8* p);
-extern void *d_a_obj_power_up_itemNewHold(u32 id, u32 a, int x, int y, int z,
-                                          const struct Vector3_16f *rot, struct Callback *cb);
 extern signed short data_02082214[];
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern void *data_0209f318;

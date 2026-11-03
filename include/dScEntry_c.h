@@ -121,6 +121,10 @@ struct dScEntry_c : dScene_c {
     void EnterPlayerSelectIntro();
     void UpdatePlayerSelectIntro();
 
+    /* Inlined into both profile factories. The three steps start as a null
+       member pointer; icon_c and OamAnimation then construct their arrays. */
+    dScEntry_c();
+
     /* Out of line: the key function, defined first in src/game/stages/d_s_entry.cpp. */
     virtual ~dScEntry_c(); /* slots 16 (D1), 17 (D0) */
 
@@ -131,6 +135,8 @@ struct dScEntry_c : dScene_c {
     virtual s32 Render();               /* slot  9 */
     virtual void OnPendingDestroy();    /* slot 12 */
 };
+
+inline dScEntry_c::dScEntry_c() : mEnterStep(0), mBehaviorStep(0), mRenderStep(0) {}
 
 // Inferred step-set names; storage remains in the overlay's existing BSS.
 extern dScEntry_c::StepSet EntryPlayerSelectIntroSteps;

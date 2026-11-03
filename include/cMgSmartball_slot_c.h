@@ -73,6 +73,7 @@ struct cMgSmartball_slot_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    ~cMgSmartball_slot_c() {}
 
     /* Recovered helpers: ReelsStopped reports all three mReelVel[i].y at or
        below zero; BeginStop arms the slow-down phase and rolls the stop

@@ -117,8 +117,6 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void MulMat4x3Mat4x3(const int *a, const int *b, int *d);
 int *Vec3_LslInPlace(void *v, int sh);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-void LoadBlueCoinModel(void *c);
-void UnloadBlueCoinModel(void *);
 
 /* Called by their mangled names: each carries a Fix12<int> by value and
    the member spelling DIFFs. */
@@ -669,7 +667,7 @@ int daFPkn_c::CleanupResources()
     for (int i = 0; i < 6; i++)
         data_ov084_021302f4[i]->Release();
     data_ov002_0210da38.Release();
-    UnloadBlueCoinModel(this);
+    UnloadBlueCoinModel();
     return 1;
 }
 
@@ -756,7 +754,7 @@ int daFPkn_c::InitResources()
         dExtFrameCtrl_c::LoadFile(*data_ov084_021302f4[i]);
 
     dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
-    LoadBlueCoinModel(this);
+    LoadBlueCoinModel();
 
     /* A real SetAnim call with a Fix12<int> speed DIFFs; see the file header. */
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130df4.filePtr, 0x40000000, 0x1000, 0);

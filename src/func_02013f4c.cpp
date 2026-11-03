@@ -9,7 +9,7 @@ extern u32 data_0209cde4;
 extern u8 data_0209cdcc;
 extern mHeap::Heap_t *data_020a0e9c;
 extern void *data_020a0ea0;
-extern void *data_020a0eac;
+extern mHeap::Heap_t *data_020a0eac;
 
 extern void InitCrashScreen(void);
 extern void ShowCrashScreen(void);
@@ -77,7 +77,7 @@ void func_02013f4c(void)
             if (cur & 4) {
                 mHeap::Heap_t *pa = data_020a0e9c;
                 mHeap::Heap_t *pb = (mHeap::Heap_t *)data_020a0ea0;
-                mHeap::Heap_t *pc = (mHeap::Heap_t *)data_020a0eac;
+                mHeap::Heap_t *pc = data_020a0eac;
                 if (cur & 0x20) {
                     pa->Rescue();
                 } else if (cur & 0x10) {

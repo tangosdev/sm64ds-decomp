@@ -69,6 +69,7 @@ struct cMgSmartball_spring_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    ~cMgSmartball_spring_c() {}
 
     s32 mGrabXSaved; /* 0x034 -- copied from mGrabX in the trigger branch and
                           never read again by anything in the tree. No evidence

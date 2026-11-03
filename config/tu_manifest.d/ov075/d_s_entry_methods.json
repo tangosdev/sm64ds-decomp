@@ -492,6 +492,16 @@
   ],
   "compiler_only_output": [
     {
+      "symbol": "_ZN8dScene_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper from return new dScEntry_c. No configured ROM symbol and no inbound relocation. Same deadstrip as dScDSMT_c."
+    },
+    {
+      "symbol": "_ZN7dBase_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper from return new dScEntry_c. No configured ROM symbol and no inbound relocation. Same deadstrip as dScDSMT_c."
+    },
+    {
       "symbol": "_ZN12OamAnimationC2Ev",
       "disposition": "deadstrip",
       "reason": "Compiler-generated base-object constructor variant for OamAnimation. The cartridge defines only the complete-object C1 at 0x0211a834; OamAnimation is never a base subobject, no symbols.txt in the tree defines a C2 and nothing relocates to one."

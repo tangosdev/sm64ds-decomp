@@ -47,7 +47,7 @@ enum daObjCtRotateBlock_c_AssetId {
 #include "dBgW.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
-#include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
 /* One record per mVariant: the base model's and the collision mesh's file
@@ -79,7 +79,6 @@ struct RotateBlockCollisionFilePtr : SharedFilePtr {
 extern "C" {
 extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
-extern void AddVec3(void *a, void *b, void *c);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
 extern void func_020393d4(void *p, void *v);

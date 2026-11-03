@@ -86,11 +86,11 @@ extern SBirdStateTable data_ov009_02113c48;
 extern s16 data_02082214[];
 extern int data_0209e650;
 
-/* local extern: no shared header declares these; their definitions take a
-   file-local Vec3, and this TU passes raw field addresses. */
+/* local extern: no shared header declares these helpers; Vec3_Sub uses the
+   shared Vector3 type, while some callers pass raw position-field addresses. */
 extern "C" {
 extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
-extern void Vec3_Sub(void *out, void *a, void *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern s32 LenVec3(void *v);
 }
 
@@ -188,7 +188,7 @@ void daSBird_c::StateLaunchFlock() {
         if (player != 0) {
             Vector3 copy;
             Vector3 diff;
-            Vec3_Sub(&diff, &mPosX, player + 0x5c);
+            Vec3_Sub(&diff, (const Vector3 *)&mPosX, (const Vector3 *)(player + 0x5c));
             copy.x = diff.x;
             copy.y = diff.y;
             copy.z = diff.z;
@@ -228,7 +228,7 @@ void daSBird_c::StateWaitForPlayer() {
             Vector3 copy;
             Vector3 diff;
             int len;
-            Vec3_Sub(&diff, &mPosX, player + 0x5c);
+            Vec3_Sub(&diff, (const Vector3 *)&mPosX, (const Vector3 *)(player + 0x5c));
             copy.x = diff.x;
             copy.y = diff.y;
             copy.z = diff.z;

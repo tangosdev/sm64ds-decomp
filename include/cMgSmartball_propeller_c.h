@@ -54,6 +54,7 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    ~cMgSmartball_propeller_c() {}
 
     /* Recovered helpers: HitTest runs the ball-vs-blade fan collision (the
        0x38..0x77 tip ring); RebuildVerts rewrites that ring from the base's

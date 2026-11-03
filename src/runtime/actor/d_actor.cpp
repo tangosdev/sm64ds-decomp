@@ -109,19 +109,6 @@ extern unsigned char data_0209f2d8;
 /* Defined below as extern "C". Fix12-by-value, so it is not a method. */
 }
 
-#ifdef _MSC_VER
-/* The host has one ~dActor_c(). These are the ROM's flat D2 and D0 names. */
-extern "C" dActor_c *_ZN8dActor_cD2Ev(dActor_c *thiz) {
-    thiz->dActor_c::~dActor_c();
-    return thiz;
-}
-extern "C" dActor_c *_ZN8dActor_cD0Ev(dActor_c *thiz) {
-    thiz->dActor_c::~dActor_c();
-    dActor_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 /* The global actor list every dActor_c links its mActorListNode into: the
    first and last nodes. Its inline constructor empties it, so mwcc emits
    __sinit_d_actor.cpp to run that (was the handwritten __sinit_02074d90).
@@ -1300,25 +1287,23 @@ s32 dActor_c::GetWaterHeightWDW()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol LoadBlueCoinModel
-/* ROM ordinal 27 -- LoadBlueCoinModel
+// @symbol _ZN8dActor_c17LoadBlueCoinModelEv
+/* ROM ordinal 27 -- dActor_c::LoadBlueCoinModel()
  * 0x0200fe9c  size 0x2c */
 extern "C" {
 extern SharedFilePtr data_ov002_0210da00; /* 0x0210da00 */
 extern SharedFilePtr data_ov002_0210d9c8; /* 0x0210d9c8 */
 }
-extern "C" void LoadBlueCoinModel(void)
-{
+void dActor_c::LoadBlueCoinModel() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210da00);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9c8);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol UnloadBlueCoinModel
-/* ROM ordinal 26 -- UnloadBlueCoinModel
+// @symbol _ZN8dActor_c19UnloadBlueCoinModelEv
+/* ROM ordinal 26 -- dActor_c::UnloadBlueCoinModel()
  * 0x0200fe70  size 0x2c */
-extern "C" void UnloadBlueCoinModel(void)
-{
+void dActor_c::UnloadBlueCoinModel() {
     data_ov002_0210da00.Release();
     data_ov002_0210d9c8.Release();
 }

@@ -385,7 +385,7 @@ extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 void d_a_kpaEarthquakeHold(void *self, struct Vector3 *v, int f);
-extern "C" void func_02011cfc(void);
+extern void func_02011cfc(void);
 /* One declaration per resource handle, typed from how InitResources and
  * CleanupResources use it:
  *
@@ -533,22 +533,7 @@ extern void func_02011d50(void *a);
 /*
 Bowser's destructors. The body is empty: the member and base teardown and the
 D1/D0 pair are compiler-generated. */
-#ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. MSVC
- * folds the Itanium destructor variants into the one ~daKpa_c() it emits,
- * so compiling the definition below as well would define that symbol
- * twice. This arm spells out, in terms of it, what the deleting destructor
- * does: the D1 body, called qualified so it is a direct call even where a
- * header declares the destructor virtual, then the class-specific
- * operator delete. Nothing here reaches mwccarm: it builds the #else arm
- * and emits the ROM bytes it always emitted. */
-extern "C" daKpa_c *_ZN7daKpa_cD0Ev(daKpa_c *thiz)
-{
-    thiz->daKpa_c::~daKpa_c();        /* the D1 body, through the one host symbol */
-    daKpa_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
-    return thiz;
-}
-#else
+#ifndef _MSC_VER
 daKpa_c::~daKpa_c()
 {
 }
@@ -558,15 +543,7 @@ daKpa_c::~daKpa_c()
 // @symbol _ZN11daKpaTail_cD0Ev
 /*
 The tail's destructors. The body is empty, as for Bowser's. */
-#ifdef _MSC_VER
-/* The host needs the ROM's flat D0 name; see the note on _ZN7daKpa_cD0Ev. */
-extern "C" daKpaTail_c *_ZN11daKpaTail_cD0Ev(daKpaTail_c *thiz)
-{
-    thiz->daKpaTail_c::~daKpaTail_c();    /* the D1 body, through the one host symbol */
-    daKpaTail_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
-    return thiz;
-}
-#else
+#ifndef _MSC_VER
 daKpaTail_c::~daKpaTail_c()
 {
 }

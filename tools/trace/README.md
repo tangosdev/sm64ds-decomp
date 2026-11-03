@@ -157,7 +157,7 @@ Python 3.11 standard library only; tkinter is needed for human mode only.
 
 ```sh
 # 0. close every melonDS window. The tool refuses to start if one is open.
-# 1. launch melonDS, load the savestate, hold the stub (leave this running)
+# 1. launch melonDS, load the savestate (checked like load-state), hold the stub (leave this running)
 python tools/trace/ask.py serve --state C:/path/to/S3.ml --workdir C:/somewhere/outside/repo/emu
 # 2. in another shell: run the spec. A topmost popup asks each question.
 python tools/trace/ask.py run tools/trace/specs/capicon_bit1.json --mode human --out C:/somewhere/outside/repo/runs/r1
@@ -172,15 +172,30 @@ a Windows Firewall prompt (the stub listens on a socket). Approve it once. The
 prompt is per executable path, so the tool always runs the installed exe and
 never copies it. During `run`, leave the melonDS window alone: input is posted
 to the window, so the window does not need focus. The popup shows only
-"A: before / B: after", the question, the choices, and a confidence row. It
-never shows the condition name, whether the pause was real, or any RAM values.
+"Question N of M" with a progress line, "A: before / B: after", the question,
+the choices, and a confidence row. It never shows the condition name, whether
+the pause was real, how many pauses are real or sham, or any RAM values.
+
+Progress counts only questions that are actually asked. The first popup
+shows the plan, e.g. "12 questions, about 5 minutes" (a rough first guess).
+Later popups show "about K minutes left", measured from the questions so far.
+M is the number asked so far plus the plan entries still to come. When
+`frame_check` skips an off-screen event and requeues it, M stays the same.
+When an event is dropped for good (no trigger, object not found, requeue
+budget spent, an error), M goes down. The progress line then adds "R
+retaken (target off screen), D dropped". The skip rule is the same for real
+and sham events, so these counts do not unblind anything. Every per-event
+stdout line, in every mode, carries the same counts: `asked`, `of`,
+`retaken`, `dropped`, `progress` ("5 of 12 asked") and `eta`. The start line
+carries `plan`.
 
 Agent mode (`--mode agent`) writes the same `pairs/Qxx.png` images and an
 `answers.json` template. Fill in `answer` and `confidence` for each id, then run
 `score`. Do not open `key/` before scoring. `--mode none` only records data.
 `--answer-after MS` auto-answers the popup and screenshots it (`popup_Qxx.png`)
-as a smoke test. Those answers are tagged `"auto": true`, and `score` excludes
-them.
+as a smoke test. It also reads the progress label back from the widget, into
+the stdout line and the key log as `popup_label`. Those answers are tagged
+`"auto": true`, and `score` excludes them.
 
 Run directory layout: `pairs/` (blind images), `answers.json`, `key/key.json`
 (condition, real/sham, expected answer, located object, pokes with old/new
@@ -193,18 +208,37 @@ values, pause trigger/pc/lr, before/after RAM snapshots, framing), `key/log.json
 python tools/trace/ask.py load-state C:/path/to/any.ml     # load any .ml file, verified
 python tools/trace/ask.py save-state C:/path/to/out.ml     # save the running game to a file
 python tools/trace/ask.py where "[0x0209f394]+0x5c" --mark C:/tmp/where.png   # is it framed?
+python tools/trace/ask.py shot C:/tmp/s.png --require-framed "[0x0209f394]+0x5c"  # capture only if framed
 python tools/trace/ask.py overlays                         # loaded overlays, suspended probes
 ```
 
 - **Any savestate file loads.** melonDS enables a File > Load state slot only
   if `game.mlN` existed when the ROM was loaded. `serve` therefore creates
   zero-byte `game.ml1`..`game.ml8` before it starts melonDS, so every slot is
-  enabled. `load-state FILE` (spec key `load_state_file`) copies FILE over slot
-  8 and loads that slot. It then compares RAM windows before and after with
-  the RAM image inside the file (`MELN`/`NDSG`, main RAM at file offset 0x24).
-  The verdict is `loaded`, `indistinguishable` (the game already matched the
-  file, e.g. that state was running) or `not_loaded`, and `run` stops on
-  `not_loaded`. A plain `load_state slot=N` refuses an empty slot file instead
+  enabled. `load-state FILE` (spec key `load_state_file`, and `serve --state`,
+  which takes the same path) copies FILE over slot 8 and loads that slot.
+- **The load verdict is a marker check.** Before the click, a sentinel is
+  written into a RAM word that nothing writes or reads while the game runs:
+  the start of the arm9 `.rodata` string "ASSERTION FAILED  FILE=[%s] ...",
+  at 0x020868a0, found by content. The sentinel is chosen to differ from the
+  value the state file holds there. If the word holds the file's value
+  afterwards, the load overwrote it: `verdict: loaded`. If the sentinel is
+  still there: `not_loaded`, and the game's value is written back. `run` and
+  `serve --state` stop on `not_loaded`. `marker` in the result has the address
+  and the values, and `verdict_by` says `marker`. The older RAM-window
+  comparison still runs, and its fields are kept: `window_verdict`,
+  `windows`, `differ`, `match_file`, `match_before`, `match_file_all`. It
+  compares windows before and after with the RAM image inside the file
+  (`MELN`/`NDSG`, main RAM at file offset 0x24). Nearby states share most of
+  those windows, so it can say `indistinguishable` after a real load. A dry
+  run (no click at all) also gave `indistinguishable`. It decides the verdict
+  only when the marker cannot (`--no-marker`, or a ROM without the string).
+  `load-state --dry-run` does everything but the click, as a self-test: the
+  verdict must be `not_loaded`.
+- **A savestate from another melonDS major version crashed melonDS 1.1**
+  (header `MELN`, u16 major at +4; 13 for 1.1). It did not refuse the file.
+  `serve` notices that its melonDS has exited, stops, and restores the config.
+- A plain `load_state slot=N` refuses an empty slot file instead
   of clicking a disabled menu item. `save-state FILE` saves through slot 8,
   waits until melonDS has finished writing it, and copies it out. Every
   breakpoint is disarmed while a menu action runs and re-armed afterwards:
@@ -232,6 +266,16 @@ python tools/trace/ask.py overlays                         # loaded overlays, su
   it projects one point, so it does not know the actor's size and does not
   test occlusion. It uses the last frame the game rendered. `dy` lifts the
   point (for example to a head) and `margin` asks for slack in pixels.
+- **Framing guard for your own capture loops.** `where` and `project` only
+  report framing. A loop that does not read the answer keeps capturing an
+  off-screen subject. In `run`, `frame_check` skips those events. Anywhere
+  else, opt in to the guard. `ask.py shot FILE --require-framed POS [--obj X]
+  [--margin 8] [--dy N]` (repeat `--require-framed` for several points)
+  refuses to capture when any point projects off the top screen. It writes no
+  file, prints `{"refused": true, ...}` and exits 3. The RPC form is
+  `c.shot(path=..., require_framed="[obj+4]+0x5c", env={"obj": o}, margin=8)`.
+  It raises `RemoteError("NotFramed: ...")` with the projection, and logs a
+  `shot_refused` event. On success the result carries `framing`.
 
 ### Spec format (JSON)
 
@@ -278,14 +322,26 @@ from the game's own state.
 - **Capture lag.** The DS 3D image lags the CPU by about one frame. A capture
   taken right after a poke can show the old state. `after_frames` defaults to
   4 (use at least 2). `shot` waits `settle_ms`, then re-captures until two
-  grabs match, because the halted window repaints late.
+  grabs match, because the halted window repaints late. A visible window has
+  once reported "no client area", and a rerun was fine. A capture is
+  therefore retried up to 5 times, 0.25 s apart, with a `capture_retry` event
+  for each retry. A minimised window fails at once.
 - **Savestates** load through the File > Load state menu (UI Automation via
-  `uia_menu.ps1`) while the target runs. **Buttons and touch** are posted
+  `uia_menu.ps1`) while the target runs. A first attempt has failed with
+  "missing: Load state", and an immediate retry worked. A path step that
+  finds no item clicked nothing, so the whole path is retried: up to 3
+  attempts, 0.8 s apart, with a `menu_retry` event on stderr and in the log
+  each time. Any other failure, or a timeout, is not retried, because the
+  click may already have landed. **Buttons and touch** are posted
   window messages, so no focus is stolen and no global hotkeys fire.
 - **Config.** melonDS reads `melonDS.toml` from next to the exe (portable mode).
   `serve` backs up your toml (and its sha256) into `--workdir`, writes one
   with GDB on (ARM9 port 3333) and JIT off, and puts yours back after melonDS
-  exits. It deletes the backup only when the hashes match. After a crash, run
-  `ask.py restore-config --workdir <dir>`.
+  exits. It deletes the backup only when the hashes match. Any `serve`
+  failure after the swap kills the melonDS it started and restores the
+  toml. That covers launch, attach, a `--state` that does not load, a busy
+  RPC port (bound before the load) and Ctrl+C. If melonDS exits while being
+  served, the daemon stops too and restores the toml. After a hard kill of
+  `serve` itself, run `ask.py restore-config --workdir <dir>`.
 - Keep run outputs and the work directory outside the repo. The ROM is copied
   into the workdir as `game.nds`, and `stop --clean` deletes that copy.

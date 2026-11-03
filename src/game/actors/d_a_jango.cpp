@@ -178,13 +178,13 @@ extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
 extern int data_020a0e68[];
-extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern signed char data_0209f2f8;
-extern "C" void func_02012694(unsigned int, void*);
+extern void func_02012694(unsigned int, void *);
 extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
-extern "C" int data_0209e650;
-extern "C" int RandomIntInternal(int* seed);
+extern int data_0209e650;
+extern int RandomIntInternal(int *seed);
 extern int Vec3_Dist(const void *a, const void *b);
 extern int ApproachAngle(s16 *cur, s16 target, int div, int band, int maxStep);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -569,7 +569,6 @@ int daJango_c::CleanupResources()
       back up by 3, then place the held actor with a fixed offset and rotation
       (one pair for a star, one for the cap) and hand it a pointer to mHeldMat.
    3. Shadow matrix: mPos >> 3 with Y lowered by 0x18000 (24 units). */
-extern "C" {
 void daJango_c::func_ov062_0211c6a8()
 {
     int v[3];
@@ -616,7 +615,6 @@ void daJango_c::func_ov062_0211c6a8()
     *(M48*)&mShadowMat = *(M48*)data_020a0e68;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x40000, 0x258000, 0xf);
 }
-}
 
 // @symbol _ZN9daJango_c19func_ov062_0211c658EPv
 /* Select a state: store the record (its address) in mState, then call the
@@ -631,7 +629,6 @@ int daJango_c::func_ov062_0211c658(void *p) { StateRecord *qq = (StateRecord *)p
    then by a pitch of -0x4000 (a quarter turn), and its Y becomes mVertSpeed
    (magnitude 20 units per frame), with mStateTimer = 60 frames. Then starts
    jango_fly.bca (4 blend frames, flags 0, speed 1.0, from frame 0). */
-extern "C" {
 int daJango_c::func_ov062_0211c594() {
     Vector3 in;
     Vector3 out;
@@ -653,7 +650,6 @@ int daJango_c::func_ov062_0211c594() {
 
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
     return 1;
-}
 }
 
 // @symbol _ZN9daJango_c19func_ov062_0211c2f4Ev
@@ -753,7 +749,6 @@ int daJango_c::func_ov062_0211c2f4() {
    starts at 0, or at 2 with a zero timer for the silver-star variant and on
    level ids 0x18 / 0x19 (data_0209f2f8 is LEVEL_ID in symbols/verified.tsv). Plays
    jango_fly.bca (4 blend frames, flags 0, speed 1.0). */
-extern "C" {
 int daJango_c::func_ov062_0211c218()
 {
     mTargetAngleY = mAngleY;
@@ -771,7 +766,6 @@ int daJango_c::func_ov062_0211c218()
         mStateTimer = 0;
     }
     return 1;
-}
 }
 
 // @symbol _ZN9daJango_c19func_ov062_0211bd10Ev
@@ -803,7 +797,6 @@ int daJango_c::func_ov062_0211c218()
    mStateTimer is declared s16, but the ROM tests it with ldrh in this function
    and in c2f4; the declared type compiles those tests to ldrsh, so they read it
    through a u16 cast (measured: both functions stop matching without it). */
-extern "C" {
 int daJango_c::func_ov062_0211bd10()
 {
     s16 angV;
@@ -938,7 +931,6 @@ int daJango_c::func_ov062_0211bd10()
     }
 
     return 1;
-}
 }
 
 // @symbol _ZN9daJango_c19func_ov062_0211bc54Ev
@@ -1132,7 +1124,6 @@ int daJango_c::func_ov062_0211b880() {
    (mPrevAngleZ) level off by 0x300 per frame. Once mPosY is within 2 units
    below mPathNodePosY or above it, it stops, snaps to that height, restores
    the animation speed to 1.0 and enters CIRCLE. */
-extern "C" {
 int daJango_c::func_ov062_0211b800() {
     mVertSpeed = 0x14000;
     ApproachLinear(mPrevAngleX, 0, 0x300);
@@ -1146,7 +1137,6 @@ int daJango_c::func_ov062_0211b800() {
         func_ov062_0211c658(JANGO_STATE_CIRCLE);
     }
     return 1;
-}
 }
 
 // @symbol _ZN9daJango_c19func_ov062_0211b51cEv
@@ -1174,7 +1164,6 @@ int daJango_c::func_ov062_0211b800() {
       set for the silver-star variant or param1 == 3, 0xc000 is 12.0 as fix12; the
       other three are not decoded here) and, if that took effect, set
       mTimer = 30 and enter CIRCLE. */
-extern "C" {
 int daJango_c::func_ov062_0211b51c()
 {
     daPly_c *pl;
@@ -1274,7 +1263,6 @@ int daJango_c::func_ov062_0211b51c()
     mTimer = 0x1e;
     return func_ov062_0211c658(JANGO_STATE_CIRCLE);
 }
-}
 
 // @symbol _ZN9daJango_c19func_ov062_0211b3acEv
 /* Pick which of the four path nodes to fly to next, based on where the player is.
@@ -1346,7 +1334,6 @@ int daJango_c::func_ov062_0211b3ac()
    state: the vector (0, 0, 20.0) turned by mAngleY then mAngleX. Empty-handed
    (nothing carried or held) it is (0, 0, 40.0) instead, and while mTimer is
    0 mPrevAngleY also drops by 0x100 (about 1.4 degrees) per call. */
-extern "C" {
 void daJango_c::func_ov062_0211b2fc(){
   Vector3 v[2];
   v[0].z = 0;
@@ -1369,7 +1356,6 @@ void daJango_c::func_ov062_0211b2fc(){
   Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
   Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, mAngleX);
   MulVec3Mat4x3(&v[0], data_020a0e68, (Vector3 *)&mSpeedX);
-}
 }
 
 // @symbol _ZN9daJango_cD0Ev

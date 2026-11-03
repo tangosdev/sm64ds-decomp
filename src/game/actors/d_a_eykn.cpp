@@ -113,8 +113,6 @@ s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-void LoadBlueCoinModel(void *actor);
-void UnloadBlueCoinModel(void *actor);
 void func_0200f760(void *actor, void *clsn);
 
 /* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
@@ -711,7 +709,7 @@ void daEykn_c::SetState(int state)
 // @symbol _ZN8daEykn_c16CleanupResourcesEv
 s32 daEykn_c::CleanupResources()
 {
-    UnloadBlueCoinModel(this);
+    UnloadBlueCoinModel();
     data_ov002_0210da38.Release();
     gEyknModelFile.Release();
     for (s32 i = 0; i < 2; ++i) {
@@ -753,12 +751,10 @@ int daEykn_c::Behavior()
 }
 
 // @symbol _ZN8daEykn_c13InitResourcesEv
-/* LoadBlueCoinModel ignores its argument, but every caller passes the actor
- * in r0; declared (void) the entry block's argument setup comes out rotated. */
 s32 daEykn_c::InitResources()
 {
     BMD_File *bmd;
-    LoadBlueCoinModel(this);
+    LoadBlueCoinModel();
 
     dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
     bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gEyknModelFile);

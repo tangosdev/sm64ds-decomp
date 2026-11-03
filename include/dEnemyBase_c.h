@@ -21,10 +21,9 @@ struct flags;
 struct mm_;
 struct outAngle_;
 struct ww_;
-/* The actor heap and its deallocator, for the inline operator delete below.
-   Spelt exactly as include/decl_common.h spells it -- see the note in dActor_c.h. */
-extern "C" void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void *, void *);
-extern "C" void *data_020a0eac;
+/* data_020a0eac is the actor heap. operator delete passes it to
+   Memory::Deallocate, the same way fBase_c and dActor_c do. */
+extern "C" mHeap::Heap_t *data_020a0eac;
 
 struct dEnemyBase_c : dActor_c {
     /* DERIVES FROM dActor_c, at last -- this header used to restate dActor_c's whole
@@ -122,7 +121,9 @@ struct dEnemyBase_c : dActor_c {
        dEnemyBase_c gained it, and following that instruction would have broken the D0
        route for 51 subclasses. See the long comment in dActor_c.h for why an inline
        member is what the ROM shows. */
-    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(ptr, data_020a0eac); }
+    void operator delete(void *ptr) {
+        Memory::Deallocate(ptr, data_020a0eac);
+    }
 
     /* --- non-virtual --- */
     int AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_);
