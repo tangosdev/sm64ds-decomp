@@ -57,7 +57,7 @@ extern char data_ov063_0211ecb8;
 /* local extern: no shared header declares these. */
 struct Vec3;
 extern "C" {
-extern void Vec3_Sub(Vec3 *out, Vec3 *a, Vec3 *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(Vec3 *v);
 void func_0203568c(int *clsn, int radius);
 void func_02035684(int *clsn, int height);
@@ -227,7 +227,8 @@ void daPiano_c::StateSearch() {
         cand = data_0209f394[i];
         if (cand == 0)
             continue;
-        Vec3_Sub((Vec3 *)&v, (Vec3 *)&this->mPosX, (Vec3 *)&((dActor_c *)cand)->mPosX);
+        Vec3_Sub((Vector3 *)&v, (const Vector3 *)&this->mPosX,
+                 (const Vector3 *)&((dActor_c *)cand)->mPosX);
         dist = LenVec3((Vec3 *)&v);
         if (IsTargetMoving((dActor_c *)cand) != 0 && dist < 0x1f4000 && dist < bestDist) {
             this->mTarget = (dActor_c *)cand;
@@ -334,7 +335,7 @@ void daPiano_c::StateAttack() {
 
     target = this->mTarget;
     if (target != 0) {
-        Vec3_Sub((Vec3 *)&tmp, (Vec3 *)&this->mPosX, (Vec3 *)&target->mPosX);
+        Vec3_Sub((Vector3 *)&tmp, (const Vector3 *)&this->mPosX, (const Vector3 *)&target->mPosX);
         dist = LenVec3((Vec3 *)&tmp);
         ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &this->mTarget->mPos), 0x200);
         this->mAngleY = this->mPrevAngleY;
