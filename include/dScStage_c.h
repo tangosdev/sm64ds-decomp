@@ -21,9 +21,13 @@ struct dExtAnmTexSRT_c;
  * dScStage_c::LoadTextureTransformers fills them: for each entry of the level's
  * animation table (data_0209f340) that carries a BTA file it news a 0x14-byte
  * dExtAnmTexSRT_c, constructs it, and stores it in the slot, striding 0xc.
- * dScStage_c::Render advances the transformer when the flag at +0x04 is set;
- * dScStage_c::RenderModelTransparent reads the same flag to decide whether that
- * part's materials get the transparent bit; dScStage_c::CleanupResources destroys
+ * The flag at +0x04 is the area's "showing" flag: HideArea/ShowArea/IsAreaShowing
+ * write and read it (slot i is area i). dScStage_c::Render advances the
+ * transformer only when it is set, and dScStage_c::RenderModelTransparent reads
+ * it to decide whether that part's materials get the transparent bit. Runtime
+ * (EU, blinded 10/10): clearing it hid the whole room and every actor bound to
+ * that area; setting another area's flag showed that area's actors.
+ * dScStage_c::CleanupResources destroys
  * the transformer through its vtable and then walks the list at +0x08, whose
  * next pointer is at +0x0c, freeing every block. */
 struct StageTexAnimSlot {

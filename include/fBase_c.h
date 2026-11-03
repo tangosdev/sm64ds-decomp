@@ -109,9 +109,13 @@ struct fBase_c {
     u8  unk_010;                              /* 0x10 */
     u8  unk_011;                              /* 0x11 */
     u8  unk_012;                              /* 0x12 */
-    /* 0x13. Bit 1 pauses this object's behaviour and bit 4 hides it; bits 2 and
-       8 are the effective versions, which the constructor seeds by OR-ing the
-       parent's 1|2 and 4|8 down. BeforeBehavior gates on 2, BeforeRender on 8. */
+    /* 0x13. Bit 1 pauses this object's children and bit 4 hides them; bits 2
+       and 8 are this object's own effective paused/hidden state, inherited from
+       the parent: the constructor seeds them by OR-ing the parent's 1|2 and 4|8
+       down, and func_02043880 recomputes them from the parent every frame.
+       BeforeBehavior gates on 2, BeforeRender on 8. Runtime (EU, blinded, 10/10):
+       setting the scene's bit 4 hid every object under it, while a Goomba's own
+       bit 4 changed nothing visible and its own bit 8 was recomputed back to 0. */
     u8  pauseFlags;                           /* 0x13 */
     Manager manager;                          /* 0x14 */
     /* Optional lifecycle-operation sequence. BeforeCleanupResources waits for
