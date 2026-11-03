@@ -432,12 +432,75 @@ bool on_ending_flight(const char *b) { return b && *(void *const *)(b + 0x370) =
 // neither and the ending's first camera step (func_0200814c) reads through a null player as the ending level loads (c0000005,
 // measured with both consoles as Yoshi). On the cartridge only Mario reaches this arena. So the body on the ending flight is
 // made Mario first, through the doors' own swap (model, state and position carry across).
+//
+// STAREXIT3: that swap is the doors' SetRealCharacter, which also writes the save file's character byte and my per-player
+// table byte (src/game/player/Player.cpp:1224-1225), so a Luigi, Wario or Yoshi player's SAVED character became Mario after
+// the ending, and the character colours and the next coop save followed it. Only the body is the ending's: the two bytes are
+// written back at once. They cannot simply stay that way, though: the ending and every credits scene are level loads, and
+// each load spawns my body from the save byte (LoadEntranceObjects' f2, hal/level_boot.cpp), where the ending's script needs
+// a Mario again. So while the ending runs, a level change that is pending (data_02092110 >= 0, held by the exit fade until
+// it is applied) gets Mario in both bytes, and every other frame gets my own character back. The keep ends once a level change
+// has happened and no level change, Kuppa script (data_0209fc48) or ending stage mode (data_0209f2d8 == 2) has been seen for
+// kKeepQuietFrames frames in a level other than the arena.
+// SM64DS_GRAND_KEEP=0 keeps the old behaviour (the swap's writes stand) and SM64DS_GRAND_KEEP=plain writes the bytes back
+// once right after the swap and never again, so a row can show either next to the fix in one exe. Test-only.
+enum : unsigned { kKeepQuietFrames = 120 };
+struct Keep { bool on, pending, changed; unsigned char save, tbl; int slot, from_level; unsigned quiet, writes; };
+Keep g_keep;
+int keep_mode() {
+    static int m = -1;
+    if (m < 0) {
+        const char *e = std::getenv("SM64DS_GRAND_KEEP");
+        m = !e || !*e ? 1 : (*e == '0' ? 0 : (*e == 'p' ? 2 : 1));
+    }
+    return m;
+}
+void keep_write(bool mario) {
+    data_0209cad2[0x0f] = mario ? 0 : g_keep.save;
+    data_02092128[g_keep.slot] = mario ? 0 : g_keep.tbl;
+    ++g_keep.writes;
+}
+void keep_tick() {
+    if (!g_keep.on) return;
+    const bool pend = (signed char)data_02092110[0] >= 0;
+    if (pend != g_keep.pending)
+        std::fprintf(stderr, "[starpop] GRAND keep: %s (level %d -> %d): save character %u, table[%d] %u wall=%lld\n",
+                     pend ? "a level change is pending, Mario for its spawn" : "no level change pending, my own character back",
+                     (int)data_0209f2f8, (int)(signed char)data_02092110[0], pend ? 0u : (unsigned)g_keep.save, g_keep.slot,
+                     pend ? 0u : (unsigned)g_keep.tbl, wall_ms());
+    g_keep.pending = pend;
+    if (pend) { g_keep.changed = true; g_keep.quiet = 0; keep_write(true); return; }
+    keep_write(false);
+    const bool ending = rd32(data_0209fc48) != 0 || data_0209f2d8[0] == 2;
+    if (g_keep.changed && (int)data_0209f2f8 != g_keep.from_level && !ending && my_body()) {
+        if (++g_keep.quiet >= kKeepQuietFrames) {
+            g_keep.on = false;
+            std::fprintf(stderr, "[starpop] GRAND keep: the ending is over (level %d, %u writes): save character %u, table[%d] %u, keep ended wall=%lld\n",
+                         (int)data_0209f2f8, g_keep.writes, (unsigned)data_0209cad2[0x0f], g_keep.slot,
+                         (unsigned)data_02092128[g_keep.slot], wall_ms());
+        }
+    } else {
+        g_keep.quiet = 0;
+    }
+}
 void ending_as_mario(char *b, const char *why) {
     if (!b || *(const unsigned *)(b + 8) == 0u) return;
     const unsigned was = *(const unsigned *)(b + 8);
+    const int slot = *(const unsigned char *)(b + 0x6d8) & 0x3f;     // mPlayerNo, the table index SetRealCharacter writes
+    const unsigned char save0 = data_0209cad2[0x0f], tbl0 = data_02092128[slot];
     port_player_set_character(b, 0u);
-    std::fprintf(stderr, "[starpop] GRAND %s: my body was character %u, now %u for the ending wall=%lld\n", why, was,
-                 *(const unsigned *)(b + 8), wall_ms());
+    const unsigned char save1 = data_0209cad2[0x0f], tbl1 = data_02092128[slot];
+    const int km = keep_mode();
+    if (km != 0 && !g_keep.on) {
+        g_keep = Keep();
+        g_keep.on = true; g_keep.save = save0; g_keep.tbl = tbl0; g_keep.slot = slot; g_keep.from_level = (int)data_0209f2f8;
+        keep_write(false);
+        if (km == 2) g_keep.on = false;
+    }
+    std::fprintf(stderr, "[starpop] GRAND %s: my body was character %u, now %u for the ending; save character %u -> %u -> %u,"
+                 " table[%d] %u -> %u -> %u (%s) wall=%lld\n", why, was, *(const unsigned *)(b + 8), (unsigned)save0, (unsigned)save1,
+                 (unsigned)data_0209cad2[0x0f], slot, (unsigned)tbl0, (unsigned)tbl1, (unsigned)data_02092128[slot],
+                 km == 0 ? "keep off" : km == 2 ? "plain restore" : "kept", wall_ms());
 }
 // My copies of the Grand Star (class 283), removed the way the ROM removes the collected one.
 int kill_grand() {
@@ -955,6 +1018,7 @@ extern "C" void port_star_popup_frame(void) {
         !(world_party_active() && comms_hub_room_kind() == kHubRoomWorld)) return;
     init_once();
     ++g.frame;
+    keep_tick();       // STAREXIT3: the saved character through the ending (before any return: the ending is no popup)
     const Mode m = mode_now();
     if (m == kNone) { if (g.counting || g.exit_pending || g.nline) clear_receiver(); return; }
     if (!g.registered && m == kCoop) {
