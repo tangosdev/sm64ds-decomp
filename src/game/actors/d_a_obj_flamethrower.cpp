@@ -75,8 +75,8 @@ extern short data_02082214[];
 extern short data_ov095_02136f98[];
 
 extern "C" {
-extern void MulVec3Mat4x3(int *v, void *m, int *dst);
-extern void Vec3_Add(int *out, int *a, int *b);
+extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* Flame particles. 0x4f / 0x50 when param1's low byte is not 0xff;
  * 0x51 / 0x52 when it is. No recovered names. */
 extern void func_02022774(Fix12i x, Fix12i y, Fix12i z, s16 ang1, int ang2);
@@ -135,14 +135,15 @@ int daObjFlamethrower_c::InitResources() {
             dst.y = zero;
             dst.z = zero;
             offset.z = data_ov095_02136fb0[i];
-            MulVec3Mat4x3((int *)&offset, &mTransform, (int *)&dst);
+            MulVec3Mat4x3((Vector3 *)&offset, &mTransform, (Vector3 *)&dst);
             if (im1 < 0) {
-                Vec3_Add((int *)&firstPos, (int *)&mPosX, (int *)&dst);
+                Vec3_Add((Vector3 *)&firstPos, (const Vector3 *)&mPosX, (const Vector3 *)&dst);
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = firstPos.x;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = firstPos.y;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = firstPos.z;
             } else {
-                Vec3_Add((int *)&nextPos, (int *)&mFlamePositions[im1], (int *)&dst);
+                Vec3_Add((Vector3 *)&nextPos, (const Vector3 *)&mFlamePositions[im1],
+                         (const Vector3 *)&dst);
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = nextPos.x;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = nextPos.y;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = nextPos.z;
@@ -262,14 +263,15 @@ int daObjFlamethrower_c::Behavior() {
                     dst[1] = zero;
                     dst[2] = zero;
                     in[2] = data_ov095_02136fb0[i];
-                    MulVec3Mat4x3(in, &mTransform, dst);
+                    MulVec3Mat4x3((Vector3 *)in, &mTransform, (Vector3 *)dst);
                     if (im1 < 0) {
-                        Vec3_Add(sum, (int *)&mPosX, dst);
+                        Vec3_Add((Vector3 *)sum, (const Vector3 *)&mPosX, (const Vector3 *)dst);
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum[0];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum[1];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum[2];
                     } else {
-                        Vec3_Add(sum2, (int *)&mFlamePositions[im1], dst);
+                        Vec3_Add((Vector3 *)sum2, (const Vector3 *)&mFlamePositions[im1],
+                                 (const Vector3 *)dst);
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum2[0];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum2[1];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum2[2];
