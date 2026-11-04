@@ -364,6 +364,8 @@ void lab_grab(char *me) {
     const int mx = rd32(me, 0x5c) >> 12, my = rd32(me, 0x60) >> 12, mz = rd32(me, 0x64) >> 12;
     for (void *a = _ZN8dActor_c4NextEPKS_(0); a; a = _ZN8dActor_c4NextEPKS_(a)) {
         if ((int)cls_of(a) != cls) continue;
+        // a Bob-omb that blew up waits dormant at home, undrawn (daBmb_c mState 5, mShouldRender 0): never that one
+        if (cls == 206 && (rd32(a, 0x3dc) == 5 || !((const unsigned char *)a)[0x3f3])) continue;
         const long long dx = (rd32(a, 0x5c) >> 12) - mx, dy = (rd32(a, 0x60) >> 12) - my, dz = (rd32(a, 0x64) >> 12) - mz;
         const long long d = dx * dx + dz * dz;
         if (d <= bd && dy > -80 && dy < 120) { bd = d; best = a; }
