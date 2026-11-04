@@ -83,7 +83,8 @@ s32   Vec3_Dist(const void *, const void *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void  Vec3_MulScalar(void *, const void *, int);
 void  Vec3_Asr(void *, void *, int);
-void  SubVec3(void *, void *, void *);
+/* local extern: CalcLib conflicts with this TU's Vec3_MulScalar spelling. */
+void  SubVec3(Vector3 *, Vector3 *, Vector3 *);
 s32   LenVec3(const void *);
 int   AngleDiff(int, int);
 int   ApproachAngle(void *, s16, int, int, int);
@@ -855,7 +856,7 @@ int daMip_c::StateFleeMain() {
             {
                 int s = cstd::fdiv(lim, len);
                 Vec3_MulScalar(&scaled, &delta, s);
-                SubVec3(&mPos, &scaled, &mPos);
+                SubVec3((::Vector3 *)&mPos, (::Vector3 *)&scaled, (::Vector3 *)&mPos);
             }
             if (mVertSpeed > 0) {
                 mPosY = ysave;
