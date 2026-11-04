@@ -250,7 +250,7 @@ void daBtfly_c::State5()
     if (mStateTimer >= 0x3c)
         hAngle = mWanderAngle;
     else
-        hAngle = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mHomePosX);
+        hAngle = Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX);
 
     {
         s16 target;
@@ -315,8 +315,7 @@ void daBtfly_c::State4()
 // @symbol _ZN9daBtfly_c6State3Ev
 void daBtfly_c::State3()
 {
-    ApproachLinear(mPrevAngleY,
-                   Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mHomePosX), 0x800);
+    ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX), 0x800);
     ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, (Vector3 *)&mHomePosX), 0x50);
     UpdatePos(0);
 
@@ -379,7 +378,7 @@ void daBtfly_c::State2()
         v.x = v.x + t / 4;
         t = mStateTimer * k;
         v.z = v.z + t / 4;
-        ApproachLinear(mPrevAngleY, Vec3_HorzAngle((const Vector3 *)&mPosX, &v), 0x300);
+        ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &v), 0x300);
 
         pp = &player->mPosX;
         v.x = pp[0];
@@ -417,7 +416,7 @@ void daBtfly_c::State1()
         return;
     mState = 2;
     daPly_c *p = ClosestPlayer();
-    mPrevAngleY = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&p->mPosX);
+    mPrevAngleY = Vec3_HorzAngle(&mPos, &p->mPos);
 }
 
 // @symbol _ZN9daBtfly_c6State0Ev
