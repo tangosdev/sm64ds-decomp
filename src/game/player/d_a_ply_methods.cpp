@@ -172,7 +172,6 @@ extern u8 data_ov002_02109dc4[];
 extern u8 data_ov002_02109dcc[];
 extern int data_ov002_02109fe4[];
 extern u32 data_ov002_0210a07c[];
-extern int data_ov002_0210a424[];
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -437,9 +436,6 @@ typedef struct {
 extern AnimScriptStep data_ov002_02109ff4[];
 extern AnimScriptStep data_ov002_0210a1d4[];
 
-extern AnimScriptStep data_ov002_0210a3dc[];
-extern AnimScriptStep data_ov002_0210a434[];
-
 /* 64 Player state-method descriptors at 0x0210a354..0x0210a554.
  * Each record is the code address followed by a zero PMF adjustment. A
  * direct PMF initializer is dynamic under mwccarm, so the flat address is
@@ -518,6 +514,22 @@ extern "C" int _ZN7daPly_c16St_SideFlip_MainEv(daPly_c *);
 extern "C" int _ZN7daPly_c16St_BackFlip_InitEv(daPly_c *);
 extern "C" int _ZN7daPly_c14St_Crouch_MainEv(daPly_c *);
 
+PlayerPmf data_ov002_0210a3d4 = { (void (*)(daPly_c *))_ZN7daPly_c17St_Headstand_MainEv };
+AnimScriptStep data_ov002_0210a3dc[] = {{1, 0}};
+PlayerPmf data_ov002_0210a3e4 = { (void (*)(daPly_c *))_ZN7daPly_c16St_Climb_CleanupEv };
+PlayerPmf data_ov002_0210a3ec = { (void (*)(daPly_c *))_ZN7daPly_c16St_WallJump_InitEv };
+PlayerCleanupPmf data_ov002_0210a3f4 = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c6fe4Ev };
+PlayerScriptCommand data_ov002_0210a3fc = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd20cEPhii };
+PlayerCleanupPmf data_ov002_0210a404 = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c70acEv };
+PlayerScriptCommand data_ov002_0210a40c = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd3a0EPhii };
+PlayerPmf data_ov002_0210a414 = { (void (*)(daPly_c *))_ZN7daPly_c22St_SwingPlayer_CleanupEv };
+PlayerPmf data_ov002_0210a41c = { (void (*)(daPly_c *))_ZN7daPly_c17St_LedgeHang_InitEv };
+int data_ov002_0210a424[] = {19, 21};
+PlayerPmf data_ov002_0210a42c = { (void (*)(daPly_c *))_ZN7daPly_c17St_WaterJump_InitEv };
+AnimScriptStep data_ov002_0210a434[] = {{188, 0}};
+PlayerPmf data_ov002_0210a43c = { (void (*)(daPly_c *))_ZN7daPly_c17St_LedgeGrab_InitEv };
+PlayerPmf data_ov002_0210a444 = { (void (*)(daPly_c *))_ZN7daPly_c17St_LedgeGrab_MainEv };
+PlayerScriptCommand data_ov002_0210a44c = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd250EPhii };
 PlayerPmf data_ov002_0210a454 = { (void (*)(daPly_c *))_ZN7daPly_c20St_CeilingGrate_InitEv };
 PlayerCleanupPmf data_ov002_0210a45c = { (void (*)(daPly_c *))func_ov002_020e1c20 };
 PlayerPmf data_ov002_0210a464 = { (void (*)(daPly_c *))_ZN7daPly_c20St_CeilingGrate_MainEv };
@@ -1050,10 +1062,10 @@ int daPly_c::func_ov002_020bd664(unsigned char *cmd, int beginFrame, int endFram
     extern PlayerScriptCommand data_ov002_0210a534;
     extern ScriptCommand data_ov002_0210a0b4;
     extern ScriptCommand data_ov002_0210a094;
-    extern ScriptCommand data_ov002_0210a40c;
+    extern PlayerScriptCommand data_ov002_0210a40c;
     extern PlayerScriptCommand data_ov002_0210a474;
-    extern ScriptCommand data_ov002_0210a44c;
-    extern ScriptCommand data_ov002_0210a3fc;
+    extern PlayerScriptCommand data_ov002_0210a44c;
+    extern PlayerScriptCommand data_ov002_0210a3fc;
     extern ScriptCommand data_ov002_0210a3c4;
     extern ScriptCommand data_ov002_0210a064;
     extern ScriptCommand data_ov002_0210a36c;
@@ -1066,10 +1078,10 @@ int daPly_c::func_ov002_020bd664(unsigned char *cmd, int beginFrame, int endFram
         data_ov002_02110794[4] = data_ov002_0210a534.pmf;
         data_ov002_02110794[5] = data_ov002_0210a0b4;
         data_ov002_02110794[6] = data_ov002_0210a094;
-        data_ov002_02110794[7] = data_ov002_0210a40c;
+        data_ov002_02110794[7] = data_ov002_0210a40c.pmf;
         data_ov002_02110794[8] = data_ov002_0210a474.pmf;
-        data_ov002_02110794[9] = data_ov002_0210a44c;
-        data_ov002_02110794[10] = data_ov002_0210a3fc;
+        data_ov002_02110794[9] = data_ov002_0210a44c.pmf;
+        data_ov002_02110794[10] = data_ov002_0210a3fc.pmf;
         data_ov002_02110794[11] = data_ov002_0210a3c4;
         data_ov002_02110794[12] = data_ov002_0210a064;
         data_ov002_02110794[13] = data_ov002_0210a36c;
@@ -25259,14 +25271,14 @@ extern int (daPly_c::*data_ov002_0210a3a4)();
 extern int (daPly_c::*data_ov002_0210a3b4)();
 extern int (daPly_c::*data_ov002_0210a3bc)();
 extern int (daPly_c::*data_ov002_0210a3cc)();
-extern int (daPly_c::*data_ov002_0210a3d4)();
-extern int (daPly_c::*data_ov002_0210a3e4)();
-extern int (daPly_c::*data_ov002_0210a3ec)();
-extern int (daPly_c::*data_ov002_0210a414)();
-extern int (daPly_c::*data_ov002_0210a41c)();
-extern int (daPly_c::*data_ov002_0210a42c)();
-extern int (daPly_c::*data_ov002_0210a43c)();
-extern int (daPly_c::*data_ov002_0210a444)();
+extern PlayerPmf data_ov002_0210a3d4;
+extern PlayerPmf data_ov002_0210a3e4;
+extern PlayerPmf data_ov002_0210a3ec;
+extern PlayerPmf data_ov002_0210a414;
+extern PlayerPmf data_ov002_0210a41c;
+extern PlayerPmf data_ov002_0210a42c;
+extern PlayerPmf data_ov002_0210a43c;
+extern PlayerPmf data_ov002_0210a444;
 extern PlayerPmf data_ov002_0210a454;
 extern PlayerPmf data_ov002_0210a464;
 extern PlayerPmf data_ov002_0210a484;
@@ -25317,8 +25329,8 @@ extern void (daPly_c::*data_ov002_0210a29c)();
 extern void (daPly_c::*data_ov002_0210a30c)();
 extern void (daPly_c::*data_ov002_0210a334)();
 extern void (daPly_c::*data_ov002_0210a3ac)();
-extern void (daPly_c::*data_ov002_0210a3f4)();
-extern void (daPly_c::*data_ov002_0210a404)();
+extern PlayerCleanupPmf data_ov002_0210a3f4;
+extern PlayerCleanupPmf data_ov002_0210a404;
 extern PlayerCleanupPmf data_ov002_0210a45c;
 extern PlayerCleanupPmf data_ov002_0210a46c;
 extern PlayerCleanupPmf data_ov002_0210a47c;
@@ -26576,7 +26588,7 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_021105ec.mCleanup = data_ov002_0210a4c4.pmf;
     data_ov002_02110604.mInit = data_ov002_0210a4b4.pmf;
     data_ov002_02110604.mMain = data_ov002_0210a494.pmf;
-    data_ov002_02110604.mCleanup = data_ov002_0210a414;
+    data_ov002_02110604.mCleanup = data_ov002_0210a414.pmf;
     data_ov002_0211061c.mCleanup = 0;
     data_ov002_0211061c.mInit = data_ov002_0210a1dc;
     data_ov002_0211061c.mMain = data_ov002_0210a3cc;
@@ -26593,7 +26605,7 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0211067c.mMain = data_ov002_0210a224;
     data_ov002_0211067c.mCleanup = data_ov002_0210a24c;
     data_ov002_02110694.mCleanup = 0;
-    data_ov002_02110694.mInit = data_ov002_0210a42c;
+    data_ov002_02110694.mInit = data_ov002_0210a42c.pmf;
     data_ov002_02110694.mMain = data_ov002_0210a2fc;
     data_ov002_021106ac.mInit = data_ov002_0210a2ec;
     data_ov002_021106ac.mMain = data_ov002_0210a0a4;
@@ -26605,20 +26617,20 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_021106dc.mMain = data_ov002_0210a39c;
     data_ov002_021106dc.mCleanup = data_ov002_0210a3bc;
     data_ov002_021106f4.mInit = data_ov002_0210a2c4;
-    data_ov002_021106f4.mMain = data_ov002_0210a3d4;
-    data_ov002_021106f4.mCleanup = data_ov002_0210a3e4;
+    data_ov002_021106f4.mMain = data_ov002_0210a3d4.pmf;
+    data_ov002_021106f4.mCleanup = data_ov002_0210a3e4.pmf;
     data_ov002_0211070c.mCleanup = 0;
-    data_ov002_0211070c.mInit = data_ov002_0210a3ec;
+    data_ov002_0211070c.mInit = data_ov002_0210a3ec.pmf;
     data_ov002_0211070c.mMain = data_ov002_0210a3b4;
     data_ov002_02110724.mInit = data_ov002_0210a2ac;
     data_ov002_02110724.mCleanup = 0;
     data_ov002_02110724.mMain = data_ov002_02109ef4;
-    data_ov002_0210ffec.mInit = data_ov002_0210a41c;
+    data_ov002_0210ffec.mInit = data_ov002_0210a41c.pmf;
     data_ov002_0210ffec.mMain = data_ov002_0210a06c;
     data_ov002_0210ffec.mCleanup = data_ov002_02109eec;
     data_ov002_02110004.mCleanup = 0;
-    data_ov002_02110004.mInit = data_ov002_0210a43c;
-    data_ov002_02110004.mMain = data_ov002_0210a444;
+    data_ov002_02110004.mInit = data_ov002_0210a43c.pmf;
+    data_ov002_02110004.mMain = data_ov002_0210a444.pmf;
     data_ov002_0211001c.mInit = data_ov002_0210a454.pmf;
     data_ov002_0211001c.mCleanup = 0;
     data_ov002_0211001c.mMain = data_ov002_0210a464.pmf;
@@ -26730,8 +26742,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0211075c[2] = data_ov002_0210a3ac;
     data_ov002_0211075c[3] = data_ov002_0210a074;
     data_ov002_0211075c[4] = data_ov002_0210a334;
-    data_ov002_0211075c[5] = data_ov002_0210a404;
-    data_ov002_0211075c[6] = data_ov002_0210a3f4;
+    data_ov002_0211075c[5] = data_ov002_0210a404.pmf;
+    data_ov002_0211075c[6] = data_ov002_0210a3f4.pmf;
 }
 }
 

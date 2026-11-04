@@ -4412,6 +4412,118 @@
   ],
   "data": [
     {
+      "symbol": "data_ov002_0210a3d4",
+      "address": "0x0210a3d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c17St_Headstand_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a3dc",
+      "address": "0x0210a3dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-step animation script {SetAnim id 1, argument 0}; no relocation."
+    },
+    {
+      "symbol": "data_ov002_0210a3e4",
+      "address": "0x0210a3e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c16St_Climb_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a3ec",
+      "address": "0x0210a3ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c16St_WallJump_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a3f4",
+      "address": "0x0210a3f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020c6fe4Ev as a void state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a3fc",
+      "address": "0x0210a3fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020bd20cEPhii as a three-argument script command; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a404",
+      "address": "0x0210a404",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020c70acEv as a void state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a40c",
+      "address": "0x0210a40c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020bd3a0EPhii as a three-argument script command; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a414",
+      "address": "0x0210a414",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c22St_SwingPlayer_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a41c",
+      "address": "0x0210a41c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c17St_LedgeHang_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a424",
+      "address": "0x0210a424",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two animation ids indexed by mStateStep in St_DeadHit_Init; no relocation."
+    },
+    {
+      "symbol": "data_ov002_0210a42c",
+      "address": "0x0210a42c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c17St_WaterJump_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a434",
+      "address": "0x0210a434",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-step animation script {SetAnim id 188, argument 0}; no relocation."
+    },
+    {
+      "symbol": "data_ov002_0210a43c",
+      "address": "0x0210a43c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c17St_LedgeGrab_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a444",
+      "address": "0x0210a444",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c17St_LedgeGrab_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a44c",
+      "address": "0x0210a44c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020bd250EPhii as a three-argument script command; code word plus zero PMF adjustment."
+    },
+    {
       "symbol": "data_ov002_0210a454",
       "address": "0x0210a454",
       "size": "0x8",
@@ -13090,6 +13202,136 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0210a3d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c17St_Headstand_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020cb15c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a3e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c16St_Climb_CleanupEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020cb568"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a3ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c16St_WallJump_InitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020e17f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a3f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020c6fe4Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020c6fe4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a3fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd20cEPhii",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020bd20c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a404",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020c70acEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020c70ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a40c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd3a0EPhii",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020bd3a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a414",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c22St_SwingPlayer_CleanupEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020d9fc4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a41c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c17St_LedgeHang_InitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020d0c54"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a42c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c17St_WaterJump_InitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020e162c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a43c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c17St_LedgeGrab_InitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020d08b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a444",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c17St_LedgeGrab_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020d0824"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a44c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd250EPhii",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020bd250"
+    },
     {
       "section": ".data",
       "source": "0x0210a454",
