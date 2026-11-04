@@ -98,12 +98,11 @@ extern s16 data_ov065_0211d334[2]; /* yaw speed for the slow and fast hands: 200
 extern KaitendaiResources data_ov065_0211d35c[];
 
 /* local extern: func_020393d4 is the dBgW callback store (see the banner)
- * and has no shared header. RandomIntInternal is declared unsigned here:
- * math/CalcLib.h's int return turns Behavior's `>> 16` into an asr and
- * changes its bytes. */
+ * and has no shared header. RandomIntInternal's named parameter preserves
+ * this TU's @NNN static-initializer aliases. */
 extern "C" {
 extern void func_020393d4(void *p, void *v);
-extern unsigned int RandomIntInternal(int *seed);
+extern int RandomIntInternal(int *seed);
 }
 
 // @symbol daObjCtKaitendai_c_classInit_CT_MECHA06
@@ -167,7 +166,7 @@ int daObjCtKaitendai_c::Behavior() {
 
     case 2: /* random hand */
         if (ApproachLinear(mPrevAngleZ, mPrevAngleX, 50) != 0) {
-            u16 roll = (u16)(RandomIntInternal(&data_0209e650) >> 16);
+            u16 roll = (u16)((u32)RandomIntInternal(&data_0209e650) >> 16);
 
             mPrevAngleX = (s16)((roll % 7) * 200);
             if (roll >= 0x7fff) {
