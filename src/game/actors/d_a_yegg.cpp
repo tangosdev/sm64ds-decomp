@@ -1401,11 +1401,53 @@ int daYegg_c::Render()
  * (func_ov002_020ed998), draws the drop shadow (func_ov002_020ed7f8), moves to
  * the next payout slot once the current one is paid, and bursts when all five
  * slots are used. */
+#ifdef _MSC_VER
+/* Host only (lane FRIENDVIS1, hal/coop_ghost_eggs.h): a coop friend's eggs on
+ * this console. Nothing here reaches mwccarm. */
+extern "C" int port_ghost_egg_begin(void *egg, int saved[4]);
+extern "C" void port_ghost_egg_end(void *egg, const int saved[4]);
+/* A host image without that file (the smoke runners) takes these: every egg
+ * is the ROM's own. */
+extern "C" int port_ghost_egg_begin_none(void *, int saved[4]) { saved[3] = 0; return 0; }
+extern "C" void port_ghost_egg_end_none(void *, const int *) {}
+#pragma comment(linker, "/alternatename:_port_ghost_egg_begin=_port_ghost_egg_begin_none")
+#pragma comment(linker, "/alternatename:_port_ghost_egg_end=_port_ghost_egg_end_none")
+#endif
 int daYegg_c::Behavior()
 {
     Vector3 vin;
     Vector3 vmid;
     Vector3 vout;
+#ifdef _MSC_VER
+    /* 1: a friend's egg that trails his ghost body: the ROM body below runs
+     * with the ghost standing where it is drawn (between draws it is parked
+     * far above), and the end call puts it back. 2: a friend's THROWN egg:
+     * the port set its position on the thrower's sent path; it only animates
+     * and draws (no state, no cylinder, no payout), so the thrower's console
+     * alone owns the hit. 3: that egg's flight ended: the burst's particles
+     * and nothing else (no payout, no star, no sound; the thrower's pop is
+     * his to send). */
+    int portSaved[4];
+    const int portMode = port_ghost_egg_begin(this, portSaved);
+    if (portMode == 2) {
+        mModelAnim.Advance();
+        mModelAnim.ApplyOpacity(0x1f, 0);
+        func_ov002_020ed998();
+        func_ov002_020ed7f8();
+        return 1;
+    }
+    if (portMode == 3) {
+        if (mBurstDone == 0) {
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x3f, mPosX, mPosY, mPosZ);
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x40, mPosX, mPosY, mPosZ);
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x41, mPosX, mPosY, mPosZ);
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x42, mPosX, mPosY, mPosZ);
+            _ZN7fBase_c18MarkForDestructionEv((struct dActor_c*)this);
+            mBurstDone = 1;
+        }
+        return 1;
+    }
+#endif
     func_ov002_020ed684();
     mModelAnim.Advance();
     if (mState != daYegg_STATE_SEEK) {
@@ -1445,6 +1487,10 @@ int daYegg_c::Behavior()
     if (mPayoutIdx >= 5) {
         func_ov002_020edca4(this);
     }
+#ifdef _MSC_VER
+    if (portMode == 1)
+        port_ghost_egg_end(this, portSaved);
+#endif
     return 1;
 }
 

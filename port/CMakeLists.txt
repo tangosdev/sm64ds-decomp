@@ -11985,6 +11985,8 @@ list(APPEND SLICE_COMMS_SOURCES hal/coop_tp.cpp)
 # Run mp1 lane COOPMOVE1: coop phase 2, live enemies and movers kept in step. INERT
 # unless SM64DS_COOP is set in a coop room; see hal/coop_actors.h.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_actors.cpp)
+# run after093, lane FRIENDVIS1: a coop friend's Yoshi eggs on my console, driven from coop_actors.cpp; see hal/coop_ghost_eggs.h.
+list(APPEND SLICE_COMMS_SOURCES hal/coop_ghost_eggs.cpp)
 # Run mp1 lane MOVERS9: always-on [syncstat] sync numbers (per class, per queue, per lane). INERT outside a coop room.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_stats_log.cpp)
 # Run mp1 wave 56 lane PSTAR1: party shared stars. INERT unless SM64DS_PARTY=1.
