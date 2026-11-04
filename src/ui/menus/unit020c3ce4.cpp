@@ -48,7 +48,7 @@ extern Ov007AllocHook data_ov007_02103258;
 extern void MultiStore32Bytes(unsigned val, int *dst, int len);
 extern void MultiStore_Int(int val, int *dst, int len);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern void func_0205a588(int a, int b, int c);
+extern void func_0205a588(void *dst, unsigned char value, unsigned int size);
 
 /* local extern: no include/ header declares the OS heap entry points. */
 extern void *OS_AllocFromHeap(int id, int heap, unsigned int size);
@@ -111,7 +111,7 @@ int func_ov007_020c3d40(const char *name, int n) {
         break;
     case 1:
     case 3:
-        func_0205a588((int)r, 0, n);
+        func_0205a588(r, 0, n);
         break;
     }
     return (int)r;
