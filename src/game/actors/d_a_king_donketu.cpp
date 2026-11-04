@@ -131,6 +131,7 @@ enum daKing_Donketu_c_AssetId {
 #include "Sound.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* Actor ids (symbols/actor_debug_names.tsv gives them in decimal) that this
    boss looks up or spawns. */
@@ -244,10 +245,11 @@ extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_king_donketu_1(Fix12i y, Fix12i x);
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
 extern short data_02082214[];
-extern u16 data_0209e650;
+
 extern u16 DecIfAbove0_Short(void* p);
 extern void func_02012694(unsigned int a, void *b);
-extern int RandomIntInternal(u16* seed);
+/* local extern: CalcLib.h conflicts with DecIfAbove0_Short(void *). */
+extern int RandomIntInternal(int *seed);
 }
 extern "C" {
 extern void d_a_king_donketuPlayLongHold(unsigned int a, unsigned int b, unsigned int c,
@@ -559,7 +561,7 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
 
         c->mHitCooldown = 0x10;
         func_02012694(SND_HIT_REGISTERED, &c->mCamSpacePosX);
-        rnd = RandomIntInternal(&data_0209e650);
+        rnd = RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
         if (((rnd >> 8) & 7) == 0) {
             v.x = c->mPosX;
             v.y = c->mPosY;
@@ -573,7 +575,7 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
                 do {
                     dActor_c* actor = dActor_c::Spawn(ACTOR_COIN, 0, v, 0, c->mAreaId, -1);
                     if (actor != 0) {
-                        rnd = RandomIntInternal(&data_0209e650);
+                        rnd = RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
                         shortY = ((s32)((((u32)rnd >> 8) & 0xf) << 0x1c)) >> 0x10;
                         actor->mPrevAngleX = 0;
                         actor->mPrevAngleY = (s16)shortY;
@@ -1490,7 +1492,10 @@ int daKing_Donketu_c::func_ov073_02120ed0() {
             if (c->mStateScratch == 0) {
                 if (c->DistToCPlayer() < 0x1f4000) {
                     c->mStateScratch = 1;
-                    if ((((unsigned int)RandomIntInternal(&data_0209e650) >> 0x18) & 7) == 0) {
+                    if ((((unsigned int)RandomIntInternal(
+                              reinterpret_cast<int *>(&data_0209e650)) >>
+                          0x18) &
+                         7) == 0) {
                         c->mPhase = 3;
                         c->mHorzSpeed = 0;
                         c->mStateTimer = 0xf;
