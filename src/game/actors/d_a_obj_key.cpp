@@ -194,7 +194,7 @@ extern ObjKeyStateTable data_ov089_02132cec;
  * UpdateContinuous veneer, not the method. */
 extern "C" {
 extern void *data_0209f318;
-extern int data_0209b454;
+extern int gNextActorUpdateMask;
 extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern void func_ov002_020c3dbc(void *player);
@@ -343,7 +343,7 @@ void daObjKey_c::StateFlyToCenter()
             Vector3 *pos;
             Vector3 *camLookAt;
             mFlags |= FLAG_CAM_TAKEOVER;
-            data_0209b454 |= FLAG_CAM_TAKEOVER;
+            gNextActorUpdateMask |= FLAG_CAM_TAKEOVER;
             lookAt = &cam->lookAt;
             camLookAt = &mCamLookAt;
             mCamLookAt.x = lookAt->x;
@@ -417,7 +417,7 @@ void daObjKey_c::StateFlyToCenter()
                     mdCcAcPos_c.flags &= ~CC_DISABLED;
                     cam->mFlags &= ~8;
                     mFlags &= ~FLAG_CAM_TAKEOVER;
-                    data_0209b454 &= ~FLAG_CAM_TAKEOVER;
+                    gNextActorUpdateMask &= ~FLAG_CAM_TAKEOVER;
                 }
             }
         }
@@ -482,7 +482,7 @@ void daObjKey_c::StateStarJump()
             daPly_c *player;
             s32 *playerPos;
             mFlags |= FLAG_CAM_TAKEOVER;
-            data_0209b454 |= FLAG_CAM_TAKEOVER;
+            gNextActorUpdateMask |= FLAG_CAM_TAKEOVER;
             lookAt = &cam->lookAt;
             mSavedCamLookAt.x = lookAt->x;
             pos = &cam->pos;
@@ -571,7 +571,7 @@ void daObjKey_c::StateStarJump()
             cam->SetPos(mSavedCamPos);
             cam->mFlags &= ~8;
             mFlags &= ~FLAG_CAM_TAKEOVER;
-            data_0209b454 &= ~FLAG_CAM_TAKEOVER;
+            gNextActorUpdateMask &= ~FLAG_CAM_TAKEOVER;
             mStep++;
             return;
         }
@@ -622,7 +622,7 @@ void daObjKey_c::StateDrop()
             Vector3 *lookAt = &cam->lookAt;
             Vector3 *pos = &cam->pos;
             mFlags |= FLAG_CAM_TAKEOVER;
-            data_0209b454 |= FLAG_CAM_TAKEOVER;
+            gNextActorUpdateMask |= FLAG_CAM_TAKEOVER;
             mSavedCamLookAt.x = lookAt->x;
             mSavedCamLookAt.y = lookAt->y;
             mSavedCamLookAt.z = lookAt->z;
@@ -662,7 +662,7 @@ void daObjKey_c::StateDrop()
         cam->SetPos(mSavedCamPos);
         cam->mFlags &= ~8;
         mFlags &= ~FLAG_CAM_TAKEOVER;
-        data_0209b454 &= ~FLAG_CAM_TAKEOVER;
+        gNextActorUpdateMask &= ~FLAG_CAM_TAKEOVER;
         mStep++;
         mdCcAcPos_c.flags &= ~CC_DISABLED;
         mParticleID[0] = 0;

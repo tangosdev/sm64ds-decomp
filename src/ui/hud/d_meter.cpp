@@ -97,7 +97,10 @@ struct OamAttr;
 struct Matrix2x2;
 
 extern "C" {
-extern unsigned char data_ov002_02111184;
+/* RenderTimeTimer draws the data_0209d4c8 timer only while this is set. The
+   writers start that timer with it: daPly_c on surface type 15 and the Koopa
+   the Quick race (daRNk_c). InitResources clears it. */
+extern unsigned char gShowRaceTimer;
 extern Timer data_0209d4c8;
 extern struct OamAttr data_ov002_0210ce80;
 extern struct OamAttr data_ov002_0210c6c0;
@@ -106,14 +109,14 @@ extern void OamRender10_d_meter(int sub, struct OamAttr *attr, int x, int y, int
 extern volatile unsigned short data_ov002_0210c208[];
 extern unsigned char data_0209f250;
 extern unsigned char data_ov002_02111178;
-extern signed char data_0209f2f4;
+extern signed char gNumLives;
 struct OamAttr;
 extern void *data_0209f394[];
 extern u8 data_ov002_02111180;
 extern void *data_0209f318;
 extern ControllerInput data_0209f498[];
 extern int data_0208ee44;
-extern u32 data_0209b454;
+extern u32 gNextActorUpdateMask;
 extern u8 data_0209d660;
 extern signed char data_0209f310[];
 /* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and
@@ -146,7 +149,7 @@ extern int GetOwnerLanguage(void);
 
 extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
-extern unsigned char data_0209d454;
+extern unsigned char gSubScreenLayers;
 extern unsigned char data_ov002_0211117c[];
 extern struct OamAttr *data_ov002_0210c254[];
 extern struct OamAttr *data_ov002_0210c278[];
@@ -320,7 +323,7 @@ int dMeter_c::InitResources() {
     }
 
     data_ov002_02111188 = 0xB4;
-    data_ov002_02111184 = 0;
+    gShowRaceTimer = 0;
     {
         u8 idx = *(volatile u8 *)&data_0209f250;
         data_ov002_0211117c[0] = ((daPly_c *)((idx ? (void *volatile *)data_0209f394
@@ -495,7 +498,7 @@ int dMeter_c::Render() {
         unsigned char v = data_0209f20c;
         if (((data_0209f2c4 | v | gVsExitScreenActive) & 0xff) == 0) {
             RenderHealthMeter();
-            if (Event::GetBit(0x1d) == 0) {
+            if (Event::GetBit(EVENT_COLLECTING_STAR) == 0) {
                 RenderCoinCount();
                 RenderRedCoins();
                 RenderSilverStars();
@@ -553,7 +556,7 @@ void dMeter_c::UpdateHealthMeter() {
         mHealthMeterHoldTimer -= data_0208ee44;
     if (mHealthTickTimer != 0)
         mHealthTickTimer -= data_0208ee44;
-    if (Event::GetBit(0x1d)) {
+    if (Event::GetBit(EVENT_COLLECTING_STAR)) {
         unsigned char s = mHealthMeterState;
         if (s != 0) {
             if (s < 5)
@@ -658,7 +661,7 @@ void dMeter_c::UpdateHealthMeter() {
             mHealthMeterState = 6;
         return;
     case 6:
-        if (Event::GetBit(0x1d) == 0)
+        if (Event::GetBit(EVENT_COLLECTING_STAR) == 0)
             mHealthMeterState = 1;
         return;
     }
@@ -713,7 +716,7 @@ void dMeter_c::UpdateVsTimer() {
             data_0209f204 = 1;
             data_ov002_02111188 = 0x3c;
             func_02012790(0x29);
-            data_0209d454 &= ~4;
+            gSubScreenLayers &= ~4;
         }
     }
 
@@ -965,7 +968,7 @@ void dMeter_c::RenderCameraButtons() {
     if (t != 0)
         data_ov002_02111180 = t - data_0208ee44;
 
-    if (data_0209b454 & 0x40000000)
+    if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
         return;
 
     if (cam->mFlags & 0x1000) {
@@ -1030,7 +1033,7 @@ void dMeter_c::RenderLifeCount() {
         OAM::Render(0, OAM::LIFE_ICONS[player->mCharacter], mLifeCountX, 0xa, -1, 1, 0x1000, 0x1000,
                     0, -1);
         OAM::Render(false, &OAM::TIMES, mLifeCountX + 0x10, 0xa, -1, 1, 0);
-        CalculateDigits((unsigned short)data_0209f2f4);
+        CalculateDigits((unsigned short)gNumLives);
         int x = mLifeCountX + 0x18;
         for (int i = 0; i < 3; i++) {
             signed char d = mDigits[i];
@@ -1042,7 +1045,7 @@ void dMeter_c::RenderLifeCount() {
     } else {
         OAM::RenderSub(OAM::LIFE_ICONS[player->mCharacter], mLifeCountX, 0xa, -1, 1);
         OAM::Render(true, &OAM::TIMES, mLifeCountX + 0x10, 0xa, -1, 1, 0);
-        CalculateDigits((unsigned short)data_0209f2f4);
+        CalculateDigits((unsigned short)gNumLives);
         int i;
         int x = mLifeCountX + 0x18;
         for (i = 0; i < 3; i++) {
@@ -1091,7 +1094,7 @@ void dMeter_c::RenderTimeTimer() {
     unsigned long long sec;
     unsigned long long centi;
 
-    if (data_ov002_02111184 == 0)
+    if (gShowRaceTimer == 0)
         return;
 
     t = data_0209d4c8.GetTime() << 6;

@@ -123,7 +123,7 @@ extern s32 data_020a0db0;
 extern u8 data_0209caa0[0x50];
 extern Matrix4x3 data_020a0e68;
 extern u8 data_02092128;
-extern signed char data_0209f2f4[];
+extern signed char gNumLives[];
 extern u8 data_ov001_020ab938;
 extern u8 data_ov001_020ab940;
 extern void *data_ov001_020abb18[];
@@ -285,7 +285,7 @@ void dScStarSel_c::func_ov003_020ae1a4(int value) {
 
 // @symbol _ZN12dScStarSel_c19func_ov003_020ae238Ev
 // ROM 0x020ae238, size 0x120. Draws the life counter: the LIFE_ICONS entry for
-// LIFE_ICON, the TIMES sprite, and the three digits of data_0209f2f4[0].
+// LIFE_ICON, the TIMES sprite, and the three digits of gNumLives[0].
 void dScStarSel_c::func_ov003_020ae238() {
     int x;
     int y;
@@ -298,7 +298,7 @@ void dScStarSel_c::func_ov003_020ae238() {
     }
     OAM::Render(0, OAM::LIFE_ICONS[LIFE_ICON(this)], x, y + 8, -1, -1, 0x1000, 0x1000, 0, -1);
     OAM::Render(0, &OAM::TIMES, x + 0x10, y + 8, -1, -1, 0);
-    func_ov003_020ae1a4((unsigned short)data_0209f2f4[0]);
+    func_ov003_020ae1a4((unsigned short)gNumLives[0]);
     {
         int i = 0;
         x += 0x18;
@@ -965,7 +965,7 @@ void DecompressLZ16(void *, void *);
 int IsStarCollected(int, int);
 
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 }
 
 #define REG16(a) (*(vu16 *)(a))
@@ -1316,7 +1316,7 @@ s32 dScStarSel_c::InitResources() {
     SPIN_ANGLE(this) = 0;
     BOUNCE_DELAY(this) = 0x78;
     ANIM_FLIP(this) = 0;
-    data_0209d454 = 0x10;
+    gSubScreenLayers = 0x10;
     REG32(0x4000000) = (REG32(0x4000000) & ~0x1F00) | (data_0209d45c << 8);
     REG32(0x4001000) = (REG32(0x4001000) & ~0x1F00) | 0x1000;
     LIFE_ICON(this) = data_0209caa0[0x41];

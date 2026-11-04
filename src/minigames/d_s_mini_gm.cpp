@@ -83,7 +83,7 @@ extern MgEntry gMgMenuRow;
 extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
 extern u32 data_0209caa0[];
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern u8 data_0209d45c;
 extern short data_0209d474[];
 extern short data_0209d494[];
@@ -230,7 +230,7 @@ s32 dScMiniGm_c::InitResources()
     GX::SetBankForTexPltt(0x20);
 
     data_0209d45c &= ~0x1f;
-    data_0209d454 &= ~0x1f;
+    gSubScreenLayers &= ~0x1f;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;
     GX::SetGraphicsMode(1, 0, 1);
@@ -365,12 +365,12 @@ s32 dScMiniGm_c::InitResources()
 
     data_0209b2fc = 0;
     data_0209d45c |= 0x11;
-    data_0209d454 |= 0x11;
+    gSubScreenLayers |= 0x11;
     data_0209d45c &= ~2;
-    data_0209d454 &= ~2;
+    gSubScreenLayers &= ~2;
     data_0209d45c |= 4;
     data_0209d45c &= ~8;
-    data_0209d454 |= 0xc;
+    gSubScreenLayers |= 0xc;
     Sound::LoadAndSetMusic_Layer1(5);
     return 1;
 }

@@ -121,7 +121,7 @@ extern SlotState pmf_Slot3_StateGameOver;
 extern SlotState pmf_Slot3_StateDone;
 extern int LoadFile(int handle);
 
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern void RenderOamMainScreen(void *, int, int, int, int);
 extern void *sSlotsSlotBlinkSprites;
@@ -891,7 +891,7 @@ s32 dScMgSlot3_c::InitResources() {
         Deallocate((void *)h);
     }
 
-    data_0209d454 = 0x14;
+    gSubScreenLayers = 0x14;
     G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
 
     Mascot_Load((char *)&mMascot);
@@ -948,7 +948,7 @@ void SlotLamp_Start(void *raw) {
     SlotLamp *lamp = (SlotLamp *)raw;
     lamp->mTimer = 0x48;
     lamp->mOn = 1;
-    data_0209d454 |= 2;
+    gSubScreenLayers |= 2;
 }
 }
 
@@ -963,14 +963,14 @@ void SlotLamp_Tick(void *o_) {
         return;
     lamp->mOn ^= 1;
     if (lamp->mOn != 0)
-        data_0209d454 |= 2;
+        gSubScreenLayers |= 2;
     else
-        data_0209d454 &= ~2;
+        gSubScreenLayers &= ~2;
 }
 }
 
 // @symbol SlotLamp_Clear
-/* mPayoutLamp (0x469c, a SlotLamp) blinks bit 1 of data_0209d454 the same
+/* mPayoutLamp (0x469c, a SlotLamp) blinks bit 1 of gSubScreenLayers the same
  * way: a timer and an on flag. This clears it, 0210c180 starts it and
  * 0210c1a8 ticks it. */
 extern "C" { /* .c-derived member: C linkage for the whole block */
@@ -1556,7 +1556,7 @@ s32 dScMgSlot1_c::InitResources() {
         Deallocate((void *)h);
     }
 
-    data_0209d454 = 0x1d;
+    gSubScreenLayers = 0x1d;
     *(volatile u16 *)0x4000050 = 0;
     G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x1c, 7, 9);
 

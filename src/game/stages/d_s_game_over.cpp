@@ -118,7 +118,7 @@ extern int data_0208ee44;
 /* Scalars, not tables: the two BG-enable bit registers, main and sub --
  * the spelling the rest of the tree uses for this pair. */
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern u8 data_0209f204;
 /* u16* spelling for 0730's `p += ...` and 16-bit stores, no cast needed.
  * Ergonomics, not a constraint: the void* form compiles to identical bytes
@@ -299,7 +299,7 @@ s32 dScGameOver_c::InitResources() {
         mGlyphUnused[i] = 0;
     }
 
-    data_0209d454 = 0x14;
+    gSubScreenLayers = 0x14;
     *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (data_0209d45c << 8);
     *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1400;
     data_0209f204 = 1;
@@ -519,7 +519,7 @@ void dScGameOver_c::func_ov003_020b060c() {
         }
         this->mIntroPhase = 2;
         data_0209d45c |= 1;
-        data_0209d454 |= 3;
+        gSubScreenLayers |= 3;
         break;
     }
 }

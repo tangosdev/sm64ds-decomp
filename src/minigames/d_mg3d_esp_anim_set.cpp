@@ -125,7 +125,7 @@ extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle_3;
 extern void *sEsp3DTextureAnim;
 extern s16 data_02082214[];
 extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char gSubScreenLayers;
 extern int sMgClearBannerX;
 extern int sMgClearBannerY;
 }
@@ -1475,7 +1475,7 @@ s32 dScMg3DEsp_c::InitResources()
     int r4v;
 
     data_0209d45c = 0x11;
-    data_0209d454 = 0x10;
+    gSubScreenLayers = 0x10;
     G3X::SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
 
@@ -1509,7 +1509,7 @@ s32 dScMg3DEsp_c::InitResources()
     mModel1.mat4x3 = (Matrix4x3 &)sEsp3DIdentityMtx;
     mModel2.mat4x3 = tmp;
 
-    data_0209d454 |= 4;
+    gSubScreenLayers |= 4;
     /* sub BG2CNT, then the sub BG2 scroll offsets */
     *(volatile unsigned short*)0x400100c &= ~3;
     *(volatile unsigned short*)0x400100c &= ~0x40;

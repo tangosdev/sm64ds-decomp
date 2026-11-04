@@ -253,7 +253,10 @@ extern u8 data_0209f274; /* doubles the far-away threshold when set */
 extern u8 data_0209f2c4;
 extern u8 data_0209f20c;
 extern u8 gVsExitScreenActive;
-extern u32 data_0209b464; /* flag mask that forces thinking; 0 means "any" */
+/* This frame's actor update mask, copied from gNextActorUpdateMask by
+   dScStage_c::Behavior: while non-zero, only actors whose mFlags share a bit
+   with it behave. */
+extern u32 gActorUpdateMask;
 }
 int dActor_c::BeforeBehavior()
 {
@@ -299,7 +302,7 @@ int dActor_c::BeforeBehavior()
     }
 
     if (((data_0209f2c4 | data_0209f20c | gVsExitScreenActive) & 0xff) != 0 ||
-        (((mFlags & 9) == 9 || (data_0209b464 != 0 && (mFlags & data_0209b464) == 0)) &&
+        (((mFlags & 9) == 9 || (gActorUpdateMask != 0 && (mFlags & gActorUpdateMask) == 0)) &&
          data_0209fc68 == 0))
         return 0;
 

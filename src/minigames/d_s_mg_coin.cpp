@@ -162,7 +162,7 @@ extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
 
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern void func_0203b9b4(int *p, int v);
 }
@@ -1624,7 +1624,7 @@ int dScMgCoin_c::InitResources() {
     DecompressLZ16(b, (void *)0x6400000);
     GX::LoadOBJPltt((const void *)a, 0, 0x100);
 
-    data_0209d454 |= 8;
+    gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x1210;
 

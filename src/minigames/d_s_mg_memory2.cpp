@@ -150,7 +150,7 @@ int Mg_GetSavedRecord1(void);
 void Mg_SetTopScreenYOffset(int v);
 void Mg_PlaceBannersOnTopScreen(void);
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 }
 
 /* The scene seen through a pointer stepped one element at a time, for the
@@ -1269,7 +1269,7 @@ s32 dScMgMemory2_c::InitResources() {
     GXS::LoadOBJPltt(palette, 0, 0x100);
     Deallocate(art);
     Deallocate(palette);
-    data_0209d454 = 0x18;
+    gSubScreenLayers = 0x18;
     ResetGame();
     /* 0x4660..0x471c is dScMgSingle3DBase_c's minigame camera. */
     Camera_InitDealerView((char *)pad_4660);
