@@ -138,7 +138,7 @@ extern "C" {
 void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 ang);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void MulVec3Mat4x3(void *src, void *m, void *dst);
-void Vec3_Add(void *out, void *a, void *b);
+void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 void SubVec3(void *a, void *b, void *c);
@@ -178,7 +178,7 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[mWaypointIndex],
                   &data_020a0e68, &tmp[0]);
-    Vec3_Add(&tmp[1], &mBasePosX, &tmp[0]);
+    Vec3_Add((Vector3 *)&tmp[1], (const Vector3 *)&mBasePosX, (const Vector3 *)&tmp[0]);
     mPosX = tmp[1].x;
     mPosY = tmp[1].y;
     mPosZ = tmp[1].z;
@@ -404,7 +404,7 @@ int daObjRotateUpdownLift_c::Behavior()
                   &data_020a0e68, &cur);
     MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[prevIndex],
                   &data_020a0e68, &prev);
-    Vec3_Add(&target, &mBasePosX, &cur);
+    Vec3_Add(&target, (const Vector3 *)&mBasePosX, &cur);
     Vec3_Sub(&remain, (const Vector3 *)&mPosX, &target);
     Vec3_Sub(&edge, &cur, &prev);
     span = LenVec3(&edge);
@@ -413,7 +413,7 @@ int daObjRotateUpdownLift_c::Behavior()
     mAngleX = (s16)(mPitchBase + (s16)FX_MUL(mPitchStep, along));
 
     if (dist == 0 || dist <= stepLen) {
-        Vec3_Add(&snapped, &mBasePosX, &cur);
+        Vec3_Add(&snapped, (const Vector3 *)&mBasePosX, &cur);
         mPosX = snapped.x;
         mPosY = snapped.y;
         mPosZ = snapped.z;
@@ -498,7 +498,8 @@ int daObjRotateUpdownLift_c::InitResources()
     mWaypointIndex = (u8)(param1 & 0xf);
 
     if (mWaypointIndex == 2) {
-        Vec3_Add(&spawnAt, &mBasePosX, &data_ov091_02134cdc[mVariant].node[0]);
+        Vec3_Add(&spawnAt, (const Vector3 *)&mBasePosX,
+                 (const Vector3 *)&data_ov091_02134cdc[mVariant].node[0]);
         spawnAt.y += data_ov091_02134d1c[mVariant].y;
         Spawn(0x1d, 0xffff, spawnAt, 0, mAreaId, -1);
     }
@@ -511,7 +512,7 @@ int daObjRotateUpdownLift_c::InitResources()
         node = mWaypointIndex;
         MulVec3Mat4x3(tbl + i * stride + node * 0xc, &data_020a0e68, &rotated);
     }
-    Vec3_Add(&placed, &mBasePosX, &rotated);
+    Vec3_Add(&placed, (const Vector3 *)&mBasePosX, &rotated);
     mPosX = placed.x;
     mPosY = placed.y;
     mPosZ = placed.z;
