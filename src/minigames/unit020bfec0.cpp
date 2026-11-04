@@ -68,8 +68,8 @@ void MulMat4x3Mat4x3(void *, void *, void *);
 void __cxa_vec_cleanup(void *, unsigned int, unsigned int, void (*)(void *));
 void func_020169d8(void *, int, unsigned int);
 void func_0203cebc(void *, void *, void *, void *);
-/* local extern: CalcLib also types SubVec3; keep this TU's void* SubVec3
- * prototype local while giving AddVec3 its definition's parameter types. */
+/* local extern: CalcLib conflicts with this TU's void* Vec3_HorzAngle
+ * spelling; keep these declarations local but use the shared vector types. */
 void AddVec3(Vector3 *, Vector3 *, Vector3 *);
 int DotVec3(const Vector3 *, const Vector3 *);
 void Matrix4x3_ApplyInPlaceToRotationX(void *, short);
@@ -80,7 +80,9 @@ void Quaternion_FromVector3(void *, void *, void *);
 void Quaternion_Normalize(void *);
 void Quaternion_SLerp(void *, void *, int, void *);
 int RandomIntInternal(int *);
-void SubVec3(void *, void *, void *);
+/* local extern: CalcLib cannot be included without conflicting with this TU's
+ * other helper spellings, including its Vec3_HorzAngle declaration. */
+void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 void Vec3_Add(void *, void *, void *);
 short Vec3_HorzAngle(const void *, const void *);
 short Vec3_VertAngle(const void *, const void *);
@@ -652,7 +654,7 @@ void FallingPetal_Update(char *self) {
     dot = DotVec3(&PETAL(self)->mAxis, (const Vector3 *)&v1);
     Vec3_MulScalar(&v2, &PETAL(self)->mAxis, dot);
     Vec3_MulScalarInPlace((int *)&v2, 0x300);
-    SubVec3(&PETAL(self)->mVel, &v2, &PETAL(self)->mVel);
+    SubVec3(&PETAL(self)->mVel, (Vector3 *)&v2, &PETAL(self)->mVel);
     v3.x = v1.x;
     v3.y = v1.y;
     v3.z = v1.z;

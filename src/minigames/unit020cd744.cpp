@@ -1213,7 +1213,7 @@ typedef struct {
 
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" void CrossVec3(const Vec3 *a, const Vec3 *b, Vec3 *out);
-extern "C" void NormalizeVec3(int *v, int *out);
+extern "C" void NormalizeVec3(const Vector3 *v, Vector3 *out);
 
 #pragma push
 extern "C" void TrmpLine_ComputeNormals(char *self) {
@@ -1259,7 +1259,7 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
                 SubVec3((Vector3 *)p - 4, (Vector3 *)p + 4, (Vector3 *)&rowEdge);
 
             CrossVec3(&columnEdge, &rowEdge, normal);
-            NormalizeVec3((int *)normal, (int *)normal);
+            NormalizeVec3((const Vector3 *)normal, (Vector3 *)normal);
 
             normal->x = FX_MUL(normal->x, 0xff8);
             normal->y = FX_MUL(normal->y, 0xff8);

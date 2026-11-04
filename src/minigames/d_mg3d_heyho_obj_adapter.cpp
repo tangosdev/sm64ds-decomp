@@ -538,7 +538,8 @@ void Heyho_StartMotionPatrolBob(int *c) {
 /* ---- Heyho_MotionPatrolBob ---- */
 namespace n020c627c {
 extern "C" {
-extern void AddVec3(void* a, void* b, void* c);
+/* local extern: helper namespaces in this TU retain differing legacy spellings. */
+extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void Heyho_CheckHitB(void* c);
 extern short data_02082214[];
 

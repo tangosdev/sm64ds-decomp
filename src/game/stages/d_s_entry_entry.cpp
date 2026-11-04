@@ -25,13 +25,13 @@ extern "C" void *dScEntry_c_classInit_ENTRY(void) {
  * InitGrid, UpdateRipple and DrawGrid. */
 
 extern "C" {
-/* local extern: no header declares these arm9 vector and matrix helpers;
-   they take the Vector3 layout, spelled EntryMeshVec here (see its header).
-   SubVec3 is the exception: its definition takes Vector3, so the calls cast. */
+/* local extern: no header declares these arm9 vector and matrix helpers.
+   EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
+   receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
 int InvMat4x3(Matrix4x3 *, Matrix4x3 *);
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 void CrossVec3(const EntryMeshVec *, const EntryMeshVec *, EntryMeshVec *);
-void NormalizeVec3(const EntryMeshVec *, EntryMeshVec *);
+void NormalizeVec3(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 unsigned int func_02045ad8(const void *);
@@ -212,7 +212,7 @@ void EntryMesh::CalcNormals() {
 
             CrossVec3(&ej, &ei, &n);
             n.z >>= 1;
-            NormalizeVec3(&n, &n);
+            NormalizeVec3((const Vector3 *)&n, (Vector3 *)&n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
             p++;
         }
