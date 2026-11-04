@@ -164,7 +164,8 @@ int func_ov002_020df7f4(void *c);
 void func_02012694(unsigned int a, void *pos);
 int ApproachAngle(short *p, int target, int a, int b, int c);
 int Vec3_Dist(const void *a, const void *b);
-short Vec3_HorzAngle(const void *a, const void *b);
+// local extern: CalcLib.h conflicts with retained opaque Vec3_Dist and Vec3_VertAngle prototypes.
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const void *a, const void *b);
 unsigned int RandomIntInternal(void *seed);
 void Matrix4x3_FromRotationY(void *m, int angle);
@@ -384,7 +385,7 @@ int daOwl_c::func_ov094_02135c28()
 
     if (Vec3_Dist(&mPosX, &mAnchorX) > 0x190000) {
         mStateTimer = 0x32;
-        mWanderAngleY = Vec3_HorzAngle(&mPosX, &mAnchorX);
+        mWanderAngleY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mAnchorX);
     } else if (OWL_TIMER(this) == 0) {
         mWanderAngleY = (s16)(((u32)RandomIntInternal(data_0209e650) >> 8) << 12);
         mStateTimer = (s16)((((u32)RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x32);
@@ -440,7 +441,7 @@ int daOwl_c::func_ov094_02135ee0()
     w.x = v.x;
     w.y = v.y;
     w.z = v.z;
-    ApproachAngle(&mPrevAngleY, Vec3_HorzAngle(&mPosX, &w), 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngleY, Vec3_HorzAngle(&mPos, &w), 0xa, 0x200, 0x100);
     Vector3 u;
     v.y += 0xc8000;
     u.x = v.x - 0;
@@ -502,7 +503,7 @@ int daOwl_c::func_ov094_02136024()
                 *py = *py + mPosY;
                 *pz = *pz + mPosZ;
             }
-            mPrevAngleY = Vec3_HorzAngle((OwlVec *)&mPosX, (OwlVec *)&mAnchorX);
+            mPrevAngleY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mAnchorX);
             mAngleY = mPrevAngleY;
             func_ov094_02136188(OWL_STATE_HOVER);
         }
