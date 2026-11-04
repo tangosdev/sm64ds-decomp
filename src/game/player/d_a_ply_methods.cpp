@@ -1710,7 +1710,9 @@ void daPly_c::func_ov002_020bf36c(void *arg) {
 extern "C" {
 int daPly_c::func_ov002_020bf40c() {
     extern unsigned char NumStars(void);
-    extern void AddVec3(void *, void *, void *);
+    /* local extern: CalcLib conflicts with this TU's body-local math
+     * declarations; retain this signature at the call site. */
+    extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
     extern void *data_0209f318;
     extern Vector3 data_ov002_0210a590;
     extern void func_0200d858(void *, const Vector3 *);
@@ -3200,7 +3202,9 @@ int func_ov002_020c2270(daPly_c *c, void *p1, void *p2) {
 extern "C" {
 int daPly_c::func_ov002_020c231c() {
     extern void SubVec3(void*, void*, void*);
-    extern void AddVec3(void*, void*, void*);
+    /* local extern: CalcLib conflicts with this TU's body-local math
+     * declarations; retain this signature at the call site. */
+    extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
     extern s16 data_02082214[];
     extern int func_ov002_020c2270(void*, void*, void*);
     Vector3 tmp;
