@@ -32,7 +32,7 @@ int InvMat4x3(Matrix4x3 *, Matrix4x3 *);
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 void CrossVec3(const EntryMeshVec *, const EntryMeshVec *, EntryMeshVec *);
 void NormalizeVec3(const Vector3 *, Vector3 *);
-void Vec3_Sub(EntryMeshVec *, const EntryMeshVec *, const Vector3 *);
+void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 unsigned int func_02045ad8(const void *);
 unsigned int func_02045a50(const void *, unsigned int);
@@ -157,7 +157,7 @@ void EntryMesh::TouchAt(Vector3 *touch) {
     origin.x = 0;
     origin.y = 0x15e000;
     origin.z = -0x320000;
-    Vec3_Sub(&out, &origin, touch);
+    Vec3_Sub((Vector3 *)&out, (const Vector3 *)&origin, touch);
     Vec3_Asr((Vector3 *)&r, (Vector3 *)&out, 3);
     r.x = r.x + 0xfa000;
     r.y = r.y + 0xfa000;
