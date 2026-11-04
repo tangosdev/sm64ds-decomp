@@ -411,6 +411,19 @@ class RomBuildEnrollment(unittest.TestCase):
                                    manifest={"entries": [entry, duplicate]})
         self.assertIn("declared by multiple entries", raised.exception.output)
 
+        # A raw object that needed no scratch rewrite records plain data-verified.
+        entry["verification"]["linkcheck"]["result"] = "data-verified"
+        self.assertEqual(RB.intact_tu_policies(
+            {"src/actors/TU.cpp"}, manifest=manifest),
+            {"src/actors/TU.cpp": entry})
+        for result in ("module-data-verified", "scratch-link-verified",
+                       "link-verified", "failed"):
+            entry["verification"]["linkcheck"]["result"] = result
+            with self.assertRaises(RB.BuildError) as raised:
+                RB.intact_tu_policies({"src/actors/TU.cpp"}, manifest=manifest)
+            self.assertIn("ordinary link evidence", raised.exception.output)
+        entry["verification"]["linkcheck"]["result"] = "scratch-data-verified"
+
         entry["verification"]["linkcheck"]["tuRanges"][1]["differingBytes"] = 1
         with self.assertRaises(RB.BuildError) as raised:
             RB.intact_tu_policies({"src/actors/TU.cpp"}, manifest=manifest)
