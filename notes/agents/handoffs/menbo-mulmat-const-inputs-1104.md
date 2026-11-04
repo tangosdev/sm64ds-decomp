@@ -2,8 +2,8 @@
 
 ## Identity and resumption
 
-- Task: Menbo matrix helper const inputs; candidate for draft PR after current-base byte proof.
-- Base: `main` at `f23e35b7d9511c50d4ca06a901404cd4bcf1a4b2`.
+- Task: Menbo matrix helper const inputs; draft PR #4810.
+- Base: `main` at `d745d7bb058430ae95cbe64bb22797b253a8349f`.
 - Independent source review is still required. This handoff records producer checks, not independent acceptance.
 
 ## Change and evidence
@@ -12,12 +12,13 @@
 
 In `InitResources`, `mAnmModel.data.transforms + idx` is a raw transform-storage view and is passed as `const Matrix4x3 *`; `data_020a0e68` is both the second input and output, matching the helper's in-place alias handling.
 
-## Verification on `f23e35b7d9511c50d4ca06a901404cd4bcf1a4b2`
+## Verification on `d745d7bb058430ae95cbe64bb22797b253a8349f`
 
 - `python tools/tubuild.py verify ov090/daMenbo_c --no-write --verdict`: 25/25 match, object isolation and relocation destinations clean, emission order correct. Exit 1 only for the pre-existing unlicensed `__sinit_d_a_menbo.cpp` section (0x1c0 bytes); no function mismatch.
-- `python tools/prepush_linkcheck.py --range f23e35b7d9511c50d4ca06a901404cd4bcf1a4b2..HEAD`: 26 checked, 25 verified, one blind `__sinit` warning, zero blocking.
+- `python tools/prepush_linkcheck.py --range d745d7bb058430ae95cbe64bb22797b253a8349f..HEAD`: 26 checked, 25 verified, one blind `__sinit` warning, zero blocking.
 - `python tools/rombuild.py -j16 --no-rom`: PASS; 106/106 modules exact, 11,395/11,395 source-built functions exact, 470/470 source-owned data claims exact, zero mismatches.
-- `python tools/check_decl_agreement.py --changed f23e35b7d9511c50d4ca06a901404cd4bcf1a4b2`: no new declaration disagreements.
+- `python tools/check_decl_agreement.py --changed d745d7bb058430ae95cbe64bb22797b253a8349f`: no new declaration disagreements.
+- `python tools/source_style.py --base d745d7bb058430ae95cbe64bb22797b253a8349f --files src/game/actors/d_a_menbo.cpp`: zero findings with pinned clang-format 19.1.7.
 - `python tools/port_refcheck.py`: 217/217 references resolve.
 - `python tools/check_dead_references.py`: no new dead references or broken Markdown links.
 
