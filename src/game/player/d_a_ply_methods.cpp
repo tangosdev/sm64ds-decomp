@@ -610,130 +610,201 @@ union PlayerScriptCommand {
     ScriptCommand pmf;
 };
 
-extern "C" int _ZN7daPly_c21St_StuckInGround_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c12St_Land_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c12St_Talk_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19func_ov002_020bccfcEPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c12St_Talk_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c12St_Spin_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c15St_Spin_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c22St_CrazedCrate_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c21St_WaitQuicksand_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c13St_Climb_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c13St_Climb_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" void _ZN7daPly_c19func_ov002_020c71e0Ev(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c16St_WallJump_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c16St_Climb_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19func_ov002_020bcd38EPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c17St_SweepKick_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c17St_Headstand_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c16St_WallJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" void _ZN7daPly_c19func_ov002_020c6fe4Ev(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19func_ov002_020bd20cEPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
-extern "C" void _ZN7daPly_c19func_ov002_020c70acEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19func_ov002_020bd3a0EPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c22St_SwingPlayer_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c17St_LedgeHang_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c17St_WaterJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c17St_LedgeGrab_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c17St_LedgeGrab_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19func_ov002_020bd250EPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c20St_CeilingGrate_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c21St_StuckInGround_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c12St_Land_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c12St_Talk_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19func_ov002_020bccfcEPhii(daPly_c *, unsigned char *, int,
+                                      int); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c12St_Talk_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c12St_Spin_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c15St_Spin_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c22St_CrazedCrate_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c21St_WaitQuicksand_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c13St_Climb_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c13St_Climb_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" void
+_ZN7daPly_c19func_ov002_020c71e0Ev(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c16St_WallJump_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c16St_Climb_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19func_ov002_020bcd38EPhii(daPly_c *, unsigned char *, int,
+                                      int); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c17St_SweepKick_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c17St_Headstand_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c16St_WallJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" void
+_ZN7daPly_c19func_ov002_020c6fe4Ev(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19func_ov002_020bd20cEPhii(daPly_c *, unsigned char *, int,
+                                      int); // local extern: flat state-descriptor address
+extern "C" void
+_ZN7daPly_c19func_ov002_020c70acEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19func_ov002_020bd3a0EPhii(daPly_c *, unsigned char *, int,
+                                      int); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c22St_SwingPlayer_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c17St_LedgeHang_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c17St_WaterJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c17St_LedgeGrab_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c17St_LedgeGrab_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19func_ov002_020bd250EPhii(daPly_c *, unsigned char *, int,
+                                      int); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c20St_CeilingGrate_InitEv(daPly_c *); // local extern: flat state-descriptor address
 extern "C" void func_ov002_020e1c20(char *);
-extern "C" int _ZN7daPly_c20St_CeilingGrate_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" void _ZN7daPly_c19func_ov002_020c7350Ev(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19func_ov002_020bd354EPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c20St_CeilingGrate_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" void
+_ZN7daPly_c19func_ov002_020c7350Ev(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19func_ov002_020bd354EPhii(daPly_c *, unsigned char *, int,
+                                      int); // local extern: flat state-descriptor address
 extern "C" void func_ov002_020e1e70(char *);
-extern "C" int _ZN7daPly_c21St_YoshiPower_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" void _ZN7daPly_c19func_ov002_020c75f0Ev(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19St_SwingPlayer_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c17St_SlideKick_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c20St_InYoshiMouth_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c20St_InYoshiMouth_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19St_SwingPlayer_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c25St_GrabBowserTail_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c22St_GrabBowserTail_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c22St_GrabBowserTail_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c15St_DeadPit_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c20St_StomachSlide_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c12St_Dive_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c22St_GroundPound_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19St_GroundPound_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19St_GroundPound_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c17St_PunchKick_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c17St_PunchKick_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c17St_EndingFly_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c16St_LongJump_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c16St_LongJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c19func_ov002_020bd480EPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c16St_SideFlip_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c16St_BackFlip_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int _ZN7daPly_c14St_Crouch_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c21St_YoshiPower_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" void
+_ZN7daPly_c19func_ov002_020c75f0Ev(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19St_SwingPlayer_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c17St_SlideKick_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c20St_InYoshiMouth_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c20St_InYoshiMouth_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19St_SwingPlayer_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c25St_GrabBowserTail_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c22St_GrabBowserTail_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c22St_GrabBowserTail_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c15St_DeadPit_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c20St_StomachSlide_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c12St_Dive_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c22St_GroundPound_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19St_GroundPound_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19St_GroundPound_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c17St_PunchKick_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c17St_PunchKick_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c17St_EndingFly_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c16St_LongJump_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c16St_LongJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c19func_ov002_020bd480EPhii(daPly_c *, unsigned char *, int,
+                                      int); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c16St_SideFlip_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c16St_BackFlip_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int
+_ZN7daPly_c14St_Crouch_MainEv(daPly_c *); // local extern: flat state-descriptor address
 
-PlayerPmf data_ov002_0210a354 = { (void (*)(daPly_c *))_ZN7daPly_c21St_StuckInGround_MainEv };
-PlayerPmf data_ov002_0210a35c = { (void (*)(daPly_c *))_ZN7daPly_c12St_Land_MainEv };
-PlayerPmf data_ov002_0210a364 = { (void (*)(daPly_c *))_ZN7daPly_c12St_Talk_InitEv };
-PlayerScriptCommand data_ov002_0210a36c = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bccfcEPhii };
-PlayerPmf data_ov002_0210a374 = { (void (*)(daPly_c *))_ZN7daPly_c12St_Talk_MainEv };
-PlayerPmf data_ov002_0210a37c = { (void (*)(daPly_c *))_ZN7daPly_c12St_Spin_MainEv };
-PlayerPmf data_ov002_0210a384 = { (void (*)(daPly_c *))_ZN7daPly_c15St_Spin_CleanupEv };
-PlayerPmf data_ov002_0210a38c = { (void (*)(daPly_c *))_ZN7daPly_c22St_CrazedCrate_CleanupEv };
-PlayerPmf data_ov002_0210a394 = { (void (*)(daPly_c *))_ZN7daPly_c21St_WaitQuicksand_MainEv };
-PlayerPmf data_ov002_0210a39c = { (void (*)(daPly_c *))_ZN7daPly_c13St_Climb_MainEv };
-PlayerPmf data_ov002_0210a3a4 = { (void (*)(daPly_c *))_ZN7daPly_c13St_Climb_InitEv };
-PlayerCleanupPmf data_ov002_0210a3ac = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c71e0Ev };
-PlayerPmf data_ov002_0210a3b4 = { (void (*)(daPly_c *))_ZN7daPly_c16St_WallJump_MainEv };
-PlayerPmf data_ov002_0210a3bc = { (void (*)(daPly_c *))_ZN7daPly_c16St_Climb_CleanupEv };
-PlayerScriptCommand data_ov002_0210a3c4 = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bcd38EPhii };
-PlayerPmf data_ov002_0210a3cc = { (void (*)(daPly_c *))_ZN7daPly_c17St_SweepKick_MainEv };
-PlayerPmf data_ov002_0210a3d4 = { (void (*)(daPly_c *))_ZN7daPly_c17St_Headstand_MainEv };
+PlayerPmf data_ov002_0210a354 = {(void (*)(daPly_c *))_ZN7daPly_c21St_StuckInGround_MainEv};
+PlayerPmf data_ov002_0210a35c = {(void (*)(daPly_c *))_ZN7daPly_c12St_Land_MainEv};
+PlayerPmf data_ov002_0210a364 = {(void (*)(daPly_c *))_ZN7daPly_c12St_Talk_InitEv};
+PlayerScriptCommand data_ov002_0210a36c = {
+    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bccfcEPhii};
+PlayerPmf data_ov002_0210a374 = {(void (*)(daPly_c *))_ZN7daPly_c12St_Talk_MainEv};
+PlayerPmf data_ov002_0210a37c = {(void (*)(daPly_c *))_ZN7daPly_c12St_Spin_MainEv};
+PlayerPmf data_ov002_0210a384 = {(void (*)(daPly_c *))_ZN7daPly_c15St_Spin_CleanupEv};
+PlayerPmf data_ov002_0210a38c = {(void (*)(daPly_c *))_ZN7daPly_c22St_CrazedCrate_CleanupEv};
+PlayerPmf data_ov002_0210a394 = {(void (*)(daPly_c *))_ZN7daPly_c21St_WaitQuicksand_MainEv};
+PlayerPmf data_ov002_0210a39c = {(void (*)(daPly_c *))_ZN7daPly_c13St_Climb_MainEv};
+PlayerPmf data_ov002_0210a3a4 = {(void (*)(daPly_c *))_ZN7daPly_c13St_Climb_InitEv};
+PlayerCleanupPmf data_ov002_0210a3ac = {(void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c71e0Ev};
+PlayerPmf data_ov002_0210a3b4 = {(void (*)(daPly_c *))_ZN7daPly_c16St_WallJump_MainEv};
+PlayerPmf data_ov002_0210a3bc = {(void (*)(daPly_c *))_ZN7daPly_c16St_Climb_CleanupEv};
+PlayerScriptCommand data_ov002_0210a3c4 = {
+    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bcd38EPhii};
+PlayerPmf data_ov002_0210a3cc = {(void (*)(daPly_c *))_ZN7daPly_c17St_SweepKick_MainEv};
+PlayerPmf data_ov002_0210a3d4 = {(void (*)(daPly_c *))_ZN7daPly_c17St_Headstand_MainEv};
 AnimScriptStep data_ov002_0210a3dc[] = {{1, 0}};
-PlayerPmf data_ov002_0210a3e4 = { (void (*)(daPly_c *))_ZN7daPly_c16St_Climb_CleanupEv };
-PlayerPmf data_ov002_0210a3ec = { (void (*)(daPly_c *))_ZN7daPly_c16St_WallJump_InitEv };
-PlayerCleanupPmf data_ov002_0210a3f4 = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c6fe4Ev };
-PlayerScriptCommand data_ov002_0210a3fc = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd20cEPhii };
-PlayerCleanupPmf data_ov002_0210a404 = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c70acEv };
-PlayerScriptCommand data_ov002_0210a40c = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd3a0EPhii };
-PlayerPmf data_ov002_0210a414 = { (void (*)(daPly_c *))_ZN7daPly_c22St_SwingPlayer_CleanupEv };
-PlayerPmf data_ov002_0210a41c = { (void (*)(daPly_c *))_ZN7daPly_c17St_LedgeHang_InitEv };
+PlayerPmf data_ov002_0210a3e4 = {(void (*)(daPly_c *))_ZN7daPly_c16St_Climb_CleanupEv};
+PlayerPmf data_ov002_0210a3ec = {(void (*)(daPly_c *))_ZN7daPly_c16St_WallJump_InitEv};
+PlayerCleanupPmf data_ov002_0210a3f4 = {(void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c6fe4Ev};
+PlayerScriptCommand data_ov002_0210a3fc = {
+    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd20cEPhii};
+PlayerCleanupPmf data_ov002_0210a404 = {(void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c70acEv};
+PlayerScriptCommand data_ov002_0210a40c = {
+    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd3a0EPhii};
+PlayerPmf data_ov002_0210a414 = {(void (*)(daPly_c *))_ZN7daPly_c22St_SwingPlayer_CleanupEv};
+PlayerPmf data_ov002_0210a41c = {(void (*)(daPly_c *))_ZN7daPly_c17St_LedgeHang_InitEv};
 int data_ov002_0210a424[] = {19, 21};
-PlayerPmf data_ov002_0210a42c = { (void (*)(daPly_c *))_ZN7daPly_c17St_WaterJump_InitEv };
+PlayerPmf data_ov002_0210a42c = {(void (*)(daPly_c *))_ZN7daPly_c17St_WaterJump_InitEv};
 AnimScriptStep data_ov002_0210a434[] = {{188, 0}};
-PlayerPmf data_ov002_0210a43c = { (void (*)(daPly_c *))_ZN7daPly_c17St_LedgeGrab_InitEv };
-PlayerPmf data_ov002_0210a444 = { (void (*)(daPly_c *))_ZN7daPly_c17St_LedgeGrab_MainEv };
-PlayerScriptCommand data_ov002_0210a44c = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd250EPhii };
-PlayerPmf data_ov002_0210a454 = { (void (*)(daPly_c *))_ZN7daPly_c20St_CeilingGrate_InitEv };
-PlayerCleanupPmf data_ov002_0210a45c = { (void (*)(daPly_c *))func_ov002_020e1c20 };
-PlayerPmf data_ov002_0210a464 = { (void (*)(daPly_c *))_ZN7daPly_c20St_CeilingGrate_MainEv };
-PlayerCleanupPmf data_ov002_0210a46c = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c7350Ev };
-PlayerScriptCommand data_ov002_0210a474 = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd354EPhii };
-PlayerCleanupPmf data_ov002_0210a47c = { (void (*)(daPly_c *))func_ov002_020e1e70 };
-PlayerPmf data_ov002_0210a484 = { (void (*)(daPly_c *))_ZN7daPly_c21St_YoshiPower_CleanupEv };
-PlayerCleanupPmf data_ov002_0210a48c = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c75f0Ev };
-PlayerPmf data_ov002_0210a494 = { (void (*)(daPly_c *))_ZN7daPly_c19St_SwingPlayer_MainEv };
-PlayerPmf data_ov002_0210a49c = { (void (*)(daPly_c *))_ZN7daPly_c17St_SlideKick_InitEv };
-PlayerPmf data_ov002_0210a4a4 = { (void (*)(daPly_c *))_ZN7daPly_c20St_InYoshiMouth_InitEv };
-PlayerPmf data_ov002_0210a4ac = { (void (*)(daPly_c *))_ZN7daPly_c20St_InYoshiMouth_MainEv };
-PlayerPmf data_ov002_0210a4b4 = { (void (*)(daPly_c *))_ZN7daPly_c19St_SwingPlayer_InitEv };
+PlayerPmf data_ov002_0210a43c = {(void (*)(daPly_c *))_ZN7daPly_c17St_LedgeGrab_InitEv};
+PlayerPmf data_ov002_0210a444 = {(void (*)(daPly_c *))_ZN7daPly_c17St_LedgeGrab_MainEv};
+PlayerScriptCommand data_ov002_0210a44c = {
+    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd250EPhii};
+PlayerPmf data_ov002_0210a454 = {(void (*)(daPly_c *))_ZN7daPly_c20St_CeilingGrate_InitEv};
+PlayerCleanupPmf data_ov002_0210a45c = {(void (*)(daPly_c *))func_ov002_020e1c20};
+PlayerPmf data_ov002_0210a464 = {(void (*)(daPly_c *))_ZN7daPly_c20St_CeilingGrate_MainEv};
+PlayerCleanupPmf data_ov002_0210a46c = {(void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c7350Ev};
+PlayerScriptCommand data_ov002_0210a474 = {
+    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd354EPhii};
+PlayerCleanupPmf data_ov002_0210a47c = {(void (*)(daPly_c *))func_ov002_020e1e70};
+PlayerPmf data_ov002_0210a484 = {(void (*)(daPly_c *))_ZN7daPly_c21St_YoshiPower_CleanupEv};
+PlayerCleanupPmf data_ov002_0210a48c = {(void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c75f0Ev};
+PlayerPmf data_ov002_0210a494 = {(void (*)(daPly_c *))_ZN7daPly_c19St_SwingPlayer_MainEv};
+PlayerPmf data_ov002_0210a49c = {(void (*)(daPly_c *))_ZN7daPly_c17St_SlideKick_InitEv};
+PlayerPmf data_ov002_0210a4a4 = {(void (*)(daPly_c *))_ZN7daPly_c20St_InYoshiMouth_InitEv};
+PlayerPmf data_ov002_0210a4ac = {(void (*)(daPly_c *))_ZN7daPly_c20St_InYoshiMouth_MainEv};
+PlayerPmf data_ov002_0210a4b4 = {(void (*)(daPly_c *))_ZN7daPly_c19St_SwingPlayer_InitEv};
 AnimScriptStep data_ov002_0210a4bc[] = {{191, 0}};
-PlayerPmf data_ov002_0210a4c4 = { (void (*)(daPly_c *))_ZN7daPly_c25St_GrabBowserTail_CleanupEv };
-PlayerPmf data_ov002_0210a4cc = { (void (*)(daPly_c *))_ZN7daPly_c22St_GrabBowserTail_MainEv };
-PlayerPmf data_ov002_0210a4d4 = { (void (*)(daPly_c *))_ZN7daPly_c22St_GrabBowserTail_InitEv };
-PlayerPmf data_ov002_0210a4dc = { (void (*)(daPly_c *))_ZN7daPly_c15St_DeadPit_MainEv };
-PlayerPmf data_ov002_0210a4e4 = { (void (*)(daPly_c *))_ZN7daPly_c20St_StomachSlide_MainEv };
-PlayerPmf data_ov002_0210a4ec = { (void (*)(daPly_c *))_ZN7daPly_c12St_Dive_InitEv };
-PlayerPmf data_ov002_0210a4f4 = { (void (*)(daPly_c *))_ZN7daPly_c22St_GroundPound_CleanupEv };
-PlayerPmf data_ov002_0210a4fc = { (void (*)(daPly_c *))_ZN7daPly_c19St_GroundPound_MainEv };
-PlayerPmf data_ov002_0210a504 = { (void (*)(daPly_c *))_ZN7daPly_c19St_GroundPound_InitEv };
-PlayerPmf data_ov002_0210a50c = { (void (*)(daPly_c *))_ZN7daPly_c17St_PunchKick_MainEv };
-PlayerPmf data_ov002_0210a514 = { (void (*)(daPly_c *))_ZN7daPly_c17St_PunchKick_InitEv };
-PlayerPmf data_ov002_0210a51c = { (void (*)(daPly_c *))_ZN7daPly_c17St_EndingFly_InitEv };
-PlayerPmf data_ov002_0210a524 = { (void (*)(daPly_c *))_ZN7daPly_c16St_LongJump_MainEv };
-PlayerPmf data_ov002_0210a52c = { (void (*)(daPly_c *))_ZN7daPly_c16St_LongJump_InitEv };
-PlayerScriptCommand data_ov002_0210a534 = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd480EPhii };
-PlayerPmf data_ov002_0210a53c = { (void (*)(daPly_c *))_ZN7daPly_c16St_SideFlip_MainEv };
-PlayerPmf data_ov002_0210a544 = { (void (*)(daPly_c *))_ZN7daPly_c16St_BackFlip_InitEv };
-PlayerPmf data_ov002_0210a54c = { (void (*)(daPly_c *))_ZN7daPly_c14St_Crouch_MainEv };
+PlayerPmf data_ov002_0210a4c4 = {(void (*)(daPly_c *))_ZN7daPly_c25St_GrabBowserTail_CleanupEv};
+PlayerPmf data_ov002_0210a4cc = {(void (*)(daPly_c *))_ZN7daPly_c22St_GrabBowserTail_MainEv};
+PlayerPmf data_ov002_0210a4d4 = {(void (*)(daPly_c *))_ZN7daPly_c22St_GrabBowserTail_InitEv};
+PlayerPmf data_ov002_0210a4dc = {(void (*)(daPly_c *))_ZN7daPly_c15St_DeadPit_MainEv};
+PlayerPmf data_ov002_0210a4e4 = {(void (*)(daPly_c *))_ZN7daPly_c20St_StomachSlide_MainEv};
+PlayerPmf data_ov002_0210a4ec = {(void (*)(daPly_c *))_ZN7daPly_c12St_Dive_InitEv};
+PlayerPmf data_ov002_0210a4f4 = {(void (*)(daPly_c *))_ZN7daPly_c22St_GroundPound_CleanupEv};
+PlayerPmf data_ov002_0210a4fc = {(void (*)(daPly_c *))_ZN7daPly_c19St_GroundPound_MainEv};
+PlayerPmf data_ov002_0210a504 = {(void (*)(daPly_c *))_ZN7daPly_c19St_GroundPound_InitEv};
+PlayerPmf data_ov002_0210a50c = {(void (*)(daPly_c *))_ZN7daPly_c17St_PunchKick_MainEv};
+PlayerPmf data_ov002_0210a514 = {(void (*)(daPly_c *))_ZN7daPly_c17St_PunchKick_InitEv};
+PlayerPmf data_ov002_0210a51c = {(void (*)(daPly_c *))_ZN7daPly_c17St_EndingFly_InitEv};
+PlayerPmf data_ov002_0210a524 = {(void (*)(daPly_c *))_ZN7daPly_c16St_LongJump_MainEv};
+PlayerPmf data_ov002_0210a52c = {(void (*)(daPly_c *))_ZN7daPly_c16St_LongJump_InitEv};
+PlayerScriptCommand data_ov002_0210a534 = {
+    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd480EPhii};
+PlayerPmf data_ov002_0210a53c = {(void (*)(daPly_c *))_ZN7daPly_c16St_SideFlip_MainEv};
+PlayerPmf data_ov002_0210a544 = {(void (*)(daPly_c *))_ZN7daPly_c16St_BackFlip_InitEv};
+PlayerPmf data_ov002_0210a54c = {(void (*)(daPly_c *))_ZN7daPly_c14St_Crouch_MainEv};
 
 /* Three three-entry animation-id tables. The state handlers step mStateStep
  * through them and pass the selected id to SetAnim. */
@@ -24975,7 +25046,6 @@ extern PlayerCleanupPmf data_ov002_0210a45c;
 extern PlayerCleanupPmf data_ov002_0210a46c;
 extern PlayerCleanupPmf data_ov002_0210a47c;
 extern PlayerCleanupPmf data_ov002_0210a48c;
-
 
 /* daPly_c handler tables; the second is indexed by mNoCtrlKind, the third by mStateWork. */
 extern void (daPly_c::*data_ov002_0211073c[4])();

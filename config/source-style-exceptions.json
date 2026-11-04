@@ -1184,6 +1184,462 @@
       "count": 2,
       "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. No header declares IRQ. Follow-up: give IRQ a header once its primitives are reconstructed as C++.",
       "evidence": "arm9/isdoverlay 6/6 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from src/unnamed/arm9/0206/func_0206d868.cpp on main, which this fold absorbs, with its `local extern:` note"
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c12St_Dive_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c12St_Land_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c12St_Spin_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c12St_Talk_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c12St_Talk_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c13St_Climb_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c13St_Climb_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c14St_Crouch_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c15St_DeadPit_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c15St_Spin_CleanupEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c16St_BackFlip_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c16St_Climb_CleanupEv",
+      "count": 4,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c16St_LongJump_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c16St_LongJump_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c16St_SideFlip_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c16St_WallJump_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c16St_WallJump_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c17St_EndingFly_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c17St_Headstand_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c17St_LedgeGrab_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c17St_LedgeGrab_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c17St_LedgeHang_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c17St_PunchKick_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c17St_PunchKick_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c17St_SlideKick_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c17St_SweepKick_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c17St_WaterJump_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19St_GroundPound_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19St_GroundPound_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19St_SwingPlayer_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19St_SwingPlayer_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020bccfcEPhii",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020bcd38EPhii",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020bd20cEPhii",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020bd250EPhii",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020bd354EPhii",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020bd3a0EPhii",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020bd480EPhii",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020c6fe4Ev",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020c70acEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020c71e0Ev",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020c7350Ev",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c19func_ov002_020c75f0Ev",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c20St_CeilingGrate_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c20St_CeilingGrate_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c20St_InYoshiMouth_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c20St_InYoshiMouth_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c20St_StomachSlide_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c21St_StuckInGround_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c21St_WaitQuicksand_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c21St_YoshiPower_CleanupEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c22St_CrazedCrate_CleanupEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c22St_GrabBowserTail_InitEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c22St_GrabBowserTail_MainEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c22St_GroundPound_CleanupEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c22St_SwingPlayer_CleanupEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daPly_c25St_GrabBowserTail_CleanupEv",
+      "count": 3,
+      "reason": "Player state descriptors store flat handler code addresses. C++ cannot convert a pointer-to-member to a plain function pointer in a constant initializer, so this data block names the ROM symbols directly; the header still declares the real member functions and the flat declarations are marked as local extern address carriers.",
+      "evidence": "ov002/daPly_c descriptor block 0x0210a354..0x0210a554; tubuild verify 624/624 MATCH; production prepare_intact_object passes; 64 data rows and 94 .data relocations."
     }
   ]
 }
