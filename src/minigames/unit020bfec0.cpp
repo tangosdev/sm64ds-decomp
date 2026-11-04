@@ -86,7 +86,7 @@ short Vec3_HorzAngle(const void *, const void *);
 short Vec3_VertAngle(const void *, const void *);
 void Vec3_MulScalar(void *, void *, int);
 void Vec3_MulScalarInPlace(int *, int);
-void Vec3_Sub(void *, void *, void *);
+void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void *SharedFilePtr_Construct_TexSeq(void *, unsigned int);
 int SharedFilePtr_Destruct_Anim(void *);
 int SharedFilePtr_Destruct_TexSeq(void *);
@@ -2281,8 +2281,8 @@ void MascotWalker_StartNextPath(char *c) {
         WALKER(c)->mPos.z = el[2];
     }
     WALKER(c)->mPathPoint += 1;
-    Vec3_Sub(sp8, &WALKER(c)->mPos,
-             (char *)((int *)WALKER(c)->mPath)[1] + WALKER(c)->mPathPoint * 0xc);
+    Vec3_Sub((Vector3 *)sp8, (const Vector3 *)&WALKER(c)->mPos,
+             (const Vector3 *)((char *)((int *)WALKER(c)->mPath)[1] + WALKER(c)->mPathPoint * 0xc));
     WALKER(c)->mDir.x = sp8[0];
     WALKER(c)->mDir.y = sp8[1];
     WALKER(c)->mDir.z = sp8[2];
@@ -2362,7 +2362,8 @@ void MascotWalker_StateWalk(char *c) {
             path = (char *)WALKER(c)->mPath;
             idx = WALKER(c)->mPathPoint * 0xc;
             arr = *(char **)(path + 4);
-            Vec3_Sub(&dir, &WALKER(c)->mPos, (Vector3 *)(arr + idx));
+            Vec3_Sub((::Vector3 *)&dir, (const ::Vector3 *)&WALKER(c)->mPos,
+                     (const ::Vector3 *)(arr + idx));
 
             WALKER(c)->mDir.x = dir.x;
             WALKER(c)->mDir.y = dir.y;
