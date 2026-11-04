@@ -637,7 +637,7 @@ extern s8 data_ov066_0211ae00;
 extern s8 data_ov066_0211ae08;
 extern s8 data_ov066_0211ae10;
 extern short data_02082314;
-extern short data_02092144[];
+extern short gPlayerHealth[];
 extern short gNumCoins[];
 extern short data_020a4bc0;
 extern short data_020a4bc4;
