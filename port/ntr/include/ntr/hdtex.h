@@ -103,10 +103,11 @@ void hdtex_dump(uint64_t name, int width, int height, const uint32_t *argb);
 int hdtex_lookup(uint64_t name, int width, int height,
                  std::vector<uint32_t> &out);
 
-// hdtex_lookup for a hdtex_name2 name, with the fallback: when the pack has no
-// file by that name and have_words is set, the texture's hdtex_name name is
-// computed from the two geometry words and looked up instead. That second
-// hash runs only on that miss.
+// hdtex_lookup for a hdtex_name2 name, with the fallback: when have_words is
+// set, the texture's hdtex_name name is computed from the two geometry words
+// and looked up too, and the file from the higher-priority directory wins
+// (mod order first, name version second; the new name wins a tie). The second
+// hash is skipped only when the new name hit the top directory.
 int hdtex_lookup2(uint64_t name2, int have_words, uint32_t teximage,
                   uint32_t plttbase, int width, int height,
                   std::vector<uint32_t> &out);

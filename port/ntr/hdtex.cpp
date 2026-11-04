@@ -794,12 +794,25 @@ int hdtex_lookup2(uint64_t name, int have_words, uint32_t teximage,
 {
     if (!g_pack_indexed || g_paused || width <= 0 || height <= 0) return 0;
     auto found = g_names->find(name);
-    if (found == g_names->end() && have_words) {
-        // THE OLD NAME, and only here, after the new one missed: every pack
-        // made before hdtex_name2 is named by hdtex_name. When the index is
-        // on, hdtex_name2 has already computed it for this same bind.
-        name = g_index_path ? g_last.v1 : name_v1(teximage, plttbase);
-        found = g_names->find(name);
+    if (have_words && (found == g_names->end() || found->second > 0)) {
+        /* THE OLD NAME, AND MOD ORDER BEFORE NAME VERSION. Every pack made
+           before hdtex_name2 is named by hdtex_name, so the old name is asked
+           for too. Each entry's value is the rank of the directory that
+           answers for it (index_pack walks them highest priority first: the
+           later mod, then the earlier ones, the main pack last), and the
+           better rank wins: a higher mod's old-name file beats a lower pack's
+           new-name file for the same texture. The new name wins only a tie,
+           both files in one directory. A new-name hit in the top directory
+           cannot be beaten, so it skips the second hash. When the index is
+           on, hdtex_name2 has already computed the old name for this bind. */
+        const uint64_t old_name =
+            g_index_path ? g_last.v1 : name_v1(teximage, plttbase);
+        const auto old_found = g_names->find(old_name);
+        if (old_found != g_names->end() &&
+            (found == g_names->end() || old_found->second < found->second)) {
+            found = old_found;
+            name = old_name;
+        }
     }
     if (found == g_names->end()) {
         // THE COMMON CASE, and it is one or two hash-set lookups with no file
