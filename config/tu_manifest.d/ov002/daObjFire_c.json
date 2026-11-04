@@ -17,8 +17,7 @@
       "end": "0x020b5a18"
     },
     {
-      "name": ".data.head",
-      "input_section": ".data",
+      "name": ".data",
       "start": "0x02108edc",
       "end": "0x02108fb4"
     }
@@ -173,7 +172,7 @@
   "production_mode": "intact-object",
   "relocations": [
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108ee0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -183,7 +182,7 @@
       "target_address": "0x02108ee8"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108ee4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -193,7 +192,7 @@
       "target_address": "0x0208e390"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108edc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -203,7 +202,7 @@
       "target_address": "0x0209a764"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108ef8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -213,7 +212,7 @@
       "target_address": "0x020b59e0"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f14",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -223,7 +222,7 @@
       "target_address": "0x020b59a8"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f34",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -233,7 +232,7 @@
       "target_address": "0x02108edc"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f74",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -243,7 +242,7 @@
       "target_address": "0x02043494"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f70",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -253,7 +252,7 @@
       "target_address": "0x0204349c"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -263,7 +262,7 @@
       "target_address": "0x0204357c"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f68",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -273,7 +272,7 @@
       "target_address": "0x02043ac0"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -283,7 +282,7 @@
       "target_address": "0x02043af0"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f44",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -293,7 +292,7 @@
       "target_address": "0x02043bf0"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108fb0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -303,7 +302,7 @@
       "target_address": "0x020100dc"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108fac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -313,7 +312,7 @@
       "target_address": "0x02010124"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108fa8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -323,7 +322,7 @@
       "target_address": "0x0201012c"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108fa4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -333,7 +332,7 @@
       "target_address": "0x02010130"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108fa0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -343,7 +342,7 @@
       "target_address": "0x02010134"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -353,7 +352,7 @@
       "target_address": "0x02010138"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f98",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -363,7 +362,7 @@
       "target_address": "0x0201013c"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f94",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -373,7 +372,7 @@
       "target_address": "0x02010140"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f90",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -383,7 +382,7 @@
       "target_address": "0x02010144"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -393,7 +392,7 @@
       "target_address": "0x02010148"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f88",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -403,7 +402,7 @@
       "target_address": "0x0201014c"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f64",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -413,7 +412,7 @@
       "target_address": "0x02010f6c"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f60",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -423,7 +422,7 @@
       "target_address": "0x02010f78"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f58",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -433,7 +432,7 @@
       "target_address": "0x02010fc8"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f54",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -443,7 +442,7 @@
       "target_address": "0x02010fd4"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -453,7 +452,7 @@
       "target_address": "0x02011214"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f48",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -463,7 +462,7 @@
       "target_address": "0x02011220"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f40",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -473,7 +472,7 @@
       "target_address": "0x02011244"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -483,7 +482,7 @@
       "target_address": "0x02011268"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -493,7 +492,7 @@
       "target_address": "0x020b5764"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f84",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -503,7 +502,7 @@
       "target_address": "0x020b599c"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f80",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -513,7 +512,7 @@
       "target_address": "0x020b59a0"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f50",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -523,7 +522,7 @@
       "target_address": "0x020b57a8"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f38",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -533,7 +532,7 @@
       "target_address": "0x020b5940"
     },
     {
-      "section": ".data.head",
+      "section": ".data",
       "source": "0x02108f78",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -622,7 +621,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data.head",
+          "section": ".data",
           "start": "0x02108edc",
           "end": "0x02108fb4",
           "differingBytes": 0,
@@ -640,7 +639,7 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".data.head",
+            "section": ".data",
             "original": [
               12,
               16,

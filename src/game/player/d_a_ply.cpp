@@ -1,7 +1,7 @@
 //cpp
 // @symbol daPly_c_classInit
 #include "daPly_c.h"
-#include "daPly_anim.h"
+#include "EndingFlyPoint.h"
 
 /* Reconstructed source-style name: SM64DS proves daPly_c through RTTI,
  * allocation size, vtable identity, and the PLAYER registry profile;
@@ -11,9 +11,12 @@ extern "C" daPly_c *daPly_c_classInit() {
     return new daPly_c;
 }
 
-/* Uniform cubic B-spline control points: {speed, x, y, z}.  The spline
-   evaluator blends four consecutive rows and advances by speed / 1000. */
-Anim2fec data_ov002_0210a8b8[27] = {
+/* The path St_EndingFly_Main flies the player along after
+   StartEndingCutscene: uniform cubic B-spline control points circling the
+   origin at radius ~4000 for two laps while climbing from y 713 to 2300.
+   daPly_c::func_ov002_020c2fec blends four consecutive rows and advances by
+   speed / 1000; the trailing speed-0 rows end the flight. */
+EndingFlyPoint gEndingFlyPath[27] = {
     {20, 0, 713, -2970},      {30, 0, 680, -3500},      {40, 1000, 700, -4000},
     {50, 2500, 750, -3500},   {50, 3500, 800, -2000},   {50, 4000, 850, 0},
     {50, 3500, 900, 2000},    {50, 2000, 950, 3500},    {50, 0, 1000, 4000},
