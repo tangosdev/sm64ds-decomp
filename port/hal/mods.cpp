@@ -1184,6 +1184,11 @@ int relatch(const char *reason, const char *list_json)
     const unsigned long dropped = port_fs_mod_relatch_reset();
     port_fs_mods_relatch_reset();
     port_nitrofs_patch_relatch();
+    /* TEXSWAP2: a new list starts with the replacements showing. The key's
+       pause is a session toggle; left set across a relatch, removing every
+       mod after a press to DS would keep the port's own HD pack off with no
+       texture mod on to press the key again (review REVTEXSWAP2). */
+    ntr::hdtex_set_paused(0);
     const int tex = ntr::hdtex_reindex();
     if (ui_old != ui_new) {
         const int a = port_menu_hostimg_hd_ui_reset(), b = port_settings_page_hd_ui_reset(), c = port_menu_pause_hd_ui_reset(),
