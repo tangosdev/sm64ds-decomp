@@ -53,6 +53,8 @@
 #include "types.h"
 #include "common.h"
 #include "daPly_c.h"
+#include "EndingFlyPoint.h"
+#include "SpawnInfo.h"
 #include "dExtAnm2Model_c.h"
 #include "PlayerInput.h"
 #include "SharedFilePtr.h"
@@ -80,6 +82,8 @@
 #include "Memory.h"
 #include "cstd.h"
 #include "math/Approach.h"
+
+extern "C" daPly_c *daPly_c_classInit();
 
 /* ---------------------------------------------------------------------------
  * Shadow types and ABI stand-ins that cannot live inside a function body.
@@ -112,7 +116,7 @@ struct CameraRaw;
  * below is the body's own, moved out unchanged, and the body keeps its own
  * declaration of the object. */
 struct Entry18 { s16 val; /* 0x0 */ char _pad[0x16]; };
-struct Anim2fec { short a; short x; short y; short z; };
+extern EndingFlyPoint gEndingFlyPath[];
 struct ObjTeleport { s16 x, y, z; u16 param; };
 struct State2i { int a; int b; };
 struct S18a { short f0; char pad[0x16]; };
@@ -246,22 +250,166 @@ int daPly_c::func_ov002_020bcd38(unsigned char *params, int beginFrame, int endF
 }
 
 /* Free C-linkage script-animation update on a daPly_c. The array-backed
- * entry retains the retail two-word stack snapshot under 2004/b56 C++.
- * w[0] is the animation ID; w[1] is the signed animation parameter.
+ * AnimScriptStep retains the retail two-word stack snapshot under 2004/b56 C++.
  * Scalar SetAnim/particle ABI calls and the raw spawned-prop view remain. */
 extern "C" {
-typedef struct { int w[2]; } AnimEntry27;
+/* One step of a Player animation script: w[0] is the SetAnim id (0 ends the
+ * script), w[1] its argument (0x40000000 or 0). An array, not two named
+ * fields: named fields move func_ov002_020bcdf0's stack copy of the step. */
+typedef struct {
+    int w[2];
+} AnimScriptStep;
+
+/* The five one-step scripts data_ov002_0210a7a0 points at: {0xb3}, {0xb7},
+ * {1}, {0xbc} and {0xbf}. Retail emits them among the pointer-to-member
+ * constants at 0x02109db8..0x0210a554, in function order, which this file
+ * does not reproduce yet, so they stay ROM data until that band does. */
+extern AnimScriptStep data_ov002_02109ff4[];
+extern AnimScriptStep data_ov002_0210a1d4[];
+extern AnimScriptStep data_ov002_0210a3dc[];
+extern AnimScriptStep data_ov002_0210a434[];
+extern AnimScriptStep data_ov002_0210a4bc[];
+
+/* Player animation scripts, frame windows, hurt tables, and body-model
+ * pointer tables. All values and pointer targets are read by the state
+ * handlers below; the three SharedFilePtr* arrays feed func_ov002_020e5948. */
+extern u32 data_ov002_0210a7e8[];
+extern SharedFilePtr data_ov002_0210ec50;
+extern SharedFilePtr data_ov002_0210ebb8;
+extern SharedFilePtr data_ov002_0210ec60;
+extern SharedFilePtr data_ov002_0210e818;
+extern SharedFilePtr data_ov002_0210e690;
+extern SharedFilePtr data_ov002_0210eb20;
+extern SharedFilePtr data_ov002_0210e758;
+extern SharedFilePtr data_ov002_0210e7a8;
+extern SharedFilePtr data_ov002_0210ec38;
+extern SharedFilePtr data_ov002_0210eb00;
+extern SharedFilePtr data_ov002_0210e790;
+extern SharedFilePtr data_ov002_0210e7f0;
+
+int data_ov002_0210a59c[3] = {0x2a000, 0x34000, 0x45000};
+int data_ov002_0210a5a8[3] = {83, 79, 75};
+int data_ov002_0210a5b4[3] = {82, 81, 76};
+int data_ov002_0210a5c0[3] = {56, 57, 58};
+u16 data_ov002_0210a5cc[8] = {5, 7, 6, 8, 2, 6, 3, 13};
+u16 data_ov002_0210a5dc[8] = {5, 9, 6, 10, 2, 8, 0, 0};
+AnimScriptStep data_ov002_0210a5ec[2] = {
+    {192, 0x40000000},
+    {0, 0},
+};
+AnimScriptStep data_ov002_0210a5fc[2] = {
+    {193, 0x40000000},
+    {0, 0},
+};
+u32 data_ov002_0210a60c[4] = {88, 87, 89, 90};
+AnimScriptStep data_ov002_0210a61c[2] = {
+    {178, 0x40000000},
+    {0, 0},
+};
+AnimScriptStep data_ov002_0210a62c[2] = {
+    {184, 0x40000000},
+    {185, 0},
+};
+AnimScriptStep data_ov002_0210a63c[2] = {
+    {182, 0x40000000},
+    {0, 0},
+};
+AnimScriptStep data_ov002_0210a64c[2] = {
+    {184, 0x40000000},
+    {185, 0},
+};
+AnimScriptStep data_ov002_0210a65c[2] = {
+    {190, 0x40000000},
+    {188, 0},
+};
+AnimScriptStep data_ov002_0210a66c[2] = {
+    {189, 0x40000000},
+    {190, 0},
+};
+AnimScriptStep data_ov002_0210a67c[2] = {
+    {1, 0x40000000},
+    {0, 0},
+};
+SharedFilePtr *data_ov002_0210a68c[4] = {
+    &data_ov002_0210ec50,
+    &data_ov002_0210ebb8,
+    &data_ov002_0210ec60,
+    &data_ov002_0210e818,
+};
+SharedFilePtr *data_ov002_0210a69c[4] = {
+    &data_ov002_0210e690,
+    &data_ov002_0210eb20,
+    &data_ov002_0210e758,
+    &data_ov002_0210e7a8,
+};
+SharedFilePtr *data_ov002_0210a6ac[4] = {
+    &data_ov002_0210ec38,
+    &data_ov002_0210eb00,
+    &data_ov002_0210e790,
+    &data_ov002_0210e7f0,
+};
+AnimScriptStep data_ov002_0210a6bc[3] = {
+    {54, 0x40000000},
+    {55, 0x40000000},
+    {183, 0},
+};
+u32 data_ov002_0210a6d4[6] = {105, 106, 18, 20, 19, 21};
+int data_ov002_0210a6ec[6] = {18, 20, 0, 0, 0, 0};
+
+/* PLAYER's registry descriptor: the factory and the draw/update priorities
+ * the actor framework reads from data_020a4bb8[PLAYER]. */
+// @symbol g_profile_PLAYER
+SpawnInfo<daPly_c> g_profile_PLAYER = {
+    daPly_c_classInit,
+    191,        /* behavior priority */
+    18,         /* render priority */
+    0x00000002, /* actorFlags */
+    0x000fa000,
+    0x000fa000,
+    0x02ee0000,
+    0x02ee0000,
+};
+
+extern AnimScriptStep data_ov002_0210e7b8[];
+
+AnimScriptStep data_ov002_0210a720[4] = {
+    {181, 0x40000000},
+    {180, 0x40000000},
+    {178, 0x40000000},
+    {179, 0},
+};
+AnimScriptStep data_ov002_0210a740[4] = {
+    {186, 0x40000000},
+    {71, 0x40000000},
+    {187, 0x40000000},
+    {188, 0},
+};
+/* The 32-colour RGB555 toon table: func_ov002_020e69c0 rotates it two
+ * entries per call and func_ov002_020e6a78 blends the player ramp toward it
+ * before passing it to func_020555a4, the toon-table load. */
+u16 data_ov002_0210a760[32] = {
+    0x3e1f, 0x3e1f, 0x3e1f, 0x3e1f, 0x3f1f, 0x3f1f, 0x3f1f, 0x3f1f, 0x43ff, 0x43ff, 0x43ff,
+    0x43ff, 0x4bef, 0x4bef, 0x4bef, 0x4bef, 0x7fef, 0x7fef, 0x7fef, 0x7fef, 0x7df0, 0x7df0,
+    0x7df0, 0x7df0, 0x7df8, 0x7df8, 0x7df8, 0x7df8, 0x69ff, 0x69ff, 0x69ff, 0x69ff,
+};
+
+AnimScriptStep *data_ov002_0210a7a0[] = {
+    data_ov002_02109ff4, data_ov002_0210a61c, data_ov002_0210a720, data_ov002_0210a63c,
+    data_ov002_0210a1d4, data_ov002_0210a64c, data_ov002_0210a740, data_ov002_0210a66c,
+    data_ov002_0210e7b8, data_ov002_0210a67c, data_ov002_0210a4bc, data_ov002_0210a434,
+    data_ov002_0210a3dc, data_ov002_0210a5ec, data_ov002_0210a5fc, data_ov002_0210a62c,
+    data_ov002_0210a6bc, data_ov002_0210a65c,
+};
 
 // @symbol func_ov002_020bcdf0
 void func_ov002_020bcdf0(char *self)
 {
     daPly_c *player = reinterpret_cast<daPly_c *>(self);
-    extern AnimEntry27 *data_ov002_0210a7a0[];
     extern void PlayerNewSimpleHold(unsigned int id, int x, int y, int z);
     extern u32 PlayerNewHold(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                              void *callback);
-    AnimEntry27 *base;
-    AnimEntry27 cur;
+    AnimScriptStep *base;
+    AnimScriptStep cur;
     int id;
     dExtFrameCtrl_c *anim;
     unsigned int frame;
@@ -3693,11 +3841,10 @@ void daPly_c::func_ov002_020c2f64() {
 // @symbol _ZN7daPly_c19func_ov002_020c2fecEPi
 extern "C" {
 int daPly_c::func_ov002_020c2fec(int *out) {
-    extern struct Anim2fec data_ov002_0210a8b8[];
     Fix12i tmp[4];
     int i;
     int ret;
-    struct Anim2fec *row;
+    EndingFlyPoint *row;
 
     ret = 0;
     out[0] = 0;
@@ -3705,14 +3852,14 @@ int daPly_c::func_ov002_020c2fec(int *out) {
     out[2] = 0;
     ComputeSplineWeights(tmp);
 
-    row = &data_ov002_0210a8b8[mSplinePoint];
+    row = &gEndingFlyPath[mSplinePoint];
     for (i = 0; i < 4; i++) {
         out[0] += tmp[i] * row[i].x;
         out[1] += tmp[i] * row[i].y;
         out[2] += tmp[i] * row[i].z;
     }
 
-    mSplineT += (row[0].a << 12) / 1000;
+    mSplineT += (row[0].speed << 12) / 1000;
     if (mSplineT >= 0x1000) {
         mSplinePoint++;
         mSplineT -= 0x1000;
@@ -3721,7 +3868,7 @@ int daPly_c::func_ov002_020c2fec(int *out) {
             ret = 1;
             break;
         case 3:
-            if (data_ov002_0210a8b8[mSplinePoint + 2].a == 0) {
+            if (gEndingFlyPath[mSplinePoint + 2].speed == 0) {
                 mSplineSpan = 4;
             }
             break;
@@ -6183,7 +6330,6 @@ int daPly_c::St_LevelEnter_Init() {
     extern signed char data_0209f2f8;
     extern u8 data_0209f264;
     extern u8 data_0209f2fc;
-    extern u32 data_ov002_0210a7e8[];
 
     u32 anim = data_ov002_0210a7e8[mStateStep];
     if (SaveData::HasPlayerLostCap() != 0) {
@@ -10435,7 +10581,6 @@ int daPly_c::St_CeilingGrate_Main() {
     extern int func_ov002_020d674c(void*);
     extern u8 data_0209f4ab[];
     extern void func_ov002_020cf384(void*);
-    extern u32 data_ov002_0210a60c[];
     extern void func_ov002_020cf2f8(void*);
     int r4;
     int spd;
@@ -15585,7 +15730,6 @@ extern "C" {
 int func_ov002_020d853c(daPly_c *player, char *o) {
     extern short Vec3_HorzAngle(const void *v0, const void *v1);
     extern int AngleDiff(int a, int b);
-    extern unsigned short data_ov002_0210a5dc[];
     if (player->IsState(data_ov002_02110574)) {
         int j = (player->mPunchKickStep << 1) & 0xff;
         unsigned idx = player->GetBodyModelID(player->param1 & 0xff, 0);
@@ -15786,7 +15930,6 @@ void func_ov002_020d8a50(char* self, int which)
     daPly_c *player = (daPly_c *)self;
     extern void func_ov002_020dbf4c(char* c);
     extern s16 data_02082214[];
-    extern u16 data_ov002_0210a5cc[];
     extern void func_ov002_020d8854(char*);
     extern void func_ov002_020d8d10(char *, Vector3 *);
     extern void func_ov002_020dbbc0(char*);
@@ -16400,7 +16543,6 @@ void daPly_c::func_ov002_020d98b4() {
 extern "C" {
 void daPly_c::StartHurtFallAnim() {
     extern u8 data_ov002_02109dcc[];
-    extern int data_ov002_0210a6ec[];
     daPly_c *player = (daPly_c *)this;
     u8 idx;
     if (player->mIsAirborne == 0)
@@ -16465,7 +16607,6 @@ void func_ov002_020d9aac(char* c)
 extern "C" {
 int daPly_c::St_Hurt_Init() {
     extern char* data_0209f318;
-    extern u32 data_ov002_0210a6d4[];
     extern void func_0200d89c(char*);
     int mid;
     char* m;
@@ -18653,7 +18794,6 @@ extern "C" {
 void func_ov002_020dd5ec(daPly_c *player) {
     extern int RandomIntInternal(int *seed);
     extern u16 data_0209f49c[];
-    extern int data_ov002_0210a5c0[];
     extern u16 data_ov002_02109dbc[];
     extern int data_ov002_0210e160;
     extern int data_ov002_020ff194[];
@@ -20384,7 +20524,6 @@ int daPly_c::St_Land_Init() {
 // @symbol func_ov002_020e0a64
 extern "C" {
 int func_ov002_020e0a64(daPly_c *player) {
-    extern int data_ov002_0210a5b4[];
     if (player->IsAnim(0x54) == 0)
         player->mJumpComboTimer = 8;
     if (player->mIsMega != 0)
@@ -21281,8 +21420,6 @@ int daPly_c::St_Jump_Init() {
     extern void func_ov002_020e2ad0(void *c);
     extern int AngleDiff(int a, int b);
     extern void func_ov002_020e25f0(void *c, int a);
-    extern int data_ov002_0210a59c[];
-    extern int data_ov002_0210a5a8[];
     int t;
 
     mJumpedFromQuicksand = 0;
@@ -21910,106 +22047,94 @@ int daPly_c::CleanupResources() {
     void UnloadKeyModels(int n);
     extern void *data_ov002_020ff480[];
     extern u8 data_0209f2d8;
-    extern char data_ov002_0210d9a0[];
-    extern char data_ov002_0210d9a8[];
-    extern char data_ov002_0210d9c0[];
-    extern char data_ov002_0210da38[];
-    extern char data_ov002_0210da40[];
-    extern char data_ov002_0210e3d8[];
-    extern char data_ov002_0210e750[];
-    extern char data_ov002_0210e8d0[];
-    extern char data_ov002_0210eb20[];
-    extern char data_ov002_0210ebb8[];
-    extern char data_ov002_0210ebd8[];
-    extern char data_ov002_02110aa4[];
-    extern char data_ov002_0210e1c8[];
-    extern char data_ov002_0210e1d0[];
-    extern char data_ov002_0210e1e0[];
-    extern char data_ov002_0210e1e8[];
-    extern char data_ov002_0210e230[];
-    extern char data_ov002_0210e250[];
-    extern char data_ov002_0210e270[];
-    extern char data_ov002_0210e288[];
-    extern char data_ov002_0210e2f0[];
-    extern char data_ov002_0210e3b0[];
-    extern char data_ov002_0210e3c8[];
-    extern char data_ov002_0210e3e0[];
-    extern char data_ov002_0210e3e8[];
-    extern char data_ov002_0210e400[];
-    extern char data_ov002_0210e408[];
-    extern char data_ov002_0210e430[];
-    extern char data_ov002_0210e438[];
-    extern char data_ov002_0210e450[];
-    extern char data_ov002_0210e458[];
-    extern char data_ov002_0210e460[];
-    extern char data_ov002_0210e478[];
-    extern char data_ov002_0210e4b8[];
-    extern char data_ov002_0210e4c0[];
-    extern char data_ov002_0210e4d0[];
-    extern char data_ov002_0210e4e8[];
-    extern char data_ov002_0210e4f0[];
-    extern char data_ov002_0210e500[];
-    extern char data_ov002_0210e538[];
-    extern char data_ov002_0210e540[];
-    extern char data_ov002_0210e588[];
-    extern char data_ov002_0210e600[];
-    extern char data_ov002_0210e620[];
-    extern char data_ov002_0210e640[];
-    extern char data_ov002_0210e660[];
-    extern char data_ov002_0210e670[];
-    extern char data_ov002_0210e680[];
-    extern char data_ov002_0210e690[];
-    extern char data_ov002_0210e6a0[];
-    extern char data_ov002_0210e6b8[];
-    extern char data_ov002_0210e6c0[];
-    extern char data_ov002_0210e6e0[];
-    extern char data_ov002_0210e6f8[];
-    extern char data_ov002_0210e708[];
-    extern char data_ov002_0210e728[];
-    extern char data_ov002_0210e738[];
-    extern char data_ov002_0210e758[];
-    extern char data_ov002_0210e770[];
-    extern char data_ov002_0210e780[];
-    extern char data_ov002_0210e788[];
-    extern char data_ov002_0210e790[];
-    extern char data_ov002_0210e798[];
-    extern char data_ov002_0210e7a8[];
-    extern char data_ov002_0210e7b0[];
-    extern char data_ov002_0210e7e8[];
-    extern char data_ov002_0210e7f0[];
-    extern char data_ov002_0210e800[];
-    extern char data_ov002_0210e818[];
-    extern char data_ov002_0210e898[];
-    extern char data_ov002_0210e8e8[];
-    extern char data_ov002_0210e910[];
-    extern char data_ov002_0210e958[];
-    extern char data_ov002_0210e9d0[];
-    extern char data_ov002_0210e9e8[];
-    extern char data_ov002_0210ea10[];
-    extern char data_ov002_0210ea30[];
-    extern char data_ov002_0210ea70[];
-    extern char data_ov002_0210ea88[];
-    extern char data_ov002_0210eac8[];
-    extern char data_ov002_0210eaf0[];
-    extern char data_ov002_0210eb00[];
-    extern char data_ov002_0210eb10[];
-    extern char data_ov002_0210eb38[];
-    extern char data_ov002_0210eb58[];
-    extern char data_ov002_0210eb70[];
-    extern char data_ov002_0210eb88[];
-    extern char data_ov002_0210eb90[];
-    extern char data_ov002_0210eb98[];
-    extern char data_ov002_0210eba8[];
-    extern char data_ov002_0210ebc8[];
-    extern char data_ov002_0210ec00[];
-    extern char data_ov002_0210ec10[];
-    extern char data_ov002_0210ec38[];
-    extern char data_ov002_0210ec40[];
-    extern char data_ov002_0210ec50[];
-    extern char data_ov002_0210ec60[];
-    extern char data_ov002_0210ec98[];
-    extern char data_ov002_0210eca8[];
-    extern char data_ov002_0210ecb8[];
+    extern SharedFilePtr data_ov002_0210d9a0;
+    extern SharedFilePtr data_ov002_0210d9a8;
+    extern SharedFilePtr data_ov002_0210d9c0;
+    extern SharedFilePtr data_ov002_0210da38;
+    extern SharedFilePtr data_ov002_0210da40;
+    extern SharedFilePtr data_ov002_0210e3d8;
+    extern SharedFilePtr data_ov002_0210e750;
+    extern SharedFilePtr data_ov002_0210e8d0;
+    extern SharedFilePtr data_ov002_0210ebd8;
+    extern SharedFilePtr data_ov002_02110aa4;
+    extern SharedFilePtr data_ov002_0210e1c8;
+    extern SharedFilePtr data_ov002_0210e1d0;
+    extern SharedFilePtr data_ov002_0210e1e0;
+    extern SharedFilePtr data_ov002_0210e1e8;
+    extern SharedFilePtr data_ov002_0210e230;
+    extern SharedFilePtr data_ov002_0210e250;
+    extern SharedFilePtr data_ov002_0210e270;
+    extern SharedFilePtr data_ov002_0210e288;
+    extern SharedFilePtr data_ov002_0210e2f0;
+    extern SharedFilePtr data_ov002_0210e3b0;
+    extern SharedFilePtr data_ov002_0210e3c8;
+    extern SharedFilePtr data_ov002_0210e3e0;
+    extern SharedFilePtr data_ov002_0210e3e8;
+    extern SharedFilePtr data_ov002_0210e400;
+    extern SharedFilePtr data_ov002_0210e408;
+    extern SharedFilePtr data_ov002_0210e430;
+    extern SharedFilePtr data_ov002_0210e438;
+    extern SharedFilePtr data_ov002_0210e450;
+    extern SharedFilePtr data_ov002_0210e458;
+    extern SharedFilePtr data_ov002_0210e460;
+    extern SharedFilePtr data_ov002_0210e478;
+    extern SharedFilePtr data_ov002_0210e4b8;
+    extern SharedFilePtr data_ov002_0210e4c0;
+    extern SharedFilePtr data_ov002_0210e4d0;
+    extern SharedFilePtr data_ov002_0210e4e8;
+    extern SharedFilePtr data_ov002_0210e4f0;
+    extern SharedFilePtr data_ov002_0210e500;
+    extern SharedFilePtr data_ov002_0210e538;
+    extern SharedFilePtr data_ov002_0210e540;
+    extern SharedFilePtr data_ov002_0210e588;
+    extern SharedFilePtr data_ov002_0210e600;
+    extern SharedFilePtr data_ov002_0210e620;
+    extern SharedFilePtr data_ov002_0210e640;
+    extern SharedFilePtr data_ov002_0210e660;
+    extern SharedFilePtr data_ov002_0210e670;
+    extern SharedFilePtr data_ov002_0210e680;
+    extern SharedFilePtr data_ov002_0210e6a0;
+    extern SharedFilePtr data_ov002_0210e6b8;
+    extern SharedFilePtr data_ov002_0210e6c0;
+    extern SharedFilePtr data_ov002_0210e6e0;
+    extern SharedFilePtr data_ov002_0210e6f8;
+    extern SharedFilePtr data_ov002_0210e708;
+    extern SharedFilePtr data_ov002_0210e728;
+    extern SharedFilePtr data_ov002_0210e738;
+    extern SharedFilePtr data_ov002_0210e770;
+    extern SharedFilePtr data_ov002_0210e780;
+    extern SharedFilePtr data_ov002_0210e788;
+    extern SharedFilePtr data_ov002_0210e798;
+    extern SharedFilePtr data_ov002_0210e7b0;
+    extern SharedFilePtr data_ov002_0210e7e8;
+    extern SharedFilePtr data_ov002_0210e800;
+    extern SharedFilePtr data_ov002_0210e898;
+    extern SharedFilePtr data_ov002_0210e8e8;
+    extern SharedFilePtr data_ov002_0210e910;
+    extern SharedFilePtr data_ov002_0210e958;
+    extern SharedFilePtr data_ov002_0210e9d0;
+    extern SharedFilePtr data_ov002_0210e9e8;
+    extern SharedFilePtr data_ov002_0210ea10;
+    extern SharedFilePtr data_ov002_0210ea30;
+    extern SharedFilePtr data_ov002_0210ea70;
+    extern SharedFilePtr data_ov002_0210ea88;
+    extern SharedFilePtr data_ov002_0210eac8;
+    extern SharedFilePtr data_ov002_0210eaf0;
+    extern SharedFilePtr data_ov002_0210eb10;
+    extern SharedFilePtr data_ov002_0210eb38;
+    extern SharedFilePtr data_ov002_0210eb58;
+    extern SharedFilePtr data_ov002_0210eb70;
+    extern SharedFilePtr data_ov002_0210eb88;
+    extern SharedFilePtr data_ov002_0210eb90;
+    extern SharedFilePtr data_ov002_0210eb98;
+    extern SharedFilePtr data_ov002_0210eba8;
+    extern SharedFilePtr data_ov002_0210ebc8;
+    extern SharedFilePtr data_ov002_0210ec00;
+    extern SharedFilePtr data_ov002_0210ec10;
+    extern SharedFilePtr data_ov002_0210ec40;
+    extern SharedFilePtr data_ov002_0210ec98;
+    extern SharedFilePtr data_ov002_0210eca8;
+    extern SharedFilePtr data_ov002_0210ecb8;
     extern void func_ov002_020e032c(void*);
     int i;
     u32 b;
@@ -22073,124 +22198,124 @@ int daPly_c::CleanupResources() {
     b = b == 1;
     if (b != false_)
         func_ov002_020bebd4(this);
-    ((SharedFilePtr *)(data_ov002_0210ec50))->Release();
-    ((SharedFilePtr *)(data_ov002_0210ebb8))->Release();
-    ((SharedFilePtr *)(data_ov002_0210ec60))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e818))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e690))->Release();
-    ((SharedFilePtr *)(data_ov002_0210eb20))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e758))->Release();
-    ((SharedFilePtr *)(data_ov002_0210ec38))->Release();
-    ((SharedFilePtr *)(data_ov002_0210eb00))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e790))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e7a8))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e7f0))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e798))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e4f0))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e3d8))->Release();
-    ((SharedFilePtr *)(data_ov002_0210eb88))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e6c0))->Release();
-    ((SharedFilePtr *)(data_ov002_0210eb98))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e4c0))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e500))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e1c8))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e770))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e230))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e288))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e478))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e9d0))->Release();
-    ((SharedFilePtr *)(data_ov002_0210ea10))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e538))->Release();
-    ((SharedFilePtr *)(data_ov002_0210eac8))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e898))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e9e8))->Release();
-    ((SharedFilePtr *)(data_ov002_0210eba8))->Release();
-    ((SharedFilePtr *)(data_ov002_0210eb70))->Release();
-    ((SharedFilePtr *)(data_ov002_0210eaf0))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e640))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e670))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e680))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e438))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e3b0))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e3c8))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e408))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e400))->Release();
-    ((SharedFilePtr *)(data_ov002_0210ecb8))->Release();
-    ((SharedFilePtr *)(data_ov002_0210e8d0))->Release();
-    ((SharedFilePtr *)(data_ov002_0210ebd8))->Release();
+    data_ov002_0210ec50.Release();
+    data_ov002_0210ebb8.Release();
+    data_ov002_0210ec60.Release();
+    data_ov002_0210e818.Release();
+    data_ov002_0210e690.Release();
+    data_ov002_0210eb20.Release();
+    data_ov002_0210e758.Release();
+    data_ov002_0210ec38.Release();
+    data_ov002_0210eb00.Release();
+    data_ov002_0210e790.Release();
+    data_ov002_0210e7a8.Release();
+    data_ov002_0210e7f0.Release();
+    data_ov002_0210e798.Release();
+    data_ov002_0210e4f0.Release();
+    data_ov002_0210e3d8.Release();
+    data_ov002_0210eb88.Release();
+    data_ov002_0210e6c0.Release();
+    data_ov002_0210eb98.Release();
+    data_ov002_0210e4c0.Release();
+    data_ov002_0210e500.Release();
+    data_ov002_0210e1c8.Release();
+    data_ov002_0210e770.Release();
+    data_ov002_0210e230.Release();
+    data_ov002_0210e288.Release();
+    data_ov002_0210e478.Release();
+    data_ov002_0210e9d0.Release();
+    data_ov002_0210ea10.Release();
+    data_ov002_0210e538.Release();
+    data_ov002_0210eac8.Release();
+    data_ov002_0210e898.Release();
+    data_ov002_0210e9e8.Release();
+    data_ov002_0210eba8.Release();
+    data_ov002_0210eb70.Release();
+    data_ov002_0210eaf0.Release();
+    data_ov002_0210e640.Release();
+    data_ov002_0210e670.Release();
+    data_ov002_0210e680.Release();
+    data_ov002_0210e438.Release();
+    data_ov002_0210e3b0.Release();
+    data_ov002_0210e3c8.Release();
+    data_ov002_0210e408.Release();
+    data_ov002_0210e400.Release();
+    data_ov002_0210ecb8.Release();
+    data_ov002_0210e8d0.Release();
+    data_ov002_0210ebd8.Release();
     b = data_0209f2d8;
     b = b == 1;
     if (b == false_) {
-        ((SharedFilePtr *)(data_ov002_0210d9a8))->Release();
-        ((SharedFilePtr *)(data_ov002_02110aa4))->Release();
-        ((SharedFilePtr *)(data_ov002_0210da38))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e750))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e588))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e7e8))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e450))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e788))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e1e8))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e1e0))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e4d0))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e4e8))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e1d0))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e800))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e4b8))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e270))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e458))->Release();
-        ((SharedFilePtr *)(data_ov002_0210ea70))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e540))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e8e8))->Release();
-        ((SharedFilePtr *)(data_ov002_0210eca8))->Release();
-        ((SharedFilePtr *)(data_ov002_0210ec98))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e600))->Release();
-        ((SharedFilePtr *)(data_ov002_0210ea88))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e910))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e460))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e2f0))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e958))->Release();
-        ((SharedFilePtr *)(data_ov002_0210eb38))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e660))->Release();
-        ((SharedFilePtr *)(data_ov002_0210ea30))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e3e8))->Release();
-        ((SharedFilePtr *)(data_ov002_0210eb90))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e6b8))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e620))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e6a0))->Release();
-        ((SharedFilePtr *)(data_ov002_0210eb58))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e3e0))->Release();
-        ((SharedFilePtr *)(data_ov002_0210eb10))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e708))->Release();
-        ((SharedFilePtr *)(data_ov002_0210ebc8))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e6e0))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e430))->Release();
-        ((SharedFilePtr *)(data_ov002_0210ec40))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e738))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e250))->Release();
-        ((SharedFilePtr *)(data_ov002_0210ec10))->Release();
-        ((SharedFilePtr *)(data_ov002_0210ec00))->Release();
-        ((SharedFilePtr *)(data_ov002_0210e728))->Release();
+        data_ov002_0210d9a8.Release();
+        data_ov002_02110aa4.Release();
+        data_ov002_0210da38.Release();
+        data_ov002_0210e750.Release();
+        data_ov002_0210e588.Release();
+        data_ov002_0210e7e8.Release();
+        data_ov002_0210e450.Release();
+        data_ov002_0210e788.Release();
+        data_ov002_0210e1e8.Release();
+        data_ov002_0210e1e0.Release();
+        data_ov002_0210e4d0.Release();
+        data_ov002_0210e4e8.Release();
+        data_ov002_0210e1d0.Release();
+        data_ov002_0210e800.Release();
+        data_ov002_0210e4b8.Release();
+        data_ov002_0210e270.Release();
+        data_ov002_0210e458.Release();
+        data_ov002_0210ea70.Release();
+        data_ov002_0210e540.Release();
+        data_ov002_0210e8e8.Release();
+        data_ov002_0210eca8.Release();
+        data_ov002_0210ec98.Release();
+        data_ov002_0210e600.Release();
+        data_ov002_0210ea88.Release();
+        data_ov002_0210e910.Release();
+        data_ov002_0210e460.Release();
+        data_ov002_0210e2f0.Release();
+        data_ov002_0210e958.Release();
+        data_ov002_0210eb38.Release();
+        data_ov002_0210e660.Release();
+        data_ov002_0210ea30.Release();
+        data_ov002_0210e3e8.Release();
+        data_ov002_0210eb90.Release();
+        data_ov002_0210e6b8.Release();
+        data_ov002_0210e620.Release();
+        data_ov002_0210e6a0.Release();
+        data_ov002_0210eb58.Release();
+        data_ov002_0210e3e0.Release();
+        data_ov002_0210eb10.Release();
+        data_ov002_0210e708.Release();
+        data_ov002_0210ebc8.Release();
+        data_ov002_0210e6e0.Release();
+        data_ov002_0210e430.Release();
+        data_ov002_0210ec40.Release();
+        data_ov002_0210e738.Release();
+        data_ov002_0210e250.Release();
+        data_ov002_0210ec10.Release();
+        data_ov002_0210ec00.Release();
+        data_ov002_0210e728.Release();
     }
     if (mLoadedResourceFlags & 1)
         UnloadSilverStarAndNumber();
     if (mLoadedResourceFlags & 2)
-        ((SharedFilePtr *)(data_ov002_0210da40))->Release();
+        data_ov002_0210da40.Release();
     if (mLoadedResourceFlags & 4)
-        ((SharedFilePtr *)(data_ov002_0210d9a0))->Release();
+        data_ov002_0210d9a0.Release();
     if (mLoadedResourceFlags & 8)
-        ((SharedFilePtr *)(data_ov002_0210d9c0))->Release();
+        data_ov002_0210d9c0.Release();
     if (mLoadedResourceFlags & 0x10)
         UnloadKeyModels(mKeyModelId);
     b = data_0209f2d8;
     b = b == 1;
     if (b == false_) {
         if (mLoadedResourceFlags & 0x20) {
-            ((SharedFilePtr *)(data_ov002_0210e6f8))->Release();
-            ((SharedFilePtr *)(data_ov002_0210e7b0))->Release();
-            ((SharedFilePtr *)(data_ov002_0210e780))->Release();
+            data_ov002_0210e6f8.Release();
+            data_ov002_0210e7b0.Release();
+            data_ov002_0210e780.Release();
         }
     } else {
-        ((SharedFilePtr *)(data_ov002_0210e7b0))->Release();
+        data_ov002_0210e7b0.Release();
     }
     if (mLoadedResourceFlags & 0x40) {
         u32 idx = mHatCharacter;
@@ -23365,9 +23490,6 @@ void func_ov002_020e5948(void* arg0)
     extern SharedFilePtr data_ov002_0210ec00;
     extern SharedFilePtr data_ov002_0210e728;
     extern SharedFilePtr *data_ov002_020ff480[];
-    extern SharedFilePtr *data_ov002_0210a68c[];
-    extern SharedFilePtr *data_ov002_0210a69c[];
-    extern SharedFilePtr *data_ov002_0210a6ac[];
     extern SharedFilePtr *data_ov002_020ff2f0[];
     extern SharedFilePtr data_ov002_0210da38;
     extern SharedFilePtr data_ov002_0210e780;
@@ -24649,8 +24771,13 @@ void *data_ov002_0210f890[3];
 void *data_ov002_0210f8a8[3];
 void *data_ov002_0210f8b4[3];
 void *data_ov002_0210f8c0[3];
+void *data_ov002_0210f8d8[3];
+void *data_ov002_0210f8e4[3];
+void *data_ov002_0210f8f0[3];
+void *data_ov002_0210f8fc[3];
+void *data_ov002_0210f908[3];
 unsigned int data_ov002_0210e158;
-int data_ov002_0210e7b8[2];
+AnimScriptStep data_ov002_0210e7b8[1];
 }
 
 #pragma define_section initsec ".init" ".init" ".init" far_absolute RX

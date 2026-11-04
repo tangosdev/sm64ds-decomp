@@ -195,11 +195,13 @@ src/game/player/d_a_ply_methods.cpp:
     complete
     .text start:0x020bccfc end:0x020e6c0c
     .init start:0x021019d0 end:0x02106e40
-    .bss start:0x0210e14c end:0x0210f8d8
+    .data start:0x0210a59c end:0x0210a7e8
+    .bss start:0x0210e14c end:0x0210f914
 
 src/game/player/d_a_ply.cpp:
     complete
     .text start:0x020e6c0c end:0x020e6c40
+    .data start:0x0210a8b8 end:0x0210a990
 
 src/game/actors/d_a_star.cpp:
     complete
