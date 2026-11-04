@@ -475,9 +475,9 @@ typedef char dActor_c_size_must_be_0xd0[sizeof(struct dActor_c) == 0xd0 ? 1 : -1
    fade out of every exit -- the VS exit screen, the course-clear exit, the pause
    screen's exit and save-and-quit -- so play stops while the screen fades.
    dCamera_c::Behavior also skips its FOV and shake update, dMap_c::Behavior
-   its touch handling, and dMeter_c stops drawing the camera buttons (at runtime, setting it hid the camera arrow
-   buttons). A plain macro: a header enum here would be one more name to keep
-   out of the @NNN books above. */
+   its touch handling, and dMeter_c the camera buttons (setting it at runtime
+   hid the camera arrow buttons). A plain macro, so that no new header name
+   joins the @NNN numbering. */
 #define ACTOR_UPDATE_MASK_STAGE_ENDING 0x40000000
 
 #endif
