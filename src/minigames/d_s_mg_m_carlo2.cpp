@@ -14,6 +14,7 @@
 
 
 #include "dScMgMCarlo2_c.h"
+#include "nitro/hw/registers.h"
 #include "dScMgCard_c.h"
 #include "types.h"
 #include "decl_common.h"
@@ -51,8 +52,8 @@ extern int sMCarlo2StartFaceCounts[]; /* the starting weights                   
 extern int sMCarlo2BoardRows[][10];   /* per-difficulty weight top-ups          */
 extern int data_0209e650[];
 extern int data_020a0db0;
-extern unsigned char data_0209d454;
-extern unsigned char data_0209d45c;
+extern unsigned char gSubScreenLayers;
+extern unsigned char gMainScreenLayers;
 
 int  RandomIntInternal(void* seed);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
@@ -112,8 +113,8 @@ s32 dScMgMCarlo2_c::InitResources()
     GXS::LoadOBJPltt((void *)palette, 0, 0x100);
     Deallocate((void *)tiles);
     Deallocate((void *)palette);
-    data_0209d45c = 0x11;
-    data_0209d454 = 0x18;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
+    gSubScreenLayers = 0x18;
     *(volatile unsigned short *)0x4000008 = (*(volatile unsigned short *)0x4000008 & ~3) | 1;
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
     Camera_InitDealerView((void *)pad_4660);

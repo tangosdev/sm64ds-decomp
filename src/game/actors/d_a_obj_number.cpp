@@ -47,7 +47,7 @@ extern SharedFilePtr data_ov002_0210da28;
 extern SharedFilePtr data_ov002_0210d9e8;
 extern SharedFilePtr data_ov002_0210d9a8;
 
-extern int data_0209b454;
+extern int gNextActorUpdateMask;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -159,9 +159,9 @@ s32 daObjNumber_c::Behavior() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjNumber_c6RenderEv
 s32 daObjNumber_c::Render() {
-    /* While data_0209b454 bit 0x4000000 is set, a power star (0xb2) of
+    /* While gNextActorUpdateMask bit 0x4000000 is set, a power star (0xb2) of
        kind 6 at camera step 0x64 removes the popup. */
-    if (data_0209b454 & 0x4000000) {
+    if (gNextActorUpdateMask & 0x4000000) {
         daStar_c *a = 0;
         u32 id = 0xb2;
         for (;;) {

@@ -113,7 +113,7 @@ enum {
 };
 
 /* Set in an actor's mFlags, in the touching player's mFlags and in the global
-   word data_0209b454 for as long as a star's collection cutscene runs. */
+   word gNextActorUpdateMask for as long as a star's collection cutscene runs. */
 enum { CUTSCENE_FLAG = 0x4000000 };
 
 extern "C" {
@@ -125,7 +125,7 @@ extern void FUN_0202a130(void);
 extern void UnloadSilverStarAndNumber(void);
 extern StarAnimationFileHandle data_ov002_02110934;
 extern int Vec3_Dist(void*, void*);
-extern unsigned int data_0209b454;
+extern unsigned int gNextActorUpdateMask;
 extern int data_ov002_0210da28[];
 extern signed char data_0209f310[];
 extern signed char NumRedCoins(void);
@@ -161,8 +161,8 @@ void GiveVsStars(int idx, int delta);
 void CollectStarInCurLevel(int i);
 int SublevelToLevel(int i);
 s16 NumCoins(void);
-extern u8 data_0209f228;
-extern u8 data_0209f2ac;
+extern u8 gCollectedStarId;
+extern u8 gNewStarCollected;
 extern s16 data_0209f358[];
 extern u8 data_0209d684;
 extern int Vec3_HorzDist(const Vec3* a, const Vec3* b);
@@ -419,7 +419,7 @@ s32 daStar_c::InitResources()
     func_ov002_020e7d08();
     if (data_0209cef0 == 0) {
         Event::ClearBit(0x1e);
-        Event::ClearBit(0x1d);
+        Event::ClearBit(EVENT_COLLECTING_STAR);
         if (mKind != KIND_3) {
             if ((s32)(data_0209f2d8 == 1) != 0 || (s32)(actorID == ACTOR_SILVER_STAR) != 0) {
                 sp = (char *)dActor_c::Spawn(ACTOR_STAR_MARKER, 0x50, mPos, 0, mSavedAreaId, -1);
@@ -600,7 +600,7 @@ int daStar_c::Behavior()
             mdCc_c.Clear();
             return 1;
         }
-        if ((data_0209b454 & CUTSCENE_FLAG) != 0) {
+        if ((gNextActorUpdateMask & CUTSCENE_FLAG) != 0) {
             if ((int)((mFlags & CUTSCENE_FLAG) != 0) != 0) {
                 dActor_c *p = mEatingPlayer;
                 if (p != 0)
@@ -798,7 +798,7 @@ void daStarBase_c::OnPendingDestroy()
 // @symbol _ZN8daStar_c19func_ov002_020ea9d0Ev
 /* STATE_LAUNCH: starts the pop-out. A star with a non-zero id first looks for
  * its marker and destroys itself without one. It then starts the cutscene
- * (mFlags and data_0209b454 get CUTSCENE_FLAG, mCamSeq 0, sound 3/0x57), jumps
+ * (mFlags and gNextActorUpdateMask get CUTSCENE_FLAG, mCamSeq 0, sound 3/0x57), jumps
  * at 32.0 with the default gravity and picks the next State: kind 4 aims a hop
  * at 200.0 above its marker (func_ov002_020e947c; arc value 100.0 on sublevel
  * 0x11, 70.0 for star id 3 on sublevel 0xb, 400.0 otherwise) and flies there,
@@ -821,7 +821,7 @@ void daStar_c::func_ov002_020ea9d0() {
         }
     }
     mFlags |= CUTSCENE_FLAG;
-    data_0209b454 |= CUTSCENE_FLAG;
+    gNextActorUpdateMask |= CUTSCENE_FLAG;
     mCamSeq = 0;
     func_02012694(0x57, &mCamSpacePosX);
     mVertSpeed = 0x20000;
@@ -1000,9 +1000,9 @@ void daStar_c::func_ov002_020ea420() {
             }
         }
         if (en != 0) {
-            if (mScaleX != 0x1000 && (data_0209b454 & CUTSCENE_FLAG) == 0) {
+            if (mScaleX != 0x1000 && (gNextActorUpdateMask & CUTSCENE_FLAG) == 0) {
                 mFlags |= CUTSCENE_FLAG;
-                data_0209b454 |= CUTSCENE_FLAG;
+                gNextActorUpdateMask |= CUTSCENE_FLAG;
             } else if (mScaleX == 0x1000) {
                 mAppearTimer = lim + 0xb;
                 mBits.appeared = 1;
@@ -1068,9 +1068,9 @@ void daStar_c::func_ov002_020ea420() {
                     mScaleY = v2;
                     mScaleZ = v2;
                 }
-                if ((data_0209b454 & CUTSCENE_FLAG) == 0) {
+                if ((gNextActorUpdateMask & CUTSCENE_FLAG) == 0) {
                     mFlags |= CUTSCENE_FLAG;
-                    data_0209b454 |= CUTSCENE_FLAG;
+                    gNextActorUpdateMask |= CUTSCENE_FLAG;
                     mCamSeq = 0x64;
                 }
             }
@@ -1830,7 +1830,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
             }
         }
         if (r4 == 0) {
-            Event::SetBit(0x1d);
+            Event::SetBit(EVENT_COLLECTING_STAR);
         }
 
         {
@@ -1839,11 +1839,11 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
         if (!b2 && !(b3 = (actorID == ACTOR_SILVER_STAR)) &&
             mStarID < 8 &&
             mHomeState != STATE_WAIT_MARKER) {
-            data_0209f228 = mStarID;
+            gCollectedStarId = mStarID;
             if (IsStarCollectedInCurLevel(mStarID) != 0) {
-                data_0209f2ac = 0;
+                gNewStarCollected = 0;
             } else {
-                data_0209f2ac = 1;
+                gNewStarCollected = 1;
             }
             CollectStarInCurLevel(mStarID);
             if (r5 != 0) {
@@ -1875,7 +1875,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
         if (!b4) {
             mPlayer->mFlags |= CUTSCENE_FLAG;
             mFlags |= CUTSCENE_FLAG;
-            data_0209b454 |= CUTSCENE_FLAG;
+            gNextActorUpdateMask |= CUTSCENE_FLAG;
         }
     }
     mdCc_c.flags |= 1;
@@ -2243,9 +2243,9 @@ void daStar_c::func_ov002_020e8618() {
     }
     mPlayer->mFlags &= ~CUTSCENE_FLAG;
     mFlags &= ~CUTSCENE_FLAG;
-    data_0209b454 &= ~CUTSCENE_FLAG;
+    gNextActorUpdateMask &= ~CUTSCENE_FLAG;
     Event::ClearBit(0x1e);
-    Event::ClearBit(0x1d);
+    Event::ClearBit(EVENT_COLLECTING_STAR);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2705,7 +2705,7 @@ void daStar_c::func_ov002_020e763c() {
     Vec3 v;
     dCamera_c *cam;
 
-    if ((data_0209b454 & CUTSCENE_FLAG) == 0)
+    if ((gNextActorUpdateMask & CUTSCENE_FLAG) == 0)
         return;
 
     if (mCamSeq == 0xffff)
@@ -2768,7 +2768,7 @@ void daStar_c::func_ov002_020e763c() {
     case 0x1f5:
         cam->mFlags &= ~8;
         mFlags &= ~CUTSCENE_FLAG;
-        data_0209b454 &= ~CUTSCENE_FLAG;
+        gNextActorUpdateMask &= ~CUTSCENE_FLAG;
         mCamSeq = 0xffff;
         mAreaId = mSavedAreaId;
         break;
@@ -2991,9 +2991,10 @@ void UnloadSilverStarAndNumber(void)
 void daStar_c::func_ov002_020e7104(int r1){
   if(r1==0){
     mBits.switchOn = 0;
-    if(data_0209b454 & CUTSCENE_FLAG) return;
+    if (gNextActorUpdateMask & CUTSCENE_FLAG)
+        return;
     mFlags |= CUTSCENE_FLAG;
-    data_0209b454 |= CUTSCENE_FLAG;
+    gNextActorUpdateMask |= CUTSCENE_FLAG;
     mCamSeq = 0x64;
     return;
   }
@@ -3011,7 +3012,7 @@ void daStar_c::func_ov002_020e7090(int arg) {
     mPlayer = (daPly_c *)arg;
     mPlayer->mFlags |= CUTSCENE_FLAG;
     mFlags |= CUTSCENE_FLAG;
-    data_0209b454 |= CUTSCENE_FLAG;
+    gNextActorUpdateMask |= CUTSCENE_FLAG;
     func_ov002_020e6fbc(0);
     mSoundObjMode = 1;
     func_ov002_020e9464();

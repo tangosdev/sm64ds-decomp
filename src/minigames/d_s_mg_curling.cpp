@@ -39,6 +39,7 @@ enum dScMgCurling_c_AssetId {
 #pragma defer_codegen off
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "dScMgCurling_c.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
@@ -96,7 +97,7 @@ extern void Mg_RenderSpriteBoth(int a, int b, int c, int d, int e);
 extern void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, int a7);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern void func_02012718(int a, int b);
-extern void DrawOamSprite(int a, int b, int c, int d);
+extern void DrawOamSprite(void *a, void *b, int c, void *d);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern int RandomIntInternal(int *seed);
 extern int atan2_hold_d_s_mg_curling_1(int y, int x);
@@ -129,8 +130,8 @@ extern int sCurlingBitSprites[];
 extern int sCurlingStoneLeftSprite;
 extern int sCurlingStoneLeftShadowSprite;
 extern int sCurlingAimMarkerSprites[];
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char gMainScreenLayers;
+extern unsigned char gSubScreenLayers;
 extern char sCurlingMgDirPath;
 extern char sCurlingBgCurling2NcgPath;
 extern int sCurlingSlideZoneEdges[];
@@ -199,7 +200,7 @@ void dScMgCurling_c::Bit_DrawAll() {
             int x = mBit[i].x >> 0xc;
             int y = mBit[i].y >> 0xc;
             Mg_RenderSubSpriteMtx(sCurlingBitSprites[mBit[i].texA], x, y, 0);
-            DrawOamSprite(sCurlingBitSprites[mBit[i].texB], x, y, 0);
+            DrawOamSprite((void *)sCurlingBitSprites[mBit[i].texB], (void *)x, y, 0);
         }
     }
 }
@@ -1657,7 +1658,7 @@ s32 dScMgCurling_c::InitResources() {
     if (a == 0 || b == 0)
         return 0;
 
-    data_0209d45c |= 4;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x1220;
     DecompressLZ16(a, G2::GetBG2CharPtr());
@@ -1676,7 +1677,7 @@ s32 dScMgCurling_c::InitResources() {
         DecompressLZ16(c7, (void *)0x6400000);
         GX::LoadOBJPltt(c8, 0, 0x100);
 
-        data_0209d454 |= 4;
+        gSubScreenLayers |= 4;
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 2;
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x814;
         DecompressLZ16(b, (void *)G2S::GetBG2CharPtr());

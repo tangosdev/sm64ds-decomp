@@ -1820,7 +1820,7 @@ namespace ns_020cb528 {
 typedef short s16;
 
 extern "C" {
-void Sound_PlayBank1Panned(int a0, char *a1, void *a2);
+void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void Trmp3DMario_StateGoal(char *c);
 extern int sTrmpRowHeights[];
 extern int pmf_Trmp3DMario_StateGoal[];
@@ -1832,7 +1832,7 @@ extern "C" void Trmp3DMario_EnterGoal(char *c) {
     MARIO3D(c)->mPos.y = sTrmpRowHeights[MARIO3D(c)->mHeightRow];
     MARIO3D(c)->mVel.x = 0;
     MARIO3D(c)->mVel.y = 0;
-    Sound_PlayBank1Panned(0, (char *)0x10, (void *)MARIO3D(c)->mPos.x);
+    Sound_PlayBank1Panned(0, 0x10, MARIO3D(c)->mPos.x);
     MARIO3D(c)->mAnmModel.SetAnim(sTrmpAnimRollJumpEnd, 0x40000000, 0x800, 0);
     sTrmpMariosOnLedges[0] = sTrmpMariosOnLedges[0] + 1;
     a = pmf_Trmp3DMario_StateGoal[0];
@@ -1874,7 +1874,7 @@ void Trmp3DMario_StateLand(char *c) {
 namespace ns_020cb690 {
 
 extern "C" {
-void Sound_PlayBank1Panned(int a0, char *a1, void *a2);
+void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void Trmp3DMario_StateLand(char *c);
 extern int data_020a0ebc[];
 struct W2 {
@@ -1889,7 +1889,7 @@ void Trmp3DMario_EnterLand(char *c) {
     MARIO3D(c)->mVel.y = data_020a0ebc[1];
     MARIO3D(c)->mVel.z = data_020a0ebc[2];
     MARIO3D(c)->mAnmModel.SetAnim(sTrmpAnimHangUp, 0x40000000, 0x800, 0);
-    Sound_PlayBank1Panned(0, (char *)0x17, (void *)MARIO3D(c)->mPos.x);
+    Sound_PlayBank1Panned(0, 0x17, MARIO3D(c)->mPos.x);
     {
         int a = pmf_Trmp3DMario_StateLand.a;
         int b = pmf_Trmp3DMario_StateLand.b;

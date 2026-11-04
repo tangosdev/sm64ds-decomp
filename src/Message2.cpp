@@ -23,17 +23,19 @@
 
 #pragma defer_codegen off
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "Message.h"
 #include "PlayerInput.h"
 #include "SaveData.h"
 #include "Sound.h"
 
 extern "C" {
-extern u8 data_0209d454;
-extern u8 data_0209d45c;
-extern u8 data_0209d64c;
-extern u8 data_0209d650;
-extern u8 data_0209d658;
+extern u8 gSubScreenLayers;
+extern u8 gMainScreenLayers;
+/* The message box rectangle: see the comment at Message.cpp's externs. */
+extern u8 gMsgBoxWinTop;
+extern u8 gMsgBoxLeft;
+extern u8 gMsgBoxWinLeft;
 extern u8 data_0209d65c;
 extern u8 data_0209d660;
 extern u8 data_0209d664; /* nonzero while a dialogue box is up */
@@ -44,8 +46,13 @@ extern u8 data_0209d674;
 extern u8 data_0209d678;
 extern u8 data_0209d680;
 extern u8 data_0209d684;
-extern u8 data_0209d688;
-extern u8 data_0209d68c;
+/* The line a horizontal (mode 1) choice sits on: AddChoice's arg 0 records
+   the current line, and state 4 draws the cursor on it. */
+extern u8 gMsgChoiceLine;
+/* The answer cursor. AddChoice uses it to count the choices as they are
+   recorded; entering a choice state resets it to 0, the D-pad and stylus move
+   it, and confirming stores it + 1 in data_0209d684. */
+extern u8 gMsgChoiceIndex;
 extern u8 data_0209d690;
 extern u8 data_0209d694;
 extern u8 data_0209d698;
@@ -59,14 +66,17 @@ extern u8 data_0209d6b4;
 extern u8 data_0209d6b8;
 extern u8 data_0209d6bc;
 extern u8 data_0209d6c0;
-extern u8 data_0209d6c4;
-extern u8 data_0209d6c8;
-extern u8 data_0209d6cc;
-extern u8 data_0209d6d0;
+extern u8 data_0209d6c4; /* the box style: see Message.cpp */
+extern u8 gMsgBoxCenterY;
+extern u8 gMsgBoxTop;
+extern u8 gMsgBoxCenterX;
 extern s16 data_0209d6d8;
 extern s16 data_0209d6dc;
 extern u16 data_0209d6e0;
-extern u8 data_0209d6e4[];
+/* Where each choice's cursor goes, recorded by AddChoice: the x column for a
+   mode-1 (horizontal) choice, which state 4 reads, or the line for modes 2 and
+   3, which states 5 and 6 read. */
+extern u8 gMsgChoicePositions[];
 extern u8 *data_0209d6f0;
 extern u8 *data_0209d6f4;
 extern int data_0209d6f8;
@@ -84,7 +94,7 @@ extern int data_0208eecc[];
 extern u8 data_0208f074[];
 extern u8 data_0208f174[];
 extern int data_0209caa0[];
-extern u32 data_0209b454;
+extern u32 gNextActorUpdateMask;
 extern u8 data_0209f2d8;
 extern s16 data_0209f4a2[];
 extern s16 data_0209f4a4[];
@@ -159,26 +169,26 @@ void Message::AddChoice() {
     u8 idx;
     switch (v) {
     case 0:
-        data_0209d688 = data_0209d6b4;
+        gMsgChoiceLine = data_0209d6b4;
         break;
     case 1:
-        idx = data_0209d68c;
-        data_0209d68c = idx + 1;
-        data_0209d6e4[idx] = data_0209d6b0;
+        idx = gMsgChoiceIndex;
+        gMsgChoiceIndex = idx + 1;
+        gMsgChoicePositions[idx] = data_0209d6b0;
         AddChar(0x4d);
         data_0209d694 = 1;
         break;
     case 2:
-        idx = data_0209d68c;
-        data_0209d68c = idx + 1;
-        data_0209d6e4[idx] = data_0209d6b4;
+        idx = gMsgChoiceIndex;
+        gMsgChoiceIndex = idx + 1;
+        gMsgChoicePositions[idx] = data_0209d6b4;
         AddChar(0x4d);
         data_0209d694 = 2;
         break;
     case 3:
-        idx = data_0209d68c;
-        data_0209d68c = idx + 1;
-        data_0209d6e4[idx] = data_0209d6b4;
+        idx = gMsgChoiceIndex;
+        gMsgChoiceIndex = idx + 1;
+        gMsgChoicePositions[idx] = data_0209d6b4;
         AddChar(0x4d);
         data_0209d694 = 3;
         break;
@@ -594,13 +604,13 @@ void Message::LayoutLine() {
                         u8 m = data_0209d694;
                         if (m == 1) {
                             data_0209d6bc = 4;
-                            data_0209d68c = 0;
+                            gMsgChoiceIndex = 0;
                         } else if (m == 2) {
                             data_0209d6bc = 6;
-                            data_0209d68c = 0;
+                            gMsgChoiceIndex = 0;
                         } else if (m == 3) {
                             data_0209d6bc = 5;
-                            data_0209d68c = 0;
+                            gMsgChoiceIndex = 0;
                         } else {
                             data_0209d6bc = 8;
                         }
@@ -609,13 +619,13 @@ void Message::LayoutLine() {
                     u8 m = data_0209d694;
                     if (m == 1) {
                         data_0209d6bc = 4;
-                        data_0209d68c = 0;
+                        gMsgChoiceIndex = 0;
                     } else if (m == 2) {
                         data_0209d6bc = 6;
-                        data_0209d68c = 0;
+                        gMsgChoiceIndex = 0;
                     } else if (m == 3) {
                         data_0209d6bc = 5;
-                        data_0209d68c = 0;
+                        gMsgChoiceIndex = 0;
                     } else {
                         data_0209d6bc = 8;
                     }
@@ -672,95 +682,97 @@ void Message::LayoutLine() {
 // @symbol _ZN7Message12UpdateWindowEv
 int Message::UpdateWindow() {
     if (data_0209d670 == 0) {
-        if (data_0209d658 > data_0209d650 || data_0209d64c > data_0209d6cc) {
+        if (gMsgBoxWinLeft > gMsgBoxLeft || gMsgBoxWinTop > gMsgBoxTop) {
             int t;
             s16 v;
             int mask;
 
             data_0209d680++;
-            t = data_0209d680 * (data_0209d6d0 - data_0209d650 + 1);
-            t = data_0209d6d0 - t / 8;
+            t = data_0209d680 * (gMsgBoxCenterX - gMsgBoxLeft + 1);
+            t = gMsgBoxCenterX - t / 8;
             v = t;
             if (v < 0)
-                data_0209d658 = 0;
+                gMsgBoxWinLeft = 0;
             else
-                data_0209d658 = t;
-            t = data_0209d680 * (data_0209d6c8 - data_0209d6cc + 1);
-            data_0209d64c = data_0209d6c8 - t / 8;
+                gMsgBoxWinLeft = t;
+            t = data_0209d680 * (gMsgBoxCenterY - gMsgBoxTop + 1);
+            gMsgBoxWinTop = gMsgBoxCenterY - t / 8;
             mask = 0;
-            if (data_0209d658 <= data_0209d650) {
-                data_0209d658 = data_0209d650;
+            if (gMsgBoxWinLeft <= gMsgBoxLeft) {
+                gMsgBoxWinLeft = gMsgBoxLeft;
                 mask = 1;
             }
-            if (data_0209d64c <= data_0209d6cc) {
+            if (gMsgBoxWinTop <= gMsgBoxTop) {
                 mask |= 2;
-                data_0209d64c = data_0209d6cc;
+                gMsgBoxWinTop = gMsgBoxTop;
             }
             if (mask == 3)
                 data_0209d6bc = data_0209d6ac;
 
             if (data_0209d698 != 0) {
-                *(volatile u16 *)0x4001040 = ((data_0209d658 << 8) & 0xff00) |
-                                             ((data_0209d6d0 * 2 - data_0209d658 + 1) & 0xff);
-                *(volatile u16 *)0x4001044 = ((data_0209d64c << 8) & 0xff00) |
-                                             ((data_0209d6c8 * 2 - data_0209d64c + 1) & 0xff);
+                *(volatile u16 *)0x4001040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                                             ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
+                *(volatile u16 *)0x4001044 = ((gMsgBoxWinTop << 8) & 0xff00) |
+                                             ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
             } else {
-                *(volatile u16 *)0x4000040 = ((data_0209d658 << 8) & 0xff00) |
-                                             ((data_0209d6d0 * 2 - data_0209d658 + 1) & 0xff);
-                *(volatile u16 *)0x4000044 = ((data_0209d64c << 8) & 0xff00) |
-                                             ((data_0209d6c8 * 2 - data_0209d64c + 1) & 0xff);
+                *(volatile u16 *)0x4000040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                                             ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
+                *(volatile u16 *)0x4000044 = ((gMsgBoxWinTop << 8) & 0xff00) |
+                                             ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
             }
             return 0;
         }
         return 1;
     }
 
-    if (data_0209d658 < data_0209d6d0 && data_0209d64c < data_0209d6c8) {
+    if (gMsgBoxWinLeft < gMsgBoxCenterX && gMsgBoxWinTop < gMsgBoxCenterY) {
         int t;
         int t2;
 
         data_0209d680--;
-        t = data_0209d680 * (data_0209d6d0 - data_0209d650 + 1);
-        t2 = data_0209d680 * (data_0209d6c8 - data_0209d6cc + 1);
-        data_0209d658 = data_0209d6d0 - t / 8;
-        data_0209d64c = data_0209d6c8 - t2 / 8;
-        data_0209d658 += 7;
-        data_0209d64c += 5;
-        if (data_0209d658 >= data_0209d6d0)
-            data_0209d658 = data_0209d6d0;
-        if (data_0209d64c >= data_0209d6c8)
-            data_0209d64c = data_0209d6c8;
+        t = data_0209d680 * (gMsgBoxCenterX - gMsgBoxLeft + 1);
+        t2 = data_0209d680 * (gMsgBoxCenterY - gMsgBoxTop + 1);
+        gMsgBoxWinLeft = gMsgBoxCenterX - t / 8;
+        gMsgBoxWinTop = gMsgBoxCenterY - t2 / 8;
+        gMsgBoxWinLeft += 7;
+        gMsgBoxWinTop += 5;
+        if (gMsgBoxWinLeft >= gMsgBoxCenterX)
+            gMsgBoxWinLeft = gMsgBoxCenterX;
+        if (gMsgBoxWinTop >= gMsgBoxCenterY)
+            gMsgBoxWinTop = gMsgBoxCenterY;
 
         if (data_0209d698 != 0) {
-            *(volatile u16 *)0x4001040 =
-                ((data_0209d658 << 8) & 0xff00) | ((data_0209d6d0 * 2 - data_0209d658 + 1) & 0xff);
+            *(volatile u16 *)0x4001040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                                         ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
             *(volatile u16 *)0x4001044 =
-                ((data_0209d64c << 8) & 0xff00) | ((data_0209d6c8 * 2 - data_0209d64c + 1) & 0xff);
+                ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
         } else {
-            *(volatile u16 *)0x4000040 =
-                ((data_0209d658 << 8) & 0xff00) | ((data_0209d6d0 * 2 - data_0209d658 + 1) & 0xff);
+            *(volatile u16 *)0x4000040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                                         ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
             *(volatile u16 *)0x4000044 =
-                ((data_0209d64c << 8) & 0xff00) | ((data_0209d6c8 * 2 - data_0209d64c + 1) & 0xff);
+                ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
         }
         return 0;
     }
 
-    data_0209b454 &= ~0x80000000;
+    gNextActorUpdateMask &= ~0x80000000;
     if (func_0201fb4c() != 0) {
         Sound::ChangeMusicVolume(0x7f, 0x000064cc);
     }
     data_0209d660 = 0;
     data_0209d670 = 0;
     if (data_0209d698 != 0) {
-        data_0209d454 &= ~2;
-        *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+        gSubScreenLayers &= ~2;
+        *(volatile u32 *)0x4001000 =
+            (*(volatile u32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
         *(volatile u16 *)0x4001050 = 0;
         *(volatile u16 *)0x4001048 &= ~0x3f;
         *(volatile u16 *)0x400104a &= ~0x3f;
         *(volatile u32 *)0x4001000 &= ~0xe000;
     } else {
-        data_0209d45c &= ~8;
-        *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (data_0209d45c << 8);
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
+        *(volatile u32 *)0x4000000 =
+            (*(volatile u32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
         *(volatile u16 *)0x4000050 = 0;
         *(volatile u16 *)0x4000048 &= ~0x3f;
         *(volatile u16 *)0x400004a &= ~0x3f;
@@ -802,29 +814,29 @@ void Message::Update() {
     case 4: {
         s16 t;
         if (IsButtonInputValid() != 0) {
-            data_0209d684 = data_0209d68c + 1;
+            data_0209d684 = gMsgChoiceIndex + 1;
             data_0209d670 = 1;
             return;
         }
         t = *(s16 *)((u8 *)data_0209f4a2 + gActivePlayerSlot * 0x18);
         if (t > 0x80) {
-            if (data_0209d68c == 0) {
+            if (gMsgChoiceIndex == 0) {
                 func_02012790(0x96);
             }
-            data_0209d68c = 1;
+            gMsgChoiceIndex = 1;
         } else if (t < -0x80) {
-            if (data_0209d68c != 0) {
+            if (gMsgChoiceIndex != 0) {
                 func_02012790(0x96);
             }
-            data_0209d68c = 0;
+            gMsgChoiceIndex = 0;
         } else if (*((u8 *)data_0209caa0 + 0x42) == 0 &&
                    (*(u16 *)((u8 *)data_020a0e5a + gActivePlayerSlot * 4) & 0x30)) {
-            data_0209d68c ^= 1;
+            gMsgChoiceIndex ^= 1;
             func_02012790(0x96);
         }
         {
-            int r5 = data_0209d6e4[data_0209d68c] + data_0209d650 + 0xC;
-            int r4 = data_0209d6cc + (data_0209d688 * 0x10) + 0xE;
+            int r5 = gMsgChoicePositions[gMsgChoiceIndex] + gMsgBoxLeft + 0xC;
+            int r4 = gMsgBoxTop + (gMsgChoiceLine * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
                             -1);
@@ -838,29 +850,29 @@ void Message::Update() {
     case 5: {
         s16 t;
         if (IsButtonInputValid() != 0) {
-            data_0209d684 = data_0209d68c + 1;
+            data_0209d684 = gMsgChoiceIndex + 1;
             data_0209d670 = 1;
             return;
         }
         t = *(s16 *)((u8 *)data_0209f4a4 + gActivePlayerSlot * 0x18);
         if (t > 0x80) {
-            if (data_0209d68c == 0) {
+            if (gMsgChoiceIndex == 0) {
                 func_02012790(0x96);
             }
-            data_0209d68c = 1;
+            gMsgChoiceIndex = 1;
         } else if (t < -0x80) {
-            if (data_0209d68c != 0) {
+            if (gMsgChoiceIndex != 0) {
                 func_02012790(0x96);
             }
-            data_0209d68c = 0;
+            gMsgChoiceIndex = 0;
         } else if (*((u8 *)data_0209caa0 + 0x42) == 0 &&
                    (*(u16 *)((u8 *)data_020a0e5a + gActivePlayerSlot * 4) & 0xC0)) {
-            data_0209d68c ^= 1;
+            gMsgChoiceIndex ^= 1;
             func_02012790(0x96);
         }
         {
-            int r5 = data_0209d650 + 0xC;
-            int r4 = data_0209d6cc + (data_0209d6e4[data_0209d68c] * 0x10) + 0xE;
+            int r5 = gMsgBoxLeft + 0xC;
+            int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
                             -1);
@@ -876,7 +888,7 @@ void Message::Update() {
         int idx;
         u8 f0;
         if (IsButtonInputValid() != 0) {
-            data_0209d684 = data_0209d68c + 1;
+            data_0209d684 = gMsgChoiceIndex + 1;
             data_0209d670 = 1;
             return;
         }
@@ -890,7 +902,7 @@ void Message::Update() {
             touchBegan = 1;
         if (touchBegan != 0) {
             data_0209d6d8 = ((u8(*)[4])gTouchY)[idx][0];
-            data_0209d6d8 -= (s16)(data_0209d68c * 8);
+            data_0209d6d8 -= (s16)(gMsgChoiceIndex * 8);
         } else if (f0 != 0) {
             s16 debval = ((u8(*)[4])gTouchY)[idx][0];
             data_0209d6dc = debval - data_0209d6d8;
@@ -901,27 +913,27 @@ void Message::Update() {
                 data_0209d6dc = 0;
                 data_0209d6d8 = debval;
             }
-            switch (data_0209d68c) {
+            switch (gMsgChoiceIndex) {
             case 0:
                 if (data_0209d6dc > 0 && data_0209d6dc >= 8) {
-                    data_0209d68c += 1;
+                    gMsgChoiceIndex += 1;
                     func_02012790(0x96);
                 }
                 break;
             case 1:
                 if (data_0209d6dc > 0) {
                     if (data_0209d6dc >= 0x10) {
-                        data_0209d68c += 1;
+                        gMsgChoiceIndex += 1;
                         func_02012790(0x96);
                     } else if (data_0209d6dc <= 6) {
-                        data_0209d68c -= 1;
+                        gMsgChoiceIndex -= 1;
                         func_02012790(0x96);
                     }
                 }
                 break;
             case 2:
                 if (data_0209d6dc > 0 && data_0209d6dc <= 0xE) {
-                    data_0209d68c -= 1;
+                    gMsgChoiceIndex -= 1;
                     func_02012790(0x96);
                 }
                 break;
@@ -930,19 +942,19 @@ void Message::Update() {
             u16 mask = data_020a0e5a[idx * 2];
             if (mask & 0xC0) {
                 u8 target = (mask & 0x40) ? 0 : 2;
-                if (data_0209d68c != target) {
+                if (gMsgChoiceIndex != target) {
                     if (target != 0) {
-                        data_0209d68c += 1;
+                        gMsgChoiceIndex += 1;
                     } else {
-                        data_0209d68c -= 1;
+                        gMsgChoiceIndex -= 1;
                     }
                     func_02012790(0x96);
                 }
             }
         }
         {
-            int r5 = data_0209d650 + 0xC;
-            int r4 = data_0209d6cc + (data_0209d6e4[data_0209d68c] * 0x10) + 0xE;
+            int r5 = gMsgBoxLeft + 0xC;
+            int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
                             -1);
@@ -968,8 +980,8 @@ void Message::Update() {
             return;
         }
         {
-            int r5 = ((data_0209d6d0 * 2) - 6) - data_0209d650;
-            int r4 = ((data_0209d6c8 * 2) + 2) - data_0209d6cc;
+            int r5 = ((gMsgBoxCenterX * 2) - 6) - gMsgBoxLeft;
+            int r4 = ((gMsgBoxCenterY * 2) + 2) - gMsgBoxTop;
             if (!(data_020a0db0 & (0x10 / data_0208ee44))) {
                 return;
             }

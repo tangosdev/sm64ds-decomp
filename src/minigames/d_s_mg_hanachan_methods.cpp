@@ -84,6 +84,7 @@ enum dScMgHanachan_c_AssetId {
 #pragma defer_codegen off
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "private/ov006_ec4dc_obj.h"
 #include "dScMgHanachan_c.h"
 #include "decl_common.h"
@@ -230,8 +231,8 @@ extern void StarPopup_Start(int x, int y);
 extern void HanaPopup_Spawn(int x, int y);
 extern s16 sHanaRoundPatterns[];
 extern volatile int sHanaFieldWigglerCounts[];
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 
 /* These helpers read or write two scalar words. Cast the plain Point
    records at the C ABI boundary rather than giving the externs new types. */
@@ -2244,7 +2245,7 @@ void Hana_LoadBackground(void) {
     DecompressLZ16(r6, (void *)func_02054d88());
     func_02056314(r5, 0, 0x800);
     GX::LoadBGPltt((const void *)r4, 0x60, 0x1a0);
-    data_0209d45c |= 8;
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
     Deallocate(r6);
     Deallocate(r5);
     Deallocate(r4);
@@ -2260,7 +2261,7 @@ void Hana_LoadBackground(void) {
     DecompressLZ16(r6, G2S::GetBG3CharPtr());
     func_020562b4(r5, 0, 0x800);
     GXS::LoadBGPltt((const void *)r4, 0x60, 0x1a0);
-    data_0209d454 |= 8;
+    gSubScreenLayers |= 8;
     Deallocate(r6);
     Deallocate(r5);
     Deallocate(r4);

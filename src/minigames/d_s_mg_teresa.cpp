@@ -49,6 +49,7 @@
 #pragma defer_codegen off
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "nitro/fx/fx.h"
 #include "OamAttr.h"
 #include "dScMgTeresa_c.h"
@@ -85,8 +86,8 @@ extern void  MultiStore16(u16 val, void *dst, int nbytes);
 extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                       s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);
 
-extern unsigned char  data_0209d454;
-extern unsigned char  data_0209d45c;
+extern unsigned char gSubScreenLayers;
+extern unsigned char gMainScreenLayers;
 extern int sTeresaBigBooSprites[];
 extern unsigned char sTeresaBigBooHoverPicks[];
 extern unsigned short sTeresaBigBooFrameTimes[];
@@ -394,7 +395,7 @@ void dScMgTeresa_c::BigBoo_StateHover(int i) {
         mBigBoo[i].wait--;
         return;
     }
-    data_0209d45c &= ~4;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     SetBg3Offset(0, 0x100);
     {
     int rnd = RandomIntInternal(&data_0209d4b8);
@@ -538,8 +539,8 @@ void dScMgTeresa_c::Reveal_StateFinish(int idx) {
     mReveal[idx].visible = 0;
     mReveal[idx].active = 0;
     Marker_Hide();
-    data_0209d45c |= 4;
-    data_0209d454 |= 1;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
+    gSubScreenLayers |= 1;
     Sound::PlayBank2_2D(0x1f6);
     mSceneState = 2;
     StartBoosHiding();
@@ -1749,7 +1750,7 @@ void dScMgTeresa_c::Scene_StateRoundEnd() {
     mSceneState = 4;
     mSceneTimer = 0x60;
     *(int *)0x4001000 = *(int *)0x4001000 & ~0xe000;
-    data_0209d454 = data_0209d454 & ~1;
+    gSubScreenLayers = gSubScreenLayers & ~1;
     Sound::PlayBank2_2D(0x1f7);
     BigBoo_ShowResult();
     if (mRoundCleared == 0)
@@ -1936,7 +1937,7 @@ s32 dScMgTeresa_c::InitResources()
         fa = 0x5300;
         MultiStore16(fa, p, 0x800);
     }
-    data_0209d45c |= 8;
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *((volatile u16 *) 0x400000e) = (*((volatile u16 *) 0x400000e)) & (~3);
     *((volatile u16 *) 0x400000e) &= ~0x40;
     *((volatile u32 *) 0x400001c) = 0;
@@ -1972,7 +1973,7 @@ s32 dScMgTeresa_c::InitResources()
         fc = 0x1111;
         MultiStore16(fc, p, 0x6000);
     }
-    data_0209d454 |= 4;
+    gSubScreenLayers |= 4;
     *((volatile u16 *) 0x400100c) = ((*((volatile u16 *) 0x400100c)) & (~3)) | 1;
     *((volatile u16 *) 0x400100c) &= ~0x40;
     *((volatile u32 *) 0x4001018) = 0;

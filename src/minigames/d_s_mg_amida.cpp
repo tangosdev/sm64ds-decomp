@@ -78,6 +78,7 @@ enum dScMgAmida_c_AssetId {
 };
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "G2.h"
 #include "decl_common.h"
 #include "dScMgAmida_c.h"
@@ -113,8 +114,8 @@ extern void *dScMgAmida_c_classInit(void);
 
 /* --- data --- */
 extern s16 data_02082214[];
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
 extern u8 gActivePlayerSlot;
 // local extern: see above.
@@ -239,7 +240,7 @@ int dScMgAmida_c::InitSubScreenBg() {
     *reg = (unsigned short)(*reg & ~0x40);
     *reg = (unsigned short)(*reg & ~3);
     SetSubBg1Offset(0, 0);
-    data_0209d454 = (unsigned char)(data_0209d454 & ~2);
+    gSubScreenLayers = (unsigned char)(gSubScreenLayers & ~2);
     id = GetGameLanguage();
     t = (void *)G2S::GetBG1CharPtr();
     LoadCompressedFileAt(sAmidaOptionNcgByLanguage[id], t);
@@ -1913,8 +1914,8 @@ s32 dScMgAmida_c::Render() {
     Mg_DrawScoreTally(raw, 0xe0, 0x14, 1);
 
     if (mState == 3 && mEndDelayTimer == 0) {
-        data_0209d45c &= ~1;
-        data_0209d454 &= ~1;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
+        gSubScreenLayers &= ~1;
         if (IsVariant2() == 0 && mFinished == 1) {
             int i;
             for (i = 0; i < 4; i++) {
@@ -1951,8 +1952,8 @@ s32 dScMgAmida_c::Render() {
         }
         return 1;
     } else {
-        data_0209d45c |= 1;
-        data_0209d454 |= 1;
+        gMainScreenLayers |= DISPLAY_LAYER_BG0;
+        gSubScreenLayers |= 1;
         if (IsVariant2() != 0) {
             RenderBoardAlt();
         } else {
@@ -2254,8 +2255,8 @@ s32 dScMgAmida_c::InitResources() {
         GXS::LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NSC_BIN, G2S::GetBG3ScrPtr());
-        data_0209d45c |= 9;
-        data_0209d454 |= 9;
+        gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3;
+        gSubScreenLayers |= 9;
     } else {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_NCG_BIN, G2S::GetBG3CharPtr());
         file = (void *)LoadFile(ASSET_D_2D_MG_BG_AMIDA2_NCL_BIN);
@@ -2265,8 +2266,8 @@ s32 dScMgAmida_c::InitResources() {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_1_NSC_BIN, G2S::GetBG3ScrPtr());
         *(volatile s16 *)0x4000050 = 0;
         G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 4, 8, 6, 0x10);
-        data_0209d45c |= 9;
-        data_0209d454 |= 0xd;
+        gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3;
+        gSubScreenLayers |= 0xd;
     }
 
     if (IsVariant2() != 0) {

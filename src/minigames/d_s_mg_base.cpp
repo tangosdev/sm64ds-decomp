@@ -1443,8 +1443,8 @@ extern "C" {
    down.  It is not a Yoshi egg, and it does not return a vector -- see the
    slot-30 block in include/dScMgBase_c.h for the AAPCS measurement that
    refutes the `ReturnVec` in the name. */
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 extern u8 data_0209d460;
 extern u8 data_0209d458;
 
@@ -1465,14 +1465,14 @@ extern u8 data_0209d458;
 }
 
 void dScMgBase_c::RestoreScreenFromMenu() {
-    using s20aeed8::data_0209d454;
+    using s20aeed8::gSubScreenLayers;
     using s20aeed8::data_0209d458;
-    using s20aeed8::data_0209d45c;
+    using s20aeed8::gMainScreenLayers;
     using s20aeed8::data_0209d460;
     MgMenuSaveArea *save = (MgMenuSaveArea *)this;
 
-    data_0209d45c = 0;
-    data_0209d454 = 0;
+    gMainScreenLayers = 0;
+    gSubScreenLayers = 0;
 
     *(u32*)0x4000000 &= ~0x1f00;
     *(u32*)0x4001000 &= ~0x1f00;
@@ -1494,14 +1494,14 @@ void dScMgBase_c::RestoreScreenFromMenu() {
         MultiCopy_Int((int *)save->subObjChars, (int *)src, 0x2000);
     }
 
-    data_0209d45c = (u8)mSavedMainBgBits;
-    data_0209d454 = (u8)mSavedSubBgBits;
+    gMainScreenLayers = (u8)mSavedMainBgBits;
+    gSubScreenLayers = (u8)mSavedSubBgBits;
 
     if (GetDisplayMode() == 2)
         return;
 
-    *(u32*)0x4000000 = (*(u32*)0x4000000 & ~0x1f00) | ((u32)data_0209d45c << 8);
-    *(u32*)0x4001000 = (*(u32*)0x4001000 & ~0x1f00) | ((u32)data_0209d454 << 8);
+    *(u32 *)0x4000000 = (*(u32 *)0x4000000 & ~0x1f00) | ((u32)gMainScreenLayers << 8);
+    *(u32 *)0x4001000 = (*(u32 *)0x4001000 & ~0x1f00) | ((u32)gSubScreenLayers << 8);
 }
 
 namespace s20af04c {
@@ -1562,8 +1562,8 @@ extern void func_0201f32c(int arg0);
 extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *src, void *dst);
 
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char gMainScreenLayers;
+extern unsigned char gSubScreenLayers;
 
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
@@ -1580,8 +1580,8 @@ int dScMgBase_c::SaveScreenForMenu() {
     using s20af094::DecompressLZ16;
     using s20af094::GetGameLanguage;
     using s20af094::MultiStore16;
-    using s20af094::data_0209d454;
-    using s20af094::data_0209d45c;
+    using s20af094::gSubScreenLayers;
+    using s20af094::gMainScreenLayers;
     using s20af094::func_0201f32c;
     MgMenuSaveArea *save = (MgMenuSaveArea *)this;
 
@@ -1590,12 +1590,12 @@ int dScMgBase_c::SaveScreenForMenu() {
 
     mSavedScreenSwap = (REG_POWCNT1 & 0x8000) >> 15;
 
-    mSavedMainBgBits = data_0209d45c;
-    mSavedSubBgBits = data_0209d454;
+    mSavedMainBgBits = gMainScreenLayers;
+    mSavedSubBgBits = gSubScreenLayers;
 
     REG_POWCNT1 |= 0x8000;
-    data_0209d45c = 0;
-    data_0209d454 = 0;
+    gMainScreenLayers = 0;
+    gSubScreenLayers = 0;
 
     *(volatile int *)0x4000000 &= ~0x1f00;
     *(volatile int *)0x4001000 &= ~0x1f00;
@@ -1624,8 +1624,8 @@ int dScMgBase_c::SaveScreenForMenu() {
 
     func_0201f32c(mSceneKind);
 
-    data_0209d45c = 0x12;
-    data_0209d454 = 0x10;
+    gMainScreenLayers = DISPLAY_LAYER_BG1 | DISPLAY_LAYER_OBJ;
+    gSubScreenLayers = 0x10;
 
     if (GetDisplayMode() != 2) {
         int *vbase = (int *)0x6600000;
@@ -3503,7 +3503,7 @@ extern "C" {
 
    ENGINE BRING-UP.  Graphics modes for both engines (GX mode 1/0/0, GXS mode
    0), VRAM banks assigned to BG and OBJ on both screens, and BOTH BG-enable
-   shadows -- data_0209d45c for the main engine, data_0209d454 for the sub --
+   shadows -- gMainScreenLayers for the main engine, gSubScreenLayers for the sub --
    initialised to 0x10, which is the value slots 30 and 31 later save, clear
    bits out of and restore.  A language-indexed character file (indexed by
    GetGameLanguage into sMgStockCounterFiles) is decompressed into BOTH engines'
@@ -3537,9 +3537,9 @@ extern void Ov004_Deallocate(void *p);
 extern void Mg_ResetOverlays(void);
 extern void FreeGfxSlotsById(int arg);
 extern int sMgTopScreenYOffset;
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern int sMgStockCounterFiles[];
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern void **data_0209d4a8;
 extern int data_0208ee44;
 }
@@ -3551,8 +3551,8 @@ void dScMgBase_c::InitEngines() {
     using s20b265c::GetGameLanguage;
     using s20b265c::Ov004_Deallocate;
     using s20b265c::data_0208ee44;
-    using s20b265c::data_0209d454;
-    using s20b265c::data_0209d45c;
+    using s20b265c::gSubScreenLayers;
+    using s20b265c::gMainScreenLayers;
     using s20b265c::data_0209d4a8;
     using s20b265c::sMgStockCounterFiles;
     using s20b265c::sMgTopScreenYOffset;
@@ -3576,7 +3576,7 @@ void dScMgBase_c::InitEngines() {
     *(vu32 *)0x4000000u &= ~0x38000000u;
     GX::SetBankForBG(3);
     GX::SetBankForOBJ(0x10);
-    data_0209d45c = 0x10;
+    gMainScreenLayers = DISPLAY_LAYER_OBJ;
     GX::SetBankForSubBG(4);
     GX::SetBankForSubOBJ(8);
     p = Ov004_LoadFile(sMgStockCounterFiles[GetGameLanguage()]);
@@ -3594,7 +3594,7 @@ void dScMgBase_c::InitEngines() {
     GX::LoadOBJPltt(p, 0x100u, 0x100u);
     GXS::LoadOBJPltt(p, 0x100u, 0x100u);
     Ov004_Deallocate(p);
-    data_0209d454 = 0x10;
+    gSubScreenLayers = 0x10;
     sMgGraphCallback.mScene = this;
     data_0209d4a8 = (void **)&sMgGraphCallback;
     Mg_ResetOverlays();
@@ -3619,25 +3619,27 @@ extern "C" {
 
    It touches no collision.  It is slot 31 with the other display engine: three
    read-modify-writes leave the MAIN BG1CNT at 0x0400000a holding exactly 0x1000,
-   the layer's scroll is reset, BG1's bit is cleared from data_0209d45c -- the
+   the layer's scroll is reset, BG1's bit is cleared from gMainScreenLayers -- the
    MAIN BG-enable shadow slot 30 restores the main DISPCNT from, where 31 cleared
-   the sub's data_0209d454 -- and a language-indexed character file plus the
+   the sub's gSubScreenLayers -- and a language-indexed character file plus the
    shared screen map (file 0x67 here, 0x5b there) are installed.  It builds this
    minigame's TOP-screen background, from AfterInitResources. */
 extern int GetGameLanguage(void);
 extern unsigned int LoadCompressedFileAt(int fileID, void *target);
-extern unsigned char data_0209d45c[];
+extern unsigned char gMainScreenLayers[];
 }
 }
 
-void dScMgBase_c::InitMainScreenBg()
-{ using s20b27f4::GetGameLanguage; using s20b27f4::LoadCompressedFileAt; using s20b27f4::data_0209d45c;
+void dScMgBase_c::InitMainScreenBg() {
+    using s20b27f4::GetGameLanguage;
+    using s20b27f4::LoadCompressedFileAt;
+    using s20b27f4::gMainScreenLayers;
     int f;
     *(volatile unsigned short *)0x400000a = *(volatile unsigned short *)0x400000a & ~3;
     *(volatile unsigned short *)0x400000a = (*(volatile unsigned short *)0x400000a & 0x43) | 0x1000;
     *(volatile unsigned short *)0x400000a = *(volatile unsigned short *)0x400000a & ~0x40;
     SetBg1Offset(0, 0);
-    data_0209d45c[0] &= ~2;
+    gMainScreenLayers[0] &= ~DISPLAY_LAYER_BG1;
     f = GetGameLanguage();
     LoadCompressedFileAt(sMgPauseBgNcgByLanguage[f], (void *)func_02054ea8());
     LoadCompressedFileAt(0x67, G2::GetBG1ScrPtr());
@@ -3665,20 +3667,20 @@ extern "C" {
    minigame's touch-screen background, from BeforeInitResources. */
 extern int GetGameLanguage(void);
 extern unsigned int LoadCompressedFileAt(int fileID, void *target);
-extern unsigned char data_0209d454[];
+extern unsigned char gSubScreenLayers[];
 }
 }
 
 int dScMgBase_c::InitSubScreenBg() {
     using s20b2880::GetGameLanguage;
     using s20b2880::LoadCompressedFileAt;
-    using s20b2880::data_0209d454;
+    using s20b2880::gSubScreenLayers;
     int f;
     *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 0x10;
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~0x40;
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
     SetSubBg1Offset(0, 0);
-    data_0209d454[0] &= ~2;
+    gSubScreenLayers[0] &= ~2;
     f = GetGameLanguage();
     LoadCompressedFileAt(sMgOptionNcgByLanguage[f], (void *)G2S::GetBG1CharPtr());
     LoadCompressedFileAt(0x5b, G2S::GetBG1ScrPtr());

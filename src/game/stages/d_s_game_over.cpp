@@ -52,6 +52,7 @@ enum dScGameOver_c_AssetId {
 };
 
 #include "dScGameOver_c.h"
+#include "nitro/hw/registers.h"
 #include "G2.h"
 #include "GX.h"
 #include "dScStage_c.h"
@@ -117,8 +118,8 @@ extern dFdBrightness_c *data_0209f5bc;
 extern int data_0208ee44;
 /* Scalars, not tables: the two BG-enable bit registers, main and sub --
  * the spelling the rest of the tree uses for this pair. */
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 extern u8 data_0209f204;
 /* u16* spelling for 0730's `p += ...` and 16-bit stores, no cast needed.
  * Ergonomics, not a constraint: the void* form compiles to identical bytes
@@ -241,7 +242,7 @@ s32 dScGameOver_c::InitResources() {
     GX::LoadOBJPltt(f, 0, 0x200);
     Deallocate(f);
 
-    data_0209d45c = 0x14;
+    gMainScreenLayers = DISPLAY_LAYER_BG2 | DISPLAY_LAYER_OBJ;
 
     *(volatile u16 *)0x4001008 &= ~3;
     *(volatile u16 *)0x4001008 &= ~0x40;
@@ -299,8 +300,8 @@ s32 dScGameOver_c::InitResources() {
         mGlyphUnused[i] = 0;
     }
 
-    data_0209d454 = 0x14;
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (data_0209d45c << 8);
+    gSubScreenLayers = 0x14;
+    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
     *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1400;
     data_0209f204 = 1;
     Sound::LoadInitialGroup(2);
@@ -518,8 +519,8 @@ void dScGameOver_c::func_ov003_020b060c() {
             return;
         }
         this->mIntroPhase = 2;
-        data_0209d45c |= 1;
-        data_0209d454 |= 3;
+        gMainScreenLayers |= DISPLAY_LAYER_BG0;
+        gSubScreenLayers |= 3;
         break;
     }
 }

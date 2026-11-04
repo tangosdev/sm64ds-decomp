@@ -16,8 +16,8 @@ extern void SetSubBg1Offset(int a, int b);
 /* The visible-plane masks of the two engines, kept beside DISPCNT bits 8-12
    (BG0-BG3, OBJ): d_a_demo.cpp sets and clears bits here and writes the
    mask back to the register the same way. */
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 extern void *data_020927b0[];
 extern void *data_020927c4[];
 extern void *data_020927d8[];
@@ -32,8 +32,8 @@ void func_02030500(void) {
     u32 tmp;
     void *p;
 
-    data_0209d45c = 0;
-    data_0209d454 = 0;
+    gMainScreenLayers = 0;
+    gSubScreenLayers = 0;
     REG_DISPCNT &= ~0x1f00;
     REG_DISPCNT_SUB &= ~0x1f00;
 
@@ -86,8 +86,8 @@ void func_02030500(void) {
     SetBg1Offset(0, 0);
     SetSubBg1Offset(0, 0);
 
-    data_0209d45c = 2;
-    data_0209d454 = 2;
+    gMainScreenLayers = DISPLAY_LAYER_BG1;
+    gSubScreenLayers = 2;
     REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x200;
     REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x200;
 }

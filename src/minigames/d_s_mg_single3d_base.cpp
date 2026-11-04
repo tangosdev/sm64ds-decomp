@@ -60,8 +60,8 @@ s32 GetGameLanguage(void);
 void *Ov004_LoadFile(int fileId);
 void Mg_ResetOverlays(void);
 void FreeGfxSlotsById(int id);
-extern u8 data_0209d454;
-extern u8 data_0209d45c;
+extern u8 gSubScreenLayers;
+extern u8 gMainScreenLayers;
 extern u32 data_020a0db0;
 extern int sMgTopScreenYOffset;
 extern int sMgGraphCallback[];
@@ -83,8 +83,8 @@ void dScMgSingle3DBase_c::InitEngines()
     sMgTopScreenYOffset = 0;
     Mg_ResetBgOffsets(); /* zero all eight BG scroll offsets */
     Mg_DisableAllBanks(); /* GX::DisableAllBanks */
-    data_0209d45c = 0x10;
-    data_0209d454 = 0x10;
+    gMainScreenLayers = DISPLAY_LAYER_OBJ;
+    gSubScreenLayers = 0x10;
     REG_DISPCNT &= ~0x7000000u;
     REG_DISPCNT &= ~0x38000000u;
     GX::SetBankForBG(2);
@@ -179,7 +179,7 @@ int dScMgSingle3DBase_c::GetDisplayMode()
 extern "C" void LoadCard2SubBg3(void)
 {
     void *fileData = (void *)LoadFile(ASSET_D_2D_MG_BG_CARD2_NCG_BIN);
-    data_0209d454 |= 8;
+    gSubScreenLayers |= 8;
     *(vu16 *)0x400100eu = (*(vu16 *)0x400100eu & 0x43) | 0x214;
     DecompressLZ16(fileData, (void *)G2S::GetBG3CharPtr());
     Ov004_Deallocate(fileData);

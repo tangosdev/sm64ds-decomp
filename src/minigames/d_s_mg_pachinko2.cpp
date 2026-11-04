@@ -44,6 +44,7 @@ enum dScMgPachinko2_c_AssetId {
 #pragma defer_codegen off
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "cstd.h"
 #include "dScMgPachinko2_c.h"
 #include "PlayerInput.h"
@@ -100,8 +101,8 @@ extern void func_020564f4(const void *, int, int);
 
 /* --- ROM data this TU reads --- */
 extern int data_0209d4b8;
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 extern s16 data_02082214[];
 extern int sPachinkoPipeSprites[];
 extern int sPachinko2SparkSprites[];
@@ -2534,7 +2535,7 @@ s32 dScMgPachinko2_c::InitResources() {
     int y;
     int x;
 
-    data_0209d45c |= 8; /* main BG3 on */
+    gMainScreenLayers |= DISPLAY_LAYER_BG3; /* main BG3 on */
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
     *(volatile u16 *)0x400000e &= ~0x40;
     *(volatile u32 *)0x400001c = 0;
@@ -2557,7 +2558,7 @@ s32 dScMgPachinko2_c::InitResources() {
     DecompressLZ16(sp4, (void *)0x6400000);
     GX::LoadOBJPltt((const void *)sp8, 0, 0x100);
 
-    data_0209d454 |= 0xd; /* sub BG0, BG2 and BG3 on */
+    gSubScreenLayers |= 0xd; /* sub BG0, BG2 and BG3 on */
     *(volatile u16 *)0x400100c &= ~3;
     *(volatile u16 *)0x400100c &= ~0x40;
     *(volatile u32 *)0x4001018 = 0;

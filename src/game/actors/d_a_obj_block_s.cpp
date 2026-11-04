@@ -125,7 +125,7 @@ enum {
 #define BLOCKS_EATING_PLAYER(o) (*(daPly_c **)((char *)(o) + 0xd0))
 
 extern "C" {
-extern u32 data_0209b454;
+extern u32 gNextActorUpdateMask;
 extern int data_ov098_0213c4c8[];
 extern s16 data_02082214[];
 extern int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
@@ -1245,7 +1245,7 @@ int daObjBlockS_c::Render()
 
 // @symbol _ZN13daObjBlockS_c8BehaviorEv
 /* Per-frame update; always returns 1.
- *  - While mFlags bit 0x4000000 is set, data_0209b454 has bit 0x4000000
+ *  - While mFlags bit 0x4000000 is set, gNextActorUpdateMask has bit 0x4000000
  *    (an unrecovered global) and a player is holding the crate, that player
  *    drops it.
  *  - Off screen (mFlags 0x8), not horizontally at home and more than 2000 units
@@ -1269,7 +1269,7 @@ int daObjBlockS_c::Behavior()
     int x, y, z;
 
     b1 = (enum Bool)((mFlags & 0x4000000) != 0);
-    if (b1 != FALSE && (data_0209b454 & 0x4000000) && mHoldingPlayer) {
+    if (b1 != FALSE && (gNextActorUpdateMask & 0x4000000) && mHoldingPlayer) {
         mHoldingPlayer->DropActor();
     }
 

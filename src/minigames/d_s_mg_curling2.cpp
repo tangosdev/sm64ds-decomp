@@ -39,6 +39,7 @@ enum dScMgCurling2_c_AssetId {
 #pragma defer_codegen off
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "dScMgCurling2_c.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
@@ -93,7 +94,7 @@ extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, s16 h);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int idx);
-extern void DrawOamSprite(int a, int b, int c, int d);
+extern void DrawOamSprite(void *a, void *b, int c, void *d);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern int RandomIntInternal(int *seed);
 extern int GetGameLanguage(void);
@@ -112,8 +113,8 @@ extern void func_02056374(const void *a, u32 b, u32 c);
 extern int func_02054d88(void);
 
 extern int data_0209d4b8;
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 extern s16 data_02082214[];
 extern unsigned char sCurling2StepXPicks[];
 extern unsigned char sCurling2StepXFastPicks[];
@@ -290,7 +291,7 @@ void dScMgCurling2_c::DrawPieces() {
             int x = mPiece[i].x >> 0xc;
             int y = mPiece[i].y >> 0xc;
             Mg_RenderSubSpriteMtx(sCurlingBitSprites[mPiece[i].sprite0], x, y, 0);
-            DrawOamSprite(sCurlingBitSprites[mPiece[i].sprite1], x, y, 0);
+            DrawOamSprite((void *)sCurlingBitSprites[mPiece[i].sprite1], (void *)x, y, 0);
         }
     }
 }
@@ -1613,7 +1614,7 @@ void dScMgCurling2_c::BeginRound() {
 // @symbol _ZN15dScMgCurling2_c6ScrollEv
 /* Pick the rink's scroll mode: 0xff in scrollIdx forces mode 0, otherwise
  * a random mode different from the current one. Apply the mode's BG2/BG0
- * offsets and set the BG0 flag in data_0209d45c unless the mode is 0. */
+ * offsets and set the BG0 flag in gMainScreenLayers unless the mode is 0. */
 void dScMgCurling2_c::Scroll() {
     int idx;
 
@@ -1639,11 +1640,11 @@ void dScMgCurling2_c::Scroll() {
     SetBg2Offset(0x80 - bg2x, 0x80 - bg2y);
 
     if (scrollIdx == 0) {
-        data_0209d45c &= ~1;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
         return;
     }
     SetBg0Offset(0x80 - bg0x, 0x80 - bg0y);
-    data_0209d45c |= 1;
+    gMainScreenLayers |= DISPLAY_LAYER_BG0;
 }
 
 // @symbol _ZN15dScMgCurling2_c11ResetScrollEv
@@ -1758,7 +1759,7 @@ s32 dScMgCurling2_c::InitResources() {
     if (r6 == 0)
         return 0;
 
-    data_0209d45c |= 8;
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 2;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1220;
     DecompressLZ16(r6, (void *)func_02054d88());
@@ -1771,7 +1772,7 @@ s32 dScMgCurling2_c::InitResources() {
     func_02056314(f, 0, 0x800);
     Deallocate(f);
 
-    data_0209d45c |= 4;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x5420;
 
@@ -1798,7 +1799,7 @@ s32 dScMgCurling2_c::InitResources() {
     DecompressLZ16(c7, (void *)0x6400000);
     GX::LoadOBJPltt(c8, 0, 0x100);
 
-    data_0209d454 |= 4;
+    gSubScreenLayers |= 4;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 2;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x814;
     DecompressLZ16(r6, (void *)G2S::GetBG2CharPtr());

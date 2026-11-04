@@ -48,6 +48,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 //   as cMgSmartball_object_c.h explains.
 
 #include "dScMgSmartball_c.h"
+#include "nitro/hw/registers.h"
 #include "CP15.h"
 #include "cMgSmartball_wing_c.h"
 #include "OamAttr.h"
@@ -261,8 +262,8 @@ void FreeGfxSlotsById(int a);
 
 extern unsigned int LoadCompressedFileAt(int fileID, void *target);
 
-extern unsigned char data_0209d454[];
-extern u8 data_0209d45c;
+extern unsigned char gSubScreenLayers[];
+extern u8 gMainScreenLayers;
 extern s32 data_0208ee44;
 
 extern void *sSmartballResultBgNcgPath;
@@ -5953,7 +5954,7 @@ s32 dScMgSmartball_c::Behavior() {
         ((dScMgSmartball_c *)(c))->UpdateScores();
         mPromptEnabled = 0;
         if (mResultTimer == 0) {
-            data_0209d454[0] |= 1;
+            gSubScreenLayers[0] |= 1;
         }
         if (mResultSlideX > 0) {
             int *p = &mResultSlideX;
@@ -6026,7 +6027,7 @@ int dScMgSmartball_c::InitSubScreenBg() {
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~0x40;
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
     SetSubBg1Offset(0, 0);
-    data_0209d454[0] &= ~2;
+    gSubScreenLayers[0] &= ~2;
     f = GetGameLanguage();
     LoadCompressedFileAt(sSmartballOptionNcgByLanguage[f], (void *)G2S::GetBG1CharPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S::GetBG1ScrPtr());
@@ -6163,9 +6164,9 @@ s32 dScMgSmartball_c::InitResources() {
         GXS::LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
     }
-    data_0209d45c &= ~1;
-    data_0209d45c |= 0xc;
-    data_0209d454[0] |= 0xd;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3;
+    gSubScreenLayers[0] |= 0xd;
     f = Ov004_LoadFileByPath(&sSmartballNclPath);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
     GX::LoadOBJPltt(f, 0, 0x100);

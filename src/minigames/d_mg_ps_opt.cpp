@@ -82,7 +82,7 @@ void TurnBacklightOn(void);
 void TurnBacklightOff(void);
 u8 DecIfAbove0_Byte(u8 *p);
 /* Sub BG enable bits. dScMgBase_c saves them in mSavedSubBgBits. */
-extern unsigned char data_0209d454;
+extern unsigned char gSubScreenLayers;
 /* 1 while the backlight is on. TurnBacklightOn / Off write it. */
 extern unsigned char data_0208ee3c;
 void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y);
@@ -166,7 +166,7 @@ void dMgPsOpt_c::Open() {
         mIcons[kIconLightOff].mOn = 1;
     }
     mIcons[kIconBack].mOn = 0;
-    data_0209d454 |= kSubBgBit;
+    gSubScreenLayers |= kSubBgBit;
     mIconCount = kIconCount;
     mActive = kPanelOpen;
 }
@@ -176,7 +176,7 @@ void dMgPsOpt_c::Open() {
    dScMgBase_c::CloseMenu. */
 void dMgPsOpt_c::Close() {
 
-    data_0209d454 &= ~kSubBgBit;
+    gSubScreenLayers &= ~kSubBgBit;
     mIconCount = 0;
     mActive = kPanelShut;
 }

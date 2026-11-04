@@ -139,7 +139,7 @@ struct SlotBlink {
 
 /* The payout lamp, 0x8 bytes: SlotLamp_Clear zeroes it, SlotLamp_Start arms
  * it and SlotLamp_Tick counts it down, mirroring mOn into bit 1 of
- * data_0209d454. */
+ * gSubScreenLayers. */
 struct SlotLamp {
     s32 mTimer; /* 0x0 -- SlotLamp_Start loads 0x48; SlotLamp_Tick counts it down */
     u8 mOn;     /* 0x4 -- flipped every 8 ticks */

@@ -112,7 +112,7 @@ extern "C" {
 /* shared engine entry points without a header declaration */
 void LoadKeyModels(int n);
 void UnloadKeyModels(int n);
-unsigned NumStars(void);
+unsigned char NumStars(void);
 int IsStarCollectedInCurLevel(int n);
 void Matrix4x3_FromTranslation(void *m, s32 x, s32 y, s32 z);
 void MulMat4x3Mat4x3(void *a, void *b, void *dst);

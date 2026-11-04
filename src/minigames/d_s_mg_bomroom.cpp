@@ -34,6 +34,7 @@
 // order).
 
 #include "dScMgBomroom_c.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "GX.h"
 #include "cstd.h"
@@ -80,8 +81,8 @@ extern void DecompressLZ16(void *src, void *dst);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 
 extern void func_02056554(const void *src, int offset, int count);
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 }
 
 #pragma defer_codegen off
@@ -2125,7 +2126,7 @@ s32 dScMgBomroom_c::InitResources() {
     int f;
     int arc;
 
-    data_0209d45c |= 8;
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 2;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
 
@@ -2141,7 +2142,7 @@ s32 dScMgBomroom_c::InitResources() {
     func_02056314((void *)f, 0, 0x800);
     Deallocate((void *)f);
 
-    data_0209d45c |= 4;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x9410;
 
@@ -2152,7 +2153,7 @@ s32 dScMgBomroom_c::InitResources() {
     func_020563d4((const void *)f, 0, 0x800);
     Deallocate((void *)f);
 
-    data_0209d45c |= 1;
+    gMainScreenLayers |= DISPLAY_LAYER_BG0;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3);
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x5610;
 
@@ -2171,7 +2172,7 @@ s32 dScMgBomroom_c::InitResources() {
     DecompressLZ16((void *)arc, (void *)0x6400000);
     GX::LoadOBJPltt((const void *)f, 0, 0x100);
 
-    data_0209d454 |= 8;
+    gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x210;
 

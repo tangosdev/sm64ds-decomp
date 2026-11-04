@@ -14,6 +14,7 @@ enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 
 
 #include "dScMgBSC_c.h"
+#include "nitro/hw/registers.h"
 #include "dScMgCard_c.h"
 #include "types.h"
 #include "decl_common.h"
@@ -70,7 +71,7 @@ void Mg_DrawScoreTally(void *scene, int a1, int a2, int a3);
 void Dealer_Draw(void *table);
 void MgCoins_Update(void);
 void Dealer_Update(Dealer *c);
-extern unsigned char data_0209d45c[];
+extern unsigned char gMainScreenLayers[];
 extern int data_0208ee44[];
 extern void LoadCard2SubBg3(void);
 extern s32 GetGameLanguage(void);
@@ -106,7 +107,7 @@ extern "C" void *dScMgBSC_c_classInit() {
  * block, untyped in the header. */
 s32 dScMgBSC_c::InitResources() {
     int paletteData;
-    data_0209d45c[0] = 0x11;
+    gMainScreenLayers[0] = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     LoadCard2SubBg3();
     LoadCompressedFileAt(sBscBigSmallNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
     paletteData = LoadFile(ASSET_D_2D_MG_BIG_SMALL_NCL_BIN);

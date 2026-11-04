@@ -23,6 +23,7 @@ enum dScMgSound_c_AssetId {
 };
 
 #include "dScMgSound_c.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
@@ -206,8 +207,8 @@ int LoadFile(int handle);
 void DecompressLZ16(int src, void *dst);
 void Camera_InitPresenterView(void *p);
 int Presenter_Load(void *p);
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 }
 
 /* The note and pop dispatch tables belong to this scene. Declaration
@@ -312,13 +313,13 @@ extern "C" void *dScMgSound_c_classInit(void) {
 s32 dScMgSound_c::InitResources() {
     int objChars, objPltt, file;
 
-    data_0209d45c |= 0x11;
+    gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     objChars = LoadFile(ASSET_D_2D_MG_SOUND_NCG_BIN);
     objPltt = LoadFile(ASSET_D_2D_MG_SOUND_NCL_BIN);
     DecompressLZ16(objChars, (void *)0x6400000);
     GX::LoadOBJPltt((const void *)objPltt, 0, 0x100);
 
-    data_0209d454 |= 4;
+    gSubScreenLayers |= 4;
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
     DecompressLZ16(file, (void *)G2S::GetBG2CharPtr());

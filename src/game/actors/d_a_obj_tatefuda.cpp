@@ -41,7 +41,7 @@
  *   spellings size-DIFF under 2004/b56.
  * - Unrecovered meanings: mFlags bits 0x100, 0x400, 0x2000, 0x4000 and
  *   0x4000000 as this class uses them, hit-flag bit 0x8000000 and bits
- *   0x2000/0x4000000 of mdCcAc_c.flags, the global words data_0209b454,
+ *   0x2000/0x4000000 of mdCcAc_c.flags, the global words gNextActorUpdateMask,
  *   data_0209d660, data_0209d6bc and gShowTouchScreenArrows, the daPly_c::Hurt
  *   arguments after the first two, and what the player-side calls
  *   func_ov002_020bec84 and func_ov002_020bec9c test and start.
@@ -164,7 +164,7 @@ extern u8 gShowTouchScreenArrows;
 extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern void func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsigned short e);
-extern unsigned int data_0209b454;
+extern unsigned int gNextActorUpdateMask;
 extern void AttachToHolder(struct daObjTatefuda_c *self);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern void *d_a_obj_tatefudaNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
@@ -280,7 +280,7 @@ int daObjTatefuda_c::InitResources()
  *
  * What it does, in order:
  *  1. If this sign's mFlags bit 0x4000000 and the same bit of the global word
- *     data_0209b454 are both set while a player holds it, tell that player to
+ *     gNextActorUpdateMask are both set while a player holds it, tell that player to
  *     let go (daPly_c::DropActor).
  *  2. If there is a holder, mFlags bit 0x4000 is set and the holder's
  *     mCarryMatrix is non-zero: put the sign on the holder (AttachToHolder), clip radius
@@ -313,7 +313,7 @@ int daObjTatefuda_c::Behavior()
         enum Bool b = (enum Bool)((mFlags & 0x4000000) != 0);
         /* Bit 0x4000000 of mFlags and of the global word; neither is named
            yet. */
-        if (b != FALSE && (data_0209b454 & 0x4000000) && mHoldingPlayer != 0)
+        if (b != FALSE && (gNextActorUpdateMask & 0x4000000) && mHoldingPlayer != 0)
             mHoldingPlayer->DropActor();
     }
 

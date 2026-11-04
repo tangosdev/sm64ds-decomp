@@ -40,6 +40,7 @@ enum dScMgRoulette_c_AssetId {
 };
 
 #include "common.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "Vector2.h"
 #include "dScMgRoulette_c.h"
@@ -231,8 +232,8 @@ extern short data_ov006_0212ed8c[];
 extern short data_ov006_0212ed8e[];
 extern s32 sMgCoinRiseFrames;
 extern u16 gMgCoinsStatus;
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 
 /* This file's helpers. The file runs from the highest address down, so
    most calls between them are forward references. */
@@ -304,8 +305,8 @@ s32 dScMgRoulette_c::InitResources() {
     Deallocate(f6);
     Deallocate(f5);
 
-    data_0209d45c = 0x11;
-    data_0209d454 = 0x15;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
+    gSubScreenLayers = 0x15;
     *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
 
     Camera_InitDealerView((char *)pad_4660);

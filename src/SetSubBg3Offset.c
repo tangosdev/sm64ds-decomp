@@ -1,2 +1,6 @@
-extern short data_0209d474[]; extern short data_0209d488[];
-void SetSubBg3Offset(int a, int b) { data_0209d474[0] = a; data_0209d488[0] = b; }
+extern short gSubBg3HOffset[];
+extern short gSubBg3VOffset[];
+void SetSubBg3Offset(int a, int b) {
+    gSubBg3HOffset[0] = a;
+    gSubBg3VOffset[0] = b;
+}

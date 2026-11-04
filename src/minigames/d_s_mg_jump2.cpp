@@ -30,6 +30,7 @@ enum d_s_mg_jump2_AssetId {
 };
 
 #include "dScMgJump2_c.h"
+#include "nitro/hw/registers.h"
 #include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
 #include "types.h"
@@ -117,7 +118,7 @@ extern void Heyho_ReactAll(void);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Heyho_InitPool(void *ptr, int n);
 extern int Jump3D_InitPool(void *base, int count);
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern s16 data_02082614;
 }
 
@@ -180,7 +181,7 @@ s32 dScMgJump2_c::InitResources() {
     Deallocate((void *)tiles);
     Deallocate((void *)palette);
 
-    data_0209d45c = 0x11;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     G3X::SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;

@@ -223,7 +223,7 @@ void dScMgLuigi_c::BuildIrisTable(int irisIndex) {
 
 // @symbol _ZN12dScMgLuigi_c8IrisStopEi
 extern "C" {
-extern unsigned char data_0209d454;
+extern unsigned char gSubScreenLayers;
 }
 void dScMgLuigi_c::IrisStop(int idx) {
     volatile unsigned short *ime = &IME;
@@ -240,12 +240,12 @@ void dScMgLuigi_c::IrisStop(int idx) {
     }
     REG_DISPCNT &= ~0xe000;
     REG_DISPCNT_SUB &= ~0xe000;
-    data_0209d454 |= 4;
+    gSubScreenLayers |= 4;
 }
 
 // @symbol _ZN12dScMgLuigi_c8IrisGrowEi
 extern "C" {
-extern unsigned char data_0209d45c;
+extern unsigned char gMainScreenLayers;
 }
 
 void dScMgLuigi_c::IrisGrow(int idx) {
@@ -254,7 +254,7 @@ void dScMgLuigi_c::IrisGrow(int idx) {
     if ((mIris[idx].radius >> 12) < 0xa0)
         return;
     mIris[idx].state += 1;
-    data_0209d45c &= ~4;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
 }
 
 // @symbol _ZN12dScMgLuigi_c8IrisHoldEi
@@ -1763,8 +1763,8 @@ extern "C" {
 extern void FreeGfxSlotsById(int arg);
 extern void Mg_SubmitScore(int);
 extern void Mg_ShowBanner(int, int, int, int, int, short);
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char gMainScreenLayers;
+extern unsigned char gSubScreenLayers;
 /* dScMgLuigi_c::Render */
 extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 /* dScMgLuigi_c::Behavior */
@@ -1818,8 +1818,8 @@ void dScMgLuigi_c::StartRound(int mode) {
     ChooseBoard();
 
     mState = STATE_SETUP;
-    data_0209d45c |= 4;
-    data_0209d454 &= ~4;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
+    gSubScreenLayers &= ~4;
 
     Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
 }
@@ -1858,7 +1858,7 @@ s32 dScMgLuigi_c::InitResources() {
     if (arc == 0)
         return 0;
 
-    data_0209d45c |= 8;
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *(volatile u16 *)0x0400000e = (*(volatile u16 *)0x0400000e & ~3) | 2;
     *(volatile u16 *)0x0400000e = (*(volatile u16 *)0x0400000e & 0x43) | 0x1218;
 
@@ -1872,7 +1872,7 @@ s32 dScMgLuigi_c::InitResources() {
     func_02056314((void *)fileData, 0, 0x800);
     Deallocate((void *)fileData);
 
-    data_0209d45c |= 4;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x0400000c &= ~3;
     *(volatile u16 *)0x0400000c &= ~0x40;
     *(volatile u32 *)0x04000018 = 0;
@@ -1914,7 +1914,7 @@ s32 dScMgLuigi_c::InitResources() {
         func_02056374((const void *)subFileData, 0, 0x800);
         Deallocate((void *)subFileData);
 
-        data_0209d454 |= 8;
+        gSubScreenLayers |= 8;
         *(volatile u16 *)0x0400100e &= ~3;
         *(volatile u16 *)0x0400100e = (*(volatile u16 *)0x0400100e & 0x43) | 0x1410;
 

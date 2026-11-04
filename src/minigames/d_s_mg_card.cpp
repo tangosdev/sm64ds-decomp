@@ -13,6 +13,7 @@
  */
 
 #include "dScMgCard_c.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
 #include "Sound.h"
@@ -87,8 +88,8 @@ extern void MgCoins_StartPayout(int a);
 extern s16 gMgCoinsStatus;
 extern void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
 extern void MgCoins_Reset(void);
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 extern void LoadCard2SubBg3(char *);
 extern void *LoadFile(int);
 extern int GetGameLanguage(void);
@@ -135,8 +136,8 @@ s32 dScMgCard_c::InitResources()
 
     Mg_SetTopScreenYOffset(0x20);
     LoadCard2SubBg3(c);
-    data_0209d45c = 0x11;
-    data_0209d454 = 0x18;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
+    gSubScreenLayers = 0x18;
     mainTiles = LoadFile(0xbd);
     mainPalette = LoadFile(0xbe);
     subTiles = LoadFile(sCardNcgByLanguage[GetGameLanguage()]);

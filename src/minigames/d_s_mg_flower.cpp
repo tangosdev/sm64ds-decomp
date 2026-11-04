@@ -31,6 +31,7 @@
  */
 
 #include "dScMgFlower_c.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
 #include "Sound.h"
@@ -79,8 +80,8 @@ void *Ov004_LoadFileByPath(void *arg);
 void DecompressLZ16(int src, void *dst);
 void Ov004_Deallocate(void *ptr);
 extern int data_0208ee44;
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 }
 
 /* Written first so D1 and D0 are emitted first, as in the cartridge. The
@@ -582,8 +583,8 @@ s32 dScMgFlower_c::InitResources() {
     *(volatile u16 *)0x4000050 = 0;
     G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
 
-    data_0209d45c |= 4;
-    data_0209d454 |= 0xc;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
+    gSubScreenLayers |= 0xc;
 
     fileData = (int)Ov004_LoadFileByPath(&sFlowerNcgPath);
     DecompressLZ16(fileData, (void *)0x6400000);
@@ -606,7 +607,7 @@ s32 dScMgFlower_c::InitResources() {
     mHoldTimer = 0;
     DealPetals();
 
-    data_0209d45c |= 1;
+    gMainScreenLayers |= DISPLAY_LAYER_BG0;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 1;
     FlowerFace_Load((char *)&mFace);
     Camera_InitFlowerView(pad_4660);

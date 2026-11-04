@@ -48,6 +48,7 @@
 #include "cstd.h"
 #include "GX.h"
 #include "G2.h"
+#include "nitro/hw/registers.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which makes its
@@ -93,30 +94,35 @@ extern u8 data_0209f20c;
 extern u8 data_0209f2c4;
 extern u8 gVsExitScreenActive;
 extern u8 data_0209f250;
-extern u8 data_0209f2d4;
+extern u8 gLevelClearStep;
 extern u8 data_0209f2d8;
 extern void *data_0209f394[];
 extern s16 data_02082214[];
 extern s8 data_ov002_02111148;
-extern u8 data_0209f37c[];
+/* Per star-marker slot: the marker type (4 = draw a red-coin icon instead). */
+extern u8 gStarMarkerTypes[];
 extern int data_0208ee44;
-extern u8 data_0209f288;
-extern u8 data_ov002_02111154[];
-extern u8 data_0209f370[];
+/* Set by the red Bob-omb Buddy's red-coin hint (messages 0x15b..0x15f) until
+   that talk ends: type-4 marker slots draw MM_RED_COIN. */
+extern u8 gShowRedCoinMarkers;
+/* Per cap slot: the cap icon is shown on the map (written by CapIconMgr's
+   func_ov001_020aa6b0), and the character it shows (0 M, 1 L, 2 W). */
+extern u8 gMapCapIconShown[];
+extern u8 gMapCapIconCharacters[];
 extern void *data_ov002_0210cac8[];
 extern void *data_ov002_0210c748[];
 extern u8 data_0209d660;
 extern u32 data_020a0db0;
 extern VtblOwner *data_0209f5bc;
 extern void *data_0209f318;
-extern u32  data_0209b454;
+extern u32 gNextActorUpdateMask;
 extern s32  data_0209d4b0;
 extern u8   data_0209f350[];
 extern s8   data_02092110;
 extern u8   data_0209f204;
 extern u8   data_ov002_02111150;
 extern ControllerInput data_0209f498[];
-extern u8   data_0209d454;
+extern u8 gSubScreenLayers;
 extern u8   data_ov002_0211114c;
 extern u8   data_ov002_02111144;
 extern int data_0209f40c[];
@@ -384,7 +390,7 @@ int dMap_c::Render()
     u8 idx = data_0209f250;
 
     if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 || !(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) ||
-        (flag20c != 0 && (u32)data_0209f2d4 < 3)) {
+        (flag20c != 0 && (u32)gLevelClearStep < 3)) {
         daPly_c *player = (daPly_c *)data_0209f394[idx];
         int vs = (data_0209f2d8 == 1);
         if (vs != 0) {
@@ -459,7 +465,7 @@ int dMap_c::Render()
         }
 
         {
-            u8 *p = data_0209f37c;
+            u8 *p = gStarMarkerTypes;
             for (i = 0; i < 12; p++, i++) {
                 s8 lvl = this->mStarMapIDs[i];
                 if (lvl >= 0) {
@@ -490,7 +496,7 @@ int dMap_c::Render()
                             this->mStarIconAnimFrame[i] = 0;
                         }
                     } else {
-                        if (data_0209f288 != 0) {
+                        if (gShowRedCoinMarkers != 0) {
                             OAM::Render(true, &OAM::MM_RED_COIN, this->mStarIconX[i],
                                         this->mStarIconY[i], -1, 2, 0);
                         }
@@ -502,8 +508,8 @@ int dMap_c::Render()
         }
 
         {
-            u8 *p1 = data_ov002_02111154;
-            u8 *p2 = data_0209f370;
+            u8 *p1 = gMapCapIconShown;
+            u8 *p2 = gMapCapIconCharacters;
             int vs2 = (data_0209f2d8 == 1);
             void **tbl = (vs2 != 0) ? data_ov002_0210cac8 : data_ov002_0210c748;
             for (i = 0; i < 9; i++, p1++, p2++) {
@@ -575,7 +581,8 @@ s32 dMap_c::Behavior()
     focus = 0;
 
     if (data_0209f5bc->vt->f[5](data_0209f5bc) == 0) goto L274;
-    if (data_0209b454 & 0x40000000) goto L274;
+    if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
+        goto L274;
     if (data_0209d4b0 != 0) goto L274;
     if (data_0209f350[data_0209f250] != 0) goto L274;
     if (player->Unk_020ca8f8() == 1) goto L274;
@@ -593,7 +600,7 @@ s32 dMap_c::Behavior()
     {
         u8 v = data_0209f498[gActivePlayerSlot].touching;
         if (v == 0 && this->mTouchCircleTimer == 0) goto L200;
-        data_0209d454 |= 4;
+        gSubScreenLayers |= 4;
         if (v != 0) {
             this->mTouchCircleTimer = 0x1e;
             SetSubBg2Offset(0x100 - data_0209f498[gActivePlayerSlot].tx,
@@ -614,9 +621,10 @@ L200:
             if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
                 goto L2a4;
         }
-        data_0209d454 &= ~4;
+        gSubScreenLayers &= ~4;
         if (!(u8)flagsOr) {
-            *(volatile s32 *)0x4001000 = (*(volatile s32 *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+            *(volatile s32 *)0x4001000 =
+                (*(volatile s32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
             *(volatile u16 *)0x4001050 = 0;
         }
         this->mTouchCircleTimer = 0;
@@ -627,7 +635,7 @@ L274:
     if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0) {
         if (data_0209d4b0 == 0) goto L2a4;
     }
-    data_0209d454 &= ~4;
+    gSubScreenLayers &= ~4;
 
 L2a4:
     if (cam == 0) goto L3e8;
@@ -765,7 +773,7 @@ L738:
         ((FX_MUL(((Vector3 *)&this->mMapCenterWorldX)->z, this->mScale) + 0x800) >> 12);
 
     /* Project each object list onto the map. A missing object gets map id -1. Stars whose
-     * kind byte in data_0209f37c is 4 are the ones Render draws as MM_RED_COIN. */
+     * kind byte in gStarMarkerTypes is 4 are the ones Render draws as MM_RED_COIN. */
     for (i = 0; i < 4; i++) {
         daPly_c *o = (daPly_c *)data_0209f394[i];
         if (o != 0) {
@@ -792,7 +800,7 @@ L738:
                             this->mAngle, &miniPos);
             this->mStarIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mStarIconY[i] = (miniPos.z + 0x800) >> 12;
-            if (data_0209f37c[i] != 4)
+            if (gStarMarkerTypes[i] != 4)
                 this->mStarMapIDs[i] = (s8)GetMinimapID((Obj *)o, -1);
             else
                 this->mStarMapIDs[i] = 1;
@@ -864,14 +872,14 @@ Lb9c:
 Lbc0:
         *(volatile u16 *)0x400100e = ((0x1f - id) << 8) | ((*(volatile u16 *)0x400100e & 0x43) | 0x10);
 Lbdc:
-        data_0209d454 |= 8;
-        goto Lc00;
+    gSubScreenLayers |= DISPLAY_LAYER_BG3;
+    goto Lc00;
 Lbf0:
-        data_0209d454 &= ~8;
+    gSubScreenLayers &= ~DISPLAY_LAYER_BG3;
 Lc00:
-        *(volatile s32 *)0x4001000 = (*(volatile s32 *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
-        data_ov002_02111148 = (s8)id;
-        this->mTargetInvScale = GetMinimapScale(id);
+    *(volatile s32 *)0x4001000 = (*(volatile s32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
+    data_ov002_02111148 = (s8)id;
+    this->mTargetInvScale = GetMinimapScale(id);
     }
 Lc30:
     UpdateMinimap(&this->mBgMatrixA, this->mMapCenterX, this->mMapCenterY, this->mMapCenterX - 0x80, this->mMapCenterY - 0x60);
@@ -977,9 +985,9 @@ int dMap_c::InitResources()
             mMapOriginZ = 0;
             mArrowType = 2;
         }
-        data_0209d454 |= 8;
+        gSubScreenLayers |= DISPLAY_LAYER_BG3;
     } else {
-        data_0209d454 &= ~8;
+        gSubScreenLayers &= ~DISPLAY_LAYER_BG3;
     }
 
     mTargetInvScale = GetMinimapScale(data_ov002_02111148);

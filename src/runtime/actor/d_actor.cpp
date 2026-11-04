@@ -75,6 +75,7 @@
 #include "dActor_c.h"
 #include "daPly_c.h"
 #include "common.h"
+#include "math/CalcLib.h"
 #include "dCc_c.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Gnd.h"
@@ -253,7 +254,10 @@ extern u8 data_0209f274; /* doubles the far-away threshold when set */
 extern u8 data_0209f2c4;
 extern u8 data_0209f20c;
 extern u8 gVsExitScreenActive;
-extern u32 data_0209b464; /* flag mask that forces thinking; 0 means "any" */
+/* This frame's actor update mask, copied from gNextActorUpdateMask by
+   dScStage_c::Behavior: while non-zero, only actors whose mFlags share a bit
+   with it behave. */
+extern u32 gActorUpdateMask;
 }
 int dActor_c::BeforeBehavior()
 {
@@ -299,7 +303,7 @@ int dActor_c::BeforeBehavior()
     }
 
     if (((data_0209f2c4 | data_0209f20c | gVsExitScreenActive) & 0xff) != 0 ||
-        (((mFlags & 9) == 9 || (data_0209b464 != 0 && (mFlags & data_0209b464) == 0)) &&
+        (((mFlags & 9) == 9 || (gActorUpdateMask != 0 && (mFlags & gActorUpdateMask) == 0)) &&
          data_0209fc68 == 0))
         return 0;
 
@@ -569,7 +573,6 @@ void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, 
 /* ROM ordinal 70 -- dActor_c::ClosestPlayer()
  * 0x02010ad8  size 0xc4 */
 extern "C" {
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern int data_0208e380;           /* distance to the cached closest player */
 extern int data_0208e37c;           /* distance to the cached farthest player */
 extern unsigned char data_0209f21c; /* number of players */
@@ -641,9 +644,6 @@ s32 dActor_c::DistToCPlayer()
 // @symbol _ZN8dActor_c18HorzAngleToCPlayerEv
 /* ROM ordinal 67 -- dActor_c::HorzAngleToCPlayer()
  * 0x020109b8  size 0x2c */
-extern "C" {
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-}
 s16 dActor_c::HorzAngleToCPlayer()
 {
     ClosestPlayer();
@@ -717,7 +717,6 @@ dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
  * 0x02010844  size 0x80 */
 extern "C" {
 extern s16 atan2_hold_d_actor_1(Fix12i y, Fix12i x);
-extern s32 Vec3_HorzLen(Vector3 *v);
 }
 /* atan2 of v's horizontal length, projected onto heading `angle`, against
    v->y. The leading actor argument is unused. */

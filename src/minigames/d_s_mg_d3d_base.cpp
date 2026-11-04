@@ -13,6 +13,7 @@
  */
 
 #include "dScMgD3DBase_c.h"
+#include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "types.h"
 #include "GX.h"
@@ -41,8 +42,8 @@ Oam sD3DOamShadow[128];
 extern unsigned char sD3DSoundPanOffsets[];
 
 /* arm9 / ov004 globals with no project header. */
-extern unsigned char data_0209d454;
-extern unsigned char data_0209d45c;
+extern unsigned char gSubScreenLayers;
+extern unsigned char gMainScreenLayers;
 extern unsigned char data_0209e660;
 extern unsigned char data_0209f5f8;
 extern void *data_0209d4a8;
@@ -90,10 +91,10 @@ extern "C" void D3D_CaptureToMain(void) {
     GX::SetBankForSubBG(4);
     func_02054430(8);
     *(volatile unsigned int *)0x4000064 = 0x80330010;
-    data_0209d454 &= ~0x10;
-    data_0209d454 |= 4;
+    gSubScreenLayers &= ~0x10;
+    gSubScreenLayers |= 4;
     *(volatile unsigned int *)0x4001000 =
-        (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+        (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
     *(volatile unsigned short *)0x400100c =
         (*(volatile unsigned short *)0x400100c & 0x43) | 0x4284;
     *(volatile unsigned short *)0x400100c &= ~3;
@@ -109,9 +110,9 @@ extern "C" void D3D_CaptureToSub(void)
     func_02054430(4);
     *(volatile int *)0x4000064 = 0x80360010;
     GXS::SetGraphicsMode(5);
-    data_0209d454 |= 0x10;
-    data_0209d454 &= ~4;
-    *(volatile int *)0x4001000 = (*(volatile int *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+    gSubScreenLayers |= 0x10;
+    gSubScreenLayers &= ~4;
+    *(volatile int *)0x4001000 = (*(volatile int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
 }
 
 // @symbol D3D_DrawSpriteTable
@@ -194,7 +195,7 @@ int dScMgD3DBase_c::InitSubScreenBg()
         *p = *p & ~0x40;
     }
     SetSubBg1Offset(0, 0);
-    data_0209d454 &= ~2;
+    gSubScreenLayers &= ~2;
     {
         s32 language = GetGameLanguage();
         LoadCompressedFileAt(sD3DOptionNcgByLanguage[language], (void *)G2S::GetBG1CharPtr());
@@ -212,8 +213,8 @@ void dScMgD3DBase_c::InitEngines()
     void *file;
 
     *(vu32 *)0x4001000u |= 0x10000u;
-    data_0209d45c = 0x10;
-    data_0209d454 = 0x10;
+    gMainScreenLayers = DISPLAY_LAYER_OBJ;
+    gSubScreenLayers = 0x10;
     Mg_ResetBgOffsets();
     Mg_DisableAllBanks();
     data_0209e660 = 1;
@@ -375,10 +376,10 @@ extern "C" int D3D_PlaySeAtX(int a, int b)
 }
 
 // @symbol Sound_PlayBank1Panned
-extern "C" void Sound_PlayBank1Panned(int a0, char *a1, void *a2) {
+extern "C" void Sound_PlayBank1Panned(int a0, int a1, int a2) {
     a1 += sD3DSoundPanOffsets[a0];
-    int pan = D3D_PanForX((int)a2);
-    func_020127ec(1, (int)a1, 4, 0, 0, pan);
+    int pan = D3D_PanForX(a2);
+    func_020127ec(1, a1, 4, 0, 0, pan);
 }
 
 // @symbol D3D_PlaySePannedLoop

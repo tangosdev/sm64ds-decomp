@@ -46,6 +46,7 @@
  */
 
 #include "dScMiniGm_c.h"
+#include "nitro/hw/registers.h"
 #include "MgMenuRow.h"
 #include "dWipe_c.h"
 #include "dFdBrightness_c.h"
@@ -83,10 +84,10 @@ extern MgEntry gMgMenuRow;
 extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
 extern u32 data_0209caa0[];
-extern u8 data_0209d454;
-extern u8 data_0209d45c;
-extern short data_0209d474[];
-extern short data_0209d494[];
+extern u8 gSubScreenLayers;
+extern u8 gMainScreenLayers;
+extern short gSubBg3HOffset[];
+extern short gSubBg0HOffset[];
 extern int data_0209e650;
 extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
 extern u8 data_0209f5f8;
@@ -229,8 +230,9 @@ s32 dScMiniGm_c::InitResources()
     GX::SetBankForOBJ(0x10);
     GX::SetBankForTexPltt(0x20);
 
-    data_0209d45c &= ~0x1f;
-    data_0209d454 &= ~0x1f;
+    gMainScreenLayers &= ~(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
+                           DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
+    gSubScreenLayers &= ~0x1f;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;
     GX::SetGraphicsMode(1, 0, 1);
@@ -364,13 +366,13 @@ s32 dScMiniGm_c::InitResources()
     }
 
     data_0209b2fc = 0;
-    data_0209d45c |= 0x11;
-    data_0209d454 |= 0x11;
-    data_0209d45c &= ~2;
-    data_0209d454 &= ~2;
-    data_0209d45c |= 4;
-    data_0209d45c &= ~8;
-    data_0209d454 |= 0xc;
+    gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
+    gSubScreenLayers |= 0x11;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
+    gSubScreenLayers &= ~2;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
+    gSubScreenLayers |= 0xc;
     Sound::LoadAndSetMusic_Layer1(5);
     return 1;
 }
@@ -1090,8 +1092,8 @@ void MiniGm_UpdatePageScroll(char *self) {
             }
         }
     }
-    data_0209d494[0] = (short)scene->mSubBgScrollX;
-    data_0209d474[0] = (short)scene->mSubBgScrollX;
+    gSubBg0HOffset[0] = (short)scene->mSubBgScrollX;
+    gSubBg3HOffset[0] = (short)scene->mSubBgScrollX;
 }
 }
 
