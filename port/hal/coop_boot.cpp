@@ -460,6 +460,18 @@ void service() {
             C.released = true;
             LOG("GO: no live hub, playing alone");
         }
+        // and the same host at the opening's closing load: nobody can be
+        // present without a live hub, so the end barrier closes on its own
+        // arrival (coop_boot_close_due with present == arrived == itself).
+        // The CLOSE below only runs on a live hub, so without this the host
+        // held its tick at the end barrier for ever (no 30 s release on the
+        // host side); a held tick skips the walk's geometry reset, the
+        // frozen frame's draws piled up in the polygon list and the process
+        // died of std::bad_alloc a few minutes later.
+        if (C.host && C.arrived && !C.closed) {
+            C.closed = true;
+            LOG("CLOSE: no live hub, nobody to wait for");
+        }
         return;
     }
     if (C.host) {
