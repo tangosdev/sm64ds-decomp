@@ -18163,6 +18163,10 @@ int main(void)
            (lane K1LOOP): decided at the phase-4 point below, read by the
            camera block, the render block and the scene-tree point. */
         int k1_rom = 0;
+        /* 1 = a coop barrier frame that keeps the last frame's geometry as it
+           stands and submits nothing new (lane GEOHOLD1): decided at the hold
+           below, read by the level pass, the player draws and phase 5. */
+        int geo_keep = 0;
         while (W.PeekMessageA_(&msg, 0, 0, 0, PM_REMOVE)) {
             if (msg.message == WM_QUIT) { host_settings_save_flush(); return 0; }
             W.TranslateMessage_(&msg);
@@ -22139,7 +22143,31 @@ int main(void)
                      !rb_skip_actor_render() && !(selftest && frame == 0) &&
                      !port_actor_frame_split_forced();
         }
-        if (port_coop_boot_frame() || tick_frozen) {
+        const int coop_hold = port_coop_boot_frame();
+        /* THE COOP BARRIER'S HELD FRAME KEEPS ITS PICTURE AND ADDS NOTHING
+           (lane GEOHOLD1). A held frame skips the walk, and with it the
+           phase-4 gx_reset that opens a ROM actor frame's geometry; k1_rom is
+           decided above from the F5 menu and the load hold only, so it stays
+           1 and the render block's own reset stands down as well. Nothing
+           else on such a frame resets the buffer, but the level pass (Stage
+           not rendered this frame), the player draws and the phase-5
+           particles still submit, so every held frame appended another copy
+           of them: 93790 triangles 5 s into an 8 s start hold, a million and
+           std::bad_alloc in an endless one. A held frame is the DS's frame
+           without a SWAP_BUFFERS, which redraws the polygon list it already
+           has. So when the previous frame was a ROM actor frame its list is
+           whole and is kept as it stands; the first held frame after any
+           other frame (the file's first level frame, after a load) submits
+           once, as before, and the frames after it keep that. What the skipped
+           draws do besides drawing still runs: the eye blink advances and a
+           hub body is parked, as for a culled ghost. The particles' own
+           countdowns, which their submission advances, hold with the world. */
+        {
+            static int geo_prev_k1;
+            geo_keep = coop_hold && k1_rom && geo_prev_k1;
+            geo_prev_k1 = k1_rom;
+        }
+        if (coop_hold || tick_frozen) {
             game_ticked = 0;
         } else if (boot_spawns) {
             /* Nothing to undo before the tick any more. The view matrix is
@@ -23705,7 +23733,7 @@ int main(void)
            `else` arm is the harness's own non-ROM level draw and is untouched,
            because there is no Stage on those frames to render anything.
            port/stage_lifecycle_map.txt section 18 is the accounting. */
-        if (!no_level) {
+        if (!no_level && !geo_keep) {
             if (real_boot && !stage9_rendered()) {
                 /* Stage::Render's own order: the skybox, then the opaque
                    pass, then the translucent one. The skybox is the +0x9bc
@@ -23891,6 +23919,14 @@ int main(void)
                     hal_player_texseq_tick(other);
                 continue;
             }
+            if (geo_keep) {   /* GEOHOLD1: kept, as a culled ghost below */
+                if (void *other = data_0209f394[pi]) {
+                    hal_player_texseq_tick(other);
+                    if (port_adventure_hub_body(pi))
+                        port_adventure_ghost_park(other);
+                }
+                continue;
+            }
             if (void *other = data_0209f394[pi]) {
                 /* GHOSTPERF1: a hub ghost nobody can see this tick is not drawn. It is still parked
                    (the park is the half of the draw that keeps its body out of the level) and its
@@ -23909,7 +23945,7 @@ int main(void)
                 hal_render_player_world(other);
             }
         }
-        if (!rb_skip_render()) {
+        if (!rb_skip_render() && !geo_keep) {
             /* SHELF1 (S3): the opening's controlled character waits at its start mark with the ROM's cull-off-screen flag (0x2) up, and
                the DS tests it against the 4:3 planes so nobody sees it there. The 16:9 view reaches that mark (a bind-pose Wario /
                Luigi at the cliff under the bridge). Same test the cast bodies get (level_boot.cpp ps_render); a body that is on the 4:3
@@ -23940,7 +23976,7 @@ int main(void)
         static int fx_no_actors = -1;
         if (fx_no_actors < 0)
             fx_no_actors = getenv("SM64DS_NO_ACTORS") ? 1 : 0;
-        if (boot_spawns && !fx_no_actors) {
+        if (boot_spawns && !fx_no_actors && !geo_keep) {
             size_t fx_before = 0, fx_after = 0;
             static int fx_tr = -1;
             if (fx_tr < 0) fx_tr = getenv("SM64DS_FX_TRACE") ? 1 : 0;
