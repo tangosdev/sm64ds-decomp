@@ -31,6 +31,11 @@
       "name": ".bss",
       "start": "0x02114aac",
       "end": "0x02114ad4"
+    },
+    {
+      "name": ".data",
+      "start": "0x021147a4",
+      "end": "0x021147b0"
     }
   ],
   "functions": [
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov015_021147a4",
+      "address": "0x021147a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor {model, collision, CLPS} InitResourcesFrom and CleanupResourcesFrom take; the words relocate to 0x02114aac, 0x02114ab4 and the CLPS block at 0x02113614"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBkUkisimaModelFile",

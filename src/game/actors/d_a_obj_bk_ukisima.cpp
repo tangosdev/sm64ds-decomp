@@ -41,8 +41,9 @@ typedef char UkisimaClsnFileHandle_size_must_be_8[sizeof(UkisimaClsnFileHandle) 
 
 #include "ResourceDescriptor.h"
 
-extern ResourceDescriptor data_ov015_021147a4;
 extern s16 data_ov015_02114794;
+extern ResourceDescriptor data_ov015_021147a4;
+extern struct CLPS_Block data_ov015_02113614;
 
 // @symbol daObjBk_Ukisima_c_classInit
 extern "C" daObjBk_Ukisima_c *daObjBk_Ukisima_c_classInit() {
@@ -62,3 +63,7 @@ s32 daObjBk_Ukisima_c::CleanupResources() {
 /* Retail construction order. mwcc emits __sinit_d_a_obj_bk_ukisima.cpp. */
 UkisimaModelFilePtr gBkUkisimaModelFile(ASSET_BK_UKISIMA_BMD);
 UkisimaClsnFileHandle gBkUkisimaCollisionFile(ASSET_BK_UKISIMA_KCL);
+
+ResourceDescriptor data_ov015_021147a4 = {
+    &gBkUkisimaModelFile, &gBkUkisimaCollisionFile, &data_ov015_02113614,
+};
