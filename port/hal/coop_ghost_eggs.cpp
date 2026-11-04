@@ -33,7 +33,7 @@ namespace port {
 namespace {
 
 enum : int { kSeats = 16, kBodies = 16, kQueue = 5, kFl = 2, kBurstList = 16, kStaleFrames = 180, kFlStale = 45,
-             kUndrawnDrop = 15 };
+             kUndrawnDrop = 15, kPartyThrowWait = 12 };
 enum : uint8_t { kFHand = 1, kFFly = 2, kFBurst = 4 };
 
 int rd32(const void *a, int off) { int v; std::memcpy(&v, (const char *)a + off, 4); return v; }
@@ -68,6 +68,7 @@ struct RxSeat {
     RxFl fl[kFl];
     unsigned trail_uid[kQueue]; void *trail[kQueue]; int ntrail;
     int undrawn;
+    unsigned drop_lf;      // party: when his count last fell (the throw's start comes a frame or two after it)
 };
 RxSeat g_rx[kSeats];
 struct Pend { unsigned uid; void *egg; };
@@ -319,7 +320,9 @@ void recv_tick() {
             }
         }
         // the trail: as many as his queue holds
-        while (s.ntrail > s.eggs) {                         // one went without a flight record (a hurt, a lost message): it bursts
+        // party rooms: his count falls at once (kHeldState) and the throw's start comes once the egg has flown a frame, so a
+        // surplus egg waits kPartyThrowWait frames for it (the flight takes it) before it counts as gone without one
+        while (s.ntrail > s.eggs && !(g_party && g_lf - s.drop_lf < (unsigned)kPartyThrowWait)) {   // one went without a flight record (a hurt, a lost message): it bursts
             push_burst(s.trail[0], s.trail_uid[0]); ++g_st.bursts;
             for (int i = 1; i < s.ntrail; ++i) { s.trail[i - 1] = s.trail[i]; s.trail_uid[i - 1] = s.trail_uid[i]; }
             --s.ntrail;
@@ -446,6 +449,7 @@ void ghost_eggs_party_in(int seat, int eggs) {
     RxSeat &s = g_rx[seat];
     ++g_st.recv;
     if (g_log && (!s.have || s.eggs != eggs)) std::fprintf(stderr, "[geggs] party in lf=%u from seat %d: eggs %d\n", g_lf, seat, eggs);
+    if (s.have && eggs < s.eggs) s.drop_lf = g_lf;
     s.have = true; s.level = g_party_level; s.act = 0; s.eggs = eggs; s.rx_lf = g_lf;
 }
 
