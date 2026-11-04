@@ -108,7 +108,7 @@ extern void OamRender10_d_meter(int sub, struct OamAttr *attr, int x, int y, int
                                 int sy, int c, int d);
 extern volatile unsigned short data_ov002_0210c208[];
 extern unsigned char data_0209f250;
-extern unsigned char data_ov002_02111178;
+extern unsigned char gMeterCounterSlideState;
 extern signed char gNumLives;
 struct OamAttr;
 extern void *data_0209f394[];
@@ -124,8 +124,8 @@ extern signed char data_0209f310[];
 extern int data_ov001_020abac8[];
 extern unsigned char data_0209f2d8;
 extern unsigned char data_0209f2fc;
-extern unsigned char data_0209f2ac;
-extern unsigned char data_0209f2d4;
+extern unsigned char gNewStarCollected;
+extern unsigned char gLevelClearStep;
 extern int data_020a0db0;
 extern unsigned char NumStars(void);
 extern signed char data_0209f30c[];
@@ -173,11 +173,11 @@ static inline int IsVsMode(void) {
 }
 
 /* 0 on the off frames of the blink after a new star is collected
-   (data_0209f2ac is NEW_STAR_COLLECTED, data_020a0db0 is FRAME_TIMER).
+   (data_020a0db0 is FRAME_TIMER).
    Flattening the nested ifs into one && chain changes the ROM's code. */
 static inline int StarCountVisible(void) {
-    if (data_0209f2ac != 0) {
-        if (data_0209f2d4 == 3 && (data_020a0db0 & 0x18) == 0)
+    if (gNewStarCollected != 0) {
+        if (gLevelClearStep == 3 && (data_020a0db0 & 0x18) == 0)
             return 0;
         return 1;
     }
@@ -352,27 +352,27 @@ int dMeter_c::InitResources() {
     }
 
     if (IsVsMode()) {
-        data_ov002_02111178 = 0;
+        gMeterCounterSlideState = 0;
         mLifeCountX = 0x10;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
     } else if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
-        data_ov002_02111178 = 6;
+        gMeterCounterSlideState = 6;
         mLifeCountX = -0x3A;
         mStarCountX = (s16)(starDigitsWidth + 0x120);
         mStarCountSlideIn = 1;
     } else if (data_0209f2fc == 2) {
-        data_ov002_02111178 = 1;
+        gMeterCounterSlideState = 1;
         mLifeCountX = -0x3A;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
     } else if (data_0209f2fc == 1) {
-        data_ov002_02111178 = 2;
+        gMeterCounterSlideState = 2;
         mLifeCountX = -0x3A;
         mStarCountX = (s16)(starDigitsWidth + 0x120);
         mStarCountSlideIn = 0;
     } else {
-        data_ov002_02111178 = 0;
+        gMeterCounterSlideState = 0;
         mLifeCountX = 0x10;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
@@ -407,9 +407,9 @@ int dMeter_c::Behavior() {
         else
             n = 9;
 
-        switch (data_ov002_02111178) {
+        switch (gMeterCounterSlideState) {
         case 2:
-            data_ov002_02111178 = 3;
+            gMeterCounterSlideState = 3;
             break;
         case 3:
             if (mLifeCountX >= 0x10) {
@@ -429,7 +429,7 @@ int dMeter_c::Behavior() {
                 flags |= 2;
             }
             if (flags == 3)
-                data_ov002_02111178 = 4;
+                gMeterCounterSlideState = 4;
             break;
         case 5:
             if (mHealthMeterHoldTimer == 0) {
@@ -448,7 +448,7 @@ int dMeter_c::Behavior() {
                     flags |= 2;
                 }
                 if (flags == 3)
-                    data_ov002_02111178 = 6;
+                    gMeterCounterSlideState = 6;
             }
             break;
         case 6:
@@ -469,7 +469,7 @@ int dMeter_c::Behavior() {
                 flags |= 2;
             }
             if (flags == 3) {
-                data_ov002_02111178 = 0;
+                gMeterCounterSlideState = 0;
                 mStarCountSlideIn = 0;
             }
             break;
@@ -515,7 +515,7 @@ int dMeter_c::Render() {
         }
         unsigned char v2 = data_0209f20c;
         if (((data_0209f2c4 | v2 | gVsExitScreenActive) & 0xff) == 0 ||
-            (v2 != 0 && data_0209f2d4 < 3)) {
+            (v2 != 0 && gLevelClearStep < 3)) {
             RenderStarCount();
             RenderCameraButtons();
             RenderLifeCount();
@@ -603,8 +603,8 @@ void dMeter_c::UpdateHealthMeter() {
                     return;
                 if (health != 8)
                     return;
-                if (data_ov002_02111178 == 1) {
-                    data_ov002_02111178 = 3;
+                if (gMeterCounterSlideState == 1) {
+                    gMeterCounterSlideState = 3;
                     mHealthMeterState = 2;
                 } else {
                     mHealthMeterHoldTimer = 0x3c;
@@ -623,8 +623,8 @@ void dMeter_c::UpdateHealthMeter() {
                 return;
             if (player->IsInAir())
                 return;
-            if (data_ov002_02111178 == 1) {
-                data_ov002_02111178 = 3;
+            if (gMeterCounterSlideState == 1) {
+                gMeterCounterSlideState = 3;
                 mHealthMeterState = 2;
             } else {
                 mHealthMeterHoldTimer = 0x3c;
@@ -633,7 +633,7 @@ void dMeter_c::UpdateHealthMeter() {
         }
         return;
     case 2:
-        if (data_ov002_02111178 == 4) {
+        if (gMeterCounterSlideState == 4) {
             mHealthMeterHoldTimer = 0x3c;
             mHealthMeterState = 3;
         }
@@ -643,7 +643,7 @@ void dMeter_c::UpdateHealthMeter() {
             return;
         GiveLives(-1);
         func_02012790(0x40);
-        data_ov002_02111178 = 5;
+        gMeterCounterSlideState = 5;
         mHealthMeterHoldTimer = 0x3c;
         mHealthMeterState = 4;
         return;
@@ -867,9 +867,10 @@ void dMeter_c::RenderRedCoins() {
  * on WHICH screen:
  *
  *   data_0209f2d8 == 1   a per-slot count out of data_0209f310, main screen
- *   the middle path      NumStars(), main screen, but only during a specific
- *                        cutscene window (data_ov002_02111178) and suppressed
- *                        entirely by the data_0209f2ac / data_0209f2d4 test
+ *   the middle path      NumStars(), main screen, but only while
+ *                        gMeterCounterSlideState has the counter sliding onto,
+ *                        resting on or sliding off the main screen, and suppressed
+ *                        entirely by the gNewStarCollected / gLevelClearStep test
  *   otherwise            NumStars(), SUB screen -- the leading argument to
  *                        OAM::Render flips 0 -> 1
  *
@@ -901,8 +902,8 @@ void dMeter_c::RenderStarCount() {
 
     {
         unsigned char mode = data_0209f2fc;
-        if ((mode != 2 && data_ov002_02111178 == 4) ||
-            (mode == 1 && data_ov002_02111178 >= 3 && data_ov002_02111178 < 6)) {
+        if ((mode != 2 && gMeterCounterSlideState == 4) ||
+            (mode == 1 && gMeterCounterSlideState >= 3 && gMeterCounterSlideState < 6)) {
             if (!StarCountVisible()) {
                 return;
             }
@@ -1027,7 +1028,7 @@ void dMeter_c::RenderCameraButtons() {
 void dMeter_c::RenderLifeCount() {
     unsigned char idx = data_0209f250;
     daPly_c *player = (daPly_c *)data_0209f394[idx];
-    unsigned char state = data_ov002_02111178;
+    unsigned char state = gMeterCounterSlideState;
 
     if (state >= 3 && state < 6) {
         OAM::Render(0, OAM::LIFE_ICONS[player->mCharacter], mLifeCountX, 0xa, -1, 1, 0x1000, 0x1000,

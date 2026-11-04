@@ -3811,7 +3811,7 @@ data_ov002_02111150 kind:bss addr:0x02111150
 gMapCapIconShown kind:bss addr:0x02111154
 @528 kind:bss addr:0x02111160
 sMapScreenCenter kind:bss addr:0x0211116c
-data_ov002_02111178 kind:bss addr:0x02111178
+gMeterCounterSlideState kind:bss addr:0x02111178
 data_ov002_0211117c kind:bss addr:0x0211117c
 data_ov002_02111180 kind:bss addr:0x02111180
 gShowRaceTimer kind:bss addr:0x02111184

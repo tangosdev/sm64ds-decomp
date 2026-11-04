@@ -94,7 +94,7 @@ extern u8 data_0209f20c;
 extern u8 data_0209f2c4;
 extern u8 gVsExitScreenActive;
 extern u8 data_0209f250;
-extern u8 data_0209f2d4;
+extern u8 gLevelClearStep;
 extern u8 data_0209f2d8;
 extern void *data_0209f394[];
 extern s16 data_02082214[];
@@ -390,7 +390,7 @@ int dMap_c::Render()
     u8 idx = data_0209f250;
 
     if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 || !(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) ||
-        (flag20c != 0 && (u32)data_0209f2d4 < 3)) {
+        (flag20c != 0 && (u32)gLevelClearStep < 3)) {
         daPly_c *player = (daPly_c *)data_0209f394[idx];
         int vs = (data_0209f2d8 == 1);
         if (vs != 0) {

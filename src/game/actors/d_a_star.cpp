@@ -162,7 +162,7 @@ void CollectStarInCurLevel(int i);
 int SublevelToLevel(int i);
 s16 NumCoins(void);
 extern u8 data_0209f228;
-extern u8 data_0209f2ac;
+extern u8 gNewStarCollected;
 extern s16 data_0209f358[];
 extern u8 data_0209d684;
 extern int Vec3_HorzDist(const Vec3* a, const Vec3* b);
@@ -1841,9 +1841,9 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
             mHomeState != STATE_WAIT_MARKER) {
             data_0209f228 = mStarID;
             if (IsStarCollectedInCurLevel(mStarID) != 0) {
-                data_0209f2ac = 0;
+                gNewStarCollected = 0;
             } else {
-                data_0209f2ac = 1;
+                gNewStarCollected = 1;
             }
             CollectStarInCurLevel(mStarID);
             if (r5 != 0) {

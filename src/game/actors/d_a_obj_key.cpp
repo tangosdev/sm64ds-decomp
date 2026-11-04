@@ -703,9 +703,9 @@ void daObjKey_c::func_ov089_02131df4(daPly_c &p) {
      * for the new-star fanfare; 0 suppresses it. Kind 7 takes neither arm.
      * One arm is shorter (0x110 -> 0xe8); the ROM has both. */
     if (data_0209caa0[1] & (2 << mState))
-        data_0209f2ac = 0;
+        gNewStarCollected = 0;
     else
-        data_0209f2ac = 1;
+        gNewStarCollected = 1;
     data_0209caa0[1] |= (2 << mState);
 
     if (mState <= 1) {
