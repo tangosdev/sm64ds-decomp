@@ -113,6 +113,29 @@ s32 daObjRc_Tikuwa_c::Render()
     return 1;
 }
 
+#ifdef _MSC_VER
+/* run after093, lane RIDERS1: in a coop room ClosestPlayer answers the shared target seat, which holds for a second (and
+   can be a friend far from the block), so the fall test below saw the friend past 2500 units and sent the block home in
+   a puff the moment it started to fall under the player riding it. The host measures to the nearest of all players
+   (port_bg_range_player, hal/coop_target.cpp, the ROM's own nearest loop with friends at their drawn pose; it calls
+   ClosestPlayer first). With one player, or when the target is the nearest, this is DistToCPlayer. The DS side is
+   untouched. */
+#include "Player.h"
+extern "C" Player *port_bg_range_player(dBgActor_c *self);
+extern "C" int Vec3_Dist(const void *a, const void *b);
+static s32 TikuwaDistToPlayer(daObjRc_Tikuwa_c *self)
+{
+    s32 dist = self->DistToCPlayer();
+    Player *nearest = port_bg_range_player(self);
+    if (nearest != 0 && nearest != self->ClosestPlayer())
+        dist = Vec3_Dist(&self->mPosX, &nearest->mPosX);
+    return dist;
+}
+#define TIKUWA_DIST_TO_PLAYER() TikuwaDistToPlayer(this)
+#else
+#define TIKUWA_DIST_TO_PLAYER() DistToCPlayer()
+#endif
+
 // @symbol _ZN16daObjRc_Tikuwa_c8BehaviorEv
 s32 daObjRc_Tikuwa_c::Behavior()
 {
@@ -131,7 +154,7 @@ s32 daObjRc_Tikuwa_c::Behavior()
         UpdatePos(0);
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
         if (mWithMeshClsn.IsOnGround() == 0) {
-            if (DistToCPlayer() <= 0x9c4000)
+            if (TIKUWA_DIST_TO_PLAYER() <= 0x9c4000)
                 break;
         }
         TriplePoofDust();
@@ -143,7 +166,7 @@ s32 daObjRc_Tikuwa_c::Behavior()
         mState = 2;
         break;
     case 2: {
-        s32 dist = DistToCPlayer();
+        s32 dist = TIKUWA_DIST_TO_PLAYER();
         if (dist <= 0x3e8000)
             break;
         if (dist < 0x7d0000) {
