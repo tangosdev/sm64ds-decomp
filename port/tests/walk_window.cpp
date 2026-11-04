@@ -15410,10 +15410,14 @@ static void texswap_keys(HWND hwnd)
     if (swap_now && !swap_edge) {
         char label[48], note[64];
         const int stepped = port_mods_texture_cycle(label, sizeof label);
-        fprintf(stderr, "[texswap] key %02x: textures %s\n", vk, label);
-        if (stepped || !strcmp(label, "DS")) snprintf(note, sizeof note, "Textures: %s", label);
-        else snprintf(note, sizeof note, "Texture mods: on");
-        ss_note(note);
+        if (stepped < 0) {
+            fprintf(stderr, "[texswap] key %02x: no texture mod is on, nothing to swap\n", vk);
+        } else {
+            fprintf(stderr, "[texswap] key %02x: textures %s\n", vk, label);
+            if (stepped || !strcmp(label, "DS")) snprintf(note, sizeof note, "Textures: %s", label);
+            else snprintf(note, sizeof note, "Texture mods: on");
+            ss_note(note);
+        }
     }
     swap_edge = swap_now;
     const int shot_now = key_live(VK_F2);

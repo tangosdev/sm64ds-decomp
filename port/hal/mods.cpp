@@ -1549,10 +1549,18 @@ bool find_tex_choice(TexChoice &tc)
 
 /* One press. `label` gets what is showing now, for the toast ("DS", or the
    choice's name, or "on"). Returns 1 when a choice setting is being stepped,
-   0 when the key only turns the replacements off and on. */
+   0 when the key only turns the replacements off and on, and -1 (label empty,
+   nothing touched) when no enabled mod ships textures_hd/: the key belongs to
+   texture mods only (Tango, 11-04), so the port's own HD pack never follows it. */
 extern "C" int port_mods_texture_cycle(char *label, unsigned cap)
 {
     latch();
+    bool any = false;
+    for (size_t i = 0; i < g_mods.size() && !any; ++i) any = has_textures(g_mods[i].folder);
+    if (!any) {
+        if (cap) label[0] = 0;
+        return -1;
+    }
     TexChoice tc;
     if (!find_tex_choice(tc)) {
         const int paused = !ntr::hdtex_paused();
