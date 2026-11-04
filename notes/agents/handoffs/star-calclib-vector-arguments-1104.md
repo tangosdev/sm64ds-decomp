@@ -3,7 +3,7 @@
 ## Identity and resumption
 
 - Scope: `src/game/actors/d_a_star.cpp`, the `daStarBase_c` + `daStar_c` TU in ov002.
-- Branch: `audit/star-horz-dist-type1107`, based on current `origin/main` `a5bb6f569f6e7382ec1b5ef993b7e4fe4eae16a7`.
+- Source branch: `star-horz-dist-type1107` in the audit namespace, based on current `origin/main` `a5bb6f569f6e7382ec1b5ef993b7e4fe4eae16a7`.
 - Related open work: PR #4794 changes star ID typing in `d_s_stage_methods.cpp`, a separate source file and symbol range. Historical queue tasks mentioning `daStar_c` are cancelled; no active reservation was found.
 - Status: byte-verified candidate; independent source review and hosted PR checks remain outstanding.
 - Next action: review the helper boundaries and the `defined_symbol_renames` table against the exact candidate; then continue auditing the remaining raw vector views in this TU.
