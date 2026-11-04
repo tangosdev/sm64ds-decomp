@@ -1096,11 +1096,11 @@ int daHanachan_c::Behavior()
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
         Matrix4x3_FromRotationY(data_020a0e68, mSegmentRot[0].y);
         MulVec3Mat4x3(&camA, data_020a0e68, &scratch);
-        Vec3_Add(&t0, (const Vector3 *)&mPosX, &scratch);
+        Vec3_Add(&t0, &mPos, &scratch);
         camA = t0;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
         MulVec3Mat4x3(&camB, data_020a0e68, &scratch);
-        Vec3_Add(&t1, (const Vector3 *)&mPosX, &scratch);
+        Vec3_Add(&t1, &mPos, &scratch);
         camB = t1;
         func_020092c4(cam, &cam->lookAt, &camA);
         func_020092c4(cam, &cam->pos, &camB);
