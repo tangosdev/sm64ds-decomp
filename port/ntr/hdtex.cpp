@@ -452,6 +452,10 @@ int hdtex_reindex(void)
     return g_stats.pack_entries;
 }
 
+static int g_paused;   /* TEXSWAP1, see hdtex.h */
+void hdtex_set_paused(int paused) { g_paused = paused ? 1 : 0; }
+int hdtex_paused(void) { return g_paused; }
+
 int hdtex_enabled(void) { return g_enabled; }
 
 const char *hdtex_pack_dir(void) { return g_pack_dir; }
@@ -649,7 +653,7 @@ void hdtex_dump(uint64_t name, int width, int height, const uint32_t *argb)
 int hdtex_lookup(uint64_t name, int width, int height,
                  std::vector<uint32_t> &out)
 {
-    if (!g_pack_indexed || width <= 0 || height <= 0) return 0;
+    if (!g_pack_indexed || g_paused || width <= 0 || height <= 0) return 0;
     const auto found = g_names->find(name);
     if (found == g_names->end()) {
         // THE COMMON CASE, and it is one hash-set lookup with no file I/O.

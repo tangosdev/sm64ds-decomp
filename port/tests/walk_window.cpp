@@ -401,6 +401,7 @@ static bool winapi_load(void)
 
 #include "ntr/gx.h"
 #include "ntr/hdtex.h"
+#include "../third_party/stb/stb_image_write.h"   /* TEXSWAP1: the F2 screenshot; implemented in ntr/hdtex.cpp */
 #include "ntr/mmio.h"
 #include "ntr/ppu.h"
 #include "ntr/rt.h"
@@ -15277,6 +15278,145 @@ static HDC  g_entry_hdc;
  * Returns 1 when the window asked to close (WM_QUIT), 0 otherwise. The caller
  * decides what closing means; the interlude stops, and scene_window_run breaks
  * its loop exactly as it did when this code was inline. */
+/* ---- TEXSWAP1: F7 TEXTURE MODS ON / OFF, F2 SCREENSHOT TO DOWNLOADS -------
+   A private test build for Tango's before / after look at a texture mod.
+
+   F7 pauses every texture replacement (ntr/hdtex.h, hdtex_set_paused) and
+   drops the decode cache, so the very next frame draws the game's own
+   textures; a second press brings the mod's back. The index stays loaded, so
+   the swap costs no reload. Only the picture changes, never the game.
+
+   F2 saves what the window shows, at the window's size, as a PNG in the
+   player's Downloads folder (SM64DS_SHOT_DIR overrides it, for test rows). The
+   window is asked to paint itself into a bitmap with PW_RENDERFULLCONTENT,
+   which also catches a picture the graphics card presented; if that is
+   refused the screen copy under the window is taken instead. Everything is
+   loaded by hand, the rule this file keeps (a static import table maps over
+   0x02000000). F6 is not used: the launcher holds it for the bug report. */
+static int shot_dir(char *out, unsigned cap)
+{
+    const char *e = getenv("SM64DS_SHOT_DIR");
+    if (e && *e) { snprintf(out, cap, "%s", e); return 1; }
+    HMODULE sh = LoadLibraryA("shell32.dll"), ole = LoadLibraryA("ole32.dll");
+    typedef HRESULT(WINAPI * Known_t)(const GUID &, DWORD, HANDLE, PWSTR *);
+    typedef void(WINAPI * Free_t)(LPVOID);
+    Known_t known = sh ? (Known_t)GetProcAddress(sh, "SHGetKnownFolderPath") : 0;
+    Free_t mfree = ole ? (Free_t)GetProcAddress(ole, "CoTaskMemFree") : 0;
+    static const GUID downloads = {0x374DE290, 0x123F, 0x4565,
+                                   {0x91, 0x64, 0x39, 0xC4, 0x92, 0x5E, 0x46, 0x7B}};
+    PWSTR w = 0;
+    if (known && known(downloads, 0, 0, &w) == S_OK && w) {
+        const int n = WideCharToMultiByte(CP_ACP, 0, w, -1, out, (int)cap, 0, 0);
+        if (mfree) mfree(w);
+        if (n > 0) return 1;
+    }
+    const char *home = getenv("USERPROFILE");
+    if (!home) return 0;
+    snprintf(out, cap, "%s\\Downloads", home);
+    return 1;
+}
+
+static void shot_save(HWND hwnd)
+{
+    HMODULE g = LoadLibraryA("gdi32.dll"), u = LoadLibraryA("user32.dll");
+    if (!g || !u) return;
+    typedef HDC(WINAPI * CreateCompatibleDC_t)(HDC);
+    typedef HBITMAP(WINAPI * CreateDIBSection_t)(HDC, const BITMAPINFO *, UINT, void **, HANDLE, DWORD);
+    typedef HGDIOBJ(WINAPI * SelectObject_t)(HDC, HGDIOBJ);
+    typedef BOOL(WINAPI * DeleteObject_t)(HGDIOBJ);
+    typedef BOOL(WINAPI * DeleteDC_t)(HDC);
+    typedef BOOL(WINAPI * BitBlt_t)(HDC, int, int, int, int, HDC, int, int, DWORD);
+    typedef HDC(WINAPI * GetDC_t)(HWND);
+    typedef int(WINAPI * ReleaseDC_t)(HWND, HDC);
+    typedef BOOL(WINAPI * GetClientRect_t)(HWND, LPRECT);
+    typedef BOOL(WINAPI * PrintWindow_t)(HWND, HDC, UINT);
+    CreateCompatibleDC_t CreateCompatibleDC_ = (CreateCompatibleDC_t)GetProcAddress(g, "CreateCompatibleDC");
+    CreateDIBSection_t CreateDIBSection_ = (CreateDIBSection_t)GetProcAddress(g, "CreateDIBSection");
+    SelectObject_t SelectObject_ = (SelectObject_t)GetProcAddress(g, "SelectObject");
+    DeleteObject_t DeleteObject_ = (DeleteObject_t)GetProcAddress(g, "DeleteObject");
+    DeleteDC_t DeleteDC_ = (DeleteDC_t)GetProcAddress(g, "DeleteDC");
+    BitBlt_t BitBlt_ = (BitBlt_t)GetProcAddress(g, "BitBlt");
+    GetDC_t GetDC_ = (GetDC_t)GetProcAddress(u, "GetDC");
+    ReleaseDC_t ReleaseDC_ = (ReleaseDC_t)GetProcAddress(u, "ReleaseDC");
+    GetClientRect_t GetClientRect_ = (GetClientRect_t)GetProcAddress(u, "GetClientRect");
+    PrintWindow_t PrintWindow_ = (PrintWindow_t)GetProcAddress(u, "PrintWindow");
+    if (!CreateCompatibleDC_ || !CreateDIBSection_ || !SelectObject_ || !DeleteObject_ || !DeleteDC_ ||
+        !BitBlt_ || !GetDC_ || !ReleaseDC_ || !GetClientRect_)
+        return;
+
+    RECT rc;
+    if (!GetClientRect_(hwnd, &rc)) return;
+    const int w = rc.right - rc.left, h = rc.bottom - rc.top;
+    if (w <= 0 || h <= 0) { ss_note("Screenshot: window is minimised"); return; }
+    HDC wdc = GetDC_(hwnd);
+    HDC mem = CreateCompatibleDC_(wdc);
+    BITMAPINFO bi;
+    memset(&bi, 0, sizeof bi);
+    bi.bmiHeader.biSize = sizeof bi.bmiHeader;
+    bi.bmiHeader.biWidth = w;
+    bi.bmiHeader.biHeight = -h;
+    bi.bmiHeader.biPlanes = 1;
+    bi.bmiHeader.biBitCount = 32;
+    bi.bmiHeader.biCompression = BI_RGB;
+    void *bits = 0;
+    HBITMAP dib = mem ? CreateDIBSection_(mem, &bi, DIB_RGB_COLORS, &bits, 0, 0) : 0;
+    int ok = 0;
+    const char *how = "-";
+    if (dib && bits) {
+        SelectObject_(mem, dib);
+        /* PW_CLIENTONLY 1 | PW_RENDERFULLCONTENT 2 */
+        if (PrintWindow_ && PrintWindow_(hwnd, mem, 3)) ok = 1, how = "PrintWindow";
+        else if (BitBlt_(mem, 0, 0, w, h, wdc, 0, 0, SRCCOPY)) ok = 1, how = "BitBlt";
+    }
+    char dir[MAX_PATH], path[MAX_PATH + 64];
+    path[0] = 0;
+    if (ok && shot_dir(dir, sizeof dir)) {
+        unsigned char *px = (unsigned char *)bits;   /* BGRA, top-down */
+        for (int i = 0; i < w * h; ++i) {
+            const unsigned char b = px[i * 4];
+            px[i * 4] = px[i * 4 + 2];
+            px[i * 4 + 2] = b;
+            px[i * 4 + 3] = 255;
+        }
+        SYSTEMTIME t;
+        GetLocalTime(&t);
+        for (int n = 1; n < 100; ++n) {
+            if (n == 1)
+                snprintf(path, sizeof path, "%s\\sm64ds_%04d-%02d-%02d_%02d-%02d-%02d.png", dir,
+                         t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
+            else
+                snprintf(path, sizeof path, "%s\\sm64ds_%04d-%02d-%02d_%02d-%02d-%02d_%d.png", dir,
+                         t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, n);
+            if (GetFileAttributesA(path) == INVALID_FILE_ATTRIBUTES) break;
+        }
+        ok = stbi_write_png(path, w, h, 4, px, w * 4) != 0;
+    } else {
+        ok = 0;
+    }
+    fprintf(stderr, "[shot] F2 %dx%d via %s: %s\n", w, h, how, ok ? path : "FAILED");
+    ss_note(ok ? "Screenshot saved to Downloads" : "Screenshot failed");
+    if (dib) DeleteObject_(dib);
+    if (mem) DeleteDC_(mem);
+    if (wdc) ReleaseDC_(hwnd, wdc);
+}
+
+static void texswap_keys(HWND hwnd)
+{
+    static int swap_edge, shot_edge;
+    const int swap_now = key_live(VK_F7);
+    if (swap_now && !swap_edge) {
+        const int paused = !ntr::hdtex_paused();
+        ntr::hdtex_set_paused(paused);
+        ntr::gx_invalidate_textures();
+        fprintf(stderr, "[texswap] F7 texture mods %s\n", paused ? "off" : "on");
+        ss_note(paused ? "Texture mods: off" : "Texture mods: on");
+    }
+    swap_edge = swap_now;
+    const int shot_now = key_live(VK_F2);
+    if (shot_now && !shot_edge) shot_save(hwnd);
+    shot_edge = shot_now;
+}
+
 static int stick_script_apply(int frame, int *pad_live, XPad *pad);
 static int rstick_script_apply(int frame, int *pad_live, XPad *pad);
 static void padptr_frame(int frame, int pad_live, XPad *pad);
@@ -15314,6 +15454,7 @@ static int scene_host_input_frame(HWND hwnd, int frame, XPad *pad,
         if (now && !ov_edge) g_overlay_on = !g_overlay_on;
         ov_edge = now;
     }
+    texswap_keys(hwnd);   /* TEXSWAP1: F7 texture mods on / off, F2 screenshot */
 
     int pad_live = port_pad_poll(pad);
     pad_focus_gate(&pad_live, pad);
@@ -18349,6 +18490,7 @@ int main(void)
             save_edge = save_now;
             load_edge = load_now;
         }
+        texswap_keys(hwnd);   /* TEXSWAP1: F7 texture mods on / off, F2 screenshot */
         /* SCRIPTED SAVE-STATE REPRODUCER (headless, selftest only).
            This is the regression rig for the 0.2.0 restore crash: real players
            save, then a message/cutscene changes hosted mode-lock state that
