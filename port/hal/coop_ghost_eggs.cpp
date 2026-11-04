@@ -327,6 +327,8 @@ void lab_grab(char *me) {
         if (d <= bd && dy > -80 && dy < 120) { bd = d; best = a; }
     }
     if (!best) return;
+    // units >= 1000 is the FETCH form: the scripted walk keeps missing the Bob-omb, so set it down at my feet first
+    if (units >= 1000) { wr32(best, 0x5c, rd32(me, 0x5c)); wr32(best, 0x60, rd32(me, 0x60)); wr32(best, 0x64, rd32(me, 0x64)); }
     const int ok = _ZN6Player7TryGrabER8dActor_c(me, best);
     if (ok || (++logs % 30) == 1) {
         short slot; std::memcpy(&slot, (const char *)best + 0xce, 2);
