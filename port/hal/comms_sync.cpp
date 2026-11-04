@@ -766,6 +766,25 @@ enum : int {
        colours. A reader of this build that gets no bit 1 does the same. */
     kGwIdentBros = 0x02,
     kGwBroBlock = 20,
+    /* GHOSTID1: bit 2, "send me yours": set on the identity a console sends
+       because its roster moved (a seat joined or left). Every reader of this
+       build that gets it sends its own identity again, once, no sooner than
+       kGwIdentGapMs after its last one, and that answer never carries the bit.
+       A friend whose datagrams stopped reaching the others for 3 s (his
+       uplink stalled, the room's relay lost him) is dropped from their hub
+       and his identity is forgotten (gw_forget_left), but on his own console
+       nothing changed, so his roster did not move and he sent his identity
+       again only on the 2 s clock: for up to 2 s the others drew him with no
+       name and the default colours. The others' roster moves when he comes
+       back, their identity asks, and his answer arrives within one round
+       trip of the gap. An older reader leaves the bit unread (bits other than
+       0 and 1 are never read) and answers on the 2 s clock as before. */
+    kGwIdentAsk = 0x04,
+    /* GHOSTID1: a seat that comes on show with no identity yet is held off
+       screen this long for it (gw_here), so he comes back with his name and
+       colours instead of as a nameless default body; past it he is drawn as
+       he is (an identity that never comes, a reader of an odd build). */
+    kGwIdentHoldMs = 1500,
 };
 
 // GHOSTLOOK1: TWO TEST KNOBS for the smoothness measurement, both default to
@@ -888,6 +907,7 @@ struct GwSeat {
     bool      last_have;     // g_gw_last holds a sample drawn in my level / area
     int       last_lvl, last_area;
     unsigned  char_wait_ms;  // when its body first showed the wrong character
+    unsigned  noident_ms;    // GHOSTID1: when it first wanted to show with no identity (kGwIdentHoldMs)
     bool      paint;         // PAINTTAG1: through a painting on this screen (no tag)
     // GHOSTCHAR1: how this seat's ghost was posed, per follower frame
     // (gw_sample), for the exit summary. A "hold" is a frame with no newer
@@ -926,8 +946,21 @@ struct GwStats {
     unsigned long long linger_frames;  // ...and drawn fading out in place
     unsigned long long char_holds;   // ...and held back for the wrong character
     unsigned long long drains;       // hub drains during my own star select
+    unsigned long long ident_holds;  // GHOSTID1: passes a seat waited off screen for its identity
+    unsigned long long ident_asks, ident_answers;   // GHOSTID1: identities sent asking / answering
 };
 GwStats g_gws;
+
+// GHOSTID1: SM64DS_GHOST_IDENT_OLD=1 is the before arm of the proof rows: no
+// kGwIdentAsk on the wire, no answer to one, no hold for a missing identity.
+bool gw_ident_hold_off() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_GHOST_IDENT_OLD");
+        v = (e && std::atoi(e) != 0) ? 1 : 0;
+    }
+    return v != 0;
+}
 
 // The sender.
 unsigned g_gw_t0 = 0;
@@ -940,6 +973,7 @@ unsigned g_gw_last_send_ms = 0;
 unsigned g_gw_last_ident_ms = 0;
 bool     g_gw_ident_sent = false;
 unsigned g_gw_roster = 0;
+bool     g_gw_ident_owed = false;  // GHOSTID1: a friend's identity asked for mine (kGwIdentAsk)
 unsigned g_gw_beh_last = 0;
 bool     g_gw_beh_seeded = false;
 int      g_gw_frozen = 0;          // frames the local body has not moved at all
@@ -1439,6 +1473,8 @@ void gw_on_ident(const unsigned char *buf, int n, int seat) {
     }
     z.build_id = h.build_id;
     z.have_ident = true;
+    z.noident_ms = 0;
+    if ((h.flags & kGwIdentAsk) && !gw_ident_hold_off()) g_gw_ident_owed = true;    /* GHOSTID1 */
     ++g_gws.syni_recvd;
 }
 
@@ -1472,10 +1508,19 @@ bool gw_cut() {
 
 // GHOSTDOOR1: 0 not here, 1 here, 2 in another level or another area of mine
 // (a ghost that was here a moment ago fades out in place: see gw_visible).
-int gw_here(const GwSeat &z) {
+int gw_here(GwSeat &z) {
     if (z.n == 0) return 0;
     const unsigned now = GetTickCount();
     if ((unsigned)(now - z.last_ms) > (unsigned)kGwDespawnMs) return 0;
+    /* GHOSTID1: frames but no identity yet (he came back after the hub had
+       forgotten him): not on show until it lands, for up to kGwIdentHoldMs */
+    if (!z.have_ident && !gw_ident_hold_off()) {
+        if (!z.noident_ms) z.noident_ms = now ? now : 1u;
+        if ((unsigned)(now - z.noident_ms) < (unsigned)kGwIdentHoldMs) {
+            ++g_gws.ident_holds;
+            return 0;
+        }
+    }
     const HubGhostFrame &nw = z.ring[z.n - 1].f;
     if (nw.y < kDeathPlaneY) return 0;                      // fell out
     /* a friend who has been in the pause menu / star select for 2 s fades
@@ -2068,7 +2113,7 @@ void gw_my_bros(unsigned short *mask, unsigned short bgr[9]) {
         }
 }
 
-void gw_send_ident(unsigned now) {
+void gw_send_ident(unsigned now, bool ask) {
     gw_me_read();
     unsigned char buf[64];
     std::memset(buf, 0, sizeof buf);
@@ -2084,6 +2129,7 @@ void gw_send_ident(unsigned now) {
     std::memcpy(h.body_rgb, g_gw_me.body, 3);
     std::memcpy(h.shoes_rgb, g_gw_me.shoes, 3);
     h.flags = g_gw_me.colours ? (unsigned char)kGwIdentColours : 0;
+    if (ask) h.flags = (unsigned char)(h.flags | kGwIdentAsk);    /* GHOSTID1 */
     h.reserved = 0;
     std::memcpy(buf, &h, sizeof h);
     std::memcpy(buf + 20, g_gw_me.name, (size_t)g_gw_me.name_len);
@@ -2127,12 +2173,18 @@ void gw_ident_tick(unsigned now) {
     if (comms_hub_state() != kHubLive) return;
     const unsigned roster = comms_hub_roster_version();
     const bool roster_moved = roster != g_gw_roster;
+    const bool gap = (unsigned)(now - g_gw_last_ident_ms) >= (unsigned)kGwIdentGapMs;
     if (!g_gw_ident_sent ||
         (unsigned)(now - g_gw_last_ident_ms) >= (unsigned)kGwIdentMs ||
-        (roster_moved &&
-         (unsigned)(now - g_gw_last_ident_ms) >= (unsigned)kGwIdentGapMs)) {
+        ((roster_moved || g_gw_ident_owed) && gap)) {
+        /* GHOSTID1: a roster move asks the others for theirs (kGwIdentAsk);
+           an answer to an ask, or the 2 s repeat, does not */
+        const bool ask = roster_moved && gap && !gw_ident_hold_off();
+        if (ask) ++g_gws.ident_asks;
+        else if (g_gw_ident_owed && !roster_moved) ++g_gws.ident_answers;
         g_gw_roster = roster;
-        gw_send_ident(now);
+        g_gw_ident_owed = false;
+        gw_send_ident(now, ask);
     }
 }
 
@@ -2364,7 +2416,8 @@ void gw_report(const char *tag) {
                  "clamped=%llu target_ghost=%llu near_ghost=%llu seat_fix=%llu "
                  "adopted=%llu cut_nosend=%llu cut_frames=%llu cut_drawn=%llu "
                  "shown_frames=%llu comebacks=%llu pal_rows=%llu "
-                 "pal_writes=%llu pal_held=%llu door_snaps=%llu cut=%d names=[%s]\n",
+                 "pal_writes=%llu pal_held=%llu door_snaps=%llu ident_holds=%llu ident_asks=%llu "
+                 "ident_answers=%llu cut=%d names=[%s]\n",
                  tag ? tag : "-", comms_hub_my_seat(), (int)data_0209f2f8,
                  g_gws.syng_sent, g_gws.syng_paused, g_gws.syni_sent,
                  g_gws.send_fail, g_gws.syng_recvd, g_gws.syni_recvd,
@@ -2377,6 +2430,7 @@ void gw_report(const char *tag) {
                  g_gws.cut_nosend, g_gws.cut_frames, g_gws.cut_drawn,
                  g_gws.shown_frames, g_gws.comebacks, g_gws.pal_rows,
                  g_gws.pal_writes, g_gws.pal_held, g_gws.door_snaps,
+                 g_gws.ident_holds, g_gws.ident_asks, g_gws.ident_answers,
                  data_0209fc48 != 0 ? 1 : 0, names);
 }
 
@@ -4958,6 +5012,7 @@ static void sync_globals_reset() {
     g_gw_last_ident_ms = 0;
     g_gw_ident_sent = false;
     g_gw_roster = 0;
+    g_gw_ident_owed = false;
     g_gw_beh_last = 0;
     g_gw_beh_seeded = false;
     g_gw_frozen = 0;
