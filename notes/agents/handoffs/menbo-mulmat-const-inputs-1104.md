@@ -3,7 +3,7 @@
 ## Identity and resumption
 
 - Task: `audit/menbo-mulmat-type1104`; candidate for draft PR after current-base byte proof.
-- Base: `main` at `087f79fb22211ad869bbd2cea526b2c2b7d8b07c`.
+- Base: `main` at `f23e35b7d9511c50d4ca06a901404cd4bcf1a4b2`.
 - Independent source review is still required. This handoff records producer checks, not independent acceptance.
 
 ## Change and evidence
@@ -12,12 +12,12 @@
 
 In `InitResources`, `mAnmModel.data.transforms + idx` is a raw transform-storage view and is passed as `const Matrix4x3 *`; `data_020a0e68` is both the second input and output, matching the helper's in-place alias handling.
 
-## Verification on `087f79fb22211ad869bbd2cea526b2c2b7d8b07c`
+## Verification on `f23e35b7d9511c50d4ca06a901404cd4bcf1a4b2`
 
 - `python tools/tubuild.py verify ov090/daMenbo_c --no-write --verdict`: 25/25 match, object isolation and relocation destinations clean, emission order correct. Exit 1 only for the pre-existing unlicensed `__sinit_d_a_menbo.cpp` section (0x1c0 bytes); no function mismatch.
-- `python tools/prepush_linkcheck.py --range 087f79fb22211ad869bbd2cea526b2c2b7d8b07c..HEAD`: 26 checked, 25 verified, one blind `__sinit` warning, zero blocking.
+- `python tools/prepush_linkcheck.py --range f23e35b7d9511c50d4ca06a901404cd4bcf1a4b2..HEAD`: 26 checked, 25 verified, one blind `__sinit` warning, zero blocking.
 - `python tools/rombuild.py -j16 --no-rom`: PASS; 106/106 modules exact, 11,395/11,395 source-built functions exact, 470/470 source-owned data claims exact, zero mismatches.
-- `python tools/check_decl_agreement.py --changed 087f79fb22211ad869bbd2cea526b2c2b7d8b07c`: no new declaration disagreements.
+- `python tools/check_decl_agreement.py --changed f23e35b7d9511c50d4ca06a901404cd4bcf1a4b2`: no new declaration disagreements.
 - `python tools/port_refcheck.py`: 217/217 references resolve.
 - `python tools/check_dead_references.py`: no new dead references or broken Markdown links.
 
