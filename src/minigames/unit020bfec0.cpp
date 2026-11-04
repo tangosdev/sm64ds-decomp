@@ -68,8 +68,10 @@ void MulMat4x3Mat4x3(void *, void *, void *);
 void __cxa_vec_cleanup(void *, unsigned int, unsigned int, void (*)(void *));
 void func_020169d8(void *, int, unsigned int);
 void func_0203cebc(void *, void *, void *, void *);
-void AddVec3(void *, void *, void *);
-int DotVec3(void *, void *);
+/* local extern: CalcLib also types SubVec3; keep this TU's void* SubVec3
+ * prototype local while giving AddVec3 its definition's parameter types. */
+void AddVec3(Vector3 *, Vector3 *, Vector3 *);
+int DotVec3(const Vector3 *, const Vector3 *);
 void Matrix4x3_ApplyInPlaceToRotationX(void *, short);
 void Matrix4x3_ApplyInPlaceToRotationY(void *, short);
 void Matrix4x3_FromTranslation(void *, int, int, int);
@@ -647,7 +649,7 @@ void FallingPetal_Update(char *self) {
     v0.z = val;
     Vec3_MulScalarInPlace((int *)&v0, 0x400);
     Vec3_Add(&v1, &PETAL(self)->mVel, &v0);
-    dot = DotVec3(&PETAL(self)->mAxis, &v1);
+    dot = DotVec3(&PETAL(self)->mAxis, (const Vector3 *)&v1);
     Vec3_MulScalar(&v2, &PETAL(self)->mAxis, dot);
     Vec3_MulScalarInPlace((int *)&v2, 0x300);
     SubVec3(&PETAL(self)->mVel, &v2, &PETAL(self)->mVel);
