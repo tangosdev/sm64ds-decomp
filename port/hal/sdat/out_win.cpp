@@ -348,6 +348,10 @@ extern "C" void out_set_volume_pct(int pct)
             v == 0 ? " (silent)" : "");
 }
 
+// run after093 lane MPSOUND1: frames rendered since boot, the WAV dump's sample
+// index (hal/coop_sound.cpp names it in its [msnd] lines). Read only.
+extern "C" unsigned sd_out_frames_rendered(void) { return (unsigned)g_cum; }
+
 // ---- wav ----------------------------------------------------------------
 
 void sd_wav_open(const char *path)

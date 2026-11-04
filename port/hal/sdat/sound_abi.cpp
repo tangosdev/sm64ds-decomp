@@ -96,6 +96,8 @@ int g_snd_reqlog = -1;
    goes out in my next arena state frame so the other consoles' puppets play it;
    inert unless arena mode is installed. */
 void port_vs_arena_sound(unsigned kind, unsigned id, const void *v);
+// run after093 lane MPSOUND1: the party / coop capture is in Sound::Play itself (src/engine/sound/Sound.cpp,
+// an _MSC_VER arm), so this bridge, which calls Sound::Play, is covered there once.
 extern signed char data_0208e428;        /* the bank every kind-3 sound rides */
 extern unsigned char data_0209b47c;      /* the loaded sound group */
 extern unsigned char data_0209b480;      /* master "sound effects on" */

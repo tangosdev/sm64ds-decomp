@@ -177,6 +177,13 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 a, int b, int c, 
 extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(s32 x, s32 y, s32 z);
 extern s32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *v, u32 d);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, const void *pos);
+#ifdef _MSC_VER
+/* run after093, lane MPSOUND2: for the length of the egg's two sound calls, name the
+   Player the egg follows and the egg's world position (src/engine/sound/Sound.cpp, read by
+   port/hal/coop_sound.cpp so a friend's egg is heard). Host only. */
+extern "C" const void *port_coop_sound_owner;
+extern "C" const void *port_coop_sound_at;
+#endif
 extern s32 _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void *dst, const void *src, s32 step);
 extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern int Vec3_HorzDist(const void *a, const void *b);
@@ -573,8 +580,16 @@ void daYegg_c::func_ov002_020ecb0c()
                 sp.rot.z = rz;
                 mParticleHandle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                     mParticleHandle, 0x2c, sp.pos.x, sp.pos.y, pz, pr, 0);
+#ifdef _MSC_VER
+                port_coop_sound_owner = mPlayer;
+                port_coop_sound_at = &mPosX;
+#endif
                 mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                     mSoundHandle, 3, 0x93, &mCamSpacePosX, 0);
+#ifdef _MSC_VER
+                port_coop_sound_owner = 0;
+                port_coop_sound_at = 0;
+#endif
                 flag = 1;
                 func_ov002_020ed738();
                 if (func_ov002_020eddc4() != 0)
@@ -1259,7 +1274,15 @@ void func_ov002_020edca4(daYegg_c* self)
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x41, self->mPosX, self->mPosY, self->mPosZ);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x42, self->mPosX, self->mPosY, self->mPosZ);
     _ZN7fBase_c18MarkForDestructionEv((struct dActor_c*)self);
+#ifdef _MSC_VER
+    port_coop_sound_owner = self->mPlayer;
+    port_coop_sound_at = &self->mPosX;
+#endif
     _ZN5Sound13PlayCharVoiceEjjRK7Vector3(0, 0x103, (const struct Vector3*)&self->mCamSpacePosX);
+#ifdef _MSC_VER
+    port_coop_sound_owner = 0;
+    port_coop_sound_at = 0;
+#endif
 
     self->mBurstDone = 1;
 }

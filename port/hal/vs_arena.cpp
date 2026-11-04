@@ -1813,6 +1813,18 @@ float vs_puppet_sfx_gain(const int me[3], const int src[3]) {
     if (d >= g_pc.sfx_far) return 0.0f;
     return (float)((g_pc.sfx_far - d) / (g_pc.sfx_far - g_pc.sfx_near));
 }
+// MPSOUND1 (party / coop / world-party sounds, hal/coop_sound.cpp): the same rule,
+// read through the same config, so both paths fade alike. Nothing in VS calls these.
+bool vs_puppet_sfx_rule(double *near_out, double *far_out) {
+    pup_sfx_cfg();
+    if (near_out) *near_out = g_pc.sfx_near;
+    if (far_out) *far_out = g_pc.sfx_far;
+    return g_pc.sfx_range_on != 0;
+}
+double vs_puppet_sfx_romdist(double dist) {
+    pup_sfx_cfg();
+    return pup_sfx_romdist(dist);
+}
 
 bool arena_state_valid(const ArenaState &s) {
     if (s.tag != kArenaTagState || s.version != 1) return false;
