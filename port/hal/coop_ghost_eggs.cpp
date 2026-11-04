@@ -239,7 +239,8 @@ void drop_trail(RxSeat &s, bool quiet_all) {
         }
 }
 
-// One egg laid on the ghost by the ROM's own call, with the ghost at its drawn spot and no payout. Taken back out of
+// One egg laid on the ghost by the ROM's own call, with the ghost at its drawn spot and a payout byte of 1 (param1 0x10:
+// the round egg; 0 would make the other, box-shaped variant). Taken back out of
 // the ghost's queue at once: this module keeps the list, so nothing else ever finds my copies through the ghost.
 void *lay(char *ghost, const int dp[3]) {
     int *q = queue_of(ghost);
@@ -251,7 +252,7 @@ void *lay(char *ghost, const int dp[3]) {
     int sv[3] = { rd32(ghost, 0x5c), rd32(ghost, 0x60), rd32(ghost, 0x64) };
     const unsigned char pay = ((unsigned char *)ghost)[0x704];
     wr32(ghost, 0x5c, dp[0]); wr32(ghost, 0x60, dp[1]); wr32(ghost, 0x64, dp[2]);
-    ((unsigned char *)ghost)[0x704] = 0;
+    ((unsigned char *)ghost)[0x704] = 1;      // egg param 1 << 4: the round egg (variant bits 1), no coins, no blue coin, no star
     func_ov002_020d6368(ghost);
     wr32(ghost, 0x5c, sv[0]); wr32(ghost, 0x60, sv[1]); wr32(ghost, 0x64, sv[2]);
     ((unsigned char *)ghost)[0x704] = pay;
