@@ -1,5 +1,6 @@
 //cpp
 #include "Ov007Picker.h"
+#include "math/CalcLib.h"
 
 /* Vector3 declares a constructor and destructor under C++, which makes its
    assignment copy word by word. The ROM copies these with one ldm/stm, which
@@ -10,7 +11,6 @@ struct Vec3Words {
 
 extern "C" {
 int func_ov007_020c30ac(void *arr, int count, void *target, int arg4, int *out);
-void SubVec3(void *a, void *b, void *c);
 int LenVec3(void *v);
 }
 
