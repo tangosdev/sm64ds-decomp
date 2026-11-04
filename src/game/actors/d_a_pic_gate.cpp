@@ -95,7 +95,7 @@ int   InvMat4x3(int *src, int *dst);
 void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 void  CrossVec3(const Vec3_Fix12 *a, const Vec3_Fix12 *b, Vec3_Fix12 *out);
-void  NormalizeVec3(const Vector3 *v, Vector3 *out);
+void NormalizeVec3(const Vector3 *v, Vector3 *out);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void  MulMat4x3Mat4x3(const int *m1, const int *m0, int *mF);
 void  func_020553a4(void *m);
