@@ -84,7 +84,7 @@ void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void  Vec3_MulScalar(void *, const void *, int);
 void  Vec3_Asr(void *, void *, int);
 /* local extern: CalcLib conflicts with this TU's Vec3_MulScalar spelling. */
-void  SubVec3(Vector3 *, Vector3 *, Vector3 *);
+void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 s32   LenVec3(const void *);
 int   AngleDiff(int, int);
 int   ApproachAngle(void *, s16, int, int, int);
