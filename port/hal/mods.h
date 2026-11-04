@@ -58,6 +58,12 @@ const char *port_mods_bundle(void);
    own art). <rel> is a plain relative path with no "..". Documented at the definition in mods.cpp. */
 int port_mods_ui_file(const char *rel, char *out, unsigned cap);
 
+/* The enabled mods' stage/ folders (run studio1, lane PORTLVLM1): the i-th entry, latest mod first and by name inside one
+   mod. Fills path with the full path of a <name>.lvlm level-edits file (returns 1, for hal/stage_mods.cpp) or a <name>_geom
+   folder of <stage>.bmd / <stage>.kcl (returns 2, for hal/stage_geom.cpp) and *mod with the mod's id; 0 past the end. Taken
+   once, from the list as the game started: the relatch at the title does not change it. Documented at the definition. */
+int port_mods_stage_entry(int i, char *path, unsigned cap, const char **mod);
+
 /* Switch the mod list IN PLACE at the title, with no level loaded (run after093, lane SEAMMODS1; one-process plan M3a): reads
    EnabledMods again (and the multiplayer rule as it stands), rebuilds the files/ layer the card serves, re-indexes textures_hd and
    drops the texture caches. Refuses, changing nothing, when a code mod is on either side, when the set of mods shipping hd_ui/,
