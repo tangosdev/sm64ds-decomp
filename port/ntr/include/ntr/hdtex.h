@@ -86,6 +86,12 @@ int hdtex_paused(void);
 // parked edition's name for the same texture.
 uint64_t hdtex_name(uint32_t teximage, uint32_t plttbase);
 
+// The same texture's second name, which hashes only the palette entries the
+// decoder reads (hdtex.cpp says why the first one did not). The loader asks
+// for this one first and for hdtex_name's on a miss; the dump writes its PNG
+// under this one, and the index row carries both, this one first.
+uint64_t hdtex_name2(uint32_t teximage, uint32_t plttbase);
+
 // Write one decoded texture to the dump directory as <name>.png (RGBA8, one
 // file per unique name, never overwritten, nothing at all when no dump
 // directory is set). `argb` is width*height texels, 0xAARRGGBB.
@@ -96,6 +102,14 @@ void hdtex_dump(uint64_t name, int width, int height, const uint32_t *argb);
 // returns S (1..8). 0 means no replacement: bind the port's own decode.
 int hdtex_lookup(uint64_t name, int width, int height,
                  std::vector<uint32_t> &out);
+
+// hdtex_lookup for a hdtex_name2 name, with the fallback: when the pack has no
+// file by that name and have_words is set, the texture's hdtex_name name is
+// computed from the two geometry words and looked up instead. That second
+// hash runs only on that miss.
+int hdtex_lookup2(uint64_t name2, int have_words, uint32_t teximage,
+                  uint32_t plttbase, int width, int height,
+                  std::vector<uint32_t> &out);
 
 // What the run did. SM64DS_HD_TEXTURES_LOG=1 prints the per-texture lines and
 // the summary; these numbers are what run hd1's measurements are taken from.

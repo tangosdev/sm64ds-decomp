@@ -8,6 +8,9 @@
 // index words and then the four palette entries EACH BLOCK INDEXES, in block
 // order; and for every other palette format its own small entry run. Nothing
 // about where the texture sits, or about what else is loaded, enters it.
+// (Almost: those fixed palette runs could reach past a short palette, so
+// hdtex_name2() further down hashes only the entries the decoder reads, and
+// the loader asks for that name first and this one second.)
 //
 // IT IS NOT THE PARKED tangOS-SM64DS EDITION'S HASH, AND THAT WAS THE PLAN.
 // That edition shipped 206 PNGs and the intent was to reproduce its hash bit
@@ -246,6 +249,7 @@ HdTexStats g_stats;
 struct NameParts {
     uint32_t teximage, plttbase, fmt, wl, hl, addr, pal_addr, tex_size, color0;
     uint64_t tangos;   // the parked edition's name for the same texture
+    uint64_t v1;       // hdtex_name's name for it, beside hdtex_name2's
 };
 NameParts g_last;
 std::string *g_index_path;
@@ -517,7 +521,7 @@ static inline uint8_t pal_byte(const uint8_t *pal, uint32_t off)
     return off < kPlttVramSize ? pal[off] : 0u;
 }
 
-uint64_t hdtex_name(uint32_t teximage, uint32_t plttbase)
+static uint64_t name_v1(uint32_t teximage, uint32_t plttbase)
 {
     const uint32_t tp = teximage & ~0xC00F0000u;
     const uint32_t fmt = (tp >> 26) & 7u;
@@ -607,7 +611,134 @@ uint64_t hdtex_name(uint32_t teximage, uint32_t plttbase)
         g_last.color0 = color0;
         g_last.tangos = tangos_name(teximage, plttbase);
     }
+    return hash;
+}
+
+uint64_t hdtex_name(uint32_t teximage, uint32_t plttbase)
+{
     ++g_stats.hashed;
+    return name_v1(teximage, plttbase);
+}
+
+/* THE SECOND NAME (run studio1, lane HDNAME2). The name must be a property of
+   the texture and nothing else, and hdtex_name above is not quite that: its
+   palette part reads FIXED runs, and a fixed run can be longer than what the
+   texture uses.
+
+   Format 5 hashes four entries per block whatever the block's mode, but a
+   mode-0 block reads three of them and a mode-1 or mode-3 block reads two. A
+   block of a two- or three-colour mode that sits on the last entries of its
+   palette therefore hashed the first entries of the NEXT model's palette, so
+   the same picture took a different name in a different level: run studio1
+   lane HASH1 counted 365 stage and object textures that do this. The other
+   palette formats read 32, 16 or 256 entries however short the texture's own
+   palette is, and 26 more textures moved with what sat after them.
+
+   This one hashes the same header, the same texel bytes and the same index
+   words, and then ONLY THE ENTRIES THE DECODER READS: for format 5, per block
+   in block order, three entries for mode 0, two for modes 1 and 3, four for
+   mode 2; for formats 1, 2, 3, 4 and 6, entries 0 up to the highest index
+   the texels use, found by one pass over them. Entry 0 is always in, so a
+   texture whose colour 0 is transparent does not change name over that bit
+   alone; the bit has its own place in the header. Format 7 has no palette
+   and gets the name hdtex_name gives it.
+
+   The loader asks for this name first and for hdtex_name's on a miss, so
+   every pack made before it still loads; a new pack may use either. */
+uint64_t hdtex_name2(uint32_t teximage, uint32_t plttbase)
+{
+    const uint32_t tp = teximage & ~0xC00F0000u;
+    const uint32_t fmt = (tp >> 26) & 7u;
+    const uint32_t wlog2 = (tp >> 20) & 7u;
+    const uint32_t hlog2 = (tp >> 23) & 7u;
+    const uint32_t w = 8u << wlog2, h = 8u << hlog2;
+    const uint32_t addr = (tp & 0xFFFFu) * 8u;
+    const uint32_t color0 = (tp >> 29) & 1u;
+
+    // The index row wants both names, and name_v1 fills g_last for it.
+    ++g_stats.hashed;
+    if (g_index_path) g_last.v1 = name_v1(teximage, plttbase);
+    if (fmt == 7)
+        return g_index_path ? g_last.v1 : name_v1(teximage, plttbase);
+
+    const uint8_t *const tex = reinterpret_cast<const uint8_t *>(kTexSlotBase);
+    const uint8_t *const pal = reinterpret_cast<const uint8_t *>(kPlttSlotBase);
+
+    uint32_t head[4] = {fmt, w, h, color0};
+    uint64_t hash = xxh64(reinterpret_cast<const uint8_t *>(head), sizeof head,
+                          0);
+
+    uint32_t tex_size = 0, pal_addr = plttbase * 16u;
+    switch (fmt) {
+        case 1: tex_size = w * h;       break;  // A3I5
+        case 2: tex_size = w * h / 4u;  pal_addr >>= 1; break;
+        case 3: tex_size = w * h / 2u;  break;
+        case 4: tex_size = w * h;       break;
+        case 5: tex_size = w * h / 16u * 4u; break;
+        case 6: tex_size = w * h;       break;  // A5I3
+        default: return 0;  // format 0 is "no texture" and never gets here
+    }
+
+    // THE TEXTURE'S OWN BYTES, exactly as hdtex_name hashes them.
+    hash = masked_hash_seeded(tex, kTexVramSize, addr, tex_size, hash);
+
+    if (fmt == 5) {
+        // The index words, at the decoder's offset, as in hdtex_name.
+        const uint32_t idx_off = 0x20000u + addr / 2u;
+        const uint32_t blocks = w * h / 16u;
+        hash = masked_hash_seeded(tex, kTexVramSize, idx_off, blocks * 2u,
+                                  hash);
+
+        // How many entries each block mode reads (GBATEK): mode 0 three, the
+        // fourth colour being transparent; modes 1 and 3 two, the others
+        // blended from them; mode 2 all four.
+        static const uint8_t kModeEntries[4] = {3, 2, 4, 2};
+        std::vector<uint8_t> refs;
+        refs.reserve(static_cast<size_t>(blocks) * 8u);
+        for (uint32_t b = 0; b < blocks; ++b) {
+            const uint32_t io = (idx_off + b * 2u) & (kTexVramSize - 1u);
+            const uint32_t info =
+                static_cast<uint32_t>(tex[io]) |
+                (static_cast<uint32_t>(tex[(io + 1u) & (kTexVramSize - 1u)])
+                 << 8);
+            const uint32_t base_byte = pal_addr + (info & 0x3FFFu) * 4u;
+            const uint32_t n = kModeEntries[info >> 14] * 2u;
+            for (uint32_t k = 0; k < n; ++k)
+                refs.push_back(pal_byte(pal, base_byte + k));
+        }
+        hash = xxh64(refs.data(), refs.size(), hash);
+    } else {
+        // One pass over the texels for the highest index they use. The index
+        // bits: format 1 the low 5 of each byte, 6 the low 3, 2 four 2-bit
+        // texels a byte, 3 two 4-bit texels, 4 the whole byte.
+        uint32_t top = 0;
+        for (uint32_t i = 0; i < tex_size; ++i) {
+            const uint32_t v = tex[(addr + i) & (kTexVramSize - 1u)];
+            uint32_t m = 0;
+            switch (fmt) {
+                case 1: m = v & 0x1Fu; break;
+                case 6: m = v & 0x07u; break;
+                case 2: {
+                    const uint32_t a = v & 3u, b = (v >> 2) & 3u,
+                                   c = (v >> 4) & 3u, d = v >> 6;
+                    m = a > b ? a : b;
+                    if (c > m) m = c;
+                    if (d > m) m = d;
+                    break;
+                }
+                case 3: {
+                    const uint32_t a = v & 0xFu, b = v >> 4;
+                    m = a > b ? a : b;
+                    break;
+                }
+                case 4: m = v; break;
+            }
+            if (m > top) top = m;
+        }
+        pal_addr &= 0x1FFFFu;
+        hash = masked_hash_seeded(pal, kPlttVramSize, pal_addr,
+                                  (top + 1u) * 2u, hash);
+    }
     return hash;
 }
 
@@ -637,11 +768,12 @@ void hdtex_dump(uint64_t name, int width, int height, const uint32_t *argb)
         if (FILE *f = fopen(g_index_path->c_str(), "ab")) {
             if (g_indexed->size() == 1)
                 fprintf(f,
-                        "name\tw\th\tfmt\tcolor0\tteximage\tplttbase\taddr\t"
-                        "texsize\tpaladdr\ttangos_name\n");
-            fprintf(f, "%016llx\t%d\t%d\t%u\t%u\t%08x\t%04x\t%05x\t%u\t%05x"
-                       "\t%016llx\n",
-                    (unsigned long long)name, width, height, g_last.fmt,
+                        "name\tname_v1\tw\th\tfmt\tcolor0\tteximage\t"
+                        "plttbase\taddr\ttexsize\tpaladdr\ttangos_name\n");
+            fprintf(f, "%016llx\t%016llx\t%d\t%d\t%u\t%u\t%08x\t%04x\t%05x"
+                       "\t%u\t%05x\t%016llx\n",
+                    (unsigned long long)name, (unsigned long long)g_last.v1,
+                    width, height, g_last.fmt,
                     g_last.color0, g_last.teximage, g_last.plttbase,
                     g_last.addr, g_last.tex_size, g_last.pal_addr,
                     (unsigned long long)g_last.tangos);
@@ -653,10 +785,25 @@ void hdtex_dump(uint64_t name, int width, int height, const uint32_t *argb)
 int hdtex_lookup(uint64_t name, int width, int height,
                  std::vector<uint32_t> &out)
 {
+    return hdtex_lookup2(name, 0, 0, 0, width, height, out);
+}
+
+int hdtex_lookup2(uint64_t name, int have_words, uint32_t teximage,
+                  uint32_t plttbase, int width, int height,
+                  std::vector<uint32_t> &out)
+{
     if (!g_pack_indexed || g_paused || width <= 0 || height <= 0) return 0;
-    const auto found = g_names->find(name);
+    auto found = g_names->find(name);
+    if (found == g_names->end() && have_words) {
+        // THE OLD NAME, and only here, after the new one missed: every pack
+        // made before hdtex_name2 is named by hdtex_name. When the index is
+        // on, hdtex_name2 has already computed it for this same bind.
+        name = g_index_path ? g_last.v1 : name_v1(teximage, plttbase);
+        found = g_names->find(name);
+    }
     if (found == g_names->end()) {
-        // THE COMMON CASE, and it is one hash-set lookup with no file I/O.
+        // THE COMMON CASE, and it is one or two hash-set lookups with no file
+        // I/O.
         ++g_stats.missing;
         return 0;
     }
