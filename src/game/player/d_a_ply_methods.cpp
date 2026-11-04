@@ -454,65 +454,65 @@ union PlayerScriptCommand {
     ScriptCommand pmf;
 };
 
-extern "C" int _ZN7daPly_c21St_StuckInGround_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c12St_Land_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c12St_Talk_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c19func_ov002_020bccfcEPhii(daPly_c *, unsigned char *, int, int);
-extern "C" int _ZN7daPly_c12St_Talk_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c12St_Spin_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c15St_Spin_CleanupEv(daPly_c *);
-extern "C" int _ZN7daPly_c22St_CrazedCrate_CleanupEv(daPly_c *);
-extern "C" int _ZN7daPly_c21St_WaitQuicksand_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c13St_Climb_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c13St_Climb_InitEv(daPly_c *);
-extern "C" void _ZN7daPly_c19func_ov002_020c71e0Ev(daPly_c *);
-extern "C" int _ZN7daPly_c16St_WallJump_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c16St_Climb_CleanupEv(daPly_c *);
-extern "C" int _ZN7daPly_c19func_ov002_020bcd38EPhii(daPly_c *, unsigned char *, int, int);
-extern "C" int _ZN7daPly_c17St_SweepKick_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c17St_Headstand_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c16St_WallJump_InitEv(daPly_c *);
-extern "C" void _ZN7daPly_c19func_ov002_020c6fe4Ev(daPly_c *);
-extern "C" int _ZN7daPly_c19func_ov002_020bd20cEPhii(daPly_c *, unsigned char *, int, int);
-extern "C" void _ZN7daPly_c19func_ov002_020c70acEv(daPly_c *);
-extern "C" int _ZN7daPly_c19func_ov002_020bd3a0EPhii(daPly_c *, unsigned char *, int, int);
-extern "C" int _ZN7daPly_c22St_SwingPlayer_CleanupEv(daPly_c *);
-extern "C" int _ZN7daPly_c17St_LedgeHang_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c17St_WaterJump_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c17St_LedgeGrab_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c17St_LedgeGrab_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c19func_ov002_020bd250EPhii(daPly_c *, unsigned char *, int, int);
-extern "C" int _ZN7daPly_c20St_CeilingGrate_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c21St_StuckInGround_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c12St_Land_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c12St_Talk_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19func_ov002_020bccfcEPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c12St_Talk_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c12St_Spin_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c15St_Spin_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c22St_CrazedCrate_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c21St_WaitQuicksand_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c13St_Climb_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c13St_Climb_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" void _ZN7daPly_c19func_ov002_020c71e0Ev(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c16St_WallJump_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c16St_Climb_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19func_ov002_020bcd38EPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c17St_SweepKick_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c17St_Headstand_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c16St_WallJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" void _ZN7daPly_c19func_ov002_020c6fe4Ev(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19func_ov002_020bd20cEPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
+extern "C" void _ZN7daPly_c19func_ov002_020c70acEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19func_ov002_020bd3a0EPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c22St_SwingPlayer_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c17St_LedgeHang_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c17St_WaterJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c17St_LedgeGrab_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c17St_LedgeGrab_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19func_ov002_020bd250EPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c20St_CeilingGrate_InitEv(daPly_c *); // local extern: flat state-descriptor address
 extern "C" void func_ov002_020e1c20(char *);
-extern "C" int _ZN7daPly_c20St_CeilingGrate_MainEv(daPly_c *);
-extern "C" void _ZN7daPly_c19func_ov002_020c7350Ev(daPly_c *);
-extern "C" int _ZN7daPly_c19func_ov002_020bd354EPhii(daPly_c *, unsigned char *, int, int);
+extern "C" int _ZN7daPly_c20St_CeilingGrate_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" void _ZN7daPly_c19func_ov002_020c7350Ev(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19func_ov002_020bd354EPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
 extern "C" void func_ov002_020e1e70(char *);
-extern "C" int _ZN7daPly_c21St_YoshiPower_CleanupEv(daPly_c *);
-extern "C" void _ZN7daPly_c19func_ov002_020c75f0Ev(daPly_c *);
-extern "C" int _ZN7daPly_c19St_SwingPlayer_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c17St_SlideKick_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c20St_InYoshiMouth_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c20St_InYoshiMouth_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c19St_SwingPlayer_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c25St_GrabBowserTail_CleanupEv(daPly_c *);
-extern "C" int _ZN7daPly_c22St_GrabBowserTail_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c22St_GrabBowserTail_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c15St_DeadPit_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c20St_StomachSlide_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c12St_Dive_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c22St_GroundPound_CleanupEv(daPly_c *);
-extern "C" int _ZN7daPly_c19St_GroundPound_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c19St_GroundPound_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c17St_PunchKick_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c17St_PunchKick_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c17St_EndingFly_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c16St_LongJump_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c16St_LongJump_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c19func_ov002_020bd480EPhii(daPly_c *, unsigned char *, int, int);
-extern "C" int _ZN7daPly_c16St_SideFlip_MainEv(daPly_c *);
-extern "C" int _ZN7daPly_c16St_BackFlip_InitEv(daPly_c *);
-extern "C" int _ZN7daPly_c14St_Crouch_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c21St_YoshiPower_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" void _ZN7daPly_c19func_ov002_020c75f0Ev(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19St_SwingPlayer_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c17St_SlideKick_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c20St_InYoshiMouth_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c20St_InYoshiMouth_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19St_SwingPlayer_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c25St_GrabBowserTail_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c22St_GrabBowserTail_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c22St_GrabBowserTail_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c15St_DeadPit_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c20St_StomachSlide_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c12St_Dive_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c22St_GroundPound_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19St_GroundPound_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19St_GroundPound_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c17St_PunchKick_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c17St_PunchKick_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c17St_EndingFly_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c16St_LongJump_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c16St_LongJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c19func_ov002_020bd480EPhii(daPly_c *, unsigned char *, int, int); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c16St_SideFlip_MainEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c16St_BackFlip_InitEv(daPly_c *); // local extern: flat state-descriptor address
+extern "C" int _ZN7daPly_c14St_Crouch_MainEv(daPly_c *); // local extern: flat state-descriptor address
 
 PlayerPmf data_ov002_0210a354 = { (void (*)(daPly_c *))_ZN7daPly_c21St_StuckInGround_MainEv };
 PlayerPmf data_ov002_0210a35c = { (void (*)(daPly_c *))_ZN7daPly_c12St_Land_MainEv };
