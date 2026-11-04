@@ -118,7 +118,7 @@ extern u8 data_0208ee74[];
 extern u8 data_0208f074[];
 extern u8 data_0209f20c;
 extern u8 data_0209f220;
-extern u8 data_0209f228;
+extern u8 gCollectedStarId;
 extern u8 data_0209f2d8;
 extern int data_0209caa0[3];
 extern s32 gRunningKuppaScript;
@@ -685,7 +685,7 @@ L_r4_else:
         if (arg0 < 0xf) {
             if (data_0209f20c != 0) {
                 s32 off = arg0 * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)&data_0209d708[off + data_0209f228];
+                data_0209d6f0 = (u8 *)&data_0209d708[off + gCollectedStarId];
             } else {
                 s32 off = arg0 * 7 + 0x1b3;
                 data_0209d6f0 = (u8 *)&data_0209d708[off + data_0209f220];

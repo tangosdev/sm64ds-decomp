@@ -4156,7 +4156,7 @@ data_02092114 kind:data(any) addr:0x02092114
 data_02092118 kind:data(any) addr:0x02092118
 data_0209211c kind:data(any) addr:0x0209211c
 data_02092120 kind:data(any) addr:0x02092120
-data_02092124 kind:data(any) addr:0x02092124
+gLastCourseSublevel kind:data(any) addr:0x02092124
 data_02092128 kind:data(any) addr:0x02092128
 data_0209212c kind:data(any) addr:0x0209212c
 data_02092130 kind:data(any) addr:0x02092130
@@ -4739,8 +4739,8 @@ data_0209f218 kind:bss addr:0x0209f218
 data_0209f21c kind:bss addr:0x0209f21c
 data_0209f220 kind:bss addr:0x0209f220
 data_0209f224 kind:bss addr:0x0209f224
-data_0209f228 kind:bss addr:0x0209f228
-data_0209f22c kind:bss addr:0x0209f22c
+gCollectedStarId kind:bss addr:0x0209f228
+gMenuWaitTimer kind:bss addr:0x0209f22c
 data_0209f230 kind:bss addr:0x0209f230
 data_0209f234 kind:bss addr:0x0209f234
 gPressedPauseArrow kind:bss addr:0x0209f238
@@ -4771,7 +4771,7 @@ data_0209f298 kind:bss addr:0x0209f298
 gBackButtonSelected kind:bss addr:0x0209f29c
 data_0209f2a0 kind:bss addr:0x0209f2a0
 data_0209f2a4 kind:bss addr:0x0209f2a4
-data_0209f2a8 kind:bss addr:0x0209f2a8
+gLevelClearPaletteTimer kind:bss addr:0x0209f2a8
 gNewStarCollected kind:bss addr:0x0209f2ac
 gLevelClearNewRecord kind:bss addr:0x0209f2b0
 gNumMenuButtons kind:bss addr:0x0209f2b4

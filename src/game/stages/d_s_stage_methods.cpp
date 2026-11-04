@@ -159,7 +159,7 @@ int __aeabi_idiv(int a, int b);
 extern int data_0208ee44;
 extern u8 data_0208ee3c;
 extern u8 data_0208ee40;
-extern s8 data_02092124;
+extern s8 gLastCourseSublevel;
 extern s16 data_02092144[];
 /* The actor update mask for the next frame. While it is non-zero, only actors
    whose mFlags share a bit with it run their behaviour (dActor_c::
@@ -197,7 +197,7 @@ extern u8 gPauseArrowPressTimer;
 extern u8 data_0209f218;
 extern u8 data_0209f20c;
 extern u8 data_0209f21c;
-extern u8 data_0209f22c;
+extern u8 gMenuWaitTimer;
 extern u8 data_0209f234;
 /* The pause arrow drawn pressed in, 0 for none. On the course page 1 is the
    left arrow and 2 the right (PS_Render moves that arrow two pixels out); the
@@ -242,7 +242,7 @@ extern u8 gVsExitScreenActive;
 extern u8 gBackButtonSelected;
 extern u8 data_0209f2a0[];
 extern u8 data_0209f2a4;
-extern u8 data_0209f2a8;
+extern u8 gLevelClearPaletteTimer;
 extern u8 gNewStarCollected;
 extern u8 gLevelClearNewRecord;
 /* How many big buttons the current menu has (2 to 4); UpdateMenuButtons
@@ -405,7 +405,7 @@ extern u8 data_0209f204;
 extern u8 data_0209f208;
 extern u8 data_0209f214;
 extern u8 data_0209f220;
-extern u8 data_0209f228[];
+extern u8 gCollectedStarId[];
 extern u8 data_0209f230;
 extern u8 data_0209f24c;
 extern u8 data_0209f25c;
@@ -593,9 +593,9 @@ void dScStage_c::VE_Update() {
             dScStage_c::UpdateMenuButtons(0);
         }
     }
-    t2 = data_0209f22c;
+    t2 = gMenuWaitTimer;
     if (t2 != 0) {
-        data_0209f22c = t2 - data_0208ee44;
+        gMenuWaitTimer = t2 - data_0208ee44;
         return;
     }
     s = data_0209f290;
@@ -624,7 +624,7 @@ void dScStage_c::VE_Update() {
                 gMenuHighlightDelay = data_0208ee44 << 2;
             }
             gSelectedMenuButton = 0;
-            data_0209f22c = data_0208ee44 << 3;
+            gMenuWaitTimer = data_0208ee44 << 3;
             dScStage_c::UpdateMenuButtons(0);
             data_0209f290 = 1;
             data_ov002_02111150 = 1;
@@ -644,7 +644,7 @@ void dScStage_c::VE_Update() {
             }
             gSelectedMenuButton = 1;
             dScStage_c::UpdateMenuButtons(0);
-            data_0209f22c = data_0208ee44 << 3;
+            gMenuWaitTimer = data_0208ee44 << 3;
             data_0209f290 = 1;
             data_ov002_02111150 = 1;
             func_02012790(0x9b);
@@ -717,21 +717,22 @@ void dScStage_c::RenderBouncingArrows() {
 }
 // @symbol _ZN10dScStage_c9LC_RenderEv
 void dScStage_c::LC_Render() {
-    data_0209f2a8 = data_0209f2a8 + data_0208ee44;
-    if (data_0209f2a8 >= 0xc)
-        data_0209f2a8 = 0;
+    gLevelClearPaletteTimer = gLevelClearPaletteTimer + data_0208ee44;
+    if (gLevelClearPaletteTimer >= 0xc)
+        gLevelClearPaletteTimer = 0;
 
     if (data_0209f20c == 0)
         return;
 
     {
         void *p = LoadFile(ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN);
-        GX::LoadOBJPltt((void *)((char *)p + (((unsigned int)data_0209f2a8 >> 2) << 5)), 0x1c0,
-                        0x10);
+        GX::LoadOBJPltt((void *)((char *)p + (((unsigned int)gLevelClearPaletteTimer >> 2) << 5)),
+                        0x1c0, 0x10);
         Deallocate(p);
     }
 
-    if (SublevelToLevel(data_02092124) >= 0xf && SublevelToLevel(data_02092124) < 0x15) {
+    if (SublevelToLevel(gLastCourseSublevel) >= 0xf &&
+        SublevelToLevel(gLastCourseSublevel) < 0x15) {
         if (GetOwnerLanguage() == 5)
             OAM::Render(0, (OamAttr *)&data_ov002_0210cea8, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
                         -1);
@@ -750,7 +751,7 @@ void dScStage_c::LC_Render() {
     }
 
     if (gLevelClearNewRecord != 0) {
-        if (data_0209f20c != 0 && SublevelToLevel(data_02092124) >= 0xf) {
+        if (data_0209f20c != 0 && SublevelToLevel(gLastCourseSublevel) >= 0xf) {
             if (GetOwnerLanguage() == 5)
                 OAM::Render(0, (OamAttr *)&data_ov002_0210ce90, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
                             0, -1);
@@ -795,15 +796,15 @@ void dScStage_c::LC_Update() {
         if (gMenuHighlightDelay == 0)
             dScStage_c::UpdateMenuButtons(0);
     }
-    if (data_0209f22c != 0) {
-        data_0209f22c = data_0209f22c - data_0208ee44;
+    if (gMenuWaitTimer != 0) {
+        gMenuWaitTimer = gMenuWaitTimer - data_0208ee44;
         return;
     }
 
     switch (gLevelClearStep) {
     case 0:
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
-        Message::DisplayLevelClearText(0x27a, SublevelToLevel(data_02092124));
+        Message::DisplayLevelClearText(0x27a, SublevelToLevel(gLastCourseSublevel));
         gMenuButtonTileOffsets[0] = 0xa0;
         gMenuButtonTileOffsets[1] = 0x140;
         gMenuButtonTileOffsets[2] = 0x1e0;
@@ -822,10 +823,10 @@ void dScStage_c::LC_Update() {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
             data_0209f280 = 1;
         }
-        data_0209f22c = 0x1e;
+        gMenuWaitTimer = 0x1e;
         return;
     case 1: {
-        int level = SublevelToLevel(data_02092124);
+        int level = SublevelToLevel(gLastCourseSublevel);
         if (data_0209f358[0] > gLevelClearCoinCount) {
             gLevelClearCoinCount += 1;
             if (gLevelClearCoinCount % 50 == 0) {
@@ -837,7 +838,7 @@ void dScStage_c::LC_Update() {
                     Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
                     data_0209f280 = 1;
                 }
-                data_0209f22c = 0x1e;
+                gMenuWaitTimer = 0x1e;
                 if (level < 0xf) {
                     u8 coins = gLevelClearCoinCount;
                     if (SaveData::GetCoinRecord(level) >= coins)
@@ -863,7 +864,7 @@ void dScStage_c::LC_Update() {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
             data_0209f280 = 1;
         }
-        data_0209f22c = 0x3c;
+        gMenuWaitTimer = 0x3c;
         data_0209f358[0] = 0;
         gLevelClearStep = 2;
         return;
@@ -910,7 +911,7 @@ void dScStage_c::LC_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 0;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 func_02012790(0x57);
                 gLevelClearStep = 4;
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -926,7 +927,7 @@ void dScStage_c::LC_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 func_02012790(0x58);
                 gLevelClearStep = 4;
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -943,7 +944,7 @@ void dScStage_c::LC_Update() {
                 gMenuHighlightDelay = data_0208ee44 << 2;
             gSelectedMenuButton = 2;
             dScStage_c::UpdateMenuButtons(0);
-            data_0209f22c = data_0208ee44 << 3;
+            gMenuWaitTimer = data_0208ee44 << 3;
             func_02012790(0x59);
             gLevelClearStep = 6;
             if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -1547,8 +1548,8 @@ void dScStage_c::PS_Update() {
         if (data_0209f23c == 0)
             dScStage_c::PS_UpdateOptionsMenu();
     }
-    if (data_0209f22c != 0) {
-        data_0209f22c = data_0209f22c - data_0208ee44;
+    if (gMenuWaitTimer != 0) {
+        gMenuWaitTimer = gMenuWaitTimer - data_0208ee44;
         return;
     }
 
@@ -1575,10 +1576,10 @@ void dScStage_c::PS_Update() {
             gPauseDisplayedCourse = i;
             gCourseArrowsHidden = 1;
         } else {
-            if (SublevelToLevel(data_02092124) >= 0xf) {
+            if (SublevelToLevel(gLastCourseSublevel) >= 0xf) {
                 gPauseDisplayedCourse = 0xf;
             } else {
-                gPauseDisplayedCourse = SublevelToLevel(data_02092124);
+                gPauseDisplayedCourse = SublevelToLevel(gLastCourseSublevel);
             }
             gCourseArrowsHidden = 0;
         }
@@ -1624,7 +1625,7 @@ void dScStage_c::PS_Update() {
                 if (gSelectedMenuButton == 0)
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 0;
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 dScStage_c::UpdateMenuButtons(0);
                 data_0209f2c4 = 2;
                 func_02012790(3);
@@ -1641,7 +1642,7 @@ void dScStage_c::PS_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 data_0209f1ec = 7;
                 func_02012790(0x53);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -1657,7 +1658,7 @@ void dScStage_c::PS_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 2;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 data_0209f1ec = 9;
                 func_02012790(0x54);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -1672,7 +1673,7 @@ void dScStage_c::PS_Update() {
                 if (gSelectedMenuButton == 3)
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 3;
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 dScStage_c::UpdateMenuButtons(0);
                 data_0209f1ec = 0xc;
                 func_02012790(0x55);
@@ -1814,7 +1815,7 @@ void dScStage_c::PS_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 0;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 data_0209f2c4 = 2;
                 func_02012790(3);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -1830,7 +1831,7 @@ void dScStage_c::PS_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 data_0209f1ec = 7;
                 func_02012790(0x53);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -1846,7 +1847,7 @@ void dScStage_c::PS_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 2;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 data_0209f1ec = 9;
                 func_02012790(0x54);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -1863,7 +1864,7 @@ void dScStage_c::PS_Update() {
                 gMenuHighlightDelay = data_0208ee44 << 2;
             gSelectedMenuButton = 3;
             dScStage_c::UpdateMenuButtons(0);
-            data_0209f22c = data_0208ee44 << 3;
+            gMenuWaitTimer = data_0208ee44 << 3;
             data_0209f1ec = 0x13;
             func_02012790(0x56);
             return;
@@ -1916,7 +1917,7 @@ void dScStage_c::PS_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 0;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 data_0209f2c4 = 2;
                 func_02012790(3);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -1932,7 +1933,7 @@ void dScStage_c::PS_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 data_0209f1ec = 0x13;
                 data_ov002_02111150 = 1;
                 func_02012790(0x56);
@@ -1948,7 +1949,7 @@ void dScStage_c::PS_Update() {
                 gMenuHighlightDelay = data_0208ee44 << 2;
             gSelectedMenuButton = 2;
             dScStage_c::UpdateMenuButtons(0);
-            data_0209f22c = data_0208ee44 << 3;
+            gMenuWaitTimer = data_0208ee44 << 3;
             data_0209f1ec = 6;
             data_ov002_02111150 = 1;
             func_02012790(0x55);
@@ -2069,7 +2070,7 @@ void dScStage_c::PS_Update() {
                 if (a == 0 || (IsTouchPressed(a, slot) && gSelectedControllerMode == 0)) {
                     gSelectedControllerMode = 0;
                     SetControllerMode(0);
-                    data_0209f22c = data_0208ee44 << 3;
+                    gMenuWaitTimer = data_0208ee44 << 3;
                     func_02012790(0x116);
                     data_0209f2c4 = 2;
                 } else {
@@ -2102,7 +2103,7 @@ void dScStage_c::PS_Update() {
                 if (a == 0 || (IsTouchPressed(a, slot) && gSelectedControllerMode == 1)) {
                     gSelectedControllerMode = 1;
                     SetControllerMode(1);
-                    data_0209f22c = data_0208ee44 << 3;
+                    gMenuWaitTimer = data_0208ee44 << 3;
                     func_02012790(0x116);
                     data_0209f2c4 = 2;
                 } else {
@@ -2135,7 +2136,7 @@ void dScStage_c::PS_Update() {
                 if (a == 0 || (IsTouchPressed(a, slot) && gSelectedControllerMode == 2)) {
                     gSelectedControllerMode = 2;
                     SetControllerMode(2);
-                    data_0209f22c = data_0208ee44 << 3;
+                    gMenuWaitTimer = data_0208ee44 << 3;
                     func_02012790(0x116);
                     data_0209f2c4 = 2;
                 } else {
@@ -2174,7 +2175,7 @@ void dScStage_c::PS_Update() {
                 data_0209f240 = 1;
                 gMenuHighlightDelay = data_0208ee44 << 2;
                 dScStage_c::PS_UpdateOkAndBackButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 if (gBackButtonSelected == 0) {
                     data_0209f2c4 = 2;
                     func_02012790(0x116);
@@ -2448,7 +2449,7 @@ void dScStage_c::PS_Update() {
                     }
                 }
                 gSelectedMenuButton = 2;
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 dScStage_c::PS_UpdateOptionsMenu();
                 data_0209f240 = 1;
                 gMenuHighlightDelay = data_0208ee44 << 2;
@@ -2517,7 +2518,7 @@ void dScStage_c::PS_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 0;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 data_0209f2c4 = 2;
                 func_02012790(3);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -2533,7 +2534,7 @@ void dScStage_c::PS_Update() {
                     gMenuHighlightDelay = data_0208ee44 << 2;
                 gSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                gMenuWaitTimer = data_0208ee44 << 3;
                 data_0209f1ec = 0xe;
                 func_02012790(0x5e);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -2550,7 +2551,7 @@ void dScStage_c::PS_Update() {
                 gMenuHighlightDelay = data_0208ee44 << 2;
             gSelectedMenuButton = 2;
             dScStage_c::UpdateMenuButtons(0);
-            data_0209f22c = data_0208ee44 << 3;
+            gMenuWaitTimer = data_0208ee44 << 3;
             data_0209f1ec = 0x10;
             func_02012790(0x5f);
             if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
@@ -2623,7 +2624,7 @@ void dScStage_c::PS_Update() {
                     if (gSelectedMenuButton == 0)
                         gMenuHighlightDelay = data_0208ee44 << 2;
                     if ((u8)rel < 0x50 && (u8)rely < 0x20) {
-                        data_0209f22c = data_0208ee44 << 3;
+                        gMenuWaitTimer = data_0208ee44 << 3;
                         data_0209f1ec = 0x12;
                         func_02012790(0x60);
                     } else {
@@ -2645,7 +2646,7 @@ void dScStage_c::PS_Update() {
                     if (gSelectedMenuButton == 1)
                         gMenuHighlightDelay = data_0208ee44 << 2;
                     if ((u8)rel < 0x50 && (u8)rely < 0x20) {
-                        data_0209f22c = data_0208ee44 << 3;
+                        gMenuWaitTimer = data_0208ee44 << 3;
                         data_0209f1ec = 0x12;
                         func_02012790(3);
                     } else {
@@ -2732,7 +2733,7 @@ void dScStage_c::PS_Init() {
     data_0209f230 = 0;
     gCourseArrowsHidden = 0;
     gPauseArrowPressTimer = 0;
-    data_0209f22c = 0;
+    gMenuWaitTimer = 0;
     data_0209f240 = 0;
     gPressedPauseArrow = 0;
     gBacklightFlashTimer = 0;
@@ -3618,8 +3619,8 @@ extern "C" void StartFile(s8 levelID, u8 entranceID) {
     SetPlayerGlobals();
     data_02092128[0] = data_0209caa0[0x41];
     SetNumPlayers(1);
-    data_02092124 = 6;
-    data_0209f228[0] = 0;
+    gLastCourseSublevel = 6;
+    gCollectedStarId[0] = 0;
     dScene_c::StartSceneFade(3, 0, 0x7fff);
 }
 
@@ -4107,7 +4108,7 @@ int dScStage_c::Render() {
     if (data_0209f2c4 != 0) {
         PS_Render();
     } else if (data_0209f20c != 0 && gLevelClearStep != 0) {
-        int coinCounterY = (SublevelToLevel(data_02092124) < 0xf) ? 0x80 : 0x70;
+        int coinCounterY = (SublevelToLevel(gLastCourseSublevel) < 0xf) ? 0x80 : 0x70;
         if (gLevelClearNewRecord != 0)
             coinCounterY += 0x10;
         OAM::Render(0, &OAM::COIN, 0x68, coinCounterY, -1, -1, 0);
@@ -4141,7 +4142,7 @@ int dScStage_c::Behavior() {
     CheckInput();
     if (data_0209f300 != 0)
         data_0209f300 -= 1;
-    if (data_0209f2c4 == 2 && data_0209f22c == 0)
+    if (data_0209f2c4 == 2 && gMenuWaitTimer == 0)
         PS_Cleanup();
     ProcessKuppaScript();
     if (data_0209f5bc->IsAtStart() == 0) {
@@ -4730,7 +4731,7 @@ int dScStage_c::InitResources() {
 
         data_0209f2fc = data_0209f26c;
         if (data_0209f2fc == 1) {
-            data_02092124 = data_0209f2f8;
+            gLastCourseSublevel = data_0209f2f8;
             data_02092118 = -1;
         }
 

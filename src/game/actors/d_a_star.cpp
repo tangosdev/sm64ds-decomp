@@ -161,7 +161,7 @@ void GiveVsStars(int idx, int delta);
 void CollectStarInCurLevel(int i);
 int SublevelToLevel(int i);
 s16 NumCoins(void);
-extern u8 data_0209f228;
+extern u8 gCollectedStarId;
 extern u8 gNewStarCollected;
 extern s16 data_0209f358[];
 extern u8 data_0209d684;
@@ -1839,7 +1839,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
         if (!b2 && !(b3 = (actorID == ACTOR_SILVER_STAR)) &&
             mStarID < 8 &&
             mHomeState != STATE_WAIT_MARKER) {
-            data_0209f228 = mStarID;
+            gCollectedStarId = mStarID;
             if (IsStarCollectedInCurLevel(mStarID) != 0) {
                 gNewStarCollected = 0;
             } else {
