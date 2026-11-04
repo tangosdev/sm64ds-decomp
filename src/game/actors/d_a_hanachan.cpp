@@ -862,10 +862,10 @@ void daHanachan_c::UpdateSegments()
             Vec3_MulScalarInPlace(&diff, mSegmentSpacing[seg]);
         }
         {
-            char *prev = (char *)&mSegmentPos[0] + off;
+            Vector3 *prev = (Vector3 *)((char *)&mSegmentPos[0] + off);
             short ang = Vec3_HorzAngle(cur, prev);
             ((daHanachan_c *)rotRow)->mSegmentRot[0].y = ang;
-            Vec3_Add(&sum, (const Vector3 *)prev, &diff);
+            Vec3_Add(&sum, prev, &diff);
         }
 
         ((daHanachan_c *)posRow)->mSegmentPos[0].x = sum.x;
