@@ -83,7 +83,7 @@ int RandomIntInternal(int *);
 /* local extern: CalcLib cannot be included without conflicting with this TU's
  * other helper spellings, including its Vec3_HorzAngle declaration. */
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
-void Vec3_Add(void *, void *, void *);
+void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 short Vec3_HorzAngle(const void *, const void *);
 short Vec3_VertAngle(const void *, const void *);
 void Vec3_MulScalar(void *, void *, int);
@@ -650,7 +650,7 @@ void FallingPetal_Update(char *self) {
     v0.y = 0;
     v0.z = val;
     Vec3_MulScalarInPlace((int *)&v0, 0x400);
-    Vec3_Add(&v1, &PETAL(self)->mVel, &v0);
+    Vec3_Add((Vector3 *)&v1, &PETAL(self)->mVel, (const Vector3 *)&v0);
     dot = DotVec3(&PETAL(self)->mAxis, (const Vector3 *)&v1);
     Vec3_MulScalar(&v2, &PETAL(self)->mAxis, dot);
     Vec3_MulScalarInPlace((int *)&v2, 0x300);

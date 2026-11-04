@@ -176,7 +176,7 @@ extern s8 gShowRaceTimer;           /* nonzero: dMeter_c draws the race timer */
 extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 extern void func_02012694(u32 a, void *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
-extern Timer data_0209d4c8;         /* TIME_TIMER: the course timer */
+extern Timer gRaceTimer;            /* TIME_TIMER: the course timer */
 extern void Vec3_Asr(void *destination, void *source, int shift);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* m, short angY);
@@ -458,7 +458,7 @@ void daRNk_c::func_ov062_0211a740()
         }
         this->mStep = 0;
         this->mHorzSpeed = 0;
-        data_0209d4c8.ResetTimer();
+        gRaceTimer.ResetTimer();
         return;
     default:
         return;
@@ -506,7 +506,7 @@ void daRNk_c::func_ov062_0211a1f4()
         this->mStep++;
         SET_ANIM(this, ANIM_RUN_START, kAnimPlayOnce);
         gShowRaceTimer = 1;
-        data_0209d4c8.StartTimer();
+        gRaceTimer.StartTimer();
         func_0201267c(kSfx4D, &this->mCamSpacePos);
         return;
     case 2:
@@ -522,7 +522,7 @@ void daRNk_c::func_ov062_0211a1f4()
                 return;
             this->mState = daRNk_c::STATE_PULL_UP;
             this->mStep = 0;
-            data_0209d4c8.StopTimer();
+            gRaceTimer.StopTimer();
             this->mPlayerWon = (flag->mHasTouchedFlag != 0) ? 1 : 0;
             flag->mHasTouchedFlag = 1;
             return;
@@ -596,7 +596,7 @@ void daRNk_c::func_ov062_0211a1f4()
             daRFlag_c *flag;
             this->mState = daRNk_c::STATE_PULL_UP;
             this->mStep = 0;
-            data_0209d4c8.StopTimer();
+            gRaceTimer.StopTimer();
             flag = (daRFlag_c *)dActor_c::FindWithID(this->mFlagID);
             this->mPlayerWon = (flag->mHasTouchedFlag != 0) ? 1 : 0;
             flag->mHasTouchedFlag = 1;

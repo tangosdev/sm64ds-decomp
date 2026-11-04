@@ -182,7 +182,7 @@ extern int data_0209e650;
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
-extern int LenVec3(int *v);
+extern int LenVec3(Vec3 *v);
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
    state timer there, so the callee takes no object: ov055's free function at
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
@@ -198,7 +198,7 @@ extern int data_ov063_0211e1d0[];
 extern int data_0209b490[];
 extern u8 data_0209d660;
 extern short data_ov063_0211e7e0[];
-extern void Vec3_Add(void * out, void * a, void * b);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
 /* Actor ids this file spawns, finds or compares (the names are the ones in
@@ -1193,7 +1193,7 @@ void daTrs_c::func_ov063_02117cdc() {
         w[0] = src->x;
         w[1] = src->y;
         w[2] = src->z;
-        if (LenVec3(w) >= 0x12c000) {
+        if (LenVec3((Vec3 *)w) >= 0x12c000) {
             return;
         }
         if (this->mTalkPlayer->StartTalk(*(fBase_c *)(this), 1) == 0) {
@@ -2848,7 +2848,7 @@ void daTrs_c::func_ov063_0211ab68() {
     }
 
     for (i = 0; i < 3; i++) {
-        Vec3_Add(&tmp, (Vec3 *)&this->mPosX, &sSpawnOff[i]);
+        Vec3_Add((Vector3 *)&tmp, (const Vector3 *)&this->mPosX, &sSpawnOff[i]);
         pos.x = tmp.x;
         pos.y = tmp.y;
         pos.z = tmp.z;

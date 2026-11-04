@@ -82,7 +82,7 @@ void func_ov102_0214ae1c(void *bomb);
 short atan2_hold_d_a_wanwan_1(int y, int x);
 
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-void Vec3_Add(void *out, void *a, void *b);
+void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* local extern: CalcLib's declaration is unnamed; retain these names so this
@@ -361,7 +361,7 @@ void func_ov014_0211250c(daWanwan_c *c) {
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
     MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
-    Vec3_Add(&tmp, &c->mPosX, &rotated);
+    Vec3_Add(&tmp, (const Vector3 *)&c->mPosX, &rotated);
     saved.x = tmp.x;
     saved.y = tmp.y;
     saved.z = tmp.z;

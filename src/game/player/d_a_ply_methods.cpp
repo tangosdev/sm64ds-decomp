@@ -113,9 +113,9 @@ extern signed char data_02092120;
 extern signed char gLastCourseSublevel;
 extern u8 data_02092128[];
 extern int data_0209212c;
-extern short data_02092144[];
+extern short gPlayerHealth[];
 extern int data_0209b49c;
-extern Timer data_0209d4c8;
+extern Timer gRaceTimer;
 extern unsigned char data_0209d660;
 extern u8 data_0209f200;
 extern u8 data_0209f20c;
@@ -2385,7 +2385,7 @@ int daPly_c::Heal(int amt) {
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::GetHealth() {
   unsigned char i = mPlayerNo;
-  return (signed char)(data_02092144[i] >> 8);
+  return (signed char)(gPlayerHealth[i] >> 8);
 }
 
 // @symbol func_ov002_020bf56c
@@ -3184,18 +3184,18 @@ int daPly_c::func_ov002_020c0fb4() {
         if (gShowRaceTimer[0] != 0) {
             break;
         }
-        data_0209d4c8.ResetTimer();
+        gRaceTimer.ResetTimer();
         gShowRaceTimer[0] = 1;
-        data_0209d4c8.StartTimer();
+        gRaceTimer.StartTimer();
         break;
 
     case 16:
-        if (data_0209d4c8.mIsRunning == 0) {
+        if (gRaceTimer.mIsRunning == 0) {
             break;
         }
-        data_0209d4c8.StopTimer();
+        gRaceTimer.StopTimer();
         {
-            unsigned long long t = data_0209d4c8.GetTime();
+            unsigned long long t = gRaceTimer.GetTime();
             if (((t << 6) / 0x1ff6210) > 0x14) {
                 break;
             }
@@ -5728,7 +5728,7 @@ int daPly_c::func_ov002_020c5dec(int r1) {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_DeadHit_Main() {
-    extern u8 data_ov002_0211117c;
+    extern u8 gMeterShownHealth;
     u32 t;
 
     if (mIsAirborne == 0) {
@@ -5764,7 +5764,7 @@ int daPly_c::St_DeadHit_Main() {
         break;
     case 2:
         if (this->FinishedAnim() != 0) {
-            if (data_ov002_0211117c == 0) {
+            if (gMeterShownHealth == 0) {
                 KillPlayer();
                 mStateWork = 3;
             }
@@ -5984,7 +5984,7 @@ int daPly_c::St_Squish_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Squish_Main() {
-    extern u8 data_ov002_0211117c;
+    extern u8 gMeterShownHealth;
     extern int func_ov002_020d91e0(void*, int a, int b);
     extern void func_ov002_020db8bc(void*, int a);
     switch (mStateStep) {
@@ -6057,7 +6057,7 @@ int daPly_c::St_Squish_Main() {
             func_ov002_020db8bc(this, 1);
             this->ChangeState(data_ov002_0211013c);
         }
-        if (data_ov002_0211117c != 0)
+        if (gMeterShownHealth != 0)
             break;
         KillPlayer();
         (*(u8 *)(int)((char *)&mStateArg))++;
@@ -13804,12 +13804,12 @@ void daPly_c::BlowAway(short v) {
    in those slots. */
 extern "C" {
 int daPly_c::St_BurnLava_Main() {
-    extern u8 data_ov002_0211117c;
+    extern u8 gMeterShownHealth;
     extern u32 PlayerNewHold7(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                               void *callback);
 
     extern void func_ov002_020e28d4(void *, int, int);
-    if (data_ov002_0211117c == 0 && mStateArg == 0) {
+    if (gMeterShownHealth == 0 && mStateArg == 0) {
         KillPlayer();
         mStateArg = 1;
         mIsBodyClsnEnabled = 0;

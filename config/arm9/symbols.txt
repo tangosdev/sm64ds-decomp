@@ -4163,7 +4163,7 @@ data_02092130 kind:data(any) addr:0x02092130
 data_02092134 kind:data(any) addr:0x02092134
 data_02092138 kind:data(any) addr:0x02092138
 g_profile_STAGE kind:data(any) addr:0x0209213c
-data_02092144 kind:data(any) addr:0x02092144
+gPlayerHealth kind:data(any) addr:0x02092144
 data_0209214c kind:data(any) addr:0x0209214c
 _ZTI10dScStage_c kind:data(any) addr:0x02092158
 _ZTIN10dScStage_c15graphCallback_cE kind:data(any) addr:0x02092164
@@ -4622,7 +4622,7 @@ data_0209d4b0 kind:bss addr:0x0209d4b0
 data_0209d4b4 kind:bss addr:0x0209d4b4
 data_0209d4b8 kind:bss addr:0x0209d4b8
 data_0209d4bc kind:bss addr:0x0209d4bc
-data_0209d4c8 kind:bss addr:0x0209d4c8
+gRaceTimer kind:bss addr:0x0209d4c8
 data_0209d4d4 kind:bss addr:0x0209d4d4
 data_0209d4d8 kind:bss addr:0x0209d4d8
 data_0209d4dc kind:bss addr:0x0209d4dc
@@ -4756,7 +4756,7 @@ data_0209f25c kind:bss addr:0x0209f25c
 gLevelClearCoinCount kind:bss addr:0x0209f260
 data_0209f264 kind:bss addr:0x0209f264
 data_0209f268 kind:bss addr:0x0209f268
-data_0209f26c kind:bss addr:0x0209f26c
+gReturnState kind:bss addr:0x0209f26c
 data_0209f270 kind:bss addr:0x0209f270
 data_0209f274 kind:bss addr:0x0209f274
 data_0209f278 kind:bss addr:0x0209f278
@@ -4796,7 +4796,7 @@ gPrevReturnState kind:bss addr:0x0209f2fc
 data_0209f300 kind:bss addr:0x0209f300
 data_0209f304 kind:bss addr:0x0209f304
 data_0209f308 kind:bss addr:0x0209f308
-data_0209f30c kind:bss addr:0x0209f30c
+gNumRedCoins kind:bss addr:0x0209f30c
 data_0209f30d kind:bss addr:0x0209f30d
 data_0209f310 kind:bss addr:0x0209f310
 data_0209f311 kind:bss addr:0x0209f311
