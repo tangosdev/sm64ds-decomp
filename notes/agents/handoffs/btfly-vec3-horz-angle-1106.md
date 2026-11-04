@@ -4,7 +4,7 @@
 
 - Task: match `daBtfly_c`'s local `Vec3_HorzAngle` declaration to the helper definition.
 - Base: latest `main` at `a5bb6f569f6e7382ec1b5ef993b7e4fe4eae16a7`.
-- Candidate: `audit/next-source-fidelity1106`; independent source review remains outstanding.
+- Candidate: isolated source correction; independent source review remains outstanding.
 - The existing `__sinit_d_a_btfly.cpp` section is not in the TU manifest and remains a promotion blocker unrelated to this signature correction.
 
 ## Change and evidence
