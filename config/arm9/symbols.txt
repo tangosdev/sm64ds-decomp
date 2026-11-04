@@ -4753,7 +4753,7 @@ data_0209f250 kind:bss addr:0x0209f250
 data_0209f254 kind:bss addr:0x0209f254
 data_0209f258 kind:bss addr:0x0209f258
 data_0209f25c kind:bss addr:0x0209f25c
-data_0209f260 kind:bss addr:0x0209f260
+gLevelClearCoinCount kind:bss addr:0x0209f260
 data_0209f264 kind:bss addr:0x0209f264
 data_0209f268 kind:bss addr:0x0209f268
 data_0209f26c kind:bss addr:0x0209f26c
@@ -4772,8 +4772,8 @@ gBackButtonSelected kind:bss addr:0x0209f29c
 data_0209f2a0 kind:bss addr:0x0209f2a0
 data_0209f2a4 kind:bss addr:0x0209f2a4
 data_0209f2a8 kind:bss addr:0x0209f2a8
-data_0209f2ac kind:bss addr:0x0209f2ac
-data_0209f2b0 kind:bss addr:0x0209f2b0
+gNewStarCollected kind:bss addr:0x0209f2ac
+gLevelClearNewRecord kind:bss addr:0x0209f2b0
 gNumMenuButtons kind:bss addr:0x0209f2b4
 data_0209f2b8 kind:bss addr:0x0209f2b8
 data_0209f2bc kind:bss addr:0x0209f2bc
@@ -4782,7 +4782,7 @@ data_0209f2c4 kind:bss addr:0x0209f2c4
 gPauseDisplayedCourse kind:bss addr:0x0209f2c8
 gBacklightFlashTimer kind:bss addr:0x0209f2cc
 data_0209f2d0 kind:bss addr:0x0209f2d0
-data_0209f2d4 kind:bss addr:0x0209f2d4
+gLevelClearStep kind:bss addr:0x0209f2d4
 data_0209f2d8 kind:bss addr:0x0209f2d8
 gSelectedControllerMode kind:bss addr:0x0209f2dc
 gSelectedMenuButton kind:bss addr:0x0209f2e0

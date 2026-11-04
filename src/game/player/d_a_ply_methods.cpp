@@ -124,7 +124,7 @@ extern u8 data_0209f250;
 extern u8 data_0209f254;
 extern u8 data_0209f264;
 extern unsigned char data_0209f28c;
-extern unsigned char data_0209f2ac;
+extern unsigned char gNewStarCollected;
 extern s16 data_0209f4a2[];
 extern u8 data_0209f4ab[];
 extern u8 data_0209fc5c[];
@@ -6048,7 +6048,7 @@ int func_ov002_020c6e14(daPly_c *actor) {
     extern void* data_0209f318[];
     int idx;
 
-    if (data_0209f2ac != 0) {
+    if (gNewStarCollected != 0) {
         idx = -1;
         switch (NumStars()) {
         case 1:  idx = 0; break;

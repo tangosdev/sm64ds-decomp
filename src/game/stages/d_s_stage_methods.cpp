@@ -217,7 +217,7 @@ extern u8 data_0209f240;
 extern u8 gMenuHighlightDelay;
 extern u8 data_0209f248;
 extern u8 data_0209f250;
-extern u8 data_0209f260;
+extern u8 gLevelClearCoinCount;
 extern u8 data_0209f280;
 /* Non-zero while a talk or event is pointing the player at the Touch Screen:
    dMeter_c::Render then calls RenderBouncingArrows, which draws the three
@@ -243,8 +243,8 @@ extern u8 gBackButtonSelected;
 extern u8 data_0209f2a0[];
 extern u8 data_0209f2a4;
 extern u8 data_0209f2a8;
-extern u8 data_0209f2ac;
-extern u8 data_0209f2b0;
+extern u8 gNewStarCollected;
+extern u8 gLevelClearNewRecord;
 /* How many big buttons the current menu has (2 to 4); UpdateMenuButtons
    repaints that many from gMenuButtonTileOffsets. On the controls page a
    gSelectedMenuButton equal to it means the bottom OK/Back row. */
@@ -260,7 +260,7 @@ extern u8 gPauseDisplayedCourse;
    selected backlight button with the highlight palette (0x6000) only while it
    is 0, so the press blinks; PS_Update repaints the page when it reaches 0. */
 extern u8 gBacklightFlashTimer;
-extern u8 data_0209f2d4;
+extern u8 gLevelClearStep;
 extern u8 data_0209f2d8;
 /* The controller mode chosen on the controls page (0..2), seeded from the
    player's record, saved through SetControllerMode, and the index of the
@@ -295,7 +295,7 @@ extern unsigned char data_0209f498[];
 extern u8 data_0209f4ae[];
 extern int data_020a0db0;
 extern u8 data_ov002_02111150;
-extern u8 data_ov002_02111178;
+extern u8 gMeterCounterSlideState;
 extern u8 data_ov002_02111180;
 extern int data_ov002_0210cea8;
 extern int data_ov002_0210cee8;
@@ -749,7 +749,7 @@ void dScStage_c::LC_Render() {
                         -1);
     }
 
-    if (data_0209f2b0 != 0) {
+    if (gLevelClearNewRecord != 0) {
         if (data_0209f20c != 0 && SublevelToLevel(data_02092124) >= 0xf) {
             if (GetOwnerLanguage() == 5)
                 OAM::Render(0, (OamAttr *)&data_ov002_0210ce90, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
@@ -785,7 +785,7 @@ void dScStage_c::LC_Render() {
         }
     }
 
-    if (data_0209f2d4 == 3)
+    if (gLevelClearStep == 3)
         RenderBouncingArrows();
 }
 // @symbol _ZN10dScStage_c9LC_UpdateEv
@@ -800,7 +800,7 @@ void dScStage_c::LC_Update() {
         return;
     }
 
-    switch (data_0209f2d4) {
+    switch (gLevelClearStep) {
     case 0:
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
         Message::DisplayLevelClearText(0x27a, SublevelToLevel(data_02092124));
@@ -808,17 +808,17 @@ void dScStage_c::LC_Update() {
         gMenuButtonTileOffsets[1] = 0x140;
         gMenuButtonTileOffsets[2] = 0x1e0;
         gNumMenuButtons = 3;
-        data_0209f2b0 = 0;
+        gLevelClearNewRecord = 0;
         gSelectedMenuButton = 0;
         dScStage_c::UpdateMenuButtons(1);
         SetBg3Offset(0, 0);
         gMainScreenLayers |= DISPLAY_LAYER_BG3;
-        data_0209f260 = 0;
-        data_0209f2d4 = 1;
+        gLevelClearCoinCount = 0;
+        gLevelClearStep = 1;
         data_0209f280 = 0;
         if (data_0209f358[0] != 0)
             return;
-        if (data_0209f2ac != 0) {
+        if (gNewStarCollected != 0) {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
             data_0209f280 = 1;
         }
@@ -826,24 +826,24 @@ void dScStage_c::LC_Update() {
         return;
     case 1: {
         int level = SublevelToLevel(data_02092124);
-        if (data_0209f358[0] > data_0209f260) {
-            data_0209f260 += 1;
-            if (data_0209f260 % 50 == 0) {
+        if (data_0209f358[0] > gLevelClearCoinCount) {
+            gLevelClearCoinCount += 1;
+            if (gLevelClearCoinCount % 50 == 0) {
                 GiveLives(1);
                 Sound::PlayBank3_2D(0x6e);
             }
-            if (data_0209f358[0] == data_0209f260) {
-                if (data_0209f2ac != 0) {
+            if (data_0209f358[0] == gLevelClearCoinCount) {
+                if (gNewStarCollected != 0) {
                     Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
                     data_0209f280 = 1;
                 }
                 data_0209f22c = 0x1e;
                 if (level < 0xf) {
-                    u8 coins = data_0209f260;
+                    u8 coins = gLevelClearCoinCount;
                     if (SaveData::GetCoinRecord(level) >= coins)
                         return;
                     SaveData::SetCoinRecordIfHigher(level, coins);
-                    data_0209f2b0 = 1;
+                    gLevelClearNewRecord = 1;
                     func_02012790(0x22);
                     return;
                 }
@@ -859,13 +859,13 @@ void dScStage_c::LC_Update() {
             func_02012790(0x15);
             return;
         }
-        if (data_0209f260 == 0 && level >= 0xf && level < 0x15) {
+        if (gLevelClearCoinCount == 0 && level >= 0xf && level < 0x15) {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
             data_0209f280 = 1;
         }
         data_0209f22c = 0x3c;
         data_0209f358[0] = 0;
-        data_0209f2d4 = 2;
+        gLevelClearStep = 2;
         return;
     }
     case 2: {
@@ -886,7 +886,7 @@ void dScStage_c::LC_Update() {
         gSubScreenLayers |= 3;
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, t6 | 0x20, -7);
         G2x::SetBlendBrightness((volatile u16 *)0x4001050, t5 | 0x20, -7);
-        data_0209f2d4 = 3;
+        gLevelClearStep = 3;
         return;
     }
     case 3: {
@@ -912,7 +912,7 @@ void dScStage_c::LC_Update() {
                 dScStage_c::UpdateMenuButtons(0);
                 data_0209f22c = data_0208ee44 << 3;
                 func_02012790(0x57);
-                data_0209f2d4 = 4;
+                gLevelClearStep = 4;
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
                 return;
@@ -928,7 +928,7 @@ void dScStage_c::LC_Update() {
                 dScStage_c::UpdateMenuButtons(0);
                 data_0209f22c = data_0208ee44 << 3;
                 func_02012790(0x58);
-                data_0209f2d4 = 4;
+                gLevelClearStep = 4;
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
                 return;
@@ -945,7 +945,7 @@ void dScStage_c::LC_Update() {
             dScStage_c::UpdateMenuButtons(0);
             data_0209f22c = data_0208ee44 << 3;
             func_02012790(0x59);
-            data_0209f2d4 = 6;
+            gLevelClearStep = 6;
             if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                 return;
             return;
@@ -953,7 +953,7 @@ void dScStage_c::LC_Update() {
     }
     case 4:
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xe00;
-        data_0209f2d4 = 5;
+        gLevelClearStep = 5;
         gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
         Message::DisplaySaveStatusText(0x295);
         data_0209f2b8 = 0x78;
@@ -968,7 +968,7 @@ void dScStage_c::LC_Update() {
         }
         data_0209f2b8 = data_0209f2b8 - data_0208ee44;
         if (data_0209f2b8 == 0)
-            data_0209f2d4 = 6;
+            gLevelClearStep = 6;
         return;
     case 6:
         if (data_0209f280 != 0) {
@@ -979,10 +979,10 @@ void dScStage_c::LC_Update() {
         gSubScreenLayers &= ~3;
         REG16(0x4000050) = 0;
         if (gSelectedMenuButton != 1) {
-            data_ov002_02111178 = 5;
+            gMeterCounterSlideState = 5;
         } else {
             dScene_c::StartSceneFade(1, 0, 0);
-            data_ov002_02111178 = 0;
+            gMeterCounterSlideState = 0;
             Sound::StopLoadedMusic_Layer1(0xa);
             {
                 int t = gNextActorUpdateMask | ACTOR_UPDATE_MASK_STAGE_ENDING;
@@ -991,8 +991,8 @@ void dScStage_c::LC_Update() {
             }
         }
         gSelectedMenuButton = 0;
-        data_0209f2d4 = 0;
-        data_0209f2b0 = 0;
+        gLevelClearStep = 0;
+        gLevelClearNewRecord = 0;
         data_0209f20c = 0;
         return;
     default:
@@ -4106,13 +4106,13 @@ int dScStage_c::Render() {
     }
     if (data_0209f2c4 != 0) {
         PS_Render();
-    } else if (data_0209f20c != 0 && data_0209f2d4 != 0) {
+    } else if (data_0209f20c != 0 && gLevelClearStep != 0) {
         int coinCounterY = (SublevelToLevel(data_02092124) < 0xf) ? 0x80 : 0x70;
-        if (data_0209f2b0 != 0)
+        if (gLevelClearNewRecord != 0)
             coinCounterY += 0x10;
         OAM::Render(0, &OAM::COIN, 0x68, coinCounterY, -1, -1, 0);
         OAM::Render(0, &OAM::TIMES, 0x78, coinCounterY + 8, -1, -1, 0);
-        RenderNumber(data_0209f260, 0x80, coinCounterY, 1, 8);
+        RenderNumber(gLevelClearCoinCount, 0x80, coinCounterY, 1, 8);
     }
     LC_Render();
     return 1;
@@ -4603,9 +4603,9 @@ int dScStage_c::CleanupResources() {
         u8 mode = data_0209f2d8;
         int resetSequenceCounts = 0;
         gSelectedMenuButton = 0;
-        data_0209f2d4 = 0;
+        gLevelClearStep = 0;
         gMenuHighlightDelay = 0;
-        data_0209f2b0 = 0;
+        gLevelClearNewRecord = 0;
         data_0209f20c = 0;
         if (mode == 1)
             resetSequenceCounts = 1;
@@ -4638,7 +4638,7 @@ int dScStage_c::CleanupResources() {
 // restored it overshoots, so the plain spelling is the matching one.
 //   (2-arg, plain) = MATCH   (2-arg, widened) = 1   (1-arg, plain) = 0xa80   (1-arg, widened) = 3
 //
-// The two pairs of stores below (f284/f294 and f2d4/f20c) are in ROM statement order.
+// The two pairs of stores below (f284/f294 and gLevelClearStep/data_0209f20c) are in ROM statement order.
 // Swapping either pair is byte-identical -- the literal-pool words are relocations and
 // therefore wildcards to the byte gate -- but sends each address to the wrong pool slot.
 // match.py --strict-relocs is what distinguishes them; keep this order.
@@ -4936,7 +4936,7 @@ int dScStage_c::InitResources() {
         data_0209f300 = 0;
         if (f2fc != 1) {
             data_0209f20c = 0;
-            data_0209f2d4 = 0;
+            gLevelClearStep = 0;
         }
         gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
 
