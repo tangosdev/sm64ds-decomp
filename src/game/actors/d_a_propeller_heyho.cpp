@@ -429,7 +429,8 @@ extern "C" {
 typedef short s16;
 
 extern int Vec3_Dist(void *a, void *b);
-extern short Vec3_HorzAngle(void *a, void *b);
+// local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_Dist/Vec3_VertAngle declarations.
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(void *a, void *b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
@@ -461,7 +462,7 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
 
     if (Vec3_Dist(&c->mPosX, &c->mHomePosX) > kWanderTurnBackDist ||
         c->mWithMeshClsn.IsOnWall()) {
-        c->mTargetAngY = Vec3_HorzAngle(&c->mPosX, &c->mHomePosX);
+        c->mTargetAngY = Vec3_HorzAngle(&c->mPos, (const Vector3 *)&c->mHomePosX);
         if ((u16)c->mStateTimer < 0x14)
             c->mStateTimer = 0x14;
     }
@@ -518,7 +519,8 @@ int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
 // @symbol func_ov070_0211fae4
 extern "C" {
 
-extern short Vec3_HorzAngle(void *v0, void *v1);
+// local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_Dist/Vec3_VertAngle declarations.
+extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern short Vec3_VertAngle(void *v1, void *v0);
 extern int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
@@ -587,7 +589,7 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     vc.y = vb.y;
     vc.z = vb.z;
 
-    c->mTargetAngY = Vec3_HorzAngle(&c->mPosX, &vc);
+    c->mTargetAngY = Vec3_HorzAngle(&c->mPos, &vc);
     ApproachAngle(&c->mPrevAngleY, c->mTargetAngY, 1, 0x500, 0x500);
 
     vd.x = vb.x;
@@ -862,7 +864,8 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
-short Vec3_HorzAngle(void* a, void* b);
+// local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_Dist/Vec3_VertAngle declarations.
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 /* (ApproachAngle: this file's own int-target view, namespace ApproachAngleInt above) */
 short Vec3_VertAngle(void* a, void* b);
 void func_02012694(unsigned int a, void *p);
@@ -895,7 +898,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
             tmp.x = posbuf.x;
             tmp.y = posbuf.y;
             tmp.z = posbuf.z;
-            mTargetAngY = Vec3_HorzAngle(&mPosX, &tmp);
+            mTargetAngY = Vec3_HorzAngle(&mPos, &tmp);
         }
         ApproachAngleInt::ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x400, 0x200);
     }
