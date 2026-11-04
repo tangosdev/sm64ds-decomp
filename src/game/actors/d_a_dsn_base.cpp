@@ -101,7 +101,7 @@ struct DsnCycle {
  * (beforeClsnCallback), spelled as src/engine/collision/d_bg_w.cpp has it. */
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8 *);
-extern int RandomIntInternal(void *);
+extern int RandomIntInternal(int *);
 extern int Vec3_Dist(const Vector3 *, const Vector3 *);
 extern void func_020393d4(int *collider, int callback);
 }
@@ -238,7 +238,7 @@ void daDsnBase_c::StateRise() {
         return;
     self->posY = self->riseY;
     self->state = 1;
-    self->timer = (u8)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 0x1e + 0xa);
+    self->timer = (u8)(((unsigned int)RandomIntInternal(data_0209e650) >> 0x10) % 0x1e + 0xa);
 }
 
 /* The per-frame shadow refresh both Behaviors run after the state step.
