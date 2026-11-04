@@ -4791,8 +4791,8 @@ data_0209f2e8 kind:bss addr:0x0209f2e8
 gSelectedBacklightButton kind:bss addr:0x0209f2ec
 gCourseArrowsHidden kind:bss addr:0x0209f2f0
 gNumLives kind:bss addr:0x0209f2f4
-data_0209f2f8 kind:bss addr:0x0209f2f8
-data_0209f2fc kind:bss addr:0x0209f2fc
+gCurrentSublevel kind:bss addr:0x0209f2f8
+gPrevReturnState kind:bss addr:0x0209f2fc
 data_0209f300 kind:bss addr:0x0209f300
 data_0209f304 kind:bss addr:0x0209f304
 data_0209f308 kind:bss addr:0x0209f308
@@ -4817,7 +4817,7 @@ data_0209f348 kind:bss addr:0x0209f348
 gEventFlags kind:bss addr:0x0209f34c
 data_0209f350 kind:bss addr:0x0209f350
 data_0209f354 kind:bss addr:0x0209f354
-data_0209f358 kind:bss addr:0x0209f358
+gNumCoins kind:bss addr:0x0209f358
 gMenuButtonTileOffsets kind:bss addr:0x0209f360
 data_0209f368 kind:bss addr:0x0209f368
 gMapCapIconCharacters kind:bss addr:0x0209f370

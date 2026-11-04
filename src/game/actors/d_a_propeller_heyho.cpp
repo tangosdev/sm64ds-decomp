@@ -65,32 +65,34 @@ struct V3h { short h[3]; };
 /* Named constants.  Fix12 values are written as the raw word (0x1000 = 1.0)
  * with the unit value in the comment; frame counts are game-logic frames (the frame rate is not established here). */
 enum {
-    kLevel0x16 = 0x16,            /* LEVEL_ID (data_0209f2f8, declared as a byte here) value at which this
+    kLevel0x16 = 0x16, /* LEVEL_ID (gCurrentSublevel, declared as a byte here) value at which this
                                      code skips re-anchoring the home position and the +300.0 home lift,
                                      and uses the alternate dive aim height / arrival distance */
-    kPlayerActorId = 191,         /* PLAYER in symbols/actor_debug_names.tsv */
+    kPlayerActorId = 191, /* PLAYER in symbols/actor_debug_names.tsv */
 
-    kHomeLiftEscape   = 0xc8000,  /* 200.0 units added to the home Y when the chase loses the player or the dive finds the player underwater */
-    kHomeLiftRecover  = 0x12c000, /* 300.0 units added to the home Y when the settle, or a dive that hurt the player, finishes */
-    kAimAbovePlayer   = 0xc8000,  /* 200.0 units: the chase aim point is this far above the player */
-    kAttackCooldown   = 0x5a,     /* 90 frames: mCooldown reload when an attack/fire/settle ends */
+    kHomeLiftEscape =
+        0xc8000, /* 200.0 units added to the home Y when the chase loses the player or the dive finds the player underwater */
+    kHomeLiftRecover =
+        0x12c000, /* 300.0 units added to the home Y when the settle, or a dive that hurt the player, finishes */
+    kAimAbovePlayer = 0xc8000, /* 200.0 units: the chase aim point is this far above the player */
+    kAttackCooldown = 0x5a,    /* 90 frames: mCooldown reload when an attack/fire/settle ends */
 
-    kWanderTurnBackDist = 0x1f4000, /* 500.0 units from home: wander turns back toward home */
-    kHomeLeashDist      = 0x5dc000, /* 1500.0 units from home: the leash for wander/chase/dive */
-    kChaseTriggerDist   = 0x3e8000, /* 1000.0 units: a player closer than this starts the chase */
-    kArriveDist         = 0x258000, /* 600.0 units: chase "arrived" distance to the aim point */
+    kWanderTurnBackDist = 0x1f4000,  /* 500.0 units from home: wander turns back toward home */
+    kHomeLeashDist = 0x5dc000,       /* 1500.0 units from home: the leash for wander/chase/dive */
+    kChaseTriggerDist = 0x3e8000,    /* 1000.0 units: a player closer than this starts the chase */
+    kArriveDist = 0x258000,          /* 600.0 units: chase "arrived" distance to the aim point */
     kArriveDistLevel0x16 = 0x384000, /* 900.0 units: the same distance when LEVEL_ID == 0x16 */
 
-    kFireFrame = 0xd,             /* animation frame 13 of the spit animation: the fireball leaves here */
-    kSndFireSpit = 0x105,         /* sound id; daKrpa_c plays the same id for its spit */
-    kSndMegaKill = 0x1d,          /* sound id played with IncMegaKillCount */
+    kFireFrame = 0xd,     /* animation frame 13 of the spit animation: the fireball leaves here */
+    kSndFireSpit = 0x105, /* sound id; daKrpa_c plays the same id for its spit */
+    kSndMegaKill = 0x1d,  /* sound id played with IncMegaKillCount */
 
     /* dCc_c hitFlags bits, read with the table in include/dCc_c.h (only 0x2000 egg and
        0x4000 explosion are proven there; the rest are its plausible reading) */
-    kHitMegaChar   = 0x10,
-    kHitSpinPound  = 0x20,
-    kHitFire       = 0x40000,
-    kHitAttackMask = 0x67c0       /* 0x40 punch | 0x80 kick | 0x100 breakdance | 0x200 slide kick
+    kHitMegaChar = 0x10,
+    kHitSpinPound = 0x20,
+    kHitFire = 0x40000,
+    kHitAttackMask = 0x67c0 /* 0x40 punch | 0x80 kick | 0x100 breakdance | 0x200 slide kick
                                      | 0x400 (player's) dive | 0x2000 egg | 0x4000 explosion */
 };
 
@@ -527,7 +529,7 @@ extern int Vec3_Dist(void *a, void *b);
 extern int RandomIntInternal(int *seed);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
 extern int data_020a0e68[];
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
@@ -554,7 +556,7 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
 
     player = c->ClosestNonVanishPlayer();
     if (player == 0) {
-        if (data_0209f2f8 != kLevel0x16) {
+        if (gCurrentSublevel != kLevel0x16) {
             c->mHomePosX = c->mPosX;
             c->mHomePosY = c->mPosY;
             c->mHomePosZ = c->mPosZ;
@@ -610,7 +612,8 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     {
     int dist = Vec3_Dist(&c->mPosX, &vb);
     int thresh = kArriveDist;
-    if (data_0209f2f8 == kLevel0x16) thresh = kArriveDistLevel0x16;
+    if (gCurrentSublevel == kLevel0x16)
+        thresh = kArriveDistLevel0x16;
     if (dist < thresh) {
         c->mSpeedX = 0;
         c->mVertSpeed = 0;
@@ -664,7 +667,7 @@ typedef signed char s8;
 
 
 /* (data_ov070_02123510: SharedFilePtr view declared earlier in this TU) */
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
 extern s32 data_0209f32c;
@@ -716,7 +719,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
             mStateStep = 1;
         }
         if (mHitDuringAttack == 1) {
-            if (data_0209f2f8 != kLevel0x16)
+            if (gCurrentSublevel != kLevel0x16)
                 mHomePosY += kHomeLiftRecover;
             mStateStep = 0;
             mCooldown = kAttackCooldown;
@@ -726,7 +729,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     }
 
     if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnWall()) {
-        if (data_0209f2f8 != kLevel0x16) {
+        if (gCurrentSublevel != kLevel0x16) {
             mHomePosX = mPosX;
             mHomePosY = mPosY;
             mHomePosZ = mPosZ;
@@ -738,7 +741,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
 
     player = ClosestNonVanishPlayer();
     if (player == 0) {
-        if (data_0209f2f8 != kLevel0x16) {
+        if (gCurrentSublevel != kLevel0x16) {
             mHomePosX = mPosX;
             mHomePosY = mPosY;
             mHomePosZ = mPosZ;
@@ -749,7 +752,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     }
 
     if (player->mIsUnderwater != 0 && data_0209f32c > mPosY) {
-        if (data_0209f2f8 != kLevel0x16) {
+        if (gCurrentSublevel != kLevel0x16) {
             mHomePosX = mPosX;
             mHomePosY = mPosY;
             mHomePosZ = mPosZ;
@@ -771,7 +774,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     v.y = z;
     v.z = z;
     tmp.y = player->mGroundY;
-    if (data_0209f2f8 == kLevel0x16)
+    if (gCurrentSublevel == kLevel0x16)
         tmp.y += 0x32000;
     else
         tmp.y += 0x47000;
@@ -820,7 +823,7 @@ int func_ov070_0211f694(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 }
@@ -832,7 +835,7 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
 int daPropeller_Heyho_c::func_ov070_0211f62c()
 {
     if (mAnmModel.dExtFrameCtrl_c::Finished() != 0) {
-        if (data_0209f2f8 != kLevel0x16)
+        if (gCurrentSublevel != kLevel0x16)
             mHomePosY += kHomeLiftRecover;
         mStateStep = 0;
         mCooldown = kAttackCooldown;

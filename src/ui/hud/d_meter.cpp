@@ -53,7 +53,7 @@
  *   volatile self-read -- the ROM reloads the byte rather than reusing the
  *   value still live from the comparison above it.
  * - InitResources keeps two launders: the volatile pun on mVsTimer in the
- *   data_0209f2f8 == 0x2B branch (a plain member store emits different code)
+ *   gCurrentSublevel == 0x2B branch (a plain member store emits different code)
  *   and the `idx ? table : table` conditional over a (void* volatile*) cast of
  *   data_0209f394 (folding it changes where the player-health read lands).
  * - data_0209f2d8 is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one
@@ -123,14 +123,14 @@ extern signed char data_0209f310[];
 * so can never be the module this reaches. */
 extern int data_ov001_020abac8[];
 extern unsigned char data_0209f2d8;
-extern unsigned char data_0209f2fc;
+extern unsigned char gPrevReturnState;
 extern unsigned char gNewStarCollected;
 extern unsigned char gLevelClearStep;
 extern int data_020a0db0;
 extern unsigned char NumStars(void);
 extern signed char data_0209f30c[];
 extern struct OamAttr data_ov002_0210c6b8;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int SublevelToLevel(int i);
 extern unsigned char data_0209f2c4;
 extern unsigned char data_0209f20c;
@@ -312,9 +312,9 @@ int dMeter_c::InitResources() {
     unk64 = 0xB4;
     mVsTimerY = 0xA;
     if (IsVsMode()) {
-        if (data_0209f2f8 == 0x33)
+        if (gCurrentSublevel == 0x33)
             mVsTimer = 0x1E;
-        else if (data_0209f2f8 == 0x2B)
+        else if (gCurrentSublevel == 0x2B)
             *(volatile u16 *)&mVsTimer = 0x1E;
         else
             mVsTimer = 0x1E;
@@ -361,12 +361,12 @@ int dMeter_c::InitResources() {
         mLifeCountX = -0x3A;
         mStarCountX = (s16)(starDigitsWidth + 0x120);
         mStarCountSlideIn = 1;
-    } else if (data_0209f2fc == 2) {
+    } else if (gPrevReturnState == 2) {
         gMeterCounterSlideState = 1;
         mLifeCountX = -0x3A;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
-    } else if (data_0209f2fc == 1) {
+    } else if (gPrevReturnState == 1) {
         gMeterCounterSlideState = 2;
         mLifeCountX = -0x3A;
         mStarCountX = (s16)(starDigitsWidth + 0x120);
@@ -418,7 +418,7 @@ int dMeter_c::Behavior() {
             } else {
                 mLifeCountX += 4;
             }
-            if (data_0209f2fc == 1) {
+            if (gPrevReturnState == 1) {
                 if (mStarCountX <= 0xf0) {
                     mStarCountX = 0xf0;
                     flags |= 2;
@@ -438,7 +438,7 @@ int dMeter_c::Behavior() {
                 } else {
                     mLifeCountX -= 4;
                 }
-                if (data_0209f2fc == 1) {
+                if (gPrevReturnState == 1) {
                     if (mStarCountX <= n + 0x120) {
                         mStarCountX += 4;
                     } else {
@@ -458,7 +458,7 @@ int dMeter_c::Behavior() {
             } else {
                 mLifeCountX += 4;
             }
-            if (data_0209f2fc == 1 || mStarCountSlideIn != 0) {
+            if (gPrevReturnState == 1 || mStarCountSlideIn != 0) {
                 if (mStarCountX <= 0xf0) {
                     mStarCountX = 0xf0;
                     flags |= 2;
@@ -801,7 +801,7 @@ void dMeter_c::RenderVsTimer() {
 void dMeter_c::RenderCoinCount() {
     if (IsVsMode()) {
         int sb = 0xf0;
-        CalculateDigits(data_0209f358[data_0209f250]);
+        CalculateDigits(gNumCoins[data_0209f250]);
         for (int i = 2; i >= 0; i--) {
             signed char d = mDigits[i];
             if (d >= 0) {
@@ -812,11 +812,11 @@ void dMeter_c::RenderCoinCount() {
         OAM::Render(true, &OAM::TIMES, sb, 0xa, -1, 1, 0);
         OAM::Render(true, &OAM::COIN, sb - 0x10, 2, -1, 1, 0);
     } else {
-        if (SublevelToLevel(data_0209f2f8) == 0x1d)
+        if (SublevelToLevel(gCurrentSublevel) == 0x1d)
             return;
         int i;
         int sb = 0xf0;
-        CalculateDigits(data_0209f358[data_0209f250]);
+        CalculateDigits(gNumCoins[data_0209f250]);
         for (i = 2; i >= 0; i--) {
             signed char d = mDigits[i];
             if (d >= 0) {
@@ -901,7 +901,7 @@ void dMeter_c::RenderStarCount() {
     CalculateDigits(NumStars());
 
     {
-        unsigned char mode = data_0209f2fc;
+        unsigned char mode = gPrevReturnState;
         if ((mode != 2 && gMeterCounterSlideState == 4) ||
             (mode == 1 && gMeterCounterSlideState >= 3 && gMeterCounterSlideState < 6)) {
             if (!StarCountVisible()) {

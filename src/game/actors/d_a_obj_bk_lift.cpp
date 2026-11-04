@@ -27,7 +27,7 @@
  *   this class's old coined name -- so this TU keeps the address-true
  *   spelling.
  * - data_ov015_02113594 is the CLPS block this TU does not own;
- *   data_02082214 is arm9's sin/cos table; data_0209f220 / data_0209f2f8
+ *   data_02082214 is arm9's sin/cos table; data_0209f220 / gCurrentSublevel
  *   are arm9 scene state; g_profile_BK_LIFT01 lives outside this TU.
  * - Behavior kind 1 writes the half-turn through s16 *p = &mPrevAngleY
  *   and a u8 temporary for 0x87: a direct member add if-converts
@@ -76,7 +76,7 @@ extern BkLiftCollisionFilePtr data_ov015_02114a5c; /* collision KCL */
 extern BkLiftModelFilePtr data_ov015_02114a64;     /* step BMD */
 extern CLPS_Block data_ov015_02113594;
 extern s16 data_02082214[]; /* arm9 sin/cos table */
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 extern u8 data_0209f220;
 
 /* arm9 C helpers with no shared header. */
@@ -165,7 +165,7 @@ int daObjBk_Lift_c::InitResources() {
         mVertSpeed = 0xa000;
     }
 
-    if (data_0209f2f8 == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) &&
+    if (gCurrentSublevel == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) &&
         mPosY >= 0xdac000)
         return 0;
 

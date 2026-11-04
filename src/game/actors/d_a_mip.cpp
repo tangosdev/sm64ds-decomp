@@ -1197,7 +1197,7 @@ void daMip_c::OnPendingDestroy()
 // @symbol _ZN7daMip_c6RenderEv
 int daMip_c::Render()
 {
-    extern signed char data_0209f2f8;
+    extern signed char gCurrentSublevel;
     extern signed char data_02092120;
 
     if (mIsDisabled == 1) return 1;
@@ -1222,7 +1222,7 @@ int daMip_c::Render()
         }
     }
 
-    if (data_0209f2f8 == 5 && data_02092120 == 3) {
+    if (gCurrentSublevel == 5 && data_02092120 == 3) {
         RenderMirrorImage();
     }
 
@@ -1288,7 +1288,7 @@ int daMip_c::Behavior()
        scratch x/y/z the code fills and reads back. */
     typedef volatile struct { Fix12i x, y, z; } Vec3Scratch;
 
-    extern s8 data_0209f2f8;
+    extern s8 gCurrentSublevel;
     extern s8 data_02092120;
     extern int data_0209caa0[];
     extern void* data_0209f33c;
@@ -1301,7 +1301,7 @@ int daMip_c::Behavior()
     char* c = (char*)this;
     daPly_c *player;
 
-    if (data_0209f2f8 != 0x32) {
+    if (gCurrentSublevel != 0x32) {
         if (mIsDisabled == 1) {
             if (data_0209caa0[2] & 0x20000)
                 mIsDisabled = 0;
@@ -1431,7 +1431,7 @@ int daMip_c::Behavior()
     else
         UpdateMatrixAndShadow();
 
-    if (data_0209f2f8 == 5 && data_02092120 == 3)
+    if (gCurrentSublevel == 5 && data_02092120 == 3)
         UpdateMirrorShadow();
 
     if (!IsFlagSet(this, 0x4000)) {
@@ -1466,7 +1466,7 @@ int daMip_c::InitResources()
     extern MipStatePair data_ov085_021306cc;
     extern s32 data_ov085_021305ac;
     extern int data_0209caa0[];
-    extern s8 data_0209f2f8;
+    extern s8 gCurrentSublevel;
     extern LevelRng data_0209e650;
 
     void* player;
@@ -1539,7 +1539,7 @@ int daMip_c::InitResources()
         player = ClosestPlayer();
         if (player == 0)
             return 0;
-        if (data_0209f2f8 != 0x32) {
+        if (gCurrentSublevel != 0x32) {
             if (mCharacterId != ((daPly_c *)player)->mCharacter)
                 return 0;
         }
@@ -1556,7 +1556,7 @@ int daMip_c::InitResources()
         if (closest != 0) {
             int v;
             v = (s32)((daPly_c *)closest)->param1;
-            if (data_0209f2f8 == 0x32)
+            if (gCurrentSublevel == 0x32)
                 v = 1;
             if (func_02013890(mRabbitId, v) != 0 && data_ov085_021305ac < 8) {
                 u32 rnd = (u32)RandomIntInternal((int *)&data_0209e650) >> 8;
@@ -1585,7 +1585,7 @@ int daMip_c::InitResources()
         }
     }
 
-    if (data_0209f2f8 == 5) {
+    if (gCurrentSublevel == 5) {
         if (mAreaId == 3)
             mFlags = 0x8280;
     }

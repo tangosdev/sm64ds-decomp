@@ -179,7 +179,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
 extern int data_020a0e68[];
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
 extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
@@ -211,7 +211,7 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov062_0211ba84, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX); */
 /* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211ba84, NOT applied: extern void MulVec3Mat4x3(const Vector3 *v, void *m, Vector3 *out); */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e17c, from the legacy file for func_ov062_0211ba84, NOT applied: extern void *data_ov062_0211e17c; */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f2f8, from the legacy file for func_ov062_0211bc54, NOT applied: extern "C" signed char data_0209f2f8; */
+/* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211bc54, NOT applied: extern "C" signed char gCurrentSublevel; */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov062_0211bc54, NOT applied: extern "C" void func_02012694(int a0, void *a1); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZNK10dBgCh_Actr8IsOnWallEv, from the legacy file for func_ov062_0211bd10, NOT applied: extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov062_0211bd10, NOT applied: extern s16 Vec3_HorzAngle(const void *a, const void *b); */
@@ -220,7 +220,7 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of _ZN7PathPtrC1Ev, from the legacy file for func_ov062_0211bd10, NOT applied: extern void _ZN7PathPtrC1Ev(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN7PathPtr6FromIDEj, from the legacy file for func_ov062_0211bd10, NOT applied: extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZNK7PathPtr7GetNodeER7Vector3j, from the legacy file for func_ov062_0211bd10, NOT applied: extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, Vector3 *v, unsigned int i); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f2f8, from the legacy file for func_ov062_0211bd10, NOT applied: extern s8 data_0209f2f8; */
+/* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211bd10, NOT applied: extern s8 gCurrentSublevel; */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov062_0211c218, NOT applied: extern int RandomIntInternal(int *seed); */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209e650, from the legacy file for func_ov062_0211c218, NOT applied: extern int data_0209e650; */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s16 Vec3_HorzAngle(const void *a, const void *b); */
@@ -229,7 +229,7 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void Matrix4x3_FromRotationY(void *m, int angle); */
 /* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void MulVec3Mat4x3(Vector3 *in, void *m, void *out); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void func_ov062_0211c658(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f2f8, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s8 data_0209f2f8; */
+/* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s8 gCurrentSublevel; */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209e650, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int data_0209e650; */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_FromRotationY(struct Matrix4x3 *m, short angY); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX); */
@@ -695,7 +695,7 @@ int daJango_c::func_ov062_0211c2f4() {
        it as a test of its own. */
     if (len == 0 || len <= 0x14000) {
         mPathPickTick = 7;
-        if (mSilverStarFlag == 2 || (u8)(s8)(data_0209f2f8 - 0x18) <= 1) {
+        if (mSilverStarFlag == 2 || (u8)(s8)(gCurrentSublevel - 0x18) <= 1) {
             mPathNodeIndex++;
             if (mPathNodeIndex >= 4)
                 mPathNodeIndex = 0;
@@ -748,7 +748,7 @@ int daJango_c::func_ov062_0211c2f4() {
    (random, 100 apart) before the actor may leave along the path. If the last thing that happened was a hit on the player
    (mHitPlayer) the timer is zeroed instead and the flag cleared. mLeaveDelay
    starts at 0, or at 2 with a zero timer for the silver-star variant and on
-   level ids 0x18 / 0x19 (data_0209f2f8 is LEVEL_ID in symbols/verified.tsv). Plays
+   level ids 0x18 / 0x19 (gCurrentSublevel is LEVEL_ID in symbols/verified.tsv). Plays
    jango_fly.bca (4 blend frames, flags 0, speed 1.0). */
 int daJango_c::func_ov062_0211c218()
 {
@@ -762,7 +762,7 @@ int daJango_c::func_ov062_0211c218()
     mLeaveDelay = 0;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
     if (mSilverStarFlag == 2 ||
-        (unsigned char)(signed char)((signed char)data_0209f2f8 - 0x18) <= 1) {
+        (unsigned char)(signed char)((signed char)gCurrentSublevel - 0x18) <= 1) {
         mLeaveDelay = 2;
         mStateTimer = 0;
     }
@@ -771,7 +771,7 @@ int daJango_c::func_ov062_0211c218()
 
 // @symbol _ZN9daJango_c19func_ov062_0211bd10Ev
 /* CIRCLE update (Klepto flying a turning loop: constant yaw turn, pitch steered
-   toward mSpawnPos when empty-handed or toward mPathNodePos otherwise). data_0209f2f8 is LEVEL_ID in symbols/verified.tsv; this code
+   toward mSpawnPos when empty-handed or toward mPathNodePos otherwise). gCurrentSublevel is LEVEL_ID in symbols/verified.tsv; this code
    special-cases level 0x10 and levels 0x18 / 0x19.
 
    1. mTimer != 0 (it has just lost its cargo or its target): head back to the
@@ -838,14 +838,14 @@ int daJango_c::func_ov062_0211bd10()
         angD = (s16)(AngleDiff(mTargetAngleY, mPrevAngleY) / 3);
     }
 
-    if (data_0209f2f8 == 0x10) {
+    if (gCurrentSublevel == 0x10) {
         ApproachAngle(&mPrevAngleX, angV, 0xa, 0x400, 0x200);
     } else {
         ApproachLinear(mPrevAngleX, angV, 0x300);
     }
     ApproachAngle(&mPrevAngleZ, angD, 0xa, 0x200, 0x100);
 
-    if (data_0209f2f8 == 0x10 || mSilverStarFlag == 2) {
+    if (gCurrentSublevel == 0x10 || mSilverStarFlag == 2) {
         p94 = &mPrevAngleY;
         *p94 = (s16)(*p94 - 0x200);
     } else {
@@ -861,7 +861,7 @@ int daJango_c::func_ov062_0211bd10()
                 tmp = pp[0];
                 ppos[0] = tmp;
                 tmp = pp[1];
-                stage = data_0209f2f8;
+                stage = gCurrentSublevel;
                 ppos[1] = tmp;
                 tmp = pp[2];
                 ppos[2] = tmp;
@@ -890,8 +890,7 @@ int daJango_c::func_ov062_0211bd10()
     if (angD < 0x300) {
         if (mStateParam == 1) {
             mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
-            if (mSilverStarFlag == 2 ||
-                (unsigned)(u8)(s8)((s8)data_0209f2f8 - 0x18) <= 1u) {
+            if (mSilverStarFlag == 2 || (unsigned)(u8)(s8)((s8)gCurrentSublevel - 0x18) <= 1u) {
                 p43c = &mLeaveDelay;
                 *p43c = *p43c - 1;
                 if (mLeaveDelay <= 0) {
@@ -914,9 +913,9 @@ int daJango_c::func_ov062_0211bd10()
         }
     }
 
-    if (mSilverStarFlag != 2 && data_0209f2f8 != 0x18 && data_0209f2f8 != 0x19 &&
-        (mCarriedItem != CARRIES_NO_STAR || mHeldActorID != 0) &&
-        func_ov062_0211b3ac() != 0 && *(u16 *)&mStateTimer != 0) {
+    if (mSilverStarFlag != 2 && gCurrentSublevel != 0x18 && gCurrentSublevel != 0x19 &&
+        (mCarriedItem != CARRIES_NO_STAR || mHeldActorID != 0) && func_ov062_0211b3ac() != 0 &&
+        *(u16 *)&mStateTimer != 0) {
         mStateTimer = 0;
     }
 
@@ -936,7 +935,7 @@ int daJango_c::func_ov062_0211bd10()
 
 // @symbol _ZN9daJango_c19func_ov062_0211bc54Ev
 /* SWOOP enter. mStateTimer is the swoop length: 50 frames in level 0x10 (the
-   LEVEL_ID in data_0209f2f8), else a random 20 to 35. Clears the velocity words,
+   LEVEL_ID in gCurrentSublevel), else a random 20 to 35. Clears the velocity words,
    plays sound 0xee at the actor's camera-space position, picks the turn rate in
    mStateParam (0x300, 0x400, 0x500 or 0x600, random) that func_ov062_0211ba84 uses as
    the ApproachLinear step, and starts jango_attack.bca (4 blend frames, flags 0,
@@ -947,7 +946,7 @@ int daJango_c::func_ov062_0211bd10()
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 int daJango_c::func_ov062_0211bc54()
 {
-    if (data_0209f2f8 == 0x10) {
+    if (gCurrentSublevel == 0x10) {
         mStateTimer = 0x32;
     } else {
         mStateTimer =
@@ -1014,7 +1013,7 @@ int func_ov062_0211ba84(char *c)
         vv.x = tx; vv.y = ty; vv.z = tz;
         pitch = Vec3_VertAngle(&actor.mPos, &vv);
     }
-    if (data_0209f2f8 == 0x10) {
+    if (gCurrentSublevel == 0x10) {
         ApproachLinear(actor.mPrevAngleY, actor.mTargetAngleY, (s16)actor.mStateParam);
         ApproachLinear(actor.mPrevAngleX, pitch, (s16)actor.mStateParam);
     } else {
@@ -1271,7 +1270,7 @@ int daJango_c::func_ov062_0211b51c()
    (mPathPickTick counts 1..7 and wraps; c2f4 sets it to 7 so the next call runs).
    Finds the node nearest the player horizontally; returns 0, changing nothing,
    if there is no change (that node is where mPathNodePos already is). Otherwise,
-   in level 0x10 (LEVEL_ID in data_0209f2f8), sets mRiseToFarNode when the node
+   in level 0x10 (LEVEL_ID in gCurrentSublevel), sets mRiseToFarNode when the node
    chosen is index ^ 2 of the current one, stores the chosen index in
    mPathNodeIndex and returns 1. */
 int daJango_c::func_ov062_0211b3ac()
@@ -1321,7 +1320,7 @@ int daJango_c::func_ov062_0211b3ac()
     if (Vec3_HorzDist(&best, (Vector3*)&mPathNodePosX) == 0)
         return 0;
 
-    if (data_0209f2f8 == 0x10) {
+    if (gCurrentSublevel == 0x10) {
         mRiseToFarNode = 0;
         if (mPathNodeIndex == (bestIdx ^ 2))
             mRiseToFarNode = 1;

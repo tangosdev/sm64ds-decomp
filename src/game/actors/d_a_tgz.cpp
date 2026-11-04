@@ -129,7 +129,7 @@ unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x,
                             const void *dir, void *callback);
 extern int data_0209f32c;
 extern char IDENTITY_MATRIX4X3;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 }
 
 // @symbol _ZN7daTgz_cD1Ev
@@ -818,7 +818,7 @@ int daTgz_c::Behavior()
     func_ov077_02125e20(this);
     MakeVanishLuigiWork(mdCcAc_c);
     func_ov077_02125304((char *)this);
-    if (data_0209f2f8 == 0x1c && mPosY <= -0x1600000) {
+    if (gCurrentSublevel == 0x1c && mPosY <= -0x1600000) {
         PoofDust();
         func_02012694(0xc4, &mCamSpacePos);
         MarkForDestruction();

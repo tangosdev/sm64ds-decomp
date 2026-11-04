@@ -20,7 +20,7 @@
  *   collider; the overlay's .data owns it.
  * - StartOpening is called from ov084 (daRedBombhei_c) once the camera has
  *   panned to the shutter.
- * - func_0201277c plays sound 0x47. data_0209f2f8 / data_0209f220 are the
+ * - func_0201277c plays sound 0x47. gCurrentSublevel / data_0209f220 are the
  *   scene/level gates Render checks.
  * - daPly_c.h is needed for ClosestPlayer()->mIsMega.
  */
@@ -47,7 +47,7 @@ int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 }
 
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
 
 extern CLPS_Block data_ov002_0210d7f4;
@@ -183,7 +183,7 @@ int daObjCannonShutter_c::Behavior() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjCannonShutter_c6RenderEv
 int daObjCannonShutter_c::Render() {
-    if (data_0209f2f8 == 6 && data_0209f220 == 1 && (int)(param1 & 0xff) == 1)
+    if (gCurrentSublevel == 6 && data_0209f220 == 1 && (int)(param1 & 0xff) == 1)
         return 1;
     if (mCannonOpen != 0)
         return 1;

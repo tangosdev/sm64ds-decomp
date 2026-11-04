@@ -187,7 +187,7 @@ extern struct OamAttr data_ov075_0211cba4[];
  * steps. */
 extern "C" {
 extern s8 data_0209f310[];
-extern s16 data_0209f358[];
+extern s16 gNumCoins[];
 extern u8 data_0209b2f0[];
 extern u8 data_0209b2ec[];
 extern u8 data_0209b2ed[];
@@ -294,8 +294,8 @@ void dScEntry_c::TallyRoundWinners() {
     } while (i < 4);
 
     if (data_0209f310[0] != 0 || data_0209f310[1] != 0 || data_0209f310[2] != 0 ||
-        data_0209f310[3] != 0 || data_0209f358[0] != 0 || data_0209f358[1] != 0 ||
-        data_0209f358[2] != 0 || data_0209f358[3] != 0) {
+        data_0209f310[3] != 0 || gNumCoins[0] != 0 || gNumCoins[1] != 0 || gNumCoins[2] != 0 ||
+        gNumCoins[3] != 0) {
         max = 0;
         i = max;
         pc = (u8 *)data_0209f310;
@@ -332,8 +332,8 @@ void dScEntry_c::TallyRoundWinners() {
                 pc = data_0209b2f0;
                 i = w;
                 do {
-                    if (*pc != 0 && w < data_0209f358[i]) {
-                        w = data_0209f358[i] & 0xff;
+                    if (*pc != 0 && w < gNumCoins[i]) {
+                        w = gNumCoins[i] & 0xff;
                     }
                     i = i + 1;
                     pc = pc + 1;
@@ -342,7 +342,7 @@ void dScEntry_c::TallyRoundWinners() {
                 pc = data_0209b2f0;
                 i = 0;
                 do {
-                    if (*pc != 0 && data_0209f358[i] < w) {
+                    if (*pc != 0 && gNumCoins[i] < w) {
                         *pc = 0;
                     }
                     i = i + 1;

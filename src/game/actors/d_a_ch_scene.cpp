@@ -40,7 +40,7 @@ extern u8 data_0209f2c0[];
 extern unsigned char data_0209f250;
 extern dActor_c *data_0209f394[];
 extern signed char data_02092110;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
 extern void *data_0209f318;
 extern dFdColor_c data_0209f5e8;
@@ -62,7 +62,7 @@ extern "C" daChScene_c *daChScene_c_classInit() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daChScene_c13InitResourcesEv
 s32 daChScene_c::InitResources() {
-    if (data_0209f2f8 == 8 && data_0209f220 != 1) {
+    if (gCurrentSublevel == 8 && data_0209f220 != 1) {
         if (IsStarCollectedInLevel(8, 1) != 0)
             return 0;
     }
@@ -73,10 +73,10 @@ s32 daChScene_c::InitResources() {
         }
     }
 
-    if (data_0209f2f8 == 0x20) {
+    if (gCurrentSublevel == 0x20) {
         mScaleX = 0x2bc0000;
         mScaleY = 0x3200000;
-    } else if (data_0209f2f8 == 0x22) {
+    } else if (gCurrentSublevel == 0x22) {
         mScaleX = 0x3e80000;
         mScaleY = 0x3e80000;
     } else {

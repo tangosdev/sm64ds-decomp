@@ -19,7 +19,7 @@
  *   no ROM home and are deadstripped in the manifest.
  * UpdateModelMatrix and UpdateShadow are coined names; the ROM records none.
  *
- * What stays: data_0209f2f8 == 13 is a level-ID check (the current
+ * What stays: gCurrentSublevel == 13 is a level-ID check (the current
  *   level); data_0209f2d8 == 1 is the mode-1 check used tree-wide.
  */
 
@@ -33,7 +33,7 @@
 
 extern CLPS_Block data_ov002_0210d7d4;
 extern short data_02082214[];
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern unsigned char data_0209f2d8;
 
 /* local extern: no shared header declares these. */
@@ -170,7 +170,7 @@ void daObjPathLift_c::UpdateShadow() {
     int cosVal;
     int t;
 
-    if (data_0209f2f8 == 13)
+    if (gCurrentSublevel == 13)
         return;
     if (mGroundY > mPosY)
         return;

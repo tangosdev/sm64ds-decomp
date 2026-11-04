@@ -35,7 +35,7 @@
 
 /* local extern: no shared header declares these. */
 extern "C" {
-extern s8 data_0209f2f8;      /* current stage id */
+extern s8 gCurrentSublevel;   /* current stage id */
 extern int data_0209f32c;     /* the stage water's global height (written by d_a_obj_wc_mizu) */
 extern short data_02082214[]; /* sin/cos table */
 
@@ -79,7 +79,7 @@ void daObjFloatBoard_c_EmitDestructor(daObjFloatBoard_c *p) {
  * this TU's Behavior. */
 // @symbol _ZN17daObjFloatBoard_c12UpdateWaterYEv
 int daObjFloatBoard_c::UpdateWaterY() {
-    if (data_0209f2f8 == 0x15) {
+    if (gCurrentSublevel == 0x15) {
         s32 fallback = mFallbackWaterY;
         mWaterY = fallback;
         s32 tide = data_0209f32c;
@@ -251,7 +251,7 @@ int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
     pad_340[0] = 0;
     mFallbackWaterY = mPosY;
 
-    if (data_0209f2f8 == 0x15) {
+    if (gCurrentSublevel == 0x15) {
         dBgCh_Gnd rg;
         vy = mPosY;
         vz = mPosZ;

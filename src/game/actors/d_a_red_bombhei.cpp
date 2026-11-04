@@ -114,7 +114,7 @@ extern "C" {
 
 /* -- globals -- */
 extern dCamera_c *data_0209f318;           /* the camera */
-extern s8  data_0209f2f8;               /* current level */
+extern s8 gCurrentSublevel;                /* current level */
 extern u8  data_0209f220;
 extern u8 gShowTouchScreenArrows;
 extern u8 gShowRedCoinMarkers;
@@ -206,7 +206,7 @@ s32 daRedBombhei_c::InitResources()
             return 0;
     }
 
-    if (func_ov084_0212cac0() != 0 && data_0209f2f8 == 8 &&
+    if (func_ov084_0212cac0() != 0 && gCurrentSublevel == 8 &&
         (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0))
         return 0;
     return 1;
@@ -557,12 +557,12 @@ void daRedBombhei_c::func_ov084_0212c508()
                 gShowRedCoinMarkers = 1;
             } else if (func_ov084_0212cac0() != 0 && IsCannonOpenInCurLevel() != 0) {
                 if (this->mCannonOpened == 0) {
-                    if (data_0209f2f8 == 6)
+                    if (gCurrentSublevel == 6)
                         msg = 0x8f;
                     else
                         msg = 0x14a;
                 } else {
-                    if (data_0209f2f8 == 6)
+                    if (gCurrentSublevel == 6)
                         msg = 0x90;
                     else
                         msg = 0x14b;
@@ -670,7 +670,7 @@ void daRedBombhei_c::func_ov084_0212c1a0()
             int msg;
             if (ApproachLinear(this->mAngleY, angle, 0x800) == 0)
                 return;
-            msg = data_0209f2f8 == 6 ? 0x8f : 0x14a;
+            msg = gCurrentSublevel == 6 ? 0x8f : 0x14a;
             if (this->mShutterID != 0)
                 func_ov084_0212c9f0(msg, 1);
             else
@@ -732,7 +732,7 @@ void daRedBombhei_c::func_ov084_0212c1a0()
         if (talkState == 1)
             return;
         if (talkState == 2) {
-            int msg = data_0209f2f8 == 6 ? 0x90 : 0x14b;
+            int msg = gCurrentSublevel == 6 ? 0x90 : 0x14b;
             func_ov084_0212c9f0(msg, 0);
             return;
         }

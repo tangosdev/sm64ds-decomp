@@ -113,7 +113,7 @@ void  func_ov102_0214b3b8(void *c);
    function, still redeclares func_0200fc44 at block scope. */
 int   func_0200fc44(int a, Vector3 *pos, int flag);
 
-extern signed char   data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
 extern unsigned char data_0209f2d8;
 
@@ -294,7 +294,7 @@ int daBmb_c::Behavior()
             }
 
             UpdatePos(&mdCc_c);
-            if (data_0209f2f8 == 6 && data_0209f220 == 3) {
+            if (gCurrentSublevel == 6 && data_0209f220 == 3) {
                 if (mHorzSpeed == 0x5000) {
                     UpdateWMClsn(mWithMeshClsn, 3);
                 } else {

@@ -33,7 +33,7 @@
  *   gEyknDeathAnimationFilePtr and gEyknTextureSequenceFiles hold the
  *   readonly resource pointers. data_ov002_0210da38 is ov002's shared
  *   sleep-bubble model.
- * - data_0209f2f8 is the current sublevel. 0x2e maps through
+ * - gCurrentSublevel is the current sublevel. 0x2e maps through
  *   SUBLEVEL_LEVEL_TABLE to course 19, which is not BBH's entrance
  *   (that is sublevel 0xc). On 0x2e the kill is entered in the death
  *   table; otherwise the eye is only marked for destruction.
@@ -125,7 +125,7 @@ void d_a_eyknNewSimpleHold(u32 effectID, int x, int y, int z);
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s16 data_02082214[];
-extern s8 data_0209f2f8; /* current sublevel id */
+extern s8 gCurrentSublevel; /* current sublevel id */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern SharedFilePtr data_ov002_0210da38; /* sleep-bubble model, out of ov002 */
 extern SharedFilePtr *const gEyknTextureSequenceFiles[2] = {&gEyknCloseTextureSequenceFile,
@@ -468,7 +468,7 @@ int daEykn_c::St_Die_Main()
             }
         }
         func_0201267c(0xc4, &mCamSpacePos);
-        if (data_0209f2f8 == 0x2e) {
+        if (gCurrentSublevel == 0x2e) {
             KillAndTrackInDeathTable();
         } else {
             MarkForDestruction();

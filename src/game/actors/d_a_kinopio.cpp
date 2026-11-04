@@ -24,7 +24,7 @@
  *   codegen, unlike the star Spawn's).
  * - Vec3_* helpers, func_020138dc / func_02013a44,
  *   ObjectMessageIDToActualMessageID, IsStarCollectedInCurLevel,
- *   NumStars and data_0209f2f8 / data_0209caa0 keep linker names; the
+ *   NumStars and gCurrentSublevel / data_0209caa0 keep linker names; the
  *   ov002 file handles stay address-named.
  * - MatrixWords keeps UpdateModelPose's aggregate 12-word copies in
  *   ldm/stm form; the head bone is still reached as a byte offset
@@ -97,7 +97,7 @@ extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 
 /* arm9 statics */
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 extern int data_0209caa0[];
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -160,7 +160,7 @@ int daKinopio_c::GetMessageID() {
     int *player = (int *)mTalkPlayer;
     u16 messageID = mMessageID;
 
-    if (data_0209f2f8 == 0x32) {
+    if (gCurrentSublevel == 0x32) {
         int state = func_020138dc();
         switch (state) {
         case 0x1c:
@@ -218,7 +218,7 @@ void daKinopio_c::St_Talk_Main()
     case 0: {
         if (ApproachLinear(mAngleY, angleToPlayer, 0x800) == 0)
             return;
-        if (data_0209f2f8 == 0x32) {
+        if (gCurrentSublevel == 0x32) {
             if ((data_0209caa0[1] & 0x40000000) == 0)
                 data_0209caa0[1] |= 0x40000000;
         }
@@ -439,7 +439,7 @@ int daKinopio_c::Render()
  * player is inside the distance threshold AND within 0x3000 of his facing; out
  * of range the targets go to zero and the head returns to centre.
  *
- * The threshold widens from 0xfa000 to 0x1f4000 when data_0209f2f8 is 0x32 -- a
+ * The threshold widens from 0xfa000 to 0x1f4000 when gCurrentSublevel is 0x32 -- a
  * mode in which he also slowly rotates his whole body toward the player rather
  * than just his head, and in which he never fades out. mAngleY is his facing,
  * and the ApproachLinear on it in that one branch is the only place the body
@@ -458,7 +458,7 @@ int daKinopio_c::Behavior()
     daPly_c *player = ClosestPlayer();
     if (player != 0) {
         s32 threshold = 0xfa000;
-        if (data_0209f2f8 == 0x32)
+        if (gCurrentSublevel == 0x32)
             threshold = 0x1f4000;
 
         Vector3 *psrc = &player->mPos;
@@ -486,7 +486,7 @@ int daKinopio_c::Behavior()
         if (horzDist < threshold && AngleDiff(yawToPlayer, mAngleY) < 0x3000) {
             mHeadYawTarget = (s16)(yawToPlayer - mAngleY);
             mHeadPitchTarget = pitchToPlayer;
-        } else if (data_0209f2f8 != 0x32) {
+        } else if (gCurrentSublevel != 0x32) {
             mHeadYawTarget = 0;
             mHeadPitchTarget = 0;
         } else {
@@ -506,7 +506,7 @@ int daKinopio_c::Behavior()
         }
     }
 
-    if (data_0209f2f8 == 0x32)
+    if (gCurrentSublevel == 0x32)
         mTargetOpacity = 0xff;
 
     ApproachLinear(mHeadYaw, mHeadYawTarget, 0x250);

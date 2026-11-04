@@ -126,7 +126,7 @@ typedef void BgchInitAt_(void *self, dActor_c *actor, Fix12i radius, Fix12i heig
 unsigned int d_a_trsNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
 
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern unsigned char data_0209f264;
 /* Per-variant tables indexed by mVariant: death mode, hurt damage. */
 extern int data_ov063_0211e22c[];
@@ -2359,8 +2359,8 @@ void daTrs_c::func_ov063_02119e38(int a1, short a2, int a3) {
         thresh = 0x5dc000;
     }
 
-    if (data_0209f2f8 == 3 && Vec3_HorzDist((Vector3 *)&this->mHomePosX,
-                                            (Vector3 *)&this->mClosestPlayer->mPosX) > thresh) {
+    if (gCurrentSublevel == 3 && Vec3_HorzDist((Vector3 *)&this->mHomePosX,
+                                               (Vector3 *)&this->mClosestPlayer->mPosX) > thresh) {
         angle = Vec3_HorzAngle((Vector3 *)&this->mPosX, (Vector3 *)&this->mHomePosX);
     } else {
         if (Vec3_HorzDist((Vector3 *)&this->mPosX, (Vector3 *)&this->mClosestPlayer->mPosX) <=
@@ -3408,7 +3408,7 @@ int daTrs_c::InitResources()
         }
         mdCcAcPos_c.Init(this, *(Vector3 *)&mClsnOffX, mClsnRadius << 0xc, mClsnHeight << 0xc,
                          0x200000, 0x207e0);
-        if (data_0209f2f8 == 0xc && mPosX == 0xbb8000 && mAreaId == 2) {
+        if (gCurrentSublevel == 0xc && mPosX == 0xbb8000 && mAreaId == 2) {
             mBooFlags.limitZ = 1;
         }
         mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);

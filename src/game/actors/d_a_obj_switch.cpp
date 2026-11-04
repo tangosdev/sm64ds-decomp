@@ -62,7 +62,7 @@ struct SwitchClsnFileHandle : SharedFilePtr {
 
 extern "C" {
 extern int gNextActorUpdateMask;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern SharedFilePtr data_ov002_0211092c;
 extern daObjSwitch_c::Resources data_ov002_021098e8[];
 extern daObjSwitch_c::StateEntry data_ov002_0210e00c[];
@@ -379,7 +379,7 @@ void daObjSwitch_c::func_ov002_020ba2d0()
             mAreaId = -1;
         }
     } else {
-        if (data_0209f2f8 == 0xd && mPosX == -0x140000) {
+        if (gCurrentSublevel == 0xd && mPosX == -0x140000) {
             SpawnSoundObj(0);
         }
         Event::SetBit(mEventBit);

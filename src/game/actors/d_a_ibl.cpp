@@ -22,7 +22,7 @@
  *   into a real Vector3. The inherited position fields remain separate scalars.
  * - Spawn still borrows this actor's flat position and angle fields through
  *   the existing reference interface; those base fields are not vector objects.
- * - data_0209f2f8 is the level id (a signed byte). The tests 6, 0x16,
+ * - gCurrentSublevel is the level id (a signed byte). The tests 6, 0x16,
  *   0x18 and 0x19 have no level names here, and neither do the distances,
  *   speeds and kill heights chosen from them.
  * - func_020383f0 and func_02038414 are the two probes picked by that
@@ -111,7 +111,7 @@ int Vec3_Equal(void *a, void *b);
 extern int IDENTITY_MATRIX4X3[];
 }
 
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int data_02092138;
 extern s16 data_02082214[];
 
@@ -225,7 +225,8 @@ void daIbl_c::func_ov100_02141fb0()
 void daIbl_c::func_ov100_02142130()
 {
     mHitWall = 0;
-    if (data_0209f2f8 == 0x19) func_020383f0(&mWithMeshClsn);
+    if (gCurrentSublevel == 0x19)
+        func_020383f0(&mWithMeshClsn);
     else func_02038414(&mWithMeshClsn);
     if (mWithMeshClsn.IsOnWall() != 0) {
         ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))
@@ -669,7 +670,10 @@ void daIbl_c::func_ov100_02142b90()
         return;
     }
 
-    if (data_0209f2f8 == 6) r1 = 3; else r1 = 6;
+    if (gCurrentSublevel == 6)
+        r1 = 3;
+    else
+        r1 = 6;
     if (mLiveBalls >= (u32)r1) return;
 
     pl = ClosestPlayer();
@@ -696,7 +700,7 @@ void daIbl_c::func_ov100_02142b90()
         if (d > mMaxSpawnDist) return;
     }
 
-    if (data_0209f2f8 == 0x16) {
+    if (gCurrentSublevel == 0x16) {
         if (pos.y < (int)0xff63c000) return;
         mStateTimer = 0x3f;
     } else {
@@ -767,7 +771,7 @@ int daIbl_c::Behavior()
 /* Loads the model and shadow, sets gravity (-4 units/frame^2, mVertAccel
    -0x4000) and terminal velocity (-70 units/frame, -0x46000), picks the kind
    from param1's low nibble and sets up that kind. Distances and speeds below
-   are in units (0x1000 = 1). The sublevel tests read data_0209f2f8 (a signed
+   are in units (0x1000 = 1). The sublevel tests read gCurrentSublevel (a signed
    byte): 6, 0x16, 0x18 and 0x19 are the sublevels this class has special
    numbers for. */
 int daIbl_c::InitResources()
@@ -809,7 +813,7 @@ int daIbl_c::InitResources()
         func_ov100_0214233c();
         mPrevAngleY = mHeadingToNode;
         mKillY = *(int *)&data_02092138;
-        d = *(signed char *)&data_0209f2f8;
+        d = *(signed char *)&gCurrentSublevel;
         /* Sublevel 0x19 is the half-size ball: speed 10 units/frame, scale
            0.5 (0x800), collider radius and height 30 units. */
         if (d == 0x19) {
@@ -828,7 +832,7 @@ int daIbl_c::InitResources()
             mWithMeshClsn.Init(this, 0x64000, 0x64000, 0, 0);
             /* Full size: scale 1.0, collider radius and height 100 units.
                Speed per frame: 25 units in sublevel 0x18, 20 in 6, else 10. */
-            d = *(volatile signed char *)&data_0209f2f8;
+            d = *(volatile signed char *)&gCurrentSublevel;
             if (d == 0x18) {
                 mHorzSpeed = 0x19000;
                 mKillY = 0xfec78000;       /* -5000 units */
@@ -864,7 +868,7 @@ int daIbl_c::InitResources()
        0x19: 512 to 6000. Otherwise the minimum is 1024 and the maximum 7000 in
        sublevels 0x18 and 0x16, 4600 in 6, 6500 elsewhere. */
     if (kind == daIbl_KIND_SPAWNER) {
-        d = *(signed char *)&data_0209f2f8;
+        d = *(signed char *)&gCurrentSublevel;
         if (d == 0x19) {
             mMinSpawnDist = 0x200000;
             mMaxSpawnDist = 0x1770000;

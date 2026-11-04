@@ -61,7 +61,7 @@ void DecompressLZ16(const void* src, void* dst);
 extern int data_0209b3ec;
 extern u32 data_0209ee84;
 extern u32 data_0209ee8c;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 
 namespace Particle {
 
@@ -142,7 +142,7 @@ u32 Texture::AllocPalVram(u32 size, bool fromLowAddress)
 // @symbol _ZN8Particle10SysTracker10InitialiseEv
 void SysTracker::Initialise()
 {
-    signed char v = data_0209f2f8;
+    signed char v = gCurrentSublevel;
     unsigned int allocSize = 0x8c00;
     int countA = 0x28;
     int countB = 0x100;
