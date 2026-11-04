@@ -1175,9 +1175,12 @@ void daObjBlockS_c::func_ov098_02139850()
         if (mHoldingPlayer->param1 == 2) {
             r5 = (r5 + 2) & 0xff;
         }
-        Math_Function_0203b14c(&mCarryOffsetX, *(int *)((char *)data_ov098_0213bf60 + r5 * 0xc), 0x800, 0x3e8000, 4);
-        Math_Function_0203b14c(&mCarryOffsetY, *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc), 0x800, 0x3e8000, 4);
-        Math_Function_0203b14c(&mCarryOffsetZ, *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc), 0x800, 0x3e8000, 4);
+        Math_Function_0203b14c(&mCarryOffsetX, *(int *)((char *)data_ov098_0213bf60 + r5 * 0xc),
+                               0x800, 0x3e8000, 4);
+        Math_Function_0203b14c(&mCarryOffsetY, *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc),
+                               0x800, 0x3e8000, 4);
+        Math_Function_0203b14c(&mCarryOffsetZ, *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc),
+                               0x800, 0x3e8000, 4);
         {
             char *res = (char *)UpdateCarry(*mHoldingPlayer, *(Vector3 *)&mCarryOffsetX);
             mModel.mat4x3 = *(struct Matrix4x3 *)res;
