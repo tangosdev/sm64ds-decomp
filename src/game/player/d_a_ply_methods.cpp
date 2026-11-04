@@ -173,10 +173,6 @@ extern u8 data_ov002_02109dcc[];
 extern int data_ov002_02109fe4[];
 extern u32 data_ov002_0210a07c[];
 extern int data_ov002_0210a424[];
-extern int data_ov002_0210a560[];
-extern u32 data_ov002_0210a578[];
-extern u32 data_ov002_0210a584[];
-extern Vector3 data_ov002_0210a590;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -435,15 +431,120 @@ typedef struct {
     int w[2];
 } AnimScriptStep;
 
-/* The five one-step scripts data_ov002_0210a7a0 points at: {0xb3}, {0xb7},
- * {1}, {0xbc} and {0xbf}. Retail emits them among the pointer-to-member
- * constants at 0x02109db8..0x0210a554, in function order, which this file
- * does not reproduce yet, so they stay ROM data until that band does. */
+/* Two one-step scripts remain ROM data: 0x02109ff4 and 0x0210a1d4. The
+ * other three (0x0210a3dc, 0x0210a434, 0x0210a4bc) are part of the
+ * descriptor block below. */
 extern AnimScriptStep data_ov002_02109ff4[];
 extern AnimScriptStep data_ov002_0210a1d4[];
+
 extern AnimScriptStep data_ov002_0210a3dc[];
 extern AnimScriptStep data_ov002_0210a434[];
 extern AnimScriptStep data_ov002_0210a4bc[];
+
+/* 64 Player state-method descriptors at 0x0210a354..0x0210a554.
+ * Each record is the code address followed by a zero PMF adjustment. A
+ * direct PMF initializer is dynamic under mwccarm, so the flat address is
+ * the constant member of a union and the PMF view is used by the state
+ * assignments. */
+union PlayerPmf {
+    void (*fn)(daPly_c *);
+    int (daPly_c::*pmf)();
+};
+union PlayerCleanupPmf {
+    void (*fn)(daPly_c *);
+    void (daPly_c::*pmf)();
+};
+union PlayerScriptCommand {
+    void (*fn)(daPly_c *);
+    ScriptCommand pmf;
+};
+
+extern "C" int _ZN7daPly_c21St_StuckInGround_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c12St_Land_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c12St_Talk_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c19func_ov002_020bccfcEPhii(daPly_c *, unsigned char *, int, int);
+extern "C" int _ZN7daPly_c12St_Talk_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c12St_Spin_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c15St_Spin_CleanupEv(daPly_c *);
+extern "C" int _ZN7daPly_c22St_CrazedCrate_CleanupEv(daPly_c *);
+extern "C" int _ZN7daPly_c21St_WaitQuicksand_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c13St_Climb_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c13St_Climb_InitEv(daPly_c *);
+extern "C" void _ZN7daPly_c19func_ov002_020c71e0Ev(daPly_c *);
+extern "C" int _ZN7daPly_c16St_WallJump_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c16St_Climb_CleanupEv(daPly_c *);
+extern "C" int _ZN7daPly_c19func_ov002_020bcd38EPhii(daPly_c *, unsigned char *, int, int);
+extern "C" int _ZN7daPly_c17St_SweepKick_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c17St_Headstand_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c16St_WallJump_InitEv(daPly_c *);
+extern "C" void _ZN7daPly_c19func_ov002_020c6fe4Ev(daPly_c *);
+extern "C" int _ZN7daPly_c19func_ov002_020bd20cEPhii(daPly_c *, unsigned char *, int, int);
+extern "C" void _ZN7daPly_c19func_ov002_020c70acEv(daPly_c *);
+extern "C" int _ZN7daPly_c19func_ov002_020bd3a0EPhii(daPly_c *, unsigned char *, int, int);
+extern "C" int _ZN7daPly_c22St_SwingPlayer_CleanupEv(daPly_c *);
+extern "C" int _ZN7daPly_c17St_LedgeHang_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c17St_WaterJump_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c17St_LedgeGrab_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c17St_LedgeGrab_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c19func_ov002_020bd250EPhii(daPly_c *, unsigned char *, int, int);
+extern "C" int _ZN7daPly_c20St_CeilingGrate_InitEv(daPly_c *);
+extern "C" void func_ov002_020e1c20(char *);
+extern "C" int _ZN7daPly_c20St_CeilingGrate_MainEv(daPly_c *);
+extern "C" void _ZN7daPly_c19func_ov002_020c7350Ev(daPly_c *);
+extern "C" int _ZN7daPly_c19func_ov002_020bd354EPhii(daPly_c *, unsigned char *, int, int);
+extern "C" void func_ov002_020e1e70(char *);
+extern "C" int _ZN7daPly_c21St_YoshiPower_CleanupEv(daPly_c *);
+extern "C" void _ZN7daPly_c19func_ov002_020c75f0Ev(daPly_c *);
+extern "C" int _ZN7daPly_c19St_SwingPlayer_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c17St_SlideKick_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c20St_InYoshiMouth_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c20St_InYoshiMouth_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c19St_SwingPlayer_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c25St_GrabBowserTail_CleanupEv(daPly_c *);
+extern "C" int _ZN7daPly_c22St_GrabBowserTail_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c22St_GrabBowserTail_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c15St_DeadPit_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c20St_StomachSlide_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c12St_Dive_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c22St_GroundPound_CleanupEv(daPly_c *);
+extern "C" int _ZN7daPly_c19St_GroundPound_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c19St_GroundPound_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c17St_PunchKick_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c17St_PunchKick_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c17St_EndingFly_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c16St_LongJump_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c16St_LongJump_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c19func_ov002_020bd480EPhii(daPly_c *, unsigned char *, int, int);
+extern "C" int _ZN7daPly_c16St_SideFlip_MainEv(daPly_c *);
+extern "C" int _ZN7daPly_c16St_BackFlip_InitEv(daPly_c *);
+extern "C" int _ZN7daPly_c14St_Crouch_MainEv(daPly_c *);
+
+PlayerPmf data_ov002_0210a4d4 = { (void (*)(daPly_c *))_ZN7daPly_c22St_GrabBowserTail_InitEv };
+PlayerPmf data_ov002_0210a4dc = { (void (*)(daPly_c *))_ZN7daPly_c15St_DeadPit_MainEv };
+PlayerPmf data_ov002_0210a4e4 = { (void (*)(daPly_c *))_ZN7daPly_c20St_StomachSlide_MainEv };
+PlayerPmf data_ov002_0210a4ec = { (void (*)(daPly_c *))_ZN7daPly_c12St_Dive_InitEv };
+PlayerPmf data_ov002_0210a4f4 = { (void (*)(daPly_c *))_ZN7daPly_c22St_GroundPound_CleanupEv };
+PlayerPmf data_ov002_0210a4fc = { (void (*)(daPly_c *))_ZN7daPly_c19St_GroundPound_MainEv };
+PlayerPmf data_ov002_0210a504 = { (void (*)(daPly_c *))_ZN7daPly_c19St_GroundPound_InitEv };
+PlayerPmf data_ov002_0210a50c = { (void (*)(daPly_c *))_ZN7daPly_c17St_PunchKick_MainEv };
+PlayerPmf data_ov002_0210a514 = { (void (*)(daPly_c *))_ZN7daPly_c17St_PunchKick_InitEv };
+PlayerPmf data_ov002_0210a51c = { (void (*)(daPly_c *))_ZN7daPly_c17St_EndingFly_InitEv };
+PlayerPmf data_ov002_0210a524 = { (void (*)(daPly_c *))_ZN7daPly_c16St_LongJump_MainEv };
+PlayerPmf data_ov002_0210a52c = { (void (*)(daPly_c *))_ZN7daPly_c16St_LongJump_InitEv };
+PlayerScriptCommand data_ov002_0210a534 = { (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd480EPhii };
+PlayerPmf data_ov002_0210a53c = { (void (*)(daPly_c *))_ZN7daPly_c16St_SideFlip_MainEv };
+PlayerPmf data_ov002_0210a544 = { (void (*)(daPly_c *))_ZN7daPly_c16St_BackFlip_InitEv };
+PlayerPmf data_ov002_0210a54c = { (void (*)(daPly_c *))_ZN7daPly_c14St_Crouch_MainEv };
+
+/* Three three-entry animation-id tables. The state handlers step mStateStep
+ * through them and pass the selected id to SetAnim. */
+int data_ov002_0210a560[3] = {116, 124, 120};
+u32 data_ov002_0210a578[3] = {117, 123, 121};
+u32 data_ov002_0210a584[3] = {118, 122, 119};
+
+/* World-space offset applied to the player before func_ov002_020bf40c
+ * updates the camera. */
+int data_ov002_0210a590[3] = {0, -0xcd000, 0x19a000};
 
 /* Player animation scripts, frame windows, hurt tables, and body-model
  * pointer tables. All values and pointer targets are read by the state
@@ -931,7 +1032,7 @@ int daPly_c::func_ov002_020bd664(unsigned char *cmd, int beginFrame, int endFram
     extern ScriptCommand data_ov002_0210a124;
     extern ScriptCommand data_ov002_0210a054;
     extern ScriptCommand data_ov002_0210a0dc;
-    extern ScriptCommand data_ov002_0210a534;
+    extern PlayerScriptCommand data_ov002_0210a534;
     extern ScriptCommand data_ov002_0210a0b4;
     extern ScriptCommand data_ov002_0210a094;
     extern ScriptCommand data_ov002_0210a40c;
@@ -947,7 +1048,7 @@ int daPly_c::func_ov002_020bd664(unsigned char *cmd, int beginFrame, int endFram
         data_ov002_02110794[1] = data_ov002_0210a124;
         data_ov002_02110794[2] = data_ov002_0210a054;
         data_ov002_02110794[3] = data_ov002_0210a0dc;
-        data_ov002_02110794[4] = data_ov002_0210a534;
+        data_ov002_02110794[4] = data_ov002_0210a534.pmf;
         data_ov002_02110794[5] = data_ov002_0210a0b4;
         data_ov002_02110794[6] = data_ov002_0210a094;
         data_ov002_02110794[7] = data_ov002_0210a40c;
@@ -2005,10 +2106,10 @@ int daPly_c::func_ov002_020bf40c() {
     Vector3 pos;
     Vector3 off;
     if (NumStars() < 0x50 || param1 != 0) {
-        AddVec3(&mPos, &data_ov002_0210a590, &mPos);
-        off.x = data_ov002_0210a590.x;
-        off.y = data_ov002_0210a590.y;
-        off.z = data_ov002_0210a590.z;
+        AddVec3(&mPos, (Vector3 *)data_ov002_0210a590, &mPos);
+        off.x = data_ov002_0210a590[0];
+        off.y = data_ov002_0210a590[1];
+        off.z = data_ov002_0210a590[2];
         func_0200d858(data_0209f318, &off);
         dBgCh_Gnd rg;
         {
@@ -25161,21 +25262,21 @@ extern int (daPly_c::*data_ov002_0210a4ac)();
 extern int (daPly_c::*data_ov002_0210a4b4)();
 extern int (daPly_c::*data_ov002_0210a4c4)();
 extern int (daPly_c::*data_ov002_0210a4cc)();
-extern int (daPly_c::*data_ov002_0210a4d4)();
-extern int (daPly_c::*data_ov002_0210a4dc)();
-extern int (daPly_c::*data_ov002_0210a4e4)();
-extern int (daPly_c::*data_ov002_0210a4ec)();
-extern int (daPly_c::*data_ov002_0210a4f4)();
-extern int (daPly_c::*data_ov002_0210a4fc)();
-extern int (daPly_c::*data_ov002_0210a504)();
-extern int (daPly_c::*data_ov002_0210a50c)();
-extern int (daPly_c::*data_ov002_0210a514)();
-extern int (daPly_c::*data_ov002_0210a51c)();
-extern int (daPly_c::*data_ov002_0210a524)();
-extern int (daPly_c::*data_ov002_0210a52c)();
-extern int (daPly_c::*data_ov002_0210a53c)();
-extern int (daPly_c::*data_ov002_0210a544)();
-extern int (daPly_c::*data_ov002_0210a54c)();
+extern PlayerPmf data_ov002_0210a4d4;
+extern PlayerPmf data_ov002_0210a4dc;
+extern PlayerPmf data_ov002_0210a4e4;
+extern PlayerPmf data_ov002_0210a4ec;
+extern PlayerPmf data_ov002_0210a4f4;
+extern PlayerPmf data_ov002_0210a4fc;
+extern PlayerPmf data_ov002_0210a504;
+extern PlayerPmf data_ov002_0210a50c;
+extern PlayerPmf data_ov002_0210a514;
+extern PlayerPmf data_ov002_0210a51c;
+extern PlayerPmf data_ov002_0210a524;
+extern PlayerPmf data_ov002_0210a52c;
+extern PlayerPmf data_ov002_0210a53c;
+extern PlayerPmf data_ov002_0210a544;
+extern PlayerPmf data_ov002_0210a54c;
 extern void (daPly_c::*data_ov002_02109dfc)();
 extern void (daPly_c::*data_ov002_02109e2c)();
 extern void (daPly_c::*data_ov002_02109f0c)();
@@ -26433,29 +26534,29 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_021104cc.mMain = data_ov002_0210a0f4;
     data_ov002_021104e4.mCleanup = 0;
     data_ov002_021104e4.mInit = data_ov002_02109de4;
-    data_ov002_021104e4.mMain = data_ov002_0210a54c;
+    data_ov002_021104e4.mMain = data_ov002_0210a54c.pmf;
     data_ov002_02110514.mInit = data_ov002_02109df4;
     data_ov002_02110514.mCleanup = 0;
     data_ov002_02110514.mMain = data_ov002_0210a0d4;
     data_ov002_0211052c.mCleanup = 0;
-    data_ov002_0211052c.mInit = data_ov002_0210a544;
-    data_ov002_0211052c.mMain = data_ov002_0210a53c;
-    data_ov002_0211055c.mInit = data_ov002_0210a52c;
+    data_ov002_0211052c.mInit = data_ov002_0210a544.pmf;
+    data_ov002_0211052c.mMain = data_ov002_0210a53c.pmf;
+    data_ov002_0211055c.mInit = data_ov002_0210a52c.pmf;
     data_ov002_0211055c.mCleanup = 0;
-    data_ov002_0211055c.mMain = data_ov002_0210a524;
+    data_ov002_0211055c.mMain = data_ov002_0210a524.pmf;
     data_ov002_02110574.mCleanup = 0;
-    data_ov002_02110574.mInit = data_ov002_0210a514;
-    data_ov002_02110574.mMain = data_ov002_0210a50c;
-    data_ov002_021105a4.mInit = data_ov002_0210a504;
-    data_ov002_021105a4.mMain = data_ov002_0210a4fc;
-    data_ov002_021105a4.mCleanup = data_ov002_0210a4f4;
+    data_ov002_02110574.mInit = data_ov002_0210a514.pmf;
+    data_ov002_02110574.mMain = data_ov002_0210a50c.pmf;
+    data_ov002_021105a4.mInit = data_ov002_0210a504.pmf;
+    data_ov002_021105a4.mMain = data_ov002_0210a4fc.pmf;
+    data_ov002_021105a4.mCleanup = data_ov002_0210a4f4.pmf;
     data_ov002_021105bc.mCleanup = 0;
-    data_ov002_021105bc.mInit = data_ov002_0210a4ec;
-    data_ov002_021105bc.mMain = data_ov002_0210a4e4;
+    data_ov002_021105bc.mInit = data_ov002_0210a4ec.pmf;
+    data_ov002_021105bc.mMain = data_ov002_0210a4e4.pmf;
     data_ov002_021105d4.mInit = data_ov002_0210a0ac;
     data_ov002_021105d4.mCleanup = 0;
     data_ov002_021105d4.mMain = data_ov002_02109f14;
-    data_ov002_021105ec.mInit = data_ov002_0210a4d4;
+    data_ov002_021105ec.mInit = data_ov002_0210a4d4.pmf;
     data_ov002_021105ec.mMain = data_ov002_0210a4cc;
     data_ov002_021105ec.mCleanup = data_ov002_0210a4c4;
     data_ov002_02110604.mInit = data_ov002_0210a4b4;
@@ -26538,7 +26639,7 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0211010c.mMain = data_ov002_0210a1bc;
     data_ov002_02110124.mInit = data_ov002_02109e04;
     data_ov002_02110124.mCleanup = 0;
-    data_ov002_02110124.mMain = data_ov002_0210a4dc;
+    data_ov002_02110124.mMain = data_ov002_0210a4dc.pmf;
     data_ov002_0211016c.mInit = data_ov002_02109f7c;
     data_ov002_0211016c.mMain = data_ov002_0210a254;
     data_ov002_0211016c.mCleanup = data_ov002_02109f8c;
@@ -26581,7 +26682,7 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_02110544.mInit = data_ov002_0210a0cc;
     data_ov002_02110544.mCleanup = 0;
     data_ov002_02110544.mMain = data_ov002_0210a0c4;
-    data_ov002_0211058c.mInit = data_ov002_0210a51c;
+    data_ov002_0211058c.mInit = data_ov002_0210a51c.pmf;
     data_ov002_0211058c.mCleanup = 0;
     data_ov002_0211058c.mMain = data_ov002_0210a0bc;
     func_ov002_020e6ad4(data_ov002_02110804);
