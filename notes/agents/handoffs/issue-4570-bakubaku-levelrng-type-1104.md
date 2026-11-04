@@ -4,8 +4,8 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## Identity and resumption
 
-- Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/4570; `issue-4570-bakubaku-levelrng-type-1104`; producer; `codex-bakubaku-levelrng1104`; Codex.
-- Source branch and previous accepted input SHA: `audit/bakubaku-levelrng1104`; `58a8e3f21b84d3825030a2c4ea09c58f568756a3`.
+- Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/4570; `issue-4570-bakubaku-levelrng-handoff-1104`; producer; `codex-bakubaku-handoff1104`; Codex.
+- Source branch and previous accepted input SHA: [published branch](https://github.com/tangosdev/sm64ds-decomp/tree/audit/bakubaku-levelrng1104); `5d22962282981edb085949a8caa3af7b0f907b46`.
 - Original source base SHA and installed workflow/tool SHA: `58a8e3f21b84d3825030a2c4ea09c58f568756a3` for both.
 - Separate evidence commits and required artifacts in this commit: none.
 - Next action, responsible role and blockers: verifier to inspect source provenance and independently rerun the requested checks; integrator follows verification. No technical blocker.
