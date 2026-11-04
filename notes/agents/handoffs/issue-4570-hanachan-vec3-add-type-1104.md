@@ -4,7 +4,7 @@
 
 - Issue: https://github.com/tangosdev/sm64ds-decomp/issues/4570
 - Task: `issue-4570-hanachan-vec3-add-type-1104-retry1`; this is the producer candidate for independent verification.
-- Source input is current `main` `3fa9448efac28990c96e42ae114eac75b649e567`; the candidate is on the existing draft PR branch.
+- Source input is current `main` `0c9c249cfb3715efff8f93ccc5f6bf62b40157b3`; the candidate is on the existing draft PR branch.
 - Original task `issue-4570-hanachan-vec3-add-type-1104` produced the first candidate on 85690 and was canceled after `main` advanced; its source work is preserved as the predecessor.
 - Next action: independent verifier checks this candidate and records source review; the existing `__sinit` manifest gap remains a TU-level policy blocker for promotion.
 - Status: candidate for independent verification; no independent review has been accepted yet.
@@ -13,7 +13,7 @@
 
 `src/Vec3_Add.c` defines `Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *)`; no shared header declares it. `daHanachan_c` now uses that signature instead of three `void *` parameters. Calls whose values are existing `Vector3` objects remain direct. In `UpdateSegments`, the byte-offset address is stored once in a `Vector3 *prev` local, so the typed call stays direct without changing the original offset calculation. The `mPosX` triple and two `s32[3]` buffers are explicitly viewed as the matching three-word vectors. No object layout or symbol ownership changed.
 
-## Proof on current main base `3fa9448efac28990c96e42ae114eac75b649e567`
+## Proof on current main base `0c9c249cfb3715efff8f93ccc5f6bf62b40157b3`
 
 - `python tools/tubuild.py verify ov034/daHanachan_c --no-write --verdict`: 35/35 functions match; object isolation and relocation destinations are clean; ROM emission order is correct. It exits 1 only because `__sinit_d_a_hanachan.cpp` (0x78c bytes) is an unlicensed `.text` symbol outside the TU manifest. Promotion remains refused by policy; no function mismatch was reported.
 - `python tools/prepush_linkcheck.py --range origin/main..HEAD`: 36 checked, 34 verified, 2 blind warnings (class-init and `__sinit`), 0 blocking.
