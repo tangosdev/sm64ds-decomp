@@ -375,10 +375,10 @@ extern "C" int D3D_PlaySeAtX(int a, int b)
 }
 
 // @symbol Sound_PlayBank1Panned
-extern "C" void Sound_PlayBank1Panned(int a0, char *a1, void *a2) {
+extern "C" void Sound_PlayBank1Panned(int a0, int a1, int a2) {
     a1 += sD3DSoundPanOffsets[a0];
-    int pan = D3D_PanForX((int)a2);
-    func_020127ec(1, (int)a1, 4, 0, 0, pan);
+    int pan = D3D_PanForX(a2);
+    func_020127ec(1, a1, 4, 0, 0, pan);
 }
 
 // @symbol D3D_PlaySePannedLoop
