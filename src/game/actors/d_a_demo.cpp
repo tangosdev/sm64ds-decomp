@@ -514,7 +514,7 @@ extern int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxSte
 extern void func_0201f138(void);
 extern void func_0201ef38(void);
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
-extern void Vec3_Sub(Vec3* out, Vec3* a, Vec3* b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vec3* out, const Vec3* in, int scale);
 extern void Vec3_Add(Vec3* out, Vec3* a, Vec3* b);
 
@@ -4211,7 +4211,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     }
 
     Math_Function_0203b0fc(&this->mRate, scale, 0x40, 0x100);
-    Vec3_Sub(&diff, (Vec3 *)&sViewEnd, (Vec3 *)base);
+    Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&sViewEnd, (const Vector3 *)base);
     tmp.x = diff.x;
     tmp.y = diff.y;
     tmp.z = diff.z;
