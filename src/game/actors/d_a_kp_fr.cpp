@@ -35,6 +35,7 @@
 #include "daPly_c.h"
 #include "SurfaceInfo.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 
 /* The registry factory behind the KERONPA_FIRE profile.
  * `return new daKpFr_c()` emits 0x48 with the synthesized ctor storing
@@ -162,7 +163,6 @@ int daKpFr_c::func_ov070_02121fb0()
 
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern short Vec3_HorzAngle(void* v0, void* v1);
 }
 // @symbol _ZN8daKpFr_c19func_ov070_02121f18Ev
 int daKpFr_c::func_ov070_02121f18() {
@@ -171,7 +171,7 @@ int daKpFr_c::func_ov070_02121f18() {
         func_ov070_02121c8c();
     player = ClosestNonVanishPlayer();
     if (player) {
-        short angleToPlayer = Vec3_HorzAngle(&mPosX, &player->mPosX);
+        short angleToPlayer = Vec3_HorzAngle(&mPos, &player->mPos);
         ApproachLinear(mAngleY, angleToPlayer, 0x180);
         mPrevAngleY = mAngleY;
     }
