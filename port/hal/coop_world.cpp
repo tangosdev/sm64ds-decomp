@@ -131,7 +131,7 @@ struct KillKnob { unsigned frame; int id; int n; bool done; };
 KillKnob g_kill[8]; int g_nkill = 0;
 unsigned g_star_frame = 0, g_star_next = 0; int g_star_tries = 0; unsigned long long g_star_base = 0;
 bool g_star_done = true, g_star_spawned = false;   // SM64DS_COOP_STAR=<est frame>: the local player touches a PowerStar
-unsigned g_goto_frame = 0; int g_goto_id = -1; bool g_goto_done = false; int g_goto_tries = 0;
+unsigned g_goto_frame = 0; int g_goto_id = -1; bool g_goto_done = false; int g_goto_tries = 0; int g_goto_dy = 0;
 struct WarpKnob { unsigned frame; int level; int act; bool done; };
 WarpKnob g_warp[4]; int g_nwarp = 0;
 struct ForgeKnob { unsigned frame; char name[16]; bool done; };
@@ -187,7 +187,8 @@ void read_env() {
     }
     if (const char *g = std::getenv("SM64DS_COOP_GOTO")) {
         unsigned f = 0; int id = 0;
-        if (std::sscanf(g, "%u:%i", &f, &id) == 2) { g_goto_frame = f; g_goto_id = id; }
+        int dy = 0;   // F:class[:dy]  dy units above the actor: the player drops onto it (a stomp)
+        if (std::sscanf(g, "%u:%i:%i", &f, &id, &dy) >= 2) { g_goto_frame = f; g_goto_id = id; g_goto_dy = dy; }
     }
     if (const char *f = std::getenv("SM64DS_COOP_FORGE")) {
         // F:name[,F:name...]
@@ -907,6 +908,7 @@ void knob_goto(int id, int tries) {
     if (n == 0) { std::fprintf(stderr, "[coop-knob] goto class=%d: no live actor\n", id); return; }
     char *a = c[tries % n];
     std::memcpy((char *)pl + 0x5c, a + 0x5c, 12);
+    *(int *)((char *)pl + 0x60) += g_goto_dy << 12;
     std::fprintf(stderr, "[coop-knob] goto class=%d try %d: candidate %d of %d slot=%d pos=%d,%d,%d\n", id, tries,
                  tries % n, n, (int)*(const short *)(a + 0xce), *(const int *)(a + 0x5c) >> 12,
                  *(const int *)(a + 0x60) >> 12, *(const int *)(a + 0x64) >> 12);
