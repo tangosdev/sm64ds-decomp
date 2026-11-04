@@ -15,10 +15,13 @@
 ## Verification
 
 - `python tools/tubuild.py verify ov094/daOwl_c --no-write --verdict`: 23/23 functions match; object isolation, relocation destinations, and emission order are clean. This TU has no unlicensed sections and is promotable under the verifier's TU policy.
+- `python tools/prepush_linkcheck.py --range a5bb6f569f6e7382ec1b5ef993b7e4fe4eae16a7..HEAD`: 22 verified, one blind `__sinit` warning, zero blocking.
+- `python tools/rombuild.py -j16 --no-rom`: PASS; 106/106 modules, 11,395/11,395 functions, and 470/470 source-owned data claims reproduce; zero mismatches.
 - `python tools/check_decl_agreement.py --changed a5bb6f569f6e7382ec1b5ef993b7e4fe4eae16a7`: no new declaration disagreements or local redeclarations of header declarations.
 - `python tools/source_style.py --base a5bb6f569f6e7382ec1b5ef993b7e4fe4eae16a7 --files src/game/actors/d_a_owl.cpp`: zero findings with clang-format 19.1.7.
-- Full ROM build, relocation linkcheck, port references, and dead-reference scan remain to be run before publishing.
+- `python tools/port_refcheck.py`: 217/217 references resolve.
+- `python tools/check_dead_references.py`: no new dead references or broken Markdown links.
 
 ## Verifier handoff
 
-Independently verify that `mPos` and the three anchor fields describe the same vectors the old calls passed. Rerun the focused TU proof and full ROM gates on the pushed candidate. Unlike several neighboring caller cleanups, this TU has no unlicensed `__sinit` blocker, so record whether its existing TU assignment can be promoted as a separate follow-up.
+Independently verify that `mPos` and the three anchor fields describe the same vectors the old calls passed. The focused proof reports no unlicensed section and a promotable TU policy result; future source ownership or TU restructuring work can build on this verification.
