@@ -1159,8 +1159,8 @@
         "param:#3 Matrix4x3 *"
       ],
       "src/game/actors/d_a_menbo.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
+        "param:#1 const Matrix4x3 *",
+        "param:#2 const Matrix4x3 *",
         "param:#3 Matrix4x3 *"
       ],
       "src/game/actors/d_a_obj_guragura.cpp": [
