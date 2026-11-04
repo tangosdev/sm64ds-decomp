@@ -54,6 +54,7 @@ void func_0201fec8(void)
    defined in func_020196cc.c, so this declaration is not emitted. */
 #ifndef SM64DS_PLATFORM_PC
 extern "C" void func_0203b9b4(int *p, int v);
+#include "LevelRng.h"
 
 struct LevelRng {
     int value;

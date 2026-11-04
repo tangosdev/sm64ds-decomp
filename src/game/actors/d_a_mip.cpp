@@ -49,6 +49,7 @@ enum daMip_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 namespace Sound {
 bool PlaySub(u32, u32, u32, int, bool);
@@ -946,7 +947,7 @@ int daMip_c::StateIdleMain()
        not instantiate (its vague-linkage D1 lived in this TU only for
        these two locals). */
     typedef struct Vector3 { int x, y, z; } Vector3;
-    extern int data_0209e650[];
+    extern LevelRng data_0209e650;
     extern MipStatePair data_ov085_0213066c;
     extern DaMipAnimationFilePtr gMipRunAnimationFile;
     extern DaMipAnimationFilePtr data_ov085_021305b0;
@@ -994,7 +995,7 @@ int daMip_c::StateIdleMain()
         }
     }
 
-    u32 r = (u32)RandomIntInternal(data_0209e650) >> 8;
+    u32 r = (u32)RandomIntInternal((int *)&data_0209e650) >> 8;
     if (mRabbitId == 1) {
         if (Vec3_HorzDist(&mPos, &pp) < 0x4b0000) {
             mTargetAngY = Vec3_HorzAngle(&mPos, &pp) + 0x8000;
@@ -1465,7 +1466,7 @@ int daMip_c::InitResources()
     extern s32 data_ov085_021305ac;
     extern int data_0209caa0[];
     extern s8 data_0209f2f8;
-    extern int data_0209e650;
+    extern LevelRng data_0209e650;
 
     void* player;
     void* closest;
@@ -1557,7 +1558,7 @@ int daMip_c::InitResources()
             if (data_0209f2f8 == 0x32)
                 v = 1;
             if (func_02013890(mRabbitId, v) != 0 && data_ov085_021305ac < 8) {
-                u32 rnd = (u32)RandomIntInternal(&data_0209e650) >> 8;
+                u32 rnd = (u32)RandomIntInternal((int *)&data_0209e650) >> 8;
                 if (NumStars() >= 0x51) {
                     if ((s32)((daPly_c *)closest)->param1 == 3) {
                         if ((rnd & 0xf) == 0)
