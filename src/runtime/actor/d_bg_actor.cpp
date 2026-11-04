@@ -420,6 +420,19 @@ dBgActor_c::dBgActor_c()
 {
 }
 
+#ifdef _MSC_VER
+/* run after093, lane SEESAW1: in a coop room ClosestPlayer answers the shared target seat, which can be a friend far
+ * away, and the collider then drops under the player standing on the platform. The host measures the range to the
+ * nearest of all players instead (hal/coop_target.cpp); with one player it is ClosestPlayer. The DS side is untouched. */
+extern "C" Player *port_bg_range_player(dBgActor_c *self);
+/* a binary without the coop sources (the slice gates) links the plain answer */
+extern "C" Player *port_bg_range_player_solo(dBgActor_c *self) { return self->ClosestPlayer(); }
+#pragma comment(linker, "/alternatename:_port_bg_range_player=_port_bg_range_player_solo")
+#define BG_RANGE_PLAYER(self) port_bg_range_player(self)
+#else
+#define BG_RANGE_PLAYER(self) (self)->ClosestPlayer()
+#endif
+
 /* Same enable/disable-by-distance as IsClsnInRange, except an off-screen actor
  * (mFlags & 8) always drops its collider, and radius 0 unconditionally enables
  * instead of falling back to the clip volume. */
@@ -445,7 +458,7 @@ int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(dBgActor_c *self, int ra
             center.y += self->mClipOffsetY;
         else
             center.y += yOffset;
-        Player *player = self->ClosestPlayer();
+        Player *player = BG_RANGE_PLAYER(self);
         int dist = Vec3_Dist(&center, (Vector3 *)((char *)player + 0x5c));
         if (dist > radius) {
             if (self->mMeshCollider.IsEnabled())
@@ -476,7 +489,7 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int radius, in
         center.y += self->mClipOffsetY;
     else
         center.y += yOffset;
-    Player *player = self->ClosestPlayer();
+    Player *player = BG_RANGE_PLAYER(self);
     int dist = Vec3_Dist(&center, (Vector3 *)((char *)player + 0x5c));
     if (dist > radius) {
         if (self->mMeshCollider.IsEnabled())

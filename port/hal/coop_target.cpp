@@ -756,3 +756,29 @@ int coop_target_seat_of_body(const void *body) {
 }
 
 }  // namespace port
+
+// ---------------------------------------------------------------------------
+// PLATFORM COLLIDER RANGE (run after093, lane SEESAW1). dBgActor_c::IsClsnInRange / IsClsnInRangeOnScreen keep a
+// platform's mesh collider in the world only while ClosestPlayer is within range (src/runtime/actor/d_bg_actor.cpp).
+// In a coop room ClosestPlayer answers the shared target seat, which holds for 1000 ms and can be the friend at the far
+// end, so the collider dropped under the player walking onto the Bob-omb Battlefield seesaw (proof: out/SEESAW1, rows
+// cb3 / cb4, collider slot byte +0x138 = 0x18 while the player stood over it). The range test asks this instead: the
+// ROM's own nearest-of-all-players loop, with every friend at his drawn pose. ClosestPlayer still runs first, so its
+// cache and the two distance words are what the cartridge leaves behind.
+// ---------------------------------------------------------------------------
+struct dBgActor_c;
+extern "C" Player *port_bg_range_player(dBgActor_c *self) {
+    dActor_c *const a = (dActor_c *)self;
+    Player *const cp = a->ClosestPlayer();
+    if (!port::live()) return cp;
+    port::place_friends();
+    void *best = nullptr;
+    int bd = 0x7fffffff;
+    for (int i = 0; i < (int)data_0209f21c; i++) {
+        void *p = data_0209f394[i];
+        if (!p) continue;
+        const int d = Vec3_Dist((const char *)a + 0x5c, (const char *)p + 0x5c);
+        if (d < bd) { bd = d; best = p; }
+    }
+    return best ? (Player *)best : cp;
+}

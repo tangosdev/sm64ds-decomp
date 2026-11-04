@@ -59,6 +59,7 @@ ROW(53,  "MOVING_BAR_BIG",      100, 8, 150, 3, 2, {0x330, 4, 0, 6}, {0x334, 4, 
 ROW(54,  "MOVING_BAR_SMALL",    100, 8, 150, 3, 2, {0x330, 4, 0, 6}, {0x334, 4, -0x100, 0x400})
 ROW(73,  "LAVA_BRIDGE",         100, 8, 150, 2, 0)
 ROW(77,  "LAVA_SEESAW",         100, 8, 150, 2, 0)
+ROW(39,  "SEESAW_BOB",          100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})   // the tilt is mAngleX (pose) plus mAngleXSpeed, the s16 Behavior / the stood-on callback integrate (src/game/actors/d_a_obj_seesaw.cpp)
 ROW(81,  "ROTATING_FIREBAR",    100, 8, 150, 2, 0)
 ROW(88,  "PYRAMID_LIFT",        100, 8, 150, 2, 0)
 ROW(124, "SLIDING_PLATFORM_RR", 100, 8, 150, 3, 2, {0x31c, 4, 0, 0x00ffffff}, {0x320, 4, 0, 0x0007ffff})
