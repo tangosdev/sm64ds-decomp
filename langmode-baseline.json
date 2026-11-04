@@ -71,8 +71,8 @@
   },
   "shadow_decls": {
     "header_shadows": 13,
-    "local_body_no_include": 41,
-    "local_body_no_include_cpp": 12,
+    "local_body_no_include": 40,
+    "local_body_no_include_cpp": 11,
     "local_struct_body": 421,
     "local_struct_body_cpp": 362,
     "pad_layout": 36
