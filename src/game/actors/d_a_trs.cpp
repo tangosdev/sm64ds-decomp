@@ -198,7 +198,7 @@ extern int data_ov063_0211e1d0[];
 extern int data_0209b490[];
 extern u8 data_0209d660;
 extern short data_ov063_0211e7e0[];
-extern void Vec3_Add(void * out, void * a, void * b);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
 /* Actor ids this file spawns, finds or compares (the names are the ones in
@@ -2848,7 +2848,7 @@ void daTrs_c::func_ov063_0211ab68() {
     }
 
     for (i = 0; i < 3; i++) {
-        Vec3_Add(&tmp, (Vec3 *)&this->mPosX, &sSpawnOff[i]);
+        Vec3_Add((Vector3 *)&tmp, (const Vector3 *)&this->mPosX, &sSpawnOff[i]);
         pos.x = tmp.x;
         pos.y = tmp.y;
         pos.z = tmp.z;
