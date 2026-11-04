@@ -176,7 +176,7 @@ extern void *data_0209f318;
 void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
 int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
 extern void Vec3_MulScalarInPlace(void *v, int s);
-extern void func_020167a4(void *p);
+extern void func_020167a4(dExtAnmModel_c *model);
 void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angle);
 extern int data_0209e650;
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
