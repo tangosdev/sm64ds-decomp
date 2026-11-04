@@ -4622,7 +4622,7 @@ data_0209d4b0 kind:bss addr:0x0209d4b0
 data_0209d4b4 kind:bss addr:0x0209d4b4
 data_0209d4b8 kind:bss addr:0x0209d4b8
 data_0209d4bc kind:bss addr:0x0209d4bc
-data_0209d4c8 kind:bss addr:0x0209d4c8
+gRaceTimer kind:bss addr:0x0209d4c8
 data_0209d4d4 kind:bss addr:0x0209d4d4
 data_0209d4d8 kind:bss addr:0x0209d4d8
 data_0209d4dc kind:bss addr:0x0209d4dc

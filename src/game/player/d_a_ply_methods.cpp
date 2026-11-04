@@ -115,7 +115,7 @@ extern u8 data_02092128[];
 extern int data_0209212c;
 extern short gPlayerHealth[];
 extern int data_0209b49c;
-extern Timer data_0209d4c8;
+extern Timer gRaceTimer;
 extern unsigned char data_0209d660;
 extern u8 data_0209f200;
 extern u8 data_0209f20c;
@@ -2966,18 +2966,18 @@ int daPly_c::func_ov002_020c0fb4() {
         if (gShowRaceTimer[0] != 0) {
             break;
         }
-        data_0209d4c8.ResetTimer();
+        gRaceTimer.ResetTimer();
         gShowRaceTimer[0] = 1;
-        data_0209d4c8.StartTimer();
+        gRaceTimer.StartTimer();
         break;
 
     case 16:
-        if (data_0209d4c8.mIsRunning == 0) {
+        if (gRaceTimer.mIsRunning == 0) {
             break;
         }
-        data_0209d4c8.StopTimer();
+        gRaceTimer.StopTimer();
         {
-            unsigned long long t = data_0209d4c8.GetTime();
+            unsigned long long t = gRaceTimer.GetTime();
             if (((t << 6) / 0x1ff6210) > 0x14) {
                 break;
             }
