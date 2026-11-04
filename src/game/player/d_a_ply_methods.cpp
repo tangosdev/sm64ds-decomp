@@ -610,6 +610,7 @@ union PlayerScriptCommand {
     ScriptCommand pmf;
 };
 
+// local extern: flat state-descriptor address
 extern "C" int
 _ZN7daPly_c21St_StuckInGround_MainEv(daPly_c *); // local extern: flat state-descriptor address
 extern "C" int
@@ -674,6 +675,7 @@ _ZN7daPly_c19func_ov002_020bd250EPhii(daPly_c *, unsigned char *, int,
 extern "C" int
 _ZN7daPly_c20St_CeilingGrate_InitEv(daPly_c *); // local extern: flat state-descriptor address
 extern "C" void func_ov002_020e1c20(char *);
+// local extern: flat state-descriptor address
 extern "C" int
 _ZN7daPly_c20St_CeilingGrate_MainEv(daPly_c *); // local extern: flat state-descriptor address
 extern "C" void
@@ -682,6 +684,7 @@ extern "C" int
 _ZN7daPly_c19func_ov002_020bd354EPhii(daPly_c *, unsigned char *, int,
                                       int); // local extern: flat state-descriptor address
 extern "C" void func_ov002_020e1e70(char *);
+// local extern: flat state-descriptor address
 extern "C" int
 _ZN7daPly_c21St_YoshiPower_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
 extern "C" void
