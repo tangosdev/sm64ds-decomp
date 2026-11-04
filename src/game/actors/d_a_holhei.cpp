@@ -37,6 +37,7 @@
 #include "dBgPi.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "SpawnInfo.h"
 
 /* A state record: daHolhei_c_ChangeState stores its address in mState
@@ -58,18 +59,22 @@ extern void func_ov002_020db54c(int p, int a, int b, int s);
 extern void func_0200d8c8(void* cam, void* v, int strength);
 extern int data_02092138;
 extern void* data_0209f318;
-extern int ApproachAngle(void* angle, int target, int a, int b, int c);
+int ApproachAngle(short *angle, short target, int a, int b,
+                  int c); /* local extern: named parameters preserve @NNN */
 extern int data_0209e650[];
-extern s16 Vec3_HorzAngle(const void* v0, const void* v1);
-extern int Vec3_Dist(const void* a, const void* b);
+short Vec3_HorzAngle(const Vector3 *v0,
+                     const Vector3 *v1); /* local extern: named parameters preserve @NNN */
+int Vec3_Dist(const Vector3 *a,
+              const Vector3 *b); /* local extern: named parameters preserve @NNN */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_FromRotationY(struct Matrix4x3 *mF, s16 angY);
 extern void MulMat4x3Mat4x3(const struct Matrix4x3 *m1, const struct Matrix4x3 *m0, struct Matrix4x3 *mF);
 extern int Math_Function_0203b14c(void*, int, int, int, int);
-extern unsigned short DecIfAbove0_Short(unsigned short* p);
+unsigned short
+DecIfAbove0_Short(unsigned short *p); /* local extern: named parameters preserve @NNN */
 extern signed char data_0209f2f8;
 extern int AngleDiff(int a, int b);
-extern unsigned int RandomIntInternal(void* s);
+int RandomIntInternal(int *s); /* local extern: named parameters preserve @NNN */
 
 void func_ov062_02116010(daHolhei_c *self);
 void func_ov062_02116dbc(daHolhei_c *self);
@@ -375,7 +380,8 @@ int daHolhei_c::func_ov062_02116c78() {
     mChargeStep = 0;
     mModel.speed = 0x1000;
     mModel.SetAnim((BCA_File *)(gHoruheiWalkAnimationFile.filePtr), 0, 0x1000, 0);
-    mTargetAngY = Vec3_HorzAngle(&mPosX, &mHomePosX);
+    mTargetAngY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
+                                 reinterpret_cast<const Vector3 *>(&mHomePosX));
     return 1;
 }
 
@@ -394,8 +400,8 @@ int daHolhei_c::func_ov062_02116bf8() {
 /* Pick a random facing and a random time on the walk animation. */
 // @symbol _ZN10daHolhei_c19func_ov062_02116b80Ev
 int daHolhei_c::func_ov062_02116b80() {
-    mTargetAngY = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
-    mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x64);
+    mTargetAngY = (short)(((unsigned int)RandomIntInternal(data_0209e650) >> 8) << 0xc);
+    mStateTimer = (short)((((unsigned int)RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x64);
     mModel.speed = 0x1000;
     mModel.SetAnim((BCA_File *)(gHoruheiWalkAnimationFile.filePtr), 0, 0x1000, 0);
     return 1;
@@ -413,7 +419,8 @@ int daHolhei_c::func_ov062_02116a08() {
     L.vd0[1] = 0;
     L.vd0[2] = 0;
 
-    Vec3_Dist(&mPosX, &mHomePosX);
+    Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
+              reinterpret_cast<const Vector3 *>(&mHomePosX));
 
     r = ClassifyObstruction();
     if (r != 0 || mEdgeStop == 1) {
@@ -437,7 +444,8 @@ int daHolhei_c::func_ov062_02116a08() {
         L.vd1[1] = pos[1];
         L.vd1[2] = pos[2];
 
-        if (Vec3_Dist(&mHomePosX, L.vd1) < 0x3e8000) {
+        if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mHomePosX),
+                      reinterpret_cast<const Vector3 *>(L.vd1)) < 0x3e8000) {
             mHorzSpeed = 0;
             ::daHolhei_c_ChangeState(this, &data_ov062_0211de90);
         }
@@ -457,10 +465,13 @@ int daHolhei_c::func_ov062_02116980() {
     mPosY = mPrevPosY;
     mPosZ = mPrevPosZ;
     mHorzSpeed = 0;
-    if (AngleDiff(mTargetAngY, Vec3_HorzAngle(&mPosX, &mHomePosX)) <= 0x2000)
+    if (AngleDiff(mTargetAngY, Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
+                                              reinterpret_cast<const Vector3 *>(&mHomePosX))) <=
+        0x2000)
         mTargetAngY = (s16)(mPrevAngleY - 0x1000);
     else
-        mTargetAngY = Vec3_HorzAngle(&mPosX, &mHomePosX);
+        mTargetAngY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
+                                     reinterpret_cast<const Vector3 *>(&mHomePosX));
     mStateTimer = 0x46;
     return 1;
 }
@@ -491,7 +502,8 @@ int daHolhei_c::func_ov062_02116894() {
 // @symbol _ZN10daHolhei_c19func_ov062_02116850Ev
 int daHolhei_c::func_ov062_02116850() {
     mVertSpeed = 0;
-    mTargetAngY = Vec3_HorzAngle(&mPosX, &mHomePosX);
+    mTargetAngY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
+                                 reinterpret_cast<const Vector3 *>(&mHomePosX));
     mStateTimer = 0x14;
     mHorzSpeed = 0;
     return 1;
@@ -567,10 +579,12 @@ int daHolhei_c::func_ov062_021165e8()
         int s = mChargeStep;
         if (s != 0) {
             if (s == 1) {
-                if (Vec3_Dist(&mPosX, &mChasePosX) < 0x3c000)
+                if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
+                              reinterpret_cast<const Vector3 *>(&mChasePosX)) < 0x3c000)
                     mChargeStep = 2;
             } else {
-                if (Vec3_Dist(&mPosX, &mChasePosX) > 0xc8000)
+                if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
+                              reinterpret_cast<const Vector3 *>(&mChasePosX)) > 0xc8000)
                     ::daHolhei_c_ChangeState(this, &data_ov062_0211ded0);
             }
         }
@@ -664,8 +678,8 @@ int daHolhei_c::func_ov062_0211632c() {
 // @symbol _ZN10daHolhei_c19func_ov062_021162b8Ev
 int daHolhei_c::func_ov062_021162b8() {
     mModel.SetAnim((BCA_File *)(gHoruheiLiftLoopAnimationFile.filePtr), 0, 0x1000, 0);
-    mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x14);
-    mTargetAngY = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
+    mStateTimer = (short)((((unsigned int)RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x14);
+    mTargetAngY = (short)(((unsigned int)RandomIntInternal(data_0209e650) >> 8) << 0xc);
     return 1;
 }
 
