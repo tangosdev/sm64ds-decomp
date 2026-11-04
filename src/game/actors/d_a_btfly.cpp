@@ -315,7 +315,8 @@ void daBtfly_c::State4()
 // @symbol _ZN9daBtfly_c6State3Ev
 void daBtfly_c::State3()
 {
-    ApproachLinear(mPrevAngleY, Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mHomePosX), 0x800);
+    ApproachLinear(mPrevAngleY,
+                   Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mHomePosX), 0x800);
     ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, (Vector3 *)&mHomePosX), 0x50);
     UpdatePos(0);
 
