@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x02113bc0",
       "end": "0x02113be8"
+    },
+    {
+      "name": ".data",
+      "start": "0x02112f48",
+      "end": "0x02112f68"
     }
   ],
   "functions": [
@@ -113,7 +118,22 @@
       "ordinal": 10
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov018_02112f48",
+      "address": "0x02112f48",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "first of two back-to-back CLPS blocks: CLPS header, layer 2, entry 0x00000fc5"
+    },
+    {
+      "symbol": "data_ov018_02112f58",
+      "address": "0x02112f58",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "second CLPS block: entry 0x01000fc5, all-ones terminator"
+    }
+  ],
   "bss": [
     {
       "symbol": "gSmLiftCollisionFile",
@@ -240,7 +260,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -276,11 +296,18 @@
           "start": "0x02113bc0",
           "end": "0x02113be8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02112f48",
+          "end": "0x02112f68",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 17
+          "LICENSED": 19
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -291,34 +318,45 @@
           {
             "section": ".init",
             "original": [
-              53
+              55
             ],
             "desired": [
-              53
+              55
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              51
+              53
             ],
             "desired": [
-              51
+              53
             ]
           },
           {
             "section": ".bss",
             "original": [
-              30,
-              31,
               32,
-              33
+              33,
+              34,
+              35
             ],
             "desired": [
+              35,
               33,
-              31,
-              32,
-              30
+              34,
+              32
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6
+            ],
+            "desired": [
+              5,
+              6
             ]
           }
         ],
@@ -327,22 +365,22 @@
             {
               "section": ".bss",
               "original": [
-                30,
-                31,
                 32,
-                33
+                33,
+                34,
+                35
               ],
               "desired": [
+                35,
                 33,
-                31,
-                32,
-                30
+                34,
+                32
               ],
               "slots": [
-                30,
-                31,
                 32,
-                33
+                33,
+                34,
+                35
               ]
             }
           ],
@@ -363,7 +401,8 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "localWorkerNote": "Verified on this machine's stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
     }
   },
   "compiler_only_output": [
