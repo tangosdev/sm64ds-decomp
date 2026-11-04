@@ -45,16 +45,23 @@ bool alive(unsigned uid, const void *a) { return uid && a && _ZN8dActor_c10FindW
 
 bool g_env = false, g_off = false, g_log = false, g_regd = false;
 unsigned g_lf = 0;
+// party rooms: the level party_hits gives me (act 0) and its record sender; coop rooms use the coop group's key
+bool g_party = false; int g_party_level = -1;
+void (*g_party_send)(const GhostEggRec &, int, int, int) = nullptr;
+bool key_now(int *lv, int *ac) {
+    if (g_party) { *lv = g_party_level; *ac = 0; return g_party_level >= 0; }
+    return coop_group_key(lv, ac);
+}
 
 struct Stats { unsigned sent, recv, bad, laid, lay_fail, thrown_shown, bursts, quiet, flights_seen, other_level; } g_st = {};
 
 // ---- my side: what I send ----
-struct TxFl { bool used; unsigned uid; uint8_t id, flags; int x, y, z; short yaw; int burst_left; };
+struct TxFl { bool used; unsigned uid; uint8_t id, flags; int x, y, z; short yaw; int burst_left; int px, py, pz; bool flew, start_sent; };
 TxFl g_tx[kFl];
 int g_tx_eggs = -1; unsigned g_tx_last = 0; uint8_t g_seq = 0;
 
 // ---- a friend's side: what I draw ----
-struct RxFl { bool used; uint8_t id, flags; int x, y, z, px, py, pz; unsigned t, tp; short yaw; unsigned egg_uid; void *egg; bool burst; };
+struct RxFl { bool used; uint8_t id, flags; int x, y, z, px, py, pz; unsigned t, tp; short yaw; unsigned egg_uid; void *egg; bool burst; bool party; };
 struct RxSeat {
     bool have; int level, act, eggs; unsigned rx_lf;
     RxFl fl[kFl];
@@ -97,7 +104,7 @@ void push_burst(void *egg, unsigned uid) {
 // ---- sending ---------------------------------------------------------------------------------------
 void send_tick(char *me) {
     int lv = -1, ac = 0;
-    if (!coop_group_key(&lv, &ac)) return;
+    if (!key_now(&lv, &ac)) return;
     int *q = queue_of(me);
     int eggs = 0;
     if (q) for (int i = 0; i < kQueue; ++i) if (q[i]) ++eggs;
@@ -131,7 +138,12 @@ void send_tick(char *me) {
             void *a = _ZN8dActor_c10FindWithIDEj(f.uid);
             const unsigned fl = (unsigned)rd32(a, 0xb0);
             f.flags = (uint8_t)(((fl & 0x100) ? kFHand : 0) | ((fl & 0x400) ? kFFly : 0));
+            const bool flying_before = f.flew;
+            f.px = f.x; f.py = f.y; f.pz = f.z;
             f.x = rd32(a, 0x5c) >> 12; f.y = rd32(a, 0x60) >> 12; f.z = rd32(a, 0x64) >> 12;
+            f.flew = (f.flags & kFFly) != 0;
+            if (f.flew && !flying_before) f.start_sent = false;   // its first flying frame: the speed is known from the next
+            if (!flying_before) f.px = f.x, f.py = f.y, f.pz = f.z;
             std::memcpy(&f.yaw, (const char *)a + 0x8e, 2);
             ++nlive;
         }
@@ -143,6 +155,27 @@ void send_tick(char *me) {
     }
     const bool changed = eggs != g_tx_eggs;
     const unsigned beat = eggs ? 30u : 90u;
+    if (g_party) {
+        // The count rides party_hits' kHeldState. SYNH is capped at 10 a second per sender (relay), shared with the hit
+        // claims, so a throw costs TWO messages a friend: its start once it has flown a frame (position and speed per
+        // frame; the friend's console flies it on from there) and its burst once.
+        for (TxFl &f : g_tx) {
+            if (!f.used || !g_party_send) continue;
+            GhostEggRec r; r.id = f.id; r.flags = f.flags; r.x = (int16_t)f.x; r.y = (int16_t)f.y; r.z = (int16_t)f.z; r.yaw = f.yaw;
+            if (f.burst_left) {
+                if (f.start_sent) { g_party_send(r, 0, 0, 0); ++g_st.sent; }
+                if (g_log) std::fprintf(stderr, "[geggs] party out lf=%u: egg %d burst%s\n", g_lf, f.id, f.start_sent ? "" : " (its start never went: nothing sent)");
+                f = TxFl();
+            } else if (f.flew && !f.start_sent && (f.x != f.px || f.y != f.py || f.z != f.pz)) {
+                const int vx = f.x - f.px, vy = f.y - f.py, vz = f.z - f.pz;
+                g_party_send(r, vx, vy, vz); ++g_st.sent; f.start_sent = true;
+                if (g_log) std::fprintf(stderr, "[geggs] party out lf=%u: egg %d thrown at (%d,%d,%d) speed (%d,%d,%d)\n", g_lf, f.id, f.x, f.y, f.z, vx, vy, vz);
+            }
+        }
+        (void)nrec; (void)nlive; (void)changed; (void)beat;
+        g_tx_eggs = eggs;
+        return;
+    }
     const bool due = changed || (nrec && (g_lf & 1) == 0) || (g_lf - g_tx_last >= beat);
     if (!due) return;
     GhostEggHead h;
@@ -157,6 +190,21 @@ void send_tick(char *me) {
 }
 
 // ---- receiving -------------------------------------------------------------------------------------
+void apply_rec(RxSeat &s, const GhostEggRec &r) {
+    RxFl *f = nullptr;
+    for (RxFl &e : s.fl) if (e.used && e.id == r.id) f = &e;
+    if (!f) {
+        if (r.flags & kFBurst) return;                  // the end of a flight I never saw begin
+        for (RxFl &e : s.fl) if (!e.used) { e = RxFl(); e.used = true; e.id = r.id; f = &e; ++g_st.flights_seen; break; }
+        if (!f) return;
+        f->x = f->px = r.x * 0x1000; f->y = f->py = r.y * 0x1000; f->z = f->pz = r.z * 0x1000; f->t = f->tp = g_lf;
+    }
+    if (f->burst) return;
+    f->px = f->x; f->py = f->y; f->pz = f->z; f->tp = f->t;
+    f->x = r.x * 0x1000; f->y = r.y * 0x1000; f->z = r.z * 0x1000; f->t = g_lf; f->yaw = r.yaw; f->flags = r.flags;
+    if (r.flags & kFBurst) f->burst = true;
+}
+
 void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     if (sub != kWorldGhostEggs || g_off) return;
     if (!ghost_eggs_validate(p, len) || seat < 0 || seat >= kSeats || seat == comms_hub_my_seat()) { ++g_st.bad; return; }
@@ -168,18 +216,7 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     s.have = true; s.level = h.key.level; s.act = h.key.act; s.eggs = h.eggs; s.rx_lf = g_lf;
     for (int k = 0; k < h.n; ++k) {
         GhostEggRec r; std::memcpy(&r, p + sizeof h + k * sizeof r, sizeof r);
-        RxFl *f = nullptr;
-        for (RxFl &e : s.fl) if (e.used && e.id == r.id) f = &e;
-        if (!f) {
-            if (r.flags & kFBurst) continue;                // the end of a flight I never saw begin
-            for (RxFl &e : s.fl) if (!e.used) { e = RxFl(); e.used = true; e.id = r.id; f = &e; ++g_st.flights_seen; break; }
-            if (!f) continue;
-            f->x = f->px = r.x * 0x1000; f->y = f->py = r.y * 0x1000; f->z = f->pz = r.z * 0x1000; f->t = f->tp = g_lf;
-        }
-        if (f->burst) continue;
-        f->px = f->x; f->py = f->y; f->pz = f->z; f->tp = f->t;
-        f->x = r.x * 0x1000; f->y = r.y * 0x1000; f->z = r.z * 0x1000; f->t = g_lf; f->yaw = r.yaw; f->flags = r.flags;
-        if (r.flags & kFBurst) f->burst = true;
+        apply_rec(s, r);
     }
 }
 
@@ -233,7 +270,7 @@ void bind_flight(RxFl &f, void *egg) {
 
 void recv_tick() {
     int lv = -1, ac = 0;
-    if (!coop_group_key(&lv, &ac)) return;
+    if (!key_now(&lv, &ac)) return;
     for (Pend &b : g_burst) if (b.uid && !alive(b.uid, b.egg)) b = Pend();     // gone before its burst ran (a level change)
     for (int seat = 0; seat < kSeats; ++seat) {
         RxSeat &s = g_rx[seat];
@@ -337,6 +374,39 @@ void lab_grab(char *me) {
     }
 }
 
+// LAB (row knob, off by default) SM64DS_GHOST_LAB_FACE=<units>[,<from frame>]: the picture rows' watcher. From that frame of
+// this module on, I stand <units> in front of the nearest drawn friend, facing him (set down again whenever he moved more
+// than 120 units off that spot), so the camera behind me has him and what he carries or throws in view.
+void lab_face(char *me) {
+    static int units = -2, from = 0;
+    static unsigned logs = 0;
+    if (units == -2) { units = -1; if (const char *e = std::getenv("SM64DS_GHOST_LAB_FACE")) std::sscanf(e, "%d,%d", &units, &from); }
+    if (units < 0 || g_lf < (unsigned)from) return;
+    const int nb = data_0209f21c < kBodies ? data_0209f21c : kBodies;
+    int best = -1, bdp[3] = {0, 0, 0}; long long bd = -1;
+    for (int i = 0; i < nb; ++i) {
+        if (i == (int)data_0209f250 || !data_0209f394[i] || port_adventure_ghost_seat(i) < 0) continue;
+        int dp[3];
+        if (!port_adventure_ghost_drawpos(i, dp)) continue;
+        const long long dx = (long long)(dp[0] - rd32(me, 0x5c)) >> 12, dz = (long long)(dp[2] - rd32(me, 0x64)) >> 12;
+        if (bd < 0 || dx * dx + dz * dz < bd) { bd = dx * dx + dz * dz; best = i; std::memcpy(bdp, dp, sizeof dp); }
+    }
+    if (best < 0) return;
+    unsigned short gy; std::memcpy(&gy, (const char *)data_0209f394[best] + 0x8e, 2);
+    const double a = (double)gy * 3.14159265358979323846 / 32768.0;
+    const int sx = bdp[0] + (int)std::lround(std::sin(a) * units) * 0x1000, sz = bdp[2] + (int)std::lround(std::cos(a) * units) * 0x1000;
+    const long long ox = (long long)(sx - rd32(me, 0x5c)) >> 12, oz = (long long)(sz - rd32(me, 0x64)) >> 12;
+    if (ox * ox + oz * oz > 120LL * 120LL) {
+        wr32(me, 0x5c, sx); wr32(me, 0x60, bdp[1]); wr32(me, 0x64, sz);
+        wr32(me, 0x98, 0); wr32(me, 0xa8, 0);
+        if ((++logs % 20) == 1)
+            std::fprintf(stderr, "[geggs] LAB face lf=%u: set down %d units in front of body %d at (%d,%d,%d)\n", g_lf, units, best,
+                         sx >> 12, bdp[1] >> 12, sz >> 12);
+    }
+    const unsigned short face = (unsigned short)(gy + 0x8000);
+    std::memcpy(me + 0x8e, &face, 2);
+}
+
 void ghost_eggs_frame(unsigned) {
     read_env();
     if (g_off) return;
@@ -344,8 +414,41 @@ void ghost_eggs_frame(unsigned) {
     ++g_lf;
     const int me = (int)data_0209f250;
     char *mb = (me >= 0 && me < kBodies) ? (char *)data_0209f394[me] : nullptr;
-    if (mb) { send_tick(mb); lab_grab(mb); }
+    if (mb) { send_tick(mb); lab_grab(mb); lab_face(mb); }
     recv_tick();
+}
+
+void ghost_eggs_party_frame(char *me, int level, void (*send)(const GhostEggRec &rec, int vx, int vy, int vz)) {
+    read_env();
+    if (g_off) return;
+    if (!g_party) { g_party = true; std::atexit(exit_line); if (g_log) std::fprintf(stderr, "[geggs] party room: eggs ride SYNH (kHeldState count, kEggFlight records)\n"); }
+    g_party_level = level; g_party_send = send;
+    ++g_lf;
+    if (me) { send_tick(me); lab_grab(me); lab_face(me); }
+    recv_tick();
+}
+
+void ghost_eggs_party_in(int seat, int eggs) {
+    if (!g_party || g_off || seat < 0 || seat >= kSeats || seat == comms_hub_my_seat() || eggs < 0 || eggs > kQueue) { ++g_st.bad; return; }
+    RxSeat &s = g_rx[seat];
+    ++g_st.recv;
+    if (g_log && (!s.have || s.eggs != eggs)) std::fprintf(stderr, "[geggs] party in lf=%u from seat %d: eggs %d\n", g_lf, seat, eggs);
+    s.have = true; s.level = g_party_level; s.act = 0; s.eggs = eggs; s.rx_lf = g_lf;
+}
+
+void ghost_eggs_party_flight(int seat, const GhostEggRec &r, int vx, int vy, int vz) {
+    if (!g_party || g_off || seat < 0 || seat >= kSeats || seat == comms_hub_my_seat() || r.flags > 7) { ++g_st.bad; return; }
+    RxSeat &s = g_rx[seat];
+    ++g_st.recv;
+    if (!s.have) { s.have = true; s.eggs = 0; }
+    s.level = g_party_level; s.act = 0; s.rx_lf = g_lf;
+    if (g_log) std::fprintf(stderr, "[geggs] party flight in lf=%u from seat %d: egg %d flags %d at (%d,%d,%d)\n", g_lf, seat, r.id, r.flags, r.x, r.y, r.z);
+    apply_rec(s, r);
+    for (RxFl &f : s.fl)
+        if (f.used && f.id == r.id && !f.burst) {     // its start: the speed it left with, per frame
+            f.party = true;
+            f.px = f.x - vx * 0x1000; f.py = f.y - vy * 0x1000; f.pz = f.z - vz * 0x1000; f.tp = f.t - 1;
+        }
 }
 
 void ghost_eggs_member_gone(int seat) {
@@ -368,7 +471,8 @@ extern "C" int port_ghost_egg_begin(void *egg, int saved[4]) {
         for (RxFl &f : s.fl) {
             if (!f.used || f.egg != egg || f.egg_uid != u) continue;
             // on his path: the newest sent spot, carried on by its own speed for up to 6 frames
-            const int dt = (int)(f.t - f.tp), ahead = (int)(g_lf - f.t) < 6 ? (int)(g_lf - f.t) : 6;
+            const int cap = f.party ? 40 : 6;     // a party flight comes as its start only: flown on for its whole life
+            const int dt = (int)(f.t - f.tp), ahead = (int)(g_lf - f.t) < cap ? (int)(g_lf - f.t) : cap;
             int x = f.x, y = f.y, z = f.z;
             if (dt > 0 && dt < 30) { x += (f.x - f.px) / dt * ahead; y += (f.y - f.py) / dt * ahead; z += (f.z - f.pz) / dt * ahead; }
             wr32(egg, 0x5c, x); wr32(egg, 0x60, y); wr32(egg, 0x64, z);

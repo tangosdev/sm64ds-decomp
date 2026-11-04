@@ -7,9 +7,9 @@
 // on my ghost body with the ROM's own lay call, lets their ROM Behavior trail the body where it is drawn,
 // and flies a thrown one along my path (cosmetic only: the thrower's console owns the hit).
 //
-// Coop rooms only (the SYNW kind rides the coop world relay; party rooms carry friend state on SYNH,
-// which party_hits.cpp owns). Driven from coop_actors.cpp's frame hook; the per-egg half is the
-// _MSC_VER arm of daYegg_c::Behavior (src/game/actors/d_a_yegg.cpp).
+// Coop rooms: the SYNW kind below rides the coop world relay, driven from coop_actors.cpp's frame hook. Party rooms:
+// party_hits.cpp's SYNH carries the egg count (kHeldState) and the thrown eggs (kEggFlight), driven from its frame
+// hook (ghost_eggs_party_*). The per-egg half is the _MSC_VER arm of daYegg_c::Behavior (src/game/actors/d_a_yegg.cpp).
 //
 // WIRE (SYNW sub-type kWorldGhostEggs = 0x60; an old build drops it as an unknown sub-type):
 //   GhostEggHead 8 B: key (level, act), ver 1, eggs 0..5 (my queue), n 0..2 (records), seq
@@ -54,6 +54,14 @@ bool ghost_eggs_validate(const void *payload, int len);
 void ghost_eggs_frame(unsigned now_ms);
 // A friend left my group: his eggs here go.
 void ghost_eggs_member_gone(int seat);
+
+// PARTY ROOMS (the coop world relay does not run there; party_hits.cpp carries the data on SYNH):
+// once a frame from party_hits' frame hook, with my level; my egg count already rides its kHeldState (eggs << 4), and
+// a thrown egg goes out through send as two kEggFlight messages: its start (position, speed per frame) and its burst.
+void ghost_eggs_party_frame(char *me, int level, void (*send)(const GhostEggRec &rec, int vx, int vy, int vz));
+// a friend's egg count (party_hits' kHeldState) and one record of his thrown egg (kEggFlight, speed 0 on a burst)
+void ghost_eggs_party_in(int seat, int eggs);
+void ghost_eggs_party_flight(int seat, const GhostEggRec &rec, int vx, int vy, int vz);
 
 }  // namespace port
 

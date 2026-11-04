@@ -42,7 +42,11 @@ enum IKind : unsigned {
     // 1 an object in my hands, 2 an object in my mouth) | eggs following me << 4, yaw = the object's spawn slot (+0xce),
     // y = its class id. Builds before it refuse kind 12 as a bad kind and draw nothing, as before.
     kHeldState = 12,
-    kKinds = 13,
+    // FRIENDVIS1: one record of a Yoshi egg I threw, to every other seat in a PARTY room (every 2 frames while it flies, a
+    // burst three times): yaw = egg id (low byte of its actor id) | flags << 8 (1 in hand, 2 flying, 4 burst), x / y / z =
+    // its position. Builds before it judge kind 13 as a claim and refuse it (kBadKind: not a victim-side kind), drawing nothing.
+    kEggFlight = 13,
+    kKinds = 14,
 };
 // seq = kind (4 bits) | stamp (4 bits) | counter (8 bits). The stamp is the attacker's estimate, in frames,
 // of how old its view of the victim was when it struck (INTERACT9: the victim judges against its own pose
