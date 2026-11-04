@@ -20,6 +20,7 @@
 // the raw store to its unmodelled byte at +0x0f. func_02034fbc stays free
 // (no receiver).
 #include "dScMB_c.h"
+#include "nitro/hw/registers.h"
 #include "AsyncJob.h"
 #include "decl_common.h"
 #include "Heap.h"
@@ -47,7 +48,7 @@ void OamRender10_d_s_mb(int sub, void *attr, int x, int y, int a, int cc, int fx
 extern struct OamAttr *data_0208a0f8[];
 extern s16 data_02082214[];
 
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
@@ -184,7 +185,7 @@ s32 dScMB_c::Behavior() {
             break;
         DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6400000);
         DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6600000);
-        data_0209d45c = 0x10;
+        gMainScreenLayers = DISPLAY_LAYER_OBJ;
         gSubScreenLayers = 0x10;
         *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x1000;
         *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1000;
@@ -299,7 +300,7 @@ s32 dScMB_c::InitResources() {
     SetBg1Offset(0, 0);
     SetSubBg1Offset(0, 0);
 
-    *(u8 *)&data_0209d45c = 0;
+    *(u8 *)&gMainScreenLayers = 0;
     *(u8 *)&gSubScreenLayers = 0;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;

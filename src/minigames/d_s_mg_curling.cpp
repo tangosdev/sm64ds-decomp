@@ -39,6 +39,7 @@ enum dScMgCurling_c_AssetId {
 #pragma defer_codegen off
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "dScMgCurling_c.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
@@ -129,7 +130,7 @@ extern int sCurlingBitSprites[];
 extern int sCurlingStoneLeftSprite;
 extern int sCurlingStoneLeftShadowSprite;
 extern int sCurlingAimMarkerSprites[];
-extern unsigned char data_0209d45c;
+extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 extern char sCurlingMgDirPath;
 extern char sCurlingBgCurling2NcgPath;
@@ -1657,7 +1658,7 @@ s32 dScMgCurling_c::InitResources() {
     if (a == 0 || b == 0)
         return 0;
 
-    data_0209d45c |= 4;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x1220;
     DecompressLZ16(a, G2::GetBG2CharPtr());

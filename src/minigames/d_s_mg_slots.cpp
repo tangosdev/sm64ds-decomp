@@ -49,6 +49,7 @@ enum dScMgSlots_AssetId {
 };
 
 #include "dScMgSlot1_c.h"
+#include "nitro/hw/registers.h"
 #include "G2.h"
 #include "dScMgSlot3_c.h"
 #include "Sound.h"
@@ -92,7 +93,7 @@ int GetGameLanguage(void);
 void *func_02054ea8(void);
 // Retained caller ABI: narrowing to the definition's u16 adds a mask in InitMainScreenBg.
 unsigned int LoadCompressedFileAt(int fileID, void *target);
-extern unsigned char data_0209d45c;
+extern unsigned char gMainScreenLayers;
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 void Mg_AddCredits(void *c, int delta);
 void Mg_SubCredits(void *c, int val);
@@ -228,7 +229,7 @@ void dScMgSlot3_c::InitMainScreenBg() {
 
     SetBg1Offset(0, 0);
 
-    data_0209d45c &= ~2;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
 
     idx = GetGameLanguage();
     LoadCompressedFileAt(sSlotPauseBgNcgByLanguage[idx], func_02054ea8());
@@ -798,7 +799,7 @@ s32 dScMgSlot3_c::Render() {
  *
  * Steps the reel state machine through the pointer-to-member table at
  * sSlot3StateTable, ticks the frame counter at 0x503f, spins the two reel
- * offsets while state 1 is running, and flips the blend bit in data_0209d45c off a
+ * offsets while state 1 is running, and flips the blend bit in gMainScreenLayers off a
  * coin toss so the machine's lights flicker.
  *
  * The state table uses this class's pointer-to-member type.
@@ -830,9 +831,9 @@ s32 dScMgSlot3_c::Behavior() {
 
     t = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 1;
     if (t)
-        data_0209d45c |= 2;
+        gMainScreenLayers |= DISPLAY_LAYER_BG1;
     else
-        data_0209d45c &= ~2;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
 
     return 1;
 }
@@ -874,7 +875,8 @@ s32 dScMgSlot3_c::InitResources() {
 
     LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6400000);
 
-    data_0209d45c = 0x1f;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
+                        DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 3;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x1218;
     *(volatile u16 *)0x400100c = *(volatile u16 *)0x400100c & ~0x40;
@@ -1511,7 +1513,7 @@ s32 dScMgSlot1_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_SCORE_UP_NSC_BIN, G2::GetBG2ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_UP_NSC_BIN, G2::GetBG3ScrPtr());
 
-    data_0209d45c = 0x1c;
+    gMainScreenLayers = DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x1410;

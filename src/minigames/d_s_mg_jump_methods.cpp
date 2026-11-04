@@ -21,6 +21,7 @@
  */
 
 #include "dScMgJump_c.h"
+#include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "types.h"
@@ -105,7 +106,7 @@ int  RandomIntInternal(int *seed);
 extern int  data_020a0e68;
 extern int  data_0209e650;
 extern int sJumpLastPick;
-extern u8   data_0209d45c;
+extern u8 gMainScreenLayers;
 extern s16  data_02082614;
 extern int sJump3DMarioCount;
 extern int sHeyhoUnsettledCount;
@@ -228,7 +229,7 @@ s32 dScMgJump_c::InitResources()
     Deallocate((void *)buf1);
     Deallocate((void *)buf2);
 
-    data_0209d45c = 0x11;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     G3X::SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;

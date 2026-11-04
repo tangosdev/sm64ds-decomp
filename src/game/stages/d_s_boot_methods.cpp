@@ -19,6 +19,7 @@
 enum dScBoot_c_AssetId { ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN = 0x022d };
 
 #include "dScBoot_c.h"
+#include "nitro/hw/registers.h"
 #include "G2.h"
 #include "GX.h"
 #include "AsyncJob.h"
@@ -41,7 +42,7 @@ extern u8 data_0209f1e8;
 extern PadData data_020a0e58[];
 extern int data_0208ee44;
 extern u8 gSubScreenLayers;
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern dFdColor_c data_0209f5e8;
 
 u32 LoadCompressedFileAt(u16 fileID, void *target);
@@ -128,7 +129,7 @@ s32 dScBoot_c::InitResources() {
     GXS::LoadBGPltt(&data_020914e0, 0x1c0, 0x40);
     DecompressLZ16(&data_02091570, (void *)G2S::GetBG2ScrPtr());
 
-    data_0209d45c = 1;
+    gMainScreenLayers = DISPLAY_LAYER_BG0;
     gSubScreenLayers = 4;
     *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x100;
     *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x400;

@@ -23,6 +23,7 @@
 
 #pragma defer_codegen off
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "Message.h"
 #include "PlayerInput.h"
 #include "SaveData.h"
@@ -30,7 +31,7 @@
 
 extern "C" {
 extern u8 gSubScreenLayers;
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 /* The message box rectangle: see the comment at Message.cpp's externs. */
 extern u8 gMsgBoxWinTop;
 extern u8 gMsgBoxLeft;
@@ -45,8 +46,13 @@ extern u8 data_0209d674;
 extern u8 data_0209d678;
 extern u8 data_0209d680;
 extern u8 data_0209d684;
-extern u8 data_0209d688;
-extern u8 data_0209d68c;
+/* The line a horizontal (mode 1) choice sits on: AddChoice's arg 0 records
+   the current line, and state 4 draws the cursor on it. */
+extern u8 gMsgChoiceLine;
+/* The answer cursor. AddChoice uses it to count the choices as they are
+   recorded; entering a choice state resets it to 0, the D-pad and stylus move
+   it, and confirming stores it + 1 in data_0209d684. */
+extern u8 gMsgChoiceIndex;
 extern u8 data_0209d690;
 extern u8 data_0209d694;
 extern u8 data_0209d698;
@@ -67,7 +73,10 @@ extern u8 gMsgBoxCenterX;
 extern s16 data_0209d6d8;
 extern s16 data_0209d6dc;
 extern u16 data_0209d6e0;
-extern u8 data_0209d6e4[];
+/* Where each choice's cursor goes, recorded by AddChoice: the x column for a
+   mode-1 (horizontal) choice, which state 4 reads, or the line for modes 2 and
+   3, which states 5 and 6 read. */
+extern u8 gMsgChoicePositions[];
 extern u8 *data_0209d6f0;
 extern u8 *data_0209d6f4;
 extern int data_0209d6f8;
@@ -160,26 +169,26 @@ void Message::AddChoice() {
     u8 idx;
     switch (v) {
     case 0:
-        data_0209d688 = data_0209d6b4;
+        gMsgChoiceLine = data_0209d6b4;
         break;
     case 1:
-        idx = data_0209d68c;
-        data_0209d68c = idx + 1;
-        data_0209d6e4[idx] = data_0209d6b0;
+        idx = gMsgChoiceIndex;
+        gMsgChoiceIndex = idx + 1;
+        gMsgChoicePositions[idx] = data_0209d6b0;
         AddChar(0x4d);
         data_0209d694 = 1;
         break;
     case 2:
-        idx = data_0209d68c;
-        data_0209d68c = idx + 1;
-        data_0209d6e4[idx] = data_0209d6b4;
+        idx = gMsgChoiceIndex;
+        gMsgChoiceIndex = idx + 1;
+        gMsgChoicePositions[idx] = data_0209d6b4;
         AddChar(0x4d);
         data_0209d694 = 2;
         break;
     case 3:
-        idx = data_0209d68c;
-        data_0209d68c = idx + 1;
-        data_0209d6e4[idx] = data_0209d6b4;
+        idx = gMsgChoiceIndex;
+        gMsgChoiceIndex = idx + 1;
+        gMsgChoicePositions[idx] = data_0209d6b4;
         AddChar(0x4d);
         data_0209d694 = 3;
         break;
@@ -595,13 +604,13 @@ void Message::LayoutLine() {
                         u8 m = data_0209d694;
                         if (m == 1) {
                             data_0209d6bc = 4;
-                            data_0209d68c = 0;
+                            gMsgChoiceIndex = 0;
                         } else if (m == 2) {
                             data_0209d6bc = 6;
-                            data_0209d68c = 0;
+                            gMsgChoiceIndex = 0;
                         } else if (m == 3) {
                             data_0209d6bc = 5;
-                            data_0209d68c = 0;
+                            gMsgChoiceIndex = 0;
                         } else {
                             data_0209d6bc = 8;
                         }
@@ -610,13 +619,13 @@ void Message::LayoutLine() {
                     u8 m = data_0209d694;
                     if (m == 1) {
                         data_0209d6bc = 4;
-                        data_0209d68c = 0;
+                        gMsgChoiceIndex = 0;
                     } else if (m == 2) {
                         data_0209d6bc = 6;
-                        data_0209d68c = 0;
+                        gMsgChoiceIndex = 0;
                     } else if (m == 3) {
                         data_0209d6bc = 5;
-                        data_0209d68c = 0;
+                        gMsgChoiceIndex = 0;
                     } else {
                         data_0209d6bc = 8;
                     }
@@ -761,8 +770,9 @@ int Message::UpdateWindow() {
         *(volatile u16 *)0x400104a &= ~0x3f;
         *(volatile u32 *)0x4001000 &= ~0xe000;
     } else {
-        data_0209d45c &= ~8;
-        *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (data_0209d45c << 8);
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
+        *(volatile u32 *)0x4000000 =
+            (*(volatile u32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
         *(volatile u16 *)0x4000050 = 0;
         *(volatile u16 *)0x4000048 &= ~0x3f;
         *(volatile u16 *)0x400004a &= ~0x3f;
@@ -804,29 +814,29 @@ void Message::Update() {
     case 4: {
         s16 t;
         if (IsButtonInputValid() != 0) {
-            data_0209d684 = data_0209d68c + 1;
+            data_0209d684 = gMsgChoiceIndex + 1;
             data_0209d670 = 1;
             return;
         }
         t = *(s16 *)((u8 *)data_0209f4a2 + gActivePlayerSlot * 0x18);
         if (t > 0x80) {
-            if (data_0209d68c == 0) {
+            if (gMsgChoiceIndex == 0) {
                 func_02012790(0x96);
             }
-            data_0209d68c = 1;
+            gMsgChoiceIndex = 1;
         } else if (t < -0x80) {
-            if (data_0209d68c != 0) {
+            if (gMsgChoiceIndex != 0) {
                 func_02012790(0x96);
             }
-            data_0209d68c = 0;
+            gMsgChoiceIndex = 0;
         } else if (*((u8 *)data_0209caa0 + 0x42) == 0 &&
                    (*(u16 *)((u8 *)data_020a0e5a + gActivePlayerSlot * 4) & 0x30)) {
-            data_0209d68c ^= 1;
+            gMsgChoiceIndex ^= 1;
             func_02012790(0x96);
         }
         {
-            int r5 = data_0209d6e4[data_0209d68c] + gMsgBoxLeft + 0xC;
-            int r4 = gMsgBoxTop + (data_0209d688 * 0x10) + 0xE;
+            int r5 = gMsgChoicePositions[gMsgChoiceIndex] + gMsgBoxLeft + 0xC;
+            int r4 = gMsgBoxTop + (gMsgChoiceLine * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
                             -1);
@@ -840,29 +850,29 @@ void Message::Update() {
     case 5: {
         s16 t;
         if (IsButtonInputValid() != 0) {
-            data_0209d684 = data_0209d68c + 1;
+            data_0209d684 = gMsgChoiceIndex + 1;
             data_0209d670 = 1;
             return;
         }
         t = *(s16 *)((u8 *)data_0209f4a4 + gActivePlayerSlot * 0x18);
         if (t > 0x80) {
-            if (data_0209d68c == 0) {
+            if (gMsgChoiceIndex == 0) {
                 func_02012790(0x96);
             }
-            data_0209d68c = 1;
+            gMsgChoiceIndex = 1;
         } else if (t < -0x80) {
-            if (data_0209d68c != 0) {
+            if (gMsgChoiceIndex != 0) {
                 func_02012790(0x96);
             }
-            data_0209d68c = 0;
+            gMsgChoiceIndex = 0;
         } else if (*((u8 *)data_0209caa0 + 0x42) == 0 &&
                    (*(u16 *)((u8 *)data_020a0e5a + gActivePlayerSlot * 4) & 0xC0)) {
-            data_0209d68c ^= 1;
+            gMsgChoiceIndex ^= 1;
             func_02012790(0x96);
         }
         {
             int r5 = gMsgBoxLeft + 0xC;
-            int r4 = gMsgBoxTop + (data_0209d6e4[data_0209d68c] * 0x10) + 0xE;
+            int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
                             -1);
@@ -878,7 +888,7 @@ void Message::Update() {
         int idx;
         u8 f0;
         if (IsButtonInputValid() != 0) {
-            data_0209d684 = data_0209d68c + 1;
+            data_0209d684 = gMsgChoiceIndex + 1;
             data_0209d670 = 1;
             return;
         }
@@ -892,7 +902,7 @@ void Message::Update() {
             touchBegan = 1;
         if (touchBegan != 0) {
             data_0209d6d8 = ((u8(*)[4])gTouchY)[idx][0];
-            data_0209d6d8 -= (s16)(data_0209d68c * 8);
+            data_0209d6d8 -= (s16)(gMsgChoiceIndex * 8);
         } else if (f0 != 0) {
             s16 debval = ((u8(*)[4])gTouchY)[idx][0];
             data_0209d6dc = debval - data_0209d6d8;
@@ -903,27 +913,27 @@ void Message::Update() {
                 data_0209d6dc = 0;
                 data_0209d6d8 = debval;
             }
-            switch (data_0209d68c) {
+            switch (gMsgChoiceIndex) {
             case 0:
                 if (data_0209d6dc > 0 && data_0209d6dc >= 8) {
-                    data_0209d68c += 1;
+                    gMsgChoiceIndex += 1;
                     func_02012790(0x96);
                 }
                 break;
             case 1:
                 if (data_0209d6dc > 0) {
                     if (data_0209d6dc >= 0x10) {
-                        data_0209d68c += 1;
+                        gMsgChoiceIndex += 1;
                         func_02012790(0x96);
                     } else if (data_0209d6dc <= 6) {
-                        data_0209d68c -= 1;
+                        gMsgChoiceIndex -= 1;
                         func_02012790(0x96);
                     }
                 }
                 break;
             case 2:
                 if (data_0209d6dc > 0 && data_0209d6dc <= 0xE) {
-                    data_0209d68c -= 1;
+                    gMsgChoiceIndex -= 1;
                     func_02012790(0x96);
                 }
                 break;
@@ -932,11 +942,11 @@ void Message::Update() {
             u16 mask = data_020a0e5a[idx * 2];
             if (mask & 0xC0) {
                 u8 target = (mask & 0x40) ? 0 : 2;
-                if (data_0209d68c != target) {
+                if (gMsgChoiceIndex != target) {
                     if (target != 0) {
-                        data_0209d68c += 1;
+                        gMsgChoiceIndex += 1;
                     } else {
-                        data_0209d68c -= 1;
+                        gMsgChoiceIndex -= 1;
                     }
                     func_02012790(0x96);
                 }
@@ -944,7 +954,7 @@ void Message::Update() {
         }
         {
             int r5 = gMsgBoxLeft + 0xC;
-            int r4 = gMsgBoxTop + (data_0209d6e4[data_0209d68c] * 0x10) + 0xE;
+            int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
                             -1);

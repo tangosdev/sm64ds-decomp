@@ -61,7 +61,7 @@ void *Ov004_LoadFile(int fileId);
 void Mg_ResetOverlays(void);
 void FreeGfxSlotsById(int id);
 extern u8 gSubScreenLayers;
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern u32 data_020a0db0;
 extern int sMgTopScreenYOffset;
 extern int sMgGraphCallback[];
@@ -83,7 +83,7 @@ void dScMgSingle3DBase_c::InitEngines()
     sMgTopScreenYOffset = 0;
     Mg_ResetBgOffsets(); /* zero all eight BG scroll offsets */
     Mg_DisableAllBanks(); /* GX::DisableAllBanks */
-    data_0209d45c = 0x10;
+    gMainScreenLayers = DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x10;
     REG_DISPCNT &= ~0x7000000u;
     REG_DISPCNT &= ~0x38000000u;

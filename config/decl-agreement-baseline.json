@@ -7967,7 +7967,7 @@
         "return:unsigned char"
       ]
     },
-    "data_0209d45c": {
+    "gMainScreenLayers": {
       "src/game/stages/d_s_title.cpp": [
         "return:unsigned char []"
       ],
@@ -7983,82 +7983,82 @@
         "return:unsigned char"
       ]
     },
-    "data_0209d468": {
+    "gBg0HOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d46c": {
+    "gBg0VOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d470": {
+    "gSubBg2VOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d474": {
+    "gSubBg3HOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d478": {
+    "gBg2VOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d47c": {
+    "gSubBg2HOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d480": {
+    "gSubBg1VOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d484": {
+    "gSubBg1HOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d488": {
+    "gSubBg3VOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d48c": {
+    "gBg3HOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d490": {
+    "gBg3VOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d494": {
+    "gSubBg0HOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d498": {
+    "gSubBg0VOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d49c": {
+    "gBg2HOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d4a0": {
+    "gBg1VOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]
     },
-    "data_0209d4a4": {
+    "gBg1HOffset": {
       "src/unnamed/arm9/0201/func_02019144.cpp": [
         "return:short"
       ]

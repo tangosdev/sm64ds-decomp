@@ -49,6 +49,7 @@
 #pragma defer_codegen off
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "nitro/fx/fx.h"
 #include "OamAttr.h"
 #include "dScMgTeresa_c.h"
@@ -86,7 +87,7 @@ extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 
                                       s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);
 
 extern unsigned char gSubScreenLayers;
-extern unsigned char  data_0209d45c;
+extern unsigned char gMainScreenLayers;
 extern int sTeresaBigBooSprites[];
 extern unsigned char sTeresaBigBooHoverPicks[];
 extern unsigned short sTeresaBigBooFrameTimes[];
@@ -394,7 +395,7 @@ void dScMgTeresa_c::BigBoo_StateHover(int i) {
         mBigBoo[i].wait--;
         return;
     }
-    data_0209d45c &= ~4;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     SetBg3Offset(0, 0x100);
     {
     int rnd = RandomIntInternal(&data_0209d4b8);
@@ -538,7 +539,7 @@ void dScMgTeresa_c::Reveal_StateFinish(int idx) {
     mReveal[idx].visible = 0;
     mReveal[idx].active = 0;
     Marker_Hide();
-    data_0209d45c |= 4;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 1;
     Sound::PlayBank2_2D(0x1f6);
     mSceneState = 2;
@@ -1936,7 +1937,7 @@ s32 dScMgTeresa_c::InitResources()
         fa = 0x5300;
         MultiStore16(fa, p, 0x800);
     }
-    data_0209d45c |= 8;
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *((volatile u16 *) 0x400000e) = (*((volatile u16 *) 0x400000e)) & (~3);
     *((volatile u16 *) 0x400000e) &= ~0x40;
     *((volatile u32 *) 0x400001c) = 0;

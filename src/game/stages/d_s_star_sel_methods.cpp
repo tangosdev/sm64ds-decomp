@@ -27,6 +27,7 @@
 #pragma defer_codegen off
 #pragma opt_strength_reduction off
 #include "common.h"
+#include "nitro/hw/registers.h"
 #include "SpawnInfo.h"
 #include "dScStarSel_c.h"
 #include "decl_common.h"
@@ -905,7 +906,7 @@ void *LoadFile(int);
 void DecompressLZ16(void *, void *);
 int IsStarCollected(int, int);
 
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
 
@@ -972,7 +973,7 @@ s32 dScStarSel_c::InitResources() {
     models[0].LoadAndSetFile(0x8015, 1, -1);
     models[1].LoadAndSetFile(0x8017, 1, -1);
     REG16(0x4000008) = (REG16(0x4000008) & ~3) | 2;
-    data_0209d45c = 0x19;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     REG16(0x400000E) &= ~3;
     REG16(0x400000E) = (REG16(0x400000E) & 0x43) | 0x1700;
     REG16(0x400000E) &= ~0x40;
@@ -992,8 +993,8 @@ s32 dScStarSel_c::InitResources() {
         DecompressLZ16(file, G2::GetBG2ScrPtr());
         Deallocate(file);
         SetBg2Offset(0, 0);
-        data_0209d45c |= 4;
-        data_0209d45c &= ~1;
+        gMainScreenLayers |= DISPLAY_LAYER_BG2;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
     } else {
         REG16(0x400000C) = (REG16(0x400000C) & ~3) | 1;
         REG16(0x400000C) = (REG16(0x400000C) & 0x43) | 0x1610;
@@ -1018,7 +1019,7 @@ s32 dScStarSel_c::InitResources() {
         DecompressLZ16(file, G2::GetBG2ScrPtr());
         Deallocate(file);
         SetBg2Offset(0, -4);
-        data_0209d45c |= 4;
+        gMainScreenLayers |= DISPLAY_LAYER_BG2;
         GXS::LoadBGPltt(&data_ov003_020b1698, 0, 2);
     }
     if (GetOwnerLanguage() == 5) {
@@ -1197,7 +1198,7 @@ s32 dScStarSel_c::InitResources() {
         }
         SetBg3Offset(0, -4);
     } else {
-        data_0209d45c &= ~8;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
     }
 
     charIdx = 0;
@@ -1259,7 +1260,7 @@ s32 dScStarSel_c::InitResources() {
     mBounceDelay = 0x78;
     mAnimFlip = 0;
     gSubScreenLayers = 0x10;
-    REG32(0x4000000) = (REG32(0x4000000) & ~0x1F00) | (data_0209d45c << 8);
+    REG32(0x4000000) = (REG32(0x4000000) & ~0x1F00) | (gMainScreenLayers << 8);
     REG32(0x4001000) = (REG32(0x4001000) & ~0x1F00) | 0x1000;
     mLifeIcon = data_0209caa0[0x41];
     data_0208ee44 = 1;
