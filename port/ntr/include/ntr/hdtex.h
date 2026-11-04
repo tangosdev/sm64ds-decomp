@@ -72,6 +72,13 @@ const char *hdtex_pack_dir(void);
 // dump is on. THIS IS THE WHOLE COST WHEN THE FEATURE IS OFF.
 bool hdtex_wants_work(void);
 
+// TEXSWAP1: the live before / after switch (the F7 key). Paused, every lookup
+// answers "no replacement" and the game draws its own textures; the caller then
+// drops gx.cpp's decode cache (gx_invalidate_textures) so the change shows on
+// the next frame. The index is kept, so switching back costs no reload.
+void hdtex_set_paused(int paused);
+int hdtex_paused(void);
+
 // The content name of the texture the two latched geometry words describe.
 // Only meaningful while hdtex_wants_work(); it reads DS video memory.
 // SM64DS_HD_TEXTURES_INDEX=<file> makes the dump write a table beside the

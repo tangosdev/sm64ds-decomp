@@ -882,6 +882,10 @@ int g_rich_presence = 1;
    be drawn out to (100 = the ROM exactly, the default; 10000 = Max). Drawing
    only: dActor_c::BeforeBehavior keeps the ROM's update decision untouched. */
 int g_draw_dist = 100;
+/* TextureSwapKey (TEXSWAP1): the virtual key that steps the texture mods
+   (DS, then each choice of a texture mod's setting). F7 by default; 0 = unbound. */
+int g_tex_swap_key = 0x76;
+int tex_swap_key_clamp(int v) { return v >= 0 && v <= 0xFE ? v : 0x76; }
 int draw_dist_clamp(int v) { return v < 100 ? 100 : v > 10000 ? 10000 : v; }
 
 /* NameTags: 1 when the VS name-and-star tag over a remote player's head is
@@ -1625,6 +1629,7 @@ void load_once(void)
     g_chars_from_start = 0;
     g_online_events = 1;
     g_rich_presence = 1;
+    g_tex_swap_key = 0x76;
     g_character_strip = 1;
     g_keep_lives = 0;
     g_skip_opening = 0;
@@ -2038,6 +2043,7 @@ void load_once(void)
         g_start_fullscreen = json_bool(text, "StartFullscreen", 0);
         g_rich_presence = json_bool(text, "RichPresence", 1);
         g_draw_dist = draw_dist_clamp(json_int(text, "DrawDistance", 100));
+        g_tex_swap_key = tex_swap_key_clamp(json_int(text, "TextureSwapKey", 0x76));
         /* the learned controller maps; absent is none, like every key */
         padlayouts_parse(text);
         /* lane VOICE: the same reader the live re-read uses, so the boot
@@ -2560,6 +2566,7 @@ int reload_live(const char *text)
     }
     /* DrawDistance: presentation only, so it follows the file at once */
     g_draw_dist = draw_dist_clamp(json_int(text, "DrawDistance", g_draw_dist));
+    g_tex_swap_key = tex_swap_key_clamp(json_int(text, "TextureSwapKey", g_tex_swap_key));   /* a key, follows the file at once */
     {
         const int dbg = json_bool(text, "DebugMenu", g_debug_menu);
         if (dbg != g_debug_menu) {
@@ -2881,6 +2888,12 @@ extern "C" int host_setting_mouse_capture(void)
 {
     load_once();
     return g_mouse_capture;
+}
+
+extern "C" int host_setting_texture_swap_key(void)
+{
+    load_once();
+    return g_tex_swap_key;
 }
 
 /* DrawDistance, percent. SM64DS_DRAW_DISTANCE=<100..10000> pins it for a proof
