@@ -200,10 +200,11 @@ struct BlockSCollisionFilePtr : SharedFilePtr {
 extern BlockSModelFilePtr gBrokenBlockSModelFile;
 extern BlockSCollisionFilePtr gBrokenBlockSCollisionFile;
 
-/* Four-word copy source for the thrown state's speed tables. */
+/* Throw speeds (20.12) for the four character weights: horizontal and
+   vertical, copied by value in func_ov098_02138818. */
 struct BlockSW4 { u32 w[4]; };
-extern "C" BlockSW4 data_ov098_0213c4e0;
-extern "C" BlockSW4 data_ov098_0213c4f0;
+BlockSW4 data_ov098_0213c4e0 = {{0x28000, 0x28000, 0x50000, 0x1e000}};
+BlockSW4 data_ov098_0213c4f0 = {{0x14000, 0x14000, 0x14000, 0xf000}};
 
 #pragma defer_codegen off
 
