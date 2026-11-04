@@ -10,6 +10,7 @@
 #include "coop_wire.h"
 #include "comms_hub.h"
 
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -24,6 +25,7 @@ void _ZN7fBase_c18MarkForDestructionEv(void *a);
 void func_ov002_020d6368(char *player);          // Player: lay one egg (class 9) behind me into my queue
 int port_adventure_ghost_seat(int slot);
 int port_adventure_ghost_drawpos(int slot, int out[3]);
+int _ZN6Player7TryGrabER8dActor_c(void *self, void *actor);
 }
 
 namespace port {
@@ -302,6 +304,32 @@ bool ghost_eggs_validate(const void *payload, int len) {
     return true;
 }
 
+// LAB (row knob, off by default) SM64DS_GHOST_LAB_GRAB=<class>[,<units>]: the ROM's own Player::TryGrab on the nearest actor of
+// that class within <units> (default 60) while I hold nothing. TryGrab itself refuses unless my body is in a real punch the
+// pad pressed (or a swim / crouch) and the actor carries the grab flag 0x80, so this only stands in for the attack cylinder
+// touching it (the scripted walk keeps kicking a Bob-omb instead of meeting it with a standing punch).
+void lab_grab(char *me) {
+    static int cls = -2, units = 60;
+    static unsigned logs = 0;
+    if (cls == -2) { cls = -1; if (const char *e = std::getenv("SM64DS_GHOST_LAB_GRAB")) std::sscanf(e, "%d,%d", &cls, &units); }
+    if (cls < 0 || rd32(me, 0x358)) return;
+    void *best = nullptr; long long bd = (long long)units * units;
+    const int mx = rd32(me, 0x5c) >> 12, my = rd32(me, 0x60) >> 12, mz = rd32(me, 0x64) >> 12;
+    for (void *a = _ZN8dActor_c4NextEPKS_(0); a; a = _ZN8dActor_c4NextEPKS_(a)) {
+        if ((int)cls_of(a) != cls) continue;
+        const long long dx = (rd32(a, 0x5c) >> 12) - mx, dy = (rd32(a, 0x60) >> 12) - my, dz = (rd32(a, 0x64) >> 12) - mz;
+        const long long d = dx * dx + dz * dz;
+        if (d <= bd && dy > -80 && dy < 120) { bd = d; best = a; }
+    }
+    if (!best) return;
+    const int ok = _ZN6Player7TryGrabER8dActor_c(me, best);
+    if (ok || (++logs % 30) == 1) {
+        short slot; std::memcpy(&slot, (const char *)best + 0xce, 2);
+        std::fprintf(stderr, "[geggs] LAB grab lf=%u: class %d slot %d at %d units, its flags 0x%x, TryGrab %s\n", g_lf, cls, slot,
+                     (int)std::sqrt((double)bd), (unsigned)rd32(best, 0xb0), ok ? "TOOK IT" : "refused");
+    }
+}
+
 void ghost_eggs_frame(unsigned) {
     read_env();
     if (g_off) return;
@@ -309,7 +337,7 @@ void ghost_eggs_frame(unsigned) {
     ++g_lf;
     const int me = (int)data_0209f250;
     char *mb = (me >= 0 && me < kBodies) ? (char *)data_0209f394[me] : nullptr;
-    if (mb) send_tick(mb);
+    if (mb) { send_tick(mb); lab_grab(mb); }
     recv_tick();
 }
 
