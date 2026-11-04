@@ -101,6 +101,11 @@ void send_tick(char *me) {
     int *q = queue_of(me);
     int eggs = 0;
     if (q) for (int i = 0; i < kQueue; ++i) if (q[i]) ++eggs;
+    if (g_log && q && q[0] && (g_lf % 30) == 0) {
+        const void *e = (const void *)(intptr_t)q[0];
+        std::fprintf(stderr, "[geggs] my trail lf=%u egg %u at (%d,%d,%d), me at (%d,%d,%d)\n", g_lf, uid_of(e) & 0xff,
+                     rd32(e, 0x5c) >> 12, rd32(e, 0x60) >> 12, rd32(e, 0x64) >> 12, rd32(me, 0x5c) >> 12, rd32(me, 0x60) >> 12, rd32(me, 0x64) >> 12);
+    }
     // my eggs out of the queue (the one in my mouth for the throw, the flying ones): class 9, following me, state 1
     for (TxFl &f : g_tx) {
         if (!f.used || f.burst_left) continue;
@@ -377,6 +382,10 @@ extern "C" int port_ghost_egg_begin(void *egg, int saved[4]) {
                 int dp[3];
                 if (!port_adventure_ghost_drawpos(b, dp)) return 0;
                 saved[0] = rd32(ghost, 0x5c); saved[1] = rd32(ghost, 0x60); saved[2] = rd32(ghost, 0x64); saved[3] = 1;
+                if (g_log && (g_lf % 30) == (u % 30))
+                    std::fprintf(stderr, "[geggs] trail lf=%u egg %u (#%d of seat body %d) at (%d,%d,%d), ghost drawn at (%d,%d,%d), ghost opacity %d, egg flags 0x%x\n",
+                                 g_lf, u & 0xff, i, b, rd32(egg, 0x5c) >> 12, rd32(egg, 0x60) >> 12, rd32(egg, 0x64) >> 12, dp[0] >> 12, dp[1] >> 12, dp[2] >> 12,
+                                 ((const unsigned char *)ghost)[0x6f5], (unsigned)rd32(egg, 0xb0));
                 wr32(ghost, 0x5c, dp[0]); wr32(ghost, 0x60, dp[1]); wr32(ghost, 0x64, dp[2]);
                 return 1;
             }
