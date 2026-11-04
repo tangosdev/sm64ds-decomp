@@ -187,7 +187,8 @@ extern "C" {
 extern int data_0209e650;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
-extern short Vec3_VertAngle(const void *a, const void *b);
+// local extern: CalcLib.h does not declare Vec3_VertAngle yet.
+extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void func_0200fa8c(void *c, int a);
 extern void func_ov102_0214b384(void *a, unsigned int b);
@@ -765,7 +766,7 @@ int daBombking_c::func_ov078_021247bc()
 
     if (this->mActionStep != 2) {
         horz = Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
-        vert = Vec3_VertAngle(&this->mPosX, &this->mArenaPosX);
+        vert = Vec3_VertAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
         Vec3_Dist((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
         vA.x = 0;
         vA.y = 0;
