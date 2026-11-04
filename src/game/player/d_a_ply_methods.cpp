@@ -4560,7 +4560,7 @@ int daPly_c::func_ov002_020c44c4() {
     if (b0 != 0) {
         goto cont;
     }
-    if ((data_0209caa0[2] & 0x80) == 0) {
+    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0) {
         goto ret0;
     }
     b1 = (int)(f2d8 == 2);
@@ -5902,7 +5902,7 @@ int daPly_c::St_Teleport_Main() {
     extern void func_02035860(void*, void*);
     extern char* data_0209f318;
     extern int data_0209f32c;
-    extern u8 data_0209f284;
+    extern u8 gShowTouchScreenArrows;
     switch (mStateStep) {
     case 0:
         if (mOpacity > 1) {
@@ -5964,7 +5964,7 @@ int daPly_c::St_Teleport_Main() {
                 this->ChangeState(data_ov002_0211067c);
             else
                 this->ChangeState(data_ov002_0211013c);
-            data_0209f284 = 1;
+            gShowTouchScreenArrows = 1;
             mTeleportTimer = 0x3c;
             func_02012790(0x24);
         }
@@ -6261,7 +6261,7 @@ void daPly_c::func_ov002_020c7350() {
         int isOne = (v == 1);
         if (isOne != false)
             goto setanim2;
-        if (!(*(int *)(data_0209caa0 + 8) & 0x80))
+        if (!(*(int *)(data_0209caa0 + 8) & FILE_FLAGS2_INTRO_DONE))
             goto skip_setanim2;
         {
             int isTwo = (v == 2);
@@ -8051,7 +8051,8 @@ void func_ov002_020ca940(char* self)
     b = data_0209f2d8;
     b = b == 1;
     if (b == false) {
-        if (!(data_0209caa0[2] & 0x80)) return;
+        if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE))
+            return;
     }
 
     if (*(u16*)(data_0209f49e + (u8)gActivePlayerSlot * 0x18) & 0x8000) {
@@ -12182,7 +12183,7 @@ int daPly_c::St_Wait_Cleanup() {
         unsigned char v = data_0209f2d8;
         int b0 = (v == 1);
         if (b0 == 0) {
-            if ((data_0209caa0[2] & 0x80) != 0) {
+            if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) != 0) {
                 int b1 = (v == 2);
                 if (b1 == 0) break;
             }
@@ -12249,7 +12250,7 @@ int daPly_c::St_Wait_Main() {
         unsigned char f2d8_0 = data_0209f2d8;
         int b0 = (f2d8_0 == 1);
         if (b0 == 0) {
-            if (data_0209caa0[2] & 0x80) {
+            if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) {
                 int b1 = (f2d8_0 == 2);
                 if (b1) goto blk0_34;
                 goto blk0_35;
@@ -12380,7 +12381,8 @@ int daPly_c::St_Wait_Main() {
             unsigned char f2d8_2 = data_0209f2d8;
             int b2a = (f2d8_2 == 1);
             if (b2a == 0) {
-                if ((data_0209caa0[2] & 0x80) == 0) break;
+                if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+                    break;
                 int b2b = (f2d8_2 == 2);
                 if (b2b != false) break;
             }
@@ -12442,7 +12444,8 @@ int daPly_c::St_Wait_Main() {
             unsigned char f2d8_4 = data_0209f2d8;
             int b4a = (f2d8_4 == 1);
             if (b4a == 0) {
-                if ((data_0209caa0[2] & 0x80) == 0) break;
+                if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+                    break;
                 int b4b = (f2d8_4 == 2);
                 if (b4b != false) break;
             }
@@ -12679,7 +12682,8 @@ int daPly_c::St_Wait_Init() {
     f2d8 = data_0209f2d8;
     b0 = (f2d8 == 1);
     if (b0 != 0) goto L80;
-    if ((data_0209caa0[2] & 0x80) == 0) goto L50;
+    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+        goto L50;
     {
         int b1 = (f2d8 == 2);
         if (b1 == 0) goto L80;
@@ -12692,7 +12696,8 @@ L50:
 L80:
     if (mIsMega == 0) goto Ld8;
     if (b0 != 0) goto Lbc;
-    if (data_0209caa0[2] & 0x80) goto Lbc;
+    if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)
+        goto Lbc;
     this->SetAnim(0xa0, 0, 0x1000, 0);
 Lbc:
     mStateTimer = 0x384;
@@ -13215,7 +13220,8 @@ int daPly_c::St_Walk_Init() {
         int byte1 = data_0209f2d8;
         int cond = (byte1 == 1);
         if (cond) goto do_anim;
-        if ((data_0209caa0[2] & 0x80) == 0) goto merge;
+        if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+            goto merge;
         cond = (byte1 == 2);
         if (cond) goto merge;
 do_anim:
@@ -13421,7 +13427,7 @@ void daPly_c::func_ov002_020d4748() {
             d = data_0209f2d8;
             b = (d == 1);
             if (b == false) {
-                if (data_0209caa0[2] & 0x80) {
+                if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) {
                     int b2 = (d == 2);
                     if (b2 == false) goto after6e3;
                 }
@@ -20164,7 +20170,8 @@ void func_ov002_020e032c(unsigned char* c)
     ((daPly_c *)c)->mHasWings = 0;
     st = data_0209f2d8;
     if ((int)(st == 1) == 0) {
-        if (((&data_0209caa0)[2] & 0x80) == 0) return;
+        if (((&data_0209caa0)[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+            return;
         if ((int)(st == 2) != 0) return;
     }
     ((daPly_c *)c)->EndPowerupMusic(0x33);
@@ -22812,7 +22819,7 @@ int daPly_c::Behavior() {
     extern void func_ov002_020ce8bc(void *self, s32 arg);
     extern int func_ov002_020d6790(void *self);
     extern void func_ov002_020d80d0(void *self);
-    extern s8 data_0209f284;
+    extern s8 gShowTouchScreenArrows;
     extern u8 data_0209f2d8;
     extern s8 data_0209f2f8;
     extern G_ee90 data_0209ee90;
@@ -22901,7 +22908,7 @@ after_player_slot:
     DecIfAbove0_Short(&mTeleportTimer);
 
     if (mTeleportTimer == 1)
-        data_0209f284 = 0;
+        gShowTouchScreenArrows = 0;
 
     if (mIsControlDisabled == 0) {
         DecIfAbove0_Short(&mBalloonTimer);
@@ -23153,7 +23160,8 @@ s32 daPly_c::InitResources() {
       t = (unsigned int)(d == 1);
     }
     if (t != 0) goto Lac;
-    if ((data_0209caa0.unk8 & 0x80) != 0) goto Lac;
+    if ((data_0209caa0.unk8 & FILE_FLAGS2_INTRO_DONE) != 0)
+        goto Lac;
     t = (unsigned int)(gRunningKuppaScript != 0);
     if (t == 0) goto Ld0;
 Lac:

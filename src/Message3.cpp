@@ -28,6 +28,7 @@
 #include "types.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
+#include "SaveData.h"
 #include "Message.h"
 #include "MessageBank.h"
 #include "G2x.h"
@@ -1036,13 +1037,13 @@ extern "C" void func_020326ac(void) {
         }
     }
     case 7: {
-        if ((data_0209caa0[2] & 0x80) && IsButtonInputValid() != 0) {
+        if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) && IsButtonInputValid() != 0) {
             data_0209fd0c += 1;
             data_0209fcc4 = 1;
             data_0209fcbc = 0;
             data_0209fcc8 = 1;
         }
-        if (!(data_0209caa0[2] & 0x80)) {
+        if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
             return;
         }
         {

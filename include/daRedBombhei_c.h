@@ -39,7 +39,7 @@ struct daRedBombhei_c : dActor_c {
     u8          mCannonOpened;      /* 0x1ea -- picks the "already opened" line next time */
     u8          mMsgPage;           /* 0x1eb -- message pages advanced this talk */
     u16         mPrevMsgPageState;  /* 0x1ec -- last frame's message page state */
-    u8          mMsgHint;           /* 0x1ee -- last frame's value of data_0209f284 */
+    u8 mMsgHint;                    /* 0x1ee -- last frame's value of gShowTouchScreenArrows */
     u8          pad_1ef;
 
     /* Inline is load-bearing: out of line emits D0 before D1. */

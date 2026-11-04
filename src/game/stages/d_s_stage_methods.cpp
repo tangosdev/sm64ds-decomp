@@ -190,9 +190,21 @@ extern u8 data_0209f248;
 extern u8 data_0209f250;
 extern u8 data_0209f260;
 extern u8 data_0209f280;
-extern u8 data_0209f284;
+/* Non-zero while a talk or event is pointing the player at the Touch Screen:
+   dMeter_c::Render then calls RenderBouncingArrows, which draws the three
+   down-arrows along the foot of the top screen. Every writer that sets it
+   also plays sound 0x24 -- the intro Lakitu partway through message 0x182,
+   the 0x74a sign, the red Bob-omb buddy, a cap icon flashing on the map, the
+   end of a teleport -- and clears it once that is over. InitResources clears
+   it on stage load. */
+extern u8 gShowTouchScreenArrows;
 extern u8 data_0209f290;
-extern u8 data_0209f294;
+/* Non-zero from VE_Init (the VS time-up exit screen: exit text, both screens
+   dimmed) until the next InitResources; data_0209f290 is that screen's step.
+   Every "is play suspended" test ORs it with data_0209f2c4 (pause) and
+   data_0209f20c, so while it is set the HUD, camera, actor behaviour and
+   button input all stand still. */
+extern u8 gVsExitScreenActive;
 extern u8 data_0209f29c;
 extern u8 data_0209f2a0[];
 extern u8 data_0209f2a4;
@@ -606,7 +618,7 @@ void dScStage_c::VE_Init() {
     data_0209d454 |= 3;
     data_0209b454 |= 0x40000000;
     data_0209b464 = data_0209b454;
-    data_0209f294 = 1;
+    gVsExitScreenActive = 1;
     data_0209f290 = 0;
     G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, a | 0x20, -7);
     G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, b | 0x20, -7);
@@ -621,7 +633,7 @@ void dScStage_c::RenderBouncingArrows() {
         r4 = (data_020a0db0 & 8) ? 0xae : 0xb0;
     }
     A = data_0209f2c4;
-    if ((A == 0 && data_0209f284 != 0 && (int)(data_0209f2d8 == 1) == 0) ||
+    if ((A == 0 && gShowTouchScreenArrows != 0 && (int)(data_0209f2d8 == 1) == 0) ||
         (A != 0 && (unsigned char)(data_0209f248 + 0xf7) <= 2u)) {
         OAM::Render(0, &OAM::BOUNCING_ARROW, 0x40, r4, -1, -1, 0x1000, 0x1000, 0, -1);
         OAM::Render(0, &OAM::BOUNCING_ARROW, 0x80, r4, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -919,7 +931,7 @@ void dScStage_c::LC_Update() {
 #pragma opt_strength_reduction off
 void dScStage_c::CheckCameraInput() {
     CamInput *cam = (CamInput *)data_0209f498;
-    if ((u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0 && data_0209d660 == 0) {
+    if ((u8)(gVsExitScreenActive | (data_0209f2c4 | data_0209f20c)) == 0 && data_0209d660 == 0) {
         int i = 0;
         int n1 = data_0209f21c;
         if (n1 > 0) {
@@ -2697,8 +2709,8 @@ int IsButtonInputValid(void) {
     int mode;
     int val;
 
-    if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) == 0 && data_0209f204 == 0 &&
-        data_0209f294 == 0) {
+    if (((data_0209f2c4 | data_0209f20c | gVsExitScreenActive) & 0xff) == 0 && data_0209f204 == 0 &&
+        gVsExitScreenActive == 0) {
         mode = data_0209caa0[0x42];
         if (mode == 0) {
             val = *(unsigned short *)((char *)&data_020a0e5a + (gActivePlayerSlot << 2));
@@ -3960,7 +3972,7 @@ void func_0203db3c(int i, int v);
 }
 
 int dScStage_c::Render() {
-    if (((data_0209f294 | (data_0209f2c4 | data_0209f20c)) & 0xff) == 0) {
+    if (((gVsExitScreenActive | (data_0209f2c4 | data_0209f20c)) & 0xff) == 0) {
         StageTexAnimSlot *slot = mTexAnimSlots;
         int slotIndex;
         for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count; slotIndex++, slot++) {
@@ -3991,7 +4003,7 @@ int dScStage_c::Render() {
             if (data_0209fc9c == 0 && data_0209f2c4 == 0) {
                 RenderVsModeCountdown();
                 RenderVsModeNewStar();
-                if (data_0209f294 != 0 && data_0209f290 != 2)
+                if (gVsExitScreenActive != 0 && data_0209f290 != 2)
                     RenderBouncingArrows();
             }
             func_0203083c();
@@ -4119,7 +4131,7 @@ int dScStage_c::Behavior() {
             if (data_ov002_02111188 == 0 && data_0209f204 != 0) {
                 if (data_0209fc68 == 0) {
                     if (data_02092110 < 0 && data_0209d4b0 == 0) {
-                        if (data_0209f294 == 0 && data_0209f290 == 0)
+                        if (gVsExitScreenActive == 0 && data_0209f290 == 0)
                             VE_Init();
                         else
                             VE_Update();
@@ -4160,11 +4172,12 @@ int dScStage_c::Behavior() {
         if ((((h1 & 0x200) == 0 && (h1 & 0x100) == 0) ||
              (*(u16 *)((char *)data_020a0e5a + pi * 4) & 8) == 0) &&
             data_0209d660 == 0 && data_0209d4b0 == 0 && CanPause() != 0 && IsPauseDisabled() == 0 &&
-            (u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0 &&
+            (u8)(gVsExitScreenActive | (data_0209f2c4 | data_0209f20c)) == 0 &&
             MaskOff(data_0209b454, 0) == 0) {
             u8 st = data_0209f2d8;
             int b1 = (st == 1);
-            if ((b1 && data_0209fc68 == 0) || (((FileSaveData *)data_0209caa0)->flags2 & 0x80)) {
+            if ((b1 && data_0209fc68 == 0) ||
+                (((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE)) {
                 int b2 = (st == 2);
                 if (b2 == 0) {
                     int b3 = (gRunningKuppaScript != 0);
@@ -4194,7 +4207,7 @@ int dScStage_c::Behavior() {
             }
         }
     }
-    if ((u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0) {
+    if ((u8)(gVsExitScreenActive | (data_0209f2c4 | data_0209f20c)) == 0) {
         if ((data_0209b454 & ~0x20000000) == 0)
             dExtShadowModel_c::CleanAll();
     }
@@ -4216,7 +4229,8 @@ void dScStage_c::CheckInput() {
     int isVsMode = (mode == 1);
     if (isVsMode == false) {
         int modeIsTwo = (mode == 2);
-        if (modeIsTwo != false || !(((FileSaveData *)data_0209caa0)->flags2 & 0x80) ||
+        if (modeIsTwo != false ||
+            !(((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE) ||
             (data_0209d660 == 0 && (int)(gRunningKuppaScript != 0) != false)) {
             {
                 CamInput *control = (CamInput *)data_0209f498;
@@ -4840,9 +4854,9 @@ int dScStage_c::InitResources() {
         scene->mSysTracker.Initialise();
 
         u8 f2fc = data_0209f2fc;
-        data_0209f294 = 0;
+        gVsExitScreenActive = 0;
         data_0209f290 = 0;
-        data_0209f284 = 0;
+        gShowTouchScreenArrows = 0;
         data_0209f300 = 0;
         if (f2fc != 1) {
             data_0209f20c = 0;
@@ -4948,7 +4962,8 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadFont3D();
     }
 
-    if ((int)(data_0209f2d8 == 0) != 0 && (((FileSaveData *)data_0209caa0)->flags2 & 0x80) == 0 &&
+    if ((int)(data_0209f2d8 == 0) != 0 &&
+        (((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         (int)(gRunningKuppaScript != 0) == 0) {
         BG0CNT_SUB &= ~3;
         BG0CNT_SUB &= ~0x40;

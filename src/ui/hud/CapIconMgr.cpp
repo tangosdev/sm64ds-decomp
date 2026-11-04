@@ -39,7 +39,7 @@ extern int data_0209f3e8[];
 /* The daPly_c*[] array. The shards disagreed scalar-vs-array; the array
  * spelling gives the same ldr for both uses ([0] = first element). */
 extern void *data_0209f394[];
-extern unsigned char data_0209f284;
+extern unsigned char gShowTouchScreenArrows;
 extern unsigned char data_0209f2d8;
 extern signed char data_0209f2f8;
 
@@ -93,7 +93,7 @@ void func_ov001_020aaf40(void)
             }
         }
         if (gCapIconFlashTimer == 0)
-            data_0209f284 = 0;
+            gShowTouchScreenArrows = 0;
     }
 
     if (IsVsMode()) {
@@ -376,7 +376,7 @@ void func_ov001_020aa6e4(int idx, unsigned r1, int* obj){
             return;
         if (func_02029600(obj[1]) == 0)
             return;
-        data_0209f284 = 1;
+        gShowTouchScreenArrows = 1;
         func_02012790(0x24);
         ((dCapIcon_c *)obj)->mFlashFrames = 0x3c;
         gCapIconFlashTimer = ((dCapIcon_c *)obj)->mFlashFrames;

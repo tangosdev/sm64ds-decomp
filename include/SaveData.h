@@ -36,7 +36,8 @@ struct FileSaveData {
        lost their cap; PlayerLoseCap sets it, HasPlayerLostCap tests it. */
     u32 flags1;
     /* 0x008 -- character unlocks in the low bits (bit 0 Mario, 1 Luigi,
-       2 Wario ...) and the eight glowing rabbits at bits 20..27.
+       2 Wario ...), FILE_FLAGS2_INTRO_DONE at bit 7 (enum FileSaveFlags2
+       below), and the eight glowing rabbits at bits 20..27.
        WIDTH CORRECTED: this was declared `u8 unk_008`, but every access is
        32 bits wide -- IsCharacterUnlocked tests the whole word,
        SetCharacterIntro read-modify-writes it, and NumGlowingRabbitsFound
@@ -61,6 +62,21 @@ struct FileSaveData {
        it, and InitControllerMode/SetControllerMode (d_s_stage_methods.cpp)
        keep it in step with the per-controller record. */
     u8 controllerMode;
+};
+
+/* Named bits of FileSaveData::flags2 (the live word is 0x0209caa8). */
+enum FileSaveFlags2 {
+    /* The opening camera sweep has played for this file. The only writer is
+       the intro Lakitu: daC_Jugem_c::StateIntroMain sets it when the sweep
+       hands the camera back, and the Lakitu's variant 1 enters the intro
+       while it is clear. Outside VS mode, normal play waits on it: dMeter_c
+       and dMap_c draw the in-course HUD only once it is set, dScStage_c
+       refuses pause and clears camera touch input before it, the message
+       box ignores the advance button before it, and LevelObjects'
+       IntroAllowed() tests it clear. At runtime, clearing it in a course
+       hides the whole HUD and turns the bottom map to a north-up zoomed
+       view with a star marker. */
+    FILE_FLAGS2_INTRO_DONE = 0x80
 };
 
 #ifdef __cplusplus

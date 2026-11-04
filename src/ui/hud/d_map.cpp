@@ -42,6 +42,7 @@
 #include "daPly_c.h"
 #include "dActor_c.h"
 #include "dCamera_c.h"
+#include "SaveData.h"
 #include "OAM.h"
 #include "G2x.h"
 #include "cstd.h"
@@ -90,7 +91,7 @@ int IsStarCollected(int level, int star);
 
 extern u8 data_0209f20c;
 extern u8 data_0209f2c4;
-extern u8 data_0209f294;
+extern u8 gVsExitScreenActive;
 extern u8 data_0209f250;
 extern u8 data_0209f2d4;
 extern u8 data_0209f2d8;
@@ -377,12 +378,13 @@ int dMap_c::Render()
 {
     u8 flag20c = data_0209f20c;
     u8 flag2c4 = data_0209f2c4;
-    u8 flag294 = data_0209f294;
+    u8 flag294 = gVsExitScreenActive;
     int i;
     int j;
     u8 idx = data_0209f250;
 
-    if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 || !(data_0209caa0[2] & 0x80) || (flag20c != 0 && (u32)data_0209f2d4 < 3)) {
+    if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 || !(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) ||
+        (flag20c != 0 && (u32)data_0209f2d4 < 3)) {
         daPly_c *player = (daPly_c *)data_0209f394[idx];
         int vs = (data_0209f2d8 == 1);
         if (vs != 0) {
@@ -432,7 +434,7 @@ int dMap_c::Render()
                     OAM::RenderSub(OAM::MM_PLAYER_ICONS[icon], this->mPlayerIconX[idx],
                                    this->mPlayerIconY[idx], -1, 2);
                 }
-                if (data_0209caa0[2] & 0x80) {
+                if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) {
                     u8 s = this->mArrowType;
                     if (s != 0) {
                         u16 ang;
@@ -582,7 +584,7 @@ s32 dMap_c::Behavior()
         this->mTouchCircleTimer -= data_0208ee44;
     }
 
-    flagsOr = data_0209f2c4 | data_0209f20c | data_0209f294;
+    flagsOr = data_0209f2c4 | data_0209f20c | gVsExitScreenActive;
     if ((u8)flagsOr) goto L200;
     if (data_02092110 >= 0) goto L200;
     if (data_0209f204 != 0) goto L200;
@@ -609,7 +611,8 @@ L200:
     {
         s32 b = (data_0209f2d8 == 1);
         if (b == 0) {
-            if ((data_0209caa0[2] & 0x80) == 0) goto L2a4;
+            if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+                goto L2a4;
         }
         data_0209d454 &= ~4;
         if (!(u8)flagsOr) {
@@ -621,7 +624,7 @@ L200:
     }
 
 L274:
-    if ((data_0209caa0[2] & 0x80) == 0) {
+    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0) {
         if (data_0209d4b0 == 0) goto L2a4;
     }
     data_0209d454 &= ~4;
@@ -640,7 +643,8 @@ L318:
     {
         s32 b = (data_0209f2d8 == 0);
         if (b == 0) goto L360;
-        if (data_0209caa0[2] & 0x80) goto L360;
+        if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)
+            goto L360;
         if (this->mInIntroCutscene != 0) goto L360;
     }
 L350:
@@ -983,7 +987,7 @@ int dMap_c::InitResources()
     {
         int b1 = (data_0209f2d8 == 0);
         if (b1) {
-            if (!(data_0209caa0[2] & 0x80)) {
+            if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
                 int b3 = (gRunningKuppaScript != 0);
                 if (!b3) {
                     mInvScale = (mTargetInvScale) << 1;

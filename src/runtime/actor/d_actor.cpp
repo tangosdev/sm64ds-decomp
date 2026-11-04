@@ -252,7 +252,7 @@ extern dClipper data_0209f43c;  /* the dClipper instance */
 extern u8 data_0209f274; /* doubles the far-away threshold when set */
 extern u8 data_0209f2c4;
 extern u8 data_0209f20c;
-extern u8 data_0209f294;
+extern u8 gVsExitScreenActive;
 extern u32 data_0209b464; /* flag mask that forces thinking; 0 means "any" */
 }
 int dActor_c::BeforeBehavior()
@@ -298,7 +298,7 @@ int dActor_c::BeforeBehavior()
         }
     }
 
-    if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) != 0 ||
+    if (((data_0209f2c4 | data_0209f20c | gVsExitScreenActive) & 0xff) != 0 ||
         (((mFlags & 9) == 9 || (data_0209b464 != 0 && (mFlags & data_0209b464) == 0)) &&
          data_0209fc68 == 0))
         return 0;

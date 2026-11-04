@@ -486,27 +486,27 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1050",
+      "from": "@1072",
       "to": "@1063",
       "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison."
     },
     {
-      "from": "@1051",
+      "from": "@1073",
       "to": "@1064",
       "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison."
     },
     {
-      "from": "@1052",
+      "from": "@1074",
       "to": "@1065",
       "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison."
     },
     {
-      "from": "@1053",
+      "from": "@1075",
       "to": "@1066",
       "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison."
     },
     {
-      "from": "@1054",
+      "from": "@1076",
       "to": "@1067",
       "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison."
     }

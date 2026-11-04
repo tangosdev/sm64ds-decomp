@@ -42,7 +42,7 @@
  * - Unrecovered meanings: mFlags bits 0x100, 0x400, 0x2000, 0x4000 and
  *   0x4000000 as this class uses them, hit-flag bit 0x8000000 and bits
  *   0x2000/0x4000000 of mdCcAc_c.flags, the global words data_0209b454,
- *   data_0209d660, data_0209d6bc and data_0209f284, the daPly_c::Hurt
+ *   data_0209d660, data_0209d6bc and gShowTouchScreenArrows, the daPly_c::Hurt
  *   arguments after the first two, and what the player-side calls
  *   func_ov002_020bec84 and func_ov002_020bec9c test and start.
  * - The daPly_c helpers stay mangled scalar externs (Fix12<int>-by-value
@@ -160,7 +160,7 @@ extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern s16 data_02082214[];
 extern u8 data_0209d660;
 extern u8 data_0209d6bc;
-extern u8 data_0209f284;
+extern u8 gShowTouchScreenArrows;
 extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern void func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsigned short e);
@@ -670,7 +670,7 @@ void daObjTatefuda_c::InitTalk()
  *
  * The tail is a special case for message 0x74a (what it stands for is not
  * recovered): while data_0209d660 is set and this sign carries that message,
- * data_0209d6bc == 3 sets the flag word data_0209f284 to 1 and
+ * data_0209d6bc == 3 sets the flag word gShowTouchScreenArrows to 1 and
  * data_0209d6bc == 9 clears it to 0. mFlagSeen holds the value this routine
  * last saw; sound 0x24 plays on a talk frame where the flag differs from it
  * and is non-zero.
@@ -800,18 +800,18 @@ void daObjTatefuda_c::Talk()
     if (data_0209d660 != 0 && msgId == 0x74a) {
         switch (data_0209d6bc) {
         case 3:
-            data_0209f284 = 1;
+            gShowTouchScreenArrows = 1;
             break;
         case 9:
-            data_0209f284 = 0;
+            gShowTouchScreenArrows = 0;
             break;
         }
     }
 
-    if (mFlagSeen != data_0209f284 && data_0209f284 != 0) {
+    if (mFlagSeen != gShowTouchScreenArrows && gShowTouchScreenArrows != 0) {
         func_02012790(0x24);
     }
-    mFlagSeen = data_0209f284;
+    mFlagSeen = gShowTouchScreenArrows;
 }
 
 // @symbol _ZN15daObjTatefuda_c12TryStartTalkEv
