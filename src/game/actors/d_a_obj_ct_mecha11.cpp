@@ -40,6 +40,7 @@ enum daObjCtMecha11_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
@@ -55,8 +56,10 @@ struct Mecha11ClsnFilePtr : SharedFilePtr {
 
 extern "C" {
 extern void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-extern int DecIfAbove0_Short(char *p);
-extern int RandomIntInternal(char *p);
+/* local extern: these matching CalcLib signatures keep their names to avoid
+ * renumbering this TU's compiler-generated static-initializer aliases. */
+extern unsigned short DecIfAbove0_Short(unsigned short *p);
+extern int RandomIntInternal(int *p);
 extern void func_020393d4(void *p, void *v);
 }
 
@@ -124,8 +127,8 @@ int daObjCtMecha11_c::Behavior() {
     unsigned char idx = data_0209f2c0[0];
     mPrevAngleX = data_ov035_02112b80[idx];
     if (idx == 2) {
-        if (DecIfAbove0_Short((char *)&mRandTimer) == 0) {
-            int r = (unsigned short)((unsigned)RandomIntInternal((char *)data_0209e650) >> 16);
+        if (DecIfAbove0_Short((unsigned short *)&mRandTimer) == 0) {
+            int r = (unsigned short)((unsigned)RandomIntInternal(data_0209e650) >> 16);
             if ((unsigned)r >= 0x7fff)
                 mRandDirection = 1;
             else
