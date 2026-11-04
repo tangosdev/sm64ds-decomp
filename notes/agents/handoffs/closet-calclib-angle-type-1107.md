@@ -4,7 +4,7 @@
 
 - Work item: type the closet call to `Vec3_HorzAngle` against its shared declaration.
 - Base: `a5bb6f569f6e7382ec1b5ef993b7e4fe4eae16a7` (`origin/main`).
-- Candidate: branch `audit/raw-vector-helper-types1107`; this change is intended for draft PR review.
+- Candidate: the branch attached to draft PR #4818.
 - Next action: independent verifier reviews the POD-to-Vector3 cast at the helper boundary and reruns focused/link/full-build checks on the pushed head. Source acceptance review remains outstanding.
 
 ## What changed and why
