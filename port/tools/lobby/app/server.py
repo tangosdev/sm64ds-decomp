@@ -186,14 +186,19 @@ HUB_TYPES = ("adventure", "party", "coop")
 #   damage     1 = a friend's hit can hurt a friend, 0 = off (SM64DS_ROOM_DAMAGE)
 #   tp         1 = TP to friends, coop only (SM64DS_ROOM_TP)
 #   starshare  1 = stars are shared, party only (SM64DS_ROOM_STARSHARE)
+#   soloexit   1 = only the player who collects a star leaves the level, 0 =
+#              everyone in it leaves (SM64DS_ROOM_SOLOEXIT, party and coop;
+#              STAREXIT1). A key still empties its boss room either way.
 # Each kind takes only its own names: a party room has no tp, a coop room no
 # starshare. An unknown name, or a name of the other kind, is refused.
 ROOM_SETTINGS = {
-    "party": ("collision", "interact", "damage", "starshare"),
-    "coop": ("collision", "interact", "damage", "tp"),
+    "party": ("collision", "interact", "damage", "starshare", "soloexit"),
+    "coop": ("collision", "interact", "damage", "tp", "soloexit"),
 }
+# A name a client never sent (an older launcher) is its default here, so an
+# older launcher's room still gets soloexit 1.
 ROOM_SETTING_DEFAULTS = {"collision": 1, "interact": 1, "damage": 0,
-                         "tp": 1, "starshare": 1}
+                         "tp": 1, "starshare": 1, "soloexit": 1}
 
 # The longest and the allowed shape of a coop save's DISPLAY name. Opaque text
 # the lobby only stores and echoes. The characters that make a path (separators,
@@ -1428,6 +1433,8 @@ def settings_for(kind, given, base=None):
         out = {k: ROOM_SETTING_DEFAULTS[k] for k in names}
     else:
         out = dict(base)
+        for k in names:                  # a room made before a name existed
+            out.setdefault(k, ROOM_SETTING_DEFAULTS[k])
     if not isinstance(given, dict):
         return None, "bad_settings"
     for k, v in given.items():

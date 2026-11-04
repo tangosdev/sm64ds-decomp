@@ -9,6 +9,7 @@
 
 #include <windows.h>
 
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -33,34 +34,53 @@ extern unsigned char data_02092110[];     // pending level change, <0 = none
 extern unsigned char data_0209f22c[];     // hold timer
 extern unsigned char data_0209f228;       // the star number the clear screen names
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
+void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 int _ZN8daStar_c19func_ov002_020e73acEv(char *star);      // the ROM's star classifier
 void ExitLevel(void);
+void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigned unk);
 extern int data_0209d6fc[];               // the message bank (hal/message_boot.cpp): base, entries, info section
 extern int data_0209d708[];
 extern int data_0209d70c[];
 void port_chat_system_line(const char *text);
+char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const void *pos, const void *v16, int area, int f);
+void _ZN7fBase_c18MarkForDestructionEv(char *c);
+extern unsigned char data_020a1164[];     // the per-player camera records (stride 0x24); +0 = the angle the stick is read against
+// STAREXIT2: the Grand Star collect (src/game/actors/d_a_obj_key.cpp daObjKey_c::func_ov089_02131dcc) and the state it puts the
+// collector in (St_EndingFly, src/game/player/Player.cpp func_ov002_020c3dbc)
+void func_ov002_020c3dbc(void *player);
+extern int data_ov002_0211058c[];
+void _ZN5Event6SetBitEj(unsigned b);
+void port_player_set_character(void *player, unsigned ch);   // hal/player_bridges.cpp: the character doors' own in-place swap
+// STAREXIT3: the two bytes Player::SetRealCharacter writes besides the body (src/game/player/Player.cpp:1224-1225): the
+// per-player table data_02092128[mPlayerNo] and the save file's character data_0209caa0[0x41] (spelled at its owner
+// data_0209cad2, [0x0f], as hal/player_bridges.cpp does). The next level's spawn reads the save byte (LoadEntranceObjects).
+extern unsigned char data_02092128[];
+extern unsigned char data_0209cad2[];
+extern void (*port_sdat_frame_hook)(void);   // hal/sdat/consumer.cpp: one call per game frame, every loop (the title's too)
 }
 
 namespace port {
 namespace {
 
 enum Mode { kNone, kParty, kCoop };
-enum : int { kKindStar = 1, kKindKey = 2 };
+enum : int { kKindStar = 1, kKindKey = 2, kKindGrand = 3 };   // 3: STAREXIT2, the Grand Star (an old receiver drops it)
 enum : unsigned { kFlagExits = 1u };
 enum : int { kCtlStarPop = 0x1e };
-enum : unsigned { kCountMs = 5000, kShowAfterMs = 2500 };
+enum : unsigned { kCountMs = 5000, kShowAfterMs = 2500, kNoteMs = 4000 };
 enum : int { kSeenMax = 16, kPendMax = 8, kSeqMemory = 12, kLedgerMax = 4, kRecentMax = 8, kResendN = 6 };
 // STARGATE1: re-sends after the first send, ms from the event (the first copy goes out at +0, then these); a console that was
 // loading or in star select when the event arrived still gets one. The receiver de-duplicates by sequence number.
 const unsigned kResendAt[kResendN] = { 250, 700, 1500, 3000, 5000, 8000 };
 enum : unsigned { kLedgerMs = 8000, kGuardMs = 2000, kSoftMs = 4000, kForceMs = 12000 };
 // SYNX reserved word
-enum : unsigned { kXStar = 1u, kXKey = 2u, kXNoExit = 4u };
+enum : unsigned { kXStar = 1u, kXKey = 2u, kXNoExit = 4u, kXGrand = 3u };
+// kXGrand (STAREXIT2) is the low two bits both set, a value no older sender makes: a 0.9.3.6 receiver drops it (its check wants
+// exactly 1 or 2) and the relay and comms_hub pass it (they police only bits above 2: reserved & ~7 == 0).
 
 #pragma pack(push, 1)
 struct PopWire {            // SYNB 0x1e payload, 8 B
     CoopKeyWire key;        // sender's level + act
-    uint8_t kind;           // 1 star, 2 key
+    uint8_t kind;           // 1 star, 2 key, 3 the Grand Star (STAREXIT2)
     uint8_t flags;          // bit0 the collector exits
     uint8_t star;           // star number 0..8
     uint8_t seq;
@@ -71,7 +91,8 @@ static_assert(sizeof(PopWire) == 8, "popup event is 8 bytes");
 struct Pending { bool used; unsigned t0; int idx; unsigned char buf[16]; int len; bool coop; PopWire w; };
 // An event that arrived while I was not in the collector's course and act yet (loading, star select): kept for kLedgerMs and
 // re-checked every frame.
-struct Ledger { bool used; int seat, kind, star, course, lvl, act; bool exits; unsigned t; };
+struct Ledger { bool used; int seat, kind, star, course, lvl, act; bool exits; unsigned t; bool arena; };
+// (arena: STAREXIT1, only a console in the collector's own level leaves for it)
 // Recent collections (mine and everyone's) for the single-collector guard.
 struct Recent { bool used; int key, star, kind; unsigned t; };
 struct Fake { bool used, done; int kind, exits; unsigned frame; };
@@ -90,7 +111,10 @@ struct State {
     // receiver
     SeqMem mem[kSeqMemory]; int nmem;
     bool counting; unsigned t_end; bool exit_pending; bool exit_key; int exit_star;
+    bool exit_grand;                 // STAREXIT2: the exit is the Grand Star's (my body takes the ending flight)
+    bool grand_sent, grand_forced;   // STAREXIT2: this level: my own Grand Star event went out / I was put on the ending flight
     char line[kStarPopupLines - 1][kStarPopupLineMax]; int nline;
+    bool note_only;                  // STAREXIT1: the lines are a note (no countdown, no exit)
     unsigned t_last;
     bool registered;
     StarPopupStats st;
@@ -147,7 +171,7 @@ void init_once() {
     }
     g.no_timeout = env_on("SM64DS_STAR_POPUP_NOTIMEOUT", false);
     if (const char *e = std::getenv("SM64DS_STAR_POPUP_STALE")) { const int f = std::atoi(e); if (f > 0) g.stale_frame = (unsigned)f; }
-    std::fprintf(stderr, "[starpop] on: enabled=%d\n", (int)g.enabled);
+    std::fprintf(stderr, "[starpop] on: enabled=%d only_collector=%d\n", (int)g.enabled, (int)env_on("SM64DS_ROOM_SOLOEXIT", true));
 }
 
 Mode mode_now() {
@@ -162,6 +186,24 @@ Mode mode_now() {
     // WPARTY2: a world room, while I am in a world party (kParty; rx adds the member test)
     if (k == kHubRoomWorld) return (world_party_active() && world_party_in_party()) ? kParty : kNone;
     return kNone;
+}
+
+// ---- STAREXIT1: the room rule "only the collector leaves" ------------------------------------------------------------------
+// The one place the rule lives. The launcher hands it over as SM64DS_ROOM_SOLOEXIT (lobby room setting "soloexit"; the coop and
+// world hand-offs put every request name into the environment), read on every event so an in-place hand-off to another room is
+// seen. A missing or empty name is ON (an older launcher sends none). star_popup_set_only_collector() overrides it (the in-game
+// lobby); -1 goes back to the environment.
+int g_only_override = -1;
+bool only_collector() {
+    if (g_only_override >= 0) return g_only_override != 0;
+    return env_on("SM64DS_ROOM_SOLOEXIT", true);
+}
+// A friend's star counts for me only where it is shared: coop always (the room shares one save), a party room when its stars are
+// shared and taken (hal/party_stars.cpp reads the same two names), a world party never (hal/party_stars.cpp takes party rooms only).
+bool star_shared_here(Mode m) {
+    if (m == kCoop) return true;
+    return comms_hub_room_kind() == kHubRoomParty && env_on("SM64DS_PARTY_SHARE_STARS", true) &&
+           env_on("SM64DS_PARTY_ACCEPT_STARS", true);
 }
 
 int my_seat() { return comms_hub_my_seat(); }
@@ -319,6 +361,7 @@ void describe(const char *name, int kind, int course, int star, char *out, size_
     // The chat font has no brackets, so the course goes after "in" / "from".
     char c[64], st[48];
     course_title(course, c, sizeof c);
+    if (kind == kKindGrand) { std::snprintf(out, cap, "%s got the Grand Star", name); return; }   // STAREXIT2
     if (!full) {        // the popup: one short line (the chat line has the course)
         if (kind == kKindKey) std::snprintf(out, cap, "%s got the key", name);
         else {
@@ -375,7 +418,160 @@ void clear_stale_d4b0() {
 }
 
 void clear_receiver() {
-    g.counting = false; g.exit_pending = false; g.nline = 0; g.t_end = 0;
+    g.counting = false; g.exit_pending = false; g.nline = 0; g.t_end = 0; g.note_only = false; g.exit_grand = false;
+}
+
+// ---- STAREXIT2: the Grand Star -----------------------------------------------------------------------------------------------
+// The ROM's collect (daObjKey_c::func_ov089_02131dcc, the LAST_STAR arm of StateStarJump step 3) is three calls: the collector's
+// Player goes to St_EndingFly (func_ov002_020c3dbc), event bit EVENT_KEY (0x1d) is set, the star marks itself for destruction.
+// St_EndingFly flies the body out of the arena and the ROM then loads the ending (castle grounds). The collector's console runs
+// that untouched; a console told about it does the same three things with its own body and its own copy of the star.
+enum : unsigned { kEventKey = 0x1d };
+bool on_ending_flight(const char *b) { return b && *(void *const *)(b + 0x370) == (const void *)data_ov002_0211058c; }
+// The ending is Mario's. Its Kuppa script finds "player 0" through func_0200e6d8(0): the local body when its character
+// (param1, +8) is 0 = Mario, else a Mario the script spawned itself; a coop or party body that is Luigi, Wario or Yoshi finds
+// neither and the ending's first camera step (func_0200814c) reads through a null player as the ending level loads (c0000005,
+// measured with both consoles as Yoshi). On the cartridge only Mario reaches this arena. So the body on the ending flight is
+// made Mario first, through the doors' own swap (model, state and position carry across).
+//
+// STAREXIT3: that swap is the doors' SetRealCharacter, which also writes the save file's character byte and my per-player
+// table byte (src/game/player/Player.cpp:1224-1225), so a Luigi, Wario or Yoshi player's SAVED character became Mario after
+// the ending, and the character colours and the next coop save followed it. Only the body is the ending's: the two bytes are
+// written back at once. They cannot simply stay that way, though: the ending and every credits scene are level loads, and
+// each load spawns my body from the save byte (LoadEntranceObjects' f2, hal/level_boot.cpp), where the ending's script needs
+// a Mario again. So while the ending runs, a level change that is pending (data_02092110 >= 0, held by the exit fade until
+// it is applied) gets Mario in both bytes, and every other frame gets my own character back. The keep ends once a level change
+// has happened and no level change, Kuppa script (data_0209fc48) or ending stage mode (data_0209f2d8 == 2) has been seen for
+// kKeepQuietFrames frames in a level other than the arena.
+// SM64DS_GRAND_KEEP=0 keeps the old behaviour (the swap's writes stand) and SM64DS_GRAND_KEEP=plain writes the bytes back
+// once right after the swap and never again, so a row can show either next to the fix in one exe. Test-only.
+enum : unsigned { kKeepQuietFrames = 120, kKeepNoBodyFrames = 120 };
+// It also ends when the ending is left another way (REVSTAREXIT3 note 2): the stage mode leaves 2 after the ending began (a file
+// started again: StartFile sets it 0), or somebody else wrote the save byte (a file was read), or the room is gone while I am no
+// longer in the ending (no body for kKeepNoBodyFrames frames, as at a title, or neither the ending mode, the ending flight nor a
+// pending level change). A credits scene's own load also has no body for a frame or two, which must not count. Then my own character goes back into both bytes if a level change window
+// left Mario there, unless a file read already replaced them, and the keep is cleared, so a later room in this process never sees
+// stale values. A room lost while the ending still runs here (mode 2, a body) keeps the keep running: the credits scenes still load
+// and still need Mario for their spawn.
+struct Keep { bool on, pending, changed, ending, room_lost_noted; unsigned char save, tbl, last; int slot, from_level; unsigned quiet, writes, windows, nobody; };
+Keep g_keep;
+int keep_mode() {
+    static int m = -1;
+    if (m < 0) {
+        const char *e = std::getenv("SM64DS_GRAND_KEEP");
+        m = !e || !*e ? 1 : (*e == '0' ? 0 : (*e == 'p' ? 2 : 1));
+    }
+    return m;
+}
+void keep_write(bool mario) {
+    data_0209cad2[0x0f] = mario ? 0 : g_keep.save;
+    data_02092128[g_keep.slot] = mario ? 0 : g_keep.tbl;
+    g_keep.last = data_0209cad2[0x0f];
+    ++g_keep.writes;
+}
+bool keep_room_alive() {
+    if (!comms_hub_active() || comms_hub_state() != kHubLive) return false;
+    if (std::getenv("SM64DS_COOP") || std::getenv("SM64DS_PARTY")) return true;
+    return world_party_active() && comms_hub_room_kind() == kHubRoomWorld;
+}
+// Clear the keep. own: put my own character back first, but only while the save byte is still the one I wrote last (a file read
+// since then owns both bytes).
+void keep_drop(const char *why, bool own) {
+    const bool mine = data_0209cad2[0x0f] == g_keep.last;
+    if (own && mine) keep_write(false);
+    std::fprintf(stderr, "[starpop] GRAND keep: dropped (%s; level %d, mode %u, body %s, %u writes): %s; save character %u, table[%d] %u"
+                 " wall=%lld\n", why, (int)data_0209f2f8, (unsigned)data_0209f2d8[0], my_body() ? "yes" : "none", g_keep.writes,
+                 own && mine ? "my own character written back" : mine ? "nothing written" : "the bytes were rewritten since (a file read): left alone",
+                 (unsigned)data_0209cad2[0x0f], g_keep.slot, (unsigned)data_02092128[g_keep.slot], wall_ms());
+    g_keep = Keep();
+}
+// The drop tests, also run from the per-frame sound hook (port_sdat_frame_hook, chained when the keep is first armed), because a
+// title reached in place runs its own loop where port_star_popup_frame is not called.
+bool keep_guard() {
+    if (!g_keep.on) return false;
+    if (data_0209cad2[0x0f] != g_keep.last) { keep_drop("the save byte was written by someone else", false); return false; }
+    const unsigned mode = data_0209f2d8[0];
+    if (mode == 2) g_keep.ending = true;
+    if (g_keep.ending && mode != 2) { keep_drop("the stage mode left the ending", true); return false; }
+    if (!keep_room_alive()) {
+        const char *b = (const char *)my_body();
+        const bool ending_now = mode == 2 || (signed char)data_02092110[0] >= 0 || (b && on_ending_flight(b));
+        const bool in_ending = ending_now && (b || g_keep.nobody < kKeepNoBodyFrames);
+        if (!in_ending) { keep_drop("the room is gone", true); return false; }
+        if (!g_keep.room_lost_noted) {
+            g_keep.room_lost_noted = true;
+            std::fprintf(stderr, "[starpop] GRAND keep: the room is gone but the ending runs on here (level %d): the keep stays wall=%lld\n",
+                         (int)data_0209f2f8, wall_ms());
+        }
+    }
+    return true;
+}
+void (*g_keep_prev_hook)(void) = nullptr;
+bool g_keep_chained = false;
+void keep_frame_hook() {
+    if (g_keep_prev_hook) g_keep_prev_hook();
+    if (g_keep.on) g_keep.nobody = my_body() ? 0 : g_keep.nobody + 1;   // once per frame in every loop
+    keep_guard();
+}
+void keep_tick() {
+    if (!keep_guard()) return;
+    const bool pend = (signed char)data_02092110[0] >= 0;
+    if (pend != g_keep.pending)
+        std::fprintf(stderr, "[starpop] GRAND keep: %s (level %d -> %d): save character %u, table[%d] %u wall=%lld\n",
+                     pend ? "a level change is pending, Mario for its spawn" : "no level change pending, my own character back",
+                     (int)data_0209f2f8, (int)(signed char)data_02092110[0], pend ? 0u : (unsigned)g_keep.save, g_keep.slot,
+                     pend ? 0u : (unsigned)g_keep.tbl, wall_ms());
+#ifndef PORT_ROM_CLEAN
+    // Proof knob SM64DS_GRAND_KEEP_QUIT=<n> (dev only): at the start of the n-th level change window of the ending, end the coop
+    // room (the hub torn down, as a lost connection tears it down), so a row can end the room inside a window.
+    if (pend && !g_keep.pending) {
+        static int quit_n = -2;
+        if (quit_n == -2) { const char *e = std::getenv("SM64DS_GRAND_KEEP_QUIT"); quit_n = (e && *e) ? std::atoi(e) : -1; }
+        if (quit_n > 0 && ++g_keep.windows == (unsigned)quit_n) {
+            std::fprintf(stderr, "[starpop] GRAND keep: proof knob: the room ends in level change window %d wall=%lld\n", quit_n, wall_ms());
+            comms_hub_teardown("proof knob: the room ends inside a level change window");
+        }
+    }
+#endif
+    g_keep.pending = pend;
+    if (pend) { g_keep.changed = true; g_keep.quiet = 0; keep_write(true); return; }
+    keep_write(false);
+    const bool ending = rd32(data_0209fc48) != 0 || data_0209f2d8[0] == 2;
+    if (g_keep.changed && (int)data_0209f2f8 != g_keep.from_level && !ending && my_body()) {
+        if (++g_keep.quiet >= kKeepQuietFrames) keep_drop("the ending is over", true);
+    } else {
+        g_keep.quiet = 0;
+    }
+}
+void ending_as_mario(char *b, const char *why) {
+    if (!b || *(const unsigned *)(b + 8) == 0u) return;
+    const unsigned was = *(const unsigned *)(b + 8);
+    const int slot = *(const unsigned char *)(b + 0x6d8) & 0x3f;     // mPlayerNo, the table index SetRealCharacter writes
+    const unsigned char save0 = data_0209cad2[0x0f], tbl0 = data_02092128[slot];
+    port_player_set_character(b, 0u);
+    const unsigned char save1 = data_0209cad2[0x0f], tbl1 = data_02092128[slot];
+    const int km = keep_mode();
+    if (km != 0 && !g_keep.on) {
+        g_keep = Keep();
+        g_keep.on = true; g_keep.save = save0; g_keep.tbl = tbl0; g_keep.slot = slot; g_keep.from_level = (int)data_0209f2f8;
+        keep_write(false);
+        if (km == 2) g_keep = Keep();
+        if (!g_keep_chained) { g_keep_chained = true; g_keep_prev_hook = port_sdat_frame_hook; port_sdat_frame_hook = keep_frame_hook; }
+    }
+    std::fprintf(stderr, "[starpop] GRAND %s: my body was character %u, now %u for the ending; save character %u -> %u -> %u,"
+                 " table[%d] %u -> %u -> %u (%s) wall=%lld\n", why, was, *(const unsigned *)(b + 8), (unsigned)save0, (unsigned)save1,
+                 (unsigned)data_0209cad2[0x0f], slot, (unsigned)tbl0, (unsigned)tbl1, (unsigned)data_02092128[slot],
+                 km == 0 ? "keep off" : km == 2 ? "plain restore" : "kept", wall_ms());
+}
+// My copies of the Grand Star (class 283), removed the way the ROM removes the collected one.
+int kill_grand() {
+    int n = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 283 || *(const unsigned char *)(a + 0x0f)) continue;
+        _ZN7fBase_c18MarkForDestructionEv(a);
+        ++n;
+    }
+    return n;
 }
 
 void toast(const char *name, int kind, int course, int star) {
@@ -421,18 +617,59 @@ void start_popup(const char *name, int kind, int course, int star) {
     }
     g.t_last = now;
     ++g.st.shown;
+    g.note_only = false;
     if (!g.counting && !g.exit_pending) {
         g.counting = true;
         g.t_end = now + kCountMs;
         g.exit_key = (kind == kKindKey);
         g.exit_star = (kind == kKindStar && star >= 1 && star <= 7) ? star : -1;   // the first star is the one the clear screen names
+        g.exit_grand = (kind == kKindGrand);
     } else if (kind == kKindKey) {
         g.exit_key = true;       // a key anywhere in the batch: use the key landing
+    } else if (kind == kKindGrand) {
+        g.exit_grand = true;     // the Grand Star wins over any other exit in the batch: it is the end of the game
     }
 }
 
 bool in_unit(int lvl, int act) {
     return lvl >= 0 && my_body() && act == (data_0209f220[0] & 0xf) && same_unit(lvl, (int)data_0209f2f8 & 0xff);
+}
+
+// STAREXIT1: a key's exit is for the boss room only: I stand in the collector's own level (the arena), not just its course.
+bool in_arena(int lvl) {
+    return lvl >= 0 && my_body() && lvl == ((int)data_0209f2f8 & 0xff);
+}
+
+// STAREXIT1: the popup's lines without the countdown (rule ON, a friend's star in my course and act). Never starts an exit.
+void note_line(const char *name, int kind, int course, int star) {
+    if (g.counting || g.exit_pending) { start_popup(name, kind, course, star); return; }   // an exit already runs: one more line
+    if (g.nline >= kStarPopupLines - 1) { std::memmove(g.line, g.line + 1, sizeof g.line[0] * (kStarPopupLines - 2)); --g.nline; }
+    char l[160];
+    describe(name, kind, course, star, l, sizeof l, false);
+    std::snprintf(g.line[g.nline], kStarPopupLineMax, "%s", l);
+    ++g.nline;
+    g.t_last = now_ms();
+    g.note_only = true;
+    ++g.st.shown;
+    ++g.st.notes;
+}
+
+// STAREXIT1, party with shared stars: a friend took star `star` of my course and act, so my copy of it goes, the way coop's
+// reconcile removes a collected star (hal/coop_world.cpp reconcile: KillAndTrackInDeathTable). A PowerStar (class 178) with that
+// star number (+0x49d, the number scan_local sends) that is not being collected right now (+0x440 != 5) and is not a silver / VS
+// star (the ROM's classifier, 2). The save bit itself arrives through hal/party_stars.cpp on a safe frame.
+int kill_local_star(int star) {
+    int n = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; ) {
+        char *next = (char *)_ZN8dActor_c4NextEPKS_(a);
+        if (*(const unsigned short *)(a + 0x0c) == 178 && *(const unsigned *)(a + 0x440) != 5u &&
+            (*(const unsigned char *)(a + 0x49d) & 7) == (star & 7) && _ZN8daStar_c19func_ov002_020e73acEv(a) != 2) {
+            _ZN8dActor_c24KillAndTrackInDeathTableEv(a);
+            ++n;
+        }
+        a = next;
+    }
+    return n;
 }
 
 // An event arrived from `seat`; the sender stood in `lvl` / `act` (lvl < 0 = unknown), course `course` (-1 unknown).
@@ -446,12 +683,55 @@ void on_event(int seat, int kind, bool exits, int lvl, int act, int course, int 
         return;
     }
     toast(name, kind, course, star);
-    const bool same = exits && in_unit(lvl, act);
+    if (kind == kKindGrand) {
+        // STAREXIT2 (lead default): everyone in the final arena (the collector's own level) leaves with the collector, whatever the
+        // room rule: their popup counts down and their body takes the ending flight, and their copy of the star is gone. Elsewhere
+        // the room rule decides: ON = a note line, I stay; OFF = the chat line only (as any event outside my course and act).
+        // A party room without shared stars (or a world party) gets the chat line only: it is not their star.
+        const Mode m = mode_now();
+        const bool shared = star_shared_here(m);
+        const bool here = in_arena(lvl);
+        const char *me = (const char *)my_body();
+        int removed = 0;
+        const char *what = "chat only";
+        if (!exits || !shared) what = "not shared: chat only";
+        else if (here && on_ending_flight(me)) what = "already on the ending flight";
+        else if (here) { removed = kill_grand(); start_popup(name, kind, course, star); what = "in the arena: popup, countdown, ending"; }
+        else if (only_collector()) { note_line(name, kind, course, star); what = "elsewhere, rule on: note line, I stay"; }
+        std::fprintf(stderr, "[starpop] rx seat=%d GRAND level=%d (mine %d) shared=%d only=%d removed=%d: %s wall=%lld\n", seat, lvl,
+                     (int)data_0209f2f8, (int)shared, (int)only_collector(), removed, what, wall_ms());
+        if (exits && shared && !here && lvl >= 0) {     // I may be on my way into the arena: the ledger checks the level
+            for (Ledger &l : g.led)
+                if (!l.used) { l = { true, seat, kind, star, course, lvl, act, exits, now_ms(), true }; break; }
+        }
+        return;
+    }
+    // STAREXIT1: with the room rule ON only the collector leaves. A key still empties its boss room (an arena has no other
+    // way out); everyone else in the course gets the note and plays on.
+    const bool only = only_collector();
+    const bool arena = only && kind == kKindKey;
+    if (exits && only && !(arena && in_arena(lvl))) {
+        const Mode m = mode_now();
+        const bool unit = in_unit(lvl, act);
+        const bool shared = star_shared_here(m);
+        int killed = 0;
+        if (unit && (shared || arena)) note_line(name, kind, course, star);
+        if (unit && kind == kKindStar && shared && m == kParty) killed = kill_local_star(star);
+        std::fprintf(stderr, "[starpop] rx seat=%d kind=%d level=%d act=%d star=%d: only the collector leaves (unit=%d shared=%d "
+                     "note=%d removed=%d) wall=%lld\n", seat, kind, lvl, act, star, (int)unit, (int)shared,
+                     (int)(unit && (shared || arena)), killed, wall_ms());
+        if (arena && lvl >= 0) {            // I may be on my way into the arena: keep it, the ledger checks the level
+            for (Ledger &l : g.led)
+                if (!l.used) { l = { true, seat, kind, star, course, lvl, act, exits, now_ms(), true }; break; }
+        }
+        return;
+    }
+    const bool same = exits && (arena ? in_arena(lvl) : in_unit(lvl, act));
     if (!same) {
         if (g.log) std::fprintf(stderr, "[starpop] rx seat=%d kind=%d exits=%d same=0 -> toast wall=%lld\n", seat, kind, (int)exits, wall_ms());
         if (exits && lvl >= 0) {            // keep it: this console may still be loading or in star select
             for (Ledger &l : g.led)
-                if (!l.used) { l = { true, seat, kind, star, course, lvl, act, exits, now_ms() }; break; }
+                if (!l.used) { l = { true, seat, kind, star, course, lvl, act, exits, now_ms(), false }; break; }
         }
         return;
     }
@@ -466,10 +746,14 @@ void ledger_tick() {
     for (Ledger &l : g.led) {
         if (!l.used) continue;
         if ((unsigned)(now - l.t) > kLedgerMs) { l.used = false; continue; }
-        if (!in_unit(l.lvl, l.act)) continue;
+        if (l.arena ? !in_arena(l.lvl) : !in_unit(l.lvl, l.act)) continue;
         if (g.counting || g.exit_pending) { l.used = false; continue; }
         char name[24];
         seat_name(l.seat, name, sizeof name);
+        if (l.kind == kKindGrand) {
+            if (on_ending_flight((const char *)my_body())) { l.used = false; continue; }
+            std::fprintf(stderr, "[starpop] late Grand Star: %d removed wall=%lld\n", kill_grand(), wall_ms());
+        }
         start_popup(name, l.kind, l.course, l.star);
         std::fprintf(stderr, "[starpop] late event from seat %d now fits my course and act (%u ms after it arrived): popup wall=%lld\n", l.seat, now - l.t, wall_ms());
         l.used = false;
@@ -508,7 +792,7 @@ void send_event(Mode m, int kind, bool exits, int star) {
         if (course < 0 || course > 29) course = 0;
         unsigned char b[kHubPartyStarBytes];
         if (hub_party_star_encode(course, star & 7, g.seq, b) != kHubPartyStarBytes) return;
-        const unsigned rsv = (kind == kKindKey ? kXKey : kXStar) | (exits ? 0u : kXNoExit);
+        const unsigned rsv = (kind == kKindGrand ? kXGrand : kind == kKindKey ? kXKey : kXStar) | (exits ? 0u : kXNoExit);
         b[8] = (unsigned char)rsv; b[9] = 0;
         std::memcpy(p.buf, b, sizeof b); p.len = (int)sizeof b; p.coop = false;
         comms_hub_send(b, (int)sizeof b);
@@ -538,7 +822,7 @@ void on_ctl(int seat, int sub, const unsigned char *pl, int len, void *) {
     if (!g.enabled || mode_now() != kCoop) return;
     if (!pl || len != (int)sizeof(PopWire)) { ++g.st.dropped; return; }
     PopWire w; std::memcpy(&w, pl, sizeof w);
-    if (!coop_key_ok(w.key) || (w.kind != kKindStar && w.kind != kKindKey) || (w.flags & ~kFlagExits) || w.star > 8 ||
+    if (!coop_key_ok(w.key) || (w.kind != kKindStar && w.kind != kKindKey && w.kind != kKindGrand) || (w.flags & ~kFlagExits) || w.star > 8 ||
         seat < 0 || seat >= kCoopMaxSeats || seat == my_seat()) { ++g.st.dropped; return; }
     if (seen_seq(seat, w.seq)) return;
     on_event(seat, w.kind, (w.flags & kFlagExits) != 0, (int)w.key.level, (int)w.key.act, course_of((int)w.key.level), w.star);
@@ -547,6 +831,14 @@ void on_ctl(int seat, int sub, const unsigned char *pl, int len, void *) {
 void scan_local(Mode m) {
     void *me = my_body();
     if (!me) return;
+    // STAREXIT2: the Grand Star leaves no actor behind to watch (the collect marks it for destruction at the touch), so the
+    // collect is seen on my own body: it entered St_EndingFly, which only the Grand Star's collect hands out. Not when I was put
+    // there by a friend's event (grand_forced). Once per level.
+    if (!g.grand_sent && !g.grand_forced && on_ending_flight((const char *)me)) {
+        g.grand_sent = true;
+        send_event(m, kKindGrand, true, 0);
+        ending_as_mario((char *)me, "collect");
+    }
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
         const unsigned cls = *(const unsigned short *)(a + 0x0c);
         int kind = 0, star = 0;
@@ -570,12 +862,156 @@ void scan_local(Mode m) {
     }
 }
 
+// Proof knob SM64DS_STAR_POPUP_CENSUS=<every>: every <every> frames in a level, my body's position and every PowerStar's
+// (class 178) position, star number and take state, so a row can walk a scripted pad to a real star (STAREXIT1).
+void census() {
+    static int every = -1;
+    if (every < 0) { const char *e = std::getenv("SM64DS_STAR_POPUP_CENSUS"); every = (e && *e) ? std::atoi(e) : 0; }
+    static unsigned f = 0;
+    if (every <= 0 || (++f % (unsigned)every) != 0) return;
+    const char *me = (const char *)my_body();
+    if (!me) return;
+    const int *mp = (const int *)(me + 0x5c);
+    std::fprintf(stderr, "[starpop] census f=%u level=%d act=%d me=%d,%d,%d yaw=%04x", f, (int)data_0209f2f8, data_0209f220[0] & 0xf,
+                 mp[0] >> 12, mp[1] >> 12, mp[2] >> 12, (unsigned)(unsigned short)*(const short *)(me + 0x8e));
+    // STAREXIT3: who my body is, the save file's character and my table byte, plus the ending's words (pending level change,
+    // the running Kuppa script, the stage mode)
+    std::fprintf(stderr, " chr body=%u save=%u tbl=%u lc=%d cut=%08x mode=%u", *(const unsigned *)(me + 8) & 0xffu, (unsigned)data_0209cad2[0x0f],
+                 (unsigned)data_02092128[*(const unsigned char *)(me + 0x6d8) & 0x3f], (int)(signed char)data_02092110[0], rd32(data_0209fc48),
+                 (unsigned)data_0209f2d8[0]);
+    for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 178) continue;
+        const int *p = (const int *)(a + 0x5c);
+        std::fprintf(stderr, " star(n=%u st=%u at %d,%d,%d)", (unsigned)*(const unsigned char *)(a + 0x49d), *(const unsigned *)(a + 0x440),
+                     p[0] >> 12, p[1] >> 12, p[2] >> 12);
+    }
+    for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 283) continue;      // STAREXIT2: the Grand Star (LAST_STAR)
+        const int *p = (const int *)(a + 0x5c);
+        std::fprintf(stderr, " grand(at %d,%d,%d dead=%u)", p[0] >> 12, p[1] >> 12, p[2] >> 12, (unsigned)*(const unsigned char *)(a + 0x0f));
+    }
+    std::fprintf(stderr, " wall=%lld\n", wall_ms());
+}
+
+// Proof knob SM64DS_STAR_POPUP_NEAR=<level>:<frame>:<star n>:<dist>:<yaw hex>: <frame> frames into level <level>, put my body
+// <dist> units BEFORE PowerStar number <n> along <yaw> (yaw 0 = +z, 4000 = +x), on the star's height, facing it. It never
+// touches the star: the row's scripted pad walks the last <dist> units, so the ROM's own touch collects it (STAREXIT1).
+// <dist> 0 arms the touch stand-in instead (below). Retried every 60 frames from <frame>.
+// STAREXIT2: <n> -1 is the Grand Star (class 283); my body keeps its own height (the star hovers above the floor), and <yaw>
+// is taken RELATIVE TO MY CAMERA: the ROM walks the body along (camera angle + stick angle), stick up being 0x8000, so <yaw> 0
+// puts me where a pushed-up stick walks straight at the star, whatever way the camera happens to face.
+void near_knob() {
+    static int lvl = -2, fr = 0, n = 0, dist = 0; static unsigned yaw = 0; static bool done = false;
+    if (lvl == -2) {
+        lvl = -1;
+        const char *e = std::getenv("SM64DS_STAR_POPUP_NEAR");
+        if (!e || std::sscanf(e, "%d:%d:%d:%d:%x", &lvl, &fr, &n, &dist, &yaw) != 5) lvl = -1;
+    }
+    static int cur = -1; static int t = 0;
+    if (lvl < 0 || done) return;
+    if ((int)data_0209f2f8 != cur) { cur = (int)data_0209f2f8; t = 0; }
+    char *me = (char *)my_body();
+    static int tries = 0;
+    if (cur != lvl || !me) return;
+    ++t;
+    if (t < fr || (t - fr) % 60 != 0) return;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (n == -1 ? *(const unsigned short *)(a + 0x0c) != 283
+                    : (*(const unsigned short *)(a + 0x0c) != 178 || *(const unsigned char *)(a + 0x49d) != (unsigned)n)) continue;
+        const int *p = (const int *)(a + 0x5c);
+        if (dist == 0 && n != -1) {
+            // <dist> 0: the touch stand-in instead (hal/coop_world.cpp knob_star, hal/input_probe.cpp SM64DS_STAR_TRIGGER):
+            // the star's toucher word and touch flag, so the star's OWN collect handler runs. Re-armed every 60 frames, 8 tries.
+            if (*(const unsigned *)(a + 0x440) == 5u || tries >= 8) { done = true; return; }
+            *(unsigned *)(a + 0x134) = *(const unsigned *)(me + 4);
+            *(unsigned *)(a + 0x130) |= 0x400000;
+            ++tries;
+            std::fprintf(stderr, "[starpop] TOUCH knob: star %d (state %u) touch armed, try %d wall=%lld\n", n,
+                         *(const unsigned *)(a + 0x440), tries, wall_ms());
+            return;
+        }
+        unsigned w = yaw;
+        if (n == -1) {
+            const int pi = (int)data_0209f250;
+            const unsigned cam = (pi >= 0 && pi < 16) ? *(const unsigned short *)(data_020a1164 + pi * 0x24) : 0u;
+            w = (cam + 0x8000u + yaw) & 0xffffu;
+            std::fprintf(stderr, "[starpop] NEAR knob: camera angle %04x, walk line %04x\n", cam, w);
+        }
+        const double r = (double)(w & 0xffff) * 6.283185307179586 / 65536.0;
+        int *mp = (int *)(me + 0x5c);
+        mp[0] = p[0] - (int)(std::sin(r) * dist * 4096.0);
+        if (n != -1) mp[1] = p[1];
+        mp[2] = p[2] - (int)(std::cos(r) * dist * 4096.0);
+        *(short *)(me + 0x8e) = (short)w;
+        done = true;
+        std::fprintf(stderr, "[starpop] NEAR knob: me at %d,%d,%d yaw %04x, %d units before star %d at %d,%d,%d wall=%lld\n",
+                     mp[0] >> 12, mp[1] >> 12, mp[2] >> 12, w & 0xffff, dist, n, p[0] >> 12, p[1] >> 12, p[2] >> 12, wall_ms());
+        return;
+    }
+    std::fprintf(stderr, "[starpop] NEAR knob: no star %d in level %d\n", n, cur);
+    done = true;
+}
+
+// Proof knob SM64DS_STAR_POPUP_WARP=<frame>:<level>:<act>[;...] (up to 4 steps): <frame> frames of standing after the last step (or after my body first stands anywhere), the game's own
+// level change call (hal/coop_world.cpp SM64DS_COOP_WARP is the same for coop rooms only), so a party row reaches a course
+// without a walk through a painting (STAREXIT1). Once.
+void warp_knob() {
+    struct Step { int fr, lv, ac; };
+    static Step st[4]; static int n = -1, k = 0, t = 0;
+    if (n < 0) {
+        n = 0;
+        if (const char *e = std::getenv("SM64DS_STAR_POPUP_WARP")) {
+            const char *p = e; int used = 0;
+            while (n < 4 && std::sscanf(p, "%d:%d:%d%n", &st[n].fr, &st[n].lv, &st[n].ac, &used) == 3 && st[n].fr >= 0) {
+                ++n; p += used;
+                if (*p != ';' && *p != ',') break;
+                ++p;
+            }
+        }
+    }
+    if (k >= n || !my_body() || ++t < st[k].fr) return;
+    std::fprintf(stderr, "[starpop] WARP knob: to level %d act %d wall=%lld\n", st[k].lv, st[k].ac, wall_ms());
+    LoadLevelNoReturn((unsigned)st[k].lv, 0, (unsigned)st[k].ac, 1);
+    ++k;
+    t = 0;
+}
+
+// Proof knob SM64DS_STAR_POPUP_GRAND=<level>:<frame>:<x>:<y>:<z> (STAREXIT2): <frame> frames into level <level>, the Grand Star
+// (LAST_STAR, class 0x11b, parameter 7) at <x>,<y>,<z> (units) through the ROM's own spawn, the call Bowser's defeat makes
+// (src/game/actors/d_a_kpa.cpp: Spawn(BOWSER_ACTOR_LAST_STAR, 7, pos, 0, mAreaId, -1), 160 units above him). A stand-in for the
+// fight ONLY: the star then runs its own StateStarJump and is collected by its own touch. Once per level entry.
+// Bowser himself (BOWSER 279, BOWSER_TAIL 278, BOWSER_FIRE 280) is marked for destruction first, as if beaten: the knob runs
+// before the fight's own intro, and a live Bowser holds the player in his talk and stands where the star lands.
+void grand_knob() {
+    static int lvl = -2, fr = 0, x = 0, y = 0, z = 0; static int cur = -1, t = 0; static bool done = false;
+    if (lvl == -2) {
+        lvl = -1;
+        const char *e = std::getenv("SM64DS_STAR_POPUP_GRAND");
+        if (!e || std::sscanf(e, "%d:%d:%d:%d:%d", &lvl, &fr, &x, &y, &z) != 5) lvl = -1;
+    }
+    if (lvl < 0) return;
+    if ((int)data_0209f2f8 != cur) { cur = (int)data_0209f2f8; t = 0; done = false; }
+    const char *me = (const char *)my_body();
+    if (cur != lvl || !me || done || ++t < fr) return;
+    done = true;
+    int gone = 0;
+    for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {
+        const unsigned c = *(const unsigned short *)(b + 0x0c);
+        if ((c == 278 || c == 279 || c == 280) && !*(const unsigned char *)(b + 0x0f)) { _ZN7fBase_c18MarkForDestructionEv(b); ++gone; }
+    }
+    const int pos[3] = { x * 4096, y * 4096, z * 4096 };
+    char *a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x11b, 7, pos, nullptr, (signed char)me[0xcc], -1);
+    std::fprintf(stderr, "[starpop] GRAND knob: Bowser actors removed %d, Grand Star spawned at %d,%d,%d -> %p (level %d frame %d) wall=%lld\n",
+                 gone, x, y, z, (void *)a, cur, t, wall_ms());
+}
+
 void new_level_check() {
     const int lv = data_0209f2f8, ac = data_0209f220[0];
     if (!g.have_key || lv != g.lvl || ac != g.act) {
         if (g.have_key && g.armed && g.stop_kind == 3 && !g.stop_timer) { g.stop_timer = true; g.stop_at = now_ms() + (unsigned)g.stop_val; }
         g.have_key = true; g.lvl = lv; g.act = ac;
         g.nseen = 0;
+        g.grand_sent = false; g.grand_forced = false;
         if ((g.counting || g.exit_pending || g.nline) && g.log)
             std::fprintf(stderr, "[starpop] level changed (%d/%d): popup cleared\n", lv, ac);
         clear_receiver();
@@ -589,7 +1025,7 @@ bool star_popup_party_rx(int seat, const unsigned char *d, int len) {
     init_once();
     const unsigned rsv = hub_rd16(d, 8);
     if (!g.enabled || mode_now() != kParty) return true;
-    if ((rsv & ~7u) || ((rsv & 3u) != kXStar && (rsv & 3u) != kXKey) || seat < 0 || seat >= 16 || seat == my_seat() ||
+    if ((rsv & ~7u) || (rsv & 3u) == 0u || seat < 0 || seat >= 16 || seat == my_seat() ||
         (comms_hub_room_kind() == kHubRoomWorld && !world_party_member(seat))) {
         ++g.st.dropped;
         return true;
@@ -600,7 +1036,7 @@ bool star_popup_party_rx(int seat, const unsigned char *d, int len) {
     const bool pres = hub_presence_get(seat, &p, &age);
     const bool here = pres && age < 5000 && p.in_level();
     HubPartyStarWire pw; std::memcpy(&pw, d, sizeof pw);
-    on_event(seat, (rsv & kXKey) ? kKindKey : kKindStar, (rsv & kXNoExit) == 0, here ? p.level : -1, here ? p.act : -1,
+    on_event(seat, (rsv & 3u) == kXGrand ? kKindGrand : (rsv & 3u) == kXKey ? kKindKey : kKindStar, (rsv & kXNoExit) == 0, here ? p.level : -1, here ? p.act : -1,
              (int)pw.course, d[7]);
     return true;
 }
@@ -624,10 +1060,23 @@ void star_popup_view(StarPopupView *out) {
 
 StarPopupStats star_popup_stats() { return g.st; }
 
+void star_popup_star_name(int course, int star, char *out, int cap) { star_title(course, star, out, cap); }
+bool star_popup_only_collector() { return only_collector(); }
+void star_popup_set_only_collector(int on) {
+    g_only_override = on < 0 ? -1 : (on ? 1 : 0);
+    std::fprintf(stderr, "[starpop] only-the-collector-leaves rule set to %d (-1 = the room's SM64DS_ROOM_SOLOEXIT)\n", g_only_override);
+}
+
 }  // namespace port
 
 extern "C" void port_star_popup_frame(void) {
     using namespace port;
+    census();          // proof knobs, solo too
+    keep_tick();       // STAREXIT3: the saved character through the ending, before every return (the ending is no popup, and a
+                       // lost room must neither freeze nor leave it armed)
+    near_knob();
+    warp_knob();
+    grand_knob();
     if (!std::getenv("SM64DS_PARTY") && !std::getenv("SM64DS_COOP") &&
         !(world_party_active() && comms_hub_room_kind() == kHubRoomWorld)) return;
     init_once();
@@ -694,6 +1143,25 @@ extern "C" void port_star_popup_frame(void) {
                                  (unsigned)data_0209f20c[0], rd32(data_0209b454), rd32(data_0209fc48), (unsigned)data_0209f22c[0],
                                  (unsigned)data_0209f2d8[0], wall_ms());
                 }
+            } else if (g.exit_grand) {
+                // STAREXIT2: the Grand Star's collect with my body (see kill_grand): the ending flight, the event bit, my copy gone.
+                char *me = (char *)my_body();
+                const int removed = kill_grand();
+                ending_as_mario(me, "exit");
+                func_ov002_020c3dbc(me);
+                _ZN5Event6SetBitEj(kEventKey);
+                if (on_ending_flight(me)) {
+                    g.grand_forced = true;
+                    ++g.st.exits;
+                    g.armed = true;
+                    std::fprintf(stderr, "[starpop] EXIT GRAND from level %d: my body is on the ending flight (removed %d) after %u ms of waiting wall=%lld\n",
+                                 (int)data_0209f2f8, removed, waited, wall_ms());
+                    g.exit_pending = false; g.nline = 0; g.exit_grand = false;
+                } else if ((unsigned)(now - g.last_wait_log) > 1000u) {      // the state change was refused this frame: again next frame
+                    g.last_wait_log = now;
+                    std::fprintf(stderr, "[starpop] GRAND: the ending flight was refused (state %p), retrying wall=%lld\n",
+                                 me ? *(void **)(me + 0x370) : nullptr, wall_ms());
+                }
             } else {
                 landing_overrides(g.exit_key);
                 if (g.exit_star >= 0) data_0209f228 = (unsigned char)g.exit_star;   // the course-clear screen names the star the collector took (the ROM sets it at the touch)
@@ -707,7 +1175,8 @@ extern "C" void port_star_popup_frame(void) {
             }
         }
     }
-    if (!g.counting && !g.exit_pending && g.nline && (unsigned)(now - g.t_last) > kShowAfterMs + kCountMs) g.nline = 0;
+    if (!g.counting && !g.exit_pending && g.nline &&
+        (unsigned)(now - g.t_last) > (g.note_only ? (unsigned)kNoteMs : (unsigned)(kShowAfterMs + kCountMs))) { g.nline = 0; g.note_only = false; }
 }
 
 extern "C" int port_star_popup_stop_now(void) { return port::g.stop_flag ? 1 : 0; }

@@ -4488,8 +4488,10 @@ def test_v5_clients_and_party_coop():
 # ------------------------------------------------ v6: room settings (ROOMSET1)
 
 
-DEFAULT_PARTY = {"collision": 1, "interact": 1, "damage": 0, "starshare": 1}
-DEFAULT_COOP = {"collision": 1, "interact": 1, "damage": 0, "tp": 1}
+DEFAULT_PARTY = {"collision": 1, "interact": 1, "damage": 0, "starshare": 1,
+                 "soloexit": 1}
+DEFAULT_COOP = {"collision": 1, "interact": 1, "damage": 0, "tp": 1,
+                "soloexit": 1}
 
 
 def settings6(code, token, settings, who="10.0.0.1", now=1000.0):
@@ -4507,8 +4509,9 @@ def test_room_settings():
     print("\n-- v6 room settings: defaults, toggles, refusals, host update")
     check("the toggle names per kind are the contract's",
           S.ROOM_SETTINGS == {
-              "party": ("collision", "interact", "damage", "starshare"),
-              "coop": ("collision", "interact", "damage", "tp")},
+              "party": ("collision", "interact", "damage", "starshare",
+                        "soloexit"),
+              "coop": ("collision", "interact", "damage", "tp", "soloexit")},
           S.ROOM_SETTINGS)
 
     # ---- defaults: no settings field means the defaults, for each kind -----
@@ -4572,7 +4575,8 @@ def test_room_settings():
     st, g = join6(host["room"], "g", who="10.0.0.2")
     check("party: a joiner is handed the host's damage=1 collision=0",
           st == 200 and g["plan"]["settings"] == {
-              "collision": 0, "interact": 1, "damage": 1, "starshare": 1},
+              "collision": 0, "interact": 1, "damage": 1, "starshare": 1,
+              "soloexit": 1},
           (st, g))
 
     # ---- refusals: the wrong kind of room, the wrong names, the wrong types -
@@ -4699,6 +4703,51 @@ def test_room_settings():
                             "10.0.0.1", 1000.0)
     check("a v5 settings verb is bad_field (the verb is v6, like color at v1)",
           st == 400 and out["error"] == "bad_field", (st, out))
+
+
+def test_room_soloexit():
+    """STAREXIT1: soloexit, only the collector leaves the level (party and coop).
+
+    On by default, on for a client that never sends it (an older launcher),
+    0 is kept, the host can flip it before Start, and a room whose stored
+    settings predate the name still answers soloexit 1.
+    """
+    print("\n-- v6 room settings: soloexit (only the collector leaves)")
+    for kind in ("party", "coop"):
+        extra = {"save_name": "f"} if kind == "coop" else {}
+        reset()
+        old = {"collision": 1, "interact": 1, "damage": 0}
+        old.update({"starshare": 1} if kind == "party" else {"tp": 1})
+        st, host = create6(nick="h", session_type=kind, settings=old, **extra)
+        check("%s: an older launcher's create (no soloexit) gets soloexit 1"
+              % kind, st == 200 and host["plan"]["settings"]["soloexit"] == 1
+              and S.ROOMS[host["room"]].settings["soloexit"] == 1, host)
+        st, g = join6(host["room"], "g", who="10.0.0.2")
+        check("%s: its joiner's plan says soloexit 1" % kind,
+              st == 200 and g["plan"]["settings"]["soloexit"] == 1, (st, g))
+        st, out = settings6(host["room"], host["token"], {"soloexit": 0})
+        check("%s: the host turns soloexit off before Start" % kind,
+              st == 200 and out["settings"]["soloexit"] == 0
+              and S.ROOMS[host["room"]].settings["soloexit"] == 0, (st, out))
+        st, p = poll6(host["room"], host["token"], 0)
+        check("%s: the poll's plan carries soloexit 0" % kind,
+              st == 200 and p["plan"]["settings"]["soloexit"] == 0, (st, p))
+        reset()
+        st, host = create6(nick="h", session_type=kind,
+                           settings={"soloexit": 0}, **extra)
+        check("%s: soloexit 0 at create is kept" % kind,
+              st == 200 and host["plan"]["settings"]["soloexit"] == 0, host)
+        for bad in (2, "0", True, None):
+            st, out = create6(nick="h", session_type=kind,
+                              settings={"soloexit": bad}, **extra)
+            check("%s: soloexit=%r is bad_setting_value" % (kind, bad),
+                  st == 400 and out["error"] == "bad_setting_value", (st, out))
+    # A room stored before the name existed: an update fills it in.
+    out, err = S.settings_for("coop", {"damage": 1},
+                              base={"collision": 1, "interact": 1,
+                                    "damage": 0, "tp": 1})
+    check("an update of settings stored without soloexit answers soloexit 1",
+          err is None and out == dict(DEFAULT_COOP, damage=1), (out, err))
 
 
 def test_party_coop_malformed_input():
@@ -4870,6 +4919,7 @@ def main():
     test_party_and_coop_rooms()
     test_v5_clients_and_party_coop()
     test_room_settings()
+    test_room_soloexit()
     test_party_coop_malformed_input()
 
     print("\n%d passed, %d failed" % (len(PASSED), len(FAILED)))
