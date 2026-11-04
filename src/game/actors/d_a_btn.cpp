@@ -65,6 +65,7 @@ enum d_a_btn_AssetId {
 };
 
 #include "daBtn_c.h"
+#include "math/CalcLib.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -104,10 +105,6 @@ void Matrix4x3_ApplyInPlaceToRotationZ(void *m, s16 a);
 void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Vec3_Asr(void *d, void *s, int sh);
-int Vec3_Dist(void *a, void *b);
-s16 Vec3_HorzAngle(const void *a, const void *b);
-int Vec3_HorzDist(const void *a, const void *b);
 
 /* Every call below passes &mMovingMeshCollider. Named prototype parameters
    advance mwcc's @NNN counter, and the manifest pins the static
@@ -554,7 +551,7 @@ void daBtn_c::func_ov079_02125b44()
                     pos[1] = src[1];
                     pos[2] = src[2];
                 }
-                ang = Vec3_HorzAngle(pos, &mPosX);
+                ang = ::Vec3_HorzAngle((const ::Vector3 *)pos, (const ::Vector3 *)&mPosX);
                 i = (u16)ang >> 4;
                 y = pos[1] + 0x96000;
                 pos[0] = data_02082214[i * 2] * 0xd7 + pos[0];
@@ -651,7 +648,7 @@ void daBtn_c::func_ov079_021258fc()
     else
         lim = 0x2bc000;
     mAnmModel.speed = 0x1000;
-    if (Vec3_HorzDist(&mPosX, &mSpawnPosX) > lim) {
+    if (::Vec3_HorzDist((const ::Vector3 *)&mPosX, (const ::Vector3 *)&mSpawnPosX) > lim) {
         mState = 7;
         mAnmModel.SetAnim(
             (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
@@ -1258,7 +1255,7 @@ void daBtn_c::func_ov079_021246dc()
                 pos.x = op->x;
                 pos.y = op->y;
                 pos.z = op->z;
-                ang = Vec3_HorzAngle(&pos, &mPosX);
+                ang = ::Vec3_HorzAngle((const ::Vector3 *)&pos, (const ::Vector3 *)&mPosX);
                 i = ang >> 4;
                 pos.y += 0x32000;
                 pos.x = data_02082214[i * 2] * mag + pos.x;
@@ -1409,7 +1406,7 @@ int daBtn_c::func_ov079_021243e0(int range)
     }
 
     player = ClosestPlayer();
-    dist = Vec3_Dist(&v, &player->mPosX);
+    dist = ::Vec3_Dist((const ::Vector3 *)&v, (const ::Vector3 *)&player->mPosX);
     if (dist > range) {
         if (mMovingMeshCollider.IsEnabled())
             mMovingMeshCollider.Disable();
@@ -1463,7 +1460,7 @@ void daBtn_c::func_ov079_02124188()
     pos.x += FX_MUL(sinComp, data_02082214[((unsigned short)mAngleY >> 4) << 1]);
     pos.z += FX_MUL(sinComp, data_02082214[(((unsigned short)mAngleY >> 4) << 1) + 1]);
 
-    Vec3_Asr(&asr, &pos, 3);
+    ::Vec3_Asr((::Vector3 *)&asr, (::Vector3 *)&pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68,
         (short)(mAngleY + mBodyYaw));
@@ -1548,8 +1545,8 @@ void daBtn_c::func_ov079_02123f34()
         v.x = p->x;
         v.y = p->y;
         v.z = p->z;
-        dist = Vec3_HorzDist(&mPosX, &v);
-        angle = Vec3_HorzAngle(&mPosX, &v);
+        dist = ::Vec3_HorzDist((const ::Vector3 *)&mPosX, (const ::Vector3 *)&v);
+        angle = ::Vec3_HorzAngle((const ::Vector3 *)&mPosX, (const ::Vector3 *)&v);
         if (dist < minDist) {
             mNearestPlayer = i;
             minDist = dist;
@@ -1634,7 +1631,7 @@ int daBtn_c::func_ov079_02123bcc() {
     p = &player->mPosX;
     v[0] = p[0]; v[1] = p[1]; v[2] = p[2];
     if (v[1] > mPosY) return 0;
-    dist = Vec3_HorzDist(v, &mPosX);
+    dist = ::Vec3_HorzDist((const ::Vector3 *)v, (const ::Vector3 *)&mPosX);
     a0 = mAngleY; a1 = mBodyYaw; a2 = mTargetAngle;
     raw = (a0 + a1) << 16; ang = a2 + (raw >> 16); rangle = raw >> 16;
     idx = (u16)(s16)ang >> 4; cosv = data_02082214[idx*2+1];
@@ -1696,7 +1693,7 @@ int daBtn_c::func_ov079_02123a8c()
         v.y = mPosY;
         v.z = mPosZ;
         v.y = v.y + OnAimedAtWithEgg();
-        int dist = Vec3_Dist(&v, &closest->mPosX);
+        int dist = ::Vec3_Dist((const ::Vector3 *)&v, (const ::Vector3 *)&closest->mPosX);
         if (dist < (mClipRadius << 3)) {
             if (!mMovingMeshCollider.IsEnabled())
                 mMovingMeshCollider.Enable(this);
@@ -1734,7 +1731,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
     v.x = v.x - cosv * 0x50;
     v.z = v.z - sinv * 0x50;
 
-    ang = Vec3_HorzAngle(&mPosX, &v);
+    ang = ::Vec3_HorzAngle((const ::Vector3 *)&mPosX, (const ::Vector3 *)&v);
 
     if (AngleDiff(ang, (s16)(mAngleY + mBodyYaw)) < 0x3c00) {
         int r1 = mState;
