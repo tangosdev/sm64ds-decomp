@@ -49,7 +49,7 @@
  * - The OAM::Render overloads that take Fix12<int> by value keep their mangled
  *   spellings: the natural static member call homes the Fix12 arguments
  *   differently under mwccarm (the Fix12 wall) and rewrites every call site.
- * - data_ov002_0211117c[0]'s self-decrement in UpdateHealthMeter keeps the
+ * - gMeterShownHealth[0]'s self-decrement in UpdateHealthMeter keeps the
  *   volatile self-read -- the ROM reloads the byte rather than reusing the
  *   value still live from the comparison above it.
  * - InitResources keeps two launders: the volatile pun on mVsTimer in the
@@ -150,7 +150,7 @@ extern int GetOwnerLanguage(void);
 extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
 extern unsigned char gSubScreenLayers;
-extern unsigned char data_ov002_0211117c[];
+extern unsigned char gMeterShownHealth[];
 extern struct OamAttr *data_ov002_0210c254[];
 extern struct OamAttr *data_ov002_0210c278[];
 extern struct OamAttr *data_ov002_0210c230[];
@@ -326,11 +326,11 @@ int dMeter_c::InitResources() {
     gShowRaceTimer = 0;
     {
         u8 idx = *(volatile u8 *)&data_0209f250;
-        data_ov002_0211117c[0] = ((daPly_c *)((idx ? (void *volatile *)data_0209f394
-                                                   : (void *volatile *)data_0209f394)[idx]))
-                                     ->GetHealth();
+        gMeterShownHealth[0] = ((daPly_c *)((idx ? (void *volatile *)data_0209f394
+                                                 : (void *volatile *)data_0209f394)[idx]))
+                                   ->GetHealth();
     }
-    if (data_ov002_0211117c[0] == 8) {
+    if (gMeterShownHealth[0] == 8) {
         mHealthMeterY = -0x18;
         unk72 = 0;
         mHealthMeterState = 0;
@@ -570,10 +570,10 @@ void dMeter_c::UpdateHealthMeter() {
             mHealthMeterState = 1;
             return;
         }
-        if (data_ov002_0211117c[0] <= health)
+        if (gMeterShownHealth[0] <= health)
             return;
         mHealthMeterY = 0x39;
-        data_ov002_0211117c[0] = *(volatile unsigned char *)&data_ov002_0211117c - 1;
+        gMeterShownHealth[0] = *(volatile unsigned char *)&gMeterShownHealth - 1;
         mHealthTickTimer = 0x1e;
         mHealthMeterHoldTimer = 0x5a;
         mHealthMeterState = 1;
@@ -589,15 +589,15 @@ void dMeter_c::UpdateHealthMeter() {
         if (mHealthTickTimer != 0)
             return;
         {
-            unsigned char cur = data_ov002_0211117c[0];
+            unsigned char cur = gMeterShownHealth[0];
             if (cur < health) {
                 if ((int)(health - cur) > 1) {
-                    data_ov002_0211117c[0] = cur + 1;
+                    gMeterShownHealth[0] = cur + 1;
                     func_02012790(0xd);
                     mHealthTickTimer = 0x10;
                     return;
                 }
-                data_ov002_0211117c[0] = health;
+                gMeterShownHealth[0] = health;
                 func_02012790(0xd);
                 if (player->mIsUnderwater != 0)
                     return;
@@ -613,7 +613,7 @@ void dMeter_c::UpdateHealthMeter() {
                 return;
             }
             if (cur > health) {
-                data_ov002_0211117c[0] = cur - 1;
+                gMeterShownHealth[0] = cur - 1;
                 mHealthTickTimer = 0x1e;
                 return;
             }
@@ -674,20 +674,20 @@ void dMeter_c::RenderHealthMeter() {
         return;
 
     if (GetOwnerLanguage() == 5) {
-        OAM::Render(0, data_ov002_0210c254[data_ov002_0211117c[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, data_ov002_0210c254[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
         OAM::Render(0, &data_ov002_0210d5d0, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else if (GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-        OAM::Render(0, data_ov002_0210c278[data_ov002_0211117c[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, data_ov002_0210c278[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
         OAM::Render(0, &data_ov002_0210d4f0, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else {
-        OAM::Render(0, data_ov002_0210c230[data_ov002_0211117c[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, data_ov002_0210c230[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
         OAM::Render(0, &data_ov002_0210c690, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     }
 
-    GX::LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[data_ov002_0211117c[0]]], 0x60, 0x20);
+    GX::LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[gMeterShownHealth[0]]], 0x60, 0x20);
 }
 
 /* ROM ordinal 11 -- dMeter_c::UpdateVsTimer(), 0x020fce9c, size 0x150 */
@@ -831,7 +831,7 @@ void dMeter_c::RenderCoinCount() {
 
 /* ROM ordinal 8 -- dMeter_c::RenderRedCoins(), 0x020fc77c, size 0xa0 */
 // @symbol _ZN8dMeter_c14RenderRedCoinsEv
-/* Draws one sprite per red coin still to collect, stepping 0xb across from
+/* Draws one sprite per red coin collected so far, stepping 0xb across from
  * x=0x10. Both the count (gNumRedCoins) and the row selector (data_0209f310)
  * are indexed by the same data_0209f250.
  *
@@ -841,8 +841,8 @@ void dMeter_c::RenderCoinCount() {
  * One byte serving as both a count and an occupancy flag for a shared row.
  *
  * The count is read through an explicit unsigned char cast off a signed char
- * array -- kept as the ROM spells it, since the same array is read signed by
- * RenderSilverStars.
+ * array -- kept as the ROM spells it. RenderSilverStars does not read this
+ * array; it reads data_0209f310.
  *
  * TOUCHES NO FIELD; the ROM body takes no `this` and now ignores the one it is
  * passed. Byte-free.

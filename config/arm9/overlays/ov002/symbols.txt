@@ -3812,7 +3812,7 @@ gMapCapIconShown kind:bss addr:0x02111154
 @528 kind:bss addr:0x02111160
 sMapScreenCenter kind:bss addr:0x0211116c
 gMeterCounterSlideState kind:bss addr:0x02111178
-data_ov002_0211117c kind:bss addr:0x0211117c
+gMeterShownHealth kind:bss addr:0x0211117c
 gZoomButtonActiveTimer kind:bss addr:0x02111180
 gShowRaceTimer kind:bss addr:0x02111184
 data_ov002_02111188 kind:bss addr:0x02111188

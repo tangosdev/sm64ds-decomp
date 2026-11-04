@@ -5510,7 +5510,7 @@ int daPly_c::func_ov002_020c5dec(int r1) {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_DeadHit_Main() {
-    extern u8 data_ov002_0211117c;
+    extern u8 gMeterShownHealth;
     u32 t;
 
     if (mIsAirborne == 0) {
@@ -5546,7 +5546,7 @@ int daPly_c::St_DeadHit_Main() {
         break;
     case 2:
         if (this->FinishedAnim() != 0) {
-            if (data_ov002_0211117c == 0) {
+            if (gMeterShownHealth == 0) {
                 KillPlayer();
                 mStateWork = 3;
             }
@@ -5766,7 +5766,7 @@ int daPly_c::St_Squish_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Squish_Main() {
-    extern u8 data_ov002_0211117c;
+    extern u8 gMeterShownHealth;
     extern int func_ov002_020d91e0(void*, int a, int b);
     extern void func_ov002_020db8bc(void*, int a);
     switch (mStateStep) {
@@ -5839,7 +5839,7 @@ int daPly_c::St_Squish_Main() {
             func_ov002_020db8bc(this, 1);
             this->ChangeState(data_ov002_0211013c);
         }
-        if (data_ov002_0211117c != 0)
+        if (gMeterShownHealth != 0)
             break;
         KillPlayer();
         (*(u8 *)(int)((char *)&mStateArg))++;
@@ -13586,12 +13586,12 @@ void daPly_c::BlowAway(short v) {
    in those slots. */
 extern "C" {
 int daPly_c::St_BurnLava_Main() {
-    extern u8 data_ov002_0211117c;
+    extern u8 gMeterShownHealth;
     extern u32 PlayerNewHold7(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                               void *callback);
 
     extern void func_ov002_020e28d4(void *, int, int);
-    if (data_ov002_0211117c == 0 && mStateArg == 0) {
+    if (gMeterShownHealth == 0 && mStateArg == 0) {
         KillPlayer();
         mStateArg = 1;
         mIsBodyClsnEnabled = 0;
