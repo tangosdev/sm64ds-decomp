@@ -94,7 +94,7 @@ extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, s16 h);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int idx);
-extern void DrawOamSprite(int a, int b, int c, int d);
+extern void DrawOamSprite(void *a, void *b, int c, void *d);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern int RandomIntInternal(int *seed);
 extern int GetGameLanguage(void);
@@ -291,7 +291,7 @@ void dScMgCurling2_c::DrawPieces() {
             int x = mPiece[i].x >> 0xc;
             int y = mPiece[i].y >> 0xc;
             Mg_RenderSubSpriteMtx(sCurlingBitSprites[mPiece[i].sprite0], x, y, 0);
-            DrawOamSprite(sCurlingBitSprites[mPiece[i].sprite1], x, y, 0);
+            DrawOamSprite((void *)sCurlingBitSprites[mPiece[i].sprite1], (void *)x, y, 0);
         }
     }
 }
