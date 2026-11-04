@@ -19,7 +19,7 @@
 
 extern "C" {
 int func_0203da3c(void);
-int CARD_GetBackupTotalSize(void);
+u32 CARD_GetBackupTotalSize(void);
 int func_02060558(u32 addr, void* buf, u32 len, int d, int e, int f);
 int func_02060484(int a, int b, int c, int d, int e, int f);
 /* local extern: no include/ header declares the CARD backup setup. */
@@ -193,7 +193,7 @@ int SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot)
     crc = 0;
     if (func_0203da3c() == 2)
         return 1;
-    half = (u32)CARD_GetBackupTotalSize() >> 1;
+    half = CARD_GetBackupTotalSize() >> 1;
     off = slot << 7;
     if (half <= off)
         return 1;
