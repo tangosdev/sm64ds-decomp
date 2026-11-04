@@ -28,15 +28,11 @@
  * and arg0+0xB4 (0x64 + 0x50), i.e. models[0] and models[1].
  *
  * MEMBERS BELOW 0x50 are all inherited (dScene_c/dBase_c add none of their
- * own -- see dScene_c.h). Everything from 0x050 up to the dExtSimpleModel_c pair, and
- * everything after it, is read by Behavior/Render (func_ov003_020af038,
- * func_ov003_020ae6f4 -- both NONMATCHING-banner near-misses, not byte
- * gates) through dozens of scalar this-relative offsets (cursor index,
- * animation timers, per-character UI positions, fade state). Recovering
- * that scalar layout field-by-field is a separate, later pass; this header
- * only needs to hold the byte ranges it occupies, which it does as opaque
- * storage below, sized exactly by the constructor/destructor evidence
- * above (the dExtSimpleModel_c pair) and the allocator literal (everything else).
+ * own -- see dScene_c.h). The scalars on either side of the dExtSimpleModel_c
+ * pair are named from their uses in d_s_star_sel_methods.cpp; the
+ * "Runtime" notes record blinded melonDS pokes (EU ROM, tier I, every sham
+ * and control unchanged). The bytes nothing reads stay pad_ arrays.
+ * Fixed-point values are 20.12 (0x1000 = 1.0).
  *
  * VTABLE ORDER follows dScene_c's (unchanged slot indices; dScStarSel_c
  * adds no new virtual). The destructor pair is at slots 16/17, same
@@ -49,14 +45,86 @@
  * immediate base, same as dScEntry_c.
  */
 struct dScStarSel_c : dScene_c {
-    u8    unk_050[0x14];  /* 0x050 -- opaque; animation/fade scalars
-                                        (Behavior/Render access as 32-bit
-                                        fixed-point values at 0x50/0x54/0x58/
-                                        0x5c/0x60) */
+    /* Scale of the bottom-screen character face, handed to OAM::Render.
+       It is an INVERSE scale: OAM::Render divides by it, so a bigger value
+       draws the face smaller (width = 1/scale), and the tap animation in
+       Render shrinks the face. Runtime (EU, blinded 12/12): 0x1800 drew the
+       face 82 px wide and 0xa00 196 px, against 123 px at 0x1000. */
+    s32 mFaceScaleX; /* 0x050 */
+    s32 mFaceScaleY; /* 0x054 -- Render copies mFaceScaleX in */
+    /* Scale of the picked character's icon in the strip, in the same
+       OAM::Render slots as mFaceScaleX. Render's pick pulse writes it. */
+    s32 mIconScaleX;             /* 0x058 */
+    s32 mIconScaleY;             /* 0x05c */
+    s32 mIdleIconScale;          /* 0x060 -- the other strip icons; 0 = not drawn */
     dExtSimpleModel_c models[2]; /* 0x064 -- dExtSimpleModel_c::LoadAndSetFile'd pair,
-                                        see CONSTRUCTION above */
-    u8    unk_104[0x38];  /* 0x104 -- opaque; cursor state, per-
-                                        character UI positions and timers */
+                                     see CONSTRUCTION above */
+    /* D-pad auto-repeat timers: Behavior reloads them with 0x10 on a press
+       and 8 while held, and counts them down. */
+    u16 mPlateRepeatTimer; /* 0x104 -- the star plates */
+    u16 mCharRepeatTimer;  /* 0x106 -- the character strip */
+    /* The bounce of the bottom TOUCH ME! prompt (Behavior): mBounceDelay
+       frames (0x78) pass, then mBounceVelocity is launched at mBounceLaunch
+       (first -0x400) and steps mPromptYOffset until it lands. Each phase-3
+       landing raises mBounceLaunch by 0x80 until it reaches -0x180 and the
+       delay restarts. mBouncePhase is 1 above the rest line, 2 or 3 below. */
+    u16 mBounceDelay; /* 0x108 */
+    /* 8.8 y offset of the TOUCH ME! prompt. Runtime (EU, blinded 11/11):
+       poking it moved the prompt. */
+    s16 mPromptYOffset;  /* 0x10a */
+    s16 mBounceVelocity; /* 0x10c */
+    s16 mBounceLaunch;   /* 0x10e */
+    /* Runtime (EU, blinded 8/12; both rotate pairs hit, and the four misses
+       were all scale-direction guesses on 0x50): rotation of the face. */
+    s16 mFaceAngle;  /* 0x110 */
+    s16 mPulseAngle; /* 0x112 -- phase of the pick pulse on mIconScaleX */
+    /* Runtime (EU, blinded 12/12): the number of star plates. */
+    u8 mPlateCount; /* 0x114 */
+    /* Runtime (EU, blinded 11/11): the highlighted plate, 0xff = none. */
+    u8 mSelectedPlate; /* 0x115 */
+    /* Index into OAM::LIFE_ICONS. Runtime (EU, blinded 11/11): the head
+       icon of the lives counter. */
+    u8 mLifeIcon; /* 0x116 */
+    /* Set like mPickPressTimer when a plate is tapped or the selection
+       moves, and counted down in Behavior. Nothing in the class reads it. */
+    u8 mPlatePressTimer; /* 0x117 */
+    u8 mPickPressTimer;  /* 0x118 -- frames the picked icon is drawn pressed */
+    /* Set to 0x10 when a choice is made; Behavior counts it down and fades
+       the scene out at zero. */
+    u8 mExitDelay; /* 0x119 */
+    /* x of plate i's number and its bottom-screen star icon. Runtime (EU,
+       blinded 12/12); the 3D stars are centred by index and do not follow it. */
+    u8 mPlateX[7]; /* 0x11a */
+    s8 mDigits[3]; /* 0x121 -- func_ov003_020ae1a4's digits, -1 = blank */
+    u8 mCharX[3];  /* 0x124 -- per character, in the strip */
+    u8 pad_127;
+    u8 mCharY[3]; /* 0x128 */
+    /* Runtime (EU, blinded 8/12; both pairs hit): screen y of the face. */
+    u8 mFaceY;         /* 0x12b */
+    u8 mCharSprite[3]; /* 0x12c -- index into data_ov001_020abcb4 */
+    u8 pad_12f;
+    /* InitResources counts the unlocked characters into it; 4 = the fixed
+       order in sStarSelectCharacterOrder. Runtime (EU, blinded 11/11): 2
+       with character 3 hides the TOUCH ME! prompt and freezes its bounce. */
+    u8 mStripMode; /* 0x130 */
+    /* Bit i: plate i can be picked and has its small bottom-screen star
+       icon. Runtime (EU, blinded 12/12): bit i draws that icon. */
+    u8 mPlateMask;  /* 0x131 */
+    u8 mPickedChar; /* 0x132 -- 3 = the face was chosen */
+    /* What the pointer points at: 0 the plates, 1 the character strip,
+       2 the face. Runtime (EU, blinded 11/11): 0 drew the down-pointer above
+       the star icon, 2 the right-pointer left of the face. */
+    u8 mCursorTarget; /* 0x133 */
+    u8 mCharCursor;   /* 0x134 -- slot within the character strip */
+    /* 0 hidden; 1 woken by the d-pad; 2 shown. Runtime (EU, blinded 11/11):
+       nonzero draws the pointer. */
+    u8 mCursorShown;  /* 0x135 */
+    u8 mBouncePhase;  /* 0x136 */
+    u8 mFaceAnimStep; /* 0x137 -- the tap's grow, shrink, wait, spin step */
+    u8 pad_138;
+    u8 mAnimMode; /* 0x139 -- 1 face chosen, 2 character picked */
+    u8 mAnimFlip; /* 0x13a -- pick pulse: which icon side is drawn */
+    u8 pad_13b;
 
     /* Declared first -- key function; see the family convention discussed in
        dBase_c.h/dScene_c.h. The D1 source now defines this destructor as a
