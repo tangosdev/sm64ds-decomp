@@ -165,7 +165,7 @@ void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
 void MulVec3Mat4x3(void *in, void *m, void *out);
-void Vec3_Add(void *out, void *a, void *b);
+void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(void *out, const void *in, int scale);
 int Vec3_HorzLen(void *v);
@@ -407,7 +407,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
 
     Matrix4x3_FromRotationXYZExt(data_020a0e68, thisx->mAngleX, thisx->mAngleY, thisx->mAngleZ);
     MulVec3Mat4x3(&in, data_020a0e68, &out);
-    Vec3_Add(&added, (Vec3i *)&thisx->mPosX, &out);
+    Vec3_Add((Vector3 *)&added, (const Vector3 *)&thisx->mPosX, (const Vector3 *)&out);
 
     {
         int ax = added.x, ay = added.y, az = added.z;
@@ -451,7 +451,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, angz);
         MulVec3Mat4x3(&in, data_020a0e68, &out);
         vel->x = pos->x; vel->y = pos->y; vel->z = pos->z;
-        Vec3_Add(&v48, src, &out);
+        Vec3_Add((Vector3 *)&v48, (const Vector3 *)src, (const Vector3 *)&out);
         pos->x = v48.x; pos->y = v48.y; pos->z = v48.z;
         Vec3_Sub((Vector3 *)&v54, (const Vector3 *)pos, (const Vector3 *)vel);
         Vec3_MulScalar(&v60, &v54, 0xbb8);
