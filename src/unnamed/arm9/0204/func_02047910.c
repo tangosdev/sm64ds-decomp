@@ -5,9 +5,10 @@ struct Vec3
   int y;
   int z;
 };
+struct Vector3;
 
 extern int LenVec3(struct Vec3 *v);
-extern void NormalizeVec3(struct Vec3 *dst, struct Vec3 *src);
+extern void NormalizeVec3(const struct Vector3 *src, struct Vector3 *dst);
 
 /* Blend the 4x3 matrix m0 toward m1 by t into dst. The Y and X rows lerp
    in direction and in length separately and are renormalized; the Z row
@@ -39,7 +40,7 @@ void func_02047910(int *m0, int *m1, int *dst, int t)
   vy.z = va.z + FX_MUL(t, (vb.z - va.z));
   if (FX_MUL(vy.x, vy.x) + FX_MUL(vy.y, vy.y) + FX_MUL(vy.z, vy.z) == 0)
       return;
-  NormalizeVec3(&vy, &vy);
+  NormalizeVec3((const struct Vector3 *)&vy, (struct Vector3 *)&vy);
   dst[3] = FX_MUL(vy.x, len);
   dst[4] = FX_MUL(vy.y, len);
   dst[5] = FX_MUL(vy.z, len);
@@ -58,7 +59,7 @@ void func_02047910(int *m0, int *m1, int *dst, int t)
   vx.z = va.z + FX_MUL(t, (vb.z - va.z));
   if (FX_MUL(vx.x, vx.x) + FX_MUL(vx.y, vx.y) + FX_MUL(vx.z, vx.z) == 0)
       return;
-  NormalizeVec3(&vx, &vx);
+  NormalizeVec3((const struct Vector3 *)&vx, (struct Vector3 *)&vx);
   dst[0] = FX_MUL(vx.x, len);
   dst[1] = FX_MUL(vx.y, len);
   dst[2] = FX_MUL(vx.z, len);
@@ -89,7 +90,7 @@ void func_02047910(int *m0, int *m1, int *dst, int t)
   if (FX_MUL(vz.x, vz.x) + FX_MUL(vz.y, vz.y) + FX_MUL(vz.z, vz.z) == 0)
       return;
 
-  NormalizeVec3(&vz, &vz);
+  NormalizeVec3((const struct Vector3 *)&vz, (struct Vector3 *)&vz);
   dst[6] = FX_MUL(vz.x, len);
   dst[7] = FX_MUL(vz.y, len);
   dst[8] = FX_MUL(vz.z, len);

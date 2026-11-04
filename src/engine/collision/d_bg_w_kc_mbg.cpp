@@ -27,7 +27,7 @@ void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 int InvMat4x3(void *dst, void *src);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
 int LenVec3(void *v);
-void NormalizeVec3(void *src, void *dst);
+void NormalizeVec3(const Vector3 *src, Vector3 *dst);
 int func_02053200(int v);
 
 /* dBgW_Kc's ITCM depth-policy setters and d_bg_w.cpp's threshold setter, run

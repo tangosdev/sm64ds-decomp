@@ -39,6 +39,7 @@
    twelve words under it, where the structured Matrix3x3 + Vector3 spelling
    scalarizes and lands +0x1c bytes long. */
 #include "common.h"
+#include "math/MtxStack.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmModel_c.h"
 #include "dExtBlendAnmModel_c.h"
@@ -58,8 +59,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern "C" {
 extern Matrix4x3 data_0209b3ec; /* local extern: the camera-space matrix the Render paths use */
 extern Matrix4x3 data_020a0e68; /* local extern: dExtShadowModel_c's shared render matrix scratch */
-/* local extern: no header declares it */
-void MulMat4x3Mat4x3(const Matrix4x3 *m1, const Matrix4x3 *m0, Matrix4x3 *mF);
 /* local extern: no header declares it; data.transforms-bone walk in Virtual10 */
 void func_02045074(ModelComponents *data, BMD_Bone *bones);
 /* local extern: no header declares it; sizes the transforms buffer from the file */
@@ -362,7 +361,7 @@ void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
 // @symbol _ZN17dExtSimpleModel_c6RenderEPK7Vector3
 void dExtSimpleModel_c::Render(const Vector3 *scale) {
     Matrix4x3 temp;
-    MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
+    MulMat4x3Mat4x3((const int *)&mat4x3, (const int *)&data_0209b3ec, (int *)&temp);
     data.Render(&temp, (Vector3 *)scale);
 }
 
@@ -726,7 +725,7 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
 // @symbol _ZN17dExtCommonModel_c6RenderEPK7Vector3
 void dExtCommonModel_c::Render(const Vector3 *scale) {
     Matrix4x3 temp;
-    MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
+    MulMat4x3Mat4x3((const int *)&mat4x3, (const int *)&data_0209b3ec, (int *)&temp);
     data->Render(&temp, (Vector3 *)scale);
 }
 
@@ -872,9 +871,11 @@ void dExtShadowModel_c::RenderAll() {
         do {
             ModelComponents *model = node->data;
             func_0203c178(&data_020a0e68, node->scale.x, node->scale.y, node->scale.z);
-            MulMat4x3Mat4x3(&data_020a0e68, node->mat, &data_020a0e68);
+            MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)node->mat,
+                            (int *)&data_020a0e68);
             data_020a0e68.m[10] += 0x2000;
-            MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
+            MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)&data_0209b3ec,
+                            (int *)&data_020a0e68);
             func_02046120(model, node->opacity);
             model->Render(&data_020a0e68, 0);
             func_02046088(model, node->opacity, 1);

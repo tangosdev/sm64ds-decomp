@@ -6,14 +6,14 @@
 #define reg_G3_IDENTITY     (*(volatile u32 *)0x04000454)
 #define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
 
-/* No header declares these; each is spelled as its definition spells it
-   (CrossVec3's vector is a Vec3_Fix12, NormalizeVec3 and MulVec3Mat3x3 take
-   int*), so the calls below cast. */
+/* No header declares these. CrossVec3 uses its Vec3_Fix12 view,
+   NormalizeVec3 uses Vector3, and MulVec3Mat3x3 uses raw component words. */
 typedef struct {
     Fix12i x, y, z;
 } Vec3_Fix12;
 extern void CrossVec3(const Vec3_Fix12 *a, const Vec3_Fix12 *b, Vec3_Fix12 *out);
-extern void NormalizeVec3(int *v, int *out);
+struct Vector3;
+extern void NormalizeVec3(const struct Vector3 *v, struct Vector3 *out);
 extern void Copy36Bytes(int *src, int *dst);
 extern void MulVec3Mat3x3(const int *in, const int *m, int *out);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
@@ -80,12 +80,12 @@ void func_0204b81c(ManagerView *mgr, ParticleElement *ptcl) {
     if (dir.x == 0 && dir.y == 0 && dir.z == 0)
         return;
 
-    NormalizeVec3((int *)&dir, (int *)&dir);
+    NormalizeVec3((const struct Vector3 *)&dir, (struct Vector3 *)&dir);
     Copy36Bytes(view, rot);
     MulVec3Mat3x3((int *)&dir, rot, (int *)&dir);
     MulVec3Mat4x3(&trans, (Matrix4x3 *)view, &trans);
     velDir = ptcl->velocity;
-    NormalizeVec3((int *)&velDir, (int *)&velDir);
+    NormalizeVec3((const struct Vector3 *)&velDir, (struct Vector3 *)&velDir);
 
     {
         /* |velocity . -view z|: 1 when the particle flies straight at the

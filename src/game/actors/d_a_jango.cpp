@@ -190,7 +190,8 @@ extern int ApproachAngle(s16 *cur, s16 target, int div, int band, int maxStep);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
-extern void SubVec3(void *a, void *b, void *c);
+/* local extern: CalcLib conflicts with this TU's LenVec3 declaration. */
+extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void Vec3_Asr(void* d, void* s, int sh);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
@@ -729,7 +730,7 @@ int daJango_c::func_ov062_0211c2f4() {
         zero[1] = mPosY;
         s = cstd::fdiv(0x14000, len);
         Vec3_MulScalar(&scaled, &diff, s);
-        SubVec3(&mPosX, &scaled, &mPosX);
+        SubVec3((Vector3 *)&mPosX, &scaled, (Vector3 *)&mPosX);
         if (mRiseToFarNode == 1) {
             mPosY = zero[1];
             if (*(u16 *)&mStateTimer == 0) {

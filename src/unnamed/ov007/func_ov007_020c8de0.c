@@ -7,7 +7,7 @@ extern void func_ov007_020c90c0(void *self);
 struct Vec3;
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern int LenVec3(struct Vec3 *v);
-extern void NormalizeVec3(int *v, int *out); /* as defined */
+extern void NormalizeVec3(const Vector3 *v, Vector3 *out);
 extern void func_02053320(int s, int *a, int *b, int *out);
 
 /* One frame of a vector tween: mode 0 blends *out from `from` to `to` by t
@@ -67,7 +67,7 @@ int func_ov007_020c8de0(Ov007VecTween *o) {
                 *dst = o->to;
                 ok = 1;
             } else {
-                NormalizeVec3((int *)&tmp, (int *)&tmp);
+                NormalizeVec3(&tmp, &tmp);
                 func_02053320(step, (int *)&tmp, (int *)dst, (int *)dst);
                 ok = 0;
             }

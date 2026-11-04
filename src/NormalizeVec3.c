@@ -1,6 +1,5 @@
 #include "types.h"
-void NormalizeVec3(int *v, int *out)
-{
+void NormalizeVec3(const Vector3 *v, Vector3 *out) {
     s64 sq;
     volatile u16 *ime;
     u16 saved;
@@ -9,9 +8,9 @@ void NormalizeVec3(int *v, int *out)
     s64 scale;
     s64 prod;
 
-    sq = (s64)v[0] * v[0];
-    sq += (s64)v[1] * v[1];
-    sq += (s64)v[2] * v[2];
+    sq = (s64)v->x * v->x;
+    sq += (s64)v->y * v->y;
+    sq += (s64)v->z * v->z;
 
     *(volatile u16 *)0x4000280 = 2;
     *(volatile u64 *)0x4000290 = (u64)0x1000000 << 32;
@@ -32,10 +31,10 @@ void NormalizeVec3(int *v, int *out)
 
     scale = recip * (s64)len;
 
-    prod = scale * (s64)v[0];
-    out[0] = (int)((prod + (1LL << 44)) >> 45);
-    prod = scale * (s64)v[1];
-    out[1] = (int)((prod + (1LL << 44)) >> 45);
-    prod = scale * (s64)v[2];
-    out[2] = (int)((prod + (1LL << 44)) >> 45);
+    prod = scale * (s64)v->x;
+    out->x = (int)((prod + (1LL << 44)) >> 45);
+    prod = scale * (s64)v->y;
+    out->y = (int)((prod + (1LL << 44)) >> 45);
+    prod = scale * (s64)v->z;
+    out->z = (int)((prod + (1LL << 44)) >> 45);
 }

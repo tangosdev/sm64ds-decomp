@@ -42,6 +42,7 @@ enum daBakubaku_c_AssetId {
 #include "SpawnInfo.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
+#include "LevelRng.h"
 #include "math/Approach.h"
 
 /* dCc_c bit table: flags/vulnFlags/hitFlags share it. */
@@ -86,7 +87,6 @@ extern daBakubaku_c::State data_ov032_02113a7c; /* surface */
 extern daBakubaku_c::State data_ov032_02113abc; /* dive */
 extern s32 data_0209f32c;
 extern Matrix4x3 data_020a0e68;
-extern int data_0209e650[];
 
 extern BakuVec3 data_ov032_021137cc; /* body cylinder */
 extern BakuVec3 data_ov032_021137d8; /* head cylinder */
@@ -288,9 +288,9 @@ int daBakubaku_c::func_ov032_02111ff4(void *pv)
 // @symbol _ZN12daBakubaku_c19func_ov032_02111f9cEv
 int daBakubaku_c::func_ov032_02111f9c()
 {
-    unsigned int r = RandomIntInternal(data_0209e650);
+    unsigned int r = RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
     mAngTarget = ((r >> 8) & 0xf) << 0xc;
-    r = RandomIntInternal(data_0209e650);
+    r = RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
     mStateTimer = ((r >> 8) & 0x3f) + 0x32;
     mAnmModel.speed = 0x1000;
     return 1;
@@ -330,7 +330,7 @@ int daBakubaku_c::func_ov032_02111e24()
         return 1;
     }
     if (*(unsigned short *)&mStateTimer == 0) {
-        unsigned int r = (unsigned int)RandomIntInternal(data_0209e650);
+        unsigned int r = (unsigned int)RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
         if (((r >> 8) & 3) == 0) {
             func_ov032_02111ff4(&data_ov032_02113a9c);
         } else {
@@ -344,7 +344,7 @@ int daBakubaku_c::func_ov032_02111e24()
 // @symbol _ZN12daBakubaku_c19func_ov032_02111dd8Ev
 int daBakubaku_c::func_ov032_02111dd8()
 {
-    unsigned int r = RandomIntInternal(data_0209e650);
+    unsigned int r = RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
     mStateTimer = ((r >> 8) & 0x1f) + 0x14;
     mAnmModel.speed = 0x1000;
     mSpeedX = 0;
@@ -390,7 +390,7 @@ int daBakubaku_c::func_ov032_02111b9c()
     }
 
     mAngTarget = Vec3_HorzAngle(&mPos, (Vector3 *)&mTargetPosX);
-    unsigned int r = (unsigned int)RandomIntInternal(data_0209e650);
+    unsigned int r = (unsigned int)RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
     int s5 = (int)(((r >> 8) & 3) << 0x1c) >> 0x10;
     ApproachLinear(mPrevAngleY, mAngTarget, 0x200);
     if (Vec3_HorzDist(&mPos, (Vector3 *)&mTargetPosX) < 0x258000) {

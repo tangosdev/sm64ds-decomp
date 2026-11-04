@@ -39,8 +39,11 @@
  * - The byte at 0x6da is written by InitResources and never read; it has no
  *   honest name, so it stays a byte store.
  * - daPly_c:: methods with no body-local externs carry no extern "C"
- *   wrapper (104 sites); the remaining 306 keep it: the block gives C linkage
- *   to body-local externs, and hoisting them exposes S42 spelling drift.
+ *   wrapper (190 definitions); the remaining 224 keep it: the block gives C
+ *   linkage to body-local externs. Externs whose body copies all agree are
+ *   declared once in the file-scope extern "C" block below; the ones left in
+ *   bodies disagree between copies, with a header or with their definition
+ *   (S42 spelling drift), and settling each is matching work.
  *   The wrapper never reaches the method itself -- [dcl.link]/4 makes a C
  *   language linkage ignored for a class member's name and for the function
  *   type of a member function -- so on a method that declares nothing in its
@@ -84,6 +87,180 @@
 #include "math/Approach.h"
 
 extern "C" daPly_c *daPly_c_classInit();
+
+/* Engine and overlay symbols used here that no header declares yet. Each
+ * used to be repeated inside every body that needed it; C linkage keeps
+ * the names unmangled, as those body-local copies had it. */
+extern "C" {
+extern int __aeabi_idiv(int a, int b);
+extern int atan2_hold_Player_11(int a, int b);
+extern int atan2_hold_Player_12(int, int);
+extern int atan2_hold_Player_13(int a, int b);
+extern int atan2_hold_Player_14(int a, int b);
+extern int atan2_hold_Player_16(int y, int x);
+extern int atan2_hold_Player_17(int y, int x);
+extern int atan2_hold_Player_18(int x, int z);
+extern s16 atan2_hold_Player_19(s32 y, s32 x);
+extern int atan2_hold_Player_2(int, int);
+extern int atan2_hold_Player_3(int a, int b);
+extern s16 atan2_hold_Player_4(s32, s32);
+extern short atan2_hold_Player_8(int a, int b);
+extern int atan2_hold_Player_9(int x, int z);
+extern int data_0208e430;
+extern signed char data_02092110;
+extern signed char data_02092120;
+extern signed char data_02092124;
+extern u8 data_02092128[];
+extern int data_0209212c;
+extern short data_02092144[];
+extern int data_0209b49c;
+extern Timer data_0209d4c8;
+extern unsigned char data_0209d660;
+extern u8 data_0209f200;
+extern u8 data_0209f20c;
+extern unsigned char data_0209f21c;
+extern u8 data_0209f250;
+extern u8 data_0209f254;
+extern u8 data_0209f264;
+extern unsigned char data_0209f28c;
+extern unsigned char data_0209f2ac;
+extern s16 data_0209f4a2[];
+extern u8 data_0209f4ab[];
+extern u8 data_0209fc5c[];
+extern s32 data_0209fc68;
+extern u8 data_ov002_020ff0ec[];
+extern unsigned char data_ov002_020ff0f0[];
+extern unsigned char data_ov002_020ff0f4[];
+extern u8 data_ov002_020ff0f8[];
+extern int data_ov002_020ff100[];
+extern s16 data_ov002_020ff108[];
+extern u16 data_ov002_020ff110[];
+extern unsigned int data_ov002_020ff118[];
+extern int data_ov002_020ff120[];
+extern u16 data_ov002_020ff128[];
+extern int data_ov002_020ff130[];
+extern u16 data_ov002_020ff138[];
+extern u16 data_ov002_020ff13c[];
+extern unsigned short data_ov002_020ff140[];
+extern u8 data_ov002_020ff14c[];
+extern unsigned short data_ov002_020ff158[];
+extern int data_ov002_020ff164[];
+extern unsigned short data_ov002_020ff170[];
+extern int data_ov002_020ff17c[];
+extern int data_ov002_020ff188[];
+extern int data_ov002_020ff194[];
+extern short data_ov002_020ff1a0[];
+extern int data_ov002_020ff1b0[4];
+extern int data_ov002_020ff1c0[];
+extern int data_ov002_020ff1d0[];
+extern int data_ov002_020ff1e0[];
+extern int data_ov002_020ff1f0[];
+extern s32 data_ov002_020ff200[];
+extern s32 data_ov002_020ff210[];
+extern int data_ov002_020ff230[];
+extern unsigned char data_ov002_020ff240[];
+extern int data_ov002_020ff254[];
+extern short data_ov002_020ff26c[];
+extern unsigned int data_ov002_020ff284[];
+extern unsigned short data_ov002_020ff29c[];
+extern int data_ov002_020ff2c0[];
+extern SharedFilePtr *data_ov002_020ff2f0[];
+extern void *data_ov002_020ff790[];
+extern u8 data_ov002_02109db8[];
+extern u16 data_ov002_02109dbc[];
+extern u8 data_ov002_02109dc4[];
+extern u8 data_ov002_02109dcc[];
+extern int data_ov002_02109fe4[];
+extern u32 data_ov002_0210a07c[];
+extern int data_ov002_0210a424[];
+extern int data_ov002_0210a560[];
+extern u32 data_ov002_0210a578[];
+extern u32 data_ov002_0210a584[];
+extern Vector3 data_ov002_0210a590;
+extern SharedFilePtr data_ov002_0210d9a0;
+extern SharedFilePtr data_ov002_0210d9a8;
+extern SharedFilePtr data_ov002_0210d9c0;
+extern SharedFilePtr data_ov002_0210da38;
+extern SharedFilePtr data_ov002_0210da40;
+extern int data_ov002_0210f92c[];
+extern int data_ov055_02111b64;
+extern int data_ov055_02111b6c;
+extern void EnterBigBoosHaunt(void);
+extern void ExitLevel(void);
+extern void FUN_02029934(void);
+extern void FUN_02029980(void);
+extern void FUN_020299f4(void);
+extern int func_01ff98f4(int a, int b);
+extern int func_01ff99a4(int a, int b);
+extern int func_01ffa4bc(int a);
+extern void func_0200ca14(void *, unsigned char b, int c);
+extern void func_0200cf40(void *);
+extern int func_0200d0ac(int a, unsigned int b);
+extern void func_0200d1e4(void *);
+extern void func_0200d858(void *, const Vector3 *);
+extern int func_0200fccc(void *, int r1);
+extern void func_020105cc(void *thiz, unsigned int flags);
+extern void func_0201628c(int a, int b);
+extern void func_020162a4(int a, int b);
+extern void func_020167a4(void *p);
+extern void func_0201fc88(s16);
+extern void func_02020388(int playerNo);
+extern u32 func_020229f0(int x, int y, int z);
+extern unsigned int func_02022d44(unsigned int, unsigned int, int, int, int, void *);
+extern int func_02035638(void *);
+extern int func_0203564c(int);
+extern void func_02035684(void *p, s32 v);
+extern void func_0203568c(void *p, s32 v);
+extern void func_02035798(void *, int);
+extern void func_020371fc(void *);
+extern void func_02037318(void *);
+extern int func_02037e20(void *);
+extern void func_0203db0c(int idx, unsigned short val);
+extern void func_ov002_020ed63c(void *, int);
+extern int func_ov002_020eea84(void *, void *);
+extern int func_ov002_020eeeb8(void *, char *);
+extern int func_ov002_020ef070(void *, char *);
+extern int func_ov002_020f035c(unsigned int sel, int r1);
+extern int func_ov100_02144fcc(void);
+extern int func_ov100_02145014(void);
+extern void func_ov100_02145070(int);
+extern int GiveHealth(int, int);
+extern void GiveLives(int);
+extern u16 gKuppaScriptFrame;
+extern s32 gRunningKuppaScript;
+extern void HitDeathPlane(int arg);
+extern unsigned char IsPlayerWarping(int a0);
+extern int IsStarCameraScript3Running(void);
+extern void KillPlayer(void);
+extern void LoadKeyModels(int idx);
+extern void LoadSilverStarAndNumber(void);
+extern int Math_Function_0203b14c(void *, int a, int b, int c, int d);
+extern int PlayerChangeMusicVolumeHold(u32 vol, int t);
+extern void PlayerChangeMusicVolumeHold2(int, int);
+extern void PlayerChangeMusicVolumeHold3(unsigned int, int);
+extern void PlayerNewSimpleHold(unsigned int id, int x, int y, int z);
+extern void PlayerNewSimpleHold1(unsigned int, int, int, int);
+extern void PlayerNewSimpleHold13(u32 id, int a, int b, int cc);
+extern void PlayerNewSimpleHold16(unsigned int id, int x, int y, int z);
+extern void PlayerNewSimpleHold2(unsigned int id, int x, int y, int z);
+extern void PlayerNewSimpleHold3(unsigned int, int, int, int);
+extern void PlayerNewSimpleHold4(unsigned int, int, int, int);
+extern void PlayerNewSimpleHold5(unsigned int id, int x, int y, int z);
+extern void PlayerNewSimpleHold6(unsigned int id, int x, int y, int z);
+extern void PlayerNewSimpleHold7(u32 id, int x, int y, int z);
+extern void PlayerNewSimpleHold9(u32 a, int b, int c, int d);
+extern void PlayerPlayLongHold_bfa74(u32 handle, u32 bank, u32 id, const void *pos, s16 e);
+extern void PlayerPlayLongHold_deadpit(u32 a, u32 b, u32 c, void *, u32 d);
+extern void PlayerPlayLongHold_electro(u32 a, u32 b, u32 c, Vector3 *v, u32 d);
+extern void PlayerPlayLongHold_swing(u32 h, u32 a, u32 b, void *v, u32 d);
+extern unsigned int ReadUnalignedInt(unsigned char *p);
+extern s16 ReadUnalignedShort(u8 *p);
+extern u16 ReadUnalignedUshort(u8 *p);
+extern void StartEndingCutscene(void);
+extern int SublevelToLevel(int);
+extern int SurfaceInfo_TestFlag0x20(void *);
+extern void Vec3_MulScalar(Vector3 *, const Vector3 *, int s);
+}
 
 /* ---------------------------------------------------------------------------
  * Shadow types and ABI stand-ins that cannot live inside a function body.
@@ -227,10 +404,8 @@ int daPly_c::func_ov002_020bcd18(unsigned char *params, int beginFrame, int endF
 // @symbol _ZN7daPly_c19func_ov002_020bcd38EPhii
 extern "C" {
 int daPly_c::func_ov002_020bcd38(unsigned char *params, int beginFrame, int endFrame) {
-    extern s16 ReadUnalignedShort(u8 *p);
     extern int AngleDiff(int a, int b);
     extern int ApproachAngle(s16 *angle, int from, int start, int speed, int max);
-    extern u16 gKuppaScriptFrame;
     s16 cur;
 
     if (beginFrame == gKuppaScriptFrame) {
@@ -405,7 +580,6 @@ AnimScriptStep *data_ov002_0210a7a0[] = {
 void func_ov002_020bcdf0(char *self)
 {
     daPly_c *player = reinterpret_cast<daPly_c *>(self);
-    extern void PlayerNewSimpleHold(unsigned int id, int x, int y, int z);
     extern u32 PlayerNewHold(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                              void *callback);
     AnimScriptStep *base;
@@ -499,7 +673,6 @@ particle:
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020bd06cEj
-extern "C" {
 void daPly_c::func_ov002_020bd06c(unsigned int state2) {
     char *self = (char *)this;
     int flag;
@@ -578,7 +751,6 @@ void daPly_c::func_ov002_020bd06c(unsigned int state2) {
         p2->mAngleZ = this->mAngleZ;
     }
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020bd20cEPhii
 int daPly_c::func_ov002_020bd20c(unsigned char *params, int beginFrame, int endFrame) {
@@ -593,8 +765,6 @@ int daPly_c::func_ov002_020bd20c(unsigned char *params, int beginFrame, int endF
 // @symbol _ZN7daPly_c19func_ov002_020bd250EPhii
 extern "C" {
 int daPly_c::func_ov002_020bd250(unsigned char *params, int beginFrame, int endFrame) {
-    extern void PlayerNewSimpleHold1(unsigned int, int, int, int);
-    extern short ReadUnalignedShort(unsigned char* p);
     extern void Vec3_RotateYAndTranslate(Vector3* out, const Vector3* base, int angle, const Vector3* off);
     char *self = (char *)this;
     Vector3 out1, off1, out2, off2, v;
@@ -624,9 +794,7 @@ int daPly_c::func_ov002_020bd250(unsigned char *params, int beginFrame, int endF
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020bd354EPhii
-extern "C" {
 int daPly_c::func_ov002_020bd354(unsigned char *params, int beginFrame, int endFrame) {
-    extern unsigned short gKuppaScriptFrame;
 
     if (beginFrame == gKuppaScriptFrame) {
         this->mHasWings = 1;
@@ -637,13 +805,10 @@ int daPly_c::func_ov002_020bd354(unsigned char *params, int beginFrame, int endF
     this->mPeakY = this->mPosY;
     return 1;
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020bd3a0EPhii
 extern "C" {
 int daPly_c::func_ov002_020bd3a0(unsigned char *params, int beginFrame, int endFrame) {
-    extern u16 ReadUnalignedUshort(u8* p);
-    extern u16 gKuppaScriptFrame;
     extern u16 data_0209f49e;
     extern u16 data_0209f49c;
 
@@ -661,7 +826,6 @@ int daPly_c::func_ov002_020bd3a0(unsigned char *params, int beginFrame, int endF
 // @symbol _ZN7daPly_c19func_ov002_020bd438EPhii
 extern "C" {
 int daPly_c::func_ov002_020bd438(unsigned char *params, int beginFrame, int endFrame) {
-    extern unsigned int ReadUnalignedInt(unsigned char *p);
     extern void func_02012694(unsigned int, void*);
     unsigned int v = ReadUnalignedInt(params);
     func_02012694(v, &mCamSpacePos);
@@ -670,23 +834,17 @@ int daPly_c::func_ov002_020bd438(unsigned char *params, int beginFrame, int endF
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020bd45cEPhii
-extern "C" {
 int daPly_c::func_ov002_020bd45c(unsigned char *params, int beginFrame, int endFrame) {
-    extern unsigned int ReadUnalignedInt(unsigned char *p);
     unsigned int v = ReadUnalignedInt(params);
     Sound::PlayBank0(v, mCamSpacePos);
     return 1;
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020bd480EPhii
-extern "C" {
 int daPly_c::func_ov002_020bd480(unsigned char *params, int beginFrame, int endFrame) {
-    extern unsigned int ReadUnalignedInt(unsigned char *p);
     unsigned int v = ReadUnalignedInt(params);
     Sound::PlayCharVoice(mCharacter, v, mCamSpacePos);
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020bd4acEPhii
@@ -709,8 +867,6 @@ int daPly_c::func_ov002_020bd4c8(unsigned char *params, int beginFrame, int endF
 #pragma opt_propagation off
 extern "C" {
 int daPly_c::func_ov002_020bd4e0(unsigned char *data, int beginFrame, int endFrame) {
-    extern void func_0203db0c(int idx, unsigned short val);
-    extern short ReadUnalignedShort(unsigned char *p);
     extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
     extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     extern char data_0209f4a6[];
@@ -752,9 +908,7 @@ int daPly_c::func_ov002_020bd4e0(unsigned char *data, int beginFrame, int endFra
 #pragma pop
 
 // @symbol _ZN7daPly_c19func_ov002_020bd600EPhii
-extern "C" {
 int daPly_c::func_ov002_020bd600(unsigned char *data, int beginFrame, int endFrame) {
-    extern s16 ReadUnalignedShort(unsigned char *p);
 
     s32 x, y, z;
     z = ReadUnalignedShort(data + 4) << 12;
@@ -766,7 +920,6 @@ int daPly_c::func_ov002_020bd600(unsigned char *data, int beginFrame, int endFra
     this->mAngleY = ReadUnalignedShort(data + 6);
     this->mPrevAngleY = this->mAngleY;
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020bd664EPhii
@@ -993,9 +1146,7 @@ void daPly_c::func_ov002_020bdc18() {
 // @symbol _ZN7daPly_c16IncMegaKillCountEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 void daPly_c::IncMegaKillCount() {
-    extern void GiveLives(int);
     Vector3 v;
     char *new_var2;
     int new_var3;
@@ -1024,7 +1175,6 @@ void daPly_c::IncMegaKillCount() {
     }
     ((daObj1UpLogo_c *)a)->mDelay = 0;
     ((daObj1UpLogo_c *)a)->SetFollowTarget(0);
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020bdd2cEv
@@ -1207,7 +1357,6 @@ void daPly_c::SetNewHatCharacter(unsigned int p1, unsigned int p2, bool p3) {
 extern "C" {
 void daPly_c::SetRealCharacter(unsigned int chr_) {
     extern SharedFilePtr *data_ov002_020ff480[];
-    extern u8 data_02092128[];
     extern u8 data_0209caa0[];
     u32 chr = (u32)chr_;
 
@@ -1262,11 +1411,7 @@ void daPly_c::func_ov002_020be3b0() {
     extern void func_ov002_020e6b74(void *, int *);
     extern void func_ov002_020d80d0(void*);
     extern SharedFilePtr *data_ov002_020ff480[];
-    extern u8 data_02092128[];
-    extern u8 data_ov002_020ff14c[];
     extern void func_ov002_020e6b3c(void*);
-    extern void*data_ov002_020ff790[];
-    extern int __aeabi_idiv(int, int);
     extern char data_ov002_02110804[];
     extern void func_ov002_020e69c0(void*);
     extern void func_ov002_020e6a78(void*, int);
@@ -1644,7 +1789,6 @@ extern "C" {
 void daPly_c::SetAnim(u32 animId, int flags, Fix12i speed, u16 startFrame) {
     extern u8 data_0209f2d8;
     extern SharedFilePtr *data_ov002_020ff480[];
-    extern SharedFilePtr *data_ov002_020ff2f0[];
     char *self = (char *)this;
     daPly_c *player = (daPly_c *)self;
     u32 charId;
@@ -1800,19 +1944,15 @@ int func_ov002_020bf27c(char* c, int r1){
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020bf2d8Ei
-extern "C" {
 void daPly_c::func_ov002_020bf2d8(Fix12i a) {
     void*c = (void*)this;
-    extern unsigned short data_ov002_020ff140[];
     unsigned int t = data_ov002_020ff140[param1];
     this->mVertSpeed = FX_MUL(a, (int)t);
-}
 }
 
 // @symbol Player_ScaleByCharFactor
 extern "C" {
 Fix12i Player_ScaleByCharFactor(void*c, Fix12i a){
-    extern unsigned short data_ov002_020ff170[];
     int idx = ((daPly_c *)c)->param1 & 0xff;
     unsigned int t = data_ov002_020ff170[idx];
     return FX_MUL(a, (int)t);
@@ -1860,8 +2000,6 @@ int daPly_c::func_ov002_020bf40c() {
     extern unsigned char NumStars(void);
     extern void AddVec3(void *, void *, void *);
     extern void *data_0209f318;
-    extern Vector3 data_ov002_0210a590;
-    extern void func_0200d858(void *, const Vector3 *);
     Vector3 pos;
     Vector3 off;
     if (NumStars() < 0x50 || param1 != 0) {
@@ -1891,27 +2029,21 @@ int daPly_c::func_ov002_020bf40c() {
 // @symbol _ZN7daPly_c4HealEi
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::Heal(int amt) {
 
-    extern int GiveHealth(int, int);
   int r = this->IsState(data_ov002_0211010c);
   if(r) return r;
   r = this->IsState(data_ov002_02110124);
   if(r) return r;
   return GiveHealth(mPlayerNo, amt);
 }
-}
 
 // @symbol _ZN7daPly_c9GetHealthEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::GetHealth() {
-    extern short data_02092144[];
   unsigned char i = mPlayerNo;
   return (signed char)(data_02092144[i] >> 8);
-}
 }
 
 // @symbol func_ov002_020bf56c
@@ -1944,7 +2076,6 @@ int func_ov002_020bf56c(void* a, int b){
 extern "C" {
 void daPly_c::func_ov002_020bf5e0() {
     extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
-    extern void PlayerNewSimpleHold2(unsigned int id, int x, int y, int z);
     extern u32 func_02022d00(u32 uniqueID, u32 effectID, int x, int y, int z, void*);
     extern int data_0209f32c;
     int flag;
@@ -2045,7 +2176,6 @@ void func_ov002_020bf800(char *c, Vector3_16f v)
 extern "C" {
 void daPly_c::func_ov002_020bf88c() {
     extern void func_02022b04(int x, int y, int z);
-    extern int data_0208e430;
     if (mIsInShallowWater) return;
     if (data_0208e430 == 0x2e) return;
     if (mIsMega)
@@ -2060,7 +2190,6 @@ extern "C" {
 void daPly_c::func_ov002_020bf90c() {
     extern void func_02022b04(Fix12i x, Fix12i y, Fix12i z);
     extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5);
-    extern int data_0208e430;
     if (this->mHorzSpeed == 0) return;
     if (mIsAirborne != 0) return;
     if (mIsInShallowWater != 0) return;
@@ -2081,11 +2210,7 @@ void daPly_c::func_ov002_020bf90c() {
 /* recovered: shared common types */
 // func_ov002_020bf9d4 at 0x020bf9d4
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
-extern "C" {
 void daPly_c::func_ov002_020bf9d4() {
-    extern int func_0200fccc(void*, int r1);
-    extern void PlayerNewSimpleHold3(unsigned int, int, int, int);
-    extern int data_0208e430;
   Vector3 v;
   if (data_0208e430 == 0x2e) return;
   if (mIsMega == 0){
@@ -2103,7 +2228,6 @@ void daPly_c::func_ov002_020bf9d4() {
     Particle::System::NewSimple(0x5b, v.x, v.y, v.z);
   }
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020bfa74Ev
 /* daPly_c on a CLPS surface of type 0xb (a current/conveyor tile): the tile's
@@ -2120,12 +2244,9 @@ int daPly_c::func_ov002_020bfa74() {
     extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
     extern s32 Vec3_HorzLen(const Vector3 *v);
-    extern s16 atan2_hold_Player_19(s32 y, s32 x);
-    extern void PlayerPlayLongHold_bfa74(u32 handle, u32 bank, u32 id, const void *pos, s16 e);
     extern void func_ov002_020bf800(void*, Vector3_16f v);
     extern int func_ov002_020e0478(void*);
     extern s16 data_02082214[];
-    extern s32 data_ov002_020ff210[];
     s32 n;
     s32 i;
     u32 idx;
@@ -2274,7 +2395,6 @@ int daPly_c::func_ov002_020c0108(int p1) {
     typedef int s32;
     extern int Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     extern int Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-    extern s32 data_ov002_020ff200[];
     extern s16 data_02082214[];
     if (this->mIsMetal != 0 || (this->mIsNoControl != 0 && p1 != 0) || this->IsState(data_ov002_02110304) || this->IsState(data_ov002_0211025c))
         return 0;
@@ -2393,7 +2513,6 @@ extern "C" {
 int daPly_c::func_ov002_020c04e0() {
     extern int Vec3_HorzLen(void*);
     extern int AngleDiff(int a, int b);
-    extern int func_ov002_020f035c(u32 sel, int r1);
     int horzLen;
     int angDiff;
     int sel;
@@ -2497,9 +2616,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
     struct Vec3 { s32 x, y, z; };
     extern int func_ov002_020f030c(unsigned int sel);
     extern int func_ov002_020f02c8(unsigned int sel);
-    extern int func_ov002_020f035c(unsigned int sel, int r1);
     extern int Vec3_HorzLen(void*);
-    extern int atan2_hold_Player_18(int x, int z);
     extern int AngleDiff(int a, int b);
     extern void ApproachAngle(void*, short target, int divisor, int band, int maxStep);
     extern short data_0209f4a0[];
@@ -2720,7 +2837,6 @@ int daPly_c::func_ov002_020c0fb4() {
     extern int func_ov002_020dec70(void *);
     extern int func_ov002_020d06c0(void *);
     extern unsigned char gShowRaceTimer[];
-    extern Timer data_0209d4c8;
     extern signed char data_0209f2f8;
     int r;
     switch (this->mSurfaceType) {
@@ -2826,7 +2942,6 @@ int daPly_c::func_ov002_020c0fb4() {
 extern "C" {
 void daPly_c::func_ov002_020c1234() {
     extern signed char data_0209f2f8;
-    extern int data_0209b49c;
     unsigned int a1, a2;
     int fx;
     if (data_0209f2f8 != 0xc && data_0209f2f8 != 0x2e) return;
@@ -2910,8 +3025,6 @@ void daPly_c::func_ov002_020c14b8() {
         unsigned short f18, f1a;
         int f1c, f20, f24;
     } ClsnResultTmp;
-    extern int SurfaceInfo_TestFlag0x20(void*);
-    extern int func_02037e20(void *);
     extern int data_02099368;
     extern int data_0209f32c;
     daPly_c *c = (daPly_c *)arg0;
@@ -2992,9 +3105,7 @@ void daPly_c::func_ov002_020c14b8() {
 }
 
 // @symbol _ZN7daPly_c19SetFloorSurfaceInfoERK5dBgPi
-extern "C" {
 void daPly_c::SetFloorSurfaceInfo(const dBgPi &hit) {
-    extern int atan2_hold_Player_17(int y, int x);
     Vector3 v;
     mClpsWord1Lo = hit.surface.clps.func_02037e90();
     mSurfaceType = hit.surface.clps.GetSurfaceType();
@@ -3010,7 +3121,6 @@ void daPly_c::SetFloorSurfaceInfo(const dBgPi &hit) {
     mFloorNormalZ = v.z;
     mFloorAngle = cstd::atan2(mFloorNormalX, mFloorNormalZ);
 }
-}
 
 // @symbol func_ov002_020c179c
 /* recovered: shared common types */
@@ -3018,7 +3128,6 @@ void daPly_c::SetFloorSurfaceInfo(const dBgPi &hit) {
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 extern "C" {
 int func_ov002_020c179c(char* self, int angle) {
-    extern int atan2_hold_Player_16(int y, int x);
     extern short data_02082214[];
     daPly_c *p = (daPly_c *)self;
     Vector3 v1;
@@ -3064,7 +3173,6 @@ extern "C" {
 void func_ov002_020c18b0(void *self, int p1) {
     extern int func_ov002_020c179c(void*, int angle);
     extern int func_02010844(void*, void*, short angle);
-    extern int __aeabi_idiv(int a, int b);
     extern short data_02082214[];
     daPly_c *p = (daPly_c *)self;
     if (p->mIsAirborne != 0)
@@ -3439,10 +3547,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         int f20;
         int f24;
     } ClsnResultTmp;
-    extern void func_02037318(void*);
     extern void func_ov002_020eed24(void*, void*);
-    extern int func_02035638(void*);
-    extern void func_020371fc(void *);
     extern void func_ov002_020cef84(void*);
     extern int func_ov002_020d0580(void*);
     extern int data_02099368;
@@ -3604,7 +3709,6 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" {
 void daPly_c::func_ov002_020c29d4() {
     char *base = (char *)this;
     if (param1 != 1)
@@ -3632,13 +3736,10 @@ void daPly_c::func_ov002_020c29d4() {
         }
     }
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020c2b08Ev
-extern "C" {
 void daPly_c::func_ov002_020c2b08() {
     void *arg0 = (void *)this;
-    extern int SurfaceInfo_TestFlag0x20(void*);
     daPly_c *c = (daPly_c *)arg0;
     int v[3];
 
@@ -3741,14 +3842,10 @@ void daPly_c::func_ov002_020c2b08() {
     }
     return;
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020c2db8Ev
-extern "C" {
 void daPly_c::func_ov002_020c2db8() {
     unsigned char *c = (unsigned char *)this;
-    extern void func_02035798(void *, int);
-    extern int func_ov002_020eea84(void *, void *);
     ((daPly_c *)(c))->func_ov002_020c14b8();
     mClsnFlags = 0;
     if (mSkipGroundUpdate != 0)
@@ -3771,13 +3868,9 @@ void daPly_c::func_ov002_020c2db8() {
     ((daPly_c *)(c))->func_ov002_020c2b08();
     ((daPly_c *)(c))->func_ov002_020c29d4();
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020c2e78Ev
-extern "C" {
 void daPly_c::func_ov002_020c2e78() {
-    extern unsigned char IsPlayerWarping(int a0);
-    extern void func_02020388(int playerNo);
     unsigned char w = IsPlayerWarping(mPlayerNo);
     if (w == 0)
         return;
@@ -3788,7 +3881,6 @@ void daPly_c::func_ov002_020c2e78() {
   mTeleportId = w;
   unsigned short *p = &this->mStateFlags;
   *p |= 8;
-}
 }
 
 // @symbol _ZN7daPly_c7CanWarpEv
@@ -3839,7 +3931,6 @@ void daPly_c::func_ov002_020c2f64() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c2fecEPi
-extern "C" {
 int daPly_c::func_ov002_020c2fec(int *out) {
     Fix12i tmp[4];
     int i;
@@ -3878,7 +3969,6 @@ int daPly_c::func_ov002_020c2fec(int *out) {
         }
     }
     return ret;
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c3148Ev
@@ -3963,7 +4053,6 @@ void daPly_c::ComputeSplineWeights(Fix12i *out) {
 extern "C" {
 void daPly_c::func_ov002_020c37a4(char *arg) {
     extern void MulVec3Mat4x3(void *, void *, void *);
-    extern void Vec3_MulScalar(Vector3 *, const Vector3 *, int s);
     extern void Vec3_RotateYAndTranslate(void *, void *, int ang, void *);
     extern u32 PlayerNewHold4(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                               void *callback);
@@ -3988,7 +4077,6 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
 extern "C" {
 void daPly_c::func_ov002_020c38a0() {
     extern int Vec3_HorzLen(void*);
-    extern int atan2_hold_Player_14(int a, int b);
     V3Quad s;
     int hlen;
     int ang;
@@ -4038,7 +4126,6 @@ void daPly_c::func_ov002_020c38a0() {
 #undef LA
 
 // @symbol _ZN7daPly_c19func_ov002_020c3a48Ev
-extern "C" {
 int daPly_c::func_ov002_020c3a48() {
     unsigned int r5;
     char *anim;
@@ -4088,13 +4175,10 @@ int daPly_c::func_ov002_020c3a48() {
     Player_AdvanceAnims(this);
     return 0;
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020c3bdcEv
-extern "C" {
 void daPly_c::func_ov002_020c3bdc() {
     typedef int Fix12i;
-    extern void StartEndingCutscene(void);
   if (mStateWork == 0){
     mHasWings = 1;
     mPowerupTimer = 0x708;
@@ -4122,7 +4206,6 @@ void daPly_c::func_ov002_020c3bdc() {
     }
   }
   Player_AdvanceAnims(this);
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c3cf0Ev
@@ -4187,7 +4270,6 @@ void func_ov002_020c3dbc(daPly_c *player) {
 
 // @symbol _ZN7daPly_c21St_OpeningWakeUp_MainEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_OpeningWakeUp_Main() {
     switch (mStateStep) {
     case 0:
@@ -4209,7 +4291,6 @@ int daPly_c::St_OpeningWakeUp_Main() {
     }
     Player_AdvanceAnims(this);
     return 1;
-}
 }
 
 // @symbol func_ov002_020c3e8c
@@ -4254,11 +4335,7 @@ void func_ov002_020c3f2c(daPly_c *player) {
 // @symbol _ZN7daPly_c15St_Respawn_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_Respawn_Main() {
-    extern u8 data_0209f250;
-    extern void FUN_02029980(void);
-    extern void FUN_02029934(void);
     switch (mStateStep) {
     case 0: {
         u16 t = mStateTimer;
@@ -4298,7 +4375,6 @@ int daPly_c::St_Respawn_Main() {
     Player_AdvanceAnims(this);
     return 1;
 }
-}
 
 // @symbol _ZN7daPly_c15St_Respawn_InitEv
 /* recovered: named members + shared header, real C++ method
@@ -4311,8 +4387,6 @@ extern "C" {
 int daPly_c::St_Respawn_Init() {
     extern void Player_DisableInteraction(void*);
     extern void func_02035860(void*, void*);
-    extern void func_0200cf40(void*);
-    extern unsigned char data_0209f250;
     extern char* data_0209f318;
     Player_DisableInteraction(this);
     mPosX = mSpawnPosX;
@@ -4346,8 +4420,6 @@ extern "C" {
 int daPly_c::func_ov002_020c4188() {
     extern int* data_0209f318;
     extern int gNextActorUpdateMask;
-    extern short data_ov002_020ff26c[];
-    extern unsigned char data_0209d660;
     extern void func_0201f32c(int arg0);
     extern void func_ov002_020e444c(void*);
     int* p;
@@ -4474,12 +4546,8 @@ int daPly_c::func_ov002_020c44c4() {
     extern u8 data_0209f2d8;
     extern int data_0209caa0[];
     extern s8 data_0209f2f8;
-    extern u8 data_0209f264;
     extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
     extern void func_02012694(unsigned int id, const Vector3 *v);
-    extern int SublevelToLevel(int);
-    extern void func_ov100_02145070(int);
-    extern int func_ov100_02145014(void);
     Vector3 pos;
     int state;
     int r4val;
@@ -4633,13 +4701,9 @@ ret0:
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Talk_Main() {
-    extern int PlayerChangeMusicVolumeHold(u32 vol, int t);
     extern void func_0201f32c(s16 a);
     extern int gNextActorUpdateMask;
     extern char* data_0209f318;
-    extern u8 data_0209d660;
-    extern void func_0201fc88(s16);
-    extern int func_ov100_02144fcc(void);
     if (mRestoreMusicVolume != 0) {
         if (Sound::ChangeMusicVolume(0x7f, 0x7222) != 0)
             mRestoreMusicVolume = 0;
@@ -4981,9 +5045,6 @@ int daPly_c::GetTalkState() {
 extern "C" {
 int daPly_c::St_StuckInGround_Main() {
     extern u16 data_0209f49e[];
-    extern u32 data_ov002_0210a578[];
-    extern u32 data_ov002_0210a584[];
-    extern u8 data_ov002_020ff0ec[];
     switch (mStateWork) {
     case 0:
         if (this->FinishedAnim()) {
@@ -5021,9 +5082,7 @@ int daPly_c::St_StuckInGround_Main() {
 
 // @symbol _ZN7daPly_c19func_ov002_020c5444Ev
 /* recovered: shared common types */
-extern "C" {
 void daPly_c::func_ov002_020c5444() {
-    extern void PlayerNewSimpleHold4(unsigned int, int, int, int);
     Vector3 v;
     ((int *)&v)[0] = this->mPosX;
     ((int *)&v)[1] = this->mPosY;
@@ -5042,7 +5101,6 @@ void daPly_c::func_ov002_020c5444() {
     }
     Particle::System::NewSimple(0xc7, v.x, v.y, v.z);
 }
-}
 
 // @symbol _ZN7daPly_c21St_StuckInGround_InitEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -5051,7 +5109,6 @@ extern "C" {
 int daPly_c::St_StuckInGround_Init() {
     extern void Player_DisableInteraction(void *);
     extern int Player_ReleaseHeldActor(void*);
-    extern int data_ov002_0210a560[];
   Player_DisableInteraction(((void*)this));
   Player_ReleaseHeldActor(((void*)this));
   unsigned char idx = *(unsigned char*)((char*)&mStateStep);
@@ -5139,10 +5196,8 @@ int func_ov002_020c56f0(unsigned char* c, unsigned char arg)
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_DeadPit_Main() {
-    extern void PlayerPlayLongHold_deadpit(u32 a, u32 b, u32 c, void *, u32 d);
     extern void Vec3_RotateYAndTranslate(void*, void*, s16 angle, void*);
     extern u8 data_0209f2d8;
-    extern void KillPlayer(void);
     switch (mStateStep) {
     case 0:
         break;
@@ -5235,12 +5290,9 @@ int daPly_c::St_DeadPit_Main() {
 extern "C" {
 int daPly_c::St_DeadPit_Init() {
     extern u8 data_0209f2d8;
-    extern u8 data_0209f250;
     extern int Player_ReleaseHeldActor(void*);
     extern int func_ov002_020d5cec(void *);
     extern void Player_DisableInteraction(void*);
-    extern void HitDeathPlane(int arg);
-    extern void FUN_020299f4(void);
     Player_ReleaseHeldActor(this);
     if (*(char**)((char*)&mObjInMouth) != 0) {
         int b = (((dActor_c *)*(char **)((char *)&mObjInMouth))->actorID == 0xbf);
@@ -5399,9 +5451,6 @@ int daPly_c::func_ov002_020c5dec(int r1) {
 extern "C" {
 int daPly_c::St_DeadHit_Main() {
     extern u8 data_ov002_0211117c;
-    extern u8 data_ov002_02109db8[];
-    extern u32 data_ov002_0210a07c[];
-    extern void KillPlayer(void);
     u32 t;
 
     if (mIsAirborne == 0) {
@@ -5459,7 +5508,6 @@ extern "C" {
 int daPly_c::St_DeadHit_Init() {
     extern void Player_DisableInteraction(void*);
     extern char* data_0209f318;
-    extern int data_ov002_0210a424[];
     extern void func_0200d89c(void*);
     Player_DisableInteraction(this);
     mIsBodyClsnEnabled = 0;
@@ -5663,7 +5711,6 @@ int daPly_c::St_Squish_Main() {
     extern u8 data_ov002_0211117c;
     extern int func_ov002_020d91e0(void*, int a, int b);
     extern void func_ov002_020db8bc(void*, int a);
-    extern void KillPlayer(void);
     switch (mStateStep) {
     case 0:
         if (func_ov002_020c6908() != 0)
@@ -5755,7 +5802,6 @@ int daPly_c::St_Squish_Main() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c6908Ev
-extern "C" {
 int daPly_c::func_ov002_020c6908() {
 
     if (mStateWork == 1) {
@@ -5777,7 +5823,6 @@ int daPly_c::func_ov002_020c6908() {
     }
 ret0:
   return 0;
-}
 }
 
 // @symbol _ZN7daPly_c14St_Squish_InitEv
@@ -5858,8 +5903,6 @@ int daPly_c::St_Teleport_Main() {
     extern char* data_0209f318;
     extern int data_0209f32c;
     extern u8 gShowTouchScreenArrows;
-    extern void func_0200d1e4(void*);
-    extern void func_02020388(int);
     switch (mStateStep) {
     case 0:
         if (mOpacity > 1) {
@@ -5955,8 +5998,6 @@ int daPly_c::St_Teleport_Init() {
  */
 extern "C" {
 int func_ov002_020c6e14(daPly_c *actor) {
-    extern unsigned char data_0209f2ac;
-    extern short data_ov002_020ff1a0[];
     extern void* data_0209f318[];
     extern int NumStars(void);
     int idx;
@@ -6025,9 +6066,7 @@ int daPly_c::St_LevelEnter_Main() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c6fe4Ev
-extern "C" {
 void daPly_c::func_ov002_020c6fe4() {
-    extern u8 data_0209f20c;
     int id;
 
     id = this->GetBodyModelID(this->param1 & 0xff, 0);
@@ -6042,7 +6081,6 @@ void daPly_c::func_ov002_020c6fe4() {
         this->SetAnim(0x47, 0, 0x1000, 0);
         mStateWork = 2;
     }
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c70acEv
@@ -6128,9 +6166,7 @@ void daPly_c::func_ov002_020c71e0() {
 extern "C" {
 void func_ov002_020c72a4(void* thisptr)
 {
-    extern int SurfaceInfo_TestFlag0x20(void*);
     extern int data_0209f32c;
-    extern int data_0209212c;
     unsigned char* r4 = (unsigned char*)thisptr;
     daPly_c *player = (daPly_c *)r4;
     dBgCh_Gnd rg;
@@ -6162,7 +6198,6 @@ void daPly_c::func_ov002_020c7350() {
     typedef unsigned short u16;
     typedef unsigned int u32;
     typedef signed char s8;
-    extern u8 data_0209f20c;
     extern u8 data_0209f2d8;
     extern char data_0209caa0[];
     int id;
@@ -6328,7 +6363,6 @@ int daPly_c::St_LevelEnter_Init() {
     extern u8 data_0209f2d8;
     extern s16 data_02082214[];
     extern signed char data_0209f2f8;
-    extern u8 data_0209f264;
     extern u8 data_0209f2fc;
 
     u32 anim = data_ov002_0210a7e8[mStateStep];
@@ -6462,8 +6496,6 @@ int daPly_c::St_LevelEnter_Init() {
 extern "C" {
 int daPly_c::func_ov002_020c7cbc() {
     extern u8 data_0209f2fc;
-    extern signed char data_02092124;
-    extern void LoadKeyModels(int idx);
     if (data_0209f2fc == 1) {
         switch (data_02092124) {
         case 0x24: mKeyModelId = 0; break;
@@ -6487,7 +6519,6 @@ int daPly_c::func_ov002_020c7cbc() {
 // @symbol _ZN7daPly_c19func_ov002_020c7dd0Ei
 extern "C" {
 void daPly_c::func_ov002_020c7dd0(int i) {
-    extern unsigned char data_ov002_020ff240[];
     extern unsigned char data_0209f2fc;
     unsigned char g;
     mStateStep = data_ov002_020ff240[i];
@@ -6530,13 +6561,11 @@ int daPly_c::IsEnteringLevel() {
 // @symbol _ZN7daPly_c20IsStateEnteringLevelEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::IsStateEnteringLevel() {
 
     if (this->IsState(data_ov002_021104b4))
         return 1;
     return this->IsState(data_ov002_0211025c);
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c7f10Ev
@@ -6631,7 +6660,6 @@ int daPly_c::St_NoControl_Cleanup() {
 extern "C" {
 int daPly_c::St_NoControl_Main() {
     extern short GetAngleToCamera(int i);
-    extern int IsStarCameraScript3Running(void);
     u8 mode = mNoCtrlKind;
     if (mode == 0 || mode == 1 || (mode == 0x11 && mStateStep != 0x18)) {
         if (IsStarCameraScript3Running() == 0) {
@@ -6772,12 +6800,7 @@ dummy_label_675641:;
 extern "C" {
 int daPly_c::func_ov002_020c8540() {
     extern void func_0201f32c(int arg0);
-    extern u16 data_ov002_020ff138[];
-    extern u16 data_ov002_020ff13c[];
-    extern u16 data_ov002_020ff110[];
-    extern s16 data_ov002_020ff108[];
     extern int gNextActorUpdateMask;
-    extern u8 data_0209d660;
     u32 s8;
     int id;
 
@@ -6837,7 +6860,6 @@ int daPly_c::func_ov002_020c8540() {
  */
 extern "C" {
 int daPly_c::func_ov002_020c8714() {
-    extern void PlayerChangeMusicVolumeHold2(int, int);
     extern u32 PlayerNewHold5(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                               void *callback);
     volatile int v[3];
@@ -6965,7 +6987,6 @@ int daPly_c::func_ov002_020c8b54() {
 /* recovered: shared common types */
 extern "C" {
 int daPly_c::func_ov002_020c8b78() {
-    extern void PlayerChangeMusicVolumeHold3(unsigned int, int);
     extern void Vec3_RotateYAndTranslate(void*, void*, int, void*);
     Vector3 v;
     Sound::ChangeMusicVolume(0x14, 0x15666);
@@ -6999,9 +7020,7 @@ int daPly_c::func_ov002_020c8b78() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c8cb0Ev
-extern "C" {
 int daPly_c::func_ov002_020c8cb0() {
-    extern signed char data_02092110;
   if (this->FinishedAnim()) {
     if (data_02092110 >= 0)
       mIsOpeningBigDoor = 1;
@@ -7011,14 +7030,12 @@ int daPly_c::func_ov002_020c8cb0() {
   }
   return 0;
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020c8d14Ev
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 extern "C" {
 int daPly_c::func_ov002_020c8d14() {
-    extern void PlayerNewSimpleHold5(unsigned int id, int x, int y, int z);
     extern int func_ov002_020d22ec(void*, int arg);
     Vector3 v;
     int val;
@@ -7073,9 +7090,7 @@ int daPly_c::func_ov002_020c8d14() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c8f0cEv
-extern "C" {
 int daPly_c::func_ov002_020c8f0c() {
-    extern void EnterBigBoosHaunt(void);
   int *p0 = &this->mScaleX;
   int *p1 = &this->mScaleY;
   int *p2 = &this->mScaleZ;
@@ -7092,7 +7107,6 @@ int daPly_c::func_ov002_020c8f0c() {
     mStateStep = 6;
   }
   return 0;
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c8f80Ev
@@ -7125,12 +7139,10 @@ int daPly_c::func_ov002_020c8f80() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c904cEv
-extern "C" {
 int daPly_c::func_ov002_020c904c() {
     typedef unsigned int u32;
     typedef int s32;
     typedef unsigned char u8;
-    extern int Math_Function_0203b14c(void *, int a, int b, int c, int d);
     int mid;
     char *anim;
     ApproachLinear(this->mPosX, this->mStateTargetX, 0x8000);
@@ -7148,10 +7160,8 @@ int daPly_c::func_ov002_020c904c() {
     }
     return 0;
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020c9128Ev
-extern "C" {
 int daPly_c::func_ov002_020c9128() {
 
     if (mStateStep == 4) {
@@ -7168,12 +7178,10 @@ int daPly_c::func_ov002_020c9128() {
     mHeadRotMode = 2;
     return 0;
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020c91bcEv
 extern "C" {
 int daPly_c::func_ov002_020c91bc() {
-    extern unsigned char data_0209d660;
     extern int gNextActorUpdateMask;
     if (data_0209d660 != 0) return 1;
     mFlags &= ~0x800000;
@@ -7201,7 +7209,6 @@ int daPly_c::func_ov002_020c924c() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c9288Ev
-extern "C" {
 int daPly_c::func_ov002_020c9288() {
 
     if (!func_ov002_020bea7c()) {
@@ -7215,7 +7222,6 @@ int daPly_c::func_ov002_020c9288() {
         }
     }
     return 0;
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c92fcEv
@@ -7273,8 +7279,6 @@ extern "C" {
 int daPly_c::func_ov002_020c94a4() {
     extern signed char data_0209f2f8;
     extern u8 data_0209211c;
-    extern u8 data_0209f200;
-    extern void ExitLevel(void);
     unsigned short st;
 
     this->mVertSpeed = 0;
@@ -7479,9 +7483,7 @@ void func_ov002_020c9998(daPly_c *p) {
 
 // @symbol _ZN7daPly_c19func_ov002_020c9a04Ev
 /* recovered: shared common types */
-extern "C" {
 void daPly_c::func_ov002_020c9a04() {
-    extern void PlayerNewSimpleHold6(unsigned int id, int x, int y, int z);
     Vector3 v;
 
     mStateStep = 0x11;
@@ -7498,7 +7500,6 @@ void daPly_c::func_ov002_020c9a04() {
 
     v.y = this->mPosY + FX_MUL(this->mScaleY, 0x50000);
     Particle::System::NewSimple(0x60, v.x, v.y, v.z);
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c9ac0Ev
@@ -7563,10 +7564,8 @@ int daPly_c::func_ov002_020c9c00() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c9c4cEv
-extern "C" {
 void daPly_c::func_ov002_020c9c4c() {
     typedef int Fix12i;
-    extern unsigned int data_ov002_020ff118[];
     this->SetAnim(data_ov002_020ff118[mStateStep], 0x40000000, 0x1000, 0);
     this->mStateStep += 7;
     mRootMotionMode = 1;
@@ -7576,19 +7575,15 @@ void daPly_c::func_ov002_020c9c4c() {
     this->mHorzSpeed = 0;
     this->mVertSpeed = 0;
 }
-}
 
 // @symbol _ZN7daPly_c19func_ov002_020c9cc0Ev
-extern "C" {
 void daPly_c::func_ov002_020c9cc0() {
-    extern signed char data_02092110;
   mStateWaitTimer=3;
   mStateStep=6;
   mSkipGroundUpdate = 1;
   mIsBodyClsnEnabled=0;
   if(this->mVertSpeed>=0x14000) this->mVertSpeed=0x14000;
   if(data_02092110==0x26 || data_02092110==0x12) mOpacity=0;
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c9d1cEv
@@ -7650,7 +7645,6 @@ void Player_DisableInteraction(void *self) {
 
 // @symbol _ZN7daPly_c12Unk_020c9e5cEh
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::Unk_020c9e5c(unsigned char h) {
     if (!IsState(data_ov002_0211022c))
         return 0;
@@ -7739,7 +7733,6 @@ int daPly_c::Unk_020c9e5c(unsigned char h) {
     }
     return 0;
 }
-}
 
 // @symbol func_ov002_020ca0f4
 extern "C" {
@@ -7749,7 +7742,6 @@ int func_ov002_020ca0f4(daPly_c *player) {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020ca108Ev
-extern "C" {
 void daPly_c::func_ov002_020ca108() {
 
     if (mIsOpeningBigDoor) {
@@ -7757,7 +7749,6 @@ void daPly_c::func_ov002_020ca108() {
         return;
     }
     this->ChangeState(data_ov002_0211013c);
-}
 }
 
 // @symbol _ZN7daPly_c11OpenBigDoorEv
@@ -7772,7 +7763,6 @@ void daPly_c::OpenBigDoor() {
 
 // @symbol _ZN7daPly_c12Unk_020ca150Eh
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::Unk_020ca150(unsigned char a) {
     if (IsState(data_ov002_0211022c)) {
         if (a == 4) {
@@ -7784,11 +7774,9 @@ int daPly_c::Unk_020ca150(unsigned char a) {
     }
     return 0;
 }
-}
 
 // @symbol _ZN7daPly_c17SetNoControlStateEhih
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::SetNoControlState(unsigned char a_, int b, unsigned char c_) {
 
     int a = (int)a_;
@@ -7813,7 +7801,6 @@ int daPly_c::SetNoControlState(unsigned char a_, int b, unsigned char c_) {
     this->ChangeState(data_ov002_0211022c);
     mStatePhase = flag;
     return 1;
-}
 }
 
 // @symbol func_ov002_020ca270
@@ -7854,7 +7841,6 @@ int daPly_c::JumpIntoBooCage(Vector3 &v_) {
 
 // @symbol _ZN7daPly_c13TryTalkToDoorEh
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::TryTalkToDoor(unsigned char a) {
     if (this->IsState(data_ov002_0211013c) || this->IsState(ST_WAIT) ||
         this->IsState(data_ov002_0211043c)) {
@@ -7863,7 +7849,6 @@ int daPly_c::TryTalkToDoor(unsigned char a) {
         return 1;
     }
     return 0;
-}
 }
 
 // @symbol _ZN7daPly_c21IsOpeningDoorWithStarEv
@@ -7874,7 +7859,6 @@ int daPly_c::IsOpeningDoorWithStar() {
 
 // @symbol _ZN7daPly_c16TryTalkToKeyDoorEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::TryTalkToKeyDoor() {
     if (this->IsState(data_ov002_0211013c) || this->IsState(ST_WAIT) ||
         this->IsState(data_ov002_0211043c)) {
@@ -7882,7 +7866,6 @@ int daPly_c::TryTalkToKeyDoor() {
         return 1;
     }
     return 0;
-}
 }
 
 // @symbol _ZN7daPly_c12Unk_020ca488Ev
@@ -7931,7 +7914,6 @@ int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
 // perturbs callee-saved homing rank to this=r4/door=r5, while virtual dispatch
 // keeps the natural reverse-arg homing (door=r4, this=r5) the ROM has. See
 // notes/mwccarm-codegen.md 6bc.
-extern "C" {
 int daPly_c::CanEnterDoor(unsigned char door) {
     if (IsState(data_ov002_0211022c)) {
         if (!(mStateStep == 0x13 && mIsOpeningBigDoor != 0))
@@ -7957,7 +7939,6 @@ int daPly_c::CanEnterDoor(unsigned char door) {
     }
     return 0;
 }
-}
 
 // @symbol _ZN7daPly_c17PlayMammaMiaSoundEv
 /* recovered: named members + shared header, real C++ method */
@@ -7969,7 +7950,6 @@ void daPly_c::PlayMammaMiaSound() {
 
 // @symbol _ZN7daPly_c24TryExitWhiteDoorWithStarEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::TryExitWhiteDoorWithStar() {
     if (IsState(data_ov002_0211022c)) {
         if (*(unsigned char *)((char *)&mStateStep) != 0x13 ||
@@ -7977,7 +7957,6 @@ int daPly_c::TryExitWhiteDoorWithStar() {
             return 0;
     }
     return this->SetNoControlState(0x11, -1, 1) != 0;
-}
 }
 
 // @symbol func_ov002_020ca78c
@@ -8030,14 +8009,12 @@ int daPly_c::St_DebugFly_Main() {
 
 // @symbol _ZN7daPly_c16St_DebugFly_InitEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_DebugFly_Init() {
     Player_DisableInteraction(this);
     mHorzSpeed = 0;
     mVertSpeed = 0;
     mVertAccel = 0;
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c12Unk_020ca8f8Ev
@@ -8063,7 +8040,6 @@ void func_ov002_020ca940(char* self)
     extern int data_0209caa0[];
     extern u8 data_0209f49e[];
     extern int data_0209f318;
-    extern int func_0200d0ac(int a, unsigned int b);
     extern void func_0200d064(int a, unsigned int b);
     extern void func_ov002_020ca940(void*);
     u8 old;
@@ -8235,7 +8211,6 @@ extern "C" {
 int daPly_c::St_CameraZoom_Main() {
     extern void func_ov002_020cae10(void*);
     extern int func_ov002_020cac60(void*);
-    extern signed char data_02092110;
     extern unsigned short data_0209f49e;
     if (data_02092110 < 0) {
         if ((unsigned short)(mStateFlags & 4) == 0) {
@@ -8269,7 +8244,6 @@ void func_ov002_020cae10(char* c)
 {
     daPly_c *self = (daPly_c *)c;
     typedef int Fix12i;
-    extern unsigned char data_0209f250;
     extern void* data_0209f318;
     extern short GetAngleToCamera(int i);
     int r4 = 0x4000;
@@ -8296,7 +8270,6 @@ extern "C" {
 int daPly_c::St_CameraZoom_Init() {
     extern int func_0200d064(void*, int playerID);
     extern struct CameraRaw* data_0209f318;
-    extern unsigned char data_0209f28c;
   *(int*)((char*)&mHorzSpeed)=0;
   *(int*)((char*)&mVertSpeed)=0;
   struct CameraRaw* cam = data_0209f318;
@@ -8539,7 +8512,6 @@ void func_ov002_020cb474(char *c) {
 // @symbol _ZN7daPly_c16St_Climb_CleanupEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_Climb_Cleanup() {
   int v = *(int*)((char*)&mRequestedState);
   if (v != (int)&data_ov002_021106dc && v != (int)&data_ov002_021106f4) {
@@ -8548,7 +8520,6 @@ int daPly_c::St_Climb_Cleanup() {
   }
   mJumpComboTimer = 0;
   return 1;
-}
 }
 
 // @symbol _ZN7daPly_c13St_Climb_MainEv
@@ -8897,7 +8868,6 @@ extern "C" {
 void func_ov002_020cc05c(char *self)
 {
     daPly_c *player = (daPly_c *)self;
-    extern s16 data_0209f4a2[];
     extern void func_ov002_020cc05c(void*, unsigned short);
     int idx = gActivePlayerSlot * 0x18;
     /* Through (int): plain player->mAngleYSpeed reschedules the 0x69c add and moves bytes. */
@@ -8958,13 +8928,11 @@ int func_ov002_020cc16c(daPly_c *player, void *state) {
 }
 
 // @symbol _ZN7daPly_c14LeaveShellRideEv
-extern "C" {
 void daPly_c::LeaveShellRide() {
     if (mRidingShell == 0)
         return;
     St_Shell_Cleanup();
     ChangeState(data_ov002_0211013c);
-}
 }
 
 // @symbol _ZN7daPly_c16St_Shell_CleanupEv
@@ -8988,15 +8956,12 @@ int daPly_c::St_Shell_Cleanup() {
 extern "C" {
 int daPly_c::St_Shell_Main() {
     extern void func_ov002_020eeca8(void*, int arg);
-    extern int atan2_hold_Player_13(int a, int b);
     extern void ApproachAngle(void*, short target, int divisor, int band, int maxStep);
     extern void func_ov002_020e25f0(void*, int a);
     extern void func_ov002_020e28d4(void*, int a, int b);
     extern s16 data_0209f4a0[];
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
-    extern int func_02035638(void*);
-    extern int func_0203564c(int);
     extern int AngleDiff(int, int);
     extern void func_ov002_020cc660(void*, int);
     extern int func_ov002_020d674c(void*);
@@ -9203,7 +9168,6 @@ int daPly_c::St_HurtWater_Main() {
 extern "C" {
 int daPly_c::St_HurtWater_Init() {
     extern int data_0209f318[];
-    extern int data_ov002_02109fe4[];
     extern void func_0200d89c(void*);
   unsigned a=data_ov002_02109fe4[mStateStep&1];
   this->SetAnim(a, 0x40000000, 0x1000, 0);
@@ -9241,7 +9205,6 @@ int daPly_c::St_MetalWaterWater_Main() {
     extern int func_ov002_020eeca8(void*, void*);
     extern int func_ov002_020bf224(void*, int a, int b);
     extern void ApproachAngle(void*, int target, int a, int b, int d);
-    extern void PlayerNewSimpleHold7(u32 id, int x, int y, int z);
     extern struct S18b2 data_0209f4a0[];
     extern int data_0209f32c;
     /* volatile: the original pins these stores to memory in this order. */
@@ -9621,8 +9584,6 @@ void func_ov002_020cd71c(char *self)
 {
     daPly_c *player = (daPly_c *)self;
     typedef short s16;
-    extern int data_ov002_020ff1f0[];
-    extern short data_0209f4a2[];
     extern void func_ov002_020cd71c(void*);
     int ip = data_ov002_020ff1f0[player->param1];
     int a = FX_MUL(ip, 0x320);
@@ -9682,9 +9643,7 @@ int daPly_c::St_Swim_Main() {
     extern int func_ov002_020cec2c(void*);
     extern void func_ov002_020cd71c(void*);
     extern void func_ov002_020cd550(void*);
-    extern unsigned int func_02022d44(unsigned int, unsigned int, int, int, int, void*);
     extern void* func_02037dc4(void*);
-    extern int atan2_hold_Player_12(int, int);
     extern void Vec3_RotateYAndTranslate(void*, void*, short, void*);
     extern int func_ov002_020ce324(void*);
     extern void func_ov002_020cd364(void*);
@@ -9966,7 +9925,6 @@ int func_ov002_020ce324(char* c)
     extern struct S18a data_0209f4a4[];
     extern short data_02082214[];
     extern int func_ov002_020ceb54(void*);
-    extern int atan2_hold_Player_11(int a, int b);
     extern int AngleDiff(int a, int b);
     extern int func_ov002_020ce324(void*);
     Vector3 a1, a2, b1, b2, nrm;
@@ -10064,7 +10022,6 @@ int func_ov002_020ce5f8(char* c) {
     extern void func_ov002_020ceb7c(void*);
     extern void MulVec3Mat4x3(void *, void *, void *);
     extern void* Vec3_LslInPlace(void*, int sh);
-    extern u32 func_020229f0(int x, int y, int z);
     extern int data_0209f32c;
     extern int func_ov002_020ce5f8(void*);
     int y, threshold;
@@ -10238,7 +10195,6 @@ void func_ov002_020ce9c8(char* self)
 extern "C" {
 int func_ov002_020ceaf4(void *c) {
     extern int data_0209f32c;
-    extern int data_ov002_020ff1e0[];
     daPly_c *player = (daPly_c *)c;
     int v;
     if (data_0209f32c - 0x50000 - player->mPosY < 0x1f4000)
@@ -10353,7 +10309,6 @@ ret0:
 // @symbol func_ov002_020cedb0
 extern "C" {
 Fix12i func_ov002_020cedb0(daPly_c *c, Fix12i a) {
-    extern unsigned short data_ov002_020ff158[];
     extern int func_ov002_020cedb0(void*, int);
     unsigned int t = data_ov002_020ff158[c->param1];
     return FX_MUL(a, (int)t);
@@ -10365,10 +10320,8 @@ Fix12i func_ov002_020cedb0(daPly_c *c, Fix12i a) {
 /* recovered: shared common types */
 extern "C" {
 int daPly_c::func_ov002_020cede0() {
-    extern int SurfaceInfo_TestFlag0x20(void *);
     extern int data_0209f32c;
     extern signed char data_0209f2f8;
-    extern int data_0209212c;
     char *thiz = (char *)this;
     daPly_c *p = (daPly_c *)thiz;
     Vector3 v;
@@ -10511,7 +10464,6 @@ int func_ov002_020cef84(daPly_c *p) {
 extern "C" {
 int func_ov002_020cf20c(char* c) {
     daPly_c *self = (daPly_c *)c;
-    extern void func_0200ca14(void*, unsigned char b, int c);
     extern void* data_0209f318[];
     extern int func_ov002_020cf20c(void*);
     Vector3 v1;
@@ -10580,7 +10532,6 @@ int daPly_c::St_CeilingGrate_Main() {
     extern s16 data_0209f4a0[];
     extern int func_ov002_020cf20c(void*);
     extern int func_ov002_020d674c(void*);
-    extern u8 data_0209f4ab[];
     extern void func_ov002_020cf384(void*);
     extern void func_ov002_020cf2f8(void*);
     int r4;
@@ -10785,9 +10736,7 @@ int daPly_c::St_OnWall_Main() {
 // @symbol _ZN7daPly_c14St_OnWall_InitEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_OnWall_Init() {
-    extern int data_ov002_020ff164[];
   int r3=0x1000;
   if(param1==2){
     if(mStateStep==2) r3=0x2000;
@@ -10795,7 +10744,6 @@ int daPly_c::St_OnWall_Init() {
   this->SetAnim(data_ov002_020ff164[mStateStep], 0, r3, 0);
   mHorzSpeed=0;
   return 1;
-}
 }
 
 // @symbol func_ov002_020cfaf0
@@ -11052,7 +11000,6 @@ int func_ov002_020cfea4(void *self) {
 extern "C" {
 int func_ov002_020d0178(char* c, int arg1, int flag)
 {
-    extern int atan2_hold_Player_9(int x, int z);
     extern int AngleDiff(int a, int b);
     extern s16 data_02082214[];
     daPly_c *p = (daPly_c *)c;
@@ -11262,7 +11209,6 @@ cont:
 // @symbol _ZN7daPly_c17St_LedgeGrab_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_LedgeGrab_Main() {
     if (this->FinishedAnim())
         this->ChangeState(data_ov002_0211013c);
@@ -11274,7 +11220,6 @@ int daPly_c::St_LedgeGrab_Main() {
     }
     Player_AdvanceAnims(this);
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c17St_LedgeGrab_InitEv
@@ -11766,8 +11711,6 @@ int daPly_c::St_Crouch_Init() {
 extern "C" {
 int daPly_c::St_HoldHeavy_Main() {
     extern void func_ov002_020d1f78(void*, u32);
-    extern int data_ov002_020ff254[];
-    extern int data_ov002_020ff1d0[];
     extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
     extern int func_ov002_020bf224(void* c, int a, int b);
     extern void func_ov002_020d4d88(void* c, int a, int b);
@@ -11865,15 +11808,12 @@ end:
 // @symbol _ZN7daPly_c17St_HoldHeavy_InitEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_HoldHeavy_Init() {
-    extern int data_ov002_020ff254[];
 
   mStateWork=0;
   this->SetAnim(data_ov002_020ff254[mStateWork], 0x40000000, 0x1000, 0);
   Sound::PlayCharVoice(mCharacter, 0x12, mCamSpacePos);
   return 1;
-}
 }
 
 // @symbol _ZN7daPly_c20St_HoldLight_CleanupEv
@@ -11892,7 +11832,6 @@ int daPly_c::St_HoldLight_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_HoldLight_Main() {
-    extern int data_ov002_020ff1c0[];
     extern int func_ov002_020d9dcc(void*);
     extern void func_ov002_020d1f78(void*, u32);
     extern int func_ov002_020e0ccc(void* c, short* st);
@@ -12037,7 +11976,6 @@ end:
 
 // @symbol _ZN7daPly_c17St_HoldLight_InitEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_HoldLight_Init() {
 
     if (mHorzSpeed >= Player_ScaleByCharFactor(this, 0x1c000)) {
@@ -12063,7 +12001,6 @@ int daPly_c::St_HoldLight_Init() {
     mAngleYSpeed = 0;
     mStateArg = 0;
     return 1;
-}
 }
 
 // @symbol func_ov002_020d1f78
@@ -12589,7 +12526,6 @@ extern "C" {
 void func_ov002_020d2e74(daPly_c *p) {
     extern void Vec3_RotateYAndTranslate(Vector3 * out, const Vector3 *base, s16 ang,
                                          const Vector3 *off);
-    extern void PlayerNewSimpleHold9(u32 a, int b, int c, int d);
 
     Vector3 v;
     Vector3 off;
@@ -13055,9 +12991,7 @@ int func_ov002_020d3b9c(char *c)
 {
     extern int func_ov002_020bf224(int c, int a, int b);
     extern int func_ov002_020bf56c(void *c, int b);
-    extern int func_ov002_020f035c(unsigned int sel, int r1);
     extern int AngleDiff(int a, int b);
-    extern int __aeabi_idiv(int a, int b);
     extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
     extern void func_ov002_020d4540(void *c);
     extern void func_ov002_020d454c(void *c);
@@ -13269,7 +13203,6 @@ int daPly_c::St_Walk_Init() {
     extern int data_0209caa0[3];
     extern unsigned char data_0209f4ac;
     extern int data_ov002_0210e160[];
-    extern int data_ov002_020ff1b0[4];
     if (this->GetHealth() == 0) {
         mStateStep = 1;
         this->ChangeState(data_ov002_0211010c);
@@ -13376,7 +13309,6 @@ extern "C" {
 void func_ov002_020d45c0(char* self)
 {
     extern void func_02022b04(int x, int y, int z);
-    extern int data_0208e430;
     extern s16 data_0209f4a0[];
     extern u8 data_0209f4ac[];
     extern u16 data_0209f49c[];
@@ -13553,7 +13485,6 @@ void daPly_c::PlayLandingEffects() {
     extern void func_0201251c(int a, int b, int c, int d);
     extern int data_0209f32c;
     extern void PlayerNewSimpleHold10(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
-    extern int data_0208e430;
     extern unsigned int func_02022d00(unsigned int, unsigned int, Fix12i, Fix12i, Fix12i, void*);
     int id;
     if (mIsInShallowWater) {
@@ -13726,7 +13657,6 @@ int daPly_c::St_BurnLava_Main() {
     extern u8 data_ov002_0211117c;
     extern s8 data_0209f2f8;
     extern s16 data_02082214[];
-    extern void KillPlayer(void);
     extern u32 PlayerNewHold7(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                               void *callback);
 
@@ -13828,7 +13758,6 @@ int daPly_c::St_BurnLava_Init() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020d5338Ev
-extern "C" {
 int daPly_c::func_ov002_020d5338() {
 
 
@@ -13837,7 +13766,6 @@ int daPly_c::func_ov002_020d5338() {
         return 0;
     this->ChangeState(data_ov002_021100f4);
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c16St_BurnFire_MainEv
@@ -14022,7 +13950,6 @@ int daPly_c::Burn() {
 /* the swim state */
 extern "C" {
 int daPly_c::St_Electrocute_Main() {
-    extern void PlayerPlayLongHold_electro(u32 a, u32 b, u32 c, Vector3 * v, u32 d);
     extern u32 PlayerNewHold9(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                               void *callback);
     Vector3 *pos = &mCamSpacePos;
@@ -14250,7 +14177,6 @@ extern "C" int func_ov002_020d5cec(void *self) {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020d5ed0Ev
-extern "C" {
 int daPly_c::func_ov002_020d5ed0() {
 
     if (!this->IsState(data_ov002_02110064)) {
@@ -14262,7 +14188,6 @@ int daPly_c::func_ov002_020d5ed0() {
     this->mStateTimer = 0x5a;
     this->mOpacity = 0;
     return 1;
-}
 }
 
 // @symbol func_ov002_020d5f34
@@ -14583,7 +14508,6 @@ L65ec:
 
 // @symbol _ZN7daPly_c15St_Swallow_InitEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_Swallow_Init() {
     daPly_c::State;
 
@@ -14600,7 +14524,6 @@ int daPly_c::St_Swallow_Init() {
     }
     this->SetAnim(0x70, 0x40000000, 0x1000, 0);
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c20RegisterEggCoinCountEjbb
@@ -14876,7 +14799,6 @@ int daPly_c::TongueWallProbe() {
     extern void MulVec3Mat4x3(void *v, void *m, void *dst);
     extern void Vec3_MulScalarInPlace(int *v, int s);
     extern int func_02053274(int *a, int *b);
-    extern short atan2_hold_Player_8(int a, int b);
     extern u32 PlayerNewHold11(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
     extern short data_02082214[];
@@ -15052,7 +14974,6 @@ void func_ov002_020d71ec(daPly_c *player, int arg1) {
     extern struct P2 data_ov002_0210a34c;
     extern struct P2 data_ov002_0210a084;
     extern struct P2 data_ov002_0210eb88;
-    extern u8 data_ov002_020ff0f8[];
     int arr[4];
     u32 shifted;
     int val;
@@ -15462,9 +15383,7 @@ int daPly_c::St_YoshiPower_Main() {
  * Matched byte-for-byte with mwccarm 1.2/sp2p3
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-extern "C" {
 int daPly_c::St_YoshiPower_Init() {
-    extern void func_ov002_020ed63c(void*, int);
     mStateFlags |= 0x200;
     unk_6ee = 0;
     mEggParams = 0;
@@ -15513,7 +15432,6 @@ int daPly_c::St_YoshiPower_Init() {
         }
     }
     return 1;
-}
 }
 
 // @symbol func_ov002_020d80d0
@@ -15592,7 +15510,6 @@ int daPly_c::St_DizzyStars_Cleanup() {
 // @symbol _ZN7daPly_c18St_DizzyStars_MainEv
 /* recovered: named members + shared header, real C++ method */
 /* the walk state */
-extern "C" {
 int daPly_c::St_DizzyStars_Main() {
 
     func_ov002_020d98b4();
@@ -15602,7 +15519,6 @@ int daPly_c::St_DizzyStars_Main() {
     if (*(s16*)&mStateTimer > 0) return 1;
     this->ChangeState(data_ov002_0211013c);
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c18St_DizzyStars_InitEv
@@ -15649,8 +15565,6 @@ int func_ov002_020d8360(void *self, void *other, unsigned int flags)
     extern int func_ov002_020d8944(void *self, char *enemy, char *v1);
     extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
     extern void func_ov002_020d8d10(void *self, Vector3 *pos);
-    extern void func_020105cc(void *thiz, unsigned int flags);
-    extern unsigned short data_ov002_020ff29c[];
     char *c = (char *)self;
     daPly_c *player = (daPly_c *)c;
     char *o = (char *)other;
@@ -15941,8 +15855,6 @@ void func_ov002_020d8a50(char* self, int which)
     extern void func_ov002_020dbbc0(char*);
     extern void func_ov002_020dbd94(char*);
     extern void func_ov002_020dbe70(char*);
-    extern int func_ov002_020eeeb8(void*, char*);
-    extern int func_ov002_020ef070(void*, char*);
     int flag = 1;
     u32 i2 = (u8)(which << 1);
     dExtAnmModel_c *model;
@@ -16074,10 +15986,8 @@ extern "C" {
 int daPly_c::Hurt(const Vector3 &a, u32 b, Fix12i dmg, u8 arg4, u8 arg5, u8 arg6) {
     extern int func_ov002_020d5cec(void *c);
     extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-    extern void PlayerNewSimpleHold13(u32 id, int a, int b, int cc);
     extern int func_ov002_020d91e0(void *thiz, int damage, int doPre);
     extern int AngleDiff(int, int);
-    extern u16 data_ov002_020ff128[];
     extern int func_ov002_020d82f0(void*);
     extern void func_ov002_020d91b8(void *, int);
     s16 ang;
@@ -16219,7 +16129,6 @@ L9c:
 // @symbol func_ov002_020d91b8
 extern "C" {
 void func_ov002_020d91b8(void *self, int a) {
-    extern int data_ov002_020ff120[];
     daPly_c *player = (daPly_c *)self;
     Sound::PlayCharVoice(player->mCharacter, data_ov002_020ff120[a & 1], player->mCamSpacePos);
 }
@@ -16276,7 +16185,6 @@ int func_ov002_020d9298(daPly_c *player) {
 // @symbol _ZN7daPly_c6BounceEi
 /* recovered: named members + shared header, declarations from a shared header */
 /* recovered: named members + shared header */
-extern "C" {
 void daPly_c::Bounce(Fix12i f) {
     if (this->IsState(data_ov002_021105a4))
         return;
@@ -16286,7 +16194,6 @@ void daPly_c::Bounce(Fix12i f) {
     this->mVertSpeed = f;
     Sound::PlayCharVoice(this->mCharacter, 0x14, this->mCamSpacePos);
     Sound::PlayBank0(0xb6, this->mCamSpacePos);
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020d93acEv
@@ -16521,7 +16428,6 @@ int daPly_c::St_Hurt_Main() {
 extern "C" {
 void daPly_c::func_ov002_020d98b4() {
     extern void MulVec3Mat4x3(void *a, void *b, Vector3 *out);
-    extern void Vec3_MulScalar(Vector3 * out, const Vector3 *in, int s);
     extern u32 PlayerNewHold14(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
     int t = this->func_ov002_020beb38();
@@ -16546,9 +16452,7 @@ void daPly_c::func_ov002_020d98b4() {
 }
 
 // @symbol _ZN7daPly_c17StartHurtFallAnimEv
-extern "C" {
 void daPly_c::StartHurtFallAnim() {
-    extern u8 data_ov002_02109dcc[];
     daPly_c *player = (daPly_c *)this;
     u8 idx;
     if (player->mIsAirborne == 0)
@@ -16561,12 +16465,10 @@ void daPly_c::StartHurtFallAnim() {
     player->mStateStep += 2;
     player->mStateWork |= 1;
 }
-}
 
 // @symbol func_ov002_020d9a4c
 extern "C" {
 void func_ov002_020d9a4c(daPly_c *c) {
-    extern u8 data_ov002_02109dc4[];
     daPly_c *player = (daPly_c *)c;
     int idx = ((daPly_c *)c)->GetBodyModelID(player->param1 & 0xff, 0);
     dExtAnmModel_c *anim = player->mModels.mBodyModels[idx];
@@ -16806,7 +16708,6 @@ int daPly_c::St_SwingPlayer_Main() {
     extern int func_ov002_020da95c(char* c);
     extern u32 PlayerNewHold15(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
-    extern void PlayerPlayLongHold_swing(u32 h, u32 a, u32 b, void *v, u32 d);
     extern void func_ov002_020dc174(char *c, const Vector3 *pos, Fix12i reach, Fix12i height,
                                     u32 flags, u32 a6);
     extern u16 data_0209f49e[];
@@ -17035,7 +16936,6 @@ int daPly_c::St_GrabBowserTail_Init() {
 
 // @symbol _ZN7daPly_c9DropActorEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::DropActor() {
 
     u32* s = *(u32**)((char*)&mHeldObj);
@@ -17087,7 +16987,6 @@ int daPly_c::DropActor() {
         this->ChangeState(data_ov002_02110034);
         return 1;
     }
-}
 }
 
 // @symbol func_ov002_020da95c
@@ -17294,7 +17193,6 @@ int func_ov002_020dacb4(daPly_c *p, char *actor) {
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
-extern "C" {
 int daPly_c::St_Throw_Main() {
     if (mIsAirborne == 0) {
         ApproachLinear(mHorzSpeed, 0, 0x1000);
@@ -17337,7 +17235,6 @@ int daPly_c::St_Throw_Main() {
         this->ChangeState(data_ov002_0211013c);
     Player_AdvanceAnims(this);
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c13St_Throw_InitEv
@@ -17632,10 +17529,7 @@ int func_ov002_020db674(char* c, int a1, int a2, int a3)
 }
 
 // @symbol _ZN7daPly_c15UpdateScaleAnimEv
-extern "C" {
 void daPly_c::UpdateScaleAnim() {
-    extern int data_ov002_020ff230[];
-    extern int data_ov002_020ff2c0[];
     int s;
     u8 i;
     int j;
@@ -17694,7 +17588,6 @@ void daPly_c::UpdateScaleAnim() {
         return;
     }
 }
-}
 
 // @symbol func_ov002_020db8bc
 extern "C" {
@@ -17711,7 +17604,6 @@ extern "C" {
 void daPly_c::func_ov002_020db8d8() {
     extern unsigned char data_0209f2d8;
     extern void MulVec3Mat4x3(void *out, void *mtx, void *vec);
-    extern void Vec3_MulScalar(Vector3 * out, const Vector3 *vec, int s);
     extern void func_ov002_020dc174(char *c, const Vector3 *pos, Fix12i reach, Fix12i height,
                                     u32 flags, u32 a6);
     char *self = (char*)this;
@@ -18186,7 +18078,6 @@ extern "C" {
 int daPly_c::St_SlideKick_Init() {
     extern int RandomIntInternal(int* seed);
     extern int data_ov002_0210e160;
-    extern int data_ov002_020ff130[];
     Sound::PlayBank0(0x11, mCamSpacePos);
     unsigned int r = (unsigned int)RandomIntInternal(&data_ov002_0210e160);
     Sound::PlayCharVoice(mCharacter, data_ov002_020ff130[(r >> 4) & 1], mCamSpacePos);
@@ -18241,9 +18132,6 @@ void func_ov002_020dc560(void *self) {
     extern int func_01ffa344(int a, int b);
     extern int AngleDiff(int a, int b);
     extern void ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
-    extern int func_01ffa4bc(int a);
-    extern int func_01ff99a4(int a, int b);
-    extern int func_01ff98f4(int a, int b);
     extern char data_0209f4a0[];
     extern short data_02082214[];
     daPly_c *player = (daPly_c *)self;
@@ -18423,7 +18311,6 @@ extern "C" {
 void func_ov002_020dcafc(void *c) {
     extern int AngleDiff(int a, int b);
     extern int ApproachAngle(void* p, int a, int b, int c, int d);
-    extern short data_0209f4a2[];
     extern short data_0209f4a4[];
     daPly_c *player = (daPly_c *)c;
     s16 v5 = 0, v4 = 0;
@@ -18643,7 +18530,6 @@ extern "C" {
 int daPly_c::St_Dive_Init() {
     extern int RandomIntInternal(int* seed);
     extern int data_ov002_0210e160;
-    extern int data_ov002_020ff100[];
     Sound::PlayBank0(0x11, mCamSpacePos);
     unsigned int r = (unsigned int)RandomIntInternal(&data_ov002_0210e160);
     Sound::PlayCharVoice(mCharacter, data_ov002_020ff100[(r >> 4) & 1], mCamSpacePos);
@@ -18800,9 +18686,7 @@ extern "C" {
 void func_ov002_020dd5ec(daPly_c *player) {
     extern int RandomIntInternal(int *seed);
     extern u16 data_0209f49c[];
-    extern u16 data_ov002_02109dbc[];
     extern int data_ov002_0210e160;
-    extern int data_ov002_020ff194[];
     int model;
     int *new_var3;
     int *p;
@@ -18918,7 +18802,6 @@ extern "C" {
 void func_ov002_020dd908(char *sb) {
     extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
     extern unsigned char data_0209f2d8;
-    extern unsigned char data_0209f21c;
     extern char *data_0209f394[];
     extern void func_ov002_020dd8f4(daPly_c *);
     int i;
@@ -19096,7 +18979,6 @@ int daPly_c::St_GroundPound_Main() {
 
 // @symbol _ZN7daPly_c19St_GroundPound_InitEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_GroundPound_Init() {
   unsigned int anim;
   Player_ReleaseHeldActor(((void*)this));
@@ -19111,7 +18993,6 @@ int daPly_c::St_GroundPound_Init() {
   Sound::PlayBank0(6, mCamSpacePos);
   mdCcAcPos_c.flags |= 0x20;
   return 1;
-}
 }
 
 // @symbol func_ov002_020dde74
@@ -19312,7 +19193,6 @@ void daPly_c::func_ov002_020de428() {
 extern "C" {
 s32 daPly_c::St_Balloon_Main() {
     extern void func_ov002_020de968(void *);
-    extern s16 atan2_hold_Player_4(s32, s32);
     extern int AngleDiff(s32, s16);
     extern void ApproachAngle(void *, s16, s16, s16, s32);
     extern s32 func_ov002_020bf224(void *, s32, s32);
@@ -19469,9 +19349,7 @@ void func_ov002_020de968(char* c){
 
 // @symbol _ZN7daPly_c16InitBalloonMarioEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 void daPly_c::InitBalloonMario() {
-    extern void PlayerNewSimpleHold16(unsigned int id, int x, int y, int z);
     Vector3 v;
 
     if (mIsBalloon != 0) return;
@@ -19492,7 +19370,6 @@ void daPly_c::InitBalloonMario() {
 
     Sound::PlayBank0(0xd7, mCamSpacePos);
 }
-}
 
 // @symbol _ZN7daPly_c17St_WindCarry_MainEv
 /* Signature deliberately copied from the local declaration above: the
@@ -19502,7 +19379,6 @@ void daPly_c::InitBalloonMario() {
 extern "C" {
 int daPly_c::St_WindCarry_Main() {
     extern void func_ov002_020e28d4(void* c, int a, int b);
-    extern int __aeabi_idiv(int a, int b);
     char* c = (char*)this;
 
     if (mIsAirborne == 0) {
@@ -19595,7 +19471,6 @@ extern "C" int func_ov002_020dec70(char *c)
 
 // @symbol _ZN7daPly_c21St_JumpQuicksand_MainEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_JumpQuicksand_Main() {
 
     u8 t = mStateWork;
@@ -19609,7 +19484,6 @@ int daPly_c::St_JumpQuicksand_Main() {
     }
     Player_AdvanceAnims(this);
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c21St_JumpQuicksand_InitEv
@@ -19641,7 +19515,6 @@ extern "C" {
 int daPly_c::St_Cannon_Main() {
     extern short GetAngleToCamera(int i);
     extern void func_02012694(u32 id, void* v);
-    extern int atan2_hold_Player_3(int a, int b);
     extern u16 data_0209f49e[];
     extern char* data_0209f318;
     extern short data_02082214[];
@@ -19717,7 +19590,6 @@ int daPly_c::St_Cannon_Main() {
 
 // @symbol _ZN7daPly_c14St_Cannon_InitEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_Cannon_Init() {
     Player_DisableInteraction(this);
     mIsUnderwater = 0;
@@ -19734,7 +19606,6 @@ int daPly_c::St_Cannon_Init() {
     mStateWork = 0;
     mIsControlDisabled = 1;
     return 1;
-}
 }
 
 // @symbol _ZN7daPly_c16IsInsideOfCannonEv
@@ -19813,7 +19684,6 @@ int daPly_c::St_Owl_Main() {
     extern char data_0209f4a0[];
     extern short data_02082214[];
     extern char* data_0209f318;
-    extern unsigned char data_0209d660;
     unsigned char st;
 
     mPeakY = mPosY;
@@ -19977,7 +19847,6 @@ extern "C" {
 void func_ov002_020df8f0(char* c)
 {
     typedef unsigned long long u64;
-    extern s16 data_0209f4a2[];
     extern s16 data_0209f4a4[];
     extern s16 data_02082214[];
     daPly_c *player = (daPly_c *)c;
@@ -20541,7 +20410,6 @@ int func_ov002_020e0a64(daPly_c *player) {
 
 // @symbol _ZN7daPly_c21St_SmallLaunchUp_MainEv
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_SmallLaunchUp_Main() {
 
   if(mIsAirborne==0){
@@ -20549,7 +20417,6 @@ int daPly_c::St_SmallLaunchUp_Main() {
   }
   Player_AdvanceAnims(this);
   return 1;
-}
 }
 
 // @symbol _ZN7daPly_c21St_SmallLaunchUp_InitEv
@@ -20647,7 +20514,6 @@ int daPly_c::St_CrazedCrate_Main() {
     typedef long long s64;
     extern short data_02082214[];
     extern void func_ov002_020e28d4(void*, int, int);
-    extern int atan2_hold_Player_2(int, int);
     extern int AngleDiff(int, int);
     extern void func_ov002_020e0f38(void*, int);
     func_ov002_020e28d4(this, 0x1000, 0x1800);
@@ -20711,8 +20577,6 @@ int daPly_c::St_CrazedCrate_Main() {
 // @symbol func_ov002_020e0f38
 extern "C" {
 void func_ov002_020e0f38(char* c, int a){
-    extern int data_ov002_020ff17c[];
-    extern int data_ov002_020ff188[];
     daPly_c *player = (daPly_c *)c;
     player->mVertSpeed = data_ov002_020ff17c[a];
     player->mHorzSpeed = data_ov002_020ff188[a];
@@ -20751,7 +20615,6 @@ int daPly_c::St_CrazedCrate_Init() {
 
 // @symbol _ZN7daPly_c10SpinBounceEi
 /* recovered: named members + shared header */
-extern "C" {
 void daPly_c::SpinBounce(Fix12i f) {
     if (this->IsState(data_ov002_021105a4))
         return;
@@ -20762,7 +20625,6 @@ void daPly_c::SpinBounce(Fix12i f) {
     Sound::PlayBank0(0xb6, this->mCamSpacePos);
     this->mStatePhase = 1;
     this->ChangeState(data_ov002_02110454);
-}
 }
 
 // @symbol func_ov002_020e10a8
@@ -21349,7 +21211,6 @@ int daPly_c::St_Jump_Main() {
     extern int func_ov002_020eeca8(void*, void*);
     extern int func_ov002_020e28d4(void*, int, int);
     extern u16 data_0209f49e[];
-    extern u8 data_0209f4ab[];
     extern void (daPly_c::*data_ov002_0211073c[])();
     extern int func_ov002_020e2664(void*);
     func_ov002_020eeca8(&mMeshClsn, ((void *)this));
@@ -21527,7 +21388,6 @@ inline int inline_fn(int *arg0) {
 void func_ov002_020e25f0(void *c, int a) {
     extern int RandomIntInternal(int *seed);
     extern int data_ov002_0210e160[];
-    extern unsigned int data_ov002_020ff284[];
     daPly_c *p = (daPly_c *)c;
     if ((p->mIsMetal) == 0) {
         Sound::PlayBank0((p->mGroundSoundType) + 0x30, p->mCamSpacePos);
@@ -22054,11 +21914,6 @@ int daPly_c::CleanupResources() {
     void UnloadKeyModels(int n);
     extern void *data_ov002_020ff480[];
     extern u8 data_0209f2d8;
-    extern SharedFilePtr data_ov002_0210d9a0;
-    extern SharedFilePtr data_ov002_0210d9a8;
-    extern SharedFilePtr data_ov002_0210d9c0;
-    extern SharedFilePtr data_ov002_0210da38;
-    extern SharedFilePtr data_ov002_0210da40;
     extern SharedFilePtr data_ov002_0210e3d8;
     extern SharedFilePtr data_ov002_0210e750;
     extern SharedFilePtr data_ov002_0210e8d0;
@@ -22366,7 +22221,6 @@ int daPly_c::Render() {
     extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
     extern int func_ov002_020d225c(void *self);
     extern u8 data_0209f2d8;
-    extern u8 data_0209fc5c[];
     extern int data_020a0e68;
     extern void func_ov002_020e3e00(void*, void*, u32);
     int t = (data_0209f2d8 == 1);
@@ -22497,10 +22351,7 @@ extern "C" {
 extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsigned int opacity) {
     typedef struct { int m[12]; } Mat;
     extern signed char data_0209f2f8;
-    extern signed char data_02092120;
     extern int data_020a0e68[12];
-    extern int data_ov055_02111b64;
-    extern int data_ov055_02111b6c;
     void func_0203c178(int *dst, int a, int b, int c);
     void MulMat3x3Mat3x3(int *dst, const int *a, const int *b);
     void func_02016acc(void *obj, unsigned int mask);
@@ -22784,7 +22635,6 @@ extern "C" void func_ov002_020e4768(char* self)
         virtual void DoThing(int arg);
     };
     typedef struct { int w[12]; } Mat43;
-    extern void func_020167a4(void* p);
     extern void func_ov002_020e640c(void* self);
     extern void MulMat4x3Mat4x3(void* dst, void* a, void* b);
     extern int data_020a0e68[12];
@@ -22851,8 +22701,6 @@ int func_ov002_020e496c(daPly_c *c) {
 // @symbol func_ov002_020e4990
 extern "C" {
 int func_ov002_020e4990(daPly_c *player) {
-    extern void func_0201628c(int a, int b);
-    extern void func_020162a4(int a, int b);
     int id;
     int b;
     id = player->GetBodyModelID(player->param1 & 0xff, 0);
@@ -22968,20 +22816,13 @@ int daPly_c::Behavior() {
     };
     extern u16 DecIfAbove0_Short(u16 *p);
     extern s16 GetAngleToCamera(u8 playerID);
-    extern void func_02035684(void *p, s32 v);
-    extern void func_0203568c(void *p, s32 v);
     extern void func_ov002_020ce8bc(void *self, s32 arg);
     extern int func_ov002_020d6790(void *self);
     extern void func_ov002_020d80d0(void *self);
-    extern u8 data_0209f250;
     extern s8 gShowTouchScreenArrows;
     extern u8 data_0209f2d8;
     extern s8 data_0209f2f8;
-    extern s32 gRunningKuppaScript;
-    extern u8 data_0209fc5c[];
-    extern s32 data_0209fc68;
     extern G_ee90 data_0209ee90;
-    extern u8 data_0209f254;
     extern s16 data_0209f4a6;
     extern void func_ov002_020ca940(void*);
     extern void func_ov002_020d8158(void*);
@@ -23269,16 +23110,10 @@ s32 daPly_c::InitResources() {
     void func_0203d384(void);
     extern u8 data_0209f2d8;
     extern s8 data_0209f2f8;
-    extern u8 data_0209f254;
     extern s8 data_02092114;
-    extern u8 data_02092128[];
     extern CAA0 data_0209caa0;
-    extern int gRunningKuppaScript;
-    extern u8 data_0209f250;
     extern u8 data_0209f2fc;
-    extern int data_0209212c;
     extern u8 data_0209211c;
-    extern u8 data_0209f200;
     /* The helpers below take void or char pointers, and this file's match
        depends on declaration and load order documented in the header comment
        above. One alias keeps every one of those decisions untouched. */
@@ -23406,7 +23241,6 @@ Ld0:
 extern "C" {
 void func_ov002_020e5948(void* arg0)
 {
-    extern void LoadSilverStarAndNumber(void);
     extern void func_ov002_020bec2c(void* p);
     extern int *func_ov002_020e6bb0(void *);
     extern void func_ov002_020e6780(void* p);
@@ -23420,9 +23254,6 @@ void func_ov002_020e5948(void* arg0)
     extern SharedFilePtr data_ov002_0210eb98;
     extern SharedFilePtr data_ov002_0210eb88;
     extern SharedFilePtr data_ov002_0210e4c0;
-    extern SharedFilePtr data_ov002_0210da40;
-    extern SharedFilePtr data_ov002_0210d9a0;
-    extern SharedFilePtr data_ov002_0210d9c0;
     extern SharedFilePtr data_ov002_0210e500;
     extern SharedFilePtr data_ov002_0210e1c8;
     extern SharedFilePtr data_ov002_0210e770;
@@ -23450,7 +23281,6 @@ void func_ov002_020e5948(void* arg0)
     extern SharedFilePtr data_ov002_0210e8d0;
     extern SharedFilePtr data_ov002_0210ebd8;
     extern SharedFilePtr data_ov002_0210e750;
-    extern SharedFilePtr data_ov002_0210d9a8;
     extern SharedFilePtr data_ov002_02110aa4;
     extern SharedFilePtr data_ov002_0210e588;
     extern SharedFilePtr data_ov002_0210e7e8;
@@ -23498,13 +23328,9 @@ void func_ov002_020e5948(void* arg0)
     extern SharedFilePtr data_ov002_0210ec00;
     extern SharedFilePtr data_ov002_0210e728;
     extern SharedFilePtr *data_ov002_020ff480[];
-    extern SharedFilePtr *data_ov002_020ff2f0[];
-    extern SharedFilePtr data_ov002_0210da38;
     extern SharedFilePtr data_ov002_0210e780;
     extern SharedFilePtr data_ov002_0210e6f8;
     extern SharedFilePtr data_ov002_0210e7b0;
-    extern SharedFilePtr data_ov002_0210ebb8;
-    extern SharedFilePtr data_ov002_0210eb20;
     daPly_c *c = (daPly_c *)arg0;
     daPly_c *player = c;
     s32 i;
@@ -23785,7 +23611,6 @@ void func_ov002_020e5948(void* arg0)
 // @symbol _ZN7daPly_c18PlayCharacterSoundEv
 extern "C" {
 void daPly_c::PlayCharacterSound() {
-    extern unsigned char data_ov002_020ff0f0[];
     extern void func_02011f7c(int a);
     func_02011f7c(data_ov002_020ff0f0[mCharacter & 3]);
 }
@@ -23796,7 +23621,6 @@ extern "C" {
 void func_ov002_020e6350(daPly_c *c) {
     extern int func_02011ee4(int x);
     extern unsigned char data_0209f2d8;
-    extern unsigned char data_ov002_020ff0f4[];
   int b = (int)(data_0209f2d8 == 1);
   if(b != 0) return;
   func_02011ee4(data_ov002_020ff0f4[c->param1 & 3]);
@@ -23806,7 +23630,6 @@ void func_ov002_020e6350(daPly_c *c) {
 // @symbol func_ov002_020e63a4
 extern "C" {
 void func_ov002_020e63a4(char* c){
-    extern int data_ov002_0210f92c[];
     daPly_c *player = (daPly_c *)c;
     int v[3];
     v[0] = data_ov002_0210f92c[0];
