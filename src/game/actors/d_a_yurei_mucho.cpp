@@ -58,7 +58,9 @@ struct V3Quint {
 extern "C" {
 
 /* arm9 scalar ABI and unnamed helpers; see the remaining work above. */
-extern unsigned int RandomIntInternal(void *seed);
+/* local extern: the shared declaration is in CalcLib.h; this named parameter
+ * keeps the TU's compiler-numbered static-initializer aliases stable. */
+extern int RandomIntInternal(int *seed);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern int ApproachAngle(void *p, short target, int a, int b, int limit);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -367,8 +369,8 @@ int daYurei_Mucho_c::func_ov065_0211691c(State *s)
    literal at 0x02116918, not a call, so the field read is what reproduces. */
 int daYurei_Mucho_c::func_ov065_021168a8()
 {
-    mTargetAngle = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
-    mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x32);
+    mTargetAngle = (short)(((u32)RandomIntInternal(data_0209e650) >> 8) << 0xc);
+    mStateTimer = (short)((((u32)RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x32);
     mAnmModel.SetAnim((BCA_File *)gYureiMuchoWaitAnimFile.filePtr, 0, 0x1000, 0);
     return 1;
 }
