@@ -16,9 +16,12 @@ No storage or control flow changed.
 ## Verification
 
 - `python tools/tubuild.py verify ov070/daKpFr_c --no-write --verdict`: 21/21 functions match; object isolation, relocation destinations, and emission order are clean. Exit 1 only for the pre-existing unlicensed `.text` symbol `__sinit_d_a_kp_fr.cpp` (0x74 bytes); no function mismatch.
+- `python tools/prepush_linkcheck.py --range a5bb6f569f6e7382ec1b5ef993b7e4fe4eae16a7..HEAD`: 22 verified, zero warnings or blocking.
+- `python tools/rombuild.py -j16 --no-rom`: PASS; 106/106 modules, 11,395/11,395 functions, and 470/470 source-owned data claims reproduce; zero mismatches.
 - `python tools/check_decl_agreement.py --changed a5bb6f569f6e7382ec1b5ef993b7e4fe4eae16a7`: no new declaration disagreements or local redeclarations of header declarations.
 - `python tools/source_style.py --base a5bb6f569f6e7382ec1b5ef993b7e4fe4eae16a7 --files src/game/actors/d_a_kp_fr.cpp`: zero findings with clang-format 19.1.7.
-- Full ROM build, relocation linkcheck, port references, and dead-reference scan remain to be run before publishing.
+- `python tools/port_refcheck.py`: 217/217 references resolve.
+- `python tools/check_dead_references.py`: no new dead references or broken Markdown links.
 
 ## Verifier handoff
 
