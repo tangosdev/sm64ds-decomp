@@ -389,8 +389,8 @@ void release(Lvlm &L)
 }
 
 /* Read and fully validate the file's own shape into L (whatever L held is
-   released first). Nothing here can look at the level -- the level is not
-   mounted when this is called for the first mount -- so this pass proves the
+   released first). Nothing here can look at the level (the level is not
+   mounted when this is called for the first mount), so this pass proves the
    file is self-consistent and the per-level checks happen in apply_sections
    below. Returns 1 loaded, 0 refused out loud (L then holds no file). `mod` is
    the mod's id for a file out of a mod's stage/ folder and 0 for the file
