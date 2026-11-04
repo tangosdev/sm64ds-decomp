@@ -4,7 +4,7 @@
 
 - Issue: https://github.com/tangosdev/sm64ds-decomp/issues/4570
 - Task: `issue-4570-hanachan-vec3-add-type-1104-retry1`; this is the producer candidate for independent verification.
-- Source branch: `audit/hanachan-vec3-add1104`; source input is current `main` `b8e6b7514b9370cf7e6f1b21a6dbe9c3434ed192`.
+- Source input is current `main` `b8e6b7514b9370cf7e6f1b21a6dbe9c3434ed192`; the candidate is on the existing draft PR branch.
 - Original task `issue-4570-hanachan-vec3-add-type-1104` produced the first candidate on 85690 and was canceled after `main` advanced; its source work is preserved as the predecessor.
 - Next action: independent verifier checks this candidate and records source review; the existing `__sinit` manifest gap remains a TU-level policy blocker for promotion.
 - Status: candidate for independent verification; no independent review has been accepted yet.
