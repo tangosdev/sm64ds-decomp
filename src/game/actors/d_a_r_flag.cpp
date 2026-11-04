@@ -21,7 +21,7 @@ enum daRFlag_c_AssetId { ASSET_OBJ_RACE_FLAG_BMD = 0x0488, ASSET_OBJ_RACE_FLAG_W
 struct BMD_File;
 struct BCA_File;
 
-extern Timer data_0209d4c8;
+extern Timer gRaceTimer;
 
 /* The model handle constructs through func_02017acc and registers
    func_02017ab4; the animation handle constructs through
@@ -88,7 +88,7 @@ int daRFlag_c::Behavior() {
                 b = b == 0xBF;
                 if (b) {
                     mHasTouchedFlag = 1;
-                    data_0209d4c8.StopTimer();
+                    gRaceTimer.StopTimer();
                     mVictoryTimer = 1;
                     Sound::PlaySub(0x1F, 0x14, 0x7F, 0x6B000, 0);
                 }

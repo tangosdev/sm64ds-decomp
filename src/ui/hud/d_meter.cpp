@@ -97,11 +97,11 @@ struct OamAttr;
 struct Matrix2x2;
 
 extern "C" {
-/* RenderTimeTimer draws the data_0209d4c8 timer only while this is set. The
-   writers start that timer with it: daPly_c on surface type 15 and the Koopa
-   the Quick race (daRNk_c). InitResources clears it. */
+/* RenderTimeTimer draws gRaceTimer only while this is set. The writers
+   start that timer with it: daPly_c on surface type 15 and the Koopa the
+   Quick race (daRNk_c). InitResources clears it. */
 extern unsigned char gShowRaceTimer;
-extern Timer data_0209d4c8;
+extern Timer gRaceTimer;
 extern struct OamAttr data_ov002_0210ce80;
 extern struct OamAttr data_ov002_0210c6c0;
 extern void OamRender10_d_meter(int sub, struct OamAttr *attr, int x, int y, int a, int b, int sx,
@@ -112,7 +112,7 @@ extern unsigned char gMeterCounterSlideState;
 extern signed char gNumLives;
 struct OamAttr;
 extern void *data_0209f394[];
-extern u8 data_ov002_02111180;
+extern u8 gZoomButtonActiveTimer;
 extern void *data_0209f318;
 extern ControllerInput data_0209f498[];
 extern int data_0208ee44;
@@ -964,10 +964,10 @@ void dMeter_c::RenderCameraButtons() {
     int idx = gActivePlayerSlot;
     u8 mode = data_0209f498[idx].mode;
     dCamera_c *cam = (dCamera_c *)data_0209f318;
-    u8 t = data_ov002_02111180;
+    u8 t = gZoomButtonActiveTimer;
 
     if (t != 0)
-        data_ov002_02111180 = t - data_0208ee44;
+        gZoomButtonActiveTimer = t - data_0208ee44;
 
     if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
         return;
@@ -1009,14 +1009,14 @@ void dMeter_c::RenderCameraButtons() {
 
     int y = (mode == 1) ? 0xa5 : 0x85;
     if (mode == 1) {
-        if (data_ov002_02111180 != 0) {
+        if (gZoomButtonActiveTimer != 0) {
             OAM::RenderSub(&OAM::CAM_ZOOM_BUTTON_PRESSED, 0xe7, y, -1, 1);
             return;
         }
         OAM::RenderSub(&OAM::CAM_ZOOM_BUTTON, 0xe7, y, -1, 1);
         return;
     }
-    if (data_ov002_02111180 != 0) {
+    if (gZoomButtonActiveTimer != 0) {
         OAM::RenderSub(&OAM::S_CAM_ZOOM_BUTTON_PRESSED, 0xe7, y, -1, 1);
         return;
     }
@@ -1098,7 +1098,7 @@ void dMeter_c::RenderTimeTimer() {
     if (gShowRaceTimer == 0)
         return;
 
-    t = data_0209d4c8.GetTime() << 6;
+    t = gRaceTimer.GetTime() << 6;
     sec = t / 33514000;
     centi = t / 33514 % 1000 / 10;
     min = sec / 60;

@@ -187,7 +187,7 @@ extern u8 gMainScreenLayers;
    `<< 8`. On the stage, BG3 is the map picture and OBJ every bottom-screen
    sprite. */
 extern u8 gSubScreenLayers;
-extern Timer data_0209d4c8;
+extern Timer gRaceTimer;
 extern int data_0209fc68;
 extern u8 data_0209f1ec;
 extern u8 data_0209f1fc;
@@ -296,7 +296,7 @@ extern u8 data_0209f4ae[];
 extern int data_020a0db0;
 extern u8 data_ov002_02111150;
 extern u8 gMeterCounterSlideState;
-extern u8 data_ov002_02111180;
+extern u8 gZoomButtonActiveTimer;
 extern int data_ov002_0210cea8;
 extern int data_ov002_0210cee8;
 extern int data_ov002_0210cf28;
@@ -1074,7 +1074,7 @@ void dScStage_c::CheckCameraInput() {
                              (state2 == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 0xd7 &&
                               ((TouchInfo *)gTouchHeld)[i].y >= 0x73 &&
                               ((TouchInfo *)gTouchHeld)[i].y < 0x97))) {
-                            data_ov002_02111180 = 0x10;
+                            gZoomButtonActiveTimer = 0x10;
                             cam->pressed |= 0x8000;
                             *st = 2;
                             cam->touching = 0;
@@ -1469,7 +1469,7 @@ void dScStage_c::UpdateMenuButtons(bool b) {
  * stops the music and clears the blend registers, all through globals. */
 void dScStage_c::PS_Cleanup() {
     if (data_0209f2a0[0]) {
-        data_0209d4c8.StartTimer();
+        gRaceTimer.StartTimer();
         data_0209f2a0[0] = 0;
     }
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
@@ -4268,8 +4268,8 @@ int dScStage_c::Behavior() {
                                 (b1 == 0 && t8 == 0 && (h2 & 4) != 0)) {
                                 data_0209f2c4 = 1;
                                 func_02012790(2);
-                                if (data_0209d4c8.mIsRunning != 0) {
-                                    data_0209d4c8.StopTimer();
+                                if (gRaceTimer.mIsRunning != 0) {
+                                    gRaceTimer.StopTimer();
                                     data_0209f2a0[0] = 1;
                                 }
                                 if (*(u16 *)((char *)data_020a0e58 + gActivePlayerSlot * 4) & 4)

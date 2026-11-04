@@ -32,7 +32,7 @@ struct RngSeed {
 };
 
 RngSeed data_0209d4b8;
-Timer data_0209d4c8;
+Timer gRaceTimer;
 
 /* Sequences the Timer construction after the seed's destructor registration.
    Timer has no constructor: Timer::Timer() would rename func_0201964c.
@@ -40,7 +40,7 @@ Timer data_0209d4c8;
    itself is unused storage (the call does not touch this) and is deadstripped. */
 struct TimerInit {
     TimerInit() {
-        func_0201964c(&data_0209d4c8);
+        func_0201964c(&gRaceTimer);
     }
 };
 static TimerInit sTimerInit;
