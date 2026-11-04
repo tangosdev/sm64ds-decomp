@@ -405,7 +405,7 @@ extern u8 data_0209f204;
 extern u8 data_0209f208;
 extern u8 data_0209f214;
 extern u8 data_0209f220;
-extern u8 gCollectedStarId[];
+extern u8 gCollectedStarId;
 extern u8 data_0209f230;
 extern u8 data_0209f24c;
 extern u8 data_0209f25c;
@@ -3620,7 +3620,7 @@ extern "C" void StartFile(s8 levelID, u8 entranceID) {
     data_02092128[0] = data_0209caa0[0x41];
     SetNumPlayers(1);
     gLastCourseSublevel = 6;
-    gCollectedStarId[0] = 0;
+    gCollectedStarId = 0;
     dScene_c::StartSceneFade(3, 0, 0x7fff);
 }
 
