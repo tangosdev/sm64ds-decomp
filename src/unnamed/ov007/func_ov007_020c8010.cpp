@@ -1,9 +1,9 @@
 //cpp
 #include "Ov007Spring.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 
-void SubVec3(void *, void *, void *);
 int LenVec3(void *);
 
 /* Links two followers: once both have a target, dir is the vector between
