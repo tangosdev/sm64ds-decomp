@@ -140,7 +140,7 @@ typedef struct WmStartParentCallback {
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void MultiStore32Bytes(unsigned val, int *dst, int len);
 extern void CpuCopy8(const void *src, void *dst, u32 size);
-extern void func_0205a588(void *dst, int val, u32 size);
+extern void func_0205a588(void *dst, u8 val, u32 size);
 extern char *WM_ReadMPData(char *buf, unsigned int aid);
 extern u8 *func_02065c2c(u8 *src, u8 *dst);
 extern u8 *func_02065d5c(MBCommParentBlockHeader *hdr, u8 *buf);

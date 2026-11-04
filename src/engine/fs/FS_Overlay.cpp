@@ -59,7 +59,7 @@ extern char data_0209aff8[];
 extern struct MWiDestructorChain *__global_destructor_chain;
 
 void CpuCopy8(const void *src, void *dst, u32 size);
-void func_0205a588(void *dst, int value, int size);
+void func_0205a588(void *dst, u8 value, u32 size);
 void DGT_Hash2CalcHmac(void *out, void *msg, int msglen, void *key, int keylen);
 void MIi_UncompressBackward(void *bottom);
 void FS_InitFile(void *s);

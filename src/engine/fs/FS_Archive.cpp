@@ -69,7 +69,7 @@ extern FSArchive *data_020a8048;
 extern FSDirPos data_020a804c;
 
 void CpuCopy8(const void *src, void *dst, u32 size);
-void func_0205a588(void *dst, int value, int size);
+void func_0205a588(void *dst, u8 value, u32 size);
 
 void FS_InitFile(int *p_file);
 int FS_ReadFile(int *p_file, int dst, int len);

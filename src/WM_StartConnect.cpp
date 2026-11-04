@@ -7,7 +7,7 @@ extern int WM_CheckStateEx(int a, int b);
 extern void WM_SetCallbackTable(int i, int val);
 extern int *WM_GetSystemWork(void);
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void func_0205a588(void *dst, int v, unsigned int size);
+extern void func_0205a588(void *dst, unsigned char v, unsigned int size);
 extern int WM_SendCommand(int a, int b);
 
 /* NitroSDK WM_StartConnect(callback, pInfo, ssid): func_020690b0 passes it
