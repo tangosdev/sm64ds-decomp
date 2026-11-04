@@ -3,7 +3,7 @@
 #include "common.h"
 #include "Ov007Light.h"
 extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
-extern void NormalizeVec3(struct Vector3 *a, struct Vector3 *b);
+extern void NormalizeVec3(const struct Vector3 *a, struct Vector3 *b);
 
 /* Rederives the light's direction from its two points. */
 void func_ov007_020c2390(Ov007Light *light) {

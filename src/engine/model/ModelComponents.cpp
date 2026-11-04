@@ -99,7 +99,7 @@ void func_02047910(int *m0, int *m1, int *dst, int t);
 void func_0204547c(int *a, int b, int c, void *elem);
 extern s16 data_02082214[];
 void func_020527e8(Mtx43 *m, int x, int y, int z);
-void NormalizeVec3(Vec3 *a, Vec3 *b);
+void NormalizeVec3(const Vector3 *a, Vector3 *b);
 void func_020458a8(void *src, void *dst);
 void Geometry_MatrixMultiply3x3(void *m);
 void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, void (*callback)(void *),
@@ -612,7 +612,7 @@ void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
                     m.r1.x = mp->r1.x;
                     m.r1.y = mp->r1.y;
                     m.r1.z = z18;
-                    NormalizeVec3(&m.r1, &m.r1);
+                    NormalizeVec3((const Vector3 *)&m.r1, (Vector3 *)&m.r1);
                     t = FX_MUL(m.r1.x, dir->x);
                     m.r1.x = t;
                     { int dy = dir->y; int ry = m.r1.y;
@@ -627,7 +627,7 @@ void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
                     m.r0.x = mp->r0.x;
                     m.r0.y = mp->r0.y;
                     m.r0.z = z20;
-                    NormalizeVec3(&m.r0, &m.r0);
+                    NormalizeVec3((const Vector3 *)&m.r0, (Vector3 *)&m.r0);
                     m.r0.x = FX_MUL(m.r0.x, dir->x);
                     t = FX_MUL(m.r0.y, dir->y);
                     m.r1.y = m.r0.x;
