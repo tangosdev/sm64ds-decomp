@@ -219,7 +219,9 @@ extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, int ang);
 extern void MulMat4x3Mat4x3(void *d, void *a, void *b);
 extern void SubVec3(void *d, void *a, void *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
-extern void AddVec3(void *d, void *a, void *b);
+/* local extern: CalcLib's declaration is unnamed; retain these names so this
+ * TU's compiler-numbered aliases remain stable. */
+extern void AddVec3(Vector3 *d, Vector3 *a, Vector3 *b);
 extern void LoadKeyModels(int idx);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, int a, int b, void *v, void *w);
@@ -445,7 +447,7 @@ void daObjKey_c::StateFlyToCenter()
     v.z = data_020a0e68.m[11];
     SubVec3(&v, &mPosX, &v);
     Vec3_LslInPlace(&v, 3);
-    AddVec3(&v, &mPosX, &v);
+    AddVec3(&v, (Vector3 *)&mPosX, &v);
     v.y = mScaleX * 13 + v.y;
     mParticleID[0] = (u32)Particle::System::New(mParticleID[0], FX_TRAIL_A, v.x, v.y, v.z, 0, 0);
     mParticleID[1] = (u32)Particle::System::New(mParticleID[1], FX_TRAIL_B, v.x, v.y, v.z, 0, 0);
@@ -823,7 +825,7 @@ int daObjKey_c::Behavior()
                 vec.z = data_020a0e68.m[11];
                 SubVec3(&vec, &mPosX, &vec);
                 Vec3_LslInPlace(&vec, 3);
-                AddVec3(&vec, &mPosX, &vec);
+                AddVec3(&vec, (Vector3 *)&mPosX, &vec);
                 /* First bone, word at +0xc. BMD_Bone has no field there. */
                 vec.y = *(int *)((char *)mAnmModel.data.bones + 0xc) * BONE_Y_MUL + vec.y;
                 vec.y = vec.y - Y_BONE;
