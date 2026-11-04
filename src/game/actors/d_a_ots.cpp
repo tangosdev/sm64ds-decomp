@@ -62,7 +62,8 @@
  * - BehaviorCommon: the mStateTimer increment stays unsigned short (ldrh).
  * - daOts_c.h first: nested Matrix4x3 for mAnmModel.mat4x3.t (02116bac).
  *   common.h's flat m[12] would stand down if it came first.
- * - Vec3_Sub / HorzLen / atan2 take int*; 02115f98 keeps the int-array pos copy.
+ * - 02115f98 keeps integer-array scratch vectors; its vector helpers receive
+ *   explicit Vector3 pointer views so these locals stay POD.
  * - bool-widening `int isD8 = (int)(actorID == kBigBullyActorId)` / `isBf` in
  *   02116754 / 02116460: the temporary is load-bearing.
  * - CleanupResources and InitResourcesCommon read the config block through
@@ -104,6 +105,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "math/CalcLib.h"
 #include "math/Approach.h"
 namespace cstd {
 s16 atan2(s32, s32);
@@ -198,12 +200,9 @@ struct BullyResourceConfig {
  * without it the block form defines rather than declares. */
 extern "C" {
 extern s16 data_02082214[];
-extern void Vec3_Sub(int* out, int* a, int* b);
-extern int Vec3_HorzLen(int* v);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_ots_1(int a, int b);
 extern void Matrix4x3_FromRotationY(void* m, short angle);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-
 
 void func_ov064_021163c0(daOts_c *c);
 }
@@ -869,14 +868,14 @@ void daOts_c::func_ov064_02115f98(char* a1)
     pos0[1] = y0 + tail().mModelYOffset;
     pos1[1] = tmpy;
 
-    Vec3_Sub(diff, pos1, pos0);
+    Vec3_Sub((Vector3 *)diff, (const Vector3 *)pos1, (const Vector3 *)pos0);
 
     scratch[0] = diff[0];
     scratch[1] = diff[1];
     scratch[2] = diff[2];
     angH = cstd::atan2(scratch[0], scratch[2]);
     {
-        int hl = Vec3_HorzLen(scratch);
+        int hl = Vec3_HorzLen((const Vector3 *)scratch);
         angV = cstd::atan2(scratch[1], hl);
     }
 
