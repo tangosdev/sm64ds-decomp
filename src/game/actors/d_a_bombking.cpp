@@ -186,7 +186,7 @@ extern void func_02011cfc(void);
 extern "C" {
 extern int data_0209e650;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
+extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
@@ -722,7 +722,7 @@ int daBombking_c::func_ov078_02124520()
         look.y += 0x100000;
         in.z = 0x800000;
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
-        MulVec3Mat4x3(&in, &data_020a0e68, &out);
+        MulVec3Mat4x3(&in, (Matrix4x3 *)&data_020a0e68, &out);
         pos.y += 0x100000;
         pos.x += out.x;
         pos.z += out.z;
@@ -784,7 +784,7 @@ int daBombking_c::func_ov078_021247bc()
         vC.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, this->mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngleX);
-        MulVec3Mat4x3((Vector3 *)&vB, &data_020a0e68, (Vector3 *)&vC);
+        MulVec3Mat4x3((Vector3 *)&vB, (Matrix4x3 *)&data_020a0e68, (Vector3 *)&vC);
         this->mSpeedX = vC.x;
         if (this->mActionStep == 0) {
             this->mVertSpeed = vC.y;
@@ -1120,7 +1120,7 @@ int daBombking_c::func_ov078_021250f8()
                     target->mSpeedZ = out.z;
                     target->mHorzSpeed = 0x14000;
                     target->mVertAccel = -0x2000;
-                    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+                    MulVec3Mat4x3(&in, (Matrix4x3 *)&data_020a0e68, &out);
                 }
                 this->mSpawnedThrown[this->mSpawnSlot] = 1;
                 target->mCarryMatrix = 0;
