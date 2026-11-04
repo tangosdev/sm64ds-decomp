@@ -76,7 +76,7 @@ typedef int LocFix12;
 
 extern "C" {
 
-void  MulMat4x3Mat4x3(Matrix4x3 *a, Matrix4x3 *b, Matrix4x3 *out);
+void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void  Matrix4x3_FromRotationY(void *m, s16 angle);
 void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -182,7 +182,7 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
         Vector3 r;
 
         data_020a0e68 = *src;
-        MulMat4x3Mat4x3((Matrix4x3 *)c->mAnmModel.data.transforms + idx, &data_020a0e68,
+        MulMat4x3Mat4x3((const Matrix4x3 *)c->mAnmModel.data.transforms + idx, &data_020a0e68,
                         &data_020a0e68);
         v.x = *(int *)((char *)&data_020a0e68 + 0x24);
         v.y = *(int *)((char *)&data_020a0e68 + 0x28);
