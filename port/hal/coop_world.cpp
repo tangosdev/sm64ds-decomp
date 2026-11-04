@@ -474,6 +474,54 @@ void send_swallows(unsigned now) {
     g_sw_n = k;
 }
 
+// A capped Goomba (or a silver-star-on-its-own-star one) that dies any other way (stomp, punch, fire, a fall into water)
+// also ends in func_ov084_02129498, which for it is MarkForDestruction only (d_a_krb.cpp:470-476): no death bit, so the
+// death table never carries it either. Watch those Goombas while my body stands in the level; one that goes away with no
+// bit, not in my mouth and not removed here by a friend's message, is told to the group like a swallow. A level teardown
+// marks dozens of placed actors in one frame: that frame (more than kCapMass slotted actors gone) sends nothing.
+enum : int { kCapMax = 24, kCapMass = 4 };
+struct CapW { char *a; uint16_t slot, cls; };
+CapW g_cap[kCapMax]; int g_cap_n = 0; unsigned g_cap_frame = 0; int g_cap_slotted = -1;
+uint16_t g_sw_applied[kSwOutMax]; int g_sw_applied_n = 0;   // slots a friend's message removed here: never echoed
+bool capped_goomba(const char *a) {
+    const unsigned cls = *(const unsigned short *)(a + 0x0c);
+    if (!is_goomba(cls)) return false;
+    return (*(const unsigned char *)(a + kKrbCapId) & 0xf) < 6 || *(const unsigned char *)(a + kKrbReward) == 2;
+}
+void cap_reset() { g_cap_n = 0; g_cap_slotted = -1; g_sw_applied_n = 0; }
+void watch_capped(unsigned now) {
+    CapW cur[kCapMax]; int n = 0, slotted = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        const short slot = *(const short *)(a + 0xce);
+        if (slot < 0 || slot >= kCoopSlots || going(a) || is_player_ptr(a)) continue;
+        ++slotted;
+        if (n < kCapMax && capped_goomba(a)) cur[n++] = {a, (uint16_t)slot, *(const unsigned short *)(a + 0x0c)};
+    }
+    const bool fresh = g_cap_slotted >= 0 && g_cap_frame + 1 == g_est_frames;
+    const bool mass = fresh && g_cap_slotted - slotted > kCapMass;
+    for (int i = 0; fresh && !mass && i < g_cap_n; ++i) {
+        const CapW &o = g_cap[i];
+        bool still = false;
+        for (int j = 0; j < n && !still; ++j) still = cur[j].a == o.a && cur[j].slot == o.slot;
+        if (still) continue;
+        const int slot = o.slot;
+        const bool bit = (tbl(g_part)[slot >> 5] >> (slot & 31)) & 1u;
+        bool skip = bit || slot == g_mouth_slot;
+        for (int k = 0; k < g_sw_applied_n && !skip; ++k) skip = g_sw_applied[k] == o.slot;
+        for (int k = 0; k < g_sw_n && !skip; ++k) skip = g_sw_out[k].slot == o.slot;
+        if (!skip && g_sw_n < kSwOutMax) g_sw_out[g_sw_n++] = {o.slot, o.cls, 0, now};
+        std::fprintf(stderr, "[coop] capped watch: class %u slot %d went away here %s wall=%lld\n", (unsigned)o.cls, slot,
+                     bit ? "with a death bit (the death table carries it)" : skip ? "(swallow or a friend's message: not told again)"
+                                                                           : "with no death bit: told the group",
+                     wall_ms());
+        if (!skip && g_log) g_sw_census_at = g_est_frames + 900;
+    }
+    if (mass && g_log) std::fprintf(stderr, "[coop] capped watch: %d slotted actors went in one frame (a teardown): nothing told\n",
+                                    g_cap_slotted - slotted);
+    std::memcpy(g_cap, cur, sizeof(CapW) * (size_t)n); g_cap_n = n;
+    g_cap_slotted = slotted; g_cap_frame = g_est_frames;
+}
+
 // A friend's swallow left no death bit: my copy goes the way his did in OnTurnIntoEgg (d_a_krb.cpp:1635-1678), with
 // the rewards left to his console. A Goomba with a cap, or one that gives the silver star only on its own star, goes
 // home and RespawnIfHasCap leaves the dormant replacement there; func_ov084_02129498 removes it (MarkForDestruction for a
@@ -494,7 +542,9 @@ void apply_swallow(int seat, int slot, unsigned cls) {
     } else {
         _ZN7fBase_c18MarkForDestructionEv(a);
     }
-    std::fprintf(stderr, "[coop] swallow from seat %d: class %u slot %d removed here the way his OnTurnIntoEgg removed it wall=%lld\n",
+    if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = (uint16_t)slot;
+    else { std::memmove(g_sw_applied, g_sw_applied + 1, sizeof g_sw_applied - sizeof g_sw_applied[0]); g_sw_applied[kSwOutMax - 1] = (uint16_t)slot; }
+    std::fprintf(stderr, "[coop] swallow from seat %d: class %u slot %d removed here the way his console removed it (no death bit) wall=%lld\n",
                  seat, cls, slot, wall_ms());
     if (g_log) g_sw_census_at = g_est_frames + 900;
 }
@@ -756,7 +806,7 @@ void join_group(const CoopKey &nk) {
     if (!g_leg_flush) flush_on_leave();
     g_grp.leave();
     g_out_n = 0;
-    g_sw_n = 0; g_mouth = nullptr; g_mouth_slot = -1; g_sw_census_at = 0;
+    g_sw_n = 0; g_mouth = nullptr; g_mouth_slot = -1; g_sw_census_at = 0; cap_reset();
     std::memset(g_remote, 0, sizeof g_remote);
     std::memset(g_sticky, 0, sizeof g_sticky);
     std::memset(g_star_seen, 0, sizeof g_star_seen);
@@ -1069,6 +1119,7 @@ void tick_est(unsigned now) {
         }
         // 1b. how a mouthful left my Yoshi's mouth (TONGUE3), and the swallows the death table cannot carry
         watch_swallow(now);
+        watch_capped(now);
         send_swallows(now);
         // 2. announce them (three tries each: now, +120 ms, +360 ms)
         unsigned char buf[sizeof(CoopDeltaWire) + 2 * kCoopMaxDelta];
@@ -1173,7 +1224,7 @@ void coop_world_session_reset() {
     g_recon_dirty = false;
     g_last_bits_hash = 0;
     g_out_n = 0;
-    g_sw_n = 0; g_mouth = nullptr; g_mouth_slot = -1; g_sw_census_at = 0;
+    g_sw_n = 0; g_mouth = nullptr; g_mouth_slot = -1; g_sw_census_at = 0; cap_reset();
     g_snap_waiting = false;
     g_snap_done = false;
     g_snap_total = 0;
@@ -1311,6 +1362,7 @@ extern "C" void port_coop_world_frame(void) {
         }
     // No body (a level unload or reload): whatever was in my mouth left with the level, not down my throat.
     if (!in_level && g_mouth) { g_mouth = nullptr; g_mouth_slot = -1; }
+    if (!in_level) g_cap_slotted = -1;
     g_grp.update(now);
     if (in_level && g_key.valid() && g_part >= 0 && g_grp.established()) tick_est(now);
 }
