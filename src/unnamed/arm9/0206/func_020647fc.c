@@ -2,8 +2,7 @@ extern int func_02065bd0(void);
 extern int func_020659f8(int a);
 extern void func_0205a588(void *dst, unsigned char value, unsigned int size);
 
-void func_020647fc(int *out, int a, void *b, int c)
-{
+void func_020647fc(int *out, int a, void *b, int c) {
     int d = func_02065bd0();
     int r;
     out[0] = a;
