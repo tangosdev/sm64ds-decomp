@@ -1,7 +1,7 @@
 #include "types.h"
 #include "private/rom_header_view.h"
 extern void func_020676e0(void *in, void *tbl, void *dst, void *recvCursor);
-extern void CpuCopy8(void *src, void *dst, u32 size);
+extern void CpuCopy8(const void *src, void *dst, u32 size);
 extern int data_0208685c[];
 
 /* NitroSDK MbSegmentInfo, as func_020676e0 fills it (same names as

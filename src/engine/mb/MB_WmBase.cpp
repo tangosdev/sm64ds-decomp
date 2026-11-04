@@ -168,7 +168,7 @@ extern void MultiStore_Int(int val, int *dst, int len);
 extern void MultiCopyHalf(const void *src, void *dst, int count);
 extern void DMASyncHalfTransfer(unsigned int ch, void *src, void *dst, unsigned int n);
 // local extern: MI_Memory.c defines these two as assembly stubs.
-extern void CpuCopy8(u16 *src, char *dst, int size);
+extern void CpuCopy8(const void *src, void *dst, u32 size);
 extern void func_0205a588(void *dst, int val, u32 size);
 
 extern void MB_CommSetParentStateCallback(u32 callback);
