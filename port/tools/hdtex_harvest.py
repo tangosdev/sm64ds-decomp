@@ -65,8 +65,13 @@ SI = subprocess.STARTUPINFO()
 SI.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 SI.wShowWindow = 7  # SW_SHOWMINNOACTIVE: minimized, never activated
 NOCON = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+# Every inherited SM64DS_* knob is dropped so a stray SM64DS_LEVEL cannot turn a
+# row into a different row. Two exceptions: the test lock (so each row takes the
+# machine-wide slot) and SM64DS_ASSET_ROOT, which is a location, not a knob: a
+# kit exe refuses to start without it (battery.py keeps it for the same reason).
 BASE_ENV = {k: v for k, v in os.environ.items()
-            if not k.startswith("SM64DS_") or k.startswith("SM64DS_TEST_LOCK")}
+            if not k.startswith("SM64DS_") or k.startswith("SM64DS_TEST_LOCK")
+            or k == "SM64DS_ASSET_ROOT"}
 
 os.makedirs(DUMP, exist_ok=True)
 ROWS = os.path.join(DUMP, "rows")
