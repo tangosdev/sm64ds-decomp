@@ -3028,18 +3028,19 @@ void daStar_c::func_ov002_020e7090(int arg) {
 /* Once per star: looks for an ice block (actor 0x12) within 200.0 and, if one
  * is there, marks the star as inside it and tells the block. */
 void daStar_c::func_ov002_020e700c() {
-  dActor_c *o;
-  if (mIceChecked) return;
-  o = (dActor_c *)dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, 0);
-  while (o) {
-      if (Vec3_Dist(&mPos, &o->mPos) < 0xc8000) {
-          mInIceBlock = 1;
-          ((daObjIceBlock_c *)o)->mContainedActor = this;
-          break;
-      }
-      o = (dActor_c *)dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, o);
-  }
-  mIceChecked = 1;
+    dActor_c *o;
+    if (mIceChecked)
+        return;
+    o = (dActor_c *)dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, 0);
+    while (o) {
+        if (Vec3_Dist(&mPos, &o->mPos) < 0xc8000) {
+            mInIceBlock = 1;
+            ((daObjIceBlock_c *)o)->mContainedActor = this;
+            break;
+        }
+        o = (dActor_c *)dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, o);
+    }
+    mIceChecked = 1;
 }
 
 /* -------------------------------------------------------------------------- */
