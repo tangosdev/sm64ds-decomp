@@ -26,6 +26,7 @@ void func_ov002_020d6368(char *player);          // Player: lay one egg (class 9
 int port_adventure_ghost_seat(int slot);
 int port_adventure_ghost_drawpos(int slot, int out[3]);
 int _ZN6Player7TryGrabER8dActor_c(void *self, void *actor);
+void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigned unk);
 }
 
 namespace port {
@@ -418,6 +419,16 @@ void ghost_eggs_frame(unsigned) {
     recv_tick();
 }
 
+// LAB (row knob, off by default) SM64DS_GHOST_LAB_WARP=<frame>:<level>:<act>: a party room has no coop warp knob, so the
+// picture rows reach a course this way: the game's own level change, once, that many party frames in.
+void lab_warp() {
+    static int at = -2, lv = 0, ac = 1;
+    if (at == -2) { at = -1; if (const char *e = std::getenv("SM64DS_GHOST_LAB_WARP")) std::sscanf(e, "%d:%d:%d", &at, &lv, &ac); }
+    if (at < 0 || g_lf != (unsigned)at) return;
+    std::fprintf(stderr, "[geggs] LAB warp lf=%u to level %d act %d\n", g_lf, lv, ac);
+    LoadLevelNoReturn((unsigned)lv, 0, (unsigned)ac, 1);
+}
+
 void ghost_eggs_party_frame(char *me, int level, void (*send)(const GhostEggRec &rec, int vx, int vy, int vz)) {
     read_env();
     if (g_off) return;
@@ -426,6 +437,7 @@ void ghost_eggs_party_frame(char *me, int level, void (*send)(const GhostEggRec 
     ++g_lf;
     if (me) { send_tick(me); lab_grab(me); lab_face(me); }
     recv_tick();
+    lab_warp();
 }
 
 void ghost_eggs_party_in(int seat, int eggs) {
