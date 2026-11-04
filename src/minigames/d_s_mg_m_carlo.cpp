@@ -86,7 +86,7 @@ extern int LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern int Dealer_Load(char *p);
 extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char gSubScreenLayers;
 }
 
 // @symbol _ZN18dMgMCarloCardObj_cC1Ev
@@ -118,7 +118,7 @@ s32 dScMgMCarlo_c::InitResources() {
     Deallocate(paletteData);
 
     data_0209d45c = 0x11;
-    data_0209d454 = 0x18;
+    gSubScreenLayers = 0x18;
     *(unsigned short *)0x4000008 = (*(unsigned short *)0x4000008 & ~3) | 1;
     *(unsigned short *)0x400100a = *(unsigned short *)0x400100a & ~3;
     Camera_InitDealerView(pad_4660);

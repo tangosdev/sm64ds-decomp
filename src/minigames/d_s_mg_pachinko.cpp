@@ -197,7 +197,7 @@ extern void func_020564f4(const void *src, int offset, int count);
 /* --- ROM data this TU reads --- */
 extern int   data_0209d4b8;
 extern unsigned char data_0209d45c;
-extern u8    data_0209d454;
+extern u8 gSubScreenLayers;
 extern s16   data_02082214[];
 // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
 extern u8    gActivePlayerSlot;
@@ -2804,7 +2804,7 @@ s32 dScMgPachinko_c::InitResources()
     DecompressLZ16((void *)objChar, (void *)0x6400000);
     GX::LoadOBJPltt((const void *)objPltt, 0, 0x100);
 
-    data_0209d454 |= 0xd;
+    gSubScreenLayers |= 0xd;
     *(volatile u16 *)0x400100c &= ~3;
     *(volatile u16 *)0x400100c &= ~0x40;
     *(volatile u32 *)0x4001018 = 0;

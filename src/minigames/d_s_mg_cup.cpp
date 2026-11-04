@@ -127,7 +127,7 @@ extern char data_ov006_02139df4[];
 extern PMF sCupStateTable[];
 extern AnimStep *sCupAnimTable[];
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern void Camera_InitPresenterView(char *);
 extern int Presenter_Load(char *);
@@ -937,7 +937,7 @@ s32 dScMgCup_c::InitResources() {
         SetSubBg0Offset(0, 0);
     }
 
-    data_0209d454 |= 1;
+    gSubScreenLayers |= 1;
     {
         volatile u16 *bg = (volatile u16 *)0x0400100c;
         *bg = (*bg & 0x43) | 0x414;
@@ -946,7 +946,7 @@ s32 dScMgCup_c::InitResources() {
         SetSubBg2Offset(0, 0);
     }
 
-    data_0209d454 |= 4;
+    gSubScreenLayers |= 4;
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP_NCG_BIN, G2S::GetBG2CharPtr() + 0x4000);
     file = LoadFile(ASSET_D_2D_MG_BG_CUP_NCL_BIN);

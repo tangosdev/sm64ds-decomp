@@ -207,7 +207,7 @@ void DecompressLZ16(int src, void *dst);
 void Camera_InitPresenterView(void *p);
 int Presenter_Load(void *p);
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 }
 
 /* The note and pop dispatch tables belong to this scene. Declaration
@@ -318,7 +318,7 @@ s32 dScMgSound_c::InitResources() {
     DecompressLZ16(objChars, (void *)0x6400000);
     GX::LoadOBJPltt((const void *)objPltt, 0, 0x100);
 
-    data_0209d454 |= 4;
+    gSubScreenLayers |= 4;
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
     DecompressLZ16(file, (void *)G2S::GetBG2CharPtr());

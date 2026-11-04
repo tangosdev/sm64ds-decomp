@@ -41,7 +41,7 @@ Oam sD3DOamShadow[128];
 extern unsigned char sD3DSoundPanOffsets[];
 
 /* arm9 / ov004 globals with no project header. */
-extern unsigned char data_0209d454;
+extern unsigned char gSubScreenLayers;
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209e660;
 extern unsigned char data_0209f5f8;
@@ -90,10 +90,10 @@ extern "C" void D3D_CaptureToMain(void) {
     GX::SetBankForSubBG(4);
     func_02054430(8);
     *(volatile unsigned int *)0x4000064 = 0x80330010;
-    data_0209d454 &= ~0x10;
-    data_0209d454 |= 4;
+    gSubScreenLayers &= ~0x10;
+    gSubScreenLayers |= 4;
     *(volatile unsigned int *)0x4001000 =
-        (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+        (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
     *(volatile unsigned short *)0x400100c =
         (*(volatile unsigned short *)0x400100c & 0x43) | 0x4284;
     *(volatile unsigned short *)0x400100c &= ~3;
@@ -109,9 +109,9 @@ extern "C" void D3D_CaptureToSub(void)
     func_02054430(4);
     *(volatile int *)0x4000064 = 0x80360010;
     GXS::SetGraphicsMode(5);
-    data_0209d454 |= 0x10;
-    data_0209d454 &= ~4;
-    *(volatile int *)0x4001000 = (*(volatile int *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+    gSubScreenLayers |= 0x10;
+    gSubScreenLayers &= ~4;
+    *(volatile int *)0x4001000 = (*(volatile int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
 }
 
 // @symbol D3D_DrawSpriteTable
@@ -194,7 +194,7 @@ int dScMgD3DBase_c::InitSubScreenBg()
         *p = *p & ~0x40;
     }
     SetSubBg1Offset(0, 0);
-    data_0209d454 &= ~2;
+    gSubScreenLayers &= ~2;
     {
         s32 language = GetGameLanguage();
         LoadCompressedFileAt(sD3DOptionNcgByLanguage[language], (void *)G2S::GetBG1CharPtr());
@@ -213,7 +213,7 @@ void dScMgD3DBase_c::InitEngines()
 
     *(vu32 *)0x4001000u |= 0x10000u;
     data_0209d45c = 0x10;
-    data_0209d454 = 0x10;
+    gSubScreenLayers = 0x10;
     Mg_ResetBgOffsets();
     Mg_DisableAllBanks();
     data_0209e660 = 1;

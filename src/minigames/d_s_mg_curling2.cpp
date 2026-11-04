@@ -113,7 +113,7 @@ extern int func_02054d88(void);
 
 extern int data_0209d4b8;
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern s16 data_02082214[];
 extern unsigned char sCurling2StepXPicks[];
 extern unsigned char sCurling2StepXFastPicks[];
@@ -1798,7 +1798,7 @@ s32 dScMgCurling2_c::InitResources() {
     DecompressLZ16(c7, (void *)0x6400000);
     GX::LoadOBJPltt(c8, 0, 0x100);
 
-    data_0209d454 |= 4;
+    gSubScreenLayers |= 4;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 2;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x814;
     DecompressLZ16(r6, (void *)G2S::GetBG2CharPtr());

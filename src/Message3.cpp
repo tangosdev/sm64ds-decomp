@@ -87,8 +87,8 @@ extern u8 data_0208f074[];
 extern u8 data_0208f174[];
 extern s32 data_0208ee44;
 extern int data_0209caa0[3];
-extern u32 data_0209b454;
-extern u8 data_0209d454;
+extern u32 gNextActorUpdateMask;
+extern u8 gSubScreenLayers;
 extern u8 data_0209d45c;
 extern s16 data_0209f4a2[];
 extern u16 data_020a0e5a[];
@@ -854,8 +854,9 @@ extern "C" int func_020321fc(void) {
     data_0209fc9c = 0;
     data_0209fcb8 = 0;
     if (data_0209fca8 != 0) {
-        data_0209d454 &= ~2;
-        *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+        gSubScreenLayers &= ~2;
+        *(volatile u32 *)0x4001000 =
+            (*(volatile u32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
         *(volatile u16 *)0x4001050 = 0;
         *(volatile u16 *)0x4001048 &= ~0x3f;
         *(volatile u16 *)0x400104a &= ~0x3f;
@@ -1830,7 +1831,7 @@ extern "C" void func_020345b0(int arg0) {
     data_0209fc74 = 0x63;
     data_0209fcac = 0;
     data_0209fc7c = 0;
-    data_0209b454 |= 0x800000;
+    gNextActorUpdateMask |= 0x800000;
 
     {
         void *p = (char *)func_02054d88() + 0x4000;

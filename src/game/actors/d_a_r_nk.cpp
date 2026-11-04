@@ -172,7 +172,7 @@ extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 /* Play2D(3, id): a sound with no position. */
 extern unsigned int func_0201277c(unsigned int id);
 extern signed char data_0209f2f8;   /* LEVEL_ID */
-extern s8 data_ov002_02111184;      /* DISPLAY_TIMER: nonzero shows the course timer */
+extern s8 gShowRaceTimer;           /* nonzero: dMeter_c draws the race timer */
 extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 extern void func_02012694(u32 a, void *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
@@ -505,7 +505,7 @@ void daRNk_c::func_ov062_0211a1f4()
         this->mIsRacing = 1;
         this->mStep++;
         SET_ANIM(this, ANIM_RUN_START, kAnimPlayOnce);
-        data_ov002_02111184 = 1;
+        gShowRaceTimer = 1;
         data_0209d4c8.StartTimer();
         func_0201267c(kSfx4D, &this->mCamSpacePos);
         return;

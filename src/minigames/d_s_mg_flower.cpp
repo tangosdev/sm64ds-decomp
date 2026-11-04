@@ -80,7 +80,7 @@ void DecompressLZ16(int src, void *dst);
 void Ov004_Deallocate(void *ptr);
 extern int data_0208ee44;
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 }
 
 /* Written first so D1 and D0 are emitted first, as in the cartridge. The
@@ -583,7 +583,7 @@ s32 dScMgFlower_c::InitResources() {
     G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
 
     data_0209d45c |= 4;
-    data_0209d454 |= 0xc;
+    gSubScreenLayers |= 0xc;
 
     fileData = (int)Ov004_LoadFileByPath(&sFlowerNcgPath);
     DecompressLZ16(fileData, (void *)0x6400000);

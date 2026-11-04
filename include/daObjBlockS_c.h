@@ -72,7 +72,7 @@ struct daObjBlockS_c : dBgActor_c {
     dCcAcPos_c mdCcAcPos_c2;    /* 0x5a4 */
     /* The ROM loads this WORD and passes it to _ZN7daPly_c9DropActorEv as that function's
        `this`, which is an object address, so the word is a daPly_c *. Behavior drops the
-       actor through it when data_0209b454 and mFlags both have bit 0x4000000 set
+       actor through it when gNextActorUpdateMask and mFlags both have bit 0x4000000 set
        (daObjKey_c names that mFlags bit a camera takeover), so it is the player
        currently carrying the crate. It says nothing about the rest of the marker's span, which stays explicit
        padding. Was a u8 marker. */

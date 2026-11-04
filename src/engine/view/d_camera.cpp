@@ -68,7 +68,7 @@ extern dCamera_c::State data_0209b108;
 extern dCamera_c::State data_0209b118;
 extern dCamera_c::State data_0209b128;
 extern Matrix4x3 data_0209b41c;
-extern unsigned int data_0209b454;
+extern unsigned int gNextActorUpdateMask;
 
 extern s16 data_02082214[];
 extern void *data_02086efc;
@@ -301,7 +301,7 @@ block_7:
     }
 
     if ((u8)(gVsExitScreenActive | (data_0209f2c4 | data_0209f20c)) == 0 &&
-        !(data_0209b454 & 0x40000000)) {
+        !(gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)) {
         enum Bool b2 = (enum Bool)(gRunningKuppaScript != 0);
         if (b2 == FALSE) {
             if (mFlags & 0x2000) {

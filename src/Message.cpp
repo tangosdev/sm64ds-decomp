@@ -55,11 +55,20 @@ u32 GetBG1ScrPtr(void);
 
 extern "C" {
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
-extern u8 data_0209d64c;
-extern u8 data_0209d650;
+extern u8 gSubScreenLayers;
+/* The message box rectangle, set when a box opens (Message.cpp's layout code):
+   gMsgBoxLeft/gMsgBoxTop are its final left and top edges and
+   gMsgBoxCenterX/gMsgBoxCenterY its centre. The window registers (WIN0H/WIN0V)
+   are written as (edge << 8) | (2 * centre - edge + 1), so the right and bottom
+   edges mirror the left and top. gMsgBoxWinLeft/gMsgBoxWinTop are the edges
+   the window is drawn with right now: they start at the centre and the
+   opening animation walks them out to gMsgBoxLeft/gMsgBoxTop. At runtime the
+   next-page arrow sits at (2 * centre x - 6 - left, 2 * centre y + 2 - top),
+   by the box's bottom-right corner. */
+extern u8 gMsgBoxWinTop;
+extern u8 gMsgBoxLeft;
 extern u8 data_0209d654;
-extern u8 data_0209d658;
+extern u8 gMsgBoxWinLeft;
 extern u8 data_0209d65c;
 extern u8 data_0209d660;
 extern u8 data_0209d664;
@@ -84,10 +93,14 @@ extern u8 data_0209d6b4;
 extern u8 data_0209d6b8;
 extern u8 data_0209d6bc;
 extern u8 data_0209d6c0;
+/* Not named yet. Picks the message box's style: the text colour mask
+   (data_0208eecc[it]), which next-page arrow sprite is drawn (at runtime it
+   changes the arrow's colour/style), and the closing sound (0x21 or 5). The
+   Display* entry points set it to 0 or 1. */
 extern u8 data_0209d6c4;
-extern u8 data_0209d6c8;
-extern u8 data_0209d6cc;
-extern u8 data_0209d6d0;
+extern u8 gMsgBoxCenterY;
+extern u8 gMsgBoxTop;
+extern u8 gMsgBoxCenterX;
 extern s16 data_0209d6d4;
 extern u16 data_0209d6e0;
 extern MessageEntry *data_0209d708;
@@ -109,7 +122,7 @@ extern u8 data_0209f2d8;
 extern int data_0209caa0[3];
 extern s32 gRunningKuppaScript;
 extern s8 data_02092110;
-extern u32 data_0209b454;
+extern u32 gNextActorUpdateMask;
 extern s32 data_0208ee44;
 
 extern void MultiStore_Int(int val, int *dst, int len);
@@ -1139,8 +1152,8 @@ void Message::DisplaySaving(unsigned short n)
     data_0209d67c = 0x3c;
     data_0209d660 = (u8)one;
     data_0209d654 = (u8)one;
-    data_0209d658 = (u8)v7f;
-    data_0209d64c = (u8)v87;
+    gMsgBoxWinLeft = (u8)v7f;
+    gMsgBoxWinTop = (u8)v87;
     data_0209d6c4 = 0;
     func_02012790(4);
 
@@ -1154,13 +1167,13 @@ void Message::DisplaySaving(unsigned short n)
     w = entry->width;
     w = w >> 3;
     data_0209d6a8 = (u8)((int)(w * 9 + 7) / 8);
-    data_0209d650 = (u8)(((0x20 - ((int)data_0209d6a8 + 2)) / 2) << 3);
-    data_0209d6d0 = (u8)v7f;
+    gMsgBoxLeft = (u8)(((0x20 - ((int)data_0209d6a8 + 2)) / 2) << 3);
+    gMsgBoxCenterX = (u8)v7f;
     v43 = 0x43;
-    data_0209d6c8 = (u8)v43;
-    data_0209d6cc = (u8)(0x44 - (int)(((((int)entry->lineCount << 1) + 1) << 3) / 2));
-    data_0209d658 = (u8)v7f;
-    data_0209d64c = (u8)v43;
+    gMsgBoxCenterY = (u8)v43;
+    gMsgBoxTop = (u8)(0x44 - (int)(((((int)entry->lineCount << 1) + 1) << 3) / 2));
+    gMsgBoxWinLeft = (u8)v7f;
+    gMsgBoxWinTop = (u8)v43;
     data_0209d680 = 0;
     data_0209d65c = 0;
 
@@ -1173,7 +1186,7 @@ void Message::DisplaySaving(unsigned short n)
     MultiStore16(ls, (char*)s, 0x800);
 
     scr = (u8 *)((char *)G2::GetBG3ScrPtr() + 0x42);
-    SetBg3Offset(-(int)data_0209d650, 4 - (int)data_0209d6cc);
+    SetBg3Offset(-(int)gMsgBoxLeft, 4 - (int)gMsgBoxTop);
 
     cols = data_0209d6a8;
     i = 0;
@@ -1193,7 +1206,7 @@ void Message::DisplaySaving(unsigned short n)
 
     {
         int b = data_0209d45c | 0x20;
-        data_0209b454 |= 0x80000000u;
+        gNextActorUpdateMask |= 0x80000000u;
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, b, -8);
     }
 
@@ -1205,12 +1218,10 @@ void Message::DisplaySaving(unsigned short n)
         *win0v = (u16)((*win0v & ~0x3f) | 0x17);
     }
 
-    *(volatile u16 *)0x4000040 =
-        (u16)(((data_0209d658 << 8) & 0xff00) |
-              ((data_0209d6d0 * 2 - data_0209d658 + 1) & 0xff));
+    *(volatile u16 *)0x4000040 = (u16)(((gMsgBoxWinLeft << 8) & 0xff00) |
+                                       ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff));
     *(volatile u16 *)0x4000044 =
-        (u16)(((data_0209d64c << 8) & 0xff00) |
-              ((data_0209d6c8 * 2 - data_0209d64c + 1) & 0xff));
+        (u16)(((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff));
 
     {
         volatile unsigned int *disp = (volatile unsigned int *)0x4000000;
@@ -1298,8 +1309,8 @@ extern "C" void func_0201f138(void)
     func_0201eaac();
 
     idx = data_0209d6d4;
-    data_0209d658 = 0x7f;
-    data_0209d64c = 0x87;
+    gMsgBoxWinLeft = 0x7f;
+    gMsgBoxWinTop = 0x87;
     data_0209d660 = 0;
     data_0209d6c4 = 1;
     data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
@@ -1366,8 +1377,8 @@ extern "C" void func_0201f32c(int arg0)
     func_0201eaac();
 
     data_0209d660 = 1;
-    data_0209d658 = 0x7f;
-    data_0209d64c = 0x87;
+    gMsgBoxWinLeft = 0x7f;
+    gMsgBoxWinTop = 0x87;
     if (data_0209d6d4 >= 0x2a && data_0209d6d4 < 0x83) {
         data_0209d6c4 = 1;
         func_02012790(0x20);
@@ -1395,31 +1406,31 @@ extern "C" void func_0201f32c(int arg0)
         if (b1 != 0 && !(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
             u32 b2 = (gRunningKuppaScript != 0);
             if (b2 == 0) {
-                data_0209d650 = 0x10;
-                data_0209d6cc = 0x64;
-                data_0209d6d0 = (u8)((((data_0209d6a8 + 2) / 2) * 8) + 0xf);
-                data_0209d6c8 = (u8)((((entry->lineCount * 2 + 1) * 8) / 2) + 0x63);
-                data_0209d658 = data_0209d6d0;
-                data_0209d64c = data_0209d6c8;
+                gMsgBoxLeft = 0x10;
+                gMsgBoxTop = 0x64;
+                gMsgBoxCenterX = (u8)((((data_0209d6a8 + 2) / 2) * 8) + 0xf);
+                gMsgBoxCenterY = (u8)((((entry->lineCount * 2 + 1) * 8) / 2) + 0x63);
+                gMsgBoxWinLeft = gMsgBoxCenterX;
+                gMsgBoxWinTop = gMsgBoxCenterY;
                 goto branchDone;
             }
         }
         {
             u32 b3 = (f2d8_val == 2);
             if (b3 != 0) {
-                data_0209d650 = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
-                data_0209d6d0 = 0x7f;
-                data_0209d6cc = 0xa0;
-                data_0209d6c8 = (u8)((((entry->lineCount) * 16) / 2) + 0x9f);
-                data_0209d658 = 0x7f;
-                data_0209d64c = data_0209d6c8;
+                gMsgBoxLeft = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
+                gMsgBoxCenterX = 0x7f;
+                gMsgBoxTop = 0xa0;
+                gMsgBoxCenterY = (u8)((((entry->lineCount) * 16) / 2) + 0x9f);
+                gMsgBoxWinLeft = 0x7f;
+                gMsgBoxWinTop = gMsgBoxCenterY;
             } else {
-                data_0209d650 = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
-                data_0209d6d0 = 0x7f;
-                data_0209d6c8 = 0x63;
-                data_0209d6cc = (u8)(0x64 - (((entry->lineCount * 2 + 2) * 8) / 2));
-                data_0209d658 = 0x7f;
-                data_0209d64c = 0x63;
+                gMsgBoxLeft = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
+                gMsgBoxCenterX = 0x7f;
+                gMsgBoxCenterY = 0x63;
+                gMsgBoxTop = (u8)(0x64 - (((entry->lineCount * 2 + 2) * 8) / 2));
+                gMsgBoxWinLeft = 0x7f;
+                gMsgBoxWinTop = 0x63;
                 if (func_0201fb4c() != 0) {
                     Sound::ChangeMusicVolume(0x40, 0xc999);
                 }
@@ -1457,7 +1468,7 @@ extern "C" void func_0201f32c(int arg0)
             MultiStore16(sp2, (char *)pb, 0x800);
         }
         var_r8 = (char *)G2S::GetBG1ScrPtr() + 0x42;
-        SetSubBg1Offset(4 - data_0209d650, 4 - data_0209d6cc);
+        SetSubBg1Offset(4 - gMsgBoxLeft, 4 - gMsgBoxTop);
         var_r7 = 0x2200;
     } else {
         {
@@ -1474,9 +1485,9 @@ extern "C" void func_0201f32c(int arg0)
         {
             u32 b4 = (data_0209f2d8 == 2);
             if (b4 != 0) {
-                SetBg3Offset(0 - data_0209d650, 8 - data_0209d6cc);
+                SetBg3Offset(0 - gMsgBoxLeft, 8 - gMsgBoxTop);
             } else {
-                SetBg3Offset(0 - data_0209d650, 4 - data_0209d6cc);
+                SetBg3Offset(0 - gMsgBoxLeft, 4 - gMsgBoxTop);
             }
         }
         var_r7 = 0x200;
@@ -1514,14 +1525,18 @@ extern "C" void func_0201f32c(int arg0)
         return;
     }
     if (disp2 == 1) {
-        G2x::SetBlendBrightness((volatile u16 *)0x04001050, data_0209d454 | 0x20, -7);
-        *(volatile u16 *)0x04001048 = (*(volatile u16 *)0x04001048 & ~0x3f) | (data_0209d454 | 2) | 0x20;
+        G2x::SetBlendBrightness((volatile u16 *)0x04001050, gSubScreenLayers | 0x20, -7);
+        *(volatile u16 *)0x04001048 =
+            (*(volatile u16 *)0x04001048 & ~0x3f) | (gSubScreenLayers | 2) | 0x20;
         *(volatile u16 *)0x0400104a = (*(volatile u16 *)0x0400104a & ~0x3f) | 0x1d;
-        *(volatile s16 *)0x04001040 = ((data_0209d658 << 8) & 0xff00) | (u8)(((data_0209d6d0 * 2) - data_0209d658) + 1);
-        *(volatile u16 *)0x04001044 = ((data_0209d64c << 8) & 0xff00) | (u8)(((data_0209d6c8 * 2) - data_0209d64c) + 1);
+        *(volatile s16 *)0x04001040 =
+            ((gMsgBoxWinLeft << 8) & 0xff00) | (u8)(((gMsgBoxCenterX * 2) - gMsgBoxWinLeft) + 1);
+        *(volatile u16 *)0x04001044 =
+            ((gMsgBoxWinTop << 8) & 0xff00) | (u8)(((gMsgBoxCenterY * 2) - gMsgBoxWinTop) + 1);
         *(volatile s32 *)0x04001000 = (*(volatile s32 *)0x04001000 & ~0xe000) | 0x2000;
-        data_0209d454 |= 2;
-        *(volatile s32 *)0x04001000 = (*(volatile s32 *)0x04001000 & ~0x1f00) | (data_0209d454 << 8);
+        gSubScreenLayers |= 2;
+        *(volatile s32 *)0x04001000 =
+            (*(volatile s32 *)0x04001000 & ~0x1f00) | (gSubScreenLayers << 8);
         return;
     }
 
@@ -1532,8 +1547,10 @@ extern "C" void func_0201f32c(int arg0)
     }
     *(volatile u16 *)0x04000048 = (*(volatile u16 *)0x04000048 & ~0x3f) | (data_0209d45c | 8) | 0x20;
     *(volatile u16 *)0x0400004a = (*(volatile u16 *)0x0400004a & ~0x3f) | 0x17;
-    *(volatile s16 *)0x04000040 = ((data_0209d658 << 8) & 0xff00) | (u8)(((data_0209d6d0 * 2) - data_0209d658) + 1);
-    *(volatile s16 *)0x04000044 = ((data_0209d64c << 8) & 0xff00) | (u8)(((data_0209d6c8 * 2) - data_0209d64c) + 1);
+    *(volatile s16 *)0x04000040 =
+        ((gMsgBoxWinLeft << 8) & 0xff00) | (u8)(((gMsgBoxCenterX * 2) - gMsgBoxWinLeft) + 1);
+    *(volatile s16 *)0x04000044 =
+        ((gMsgBoxWinTop << 8) & 0xff00) | (u8)(((gMsgBoxCenterY * 2) - gMsgBoxWinTop) + 1);
     data_0209d6bc = 0;
     *(volatile s32 *)0x04000000 = (*(volatile s32 *)0x04000000 & ~0xe000) | 0x2000;
     data_0209d45c |= 8;

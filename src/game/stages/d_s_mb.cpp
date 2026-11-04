@@ -48,7 +48,7 @@ extern struct OamAttr *data_0208a0f8[];
 extern s16 data_02082214[];
 
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
    the frame start (func_02019390), GraphCallback1 before the frame wait
@@ -185,7 +185,7 @@ s32 dScMB_c::Behavior() {
         DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6400000);
         DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6600000);
         data_0209d45c = 0x10;
-        data_0209d454 = 0x10;
+        gSubScreenLayers = 0x10;
         *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x1000;
         *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1000;
         mStep++;
@@ -300,7 +300,7 @@ s32 dScMB_c::InitResources() {
     SetSubBg1Offset(0, 0);
 
     *(u8 *)&data_0209d45c = 0;
-    *(u8 *)&data_0209d454 = 0;
+    *(u8 *)&gSubScreenLayers = 0;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;
     GX::DispOn();

@@ -327,19 +327,19 @@ void dScMgPanel_c::Scroll_Stop() {
 // @symbol _ZN12dScMgPanel_c18EnableOverlayLayerEv
 void dScMgPanel_c::EnableOverlayLayer() {
     u8 *scene = (u8 *)this; /* dead, but dropping it renumbers @NNN */
-    extern u8 data_0209d454[];
+    extern u8 gSubScreenLayers[];
     if (mShake[0].state != 0)
         return;
     mShake[0].state = 1;
     mShake[0].timer = 0;
-    data_0209d454[0] |= 1;
+    gSubScreenLayers[0] |= 1;
 }
 
 // @symbol _ZN12dScMgPanel_c18Shake_StateLoseTryEi
 void dScMgPanel_c::Shake_StateLoseTry(int index) {
     char *scene = (char *)this;
     dScMgPanel_c *s = (dScMgPanel_c *)scene;
-    extern u8 data_0209d454;
+    extern u8 gSubScreenLayers;
     extern int data_ov006_0212ed00[];
     int n = index * 0xc;
     /* base + n is mShake[index].timer and &mShake[0].offset + n is
@@ -354,7 +354,7 @@ void dScMgPanel_c::Shake_StateLoseTry(int index) {
         *(u16 *)(base + n) = 0;
         ((dScMgPanel_c *)(scene + n))->mShake[0].state = 0;
         SetSubBg0Offset(0, 0);
-        data_0209d454 &= ~1;
+        gSubScreenLayers &= ~1;
         func_02012790(0x12f);
         s->mCredits -= 1;
         return;
@@ -1974,7 +1974,7 @@ extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
    slot instead of overriding it. */
 
 void dScMgPanel_c::StartRound(int flag) {
-    extern u8 data_0209d454;
+    extern u8 gSubScreenLayers;
     char *self = (char *)this;
 
     char *p;
@@ -2008,7 +2008,7 @@ void dScMgPanel_c::StartRound(int flag) {
     Mg_ShowBanner(0xd, 0x80, 0x40, 0, -1, 0xd);
     SetSubBg0Offset(0, 0);
 
-    data_0209d454 &= ~1;
+    gSubScreenLayers &= ~1;
 }
 
 // @symbol _ZN12dScMgPanel_c6RenderEv
@@ -2057,7 +2057,7 @@ s32 dScMgPanel_c::Behavior() {
 
 s32 dScMgPanel_c::InitResources() {
     extern u8 data_0209d45c;
-    extern u8 data_0209d454;
+    extern u8 gSubScreenLayers;
     char *c = (char *)this;
     char *b;
     volatile u16 mainFill;
@@ -2113,7 +2113,7 @@ s32 dScMgPanel_c::InitResources() {
     DecompressLZ16(msgFile, (void *)0x6400000);
     GX::LoadOBJPltt((const void *)file, 0, 0x100);
 
-    data_0209d454 |= 8;
+    gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
     *(volatile u16 *)0x400100e &= ~0x40;
     *(volatile u32 *)0x400101c = 0;
@@ -2133,7 +2133,7 @@ s32 dScMgPanel_c::InitResources() {
         func_020562b4((const void *)subFile, 0, 0x800);
         Deallocate((void *)subFile);
 
-        data_0209d454 |= 4;
+        gSubScreenLayers |= 4;
         *(volatile u16 *)0x400100c &= ~0x40;
         *(volatile u32 *)0x4001018 = 0;
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;

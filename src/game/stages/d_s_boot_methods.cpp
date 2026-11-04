@@ -40,7 +40,7 @@ extern dFdBrightness_c *data_0209f5bc;
 extern u8 data_0209f1e8;
 extern PadData data_020a0e58[];
 extern int data_0208ee44;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern u8 data_0209d45c;
 extern dFdColor_c data_0209f5e8;
 
@@ -129,7 +129,7 @@ s32 dScBoot_c::InitResources() {
     DecompressLZ16(&data_02091570, (void *)G2S::GetBG2ScrPtr());
 
     data_0209d45c = 1;
-    data_0209d454 = 4;
+    gSubScreenLayers = 4;
     *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x100;
     *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x400;
 
@@ -222,8 +222,8 @@ s32 dScBoot_c::Behavior() {
                     func_02005348();
                     SetSubBg0Offset(0, 0);
                     SetSubBg1Offset(0, 0);
-                    data_0209d454 |= 3;
-                    data_0209d454 &= ~4;
+                    gSubScreenLayers |= 3;
+                    gSubScreenLayers &= ~4;
                     mState = STATE_CONFIRM_ERASE;
                 }
             }
@@ -336,8 +336,8 @@ s32 dScBoot_c::Behavior() {
                 if (eraseFramesLeft == 0x3c) {
                     Message::DisplaySaveStatusText(0x29d);
                 } else if (eraseFramesLeft == 0) {
-                    data_0209d454 &= ~3;
-                    data_0209d454 |= 4;
+                    gSubScreenLayers &= ~3;
+                    gSubScreenLayers |= 4;
                     mFadeTimer = 0x3c;
                     mState = STATE_POST_ERASE_WAIT;
                 }
@@ -345,8 +345,8 @@ s32 dScBoot_c::Behavior() {
             break;
 
         case STATE_CANCEL_ERASE:
-            data_0209d454 &= ~3;
-            data_0209d454 |= 4;
+            gSubScreenLayers &= ~3;
+            gSubScreenLayers |= 4;
             mFadeTimer = 0x3c;
             mState = STATE_BOOT_WAIT;
             break;

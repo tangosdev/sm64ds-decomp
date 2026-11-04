@@ -2935,7 +2935,7 @@ int daPly_c::func_ov002_020c0d90(int y) {
 extern "C" {
 int daPly_c::func_ov002_020c0fb4() {
     extern int func_ov002_020dec70(void *);
-    extern unsigned char data_ov002_02111184[];
+    extern unsigned char gShowRaceTimer[];
     int r;
     switch (this->mSurfaceType) {
     case 4:
@@ -2962,11 +2962,11 @@ int daPly_c::func_ov002_020c0fb4() {
         break;
 
     case 15:
-        if (data_ov002_02111184[0] != 0) {
+        if (gShowRaceTimer[0] != 0) {
             break;
         }
         data_0209d4c8.ResetTimer();
-        data_ov002_02111184[0] = 1;
+        gShowRaceTimer[0] = 1;
         data_0209d4c8.StartTimer();
         break;
 
@@ -4493,7 +4493,7 @@ int daPly_c::St_Respawn_Init() {
 extern "C" {
 int daPly_c::func_ov002_020c4188() {
     extern int* data_0209f318;
-    extern int data_0209b454;
+    extern int gNextActorUpdateMask;
     extern void func_0201f32c(int arg0);
     extern void func_ov002_020e444c(void*);
     int* p;
@@ -4523,7 +4523,7 @@ int daPly_c::func_ov002_020c4188() {
     case 1:
     case1:
         mFlags |= 0x800000;
-        data_0209b454 |= 0x800000;
+        gNextActorUpdateMask |= 0x800000;
         mEventWait = 0xa;
         mEventStep++;
         break;
@@ -4544,7 +4544,7 @@ int daPly_c::func_ov002_020c4188() {
         }
         mEventStep++;
         mFlags &= ~0x800000;
-        data_0209b454 &= ~0x800000;
+        gNextActorUpdateMask &= ~0x800000;
         if (mEventId >= 7) {
             ((dCamera_c *)p)->mFlags &= ~8;
         }
@@ -4563,7 +4563,7 @@ int daPly_c::func_ov002_020c4188() {
         mEventId = 0;
         mEventStep = 0;
         mFlags &= ~0x800000;
-        data_0209b454 &= ~0x800000;
+        gNextActorUpdateMask &= ~0x800000;
         break;
     }
 
@@ -4709,7 +4709,7 @@ cont:
 /* recovered: named members + shared header, real C++ method
  *
  * Leaving the talk state: clear the "in conversation" bit (0x800000) on the
- * actor being talked to, on the player, and on the global at data_0209b454;
+ * actor being talked to, on the player, and on the global at gNextActorUpdateMask;
  * clear bit 3 on data_0209f318+0x154; and restore music layer 1 if this state
  * had overridden it.
  *
@@ -4719,7 +4719,7 @@ cont:
  */
 extern "C" {
 int daPly_c::St_Talk_Cleanup() {
-    extern u32 data_0209b454;
+    extern u32 gNextActorUpdateMask;
     extern char* data_0209f318;
     dActor_c *p = (dActor_c *)mTalkActor;
     if (p) {
@@ -4727,7 +4727,7 @@ int daPly_c::St_Talk_Cleanup() {
         mTalkActor = 0;
     }
     mFlags &= ~0x800000;
-    data_0209b454 &= ~0x800000;
+    gNextActorUpdateMask &= ~0x800000;
     ((dCamera_c *)data_0209f318)->mFlags &= ~8;
     if (mPlayMusicAfterTalk) {
         Sound::LoadAndSetMusic_Layer1(0x39);
@@ -4774,7 +4774,7 @@ ret0:
 extern "C" {
 int daPly_c::St_Talk_Main() {
     extern void func_0201f32c(s16 a);
-    extern int data_0209b454;
+    extern int gNextActorUpdateMask;
     extern char* data_0209f318;
     if (mRestoreMusicVolume != 0) {
         if (Sound::ChangeMusicVolume(0x7f, 0x7222) != 0)
@@ -4786,7 +4786,7 @@ int daPly_c::St_Talk_Main() {
         if (p != 0)
             p->mFlags |= 0x800000;
         mFlags |= 0x800000;
-        data_0209b454 |= 0x800000;
+        gNextActorUpdateMask |= 0x800000;
         mNoCtrlKind = 1;
     }
 
@@ -6836,7 +6836,7 @@ dummy_label_675641:;
 extern "C" {
 int daPly_c::func_ov002_020c8540() {
     extern void func_0201f32c(int arg0);
-    extern int data_0209b454;
+    extern int gNextActorUpdateMask;
     u32 s8;
     int id;
 
@@ -6863,7 +6863,7 @@ int daPly_c::func_ov002_020c8540() {
                 int *p = (int *)&((dActor_c *)o)->mFlags;
                 *p &= ~0x800000;
             }
-            data_0209b454 |= 0x800000;
+            gNextActorUpdateMask |= 0x800000;
             func_0201f32c(data_ov002_020ff108[this->param1]);
             mStateArg = 1;
             return 1;
@@ -6871,7 +6871,7 @@ int daPly_c::func_ov002_020c8540() {
     } else {
         char* o;
         if (data_0209d660 != 0) return 1;
-        data_0209b454 &= ~0x800000;
+        gNextActorUpdateMask &= ~0x800000;
         mFlags &= ~0x800000;
         o = (char *)mTalkActor;
         if (o != 0) {
@@ -7215,10 +7215,10 @@ int daPly_c::func_ov002_020c9128() {
 // @symbol _ZN7daPly_c19func_ov002_020c91bcEv
 extern "C" {
 int daPly_c::func_ov002_020c91bc() {
-    extern int data_0209b454;
+    extern int gNextActorUpdateMask;
     if (data_0209d660 != 0) return 1;
     mFlags &= ~0x800000;
-    data_0209b454 &= ~0x800000;
+    gNextActorUpdateMask &= ~0x800000;
     if (this->FinishedAnim()) {
         if (mIsUnderwater != 0)
             this->ChangeState(data_ov002_0211067c);
@@ -7260,7 +7260,7 @@ int daPly_c::func_ov002_020c9288() {
 // @symbol _ZN7daPly_c19func_ov002_020c92fcEv
 extern "C" {
 int daPly_c::func_ov002_020c92fc() {
-    extern int data_0209b454;
+    extern int gNextActorUpdateMask;
     extern unsigned char data_0209f2d8;
     extern int data_0209caa0[];
     extern void *data_0209f318;
@@ -7282,7 +7282,7 @@ int daPly_c::func_ov002_020c92fc() {
         mStateStep = 0x14;
         this->mVertSpeed = 0;
         mFlags |= 0x800000;
-        data_0209b454 |= 0x800000;
+        gNextActorUpdateMask |= 0x800000;
         return 0;
     }
 

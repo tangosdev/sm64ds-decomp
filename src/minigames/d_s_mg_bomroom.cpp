@@ -81,7 +81,7 @@ extern void MultiStore16(u16 val, char *dst, int nbytes);
 
 extern void func_02056554(const void *src, int offset, int count);
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 }
 
 #pragma defer_codegen off
@@ -2171,7 +2171,7 @@ s32 dScMgBomroom_c::InitResources() {
     DecompressLZ16((void *)arc, (void *)0x6400000);
     GX::LoadOBJPltt((const void *)f, 0, 0x100);
 
-    data_0209d454 |= 8;
+    gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x210;
 
