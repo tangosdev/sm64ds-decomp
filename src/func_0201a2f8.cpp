@@ -21,7 +21,7 @@ extern void InitializeAssetHandleTable(void);
 extern void UnloadOverlay(int id);
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern void *FS_UnloadArchiveTables(void *p_arc);
-extern void LoadFont(int id);
+extern void LoadFont(unsigned char id);
 
 extern int OVERLAY_0_ID;
 extern int OVERLAY_1_ID;
