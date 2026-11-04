@@ -3808,13 +3808,13 @@ data_ov002_02111144 kind:bss addr:0x02111144
 data_ov002_02111148 kind:bss addr:0x02111148
 data_ov002_0211114c kind:bss addr:0x0211114c
 data_ov002_02111150 kind:bss addr:0x02111150
-data_ov002_02111154 kind:bss addr:0x02111154
+gMapCapIconShown kind:bss addr:0x02111154
 @528 kind:bss addr:0x02111160
 sMapScreenCenter kind:bss addr:0x0211116c
 data_ov002_02111178 kind:bss addr:0x02111178
 data_ov002_0211117c kind:bss addr:0x0211117c
 data_ov002_02111180 kind:bss addr:0x02111180
-data_ov002_02111184 kind:bss addr:0x02111184
+gShowRaceTimer kind:bss addr:0x02111184
 data_ov002_02111188 kind:bss addr:0x02111188
 data_ov002_0211118c kind:bss addr:0x0211118c
 data_ov002_02111190 kind:bss addr:0x02111190

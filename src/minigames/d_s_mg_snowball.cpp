@@ -160,7 +160,7 @@ void *Ov004_LoadFileByPath(void *p);
 void DecompressLZ16(void *src, void *dst);
 extern int data_0208ee44;
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 /* Where two recovered declarations disagreed, the more precise one is
   * kept. */
 }
@@ -1937,7 +1937,7 @@ s32 dScMgSnowball_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKA_NSC_BIN, G2S::GetBG3ScrPtr());
 
     data_0209d45c |= 0xc;
-    data_0209d454 |= 0xc;
+    gSubScreenLayers |= 0xc;
 
     buf = Ov004_LoadFileByPath(&sSnowballBgNclPath);
     CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);

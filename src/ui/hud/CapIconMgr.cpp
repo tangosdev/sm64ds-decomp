@@ -32,7 +32,8 @@
 
 extern "C" {
 
-extern unsigned char data_ov002_02111154[];
+/* Per cap slot: dMap_c::Render draws the slot's cap icon while it is set. */
+extern unsigned char gMapCapIconShown[];
 extern unsigned char data_0208a0e0;
 extern signed char data_02092114;
 extern int data_0209f3e8[];
@@ -392,7 +393,7 @@ void func_ov001_020aa6cc(int r0) {
 void func_ov001_020aa6b0(int* r0, int r1) {
     int r2 = r0[5];
     if (r2 != -1) {
-        data_ov002_02111154[r2] = (unsigned char)r1;
+        gMapCapIconShown[r2] = (unsigned char)r1;
     }
 }
 

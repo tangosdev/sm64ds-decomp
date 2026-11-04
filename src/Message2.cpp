@@ -29,11 +29,12 @@
 #include "Sound.h"
 
 extern "C" {
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern u8 data_0209d45c;
-extern u8 data_0209d64c;
-extern u8 data_0209d650;
-extern u8 data_0209d658;
+/* The message box rectangle: see the comment at Message.cpp's externs. */
+extern u8 gMsgBoxWinTop;
+extern u8 gMsgBoxLeft;
+extern u8 gMsgBoxWinLeft;
 extern u8 data_0209d65c;
 extern u8 data_0209d660;
 extern u8 data_0209d664; /* nonzero while a dialogue box is up */
@@ -59,10 +60,10 @@ extern u8 data_0209d6b4;
 extern u8 data_0209d6b8;
 extern u8 data_0209d6bc;
 extern u8 data_0209d6c0;
-extern u8 data_0209d6c4;
-extern u8 data_0209d6c8;
-extern u8 data_0209d6cc;
-extern u8 data_0209d6d0;
+extern u8 data_0209d6c4; /* the box style: see Message.cpp */
+extern u8 gMsgBoxCenterY;
+extern u8 gMsgBoxTop;
+extern u8 gMsgBoxCenterX;
 extern s16 data_0209d6d8;
 extern s16 data_0209d6dc;
 extern u16 data_0209d6e0;
@@ -84,7 +85,7 @@ extern int data_0208eecc[];
 extern u8 data_0208f074[];
 extern u8 data_0208f174[];
 extern int data_0209caa0[];
-extern u32 data_0209b454;
+extern u32 gNextActorUpdateMask;
 extern u8 data_0209f2d8;
 extern s16 data_0209f4a2[];
 extern s16 data_0209f4a4[];
@@ -672,88 +673,89 @@ void Message::LayoutLine() {
 // @symbol _ZN7Message12UpdateWindowEv
 int Message::UpdateWindow() {
     if (data_0209d670 == 0) {
-        if (data_0209d658 > data_0209d650 || data_0209d64c > data_0209d6cc) {
+        if (gMsgBoxWinLeft > gMsgBoxLeft || gMsgBoxWinTop > gMsgBoxTop) {
             int t;
             s16 v;
             int mask;
 
             data_0209d680++;
-            t = data_0209d680 * (data_0209d6d0 - data_0209d650 + 1);
-            t = data_0209d6d0 - t / 8;
+            t = data_0209d680 * (gMsgBoxCenterX - gMsgBoxLeft + 1);
+            t = gMsgBoxCenterX - t / 8;
             v = t;
             if (v < 0)
-                data_0209d658 = 0;
+                gMsgBoxWinLeft = 0;
             else
-                data_0209d658 = t;
-            t = data_0209d680 * (data_0209d6c8 - data_0209d6cc + 1);
-            data_0209d64c = data_0209d6c8 - t / 8;
+                gMsgBoxWinLeft = t;
+            t = data_0209d680 * (gMsgBoxCenterY - gMsgBoxTop + 1);
+            gMsgBoxWinTop = gMsgBoxCenterY - t / 8;
             mask = 0;
-            if (data_0209d658 <= data_0209d650) {
-                data_0209d658 = data_0209d650;
+            if (gMsgBoxWinLeft <= gMsgBoxLeft) {
+                gMsgBoxWinLeft = gMsgBoxLeft;
                 mask = 1;
             }
-            if (data_0209d64c <= data_0209d6cc) {
+            if (gMsgBoxWinTop <= gMsgBoxTop) {
                 mask |= 2;
-                data_0209d64c = data_0209d6cc;
+                gMsgBoxWinTop = gMsgBoxTop;
             }
             if (mask == 3)
                 data_0209d6bc = data_0209d6ac;
 
             if (data_0209d698 != 0) {
-                *(volatile u16 *)0x4001040 = ((data_0209d658 << 8) & 0xff00) |
-                                             ((data_0209d6d0 * 2 - data_0209d658 + 1) & 0xff);
-                *(volatile u16 *)0x4001044 = ((data_0209d64c << 8) & 0xff00) |
-                                             ((data_0209d6c8 * 2 - data_0209d64c + 1) & 0xff);
+                *(volatile u16 *)0x4001040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                                             ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
+                *(volatile u16 *)0x4001044 = ((gMsgBoxWinTop << 8) & 0xff00) |
+                                             ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
             } else {
-                *(volatile u16 *)0x4000040 = ((data_0209d658 << 8) & 0xff00) |
-                                             ((data_0209d6d0 * 2 - data_0209d658 + 1) & 0xff);
-                *(volatile u16 *)0x4000044 = ((data_0209d64c << 8) & 0xff00) |
-                                             ((data_0209d6c8 * 2 - data_0209d64c + 1) & 0xff);
+                *(volatile u16 *)0x4000040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                                             ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
+                *(volatile u16 *)0x4000044 = ((gMsgBoxWinTop << 8) & 0xff00) |
+                                             ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
             }
             return 0;
         }
         return 1;
     }
 
-    if (data_0209d658 < data_0209d6d0 && data_0209d64c < data_0209d6c8) {
+    if (gMsgBoxWinLeft < gMsgBoxCenterX && gMsgBoxWinTop < gMsgBoxCenterY) {
         int t;
         int t2;
 
         data_0209d680--;
-        t = data_0209d680 * (data_0209d6d0 - data_0209d650 + 1);
-        t2 = data_0209d680 * (data_0209d6c8 - data_0209d6cc + 1);
-        data_0209d658 = data_0209d6d0 - t / 8;
-        data_0209d64c = data_0209d6c8 - t2 / 8;
-        data_0209d658 += 7;
-        data_0209d64c += 5;
-        if (data_0209d658 >= data_0209d6d0)
-            data_0209d658 = data_0209d6d0;
-        if (data_0209d64c >= data_0209d6c8)
-            data_0209d64c = data_0209d6c8;
+        t = data_0209d680 * (gMsgBoxCenterX - gMsgBoxLeft + 1);
+        t2 = data_0209d680 * (gMsgBoxCenterY - gMsgBoxTop + 1);
+        gMsgBoxWinLeft = gMsgBoxCenterX - t / 8;
+        gMsgBoxWinTop = gMsgBoxCenterY - t2 / 8;
+        gMsgBoxWinLeft += 7;
+        gMsgBoxWinTop += 5;
+        if (gMsgBoxWinLeft >= gMsgBoxCenterX)
+            gMsgBoxWinLeft = gMsgBoxCenterX;
+        if (gMsgBoxWinTop >= gMsgBoxCenterY)
+            gMsgBoxWinTop = gMsgBoxCenterY;
 
         if (data_0209d698 != 0) {
-            *(volatile u16 *)0x4001040 =
-                ((data_0209d658 << 8) & 0xff00) | ((data_0209d6d0 * 2 - data_0209d658 + 1) & 0xff);
+            *(volatile u16 *)0x4001040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                                         ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
             *(volatile u16 *)0x4001044 =
-                ((data_0209d64c << 8) & 0xff00) | ((data_0209d6c8 * 2 - data_0209d64c + 1) & 0xff);
+                ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
         } else {
-            *(volatile u16 *)0x4000040 =
-                ((data_0209d658 << 8) & 0xff00) | ((data_0209d6d0 * 2 - data_0209d658 + 1) & 0xff);
+            *(volatile u16 *)0x4000040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                                         ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
             *(volatile u16 *)0x4000044 =
-                ((data_0209d64c << 8) & 0xff00) | ((data_0209d6c8 * 2 - data_0209d64c + 1) & 0xff);
+                ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
         }
         return 0;
     }
 
-    data_0209b454 &= ~0x80000000;
+    gNextActorUpdateMask &= ~0x80000000;
     if (func_0201fb4c() != 0) {
         Sound::ChangeMusicVolume(0x7f, 0x000064cc);
     }
     data_0209d660 = 0;
     data_0209d670 = 0;
     if (data_0209d698 != 0) {
-        data_0209d454 &= ~2;
-        *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+        gSubScreenLayers &= ~2;
+        *(volatile u32 *)0x4001000 =
+            (*(volatile u32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
         *(volatile u16 *)0x4001050 = 0;
         *(volatile u16 *)0x4001048 &= ~0x3f;
         *(volatile u16 *)0x400104a &= ~0x3f;
@@ -823,8 +825,8 @@ void Message::Update() {
             func_02012790(0x96);
         }
         {
-            int r5 = data_0209d6e4[data_0209d68c] + data_0209d650 + 0xC;
-            int r4 = data_0209d6cc + (data_0209d688 * 0x10) + 0xE;
+            int r5 = data_0209d6e4[data_0209d68c] + gMsgBoxLeft + 0xC;
+            int r4 = gMsgBoxTop + (data_0209d688 * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
                             -1);
@@ -859,8 +861,8 @@ void Message::Update() {
             func_02012790(0x96);
         }
         {
-            int r5 = data_0209d650 + 0xC;
-            int r4 = data_0209d6cc + (data_0209d6e4[data_0209d68c] * 0x10) + 0xE;
+            int r5 = gMsgBoxLeft + 0xC;
+            int r4 = gMsgBoxTop + (data_0209d6e4[data_0209d68c] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
                             -1);
@@ -941,8 +943,8 @@ void Message::Update() {
             }
         }
         {
-            int r5 = data_0209d650 + 0xC;
-            int r4 = data_0209d6cc + (data_0209d6e4[data_0209d68c] * 0x10) + 0xE;
+            int r5 = gMsgBoxLeft + 0xC;
+            int r4 = gMsgBoxTop + (data_0209d6e4[data_0209d68c] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
                             -1);
@@ -968,8 +970,8 @@ void Message::Update() {
             return;
         }
         {
-            int r5 = ((data_0209d6d0 * 2) - 6) - data_0209d650;
-            int r4 = ((data_0209d6c8 * 2) + 2) - data_0209d6cc;
+            int r5 = ((gMsgBoxCenterX * 2) - 6) - gMsgBoxLeft;
+            int r4 = ((gMsgBoxCenterY * 2) + 2) - gMsgBoxTop;
             if (!(data_020a0db0 & (0x10 / data_0208ee44))) {
                 return;
             }

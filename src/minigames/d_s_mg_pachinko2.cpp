@@ -101,7 +101,7 @@ extern void func_020564f4(const void *, int, int);
 /* --- ROM data this TU reads --- */
 extern int data_0209d4b8;
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern s16 data_02082214[];
 extern int sPachinkoPipeSprites[];
 extern int sPachinko2SparkSprites[];
@@ -2557,7 +2557,7 @@ s32 dScMgPachinko2_c::InitResources() {
     DecompressLZ16(sp4, (void *)0x6400000);
     GX::LoadOBJPltt((const void *)sp8, 0, 0x100);
 
-    data_0209d454 |= 0xd; /* sub BG0, BG2 and BG3 on */
+    gSubScreenLayers |= 0xd; /* sub BG0, BG2 and BG3 on */
     *(volatile u16 *)0x400100c &= ~3;
     *(volatile u16 *)0x400100c &= ~0x40;
     *(volatile u32 *)0x4001018 = 0;

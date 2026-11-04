@@ -7816,7 +7816,7 @@
         "return:char []"
       ]
     },
-    "data_0209b454": {
+    "gNextActorUpdateMask": {
       "src/game/actors/d_a_obj_key.cpp": [
         "return:int"
       ],
@@ -7951,7 +7951,7 @@
         "return:int"
       ]
     },
-    "data_0209d454": {
+    "gSubScreenLayers": {
       "src/minigames/d_s_mg_base.cpp": [
         "return:unsigned char []"
       ],
@@ -8557,7 +8557,7 @@
         "return:unsigned char []"
       ]
     },
-    "data_0209f2f4": {
+    "gNumLives": {
       "src/game/stages/d_s_star_sel_methods.cpp": [
         "return:signed char []"
       ],
@@ -10595,7 +10595,7 @@
         "return:unsigned char"
       ]
     },
-    "data_ov002_02111184": {
+    "gShowRaceTimer": {
       "src/ui/hud/d_meter.cpp": [
         "return:unsigned char"
       ],

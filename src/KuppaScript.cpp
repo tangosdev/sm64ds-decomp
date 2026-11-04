@@ -126,7 +126,7 @@ extern s8 data_0209f224;               /* STAR_OBTAINED_COPY */
 extern u8 data_0209f250;               /* CURR_PLAYER_ID */
 extern u8 data_0209f2d8;               /* CURRENT_GAMEMODE */
 extern dActor_c *data_0209f394[];      /* PLAYER_ARR */
-extern u32 data_0209b454;              /* NEXT_ACTOR_UPDATE_FLAGS */
+extern u32 gNextActorUpdateMask;       /* NEXT_ACTOR_UPDATE_FLAGS */
 extern int data_0209caa0[];            /* SaveData; [1] is flags1 */
 extern dFdBrightness_c *data_0209d4b0; /* KS_FADER */
 extern dFdBrightness_c *data_0209f5bc; /* SCENE_FADER */
@@ -4576,7 +4576,7 @@ void EndKuppaScript() {
     }
 
     gRunningKuppaScript = 0;
-    data_0209b454 &= ~0x20000000;
+    gNextActorUpdateMask &= ~0x20000000;
     if (IsCastleFallCutsceneRunning() && gSavedKuppaScript == 0)
         data_0209f2d8 = 0;
 }
@@ -4728,7 +4728,7 @@ int RunKuppaScript(u8 *script) {
     gKuppaScriptFrame = 0;
     gRunningKuppaScript = script;
     if (!IsCastleFallCutsceneRunning())
-        data_0209b454 |= 0x20000000;
+        gNextActorUpdateMask |= 0x20000000;
     ProcessKuppaScript();
     return 1;
 }

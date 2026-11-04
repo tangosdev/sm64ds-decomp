@@ -107,7 +107,7 @@ int Dealer_IsIdle(int *p);
 void Mg_SetTopScreenYOffset(int v);
 void Mg_PlaceBannersOnTopScreen(void);
 extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 }
 
 /* Load-bearing: source order, and the opt pragmas on DrawCards and
@@ -1022,7 +1022,7 @@ s32 dScMgMemory_c::InitResources() {
     GXS::LoadOBJPltt(palette, 0, 0x100);
     Deallocate(tiles);
     Deallocate(palette);
-    data_0209d454 = 0x18;
+    gSubScreenLayers = 0x18;
     ResetGame();
     Camera_InitDealerView((char *)pad_4660);
     if (Dealer_Load(&mDealer) == 0)

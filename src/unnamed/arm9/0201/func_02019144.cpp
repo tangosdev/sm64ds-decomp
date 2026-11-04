@@ -17,7 +17,7 @@ struct UnkObj {
 
 extern UnkObj *data_0209d4a8;
 extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char gSubScreenLayers;
 extern short data_0209d468;
 extern short data_0209d46c;
 extern short data_0209d4a4;
@@ -40,7 +40,7 @@ void func_02055454(int v);
 /* The VBlank IRQ's display commit (IRQ2.cpp). The scene's GraphCallback2
    (data_0209d4a8) can skip it by returning 0. Otherwise flush and load
    OAM, put the layer enables (DISPCNT bits 8-12) from data_0209d45c on
-   the main screen and data_0209d454 on the sub screen, and write both
+   the main screen and gSubScreenLayers on the sub screen, and write both
    screens' BG scroll registers from their shadow words. With BG0 in 3D
    mode (DISPCNT bit 3) its horizontal offset goes through
    G3X_SetHOffset (func_02055454) instead. */
@@ -54,7 +54,7 @@ void func_02019144(void)
     OAM::Flush();
     OAM::Load();
     *(vu32 *)0x4000000 = (*(vu32 *)0x4000000 & ~0x1f00) | (data_0209d45c << 8);
-    *(vu32 *)0x4001000 = (*(vu32 *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+    *(vu32 *)0x4001000 = (*(vu32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
     if (!(*(vu32 *)0x4000000 & 8)) {
         *(vu32 *)0x4000010 = (data_0209d468 & 0x1ff) | (0x1ff0000 & (data_0209d46c << 16));
     } else {

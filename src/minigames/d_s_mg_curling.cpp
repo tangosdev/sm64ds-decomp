@@ -130,7 +130,7 @@ extern int sCurlingStoneLeftSprite;
 extern int sCurlingStoneLeftShadowSprite;
 extern int sCurlingAimMarkerSprites[];
 extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char gSubScreenLayers;
 extern char sCurlingMgDirPath;
 extern char sCurlingBgCurling2NcgPath;
 extern int sCurlingSlideZoneEdges[];
@@ -1676,7 +1676,7 @@ s32 dScMgCurling_c::InitResources() {
         DecompressLZ16(c7, (void *)0x6400000);
         GX::LoadOBJPltt(c8, 0, 0x100);
 
-        data_0209d454 |= 4;
+        gSubScreenLayers |= 4;
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 2;
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x814;
         DecompressLZ16(b, (void *)G2S::GetBG2CharPtr());

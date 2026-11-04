@@ -132,7 +132,7 @@ void d_a_btnEarthquakeHold(void *self, const void *v, int f);
 
 /* ---- data ---- */
 extern s16 data_02082214[];
-extern unsigned int data_0209b454;
+extern unsigned int gNextActorUpdateMask;
 extern u8 data_0209d660;
 extern u8 data_0209f21c;
 extern u8 data_0209f220;
@@ -772,7 +772,7 @@ void daBtn_c::func_ov079_021256d4()
 // @symbol _ZN7daBtn_c19func_ov079_02125504Ev
 /* The walk cycle's footfalls: on the walk animation, frames 0..7 and
    0x1e..0x26 are a foot coming down -- stop, and once per footfall play the
-   step, shake the camera (unless flag 0x800000 of data_0209b454 is set) and
+   step, shake the camera (unless flag 0x800000 of gNextActorUpdateMask is set) and
    kick up dust beside the body, left or right by the frame. */
 void daBtn_c::func_ov079_02125504()
 {
@@ -804,7 +804,7 @@ void daBtn_c::func_ov079_02125504()
         mStepPlayed = 1;
         func_0201267c(0xc5, &mCamSpacePos);
 
-        if ((data_0209b454 & 0x800000) == 0) {
+        if ((gNextActorUpdateMask & 0x800000) == 0) {
             v[1].x = mPosX;
             v[1].y = mPosY;
             v[1].z = mPosZ;
