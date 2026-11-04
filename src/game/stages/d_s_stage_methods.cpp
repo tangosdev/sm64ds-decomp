@@ -160,7 +160,7 @@ extern int data_0208ee44;
 extern u8 data_0208ee3c;
 extern u8 data_0208ee40;
 extern s8 gLastCourseSublevel;
-extern s16 data_02092144[];
+extern s16 gPlayerHealth[];
 /* The actor update mask for the next frame. While it is non-zero, only actors
    whose mFlags share a bit with it run their behaviour (dActor_c::
    BeforeBehavior tests gActorUpdateMask, which Behavior copies from this word
@@ -411,7 +411,7 @@ extern u8 data_0209f24c;
 extern u8 data_0209f25c;
 extern u8 data_0209f264;
 extern u8 data_0209f268;
-extern u8 data_0209f26c;
+extern u8 gReturnState;
 extern u8 data_0209f270;
 extern u8 data_0209f274;
 extern u8 data_0209f278;
@@ -426,7 +426,7 @@ extern s8 gNumLives;
 extern u8 gPrevReturnState;
 extern u16 data_0209f304;
 extern u16 data_0209f308;
-extern s8 data_0209f30c[];
+extern s8 gNumRedCoins[];
 extern s8 data_0209f30d;
 extern s8 data_0209f310[];
 extern s8 data_0209f311;
@@ -1136,7 +1136,7 @@ void dScStage_c::RenderNumber(unsigned char num, int x, int y, bool b, int p5) {
 }
 // @symbol _ZN10dScStage_c9PS_RenderEv
 void dScStage_c::PS_Render() {
-    if (func_02029408() != 0 && data_02092144[data_0209f250] != 0 && data_0209f248 != 0xb &&
+    if (func_02029408() != 0 && gPlayerHealth[data_0209f250] != 0 && data_0209f248 != 0xb &&
         data_0209f248 != 0xe && data_0209f248 != 0xf &&
         ((unsigned int)data_0209f248 < 7U || (unsigned int)data_0209f248 > 8U)) {
         dScStage_c::RenderBouncingArrows();
@@ -1781,7 +1781,7 @@ void dScStage_c::PS_Update() {
         dScStage_c::UpdateMenuButtons(1);
         SetBg3Offset(0, 0);
         gMainScreenLayers |= DISPLAY_LAYER_BG3;
-        if (func_02029408() != 0 && data_02092144[data_0209f250] != 0) {
+        if (func_02029408() != 0 && gPlayerHealth[data_0209f250] != 0) {
             SetBg2Offset(0, 0);
             SetSubBg0Offset(0, 0);
             SetSubBg1Offset(0, 0);
@@ -3021,7 +3021,7 @@ extern "C" void SetNextLevel(int arg) {
     data_0209211c = -1;
     data_0209f1f0 = data_0209f220;
     SetNextStar();
-    data_0209f26c = arg;
+    gReturnState = arg;
 }
 
 // @symbol SetNextStar
@@ -3275,7 +3275,7 @@ extern "C" s32 IsStarCollectedInCurLevel(s32 starID) {
 // @symbol NumRedCoins
 extern "C" signed char NumRedCoins(void) {
     int i = 1;
-    signed char sum = data_0209f30c[0];
+    signed char sum = gNumRedCoins[0];
     signed char *p;
     if (i >= (int)data_0209f21c)
         return sum;
@@ -3290,9 +3290,9 @@ extern "C" signed char NumRedCoins(void) {
 
 // @symbol GiveRedCoins
 extern "C" int GiveRedCoins(int i, int amt) {
-    signed char *p = &data_0209f30c[i];
-    data_0209f30c[i] = (signed char)(data_0209f30c[i] + amt);
-    int v = data_0209f30c[i];
+    signed char *p = &gNumRedCoins[i];
+    gNumRedCoins[i] = (signed char)(gNumRedCoins[i] + amt);
+    int v = gNumRedCoins[i];
     if (v > 0x63) {
         v = 0x63;
         *p = (signed char)v;
@@ -3340,16 +3340,16 @@ extern "C" void GiveCoins(int idx, int amount) {
 /* Returns the clamped health, which daPly_c::GiveHealth hands straight back. */
 extern "C" int GiveHealth(int idx, int amt) {
     int v;
-    data_02092144[idx] += amt;
-    v = data_02092144[idx];
+    gPlayerHealth[idx] += amt;
+    v = gPlayerHealth[idx];
     if (v > 0x880) {
         v = 0x880;
-        data_02092144[idx] = v;
+        gPlayerHealth[idx] = v;
         return v;
     }
     if (v < 0) {
         v = 0;
-        data_02092144[idx] = v;
+        gPlayerHealth[idx] = v;
     }
     return v;
 }
@@ -3521,7 +3521,7 @@ extern "C" void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 
     else
         data_0209f1f0 = (u8)starID;
     SetNextStar();
-    data_0209f26c = arg3;
+    gReturnState = arg3;
     if (returnState >= 0) {
         data_0209211c = gCurrentSublevel;
         data_0209f200 = (u8)returnState;
@@ -3563,7 +3563,7 @@ extern "C" void SetPlayerGlobals(void) {
     s32 i = 0;
     do {
         u8 mode = data_0209caa0[0x42];
-        data_02092144[i] = 0x880;
+        gPlayerHealth[i] = 0x880;
         InitControllerMode(i, mode);
         i++;
     } while (i < 4);
@@ -4697,7 +4697,7 @@ int dScStage_c::InitResources() {
         mode = data_0209f2d8;
         int vsModeReset = (mode == 1) ? 1 : 0;
 
-        if (vsModeReset || data_0209f26c == 2 || specialSublevel || nextLevel == 0x1D ||
+        if (vsModeReset || gReturnState == 2 || specialSublevel || nextLevel == 0x1D ||
             nextLevel != previousLevel) {
             int row = 0;
             gEventFlags = 0;
@@ -4713,10 +4713,10 @@ int dScStage_c::InitResources() {
             if ((s32)data_0209f21c > 0) {
                 int count = data_0209f21c;
                 int idx = 0;
-                u8 *p1 = (u8 *)data_0209f30c;
+                u8 *p1 = (u8 *)gNumRedCoins;
                 u8 *vsStars = (u8 *)data_0209f310;
                 int vsModeCounters = (mode == 1) ? 1 : 0;
-                u8 loadMode = data_0209f26c;
+                u8 loadMode = gReturnState;
                 do {
                     if (vsModeCounters || (specialSublevel == 0 && loadMode != 1)) {
                         gNumCoins[idx] = 0;
@@ -4730,7 +4730,7 @@ int dScStage_c::InitResources() {
             }
         }
 
-        gPrevReturnState = data_0209f26c;
+        gPrevReturnState = gReturnState;
         if (gPrevReturnState == 1) {
             gLastCourseSublevel = gCurrentSublevel;
             data_02092118 = -1;

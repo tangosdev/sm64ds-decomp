@@ -113,7 +113,7 @@ extern signed char data_02092120;
 extern signed char gLastCourseSublevel;
 extern u8 data_02092128[];
 extern int data_0209212c;
-extern short data_02092144[];
+extern short gPlayerHealth[];
 extern int data_0209b49c;
 extern Timer data_0209d4c8;
 extern unsigned char data_0209d660;
@@ -2167,7 +2167,7 @@ int daPly_c::Heal(int amt) {
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::GetHealth() {
   unsigned char i = mPlayerNo;
-  return (signed char)(data_02092144[i] >> 8);
+  return (signed char)(gPlayerHealth[i] >> 8);
 }
 
 // @symbol func_ov002_020bf56c

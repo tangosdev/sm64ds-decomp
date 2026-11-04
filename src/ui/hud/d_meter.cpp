@@ -128,7 +128,7 @@ extern unsigned char gNewStarCollected;
 extern unsigned char gLevelClearStep;
 extern int data_020a0db0;
 extern unsigned char NumStars(void);
-extern signed char data_0209f30c[];
+extern signed char gNumRedCoins[];
 extern struct OamAttr data_ov002_0210c6b8;
 extern signed char gCurrentSublevel;
 extern int SublevelToLevel(int i);
@@ -549,7 +549,7 @@ s32 dMeter_c::CleanupResources() {
 void dMeter_c::UpdateHealthMeter() {
     int chr = data_0209f250;
     daPly_c *player = (daPly_c *)data_0209f394[chr];
-    unsigned int health = (data_02092144[chr] >> 8) & 0xff;
+    unsigned int health = (gPlayerHealth[chr] >> 8) & 0xff;
     if ((unsigned char)(data_0209f2c4 | data_0209f20c | gVsExitScreenActive) != 0)
         return;
     if (mHealthMeterHoldTimer != 0)
@@ -832,7 +832,7 @@ void dMeter_c::RenderCoinCount() {
 /* ROM ordinal 8 -- dMeter_c::RenderRedCoins(), 0x020fc77c, size 0xa0 */
 // @symbol _ZN8dMeter_c14RenderRedCoinsEv
 /* Draws one sprite per red coin still to collect, stepping 0xb across from
- * x=0x10. Both the count (data_0209f30c) and the row selector (data_0209f310)
+ * x=0x10. Both the count (gNumRedCoins) and the row selector (data_0209f310)
  * are indexed by the same data_0209f250.
  *
  * That row selector is the interesting bit: it is the SAME byte
@@ -850,7 +850,7 @@ void dMeter_c::RenderCoinCount() {
 void dMeter_c::RenderRedCoins() {
     int idx = data_0209f250;
     int flag = data_0209f310[idx];
-    int count = (unsigned char)data_0209f30c[idx];
+    int count = (unsigned char)gNumRedCoins[idx];
     int sl = flag ? 0x1c : 0xa;
     for (int i = 0; i < count; i++) {
         OAM::Render(false, &data_ov002_0210c6b8, 0x10 + i * 0xb, sl, -1, 1, (Matrix2x2 *)0);
