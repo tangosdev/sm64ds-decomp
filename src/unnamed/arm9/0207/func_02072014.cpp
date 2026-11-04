@@ -3,14 +3,15 @@
    .exceptix record at 0x0207391c (func_02072014, length 0x154)
    exists only because this pragma turns exceptions back on. */
 #pragma exceptions on
+#include "private/arm9_action_walk.h"
 namespace std {
 void terminate();
 }
 
 extern "C" {
 
-extern unsigned char func_02072d90(void *p);
-extern unsigned char func_020729f4(void *p);
+extern unsigned char func_02072d90(struct ActionWalk *p);
+extern unsigned char func_020729f4(struct ActionWalk *p);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 
 struct Arr21 {
@@ -56,7 +57,7 @@ int func_02072014(int *c, int *arg)
     l.cpart.f6 = ((struct Ctx *)c)->f6;
     l.cpart.arr = ((struct Ctx *)c)->arr;
 
-    sel = func_02072d90(&l);
+    sel = func_02072d90((struct ActionWalk *)&l);
     for (;;) {
         switch (sel) {
         case 1:
@@ -80,7 +81,7 @@ int func_02072014(int *c, int *arg)
         case 16:
         case 17:
         case 18:
-            sel = func_020729f4(&l);
+            sel = func_020729f4((struct ActionWalk *)&l);
             continue;
         case 13:
             break;
