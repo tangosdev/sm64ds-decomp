@@ -395,6 +395,7 @@ enum : int { kKrbCapId = 0x113, kKrbReward = 0x464, kKrbHome = 0x41c, kMouthObj 
 struct SwOut { uint16_t slot, cls; uint8_t sent; unsigned next; };
 SwOut g_sw_out[kSwOutMax]; int g_sw_n = 0;
 char *g_mouth = nullptr; int g_mouth_cls = 0, g_mouth_slot = -1, g_mouth_eggs = 0;
+const char *g_mouth_body = nullptr;      // the body whose mouth held g_mouth
 unsigned g_sw_census_at = 0;               // proof log: a census this many est frames after a swallow
 
 bool is_goomba(unsigned cls) { return cls >= 200 && cls <= 202; }
@@ -419,7 +420,12 @@ void watch_swallow(unsigned now) {
     const int me = (int)data_0209f250;
     char *body = (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
     char *m = body ? *(char **)(body + kMouthObj) : nullptr;
-    if (m == g_mouth) return;
+    if (m == g_mouth && body == g_mouth_body) return;
+    if (g_mouth && body != g_mouth_body) {
+        // A new body (the level or my player was rebuilt): that mouthful went with the old one, nothing was swallowed.
+        if (g_log) std::fprintf(stderr, "[coop] swallow watch: my body changed, class %d slot %d forgotten\n", g_mouth_cls, g_mouth_slot);
+        g_mouth = nullptr; g_mouth_slot = -1;
+    }
     if (g_mouth && g_mouth_slot >= 0) {
         // the mouthful left: spat or dropped = still standing; swallowed = marked for destruction (or already gone)
         const bool alive = is_live(g_mouth) && !going(g_mouth);
@@ -440,7 +446,7 @@ void watch_swallow(unsigned now) {
         const short slot = *(const short *)(m + 0xce);
         const unsigned cls = *(const unsigned short *)(m + 0x0c);
         if (slot >= 0 && slot < kCoopSlots && cls < 1024) {
-            g_mouth = m; g_mouth_cls = (int)cls; g_mouth_slot = slot; g_mouth_eggs = eggs_of(body);
+            g_mouth = m; g_mouth_cls = (int)cls; g_mouth_slot = slot; g_mouth_eggs = eggs_of(body); g_mouth_body = body;
             if (g_log && is_goomba(cls))
                 std::fprintf(stderr, "[coop] swallow watch: class %u slot %d in my mouth (cap %d reward %d)\n", cls, (int)slot,
                              *(const unsigned char *)(m + kKrbCapId) & 0xf, *(const unsigned char *)(m + kKrbReward));
@@ -1301,6 +1307,8 @@ extern "C" void port_coop_world_frame(void) {
             std::fprintf(stderr, "[coop-knob] warp to level %d act %d\n", g_warp[i].level, g_warp[i].act);
             LoadLevelNoReturn((unsigned)g_warp[i].level, 0, (unsigned)g_warp[i].act, 1);
         }
+    // No body (a level unload or reload): whatever was in my mouth left with the level, not down my throat.
+    if (!in_level && g_mouth) { g_mouth = nullptr; g_mouth_slot = -1; }
     g_grp.update(now);
     if (in_level && g_key.valid() && g_part >= 0 && g_grp.established()) tick_est(now);
 }
