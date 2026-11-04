@@ -132,6 +132,7 @@ struct Mod {
     int api;
     bool part;   /* a switchable sub-folder of the mod above it (see add_parts) */
     bool online; /* mod.json "onlineCompatible": true (the literal true, nothing else) */
+    std::string tex; /* TEXSWAP1: the folder whose textures_hd/ the texture key put in place of this part's own; empty = folder */
 };
 
 std::vector<Mod> g_mods;
@@ -797,7 +798,8 @@ int mods_tex_dir(int i, char *out, unsigned cap)
     latch();
     const int n = (int)g_mods.size();
     if (i < 0 || i >= n) return 0;
-    const std::string d = g_mods[n - 1 - i].folder + "/textures_hd";
+    const Mod &m = g_mods[n - 1 - i];
+    const std::string d = (m.tex.empty() ? m.folder : m.tex) + "/textures_hd";
     if (d.size() + 1 > cap) return 0;
     memcpy(out, d.c_str(), d.size() + 1);
     return 1;
@@ -1468,29 +1470,23 @@ extern "C" int port_mods_relatch_at_title(const char *reason) { return relatch(r
 /* ---- THE TEXTURE CYCLE (TEXSWAP1) ---------------------------------------
    One key in game steps the texture mods: the DS textures (every replacement
    paused, ntr/hdtex.h), then each choice of the first enabled mod's choice
-   setting whose parts hold textures only, then the DS textures again. The step
-   starts from whatever the launcher's setting picked, and nothing is written:
-   the next start reads the setting again.
+   setting whose every choice has textures_hd/, then the DS textures again. The
+   step starts from whatever the launcher's setting picked, and nothing is
+   written: the next start reads the setting again.
 
-   A part is switched in place: its entry in g_mods gets the other choice's
-   folder, the textures_hd index is built again from the list (hdtex_reindex,
-   the call relatch makes) and the decode cache is dropped. TEXTURES ONLY, ON
-   PURPOSE: a choice whose folders hold files/, sound/, palettes/, character/
-   or hd_ui/ is never stepped, because those are read into a level as it loads
-   and cannot follow a mid-level switch. With no such setting the key just turns
-   every replacement off and on. A relatch at the title rebuilds the list from
-   disk, so the setting's own choice comes back there. */
+   ONLY THE TEXTURES STEP. The part keeps its folder; its `tex` names the other
+   choice's folder, mods_tex_dir reads textures_hd/ from there, the index is
+   built again (hdtex_reindex, the call relatch makes) and the decode cache is
+   dropped. A choice's files/, sound/, palettes/, character/ and hd_ui/ (the
+   N64 Restoration minimaps, say) stay the launcher's pick, because those are
+   read into a level as it loads and cannot follow a mid-level switch. With no
+   such setting the key just turns every replacement off and on. A relatch at
+   the title rebuilds the list from disk, so the setting's own choice comes
+   back there. */
 namespace ntr { void hdtex_set_paused(int paused); int hdtex_paused(void); }
 namespace {
 
-bool texture_only(const std::string &dir)
-{
-    static const char *const D[] = { "/files", "/sound", "/palettes", "/character", "/hd_ui", 0 };
-    if (!dir_exists(dir + "/textures_hd")) return false;
-    for (int i = 0; D[i]; ++i)
-        if (dir_exists(dir + D[i])) return false;
-    return true;
-}
+bool has_textures(const std::string &dir) { return dir_exists(dir + "/textures_hd"); }
 
 /* the strings of `"key": [ "a", "b" ]` in one settings object */
 std::vector<std::string> json_str_array(const std::string &obj, const char *key)
@@ -1514,7 +1510,7 @@ std::vector<std::string> json_str_array(const std::string &obj, const char *key)
 struct TexChoice { int part; std::string base; std::vector<std::string> choices; };
 
 /* The first part in g_mods made by a choice setting whose every choice folder
-   is texture-only. Found again on each press, so a relatch never leaves a
+   has textures. Found again on each press, so a relatch never leaves a
    stale index behind. */
 bool find_tex_choice(TexChoice &tc)
 {
@@ -1538,7 +1534,7 @@ bool find_tex_choice(TexChoice &tc)
             if (g_mods[i].folder.compare(0, base.size() + 1, base + "/") != 0) continue;
             std::vector<std::string> ch = json_str_array(obj, "choices"), ok;
             for (size_t c = 0; c < ch.size(); ++c)
-                if (part_path_ok(ch[c]) && ch[c].find('/') == std::string::npos && texture_only(base + "/" + ch[c])) ok.push_back(ch[c]);
+                if (part_path_ok(ch[c]) && ch[c].find('/') == std::string::npos && has_textures(base + "/" + ch[c])) ok.push_back(ch[c]);
             if (ok.size() < 2 || ok.size() != ch.size()) continue;
             tc.part = i;
             tc.base = base;
@@ -1567,7 +1563,7 @@ extern "C" int port_mods_texture_cycle(char *label, unsigned cap)
         return 0;
     }
     Mod &pm = g_mods[tc.part];
-    const std::string cur = pm.folder.substr(tc.base.size() + 1);
+    const std::string cur = (pm.tex.empty() ? pm.folder : pm.tex).substr(tc.base.size() + 1);
     int k = -1;
     for (size_t c = 0; c < tc.choices.size(); ++c)
         if (tc.choices[c] == cur) k = (int)c;
@@ -1579,14 +1575,13 @@ extern "C" int port_mods_texture_cycle(char *label, unsigned cap)
         ntr::hdtex_set_paused(1);
         snprintf(label, cap, "DS");
     } else {
-        pm.folder = tc.base + "/" + next;
-        pm.id = pm.id.substr(0, pm.id.size() - cur.size()) + next;   /* "<mod>:<files>/<choice>" */
+        pm.tex = tc.base + "/" + next;
         ntr::hdtex_set_paused(0);
         ntr::hdtex_reindex();
         snprintf(label, cap, "%s", next.c_str());
     }
     ntr::gx_invalidate_textures();
-    mlog("[mods] texture key: %s (part %s)\n", label, pm.folder.c_str());
+    mlog("[mods] texture key: %s (textures from %s)\n", label, (pm.tex.empty() ? pm.folder : pm.tex).c_str());
     return 1;
 }
 
