@@ -1788,64 +1788,64 @@
   "production_mode": "intact-object",
   "defined_symbol_renames": [
     {
-      "from": "@3118",
+      "from": "@3104",
       "to": "@3087",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "@3119",
+      "from": "@3105",
       "to": "@3088",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "@3120",
+      "from": "@3106",
       "to": "@3089",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "@3121",
+      "from": "@3107",
       "to": "@3090",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "@3122",
+      "from": "@3108",
       "to": "@3091",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "@3123",
+      "from": "@3109",
       "to": "@3092",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "@3124",
+      "from": "@3110",
       "to": "@3093",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13"
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "_ZGVsSpawnOff$2417",
+      "from": "_ZGVsSpawnOff$2403",
       "to": "_ZGVsSpawnOff$2361",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "@2423",
+      "from": "@2409",
       "to": "@2367",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "@2425",
+      "from": "@2411",
       "to": "@2369",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "@2427",
+      "from": "@2413",
       "to": "@2371",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     },
     {
-      "from": "sSpawnOff$2417",
+      "from": "sSpawnOff$2403",
       "to": "sSpawnOff$2361",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs."
     }
   ]
 }
