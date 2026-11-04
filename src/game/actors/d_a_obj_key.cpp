@@ -217,7 +217,8 @@ extern Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, int ang);
 extern void MulMat4x3Mat4x3(void *d, void *a, void *b);
-extern void SubVec3(void *d, void *a, void *b);
+/* local extern: named parameters keep this TU's compiler-numbered aliases. */
+extern void SubVec3(Vector3 *d, Vector3 *a, Vector3 *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
 /* local extern: CalcLib's declaration is unnamed; retain these names so this
  * TU's compiler-numbered aliases remain stable. */
@@ -445,7 +446,7 @@ void daObjKey_c::StateFlyToCenter()
     v.x = data_020a0e68.m[9];
     v.y = data_020a0e68.m[10];
     v.z = data_020a0e68.m[11];
-    SubVec3(&v, &mPosX, &v);
+    SubVec3(&v, (Vector3 *)&mPosX, &v);
     Vec3_LslInPlace(&v, 3);
     AddVec3(&v, (Vector3 *)&mPosX, &v);
     v.y = mScaleX * 13 + v.y;
@@ -823,7 +824,7 @@ int daObjKey_c::Behavior()
                 vec.x = data_020a0e68.m[9];
                 vec.y = data_020a0e68.m[10];
                 vec.z = data_020a0e68.m[11];
-                SubVec3(&vec, &mPosX, &vec);
+                SubVec3(&vec, (Vector3 *)&mPosX, &vec);
                 Vec3_LslInPlace(&vec, 3);
                 AddVec3(&vec, (Vector3 *)&mPosX, &vec);
                 /* First bone, word at +0xc. BMD_Bone has no field there. */

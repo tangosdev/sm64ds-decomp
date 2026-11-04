@@ -65,7 +65,7 @@ extern "C" {
 
 /* Fix12<int> by value in the real signatures; see the banner. */
 void Sound_PlayBank1Panned(int a, int b, int c);
-void Vec3_Sub(Jump3DVec *out, Jump3DVec *a, Jump3DVec *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 int  NormalizeVec3IfNonZero(Jump3DVec *v);
 int  RandomIntInternal(int *seed);
@@ -574,7 +574,7 @@ void dMgJump3DMario_c::EnterHold()
        (notes/experiments/jump3d-2711-scratch-vector3.md). */
     Jump3DVec v;
 
-    Vec3_Sub(&v, &mPos, &mAnchor);
+    Vec3_Sub((Vector3 *)&v, (const Vector3 *)&mPos, (const Vector3 *)&mAnchor);
     if (NormalizeVec3IfNonZero(&v) != 0) {
         mVel.x = v.x;
         mVel.y = v.y;
