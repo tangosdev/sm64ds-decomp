@@ -878,7 +878,9 @@ extern "C" void TrmpItem_UpdateMatrix(char *self) {
 
 namespace s020cea2c {
 extern "C" {
-void AddVec3(void *a, void *b, void *c);
+/* local extern: including CalcLib makes this TU's scoped SubVec3 declarations
+ * ambiguous; keep the namespace-local declaration but use the shared type. */
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 
 struct C;
