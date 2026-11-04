@@ -15400,16 +15400,20 @@ static void shot_save(HWND hwnd)
     if (wdc) ReleaseDC_(hwnd, wdc);
 }
 
+extern "C" int port_mods_texture_cycle(char *label, unsigned cap);   /* hal/mods.cpp */
+extern "C" int host_setting_texture_swap_key(void);
 static void texswap_keys(HWND hwnd)
 {
     static int swap_edge, shot_edge;
-    const int swap_now = key_live(VK_F7);
+    const int vk = host_setting_texture_swap_key();   /* the launcher's "Texture swap" row, F7 unless rebound */
+    const int swap_now = vk > 0 && key_live(vk);
     if (swap_now && !swap_edge) {
-        const int paused = !ntr::hdtex_paused();
-        ntr::hdtex_set_paused(paused);
-        ntr::gx_invalidate_textures();
-        fprintf(stderr, "[texswap] F7 texture mods %s\n", paused ? "off" : "on");
-        ss_note(paused ? "Texture mods: off" : "Texture mods: on");
+        char label[48], note[64];
+        const int stepped = port_mods_texture_cycle(label, sizeof label);
+        fprintf(stderr, "[texswap] key %02x: textures %s\n", vk, label);
+        if (stepped || !strcmp(label, "DS")) snprintf(note, sizeof note, "Textures: %s", label);
+        else snprintf(note, sizeof note, "Texture mods: on");
+        ss_note(note);
     }
     swap_edge = swap_now;
     const int shot_now = key_live(VK_F2);

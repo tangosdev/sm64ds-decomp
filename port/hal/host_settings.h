@@ -398,6 +398,10 @@ int host_setting_rich_presence(void);
 /* DrawDistance: percent (100..10000) of each actor's ROM draw distance. 100 is
    the ROM's own and the default. Drawing only. */
 int host_setting_draw_distance_pct(void);
+/* TEXSWAP1: settings.json "TextureSwapKey", the virtual key that steps the
+   texture mods in game (hal/mods.cpp port_mods_texture_cycle). F7 (0x76) when
+   absent, 0 = unbound. Re-read live with the presentation keys. */
+int host_setting_texture_swap_key(void);
 int host_setting_set_draw_distance(int pct);
 
 /* ---- NameTags: WHO THAT IS, AND HOW THEY ARE DOING ----------------------
