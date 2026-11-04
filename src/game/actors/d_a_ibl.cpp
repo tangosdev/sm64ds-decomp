@@ -22,6 +22,8 @@
  *   into a real Vector3. The inherited position fields remain separate scalars.
  * - Spawn still borrows this actor's flat position and angle fields through
  *   the existing reference interface; those base fields are not vector objects.
+ *   CalcLib vector helpers receive temporary Vector3 pointer views over the
+ *   contiguous scalar triples at call boundaries; the actor fields stay scalars.
  * - gCurrentSublevel is the level id (a signed byte). The tests 6, 0x16,
  *   0x18 and 0x19 have no level names here, and neither do the distances,
  *   speeds and kill heights chosen from them.
@@ -47,6 +49,7 @@
 #include "Sound.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "Particle__System.h"
 
 /* Actor IDs from symbols/actor_debug_names.tsv. */
@@ -104,9 +107,6 @@ void d_a_iblPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 void func_02038414(void *p);
 int atan2_hold_d_a_ibl_1(int y, int x);
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
-int Vec3_HorzLen(void *v);
-int Vec3_HorzDist(const void *a, const void *b);
-int Vec3_Equal(void *a, void *b);
 
 extern int IDENTITY_MATRIX4X3[];
 }
@@ -462,7 +462,7 @@ void daIbl_c::func_ov100_021424c0() {
             } else {
                 mSpeedX += mFloorNormalX;
                 mSpeedZ += mFloorNormalZ;
-                mHorzSpeed = Vec3_HorzLen(&mSpeedX);
+                mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
             }
         }
     }
@@ -523,7 +523,7 @@ ground:
 
         *pa4 = *pa4 + mFloorNormalX * 3;
         *pac = *pac + mFloorNormalZ * 3;
-        mHorzSpeed = Vec3_HorzLen(pa4);
+        mHorzSpeed = Vec3_HorzLen((const Vector3 *)pa4);
 
         mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
 
@@ -601,7 +601,7 @@ void daIbl_c::func_ov100_02142918()
             int *pac = &mSpeedZ;
             *pa4 = *pa4 - mWallNormalX * 3;
             *pac = *pac - mWallNormalZ * 3;
-            mHorzSpeed = Vec3_HorzLen(pa4);
+            mHorzSpeed = Vec3_HorzLen((const Vector3 *)pa4);
         }
         goto Lend;
     }
@@ -614,7 +614,7 @@ void daIbl_c::func_ov100_02142918()
         int *pac = &mSpeedZ;
         *pa4 = *pa4 + mFloorNormalX * 3;
         *pac = *pac + mFloorNormalZ * 3;
-        mHorzSpeed = Vec3_HorzLen(pa4);
+        mHorzSpeed = Vec3_HorzLen((const Vector3 *)pa4);
     }
     if (mFloorNormalY == 0x1000 && mHorzSpeed > 0x1c000) {
         mHorzSpeed = 0x1c000;
@@ -695,7 +695,7 @@ void daIbl_c::func_ov100_02142b90()
     }
 
     {
-        int d = Vec3_HorzDist(&mPosX, &pos);
+        int d = Vec3_HorzDist((const Vector3 *)&mPosX, &pos);
         if (d < mMinSpawnDist) return;
         if (d > mMaxSpawnDist) return;
     }
@@ -806,7 +806,7 @@ int daIbl_c::InitResources()
         mPrevNodePosY = mPosY;
         mPrevNodePosZ = mPosZ;
         mPathPtr.GetNode(*(Vector3 *)&mNextNodePosX, mPathNodeIndex);
-        if (Vec3_Equal(&mPosX, &mNextNodePosX)) {
+        if (Vec3_Equal((const Vector3 *)&mPosX, (const Vector3 *)&mNextNodePosX)) {
             mPathNodeIndex += 1;
             mPathPtr.GetNode(*(Vector3 *)&mNextNodePosX, mPathNodeIndex);
         }
