@@ -4412,6 +4412,118 @@
   ],
   "data": [
     {
+      "symbol": "data_ov002_0210a354",
+      "address": "0x0210a354",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c21St_StuckInGround_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a35c",
+      "address": "0x0210a35c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c12St_Land_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a364",
+      "address": "0x0210a364",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c12St_Talk_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a36c",
+      "address": "0x0210a36c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020bccfcEPhii as a three-argument script command; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a374",
+      "address": "0x0210a374",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c12St_Talk_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a37c",
+      "address": "0x0210a37c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c12St_Spin_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a384",
+      "address": "0x0210a384",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c15St_Spin_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a38c",
+      "address": "0x0210a38c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c22St_CrazedCrate_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a394",
+      "address": "0x0210a394",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c21St_WaitQuicksand_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a39c",
+      "address": "0x0210a39c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c13St_Climb_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a3a4",
+      "address": "0x0210a3a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c13St_Climb_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a3ac",
+      "address": "0x0210a3ac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020c71e0Ev as a void state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a3b4",
+      "address": "0x0210a3b4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c16St_WallJump_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a3bc",
+      "address": "0x0210a3bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c16St_Climb_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a3c4",
+      "address": "0x0210a3c4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020bcd38EPhii as a three-argument script command; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a3cc",
+      "address": "0x0210a3cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c17St_SweepKick_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
       "symbol": "data_ov002_0210a3d4",
       "address": "0x0210a3d4",
       "size": "0x8",
@@ -13202,6 +13314,166 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0210a354",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c21St_StuckInGround_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020c52bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a35c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c12St_Land_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020e04ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a364",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c12St_Talk_InitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020c4bd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a36c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020bccfcEPhii",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020bccfc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a374",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c12St_Talk_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020c48e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a37c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c12St_Spin_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020e10ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a384",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c15St_Spin_CleanupEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020e10d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a38c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c22St_CrazedCrate_CleanupEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020e0d28"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a394",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c21St_WaitQuicksand_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020d2184"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a39c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c13St_Climb_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020cb5bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a3a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c13St_Climb_InitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020cbd34"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a3ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020c71e0Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020c71e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a3b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c16St_WallJump_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020e1714"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a3bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c16St_Climb_CleanupEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020cb568"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a3c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020bcd38EPhii",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020bcd38"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a3cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c17St_SweepKick_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020dc48c"
+    },
     {
       "section": ".data",
       "source": "0x0210a3d4",
