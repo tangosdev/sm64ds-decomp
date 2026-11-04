@@ -152,7 +152,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
 extern "C" {
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
 extern short data_02082214[];
 extern int data_0209e650[];
@@ -222,7 +222,7 @@ void daOwl_c::func_ov094_021357a4()
     st[1] = 0;
     st[2] = 0;
     st[1] = 0x1838000;
-    if (data_0209f2f8 == 0x16)
+    if (gCurrentSublevel == 0x16)
         st[1] = 0x1194000;
     mSpeedX = 0;
     mVertSpeed = 0;
@@ -687,7 +687,7 @@ int daOwl_c::InitResources()
     mWithMeshClsn.Init(this, 0x50000, 0x64000, (Vector3_16 *)0, 0);
     func_ov094_02136188(OWL_STATE_DORMANT);
 
-    if (data_0209f2f8 == 7) {
+    if (gCurrentSublevel == 7) {
         if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
             MarkForDestruction();
             return 0;

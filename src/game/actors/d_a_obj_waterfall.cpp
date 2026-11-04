@@ -3,7 +3,7 @@
  * Waterfall mist.
  *
  * No model. InitResources succeeds with nothing to load; it only
- * picks a particle ID from the current course (data_0209f2f8, the
+ * picks a particle ID from the current course (gCurrentSublevel, the
  * LEVEL_ID byte): 0x71 on 0x16, 0xeb on 0x21, otherwise 0x24.
  * Behavior (re)issues that particle at this actor's position every
  * frame, feeding last frame's handle back so the emitter is recycled.
@@ -12,7 +12,7 @@
  * WATERFALL registry). Retail does not store that spelling.
  *
  * NOTES:
- * - data_0209f2f8 is LEVEL_ID in verified.tsv; a local
+ * - gCurrentSublevel is LEVEL_ID in verified.tsv; a local
  *   `signed char &LEVEL_ID` alias size-DIFFs, so the rename belongs in
  *   symbols.txt.
  * - Behavior passes mPosX/Y/Z as three scalars: z is the first stack
@@ -23,7 +23,7 @@
 #include "SpawnInfo.h"
 #include "Particle__System.h"
 
-extern s8 data_0209f2f8; /* LEVEL_ID */
+extern s8 gCurrentSublevel; /* LEVEL_ID */
 
 enum {
     kCourse16 = 0x16,
@@ -52,7 +52,7 @@ extern "C" SpawnInfo<daObjWaterfall_c> g_profile_WATERFALL = {
 // @symbol _ZN16daObjWaterfall_c13InitResourcesEv
 s32 daObjWaterfall_c::InitResources() {
     mParticleID = kWaterfallMistDefault;
-    switch (data_0209f2f8) {
+    switch (gCurrentSublevel) {
     case kCourse16:
         mParticleID = kWaterfallMistCourse16;
         break;

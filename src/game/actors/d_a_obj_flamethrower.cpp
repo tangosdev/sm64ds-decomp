@@ -69,7 +69,7 @@ enum {
     kHeightMul = 0x28
 };
 
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern short data_02082214[];
 /* Second particle parameter per segment: 0xe61 + i * 0x689. */
 extern short data_ov095_02136f98[];
@@ -116,7 +116,7 @@ int daObjFlamethrower_c::InitResources() {
     struct Vec3 nextPos;
 
     count = kSegments;
-    if (data_0209f2f8 == kBigBoosHaunt)
+    if (gCurrentSublevel == kBigBoosHaunt)
         count = kBbhSegments;
     Matrix4x3_FromRotationXYZExt(&mTransform, mAngleX, mAngleY, mAngleZ);
     zero = 0;
@@ -195,7 +195,7 @@ int daObjFlamethrower_c::Behavior() {
 
     self = (char *)this;
     count = kSegments;
-    if (data_0209f2f8 == kBigBoosHaunt)
+    if (gCurrentSublevel == kBigBoosHaunt)
         count = kBbhSegments;
     if (count <= 1)
         count = 1;
@@ -237,7 +237,7 @@ int daObjFlamethrower_c::Behavior() {
     if (hidden != 0)
         return 1;
 
-    if (((param1 & 0xff) != kAltParam) || (data_0209f2f8 == kBigBoosHaunt))
+    if (((param1 & 0xff) != kAltParam) || (gCurrentSublevel == kBigBoosHaunt))
         Matrix4x3_FromRotationXYZExt(&mTransform, mAngleX, mAngleY, mAngleZ);
 
     if (mActiveFlames != 0) {
@@ -254,7 +254,7 @@ int daObjFlamethrower_c::Behavior() {
             do {
                 if (i == (int)mActiveFlames)
                     break;
-                if (((param1 & 0xff) != kAltParam) || (data_0209f2f8 == kBigBoosHaunt)) {
+                if (((param1 & 0xff) != kAltParam) || (gCurrentSublevel == kBigBoosHaunt)) {
                     im1 = i - 1;
                     in[0] = zero;
                     in[1] = zero;
@@ -276,7 +276,7 @@ int daObjFlamethrower_c::Behavior() {
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum2[1];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum2[2];
                     }
-                    if (data_0209f2f8 == kBigBoosHaunt) {
+                    if (gCurrentSublevel == kBigBoosHaunt) {
                         s16 wave = data_02082214[(((u16)(s16)wavePhase) >> 4) * 2];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y =
                             mPosY + FX_MUL(wave, -0xaa000);

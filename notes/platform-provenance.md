@@ -239,7 +239,7 @@ Field roles, from `InitResources`, `Behavior`, `Kill` and `Render` ([ov091](../c
 | 0x38c | `mBasePosY` | `= mPosY` |
 | 0x390 | `mBasePosZ` | `= mPosZ` |
 | 0x394 | `mWaypointIndex` | `= param1 & 0xf`; indexes [data_ov091_02134cdc](../config/arm9/overlays/ov091/symbols.txt) + `mVariant*0x78` at stride 0xc, wraps at 10 |
-| 0x395 | `mVariant` | 0 / 1 / 2 from `actorID == 0x1e` and [data_0209f2f8](../config/arm9/symbols.txt) `== 7`; the 0x78 stride selector |
+| 0x395 | `mVariant` | 0 / 1 / 2 from `actorID == 0x1e` and [gCurrentSublevel](../config/arm9/symbols.txt) `== 7`; the 0x78 stride selector |
 | 0x398 | `mPlatform0` | `dActor_c::FindWithActorID(0x1d, …)` neighbour within 0xa0000 |
 | 0x39c | `mPlatform1` | the second such neighbour |
 | 0x3a0 | `mIsDead` | set to 1 by `Kill`; `Behavior` and `Render` both return early when it is set, and neighbours test `*(u8 *)(other + 0x3a0)` |

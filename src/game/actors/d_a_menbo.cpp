@@ -107,7 +107,7 @@ extern Matrix4x3     data_020a0e68;
 extern int           data_02092138;
 extern int           data_0209e650;
 extern unsigned char data_0209f2d8;
-extern signed char   data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int           data_0209f32c;
 
 extern Vector3       data_ov090_0213412c;
@@ -294,7 +294,7 @@ void func_ov090_021310b4(daMenbo_c *c)
  * A higher floor is the line instead, and either way Y is clamped up to it. */
 void func_ov090_02131378(daMenbo_c *c)
 {
-    if (IsGameMode(2) && data_0209f2f8 == 0x12) {
+    if (IsGameMode(2) && gCurrentSublevel == 0x12) {
         func_ov090_02130f94(c);
         return;
     }
@@ -750,7 +750,7 @@ int daMenbo_c::Behavior()
         mHorzSpeed = 0;
         UpdatePos(&mdCcAcPos_c);
         func_ov090_02131378(this);
-        if (data_0209f2f8 == 0x15 && mAreaId == 1) {
+        if (gCurrentSublevel == 0x15 && mAreaId == 1) {
             UpdateWMClsn(mWithMeshClsn, 2);
             if (func_02035638((u8 *)(&mWithMeshClsn))) {
                 mVertAccel = 0;
@@ -775,7 +775,7 @@ int daMenbo_c::Behavior()
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mPosY <= mSurfaceY)
         mPosY = mSurfaceY;
-    if (data_0209f2f8 == 0x15 && mAreaId == 1 && func_02035638((u8 *)(&mWithMeshClsn))) {
+    if (gCurrentSublevel == 0x15 && mAreaId == 1 && func_02035638((u8 *)(&mWithMeshClsn))) {
         mVertAccel = 0;
         mSpeedX = 0;
         mVertSpeed = 0;
@@ -843,7 +843,7 @@ int daMenbo_c::InitResources()
     mExtraCoinCount = 2;
     mVertAccel = -0x3000;
 
-    if (IsGameMode(2) && data_0209f2f8 == 0x12) {
+    if (IsGameMode(2) && gCurrentSublevel == 0x12) {
         mSurfaceY = mPosY;
         mAnchorPosX = mPosX;
         mAnchorPosY = mPosY;

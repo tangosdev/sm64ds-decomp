@@ -72,7 +72,7 @@ extern void MulMat4x3Mat4x3(const struct Matrix4x3 *m1, const struct Matrix4x3 *
 extern int Math_Function_0203b14c(void*, int, int, int, int);
 unsigned short
 DecIfAbove0_Short(unsigned short *p); /* local extern: named parameters preserve @NNN */
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int AngleDiff(int a, int b);
 int RandomIntInternal(int *s); /* local extern: named parameters preserve @NNN */
 
@@ -229,7 +229,7 @@ int daHolhei_c::Behavior()
     if (mState != &data_ov062_0211dea0) {
         if (mState != &data_ov062_0211dec0 && mState != &data_ov062_0211de70) {
             int atEdge = 0;
-            signed char t = data_0209f2f8;
+            signed char t = gCurrentSublevel;
             if (t == 0x16) {
                 if (mPosX > (int)0xff95c000)
                     atEdge = 1;

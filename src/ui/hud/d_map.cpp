@@ -84,7 +84,7 @@ struct Vec3 { int x, y, z; };
 
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern u8 data_0209f220;
 extern u32 data_0209caa0[];
 int SublevelToLevel(int i);
@@ -186,8 +186,10 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
     p1.y = 0;
     p1.z = (int)0xff741000;
 
-    if (SublevelToLevel(data_0209f2f8) != 0x1d) return;
-    if (data_0209f2f8 != 5) return;
+    if (SublevelToLevel(gCurrentSublevel) != 0x1d)
+        return;
+    if (gCurrentSublevel != 5)
+        return;
     if (data_ov002_02111148 != 2) return;
 
     if (v->z <= p0.z) {
@@ -210,7 +212,7 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
  * condition holds (cases 7 and 8 also need data_0209f220 >= 2): a star collected, an event bit, or a bit in data_0209caa0. */
 void dMap_c::UpdateLevelSpecific()
 {
-    int sublevel = data_0209f2f8;
+    int sublevel = gCurrentSublevel;
     switch (sublevel) {
     case 7: {
         u16* p;
@@ -639,14 +641,21 @@ L274:
 
 L2a4:
     if (cam == 0) goto L3e8;
-    if (SublevelToLevel(data_0209f2f8) != 0x1d) goto A1;
-    if (data_0209f2f8 == 1) goto A1;
-    if (data_0209f2f8 == 0x33) goto A1;
-    if (data_0209f2f8 != 3) goto L350;
+    if (SublevelToLevel(gCurrentSublevel) != 0x1d)
+        goto A1;
+    if (gCurrentSublevel == 1)
+        goto A1;
+    if (gCurrentSublevel == 0x33)
+        goto A1;
+    if (gCurrentSublevel != 3)
+        goto L350;
 A1:
-    if (SublevelToLevel(data_0209f2f8) == 4) goto L350;
-    if (SublevelToLevel(data_0209f2f8) != 0x13) goto L318;
-    if (data_0209f2f8 == 0x2e) goto L350;
+    if (SublevelToLevel(gCurrentSublevel) == 4)
+        goto L350;
+    if (SublevelToLevel(gCurrentSublevel) != 0x13)
+        goto L318;
+    if (gCurrentSublevel == 0x2e)
+        goto L350;
 L318:
     {
         s32 b = (data_0209f2d8 == 0);
@@ -741,13 +750,19 @@ L4d8:
         this->mPlayerIconX[p] = (miniPos.x + 0x800) >> 12;
         this->mPlayerIconY[p] = (miniPos.z + 0x800) >> 12;
 
-        if (SublevelToLevel(data_0209f2f8) != 0x1d) goto B1;
-        if (data_0209f2f8 != 1) goto L6a4;
-        if (data_0209f2f8 == 0x33) goto B1;
-        if (data_0209f2f8 != 3) goto L6a4;
+        if (SublevelToLevel(gCurrentSublevel) != 0x1d)
+            goto B1;
+        if (gCurrentSublevel != 1)
+            goto L6a4;
+        if (gCurrentSublevel == 0x33)
+            goto B1;
+        if (gCurrentSublevel != 3)
+            goto L6a4;
 B1:
-        if (SublevelToLevel(data_0209f2f8) != 0x13) goto L6f0;
-        if (data_0209f2f8 != 0x2e) goto L6f0;
+    if (SublevelToLevel(gCurrentSublevel) != 0x13)
+        goto L6f0;
+    if (gCurrentSublevel != 0x2e)
+        goto L6f0;
 L6a4:
         if (this->mPlayerIconX[p] < 0x60) { miniPos.x = 0x60000; }
         else if (this->mPlayerIconX[p] > 0xa0) { miniPos.x = 0xa0000; }
@@ -856,16 +871,24 @@ Lae4:
         if (id >= 0x10) goto Lc30;
         if (id < 0) goto Lbf0;
 
-        if (SublevelToLevel(data_0209f2f8) != 0x1d) goto C1;
-        if (data_0209f2f8 == 1) goto C1;
-        if (data_0209f2f8 == 0x33) goto C1;
-        if (data_0209f2f8 != 3) goto Lb9c;
+        if (SublevelToLevel(gCurrentSublevel) != 0x1d)
+            goto C1;
+        if (gCurrentSublevel == 1)
+            goto C1;
+        if (gCurrentSublevel == 0x33)
+            goto C1;
+        if (gCurrentSublevel != 3)
+            goto Lb9c;
 C1:
-        if (SublevelToLevel(data_0209f2f8) == 4) goto Lb9c;
-        if (SublevelToLevel(data_0209f2f8) != 0x13) goto Lb84;
-        if (data_0209f2f8 == 0x2e) goto Lb9c;
+    if (SublevelToLevel(gCurrentSublevel) == 4)
+        goto Lb9c;
+    if (SublevelToLevel(gCurrentSublevel) != 0x13)
+        goto Lb84;
+    if (gCurrentSublevel == 0x2e)
+        goto Lb9c;
 Lb84:
-        if (SublevelToLevel(data_0209f2f8) != -1) goto Lbc0;
+    if (SublevelToLevel(gCurrentSublevel) != -1)
+        goto Lbc0;
 Lb9c:
         *(volatile u16 *)0x400100e = ((0x1f - id) << 8) | ((*(volatile u16 *)0x400100e & 0x43) | 0x4010);
         goto Lbdc;
@@ -952,25 +975,26 @@ int dMap_c::InitResources()
     data_ov002_02111148 = (signed char)GetMinimapID((Obj *)data_0209f394[data_0209f250], -1);
 
     if (data_ov002_02111148 >= 0) {
-        if ((SublevelToLevel(data_0209f2f8) == 0x1d && data_0209f2f8 != 1 && data_0209f2f8 != 0x33 && data_0209f2f8 != 3)
-            || SublevelToLevel(data_0209f2f8) == 4
-            || (SublevelToLevel(data_0209f2f8) == 0x13 && data_0209f2f8 == 0x2e)
-            || SublevelToLevel(data_0209f2f8) == -1)
-        {
+        if ((SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
+             gCurrentSublevel != 0x33 && gCurrentSublevel != 3) ||
+            SublevelToLevel(gCurrentSublevel) == 4 ||
+            (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e) ||
+            SublevelToLevel(gCurrentSublevel) == -1) {
             *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x4010));
             mMapWidth = 0x100;
             mMapCenterOffset = 0x80;
 
-            if (SublevelToLevel(data_0209f2f8) == 4) {
+            if (SublevelToLevel(gCurrentSublevel) == 4) {
                 mMapOriginX = 0x258000;
                 mMapOriginY = 0;
                 mMapOriginZ = 0x64000;
-            } else if (SublevelToLevel(data_0209f2f8) == 0x1d && data_0209f2f8 != 1 && data_0209f2f8 != 0x33 && data_0209f2f8 != 3) {
+            } else if (SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
+                       gCurrentSublevel != 0x33 && gCurrentSublevel != 3) {
                 mMapOriginX = -0x2bc000;
                 mMapOriginY = 0;
                 mMapOriginZ = -0x2bc000;
             } else {
-                SublevelToLevel(data_0209f2f8);
+                SublevelToLevel(gCurrentSublevel);
                 mMapOriginX = 0;
                 mMapOriginY = 0;
                 mMapOriginZ = 0;

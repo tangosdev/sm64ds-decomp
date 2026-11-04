@@ -98,7 +98,7 @@ extern u8 data_0209f20c;
 extern u8 data_0209f250;
 extern u8 gVsExitScreenActive;
 extern u8 data_0209f2c4;
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 extern s32 data_0209f32c;
 extern void *data_0209f394[];
 extern dClipper data_0209f43c;
@@ -330,11 +330,12 @@ block_7:
         }
         {
             int condA = 1;
-            if (data_0209f2f8 != 0xa && data_0209f2f8 != 0x13) condA = 0;
+            if (gCurrentSublevel != 0xa && gCurrentSublevel != 0x13)
+                condA = 0;
             if (condA != 0) {
                 r5 = 0x112;
             } else {
-                u8 t = (u8)data_0209f2f8 + 0xf8;
+                u8 t = (u8)gCurrentSublevel + 0xf8;
                 enum Bool ip = FALSE;
                 if ((u32)t <= 0x16) {
                     if ((1 << t) & 0x402401) {
@@ -343,7 +344,7 @@ block_7:
                 }
                 if (ip != FALSE) {
                     r5 = 0xbc;
-                } else if (data_0209f2f8 == 0x31) {
+                } else if (gCurrentSublevel == 0x31) {
                     r5 = 0x86;
                 } else {
                     r5 = -1;
@@ -476,7 +477,7 @@ int dCamera_c::Render()
                                   (self->mViewport[2] << 16) | (self->mViewport[3] << 24);
 
     s32 var_r6;
-    if (data_0209f2f8 == 0x28) {
+    if (gCurrentSublevel == 0x28) {
         var_r6 = 0x10;
     } else {
         var_r6 = data_0209ee90[0x44 / 4];
@@ -1213,7 +1214,7 @@ extern "C" int func_0200c66c(void *self_, void *pos_, int *out2_, int *out1_, in
         }
     }
 
-    if (obj != 0 && data_0209f2f8 != 0x1c) {
+    if (obj != 0 && gCurrentSublevel != 0x1c) {
         col1 = obj->mClpsBits15_18 & 0xff;
         col2 = obj->mClpsBits6_11 & 0xff;
         hval = res;
@@ -1248,7 +1249,6 @@ extern "C" int func_0200c66c(void *self_, void *pos_, int *out2_, int *out1_, in
             col1 = ((const CLPS *)&ground.surface)->func_02037e48() & 0xff;
             col2 = ((const CLPS *)&ground.surface)->func_02037e68() & 0xff;
         }
-
     }
 
     if (col1 == 0 || (cam->mFlags & 0x400) != 0) {
@@ -1282,7 +1282,7 @@ extern "C" int func_0200c66c(void *self_, void *pos_, int *out2_, int *out1_, in
                 } else {
                     if ((cam->mMode->flags & 4) == 0) {
                         if (b0 == 0) {
-                            if (*out1 == (void*)&data_02087274 && data_0209f2f8 == 0x2d) {
+                            if (*out1 == (void *)&data_02087274 && gCurrentSublevel == 0x2d) {
                                 cam->mLookTargetPos.x = cam->mTargetPos.x;
                                 cam->mLookTargetPos.y = cam->mTargetPos.y;
                                 cam->mLookTargetPos.z = cam->mTargetPos.z;
@@ -1355,7 +1355,7 @@ body:
                 }
                 Vec3_Sub((Vector3 *)&local, &cam->mLookTargetPos, (const Vector3 *)a3);
                 cam->mFocusDist = LenVec3(&local) >> 1;
-                g = data_0209f2f8;
+                g = gCurrentSublevel;
                 v = (g == 0x2d);
                 if (v) {
                     if (cam->mFocusDist < 0x100000)
@@ -1770,7 +1770,7 @@ void func_0200b990(dCamera_c *cam, CamViewObj *obj, int arg2) {
     if (b0 == 0) {
         b1 = obj->p1;
         if (b1 == 0xff) {
-            signed char zone = data_0209f2f8;
+            signed char zone = gCurrentSublevel;
             if (zone != 0x16 && zone != 0xa && zone != 0x10) {
                 dBgCh_Lin rc;
                 Vector3 lineB;
@@ -1791,7 +1791,7 @@ void func_0200b990(dCamera_c *cam, CamViewObj *obj, int arg2) {
             step = 0x2000;
         } else {
             step = 0;
-            rate = (data_0209f2f8 == 0x2d) ? 0x12 : 0xf;
+            rate = (gCurrentSublevel == 0x2d) ? 0x12 : 0xf;
         }
     } else {
         step = 0x6800;
@@ -2120,7 +2120,7 @@ void func_0200b0fc(dCamera_c *cam, CamViewObj *obj, int floorY) {
         v4 = path.GetPullFactor() << 4;
     }
 
-    if (data_0209f2f8 == 0x2f) {
+    if (gCurrentSublevel == 0x2f) {
         projSide = projSide - FX_MUL(cam->mFocusDist, 0x5000);
         if (projSide < 0) {
             targetPos.y -= FX_MUL(projSide, 0x400);
@@ -2161,7 +2161,7 @@ void func_0200af20(dCamera_c *cam, Vector3 *v1, Vector3 *v2, short *out) {
 
     b = 0;
     {
-        signed char g = data_0209f2f8;
+        signed char g = gCurrentSublevel;
         if (g == 6) {
             b = data_02086f38;
         } else if (g == 0x15) {
@@ -2637,7 +2637,7 @@ s32 func_02009e70(dCamera_c *cam) {
                                 r7h = cam->lookAt.y + r6;
                             else if (sp40.y > t0)
                                 r7h = cam->lookAt.y + t0;
-                            if (data_0209f2f8 == 0x26) {
+                            if (gCurrentSublevel == 0x26) {
                                 if (cam->pos.y < sb + 0x25bc8)
                                     cam->pos.y = sb + 0x25bc8;
                             }
@@ -3837,7 +3837,7 @@ int func_02007d58(dCamera_c *cam) {
     if (p != 0) {
         cam->mOrbitTargetYaw = Vec3_HorzAngle(p, &cam->pos);
     }
-    lvl = SublevelToLevel(data_0209f2f8);
+    lvl = SublevelToLevel(gCurrentSublevel);
     if (lvl == 3 && data_0209f224 == 4) {
         func_020071a8(cam, 0x5600, 0x800);
     } else if (lvl == 0xb && data_0209f224 == 2) {
@@ -4005,7 +4005,7 @@ int func_02007870(dCamera_c *cam, u8 *data) {
 /* Script op: the per-level orbit yaws (func_020071a8). */
 int func_020077f0(dCamera_c *cam) {
     dCamera_c *r4 = cam;
-    int lvl = SublevelToLevel(data_0209f2f8);
+    int lvl = SublevelToLevel(gCurrentSublevel);
 
     if (lvl == 2 && data_0209f224 == 5) {
         func_020071a8(r4, 0, 0x4000);
@@ -4020,7 +4020,7 @@ int func_020077f0(dCamera_c *cam) {
 /* Script op: orbit pos toward mOrbitTargetYaw, slower in two areas. */
 int func_02007758(dCamera_c *cam) {
     short amt = 0x1800;
-    int level = SublevelToLevel(data_0209f2f8);
+    int level = SublevelToLevel(gCurrentSublevel);
     if ((level == 9 && data_0209f224 == 6) || (level == 0xd && data_0209f224 == 4))
         amt = 0x800;
     func_020070e8(cam, 0x320000, 0xcc, amt, 0x10, cam->mOrbitTargetYaw, 8);

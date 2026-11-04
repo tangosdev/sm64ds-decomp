@@ -1208,7 +1208,7 @@ dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibbl
  * 0x0200ff94  size 0xb0 */
 extern "C" {
 extern u8 data_0209f220[]; /* the star index this mission was entered for */
-extern s8 data_0209f2f8[]; /* the current sublevel id */
+extern s8 gCurrentSublevel[];      /* the current sublevel id */
 extern dActor_c *STAR_MARKERS[12]; /* 0x0209f40c */
 void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
 int IsStarCollectedInCurLevel(s32 starIdx);
@@ -1219,7 +1219,7 @@ s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
 
     if (markerType == 2) {
         if (starIdx != data_0209f220[0]) {
-            if (SublevelToLevel(data_0209f2f8[0]) <= 0xe)
+            if (SublevelToLevel(gCurrentSublevel[0]) <= 0xe)
                 return -1;
         }
         if (IsStarCollectedInCurLevel(starIdx))
@@ -1276,7 +1276,7 @@ extern int data_02075244[];           /* the water height for each level */
 s32 dActor_c::GetWaterHeightWDW()
 {
     s32 height = mPosY;
-    if (data_0209f2f8[0] == 0x15 && mAreaId == 0) {
+    if (gCurrentSublevel[0] == 0x15 && mAreaId == 0) {
         unsigned int level = data_0209f2c0[0];
         if (level >= 3)
             level = 2;

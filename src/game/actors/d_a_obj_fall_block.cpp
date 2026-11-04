@@ -71,7 +71,7 @@ void func_020393c4(int *p, int v);
 }
 
 extern s16 data_02082214[];       /* sine table */
-extern signed char data_0209f2f8; /* current level id */
+extern signed char gCurrentSublevel; /* current level id */
 
 // @symbol _ZN16daObjFallBlock_cD0Ev
 // @symbol _ZN16daObjFallBlock_cD1Ev
@@ -395,7 +395,7 @@ s32 daObjFallBlock_c::Behavior() {
             pl = ClosestPlayer();
             dist = Vec3_HorzDist(&mRestPos, &((dActor_c *)pl)->mPos);
             thresh = 0x28a000;
-            if (data_0209f2f8 == 0x2e)
+            if (gCurrentSublevel == 0x2e)
                 thresh = 0xa000;
             flag = (mFlags & 8) ? 1 : 0;
             if (flag != 0 && dist > thresh)

@@ -42,7 +42,7 @@ extern int data_0209f3e8[];
 extern void *data_0209f394[];
 extern unsigned char gShowTouchScreenArrows;
 extern unsigned char data_0209f2d8;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 
 /* local extern: func_0202a8e0's first parameter is an address the callers
  * pass as object pointers; the definition spells it int. */
@@ -293,7 +293,7 @@ void func_ov001_020aaa54(void)
         }
 
         if ((*flagp & 3) == 0) {
-            int lvl = SublevelToLevel(data_0209f2f8);
+            int lvl = SublevelToLevel(gCurrentSublevel);
             if ((unsigned)(lvl - 0xf) <= 2) *flagp |= 1;
             else *flagp |= 2;
         }

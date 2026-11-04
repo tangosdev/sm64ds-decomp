@@ -47,7 +47,7 @@
  * - GetCapState is the dCapEnemy_c.h member.
  * - What dCcAc_c bits 0x4 and 0x20000 mean, the king's mState 4 that
  *   mFreeRoamTimer watches, sounds 0xd0 / 0xe0 / 0xd6 / 0x110 / 0x111 / 0x118 /
- *   0x13a / 0x13b, mFlags bits 0x8 and 0x10000000, and data_0209f2f8
+ *   0x13a / 0x13b, mFlags bits 0x8 and 0x10000000, and gCurrentSublevel
  *   values 6 and 0x1b are not named here.
  *   Nothing in this TU enters STATE_PAUSE except through the table.
  */
@@ -227,7 +227,7 @@ extern int Vec3_HorzDist(void *a, void *b);
 extern unsigned char DecIfAbove0_Byte(void *p);
 extern unsigned short DecIfAbove0_Short(void *p);
 extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 void LoadSilverStarAndNumber(void);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i cc, void *d, Fix12i e);
@@ -1716,7 +1716,7 @@ int daKrb_c::Render()
  * is zeroed when the state changes. Then the hit reaction
  * (func_ov084_02129ed4), UpdatePos, the ledge check (a step that would carry
  * it off a ledge is undone by restoring mSafePos), UpdateWMClsn (mode 0 for
- * KURIBO_S; mode 2 for the others, or 3 when data_0209f2f8 is 6 or 0x1b, its
+ * KURIBO_S; mode 2 for the others, or 3 when gCurrentSublevel is 6 or 0x1b, its
  * target speed is the walk speed and mDeathState is not DEATH_HIT_20000), the ground
  * check, the cylinder, model placement and the water check. In STATE_WALK
  * (unless mFlags bit 3, "off screen" in dActor_c.h, is set) a Goomba that has stayed within 10.0 units of
@@ -1826,7 +1826,7 @@ int daKrb_c::Behavior()
         int lvl = mGoombaType;
         if (lvl == GOOMBA_SMALL) {
             UpdateWMClsn(mWithMeshClsn, 0);
-        } else if (data_0209f2f8 == 6 || data_0209f2f8 == 0x1b) {
+        } else if (gCurrentSublevel == 6 || gCurrentSublevel == 0x1b) {
             if (mTargetHorzSpeed == data_ov084_02130228[lvl] && mDeathState != DEATH_HIT_20000)
                 UpdateWMClsn(mWithMeshClsn, 3);
             else

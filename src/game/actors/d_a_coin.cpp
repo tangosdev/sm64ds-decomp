@@ -156,7 +156,7 @@ int daCoin_c::func_ov002_020b10a0()
 // @symbol _ZN8daCoin_c19func_ov002_020b10e4Ev
 void daCoin_c::func_ov002_020b10e4()
 {
-    extern signed char data_0209f2f8;
+    extern signed char gCurrentSublevel;
 
     int offScreen;
     dActor_c* platform;
@@ -166,7 +166,7 @@ void daCoin_c::func_ov002_020b10e4()
 
     if (((CoinFlagBits*)&mCoinFlags)->floorState != FLOOR_UNPROBED) return;
 
-    if (data_0209f2f8 == 0x1c || data_0209f2f8 == 0x27) {
+    if (gCurrentSublevel == 0x1c || gCurrentSublevel == 0x27) {
         platform = dActor_c::Next(0);
         if (platform) {
             do {
@@ -451,8 +451,8 @@ void daCoin_c::func_ov002_020b1884(daPly_c *player) {
 extern "C" {
 void func_ov002_020b18f0(char* self)
 {
-    extern signed char data_0209f2f8;
-    extern short data_0209f358[];
+    extern signed char gCurrentSublevel;
+    extern short gNumCoins[];
     extern int SublevelToLevel(int);
 
     daPly_c *player = (daPly_c *)self;
@@ -461,9 +461,11 @@ void func_ov002_020b18f0(char* self)
     struct Vector3* playerPos;
     int y;
     if (Event::GetBit(0x1f)) return;
-    if (SublevelToLevel(data_0209f2f8) >= 0xf) return;
+    if (SublevelToLevel(gCurrentSublevel) >= 0xf)
+        return;
     if (player == 0) return;
-    if (data_0209f358[player->mPlayerNo] < 0x64) return;
+    if (gNumCoins[player->mPlayerNo] < 0x64)
+        return;
     playerPos = &player->mPos;
     spawnPos.x = playerPos->x;
     y = playerPos->y;
@@ -534,7 +536,7 @@ void daCoin_c::func_ov002_020b1a60()
 // @symbol _ZN8daCoin_c19func_ov002_020b1ad4Ev
 void daCoin_c::func_ov002_020b1ad4()
 {
-    extern signed char data_0209f2f8;
+    extern signed char gCurrentSublevel;
 
     daPly_c *player;
     int range;
@@ -543,13 +545,14 @@ void daCoin_c::func_ov002_020b1ad4()
     if (((CoinFlagBits *)&mCoinFlags)->bounces == 0) {
         player = ClosestPlayer();
         if (player == 0) return;
-        range = (data_0209f2f8 == 0xb) ? 0x258000 : 0x4b0000;
+        range = (gCurrentSublevel == 0xb) ? 0x258000 : 0x4b0000;
         if (Vec3_Dist(&mPos, &player->mPos) > range)
             return;
         speed = player->mHorzSpeed;
         if (speed < 0x14000) speed = 0x14000;
         else if (speed > 0x28000) speed = 0x28000;
-        if (data_0209f2f8 == 0xb) speed <<= 1;
+        if (gCurrentSublevel == 0xb)
+            speed <<= 1;
         mHorzSpeed = speed;
         mVertSpeed = 0x14000;
         ((CoinFlagBits *)(int)&mCoinFlags)->bounces++;
@@ -887,7 +890,7 @@ s32 daCoin_c::InitResources()
 
     typedef struct { void* sfp; void* bmd; } FileEntry;
     extern Matrix4x3 IDENTITY_MATRIX4X3;
-    extern s8 data_0209f2f8;
+    extern s8 gCurrentSublevel;
     extern u8 data_0209f220;
     extern s32 data_0209f40c[];
     extern u8 data_0209f2d8;
@@ -967,8 +970,7 @@ common:;
             mSpawnFilter = (u8)((param1 >> 4) & 7);
             dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov002_0210d9a8);
             mCoinType = COIN_RED;
-            if (SublevelToLevel(data_0209f2f8) == 0x13 ||
-                mSpawnFilter == data_0209f220) {
+            if (SublevelToLevel(gCurrentSublevel) == 0x13 || mSpawnFilter == data_0209f220) {
                 if (GetBitInDeathTable() == 0) {
                     for (slot = 0; slot < 0xc; slot = (s8)(slot + 1)) {
                         if (data_0209f40c[slot] == 0) {
