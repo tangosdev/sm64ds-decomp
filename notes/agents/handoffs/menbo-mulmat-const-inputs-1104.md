@@ -2,7 +2,7 @@
 
 ## Identity and resumption
 
-- Task: `audit/menbo-mulmat-type1104`; candidate for draft PR after current-base byte proof.
+- Task: Menbo matrix helper const inputs; candidate for draft PR after current-base byte proof.
 - Base: `main` at `f23e35b7d9511c50d4ca06a901404cd4bcf1a4b2`.
 - Independent source review is still required. This handoff records producer checks, not independent acceptance.
 
