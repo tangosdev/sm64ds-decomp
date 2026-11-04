@@ -1392,7 +1392,7 @@ extern "C" void func_0201f32c(int arg0)
     f2d8_val = data_0209f2d8;
     {
         u32 b1 = (f2d8_val == 0);
-        if (b1 != 0 && !(data_0209caa0[2] & 0x80)) {
+        if (b1 != 0 && !(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
             u32 b2 = (gRunningKuppaScript != 0);
             if (b2 == 0) {
                 data_0209d650 = 0x10;

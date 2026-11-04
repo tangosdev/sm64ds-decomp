@@ -8515,7 +8515,7 @@
         "return:unsigned char []"
       ]
     },
-    "data_0209f284": {
+    "gShowTouchScreenArrows": {
       "src/_ZN7daPly_c8BehaviorEv.cpp": [
         "return:signed char"
       ]

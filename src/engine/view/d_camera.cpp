@@ -96,7 +96,7 @@ extern s32 data_0209ee90[];
 extern u8 data_0209f1f8;
 extern u8 data_0209f20c;
 extern u8 data_0209f250;
-extern u8 data_0209f294;
+extern u8 gVsExitScreenActive;
 extern u8 data_0209f2c4;
 extern s8 data_0209f2f8;
 extern s32 data_0209f32c;
@@ -300,7 +300,8 @@ block_7:
         func_020089f8(c);
     }
 
-    if ((u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0 && !(data_0209b454 & 0x40000000)) {
+    if ((u8)(gVsExitScreenActive | (data_0209f2c4 | data_0209f20c)) == 0 &&
+        !(data_0209b454 & 0x40000000)) {
         enum Bool b2 = (enum Bool)(gRunningKuppaScript != 0);
         if (b2 == FALSE) {
             if (mFlags & 0x2000) {
@@ -446,8 +447,8 @@ int dCamera_c::Render()
                 s32 d = 0xaaa - sp18;
                 sp18 = (s16)(sp18 + (s16)FX_MUL(d, t));
             }
-            if (data_0209f20c == 0 && data_0209f294 == 0 &&
-                (u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) != 0) {
+            if (data_0209f20c == 0 && gVsExitScreenActive == 0 &&
+                (u8)(gVsExitScreenActive | (data_0209f2c4 | data_0209f20c)) != 0) {
                 func_0200af20(self, (Vector3 *)&sp[0], (Vector3 *)&sp[3], &sp18);
             }
         }

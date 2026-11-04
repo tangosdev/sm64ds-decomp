@@ -83,6 +83,7 @@ enum dMeter_c_AssetId {
 #include "dCamera_c.h"
 #include "dScStage_c.h"
 #include "PlayerInput.h"
+#include "SaveData.h"
 #include "private/controller_input.h"
 #include "Sound.h"
 #include "Event.h"
@@ -130,7 +131,7 @@ extern signed char data_0209f2f8;
 extern int SublevelToLevel(int i);
 extern unsigned char data_0209f2c4;
 extern unsigned char data_0209f20c;
-extern unsigned char data_0209f294;
+extern unsigned char gVsExitScreenActive;
 extern unsigned char data_0209f204;
 extern struct OamAttr data_ov002_0210d290;
 extern struct OamAttr data_ov002_0210d2c0;
@@ -154,7 +155,7 @@ extern struct OamAttr data_ov002_0210d5d0;
 extern struct OamAttr data_ov002_0210d4f0;
 extern struct OamAttr data_ov002_0210c690;
 extern int data_0209caa0[];
-extern unsigned char data_0209f284;
+extern unsigned char gShowTouchScreenArrows;
 extern dFdBrightness_c *data_0209f5bc;
 void *LoadFile(int handle);
 void DecompressLZ16(void *handle, int addr);
@@ -352,7 +353,7 @@ int dMeter_c::InitResources() {
         mLifeCountX = 0x10;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
-    } else if (!(data_0209caa0[2] & 0x80)) {
+    } else if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
         data_ov002_02111178 = 6;
         mLifeCountX = -0x3A;
         mStarCountX = (s16)(starDigitsWidth + 0x120);
@@ -385,7 +386,7 @@ int dMeter_c::Behavior() {
 
     /* vs is computed only once the first test passes and is reused below. */
     if (data_0209f5bc->IsAtStart() == 0 ||
-        ((vs = IsVsMode()) == 0 && (data_0209caa0[2] & 0x80) == 0))
+        ((vs = IsVsMode()) == 0 && (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0))
         return 1;
     if (vs != 0) {
         UpdateVsTimer();
@@ -479,7 +480,7 @@ int dMeter_c::Behavior() {
 int dMeter_c::Render() {
     if (IsVsMode()) {
         if (data_0209fc9c == 0) {
-            if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) == 0) {
+            if (((data_0209f2c4 | data_0209f20c | gVsExitScreenActive) & 0xff) == 0) {
                 RenderVsTimer();
                 RenderStarCount();
                 RenderCoinCount();
@@ -490,9 +491,9 @@ int dMeter_c::Render() {
                 }
             }
         }
-    } else if ((data_0209caa0[2] & 0x80) != 0) {
+    } else if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) != 0) {
         unsigned char v = data_0209f20c;
-        if (((data_0209f2c4 | v | data_0209f294) & 0xff) == 0) {
+        if (((data_0209f2c4 | v | gVsExitScreenActive) & 0xff) == 0) {
             RenderHealthMeter();
             if (Event::GetBit(0x1d) == 0) {
                 RenderCoinCount();
@@ -500,7 +501,7 @@ int dMeter_c::Render() {
                 RenderSilverStars();
                 RenderTimeTimer();
             }
-            if (data_0209f284 != 0) {
+            if (gShowTouchScreenArrows != 0) {
                 dScStage_c::RenderBouncingArrows();
             }
         } else {
@@ -510,7 +511,8 @@ int dMeter_c::Render() {
             }
         }
         unsigned char v2 = data_0209f20c;
-        if (((data_0209f2c4 | v2 | data_0209f294) & 0xff) == 0 || (v2 != 0 && data_0209f2d4 < 3)) {
+        if (((data_0209f2c4 | v2 | gVsExitScreenActive) & 0xff) == 0 ||
+            (v2 != 0 && data_0209f2d4 < 3)) {
             RenderStarCount();
             RenderCameraButtons();
             RenderLifeCount();
@@ -545,7 +547,7 @@ void dMeter_c::UpdateHealthMeter() {
     int chr = data_0209f250;
     daPly_c *player = (daPly_c *)data_0209f394[chr];
     unsigned int health = (data_02092144[chr] >> 8) & 0xff;
-    if ((unsigned char)(data_0209f2c4 | data_0209f20c | data_0209f294) != 0)
+    if ((unsigned char)(data_0209f2c4 | data_0209f20c | gVsExitScreenActive) != 0)
         return;
     if (mHealthMeterHoldTimer != 0)
         mHealthMeterHoldTimer -= data_0208ee44;
@@ -692,7 +694,7 @@ void dMeter_c::UpdateVsTimer() {
 
     if (data_0209f2bc != 0)
         return;
-    if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) != 0)
+    if (((data_0209f2c4 | data_0209f20c | gVsExitScreenActive) & 0xff) != 0)
         return;
 
     if (data_ov002_02111188 != 0)
@@ -748,7 +750,7 @@ void dMeter_c::UpdateVsTimer() {
 void dMeter_c::RenderVsTimer() {
     int t = mVsTimer;
 
-    if ((unsigned char)(data_0209f2c4 | data_0209f20c | data_0209f294) == 0) {
+    if ((unsigned char)(data_0209f2c4 | data_0209f20c | gVsExitScreenActive) == 0) {
         if (GetOwnerLanguage() == 5) {
             OAM::Render(0, &data_ov002_0210d290, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {

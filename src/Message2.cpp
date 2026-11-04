@@ -954,7 +954,7 @@ void Message::Update() {
         }
     }
     case 7: {
-        if (((data_0209caa0[2] & 0x80) && !IsCastleFallCutsceneRunning() &&
+        if (((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning() &&
              IsButtonInputValid() != 0) ||
             data_0209d66c != 0) {
             data_0209d6f4 += 1;
@@ -964,7 +964,7 @@ void Message::Update() {
             data_0209d6bc = 1;
             func_02012790(0x14);
         }
-        if (!(data_0209caa0[2] & 0x80)) {
+        if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
             return;
         }
         {
@@ -984,7 +984,7 @@ void Message::Update() {
         }
     }
     case 8: {
-        if (((data_0209caa0[2] & 0x80) && !IsCastleFallCutsceneRunning() &&
+        if (((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning() &&
              IsButtonInputValid() != 0) ||
             data_0209d66c != 0) {
             data_0209d670 = 1;

@@ -116,7 +116,7 @@ static inline int IsGameMode(int mode) {
 
 /* Game mode 0 with bit 0x80 of the current file's flags2 clear. */
 static inline int IntroAllowed() {
-    return IsGameMode(0) && (sCurrentFile.flags2 & 0x80) == 0;
+    return IsGameMode(0) && (sCurrentFile.flags2 & FILE_FLAGS2_INTRO_DONE) == 0;
 }
 
 /* Spawn simple actors, or hand a minimap-change sentinel to

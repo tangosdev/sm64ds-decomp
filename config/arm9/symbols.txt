@@ -4762,11 +4762,11 @@ data_0209f274 kind:bss addr:0x0209f274
 data_0209f278 kind:bss addr:0x0209f278
 data_0209f27c kind:bss addr:0x0209f27c
 data_0209f280 kind:bss addr:0x0209f280
-data_0209f284 kind:bss addr:0x0209f284
+gShowTouchScreenArrows kind:bss addr:0x0209f284
 data_0209f288 kind:bss addr:0x0209f288
 data_0209f28c kind:bss addr:0x0209f28c
 data_0209f290 kind:bss addr:0x0209f290
-data_0209f294 kind:bss addr:0x0209f294
+gVsExitScreenActive kind:bss addr:0x0209f294
 data_0209f298 kind:bss addr:0x0209f298
 data_0209f29c kind:bss addr:0x0209f29c
 data_0209f2a0 kind:bss addr:0x0209f2a0

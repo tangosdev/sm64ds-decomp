@@ -32,6 +32,7 @@
 #include "daSetSE_c.h"
 #include "dCamera_c.h"
 #include "Sound.h"
+#include "SaveData.h"
 
 extern int data_ov002_0210b498[];  /* sound-ID table, 11 entries: 0x18d, 0x100-0x103, 0x81, 0x89, 0x9c-0x9e, 0; the _ZTV9daSetSE_c header follows it, so spawn params stay 0-10 */
 extern int data_ov002_02110aec;    /* WATERFALL_SOUNDS_DISABLED */
@@ -67,7 +68,7 @@ int daSetSE_c::InitResources()
     /* The (int) casts are load-bearing, not noise: each forces its boolean
        to materialize into a word before the re-test, and spelling the
        tests directly comes out six words short of the ROM. */
-    if ((int)(data_0209f2d8 == 0) != 0 && (data_0209caa0[2] & 0x80) == 0 &&
+    if ((int)(data_0209f2d8 == 0) != 0 && (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0 &&
         (int)(gRunningKuppaScript != 0) == 0)
         disabled = 1;
     else

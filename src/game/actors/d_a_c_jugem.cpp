@@ -51,6 +51,7 @@ enum daC_Jugem_c_AssetId {
 #include "dCamera_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
+#include "SaveData.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 
@@ -132,7 +133,7 @@ extern void          *data_0209f318;        /* the camera object */
 extern int            data_0209caa0[];      /* level progress flags */
 extern u8             data_0209d66c;
 extern u8             data_0209d6bc;
-extern u8             data_0209f284;
+extern u8 gShowTouchScreenArrows;
 extern s8             data_0209f2f8;
 extern short          data_02082214[];      /* the sine lookup table */
 extern Matrix4x3      data_020a0e68;        /* scratch matrix */
@@ -233,7 +234,7 @@ int daC_Jugem_c::StateIntroMain() {
             daPly_c *player = ClosestPlayer();
             if (player != 0) {
                 func_ov002_020c3e8c(player);
-                data_0209caa0[2] |= 0x80;
+                data_0209caa0[2] |= FILE_FLAGS2_INTRO_DONE;
             }
             SetState(data_ov085_021307e0);
         }
@@ -587,7 +588,7 @@ int daC_Jugem_c::StateLeaveMain()
         if (Sound::PlaySub(0x4a, 0x7f, 0, 0x7222, 0) != 0) {
             if (mTalkPlayer->HasFinishedTalking() == 1) {
                 MarkForDestruction();
-                data_0209f284 = 0;
+                gShowTouchScreenArrows = 0;
             }
         }
     }
@@ -623,7 +624,7 @@ int daC_Jugem_c::StateTalkMain()
         if (data_0209d6bc == 7)
             break;
         func_02012790(0x24);
-        data_0209f284 = 1;
+        gShowTouchScreenArrows = 1;
         { mTalkStep += 1; }
         break;
     case 3:
@@ -979,7 +980,7 @@ int daC_Jugem_c::InitResources()
         if (v & 0x10000)
             data_0209caa0[2] = v & ~0x10000;
         mHidden = 1;
-        if (!(data_0209caa0[2] & 0x80))
+        if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE))
             SetState(data_ov085_02130790);
         else
             SetState(data_ov085_021307e0);
