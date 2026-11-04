@@ -7,6 +7,7 @@
 // attacker's console never writes a friend's body except the cosmetic scale).
 
 #include "party_hits.h"
+#include "coop_actors.h"
 #include "party_hits_core.h"
 #include "party.h"
 #include "comms_hub.h"
@@ -32,6 +33,7 @@ extern signed char data_02092120;         // area
 extern int data_0209f220[];               // [0] & 0xff = act
 extern unsigned char data_0209f2d8[];     // game mode: 0 adventure / party / coop, 1 VS, 2 script (cutscene)
 extern unsigned char data_0209fc48[];     // (s32) cutscene
+extern unsigned char data_0209d660[];     // 1 while a message box is up (coop_tp.cpp)
 extern unsigned char data_ov002_0211013c[];   // the neutral state the ROM returns to (vs_arena_eat.cpp)
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const void *pos, unsigned dmg_units, int speed,
                                            unsigned char a4, unsigned char a5, unsigned char a6);
@@ -51,6 +53,15 @@ int func_ov002_020db5f4(char *victim, char *holder);              // victim: St_
 void func_ov002_020db54c(unsigned char *victim, int speed, int vert, short yaw);   // victim: thrown
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned id, int x, int y, int z);
 void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned id, const void *pos);
+int func_ov002_020d82f0(void *c);                // the ROM's "can be eaten / grabbed" gate (src/game/player/Player.cpp)
+extern char data_0209f498[];                     // Stage::CheckInput's Ctrl[4], stride 0x18 (vs_arena_eat.cpp rig_press)
+extern unsigned short data_020a0e58[];           // PadData[4]: {held, pressed}, the raw DS pad
+extern int data_020a0e5a[];                      // the split "pressed" symbol (same memory on the DS)
+extern unsigned short *data_0209214c[];          // CheckInput's three DS bit -> Ctrl bit maps
+void *_ZN8dActor_c4NextEPKS_(const void *prev);   // the actor list walk (coop_actors.cpp)
+unsigned port_stage_behavior_calls(void);       // the Stage behaviour count (hub_presence.cpp): still = a menu
+short GetAngleToCamera(int player_no);           // src/GetAngleToCamera.c: the stick angle is relative to this
+extern int data_0209fc68[];                      // nonzero: each player reads its own camera (Player::Behavior)
 }
 namespace port {
 int vs_arena_state_index(const void *body);
@@ -84,7 +95,9 @@ enum : unsigned {
     kRingFrames = 16,
     kAttachLife = 150,                          // an attach nobody refreshed or cleared dies after this
     kGrabAckWait = 20,
-    kAttachBeat = 30,                           // the victim repeats its attach this often
+    kAttachBeat = 30,
+    kHeldBeat = 30, kHeldLife = 90,             // TONGUE1: held state repeats each second, dies unrefreshed after three
+    kMouthPullFrames = 6, kParkUnits = 200000, kLeftWait = 10, kPutBackLift = 120, kQuietLate = 600,  // a friend's mouthful: at the mouth for the pull, then out of sight                           // the victim repeats its attach this often
 };
 enum : unsigned {
     kFlagCarried = 0x100, kFlagHeldOut = 0x4000, kFlagGrabbable = 0x80, kFlagThrown = 0x400,
@@ -114,6 +127,23 @@ struct G {
     Attach att[kHubPartySeats];
     // I am eaten through the ROM's own mouth state (else the synthetic hold)
     bool rom_mouth = false;
+    // TONGUE1: what each friend holds (kHeldState in), what I last said I hold (out)
+    struct HeldIn { int kind = 0, cls = 0, slot = -1, eggs = 0; unsigned until = 0, since = 0; char *pinned = nullptr; bool parked = false; int mode = 0;   // mode: 1 pinned, 2 left alone as mine
+                    // TONGUEFIX2: where my copy stood when the pin began (a pose it really had here), the eater's last drawn mouth spot,
+                    // the level both belong to, and (left behind by a finished hold) whether the eater swallowed it (his egg count rose)
+                    int back[3] = {0, 0, 0}, mouth[3] = {0, 0, 0}; bool have_back = false, have_mouth = false, swallowed = false, kept = false; int level = -1; };
+    HeldIn held_in[kHubPartySeats];
+    HeldIn held_quiet[kHubPartySeats];   // a hold that went quiet and whose copy I put back: a late hold end can still say it was swallowed
+    HeldIn held_left[8];          // TONGUEFIX2: copies a finished hold left parked out of sight, until an owner's pose, a kill or my ownership
+    int ho_kind = 0, ho_cls = 0, ho_slot = -1, ho_eggs = 0; unsigned ho_last = 0;
+    unsigned held_sent = 0, held_recv = 0, held_pins = 0, held_miss = 0, held_drop = 0, held_owned = 0;
+    unsigned mouth_miss = 0, eats_unstepped = 0;
+    bool lab_drop_nothing = false;   // LAB (TONGUEFIX2, SM64DS_PHIT_LAB_DROP_NOTHING=1): my one-shot "nothing" held message is not sent (a lost datagram)
+    unsigned lab_drop_until = 0;
+    unsigned att_claims = 0;         // TONGUEFIX2: claims I sent at a friend the attach book says sits in a mouth / hands
+    unsigned att_held_back = 0;      // TONGUEFIX2: claims not sent because the friend is held (the victim refuses them all)
+    bool held_off = false;        // SM64DS_PHIT_HELD=0, the CONTROL: no kHeldState out, nothing pinned (the friend looks empty-handed)
+    bool tongue_old = false;      // SM64DS_PHIT_TONGUE_OLD=1, the CONTROL: the tongue rules before TONGUE1 (state list, re-arm, no message gate)      // TONGUE1: hook passes the ROM mouth state left me off the eater's drawn body
     unsigned beat = 0;
     CarryV cv;      // I am carried
     CarryH ch;      // I carry
@@ -126,6 +156,7 @@ struct G {
     struct Later { int what = 0; int seat = 0; bool swing = false; int yaw = 0, speed = 0; };
     Later later[6]; int later_n = 0;
     int eat_ahead = 28, eat_up = 30, carry_ahead = 8, carry_up = 85;
+    int held_ahead = 30, held_up = 45;      // TONGUE1: a friend's carried object, units ahead of / above his feet (SM64DS_HELD_AT)
     // lab
     char forge_kind = 0; int forge_units = 0; bool forged = false;
     unsigned probe_frame = 0;
@@ -134,6 +165,15 @@ struct G {
     int lab_seat = -1;      // LAB: forge only toward this hub seat
     int lab_swing = 0; bool swing_done = false;     // LAB: force the holder's St_SwingPlayer this many frames into the hold (the pad's circular stick motion is not scripted; the arena rig does the same)
     unsigned forge_at = 0, eat_hold = 0;      // LAB: forge from this frame on; a longer eat hold for pictures
+    // LAB (TONGUE1, SM64DS_PHIT_LAB_SEEK=<seat>[,<near>]): walk to that friend and use the tongue with the DS pad alone
+    int seek_seat = -1, seek_near = 200, seek_cls = -1;   // seek_cls: obj:<class> walks to the nearest such object instead
+    unsigned seek_idle = 0, seek_from = 0, seek_beh = 0;   // seek_from: no seek before this frame                              // frames walking without a press (a stale camera frame recalibrates)
+    int seek_phase = 0; unsigned seek_t = 0; int seek_cup = 0, seek_sign = 1; unsigned seek_f = 0;
+    unsigned long long seek_tongues = 0;
+    // TONGUE1 counters: why a tongue did not say anything, and what the ROM's own gate said of each refused eat
+    unsigned long long tongues = 0, tongue_sent = 0, unsent_far = 0, unsent_facing = 0, unsent_dy = 0, unsent_none = 0;
+    unsigned long long eat_rom_ok = 0, eat_rom_no = 0;
+    bool tongue_said = false;
     Stats st = {};
 } g;
 
@@ -149,6 +189,12 @@ void read_env() {
     r.check_cooldown = !env_flag(std::getenv("SM64DS_PHIT_NOCOOLDOWN"), false);
     r.check_pos = !env_flag(std::getenv("SM64DS_PHIT_NOPOS"), false);
     r.check_busy = !env_flag(std::getenv("SM64DS_PHIT_NOBUSY"), false);
+    // TONGUE1: no port re-arm after an eat. The cartridge's own gate already refuses the spat victim while its +0x708 is
+    // set; the 150-frame re-arm refused tongues the ROM takes (7 of 18 refusals in MPJANK1's recipe).
+    g.tongue_old = env_flag(std::getenv("SM64DS_PHIT_TONGUE_OLD"), false);
+    g.held_off = !env_flag(std::getenv("SM64DS_PHIT_HELD"), true);
+    g.lab_drop_nothing = env_flag(std::getenv("SM64DS_PHIT_LAB_DROP_NOTHING"), false);
+    r.check_eat_rearm = g.tongue_old || env_flag(std::getenv("SM64DS_PHIT_EAT_REARM"), false);
     // ROMSTATE9: the victim's own console runs the ROM's real St_InYoshiMouth (eat) and St_Grabbed / thrown (carry) by default;
     // SM64DS_ROOM_ROMSTATE=0 falls back to INTERACT9's synthetic holds (SM64DS_ROOM_EATVIS=0/1 still picks the eat alone)
     g.rom_eat = g.rom_grab = env_flag(std::getenv("SM64DS_ROOM_ROMSTATE"), true);
@@ -157,11 +203,17 @@ void read_env() {
     g.feedback = env_flag(std::getenv("SM64DS_PHIT_FEEDBACK"), true);
     if (const char *e = std::getenv("SM64DS_ATTACH_EAT")) std::sscanf(e, "%d,%d", &g.eat_ahead, &g.eat_up);
     if (const char *e = std::getenv("SM64DS_ATTACH_CARRY")) std::sscanf(e, "%d,%d", &g.carry_ahead, &g.carry_up);
+    if (const char *e = std::getenv("SM64DS_HELD_AT")) std::sscanf(e, "%d,%d", &g.held_ahead, &g.held_up);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_GATHER")) { g.gather = true; g.gather_dx = 150; g.gather_dz = 0; std::sscanf(e, "%d,%d", &g.gather_dx, &g.gather_dz); }
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_AT")) g.forge_at = (unsigned)std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEAT")) g.lab_seat = std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SWING")) g.lab_swing = std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_EATHOLD")) g.eat_hold = (unsigned)std::atoi(e);
+    if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEEK")) {
+        if (!std::strncmp(e, "any", 3)) { g.seek_seat = -2; std::sscanf(e + 3, ",%d", &g.seek_near); }
+        else if (!std::strncmp(e, "obj:", 4)) { g.seek_seat = -3; std::sscanf(e + 4, "%d,%d,%u", &g.seek_cls, &g.seek_near, &g.seek_from); }
+        else std::sscanf(e, "%d,%d", &g.seek_seat, &g.seek_near);
+    }
     if (const char *e = std::getenv("SM64DS_PHIT_LAB")) {
         char kind[16] = {0}; int units = 0;
         if (std::sscanf(e, "forge:%15[a-z]:%d", kind, &units) == 2) {
@@ -229,6 +281,12 @@ Place my_place() {
 // Can my body be hit / held right now? (the same set of reasons vs_arena_ref.cpp's my_body_may_act and the
 // referee's _hit use, plus a level in transition). `grab`: a Wario hold takes a STUNNED player, so the hurt
 // states and the knock's invincibility do not count against it.
+// TONGUE1: my own Player::Behavior does not run its state while a message sequence holds me (func_ov002_020c4188 returns
+// early on +0x71e, e.g. Bob-omb Battlefield's first-visit tutorial), and a message box freezes the actor walk
+// (actor_registry.cpp). Eaten then, the ROM mouth state never steps: hidden on my own spot until the spit.
+bool me_in_message(const char *me) {
+    return *(const unsigned char *)(me + 0x71e) != 0 || data_0209d660[0] != 0;
+}
 const char *g_busy_why = "";
 int g_busy_state = 0xFF;
 bool me_busy(const char *me, bool grab = false) {
@@ -242,12 +300,32 @@ bool me_busy(const char *me, bool grab = false) {
     if (!grab && (*(const unsigned char *)(me + 0x708) || *(const unsigned char *)(me + kNoControl))) return true;
     g_busy_why = "inmouth";
     if (*(void *const *)(me + kInMouth)) return true;
+    g_busy_why = "message";
+    if (!g.tongue_old && me_in_message(me)) return true;
     g_busy_why = "level_state";
     if (data_0209f2d8[0] == 2) return true;
     g_busy_why = "cutscene";
     if (*(const int *)data_0209fc48 != 0) return true;
     g_busy_why = "";
     return false;
+}
+
+// TONGUE1: what the cartridge itself asks before a Yoshi tongue takes a player (func_ov002_020d6c60, the VS arena's
+// own path): func_ov002_020d82f0 on the victim (no blink +0x6a0, not mega +0x703, no cap power +0x73c, not vanished
+// +0x6fb, both no-control bytes +0x708 / +0x709 clear), the victim holds nobody in its own mouth (+0x360), and the
+// mouth entry func_ov002_020d5f34 finds +0xd0 (mEatingPlayer) empty. Nothing about the state the body is in.
+// Returns 0 when the ROM would eat, else a short reason.
+const char *rom_eat_refusal(char *me) {
+    if (!func_ov002_020d82f0(me)) {
+        if (*(const unsigned short *)(me + 0x6a0)) return "rom_blink";
+        if (*(const unsigned char *)(me + 0x703)) return "rom_mega";
+        if (*(const unsigned short *)(me + 0x73c)) return "rom_capflags";
+        if (*(const unsigned char *)(me + 0x6fb)) return "rom_vanish";
+        return "rom_nocontrol";
+    }
+    if (*(void *const *)(me + kMouthObj)) return "rom_mouth_full";
+    if (*(void *const *)(me + kInMouth)) return "rom_in_a_mouth";
+    return nullptr;
 }
 
 bool see(int seat, Seen *s) {
@@ -284,6 +362,176 @@ void broadcast_attach(int holder, int state) {
     for (int seat = 0; seat < kHubPartySeats; ++seat) {
         if (seat == comms_hub_my_seat() || !party::seat_is_party(seat)) continue;
         send_wire(seat, kAttach, holder & 0xFFFF, state, 0, 0);
+    }
+}
+
+// ---- TONGUE1: what I hold, to every other seat ----------------------------------------------------------
+// The SYNG frame carries my body only: a friend sees my hands and mouth empty. The object's identity on every console
+// is its spawn slot (+0xce) and class (+0x0c), the same pair coop_actors.cpp syncs it by. A player in my hands or mouth
+// rides kAttach instead; eggs are local spawns (+0x588, five following eggs), so only their count goes out.
+void held_send(char *me) {
+    if (g.held_off) return;
+    int kind = 0, cls = 0, slot = -1, eggs = 0;
+    const char *ho = ptrf(me, kHeldObj), *mo = ptrf(me, kMouthObj);
+    const char *ob = mo ? mo : ho;
+    if (ob && *(const unsigned short *)(ob + 0x0c) != 0xbf) {
+        kind = mo ? 2 : 1;
+        cls = *(const unsigned short *)(ob + 0x0c);
+        slot = *(const short *)(ob + 0xce);
+        if (cls >= 1024 || slot < 0) kind = cls = 0, slot = -1;     // a runtime spawn has no slot every console shares
+    }
+    if (const int *q = *(int *const *)(me + 0x588)) for (int i = 0; i < 5; ++i) if (q[i]) ++eggs;
+    const bool changed = kind != g.ho_kind || cls != g.ho_cls || slot != g.ho_slot || eggs != g.ho_eggs;
+    if (!changed && (!(kind || eggs) || g.frame - g.ho_last < (unsigned)kHeldBeat)) return;
+    const bool hold_ended = changed && g.ho_kind && !kind;
+    g.ho_kind = kind; g.ho_cls = cls; g.ho_slot = slot; g.ho_eggs = eggs; g.ho_last = g.frame;
+    if (changed && g.log > 0)
+        std::fprintf(stderr, "[phit] held out f=%u: kind %d class %d slot %d eggs %d\n", g.frame, kind, cls, slot, eggs);
+    if (g.lab_drop_nothing && !kind) {
+        // LAB: the message that ends a hold is lost, and so is everything after it for five seconds (the egg count's
+        // one-second repeat would end the hold too), so the friend's console sees the hold go quiet
+        if (hold_ended) { g.lab_drop_until = g.frame + 150; std::fprintf(stderr, "[phit] LAB held out f=%u: the hold-ends message is dropped, and 150 frames after it\n", g.frame); }
+        if (g.frame < g.lab_drop_until) return;
+    }
+    for (int seat = 0; seat < kHubPartySeats; ++seat) {
+        if (seat == comms_hub_my_seat() || !party::seat_is_party(seat)) continue;
+        if (send_wire(seat, kHeldState, slot & 0xFFFF, kind | (eggs << 4), cls, 0)) ++g.held_sent;
+    }
+}
+
+// After the follower posed every ghost: an object a friend holds sits at his DRAWN hands, one in his mouth goes into
+// it (at the mouth for the tongue's pull, then out of sight, the way the cartridge hides a mouthful). My copy's own
+// Behavior still runs from the pinned spot next walk; coop_actors' slave pin ran before the follower.
+bool is_body(const char *a) {
+    for (int i = 0; i < 16; ++i) if (data_0209f394[i] == a) return true;
+    return false;
+}
+char *held_find(int cls, int slot) {
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+        if (*(const unsigned short *)(a + 0x0c) == (unsigned)cls && *(const short *)(a + 0xce) == slot) return a;
+    return nullptr;
+}
+// TONGUEFIX2: a copy my pin parked out of sight goes back to a real pose before coop sync can publish it: where it stood
+// on this console when the pin began, else the eater's last drawn mouth spot. Only the same object in the same level.
+bool held_put_back(G::HeldIn &h, const char *why, bool at_mouth = false) {
+    if (!h.pinned || h.slot < 0 || h.level != (int)my_place().level) return false;
+    char *a = held_find(h.cls, h.slot);
+    if (!a || a != h.pinned || is_body(a)) return false;      // killed (coop reconcile), or the slot holds another actor now
+    const bool mouth = h.have_mouth && (at_mouth || !h.have_back);
+    const int *src = mouth ? h.mouth : h.have_back ? h.back : nullptr;
+    if (!src) return false;
+    // The pose the pin took is already part way into the tongue's pull, a few units under the floor (an object put back
+    // there falls through the level): it comes back kPutBackLift units higher and drops onto the floor by itself.
+    int *pos = (int *)(a + 0x5c);
+    pos[0] = src[0]; pos[1] = src[1] + kPutBackLift * 0x1000; pos[2] = src[2];
+    coop_move_unpin(h.slot);                                  // a real pose again: coop sync may publish it from now on
+    h.parked = false;
+    std::fprintf(stderr, "[phit] held: class %d slot %d %s, put back at %d,%d,%d (%s)\n", h.cls, h.slot, why,
+                 src[0] >> 12, (src[1] >> 12) + kPutBackLift, src[2] >> 12, mouth ? "the eater's last mouth spot" : "where it was eaten");
+    return true;
+}
+// A finished hold's parked copy is settled by what the copy IS, not by the pin mark: coop sync's slave pin refuses a
+// jump of more than 6000 units, so the owner's pose never reaches a copy parked 200000 up, while apply_rec clears the
+// mark on any owner record. Real again (within 5000 units of the height it had at the eat): done. Still up there:
+// swallowed (his egg count rose) it stays out of sight and unpublished, its kill comes through the death table; else
+// (spat, or the hold-ends message went missing) it comes back at the eater's mouth after kLeftWait frames, time for a
+// kill sent with the hold's end to land first, and the owner's pose takes it from there.
+void held_leftovers() {
+    for (G::HeldIn &l : g.held_left) {
+        if (!l.pinned) continue;
+        char *a = held_find(l.cls, l.slot);
+        const bool here = a && a == l.pinned && l.level == (int)my_place().level;
+        if (!here) { std::fprintf(stderr, "[phit] held: parked class %d slot %d is gone (killed or level left)\n", l.cls, l.slot); l = G::HeldIn(); continue; }
+        const int ref_y = l.have_back ? l.back[1] : l.mouth[1];
+        const long long dy = (long long)*(const int *)(a + 0x60) - ref_y;
+        if (dy <= 5000LL * 0x1000 && dy >= -5000LL * 0x1000) {
+            std::fprintf(stderr, "[phit] held: parked class %d slot %d is on a real pose again (%d,%d,%d)\n", l.cls, l.slot,
+                         *(int *)(a + 0x5c) >> 12, *(int *)(a + 0x60) >> 12, *(int *)(a + 0x64) >> 12);
+            l = G::HeldIn(); continue;
+        }
+        if (l.swallowed) {
+            coop_move_pinned(l.slot, true);
+            if (!l.kept) {
+                l.kept = true;
+                std::fprintf(stderr, "[phit] held: parked class %d slot %d was swallowed: stays out of sight and unpublished\n", l.cls, l.slot);
+            }
+            continue;
+        }
+        if (g.frame - l.since < (unsigned)kLeftWait) { coop_move_pinned(l.slot, true); continue; }
+        held_put_back(l, coop_move_i_own(l.slot, (unsigned)l.cls) ? "left parked by a finished hold (MINE)" : "left parked by a finished hold", true);
+        l = G::HeldIn();
+    }
+}
+void held_after_follow_impl() {
+    char *me = my_body();
+    const int nb = (int)data_0209f21c < 16 ? (int)data_0209f21c : 16;
+    held_leftovers();
+    for (int seat = 0; seat < kHubPartySeats; ++seat) {
+        G::HeldIn &h = g.held_in[seat];
+        if (!h.kind) continue;
+        if (g.frame >= h.until) {
+            // the eater left, or the message that ends the hold was lost ("nothing" is said once): a copy I parked out of
+            // sight comes back now, before this console can be adopted as its owner and publish the park spot
+            if (h.parked && held_put_back(h, "went quiet while parked")) { g.held_quiet[seat] = h; g.held_quiet[seat].since = g.frame; }
+            else std::fprintf(stderr, "[phit] held: seat %d went quiet, nothing pinned\n", seat);
+            h = G::HeldIn();
+            continue;
+        }
+        char *a = held_find(h.cls, h.slot);
+        if (a && is_body(a)) a = nullptr;                   // never a player / ghost body
+        int dp[3] = {0, 0, 0}, drawn = 0; char *gb = nullptr;
+        for (int i = 0; i < nb && !drawn; ++i)
+            if (port_adventure_ghost_seat(i) == seat && data_0209f394[i] && data_0209f394[i] != me) {
+                gb = (char *)data_0209f394[i]; drawn = port_adventure_ghost_drawpos(i, dp);
+            }
+        const bool eater_here = drawn && gb;
+        // A copy parked in a drawn eater's mouth stays there even if coop sync hands it to me: the eater stops publishing
+        // an object in his mouth, so ownership drifts to me while he still holds it (his kill or spit decides what comes
+        // next). The pin below keeps it parked and unpublished. Once he is gone or quiet it comes back (held_put_back).
+        const bool keep_parked = h.parked && a && h.pinned == a && eater_here;
+        if (a && !keep_parked && coop_move_i_own(h.slot, (unsigned)h.cls)) {
+            // I simulate and publish this one in coop sync: pinning it would overwrite the owner's pose and publish the
+            // park spot to everyone. It stays mine; the holder's console shows it in his mouth / hands.
+            if (h.parked && h.pinned == a)                  // ownership came to me while my copy sat parked and the eater is gone
+                held_put_back(h, "became MINE while parked, the eater not drawn");
+            if (h.pinned != a || h.mode != 2) {
+                h.pinned = a; h.mode = 2;
+                std::fprintf(stderr, "[phit] held: class %d slot %d is MINE in coop sync, not pinned (seat %d's %s; my copy at %d,%d,%d)\n",
+                             h.cls, h.slot, seat, h.kind == 1 ? "hands" : "mouth", *(int *)(a + 0x5c) >> 12, *(int *)(a + 0x60) >> 12, *(int *)(a + 0x64) >> 12);
+            }
+            ++g.held_owned;
+            continue;
+        }
+        if (keep_parked && !h.kept && coop_move_i_own(h.slot, (unsigned)h.cls)) {
+            h.kept = true;
+            std::fprintf(stderr, "[phit] held: class %d slot %d became MINE while parked in seat %d's drawn mouth: stays parked and unpublished\n", h.cls, h.slot, seat);
+        }
+        if (!eater_here) {
+            if (h.parked && a && a == h.pinned) coop_move_pinned(h.slot, true);   // parked and the eater not drawn: stays unpublished
+            continue;
+        }
+        if (!a || a == me) { if (++g.held_miss <= 8) std::fprintf(stderr, "[phit] held: no local class %d slot %d for seat %d\n", h.cls, h.slot, seat); continue; }
+        if (a != h.pinned || h.mode != 1) {
+            h.pinned = a; h.mode = 1;
+            if (!h.have_back) {                             // the pose my copy has as the pin takes it
+                const int *p0 = (const int *)(a + 0x5c);
+                h.back[0] = p0[0]; h.back[1] = p0[1]; h.back[2] = p0[2]; h.have_back = true;
+            }
+            h.level = (int)my_place().level;
+            std::fprintf(stderr, "[phit] held: pinning my class %d slot %d to seat %d's %s\n", h.cls, h.slot, seat, h.kind == 1 ? "hands" : "mouth");
+        }
+        const int yaw = *player::facing(gb) & 0xFFFF;
+        const int ahead = h.kind == 1 ? g.held_ahead : g.eat_ahead, up = h.kind == 1 ? g.held_up : g.eat_up;
+        const double ang = (double)yaw * 3.14159265358979323846 / 32768.0;
+        int *pos = (int *)(a + 0x5c);
+        pos[0] = dp[0] + (int)std::lround(std::sin(ang) * ahead) * 0x1000;
+        pos[2] = dp[2] + (int)std::lround(std::cos(ang) * ahead) * 0x1000;
+        h.mouth[0] = pos[0]; h.mouth[1] = dp[1] + up * 0x1000; h.mouth[2] = pos[2]; h.have_mouth = true;
+        h.parked = h.kind == 2 && g.frame - h.since > (unsigned)kMouthPullFrames;
+        pos[1] = dp[1] + up * 0x1000 + (h.parked ? kParkUnits * 0x1000 : 0);
+        coop_move_pinned(h.slot);                           // coop sync must not publish the pinned / parked pose
+        *(short *)(a + 0x8e) = (short)yaw;
+        ++g.held_pins;
     }
 }
 
@@ -371,6 +619,7 @@ void apply_effect(char *me, const Claim &c, const Effect &fx) {
 void eat_begin(char *me, const Claim &c) {
     g.lab_done = true;
     g.hold.begin(c.attacker, c.yaw, g.frame);
+    g.mouth_miss = 0;
     if (g.eat_hold) g.hold.set_frames(g.eat_hold, g.eat_hold + 45);
     ++g.st.eats_began;
     char *ep = body_of_seat(c.attacker);
@@ -475,11 +724,39 @@ void eat_tick(char *me) {
             eat_end(me, false, true);
             return;
         }
+        // TONGUE1: St_InYoshiMouth_Main copies the eater's body position into mine every walk. Off it three passes in a row
+        // means my state is not stepping (a message holds me, the walk is frozen): spit now on both consoles rather than sit
+        // hidden on my own spot for the whole hold.
+        if (!g.tongue_old && in_state && ep && g.frame - g.hold.since() >= 2) {
+            int dp[3] = {0, 0, 0}, drawn = 0;
+            const int nb = (int)data_0209f21c < 16 ? (int)data_0209f21c : 16;
+            for (int i = 0; i < nb; ++i) if (data_0209f394[i] == ep) drawn = port_adventure_ghost_drawpos(i, dp);
+            const int dx = (*player::pos_x(me) - dp[0]) >> 12, dz = (*player::pos_z(me) - dp[2]) >> 12;
+            if (drawn && (dx > 8 || dx < -8 || dz > 8 || dz < -8)) ++g.mouth_miss; else g.mouth_miss = 0;
+            if (g.mouth_miss >= 3) {
+                std::fprintf(stderr, "[phit] EAT the mouth state is not stepping (me %d,%d off the eater, 71e %u, message %u): spit now\n",
+                             dx, dz, (unsigned)*(unsigned char *)(me + 0x71e), (unsigned)data_0209d660[0]);
+                ++g.eats_unstepped;
+                eat_end(me, true);
+                return;
+            }
+        }
         if (g.frame - g.beat >= (unsigned)kAttachBeat) { g.beat = g.frame; broadcast_attach(eater, 1); }
         if (g.log > 0 && ep && (g.frame % 20) == 0)
             std::fprintf(stderr, "[phit] mash f=%u count=%d phase=%d eater timer=%u step=%d state_is_mouth=%d\n", g.frame,
                          _ZN6Player19func_ov002_020beb38Ev(me), (int)*(unsigned char *)(me + 0x6f5), (unsigned)*(unsigned short *)(ep + kHoldTimer),
                          (int)*(unsigned char *)(me + 0x6e3), state_is(me, data_ov002_02110064) ? 1 : 0);
+    }
+    if (g.log > 0 && ((g.frame - g.hold.since()) % 5) == 0) {
+        // TONGUE1: where am I, and where is the eater DRAWN on this screen (the follower's pose; 0 = not drawn this pass)
+        char *ep = body_of_seat(eater);
+        int dp[3] = {0, 0, 0}, drawn = 0;
+        const int nb = (int)data_0209f21c < 16 ? (int)data_0209f21c : 16;
+        for (int i = 0; i < nb; ++i) if (ep && data_0209f394[i] == ep) drawn = port_adventure_ghost_drawpos(i, dp);
+        std::fprintf(stderr, "[phit] held f=%u +%u me (%d,%d,%d) opacity %u state %d | eater seat %d drawn %d at (%d,%d,%d) wire (%d,%d,%d)\n",
+                     g.frame, g.frame - g.hold.since(), u(*player::pos_x(me)), u(*player::pos_y(me)), u(*player::pos_z(me)),
+                     (unsigned)*(unsigned char *)(me + 0x6f5), port::vs_arena_state_index(me), eater, drawn,
+                     u(dp[0]), u(dp[1]), u(dp[2]), s.x, s.y, s.z);
     }
     const EatStep step = g.hold.tick(g.frame, in);
     if (step == kEatHolding) {
@@ -715,9 +992,29 @@ void handle_claim(int attacker, unsigned ikind, unsigned counter, unsigned stamp
     m.x = stamp ? hp.x : u(*player::pos_x(me)); m.y = stamp ? hp.y : u(*player::pos_y(me)); m.z = stamp ? hp.z : u(*player::pos_z(me));
     m.busy = me_busy(me, ikind == kGrabCatch);
     m.eaten = g.hold.active() || g.cv.active;
+    const char *rom_no = ikind == kEatClaim ? rom_eat_refusal(me) : nullptr;
+    if (ikind == kEatClaim && !g.tongue_old) {
+        // TONGUE1: a tongue asks what the cartridge asks (func_ov002_020d6c60's gate, rom_eat_refusal), plus the port-only
+        // reasons my body cannot step a mouth state at all (a message, a script, a cutscene) and a hold I am already in.
+        // The state list is not the ROM's: it refused tongues the cartridge takes (MPJANK1).
+        m.busy = true;
+        if (rom_no) g_busy_why = rom_no;
+        else if (me_in_message(me)) g_busy_why = "message";
+        else if (data_0209f2d8[0] == 2) g_busy_why = "level_state";
+        else if (*(const int *)data_0209fc48 != 0) g_busy_why = "cutscene";
+        else { g_busy_why = ""; m.busy = false; }
+        g_busy_state = port::vs_arena_state_index(me);
+    }
     Effect fx;
     const Verdict v = g.judge.judge(c, s, m, g.frame, &fx);
     log_verdict(c, v);
+    if (ikind == kEatClaim) {
+        if (rom_no) ++g.eat_rom_no; else ++g.eat_rom_ok;
+        std::fprintf(stderr, "[phit] eat claim f=%u verdict %s, the ROM's own gate: %s (state %d, blink %u, 708 %u, 709 %u, 71e %u, message %u)\n", g.frame,
+                     verdict_name(v), rom_no ? rom_no : "would eat", port::vs_arena_state_index(me),
+                     (unsigned)*(unsigned short *)(me + 0x6a0), (unsigned)*(unsigned char *)(me + 0x708), (unsigned)*(unsigned char *)(me + 0x709),
+                     (unsigned)*(unsigned char *)(me + 0x71e), (unsigned)data_0209d660[0]);
+    }
     if (v != kOk) return;
     // A believed claim waits for the frame hook. The pump runs inside the frame's tick, BEFORE and around the
     // actor walk, so changing my body's state from here is unsafe (measured: the ROM's mouth state found its
@@ -787,6 +1084,60 @@ void handle_reply(int seat, unsigned ik, int yaw, int x, int y, int z) {
         att_set(seat, yaw & 0xFFFF, st);
         break;
     }
+    case kHeldState: {
+        if (seat < 0 || seat >= kHubPartySeats) break;
+        const int v = u(x), kind = v & 0xF, eggs = (v >> 4) & 0xF, cls = u(y), slot = (short)yaw;
+        // a held object is a level object every console shares by slot: no runtime spawn (slot -1), never a player /
+        // ghost body (class 0xbf, those ride kAttach); "nothing" carries no object at all
+        const bool bad = kind > 2 || eggs > 5 || cls < 0 || cls >= 1024 ||
+                         (kind != 0 && (slot < 0 || cls == 0xbf || cls == 0)) || (kind == 0 && (slot != -1 || cls != 0));
+        if (bad) {
+            ++g.st.refused; ++g.st.refused_by[kBadKind & 15];
+            if (++g.held_drop <= 8) std::fprintf(stderr, "[phit] held: dropped from seat %d (kind %d class %d slot %d eggs %d)\n", seat, kind, cls, slot, eggs);
+            break;
+        }
+        G::HeldIn &h = g.held_in[seat];
+        ++g.held_recv;
+        G::HeldIn &q = g.held_quiet[seat];
+        if (q.pinned && (kind != 0 || g.frame - q.since > (unsigned)kQuietLate)) q = G::HeldIn();
+        if (q.pinned && kind == 0 && eggs > q.eggs) {
+            // the hold I put back for going quiet ends late, and his egg count rose: he swallowed it. My copy goes back out
+            // of sight and unpublished, the way a swallow that arrived in time leaves it (held_leftovers keeps it there).
+            char *qa = held_find(q.cls, q.slot);
+            if (qa && qa == q.pinned && !is_body(qa) && q.level == (int)my_place().level) {
+                *(int *)(qa + 0x60) += kParkUnits * 0x1000;
+                q.parked = true;
+                coop_move_pinned(q.slot, true);
+                int k = 0;
+                for (int i = 0; i < 8; ++i) if (!g.held_left[i].pinned) { k = i; break; } else if (g.held_left[i].since < g.held_left[k].since) k = i;
+                g.held_left[k] = q;
+                g.held_left[k].since = g.frame; g.held_left[k].swallowed = true; g.held_left[k].kept = false;
+                std::fprintf(stderr, "[phit] held: seat %d's late hold end says it swallowed my class %d slot %d (eggs %d -> %d): out of sight and unpublished again\n",
+                             seat, q.cls, q.slot, q.eggs, eggs);
+            }
+            q = G::HeldIn();
+        }
+        if (h.kind != kind || h.cls != cls || h.slot != slot || h.eggs != eggs) {
+            std::fprintf(stderr, "[phit] held: seat %d now holds %s (class %d slot %d), eggs %d\n", seat,
+                         kind == 1 ? "an object in its hands" : kind == 2 ? "an object in its mouth" : "nothing", cls, slot, eggs);
+            if (h.parked && h.pinned && h.slot >= 0) {
+                // the hold ended with my copy parked out of sight: it stays there, and coop sync keeps it unpublished
+                // until held_leftovers settles it: back on a real pose, killed through the death table, or put back at the mouth
+                coop_move_pinned(h.slot, true);
+                int k = 0;
+                for (int i = 0; i < 8; ++i) if (!g.held_left[i].pinned) { k = i; break; } else if (g.held_left[i].since < g.held_left[k].since) k = i;
+                g.held_left[k] = h;
+                g.held_left[k].since = g.frame;
+                g.held_left[k].swallowed = kind == 0 && eggs > h.eggs; g.held_left[k].kept = false;
+                std::fprintf(stderr, "[phit] held: seat %d's hold ended, my class %d slot %d stays parked and unpublished%s\n", seat, h.cls, h.slot,
+                             g.held_left[k].swallowed ? " (swallowed: his eggs rose)" : "");
+            }
+            h.since = g.frame; h.pinned = nullptr; h.parked = false; h.mode = 0;
+            h.have_back = h.have_mouth = h.swallowed = h.kept = false; h.level = -1;
+        }
+        h.kind = kind; h.cls = cls; h.slot = slot; h.eggs = eggs; h.until = g.frame + kHeldLife;
+        break;
+    }
     default: break;
     }
 }
@@ -800,9 +1151,26 @@ void on_hit(int seat, const unsigned char *d, int len, void *) {
 }
 
 // ---- attacker side --------------------------------------------------------------------------------
+int g_tongue_why = 0;   // TONGUE1: the last reason a scan of this tongue did not send (1 far, 2 height, 3 facing)
 void track_pose(const char *me) {
     const int st = port::vs_arena_state_index(me);
-    if (st != g.state) { g.prev_state = g.state; g.state = st; g.in_state = 0; } else { ++g.in_state; }
+    if (st != g.state) {
+        if (g.state == kStYoshiPower && g.in_state >= kTongueFirst && !g.tongue_said) {
+            if (g_tongue_why == 1) ++g.unsent_far; else if (g_tongue_why == 2) ++g.unsent_dy;
+            else if (g_tongue_why == 3) ++g.unsent_facing; else ++g.unsent_none;
+        }
+        g.prev_state = g.state; g.state = st; g.in_state = 0;
+        if (st == kStYoshiPower) { ++g.tongues; g.tongue_said = false; g_tongue_why = 0; }
+    } else { ++g.in_state; }
+}
+// attacker_contact's own tests, with which one failed (0 = it reaches)
+int contact_why(unsigned ikind, int mx, int my, int mz, int myaw, int tx, int ty, int tz) {
+    const ReachRule r = reach_rule(ikind);
+    const long long dy = (long long)my - ty;
+    const int h = r.horiz - kLagAllow;
+    if (horiz2(mx, mz, tx, tz) > sq(h)) return 1;
+    if (dy < r.dy_lo || dy > r.dy_hi) return 2;
+    return attacker_contact(ikind, mx, my, mz, myaw, tx, ty, tz) ? 0 : 3;
 }
 
 unsigned stamp_for(const HubSeatInfo &si) {
@@ -840,6 +1208,15 @@ void lab_gather(char *me) {
     *(int *)(me + kHorzSpeed) = 0; *(int *)(me + kVertSpeed) = 0;
 }
 
+// TONGUEFIX2: is this friend held in a mouth or hands? My own mouth / hands say it at once; the attach book (the victim's
+// own kAttach broadcast) says it for any holder. The victim's console judges the same thing as m.eaten.
+bool friend_is_held(char *me, int seat) {
+    char *vb = body_of_seat(seat);
+    if (vb && (ptrf(me, kMouthObj) == vb || ptrf(me, kHeldObj) == vb)) return true;
+    const Attach &at = g.att[seat];
+    return at.by >= 0 && g.frame < at.until;
+}
+
 void attacker_scan(char *me) {
     Pose p;
     p.state = g.state; p.prev_state = g.prev_state; p.frames_in_state = g.in_state;
@@ -858,6 +1235,14 @@ void attacker_scan(char *me) {
         if (g.send_frame[seat] && g.frame - g.send_frame[seat] < (unsigned)kSendGapFrames) continue;
         Seen s;
         if (!see(seat, &s) || !s.have_ghost) continue;
+        if (!lab && g.judge.rules.check_busy && friend_is_held(me, seat)) {
+            // TONGUEFIX2: the friend sits in a mouth or hands (in mine, or another's by the attach book). His console
+            // refuses every claim then (m.eaten, victim_busy), so none is sent: a Yoshi holding a friend stood on him
+            // and sent a stomp claim a frame (HITLAG1: 26 in one row, all refused)
+            if (++g.att_held_back <= 4 || (g.att_held_back & 63) == 0)
+                std::fprintf(stderr, "[phit] claims to seat %d held back: the friend is held (#%u) f=%u\n", seat, g.att_held_back, g.frame);
+            continue;
+        }
         HubSeatInfo si; comms_hub_seat_info(seat, &si);
         const unsigned stamp = stamp_for(si);
         int kind = ik;
@@ -878,6 +1263,7 @@ void attacker_scan(char *me) {
         port::comms_sync_ghost_look(seat, &fanim, &fchar);
         if (kind == kMelee && g.grab_on && wario && !g.ch.active && ghost_tongue::is_hurt_anim(fanim)) kind = kGrabCatch;
         if (!attacker_contact((unsigned)kind, mx, my, mz, yaw, s.x, s.y, s.z)) {
+            if (ik == kEatClaim) g_tongue_why = contact_why((unsigned)kind, mx, my, mz, yaw, s.x, s.y, s.z);
             if (ik == kEatClaim && g.log > 0 && g.frame - g.probe_frame >= 4) {
                 // PROBE (item 7): why a tongue scan did not send, with the friend's character
                 g.probe_frame = g.frame;
@@ -896,7 +1282,15 @@ void attacker_scan(char *me) {
         send_wire(seat, (unsigned)kind, yaw, mx, my, mz, stamp);
         g.send_frame[seat] = g.frame ? g.frame : 1;
         ++g.st.claims_sent;
-        if (kind == kEatClaim) g.book.sent(seat, g.frame);
+        {   // proof (TONGUEFIX2): a claim at a friend the victim refuses as held (in a mouth / hands)
+            const Attach &at = g.att[seat];
+            char *vb = body_of_seat(seat);
+            const bool mine = vb && (ptrf(me, kMouthObj) == vb || ptrf(me, kHeldObj) == vb);
+            if (mine || (at.by >= 0 && g.frame < at.until))
+                std::fprintf(stderr, "[phit] claim sent at an attached friend #%u: ik=%d -> seat %d (%s by seat %d) f=%u\n", ++g.att_claims, kind, seat,
+                             mine ? "in my mouth / hands" : at.kind == 1 ? "in the mouth of" : "carried", mine ? comms_hub_my_seat() : at.by, g.frame);
+        }
+        if (kind == kEatClaim) { g.book.sent(seat, g.frame); g.tongue_said = true; ++g.tongue_sent; }
         if (kind == kStomp) {
             *(int *)(me + kVertSpeed) = kBounceUp;             // my own bounce, whatever the friend's console decides
             g.squash_until[seat] = g.frame + 20;
@@ -906,6 +1300,132 @@ void attacker_scan(char *me) {
         if (g.log > 0) std::fprintf(stderr, "[phit] claim sent ik=%d -> seat %d stamp=%u (my %d,%d,%d; his %d,%d,%d)\n", kind, seat, stamp, mx, my, mz, s.x, s.y, s.z);
         return;                                                // one claim per frame
     }
+}
+
+// ---- LAB (TONGUE1): the seek pad -----------------------------------------------------------------
+// SM64DS_PHIT_LAB_SEEK=<seat>[,<near>]: this console walks its own body to that friend and uses the tongue, with
+// nothing but DS pad bits written into PadData before the actor walk (Stage::CheckInput builds the Ctrl block from
+// them at the top of the walk: vs_arena_eat.cpp rig_press says why the Ctrl words themselves are no use). No position,
+// speed or facing is written: the ROM's own walk turns and moves the body. The D-pad is camera-relative, so the
+// camera's forward is learned by holding UP (the body turns to it) and the handedness by holding LEFT once.
+void pad_raw(unsigned short ds, bool edge) {
+    const int slot = (int)data_0209f250;
+    if (slot < 0 || slot > 3) return;
+    data_020a0e58[slot * 2] |= ds;
+    if (edge) {
+        data_020a0e58[slot * 2 + 1] |= ds;
+        *(unsigned short *)((char *)data_020a0e5a + slot * 4) |= ds;
+    }
+}
+void pad_ctrl(unsigned short ctrl_mask, bool edge) {      // a Ctrl bit (0x0001 = attack) through CheckInput's own map
+    const int slot = (int)data_0209f250;
+    if (slot < 0 || slot > 3) return;
+    const unsigned char mode = *(unsigned char *)(data_0209f498 + slot * 0x18 + 0x16);
+    const unsigned short *map = data_0209214c[mode < 3 ? mode : 0];
+    unsigned short ds = 0;
+    for (int j = 0; j < 16; ++j)
+        if (map[j] & ctrl_mask) ds |= (unsigned short)(1u << j);
+    pad_raw(ds, edge);
+}
+enum : unsigned short { kDsRight = 0x10, kDsLeft = 0x20, kDsUp = 0x40, kDsDown = 0x80 };
+void lab_seek(char *me) {
+    if (g.seek_seat < 0 && g.seek_seat != -2 && g.seek_seat != -3) return;
+    if (g.hold.active() || g.cv.active) return;
+    {   // only while my level runs: not on star select, not inside a message (the pad would page it, not walk)
+        const unsigned beh = port_stage_behavior_calls();
+        const bool running = beh != g.seek_beh;
+        g.seek_beh = beh;
+        if (!running || me_in_message(me) || g.frame < g.seek_from) return;
+    }
+    int seat = g.seek_seat;
+    Seen s;
+    if (seat == -3) {                           // obj:<class>: the nearest synced object of that class; hands off while I hold anything
+        if (ptrf(me, kHeldObj) || ptrf(me, kMouthObj)) { g.seek_idle = 0; return; }
+        if (const int *q = *(int *const *)(me + 0x588)) for (int i = 0; i < 5; ++i) if (q[i]) return;
+        const int mx0 = *player::pos_x(me) >> 12, mz0 = *player::pos_z(me) >> 12;
+        double best = 1e18;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (*(const unsigned short *)(a + 0x0c) != (unsigned)g.seek_cls || *(const short *)(a + 0xce) < 0) continue;
+            const int ax = *(const int *)(a + 0x5c) >> 12, az = *(const int *)(a + 0x64) >> 12;
+            const double d = (double)horiz2(mx0, mz0, ax, az);
+            if (d < best) { best = d; s.x = ax; s.y = *(const int *)(a + 0x60) >> 12; s.z = az; }
+        }
+        if (best > 1e17) return;
+    } else if (seat == -2) {                           // "any": the first friend seat with a fresh ghost (seats are not stable per run)
+        Seen t;
+        for (int q = 0; q < kHubPartySeats && seat == -2; ++q)
+            if (q != comms_hub_my_seat() && see(q, &t) && t.have_ghost) seat = q;
+        if (seat == -2) return;
+    }
+    if (seat != -3) {
+        if (!see(seat, &s) || !s.have_ghost || !s.in_level) return;
+        const Place mp = my_place();
+        if (s.at.level != mp.level || s.at.area != mp.area) return;
+    }
+    ++g.seek_f;
+    const int mx = u(*player::pos_x(me)), mz = u(*player::pos_z(me));
+    const int yaw = *(const short *)(me + kYawAngle) & 0xFFFF;
+    const double dist = std::sqrt((double)horiz2(mx, mz, s.x, s.z));
+    const int want = angle_from_to(mx, mz, s.x, s.z);
+    // the ROM turns the stick's angle by the camera's (Player::Behavior: mDesiredAngleY = Ctrl angle + GetAngleToCamera),
+    // so the D-pad is learned against the camera and re-aimed through it every frame
+    const int cam = GetAngleToCamera(data_0209fc68[0] ? (int)data_0209f250 : 0) & 0xFFFF;
+    const int dyaw = *(const short *)(me + 0x6d2) & 0xFFFF;   // mDesiredAngleY: where the stick points this frame (the body turns later)
+    switch (g.seek_phase) {
+    case 0:                                     // hold UP: the body turns to the camera's forward
+        pad_raw(kDsUp, g.seek_t == 0);
+        if (++g.seek_t >= 10) { g.seek_cup = (dyaw - cam) & 0xFFFF; g.seek_t = 0; g.seek_phase = 1; }
+        return;
+    case 1: {                                   // hold LEFT: which way is left
+        pad_raw(kDsLeft, g.seek_t == 0);
+        if (++g.seek_t >= 10) {
+            const short d = (short)(dyaw - cam - g.seek_cup);
+            g.seek_sign = d >= 0 ? 1 : -1;
+            g.seek_t = 0; g.seek_phase = 2;
+            std::fprintf(stderr, "[phit] LAB seek: stick up 0x%04x against the camera (cam 0x%04x, desired 0x%04x, body 0x%04x), left is %s\n", g.seek_cup, cam, dyaw, yaw, g.seek_sign > 0 ? "+0x4000" : "-0x4000");
+        }
+        return;
+    }
+    case 2: {                                   // walk to him; near and facing him: the tongue
+        int fe = (want - yaw) & 0xFFFF; if (fe > 0x8000) fe -= 0x10000;
+        if (++g.seek_idle >= 600) {             // ten seconds without a press: the camera turned since the last calibration
+            g.seek_idle = 0; g.seek_t = 0; g.seek_phase = 0;
+            std::fprintf(stderr, "[phit] LAB seek: no press in 600 frames, calibrating again (f=%u)\n", g.frame);
+            return;
+        }
+        if (dist <= g.seek_near && fe > -0x1000 && fe < 0x1000 && g.state != kStYoshiPower) {
+            pad_ctrl(0x0001, true);
+            ++g.seek_tongues;
+            g.seek_idle = 0;
+            std::fprintf(stderr, "[phit] LAB seek: tongue %llu at %d units, facing error 0x%x, f=%u\n", g.seek_tongues, (int)dist, fe & 0xFFFF, g.frame);
+            g.seek_t = 0; g.seek_phase = 3;
+            return;
+        }
+        // the D-pad direction (8 of them) nearest the way to him, in the camera's frame
+        const short rel = (short)((want - cam - g.seek_cup) * g.seek_sign);
+        const int k = (((int)rel + 0x1000) & 0xFFFF) / 0x2000;       // 0 up, 1 up-left, 2 left, ... 7 up-right
+        static const unsigned short dirs[8] = { kDsUp, kDsUp | kDsLeft, kDsLeft, kDsDown | kDsLeft, kDsDown, kDsDown | kDsRight, kDsRight, kDsUp | kDsRight };
+        // close in: a short press only turns the body (and steps it a little)
+        if (dist > g.seek_near * 0.6 || (g.seek_f & 3) == 0) pad_raw(dirs[k & 7], false);
+        return;
+    }
+    default:                                    // after a tongue: hands off for a second and a half
+        if (++g.seek_t >= 45) { g.seek_t = 0; g.seek_phase = (g.seek_tongues % 6) == 0 ? 0 : 2; }
+        return;
+    }
+}
+
+void exit_summary() {
+    std::fprintf(stderr, "[phit:exit] tongues %llu: claim sent %llu, unsent: out of reach %llu, height %llu, facing %llu, nothing to say %llu"
+                 " (seek pad tongues %llu)\n", g.tongues, g.tongue_sent, g.unsent_far, g.unsent_dy, g.unsent_facing, g.unsent_none, g.seek_tongues);
+    std::fprintf(stderr, "[phit:exit] claims in %llu: applied %llu, refused %llu; eat claims the ROM's own gate would take %llu, refuse %llu\n",
+                 g.st.claims_recv, g.st.claims_recv - g.st.refused, g.st.refused, g.eat_rom_ok, g.eat_rom_no);
+    for (int v = 1; v < kVerdicts; ++v)
+        if (g.st.refused_by[v & 15]) std::fprintf(stderr, "[phit:exit]   refused %s: %llu\n", verdict_name(v), g.st.refused_by[v & 15]);
+    std::fprintf(stderr, "[phit:exit] eats began %llu, spat %llu, aborted %llu, spat early (mouth state not stepping) %u\n", g.st.eats_began, g.st.eats_spat, g.st.eats_aborted, g.eats_unstepped);
+    std::fprintf(stderr, "[phit:exit] held state: sent %u, received %u, pinned frames %u, no local copy %u, dropped %u, left alone as mine %u frames, coop publishes held back %u\n", g.held_sent, g.held_recv, g.held_pins, g.held_miss, g.held_drop, g.held_owned, coop_move_pin_skips());
+    std::fprintf(stderr, "[phit:exit] claims sent at an attached friend %u, held back (friend held) %u\n", g.att_claims, g.att_held_back);
+    std::fflush(stderr);
 }
 
 }  // namespace
@@ -928,6 +1448,8 @@ int squash_scale_for_seat(int seat) {
     if (seat < 0 || seat >= kHubPartySeats || !g.on || g.frame >= g.squash_until[seat]) return 0x1000;
     return 0x800;                                              // TUNE: half height
 }
+
+void held_after_follow() { if (g.on && !g.held_off) held_after_follow_impl(); }
 
 int attached_holder(int victim_seat, int *kind) {
     if (!g.on || victim_seat < 0 || victim_seat >= kHubPartySeats) return -1;
@@ -965,6 +1487,7 @@ extern "C" void port_party_hits_frame(void) {
             const bool ok = coop_ctl_register(kCoopCtlSubtype, kCoopCtlSubtype, coop_sub, nullptr);
             std::fprintf(stderr, "[phit] coop SYNB 0x%02x %s\n", (unsigned)kCoopCtlSubtype, ok ? "registered" : "REGISTER FAILED");
         }
+        if (g.on) std::atexit(exit_summary);
         std::fprintf(stderr, "[phit] %s (room %d, interact %d, damage %d)\n", g.on ? "on" : "off: not a party/coop room or interactions off",
                      (int)rk, g.judge.tog.interact ? 1 : 0, g.judge.tog.damage ? 1 : 0);
     }
@@ -973,6 +1496,7 @@ extern "C" void port_party_hits_frame(void) {
     char *me = my_body();
     if (!me) return;
     track_pose(me);
+    held_send(me);
     {   // my position this frame, for the claims that name an age
         Pos3 &r = g.ring[g.frame % kRingFrames];
         r.x = u(*player::pos_x(me)); r.y = u(*player::pos_y(me)); r.z = u(*player::pos_z(me));
@@ -1002,6 +1526,7 @@ extern "C" void port_party_hits_prewalk(void) {
     char *me = my_body();
     if (!me) return;
     diag_links("prewalk-before", me);
+    lab_seek(me);                                 // LAB (TONGUE1): inert unless SM64DS_PHIT_LAB_SEEK
     if (g.hold.active() && g.rom_mouth) {
         if (char *ep = body_of_seat(g.hold.eater())) {
             if (state_is(me, data_ov002_02110064)) {

@@ -38,7 +38,11 @@ enum IKind : unsigned {
     kGrabBreak = 9,    // victim -> holder: "I broke free" (the holder drops me)
     kAttach = 10,      // victim -> every other seat: x = 0 off / 1 eaten / 2 carried, yaw = the holder's seat
     kGrabAck = 11,     // victim -> holder: "I am in your hands"
-    kKinds = 12,
+    // TONGUE1: what I hold, to every other seat (on change and every second while I hold something): x = kind (0 nothing,
+    // 1 an object in my hands, 2 an object in my mouth) | eggs following me << 4, yaw = the object's spawn slot (+0xce),
+    // y = its class id. Builds before it refuse kind 12 as a bad kind and draw nothing, as before.
+    kHeldState = 12,
+    kKinds = 13,
 };
 // seq = kind (4 bits) | stamp (4 bits) | counter (8 bits). The stamp is the attacker's estimate, in frames,
 // of how old its view of the victim was when it struck (INTERACT9: the victim judges against its own pose

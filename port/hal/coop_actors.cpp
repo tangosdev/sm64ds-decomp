@@ -201,6 +201,7 @@ struct Slot {
     int      owner;           // -1 unknown, my seat, or a remote seat
     unsigned owner_t;         // when it last changed
     unsigned last_pub;
+    unsigned pin_lf;          // TONGUE1: g_lf + 1 when a friend's held-object pin last moved this copy, 0 never, kPinStay muted
     bool     lvalid;
     int32_t  lx, ly, lz;
     int16_t  lax, lay, laz;
@@ -232,6 +233,8 @@ bool g_regd = false;
 int  g_my = -1;
 CoopKey g_key;
 unsigned g_lf = 0;                // ticks since this group key
+const unsigned kPinStay = 0xffffffffu;   // TONGUE1: a parked copy left behind by a finished hold
+unsigned g_pin_skips = 0;         // TONGUE1: publishes held back because a friend's held pin moved the copy
 unsigned g_spawn_lf = 0; bool g_spawned = false;
 unsigned g_ents = 0;
 Slot g_slot[kSlots];
@@ -510,6 +513,7 @@ void apply_rec(int slot, Slot &s, Rx &x) {
     const Prof &p = g_prof[s.prof];
     char *a = s.a;
     if (x.cls != p.id || x.nf != p.nf) { ++g_st.cls_mismatch; return; }
+    if (s.pin_lf == kPinStay) s.pin_lf = 0;   // TONGUE1: an owner's record replaces the parked copy
     if (skip_state(a, p)) { ++g_st.skipped_state; return; }
     const bool force = x.snap;
     const bool phase = (p.flags & kFPhase) && p.nf > 0;
@@ -610,7 +614,7 @@ void scan_ents() {
         Slot &s = g_slot[slot];
         if (s.a) continue;                                    // two actors in one slot: the first wins
         if (s.prof != g_prof_of[id]) {                        // a different class (or first sight): start clean
-            s.prof = g_prof_of[id]; s.seen = 0; s.lvalid = false; s.owner = -1; s.last_pub = 0;
+            s.prof = g_prof_of[id]; s.seen = 0; s.lvalid = false; s.owner = -1; s.last_pub = 0; s.pin_lf = 0;
         }
         s.a = a;
         ++s.seen;
@@ -682,6 +686,7 @@ void slave(Slot &s, const Rx &x, unsigned now) {
     wr32(a, 0x64, clampi(tz, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
     wr16(a, 0x8c, tax); wr16(a, 0x8e, tay); wr16(a, 0x90, taz);
     s.lvalid = false;
+    if (s.pin_lf == kPinStay) s.pin_lf = 0;   // TONGUE1: an owner's pose replaced the parked copy
     ++g_st.slaved;
     ++g_cs[s.prof].slaved;
 }
@@ -743,6 +748,7 @@ void process(unsigned now) {
         // 3. publish if I own it
         if (!g_act) continue;
         if (!g_hold && s.owner == g_my && s.seen >= 3 && !skip_state(s.a, p) && !frozen_state(s.a)) {
+            if (s.pin_lf == kPinStay || (s.pin_lf && g_lf - (s.pin_lf - 1) <= 1u)) { ++g_pin_skips; continue; }   // a friend's held pin owns the pose
             const unsigned age = now - s.last_pub;
             if (age >= p.period) {
                 bool changed = !s.lvalid || rd32(s.a, 0x5c) != s.lx || rd32(s.a, 0x60) != s.ly || rd32(s.a, 0x64) != s.lz ||
@@ -791,7 +797,8 @@ void process(unsigned now) {
             while (j.cursor < kSlots && nrec < kMoverMaxRecs) {
                 Slot &s = g_slot[j.cursor];
                 const int slot = j.cursor;
-                bool mine = s.a && s.seen >= 3 && !skip_state(s.a, g_prof[s.prof]) && s.owner == g_my && (s.heard || coop_group_i_am_owner());
+                bool mine = s.a && s.seen >= 3 && !skip_state(s.a, g_prof[s.prof]) && s.owner == g_my && (s.heard || coop_group_i_am_owner()) &&
+                            !(s.pin_lf == kPinStay || (s.pin_lf && g_lf - (s.pin_lf - 1) <= 1u));
                 if (mine && bytes + rec_bytes(s.prof) + (int)sizeof(MoverBatchHead) > kPayloadMax) break;
                 ++j.cursor;
                 if (!mine) continue;
@@ -990,6 +997,27 @@ struct Registrar {
 // Public.
 // ---------------------------------------------------------------------------
 CoopMoveStats coop_move_stats() { return g_st; }
+
+bool coop_move_i_own(int slot, unsigned cls) {
+    if (slot < 0 || slot >= kSlots || g_my < 0) return false;
+    const Slot &s = g_slot[slot];
+    if (!s.a || *(const unsigned short *)(s.a + 0x0c) != cls) return false;
+    return s.owner == g_my;
+}
+
+void coop_move_pinned(int slot, bool stay) {
+    if (slot >= 0 && slot < kSlots && g_slot[slot].a) g_slot[slot].pin_lf = stay ? kPinStay : g_lf + 1;
+}
+
+void coop_move_unpin(int slot) {
+    if (slot >= 0 && slot < kSlots) g_slot[slot].pin_lf = 0;
+}
+
+bool coop_move_pin_stays(int slot) {
+    return slot >= 0 && slot < kSlots && g_slot[slot].a && g_slot[slot].pin_lf == kPinStay;
+}
+
+unsigned coop_move_pin_skips() { return g_pin_skips; }
 
 int coop_move_class_stats(CoopClassStat *out, int max) {
     int n = 0;

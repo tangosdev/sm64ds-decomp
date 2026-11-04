@@ -112,6 +112,18 @@ struct CoopClassStat {
     double pin_avg, pin_max;
 };
 int coop_move_class_stats(CoopClassStat *out, int max);
+// TONGUE1: true when the actor in spawn slot `slot` of class `cls` is synced here and THIS console owns it (it simulates
+// and publishes its pose). A friend's held-object pin must leave such an actor alone.
+bool coop_move_i_own(int slot, unsigned cls);
+// TONGUE1: the held-object pin moved my (not owned) copy in `slot` this tick: it is not published this tick or the next,
+// so a flip of ownership to me never sends the pinned / parked pose. `stay`: the hold ended with my copy parked out of
+// sight, so it stays unpublished until an owner's pose lands on it. coop_move_pin_skips counts the publishes held back.
+void coop_move_pinned(int slot, bool stay = false);
+// TONGUEFIX2: the held-object pin put my parked copy in `slot` back on a real pose: coop sync may publish it again at once.
+void coop_move_unpin(int slot);
+// TONGUEFIX2: true while my copy in `slot` is still the parked copy a finished hold left (no owner's pose has landed on it).
+bool coop_move_pin_stays(int slot);
+unsigned coop_move_pin_skips();
 
 // Validators (payload = after the 12-byte head). Exposed for the forged-input rows.
 bool coop_mover_batch_validate(const void *payload, int len);

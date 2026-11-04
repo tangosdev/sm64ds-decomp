@@ -35,6 +35,8 @@ int squash_scale_for_seat(int seat);
 int attached_holder(int victim_seat, int *kind);
 // Units ahead of the holder's yaw and up from its feet for the attach kind.
 void attach_offsets(int kind, int *ahead, int *up);
+// TONGUE1: after the follower posed the ghosts, put the objects friends hold at their drawn hands / mouth (kHeldState).
+void held_after_follow();
 
 struct Stats {
     unsigned long long claims_sent, claims_recv, applied, refused, bounces, eats_began, eats_spat, eats_aborted;
