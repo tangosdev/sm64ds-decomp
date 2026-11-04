@@ -85,7 +85,9 @@ void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(void *out, void *a, void *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
-void AddVec3(void *a, void *b, void *c);
+/* local extern: CalcLib's declaration is unnamed; retain these names so this
+ * TU's compiler-numbered aliases remain stable. */
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 int Vec3_HorzLen(void *v);
 int LenVec3(Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);

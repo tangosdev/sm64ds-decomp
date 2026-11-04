@@ -45,6 +45,7 @@ enum daC_Jugem_c_AssetId {
 
 #include "daC_Jugem_c.h"
 #include "common.h"
+#include "math/CalcLib.h"
 #include "dActor_c.h"
 #include "daPly_c.h"
 #include "dCamera_c.h"
@@ -100,17 +101,12 @@ struct JugemVec3 {
 
 extern "C" {
 
-/* math / vector helpers -- no shared header declares these */
-int   Vec3_Dist(const void *a, const void *b);
-int   Vec3_HorzDist(const void *a, const void *b);
-s16   Vec3_HorzAngle(const void *a, const void *b);
+/* Helpers not declared by the included headers. */
 s16   Vec3_VertAngle(const void *a, const void *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int sh);
 int   Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
 int   LenVec3(const void *v);
 int   AngleDiff(int a, int b);
-u16   DecIfAbove0_Short(u16 *p);
 void  Matrix4x3_FromRotationY(void *m, int angY);
 void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
@@ -222,7 +218,7 @@ int daC_Jugem_c::StateIntroMain() {
     ApproachLinear(*(Vector3 *)&mCamLookX, *(Vector3 *)&r, 0x70000);
     cam->SetLookAt(*(Vector3 *)&mCamLookX);
     cam->SetPos(*(Vector3 *)&mCamPosX);
-    Vec3_Dist(&mCamLookX, &r);
+    ::Vec3_Dist((const ::Vector3 *)&mCamLookX, (const ::Vector3 *)&r);
     mTimer++;
     if (mTimer > 0x64) {
         if (Sound::PlaySub(0x4b, 0x7f, 0, 0x7222, false) != 0) {
@@ -269,10 +265,16 @@ int daC_Jugem_c::StateApproachMain()
     cam = (dCamera_c *)data_0209f318;
     cam->SetFlag_3();
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
-    ApproachLinear(mAngleY, Vec3_HorzAngle(&mPosX, &data_ov085_0213084c), 0x200);
+    ApproachLinear(
+        mAngleY,
+        ::Vec3_HorzAngle((const ::Vector3 *)&mPosX, (const ::Vector3 *)&data_ov085_0213084c),
+        0x200);
     ApproachLinear(mAngleX, Vec3_VertAngle(&mPosX, &data_ov085_0213084c), 0x200);
     ApproachLinear(mHorzSpeed, 0x28000, 0x2000);
-    ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPosX, &data_ov085_0213084c), (s16)mAuxCounter);
+    ApproachLinear(
+        mPrevAngleY,
+        ::Vec3_HorzAngle((const ::Vector3 *)&mPosX, (const ::Vector3 *)&data_ov085_0213084c),
+        (s16)mAuxCounter);
     mAngleY = mPrevAngleY;
     mAuxCounter += 5;
     if (mAuxCounter > 0x800)
@@ -571,10 +573,13 @@ int daC_Jugem_c::StateArriveInit()
    mark for destruction. */
 int daC_Jugem_c::StateLeaveMain()
 {
-    ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPosX, &mTargetX), 0x800);
+    ApproachLinear(mPrevAngleY,
+                   ::Vec3_HorzAngle((const ::Vector3 *)&mPosX, (const ::Vector3 *)&mTargetX),
+                   0x800);
     ApproachLinear(mAngleY, mPrevAngleY, 0x800);
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
-    if (AngleDiff(mPrevAngleY, Vec3_HorzAngle(&mPosX, &mTargetX)) < 0x2000) {
+    if (AngleDiff(mPrevAngleY, ::Vec3_HorzAngle((const ::Vector3 *)&mPosX,
+                                                (const ::Vector3 *)&mTargetX)) < 0x2000) {
         Vec3_ApproachHorz(&mPosX, &mTargetX, 0x1e000);
         ApproachLinear(mPosY, mTargetY, 0x1e000);
     }
@@ -682,10 +687,11 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     out.z += p->mPosZ;
 
     ApproachLinear(mPos, *(::Vector3 *)&out, 0x14000);
-    ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPosX, &out), 0x800);
+    ApproachLinear(mPrevAngleY,
+                   ::Vec3_HorzAngle((const ::Vector3 *)&mPosX, (const ::Vector3 *)&out), 0x800);
     mAngleY = mPrevAngleY;
 
-    if (Vec3_Dist(&mPosX, &out) < 0x14000) {
+    if (::Vec3_Dist((const ::Vector3 *)&mPosX, (const ::Vector3 *)&out) < 0x14000) {
         mTalkPlayer = p;
         SetState(data_ov085_02130810);
     }
@@ -773,8 +779,9 @@ int daC_Jugem_c::StateHoverMain()
     }
     mPosY = plpos.y;
     mPosZ = plpos.z;
-    in.z = Vec3_HorzDist(&plpos, &mPosX);
-    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle(&plpos, &mPosX));
+    in.z = ::Vec3_HorzDist((const ::Vector3 *)&plpos, (const ::Vector3 *)&mPosX);
+    Matrix4x3_FromRotationY(&data_020a0e68,
+                            ::Vec3_HorzAngle((const ::Vector3 *)&plpos, (const ::Vector3 *)&mPosX));
     MulVec3Mat4x3(&in, &data_020a0e68, &out);
     mPosX += out.x;
     if (data_0209f2f8 == 0x2f) {
@@ -877,9 +884,9 @@ void daC_Jugem_c::UpdateShadowPlayer()
     p.y = pp.y;
     p.z = pp.z;
 
-    z1.z = Vec3_HorzDist(&pp, &p);
+    z1.z = ::Vec3_HorzDist((const ::Vector3 *)&pp, (const ::Vector3 *)&p);
     {
-        short ang = Vec3_HorzAngle(&pp, &p);
+        short ang = ::Vec3_HorzAngle((const ::Vector3 *)&pp, (const ::Vector3 *)&p);
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
     }
     MulVec3Mat4x3(&z1, &data_020a0e68, &off);

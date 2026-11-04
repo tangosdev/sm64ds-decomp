@@ -52,6 +52,7 @@
 #include "dBgCh_Actr.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "SpawnInfo.h"
 
 #pragma defer_codegen off
@@ -114,8 +115,6 @@ void func_ov077_02125e94(daTgz_c *self, int state);
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 s16 func_02010844(void *unused, Vector3 *v, s16 angle);
-short Vec3_HorzAngle(void *a, void *b);
-void Vec3_Asr(void *dst, void *src, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
@@ -297,7 +296,8 @@ extern "C" void func_ov077_02124eb0(void *vc)
     }
 
     if (self->mdCcAc_c.hitFlags & 0x10) {
-        self->mPrevAngleY = Vec3_HorzAngle(&player->mPosX, &self->mPosX);
+        self->mPrevAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&player->mPosX),
+                                           reinterpret_cast<const Vector3 *>(&self->mPosX));
         player->IncMegaKillCount();
         func_ov077_02125e94(self, 5);
         return;
@@ -337,7 +337,8 @@ extern "C" void func_ov077_021250a8(void *vc)
     }
     int flags = self->mdCcAc_c.hitFlags;
     if ((flags & 0x10) != 0) {
-        self->mPrevAngleY = Vec3_HorzAngle(&player->mPosX, &self->mPosX);
+        self->mPrevAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&player->mPosX),
+                                           reinterpret_cast<const Vector3 *>(&self->mPosX));
         self->mAngleY = self->mPrevAngleY + 0x8000;
         player->IncMegaKillCount();
         func_ov077_02125e94(self, 5);
@@ -355,10 +356,9 @@ extern "C" void func_ov077_021250a8(void *vc)
 // @symbol func_ov077_021251d0
 /* Tumble matrix: translate to pos>>3, up by the egg-aim height, rotate, then
  * back down by that height, and keep the result on the anim model's matrix. */
-extern "C" void func_ov077_021251d0(daTgz_c *self)
-{
+extern "C" void func_ov077_021251d0(daTgz_c *self) {
     int v[3];
-    Vec3_Asr(v, &self->mPosX, 3);
+    Vec3_Asr(reinterpret_cast<Vector3 *>(v), reinterpret_cast<Vector3 *>(&self->mPosX), 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
     int aimHeight = self->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, aimHeight >> 3, 0);
@@ -628,7 +628,8 @@ int daTgz_c::func_ov077_02125908() {
 int daTgz_c::func_ov077_02125a0c() {
     mHorzSpeed = 0x5000;
     mVertSpeed = 0xd000;
-    short ang = (short)Vec3_HorzAngle(&mChasePlayer->mPosX, &mPosX);
+    short ang = (short)Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mChasePlayer->mPosX),
+                                      reinterpret_cast<const Vector3 *>(&mPosX));
     mPrevAngleY = ang;
     mWithMeshClsn.SetLimMovFlag();
     mState = 2;

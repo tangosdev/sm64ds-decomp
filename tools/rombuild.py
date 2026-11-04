@@ -1083,9 +1083,12 @@ def intact_tu_policies(enrolled=None, manifest=None):
                           "supported until baseline bootstrapping is non-circular")
         linkcheck = (entry.get("verification") or {}).get("linkcheck") or {}
         phases = linkcheck.get("phases") or {}
-        if linkcheck.get("result") != "scratch-data-verified":
+        # `data-verified` is the same ordinary link with nothing to rewrite: the raw
+        # object already owned exactly its manifest ranges, so tubuild's classifier
+        # had no scratch rewrite to name. The ROM and range checks below still apply.
+        if linkcheck.get("result") not in ("scratch-data-verified", "data-verified"):
             errors.append(f"{label}: intact-object policy needs scratch-data-verified "
-                          "ordinary link evidence")
+                          "or data-verified ordinary link evidence")
         for phase in ("delink", "lcf", "compile", "link", "checkModules", "rom"):
             if phases.get(phase) is not True:
                 errors.append(f"{label}: intact-object proof phase {phase} is not green")

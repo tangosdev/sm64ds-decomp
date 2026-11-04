@@ -406,14 +406,16 @@ extern "C" int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::S
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211ffa8
 extern "C" {
-extern unsigned int RandomIntInternal(void* s);
+/* local extern: retain the named parameter from CalcLib's shared signature
+ * to keep this TU's compiler-numbered aliases stable. */
+extern int RandomIntInternal(int *seed);
 extern int data_0209e650[];
 /* Wander init: heading = a random multiple of 0x1000 (one of 16 directions,
  * 22.5 degrees apart), timer = 50 + random 0..31 frames, plays the file-02123520
  * animation at speed 1.0. */
 int func_ov070_0211ffa8(daPropeller_Heyho_c* c){
-    c->mTargetAngY = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0xf) << 0xc);
-    c->mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x32);
+    c->mTargetAngY = (short)((((unsigned int)RandomIntInternal(data_0209e650) >> 8) & 0xf) << 0xc);
+    c->mStateTimer = (short)((((unsigned int)RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x32);
     c->mAnmModel.SetAnim((BCA_File *)data_ov070_02123520.filePtr, 0, 0x1000, 0);
     return 1;
 }
@@ -521,7 +523,8 @@ extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(void *a, void *m, void *out);
 extern int Vec3_Dist(void *a, void *b);
-extern unsigned int RandomIntInternal(void *seed);
+/* local extern: see the named CalcLib-signature exception above. */
+extern int RandomIntInternal(int *seed);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern signed char data_0209f2f8;
@@ -613,7 +616,7 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
         c->mVertSpeed = 0;
         c->mSpeedZ = 0;
         if (c->mCanSpitFire == 0 ||
-            (((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 1) == 0) {
+            (((unsigned int)RandomIntInternal((int *)&data_0209e650) >> 8) & 1) == 0) {
             FlyGuy_ChangeState(c, &data_ov070_021235cc);
         } else {
             FlyGuy_ChangeState(c, &data_ov070_0212358c);

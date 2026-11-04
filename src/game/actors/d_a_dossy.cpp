@@ -68,6 +68,7 @@ enum daDossy_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -134,20 +135,29 @@ void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 a);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 a);
 void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 a);
 void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *o);
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *o);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *o);
+/* The named local declarations below keep this TU's @NNN compiler-temp
+   identities stable. Their signatures now match CalcLib.h exactly. */
+void SubVec3(Vector3 *a, Vector3 *b,
+             Vector3 *o); /* local extern: named parameters preserve @NNN identities */
+void AddVec3(Vector3 *a, Vector3 *b,
+             Vector3 *o); /* local extern: named parameters preserve @NNN identities */
+void Vec3_Asr(Vector3 *d, Vector3 *s,
+              int sh); /* local extern: named parameters preserve @NNN identities */
+int Vec3_HorzDist(const Vector3 *a,
+                  const Vector3 *b); /* local extern: named parameters preserve @NNN identities */
+short Vec3_HorzAngle(
+    const Vector3 *a,
+    const Vector3 *b); /* local extern: named parameters preserve @NNN identities */
+unsigned short DecIfAbove0_Short(
+    unsigned short *counter); /* local extern: named parameters preserve @NNN identities */
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
-extern void Vec3_Asr(void* d, void* s, int sh);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void hold_d_a_dossy(void *self, void *kcl, void *mtx, Fix12i r, short s, void *clps);
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i r, Fix12i h, void *p, void *q);
-extern int Vec3_HorzDist(void* a, void* b);
-extern short Vec3_HorzAngle(void* a, void* b);
 extern int AngleDiff(int a, int b);
-extern u16 DecIfAbove0_Short(void *counter);
 
 int func_ov065_021180d4(char* self);
 void func_ov065_02118c4c(char* c);
@@ -371,8 +381,10 @@ int daDossy_c::Behavior()
 
     (this->*data_ov065_0211d7fc[mState])();
 
-    mDistToCenter = Vec3_HorzDist(&mPosX, &mSpawnPosX);
-    mAngToCenter = Vec3_HorzAngle(&mPosX, &mSpawnPosX);
+    mDistToCenter = Vec3_HorzDist(reinterpret_cast<const Vector3 *>(&mPosX),
+                                  reinterpret_cast<const Vector3 *>(&mSpawnPosX));
+    mAngToCenter = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
+                                  reinterpret_cast<const Vector3 *>(&mSpawnPosX));
 
     d = (short)AngleDiff(mAngToCenter, mAngleY);
 
@@ -465,7 +477,7 @@ extern "C" void func_ov065_02118c4c(char *c)
 {
     daDossyCap_c *cap = (daDossyCap_c *)c;
     Vector3 pos;
-    Vec3_Asr(&pos, &cap->mPosX, 3);
+    Vec3_Asr(reinterpret_cast<Vector3 *>(&pos), reinterpret_cast<Vector3 *>(&cap->mPosX), 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, cap->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, cap->mAngleX);
@@ -661,7 +673,9 @@ void daDossy_c::func_ov065_021183c8()
         if (mClsnState == 2 && mRideCooldown == 0) {
             if (mCap == 0 || func_ov065_02119210((unsigned char *)mCap) == 0) {
                 playerPos = mClsnPlayer->mPos;
-                if (playerPos.y >= mHomePosY && Vec3_HorzDist(&playerPos, &mHomePosX) < 0x88000 &&
+                if (playerPos.y >= mHomePosY &&
+                    Vec3_HorzDist(&playerPos, reinterpret_cast<const Vector3 *>(&mHomePosX)) <
+                        0x88000 &&
                     ((daPly_c *)mClsnPlayer)->SetNoControlState(5, -1, 0) != 0) {
                     mState++;
                     mStateState = 0;
@@ -671,7 +685,8 @@ void daDossy_c::func_ov065_021183c8()
                 }
             }
         }
-        if (Vec3_HorzDist(&mPosX, &mClsnPlayer->mPosX) < 0x1f4000)
+        if (Vec3_HorzDist(reinterpret_cast<const Vector3 *>(&mPosX),
+                          reinterpret_cast<const Vector3 *>(&mClsnPlayer->mPosX)) < 0x1f4000)
             mStateTimer = 0;
     } else {
         if (mStateTimer > 0x96) {

@@ -54,6 +54,7 @@ enum daGmch_c_AssetId {
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "math/CalcLib.h"
 
 /* Actor ids are from symbols/actor_debug_names.tsv. */
 enum {
@@ -136,10 +137,9 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  *   mCamSpacePos.
  *   Same address, same register, and the member still matches.
  *
- * The NINTH is genuinely load-bearing: RandomIntInternal must return
- * `unsigned int`.  Measured -- declaring it `int` leaves 36/37 matching and
- * breaks ChooseNextState alone, which is the only caller that takes `% 10` of
- * the result and so the only one that pays for a signed remainder.
+ * The RNG definition returns `int`; ChooseNextState needs an explicit unsigned
+ * conversion before `% 10` to preserve the unsigned remainder encoded in the
+ * ROM. This keeps the shared signature truthful without changing that codegen.
  *
  * Data is different -- mwccarm leaves a file-scope variable's name unmangled in
  * C++ -- so every `data_*` declaration stays at block scope in the member that
@@ -151,13 +151,15 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
 extern "C" {
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern unsigned int RandomIntInternal(int *seed);
+/* local extern: named parameters keep the TU's compiler-generated aliases
+ * stable when CalcLib's shared declarations are included above. */
+extern int RandomIntInternal(int *seed);
 extern void func_02038414(void *clsn);
 extern void   Matrix4x3_FromRotationY(void *m, int angle);
 extern void   Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void   Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern void   Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
-extern int DecIfAbove0_Byte(void *p);
+extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
@@ -212,7 +214,7 @@ void daGmch_c::ChooseNextState()
     } else if (distC < 0x1f4000) {
         mNextState = 3;
     } else {
-        if (RandomIntInternal(&data_0209e650) % 10 < 7)
+        if ((unsigned int)RandomIntInternal(&data_0209e650) % 10 < 7)
             mNextState = 3;
         else
             mNextState = 1;
@@ -395,7 +397,7 @@ int daGmch_c::UpdateState8()
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
     func_02038414(&mWithMeshClsn);
-    if (mWithMeshClsn.JustHitGround() != 0 || DecIfAbove0_Byte(&mTimer) == 0) {
+    if (mWithMeshClsn.JustHitGround() != 0 || DecIfAbove0_Byte((unsigned char *)&mTimer) == 0) {
         SpawnCoinsAndDie();
     }
     return 1;
@@ -683,7 +685,7 @@ int daGmch_c::UpdateState1()
     ApplySlopeToVertSpeed(&mWithMeshClsn);
     CheckPlayerContact();
     mAnmModel.Advance();
-    if (DecIfAbove0_Byte(&mTimer) == 0) {
+    if (DecIfAbove0_Byte((unsigned char *)&mTimer) == 0) {
         ChooseNextState();
     }
     mdCcAc_c.Clear();
