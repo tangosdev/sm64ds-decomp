@@ -161,7 +161,7 @@ extern int GetOwnerLanguage(void);
 extern int GiveHealth(int, int);
 extern int IsButtonInputValid(void);
 extern int IsCannonOpenInCurLevel(void);
-extern int IsPlayerWarping(int);
+extern unsigned char IsPlayerWarping(int);
 extern int LoadArchive(int);
 extern int ObjectMessageIDToActualMessageID(short);
 extern int SetPolygonID(void*, int);
