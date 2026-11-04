@@ -91,14 +91,14 @@ void  Matrix4x3_FromRotationY(void *, int);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
 void  MulMat4x3Mat4x3(void *, void *, void *);
 void  MulMat3x3Mat3x3(void *, void *, void *);
-void  MulVec3Mat4x3(const void *, const void *, void *);
-/* Unsigned, and that is measured: InitResources shifts the result right by 8
-   and the ROM uses LSR. Declared `int`, the same expression comes out ASR. */
-u32   RandomIntInternal(int *);
-u8    NumStars(void);
-u16   DecIfAbove0_Short(void *);
-int   func_02013890(int, int);
-void  func_02013944(void);
+void MulVec3Mat4x3(const void *, const void *, void *);
+/* local extern: CalcLib's int(int *) declaration is kept local because its
+   vector declarations conflict with this TU's other helper signatures. */
+int RandomIntInternal(int *);
+u8 NumStars(void);
+u16 DecIfAbove0_Short(void *);
+int func_02013890(int, int);
+void func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
 void func_02016acc(void *, unsigned int);
 void func_02016b24(void *, unsigned int);
@@ -1557,7 +1557,7 @@ int daMip_c::InitResources()
             if (data_0209f2f8 == 0x32)
                 v = 1;
             if (func_02013890(mRabbitId, v) != 0 && data_ov085_021305ac < 8) {
-                u32 rnd = RandomIntInternal(&data_0209e650) >> 8;
+                u32 rnd = (u32)RandomIntInternal(&data_0209e650) >> 8;
                 if (NumStars() >= 0x51) {
                     if ((s32)((daPly_c *)closest)->param1 == 3) {
                         if ((rnd & 0xf) == 0)
