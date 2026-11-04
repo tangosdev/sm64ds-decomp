@@ -12,6 +12,7 @@
 #include "hub_presence.h"
 #include "coop_target.h"
 #include "coop_stats_log.h"
+#include "coop_ghost_eggs.h"
 
 #include <windows.h>
 
@@ -958,6 +959,7 @@ void on_frame(unsigned now) {
     if (!g_spawned && g_ents > 0) { g_spawned = true; g_spawn_lf = g_lf; }
     maybe_request(now);
     process(now);
+    ghost_eggs_frame(now);     // FRIENDVIS1: a friend's Yoshi eggs on my console (hal/coop_ghost_eggs.h)
     if (g_god) {      // lab knob: the proof player does not die and does not fall out of a course whose warp lands in the air
         data_02092144[data_0209f250 & 15] = (short)(8 << 8);
         if (g_spawned && g_lf - g_spawn_lf == 30) { std::memcpy(g_god_pos, pl + 0x5c, 12); g_god_set = true; }
@@ -975,6 +977,7 @@ void on_frame(unsigned now) {
 }
 
 void on_member_gone(int seat) {
+    ghost_eggs_member_gone(seat);   // FRIENDVIS1
     if (seat < 0 || seat >= kSeats || !g_stale_on) return;     // (the stale control keeps a dead owner)
     for (int i = 0; i < kSlots; ++i) {
         g_rx[i][seat].valid = false; g_rx[i][seat].fresh = false;

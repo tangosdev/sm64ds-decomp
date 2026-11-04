@@ -15,6 +15,7 @@
 #include "hub_presence.h"
 #include "player_fields.h"
 #include "ghost_tongue.h"
+#include "coop_ghost_eggs.h"
 
 #include <cmath>
 #include <cstdio>
@@ -131,7 +132,9 @@ struct G {
     struct HeldIn { int kind = 0, cls = 0, slot = -1, eggs = 0; unsigned until = 0, since = 0; char *pinned = nullptr; bool parked = false; int mode = 0;   // mode: 1 pinned, 2 left alone as mine
                     // TONGUEFIX2: where my copy stood when the pin began (a pose it really had here), the eater's last drawn mouth spot,
                     // the level both belong to, and (left behind by a finished hold) whether the eater swallowed it (his egg count rose)
-                    int back[3] = {0, 0, 0}, mouth[3] = {0, 0, 0}; bool have_back = false, have_mouth = false, swallowed = false, kept = false; int level = -1; };
+                    int back[3] = {0, 0, 0}, mouth[3] = {0, 0, 0}; bool have_back = false, have_mouth = false, swallowed = false, kept = false; int level = -1;
+                    // FRIENDVIS1: my Bob-omb copy was hidden when the pin took it and the pin turned its drawing on; pins logged
+                    bool forced = false; unsigned diag = 0; };
     HeldIn held_in[kHubPartySeats];
     HeldIn held_quiet[kHubPartySeats];   // a hold that went quiet and whose copy I put back: a late hold end can still say it was swallowed
     HeldIn held_left[8];          // TONGUEFIX2: copies a finished hold left parked out of sight, until an owner's pose, a kill or my ownership
@@ -365,6 +368,21 @@ void broadcast_attach(int holder, int state) {
     }
 }
 
+// FRIENDVIS1: one record of my thrown egg to every other party seat (kEggFlight, party rooms only). x / y / z carry the
+// position in whole units and, in the 12 fraction bits, the egg's speed per frame on that axis (signed 12 bits).
+int egg_pack(int units, int speed) { return (int)(((unsigned)units << 12) | ((unsigned)speed & 0xFFFu)); }
+int egg_speed(int fix) { return (int)(((unsigned)fix & 0xFFFu) ^ 0x800u) - 0x800; }
+void egg_flight_send(const GhostEggRec &r, int vx, int vy, int vz) {
+    for (int seat = 0; seat < kHubPartySeats; ++seat) {
+        if (seat == comms_hub_my_seat() || !party::seat_is_party(seat)) continue;
+        const unsigned seq = pack_seq(kEggFlight, ++g.counter, 0);
+        unsigned char d[64];
+        const int n = hub_party_hit_encode(seat, kHitShove, seq, (int)r.id | ((int)r.flags << 8),
+                                           egg_pack(r.x, vx), egg_pack(r.y, vy), egg_pack(r.z, vz), d);
+        if (n) comms_hub_send(d, n);
+    }
+}
+
 // ---- TONGUE1: what I hold, to every other seat ----------------------------------------------------------
 // The SYNG frame carries my body only: a friend sees my hands and mouth empty. The object's identity on every console
 // is its spawn slot (+0xce) and class (+0x0c), the same pair coop_actors.cpp syncs it by. A player in my hands or mouth
@@ -402,6 +420,32 @@ void held_send(char *me) {
 // After the follower posed every ghost: an object a friend holds sits at his DRAWN hands, one in his mouth goes into
 // it (at the mouth for the tongue's pull, then out of sight, the way the cartridge hides a mouthful). My copy's own
 // Behavior still runs from the pinned spot next walk; coop_actors' slave pin ran before the follower.
+// FRIENDVIS1: a Bob-omb (class 206, daBmb_c) builds its draw matrix inside its own Behavior (func_ov102_0214b53c: a Y
+// rotation at its position, or the carrier's hand while mCarrier is set), and the pin below moves it AFTER that ran, so
+// the frame drew it where coop sync had left it, and a copy whose own state machine had it dormant (state 5, drawing off)
+// drew nothing at all: the friend's carry pose with empty hands. While a friend holds it in his hands, its matrix is
+// rebuilt at the pinned spot and it is drawn; a copy still dormant when the hold ends is hidden again.
+enum : int { kClsBobomb = 206, kBmbMat = 0x31c, kBmbState = 0x3dc, kBmbRender = 0x3f3 };
+extern "C" void hal_m43_roty(void *m, int a);
+char *held_find(int cls, int slot);
+void held_draw_bobomb(G::HeldIn &h, char *a, int yaw) {
+    const int *pos = (const int *)(a + 0x5c);
+    int *m = (int *)(a + kBmbMat);
+    if (g.log > 0 && (h.diag++ % 60) == 0)
+        std::fprintf(stderr, "[phit] held: pinned Bob-omb slot %d: state %d, drawing %d, flags 0x%x, its matrix at (%d,%d,%d), pinned at (%d,%d,%d)\n",
+                     h.slot, *(const int *)(a + kBmbState), (int)(unsigned char)a[kBmbRender], *(const unsigned *)(a + 0xb0),
+                     (m[9] << 3) >> 12, (m[10] << 3) >> 12, (m[11] << 3) >> 12, pos[0] >> 12, pos[1] >> 12, pos[2] >> 12);
+    if (!a[kBmbRender]) { a[kBmbRender] = 1; h.forced = true; }
+    hal_m43_roty(m, yaw);
+    m[9] = pos[0] >> 3; m[10] = pos[1] >> 3; m[11] = pos[2] >> 3;
+}
+void held_draw_end(G::HeldIn &h) {
+    if (!h.forced || !h.pinned || h.cls != kClsBobomb) return;
+    char *a = held_find(h.cls, h.slot);
+    if (a == h.pinned && *(const int *)(a + kBmbState) == 5) a[kBmbRender] = 0;   // dormant here: hidden again
+    h.forced = false;
+}
+
 bool is_body(const char *a) {
     for (int i = 0; i < 16; ++i) if (data_0209f394[i] == a) return true;
     return false;
@@ -531,6 +575,7 @@ void held_after_follow_impl() {
         pos[1] = dp[1] + up * 0x1000 + (h.parked ? kParkUnits * 0x1000 : 0);
         coop_move_pinned(h.slot);                           // coop sync must not publish the pinned / parked pose
         *(short *)(a + 0x8e) = (short)yaw;
+        if (h.kind == 1 && h.cls == kClsBobomb) held_draw_bobomb(h, a, yaw);   // FRIENDVIS1
         ++g.held_pins;
     }
 }
@@ -1142,10 +1187,22 @@ void handle_reply(int seat, unsigned ik, int yaw, int x, int y, int z) {
                 std::fprintf(stderr, "[phit] held: seat %d's hold ended, my class %d slot %d stays parked and unpublished%s\n", seat, h.cls, h.slot,
                              g.held_left[k].swallowed ? " (swallowed: his eggs rose)" : "");
             }
+            held_draw_end(h);                   // FRIENDVIS1
             h.since = g.frame; h.pinned = nullptr; h.parked = false; h.mode = 0;
             h.have_back = h.have_mouth = h.swallowed = h.kept = false; h.level = -1;
         }
         h.kind = kind; h.cls = cls; h.slot = slot; h.eggs = eggs; h.until = g.frame + kHeldLife;
+        if (comms_hub_room_kind() == kHubRoomParty) ghost_eggs_party_in(seat, eggs);   // FRIENDVIS1: his trail, drawn here
+        break;
+    }
+    case kEggFlight: {                          // FRIENDVIS1: a friend's thrown egg (party rooms; coop rides SYNW 0x60)
+        if (seat < 0 || seat >= kHubPartySeats || comms_hub_room_kind() != kHubRoomParty) break;
+        const int v = yaw & 0xFFFF;
+        GhostEggRec r;
+        r.id = (uint8_t)(v & 0xFF); r.flags = (uint8_t)((v >> 8) & 0xFF);
+        r.x = (int16_t)u(x); r.y = (int16_t)u(y); r.z = (int16_t)u(z); r.yaw = 0;
+        if (r.flags > 7) { ++g.st.refused; ++g.st.refused_by[kBadKind & 15]; break; }
+        ghost_eggs_party_flight(seat, r, egg_speed(x), egg_speed(y), egg_speed(z));
         break;
     }
     default: break;
@@ -1516,6 +1573,7 @@ extern "C" void port_party_hits_frame(void) {
     if (!me) return;
     track_pose(me);
     held_send(me);
+    if (comms_hub_room_kind() == kHubRoomParty) ghost_eggs_party_frame(me, (int)my_place().level, egg_flight_send);   // FRIENDVIS1
     {   // my position this frame, for the claims that name an age
         Pos3 &r = g.ring[g.frame % kRingFrames];
         r.x = u(*player::pos_x(me)); r.y = u(*player::pos_y(me)); r.z = u(*player::pos_z(me));
