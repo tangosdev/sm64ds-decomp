@@ -32,6 +32,7 @@
 
 #pragma defer_codegen off
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "Message.h"
 #include "G2x.h"
 #include "SaveData.h"
@@ -54,7 +55,7 @@ u32 GetBG1ScrPtr(void);
 }
 
 extern "C" {
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 /* The message box rectangle, set when a box opens (Message.cpp's layout code):
    gMsgBoxLeft/gMsgBoxTop are its final left and top edges and
@@ -80,7 +81,7 @@ extern u8 data_0209d678;
 extern u8 data_0209d67c;
 extern u8 data_0209d680;
 extern u8 data_0209d684;
-extern u8 data_0209d68c;
+extern u8 gMsgChoiceIndex;
 extern u8 data_0209d690;
 extern u8 data_0209d694;
 extern u8 data_0209d698;
@@ -1109,7 +1110,7 @@ extern "C" void func_0201eaac(void)
     data_0209d69c = 0;
     data_0209d694 = 0;
     data_0209d6bc = 1;
-    data_0209d68c = 0;
+    gMsgChoiceIndex = 0;
     data_0209d684 = 0;
     data_0209d6b8 = 0;
     data_0209d6c4 = 0;
@@ -1205,7 +1206,7 @@ void Message::DisplaySaving(unsigned short n)
         Message::Update();
 
     {
-        int b = data_0209d45c | 0x20;
+        int b = gMainScreenLayers | 0x20;
         gNextActorUpdateMask |= 0x80000000u;
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, b, -8);
     }
@@ -1213,7 +1214,7 @@ void Message::DisplaySaving(unsigned short n)
     {
         volatile u16 *win0h = (volatile u16 *)0x4000048;
         volatile u16 *win0v = (volatile u16 *)0x400004a;
-        u8 d = data_0209d45c;
+        u8 d = gMainScreenLayers;
         *win0h = (u16)((*win0h & ~0x3f) | (d | 8) | 0x20);
         *win0v = (u16)((*win0v & ~0x3f) | 0x17);
     }
@@ -1226,13 +1227,15 @@ void Message::DisplaySaving(unsigned short n)
     {
         volatile unsigned int *disp = (volatile unsigned int *)0x4000000;
         *disp = (*disp & ~0xe000u) | 0x2000u;
-        data_0209d45c |= 8;
-        *disp = (*disp & ~0x1f00u) | ((unsigned int)data_0209d45c << 8);
+        gMainScreenLayers |= DISPLAY_LAYER_BG3;
+        *disp = (*disp & ~0x1f00u) | ((unsigned int)gMainScreenLayers << 8);
     }
 }
 
 // @symbol func_0201ef38
-extern "C" void func_0201ef38(void) { data_0209d45c &= ~8; }
+extern "C" void func_0201ef38(void) {
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
+}
 
 // @symbol func_0201ef50
 extern "C" void func_0201ef50(int arg)
@@ -1346,7 +1349,7 @@ extern "C" void func_0201f138(void)
         Message::Update();
     }
     SetBg3Offset(-0x11, -0x3c);
-    data_0209d45c |= 8;
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
 }
 
 // @symbol func_0201f32c
@@ -1520,8 +1523,9 @@ extern "C" void func_0201f32c(int arg0)
 
     disp2 = data_0209d698;
     if (disp2 == 2) {
-        data_0209d45c |= 2;
-        *(volatile s32 *)0x04000000 = (*(volatile s32 *)0x04000000 & ~0x1f00) | (data_0209d45c << 8);
+        gMainScreenLayers |= DISPLAY_LAYER_BG1;
+        *(volatile s32 *)0x04000000 =
+            (*(volatile s32 *)0x04000000 & ~0x1f00) | (gMainScreenLayers << 8);
         return;
     }
     if (disp2 == 1) {
@@ -1541,11 +1545,12 @@ extern "C" void func_0201f32c(int arg0)
     }
 
     if (data_0209d6d4 >= 0x2a && data_0209d6d4 < 0x83) {
-        G2x::SetBlendBrightness((volatile u16 *)0x04000050, data_0209d45c & ~0x38, 7);
+        G2x::SetBlendBrightness((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, 7);
     } else {
-        G2x::SetBlendBrightness((volatile u16 *)0x04000050, data_0209d45c & ~0x38, -8);
+        G2x::SetBlendBrightness((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, -8);
     }
-    *(volatile u16 *)0x04000048 = (*(volatile u16 *)0x04000048 & ~0x3f) | (data_0209d45c | 8) | 0x20;
+    *(volatile u16 *)0x04000048 =
+        (*(volatile u16 *)0x04000048 & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
     *(volatile u16 *)0x0400004a = (*(volatile u16 *)0x0400004a & ~0x3f) | 0x17;
     *(volatile s16 *)0x04000040 =
         ((gMsgBoxWinLeft << 8) & 0xff00) | (u8)(((gMsgBoxCenterX * 2) - gMsgBoxWinLeft) + 1);
@@ -1553,8 +1558,9 @@ extern "C" void func_0201f32c(int arg0)
         ((gMsgBoxWinTop << 8) & 0xff00) | (u8)(((gMsgBoxCenterY * 2) - gMsgBoxWinTop) + 1);
     data_0209d6bc = 0;
     *(volatile s32 *)0x04000000 = (*(volatile s32 *)0x04000000 & ~0xe000) | 0x2000;
-    data_0209d45c |= 8;
-    *(volatile s32 *)0x04000000 = (*(volatile s32 *)0x04000000 & ~0x1f00) | (data_0209d45c << 8);
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
+    *(volatile s32 *)0x04000000 =
+        (*(volatile s32 *)0x04000000 & ~0x1f00) | (gMainScreenLayers << 8);
 }
 
 /* Course ids that must not open the talk window. data_0209d664 is the byte

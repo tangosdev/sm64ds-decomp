@@ -134,7 +134,7 @@
       "rule": "unknown-field",
       "match": "unk_287",
       "count": 1,
-      "reason": "dScEntry_c::InitResources clears byte 0x287, moved verbatim from the retired src/_ZN10dScEntry_c13InitResourcesEv.cpp (`self->unk_287 = 0` on main). include/dScEntry_c.h names the field unk_287. Its other users are in the same unit (UpdateRematchSync and EnterRematchPrompt store 0 and 0xe; func_ov075_02119dc4 clears it as a bit mask out of data_0209d45c), and data_0209d45c's role is itself unproven, so no name is invented. Follow-up: rename the header field when those helpers fold into this class and data_0209d45c is identified.",
+      "reason": "dScEntry_c::InitResources clears byte 0x287, moved verbatim from the retired src/_ZN10dScEntry_c13InitResourcesEv.cpp (`self->unk_287 = 0` on main). include/dScEntry_c.h names the field unk_287. Its other users are in the same unit (UpdateRematchSync and EnterRematchPrompt store 0 and 0xe; func_ov075_02119dc4 clears it as a bit mask out of gMainScreenLayers), and gMainScreenLayers's role is itself unproven, so no name is invented. Follow-up: rename the header field when those helpers fold into this class and gMainScreenLayers is identified.",
       "evidence": "src/_ZN10dScEntry_c13InitResourcesEv.cpp on main line 95; include/dScEntry_c.h line 33 (`u8 unk_287; /* 0x287 */`); ROM ov075 dScEntry_c::InitResources TEXT-VERIFIED in ov075/d_s_entry_methods"
     },
     {

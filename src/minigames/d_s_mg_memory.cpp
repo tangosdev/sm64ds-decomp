@@ -24,6 +24,7 @@ enum d_s_mg_memory_AssetId {
 };
 
 #include "dScMgMemory_c.h"
+#include "nitro/hw/registers.h"
 #include "common.h"
 #include "types.h"
 #include "PlayerInput.h"
@@ -106,7 +107,7 @@ void MgCoins_Reset(void);
 int Dealer_IsIdle(int *p);
 void Mg_SetTopScreenYOffset(int v);
 void Mg_PlaceBannersOnTopScreen(void);
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
 
@@ -1012,7 +1013,7 @@ s32 dScMgMemory_c::InitResources() {
     void *tiles;
     void *palette;
 
-    data_0209d45c = 0x11;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     LoadCard2SubBg3();
     tiles = LoadFile(sMemoryCardNcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);

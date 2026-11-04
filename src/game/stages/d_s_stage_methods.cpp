@@ -178,7 +178,10 @@ extern u16 data_020755c0[];
 extern u16 data_020755c4[];
 extern s16 data_020756d0[];
 extern u8 data_0209d660;
-extern u8 data_0209d45c;
+/* The main engine's enabled layers, the same byte for DISPCNT bits 8..12:
+   func_02019144 commits it every VBlank. BG0 is the 3D scene, BG3 the message
+   text and OBJ the top-screen sprites. */
+extern u8 gMainScreenLayers;
 /* The sub engine's enabled layers, DISPCNT_SUB bits 8..12 shifted down to bit
    0 (DISPLAY_LAYER_*, nitro/hw/registers.h); every writer copies it in with
    `<< 8`. On the stage, BG3 is the map picture and OBJ every bottom-screen
@@ -200,6 +203,10 @@ extern u8 data_0209f234;
    left arrow and 2 the right (PS_Render moves that arrow two pixels out); the
    sound-options page sets 2 for its left arrow and 1 for its right. */
 extern u8 gPressedPauseArrow;
+/* Another options-page countdown: PS_Update repaints the page when it
+   reaches 0, like gSoundBoxFlashTimer and gBacklightFlashTimer. Nothing in the
+   ROM sets it non-zero (its only other access is PS_Init's clear), and the
+   runtime pass did not confirm a role, so it keeps its placeholder name. */
 extern u8 data_0209f23c;
 extern u8 data_0209f240;
 /* Frames until the selected big button's highlight is redrawn. Touching or
@@ -248,7 +255,11 @@ extern u8 data_0209f2c4;
    the course arrows. 0xf is the castle: the total star count, with no
    star/coin line. */
 extern u8 gPauseDisplayedCourse;
-extern u8 data_0209f2cc;
+/* Set to 4 frames when a backlight button is touched without changing the
+   backlight, or when the toggle flips it. PS_UpdateOptionsMenu draws the
+   selected backlight button with the highlight palette (0x6000) only while it
+   is 0, so the press blinks; PS_Update repaints the page when it reaches 0. */
+extern u8 gBacklightFlashTimer;
 extern u8 data_0209f2d4;
 extern u8 data_0209f2d8;
 /* The controller mode chosen on the controls page (0..2), seeded from the
@@ -259,8 +270,15 @@ extern u8 gSelectedControllerMode;
    cursor row on the controls page). The menus read it when the selection is
    confirmed. */
 extern u8 gSelectedMenuButton;
-extern u8 data_0209f2e4;
-extern u8 data_0209f2ec;
+/* Set to 8 when an arrow steps the sound mode. While it is non-zero
+   PS_UpdateOptionsMenu draws the SOUND box with palette 0x5000 instead of the
+   highlight 0x6000, and PS_Update repaints the page when it reaches 0. */
+extern u8 gSoundBoxFlashTimer;
+/* The backlight button drawn selected on the options page: 0 the left (on)
+   and 1 the right (off). Seeded from data_0208ee3c ^ 1 when the page opens;
+   touching a button sets it, and the toggle flips it. The buttons show it only
+   when PS_UpdateOptionsMenu repaints the page. */
+extern u8 gSelectedBacklightButton;
 /* Set when no course 0..14 has a star yet: the pause screen then shows only
    the castle total (gPauseDisplayedCourse 0xf) and neither draws nor reads
    the course arrows. */
@@ -642,7 +660,7 @@ void dScStage_c::VE_Update() {
             dScene_c::StartSceneFade(1, 0, 0);
         }
         data_0209f290 = 2;
-        data_0209d45c &= ~4;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
         gSubScreenLayers &= ~3;
         *(u16 *)0x04000050 = 0;
         *(u16 *)0x04001050 = 0;
@@ -655,7 +673,7 @@ void dScStage_c::VE_Init() {
     unsigned int a;
     unsigned int b;
 
-    a = data_0209d45c ^ 0x10;
+    a = gMainScreenLayers ^ DISPLAY_LAYER_OBJ;
     b = gSubScreenLayers ^ DISPLAY_LAYER_OBJ;
     *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 0x1100;
     *(volatile unsigned short *)0x400000c = (*(volatile unsigned short *)0x400000c & 0x43) | 0x1010;
@@ -668,7 +686,7 @@ void dScStage_c::VE_Init() {
     SetBg2Offset(0, 0);
     SetSubBg0Offset(0, 0);
     SetSubBg1Offset(0, 0);
-    data_0209d45c |= 4;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 3;
     gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
     gActorUpdateMask = gNextActorUpdateMask;
@@ -794,7 +812,7 @@ void dScStage_c::LC_Update() {
         gSelectedMenuButton = 0;
         dScStage_c::UpdateMenuButtons(1);
         SetBg3Offset(0, 0);
-        data_0209d45c |= 8;
+        gMainScreenLayers |= DISPLAY_LAYER_BG3;
         data_0209f260 = 0;
         data_0209f2d4 = 1;
         data_0209f280 = 0;
@@ -859,12 +877,12 @@ void dScStage_c::LC_Update() {
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
         }
         data_0209f358[0] = 0;
-        t6 = data_0209d45c ^ 0x18;
+        t6 = gMainScreenLayers ^ (DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
         t5 = gSubScreenLayers ^ DISPLAY_LAYER_OBJ;
         SetBg2Offset(0, 0);
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        data_0209d45c |= 4;
+        gMainScreenLayers |= DISPLAY_LAYER_BG2;
         gSubScreenLayers |= 3;
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, t6 | 0x20, -7);
         G2x::SetBlendBrightness((volatile u16 *)0x4001050, t5 | 0x20, -7);
@@ -936,7 +954,7 @@ void dScStage_c::LC_Update() {
     case 4:
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xe00;
         data_0209f2d4 = 5;
-        data_0209d45c &= ~4;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
         Message::DisplaySaveStatusText(0x295);
         data_0209f2b8 = 0x78;
         return;
@@ -957,7 +975,7 @@ void dScStage_c::LC_Update() {
             Sound::PlaySub(0x23, 0x7f, 0, 0x15666, 0);
             data_0209f280 = 0;
         }
-        data_0209d45c &= ~0xc;
+        gMainScreenLayers &= ~(DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
         gSubScreenLayers &= ~3;
         REG16(0x4000050) = 0;
         if (gSelectedMenuButton != 1) {
@@ -1191,7 +1209,7 @@ void dScStage_c::PS_Render() {
             OAM::Render(false, &OAM::TIMES, 0x80, 0x60, -1, -1, 0);
             RenderNumber(CountStarsCollectedInLevelToDisplay(0x1d), 0x88, 0x58, 1, 8);
         }
-    } else if (data_0209d45c & 8) {
+    } else if (gMainScreenLayers & DISPLAY_LAYER_BG3) {
         if ((unsigned int)gPauseDisplayedCourse < 0xfU) {
             unsigned char r4v = CountStarsCollectedInLevelToDisplay(gPauseDisplayedCourse);
             OAM::Render(false, &OAM::MM_SMALL_STAR, 0x58, 0x8c, -1, -1, 0);
@@ -1378,7 +1396,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     u16 *scr;
     u16 v;
 
-    sel = (data_0209f2e4 != 0) ? 0x5000 : 0x6000;
+    sel = (gSoundBoxFlashTimer != 0) ? 0x5000 : 0x6000;
     scr = (u16 *)G2S::GetBG1ScrPtr() + 0xae;
     for (j = 0; j < 0xf; j++) {
         scr[0] = (scr[0] & 0x3ff) | sel;
@@ -1401,7 +1419,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
 
     for (i = 0; i < 2; i++) {
         scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755c4[i];
-        v = (data_0209f2ec == i && data_0209f2cc == 0) ? 0x6000 : 0x5000;
+        v = (gSelectedBacklightButton == i && gBacklightFlashTimer == 0) ? 0x6000 : 0x5000;
         counter = 0;
         for (; counter < 7; counter++) {
             scr[0] = (scr[0] & 0x3ff) | v;
@@ -1453,7 +1471,7 @@ void dScStage_c::PS_Cleanup() {
         data_0209d4c8.StartTimer();
         data_0209f2a0[0] = 0;
     }
-    data_0209d45c &= ~0xe;
+    gMainScreenLayers &= ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
     gSubScreenLayers &= ~3;
     if (data_0209f280 == 0)
         Sound::UnpauseMusic();
@@ -1496,9 +1514,9 @@ void dScStage_c::PS_Update() {
         if (gPauseArrowPressTimer == 0)
             gPressedPauseArrow = 0;
     }
-    if (data_0209f2e4 != 0) {
-        data_0209f2e4 = data_0209f2e4 - data_0208ee44;
-        if (data_0209f2e4 == 0)
+    if (gSoundBoxFlashTimer != 0) {
+        gSoundBoxFlashTimer = gSoundBoxFlashTimer - data_0208ee44;
+        if (gSoundBoxFlashTimer == 0)
             dScStage_c::PS_UpdateOptionsMenu();
     }
     if (gMenuHighlightDelay != 0) {
@@ -1519,9 +1537,9 @@ void dScStage_c::PS_Update() {
             }
         }
     }
-    if (data_0209f2cc != 0) {
-        data_0209f2cc = data_0209f2cc - data_0208ee44;
-        if (data_0209f2cc == 0)
+    if (gBacklightFlashTimer != 0) {
+        gBacklightFlashTimer = gBacklightFlashTimer - data_0208ee44;
+        if (gBacklightFlashTimer == 0)
             dScStage_c::PS_UpdateOptionsMenu();
     }
     if (data_0209f23c != 0) {
@@ -1579,7 +1597,7 @@ void dScStage_c::PS_Update() {
         SetBg3Offset(0, 0);
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        data_0209d45c |= 0xe;
+        gMainScreenLayers |= DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3;
         gSubScreenLayers |= 3;
         data_0209f1ec = 1;
         return;
@@ -1761,12 +1779,12 @@ void dScStage_c::PS_Update() {
         gSelectedMenuButton = 0;
         dScStage_c::UpdateMenuButtons(1);
         SetBg3Offset(0, 0);
-        data_0209d45c |= 8;
+        gMainScreenLayers |= DISPLAY_LAYER_BG3;
         if (func_02029408() != 0 && data_02092144[data_0209f250] != 0) {
             SetBg2Offset(0, 0);
             SetSubBg0Offset(0, 0);
             SetSubBg1Offset(0, 0);
-            data_0209d45c |= 4;
+            gMainScreenLayers |= DISPLAY_LAYER_BG2;
             gSubScreenLayers |= 3;
             return;
         }
@@ -1868,8 +1886,8 @@ void dScStage_c::PS_Update() {
         }
         SetBg2Offset(0, 0);
         SetBg3Offset(0, 0);
-        data_0209d45c |= 4;
-        data_0209d45c &= ~8;
+        gMainScreenLayers |= DISPLAY_LAYER_BG2;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
         gSubScreenLayers |= 3;
@@ -1994,9 +2012,9 @@ void dScStage_c::PS_Update() {
         data_0209f240 = 0;
         dScStage_c::PS_UpdateOkAndBackButtons(1);
         SetBg2Offset(0, 0);
-        data_0209d45c &= ~2;
-        data_0209d45c |= 4;
-        data_0209d45c &= ~8;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
+        gMainScreenLayers |= DISPLAY_LAYER_BG2;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
         gSubScreenLayers |= 3;
         return;
     }
@@ -2178,7 +2196,7 @@ void dScStage_c::PS_Update() {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0x1000;
         data_0209f1ec = 0xa;
         data_0209f234 = GetSoundMode();
-        data_0209f2ec = data_0208ee3c ^ 1;
+        gSelectedBacklightButton = data_0208ee3c ^ 1;
         data_0209f1fc = data_0208ee40;
         gPressedPauseArrow = 0;
         Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
@@ -2189,9 +2207,9 @@ void dScStage_c::PS_Update() {
         data_0209f240 = 0;
         dScStage_c::PS_UpdateOkAndBackButtons(1);
         if (SublevelToLevel(data_0209f2f8) == 0x1d) {
-            data_0209d45c &= ~2;
+            gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
         } else {
-            data_0209d45c &= ~4;
+            gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
         }
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
@@ -2247,7 +2265,7 @@ void dScStage_c::PS_Update() {
                 gPauseArrowPressTimer = data_0208ee44 * 3;
                 gSelectedMenuButton = 0;
                 Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
-                data_0209f2e4 = 8;
+                gSoundBoxFlashTimer = 8;
                 dScStage_c::PS_UpdateOptionsMenu();
                 SetSoundMode(data_0209f234);
                 func_02012790(0x64);
@@ -2285,7 +2303,7 @@ void dScStage_c::PS_Update() {
                 gSelectedMenuButton = 0;
                 SetSoundMode(data_0209f234);
                 func_02012790(0x64);
-                data_0209f2e4 = 8;
+                gSoundBoxFlashTimer = 8;
                 dScStage_c::PS_UpdateOptionsMenu();
                 Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
                 {
@@ -2323,14 +2341,14 @@ void dScStage_c::PS_Update() {
                             return;
                     }
                     data_0209f2a4 = 3;
-                    if (data_0209f2ec != 0) {
+                    if (gSelectedBacklightButton != 0) {
                         func_02012790(0x66);
                         TurnBacklightOn();
                     } else {
-                        data_0209f2cc = data_0208ee44 << 2;
+                        gBacklightFlashTimer = data_0208ee44 << 2;
                         func_02012790(0x67);
                     }
-                    data_0209f2ec = 0;
+                    gSelectedBacklightButton = 0;
                     gSelectedMenuButton = 1;
                     dScStage_c::PS_UpdateOptionsMenu();
                     if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x70) < 0x38)
@@ -2357,14 +2375,14 @@ void dScStage_c::PS_Update() {
                             return;
                     }
                     data_0209f2a4 = 4;
-                    if (data_0209f2ec == 0) {
+                    if (gSelectedBacklightButton == 0) {
                         func_02012790(0x66);
                         TurnBacklightOff();
                     } else {
-                        data_0209f2cc = data_0208ee44 << 2;
+                        gBacklightFlashTimer = data_0208ee44 << 2;
                         func_02012790(0x67);
                     }
-                    data_0209f2ec = 1;
+                    gSelectedBacklightButton = 1;
                     gSelectedMenuButton = 1;
                     dScStage_c::PS_UpdateOptionsMenu();
                     if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0xb0) < 0x38)
@@ -2395,13 +2413,13 @@ void dScStage_c::PS_Update() {
                         gSelectedMenuButton = 1;
                         dScStage_c::PS_UpdateOptionsMenu();
                     }
-                    data_0209f2ec = data_0209f2ec ^ 1;
-                    if (data_0209f2ec == 0) {
+                    gSelectedBacklightButton = gSelectedBacklightButton ^ 1;
+                    if (gSelectedBacklightButton == 0) {
                         TurnBacklightOn();
                     } else {
                         TurnBacklightOff();
                     }
-                    data_0209f2cc = data_0208ee44 << 2;
+                    gBacklightFlashTimer = data_0208ee44 << 2;
                     dScStage_c::PS_UpdateOptionsMenu();
                     func_02012790(0x66);
                     return;
@@ -2544,7 +2562,7 @@ void dScStage_c::PS_Update() {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xe00;
         data_0209f1ec = 0xf;
         Message::DisplaySaveStatusText(0x295);
-        data_0209d45c &= ~2;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
         data_0209f2b8 = 0x78;
         return;
     }
@@ -2705,7 +2723,7 @@ void dScStage_c::PS_Init() {
     }
 
     specialPauseState = data_0209f218;
-    mainLayers = data_0209d45c;
+    mainLayers = gMainScreenLayers;
     isVsMode = 0;
 
     data_0209f248 = 0;
@@ -2717,7 +2735,7 @@ void dScStage_c::PS_Init() {
     data_0209f22c = 0;
     data_0209f240 = 0;
     gPressedPauseArrow = 0;
-    data_0209f2cc = 0;
+    gBacklightFlashTimer = 0;
     data_0209f300 = 0xf;
     data_0209f23c = 0;
     gMenuHighlightDelay = 0;
@@ -4920,7 +4938,7 @@ int dScStage_c::InitResources() {
             data_0209f20c = 0;
             data_0209f2d4 = 0;
         }
-        data_0209d45c = 0x11;
+        gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
 
         *p0 = (*p0 & ~0x1F00) | 0x1100;
         int skipSubDisplayLayers = (data_0209f2d8 == 2) ? 1 : 0;

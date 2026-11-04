@@ -16,6 +16,7 @@
 enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 
 #include "dScMgMCarlo_c.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
 #include "dScMgCard_c.h"
@@ -85,7 +86,7 @@ extern int GetGameLanguage(void);
 extern int LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern int Dealer_Load(char *p);
-extern unsigned char data_0209d45c;
+extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 }
 
@@ -117,7 +118,7 @@ s32 dScMgMCarlo_c::InitResources() {
     Deallocate(tileData);
     Deallocate(paletteData);
 
-    data_0209d45c = 0x11;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x18;
     *(unsigned short *)0x4000008 = (*(unsigned short *)0x4000008 & ~3) | 1;
     *(unsigned short *)0x400100a = *(unsigned short *)0x400100a & ~3;

@@ -24,6 +24,7 @@
 enum dScMgMemory2_c_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 
 #include "dScMgMemory2_c.h"
+#include "nitro/hw/registers.h"
 #include "SpawnInfo.h"
 #include "Sound.h"
 #include "types.h"
@@ -149,7 +150,7 @@ int Mg_GetSavedRecord0(void);
 int Mg_GetSavedRecord1(void);
 void Mg_SetTopScreenYOffset(int v);
 void Mg_PlaceBannersOnTopScreen(void);
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
 
@@ -1259,7 +1260,7 @@ s32 dScMgMemory2_c::InitResources() {
     void *art;
     void *palette;
 
-    data_0209d45c = 0x11;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     LoadCard2SubBg3();
     art = LoadFile(sMemory2CardNcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);

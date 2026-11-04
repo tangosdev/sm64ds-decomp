@@ -13,6 +13,7 @@
  */
 
 #include "dScMgD3DBase_c.h"
+#include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "types.h"
 #include "GX.h"
@@ -42,7 +43,7 @@ extern unsigned char sD3DSoundPanOffsets[];
 
 /* arm9 / ov004 globals with no project header. */
 extern unsigned char gSubScreenLayers;
-extern unsigned char data_0209d45c;
+extern unsigned char gMainScreenLayers;
 extern unsigned char data_0209e660;
 extern unsigned char data_0209f5f8;
 extern void *data_0209d4a8;
@@ -212,7 +213,7 @@ void dScMgD3DBase_c::InitEngines()
     void *file;
 
     *(vu32 *)0x4001000u |= 0x10000u;
-    data_0209d45c = 0x10;
+    gMainScreenLayers = DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x10;
     Mg_ResetBgOffsets();
     Mg_DisableAllBanks();

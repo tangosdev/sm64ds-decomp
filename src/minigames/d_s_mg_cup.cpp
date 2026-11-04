@@ -26,6 +26,7 @@ enum dScMgCup_c_AssetId {
 };
 
 #include "dScMgCup_c.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
 #include "OamAttr.h"
@@ -126,7 +127,7 @@ void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern char data_ov006_02139df4[];
 extern PMF sCupStateTable[];
 extern AnimStep *sCupAnimTable[];
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern void Camera_InitPresenterView(char *);
@@ -924,7 +925,7 @@ s32 dScMgCup_c::Behavior() {
 s32 dScMgCup_c::InitResources() {
     void *file;
 
-    data_0209d45c = 0x11;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     Camera_InitPresenterView((char *)pad_4660);
     if (Presenter_Load((char *)&mModel) == 0)
         return 0;

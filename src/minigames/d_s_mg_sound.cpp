@@ -23,6 +23,7 @@ enum dScMgSound_c_AssetId {
 };
 
 #include "dScMgSound_c.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
@@ -206,7 +207,7 @@ int LoadFile(int handle);
 void DecompressLZ16(int src, void *dst);
 void Camera_InitPresenterView(void *p);
 int Presenter_Load(void *p);
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
 
@@ -312,7 +313,7 @@ extern "C" void *dScMgSound_c_classInit(void) {
 s32 dScMgSound_c::InitResources() {
     int objChars, objPltt, file;
 
-    data_0209d45c |= 0x11;
+    gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     objChars = LoadFile(ASSET_D_2D_MG_SOUND_NCG_BIN);
     objPltt = LoadFile(ASSET_D_2D_MG_SOUND_NCL_BIN);
     DecompressLZ16(objChars, (void *)0x6400000);

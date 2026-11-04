@@ -47,6 +47,7 @@
 
 #pragma defer_codegen off
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "dActor_c.h"
 #include "dFdColor_c.h"
 #include "dScene_c.h"
@@ -130,7 +131,7 @@ extern u32 gNextActorUpdateMask;       /* NEXT_ACTOR_UPDATE_FLAGS */
 extern int data_0209caa0[];            /* SaveData; [1] is flags1 */
 extern dFdBrightness_c *data_0209d4b0; /* KS_FADER */
 extern dFdBrightness_c *data_0209f5bc; /* SCENE_FADER */
-extern u8 data_0209d45c;               /* TOP_SCREEN_RELATED */
+extern u8 gMainScreenLayers;           /* TOP_SCREEN_RELATED */
 extern u8 data_0209d66c;               /* set to close the open message */
 extern s8 data_02092110;               /* NEXT_LEVEL_ID */
 extern PadData data_020a0e58[];        /* BUTTON_INPUT_ARR, one per player */
@@ -4656,7 +4657,7 @@ void ProcessKuppaScript() {
                 data_0209d4b0 = f;
             } else if (command == KS_BLACK_FADE_BACKWARD) {
                 dFdColor_c *f = &data_0209b294;
-                data_0209d45c = 0x10;
+                gMainScreenLayers = DISPLAY_LAYER_OBJ;
                 f->SetToEnd();
                 f->color = 0;
                 f->SetBackwardTime(0x50, 0);

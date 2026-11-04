@@ -1,5 +1,6 @@
 //cpp
 #include "dFdBrightness_c.h"
+#include "nitro/hw/registers.h"
 #include "math/Approach.h"
 /* dScMgTrampoline_c -- Trampoline Time. Draw a line on the touch screen
  * (up to three at once) and bounce Mario to the lit door. Three misses
@@ -156,7 +157,7 @@ int TrmpLine_Create(Vec2s *a, Vec2s *b);
 
 void SetBg2Offset(int a, int b);
 int Mg_GetTopScreenYOffset(void);
-extern unsigned char data_0209d45c;
+extern unsigned char gMainScreenLayers;
 extern void Mg_CommitRecords(void *scene);
 int GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
@@ -278,7 +279,7 @@ int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpStartTouchY, from the legacy file for func_ov006_02121f04, NOT applied: extern short sTrmpStartTouchY; */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for _ZN17dScMgTrampoline_c11CanEndStateEi, NOT applied: extern int GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd4fdivEii, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern s32 _ZN4cstd4fdivEii(s32 a, s32 b); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209d45c, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern u8 data_0209d45c; */
+/* TUBUILD CONFLICT -- alternate declaration of gMainScreenLayers, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern u8 gMainScreenLayers; */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov006_0212231c, NOT applied: extern s32 GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2G213GetBG2CharPtrEv, from the legacy file for func_ov006_0212231c, NOT applied: extern char *_ZN2G213GetBG2CharPtrEv(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for func_ov006_0212231c, NOT applied: extern void MultiStore16(u16 val, char *dst, int nbytes); */
@@ -346,7 +347,8 @@ s32 dScMgTrampoline_c::InitResources() {
     this->mScrollY = 0x20;
     this->mScrollTargetY = this->mScrollY;
     InitDisplay();
-    data_0209d45c = 0x1d;
+    gMainScreenLayers =
+        DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     G3X::SetFog(false, 0, 2, 0x1000);
     *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
@@ -818,11 +820,11 @@ int dScMgTrampoline_c::OnGraphCallback2() {
         return 0;
     if (mMenuOpen == 0) {
         if (mDrawSubScreen == 0) {
-            data_0209d45c &= ~8;
+            gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
             SetBg2Offset(0, mScrollY + mScrollOffsetY);
             *(volatile int *)0x4000018 = (mScrollY + mScrollOffsetY) << 16 & 0x1ff0000;
         } else {
-            data_0209d45c |= 8;
+            gMainScreenLayers |= DISPLAY_LAYER_BG3;
             SetBg2Offset(0, mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset());
             *(volatile int *)0x4000018 =
                 (mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset()) << 16 & 0x1ff0000;

@@ -26,6 +26,7 @@
 
 #pragma defer_codegen off
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "SaveData.h"
@@ -89,7 +90,7 @@ extern s32 data_0208ee44;
 extern int data_0209caa0[3];
 extern u32 gNextActorUpdateMask;
 extern u8 gSubScreenLayers;
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern s16 data_0209f4a2[];
 extern u16 data_020a0e5a[];
 extern s32 data_020a0db0;
@@ -862,8 +863,9 @@ extern "C" int func_020321fc(void) {
         *(volatile u16 *)0x400104a &= ~0x3f;
         *(volatile u32 *)0x4001000 &= ~0xe000;
     } else {
-        data_0209d45c &= ~8;
-        *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (data_0209d45c << 8);
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
+        *(volatile u32 *)0x4000000 =
+            (*(volatile u32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
         *(volatile u16 *)0x4000050 = 0;
         *(volatile u16 *)0x4000048 &= ~0x3f;
         *(volatile u16 *)0x400004a &= ~0x3f;
@@ -1871,9 +1873,10 @@ extern "C" void func_020345b0(int arg0) {
     }
     data_0209fcb4 = t;
 
-    G2x::SetBlendBrightness((volatile u16 *)0x4000050, (data_0209d45c ^ 0x10) | 0x20, -8);
+    G2x::SetBlendBrightness((volatile u16 *)0x4000050, (gMainScreenLayers ^ 0x10) | 0x20, -8);
 
-    *(volatile u16 *)0x4000048 = (*(volatile u16 *)0x4000048 & ~0x3f) | (data_0209d45c | 8) | 0x20;
+    *(volatile u16 *)0x4000048 =
+        (*(volatile u16 *)0x4000048 & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
     *(volatile u16 *)0x400004a = (*(volatile u16 *)0x400004a & ~0x3f) | 0x17;
     *(volatile s16 *)0x4000040 =
         ((data_0209fc8c << 8) & 0xff00) | (u8)(((data_0209fce4 * 2) - data_0209fc8c) + 1);
@@ -1882,8 +1885,8 @@ extern "C" void func_020345b0(int arg0) {
 
     data_0209fcc8 = 0;
     *(volatile s32 *)0x4000000 = (*(volatile s32 *)0x4000000 & ~0xe000) | 0x2000;
-    data_0209d45c |= 8;
-    *(volatile s32 *)0x4000000 = (*(volatile s32 *)0x4000000 & ~0x1f00) | (data_0209d45c << 8);
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
+    *(volatile s32 *)0x4000000 = (*(volatile s32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
 }
 
 // @symbol LoadFont3D

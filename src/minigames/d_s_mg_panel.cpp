@@ -63,6 +63,7 @@ enum dScMgPanel_c_AssetId {
 #pragma defer_codegen off /* per-function opt pragmas, and .text in source order */
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "dScMgPanel_c.h"
 #include "SpawnInfo.h"
 
@@ -2056,7 +2057,7 @@ s32 dScMgPanel_c::Behavior() {
    message graphics for the owner's language, then resets the board. */
 
 s32 dScMgPanel_c::InitResources() {
-    extern u8 data_0209d45c;
+    extern u8 gMainScreenLayers;
     extern u8 gSubScreenLayers;
     char *c = (char *)this;
     char *b;
@@ -2065,7 +2066,7 @@ s32 dScMgPanel_c::InitResources() {
     int file;
     int msgFile;
 
-    data_0209d45c |= 8;
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
     *(volatile u16 *)0x400000e &= ~0x40;
     *(volatile u32 *)0x400001c = 0;
@@ -2084,7 +2085,7 @@ s32 dScMgPanel_c::InitResources() {
     func_02056314((void *)file, 0, 0x800);
     Deallocate((void *)file);
 
-    data_0209d45c |= 4;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x400000c &= ~0x40;
     *(volatile u32 *)0x4000018 = 0;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;

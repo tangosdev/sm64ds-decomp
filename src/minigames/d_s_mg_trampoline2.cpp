@@ -1,5 +1,6 @@
 //cpp
 #include "dFdBrightness_c.h"
+#include "nitro/hw/registers.h"
 #include "G2.h"
 #include "G2x.h"
 #include "GX.h"
@@ -174,7 +175,7 @@ extern struct P2 pmf_dScMgTrampoline2_c_StateIntro;
 extern void TrmpLine_ClearAll(u32 a);
 extern volatile s16 data_020a0dbc[];
 extern void Camera_UpdateMatrices(void *cam);
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
 extern void Deallocate(void *ptr);
@@ -324,7 +325,8 @@ s32 dScMgTrampoline2_c::InitResources() {
     s32 fov;
 
     InitDisplay();
-    data_0209d45c = 0x1d;
+    gMainScreenLayers =
+        DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     G3X::SetFog(false, 0, 2, 0x1000);
     *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
@@ -929,11 +931,11 @@ int dScMgTrampoline2_c::OnGraphCallback2() {
         return 0;
     if (mMenuOpen == 0) {
         if (mDrawSubScreen == 0) {
-            data_0209d45c = data_0209d45c & ~8;
+            gMainScreenLayers = gMainScreenLayers & ~DISPLAY_LAYER_BG3;
             SetBg2Offset(0, 0);
             *(int *)0x4000018 = 0;
         } else {
-            data_0209d45c = data_0209d45c | 8;
+            gMainScreenLayers = gMainScreenLayers | DISPLAY_LAYER_BG3;
             SetBg2Offset(0, 0xc0);
             *(int *)0x4000018 = 0xc00000;
         }

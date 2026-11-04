@@ -51,6 +51,7 @@
 #pragma defer_codegen off
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "nitro/fx/fx.h"
 #include "dScMgPachinko_c.h"
 
@@ -196,7 +197,7 @@ extern void func_020564f4(const void *src, int offset, int count);
 
 /* --- ROM data this TU reads --- */
 extern int   data_0209d4b8;
-extern unsigned char data_0209d45c;
+extern unsigned char gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s16   data_02082214[];
 // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
@@ -439,7 +440,7 @@ void PachinkoBg_StateSinkOut(char *raw, int i) {
     if (y < 0x40) return;
     *(short *)(raw + REC_OFF(mBg, timer) + off) = 0x258;
     *(unsigned char *)(raw + REC_OFF(mBg, state) + off) = 0;
-    data_0209d45c &= ~4;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     PachinkoDeco_HideAll(raw);
 }
 
@@ -515,10 +516,10 @@ void PachinkoBg_StateWaiting(char *raw, int idx) {
         return;
     }
 
-    flag = data_0209d45c;
+    flag = gMainScreenLayers;
     p_row = raw + off;
     neg = 0x1000;
-    data_0209d45c = flag | 4;
+    gMainScreenLayers = flag | DISPLAY_LAYER_BG2;
     *(int *)((raw + REC_OFF(mBg, x)) + off) = 0x100000;
     *(int *)((raw + REC_OFF(mBg, y)) + off) = 0x40000;
     neg = -neg;
@@ -560,7 +561,7 @@ void PachinkoBg_Start(char *raw){
 // @symbol PachinkoBg_Stop
 void PachinkoBg_Stop(char *raw)
 {
-    data_0209d45c &= ~4;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     PACHINKO(raw)->mBg[0].active = 0;
 }
 
@@ -2765,7 +2766,7 @@ s32 dScMgPachinko_c::InitResources()
     int y;
     int x;
 
-    data_0209d45c |= 8;
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
     *(volatile u16 *)0x400000e &= ~0x40;
     *(volatile u32 *)0x400001c = 0;

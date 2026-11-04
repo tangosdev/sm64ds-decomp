@@ -46,6 +46,7 @@
 #pragma defer_codegen off
 
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "PlayerInput.h"
 #include "private/controller_input.h"
 #include "Sound.h"
@@ -96,7 +97,7 @@ void func_ov075_0211601c(dScEntry_c::graphCallback_c *, dScEntry_c *, int);
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
 extern dGraph_c::callback_c *data_0209d4a8;
-extern u8 data_0209d45c;
+extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s32 data_0208ee44;
 
@@ -634,7 +635,7 @@ void dScEntry_c::UpdateSettingsSync() {
 
 // @symbol _ZN10dScEntry_c17EnterSettingsSyncEv
 void dScEntry_c::EnterSettingsSync() {
-    data_0209d45c &= ~4;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     gSubScreenLayers &= ~1;
     func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 6);
     func_020338b0(0x145, 0xb0, 0x1d, -1);
@@ -962,7 +963,7 @@ void dScEntry_c::EnterControlSettings() {
         SetBg2Offset(0, 0x100);
 
     func_02033bb8(5);
-    data_0209d45c |= 4;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 5;
     G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0xb, ~5);
 
@@ -972,7 +973,8 @@ void dScEntry_c::EnterControlSettings() {
 
 // @symbol _ZN10dScEntry_c16EnterQuitMessageEv
 void dScEntry_c::EnterQuitMessage() {
-    data_0209d45c = data_0209d45c & (~0xe);
+    gMainScreenLayers =
+        gMainScreenLayers & ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
     gSubScreenLayers = gSubScreenLayers & (~1);
     func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 6);
     func_020338b0(0x145, 0xb0, 0x17, -1);
@@ -994,7 +996,7 @@ void dScEntry_c::UpdateQuit() {
 
 // @symbol _ZN10dScEntry_c9EnterQuitEv
 void dScEntry_c::EnterQuit() {
-    data_0209d45c &= ~0xe;
+    gMainScreenLayers &= ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
     mStepDelay = 0x14;
     UnloadOverlay((int)&OVERLAY_100_ID);
     UnloadOverlay((int)&OVERLAY_102_ID);
@@ -1084,7 +1086,8 @@ void dScEntry_c::UpdateRematchSync() {
         func_02020190();
         func_020200e0();
         func_02030994();
-        data_0209d45c = data_0209d45c & ~0xe;
+        gMainScreenLayers =
+            gMainScreenLayers & ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
         mDisconnectHideMask = 0;
         mRenderStep = 0;
         dScene_c::StartSceneFade(6, 2, 0);
@@ -1209,8 +1212,8 @@ void dScEntry_c::UpdateRematchPrompt() {
     func_02012790(0x119);
 }
 
-/* Sets data_0209d45c bits 0xe and records them in mDisconnectHideMask; on
- * a player disconnect HandlePlayerDisconnect clears data_0209d45c by
+/* Sets gMainScreenLayers bits 0xe and records them in mDisconnectHideMask; on
+ * a player disconnect HandlePlayerDisconnect clears gMainScreenLayers by
  * ~mDisconnectHideMask, and UpdateRematchSync clears both on its own. */
 // @symbol _ZN10dScEntry_c18EnterRematchPromptEv
 void dScEntry_c::EnterRematchPrompt() {
@@ -1220,7 +1223,7 @@ void dScEntry_c::EnterRematchPrompt() {
     LoadCompressedFileAt(0x8407, G2S::GetBG3ScrPtr());
     Message::DisplayVsExitText(0x1f);
 
-    data_0209d45c |= 0xe;
+    gMainScreenLayers |= DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3;
     gSubScreenLayers |= 5;
     mSelectedIcon = 0;
     func_ov075_02115e8c((char *)&mIcons[0], 0xa, 0, 0x80, 0x48);
@@ -1570,7 +1573,7 @@ void dScEntry_c::EnterCourseSelect() {
     int x;
     icon_c *icon;
 
-    data_0209d45c &= ~4;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     gSubScreenLayers &= ~5;
     func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 1);
     func_ov075_02116030(ENTRY_GRAPH_CALLBACK, LoadFile(0x8409));
@@ -2029,7 +2032,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
             }
         }
         mBehaviorStep = 0;
-        data_0209d45c = data_0209d45c & ~mDisconnectHideMask;
+        gMainScreenLayers = gMainScreenLayers & ~mDisconnectHideMask;
         if (mDisconnectHideMask)
             mRenderStep = 0;
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x1f, -6);
@@ -2047,7 +2050,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
                 func_020338b0(0x125, 0xb0, 0x1a, -1);
             func_02030a78();
             ChangeStepsAfterDelay(reinterpret_cast<const StepSet *>(&data_ov075_0211d930), 0xb4);
-            data_0209d45c = data_0209d45c & ~mDisconnectHideMask;
+            gMainScreenLayers = gMainScreenLayers & ~mDisconnectHideMask;
             if (mDisconnectHideMask)
                 mRenderStep = 0;
             G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x1f, -6);
@@ -2201,7 +2204,7 @@ s32 dScEntry_c::InitResources() {
     SetBg0Offset(0, 0);
     SetBg2Offset(0, 0);
     SetBg3Offset(0, 0);
-    data_0209d45c = 0x11;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
 
     *(u16 *)0x4001008 = (*(u16 *)0x4001008 & ~3) | 1;
     *(u16 *)0x400100c = (*(u16 *)0x400100c & ~3) | 3;
