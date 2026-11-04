@@ -4412,6 +4412,118 @@
   ],
   "data": [
     {
+      "symbol": "data_ov002_0210a454",
+      "address": "0x0210a454",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c20St_CeilingGrate_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a45c",
+      "address": "0x0210a45c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "func_ov002_020e1c20 as a void state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a464",
+      "address": "0x0210a464",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c20St_CeilingGrate_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a46c",
+      "address": "0x0210a46c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020c7350Ev as a void state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a474",
+      "address": "0x0210a474",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020bd354EPhii as a three-argument script command; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a47c",
+      "address": "0x0210a47c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "func_ov002_020e1e70 as a void state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a484",
+      "address": "0x0210a484",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c21St_YoshiPower_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a48c",
+      "address": "0x0210a48c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19func_ov002_020c75f0Ev as a void state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a494",
+      "address": "0x0210a494",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19St_SwingPlayer_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a49c",
+      "address": "0x0210a49c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c17St_SlideKick_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a4a4",
+      "address": "0x0210a4a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c20St_InYoshiMouth_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a4ac",
+      "address": "0x0210a4ac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c20St_InYoshiMouth_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a4b4",
+      "address": "0x0210a4b4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c19St_SwingPlayer_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a4bc",
+      "address": "0x0210a4bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-step animation script {SetAnim id 191, argument 0}; no relocation."
+    },
+    {
+      "symbol": "data_ov002_0210a4c4",
+      "address": "0x0210a4c4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c25St_GrabBowserTail_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
+      "symbol": "data_ov002_0210a4cc",
+      "address": "0x0210a4cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "_ZN7daPly_c22St_GrabBowserTail_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+    },
+    {
       "symbol": "data_ov002_0210a4d4",
       "address": "0x0210a4d4",
       "size": "0x8",
@@ -12978,6 +13090,156 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0210a454",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c20St_CeilingGrate_InitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020cf6bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a45c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_ov002_020e1c20",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020e1c20"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a464",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c20St_CeilingGrate_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020cf398"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a46c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020c7350Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020c7350"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a474",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd354EPhii",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020bd354"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a47c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_ov002_020e1e70",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020e1e70"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a484",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c21St_YoshiPower_CleanupEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020d736c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a48c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19func_ov002_020c75f0Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020c75f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a494",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19St_SwingPlayer_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020d9fec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a49c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c17St_SlideKick_InitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020dc3e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a4a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c20St_InYoshiMouth_InitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020d62f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a4ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c20St_InYoshiMouth_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020d60b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a4b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c19St_SwingPlayer_InitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020da3b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a4c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c25St_GrabBowserTail_CleanupEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020da41c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a4cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daPly_c22St_GrabBowserTail_MainEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020da438"
+    },
     {
       "section": ".data",
       "source": "0x0210a4d4",
