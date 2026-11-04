@@ -5,7 +5,7 @@
  * class. param1's low nibble is the node the lift starts on. A 10-node
  * path in data_ov091_02134cdc (one 0x78-byte path per variant, each node
  * a 12-byte point) is rotated by mAngleY and added to the spawn position.
- * Variant 0 is the default path, variant 1 when data_0209f2f8 (the level
+ * Variant 0 is the default path, variant 1 when gCurrentSublevel (the level
  * id) is 7, variant 2 when the actor is HS_UPDOWN_LIFT. The step along
  * the path is data_ov091_021344e8[variant] (0x5000 for all three).
  *
@@ -128,7 +128,7 @@ extern UpdownFileSlot data_ov091_02134c34[];
 extern UpdownClpsSlot data_ov091_02134c38[];
 extern Matrix4x3 data_020a0e68;
 extern s16 data_02082214[];
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 
 namespace cstd {
 int fdiv(int numerator, int denominator);
@@ -491,7 +491,7 @@ int daObjRotateUpdownLift_c::InitResources()
         int isHs = (actorID == 0x1e);
         if (isHs)
             mVariant = 2;
-        else if (data_0209f2f8 == 7)
+        else if (gCurrentSublevel == 7)
             mVariant = 1;
     }
 

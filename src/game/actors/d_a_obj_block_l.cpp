@@ -15,7 +15,7 @@
  *   header owns that 0xc-stride row yet (ClpsRow is private/clps_row.h).
  * - linkedActor + 0x3b0 is an unnamed byte on the mega character
  *   (actor 0x121); no header names it.
- * - data_0209f2f8 reads as the level ID and data_0209f220 as a star
+ * - gCurrentSublevel reads as the level ID and data_0209f220 as a star
  *   flag (same pattern in the daObjBk_Botaosi_c TU); neither has a
  *   shared home.
  * - IsStarCollectedInCurLevel is a shared coined helper; naming
@@ -65,7 +65,7 @@ extern BigBrickBlockFileRow data_ov002_02108ab0[];
 extern BigBrickBlockFileRow data_ov002_02108ab4[];
 extern Vector3 data_ov002_021089e0;
 extern ClpsRow data_ov002_02108ab8[]; /* CLPS blocks,       0xc stride */
-extern s8 data_0209f2f8;              /* current level */
+extern s8 gCurrentSublevel;           /* current level */
 extern u8 data_0209f220;
 
 /* local extern: dBgW setters and a coined star helper with no shared header. */
@@ -462,13 +462,13 @@ int daObjBlockL_c::InitResources() {
         daPly_c *pl = ClosestPlayer();
         if (pl != 0 && pl->IsEnteringLevel() != 0) {
             if (IsActorID(this, 0x11) && HasNonzeroAngleX()) {
-                if (data_0209f2f8 == 1)
+                if (gCurrentSublevel == 1)
                     return 0;
             }
         }
     }
 
-    if (IsActorID(this, 0x2e) && data_0209f2f8 == 7) {
+    if (IsActorID(this, 0x2e) && gCurrentSublevel == 7) {
         if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
             if (mPosY >= 0xdac000)
                 return 0;

@@ -283,7 +283,7 @@ extern u8 gSelectedBacklightButton;
    the castle total (gPauseDisplayedCourse 0xf) and neither draws nor reads
    the course arrows. */
 extern u8 gCourseArrowsHidden;
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 extern u16 data_0209f300;
 /* Each big button's offset, in screen entries, into the sub engine's BG1
    map; the menu that opens sets them with gNumMenuButtons. */
@@ -423,7 +423,7 @@ extern u8 data_0209f2d0;
    0..100, KillPlayer and HitDeathPlane go to game over at 0, and
    dMeter_c::RenderLifeCount draws it. */
 extern s8 gNumLives;
-extern u8 data_0209f2fc;
+extern u8 gPrevReturnState;
 extern u16 data_0209f304;
 extern u16 data_0209f308;
 extern s8 data_0209f30c[];
@@ -817,7 +817,7 @@ void dScStage_c::LC_Update() {
         gLevelClearCoinCount = 0;
         gLevelClearStep = 1;
         data_0209f280 = 0;
-        if (data_0209f358[0] != 0)
+        if (gNumCoins[0] != 0)
             return;
         if (gNewStarCollected != 0) {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
@@ -827,13 +827,13 @@ void dScStage_c::LC_Update() {
         return;
     case 1: {
         int level = SublevelToLevel(gLastCourseSublevel);
-        if (data_0209f358[0] > gLevelClearCoinCount) {
+        if (gNumCoins[0] > gLevelClearCoinCount) {
             gLevelClearCoinCount += 1;
             if (gLevelClearCoinCount % 50 == 0) {
                 GiveLives(1);
                 Sound::PlayBank3_2D(0x6e);
             }
-            if (data_0209f358[0] == gLevelClearCoinCount) {
+            if (gNumCoins[0] == gLevelClearCoinCount) {
                 if (gNewStarCollected != 0) {
                     Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
                     data_0209f280 = 1;
@@ -865,19 +865,19 @@ void dScStage_c::LC_Update() {
             data_0209f280 = 1;
         }
         gMenuWaitTimer = 0x3c;
-        data_0209f358[0] = 0;
+        gNumCoins[0] = 0;
         gLevelClearStep = 2;
         return;
     }
     case 2: {
         int t6;
         int t5;
-        if (SublevelToLevel(data_0209f2f8) == 0x1d) {
+        if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1210;
         } else {
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
         }
-        data_0209f358[0] = 0;
+        gNumCoins[0] = 0;
         t6 = gMainScreenLayers ^ (DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
         t5 = gSubScreenLayers ^ DISPLAY_LAYER_OBJ;
         SetBg2Offset(0, 0);
@@ -1146,7 +1146,7 @@ void dScStage_c::PS_Render() {
     if (r0v != 0 && data_0209fc68 == 0) {
         OAM::Render(0, &OAM::VS_PAUSE, 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
     } else if (data_0209f248 == 1 ||
-               (SublevelToLevel(data_0209f2f8) == 0x1d &&
+               (SublevelToLevel(gCurrentSublevel) == 0x1d &&
                 ((unsigned int)data_0209f248 < 7U || (unsigned int)data_0209f248 > 8U))) {
         int var_sl;
         unsigned char var_sb;
@@ -1770,7 +1770,7 @@ void dScStage_c::PS_Update() {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xc00;
         REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
         data_0209f1ec = 3;
-        gPauseDisplayedCourse = SublevelToLevel(data_0209f2f8);
+        gPauseDisplayedCourse = SublevelToLevel(gCurrentSublevel);
         Message::DisplayPauseText(0x277, gPauseDisplayedCourse);
         gMenuButtonTileOffsets[0] = 0x60;
         gMenuButtonTileOffsets[1] = 0x100;
@@ -2182,7 +2182,7 @@ void dScStage_c::PS_Update() {
                     return;
                 }
                 func_02012790(0x5c);
-                if (SublevelToLevel(data_0209f2f8) == 0x1d) {
+                if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
                     data_0209f1ec = 0;
                 } else {
                     data_0209f1ec = 2;
@@ -2207,7 +2207,7 @@ void dScStage_c::PS_Update() {
         gBackButtonSelected = 0;
         data_0209f240 = 0;
         dScStage_c::PS_UpdateOkAndBackButtons(1);
-        if (SublevelToLevel(data_0209f2f8) == 0x1d) {
+        if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
             gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
         } else {
             gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
@@ -2466,7 +2466,7 @@ void dScStage_c::PS_Update() {
                     return;
                 }
                 func_02012790(0x5d);
-                if (SublevelToLevel(data_0209f2f8) == 0x1d) {
+                if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
                     data_0209f1ec = 0;
                 } else {
                     data_0209f1ec = 2;
@@ -2754,7 +2754,7 @@ void dScStage_c::PS_Init() {
         if (isVsMode != 0 && data_0209fc68 == 0) {
             data_0209f1ec = 4;
         } else {
-            if (SublevelToLevel(data_0209f2f8) == 0x1d)
+            if (SublevelToLevel(gCurrentSublevel) == 0x1d)
                 data_0209f1ec = 0;
             else
                 data_0209f1ec = 2;
@@ -2989,7 +2989,7 @@ extern "C" void ExitLevel(void) {
 
 // @symbol SetNextLevel
 extern "C" void SetNextLevel(int arg) {
-    int v = data_0209f2f8;
+    int v = gCurrentSublevel;
     unsigned int i;
     struct LevelReturnEntry *p;
 
@@ -3048,7 +3048,7 @@ extern "C" void SetNextStar(void) {
 extern "C" void DeathTable_ClearBit(s32 id) {
     if (id < 0)
         return;
-    s32 level = GetLevelPart((s32)data_0209f2f8);
+    s32 level = GetLevelPart((s32)gCurrentSublevel);
     u32 *table = data_0209f4f8[level];
     u32 bitMask = ~(1u << (id & 0x1f));
     s32 word = id >> 5;
@@ -3059,7 +3059,7 @@ extern "C" void DeathTable_ClearBit(s32 id) {
 extern "C" void DeathTable_SetBit(s32 id) {
     if (id < 0)
         return;
-    s32 level = GetLevelPart((s32)data_0209f2f8);
+    s32 level = GetLevelPart((s32)gCurrentSublevel);
     u32 *table = data_0209f4f8[level];
     s32 word = id >> 5;
     u32 val = table[word];
@@ -3071,7 +3071,7 @@ extern "C" void DeathTable_SetBit(s32 id) {
 extern "C" u32 DeathTable_GetBit(s32 id) {
     if (id < 0)
         return 0;
-    s32 level = GetLevelPart((s32)data_0209f2f8);
+    s32 level = GetLevelPart((s32)gCurrentSublevel);
     u32 *table = data_0209f4f8[level];
     s32 word = id >> 5;
     s32 bit = id & 0x1f;
@@ -3254,22 +3254,22 @@ extern "C" void SetStarMarker(int i, int v1, int v2) {
 
 // @symbol OpenCannonInCurLevel
 extern "C" void OpenCannonInCurLevel(void) {
-    OpenCannonInLevel(data_0209f2f8);
+    OpenCannonInLevel(gCurrentSublevel);
 }
 
 // @symbol IsCannonOpenInCurLevel
 extern "C" int IsCannonOpenInCurLevel(void) {
-    return IsCannonOpenInLevel(data_0209f2f8);
+    return IsCannonOpenInLevel(gCurrentSublevel);
 }
 
 // @symbol CollectStarInCurLevel
 extern "C" void CollectStarInCurLevel(s32 starID) {
-    CollectStarInLevel(data_0209f2f8, starID);
+    CollectStarInLevel(gCurrentSublevel, starID);
 }
 
 // @symbol IsStarCollectedInCurLevel
 extern "C" s32 IsStarCollectedInCurLevel(s32 starID) {
-    return IsStarCollectedInLevel(data_0209f2f8, starID);
+    return IsStarCollectedInLevel(gCurrentSublevel, starID);
 }
 
 // @symbol NumRedCoins
@@ -3310,7 +3310,7 @@ extern "C" int GiveRedCoins(int i, int amt) {
 extern "C" short NumCoins(void) {
     int i = 1;
     int n = data_0209f21c;
-    short *p = data_0209f358;
+    short *p = gNumCoins;
     short sum = p[0];
     if (n <= 1)
         return sum;
@@ -3323,7 +3323,7 @@ extern "C" short NumCoins(void) {
 
 // @symbol GiveCoins
 extern "C" void GiveCoins(int idx, int amount) {
-    short *p = data_0209f358;
+    short *p = gNumCoins;
     short cur = p[idx];
     short v = cur + amount;
     p[idx] = v;
@@ -3523,7 +3523,7 @@ extern "C" void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 
     SetNextStar();
     data_0209f26c = arg3;
     if (returnState >= 0) {
-        data_0209211c = data_0209f2f8;
+        data_0209211c = gCurrentSublevel;
         data_0209f200 = (u8)returnState;
         chk = data_02092118;
         if (chk < 0)
@@ -3538,7 +3538,7 @@ extern "C" void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 
         data_0209f268 = data_0209f24c;
         data_0209f1f0 = data_0209f270;
     } else {
-        cur = SublevelToLevel(data_0209f2f8);
+        cur = SublevelToLevel(gCurrentSublevel);
         if (data_0209211c >= 0 && (cur == 6 || cur == 7 || cur == 0xb)) {
             data_02092118 = data_02092110;
             data_0209f24c = data_0209f268;
@@ -3578,7 +3578,7 @@ extern "C" void SetPlayerGlobals(void) {
 extern "C" void ExitMinigameMenu(void) {
     if (data_0209f298) {
         LoadLevelNoReturn(0x32, 4, 1, 0);
-        data_0209f2f8 = 6;
+        gCurrentSublevel = 6;
         dScene_c::StartSceneFade(3, 0, 0x7fff);
     } else {
         dScene_c::StartSceneFade(1, 0, 0);
@@ -3962,7 +3962,7 @@ void dScStage_c::LoadModel() {
 
 void dScStage_c::RenderFog() {
     Fog *fog = 0;
-    if (data_0209f2f8 == 5)
+    if (gCurrentSublevel == 5)
         fog = daMugenBGM_c::GetActiveFog();
     if (fog == 0) {
         dCamera_c *camera = (dCamera_c *)data_0209f318;
@@ -4224,7 +4224,7 @@ int dScStage_c::Behavior() {
     }
     if (data_02092110 >= 0) {
         int lvl = SublevelToLevel(data_02092110);
-        int lvl2 = SublevelToLevel(data_0209f2f8);
+        int lvl2 = SublevelToLevel(gCurrentSublevel);
         int bb = (data_0209f2d8 == 2);
         if (bb == 0 && lvl <= 0xe && lvl != lvl2 && data_02092118 < 0 &&
             (data_02092110 != 0xc || data_0209f268 != 4)) {
@@ -4232,8 +4232,9 @@ int dScStage_c::Behavior() {
         } else {
             dScene_c::SetSceneToSpawn(3, 0);
         }
-        if ((IsLevelInsideCastle(data_0209f2f8) == 0 || IsLevelInsideCastle(data_02092110) == 0) &&
-            (IsLevelTinyHugeIslandOutside(data_0209f2f8) == 0 ||
+        if ((IsLevelInsideCastle(gCurrentSublevel) == 0 ||
+             IsLevelInsideCastle(data_02092110) == 0) &&
+            (IsLevelTinyHugeIslandOutside(gCurrentSublevel) == 0 ||
              IsLevelTinyHugeIslandOutside(data_02092110) == 0)) {
             int bb2 = (data_0209f2d8 == 2);
             if (bb2 == 0)
@@ -4587,8 +4588,8 @@ int dScStage_c::CleanupResources() {
     mMeshCollider.Disable();
     dScStage_c::ResetMeshColliders();
     Deallocate(func_01ffb0c8(&mMeshCollider));
-    UnloadLevelOverlays(data_0209f2f8);
-    if (data_0209f2f8 == 1)
+    UnloadLevelOverlays(gCurrentSublevel);
+    if (gCurrentSublevel == 1)
         UnloadArchive(7);
 
     {
@@ -4686,7 +4687,7 @@ int dScStage_c::InitResources() {
         data_0209f2c4 = 0;
 
         int nextLevel = SublevelToLevel(data_02092110);
-        int previousLevel = SublevelToLevel(data_0209f2f8);
+        int previousLevel = SublevelToLevel(gCurrentSublevel);
         u32 sublevelBit = ((u8)data_02092110 + 0xDC) & 0xFF;
         int specialSublevel = 0;
         if (sublevelBit <= 0xD) {
@@ -4718,7 +4719,7 @@ int dScStage_c::InitResources() {
                 u8 loadMode = data_0209f26c;
                 do {
                     if (vsModeCounters || (specialSublevel == 0 && loadMode != 1)) {
-                        data_0209f358[idx] = 0;
+                        gNumCoins[idx] = 0;
                     }
                     *p1 = 0;
                     *vsStars = 0;
@@ -4729,30 +4730,30 @@ int dScStage_c::InitResources() {
             }
         }
 
-        data_0209f2fc = data_0209f26c;
-        if (data_0209f2fc == 1) {
-            gLastCourseSublevel = data_0209f2f8;
+        gPrevReturnState = data_0209f26c;
+        if (gPrevReturnState == 1) {
+            gLastCourseSublevel = gCurrentSublevel;
             data_02092118 = -1;
         }
 
-        s8 previousSublevel = data_0209f2f8;
-        data_0209f2f8 = data_02092110;
+        s8 previousSublevel = gCurrentSublevel;
+        gCurrentSublevel = data_02092110;
         data_0209f264 = data_0209f268;
         data_0209f220 = data_0209f1f0;
         data_02092120 = -1;
         data_0209f314 = (int)scene->mTexAnimSlots;
         data_0209f32c = 0x80000000;
         data_0209f274 = 0;
-        SublevelToLevel(data_0209f2f8);
+        SublevelToLevel(gCurrentSublevel);
 
         s32 levelArchive = 0xBF;
-        if (data_0209f2f8 == 0x33)
+        if (gCurrentSublevel == 0x33)
             levelArchive = 2;
-        else if (data_0209f2f8 == 0x2B)
+        else if (gCurrentSublevel == 0x2B)
             levelArchive = 3;
-        else if (data_0209f2f8 == 0x1D)
+        else if (gCurrentSublevel == 0x1D)
             levelArchive = 4;
-        else if (data_0209f2f8 == 0x2A)
+        else if (gCurrentSublevel == 0x2A)
             levelArchive = 5;
 
         u32 archiveToUnload = 2;
@@ -4765,7 +4766,7 @@ int dScStage_c::InitResources() {
 
         LoadTextNarcs();
         LoadArchive(0);
-        if (data_0209f2f8 == 1) {
+        if (gCurrentSublevel == 1) {
             mHeap::Heap_t *previousHeap = data_020a0eac->SetDefault();
             LoadArchive(7);
             previousHeap->SetDefault();
@@ -4839,11 +4840,12 @@ int dScStage_c::InitResources() {
         data_0209f25c = 0;
         data_0209f338 = 0;
         data_02092134 = 0x44444444;
-        LoadLevelOverlays(data_0209f2f8);
+        LoadLevelOverlays(gCurrentSublevel);
 
         int skipSoundGroup = (data_0209f2d8 == 2) ? 1 : 0;
         if (skipSoundGroup == 0) {
-            s8 sublevel = *(s8 *)(unsigned)(((unsigned long long)(unsigned)&data_0209f2f8) & ~0ULL);
+            s8 sublevel =
+                *(s8 *)(unsigned)(((unsigned long long)(unsigned)&gCurrentSublevel) & ~0ULL);
             int soundGroup = 0;
             u8 bank = 0x36;
             if (data_0209f220 == 2) {
@@ -4865,7 +4867,7 @@ int dScStage_c::InitResources() {
         }
 
         *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 2;
-        LoadGraphics2D(data_0209f2d8 == 1, data_0209f2f8);
+        LoadGraphics2D(data_0209f2d8 == 1, gCurrentSublevel);
 
         {
             u32 i;
@@ -4878,7 +4880,7 @@ int dScStage_c::InitResources() {
         u16 *faderFileIds;
         if (vsModeFaders && levelArchive != 0xBF) {
             faderFileIds = data_02075600;
-        } else if (data_0209f2f8 == 5) {
+        } else if (gCurrentSublevel == 5) {
             faderFileIds = data_020755f0;
         } else {
             faderFileIds = data_020755e0;
@@ -4894,7 +4896,7 @@ int dScStage_c::InitResources() {
             faderOffset += 0x60;
         } while (faderIndex < 7);
 
-        data_0209f340 = (char *)data_02092208[data_0209f2f8];
+        data_0209f340 = (char *)data_02092208[gCurrentSublevel];
         scene->LoadModel();
         data_0208ee44 = 2;
         dScStage_c::LoadClsnAndObjects(*(LVL_Overlay *)data_0209f340, data_0209f264,
@@ -4904,12 +4906,13 @@ int dScStage_c::InitResources() {
         if (vsModeMusic == 0) {
             int skipMusicSetup = (gRunningKuppaScript != 0) ? 1 : 0;
             if (skipMusicSetup == 0) {
-                if (!IsLevelInsideCastle(data_0209f2f8) || !IsLevelInsideCastle(previousSublevel)) {
-                    if (!IsLevelTinyHugeIslandOutside(data_0209f2f8) ||
+                if (!IsLevelInsideCastle(gCurrentSublevel) ||
+                    !IsLevelInsideCastle(previousSublevel)) {
+                    if (!IsLevelTinyHugeIslandOutside(gCurrentSublevel) ||
                         !IsLevelTinyHugeIslandOutside(previousSublevel)) {
-                        if (data_0209f2f8 != 2 ||
+                        if (gCurrentSublevel != 2 ||
                             (((FileSaveData *)data_0209caa0)->flags2 & 0x200)) {
-                            Sound::LoadAndSetMusic_Layer1(data_0207576a[data_0209f2f8 * 3]);
+                            Sound::LoadAndSetMusic_Layer1(data_0207576a[gCurrentSublevel * 3]);
                             u8 localPlayer = data_0209f250;
                             if (((u8 *)data_0209f394[localPlayer])[0x6ff] != 0) {
                                 Sound::SetMusic(localPlayer, 0x33);
@@ -4930,7 +4933,7 @@ int dScStage_c::InitResources() {
         data_0209cef0 = 1;
         scene->mSysTracker.Initialise();
 
-        u8 f2fc = data_0209f2fc;
+        u8 f2fc = gPrevReturnState;
         gVsExitScreenActive = 0;
         data_0209f290 = 0;
         gShowTouchScreenArrows = 0;

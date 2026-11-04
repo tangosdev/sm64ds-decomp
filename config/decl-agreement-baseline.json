@@ -8565,7 +8565,7 @@
         "return:signed char"
       ]
     },
-    "data_0209f2f8": {
+    "gCurrentSublevel": {
       "src/game/actors/d_a_brq.cpp": [
         "return:signed char []"
       ],

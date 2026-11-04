@@ -79,7 +79,7 @@ extern int IsStarCollected(int r0, int r1);
 
 extern SharedFilePtr data_ov002_0210da10;
 extern SharedFilePtr data_ov002_0210d9a8;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
 
 /* Identity, but it keeps the address expression from being folded into the access. */
@@ -341,7 +341,8 @@ s32 daWater_Hakidasi_c::InitResources() {
     mNoRings = param1 & 1;
     if ((param1 & 0xf) > 1)
         mNoRings = 0;
-    if (data_0209f2f8 == 8 && (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0)) {
+    if (gCurrentSublevel == 8 &&
+        (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0)) {
         return 0;
     }
     mdCcAc_c.Init(this, 0xc8000, 0x190000, 0x800004, 0);

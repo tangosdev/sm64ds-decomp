@@ -136,7 +136,7 @@ extern unsigned int gNextActorUpdateMask;
 extern u8 data_0209d660;
 extern u8 data_0209f21c;
 extern u8 data_0209f220;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int data_0209f318;
 extern daPly_c *data_0209f394[];
 extern MatrixWords data_020a0e68;
@@ -390,10 +390,8 @@ int daBtn_c::InitResources()
         }
     }
 
-    if (mIsKing != 0
-        && data_0209f2f8 == 7
-        && data_0209f220 != 1
-        && IsStarCollectedInCurLevel(1) != 0) {
+    if (mIsKing != 0 && gCurrentSublevel == 7 && data_0209f220 != 1 &&
+        IsStarCollectedInCurLevel(1) != 0) {
         MarkForDestruction();
         return 0;
     }
@@ -643,7 +641,7 @@ void daBtn_c::func_ov079_021258fc()
         mHorzSpeed = data_ov079_021275dc[king];
     }
 
-    if (data_0209f2f8 == 0x27)
+    if (gCurrentSublevel == 0x27)
         lim = 0xc8000;
     else
         lim = 0x2bc000;

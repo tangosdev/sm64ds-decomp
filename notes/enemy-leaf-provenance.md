@@ -264,8 +264,8 @@ Left `unk_`:
 * **0x3ba** — an `s16` that `func_ov100_0214233c` fills and `InitResources`
   immediately copies into `mPrevAngleY`. It is an angle, but which one (heading to
   the next node is the obvious guess) the matched code does not say.
-* **0x3c0, 0x3c4, 0x3c8** — per-level constants selected by `data_0209f2f8`
-  (the level ID). 0x3c0/0x3c4 look like a near/far distance pair and 0x3c8 is
+* **0x3c0, 0x3c4, 0x3c8** — per-level constants selected by `gCurrentSublevel`
+  (the current sublevel). 0x3c0/0x3c4 look like a near/far distance pair and 0x3c8 is
   seeded from `data_02092138`, but nothing in the tree reads any of them back.
 
 Byte-neutral cleanups: six `((char *)this) + 0xNNN` member addresses in

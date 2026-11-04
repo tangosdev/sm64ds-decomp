@@ -185,7 +185,7 @@ enum { SAVE_FLAGS1_BIT31 = 0x80000000 };
 
 extern "C" {
 
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int data_0209f32c;
 extern int data_0209e650;
 extern unsigned char data_0209f2d8;
@@ -510,7 +510,7 @@ int daObjHatenaBlock_c::Behavior()
             goto end;
         }
     }
-    if (data_0209f2f8 == 0x1c) {   /* LEVEL_ID 0x1c */
+    if (gCurrentSublevel == 0x1c) { /* LEVEL_ID 0x1c */
         if (IsClsnInRange(0x460000, 0x46000) != 0) {
             func_ov102_02149e38();
         }
@@ -871,7 +871,7 @@ void daObjHatenaBlock_c::func_ov102_021498e0()
         break;
     }
     case 0:     /* HATENA_BLOCK */
-        if (SaveData::HasPlayerLostCap() == 0 || data_0209f2f8 == 0x1f) {
+        if (SaveData::HasPlayerLostCap() == 0 || gCurrentSublevel == 0x1f) {
             PMF (*tbl)[4] = data_ov102_0214e8c0;
             u8 content = mContentType;
             if (ch >= 4) ch = 0;
@@ -1193,15 +1193,15 @@ void daObjHatenaBlock_c::func_ov102_02149100(Vector3 *pos, int n, unsigned int s
    mHomePosY - 0x32000 (50 units) is at or below data_0209f32c
    (WATER_HEIGHT in symbols/verified.tsv); in any other level except 0x21 (0
    there) when the closest player's mIsUnderwater is non-zero; otherwise 0.
-   The levels are LEVEL_ID values (data_0209f2f8); 0x15 is Wet-Dry World per
+   The levels are LEVEL_ID values (gCurrentSublevel); 0x15 is Wet-Dry World per
    dActor_c::GetWaterHeightWDW, the tree does not name 0x21. */
 int daObjHatenaBlock_c::func_ov102_02149078()
 {
-    if (data_0209f2f8 == 0x15) {
+    if (gCurrentSublevel == 0x15) {
         if ((int)(mHomePosY - 0x32000) <= data_0209f32c)
             return 1;
     } else {
-        if (data_0209f2f8 == 0x21)
+        if (gCurrentSublevel == 0x21)
             return 0;
         if (ClosestPlayer()->mIsUnderwater)
             return 1;

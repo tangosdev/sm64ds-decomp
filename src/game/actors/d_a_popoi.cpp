@@ -111,7 +111,7 @@ extern PopoiPMF data_ov077_02127cd8[2];
  * the Fix12-by-value signatures the real headers cannot express. */
 extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
-extern signed char data_0209f2f8;       /* LEVEL_ID */
+extern signed char gCurrentSublevel;    /* LEVEL_ID */
 extern int data_0209e650[];             /* RandomIntInternal state */
 extern char data_020a0e68[];            /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
@@ -662,7 +662,7 @@ void daPopoi_c::func_ov077_02126528()
  * down 0x3000 (67.5 degrees). "Ahead" is the +Z direction rotated by mAngleY.
  * Blocked means "the level ray hit something, OR the pitched ray found no ground".
  *
- * Guarded by data_0209f2f8 (LEVEL_ID) == 0x2a (42), so the probe only casts in
+ * Guarded by gCurrentSublevel (LEVEL_ID) == 0x2a (42), so the probe only casts in
  * that level; in every other level it returns 0 without casting anything.
  *
  * NOTE on the two `end.x = sx; end.x = sx + ox;` pairs below: the dead first
@@ -673,7 +673,7 @@ int daPopoi_c::func_ov077_02126300()
 {
     int y;
 
-    if (data_0209f2f8 == 0x2a) {
+    if (gCurrentSublevel == 0x2a) {
         dBgCh_Lin ray1;
         dBgCh_Lin ray2;
         Vector3 start;

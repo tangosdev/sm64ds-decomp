@@ -38,7 +38,7 @@ extern int data_ov002_0210b498[];  /* sound-ID table, 11 entries: 0x18d, 0x100-0
 extern int data_ov002_02110aec;    /* WATERFALL_SOUNDS_DISABLED */
 extern int data_0209b4ac;          /* current music ID */
 extern dCamera_c *data_0209f318;   /* CAMERA */
-extern s8 data_0209f2f8;           /* LEVEL_ID */
+extern s8 gCurrentSublevel;        /* LEVEL_ID */
 extern u8 data_0209f220;           /* STAR_ID */
 extern u8 data_0209f2d8;           /* CURRENT_GAMEMODE */
 extern int data_0209caa0[];        /* SAVE_DATA */
@@ -57,7 +57,7 @@ int daSetSE_c::InitResources()
 {
     int disabled;
 
-    if (data_0209f2f8 == 8 && (data_0209f220 == 1 || IsStarCollectedInLevel(8, 1) == 0))
+    if (gCurrentSublevel == 8 && (data_0209f220 == 1 || IsStarCollectedInLevel(8, 1) == 0))
         return 0;
 
     /* Volatile keeps CW from materializing an extra base pointer for this

@@ -268,7 +268,7 @@ extern int atan2_hold_Player_5(Fix12i y, Fix12i x);
 extern Fix12i atan2_hold_Player_6(Fix12i a, Fix12i b);
 extern int atan2_hold_Player_7(Fix12i a, int b);
 extern s16 data_02082214[];
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern unsigned char data_0209f4ae[];
 extern unsigned int data_ov002_020ff220[];
 extern SharedFilePtr *data_ov002_020ff480[];
@@ -1231,7 +1231,8 @@ void daPly_c::func_ov002_020bda48() {
 extern "C" {
 int daPly_c::HasNoCap() {
     extern unsigned char data_0209f2d8;
-    if(data_0209f2f8 == 0x1f) return 0;
+    if (gCurrentSublevel == 0x1f)
+        return 0;
     int r = (data_0209f2d8 == 2);
     if(!r){
         if(!this->IsState(data_ov002_0211058c)){
@@ -2998,7 +2999,7 @@ int daPly_c::func_ov002_020c0fb4() {
         break;
     }
 
-    if (data_0209f2f8 == 0x26) {
+    if (gCurrentSublevel == 0x26) {
         if ((this->mPosY) < (-0x3e8000)) {
             this->mPosY = -0x3e8000;
             if ((r = this->func_ov002_020d5338()) != 0) {
@@ -3040,7 +3041,8 @@ int daPly_c::func_ov002_020c0fb4() {
 void daPly_c::func_ov002_020c1234() {
     unsigned int a1, a2;
     int fx;
-    if (data_0209f2f8 != 0xc && data_0209f2f8 != 0x2e) return;
+    if (gCurrentSublevel != 0xc && gCurrentSublevel != 0x2e)
+        return;
     switch (mGroundSoundType) {
     case 0xa:
         a1 = 0x2d;
@@ -4644,11 +4646,11 @@ ret0:
     return 0;
 
 cont:
-    if (SaveData::CountStarsCollectedInLevel(SublevelToLevel(data_0209f2f8)) != 0) {
+    if (SaveData::CountStarsCollectedInLevel(SublevelToLevel(gCurrentSublevel)) != 0) {
         return 0;
     }
 
-    state = data_0209f2f8;
+    state = gCurrentSublevel;
 
     switch (state) {
     case 2:
@@ -6186,7 +6188,7 @@ extern "C" {
 void daPly_c::func_ov002_020c71e0() {
     extern void func_ov002_020be008(void*);
     extern unsigned char data_0209f2bc[];
-    extern unsigned char data_0209f2fc[];
+    extern unsigned char gPrevReturnState[];
     mLevelEntryDone = 1;
     if (data_0209f2bc[0] != 0) return;
     if (mStateWaitTimer == 0) {
@@ -6195,7 +6197,7 @@ void daPly_c::func_ov002_020c71e0() {
             this->ChangeState(data_ov002_0211067c);
         } else {
             this->ChangeState(data_ov002_0211013c);
-            if (mKeyModelId < 0 && data_0209f2fc[0] == 1) {
+            if (mKeyModelId < 0 && gPrevReturnState[0] == 1) {
                 if (func_ov002_020c6e14(this) != 0) return;
             }
             if (func_ov002_020c44c4() != 0) return;
@@ -6327,7 +6329,7 @@ void daPly_c::func_ov002_020c7350() {
 extern "C" {
 void daPly_c::func_ov002_020c75f0() {
     extern void func_02012694(u32 id, void*);
-    extern u8 data_0209f2fc;
+    extern u8 gPrevReturnState;
     if (this->IsAnim(0x56))
     {
         int model = this->GetBodyModelID(param1 & 0xff, 0);
@@ -6341,8 +6343,7 @@ void daPly_c::func_ov002_020c75f0() {
         func_ov002_020c2f64();
         mStateArg = 0;
         mStateWork = 1;
-        if (data_0209f2fc == 1 || data_0209f2fc == 2)
-        {
+        if (gPrevReturnState == 1 || gPrevReturnState == 2) {
             this->Heal(0x880);
         }
         switch (mStateStep)
@@ -6380,8 +6381,7 @@ void daPly_c::func_ov002_020c75f0() {
             this->SetAnim(0x52, 0x40000000, 0x1000, 0);
             break;
         }
-        if (data_0209f2fc == 2)
-        {
+        if (gPrevReturnState == 2) {
             Sound::PlayCharVoice(mCharacter, 0x24, mCamSpacePos);
         }
     }
@@ -6405,7 +6405,7 @@ void daPly_c::func_ov002_020c75f0() {
 extern "C" {
 int daPly_c::St_LevelEnter_Init() {
     extern u8 data_0209f2d8;
-    extern u8 data_0209f2fc;
+    extern u8 gPrevReturnState;
 
     u32 anim = data_ov002_0210a7e8[mStateStep];
     if (SaveData::HasPlayerLostCap() != 0) {
@@ -6498,8 +6498,10 @@ int daPly_c::St_LevelEnter_Init() {
         mStateArg = 1;
         mVertAccel = 0;
         mStateWork = 5;
-        if (data_0209f2f8 == 0x18) func_02012790(0x16);
-        else if (data_0209f2f8 == 0x19) func_02012790(0x17);
+        if (gCurrentSublevel == 0x18)
+            func_02012790(0x16);
+        else if (gCurrentSublevel == 0x19)
+            func_02012790(0x17);
         break;
     }
     case 2:
@@ -6521,11 +6523,11 @@ int daPly_c::St_LevelEnter_Init() {
     mLandSoundPlayed = 0;
     {
         u8 c2 = data_0209f264;
-        if (data_0209f2f8 == 2) {
-            if (c2 == 0 || (c2 == 0xe && data_0209f2fc != 1)) {
+        if (gCurrentSublevel == 2) {
+            if (c2 == 0 || (c2 == 0xe && gPrevReturnState != 1)) {
                 func_02012790(0x1d);
             }
-        } else if (data_0209f2f8 == 1 && (c2 == 6 || c2 == 7 || (u32)(c2 - 9) <= 1)) {
+        } else if (gCurrentSublevel == 1 && (c2 == 6 || c2 == 7 || (u32)(c2 - 9) <= 1)) {
             func_02012790(0x1d);
         }
     }
@@ -6537,8 +6539,8 @@ int daPly_c::St_LevelEnter_Init() {
 // @symbol _ZN7daPly_c19func_ov002_020c7cbcEv
 extern "C" {
 int daPly_c::func_ov002_020c7cbc() {
-    extern u8 data_0209f2fc;
-    if (data_0209f2fc == 1) {
+    extern u8 gPrevReturnState;
+    if (gPrevReturnState == 1) {
         switch (gLastCourseSublevel) {
         case 0x24: mKeyModelId = 0; break;
         case 0x26: mKeyModelId = 1; break;
@@ -6561,10 +6563,10 @@ int daPly_c::func_ov002_020c7cbc() {
 // @symbol _ZN7daPly_c19func_ov002_020c7dd0Ei
 extern "C" {
 void daPly_c::func_ov002_020c7dd0(int i) {
-    extern unsigned char data_0209f2fc;
+    extern unsigned char gPrevReturnState;
     unsigned char g;
     mStateStep = data_ov002_020ff240[i];
-    g = data_0209f2fc;
+    g = gPrevReturnState;
     if (g == 2) {
         unsigned char s = mStateStep;
         switch (s) {
@@ -7323,7 +7325,7 @@ int daPly_c::func_ov002_020c94a4() {
 
         sub = mNoCtrlKind;
         if (sub == 0) {
-            if (data_0209f2f8 == 0x21) {
+            if (gCurrentSublevel == 0x21) {
                 data_0209211c = 4;
                 data_0209f200 = 7;
             }
@@ -7333,7 +7335,7 @@ int daPly_c::func_ov002_020c94a4() {
         }
 
         if (sub == 3) {
-            switch (data_0209f2f8) {
+            switch (gCurrentSublevel) {
             case 0x24:
                 data_0209211c = 2;
                 data_0209f200 = 0xa;
@@ -8509,7 +8511,7 @@ void func_ov002_020cb474(char *c) {
     v[1] = y;
     v[2] = z;
     unsigned int id;
-    switch (data_0209f2f8) {
+    switch (gCurrentSublevel) {
     case 0x13:
     case 0xa:
         id = 0xba;
@@ -10248,7 +10250,7 @@ int func_ov002_020cec2c(daPly_c *player) {
         return 0;
 
     flag = 0;
-    if (data_0209f2f8 == 0x13 || data_0209f2f8 == 0x14 || data_0209f2f8 == 0x30)
+    if (gCurrentSublevel == 0x13 || gCurrentSublevel == 0x14 || gCurrentSublevel == 0x30)
         flag = 1;
 
     if (func_ov002_020ceb54(player) == 0 && flag == 0) {
@@ -10341,7 +10343,7 @@ int daPly_c::func_ov002_020cede0() {
         data_0209f32c = p->mWaterSurfaceY;
         return 1;
     }
-    if (data_0209f2f8 == 0x21) {
+    if (gCurrentSublevel == 0x21) {
         p->mWaterSurfaceY = 0x80000000;
         data_0209f32c = p->mWaterSurfaceY;
         return 0;
@@ -12592,7 +12594,7 @@ int func_ov002_020d2fdc(daPly_c *p) {
     if (p->mStateStep == 0) {
         p->SetAnim(0x47, 0, 0x1000, 0);
         if (p->mStateTimer == 0) {
-            char v = data_0209f2f8;
+            char v = gCurrentSublevel;
             if (v == 0x13 || v == 0xa || (unsigned)(v - 0x30) <= 1) {
                 p->SetAnim(0x95, 0x40000000, 0x1000, 0);
                 p->mStateStep = 5;
@@ -13596,7 +13598,7 @@ int daPly_c::St_BurnLava_Main() {
     }
 
     {
-        s8 lv = data_0209f2f8;
+        s8 lv = gCurrentSublevel;
         if (lv != 0x13 && lv != 0x31 && mVertSpeed >= 0) {
             /* Field order is the stack layout the original built, not a choice. */
             struct Info {
@@ -21488,7 +21490,7 @@ int daPly_c::TryEnterBigFallLanding() {
     int func_ov002_020e3078(daPly_c * self, daPly_c::State * s);
     char *base = (char *)this;
     daPly_c *p = (daPly_c *)base;
-    signed char c = data_0209f2f8;
+    signed char c = gCurrentSublevel;
 
     if (c == 0x13 || c == 0xa || c == 0x10) {
         /* proceed */
@@ -22076,10 +22078,11 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     void MulMat3x3Mat3x3(int *dst, const int *a, const int *b);
     void func_02016acc(void *obj, unsigned int mask);
     void func_02016b24(void *obj, unsigned int mask);
-    int ip = (data_0209f2f8 == 0x2f) ? 1 : 0;
+    int ip = (gCurrentSublevel == 0x2f) ? 1 : 0;
 
     if (!ip) {
-        if (data_0209f2f8 != 5) return;
+        if (gCurrentSublevel != 5)
+            return;
         if (data_02092120 != 3) return;
     }
 
@@ -22675,8 +22678,7 @@ after_player_slot:
         fallFlag = 1;
     else
         fallFlag = 0;
-    if (data_0209f2f8 == 0x1f
-        && IsState(data_ov002_021104b4) != 0)
+    if (gCurrentSublevel == 0x1f && IsState(data_ov002_021104b4) != 0)
         fallFlag = 0;
 
     if (mIsAirborne == 0 || fallFlag != 0 || mPeakY < mPosY)
@@ -22821,7 +22823,7 @@ s32 daPly_c::InitResources() {
     extern u8 data_0209f2d8;
     extern s8 data_02092114;
     extern CAA0 data_0209caa0;
-    extern u8 data_0209f2fc;
+    extern u8 gPrevReturnState;
     extern u8 data_0209211c;
     /* The helpers below take void or char pointers, and this file's match
        depends on declaration and load order documented in the header comment
@@ -22849,7 +22851,7 @@ s32 daPly_c::InitResources() {
     changed = 0;
     t = (unsigned int)(data_0209f2d8 == 1);
     if (t == 0) {
-        if (SublevelToLevel(data_0209f2f8) == 0x1d) {
+        if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
             data_0209f254 = 0;
             cur = mCharacter;
             if (sub != cur) {
@@ -22918,7 +22920,7 @@ Ld0:
         }
     }
     data_0209f254 = 0;
-    if (data_0209f2fc == 1) {
+    if (gPrevReturnState == 1) {
         if (SaveData::HasPlayerLostCap() != 0)
             func_02013a00();
     }
@@ -22933,7 +22935,7 @@ Ld0:
     rc.mProbeHeight = td * 2;
     rc.SetObjAndPos(pos, (dActor_c *)c);
     rc.StartDetectingWater();
-    if (data_0209f2f8 == 0x1d) {
+    if (gCurrentSublevel == 0x1d) {
         data_0209211c = 2;
         data_0209f200 = 0xe;
     }
@@ -23158,7 +23160,7 @@ void func_ov002_020e5948(void* arg0)
             player->mModels.mSleepBubbleModel->SetFile(
                 (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210da38), 1, -1);
 
-            if (data_0209f2f8 != 2 && data_0209f2f8 != 5 && data_0209f2f8 != 4) {
+            if (gCurrentSublevel != 2 && gCurrentSublevel != 5 && gCurrentSublevel != 4) {
                 player->mLoadedResourceFlags |= 0x20;
                 player->mModels.mBodyModels[4] = new dExtAnm2Model_c;
                 player->mModels.mBodyModels[4]->SetFile(

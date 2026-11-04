@@ -151,7 +151,7 @@ extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern int SurfaceInfo_TestFlag0x20(void* p);
 extern int data_0209f32c;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern void SetStarMarker(int i, int v1, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
 extern int data_0209f40c[];
@@ -163,7 +163,7 @@ int SublevelToLevel(int i);
 s16 NumCoins(void);
 extern u8 gCollectedStarId;
 extern u8 gNewStarCollected;
-extern s16 data_0209f358[];
+extern s16 gNumCoins[];
 extern u8 data_0209d684;
 extern int Vec3_HorzDist(const Vec3* a, const Vec3* b);
 extern s16 GetAngleToCamera(int i);
@@ -315,7 +315,7 @@ s32 daStar_c::InitResources()
 
     b = (s32)(actorID == ACTOR_STAR);
     if (b != 0) {
-        if (data_0209f220 == (param1 & 0xf) || SublevelToLevel(data_0209f2f8) > 0xe)
+        if (data_0209f220 == (param1 & 0xf) || SublevelToLevel(gCurrentSublevel) > 0xe)
             mMarkerType = 2;
         else
             mMarkerType = 0;
@@ -407,7 +407,7 @@ s32 daStar_c::InitResources()
 
     if (mStarID < 8 && mKind != KIND_5 && mKind != KIND_3 &&
         (s32)(data_0209f2d8 == 1) == 0 && IsStarCollectedInCurLevel(mStarID) != 0) {
-        if (SublevelToLevel(data_0209f2f8) == 0x1d) {
+        if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
             MarkForDestruction();
             return 0;
         }
@@ -435,19 +435,19 @@ s32 daStar_c::InitResources()
     sp = (char *)dActor_c::FindWithID((u32)mMarkerID);
     if (sp != 0)
         ((daStarBase_c *)(sp))->LinkSilverStarAndStarMarker((char *)this);
-    if (data_0209f2f8 == 8 && mStarID == 7) {
+    if (gCurrentSublevel == 8 && mStarID == 7) {
         if (IsStarCollected(SublevelToLevel(8), 1) == 0 || data_0209f220 == 1) {
             MarkForDestruction();
             return ret;
         }
     }
-    if (data_0209f2f8 == 7 && mStarID == 2) {
+    if (gCurrentSublevel == 7 && mStarID == 2) {
         if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
             MarkForDestruction();
             return 0;
         }
     }
-    if (GetBitInDeathTable() != 0 && mStarID == 1 && data_0209f2f8 == 0x2e) {
+    if (GetBitInDeathTable() != 0 && mStarID == 1 && gCurrentSublevel == 0x2e) {
         KillAndTrackInDeathTable();
         sp = (char *)dActor_c::FindWithID((u32)mMarkerID);
         if (sp != 0)
@@ -565,7 +565,8 @@ int daStarBase_c::InitResources()
 
     if (data_0209f2d8 == 1)
         r3 = 1;
-    if (r3 == 0 && SublevelToLevel((s8)data_0209f2f8) == 0x1d && IsStarCollectedInCurLevel(mStarID) != 0) {
+    if (r3 == 0 && SublevelToLevel((s8)gCurrentSublevel) == 0x1d &&
+        IsStarCollectedInCurLevel(mStarID) != 0) {
         MarkForDestruction();
         return 0;
     }
@@ -838,7 +839,7 @@ void daStar_c::func_ov002_020ea9d0() {
             *(struct Vec1 *)&v0.y = *(struct Vec1 *)&op->y;
             *(struct Vec1 *)&v0.z = *(struct Vec1 *)&op->z;
             v0.y = v0.y + 0xc8000;
-            area = data_0209f2f8;
+            area = gCurrentSublevel;
             if (area == 0x11) {
                 v1.x = v0.x;
                 v1.y = v0.y;
@@ -928,7 +929,7 @@ void daStar_c::func_ov002_020ea824() {
         *yp += 0xc8000;
         mHorzSpeed = 0;
         mVertSpeed = 0x18000;
-        if (data_0209f2f8 == 0xb) {
+        if (gCurrentSublevel == 0xb) {
             if (mStarID == 3) {
                 mVertSpeed = 0x10000;
                 goto skip;
@@ -1601,7 +1602,7 @@ void daStar_c::func_ov002_020e96a0() {
 /* True on levels 0xf-0x14 and 0x1d, where a collected Power Star starts a
  * talk. */
 int daStar_c::func_ov002_020e9630() {
-    int lv = SublevelToLevel(data_0209f2f8);
+    int lv = SublevelToLevel(gCurrentSublevel);
     if (lv == 0xf || lv == 0x10 || lv == 0x11 || lv == 0x12 ||
         lv == 0x13 || lv == 0x14 || lv == 0x1d)
         return 1;
@@ -1851,12 +1852,12 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
                 if (mBits.coinReward != 0 && found != 0) {
                     ((dActor_c *)found)->TrackInDeathTable();
                 }
-                lvl = SublevelToLevel((signed char)data_0209f2f8);
+                lvl = SublevelToLevel((signed char)gCurrentSublevel);
                 if (lvl <= 0xe) {
                     int rec = SaveData::GetCoinRecord(lvl);
                     if (rec < NumCoins()) {
                         SaveData::SetCoinRecordIfHigher(
-                            lvl, (u8)(data_0209f358[((daPly_c *)p)->mPlayerNo] & 0xff));
+                            lvl, (u8)(gNumCoins[((daPly_c *)p)->mPlayerNo] & 0xff));
                     }
                 }
             }
@@ -1935,7 +1936,7 @@ void daStar_c::func_ov002_020e8e80(int a) {
  * id 5, and sublevel 0x16 shows star id 4 only once data_0209f264 is 4. Marker
  * type 0 is added only for kinds 2 and 4. */
 int daStar_c::func_ov002_020e8dd8() {
-    signed char g1 = data_0209f2f8;
+    signed char g1 = gCurrentSublevel;
     int t;
     if (g1 == 5) {
         if (mStarID == 5) {
@@ -2149,7 +2150,8 @@ void daStar_c::func_ov002_020e88a8() {
     if (Vec3_Dist(&mPos, &v) < 0x4b0000) {
         mPrevAngleY = Vec3_HorzAngle(&v, &mPos);
         if (mFloorNormalY >= *(short*)(data_02082714 + 0x56)) {
-            if (data_0209f2f8 != 0x1d) return;
+            if (gCurrentSublevel != 0x1d)
+                return;
             if (mWithMeshClsn.GetFloorResult()->surface.clps.GetFloorClass() != 5)
                 return;
         }

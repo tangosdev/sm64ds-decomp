@@ -171,7 +171,7 @@ extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 /* Play2D(3, id): a sound with no position. */
 extern unsigned int func_0201277c(unsigned int id);
-extern signed char data_0209f2f8;   /* LEVEL_ID */
+extern signed char gCurrentSublevel; /* LEVEL_ID */
 extern s8 gShowRaceTimer;           /* nonzero: dMeter_c draws the race timer */
 extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 extern void func_02012694(u32 a, void *b);
@@ -415,7 +415,7 @@ void daRNk_c::func_ov062_0211a740()
             Vector3 v;
             if (this->mIsTalkingToMario == 0) {
                 msg = MSG_OFFER_NOT_MARIO;
-            } else if (data_0209f2f8 == kAltLevelID) {
+            } else if (gCurrentSublevel == kAltLevelID) {
                 msg = MSG_OFFER_ALT_LEVEL;
             } else {
                 msg = MSG_OFFER;
@@ -550,7 +550,7 @@ void daRNk_c::func_ov062_0211a1f4()
                 if (flag->mHasTouchedFlag != 0 &&
                     Vec3_Dist(&this->mPos, &this->mPlayer->mPos) > kCatchUpDist)
                     speedMul = 8;
-                else if (data_0209f2f8 == kAltLevelID)
+                else if (gCurrentSublevel == kAltLevelID)
                     speedMul = 6;
             }
         }
@@ -723,7 +723,7 @@ void daRNk_c::func_ov062_02119be0() {
             } else if (this->mHasPlayerUsedCannon != 0) {
                 this->mPlayerWon = 0;
                 msg = MSG_RESULT_CANNON;
-            } else if (data_0209f2f8 == kAltLevelID) {
+            } else if (gCurrentSublevel == kAltLevelID) {
                 msg = MSG_RESULT_ALT_LEVEL;
             } else {
                 msg = MSG_RESULT_PLAYER_FIRST;

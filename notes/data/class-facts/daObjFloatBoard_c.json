@@ -97,7 +97,7 @@
     {"offset": "0x338", "name": "mBobPhase", "type": "s16", "evidence": "Behavior steps it 0xa00 a frame and indexes data_02082214 with it."},
     {"offset": "0x33c", "name": "mRider", "type": "void *", "evidence": "Behavior reads the rider's position at rider+0x5c and tilts toward its horizontal bearing; cleared when mRiderTimeout expires."},
     {"offset": "0x342", "name": "mRiderTimeout", "type": "u16", "evidence": "Behavior passes its address to DecIfAbove0_Short and clears mRider at zero."},
-    {"offset": "0x344", "name": "mFallbackWaterY", "type": "s32", "evidence": "func_ov002_020b5ab4 reads it only when the current stage id (data_0209f2f8) is 0x15."}
+    {"offset": "0x344", "name": "mFallbackWaterY", "type": "s32", "evidence": "func_ov002_020b5ab4 reads it only when the current sublevel (gCurrentSublevel) is 0x15."}
   ],
   "pad": [
     {"offset": "0x320", "size": "0x4", "note": "UNOBSERVED -- no method of this class touches it"},

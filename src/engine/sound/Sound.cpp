@@ -149,7 +149,7 @@ extern char data_0209b4b4[];
 extern int data_0209baa0;
 extern char data_0209d574[];
 extern unsigned char data_0209f250;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern void *data_0209f394[];
 extern signed char data_02092120;
 extern unsigned char data_02075250[];
@@ -231,7 +231,7 @@ extern "C" int func_02013078(void)
     if (obj == 0)
         return -1;
     flag = (*(unsigned char *)(obj + 0x706) != 0);
-    state = data_0209f2f8;
+    state = gCurrentSublevel;
     result = -1;
     if (state == 8) {
         result = data_0208e434;
@@ -276,7 +276,7 @@ void StopLoadedMusic_Layer1(unsigned int arg)
 // @symbol _ZN5Sound10PauseMusicEv
 void PauseMusic(void)
 {
-    int state = data_0209f2f8;
+    int state = gCurrentSublevel;
     if (state == 2 || state == 5 || state == 4 || state == 0x32) {
         if (data_0208e420 < 0) {
             data_0208e420 = data_0208e42c;
@@ -296,7 +296,7 @@ void PauseMusic(void)
 // @symbol _ZN5Sound12UnpauseMusicEv
 void UnpauseMusic(void)
 {
-    signed char s = data_0209f2f8;
+    signed char s = gCurrentSublevel;
     if (s == 2 || s == 5 || s == 4 || s == 0x32) {
         signed char saved = data_0208e420;
         if (saved < 0) return;

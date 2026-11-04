@@ -134,7 +134,7 @@ extern int            data_0209caa0[];      /* level progress flags */
 extern u8             data_0209d66c;
 extern u8             data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
-extern s8             data_0209f2f8;
+extern s8 gCurrentSublevel;
 extern short          data_02082214[];      /* the sine lookup table */
 extern Matrix4x3      data_020a0e68;        /* scratch matrix */
 
@@ -766,7 +766,7 @@ int daC_Jugem_c::StateHoverMain()
     plpos.x = src->x;
     plpos.y = src->y;
     plpos.z = src->z;
-    if (data_0209f2f8 == 0x2f) {
+    if (gCurrentSublevel == 0x2f) {
         mPosX = 0;
     } else {
         mPosX = 0x1086000;
@@ -785,7 +785,7 @@ int daC_Jugem_c::StateHoverMain()
                             ::Vec3_HorzAngle((const ::Vector3 *)&plpos, (const ::Vector3 *)&mPosX));
     MulVec3Mat4x3(&in, &data_020a0e68, &out);
     mPosX += out.x;
-    if (data_0209f2f8 == 0x2f) {
+    if (gCurrentSublevel == 0x2f) {
         if (mPosX > 0x79e000) {
             mPosX = 0x79e000;
         }
@@ -862,7 +862,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
     pl = ClosestPlayer();
     if (pl == 0) return;
 
-    lvl = data_0209f2f8;
+    lvl = gCurrentSublevel;
     p.x = 0;
     p.y = 0;
     p.z = 0;

@@ -70,7 +70,7 @@
       "rule": "handspelled-member",
       "match": "_ZN10dScStage_c14LoadGraphics2DEbi",
       "count": 2,
-      "reason": "InitResources passes a raw int as the bool parameter; through the header's `bool e3d` InitResources stops matching (measured: dScStage_c::LoadGraphics2D(v0_6, data_0209f2f8) DIFFs), so the call keeps the mangled spelling (the member definition itself is a real dScStage_c::LoadGraphics2D).",
+      "reason": "InitResources passes a raw int as the bool parameter; through the header's `bool e3d` InitResources stops matching (measured: dScStage_c::LoadGraphics2D(v0_6, gCurrentSublevel) DIFFs), so the call keeps the mangled spelling (the member definition itself is a real dScStage_c::LoadGraphics2D).",
       "evidence": "include/dScStage_c.h:107; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
     },
     {
