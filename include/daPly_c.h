@@ -680,7 +680,7 @@ struct daPly_c : dActor_c {
        scripts is left; func_ov002_020bcdf0 keeps it on mPos and the
        player's angles. */
     dActor_c *mCapActor; /* 0x72c */
-    /* A flight along the control points data_ov002_0210a8b8 ({speed, x, y,
+    /* A flight along the control points gEndingFlyPath ({speed, x, y,
        z} rows), a uniform cubic B-spline: func_ov002_020c3148 resets it,
        ComputeSplineWeights weights four rows from mSplinePoint by the basis
        at mSplineT (fx12), using mSplineSpan 1..5 to pick the clamped-end
