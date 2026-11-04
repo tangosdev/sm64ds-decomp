@@ -109,7 +109,8 @@ extern int data_ov034_02114488[];
 extern char data_020a0e68[];
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
-extern void Vec3_Add(void *out, void *a, void *b);
+// local extern: no shared header declares Vec3_Add.
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int NormalizeVec3IfNonZero(void *v);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern SharedFilePtr *data_ov034_02113838[];
@@ -864,7 +865,7 @@ void daHanachan_c::UpdateSegments()
             char *prev = (char *)&mSegmentPos[0] + off;
             short ang = Vec3_HorzAngle(cur, prev);
             ((daHanachan_c *)rotRow)->mSegmentRot[0].y = ang;
-            Vec3_Add(&sum, prev, &diff);
+            Vec3_Add(&sum, (const Vector3 *)prev, &diff);
         }
 
         ((daHanachan_c *)posRow)->mSegmentPos[0].x = sum.x;
@@ -1095,11 +1096,11 @@ int daHanachan_c::Behavior()
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
         Matrix4x3_FromRotationY(data_020a0e68, mSegmentRot[0].y);
         MulVec3Mat4x3(&camA, data_020a0e68, &scratch);
-        Vec3_Add(&t0, &mPosX, &scratch);
+        Vec3_Add(&t0, (const Vector3 *)&mPosX, &scratch);
         camA = t0;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
         MulVec3Mat4x3(&camB, data_020a0e68, &scratch);
-        Vec3_Add(&t1, &mPosX, &scratch);
+        Vec3_Add(&t1, (const Vector3 *)&mPosX, &scratch);
         camB = t1;
         func_020092c4(cam, &cam->lookAt, &camA);
         func_020092c4(cam, &cam->pos, &camB);
@@ -1200,7 +1201,7 @@ int daHanachan_c::InitResources()
             Matrix4x3_FromRotationY(data_020a0e68, mSegmentRot[0].y);
             MulVec3Mat4x3(va, data_020a0e68, vb);
             prev = i - 1;
-            Vec3_Add(out, &mSegmentPos[prev], vb);
+            Vec3_Add((Vector3 *)out, &mSegmentPos[prev], (const Vector3 *)vb);
             ((daHanachan_c *)posRow)->mSegmentPos[0].x = out[0];
             ((daHanachan_c *)posRow)->mSegmentPos[0].y = out[1];
             ((daHanachan_c *)posRow)->mSegmentPos[0].z = out[2];
