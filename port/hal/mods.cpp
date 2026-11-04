@@ -308,6 +308,11 @@ void add_parts(const Mod &parent, std::vector<Mod> &list, std::string &summary)
    zip that was unpacked with its contents inside one extra folder. */
 bool has_content(const std::string &folder)
 {
+    /* CHARPALG1: the two mods whose settings the game reads itself
+       (hal/fs_mods.cpp, THE TWO CATALOG MODS) do their work with no folder */
+    const size_t slash = folder.find_last_of("/\\");
+    const std::string leaf = slash == std::string::npos ? folder : folder.substr(slash + 1);
+    if (leaf == "character-palettes" || leaf == "loves-me-swap") return true;
     static const char *const D[] = { "/files", "/sound", "/textures_hd", "/palettes", "/character", "/hd_ui", 0 };
     for (int i = 0; D[i]; ++i)
         if (dir_exists(folder + D[i])) return true;
@@ -371,7 +376,9 @@ bool json_top_true(const char *s, const char *key)
 
 /* THE CONTENT CHECK: the tag is a claim, the game verifies it. A folder is
    cosmetic when every folder directly inside it is textures_hd/ (HD
-   textures), hd_ui/ (UI art), sound/ (sounds) or palettes/ (colour tables).
+   textures), hd_ui/ (UI art), sound/ (sounds), palettes/ (colour tables) or
+   media/ (the launcher's pictures and videos of the mod, which the game never
+   reads; run after093, lane CHARPALG1).
    Anything else is not: files/ replaces raw game data (models, collision,
    levels, scripts), character/ is a playable character, plugin/ is code, and
    a folder this check does not know (parts/ included) is refused rather than
@@ -381,7 +388,7 @@ bool json_top_true(const char *s, const char *key)
    name in *bad. */
 bool cosmetic_folder(const std::string &folder, std::string *bad)
 {
-    static const char *const OK[] = { "textures_hd", "hd_ui", "sound", "palettes", 0 };
+    static const char *const OK[] = { "textures_hd", "hd_ui", "sound", "palettes", "media", 0 };
     WIN32_FIND_DATAA fd;
     HANDLE h = FindFirstFileA((folder + "/*").c_str(), &fd);
     if (h == INVALID_HANDLE_VALUE) return true;
