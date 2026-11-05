@@ -54,6 +54,7 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "SpawnInfo.h"
+#include "math/MtxStack.h"
 
 #pragma defer_codegen off
 
@@ -115,11 +116,6 @@ void func_ov077_02125e94(daTgz_c *self, int state);
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 s16 func_02010844(void *unused, Vector3 *v, s16 angle);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
-extern Matrix4x3 data_020a0e68;
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern s16 data_02082214[];
 void func_02035684(int *p, int v);

@@ -33,8 +33,7 @@
  *   func_020393d4: InitResources stores dBgW::UpdatePosWithTransform on
  *   mMeshCollider; dBgW.h has no setter.
  *   func_0200fa04 is Behavior's impact dust; no named method in this TU.
- *   AddVec3 / Matrix4x3_FromRotationXYZExt: no shared header declares
- *   them.
+ *   AddVec3: no shared header declares it.
  *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit
  *   owns; data_ov064_0211ba4c (CLPS) is overlay .data; data_02082214 is the
  *   sine table.
@@ -62,7 +61,6 @@ extern CLPS_Block data_ov064_0211ba4c;
 extern "C" {
 extern s16 data_02082214[];
 
-extern void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
 extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
 extern int func_0200fa04(dActor_c *, BattanVector3 *, int);
 
