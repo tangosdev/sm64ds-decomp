@@ -8,10 +8,9 @@
  * defer_codegen off. daHanachan_c_classInit closes ov034's .text.
  */
 /* leftovers:
- * - StateDemoWaitInit, UpdateSegments, UpdateSegmentModels and
- *   InitResources walk segment rows through char* bases. Indexing
- *   mSegmentPos[seg] / &mAnmModels[i].mat4x3 changes those sizes, and
- *   UpdateSegments' NormalizeVec3IfNonZero relocation moves with them.
+ * - StateDemoWaitInit, UpdateSegmentModels and InitResources walk
+ *   segment rows through char* bases. Indexing mSegmentPos[seg] /
+ *   &mAnmModels[i].mat4x3 changes those sizes.
  * - func_ov002_020c51d0 is ov002's. daPly_c::Hurt and daPly_c::Bounce
  *   stay mangled (Fix12<int> by value).
  */
@@ -829,74 +828,41 @@ void daHanachan_c::HandlePlayerHits()
     }
 }
 
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
 /* Pulls each segment to its spacing behind the one ahead, sets it on the ground and moves its cylinders. */
 // @symbol _ZN12daHanachan_c14UpdateSegmentsEv
 void daHanachan_c::UpdateSegments()
 {
-    /* Strength reduction and CSE are off. rotRow starts at this+6 and posRow
-       at this+0xc, then each steps by one element, so member [0] on that
-       pointer is segment `seg` (the loop starts at 1). An index, or
-       &mSegmentPos[seg - 1] for the segment behind, changes the size. */
-    char *self = (char *)this;
-    int seg;
-    Vector3 *cur;
-    char *rotRow;
-    char *posRow;
     Vector3 diff;
     Vector3 castPos;
     Vector3 sum;
 
-    cur = &mSegmentPos[0];
-    cur = cur + 1;
-    rotRow = self + 6;
-    posRow = self + 0xc;
-    seg = 1;
-
-    for (; seg < 5; seg++, cur++, rotRow += 6, posRow += 0xc) {
-        int off = (seg - 1) * 0xc;
-        Vec3_Sub(&diff, cur, (const Vector3 *)((char *)&mSegmentPos[0] + off));
+    for (int seg = 1; seg < 5; seg++) {
+        Vector3 *cur = &mSegmentPos[seg];
+        Vec3_Sub(&diff, cur, &mSegmentPos[seg - 1]);
         if (NormalizeVec3IfNonZero(&diff) != 0) {
             Vec3_MulScalarInPlace(&diff, mSegmentSpacing[seg]);
         }
-        {
-            const Vector3 *prev = (const Vector3 *)((char *)&mSegmentPos[0] + off);
-            short ang = Vec3_HorzAngle(cur, prev);
-            ((daHanachan_c *)rotRow)->mSegmentRot[0].y = ang;
-            Vec3_Add(&sum, prev, &diff);
-        }
+        Vector3 *prev = &mSegmentPos[seg - 1];
+        mSegmentRot[seg].y = Vec3_HorzAngle(cur, prev);
+        Vec3_Add(&sum, prev, &diff);
 
-        ((daHanachan_c *)posRow)->mSegmentPos[0].x = sum.x;
-        ((daHanachan_c *)posRow)->mSegmentPos[0].y = sum.y;
-        ((daHanachan_c *)posRow)->mSegmentPos[0].z = sum.z;
-        mdCc_cs1[seg].pos.x = ((daHanachan_c *)posRow)->mSegmentPos[0].x;
-        mdCc_cs1[seg].pos.y = ((daHanachan_c *)posRow)->mSegmentPos[0].y;
-        mdCc_cs1[seg].pos.z = ((daHanachan_c *)posRow)->mSegmentPos[0].z;
-        mdCc_cs2[seg].pos.x = ((daHanachan_c *)posRow)->mSegmentPos[0].x;
-        mdCc_cs2[seg].pos.y = ((daHanachan_c *)posRow)->mSegmentPos[0].y;
-        mdCc_cs2[seg].pos.z = ((daHanachan_c *)posRow)->mSegmentPos[0].z;
+        mSegmentPos[seg] = sum;
+        mdCc_cs1[seg].pos = mSegmentPos[seg];
+        mdCc_cs2[seg].pos = mSegmentPos[seg];
 
         if (mFalling == 0) {
-            int py;
             dBgCh_Gnd ray;
-            castPos.x = ((daHanachan_c *)posRow)->mSegmentPos[0].x;
-            py = ((daHanachan_c *)posRow)->mSegmentPos[0].y;
-            castPos.y = py;
-            castPos.z = ((daHanachan_c *)posRow)->mSegmentPos[0].z;
-            castPos.y = py + 0x3c000;
+            castPos = mSegmentPos[seg];
+            castPos.y += 0x3c000;
             ray.SetObjAndPos(castPos, 0);
             if (ray.DetectClsn() != 0) {
-                int clY = ray.clsnY;
-                if (((daHanachan_c *)posRow)->mSegmentPos[0].y <= clY)
-                    ((daHanachan_c *)posRow)->mSegmentPos[0].y = clY;
+                if (mSegmentPos[seg].y <= ray.clsnY)
+                    mSegmentPos[seg].y = ray.clsnY;
             }
         }
     }
 }
 
-#pragma opt_common_subs on
-#pragma opt_strength_reduction on
 /* Copies each segment's rotation and position into its model matrix. */
 // @symbol _ZN12daHanachan_c19UpdateSegmentModelsEv
 void daHanachan_c::UpdateSegmentModels()
