@@ -79,7 +79,8 @@ int   SurfaceInfo_TestFlag0x20(void *);
 /* maths and the still-unnamed helpers */
 s16   Vec3_HorzAngle(const void *, const void *);
 s32   Vec3_HorzDist(const void *, const void *);
-s32   Vec3_Dist(const void *, const void *);
+/* local extern: CalcLib conflicts with this TU's Vec3_HorzAngle/HorzDist/Asr declarations. */
+int Vec3_Dist(const Vector3 *, const Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void  Vec3_MulScalar(void *, const void *, int);
 void  Vec3_Asr(void *, void *, int);
@@ -779,7 +780,7 @@ int daMip_c::StateFleeMain() {
     pl = ClosestPlayer();
     if (pl != 0) {
         v = *((struct V3Blk *)&pl->mPosX);
-        if (Vec3_Dist(&mPos, &v) > 0x4b0000) {
+        if (Vec3_Dist(&mPos, (const ::Vector3 *)&v) > 0x4b0000) {
             SetState(&data_ov085_0213069c);
             return 1;
         }
@@ -909,8 +910,8 @@ int daMip_c::StateFleeInit()
             pathptr.GetNode(*(::Vector3 *)&nodes[i], indices[i]);
 
         mPathDir = 1;
-        d0 = Vec3_Dist(&v, &nodes[0]);
-        if (d0 > Vec3_Dist(&v, &nodes[1]))
+        d0 = Vec3_Dist((const ::Vector3 *)&v, (const ::Vector3 *)&nodes[0]);
+        if (d0 > Vec3_Dist((const ::Vector3 *)&v, (const ::Vector3 *)&nodes[1]))
             mPathDir = -1;
     }
 
