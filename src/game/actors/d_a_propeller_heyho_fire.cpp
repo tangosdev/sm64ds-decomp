@@ -25,7 +25,7 @@
  */
 // What stays:
 // - UpdateModelMatrix copies the scratch matrix as twelve plain words, so
-//   data_020a0e68 is declared here as M48 and math/MtxStack.h's Matrix4x3
+//   data_020a0e68 is declared here as Mtx43 and math/MtxStack.h's Matrix4x3
 //   view of it is not included.
 
 #pragma defer_codegen off
@@ -37,22 +37,18 @@
 #include "daPly_c.h"
 #include "Sound.h"
 #include "math/CalcLib.h"
+#include "private/mtx43.h"
 
 struct BMD_File;
-
-/* The scratch matrix at 0x020a0e68 as UpdateModelMatrix copies it: twelve
-   plain words. A struct copy of the C++ Matrix4x3 does not reproduce it. */
-struct M48 {
-    int w[12];
-};
 
 /* Was spelled `func_0211d610`, a name no symbols.txt defines. ov002's relocs
    record both loads (0x020fee10, 0x020fefc0) as `overlays(65,75)`; ov065's
    row there is the one unambiguous `kind:bss`, and CleanupResources already
    named it. It is the fireball's shared model file. */
 extern SharedFilePtr data_ov065_0211d610;
-/* local extern: the twelve-word view (see M48). */
-extern "C" M48 data_020a0e68;
+/* local extern: the scratch matrix as UpdateModelMatrix copies it, flat. A
+   copy of the C++ Matrix4x3 grows .text by 0x1c bytes. */
+extern "C" Mtx43 data_020a0e68;
 
 /* The one state, as two member-function pointers of two words each:
  * data_ov002_0210d600 points at InitState0 (init) and
@@ -71,7 +67,7 @@ struct HeyhoStateTable {
 extern HeyhoStateTable data_ov002_02111190;
 
 /* local extern: no shared header declares these (math/MtxStack.h is not
- * included, see M48). */
+ * included, see data_020a0e68 above). */
 extern "C" {
 void func_02012694(unsigned int a, Vector3 const &v);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
@@ -179,7 +175,7 @@ void daPropeller_Heyho_Fire_c::UpdateModelMatrix() {
     Vec3_Asr((Vector3 *)v, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(M48 *)&mModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = data_020a0e68;
 }
 
 // @symbol _ZN24daPropeller_Heyho_Fire_c16CleanupResourcesEv
