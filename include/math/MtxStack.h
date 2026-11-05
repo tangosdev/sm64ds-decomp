@@ -15,23 +15,34 @@
  * that use as inline statics. Its name is coined; nothing of it reaches the
  * ROM, because every member inlines into a plain call on &data_020a0e68.
  *
- * Parameter types follow each DEFINITION in src/, which is why some read
- * void * or const int * where Matrix4x3 * is meant. Changing one is matching
- * work on the definition, not a header edit.
+ * The routines are C: their definitions are .c files, so the prototypes
+ * read as C too, and a .c file can include this header for them. Matrices
+ * pass as Matrix4x3 *. Angles pass as int to the "set" forms and as short to
+ * the "apply" forms, as each definition takes them. MulMat4x3Mat4x3 still
+ * takes const int * because its definition indexes the twelve words directly.
+ *
+ * Each named parameter below takes a compiler @NNN number in every file that
+ * includes this header, so naming an unnamed one renumbers those files.
  *
  * Only the members d_a_mky.cpp needs exist so far. */
+#ifdef __cplusplus
 extern "C" {
+#endif
 
-void Matrix4x3_FromRotationY(void *m, int angle);
+void Matrix4x3_FromRotationX(Matrix4x3 *, int);
+void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
+void Matrix4x3_FromRotationZ(Matrix4x3 *, int);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, short);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angle);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
+void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
+void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void MulMat4x3Mat4x3(const int *a, const int *b, int *out);
 
 extern Matrix4x3 data_020a0e68;
+
+#ifdef __cplusplus
 }
 
 struct MtxStack {
@@ -64,5 +75,6 @@ struct MtxStack {
         XYZrotM(r.x, r.y, r.z);
     }
 };
+#endif /* __cplusplus */
 
 #endif

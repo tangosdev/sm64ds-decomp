@@ -187,7 +187,7 @@ void daObjPathLift_c::UpdateShadow() {
     if (scaleZ < 0)
         scaleZ = -scaleZ;
 
-    Matrix4x3_FromRotationY(mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngleY);
     mShadowMat[9] = mPosX >> 3;
     mShadowMat[10] = (mPosY - yOff) >> 3;
     mShadowMat[11] = mPosZ >> 3;
