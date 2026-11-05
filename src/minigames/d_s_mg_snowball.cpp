@@ -358,6 +358,7 @@ int dScMgSnowball_c::HitsBreakable(int *point) {
     return 0;
 }
 
+// kept: the ROM recomputes x >> 12 after the tile lookup; with CSE on it is reused and the function is 0x288
 #pragma opt_common_subs off
 // @symbol _ZN15dScMgSnowball_c8HitsWallEPi
 int dScMgSnowball_c::HitsWall(int *point) {
@@ -745,6 +746,7 @@ void dScMgSnowball_c::RedrawCourse() {
     }
 }
 
+// kept: the body as written moves 56 words with strength reduction on; no rewrite tried here recovers it
 #pragma opt_strength_reduction off
 // @symbol _ZN15dScMgSnowball_c16DrawCourseColumnEii
 /* BG2 tile-column writer.
@@ -1342,24 +1344,25 @@ void dScMgSnowball_c::ResetScene() {
     mEndDelayTimer = 0;
 }
 
+// kept: with strength reduction on, the two slot loops grow (0x6b0) and no indexed spelling recovers 0x694
 #pragma opt_strength_reduction off
 // @symbol _ZN15dScMgSnowball_c6RenderEv
-/* Slot 9. `c` stays next to `self` as the stepping base for the
- * mArray1Active/mArray1Hit byte flags, read through `(dScMgSnowball_c *)p`. */
+/* Slot 9. `p` (this + i) is the stepping base for the mArray1Active/mArray1Hit
+ * byte flags and colours r7; the indexed spelling colours it last. The y reads
+ * go through LNDR on `(this + i * 8)->mArray[0].y` because the ROM loads them
+ * as `[this + i * 8, pool offset]`, which `mArray1[i].y` does not reproduce. */
 s32 dScMgSnowball_c::Render() {
-    char *c = (char *)this;
-    struct dScMgSnowball_c *self = (struct dScMgSnowball_c *)(void *)c;
     int m[3];
     int vecArr[3];
 
-    self->mAnimCounter++;
-    if (self->mAnimCounter >= 0x20) {
-        self->mAnimCounter = 0;
+    mAnimCounter++;
+    if (mAnimCounter >= 0x20) {
+        mAnimCounter = 0;
     }
 
     {
-        int base = self->mGoalY;
-        int t = (((self->mPosY >> 0xc) - base) * 0x7c) / (self->mStartY - base);
+        int base = mGoalY;
+        int t = (((mPosY >> 0xc) - base) * 0x7c) / (mStartY - base);
         Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[0], 0xf0, t + 0x22, -1, 0);
     }
     Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[1], 0xf0, 0x60, -1, 0);
@@ -1374,63 +1377,57 @@ s32 dScMgSnowball_c::Render() {
     *(int *)0x040004cc = 0x7fff;
 
     {
-        int v = self->mBallSize;
-        int t = v / 2 + v * 4;
+        int t = mBallSize / 2 + mBallSize * 4;
         vecArr[0] = t;
         vecArr[1] = t;
         vecArr[2] = t;
-        if (self->mBallSize > 0) {
-            dExtSimpleModel_c *model = &((dScMgSnowball_c *)c)->mModel;
-            const Vector3 *scale = (const Vector3 *)vecArr;
-            model->Render(scale);
+        if (mBallSize > 0) {
+            mModel.Render((const Vector3 *)vecArr);
         }
     }
 
     RedrawCourse();
 
-    for (int i1 = 0; i1 < 0x80; i1++) {
-        char *p = c + i1;
+    for (int i = 0; i < 0x80; i++) {
+        char *p = (char *)this + i;
         if (((dScMgSnowball_c *)p)->mArray1Active[0] == 1) {
-            int t6 = self->mScrollY;
-            int t5 = *(int *)((long long)(int)&((dScMgSnowball_c *)(c + i1 * 8))->mArray1[0].y);
-            if (t5 >= t6 - 0x20000 && t5 < t6 + 0x1a0000 + (Mg_GetTopScreenYOffset() << 0xc)) {
-                if (mArray1Kind[i1] == 1) {
-                    int cnt = self->mAnimCounter;
-                    int idx = (cnt / 4) & 7;
+            int scrollY = mScrollY;
+            int y = *(int *)LNDR(&((dScMgSnowball_c *)((char *)this + i * 8))->mArray1[0].y);
+            if (y >= scrollY - 0x20000 &&
+                y < scrollY + 0x1a0000 + (Mg_GetTopScreenYOffset() << 0xc)) {
+                if (mArray1Kind[i] == 1) {
+                    int idx = (mAnimCounter / 4) & 7;
                     if (((dScMgSnowball_c *)p)->mArray1Hit[0] == 1)
                         idx += 8;
-                    int a1 = (self->mArray1[i1].x - self->mScrollX) >> 0xc;
-                    int a2 = ((t5 - t6) >> 0xc) - 0x110;
-                    Mg_RenderSpriteBoth(sSnowballBreakableAnimSprites[idx], a1, a2, -1, -1);
+                    Mg_RenderSpriteBoth(sSnowballBreakableAnimSprites[idx],
+                                        (mArray1[i].x - mScrollX) >> 0xc,
+                                        ((y - scrollY) >> 0xc) - 0x110, -1, -1);
                 } else {
-                    int a1 = (self->mArray1[i1].x - self->mScrollX) >> 0xc;
-                    int a2 = ((t5 - t6) >> 0xc) - 0x110;
-                    Mg_RenderSpriteBoth(sSnowballBreakableSprite, a1, a2, -1, 2);
+                    Mg_RenderSpriteBoth(sSnowballBreakableSprite, (mArray1[i].x - mScrollX) >> 0xc,
+                                        ((y - scrollY) >> 0xc) - 0x110, -1, 2);
                 }
             }
         }
     }
 
-    for (int i2 = 0; i2 < 0x80; i2++) {
-        if (self->mArray2Active[i2] == 1) {
-            int t7 = self->mScrollY;
-            int t6 = *(int *)((long long)(int)&((dScMgSnowball_c *)(c + i2 * 8))->mArray2[0].y);
-            if (t6 >= t7 - 0x40000 && t6 < t7 + 0x1c0000 + (Mg_GetTopScreenYOffset() << 0xc)) {
-                switch (mArray2Kind[i2]) {
+    for (int i = 0; i < 0x80; i++) {
+        if (mArray2Active[i] == 1) {
+            int scrollY = mScrollY;
+            int y = *(int *)LNDR(&((dScMgSnowball_c *)((char *)this + i * 8))->mArray2[0].y);
+            if (y >= scrollY - 0x40000 &&
+                y < scrollY + 0x1c0000 + (Mg_GetTopScreenYOffset() << 0xc)) {
+                switch (mArray2Kind[i]) {
                 case 0:
                 case 1:
-                case 2: {
-                    int a1 = (self->mArray2[i2].x - self->mScrollX) >> 0xc;
-                    int a2 = ((t6 - t7) >> 0xc) - 0x110;
-                    Mg_RenderSpriteBoth(sSnowballObstacleSprite, a1, a2, -1, 1);
+                case 2:
+                    Mg_RenderSpriteBoth(sSnowballObstacleSprite, (mArray2[i].x - mScrollX) >> 0xc,
+                                        ((y - scrollY) >> 0xc) - 0x110, -1, 1);
                     break;
-                }
                 case 3: {
-                    int v = self->mArray2[i2].x;
-                    int sel = (v < 0x80000) ? 1 : 0;
-                    int a1 = (v - self->mScrollX) >> 0xc;
-                    int a2 = ((t6 - t7) >> 0xc) - 0x110;
-                    Mg_RenderSpriteBoth(sSnowballObstacleSideSprites[sel], a1, a2, -1, 1);
+                    int x = mArray2[i].x;
+                    Mg_RenderSpriteBoth(sSnowballObstacleSideSprites[(x < 0x80000) ? 1 : 0],
+                                        (x - mScrollX) >> 0xc, ((y - scrollY) >> 0xc) - 0x110, -1,
+                                        1);
                     break;
                 }
                 }
@@ -1438,30 +1435,23 @@ s32 dScMgSnowball_c::Render() {
         }
     }
 
-    {
-        int a1 = (self->mDrawPosX - self->mScrollX) >> 0xc;
-        int a2 = ((self->mDrawPosY - self->mScrollY) >> 0xc) - 0x110;
-        Mg_RenderSpriteBoth(sSnowballBallSprite, a1, a2, -1, 2);
-    }
+    Mg_RenderSpriteBoth(sSnowballBallSprite, (mDrawPosX - mScrollX) >> 0xc,
+                        ((mDrawPosY - mScrollY) >> 0xc) - 0x110, -1, 2);
 
     {
-        int t4 = self->mCountdownTimer;
-        if (t4 <= 0xf0 && t4 > 0x3c) {
-            int q = t4 / 60;
+        if (mCountdownTimer <= 0xf0 && mCountdownTimer > 0x3c) {
+            int q = mCountdownTimer / 60;
             if (q >= 4)
                 q = 3;
             Mg_DrawNumberRotated(0x80, 0x60, q, -1, -1, 0x800, 0);
         } else {
-            int mode = self->mState;
-            if (mode == 1 || mode == 2 || (mode == 3 && self->mEndDelayTimer > 0) ||
-                (mode == 4 && self->mCrashTimer <= 0x3c)) {
-                int v = self->mTimeLeft;
+            int mode = mState;
+            if (mode == 1 || mode == 2 || (mode == 3 && mEndDelayTimer > 0) ||
+                (mode == 4 && mCrashTimer <= 0x3c)) {
+                int v = mTimeLeft;
                 int q60 = v / 60;
-                int rem60 = v % 60;
-                int r7 = rem60 * 100;
-                int centis = r7 / 60;
+                int centis = v % 60 * 100 / 60;
                 int r4;
-                int tens;
                 int ones;
                 if (v < 0x258) {
                     r4 = 0xc;
@@ -1471,25 +1461,19 @@ s32 dScMgSnowball_c::Render() {
                     r4 = ((0x258 - v) * 0x110) / 30 + 0xc;
                 }
                 Mg_DrawBigNumber(0x84, r4, q60, -1, -1, 1, 0);
-                tens = centis / 10;
-                Mg_DrawBigNumber(0x9c, r4, tens, -1, -1, 1, 0);
+                Mg_DrawBigNumber(0x9c, r4, centis / 10, -1, -1, 1, 0);
                 ones = centis % 10;
                 if (ones == 5 || ones == 0) {
                     Mg_DrawBigNumber(0xac, r4, ones, -1, -1, 1, 0);
                 } else {
                     Mg_DrawBigNumber(0xac, r4, ones + 1, -1, -1, 1, 0);
                 }
-                {
-                    int idx = GetGameLanguage();
-                    Mg_RenderSpriteBothMtx(
-                        *(void **)((char *)sSnowballTextSpritesByLanguage[idx] + 0xc), 0x5c, r4, 0);
-                }
-                {
-                    int idx = GetGameLanguage();
-                    Mg_RenderSpriteBothMtx(
-                        *(void **)((char *)sSnowballTextSpritesByLanguage[idx] + 0x1c), 0x90, r4,
-                        0);
-                }
+                Mg_RenderSpriteBothMtx(
+                    *(void **)((char *)sSnowballTextSpritesByLanguage[GetGameLanguage()] + 0xc),
+                    0x5c, r4, 0);
+                Mg_RenderSpriteBothMtx(
+                    *(void **)((char *)sSnowballTextSpritesByLanguage[GetGameLanguage()] + 0x1c),
+                    0x90, r4, 0);
             }
         }
     }
