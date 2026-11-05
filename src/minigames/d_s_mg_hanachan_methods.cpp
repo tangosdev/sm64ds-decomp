@@ -84,6 +84,7 @@ enum dScMgHanachan_c_AssetId {
 #pragma defer_codegen off
 
 #include "types.h"
+#include "OAM.h"
 #include "nitro/hw/registers.h"
 #include "private/ov006_ec4dc_obj.h"
 #include "dScMgHanachan_c.h"
@@ -93,11 +94,6 @@ enum dScMgHanachan_c_AssetId {
 #include "SpawnInfo.h"
 #include "Sound.h"
 #include "math/Approach.h"
-
-struct OamAttr;
-struct OAM {
-    static OamAttr *Render(bool, OamAttr *, int, int, int, int, int, int);
-};
 
 extern "C" void *dScMgHanachan_c_classInit();
 extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
