@@ -47,9 +47,9 @@
  *  - One prototype per function, taken from whichever file had recovered the
  *    most: func_02010e78's caller knew (const Vector3*, const Vector3_16*, s8,
  *    s16) where its own file only knew (int, int, uchar, short);
- *    Particle::System::NewSimple returns int, because the two callers that USE
- *    the result cannot both be wrong about it while six that discard it are
- *    right. dActor_c::ClosestPlayer is DEFINED here, so the three disagreeing
+ *    Particle::System::NewSimple uses the shared `void *` return type from its
+ *    definition; the two int-returning C helpers cast that value explicitly.
+ *    dActor_c::ClosestPlayer is DEFINED here, so the three disagreeing
  *    extern "C" guesses at its prototype are simply gone.
  *  - Ordinals 12, 14, 16 and 18 use the real dBgCh_Gnd header and its
  *    collision-height field; their automatic query objects own the normal
@@ -70,6 +70,7 @@
  * came later, for the classes SpawnFireball, SpawnNumber and
  * GivePlayerCoins spawn. */
 #include "types.h"
+#include "Particle__System.h"
 #include "SpawnInfo.h"
 #include "decl_common.h"
 #include "dActor_c.h"
@@ -1324,15 +1325,6 @@ void dActor_c::PoofDust()
 // @symbol _ZN8dActor_c10PoofDustAtERK7Vector3
 /* ROM ordinal 24 -- dActor_c::PoofDustAt(Vector3 const &)
  * 0x0200fdfc  size 0x40 */
-extern "C" {
-/* local extern: Particle::System::NewSimple takes Fix12<int> by value, so it
-   is called by its symbol (the Fix12 wall). */
-namespace Particle {
-struct System {
-    static int NewSimple(unsigned int id, int x, int y, int z);
-};
-}
-}
 void dActor_c::PoofDustAt(const Vector3 &pos)
 {
     Particle::System::NewSimple(0x122, pos.x, pos.y, pos.z);
@@ -1419,7 +1411,7 @@ extern "C" int func_0200fc44(int actor, Vector3 *pos, int doRaycast) {
             pos->y = rc.clsnY;
     }
     pos->y += 0x19000;
-    return Particle::System::NewSimple(0xb3, pos->x, pos->y, pos->z);
+    return (int)Particle::System::NewSimple(0xb3, pos->x, pos->y, pos->z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1514,7 +1506,7 @@ extern "C" int func_0200fa04(int actor, Vector3 *pos, int doRaycast) {
             pos->y = rc.clsnY;
     }
     pos->y += 0x78000;
-    return Particle::System::NewSimple(0x1b, pos->x, pos->y, pos->z);
+    return (int)Particle::System::NewSimple(0x1b, pos->x, pos->y, pos->z);
 }
 
 /* -------------------------------------------------------------------------- */
