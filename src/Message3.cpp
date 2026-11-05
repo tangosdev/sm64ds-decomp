@@ -1177,8 +1177,6 @@ extern "C" void func_02032f9c(int a) {
 }
 
 // @symbol func_020331fc
-#pragma push
-#pragma opt_strength_reduction off
 extern "C" void func_020331fc(int a0, int a1, int a2) {
     volatile int li;
     short *scr;
@@ -1227,14 +1225,13 @@ extern "C" void func_020331fc(int a0, int a1, int a2) {
             v2 = n + 0x200;
             do {
                 scr[j] = j + 0x200;
-                *(short *)((char *)&scr[j] + 0x40) = v2;
+                (scr + j)[0x20] = v2;
                 v2++;
                 j++;
             } while (j < n);
         }
     }
 }
-#pragma pop
 
 // @symbol func_02033390
 extern "C" void func_02033390(int sub) {
@@ -1508,7 +1505,6 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
 
 // @symbol func_02033bb8
 #pragma push
-#pragma opt_strength_reduction off
 #pragma opt_common_subs off
 extern "C" void func_02033bb8(int param0) {
     volatile int li;
@@ -1545,7 +1541,7 @@ extern "C" void func_02033bb8(int param0) {
         int v2 = m + 0x280;
         do {
             scr[i] = (short)(i + 0x280);
-            *(short *)((char *)&scr[i] + 0x40) = (short)v2;
+            (scr + i)[0x20] = (short)v2;
             v2++;
             i++;
         } while (i < m);
@@ -1568,7 +1564,7 @@ extern "C" void func_02033bb8(int param0) {
         int v2 = d - mm + 0x280;
         do {
             scr[i] = (short)v1;
-            *(short *)((char *)&scr[i] + 0x40) = (short)v2;
+            (scr + i)[0x20] = (short)v2;
             v1++;
             v2++;
             i++;
@@ -1592,7 +1588,7 @@ extern "C" void func_02033bb8(int param0) {
         int v2 = d - mm + 0x280;
         do {
             scr[i] = (short)v1;
-            *(short *)((char *)&scr[i] + 0x40) = (short)v2;
+            (scr + i)[0x20] = (short)v2;
             v1++;
             v2++;
             i++;
@@ -1607,8 +1603,6 @@ extern "C" void func_02033bb8(int param0) {
 #pragma pop
 
 // @symbol func_02033e50
-#pragma push
-#pragma opt_strength_reduction off
 extern "C" void func_02033e50(int p0, int p1) {
     int i;
     int idx = data_0209fce8;
@@ -1639,7 +1633,7 @@ extern "C" void func_02033e50(int p0, int p1) {
                     int v2 = n + v1;
                     do {
                         scr[i] = v1;
-                        *(short *)((char *)&scr[i] + 0x40) = v2;
+                        (scr + i)[0x20] = v2;
                         v1++;
                         v2++;
                         i++;
@@ -1668,7 +1662,7 @@ extern "C" void func_02033e50(int p0, int p1) {
                     v2 = n + v1;
                     do {
                         scr[i] = v1;
-                        *(short *)((char *)&scr[i] + 0x40) = v2;
+                        (scr + i)[0x20] = v2;
                         v1++;
                         v2++;
                         i++;
@@ -1684,7 +1678,6 @@ extern "C" void func_02033e50(int p0, int p1) {
     } while (data_0209fcc8 != 8);
     data_0209fcc8 = 0;
 }
-#pragma pop
 
 // @symbol Message_DrawLineBG2VS
 extern "C" void Message_DrawLineBG2VS(void) {
