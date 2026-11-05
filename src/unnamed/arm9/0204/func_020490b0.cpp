@@ -13,7 +13,7 @@ extern s32 data_020a4c54[];
    NNS_SndPlayerSetTrackVolume in 0..127. The tracks are muted with
    NNS_SndPlayerSetTrackMute when a falling ramp drops below 0 and unmuted
    when a rising one leaves 0. func_020132d8 calls it every frame on
-   data_0209b4a0. */
+   sMusicHandle. */
 void func_020490b0(NNSSndHandle *c) {
     s32 t[4];
     s32 i;

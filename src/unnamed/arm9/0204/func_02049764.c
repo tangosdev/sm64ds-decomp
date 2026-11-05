@@ -4,7 +4,7 @@ extern int data_020a4c4c[2];
 
 /* Reset both track volume ramps (see func_020490b0): current and target
    at 127 (0x7f000) and no step. func_02011dcc calls it once it starts a
-   sequence on data_0209b4a0, as Sound.cpp's music loaders (e.g.
+   sequence on sMusicHandle, as Sound.cpp's music loaders (e.g.
    Sound::LoadAndSetMusic_Layer3) do. */
 void func_02049764(void) {
     data_020a4c5c[0] = 0x7f000;

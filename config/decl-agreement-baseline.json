@@ -7845,19 +7845,6 @@
         "return:int []"
       ]
     },
-    "data_0209b490": {
-      "src/game/actors/d_a_door.cpp": [
-        "return:int []"
-      ],
-      "src/game/actors/d_a_trs.cpp": [
-        "return:int []"
-      ]
-    },
-    "data_0209b49c": {
-      "src/game/actors/d_a_door.cpp": [
-        "return:int []"
-      ]
-    },
     "data_0209caa0": {
       "src/game/stages/d_s_stage_methods.cpp": [
         "return:unsigned char []"

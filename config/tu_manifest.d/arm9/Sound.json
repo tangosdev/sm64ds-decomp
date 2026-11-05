@@ -30,8 +30,13 @@
       "end": "0x02086b70"
     },
     {
+      "name": ".data",
+      "start": "0x0208e420",
+      "end": "0x0208e498"
+    },
+    {
       "name": ".bss",
-      "start": "0x0209b53c",
+      "start": "0x0209b470",
       "end": "0x0209ba84"
     }
   ],
@@ -660,8 +665,212 @@
       "ordinal": 88
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sSavedMusicVolume",
+      "address": "0x0208e420",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "s8, initialized -1 (retail byte 0xff). Sound::PauseMusic and func_02012e78 copy sMusicVolumeTarget here while it is negative and duck the target to 0x40; Sound::UnpauseMusic and func_02012e1c restore it and store -1 again. melonDS RAM diff: -1 to 0x7f on pausing in a castle sublevel. Readers: func_02011b7c, func_02012e1c, func_02012e78, PauseMusic and UnpauseMusic, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "sSavedSubVolume",
+      "address": "0x0208e424",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "s8, initialized -1. Saved from sSubVolumeTarget beside sSavedMusicVolume and restored into it by the same four functions; static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "sCurrentBank",
+      "address": "0x0208e428",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "s8, initialized -1. Sound::LoadGroupAndSetBank stores its second argument here; Player_PlaySoundEffect passes it as func_02051e60's bank for a type-3 sequence. Those two are its only readers, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "sMusicVolumeTarget",
+      "address": "0x0208e42c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "s8, initialized 0x7f. func_02012d64 ramps gMusicVolume toward it << 12 by sVolumeRampStep; ChangeMusicVolume, PlaySub and func_02011b7c set it. melonDS RAM diff: 0x7f to 0x40 on pausing in a castle sublevel. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "gSubSoundID",
+      "address": "0x0208e430",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int, initialized -1. Sound::PlaySub stores the sequence it starts on sSubHandle; func_020132d8 and func_02011b7c store -1 when the sub channel stops. ov002 daPly_c (0x020bf908, 0x020bf9d0, 0x020bfa70, 0x020d4734, 0x020d4d84) and daSoundObj_c (0x020f95d4, 0x020f9724) read it, so global."
+    },
+    {
+      "symbol": "gMusicTrackModeOverride",
+      "address": "0x0208e434",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int, initialized -1. func_02013078 returns it as sublevel 8's track mode while it is not negative; Sound::LoadAndSetMusic_Layer1 resets it. ov002 daMugenBGM_c::Behavior (0x020f1e9c) writes 2 or -1, so global."
+    },
+    {
+      "symbol": "sMusicTrackMode",
+      "address": "0x0208e438",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int, initialized -1. func_02013078 stores a newly picked track mode here; func_02011dcc passes it to func_0204921c after starting music on sMusicHandle. Readers: func_02011dcc, func_02013078 and LoadAndSetMusic_Layer1, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "sLayer1Music",
+      "address": "0x0208e43c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int, initialized -1. Sound::LoadAndSetMusic_Layer1 stores its music ID here; SetMusic, EndMusic and StopLoadedMusic_Layer3 fall back to it. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "sLayer2Music",
+      "address": "0x0208e440",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int, initialized -1. Sound::LoadAndSetMusic_Layer2 stores its music ID; StopLoadedMusic_Layer2 and func_02011b7c clear it. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "sLayer3Music",
+      "address": "0x0208e444",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int, initialized -1. Sound::LoadAndSetMusic_Layer3 stores its music ID; StopLoadedMusic_Layer3 and func_02011b7c clear it, and SetMusic and EndMusic defer while it is set. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "sPlayerSeqLimits",
+      "address": "0x0208e448",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "SoundPlayerDefault[10], {player, playable sequence count} pairs {9,6} {10,3} {15,1} {17,5} {18,1} {19,1} {28,1} {13,3} {2,2} {3,1}. func_02011c8c applies each pair through Sound::Player::SetPlayableSeqCount; DisableSoundPlayersForCredits sets each player's count to 0. Those two only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    }
+  ],
   "bss": [
+    {
+      "symbol": "sSubVolumeTarget",
+      "address": "0x0209b470",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "s8. func_020132d8 ramps gSubVolume toward it << 12 by sVolumeRampStep; PlaySub sets it and PauseMusic ducks it to 0x40. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "gSoundMuted",
+      "address": "0x0209b474",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. While it is nonzero, func_02013524 moves every volume to 0 at once. The lid-close handler func_02019ac4 (0x02019df0) sets and clears it, so global."
+    },
+    {
+      "symbol": "sPlayerVoiceGroup",
+      "address": "0x0209b478",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. func_02011f7c stores the voice group it loads; Sound::UnsetPlayerVoiceGroup, ResetPlayerVoiceGroup and LoadGroupAndSetBank clear it. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "sLoadedGroup",
+      "address": "0x0209b47c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Sound::LoadGroupAndSetBank stores the group it loads and skips the load when the group is already this one. Its only reader, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "gSoundInitialized",
+      "address": "0x0209b480",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. func_020133bc sets it once sound is up; Player_PlaySoundEffect, func_02011d5c and func_020132d8 return early while it is 0. func_020197b8, func_020199a4, func_02019ac4 and func_02030790 read it, so global."
+    },
+    {
+      "symbol": "data_0209b484",
+      "address": "0x0209b484",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. The sound-heap level LoadGroupAndSetBank records after loading a group (func_0205117c); func_02011f7c and ResetPlayerVoiceGroup roll the heap back to it. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt. Name kept: what the level marks is not settled."
+    },
+    {
+      "symbol": "data_0209b488",
+      "address": "0x0209b488",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. The sound-heap level func_02011f7c records after loading a voice group; func_02011ee4 rolls back to it. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt. Name kept."
+    },
+    {
+      "symbol": "data_0209b48c",
+      "address": "0x0209b48c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. The handle func_02013078 keeps for sound 0x18d (Sound_PlayIfNotActive) in sublevel 0xc; LoadAndSetMusic_Layer1 clears it. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt. Name kept."
+    },
+    {
+      "symbol": "gMusicVolume",
+      "address": "0x0209b490",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int, 20.12 fixed point. func_02012d64 ramps it toward sMusicVolumeTarget << 12 and sets sMusicHandle's volume to it >> 12; func_02011b7c resets it to 0x7f000. Read by ov002 daSoundObj_c::Behavior, ov063 daTrs_c, ov089 daObjKey_c::StateFlyToCenter and ov100 func_ov100_02144f84, so global."
+    },
+    {
+      "symbol": "sVolumeRampStep",
+      "address": "0x0209b494",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. The step both ramps use (func_02012d64 for the music, func_020132d8 for the sub channel); ChangeMusicVolume and PlaySub set it, PauseMusic sets 0xc999. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "sSndHeap",
+      "address": "0x0209b498",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "the sound heap: func_020133bc stores func_0205130c's result for a 0x100000-byte Memory::Allocate block, and every group load (func_020134d8) and level roll-back uses it. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "gSubVolume",
+      "address": "0x0209b49c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int, 20.12 fixed point. func_020132d8 ramps it toward sSubVolumeTarget << 12, sets sSubHandle's volume to it >> 12 and stops the sub channel when it reaches 0. Read by ov002 daPly_c and daSoundObj_c and ov100 func_ov100_02144f84, so global."
+    },
+    {
+      "symbol": "sMusicHandle",
+      "address": "0x0209b4a0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-word sequence handle: every music-layer start and stop (func_02011dcc, func_0204fa2c) and func_02012d64's volume act on it. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "data_0209b4a4",
+      "address": "0x0209b4a4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-word sequence handle that Sound::Play, Play2D and the func_020127a4/func_020127ec wrappers start their sound on before adjusting it. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt. Name kept."
+    },
+    {
+      "symbol": "data_0209b4a8",
+      "address": "0x0209b4a8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. The sound-heap level LoadGroupAndSetBank records after loading group 0 and rolls back to before loading another. Its only reader, so static in the source; no reader outside this TU in config/**/relocs.txt. Name kept."
+    },
+    {
+      "symbol": "gCurrentMusicID",
+      "address": "0x0209b4ac",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. The music on sMusicHandle: LoadAndSetMusic_Layer1 and SetMusic store it, StopLoadedMusic_Layer1 stores ~0. ov002 daSetSE_c::Behavior (0x020f1ab8) reads it, so global."
+    },
+    {
+      "symbol": "sSubHandle",
+      "address": "0x0209b4b0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-word sequence handle Sound::PlaySub starts gSubSoundID on (func_02011dcc) and func_020132d8 stops. Sound functions only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "sSndArc",
+      "address": "0x0209b4b4",
+      "size": "0x88",
+      "binding": "STB_GLOBAL",
+      "evidence": "the sound archive: func_020133bc passes it to func_02050f34 with the path \"/data/sound_data.sdat\" and the heap, then to func_02048f34. Its only reader, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
     {
       "symbol": "data_0209b53c",
       "address": "0x0209b53c",
@@ -672,7 +881,10 @@
   ],
   "compiler_only_output": [],
   "notes": [
-    "Text-only. The module state (data_0208e420..data_0208e498, data_0209b470..data_0209baa0, data_0209d574, data_0209f250/2f8/394, data_02092120) is all .bss: no initialized bytes exist for this TU to own, so data and bss claims stay empty and the entry promotes as text-only like the other namespace-module TUs.",
+    "MODULE STATE (2026-11-05): the TU defines its .data 0x0208e420..0x0208e498 (eleven objects) and .bss 0x0209b470..0x0209ba84 (seventeen objects plus the registry). An earlier note here called the module state all .bss and listed data_0209f250/2f8/394; that was wrong. 0x0208e420.. is initialized .data (four s8, three of them -1 and one 0x7f; six int words, all -1; then sPlayerSeqLimits), and 0x0209f250, gCurrentSublevel (0x0209f2f8) and 0x0209f394 are the stage TU's .bss (the 0x0209f1e8..0x0209f5b8 run, d_s_stage_methods.cpp), read here only.",
+    "Boundaries. .data starts where _ZTV8dActor_c ends (address point 0x0208e3a4, 0x84 bytes from 0x0208e39c, so it ends at 0x0208e420). .bss starts where d_actor.cpp's actor list ends (0x0209b468..0x0209b470). mwcc sorts a TU's .data and .bss objects by size as one list (notes/mwccarm-codegen.md 6dg). Both runs ascend: 1, 4 and 0x50 bytes in .data; 1, 4, 0x88 and 0x548 in .bss. The run ends with the 0x1000-byte heap data_0209baa0 (32-aligned, behind the 0x1c-byte gap data_0209ba84) and then a size drop at data_0209caa0. The heap is read only by func_020133bc, but it stays unclaimed here.",
+    "The 0x50-before-0x20 order at 0x0208e448/0x0208e498 is not a size-sort break and not a TU boundary. 0x0208e498 holds \"/data/sound_data.sdat\", which is 0x16 bytes, not 0x20. The next 8 bytes, 0x0208e4b0..0x0208e4b8, are _ZTV7dBase_c's preamble (0, then &_ZTI7dBase_c at 0x02086e78). func_020133bc passes the string to func_02050f34 as the archive path. Compiled as a literal, mwcc numbers it @1611 and emits it after every size-sorted named object, in its own .data section. That is retail's placement. It is left extern (data_0208e498) and outside the claim, because it ends at 0x0208e4ae, 2 bytes short of 0x0208e4b0. A claim ending at 0x0208e4b0 would need terminal linker fill, which tubuild licenses only for a claim that owns a whole module section. A deadstrip-data row cannot home the local @1611 either: compiler-only data policy runs before binding rewrites and skips locals.",
+    "Linkage. Objects with readers outside this TU (config/**/relocs.txt, overlays included) are globals: gSubSoundID, gMusicTrackModeOverride, gSoundMuted, gSoundInitialized, gMusicVolume, gSubVolume, gCurrentMusicID, data_0209b53c. Every other object is static in the source and is published STB_GLOBAL by a symbol_binding_rewrites row, because dsd cannot record a local symbol in symbols.txt. data_0209b484, data_0209b488, data_0209b48c, data_0209b4a4 and data_0209b4a8 keep their address names. The code shows how they are used (heap levels and two sequence handles), not what they were called.",
     "Sound::Play and Sound::Play2D are defined void, matching the plurality of the tree. Callers that consume r0 (PlayCharVoice, PlayBank2_2D/PlayBank3_2D, func_02012174/func_0201277c/func_02012790) keep the extern \"C\" mangled spelling -- the same return-split the shard files already carried, banked in decl-agreement-baseline.json.",
     "Sound::PlaySub and Sound::ChangeMusicVolume keep their literal mangled names: the `5Fix12IiE` encoding cannot be produced by any type this tree defines (the Fix12 wall, see include/Sound.h).",
     "func_020133bc keeps its shard's opt_propagation-off pragma (load-bearing); the pragma is file-global under deferred codegen, so func_020132d8 and func_020133bc sit inside defer_codegen brackets -- func_020132d8 flushes the deferred queue under on and func_020133bc alone binds off. func_02012468 keeps the u64-mask launder that pins its register birth order.",
@@ -696,7 +908,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -742,15 +954,22 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0208e420",
+          "end": "0x0208e498",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
-          "start": "0x0209b53c",
+          "start": "0x0209b470",
           "end": "0x0209ba84",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 92
+          "LICENSED": 121
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -761,32 +980,212 @@
           {
             "section": ".init",
             "original": [
-              182
+              211
             ],
             "desired": [
-              182
+              211
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              180
+              209
             ],
             "desired": [
-              180
+              209
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              7,
+              11,
+              12,
+              13,
+              16,
+              22,
+              25,
+              26,
+              28,
+              29,
+              32
+            ],
+            "desired": [
+              13,
+              11,
+              12,
+              7,
+              29,
+              28,
+              16,
+              26,
+              25,
+              22,
+              32
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5
+              5,
+              6,
+              8,
+              9,
+              10,
+              14,
+              15,
+              17,
+              18,
+              19,
+              20,
+              21,
+              23,
+              24,
+              27,
+              30,
+              31,
+              33,
+              34
             ],
             "desired": [
-              5
+              6,
+              8,
+              5,
+              10,
+              9,
+              18,
+              17,
+              15,
+              19,
+              21,
+              23,
+              27,
+              30,
+              14,
+              20,
+              24,
+              31,
+              33,
+              34
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                7,
+                11,
+                12,
+                13,
+                16,
+                22,
+                25,
+                26,
+                28,
+                29,
+                32
+              ],
+              "desired": [
+                13,
+                11,
+                12,
+                7,
+                29,
+                28,
+                16,
+                26,
+                25,
+                22,
+                32
+              ],
+              "slots": [
+                7,
+                11,
+                12,
+                13,
+                16,
+                22,
+                25,
+                26,
+                28,
+                29,
+                32
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                8,
+                9,
+                10,
+                14,
+                15,
+                17,
+                18,
+                19,
+                20,
+                21,
+                23,
+                24,
+                27,
+                30,
+                31,
+                33,
+                34
+              ],
+              "desired": [
+                6,
+                8,
+                5,
+                10,
+                9,
+                18,
+                17,
+                15,
+                19,
+                21,
+                23,
+                27,
+                30,
+                14,
+                20,
+                24,
+                31,
+                33,
+                34
+              ],
+              "slots": [
+                5,
+                6,
+                8,
+                9,
+                10,
+                14,
+                15,
+                17,
+                18,
+                19,
+                20,
+                21,
+                23,
+                24,
+                27,
+                30,
+                31,
+                33,
+                34
+              ]
+            }
+          ],
+          "symbolIndices": 30,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -833,6 +1232,138 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "sSavedMusicVolume",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sSavedSubVolume",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sCurrentBank",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sMusicVolumeTarget",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sMusicTrackMode",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sLayer1Music",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sLayer2Music",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sLayer3Music",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sPlayerSeqLimits",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sSubVolumeTarget",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sPlayerVoiceGroup",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sLoadedGroup",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "data_0209b484",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "data_0209b488",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "data_0209b48c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sVolumeRampStep",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sSndHeap",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sMusicHandle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "data_0209b4a4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "data_0209b4a8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sSubHandle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "sSndArc",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
     }
   ],
   "relocations": [

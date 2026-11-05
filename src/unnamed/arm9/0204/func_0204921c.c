@@ -7,8 +7,8 @@ extern u16 data_020a4c48[];
 /* For the three sequences that have them (0x3b, 0x3d, 0x3e), set the volume
    (data_020a4c5c, 0..0x7f000) of two track masks (data_020a4c48) for `mode`,
    and send each through NNS_SndPlayerSetTrackVolume; a track set to 0 also gets
-   NNS_SndPlayerSetTrackMute(a, mask, 1). func_02011dcc calls it with data_0208e438 after
-   func_02051fb4 succeeds on the handle at data_0209b4a0. func_020494cc sets
+   NNS_SndPlayerSetTrackMute(a, mask, 1). func_02011dcc calls it with sMusicTrackMode after
+   func_02051fb4 succeeds on the handle at sMusicHandle. func_020494cc sets
    the matching targets and steps (data_020a4c54, data_020a4c4c). */
 void func_0204921c(NNSSndHandle *a, int mode) {
     int i;

@@ -107,14 +107,14 @@ extern int atan2_hold_Player_3(int a, int b);
 extern s16 atan2_hold_Player_4(s32, s32);
 extern short atan2_hold_Player_8(int a, int b);
 extern int atan2_hold_Player_9(int x, int z);
-extern int data_0208e430;
+extern int gSubSoundID;
 extern signed char data_02092110;
 extern signed char data_02092120;
 extern signed char gLastCourseSublevel;
 extern u8 data_02092128[];
 extern int data_0209212c;
 extern short gPlayerHealth[];
-extern int data_0209b49c;
+extern int gSubVolume;
 extern Timer gRaceTimer;
 extern unsigned char data_0209d660;
 extern u8 data_0209f200;
@@ -2294,7 +2294,8 @@ void func_ov002_020bf800(char *c, Vector3_16f v)
 // @symbol _ZN7daPly_c19func_ov002_020bf88cEv
 void daPly_c::func_ov002_020bf88c() {
     if (mIsInShallowWater) return;
-    if (data_0208e430 == 0x2e) return;
+    if (gSubSoundID == 0x2e)
+        return;
     if (mIsMega)
         func_02022b04(this->mPosX, this->mPosY, this->mPosZ);
     else
@@ -2308,7 +2309,8 @@ void daPly_c::func_ov002_020bf90c() {
     if (this->mHorzSpeed == 0) return;
     if (mIsAirborne != 0) return;
     if (mIsInShallowWater != 0) return;
-    if (data_0208e430 == 0x2e) return;
+    if (gSubSoundID == 0x2e)
+        return;
 
     if (mIsMega != 0)
         func_02022b04(this->mPosX, this->mPosY, this->mPosZ);
@@ -2327,7 +2329,8 @@ void daPly_c::func_ov002_020bf90c() {
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 void daPly_c::func_ov002_020bf9d4() {
   Vector3 v;
-  if (data_0208e430 == 0x2e) return;
+  if (gSubSoundID == 0x2e)
+      return;
   if (mIsMega == 0){
     func_0200fccc(this, 0);
     return;
@@ -3044,7 +3047,7 @@ void daPly_c::func_ov002_020c1234() {
     case 0xa:
         a1 = 0x2d;
         a2 = 0x28;
-        fx = (data_0209b49c >> 12 > 0x28) ? 0x8b33 : 0xd1e;
+        fx = (gSubVolume >> 12 > 0x28) ? 0x8b33 : 0xd1e;
         mGroundSubSoundActive = 1;
         break;
     case 0xb:
@@ -13247,7 +13250,8 @@ void func_ov002_020d45c0(char* self)
     daPly_c *p = (daPly_c *)self;
     if (p->mIsInShallowWater != 0)
         return;
-    if (data_0208e430 == 0x2e) return;
+    if (gSubSoundID == 0x2e)
+        return;
 
     if (p->mHorzSpeed < Player_ScaleByCharFactor(self, 0x24000)) {
         if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) >= 0xe00) {
@@ -13434,7 +13438,8 @@ void daPly_c::PlayLandingEffects() {
             func_0201251c(0, 0xaa, (int)&mCamSpacePos, mHorzSpeed);
         }
     }
-    if (data_0208e430 == 0x2e) return;
+    if (gSubSoundID == 0x2e)
+        return;
     id = -1;
     if (mGroundSoundType != 6) {
         if (mGroundSoundType != 8) {

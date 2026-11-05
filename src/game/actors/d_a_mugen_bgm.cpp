@@ -2,7 +2,7 @@
 /**
  * Endless BGM / fog controller (registry profile MUGEN_BGM).
  *
- * param1 == 1 steers data_0208e434 from the rotated offset; otherwise it
+ * param1 == 1 steers gMusicTrackModeOverride from the rotated offset; otherwise it
  * drives Fog depth/color from the rotated offset, star count and
  * data_0209caa0[0x41], then keeps Sound sub 0x2e playing while
  * func_ov100_02144f84 gates mHorzSpeed.
@@ -100,7 +100,7 @@ int daMugenBGM_c::Behavior() {
         if (x < 0x320000) {
             int y = rotated[1];
             if (y > -0x12c000 && y < 0x5dc000 && az > 0x32000 && az < 0xc8000)
-                data_0208e434 = (z < 0) ? 2 : -1;
+                gMusicTrackModeOverride = (z < 0) ? 2 : -1;
         }
         return 1;
     }
