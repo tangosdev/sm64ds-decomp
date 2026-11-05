@@ -103,6 +103,7 @@ extern s16 data_02082214[];              /* the sin/cos table, two shorts a step
 extern int data_ov084_0213030c[];        /* per-frame particle X/Z offset (0212f460, 0xfb) */
 extern int data_ov084_02130334[];        /* per-frame particle Y offset */
 extern u8  data_ov084_021302ec[];        /* five indices {0,3,4,5,6}; 0212ec60 sums s16 at [i]*0x34+0x1c into ang[1] (dead -- later y-adjust reads ang[0]==0, so the offset is constant 0x32000). 0x34 is not BMD_Bone (0x40). */
+/* local extern: math/MtxStack.h's helper prototypes clash with this file's */
 extern Matrix4x3 data_020a0e68;          /* the shared scratch matrix */
 
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);

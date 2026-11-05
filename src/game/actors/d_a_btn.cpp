@@ -139,6 +139,7 @@ extern u8 data_0209f220;
 extern signed char gCurrentSublevel;
 extern int data_0209f318;
 extern daPly_c *data_0209f394[];
+/* local extern: math/MtxStack.h's helper prototypes clash with this file's */
 extern Matrix4x3 data_020a0e68;
 /* The king's collision mesh takes Whomp's Fortress's own CLPS block. The
    relocation's target address is shared by 15 level overlays; residency

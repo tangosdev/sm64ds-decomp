@@ -145,6 +145,7 @@ extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
 extern void MulMat4x3Mat4x3(void* out, void* a, void* b);
 extern int *Vec3_LslInPlace(void *v, int sh);
+/* local extern: math/MtxStack.h's helper prototypes clash with this file's */
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);

@@ -47,6 +47,7 @@ struct CapVec { int x, y, z; };
 extern void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *mF, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *mF, short x, short y, short z);
+/* local extern: math/MtxStack.h's helper prototypes clash with this file's */
 extern Matrix4x3 data_020a0e68;
 }
 
