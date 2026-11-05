@@ -303,16 +303,18 @@ names -- see "The third shadow" above.)
 What was left here was *padding* rather than `unk_`, and two runs of it turned
 out to be real structure.
 
-### 0x8bc — eight texture-animation slots
+### 0x8bc — the eight area records
 
 Was `pad_8bc[0x60]`, and four functions were walking it by hand with a 0xc
-stride. It is an array of eight `StageTexAnimSlot`, one per entry of the
-level's texture-animation table (`data_0209f340`):
+stride. It is an array of eight `StageArea` (first named `StageTexAnimSlot`),
+one per entry of the level record's table (`data_0209f340`), and the member is
+`mAreas`. Slot i is area i: `HideArea`/`ShowArea`/`IsAreaShowing` index it by
+area id, `GetMinimapID` by an actor's `mAreaId`:
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
 | 0x00 | `mTransformer` | `dScStage_c::LoadTextureTransformers` news a 0x14-byte `dExtAnmTexSRT_c`, constructs it, stores it here and calls `SetFile` on it; `dScStage_c::RenderModel` passes it to `dExtAnmTexSRT_c::Update`; `dScStage_c::CleanupResources` destroys it through its vtable. |
-| 0x04 | `mActive` | Gates the slot in three places: `dScStage_c::Render` only advances the animation when it is set, and `dScStage_c::RenderModel` and `dScStage_c::RenderModelTransparent` both use it to decide whether that part's materials get the transparent bit or lose it. |
+| 0x04 | `mShowing` (was `mActive`) | The area's showing flag: `HideArea` clears it, `ShowArea` sets it, `IsAreaShowing` returns it. A blinded melonDS run (EU, 10/10) confirmed it: clearing it hid the area's room and every actor bound to the area. It gates the slot in three places: `dScStage_c::Render` only advances the animation when it is set, and `dScStage_c::RenderModel` and `dScStage_c::RenderModelTransparent` both use it to decide whether that part's materials get the transparent bit or lose it. |
 | 0x08 | `mBlockList` | `dScStage_c::CleanupResources` walks it as a singly linked list, freeing each block and following the next pointer at the block's `+0x0c` — which is inside the *block*, not the slot; the slot's own stride is 0xc. |
 
 Three private redeclarations of this record existed —

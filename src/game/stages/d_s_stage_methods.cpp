@@ -3419,9 +3419,9 @@ extern "C" int func_0202a980(void) {
 }
 
 // @symbol _Z23LoadMinimapChangeObjectiia
-/* data_0209f314 points at mTexAnimSlots (InitResources stores it). Each
-   0xc-byte slot doubles as the per-area record: HideArea/ShowArea toggle its
-   mActive byte, and mBlockList heads a sorted list of these minimap-change
+/* data_0209f314 points at mAreas (InitResources stores it). In each
+   0xc-byte area record, HideArea/ShowArea toggle mShowing, and
+   mBlockList heads a sorted list of these minimap-change
    records, threshold at +0, next at +0xc (the link CleanupResources walks
    when it frees them). GetMinimapID walks next from the head and answers
    minimapId for the first record whose height an actor is above. */
@@ -3437,7 +3437,7 @@ struct MinimapChangeNode {
 
 void LoadMinimapChangeObject(int idx, Fix12i val, s8 h) {
     struct MinimapChangeNode *nn = (MinimapChangeNode *)::operator new(sizeof(MinimapChangeNode));
-    StageTexAnimSlot *e = &((StageTexAnimSlot *)data_0209f314)[idx];
+    StageArea *e = &((StageArea *)data_0209f314)[idx];
     struct MinimapChangeNode *cur = (MinimapChangeNode *)e->mBlockList;
     struct MinimapChangeNode *prev = cur;
     if (cur != 0) {
@@ -3470,17 +3470,17 @@ void LoadMinimapChangeObject(int idx, Fix12i val, s8 h) {
 
 // @symbol HideArea
 extern "C" void HideArea(int idx) {
-    ((StageTexAnimSlot *)data_0209f314)[idx].mActive = 0;
+    ((StageArea *)data_0209f314)[idx].mShowing = 0;
 }
 
 // @symbol ShowArea
 extern "C" void ShowArea(int idx) {
-    ((StageTexAnimSlot *)data_0209f314)[idx].mActive = 1;
+    ((StageArea *)data_0209f314)[idx].mShowing = 1;
 }
 
 // @symbol IsAreaShowing
 extern "C" unsigned char IsAreaShowing(int idx) {
-    return ((StageTexAnimSlot *)data_0209f314)[idx].mActive;
+    return ((StageArea *)data_0209f314)[idx].mShowing;
 }
 
 // @symbol ChangeArea
@@ -3669,7 +3669,7 @@ extern "C" int GetMinimapID(struct Obj *obj, int arg) {
         idx = data_02092120;
     g = (char *)data_0209f314;
     if (g != 0) {
-        node = (MinimapChangeNode *)((StageTexAnimSlot *)g)[idx].mBlockList;
+        node = (MinimapChangeNode *)((StageArea *)g)[idx].mBlockList;
         if (node != 0) {
             val = obj->mPosY;
             while (node != 0) {
@@ -3777,11 +3777,11 @@ struct LocalModelComponents {
 void dScStage_c::RenderModelTransparent() {
     ModelComponents *components = &mModel.data;
     BMD_Bone *bone = components->modelFile->bones;
-    StageTexAnimSlot *slot = mTexAnimSlots;
-    int slotIndex;
-    for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count;
-         slotIndex++, slot++, bone++) {
-        if (slot->mActive != 0) {
+    StageArea *area = mAreas;
+    int areaIndex;
+    for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count;
+         areaIndex++, area++, bone++) {
+        if (area->mShowing != 0) {
             u8 *materialIds = bone->materialIds;
             u16 materialIndex;
             for (materialIndex = 0; materialIndex < bone->numMaterials; materialIndex++) {
@@ -3802,14 +3802,14 @@ void dScStage_c::RenderModelTransparent() {
 void dScStage_c::RenderModel() {
     ModelComponents *components = &mModel.data;
     BMD_Bone *bone = components->modelFile->bones;
-    StageTexAnimSlot *slot = mTexAnimSlots;
-    int slotIndex;
+    StageArea *area = mAreas;
+    int areaIndex;
 
-    for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count; slotIndex++) {
-        u8 active = slot->mActive;
+    for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++) {
+        u8 showing = area->mShowing;
         u8 *materialIds = bone->materialIds;
 
-        if (active != 0) {
+        if (showing != 0) {
             u16 materialIndex;
             for (materialIndex = 0; materialIndex < bone->numMaterials; materialIndex++) {
                 u8 materialId = *materialIds;
@@ -3824,8 +3824,8 @@ void dScStage_c::RenderModel() {
                     *flags |= 0x80000000;
                 }
             }
-            if (slot->mTransformer != 0)
-                slot->mTransformer->Update(mModel.data);
+            if (area->mTransformer != 0)
+                area->mTransformer->Update(mModel.data);
         } else {
             u16 materialIndex;
             for (materialIndex = 0; materialIndex < bone->numMaterials; materialIndex++) {
@@ -3836,7 +3836,7 @@ void dScStage_c::RenderModel() {
             }
         }
 
-        slot++;
+        area++;
         bone++;
     }
 
@@ -3919,17 +3919,17 @@ extern "C" int CopyTexPalFromLevelModel(void *p) {
 // @symbol _ZN10dScStage_c23LoadTextureTransformersEv
 void dScStage_c::LoadTextureTransformers() {
     struct LevelTexAnim *entry = ((LevelInfo *)data_0209f340)->entries;
-    StageTexAnimSlot *slot = mTexAnimSlots;
+    StageArea *area = mAreas;
     BMD_File *modelFile = mModel.data.modelFile;
-    int slotIndex;
-    for (slotIndex = 0; slotIndex < (int)((LevelInfo *)data_0209f340)->count; slotIndex++) {
+    int areaIndex;
+    for (areaIndex = 0; areaIndex < (int)((LevelInfo *)data_0209f340)->count; areaIndex++) {
         if (entry->bta) {
             dExtAnmTexSRT_c::Prepare(*modelFile, *(BTA_File *)entry->bta);
-            slot->mTransformer = new dExtAnmTexSRT_c;
-            slot->mTransformer->SetFile(*(BTA_File *)entry->bta, 0, 0x1000, 0);
+            area->mTransformer = new dExtAnmTexSRT_c;
+            area->mTransformer->SetFile(*(BTA_File *)entry->bta, 0, 0x1000, 0);
         }
         entry++;
-        slot++;
+        area++;
     }
 }
 
@@ -4050,11 +4050,11 @@ void func_0203db3c(int i, int v);
 
 int dScStage_c::Render() {
     if (((gVsExitScreenActive | (data_0209f2c4 | data_0209f20c)) & 0xff) == 0) {
-        StageTexAnimSlot *slot = mTexAnimSlots;
-        int slotIndex;
-        for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count; slotIndex++, slot++) {
-            if (slot->mActive != 0 && slot->mTransformer != 0)
-                slot->mTransformer->Advance();
+        StageArea *area = mAreas;
+        int areaIndex;
+        for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++, area++) {
+            if (area->mShowing != 0 && area->mTransformer != 0)
+                area->mTransformer->Advance();
         }
         mSysTracker.Update();
     }
@@ -4561,14 +4561,14 @@ int dScStage_c::CleanupResources() {
     }
 
     {
-        StageTexAnimSlot *slot = mTexAnimSlots;
-        int slotIndex;
-        for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count; slotIndex++, slot++) {
-            dExtAnmTexSRT_c *transformer = slot->mTransformer;
+        StageArea *area = mAreas;
+        int areaIndex;
+        for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++, area++) {
+            dExtAnmTexSRT_c *transformer = area->mTransformer;
             if (transformer)
                 delete transformer;
             {
-                MinimapChangeNode *block = (MinimapChangeNode *)slot->mBlockList;
+                MinimapChangeNode *block = (MinimapChangeNode *)area->mBlockList;
                 while (block) {
                     MinimapChangeNode *next = block->next;
                     Memory::operator_delete2(block);
@@ -4741,7 +4741,7 @@ int dScStage_c::InitResources() {
         data_0209f264 = data_0209f268;
         data_0209f220 = data_0209f1f0;
         data_02092120 = -1;
-        data_0209f314 = (int)scene->mTexAnimSlots;
+        data_0209f314 = (int)scene->mAreas;
         data_0209f32c = 0x80000000;
         data_0209f274 = 0;
         SublevelToLevel(gCurrentSublevel);
