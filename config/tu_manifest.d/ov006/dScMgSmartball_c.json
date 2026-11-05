@@ -958,7 +958,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgSmartball_c/dScMgSmartball_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgSmartball_c/d_s_mg_smartball.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 132,
     "functions_declared": 132,
@@ -1150,7 +1150,8 @@
         "_ZTV21cMgSmartball_spring_c",
         "_ZTV24cMgSmartball_propeller_c",
         "_ZTV25cMgSmartball_pushswitch_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
