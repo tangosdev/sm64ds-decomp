@@ -11,9 +11,6 @@
  * leftovers:
  * - Address names stay. Each function keeps its namespace, because
  *   the local structs and externs disagree.
- * - TrmpItem_MotionSway keeps opt_propagation off.
- *   TrmpLine_ComputeNormals keeps opt_strength_reduction off.
- *   TrmpLine_PushJumper keeps opt_common_subs off and opt_propagation off.
  * - Vector3 locals emit an empty destructor, licensed as a deadstrip
  *   duplicate of the arm9 copy. Spare4 in TrmpLine_Build emits
  *   another, deadstripped as compiler-only output.
@@ -278,27 +275,22 @@ extern "C" void TrmpItem_SetMotionHover(char *c) {
 
 namespace s020cdc8c {
 
-#pragma push
-#pragma opt_propagation off
 extern "C" void TrmpItem_MotionSway(char *self) {
     int distanceFromCenterY;
-    int xSpeed;
-    int minimumSpeed = 0x400;
-    u16 *phase = &TRMPITEM(self)->mPhase;
+    int xSpeed = 0x400;
 
-    *phase = *phase + 0x40;
+    TRMPITEM(self)->mPhase += 0x40;
 
     distanceFromCenterY = TRMPITEM(self)->mPos.y - 0x74000;
     if (distanceFromCenterY < 0)
         distanceFromCenterY = -distanceFromCenterY;
-    xSpeed = (cstd::fdiv(distanceFromCenterY, 0x4c000) >> 3) + minimumSpeed;
+    xSpeed += cstd::fdiv(distanceFromCenterY, 0x4c000) >> 3;
 
     if (TRMPITEM(self)->mPhase & 0x4000)
         TRMPITEM(self)->mVel.x = xSpeed;
     else
         TRMPITEM(self)->mVel.x = -xSpeed;
 }
-#pragma pop
 }
 
 namespace s020cdce4 {

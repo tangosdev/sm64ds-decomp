@@ -431,7 +431,7 @@
       "ordinal": 55
     },
     {
-      "symbol": "__arraydtor$2193",
+      "symbol": "__arraydtor$2192",
       "address": "0x020d0fe4",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020d0fe4.c",
@@ -462,7 +462,7 @@
       "evidence": "guard word of TrmpItem_MotionSpinSway's function-local `static Vector3 sUnitY`; the function tests and sets bit 0 exactly as retail"
     },
     {
-      "symbol": "_ZGVsUnitZ$318",
+      "symbol": "_ZGVsUnitZ$317",
       "address": "0x0214080c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -490,7 +490,7 @@
       "evidence": "count of items hit, capped at 9999 by TrmpItem_UpdateWithJumper and cleared by TrmpItem_HideAll; d_s_mg_trampoline2 reads it"
     },
     {
-      "symbol": "_ZGVsUnitY$934",
+      "symbol": "_ZGVsUnitY$933",
       "address": "0x0214081c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -504,7 +504,7 @@
       "evidence": "guard word of TrmpItem_MotionSpinHover's function-local `static Vector3 sUnitY`; the function tests and sets bit 0 exactly as retail"
     },
     {
-      "symbol": "_ZGVsUnitY$314",
+      "symbol": "_ZGVsUnitY$313",
       "address": "0x02140824",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -630,7 +630,7 @@
       "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_Init; it is the third __register_global_object argument exactly as retail"
     },
     {
-      "symbol": "sUnitY$934",
+      "symbol": "sUnitY$933",
       "address": "0x021408a8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -679,7 +679,7 @@
       "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_MotionSpin; it is the third __register_global_object argument exactly as retail"
     },
     {
-      "symbol": "sUnitY$314",
+      "symbol": "sUnitY$313",
       "address": "0x021408fc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -693,7 +693,7 @@
       "evidence": "compiler-generated destructor-registration node for a function-local Vector3 in TrmpItem_MotionSpin; it is the third __register_global_object argument exactly as retail"
     },
     {
-      "symbol": "sUnitZ$318",
+      "symbol": "sUnitZ$317",
       "address": "0x02140914",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -1211,39 +1211,29 @@
       "evidence": "compiler temp: mwcc numbers this destructor-registration node @233, and ov070 already defines @233; @240 is unused fleet-wide and the same length, configured at 0x0214095c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
     },
     {
-      "from": "@317",
-      "to": "@316",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @317, and ov004 already defines @317; @316 is unused fleet-wide and the same length, configured at 0x021408f0. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
-    },
-    {
-      "from": "@321",
-      "to": "@320",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @321, and ov004 already defines @321; @320 is unused fleet-wide and the same length, configured at 0x02140908. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
-    },
-    {
-      "from": "@937",
+      "from": "@936",
       "to": "@817",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @937, and ov098 already defines @937; @817 is unused fleet-wide and the same length, configured at 0x0214089c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @937, and ov098 already defines @937; @817 is unused fleet-wide and the same length, configured at 0x0214089c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @937 to @936 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@2194",
+      "from": "@2193",
       "to": "@2175",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2194, and ov066 already defines @2194; @2175 is unused fleet-wide and the same length, configured at 0x021408cc. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2194, and ov066 already defines @2194; @2175 is unused fleet-wide and the same length, configured at 0x021408cc. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2194 to @2193 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@2204",
+      "to": "@2174",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2205, and @2205 is the compiled name another manifest renames away (ov006/dScMgLuigi_c), so it is kept off for clarity; @2174 is unused fleet-wide and the same length, configured at 0x0214092c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2205 to @2204 when the opt pragma was removed (#821)."
     },
     {
       "from": "@2205",
-      "to": "@2174",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2205, and @2205 is the compiled name another manifest renames away (ov006/dScMgLuigi_c), so it is kept off for clarity; @2174 is unused fleet-wide and the same length, configured at 0x0214092c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+      "to": "@2173",
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2206, and ov006 already defines @2206; @2173 is unused fleet-wide and the same length, configured at 0x02140944. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2206 to @2205 when the opt pragma was removed (#821)."
     },
     {
       "from": "@2206",
-      "to": "@2173",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2206, and ov006 already defines @2206; @2173 is unused fleet-wide and the same length, configured at 0x02140944. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
-    },
-    {
-      "from": "@2207",
       "to": "@2171",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2207, and @2207 is the compiled name another manifest renames away (ov006/dScMgLuigi_c), so it is kept off for clarity; @2171 is unused fleet-wide and the same length, configured at 0x02140950. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change."
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2207, and @2207 is the compiled name another manifest renames away (ov006/dScMgLuigi_c), so it is kept off for clarity; @2171 is unused fleet-wide and the same length, configured at 0x02140950. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2207 to @2206 when the opt pragma was removed (#821)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -1260,7 +1250,7 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "__arraydtor$2193",
+      "symbol": "__arraydtor$2192",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local array destructor thunk for sTrmpLines; it is a configured initializer relocation destination at 0x020d0fe4"
@@ -1272,7 +1262,7 @@
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140808, and changing the ELF binding preserves storage, relocations and bytes"
     },
     {
-      "symbol": "_ZGVsUnitZ$318",
+      "symbol": "_ZGVsUnitZ$317",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x0214080c, and changing the ELF binding preserves storage, relocations and bytes"
@@ -1284,7 +1274,7 @@
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140810, and changing the ELF binding preserves storage, relocations and bytes"
     },
     {
-      "symbol": "_ZGVsUnitY$934",
+      "symbol": "_ZGVsUnitY$933",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x0214081c, and changing the ELF binding preserves storage, relocations and bytes"
@@ -1296,7 +1286,7 @@
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140820, and changing the ELF binding preserves storage, relocations and bytes"
     },
     {
-      "symbol": "_ZGVsUnitY$314",
+      "symbol": "_ZGVsUnitY$313",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140824, and changing the ELF binding preserves storage, relocations and bytes"
@@ -1356,7 +1346,7 @@
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x0214089c, and changing the ELF binding preserves storage, relocations and bytes"
     },
     {
-      "symbol": "sUnitY$934",
+      "symbol": "sUnitY$933",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408a8, and changing the ELF binding preserves storage, relocations and bytes"
@@ -1398,7 +1388,7 @@
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408f0, and changing the ELF binding preserves storage, relocations and bytes"
     },
     {
-      "symbol": "sUnitY$314",
+      "symbol": "sUnitY$313",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x021408fc, and changing the ELF binding preserves storage, relocations and bytes"
@@ -1410,7 +1400,7 @@
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140908, and changing the ELF binding preserves storage, relocations and bytes"
     },
     {
-      "symbol": "sUnitZ$318",
+      "symbol": "sUnitZ$317",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-owned function-local static, guard or destructor-registration node; DSD requires a configured global symbol at 0x02140914, and changing the ELF binding preserves storage, relocations and bytes"
@@ -1568,7 +1558,7 @@
       "source": "0x0212fd1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__arraydtor$2193",
+      "symbol": "__arraydtor$2192",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x020d0fe4"
