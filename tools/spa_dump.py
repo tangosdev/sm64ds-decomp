@@ -59,6 +59,21 @@ TEXTURE_FORMATS = {
     1: "A3I5", 2: "4-color", 3: "16-color", 4: "256-color",
     5: "4x4-texel", 6: "A5I3", 7: "direct",
 }
+# Emitter shapes, from func_0204c584's jump table on flags & 0xf (0x0204c684..0x0204c698).
+# Each case builds the new particle's offset from the emitter point.  Helpers:
+#   func_0204d9f0 = random 2D unit vector (two LCG draws, z=0, normalised)
+#   func_0204da4c = random 3D unit vector (three LCG draws, normalised)
+#   func_0204cd5c = maps a 2D offset onto the plane perpendicular to `axis`
+#                   (mode taken from flags bits 6-7)
+# "Filled" (4, 5) is inferred from the extra per-axis random in [-1,1).
+SHAPES = {
+    0: "point",                  # offset = 0
+    1: "sphere surface",         # random 3D unit vector * radius
+    2: "circle rim, random",     # random 2D unit vector * radius, in the axis plane
+    3: "circle rim, even steps", # cos/sin of a running angle (step / count), in the axis plane
+    4: "volume (per-axis rand)", # random 3D unit vector * radius * rand[-1,1) per axis
+    5: "disc (per-axis rand)",   # random 2D unit vector * radius * rand[-1,1) per axis, in plane
+}
 BASE_SIZE = 0x38
 TEXTURE_FIELD = 0x33  # proven: func_0204a5c8 reads it as the texture index
 
@@ -79,6 +94,8 @@ def decode_base(b, start):
     axis = struct.unpack_from("<3h", b, start + 0x0C)
     return {
         "shape": flags & 0xF,                 # emitter shape 0..5
+        "shapeName": SHAPES.get(flags & 0xF, "?"),
+        "planeMode": flags >> 6 & 3,          # flags bits 6-7: func_0204cd5c mapping mode
         "drawMode": flags >> 4 & 3,           # 0..2, selects draw/blend routine
         "radius": fx12(radius),               # emitRadius (Fix12)
         "axis": [fx12(a) for a in axis],      # direction vector (1.3.12 fixed)
@@ -202,14 +219,15 @@ def main():
         print("texture (byte 0x33): %d%s" % (d["texture"], "" if not tx else
               "  %s %dx%d" % (tx["format_name"], tx["width"], tx["height"])))
         x = d["decoded"]
-        print("shape %d  drawMode %d  radius %.3f  axis (%.3f, %.3f, %.3f)" % (
-            x["shape"], x["drawMode"], x["radius"], *x["axis"]))
+        print("shape %d (%s)  planeMode %d  drawMode %d  radius %.3f  axis (%.3f, %.3f, %.3f)" % (
+            x["shape"], x["shapeName"], x["planeMode"], x["drawMode"], x["radius"], *x["axis"]))
         print("lifetime %d  emitInterval %d  baseAlpha %d" % (
             x["lifetime"], x["emitInterval"], x["baseAlpha"]))
         for i, w in enumerate(d["words"]):
             print("  +0x%02x  %08x" % (i * 4, w))
         return
 
+    print("shapes: " + "; ".join("%d=%s" % kv for kv in sorted(SHAPES.items())))
     print("SPA @ arm9_dec 0x%x (ROM 0x%08x): %d effects, %d textures, resident 0x%x" % (
         t["arm9_file_offset"], t["rom_address"], t["numDefinitions"],
         t["numTextures"], t["residentSize"]))
