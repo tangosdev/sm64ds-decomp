@@ -56,14 +56,6 @@
 #include "AsyncJob.h"
 #include "Heap.h"
 
-/* One player's gTouchHeld/gTouchEdge/gTouchX/gTouchY record (PlayerInput.h). */
-struct TouchInfo {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
-
 /* The Nitro SDK's sub-engine palette loader. No header in the tree
  * declares the namespace yet; d_s_star_sel_methods.cpp spells it the
  * same way. */

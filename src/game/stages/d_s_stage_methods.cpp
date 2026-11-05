@@ -92,15 +92,6 @@ struct OamAttr;
 dScStage_c::graphCallback_c data_0209f3c4;
 dClipper data_0209f43c;
 
-/* TU-local overlay of the touch records the ROM keeps at gTouchHeld:
-   held/edge are the gTouchHeld/gTouchEdge lanes, x/y the gTouchX/gTouchY lanes. */
-struct TouchInfo {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
-
 extern "C" {
 int IsButtonInputValid(void);
 int SublevelToLevel(int lv);

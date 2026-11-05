@@ -139,14 +139,6 @@ void Cup_Nothing(void);
 void func_0203d738(void);
 }
 
-/* One player's record in the touch table at gTouchHeld (PlayerInput.h). */
-struct TouchInfo {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
-
 #pragma defer_codegen off
 /* Emit each function as it is read, so D1 lands ahead of D0. */
 
