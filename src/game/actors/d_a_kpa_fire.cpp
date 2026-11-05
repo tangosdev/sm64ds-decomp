@@ -55,12 +55,11 @@
 #include "SaveData.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
+#include "private/mtx43.h"
 
-/* POD view of the 0x30-byte matrix. The single integer array preserves
- * the shadow update's block copy in C++ with Vector3's user-declared
- * constructor in scope. */
-struct RawMatrix4x3 { int m[12]; };
-typedef struct RawMatrix4x3 RawMatrix4x3;
+/* The shadow update copies its matrix through Mtx43: the plain word union
+ * keeps the block copy in C++ with Vector3's user-declared constructor in
+ * scope. */
 
 /* The variant tables. Behavior calls data_ov060_0211afb4[mVariant].pmf and
  * InitResources calls data_ov060_0211af74[mVariant]. Both hold
@@ -260,12 +259,12 @@ int daKpaFire_c::CleanupResources()
  * calls it `depth`) 30 units (0x1e000), and the `opacity` argument 0xf (what
  * that value means is not decoded; every caller passes 0xf).
  * The Matrix4x3 at 0x32c remains the header's `mShadowMat` storage; copying it
- * through the RawMatrix4x3 view keeps the block copy intact in C++. */
+ * through the Mtx43 view keeps the block copy intact in C++. */
 void daKpaFire_c::func_ov060_02117624() {
     if (mDropsShadow == 0)
         return;
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, mGroundY >> 3, mPosZ >> 3);
-    *(RawMatrix4x3 *)mShadowMat = *(RawMatrix4x3 *)&data_020a0e68;
+    *(Mtx43 *)mShadowMat = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, mShadowRadiusMul * mFireScale,
                         0x1e000, 0xf);
 }
