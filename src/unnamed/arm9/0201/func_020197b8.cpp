@@ -17,7 +17,7 @@ extern int data_020a0db0;
 extern unsigned char data_0209d4f0;
 extern unsigned char data_0209ee90[];
 extern int data_0209d514;
-extern unsigned char data_0209b480;
+extern unsigned char gSoundInitialized;
 extern unsigned char data_0209e64c;
 
 void func_02019ac4(void);
@@ -43,7 +43,7 @@ int func_02030e4c(void);
    swap request (func_020190b8) with the VBlank IRQ held, the frame wait
    (func_0201a4bc) and the link step (func_0201ffcc). The active player's
    button word also goes into the 32-entry ring data_0209d534. Then the sound
-   update (func_020132d8, once data_0209b480 says sound is up) and, with
+   update (func_020132d8, once gSoundInitialized says sound is up) and, with
    the link started or a link error up, the session check
    (func_02030e4c). */
 void func_020197b8(void) {
@@ -76,7 +76,8 @@ void func_020197b8(void) {
         if ((*(int*)(data_0209ee90 + 0x108) & 0x10) == 0)
             data_0209d514 = 0;
         data_0209d50c = 9;
-        if (data_0209b480 != 0) func_020132d8();
+        if (gSoundInitialized != 0)
+            func_020132d8();
         if (data_0209e64c != 0 || func_0203da80(0x9d) != 0)
             func_02030e4c();
     } while (1);

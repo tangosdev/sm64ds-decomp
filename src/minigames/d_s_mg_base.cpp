@@ -865,9 +865,9 @@ extern void d_s_mg_basePlaySubHold(unsigned int a, unsigned int b, unsigned int 
 extern int Mg_GetMusicMode(void);
 extern int Mg_GetMusicTrack(void);
 /* Sound::PlaySub with third argument 0 and its flag set starts nothing:
-   it only sets the music volume target (data_0208e42c, which
+   it only sets the music volume target (sMusicVolumeTarget, which
    ChangeMusicVolume and PauseMusic also write) back to 0x7f, with step
-   0x7f000, and zeroes data_0209b470. Then, while a scene exists and in
+   0x7f000, and zeroes sSubVolumeTarget. Then, while a scene exists and in
    music mode 1, this loads the scene's track. */
 void Mg_RestoreMusic(void)
 {
@@ -885,7 +885,7 @@ extern "C" {
 extern int Mg_GetMusicMode(void);
 
 /* While a scene exists, starts sequence `id` on Sound::PlaySub's own
-   player (data_0209b4b0) unless it is already the current one, and sets
+   player (sSubHandle) unless it is already the current one, and sets
    the music volume target to 0x40 [GUESS: ducks the music; PauseMusic uses
    0x40 too]. The Mg_GetMusicMode result is not used. */
 void Mg_PlayJingle(void* id) {

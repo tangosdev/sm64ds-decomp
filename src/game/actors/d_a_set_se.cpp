@@ -19,7 +19,7 @@
  *   (LEVEL_ID, STAR_ID, CURRENT_GAMEMODE, CAMERA, SAVE_DATA,
  *   RUNNING_KUPPA_SCRIPT, WATERFALL_SOUNDS_DISABLED) are in
  *   symbols/verified.tsv; renaming them is a symbols.txt change.
- *   data_0209b4ac is the current music ID, written by
+ *   gCurrentMusicID is the current music ID, written by
  *   Sound::SetMusic/LoadAndSetMusic and cleared by StopLoadedMusic.
  * - g_profile_SET_SE is ov002 gap data outside this TU (S14), as are the
  *   sound table and the WATERFALL_SOUNDS_DISABLED flag this TU reads and
@@ -36,7 +36,7 @@
 
 extern int data_ov002_0210b498[];  /* sound-ID table, 11 entries: 0x18d, 0x100-0x103, 0x81, 0x89, 0x9c-0x9e, 0; the _ZTV9daSetSE_c header follows it, so spawn params stay 0-10 */
 extern int data_ov002_02110aec;    /* WATERFALL_SOUNDS_DISABLED */
-extern int data_0209b4ac;          /* current music ID */
+extern int gCurrentMusicID;        /* current music ID */
 extern dCamera_c *data_0209f318;   /* CAMERA */
 extern s8 gCurrentSublevel;        /* LEVEL_ID */
 extern u8 data_0209f220;           /* STAR_ID */
@@ -91,7 +91,7 @@ int daSetSE_c::Behavior()
     effect = param1;
     if (effect >= 1 && effect <= 4) {
         cam = data_0209f318;
-        music = data_0209b4ac;
+        music = gCurrentMusicID;
         if (music == 0x32 || music == 0x33 || music == 0x34 ||
             cam->IsUnderwater())
             return 1;

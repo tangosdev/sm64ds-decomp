@@ -262,9 +262,9 @@ extern char *data_0209f394[];
 extern unsigned char data_0209f2d8;
 /* The next-level id (signed byte). */
 extern char data_02092110;
-/* Music volume and message-sound volume, both in Fix12 (0x7f000 = 127.0). */
-extern int data_0209b490[];
-extern int data_0209b49c[];
+/* The music and sub-channel volumes, both in Fix12 (0x7f000 = 127.0). */
+extern int gMusicVolume;
+extern int gSubVolume;
 extern int data_020a0ebc;
 extern M48 data_020a0e68;
 extern int data_ov002_0211094c;
@@ -769,15 +769,15 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
 /* ROM ordinal 16 -- func_ov100_02144f84, 0x02144f84, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov100_02144f84
-/* 1 when the shared countdown is zero, the music volume data_0209b490 is at
-   0x7f000 (127.0 as Fix12) and the message-sound volume data_0209b49c is
+/* 1 when the shared countdown is zero, the music volume gMusicVolume is at
+   0x7f000 (127.0 as Fix12) and the sub-channel volume gSubVolume is
    zero. Was a C source. */
 extern "C" int func_ov100_02144f84(void) {
     if (*data_ov100_02148708 != 0)
         goto fail;
-    if (*data_0209b490 != 0x7f000)
+    if (gMusicVolume != 0x7f000)
         goto fail;
-    if (*data_0209b49c == 0)
+    if (gSubVolume == 0)
         return 1;
 fail:
     return 0;

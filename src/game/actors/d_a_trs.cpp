@@ -195,7 +195,7 @@ extern s16 data_ov063_0211e1dc[];
 extern s16 data_ov063_0211e1e4[];
 extern s16 data_ov063_0211e1c0[];
 extern int data_ov063_0211e1d0[];
-extern int data_0209b490[];
+extern int gMusicVolume;
 extern u8 data_0209d660;
 extern short data_ov063_0211e7e0[];
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -1860,7 +1860,7 @@ void daTrs_c::func_ov063_02119074() {
         this->mAnmModel.SetPolygonID(0x16);
 
         if (this->mVariant == 0xd) {
-            this->mSavedMusicVolume = data_0209b490[0];
+            this->mSavedMusicVolume = gMusicVolume;
 
             if (!this->mBooFlags.soundStarted) {
                 Sound::PlaySub(0x20, 0x14, 0x7f, 0x6b000, 1);

@@ -137,7 +137,8 @@ src/engine/sound/Sound.cpp:
     .text start:0x02011654 end:0x02013548
     .init start:0x02074da8 end:0x02074dbc
     .ctor start:0x02086b6c end:0x02086b70
-    .bss start:0x0209b53c end:0x0209ba84
+    .data start:0x0208e420 end:0x0208e498
+    .bss start:0x0209b470 end:0x0209ba84
 
 src/GetLevelPart.cpp:
     complete
