@@ -20,8 +20,7 @@
  *
  * common.h is included first so Matrix4x3 is the flat twelve words the two
  * matrix copies were matched under. defer_codegen is off, so the bodies are
- * ROM-ascending. opt_strength_reduction stays off for the file;
- * opt_common_subs is off except around the ground probe and Behavior.
+ * ROM-ascending. opt_strength_reduction stays off for the file.
  *
  * deslop leftovers:
  * - func_ov090_02131ac4: `mStateTimer == 0` is ldrsh. The ROM is ldrh, one
@@ -44,7 +43,6 @@
 #include "Particle__System.h"
 
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 
 struct BMD_File;
 struct BCA_File;
@@ -286,7 +284,6 @@ void func_ov090_021310b4(daMenbo_c *c)
     ((daPly_c *)p)->Hurt(hurt, 2, 0xc000, 1, 0, 1);
 }
 
-#pragma opt_common_subs on
 // @symbol func_ov090_02131378
 /* Ground probe. Mode 2 on course 0x12 skips it and only spawns ripples.
  * Otherwise a hit below the published water height (data_0209f32c) means
@@ -325,7 +322,6 @@ void func_ov090_02131378(daMenbo_c *c)
         c->mVertSpeed = 0;
     }
 }
-#pragma opt_common_subs off
 
 // @symbol func_ov090_021314a0
 /* 1 while a player is close and within a quarter turn of the heading.
@@ -694,7 +690,6 @@ int daMenbo_c::Render()
     return 1;
 }
 
-#pragma opt_common_subs on
 // @symbol _ZN9daMenbo_c8BehaviorEv
 /* Yoshi's mouth, a killing blow, the death tumble, or one ordinary frame.
  * Course 0x15 area 1 treats a water hit on the mesh as a knock into the
