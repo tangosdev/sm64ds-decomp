@@ -53,10 +53,7 @@
  * - Wiggler_StepSegmentsA, Wiggler_StepSegmentsB, Wiggler_StepSegmentsC,
  *   Wiggler_MoveBounce, cstd::atan2(Fix12<int>, Fix12<int>), does not link.
  *   cstd::atan2(int, int) mangles Eii, not E5Fix12IiES1_.
- * - Wiggler_DrawField's seg reads and Wiggler_StartPathB's seg / ang loop
- *   step the base pointer (`((Wiggler *)(raw + i * 8))->seg[0]`); direct
- *   seg[i] / ang[i] renumbers six pinned @NNN labels in each.
- *   Wiggler_GetFlag reads the four 2-bit colours in color (+0x74) through
+ * - Wiggler_GetFlag reads the four 2-bit colours in color (+0x74) through
  *   the B72 bitfield view.
  * - Wiggler_DrawField, OAM::Render(int, OamAttr*, int, int, int,
  *   int, int, int), does not typecheck (the sprite table is void*). The
@@ -66,8 +63,7 @@
  */
 
 /* .text in source order (ROM-ascending; do not reorder) and per-function
-   opt pragmas bind: 5x opt_strength_reduction off, one O3, Render
-   opt_common_subs off. Without it the 49-function version matched 44/49
+   pragmas bind: one O3, on Wiggler::Update. Without it the 49-function version matched 44/49
    and failed the order check. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScMgHanachan_c_AssetId {
@@ -634,8 +630,6 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
 
 // @symbol Wiggler_DrawField
 extern "C" {
-#pragma push
-#pragma opt_strength_reduction off
 void Wiggler_DrawField(void *arg) {
     char *raw = (char *)arg;
     struct {
@@ -663,9 +657,8 @@ void Wiggler_DrawField(void *arg) {
     t.va0x = 0;
     for (; i < 5; i++) {
         rot = ((Wiggler *)raw)->ang[i];
-        /* Stepped base: the direct seg[i].x/.y spelling renumbers six @NNN labels. */
-        s.pos.x = ((Wiggler *)(raw + i * 8))->seg[0].x;
-        s.pos.y = ((Wiggler *)(raw + i * 8))->seg[0].y;
+        s.pos.x = ((Wiggler *)raw)->seg[i].x;
+        s.pos.y = ((Wiggler *)raw)->seg[i].y;
         s.va.x = t.va0x;
         s.va.y = 0x1000;
         ang = (short)(((Wiggler *)raw)->bob - t.A);
@@ -736,7 +729,6 @@ void Wiggler_DrawField(void *arg) {
         t.B += 0x200;
     }
 }
-#pragma pop
 }
 
 // @symbol _ZN15dScMgHanachan_c7Wiggler6UpdateEv
@@ -1598,8 +1590,6 @@ void dScMgHanachan_c::Wiggler::CheckOffLeftB() {
 
 // @symbol Wiggler_StartPathB
 extern "C" {
-#pragma push
-#pragma opt_strength_reduction off
 void Wiggler_StartPathB(char *raw, int idx) {
     int n1;
     int A, B;
@@ -1633,15 +1623,14 @@ void Wiggler_StartPathB(char *raw, int idx) {
         pos[0] -= ((unsigned int)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 19) << 7;
     }
 
-    /* seg and ang through a stepped base: direct seg[i] / ang[i] renumbers six @NNN labels. */
     for (i = 0, off = 0; i < 5; i++) {
-        ((Wiggler *)(raw + i * 8))->seg[0].x = pos[0];
-        ((Wiggler *)(raw + i * 8))->seg[0].y = pos[1];
+        ((Wiggler *)raw)->seg[i].x = pos[0];
+        ((Wiggler *)raw)->seg[i].y = pos[1];
         if (((Wiggler *)raw)->aim < 0)
-            ((Wiggler *)(raw + i * 8))->seg[0].x += off;
+            ((Wiggler *)raw)->seg[i].x += off;
         else
-            ((Wiggler *)(raw + i * 8))->seg[0].x -= off;
-        ((Wiggler *)(raw + i * 2))->ang[0] = ((Wiggler *)raw)->aim;
+            ((Wiggler *)raw)->seg[i].x -= off;
+        ((Wiggler *)raw)->ang[i] = ((Wiggler *)raw)->aim;
         off += 0x20000;
     }
 
@@ -1651,7 +1640,6 @@ void Wiggler_StartPathB(char *raw, int idx) {
     ((Wiggler *)raw)->state = &Wiggler::CheckOffLeftB;
     ((Wiggler *)raw)->saved = ((Wiggler *)raw)->state;
 }
-#pragma pop
 }
 
 // @symbol _ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv
