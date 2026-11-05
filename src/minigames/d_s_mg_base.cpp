@@ -1788,8 +1788,6 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
 }
 }
 
-#pragma push
-#pragma opt_strength_reduction off
 // @symbol Mg_CopySpriteList
 namespace s20af5e0 {
 extern "C" {
@@ -1806,32 +1804,23 @@ typedef struct Item {
 int Mg_CopySpriteList(Item* src, Item* dst, int add)
 {
     int n = 1;
-    int i = 0;
-    Item* q = dst;
-    do {
-        u32 w;
-        u32* p;
-        dst[i].w0 = src->w0;
-        *(u32*)((char*)&dst[i] + 4) = *(u32*)((char*)src + 4);
-        w = (add + src->val) & 0x3ff;
-        p = (u32*)((char*)q + 4);
-        *p = (*p & ~0x3ff) | ((u32)(w) & 0x3ff);
+    int i;
+    for (i = 0; i < 0x20; i++) {
+        dst[i] = *src;
+        dst[i].val = (add + src->val) & 0x3ff;
         if (*(u16*)((char*)src + 6) == 0xffff)
             break;
         if (i == 0x1f) {
             *(u16*)((char*)&dst[i] + 6) = 0xffff;
             break;
         }
-        i++;
         src++;
         n++;
-        q++;
-    } while (i < 0x20);
+    }
     return n;
 }
 }
 }
-#pragma pop
 
 /* OAM::Render is a C++-linkage member of the global OAM namespace, so its
  * declaration sits outside the address namespace and its extern "C" block. */
