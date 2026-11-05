@@ -6,11 +6,9 @@
  * scene. Its state tables and registry profile close the file, and mwcc
  * builds the tables in __sinit_d_s_mg_luigi.cpp.
  *
- * Keep source order. The local optimization pragmas stay with the functions
- * that need them.
+ * Keep source order.
  *
- * Four places only match through a stepped base: UpdatePenalties walks a
- * char * by 0x14 (a pointer at mPenalty is 0x24 bytes short),
+ * Three places only match through a stepped base:
  * RestartPicture steps by idx (direct mShown[idx] and friends change the
  * code), the grid cell in PlaceNextPicture steps by col * 9 + row (direct
  * &mGrid[col][row] changes it), and TickPictureFlash keeps its blink and
@@ -176,8 +174,6 @@ void Luigi_PushScanlineRecord(void) {
 }
 
 // @symbol _ZN12dScMgLuigi_c14BuildIrisTableEi
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgLuigi_c::BuildIrisTable(int irisIndex) {
     extern int data_0209f608;
     extern struct IrisScanline data_0209f648[][0xc0];
@@ -219,7 +215,6 @@ void dScMgLuigi_c::BuildIrisTable(int irisIndex) {
     CP15::FlushAndInvalidateDataCache((u32)data_0209f648, 0x600);
     data_0209f60c = writeBuffer;
 }
-#pragma pop
 
 // @symbol _ZN12dScMgLuigi_c8IrisStopEi
 extern "C" {
@@ -767,45 +762,34 @@ void dScMgLuigi_c::DrawPenalties() {
 }
 
 // @symbol _ZN12dScMgLuigi_c15UpdatePenaltiesEv
-#pragma push
-#pragma opt_common_subs off
-/* Walks from this: q steps one dScMgLuigi_Penalty at a time and PEN reads
-   mPenalty[0] through it. A pointer at mPenalty is 0x24 bytes short of this
-   body. timer is s16, but the ROM tests and decrements it as a u16; the s16
-   spelling of either changes the code. */
-#define PEN(q) (((dScMgLuigi_c *)(q))->mPenalty[0])
 void dScMgLuigi_c::UpdatePenalties() {
-    char *q = (char *)this;
-    int penaltyIndex;
-    for (penaltyIndex = 0; penaltyIndex < 0x10; penaltyIndex++, q += 0x14) {
-        if (PEN(q).active != 0) {
-            if (PEN(q).phase == 0) {
-                if (*(u16 *)&PEN(q).timer != 0) {
-                    *(u16 *)&PEN(q).timer -= 1;
-                    if (PEN(q).timer < 0)
-                        PEN(q).timer = 0;
-                    PEN(q).y += PEN(q).velY;
-                    PEN(q).velY += 0x100;
+    for (int i = 0; i < 0x10; i++) {
+        if (mPenalty[i].active != 0) {
+            if (mPenalty[i].phase == 0) {
+                if (mPenalty[i].timer != 0) {
+                    mPenalty[i].timer--;
+                    if ((s16)mPenalty[i].timer < 0)
+                        mPenalty[i].timer = 0;
+                    mPenalty[i].y += mPenalty[i].velY;
+                    mPenalty[i].velY += 0x100;
                 } else {
-                    PEN(q).timer = 0x40;
-                    PEN(q).phase += 1;
+                    mPenalty[i].timer = 0x40;
+                    mPenalty[i].phase += 1;
                 }
             } else {
-                if (*(u16 *)&PEN(q).timer != 0) {
-                    *(u16 *)&PEN(q).timer -= 1;
-                    if (PEN(q).timer < 0)
-                        PEN(q).timer = 0;
+                if (mPenalty[i].timer != 0) {
+                    mPenalty[i].timer--;
+                    if ((s16)mPenalty[i].timer < 0)
+                        mPenalty[i].timer = 0;
                 } else {
-                    PEN(q).timer = 0;
-                    PEN(q).active = 0;
-                    PEN(q).shown = 0;
+                    mPenalty[i].timer = 0;
+                    mPenalty[i].active = 0;
+                    mPenalty[i].shown = 0;
                 }
             }
         }
     }
 }
-#undef PEN
-#pragma pop
 
 // @symbol _ZN12dScMgLuigi_c10AddPenaltyEi
 /* First free miss mark, at the picture that was tapped, and ten seconds off. */
@@ -838,12 +822,7 @@ void dScMgLuigi_c::DrawWantedIcon() {
 }
 
 // @symbol _ZN12dScMgLuigi_c16TickPictureFlashEi
-#pragma push
-#pragma opt_common_subs off
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgLuigi_c::TickPictureFlash(int pictureIndex) {
-    char *raw = (char *)this; /* unread; deleting it renumbers the pinned @NNN */
     char *blinkBase = (char *)mBlink;
     int byteOffset = pictureIndex * 2;
     unsigned short timer = *(unsigned short *)(blinkBase + byteOffset);
@@ -872,12 +851,8 @@ after_flag:
     mKind[pictureIndex] = 0;
     *shown = 1;
 }
-#pragma pop
-#pragma pop
 
 // @symbol _ZN12dScMgLuigi_c17MovePictureBounceEi
-#pragma push
-#pragma opt_common_subs off
 void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
     extern int data_0209d4b8;
     extern int sLuigiBounceSpeeds[];
@@ -946,7 +921,6 @@ void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
         }
     }
 }
-#pragma pop
 
 // @symbol _ZN12dScMgLuigi_c15MovePictureSwayEi
 /* Sway. A new slot takes phase 0 and a signed x speed; a running slot
@@ -1397,11 +1371,9 @@ void dScMgLuigi_c::PlaceBoardLayout() {
     mFilled++;
 }
 
-#pragma push
 // @symbol _ZN12dScMgLuigi_c16PlaceNextPictureEv
 /* One picture per call, or a whole fixed board. character and targetFirst
-   stay as pointers: character selection and the final capacity test reload them.
-   opt_propagation off keeps this in the right registers. */
+   stay as pointers: character selection and the final capacity test reload them. */
 void dScMgLuigi_c::PlaceNextPicture() {
     extern int data_0209d4b8;
     extern u8 sLuigiBoardFlags[];
@@ -1527,11 +1499,8 @@ void dScMgLuigi_c::PlaceNextPicture() {
     mLevelPhase[2] = ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 16 >> 15) << 12;
     mLevelPhase[3] = ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 16 >> 15) << 12;
 }
-#pragma pop
 
 // @symbol _ZN12dScMgLuigi_c12ChooseTargetEv
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgLuigi_c::ChooseTarget() {
     extern int data_0209d4b8;
     extern u8 sLuigiWantedPicks[];
@@ -1542,8 +1511,6 @@ void dScMgLuigi_c::ChooseTarget() {
     u16 sourceTile;
     u16 t;
     s32 tileColumn;
-    s32 rowOffset;
-    s32 tileBytes;
     /* A plain u16 here is 8 bytes short of the tile copy. */
     volatile u16 tile;
 
@@ -1571,20 +1538,17 @@ void dScMgLuigi_c::ChooseTarget() {
         }
     }
 
-    tileBytes = 2;
-    for (tileRow = 0, rowOffset = 0; tileRow < 8; tileRow++, rowOffset += 0x20) {
-        dst = (u16 *)(G2::GetBG3ScrPtr() + 0x1d8) + rowOffset;
-        sourceTile = sLuigiWantedPosterTiles[mWanted];
-        sourceTile += rowOffset;
+    for (tileRow = 0; tileRow < 8; tileRow++) {
+        dst = (u16 *)(G2::GetBG3ScrPtr() + 0x1d8) + tileRow * 0x20;
+        sourceTile = sLuigiWantedPosterTiles[mWanted] + tileRow * 0x20;
         for (tileColumn = 0; tileColumn < 8; tileColumn++) {
             tile = ((u16 *)G2::GetBG3ScrPtr())[sourceTile];
-            MultiStore16(tile, (char *)dst, tileBytes);
+            MultiStore16(tile, (char *)dst, 2);
             sourceTile++;
             dst++;
         }
     }
 }
-#pragma pop
 
 // @symbol _ZN12dScMgLuigi_c11ChooseBoardEv
 void dScMgLuigi_c::ChooseBoard() {
@@ -1669,8 +1633,6 @@ void dScMgLuigi_c::ResetBoard() {
 }
 
 // @symbol _ZN12dScMgLuigi_c10StateCatchEv
-#pragma push
-#pragma opt_strength_reduction off
 
 void dScMgLuigi_c::StateCatch() {
     extern LuigiSlotHandler sLuigiSlotHandlers[];
@@ -1721,7 +1683,6 @@ void dScMgLuigi_c::StateCatch() {
     }
     mPromptEnabled = 0;
 }
-#pragma pop
 
 // @symbol _ZN12dScMgLuigi_c9StatePlayEv
 void dScMgLuigi_c::StatePlay() {

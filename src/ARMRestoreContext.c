@@ -1,6 +1,6 @@
-// HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
-extern void ARMMathLoadState(void *);
+#include "private/arm_math_state.h"
 
+// HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
 asm void ARMRestoreContext(void *ctx)
 {
     stmdb sp!, {r0, lr}

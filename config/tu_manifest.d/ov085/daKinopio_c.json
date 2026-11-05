@@ -620,34 +620,34 @@
       "evidence": "compiler temp mapped to 0x021304b0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
     },
     {
-      "from": "@866",
+      "from": "@861",
       "to": "data_ov085_0212fe40",
-      "evidence": "compiler temp mapped to 0x0212fe40 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0212fe40 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @866 to @861 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@863",
+      "to": "data_ov085_0212fe48",
+      "evidence": "compiler temp mapped to 0x0212fe48 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @868 to @863 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@866",
+      "to": "data_ov085_0212fe30",
+      "evidence": "compiler temp mapped to 0x0212fe30 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @871 to @866 when the opt pragma was removed (#821)."
     },
     {
       "from": "@868",
-      "to": "data_ov085_0212fe48",
-      "evidence": "compiler temp mapped to 0x0212fe48 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@871",
-      "to": "data_ov085_0212fe30",
-      "evidence": "compiler temp mapped to 0x0212fe30 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@873",
       "to": "data_ov085_0212fe38",
-      "evidence": "compiler temp mapped to 0x0212fe38 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0212fe38 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @873 to @868 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@864",
+      "to": "data_ov085_0212fe28",
+      "evidence": "compiler temp mapped to 0x0212fe28 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @869 to @864 when the opt pragma was removed (#821)."
     },
     {
       "from": "@869",
-      "to": "data_ov085_0212fe28",
-      "evidence": "compiler temp mapped to 0x0212fe28 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@874",
       "to": "data_ov085_0212fe20",
-      "evidence": "compiler temp mapped to 0x0212fe20 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0212fe20 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @874 to @869 when the opt pragma was removed (#821)."
     }
   ],
   "symbol_binding_rewrites": [

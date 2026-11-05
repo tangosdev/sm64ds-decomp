@@ -12,11 +12,7 @@
  * comment leftovers: a few spellings keep `pointer + offset` arithmetic
  * because every member spelling changes codegen; their offsets are named
  * through CURL_OFF:
- * - Popup_UpdateAll / ScoreStones / Scene_Play / ClearStones sit under
- *   opt_strength_reduction off and walk the rows with a stepped `char *`.
- *   Popup_UpdateAll's volatile countdown launder and ScoreStones' M()
- *   popup-Y launder stay; ScoreStones' stone x/y reads and Scene_Play's
- *   timer pointer and state reads keep CURL_OFF.
+ * - Scene_Play and ClearStones walk the stone rows with a stepped `char *`.
  * - Stone_Slide keeps its angle/speed/position pointer temporaries; the
  *   angle and speed ones stay `&mStone[0].f + offset`, since
  *   &mStone[idx] moves their address math.
@@ -79,9 +75,6 @@ struct B4 {
     unsigned char v;
     unsigned char pad[3];
 };
-
-/* Launder: forces an address through an integer so it is not shared. */
-#define M(p) ((int *)(int)(p))
 
 /* Byte offset of a dScMgCurling_c member, for the sites that must keep
    `pointer + constant` arithmetic because every member spelling moved bytes. */
@@ -513,7 +506,6 @@ void dScMgCurling_c::Bit_RunKindB(int idx) {
     (((C *)this)->*sCurlingBitBStateTable[state].pmf)(idx);
 }
 
-#pragma push
 // @symbol _ZN14dScMgCurling_c12Bit_PickKindEi
 void dScMgCurling_c::Bit_PickKind(int idx) {
     unsigned roll = (unsigned)RandomIntInternal(&data_0209d4b8);
@@ -524,7 +516,6 @@ void dScMgCurling_c::Bit_PickKind(int idx) {
     mBit[idx].kind = sCurlingBitKinds[k];
     mBit[idx].state = 0;
 }
-#pragma pop
 
 // @symbol _ZN14dScMgCurling_c13Bit_UpdateAllEv
 void dScMgCurling_c::Bit_UpdateAll() {
@@ -629,40 +620,26 @@ void dScMgCurling_c::Popup_DrawAll() {
     }
 }
 
-#pragma push
 // @symbol _ZN14dScMgCurling_c15Popup_UpdateAllEv
-#pragma opt_strength_reduction off
 void dScMgCurling_c::Popup_UpdateAll() {
-    char *raw = (char *)this;
     int i;
     for (i = 0; i < 5; i++) {
-        char *popup = raw + (i << 4);
         if (mPopup[i].live == 0)
             continue;
         if (mPopup[i].countdown == 0)
             continue;
-        {
-            volatile unsigned short *timer =
-                (volatile u16 *)((unsigned int)&((dScMgCurling_c *)popup)->mPopup[0].countdown);
-            *timer = *timer - 1;
-            if (*timer != 0)
-                continue;
-        }
+        mPopup[i].countdown--;
+        if (mPopup[i].countdown != 0)
+            continue;
         mPopup[i].shown = 1;
         Sound::PlayBank2_2D(0x1bc);
     }
 }
-#pragma pop
 
-#pragma push
-#pragma opt_strength_reduction off
 // @symbol _ZN14dScMgCurling_c11ScoreStonesEv
 void dScMgCurling_c::ScoreStones() {
-    char *raw = (char *)this;
     int slot = 0;
     int i, j;
-    char *stone;
-    u8 *delay;
 
     for (j = 0; j < 5; j++) {
         if (mPopup[j].live == 0) {
@@ -671,45 +648,38 @@ void dScMgCurling_c::ScoreStones() {
         }
     }
 
-    delay = &sCurlingScoreDelays[slot];
-    stone = raw;
-    for (i = 0; i < 5; i++, stone += 0x2c) {
+    for (i = 0; i < 5; i++) {
         int dx, dz, dist, top;
 
-        if (((dScMgCurling_c *)stone)->mStone[0].active == 0)
+        if (mStone[i].active == 0)
             continue;
-        dx = *(int *)(stone + CURL_OFF(mStone[0].x)) - mHouseX;
-        dz = *(int *)(stone + CURL_OFF(mStone[0].y)) - mHouseY;
+        dx = mStone[i].x - mHouseX;
+        dz = mStone[i].y - mHouseY;
         {
             int ax = dx >> 12;
             int az = dz >> 12;
             dist = cstd::sqrt((u64)(s64)(ax * ax + az * az));
         }
         mPopup[slot].live = 1;
-        mPopup[slot].x = *(int *)(stone + CURL_OFF(mStone[0].x));
-        {
-            int *popupY = M(&((dScMgCurling_c *)(raw + slot * 16))->mPopup[0].y);
-            *popupY = *(int *)(stone + CURL_OFF(mStone[0].y)) + 0x1000;
-            mPopup[slot].countdown = *delay;
-            if (dist <= 8)
-                mPopup[slot].points = 1000;
-            else if (dist <= 0x18)
-                mPopup[slot].points = 500;
-            else if (dist <= 0x28)
-                mPopup[slot].points = 300;
-            else if (dist <= 0x38)
-                mPopup[slot].points = 100;
-            else
-                mPopup[slot].points = 0;
-            top = *popupY >> 12;
-            if (top >= -32 && top <= 8)
-                *popupY = -0x28000;
-        }
-        delay++;
+        mPopup[slot].x = mStone[i].x;
+        mPopup[slot].y = mStone[i].y + 0x1000;
+        mPopup[slot].countdown = sCurlingScoreDelays[slot];
+        if (dist <= 8)
+            mPopup[slot].points = 1000;
+        else if (dist <= 0x18)
+            mPopup[slot].points = 500;
+        else if (dist <= 0x28)
+            mPopup[slot].points = 300;
+        else if (dist <= 0x38)
+            mPopup[slot].points = 100;
+        else
+            mPopup[slot].points = 0;
+        top = mPopup[slot].y >> 12;
+        if (top >= -32 && top <= 8)
+            mPopup[slot].y = -0x28000;
         slot++;
     }
 }
-#pragma pop
 
 // @symbol _ZN14dScMgCurling_c13DrawAimMarkerEv
 /* Draws a sprite at the aimed stone's position (mAimX/mAimY) once the
@@ -722,8 +692,6 @@ void dScMgCurling_c::DrawAimMarker() {
     Mg_RenderSpriteBoth((int)sCurlingAimMarkerSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
 }
 
-#pragma push
-#pragma opt_common_subs off
 // @symbol _ZN14dScMgCurling_c9Aim_SwingEv
 /* Stylus handler for the stone being aimed. While the stylus is down, the
  * touch point plus the grab offset becomes the new position, clamped to the
@@ -735,8 +703,9 @@ void dScMgCurling_c::DrawAimMarker() {
  *
  * Shapes that must stay: the touch records are read through a `u8 *` cast;
  * dx is computed before dy with no temporaries; the tail's index `j` is
- * wider than a byte; and the pragma keeps the mAimX and mAimY re-reads
- * after the clamps. */
+ * wider than a byte; and dx is halved in place before atan2. Spelled
+ * `dx >> 1` at both uses, the two shifts are merged into one, which the
+ * ROM does not do. */
 void dScMgCurling_c::Aim_Swing() {
     u8 idx;
     int dx, oldx, oldy;
@@ -801,7 +770,8 @@ void dScMgCurling_c::Aim_Swing() {
         }
 
         ang = mSwingAng;
-        mSwingAng = cstd::atan2(dy, dx >> 1);
+        dx >>= 1;
+        mSwingAng = cstd::atan2(dy, dx);
         {
             u16 a = mSwingAng;
             if (a <= 0x8000) {
@@ -818,7 +788,7 @@ void dScMgCurling_c::Aim_Swing() {
         {
             int mag;
             mSwingAng = (u16)((mSwingAng + ang) >> 1);
-            mag = cstd::sqrt((s64)((dx >> 1) * (dx >> 1) + dy2)) * 9;
+            mag = cstd::sqrt((s64)(dx * dx + dy2)) * 9;
             mag = (mag << 12) >> 4;
             if (mag >= 0xc000)
                 mag = 0xc000;
@@ -850,7 +820,6 @@ void dScMgCurling_c::Aim_Swing() {
     mStylusHeld = 0;
     mAimShown = 1;
 }
-#pragma pop
 
 // @symbol _ZN14dScMgCurling_c13Aim_WaitTouchEv
 void dScMgCurling_c::Aim_WaitTouch() {
@@ -1560,7 +1529,6 @@ void dScMgCurling_c::ResetHouse() {
     mHouse = 255;
 }
 
-#pragma push
 // @symbol _ZN14dScMgCurling_c11ClearStonesEv
 /* Zeroes the five stones, the five score popups and the aim fields, and
  * resets the score. */
@@ -1608,7 +1576,6 @@ void dScMgCurling_c::ClearStones() {
     mSwingTimer = 0;
     Mg_SubmitScore(0);
 }
-#pragma pop
 
 // @symbol _ZN14dScMgCurling_c10StartRoundEi
 /* Slot 18, one of dScMgBase_c's own undeclared slots; the inherited label

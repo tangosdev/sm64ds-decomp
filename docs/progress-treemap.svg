@@ -21349,7 +21349,7 @@ matched: yes</title></rect><rect x="981.53" y="179.69" width="64.36" height="9.7
 module: ov006
 addr: 0x020d0c38
 size: 940 bytes
-matched: yes</title></rect><rect x="1045.89" y="179.69" width="2.46" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__arraydtor$2193
+matched: yes</title></rect><rect x="1045.89" y="179.69" width="2.46" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__arraydtor$2192
 module: ov006
 addr: 0x020d0fe4
 size: 36 bytes

@@ -58,7 +58,7 @@ extern void Initialise3dGraphics(int arg);
 
 extern fBase_c *data_0209f5c0;
 
-extern void *data_0209f1e4;
+extern dFader_c *gSoftResetFader;
 extern void func_02011b7c(void);
 
 /* Sound.cpp's sound-object registry; only its address is needed here.
@@ -69,7 +69,7 @@ extern void func_02011974(void *object);
 
 extern u8 data_02092660;
 
-extern u8   data_0209f1e0;
+extern u8 gSoftResetPending;
 
 extern dFdBrightness_c *data_0209f5bc;
 extern u16  data_02092664;
@@ -251,7 +251,7 @@ bool dScene_c::ResetFadersAndSound()
     if (!fBase_c::BeforeInitResources())
         return 0;
     SetFaders(&data_0209f5e8);
-    data_0209f1e4 = 0;
+    gSoftResetFader = 0;
     func_02011b7c();
     return 1;
 }
@@ -294,15 +294,15 @@ int dScene_c::BeforeBehavior()
     if (!fBase_c::BeforeBehavior())
         return 0;
 
-    if (data_0209f1e0 != 0) {
+    if (gSoftResetPending != 0) {
         int noActor = (data_0209f5c0->actorID == 0);
         if (noActor != 0) {
             func_02023544();
         } else {
-            if (data_0209f1e4 == 0) {
+            if (gSoftResetFader == 0) {
                 data_0209f5d0.currInterp = 0;
                 data_0209f5d0.dFdBrightness_c::SetForwardTime(0x10, 0);
-                data_0209f1e4 = &data_0209f5d0;
+                gSoftResetFader = &data_0209f5d0;
             } else if (data_0209f5d0.dFdBrightness_c::IsAtEnd()) {
                 StartSceneFade(1, 0, 0);
                 data_0209f5e8.SetForwardTime(0, 0);

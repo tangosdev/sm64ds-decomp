@@ -707,7 +707,7 @@
   "notes": [
     "Widened from the nine-function dMg3DEspAnimSet_c span 0x020e777c..0x020e7b0c to the whole unit, which also holds dScMg3DEsp_c and dMg3DEspModel_c. The manifest id and the path stay dMg3DEspAnimSet_c's, the smaller change: renaming the TU after dScMg3DEsp_c would re-key the nine existing attribution and converted-baseline entries and the queue row as well. The folded files were dScMg3DEsp_c's D1 and D0, dMg3DEspModel_c's seven members, the 43 helpers from func_ov006_020e7cc0 to func_ov006_020e9bbc, and dScMg3DEsp_c's Virtual50, OnYoshiTryEat, CleanupResources, Render, Behavior and InitResources files; attribution.json keeps each one's credit through a path#symbol override.",
     "Written ROM-ASCENDING because `#pragma defer_codegen off` makes CodeWarrior emit each definition as it is encountered rather than in reverse source order. With dScMg3DEsp_c's out-of-line destructor first in the file it emits D1 and D0 at ordinals 0 and 1; the homeless D2s and C2s of the three classes are dispositioned deadstrip.",
-    "Pragma brackets carry each retired file's file-global pragma around its own function: opt_strength_reduction off around the nine dMg3DEspAnimSet_c members (the previous TU's file-global) and dScMg3DEsp_c::ResetSlots, opt_common_subs off around SlotKick (with opt_strength_reduction off), SlotRise, SlotSetup, SlotFall and SlotWait.",
+    "No pragma brackets remain. The retired files' file-global pragmas (opt_strength_reduction off around the nine dMg3DEspAnimSet_c members and dScMg3DEsp_c::ResetSlots, opt_common_subs off around SlotKick, SlotRise, SlotSetup, SlotFall and SlotWait) are gone; the last opt_common_subs brackets only renumbered this TU's @NNN temps (#821).",
     "The file does not include decl_common.h, which declares the file handles and sEsp3DTextureAnim as void * and func_ov006_020e8354 as taking char *. The ten SharedFilePtr file handles are declared as SharedFilePtr here, as the retired destructor and CleanupResources files did. The helper declarations decl_common.h used to carry for these functions were dropped when they methodized; the calls now go through the class member declarations. The dExtAnmModel_c::SetAnim, dExtAnmTexPat_c::SetFile and dExtAnmTexSRT_c::SetFile calls stay mangled with a scalar speed and an unsigned short last parameter.",
     "Folding changed four spellings, all measured byte-identical: func_ov006_020e91a0 tests data_020a0de9 directly (the retired C file stored `x != 0` in an int, which in C++ is a bool conversion and costs three instructions); func_ov006_020e989c reads gMgScene through `char *` casts, and the one load the ROM repeats is a volatile read, because dScMgBase_c.h declares it void * and every non-volatile spelling reuses the earlier load; func_ov006_020e9b70 is void, as func_ov006_020e82fc is; and the retired files' mangled `_ZN5Sound12PlayBank2_2DEj` calls are spelled Sound::PlayBank2_2D.",
     "Each member keeps its own legacy shadow types, suffixed with the member's address (G2_7d7c, Ent_82fc, Outer_8354, C_8a44, C_8d08, P_8e10, C_9374, C_989c, C_9b70, ...) so that the retired files' independently-invented tags coexist. The incomplete structs and PMF typedefs above the pointer-to-member dispatchers (C_8a44, C_8d08, C_9374, C_9b70) keep their order: completing a struct before its PMF typedef changes the pointer-to-member representation mwcc emits.",
@@ -2051,54 +2051,54 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1791",
+      "from": "@1837",
       "to": "@1809",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1823 now; licensed under the existing pin @1809 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1792) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1823 now; licensed under the existing pin @1809 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1792) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1791 to @1837 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@1782",
+      "from": "@1828",
       "to": "@1800",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1814 now; licensed under the existing pin @1800 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1783) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1814 now; licensed under the existing pin @1800 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1783) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1782 to @1828 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@1783",
+      "from": "@1829",
       "to": "@1801",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1815 now; licensed under the existing pin @1801 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1784) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1815 now; licensed under the existing pin @1801 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1784) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1783 to @1829 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@1784",
+      "from": "@1830",
       "to": "@1802",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1816 now; licensed under the existing pin @1802 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1785) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1816 now; licensed under the existing pin @1802 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1785) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1784 to @1830 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@1785",
+      "from": "@1831",
       "to": "@1803",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1817 now; licensed under the existing pin @1803 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1786) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1817 now; licensed under the existing pin @1803 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1786) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1785 to @1831 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@1786",
+      "from": "@1832",
       "to": "@1804",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1818 now; licensed under the existing pin @1804 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1787) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1818 now; licensed under the existing pin @1804 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1787) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1786 to @1832 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@1787",
+      "from": "@1833",
       "to": "@1805",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1819 now; licensed under the existing pin @1805 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1788) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1819 now; licensed under the existing pin @1805 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1788) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1787 to @1833 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@1788",
+      "from": "@1834",
       "to": "@1806",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1820 now; licensed under the existing pin @1806 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1789) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1820 now; licensed under the existing pin @1806 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1789) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1788 to @1834 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@1789",
+      "from": "@1835",
       "to": "@1807",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1821 now; licensed under the existing pin @1807 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1790) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1821 now; licensed under the existing pin @1807 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1790) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1789 to @1835 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@1790",
+      "from": "@1836",
       "to": "@1808",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1822 now; licensed under the existing pin @1808 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1791) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1822 now; licensed under the existing pin @1808 | compiler temp; the G2x::SetBlendAlpha signature correction deletes this TU's local G2x shadow and extern ahead of it, lowering the per-TU @NNN uniquifier. Re-keyed +1 (from @1791) when this TU's RenderRows cleanup and dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1790 to @1836 when the opt pragma was removed (#821)."
     }
   ]
 }

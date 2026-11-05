@@ -139,6 +139,14 @@ void Cup_Nothing(void);
 void func_0203d738(void);
 }
 
+/* One player's record in the touch table at gTouchHeld (PlayerInput.h). */
+struct TouchInfo {
+    u8 held;
+    u8 edge;
+    u8 x;
+    u8 y;
+};
+
 #pragma defer_codegen off
 /* Emit each function as it is read, so D1 lands ahead of D0. */
 
@@ -453,7 +461,6 @@ void dScMgCup_c::StateFinish() {
 }
 
 // @symbol _ZN10dScMgCup_c11StateResultEv
-#pragma push
 void dScMgCup_c::StateResult() {
     int score;
     int i;
@@ -487,11 +494,8 @@ void dScMgCup_c::StateResult() {
     mState = 6;
     mPromptEnabled = 0;
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c11StateSelectEv
-#pragma push
-#pragma opt_common_subs off
 void dScMgCup_c::StateSelect() {
     char *raw = (char *)this;
     int touchPressed = 0;
@@ -505,11 +509,8 @@ void dScMgCup_c::StateSelect() {
     if (touchPressed == 0)
         return;
 
-    {
-        unsigned char *touch = &gTouchHeld[playerSlot * 4];
-        touchX = touch[2];
-        touchY = touch[3];
-    }
+    touchX = ((TouchInfo *)gTouchHeld)[playerSlot].x;
+    touchY = ((TouchInfo *)gTouchHeld)[playerSlot].y;
 
     for (cup = 0; cup < 3; cup++) {
         int dx = touchX - (mCup[cup].x >> 12);
@@ -543,7 +544,6 @@ void dScMgCup_c::StateSelect() {
         return;
     }
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c17StateWaitForInputEv
 void dScMgCup_c::StateWaitForInput() {
@@ -555,8 +555,6 @@ void dScMgCup_c::StateWaitForInput() {
 }
 
 // @symbol _ZN10dScMgCup_c12StateShuffleEv
-#pragma push
-#pragma opt_common_subs off
 void dScMgCup_c::StateShuffle() {
     char *raw = (char *)this;
     int oldX, oldY;
@@ -708,7 +706,6 @@ void dScMgCup_c::StateShuffle() {
 
     mTimer += 1;
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c19StatePrepareShuffleEv
 void dScMgCup_c::StatePrepareShuffle() {
@@ -792,8 +789,6 @@ void dScMgCup_c::OnNewRecord() {
     Presenter_PlayCheer(&mModel);
 }
 
-#pragma push
-#pragma opt_common_subs off
 void dScMgCup_c::StartRound(int msg) {
     int i;
 
@@ -845,7 +840,6 @@ void dScMgCup_c::StartRound(int msg) {
     }
     Mg_ShowBanner(0xd, 0x80, 0xa0, 1, -1, 0xd);
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c6RenderEv
 /* Slot 9: submits cups in descending screen-y order. The animation frame
@@ -896,7 +890,6 @@ s32 dScMgCup_c::Render() {
 // @symbol _ZN10dScMgCup_c8BehaviorEv
 /* Slot 6: runs the current state, then advances each cup's animation
    according to the duration stored in its current frame. */
-#pragma push
 s32 dScMgCup_c::Behavior() {
     char *raw = (char *)this;
     int cupIndex;
@@ -917,7 +910,6 @@ s32 dScMgCup_c::Behavior() {
     Presenter_Update((char *)&mModel);
     return 1;
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c13InitResourcesEv
 /* Slot 0: sets up the sub-screen backgrounds, loads the board graphics,

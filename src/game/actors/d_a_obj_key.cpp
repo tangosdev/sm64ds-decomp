@@ -359,7 +359,7 @@ void daObjKey_c::StateFlyToCenter()
             mSavedCamPos.z = pos->z;
             cam->SetFlag_3();
             mStep++;
-            Sound::ChangeMusicVolume(0, data_0209b490 / 15);
+            Sound::ChangeMusicVolume(0, gMusicVolume / 15);
             break;
         }
 

@@ -322,7 +322,6 @@ void Message::DisplayOptionsMenuText(s16 n) {
 
 // @symbol LoadControllerModeText
 #pragma push
-#pragma opt_strength_reduction off
 #pragma opt_common_subs off
 extern "C" void LoadControllerModeText(int param0)
 {
@@ -349,7 +348,7 @@ extern "C" void LoadControllerModeText(int param0)
         int v2 = m + 0x280;
         do {
             scr[i] = (short)(i + 0x280);
-            *(short*)((char*)&scr[i] + 0x40) = (short)v2;
+            (scr + i)[0x20] = (short)v2;
             v2++;
             i++;
         } while (i < m);
@@ -371,7 +370,7 @@ extern "C" void LoadControllerModeText(int param0)
         int v2 = d - mm + 0x280;
         do {
             scr[i] = (short)v1;
-            *(short*)((char*)&scr[i] + 0x40) = (short)v2;
+            (scr + i)[0x20] = (short)v2;
             v1++;
             v2++;
             i++;
@@ -394,7 +393,7 @@ extern "C" void LoadControllerModeText(int param0)
         int v2 = d - mm + 0x280;
         do {
             scr[i] = (short)v1;
-            *(short*)((char*)&scr[i] + 0x40) = (short)v2;
+            (scr + i)[0x20] = (short)v2;
             v1++;
             v2++;
             i++;
@@ -432,8 +431,6 @@ void Message::DisplayControllerModeText(unsigned short n)
 }
 
 // @symbol func_0201d418
-#pragma push
-#pragma opt_strength_reduction off
 extern "C" void func_0201d418(int p0, int p1) {
     volatile int li;
     int i;
@@ -454,17 +451,9 @@ extern "C" void func_0201d418(int p0, int p1) {
         }
         {
             short *scr = (short *)(G2S::GetBG0ScrPtr() + p0 * 2);
-            i = 0;
-            if (n > 0) {
-                int v1 = (data_0209d6a8 << 1) + 0x200;
-                int v2 = n + v1;
-                do {
-                    scr[i] = v1;
-                    *(short*)((char*)&scr[i] + 0x40) = v2;
-                    v1++;
-                    v2++;
-                    i++;
-                } while (i < n);
+            for (i = 0; i < n; i++) {
+                scr[i] = (data_0209d6a8 << 1) + 0x200 + i;
+                (scr + i)[0x20] = n + ((data_0209d6a8 << 1) + 0x200) + i;
             }
         }
         Message::LayoutLine();
@@ -475,7 +464,6 @@ extern "C" void func_0201d418(int p0, int p1) {
     } while (data_0209d6bc != 8);
     data_0209d6bc = 0;
 }
-#pragma pop
 
 // @symbol Message_DrawLineBG2
 /* Lays out the current message line into the main BG2 tiles at
@@ -550,8 +538,6 @@ extern "C" void Message_DrawCenteredLine(int a, int b)
 }
 
 // @symbol func_0201d850
-#pragma push
-#pragma opt_strength_reduction off
 extern "C" void func_0201d850(u32 arg0)
 {
     u16 var_r5;
@@ -606,7 +592,7 @@ extern "C" void func_0201d850(u32 arg0)
         p = (u16 *)G2::GetBG3ScrPtr() + (var_r4 + ((0x20 - n) >> 1));
         for (i = 0; i < n; i++) {
             p[i] = (u16)(var_r5 + i);
-            *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + (var_r5 + i));
+            (p + i)[0x20] = (u16)(n + (var_r5 + i));
         }
         var_r4 += 0x40;
         var_r5 += (u16)(n * 2);
@@ -649,7 +635,7 @@ L_r4_else:
             tile = var_r5;
             do {
                 p[i] = (u16)tile;
-                *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + tile);
+                (p + i)[0x20] = (u16)(n + tile);
                 tile++;
                 i++;
             } while (i < n);
@@ -710,7 +696,7 @@ L_r4_else:
             tile = var_r5;
             do {
                 p[i] = (u16)tile;
-                *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + tile);
+                (p + i)[0x20] = (u16)(n + tile);
                 tile++;
                 i++;
             } while (i < n);
@@ -747,7 +733,7 @@ L_r4_else:
             tile = var_r5;
             do {
                 p[i] = (u16)tile;
-                *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + tile);
+                (p + i)[0x20] = (u16)(n + tile);
                 tile++;
                 i++;
             } while (i < n);
@@ -783,14 +769,13 @@ L_r4_else:
             tile = var_r5;
             do {
                 p[i] = (u16)tile;
-                *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + tile);
+                (p + i)[0x20] = (u16)(n + tile);
                 tile++;
                 i++;
             } while (i < n);
         }
     }
 }
-#pragma pop
 
 // @symbol _ZN7Message16DisplayPauseTextEth
 void Message::DisplayPauseText(unsigned short n, unsigned char b)

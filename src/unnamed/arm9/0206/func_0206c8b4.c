@@ -4,17 +4,15 @@
 int func_0206c8b4(double x)
 {
     int hi, lo;
-    int a, b, p;
+    int p;
 
-    a = (int)(&x);
-    p = (int)((long long)(a + 7));
+    p = (int)&x + 7;
     if (p & 1)
         hi = (*(unsigned short *)(p - 1) & 0xff00) >> 8;
     else
         hi = *(unsigned short *)p & 0xff;
 
-    b = (int)(&x);
-    p = (int)((long long)(b + 6));
+    p = (int)&x + 6;
     if (p & 1)
         lo = (*(unsigned short *)(p - 1) & 0xff00) >> 8;
     else

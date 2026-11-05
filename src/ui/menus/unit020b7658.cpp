@@ -30,17 +30,12 @@
  *
  * Emission order: mwccarm 2004/b56 emits one .text section per function in
  * the reverse of source order, so the highest-address function is written
- * first here and the functions come out in ROM order. The file-scope
- * opt_common_subs pragma is the one func_ov007_020b78d0 needs; a pragma
- * scoped to that function does not take effect, because mwccarm generates
- * code for the whole unit at the end.
+ * first here and the functions come out in ROM order.
  *
  * The functions keep their ROM names under C linkage.
  */
 #include "Particle__Manager.h"
 #include "Particle__System.h"
-
-#pragma opt_common_subs off
 
 extern "C" {
 
@@ -99,14 +94,8 @@ int func_ov007_020b7914(int x, int cond) {
 
 // @symbol func_ov007_020b78d0
 int func_ov007_020b78d0(int x) {
-    int r3 = x << 1;
-    int r0 = x & ~3;
-    int b = data_ov007_02103448;
-    int a = data_ov007_02103444;
-    int t = r3 - r0;
-    int st = a + t;
-    int rv = b + a;
-    data_ov007_02103444 = st;
+    int rv = data_ov007_02103448 + data_ov007_02103444;
+    data_ov007_02103444 += (x << 1) - (x & ~3);
     return rv;
 }
 

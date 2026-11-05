@@ -74,6 +74,7 @@ enum daStar_c_AssetId {
 #include "cstd.h"
 #include "Event.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 
 /* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
  * a local or a struct copy of either one adds cleanup code the cartridge does
@@ -124,7 +125,6 @@ extern void DeathTable_ClearBit(int);
 extern void FUN_0202a130(void);
 extern void UnloadSilverStarAndNumber(void);
 extern StarAnimationFileHandle data_ov002_02110934;
-extern int Vec3_Dist(void*, void*);
 extern unsigned int gNextActorUpdateMask;
 extern int data_ov002_0210da28[];
 extern signed char data_0209f310[];
@@ -154,7 +154,7 @@ extern int data_0209f32c;
 extern signed char gCurrentSublevel;
 extern void SetStarMarker(int i, int v1, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
-extern int data_0209f40c[];
+extern dActor_c *STAR_MARKERS[12];
 extern u8 data_0209f208;
 extern unsigned char data_0209f264;
 void GiveVsStars(int idx, int delta);
@@ -165,7 +165,6 @@ extern u8 gCollectedStarId;
 extern u8 gNewStarCollected;
 extern s16 gNumCoins[];
 extern u8 data_0209d684;
-extern int Vec3_HorzDist(const Vec3* a, const Vec3* b);
 extern s16 GetAngleToCamera(int i);
 extern u8 *data_0209f344;
 }
@@ -829,7 +828,7 @@ void daStar_c::func_ov002_020ea9d0() {
     func_ov002_020e9448();
     other = (dActor_c *)dActor_c::FindWithID(mMarkerID);
     if (mKind == KIND_4) {
-        if (other == 0 || Vec3_HorzDist((const Vec3 *)&mPosX, (const Vec3 *)&other->mPosX) == 0) {
+        if (other == 0 || Vec3_HorzDist(&mPos, &other->mPos) == 0) {
             mVertSpeed = 0x18000;
             mState = STATE_LAND;
         } else {
@@ -877,7 +876,7 @@ void daStar_c::func_ov002_020ea9d0() {
 void daStar_c::func_ov002_020ea90c() {
     if (mVertSpeed <= -0x20000) {
         dActor_c *other = (dActor_c *)dActor_c::FindWithID(mMarkerID);
-        if (other == 0 || Vec3_HorzDist((const Vec3 *)&mPosX, (const Vec3 *)&other->mPosX) == 0) {
+        if (other == 0 || Vec3_HorzDist(&mPos, &other->mPos) == 0) {
             mVertSpeed = 0x18000;
             mState = STATE_LAND;
         } else {
@@ -920,7 +919,7 @@ void daStar_c::func_ov002_020ea90c() {
 void daStar_c::func_ov002_020ea824() {
     dActor_c *o = (dActor_c *)dActor_c::FindWithID(mMarkerID);
     if (o == 0) { MarkForDestruction(); return; }
-    if (Vec3_HorzDist((const Vec3 *)&mPosX, (const Vec3 *)&o->mPosX) < mHorzSpeed) {
+    if (Vec3_HorzDist(&mPos, &o->mPos) < mHorzSpeed) {
         int* src = (int*)&o->mPosX;
         int* yp = (int*)&mPosY;
         mPosX = src[0];
@@ -1675,8 +1674,8 @@ void daStar_c::func_ov002_020e947c(Vector3 *p, int n) {
         mVertSpeed = (dy + 1) * v;
     }
     mTerminalVelocity = -0x32000;
-    mHorzSpeed = Vec3_HorzDist((const Vec3 *)&mPosX, (const Vec3*)p) / 50;
-    mPrevAngleY = Vec3_HorzAngle(&mPos, (const Vector3 *)p);
+    mHorzSpeed = Vec3_HorzDist(&mPos, p) / 50;
+    mPrevAngleY = Vec3_HorzAngle(&mPos, p);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1962,7 +1961,7 @@ int daStar_c::func_ov002_020e8dd8() {
 }
 
 // @symbol _ZN8daStar_c13AddStarMarkerEv
-/* Claims a free slot of the map-marker table (data_0209f40c, 12 entries) for
+/* Claims a free slot of the map-marker table (STAR_MARKERS, 12 entries) for
  * this star. The marker type is 1 for the silver star, 2 for the Power Star
  * and 3 once collected; type 0 uses 3 or 2 from the collected-model flag. A
  * star waiting for its marker does not show it until data_0209f208 is non-
@@ -1972,7 +1971,8 @@ void daStar_c::AddStarMarker()
     s8 i;
     if (mMarkerSlot >= 0) return;
     for (i = 0; i < 0xc; i++) {
-        if (data_0209f40c[(int)i] != 0) continue;
+        if (STAR_MARKERS[(int)i] != 0)
+            continue;
 
         if (mMarkerType == 0) {
             if (mBits.collectedModel) {
@@ -3029,18 +3029,19 @@ void daStar_c::func_ov002_020e7090(int arg) {
 /* Once per star: looks for an ice block (actor 0x12) within 200.0 and, if one
  * is there, marks the star as inside it and tells the block. */
 void daStar_c::func_ov002_020e700c() {
-  dActor_c *o;
-  if (mIceChecked) return;
-  o = (dActor_c *)dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, 0);
-  while (o) {
-    if (Vec3_Dist((char*)&mPosX, (char*)&o->mPosX) < 0xc8000) {
-      mInIceBlock = 1;
-      ((daObjIceBlock_c *)o)->mContainedActor = this;
-      break;
+    dActor_c *o;
+    if (mIceChecked)
+        return;
+    o = (dActor_c *)dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, 0);
+    while (o) {
+        if (Vec3_Dist(&mPos, &o->mPos) < 0xc8000) {
+            mInIceBlock = 1;
+            ((daObjIceBlock_c *)o)->mContainedActor = this;
+            break;
+        }
+        o = (dActor_c *)dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, o);
     }
-    o = (dActor_c *)dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, o);
-  }
-  mIceChecked = 1;
+    mIceChecked = 1;
 }
 
 /* -------------------------------------------------------------------------- */

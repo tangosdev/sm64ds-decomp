@@ -17,29 +17,30 @@ struct dExtAnmTexSRT_c;
 #include "Matrix2x2.h"
 #include "dGraph_c.h"
 
-/* One per level texture animation, eight slots' worth at dScStage_c+0x8bc.
- * dScStage_c::LoadTextureTransformers fills them: for each entry of the level's
- * animation table (data_0209f340) that carries a BTA file it news a 0x14-byte
- * dExtAnmTexSRT_c, constructs it, and stores it in the slot, striding 0xc.
- * The flag at +0x04 is the area's "showing" flag: HideArea/ShowArea/IsAreaShowing
- * write and read it (slot i is area i). dScStage_c::Render advances the
- * transformer only when it is set, and dScStage_c::RenderModelTransparent reads
- * it to decide whether that part's materials get the transparent bit. Runtime
- * (EU, blinded 10/10): clearing it hid the whole room and every actor bound to
- * that area; setting another area's flag showed that area's actors.
- * dScStage_c::CleanupResources destroys
- * the transformer through its vtable and then walks the list at +0x08, whose
- * next pointer is at +0x0c, freeing every block. */
-struct StageTexAnimSlot {
+/* One per level area, eight of them at dScStage_c+0x8bc. Area i pairs with
+ * entry i of the level record's table (data_0209f340) and with bone i of the
+ * level model. dScStage_c::LoadTextureTransformers gives an area whose entry
+ * carries a BTA file a 0x14-byte dExtAnmTexSRT_c, striding 0xc.
+ * dScStage_c::CleanupResources destroys the transformer through its vtable
+ * and then walks the area's minimap-change list at +0x08, whose next pointer
+ * is at +0x0c, freeing every record. */
+struct StageArea {
     struct dExtAnmTexSRT_c *mTransformer; /* 0x00 - heap */
-    u8 mActive;         /* 0x04 */
+    /* HideArea clears it, ShowArea sets it, IsAreaShowing returns it.
+     * dScStage_c::Render advances the area's transformer only while it is
+     * set, and RenderModel/RenderModelTransparent read it to decide whether
+     * that bone's materials get the transparent bit. Runtime (EU, blinded
+     * 10/10): clearing it hid the area's room geometry; an actor moved into
+     * a hidden area vanished, and setting that area's flag brought it back.
+     * An actor with no area (-1) stayed drawn. */
+    u8 mShowing; /* 0x04 */
     u8 pad_05[0x3];
     void *mBlockList; /* 0x08 - singly linked, next pointer at +0x0c */
 };
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char StageTexAnimSlot_size_must_be_0xc[sizeof(struct StageTexAnimSlot) == 0xc ? 1 : -1];
+typedef char StageArea_size_must_be_0xc[sizeof(struct StageArea) == 0xc ? 1 : -1];
 #endif
 
 /* The level loader's minimap-change sentinel: link a record into area idx's
@@ -66,7 +67,7 @@ struct dScStage_c : dScene_c {
 
     Particle::SysTracker mSysTracker;  /* 0x050 */
     dExtSimpleModel_c mModel;          /* 0x86c */
-    StageTexAnimSlot mTexAnimSlots[8]; /* 0x8bc - dExtSimpleModel_c ends here, and dBgW_Kc
+    StageArea mAreas[8];               /* 0x8bc - dExtSimpleModel_c ends here, and dBgW_Kc
                                            does not start until 0x91c */
     dBgW_Kc mMeshCollider;             /* 0x91c */
     /* Two fog setups, 0x28 apart: LoadFog fills both by hand and then walks

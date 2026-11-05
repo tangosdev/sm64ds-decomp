@@ -825,6 +825,11 @@
   },
   "compiler_only_output": [
     {
+      "symbol": "_ZN8daNknk_c22@class$424d_a_nknk_cppD1Ev",
+      "disposition": "deadstrip",
+      "reason": "MWCC emits this unnamed Vector3 union destructor after adding the mHomePos view. The candidate object defines a four-byte bx lr STB_LOPROC function with no inbound relocations; no symbols.txt row names it. Deadstrip the compiler-only thunk, leaving the ROM-addressed functions in their original order."
+    },
+    {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
@@ -1511,59 +1516,59 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1266",
+      "from": "@1271",
       "to": "@1292",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1306 now; licensed under the existing pin @1292 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1259",
-      "to": "@1285",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1299 now; licensed under the existing pin @1285 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1261",
-      "to": "@1287",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1301 now; licensed under the existing pin @1287 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1262",
-      "to": "@1288",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1302 now; licensed under the existing pin @1288 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1260",
-      "to": "@1286",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1300 now; licensed under the existing pin @1286 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1263",
-      "to": "@1289",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1303 now; licensed under the existing pin @1289 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 26, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1264 to @1271 after adding the mHomePos Vector3 view. The existing target @1292 is unchanged."
     },
     {
       "from": "@1264",
-      "to": "@1290",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1304 now; licensed under the existing pin @1290 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@1285",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 34, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1257 to @1264 after adding the mHomePos Vector3 view. The existing target @1285 is unchanged."
     },
     {
-      "from": "@1258",
-      "to": "@1284",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1298 now; licensed under the existing pin @1284 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "from": "@1266",
+      "to": "@1287",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 30, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1259 to @1266 after adding the mHomePos Vector3 view. The existing target @1287 is unchanged."
     },
     {
-      "from": "@1256",
-      "to": "@1282",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1296 now; licensed under the existing pin @1282 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1257",
-      "to": "@1283",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1297 now; licensed under the existing pin @1283 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "from": "@1267",
+      "to": "@1288",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 33, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1260 to @1267 after adding the mHomePos Vector3 view. The existing target @1288 is unchanged."
     },
     {
       "from": "@1265",
+      "to": "@1286",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 27, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1258 to @1265 after adding the mHomePos Vector3 view. The existing target @1286 is unchanged."
+    },
+    {
+      "from": "@1268",
+      "to": "@1289",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 35, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1261 to @1268 after adding the mHomePos Vector3 view. The existing target @1289 is unchanged."
+    },
+    {
+      "from": "@1269",
+      "to": "@1290",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 38, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1262 to @1269 after adding the mHomePos Vector3 view. The existing target @1290 is unchanged."
+    },
+    {
+      "from": "@1263",
+      "to": "@1284",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 23, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1256 to @1263 after adding the mHomePos Vector3 view. The existing target @1284 is unchanged."
+    },
+    {
+      "from": "@1261",
+      "to": "@1282",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 40, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1254 to @1261 after adding the mHomePos Vector3 view. The existing target @1282 is unchanged."
+    },
+    {
+      "from": "@1262",
+      "to": "@1283",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 39, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1255 to @1262 after adding the mHomePos Vector3 view. The existing target @1283 is unchanged."
+    },
+    {
+      "from": "@1270",
       "to": "@1291",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1305 now; licensed under the existing pin @1291 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 22, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1263 to @1270 after adding the mHomePos Vector3 view. The existing target @1291 is unchanged."
     }
   ]
 }

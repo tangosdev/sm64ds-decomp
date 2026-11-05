@@ -12,6 +12,9 @@ Status: **Phase 0 spike** (attach + breakpoint + canary + register/mem dump).
   used to resolve a captured `lr` to a caller name.
 - `gdb_harness.py` — the Phase-0 spike runner. Breaks at always-resident arm9
   functions and validates the pipeline against ground truth.
+- `scenerun.py`, `ramdiff.py`, `scenecov.py`, `thissweep.py`, `symtab.py`: research
+  runs through the `ask.py serve` daemon (RAM diff, per-scene coverage, `this`
+  class sweep). See "Research runs" below.
 - `mg/` — the minigame play kit: a watcher for the shared minigame functions,
   plus input and capture scripts for melonDS (`mg/README.md`).
 
@@ -151,6 +154,7 @@ draws the cap on a Goomba's head.
 Files: `ask.py` (CLI), `emusession.py` (one long-lived stub session plus a
 local RPC daemon), `emuwin.py` (launch, window capture, focus-free input,
 config swap), `uia_menu.ps1` (menu clicks by UI Automation), `specs/*.json`.
+`ctlclient.py` and `ctlsession.py` are the control-socket backend (below).
 Python 3.11 standard library only; tkinter is needed for human mode only.
 
 ### A human session
@@ -201,6 +205,103 @@ Run directory layout: `pairs/` (blind images), `answers.json`, `key/key.json`
 (condition, real/sham, expected answer, located object, pokes with old/new
 values, pause trigger/pc/lr, before/after RAM snapshots, framing), `key/log.jsonl`
 (every daemon event), `key/events.jsonl`, and `key/` raw shots.
+
+### Control-socket backend (`--backend ctl`)
+
+`serve` drives one of two emulators. The daemon ops, the spec format, the
+blinding, `score` and the pair layout are the same with both.
+
+| | `gdb` (stock melonDS) | `ctl` (melonDS AI-controller fork) |
+|---|---|---|
+| connection | GDB stub, port 3333 | JSON lines on 127.0.0.1:45987, with a token |
+| config | `melonDS.toml` swapped next to the installed exe | the fork's own config dir (`<workdir>/ctl-config`); no toml touched |
+| savestates | File menu (UI Automation), copied over a slot file | `load_state` / `save_state` by path |
+| shots | window capture, re-grabbed until stable | the framebuffer, exact; upscaled by `--scale` (2), nearest neighbour |
+| input | posted keys for ms of wall time (the game must run) | `press` / `touch` / `input` hold N emulated frames |
+| breakpoints | stub Z0, overlay canary checked in Python | in-process; the canary is a native condition |
+| frames | free run at 60 fps, frame breakpoint counted | synchronous unthrottled `step`, frame breakpoint counted |
+
+Selection: `serve --backend ctl|gdb|auto`, or the env var `ASK_BACKEND`. `auto`
+(the default) picks `ctl` when the fork answers `ping` on the control port
+(`--ctl-port`, env `MELONDS_CONTROL_PORT`; token `--ctl-token`, env
+`MELONDS_CONTROL_TOKEN`), else `gdb`. With `--backend ctl` and nothing
+answering, `serve` launches the fork through its `tools/start_control.ps1`
+(found by `--fork`, env `MELONDS_AI_ROOT`, or `C:\tmp\melonds-ai-controller`),
+headless, with a ROM copy in `--workdir` (default `%TEMP%\sm64ds-ask-emu-ctl`).
+It refuses while any other melonDS runs (`--wait-other` waits up to 20 min).
+`stop --kill` quits the fork through its socket. The fork is a local build of
+melonDS 1.1 and is not published; its `CONTROL_API.md` lists every command.
+
+Things that differ in use:
+
+- Timeouts (`step`, `wait_trigger`) count emulated time: `timeout` seconds is
+  `timeout * 60` frames, run as fast as the emulator goes. Between ops the game
+  free runs at 60 fps, as with the stub.
+- SM64DS reads the pad at 30 Hz, on alternate frames. `input frames=1` can fall
+  between two polls; hold 2 or more. Held input starts with the next frame; a
+  frame halted at a breakpoint counts as the first.
+- `ctl fork cmd=coverage_start args='{...}'` passes one raw command to the fork
+  (coverage, `overlays`, `research_snapshot`); the session re-reads the run
+  state afterwards.
+
+### RAM snapshots (`ram-snapshot`, `ram-diff`)
+
+```sh
+python tools/trace/ask.py ram-snapshot C:/somewhere/a.bin                  # default ranges
+python tools/trace/ask.py ram-snapshot C:/somewhere/b.bin --range 0x02086bc0:0x23860:arm9 --range "[0x0209f394]:0x800:player"
+python tools/trace/ask.py ram-diff C:/somewhere/a.bin.json C:/somewhere/b.bin.json
+```
+
+`ram_snapshot` (op and command) takes several ranges in one call. Addresses
+may be expressions (with `--obj`). It writes the bytes, concatenated, to `OUT`
+and an index to `OUT.json`: name, address, size, offset and sha256 per range,
+plus the frame counters. The ctl backend reads every range at one emulated
+instant (`read_ranges`, up to 16 MiB in all). The stub backend reads them in
+turn, which is consistent only while the target is halted; `atomic` in the
+result says which. The default ranges are a RAM-diff screen's: arm9 .data and
+.bss, ov002 .data and .bss, and 0x800 bytes of the player actor. `ram-diff`
+lists the byte runs that differ between two snapshots of the same ranges.
+
+### Research runs: `ramdiff.py`, `scenecov.py`, `thissweep.py`
+
+Three scripts that drive a running `ask.py serve` daemon (coverage and the
+sweep need `--backend ctl`). They share `scenerun.py`, which loads a state,
+aligns on a hooked PC and condition (default: CheckInput 0x0202c2ac when
+`FRAME_TIMER == file timer + 300`, so every run starts on the same game frame),
+then steps hooked frames with the pad and touch records forced on every frame
+(neutral when idle; a press is held at least 2 frames). Script ops can also
+bind a name to the nearest actor of an id and write memory, e.g. move a coin
+onto the player. `symtab.py` holds the shared lookups: symbols by address
+from `config/arm9/**/symbols.txt`, readers and writers from `relocs.txt`, and
+vptr to `_ZTV` symbol, class and RTTI chain.
+
+```sh
+python tools/trace/ramdiff.py run PLAN.json --out DIR      # idle x2 + each event x2, all from fresh loads
+python tools/trace/ramdiff.py analyze DIR                  # candidates.tsv, summary.json, summary.md
+python tools/trace/scenecov.py run SCENES.json --out DIR   # coverage.tsv: function x scene call counts
+python tools/trace/thissweep.py run --coverage DIR/coverage.tsv --state B1.ml --out OUT --script walk.json
+```
+
+- **ramdiff** snapshots arm9 .data/.bss, every resident overlay's
+  .data/.bss and the player at the plan's frame offsets. Idle runs classify each
+  byte as constant, deterministic-changing or noisy. Event bytes are diffed
+  against idle at the same offset and reported per symbol: named rows are kept
+  and marked, and each row carries `repeats_agree` and its readers and writers.
+- **scenecov** counts calls to every arm9, itcm and resident-overlay function
+  start over a scene. Each hit's first instruction word is checked against the
+  module's image, so another overlay's code at the same address is not counted.
+- **thissweep** puts log-action breakpoints, which never halt, on N unnamed
+  functions. They record each distinct `u32[r0]`, which is resolved to a vtable,
+  a class, an RTTI chain and an actor id. Each function gets a verdict:
+  `one_class` (method evidence), `several_classes` (with the common base),
+  `mixed` or `not_object`. `emusession`'s `this` op and the `this=True` option on
+  `add_bp` resolve `this` the same way for a single breakpoint hit.
+- **Modules for `add_bp`**: `arm9`, `itcm` (0x01ff8000, from
+  `extracted/dsd/arm9/itcm.bin`) or `ovNNN`. With `module` left out, an address
+  inside the arm9 or ITCM image takes that module. An overlay address needs its
+  `ovNNN`, because several overlays share one address range.
+
+Their outputs come from the ROM at run time. Keep them outside the repository.
 
 ### Savestates, framing, overlays
 

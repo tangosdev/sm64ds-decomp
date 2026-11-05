@@ -107,14 +107,14 @@ extern int atan2_hold_Player_3(int a, int b);
 extern s16 atan2_hold_Player_4(s32, s32);
 extern short atan2_hold_Player_8(int a, int b);
 extern int atan2_hold_Player_9(int x, int z);
-extern int data_0208e430;
+extern int gSubSoundID;
 extern signed char data_02092110;
 extern signed char data_02092120;
 extern signed char gLastCourseSublevel;
 extern u8 data_02092128[];
 extern int data_0209212c;
 extern short gPlayerHealth[];
-extern int data_0209b49c;
+extern int gSubVolume;
 extern Timer gRaceTimer;
 extern unsigned char data_0209d660;
 extern u8 data_0209f200;
@@ -1169,8 +1169,6 @@ int daPly_c::func_ov002_020bd4c8(unsigned char *params, int beginFrame, int endF
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020bd4e0EPhii
-#pragma push
-#pragma opt_propagation off
 extern "C" {
 int daPly_c::func_ov002_020bd4e0(unsigned char *data, int beginFrame, int endFrame) {
     extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
@@ -1211,7 +1209,6 @@ int daPly_c::func_ov002_020bd4e0(unsigned char *data, int beginFrame, int endFra
     }
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c19func_ov002_020bd600EPhii
 int daPly_c::func_ov002_020bd600(unsigned char *data, int beginFrame, int endFrame) {
@@ -2450,7 +2447,8 @@ void func_ov002_020bf800(char *c, Vector3_16f v)
 // @symbol _ZN7daPly_c19func_ov002_020bf88cEv
 void daPly_c::func_ov002_020bf88c() {
     if (mIsInShallowWater) return;
-    if (data_0208e430 == 0x2e) return;
+    if (gSubSoundID == 0x2e)
+        return;
     if (mIsMega)
         func_02022b04(this->mPosX, this->mPosY, this->mPosZ);
     else
@@ -2464,7 +2462,8 @@ void daPly_c::func_ov002_020bf90c() {
     if (this->mHorzSpeed == 0) return;
     if (mIsAirborne != 0) return;
     if (mIsInShallowWater != 0) return;
-    if (data_0208e430 == 0x2e) return;
+    if (gSubSoundID == 0x2e)
+        return;
 
     if (mIsMega != 0)
         func_02022b04(this->mPosX, this->mPosY, this->mPosZ);
@@ -2483,7 +2482,8 @@ void daPly_c::func_ov002_020bf90c() {
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 void daPly_c::func_ov002_020bf9d4() {
   Vector3 v;
-  if (data_0208e430 == 0x2e) return;
+  if (gSubSoundID == 0x2e)
+      return;
   if (mIsMega == 0){
     func_0200fccc(this, 0);
     return;
@@ -3200,7 +3200,7 @@ void daPly_c::func_ov002_020c1234() {
     case 0xa:
         a1 = 0x2d;
         a2 = 0x28;
-        fx = (data_0209b49c >> 12 > 0x28) ? 0x8b33 : 0xd1e;
+        fx = (gSubVolume >> 12 > 0x28) ? 0x8b33 : 0xd1e;
         mGroundSubSoundActive = 1;
         break;
     case 0xb:
@@ -13403,7 +13403,8 @@ void func_ov002_020d45c0(char* self)
     daPly_c *p = (daPly_c *)self;
     if (p->mIsInShallowWater != 0)
         return;
-    if (data_0208e430 == 0x2e) return;
+    if (gSubSoundID == 0x2e)
+        return;
 
     if (p->mHorzSpeed < Player_ScaleByCharFactor(self, 0x24000)) {
         if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) >= 0xe00) {
@@ -13590,7 +13591,8 @@ void daPly_c::PlayLandingEffects() {
             func_0201251c(0, 0xaa, (int)&mCamSpacePos, mHorzSpeed);
         }
     }
-    if (data_0208e430 == 0x2e) return;
+    if (gSubSoundID == 0x2e)
+        return;
     id = -1;
     if (mGroundSoundType != 6) {
         if (mGroundSoundType != 8) {
@@ -14121,7 +14123,6 @@ int daPly_c::Shock(unsigned int j) {
 }
 
 // @symbol func_ov002_020d5ab4
-#pragma push
 extern "C" {
 int func_ov002_020d5ab4(daPly_c *p) {
     typedef long long s64;
@@ -14168,7 +14169,6 @@ int func_ov002_020d5ab4(daPly_c *p) {
     return 1;
 }
 }
-#pragma pop
 
 // @symbol func_ov002_020d5c6c
 extern "C" {
@@ -14475,7 +14475,6 @@ int func_ov002_020d6334(daPly_c *o, int val) {
 // @symbol func_ov002_020d6368
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
-#pragma push
 extern "C" {
 void func_ov002_020d6368(void *self) {
     typedef long long s64;
@@ -14509,7 +14508,6 @@ void func_ov002_020d6368(void *self) {
     p->mEggParams = zero;
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c15St_Swallow_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -15024,8 +15022,6 @@ void daPly_c::func_ov002_020d71a0() {
 }
 
 // @symbol func_ov002_020d71ec
-#pragma push
-#pragma opt_propagation off
 /* P2's only member is an array. With named members, C++ copies each
  * table into arr[] member by member, and the arr base and the zero for
  * the stack argument take their registers in the other order (5 words
@@ -15076,7 +15072,6 @@ void func_ov002_020d71ec(daPly_c *player, int arg1) {
     player->mStateTimer = 0xa;
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c21St_YoshiPower_CleanupEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -16591,8 +16586,6 @@ int daPly_c::GetHurtState() {
 }
 
 // @symbol func_ov002_020d9c70
-#pragma push
-#pragma opt_common_subs off
 extern "C" {
 void func_ov002_020d9c70(char *o)
 {
@@ -16645,7 +16638,6 @@ void func_ov002_020d9c70(char *o)
     }
 }
 }
-#pragma pop
 
 // @symbol func_ov002_020d9dcc
 /* The state test compares the comparison as an int,
@@ -17026,8 +17018,6 @@ int daPly_c::DropActor() {
 }
 
 // @symbol func_ov002_020da95c
-#pragma push
-#pragma opt_propagation off
 extern "C" {
 int func_ov002_020da95c(char *c)
 {
@@ -17043,7 +17033,6 @@ int func_ov002_020da95c(char *c)
     return 1;
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c11DropHeldObjEv
 int daPly_c::DropHeldObj() {
@@ -18844,8 +18833,6 @@ int daPly_c::St_GroundPound_Cleanup() {
  * branch picks one of three particle sets by cap state and character, shakes
  * the camera, and skips the upper particles in shallow water.
  */
-#pragma push
-#pragma opt_common_subs off
 extern "C" {
 int daPly_c::St_GroundPound_Main() {
     void func_ov002_020ef2a4(void* c, void* arg);
@@ -18972,7 +18959,6 @@ int daPly_c::St_GroundPound_Main() {
     return 1;
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c19St_GroundPound_InitEv
 /* recovered: named members + shared header, real C++ method */
@@ -19829,8 +19815,6 @@ int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
 }
 
 // @symbol func_ov002_020df8f0
-#pragma push
-#pragma opt_common_subs off
 extern "C" {
 void func_ov002_020df8f0(char* c)
 {
@@ -19971,7 +19955,6 @@ void func_ov002_020df8f0(char* c)
     }
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c11St_Fly_MainEv
 /* Signature deliberately copied from the local declaration above: the
@@ -21859,8 +21842,6 @@ int daPly_c::ChangeState(daPly_c::State &state) {
    is not a redeclaration but an attempt to overload a C-linkage name, which
    mwccarm rejects outright. func_ov002_020bdd2c is a daPly_c member now and
    comes from daPly_c.h. */
-#pragma push
-#pragma opt_common_subs off
 extern "C" {
 int daPly_c::CleanupResources() {
     enum { false_, true_ };
@@ -22065,7 +22046,6 @@ int daPly_c::CleanupResources() {
     return 1;
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c16OnPendingDestroyEv
 /* recovered: named members + shared header, real C++ method */
@@ -22079,8 +22059,6 @@ void daPly_c::OnPendingDestroy() {
 // @symbol _ZN7daPly_c6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-#pragma push
-#pragma opt_common_subs off
 extern "C" {
 int daPly_c::Render() {
     struct VObj {
@@ -22201,7 +22179,6 @@ int daPly_c::Render() {
     return 1;
 }
 }
-#pragma pop
 
 // @symbol func_ov002_020e3e00
 /* recovered: shared common types */

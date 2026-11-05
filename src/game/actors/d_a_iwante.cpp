@@ -356,7 +356,8 @@ extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
 extern int Vec3_Dist(const void *a, const void *b);
 extern void Vec3_Asr(void *d, void *s, int sh);
 extern int Vec3_HorzDist(const void *a, const void *b);
-extern s16 Vec3_HorzAngle(const void *a, const void *b);
+// local extern: CalcLib.h conflicts with this TU's opaque Vec3_Dist, Vec3_Asr, and Vec3_HorzDist prototypes.
+extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void func_0200d8c8(void *cam, void *v, int strength);
 extern int func_020092c4(void *cam, void *out, void *target);
 extern void func_02011cfc(void);
@@ -887,7 +888,7 @@ int daIwante_c::func_ov066_02116db0() {
                 out.z = 0;
                 in.z = 0x3e8000;
 
-                ang = Vec3_HorzAngle(&mPosX, &mTargetPosX);
+                ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
                 Matrix4x3_FromRotationY(data_020a0e68, ang);
                 MulVec3Mat4x3(&in, data_020a0e68, &out);
 
@@ -903,7 +904,7 @@ int daIwante_c::func_ov066_02116db0() {
                 func_02012694(SE_START_MOVING, &mCamSpacePosX);
             }
 
-            ang = Vec3_HorzAngle(&mPosX, &mTargetPosX);
+            ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
             ApproachAngle(&mAngleY, ang, 2, 0x400, 0x200);
         }
 

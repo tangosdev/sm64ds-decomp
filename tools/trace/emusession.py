@@ -110,6 +110,10 @@ class Images:
         ay = open(os.path.join(self.dir, 'arm9', 'arm9.yaml')).read()
         self.mods['arm9'] = (int(re.search(r'^base_address:\s*(\d+)', ay, re.M).group(1)),
                              os.path.join(self.dir, 'arm9', 'arm9.bin'))
+        iy = os.path.join(self.dir, 'arm9', 'itcm.yaml')
+        if os.path.exists(iy):          # ITCM code (0x01ff8000), copied there at boot
+            self.mods['itcm'] = (int(re.search(r'^base_address:\s*(\d+)', open(iy).read(), re.M).group(1)),
+                                 os.path.join(self.dir, 'arm9', 'itcm.bin'))
         oy = open(os.path.join(self.dir, 'arm9_overlays', 'overlays.yaml')).read()
         for m in re.finditer(r'-\s*id:\s*(\d+)\s*\n\s*base_address:\s*(\d+)', oy):
             n = int(m.group(1))
@@ -139,9 +143,12 @@ class Images:
         return None if k < 0 else self.mods['arm9'][0] + k
 
     def default_module(self, addr):
-        base = self.mods['arm9'][0]
-        if base <= addr < base + len(self.data('arm9')):
-            return 'arm9'
+        """'arm9' or 'itcm' when addr lies in that image, else None (overlays are ambiguous)."""
+        for mod in ('arm9', 'itcm'):
+            if mod in self.mods:
+                base = self.mods[mod][0]
+                if base <= addr < base + len(self.data(mod)):
+                    return mod
         return None
 
 
@@ -300,7 +307,7 @@ def evaluate(expr, env, read):
 # --------------------------------------------------------------------- session
 class Bp:
     def __init__(self, addr, role, name='', module=None, dump=(), ret=False, max_hits=0, when=None,
-                 obj=None, thumb=False):
+                 obj=None, thumb=False, this=False):
         self.addr = addr & ~1
         self.thumb = bool(thumb or (addr & 1))
         self.role = role            # frame | trigger | probe
@@ -312,6 +319,7 @@ class Bp:
         self.max_hits = max_hits
         self.when = when            # expression; trigger/probe only fires when nonzero
         self.obj = obj              # expression for `obj` at the hit
+        self.this = bool(this)      # resolve r0 as `this` (vptr -> class, actor id) at each hit
         self.armed = False          # set in the stub right now
         self.want = False           # asked to be armed (armed unless suspended)
         self.suspended = False      # wanted, but held out: its overlay is not loaded
@@ -663,6 +671,22 @@ class Session:
     def ev(self, expr, env):
         return evaluate(expr, env, lambda a, n: self.read_int(a, n))
 
+    def this_info(self, obj):
+        """r0 (or any address) as an object: its vptr resolved to a _ZTV symbol in arm9
+        or a loaded overlay, the RTTI base chain, and for a dActor_c its actor id."""
+        import symtab
+        if self.loaded is None:
+            try:
+                self.refresh_overlays()
+            except (RuntimeError, ValueError):
+                pass
+        mods = ['arm9'] + ['ov%03d' % i for i in sorted(self.loaded or ())]
+        cache = self.__dict__.setdefault('_vptr_cache', {})
+        try:
+            return symtab.resolve_object(self.read, obj & 0xffffffff, mods, symtab.table(), cache)
+        except Exception as e:
+            return {'obj': '%08x' % (obj & 0xffffffff), 'error': str(e)}
+
     def _dump(self, bp, env):
         out = {}
         for label, expr, size in bp.dump:
@@ -738,6 +762,8 @@ class Session:
                    'r3': '%08x' % regs['r3'], 'sp': '%08x' % regs['sp']}
             if 'obj' in info:
                 rec['obj'] = info['obj']
+            if bp.this:
+                rec['this'] = self.this_info(regs['r0'])
             rec.update(self._dump(bp, env))
             self.event(rec)
             if bp.ret:
@@ -754,8 +780,10 @@ class Session:
             return 'go', None
         # trigger
         info['dump'] = self._dump(bp, env)
+        if bp.this:
+            info['this'] = self.this_info(regs['r0'])
         self.event({'ev': 'trigger', 'name': bp.name, 'pc': info['pc'], 'obj': info.get('obj'),
-                    'lr': '%08x' % regs['lr'], 'dump': info['dump']})
+                    'lr': '%08x' % regs['lr'], 'dump': info['dump'], 'this': info.get('this')})
         if bp.max_hits and bp.hits >= bp.max_hits:
             bp.want = False
             self._apply(bp)
@@ -874,6 +902,19 @@ class Daemon:
         self.s.event({'ev': 'write', 'addr': '%08x' % a, 'before': before, 'after': after})
         return {'before': before, 'after': after}
 
+    def op_write_many(self, writes):
+        """[[addr, hex], ...] written in order, no read-back and no event (per-frame
+        input injection)."""
+        for a, h in writes:
+            self.s.write(parse_int(a), bytes.fromhex(h))
+        return len(writes)
+
+    def op_this(self, obj='r0', env=None):
+        """Resolve an object pointer (an expression: default r0 at the current halt)
+        to its class: vptr -> _ZTV symbol, RTTI chain, dActor_c actor id."""
+        e = self._env(env)
+        return self.s.this_info(self.s.ev(obj, e) & 0xffffffff)
+
     def op_eval(self, expr, env=None):
         regs = {} if self.s.running else self.s.regs()
         e = self.s.env(regs, {k: parse_int(v) for k, v in (env or {}).items()})
@@ -889,9 +930,10 @@ class Daemon:
         return bp.desc()
 
     def op_add_bp(self, addr, role='trigger', name='', module=None, dump=(), ret=False, max_hits=0,
-                  when=None, obj=None, arm=True):
+                  when=None, obj=None, arm=True, this=False):
+        """this: at each hit, resolve r0 as `this` (see op_this) into the event."""
         bp = Bp(parse_int(addr), role, name=name, module=module, dump=dump, ret=ret,
-                max_hits=parse_int(max_hits), when=when, obj=obj)
+                max_hits=parse_int(max_hits), when=when, obj=obj, this=this)
         return self.s.add_bp(bp, arm=arm).desc()
 
     def op_arm(self, addr, on=True):
@@ -1041,7 +1083,6 @@ class Daemon:
         `margin` px of slack; `dy` lifts the point), nothing is captured and
         NotFramed is raised, so a capture loop cannot waste shots on a subject
         that is not in view."""
-        import emuwin
         framing = None
         if require_framed:
             pts = require_framed if isinstance(require_framed, list) else [require_framed]
@@ -1054,6 +1095,19 @@ class Daemon:
             if bad:
                 self.s.event({'ev': 'shot_refused', 'path': path, 'framing': framing})
                 raise NotFramed('capture refused, target not framed: %s' % json.dumps(bad))
+        prev, stable, retries = self._grab(which, settle_ms, stable_tries)
+        if path:
+            prev.save_png(path)
+        out = {'w': prev.w, 'h': prev.h, 'path': path, 'stable': stable}
+        if retries:
+            out['capture_retries'] = retries
+        if framing is not None:
+            out['framing'] = framing
+        return out
+
+    def _grab(self, which, settle_ms, stable_tries):
+        """(Frame, stable, capture retries): the window, re-captured until two grabs agree."""
+        import emuwin
         log = self.s.event
         time.sleep(float(settle_ms) / 1000.0)
         prev = emuwin.capture_screens(self.window(), which, log=log)
@@ -1067,14 +1121,71 @@ class Daemon:
                 stable = True
                 break
             prev = cur
+        return prev, stable, retries
+
+    def op_backend(self):
+        return {'backend': 'gdb', 'stub_port': self.s.port}
+
+    def _read_ranges(self, ranges):
+        """[(addr, size)] -> [bytes]. The stub reads them one after another (0x80 per packet)."""
+        return [self.s.read(a, n) for a, n in ranges]
+
+    def _ranges_meta(self):
+        return {'atomic': not self.s.running}
+
+    def op_ram_snapshot(self, ranges, path=None, env=None, data=False):
+        """Read several RAM ranges in one call, for RAM-diff screening.
+
+        ranges: [[addr, size], ...] or [{name, addr, size}, ...]; addr may be an
+        expression ("[0x0209f394]", "obj+0x5c", with env). The control-socket
+        backend reads them all at one emulated instant; the stub backend reads them
+        in turn (consistent only while the target is halted).
+        path: write the bytes, concatenated, to path and the index to path + '.json'.
+        data: also return each range's bytes (hex) in the reply."""
+        import hashlib
+        e = self._env(env)
+        rs = []
+        for k, r in enumerate(ranges):
+            if isinstance(r, dict):
+                name, a, n = r.get('name'), r['addr'], r['size']
+            else:
+                a, n = r[0], r[1]
+                name = r[2] if len(r) > 2 else None
+            addr = self.s.ev(a, e) & 0xffffffff if isinstance(a, str) else parse_int(a)
+            rs.append({'name': name or '%08x' % addr, 'addr': '%08x' % addr, 'size': parse_int(n)})
+        blobs = self._read_ranges([(int(r['addr'], 16), r['size']) for r in rs])
+        off = 0
+        for r, b in zip(rs, blobs):
+            r.update(offset=off, sha256=hashlib.sha256(b).hexdigest())
+            off += len(b)
+            if data:
+                r['hex'] = b.hex()
+        out = {'frames': self.s.frames, 'halted': not self.s.running, 'total': off, 'ranges': rs,
+               'backend': self.op_backend()['backend'], 't': round(time.time(), 3)}
+        out.update(self._ranges_meta())
         if path:
-            prev.save_png(path)
-        out = {'w': prev.w, 'h': prev.h, 'path': path, 'stable': stable}
-        if retries:
-            out['capture_retries'] = retries
-        if framing is not None:
-            out['framing'] = framing
+            path = os.path.abspath(path)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, 'wb') as f:
+                for b in blobs:
+                    f.write(b)
+            with open(path + '.json', 'w', encoding='utf-8') as f:
+                json.dump(dict(out, ranges=[{k: v for k, v in r.items() if k != 'hex'} for r in rs], bin=path),
+                          f, indent=1)
+            out['path'] = path
+        self.s.event({'ev': 'ram_snapshot', 'ranges': len(rs), 'total': off, 'path': out.get('path')})
         return out
+
+    def op_input(self, buttons=None, touch=None, frames=2):
+        """Hold buttons and/or touch [x, y] for `frames` emulated frames. The stub
+        backend can only post keys for the equivalent wall time while running."""
+        import emuwin
+        ms = int(round(parse_int(frames) * 1000.0 / 60.0))
+        if touch:
+            emuwin.touch(self.window(), int(touch[0]), int(touch[1]), ms)
+        if buttons:
+            self.op_press(buttons, ms)
+        return {'exact': False, 'ms': ms}
 
     def op_press(self, buttons, ms=100):
         import emuwin

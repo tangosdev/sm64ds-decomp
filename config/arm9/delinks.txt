@@ -92,7 +92,7 @@ src/engine/view/d_camera.cpp:
     .text start:0x020072c4 end:0x0200e494
     .init start:0x02073a24 end:0x02073e6c
     .ctor start:0x02086b60 end:0x02086b64
-    .bss start:0x0209b008 end:0x0209b138
+    .bss start:0x0209b000 end:0x0209b270
 
 src/KuppaScript.cpp:
     complete
@@ -137,7 +137,8 @@ src/engine/sound/Sound.cpp:
     .text start:0x02011654 end:0x02013548
     .init start:0x02074da8 end:0x02074dbc
     .ctor start:0x02086b6c end:0x02086b70
-    .bss start:0x0209b53c end:0x0209ba84
+    .data start:0x0208e420 end:0x0208e498
+    .bss start:0x0209b470 end:0x0209ba84
 
 src/GetLevelPart.cpp:
     complete
@@ -767,6 +768,7 @@ src/LoadDebugFont.cpp:
 src/unnamed/arm9/0202/func_0202345c.cpp:
     complete
     .text start:0x0202345c end:0x02023598
+    .bss start:0x0209f1d8 end:0x0209f1e8
 src/game/stages/d_s_boot.cpp:
     complete
     .text start:0x02023598 end:0x02023688
@@ -776,7 +778,7 @@ src/game/stages/d_s_stage_methods.cpp:
     .text start:0x02023688 end:0x0202e118
     .init start:0x02074e84 end:0x02074edc
     .ctor start:0x02086b88 end:0x02086b8c
-    .bss start:0x0209f388 end:0x0209f498
+    .bss start:0x0209f1ec end:0x0209f5b8
 
 src/GetStageDebugName.c:
     complete

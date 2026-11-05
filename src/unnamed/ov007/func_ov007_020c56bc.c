@@ -1,7 +1,6 @@
 #include "Ov007Picker.h"
 
 extern int func_ov007_020c3ba8(int n);
-#pragma opt_propagation off
 
 /* Jitters the rest offsets (dir x/y) of the groups' per-point links. Each
  * link is picked with chance percent / 100 (func_ov007_020c3ba8(1000) <
@@ -21,12 +20,9 @@ void func_ov007_020c56bc(char *sl, int mode, int percent, int rangeX, int rangeY
     if (self->groupCount <= 0)
         return;
 
-    /* offset holds percent * 10 first; threshold computed straight from
-     * percent is 8 bytes longer under opt_propagation off. */
-    offset = percent * 10;
+    threshold = percent * 10 - 1;
     minX = -rangeX;
     minY = -rangeY;
-    threshold = offset - 1;
     spanX = rangeX - minX;
     spanY = rangeY - minY;
 

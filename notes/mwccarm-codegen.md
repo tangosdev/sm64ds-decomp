@@ -1219,6 +1219,9 @@ were the 3-word `v = r;` struct copy: struct assign emits ldm/stm (wrong), int t
 extend live ranges and reorder the loads (wrong); plain per-field `v.x = r.x; v.y =
 r.y; v.z = r.z;` under `opt_common_subs off` emits the batched 3-load/3-store shape
 byte-exact, including reusing the r.z load (r3) for a later stack arg.
+**Superseded in part (2026-11-05, #821):** in today's `src/game/actors/d_a_menbo.cpp` this
+body is byte-identical without `opt_common_subs off` (only the TU's `@NNN` names move), so
+that pragma was removed; `opt_strength_reduction off` with the explicit `idx` counter is still live.
 
 ## 6j. Array-subscript indexing defeats a LICM index*scale hoist under EBB-local CSE (2026-07-10)
 
@@ -1232,6 +1235,8 @@ register - closing a divergence gap that pointer-arithmetic rewrites alone did n
 div on func_ov007_020ca308, paired with `#pragma opt_strength_reduction off` and the
 u64-mask laundering for a separate `+0x18` RMW site, Fable, div 79->0 to full MATCH).
 Try the subscript form before parking an index-variable spill as a coloring floor.
+(2026-11, #821: the strength-reduction pragma on func_ov007_020ca308 is gone; the sine
+phase written as `base + j * step` in a `for` loop matches with it on.)
 
 ## 6k. Callee-saved locals color in REVERSE declaration order (2026-07-10)
 
@@ -2793,7 +2798,10 @@ follow-on batch). Each was load-bearing in at least one match; function addresse
   escape the volatile-object canonical schedule - giving the ROM's naive uncoalesced
   store group that ~30 volatile-object/launder/pragma variants could not reach. Paired
   with `#pragma opt_lifetimes off` to collapse the frame. Rule: volatility per MEMBER is
-  a scheduling dial, not just an access pin.
+  a scheduling dial, not just an access pin. *Superseded for this function (#821):
+  a plain `Vector3 v` (its user-declared destructor keeps the object in memory)
+  passed member-wise as `v.x, v.y, v.z` gives the same stores and frame with no
+  volatile member and no pragma.*
 - **Callee-saved coloring follows the LOOP DEPTH of a definition, not decl order**
   (func_ov006_021027e4): all 720 decl-order permutations were inert while moving a
   definition between nesting depths rotated {r4,r5,r6} cyclically. Companion trick: a

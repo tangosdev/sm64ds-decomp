@@ -14,7 +14,6 @@
  * - &mHomePosX stays punned: daKirai_c stores it as three scalars.
  * - The armed state tests IsPlayerActor, an int-returning predicate: a bool
  *   local there misses.
- * - The spent state keeps opt_strength_reduction and opt_common_subs off.
  * - func_02012694 plays sound 0x2f at mCamSpacePos.
  */
 
@@ -155,7 +154,6 @@ void daKirai_c::Rearm() {
 
 /* Spent: wait until every sibling has gone off, then re-arm whichever bomb
    (this one or a sibling) is nearest the player. */
-#pragma opt_common_subs off
 // @symbol _ZN9daKirai_c10StateSpentEv
 void daKirai_c::StateSpent() {
     Vector3 v;
@@ -203,7 +201,6 @@ void daKirai_c::StateSpent() {
     }
     bestActor->Rearm();
 }
-#pragma opt_common_subs on
 
 /* Exploding: swell, fade and rise for 0x1c frames, then disarm. */
 // @symbol _ZN9daKirai_c14StateExplodingEv

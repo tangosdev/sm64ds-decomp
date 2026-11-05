@@ -63,6 +63,7 @@ enum d_a_nknk_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the two models,
@@ -94,7 +95,6 @@ extern NknkAnimationFileHandle *data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];
 /* The called scalar definition takes u16 startFrame. The unused dExtAnmModel_c
  * member declaration takes Fix12<int>/u32; its measured form grew this helper. */
-extern int Vec3_Dist(void* a, void* b);
 /* Reconstructed receiver/attacker/nullable collision interface; the original
  * source prototype is not uniquely recoverable from the register traffic. */
 extern void func_ov002_020aea30(void* self, void* attacker, dBgCh_Actr* collision);
@@ -109,8 +109,6 @@ extern SharedFilePtr* data_ov062_0211cee0[2];
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, int q);
 
-/* local extern: math/CalcLib.h's spelling cannot be used here -- this TU's
-   Vec3_Dist(void *, void *) would contradict that header's declaration of it. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *m, short angY);
@@ -556,7 +554,7 @@ void daNknk_c::func_ov062_02118718()
 
         other = func_ov062_02117b9c();
         if (other) {
-            dist = Vec3_Dist(&mPosX, &other->mPosX);
+            dist = Vec3_Dist(&mPos, &other->mPos);
             mTargetAngle = Vec3_HorzAngle(&mPos, &other->mPos);
         } else {
             mTurning =
@@ -672,7 +670,7 @@ void daNknk_c::func_ov062_021183e0()
             mTargetAngle = mAimAngle;
         other = func_ov062_02117b9c();
         if (other) {
-            dist = Vec3_Dist(&mPosX, &other->mPosX);
+            dist = Vec3_Dist(&mPos, &other->mPos);
             if (dist < 0xc8000)
                 mTargetAngle = Vec3_HorzAngle(&mPos, &other->mPos);
         }
@@ -729,8 +727,8 @@ void daNknk_c::func_ov062_02118258(int lim)
 {
     mClosestPlayer = ClosestPlayer();
 
-    if (mClosestPlayer == 0 || Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > lim) {
-        mAimAngle = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
+    if (mClosestPlayer == 0 || Vec3_Dist(&mPos, &mHomePos) > lim) {
+        mAimAngle = Vec3_HorzAngle(&mPos, &mHomePos);
         mPlayerDist = 0x61a8000;
     } else {
         Vector3 v;
@@ -738,7 +736,7 @@ void daNknk_c::func_ov062_02118258(int lim)
         v.x = src[0];
         v.y = src[1];
         v.z = src[2];
-        if (Vec3_Dist((Vector3*)&mHomePosX, &v) > lim) {
+        if (Vec3_Dist(&mHomePos, &v) > lim) {
             mPlayerDist = 0x4e20000;
             return;
         }
@@ -795,7 +793,7 @@ void daNknk_c::func_ov062_02118058() {
     daPly_c *o = mClosestPlayer;
     int d = mPlayerDist;
     if (o != 0)
-        d = Vec3_Dist(&mPosX, &o->mPosX);
+        d = Vec3_Dist(&mPos, &o->mPos);
     if (d >= 0x12c000)
         return;
     int s = GetSubtraction(mAimAngle, mPrevAngleY);
@@ -998,7 +996,7 @@ int daNknk_c::func_ov062_02117b60()
 {
     daPly_c *target = mClosestPlayer;
     if (!target) return 0x61a8000;
-    return Vec3_Dist(&mPosX, &target->mPosX);
+    return Vec3_Dist(&mPos, &target->mPos);
 }
 
 // @symbol _ZN8daNknk_c19func_ov062_02117b48Ev

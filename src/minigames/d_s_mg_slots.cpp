@@ -402,29 +402,17 @@ void Slot3_StateJudge(char *c) {
 }
 }
 
-// Bracketed, not file-global: with #pragma defer_codegen off these bind to
-// the functions between them. Measured -- this member DIFFs without them and
-// the members outside them DIFF with them applied file-wide.
-#pragma opt_strength_reduction off
 // @symbol Slot3_StateSpin
 extern "C" { /* .c-derived member: C linkage for the whole block */
-/* Indexed address construction is byte-sensitive: direct member indexing
- * (scene->mReelStopped[reelIndex]) adds 4 bytes, so the per-reel arrays are
- * reached through the scene pointer stepped by the reel index, and the scroll
- * pointer is formed in two steps (measured: one step also adds 4 bytes).
- * Scalar fields are native. */
 void Slot3_StateSpin(char *c) {
     dScMgSlot3_c *scene = (dScMgSlot3_c *)c;
     u8 playerSlot;
     int touchPressed;
     int touchOffset;
     int reelIndex;
-    int one;
-    int *speedTable;
     playerSlot = gActivePlayerSlot;
     touchPressed = 0;
     touchOffset = playerSlot * 4;
-    one = 1;
     if (gTouchHeld[playerSlot * 4]) {
         if (gTouchEdge[touchOffset]) {
             touchPressed = 1;
@@ -433,46 +421,42 @@ void Slot3_StateSpin(char *c) {
     if (touchPressed != 0) {
         unsigned int touchY = gTouchY[playerSlot * 4];
         if (touchY >= 0x40 && touchY < 0x58) {
-            if (scene->mReelSpinning[0] == one)
+            if (scene->mReelSpinning[0] == 1)
                 scene->mReelSpinning[0] = 0;
         } else if (touchY >= 0x58 && touchY < 0x70) {
             if (scene->mReelSpinning[1] == 1)
                 scene->mReelSpinning[1] = 0;
         } else if (touchY >= 0x70 && touchY < 0x88) {
-            if (scene->mReelSpinning[2] == one)
+            if (scene->mReelSpinning[2] == 1)
                 scene->mReelSpinning[2] = 0;
         }
     }
-    reelIndex = 0;
-    for (; reelIndex < 3; reelIndex++) {
-        if (((dScMgSlot3_c *)(c + reelIndex))->mReelStopped[0] == 0) {
-            int *scroll = (int *)(c + reelIndex * 4);
-            int oldScroll;
+    for (reelIndex = 0; reelIndex < 3; reelIndex++) {
+        if (scene->mReelStopped[reelIndex] == 0) {
             int oldSymbol;
             int newSymbol;
-            speedTable = data_ov006_0213e948;
-            scroll = &((dScMgSlot3_c *)scroll)->mReelPos[0];
-            oldScroll = *scroll;
-            oldSymbol = (oldScroll >> 12) / 0x50;
-            if (((dScMgSlot3_c *)(c + reelIndex))->mReelReverse[0] == 1) {
-                *scroll = oldScroll - speedTable[scene->mStoppedReelCount * 3 + reelIndex];
-                if (*scroll < 0)
-                    *scroll += scene->mReelPeriod;
+            oldSymbol = (scene->mReelPos[reelIndex] >> 12) / 0x50;
+            if (scene->mReelReverse[reelIndex] == 1) {
+                scene->mReelPos[reelIndex] -=
+                    data_ov006_0213e948[scene->mStoppedReelCount * 3 + reelIndex];
+                if (scene->mReelPos[reelIndex] < 0)
+                    scene->mReelPos[reelIndex] += scene->mReelPeriod;
             } else {
-                *scroll = oldScroll + speedTable[scene->mStoppedReelCount * 3 + reelIndex];
-                if (*scroll >= scene->mReelPeriod)
-                    *scroll -= scene->mReelPeriod;
+                scene->mReelPos[reelIndex] +=
+                    data_ov006_0213e948[scene->mStoppedReelCount * 3 + reelIndex];
+                if (scene->mReelPos[reelIndex] >= scene->mReelPeriod)
+                    scene->mReelPos[reelIndex] -= scene->mReelPeriod;
             }
-            if (((dScMgSlot3_c *)(c + reelIndex))->mReelSpinning[0] == 0) {
-                newSymbol = (*scroll >> 12) / 0x50;
+            if (scene->mReelSpinning[reelIndex] == 0) {
+                newSymbol = (scene->mReelPos[reelIndex] >> 12) / 0x50;
                 if (newSymbol != oldSymbol) {
-                    if (((dScMgSlot3_c *)(c + reelIndex))->mReelReverse[0] == one)
-                        *scroll = (oldSymbol * 0x50) << 12;
+                    if (scene->mReelReverse[reelIndex] == 1)
+                        scene->mReelPos[reelIndex] = (oldSymbol * 0x50) << 12;
                     else
-                        *scroll = (newSymbol * 0x50) << 12;
+                        scene->mReelPos[reelIndex] = (newSymbol * 0x50) << 12;
                     Slot3_ReelDigits(c, reelIndex);
-                    ((dScMgSlot3_c *)(c + reelIndex))->mReelStopped[0] = 1;
-                    scene->mStoppedReelCount += one;
+                    scene->mReelStopped[reelIndex] = 1;
+                    scene->mStoppedReelCount++;
                     scene->mFrameCounter = 0;
                     Sound::PlayBank2_2D(0x1a9);
                 }
@@ -486,8 +470,6 @@ void Slot3_StateSpin(char *c) {
     }
 }
 }
-
-#pragma opt_strength_reduction on
 
 // @symbol Slot3_StateIntro
 extern "C" { /* .c-derived member: C linkage for the whole block */

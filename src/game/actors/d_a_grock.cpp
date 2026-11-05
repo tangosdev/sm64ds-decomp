@@ -49,6 +49,7 @@ enum daGrock_c_AssetId { ASSET_CV_GORO_ROCK_BMD = 0x05d4 };
 #include "dBgCh_Actr.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "cstd.h"
 
@@ -91,12 +92,8 @@ struct AngleWords {
  * clears the cylinder flags bit 2, then sets it when the closest player is
  * vanish Luigi (MakeVanishLuigiWork is the other copy). */
 extern "C" {
-extern void Vec3_Asr(void *dst, void *src, int n);
 extern void func_02012694(unsigned int id, void *pos);
-extern int Vec3_HorzLen(void *v);
-extern void AddVec3(struct Vector3 *dst, struct Vector3 *a, struct Vector3 *b);
 extern void func_0200f760(void *self, void *cyl);
-extern int RandomIntInternal(int *seed);
 }
 
 struct LevelRng;
@@ -135,7 +132,7 @@ void daGrock_c::SpawnStar() {
 void daGrock_c::UpdateModelTransform() {
     int shifted[3];
 
-    Vec3_Asr(shifted, &mPos, 3);
+    Vec3_Asr(reinterpret_cast<Vector3 *>(shifted), &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted[0], shifted[1], shifted[2]);
     *(Matrix4x3 *)pad_188 = data_020a0e68;
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
@@ -235,7 +232,7 @@ void daGrock_c::HandleMeshCollision() {
             *vx = *vx + normal.x * 5;
             *vz = *vz + normal.z * 5;
         }
-        mHorzSpeed = Vec3_HorzLen(&mSpeedX);
+        mHorzSpeed = Vec3_HorzLen(reinterpret_cast<const Vector3 *>(&mSpeedX));
         mPrevAngleY = (s16)cstd::atan2(mSpeedX, mSpeedZ);
         if (mHorzSpeed >= 0x22000) {
             mHorzSpeed = 0x22000;

@@ -11,9 +11,6 @@
  * leftovers:
  * - Address names stay. Each function keeps its namespace, because
  *   the local structs and externs disagree.
- * - TrmpItem_MotionSway keeps opt_propagation off.
- *   TrmpLine_ComputeNormals keeps opt_strength_reduction off.
- *   TrmpLine_PushJumper keeps opt_common_subs off and opt_propagation off.
  * - Vector3 locals emit an empty destructor, licensed as a deadstrip
  *   duplicate of the arm9 copy. Spare4 in TrmpLine_Build emits
  *   another, deadstripped as compiler-only output.
@@ -278,27 +275,22 @@ extern "C" void TrmpItem_SetMotionHover(char *c) {
 
 namespace s020cdc8c {
 
-#pragma push
-#pragma opt_propagation off
 extern "C" void TrmpItem_MotionSway(char *self) {
     int distanceFromCenterY;
-    int xSpeed;
-    int minimumSpeed = 0x400;
-    u16 *phase = &TRMPITEM(self)->mPhase;
+    int xSpeed = 0x400;
 
-    *phase = *phase + 0x40;
+    TRMPITEM(self)->mPhase += 0x40;
 
     distanceFromCenterY = TRMPITEM(self)->mPos.y - 0x74000;
     if (distanceFromCenterY < 0)
         distanceFromCenterY = -distanceFromCenterY;
-    xSpeed = (cstd::fdiv(distanceFromCenterY, 0x4c000) >> 3) + minimumSpeed;
+    xSpeed += cstd::fdiv(distanceFromCenterY, 0x4c000) >> 3;
 
     if (TRMPITEM(self)->mPhase & 0x4000)
         TRMPITEM(self)->mVel.x = xSpeed;
     else
         TRMPITEM(self)->mVel.x = -xSpeed;
 }
-#pragma pop
 }
 
 namespace s020cdce4 {
@@ -665,7 +657,7 @@ extern int sTrmp2Score;
 
 extern "C" void TrmpItem_ReflectOffLine(char *a, void *o);
 extern "C" int TrmpItem_HitTest2D(char *a, void *o, int arg1);
-extern "C" void D3D_PlaySeAtX(int a, int b);
+extern "C" int D3D_PlaySeAtX(int a, int b);
 extern "C" void Trmp2Spinner_InitAll(int c);
 extern "C" void TrmpItem_ProjectToScreen(char *c, unsigned short arg1);
 
@@ -1215,7 +1207,6 @@ extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" void CrossVec3(const Vec3 *a, const Vec3 *b, Vec3 *out);
 extern "C" void NormalizeVec3(const Vector3 *v, Vector3 *out);
 
-#pragma push
 extern "C" void TrmpLine_ComputeNormals(char *self) {
     Vec3 columnEdge;
     Vec3 rowEdge;
@@ -1275,7 +1266,6 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
         }
     }
 }
-#pragma pop
 }
 
 namespace s020cf2fc {
@@ -1684,8 +1674,6 @@ extern "C" {
 extern int sTrmpLinePushStrongPitchEnd;
 }
 
-#pragma push
-#pragma opt_propagation off
 // @symbol TrmpLine_PushJumper
 extern "C" int TrmpLine_PushJumper(char *c) {
     int jumperIndex;
@@ -1842,7 +1830,6 @@ extern "C" int TrmpLine_PushJumper(char *c) {
     } while (++jumperIndex < 5);
     return 0;
 }
-#pragma pop
 }
 
 namespace s020d01e0 {

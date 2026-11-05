@@ -8,17 +8,14 @@
  * profile-derived label, not a recovered class name.
  *
  * leftovers:
- *  - The allocation is four bytes over sizeof(dActor_c), and this TU does not
- *    include that class. Placement new on the local declaration is the
- *    cartridge's C1; its null test is the old explicit check.
+ *  - The allocation is four bytes over sizeof(dActor_c), but the most-derived
+ *    identity remains unknown: no derived vptr or identifying RTTI survives.
+ *    The factory calls the known dActor_c base constructor only.
  *  - This is a production source for the factory, not a recovered
  *    translation-unit boundary.
  */
 #include "fBase_c.h"
-
-struct dActor_c {
-    dActor_c();
-};
+#include "dActor_c.h"
 
 inline void *operator new(size_t, void *p) {
     return p;

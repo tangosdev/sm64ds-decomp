@@ -101,12 +101,8 @@ void __assert(const char* file, const char* expr, const char* func, int line)
 
 /* The print helper __assert calls: card-wait gate, then formats the varargs
  * through func_0206a928 with a print-argument struct and the func_0206cbc0
- * console callback. The print struct stays function-local and the pragmas
- * stay scoped push/pop so opt_common_subs is restored on, undoing the off
- * state the register helper above leaks. Lowest address in the TU, so it
- * goes last for reverse-source emission. */
-#pragma push
-#pragma opt_common_subs on
+ * console callback. The print struct stays function-local. Lowest address
+ * in the TU, so it goes last for reverse-source emission. */
 // @symbol func_0206ccd8
 extern "C" void func_0206ccd8(int fmt, ...)
 {
@@ -124,4 +120,3 @@ extern "C" void func_0206ccd8(int fmt, ...)
         func_0206a928(&s, fmt, &p, p);
     }
 }
-#pragma pop

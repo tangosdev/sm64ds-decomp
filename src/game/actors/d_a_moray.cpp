@@ -104,7 +104,7 @@ u16 DecIfAbove0_Short(u16 *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 /* UpdateBones(model.data, model.file, frame). Inlining that grows Render
    0x8c -> 0x9c. */
-void func_020167a4(dExtBlendAnmModel_c *model);
+void func_020167a4(dExtAnmModel_c *model);
 /* Blend the posed bones by blendWeight. No named method. */
 void func_0204531c(ModelComponents *data, s32 weight);
 
@@ -656,7 +656,6 @@ void daMoray_c::OnPendingDestroy()
 {
 }
 
-#pragma push
 // @symbol _ZN9daMoray_c6RenderEv
 s32 daMoray_c::Render()
 {
@@ -678,7 +677,6 @@ s32 daMoray_c::Render()
     mBlendAnmModel.dExtSimpleModel_c::Render(0);
     return 1;
 }
-#pragma pop
 
 // @symbol _ZN9daMoray_c8BehaviorEv
 s32 daMoray_c::Behavior()

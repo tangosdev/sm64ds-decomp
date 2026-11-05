@@ -515,9 +515,9 @@ void Ov004_Deallocate(void *ptr)
 // @symbol Ov004_LoadFile
 namespace s20adc68 {
 extern "C" {
-extern int LoadFile(void);
-void *Ov004_LoadFile(void) {
-    return (void *)LoadFile();
+extern int LoadFile(int handle);
+void *Ov004_LoadFile(int id) {
+    return (void *)LoadFile(id);
 }
 }
 }
@@ -865,9 +865,9 @@ extern void d_s_mg_basePlaySubHold(unsigned int a, unsigned int b, unsigned int 
 extern int Mg_GetMusicMode(void);
 extern int Mg_GetMusicTrack(void);
 /* Sound::PlaySub with third argument 0 and its flag set starts nothing:
-   it only sets the music volume target (data_0208e42c, which
+   it only sets the music volume target (sMusicVolumeTarget, which
    ChangeMusicVolume and PauseMusic also write) back to 0x7f, with step
-   0x7f000, and zeroes data_0209b470. Then, while a scene exists and in
+   0x7f000, and zeroes sSubVolumeTarget. Then, while a scene exists and in
    music mode 1, this loads the scene's track. */
 void Mg_RestoreMusic(void)
 {
@@ -885,7 +885,7 @@ extern "C" {
 extern int Mg_GetMusicMode(void);
 
 /* While a scene exists, starts sequence `id` on Sound::PlaySub's own
-   player (data_0209b4b0) unless it is already the current one, and sets
+   player (sSubHandle) unless it is already the current one, and sets
    the music volume target to 0x40 [GUESS: ducks the music; PauseMusic uses
    0x40 too]. The Mg_GetMusicMode result is not used. */
 void Mg_PlayJingle(void* id) {
@@ -1788,8 +1788,6 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
 }
 }
 
-#pragma push
-#pragma opt_strength_reduction off
 // @symbol Mg_CopySpriteList
 namespace s20af5e0 {
 extern "C" {
@@ -1806,32 +1804,23 @@ typedef struct Item {
 int Mg_CopySpriteList(Item* src, Item* dst, int add)
 {
     int n = 1;
-    int i = 0;
-    Item* q = dst;
-    do {
-        u32 w;
-        u32* p;
-        dst[i].w0 = src->w0;
-        *(u32*)((char*)&dst[i] + 4) = *(u32*)((char*)src + 4);
-        w = (add + src->val) & 0x3ff;
-        p = (u32*)((char*)q + 4);
-        *p = (*p & ~0x3ff) | ((u32)(w) & 0x3ff);
+    int i;
+    for (i = 0; i < 0x20; i++) {
+        dst[i] = *src;
+        dst[i].val = (add + src->val) & 0x3ff;
         if (*(u16*)((char*)src + 6) == 0xffff)
             break;
         if (i == 0x1f) {
             *(u16*)((char*)&dst[i] + 6) = 0xffff;
             break;
         }
-        i++;
         src++;
         n++;
-        q++;
-    } while (i < 0x20);
+    }
     return n;
 }
 }
 }
-#pragma pop
 
 /* OAM::Render is a C++-linkage member of the global OAM namespace, so its
  * declaration sits outside the address namespace and its extern "C" block. */

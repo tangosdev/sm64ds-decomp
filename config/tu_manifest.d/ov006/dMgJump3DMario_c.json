@@ -1204,39 +1204,39 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@918",
-      "to": "@871",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @885 now; licensed under the existing pin @871"
-    },
-    {
-      "from": "@919",
-      "to": "@872",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @886 now; licensed under the existing pin @872"
-    },
-    {
       "from": "@920",
-      "to": "@873",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @887 now; licensed under the existing pin @873"
+      "to": "@871",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @885 now; licensed under the existing pin @871. Re-keyed from @918 to @920 when the opt pragma was removed (#821)."
     },
     {
       "from": "@921",
-      "to": "@874",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @888 now; licensed under the existing pin @874"
+      "to": "@872",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @886 now; licensed under the existing pin @872. Re-keyed from @919 to @921 when the opt pragma was removed (#821)."
     },
     {
       "from": "@922",
+      "to": "@873",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @887 now; licensed under the existing pin @873. Re-keyed from @920 to @922 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@923",
+      "to": "@874",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @888 now; licensed under the existing pin @874. Re-keyed from @921 to @923 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@924",
       "to": "@875",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @889 now; licensed under the existing pin @875"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @889 now; licensed under the existing pin @875. Re-keyed from @922 to @924 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@916",
+      "from": "@918",
       "to": "@869",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @883 now; licensed under the existing pin @869"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @883 now; licensed under the existing pin @869. Re-keyed from @916 to @918 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@917",
+      "from": "@919",
       "to": "@870",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @884 now; licensed under the existing pin @870"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @884 now; licensed under the existing pin @870. Re-keyed from @917 to @919 when the opt pragma was removed (#821)."
     }
   ]
 }

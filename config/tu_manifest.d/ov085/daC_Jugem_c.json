@@ -486,29 +486,29 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1072",
+      "from": "@1081",
       "to": "@1063",
-      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison."
+      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
     },
     {
-      "from": "@1073",
+      "from": "@1082",
       "to": "@1064",
-      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison."
+      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
     },
     {
-      "from": "@1074",
+      "from": "@1083",
       "to": "@1065",
-      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison."
+      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
     },
     {
-      "from": "@1075",
+      "from": "@1084",
       "to": "@1066",
-      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison."
+      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
     },
     {
-      "from": "@1076",
+      "from": "@1085",
       "to": "@1067",
-      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison."
+      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
     }
   ],
   "symbol_binding_rewrites": [

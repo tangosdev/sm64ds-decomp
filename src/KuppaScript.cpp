@@ -41,8 +41,7 @@
  * other state, and one object cannot place a definition in two runs. By
  * link order that run is d_view.cpp's.
  *
- * The file is ROM-ascending under `#pragma defer_codegen off`, which also
- * keeps ProcessKuppaScript's opt_common_subs bracket to that one function.
+ * The file is ROM-ascending under `#pragma defer_codegen off`.
  */
 
 #pragma defer_codegen off
@@ -4430,9 +4429,19 @@ static inline int IsCastleFallCutsceneRunning() {
     return data_0209f2d8 == 2;
 }
 
+/* TU-local overlay of the touch records the ROM keeps at gTouchHeld:
+   held/edge are the gTouchHeld/gTouchEdge lanes, x/y the gTouchX/gTouchY lanes. */
+struct TouchInfo {
+    u8 held;
+    u8 edge;
+    u8 x;
+    u8 y;
+};
+
 /* Stylus down this frame with its edge bit set: the touch just began. */
-static inline int IsTouchJustBegun(u32 off) {
-    return gTouchHeld[off] != 0 && *(gTouchHeld + off + 1) != 0;
+static inline int IsTouchJustBegun(u32 slot) {
+    TouchInfo *touch = (TouchInfo *)gTouchHeld;
+    return touch[slot].held != 0 && touch[slot].edge != 0;
 }
 
 /* Shaped like RunPlayerCommand, but the demo dispatcher returns nothing, so the
@@ -4582,8 +4591,6 @@ void EndKuppaScript() {
         data_0209f2d8 = 0;
 }
 
-#pragma opt_common_subs off
-
 void ProcessKuppaScript() {
     u8 *s = gRunningKuppaScript;
     u8 *next;
@@ -4603,8 +4610,7 @@ void ProcessKuppaScript() {
             if (command == KS_SKIP_ON_INPUT) {
                 if (data_0209f5bc->IsBetweenStartAndEnd() == 0) {
                     u32 i = gActivePlayerSlot;
-                    u32 off = i * 4;
-                    if (data_020a0e58[i].pressed != 0 || IsTouchJustBegun(off)) {
+                    if (data_020a0e58[i].pressed != 0 || IsTouchJustBegun(i)) {
                         dScene_c::StartSceneFade(1, 0, 0);
                         Sound::StopLoadedMusic_Layer1(0x3c);
                     }
@@ -4695,8 +4701,6 @@ void ProcessKuppaScript() {
     if (gKuppaScriptFrame == 0)
         gKuppaScriptFrame--;
 }
-
-#pragma opt_common_subs on
 
 int IsStarCameraScript3Running() {
     return gRunningKuppaScript == data_020889b0;

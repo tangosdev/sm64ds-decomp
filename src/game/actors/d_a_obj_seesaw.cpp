@@ -129,8 +129,6 @@ int daObjSeesaw_c::GetActorWeight(dActor_c *other) {
     return scale;
 }
 
-#pragma push
-#pragma opt_propagation off
 // @symbol _ZN13daObjSeesaw_c15OnGroundPoundedER8dActor_c
 void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
     /* b and bPos stay separate locals: mwcc keeps the hitter in r8 and
@@ -139,30 +137,19 @@ void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
     Vector3 *bPos = &b->mPos;
     int dist = Vec3_Dist(&mPos, bPos);
     s16 angle = Vec3_HorzAngle(&mPos, bPos);
-    int n, d, idx, prod, cur, v;
-    s16 *pitch;
+    int weight;
+    s16 diff;
 
     mPoundedThisFrame = 1;
-    n = GetActorWeight(b);
-    d = AngleDiff(angle, mAngleY);
-    /* data_02082214 is interleaved cos, sin. (angle >> 4) * 2 + 1 is sine. */
-    idx = ((u16)(s16)d >> 4) << 1;
-
-    prod = FX_MUL(dist, n);
-    idx = idx + 1;
-
-    pitch = &mAngleX;
-    cur = *pitch;
-    v = FX_MUL(prod, data_02082214[idx]);
-    /* Signed divide by 4096, then narrow onto the s16 angle. */
-    v = (v + ((unsigned)(v >> 11) >> 20)) << 4;
-    *pitch = (s16)(cur + (v >> 16));
+    weight = GetActorWeight(b);
+    diff = AngleDiff(angle, mAngleY);
+    /* data_02082214 is interleaved cos, sin: entry (angle >> 4) * 2 + 1 is the sine. */
+    mAngleX += (s16)(FX_MUL(FX_MUL(dist, weight), data_02082214[((u16)diff >> 4) * 2 + 1]) / 4096);
     if (mAngleX > kMaxPitch)
         mAngleX = kMaxPitch;
     if (mAngleX < -kMaxPitch)
         mAngleX = -kMaxPitch;
 }
-#pragma pop
 
 /* Spring *angle toward target by *speed. Behavior calls this with
  * &mAngleX, &mAngleXSpeed, target 0, thresh 6, accel 3, mult 3. It reads

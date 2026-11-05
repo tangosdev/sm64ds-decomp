@@ -769,6 +769,16 @@
       "reason": "Local Vector3 coordinates emit the four-byte weak destructor. Its sole ROM home is arm9:0x020072c0; the duplicate policy verifies the emitted body before stripping it."
     },
     {
+      "symbol": "_ZN9daJango_c23@class$424d_a_jango_cppD1Ev",
+      "disposition": "deadstrip",
+      "reason": "The mPathNodePos and mSpawnPos Vector3 unions make mwcc emit this four-byte empty anonymous-union cleanup thunk. It has no retail function home and is unused by the licensed functions."
+    },
+    {
+      "symbol": "_ZN9daJango_c23@class$427d_a_jango_cppD1Ev",
+      "disposition": "deadstrip",
+      "reason": "The mPathNodePos and mSpawnPos Vector3 unions make mwcc emit this second four-byte empty anonymous-union cleanup thunk. It has no retail function home and is unused by the licensed functions."
+    },
+    {
       "symbol": "_ZTS9daJango_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov062",
@@ -1431,67 +1441,67 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1178",
+      "from": "@1174",
       "to": "@1115",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1174 in the current object; retain its already measured fleet-unique @1115 alias. The complete stock ROM build verifies the linked destination and bytes."
+    },
+    {
+      "from": "@1175",
+      "to": "@1116",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1175 in the current object; retain its already measured fleet-unique @1116 alias. The complete stock ROM build verifies the linked destination and bytes."
+    },
+    {
+      "from": "@1176",
+      "to": "@1117",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1176 in the current object; retain its already measured fleet-unique @1117 alias. The complete stock ROM build verifies the linked destination and bytes."
+    },
+    {
+      "from": "@1177",
+      "to": "@1118",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1177 in the current object; retain its already measured fleet-unique @1118 alias. The complete stock ROM build verifies the linked destination and bytes."
     },
     {
       "from": "@1179",
-      "to": "@1116",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1180",
-      "to": "@1117",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@1120",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1179 in the current object; retain its already measured fleet-unique @1120 alias. The complete stock ROM build verifies the linked destination and bytes."
     },
     {
       "from": "@1181",
-      "to": "@1118",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@1122",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1181 in the current object; retain its already measured fleet-unique @1122 alias. The complete stock ROM build verifies the linked destination and bytes."
     },
     {
       "from": "@1183",
-      "to": "@1120",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@1124",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1183 in the current object; retain its already measured fleet-unique @1124 alias. The complete stock ROM build verifies the linked destination and bytes."
     },
     {
       "from": "@1185",
-      "to": "@1122",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1187",
-      "to": "@1124",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1189",
       "to": "@1126",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1185 in the current object; retain its already measured fleet-unique @1126 alias. The complete stock ROM build verifies the linked destination and bytes."
     },
     {
-      "from": "@620",
+      "from": "@632",
       "to": "@692",
       "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1191",
+      "from": "@1187",
       "to": "@690",
       "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1193",
+      "from": "@1189",
       "to": "@189",
       "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1195",
+      "from": "@1191",
       "to": "@197",
       "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@1197",
+      "from": "@1193",
       "to": "@198",
       "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

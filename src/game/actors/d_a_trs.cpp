@@ -176,7 +176,7 @@ extern void *data_0209f318;
 void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
 int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
 extern void Vec3_MulScalarInPlace(void *v, int s);
-extern void func_020167a4(void *p);
+extern void func_020167a4(dExtAnmModel_c *model);
 void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angle);
 extern int data_0209e650;
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
@@ -195,7 +195,7 @@ extern s16 data_ov063_0211e1dc[];
 extern s16 data_ov063_0211e1e4[];
 extern s16 data_ov063_0211e1c0[];
 extern int data_ov063_0211e1d0[];
-extern int data_0209b490[];
+extern int gMusicVolume;
 extern u8 data_0209d660;
 extern short data_ov063_0211e7e0[];
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -359,13 +359,6 @@ unsigned char daTrs_c::func_ov063_021163d0() {
 }
 
 
-/* 0211640c needs opt_propagation off: the ROM keeps the s16 -1 in a register
- * and multiplies (smulbb) where propagation would fold it to rsb. Measured in
- * this file, the setting binds one definition late: a bracket that closes
- * right after 0211640c leaves it unmatched, so the bracket also spans the
- * propagation-insensitive 021166ac. Deleting it unmatches 0211640c alone. */
-#pragma push
-#pragma opt_propagation off
 // @symbol _ZN7daTrs_c19func_ov063_0211640cEv
 void daTrs_c::func_ov063_0211640c() {
 
@@ -382,9 +375,8 @@ void daTrs_c::func_ov063_0211640c() {
 
     if (this->mBooFlags.mirrored) {
         s16 neg = -1;
-        s16 a = ang;
-        pos.x = pos.x * (int)neg;
-        ang = (s16)(a * neg);
+        pos.x *= (int)neg;
+        ang *= (int)neg;
     }
 
     if (this->mState == 3) {
@@ -416,9 +408,8 @@ void daTrs_c::func_ov063_0211640c() {
                             0xc8000, 0xf);
 
         if (this->mBooFlags.mirrored) {
-            int px = pos.x;
-            int neg = -1;
-            pos.x = px * neg;
+            s16 neg = -1;
+            pos.x *= (int)neg;
             Matrix4x3_FromTranslation(&data_020a0e68,
                 pos.x >> 3, pos.y >> 3, pos.z >> 3);
             this->mShadowMtx2 = data_020a0e68;
@@ -510,7 +501,6 @@ void daTrs_c::func_ov063_021166ac() {
 }
 
 
-#pragma pop
 // @symbol _ZN11daTBasket_c19func_ov063_021169c4Ev
 void daTBasket_c::func_ov063_021169c4() {
 
@@ -1870,7 +1860,7 @@ void daTrs_c::func_ov063_02119074() {
         this->mAnmModel.SetPolygonID(0x16);
 
         if (this->mVariant == 0xd) {
-            this->mSavedMusicVolume = data_0209b490[0];
+            this->mSavedMusicVolume = gMusicVolume;
 
             if (!this->mBooFlags.soundStarted) {
                 Sound::PlaySub(0x20, 0x14, 0x7f, 0x6b000, 1);

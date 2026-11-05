@@ -54,8 +54,6 @@ typedef struct Ov007MenuHooks {
 /* set while no entry point is running */
 extern int data_ov007_02103430;
 
-extern void ARMMathSaveState(ARMMathState *s);
-extern void ARMMathLoadState(ARMMathState *s);
 extern void func_02045d9c(void);
 extern void func_ov007_020aed98(void *thiz);
 extern void func_ov007_020b2e64(u16 *buf);

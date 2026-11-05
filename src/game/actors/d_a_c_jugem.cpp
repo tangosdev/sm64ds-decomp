@@ -712,7 +712,6 @@ int daC_Jugem_c::StateFlyToPlayerInit()
 // @symbol _ZN11daC_Jugem_c15StateHiddenMainEv
 /* Hidden; watch for the player to step inside the trigger volume, then
    take his control and fly to him. */
-#pragma opt_common_subs off
 int daC_Jugem_c::StateHiddenMain()
 {
     daPly_c *p = ClosestPlayer();
@@ -724,9 +723,7 @@ int daC_Jugem_c::StateHiddenMain()
             p->mStateTargetX = mPosX;
             p->mStateTargetY = mPosY;
             p->mStateTargetZ = mPosZ;
-            mPosX = v.x;
-            mPosY = v.y;
-            mPosZ = v.z;
+            *(V3 *)&mPosX = v;
             mPosX -= 0x3e8000;
             mPosY = p->mGroundY + 0x3e8000;
             mTargetX = mPosX;
@@ -738,7 +735,6 @@ int daC_Jugem_c::StateHiddenMain()
     }
     return 1;
 }
-#pragma opt_common_subs on
 
 // @symbol _ZN11daC_Jugem_c15StateHiddenInitEv
 int daC_Jugem_c::StateHiddenInit()

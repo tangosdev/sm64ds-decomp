@@ -4,7 +4,7 @@
 
 extern "C" {
 
-extern void Copy48Bytes(int *src, int *dst);
+extern void Copy48Bytes(const void *src, void *dst);
 
 int InvMat4x3(int *src, int *dst)
 {

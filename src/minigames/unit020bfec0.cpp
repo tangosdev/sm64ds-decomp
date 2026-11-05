@@ -85,7 +85,8 @@ int RandomIntInternal(int *);
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 short Vec3_HorzAngle(const void *, const void *);
-short Vec3_VertAngle(const void *, const void *);
+// local extern: no shared header declares Vec3_VertAngle.
+short Vec3_VertAngle(const Vector3 *, const Vector3 *);
 void Vec3_MulScalar(void *, void *, int);
 void Vec3_MulScalarInPlace(int *, int);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);

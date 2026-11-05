@@ -20,8 +20,7 @@
  *
  * common.h is included first so Matrix4x3 is the flat twelve words the two
  * matrix copies were matched under. defer_codegen is off, so the bodies are
- * ROM-ascending. opt_strength_reduction stays off for the file;
- * opt_common_subs is off except around the ground probe and Behavior.
+ * ROM-ascending. opt_strength_reduction stays off for the file.
  *
  * deslop leftovers:
  * - func_ov090_02131ac4: `mStateTimer == 0` is ldrsh. The ROM is ldrh, one
@@ -44,7 +43,6 @@
 #include "Particle__System.h"
 
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 
 struct BMD_File;
 struct BCA_File;
@@ -76,7 +74,7 @@ typedef int LocFix12;
 
 extern "C" {
 
-void  MulMat4x3Mat4x3(Matrix4x3 *a, Matrix4x3 *b, Matrix4x3 *out);
+void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void  Matrix4x3_FromRotationY(void *m, s16 angle);
 void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -182,7 +180,7 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
         Vector3 r;
 
         data_020a0e68 = *src;
-        MulMat4x3Mat4x3((Matrix4x3 *)c->mAnmModel.data.transforms + idx, &data_020a0e68,
+        MulMat4x3Mat4x3((const Matrix4x3 *)c->mAnmModel.data.transforms + idx, &data_020a0e68,
                         &data_020a0e68);
         v.x = *(int *)((char *)&data_020a0e68 + 0x24);
         v.y = *(int *)((char *)&data_020a0e68 + 0x28);
@@ -286,7 +284,6 @@ void func_ov090_021310b4(daMenbo_c *c)
     ((daPly_c *)p)->Hurt(hurt, 2, 0xc000, 1, 0, 1);
 }
 
-#pragma opt_common_subs on
 // @symbol func_ov090_02131378
 /* Ground probe. Mode 2 on course 0x12 skips it and only spawns ripples.
  * Otherwise a hit below the published water height (data_0209f32c) means
@@ -325,7 +322,6 @@ void func_ov090_02131378(daMenbo_c *c)
         c->mVertSpeed = 0;
     }
 }
-#pragma opt_common_subs off
 
 // @symbol func_ov090_021314a0
 /* 1 while a player is close and within a quarter turn of the heading.
@@ -694,7 +690,6 @@ int daMenbo_c::Render()
     return 1;
 }
 
-#pragma opt_common_subs on
 // @symbol _ZN9daMenbo_c8BehaviorEv
 /* Yoshi's mouth, a killing blow, the death tumble, or one ordinary frame.
  * Course 0x15 area 1 treats a water hit on the mesh as a knock into the

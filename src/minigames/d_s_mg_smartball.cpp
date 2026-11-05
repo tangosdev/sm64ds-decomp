@@ -1163,7 +1163,6 @@ void cMgSmartball_board_c::ClaimCell(int i) {
 }
 
 // @symbol _ZN20cMgSmartball_board_c12SaveSnapshotEv
-#pragma push
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same pattern as every sibling in this family (the
  * base's copy is out-of-line and there is no bl here).
@@ -1284,7 +1283,6 @@ void cMgSmartball_board_c::SaveSnapshot() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN20cMgSmartball_board_c14RestoreInitialEv
 /* Slot 2. Unlike most of this family's slot 2s this is a real body, not a
@@ -1395,8 +1393,6 @@ void cMgSmartball_slot_c::StartSpin() {
 }
 
 // @symbol _ZN19cMgSmartball_slot_c10UpdateSpinEv
-#pragma push
-#pragma opt_common_subs off
 void cMgSmartball_slot_c::UpdateSpin() {
     int ib, ic;
 
@@ -1515,7 +1511,6 @@ void cMgSmartball_slot_c::UpdateSpin() {
     mSpinCooldown = 0x3c;
 }
 
-#pragma pop
 
 // @symbol _ZN19cMgSmartball_slot_c6UpdateEv
 /* Slot 1. First loop draws three copies of one sprite in a row (index i is
@@ -1765,7 +1760,6 @@ void cMgSmartball_pakkun_c::Update() {
 }
 
 // @symbol _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv
-#pragma push
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same idiom as every sibling. Then, while
  * mActionTimer is still counting down from a previous trigger, it just
@@ -1817,7 +1811,6 @@ void cMgSmartball_pakkun_c::SaveSnapshot() {
         mTriggered = 0;
 }
 
-#pragma pop
 
 // @symbol _ZN21cMgSmartball_pakkun_c14RestoreInitialEv
 /* Slot 2. A real override, not a tail-call veneer: it calls the base's
@@ -1882,7 +1875,6 @@ void cMgSmartball_dokan_c::Update() {
 }
 
 // @symbol _ZN20cMgSmartball_dokan_c12SaveSnapshotEv
-#pragma push
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- the base's is out-of-line at 0x02114724 and there is
  * no bl here, so the original repeated the two statements. Every sibling's
@@ -1923,7 +1915,6 @@ void cMgSmartball_dokan_c::SaveSnapshot() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN20cMgSmartball_dokan_c14RestoreInitialEv
 /* Slot 2. The ROM is three words -- ldr ip, [pc]; bx ip; .word target -- which
@@ -2182,8 +2173,6 @@ void cMgSmartball_spring_c::Update() {
 }
 
 // @symbol _ZN21cMgSmartball_spring_c12SaveSnapshotEv
-#pragma push
-#pragma opt_propagation off
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same pattern as every sibling. Then a three-way
  * state machine gated by two slot-indexed byte lanes (gTouchHeld/gTouchEdge)
@@ -2198,7 +2187,7 @@ void cMgSmartball_spring_c::Update() {
  * off it (`int *p = (int *)(c + off); *p = *p - k;`). All three are plain
  * compound assignments below and emit the same. */
 void cMgSmartball_spring_c::SaveSnapshot() {
-    u8 slot;
+    int slot;
     int held;
     int flag;
     int d;
@@ -2263,8 +2252,6 @@ void cMgSmartball_spring_c::SaveSnapshot() {
         mVel1 = 0;
     }
 }
-
-#pragma pop
 
 // @symbol _ZN21cMgSmartball_spring_c14RestoreInitialEv
 /* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial), then
@@ -2419,7 +2406,6 @@ void cMgSmartball_kinoko_c::Update() {
 }
 
 // @symbol _ZN21cMgSmartball_kinoko_c12SaveSnapshotEv
-#pragma push
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same idiom as every sibling. While mWasHit is set,
  * runs a one-shot transition (an effect/sound trigger, gated on mHitTimer
@@ -2492,7 +2478,6 @@ done:
     }
 }
 
-#pragma pop
 
 // @symbol _ZN21cMgSmartball_kinoko_c14RestoreInitialEv
 /* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial, qualified --
@@ -2747,7 +2732,6 @@ int cMgSmartball_ball_c::HitPropellers(int *pos) {
 }
 
 // @symbol _ZN19cMgSmartball_ball_c10HitKinokosEPi
-#pragma push
 int cMgSmartball_ball_c::HitKinokos(int *pos) {
     int i;
     dScMgSmartball_c *base;
@@ -2791,7 +2775,6 @@ int cMgSmartball_ball_c::HitKinokos(int *pos) {
     return 0;
 }
 
-#pragma pop
 
 // @symbol _ZN19cMgSmartball_ball_c10CheckExitsEPi
 int cMgSmartball_ball_c::CheckExits(int *pos) {
@@ -4421,7 +4404,6 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
 // @symbol _ZN16dScMgSmartball_c12UpdateScoresEv
 #pragma push
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
     dScMgSmartball_c *self = (dScMgSmartball_c *)o;
@@ -4632,7 +4614,6 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
 // @symbol _ZN16dScMgSmartball_c12CollideBallsEv
 #pragma push
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 void dScMgSmartball_c::CollideBalls() {
     char *p = (char *)this;
     int ballCount = mBallCount;
@@ -6033,15 +6014,27 @@ int dScMgSmartball_c::InitSubScreenBg() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S::GetBG1ScrPtr());
 }
 
+/* NitroSDK's G2_SetOBJMode and G2_GetOBJColorParam, on OamAttr: the mode
+ * sits in attr0|attr1 bits 10-11 and the colour param in attr2 bits 12-15. */
+enum { GX_OAM_MODE_XLU = 1 };
+
+inline int G2_GetOBJColorParam(const OamAttr *oam) {
+    return (oam->attr2 & 0xf000) >> 12;
+}
+
+inline void G2_SetOBJMode(OamAttr *oam, int mode, int cParam) {
+    *(u32 *)oam = (*(u32 *)oam & ~0xc00) | (mode << 10);
+    oam->attr2 = (u16)((oam->attr2 & ~0xf000) | (cParam << 12));
+}
+
 // @symbol _ZN16dScMgSmartball_c13InitResourcesEv
-#pragma push
-#pragma opt_propagation off
 /* dScMgSmartball_c::InitResources() -- vtable slot 0, the scene
  * setup for the Smartball (Bounce and Pounce) minigame. Clamps the saved
  * high score, brings up the two screens' BG layers, decompresses one of two
  * tile/palette sets depending on the mode byte at +8, zeroes the seven
  * per-object state arrays, builds the scene's one heap object, and finishes
- * by forcing every listed OAM sprite to blend mode 1 with priority 0.
+ * by putting every listed OAM sprite into translucent mode, keeping its
+ * colour param.
  *
  * Two shapes below are load-bearing, not style:
  *   - the saved score is narrowed with `(u8)(param & 0xFF)`, and BOTH halves
@@ -6051,9 +6044,9 @@ int dScMgSmartball_c::InitSubScreenBg() {
  *     four bytes. This replaces the u64 cast the first draft used for the
  *     same effect: the plain narrowing conversion emits the same pair,
  *     so no launder is needed here at all.
- *   - the last OAM block reads its old attr2 from sSmartballPakkunSprites[2],
- *     NOT from [2]+1 that it then writes. The ROM does the same, so the
- *     original macro expansion there was fed the wrong pointer.
+ *   - the last Pakkun G2_SetOBJMode call reads its colour param from
+ *     sSmartballPakkunSprites[2], NOT from [2]+1 that it then writes. The ROM
+ *     does the same, so the original call there was fed the wrong pointer.
  *
  * The offsets still spelled raw off `c` all fall inside dScMgSmartball_c.h's
  * pad_4660, which that header records as real access it has not modelled
@@ -6061,18 +6054,6 @@ int dScMgSmartball_c::InitSubScreenBg() {
  * their three singletons at 0x4684/0x4778..0x4780, and the high score at 0xbc.
  * Reading their widths is a separate pass; nothing here shadows a type.
  */
-inline u32 OamWordVal(OamAttr *arg0) {
-    return *((u32 *)arg0);
-}
-
-inline OamAttr *OamNext(OamAttr *arg0) {
-    return arg0 + 1;
-}
-
-inline u32 *OamWord(OamAttr *arg0) {
-    return (u32 *)arg0;
-}
-
 s32 dScMgSmartball_c::InitResources() {
     char *c = (char *)this;
     void *f;
@@ -6224,109 +6205,33 @@ s32 dScMgSmartball_c::InitResources() {
     mpWing = 0;
     G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0x18, 4, 0xa);
     G2x::SetBlendAlpha((volatile u16 *)0x4001050, 0, 0x18, 4, 0xa);
-    do {
-        OamAttr *_p = sSmartballBallSprites[1];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = ((*OamWord(_p)) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (u16)((_p->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballBallSpritesAlt[1];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = ((*OamWord(_p)) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (u16)((_p->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballPushSwitchSprites[2];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = ((*OamWord(_p)) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (u16)((_p->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballPropellerSprites[1];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = ((*OamWord(_p)) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (u16)((_p->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballKinokoSprites[1];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = ((*OamWord(_p)) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (u16)((_p->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballKinokoTurnSprites[1];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = ((*OamWord(_p)) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (u16)((_p->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballSpringSprites[1];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = (OamWordVal(_p) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (u16)((_p->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballSpringSpritesAlt[1];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = (OamWordVal(_p) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (u16)((_p->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballPakkunSprites[2];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = (OamWordVal(_p) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (_p->attr2 & (~0xf000)) | (_n << 0xc);
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballPakkunSprites[2] + 1;
-        u16 _a = sSmartballPakkunSprites[2]->attr2;
-        u32 _n;
-        *OamWord(sSmartballPakkunSprites[2] + 1) =
-            (OamWordVal(OamNext(sSmartballPakkunSprites[2])) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        OamNext(sSmartballPakkunSprites[2])->attr2 =
-            (u16)((OamNext(sSmartballPakkunSprites[2])->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballWingSprites[1];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = (OamWordVal(_p) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (u16)((_p->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
-    do {
-        OamAttr *_p = sSmartballWingBodySprites[1];
-        u16 _a = _p->attr2;
-        u32 _n;
-        *OamWord(_p) = (OamWordVal(_p) & (~0xc00)) | 0x400;
-        _n = (_a & 0xf000) >> 0xc;
-        _p->attr2 = (u16)((_p->attr2 & (~0xf000)) | (_n << 0xc));
-    } while (0);
+    G2_SetOBJMode(sSmartballBallSprites[1], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballBallSprites[1]));
+    G2_SetOBJMode(sSmartballBallSpritesAlt[1], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballBallSpritesAlt[1]));
+    G2_SetOBJMode(sSmartballPushSwitchSprites[2], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballPushSwitchSprites[2]));
+    G2_SetOBJMode(sSmartballPropellerSprites[1], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballPropellerSprites[1]));
+    G2_SetOBJMode(sSmartballKinokoSprites[1], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballKinokoSprites[1]));
+    G2_SetOBJMode(sSmartballKinokoTurnSprites[1], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballKinokoTurnSprites[1]));
+    G2_SetOBJMode(sSmartballSpringSprites[1], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballSpringSprites[1]));
+    G2_SetOBJMode(sSmartballSpringSpritesAlt[1], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballSpringSpritesAlt[1]));
+    G2_SetOBJMode(sSmartballPakkunSprites[2], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballPakkunSprites[2]));
+    G2_SetOBJMode(sSmartballPakkunSprites[2] + 1, GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballPakkunSprites[2]));
+    G2_SetOBJMode(sSmartballWingSprites[1], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballWingSprites[1]));
+    G2_SetOBJMode(sSmartballWingBodySprites[1], GX_OAM_MODE_XLU,
+                  G2_GetOBJColorParam(sSmartballWingBodySprites[1]));
     ((dScMgSmartball_c *)(c))->SpawnObjects();
     return 1;
 }
-
-#pragma pop
 
 // @symbol _ZN16dScMgSmartball_c21AfterCleanupResourcesEj
 #pragma push

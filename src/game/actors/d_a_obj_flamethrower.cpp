@@ -79,10 +79,10 @@ extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* Flame particles. 0x4f / 0x50 when param1's low byte is not 0xff;
  * 0x51 / 0x52 when it is. No recovered names. */
-extern void func_02022774(Fix12i x, Fix12i y, Fix12i z, s16 ang1, int ang2);
-extern void func_020226fc(Fix12i x, Fix12i y, Fix12i z, s16 ang1, s16 ang2);
-extern void func_02022864(Fix12i x, Fix12i y, Fix12i z, s16 ang1, int ang2);
-extern void func_020227ec(Fix12i x, Fix12i y, Fix12i z, s16 ang1, s16 ang2);
+extern void func_02022774(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity);
+extern void func_020226fc(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity);
+extern void func_02022864(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity);
+extern void func_020227ec(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity);
 }
 
 /* data_ov095_02136f80 (decl_common.h) is the per-segment scale,

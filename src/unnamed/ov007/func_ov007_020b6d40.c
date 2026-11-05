@@ -5,7 +5,7 @@ extern int data_ov007_020d7e28[];
 extern int data_ov007_020d7e38[];
 extern int data_ov007_020d7e50[];
 extern int data_ov007_020d7ec8[];
-extern u8 data_ov007_020d7a24[];
+extern u8 data_ov007_020d7a24[][2];
 
 extern Ov007Display *func_ov007_020b7594(int maskMain, int maskSub);
 extern void func_ov007_020b7320(Ov007Display *d, int a, int b);
@@ -17,9 +17,6 @@ extern struct Ov007ItemNode *func_ov007_020ade58(int index);
 extern void func_ov007_020b72d8(Ov007Display *d, int n);
 extern Ov007BgLayer *func_ov007_020c95fc(int a, int b, int c);
 extern struct Ov007LayerSlot *func_ov007_020adc08(int type, Ov007BgLayer *layer);
-
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
 
 void func_ov007_020b6d40(void) {
     Ov007Display *c;
@@ -53,9 +50,8 @@ void func_ov007_020b6d40(void) {
     func_ov007_020b72d8(c, 8);
 
     for (i = 0; i < 8; i++) {
-        c->bgLayers[i] =
-            func_ov007_020c95fc(data_ov007_020d7ec8[i], (&data_ov007_020d7a24[i * 2])[0],
-                                (&data_ov007_020d7a24[i * 2])[1]);
+        c->bgLayers[i] = func_ov007_020c95fc(data_ov007_020d7ec8[i], data_ov007_020d7a24[i][0],
+                                             data_ov007_020d7a24[i][1]);
         WORK->layerSlots[i] = func_ov007_020adc08(i, c->bgLayers[i]);
     }
 }

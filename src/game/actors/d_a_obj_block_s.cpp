@@ -158,7 +158,7 @@ extern s32 Vec3_HorzLen(const Vector3 *v0);
 extern void Vec3_MulScalarInPlace(int *v, int s);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern int Math_Function_0203b14c(char *dst, int a, int b, int c, int d);
+extern int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);
 
 void Crate_SetState(daObjBlockS_c *c, int i);
 }
@@ -915,7 +915,6 @@ void daObjBlockS_c::func_ov098_021390ec()
     mPrevAngleY = ReflectAngle(v.x, v.z, mPrevAngleY);
 }
 
-#pragma push
 // @symbol _ZN13daObjBlockS_c19func_ov098_02139228Ev
 /* Ground contact and slide step; returns 1 when it ran to the end, 0 when the
  * crate is airborne or it left early (see below).
@@ -953,9 +952,6 @@ void daObjBlockS_c::func_ov098_021390ec()
  * for the floor normal, the crate's yaw and the yaw minus a quarter turn. */
 int daObjBlockS_c::func_ov098_02139228()
 {
-
-#pragma opt_propagation off
-    int base = 2;
     void *fr;
     int n;
     int ang;
@@ -992,8 +988,7 @@ int daObjBlockS_c::func_ov098_02139228()
     ApproachLinear(mClsnYOffset, mClsnYOffsetTarget, 0x800);
 
     if ((mFloorNormalY | mHorzSpeed) == 0) {
-        u32 *p = &mdCcAcPos_c1.flags;
-        *p &= ~0x2000;
+        mdCcAcPos_c1.flags &= ~0x2000;
         return 0;
     }
 
@@ -1009,24 +1004,15 @@ int daObjBlockS_c::func_ov098_02139228()
 
 
     {
-        u16 r_94 = mPrevAngleY;
-        int sa = (u16)ang;
-        sa >>= 4;
-        int s94 = r_94;
-        s94 >>= 4;
-        int li94 = s94 * 2;
-        s32 v98 = mHorzSpeed;
-        s16 x94 = data_02082214[li94];
-        s16 z94 = data_02082214[li94 + 1];
+        int sMove = (u16)ang >> 4;
+        int sPrev = (u16)mPrevAngleY >> 4;
+        s32 speed = mHorzSpeed;
+        a1.x = FX_MUL(speed, data_02082214[sPrev * 2]);
         a1.y = 0;
+        a1.z = FX_MUL(speed, data_02082214[sPrev * 2 + 1]);
+        a2.x = FX_MUL(hl, data_02082214[sMove * 2]);
         a2.y = 0;
-        s32 a1x = FX_MUL(v98, x94);
-        a1.z = FX_MUL(v98, z94);
-        s16 xa = data_02082214[sa * 2];
-        s16 za = data_02082214[sa * 2 + 1];
-        a2.x = FX_MUL(hl, xa);
-        a2.z = FX_MUL(hl, za);
-        a1.x = a1x;
+        a2.z = FX_MUL(hl, data_02082214[sMove * 2 + 1]);
     }
     Vec3_MulScalarInPlace(&a2.x, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
     Vec3_Add(&sum, &a1, &a2);
@@ -1052,8 +1038,7 @@ int daObjBlockS_c::func_ov098_02139228()
             q1 = mAngleZ;
             if (q1 < 0) q1 = ((-q1) << 16) >> 16;
             if (q1 < 0x10) {
-                s32 v = mHorzSpeed;
-                sd = cstd::fdiv(FX_MUL(v, 8), 0xa);
+                sd = cstd::fdiv(FX_MUL(mHorzSpeed, 8), 0xa);
                 if (sd < 0) sd = -sd;
                 if (mVertSpeed > 0xa000)
                     Sound::PlayBank3(0x51, mCamSpacePos);
@@ -1076,9 +1061,8 @@ int daObjBlockS_c::func_ov098_02139228()
         UpdateAngle(mAngleX, r5, 4, 0x1000);
         UpdateAngle(mAngleZ, r4, 4, 0x1000);
     }
-    return 1 | (base & 0);
+    return 1;
 }
-#pragma pop
 
 // @symbol _ZN13daObjBlockS_c19func_ov098_021396a4Ev
 /* Drop shadow. Probes for ground 10 units below the crate (0xa000) with
@@ -1175,9 +1159,12 @@ void daObjBlockS_c::func_ov098_02139850()
         if (mHoldingPlayer->param1 == 2) {
             r5 = (r5 + 2) & 0xff;
         }
-        Math_Function_0203b14c((char *)&mCarryOffsetX, *(int *)((char *)data_ov098_0213bf60 + r5 * 0xc), 0x800, 0x3e8000, 4);
-        Math_Function_0203b14c((char *)&mCarryOffsetY, *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc), 0x800, 0x3e8000, 4);
-        Math_Function_0203b14c((char *)&mCarryOffsetZ, *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc), 0x800, 0x3e8000, 4);
+        Math_Function_0203b14c(&mCarryOffsetX, *(int *)((char *)data_ov098_0213bf60 + r5 * 0xc),
+                               0x800, 0x3e8000, 4);
+        Math_Function_0203b14c(&mCarryOffsetY, *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc),
+                               0x800, 0x3e8000, 4);
+        Math_Function_0203b14c(&mCarryOffsetZ, *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc),
+                               0x800, 0x3e8000, 4);
         {
             char *res = (char *)UpdateCarry(*mHoldingPlayer, *(Vector3 *)&mCarryOffsetX);
             mModel.mat4x3 = *(struct Matrix4x3 *)res;

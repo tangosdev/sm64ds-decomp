@@ -132,7 +132,7 @@ extern signed char gNumRedCoins[];
 extern struct OamAttr data_ov002_0210c6b8;
 extern signed char gCurrentSublevel;
 extern int SublevelToLevel(int i);
-extern unsigned char data_0209f2c4;
+extern unsigned char gGamePaused;
 extern unsigned char data_0209f20c;
 extern unsigned char gVsExitScreenActive;
 extern unsigned char data_0209f204;
@@ -483,7 +483,7 @@ int dMeter_c::Behavior() {
 int dMeter_c::Render() {
     if (IsVsMode()) {
         if (data_0209fc9c == 0) {
-            if (((data_0209f2c4 | data_0209f20c | gVsExitScreenActive) & 0xff) == 0) {
+            if (((gGamePaused | data_0209f20c | gVsExitScreenActive) & 0xff) == 0) {
                 RenderVsTimer();
                 RenderStarCount();
                 RenderCoinCount();
@@ -496,7 +496,7 @@ int dMeter_c::Render() {
         }
     } else if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) != 0) {
         unsigned char v = data_0209f20c;
-        if (((data_0209f2c4 | v | gVsExitScreenActive) & 0xff) == 0) {
+        if (((gGamePaused | v | gVsExitScreenActive) & 0xff) == 0) {
             RenderHealthMeter();
             if (Event::GetBit(EVENT_COLLECTING_STAR) == 0) {
                 RenderCoinCount();
@@ -514,7 +514,7 @@ int dMeter_c::Render() {
             }
         }
         unsigned char v2 = data_0209f20c;
-        if (((data_0209f2c4 | v2 | gVsExitScreenActive) & 0xff) == 0 ||
+        if (((gGamePaused | v2 | gVsExitScreenActive) & 0xff) == 0 ||
             (v2 != 0 && gLevelClearStep < 3)) {
             RenderStarCount();
             RenderCameraButtons();
@@ -550,7 +550,7 @@ void dMeter_c::UpdateHealthMeter() {
     int chr = data_0209f250;
     daPly_c *player = (daPly_c *)data_0209f394[chr];
     unsigned int health = (gPlayerHealth[chr] >> 8) & 0xff;
-    if ((unsigned char)(data_0209f2c4 | data_0209f20c | gVsExitScreenActive) != 0)
+    if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) != 0)
         return;
     if (mHealthMeterHoldTimer != 0)
         mHealthMeterHoldTimer -= data_0208ee44;
@@ -697,7 +697,7 @@ void dMeter_c::UpdateVsTimer() {
 
     if (data_0209f2bc != 0)
         return;
-    if (((data_0209f2c4 | data_0209f20c | gVsExitScreenActive) & 0xff) != 0)
+    if (((gGamePaused | data_0209f20c | gVsExitScreenActive) & 0xff) != 0)
         return;
 
     if (data_ov002_02111188 != 0)
@@ -747,13 +747,13 @@ void dMeter_c::UpdateVsTimer() {
  *   0..3    not a digit at all: data_ov002_0210ca0c[3 - ones], a separate
  *           countdown artwork set, indexed backwards
  *
- * Only the caption is drawn when any of data_0209f2c4 / f20c / f294 is set;
+ * Only the caption is drawn when any of gGamePaused / f20c / f294 is set;
  * they are OR-ed and tested as a single byte.
  */
 void dMeter_c::RenderVsTimer() {
     int t = mVsTimer;
 
-    if ((unsigned char)(data_0209f2c4 | data_0209f20c | gVsExitScreenActive) == 0) {
+    if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) == 0) {
         if (GetOwnerLanguage() == 5) {
             OAM::Render(0, &data_ov002_0210d290, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {

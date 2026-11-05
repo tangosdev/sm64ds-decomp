@@ -20,7 +20,7 @@
  * `#pragma defer_codegen off` below. Do not reorder, and do not drop that
  * pragma. It makes the out-of-line destructor come out D1, D0 as in the
  * ROM (the unused D2 trails it and is deadstripped), and it is what lets
- * the seven push and pop brackets bind. Each bracket was measured: without
+ * the two push and pop brackets bind. Each bracket was measured: without
  * it, its function stops matching. The destructor is out of line, so it is
  * the key function and this file emits the vtable and RTTI for the whole
  * base chain.
@@ -39,7 +39,7 @@
 // - The 16 small Boos at 0x4660 are typed (dScMgTeresa_c::SmallBoo mBoos[16]).
 //   Their handlers use mBoos[i] where that measured identical. StepBoo and
 //   Boo_StateFadeAway spell most fields as `(char *)&mBoos[0].field + i * 0x24`
-//   (field first, stride last, the cartridge's order); ResetRound,
+//   (field first, stride last, the cartridge's order);
 //   CheckRevealDone, CheckRoundEnd and CountRubbedTiles walk a 0x24-stepped
 //   pointer and read `((dScMgTeresa_c *)p)->mBoos[0].field`.
 // - ResetRound clears 0x4bfc, 0x4c00 and 0x4c10 by offset: nothing in this TU
@@ -548,7 +548,6 @@ void dScMgTeresa_c::Reveal_StateFinish(int idx) {
     Sound::PlayBank2_2D(0x1f5);
 }
 
-#pragma push
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 // @symbol _ZN13dScMgTeresa_c22Reveal_StateDipAndRiseEi
 void dScMgTeresa_c::Reveal_StateDipAndRise(int i) {
@@ -583,7 +582,6 @@ void dScMgTeresa_c::Reveal_StateDipAndRise(int i) {
     }
 }
 #undef AT
-#pragma pop
 
 // @symbol _ZN13dScMgTeresa_c19Reveal_StateAnimateEi
 void dScMgTeresa_c::Reveal_StateAnimate(int i) {
@@ -603,7 +601,6 @@ void dScMgTeresa_c::Reveal_StateAnimate(int i) {
     }
 }
 
-#pragma push
 // @symbol _ZN13dScMgTeresa_c19Reveal_StateSlideInEi
 void dScMgTeresa_c::Reveal_StateSlideIn(int i) {
     mReveal[i].frameTimer += 1;
@@ -632,7 +629,6 @@ void dScMgTeresa_c::Reveal_StateSlideIn(int i) {
     mReveal[i].frameTimer = 0;
     mReveal[i].vx = 0;
 }
-#pragma pop
 
 // @symbol _ZN13dScMgTeresa_c17Reveal_StateStartEi
 void dScMgTeresa_c::Reveal_StateStart(int i) {
@@ -809,8 +805,6 @@ void dScMgTeresa_c::VanishPuff_UpdateAll() {
     }
 }
 
-#pragma push
-#pragma opt_strength_reduction off
 // @symbol _ZN13dScMgTeresa_c16VanishPuff_SpawnEi
 void dScMgTeresa_c::VanishPuff_Spawn(int param) {
     int i;
@@ -826,7 +820,6 @@ void dScMgTeresa_c::VanishPuff_Spawn(int param) {
         }
     }
 }
-#pragma pop
 
 
 // @symbol _ZN13dScMgTeresa_c13DrawCountdownEv
@@ -1542,8 +1535,6 @@ void dScMgTeresa_c::SpawnBoos() {
     } while (i < count);
 }
 
-#pragma push
-#pragma opt_common_subs off
 // @symbol _ZN13dScMgTeresa_c13UpdateRubbingEv
 void dScMgTeresa_c::UpdateRubbing() {
     int close;
@@ -1579,7 +1570,6 @@ void dScMgTeresa_c::UpdateRubbing() {
         mRubPrevY = mRubY;
     }
 }
-#pragma pop
 
 // @symbol _ZN13dScMgTeresa_c12ReadRubTouchEv
 void dScMgTeresa_c::ReadRubTouch() {
@@ -1600,88 +1590,64 @@ void dScMgTeresa_c::ReadRubTouch() {
     mRubY = gTouchY[(unsigned int)gActivePlayerSlot * 4];
 }
 
-#pragma push
-#pragma opt_strength_reduction off
 // @symbol _ZN13dScMgTeresa_c10ResetRoundEv
-void dScMgTeresa_c::ResetRound()
-{
+void dScMgTeresa_c::ResetRound() {
     char *p = (char *)this;
-  int v;
-  int i;
-  char *q;
-  v = 0;
-  q = p;
-  i = 0;
-  do
-  {
-      ((dScMgTeresa_c *)q)->mBoos[0].mX = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mY = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mTimer = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mAnimTimer = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mTurnTimer = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mInPlay = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mState = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mSettled = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mVisible = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mPriority = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mFound = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mFrame = v;
-      ((dScMgTeresa_c *)q)->mBoos[0].mAnim = v;
-      i++;
-      ((dScMgTeresa_c *)q)->mBoos[0].mFade = v;
-      q += 0x24;
-  }
-  while (i < 0x10);
-  q = p;
-  v = 0;
-  i = 0;
-  do
-  {
-      ((dScMgTeresa_c *)q)->mExclaims[0].x = i;
-      ((dScMgTeresa_c *)q)->mExclaims[0].y = i;
-      ((dScMgTeresa_c *)q)->mExclaims[0].timer = i;
-      ((dScMgTeresa_c *)q)->mExclaims[0].active = i;
-      v++;
-      ((dScMgTeresa_c *)q)->mExclaims[0].visible = i;
-      q += 0xc;
-  }
-  while (v < 0x10);
-  v = 0;
-  do
-  {
-      ((dScMgTeresa_c *)(p + (v << 4)))->mVanishPuffs[0].active = i;
-      ((dScMgTeresa_c *)(p + (v << 4)))->mVanishPuffs[0].visible = i;
-      v++;
-  }
-  while (v < 0x10);
-  mRubX = i;
-  mRubY = i;
-  mRubPrevX = i;
-  mRubPrevY = i;
-  /* 0x4bfc, 0x4c00 and 0x4c10 are cleared here and read nowhere in this TU. */
-  *((int *) (p + 0x4bfc)) = i;
-  *((int *) (p + 0x4c00)) = i;
-  *((short *) (p + 0x4c10)) = i;
-  mSceneTimer = i;
-  mBg3FlashTimer = i;
-  mRubTouching = i;
-  mRoundCleared = i;
-  mRevealDone = i;
-  mTimeLeft = i;
-  mCountdownFrames = i;
-  mCountdownShown = i;
-  mCountdownRunning = i;
-  mFoundCount = i;
-  Reveal_Hide();
-  Marker_Hide();
-  mBg3FlashTick = i;
-  mBg3FlashStep = i;
-  BigBoo_Hide();
-  mRubSound = i;
-  mFirstFoundBoo = 0xff;
-  mRubLocked = i;
+
+    for (int i = 0; i < 0x10; i++) {
+        mBoos[i].mX = 0;
+        mBoos[i].mY = 0;
+        mBoos[i].mTimer = 0;
+        mBoos[i].mAnimTimer = 0;
+        mBoos[i].mTurnTimer = 0;
+        mBoos[i].mInPlay = 0;
+        mBoos[i].mState = 0;
+        mBoos[i].mSettled = 0;
+        mBoos[i].mVisible = 0;
+        mBoos[i].mPriority = 0;
+        mBoos[i].mFound = 0;
+        mBoos[i].mFrame = 0;
+        mBoos[i].mAnim = 0;
+        mBoos[i].mFade = 0;
+    }
+    for (int i = 0; i < 0x10; i++) {
+        mExclaims[i].x = 0;
+        mExclaims[i].y = 0;
+        mExclaims[i].timer = 0;
+        mExclaims[i].active = 0;
+        mExclaims[i].visible = 0;
+    }
+    for (int i = 0; i < 0x10; i++) {
+        mVanishPuffs[i].active = 0;
+        mVanishPuffs[i].visible = 0;
+    }
+    mRubX = 0;
+    mRubY = 0;
+    mRubPrevX = 0;
+    mRubPrevY = 0;
+    /* 0x4bfc, 0x4c00 and 0x4c10 are cleared here and read nowhere in this TU. */
+    *((int *)(p + 0x4bfc)) = 0;
+    *((int *)(p + 0x4c00)) = 0;
+    *((short *)(p + 0x4c10)) = 0;
+    mSceneTimer = 0;
+    mBg3FlashTimer = 0;
+    mRubTouching = 0;
+    mRoundCleared = 0;
+    mRevealDone = 0;
+    mTimeLeft = 0;
+    mCountdownFrames = 0;
+    mCountdownShown = 0;
+    mCountdownRunning = 0;
+    mFoundCount = 0;
+    Reveal_Hide();
+    Marker_Hide();
+    mBg3FlashTick = 0;
+    mBg3FlashStep = 0;
+    BigBoo_Hide();
+    mRubSound = 0;
+    mFirstFoundBoo = 0xff;
+    mRubLocked = 0;
 }
-#pragma pop
 
 // @symbol _ZN13dScMgTeresa_c17Scene_StateResultEv
 void dScMgTeresa_c::Scene_StateResult() {
