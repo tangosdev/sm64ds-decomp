@@ -1,16 +1,5 @@
 #include "types.h"
-
-/* RFC 3174 SHA1Context, as func_0205e3d4.c and func_0205e89c.c spell it, with
- * the 32-bit block index this build stores. */
-typedef struct {
-    u32 Intermediate_Hash[5]; /* 0x00 */
-    u32 Length_Low;           /* 0x14 */
-    u32 Length_High;          /* 0x18 */
-    u32 Message_Block_Index;  /* 0x1c */
-    u8 Message_Block[64];     /* 0x20 */
-    int Computed;             /* 0x60 -- more input is refused once set */
-    int Corrupted;            /* 0x64 -- the error code, 0 while good */
-} SHA1Context;
+#include "SHA1Context.h"
 
 /* The parameter keeps its old struct Obj tag, as does the
  * func_0205e3d4 extern: retyping either changes a declaration the
