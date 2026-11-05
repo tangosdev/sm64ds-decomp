@@ -26,11 +26,6 @@
  * byte globals declared below the includes.
  *
  * deslop leftovers:
- *  - Raw offsets remain in the dust-slot walks: Behavior's particle loop and
- *    clear loop step a char pointer from this and read +0x4dc..0x4e4 (mDustPos),
- *    and InitResources clears the same slots the same way. A Vector3 pointer
- *    over mDustPos measures longer in each of the three loops (see the
- *    comments there), so they keep the walking-pointer shape.
  *  - Names inferred from behaviour only, not from a symbol or RTTI: mHitPoints,
  *    mTargetPos*, mHorzAccelStep, mTexTimer/mTexPhase, mDustCounter; patterns
  *    4..9 are numbered, not named; the SE_* ids are named by the situation
@@ -52,11 +47,8 @@
  *  - Sound::ChangeMusicVolume keeps its mangled decl (Fix12<int> by value, S13 wall); the Layer3 pair keeps file-local mangled decls because Sound.h declares only Layer1/Layer2 (this file excludes decl_common.h).
  */
 
-/* Turns off deferred codegen, which does two things at once here: it makes
- * the bracketed opt_common_subs / opt_strength_reduction pair around
- * _ZN10daIwante_c8BehaviorEv bind to that member alone instead of leaking
- * file-wide, and it flips .text emission from reverse-source to source
- * order -- which is why this file is written ROM-ascending. */
+/* Turns off deferred codegen, which flips .text emission from reverse-source
+ * to source order -- which is why this file is written ROM-ascending. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum Eyerok_AssetId {
     ASSET_IWANTE_KCL = 0x0332,
@@ -2377,17 +2369,13 @@ int daIwante_c::Render() {
     return 1;
 }
 
-/* Bracketed, and it binds only because of the file-top
- * `#pragma defer_codegen off`: with codegen deferred (mwccarm 2004/b56s
- * default) a bracketed opt_* pragma does not bind and these two go
- * file-global, which costs func_ov066_021184e0 (4 words) and
- * func_ov066_021194fc (a size change).  Deleting them outright instead
- * costs _ZN10daIwante_c8BehaviorEv: 33/34, a 999-word content divergence plus one
- * wrong relocation destination, with the size UNCHANGED at 0x4b0.  (An earlier
- * revision of this comment said 0x4b0 -> 0x4ac; that size change belongs to a
- * ROM-descending arrangement, not this one.  Re-measured by negative control on
- * the shipped source.) */
-#pragma opt_common_subs off
+/* Issue (or re-issue) one dust particle at a slot position. The reference
+ * parameter is what makes the call re-read the slot's x after Behavior's
+ * nonzero test; passing mDustPos[i].x directly reuses the tested register. */
+static inline u32 NewDust(u32 handle, u32 id, const Vector3 &pos) {
+    return Particle::System::New(handle, id, pos.x, pos.y, pos.z, 0, 0);
+}
+
 // @symbol _ZN10daIwante_c8BehaviorEv
 /* Per frame, for all three parts: count mTimer1 and mTimer2 down, then run the
  * current state's run handler (the second pointer-to-member of the descriptor
@@ -2407,114 +2395,74 @@ int daIwante_c::Render() {
  * ROM symbols carry by-value/ref class parameters keep their literal mangled
  * extern "C" spellings. */
 int daIwante_c::Behavior() {
-    char *c = (char *)this;
-
     DecIfAbove0_Short(&mTimer1);
     DecIfAbove0_Short(&mTimer2);
 
-    {
-        EyerokState *st = mState;
-        if (*(int *)&st->run != 0)
-            (this->*st->run)();
-    }
+    if (mState->run)
+        (this->*mState->run)();
 
     if (mDustCounter != 0) {
         if ((mDustCounter & 1) == 0) {
             int rnd = RandomIntInternal(&data_0209e650);
-            int off = (mDustCounter >> 1) * 0xc;
-            char *bx = (char *)&mDustPos[0].x;
-            char *bz = (char *)&mDustPos[0].z;
-            char *by = (char *)&mDustPos[0].y;
-            int *px;
-            int *pz;
-            int *py;
-            int zero;
+            int idx = mDustCounter >> 1;
             EVec3 vin;
             EVec3 vout;
-            *(int *)(bx + off) = mPosX;
-            *(int *)(by + off) = mPosY;
-            *(int *)(bz + off) = mPosZ;
-            px = (int *)(bx + off);
-            py = (int *)(by + off);
-            pz = (int *)(bz + off);
-            zero = 0;
-            vin.x = zero;
-            vin.y = zero;
-            vin.z = zero;
-            vout.x = zero;
-            vout.y = zero;
-            vout.z = zero;
+            mDustPos[idx].x = mPosX;
+            mDustPos[idx].y = mPosY;
+            mDustPos[idx].z = mPosZ;
+            vin.x = 0;
+            vin.y = 0;
+            vin.z = 0;
+            vout.x = 0;
+            vout.y = 0;
+            vout.z = 0;
             if (mState != &data_ov066_0211b07c) {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
                     Matrix4x3_FromRotationY(data_020a0e68, (s16)(mAngleY - 0x4000));
                     MulVec3Mat4x3(&vin, data_020a0e68, &vout);
-                    *px += vout.x;
-                    *pz += vout.z;
+                    mDustPos[idx].x += vout.x;
+                    mDustPos[idx].z += vout.z;
                 } else {
                     if (((rnd >> 16) & 1) == 0)
-                        *px += (((rnd >> 8) & 3) * 0x28) << 12;
+                        mDustPos[idx].x += (((rnd >> 8) & 3) * 0x28) << 12;
                     else
-                        *px -= (((rnd >> 8) & 3) * 0x28) << 12;
-                    *pz += 0x19000;
+                        mDustPos[idx].x -= (((rnd >> 8) & 3) * 0x28) << 12;
+                    mDustPos[idx].z += 0x19000;
                 }
-                *py += ((mDustCounter * 0xa) + 0x23) << 12;
+                mDustPos[idx].y += ((mDustCounter * 0xa) + 0x23) << 12;
             } else {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
                     Matrix4x3_FromRotationY(data_020a0e68, (s16)(mAngleY - 0x4000));
                     MulVec3Mat4x3(&vin, data_020a0e68, &vout);
-                    *px += vout.x;
-                    *pz += vout.z;
+                    mDustPos[idx].x += vout.x;
+                    mDustPos[idx].z += vout.z;
                 } else {
                     int a = ((rnd >> 24) & 7) * 0x1e;
                     int b = ((rnd >> 16) & 7) * 0x1e;
-                    *pz -= 0x64000;
-                    *px += (0x69 - a) << 12;
-                    *pz += (0x69 - b) << 12;
+                    mDustPos[idx].z -= 0x64000;
+                    mDustPos[idx].x += (0x69 - a) << 12;
+                    mDustPos[idx].z += (0x69 - b) << 12;
                 }
-                *py += 0x96000;
+                mDustPos[idx].y += 0x96000;
             }
         }
 
-        {
-            /* cur walks mDustPos as actor-relative offsets; a Vector3 *cur
-               over mDustPos makes Behavior 4 bytes longer. */
-            int i = 0;
-            char *cur = c;
-            u32 id0 = 0x13a;
-            u32 id1 = 0x13b;
-            int z0 = 0;
-            for (; i < 0x14; i++) {
-                if (((daIwante_c *)cur)->mDustPos[0].x != 0 ||
-                    ((daIwante_c *)cur)->mDustPos[0].y != 0 ||
-                    ((daIwante_c *)cur)->mDustPos[0].z != 0) {
-                    mDustParticle1[i] = Particle::System::New(
-                        mDustParticle1[i], id0, ((daIwante_c *)cur)->mDustPos[0].x,
-                        ((daIwante_c *)cur)->mDustPos[0].y, ((daIwante_c *)cur)->mDustPos[0].z,
-                        (const Vector3_16f *)((void *)z0), (Particle::Callback *)((void *)z0));
-                    mDustParticle2[i] = Particle::System::New(
-                        mDustParticle2[i], id1, ((daIwante_c *)cur)->mDustPos[0].x,
-                        ((daIwante_c *)cur)->mDustPos[0].y, ((daIwante_c *)cur)->mDustPos[0].z,
-                        (const Vector3_16f *)((void *)z0), (Particle::Callback *)((void *)z0));
-                }
-                cur += 0xc;
+        for (int i = 0; i < 0x14; i++) {
+            if (mDustPos[i].x != 0 || mDustPos[i].y != 0 || mDustPos[i].z != 0) {
+                mDustParticle1[i] = NewDust(mDustParticle1[i], 0x13a, mDustPos[i]);
+                mDustParticle2[i] = NewDust(mDustParticle2[i], 0x13b, mDustPos[i]);
             }
         }
 
-        {
-            mDustCounter++;
-            if (mDustCounter > 0x26) {
-                /* A Vector3 *q over mDustPos makes Behavior 4 bytes longer. */
-                int j = 0;
-                char *q = c;
-                mDustCounter = (u16)j;
-                for (; j < 0x14; j++) {
-                    ((daIwante_c *)q)->mDustPos[0].x = 0;
-                    ((daIwante_c *)q)->mDustPos[0].y = 0;
-                    ((daIwante_c *)q)->mDustPos[0].z = 0;
-                    q += 0xc;
-                }
+        mDustCounter++;
+        if (mDustCounter > 0x26) {
+            mDustCounter = 0;
+            for (int j = 0; j < 0x14; j++) {
+                mDustPos[j].x = 0;
+                mDustPos[j].y = 0;
+                mDustPos[j].z = 0;
             }
         }
     }
@@ -2527,16 +2475,13 @@ int daIwante_c::Behavior() {
     }
 
     {
-        EVec3 vrel;
         mRestPosY = mSpawnPosY + 0x8000;
         UpdatePos(0);
         mdCcAcPos_c.pos.x = mPosX;
         mdCcAcPos_c.pos.y = mPosY;
         mdCcAcPos_c.pos.z = mPosZ;
-        vrel.x = data_ov066_0211ad18[0];
-        vrel.y = data_ov066_0211ad18[1];
-        vrel.z = data_ov066_0211ad18[2];
-        mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&vrel);
+        Vector3 vrel(data_ov066_0211ad18[0], data_ov066_0211ad18[1], data_ov066_0211ad18[2]);
+        mdCcAcPos_c.SetPosRelativeToActor(vrel);
         func_ov066_021194fc();
         if (mMeshCollider2.IsEnabled() != 0)
             func_ov066_021194a4();
@@ -2547,8 +2492,6 @@ int daIwante_c::Behavior() {
     }
     return 1;
 }
-
-#pragma opt_common_subs on
 
 // @symbol _ZN10daIwante_c13InitResourcesEv
 /* mPartIdx comes from the low byte of param1 (0xff, or anything above 2, means
@@ -2633,19 +2576,10 @@ int daIwante_c::InitResources() {
         mdCcAcPos_c.Init((dActor_c *)c, w, 0x64000, 0x64000, 0x200002, 0);
     }
 
-    {
-        /* NOT mDustPos[i]: the ROM walks a running char* and re-derives the
-           three stores from it. Spelling this as `Vector3 *p = mDustPos; p->x
-           = 0; ... p++;` makes InitResources 8 bytes longer. */
-        int i = 0;
-        char *p = c;
-        do {
-            ((daIwante_c *)p)->mDustPos[0].x = 0;
-            ((daIwante_c *)p)->mDustPos[0].y = 0;
-            i += 1;
-            ((daIwante_c *)p)->mDustPos[0].z = 0;
-            p += 0xC;
-        } while (i < 0x14);
+    for (int i = 0; i < 0x14; i++) {
+        mDustPos[i].x = 0;
+        mDustPos[i].y = 0;
+        mDustPos[i].z = 0;
     }
 
     mTerminalVelocity = -0x64000;

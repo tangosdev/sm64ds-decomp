@@ -1841,7 +1841,8 @@ int daKing_Donketu_c::Render()
  * the camera frames the boss with the player.
  *
  * `opt_propagation off` is what stops the many position temporaries being
- * folded. It is bracketed to this one member: under `defer_codegen off` above,
+ * folded (without it Behavior is 0x428, not 0x42c: angx's 0x2000 and the
+ * data_020a0e68 address are folded instead of held in r4). It is bracketed to this one member: under `defer_codegen off` above,
  * the bracket binds positionally, so the members before and after it keep
  * the file's default propagation. The closing `#pragma pop` must NOT follow
  * Behavior's closing brace directly: the parser reads one token past the `}`
@@ -1857,7 +1858,6 @@ struct RayParams { Vector3 start, end, in, out; };
 // @symbol _ZN16daKing_Donketu_c8BehaviorEv
 int daKing_Donketu_c::Behavior()
 {
-    char *self = (char *)this;
     C *c = (C *)this;
     int angx;
     Vector3 v0;
@@ -1869,14 +1869,11 @@ int daKing_Donketu_c::Behavior()
     ((dCamera_c *)data_0209f318)->mFramedActor = this;
     DecIfAbove0_Short(&mStateTimer);
 
-    if (c->pp[1] != 0) {
-        PMF *p = c->pp + 1;
-        (c->**p)();
-    }
+    if (c->pp[1] != 0)
+        (c->*c->pp[1])();
 
-    if ((char *)c->pp != (char *)&data_ov073_02123400
-        && (char *)c->pp != (char *)&data_ov073_02123320
-        && (char *)c->pp != (char *)&data_ov073_02123340) {
+    if (mState != &data_ov073_02123400 && mState != &data_ov073_02123320 &&
+        mState != &data_ov073_02123340) {
         UpdatePos(&mdCcAcPos_c);
     } else {
         int sum = mVertSpeed + mVertAccel;
@@ -1888,8 +1885,7 @@ int daKing_Donketu_c::Behavior()
         UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     }
 
-    if (((char *)c->pp == (char *)&data_ov073_02123330 ||
-         (char *)c->pp == (char *)&data_ov073_02123350) &&
+    if ((mState == &data_ov073_02123330 || mState == &data_ov073_02123350) &&
         mBlendAnmModel.WillHitFrame(7) != 0) {
         data_020a0e68 = mBlendAnmModel.mat4x3;
         MulMat4x3Mat4x3(&mBlendAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
@@ -1903,13 +1899,10 @@ int daKing_Donketu_c::Behavior()
         HugeLandingDustAt(v48, 1);
     }
 
-    if ((char *)c->pp != (char *)&data_ov073_021233c0
-        && (char *)c->pp != (char *)&data_ov073_021233d0
-        && (char *)c->pp != (char *)&data_ov073_021233f0
-        && (char *)c->pp != (char *)&data_ov073_02123400
-        && (char *)c->pp != (char *)&data_ov073_02123320
-        && (char *)c->pp != (char *)&data_ov073_02123340
-        && (char *)c->pp != (char *)&data_ov073_02123380) {
+    if (mState != &data_ov073_021233c0 && mState != &data_ov073_021233d0 &&
+        mState != &data_ov073_021233f0 && mState != &data_ov073_02123400 &&
+        mState != &data_ov073_02123320 && mState != &data_ov073_02123340 &&
+        mState != &data_ov073_02123380) {
         dBgCh_Lin line;
         rp.start.x = 0; rp.start.y = 0; rp.start.z = 0;
         rp.end.x = 0; rp.end.y = 0; rp.end.z = 0;
@@ -1954,7 +1947,7 @@ int daKing_Donketu_c::Behavior()
             mGroundMissPosX = mPosX;
             mGroundMissPosY = mPosY;
             mGroundMissPosZ = mPosZ;
-            if ((char *)c->pp != (char *)&data_ov073_021233a0) {
+            if (mState != &data_ov073_021233a0) {
                 mPosX = mPrevPosX;
                 mPosY = mPrevPosY;
                 mPosZ = mPrevPosZ;
@@ -1970,13 +1963,12 @@ int daKing_Donketu_c::Behavior()
     v54 = data_ov073_02123040;
     mdCcAcPos_c.SetPosRelativeToActor(v54);
 
-    if ((char *)c->pp == (char *)&data_ov073_02123360
-        || (char *)c->pp == (char *)&data_ov073_02123390) {
-        ((daKing_Donketu_c *)self)->func_ov073_0211f61c();
+    if (mState == &data_ov073_02123360 || mState == &data_ov073_02123390) {
+        func_ov073_0211f61c();
     }
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
-    ((daKing_Donketu_c *)self)->func_ov073_021215cc();
+    func_ov073_021215cc();
     mBlendAnmModel.Advance();
     return 1;
 }

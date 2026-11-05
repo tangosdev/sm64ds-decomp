@@ -7,7 +7,8 @@
  * destructor is under opt_propagation on and defer_codegen off, so it
  * emits D1, D0, then a D2 the cartridge does not keep, ahead of the
  * deferred functions. opt_propagation off stays last: deferred codegen
- * of func_ov060_02117db8 uses that setting. Do not move it.
+ * of func_ov060_02117db8 uses that setting (without it, 89 of its 202
+ * words differ). Do not move it.
  *
  * Behavior runs data_ov060_0211b1ac[mState]: 0 finds Bowser, 1 watches
  * him, 2 drops the platform. The three handlers are declared in the
@@ -18,7 +19,7 @@
  * pointer-to-member to the table's void handler type.
  *
  * __sinit at the end of this file emits compiler-numbered statics; they
- * compile as @666..@691 and the manifest maps them to the ROM's
+ * compile as @657..@681 and the manifest maps them to the ROM's
  * @456..@479 and @506. mwcc's counter for those names advances for
  * named variables, named parameters (prototypes included) and some
  * compiler temporaries declared before them (`new daKpa3Bg_c` alone
@@ -27,8 +28,6 @@
  * names are there for the count:
  * - InitResources loads the model through the named local bmd.
  * - func_ov060_021180e0 steps its timer through two named locals.
- * - func_ov060_02117db8 keeps live, p and py (never read) and steps
- *   mVertSpeed/mPosY through the speed/posY pointers.
  *
  * leftovers:
  * - The three handlers keep their address names.
@@ -282,9 +281,6 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
     int bx, bz, k;
     int x, y, z;
     int a;
-    int live = 2; /* live, p and py are never read: they keep the @NNN count */
-    int *p;
-    int *py;
 
     state = self->mPhase;
     if (state == 0 || state == 0x16) {
@@ -353,14 +349,10 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         kpaCallPoof(self, &dust2);
     }
 
-    {
-        int *speed = &self->mVertSpeed;
-        int *posY = &self->mPosY;
-        *speed += self->mVertAccel;
-        if (self->mVertSpeed <= self->mTerminalVelocity)
-            self->mVertSpeed = self->mTerminalVelocity;
-        *posY += self->mVertSpeed;
-    }
+    self->mVertSpeed += self->mVertAccel;
+    if (self->mVertSpeed <= self->mTerminalVelocity)
+        self->mVertSpeed = self->mTerminalVelocity;
+    self->mPosY += self->mVertSpeed;
     if (self->mPhase > 0x12cu)
         kpaCallDestroy(self);
     self->mPhase++;
