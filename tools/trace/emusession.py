@@ -300,7 +300,7 @@ def evaluate(expr, env, read):
 # --------------------------------------------------------------------- session
 class Bp:
     def __init__(self, addr, role, name='', module=None, dump=(), ret=False, max_hits=0, when=None,
-                 obj=None, thumb=False):
+                 obj=None, thumb=False, this=False):
         self.addr = addr & ~1
         self.thumb = bool(thumb or (addr & 1))
         self.role = role            # frame | trigger | probe
@@ -312,6 +312,7 @@ class Bp:
         self.max_hits = max_hits
         self.when = when            # expression; trigger/probe only fires when nonzero
         self.obj = obj              # expression for `obj` at the hit
+        self.this = bool(this)      # resolve r0 as `this` (vptr -> class, actor id) at each hit
         self.armed = False          # set in the stub right now
         self.want = False           # asked to be armed (armed unless suspended)
         self.suspended = False      # wanted, but held out: its overlay is not loaded
@@ -663,6 +664,22 @@ class Session:
     def ev(self, expr, env):
         return evaluate(expr, env, lambda a, n: self.read_int(a, n))
 
+    def this_info(self, obj):
+        """r0 (or any address) as an object: its vptr resolved to a _ZTV symbol in arm9
+        or a loaded overlay, the RTTI base chain, and for a dActor_c its actor id."""
+        import symtab
+        if self.loaded is None:
+            try:
+                self.refresh_overlays()
+            except (RuntimeError, ValueError):
+                pass
+        mods = ['arm9'] + ['ov%03d' % i for i in sorted(self.loaded or ())]
+        cache = self.__dict__.setdefault('_vptr_cache', {})
+        try:
+            return symtab.resolve_object(self.read, obj & 0xffffffff, mods, symtab.table(), cache)
+        except Exception as e:
+            return {'obj': '%08x' % (obj & 0xffffffff), 'error': str(e)}
+
     def _dump(self, bp, env):
         out = {}
         for label, expr, size in bp.dump:
@@ -738,6 +755,8 @@ class Session:
                    'r3': '%08x' % regs['r3'], 'sp': '%08x' % regs['sp']}
             if 'obj' in info:
                 rec['obj'] = info['obj']
+            if bp.this:
+                rec['this'] = self.this_info(regs['r0'])
             rec.update(self._dump(bp, env))
             self.event(rec)
             if bp.ret:
@@ -754,8 +773,10 @@ class Session:
             return 'go', None
         # trigger
         info['dump'] = self._dump(bp, env)
+        if bp.this:
+            info['this'] = self.this_info(regs['r0'])
         self.event({'ev': 'trigger', 'name': bp.name, 'pc': info['pc'], 'obj': info.get('obj'),
-                    'lr': '%08x' % regs['lr'], 'dump': info['dump']})
+                    'lr': '%08x' % regs['lr'], 'dump': info['dump'], 'this': info.get('this')})
         if bp.max_hits and bp.hits >= bp.max_hits:
             bp.want = False
             self._apply(bp)
@@ -874,6 +895,19 @@ class Daemon:
         self.s.event({'ev': 'write', 'addr': '%08x' % a, 'before': before, 'after': after})
         return {'before': before, 'after': after}
 
+    def op_write_many(self, writes):
+        """[[addr, hex], ...] written in order, no read-back and no event (per-frame
+        input injection)."""
+        for a, h in writes:
+            self.s.write(parse_int(a), bytes.fromhex(h))
+        return len(writes)
+
+    def op_this(self, obj='r0', env=None):
+        """Resolve an object pointer (an expression: default r0 at the current halt)
+        to its class: vptr -> _ZTV symbol, RTTI chain, dActor_c actor id."""
+        e = self._env(env)
+        return self.s.this_info(self.s.ev(obj, e) & 0xffffffff)
+
     def op_eval(self, expr, env=None):
         regs = {} if self.s.running else self.s.regs()
         e = self.s.env(regs, {k: parse_int(v) for k, v in (env or {}).items()})
@@ -889,9 +923,10 @@ class Daemon:
         return bp.desc()
 
     def op_add_bp(self, addr, role='trigger', name='', module=None, dump=(), ret=False, max_hits=0,
-                  when=None, obj=None, arm=True):
+                  when=None, obj=None, arm=True, this=False):
+        """this: at each hit, resolve r0 as `this` (see op_this) into the event."""
         bp = Bp(parse_int(addr), role, name=name, module=module, dump=dump, ret=ret,
-                max_hits=parse_int(max_hits), when=when, obj=obj)
+                max_hits=parse_int(max_hits), when=when, obj=obj, this=this)
         return self.s.add_bp(bp, arm=arm).desc()
 
     def op_arm(self, addr, on=True):
