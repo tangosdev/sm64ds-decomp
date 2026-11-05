@@ -19,12 +19,6 @@
 #include "types.h"
 #include "Decimal.h"
 
-typedef struct {
-    char style;
-    char unused;
-    short digits;
-} decform;
-
 extern int func_01ff9d40(double, double);
 extern double func_01ff8e10(double, double);
 extern double frexp(double, int *);

@@ -23,14 +23,7 @@
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 /* local extern: no shared header declares it. */
 extern "C" void func_020393d4(dBgW_KcMbg *clsn, void *fn);

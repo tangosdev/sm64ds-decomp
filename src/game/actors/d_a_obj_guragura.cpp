@@ -29,14 +29,7 @@
 #include "SharedFilePtr.h"
 #include "math/CalcLib.h"
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 extern Matrix4x3 data_020a0e68;
 extern int data_02092768[4];

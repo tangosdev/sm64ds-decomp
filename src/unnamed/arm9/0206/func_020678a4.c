@@ -1,21 +1,12 @@
 #include "types.h"
 #include "private/rom_header_view.h"
+#include "private/arm9_a9db8_mb_parent.h"
 extern void func_020676e0(void *in, void *tbl, void *dst, void *recvCursor);
 extern void CpuCopy8(const void *src, void *dst, u32 size);
 extern int data_0208685c[];
 
-/* NitroSDK MbSegmentInfo, as func_020676e0 fills it (same names as
- * func_02067604's view). */
-typedef struct MbSegmentInfo {
-    u32 recv_addr;  /* 0x00 */
-    u32 load_addr;  /* 0x04 */
-    u32 size;       /* 0x08 */
-    u32 target : 1; /* 0x0c -- set for the ARM7 segment */
-    u32 rsv : 31;
-} MbSegmentInfo;
-
 /* NitroSDK MB_DownloadFileInfo, the start of MbParentFile.mHeader: the
- * MbDownloadFileInfoHeader fields (as func_02067604's view names them), then
+ * MbDownloadFileInfoHeader fields (as that type names them), then
  * the 0x88-byte authentication code. */
 typedef struct MB_DownloadFileInfo {
     u32 arm9EntryAddr;    /* 0x00 */

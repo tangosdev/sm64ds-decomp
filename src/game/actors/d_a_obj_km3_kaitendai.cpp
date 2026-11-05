@@ -59,12 +59,7 @@ struct Km3KaitendaiClpsBlock {
 typedef char
     Km3KaitendaiClpsBlock_size_must_be_0x18[sizeof(Km3KaitendaiClpsBlock) == 0x18 ? 1 : -1];
 
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *kcl;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 extern Km3KaitendaiModelFilePtr data_ov047_02112610;
 extern Km3KaitendaiClsnFilePtr data_ov047_02112608;

@@ -23,14 +23,7 @@ enum d_a_obj_wc_obj07_AssetId { ASSET_WC_OBJ07_BMD = 0x06d7, ASSET_WC_OBJ07_KCL 
 #include "daObjWc_Obj07_c.h"
 #include "SharedFilePtr.h"
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 extern ResourceDescriptor data_ov029_02113fd4;
 extern s16 data_ov029_02113fc4;
