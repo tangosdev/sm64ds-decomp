@@ -3,8 +3,8 @@
 
 /*
  * Types of the MWCC C++ runtime, the role MSL's MWCPlusLib.h plays: the
- * element constructor/destructor pointers the array helpers take
- * (src/lib/runtime/__cxa_vec_*.cpp, func_02073300, func_02073534) and the
+ * element ctor/dtor pointers the array helpers take (__cxa_vec_new,
+ * __cxa_vec_ctor, __cxa_vec_cleanup, func_02073300, func_02073534) and the
  * exception index table the EH runtime searches (func_02071844,
  * func_02072dac, func_02072ed0). The type names are this tree's; MSL's own
  * spellings are not recorded in the cartridge.
