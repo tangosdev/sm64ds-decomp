@@ -236,38 +236,6 @@ SolidHeap_t::SolidHeap_t(void* start, u32 size, Heap_t* root,
 {
 }
 
-#ifdef _MSC_VER
-} /* namespace mHeap */
-
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAMES, AND MSVC NEVER EMITS THEM. MSVC folds
- * the Itanium destructor variants into the one ~X() it emits, so each deleting
- * destructor is spelled out in terms of it: the complete-object body, called
- * qualified so it is a direct call, then the class-specific operator delete.
- * Nothing here reaches mwccarm, which emits D0 from the definitions below. */
-extern "C" Heap *_ZN5mHeap6Heap_tD0Ev(Heap *thiz)
-{
-    thiz->mHeap::Heap_t::~Heap_t();
-    Heap::operator delete(thiz);
-    return thiz;
-}
-
-extern "C" ExpandingHeap *_ZN5mHeap9ExpHeap_tD0Ev(ExpandingHeap *thiz)
-{
-    thiz->mHeap::ExpHeap_t::~ExpHeap_t();
-    ExpandingHeap::operator delete(thiz);
-    return thiz;
-}
-
-extern "C" SolidHeap *_ZN5mHeap11SolidHeap_tD0Ev(SolidHeap *thiz)
-{
-    thiz->mHeap::SolidHeap_t::~SolidHeap_t();
-    SolidHeap::operator delete(thiz);
-    return thiz;
-}
-
-namespace mHeap {
-#endif
-
 /* The destructors are empty: CodeWarrior supplies each vptr transition, the
    base teardown and, in D0, the inline operator delete. ~Heap_t is the
    family's key function -- the first virtual not defined inline -- so these

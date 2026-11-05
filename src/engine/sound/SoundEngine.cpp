@@ -20,6 +20,7 @@
 #include "Sound.h"
 #include "SoundPlayerRecord.h"
 #include "NestedHeapIterator.h"
+#include "decl_NestedHeapIterator.h"
 #include "HeapAllocator.h"
 #include "SolidHeapAllocator.h"
 #include "Heap.h"
@@ -316,10 +317,6 @@ extern struct HeapAllocator;
 extern void MultiStore_Int(int val, int *dst, int len);
 extern struct NestedHeapIterator;
 extern struct ElemTable;
-/* local extern: these callers run the constructor over storage that already
-   exists (and func_02051064 returns its r0), which C++ cannot spell without a
-   placement new the tree does not have. */
-extern int _ZN18NestedHeapIteratorC1Ej(int a, int b);
 
 extern int __aeabi_idiv(int a, int b);
 extern unsigned int __aeabi_uidiv(unsigned int a, unsigned int b);
@@ -1267,13 +1264,16 @@ extern "C" u32 func_02051074(SolidHeapAllocator **pHeap)
 // @symbol func_02051064
 extern "C" int func_02051064(int a)
 {
-    return _ZN18NestedHeapIteratorC1Ej(a, 0);
+    /* Runs the NestedHeapIterator constructor over existing storage and
+       returns its r0 (the C1's `this'), which C++ cannot spell: the int-arity
+       cast keeps the tail call a member call would not give it. */
+    return ((int (*)(int, int))_ZN18NestedHeapIteratorC1Ej)(a, 0);
 }
 
 // @symbol func_02051024
 extern "C" s32 func_02051024(struct SolidHeapWithIter* self, void* allocator)
 {
-    ((void(*)(void* self, u32 offset))_ZN18NestedHeapIteratorC1Ej)(&self->nhi_first, 0xc);
+    _ZN18NestedHeapIteratorC1Ej(&self->nhi_first, 0xc);
     self->allocator = allocator;
     if (((s32(*)(struct SolidHeapWithIter* self))func_02050fd4)(self)) {
         return 1;
@@ -1920,18 +1920,16 @@ void C::func_0204fce8(void *arg) {
 extern "C" void func_0204fc40(void)
 {
     int i;
-    ((void(*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(((char*)&data_020a4d60), 0x14);
-    ((void(*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(data_020a4d54, 0x14);
+    _ZN18NestedHeapIteratorC1Ej((char*)&data_020a4d60, 0x14);
+    _ZN18NestedHeapIteratorC1Ej(data_020a4d54, 0x14);
     for (i = 0; i < 0x10; i++) {
         data_020a50ec[i].status = 0;
         data_020a50ec[i].playerNo = (unsigned char)i;
         ((NestedHeapIterator*)&data_020a4d54)->AddLast((HeapAllocator*)(&data_020a50ec[i]));
     }
     for (i = 0; i < 0x20; i++) {
-        ((void (*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(
-            &data_020a4d6c[i].mLists[0], 0xc);
-        ((void (*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(
-            &data_020a4d6c[i].mLists[1], 0);
+        _ZN18NestedHeapIteratorC1Ej(&data_020a4d6c[i].mLists[0], 0xc);
+        _ZN18NestedHeapIteratorC1Ej(&data_020a4d6c[i].mLists[1], 0);
         data_020a4d6c[i].mPlayableSeqCount = 1;
     }
 }
