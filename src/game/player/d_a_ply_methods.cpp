@@ -22101,11 +22101,11 @@ extern "C" {
 int func_ov002_020e3f90(char* self) {
     daPly_c *player = (daPly_c *)self;
     extern void ApproachAngle(short* v, int target, int a, int b, int c);
-    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
-    extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, int a);
-    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, int a);
-    extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, int a);
-    extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
+    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *, int x, int y, int z);
+    extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, int a);
+    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, int a);
+    extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, int a);
+    extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *, int x, int y, int z);
     extern Matrix4x3 data_020a0e68;
     struct S { short angs[3]; volatile int v[3]; int tgt[3]; } s;
     int b;

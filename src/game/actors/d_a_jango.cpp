@@ -141,7 +141,6 @@ enum Bool { FALSE, TRUE };
 /* shadow struct 'BCA_File' */
 struct BCA_File;
 
-
 /* The matrix copies go through Mtx43: assigning this TU's nested
    Matrix4x3 instead grows .text by 0x38 bytes. */
 
