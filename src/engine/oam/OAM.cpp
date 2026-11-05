@@ -16,7 +16,7 @@
  * deferred default would read optimization pragmas last-wins at end of file
  * and these members need positional brackets: the 10-arg Render keeps its
  * opt_common_subs/opt_propagation/opt_loop_invariants offs, LoadAffineParams
- * keeps opt_strength_reduction/opt_common_subs off, and both brackets restore
+ * keeps opt_common_subs off, and both brackets restore
  * `on` so the rest of the file gets defaults.
  *
  * Four local decompositions of the same 8-byte attribute entry survive
@@ -128,7 +128,6 @@ void func_02020820(char *self, int *src, int arg2, int arg3, u8 arg5, u8 arg6)
 // @symbol _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2
 /* ROM ordinal 1 -- OAM::LoadAffineParams(OamAttr *, int *, Matrix2x2 *)
  * 0x02020884  size 0xe8 */
-#pragma opt_strength_reduction off
 #pragma opt_common_subs off
 int OAM::LoadAffineParams(OamAttr *oam, int *count, Matrix2x2 *mtx)
 {
@@ -146,9 +145,8 @@ int OAM::LoadAffineParams(OamAttr *oam, int *count, Matrix2x2 *mtx)
     int i;
 
     for (i = 0; i < n; i += 4) {
-        OamAttr *e = &oam[i];
-        if (k0 == e[0].attr3 && k1 == e[1].attr3 &&
-            k2 == e[2].attr3 && k3 == e[3].attr3)
+        if (k0 == (oam + i)[0].attr3 && k1 == (oam + i)[1].attr3 && k2 == (oam + i)[2].attr3 &&
+            k3 == (oam + i)[3].attr3)
             return i >> 2;
     }
     if (n >= 0x80)
@@ -166,7 +164,6 @@ int OAM::LoadAffineParams(OamAttr *oam, int *count, Matrix2x2 *mtx)
         return t >> 2;
     }
 }
-#pragma opt_strength_reduction on
 #pragma opt_common_subs on
 
 /* -------------------------------------------------------------------------- */
