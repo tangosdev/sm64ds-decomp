@@ -57,6 +57,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "decl_Platform.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "math/MtxStack.h"
 
 /* Plain 12-byte point. Vector3's destructor is empty but the type is not
    POD, and the copies below are three-word ldm/stm with no cleanup. */
@@ -126,7 +127,6 @@ extern VariantWords data_ov091_02134ba0;
 extern UpdownFileSlot data_ov091_02134c30[];
 extern UpdownFileSlot data_ov091_02134c34[];
 extern UpdownClpsSlot data_ov091_02134c38[];
-extern Matrix4x3 data_020a0e68;
 extern s16 data_02082214[];
 extern s8 gCurrentSublevel;
 
@@ -135,7 +135,6 @@ int fdiv(int numerator, int denominator);
 }
 
 extern "C" {
-void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 ang);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void MulVec3Mat4x3(void *src, void *m, void *dst);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);

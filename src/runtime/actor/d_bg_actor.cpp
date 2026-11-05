@@ -36,6 +36,7 @@
 #include "dBgCh_Actr.h"
 #include "daPly_c.h"
 #include "Sound.h"
+#include "math/MtxStack.h"
 
 /* ROM symbols with no header of their own. Spelled to agree with their
  * definitions (const Vector3 * Vec3 pairs, void * rotation target); the two
@@ -49,12 +50,8 @@ int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_FromRotationY(void *m, int angleY);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern Matrix4x3 data_020a0e68;
 }
 
 /* --- Collision events, 0x020eea84..0x020ef320. ------------------------------

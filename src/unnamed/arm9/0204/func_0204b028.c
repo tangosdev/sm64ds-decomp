@@ -1,6 +1,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "private/spl_particle_views.h"
+#include "math/MtxStack.h"
 
 #define reg_G3_COLOR        (*(volatile u32 *)0x04000480)
 #define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
@@ -10,7 +11,6 @@ extern void (*data_02099fbc[])(int, int, void *); /* func_0204c0a8, func_0204c0e
 extern void (*data_02099fb4[])(u8, u8);           /* func_0204c24c, func_0204c194 */
 
 extern void func_020527e8(int *m, int sx, int sy, int sz); /* scale matrix */
-extern void MulMat4x3Mat4x3(void *a, void *b, void *out);
 extern void func_020553a4(void *m); /* load the 4x3 matrix */
 extern void func_02055388(void *m); /* multiply by the 4x3 matrix */
 

@@ -108,11 +108,12 @@ int func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
 void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 int *Vec3_LslInPlace(int *v, int sh);
-/* math/MtxStack.h declares the next two, but including it renumbers this
-   TU's @NNN compiler temps (its inline MtxStack bodies), and the manifest maps
-   those temps to retail addresses (defined_symbol_renames). */
-void Matrix4x3_FromRotationY(void *m, int angle);  /* local extern: MtxStack.h renumbers @NNN */
-void MulMat4x3Mat4x3(void *a, void *b, void *out); /* local extern: MtxStack.h renumbers @NNN */
+/* local extern: math/MtxStack.h declares the next two, but spells
+   MulMat4x3Mat4x3 with const int *, as its definition does, and this file
+   passes it Matrix4x3 pointers. Including the header also renumbers this TU's
+   @NNN compiler temps, which the manifest maps to retail addresses. */
+void Matrix4x3_FromRotationY(void *m, int angle);
+void MulMat4x3Mat4x3(void *a, void *b, void *out); /* local extern: as above */
 
 /* Hoisted out of four member bodies.  A class member function may not sit in a
    block-scope linkage specification, so daBmb_c::State1/3/4/5 cannot carry their
