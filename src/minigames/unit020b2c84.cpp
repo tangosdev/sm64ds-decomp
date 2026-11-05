@@ -104,6 +104,7 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "nitro/gx/gxcommon.h"
+#include "MWCPlusLib.h"
 
 struct M { int _00, _01, _10, _11; };
 struct Pair { int a, b; };
@@ -175,7 +176,7 @@ int RandomIntInternal(int *seed);
 void Mg_SpawnFx(int c, short a1, int *a2, int *r3, int *sp0);
 /* local extern: only sibling minigame scene headers declare it, and its
    named parameters hold the @NNN count noted above. */
-void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, void (*dtor)(void *));
+void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, dtor_t dtor);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
 void Mg_RenderSpriteOn(int a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
