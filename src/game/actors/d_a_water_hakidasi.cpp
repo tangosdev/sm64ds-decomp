@@ -21,11 +21,10 @@
  * installs it from InitResources.
  *
  * What stays:
- * - `#pragma opt_strength_reduction off` is required inside State0 and is
- *   turned back on right after it: the pragma is file-global and the later
- *   members matched without it.
- * - State0 keeps its M() launders, the volatile rot block and `m1 = -1` as
- *   found; they were needed to match.
+ * - State0 reads mAngleX/mAngleY through volatile u16 lvalues: the cartridge
+ *   loads both with ldrh, x before y, and every plain spelling flips the
+ *   order or sign-extends (measured). The playerPos and posp pointers stay
+ *   for the same reason; the member spellings DIFF.
  * - The state table is two plain copies of the ROM's pointer-to-member
  *   constants (HakPmfSlot), so InitResources casts it to State.
  * - The empty member at 0x0211987c keeps its address name: Behavior calls it
@@ -82,9 +81,6 @@ extern SharedFilePtr data_ov002_0210d9a8;
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
 
-/* Identity, but it keeps the address expression from being folded into the access. */
-#define M(p) (p)
-
 /* D0 is the deleting destructor: it destroys through this class and its
  * bases, which is why more than one vptr store appears, then frees through an
  * inline operator delete, which is why nothing here mentions a heap. */
@@ -112,15 +108,8 @@ int daWater_Hakidasi_c::State0() {
     dActor_c *hit;
     int uid;
     int *playerPos;
-    int px, py, pz;
-    int *headp;
-    int *hitsp;
-    int *slotp;
-    int *timerp;
     int *posp;
-    u16 ax, ay, az;
-    s16 tx;
-    int m1;
+    u16 ax, ay;
 
     player = ClosestPlayer();
     if (player != 0 && player->mIsMetal == 0) { /* daPly_c::mIsMetal */
@@ -136,22 +125,16 @@ int daWater_Hakidasi_c::State0() {
             Matrix4x3_FromRotationY(&data_020a0e68, (s16)(HorzAngleToCPlayer() + 0x8000));
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
             MulVec3Mat4x3((Vector3 *)&vec, &data_020a0e68, (Vector3 *)&delta);
-            playerPos = (int *)(int)M(&player->mPosX);
-            px = playerPos[0];
-            vec.x = px;
-            py = playerPos[1];
-            vec.y = py;
-            pz = playerPos[2];
-            vec.z = pz;
-            {
-                int newX = px + delta.x;
-                vec.y = py + delta.y;
-                vec.z = pz + delta.z;
-                vec.x = newX;
-                player->mPosX = newX;
-                player->mPosY = vec.y;
-                player->mPosZ = vec.z;
-            }
+            playerPos = &player->mPosX;
+            vec.x = playerPos[0];
+            vec.y = playerPos[1];
+            vec.z = playerPos[2];
+            vec.x += delta.x;
+            vec.y += delta.y;
+            vec.z += delta.z;
+            player->mPosX = vec.x;
+            player->mPosY = vec.y;
+            player->mPosZ = vec.z;
         }
         mdCcAc_c.Clear();
         mdCcAc_c.dCc_c::Update();
@@ -166,24 +149,16 @@ int daWater_Hakidasi_c::State0() {
             if (*(u16 *)&mStateTimer == 0) {
                 ax = *(volatile u16 *)&mAngleX;
                 ay = *(volatile u16 *)&mAngleY;
-                {
-                    volatile struct Vec3_16 *vr = &rot;
-                    vr->x = ax;
-                    vr->y = ay;
-                    az = *(u16 *)&mAngleZ;
-                    tx = (s16)vr->x;
-                    m1 = -1;
-                    vr->z = az;
-                    tx = (s16)(tx + 0x4000);
-                    vr->x = (u16)tx;
-                }
+                rot.x = ax;
+                rot.y = ay;
+                rot.z = *(u16 *)&mAngleZ;
+                rot.x += 0x4000;
                 /* Registry slot 0xf4 constructs daWater_Ring_c. */
                 ring = static_cast<daWater_Ring_c *>(
                     dActor_c::Spawn(0xf4, 2, mPos, (Vector3_16 *)&rot, mAreaId, -1));
                 if (ring != 0) {
                     mSpawnedIDs[mSpawnedHead] = ring->uniqueID;
-                    headp = (int *)(int)M(&mSpawnedHead);
-                    *headp = *headp + 1;
+                    mSpawnedHead++;
                     if (mSpawnedHead >= 0x14) {
                         mSpawnedHead = 0;
                     }
@@ -202,11 +177,10 @@ int daWater_Hakidasi_c::State0() {
                         u32 slot = mSpawnedIDs[i];
                         if (slot == uid) {
                             mMatchedSlot = i;
-                            hitsp = (int *)(int)M(&mRingsPassed);
-                            *hitsp = *hitsp + 1;
+                            mRingsPassed++;
                             func_02012790(0x25);
                             hit = mPassedRing;
-                            posp = (int *)(int)M(&hit->mPosX);
+                            posp = &hit->mPosX;
                             hitPos1.x = posp[0];
                             hitPos1.y = posp[1];
                             hitPos1.z = posp[2];
@@ -216,8 +190,7 @@ int daWater_Hakidasi_c::State0() {
                         }
                     }
                 } else {
-                    slotp = (int *)(int)M(&mMatchedSlot);
-                    *slotp = *slotp + 1;
+                    mMatchedSlot++;
                     if (mMatchedSlot >= 0x14) {
                         mMatchedSlot = 0;
                     }
@@ -227,11 +200,10 @@ int daWater_Hakidasi_c::State0() {
                         while (1) {
                             u32 slot = mSpawnedIDs[i];
                             if (slot == uid) {
-                                hitsp = (int *)(int)M(&mRingsPassed);
-                                *hitsp = *hitsp + 1;
+                                mRingsPassed++;
                                 func_02012790(0x25);
                                 hit = mPassedRing;
-                                posp = (int *)(int)M(&hit->mPosX);
+                                posp = &hit->mPosX;
                                 hitPos2.x = posp[0];
                                 hitPos2.y = posp[1];
                                 hitPos2.z = posp[2];
@@ -253,12 +225,11 @@ int daWater_Hakidasi_c::State0() {
     }
 
     if (mRingsPassed == 5) {
-        timerp = (int *)(int)M(&mRewardTimer);
         rewardPos.x = mPosX;
         rewardPos.y = mPosY;
         rewardPos.z = mPosZ;
         rewardPos.y = rewardPos.y - 0x64000;
-        *timerp = *timerp + 1;
+        mRewardTimer++;
         if (mRewardTimer > 0x1e) {
             dActor_c::Spawn(0xb2, mStarID | 0x40, *(Vector3 *)&rewardPos, &mAngle, mAreaId, -1);
             mRingsPassed = 0xa;
