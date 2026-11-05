@@ -861,94 +861,94 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@530",
+      "from": "@529",
       "to": "data_ov085_02130538",
-      "evidence": "compiler temp mapped to 0x02130538 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x02130538 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @530 to @529 when the anonymous PeachM48 typedef was retired (#4570)."
+    },
+    {
+      "from": "@530",
+      "to": "data_ov085_02130544",
+      "evidence": "compiler temp mapped to 0x02130544 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @531 to @530 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
       "from": "@531",
-      "to": "data_ov085_02130544",
-      "evidence": "compiler temp mapped to 0x02130544 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "to": "data_ov085_02130550",
+      "evidence": "compiler temp mapped to 0x02130550 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @532 to @531 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
       "from": "@532",
-      "to": "data_ov085_02130550",
-      "evidence": "compiler temp mapped to 0x02130550 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "to": "data_ov085_021304fc",
+      "evidence": "compiler temp mapped to 0x021304fc by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @533 to @532 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
       "from": "@533",
-      "to": "data_ov085_021304fc",
-      "evidence": "compiler temp mapped to 0x021304fc by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "to": "data_ov085_02130508",
+      "evidence": "compiler temp mapped to 0x02130508 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @534 to @533 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
       "from": "@534",
-      "to": "data_ov085_02130508",
-      "evidence": "compiler temp mapped to 0x02130508 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "to": "data_ov085_02130514",
+      "evidence": "compiler temp mapped to 0x02130514 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @535 to @534 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
       "from": "@535",
-      "to": "data_ov085_02130514",
-      "evidence": "compiler temp mapped to 0x02130514 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "to": "data_ov085_02130520",
+      "evidence": "compiler temp mapped to 0x02130520 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @536 to @535 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
       "from": "@536",
-      "to": "data_ov085_02130520",
-      "evidence": "compiler temp mapped to 0x02130520 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
-    },
-    {
-      "from": "@537",
       "to": "data_ov085_0213052c",
-      "evidence": "compiler temp mapped to 0x0213052c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0213052c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @537 to @536 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
-      "from": "@539",
+      "from": "@538",
       "to": "data_ov085_0212ff7c",
-      "evidence": "compiler temp mapped to 0x0212ff7c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0212ff7c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @539 to @538 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
-      "from": "@541",
+      "from": "@540",
       "to": "data_ov085_0212ff64",
-      "evidence": "compiler temp mapped to 0x0212ff64 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0212ff64 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @541 to @540 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
-      "from": "@543",
+      "from": "@542",
       "to": "data_ov085_0212ff44",
-      "evidence": "compiler temp mapped to 0x0212ff44 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0212ff44 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @543 to @542 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
-      "from": "@545",
+      "from": "@544",
       "to": "data_ov085_0212ff6c",
-      "evidence": "compiler temp mapped to 0x0212ff6c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0212ff6c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @545 to @544 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
-      "from": "@547",
+      "from": "@546",
       "to": "data_ov085_0212ff4c",
-      "evidence": "compiler temp mapped to 0x0212ff4c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0212ff4c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @547 to @546 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
-      "from": "@549",
+      "from": "@548",
       "to": "data_ov085_0212ff74",
-      "evidence": "compiler temp mapped to 0x0212ff74 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0212ff74 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @549 to @548 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
-      "from": "@551",
+      "from": "@550",
       "to": "data_ov085_0212ff54",
-      "evidence": "compiler temp mapped to 0x0212ff54 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0212ff54 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @551 to @550 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
-      "from": "@553",
+      "from": "@552",
       "to": "data_ov085_0212ff5c",
-      "evidence": "compiler temp mapped to 0x0212ff5c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0212ff5c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @553 to @552 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
-      "from": "@555",
+      "from": "@554",
       "to": "data_ov085_0212ff3c",
-      "evidence": "compiler temp mapped to 0x0212ff3c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0212ff3c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @555 to @554 when the anonymous PeachM48 typedef was retired (#4570)."
     },
     {
-      "from": "@557",
+      "from": "@556",
       "to": "data_ov085_0212ff34",
-      "evidence": "compiler temp mapped to 0x0212ff34 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp mapped to 0x0212ff34 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after including the shared math/CalcLib.h and math/MtxStack.h headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @557 to @556 when the anonymous PeachM48 typedef was retired (#4570)."
     }
   ],
   "symbol_binding_rewrites": [
