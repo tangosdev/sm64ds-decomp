@@ -63,6 +63,32 @@ BASE_SIZE = 0x38
 TEXTURE_FIELD = 0x33  # proven: func_0204a5c8 reads it as the texture index
 
 
+def fx12(v):
+    return v / 4096.0
+
+
+def decode_base(b, start):
+    """Fields of the 0x38-byte base record that the ROM's own code names.
+
+    Sources: func_0204ae2c copies radius/axis/lifetime/interval/alpha into the live
+    System (names from include/Particle__System.h); func_0204c584 switches on
+    flags & 0xf; func_0204a5c8 reads the draw-mode bits and the texture byte.
+    """
+    flags = struct.unpack_from("<I", b, start)[0]
+    radius = struct.unpack_from("<i", b, start + 0x08)[0]
+    axis = struct.unpack_from("<3h", b, start + 0x0C)
+    return {
+        "shape": flags & 0xF,                 # emitter shape 0..5
+        "drawMode": flags >> 4 & 3,           # 0..2, selects draw/blend routine
+        "radius": fx12(radius),               # emitRadius (Fix12)
+        "axis": [fx12(a) for a in axis],      # direction vector (1.3.12 fixed)
+        "lifetime": struct.unpack_from("<H", b, start + 0x2A)[0],  # particleLifetime
+        "emitInterval": b[start + 0x30],      # System::emitInterval
+        "baseAlpha": b[start + 0x31],         # System::baseAlpha
+        "texture": b[start + 0x33],
+    }
+
+
 def find_resource(data):
     """Return the offset of the SPA header inside data."""
     hits = []
@@ -107,6 +133,7 @@ def parse(data):
             "flags": flags,
             "words": list(struct.unpack_from("<14I", b, start)),
             "texture": b[start + TEXTURE_FIELD],
+            "decoded": decode_base(b, start),
             "optional": [n for _, _, n in OPTIONAL if n in records],
             "behaviors": behaviors,
             "records": {k: {"offset": o, "size": s} for k, (o, s) in records.items()},
@@ -174,6 +201,11 @@ def main():
         tx = t["textures"][d["texture"]] if d["texture"] < t["numTextures"] else None
         print("texture (byte 0x33): %d%s" % (d["texture"], "" if not tx else
               "  %s %dx%d" % (tx["format_name"], tx["width"], tx["height"])))
+        x = d["decoded"]
+        print("shape %d  drawMode %d  radius %.3f  axis (%.3f, %.3f, %.3f)" % (
+            x["shape"], x["drawMode"], x["radius"], *x["axis"]))
+        print("lifetime %d  emitInterval %d  baseAlpha %d" % (
+            x["lifetime"], x["emitInterval"], x["baseAlpha"]))
         for i, w in enumerate(d["words"]):
             print("  +0x%02x  %08x" % (i * 4, w))
         return
@@ -181,10 +213,14 @@ def main():
     print("SPA @ arm9_dec 0x%x (ROM 0x%08x): %d effects, %d textures, resident 0x%x" % (
         t["arm9_file_offset"], t["rom_address"], t["numDefinitions"],
         t["numTextures"], t["residentSize"]))
-    print("%-6s %-10s %-4s %-4s %s" % ("id", "flags", "tex", "size", "optional / behaviors"))
+    print("%-6s %-10s %-3s %-4s %-5s %-6s %-4s %-3s %-5s %s" % (
+        "id", "flags", "tex", "shp", "draw", "radius", "life", "int", "alpha", "optional / behaviors"))
     for d in t["definitions"]:
+        x = d["decoded"]
         extra = ",".join(d["optional"] + d["behaviors"]) or "-"
-        print("0x%03x  0x%08x %4d 0x%02x %s" % (d["id"], d["flags"], d["texture"], d["size"], extra))
+        print("0x%03x  0x%08x %3d %4d %5d %6.2f %4d %3d %5d %s" % (
+            d["id"], d["flags"], d["texture"], x["shape"], x["drawMode"], x["radius"],
+            x["lifetime"], x["emitInterval"], x["baseAlpha"], extra))
 
 
 if __name__ == "__main__":
