@@ -1219,6 +1219,9 @@ were the 3-word `v = r;` struct copy: struct assign emits ldm/stm (wrong), int t
 extend live ranges and reorder the loads (wrong); plain per-field `v.x = r.x; v.y =
 r.y; v.z = r.z;` under `opt_common_subs off` emits the batched 3-load/3-store shape
 byte-exact, including reusing the r.z load (r3) for a later stack arg.
+**Superseded in part (2026-11-05, #821):** in today's `src/game/actors/d_a_menbo.cpp` this
+body is byte-identical without `opt_common_subs off` (only the TU's `@NNN` names move), so
+that pragma was removed; `opt_strength_reduction off` with the explicit `idx` counter is still live.
 
 ## 6j. Array-subscript indexing defeats a LICM index*scale hoist under EBB-local CSE (2026-07-10)
 
