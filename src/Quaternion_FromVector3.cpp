@@ -7,9 +7,11 @@ extern "C" {
 typedef long long s64;
 typedef struct { int x, y, z; } Vec3;
 typedef struct { int x, y, z, w; } Quat;
+struct Vector3;
 
 extern int NormalizeVec3IfNonZero(Vec3 *v);
-extern int DotVec3(const Vec3 *a, const Vec3 *b);
+/* DotVec3 is defined with Vector3 inputs; Vec3 remains a local POD view. */
+extern int DotVec3(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_020531a4(int a);
 extern void func_0203cebc(Vec3 *out, Vec3 *p, Vec3 *q, Vec3 *r);
 extern Quat data_02075b04;
@@ -26,7 +28,8 @@ void Quaternion_FromVector3(Quat *out, Vec3 *a, Vec3 *b)
     va.y = a->y;
     va.z = a->z;
     if (NormalizeVec3IfNonZero(&vb) != 0 && NormalizeVec3IfNonZero(&va) != 0) {
-        r4 = func_020531a4((DotVec3(&va, &vb) + 0x1000) << 1);
+        r4 = func_020531a4(
+            (DotVec3((const struct Vector3 *)&va, (const struct Vector3 *)&vb) + 0x1000) << 1);
         vb2.x = vb.x;
         vb2.y = vb.y;
         vb2.z = vb.z;
