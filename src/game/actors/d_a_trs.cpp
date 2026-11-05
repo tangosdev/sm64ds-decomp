@@ -359,13 +359,6 @@ unsigned char daTrs_c::func_ov063_021163d0() {
 }
 
 
-/* 0211640c needs opt_propagation off: the ROM keeps the s16 -1 in a register
- * and multiplies (smulbb) where propagation would fold it to rsb. Measured in
- * this file, the setting binds one definition late: a bracket that closes
- * right after 0211640c leaves it unmatched, so the bracket also spans the
- * propagation-insensitive 021166ac. Deleting it unmatches 0211640c alone. */
-#pragma push
-#pragma opt_propagation off
 // @symbol _ZN7daTrs_c19func_ov063_0211640cEv
 void daTrs_c::func_ov063_0211640c() {
 
@@ -382,9 +375,8 @@ void daTrs_c::func_ov063_0211640c() {
 
     if (this->mBooFlags.mirrored) {
         s16 neg = -1;
-        s16 a = ang;
-        pos.x = pos.x * (int)neg;
-        ang = (s16)(a * neg);
+        pos.x *= (int)neg;
+        ang *= (int)neg;
     }
 
     if (this->mState == 3) {
@@ -416,9 +408,8 @@ void daTrs_c::func_ov063_0211640c() {
                             0xc8000, 0xf);
 
         if (this->mBooFlags.mirrored) {
-            int px = pos.x;
-            int neg = -1;
-            pos.x = px * neg;
+            s16 neg = -1;
+            pos.x *= (int)neg;
             Matrix4x3_FromTranslation(&data_020a0e68,
                 pos.x >> 3, pos.y >> 3, pos.z >> 3);
             this->mShadowMtx2 = data_020a0e68;
@@ -510,7 +501,6 @@ void daTrs_c::func_ov063_021166ac() {
 }
 
 
-#pragma pop
 // @symbol _ZN11daTBasket_c19func_ov063_021169c4Ev
 void daTBasket_c::func_ov063_021169c4() {
 
