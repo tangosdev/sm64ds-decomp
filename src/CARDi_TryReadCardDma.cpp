@@ -17,12 +17,16 @@ extern char func_01ff8000; /* the ITCM's end: its first address past 0x01ff8000 
 extern void CARDi_OnReadCard(void);
 extern void CARDi_SetCardDma(void);
 
-#pragma opt_propagation off
+static inline int CARDi_IsInTcm(u32 buf, u32 len) {
+    const u32 d = CP15::GetDTCMBaseAddress();
+    return (buf + len > (u32)&func_01ff8000 && buf < 0x2000000) ||
+           (d < buf + len && d + 0x4000 > buf);
+}
+
 int CARDi_TryReadCardDma(CARDRomStat *p) {
     CARDRomStat *stat;
     CARDiCommon *c;
     u32 len;
-    u32 dtcm;
     int is_async;
     int whole_pages;
     int not_in_tcm;
@@ -45,26 +49,8 @@ int CARDi_TryReadCardDma(CARDRomStat *p) {
     }
 
     if (dma_ok != 0) {
-        int in_tcm;
-        int in_itcm;
-        u32 end;
         len = c->len;
-        dtcm = CP15::GetDTCMBaseAddress();
-        end = dst + len;
-        in_tcm = 1;
-        in_itcm = 0;
-
-        if (end > (u32)&func_01ff8000) {
-            if (dst < 0x2000000)
-                in_itcm = in_tcm;
-        }
-
-        if (in_itcm == 0) {
-            if (dtcm >= end || dtcm + 0x4000 <= dst)
-                in_tcm = 0;
-        }
-
-        if (in_tcm == 0)
+        if (!CARDi_IsInTcm(dst, len))
             not_in_tcm = 1;
     }
 
