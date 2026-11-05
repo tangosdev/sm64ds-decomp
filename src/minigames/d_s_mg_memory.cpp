@@ -310,6 +310,8 @@ void dScMgMemory_c::JudgePair() {
 }
 
 #pragma push
+/* Kept: indexed or cursor forms without it give the card counter sl, not r4
+ * (colour only). */
 #pragma opt_propagation off
 void dScMgMemory_c::DrawCards() {
     char *raw = (char *)this;
@@ -346,26 +348,23 @@ void dScMgMemory_c::UpdateCards() {
 }
 
 #pragma push
+/* Kept: without opt_lifetimes off the two loops' counter and limit take other registers (colour only). */
 #pragma opt_lifetimes off
 void dScMgMemory_c::CardFlyAway(int cardIndex) {
     int j;
     int n;
-    unsigned char *started;
-    int *cardX;
 
-    cardX = &mCards[cardIndex].x;
-    started = &mCards[cardIndex].flyAwayStarted;
-    *cardX -= 0x10000;
-    if (*started == 0) {
+    mCards[cardIndex].x -= 0x10000;
+    if (mCards[cardIndex].flyAwayStarted == 0) {
         if (mDifficulty == 1) {
             if (cardIndex == 6 || cardIndex == 0xb) {
-                *started = 1;
+                mCards[cardIndex].flyAwayStarted = 1;
             }
             n = (cardIndex >= 7) ? 0xc - cardIndex : 7 - cardIndex;
             for (j = 1; j < n; j++) {
                 if (mCards[cardIndex + j].active != 0) {
                     if (((mCards[cardIndex].x - mCards[cardIndex + j].x) >> 12) <= 4) {
-                        *started = 1;
+                        mCards[cardIndex].flyAwayStarted = 1;
                         mCards[cardIndex + j].state = CARD_FLYING_AWAY;
                         break;
                     }
@@ -373,13 +372,13 @@ void dScMgMemory_c::CardFlyAway(int cardIndex) {
             }
         } else {
             if ((cardIndex & 3) == 3) {
-                *started = 1;
+                mCards[cardIndex].flyAwayStarted = 1;
             }
             j = 4 - (cardIndex & 3);
             for (n = 1; n < j; n++) {
                 if (mCards[cardIndex + n].active != 0) {
                     if (((mCards[cardIndex].x - mCards[cardIndex + n].x) >> 12) <= 4) {
-                        *started = 1;
+                        mCards[cardIndex].flyAwayStarted = 1;
                         mCards[cardIndex + n].state = CARD_FLYING_AWAY;
                         break;
                     }
@@ -387,7 +386,7 @@ void dScMgMemory_c::CardFlyAway(int cardIndex) {
             }
         }
     }
-    if ((*cardX >> 12) > -0x18) {
+    if ((mCards[cardIndex].x >> 12) > -0x18) {
         return;
     }
     mCards[cardIndex].active = 0;

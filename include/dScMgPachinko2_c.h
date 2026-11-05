@@ -41,7 +41,8 @@ struct dScMgPachinko2_Ball {
     u16 angle;      /* +0x34 -- heading: Ball_HitAt stores 0xd000 or 0xb000,
                        Ball_StateAim an atan2, and every reader takes it
                        unsigned as the sine-table index (>> 4). Was s16. */
-    s16 timer;      /* +0x36 -- anim tick in state 5, countdown from 0x40 in state 7 */
+    u16 timer;      /* +0x36 -- anim tick in state 5, countdown from 0x40 in state 7;
+                       both states read it unsigned (ldrh). Was s16. */
     u8 active;      /* +0x38 -- Ball_UpdateAll runs the ball while set */
     u8 state;       /* +0x39 -- 2 while released, 0 when reset */
     u8 visible;     /* +0x3a -- Ball_DrawAll draws the ball while set */

@@ -59,10 +59,6 @@ void PlayBank2_2D(unsigned int id);
 /* The pointer-to-member tables dispatch on this class. */
 typedef void (dScMgPachinko2_c::*PMF)(int);
 
-/* mBalls[0]'s field as a byte offset into the scene, and the same less the
-   0x4600 split base some ball handlers add first. */
-#define BALL2_OFF(member) ((int)&((dScMgPachinko2_c *)0)->mBalls[0].member)
-#define BALL2_HI(member) (BALL2_OFF(member) - 0x4600)
 struct Entry {
     PMF pmf;
 };
@@ -732,102 +728,48 @@ void dScMgPachinko2_c::Paddle_Stop(int idx) {
 }
 
 // @symbol _ZN16dScMgPachinko2_c20Paddle_CheckBallHitsEi
-#pragma push
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Paddle_CheckBallHits(int idx) {
-    char *scene = (char *)this;
-    int i;
-    u8(*recordStrides)[0x40];
-    u8 *slot;
-    u8 paddleState;
-    int *paddleX;
-    int *paddleY;
-    int edgeSpeed;
-    int negativeEdgeSpeed;
-    u8 *ballsHeld;
-    int outerBounceSpeed;
-    int outerBounceVy;
-    int innerBounceSpeed;
-    int innerBounceVy;
-    int *paddleVx;
-    u8 *row;
-    u8 *ballActive;
-    int *ballY;
-    int dx;
-    int dy;
-    int *ballVy;
-    int *ballX;
-    int clearFlag;
-
-    /* Preserve the address forms and temporary lifetimes for matching. */
-    recordStrides = (u8(*)[0x40])scene;
-    slot = recordStrides[idx];
-    paddleState = ((dScMgPachinko2_c *)slot)->mPaddles[0].state;
-    if (paddleState == 0)
+    if (mPaddles[idx].state == 0)
         return;
-    if (paddleState >= 0xc)
+    if (mPaddles[idx].state >= 0xc)
         return;
 
-    paddleX = &((dScMgPachinko2_c *)slot)->mPaddles[0].x;
-    paddleY = &((dScMgPachinko2_c *)slot)->mPaddles[0].y;
-    edgeSpeed = 0x1800;
-    negativeEdgeSpeed = -edgeSpeed;
-    ballsHeld = &((dScMgPachinko2_c *)slot)->mPaddles[0].ballsHeld;
-    outerBounceSpeed = 0x2800;
-    outerBounceVy = -outerBounceSpeed;
-    innerBounceSpeed = 0x2000;
-    innerBounceVy = -innerBounceSpeed;
-    i = 0;
-    paddleVx = &((dScMgPachinko2_c *)slot)->mPaddles[0].vx;
-    clearFlag = i;
-
-    do {
-        row = recordStrides[i];
-        ballActive = &((dScMgPachinko2_c *)row)->mBalls[0].active;
-        if (*ballActive != 0) {
-            if (((dScMgPachinko2_c *)row)->mBalls[0].state >= 2) {
-                ballVy = &((dScMgPachinko2_c *)row)->mBalls[0].vy;
-                if (*ballVy > 0x2000) {
-                    dx = (*paddleX - ((dScMgPachinko2_c *)row)->mBalls[0].x) >> 12;
-                    ballY = &((dScMgPachinko2_c *)row)->mBalls[0].y;
-                    dy = (*paddleY - *ballY) >> 12;
+    for (int i = 0; i < 0x30; i++) {
+        if (mBalls[i].active != 0) {
+            if (mBalls[i].state >= 2) {
+                if (mBalls[i].vy > 0x2000) {
+                    int dx = (mPaddles[idx].x - mBalls[i].x) >> 12;
+                    int dy = (mPaddles[idx].y - mBalls[i].y) >> 12;
                     if (dx >= -0x30 && dx <= 0x30 && dy >= 0 && dy <= 8) {
                         /* Catch the center; the next two bands bounce the ball. */
                         if (dx >= -0x10 && dx <= 0x10) {
-                            *ballsHeld = (u8)(*ballsHeld + 1);
-                            ((dScMgPachinko2_c *)row)->mBalls[0].visible = (u8)clearFlag;
-                            ballX = &((dScMgPachinko2_c *)row)->mBalls[0].x;
-                            *ballActive = (u8)clearFlag;
-                            Spark_Spawn(*ballX, *ballY);
-                            func_02012718(0x19a, *ballX);
+                            mPaddles[idx].ballsHeld++;
+                            mBalls[i].visible = 0;
+                            mBalls[i].active = 0;
+                            Spark_Spawn(mBalls[i].x, mBalls[i].y);
+                            func_02012718(0x19a, mBalls[i].x);
                             Paddle_Hit(idx);
                         } else if (dx >= -0x20 && dx <= 0x20) {
                             if (dx < 0)
-                                ((dScMgPachinko2_c *)recordStrides[i])->mBalls[0].vx =
-                                    *paddleVx - 0x1800;
+                                mBalls[i].vx = mPaddles[idx].vx - 0x1800;
                             else
-                                ((dScMgPachinko2_c *)recordStrides[i])->mBalls[0].vx =
-                                    *paddleVx + 0x1800;
-                            *ballVy = innerBounceVy;
+                                mBalls[i].vx = mPaddles[idx].vx + 0x1800;
+                            mBalls[i].vy = -0x2000;
                             Sound::PlayBank2_2D(0x19b);
                         } else {
                             if (dx < 0)
-                                ((dScMgPachinko2_c *)recordStrides[i])->mBalls[0].vx = edgeSpeed;
+                                mBalls[i].vx = 0x1800;
                             else
-                                ((dScMgPachinko2_c *)recordStrides[i])->mBalls[0].vx =
-                                    negativeEdgeSpeed;
-                            *ballVy = outerBounceVy;
+                                mBalls[i].vx = -0x1800;
+                            mBalls[i].vy = -0x2800;
                             Sound::PlayBank2_2D(0x19b);
                         }
                     }
                 }
             }
         }
-        i++;
-    } while (i < 0x30);
+    }
 }
-#pragma pop
 
 // @symbol _ZN16dScMgPachinko2_c19Paddle_StateFlyAwayEi
 void dScMgPachinko2_c::Paddle_StateFlyAway(int i) {
@@ -1654,6 +1596,8 @@ void dScMgPachinko2_c::ClearAimLine() {
 
 // @symbol _ZN16dScMgPachinko2_c16PlotSubBg2PixelsEiii
 #pragma push
+/* Kept: without opt_loop_invariants off the hoisted x >> 3 and x & 7 swap
+ * order and the row and column take other registers. */
 #pragma opt_loop_invariants off
 void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
     int i, j, x, lo, hi, col, row, yb, s;
@@ -1677,67 +1621,60 @@ void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
 
 // @symbol _ZN16dScMgPachinko2_c11DrawAimLineEv
 #pragma push
+/* Kept: without opt_dead_assignments off the scheduler stores the right pivot
+ * x (0x94) before the pivot y (0x22); the stores are otherwise the same. */
 #pragma opt_dead_assignments off
 void dScMgPachinko2_c::DrawAimLine() {
-    char *c = (char *)this;
-    int k;                       /* sp+0x00 */
-    int tx;                      /* sp+0x04 */
-    int ty;                      /* sp+0x08 */
-    int *p1;                     /* sp+0x0c */
-    int *p2;                     /* sp+0x10 */
-    int idx;                     /* sp+0x14 */
-    int v2[2];                   /* sp+0x18..0x1c */
-    int x1;                      /* sp+0x20 */
-    volatile unsigned short tmp; /* sp+0x24 */
-    int cx;                      /* sb */
-    int cy;                      /* r8 */
-    int dx;                      /* r7 */
-    int dy;                      /* fp */
-    int adx;                     /* r6 */
-    int ady;                     /* r5 */
-    int layer;                   /* r4 */
-    int n;
+    int k;
+    int tx;
+    int ty;
+    int idx;
+    int pivot[2];
+    int rightPivotX;
+    volatile unsigned short tmp;
+    int cx;
+    int cy;
+    int dx;
+    int dy;
+    int adx;
+    int ady;
+    int layer;
 
-    n = mHeldBall;
-    if (n == 0)
+    if (mHeldBall == 0)
         return;
-    idx = n - 1;
+    idx = mHeldBall - 1;
     if (mBalls[idx].x != mBalls[idx].prevX || mBalls[idx].y != mBalls[idx].prevY) {
         char *dst = (char *)G2S::GetBG2CharPtr();
-        int i2;
         tmp = 0;
         MultiStore16(tmp, dst, 0x6000);
 
-        i2 = (int)((long long)idx);
-        p1 = &((dScMgPachinko2_c *)(c + i2 * 0x40))->mBalls[0].x;
-        p2 = &((dScMgPachinko2_c *)(c + i2 * 0x40))->mBalls[0].y;
         k = 0;
-        v2[0] = 0x6c;
-        v2[1] = 0x22;
+        pivot[0] = 0x6c;
+        pivot[1] = 0x22;
         layer = 2;
-        x1 = 0x94;
+        rightPivotX = 0x94;
         do {
             if (k == 0) {
                 int v;
-                cx = v2[0];
-                v = *p2 >> 12;
-                tx = *p1 >> 12;
+                cx = pivot[0];
+                tx = mBalls[idx].x >> 12;
+                v = mBalls[idx].y >> 12;
                 if (v >= 0x22)
                     ty = v + 4;
                 else
                     ty = v - 4;
-                cy = v2[1];
+                cy = pivot[1];
                 tx = tx - 4;
             } else {
                 int v;
-                cx = x1;
-                v = *p2 >> 12;
-                tx = *p1 >> 12;
+                cx = rightPivotX;
+                tx = mBalls[idx].x >> 12;
+                v = mBalls[idx].y >> 12;
                 if (v >= 0x22)
                     ty = v + 4;
                 else
                     ty = v - 4;
-                cy = v2[1];
+                cy = pivot[1];
                 tx = tx + 4;
             }
             dx = tx - cx;
@@ -1821,11 +1758,8 @@ void dScMgPachinko2_c::DrawAimLine() {
             k++;
         } while (k < 2);
     }
-    {
-        int i3 = (int)((unsigned long long)idx);
-        mBalls[i3].prevX = mBalls[i3].x;
-        mBalls[i3].prevY = mBalls[i3].y;
-    }
+    mBalls[idx].prevX = mBalls[idx].x;
+    mBalls[idx].prevY = mBalls[idx].y;
 }
 #pragma pop
 
@@ -2201,40 +2135,25 @@ void dScMgPachinko2_c::Ball_StateHop(int i) {
 }
 
 // @symbol _ZN16dScMgPachinko2_c17Ball_StateWalkOffEi
-#pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Ball_StateWalkOff(int i) {
-    /* mBalls[i].timer stays a byte offset here and in Ball_StateScored, some
-       reads through the split 0x4600 base (BALL2_HI): the member spelling
-       folds those adds and moves bytes. */
-    char *c = (char *)this;
-    *(unsigned short *)(c + BALL2_OFF(timer) + (i << 6)) += 1;
-
-    if (*(unsigned short *)(c + (i << 6) + 0x4600 + BALL2_HI(timer)) >= 4) {
-        *(unsigned short *)(c + (i << 6) + 0x4600 + BALL2_HI(timer)) = 0;
-        mBalls[i].animStep += 1;
+    mBalls[i].timer++;
+    if (mBalls[i].timer >= 4) {
+        mBalls[i].timer = 0;
+        mBalls[i].animStep++;
         if (mBalls[i].animStep >= 4)
             mBalls[i].animStep = 0;
     }
 
-    {
-        unsigned char idx = mBalls[i].animStep;
-        mBalls[i].sprite = sPachinko2BallWalkOffSprites[idx];
-        if (mBalls[i].facingRight != 0)
-            mBalls[i].sprite += 4;
-    }
+    mBalls[i].sprite = sPachinko2BallWalkOffSprites[mBalls[i].animStep];
+    if (mBalls[i].facingRight != 0)
+        mBalls[i].sprite += 4;
 
     mBalls[i].x += mBalls[i].vx;
 
-    {
-        int val = mBalls[i].x;
-        int scaled = val >> 12;
-        if (scaled >= 0x110 || scaled <= -16) {
-            mBalls[i].state = 6;
-        }
-    }
+    int x = mBalls[i].x >> 12;
+    if (x >= 0x110 || x <= -16)
+        mBalls[i].state = 6;
 }
-#pragma pop
 
 // @symbol _ZN16dScMgPachinko2_c16Ball_StateRemoveEi
 void dScMgPachinko2_c::Ball_StateRemove(int idx) {
@@ -2243,10 +2162,7 @@ void dScMgPachinko2_c::Ball_StateRemove(int idx) {
 }
 
 // @symbol _ZN16dScMgPachinko2_c16Ball_StateScoredEi
-#pragma push
-#pragma opt_common_subs off
 void dScMgPachinko2_c::Ball_StateScored(int i) {
-    char *c = (char *)this;
     mBalls[i].x += mBalls[i].vx;
     mBalls[i].y += mBalls[i].vy;
     mBalls[i].gravity += 0x10;
@@ -2255,14 +2171,10 @@ void dScMgPachinko2_c::Ball_StateScored(int i) {
     if (mBalls[i].vy >= 0x8000)
         mBalls[i].vy = 0x8000;
 
-    if (*(unsigned short *)(c + i * 0x40 + 0x4600 + BALL2_HI(timer)) != 0) {
-        *(unsigned short *)(c + BALL2_OFF(timer) + i * 0x40) -= 1;
-
-        if (*(unsigned short *)(c + i * 0x40 + 0x4600 + BALL2_HI(timer)) == 0x20) {
-            int r3 = Mg_GetSubmittedScore();
-            int f660 = mBalls[i].x;
-            int f664 = mBalls[i].y;
-            Popup_Spawn(f660, f664, r3 + 1);
+    if (mBalls[i].timer != 0) {
+        mBalls[i].timer--;
+        if (mBalls[i].timer == 0x20) {
+            Popup_Spawn(mBalls[i].x, mBalls[i].y, Mg_GetSubmittedScore() + 1);
             Mg_SubmitScore(Mg_GetSubmittedScore() + 1);
         }
     }
@@ -2272,7 +2184,6 @@ void dScMgPachinko2_c::Ball_StateScored(int i) {
 
     Ball_Bounce(i);
 }
-#pragma pop
 
 // @symbol _ZN16dScMgPachinko2_c14UpdateNextBallEv
 void dScMgPachinko2_c::UpdateNextBall() {

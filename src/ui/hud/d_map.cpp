@@ -924,6 +924,8 @@ extern s32 gRunningKuppaScript;
 }
 
 #pragma opt_strength_reduction off
+/* Kept: the ROM recomputes i << 11 for each screen block; strength reduction
+ * turns it into a running offset and needs one more register. */
 // @symbol _ZN6dMap_c13InitResourcesEv
 int dMap_c::InitResources()
 {
