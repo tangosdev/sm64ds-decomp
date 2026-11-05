@@ -25,8 +25,8 @@
  * file's .data claim covers. Everything else it touches is reached by extern.
  *
  * Emission order. `#pragma defer_codegen off` is load-bearing here: with codegen
- * deferred the opt_* pragmas around Mg_LoadBannerFiles, Banner_DrawSqueeze,
- * Banner_DrawZoomA and Banner_DrawZoomB do not bind to the one function
+ * deferred the opt_* pragmas around Banner_DrawSqueeze, Banner_DrawZoomA
+ * and Banner_DrawZoomB do not bind to the one function
  * they bracket. Source is therefore ROM-ascending.
  *
  * The bodies were matched as one-function C or C++ sources and keep that
@@ -35,7 +35,7 @@
  * Numbered names. mwccarm numbers its generated names from one counter that
  * every named parameter (prototypes included), local and temporary before a
  * definition advances. The array gMgBanners at the end of the file
- * gets __arraydtor$974 (and @975); symbols.txt names the thunk
+ * gets __arraydtor$978 (and @979); symbols.txt names the thunk
  * __arraydtor$954, and the manifest renames both onto their configured
  * names, so an edit here that moves the count re-keys those two rows. The
  * two function-local Vector2 statics (Banner_StartWaveBurst,
@@ -281,7 +281,6 @@ extern "C" void Mg_FreeBannerFiles(void) {
 }
 
 // @symbol Mg_LoadBannerFiles
-#pragma opt_strength_reduction off
 extern "C" void Mg_LoadBannerFiles(void)
 {
     int i;
@@ -355,16 +354,10 @@ extern "C" void Mg_LoadBannerFiles(void)
     entries.e[28].ptr = sMgMsgFiveCardSpritesByLanguage[GetGameLanguage()];
 
     for (i = 0; i < 29; i++) {
-        int t;
-        t = LoadFile(entries.e[i].id);
-        ((volatile int *)sMgBannerFiles)[i] = t;
-        t = (int)&entries.e[i];
-        t = *(volatile int *)(t + 4);
-        t = *(int *)t;
-        sMgBannerSprites[i] = t;
+        sMgBannerFiles[i] = LoadFile(entries.e[i].id);
+        sMgBannerSprites[i] = *(int *)entries.e[i].ptr;
     }
 }
-#pragma opt_strength_reduction on
 
 // @symbol Banner_Free
 extern "C" void Banner_Free(MgBanner *e) {

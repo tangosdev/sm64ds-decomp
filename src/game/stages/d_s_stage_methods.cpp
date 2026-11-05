@@ -40,8 +40,6 @@
 //   role is recovered. The touch and controller globals
 //   (gTouchHeld..gTouchY, gActivePlayerSlot, data_0209f498) have no header;
 //   data_ov001_ and data_ov002_ handles keep linker names.
-// - func_0202a850 keeps `#pragma opt_dead_assignments off` around its pair of
-//   stores the ROM writes twice.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a };
 
@@ -3355,14 +3353,12 @@ extern "C" int GiveHealth(int idx, int amt) {
 }
 
 // @symbol func_0202a850
-#pragma opt_dead_assignments off
 extern "C" void func_0202a850(int a, int b) {
     data_02092138 = a;
     data_0209212c = b;
-    data_02092138 = a - 0x64000;
-    data_0209212c = b + 0x64000;
+    data_02092138 -= 0x64000;
+    data_0209212c += 0x64000;
 }
-#pragma opt_dead_assignments reset
 
 // @symbol InitControllerMode
 /* The per-controller records at data_0209f498 are 0x18 apart; the mode byte
