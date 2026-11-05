@@ -596,8 +596,10 @@ void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
                 off = ix * 0x30;
                 if (mtx) {
                     func_020527e8(&mw, dir->x, dir->y, dir->z);
-                    MulMat4x3Mat4x3((const Matrix4x3 *)&mw, (const Matrix4x3 *)mtx, (Matrix4x3 *)&mw);
-                    MulMat4x3Mat4x3((const Matrix4x3 *)mp, (const Matrix4x3 *)&mw, (Matrix4x3 *)&mw);
+                    MulMat4x3Mat4x3((const Matrix4x3 *)&mw, (const Matrix4x3 *)mtx,
+                                    (Matrix4x3 *)&mw);
+                    MulMat4x3Mat4x3((const Matrix4x3 *)mp, (const Matrix4x3 *)&mw,
+                                    (Matrix4x3 *)&mw);
                     mp = &mw;
                 }
                 m.r[2].y = m.r[2].x = z14;

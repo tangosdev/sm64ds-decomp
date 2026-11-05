@@ -184,8 +184,7 @@ void daBttBk_c::UpdateModelTransform() {
         if (sv < 0)
             sv = -sv;
         int result = FX_MUL(sv, 0x28000);
-        DropShadowScaleXYZ(mShadowModel, mShadowMtx, 0x96000, 0x32000,
-                           result + 0x96000, 0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMtx, 0x96000, 0x32000, result + 0x96000, 0xf);
     }
 }
 

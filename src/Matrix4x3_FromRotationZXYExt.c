@@ -3,8 +3,7 @@
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-void Matrix4x3_FromRotationZXYExt(Matrix4x3 *m, int x, int y, int z)
-{
+void Matrix4x3_FromRotationZXYExt(Matrix4x3 *m, int x, int y, int z) {
     Matrix4x3 tmp;
     if (y != 0)
         Matrix4x3_FromRotationY(m, y);

@@ -113,7 +113,7 @@ extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
 extern int data_0209e650[];             /* RandomIntInternal state */
-extern Matrix4x3 data_020a0e68;            /* scratch Matrix4x3 */
+extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
 /* Named local declarations preserve this TU's compiler-numbered @NNN symbols;

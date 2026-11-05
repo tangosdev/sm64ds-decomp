@@ -305,8 +305,7 @@ void daYurei_Mucho_c::func_ov065_0211696c()
 
     Vec3_Asr(&v, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
 
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     mShotPosX = 0;
@@ -324,10 +323,7 @@ void daYurei_Mucho_c::func_ov065_0211696c()
     mShotPosY -= 0xa000;
     mShotPosZ <<= 3;
 
-    Matrix4x3_FromTranslation(&data_020a0e68,
-        mPosX >> 3,
-        (mPosY - 0x18000) >> 3,
-        mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
 
     *(Mtx43 *)mShadowMat = *(Mtx43 *)&data_020a0e68;
 

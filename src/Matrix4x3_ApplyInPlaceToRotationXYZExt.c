@@ -1,8 +1,7 @@
 #include "common.h"
 #include "math/MtxStack.h"
 
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z)
-{
+void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z) {
     Matrix4x3 tmp;
     if (z != 0) {
         Matrix4x3_FromRotationZ(&tmp, z);
