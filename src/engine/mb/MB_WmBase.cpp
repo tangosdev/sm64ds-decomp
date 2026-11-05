@@ -46,6 +46,7 @@
 #include "IRQ.h"
 #include "WmWork.h"
 #include "private/arm9_a9db8_mb_parent.h"
+#include "private/wm_views.h"
 
 /* The SDK built this file as C, where the GameInfo copy in
  * RecordScannedParent is an inline 0x20-pass halfword loop. As C++ it is an
@@ -89,15 +90,6 @@ typedef struct WmCallback {
     u16 apiid;   /* 0x00 */
     u16 errcode; /* 0x02 */
 } WmCallback;
-
-/* Leading fields of WMStartParentCallback (apiid 8). */
-typedef struct WmStartParentCallback {
-    u16 apiid;    /* 0x00 */
-    u16 errcode;  /* 0x02 */
-    u16 wlCmdID;  /* 0x04 */
-    u16 wlResult; /* 0x06 */
-    u16 state;    /* 0x08 -- 2 BEACON_SENT, 7 CONNECTED, 9 DISCONNECTED */
-} WmStartParentCallback;
 
 /* Leading fields of WMStartMPCallback (apiid 0xe). */
 typedef struct WmStartMPCallback {
