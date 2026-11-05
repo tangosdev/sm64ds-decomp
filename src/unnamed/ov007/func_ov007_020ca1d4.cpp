@@ -7,8 +7,6 @@
 
 extern "C" {
 
-#pragma opt_strength_reduction off
-
 extern short data_02082214[];
 extern int func_ov007_020c3ba8(int);
 extern void *func_ov007_020c3df4(const char *name, int size);
@@ -32,7 +30,6 @@ void func_ov007_020ca308(Ov007MeshWave *wave, Ov007Mesh *mesh, int i) {
     int lines;
     int ticks;
     int j;
-    int phase;
 
     state = wave->waves[i];
     params = wave->params;
@@ -60,22 +57,16 @@ void func_ov007_020ca308(Ov007MeshWave *wave, Ov007Mesh *mesh, int i) {
         if (func_ov007_020c3ba8(10000) <= keep * 10 - 1) {
             u16 base;
             u16 step = (u16)cstd::div(spread, count);
-            j = 0;
             base = (u16)(ticks * speed);
-            if (count <= 0)
-                return;
-            phase = j;
-            do {
-                s16 sine = data_02082214[((u16)(base + phase) >> 4) * 2];
+            for (j = 0; j < count; j++) {
+                s16 sine = data_02082214[((u16)(base + j * step) >> 4) * 2];
                 int val = FX_MUL(amplitude, sine);
                 if (i == 0) {
                     mesh->grid->rowLists[j]->items[line]->force.z += val;
                 } else if (i == 1) {
                     mesh->grid->rowLists[line]->items[j]->force.z += val;
                 }
-                j++;
-                phase += step;
-            } while (j < count);
+            }
             return;
         }
     }

@@ -1232,6 +1232,8 @@ register - closing a divergence gap that pointer-arithmetic rewrites alone did n
 div on func_ov007_020ca308, paired with `#pragma opt_strength_reduction off` and the
 u64-mask laundering for a separate `+0x18` RMW site, Fable, div 79->0 to full MATCH).
 Try the subscript form before parking an index-variable spill as a coloring floor.
+(2026-11, #821: the strength-reduction pragma on func_ov007_020ca308 is gone; the sine
+phase written as `base + j * step` in a `for` loop matches with it on.)
 
 ## 6k. Callee-saved locals color in REVERSE declaration order (2026-07-10)
 
