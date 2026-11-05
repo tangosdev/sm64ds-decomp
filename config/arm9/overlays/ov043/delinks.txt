@@ -26,6 +26,7 @@ src/game/actors/d_a_obj_km1_kurumajiku.cpp:
     .init start:0x02111868 end:0x021118d4
     .ctor start:0x02111aec end:0x02111af0
     .bss start:0x02112608 end:0x02112630
+    .data start:0x02112344 end:0x02112350
 
 src/game/actors/d_a_obj_km1_kuruma.cpp:
     complete
