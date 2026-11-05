@@ -21915,7 +21915,6 @@ int daPly_c::Render() {
         virtual void m14(void* a);
         virtual void m18(void* a, void* b);
     };
-    typedef struct M34 { int m[12]; } M34;
     extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
     extern void Matrix4x3_ApplyInPlaceToRotationZ(void* m, int ang);
     extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
@@ -22004,7 +22003,7 @@ int daPly_c::Render() {
                 } else {
                     Matrix4x3 *dst = mModels.mHeadModels[i]->data.transforms;
                     Matrix4x3 *src = &bodyMdl->data.transforms[15];
-                    *(M34*)dst = *(M34*)src;
+                    *dst = *src;
                     ((VObj *)(char *)mModels.mHeadModels[i])->m14((char *)&mScaleX);
                 }
                 if (param1 == 1) {
@@ -22047,7 +22046,6 @@ int daPly_c::Render() {
        ambiguous at 0x02111b64; every other candidate is ambiguous at both. */
 extern "C" {
 extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsigned int opacity) {
-    typedef struct { int m[12]; } Mat;
     extern int data_020a0e68[12];
     void func_0203c178(int *dst, int a, int b, int c);
     void MulMat3x3Mat3x3(int *dst, const int *a, const int *b);
@@ -22070,8 +22068,8 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
         if (!ok) return;
     }
 
-    Mat tmp;
-    Mat *src = (Mat *)&obj->mat4x3;
+    Matrix4x3 tmp;
+    Matrix4x3 *src = &obj->mat4x3;
     tmp = *src;
 
     int r0;
@@ -22102,14 +22100,13 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
 extern "C" {
 int func_ov002_020e3f90(char* self) {
     daPly_c *player = (daPly_c *)self;
-    struct M48 { int w[12]; };
     extern void ApproachAngle(short* v, int target, int a, int b, int c);
-    extern void Matrix4x3_ApplyInPlaceToTranslation(struct M48* m, int x, int y, int z);
-    extern void Matrix4x3_ApplyInPlaceToRotationX(struct M48* m, int a);
-    extern void Matrix4x3_ApplyInPlaceToRotationY(struct M48* m, int a);
-    extern void Matrix4x3_ApplyInPlaceToRotationZ(struct M48* m, int a);
-    extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(struct M48* m, int x, int y, int z);
-    extern struct M48 data_020a0e68;
+    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *, int x, int y, int z);
+    extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, int a);
+    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, int a);
+    extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, int a);
+    extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *, int x, int y, int z);
+    extern Matrix4x3 data_020a0e68;
     struct S { short angs[3]; volatile int v[3]; int tgt[3]; } s;
     int b;
     int t;
@@ -22129,8 +22126,8 @@ int func_ov002_020e3f90(char* self) {
     s.v[1] = 0;
     s.v[2] = 0;
     data_020a0e68 =
-        *(struct M48 *)*(char *volatile *)&((dActor_c *)*(char *volatile *)&player->mGrabbedByActor)
-             ->mCarryMatrix;
+        **(Matrix4x3 *volatile *)&((dActor_c *)*(char *volatile *)&player->mGrabbedByActor)
+              ->mCarryMatrix;
     p = (daPly_c *)player->mGrabbedByActor;
     if (((dActor_c *)p)->actorID == 0xbf)
         b = 1;
@@ -22176,10 +22173,10 @@ int func_ov002_020e3f90(char* self) {
             Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x600, -0x2600, 0);
         }
     }
-    *(struct M48 *)&player->mShadowMatrix = data_020a0e68;
-    t = ((volatile struct M48*)&data_020a0e68)->w[9];
-    t1 = ((volatile struct M48*)&data_020a0e68)->w[10];
-    t2 = ((volatile struct M48*)&data_020a0e68)->w[11];
+    player->mShadowMatrix = data_020a0e68;
+    t = ((volatile Matrix4x3 *)&data_020a0e68)->m[9];
+    t1 = ((volatile Matrix4x3 *)&data_020a0e68)->m[10];
+    t2 = ((volatile Matrix4x3 *)&data_020a0e68)->m[11];
     s.v[1] = t1;
     s.v[2] = t2;
     s.v[0] = t;
@@ -22189,13 +22186,13 @@ int func_ov002_020e3f90(char* self) {
     player->mPrevAngleY = ((dActor_c *)player->mGrabbedByActor)->mAngleY;
     n = ((daPly_c *)self)->GetBodyModelID(player->param1 & 0xff, 0);
     m = (char *)player->mModels.mBodyModels[n];
-    *(struct M48 *)&((dExtSimpleModel_c *)m)->mat4x3 = data_020a0e68;
-    *(struct M48 *)&player->mModels.mAnmModel2.mat4x3 = data_020a0e68;
+    ((dExtSimpleModel_c *)m)->mat4x3 = data_020a0e68;
+    player->mModels.mAnmModel2.mat4x3 = data_020a0e68;
     n = ((daPly_c *)self)->func_ov002_020becf4(player->param1 & 0xff, 0);
     if (n != 9 && n != 8) {
         m = (char *)player->mModels.mHeadModels[n];
         if (m != 0) {
-            *(struct M48 *)&((dExtSimpleModel_c *)m)->mat4x3 = data_020a0e68;
+            ((dExtSimpleModel_c *)m)->mat4x3 = data_020a0e68;
         }
     }
     return 1;
@@ -22329,9 +22326,8 @@ extern "C" void func_ov002_020e4768(char* self)
         virtual void v3();
         virtual void DoThing(int arg);
     };
-    typedef struct { int w[12]; } Mat43;
     extern void MulMat4x3Mat4x3(void* dst, void* a, void* b);
-    extern int data_020a0e68[12];
+    extern Matrix4x3 data_020a0e68;
     unsigned int mid;
     dExtAnm2Model_c *comp;
     int idx;
@@ -22360,26 +22356,26 @@ extern "C" void func_ov002_020e4768(char* self)
         if (hasFlag) {
             mid = ((daPly_c *)self)->GetBodyModelID(player->param1 & 0xff, 0);
             comp = player->mModels.mBodyModels[mid];
-            *(Mat43 *)data_020a0e68 = *(Mat43 *)&comp->mat4x3;
+            data_020a0e68 = comp->mat4x3;
 
             mid = ((daPly_c *)self)->GetBodyModelID(player->param1 & 0xff, 0);
             comp = player->mModels.mBodyModels[mid];
-            MulMat4x3Mat4x3(&comp->data.transforms[14], data_020a0e68, data_020a0e68);
+            MulMat4x3Mat4x3(&comp->data.transforms[14], &data_020a0e68, &data_020a0e68);
 
-            *(Mat43 *)&player->mHeldObjMatrix = *(Mat43 *)data_020a0e68;
+            player->mHeldObjMatrix = data_020a0e68;
             player->mCarryMatrix = &player->mHeldObjMatrix;
         }
     }
 
     mid = ((daPly_c *)self)->GetBodyModelID(player->param1 & 0xff, 0);
     comp = player->mModels.mBodyModels[mid];
-    *(Mat43 *)data_020a0e68 = *(Mat43 *)&comp->mat4x3;
+    data_020a0e68 = comp->mat4x3;
 
     mid = ((daPly_c *)self)->GetBodyModelID(player->param1 & 0xff, 0);
     comp = player->mModels.mBodyModels[mid];
-    MulMat4x3Mat4x3(&comp->data.transforms[15], data_020a0e68, data_020a0e68);
+    MulMat4x3Mat4x3(&comp->data.transforms[15], &data_020a0e68, &data_020a0e68);
 
-    *(Mat43 *)&player->mHeadMatrix = *(Mat43 *)data_020a0e68;
+    player->mHeadMatrix = data_020a0e68;
 }
 }
 

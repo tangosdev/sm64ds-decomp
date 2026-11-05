@@ -109,18 +109,16 @@ enum daDoor_c_AssetId {
 #include "dExtFrameCtrl_c.h"
 #include "dActor_c.h"
 #include "Sound.h"
+#include "private/mtx43.h"
 
 /* Three plain words. A stack Vector3 would run its destructor; these temps do not. */
 struct Vec3i {
     s32 x, y, z;
 };
 
-/* The door's matrix, as twelve words: a copy through the C++ Matrix4x3 is
-   the struct-copy DIFF of notes/cpp-class-form.md. */
-struct M48 {
-    int w[12];
-};
-
+/* The door's matrix copies go through the flat Mtx43: a copy through the
+   C++ Matrix4x3 is the struct-copy DIFF of notes/cpp-class-form.md (.text
+   grows by 0x3c bytes). */
 /* One entry of data_ov100_02148204, indexed by param1 (the variant). */
 struct DoorEntry {
     SharedFilePtr *file;    /* 0x0: the door model */
@@ -266,7 +264,9 @@ extern char data_02092110;
 extern int gMusicVolume;
 extern int gSubVolume;
 extern int data_020a0ebc;
-extern M48 data_020a0e68;
+/* local extern: including math/MtxStack.h instead renumbers every @NNN and
+   $NNN in this TU (+72, measured). */
+extern Matrix4x3 data_020a0e68;
 extern int data_ov002_0211094c;
 extern int data_ov089_02132c50;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
@@ -1142,13 +1142,13 @@ s32 daDoor_c::InitResources() {
     Vec3_Asr(&tmp, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    *(M48 *)&mModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     if (e->keyFile != 0) {
         mKeyModel = new dExtSimpleModel_c;
         f = dExtSimpleModel_c::LoadFile(*e->keyFile);
         mKeyModel->SetFile((BMD_File *)f, 1, -1);
-        *(M48 *)&mKeyModel->mat4x3 = data_020a0e68;
+        *(Mtx43 *)&mKeyModel->mat4x3 = *(Mtx43 *)&data_020a0e68;
     }
 
     {

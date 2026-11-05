@@ -1441,44 +1441,44 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1174",
+      "from": "@1173",
       "to": "@1115",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1174 in the current object; retain its already measured fleet-unique @1115 alias. The complete stock ROM build verifies the linked destination and bytes."
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1174 in the current object; retain its already measured fleet-unique @1115 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1174 to @1173 when the anonymous M48 typedef was retired (#4570)."
+    },
+    {
+      "from": "@1174",
+      "to": "@1116",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1175 in the current object; retain its already measured fleet-unique @1116 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1175 to @1174 when the anonymous M48 typedef was retired (#4570)."
     },
     {
       "from": "@1175",
-      "to": "@1116",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1175 in the current object; retain its already measured fleet-unique @1116 alias. The complete stock ROM build verifies the linked destination and bytes."
+      "to": "@1117",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1176 in the current object; retain its already measured fleet-unique @1117 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1176 to @1175 when the anonymous M48 typedef was retired (#4570)."
     },
     {
       "from": "@1176",
-      "to": "@1117",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1176 in the current object; retain its already measured fleet-unique @1117 alias. The complete stock ROM build verifies the linked destination and bytes."
-    },
-    {
-      "from": "@1177",
       "to": "@1118",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1177 in the current object; retain its already measured fleet-unique @1118 alias. The complete stock ROM build verifies the linked destination and bytes."
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1177 in the current object; retain its already measured fleet-unique @1118 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1177 to @1176 when the anonymous M48 typedef was retired (#4570)."
     },
     {
-      "from": "@1179",
+      "from": "@1178",
       "to": "@1120",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1179 in the current object; retain its already measured fleet-unique @1120 alias. The complete stock ROM build verifies the linked destination and bytes."
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1179 in the current object; retain its already measured fleet-unique @1120 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1179 to @1178 when the anonymous M48 typedef was retired (#4570)."
     },
     {
-      "from": "@1181",
+      "from": "@1180",
       "to": "@1122",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1181 in the current object; retain its already measured fleet-unique @1122 alias. The complete stock ROM build verifies the linked destination and bytes."
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1181 in the current object; retain its already measured fleet-unique @1122 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1181 to @1180 when the anonymous M48 typedef was retired (#4570)."
     },
     {
-      "from": "@1183",
+      "from": "@1182",
       "to": "@1124",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1183 in the current object; retain its already measured fleet-unique @1124 alias. The complete stock ROM build verifies the linked destination and bytes."
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1183 in the current object; retain its already measured fleet-unique @1124 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1183 to @1182 when the anonymous M48 typedef was retired (#4570)."
     },
     {
-      "from": "@1185",
+      "from": "@1184",
       "to": "@1126",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1185 in the current object; retain its already measured fleet-unique @1126 alias. The complete stock ROM build verifies the linked destination and bytes."
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1185 in the current object; retain its already measured fleet-unique @1126 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1185 to @1184 when the anonymous M48 typedef was retired (#4570)."
     },
     {
       "from": "@632",
@@ -1486,24 +1486,24 @@
       "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1187",
+      "from": "@1186",
       "to": "@690",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1187 to @1186 when the anonymous M48 typedef was retired (#4570)."
     },
     {
-      "from": "@1189",
+      "from": "@1188",
       "to": "@189",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1189 to @1188 when the anonymous M48 typedef was retired (#4570)."
     },
     {
-      "from": "@1191",
+      "from": "@1190",
       "to": "@197",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1191 to @1190 when the anonymous M48 typedef was retired (#4570)."
     },
     {
-      "from": "@1193",
+      "from": "@1192",
       "to": "@198",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1193 to @1192 when the anonymous M48 typedef was retired (#4570)."
     }
   ]
 }

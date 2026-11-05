@@ -64,6 +64,7 @@ enum d_a_nknk_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "private/mtx43.h"
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the two models,
@@ -706,12 +707,8 @@ void daNknk_c::func_ov062_02118334()
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         angleY = &mAngleY;
         Matrix4x3_ApplyInPlaceToRotationY(inline_fn(), *angleY);
-        {
-            struct M12w {
-                int w[12];
-            }; /* array-wrapper copy: keeps C's block copy under -lang c++ */
-            *(M12w *)&mAnmModel.mat4x3 = *(M12w *)&data_020a0e68;
-        }
+        /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
+        *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         {
             int b = (int)((mFlags & 0x40000) != 0);
             if (b != 0) {

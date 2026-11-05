@@ -25,7 +25,7 @@
  *   void * externs. Random() wraps math/CalcLib.h's RandomIntInternal as
  *   unsigned: a signed % 400 / % 4000 or >> 16 changes codegen.
  * - Behavior builds the model matrix through MtxStack (math/MtxStack.h) but
- *   copies it out as twelve plain words (BirdMtx).
+ *   copies it out as twelve plain words (Mtx43).
  * - data_ov009_02113c20 / 02113c28 SharedFilePtr handles: the initializer
  *   constructs them as file IDs 1080 / 1081. symbols.txt has no recovered
  *   names, so they are not coined.
@@ -47,6 +47,7 @@
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 #include "cstd.h"
+#include "private/mtx43.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -74,12 +75,8 @@ struct SBirdStateTable {
     }
 };
 
-/* Behavior copies the scratch matrix as twelve plain words; a Matrix4x3
-   assignment compiles to a different copy. */
-struct BirdMtx {
-    int w[12];
-};
-
+/* Behavior copies the scratch matrix through the flat Mtx43; a Matrix4x3
+   assignment compiles to a different copy (.text grows by 0x1c bytes). */
 extern SBirdModelFilePtr data_ov009_02113c20;
 extern SBirdAnimationFilePtr data_ov009_02113c28;
 extern SBirdStateTable data_ov009_02113c48;
@@ -303,7 +300,7 @@ s32 daSBird_c::Behavior() {
     mAngleY = mPrevAngleY;
     Matrix4x3_ApplyInPlaceToRotationZ(&MtxStack::get(), mAngleZ);
     MtxStack::YrotM(mAngleY);
-    *(BirdMtx *)&mAnmModel.mat4x3 = *(BirdMtx *)&MtxStack::get();
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&MtxStack::get();
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x1e000, 0x7d0000, 0xf);
     mAnmModel.Advance();
     return 1;

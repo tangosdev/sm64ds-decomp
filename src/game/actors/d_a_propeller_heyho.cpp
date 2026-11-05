@@ -365,6 +365,7 @@ int daPropeller_Heyho_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_02120070
 #include "common.h"
+#include "private/mtx43.h"
 
 extern "C" {
 
@@ -373,7 +374,8 @@ extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern int data_020a0e68[];
 
-typedef struct { int w[12]; } M48;
+/* The matrix copies go through the flat Mtx43: assigning Matrix4x3 grows
+   .text by 0x34 bytes. */
 
 /* Refreshes the draw matrices: the model matrix from position >> 3 (Vec3_Asr by 3)
  * and the three angles, copied into mAnmModel.mat4x3; the shadow matrix from the
@@ -385,9 +387,9 @@ void func_ov070_02120070(daPropeller_Heyho_c* c)
     Vec3_Asr(&v, &c->mPosX, 3);
     Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
-    *(M48 *)&c->mAnmModel.mat4x3 = *(M48 *)data_020a0e68;
+    *(Mtx43 *)&c->mAnmModel.mat4x3 = *(Mtx43 *)data_020a0e68;
     Matrix4x3_FromTranslation(data_020a0e68, c->mPosX >> 3, (c->mPosY - 0xa000) >> 3, c->mPosZ >> 3);
-    *(M48*)c->mShadowMatrix = *(M48*)data_020a0e68;
+    *(Mtx43 *)c->mShadowMatrix = *(Mtx43 *)data_020a0e68;
     c->DropShadowRadHeight(c->mShadowModel, *(Matrix4x3 *)c->mShadowMatrix, 0x76000, 0x320000, 0xf);
 }
 }

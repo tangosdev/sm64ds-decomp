@@ -237,9 +237,6 @@ typedef int Fix12i;
 
 /* shadow typedef 'Vector3' */
 
-/* shadow struct 'M48' */
-struct M48 { int w[12]; };
-
 /* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for func_ov002_020f237c, NOT applied:
 struct Obj {
     char _pad0[0xd4];
@@ -4456,12 +4453,12 @@ int daDemo_c::Render() {
         struct {
             char *p;
             char *cur;
-            M48 *src;
+            Matrix4x3 *src;
         } s;
-        s.src = (M48 *)&data_0209b41c;
+        s.src = &data_0209b41c;
         s.p = (char *)&mModel->mat4x3;
         s.cur = s.p;
-        *(M48 *)s.cur = *s.src;
+        *(Matrix4x3 *)s.cur = *s.src;
         int *tbl = data_ov002_0210bb7c;
         int i = 0;
         do {

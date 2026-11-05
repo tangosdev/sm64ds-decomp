@@ -20,6 +20,7 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "private/mtx43.h"
 
 extern "C" {
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
@@ -264,15 +265,12 @@ int daObj_Mip_Key_c::ChangeState(MipKeyState *p) {
 
 void daObj_Mip_Key_c::UpdateModelAndShadow() {
     // Whole Matrix4x3 assignment emits six extra words under 2004/b56.
-    // Preserve the measured flat 48-byte copy until the shared type is resolved.
-    typedef struct {
-        int w[12];
-    } MipKeyM48;
+    // The model-matrix copy goes through the flat Mtx43 instead.
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(MipKeyM48 *)(&mModel.mat4x3) = *(MipKeyM48 *)&data_020a0e68;
+    *(Mtx43 *)(&mModel.mat4x3) = *(Mtx43 *)&data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x32000) >> 3, mPosZ >> 3);
     DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x23000, 0x12c000, 0xf);
 }

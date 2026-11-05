@@ -25,9 +25,9 @@ comment leftovers:
  *     carry-offset vectors are file-scope objects at the end of this file
  *     (folded sinit 0x0212fa40). The records stay StateFn[2]; the sinit
  *     pairs they copy from are unlicensed .data descriptors.
- *   - Matrix copies go through local 12-word structs (M48 in UpdateShadow,
- *     M48e858 in UpdateShadowPlayer): types.h's Vector3 and math/Matrix.h's
- *     Matrix4x3 are non-POD here, so a typed copy scalarizes or destroys.
+ *   - Matrix copies go through the flat Mtx43: math/Matrix.h's Matrix4x3
+ *     is the one this file sees, and assigning it is not the ROM's block
+ *     copy (the object grows by 0x30 bytes).
  *   - CamPose, V3 and the local Vec3/Vector3 spellings are the same kind
  *     of non-POD dodge for vector locals.
  *   - unk_2e0 is written once (StateApproachInit) and never read.
@@ -54,6 +54,7 @@ enum daC_Jugem_c_AssetId {
 #include "SaveData.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
 
 /* File-scope objects at the end of this file construct the three resource
  * handles (model file 0x2d7, animation file 0x2d8, texture-sequence file
@@ -189,7 +190,6 @@ struct CamPose { s32 lx, ly, lz, px, py, pz; };
 /* Flat three-word vector view for block copies where the real Vector3
    (non-POD here, it has a declared destructor) would change codegen. */
 struct V3 { s32 x, y, z; };
-struct M48 { s32 w[12]; };
 
 #pragma defer_codegen off
 
@@ -818,16 +818,15 @@ void daC_Jugem_c::UpdateShadow()
     Vec3_Asr((Vector3 *)&v, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(M48 *)&mAnmModel1.mat4x3 = *(M48 *)&data_020a0e68;
+    *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x38000) >> 3, mPosZ >> 3);
-    *(M48 *)&mShadowMat1 = *(M48 *)&data_020a0e68;
+    *(Mtx43 *)&mShadowMat1 = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);
 }
 
 // @symbol _ZN11daC_Jugem_c18UpdateShadowPlayerEv
 /* The ambient variant's two shadows: one at Lakitu's own position, one
-   projected ahead of the player. The matrix copies stay 12-word block
-   moves through M48; the shared Matrix4x3 spelling scalarizes them. */
+   projected ahead of the player. */
 void daC_Jugem_c::UpdateShadowPlayer()
 {
     typedef struct Vector3 { int x, y, z; } Vector3;
@@ -845,13 +844,13 @@ void daC_Jugem_c::UpdateShadowPlayer()
     Vec3_Asr((::Vector3 *)&t, (::Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(M48 *)&mAnmModel1.mat4x3 = *(M48 *)&data_020a0e68;
+    *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
         (mPosY - 0x38000) >> 3,
         mPosZ >> 3);
-    *(M48 *)&mShadowMat1 = *(M48 *)&data_020a0e68;
+    *(Mtx43 *)&mShadowMat1 = *(Mtx43 *)&data_020a0e68;
 
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);
 
@@ -895,7 +894,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
 
     func_ov002_020e4374(pl, &p1, &p2);
 
-    *(M48 *)&mShadowMat2 = *(M48 *)&data_020a0e68;
+    *(Mtx43 *)&mShadowMat2 = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel2, *(Matrix4x3 *)&mShadowMat2, p2, p1, 0xf);
 }
 

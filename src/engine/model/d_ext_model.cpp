@@ -348,13 +348,7 @@ int dExtSimpleModel_c::DoSetFile(char *file_, int a, int b) {
 
 // @symbol _ZN17dExtSimpleModel_c9Virtual10ER9Matrix4x3
 void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
-    /* The copy is one flat 12-word ldm/stm run in the ROM. CW copies the
-       nested Matrix4x3 (Matrix3x3 + Vector3) memberwise, which is bigger,
-       so it goes through a flat 12-word view instead. */
-    struct Mtx12w {
-        Fix12i m[12];
-    };
-    *(Mtx12w *)data.transforms = *(const Mtx12w *)&mat;
+    *data.transforms = mat;
     func_02045074(&data, data.modelFile->bones);
 }
 
