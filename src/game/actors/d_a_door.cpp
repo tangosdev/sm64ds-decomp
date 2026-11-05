@@ -264,7 +264,9 @@ extern char data_02092110;
 extern int gMusicVolume;
 extern int gSubVolume;
 extern int data_020a0ebc;
-extern Mtx43 data_020a0e68;
+/* local extern: including math/MtxStack.h instead renumbers every @NNN and
+   $NNN in this TU (+72, measured). */
+extern Matrix4x3 data_020a0e68;
 extern int data_ov002_0211094c;
 extern int data_ov089_02132c50;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
@@ -1140,13 +1142,13 @@ s32 daDoor_c::InitResources() {
     Vec3_Asr(&tmp, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    *(Mtx43 *)&mModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     if (e->keyFile != 0) {
         mKeyModel = new dExtSimpleModel_c;
         f = dExtSimpleModel_c::LoadFile(*e->keyFile);
         mKeyModel->SetFile((BMD_File *)f, 1, -1);
-        *(Mtx43 *)&mKeyModel->mat4x3 = data_020a0e68;
+        *(Mtx43 *)&mKeyModel->mat4x3 = *(Mtx43 *)&data_020a0e68;
     }
 
     {

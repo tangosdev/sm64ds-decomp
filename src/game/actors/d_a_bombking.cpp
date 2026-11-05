@@ -168,6 +168,8 @@ extern "C" {
      * preamble carried up to three contradictory spellings of each. */
 extern unsigned char data_0209f220[];
 extern void *data_0209f318;
+/* local extern: math/MtxStack.h's spellings of the matrix calls below
+   clash with these (illegal function overloading). */
 extern Matrix4x3 data_020a0e68;
 extern int data_02092138;
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
