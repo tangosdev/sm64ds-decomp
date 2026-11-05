@@ -9,7 +9,7 @@
     "launder_or_forced": 52,
     "launder_sites": 156,
     "pragma_by_name": {
-      "opt_common_subs": 35,
+      "opt_common_subs": 33,
       "opt_dead_assignments": 2,
       "opt_foldconstants": 1,
       "opt_lifetimes": 3,
@@ -19,8 +19,8 @@
       "opt_strength_reduction": 27,
       "optimize_for_size": 13
     },
-    "pragma_files": 59,
-    "pragma_overrides": 112,
+    "pragma_files": 58,
+    "pragma_overrides": 110,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
