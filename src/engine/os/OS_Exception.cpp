@@ -17,12 +17,11 @@
  */
 #include "types.h"
 #include "CP15.h"
+#include "nitro/os/exception.h"
 
 /* The debugger's exception vector slot in the shared work area. A debugger
  * that owns exceptions leaves a main-RAM handler address there. */
 #define HW_EXCEP_VECTOR_BUF_FOR_DEBUGGER 0x027ffd9c
-
-typedef void (*OSExceptionHandler)(u32 context, void *arg);
 
 extern "C" {
 

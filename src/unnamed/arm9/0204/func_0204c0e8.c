@@ -1,11 +1,5 @@
 #include "nitro/fx/fx.h"
 
-/* NitroSDK's MtxFx43: a 4x3 fixed-point matrix, row by row. Not
- * include/private/mtx43.h's Mtx43, which is the same 12 words unrowed. */
-typedef struct MtxFx43 {
-    int m[4][3];
-} MtxFx43;
-
 /* Build a rotation about the (1, 1, 1) diagonal from its sine and cosine:
  * 0x555 is 1/3 and 0x93d is sqrt(1/3) in 20.12. The particle draws pick it or
  * func_0204c0a8 out of data_02099fbc; pret's SPL names it SPLUtil_RotateXYZ. */

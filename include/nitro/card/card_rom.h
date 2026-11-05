@@ -17,6 +17,14 @@ extern "C" {
 
 #define CARD_ROM_PAGE_SIZE 0x200
 
+/* NitroSDK CARDRomRegion: an {offset, length} span of the card ROM, the
+ * shape of the ROM header's FNT and FAT entries and of the overlay tables
+ * (fsi_ovt9, fsi_ovt7). */
+typedef struct CARDRomRegion {
+    u32 offset;
+    u32 length;
+} CARDRomRegion;
+
 /* NitroSDK CARDRomStat (rom_stat, data_020a8780). */
 typedef struct CARDRomStat {
     void (*read_func)(struct CARDRomStat *); /* 0x00 -- CARD_Init installs CARDi_ReadCard */

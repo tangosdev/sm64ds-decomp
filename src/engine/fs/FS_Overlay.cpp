@@ -23,18 +23,13 @@
 #include "types.h"
 #include "CP15.h"
 #include "IRQ.h"
+#include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
 
 extern "C" {
-
-/* NitroSDK CARDRomRegion. */
-typedef struct CARDRomRegion {
-    u32 offset;
-    u32 length;
-} CARDRomRegion;
 
 /* The __global_destructor_chain entries the runtime keeps for objects with
  * static storage. */

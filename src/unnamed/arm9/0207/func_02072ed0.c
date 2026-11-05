@@ -1,10 +1,4 @@
-/* An exception index entry: start address, size with the inline flag in
-   bit 0, then the action table (see func_02072dac). */
-struct EHIndexEntry {
-    unsigned int start;
-    unsigned int sizeFlags;
-    int table;
-};
+#include "MWCPlusLib.h"
 
 /* EH runtime: binary search of count index entries for the one whose
    [start, start + (sizeFlags & ~1)] range holds key. Returns 0 when none does.

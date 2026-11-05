@@ -17,7 +17,7 @@
 // This is the cleanup __cxa_vec_new calls when an element constructor throws
 // partway through building an array.
 
-typedef void (*dtor_t)(void *);
+#include "MWCPlusLib.h"
 
 namespace std {
 void terminate();
