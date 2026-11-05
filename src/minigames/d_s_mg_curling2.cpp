@@ -7,7 +7,7 @@
  *   stoneOffset` order (`&mStone[0].speed + stoneOffset`), and Play keeps
  *   the stone timer and state dispatch raw; every member spelling of those
  *   sites moves bytes. StoneSpin, NextStone,
- *   Play, ResetGame and the two mark functions reach their records through
+ *   Play, ResetGame and DrawMarks reach their records through
  *   a stepped `char *` cast back to the class (`((dScMgCurling2_c *)p)->
  *   mStone[0].x`): indexing mStone[i] directly folds the base differently.
  *
@@ -25,7 +25,7 @@
 // The drag controls are declared in dScMgCurling2_c.h; this consolidated
 // TU is their sole consumer.
 
-/* Required: ROM order, and the brackets on AgeMarks and DragUpdate. */
+/* Required: ROM order. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScMgCurling2_c_AssetId {
     ASSET_D_2D_MG_BG_JOKYU_CURLING1_MATO_NSC_BIN = 0x0041,
@@ -754,32 +754,23 @@ void dScMgCurling2_c::DrawMarks() {
 
 /* Age the five score marks: run the countdown down
  * and, on the frame it reaches zero, set the flag that DrawMarks draws on and
- * play sound 0x1bc. The `opt_strength_reduction off` bracket is needed
- * (see the banner). The countdown is reached through the stepped `rec`
- * pointer -- &mMark[i] folds the base differently. */
-#pragma push
-#pragma opt_strength_reduction off
+ * play sound 0x1bc. */
 // @symbol _ZN15dScMgCurling2_c8AgeMarksEv
 void dScMgCurling2_c::AgeMarks() {
-    char *raw = (char *)this;
     int i;
 
     for (i = 0; i < 5; i++) {
-        char *rec = raw + (i << 4);
-        unsigned short *timer;
         if (mMark[i].enable == 0)
             continue;
         if (mMark[i].countdown == 0)
             continue;
-        timer = &((dScMgCurling2_c *)rec)->mMark[0].countdown;
-        *timer = *timer - 1;
-        if (*timer != 0)
+        mMark[i].countdown--;
+        if (mMark[i].countdown != 0)
             continue;
         mMark[i].drawn = 1;
         Sound::PlayBank2_2D(0x1bc);
     }
 }
-#pragma pop
 
 // @symbol _ZN15dScMgCurling2_c10DrawCursorEv
 /* Draw the drag cursor at the mDragX/mDragY drag point,
@@ -806,21 +797,13 @@ void dScMgCurling2_c::DrawCursor() {
  * instantly and decaying by half. Finally the grab offset is recomputed
  * from the new point and a fresh read of the input index.
  *
- * Both pragmas are load-bearing. The ROM shares nothing across an extended
- * basic block that 2004/b56 would share by default: dx >> 1 is recomputed
- * after the atan2 call and the input index is re-read at the end, so
- * opt_common_subs is off, and every value the ROM does share is a named
- * local here (i4, bx/by, dy2, j-free ax/ay). opt_propagation off keeps the
- * stylus byte loads above the first store (the ROM loads both before it)
- * and puts i4 in r4. Loading by before bx, and ay before ax, colours the
- * two scratch pairs the ROM's way; the twin Aim_Swing in
- * dScMgCurling_c reads the same. */
-#pragma push
-#pragma opt_common_subs off
-#pragma opt_propagation off
+ * As in the twin Aim_Swing in dScMgCurling_c, dx is halved in place
+ * before atan2 (spelled `dx >> 1` at both uses, the two shifts merge into
+ * one, which the ROM does not do), and the touch records are read through
+ * a `u8 *` cast, which keeps both stylus byte loads above the first store
+ * as the ROM has them. */
 // @symbol _ZN15dScMgCurling2_c10DragUpdateEv
 void dScMgCurling2_c::DragUpdate() {
-    dScMgCurling2_c *self = this;
     u8 idx;
     int dx;
     int oldx;
@@ -828,94 +811,90 @@ void dScMgCurling2_c::DragUpdate() {
     int diff;
     u16 oldAng;
     int mag;
-    int i4;
 
     idx = gActivePlayerSlot;
-    i4 = idx * 4;
     if (gTouchHeld[idx * 4] != 0) {
         int dy2;
         int dy;
-        u8 bx;
-        u8 by;
+        u8 bx = ((u8 *)gTouchX)[idx * 4];
+        u8 by = ((u8 *)gTouchY)[idx * 4];
 
-        by = gTouchY[i4];
-        bx = gTouchX[i4];
-        oldx = self->mDragX;
-        oldy = self->mDragY;
-        self->mDragX = self->mGrabOffsetX + (bx << 12);
-        self->mDragY = self->mGrabOffsetY + (by << 12);
-        if (self->mDragY <= 0x94000)
-            self->mDragY = 0x94000;
-        if (self->mDragX <= 0x20000)
-            self->mDragX = 0x20000;
-        if (self->mDragX >= 0xe0000)
-            self->mDragX = 0xe0000;
-        if (self->mDragY >= 0xb8000)
-            self->mDragY = 0xb8000;
-        dx = (self->mDragX - oldx) >> 12;
-        dy = (self->mDragY - oldy) >> 12;
+        oldx = mDragX;
+        oldy = mDragY;
+        mDragX = (bx << 12) + mGrabOffsetX;
+        mDragY = mGrabOffsetY + (by << 12);
+        if (mDragY <= 0x94000)
+            mDragY = 0x94000;
+        if (mDragX <= 0x20000)
+            mDragX = 0x20000;
+        if (mDragX >= 0xe0000)
+            mDragX = 0xe0000;
+        if (mDragY >= 0xb8000)
+            mDragY = 0xb8000;
+        dx = (mDragX - oldx) >> 12;
+        dy = (mDragY - oldy) >> 12;
         dy2 = dy * dy;
         if (cstd::sqrt((u64)(dx * dx + dy2)) <= 1) {
-            self->mDragX = oldx;
-            self->mDragY = oldy;
+            mDragX = oldx;
+            mDragY = oldy;
             return;
         }
-        diff = (self->mDragY - self->mSwingReferenceY) >> 12;
-        if (self->mSwingState == 0) {
-            func_02012718(0x1d6, self->mDragX);
-            self->mSwingState = 2;
-            self->mLastSwingDeltaY = (self->mDragY - self->mSwingReferenceY) >> 12;
-            self->mSwingReferenceY = self->mDragY;
-        } else if (self->mSwingState == 1) {
-            if (self->mLastSwingDeltaY * diff > 0) {
+        diff = (mDragY - mSwingReferenceY) >> 12;
+        if (mSwingState == 0) {
+            func_02012718(0x1d6, mDragX);
+            mSwingState = 2;
+            mLastSwingDeltaY = (mDragY - mSwingReferenceY) >> 12;
+            mSwingReferenceY = mDragY;
+        } else if (mSwingState == 1) {
+            if (mLastSwingDeltaY * diff > 0) {
                 if (diff < 0)
                     diff = -diff;
                 if (diff >= 0xa)
-                    self->mSwingState = 0;
+                    mSwingState = 0;
             } else {
-                self->mLastSwingDeltaY = diff;
-                self->mSwingReferenceY = self->mDragY;
+                mLastSwingDeltaY = diff;
+                mSwingReferenceY = mDragY;
             }
         } else {
-            if (self->mLastSwingDeltaY * diff < 0)
-                self->mSwingState = 1;
-            self->mLastSwingDeltaY = (self->mDragY - self->mSwingReferenceY) >> 12;
-            self->mSwingReferenceY = self->mDragY;
+            if (mLastSwingDeltaY * diff < 0)
+                mSwingState = 1;
+            mLastSwingDeltaY = (mDragY - mSwingReferenceY) >> 12;
+            mSwingReferenceY = mDragY;
         }
-        oldAng = self->mThrowAngle;
-        self->mThrowAngle = cstd::atan2(dy, dx >> 1);
+        oldAng = mThrowAngle;
+        dx >>= 1;
+        mThrowAngle = cstd::atan2(dy, dx);
         {
-            u16 a = self->mThrowAngle;
+            u16 a = mThrowAngle;
 
             if (a <= 0x8000 && a >= 0x4000) {
-                self->mThrowAngle = 0x8000;
+                mThrowAngle = 0x8000;
             } else if (a <= 0x4000) {
-                self->mThrowAngle = 0;
+                mThrowAngle = 0;
             }
         }
-        self->mThrowAngle = (self->mThrowAngle + oldAng) >> 1;
-        mag = cstd::sqrt((u64)((dx >> 1) * (dx >> 1) + dy2)) * 9;
+        mThrowAngle = (mThrowAngle + oldAng) >> 1;
+        mag = cstd::sqrt((u64)(dx * dx + dy2)) * 9;
         mag = (mag << 12) >> 4;
         if (mag >= 0xc000)
             mag = 0xc000;
-        if (mag > self->mThrowSpeed)
-            self->mThrowSpeed = mag;
-        if (self->mThrowSpeed > mag)
-            self->mThrowSpeed -= (self->mThrowSpeed - mag) >> 1;
+        if (mag > mThrowSpeed)
+            mThrowSpeed = mag;
+        if (mThrowSpeed > mag)
+            mThrowSpeed -= (mThrowSpeed - mag) >> 1;
         {
             int j = gActivePlayerSlot;
-            int ay = (self->mDragY >> 12) - gTouchY[j * 4];
-            int ax = (self->mDragX >> 12) - gTouchX[j * 4];
+            int ay = (mDragY >> 12) - gTouchY[j * 4];
+            int ax = (mDragX >> 12) - gTouchX[j * 4];
 
-            self->mGrabOffsetX = ax << 12;
-            self->mGrabOffsetY = ay << 12;
+            mGrabOffsetX = ax << 12;
+            mGrabOffsetY = ay << 12;
         }
         return;
     }
-    self->mDragState = 0;
-    self->mCursorVisible = 1;
+    mDragState = 0;
+    mCursorVisible = 1;
 }
-#pragma pop
 
 // @symbol _ZN15dScMgCurling2_c9DragBeginEv
 /* Begin a drag: latch the grab offset and the first angle. Entry 0 of
