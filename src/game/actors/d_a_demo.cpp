@@ -61,11 +61,8 @@
  * (notes/model-rtti-names.md); this TU does not emit a homeless _ZTI.
  *
  * deslop leftovers:
- *   func_ov002_020f20f4 compiles to the ROM's loop only as C++ (every
- *   C-flavored spelling walks a byte-offset induction variable).
  *   func_ov002_020f2aec/2bf4/335c/340c/39ec keep opt_common_subs off
- *   brackets; 20f4 keeps opt_strength_reduction / opt_loop_invariants
- *   off. The brackets bind per-member only under defer_codegen off.
+ *   brackets. The brackets bind per-member only under defer_codegen off.
  *   func_ov002_020f27e8 and the OAM tail family return a callee's r0 by
  *   falling off the end; the callees are declared int so the passthrough
  *   is spelled.
@@ -684,54 +681,28 @@ void daDemo_c::func_ov002_020f1fcc()
  * is clear, spriteX += spriteVelX and the RNG is stepped (result unused); a
  * slot that reaches x 0x140 moving right or x -0x40 moving left goes idle with
  * spriteDelay (slot + 1) << 5. Every active slot is drawn each frame. */
-/* This member is C++, not C: under every C-flavored path here (the legacy .c
-   file, an extern "C" block, #pragma cplusplus off) the backend strength-
-   reduces the shared `d + i*2` into an r8 byte-walk; the ROM recomputes it
-   (`add r0, r0, r9, lsl #1`), which only the C++ backend emits. extern "C" on
-   the definition keeps the unmangled cartridge spelling without changing the
-   backend. */
 extern "C" struct OamAttr *data_ov002_0210be1c[];
-#pragma opt_strength_reduction off
 
 void daDemo_c::func_ov002_020f20f4() {
-    int i = 0;
-    int zpos = 0;
-    int zneg = 0;
-    int two = 2;
-    int m1 = -1;
-    for (; i < 3; i++) {
-        char *d = (char *)this->mScroll;
-        if ((((ScrollState *)d)->spriteActive[i]) != 0) {
+    for (int i = 0; i < 3; i++) {
+        if (mScroll->spriteActive[i] != 0) {
             if ((data_020a0db0 & 1) == 0) {
-                /* q is &spriteX[i] through a base stepped by i * 2:
-                   q = &spriteX[i] builds 4 bytes long, and reading
-                   spriteX[i] directly builds 4 bytes short. */
-                s16 *q = ((ScrollState *)(d + i * 2))->spriteX;
-                s16 vel = ((ScrollState *)d)->spriteVelX[i];
-                s16 pos = *q;
-                int *seed = &data_0209e650;
-                *q = (s16)(pos + vel);
-                RandomIntInternal(seed);
-                d = (char *)this->mScroll;
-                if (((ScrollState *)d)->spriteVelX[i] >= 0) {
-                    if (((ScrollState *)d)->spriteX[i] >= 0x140) {
-                        ((ScrollState *)d)->spriteActive[i] = (u8)zpos;
-                        d = (char *)this->mScroll;
-                        ((ScrollState *)d)->spriteDelay[i] = (s16)((i + 1) << 5);
+                mScroll->spriteX[i] += mScroll->spriteVelX[i];
+                RandomIntInternal(&data_0209e650);
+                if (mScroll->spriteVelX[i] >= 0) {
+                    if (mScroll->spriteX[i] >= 0x140) {
+                        mScroll->spriteActive[i] = 0;
+                        mScroll->spriteDelay[i] = (i + 1) << 5;
                     }
-                } else if (((ScrollState *)d)->spriteX[i] <= (-0x40)) {
-                    ((ScrollState *)d)->spriteActive[i] = (u8)zneg;
-                    d = (char *)this->mScroll;
-                    ((ScrollState *)d)->spriteDelay[i] = (s16)((i + 1) << 5);
+                } else if (mScroll->spriteX[i] <= -0x40) {
+                    mScroll->spriteActive[i] = 0;
+                    mScroll->spriteDelay[i] = (i + 1) << 5;
                 }
             }
-            d = (char *)this->mScroll;
-            OAM::RenderSub(data_ov002_0210be1c[i], ((ScrollState *)d)->spriteX[i],
-                           ((ScrollState *)d)->spriteY[i], m1, two);
+            OAM::RenderSub(data_ov002_0210be1c[i], mScroll->spriteX[i], mScroll->spriteY[i], -1, 2);
         }
     }
 }
-#pragma opt_strength_reduction on
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov002_020f2210, 0x020f2210, size 0x130 */

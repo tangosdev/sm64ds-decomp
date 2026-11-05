@@ -12,7 +12,7 @@
  * D1 at 0x0212568c, D0 at 0x0212573c.
  *
  * Functions run in ROM order under `#pragma defer_codegen off`; removing it
- * breaks five functions and the section order. The six bracketed optimizer
+ * breaks five functions and the section order. The three bracketed optimizer
  * pragmas are needed too, and so is the include order (see below).
  *
  * The helpers whose first parameter was the scene are now members of
@@ -24,11 +24,8 @@
  */
 
 // leftovers:
-// - Snowball_UpdateCamera stays a free function. Inside its `opt_lifetimes
-//   off` window the member spelling reserves six extra stack slots (frame
-//   0x10 -> 0x28, v leaves sp+0) under every alias shape tried, so it keeps
-//   its char* parameter and C linkage (caller: Behavior's per-element
-//   dispatch in this TU).
+// - Snowball_UpdateCamera stays a free function with its char* parameter and
+//   C linkage (caller: Behavior's per-element dispatch in this TU).
 // - dScMgSnowball_c::Vec2, the collision ring's hit pair, stays its own nested
 //   type with a destructor and no constructor (see the header); it was not
 //   swapped for Vector2 in the pass that typed mArray1/mArray2.
@@ -76,11 +73,6 @@ enum dScMgSnowball_c_AssetId {
 typedef struct Vec3 {
     int x, y, z;
 } Vec3;
-
-struct V3 {
-    int x, y;
-    volatile int z;
-};
 
 /* The FLAT 12-word view of Matrix4x3. include/common.h and include/math/Matrix.h
    carry two spellings of this 0x30-byte type and whichever a TU sees first
@@ -336,47 +328,39 @@ int dScMgSnowball_c::IsInWater(int *point) {
     }
 }
 
-#pragma opt_strength_reduction off
 // @symbol _ZN15dScMgSnowball_c13HitsBreakableEPi
 int dScMgSnowball_c::HitsBreakable(int *point) {
-    char *scene = (char *)this;
     int i;
     for (i = 0; i < 0x80; i++) {
-        if (((dScMgSnowball_c *)(scene + i))->mArray1Active[0] == 1) {
-            char *prop = scene + i * 8;
+        if (mArray1Active[i] == 1) {
             int dx, dy;
-            /* mArray1 member spellings here grow the function by 8 bytes, so
-               these reads keep `prop + offset` */
-            if (point[0] >= *(int *)(prop + SNOW_OFF(mArray1[0].x)) + 0x10000)
+            if (point[0] >= mArray1[i].x + 0x10000)
                 continue;
-            if (point[0] < *(int *)(prop + SNOW_OFF(mArray1[0].x)) - 0x10000)
+            if (point[0] < mArray1[i].x - 0x10000)
                 continue;
-            if (point[1] >= *(int *)(prop + SNOW_OFF(mArray1[0].y)) + 0x8000)
+            if (point[1] >= mArray1[i].y + 0x8000)
                 continue;
-            if (point[1] < *(int *)(prop + SNOW_OFF(mArray1[0].y)) - 0x8000)
+            if (point[1] < mArray1[i].y - 0x8000)
                 continue;
-            dy = *(int *)(prop + SNOW_OFF(mArray1[0].y)) - point[1];
-            dx = *(int *)(prop + SNOW_OFF(mArray1[0].x)) - point[0];
+            dy = mArray1[i].y - point[1];
+            dx = mArray1[i].x - point[0];
             if (FX_MUL(dx, dx) + FX_MUL(dy, dy) / 4 > 0x100000)
                 continue;
-            ((dScMgSnowball_c *)(scene + i))->mArray1Hit[0] = 1;
+            mArray1Hit[i] = 1;
             if (mArray1Kind[i] == 1) {
                 mSoundPending = 1;
-                mHitSoundX = ((dScMgSnowball_c *)prop)->mArray1[0].x;
-                mHitSoundY = ((dScMgSnowball_c *)prop)->mArray1[0].y;
+                mHitSoundX = mArray1[i].x;
+                mHitSoundY = mArray1[i].y;
             }
             return 1;
         }
     }
     return 0;
 }
-#pragma opt_strength_reduction on
 
 #pragma opt_common_subs off
 // @symbol _ZN15dScMgSnowball_c8HitsWallEPi
 int dScMgSnowball_c::HitsWall(int *point) {
-    int raw = (int)this;
-    char *scene = (char *)raw;
     int courseY = point[1];
     int x;
     unsigned short tile;
@@ -384,9 +368,9 @@ int dScMgSnowball_c::HitsWall(int *point) {
 
     if (courseY < -0x20000)
         return 1;
-    if (courseY >= ((dScMgSnowball_c *)scene)->mScrollLimit << 16)
+    if (courseY >= mScrollLimit << 16)
         return 1;
-    if (courseY >= ((dScMgSnowball_c *)scene)->mScrollY + 0x1d0000)
+    if (courseY >= mScrollY + 0x1d0000)
         return 1;
     x = point[0];
     if (x < 0)
@@ -394,13 +378,9 @@ int dScMgSnowball_c::HitsWall(int *point) {
     if (x >= 0x100000)
         return 1;
     if (courseY < 0)
-        tile = ((dScMgSnowball_c *)scene)->mTileMap[(x >> 12) / 16][0];
-    else {
-        int lane = (x >> 12) / 16;
-        lane = lane ? lane : lane;
-        tile =
-            ((dScMgSnowball_c *)(raw + lane * 0x5c0 + ((courseY >> 12) / 16) * 2))->mTileMap[0][0];
-    }
+        tile = mTileMap[(x >> 12) / 16][0];
+    else
+        tile = mTileMap[(x >> 12) / 16][(courseY >> 12) / 16];
     localY = (courseY >> 12) & 0xf;
     localX = (x >> 12) & 0xf;
     diagonalSum = localX + localY;
@@ -699,13 +679,12 @@ void dScMgSnowball_c::UpdateSnowball() {
     }
 }
 
-#pragma opt_lifetimes off
 // @symbol Snowball_UpdateCamera
 extern "C" {
 void Snowball_UpdateCamera(char *scene) {
     dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
     int t = cstd::fdiv(0xc0000, data_02082314);
-    struct V3 v;
+    Vector3 v;
     int x, y;
     /* pad_4660 is the head of the base's 0xbc camera (dScMgSingle3DBase_c.h). */
     if (self->mScreensSwapped == 0) {
@@ -732,14 +711,13 @@ void Snowball_UpdateCamera(char *scene) {
     v.x = x;
     v.y = y;
     v.z = 0;
-    Matrix4x3_FromTranslation(&data_020a0e68, x, y, 0);
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, self->mHeadingAngle);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mRollAngle);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
     *(struct M4x3Flat *)&self->mModel.mat4x3 = *(struct M4x3Flat *)&data_020a0e68;
 }
 }
-#pragma opt_lifetimes on
 
 // @symbol _ZN15dScMgSnowball_c12RedrawCourseEv
 void dScMgSnowball_c::RedrawCourse() {
@@ -1365,11 +1343,9 @@ void dScMgSnowball_c::ResetScene() {
 }
 
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 // @symbol _ZN15dScMgSnowball_c6RenderEv
 /* Slot 9. `c` stays next to `self` as the stepping base for the
- * mArray1Active/mArray1Hit byte flags, read through `(dScMgSnowball_c *)p`.
- * Both pragmas are needed. */
+ * mArray1Active/mArray1Hit byte flags, read through `(dScMgSnowball_c *)p`. */
 s32 dScMgSnowball_c::Render() {
     char *c = (char *)this;
     struct dScMgSnowball_c *self = (struct dScMgSnowball_c *)(void *)c;
@@ -1522,7 +1498,6 @@ s32 dScMgSnowball_c::Render() {
     SnowSpray_DrawAll();
     return 1;
 }
-#pragma opt_common_subs on
 #pragma opt_strength_reduction on
 
 // @symbol _ZN15dScMgSnowball_c8BehaviorEv
