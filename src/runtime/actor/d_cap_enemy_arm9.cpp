@@ -19,8 +19,9 @@
  *    flags word have no member names; the measured ldrb/launder forms stay.
  *    AddCap's mFlags &= ~1 and its mCapId store go through plain `&member`
  *    pointers.
- *  - UpdateCapPos keeps CapVec/CapMtx POD shadows: Vector3's empty
- *    destructor and Matrix4x3's embedded Vector3 change the frame.
+ *  - UpdateCapPos keeps the CapVec POD shadow: Vector3's empty destructor
+ *    changes the frame. Its matrix copy goes through Mtx43; a plain
+ *    Matrix4x3 assignment is memberwise and 0x1c bytes longer.
  */
 #include "dCapEnemy_c.h"
 #include "daPly_c.h"
@@ -29,6 +30,7 @@
 /* _ZTV11dCapEnemy_c is already declared here. A local extern would be a new
  * extern-vtable site; the ov002 half includes this header for the same store. */
 #include "decl_common.h"
+#include "private/mtx43.h"
 
 extern "C" {
 extern SharedFilePtr *data_ov002_020ff028[];
@@ -39,14 +41,13 @@ extern void *data_0209f394[];
 
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
-/* UpdateCapPos's stack temps are POD. Vector3's empty destructor and
-   Matrix4x3's embedded Vector3 change this function's frame. */
+/* UpdateCapPos's stack temps are POD: Vector3's empty destructor changes
+   this function's frame. */
 struct CapVec { int x, y, z; };
-struct CapMtx { int a[12]; };
 extern void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
-extern void Matrix4x3_FromTranslation(CapMtx *mF, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(CapMtx *mF, short x, short y, short z);
-extern CapMtx data_020a0e68;
+extern void Matrix4x3_FromTranslation(Matrix4x3 *mF, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *mF, short x, short y, short z);
+extern Matrix4x3 data_020a0e68;
 }
 
 // @symbol _ZN11dCapEnemy_cC2Ev
@@ -138,7 +139,7 @@ void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
     Vec3_Asr((Vector3 *)&asr, (Vector3 *)&sum, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, rot.x, rot.y, rot.z);
-    *(CapMtx *)&mModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 // @symbol _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3
