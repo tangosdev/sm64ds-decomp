@@ -727,8 +727,8 @@ void daNknk_c::func_ov062_02118258(int lim)
 {
     mClosestPlayer = ClosestPlayer();
 
-    if (mClosestPlayer == 0 || Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > lim) {
-        mAimAngle = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
+    if (mClosestPlayer == 0 || Vec3_Dist(&mPos, &mHomePos) > lim) {
+        mAimAngle = Vec3_HorzAngle(&mPos, &mHomePos);
         mPlayerDist = 0x61a8000;
     } else {
         Vector3 v;
@@ -736,7 +736,7 @@ void daNknk_c::func_ov062_02118258(int lim)
         v.x = src[0];
         v.y = src[1];
         v.z = src[2];
-        if (Vec3_Dist((Vector3*)&mHomePosX, &v) > lim) {
+        if (Vec3_Dist(&mHomePos, &v) > lim) {
             mPlayerDist = 0x4e20000;
             return;
         }

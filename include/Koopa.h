@@ -39,9 +39,12 @@ struct daNknk_c : dEnemyBase_c {
     s32             mModelIndex;             /* 0x394 */
     u8              mAnimIndex;              /* 0x398 */
     u8              pad_399[3];              /* 0x399 */
-    s32             mHomePosX;               /* 0x39c */
-    s32             mHomePosY;               /* 0x3a0 */
-    s32             mHomePosZ;               /* 0x3a4 */
+    union {
+        struct {
+            s32 mHomePosX, mHomePosY, mHomePosZ;
+        };
+        Vector3 mHomePos; /* 0x39c -- spawn point used by the leash and return heading */
+    };
     s32             mSafePosX;               /* 0x3a8 */
     s32             mSafePosY;               /* 0x3ac */
     s32             mSafePosZ;               /* 0x3b0 */
