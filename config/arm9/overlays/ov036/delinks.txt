@@ -17,6 +17,7 @@ src/game/actors/d_a_obj_rc_kaitendai.cpp:
     .init start:0x0211261c end:0x02112688
     .ctor start:0x021129e0 end:0x021129e4
     .bss start:0x02114048 end:0x02114070
+    .data start:0x02113b2c end:0x02113b38
 
 src/game/actors/d_a_obj_rc_hane.cpp:
     complete

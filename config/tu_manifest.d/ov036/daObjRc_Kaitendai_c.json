@@ -31,6 +31,11 @@
       "name": ".bss",
       "start": "0x02114048",
       "end": "0x02114070"
+    },
+    {
+      "name": ".data",
+      "start": "0x02113b2c",
+      "end": "0x02113b38"
     }
   ],
   "functions": [
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov036_02113b2c",
+      "address": "0x02113b2c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor {model, collision, CLPS} InitResourcesFrom and CleanupResourcesFrom take; the words relocate to 0x02114050, 0x02114048 and the CLPS block at 0x02112bc8"
+    }
+  ],
   "bss": [
     {
       "symbol": "gRcKaitenCollisionFile",
@@ -199,7 +212,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -235,11 +248,18 @@
           "start": "0x02114048",
           "end": "0x02114070",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02113b2c",
+          "end": "0x02113b38",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 11
+          "LICENSED": 12
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -250,66 +270,47 @@
           {
             "section": ".init",
             "original": [
-              45
+              47
             ],
             "desired": [
-              45
+              47
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              43
+              45
             ],
             "desired": [
-              43
+              45
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              22,
+              7,
+              8,
+              16,
+              25
+            ],
+            "desired": [
+              7,
+              8,
+              16,
+              25
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
               23
             ],
             "desired": [
-              6,
-              5,
-              22,
               23
             ]
           }
         ],
-        "objisolate": {
-          "reordered": [
-            {
-              "section": ".bss",
-              "original": [
-                5,
-                6,
-                22,
-                23
-              ],
-              "desired": [
-                6,
-                5,
-                22,
-                23
-              ],
-              "slots": [
-                5,
-                6,
-                22,
-                23
-              ]
-            }
-          ],
-          "symbolIndices": 4,
-          "sectionLinks": 0,
-          "sectionInfos": 0,
-          "error": null
-        },
+        "objisolate": null,
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -322,7 +323,8 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "localWorkerNote": "Verified on this machine's stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
     }
   },
   "compiler_only_output": [
@@ -624,6 +626,36 @@
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x02114064"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRcKaitenModelFile",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02114050"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRcKaitenCollisionFile",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02114048"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_02112bc8",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02112bc8"
     }
   ]
 }

@@ -42,8 +42,9 @@ struct RcKaitendaiCollisionFilePtr : SharedFilePtr {
     ~RcKaitendaiCollisionFilePtr();
 };
 
-extern ResourceDescriptor data_ov036_02113b2c;
 extern s16 data_ov036_02113b18;
+extern ResourceDescriptor data_ov036_02113b2c;
+extern struct CLPS_Block data_ov036_02112bc8;
 extern s16 data_ov036_02113b1c;
 
 // @symbol daObjRc_Kaitendai_c_classInit
@@ -68,3 +69,7 @@ s32 daObjRc_Kaitendai_c::CleanupResources() {
  * Definition order is the retail initializer's construction order. */
 RcKaitendaiModelFile gRcKaitenModelFile(ASSET_RC_KAITEN_BMD);
 RcKaitendaiCollisionFilePtr gRcKaitenCollisionFile(ASSET_RC_KAITEN_KCL);
+
+ResourceDescriptor data_ov036_02113b2c = {
+    &gRcKaitenModelFile, &gRcKaitenCollisionFile, &data_ov036_02112bc8,
+};
