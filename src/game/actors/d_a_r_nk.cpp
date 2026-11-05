@@ -40,6 +40,7 @@ enum daRNk_c_AssetId {
 #include "Timer.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
 #include "Sound.h"
 #include "math/Approach.h"
 namespace cstd {
@@ -167,8 +168,6 @@ extern "C" {
 extern short data_02082214[];   /* SINE_TABLE: {sin, cos} pairs in fix12, indexed by angle >> 4 */
 /* This scalar entry follows its C definition, including u16 startFrame.
    dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */
-extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 /* Play2D(3, id): a sound with no position. */
 extern unsigned int func_0201277c(unsigned int id);
 extern signed char gCurrentSublevel; /* LEVEL_ID */
@@ -177,7 +176,6 @@ extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 extern void func_02012694(u32 a, void *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
 extern Timer gRaceTimer;            /* TIME_TIMER: the course timer */
-extern void Vec3_Asr(void *destination, void *source, int shift);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* m, short angY);
 extern struct Matrix4x3 data_020a0e68;  /* MATRIX_SCRATCH_PAPER */
@@ -319,7 +317,7 @@ int daRNk_c::Render()
    and give DropShadowRadHeight a radius and height of 160 units. */
 void daRNk_c::func_ov062_0211aac0(){
     struct Vector3 v;
-    Vec3_Asr(&v, &this->mPosX, 3);
+    Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
     {
