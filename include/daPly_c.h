@@ -1048,7 +1048,6 @@ struct daPly_c : dActor_c {
        advances mwccarm's @NNN counter in every file that includes this
        header (measured: 33 of 258 consumers renumbered their @NNN locals),
        and unnamed they leave all 258 objects byte-identical. */
-    int func_ov002_020bccfc(unsigned char *, int, int);
     int func_ov002_020bcd18(unsigned char *, int, int);
     int func_ov002_020bcd38(unsigned char *, int, int);
     void func_ov002_020bd06c(unsigned int);

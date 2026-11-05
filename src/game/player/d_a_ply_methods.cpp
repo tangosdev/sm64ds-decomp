@@ -541,9 +541,10 @@ extern daPly_c::State data_ov002_0211070c;
 extern daPly_c::State data_ov002_02110724;
 }
 
-// @symbol _ZN7daPly_c19func_ov002_020bccfcEPhii
-int daPly_c::func_ov002_020bccfc(unsigned char *params, int beginFrame, int endFrame) {
-    this->MarkForDestruction();
+// @symbol daPly_func_ov002_020bccfc
+extern "C" int daPly_func_ov002_020bccfc(daPly_c *self, unsigned char *params, int beginFrame,
+                                         int endFrame) {
+    self->MarkForDestruction();
     return 1;
 }
 
@@ -593,221 +594,155 @@ extern AnimScriptStep data_ov002_02109ff4[];
 extern AnimScriptStep data_ov002_0210a1d4[];
 
 /* 64 Player state-method descriptors at 0x0210a354..0x0210a554.
- * Each record is the code address followed by a zero PMF adjustment. A
- * direct PMF initializer is dynamic under mwccarm, so the flat address is
- * the constant member of a union and the PMF view is used by the state
- * assignments. */
-union PlayerPmf {
-    void (*fn)(daPly_c *);
+ * Each record is the handler code word followed by a zero PMF adjustment.
+ * mwccarm moves a direct PMF initializer to .bss, so the code word is kept
+ * in a plain function pointer and the state assignments use the PMF view.
+ * The plain names are linker aliases for the member handlers; symbols.txt
+ * records each one at its method's address. */
+union PlayerStateTarget {
+    int (*code)(daPly_c *);
     int (daPly_c::*pmf)();
 };
-union PlayerCleanupPmf {
-    void (*fn)(daPly_c *);
+union PlayerCleanupTarget {
+    void (*code)(daPly_c *);
     void (daPly_c::*pmf)();
 };
-union PlayerScriptCommand {
-    void (*fn)(daPly_c *);
+union PlayerFreeCleanupTarget {
+    void (*code)(char *);
+    void (daPly_c::*pmf)();
+};
+union PlayerScriptTarget {
+    int (*code)(daPly_c *, unsigned char *, int, int);
     ScriptCommand pmf;
 };
 
-// local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c21St_StuckInGround_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c12St_Land_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c12St_Talk_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19func_ov002_020bccfcEPhii(daPly_c *, unsigned char *, int,
-                                      int); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c12St_Talk_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c12St_Spin_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c15St_Spin_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c22St_CrazedCrate_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c21St_WaitQuicksand_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c13St_Climb_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c13St_Climb_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" void
-_ZN7daPly_c19func_ov002_020c71e0Ev(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c16St_WallJump_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c16St_Climb_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19func_ov002_020bcd38EPhii(daPly_c *, unsigned char *, int,
-                                      int); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c17St_SweepKick_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c17St_Headstand_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c16St_WallJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" void
-_ZN7daPly_c19func_ov002_020c6fe4Ev(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19func_ov002_020bd20cEPhii(daPly_c *, unsigned char *, int,
-                                      int); // local extern: flat state-descriptor address
-extern "C" void
-_ZN7daPly_c19func_ov002_020c70acEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19func_ov002_020bd3a0EPhii(daPly_c *, unsigned char *, int,
-                                      int); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c22St_SwingPlayer_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c17St_LedgeHang_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c17St_WaterJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c17St_LedgeGrab_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c17St_LedgeGrab_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19func_ov002_020bd250EPhii(daPly_c *, unsigned char *, int,
-                                      int); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c20St_CeilingGrate_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" void func_ov002_020e1c20(char *);
-// local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c20St_CeilingGrate_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" void
-_ZN7daPly_c19func_ov002_020c7350Ev(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19func_ov002_020bd354EPhii(daPly_c *, unsigned char *, int,
-                                      int); // local extern: flat state-descriptor address
-extern "C" void func_ov002_020e1e70(char *);
-// local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c21St_YoshiPower_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" void
-_ZN7daPly_c19func_ov002_020c75f0Ev(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19St_SwingPlayer_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c17St_SlideKick_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c20St_InYoshiMouth_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c20St_InYoshiMouth_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19St_SwingPlayer_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c25St_GrabBowserTail_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c22St_GrabBowserTail_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c22St_GrabBowserTail_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c15St_DeadPit_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c20St_StomachSlide_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c12St_Dive_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c22St_GroundPound_CleanupEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19St_GroundPound_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19St_GroundPound_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c17St_PunchKick_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c17St_PunchKick_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c17St_EndingFly_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c16St_LongJump_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c16St_LongJump_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c19func_ov002_020bd480EPhii(daPly_c *, unsigned char *, int,
-                                      int); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c16St_SideFlip_MainEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c16St_BackFlip_InitEv(daPly_c *); // local extern: flat state-descriptor address
-extern "C" int
-_ZN7daPly_c14St_Crouch_MainEv(daPly_c *); // local extern: flat state-descriptor address
+/* Flat names for the handlers defined later in this TU. symbols.txt
+ * records each name at the same address as its member method, so the
+ * descriptor words below link to the methods without a PMF conversion. */
+int daPly_St_StuckInGround_Main(daPly_c *);
+int daPly_St_Land_Main(daPly_c *);
+int daPly_St_Talk_Init(daPly_c *);
+int daPly_St_Talk_Main(daPly_c *);
+int daPly_St_Spin_Main(daPly_c *);
+int daPly_St_Spin_Cleanup(daPly_c *);
+int daPly_St_CrazedCrate_Cleanup(daPly_c *);
+int daPly_St_WaitQuicksand_Main(daPly_c *);
+int daPly_St_Climb_Main(daPly_c *);
+int daPly_St_Climb_Init(daPly_c *);
+int daPly_St_WallJump_Main(daPly_c *);
+int daPly_St_Climb_Cleanup(daPly_c *);
+int daPly_St_SweepKick_Main(daPly_c *);
+int daPly_St_Headstand_Main(daPly_c *);
+int daPly_St_WallJump_Init(daPly_c *);
+int daPly_St_SwingPlayer_Cleanup(daPly_c *);
+int daPly_St_LedgeHang_Init(daPly_c *);
+int daPly_St_WaterJump_Init(daPly_c *);
+int daPly_St_LedgeGrab_Init(daPly_c *);
+int daPly_St_LedgeGrab_Main(daPly_c *);
+int daPly_St_CeilingGrate_Init(daPly_c *);
+int daPly_St_CeilingGrate_Main(daPly_c *);
+int daPly_St_YoshiPower_Cleanup(daPly_c *);
+int daPly_St_SwingPlayer_Main(daPly_c *);
+int daPly_St_SlideKick_Init(daPly_c *);
+int daPly_St_InYoshiMouth_Init(daPly_c *);
+int daPly_St_InYoshiMouth_Main(daPly_c *);
+int daPly_St_SwingPlayer_Init(daPly_c *);
+int daPly_St_GrabBowserTail_Cleanup(daPly_c *);
+int daPly_St_GrabBowserTail_Main(daPly_c *);
+int daPly_St_GrabBowserTail_Init(daPly_c *);
+int daPly_St_DeadPit_Main(daPly_c *);
+int daPly_St_StomachSlide_Main(daPly_c *);
+int daPly_St_Dive_Init(daPly_c *);
+int daPly_St_GroundPound_Cleanup(daPly_c *);
+int daPly_St_GroundPound_Main(daPly_c *);
+int daPly_St_GroundPound_Init(daPly_c *);
+int daPly_St_PunchKick_Main(daPly_c *);
+int daPly_St_PunchKick_Init(daPly_c *);
+int daPly_St_EndingFly_Init(daPly_c *);
+int daPly_St_LongJump_Main(daPly_c *);
+int daPly_St_LongJump_Init(daPly_c *);
+int daPly_St_SideFlip_Main(daPly_c *);
+int daPly_St_BackFlip_Init(daPly_c *);
+int daPly_St_Crouch_Main(daPly_c *);
+void daPly_func_ov002_020c71e0(daPly_c *);
+void daPly_func_ov002_020c6fe4(daPly_c *);
+void daPly_func_ov002_020c70ac(daPly_c *);
+void daPly_func_ov002_020c7350(daPly_c *);
+void daPly_func_ov002_020c75f0(daPly_c *);
+int daPly_func_ov002_020bccfc(daPly_c *, unsigned char *, int, int);
+int daPly_func_ov002_020bcd38(daPly_c *, unsigned char *, int, int);
+int daPly_func_ov002_020bd20c(daPly_c *, unsigned char *, int, int);
+int daPly_func_ov002_020bd3a0(daPly_c *, unsigned char *, int, int);
+int daPly_func_ov002_020bd250(daPly_c *, unsigned char *, int, int);
+int daPly_func_ov002_020bd354(daPly_c *, unsigned char *, int, int);
+int daPly_func_ov002_020bd480(daPly_c *, unsigned char *, int, int);
+void func_ov002_020e1c20(char *);
+void func_ov002_020e1e70(char *);
 
-PlayerPmf data_ov002_0210a354 = {(void (*)(daPly_c *))_ZN7daPly_c21St_StuckInGround_MainEv};
-PlayerPmf data_ov002_0210a35c = {(void (*)(daPly_c *))_ZN7daPly_c12St_Land_MainEv};
-PlayerPmf data_ov002_0210a364 = {(void (*)(daPly_c *))_ZN7daPly_c12St_Talk_InitEv};
-PlayerScriptCommand data_ov002_0210a36c = {
-    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bccfcEPhii};
-PlayerPmf data_ov002_0210a374 = {(void (*)(daPly_c *))_ZN7daPly_c12St_Talk_MainEv};
-PlayerPmf data_ov002_0210a37c = {(void (*)(daPly_c *))_ZN7daPly_c12St_Spin_MainEv};
-PlayerPmf data_ov002_0210a384 = {(void (*)(daPly_c *))_ZN7daPly_c15St_Spin_CleanupEv};
-PlayerPmf data_ov002_0210a38c = {(void (*)(daPly_c *))_ZN7daPly_c22St_CrazedCrate_CleanupEv};
-PlayerPmf data_ov002_0210a394 = {(void (*)(daPly_c *))_ZN7daPly_c21St_WaitQuicksand_MainEv};
-PlayerPmf data_ov002_0210a39c = {(void (*)(daPly_c *))_ZN7daPly_c13St_Climb_MainEv};
-PlayerPmf data_ov002_0210a3a4 = {(void (*)(daPly_c *))_ZN7daPly_c13St_Climb_InitEv};
-PlayerCleanupPmf data_ov002_0210a3ac = {(void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c71e0Ev};
-PlayerPmf data_ov002_0210a3b4 = {(void (*)(daPly_c *))_ZN7daPly_c16St_WallJump_MainEv};
-PlayerPmf data_ov002_0210a3bc = {(void (*)(daPly_c *))_ZN7daPly_c16St_Climb_CleanupEv};
-PlayerScriptCommand data_ov002_0210a3c4 = {
-    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bcd38EPhii};
-PlayerPmf data_ov002_0210a3cc = {(void (*)(daPly_c *))_ZN7daPly_c17St_SweepKick_MainEv};
-PlayerPmf data_ov002_0210a3d4 = {(void (*)(daPly_c *))_ZN7daPly_c17St_Headstand_MainEv};
+PlayerStateTarget data_ov002_0210a354 = {daPly_St_StuckInGround_Main};
+PlayerStateTarget data_ov002_0210a35c = {daPly_St_Land_Main};
+PlayerStateTarget data_ov002_0210a364 = {daPly_St_Talk_Init};
+PlayerScriptTarget data_ov002_0210a36c = {daPly_func_ov002_020bccfc};
+PlayerStateTarget data_ov002_0210a374 = {daPly_St_Talk_Main};
+PlayerStateTarget data_ov002_0210a37c = {daPly_St_Spin_Main};
+PlayerStateTarget data_ov002_0210a384 = {daPly_St_Spin_Cleanup};
+PlayerStateTarget data_ov002_0210a38c = {daPly_St_CrazedCrate_Cleanup};
+PlayerStateTarget data_ov002_0210a394 = {daPly_St_WaitQuicksand_Main};
+PlayerStateTarget data_ov002_0210a39c = {daPly_St_Climb_Main};
+PlayerStateTarget data_ov002_0210a3a4 = {daPly_St_Climb_Init};
+PlayerCleanupTarget data_ov002_0210a3ac = {daPly_func_ov002_020c71e0};
+PlayerStateTarget data_ov002_0210a3b4 = {daPly_St_WallJump_Main};
+PlayerStateTarget data_ov002_0210a3bc = {daPly_St_Climb_Cleanup};
+PlayerScriptTarget data_ov002_0210a3c4 = {daPly_func_ov002_020bcd38};
+PlayerStateTarget data_ov002_0210a3cc = {daPly_St_SweepKick_Main};
+PlayerStateTarget data_ov002_0210a3d4 = {daPly_St_Headstand_Main};
 AnimScriptStep data_ov002_0210a3dc[] = {{1, 0}};
-PlayerPmf data_ov002_0210a3e4 = {(void (*)(daPly_c *))_ZN7daPly_c16St_Climb_CleanupEv};
-PlayerPmf data_ov002_0210a3ec = {(void (*)(daPly_c *))_ZN7daPly_c16St_WallJump_InitEv};
-PlayerCleanupPmf data_ov002_0210a3f4 = {(void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c6fe4Ev};
-PlayerScriptCommand data_ov002_0210a3fc = {
-    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd20cEPhii};
-PlayerCleanupPmf data_ov002_0210a404 = {(void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c70acEv};
-PlayerScriptCommand data_ov002_0210a40c = {
-    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd3a0EPhii};
-PlayerPmf data_ov002_0210a414 = {(void (*)(daPly_c *))_ZN7daPly_c22St_SwingPlayer_CleanupEv};
-PlayerPmf data_ov002_0210a41c = {(void (*)(daPly_c *))_ZN7daPly_c17St_LedgeHang_InitEv};
+PlayerStateTarget data_ov002_0210a3e4 = {daPly_St_Climb_Cleanup};
+PlayerStateTarget data_ov002_0210a3ec = {daPly_St_WallJump_Init};
+PlayerCleanupTarget data_ov002_0210a3f4 = {daPly_func_ov002_020c6fe4};
+PlayerScriptTarget data_ov002_0210a3fc = {daPly_func_ov002_020bd20c};
+PlayerCleanupTarget data_ov002_0210a404 = {daPly_func_ov002_020c70ac};
+PlayerScriptTarget data_ov002_0210a40c = {daPly_func_ov002_020bd3a0};
+PlayerStateTarget data_ov002_0210a414 = {daPly_St_SwingPlayer_Cleanup};
+PlayerStateTarget data_ov002_0210a41c = {daPly_St_LedgeHang_Init};
 int data_ov002_0210a424[] = {19, 21};
-PlayerPmf data_ov002_0210a42c = {(void (*)(daPly_c *))_ZN7daPly_c17St_WaterJump_InitEv};
+PlayerStateTarget data_ov002_0210a42c = {daPly_St_WaterJump_Init};
 AnimScriptStep data_ov002_0210a434[] = {{188, 0}};
-PlayerPmf data_ov002_0210a43c = {(void (*)(daPly_c *))_ZN7daPly_c17St_LedgeGrab_InitEv};
-PlayerPmf data_ov002_0210a444 = {(void (*)(daPly_c *))_ZN7daPly_c17St_LedgeGrab_MainEv};
-PlayerScriptCommand data_ov002_0210a44c = {
-    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd250EPhii};
-PlayerPmf data_ov002_0210a454 = {(void (*)(daPly_c *))_ZN7daPly_c20St_CeilingGrate_InitEv};
-PlayerCleanupPmf data_ov002_0210a45c = {(void (*)(daPly_c *))func_ov002_020e1c20};
-PlayerPmf data_ov002_0210a464 = {(void (*)(daPly_c *))_ZN7daPly_c20St_CeilingGrate_MainEv};
-PlayerCleanupPmf data_ov002_0210a46c = {(void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c7350Ev};
-PlayerScriptCommand data_ov002_0210a474 = {
-    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd354EPhii};
-PlayerCleanupPmf data_ov002_0210a47c = {(void (*)(daPly_c *))func_ov002_020e1e70};
-PlayerPmf data_ov002_0210a484 = {(void (*)(daPly_c *))_ZN7daPly_c21St_YoshiPower_CleanupEv};
-PlayerCleanupPmf data_ov002_0210a48c = {(void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020c75f0Ev};
-PlayerPmf data_ov002_0210a494 = {(void (*)(daPly_c *))_ZN7daPly_c19St_SwingPlayer_MainEv};
-PlayerPmf data_ov002_0210a49c = {(void (*)(daPly_c *))_ZN7daPly_c17St_SlideKick_InitEv};
-PlayerPmf data_ov002_0210a4a4 = {(void (*)(daPly_c *))_ZN7daPly_c20St_InYoshiMouth_InitEv};
-PlayerPmf data_ov002_0210a4ac = {(void (*)(daPly_c *))_ZN7daPly_c20St_InYoshiMouth_MainEv};
-PlayerPmf data_ov002_0210a4b4 = {(void (*)(daPly_c *))_ZN7daPly_c19St_SwingPlayer_InitEv};
+PlayerStateTarget data_ov002_0210a43c = {daPly_St_LedgeGrab_Init};
+PlayerStateTarget data_ov002_0210a444 = {daPly_St_LedgeGrab_Main};
+PlayerScriptTarget data_ov002_0210a44c = {daPly_func_ov002_020bd250};
+PlayerStateTarget data_ov002_0210a454 = {daPly_St_CeilingGrate_Init};
+PlayerFreeCleanupTarget data_ov002_0210a45c = {func_ov002_020e1c20};
+PlayerStateTarget data_ov002_0210a464 = {daPly_St_CeilingGrate_Main};
+PlayerCleanupTarget data_ov002_0210a46c = {daPly_func_ov002_020c7350};
+PlayerScriptTarget data_ov002_0210a474 = {daPly_func_ov002_020bd354};
+PlayerFreeCleanupTarget data_ov002_0210a47c = {func_ov002_020e1e70};
+PlayerStateTarget data_ov002_0210a484 = {daPly_St_YoshiPower_Cleanup};
+PlayerCleanupTarget data_ov002_0210a48c = {daPly_func_ov002_020c75f0};
+PlayerStateTarget data_ov002_0210a494 = {daPly_St_SwingPlayer_Main};
+PlayerStateTarget data_ov002_0210a49c = {daPly_St_SlideKick_Init};
+PlayerStateTarget data_ov002_0210a4a4 = {daPly_St_InYoshiMouth_Init};
+PlayerStateTarget data_ov002_0210a4ac = {daPly_St_InYoshiMouth_Main};
+PlayerStateTarget data_ov002_0210a4b4 = {daPly_St_SwingPlayer_Init};
 AnimScriptStep data_ov002_0210a4bc[] = {{191, 0}};
-PlayerPmf data_ov002_0210a4c4 = {(void (*)(daPly_c *))_ZN7daPly_c25St_GrabBowserTail_CleanupEv};
-PlayerPmf data_ov002_0210a4cc = {(void (*)(daPly_c *))_ZN7daPly_c22St_GrabBowserTail_MainEv};
-PlayerPmf data_ov002_0210a4d4 = {(void (*)(daPly_c *))_ZN7daPly_c22St_GrabBowserTail_InitEv};
-PlayerPmf data_ov002_0210a4dc = {(void (*)(daPly_c *))_ZN7daPly_c15St_DeadPit_MainEv};
-PlayerPmf data_ov002_0210a4e4 = {(void (*)(daPly_c *))_ZN7daPly_c20St_StomachSlide_MainEv};
-PlayerPmf data_ov002_0210a4ec = {(void (*)(daPly_c *))_ZN7daPly_c12St_Dive_InitEv};
-PlayerPmf data_ov002_0210a4f4 = {(void (*)(daPly_c *))_ZN7daPly_c22St_GroundPound_CleanupEv};
-PlayerPmf data_ov002_0210a4fc = {(void (*)(daPly_c *))_ZN7daPly_c19St_GroundPound_MainEv};
-PlayerPmf data_ov002_0210a504 = {(void (*)(daPly_c *))_ZN7daPly_c19St_GroundPound_InitEv};
-PlayerPmf data_ov002_0210a50c = {(void (*)(daPly_c *))_ZN7daPly_c17St_PunchKick_MainEv};
-PlayerPmf data_ov002_0210a514 = {(void (*)(daPly_c *))_ZN7daPly_c17St_PunchKick_InitEv};
-PlayerPmf data_ov002_0210a51c = {(void (*)(daPly_c *))_ZN7daPly_c17St_EndingFly_InitEv};
-PlayerPmf data_ov002_0210a524 = {(void (*)(daPly_c *))_ZN7daPly_c16St_LongJump_MainEv};
-PlayerPmf data_ov002_0210a52c = {(void (*)(daPly_c *))_ZN7daPly_c16St_LongJump_InitEv};
-PlayerScriptCommand data_ov002_0210a534 = {
-    (void (*)(daPly_c *))_ZN7daPly_c19func_ov002_020bd480EPhii};
-PlayerPmf data_ov002_0210a53c = {(void (*)(daPly_c *))_ZN7daPly_c16St_SideFlip_MainEv};
-PlayerPmf data_ov002_0210a544 = {(void (*)(daPly_c *))_ZN7daPly_c16St_BackFlip_InitEv};
-PlayerPmf data_ov002_0210a54c = {(void (*)(daPly_c *))_ZN7daPly_c14St_Crouch_MainEv};
+PlayerStateTarget data_ov002_0210a4c4 = {daPly_St_GrabBowserTail_Cleanup};
+PlayerStateTarget data_ov002_0210a4cc = {daPly_St_GrabBowserTail_Main};
+PlayerStateTarget data_ov002_0210a4d4 = {daPly_St_GrabBowserTail_Init};
+PlayerStateTarget data_ov002_0210a4dc = {daPly_St_DeadPit_Main};
+PlayerStateTarget data_ov002_0210a4e4 = {daPly_St_StomachSlide_Main};
+PlayerStateTarget data_ov002_0210a4ec = {daPly_St_Dive_Init};
+PlayerStateTarget data_ov002_0210a4f4 = {daPly_St_GroundPound_Cleanup};
+PlayerStateTarget data_ov002_0210a4fc = {daPly_St_GroundPound_Main};
+PlayerStateTarget data_ov002_0210a504 = {daPly_St_GroundPound_Init};
+PlayerStateTarget data_ov002_0210a50c = {daPly_St_PunchKick_Main};
+PlayerStateTarget data_ov002_0210a514 = {daPly_St_PunchKick_Init};
+PlayerStateTarget data_ov002_0210a51c = {daPly_St_EndingFly_Init};
+PlayerStateTarget data_ov002_0210a524 = {daPly_St_LongJump_Main};
+PlayerStateTarget data_ov002_0210a52c = {daPly_St_LongJump_Init};
+PlayerScriptTarget data_ov002_0210a534 = {daPly_func_ov002_020bd480};
+PlayerStateTarget data_ov002_0210a53c = {daPly_St_SideFlip_Main};
+PlayerStateTarget data_ov002_0210a544 = {daPly_St_BackFlip_Init};
+PlayerStateTarget data_ov002_0210a54c = {daPly_St_Crouch_Main};
 
 /* Three three-entry animation-id tables. The state handlers step mStateStep
  * through them and pass the selected id to SetAnim. */
@@ -1301,16 +1236,16 @@ int daPly_c::func_ov002_020bd664(unsigned char *cmd, int beginFrame, int endFram
     extern ScriptCommand data_ov002_0210a124;
     extern ScriptCommand data_ov002_0210a054;
     extern ScriptCommand data_ov002_0210a0dc;
-    extern PlayerScriptCommand data_ov002_0210a534;
+    extern PlayerScriptTarget data_ov002_0210a534;
     extern ScriptCommand data_ov002_0210a0b4;
     extern ScriptCommand data_ov002_0210a094;
-    extern PlayerScriptCommand data_ov002_0210a40c;
-    extern PlayerScriptCommand data_ov002_0210a474;
-    extern PlayerScriptCommand data_ov002_0210a44c;
-    extern PlayerScriptCommand data_ov002_0210a3fc;
-    extern PlayerScriptCommand data_ov002_0210a3c4;
+    extern PlayerScriptTarget data_ov002_0210a40c;
+    extern PlayerScriptTarget data_ov002_0210a474;
+    extern PlayerScriptTarget data_ov002_0210a44c;
+    extern PlayerScriptTarget data_ov002_0210a3fc;
+    extern PlayerScriptTarget data_ov002_0210a3c4;
     extern ScriptCommand data_ov002_0210a064;
-    extern PlayerScriptCommand data_ov002_0210a36c;
+    extern PlayerScriptTarget data_ov002_0210a36c;
     if (!(data_ov002_0210e158 & 1)) {
         data_ov002_0210e158 |= 1;
         data_ov002_02110794[0] = data_ov002_0210a14c;
@@ -24972,52 +24907,52 @@ extern int (daPly_c::*data_ov002_0210a324)();
 extern int (daPly_c::*data_ov002_0210a32c)();
 extern int (daPly_c::*data_ov002_0210a33c)();
 extern int (daPly_c::*data_ov002_0210a344)();
-extern PlayerPmf data_ov002_0210a354;
-extern PlayerPmf data_ov002_0210a35c;
-extern PlayerPmf data_ov002_0210a364;
-extern PlayerPmf data_ov002_0210a374;
-extern PlayerPmf data_ov002_0210a37c;
-extern PlayerPmf data_ov002_0210a384;
-extern PlayerPmf data_ov002_0210a38c;
-extern PlayerPmf data_ov002_0210a394;
-extern PlayerPmf data_ov002_0210a39c;
-extern PlayerPmf data_ov002_0210a3a4;
-extern PlayerPmf data_ov002_0210a3b4;
-extern PlayerPmf data_ov002_0210a3bc;
-extern PlayerPmf data_ov002_0210a3cc;
-extern PlayerPmf data_ov002_0210a3d4;
-extern PlayerPmf data_ov002_0210a3e4;
-extern PlayerPmf data_ov002_0210a3ec;
-extern PlayerPmf data_ov002_0210a414;
-extern PlayerPmf data_ov002_0210a41c;
-extern PlayerPmf data_ov002_0210a42c;
-extern PlayerPmf data_ov002_0210a43c;
-extern PlayerPmf data_ov002_0210a444;
-extern PlayerPmf data_ov002_0210a454;
-extern PlayerPmf data_ov002_0210a464;
-extern PlayerPmf data_ov002_0210a484;
-extern PlayerPmf data_ov002_0210a494;
-extern PlayerPmf data_ov002_0210a49c;
-extern PlayerPmf data_ov002_0210a4a4;
-extern PlayerPmf data_ov002_0210a4ac;
-extern PlayerPmf data_ov002_0210a4b4;
-extern PlayerPmf data_ov002_0210a4c4;
-extern PlayerPmf data_ov002_0210a4cc;
-extern PlayerPmf data_ov002_0210a4d4;
-extern PlayerPmf data_ov002_0210a4dc;
-extern PlayerPmf data_ov002_0210a4e4;
-extern PlayerPmf data_ov002_0210a4ec;
-extern PlayerPmf data_ov002_0210a4f4;
-extern PlayerPmf data_ov002_0210a4fc;
-extern PlayerPmf data_ov002_0210a504;
-extern PlayerPmf data_ov002_0210a50c;
-extern PlayerPmf data_ov002_0210a514;
-extern PlayerPmf data_ov002_0210a51c;
-extern PlayerPmf data_ov002_0210a524;
-extern PlayerPmf data_ov002_0210a52c;
-extern PlayerPmf data_ov002_0210a53c;
-extern PlayerPmf data_ov002_0210a544;
-extern PlayerPmf data_ov002_0210a54c;
+extern PlayerStateTarget data_ov002_0210a354;
+extern PlayerStateTarget data_ov002_0210a35c;
+extern PlayerStateTarget data_ov002_0210a364;
+extern PlayerStateTarget data_ov002_0210a374;
+extern PlayerStateTarget data_ov002_0210a37c;
+extern PlayerStateTarget data_ov002_0210a384;
+extern PlayerStateTarget data_ov002_0210a38c;
+extern PlayerStateTarget data_ov002_0210a394;
+extern PlayerStateTarget data_ov002_0210a39c;
+extern PlayerStateTarget data_ov002_0210a3a4;
+extern PlayerStateTarget data_ov002_0210a3b4;
+extern PlayerStateTarget data_ov002_0210a3bc;
+extern PlayerStateTarget data_ov002_0210a3cc;
+extern PlayerStateTarget data_ov002_0210a3d4;
+extern PlayerStateTarget data_ov002_0210a3e4;
+extern PlayerStateTarget data_ov002_0210a3ec;
+extern PlayerStateTarget data_ov002_0210a414;
+extern PlayerStateTarget data_ov002_0210a41c;
+extern PlayerStateTarget data_ov002_0210a42c;
+extern PlayerStateTarget data_ov002_0210a43c;
+extern PlayerStateTarget data_ov002_0210a444;
+extern PlayerStateTarget data_ov002_0210a454;
+extern PlayerStateTarget data_ov002_0210a464;
+extern PlayerStateTarget data_ov002_0210a484;
+extern PlayerStateTarget data_ov002_0210a494;
+extern PlayerStateTarget data_ov002_0210a49c;
+extern PlayerStateTarget data_ov002_0210a4a4;
+extern PlayerStateTarget data_ov002_0210a4ac;
+extern PlayerStateTarget data_ov002_0210a4b4;
+extern PlayerStateTarget data_ov002_0210a4c4;
+extern PlayerStateTarget data_ov002_0210a4cc;
+extern PlayerStateTarget data_ov002_0210a4d4;
+extern PlayerStateTarget data_ov002_0210a4dc;
+extern PlayerStateTarget data_ov002_0210a4e4;
+extern PlayerStateTarget data_ov002_0210a4ec;
+extern PlayerStateTarget data_ov002_0210a4f4;
+extern PlayerStateTarget data_ov002_0210a4fc;
+extern PlayerStateTarget data_ov002_0210a504;
+extern PlayerStateTarget data_ov002_0210a50c;
+extern PlayerStateTarget data_ov002_0210a514;
+extern PlayerStateTarget data_ov002_0210a51c;
+extern PlayerStateTarget data_ov002_0210a524;
+extern PlayerStateTarget data_ov002_0210a52c;
+extern PlayerStateTarget data_ov002_0210a53c;
+extern PlayerStateTarget data_ov002_0210a544;
+extern PlayerStateTarget data_ov002_0210a54c;
 extern void (daPly_c::*data_ov002_02109dfc)();
 extern void (daPly_c::*data_ov002_02109e2c)();
 extern void (daPly_c::*data_ov002_02109f0c)();
@@ -25042,13 +24977,13 @@ extern void (daPly_c::*data_ov002_0210a274)();
 extern void (daPly_c::*data_ov002_0210a29c)();
 extern void (daPly_c::*data_ov002_0210a30c)();
 extern void (daPly_c::*data_ov002_0210a334)();
-extern PlayerCleanupPmf data_ov002_0210a3ac;
-extern PlayerCleanupPmf data_ov002_0210a3f4;
-extern PlayerCleanupPmf data_ov002_0210a404;
-extern PlayerCleanupPmf data_ov002_0210a45c;
-extern PlayerCleanupPmf data_ov002_0210a46c;
-extern PlayerCleanupPmf data_ov002_0210a47c;
-extern PlayerCleanupPmf data_ov002_0210a48c;
+extern PlayerCleanupTarget data_ov002_0210a3ac;
+extern PlayerCleanupTarget data_ov002_0210a3f4;
+extern PlayerCleanupTarget data_ov002_0210a404;
+extern PlayerFreeCleanupTarget data_ov002_0210a45c;
+extern PlayerCleanupTarget data_ov002_0210a46c;
+extern PlayerFreeCleanupTarget data_ov002_0210a47c;
+extern PlayerCleanupTarget data_ov002_0210a48c;
 
 /* daPly_c handler tables; the second is indexed by mNoCtrlKind, the third by mStateWork. */
 extern void (daPly_c::*data_ov002_0211073c[4])();
