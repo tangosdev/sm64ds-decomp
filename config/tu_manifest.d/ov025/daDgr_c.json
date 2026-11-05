@@ -30,6 +30,11 @@
       "name": ".bss",
       "start": "0x02113a60",
       "end": "0x02113a88"
+    },
+    {
+      "name": ".data",
+      "start": "0x02112c28",
+      "end": "0x02112c48"
     }
   ],
   "functions": [
@@ -104,7 +109,15 @@
       "ordinal": 9
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov025_02112c28",
+      "address": "0x02112c28",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block the door mesh collider is handed: CLPS header, one entry 0x01000fc0, four all-ones words. The cartridge also labels the last word 0x02112c44; it is this block eighth word."
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov025_02113a60",
@@ -229,7 +242,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -265,11 +278,18 @@
           "start": "0x02113a60",
           "end": "0x02113a88",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02112c28",
+          "end": "0x02112c48",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 16
+          "LICENSED": 17
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -280,19 +300,19 @@
           {
             "section": ".init",
             "original": [
-              50
+              51
             ],
             "desired": [
-              50
+              51
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              48
+              49
             ],
             "desired": [
-              48
+              49
             ]
           },
           {
@@ -309,6 +329,15 @@
               15,
               22
             ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
+            ]
           }
         ],
         "objisolate": null,
@@ -324,7 +353,8 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "localWorkerNote": "Verified on this machine's stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
     }
   },
   "compiler_only_output": [

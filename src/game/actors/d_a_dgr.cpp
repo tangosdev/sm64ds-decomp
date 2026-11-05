@@ -78,7 +78,19 @@ enum {
 extern DgrModelFilePtr data_ov025_02113a68;
 extern DgrCollisionFilePtr data_ov025_02113a60;
 extern s16 data_02082214[];
-extern CLPS_Block data_ov025_02112c28;
+/* CLPS.h keeps the block opaque: header with the entry stride at +4, then
+   the entries. This TU hands SetFile a one-entry block. */
+struct CLPS_Block {
+    u32 words[8];
+};
+
+/* CLPS block SetFile takes: CLPS header, one entry, four all-ones words. The
+   cartridge also labels the last of them 0x02112c44 -- it is this block's
+   eighth word, not a separate object. */
+CLPS_Block data_ov025_02112c28 = {
+    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff,
+    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};
 
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
