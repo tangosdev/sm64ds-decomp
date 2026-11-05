@@ -1860,7 +1860,7 @@ _ZTV13daObjSwitch_c kind:data(any) addr:0x02109940
 _ZTI13daObjSwdoor_c kind:data(any) addr:0x021099c0
 _ZTS13daObjSwdoor_c kind:data(any) addr:0x021099cc
 _ZTV13daObjSwdoor_c kind:data(any) addr:0x021099e4
-@9031 kind:data(any) addr:0x02109a64
+@1133 kind:data(any) addr:0x02109a64
 @2760 kind:data(any) addr:0x02109a6c
 @2155 kind:data(any) addr:0x02109a74
 @1131 kind:data(any) addr:0x02109a7c
