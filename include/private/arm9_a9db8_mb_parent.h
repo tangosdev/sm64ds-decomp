@@ -11,6 +11,35 @@
  * multiboot (MB) parent layout, so the names follow that role without
  * claiming the SDK's own identifiers. */
 
+/* NitroSDK MbSegmentInfo: one row of a download file's segment table
+ * (ARM9 static, ARM7 static, ROM header), as func_020676e0
+ * (MBi_SetSegmentInfo) fills it. */
+typedef struct MbSegmentInfo {
+    u32 recv_addr;  /* 0x00 -- where the child receives it: load_addr, or a
+                       staging buffer for an ARM7 segment */
+    u32 load_addr;  /* 0x04 -- where it finally runs */
+    u32 size;       /* 0x08 */
+    u32 target : 1; /* 0x0c -- set for the ARM7 segment */
+    u32 rsv : 31;
+} MbSegmentInfo;
+
+/* NitroSDK MbDownloadFileInfoHeader, the start of MbParentFile.mHeader
+ * (func_020678a4 builds it). */
+typedef struct MbDownloadFileInfoHeader {
+    u32 arm9EntryAddr;    /* 0x00 */
+    u32 arm7EntryAddr;    /* 0x04 */
+    u32 padding;          /* 0x08 */
+    MbSegmentInfo seg[3]; /* 0x0c */
+} MbDownloadFileInfoHeader;
+
+/* NitroSDK MB_BlockInfoTable, MbParentFile.mBlockTable: each segment's byte
+ * offset and first block number in the stream, and the total block count. */
+typedef struct MB_BlockInfoTable {
+    u32 seg_head_offset[3]; /* 0x00 */
+    u16 block_head[3];      /* 0x0c */
+    u16 block_num;          /* 0x12 */
+} MB_BlockInfoTable;
+
 typedef struct MbParentFile {
     u8 mHeader[0x59c];    /* 0x000 -- download info; MBi_CommParentSendDlFileInfo sends 0xe4 of
                              it, func_02067530 reads three 16-byte segment rows

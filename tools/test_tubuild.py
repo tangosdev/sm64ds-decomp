@@ -2465,6 +2465,42 @@ def test_record_linkcheck_preserves_all_owned_ranges():
         "errors": None,
     }
 
+
+def test_a_no_rom_linkcheck_leaves_the_stored_rom_proof_alone():
+    """PR #4879: `linkcheck --no-rom` on an intact TU replaced its stored full-ROM proof
+    with one that has no ROM phase and no SHA-256, and rombuild.intact_tu_policies --
+    which every later `tubuild linkcheck` runs over every other intact entry -- then
+    refused it, so the next TU's linkcheck aborted. A --no-rom run records nothing."""
+    import copy
+    proof = {"result": "data-verified", "phases": {"rom": True},
+             "rom": {"sha256": "a" * 64, "matchesStockRom": True}}
+    entry = {"id": "arm9/T", "status": "data-verified",
+             "verification": {"linkcheck": copy.deepcopy(proof)}}
+    before = copy.deepcopy(entry)
+    no_rom = {"result": "module-data-verified", "noRom": True, "scratch": "build/tu/T/link",
+              "phases": {"link": {"ok": True}}, "objectAudit": {}, "rom": None}
+    saves = []
+    original = tubuild.save_manifest
+    try:
+        tubuild.save_manifest = saves.append
+        tubuild._record_linkcheck({"entries": [entry]}, entry, no_rom, False)
+        tubuild._record_partitioned({"entries": [entry]}, entry, no_rom)
+    finally:
+        tubuild.save_manifest = original
+    assert entry == before
+    assert saves == []
+
+    # ...and a full run still records, so the skip is keyed on --no-rom alone.
+    full = dict(no_rom, noRom=False, result="data-verified",
+                rom={"sha256": "b" * 64, "matchesStockRom": True})
+    try:
+        tubuild.save_manifest = saves.append
+        tubuild._record_linkcheck({"entries": [entry]}, entry, full, False)
+    finally:
+        tubuild.save_manifest = original
+    assert entry["verification"]["linkcheck"]["rom"]["sha256"] == "b" * 64
+    assert len(saves) == 1
+
 # ---------------------------------------------------------------- create repairs
 # The three assemble_shadow_source behaviors proven by six modules of
 # hand-assembly (222 byte-verified functions) before being folded into the

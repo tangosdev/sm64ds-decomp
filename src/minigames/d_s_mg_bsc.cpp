@@ -1,9 +1,6 @@
 //cpp
 /* ov006/dScMgBSC_c -- the Lucky Stars card minigame, 20 functions.
  *
- * `#pragma opt_strength_reduction off` is file-wide and needed:
- * StateDealCards and StateRevealCards depend on it, a bracket around them
- * does not bind (last setting wins), and the other functions do not care.
  * Functions run in REVERSE of ROM order; do not reorder.
  *
  * leftovers:
@@ -226,14 +223,12 @@ void dScMgBSC_c::OnDealDone() {
  * prompt, and moves to StateWaitDeal. */
 void dScMgBSC_c::StateDealCards() {
     unsigned char valueUsed[5];
-    unsigned char *usedEntry;
     int valueIndex;
     int cardIndex;
     unsigned char cardValue;
 
-    usedEntry = valueUsed;
     for (valueIndex = 0; valueIndex < 5; valueIndex++)
-        *usedEntry++ = 0;
+        valueUsed[valueIndex] = 0;
 
     for (cardIndex = 0; cardIndex < 2; cardIndex++) {
         mCardPos[cardIndex].x = 0x80000;

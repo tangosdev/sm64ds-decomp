@@ -159,6 +159,8 @@ s32 daDpLift_c::Behavior() {
 
 // @symbol _ZN10daDpLift_c13InitResourcesEv
 #pragma push
+/* Strength reduction turns the marker loop's (i + 1) * 0x1cc000 into an
+ * added step; the cartridge keeps the mul (20 of 73 words differ). */
 #pragma opt_strength_reduction off
 s32 daDpLift_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov025_02113ae0), 1, -1);

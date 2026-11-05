@@ -20,8 +20,8 @@ extern "C" {
  *
  * Most readers load each byte lane through its own literal-pool address
  * (0x...de8, de9, dea, deb) and index it as a flat byte array with a stride
- * of 4: gTouchX[slot * 4], not gTouchX[slot]. Some read the whole record
- * through gTouchHeld plus an offset, via a local struct overlay.
+ * of 4: gTouchX[slot * 4], not gTouchX[slot]. Others read the whole
+ * record as a TouchInfo through gTouchHeld: ((TouchInfo *)gTouchHeld)[slot].
  *
  * gActivePlayerSlot is the player (0..3) the single-player code paths read.
  * daPly_c::Behavior sets it to mPlayerNo while that player updates (or 0, per
@@ -29,6 +29,15 @@ extern "C" {
  * data_0209fc68 is clear). It indexes the stride-0x18 controller records at
  * data_0209f498 and the stride-4 key words at data_020a0e58/e5a.
  */
+
+/* One player's record in the touch table at gTouchHeld. */
+typedef struct TouchInfo {
+    u8 held; /* 0x0: gTouchHeld lane */
+    u8 edge; /* 0x1: gTouchEdge lane */
+    u8 x;    /* 0x2: gTouchX lane */
+    u8 y;    /* 0x3: gTouchY lane */
+} TouchInfo;
+
 extern u8 gTouchHeld[];
 extern u8 gTouchEdge[];
 extern u8 gTouchX[];

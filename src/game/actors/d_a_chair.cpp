@@ -39,6 +39,8 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 #include "Particle__System.h"
 #include "math/CalcLib.h"
 
+/* Only ApproachStateValue needs this: without it the two (short)accel casts
+ * share one sign-extend and both smulbb become muls (21 of 44 words differ). */
 #pragma opt_common_subs off
 
 /* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The

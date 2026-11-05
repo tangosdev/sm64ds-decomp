@@ -155,6 +155,8 @@ void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
  * &mAngleX, &mAngleXSpeed, target 0, thresh 6, accel 3, mult 3. It reads
  * nothing from the seesaw itself. Returns 1 once the angle has settled. */
 #pragma push
+/* Without it the two (short)accel casts share one sign-extend and both
+ * smulbb become muls: 21 of 44 words differ (0xb4 with `*speed += accel`). */
 #pragma opt_common_subs off
 // @symbol _ZN13daObjSeesaw_c11SpringAngleEPsS0_isis
 int daObjSeesaw_c::SpringAngle(short *angle, short *speed, int target, short thresh, int accel,

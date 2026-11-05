@@ -624,6 +624,7 @@ void dScMgSlot3_c::StartRound(int mode) {
 // Bracketed, not file-global: with #pragma defer_codegen off these bind to
 // the functions between them. Measured -- this member DIFFs without them and
 // the members outside them DIFF with them applied file-wide.
+// Kept: pragma-free member spellings match except the mReelPos[i] load, which needs it.
 #pragma opt_strength_reduction off
 // @symbol _ZN12dScMgSlot3_c6RenderEv
 /* dScMgSlot3_c::Render -- vtable slot 9.
@@ -639,34 +640,34 @@ void dScMgSlot3_c::StartRound(int mode) {
  * The pragma is load-bearing, not tidying; the `(int)` launder on the two indexed
  * reads of mReelPos (0x4fe4) and mReelWinPos (0x4ff4) is there for the same
  * reason, and those two stay raw: every member spelling of them DIFFs
- * (measured). Only the receiver changed:
- * `self` is `this` now instead of a char* parameter cast back to the class. */
+ * (measured). So do the row walks through `p` and the y counters in the two
+ * reel passes and the mResultSymbols reads in the marker scan; mReelStopped[i]
+ * and the plain members take their real spellings. */
 s32 dScMgSlot3_c::Render() {
     char *c = (char *)this;
-    struct dScMgSlot3_c *self = this;
-    int i, j;
+    int i;
 
-    Camera_InitSlotsView((char *)self->pad_4660);
-    Mascot_Draw((char *)&self->mMascot);
+    Camera_InitSlotsView((char *)pad_4660);
+    Mascot_Draw((char *)&mMascot);
 
-    if (self->mReelDrawY > 0) {
+    if (mReelDrawY > 0) {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[self->mWinSymbol * 3 + i], 0x80,
-                        self->mReelDrawY + 0x10, -1, 2, 0x1000, 0x1000, 0, 1);
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 0x80,
+                        mReelDrawY + 0x10, -1, 2, 0x1000, 0x1000, 0, 1);
         }
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[self->mNextWinSymbol * 3 + i], 0x80,
-                        self->mReelDrawY + 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mNextWinSymbol * 3 + i], 0x80,
+                        mReelDrawY + 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
         }
     } else {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[self->mWinSymbol * 3 + i], 0x80, 0x60, -1,
-                        2, 0x1000, 0x1000, 0, 1);
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 0x80, 0x60, -1, 2,
+                        0x1000, 0x1000, 0, 1);
         }
     }
 
-    if (self->mState != 7) {
-        if (self->mState == 6) {
+    if (mState != 7) {
+        if (mState == 6) {
             int i2, j2;
             char *p = c;
             for (i2 = 0; i2 < 3; i2++) {
@@ -694,7 +695,7 @@ s32 dScMgSlot3_c::Render() {
                     Hud_RenderSprite(
                         sSlot3FaceSprites[((dScMgSlot3_c *)(p + row))->mReelStrip[0][0] * 3 + i2],
                         y - rem, 0x60, -1, -1);
-                    row = (row + 1) % self->mStripLength;
+                    row = (row + 1) % mStripLength;
                     y += 0x50;
                 }
                 p += 5;
@@ -702,18 +703,18 @@ s32 dScMgSlot3_c::Render() {
         }
     }
 
-    if (self->mStoppedReelCount < 3 && (self->mFrameCounter & 0x20)) {
+    if (mStoppedReelCount < 3 && (mFrameCounter & 0x20)) {
         int slot = 3;
         int ok = 1;
         int i3, j3;
         char *p = c;
         for (i3 = 0; i3 < 3; i3++) {
-            if (((dScMgSlot3_c *)(c + i3))->mReelStopped[0] != 0) {
+            if (mReelStopped[i3] != 0) {
                 if (slot < 3) {
-                    if (self->mWinSymbol != ((dScMgSlot3_c *)(p + slot))->mResultSymbols[0][0])
+                    if (mWinSymbol != ((dScMgSlot3_c *)(p + slot))->mResultSymbols[0][0])
                         ok = 0;
                 } else {
-                    u8 t = self->mWinSymbol;
+                    u8 t = mWinSymbol;
                     for (j3 = 0; j3 < 3; j3++) {
                         if (t == ((dScMgSlot3_c *)(p + j3))->mResultSymbols[0][0]) {
                             slot = j3;
@@ -733,13 +734,13 @@ s32 dScMgSlot3_c::Render() {
             int i4;
             int y = 0x4c;
             for (i4 = 0; i4 < 3; i4++) {
-                if (((dScMgSlot3_c *)(c + i4))->mReelStopped[0] != 0) {
+                if (mReelStopped[i4] != 0) {
                     Hud_RenderSprite(&data_ov006_0213e5dc, slot * 0x50 + 0x30, y, -1, -1);
                     count++;
                 }
                 y += 0x18;
             }
-            if ((self->mFrameCounter & 0x3f) == 0x20) {
+            if ((mFrameCounter & 0x3f) == 0x20) {
                 Sound::PlayBank2_2D(count > 1 ? 0x1ac : 0x1ab);
             }
         }
@@ -748,24 +749,24 @@ s32 dScMgSlot3_c::Render() {
     Mg_DrawCredits(c, 0xc, 0xc, 0);
     Mg_DrawScoreTally(c, 0xe0, 0x14, 1);
 
-    if (self->mState == 3 && self->mWinColumn >= 0) {
-        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2],
-                              self->mWinColumn * 0x50 + 0x20, 0x28, 0);
-        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][13],
-                              self->mWinColumn * 0x50 + 0x30, 0x28, 0);
-        if (self->mWinColumn == 1) {
-            Mg_DrawBigNumber(self->mWinColumn * 0x50 + 0x40, 0x28, 6, 0, 0, 0, 0x14);
+    if (mState == 3 && mWinColumn >= 0) {
+        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], mWinColumn * 0x50 + 0x20,
+                              0x28, 0);
+        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][13], mWinColumn * 0x50 + 0x30,
+                              0x28, 0);
+        if (mWinColumn == 1) {
+            Mg_DrawBigNumber(mWinColumn * 0x50 + 0x40, 0x28, 6, 0, 0, 0, 0x14);
         } else {
-            Mg_DrawBigNumber(self->mWinColumn * 0x50 + 0x40, 0x28, 3, 0, 0, 0, 0x14);
+            Mg_DrawBigNumber(mWinColumn * 0x50 + 0x40, 0x28, 3, 0, 0, 0, 0x14);
         }
-    } else if (self->mState == 4 && self->mWinColumn < 0) {
+    } else if (mState == 4 && mWinColumn < 0) {
         Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0x70, 0x28, 0);
         Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][14], 0x80, 0x28, 0);
         Mg_DrawBigNumber(0x90, 0x28, 3, 0, 0, 0, 0x28);
     }
 
-    Mg_RenderMainSpriteScaled(sSlotLamp1Sprite, 0x18, 0x30, -1, 0, 0x1000, self->mLamp1Angle);
-    Mg_RenderMainSpriteScaled(sSlotLamp2Sprite, 0x40, 0x10, -1, 0, 0x1000, self->mLamp2Angle);
+    Mg_RenderMainSpriteScaled(sSlotLamp1Sprite, 0x18, 0x30, -1, 0, 0x1000, mLamp1Angle);
+    Mg_RenderMainSpriteScaled(sSlotLamp2Sprite, 0x40, 0x10, -1, 0, 0x1000, mLamp2Angle);
 
     return 1;
 }

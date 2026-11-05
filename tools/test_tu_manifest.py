@@ -65,6 +65,38 @@ class RoundTripTests(unittest.TestCase):
         self.assertEqual(back["about"], "hello")
         self.assertEqual([e["id"] for e in back["entries"]], ["ov001/A", "ov002/B"])
 
+    def test_an_untouched_entry_is_not_rewritten_even_if_not_canonical(self):
+        """tubuild saves the WHOLE tree to record one entry. A file whose content did not
+        change must keep its bytes, or one hand-formatted file (ov006/unit020bfec0.json's
+        `]\\n,`) becomes a diff in every agent's every run."""
+        TUM.save({"entries": [_entry("ov1/A"), _entry("ov2/B")]}, self.root)
+        b_path = self.root / "ov2" / "B.json"
+        odd = '{"id":"ov2/B",   "status": "text-verified",\n"module": "ov2"}\n'
+        b_path.write_text(odd, encoding="utf-8", newline="\n")
+        data = TUM.load(self.root)
+        next(e for e in data["entries"] if e["id"] == "ov1/A")["status"] = "link-verified"
+        TUM.save(data, self.root)
+        self.assertEqual(b_path.read_text(encoding="utf-8"), odd)
+        a = json.loads((self.root / "ov1" / "A.json").read_text(encoding="utf-8"))
+        self.assertEqual(a["status"], "link-verified")
+
+    def test_a_changed_entry_is_written_in_canonical_form(self):
+        TUM.save({"entries": [_entry("ov1/A")]}, self.root)
+        path = self.root / "ov1" / "A.json"
+        path.write_text('{"id":"ov1/A","module":"ov1","status":"text-verified"}',
+                        encoding="utf-8")
+        TUM.save({"entries": [_entry("ov1/A", status="link-verified")]}, self.root)
+        self.assertEqual(path.read_text(encoding="utf-8"),
+                         json.dumps(_entry("ov1/A", status="link-verified"), indent=2,
+                                    ensure_ascii=False) + "\n")
+
+    def test_true_and_one_are_different_content(self):
+        """Python's `==` calls them equal; JSON does not, and neither may the skip."""
+        TUM.save({"entries": [_entry("ov1/A", flag=1)]}, self.root)
+        TUM.save({"entries": [_entry("ov1/A", flag=True)]}, self.root)
+        back = json.loads((self.root / "ov1" / "A.json").read_text(encoding="utf-8"))
+        self.assertIs(back["flag"], True)
+
     def test_entries_come_back_sorted_regardless_of_write_order(self):
         TUM.save({"entries": [_entry("ov9/Z"), _entry("ov0/A"), _entry("ov5/M")]}, self.root)
         self.assertEqual([e["id"] for e in TUM.load(self.root)["entries"]],

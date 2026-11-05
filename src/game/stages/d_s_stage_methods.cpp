@@ -33,8 +33,8 @@
 //   was named _Znwm, when a new-expression could not link; the fader array passes dFdWipe_c's constructor and destructor by address.
 // - CheckCameraInput keeps `#pragma opt_strength_reduction off`; PS_Update and Behavior keep
 //   `#pragma opt_common_subs off` (switched back on after each), the
-//   stale-tmpv levers in PS_Update's case 0xa and the
-//   address-rematerialization pokes in its case-1 star scroll, and its
+//   stale-tmpv levers in PS_Update's case 0xa and the `aa` staging in its
+//   case-1 star scroll, and its
 //   sp0..sp10/var_r0/var_sl/var_fp locals stay unrenamed until each slot's
 //   role is recovered. The touch globals (gTouchHeld..gTouchY,
 //   gActivePlayerSlot) have no header;
@@ -91,15 +91,6 @@ struct OamAttr;
    register it; the callback has none. */
 dScStage_c::graphCallback_c data_0209f3c4;
 dClipper data_0209f43c;
-
-/* TU-local overlay of the touch records the ROM keeps at gTouchHeld:
-   held/edge are the gTouchHeld/gTouchEdge lanes, x/y the gTouchX/gTouchY lanes. */
-struct TouchInfo {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
 
 extern "C" {
 int IsButtonInputValid(void);
@@ -1017,6 +1008,7 @@ void dScStage_c::LC_Update() {
     }
 }
 // @symbol _ZN10dScStage_c16CheckCameraInputEv
+// kept: the ROM reads data_0209f498[i] by mla beside the cam cursor; strength reduction merges them (0x450)
 #pragma opt_strength_reduction off
 void dScStage_c::CheckCameraInput() {
     ControllerInput *cam = data_0209f498;
@@ -1515,10 +1507,11 @@ static inline int IsTouchPressed(u8 held, u8 slot) {
  * indexes with a fresh gActivePlayerSlot load; and the f238 store sits in the unconditional scope
  * after the displayed-level normalization so the case-1 literal loads keep
  * ROM order. */
+// kept: with CSE on the function builds 0x3094, 0x18 bytes short of the ROM
 #pragma opt_common_subs off
 void dScStage_c::PS_Update() {
-    register u8 var_sl;
-    register u8 var_fp;
+    u8 var_sl;
+    u8 var_fp;
     s32 sp0;
     s32 sp4;
     s32 sp8;
@@ -1701,12 +1694,9 @@ void dScStage_c::PS_Update() {
         if (sCourseArrowsHidden != 0)
             return;
         {
-            register u8 *de8_sb;
+            u8 *de8_sb;
             var_sl = 0;
             var_fp = var_sl;
-            (void)(u32)&sPressedPauseArrow;
-            (void)(u32)&gTouchHeld;
-            (void)(u32)&sPauseDisplayedCourse;
             sp4 = var_sl;
             sp8 = var_sl;
             sp0 = var_sl;
@@ -1717,17 +1707,13 @@ void dScStage_c::PS_Update() {
                 u8 sl2;
                 u8 a;
                 u8 vx;
+                var_r0 = sp0;
+                sl2 = gActivePlayerSlot;
                 {
-                    volatile u8 *pSlot = &gActivePlayerSlot;
-                    volatile s32 *psp = &sp0;
-                    var_r0 = *psp;
-                    sl2 = *pSlot;
-                    {
-                        register u8 aa = gTouchHeld[sl2 * 4];
-                        a = aa;
-                    }
-                    de_off = sl2 * 4;
+                    u8 aa = gTouchHeld[sl2 * 4];
+                    a = aa;
                 }
+                de_off = sl2 * 4;
                 if ((a != 0) && (TOUCHP(de_off)->edge != 0)) {
                     var_r0 = 1;
                 }
@@ -2627,8 +2613,8 @@ void dScStage_c::PS_Update() {
             }
         }
         {
-            register u8 slot;
-            register u8 tx;
+            u8 slot;
+            u8 tx;
             int rel;
             int rely;
             slot = gActivePlayerSlot;
@@ -4148,6 +4134,7 @@ static inline u32 MaskOff(u32 x, u32 m) {
     return x & ~m;
 }
 
+// kept: the ROM reloads data_0209f304 after testing it; with CSE on the function is 0x6e8
 #pragma opt_common_subs off
 
 int dScStage_c::Behavior() {

@@ -4429,15 +4429,6 @@ static inline int IsCastleFallCutsceneRunning() {
     return data_0209f2d8 == 2;
 }
 
-/* TU-local overlay of the touch records the ROM keeps at gTouchHeld:
-   held/edge are the gTouchHeld/gTouchEdge lanes, x/y the gTouchX/gTouchY lanes. */
-struct TouchInfo {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
-
 /* Stylus down this frame with its edge bit set: the touch just began. */
 static inline int IsTouchJustBegun(u32 slot) {
     TouchInfo *touch = (TouchInfo *)gTouchHeld;

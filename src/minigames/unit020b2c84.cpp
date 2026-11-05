@@ -35,7 +35,7 @@
  * Numbered names. mwccarm numbers its generated names from one counter that
  * every named parameter (prototypes included), local and temporary before a
  * definition advances. The array gMgBanners at the end of the file
- * gets __arraydtor$978 (and @979); symbols.txt names the thunk
+ * gets __arraydtor$984 (and @985); symbols.txt names the thunk
  * __arraydtor$954, and the manifest renames both onto their configured
  * names, so an edit here that moves the count re-keys those two rows. The
  * two function-local Vector2 statics (Banner_StartWaveBurst,
@@ -103,6 +103,7 @@
 #include "Vector2.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "nitro/gx/gxcommon.h"
 
 struct M { int _00, _01, _10, _11; };
 struct Pair { int a, b; };
@@ -688,16 +689,14 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
 }
 
 // @symbol Banner_DrawSqueeze
-#pragma opt_propagation off
 extern "C" void Banner_DrawSqueeze(MgBanner *e) {
-    int m, fd, t, v;
+    int m, t, v;
     unsigned short term;
     if (e->mTimer == 0) return;
     m = FX_MUL(e->mTimer, 0xcc);
     {
-        u8* el = e->mOam;
-        fd = cstd::fdiv(m, 0x1000);
-        t = FX_MUL(fd, 0x1000);
+        GXOamAttr *oam = (GXOamAttr *)e->mOam;
+        t = FX_MUL(cstd::fdiv(m, 0x1000), 0x1000);
         v = func_02053200(m);
         {
             M buf = {0};
@@ -705,21 +704,17 @@ extern "C" void Banner_DrawSqueeze(MgBanner *e) {
             buf._11 = v;
             t = 0x1000 - t;
             do {
-                s16 f = (s16)(((unsigned int)(*(int*)el << 7)) >> 23);
-                int off;
-                if (f > 0x100) f -= 0x200;
-                off = f * t;
-                Mg_RenderSpriteOnMtx(el,
-                    e->mX - ((off << 4) >> 16),
-                    e->mY, e->mScreen,
-                    e->mPriority, &buf);
-                term = *(unsigned short*)(el + 6);
-                el += 8;
+                s16 x = oam->x;
+                if (x > 0x100)
+                    x -= 0x200;
+                x = x * t >> 12;
+                Mg_RenderSpriteOnMtx(oam, e->mX - x, e->mY, e->mScreen, e->mPriority, &buf);
+                term = oam->attr3;
+                oam++;
             } while (term != 0xffff);
         }
     }
 }
-#pragma opt_propagation on
 
 // @symbol Banner_UpdateFall
 extern "C" void Banner_UpdateFall(MgBanner *e) {
@@ -926,13 +921,12 @@ extern "C" void Banner_SetupZoom(MgBanner *e) {
 }
 
 // @symbol Banner_DrawZoomA
-#pragma opt_propagation off
 extern "C" void Banner_DrawZoomA(MgBanner *e) {
     u16 flag;
     int val = e->mTimer;
     if (val == 0) return;
     {
-        u8* el = e->mOam;
+        GXOamAttr *oam = (GXOamAttr *)e->mOam;
         if (val < 0x1e000) {
             int d;
             int scale;
@@ -955,16 +949,13 @@ extern "C" void Banner_DrawZoomA(MgBanner *e) {
                 m._11 = d;
                 scale = 0x1000 - scale;
                 do {
-                    s16 f = (s16)(((unsigned int)(*(int*)el << 7)) >> 23);
-                    int off;
-                    if (f > 0x100) f -= 0x200;
-                    off = f * scale;
-                    Mg_RenderSpriteOnMtx(el,
-                                        e->mX - ((off << 4) >> 16),
-                                        e->mY, e->mScreen,
-                                        e->mPriority, &m);
-                    flag = *(u16*)(el + 6);
-                    el += 8;
+                    s16 x = oam->x;
+                    if (x > 0x100)
+                        x -= 0x200;
+                    x = x * scale >> 12;
+                    Mg_RenderSpriteOnMtx(oam, e->mX - x, e->mY, e->mScreen, e->mPriority, &m);
+                    flag = oam->attr3;
+                    oam++;
                 } while (flag != 0xffff);
             }
         } else {
@@ -982,26 +973,23 @@ extern "C" void Banner_DrawZoomA(MgBanner *e) {
                     M m2 = {0};
                     m2._00 = r;
                     m2._11 = r;
-                    Mg_RenderSpriteOnMtx(el, e->mX, e->mY,
-                                        e->mScreen, e->mPriority, &m2);
+                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
                 }
                 i += 0x1000;
-                flag = *(u16*)(el + 6);
-                el += 8;
+                flag = oam->attr3;
+                oam++;
             } while (flag != 0xffff);
         }
     }
 }
-#pragma opt_propagation on
 
 // @symbol Banner_DrawZoomB
-#pragma opt_propagation off
 extern "C" void Banner_DrawZoomB(MgBanner *e) {
     u16 flag;
     int val = e->mTimer;
     if (val == 0) return;
     {
-        u8* el = e->mOam;
+        GXOamAttr *oam = (GXOamAttr *)e->mOam;
         if (val < 0x1e000) {
             int d;
             int scale;
@@ -1024,16 +1012,13 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
                 m._11 = d;
                 scale = 0x1000 - scale;
                 do {
-                    s16 f = (s16)(((unsigned int)(*(int*)el << 7)) >> 23);
-                    int off;
-                    if (f > 0x100) f -= 0x200;
-                    off = f * scale;
-                    Mg_RenderSpriteOnMtx(el,
-                                        e->mX - ((off << 4) >> 16),
-                                        e->mY, e->mScreen,
-                                        e->mPriority, &m);
-                    flag = *(u16*)(el + 6);
-                    el += 8;
+                    s16 x = oam->x;
+                    if (x > 0x100)
+                        x -= 0x200;
+                    x = x * scale >> 12;
+                    Mg_RenderSpriteOnMtx(oam, e->mX - x, e->mY, e->mScreen, e->mPriority, &m);
+                    flag = oam->attr3;
+                    oam++;
                 } while (flag != 0xffff);
             }
         } else {
@@ -1051,17 +1036,15 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
                     M m2 = {0};
                     m2._00 = r;
                     m2._11 = r;
-                    Mg_RenderSpriteOnMtx(el, e->mX, e->mY,
-                                        e->mScreen, e->mPriority, &m2);
+                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
                 }
                 i += 0x1000;
-                flag = *(u16*)(el + 6);
-                el += 8;
+                flag = oam->attr3;
+                oam++;
             } while (flag != 0xffff);
         }
     }
 }
-#pragma opt_propagation on
 
 // @symbol Banner_UpdateZoom
 extern "C" void Banner_UpdateZoom(MgBanner *e) {

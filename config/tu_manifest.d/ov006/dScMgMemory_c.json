@@ -2245,129 +2245,129 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1543",
-      "to": "pmf_dScMgMemory_c_StateSetup",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1543) when dScMgBase_c.h gained Mg_DrawLine."
-    },
-    {
       "from": "@1545",
-      "to": "pmf_dScMgMemory_c_StatePlay",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1545) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_StateSetup",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1543) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1543 to @1545 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1547",
-      "to": "pmf_dScMgMemory_c_StateJudge",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1547) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_StatePlay",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1545) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1545 to @1547 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1549",
-      "to": "pmf_dScMgMemory_c_StateResult",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1549) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_StateJudge",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1547) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1547 to @1549 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1551",
-      "to": "pmf_dScMgMemory_c_StateExit",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1551) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_StateResult",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1549) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1549 to @1551 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1553",
-      "to": "pmf_dScMgMemory_c_RoundStart",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1553) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_StateExit",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1551) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1551 to @1553 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1555",
-      "to": "pmf_dScMgMemory_c_RoundDealEasy",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1555) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_RoundStart",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1553) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1553 to @1555 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1557",
-      "to": "pmf_dScMgMemory_c_RoundDealNormal",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1557) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_RoundDealEasy",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1555) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1555 to @1557 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1559",
-      "to": "pmf_dScMgMemory_c_RoundDealHard",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1559) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_RoundDealNormal",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1557) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1557 to @1559 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1561",
-      "to": "pmf_dScMgMemory_c_RoundWaitDeal",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1561) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_RoundDealHard",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1559) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1559 to @1561 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1563",
-      "to": "pmf_dScMgMemory_c_RoundReveal",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1563) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_RoundWaitDeal",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1561) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1561 to @1563 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1565",
-      "to": "pmf_dScMgMemory_c_ResultWait",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1565) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_RoundReveal",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1563) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1563 to @1565 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1567",
-      "to": "pmf_dScMgMemory_c_ResultReward",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1567) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_ResultWait",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1565) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1565 to @1567 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1569",
-      "to": "pmf_dScMgMemory_c_ResultTurnCards",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1569) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_ResultReward",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1567) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1567 to @1569 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1571",
-      "to": "pmf_dScMgMemory_c_ResultFinish",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1571) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_ResultTurnCards",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1569) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1569 to @1571 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1573",
-      "to": "pmf_dScMgMemory_c_CardMove",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1573) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_ResultFinish",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1571) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1571 to @1573 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1575",
-      "to": "pmf_dScMgMemory_c_CardIdle",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1575) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_CardMove",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1573) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1573 to @1575 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1577",
-      "to": "pmf_dScMgMemory_c_CardSelect",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1577) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_CardIdle",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1575) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1575 to @1577 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1579",
-      "to": "pmf_dScMgMemory_c_CardFlipUp",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1579) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_CardSelect",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1577) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1577 to @1579 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1581",
-      "to": "pmf_dScMgMemory_c_CardWait",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1581) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_CardFlipUp",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1579) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1579 to @1581 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1583",
-      "to": "pmf_dScMgMemory_c_CardFlipDown",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1583) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_CardWait",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1581) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1581 to @1583 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1585",
-      "to": "pmf_dScMgMemory_c_CardFlyAway",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1585) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_CardFlipDown",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1583) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1583 to @1585 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1587",
-      "to": "pmf_dScMgMemory_c_PlayerDrop",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1587) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_CardFlyAway",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1585) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1585 to @1587 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1589",
-      "to": "pmf_dScMgMemory_c_PlayerMove",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1589) when dScMgBase_c.h gained Mg_DrawLine."
+      "to": "pmf_dScMgMemory_c_PlayerDrop",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1587) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1587 to @1589 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     },
     {
       "from": "@1591",
+      "to": "pmf_dScMgMemory_c_PlayerMove",
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1589) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1589 to @1591 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
+    },
+    {
+      "from": "@1593",
       "to": "pmf_dScMgMemory_c_PlayerWait",
-      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1591) when dScMgBase_c.h gained Mg_DrawLine."
+      "evidence": "Native compiler-local member pointer; exact handler target and zero adjustment identify the existing PMF label. Native local binding retained. Re-keyed +6 (from @1591) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1591 to @1593 when CardFlyAway's pointer aliases were cut beside its kept opt pragma (#821)."
     }
   ]
 }

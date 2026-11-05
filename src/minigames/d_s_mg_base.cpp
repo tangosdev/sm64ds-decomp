@@ -1153,6 +1153,7 @@ void dScMgBase_c::Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int si
     }
 }
 
+// Kept: the cartridge reloads tbl[i] after the cursor-item loop; with CSE on it is reused.
 #pragma push
 #pragma opt_common_subs off
 // @symbol Mg_DrawMenu
@@ -1180,9 +1181,6 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
     int extra[3];
     s16 *tbl[3];
     int buf[4];
-    int zero1;
-    int zero2;
-    int zero0;
     int i;
 
     if (scene->mTouchOptions.Draw() != 0)
@@ -1196,26 +1194,15 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
     tbl[1] = &scene->mMenuItem1X;
     tbl[2] = &scene->mMenuItem2X;
 
-    i = 0;
-    zero1 = 0;
-    zero2 = 0;
-    zero0 = 0;
-
-    for (; i < 3; i++) {
+    for (i = 0; i < 3; i++) {
         if (i == scene->mMenuCursor) {
-            unsigned int field = (unsigned int)scene->mMenuCursorPhase;
-            unsigned int shifted = (field << 0xf) >> 0x10;
-            int idx0 = (int)shifted >> 4;
-            int s0 = data_02082214[idx0 * 2];
+            int idx = (int)(((u32)scene->mMenuCursorPhase << 0xf) >> 0x10) >> 4;
             char *cursor = (char *)extra[i];
-            int arg0;
-            int result;
             s16 *pos;
             u16 v;
             int *pbuf = buf;
-
-            arg0 = (int)((((s64)s0 << 11) + 0x800) >> 12) + 0x1000;
-            result = func_02053200(arg0);
+            int scale =
+                func_02053200((int)((((s64)data_02082214[idx * 2] << 11) + 0x800) >> 12) + 0x1000);
 
             {
                 volatile int *vp = pbuf;
@@ -1224,23 +1211,22 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
                 vp[2] = 0;
                 vp[3] = 0;
             }
-            buf[0] = result;
-            buf[3] = result;
+            buf[0] = scale;
+            buf[3] = scale;
 
             pos = tbl[i];
             do {
-                Mg_DrawSpriteListEntry((void *)cursor, (void *)(int)pos[0], (void *)(int)pos[1], (void *)pbuf);
+                Mg_DrawSpriteListEntry((void *)cursor, (void *)(int)pos[0], (void *)(int)pos[1],
+                                       (void *)buf);
                 v = *(u16 *)(cursor + 6);
                 cursor += 8;
             } while (v != 0xffff);
 
-            pos = tbl[i];
-            Mg_DrawSpriteList((void *)data_ov006_021346bc, pos[0], pos[1], zero0);
+            Mg_DrawSpriteList((void *)data_ov006_021346bc, tbl[i][0], tbl[i][1], 0);
         } else {
             s16 *pos = tbl[i];
-            char *ep = (char *)extra[i];
-            Mg_DrawSpriteList((void *)ep, pos[0], pos[1], zero1);
-            Mg_DrawSpriteList((void *)data_ov006_021346bc, pos[0], pos[1], zero2);
+            Mg_DrawSpriteList((void *)extra[i], pos[0], pos[1], 0);
+            Mg_DrawSpriteList((void *)data_ov006_021346bc, pos[0], pos[1], 0);
         }
     }
 }
@@ -3336,6 +3322,7 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
 }
 }
 
+// Kept: without it the thousands counter moves from r0 to r3 (register colour only).
 // @symbol Mg_DrawNumberRotated
 #pragma push
 #pragma opt_propagation off

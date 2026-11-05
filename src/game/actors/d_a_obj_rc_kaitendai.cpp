@@ -23,14 +23,7 @@ enum d_a_obj_rc_kaitendai_AssetId { ASSET_RC_KAITEN_BMD = 0x06a7, ASSET_RC_KAITE
 #include "daObjRc_Kaitendai_c.h"
 #include "SharedFilePtr.h"
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x6a7, collision file 0x6a8). mwcc emits

@@ -59,18 +59,7 @@ struct MarutaClsnFileHandle : SharedFilePtr {
 typedef char MarutaModelFilePtr_size_must_be_8[sizeof(MarutaModelFilePtr) == 8 ? 1 : -1];
 typedef char MarutaClsnFileHandle_size_must_be_8[sizeof(MarutaClsnFileHandle) == 8 ? 1 : -1];
 
-struct CLPS_Block;
-
-/* The model/collision/CLPS triple func_ov080_021274ac and _021270dc take,
- * spelt as src/game/actors/d_a_obj_maruta.cpp spells it. ov030's copy is
- * data_ov030_02115a04: its three words relocate to 0x02115ca8 and 0x02115cb0,
- * this overlay's model and collision SharedFilePtrs, and to the CLPS block
- * at 0x02114f24. */
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
+#include "ResourceDescriptor.h"
 
 extern "C" {
 /* The helpers live in ov080, out of branch range of this overlay, so the ROM
@@ -83,6 +72,10 @@ int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 #pragma long_calls off
 }
 
+/* The model/collision/CLPS triple func_ov080_021274ac and _021270dc take.
+ * ov030's copy: its three words relocate to 0x02115ca8 and 0x02115cb0, this
+ * overlay's model and collision SharedFilePtrs, and to the CLPS block at
+ * 0x02114f24. */
 extern ResourceDescriptor data_ov030_02115a04;
 extern int data_ov030_021159f4;
 
