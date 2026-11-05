@@ -355,7 +355,7 @@ void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
 // @symbol _ZN17dExtSimpleModel_c6RenderEPK7Vector3
 void dExtSimpleModel_c::Render(const Vector3 *scale) {
     Matrix4x3 temp;
-    MulMat4x3Mat4x3((const int *)&mat4x3, (const int *)&data_0209b3ec, (int *)&temp);
+    MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
     data.Render(&temp, (Vector3 *)scale);
 }
 
@@ -719,7 +719,7 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
 // @symbol _ZN17dExtCommonModel_c6RenderEPK7Vector3
 void dExtCommonModel_c::Render(const Vector3 *scale) {
     Matrix4x3 temp;
-    MulMat4x3Mat4x3((const int *)&mat4x3, (const int *)&data_0209b3ec, (int *)&temp);
+    MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
     data->Render(&temp, (Vector3 *)scale);
 }
 
@@ -865,11 +865,9 @@ void dExtShadowModel_c::RenderAll() {
         do {
             ModelComponents *model = node->data;
             func_0203c178(&data_020a0e68, node->scale.x, node->scale.y, node->scale.z);
-            MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)node->mat,
-                            (int *)&data_020a0e68);
+            MulMat4x3Mat4x3(&data_020a0e68, node->mat, &data_020a0e68);
             data_020a0e68.m[10] += 0x2000;
-            MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)&data_0209b3ec,
-                            (int *)&data_020a0e68);
+            MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
             func_02046120(model, node->opacity);
             model->Render(&data_020a0e68, 0);
             func_02046088(model, node->opacity, 1);

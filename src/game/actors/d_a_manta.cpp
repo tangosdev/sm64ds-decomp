@@ -241,7 +241,7 @@ void daManta_c::UpdateModelAndRingPos() {
     mRingPos.y = 0;
     mRingPos.z = 0;
     data_020a0e68 = mAnmModel.mat4x3;
-    MulMat4x3Mat4x3((const int *)(mAnmModel.data.transforms + 3), data_020a0e68.m, data_020a0e68.m);
+    MulMat4x3Mat4x3(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
     mRingPos.x = data_020a0e68.m[9];
     mRingPos.y = data_020a0e68.m[10];
     mRingPos.z = data_020a0e68.m[11];

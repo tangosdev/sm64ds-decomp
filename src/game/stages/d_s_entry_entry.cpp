@@ -301,7 +301,7 @@ void EntryMesh::StartRipple(int x, int y) {
 void EntryMesh::DrawGrid() {
     int z0;
     int z1;
-    int tmp[13];
+    Matrix4x3 tmp;
     int i;
     int j;
     int cols;
@@ -313,11 +313,11 @@ void EntryMesh::DrawGrid() {
     int sz;
 
     *(int *)0x4000444 = 0;
-    MulMat4x3Mat4x3((const int *)&mMtx, (const int *)&data_0209b3ec, tmp);
+    MulMat4x3Mat4x3((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
     *(int *)0x4000440 = 2;
-    func_020553a4(tmp);
+    func_020553a4(&tmp);
     *(int *)0x4000440 = 1;
-    func_020553a4(tmp);
+    func_020553a4(&tmp);
     *(int *)0x40004c8 = 0xe0000000;
     *(int *)0x40004cc = 0xc0007fff;
     SendMaterial();
