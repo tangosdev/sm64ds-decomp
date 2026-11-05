@@ -16,6 +16,7 @@
 #include "dBgPi.h"
 #include "nitro/fx/fx.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 extern "C" {
 /* This TU's own free helpers, defined below the members that call them. */
@@ -44,7 +45,6 @@ void func_01ffb0bc(dBgW_Kc *self);
    local extern: no header in include/ declares them. */
 extern Vector3 data_020a0d60;
 extern dBgPi data_020a0d1c;
-extern Matrix4x3 data_020a0e68;
 }
 
 /* The shared scratch line, in collider space. A namespace-scope dBgCh_Lin,
