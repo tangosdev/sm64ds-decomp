@@ -1,13 +1,8 @@
+#include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
-
-/* NitroSDK CARDRomRegion. */
-struct CARDRomRegion {
-    u32 offset;
-    u32 length;
-};
 
 extern void FS_InitFile(void *s);
 extern int myFS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,

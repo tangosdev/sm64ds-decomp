@@ -41,22 +41,6 @@ typedef struct WMDataSharingInfo {
 
 typedef char WMDataSharingInfo_size_must_be_0x420[sizeof(WMDataSharingInfo) == 0x420 ? 1 : -1];
 
-/* NitroSDK WMPortRecvCallback, the leading fields: the offsets agree with
- * every port receive callback in this cluster and with func_020417d0. */
-typedef struct WMPortRecvCallback {
-    u16 apiid;        /* 0x00 */
-    u16 errcode;      /* 0x02 */
-    u16 state;        /* 0x04 -- 7 CONNECTED, 9 DISCONNECTED, 0x15 PORT_RECV */
-    u16 port;         /* 0x06 */
-    void *recvBuf;    /* 0x08 */
-    u16 *data;        /* 0x0c */
-    u16 length;       /* 0x10 -- bytes at data */
-    u16 aid;          /* 0x12 -- the sender */
-    u8 macAddress[6]; /* 0x14 */
-    u16 seqNo;        /* 0x1a */
-    void *arg;        /* 0x1c -- WM_SetPortCallback's argument */
-} WMPortRecvCallback;
-
 /* NitroSDK WMPortSendCallback: only the fields read here. */
 typedef struct WMPortSendCallback {
     char pad0[2];

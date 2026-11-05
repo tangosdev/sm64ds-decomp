@@ -15,19 +15,12 @@
      the round-1 body is what keeps K[0] un-hoisted in the ROM; rounds 2..4
      hoist their K into the preheader on their own. */
 
+#include "SHA1Context.h"
+
 typedef struct
 {
     unsigned int w[4];
 } T4;
-
-typedef struct
-{
-    unsigned int Intermediate_Hash[5]; /* 0x00 */
-    unsigned int Length_Low;           /* 0x14 */
-    unsigned int Length_High;          /* 0x18 */
-    unsigned int Message_Block_Index;  /* 0x1c */
-    unsigned char Message_Block[64];   /* 0x20 */
-} SHA1Context;
 
 extern int data_020a80c4;
 extern unsigned int data_0209a054[4];

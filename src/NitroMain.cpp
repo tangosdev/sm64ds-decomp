@@ -1,12 +1,12 @@
 //cpp
 #include "Heap.h"
+#include "nitro/os/exception.h"
 #include "nitro/os/thread.h"
 
 extern "C" {
 
 extern void OS_InitTick(void);
 extern void OS_InitAlarm(void);
-typedef void (*OSExceptionHandler)(u32 context, void *arg);
 extern void OS_SetUserExceptionHandler(OSExceptionHandler handler, void *arg);
 extern void func_0201a054(void);
 extern void func_020197b8(void);

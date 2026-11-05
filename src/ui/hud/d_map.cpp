@@ -25,8 +25,6 @@
  *   a plain `playerPos = o->mPos` uses [r8,#0x5c] addressing and shortens
  *   Behavior by 4 bytes. The focus copy already goes through a pointer
  *   local, so `&focus->mPos` needs no launder.
- * - GetMinimapID's extern keeps GetMinimapID.c's own `struct Obj` slice
- *   spelling; the Obj tag is only a forward here so the declaration agrees.
  * - struct Vec3 stays the launder for the two projection helpers.
  *   GetPosFromMinimapPos and GetPosOnMinimap are static Fix12i methods;
  *   the third parameter is the scalar, not Fix12<int>.
@@ -67,10 +65,6 @@
 struct Event {
     static int GetBit(unsigned int bit);
 };
-
-/* Forward tag for GetMinimapID's parameter: its own file cuts a `struct Obj`
-   slice, and this declaration must spell the param the same way. */
-struct Obj;
 
 struct Vtbl { s32 (*f[8])(void *); };
 
@@ -130,7 +124,7 @@ extern int data_0209f3e8[];
 extern int data_0209f3a4[];
 extern void SetSubBg2Offset(s32 a, s32 b);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern s32  GetMinimapID(struct Obj *obj, s32 arg);
+extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
 extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
 int *Vec3_DivScalarInPlace(struct Vec3 *v, int s);
@@ -800,9 +794,9 @@ L738:
             this->mPlayerIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mPlayerIconY[i] = (miniPos.z + 0x800) >> 12;
             if (i != data_0209f250)
-                this->mPlayerMapIDs[i] = (s8)GetMinimapID((Obj *)o, -1);
+                this->mPlayerMapIDs[i] = (s8)GetMinimapID(o, -1);
             else
-                this->mPlayerMapIDs[i] = (s8)GetMinimapID((Obj *)o, data_ov002_02111148);
+                this->mPlayerMapIDs[i] = (s8)GetMinimapID(o, data_ov002_02111148);
         } else {
             this->mPlayerMapIDs[i] = -1;
         }
@@ -816,7 +810,7 @@ L738:
             this->mStarIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mStarIconY[i] = (miniPos.z + 0x800) >> 12;
             if (gStarMarkerTypes[i] != 4)
-                this->mStarMapIDs[i] = (s8)GetMinimapID((Obj *)o, -1);
+                this->mStarMapIDs[i] = (s8)GetMinimapID(o, -1);
             else
                 this->mStarMapIDs[i] = 1;
         } else {
@@ -831,7 +825,7 @@ L738:
                             this->mAngle, &miniPos);
             this->mCapIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mCapIconY[i] = (miniPos.z + 0x800) >> 12;
-            this->mCapMapIDs[i] = (s8)GetMinimapID((Obj *)o, -1);
+            this->mCapMapIDs[i] = (s8)GetMinimapID(o, -1);
         } else {
             this->mCapMapIDs[i] = -1;
         }
@@ -866,19 +860,22 @@ La64:
 
 Lae4:
     {
-        s32 id = GetMinimapID((Obj *)focus, data_ov002_02111148);
-        if (id == data_ov002_02111148) goto Lc30;
-        if (id >= 0x10) goto Lc30;
-        if (id < 0) goto Lbf0;
+    s32 id = GetMinimapID(focus, data_ov002_02111148);
+    if (id == data_ov002_02111148)
+        goto Lc30;
+    if (id >= 0x10)
+        goto Lc30;
+    if (id < 0)
+        goto Lbf0;
 
-        if (SublevelToLevel(gCurrentSublevel) != 0x1d)
-            goto C1;
-        if (gCurrentSublevel == 1)
-            goto C1;
-        if (gCurrentSublevel == 0x33)
-            goto C1;
-        if (gCurrentSublevel != 3)
-            goto Lb9c;
+    if (SublevelToLevel(gCurrentSublevel) != 0x1d)
+        goto C1;
+    if (gCurrentSublevel == 1)
+        goto C1;
+    if (gCurrentSublevel == 0x33)
+        goto C1;
+    if (gCurrentSublevel != 3)
+        goto Lb9c;
 C1:
     if (SublevelToLevel(gCurrentSublevel) == 4)
         goto Lb9c;
@@ -974,7 +971,7 @@ int dMap_c::InitResources()
         }
     }
 
-    data_ov002_02111148 = (signed char)GetMinimapID((Obj *)data_0209f394[data_0209f250], -1);
+    data_ov002_02111148 = (signed char)GetMinimapID((dActor_c *)data_0209f394[data_0209f250], -1);
 
     if (data_ov002_02111148 >= 0) {
         if ((SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
