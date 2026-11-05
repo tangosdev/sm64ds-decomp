@@ -110,6 +110,10 @@ class Images:
         ay = open(os.path.join(self.dir, 'arm9', 'arm9.yaml')).read()
         self.mods['arm9'] = (int(re.search(r'^base_address:\s*(\d+)', ay, re.M).group(1)),
                              os.path.join(self.dir, 'arm9', 'arm9.bin'))
+        iy = os.path.join(self.dir, 'arm9', 'itcm.yaml')
+        if os.path.exists(iy):          # ITCM code (0x01ff8000), copied there at boot
+            self.mods['itcm'] = (int(re.search(r'^base_address:\s*(\d+)', open(iy).read(), re.M).group(1)),
+                                 os.path.join(self.dir, 'arm9', 'itcm.bin'))
         oy = open(os.path.join(self.dir, 'arm9_overlays', 'overlays.yaml')).read()
         for m in re.finditer(r'-\s*id:\s*(\d+)\s*\n\s*base_address:\s*(\d+)', oy):
             n = int(m.group(1))
@@ -139,9 +143,12 @@ class Images:
         return None if k < 0 else self.mods['arm9'][0] + k
 
     def default_module(self, addr):
-        base = self.mods['arm9'][0]
-        if base <= addr < base + len(self.data('arm9')):
-            return 'arm9'
+        """'arm9' or 'itcm' when addr lies in that image, else None (overlays are ambiguous)."""
+        for mod in ('arm9', 'itcm'):
+            if mod in self.mods:
+                base = self.mods[mod][0]
+                if base <= addr < base + len(self.data(mod)):
+                    return mod
         return None
 
 
