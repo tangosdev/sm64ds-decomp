@@ -103,6 +103,7 @@
 #include "Vector2.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "nitro/gx/gxcommon.h"
 
 struct M { int _00, _01, _10, _11; };
 struct Pair { int a, b; };
@@ -111,34 +112,6 @@ struct PairW { int w0, w1; };
 struct S3 { int v[3]; };
 struct Entry { int id; int ptr; };
 struct EntryTable { Entry e[29]; };
-
-/* NitroSDK's GXOamAttr (gxcommon.h): one OAM record, seen as its four
-   attribute words or as the attribute bitfields. The squeeze and zoom draws
-   read x, the 9-bit screen position, and a record whose attr3 is 0xffff
-   ends a banner's list. */
-union GXOamAttr {
-    struct {
-        u16 attr0;
-        u16 attr1;
-        u16 attr2;
-        u16 attr3;
-    };
-    struct {
-        u32 y : 8;
-        u32 rsMode : 2;
-        u32 objMode : 2;
-        u32 mosaic : 1;
-        u32 colorMode : 1;
-        u32 shape : 2;
-        u32 x : 9;
-        u32 rsParam : 5;
-        u32 size : 2;
-        u32 charNo : 10;
-        u32 priority : 2;
-        u32 cParam : 4;
-        u32 _3 : 16;
-    };
-};
 
 /* The minigame scene at gMgScene, seen through the one virtual
    used here. Slot 26 is dScMgBase_c.h's GetDisplayMode; its scene
