@@ -31,12 +31,12 @@
  *     2026-09-14 and was matched on 2026-10-02.
  *
  * Remaining matching constraints:
- * - StepWalkers, RenderBoard, Render and Behavior step a char* through
- *   the per-walker, per-lane and per-piece arrays and spell each field as
- *   element 0 of the stepped pointer (`((dScMgAmida_c *)lane)->
- *   mLaneAnimTimer[0]`). Indexing the member directly diffs: StepWalkers'
- *   pointer forms move bytes, and Behavior's piece walk keeps PIECE_OFF's
- *   cast arithmetic (see the macro). StepWalker takes plain members.
+ * - StepWalkers and Behavior step a char* through the per-walker and
+ *   per-piece arrays and spell each field as element 0 of the stepped
+ *   pointer (`((dScMgAmida_c *)p)->mWalkerDelay[0]`). Indexing the member
+ *   directly diffs there: StepWalkers' pointer forms move bytes, and
+ *   Behavior's piece walk keeps PIECE_OFF's cast arithmetic (see the
+ *   macro). StepWalker, RenderBoard and Render take plain members.
  * - Amida_RestoreBgChars and Amida_SaveBgChars stay free helpers: the
  *   object pointer they take is never read -- both only copy BG char VRAM --
  *   so membership cannot be proven from the bodies.
@@ -1793,14 +1793,16 @@ void dScMgAmida_c::SetupRound() {
 }
 
 // @symbol _ZN12dScMgAmida_c11RenderBoardEv
+/* This bracket is SetupRound's. mwcc reads opt_strength_reduction for
+   SetupRound only after its closing brace, so a pop right after SetupRound
+   undoes it; RenderBoard compiles the same either way. Without it SetupRound
+   strength-reduces the lane x (xw[0] << 12) into its own induction register. */
 #pragma push
 #pragma opt_strength_reduction off
 void dScMgAmida_c::RenderBoard() {
-    void *scene = (void *)this;
     typedef struct {
         int a[13];
     } T13;
-    unsigned char *raw = (unsigned char *)scene;
     int noPalette = -1;
     int i;
     int y;
@@ -1808,52 +1810,44 @@ void dScMgAmida_c::RenderBoard() {
     i = 0;
     y = 0x20;
     for (; i < 4; y += 0x40, i++) {
-        int *lane = (int *)(raw + i * 4);
         if (mLaneResult[i] != 0) {
-            int *animTimer = &((dScMgAmida_c *)lane)->mLaneAnimTimer[0];
-            (*animTimer)++;
-            if (*animTimer >= 6) {
-                int *animFrame = &((dScMgAmida_c *)lane)->mLaneAnimFrame[0];
-                *animTimer = 0;
-                (*animFrame)++;
-                if (*animFrame >= 14)
-                    *animFrame = 0;
+            mLaneAnimTimer[i]++;
+            if (mLaneAnimTimer[i] >= 6) {
+                mLaneAnimTimer[i] = 0;
+                mLaneAnimFrame[i]++;
+                if (mLaneAnimFrame[i] >= 14)
+                    mLaneAnimFrame[i] = 0;
             }
             Mg_RenderSpriteBoth(sAmidaLaneAnimSprites[mLaneAnimFrame[i]], mLanePos[i].x >> 12,
                                 (mLanePos[i].y >> 12) - 4, noPalette, 0);
         } else {
-            int *timer;
-            int *frame;
             int frames[13];
             if (mLaneFlashFlag[i] == 0) {
-                timer = &((dScMgAmida_c *)lane)->mLaneFlashTimer[0];
-                frame = &((dScMgAmida_c *)lane)->mLaneFlashFrame[0];
-                (*timer)++;
-                if (*frame >= 12) {
-                    if (*timer >= 6) {
-                        *timer = 0;
-                        *frame = 0;
+                mLaneFlashTimer[i]++;
+                if (mLaneFlashFrame[i] >= 12) {
+                    if (mLaneFlashTimer[i] >= 6) {
+                        mLaneFlashTimer[i] = 0;
+                        mLaneFlashFrame[i] = 0;
                     }
-                } else if (*timer >= 4) {
-                    *timer = 0;
-                    (*frame)++;
+                } else if (mLaneFlashTimer[i] >= 4) {
+                    mLaneFlashTimer[i] = 0;
+                    mLaneFlashFrame[i]++;
                 }
             } else {
-                timer = &((dScMgAmida_c *)lane)->mLaneFlashTimer[0];
-                frame = &((dScMgAmida_c *)lane)->mLaneFlashFrame[0];
-                (*timer)++;
-                if (*frame >= 12) {
-                    if (*timer >= 5) {
-                        *timer = 0;
-                        *frame = 0;
+                mLaneFlashTimer[i]++;
+                if (mLaneFlashFrame[i] >= 12) {
+                    if (mLaneFlashTimer[i] >= 5) {
+                        mLaneFlashTimer[i] = 0;
+                        mLaneFlashFrame[i] = 0;
                     }
-                } else if (*timer >= 2) {
-                    *timer = 0;
-                    (*frame)++;
+                } else if (mLaneFlashTimer[i] >= 2) {
+                    mLaneFlashTimer[i] = 0;
+                    mLaneFlashFrame[i]++;
                 }
             }
             *(T13 *)frames = *(T13 *)sAmidaBoardAnimationFrames;
-            Mg_RenderSpriteBoth(sAmidaBoardAnimSprites[frames[*frame]], y, 0xb8, noPalette, 0);
+            Mg_RenderSpriteBoth(sAmidaBoardAnimSprites[frames[mLaneFlashFrame[i]]], y, 0xb8,
+                                noPalette, 0);
         }
     }
     {
@@ -1868,8 +1862,6 @@ void dScMgAmida_c::RenderBoard() {
 #pragma pop
 
 // @symbol _ZN12dScMgAmida_c14RenderBoardAltEv
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgAmida_c::RenderBoardAlt() {
     int noPalette = -1;
     int i;
@@ -1888,16 +1880,8 @@ void dScMgAmida_c::RenderBoardAlt() {
         Mg_RenderSpriteBoth((void *)sAmidaLaneResultSprites[mLaneResult[j]], x, 0x78, noPalette, 0);
     }
 }
-#pragma pop
-
 // @symbol _ZN12dScMgAmida_c6RenderEv
-/* These two pragmas are load-bearing: without them Render compiles 0xc
- * bytes larger than the ROM (0x2ac vs 0x2a0) and rombuild drops to 102/106. */
-#pragma push
-#pragma opt_strength_reduction off
 s32 dScMgAmida_c::Render() {
-    char *raw = (char *)this;
-
     mBgScrollPhase += 0xc0;
     {
         u16 idx = mBgScrollPhase;
@@ -1905,7 +1889,7 @@ s32 dScMgAmida_c::Render() {
         int off = (sine + (int)((unsigned)(sine >> 7) >> 24)) >> 8;
         SetSubBg2Offset(off, 0);
     }
-    Mg_DrawScoreTally(raw, 0xe0, 0x14, 1);
+    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
 
     if (mState == 3 && mEndDelayTimer == 0) {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
@@ -1914,33 +1898,25 @@ s32 dScMgAmida_c::Render() {
             int i;
             for (i = 0; i < 4; i++) {
                 if (mLaneResult[i] != 0) {
-                    int *counterA = &((dScMgAmida_c *)(raw + i * 4))->mLaneAnimTimer[0];
-                    (*counterA)++;
+                    mLaneAnimTimer[i]++;
                     AmidaRenderPeriods periods = sAmidaRenderPeriods;
-                    if (*counterA >= periods.values[i]) {
-                        int *counterB;
-                        *counterA = 0;
-                        counterB = &((dScMgAmida_c *)(raw + i * 4))->mLaneAnimFrame[0];
-                        (*counterB)++;
-                        if (*counterB >= 0xe)
-                            *counterB = 0;
+                    if (mLaneAnimTimer[i] >= periods.values[i]) {
+                        mLaneAnimTimer[i] = 0;
+                        mLaneAnimFrame[i]++;
+                        if (mLaneAnimFrame[i] >= 0xe)
+                            mLaneAnimFrame[i] = 0;
                     }
                     Mg_RenderSpriteBoth(sAmidaLaneAnimSprites[mLaneAnimFrame[i]],
                                         mLanePos[i].x >> 12, (mLanePos[i].y >> 12) - 4, -1, 0);
                 }
             }
 
-            int piece = 0;
-            int zero = 0;
-            int noPalette = -1;
-            for (; piece < 0x80; piece++, raw += 0x18) {
-                if (PIECE_AT(raw)->active != 0) {
-                    int age = PIECE_AT(raw)->timer;
-                    int x = PIECE_AT(raw)->posX;
-                    int idx = age / 4;
-                    int y = PIECE_AT(raw)->posY;
-                    Mg_RenderSpriteBoth(sAmidaWalkerSprites[idx], x >> 12, y >> 12, noPalette,
-                                        zero);
+            int piece;
+            for (piece = 0; piece < 0x80; piece++) {
+                if (mPieces[piece].active != 0) {
+                    Mg_RenderSpriteBoth(sAmidaWalkerSprites[mPieces[piece].timer / 4],
+                                        mPieces[piece].posX >> 12, mPieces[piece].posY >> 12, -1,
+                                        0);
                 }
             }
         }
@@ -1956,7 +1932,6 @@ s32 dScMgAmida_c::Render() {
         return 1;
     }
 }
-#pragma pop
 
 // @symbol _ZN12dScMgAmida_c8BehaviorEv
 s32 dScMgAmida_c::Behavior() {
