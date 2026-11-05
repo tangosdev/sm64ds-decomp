@@ -6,6 +6,7 @@
 - Task: `issue-4570-propeller-heyho-vec3-dist-type-1105`.
 - Candidate base: `0bab793a13bf137418b5078adb030359b9cfbeb4` (`origin/main`).
 - Source: `src/game/actors/d_a_propeller_heyho.cpp`, TU `ov070/daPropeller_Heyho_c`.
+- This revision replaces the cast-only draft PR #4844, which was closed before the `mHomePos` Vector3 overlay was added.
 - Status: producer verification complete; independent source review and hosted PR review remain.
 
 ## What changed and why
