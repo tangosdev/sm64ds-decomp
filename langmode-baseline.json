@@ -9,18 +9,18 @@
     "launder_or_forced": 55,
     "launder_sites": 169,
     "pragma_by_name": {
-      "opt_common_subs": 89,
+      "opt_common_subs": 84,
       "opt_dead_assignments": 3,
       "opt_foldconstants": 1,
       "opt_lifetimes": 5,
       "opt_loop_invariants": 15,
       "opt_prelinearize": 1,
-      "opt_propagation": 48,
+      "opt_propagation": 47,
       "opt_strength_reduction": 71,
       "optimize_for_size": 13
     },
-    "pragma_files": 94,
-    "pragma_overrides": 246,
+    "pragma_files": 90,
+    "pragma_overrides": 240,
     "pragma_resets": 1,
     "pragma_resets_by_name": {
       "opt_dead_assignments": 1
