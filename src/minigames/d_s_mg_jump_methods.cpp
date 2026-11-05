@@ -267,7 +267,7 @@ s32 dScMgJump_c::InitResources()
     r = mModel.SetFile((BMD_File *)modelFile, 1, -1);
     if (r == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-        *(struct Mtx43 *)&mModel.mat4x3 = *(struct Mtx43 *)&data_020a0e68;
+        *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         return 0;
     }
     Mg_SetTopScreenYOffset(0x10);
@@ -486,7 +486,7 @@ s32 dScMgJump_c::Render()
             ((((short)m[2] >> 3) & 0x3ff) << 20)) | 0x40000000;
     }
 
-    *(struct Mtx43 *)&mModel.mat4x3 = *(struct Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     {
         V3 t;
