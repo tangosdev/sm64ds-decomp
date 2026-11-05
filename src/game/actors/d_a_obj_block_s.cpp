@@ -1023,8 +1023,11 @@ int daObjBlockS_c::func_ov098_02139228()
     mPrevAngleY = newAng;
     AngleDiff(mPrevAngleY, mAngleY);
 
-    mVertSpeed = -(cstd::fdiv(FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ),
-                              mFloorNormalY) + 0x8000);
+    {
+        s32 m0 = FX_MUL(mFloorNormalX, mSpeedX);
+        s32 m1 = FX_MUL(mFloorNormalZ, mSpeedZ);
+        mVertSpeed = -(cstd::fdiv(m0 + m1, mFloorNormalY) + 0x8000);
+    }
 
     if (func_ov002_020f035c(n, mFloorNormalY) != 0 && mHorzSpeed > 0x5000) {
         int q0 = mAngleX;
