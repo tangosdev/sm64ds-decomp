@@ -50,9 +50,8 @@ void func_ov007_020b6d40(void) {
     func_ov007_020b72d8(c, 8);
 
     for (i = 0; i < 8; i++) {
-        c->bgLayers[i] =
-            func_ov007_020c95fc(data_ov007_020d7ec8[i], data_ov007_020d7a24[i][0],
-                                data_ov007_020d7a24[i][1]);
+        c->bgLayers[i] = func_ov007_020c95fc(data_ov007_020d7ec8[i], data_ov007_020d7a24[i][0],
+                                             data_ov007_020d7a24[i][1]);
         WORK->layerSlots[i] = func_ov007_020adc08(i, c->bgLayers[i]);
     }
 }

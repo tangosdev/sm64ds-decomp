@@ -1295,7 +1295,8 @@ void dScEntry_c::UpdateResults() {
                 for (i = 0; i < 4; i++) {
                     if (data_0209fc5c[i] != 0) {
                         acc |= data_020a0e58[i].pressed & 0xc;
-                        acc |= ((TouchInfo *)gTouchHeld)[i].held && ((TouchInfo *)gTouchHeld)[i].edge;
+                        acc |=
+                            ((TouchInfo *)gTouchHeld)[i].held && ((TouchInfo *)gTouchHeld)[i].edge;
                     }
                 }
                 mStepDelay -= data_0208ee44;
