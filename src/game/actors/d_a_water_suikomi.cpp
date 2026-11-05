@@ -1,4 +1,5 @@
 //cpp
+#include "nitro/fx/fx.h"
 /* Production translation unit for ov026/daWater_Suikomi_c.
  * 13 function(s), .text 0x021121fc..0x02112490. The WATER_SUIKOMI actor, the
  * water suction in Wet-Dry World.
@@ -53,13 +54,10 @@ struct SuikomiStateTable {
 };
 extern SuikomiStateTable data_ov026_02113f58;
 
-/* The collider offset. A plain int triple, not Vector3: a Vector3 local
+/* The collider offset. A VecFx32, not Vector3: a Vector3 local
  * would emit Vector3's inline destructor, which this TU's manifest does not
  * license. */
-struct V3 {
-    int x, y, z;
-};
-extern V3 data_ov026_02113f4c;
+extern VecFx32 data_ov026_02113f4c;
 
 #pragma defer_codegen off
 
@@ -145,7 +143,7 @@ int daWater_Suikomi_c::Behavior() {
 
 // @symbol _ZN17daWater_Suikomi_c13InitResourcesEv
 int daWater_Suikomi_c::InitResources() {
-    V3 vec;
+    VecFx32 vec;
     unk_314 = param1 & 0xff;
     vec = data_ov026_02113f4c;
     mdCcAcPos_c.Init(this, *(Vector3 *)&vec, 0x64000, 0xa4000, 0x800006, 0);

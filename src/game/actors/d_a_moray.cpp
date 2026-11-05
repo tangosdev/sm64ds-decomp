@@ -1,4 +1,5 @@
 //cpp
+#include "nitro/fx/fx.h"
 /* daMoray_c -- Jolly Roger Bay eel (MORAY).
  *
  * Five states installed by func_ov016_02111bf0 (retreat init is the
@@ -85,12 +86,10 @@ extern daMoray_c::State data_ov016_02114dac;
 extern daMoray_c::State data_ov016_02114dbc;
 
 /* The zero cylinder offset has three signed components and no registered
- * lifetime work in the retail initializer. Keep its storage plain; copy the
- * components into the collision API's Vector3 locals below. */
-struct MorayCylinderOffset { s32 x, y, z; };
-
+ * lifetime work in the retail initializer: a VecFx32, not a Vector3. Its
+ * components are copied into the collision API's Vector3 locals below. */
 extern "C" {
-extern MorayCylinderOffset data_ov016_02114d4c;         /* cylinder offset, bss */
+extern VecFx32 data_ov016_02114d4c;         /* cylinder offset, bss */
 
 extern unsigned char data_0209f220; /* entrance filter */
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
@@ -872,4 +871,4 @@ daMoray_c::State data_ov016_02114dbc = { &daMoray_c::func_ov016_02111718,
 daMoray_c::State data_ov016_02114d7c = { &daMoray_c::BookSwitch_Spawn,
                                        &daMoray_c::func_ov016_02111534 };
 
-MorayCylinderOffset data_ov016_02114d4c;
+VecFx32 data_ov016_02114d4c;

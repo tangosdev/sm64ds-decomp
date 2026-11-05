@@ -66,10 +66,8 @@ enum daBtfly_c_AssetId {
 /* The model-matrix copies go through Mtx43, a flat 12-word copy. Assigning
  * Matrix4x3 would run ~Vector3 on its translation. */
 
-/* No destructor. dCcAcPos_c::Init's offset argument is passed as a pointer;
- * a stack Vector3 here would emit ~Vector3. */
-struct Vec3 { s32 x, y, z; };
-
+/* InitResources' collider offset is a VecFx32. dCcAcPos_c::Init's offset
+ * argument is passed as a pointer; a stack Vector3 here would emit ~Vector3. */
 typedef void (daBtfly_c::*ButterflyState)();
 
 /* File-scope objects at the end of this file construct the two resource
@@ -525,7 +523,7 @@ int daBtfly_c::InitResources()
 
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
 
-    Vec3 v;
+    VecFx32 v;
     v.x = 0;
     v.y = -0x32000;
     v.z = 0;

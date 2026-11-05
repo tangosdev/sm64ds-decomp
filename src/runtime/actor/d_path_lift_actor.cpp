@@ -1,4 +1,5 @@
 //cpp
+#include "nitro/fx/fx.h"
 /**
  * dPathLiftActor_c -- the path-following lift base.
  *
@@ -51,11 +52,7 @@ struct PathLiftState {
 
 /* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
    Vector3, copy-init lowers memberwise; the ROM copy is the block move, so the
-   per-frame local in RenderPathModels goes through this. */
-struct RawVector3 {
-    int x, y, z;
-};
-
+   per-frame local in RenderPathModels is a VecFx32. */
 /* The shared lift model file, in SharedFilePtr's layout. This TU does not
    include SharedFilePtr.h: the header's declarations take one compiler
    label number, and every @NNN of the state table would move up by one. */
@@ -398,7 +395,7 @@ void dPathLiftActor_c::RenderPathModels()
     int i = 0;
     dExtSimpleModel_c *model = mModels;
     do {
-        RawVector3 local = *(RawVector3 *)&data_ov002_0210af00;
+        VecFx32 local = *(VecFx32 *)&data_ov002_0210af00;
         model->Render((Vector3 *)&local);
         i++;
         model++;

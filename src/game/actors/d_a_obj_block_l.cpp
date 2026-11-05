@@ -1,4 +1,5 @@
 //cpp
+#include "nitro/fx/fx.h"
 /* Big brick blocks: one class, six actor IDs (0xf, 0x10, 0x11, 0x12,
  * 0x13, 0x2e) -- item blocks, the star block, the switch-activated
  * block. Kill is a switchboard on actorID: coins, stars, particles,
@@ -42,11 +43,7 @@ struct BigBrickBlockFileRow {
 
 /* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
    Vector3, copy-init lowers memberwise; the ROM copy is the block move, so the
-   local copy in Render goes through this. */
-struct RawVector3 {
-    int x, y, z;
-};
-
+   local copy in Render is a VecFx32. */
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4. Collision handles construct through func_02017b4c and
  * destroy through SharedFilePtr_Destruct_Clsn. The manifest aliases those
@@ -334,7 +331,7 @@ int daObjBlockL_c::Render() {
         }
     }
     if (IsActorID(this, 0x10)) {
-        RawVector3 v = *(RawVector3 *)&data_ov002_021089e0;
+        VecFx32 v = *(VecFx32 *)&data_ov002_021089e0;
         mModel.Render((Vector3 *)&v);
     } else {
         mModel.Render(0);

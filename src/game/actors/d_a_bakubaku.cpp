@@ -1,4 +1,5 @@
 //cpp
+#include "nitro/fx/fx.h"
 /**
  * daBakubaku_c -- Bubba, the fish that patrols Jolly Roger Bay.
  *
@@ -71,11 +72,9 @@ struct BakubakuAnimationFileHandle : SharedFilePtr {
     ~BakubakuAnimationFileHandle();
 };
 
-/* BakuVec3 is three plain words: the retail initializer registers no
- * destructor for the cylinder offsets, so they were never Vector3 globals
- * (Vector3 carries a declared ~Vector3, which would register at exit). */
-struct BakuVec3 { s32 x, y, z; };
-
+/* The cylinder offsets are VecFx32: the retail initializer registers no
+ * destructor for them, so they were never Vector3 globals (Vector3 carries
+ * a declared ~Vector3, which would register at exit). */
 extern "C" {
 extern BakubakuModelFilePtr gBakubakuModelFile;    /* model 0x295 */
 extern BakubakuAnimationFileHandle data_ov032_02113a50; /* swim anim 0x297 */
@@ -88,8 +87,8 @@ extern daBakubaku_c::State data_ov032_02113abc; /* dive */
 extern s32 data_0209f32c;
 extern Matrix4x3 data_020a0e68;
 
-extern BakuVec3 data_ov032_021137cc; /* body cylinder */
-extern BakuVec3 data_ov032_021137d8; /* head cylinder */
+extern VecFx32 data_ov032_021137cc; /* body cylinder */
+extern VecFx32 data_ov032_021137d8; /* head cylinder */
 
 
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
@@ -729,5 +728,5 @@ daBakubaku_c::State data_ov032_02113abc = {
 daBakubaku_c::State data_ov032_02113a7c = {
     &daBakubaku_c::func_ov032_02111814, &daBakubaku_c::func_ov032_02111620
 };
-BakuVec3 data_ov032_021137cc = { 0, -0x28000, 0x58000 };   /* body cylinder */
-BakuVec3 data_ov032_021137d8 = { 0, -0x30000, -0x20000 };  /* head cylinder */
+VecFx32 data_ov032_021137cc = { 0, -0x28000, 0x58000 };   /* body cylinder */
+VecFx32 data_ov032_021137d8 = { 0, -0x30000, -0x20000 };  /* head cylinder */

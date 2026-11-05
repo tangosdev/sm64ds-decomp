@@ -40,10 +40,6 @@
 
 #pragma defer_codegen off
 
-/* The tag SubVec3.c defines its parameters by. Vec3_Asr.c takes Vector3
-   now, so the extern below uses that. */
-struct Vec3 { int x, y, z; };
-
 /* UpdateClsnOffset's stack locals: three bone-angle sums, then the
    position shifted down by 3. */
 struct ClsnOffsetLocals {
