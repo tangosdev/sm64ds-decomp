@@ -518,9 +518,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@871",
+      "from": "@870",
       "to": "@930",
-      "evidence": "The emitted 12-byte registration node at ov027:0x02113d04 is @818 in this TU, a spelling ov065 already owns (it was @826, owned by ov018, when @930 was chosen). @930 has no other configured home and preserves the native storage/relocations."
+      "evidence": "The emitted 12-byte registration node at ov027:0x02113d04 is @818 in this TU, a spelling ov065 already owns (it was @826, owned by ov018, when @930 was chosen). @930 has no other configured home and preserves the native storage/relocations.; re-keyed from @871 after this TU's local matrix-copy twin was retired (#4570)"
     }
   ],
   "symbol_binding_rewrites": [

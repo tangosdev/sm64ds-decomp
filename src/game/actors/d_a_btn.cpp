@@ -75,6 +75,7 @@ enum d_a_btn_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "private/mtx43.h"
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. It
    sits outside the extern "C" block below, where the names would come out
@@ -86,9 +87,8 @@ void StopLoadedMusic_Layer3(void);
 
 struct CLPS_Block;
 
-/* One 0x30-byte block copy. Matrix4x3's own assignment goes member by
-   member through Vector3 and comes out longer. */
-struct MatrixWords { s32 w[12]; };
+/* The matrix copies go through Mtx43, one 0x30-byte block copy. Matrix4x3's
+   own assignment goes member by member through Vector3 and comes out longer. */
 
 extern "C" {
 /* ---- this TU ---- */
@@ -139,7 +139,8 @@ extern u8 data_0209f220;
 extern signed char gCurrentSublevel;
 extern int data_0209f318;
 extern daPly_c *data_0209f394[];
-extern MatrixWords data_020a0e68;
+/* local extern: math/MtxStack.h's helper prototypes clash with this file's */
+extern Matrix4x3 data_020a0e68;
 /* The king's collision mesh takes Whomp's Fortress's own CLPS block. The
    relocation's target address is shared by 15 level overlays; residency
    leaves ov015 and ov026, and only ov015 holds a CLPS block there (ov026's
@@ -1463,7 +1464,7 @@ void daBtn_c::func_ov079_02124188()
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68,
         (short)(mAngleY + mBodyYaw));
 
-    *(MatrixWords *)mShadowMatrix = data_020a0e68;
+    *(Mtx43 *)mShadowMatrix = *(Mtx43 *)&data_020a0e68;
 
     if (mShouldRender == 0)
         return;
@@ -1502,7 +1503,7 @@ void daBtn_c::func_ov079_02124008()
     }
 
     off = (n + 1) * ((s - 0x1000) * 0x168);
-    *(MatrixWords *)mMeshMatrix = *(MatrixWords *)&mAnmModel.mat4x3;
+    *(Mtx43 *)mMeshMatrix = *(Mtx43 *)&mAnmModel.mat4x3;
 
     Matrix4x3_ApplyInPlaceToRotationY(mMeshMatrix, mBodyYaw);
     if (mState != 1 && mState != 7) {

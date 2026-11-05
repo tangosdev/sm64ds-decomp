@@ -2,7 +2,7 @@
 /* The constructor/destructor order retains all five lifecycle variants used
  * by dBgW_KcMbgSclY. The direction-to-world and movement-filter helpers retain C linkage.
  * SetFile and dBgCh_SphCrr::SetObjAndSphere are scalar Fix12i methods.
- * Flat matrix copies use RawMatrix4x3;
+ * Flat matrix copies use Mtx43;
  * the shared Matrix4x3 copy changes the retail instruction sequence.
  */
 /* dBgW_KcMbg: KCL mesh under a Matrix4x3, with a uniform scale.
@@ -15,6 +15,7 @@
 #include "dBgCh_SphCrr.h"
 #include "dBgPi.h"
 #include "nitro/fx/fx.h"
+#include "private/mtx43.h"
 
 extern "C" {
 /* This TU's own free helpers, defined below the members that call them. */
@@ -54,12 +55,9 @@ dBgCh_Lin data_020a0d0c;
 
 /* Flat storage for matrix/vector copies in SetFile and Transform. The shared
  * Matrix4x3 contains a Vector3 with a destructor; copying its words through
- * this local view preserves the retail block copies without changing it.
+ * Mtx43 and this local vector view preserves the retail block copies without
+ * changing it.
  */
-struct RawMatrix4x3 {
-    s32 m[12];
-};
-
 struct RawVector3 {
     s32 x, y, z;
 };
@@ -75,22 +73,22 @@ dBgW_KcMbg::~dBgW_KcMbg() {}
 
 // @symbol _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block
 /* The scratch aggregate holds two complete matrices and the local up axis.
- * Matrix words are copied through RawMatrix4x3; a Matrix4x3 assignment
+ * Matrix words are copied through Mtx43; a Matrix4x3 assignment
  * scalarizes.
  */
 void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, Fix12i scale, s16 angY,
                          CLPS_Block &clps) {
     dBgW_KcMbg *self = this;
     struct Scratch {
-        RawMatrix4x3 rotation;
-        RawMatrix4x3 scaled;
+        Mtx43 rotation;
+        Mtx43 scaled;
         RawVector3 up;
     } scratch;
     self->dBgW_Kc::SetFile(file, clps);
     self->Reset();
     self->scale = scale;
-    *(RawMatrix4x3 *)&self->mat = *(RawMatrix4x3 *)&mtx;
-    *(RawMatrix4x3 *)&self->invMat = *(RawMatrix4x3 *)&self->mat;
+    *(Mtx43 *)&self->mat = *(Mtx43 *)&mtx;
+    *(Mtx43 *)&self->invMat = *(Mtx43 *)&self->mat;
     InvMat4x3(&self->invMat, &self->invMat);
     self->angY = angY;
     self->angVelY = 0;
@@ -98,21 +96,21 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, Fix12i scale, s16
     self->pos.y = mtx.t.y;
     self->pos.z = mtx.t.z;
     self->velocity.x = self->velocity.y = self->velocity.z = 0;
-    scratch.rotation = *(RawMatrix4x3 *)&self->mat;
-    scratch.rotation.m[9] = 0;
-    scratch.rotation.m[10] = 0;
-    scratch.rotation.m[11] = 0;
-    *(RawMatrix4x3 *)&self->invRotMat = scratch.rotation;
+    scratch.rotation = *(Mtx43 *)&self->mat;
+    scratch.rotation.r[3].x = 0;
+    scratch.rotation.r[3].y = 0;
+    scratch.rotation.r[3].z = 0;
+    *(Mtx43 *)&self->invRotMat = scratch.rotation;
     InvMat4x3(&self->invRotMat, &self->invRotMat);
     self->invScale = func_02053200(scale);
-    *(RawMatrix4x3 *)&data_020a0e68 = *(RawMatrix4x3 *)&mtx;
+    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mtx;
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, self->scale, self->scale, self->scale);
-    scratch.scaled = *(RawMatrix4x3 *)&data_020a0e68;
-    *(RawMatrix4x3 *)&self->newScaledMat = *(RawMatrix4x3 *)&data_020a0e68;
-    *(RawMatrix4x3 *)&self->invScaledMat = scratch.scaled;
+    scratch.scaled = *(Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&self->newScaledMat = *(Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&self->invScaledMat = scratch.scaled;
     InvMat4x3(&self->invScaledMat, &self->invScaledMat);
-    *(RawMatrix4x3 *)&self->prevInvScaledMat = *(RawMatrix4x3 *)&self->invScaledMat;
-    *(RawMatrix4x3 *)&self->scaledMat = scratch.scaled;
+    *(Mtx43 *)&self->prevInvScaledMat = *(Mtx43 *)&self->invScaledMat;
+    *(Mtx43 *)&self->scaledMat = scratch.scaled;
     scratch.up.x = 0;
     scratch.up.y = 0x1000;
     scratch.up.z = 0;
@@ -125,11 +123,11 @@ void dBgW_KcMbg::Virtual08() {}
 
 // @symbol _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s
 void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
-    *(RawMatrix4x3 *)&invMat = *(RawMatrix4x3 *)&mat;
+    *(Mtx43 *)&invMat = *(Mtx43 *)&mat;
     InvMat4x3(&invMat, &invMat);
 
     int zero = 0;
-    *(RawMatrix4x3 *)&mat = *(const RawMatrix4x3 *)&mtx;
+    *(Mtx43 *)&mat = *(const Mtx43 *)&mtx;
 
     s16 oldAngle = angY;
     angVelY = angle - oldAngle;
@@ -142,20 +140,20 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     pos.y = mtx.t.y;
     pos.z = mtx.t.z;
 
-    RawMatrix4x3 rotation = *(RawMatrix4x3 *)&mat;
-    rotation.m[9] = zero;
-    rotation.m[10] = zero;
-    rotation.m[11] = zero;
-    *(RawMatrix4x3 *)&invRotMat = rotation;
+    Mtx43 rotation = *(Mtx43 *)&mat;
+    rotation.r[3].x = zero;
+    rotation.r[3].y = zero;
+    rotation.r[3].z = zero;
+    *(Mtx43 *)&invRotMat = rotation;
     InvMat4x3(&invRotMat, &invRotMat);
 
-    *(RawMatrix4x3 *)&scaledMat = *(RawMatrix4x3 *)&newScaledMat;
-    *(RawMatrix4x3 *)&data_020a0e68 = *(const RawMatrix4x3 *)&mtx;
+    *(Mtx43 *)&scaledMat = *(Mtx43 *)&newScaledMat;
+    *(Mtx43 *)&data_020a0e68 = *(const Mtx43 *)&mtx;
     s32 currentScale = scale;
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, currentScale, currentScale, currentScale);
-    *(RawMatrix4x3 *)&newScaledMat = *(RawMatrix4x3 *)&data_020a0e68;
-    *(RawMatrix4x3 *)&prevInvScaledMat = *(RawMatrix4x3 *)&invScaledMat;
-    *(RawMatrix4x3 *)&invScaledMat = *(RawMatrix4x3 *)&newScaledMat;
+    *(Mtx43 *)&newScaledMat = *(Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&prevInvScaledMat = *(Mtx43 *)&invScaledMat;
+    *(Mtx43 *)&invScaledMat = *(Mtx43 *)&newScaledMat;
     InvMat4x3(&invScaledMat, &invScaledMat);
 
     RawVector3 up;
@@ -229,7 +227,7 @@ void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result
 /* Transform a direction by mat, leaving out the translation. */
 extern "C" void func_02039db8(dBgW_KcMbg *collider, Vector3 *direction, Vector3 *result) {
     Matrix4x3 rotation;
-    *(RawMatrix4x3 *)&rotation = *(RawMatrix4x3 *)&collider->mat;
+    *(Mtx43 *)&rotation = *(Mtx43 *)&collider->mat;
     rotation.t.x = 0;
     rotation.t.y = 0;
     rotation.t.z = 0;

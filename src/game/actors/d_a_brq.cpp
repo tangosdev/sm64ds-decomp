@@ -16,11 +16,10 @@
  * Source is reverse ROM order: the factory first, the destructor group
  * last. InitResources is the key function; the inline destructor in the
  * header emits retail D1 then D0 plus the complete class data group.
- * common.h comes first so Matrix4x3 is the flat 12-word spelling.
+ * common.h comes first so Matrix4x3 is the flat 12-word spelling, and
+ * assigning IDENTITY_MATRIX4X3 to mMat4x3 is one block copy.
  *
  * Notes:
- * - BrqMatrixWords block-copies IDENTITY_MATRIX4X3 through int[12]: a
- *   Matrix4x3 assignment scalarizes.
  * - UpdateDefeatedState calls the interworking veneer
  *   dBgCh_Actr_UpdateDiscreteNoLava_veneer (0x02038420), not the method
  *   body at 0x02037024.
@@ -107,11 +106,7 @@ extern "C" SpawnInfo<daBrq_c> g_profile_BIRIKYU = {
 
 extern SharedFilePtr *data_ov070_021222e0[2];
 extern BTA_File data_ov070_021231f4;
-extern char IDENTITY_MATRIX4X3;
-
-struct BrqMatrixWords {
-    int words[12];
-};
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 // @symbol _ZN7daBrq_c13InitResourcesEv
 int daBrq_c::InitResources() {
@@ -149,7 +144,7 @@ int daBrq_c::InitResources() {
     mTerminalVelocity = 0;
     SetState(1);
 
-    *(BrqMatrixWords *)&mMat4x3 = *(BrqMatrixWords *)&IDENTITY_MATRIX4X3;
+    mMat4x3 = IDENTITY_MATRIX4X3;
 
     UpdateModelTransform();
     return 1;

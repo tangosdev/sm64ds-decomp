@@ -535,59 +535,59 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1661",
+      "from": "@1642",
       "to": "@1500",
-      "evidence": "mwcc numbers this registration node @1613 per TU and the fleet already defines a global @1613, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1613 per TU and the fleet already defines a global @1613, so the scratch link would multiply-define it; re-keyed from @1661 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
-      "from": "@1662",
+      "from": "@1643",
       "to": "@1501",
-      "evidence": "mwcc numbers this registration node @1614 per TU and the fleet already defines a global @1614, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1614 per TU and the fleet already defines a global @1614, so the scratch link would multiply-define it; re-keyed from @1662 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
-      "from": "@1663",
+      "from": "@1644",
       "to": "@1502",
-      "evidence": "mwcc numbers this registration node @1615 per TU and the fleet already defines a global @1615, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1615 per TU and the fleet already defines a global @1615, so the scratch link would multiply-define it; re-keyed from @1663 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
-      "from": "@1664",
+      "from": "@1645",
       "to": "@1503",
-      "evidence": "mwcc numbers this registration node @1616 per TU and the fleet already defines a global @1616, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1616 per TU and the fleet already defines a global @1616, so the scratch link would multiply-define it; re-keyed from @1664 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
-      "from": "@1665",
+      "from": "@1646",
       "to": "@1504",
-      "evidence": "mwcc numbers this registration node @1617 per TU and the fleet already defines a global @1617, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1617 per TU and the fleet already defines a global @1617, so the scratch link would multiply-define it; re-keyed from @1665 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
-      "from": "@1666",
+      "from": "@1647",
       "to": "@1505",
-      "evidence": "mwcc numbers this registration node @1618 per TU and the fleet already defines a global @1618, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1618 per TU and the fleet already defines a global @1618, so the scratch link would multiply-define it; re-keyed from @1666 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
-      "from": "@1667",
+      "from": "@1648",
       "to": "@1506",
-      "evidence": "mwcc numbers this registration node @1619 per TU and the fleet already defines a global @1619, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1619 per TU and the fleet already defines a global @1619, so the scratch link would multiply-define it; re-keyed from @1667 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
-      "from": "@1668",
+      "from": "@1649",
       "to": "@1507",
-      "evidence": "mwcc numbers this registration node @1620 per TU and the fleet already defines a global @1620, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1620 per TU and the fleet already defines a global @1620, so the scratch link would multiply-define it; re-keyed from @1668 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
-      "from": "@1669",
+      "from": "@1650",
       "to": "@1508",
-      "evidence": "mwcc numbers this registration node @1621 per TU and the fleet already defines a global @1621, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1621 per TU and the fleet already defines a global @1621, so the scratch link would multiply-define it; re-keyed from @1669 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
-      "from": "@1670",
+      "from": "@1651",
       "to": "@1509",
-      "evidence": "mwcc numbers this registration node @1622 per TU and the fleet already defines a global @1622, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1622 per TU and the fleet already defines a global @1622, so the scratch link would multiply-define it; re-keyed from @1670 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
-      "from": "@1671",
+      "from": "@1652",
       "to": "@1510",
-      "evidence": "mwcc numbers this registration node @1623 per TU and the fleet already defines a global @1623, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @1623 per TU and the fleet already defines a global @1623, so the scratch link would multiply-define it; re-keyed from @1671 after this TU's local matrix-copy twin was retired (#4570)"
     }
   ],
   "symbol_binding_rewrites": [

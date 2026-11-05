@@ -26,6 +26,7 @@
 #include "daPly_c.h"
 #include "SaveData.h"
 #include "SpawnInfo.h"
+#include "private/mtx43.h"
 
 /* This scene owns the position used by the breath effect. */
 extern Vector3 data_ov027_02113d10;
@@ -58,10 +59,10 @@ extern u8 data_0209f2d8[];
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
-/* Whole-matrix copies (InitResources, IsPlayerInRange) cast through a plain
- * 48-byte struct; that is the form both were matched in, so it stays. */
-typedef struct { s32 words[12]; } MatrixWords;
 }
+
+/* Whole-matrix copies (InitResources, IsPlayerInRange) cast through Mtx43;
+ * mInvModelMat is flat words. */
 
 /* Actor ID 0xbf is PLAYER. int-returning, so the ROM materializes the 0/1
  * before testing it; a direct `!=` does not. */
@@ -221,7 +222,7 @@ int daSnmBth_c::IsPlayerInRange()
 
     Vector3 playerPos;
     Vec3_Asr(&playerPos, &player->mPos, 3);
-    *(MatrixWords *)&data_020a0e68 = *(MatrixWords *)&mInvModelMat;
+    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mInvModelMat;
 
     Vector3 localPos;
     MulVec3Mat4x3(&playerPos, &data_020a0e68, &localPos);
@@ -356,7 +357,7 @@ int daSnmBth_c::InitResources()
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     InvMat4x3(&data_020a0e68, &data_020a0e68);
-    *(MatrixWords *)&mInvModelMat = *(MatrixWords *)&data_020a0e68;
+    *(Mtx43 *)&mInvModelMat = *(Mtx43 *)&data_020a0e68;
     return 1;
 }
 

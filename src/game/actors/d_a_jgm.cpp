@@ -82,8 +82,6 @@ struct DaJgmVector3Words { Fix12i x, y, z; };
 typedef char DaJgmVector3Words_size_must_be_0xc[
     sizeof(DaJgmVector3Words) == 0xc ? 1 : -1];
 
-struct DaJgmMatrixWords { int words[12]; };
-
 
 /* File-scope objects at the end of this file construct the seven resource
  * handles (model files 0x34c/0x429/0x42a, animation files 0x34f/0x34d,
@@ -577,7 +575,7 @@ void daJgm_c::UpdateModels()
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, lv.t[0], lv.t[1], lv.t[2]);
 
-    *(DaJgmMatrixWords *)&mModel.mat4x3 = *(DaJgmMatrixWords *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 }
 
 // @symbol _ZN7daJgm_c18UpdateWallAndWaterER10dBgCh_Actr
