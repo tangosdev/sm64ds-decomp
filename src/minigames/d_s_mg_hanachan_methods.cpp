@@ -563,8 +563,6 @@ struct Vec2_ea914 {
     ~Vec2_ea914() {}
 };
 
-#pragma push
-#pragma opt_strength_reduction off
 extern "C" void Wiggler_DrawTarget(void *self_) {
     Wiggler *self = (Wiggler *)self_;
     s32 i;
@@ -637,7 +635,6 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
         B = B + 0x200;
     }
 }
-#pragma pop
 
 // @symbol Wiggler_DrawField
 extern "C" {
@@ -1430,7 +1427,6 @@ void Wiggler_StepSegmentsC(Wiggler *wiggler) {
 }
 
 // @symbol _ZN15dScMgHanachan_c7Wiggler13CheckOffLeftAEv
-#pragma push
 void dScMgHanachan_c::Wiggler::CheckOffLeftA() {
     Wiggler *self = (Wiggler *)this;
     int i;
@@ -1445,7 +1441,6 @@ void dScMgHanachan_c::Wiggler::CheckOffLeftA() {
             self->seg[i].x -= 0x170000;
     }
 }
-#pragma pop
 
 // @symbol Wiggler_StartPathA
 extern "C" {
@@ -1590,7 +1585,6 @@ void Wiggler_StartBounce(char *raw, int) {
 }
 
 // @symbol _ZN15dScMgHanachan_c7Wiggler13CheckOffLeftBEv
-#pragma push
 void dScMgHanachan_c::Wiggler::CheckOffLeftB() {
     Wiggler *self = (Wiggler *)this;
     int i;
@@ -1605,7 +1599,6 @@ void dScMgHanachan_c::Wiggler::CheckOffLeftB() {
             self->seg[i].x -= 0x170000;
     }
 }
-#pragma pop
 
 // @symbol Wiggler_StartPathB
 extern "C" {
@@ -1784,7 +1777,6 @@ s32 dScMgHanachan_c::CleanupResources() {
 }
 
 // @symbol _ZN15dScMgHanachan_c6RenderEv
-#pragma push
 s32 dScMgHanachan_c::Render() {
     char *raw = (char *)this;
     int i;
@@ -1864,7 +1856,6 @@ tail:
 
     return 1;
 }
-#pragma pop
 
 // @symbol _ZN15dScMgHanachan_c8BehaviorEv
 s32 dScMgHanachan_c::Behavior() {

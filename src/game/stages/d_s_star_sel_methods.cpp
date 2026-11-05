@@ -25,7 +25,6 @@
  * 0x020addfc..0x020b0580. Base is dScene_c.
  */
 #pragma defer_codegen off
-#pragma opt_strength_reduction off
 #include "common.h"
 #include "nitro/hw/registers.h"
 #include "SpawnInfo.h"
@@ -898,7 +897,6 @@ enum ZN12dScStarSel_c13InitResourcesEv_AssetId {
  * pitch, and each star adds one pitch. Written as one u8 with if/else constant
  * arms, which is what keeps the value in the register the ternary lands in (r3)
  * and lets the loop's +0x23 temp take a fresh r1. */
-#pragma push
 
 extern "C" {
 void Enable3dEngines(void);
@@ -1266,7 +1264,6 @@ s32 dScStarSel_c::InitResources() {
     data_0208ee44 = 1;
     return 1;
 }
-#pragma pop
 
 // @symbol dScStarSel_c_classInit
 /* Reconstructed source-style name: SM64DS proves dScStarSel_c through RTTI,

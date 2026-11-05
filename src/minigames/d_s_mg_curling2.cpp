@@ -1520,8 +1520,6 @@ void dScMgCurling2_c::EndRound() {
 /* Behavior state 2, reached once every stone rests. Age the score marks,
  * then either go back to Play after dealing the next stone or -- with all
  * five thrown -- set gameOver, sound the horn and advance to EndRound. */
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgCurling2_c::NextThrow() {
     int i;
     AgeMarks();
@@ -1548,7 +1546,6 @@ void dScMgCurling2_c::NextThrow() {
     }
     NextStone();
 }
-#pragma pop
 
 // @symbol _ZN15dScMgCurling2_c4PlayEv
 /* Behavior state 1: one frame of play. Enable the prompt on the first

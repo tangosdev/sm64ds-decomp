@@ -1215,7 +1215,6 @@ extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" void CrossVec3(const Vec3 *a, const Vec3 *b, Vec3 *out);
 extern "C" void NormalizeVec3(const Vector3 *v, Vector3 *out);
 
-#pragma push
 extern "C" void TrmpLine_ComputeNormals(char *self) {
     Vec3 columnEdge;
     Vec3 rowEdge;
@@ -1275,7 +1274,6 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
         }
     }
 }
-#pragma pop
 }
 
 namespace s020cf2fc {
@@ -1684,8 +1682,6 @@ extern "C" {
 extern int sTrmpLinePushStrongPitchEnd;
 }
 
-#pragma push
-#pragma opt_propagation off
 // @symbol TrmpLine_PushJumper
 extern "C" int TrmpLine_PushJumper(char *c) {
     int jumperIndex;
@@ -1842,7 +1838,6 @@ extern "C" int TrmpLine_PushJumper(char *c) {
     } while (++jumperIndex < 5);
     return 0;
 }
-#pragma pop
 }
 
 namespace s020d01e0 {

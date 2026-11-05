@@ -1016,8 +1016,6 @@ int daPly_c::func_ov002_020bd4c8(unsigned char *params, int beginFrame, int endF
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020bd4e0EPhii
-#pragma push
-#pragma opt_propagation off
 extern "C" {
 int daPly_c::func_ov002_020bd4e0(unsigned char *data, int beginFrame, int endFrame) {
     extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
@@ -1058,7 +1056,6 @@ int daPly_c::func_ov002_020bd4e0(unsigned char *data, int beginFrame, int endFra
     }
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c19func_ov002_020bd600EPhii
 int daPly_c::func_ov002_020bd600(unsigned char *data, int beginFrame, int endFrame) {
@@ -13968,7 +13965,6 @@ int daPly_c::Shock(unsigned int j) {
 }
 
 // @symbol func_ov002_020d5ab4
-#pragma push
 extern "C" {
 int func_ov002_020d5ab4(daPly_c *p) {
     typedef long long s64;
@@ -14015,7 +14011,6 @@ int func_ov002_020d5ab4(daPly_c *p) {
     return 1;
 }
 }
-#pragma pop
 
 // @symbol func_ov002_020d5c6c
 extern "C" {
@@ -14322,7 +14317,6 @@ int func_ov002_020d6334(daPly_c *o, int val) {
 // @symbol func_ov002_020d6368
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
-#pragma push
 extern "C" {
 void func_ov002_020d6368(void *self) {
     typedef long long s64;
@@ -14356,7 +14350,6 @@ void func_ov002_020d6368(void *self) {
     p->mEggParams = zero;
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c15St_Swallow_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -14871,8 +14864,6 @@ void daPly_c::func_ov002_020d71a0() {
 }
 
 // @symbol func_ov002_020d71ec
-#pragma push
-#pragma opt_propagation off
 /* P2's only member is an array. With named members, C++ copies each
  * table into arr[] member by member, and the arr base and the zero for
  * the stack argument take their registers in the other order (5 words
@@ -14923,7 +14914,6 @@ void func_ov002_020d71ec(daPly_c *player, int arg1) {
     player->mStateTimer = 0xa;
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c21St_YoshiPower_CleanupEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -16438,8 +16428,6 @@ int daPly_c::GetHurtState() {
 }
 
 // @symbol func_ov002_020d9c70
-#pragma push
-#pragma opt_common_subs off
 extern "C" {
 void func_ov002_020d9c70(char *o)
 {
@@ -16492,7 +16480,6 @@ void func_ov002_020d9c70(char *o)
     }
 }
 }
-#pragma pop
 
 // @symbol func_ov002_020d9dcc
 /* The state test compares the comparison as an int,
@@ -16873,8 +16860,6 @@ int daPly_c::DropActor() {
 }
 
 // @symbol func_ov002_020da95c
-#pragma push
-#pragma opt_propagation off
 extern "C" {
 int func_ov002_020da95c(char *c)
 {
@@ -16890,7 +16875,6 @@ int func_ov002_020da95c(char *c)
     return 1;
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c11DropHeldObjEv
 int daPly_c::DropHeldObj() {
@@ -18691,8 +18675,6 @@ int daPly_c::St_GroundPound_Cleanup() {
  * branch picks one of three particle sets by cap state and character, shakes
  * the camera, and skips the upper particles in shallow water.
  */
-#pragma push
-#pragma opt_common_subs off
 extern "C" {
 int daPly_c::St_GroundPound_Main() {
     void func_ov002_020ef2a4(void* c, void* arg);
@@ -18819,7 +18801,6 @@ int daPly_c::St_GroundPound_Main() {
     return 1;
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c19St_GroundPound_InitEv
 /* recovered: named members + shared header, real C++ method */
@@ -19676,8 +19657,6 @@ int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
 }
 
 // @symbol func_ov002_020df8f0
-#pragma push
-#pragma opt_common_subs off
 extern "C" {
 void func_ov002_020df8f0(char* c)
 {
@@ -19818,7 +19797,6 @@ void func_ov002_020df8f0(char* c)
     }
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c11St_Fly_MainEv
 /* Signature deliberately copied from the local declaration above: the
@@ -21706,8 +21684,6 @@ int daPly_c::ChangeState(daPly_c::State &state) {
    is not a redeclaration but an attempt to overload a C-linkage name, which
    mwccarm rejects outright. func_ov002_020bdd2c is a daPly_c member now and
    comes from daPly_c.h. */
-#pragma push
-#pragma opt_common_subs off
 extern "C" {
 int daPly_c::CleanupResources() {
     enum { false_, true_ };
@@ -21912,7 +21888,6 @@ int daPly_c::CleanupResources() {
     return 1;
 }
 }
-#pragma pop
 
 // @symbol _ZN7daPly_c16OnPendingDestroyEv
 /* recovered: named members + shared header, real C++ method */
@@ -21926,8 +21901,6 @@ void daPly_c::OnPendingDestroy() {
 // @symbol _ZN7daPly_c6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-#pragma push
-#pragma opt_common_subs off
 extern "C" {
 int daPly_c::Render() {
     struct VObj {
@@ -22048,7 +22021,6 @@ int daPly_c::Render() {
     return 1;
 }
 }
-#pragma pop
 
 // @symbol func_ov002_020e3e00
 /* recovered: shared common types */

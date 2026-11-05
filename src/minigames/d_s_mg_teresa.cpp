@@ -548,7 +548,6 @@ void dScMgTeresa_c::Reveal_StateFinish(int idx) {
     Sound::PlayBank2_2D(0x1f5);
 }
 
-#pragma push
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 // @symbol _ZN13dScMgTeresa_c22Reveal_StateDipAndRiseEi
 void dScMgTeresa_c::Reveal_StateDipAndRise(int i) {
@@ -583,7 +582,6 @@ void dScMgTeresa_c::Reveal_StateDipAndRise(int i) {
     }
 }
 #undef AT
-#pragma pop
 
 // @symbol _ZN13dScMgTeresa_c19Reveal_StateAnimateEi
 void dScMgTeresa_c::Reveal_StateAnimate(int i) {
@@ -603,7 +601,6 @@ void dScMgTeresa_c::Reveal_StateAnimate(int i) {
     }
 }
 
-#pragma push
 // @symbol _ZN13dScMgTeresa_c19Reveal_StateSlideInEi
 void dScMgTeresa_c::Reveal_StateSlideIn(int i) {
     mReveal[i].frameTimer += 1;
@@ -632,7 +629,6 @@ void dScMgTeresa_c::Reveal_StateSlideIn(int i) {
     mReveal[i].frameTimer = 0;
     mReveal[i].vx = 0;
 }
-#pragma pop
 
 // @symbol _ZN13dScMgTeresa_c17Reveal_StateStartEi
 void dScMgTeresa_c::Reveal_StateStart(int i) {
@@ -809,8 +805,6 @@ void dScMgTeresa_c::VanishPuff_UpdateAll() {
     }
 }
 
-#pragma push
-#pragma opt_strength_reduction off
 // @symbol _ZN13dScMgTeresa_c16VanishPuff_SpawnEi
 void dScMgTeresa_c::VanishPuff_Spawn(int param) {
     int i;
@@ -826,7 +820,6 @@ void dScMgTeresa_c::VanishPuff_Spawn(int param) {
         }
     }
 }
-#pragma pop
 
 
 // @symbol _ZN13dScMgTeresa_c13DrawCountdownEv
@@ -1542,8 +1535,6 @@ void dScMgTeresa_c::SpawnBoos() {
     } while (i < count);
 }
 
-#pragma push
-#pragma opt_common_subs off
 // @symbol _ZN13dScMgTeresa_c13UpdateRubbingEv
 void dScMgTeresa_c::UpdateRubbing() {
     int close;
@@ -1579,7 +1570,6 @@ void dScMgTeresa_c::UpdateRubbing() {
         mRubPrevY = mRubY;
     }
 }
-#pragma pop
 
 // @symbol _ZN13dScMgTeresa_c12ReadRubTouchEv
 void dScMgTeresa_c::ReadRubTouch() {

@@ -453,7 +453,6 @@ void dScMgCup_c::StateFinish() {
 }
 
 // @symbol _ZN10dScMgCup_c11StateResultEv
-#pragma push
 void dScMgCup_c::StateResult() {
     int score;
     int i;
@@ -487,7 +486,6 @@ void dScMgCup_c::StateResult() {
     mState = 6;
     mPromptEnabled = 0;
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c11StateSelectEv
 #pragma push
@@ -896,7 +894,6 @@ s32 dScMgCup_c::Render() {
 // @symbol _ZN10dScMgCup_c8BehaviorEv
 /* Slot 6: runs the current state, then advances each cup's animation
    according to the duration stored in its current frame. */
-#pragma push
 s32 dScMgCup_c::Behavior() {
     char *raw = (char *)this;
     int cupIndex;
@@ -917,7 +914,6 @@ s32 dScMgCup_c::Behavior() {
     Presenter_Update((char *)&mModel);
     return 1;
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c13InitResourcesEv
 /* Slot 0: sets up the sub-screen backgrounds, loads the board graphics,

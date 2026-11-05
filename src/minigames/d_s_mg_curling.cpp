@@ -513,7 +513,6 @@ void dScMgCurling_c::Bit_RunKindB(int idx) {
     (((C *)this)->*sCurlingBitBStateTable[state].pmf)(idx);
 }
 
-#pragma push
 // @symbol _ZN14dScMgCurling_c12Bit_PickKindEi
 void dScMgCurling_c::Bit_PickKind(int idx) {
     unsigned roll = (unsigned)RandomIntInternal(&data_0209d4b8);
@@ -524,7 +523,6 @@ void dScMgCurling_c::Bit_PickKind(int idx) {
     mBit[idx].kind = sCurlingBitKinds[k];
     mBit[idx].state = 0;
 }
-#pragma pop
 
 // @symbol _ZN14dScMgCurling_c13Bit_UpdateAllEv
 void dScMgCurling_c::Bit_UpdateAll() {
@@ -1560,7 +1558,6 @@ void dScMgCurling_c::ResetHouse() {
     mHouse = 255;
 }
 
-#pragma push
 // @symbol _ZN14dScMgCurling_c11ClearStonesEv
 /* Zeroes the five stones, the five score popups and the aim fields, and
  * resets the score. */
@@ -1608,7 +1605,6 @@ void dScMgCurling_c::ClearStones() {
     mSwingTimer = 0;
     Mg_SubmitScore(0);
 }
-#pragma pop
 
 // @symbol _ZN14dScMgCurling_c10StartRoundEi
 /* Slot 18, one of dScMgBase_c's own undeclared slots; the inherited label

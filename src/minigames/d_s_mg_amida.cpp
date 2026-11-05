@@ -841,8 +841,6 @@ int dScMgAmida_c::ProbeRung(Point p1, Point p2) {
 }
 
 // @symbol _ZN12dScMgAmida_c10StepWalkerEii
-#pragma push
-#pragma opt_common_subs off
 int dScMgAmida_c::StepWalker(int walker, int dir) {
     int gridX, gridY;
     u8 lineMark;
@@ -917,7 +915,6 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
         return 1;
     }
 }
-#pragma pop
 
 // @symbol _ZN12dScMgAmida_c11StepWalkersEv
 /* The per-step routine Behavior runs mScrollAccum / 16 times a frame:
@@ -1502,8 +1499,6 @@ void dScMgAmida_c::InitWalkers() {
 }
 
 // @symbol _ZN12dScMgAmida_c10SetupRoundEv
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgAmida_c::SetupRound() {
     char *raw = (char *)this;
     int level;
@@ -1796,7 +1791,6 @@ void dScMgAmida_c::SetupRound() {
         }
     }
 }
-#pragma pop
 
 // @symbol _ZN12dScMgAmida_c11RenderBoardEv
 #pragma push
@@ -1965,7 +1959,6 @@ s32 dScMgAmida_c::Render() {
 #pragma pop
 
 // @symbol _ZN12dScMgAmida_c8BehaviorEv
-#pragma push
 s32 dScMgAmida_c::Behavior() {
     char *raw = (char *)this;
     int piece;
@@ -2158,7 +2151,6 @@ s32 dScMgAmida_c::Behavior() {
     }
     return 1;
 }
-#pragma pop
 
 // @symbol _ZN12dScMgAmida_c10StartRoundEi
 /* Slot 18: counts a win (arg 0) or resets the score, then sets up the next board. */
