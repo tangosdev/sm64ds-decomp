@@ -92,7 +92,7 @@ src/engine/view/d_camera.cpp:
     .text start:0x020072c4 end:0x0200e494
     .init start:0x02073a24 end:0x02073e6c
     .ctor start:0x02086b60 end:0x02086b64
-    .bss start:0x0209b008 end:0x0209b138
+    .bss start:0x0209b000 end:0x0209b270
 
 src/KuppaScript.cpp:
     complete

@@ -4493,8 +4493,8 @@ _ZTSN3abi21__vmi_class_type_infoE kind:data(any) addr:0x0209a7b8
 data_0209a7d8 kind:data(any) addr:0x0209a7d8
 data_0209a7ec kind:data(any) addr:0x0209a7ec
 data_0209aff8 kind:data(any) addr:0x0209aff8
-data_0209b000 kind:bss addr:0x0209b000
-data_0209b004 kind:bss addr:0x0209b004
+sPrevTurnInput$1940 kind:bss addr:0x0209b000
+_ZGVsScriptOps$2648 kind:bss addr:0x0209b004
 data_0209b008 kind:bss addr:0x0209b008
 data_0209b018 kind:bss addr:0x0209b018
 data_0209b028 kind:bss addr:0x0209b028
@@ -4514,7 +4514,7 @@ data_0209b0f8 kind:bss addr:0x0209b0f8
 data_0209b108 kind:bss addr:0x0209b108
 data_0209b118 kind:bss addr:0x0209b118
 data_0209b128 kind:bss addr:0x0209b128
-data_0209b138 kind:bss addr:0x0209b138
+sScriptOps$2648 kind:bss addr:0x0209b138
 gKuppaScriptNumPlayers kind:bss addr:0x0209b270
 gKuppaScriptFrame kind:bss addr:0x0209b274
 @259 kind:bss addr:0x0209b278
