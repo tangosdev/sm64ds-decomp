@@ -15,12 +15,12 @@
       "opt_lifetimes": 5,
       "opt_loop_invariants": 15,
       "opt_prelinearize": 1,
-      "opt_propagation": 42,
-      "opt_strength_reduction": 68,
+      "opt_propagation": 37,
+      "opt_strength_reduction": 67,
       "optimize_for_size": 13
     },
-    "pragma_files": 80,
-    "pragma_overrides": 230,
+    "pragma_files": 79,
+    "pragma_overrides": 224,
     "pragma_resets": 1,
     "pragma_resets_by_name": {
       "opt_dead_assignments": 1
