@@ -8492,11 +8492,6 @@
         "return:unsigned char []"
       ]
     },
-    "gCollectedStarId": {
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:unsigned char []"
-      ]
-    },
     "gShowTouchScreenArrows": {
       "src/_ZN7daPly_c8BehaviorEv.cpp": [
         "return:signed char"
@@ -8643,16 +8638,6 @@
         "return:dCamera_c *"
       ]
     },
-    "data_0209f338": {
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:int"
-      ]
-    },
-    "data_0209f344": {
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:int"
-      ]
-    },
     "data_0209f394": {
       "src/game/actors/d_a_btn.cpp": [
         "return:daPly_c * []"
@@ -8689,20 +8674,12 @@
       ]
     },
     "data_0209f3a4": {
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:void * []"
-      ],
       "src/ui/hud/d_map.cpp": [
         "return:int []",
         "return:Obj * []"
       ]
     },
     "data_0209f3e8": {
-      "src/ui/hud/d_map.cpp": [
-        "return:Obj * []"
-      ]
-    },
-    "data_0209f40c": {
       "src/ui/hud/d_map.cpp": [
         "return:Obj * []"
       ]
@@ -19842,11 +19819,6 @@
     "WM_StartScan": {
       "src/engine/mb/MB_WmBase.cpp": [
         "param:#1 void *"
-      ]
-    },
-    "data_0209f498": {
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:unsigned char []"
       ]
     }
   },

@@ -97,7 +97,7 @@ extern u8 data_0209f1f8;
 extern u8 data_0209f20c;
 extern u8 data_0209f250;
 extern u8 gVsExitScreenActive;
-extern u8 data_0209f2c4;
+extern u8 gGamePaused;
 extern s8 gCurrentSublevel;
 extern s32 data_0209f32c;
 extern void *data_0209f394[];
@@ -300,7 +300,7 @@ block_7:
         func_020089f8(c);
     }
 
-    if ((u8)(gVsExitScreenActive | (data_0209f2c4 | data_0209f20c)) == 0 &&
+    if ((u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0 &&
         !(gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)) {
         enum Bool b2 = (enum Bool)(gRunningKuppaScript != 0);
         if (b2 == FALSE) {
@@ -449,7 +449,7 @@ int dCamera_c::Render()
                 sp18 = (s16)(sp18 + (s16)FX_MUL(d, t));
             }
             if (data_0209f20c == 0 && gVsExitScreenActive == 0 &&
-                (u8)(gVsExitScreenActive | (data_0209f2c4 | data_0209f20c)) != 0) {
+                (u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) != 0) {
                 func_0200af20(self, (Vector3 *)&sp[0], (Vector3 *)&sp[3], &sp18);
             }
         }

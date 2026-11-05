@@ -154,7 +154,7 @@ extern int data_0209f32c;
 extern signed char gCurrentSublevel;
 extern void SetStarMarker(int i, int v1, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
-extern int data_0209f40c[];
+extern dActor_c *STAR_MARKERS[12];
 extern u8 data_0209f208;
 extern unsigned char data_0209f264;
 void GiveVsStars(int idx, int delta);
@@ -1961,7 +1961,7 @@ int daStar_c::func_ov002_020e8dd8() {
 }
 
 // @symbol _ZN8daStar_c13AddStarMarkerEv
-/* Claims a free slot of the map-marker table (data_0209f40c, 12 entries) for
+/* Claims a free slot of the map-marker table (STAR_MARKERS, 12 entries) for
  * this star. The marker type is 1 for the silver star, 2 for the Power Star
  * and 3 once collected; type 0 uses 3 or 2 from the collected-model flag. A
  * star waiting for its marker does not show it until data_0209f208 is non-
@@ -1971,7 +1971,8 @@ void daStar_c::AddStarMarker()
     s8 i;
     if (mMarkerSlot >= 0) return;
     for (i = 0; i < 0xc; i++) {
-        if (data_0209f40c[(int)i] != 0) continue;
+        if (STAR_MARKERS[(int)i] != 0)
+            continue;
 
         if (mMarkerType == 0) {
             if (mBits.collectedModel) {
