@@ -64,6 +64,7 @@
 #include "dBgCh_Actr.h"
 #include "Sound.h"
 #include "cstd.h"
+#include "private/mtx43.h"
 
 /* Written as the real constructor, which is the form the legacy shard recovered
    and byte-matched. Two steps, and neither is spelled below: the dActor_c
@@ -868,14 +869,9 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);
         /* Vector3's constructor makes Matrix4x3's own assignment copy the
-           rotation and the translation separately. A flat 12-word record
-           is the one copy this function's bytes are. */
-        {
-            struct M12 {
-                s32 m[12];
-            };
-            *(struct M12 *)&anim.mat4x3 = *(struct M12 *)&data_020a0e68;
-        }
+           rotation and the translation separately (.text grows by 0x1c
+           bytes). The flat Mtx43 copy is the one this function's bytes are. */
+        *(Mtx43 *)&anim.mat4x3 = *(Mtx43 *)&data_020a0e68;
     }
     return 1;
 }

@@ -27,6 +27,7 @@
 #include "dExtFrameCtrl_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 
 enum {
     kYoshiEggId = 9,
@@ -65,7 +66,6 @@ extern WanwanModelFilePtr data_ov014_02114978;
 extern WanwanAnimationFileHandle data_ov014_02114980;
 extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
-extern Matrix4x3 data_020a0e68;   /* MATRIX_SCRATCH_PAPER */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern s16 data_02082214[]; /* SINE_TABLE: sin, cos pairs */
 extern void *data_0209f318; /* CAMERA */
@@ -93,8 +93,6 @@ int LenVec3(Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const void *a, const void *b);
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationY(void *m, int ang);
-void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 int AngleDiff(int a, int b);
 int ApproachAngle(short *angles, int target, int a, int b, int c);
 unsigned short DecIfAbove0_Short(unsigned short *p);

@@ -65,12 +65,10 @@
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
 
-/* Twelve plain words: assigning a Matrix4x3 copies it member by member,
-   0x1c bytes longer than the cartridge's block copy. */
-struct MatrixWords {
-    s32 m[12];
-};
+/* The shadow matrix is reset through Mtx43: assigning a Matrix4x3 copies it
+   member by member, 0x1c bytes longer than the cartridge's block copy. */
 
 /* Inferred local resource-family ABI views; these type names are not ROM
  * names. The manifest binds each constructor/destructor to its existing
@@ -818,7 +816,7 @@ s32 daEykn_c::InitResources()
     mTarget = 0;
     mCircleTimer = kCircleFrames;
 
-    *(MatrixWords *)mShadowMat = *(MatrixWords *)&IDENTITY_MATRIX4X3;
+    *(Mtx43 *)mShadowMat = *(Mtx43 *)&IDENTITY_MATRIX4X3;
 
     dBgCh_Gnd ray;
     ray.SetObjAndPos(mPos, this);

@@ -317,9 +317,8 @@ void daHolhei_c::HomeCarryOffset() {
     Math_Function_0203b14c(&mCarryOffsX, data_ov062_0211df10[idx].x, 0x800, 0x3e8000, 4);
     Math_Function_0203b14c(&mCarryOffsY, data_ov062_0211df10[idx].y, 0x800, 0x3e8000, 4);
     Math_Function_0203b14c(&mCarryOffsZ, data_ov062_0211df10[idx].z, 0x800, 0x3e8000, 4);
-    void *r = UpdateCarry(*mHeld, *(Vector3 *)&mCarryOffsX);
-    struct M12w { int w[12]; };
-    *(M12w *)&mModel.mat4x3 = *(M12w *)r;
+    Matrix4x3 *r = UpdateCarry(*mHeld, *(Vector3 *)&mCarryOffsX);
+    mModel.mat4x3 = *r;
 }
 
 /* Bone 3's transform times the model's yaw, stored where a holder looks. */
@@ -337,8 +336,7 @@ void daHolhei_c::BuildHoldMatrix() {
 // @symbol func_ov062_02116dbc
 extern "C" void func_ov062_02116dbc(daHolhei_c *self)
 {
-    struct M12w { int w[12]; };
-    *(M12w *)&self->mShadowMtx = *(M12w *)&IDENTITY_MATRIX4X3;
+    self->mShadowMtx = IDENTITY_MATRIX4X3;
     self->mShadowMtx.m[9] = self->mPosX >> 3;
     self->mShadowMtx.m[10] = self->mPosY >> 3;
     self->mShadowMtx.m[11] = self->mPosZ >> 3;
@@ -353,8 +351,7 @@ extern "C" void func_ov062_02116dbc(daHolhei_c *self)
 // @symbol _ZN10daHolhei_c19func_ov062_02116d28Ev
 void daHolhei_c::func_ov062_02116d28()
 {
-    struct M12w { int w[12]; };
-    *(M12w *)&mShadowMtx = *(M12w *)&IDENTITY_MATRIX4X3;
+    mShadowMtx = IDENTITY_MATRIX4X3;
     mShadowMtx.m[9] = mHeld->mPosX >> 3;
     mShadowMtx.m[10] = mHeld->mPosY >> 3;
     mShadowMtx.m[11] = mHeld->mPosZ >> 3;

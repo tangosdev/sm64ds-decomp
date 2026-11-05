@@ -74,6 +74,7 @@ extern "C" int AngleDiff(int a, int b);
 #include "dExtFrameCtrl_c.h"
 #include "daObjMarioCap_c.h"
 #include "Sound.h"
+#include "private/mtx43.h"
 
 /* Static-init ownership (was the handwritten __sinit_ov062_0211d6fc shard).
  * The file-scope objects at the end of this file construct the four
@@ -140,9 +141,8 @@ enum Bool { FALSE, TRUE };
 /* shadow struct 'BCA_File' */
 struct BCA_File;
 
-
-/* shadow typedef 'M48' */
-typedef struct { int w[12]; } M48;
+/* The matrix copies go through Mtx43: assigning this TU's nested
+   Matrix4x3 instead grows .text by 0x38 bytes. */
 
 /* Array-backed position snapshot: mwccarm 2004/b56 copies these three
    words with the retail ldm/stm sequence in C++. A three-scalar-member
@@ -570,7 +570,7 @@ void daJango_c::func_ov062_0211c6a8()
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(M48 *)&mBlendAnmModel.mat4x3 = *(M48 *)data_020a0e68;
+    *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)data_020a0e68;
 
     if (mHeldActorID != 0)
     {
@@ -605,7 +605,7 @@ void daJango_c::func_ov062_0211c6a8()
     }
 
     Matrix4x3_FromTranslation(data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
-    *(M48*)&mShadowMat = *(M48*)data_020a0e68;
+    *(Mtx43 *)&mShadowMat = *(Mtx43 *)data_020a0e68;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x40000, 0x258000, 0xf);
 }
 

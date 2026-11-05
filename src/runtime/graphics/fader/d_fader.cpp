@@ -25,6 +25,7 @@
 #include "decl_common.h"
 #include "G2x.h"
 #include "dExtModel_c.h"
+#include "math/MtxStack.h"
 
 // These helpers have native definitions but no shared declaration yet.
 namespace cstd {
@@ -43,11 +44,8 @@ int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
 
 extern "C" {
 void func_02053a90(u16 *reg, int value);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short ang);
 }
-extern Matrix4x3 data_020a0e68;
 
 #ifndef _MSC_VER
 // @symbol _ZN8dFader_cD0Ev

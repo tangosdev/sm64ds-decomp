@@ -32,6 +32,7 @@ enum d_a_obj_wl_polelift_AssetId {
 #include "daObjWlPolelift_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
+#include "math/MtxStack.h"
 
 /* The file-scope object at the end of this file constructs the resource
  * handle (model file 0x6db). mwcc emits __sinit_d_a_obj_wl_polelift.cpp
@@ -53,7 +54,6 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *a, int scale);
 void SubVec3(Vector3 *out, Vector3 *a, Vector3 *b);
-void Matrix4x3_FromRotationY(void *mtx, int angleY);
 
 void func_ov026_02111234(daObjWlPolelift_c *actor);
 void func_ov026_021112a4(daObjWlPolelift_c *actor);

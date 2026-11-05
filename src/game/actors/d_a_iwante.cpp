@@ -41,8 +41,9 @@
  *    resource handles and 19 state descriptors are now typed objects defined
  *    at the bottom of this file; the 38 pointer-to-member records they copy
  *    from keep their data_ov066 names.
- *  - EVec3 and M48 are plain word structs standing in for Vector3 and
- *    Matrix4x3. Vec4 is an unused stack object with a destructor.
+ *  - EVec3 is a plain word struct standing in for Vector3, and the matrix
+ *    copies go through the flat Mtx43: assigning Matrix4x3 grows .text by
+ *    0x54 bytes. Vec4 is an unused stack object with a destructor.
  *  - Handler descriptions come from reading the code, not from play-testing.
  *  - Sound::ChangeMusicVolume keeps its mangled decl (Fix12<int> by value, S13 wall); the Layer3 pair keeps file-local mangled decls because Sound.h declares only Layer1/Layer2 (this file excludes decl_common.h).
  */
@@ -92,6 +93,7 @@ enum Eyerok_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "private/mtx43.h"
 
 /* Actor ids, from symbols/actor_debug_names.tsv. */
 enum {
@@ -371,7 +373,6 @@ extern void func_ov066_0211a35c(void *a, void *b, void *c);
 }
 
 
-typedef struct { int w[12]; } M48;
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. These int-returning predicates are what make the ROM
@@ -2291,9 +2292,9 @@ void daIwante_c::func_ov066_021194fc() {
     Matrix4x3_FromTranslation(data_020a0e68, v[0], v[1], v[2]);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68, mAngleX, mAngleY, mAngleZ);
     if (mPartIdx == PART_MAIN)
-        *(M48 *)&mModel2.mat4x3 = *(M48*)data_020a0e68;
+        *(Mtx43 *)&mModel2.mat4x3 = *(Mtx43 *)data_020a0e68;
     else
-        *(M48 *)&mBlendAnmModel.mat4x3 = *(M48 *)data_020a0e68;
+        *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)data_020a0e68;
     if (mPartIdx == PART_MAIN)
         return;
     if (mRestPosY >= mPosY)
@@ -2309,7 +2310,7 @@ void daIwante_c::func_ov066_021194fc() {
             (mPosY - 0x8000) >> 3,
             (mPosZ + 0xa0000) >> 3);
     }
-    *(M48 *)mShadowMtx = *(M48*)data_020a0e68;
+    *(Mtx43 *)mShadowMtx = *(Mtx43 *)data_020a0e68;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0x140000, 0x258000, 0xf);
 }
 

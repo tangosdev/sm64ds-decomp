@@ -41,6 +41,7 @@
 #include "G2.h"
 #include "math/Approach.h"
 #include "dScMgBase_c.h"
+#include "MWCPlusLib.h"
 /* Typed access to a MascotWalker record from the char* helpers below. */
 #define WALKER(p) ((MascotWalker *)(p))
 /* Typed access to a Presenter record from the char* helpers below. */
@@ -65,7 +66,7 @@ void Matrix4x3_ApplyInPlaceToRotationZ(void *, short);
 void Matrix4x3_FromQuaternion(void *, void *);
 void MulVec3Mat3x3(void *, void *, void *);
 void MulMat4x3Mat4x3(void *, void *, void *);
-void __cxa_vec_cleanup(void *, unsigned int, unsigned int, void (*)(void *));
+void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
 void func_020169d8(void *, int, unsigned int);
 void func_0203cebc(void *, void *, void *, void *);
 /* local extern: CalcLib conflicts with this TU's void* Vec3_HorzAngle
@@ -94,7 +95,7 @@ void *SharedFilePtr_Construct_TexSeq(void *, unsigned int);
 int SharedFilePtr_Destruct_Anim(void *);
 int SharedFilePtr_Destruct_TexSeq(void *);
 
-void __cxa_vec_ctor(void *, unsigned int, unsigned int, void (*)(void *), void (*)(void *));
+void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
 unsigned int func_02012174(unsigned int, unsigned int);
 void func_02016a04(void *, int);
 void func_02016a14(void *, int);
@@ -418,14 +419,10 @@ extern "C" {
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
 struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
+    Matrix4x3 viewMat;              /* 0x00 */
     char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
+    Matrix4x3 projMat;              /* 0x60 */
     char pad90[0x10];               /* 0x90 */
     struct Vector3 target;          /* 0xa0 */
     struct Vector3 eye;             /* 0xac */
@@ -1228,14 +1225,10 @@ extern "C" {
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
 struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
+    Matrix4x3 viewMat;              /* 0x00 */
     char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
+    Matrix4x3 projMat;              /* 0x60 */
     char pad90[0x10];               /* 0x90 */
     struct Vector3 target;          /* 0xa0 */
     struct Vector3 eye;             /* 0xac */
@@ -1389,14 +1382,10 @@ extern "C" {
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
 struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
+    Matrix4x3 viewMat;              /* 0x00 */
     char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
+    Matrix4x3 projMat;              /* 0x60 */
     char pad90[0x10];               /* 0x90 */
     struct Vector3 target;          /* 0xa0 */
     struct Vector3 eye;             /* 0xac */
@@ -2078,14 +2067,10 @@ extern "C" {
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
 struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
+    Matrix4x3 viewMat;              /* 0x00 */
     char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
+    Matrix4x3 projMat;              /* 0x60 */
     char pad90[0x10];               /* 0x90 */
     struct Vector3 target;          /* 0xa0 */
     struct Vector3 eye;             /* 0xac */
@@ -2453,14 +2438,10 @@ extern "C" {
  */
 typedef int s32;
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
 struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
+    Matrix4x3 viewMat;              /* 0x00 */
     char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
+    Matrix4x3 projMat;              /* 0x60 */
     char pad90[0x10];               /* 0x90 */
     /* Camera_UpdateMatrices hands 0xac to G3i::LookAt_ as the camera
      * position and 0xa0 as the point it looks at. The flower, slots and
@@ -2499,11 +2480,11 @@ void Camera_UpdateMatrices(struct dCamera_c *self) {
 
     idx = (self->angle >> 4) * 2;
     G3i::PerspectiveW_(data_02082214[idx], data_02082214[idx + 1], 0x1555, 0x1000, 0x1388000,
-                       0x1000, 1, (Matrix4x3 *)&self->projMat);
+                       0x1000, 1, &self->projMat);
 
-    G3i::LookAt_(&self->eye, &up, &self->target, true, (Matrix4x3 *)&self->viewMat);
+    G3i::LookAt_(&self->eye, &up, &self->target, true, &self->viewMat);
 
-    CopyToViewMat((const Matrix4x3 *)&self->viewMat);
+    CopyToViewMat(&self->viewMat);
 
     data_0209f43c.Func_020156DC(0x1555, self->angle, 0x1000, 0x1388000);
 }

@@ -16,9 +16,9 @@
  *
  * What stays: func_020393c4 is a 4-byte store into dBgW+0x1c
  *   (stoodOnCallback). This TU calls it; naming belongs with dBgW in arm9.
- * What stays: HatenaMatrixWords 12-word copies -- structured Matrix4x3
- *   assignment scalarizes; common.h-first would drop mClsnMat.t used in
- *   UpdateClsnTransform.
+ * What stays: the 12-word matrix copies go through Mtx43 -- structured
+ *   Matrix4x3 assignment scalarizes; common.h-first would drop mClsnMat.t
+ *   used in UpdateClsnTransform.
  * What stays: data_ov002_0210d8b4 / 0210d774 are CLPS blocks this TU does
  *   not own.
  * What stays: data_0209caa0 / data_0209d684 / data_0209d660 are arm9
@@ -42,14 +42,12 @@ enum d_a_obj_hatena_switch_AssetId {
 #include "Particle__System.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "private/mtx43.h"
 
-/* Plain stack values avoid pulling unrelated Vector3 and Matrix4x3 special
- * members into this TU while preserving their measured three/twelve-word ABI. */
+/* Plain stack values avoid pulling unrelated Vector3 special members into
+ * this TU while preserving their measured three-word ABI. */
 struct HatenaVector3Words {
     s32 x, y, z;
-};
-struct HatenaMatrixWords {
-    s32 words[12];
 };
 
 /* Actor ID 0xbf is PLAYER, 0xc2 is CRATE. dActor_c::mFlags bit 0x08 is
@@ -294,13 +292,13 @@ void daObjHatenaSwitch_c::UpdateModelTransform() {
     Vec3_Asr((Vector3 *)&shifted, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted[0], shifted[1], shifted[2]);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    *(HatenaMatrixWords *)&mAnmModel.mat4x3 = *(HatenaMatrixWords *)&data_020a0e68;
-    *(HatenaMatrixWords *)&mModel.mat4x3 = *(HatenaMatrixWords *)&mAnmModel.mat4x3;
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&mAnmModel.mat4x3;
 }
 
 // @symbol _ZN19daObjHatenaSwitch_c19UpdateClsnTransformEv
 void daObjHatenaSwitch_c::UpdateClsnTransform() {
-    *(HatenaMatrixWords *)&mClsnMat = *(HatenaMatrixWords *)&mAnmModel.mat4x3;
+    *(Mtx43 *)&mClsnMat = *(Mtx43 *)&mAnmModel.mat4x3;
     mClsnMat.t.x = mPosX;
     mClsnMat.t.y = mPosY;
     mClsnMat.t.z = mPosZ;

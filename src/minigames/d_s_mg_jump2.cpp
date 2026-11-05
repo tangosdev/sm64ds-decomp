@@ -37,6 +37,7 @@ enum d_s_mg_jump2_AssetId {
 #include "decl_common.h"
 #include "Particle__System.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
 
 /* The list link at the head of each Jump2Popup. Its two methods link `this` into
  * and back out of the live list at sJump2PopupList. */
@@ -44,11 +45,6 @@ struct Jump2PopupLink {
     struct Jump2PopupLink *next;
     void Link();   /* push */
     void Unlink(); /* remove */
-};
-
-/* Whole-matrix copies go through this so they stay one block move. */
-struct M48 {
-    int w[12];
 };
 
 /* Three words as an array, not three ints: as separate members the copy
@@ -219,7 +215,9 @@ s32 dScMgJump2_c::InitResources() {
 
     if (mModel.SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-        *(struct M48 *)&mModel.mat4x3 = *(struct M48 *)&data_020a0e68;
+        /* Whole-matrix copies go through the flat Mtx43 so they stay one
+           block move; assigning Matrix4x3 grows .text by 0x40 bytes. */
+        *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         return 0;
     }
 
@@ -446,7 +444,7 @@ s32 dScMgJump2_c::Render() {
     Jump2Popup_DrawAll();
     Jump2_SetLights();
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0xffead000, -0xa0000);
-    *(struct M48 *)&mModel.mat4x3 = *(struct M48 *)&data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     scale = *(struct S3 *)&sJump2RenderScale;
 

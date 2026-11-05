@@ -35,7 +35,7 @@
  * Numbered names. mwccarm numbers its generated names from one counter that
  * every named parameter (prototypes included), local and temporary before a
  * definition advances. The array gMgBanners at the end of the file
- * gets __arraydtor$984 (and @985); symbols.txt names the thunk
+ * gets __arraydtor$1099 (and @1100); symbols.txt names the thunk
  * __arraydtor$954, and the manifest renames both onto their configured
  * names, so an edit here that moves the count re-keys those two rows. The
  * two function-local Vector2 statics (Banner_StartWaveBurst,
@@ -104,6 +104,8 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "nitro/gx/gxcommon.h"
+#include "MWCPlusLib.h"
+#include "dScMgBase_c.h"
 
 struct M { int _00, _01, _10, _11; };
 struct Pair { int a, b; };
@@ -112,23 +114,6 @@ struct PairW { int w0, w1; };
 struct S3 { int v[3]; };
 struct Entry { int id; int ptr; };
 struct EntryTable { Entry e[29]; };
-
-/* The minigame scene at gMgScene, seen through the one virtual
-   used here. Slot 26 is dScMgBase_c.h's GetDisplayMode; its scene
-   bodies return 0 (dScMgBase_c), 1 (dScMgSingle3DBase_c) or 2
-   (dScMgD3DBase_c), and this file only compares the result with 2. The
-   view keeps the name Obj, the spelling config/decl-agreement-baseline.json
-   records for this extern. */
-struct Obj {
-    virtual int v00(); virtual int v01(); virtual int v02(); virtual int v03();
-    virtual int v04(); virtual int v05(); virtual int v06(); virtual int v07();
-    virtual int v08(); virtual int v09(); virtual int v10(); virtual int v11();
-    virtual int v12(); virtual int v13(); virtual int v14(); virtual int v15();
-    virtual int v16(); virtual int v17(); virtual int v18(); virtual int v19();
-    virtual int v20(); virtual int v21(); virtual int v22(); virtual int v23();
-    virtual int v24(); virtual int v25();
-    virtual int GetDisplayMode();  /* slot 26 */
-};
 
 /* One of the three 0x134-byte records at gMgBanners: a graphic
    loaded from the file table and drawn as a list of OAM records. The class
@@ -153,7 +138,9 @@ struct MgBanner {
     s16 mGfxSlot;        /* 0x30 0..2, see sMgBannerGfxSlotUsed */
     s16 mArrived;        /* 0x32 set when mX reaches mTargetX
                             (Banner_UpdateSlideFromRight, Banner_UpdateSlideFromLeft) */
-    u8 mOam[0x100];      /* 0x34 8-byte OAM records; 0xffff at +6 ends the list */
+    u8 mOam[0x100];      /* 0x34 GXOamAttr records; the one whose attr3 is 0xffff is the
+                            last drawn. The squeeze and zoom draws read x, the 9-bit
+                            screen position, and fold values above 0x100 negative. */
     MgBanner();
     ~MgBanner() {}
 };
@@ -175,7 +162,7 @@ int RandomIntInternal(int *seed);
 void Mg_SpawnFx(int c, short a1, int *a2, int *r3, int *sp0);
 /* local extern: only sibling minigame scene headers declare it, and its
    named parameters hold the @NNN count noted above. */
-void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, void (*dtor)(void *));
+void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, dtor_t dtor);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
 void Mg_RenderSpriteOn(int a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
@@ -187,7 +174,6 @@ void Banner_StartWaveBurst(MgBanner *e);
 
 extern s16 data_02082214[];
 extern int data_0209e650;
-extern Obj *gMgScene;  /* local extern: through the Obj view above, the spelling the decl-agreement baseline records */
 extern S3 data_ov004_020bc27c;
 extern int sMgMsgGiveUpSprites;
 static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, (int)&sMgMsgGiveUpSprites}}};

@@ -71,6 +71,7 @@ enum daStar_c_AssetId {
 #include "daSoundObj_c.h"
 #include "dExtSimpleModel_c.h"
 #include "Sound.h"
+#include "private/mtx43.h"
 #include "cstd.h"
 #include "Event.h"
 #include "math/Approach.h"
@@ -78,11 +79,10 @@ enum daStar_c_AssetId {
 
 /* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
  * a local or a struct copy of either one adds cleanup code the cartridge does
- * not have; these same-layout PODs keep the bytes identical. */
+ * not have; these same-layout PODs keep the bytes identical. Whole matrices
+ * are copied through Mtx43. */
 struct Vec3 { int x, y, z; };          /* a Vector3's three Fix12 words */
 struct Vec1 { s32 a; };                /* one word, copied component by component */
-struct M48 { int w[12]; };             /* a Matrix4x3's twelve words, copied whole */
-typedef struct Mtx { int m[12]; } Mtx; /* IDENTITY_MATRIX4X3 */
 
 /* A state handler: data_ov002_021109d8 holds one pointer-to-member per
    daStar_c::State. */
@@ -145,8 +145,10 @@ extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
 extern void MulMat4x3Mat4x3(void* out, void* a, void* b);
 extern int *Vec3_LslInPlace(void *v, int sh);
-extern struct M48 data_020a0e68;
-extern Mtx IDENTITY_MATRIX4X3;
+/* local extern: math/MtxStack.h spells MulMat4x3Mat4x3 with const int *, as
+   its definition does, and this file passes it an Mtx43 and data_020a0e68. */
+extern Matrix4x3 data_020a0e68;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern int SurfaceInfo_TestFlag0x20(void* p);
@@ -676,7 +678,7 @@ int daStarBase_c::Behavior()
         mModel.mat4x3.t.z = mPosZ >> 3;
     }
     if (mBits.visible) {
-        *(Mtx *)&mShadowMtx = IDENTITY_MATRIX4X3;
+        *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&IDENTITY_MATRIX4X3;
         mShadowMtx.t.x = mPosX >> 3;
         mShadowMtx.t.y = mPosY >> 3;
         mShadowMtx.t.z = mPosZ >> 3;
@@ -2268,11 +2270,11 @@ void daStar_c::func_ov002_020e84ec() {
         Vec3_Asr(&v, &mPos, 3);
         Matrix4x3_FromTranslation(&mAnmModel1.mat4x3, v.x, v.y, v.z);
     } else if (mCarryMatrix != 0) {
-        /* M48 overlay: the class headers above switch Matrix4x3 to the
+        /* Mtx43 overlay: the class headers above switch Matrix4x3 to the
          * structured math/Matrix.h spelling, whose struct-copy codegen
-         * differs from the flat 12-word copy this shard proved. M48 is the
+         * differs from the flat 12-word copy this shard proved. Mtx43 is the
          * same 12 words; proven byte-identical in isolation. */
-        *(struct M48 *)&mAnmModel1.mat4x3 = *(struct M48 *)mCarryMatrix;
+        *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)mCarryMatrix;
     } else if (!mBits.noSpin) {
         ang = (s16 *)&mAngleY;
         t = *ang + 0xc00;
@@ -2288,7 +2290,7 @@ void daStar_c::func_ov002_020e84ec() {
         mAnmModel1.mat4x3.t.z = mPosZ >> 3;
     }
 
-    *(struct M48 *)&mAnmModel2.mat4x3 = *(struct M48 *)&mAnmModel1.mat4x3;
+    *(Mtx43 *)&mAnmModel2.mat4x3 = *(Mtx43 *)&mAnmModel1.mat4x3;
     func_ov002_020e8398();
 }
 
@@ -2331,7 +2333,7 @@ void daStar_c::func_ov002_020e8398() {
 
     t = delta + 0x28000;
 
-    *(Mtx *)&mShadowMtx = IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&IDENTITY_MATRIX4X3;
 
     mShadowMtx.tx = mPosX >> 3;
     mShadowMtx.ty = mPosY >> 3;
@@ -2353,7 +2355,7 @@ void daStar_c::func_ov002_020e8398() {
 extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
 void func_ov002_020e8244(void *out, daStar_c *b)
 {
-    struct M48 local;
+    Mtx43 local;
     Vec3 zero;
     zero.x = 0;
     zero.y = 0;
@@ -2366,11 +2368,11 @@ void func_ov002_020e8244(void *out, daStar_c *b)
     }
     Matrix4x3_FromTranslation(&data_020a0e68, b->mPosX, b->mPosY, b->mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngleY);
-    local = *(struct M48 *)b->mAnmModel1.data.transforms;
+    local = *(Mtx43 *)b->mAnmModel1.data.transforms;
     MulMat4x3Mat4x3(&local, &data_020a0e68, &data_020a0e68);
-    b->mCenterX = data_020a0e68.w[9];
-    b->mCenterY = data_020a0e68.w[10];
-    b->mCenterZ = data_020a0e68.w[11];
+    b->mCenterX = data_020a0e68.t.x;
+    b->mCenterY = data_020a0e68.t.y;
+    b->mCenterZ = data_020a0e68.t.z;
     SubVec3((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
     Vec3_LslInPlace((void *)&b->mCenterX, 3);
     AddVec3((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);

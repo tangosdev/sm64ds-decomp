@@ -46,6 +46,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "Sound.h"
+#include "math/MtxStack.h"
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
@@ -107,9 +108,6 @@ struct dExtSimpleModel_c { ~dExtSimpleModel_c(); };
 */
 
 extern "C" {
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
-extern Matrix4x3 data_020a0e68;
 extern void Trmp2Spinner_UpdateMatrix(char *c);
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern Trampoline2ModelFilePtr sTrmp2StarModelFile;

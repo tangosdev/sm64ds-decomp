@@ -3,10 +3,7 @@
  */
 
 #include "math/Matrix.h"
-
-extern void Matrix4x3_FromRotationY(struct Matrix4x3 *mF, s16 angY);
-/* local extern: MtxStack.h is C++ only; the helper definition takes words. */
-extern void MulMat4x3Mat4x3(const int *m1, const int *m0, int *mF);
+#include "math/MtxStack.h"
 
 void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, s16 angY)
 {

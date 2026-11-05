@@ -491,7 +491,6 @@ extern u16 data_ov002_02111188;
 /* The free functions this file defines, declared ahead of their first use
    (the ones decl_common.h and the block above already declare are not
    repeated). */
-struct Obj;
 struct ObjTeleport;
 extern "C" {
 int func_02029600(int x);
@@ -531,7 +530,7 @@ int StartWithFarCamera(void);
 unsigned char GetStarCameraSetting(int idx);
 int GetMinimapScale(int idx);
 void func_0202af80(int a, int b);
-int GetMinimapID(struct Obj *obj, int arg);
+int GetMinimapID(dActor_c *actor, int arg);
 void func_0202b044(int a, int b);
 void func_0202b060(int a, int b);
 struct ObjTeleport *GetTeleportDestObj(int i);
@@ -2774,7 +2773,7 @@ int func_02029600(int x) {
     int b = (int)(data_0209f2d8 == 2);
     if (b == 0) {
         unsigned char saved = *(u8 *)&data_ov002_02111148;
-        int r = GetMinimapID((Obj *)x, -1);
+        int r = GetMinimapID((dActor_c *)x, -1);
         if (r == saved)
             return 1;
     }
@@ -3651,17 +3650,10 @@ extern "C" void func_0202af80(int a, int b) {
 }
 
 // @symbol GetMinimapID
-/* The actor GetMinimapID places, with dActor_c's names: its height at
-   +0x60, its area at +0xcc. */
-struct Obj {
-    char pad0[0x60];
-    int mPosY; /* 0x60 */
-    char pad64[0xcc - 0x64];
-    s8 mAreaId; /* 0xcc */
-};
-
-extern "C" int GetMinimapID(struct Obj *obj, int arg) {
-    int idx = obj->mAreaId;
+/* The minimap for an actor: its area's height bands, read at the actor's
+   height, or the level's own map when the area has none. */
+extern "C" int GetMinimapID(dActor_c *actor, int arg) {
+    int idx = actor->mAreaId;
     char *g;
     int val;
     struct MinimapChangeNode *node;
@@ -3671,7 +3663,7 @@ extern "C" int GetMinimapID(struct Obj *obj, int arg) {
     if (g != 0) {
         node = (MinimapChangeNode *)((StageArea *)g)[idx].mBlockList;
         if (node != 0) {
-            val = obj->mPosY;
+            val = actor->mPosY;
             while (node != 0) {
                 int d = val - node->height;
                 if (d > 0) {

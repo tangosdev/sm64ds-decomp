@@ -33,8 +33,8 @@
  *   BCA_File * SetAnim takes.
  * - data_0209caa0 / data_0209f32c are the arm9 level-state words that
  *   carry the "has water" flag and the water height; neither is named yet.
- * - RawMatrix4x3 / RawVector3_16 are POD views whose aggregate copies
- *   keep the ROM's ldm/stm / halfword-move shapes.
+ * - Mtx43 / RawVector3_16 are POD views whose aggregate copies keep the
+ *   ROM's ldm/stm / halfword-move shapes.
  * - func_0203b9b4, Vec3_Sub and Vec3_Asr have no shared header, so they
  *   keep a local extern "C" block.
  */
@@ -57,6 +57,7 @@ enum d_a_fish_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "private/mtx43.h"
 
 struct daFishState {
     void (daFish_c::*func)();
@@ -112,12 +113,9 @@ enum {
 };
 
 /* Matrix4x3 contains a non-trivial Vector3 tail, whose generated assignment
- * schedules differently. This POD view preserves the ROM's three ldm/stm copies.
+ * schedules differently. Copying through Mtx43 preserves the ROM's three
+ * ldm/stm copies.
  */
-struct RawMatrix4x3 {
-    int words[12];
-};
-
 /* The same for the spawn rotation: C++'s memberwise Vector3_16 copy loads
  * each field sign-extended; the ROM moves three plain halfwords. */
 struct RawVector3_16 {
@@ -180,7 +178,7 @@ s32 daFish_c::Behavior() {
         Matrix4x3_FromTranslation(&data_020a0e68, shiftedPos.x, shiftedPos.y, shiftedPos.z);
         mAngleY = mPrevAngleY;
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-        *(RawMatrix4x3 *)&mAnmModel.mat4x3 = *(RawMatrix4x3 *)&data_020a0e68;
+        *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         mAnmModel.Advance();
     }
     return 1;

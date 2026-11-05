@@ -1,4 +1,4 @@
-typedef unsigned long __file_handle;
+#include "file_struc.h"
 
 /* MSL __close_console for the debug console: nothing to do, returns 0. It
    takes the standard close_proc handle and ignores it. It is the close_proc

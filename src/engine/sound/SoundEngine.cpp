@@ -26,6 +26,7 @@
 #include "cstd.h"
 #include "CP15.h"
 #include "nnsys/snd/player.h"
+#include "nitro/snd/alarm.h"
 
 namespace IRQ {
     /* Defined at 0x02059d1c/0x02059d30 (the IRQ TU); namespace-scope externs
@@ -367,8 +368,7 @@ extern void SND_SetChannelVolume(u32 chnBitMask, s32 volume, s32 chnDataShift);
 extern void SND_UnlockChannel(u32 chnBitMask, u32 flags);
 extern void SND_LockChannel(u32 chnBitMask, u32 flags);
 extern void SND_SetTrackMute(s32 player, u32 trackBitMask, int flag);
-extern void SND_SetupAlarm(s32 alarm, u32 tick, u32 period, void (*cb)(void *userData),
-                           void *userData);
+extern void SND_SetupAlarm(s32 alarm, u32 tick, u32 period, SNDAlarmCallback cb, void *userData);
 extern void SND_SetupCapture(s32 capture, s32 format, void *bufferPtr, u32 length, int loopFlag,
                              s32 in, s32 out);
 extern void SND_StopTimer(u32 chnBitMask, u32 capBitMask, u32 alarmBitMask, u32 flags);

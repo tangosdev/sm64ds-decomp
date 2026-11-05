@@ -78,6 +78,7 @@ enum daObjTatefuda_c_AssetId {
 #include "dCc_c.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "private/mtx43.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
@@ -85,9 +86,9 @@ enum daObjTatefuda_c_AssetId {
 /* shadow struct 'Vec3' */
 struct Vec3 { int x, y, z; };
 
-/* Array-backed view of Matrix4x3's 0x30 bytes. Copying this aggregate retains
- * the ROM block moves in C++ under 2004/b56. */
-struct RawMatrix4x3 { int m[12]; };
+/* The model-matrix copies go through Mtx43: copying that word union retains
+ * the ROM block moves in C++ under 2004/b56, where Matrix4x3's own assignment
+ * goes member by member. */
 
 /* Bare Vec3 is used for the locals and casts below; the struct form above
  * feeds the elaborated-type uses. */
@@ -1058,7 +1059,7 @@ void AttachToHolder(struct daObjTatefuda_c *self)
     ((int *)&v)[0] = 0;
     ((int *)&v)[1] = 0;
     ((int *)&v)[2] = 0;
-    *(struct RawMatrix4x3 *)&data_020a0e68 = *(struct RawMatrix4x3 *)&body->mat4x3;
+    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&body->mat4x3;
     MulMat4x3Mat4x3(&bones[14], &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.t.x;
     v.y = data_020a0e68.t.y;
@@ -1080,7 +1081,7 @@ void AttachToHolder(struct daObjTatefuda_c *self)
     self->mPosX = lo.x;
     self->mPosY = lo.y;
     self->mPosZ = lo.z;
-    *(struct RawMatrix4x3 *)&self->mModel.mat4x3 = *(struct RawMatrix4x3 *)&data_020a0e68;
+    *(Mtx43 *)&self->mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1101,7 +1102,7 @@ void RebuildModelMatrix(struct daObjTatefuda_c* self){
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
         self->mAngleX, self->mAngleY, self->mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    *(struct RawMatrix4x3 *)&self->mModel.mat4x3 = *(struct RawMatrix4x3 *)&data_020a0e68;
+    *(Mtx43 *)&self->mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 // @symbol _ZN15daObjTatefuda_c18UpdateShadowMatrixEv

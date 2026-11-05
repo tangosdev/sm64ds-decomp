@@ -3,10 +3,7 @@
  */
 
 #include "common.h"
-
-extern void Matrix4x3_FromTranslation(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-/* local extern: MtxStack.h is C++ only; the helper definition takes words. */
-extern void MulMat4x3Mat4x3(const int *m1, const int *m0, int *mF);
+#include "math/MtxStack.h"
 
 void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z)
 {

@@ -41,6 +41,7 @@
 #include "G2.h"
 #include "GX.h"
 #include "private/controller_input.h"
+#include "math/MtxStack.h"
 
 /* The cosine table lookup used by Render. */
 #define COS(a) data_02082214[((u16)(a) >> 4) * 2 + 1]
@@ -63,14 +64,11 @@ extern int data_0208ee44;
 extern PadData data_020a0e58[];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
 void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int, int);
-void Matrix4x3_FromTranslation(Matrix4x3 *, s32, s32, s32);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, s16);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, s32, s32, s32);
 extern s8 data_02092110;
 extern s16 data_02082214[];
 extern s32 data_020a0db0;
 extern u8 data_0209caa0[0x50];
-extern Matrix4x3 data_020a0e68;
 extern u8 data_02092128;
 extern signed char gNumLives[];
 extern u8 data_ov001_020ab938;

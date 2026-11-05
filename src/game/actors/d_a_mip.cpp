@@ -8,7 +8,7 @@
  * - g_profile_MIP stays outside this TU. The file handles, the eight
  *   state records, the carry offsets and the rabbit-count int are
  *   the folded sinit objects at the end of this file.
- * - Matrix copies use a local { s32 m[12] }. Matrix4x3 embeds
+ * - Matrix copies go through Mtx43. Matrix4x3 embeds
  *   Vector3, and a typed copy emits ~Vector3. StateFleeMain copies
  *   the player position through V3Blk for the same reason.
  *   TestWaterBelow's ground probe stays a stack buffer; clsnY is
@@ -50,6 +50,7 @@ enum daMip_c_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "LevelRng.h"
+#include "private/mtx43.h"
 
 namespace Sound {
 bool PlaySub(u32, u32, u32, int, bool);
@@ -1068,21 +1069,20 @@ int daMip_c::SetState(void *record)
 void daMip_c::UpdateMatrixAndShadow()
 {
     struct Vector3 { s32 x, y, z; };
-    struct Mtx43 { s32 m[12]; };
-    extern struct Mtx43 data_020a0e68;
+    extern Mtx43 data_020a0e68;
 
     char tmp[0x30];
     struct Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(struct Mtx43 *)&mAnmModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mAnmModel.mat4x3 = data_020a0e68;
     MulMat4x3Mat4x3(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
         (mPosY - 0xe000) >> 3,
         mPosZ >> 3);
-    *(struct Mtx43 *)mShadowMtx = data_020a0e68;
+    *(Mtx43 *)mShadowMtx = data_020a0e68;
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
@@ -1091,7 +1091,6 @@ void daMip_c::UpdateMatrixAndShadow()
    offsets at data_ov085_021306ec. Sliding and param1 == 2 pick the slot. */
 void daMip_c::UpdateCarriedMatrix()
 {
-    struct Mtx43 { s32 m[12]; };
     extern MipVec3 data_ov085_021306ec;
     extern int data_020a0e68[];
 
@@ -1108,9 +1107,9 @@ void daMip_c::UpdateCarriedMatrix()
         idx = (idx + 2) & 0xff;
     }
     res = UpdateCarry(*mTalkingPlayer, *(Vector3 *)((char *)&data_ov085_021306ec + idx * 0xc));
-    *(struct Mtx43 *)&mAnmModel.mat4x3 = *(struct Mtx43 *)res;
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)res;
     Matrix4x3_FromTranslation(data_020a0e68, mPosX >> 3, (mPosY - 0xc000) >> 3, mPosZ >> 3);
-    *(struct Mtx43 *)mShadowMtx = *(struct Mtx43 *)data_020a0e68;
+    *(Mtx43 *)mShadowMtx = *(Mtx43 *)data_020a0e68;
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
@@ -1121,7 +1120,6 @@ void daMip_c::UpdateCarriedMatrix()
    the same size and differs by 34 words. The overlay keeps the block move. */
 void daMip_c::UpdateMirrorShadow()
 {
-    struct Mtx43 { s32 m[12]; };
     struct Vector3_local { int x; int y; int z; };
     struct Obj {
         char pad5c[0x5c];
@@ -1130,9 +1128,9 @@ void daMip_c::UpdateMirrorShadow()
         int v64;
         char pad3c0[0x3c0 - 0x68];
         char shadowmodel[0x28];
-        struct Mtx43 mtx;
+        Mtx43 mtx;
     };
-    extern struct Mtx43 data_020a0e68;
+    extern Mtx43 data_020a0e68;
 
     struct Obj *c = (struct Obj *)this;
 
@@ -1233,15 +1231,14 @@ int daMip_c::Render()
 // @symbol _ZN7daMip_c17RenderMirrorImageEv
 /* Mirrored second copy. mat4x3.t is the translation. 0x421800 is
    (0x1086000 >> 3) << 1, so the subtract reflects X across
-   UpdateMirrorShadow's plane. The saved and restored matrix is a flat
-   { s32 m[12] } so the copy stays a block move. */
+   UpdateMirrorShadow's plane. The saved and restored matrix is an Mtx43
+   so the copy stays a block move. */
 void daMip_c::RenderMirrorImage()
 {
-    struct Mtx43 { s32 m[12]; };
     extern int data_020a0e68;
 
-    struct Mtx43 tmp;
-    tmp = *(struct Mtx43 *)&mAnmModel.mat4x3;
+    Mtx43 tmp;
+    tmp = *(Mtx43 *)&mAnmModel.mat4x3;
     mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
     MulMat3x3Mat3x3(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
@@ -1251,7 +1248,7 @@ void daMip_c::RenderMirrorImage()
     mAnmModel.ApplyOpacity(0xff, 0);
     func_02016b24(&mAnmModel, 0x80);
     func_02016acc(&mAnmModel, 0x40);
-    *(struct Mtx43 *)&mAnmModel.mat4x3 = tmp;
+    *(Mtx43 *)&mAnmModel.mat4x3 = tmp;
 }
 
 // @symbol _ZN7daMip_c8BehaviorEv

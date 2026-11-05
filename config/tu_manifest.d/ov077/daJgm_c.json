@@ -1329,44 +1329,44 @@
   "production_mode": "intact-object",
   "defined_symbol_renames": [
     {
-      "from": "@905",
+      "from": "@903",
       "to": "@959",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @905 after this TU's local matrix-copy twin was retired (#4570)"
+    },
+    {
+      "from": "@904",
+      "to": "@961",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @906 after this TU's local matrix-copy twin was retired (#4570)"
+    },
+    {
+      "from": "@905",
+      "to": "@739",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @907 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
       "from": "@906",
-      "to": "@961",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@740",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @908 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
       "from": "@907",
-      "to": "@739",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@945",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @909 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
       "from": "@908",
-      "to": "@740",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@965",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @910 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
       "from": "@909",
-      "to": "@945",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@947",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @911 after this TU's local matrix-copy twin was retired (#4570)"
     },
     {
       "from": "@910",
-      "to": "@965",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@911",
-      "to": "@947",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@912",
       "to": "@967",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @912 after this TU's local matrix-copy twin was retired (#4570)"
     }
   ]
 }

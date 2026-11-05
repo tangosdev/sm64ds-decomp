@@ -30,14 +30,13 @@
 // [fp,#0x40]: 9 pushed registers plus the 0x1c frame put the first stacked
 // argument exactly there.
 
+#include "MWCPlusLib.h"
+
 namespace Memory {
 void *operator_new2(unsigned int size);
 }
 
 extern "C" void func_0203cbc0(void *block);
-
-typedef void (*ctor_t)(void *);
-typedef void (*dtor_t)(void *);
 
 extern "C" void func_02073534(void *base, void *current, unsigned int size, dtor_t dtor);
 
