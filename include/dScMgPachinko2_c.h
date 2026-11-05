@@ -66,7 +66,7 @@ struct dScMgPachinko2_Paddle {
     s32 vx;         /* +0x08 */
     s32 vy;         /* +0x0c */
     s32 speed;      /* +0x10 */
-    u8 unk_14[0x8]; /* +0x14 -- Paddle_SpawnForLanes zeroes both words; nothing reads them */
+    s32 spawnClear[2]; /* +0x14 -- Paddle_SpawnForLanes zeroes both words; nothing reads them */
     s32 homeX;      /* +0x1c */
     s32 homeY;      /* +0x20 */
     s32 savedVx;    /* +0x24 */

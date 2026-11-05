@@ -1548,29 +1548,20 @@ void dScMgPachinko2_c::Paddle_UpdateAll() {
 }
 
 // @symbol _ZN16dScMgPachinko2_c20Paddle_SpawnForLanesEv
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgPachinko2_c::Paddle_SpawnForLanes() {
-    char *c = (char *)this;
     int n = sPachinko2PaddleCountPerLanes[mLaneConfig];
-    int i = 0;
-    if (n <= 0)
-        return;
-    do {
-        char *b = c + i * 0x40;
+    for (int i = 0; i < n; i++) {
         mPaddles[i].active = 1;
         mPaddles[i].state = 0;
         mPaddles[i].step = 0;
         mPaddles[i].timer = 0x20;
         mPaddles[i].sound = 0;
-        *(int *)(b + 0x5274) = 0;
-        *(int *)(b + 0x5278) = 0;
+        mPaddles[i].spawnClear[0] = 0;
+        mPaddles[i].spawnClear[1] = 0;
         mPaddles[i].hits = 0;
         mPaddles[i].flip = 0;
-        i++;
-    } while (i < n);
+    }
 }
-#pragma pop
 
 // @symbol _ZN16dScMgPachinko2_c15Paddle_ClearAllEv
 void dScMgPachinko2_c::Paddle_ClearAll() {
