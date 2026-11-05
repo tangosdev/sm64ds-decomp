@@ -5,7 +5,7 @@ This document describes this commit. The queue records its immutable output SHA.
 ## Identity and resumption
 
 - Issue URL, task ID, stage, session and harness: issue #4570; `issue-4570-koopa-homepos-vector-view-1105`; producer; `codex-koopa-homepos-vector-view-1105`; Codex.
-- Source branch and previous accepted input SHA: `audit/koopa-homepos-vector-view1105`; `c6bfb72fc09c4b14c2cb344b4f628f649148985e`.
+- Source branch and previous accepted input SHA: `refs/heads/audit/koopa-homepos-vector-view1105`; `c6bfb72fc09c4b14c2cb344b4f628f649148985e`.
 - Original source base SHA and installed workflow/tool SHA: `c6bfb72fc09c4b14c2cb344b4f628f649148985e` for both.
 - Separate evidence commits and required artifacts in this commit: none. Local build artifacts remain ignored under `build/`; ROM/compiler inputs are linked, not included.
 - Next action, responsible role and blockers: independent verifier accepts this exact commit and re-runs the focused TU and full stock ROM proof; source-quality review remains pending.
