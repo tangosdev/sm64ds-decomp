@@ -22,9 +22,11 @@ or unload during the run shows.
 
 DIR/coverage.tsv: one row per function that ran in any scene: module, addr,
 name, named, class (from the mangled name), size, thumb, one count column per
-scene, scenes_hit, states_hit. DIR/summary.json + summary.md: per scene, how
-many functions and unnamed func_ symbols ran; the unnamed ones that ran in only
-one scene, and in only one state.
+scene, scenes_hit, states_hit. DIR/summary.json: per scene, how many functions
+and unnamed func_ symbols ran; the unnamed ones that ran in only one scene, and
+in only one state; and the coverage gaps: every unnamed func_ in a module some
+scene watched that ran in no scene. DIR/summary.md is rendered from
+summary.json alone (`table` writes both; no count in it is typed by hand).
 """
 import argparse
 import json
@@ -187,12 +189,29 @@ def cmd_table(a):
     summ['only_one_state_unnamed'] = [
         {'state': r['states_hit'][0], 'module': r['module'], 'name': r['name'], 'counts': r['counts']}
         for r in order if is_func(r) and len(r['states_hit']) == 1 and len(states) > 1]
+    summ['gaps'] = coverage_gaps(tab, scenes, rows)
     with open(os.path.join(out, 'summary.json'), 'w', encoding='utf-8') as f:
         json.dump(summ, f, indent=1)
     md = _markdown(summ)
     with open(os.path.join(out, 'summary.md'), 'w', encoding='utf-8') as f:
         f.write(md)
     print(md)
+
+
+def coverage_gaps(tab, scenes, rows):
+    """Unnamed func_ in a module some scene watched (arm9, itcm, its resident
+    overlays) that ran in no scene: what these scenes cannot say anything about."""
+    watched = []
+    for m in ['arm9', 'itcm'] + ['ov%03d' % i for i in sorted({i for s in scenes for i in s['resident']})]:
+        if m in tab.mods and m not in watched:
+            watched.append(m)
+    by_mod, never = {}, []
+    for m in watched:
+        fs = [s for s in tab.functions(m) if s.name.startswith('func_')]
+        miss = [s for s in fs if (m, '%08x' % s.addr) not in rows]
+        by_mod[m] = {'func_': len(fs), 'ran': len(fs) - len(miss), 'never_ran': len(miss)}
+        never += [{'module': m, 'addr': '%08x' % s.addr, 'name': s.name, 'size': s.size} for s in miss]
+    return {'modules': watched, 'by_module': by_mod, 'never_ran': never}
 
 
 def _by_mod(rows):
@@ -230,6 +249,21 @@ def _markdown(s):
         L.append('- %s (%d): %s' % (sc, len(rs), ' '.join('%s:%s(%d)' % (r['module'], r['name'], r['count'])
                                                           for r in rs[:80]) + (' ...' if len(rs) > 80 else '')))
     L.append('')
+    g = s.get('gaps')
+    if g:
+        L += ['## Coverage gaps: unnamed func_ that ran in no scene (%d)' % len(g['never_ran']), '',
+              'Modules watched by at least one scene. These functions have no runtime evidence here.', '',
+              '| module | func_ | ran | never ran |', '|---|---|---|---|']
+        for m in g['modules']:
+            b = g['by_module'][m]
+            L.append('| %s | %d | %d | %d |' % (m, b['func_'], b['ran'], b['never_ran']))
+        L.append('')
+        by = {}
+        for r in g['never_ran']:
+            by.setdefault(r['module'], []).append(r['name'])
+        for m, ns in by.items():
+            L.append('- %s (%d): %s' % (m, len(ns), ' '.join(ns[:120]) + (' ...' if len(ns) > 120 else '')))
+        L.append('')
     return '\n'.join(L)
 
 
