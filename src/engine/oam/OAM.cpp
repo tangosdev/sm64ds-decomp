@@ -14,10 +14,9 @@
  *
  * Source order is ROM-ascending under `#pragma defer_codegen off` -- the
  * deferred default would read optimization pragmas last-wins at end of file
- * and these members need positional brackets: the 10-arg Render keeps its
- * opt_common_subs/opt_propagation/opt_loop_invariants offs, LoadAffineParams
- * keeps opt_common_subs off, and both brackets restore
- * `on` so the rest of the file gets defaults.
+ * and this member needs a positional bracket: the 10-arg Render keeps its
+ * opt_common_subs/opt_propagation/opt_loop_invariants offs, and the bracket
+ * restores `on` so the rest of the file gets defaults.
  *
  * Four local decompositions of the same 8-byte attribute entry survive
  * because each function's bit reads were matched against its own view:
@@ -128,7 +127,18 @@ void func_02020820(char *self, int *src, int arg2, int arg3, u8 arg5, u8 arg6)
 // @symbol _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2
 /* ROM ordinal 1 -- OAM::LoadAffineParams(OamAttr *, int *, Matrix2x2 *)
  * 0x02020884  size 0xe8 */
-#pragma opt_common_subs off
+
+/* Write a 2x2 matrix into the four consecutive entries an affine slot spans
+ * (attr3 of each, in 8.8 fixed point). Inline, not open-coded: the ROM
+ * re-reads mtx->m00 here instead of reusing the load the search made, which
+ * is what an inlined callee's fresh parameter does. */
+static inline void SetAffineParams(OamAttr *oam, const Matrix2x2 *mtx) {
+    oam[0].attr3 = mtx->m00 >> 4;
+    oam[1].attr3 = mtx->m01 >> 4;
+    oam[2].attr3 = mtx->m10 >> 4;
+    oam[3].attr3 = mtx->m11 >> 4;
+}
+
 int OAM::LoadAffineParams(OamAttr *oam, int *count, Matrix2x2 *mtx)
 {
     /* Find an existing affine slot holding this matrix, or append one, and
@@ -136,35 +146,25 @@ int OAM::LoadAffineParams(OamAttr *oam, int *count, Matrix2x2 *mtx)
      * four coefficients are interleaved across four CONSECUTIVE entries,
      * which is exactly why this function strides `i += 4` and touches only
      * attr3. */
-    int *m = (int *)mtx;
-    unsigned int k0 = (unsigned short)((unsigned int)m[0] >> 4);
-    unsigned int k1 = (unsigned short)((unsigned int)m[1] >> 4);
-    unsigned int k2 = (unsigned short)((unsigned int)m[2] >> 4);
-    unsigned int k3 = (unsigned short)((unsigned int)m[3] >> 4);
-    int n = *count;
+    u16 pa = mtx->m00 >> 4;
+    u16 pb = mtx->m01 >> 4;
+    u16 pc = mtx->m10 >> 4;
+    u16 pd = mtx->m11 >> 4;
     int i;
 
-    for (i = 0; i < n; i += 4) {
-        if (k0 == (oam + i)[0].attr3 && k1 == (oam + i)[1].attr3 && k2 == (oam + i)[2].attr3 &&
-            k3 == (oam + i)[3].attr3)
+    for (i = 0; i < *count; i += 4) {
+        if (pa == (oam + i)[0].attr3 && pb == (oam + i)[1].attr3 && pc == (oam + i)[2].attr3 &&
+            pd == (oam + i)[3].attr3)
             return i >> 2;
     }
-    if (n >= 0x80)
+    if (*count >= 0x80)
         return -1;
-    {
-        OamAttr *e = &oam[n];
-        e[0].attr3 = m[0] >> 4;
-        e[1].attr3 = m[1] >> 4;
-        e[2].attr3 = m[2] >> 4;
-        e[3].attr3 = m[3] >> 4;
-    }
-    {
-        int t = *count;
-        *count = t + 4;
-        return t >> 2;
-    }
+    SetAffineParams(&oam[*count], mtx);
+
+    int slot = *count >> 2;
+    *count += 4;
+    return slot;
 }
-#pragma opt_common_subs on
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN3OAM12GetObjHeightEii
@@ -209,7 +209,11 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
      *
      * The three pragma offs above are load-bearing: the scalar parameters
      * are used DIRECTLY, never copied into locals, which is what reproduces
-     * the ROM's prologue register-homing order. `attr_` is spelled OamAttr*
+     * the ROM's prologue register-homing order. Each one alone moves the
+     * size (0x680-0x698 against 0x690): the pragmas stay for CSE recompute,
+     * copy propagation and loop-invariant placement together, not for colour.
+     * The 0x100 / 0x300 / 0 constants the prologue spills are the compiler's
+     * own hoist of the bare literals below. `attr_` is spelled OamAttr*
      * for the call-site declarations; the body views it through OamAttrRaw. */
     struct OamAttrRaw *attr = (struct OamAttrRaw *)attr_;
     int priVal;
@@ -225,9 +229,6 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
     s64 tsx;
     s64 tsy;
     s64 tcx;
-    int c100;
-    int c300;
-    int zero;
     struct Matrix2x2 m;
     int y;
     int w;
@@ -249,9 +250,6 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
     sinIdx = ((u16)(s16)rotation >> 4) * 2;
     mtxIdx = (rotation >> 4) * 2;
     cosIdx = sinIdx + 1;
-    zero = 0;
-    c300 = 0x300;
-    c100 = 0x100;
 
     while (1) {
         if (*pCount >= 0x80)
@@ -264,79 +262,78 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
                 t -= 0x200;
             x = t;
             u = *(s8 *)attr;
+            w = GetObjWidth((int)((attr->a01 << 16) >> 30), (int)(attr->a01 >> 30));
             {
-            u32 a = attr->a01;
-            w = GetObjWidth((int)((a << 16) >> 30), (int)(a >> 30));
-            }
-        {
-        int h;
-        {
-            u32 a = attr->a01;
-            h = GetObjHeight((int)((a << 16) >> 30), (int)(a >> 30));
-        }
-        y = u;
+                int h;
+                h = GetObjHeight((int)((attr->a01 << 16) >> 30), (int)(attr->a01 >> 30));
+                y = u;
 
-        if (scaleX != 0x1000 || scaleY != 0x1000 || rotation != 0) {
-            x = (x + (w >> 1)) << 12;
-            y = (y + (h >> 1)) << 12;
-            halfW = w >> 1;
-            halfH = h >> 1;
-            if (scaleX != 0x1000)
-                x = cstd::fdiv(x, scaleX);
-            if (scaleY != 0x1000)
-                y = cstd::fdiv(y, scaleY);
-            if (rotation != 0) {
-                s16 s, c;
-                s = data_02082214[sinIdx];
-                c = data_02082214[cosIdx];
-                tcy = (s64)c * y;
-                tcx = (s64)c * x;
-                tsy = (s64)s * y;
-                tsx = (s64)s * x;
-                x = (((int)((tcx + 0x800) >> 12) - (int)((tsy + 0x800) >> 12)) >> 12) - halfW;
-                y = (((int)((tcy + 0x800) >> 12) + (int)((tsx + 0x800) >> 12)) >> 12) - halfH;
-            } else {
-                x = (x >> 12) - halfW;
-                y = (y >> 12) - halfH;
-            }
-            if (((attr->a01 << 22) >> 30) != 1) {
-                w <<= 1;
-                x -= halfW;
-                h <<= 1;
-                y -= halfH;
-            }
-        }
+                if (scaleX != 0x1000 || scaleY != 0x1000 || rotation != 0) {
+                    x = (x + (w >> 1)) << 12;
+                    y = (y + (h >> 1)) << 12;
+                    halfW = w >> 1;
+                    halfH = h >> 1;
+                    if (scaleX != 0x1000)
+                        x = cstd::fdiv(x, scaleX);
+                    if (scaleY != 0x1000)
+                        y = cstd::fdiv(y, scaleY);
+                    if (rotation != 0) {
+                        s16 s, c;
+                        s = data_02082214[sinIdx];
+                        c = data_02082214[cosIdx];
+                        tcy = (s64)c * y;
+                        tcx = (s64)c * x;
+                        tsy = (s64)s * y;
+                        tsx = (s64)s * x;
+                        x = (((int)((tcx + 0x800) >> 12) - (int)((tsy + 0x800) >> 12)) >> 12) -
+                            halfW;
+                        y = (((int)((tcy + 0x800) >> 12) + (int)((tsx + 0x800) >> 12)) >> 12) -
+                            halfH;
+                    } else {
+                        x = (x >> 12) - halfW;
+                        y = (y >> 12) - halfH;
+                    }
+                    if (((attr->a01 << 22) >> 30) != 1) {
+                        w <<= 1;
+                        x -= halfW;
+                        h <<= 1;
+                        y -= halfH;
+                    }
+                }
 
-        x += xOff;
-        y += yOff;
+                x += xOff;
+                y += yOff;
 
-        if (rotation != 0) {
-            if (w < h)
-                w = h;
-            if (x + w < 0 || x > 0x100) {
-                if (attr->a3 == 0xffff) return;
-                attr++;
-                continue;
+                if (rotation != 0) {
+                    if (w < h)
+                        w = h;
+                    if (x + w < 0 || x > 0x100) {
+                        if (attr->a3 == 0xffff)
+                            return;
+                        attr++;
+                        continue;
+                    }
+                    if (y + w < 0 || y > 0xc0) {
+                        if (attr->a3 == 0xffff)
+                            return;
+                        attr++;
+                        continue;
+                    }
+                } else {
+                    if (x + w < 0 || x > 0x100) {
+                        if (attr->a3 == 0xffff)
+                            return;
+                        attr++;
+                        continue;
+                    }
+                    if (y + h < 0 || y > 0xc0) {
+                        if (attr->a3 == 0xffff)
+                            return;
+                        attr++;
+                        continue;
+                    }
+                }
             }
-            if (y + w < 0 || y > 0xc0) {
-                if (attr->a3 == 0xffff) return;
-                attr++;
-                continue;
-            }
-        } else {
-            if (x + w < 0 || x > 0x100) {
-                if (attr->a3 == 0xffff) return;
-                attr++;
-                continue;
-            }
-            if (y + h < 0 || y > 0xc0) {
-                if (attr->a3 == 0xffff) return;
-                attr++;
-                continue;
-            }
-        }
-
-        }
         }
         if (palette == -1)
             palVal = (int)((*(u32 *)&attr->a2 << 16) >> 28);
@@ -377,10 +374,13 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
                     attr++;
                     continue;
                 }
-                ipVal = (((attr->a01 << 22) >> 30) == 1) ? *(int *)&c100 : *(int *)&c300;
+                if (((attr->a01 << 22) >> 30) == 1)
+                    ipVal = 0x100;
+                else
+                    ipVal = 0x300;
             } else {
                 ipVal = attr->a01 & 0x30000000;
-                aff = *(int *)&zero;
+                aff = 0;
             }
             {
                 u32 a23 = *(u32 *)&attr->a2;
