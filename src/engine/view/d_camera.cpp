@@ -134,8 +134,11 @@ extern int *Vec3_LslInPlace(int *v, int sh);
 extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
 extern void MulVec3Mat4x3(void *dst, const void *src, void *out);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
+/* local extern: including math/MtxStack.h renumbers this TU's function-local
+   statics (sScriptOps, sPrevTurnInput), whose numbered names symbols.txt
+   records, so its matrix routines stay declared here. */
 extern void Matrix4x3_FromRotationZ(void *m, int angle);
-extern void MulMat4x3Mat4x3(void *dst, const void *a, void *b);
+extern void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 extern void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
 
 /* A sibling inside this TU whose file-local decl spelling decl_common.h does
@@ -1513,8 +1516,7 @@ extern "C" {
    from it. */
 extern s32 ApproachAngle(s16 *cur, s32 target, s32 div, s32 band, s32 step);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-/* local extern: math/MtxStack.h's MulMat4x3Mat4x3 spelling conflicts with the
-   one Render calls. */
+/* local extern: math/MtxStack.h declares these; see the matrix helpers above. */
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short angle);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angle);

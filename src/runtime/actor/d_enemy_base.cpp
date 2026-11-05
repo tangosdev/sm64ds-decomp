@@ -829,7 +829,7 @@ extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
-extern char data_020a0e68;
+extern Matrix4x3 data_020a0e68;
 }
 
 // @symbol _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR14dExtAnmModel_cj

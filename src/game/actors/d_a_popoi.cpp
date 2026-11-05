@@ -113,7 +113,7 @@ extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
 extern int data_0209e650[];             /* RandomIntInternal state */
-extern char data_020a0e68[];            /* scratch Matrix4x3 */
+extern Matrix4x3 data_020a0e68;            /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
 /* Named local declarations preserve this TU's compiler-numbered @NNN symbols;
@@ -700,8 +700,8 @@ int daPopoi_c::func_ov077_02126300()
         start.z = mPosZ;
         start.y = y + 0x28000;
         dir.z = 0xc8000;
-        Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-        MulVec3Mat4x3(&dir, data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        MulVec3Mat4x3(&dir, &data_020a0e68, &out);
         {
             int sx = start.x;
             int ox = out.x;
@@ -728,9 +728,9 @@ int daPopoi_c::func_ov077_02126300()
         dir.x = 0;
         dir.y = 0;
         dir.z = 0x2c000;
-        Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, 0x3000);
-        MulVec3Mat4x3(&dir, data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x3000);
+        MulVec3Mat4x3(&dir, &data_020a0e68, &out);
         {
             int sx = start.x;
             int ox = out.x;

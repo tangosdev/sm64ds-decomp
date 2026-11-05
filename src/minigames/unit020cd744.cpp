@@ -849,7 +849,7 @@ namespace s020ce988 {
 extern "C" {
 void Matrix4x3_FromQuaternion(const void *q, struct Matrix4x3 *mF);
 void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
-void MulMat4x3Mat4x3(struct Matrix4x3 *a, struct Matrix4x3 *b, struct Matrix4x3 *out);
+void MulMat4x3Mat4x3(const struct Matrix4x3 *a, const struct Matrix4x3 *b, struct Matrix4x3 *out);
 }
 extern "C" {
 extern struct Matrix4x3 data_020a0e68;
@@ -1277,7 +1277,6 @@ typedef struct {
     s32 z;
 } Vec3;
 
-struct Matrix4x3;
 extern "C" struct Matrix4x3 data_020a0e68;
 extern "C" struct Matrix4x3 data_0209b3ec;
 extern "C" unsigned short sTrmpLineDiffuse[];
@@ -1286,7 +1285,8 @@ extern "C" int sTrmpLineTexCoords[];
 extern "C" void *sTrmpLineTexAddr;
 extern "C" void *sTrmpLinePlttAddr;
 extern "C" void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
-extern "C" void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
+extern "C" void MulMat4x3Mat4x3(const struct Matrix4x3 *a, const struct Matrix4x3 *b,
+                                struct Matrix4x3 *out);
 extern "C" void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *m, int x, int y, int z);
 extern "C" void func_020553a4(int *m);
 
@@ -1322,18 +1322,18 @@ static inline void G3_Vtx(s16 x, s16 y, s16 z) {
  * inside the write reorders the vertex loads. */
 extern "C" void TrmpLine_Draw(char *obj) {
     int i;
-    int m2[12];
-    int m1[12];
+    Matrix4x3 m2;
+    Matrix4x3 m1;
     Matrix4x3_FromTranslation(&data_020a0e68, TRMPLINE(obj)->mCenter.x, TRMPLINE(obj)->mCenter.y,
                               TRMPLINE(obj)->mCenter.z);
-    MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)&data_0209b3ec, m1);
+    MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &m1);
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, TRMPLINE(obj)->mScale.x, TRMPLINE(obj)->mScale.y,
                                   TRMPLINE(obj)->mScale.z);
-    MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)&data_0209b3ec, m2);
+    MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &m2);
     REG_MTX_MODE = 2;
-    func_020553a4(m1);
+    func_020553a4(m1.m);
     REG_MTX_MODE = 1;
-    func_020553a4(m2);
+    func_020553a4(m2.m);
     REG_MTX_SCALE = 0x100000;
     REG_MTX_SCALE = 0x100000;
     REG_MTX_SCALE = 0x100000;
