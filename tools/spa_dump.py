@@ -126,6 +126,14 @@ def decode_base(b, start):
         # func_0204a730: velocity *= (0x180 + byte) >> 9 every frame
         "drag": (0x180 + b[start + 0x32]) / 512.0,
         # func_0204d294 blends the color animation toward this RGB555 base color
+        # func_0204ae2c copies +0x14/+0x18/+0x1c to System +0x48/+0x4c/+0x50
+        # (callbackParam/Velocity/Scale in include/Particle__System.h).  The table's own
+        # code never reads them again, so their meaning belongs to the effect callbacks.
+        "callbackWords": [struct.unpack_from("<i", b, start + o)[0] for o in (0x14, 0x18, 0x1c)],
+        # Every draw routine ends with func_0204c24c(w>>24&3, w>>26&3) for w = +0x34, which
+        # loads the texture matrix scale (0x1000 << n).  The shift is proven; calling it a
+        # UV repeat scale is inferred.
+        "uvScaleShift": (b[start + 0x37] & 3, b[start + 0x37] >> 2 & 3),
         "baseColor": rgb(struct.unpack_from("<H", b, start + 0x12)[0]),
     }
 
@@ -270,6 +278,7 @@ def main():
             x["shape"], x["shapeName"], x["planeMode"], x["drawMode"], x["drawModeName"], x["radius"], *x["axis"]))
         print("lifetime %d  emitInterval %d  baseAlpha %d  baseColor %s" % (
             x["lifetime"], x["emitInterval"], x["baseAlpha"], x["baseColor"]))
+        print("callbackWords %s  uvScaleShift %s" % (x["callbackWords"], x["uvScaleShift"]))
         print("emissionCount %.1f  emitterLifetime %d%s  drag %.3f" % (
             x["emissionCount"], x["emitterLifetime"],
             " (forever)" if x["emitterLifetime"] == 0 else "", x["drag"]))
