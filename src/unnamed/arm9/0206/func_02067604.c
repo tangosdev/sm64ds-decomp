@@ -2,34 +2,6 @@
 extern int func_0206736c(unsigned int idx, unsigned int addr, unsigned int size);
 extern void *data_020a9db8;
 
-/* NitroSDK MbSegmentInfo: one row of a download file's segment table, as
- * func_020676e0 fills it (ARM9 static, ARM7 static, ROM header). */
-typedef struct MbSegmentInfo {
-    unsigned int recv_addr;  /* 0x00 -- where the child receives it: load_addr, or a
-                                staging buffer for an ARM7 segment */
-    unsigned int load_addr;  /* 0x04 -- where it finally runs */
-    unsigned int size;       /* 0x08 */
-    unsigned int target : 1; /* 0x0c -- set for the ARM7 segment */
-    unsigned int rsv : 31;
-} MbSegmentInfo;
-
-/* NitroSDK MbDownloadFileInfoHeader, the start of MbParentFile.mHeader
- * (func_020678a4 builds it). */
-typedef struct MbDownloadFileInfoHeader {
-    unsigned int arm9EntryAddr; /* 0x00 */
-    unsigned int arm7EntryAddr; /* 0x04 */
-    unsigned int padding;       /* 0x08 */
-    MbSegmentInfo seg[3];       /* 0x0c */
-} MbDownloadFileInfoHeader;
-
-/* NitroSDK MB_BlockInfoTable, MbParentFile.mBlockTable: each segment's byte
- * offset and first block number in the stream, and the total block count. */
-typedef struct MB_BlockInfoTable {
-    unsigned int seg_head_offset[3]; /* 0x00 */
-    unsigned short block_head[3];    /* 0x0c */
-    unsigned short block_num;        /* 0x12 */
-} MB_BlockInfoTable;
-
 /* NitroSDK MBi_MakeBlockInfoTable(table, mdfi): lay the three segments out as
  * consecutive mBlockSize-byte blocks, refusing a segment func_0206736c
  * (MBi_IsAbleToRecv) says the child cannot receive. */

@@ -46,16 +46,7 @@
 /* Profile actor ids (symbols/profile_reconstruction_registry.json). */
 enum { ACTOR_FL_KUZURE = 0x53, ACTOR_KM2_KUZURE = 0x8b, ACTOR_STAR = 0xb2 };
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-#ifndef SM64DS_PLATFORM_PC
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
-#endif
+#include "ResourceDescriptor.h"
 
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);

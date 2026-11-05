@@ -32,18 +32,9 @@ enum daObjFl_Koma_D_c_AssetId { ASSET_FL_KOMA_D_BMD = 0x05f5, ASSET_FL_KOMA_D_KC
 #include "daObjFl_Koma_D_c.h"
 #include "SharedFilePtr.h"
 
+#include "ResourceDescriptor.h"
+
 /* This descriptor matches the shared helpers in d_a_obj_kaitendai.cpp. */
-
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
-
 extern ResourceDescriptor data_ov022_02113da4;
 
 // @symbol _ZN16daObjFl_Koma_D_cD1Ev

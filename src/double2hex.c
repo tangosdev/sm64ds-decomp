@@ -5,6 +5,8 @@
  * which does %e/%f/%g. Returns a pointer to the first character, or NULL if the
  * requested precision would exceed 509 characters.
  */
+#include "Decimal.h"
+
 typedef struct {
     unsigned char justification_options;
     unsigned char sign_options;
@@ -17,12 +19,6 @@ typedef struct {
     int field_width;
     int precision;
 } print_format;
-
-typedef struct {
-    char style;
-    char unused;
-    short digits;
-} decform;
 
 typedef struct {
     unsigned char sgn;

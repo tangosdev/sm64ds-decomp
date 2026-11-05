@@ -18,12 +18,6 @@ typedef struct {
     int precision;
 } print_format;
 
-typedef struct {
-    char style;
-    char unused;
-    short digits;
-} decform;
-
 enum { only_minus = 0, sign_always = 1, space_holder = 2 };
 
 extern void __num2dec(decform *f, double x, Decimal *d);
