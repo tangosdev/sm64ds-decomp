@@ -17,18 +17,14 @@
  * in ROM order under
  * `#pragma defer_codegen off`; do not reorder.
  *
- * Each pragma bracket below carries the file-global pragma of the shard
- * that function came from; every bracket moves bytes, and they bind only
- * under defer_codegen off.
+ * SpawnBombs keeps the file-global pragmas of the shard it came from in a
+ * bracket; the bracket moves bytes, and binds only under defer_codegen off.
  */
 
-// leftovers: a few bomb fields are reached through a bomb pointer stepped
-// by i * 0x40 and cast back to the scene, ((dScMgBomroom_c *)bomb)->
-// mBombs[0].field, because indexing mBombs[i] directly changes the code:
-// OnBombExploded's pen, state and color (&mBombs[i].state is 4 bytes
-// shorter or 8 longer; .color and &mBombs[picked].pen swap registers),
-// CheckColorComplete's lineSlot and SpawnBombs' color (8 bytes longer each).
-// SpawnBombs also adds the offset of mBombs[0].active to this + j * 0x40.
+// leftovers: SpawnBombs reaches its bomb's color through a bomb pointer
+// stepped by j * 0x40 and cast back to the scene, ((dScMgBomroom_c *)
+// bomb)->mBombs[0].color, and adds the offset of mBombs[0].active to
+// this + j * 0x40.
 // CountSortedBombs bumps mLevel through a volatile store. Bomb_StateInPen
 // keeps the sine-table value as the first factor (inline reads flip smull
 // order).
@@ -633,37 +629,24 @@ void dScMgBomroom_c::CountSortedBombs() {
  * state 3 for 0x20 frames. Otherwise only the bombs of that pen's color and
  * the idle ones are. The first blast also records its pen in mBlastPen and
  * sets mSceneState to 3. */
-#pragma push
-#pragma opt_strength_reduction off
-
 void dScMgBomroom_c::OnBombExploded(int picked) {
-    char * raw = (char *)this;
     int i;
-    u8 *cur = &((dScMgBomroom_c *)(raw + picked * 0x40))->mBombs[0].pen;
     for (i = 0; i < 0x70; i++) {
-        char *bomb = raw + i * 0x40;
-        if (mBombs[i].active != 0) {
-            if (i != picked) {
-                u8 pen = *cur;
-                if (pen == 0) {
-                    u8 *state = &((dScMgBomroom_c *)bomb)->mBombs[0].state;
-                    if (*state != 5) {
-                        *state = 3;
-                        mBombs[i].marchDelay = 0x20;
-                    }
-                } else {
-                    u8 *state = &((dScMgBomroom_c *)bomb)->mBombs[0].state;
-                    if (*state == 5) {
-                        if (((dScMgBomroom_c *)bomb)->mBombs[0].color + 1 == pen) {
-                            *state = 3;
-                            mBombs[i].marchDelay = 0x20;
-                        }
-                    }
-                    if (*state <= 1) {
-                        *state = 3;
-                        mBombs[i].marchDelay = 0x20;
-                    }
-                }
+        if (mBombs[i].active == 0 || i == picked)
+            continue;
+        if (mBombs[picked].pen == 0) {
+            if (mBombs[i].state != 5) {
+                mBombs[i].state = 3;
+                mBombs[i].marchDelay = 0x20;
+            }
+        } else {
+            if (mBombs[i].state == 5 && mBombs[i].color + 1 == mBombs[picked].pen) {
+                mBombs[i].state = 3;
+                mBombs[i].marchDelay = 0x20;
+            }
+            if (mBombs[i].state <= 1) {
+                mBombs[i].state = 3;
+                mBombs[i].marchDelay = 0x20;
             }
         }
     }
@@ -674,8 +657,6 @@ void dScMgBomroom_c::OnBombExploded(int picked) {
     mSceneState = 3;
     mSubState = 0;
 }
-
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c12Bomb_AnimateEi
 /* Steps one bomb's animation: the frame advances when its counter
@@ -801,9 +782,6 @@ void dScMgBomroom_c::Bomb_CheckWrongPen(int index) {
 /* Picks up a bomb under the stylus: a touch within 12 units across and 15
  * down of it, while nothing is held (mHeldColor is 0xff). grabX/grabY keep the
  * stylus-minus-bomb offset. */
-#pragma push
-#pragma opt_propagation off
-
 
 typedef struct { u8 f0, f1, f2, f3; } Tab;
 // local extern: see above.
@@ -815,9 +793,8 @@ void dScMgBomroom_c::Bomb_CheckGrab(int index) {
     u8 touch = gActivePlayerSlot;
     int touching = 0;
     int dx, dy;
-    if (gTouchHeld[touch].f0 != 0) {
-        if (gTouchHeld[touch].f1 != 0) touching = 1;
-    }
+    if (gTouchHeld[touch].f0 != 0)
+        touching = gTouchHeld[touch].f1 != 0;
     if (touching == 0) return;
     if (mHeldColor != 0xff) return;
     dx = gTouchHeld[touch].f2 - (mBombs[index].x >> 0xc);
@@ -834,8 +811,6 @@ void dScMgBomroom_c::Bomb_CheckGrab(int index) {
     mBombs[index].overPen = 0;
     func_02012718((int)0x1d2, mBombs[index].x);
 }
-
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c14Bomb_PushApartEi
 
@@ -1022,19 +997,14 @@ void dScMgBomroom_c::DrawBombs() {
 
 
 // @symbol _ZN14dScMgBomroom_c18CheckColorCompleteEv
-#pragma push
-#pragma opt_strength_reduction off
 
 void dScMgBomroom_c::CheckColorComplete() {
-    void * raw = (void *)this;
-    unsigned char *bytes = (unsigned char *)raw;
     int ca = 0;
     int cb = 0;
     int cc = 0;
     int i;
 
     for (i = 0; i < 0x70; i++) {
-        unsigned char *bomb = bytes + i * 64;
         if (mBombs[i].active != 0) {
             if (mBlastPen == 1) {
                 if (mBombs[i].color != 0) {
@@ -1051,14 +1021,13 @@ void dScMgBomroom_c::CheckColorComplete() {
                 } else {
                     int v;
                     int q;
-                    unsigned char *d = &((dScMgBomroom_c *)bomb)->mBombs[0].lineSlot;
-                    *d = (unsigned char)cb;
+                    mBombs[i].lineSlot = (unsigned char)cb;
                     mBombs[i].substate = 3;
                     v = cb;
                     mBombs[i].marchDelay = (unsigned short)(cc * 8);
                     q = 0;
                     while (v >= 5) { v -= 5; q++; }
-                    *d = (unsigned char)(q * 10 + v + 5);
+                    mBombs[i].lineSlot = (unsigned char)(q * 10 + v + 5);
                     cb++;
                     cc++;
                 }
@@ -1079,8 +1048,6 @@ void dScMgBomroom_c::CheckColorComplete() {
     }
     TopDoor_Open();
 }
-
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c17BombMarch_LinedUpEv
 
