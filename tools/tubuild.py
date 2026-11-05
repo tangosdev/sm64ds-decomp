@@ -5221,6 +5221,7 @@ def cmd_linkcheck(args):
     cfg_root = scratch / "config" / "arm9"
     report = {"id": tu_id, "baseline": baseline, "partial": partial,
               "partitioned": partitioned, "module": module,
+              "noRom": bool(getattr(args, "no_rom", False)),
               "scratch": scratch.relative_to(REPO).as_posix(), "phases": {}}
     shared_bins_before = shared_build_bin_snapshot() if partitioned else {}
 
@@ -6366,6 +6367,8 @@ def cmd_linkcheck(args):
     _write_link_report(scratch, report)
     if partitioned:
         _record_partitioned(data, entry, report)
+    elif partial and _no_rom_leaves_manifest(report):
+        pass
     elif partial:
         p = report["partial"]
         _record_partial(data, entry, {
@@ -6539,9 +6542,31 @@ def _partition_attempt_record(report):
     }
 
 
+def _no_rom_leaves_manifest(report):
+    """True, after saying so, when this run must not touch the tracked manifest.
+
+    A `--no-rom` run stops before the ROM build, so it has no ROM phase, no ROM SHA-256
+    and no stock-ROM comparison. Those are exactly the fields an intact-object entry's
+    stored proof needs: rombuild.intact_tu_policies refuses an entry without them, and
+    every `tubuild linkcheck` validates every OTHER intact entry's proof that way before
+    it starts. So recording a `--no-rom` run on an intact TU replaced its full-ROM proof
+    with a weaker one, and the NEXT TU's linkcheck then aborted with "intact-object proof
+    has no full-ROM SHA-256" until someone re-ran the first TU's full linkcheck (PR
+    #4879). Nor can a `--no-rom` run earn anything: classify_link_result names it
+    `module-*`, which promotes no status, and notes/agent-partitioned-tu-workflow.md
+    already says it "cannot earn the strict status". It is a debugging run, and its whole
+    report is still written under the scratch tree."""
+    if not report.get("noRom"):
+        return False
+    print(f"manifest NOT updated: a --no-rom run has no full-ROM proof, and recording it "
+          f"would replace the entry's stored one. Full report: {report['scratch']}/"
+          f"linkcheck.json")
+    return True
+
+
 def _record_partitioned(data, entry, report):
     """Record an orthogonal attempt, preserving any earlier full-ROM proof."""
-    if entry is None:
+    if entry is None or _no_rom_leaves_manifest(report):
         return
     block = entry.setdefault("partitioned_link", {})
     attempt = _partition_attempt_record(report)
@@ -6567,8 +6592,9 @@ def _record_linkcheck(data, entry, report, baseline):
     """Record the run on the manifest entry. Promotes shadow->link-verified on a pass;
     NEVER downgrades an earned status on a failure -- a linkcheck failure says nothing
     about whether the text-only result still holds, and pilot #1's report predicted its
-    own linkcheck failure while its 7/7 text result stood."""
-    if baseline or entry is None:
+    own linkcheck failure while its 7/7 text result stood. A `--no-rom` run records
+    nothing at all: see _no_rom_leaves_manifest."""
+    if baseline or entry is None or _no_rom_leaves_manifest(report):
         return
     audit = report.get("objectAudit") or {}
     section_order = report.get("nontextSectionOrder") or {}
@@ -6897,7 +6923,9 @@ def main():
     p.add_argument("-j", "--jobs", type=int, default=RB.default_jobs())
     p.add_argument("--no-cache", action="store_true",
                    help="compile every enrolled file instead of reusing build/objcache hits")
-    p.add_argument("--no-rom", action="store_true", help="stop after the module comparison")
+    p.add_argument("--no-rom", action="store_true",
+                   help="stop after the module comparison; a debugging run, so it does "
+                        "not touch the tracked manifest (the stored full-ROM proof stays)")
     p.add_argument("--clean", action="store_true",
                    help="delete this TU's scratch tree before running")
     p.set_defaults(func=cmd_linkcheck)

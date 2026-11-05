@@ -1030,8 +1030,7 @@
       "to": "STB_GLOBAL",
       "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x021402f0, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
     }
-  ]
-,
+  ],
   "defined_symbol_renames": [
     {
       "from": "sAxis$658",

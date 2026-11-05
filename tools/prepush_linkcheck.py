@@ -41,10 +41,33 @@ function gets one verdict PER FUNCTION here -- the file cannot be waved through 
 NO-SYM just because its own name matches nothing. An unenrolled file still falls back to
 its filename, so nothing here changes for a source with no delinks.txt entry yet.
 
+WHERE THE TIME GOES, AND WHY IT IS IN-PROCESS NOW
+---------------------------------------------------
+This used to spawn `tools/linkcheck.py` once PER FUNCTION. Each of those processes
+paid interpreter and import start-up, rebuilt the symbol-name index, and -- the real
+cost -- recompiled the function's whole translation unit from scratch, because nothing
+outlives a process. A consolidated TU with 140 functions was compiled 140+ times. On a
+shared-header change that is ruinous: PR #4871's `decl_common.h` edit fans out to 129
+files / 3,644 functions, which ran at ~2 s a function, about two hours, and agents'
+30-minute caps killed it before it reached the TU the PR actually changed.
+
+So the same `linkcheck.linkcheck()` call now runs in-process, with one name index per
+process and `match.memoize_compiles()` on (this gate checks one tree that nothing edits
+underneath it, which is exactly the condition that memo needs), and the files are
+spread across a process pool: the per-function work after the compile is pure-Python
+ELF parsing, which threads would serialise on the GIL. WHAT is checked did not change.
+Every function still gets the identical `linkcheck(name, addr, size, module,
+name_index)` call the subprocess made, with the same one retry on ERROR.
+
+The files the diff names directly run first, and a header's fan-out runs after them.
+With `--time-budget`, a run that cannot finish stops at the budget, says exactly which
+files it did and did not reach, and exits 2: an incomplete run is never a pass.
+
 Usage:
   python tools/prepush_linkcheck.py --range origin/main..HEAD   # changed src + header consumers
   python tools/prepush_linkcheck.py --files src/a.c src/b.cpp
   python tools/prepush_linkcheck.py --range origin/main..HEAD --json report.json
+  python tools/prepush_linkcheck.py --range origin/main..HEAD -j 16 --time-budget 1500
 
 Install as a git hook (local, not committed):
   see tools/hooks/pre-push
@@ -55,6 +78,7 @@ import pathlib
 import subprocess
 import sys
 import tempfile
+import time
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
@@ -71,17 +95,45 @@ BLOCKING = {"WRONG", "NO-REPRO", "ERROR", "NO-COMPILE"}
 VERSION = "2004/b56"
 
 
-def _load_symbol(name):
-    """(module, addr, size) for a symbol, via the resolver stamp_provenance already uses."""
-    import importlib.util
+_SYMBOLS = None
 
-    spec = importlib.util.spec_from_file_location("_sp", REPO / "tools" / "stamp_provenance.py")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod.load_symbol(name)
+
+def _symbol_index():
+    """name -> (module, addr, size) for every function row, built ONCE per process.
+
+    The same walk as stamp_provenance.load_symbol: relocs.module_universe's files in its
+    order, stamp_provenance.FUNC_RE on each line, first hit wins. load_symbol re-reads
+    every symbols.txt on each lookup, and this gate used to re-execute the whole
+    stamp_provenance module on each lookup too."""
+    global _SYMBOLS
+    if _SYMBOLS is None:
+        import importlib.util
+        import relocs
+
+        spec = importlib.util.spec_from_file_location("_sp", REPO / "tools" / "stamp_provenance.py")
+        sp = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(sp)
+        index = {}
+        for path, module in relocs.module_universe(repo=sp.get_repo()):
+            for line in path.read_text(errors="ignore").splitlines():
+                m = sp.FUNC_RE.match(line)
+                if m:
+                    index.setdefault(m.group(1), (module, int(m.group(3), 16),
+                                                  int(m.group(2), 16)))
+        _SYMBOLS = index
+    return _SYMBOLS
+
+
+def _load_symbol(name):
+    """(module, addr, size) for a symbol, or None: stamp_provenance.load_symbol's answer."""
+    return _symbol_index().get(name)
 
 
 def changed_src_files(rev_range):
+    """Every source the range affects, with the files the diff names directly first.
+
+    The order is the point. A shared-header edit fans out to a hundred-odd consumers, and
+    a run that is cut short must already have checked the files the change is about."""
     out = subprocess.run(
         ["git", "diff", "--name-only", "--diff-filter=d", rev_range,
          "--", "src/", "include/"],
@@ -91,13 +143,19 @@ def changed_src_files(rev_range):
         return []
     changed = [f.strip() for f in out.stdout.splitlines() if f.strip()]
     expanded = A.affected_sources(changed)
+    named = set(changed)
+    direct = [f for f in expanded if f in named]
+    # Largest TUs first within the fan-out, so the pool does not finish on one 150-function
+    # straggler while every other worker sits idle.
+    fanout = sorted((f for f in expanded if f not in named),
+                    key=lambda f: -len(srcpath.symbols_for(f)))
     # Say so when headers pulled in files the diff never named. A silent expansion from 2
     # files to 300 reads as a hung gate; a silent expansion to 0 reads as "checked, clean".
     headers = [f for f in changed if f.endswith((".h", ".hpp"))]
     if headers:
         print(f"{len(headers)} changed header(s) fan out to {len(expanded)} source file(s) "
-              f"to verify", flush=True)
-    return expanded
+              f"to verify ({len(direct)} named by the diff, checked first)", flush=True)
+    return direct + fanout
 
 
 def is_draft(path):
@@ -107,26 +165,44 @@ def is_draft(path):
     return asm_policy.has_draft_banner(p.read_text(errors="ignore"))
 
 
+_NAME_INDEX = None
+
+
+def _linkcheck_setup():
+    """Per-process state for `_run_linkcheck`: the reloc-target name index, and compile
+    memoisation. The memo is safe here and not in tools that edit headers between
+    compiles (see match.memoize_compiles), because this gate checks one tree that nothing
+    edits underneath it. Idempotent: the serial path and every pool worker call it."""
+    global _NAME_INDEX
+    if _NAME_INDEX is None:
+        import match
+        import reloc_audit as RA
+
+        match.memoize_compiles()
+        _NAME_INDEX = RA.build_name_index()
+    return _NAME_INDEX
+
+
 def _run_linkcheck(module, name, addr, size):
-    """One linkcheck invocation -> (verdict, blind, diffs). verdict 'ERROR' if no JSON came back."""
-    proc = subprocess.run(
-        [sys.executable, str(REPO / "tools" / "linkcheck.py"),
-         "--module", module, "--name", name,
-         "--addr", hex(addr), "--size", hex(size)],
-        cwd=REPO, capture_output=True, text=True,
-    )
+    """One linkcheck -> (verdict, blind, diffs). verdict 'ERROR' if it raised.
+
+    In-process, but the same call `tools/linkcheck.py --module --name --addr --size`
+    makes: `linkcheck.linkcheck(name, addr, size, module, build_name_index())`, with no
+    candidate override. An exception is what used to surface as "no JSON on stdout", so
+    it keeps that ERROR verdict and the caller's one retry."""
+    import contextlib
+    import io
+
     try:
-        # Decode from the FIRST '{'. Taking the last one lands inside the "diffs" array on
-        # exactly the runs that matter - a WRONG verdict carries diff objects, so rfind hit a
-        # fragment, json.loads raised, and the verdict silently degraded to ERROR. ERROR was
-        # then only a warning, so the gate waved through the false matches it exists to stop.
-        start = proc.stdout.find("{")
-        if start != -1:
-            rec, _ = json.JSONDecoder().raw_decode(proc.stdout[start:])
-            return rec.get("verdict", "ERROR"), rec.get("blind", 0), rec.get("diffs", [])
-    except (ValueError, TypeError):
-        pass
-    return "ERROR", 0, []
+        import linkcheck as LC
+
+        # The subprocess's stdout was captured and only its JSON read; the compiler's
+        # "! compile failed" chatter must not land in this gate's report either.
+        with contextlib.redirect_stdout(io.StringIO()):
+            rec = LC.linkcheck(name, addr, size, module, _linkcheck_setup())
+        return rec.get("verdict", "ERROR"), rec.get("blind", 0), rec.get("diffs", [])
+    except Exception:  # noqa: BLE001 -- a crash is an ERROR verdict, never a pass
+        return "ERROR", 0, []
 
 
 def _compiles(path):
@@ -199,24 +275,95 @@ def verify(path):
     return rows
 
 
+def _verify_or_draft(path):
+    """verify(path), or None for a NONMATCHING draft. The unit of work a pool worker runs.
+
+    An exception is an ERROR row, which blocks: a file this gate could not check must not
+    read as a file that passed, and one bad file must not take the other results with it."""
+    try:
+        if is_draft(path):
+            return None
+        return verify(path)
+    except Exception as exc:  # noqa: BLE001
+        return [{"file": path, "name": pathlib.Path(path).name, "verdict": "ERROR",
+                 "note": f"{type(exc).__name__}: {exc}"}]
+
+
+def _worker_init():
+    sys.path.insert(0, str(REPO / "tools"))
+    _linkcheck_setup()
+    _symbol_index()
+
+
+def _default_jobs():
+    import os
+    return max(1, os.cpu_count() or 1)
+
+
+def _results_in_order(files, jobs, deadline):
+    """Yield (path, rows-or-None) in `files` order, stopping at `deadline` (monotonic).
+
+    The files are independent and the per-function work is CPU-bound Python, so they go
+    to a process pool; each worker keeps its own compile memo and indexes. Results are
+    still yielded, printed and reported in `files` order, so a -j16 log reads like -j1.
+    At the deadline the files already finished are yielded (out of order, when a longer
+    one ahead of them is still running), the pool is terminated, and the caller reports
+    what was not reached. The serial path checks the deadline between files."""
+    if jobs <= 1 or len(files) <= 1:
+        for f in files:
+            if deadline is not None and time.monotonic() >= deadline:
+                return
+            yield f, _verify_or_draft(f)
+        return
+    import multiprocessing as mp
+
+    pool = mp.get_context("spawn").Pool(min(jobs, len(files)), initializer=_worker_init)
+    try:
+        pending = [(f, pool.apply_async(_verify_or_draft, (f,))) for f in files]
+        for i, (f, res) in enumerate(pending):
+            timeout = None if deadline is None else max(0.0, deadline - time.monotonic())
+            try:
+                rows = res.get(timeout)
+            except mp.TimeoutError:
+                # Out of time. Whatever the workers already FINISHED is still a real
+                # result -- one long file early in the order must not discard the short
+                # ones behind it -- so hand those over before stopping.
+                for g, later in pending[i:]:
+                    if later.ready():
+                        yield g, later.get()
+                return
+            yield f, rows
+    finally:
+        pool.terminate()
+        pool.join()
+
+
 def main():
     ap = argparse.ArgumentParser(description="Link-verify matched src/ files before a push")
     ap.add_argument("--range", default="origin/main..HEAD", help="git rev range to inspect")
     ap.add_argument("--files", nargs="*", help="explicit file list (overrides --range)")
     ap.add_argument("--json", help="write a JSON report here")
+    ap.add_argument("-j", "--jobs", type=int, default=_default_jobs(),
+                    help="files to check at once (default: CPU count)")
+    ap.add_argument("--time-budget", type=float, default=None, metavar="SECONDS",
+                    help="stop after this long, report the coverage reached, and exit 2 "
+                         "(an incomplete run is not a pass). Set it below any outer "
+                         "timeout so the run reports instead of being killed.")
     args = ap.parse_args()
 
+    started = time.monotonic()
+    deadline = None if args.time_budget is None else started + args.time_budget
     files = args.files if args.files else changed_src_files(args.range)
     if not files:
         print("prepush-linkcheck: no matched src/ files in this push - nothing to verify")
         return 0
 
-    results, blocked, warned, drafts = [], [], [], []
-    for f in files:
-        if is_draft(f):
+    results, blocked, warned, drafts, done = [], [], [], [], []
+    for f, rows in _results_in_order(files, args.jobs, deadline):
+        done.append(f)
+        if rows is None:
             drafts.append(f)
             continue
-        rows = verify(f)
         if len(rows) > 1:
             print(f"  {f}  ({len(rows)} functions)")
         for r in rows:
@@ -227,16 +374,30 @@ def main():
                 warned.append(r)
             icon = "OK  " if r["verdict"] == "VERIFIED" else "FAIL" if r["verdict"] in BLOCKING else "WARN"
             name = f"  {r['name']}" if len(rows) > 1 else r["name"]
-            print(f"  [{icon}] {name:<44} {r['verdict']}")
+            print(f"  [{icon}] {name:<44} {r['verdict']}", flush=True)
 
+    reached = set(done)
+    unchecked = [f for f in files if f not in reached]
     if drafts:
         print(f"prepush-linkcheck: skipped {len(drafts)} NONMATCHING draft(s)")
     if args.json:
-        pathlib.Path(args.json).write_text(json.dumps(results, indent=1))
+        report = results + [{"file": f, "verdict": "UNCHECKED",
+                             "note": "time budget reached first"} for f in unchecked]
+        pathlib.Path(args.json).write_text(json.dumps(report, indent=1))
 
     ok = sum(1 for r in results if r["verdict"] == "VERIFIED")
+    elapsed = time.monotonic() - started
     print(f"prepush-linkcheck: {len(results)} checked - "
-          f"{ok} verified, {len(warned)} warning(s), {len(blocked)} blocking")
+          f"{ok} verified, {len(warned)} warning(s), {len(blocked)} blocking "
+          f"({len(done)}/{len(files)} files, {elapsed:.0f}s, -j{args.jobs})")
+    if unchecked:
+        print(f"\nprepush-linkcheck: INCOMPLETE - the {args.time_budget:g}s time budget ran "
+              f"out with {len(unchecked)} of {len(files)} file(s) not checked:",
+              file=sys.stderr)
+        for f in unchecked:
+            print(f"  {f}", file=sys.stderr)
+        print("Nothing above vouches for those files. Re-run with a larger budget, or "
+              "check them with --files.", file=sys.stderr)
     if blocked:
         print("\nPUSH BLOCKED - these do not reproduce the ROM:", file=sys.stderr)
         for r in blocked:
@@ -246,7 +407,7 @@ def main():
         print("Move it to nearmiss/db.jsonl (tools/nearmiss_db.py) or fix it, then push again.",
               file=sys.stderr)
         return 1
-    return 0
+    return 2 if unchecked else 0
 
 
 if __name__ == "__main__":

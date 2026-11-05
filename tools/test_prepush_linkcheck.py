@@ -213,7 +213,7 @@ class MainAggregation(unittest.TestCase):
     rows for one file. `verify` itself is mocked here -- these tests are about what
     `main` does with a multi-row result, not about the resolver again."""
 
-    def _run(self, file_rows, files):
+    def _run(self, file_rows, files, extra=()):
         """file_rows: {path: [row, ...]}. Runs main() with --files=files, --json to a
         temp path, monkeypatching verify/is_draft so nothing touches disk or a
         subprocess. Returns (exit_code, stdout_text, json_report)."""
@@ -226,7 +226,9 @@ class MainAggregation(unittest.TestCase):
             return file_rows[path]
 
         out_path = tempfile.mktemp(suffix=".json")
-        argv = ["prepush_linkcheck.py", "--files", *files, "--json", out_path]
+        # -j1: the mocks live in this process, and a pool worker would not see them.
+        argv = ["prepush_linkcheck.py", "--files", *files, "--json", out_path, "-j", "1",
+                *extra]
         buf = io.StringIO()
         with mock.patch.object(PL, "verify", side_effect=fake_verify), \
              mock.patch.object(PL, "is_draft", return_value=False), \
@@ -290,6 +292,87 @@ class MainAggregation(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(len(report), 3)
         self.assertEqual({r["name"] for r in report}, {"a", "b", "func_0205a61c"})
+
+    def test_a_run_cut_short_by_its_budget_names_what_it_missed_and_is_not_a_pass(self):
+        """A zero budget reaches nothing. That must read as INCOMPLETE with exit 2 and every
+        unchecked file listed, never as `0 checked, 0 blocking` with exit 0."""
+        rows = {"src/a.cpp": [{"file": "src/a.cpp", "name": "a", "verdict": "VERIFIED",
+                               "blind": 0, "diffs": []}]}
+        code, out, report = self._run(rows, ["src/a.cpp", "src/b.cpp"],
+                                      extra=["--time-budget", "0"])
+        self.assertEqual(code, 2)
+        self.assertIn("INCOMPLETE", out)
+        self.assertIn("src/b.cpp", out)
+        self.assertEqual([(r["file"], r["verdict"]) for r in report],
+                         [("src/a.cpp", "UNCHECKED"), ("src/b.cpp", "UNCHECKED")])
+
+    def test_a_blocking_verdict_still_wins_over_an_incomplete_run(self):
+        rows = {"src/a.cpp": [{"file": "src/a.cpp", "name": "a", "verdict": "WRONG",
+                               "blind": 0, "diffs": []}]}
+        ticks = iter([0.0, 0.0, 5.0, 5.0, 5.0, 5.0])
+        with mock.patch.object(PL.time, "monotonic", lambda: next(ticks, 5.0)):
+            code, out, _report = self._run(rows, ["src/a.cpp", "src/b.cpp"],
+                                           extra=["--time-budget", "1"])
+        self.assertEqual(code, 1)
+        self.assertIn("PUSH BLOCKED", out)
+        self.assertIn("INCOMPLETE", out)
+
+    def test_a_file_whose_verify_raises_is_an_error_row_not_a_crash(self):
+        with mock.patch.object(PL, "is_draft", return_value=False), \
+             mock.patch.object(PL, "verify", side_effect=RuntimeError("boom")):
+            rows = PL._verify_or_draft("src/a.cpp")
+        self.assertEqual([r["verdict"] for r in rows], ["ERROR"])
+        self.assertIn("ERROR", PL.BLOCKING)
+
+
+class Ordering(unittest.TestCase):
+    """The files the diff names run before a header's fan-out, so a run cut short has
+    already checked the change itself. PR #4871 lost exactly that: its TU sorted after
+    a hundred alphabetically earlier header consumers."""
+
+    def test_directly_changed_sources_come_before_the_header_fan_out(self):
+        diff = mock.Mock(returncode=0, stdout="include/decl_common.h\nsrc/z/changed.cpp\n")
+        expanded = ["src/a/small.cpp", "src/b/big.cpp", "src/z/changed.cpp"]
+        counts = {"src/a/small.cpp": 2, "src/b/big.cpp": 90, "src/z/changed.cpp": 1}
+        with mock.patch.object(PL.subprocess, "run", return_value=diff), \
+             mock.patch.object(PL.A, "affected_sources", return_value=expanded), \
+             mock.patch.object(PL.srcpath, "symbols_for", lambda f: ["x"] * counts[f]), \
+             mock.patch("sys.stdout", new_callable=lambda: __import__("io").StringIO()):
+            files = PL.changed_src_files("base..head")
+        # the diff's own file first, then the fan-out largest TU first
+        self.assertEqual(files, ["src/z/changed.cpp", "src/b/big.cpp", "src/a/small.cpp"])
+
+
+class InProcessLinkcheck(unittest.TestCase):
+    """`_run_linkcheck` no longer spawns a process, so a raised exception -- what used to
+    show up as "no JSON on stdout" -- has to become the same ERROR verdict, and the
+    symbol index has to answer what stamp_provenance.load_symbol answers."""
+
+    def test_an_exception_inside_linkcheck_is_an_error_verdict(self):
+        fake = mock.Mock()
+        fake.linkcheck.side_effect = RuntimeError("elftools blew up")
+        with mock.patch.dict(sys.modules, {"linkcheck": fake}), \
+             mock.patch.object(PL, "_linkcheck_setup", return_value={}):
+            self.assertEqual(PL._run_linkcheck("arm9", "f", 0x02000000, 4), ("ERROR", 0, []))
+
+    def test_the_verdict_fields_pass_through(self):
+        fake = mock.Mock()
+        fake.linkcheck.return_value = {"verdict": "WRONG", "blind": 1,
+                                       "diffs": [{"off": "+0x4"}]}
+        with mock.patch.dict(sys.modules, {"linkcheck": fake}), \
+             mock.patch.object(PL, "_linkcheck_setup", return_value={"n": 1}):
+            got = PL._run_linkcheck("ov002", "f", 0x02100000, 8)
+        self.assertEqual(got, ("WRONG", 1, [{"off": "+0x4"}]))
+        fake.linkcheck.assert_called_once_with("f", 0x02100000, 8, "ov002", {"n": 1})
+
+    def test_the_index_agrees_with_stamp_provenance_load_symbol(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "_sp_test", PL.REPO / "tools" / "stamp_provenance.py")
+        sp = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(sp)
+        for name in ("OSReadROMArea", "func_02031028", "func_0209aaaa_not_a_symbol"):
+            self.assertEqual(PL._load_symbol(name), sp.load_symbol(name), name)
 
 
 if __name__ == "__main__":
