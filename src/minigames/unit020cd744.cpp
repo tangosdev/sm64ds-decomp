@@ -665,7 +665,7 @@ extern int sTrmp2Score;
 
 extern "C" void TrmpItem_ReflectOffLine(char *a, void *o);
 extern "C" int TrmpItem_HitTest2D(char *a, void *o, int arg1);
-extern "C" void D3D_PlaySeAtX(int a, int b);
+extern "C" int D3D_PlaySeAtX(int a, int b);
 extern "C" void Trmp2Spinner_InitAll(int c);
 extern "C" void TrmpItem_ProjectToScreen(char *c, unsigned short arg1);
 
