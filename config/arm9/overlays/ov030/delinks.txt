@@ -18,6 +18,7 @@ src/game/actors/d_a_obj_hm_maruta.cpp:
     .init start:0x021148b8 end:0x02114924
     .ctor start:0x02114dd4 end:0x02114dd8
     .bss start:0x02115ca8 end:0x02115cd0
+    .data start:0x02115a04 end:0x02115a10
 
 src/game/actors/d_a_mky.cpp:
     complete
