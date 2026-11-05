@@ -1106,6 +1106,7 @@ void dScMgTeresa_c::TouchTestBoo(int idx)
 
 
 #pragma push
+/* Kept: the ROM recomputes idx * 0x24 for mHeading after reusing `off`; CSE folds them (true CSE recompute). */
 #pragma opt_common_subs off
 // @symbol _ZN13dScMgTeresa_c16CountRubbedTilesEi
 void dScMgTeresa_c::CountRubbedTiles(int idx)
@@ -1117,10 +1118,7 @@ void dScMgTeresa_c::CountRubbedTiles(int idx)
     int x;
     int *pA;
     int *pB;
-    char *tile;
-    int tidx;
     int *row;
-    int word;
     int off;
 
     off = idx * 0x24;
@@ -1131,13 +1129,8 @@ void dScMgTeresa_c::CountRubbedTiles(int idx)
         for (x = 0; x < 8; x++) {
             gx = x + ((*pA >> 12) - 4);
             gy = y + ((*pB >> 12) - 4);
-            tile = (char *)G2S::GetBG0CharPtr();
-            tidx = (gx >> 3) + ((gy >> 3) << 5);
-            row = (int *)(tile + (tidx << 5));
-            /* pin row complete before nibble extract */
-            row = (int *)((char *)row + (gy - gy));
-            word = row[gy & 7];
-            if (((word >> ((gx & 7) << 2)) & 0xf) == 0)
+            row = (int *)((char *)G2S::GetBG0CharPtr() + ((gx >> 3) + ((gy >> 3) << 5)) * 32);
+            if (((row[gy & 7] >> ((gx & 7) << 2)) & 0xf) == 0)
                 cnt++;
         }
     }
@@ -1759,6 +1752,8 @@ void dScMgTeresa_c::Scene_StateInit() {
 }
 
 #pragma push
+/* Kept: with loop invariants hoisted, the constants spill, the stack frame
+ * grows and buf moves to another slot. */
 #pragma opt_loop_invariants off
 // @symbol _ZN13dScMgTeresa_c11PaintSquareEiiii
 /* dScMgTeresa_c::PaintSquare - slot 34, a STIPPLED brush.

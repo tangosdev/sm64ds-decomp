@@ -7,7 +7,7 @@
  *
  * leftovers:
  * - DrawCards, RoundWaitDeal, RoundReadyCards, RoundHideCards,
- *   RoundShowCards, ResultFinish, ResetGame and InitPlayers step char* by
+ *   RoundShowCards, ResetGame and InitPlayers step char* by
  *   0x18 or 0x14 from this. A card or player pointer changes those loops.
  * - CardFlyAway keeps FlyAwaySceneView. Direct mCards access misses.
  * - CheckFinished reads mCredits and mHudScore through inline_fn(&member);
@@ -548,29 +548,17 @@ void dScMgMemory2_c::CardMove(int cardIndex) {
     *&mCards[cardIndex].state = CARD_IDLE;
 }
 
-#pragma push
-#pragma opt_loop_invariants off
 void dScMgMemory2_c::ResultFinish() {
-    char *raw = (char *)this;
-    int rowIndex;
-    int lastActiveCard;
-    int column;
-    int rowWidth;
-    int playerSlot;
-    int touchPressed;
-    unsigned short *timer;
-
     UpdateCards();
     UpdateCursor();
 
     if (mCardTimer != 0) {
-        timer = &mCardTimer;
-        *timer = *timer - 1;
+        mCardTimer--;
         return;
     }
 
-    touchPressed = 0;
-    playerSlot = gActivePlayerSlot;
+    int touchPressed = 0;
+    int playerSlot = gActivePlayerSlot;
     if (gTouchHeld[playerSlot * 4] != 0) {
         if (gTouchEdge[playerSlot * 4] != 0) {
             touchPressed = 1;
@@ -583,14 +571,11 @@ void dScMgMemory2_c::ResultFinish() {
     func_02012790(0x62);
 
     if (mCredits == 0) {
-        for (rowIndex = 0; rowIndex < sMemory2ResultRowsPerDifficulty[mDifficulty]; rowIndex++) {
-            lastActiveCard = 0xff;
-            column = 0;
-            rowWidth = sMemory2ResultColsPerDifficulty[mDifficulty];
-            for (; column < sMemory2ResultColsPerDifficulty[mDifficulty]; column++) {
-                if (mCards[rowIndex * rowWidth + column].active != 0) {
-                    lastActiveCard = column;
-                    lastActiveCard = lastActiveCard + rowIndex * rowWidth;
+        for (int row = 0; row < sMemory2ResultRowsPerDifficulty[mDifficulty]; row++) {
+            int lastActiveCard = 0xff;
+            for (int column = 0; column < sMemory2ResultColsPerDifficulty[mDifficulty]; column++) {
+                if (mCards[row * sMemory2ResultColsPerDifficulty[mDifficulty] + column].active) {
+                    lastActiveCard = column + row * sMemory2ResultColsPerDifficulty[mDifficulty];
                 }
             }
             if (lastActiveCard != 0xff) {
@@ -603,7 +588,6 @@ void dScMgMemory2_c::ResultFinish() {
     HideCursor();
     mState = STATE_EXIT;
 }
-#pragma pop
 
 void dScMgMemory2_c::ResultTurnCards() {
     if (mCardTimer) {
