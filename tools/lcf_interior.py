@@ -14,13 +14,12 @@ relocation against that name, and the link aborts `Undefined`, because the
 range is source-built and no gap object defines the rows inside it any more.
 
 `patch` closes that gap with absolute definitions: for every function row
-of a fixed-address module that lies strictly inside a `complete` delinks
-range and that no object handed to the link defines, it adds
-`name = 0x<addr>;` to the linker command file, inside that module's output
-section. This covers arm9, itcm, dtcm and every overlay: they all have a
-fixed virtual address, so the address in symbols.txt is the address the
-linked code is at. For the fixed modules, a second spelling at a complete
-range's start is handled the same way when the link imports it.
+of a fixed-address module (arm9, itcm, dtcm) that lies strictly inside a
+`complete` delinks range and that no object handed to the link defines, it
+adds `name = 0x<addr>;` to the linker command file, inside that module's
+output section. Those modules never move, so the address in
+symbols.txt is the address the linked code is at. Overlay code entry points are
+left alone.
 
 The output section matters to `dsd check symbols`, which reads the linked ELF
 and looks for a row in its own module's section. An assignment at the top of
@@ -202,21 +201,6 @@ def _module_dir(config_root, module):
     return config_root if module == "arm9" else config_root / module
 
 
-def _code_modules(config_root):
-    """Every fixed-address code module: the fixed modules plus the overlays."""
-    yield from FIXED
-    overlays = pathlib.Path(config_root) / "overlays"
-    if not overlays.is_dir():
-        return
-    for child in sorted(overlays.iterdir()):
-        if child.is_dir():
-            yield f"overlays/{child.name}"
-
-
-def _output_section(module):
-    return pathlib.PurePosixPath(module).name if module != "." else "arm9"
-
-
 def _complete_ranges(delinks_path, pattern):
     """Ranges selected from complete source entries, excluding module headers."""
     out, body, complete = [], [], False
@@ -337,7 +321,7 @@ def interior_rows(config_root):
 def _interior_rows(config_root):
     config_root = pathlib.Path(config_root)
     rows = []
-    for module in _code_modules(config_root):
+    for module in FIXED:
         d = _module_dir(config_root, module)
         syms, dl = d / "symbols.txt", d / "delinks.txt"
         if not (syms.is_file() and dl.is_file()):
@@ -709,11 +693,10 @@ def patch(lcf_path, objects_txt, config_root, *, initialized_prefixes=()):
     # Each insert goes first in its section, so reversed order reads ascending.
     for name, address, module in reversed(missing):
         if module is not None:
-            text = _define_in_section(text, nl, _output_section(module), name,
-                                      address, "interior row")
+            text = _define_in_section(text, nl, module, name, address, "interior row")
     missing = [(n, a) for n, a, _module in missing]
     for name, address, _owner, _offset, module in aliases:
-        section = _output_section(module)
+        section = pathlib.PurePosixPath(module).name if module != "." else "arm9"
         # mwldarm evaluates `object + offset` here before relocating the
         # object and would retain only the offset. A canonical value INSIDE
         # the output module preserves both the address and ELF section identity.

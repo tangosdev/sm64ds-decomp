@@ -165,24 +165,6 @@ class LcfInteriorTests(unittest.TestCase):
                          "        _deq = 0x01ff9d40;\n"
                          "    } > itcm\n}\n")
 
-    def test_patch_defines_an_overlay_interior_row_in_the_overlay_section(self):
-        overlay = self.root / "config" / "overlays" / "ov002"
-        overlay.mkdir(parents=True)
-        (overlay / "symbols.txt").write_text(
-            "func_ov002_020c0000 kind:function(arm,size=0x4) addr:0x020c0000\n"
-            "func_ov002_020c0004 kind:function(arm,size=0x4) addr:0x020c0004\n")
-        (overlay / "delinks.txt").write_text(
-            "src/unnamed/ov002/func_ov002_020c0000.cpp:\n"
-            "    complete\n"
-            "    .text start:0x020c0000 end:0x020c0008\n")
-        lcf, objects_txt = self._link(_elf(defined=["func_ov002_020c0000"]))
-        lcf.write_text(LCF.replace("    } > itcm\n",
-                                   "    } > itcm\n    .ov002 : {\n    }\n"))
-        added = LI.patch(lcf, objects_txt, self.root / "config")
-        self.assertIn(("func_ov002_020c0004", 0x020c0004), added)
-        self.assertIn("    .ov002 : {\n        func_ov002_020c0004 = 0x020c0004;\n",
-                      lcf.read_text())
-
     def test_patch_refuses_an_lcf_without_the_module_section(self):
         lcf, objects_txt = self._link(_elf(imported=["func_01ff98f4"]))
         lcf.write_text("SECTIONS {\n    .text : {}\n}\n")

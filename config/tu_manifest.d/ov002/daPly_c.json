@@ -4412,25 +4412,25 @@
   ],
   "data": [
     {
-      "symbol": "data_ov002_0210a354",
+      "symbol": "@10000",
       "address": "0x0210a354",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c21St_StuckInGround_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c21St_StuckInGround_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a35c",
+      "symbol": "@10001",
       "address": "0x0210a35c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c12St_Land_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c12St_Land_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a364",
+      "symbol": "@10002",
       "address": "0x0210a364",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c12St_Talk_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c12St_Talk_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
       "symbol": "data_ov002_0210a36c",
@@ -4440,95 +4440,95 @@
       "evidence": "daPly_func_ov002_020bccfc as a three-argument script command; code word plus zero PMF adjustment."
     },
     {
-      "symbol": "data_ov002_0210a374",
+      "symbol": "@10003",
       "address": "0x0210a374",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c12St_Talk_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c12St_Talk_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a37c",
+      "symbol": "@10004",
       "address": "0x0210a37c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c12St_Spin_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c12St_Spin_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a384",
+      "symbol": "@10005",
       "address": "0x0210a384",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c15St_Spin_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c15St_Spin_CleanupEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a38c",
+      "symbol": "@10006",
       "address": "0x0210a38c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c22St_CrazedCrate_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c22St_CrazedCrate_CleanupEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a394",
+      "symbol": "@10007",
       "address": "0x0210a394",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c21St_WaitQuicksand_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c21St_WaitQuicksand_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a39c",
+      "symbol": "@10008",
       "address": "0x0210a39c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c13St_Climb_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c13St_Climb_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a3a4",
+      "symbol": "@10009",
       "address": "0x0210a3a4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c13St_Climb_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c13St_Climb_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a3ac",
+      "symbol": "@10010",
       "address": "0x0210a3ac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020c71e0Ev as a void state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020c71e0Ev as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a3b4",
+      "symbol": "@10011",
       "address": "0x0210a3b4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c16St_WallJump_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c16St_WallJump_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a3bc",
+      "symbol": "@10012",
       "address": "0x0210a3bc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c16St_Climb_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c16St_Climb_CleanupEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a3c4",
+      "symbol": "@10013",
       "address": "0x0210a3c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020bcd38EPhii as a three-argument script command; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020bcd38EPhii as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a3cc",
+      "symbol": "@10014",
       "address": "0x0210a3cc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c17St_SweepKick_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c17St_SweepKick_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a3d4",
+      "symbol": "@10015",
       "address": "0x0210a3d4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c17St_Headstand_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c17St_Headstand_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
       "symbol": "data_ov002_0210a3dc",
@@ -4538,60 +4538,60 @@
       "evidence": "one-step animation script {SetAnim id 1, argument 0}; no relocation."
     },
     {
-      "symbol": "data_ov002_0210a3e4",
+      "symbol": "@10016",
       "address": "0x0210a3e4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c16St_Climb_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c16St_Climb_CleanupEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a3ec",
+      "symbol": "@10017",
       "address": "0x0210a3ec",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c16St_WallJump_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c16St_WallJump_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a3f4",
+      "symbol": "@10018",
       "address": "0x0210a3f4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020c6fe4Ev as a void state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020c6fe4Ev as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a3fc",
+      "symbol": "@10019",
       "address": "0x0210a3fc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020bd20cEPhii as a three-argument script command; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020bd20cEPhii as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a404",
+      "symbol": "@10020",
       "address": "0x0210a404",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020c70acEv as a void state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020c70acEv as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a40c",
+      "symbol": "@10021",
       "address": "0x0210a40c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020bd3a0EPhii as a three-argument script command; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020bd3a0EPhii as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a414",
+      "symbol": "@10022",
       "address": "0x0210a414",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c22St_SwingPlayer_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c22St_SwingPlayer_CleanupEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a41c",
+      "symbol": "@10023",
       "address": "0x0210a41c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c17St_LedgeHang_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c17St_LedgeHang_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
       "symbol": "data_ov002_0210a424",
@@ -4601,11 +4601,11 @@
       "evidence": "two animation ids indexed by mStateStep in St_DeadHit_Init; no relocation."
     },
     {
-      "symbol": "data_ov002_0210a42c",
+      "symbol": "@10024",
       "address": "0x0210a42c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c17St_WaterJump_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c17St_WaterJump_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
       "symbol": "data_ov002_0210a434",
@@ -4615,32 +4615,32 @@
       "evidence": "one-step animation script {SetAnim id 188, argument 0}; no relocation."
     },
     {
-      "symbol": "data_ov002_0210a43c",
+      "symbol": "@10025",
       "address": "0x0210a43c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c17St_LedgeGrab_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c17St_LedgeGrab_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a444",
+      "symbol": "@10026",
       "address": "0x0210a444",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c17St_LedgeGrab_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c17St_LedgeGrab_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a44c",
+      "symbol": "@10027",
       "address": "0x0210a44c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020bd250EPhii as a three-argument script command; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020bd250EPhii as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a454",
+      "symbol": "@10028",
       "address": "0x0210a454",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c20St_CeilingGrate_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c20St_CeilingGrate_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
       "symbol": "data_ov002_0210a45c",
@@ -4650,25 +4650,25 @@
       "evidence": "func_ov002_020e1c20 as a void state handler; code word plus zero PMF adjustment."
     },
     {
-      "symbol": "data_ov002_0210a464",
+      "symbol": "@10029",
       "address": "0x0210a464",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c20St_CeilingGrate_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c20St_CeilingGrate_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a46c",
+      "symbol": "@10030",
       "address": "0x0210a46c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020c7350Ev as a void state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020c7350Ev as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a474",
+      "symbol": "@10031",
       "address": "0x0210a474",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020bd354EPhii as a three-argument script command; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020bd354EPhii as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
       "symbol": "data_ov002_0210a47c",
@@ -4678,53 +4678,53 @@
       "evidence": "func_ov002_020e1e70 as a void state handler; code word plus zero PMF adjustment."
     },
     {
-      "symbol": "data_ov002_0210a484",
+      "symbol": "@10032",
       "address": "0x0210a484",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c21St_YoshiPower_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c21St_YoshiPower_CleanupEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a48c",
+      "symbol": "@10033",
       "address": "0x0210a48c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020c75f0Ev as a void state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020c75f0Ev as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a494",
+      "symbol": "@10034",
       "address": "0x0210a494",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19St_SwingPlayer_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19St_SwingPlayer_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a49c",
+      "symbol": "@10035",
       "address": "0x0210a49c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c17St_SlideKick_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c17St_SlideKick_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a4a4",
+      "symbol": "@10036",
       "address": "0x0210a4a4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c20St_InYoshiMouth_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c20St_InYoshiMouth_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a4ac",
+      "symbol": "@10037",
       "address": "0x0210a4ac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c20St_InYoshiMouth_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c20St_InYoshiMouth_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a4b4",
+      "symbol": "@10038",
       "address": "0x0210a4b4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19St_SwingPlayer_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19St_SwingPlayer_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
       "symbol": "data_ov002_0210a4bc",
@@ -4734,130 +4734,130 @@
       "evidence": "one-step animation script {SetAnim id 191, argument 0}; no relocation."
     },
     {
-      "symbol": "data_ov002_0210a4c4",
+      "symbol": "@10039",
       "address": "0x0210a4c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c25St_GrabBowserTail_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c25St_GrabBowserTail_CleanupEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a4cc",
+      "symbol": "@10040",
       "address": "0x0210a4cc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c22St_GrabBowserTail_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c22St_GrabBowserTail_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a4d4",
+      "symbol": "@10041",
       "address": "0x0210a4d4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c22St_GrabBowserTail_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c22St_GrabBowserTail_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a4dc",
+      "symbol": "@10042",
       "address": "0x0210a4dc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c15St_DeadPit_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c15St_DeadPit_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a4e4",
+      "symbol": "@10043",
       "address": "0x0210a4e4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c20St_StomachSlide_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c20St_StomachSlide_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a4ec",
+      "symbol": "@10044",
       "address": "0x0210a4ec",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c12St_Dive_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c12St_Dive_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a4f4",
+      "symbol": "@10045",
       "address": "0x0210a4f4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c22St_GroundPound_CleanupEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c22St_GroundPound_CleanupEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a4fc",
+      "symbol": "@10046",
       "address": "0x0210a4fc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19St_GroundPound_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19St_GroundPound_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a504",
+      "symbol": "@10047",
       "address": "0x0210a504",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19St_GroundPound_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19St_GroundPound_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a50c",
+      "symbol": "@10048",
       "address": "0x0210a50c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c17St_PunchKick_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c17St_PunchKick_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a514",
+      "symbol": "@10049",
       "address": "0x0210a514",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c17St_PunchKick_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c17St_PunchKick_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a51c",
+      "symbol": "@10050",
       "address": "0x0210a51c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c17St_EndingFly_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c17St_EndingFly_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a524",
+      "symbol": "@10051",
       "address": "0x0210a524",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c16St_LongJump_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c16St_LongJump_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a52c",
+      "symbol": "@10052",
       "address": "0x0210a52c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c16St_LongJump_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c16St_LongJump_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a534",
+      "symbol": "@10053",
       "address": "0x0210a534",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c19func_ov002_020bd480EPhii as a three-argument script command; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c19func_ov002_020bd480EPhii as a three-argument script command; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a53c",
+      "symbol": "@10054",
       "address": "0x0210a53c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c16St_SideFlip_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c16St_SideFlip_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a544",
+      "symbol": "@10055",
       "address": "0x0210a544",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c16St_BackFlip_InitEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c16St_BackFlip_InitEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
-      "symbol": "data_ov002_0210a54c",
+      "symbol": "@10056",
       "address": "0x0210a54c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "_ZN7daPly_c14St_Crouch_MainEv as an int-returning state handler; code word plus zero PMF adjustment."
+      "evidence": "_ZN7daPly_c14St_Crouch_MainEv as a state handler; compiler-emitted PMF literal (code word plus zero PMF adjustment)."
     },
     {
       "symbol": "_ZTS7daPly_c",
@@ -9845,6 +9845,9 @@
           {
             "section": ".data",
             "original": [
+              5,
+              7,
+              9,
               11,
               13,
               15,
@@ -9863,34 +9866,32 @@
               41,
               43,
               45,
-              46,
-              48,
-              50,
-              52,
-              54,
-              56,
-              58,
-              60,
-              62,
+              47,
+              49,
+              51,
+              53,
+              55,
+              57,
+              59,
+              61,
               63,
               65,
-              66,
-              68,
-              70,
-              72,
-              74,
-              76,
-              78,
-              80,
-              82,
-              84,
-              86,
-              88,
-              90,
-              92,
-              94,
-              96,
-              98,
+              67,
+              69,
+              71,
+              73,
+              75,
+              77,
+              79,
+              81,
+              83,
+              85,
+              87,
+              89,
+              91,
+              93,
+              95,
+              97,
               99,
               101,
               103,
@@ -9901,14 +9902,13 @@
               113,
               115,
               117,
-              119,
-              121,
-              123,
               125,
               127,
+              128,
               129,
-              131,
-              133,
+              130,
+              132,
+              134,
               135,
               136,
               137,
@@ -9944,70 +9944,70 @@
               2008
             ],
             "desired": [
-              11,
-              13,
-              15,
-              17,
-              19,
-              21,
-              23,
-              25,
-              27,
-              29,
-              31,
-              33,
-              35,
-              37,
-              39,
-              41,
-              43,
-              45,
-              46,
-              48,
-              50,
-              52,
-              54,
-              56,
-              58,
-              60,
-              62,
-              63,
-              65,
-              66,
-              68,
-              70,
-              72,
-              74,
-              76,
-              78,
-              80,
-              82,
-              84,
-              86,
-              88,
-              90,
-              92,
-              94,
-              96,
-              98,
-              99,
-              101,
-              103,
-              105,
-              107,
-              109,
-              111,
-              113,
               115,
-              117,
-              119,
-              121,
-              123,
+              113,
+              111,
               125,
+              109,
+              107,
+              105,
+              103,
+              101,
+              99,
+              97,
+              95,
+              93,
+              91,
+              89,
+              87,
+              85,
               127,
+              83,
+              81,
+              79,
+              77,
+              75,
+              73,
+              71,
+              69,
+              128,
+              67,
               129,
-              131,
-              133,
+              65,
+              63,
+              61,
+              59,
+              130,
+              57,
+              55,
+              53,
+              132,
+              51,
+              49,
+              47,
+              45,
+              43,
+              41,
+              39,
+              134,
+              37,
+              35,
+              33,
+              31,
+              29,
+              27,
+              25,
+              23,
+              21,
+              19,
+              17,
+              15,
+              13,
+              11,
+              9,
+              7,
+              5,
+              117,
               2007,
               135,
               2008,
@@ -11336,6 +11336,9 @@
             {
               "section": ".data",
               "original": [
+                5,
+                7,
+                9,
                 11,
                 13,
                 15,
@@ -11354,34 +11357,32 @@
                 41,
                 43,
                 45,
-                46,
-                48,
-                50,
-                52,
-                54,
-                56,
-                58,
-                60,
-                62,
+                47,
+                49,
+                51,
+                53,
+                55,
+                57,
+                59,
+                61,
                 63,
                 65,
-                66,
-                68,
-                70,
-                72,
-                74,
-                76,
-                78,
-                80,
-                82,
-                84,
-                86,
-                88,
-                90,
-                92,
-                94,
-                96,
-                98,
+                67,
+                69,
+                71,
+                73,
+                75,
+                77,
+                79,
+                81,
+                83,
+                85,
+                87,
+                89,
+                91,
+                93,
+                95,
+                97,
                 99,
                 101,
                 103,
@@ -11392,14 +11393,13 @@
                 113,
                 115,
                 117,
-                119,
-                121,
-                123,
                 125,
                 127,
+                128,
                 129,
-                131,
-                133,
+                130,
+                132,
+                134,
                 135,
                 136,
                 137,
@@ -11435,70 +11435,70 @@
                 2008
               ],
               "desired": [
-                11,
-                13,
-                15,
-                17,
-                19,
-                21,
-                23,
-                25,
-                27,
-                29,
-                31,
-                33,
-                35,
-                37,
-                39,
-                41,
-                43,
-                45,
-                46,
-                48,
-                50,
-                52,
-                54,
-                56,
-                58,
-                60,
-                62,
-                63,
-                65,
-                66,
-                68,
-                70,
-                72,
-                74,
-                76,
-                78,
-                80,
-                82,
-                84,
-                86,
-                88,
-                90,
-                92,
-                94,
-                96,
-                98,
-                99,
-                101,
-                103,
-                105,
-                107,
-                109,
-                111,
-                113,
                 115,
-                117,
-                119,
-                121,
-                123,
+                113,
+                111,
                 125,
+                109,
+                107,
+                105,
+                103,
+                101,
+                99,
+                97,
+                95,
+                93,
+                91,
+                89,
+                87,
+                85,
                 127,
+                83,
+                81,
+                79,
+                77,
+                75,
+                73,
+                71,
+                69,
+                128,
+                67,
                 129,
-                131,
-                133,
+                65,
+                63,
+                61,
+                59,
+                130,
+                57,
+                55,
+                53,
+                132,
+                51,
+                49,
+                47,
+                45,
+                43,
+                41,
+                39,
+                134,
+                37,
+                35,
+                33,
+                31,
+                29,
+                27,
+                25,
+                23,
+                21,
+                19,
+                17,
+                15,
+                13,
+                11,
+                9,
+                7,
+                5,
+                117,
                 2007,
                 135,
                 2008,
@@ -11534,6 +11534,9 @@
                 169
               ],
               "slots": [
+                5,
+                7,
+                9,
                 11,
                 13,
                 15,
@@ -11552,34 +11555,32 @@
                 41,
                 43,
                 45,
-                46,
-                48,
-                50,
-                52,
-                54,
-                56,
-                58,
-                60,
-                62,
+                47,
+                49,
+                51,
+                53,
+                55,
+                57,
+                59,
+                61,
                 63,
                 65,
-                66,
-                68,
-                70,
-                72,
-                74,
-                76,
-                78,
-                80,
-                82,
-                84,
-                86,
-                88,
-                90,
-                92,
-                94,
-                96,
-                98,
+                67,
+                69,
+                71,
+                73,
+                75,
+                77,
+                79,
+                81,
+                83,
+                85,
+                87,
+                89,
+                91,
+                93,
+                95,
+                97,
                 99,
                 101,
                 103,
@@ -11590,14 +11591,13 @@
                 113,
                 115,
                 117,
-                119,
-                121,
-                123,
                 125,
                 127,
+                128,
                 129,
-                131,
-                133,
+                130,
+                132,
+                134,
                 135,
                 136,
                 137,
@@ -13577,7 +13577,7 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
         "matchesStockRom": true
       },
       "linkerOutput": null
@@ -13674,83 +13674,710 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the function-local static local; symbols.txt homes it at 0x0210f344"
+    },
+    {
+      "symbol": "@10000",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10001",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10002",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10003",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10004",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10005",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10006",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10007",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10008",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10009",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10010",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10011",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10016",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10013",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10014",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10015",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10012",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10017",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10018",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10019",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10020",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10021",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10022",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10023",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10024",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10025",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10026",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10027",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10028",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10029",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10030",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10031",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10032",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10033",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10034",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10035",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10036",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10037",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10038",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10039",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10040",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10041",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10042",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10043",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10044",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10045",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10046",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10047",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10048",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10049",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10050",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10051",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10052",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10053",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10054",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10055",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "@10056",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
     }
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLevelIntroOff$4575",
+      "from": "_ZGVsLevelIntroOff$4941",
       "to": "_ZGVsLevelIntroOff$4424",
       "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
     },
     {
-      "from": "@4578",
+      "from": "@4944",
       "to": "@4427",
       "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
     },
     {
-      "from": "sLevelIntroOff$4575",
+      "from": "sLevelIntroOff$4941",
       "to": "sLevelIntroOff$4424",
       "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
     },
     {
-      "from": "_ZGVsTalkOff$4793",
+      "from": "_ZGVsTalkOff$5159",
       "to": "_ZGVsTalkOff$4648",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
-      "from": "@4796",
+      "from": "@5162",
       "to": "@4651",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
-      "from": "sTalkOff$4793",
+      "from": "sTalkOff$5159",
       "to": "sTalkOff$4648",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
     },
     {
-      "from": "_ZGVsAnchorOff$6356",
+      "from": "_ZGVsAnchorOff$6722",
       "to": "_ZGVsAnchorOff$6223",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "@6359",
+      "from": "@6725",
       "to": "@6226",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "sAnchorOff$6356",
+      "from": "sAnchorOff$6722",
       "to": "sAnchorOff$6223",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "_ZGVsDoorMsgOff$6384",
+      "from": "_ZGVsDoorMsgOff$6750",
       "to": "_ZGVsDoorMsgOff$6251",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "@6387",
+      "from": "@6753",
       "to": "@6254",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "sDoorMsgOff$6384",
+      "from": "sDoorMsgOff$6750",
       "to": "sDoorMsgOff$6251",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "_ZGVsStarDoorOff$7035",
+      "from": "_ZGVsStarDoorOff$7401",
       "to": "_ZGVsStarDoorOff$6917",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "@7038",
+      "from": "@7404",
       "to": "@6920",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
     },
     {
-      "from": "sStarDoorOff$7035",
+      "from": "sStarDoorOff$7401",
       "to": "sStarDoorOff$6917",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
+    },
+    {
+      "from": "@947",
+      "to": "@10000",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@953",
+      "to": "@10001",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@959",
+      "to": "@10002",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@965",
+      "to": "@10003",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@971",
+      "to": "@10004",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@977",
+      "to": "@10005",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@983",
+      "to": "@10006",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@989",
+      "to": "@10007",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@995",
+      "to": "@10008",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1001",
+      "to": "@10009",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1007",
+      "to": "@10010",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1013",
+      "to": "@10011",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1019",
+      "to": "@10012",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1025",
+      "to": "@10013",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1031",
+      "to": "@10014",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1037",
+      "to": "@10015",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1043",
+      "to": "@10016",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1049",
+      "to": "@10017",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1055",
+      "to": "@10018",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1061",
+      "to": "@10019",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1067",
+      "to": "@10020",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1073",
+      "to": "@10021",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1079",
+      "to": "@10022",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1085",
+      "to": "@10023",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1091",
+      "to": "@10024",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1097",
+      "to": "@10025",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1103",
+      "to": "@10026",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1109",
+      "to": "@10027",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1115",
+      "to": "@10028",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1121",
+      "to": "@10029",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1127",
+      "to": "@10030",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1133",
+      "to": "@10031",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1139",
+      "to": "@10032",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1145",
+      "to": "@10033",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1151",
+      "to": "@10034",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1157",
+      "to": "@10035",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1163",
+      "to": "@10036",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1169",
+      "to": "@10037",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1175",
+      "to": "@10038",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1181",
+      "to": "@10039",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1187",
+      "to": "@10040",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1193",
+      "to": "@10041",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1199",
+      "to": "@10042",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1205",
+      "to": "@10043",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1211",
+      "to": "@10044",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1217",
+      "to": "@10045",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1223",
+      "to": "@10046",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1229",
+      "to": "@10047",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1235",
+      "to": "@10048",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1241",
+      "to": "@10049",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1247",
+      "to": "@10050",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1253",
+      "to": "@10051",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1259",
+      "to": "@10052",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1265",
+      "to": "@10053",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1271",
+      "to": "@10054",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1277",
+      "to": "@10055",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@1283",
+      "to": "@10056",
+      "evidence": "compiler-generated PMF descriptor local renamed to a globally unique canonical @ symbol; section and relocation target are unchanged"
     }
   ],
   "relocations": [
@@ -13759,7 +14386,7 @@
       "source": "0x0210a354",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_StuckInGround_Main",
+      "symbol": "_ZN7daPly_c21St_StuckInGround_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c52bc"
@@ -13769,7 +14396,7 @@
       "source": "0x0210a35c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Land_Main",
+      "symbol": "_ZN7daPly_c12St_Land_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e04ec"
@@ -13779,7 +14406,7 @@
       "source": "0x0210a364",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Talk_Init",
+      "symbol": "_ZN7daPly_c12St_Talk_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c4bd8"
@@ -13799,7 +14426,7 @@
       "source": "0x0210a374",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Talk_Main",
+      "symbol": "_ZN7daPly_c12St_Talk_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c48e0"
@@ -13809,7 +14436,7 @@
       "source": "0x0210a37c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Spin_Main",
+      "symbol": "_ZN7daPly_c12St_Spin_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e10ec"
@@ -13819,7 +14446,7 @@
       "source": "0x0210a384",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Spin_Cleanup",
+      "symbol": "_ZN7daPly_c15St_Spin_CleanupEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e10d4"
@@ -13829,7 +14456,7 @@
       "source": "0x0210a38c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_CrazedCrate_Cleanup",
+      "symbol": "_ZN7daPly_c22St_CrazedCrate_CleanupEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e0d28"
@@ -13839,7 +14466,7 @@
       "source": "0x0210a394",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_WaitQuicksand_Main",
+      "symbol": "_ZN7daPly_c21St_WaitQuicksand_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020d2184"
@@ -13849,7 +14476,7 @@
       "source": "0x0210a39c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Climb_Main",
+      "symbol": "_ZN7daPly_c13St_Climb_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020cb5bc"
@@ -13859,7 +14486,7 @@
       "source": "0x0210a3a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Climb_Init",
+      "symbol": "_ZN7daPly_c13St_Climb_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020cbd34"
@@ -13869,7 +14496,7 @@
       "source": "0x0210a3ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020c71e0",
+      "symbol": "_ZN7daPly_c19func_ov002_020c71e0Ev",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c71e0"
@@ -13879,7 +14506,7 @@
       "source": "0x0210a3b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_WallJump_Main",
+      "symbol": "_ZN7daPly_c16St_WallJump_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e1714"
@@ -13889,7 +14516,7 @@
       "source": "0x0210a3bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Climb_Cleanup",
+      "symbol": "_ZN7daPly_c16St_Climb_CleanupEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020cb568"
@@ -13899,7 +14526,7 @@
       "source": "0x0210a3c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020bcd38",
+      "symbol": "_ZN7daPly_c19func_ov002_020bcd38EPhii",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020bcd38"
@@ -13909,7 +14536,7 @@
       "source": "0x0210a3cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_SweepKick_Main",
+      "symbol": "_ZN7daPly_c17St_SweepKick_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020dc48c"
@@ -13919,7 +14546,7 @@
       "source": "0x0210a3d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Headstand_Main",
+      "symbol": "_ZN7daPly_c17St_Headstand_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020cb15c"
@@ -13929,7 +14556,7 @@
       "source": "0x0210a3e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Climb_Cleanup",
+      "symbol": "_ZN7daPly_c16St_Climb_CleanupEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020cb568"
@@ -13939,7 +14566,7 @@
       "source": "0x0210a3ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_WallJump_Init",
+      "symbol": "_ZN7daPly_c16St_WallJump_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e17f8"
@@ -13949,7 +14576,7 @@
       "source": "0x0210a3f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020c6fe4",
+      "symbol": "_ZN7daPly_c19func_ov002_020c6fe4Ev",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c6fe4"
@@ -13959,7 +14586,7 @@
       "source": "0x0210a3fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020bd20c",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd20cEPhii",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020bd20c"
@@ -13969,7 +14596,7 @@
       "source": "0x0210a404",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020c70ac",
+      "symbol": "_ZN7daPly_c19func_ov002_020c70acEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c70ac"
@@ -13979,7 +14606,7 @@
       "source": "0x0210a40c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020bd3a0",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd3a0EPhii",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020bd3a0"
@@ -13989,7 +14616,7 @@
       "source": "0x0210a414",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_SwingPlayer_Cleanup",
+      "symbol": "_ZN7daPly_c22St_SwingPlayer_CleanupEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020d9fc4"
@@ -13999,7 +14626,7 @@
       "source": "0x0210a41c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_LedgeHang_Init",
+      "symbol": "_ZN7daPly_c17St_LedgeHang_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020d0c54"
@@ -14009,7 +14636,7 @@
       "source": "0x0210a42c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_WaterJump_Init",
+      "symbol": "_ZN7daPly_c17St_WaterJump_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e162c"
@@ -14019,7 +14646,7 @@
       "source": "0x0210a43c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_LedgeGrab_Init",
+      "symbol": "_ZN7daPly_c17St_LedgeGrab_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020d08b0"
@@ -14029,7 +14656,7 @@
       "source": "0x0210a444",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_LedgeGrab_Main",
+      "symbol": "_ZN7daPly_c17St_LedgeGrab_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020d0824"
@@ -14039,7 +14666,7 @@
       "source": "0x0210a44c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020bd250",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd250EPhii",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020bd250"
@@ -14049,7 +14676,7 @@
       "source": "0x0210a454",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_CeilingGrate_Init",
+      "symbol": "_ZN7daPly_c20St_CeilingGrate_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020cf6bc"
@@ -14069,7 +14696,7 @@
       "source": "0x0210a464",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_CeilingGrate_Main",
+      "symbol": "_ZN7daPly_c20St_CeilingGrate_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020cf398"
@@ -14079,7 +14706,7 @@
       "source": "0x0210a46c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020c7350",
+      "symbol": "_ZN7daPly_c19func_ov002_020c7350Ev",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c7350"
@@ -14089,7 +14716,7 @@
       "source": "0x0210a474",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020bd354",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd354EPhii",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020bd354"
@@ -14109,7 +14736,7 @@
       "source": "0x0210a484",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_YoshiPower_Cleanup",
+      "symbol": "_ZN7daPly_c21St_YoshiPower_CleanupEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020d736c"
@@ -14119,7 +14746,7 @@
       "source": "0x0210a48c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020c75f0",
+      "symbol": "_ZN7daPly_c19func_ov002_020c75f0Ev",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c75f0"
@@ -14129,7 +14756,7 @@
       "source": "0x0210a494",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_SwingPlayer_Main",
+      "symbol": "_ZN7daPly_c19St_SwingPlayer_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020d9fec"
@@ -14139,7 +14766,7 @@
       "source": "0x0210a49c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_SlideKick_Init",
+      "symbol": "_ZN7daPly_c17St_SlideKick_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020dc3e0"
@@ -14149,7 +14776,7 @@
       "source": "0x0210a4a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_InYoshiMouth_Init",
+      "symbol": "_ZN7daPly_c20St_InYoshiMouth_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020d62f8"
@@ -14159,7 +14786,7 @@
       "source": "0x0210a4ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_InYoshiMouth_Main",
+      "symbol": "_ZN7daPly_c20St_InYoshiMouth_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020d60b8"
@@ -14169,7 +14796,7 @@
       "source": "0x0210a4b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_SwingPlayer_Init",
+      "symbol": "_ZN7daPly_c19St_SwingPlayer_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020da3b0"
@@ -14179,7 +14806,7 @@
       "source": "0x0210a4c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_GrabBowserTail_Cleanup",
+      "symbol": "_ZN7daPly_c25St_GrabBowserTail_CleanupEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020da41c"
@@ -14189,7 +14816,7 @@
       "source": "0x0210a4cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_GrabBowserTail_Main",
+      "symbol": "_ZN7daPly_c22St_GrabBowserTail_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020da438"
@@ -14199,7 +14826,7 @@
       "source": "0x0210a4d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_GrabBowserTail_Init",
+      "symbol": "_ZN7daPly_c22St_GrabBowserTail_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020da794"
@@ -14209,7 +14836,7 @@
       "source": "0x0210a4dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_DeadPit_Main",
+      "symbol": "_ZN7daPly_c15St_DeadPit_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c5780"
@@ -14219,7 +14846,7 @@
       "source": "0x0210a4e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_StomachSlide_Main",
+      "symbol": "_ZN7daPly_c20St_StomachSlide_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020dcc28"
@@ -14229,7 +14856,7 @@
       "source": "0x0210a4ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Dive_Init",
+      "symbol": "_ZN7daPly_c12St_Dive_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020dd17c"
@@ -14239,7 +14866,7 @@
       "source": "0x0210a4f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_GroundPound_Cleanup",
+      "symbol": "_ZN7daPly_c22St_GroundPound_CleanupEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020dd9e0"
@@ -14249,7 +14876,7 @@
       "source": "0x0210a4fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_GroundPound_Main",
+      "symbol": "_ZN7daPly_c19St_GroundPound_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020dd9f8"
@@ -14259,7 +14886,7 @@
       "source": "0x0210a504",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_GroundPound_Init",
+      "symbol": "_ZN7daPly_c19St_GroundPound_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020dddf0"
@@ -14269,7 +14896,7 @@
       "source": "0x0210a50c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_PunchKick_Main",
+      "symbol": "_ZN7daPly_c17St_PunchKick_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020dd3c4"
@@ -14279,7 +14906,7 @@
       "source": "0x0210a514",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_PunchKick_Init",
+      "symbol": "_ZN7daPly_c17St_PunchKick_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020dd79c"
@@ -14289,7 +14916,7 @@
       "source": "0x0210a51c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_EndingFly_Init",
+      "symbol": "_ZN7daPly_c17St_EndingFly_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c3d6c"
@@ -14299,7 +14926,7 @@
       "source": "0x0210a524",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_LongJump_Main",
+      "symbol": "_ZN7daPly_c16St_LongJump_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e1238"
@@ -14309,7 +14936,7 @@
       "source": "0x0210a52c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_LongJump_Init",
+      "symbol": "_ZN7daPly_c16St_LongJump_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e127c"
@@ -14319,7 +14946,7 @@
       "source": "0x0210a534",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_func_ov002_020bd480",
+      "symbol": "_ZN7daPly_c19func_ov002_020bd480EPhii",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020bd480"
@@ -14329,7 +14956,7 @@
       "source": "0x0210a53c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_SideFlip_Main",
+      "symbol": "_ZN7daPly_c16St_SideFlip_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e13c0"
@@ -14339,7 +14966,7 @@
       "source": "0x0210a544",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_BackFlip_Init",
+      "symbol": "_ZN7daPly_c16St_BackFlip_InitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020e18a8"
@@ -14349,7 +14976,7 @@
       "source": "0x0210a54c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPly_St_Crouch_Main",
+      "symbol": "_ZN7daPly_c14St_Crouch_MainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020d1354"
@@ -30830,7 +31457,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a35c",
+      "symbol": "@10001",
       "target_module": "ov002",
       "target_address": "0x0210a35c"
     },
@@ -30890,7 +31517,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a37c",
+      "symbol": "@10004",
       "target_module": "ov002",
       "target_address": "0x0210a37c"
     },
@@ -30900,7 +31527,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a384",
+      "symbol": "@10005",
       "target_module": "ov002",
       "target_address": "0x0210a384"
     },
@@ -30940,7 +31567,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a38c",
+      "symbol": "@10006",
       "target_module": "ov002",
       "target_address": "0x0210a38c"
     },
@@ -30970,7 +31597,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a394",
+      "symbol": "@10007",
       "target_module": "ov002",
       "target_address": "0x0210a394"
     },
@@ -31040,7 +31667,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a54c",
+      "symbol": "@10056",
       "target_module": "ov002",
       "target_address": "0x0210a54c"
     },
@@ -31090,7 +31717,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a544",
+      "symbol": "@10055",
       "target_module": "ov002",
       "target_address": "0x0210a544"
     },
@@ -31100,7 +31727,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a53c",
+      "symbol": "@10054",
       "target_module": "ov002",
       "target_address": "0x0210a53c"
     },
@@ -31120,7 +31747,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a52c",
+      "symbol": "@10052",
       "target_module": "ov002",
       "target_address": "0x0210a52c"
     },
@@ -31130,7 +31757,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a524",
+      "symbol": "@10051",
       "target_module": "ov002",
       "target_address": "0x0210a524"
     },
@@ -31150,7 +31777,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a514",
+      "symbol": "@10049",
       "target_module": "ov002",
       "target_address": "0x0210a514"
     },
@@ -31160,7 +31787,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a50c",
+      "symbol": "@10048",
       "target_module": "ov002",
       "target_address": "0x0210a50c"
     },
@@ -31180,7 +31807,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a504",
+      "symbol": "@10047",
       "target_module": "ov002",
       "target_address": "0x0210a504"
     },
@@ -31190,7 +31817,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4fc",
+      "symbol": "@10046",
       "target_module": "ov002",
       "target_address": "0x0210a4fc"
     },
@@ -31200,7 +31827,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4f4",
+      "symbol": "@10045",
       "target_module": "ov002",
       "target_address": "0x0210a4f4"
     },
@@ -31220,7 +31847,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4ec",
+      "symbol": "@10044",
       "target_module": "ov002",
       "target_address": "0x0210a4ec"
     },
@@ -31230,7 +31857,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4e4",
+      "symbol": "@10043",
       "target_module": "ov002",
       "target_address": "0x0210a4e4"
     },
@@ -31280,7 +31907,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4d4",
+      "symbol": "@10041",
       "target_module": "ov002",
       "target_address": "0x0210a4d4"
     },
@@ -31290,7 +31917,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4cc",
+      "symbol": "@10040",
       "target_module": "ov002",
       "target_address": "0x0210a4cc"
     },
@@ -31300,7 +31927,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4c4",
+      "symbol": "@10039",
       "target_module": "ov002",
       "target_address": "0x0210a4c4"
     },
@@ -31320,7 +31947,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4b4",
+      "symbol": "@10038",
       "target_module": "ov002",
       "target_address": "0x0210a4b4"
     },
@@ -31330,7 +31957,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a494",
+      "symbol": "@10034",
       "target_module": "ov002",
       "target_address": "0x0210a494"
     },
@@ -31340,7 +31967,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a414",
+      "symbol": "@10022",
       "target_module": "ov002",
       "target_address": "0x0210a414"
     },
@@ -31370,7 +31997,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a3cc",
+      "symbol": "@10014",
       "target_module": "ov002",
       "target_address": "0x0210a3cc"
     },
@@ -31390,7 +32017,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a49c",
+      "symbol": "@10035",
       "target_module": "ov002",
       "target_address": "0x0210a49c"
     },
@@ -31540,7 +32167,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a42c",
+      "symbol": "@10024",
       "target_module": "ov002",
       "target_address": "0x0210a42c"
     },
@@ -31650,7 +32277,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a3a4",
+      "symbol": "@10009",
       "target_module": "ov002",
       "target_address": "0x0210a3a4"
     },
@@ -31660,7 +32287,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a39c",
+      "symbol": "@10008",
       "target_module": "ov002",
       "target_address": "0x0210a39c"
     },
@@ -31670,7 +32297,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a3bc",
+      "symbol": "@10012",
       "target_module": "ov002",
       "target_address": "0x0210a3bc"
     },
@@ -31700,7 +32327,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a3d4",
+      "symbol": "@10015",
       "target_module": "ov002",
       "target_address": "0x0210a3d4"
     },
@@ -31710,7 +32337,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a3e4",
+      "symbol": "@10016",
       "target_module": "ov002",
       "target_address": "0x0210a3e4"
     },
@@ -31730,7 +32357,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a3ec",
+      "symbol": "@10017",
       "target_module": "ov002",
       "target_address": "0x0210a3ec"
     },
@@ -31740,7 +32367,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a3b4",
+      "symbol": "@10011",
       "target_module": "ov002",
       "target_address": "0x0210a3b4"
     },
@@ -31790,7 +32417,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a41c",
+      "symbol": "@10023",
       "target_module": "ov002",
       "target_address": "0x0210a41c"
     },
@@ -31830,7 +32457,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a43c",
+      "symbol": "@10025",
       "target_module": "ov002",
       "target_address": "0x0210a43c"
     },
@@ -31840,7 +32467,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a444",
+      "symbol": "@10026",
       "target_module": "ov002",
       "target_address": "0x0210a444"
     },
@@ -31860,7 +32487,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a454",
+      "symbol": "@10028",
       "target_module": "ov002",
       "target_address": "0x0210a454"
     },
@@ -31870,7 +32497,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a464",
+      "symbol": "@10029",
       "target_module": "ov002",
       "target_address": "0x0210a464"
     },
@@ -31910,7 +32537,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a484",
+      "symbol": "@10032",
       "target_module": "ov002",
       "target_address": "0x0210a484"
     },
@@ -31960,7 +32587,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4a4",
+      "symbol": "@10036",
       "target_module": "ov002",
       "target_address": "0x0210a4a4"
     },
@@ -31970,7 +32597,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4ac",
+      "symbol": "@10037",
       "target_module": "ov002",
       "target_address": "0x0210a4ac"
     },
@@ -32230,7 +32857,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a4dc",
+      "symbol": "@10042",
       "target_module": "ov002",
       "target_address": "0x0210a4dc"
     },
@@ -32580,7 +33207,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a354",
+      "symbol": "@10000",
       "target_module": "ov002",
       "target_address": "0x0210a354"
     },
@@ -32600,7 +33227,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a364",
+      "symbol": "@10002",
       "target_module": "ov002",
       "target_address": "0x0210a364"
     },
@@ -32610,7 +33237,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a374",
+      "symbol": "@10003",
       "target_module": "ov002",
       "target_address": "0x0210a374"
     },
@@ -32740,7 +33367,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a51c",
+      "symbol": "@10050",
       "target_module": "ov002",
       "target_address": "0x0210a51c"
     },
@@ -33040,7 +33667,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a48c",
+      "symbol": "@10033",
       "target_module": "ov002",
       "target_address": "0x0210a48c"
     },
@@ -33050,7 +33677,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a46c",
+      "symbol": "@10030",
       "target_module": "ov002",
       "target_address": "0x0210a46c"
     },
@@ -33060,7 +33687,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a3ac",
+      "symbol": "@10010",
       "target_module": "ov002",
       "target_address": "0x0210a3ac"
     },
@@ -33090,7 +33717,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a404",
+      "symbol": "@10020",
       "target_module": "ov002",
       "target_address": "0x0210a404"
     },
@@ -33100,7 +33727,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210a3f4",
+      "symbol": "@10018",
       "target_module": "ov002",
       "target_address": "0x0210a3f4"
     }
