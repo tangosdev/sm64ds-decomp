@@ -163,8 +163,8 @@ void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *
 int func_ov002_020df7f4(void *c);
 void func_02012694(unsigned int a, void *pos);
 int ApproachAngle(short *p, int target, int a, int b, int c);
-int Vec3_Dist(const void *a, const void *b);
-// local extern: CalcLib.h conflicts with retained opaque Vec3_Dist and Vec3_VertAngle prototypes.
+int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+// local extern: CalcLib.h conflicts with this TU's opaque Vec3_VertAngle prototype.
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const void *a, const void *b);
 unsigned int RandomIntInternal(void *seed);
@@ -383,7 +383,7 @@ int daOwl_c::func_ov094_02135c28()
         }
     }
 
-    if (Vec3_Dist(&mPosX, &mAnchorX) > 0x190000) {
+    if (Vec3_Dist(&mPos, (const Vector3 *)&mAnchorX) > 0x190000) {
         mStateTimer = 0x32;
         mWanderAngleY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mAnchorX);
     } else if (OWL_TIMER(this) == 0) {
