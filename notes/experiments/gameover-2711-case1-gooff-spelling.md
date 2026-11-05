@@ -1,5 +1,11 @@
 # case1 (char *)o + GO_OFF spelling vs member index (GAMEOVER-2711-01, PR #2711)
 
+> **Superseded (2026-11-05, #821 pragma batch 3):** with `mGlyphDelay` typed `u16`
+> (the ROM loads it with `ldrh`), `func_ov003_020b060c` matches with plain member
+> indexing and no `opt_strength_reduction` pragma. The `GO_OFF` spelling and the
+> pragma recorded below are gone from the source. The measurements stand for the
+> `s16` field they were taken against.
+
 - tested_commit: 2546f0ae4 (cleanup-mgjump3-gameover at experiment time)
 - compiler: mwccarm 2004/b56 (tools/mwccarm/2004/b56/mwccarm.exe)
 - claim: `src/actors/dScGameOver_c.cpp:455-457,505-510` keeps case1's
