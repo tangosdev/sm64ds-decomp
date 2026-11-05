@@ -5,8 +5,7 @@
  * panel to flip it and its neighbours until every mFace matches mGoal.
  *
  * Functions run in ROM order under `#pragma defer_codegen off`; do not
- * reorder or drop the pragma. It also makes the bracketed optimizer pragmas
- * bind to their own functions.
+ * reorder or drop the pragma.
  *
  * The destructor is out of line and written first, so this file owns the
  * key function and emits the vtable and typeinfo; the compiler emits D1 and
@@ -60,7 +59,7 @@ enum dScMgPanel_c_AssetId {
     ASSET_D_2D_YOSIFINX_NORMAL_NSC_BIN = 0x01e6
 };
 
-#pragma defer_codegen off /* per-function opt pragmas, and .text in source order */
+#pragma defer_codegen off /* .text in source order */
 
 #include "types.h"
 #include "nitro/hw/registers.h"
@@ -172,48 +171,35 @@ void dScMgPanel_c::Particle_UpdateAll() {
 // @symbol _ZN12dScMgPanel_c14Particle_SpawnEiii
 /* Spawn one particle in the first free slot, at (x, y).  `mode` picks the
    fixed-drift variant over the random one. */
-#pragma push
-#pragma opt_common_subs off
 void dScMgPanel_c::Particle_Spawn(int x, int y, int mode) {
-    char *scene = (char *)this;
     extern int data_0209d4b8;
     int i;
-    char *q = scene;
-    for (i = 0; i < 0x40; i++, q += 0x18) {
-        if (((dScMgPanel_c *)q)->mParticles[0].active == 0) {
-            int off = i * 0x18;
-            int *w;
+    for (i = 0; i < 0x40; i++) {
+        if (mParticles[i].active == 0) {
             mParticles[i].active = 1;
             mParticles[i].visible = 1;
             mParticles[i].tick = 0;
             mParticles[i].kind = 0;
             mParticles[i].frame = 0;
             mParticles[i].stuck = mode;
-            /* The `(int)` launder keeps mwcc from common-subexpressioning this
-               field address with the one taken three lines down; without it 16
-               words of this function move. */
-            *(int *)((char *)(((int)&mParticles[0].vx)) + off) = 0;
+            mParticles[i].vx = 0;
             mParticles[i].vy = 0;
             mParticles[i].x = x;
             mParticles[i].y = y;
-            w = (int *)((char *)(((int)&mParticles[0].vx)) + off);
             if (mode != 0) {
                 mParticles[i].drift = 0;
             } else {
-                int rnd = (int)((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff);
-                rnd = (int)((((u32)rnd) << 1) >> 15);
-                /* Strided on purpose: `mParticles[i].drift = rnd` moves code. */
-                ((dScMgPanel_c *)(scene + off))->mParticles[0].drift = rnd;
+                mParticles[i].drift =
+                    ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1) >> 15;
             }
             if (x >= 0x80000)
-                *w = -0x100;
+                mParticles[i].vx = -0x100;
             else
-                *w = 0x100;
+                mParticles[i].vx = 0x100;
             return;
         }
     }
 }
-#pragma pop
 
 // @symbol _ZN12dScMgPanel_c17Particle_ClearAllEv
 /* Retire every particle in the 64-slot pool. */
@@ -1367,14 +1353,10 @@ void dScMgPanel_c::DealPuzzle() {
 }
 
 // @symbol _ZN12dScMgPanel_c14ScramblePanelsEv
-#pragma push
-#pragma opt_common_subs off
 /* The 15-bit random draw, used a dozen times below. */
 #define PANEL_RAND ((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff)
 
 void dScMgPanel_c::ScramblePanels() {
-    char *scene = (char *)this;
-    dScMgPanel_c *self = (dScMgPanel_c *)scene;
     extern int data_0209d4b8;
     extern u8 sPanelScrambleFlipEnabled[];
     extern u8 sPanelScrambleFlips[];
@@ -1382,50 +1364,43 @@ void dScMgPanel_c::ScramblePanels() {
     extern u8 sPanelScrambleFlipEnabledAlt[];
     extern u8 sPanelScrambleFlipsAlt[];
     extern u8 sPanelPuzzleSizes[];
-    int t = (int)self->mLevel;
-    if (self->IsAltVariant() != 0) {
+    int t = (int)mLevel;
+    if (IsAltVariant() != 0) {
         int nv;
         if (t >= 0xf) {
             t = (PANEL_RAND * 0xf) >> 15;
-            if (t == self->mLastPuzzle) {
+            if (t == mLastPuzzle) {
                 t += ((PANEL_RAND * 0xe) >> 15) + 1;
                 if (t >= 0xf)
                     t -= 0xf;
             }
         }
-        if (sPanelScrambleFlipEnabled[t] != 0 || self->mDealt == 0) {
-            if (self->mDealt == 0)
-                self->mDealt += 1;
+        if (sPanelScrambleFlipEnabled[t] != 0 || mDealt == 0) {
+            if (mDealt == 0)
+                mDealt += 1;
             nv = (PANEL_RAND * 8) >> 15;
-            if (nv == self->mFaceSet) {
+            if (nv == mFaceSet) {
                 nv = (nv + (((PANEL_RAND * 7) >> 15) + 1)) & 7;
             }
-            self->mFaceSet = nv;
+            mFaceSet = nv;
         }
-        ((dScMgPanel_c *)scene)->mWidth = sPanelScrambleWidths[t];
-        {
-            int q = ((dScMgPanel_c *)scene)->mWidth;
-            ((dScMgPanel_c *)scene)->mCount = q * q;
-        }
-        self->mFlips = sPanelScrambleFlips[t];
-        self->mLastPuzzle = t;
+        mWidth = sPanelScrambleWidths[t];
+        mCount = mWidth * mWidth;
+        mFlips = sPanelScrambleFlips[t];
+        mLastPuzzle = t;
     } else {
         int nv;
-        int k;
-        u8 *p;
         while (t >= 0x19)
             t -= 0x19;
-        if (sPanelScrambleFlipEnabledAlt[t] != 0 || self->mDealt == 0) {
-            if (self->mDealt == 0)
-                self->mDealt += 1;
+        if (sPanelScrambleFlipEnabledAlt[t] != 0 || mDealt == 0) {
+            if (mDealt == 0)
+                mDealt += 1;
             nv = (PANEL_RAND * 4) >> 15;
-            k = sPanelPuzzleSizes[t];
-            p = &sPanelPuzzleSizes[t];
-            if (k == 5) {
+            if (sPanelPuzzleSizes[t] == 5) {
                 nv = ((PANEL_RAND * 5) >> 15) + 4;
             }
-            if (nv == self->mFaceSet) {
-                if (*p == 4) {
+            if (nv == mFaceSet) {
+                if (sPanelPuzzleSizes[t] == 4) {
                     nv = (nv + (((PANEL_RAND * 3) >> 15) + 1)) & 3;
                 } else {
                     nv = nv + (((PANEL_RAND * 4) >> 15) + 1);
@@ -1433,61 +1408,45 @@ void dScMgPanel_c::ScramblePanels() {
                         nv -= 5;
                 }
             }
-            self->mFaceSet = nv;
+            mFaceSet = nv;
         }
-        ((dScMgPanel_c *)scene)->mWidth = sPanelPuzzleSizes[t];
-        {
-            int q = ((dScMgPanel_c *)scene)->mWidth;
-            ((dScMgPanel_c *)scene)->mCount = q * q;
-        }
-        self->mFlips = sPanelScrambleFlipsAlt[t];
+        mWidth = sPanelPuzzleSizes[t];
+        mCount = mWidth * mWidth;
+        mFlips = sPanelScrambleFlipsAlt[t];
     }
 }
 #undef PANEL_RAND
-#pragma pop
 
 // @symbol _ZN12dScMgPanel_c16HasDuplicateRowsEv
-#pragma push
-#pragma opt_strength_reduction off
 int dScMgPanel_c::HasDuplicateRows() {
-    char *scene = (char *)this;
     int i, bad, j;
-    char *row = scene;
 
     /* Refuse a pick set that repeats any of the last five. */
     for (i = 0; i < 5; i++) {
         bad = 0;
         for (j = 0; j < 0xa; j++) {
-            if (((dScMgPanel_c *)scene)->mFlipAt[j] != ((dScMgPanel_c *)row)->mPastFlips[0][j]) {
+            if (mFlipAt[j] != mPastFlips[i][j]) {
                 bad = 1;
                 break;
             }
         }
         if (bad == 0)
             return 0;
-        row += 0xa;
     }
     /* Shift the history down one row, then record this pick set as row 0. */
     {
         int r, k;
-        char *dst;
-        char *src = scene;
         for (r = 0; r < 4; r++) {
-            dst = scene + (r + 1) * 0xa;
             for (k = 0; k < 0xa; k++) {
-                ((dScMgPanel_c *)dst)->mPastFlips[0][0] = ((dScMgPanel_c *)src)->mPastFlips[0][k];
-                dst++;
+                mPastFlips[r + 1][k] = mPastFlips[r][k];
             }
-            src += 0xa;
         }
     }
-    /* mPastFlips[0][i] = mFlipAt[i]; the indexed store renumbers @NNN. */
     for (i = 0; i < 0xa; i++) {
-        ((dScMgPanel_c *)(scene + i))->mPastFlips[0][0] = ((dScMgPanel_c *)scene)->mFlipAt[i];
+        mPastFlips[0][i] = mFlipAt[i];
     }
     return 1;
 }
-#pragma pop
 
 // @symbol _ZN12dScMgPanel_c9ClearGridEv
 void dScMgPanel_c::ClearGrid() {
@@ -1507,25 +1466,21 @@ void dScMgPanel_c::ClearGrid() {
 /* Clear the whole board back to its start-of-round state: the 36 parallel
    panel arrays, the state word, the pick list (0xff = no pick) and the
    cursor, then hand off to the three subsystem resets. */
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgPanel_c::ResetRound() {
     char *scene = (char *)this;
+    /* 0x4ec2 and 0x466c are pads that only this function writes. */
     int i;
-    /* mX, mY, mFlipFrame, mAnimTimer and mFlipDelay are stepped: indexed
-       they renumber this file's @NNN labels. 0x4ec2 and 0x466c are pads
-       that only this function writes. */
     for (i = 0; i < 0x24; i++) {
-        ((dScMgPanel_c *)(scene + i * 4))->mX[0] = 0;
-        ((dScMgPanel_c *)(scene + i * 4))->mY[0] = 0;
-        ((dScMgPanel_c *)(scene + i * 2))->mFlipFrame[0] = 0;
-        ((dScMgPanel_c *)(scene + i * 2))->mAnimTimer[0] = 0;
-        ((dScMgPanel_c *)(scene + i * 2))->mFlipDelay[0] = 0;
-        ((dScMgPanel_c *)scene)->mFace[i] = 0;
-        ((dScMgPanel_c *)scene)->mKind[i] = 0;
-        ((dScMgPanel_c *)scene)->mGoal[i] = 0;
-        ((dScMgPanel_c *)scene)->mVisible[i] = 0;
-        ((dScMgPanel_c *)scene)->mFastFlip[i] = 0;
+        mX[i] = 0;
+        mY[i] = 0;
+        mFlipFrame[i] = 0;
+        mAnimTimer[i] = 0;
+        mFlipDelay[i] = 0;
+        mFace[i] = 0;
+        mKind[i] = 0;
+        mGoal[i] = 0;
+        mVisible[i] = 0;
+        mFastFlip[i] = 0;
     }
     mState = 0;
     mBusy = 0;
@@ -1533,37 +1488,35 @@ void dScMgPanel_c::ResetRound() {
     *(s16 *)(scene + 0x4ec2) = 0;
     mFlipCount = 0;
     mMovesUsed = 0;
-    ((dScMgPanel_c *)scene)->mCredits = 0;
+    mCredits = 0;
     for (i = 0; i < 0x20; i++) {
-        ((dScMgPanel_c *)scene)->mFlipAt[i] = 0xff;
+        mFlipAt[i] = 0xff;
     }
     for (i = 0; i < 0x10; i++) {
-        ((dScMgPanel_c *)scene)->mTouchLog[i] = 0;
+        mTouchLog[i] = 0;
     }
     mTouchCount = 0;
     mInputState = 0;
-    dScMgPanel_c *s = (dScMgPanel_c *)scene;
-    s->mSlide = 0;
-    s->mSlideY = 0;
-    s->mSlideVel = 0;
+    mSlide = 0;
+    mSlideY = 0;
+    mSlideVel = 0;
     *(int *)(scene + 0x466c) = 0;
-    s->mHold = 0;
-    s->mSlideStep = 0;
-    s->mSlideFlag = 0;
-    s->mSlideOn = 0;
-    s->mBanner.x = 0;
-    s->mBanner.y = 0;
-    s->mBanner.timer = 0;
-    s->mBanner.active = 0;
-    s->mBanner.visible = 0;
-    s->mBanner.state = 0;
-    s->mSolved = 0;
-    s->mScrollFrames = 0;
+    mHold = 0;
+    mSlideStep = 0;
+    mSlideFlag = 0;
+    mSlideOn = 0;
+    mBanner.x = 0;
+    mBanner.y = 0;
+    mBanner.timer = 0;
+    mBanner.active = 0;
+    mBanner.visible = 0;
+    mBanner.state = 0;
+    mSolved = 0;
+    mScrollFrames = 0;
     Shake_Stop();
     Scroll_Stop();
     Particle_ClearAll();
 }
-#pragma pop
 
 // @symbol _ZN12dScMgPanel_c14Panel_StartAllEv
 void dScMgPanel_c::Panel_StartAll() {
@@ -1648,57 +1601,34 @@ void dScMgPanel_c::Panel_StateBlink(int idx) {
 }
 
 // @symbol _ZN12dScMgPanel_c15Panel_StateFlipEi
-#pragma push
-#pragma opt_common_subs off
 /*
  * Per-panel flip tick for one panel (index).
  * Bumps mBusy.  If the panel's mFlipDelay is running, count it down and
  * clamp at zero; otherwise advance its mAnimTimer and, once it reaches
  * the limit (4 while mFastFlip is set, else 8), reset it, step mFlipFrame
  * and end the flip past 5 by clearing mKind.
- *
- * Shape notes: the RMW sites (`*p = *p +- 1`) go through a pointer local,
- * the plain reads index the member directly, and opt_common_subs off
- * keeps the else-branch recomputing this+index*2 (its own extended basic
- * block) the way the ROM does.  The timer must be bumped before mFastFlip
- * is read, and the limit compare is unsigned.  The unused `scene` local
- * stays: dropping it renumbers the pinned @NNN labels.
  */
-
 void dScMgPanel_c::Panel_StateFlip(int index) {
-    char *scene = (char *)this;
-    u8 *cnt = &mBusy;
-
-    *cnt = *cnt + 1;
-
+    mBusy++;
     if (mFlipDelay[index] != 0) {
-        u16 *q = &mFlipDelay[index];
-        *q = *q - 1;
+        mFlipDelay[index]--;
         if ((s16)mFlipDelay[index] < 0) {
             mFlipDelay[index] = 0;
         }
     } else {
-        u16 *r = &mAnimTimer[index];
-        u8 flag;
-        u32 lim;
-        *r = *r + 1;
-        flag = mFastFlip[index];
-        lim = (flag != 0) ? 4 : 8;
-        if (mAnimTimer[index] < lim) {
+        mAnimTimer[index]++;
+        u32 limit = mFastFlip[index] != 0 ? 4 : 8;
+        if (mAnimTimer[index] < limit) {
             return;
         }
         mAnimTimer[index] = 0;
-        {
-            u16 *s = &mFlipFrame[index];
-            *s = *s + 1;
-        }
+        mFlipFrame[index]++;
         if (mFlipFrame[index] >= 5) {
             mFlipFrame[index] = 0;
             mKind[index] = 0;
         }
     }
 }
-#pragma pop
 
 // @symbol _ZN12dScMgPanel_c15Panel_StateIdleEi
 void dScMgPanel_c::Panel_StateIdle(int index) {
@@ -1747,8 +1677,6 @@ void dScMgPanel_c::Scene_StateGameOver() {
 }
 
 // @symbol _ZN12dScMgPanel_c17Scene_StateResultEv
-#pragma push
-#pragma opt_propagation off
 void dScMgPanel_c::Scene_StateResult() {
     char *scene = (char *)this;
     extern PanelStateFnI sPanelPanelStateTable[];
@@ -1837,7 +1765,6 @@ void dScMgPanel_c::Scene_StateResult() {
         *ip = *ip + 1;
     }
 }
-#pragma pop
 
 // @symbol _ZN12dScMgPanel_c21Scene_StateShowAnswerEv
 void dScMgPanel_c::Scene_StateShowAnswer() {
