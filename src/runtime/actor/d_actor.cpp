@@ -251,7 +251,7 @@ extern int data_0209fc68; /* nonzero forces the actor to think anyway */
 extern Matrix4x3 data_0209b3ec; /* world -> camera */
 extern dClipper data_0209f43c;  /* the dClipper instance */
 extern u8 data_0209f274; /* doubles the far-away threshold when set */
-extern u8 data_0209f2c4;
+extern u8 gGamePaused;
 extern u8 data_0209f20c;
 extern u8 gVsExitScreenActive;
 /* This frame's actor update mask, copied from gNextActorUpdateMask by
@@ -302,7 +302,7 @@ int dActor_c::BeforeBehavior()
         }
     }
 
-    if (((data_0209f2c4 | data_0209f20c | gVsExitScreenActive) & 0xff) != 0 ||
+    if (((gGamePaused | data_0209f20c | gVsExitScreenActive) & 0xff) != 0 ||
         (((mFlags & 9) == 9 || (gActorUpdateMask != 0 && (mFlags & gActorUpdateMask) == 0)) &&
          data_0209fc68 == 0))
         return 0;

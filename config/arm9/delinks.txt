@@ -778,7 +778,7 @@ src/game/stages/d_s_stage_methods.cpp:
     .text start:0x02023688 end:0x0202e118
     .init start:0x02074e84 end:0x02074edc
     .ctor start:0x02086b88 end:0x02086b8c
-    .bss start:0x0209f388 end:0x0209f498
+    .bss start:0x0209f1ec end:0x0209f5b8
 
 src/GetStageDebugName.c:
     complete

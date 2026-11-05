@@ -91,7 +91,7 @@ int SublevelToLevel(int i);
 int IsStarCollected(int level, int star);
 
 extern u8 data_0209f20c;
-extern u8 data_0209f2c4;
+extern u8 gGamePaused;
 extern u8 gVsExitScreenActive;
 extern u8 data_0209f250;
 extern u8 gLevelClearStep;
@@ -125,7 +125,7 @@ extern ControllerInput data_0209f498[];
 extern u8 gSubScreenLayers;
 extern u8   data_ov002_0211114c;
 extern u8   data_ov002_02111144;
-extern int data_0209f40c[];
+extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
 extern int data_0209f3a4[];
 extern void SetSubBg2Offset(s32 a, s32 b);
@@ -385,7 +385,7 @@ void dMap_c::OnPendingDestroy()
 int dMap_c::Render()
 {
     u8 flag20c = data_0209f20c;
-    u8 flag2c4 = data_0209f2c4;
+    u8 flag2c4 = gGamePaused;
     u8 flag294 = gVsExitScreenActive;
     int i;
     int j;
@@ -593,7 +593,7 @@ s32 dMap_c::Behavior()
         this->mTouchCircleTimer -= data_0208ee44;
     }
 
-    flagsOr = data_0209f2c4 | data_0209f20c | gVsExitScreenActive;
+    flagsOr = gGamePaused | data_0209f20c | gVsExitScreenActive;
     if ((u8)flagsOr) goto L200;
     if (data_02092110 >= 0) goto L200;
     if (data_0209f204 != 0) goto L200;
@@ -809,7 +809,7 @@ L738:
     }
 
     for (i = 0; i < 0xc; i++) {
-        dActor_c *o = (dActor_c *)data_0209f40c[i];
+        dActor_c *o = STAR_MARKERS[i];
         if (o != 0) {
             GetPosOnMinimap(&o->mPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
                             this->mAngle, &miniPos);

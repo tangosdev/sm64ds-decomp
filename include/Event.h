@@ -2,7 +2,8 @@
 
 #include "types.h"
 
-/* Event bitfield helpers over the single event-flag word gEventFlags (0x0209f34c).
+/* Event bitfield helpers over the single event-flag word sEventFlags (0x0209f34c,
+ * a static of d_s_stage_methods.cpp).
  * `bit` is an index into that word, not a mask.
  */
 namespace Event {
@@ -13,7 +14,7 @@ s32 GetBit(u32 bit);
 
 }
 
-/* Named indices into gEventFlags. */
+/* Named indices into sEventFlags. */
 enum EventBit {
     /* Set while a star (daStar_c) or a Bowser key (daObjKey_c, which spells it
        EVENT_KEY) is being collected, and cleared when the collection ends.
@@ -22,5 +23,3 @@ enum EventBit {
        meter. At runtime, setting it hides the coin and red-coin counters. */
     EVENT_COLLECTING_STAR = 0x1d
 };
-
-extern s32 gEventFlags;

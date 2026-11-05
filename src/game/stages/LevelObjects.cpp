@@ -44,7 +44,7 @@ extern u8 data_0209f220;
 extern u8 data_0209f250;
 extern u8 data_0209f2d8;
 extern void *data_0209f318;
-extern int data_0209f338[];
+extern void *data_0209f338;
 extern void *data_0209f394[];
 extern u8 data_0209fc5c[];
 extern int data_02092134;
@@ -383,7 +383,7 @@ void LoadMinimapScaleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
  * that keeps the table around, which also explains why it reads no count. */
 // @symbol _Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEaj
 void LoadUnusedType13Objects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    data_0209f338[0] = (int)table.entries;
+    data_0209f338 = table.entries;
 }
 
 /* Take the first word of the star-camera table and publish it. Reads no count,
