@@ -6,13 +6,11 @@
  *   Vec3; Vec3_Sub, SubVec3, Vec3_HorzLen and Vec3_Equal take Vector3;
  *   Vec3_MulScalar takes Vec3_Fix12. Keep the local POD views so each call
  *   uses its declared helper interface without adding Vector3 lifetimes.
- * - Vector3 stays a local POD twin rather than include/types.h's: that one
- *   declares a ctor and dtor under C++, which turns `dst = target` below from
- *   a block move into memberwise stores and loses the match.
  */
 #include "math/Approach.h"
 
 struct Vec3 { int x, y, z; };
+/* Not types.h's: its inline ~Vector3 adds a _ZN7Vector3D1Ev copy and renumbers @60/@61 (measured). */
 struct Vector3 { int x, y, z; };
 typedef struct { int x, y, z; } Vec3_Fix12;
 

@@ -45,6 +45,9 @@
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
+#include "OAM.h"
+#include "G2x.h"
+#include "G3i.h"
 
 typedef struct { int x, y, z; } Vec3;	/* POD triple for the C bodies */
 
@@ -209,21 +212,6 @@ struct CamPmfHost {
 
 enum Bool { FALSE, TRUE };
 
-/* The G3x/OAM records below exist only so the Render body's member-call
-   spellings mangle to the ROM's symbols; the by-value Fix12<int> parameters on
-   the real signatures cannot be written (the Fix12 wall), so the actual calls
-   go through the extern "C" spellings in the pool. */
-struct OamAttr;
-struct OAM {
-    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
-};
-struct G2x {
-    static void SetBlendAlpha(volatile unsigned short *, int, int, int, int);
-};
-struct G3i {
-    static void PerspectiveW_(Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, int, Matrix4x3 *);
-    static void LookAt_(const Vector3 *, const Vector3 *, const Vector3 *, bool, Matrix4x3 *);
-};
 
 /* @symbol dCamera_c_classInit
  * Allocation factory. new dCamera_c is the fBase constructor, the dBase and
