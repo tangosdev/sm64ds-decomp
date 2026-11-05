@@ -23,6 +23,12 @@ typedef signed int fx32;
 typedef signed long long fx64;
 typedef signed long long fx64c;
 
+/* NitroSDK's MtxFx43: a 4x3 fixed-point matrix, row by row. Not
+ * include/private/mtx43.h's Mtx43, which is the same 12 words unrowed. */
+typedef struct MtxFx43 {
+    fx32 m[4][3];
+} MtxFx43;
+
 #define FX32_SHIFT 12
 #define FX32_CAST(x) ((fx32)(x))
 

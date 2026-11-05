@@ -21,6 +21,7 @@
 #include "types.h"
 #include "CP15.h"
 #include "IRQ.h"
+#include "nitro/snd/command.h"
 
 extern "C" {
 
@@ -33,12 +34,6 @@ extern "C" {
 
 #define PXI_FIFO_TAG_SOUND 7
 #define PXI_PROC_ARM7 1
-
-typedef struct SNDCommand {
-    struct SNDCommand *next; /* 0x00 */
-    s32 id;                  /* 0x04 */
-    u32 arg[4];              /* 0x08 */
-} SNDCommand;
 
 struct SNDSharedWork;
 

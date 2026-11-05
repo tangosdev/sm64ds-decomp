@@ -115,16 +115,6 @@ typedef struct WmIndCallback {
     u16 state;   /* 0x04 */
 } WmIndCallback;
 
-/* Leading fields of WMStartConnectCallback (apiid 0xc). */
-typedef struct WmStartConnectCallback {
-    u16 apiid;    /* 0x0 */
-    u16 errcode;  /* 0x2 */
-    u16 wlCmdID;  /* 0x4 */
-    u16 wlResult; /* 0x6 */
-    u16 state;    /* 0x8 */
-    u16 aid;      /* 0xa */
-} WmStartConnectCallback;
-
 /* Leading fields of WMPortRecvCallback. */
 typedef struct WmPortRecvCallback {
     u16 apiid;   /* 0x0 */

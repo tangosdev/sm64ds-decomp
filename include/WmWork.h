@@ -63,6 +63,17 @@ typedef struct {
     unsigned char pad_178[8];
 } WmParentRecord; /* one scanned parent, 0x180 */
 
+/* Leading fields of WMStartConnectCallback (apiid 0xc), what WM_StartConnect's
+ * callback receives. */
+typedef struct WmStartConnectCallback {
+    unsigned short apiid;    /* 0x0 */
+    unsigned short errcode;  /* 0x2: 0 is WM_ERRCODE_SUCCESS */
+    unsigned short wlCmdID;  /* 0x4 */
+    unsigned short wlResult; /* 0x6 */
+    unsigned short state;    /* 0x8: WM_STATECODE_* */
+    unsigned short aid;      /* 0xa: the AID the parent assigned */
+} WmStartConnectCallback;
+
 /* WmWork field evidence (WM API ids from each wrapper's WM_SetCallbackTable):
  *   wmSysBuf        buffer arg of WM_Initialize (id 0, WM_Initialize)
  *   parentParam     WM_SetParentParameter (id 7); KS_Flag at

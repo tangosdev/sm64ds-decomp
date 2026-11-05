@@ -1,13 +1,4 @@
-struct EHIndexEntry;
-
-/* The view func_02072dac fills: see its banner. */
-struct EHTableInfo {
-    int start;
-    unsigned char *table;
-    int action;
-    struct EHIndexEntry *indexBegin;
-    struct EHIndexEntry *indexEnd;
-};
+#include "MWCPlusLib.h"
 
 /* The exception index table: data_020737a8 up to the start of .init. */
 extern struct EHIndexEntry data_020737a8;
