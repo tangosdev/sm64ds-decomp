@@ -15,6 +15,10 @@ Status: **Phase 0 spike** (attach + breakpoint + canary + register/mem dump).
 - `scenerun.py`, `ramdiff.py`, `scenecov.py`, `thissweep.py`, `symtab.py`: research
   runs through the `ask.py serve` daemon (RAM diff, per-scene coverage, `this`
   class sweep). See "Research runs" below.
+- `r0use.py`: static check, from the extracted module bytes, of whether a function
+  reads r0 before it writes it (the `method` category in thissweep needs it).
+- `blindround.py`: a pre-registered blind A/B round over several specs, from
+  design to score, with its gates. See "Blind rounds" below.
 - `mg/` — the minigame play kit: a watcher for the shared minigame functions,
   plus input and capture scripts for melonDS (`mg/README.md`).
 
@@ -291,10 +295,17 @@ python tools/trace/thissweep.py run --coverage DIR/coverage.tsv --state B1.ml --
   start over a scene. Each hit's first instruction word is checked against the
   module's image, so another overlay's code at the same address is not counted.
 - **thissweep** puts log-action breakpoints, which never halt, on N unnamed
-  functions. They record each distinct `u32[r0]`, which is resolved to a vtable,
-  a class, an RTTI chain and an actor id. Each function gets a verdict:
-  `one_class` (method evidence), `several_classes` (with the common base),
-  `mixed` or `not_object`. `emusession`'s `this` op and the `this=True` option on
+  functions. By default (`--sample reservoir`) the fork keeps a uniform sample of
+  each function's hits over the whole run, with r0-r3, sp, lr and bytes at r0-r3;
+  `--sample distinct` logs each distinct `u32[r0]` once instead. Each r0 word is
+  resolved to a vtable, a class, an RTTI chain and an actor id. Each function gets
+  a verdict (`one_class`, `several_classes` with the common base, `mixed`,
+  `not_object`) and a category: `method` needs `one_class` and `r0_used` (r0use.py),
+  so a function that overwrites r0 first is flagged, not claimed. `summary.md` is
+  generated from sweep.json and sweep.tsv, with the coverage gaps (candidates
+  never swept, swept but never sampled). scenecov's summary.md likewise comes from
+  its summary.json and lists every unnamed function in a watched module that ran
+  in no scene. `emusession`'s `this` op and the `this=True` option on
   `add_bp` resolve `this` the same way for a single breakpoint hit.
 - **Modules for `add_bp`**: `arm9`, `itcm` (0x01ff8000, from
   `extracted/dsd/arm9/itcm.bin`) or `ovNNN`. With `module` left out, an address
@@ -302,6 +313,25 @@ python tools/trace/thissweep.py run --coverage DIR/coverage.tsv --state B1.ml --
   `ovNNN`, because several overlays share one address range.
 
 Their outputs come from the ROM at run time. Keep them outside the repository.
+
+### Blind rounds: `blindround.py`
+
+```sh
+python tools/trace/blindround.py spec ROUND       # ROUND/design.json -> specs (scrambled c-names), predictions, JUDGE.md
+python tools/trace/blindround.py dryrun ROUND     # answer from the predictions; flag choices that can't separate conditions
+python tools/trace/blindround.py pilot ROUND      # guards, pokes landed, hook hit: pass/fail only, no images or values
+python tools/trace/blindround.py register ROUND   # REGISTERED.sha256
+python tools/trace/blindround.py run ROUND        # refuses unless the registration matches; ends with selfcheck
+python tools/trace/blindround.py score ROUND      # refuses until every judge/<spec>/my_judgments.json exists
+```
+
+The judge gets `ROUND/judge/` only (JUDGE.md, answers.json and pairs per spec);
+the key and the scores sit beside it, outside. Each event's settle offset is
+unique within its spec, judge PNGs carry only critical chunks, and `selfcheck`
+fails on a stray file, a path, an address, a c-name, a label, a planner word or
+two identical images. A respec deletes the registration. ROUND holds savestate
+paths and screenshots, so it lives outside the repository. The module docstring
+has the design.json format.
 
 ### Savestates, framing, overlays
 

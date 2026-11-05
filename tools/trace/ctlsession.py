@@ -469,6 +469,19 @@ class CtlDaemon(es.Daemon):
 
     def _this_arm(self, w):
         """(Re-)add w's log breakpoint: a fresh log, hits and evaluations reset."""
+        smp = getattr(self, '_this_sample', None)
+        if smp:
+            # one breakpoint for the whole run: the fork keeps a uniform sample of every
+            # hit (reservoir), with the argument registers and bytes at each of r0-r3
+            args = {'address': w['addr'], 'action': 'log', 'sample': 'reservoir', 'registers': 'args',
+                    'log_limit': smp['log_limit'],
+                    'dump': [{'address': 'r%d' % i, 'size': max(4, smp['arg_bytes'])} for i in range(4)]}
+            cond = self._this_cond(dict(w, keys={}))
+            if cond:
+                args['condition'] = cond
+            self.s._call('breakpoint_add', **args)
+            w['eval_base'] = 0
+            return
         args = {'address': w['addr'], 'action': 'log', 'dump': [{'address': 'r0', 'size': 0x10}]}
         cond = self._this_cond(w)
         if cond:
@@ -476,19 +489,32 @@ class CtlDaemon(es.Daemon):
         self.s._call('breakpoint_add', **args)
         w['eval_base'] = 0
 
-    def op_this_watch(self, functions, max_keys=32):
+    def op_this_watch(self, functions, max_keys=32, sample=None, log_limit=64, arg_bytes=16):
         """functions: [{addr, module, thumb, name}] (module 'arm9', 'itcm' or 'ovNNN').
-        Each entry gets a log breakpoint that records r0 and 16 bytes at r0, but
-        only for a vptr (u32[r0]) not yet seen there; an overlay function's
-        condition also checks its code bytes, so another overlay's code at the
-        same address never logs. Poll this_collect every few frames (a breakpoint
-        logs at most 4096 hits between polls)."""
+
+        sample=None (distinct): each entry gets a log breakpoint that records r0 and
+        16 bytes at r0, but only for a vptr (u32[r0]) not yet seen there. Poll
+        this_collect every few frames (a breakpoint logs at most 4096 hits between
+        polls); it re-arms with the seen vptrs filtered out.
+
+        sample='reservoir': each entry gets one log breakpoint for the whole run that
+        keeps a uniform sample of log_limit hits out of every hit (the fork's reservoir
+        log), each with r0-r3, r12, sp, lr and arg_bytes bytes at each of r0-r3. No
+        hit halts and none is re-armed, so the samples spread over the run instead of
+        bunching at its start. this_collect reads the current sample (call it at the end).
+
+        Either way an overlay function's condition also checks its code bytes, so
+        another overlay's code at the same address never logs."""
         import symtab
         if any(b.armed for b in self.s.bps.values() if b.role != 'frame'):
             raise RuntimeError('this_watch: clear the daemon probes/triggers first')
+        if sample not in (None, 'distinct', 'reservoir'):
+            raise RuntimeError('this_watch: sample must be distinct or reservoir')
         self._this_unwatch()
         self._watch = {}
         self._this_max = int(max_keys)
+        self._this_sample = ({'log_limit': int(log_limit), 'arg_bytes': int(arg_bytes)}
+                             if sample == 'reservoir' else None)
         for f in functions:
             a = es.parse_int(f['addr'])
             mod = f.get('module') or 'arm9'
@@ -516,6 +542,8 @@ class CtlDaemon(es.Daemon):
         self.s.refresh_overlays()
         mods = ['arm9'] + ['ov%03d' % i for i in sorted(self.s.loaded or ())]
         cache = self.__dict__.setdefault('_vptr_cache', {})
+        if getattr(self, '_this_sample', None):
+            return self._this_collect_sample(lst, mods, cache)
         new = 0
         for b in lst.get('breakpoints', []):
             a = b.get('address')
@@ -557,6 +585,57 @@ class CtlDaemon(es.Daemon):
                 self._this_arm(w)
         return {'new': new}
 
+    def _this_collect_sample(self, lst, mods, cache):
+        """Reservoir mode: the log is the sample so far; rebuild each function's keys
+        and samples from it (nothing is re-armed, so nothing resets)."""
+        import symtab
+        watch = self._watch
+        for b in lst.get('breakpoints', []):
+            a = b.get('address')
+            a = int(a, 16) if isinstance(a, str) else int(a)
+            w = watch.get(a)
+            if w is None:
+                continue
+            w['evaluations'] = int(b.get('evaluations', 0))
+            w['hits'] = int(b.get('hits', 0))
+            w['seen'] = int(b.get('log_seen', 0))
+            log = b.get('log') or []
+            w['logged'] = len(log)
+            w['truncated'] = max(0, w['hits'] - len(log))
+            keys, samples = {}, []
+            for h in log:
+                regs = h['registers']
+                dumps = h.get('dumps') or []
+                raw0 = bytes.fromhex(dumps[0]['hex']) if dumps and dumps[0].get('hex') else b''
+                key = int.from_bytes(raw0[:4], 'little') if len(raw0) >= 4 else 'unreadable'
+                k = keys.get(key)
+                if k is None:
+                    k = {'n': 0, 'obj': regs['r0'][2:], 'lr': regs.get('r14'), 'actor_ids': [], 'objs': []}
+                    if isinstance(key, int):
+                        k.update(symtab.resolve_vptr(self.s.read, key, mods, self._this_table, cache))
+                    keys[key] = k
+                k['n'] += 1
+                r0 = int(regs['r0'], 16)
+                if r0 not in k['objs'] and len(k['objs']) < 64:
+                    k['objs'].append(r0)
+                if k.get('is_actor') and len(raw0) >= 0x0e:
+                    aid = int.from_bytes(raw0[0x0c:0x0e], 'little')
+                    if aid not in k['actor_ids'] and len(k['actor_ids']) < 8:
+                        k['actor_ids'].append(aid)
+                s = {'frame': h.get('frame'), 'hit': h.get('hit_count'),
+                     'key': key if isinstance(key, str) else '%08x' % key}
+                for i in range(4):
+                    s['r%d' % i] = regs.get('r%d' % i)
+                    if i < len(dumps):
+                        s['m%d' % i] = dumps[i].get('hex') or 'ERR'
+                s['lr'], s['sp'] = regs.get('r14'), regs.get('r13')
+                samples.append(s)
+            samples.sort(key=lambda s: (s['frame'] or 0, s['hit'] or 0))
+            w['keys'] = keys
+            w['samples'] = samples
+            w['many'] = len(keys) > self._this_max
+        return {'new': sum(len(w['keys']) for w in watch.values())}
+
     def op_this_report(self):
         """Per watched function: the vptrs seen in r0 (each resolved to its class,
         RTTI chain, actor ids), logged hits and breakpoint evaluations."""
@@ -569,9 +648,12 @@ class CtlDaemon(es.Daemon):
                 v['actor_names'] = [names.get(i, '?') for i in v.get('actor_ids', [])]
                 v['key'] = k if isinstance(k, str) else '%08x' % k
                 keys.append(v)
-            out.append({'addr': '%08x' % w['addr'], 'module': w['module'], 'name': w['name'],
-                        'thumb': w['thumb'], 'evaluations': w['evaluations'], 'logged': w['logged'],
-                        'truncated': w['truncated'], 'many': w['many'], 'keys': keys})
+            rec = {'addr': '%08x' % w['addr'], 'module': w['module'], 'name': w['name'],
+                   'thumb': w['thumb'], 'evaluations': w['evaluations'], 'logged': w['logged'],
+                   'truncated': w['truncated'], 'many': w['many'], 'keys': keys}
+            if 'samples' in w:
+                rec.update(sample='reservoir', hits=w['hits'], seen=w.get('seen', 0), samples=w['samples'])
+            out.append(rec)
         return out
 
     def _this_unwatch(self):
