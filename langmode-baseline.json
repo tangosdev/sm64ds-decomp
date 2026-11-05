@@ -15,12 +15,12 @@
       "opt_lifetimes": 3,
       "opt_loop_invariants": 15,
       "opt_prelinearize": 1,
-      "opt_propagation": 30,
+      "opt_propagation": 23,
       "opt_strength_reduction": 30,
       "optimize_for_size": 13
     },
-    "pragma_files": 67,
-    "pragma_overrides": 151,
+    "pragma_files": 63,
+    "pragma_overrides": 144,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
@@ -56,14 +56,14 @@
       },
       "method": {
         "draft": 0,
-        "migrated": 6044,
+        "migrated": 6053,
         "unmigrated": 1
       }
     },
     "cpp_still_handspelled": 3,
     "mangled_c": 0,
-    "mangled_cpp": 7002,
-    "mangled_total": 7002,
+    "mangled_cpp": 7011,
+    "mangled_total": 7011,
     "nonmatching_drafts": 0,
     "unmigrated_total": 3
   },
