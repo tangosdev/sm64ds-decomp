@@ -24,7 +24,8 @@
  * It disarms at the top of port_level_teardown (hal/level_change.cpp, through
  * port_polelog_disarm_hook, which the first tick sets), before
  * any pole's cleanup runs, and when the crash writer asks for its text. With
- * a debugger attached it never arms (the debugger owns the registers).
+ * a debugger attached it never arms (the debugger owns the registers), and
+ * under Wine / Proton it never arms (ntdll exports wine_get_version there).
  *
  * THREADS. Debug registers are per thread. Arm, disarm and the actor walk all
  * run on the game thread, which is the only thread that runs actor code; a
@@ -155,8 +156,26 @@ LONG WINAPI polelog_veh(EXCEPTION_POINTERS *ep)
         }
         g_last[i] = now;
     }
-    if (!mine)
-        return EXCEPTION_CONTINUE_SEARCH;   /* somebody else's breakpoint */
+    if (!mine) {
+        /* A data trap whose Dr6 came back empty and whose value did not
+           change (a same-value write on a host that does not report Dr6).
+           Nothing else in a player build uses the debug registers or the trap
+           flag, so while armed, a single step with TF clear and no Dr6 bit is
+           ours: resume it here, or the quarantine filter would see it and
+           freeze the walker. */
+        if ((ep->ContextRecord->EFlags & 0x100) || (dr6 & 0xf))
+            return EXCEPTION_CONTINUE_SEARCH;   /* somebody else's breakpoint */
+        static int said;
+        if (!said) {
+            said = 1;
+            std::snprintf(g_line, sizeof g_line,
+                "[polelog] f%d unattributed single step (Dr6 %08lx, TF clear) eip=+0x%08x: resumed\n",
+                g_frame, (unsigned long)dr6,
+                (unsigned)((char *)ep->ExceptionRecord->ExceptionAddress - g_modbase));
+            std::fputs(g_line, stderr);
+            std::fflush(stderr);
+        }
+    }
     ep->ContextRecord->Dr6 = 0;
     ep->ContextRecord->EFlags |= 0x10000;   /* RF; harmless for a data trap */
     return EXCEPTION_CONTINUE_EXECUTION;
@@ -177,6 +196,14 @@ void arm(void)
 {
     g_tried = 1;
     g_hits = 0;
+    /* Wine / Proton: its debug-register support is not the same as Windows'
+       (Dr6 may come back empty), so never arm there and make no context
+       call at all. */
+    if (HMODULE nt = GetModuleHandleA("ntdll.dll"))
+        if (GetProcAddress(nt, "wine_get_version")) {
+            std::fprintf(stderr, "[polelog] wine: not armed\n");
+            return;
+        }
     if (IsDebuggerPresent()) {
         std::fprintf(stderr, "[polelog] level %d: debugger attached, watch not armed\n", kLevel);
         return;
