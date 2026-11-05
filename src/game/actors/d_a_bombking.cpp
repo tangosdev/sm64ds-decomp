@@ -2,7 +2,7 @@
 /* daBombking_c -- King Bob-omb (BOMBKING), Bob-omb Battlefield.
  * The destructor is out of line and first. defer_codegen off emits D1 then
  * D0 at the head, so source order is ROM order. common.h is first so the
- * shadow and hold copies stay flat 12-word moves through M12.
+ * shadow and hold copies are flat 12-word moves.
  */
 /* leftovers: the held matrix pointer at actor+0xc8 is dActor_c::mCarryMatrix.
  * func_ov078_02125de0 stores the king's own as the member; the stores into
@@ -26,7 +26,7 @@
 /* common.h FIRST: daBombking_c.h reaches math/Matrix.h through dExtBlendAnmModel_c.h,
  * and that header spells Matrix4x3 as {Matrix3x3 r; Vector3 t;} where common.h
  * spells it flat as s32 m[12]. Helpers whole-struct-assign the shadow/hold
- * matrices through M12; only the flat spelling reproduces the block move. */
+ * matrices; only the flat spelling reproduces the block move. */
 #include "common.h"
 #include "math/CalcLib.h"
 #include "daBombking_c.h"
@@ -51,11 +51,6 @@ s16 atan2(s32, s32);
  * dActor_c, fBase_c, daPly_c, BMD_File, dExtBlendAnmModel_c) was DROPPED here -- the
  * generated preamble redefined all of them. The shapes below are surviving
  * views from the legacy shards, not evidence of original local classes. */
-
-/* File-local flat matrix. math/Matrix.h spells Matrix4x3 as {Matrix3x3 r;
- * Vector3 t;} while common.h spells it flat; whole-matrix assignment must stay
- * flat or mwcc splits it into ldm/stm + a CSE'd tail. */
-struct M12 { int w[12]; };
 
 struct Vec3 { int x, y, z; };
 
@@ -173,7 +168,7 @@ extern "C" {
      * preamble carried up to three contradictory spellings of each. */
 extern unsigned char data_0209f220[];
 extern void *data_0209f318;
-extern struct M12 data_020a0e68;
+extern Matrix4x3 data_020a0e68;
 extern int data_02092138;
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
@@ -255,12 +250,12 @@ int daBombking_c::func_ov078_021238ac()
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    data_020a0e68 = *(struct M12 *)&this->mBlendAnmModel.mat4x3;
+    data_020a0e68 = this->mBlendAnmModel.mat4x3;
     MulMat4x3Mat4x3(&this->mBlendAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
 
-    v.x = data_020a0e68.w[9];
-    v.y = data_020a0e68.w[10];
-    v.z = data_020a0e68.w[11];
+    v.x = data_020a0e68.m[9];
+    v.y = data_020a0e68.m[10];
+    v.z = data_020a0e68.m[11];
     Vec3_Lsl(&t, &v, 3);
     v.x = t.x;
     v.y = t.y;
@@ -662,11 +657,11 @@ int daBombking_c::func_ov078_02124520()
         a.x = 0;
         a.y = 0;
         a.z = 0;
-        data_020a0e68 = *(struct M12 *)&this->mBlendAnmModel.mat4x3;
+        data_020a0e68 = this->mBlendAnmModel.mat4x3;
         MulMat4x3Mat4x3(&this->mBlendAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-        a.x = data_020a0e68.w[9];
-        a.y = data_020a0e68.w[10];
-        a.z = data_020a0e68.w[11];
+        a.x = data_020a0e68.m[9];
+        a.y = data_020a0e68.m[10];
+        a.z = data_020a0e68.m[11];
         Vec3_Lsl(&tmp, &a, 3);
         a.x = tmp.x;
         dust.x = tmp.x;
@@ -1286,11 +1281,11 @@ int daBombking_c::func_ov078_02125790()
         s.x = 0;
         s.y = 0;
         s.z = 0;
-        data_020a0e68 = *(struct M12 *)&this->mBlendAnmModel.mat4x3;
+        data_020a0e68 = this->mBlendAnmModel.mat4x3;
         MulMat4x3Mat4x3(&this->mBlendAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-        s.x = data_020a0e68.w[9];
-        s.y = data_020a0e68.w[10];
-        s.z = data_020a0e68.w[11];
+        s.x = data_020a0e68.m[9];
+        s.y = data_020a0e68.m[10];
+        s.z = data_020a0e68.m[11];
         Vec3_Lsl(&d, &s, 3);
         s.x = d.x;
         v.x = d.x;
@@ -1471,7 +1466,7 @@ void daBombking_c::func_ov078_02125c98() {
   int scale = 0x15e000 - FX_MUL(ip, 0x180);
   if (scale < 0xa000)
     scale = 0xa000;
-  *(struct M12 *)this->mShadowMtx = *(struct M12 *)&IDENTITY_MATRIX4X3;
+  *(Matrix4x3 *)this->mShadowMtx = IDENTITY_MATRIX4X3;
   this->mShadowMtx[9] = this->mPosX >> 3;
   this->mShadowMtx[10] = this->mPosY >> 3;
   this->mShadowMtx[11] = this->mPosZ >> 3;
@@ -1518,10 +1513,10 @@ void daBombking_c::func_ov078_02125de0()
         if (actor == 0)
             continue;
 
-        data_020a0e68 = *(struct M12 *)this->mHoldMtx;
+        data_020a0e68 = *(Matrix4x3 *)this->mHoldMtx;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0xb000, -0x7000, -0x6000);
         Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x4000, -0x1000, 0x2000);
-        *(struct M12 *)this->mHoldMtx = data_020a0e68;
+        *(Matrix4x3 *)this->mHoldMtx = data_020a0e68;
         ((dActor_c *)actor)->mCarryMatrix = (struct Matrix4x3 *)this->mHoldMtx;
     }
 }
@@ -1536,7 +1531,7 @@ void daBombking_c::func_ov078_02125f8c(){
     if (player == 0) return;
     if (player->param1 == 2) idx = 1;
     Matrix4x3 *res = this->UpdateCarry(*player, data_ov078_0212711c[idx]);
-    *(struct M12 *)&this->mBlendAnmModel.mat4x3 = *(struct M12 *)res;
+    this->mBlendAnmModel.mat4x3 = *res;
 }
 
 /* -------------------------------------------------------------------------- */
