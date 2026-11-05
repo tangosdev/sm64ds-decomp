@@ -151,6 +151,7 @@ draws the cap on a Goomba's head.
 Files: `ask.py` (CLI), `emusession.py` (one long-lived stub session plus a
 local RPC daemon), `emuwin.py` (launch, window capture, focus-free input,
 config swap), `uia_menu.ps1` (menu clicks by UI Automation), `specs/*.json`.
+`ctlclient.py` and `ctlsession.py` are the control-socket backend (below).
 Python 3.11 standard library only; tkinter is needed for human mode only.
 
 ### A human session
@@ -201,6 +202,62 @@ Run directory layout: `pairs/` (blind images), `answers.json`, `key/key.json`
 (condition, real/sham, expected answer, located object, pokes with old/new
 values, pause trigger/pc/lr, before/after RAM snapshots, framing), `key/log.jsonl`
 (every daemon event), `key/events.jsonl`, and `key/` raw shots.
+
+### Control-socket backend (`--backend ctl`)
+
+`serve` drives one of two emulators. The daemon ops, the spec format, the
+blinding, `score` and the pair layout are the same with both.
+
+| | `gdb` (stock melonDS) | `ctl` (melonDS AI-controller fork) |
+|---|---|---|
+| connection | GDB stub, port 3333 | JSON lines on 127.0.0.1:45987, with a token |
+| config | `melonDS.toml` swapped next to the installed exe | the fork's own config dir (`<workdir>/ctl-config`); no toml touched |
+| savestates | File menu (UI Automation), copied over a slot file | `load_state` / `save_state` by path |
+| shots | window capture, re-grabbed until stable | the framebuffer, exact; upscaled by `--scale` (2), nearest neighbour |
+| input | posted keys for ms of wall time (the game must run) | `press` / `touch` / `input` hold N emulated frames |
+| breakpoints | stub Z0, overlay canary checked in Python | in-process; the canary is a native condition |
+| frames | free run at 60 fps, frame breakpoint counted | synchronous unthrottled `step`, frame breakpoint counted |
+
+Selection: `serve --backend ctl|gdb|auto`, or the env var `ASK_BACKEND`. `auto`
+(the default) picks `ctl` when the fork answers `ping` on the control port
+(`--ctl-port`, env `MELONDS_CONTROL_PORT`; token `--ctl-token`, env
+`MELONDS_CONTROL_TOKEN`), else `gdb`. With `--backend ctl` and nothing
+answering, `serve` launches the fork through its `tools/start_control.ps1`
+(found by `--fork`, env `MELONDS_AI_ROOT`, or `C:\tmp\melonds-ai-controller`),
+headless, with a ROM copy in `--workdir` (default `%TEMP%\sm64ds-ask-emu-ctl`).
+It refuses while any other melonDS runs (`--wait-other` waits up to 20 min).
+`stop --kill` quits the fork through its socket. The fork is a local build of
+melonDS 1.1 and is not published; its `CONTROL_API.md` lists every command.
+
+Things that differ in use:
+
+- Timeouts (`step`, `wait_trigger`) count emulated time: `timeout` seconds is
+  `timeout * 60` frames, run as fast as the emulator goes. Between ops the game
+  free runs at 60 fps, as with the stub.
+- SM64DS reads the pad at 30 Hz, on alternate frames. `input frames=1` can fall
+  between two polls; hold 2 or more. Held input starts with the next frame; a
+  frame halted at a breakpoint counts as the first.
+- `ctl fork cmd=coverage_start args='{...}'` passes one raw command to the fork
+  (coverage, `overlays`, `research_snapshot`); the session re-reads the run
+  state afterwards.
+
+### RAM snapshots (`ram-snapshot`, `ram-diff`)
+
+```sh
+python tools/trace/ask.py ram-snapshot C:/somewhere/a.bin                  # default ranges
+python tools/trace/ask.py ram-snapshot C:/somewhere/b.bin --range 0x02086bc0:0x23860:arm9 --range "[0x0209f394]:0x800:player"
+python tools/trace/ask.py ram-diff C:/somewhere/a.bin.json C:/somewhere/b.bin.json
+```
+
+`ram_snapshot` (op and command) takes several ranges in one call. Addresses
+may be expressions (with `--obj`). It writes the bytes, concatenated, to `OUT`
+and an index to `OUT.json`: name, address, size, offset and sha256 per range,
+plus the frame counters. The ctl backend reads every range at one emulated
+instant (`read_ranges`, up to 16 MiB in all). The stub backend reads them in
+turn, which is consistent only while the target is halted; `atomic` in the
+result says which. The default ranges are a RAM-diff screen's: arm9 .data and
+.bss, ov002 .data and .bss, and 0x800 bytes of the player actor. `ram-diff`
+lists the byte runs that differ between two snapshots of the same ranges.
 
 ### Savestates, framing, overlays
 
