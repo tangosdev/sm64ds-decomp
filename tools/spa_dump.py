@@ -70,6 +70,15 @@ TEXTURE_FORMATS = {
 #   func_0204cd5c = maps a 2D offset onto the plane perpendicular to `axis`
 #                   (mode taken from flags bits 6-7)
 # "Filled" (4, 5) is inferred from the extra per-axis random in [-1,1).
+# flags bits 4-5, proven to select the per-particle render function in func_0204a5c8
+# (child records use the same three at child halfword bits 7-8).  The meaning of each
+# is read from what the routine calls; mode 1/2 labels are inferred.
+DRAW_MODES = {
+    0: "billboard",         # 0x0204be40: view-space transform only, camera-facing quad
+    1: "velocity-aligned",  # 0x0204b81c: CrossVec3 + NormalizeVec3 against particle +0x20
+    2: "spinning",          # 0x0204b244: angle (particle+0x36) via sin/cos table, axis from flag bits 17-18
+}
+
 SHAPES = {
     0: "point",                  # offset = 0
     1: "sphere surface",         # random 3D unit vector * radius
@@ -100,7 +109,9 @@ def decode_base(b, start):
         "shape": flags & 0xF,                 # emitter shape 0..5
         "shapeName": SHAPES.get(flags & 0xF, "?"),
         "planeMode": flags >> 6 & 3,          # flags bits 6-7: func_0204cd5c mapping mode
-        "drawMode": flags >> 4 & 3,           # 0..2, selects draw/blend routine
+        "drawMode": flags >> 4 & 3,           # 0..2, selects the render function
+        "drawModeName": DRAW_MODES.get(flags >> 4 & 3, "?"),
+        "spinAxisSelect": flags >> 17 & 3,    # flags bits 17-18: index into the table the spinning draw mode uses
         "radius": fx12(radius),               # emitRadius (Fix12)
         "axis": [fx12(a) for a in axis],      # direction vector (1.3.12 fixed)
         "lifetime": struct.unpack_from("<H", b, start + 0x2A)[0],  # particleLifetime
@@ -255,8 +266,8 @@ def main():
         print("texture (byte 0x33): %d%s" % (d["texture"], "" if not tx else
               "  %s %dx%d" % (tx["format_name"], tx["width"], tx["height"])))
         x = d["decoded"]
-        print("shape %d (%s)  planeMode %d  drawMode %d  radius %.3f  axis (%.3f, %.3f, %.3f)" % (
-            x["shape"], x["shapeName"], x["planeMode"], x["drawMode"], x["radius"], *x["axis"]))
+        print("shape %d (%s)  planeMode %d  drawMode %d (%s)  radius %.3f  axis (%.3f, %.3f, %.3f)" % (
+            x["shape"], x["shapeName"], x["planeMode"], x["drawMode"], x["drawModeName"], x["radius"], *x["axis"]))
         print("lifetime %d  emitInterval %d  baseAlpha %d  baseColor %s" % (
             x["lifetime"], x["emitInterval"], x["baseAlpha"], x["baseColor"]))
         print("emissionCount %.1f  emitterLifetime %d%s  drag %.3f" % (
