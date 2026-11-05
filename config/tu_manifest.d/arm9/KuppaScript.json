@@ -1310,7 +1310,7 @@
   "notes": [
     "HAND-BUILT manifest entry -- the `main` module is unsegmentable, so there is no tubuild create candidate id.",
     "No ROM RTTI names this code; KuppaScript is the tree's established name for it (RunKuppaScript, EndKuppaScript, ProcessKuppaScript, ...), so the file takes that coined name per AGENTS.md. Every function keeps C linkage: C sources bind FindDemoActor, FindScriptPlayer, ReadUnaligned*, and the rest are declared extern \"C\" by their C++ callers.",
-    "ROM-ascending under `#pragma defer_codegen off`; the opt_common_subs off bracket ProcessKuppaScript needs binds to that function only.",
+    "ROM-ascending under `#pragma defer_codegen off`.",
     "Pointer bytes: a script is a u8 array whose records hold unaligned addresses, spelled KS_PTR(p) = (u32)&p & 0xff, ((u32)&p >> 8) & 0xff, ... Those bytes are zero in .data and stored by the initializer, in definition order, so the 38 patched scripts are defined in retail's store order and the fader after them. The & 0xff masks are load-bearing: (u8) casts instead give an initializer 0x5c bytes short.",
     "False relocations: dsd had read 11 words of script bytes (frame numbers and arguments) inside 0x0208751c..0x0208a0e0 as pointers; they are dropped from config/arm9/relocs.txt.",
     "Collision property member calls replace local helper declarations. Reconciled 1 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (182 sections, 272 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."

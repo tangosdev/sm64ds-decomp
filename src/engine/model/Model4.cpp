@@ -541,9 +541,6 @@ u32 dExtSimpleModel_c::LoadTextureToVram(char *texData, u32 size) {
 }
 
 // @symbol _ZN17dExtSimpleModel_c27LoadCompressedTextureToVramEPcjS0_
-/* Stays off through the rest of the file. Restoring it before deferred
-   codegen emits this function reorders five words. */
-#pragma opt_common_subs off
 u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *dst) {
     u32 vramOffset;
 
@@ -552,7 +549,7 @@ u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *ds
     GX::BeginLoadTex();
     GX::LoadTex(src, data_020a4bc8, size);
     data_020a4be4 += size;
-    GX::LoadTex(dst, data_020a4be0, size >> 1);
+    GX::LoadTex(dst, data_020a4be0, size / 2);
     data_020a4be4 += size >> 1;
     GX::EndLoadTex();
     vramOffset = data_020a4bc8;

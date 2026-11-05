@@ -5,8 +5,7 @@
  *
  * leftovers:
  * - defer_codegen is off for the whole file, so definitions run low
- *   address first. func_02044284 needs opt_common_subs off and the other
- *   bodies need it on; under deferred codegen one setting covers the file.
+ *   address first.
  * - data_020a4b68 is the currently executing process node. It stays
  *   void *: ActorBase.cpp and ShowCrashScreen.c spell it that way, and
  *   the fLiNdBa_c destructor's old fLiNdBa_c * spelling was a second claim
@@ -180,8 +179,6 @@ extern "C" int func_0204424c(char *c) {
 
 /* Run table entries from idx while each returns state 2. With flag == 0,
  * run at most one. */
-#pragma push
-#pragma opt_common_subs off
 // @symbol func_02044284
 extern "C" int func_02044284(Obj *self, int flag) {
     void **arr = self->arr;
@@ -191,7 +188,7 @@ extern "C" int func_02044284(Obj *self, int flag) {
         return 2;
 
     i = self->idx;
-    while (arr[i] != 0) {
+    while (self->arr[self->idx] != 0) {
         self->state = self->v08(arr[i]);
         if (self->state != 2)
             break;
@@ -204,7 +201,6 @@ extern "C" int func_02044284(Obj *self, int flag) {
     }
     return self->state;
 }
-#pragma pop
 
 /* Drain a started sequence: call slot 3 on each entry already run, newest
  * first. */
