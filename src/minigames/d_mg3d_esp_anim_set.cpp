@@ -14,9 +14,6 @@
  * and ends the unit. Functions run in ROM order under
  * `#pragma defer_codegen off`; do not reorder.
  *
- * Each pragma bracket below carries the file-global pragma of the file
- * that function came from; the brackets bind only under defer_codegen off.
- *
  * deslop leftovers:
  * - The scene's cards, rows and slots are the header's Card, Row and Slot
  *   arrays. RenderRows indexes mRows directly; RenderCards still reads its
@@ -638,8 +635,6 @@ void dScMg3DEsp_c::SlotDampen(int i) {
     }
 }
 
-#pragma push
-#pragma opt_common_subs off
 // @symbol _ZN12dScMg3DEsp_c8SlotKickEi
 void dScMg3DEsp_c::SlotKick(int i)
 {
@@ -667,10 +662,7 @@ void dScMg3DEsp_c::SlotKick(int i)
     }
     mSlots[i].mType = 3;
 }
-#pragma pop
 
-#pragma push
-#pragma opt_common_subs off
 // @symbol _ZN12dScMg3DEsp_c8SlotRiseEi
 void dScMg3DEsp_c::SlotRise(int i)
 {
@@ -716,12 +708,9 @@ void dScMg3DEsp_c::SlotRise(int i)
         mSlots[i].mType = 3;
     }
 }
-#pragma pop
 
 extern unsigned char data_ov006_0212e57c[];
 
-#pragma push
-#pragma opt_common_subs off
 // @symbol _ZN12dScMg3DEsp_c9SlotSetupEi
 void dScMg3DEsp_c::SlotSetup(int idx) {
     unsigned int r;
@@ -738,10 +727,7 @@ void dScMg3DEsp_c::SlotSetup(int idx) {
     r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
     mSlots[idx].mType = data_ov006_0212e57c[(r << 1) >> 15];
 }
-#pragma pop
 
-#pragma push
-#pragma opt_common_subs off
 // @symbol _ZN12dScMg3DEsp_c8SlotFallEi
 void dScMg3DEsp_c::SlotFall(int idx)
 {
@@ -762,10 +748,7 @@ void dScMg3DEsp_c::SlotFall(int idx)
         mSlots[idx].mState = 0;
     }
 }
-#pragma pop
 
-#pragma push
-#pragma opt_common_subs off
 // @symbol _ZN12dScMg3DEsp_c8SlotWaitEi
 void dScMg3DEsp_c::SlotWait(int idx)
 {
@@ -788,7 +771,6 @@ void dScMg3DEsp_c::SlotWait(int idx)
         mSlots[idx].mFrame = 0;
     }
 }
-#pragma pop
 
 // @symbol _ZN12dScMg3DEsp_c11UpdateSlotsEv
 void dScMg3DEsp_c::UpdateSlots() {
