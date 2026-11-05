@@ -92,6 +92,7 @@
 #include "daStar_c.h"
 #include "daBtn_c.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
 
 struct dBgPi;
 
@@ -100,8 +101,6 @@ struct dBgPi;
 struct Vec3i { s32 x, y, z; };
 struct Vec3_16f { s16 x, y, z; };
 
-/* The scratch matrix at 0x020a0e68, as twelve words. */
-struct M48 { int w[12]; };
 struct Spawn { struct Vec3_16f rot; struct Vec3i pos; };
 
 /* Actor registry IDs this file tests or spawns (symbols/actor_debug_names.tsv). */
@@ -143,7 +142,9 @@ extern SharedFilePtr data_ov002_0210eb78;
 extern s16 data_ov002_021000a8[];
 extern s16 data_02082214[];
 extern int data_0209e650;
-extern M48 data_020a0e68;
+/* The scratch matrix, flat: assigning this TU's nested Matrix4x3 grows the
+   object by 0x30 bytes. */
+extern Mtx43 data_020a0e68;
 
 extern int func_02035638(u8 *p);
 extern char *data_ov002_021000a0[];
@@ -179,10 +180,10 @@ extern int Math_Function_0203b14c(void *ptr, int target, int rate, int limit, in
 extern int ApproachAngle(void *cur, short target, int divisor, int band, int maxStep);
 extern short func_02010844(void *unused, void *v, short angle);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_FromTranslation(M48 *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToTranslation(M48 *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(M48 *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(M48 *m, int x, int y, int z);
+extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToTranslation(Mtx43 *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(Mtx43 *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Mtx43 *m, int x, int y, int z);
 extern int func_ov002_020cf700(void *g);
 extern int func_ov002_020d0d2c(void *g);
 }
@@ -1077,12 +1078,12 @@ void daYegg_c::func_ov002_020ed998()
         v.x = 0;
         v.y = 0;
         v.z = 0;
-        data_020a0e68 = *(M48 *)mPlayer->mCarryMatrix;
+        data_020a0e68 = *(Mtx43 *)mPlayer->mCarryMatrix;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3f, 9, 0xb);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
-        t9  = ((volatile M48 *)&data_020a0e68)->w[9];
-        t10 = ((volatile M48 *)&data_020a0e68)->w[10];
-        t11 = ((volatile M48 *)&data_020a0e68)->w[11];
+        t9  = ((volatile Mtx43 *)&data_020a0e68)->r[3].x;
+        t10 = ((volatile Mtx43 *)&data_020a0e68)->r[3].y;
+        t11 = ((volatile Mtx43 *)&data_020a0e68)->r[3].z;
         v.y = t10;
         v.z = t11;
         v.x = t9;
@@ -1096,7 +1097,7 @@ void daYegg_c::func_ov002_020ed998()
                               (int)((((long long)mPosZ << 9) + 0x800) >> 12));
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
         mAngleX, mAngleY, mAngleZ);
-    *(M48 *)&mAnmModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mAnmModel.mat4x3 = data_020a0e68;
 }
 
 /* -------------------------------------------------------------------------- */
