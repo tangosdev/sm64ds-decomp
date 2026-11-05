@@ -23,8 +23,7 @@
  * three-Mario array and its small state accessors (0x020c70d0..0x020c7574).
  * They share the .data tuning words at 0213b008..0213b01c and the bss
  * window at 02140400.. with the members below, which is what puts them in
- * this TU. They were one-function shards, one per function; Jump3D_StartRoundLayout keeps its
- * `opt_common_subs off` as a push/pop bracket.
+ * this TU. They were one-function shards, one per function.
  *
  * leftovers:
  * - dExtAnmModel_c::SetAnim takes Fix12<int> by value; its real spelling makes
@@ -322,8 +321,6 @@ struct Jump3DLayoutSlot {
 typedef char Jump3DLayoutSlot_size_must_be_0xc[sizeof(Jump3DLayoutSlot) == 0xc ? 1 : -1];
 
 // @symbol Jump3D_StartRoundLayout
-#pragma push
-#pragma opt_common_subs off
 extern "C" void Jump3D_StartRoundLayout(void)
 {
     int i;
@@ -352,7 +349,6 @@ extern "C" void Jump3D_StartRoundLayout(void)
         ooff += 0xb8;
     } while (i < sJump3DMarioCount);
 }
-#pragma pop
 
 // @symbol Jump3D_InitPool
 extern "C" int Jump3D_InitPool(char *base, int count)
