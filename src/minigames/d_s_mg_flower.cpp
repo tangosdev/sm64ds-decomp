@@ -24,9 +24,6 @@
  * comment leftovers:
  *  - The FlowerFace_* helpers are free functions over a char* record in
  *    src/minigames/unit020bfec0.cpp, so mFace is passed by address.
- *  - DealPetals' layout and shuffle loops reach the petal fields through
- *    c + i * 0x20 cast back to the scene, ((dScMgFlower_c *)p)->mPetals[0]:
- *    indexing mPetals[i] there changes the code (see its doc comment).
  *  - Behavior keeps one launder, LB, on the dragged petal's y.
  */
 
@@ -42,7 +39,6 @@
 #include "GX.h"
 
 #pragma defer_codegen off
-#pragma opt_strength_reduction off
 
 /* The first two OAM attribute words, copied whole from the petal template. */
 struct SpriteAttr {
@@ -136,22 +132,13 @@ void dScMgFlower_c::UpdatePetals() {
  * chance of 20-21, otherwise 8-15). The petals are laid out on a circle
  * (angle = base + i * full turn / count, a (0, 3.0) offset rotated by that
  * angle and moved to (8.0, 6.0)), shuffled by swapping angle and position
- * with random partners, and the round state is reset.
- *
- * The layout and shuffle loops step a petal pointer, c + i * 0x20, and
- * cast it back to the scene: &mPetals[i].angle makes the function 0xc
- * bytes longer, mPetals[i].y 4 bytes longer, and &mPetals[i].x and the
- * indexed swap reorder registers. pAngle and pX must stay block locals with
- * pX declared after the angle store, and the swap temp must be a Vec2 (its
- * empty destructor keeps its stack slot). */
+ * with random partners, and the round state is reset. The rotation takes
+ * the angle signed; the swap moves it as the stored u16. */
 void dScMgFlower_c::DealPetals() {
     dScMgFlower_c *self = this;
-    char *c = (char *)self;
     unsigned int roll;
     int shuffleIndex;
     int petalIndex;
-    int angle;
-    int *pPos;
     int clearIndex;
     int baseAngle;
 
@@ -188,53 +175,32 @@ void dScMgFlower_c::DealPetals() {
     }
     roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
     baseAngle = (roll * 0x10000) >> 15;
-    petalIndex = 0;
-    if (self->mPetalsLeft > 0) {
-        pPos = &self->mPetals[0].x;
-        angle = 0;
-        do {
-            s16 *pAngle = &((dScMgFlower_c *)(c + petalIndex * 0x20))->mPetals[0].angle;
-            *pAngle = baseAngle + angle / self->mPetalsLeft;
-            {
-                s32 *pX = &((dScMgFlower_c *)(c + petalIndex * 0x20))->mPetals[0].x;
-                *pX = 0;
-                ((dScMgFlower_c *)(c + petalIndex * 0x20))->mPetals[0].y = 0x30000;
-                func_0203d388(pPos, *pAngle);
-                *pX += 0x80000;
-                ((dScMgFlower_c *)(c + petalIndex * 0x20))->mPetals[0].y += 0x60000;
-            }
-            self->mPetals[petalIndex].active = 1;
-            petalIndex++;
-            angle += 0x10000;
-            pPos += 8;
-        } while (petalIndex < self->mPetalsLeft);
+    for (petalIndex = 0; petalIndex < self->mPetalsLeft; petalIndex++) {
+        self->mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / self->mPetalsLeft;
+        self->mPetals[petalIndex].x = 0;
+        self->mPetals[petalIndex].y = 0x30000;
+        func_0203d388(&self->mPetals[petalIndex].x, (s16)self->mPetals[petalIndex].angle);
+        self->mPetals[petalIndex].x += 0x80000;
+        self->mPetals[petalIndex].y += 0x60000;
+        self->mPetals[petalIndex].active = 1;
     }
-    shuffleIndex = 0;
-    if (self->mPetalsLeft > 0) {
-        do {
-            int swapIndex;
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-            swapIndex = (self->mPetalsLeft * roll) >> 15;
-            if (swapIndex != shuffleIndex) {
-                char *shuffleBase = c + shuffleIndex * 0x20;
-                char *swapBase = c + swapIndex * 0x20;
-                u16 savedAngle;
-                dScMgFlower_c::Vec2 savedPosition;
-                savedAngle = *(u16 *)&((dScMgFlower_c *)shuffleBase)->mPetals[0].angle;
-                *(u16 *)&((dScMgFlower_c *)shuffleBase)->mPetals[0].angle =
-                    *(u16 *)&((dScMgFlower_c *)swapBase)->mPetals[0].angle;
-                *(u16 *)&((dScMgFlower_c *)swapBase)->mPetals[0].angle = savedAngle;
-                savedPosition.x = ((dScMgFlower_c *)shuffleBase)->mPetals[0].x;
-                savedPosition.y = ((dScMgFlower_c *)shuffleBase)->mPetals[0].y;
-                ((dScMgFlower_c *)shuffleBase)->mPetals[0].x =
-                    ((dScMgFlower_c *)swapBase)->mPetals[0].x;
-                ((dScMgFlower_c *)shuffleBase)->mPetals[0].y =
-                    ((dScMgFlower_c *)swapBase)->mPetals[0].y;
-                ((dScMgFlower_c *)swapBase)->mPetals[0].x = savedPosition.x;
-                ((dScMgFlower_c *)swapBase)->mPetals[0].y = savedPosition.y;
-            }
-            shuffleIndex++;
-        } while (shuffleIndex < self->mPetalsLeft);
+    for (shuffleIndex = 0; shuffleIndex < self->mPetalsLeft; shuffleIndex++) {
+        int swapIndex;
+        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        swapIndex = (self->mPetalsLeft * roll) >> 15;
+        if (swapIndex != shuffleIndex) {
+            u16 savedAngle;
+            dScMgFlower_c::Vec2 savedPosition;
+            savedAngle = self->mPetals[shuffleIndex].angle;
+            self->mPetals[shuffleIndex].angle = self->mPetals[swapIndex].angle;
+            self->mPetals[swapIndex].angle = savedAngle;
+            savedPosition.x = self->mPetals[shuffleIndex].x;
+            savedPosition.y = self->mPetals[shuffleIndex].y;
+            self->mPetals[shuffleIndex].x = self->mPetals[swapIndex].x;
+            self->mPetals[shuffleIndex].y = self->mPetals[swapIndex].y;
+            self->mPetals[swapIndex].x = savedPosition.x;
+            self->mPetals[swapIndex].y = savedPosition.y;
+        }
     }
     self->mHeldPetal = -1;
     self->mPetalToggle = 0;
@@ -291,7 +257,7 @@ s32 dScMgFlower_c::Render() {
             if (mHeldPetal == i)
                 palette = 0;
             Mg_RenderSubSpriteScaled(&attr, mPetals[i].x >> 12, mPetals[i].y >> 12, -1, palette,
-                                     0x1000, (u16)(s16)((u16)mPetals[i].angle + 0x8000));
+                                     0x1000, (s16)(mPetals[i].angle + 0x8000));
         }
     }
 
