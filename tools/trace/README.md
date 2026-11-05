@@ -12,6 +12,9 @@ Status: **Phase 0 spike** (attach + breakpoint + canary + register/mem dump).
   used to resolve a captured `lr` to a caller name.
 - `gdb_harness.py` — the Phase-0 spike runner. Breaks at always-resident arm9
   functions and validates the pipeline against ground truth.
+- `scenerun.py`, `ramdiff.py`, `scenecov.py`, `thissweep.py`, `symtab.py`: research
+  runs through the `ask.py serve` daemon (RAM diff, per-scene coverage, `this`
+  class sweep). See "Research runs" below.
 - `mg/` — the minigame play kit: a watcher for the shared minigame functions,
   plus input and capture scripts for melonDS (`mg/README.md`).
 
@@ -258,6 +261,43 @@ turn, which is consistent only while the target is halted; `atomic` in the
 result says which. The default ranges are a RAM-diff screen's: arm9 .data and
 .bss, ov002 .data and .bss, and 0x800 bytes of the player actor. `ram-diff`
 lists the byte runs that differ between two snapshots of the same ranges.
+
+### Research runs: `ramdiff.py`, `scenecov.py`, `thissweep.py`
+
+Three scripts that drive a running `ask.py serve` daemon (coverage and the
+sweep need `--backend ctl`). They share `scenerun.py`, which loads a state,
+aligns on a hooked PC and condition (default: CheckInput 0x0202c2ac when
+`FRAME_TIMER == file timer + 300`, so every run starts on the same game frame),
+then steps hooked frames with the pad and touch records forced on every frame
+(neutral when idle; a press is held at least 2 frames). Script ops can also
+bind a name to the nearest actor of an id and write memory, e.g. move a coin
+onto the player. `symtab.py` holds the shared lookups: symbols by address
+from `config/arm9/**/symbols.txt`, readers and writers from `relocs.txt`, and
+vptr to `_ZTV` symbol, class and RTTI chain.
+
+```sh
+python tools/trace/ramdiff.py run PLAN.json --out DIR      # idle x2 + each event x2, all from fresh loads
+python tools/trace/ramdiff.py analyze DIR                  # candidates.tsv, summary.json, summary.md
+python tools/trace/scenecov.py run SCENES.json --out DIR   # coverage.tsv: function x scene call counts
+python tools/trace/thissweep.py run --coverage DIR/coverage.tsv --state B1.ml --out OUT --script walk.json
+```
+
+- **ramdiff** snapshots arm9 .data/.bss, every resident overlay's
+  .data/.bss and the player at the plan's frame offsets. Idle runs classify each
+  byte as constant, deterministic-changing or noisy. Event bytes are diffed
+  against idle at the same offset and reported per symbol: named rows are kept
+  and marked, and each row carries `repeats_agree` and its readers and writers.
+- **scenecov** counts calls to every arm9, itcm and resident-overlay function
+  start over a scene. Each hit's first instruction word is checked against the
+  module's image, so another overlay's code at the same address is not counted.
+- **thissweep** puts log-action breakpoints, which never halt, on N unnamed
+  functions. They record each distinct `u32[r0]`, which is resolved to a vtable,
+  a class, an RTTI chain and an actor id. Each function gets a verdict:
+  `one_class` (method evidence), `several_classes` (with the common base),
+  `mixed` or `not_object`. `emusession`'s `this` op and the `this=True` option on
+  `add_bp` resolve `this` the same way for a single breakpoint hit.
+
+Their outputs come from the ROM at run time. Keep them outside the repository.
 
 ### Savestates, framing, overlays
 

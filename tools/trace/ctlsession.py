@@ -456,6 +456,138 @@ class CtlDaemon(es.Daemon):
         self.s.running = not halted
         return r
 
+    # ---- `this` sweep: log-action breakpoints (they never halt) on many entries
+    def _this_cond(self, w):
+        parts = []
+        if w['canary']:
+            ty, step = ('u16', 2) if w['thumb'] else ('u32', 4)
+            c = w['canary']
+            parts += ['%s[0x%x] == 0x%x' % (ty, w['addr'] + i, int.from_bytes(c[i:i + step], 'little'))
+                      for i in range(0, len(c), step)]
+        parts += ['u32[r0] != 0x%x' % k for k in sorted(k for k in w['keys'] if isinstance(k, int))]
+        return ' && '.join(parts)
+
+    def _this_arm(self, w):
+        """(Re-)add w's log breakpoint: a fresh log, hits and evaluations reset."""
+        args = {'address': w['addr'], 'action': 'log', 'dump': [{'address': 'r0', 'size': 0x10}]}
+        cond = self._this_cond(w)
+        if cond:
+            args['condition'] = cond
+        self.s._call('breakpoint_add', **args)
+        w['eval_base'] = 0
+
+    def op_this_watch(self, functions, max_keys=32):
+        """functions: [{addr, module, thumb, name}] (module 'arm9', 'itcm' or 'ovNNN').
+        Each entry gets a log breakpoint that records r0 and 16 bytes at r0, but
+        only for a vptr (u32[r0]) not yet seen there; an overlay function's
+        condition also checks its code bytes, so another overlay's code at the
+        same address never logs. Poll this_collect every few frames (a breakpoint
+        logs at most 4096 hits between polls)."""
+        import symtab
+        if any(b.armed for b in self.s.bps.values() if b.role != 'frame'):
+            raise RuntimeError('this_watch: clear the daemon probes/triggers first')
+        self._this_unwatch()
+        self._watch = {}
+        self._this_max = int(max_keys)
+        for f in functions:
+            a = es.parse_int(f['addr'])
+            mod = f.get('module') or 'arm9'
+            thumb = bool(f.get('thumb') or (a & 1))
+            a &= ~1
+            if a in self.s.bps:
+                raise RuntimeError('this_watch: %08x is a daemon breakpoint' % a)
+            canary = self.s.images.bytes_at(mod, a, 8) if mod.startswith('ov') else None
+            w = {'addr': a, 'module': mod, 'thumb': thumb, 'name': f.get('name'), 'canary': canary,
+                 'keys': {}, 'hits': 0, 'evaluations': 0, 'logged': 0, 'truncated': 0, 'many': False}
+            self._watch[a] = w
+            self._this_arm(w)
+        self._this_table = symtab.table()
+        self._this_names = symtab.actor_names()
+        return {'watching': len(self._watch)}
+
+    def op_this_collect(self):
+        """Fold the logs into the per-function vptr sets, then re-arm with the new
+        vptrs filtered out. Returns how many new (function, vptr) pairs it found."""
+        import symtab
+        watch = getattr(self, '_watch', None) or {}
+        if not watch:
+            return {'new': 0}
+        lst = self.s._call('breakpoint_list', include_log=True)
+        self.s.refresh_overlays()
+        mods = ['arm9'] + ['ov%03d' % i for i in sorted(self.s.loaded or ())]
+        cache = self.__dict__.setdefault('_vptr_cache', {})
+        new = 0
+        for b in lst.get('breakpoints', []):
+            a = b.get('address')
+            a = int(a, 16) if isinstance(a, str) else int(a)
+            w = watch.get(a)
+            if w is None or w['many']:
+                continue
+            ev = int(b.get('evaluations', 0))
+            w['evaluations'] += ev - w['eval_base']
+            w['eval_base'] = ev
+            log = b.get('log') or []
+            if not log:
+                continue
+            hits = int(b.get('hits', 0))
+            w['hits'] += hits
+            w['logged'] += len(log)
+            w['truncated'] += max(0, hits - len(log))
+            for h in log:
+                d = (h.get('dumps') or [{}])[0].get('hex')
+                r0 = int(h['registers']['r0'], 16)
+                raw = bytes.fromhex(d) if d else b''
+                key = int.from_bytes(raw[:4], 'little') if len(raw) >= 4 else 'unreadable'
+                k = w['keys'].get(key)
+                if k is None:
+                    k = {'n': 0, 'obj': '%08x' % r0, 'lr': h['registers'].get('r14'), 'actor_ids': []}
+                    if isinstance(key, int):
+                        k.update(symtab.resolve_vptr(self.s.read, key, mods, self._this_table, cache))
+                    w['keys'][key] = k
+                    new += 1
+                k['n'] += 1
+                if k.get('is_actor') and len(raw) >= 0x0e:
+                    aid = int.from_bytes(raw[0x0c:0x0e], 'little')
+                    if aid not in k['actor_ids'] and len(k['actor_ids']) < 8:
+                        k['actor_ids'].append(aid)
+            if len(w['keys']) > self._this_max:
+                w['many'] = True        # r0 is no object pointer here (or too many kinds): stop
+                self.s._call('breakpoint_remove', address=a)
+            else:
+                self._this_arm(w)
+        return {'new': new}
+
+    def op_this_report(self):
+        """Per watched function: the vptrs seen in r0 (each resolved to its class,
+        RTTI chain, actor ids), logged hits and breakpoint evaluations."""
+        out = []
+        names = getattr(self, '_this_names', {})
+        for w in (getattr(self, '_watch', None) or {}).values():
+            keys = []
+            for k, v in w['keys'].items():
+                v = dict(v)
+                v['actor_names'] = [names.get(i, '?') for i in v.get('actor_ids', [])]
+                v['key'] = k if isinstance(k, str) else '%08x' % k
+                keys.append(v)
+            out.append({'addr': '%08x' % w['addr'], 'module': w['module'], 'name': w['name'],
+                        'thumb': w['thumb'], 'evaluations': w['evaluations'], 'logged': w['logged'],
+                        'truncated': w['truncated'], 'many': w['many'], 'keys': keys})
+        return out
+
+    def _this_unwatch(self):
+        for a in list(getattr(self, '_watch', None) or {}):
+            try:
+                self.s._call('breakpoint_remove', address=a)
+            except cc.CtlError:
+                pass
+
+    def op_this_unwatch(self):
+        """Remove the sweep's breakpoints; returns the final this_report."""
+        rep = self.op_this_report()
+        self._this_unwatch()
+        self._watch = {}
+        return rep
+
     def op_reconnect(self):
         self.s.ctl.close()
         stop = self.s.connect(timeout=20)

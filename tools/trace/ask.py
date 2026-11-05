@@ -25,6 +25,9 @@ are mixed in at random. The key lives in a separate file; `score` unblinds.
   stop    detach cleanly (and --kill melonDS, --clean its work directory)
 
 See README.md ("ask.py: pause and ask") for the spec format and a walkthrough.
+Research runs through the same daemon: ramdiff.py (RAM diff of input events
+against idle), scenecov.py (function coverage per scene) and thissweep.py (the
+class of `this` at unnamed functions); README.md, "Research runs".
 """
 import argparse
 import json
