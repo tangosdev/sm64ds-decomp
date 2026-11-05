@@ -296,6 +296,10 @@ python tools/trace/thissweep.py run --coverage DIR/coverage.tsv --state B1.ml --
   `one_class` (method evidence), `several_classes` (with the common base),
   `mixed` or `not_object`. `emusession`'s `this` op and the `this=True` option on
   `add_bp` resolve `this` the same way for a single breakpoint hit.
+- **Modules for `add_bp`**: `arm9`, `itcm` (0x01ff8000, from
+  `extracted/dsd/arm9/itcm.bin`) or `ovNNN`. With `module` left out, an address
+  inside the arm9 or ITCM image takes that module. An overlay address needs its
+  `ovNNN`, because several overlays share one address range.
 
 Their outputs come from the ROM at run time. Keep them outside the repository.
 
