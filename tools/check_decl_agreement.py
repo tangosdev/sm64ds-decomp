@@ -58,8 +58,10 @@ layouts. "Silently smashes the caller's stack" is the worst case, not the rule.
 WHAT IT COMPARES
 ----------------
 Identity is the SYMBOL NAME as the linker sees it: the identifier a declaration spells, and
-for a definition either the `// @symbol <name>` line above it (the tree's convention in a
-merged translation unit) or the flat identifier the definition itself declares. That is why
+for a definition the symbol the file's enrolment binds it to -- derived by
+`tools/def_locate.py` (demangled-signature matching against the delinks/symbols.txt
+ownership table; `// @symbol` comments used to carry that pairing by hand) -- or the flat
+identifier the definition itself declares. That is why
 a hand-spelled `_ZN9ModelAnim7AdvanceEv` extern and the file that defines it line up here
 even though neither side is C++ the compiler would recognise as the same entity.
 
@@ -86,8 +88,9 @@ because it makes this tool report a FALSE finding against an honest declaration:
                         define the flat name.
   out-of-line members   `daStarGate_c::State daStarGate_c::ST_WAIT = {...}`.
 
-The last two are recoverable when the file carries a `// @symbol <name>` line, and are
-claimed under that name when it does.
+The last two are recoverable when the file's enrolment binds the definition to an owned
+symbol (`def_locate` demangle-matches it; a `// @symbol <name>` line used to mark it by
+hand), and are claimed under that name when it does.
 
 For every symbol with at least one `extern` declaration, this compares each declaration
 against the reference spelling:
@@ -1512,7 +1515,8 @@ def parse_file(rel, text, aliases, statics=None):
     not have. `None` means "no index was built", which is the pre-index behaviour:
     every out-of-line member is read as an instance member.
     """
-    code, marks = scrub(text)
+    code, _marks = scrub(text)
+    marks = _file_marks(rel, text)
     orphans = []
     unbound_lifecycles = 0
     newlines = line_index(text)
@@ -1866,16 +1870,41 @@ def _decode_direct_destructor(symbol):
     return symbol, "::".join(parts), prefix
 
 
-def _direct_destructor_marker(text):
+def _file_marks(rel, text):
+    """The definition-to-symbol marks for ``rel``.
+
+    ``// @symbol`` comments are gone; ``tools/def_locate.py`` derives the
+    same pairing by demangling the file's owned symbols (delinks +
+    symbols.txt) and matching parsed definitions -- including emitted-but-
+    undefined symbols, which the marker era wrote as detached comments. A
+    header or a file outside the delinks owns nothing and marks nothing."""
+    if not rel.endswith(SOURCE_SUFFIXES):
+        return []
+    marks = None
+    try:
+        import def_locate as DL
+        marks = DL.marks_for(rel, text)
+    except Exception:
+        pass
+    # prefer the derived marks when a definition actually bound; a file
+    # whose ownership resolves to nothing it defines (out-of-tree text,
+    # fixtures, asm-only carriers) falls back to literal mark positions
+    if marks and any(idx < len(text) for idx, _s in marks):
+        return marks
+    return [(m.start(), m.group(1))
+            for m in re.finditer(r"//\s*@symbol\s+(\S+)", text)]
+
+
+def _direct_destructor_marker(rel, text):
     """One ordinary, exactly encoded direct D1/D2 identity; no ABI guess yet."""
-    _code, marks = scrub(text)
+    marks = _file_marks(rel, text)
     if len(marks) != 1:
         return None
     decoded = _decode_direct_destructor(marks[0][1])
     return None if decoded is None else (decoded[0], decoded[1])
 
 
-def _element_destructor_marker(text, extra_symbols=()):
+def _element_destructor_marker(rel, text, extra_symbols=()):
     """A leftover direct D1/D2 mark for a type this file does not define.
 
     A one-function carrier has that mark alone. A multi-function TU marks every
@@ -1884,7 +1913,8 @@ def _element_destructor_marker(text, extra_symbols=()):
     definition. A mark whose class this file already names is that class's
     destructor, not an element.
     """
-    code, marks = scrub(text)
+    code, _marks = scrub(text)
+    marks = _file_marks(rel, text)
     if len(marks) <= 1:
         return None
     attached = set()
@@ -2091,9 +2121,9 @@ def inline_destructor_definitions(root, targets, definitions):
         if not rel.endswith((".cc", ".cpp")) or not (root / rel).exists():
             continue
         text = (root / rel).read_text(encoding="utf-8", errors="replace")
-        direct = _direct_destructor_marker(text)
+        direct = _direct_destructor_marker(rel, text)
         file_symbols = {d.symbol for d in definitions if d.file == rel}
-        marker = direct or _element_destructor_marker(text, file_symbols)
+        marker = direct or _element_destructor_marker(rel, text, file_symbols)
         if marker is None or marker[0] in defined:
             continue
         symbol, owner = marker
@@ -2221,9 +2251,10 @@ def _inline_changed_symbols(touched, base, root):
         if rel in touched:
             versions.append(blob_text(rel, base, root))
         for text in versions:
-            marker = _direct_destructor_marker(text) if text is not None else None
+            marker = (_direct_destructor_marker(rel, text)
+                      if text is not None else None)
             if marker is None and text is not None:
-                marker = _element_destructor_marker(text)
+                marker = _element_destructor_marker(rel, text)
             if marker is not None:
                 symbols.add(marker[0])
     return symbols

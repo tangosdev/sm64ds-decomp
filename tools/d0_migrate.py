@@ -26,7 +26,6 @@ import build_pin as BP  # noqa: E402
 REPO = pathlib.Path(__file__).resolve().parents[1]
 
 BODY = """//cpp
-// @symbol _ZN{n}{cls}D0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 is the DELETING destructor: destroy through this class and its bases --
