@@ -40,6 +40,7 @@ enum daDgr_c_AssetId { ASSET_DONGURU_BMD = 0x02da, ASSET_DONGURU_KCL = 0x02db };
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* POD position. Vector3's destructor is not in Behavior's bytes. */
 typedef struct {
@@ -82,7 +83,6 @@ extern CLPS_Block data_ov025_02112c28;
 
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
-void Matrix4x3_FromRotationX(void *mat, int angleX);
 void func_02012694(unsigned int, const Vector3 *);
 void func_020393d4(int *collider, int callback);
 }

@@ -38,7 +38,6 @@ extern unsigned char data_0209f2d8;
 
 /* local extern: no shared header declares these. */
 extern "C" {
-extern void Matrix4x3_FromRotationXYZExt(Matrix4x3 *dst, int a, int b, int c2);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern void func_020393d4(dBgW_KcMbg *p, void *v);
 }

@@ -79,6 +79,7 @@ enum daObjTatefuda_c_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
@@ -141,15 +142,8 @@ enum {
 };
 
 extern "C" {
-extern void Matrix4x3_FromRotationY(void *, int);
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
-extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
-extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(struct Matrix4x3* m, int x, int y, int z);
-extern struct Matrix4x3 data_020a0e68;
 extern char *func_ov002_020e496c(daPly_c *p);
-extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern void Vec3_Lsl(struct Vec3 *d, struct Vec3 *s, int sh);
 extern short data_ov002_020ff0d0[];
 extern int data_ov002_020ff0d4[];

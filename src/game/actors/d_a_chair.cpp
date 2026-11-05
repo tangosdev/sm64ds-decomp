@@ -38,6 +38,7 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 #include "cstd.h"
 #include "Particle__System.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* Only ApproachStateValue needs this: without it the two (short)accel casts
  * share one sign-extend and both smulbb become muls (21 of 44 words differ). */
@@ -85,7 +86,6 @@ void func_0200f760(void *self, void *cyl);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *dst, Vector3 *add, Vector3 *src);
 int AngleDiff(int a, int b);
-void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 }
 
 extern s16 data_02082214[];

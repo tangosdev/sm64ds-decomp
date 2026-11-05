@@ -32,6 +32,7 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
+#include "math/MtxStack.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daPkn_c_AssetId {
@@ -103,18 +104,12 @@ extern s16 data_02082214[];              /* the sin/cos table, two shorts a step
 extern int data_ov084_0213030c[];        /* per-frame particle X/Z offset (0212f460, 0xfb) */
 extern int data_ov084_02130334[];        /* per-frame particle Y offset */
 extern u8  data_ov084_021302ec[];        /* five indices {0,3,4,5,6}; 0212ec60 sums s16 at [i]*0x34+0x1c into ang[1] (dead -- later y-adjust reads ang[0]==0, so the offset is constant 0x32000). 0x34 is not BMD_Bone (0x40). */
-/* local extern: math/MtxStack.h spells MulMat4x3Mat4x3 with const int *, as
-   its definition does, and UpdatePose passes it Matrix4x3 pointers. */
-extern Matrix4x3 data_020a0e68; /* the shared scratch matrix */
 
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int *Vec3_LslInPlace(PknVec3 *v, int sh);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 ang);
-void  MulMat4x3Mat4x3(void *a, void *b, void *c);
 
 void *d_a_pknNewHold(u32 handle, u32 id, int x, int y, int z, const void *f, void *cb);
 int d_a_pknPlaySubHold(u32 a, u32 b, u32 c, int t, int flag);

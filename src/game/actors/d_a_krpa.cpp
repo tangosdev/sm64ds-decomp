@@ -48,17 +48,11 @@ enum d_a_krpa_AssetId { ASSET_KERONPA_BMD = 0x0351 };
 #include "math/CalcLib.h"
 #include "Particle__System.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 extern int IDENTITY_MATRIX4X3[];
 extern int data_0209f32c;
 extern short data_02082214[];
-
-/* local extern: arm9 matrix helpers this TU calls with its nested
-   Matrix4x3; no shared header declares them in that spelling. */
-extern "C" {
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationY(void *m, int angle);
-}
 
 // @symbol daKrpa_c_classInit
 /* `return new daKrpa_c()` emits 0x50, calling the inherited

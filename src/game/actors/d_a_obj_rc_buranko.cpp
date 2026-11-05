@@ -54,6 +54,7 @@ enum d_a_obj_rc_buranko_AssetId { ASSET_RC_BURANKO_BMD = 0x0695, ASSET_RC_BURANK
 #include "daObjRcBuranko_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "math/MtxStack.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -81,7 +82,6 @@ extern CLPS_Block data_ov036_02112b68;
 /* local extern: no shared header declares these. */
 extern "C" {
 void func_020393d4(dBgW *bgw, void *fn);
-void Matrix4x3_FromRotationXYZExt(void *mtx, int x, int y, int z);
 }
 
 /* -------------------------------------------------------------------------- */

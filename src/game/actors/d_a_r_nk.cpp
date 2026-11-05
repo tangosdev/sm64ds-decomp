@@ -44,6 +44,7 @@ enum daRNk_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -177,9 +178,6 @@ extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 extern void func_02012694(u32 a, void *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
 extern Timer gRaceTimer;            /* TIME_TIMER: the course timer */
-extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void* m, short angY);
-extern struct Matrix4x3 data_020a0e68;  /* MATRIX_SCRATCH_PAPER */
 /* The existing C initializer erases pointer slots to integers. Keep the
    evidenced actor view here; repairing the shared initializer is separate. */
 /* Parameter names keep this TU's @NNN. */

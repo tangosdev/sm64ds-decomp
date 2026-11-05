@@ -58,7 +58,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern "C" {
 extern Matrix4x3 data_0209b3ec; /* local extern: the camera-space matrix the Render paths use */
-extern Matrix4x3 data_020a0e68; /* local extern: dExtShadowModel_c's shared render matrix scratch */
 /* local extern: no header declares it; data.transforms-bone walk in Virtual10 */
 void func_02045074(ModelComponents *data, BMD_Bone *bones);
 /* local extern: no header declares it; sizes the transforms buffer from the file */

@@ -43,6 +43,7 @@
 #include "Sound.h"
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -104,7 +105,6 @@ void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c_);
 int RandomIntInternal(int *p);
 void func_ov063_0211cae8(void *found, int mask);
 void func_0203568c(int *p, int v);
-void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 void func_0200f760(void *a, void *b);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,

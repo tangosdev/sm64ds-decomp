@@ -29,6 +29,7 @@ enum d_a_obj_rc_carpet_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 
 struct FlyingCarpetResources {
     SharedFilePtr *model;
@@ -69,7 +70,6 @@ FlyingCarpetResources data_ov036_02113f58 = {&gRcCarpetModelFile, &gRcCarpetColl
 
 extern "C" {
 void func_020393d4(dBgW *collider, void *callback);
-void Matrix4x3_FromRotationXYZExt(Matrix4x3 *matrix, s16 x, s16 y, s16 z);
 }
 
 // @symbol daObjRcCarpet_c_classInit

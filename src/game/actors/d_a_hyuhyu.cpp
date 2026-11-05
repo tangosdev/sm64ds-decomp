@@ -77,7 +77,6 @@ s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 angX);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 }
 

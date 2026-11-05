@@ -32,6 +32,7 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "cstd.h"
+#include "math/MtxStack.h"
 
 /* local extern: no shared header declares these. */
 extern "C" {
@@ -40,7 +41,6 @@ extern int data_0209f32c;     /* the stage water's global height (written by d_a
 extern short data_02082214[]; /* sin/cos table */
 
 int SurfaceInfo_TestFlag0x20(int *p);
-void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 
 /* Stores into the mesh collider's two callback slots (+0x1c / +0x18 of the
    embedded dBgW; the +0x0c store is dBgW::SetClipRadius). */

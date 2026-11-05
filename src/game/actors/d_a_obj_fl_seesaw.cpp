@@ -26,6 +26,7 @@ enum daObjFl_Seesaw_c_AssetId { ASSET_FL_SHISO_BMD = 0x0610, ASSET_FL_SHISO_KCL 
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x610, collision file 0x611). mwcc emits
@@ -47,7 +48,6 @@ extern SeesawCollisionFilePtr data_ov022_021145a0;
 extern char data_ov064_0211bacc[];
 
 extern "C" {
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 
 /* local extern: stores beforeClsnCallback at dBgW+0x18. d_bg_w.cpp
  * defines it and no header declares it. */

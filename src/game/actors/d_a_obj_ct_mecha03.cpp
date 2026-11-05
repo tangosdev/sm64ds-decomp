@@ -82,7 +82,6 @@ extern CLPS_Block data_ov035_02112198;
 /* local extern: arm9 matrix/vector helpers and dBgW stores with no shared
  * header. */
 extern "C" {
-extern void Matrix4x3_FromRotationZXYExt(Matrix4x3 *m, int x, int y, int z);
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void func_020393d4(void *p, void *v);
