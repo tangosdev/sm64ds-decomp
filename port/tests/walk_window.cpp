@@ -1859,6 +1859,7 @@ void port_input_probe_trace_msg(int frame);
 void port_input_probe_trace_cannon(int frame);
 void port_input_probe_buddy_trigger(int frame);
 void port_input_probe_star_trigger(int frame);  /* TEMPORARY: SM64DS_STAR_TRIGGER */
+void port_polelog_tick(int frame);  /* hal/polelog_watch.cpp: the level 43 pole write-watch */
 void port_input_probe_king_drop(int frame);     /* TEMPORARY: SM64DS_VS_KING_DROP */
 void port_input_probe_feather_trigger(int frame); /* TEMPORARY: SM64DS_FEATHER_TRIGGER */
 void port_vs_stars_probe(int frame);            /* TEMPORARY: SM64DS_VS_STARS */
@@ -22406,6 +22407,7 @@ int main(void)
                here, before the walk ticks the bodies. No-op outside arena. */
             port::vs_arena_before_walk(frame);
             port_vs_match_end_hold();
+            port_polelog_tick(frame);   /* POLELOG1: level 43 pole heap-word watch, before the walk */
             {
                 const double rb_t = rb_probe_mode() ? rb_now_ms() : 0.0;
                 pt_mark(PS_ROM_FRAME);

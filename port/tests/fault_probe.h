@@ -439,6 +439,15 @@ extern "C" __declspec(selectany) port_classname_fn port_classname_resolver = 0;
 __declspec(selectany) port_classname_fn port_classname_resolver = 0;
 #endif
 
+/* Extra crash text from hal/polelog_watch.cpp (the level 43 pole write-watch), the
+   same weak data-pointer shape: null unless walk_window linked that file. */
+typedef void (*port_crash_extra_fn)(char *buf, unsigned *p, unsigned cap);
+#ifdef __cplusplus
+extern "C" __declspec(selectany) port_crash_extra_fn port_crash_extra_text = 0;
+#else
+__declspec(selectany) port_crash_extra_fn port_crash_extra_text = 0;
+#endif
+
 /* port_last_frame is declared with its weak fallback later (the exit.txt
    block); the rich dump above uses it, so hoist just the DECLARATION here. The
    alternatename that gives it a weak body stays in the one place, below. */
@@ -737,6 +746,8 @@ static void port_rich_dump(EXCEPTION_POINTERS *ep, unsigned code,
     } else {
         PORT_RD_STR("\r\nwalker    (idle)");
     }
+    if (port_crash_extra_text)   /* level 43 pole bytes (hal/polelog_watch.cpp) */
+        port_crash_extra_text(buf, &p, (unsigned)sizeof buf);
     /* registers + 32 stack return words (module-relative), like crash.txt but
        wider. */
     if (ep && ep->ContextRecord) {
