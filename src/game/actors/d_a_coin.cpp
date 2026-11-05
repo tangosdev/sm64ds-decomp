@@ -9,7 +9,7 @@
  *
  * One out-of-line destructor is the key function. Under defer_codegen off
  * it emits D1, D0, then a D2 the cartridge does not keep, and .text follows
- * source order. opt_common_subs off is bracketed around InitResources only.
+ * source order.
  */
 // leftovers:
 // - The FL_COIN puzzle manager (actor 0x4f) has no header, so its live-coin
@@ -882,11 +882,7 @@ s32 daCoin_c::InitResources()
      * Launders kept: the three `mCoinFlags = (mCoinFlags & ~m) | v` stores
      * go through `*(u8 *)((int)&mCoinFlags)`. Spelled as the plain member,
      * each one changes the code (measured per site); the plain `&=`/`|=`
-     * sites take the member as is.
-     *
-     * `#pragma opt_common_subs off` is load-bearing: the ROM re-issues loads
-     * this compiler would otherwise CSE. */
-    #pragma opt_common_subs off
+     * sites take the member as is. */
 
     typedef struct { void* sfp; void* bmd; } FileEntry;
     extern Matrix4x3 IDENTITY_MATRIX4X3;
