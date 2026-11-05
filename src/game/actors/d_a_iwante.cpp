@@ -353,10 +353,10 @@ extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void MulVec3Mat4x3(void *a, void *m, void *b);
 extern int RandomIntInternal(int *seed);
 extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
-extern int Vec3_Dist(const void *a, const void *b);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(void *d, void *s, int sh);
 extern int Vec3_HorzDist(const void *a, const void *b);
-// local extern: CalcLib.h conflicts with this TU's opaque Vec3_Dist, Vec3_Asr, and Vec3_HorzDist prototypes.
+// local extern: CalcLib.h conflicts with this TU's opaque Vec3_Asr and Vec3_HorzDist prototypes.
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void func_0200d8c8(void *cam, void *v, int strength);
 extern int func_020092c4(void *cam, void *out, void *target);
@@ -1048,7 +1048,7 @@ int daIwante_c::func_ov066_021171b0() {
     }
     case 1:
         ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x28000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) > 0x28000)
+        if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) > 0x28000)
             break;
         mPosX = mTargetPosX;
         mPosY = mTargetPosY;
@@ -1071,7 +1071,7 @@ int daIwante_c::func_ov066_021171b0() {
         if (mTimer1 != 0)
             break;
         ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x32000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) > 0x32000)
+        if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) > 0x32000)
             break;
         mPosX = mTargetPosX;
         mPosY = mTargetPosY;
@@ -1209,7 +1209,7 @@ int daIwante_c::func_ov066_021175e8() {
         break;
     case 1:
         ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x28000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) <= 0x28000) {
+        if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) <= 0x28000) {
             mTimer1 = 0xa;
             mFlags = 0x2000000;
             mPosX = mTargetPosX;
@@ -1222,7 +1222,7 @@ int daIwante_c::func_ov066_021175e8() {
     case 2:
         if (mTimer1 == 0)
             ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x32000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) <= 0x32000) {
+        if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) <= 0x32000) {
             func_ov066_02116ac4(0x7d0000);
             mPosX = mTargetPosX;
             mPosY = mTargetPosY;
