@@ -667,7 +667,6 @@ void daPly_func_ov002_020c6fe4(daPly_c *);
 void daPly_func_ov002_020c70ac(daPly_c *);
 void daPly_func_ov002_020c7350(daPly_c *);
 void daPly_func_ov002_020c75f0(daPly_c *);
-int daPly_func_ov002_020bccfc(daPly_c *, unsigned char *, int, int);
 int daPly_func_ov002_020bcd38(daPly_c *, unsigned char *, int, int);
 int daPly_func_ov002_020bd20c(daPly_c *, unsigned char *, int, int);
 int daPly_func_ov002_020bd3a0(daPly_c *, unsigned char *, int, int);
