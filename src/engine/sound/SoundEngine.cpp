@@ -318,6 +318,20 @@ extern void MultiStore_Int(int val, int *dst, int len);
 extern struct NestedHeapIterator;
 extern struct ElemTable;
 
+/* The NestedHeapIterator constructor is run over storage that already
+   exists; mwccarm cannot call a constructor on an object (p->C::C is
+   rejected, placement new emits a null test), so the calls go through the
+   C1's own name. nhiConstructRetAt keeps the int-arity spelling
+   func_02051064's tail call returns. */
+static inline void nhiConstructAt(void* at, u32 linkOffset)
+{
+    _ZN18NestedHeapIteratorC1Ej(at, linkOffset);
+}
+static inline int nhiConstructRetAt(void* at, u32 linkOffset)
+{
+    return ((int (*)(void*, u32))_ZN18NestedHeapIteratorC1Ej)(at, linkOffset);
+}
+
 extern int __aeabi_idiv(int a, int b);
 extern unsigned int __aeabi_uidiv(unsigned int a, unsigned int b);
 extern s16 data_02086384[];
@@ -451,6 +465,17 @@ extern void func_0204ffcc(char *self);
 extern void func_02050008(struct C *o);
 extern void func_02050038(void);
 extern void _ZN1T13func_020500a4Ev(struct T *); /* local extern: PMF -> int */
+/* Address-taken member functions: a PMF is a two-word {ptr, adj} pair and
+   cannot feed a plain function-pointer slot, so the flat symbol is taken
+   directly. */
+static inline u32 elem_204f278Fn(void)
+{
+    return (u32)_ZN12Elem_204f27813func_0204f278Ev;
+}
+static inline int t_020500a4Fn(void)
+{
+    return (int)_ZN1T13func_020500a4Ev;
+}
 extern void func_020501b8(void);
 extern void func_02050258(void);
 extern void func_020502b8(void);
@@ -1264,16 +1289,13 @@ extern "C" u32 func_02051074(SolidHeapAllocator **pHeap)
 // @symbol func_02051064
 extern "C" int func_02051064(int a)
 {
-    /* Runs the NestedHeapIterator constructor over existing storage and
-       returns its r0 (the C1's `this'), which C++ cannot spell: the int-arity
-       cast keeps the tail call a member call would not give it. */
-    return ((int (*)(int, int))_ZN18NestedHeapIteratorC1Ej)(a, 0);
+    return nhiConstructRetAt((void*)a, 0);
 }
 
 // @symbol func_02051024
 extern "C" s32 func_02051024(struct SolidHeapWithIter* self, void* allocator)
 {
-    _ZN18NestedHeapIteratorC1Ej(&self->nhi_first, 0xc);
+    nhiConstructAt(&self->nhi_first, 0xc);
     self->allocator = allocator;
     if (((s32(*)(struct SolidHeapWithIter* self))func_02050fd4)(self)) {
         return 1;
@@ -1665,7 +1687,7 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
         SND_SetupCapture(1, fmt2, (void *)c, qlen, pp8, p6, p7);
         if (handle >= 0) {
             ((void (*)(int a, int b, int c, int d, void *e))SND_SetupAlarm)(
-                handle, total + chunk, total, (int)_ZN1T13func_020500a4Ev, g);
+                handle, total + chunk, total, t_020500a4Fn(), g);
         }
         if (a == 1) {
             SND_SetOutputSelector(3, 3, 1, 1);
@@ -1920,16 +1942,16 @@ void C::func_0204fce8(void *arg) {
 extern "C" void func_0204fc40(void)
 {
     int i;
-    _ZN18NestedHeapIteratorC1Ej((char*)&data_020a4d60, 0x14);
-    _ZN18NestedHeapIteratorC1Ej(data_020a4d54, 0x14);
+    nhiConstructAt(&data_020a4d60, 0x14);
+    nhiConstructAt(data_020a4d54, 0x14);
     for (i = 0; i < 0x10; i++) {
         data_020a50ec[i].status = 0;
         data_020a50ec[i].playerNo = (unsigned char)i;
         ((NestedHeapIterator*)&data_020a4d54)->AddLast((HeapAllocator*)(&data_020a50ec[i]));
     }
     for (i = 0; i < 0x20; i++) {
-        _ZN18NestedHeapIteratorC1Ej(&data_020a4d6c[i].mLists[0], 0xc);
-        _ZN18NestedHeapIteratorC1Ej(&data_020a4d6c[i].mLists[1], 0);
+        nhiConstructAt(&data_020a4d6c[i].mLists[0], 0xc);
+        nhiConstructAt(&data_020a4d6c[i].mLists[1], 0);
         data_020a4d6c[i].mPlayableSeqCount = 1;
     }
 }
@@ -1994,7 +2016,7 @@ extern "C" int func_0204fa3c(int owner, void *b, u32 c)
     char *r4;
     void *res;
     r4 = (char *)((void *(*)(void *a, u32 elemSize, u32 p2, u32 p3, u32 p4))func_020511d4)(
-        b, c + sizeof(Elem_204f278), (u32)_ZN12Elem_204f27813func_0204f278Ev, 0, 0);
+        b, c + sizeof(Elem_204f278), elem_204f278Fn(), 0, 0);
     if (!r4) return 0;
     ((Elem_204f278 *)r4)->player = 0;
     ((Elem_204f278 *)r4)->playerIndex = owner;

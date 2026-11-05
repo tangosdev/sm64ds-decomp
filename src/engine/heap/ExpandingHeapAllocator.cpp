@@ -63,6 +63,13 @@ extern "C" void MultiStore_Int(int val, void *dst, int len);
    exists. Placement new measured CreateExpandingHeapAllocator 0x4c -> 0x5c. */
 extern "C" ExpandingHeapAllocator *_ZN22ExpandingHeapAllocatorC1EPvj(
     ExpandingHeapAllocator *self, void *heapEnd, u32 flags);
+static inline ExpandingHeapAllocator *newExpandingHeapAllocatorAt(void *at,
+                                                                    void *heapEnd,
+                                                                    u32 flags)
+{
+    return _ZN22ExpandingHeapAllocatorC1EPvj((ExpandingHeapAllocator *)at,
+                                           heapEnd, flags);
+}
 
 /* The free list sentinel: a view of the allocator's node bookkeeping from
  * this+0x24, with the header's member names. mFlags2 bit 0 is the
@@ -374,7 +381,7 @@ ExpandingHeapAllocator *Heap_t::CreateExpandingHeapAllocator(void *address, u32 
     if (start > end || (end - start) < 0x4c)
         return 0;
 
-    return _ZN22ExpandingHeapAllocatorC1EPvj((ExpandingHeapAllocator *)start, (void *)end, flags);
+    return newExpandingHeapAllocatorAt((void *)start, (void *)end, flags);
 }
 
 } /* namespace mHeap */

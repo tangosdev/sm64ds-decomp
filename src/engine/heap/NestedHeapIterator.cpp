@@ -42,6 +42,15 @@
 extern int data_020a4d34;
 extern "C" NestedHeapIterator data_020a4d38;
 
+/* Runs the NestedHeapIterator constructor over storage that already exists
+   (the embedded mChildren lists): mwccarm cannot call a constructor on an
+   object -- p->C::C is rejected and placement new emits a null test,
+   func_0204df54 0x94 -> 0xa0 -- so it goes through the C1's own name. */
+static inline void nhiConstructAt(void* at, u32 linkOffset)
+{
+    _ZN18NestedHeapIteratorC1Ej(at, linkOffset);
+}
+
 // @symbol _ZN18NestedHeapIterator19RecursiveFindNestedEPv
 /* The walk: for the first node whose [mStart, mEnd) contains addr, recurse
  * into that node's own child list before falling back to the node itself. */
@@ -86,12 +95,10 @@ extern "C" void func_0204df54(HeapAllocator* self, u32 magic, void* start,
     self->mFlags &= ~0xffu;
     self->mFlags |= flags & 0xffu;
 
-    /* Placement new measured func_0204df54 0x94 -> 0xa0. The address is
-       storage that already exists, and mwcc null-tests it. */
-    _ZN18NestedHeapIteratorC1Ej(&self->mChildren, 4);
+    nhiConstructAt(&self->mChildren, 4);
 
     if (data_020a4d34 == 0) {
-        _ZN18NestedHeapIteratorC1Ej(&data_020a4d38, 4);
+        nhiConstructAt(&data_020a4d38, 4);
         data_020a4d34 = 1;
     }
 

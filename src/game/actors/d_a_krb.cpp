@@ -188,16 +188,12 @@ extern KrbAnimationFileHandle data_ov084_02130ce8;
 extern KrbAnimationFileHandle data_ov084_02130cf0;
 extern KrbModelFilePtr data_ov084_02130cf8;
 extern KrbModelFilePtr gKuriboLowModelModelFile;
-/* local extern: flat function addresses initialize the retained union descriptors below.
-   Real StateHandler globals add four runtime descriptor copies (initializer 0x23c
-   instead of retail 0x1fc under 2004/b56). */
-/* local extern: retained flat state descriptor initialization, measured above. */
+/* local extern: flat function addresses initialize the retained union
+   descriptors below. Real StateHandler globals add four runtime descriptor
+   copies (initializer 0x23c instead of retail 0x1fc under 2004/b56). */
 extern void _ZN7daKrb_c19func_ov084_0212a774Ev(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
 extern void _ZN7daKrb_c19func_ov084_0212ab48Ev(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
 extern void _ZN7daKrb_c19func_ov084_0212b2dcEv(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
 extern void _ZN7daKrb_c19func_ov084_0212a6f8Ev(daKrb_c *);
 extern StateHandler data_ov084_02130d74[];
 int func_02037e20(int* p);
