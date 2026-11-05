@@ -1041,7 +1041,6 @@ class Daemon:
         `margin` px of slack; `dy` lifts the point), nothing is captured and
         NotFramed is raised, so a capture loop cannot waste shots on a subject
         that is not in view."""
-        import emuwin
         framing = None
         if require_framed:
             pts = require_framed if isinstance(require_framed, list) else [require_framed]
@@ -1054,6 +1053,19 @@ class Daemon:
             if bad:
                 self.s.event({'ev': 'shot_refused', 'path': path, 'framing': framing})
                 raise NotFramed('capture refused, target not framed: %s' % json.dumps(bad))
+        prev, stable, retries = self._grab(which, settle_ms, stable_tries)
+        if path:
+            prev.save_png(path)
+        out = {'w': prev.w, 'h': prev.h, 'path': path, 'stable': stable}
+        if retries:
+            out['capture_retries'] = retries
+        if framing is not None:
+            out['framing'] = framing
+        return out
+
+    def _grab(self, which, settle_ms, stable_tries):
+        """(Frame, stable, capture retries): the window, re-captured until two grabs agree."""
+        import emuwin
         log = self.s.event
         time.sleep(float(settle_ms) / 1000.0)
         prev = emuwin.capture_screens(self.window(), which, log=log)
@@ -1067,14 +1079,71 @@ class Daemon:
                 stable = True
                 break
             prev = cur
+        return prev, stable, retries
+
+    def op_backend(self):
+        return {'backend': 'gdb', 'stub_port': self.s.port}
+
+    def _read_ranges(self, ranges):
+        """[(addr, size)] -> [bytes]. The stub reads them one after another (0x80 per packet)."""
+        return [self.s.read(a, n) for a, n in ranges]
+
+    def _ranges_meta(self):
+        return {'atomic': not self.s.running}
+
+    def op_ram_snapshot(self, ranges, path=None, env=None, data=False):
+        """Read several RAM ranges in one call, for RAM-diff screening.
+
+        ranges: [[addr, size], ...] or [{name, addr, size}, ...]; addr may be an
+        expression ("[0x0209f394]", "obj+0x5c", with env). The control-socket
+        backend reads them all at one emulated instant; the stub backend reads them
+        in turn (consistent only while the target is halted).
+        path: write the bytes, concatenated, to path and the index to path + '.json'.
+        data: also return each range's bytes (hex) in the reply."""
+        import hashlib
+        e = self._env(env)
+        rs = []
+        for k, r in enumerate(ranges):
+            if isinstance(r, dict):
+                name, a, n = r.get('name'), r['addr'], r['size']
+            else:
+                a, n = r[0], r[1]
+                name = r[2] if len(r) > 2 else None
+            addr = self.s.ev(a, e) & 0xffffffff if isinstance(a, str) else parse_int(a)
+            rs.append({'name': name or '%08x' % addr, 'addr': '%08x' % addr, 'size': parse_int(n)})
+        blobs = self._read_ranges([(int(r['addr'], 16), r['size']) for r in rs])
+        off = 0
+        for r, b in zip(rs, blobs):
+            r.update(offset=off, sha256=hashlib.sha256(b).hexdigest())
+            off += len(b)
+            if data:
+                r['hex'] = b.hex()
+        out = {'frames': self.s.frames, 'halted': not self.s.running, 'total': off, 'ranges': rs,
+               'backend': self.op_backend()['backend'], 't': round(time.time(), 3)}
+        out.update(self._ranges_meta())
         if path:
-            prev.save_png(path)
-        out = {'w': prev.w, 'h': prev.h, 'path': path, 'stable': stable}
-        if retries:
-            out['capture_retries'] = retries
-        if framing is not None:
-            out['framing'] = framing
+            path = os.path.abspath(path)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, 'wb') as f:
+                for b in blobs:
+                    f.write(b)
+            with open(path + '.json', 'w', encoding='utf-8') as f:
+                json.dump(dict(out, ranges=[{k: v for k, v in r.items() if k != 'hex'} for r in rs], bin=path),
+                          f, indent=1)
+            out['path'] = path
+        self.s.event({'ev': 'ram_snapshot', 'ranges': len(rs), 'total': off, 'path': out.get('path')})
         return out
+
+    def op_input(self, buttons=None, touch=None, frames=2):
+        """Hold buttons and/or touch [x, y] for `frames` emulated frames. The stub
+        backend can only post keys for the equivalent wall time while running."""
+        import emuwin
+        ms = int(round(parse_int(frames) * 1000.0 / 60.0))
+        if touch:
+            emuwin.touch(self.window(), int(touch[0]), int(touch[1]), ms)
+        if buttons:
+            self.op_press(buttons, ms)
+        return {'exact': False, 'ms': ms}
 
     def op_press(self, buttons, ms=100):
         import emuwin
