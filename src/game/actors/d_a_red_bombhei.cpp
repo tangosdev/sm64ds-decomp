@@ -42,13 +42,13 @@
 #include "cstd.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
+#include "private/mtx43.h"
 
 struct BCA_File;
 
-/* A flat view of Matrix4x3 for the one whole-matrix copy below. The
-   translation-vector spelling in math/Matrix.h lowers the same assignment to
-   two ldm/stm pairs plus three word copies; the cartridge has three pairs. */
-struct RedBombheiMtx { s32 m[12]; };
+/* The one whole-matrix copy below goes through Mtx43. The translation-vector
+   spelling in math/Matrix.h lowers the same assignment to two ldm/stm pairs
+   plus three word copies; the cartridge has three pairs. */
 
 enum {
     kPlayerActorID        = 0xbf,
@@ -261,7 +261,7 @@ void daRedBombhei_c::func_ov084_0212ce50()
     this->mAnmModel.mat4x3.t.x = this->mPosX >> 3;
     this->mAnmModel.mat4x3.t.y = (this->mPosY + 0x4000) >> 3;
     this->mAnmModel.mat4x3.t.z = this->mPosZ >> 3;
-    *(RedBombheiMtx *)&this->mShadowMat = *(RedBombheiMtx *)&IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&this->mShadowMat = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     this->mShadowMat.t.x = this->mPosX >> 3;
     this->mShadowMat.t.y = (this->mPosY - 0x8000) >> 3;
     this->mShadowMat.t.z = this->mPosZ >> 3;
