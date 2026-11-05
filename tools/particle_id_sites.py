@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Map particle effect IDs to the call sites that spawn them.
 
-Scans src/ for `Particle::System::NewSimple(id, ...)` (and its mangled
-`_ZN8Particle6System9NewSimpleE...` spelling), resolves an identifier argument
+Scans src/ for every entry point that takes an effect ID: `NewSimple(id, ...)`,
+`System::New(uniqueID, id, ...)`, `NewWeather`, `NewUnkCallback818` and the
+`func_02022c3c/c80/cbc/d00/d44` callback wrappers, in plain and mangled
+spellings.  Resolves an identifier argument
 through a same-file `NAME = 0x..` / `#define NAME 0x..` / `const ... NAME = ..`,
 and joins the result with the SPA table from tools/spa_dump.py.
 
@@ -12,7 +14,9 @@ definition's flags / inferred texture / records.  IDs in the table that no
 `NewSimple` literal reaches are listed separately.
 
 Static only: a literal in source does not prove the call is reachable, and
-`System::New`, the fixed-effect wrappers and computed IDs are not counted.
+computed IDs (variables) are not counted.  The fixed-ID wrappers (NewRipple,
+NewBigSplash, RunningSlidingDustAt, ...) hard-wire their IDs inside their own
+bodies, so those show up as `System::New` sites in src/engine/particle/.
 
 Usage:
   python tools/particle_id_sites.py               # table
@@ -29,7 +33,38 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import spa_dump  # noqa: E402
 
-CALL = re.compile(r"(?:NewSimple|_ZN8Particle6System9NewSimpleE\w*)\s*\(\s*([^,)]+)")
+# (regex for the callee, index of the effect-ID argument, label).  NewSimple takes
+# the ID first; System::New and the callback wrappers take (uniqueID, effectID, ...).
+ENTRY = [
+    (re.compile(r"(?:Particle::System::NewSimple|_ZN8Particle6System9NewSimpleE\w*|\bNewSimple)\s*\("), 0, "NewSimple"),
+    (re.compile(r"(?:Particle::System::New|System::New|_ZN8Particle6System3NewE\w*)\s*\("), 1, "System::New"),
+    (re.compile(r"(?:Particle::System::NewWeather|_ZN8Particle6System10NewWeatherE\w*)\s*\("), 1, "NewWeather"),
+    (re.compile(r"(?:Particle::System::NewUnkCallback818|_ZN8Particle6System17NewUnkCallback818E\w*)\s*\("), 1, "NewUnkCallback818"),
+    (re.compile(r"\b(func_02022d44|func_02022d00|func_02022cbc|func_02022c80|func_02022c3c)\s*\("), 1, "callback wrapper"),
+]
+
+
+def split_args(text, i):
+    """Arguments of the call whose '(' is at text[i-1], paren-aware; None if unterminated."""
+    depth, cur, args = 1, [], []
+    while i < len(text) and depth:
+        c = text[i]
+        if c in "([{":
+            depth += 1
+        elif c in ")]}":
+            depth -= 1
+            if depth == 0:
+                break
+        if c == "," and depth == 1:
+            args.append("".join(cur).strip())
+            cur = []
+        else:
+            cur.append(c)
+        i += 1
+    if depth:
+        return None
+    args.append("".join(cur).strip())
+    return args
 NUM = re.compile(r"^(?:0[xX][0-9a-fA-F]+|\d+)$")
 SYMBOL = re.compile(r"//\s*@symbol\s+(\S+)")
 SRC_EXT = (".c", ".cpp", ".h")
@@ -62,16 +97,20 @@ def scan(root):
                 text = open(path, encoding="utf-8", errors="replace").read()
             except OSError:
                 continue
-            if "NewSimple" not in text:
+            if "Particle" not in text and "func_02022" not in text and "NewSimple" not in text:
                 continue
             consts = constants(text)
-            sym = None
-            for n, line in enumerate(text.splitlines(), 1):
-                s = SYMBOL.search(line)
-                if s:
-                    sym = s.group(1)
-                for m in CALL.finditer(line):
-                    arg = m.group(1).strip()
+            lines_start = [0]
+            for ln in text.splitlines(True):
+                lines_start.append(lines_start[-1] + len(ln))
+            symbols = [(m.start(), m.group(1)) for m in SYMBOL.finditer(text)]
+            import bisect
+            for rx, idx, label in ENTRY:
+                for m in rx.finditer(text):
+                    args = split_args(text, m.end())
+                    if not args or len(args) <= idx:
+                        continue
+                    arg = args[idx]
                     name = comment = None
                     if NUM.match(arg):
                         val = int(arg, 0)
@@ -79,10 +118,12 @@ def scan(root):
                         val, comment = consts[arg]
                         name = arg
                     else:
-                        continue  # variable / declaration
-                    sites.append({"id": val, "name": name, "comment": comment,
+                        continue  # variable / declaration / definition
+                    n = bisect.bisect_right(lines_start, m.start())
+                    k = bisect.bisect_right([p0 for p0, _ in symbols], m.start()) - 1
+                    sites.append({"id": val, "name": name, "comment": comment, "via": label,
                                   "file": os.path.relpath(path, root).replace("\\", "/"),
-                                  "line": n, "symbol": sym})
+                                  "line": n, "symbol": symbols[k][1] if k >= 0 else None})
     return sites
 
 
@@ -117,22 +158,27 @@ def main():
               "flags 0x%08x texture %d(inferred) %s %s" % (
                   d["flags"], d["texture"], ",".join(d["optional"]) or "-", ",".join(d["behaviors"]) or "-")))
         for s in by.get(a.id, []):
-            print("  %s:%d  %s%s%s" % (s["file"], s["line"], s["symbol"] or "?",
+            print("  %s:%d  [%s] %s%s%s" % (s["file"], s["line"], s["via"], s["symbol"] or "?",
                   "  name=" + s["name"] if s["name"] else "",
                   "  /* %s */" % s["comment"] if s["comment"] else ""))
         if a.id not in by:
-            print("  no NewSimple literal in src/")
+            print("  no literal effect ID in src/")
         return
 
     if a.unused:
         ids = [i for i in sorted(defs) if i not in by]
-        print("%d of %d table IDs are never passed to NewSimple as a literal:" % (len(ids), len(defs)))
+        print("%d of %d table IDs are never passed as a literal to any entry point:" % (len(ids), len(defs)))
         print(" ".join("0x%x" % i for i in ids))
         return
 
     named = sum(1 for v in by.values() if any(s["name"] for s in v))
-    print("%d distinct IDs from %d call sites; %d carry a source name; table has %d" % (
-        len(by), sum(len(v) for v in by.values()), named, len(defs)))
+    via = {}
+    for v in by.values():
+        for x in v:
+            via[x["via"]] = via.get(x["via"], 0) + 1
+    print("%d distinct IDs from %d call sites (%s); %d carry a source name; table has %d" % (
+        len(by), sum(len(v) for v in by.values()),
+        ", ".join("%s %d" % kv for kv in sorted(via.items())), named, len(defs)))
     print("%-6s %-5s %-4s %-26s %s" % ("id", "calls", "tex?", "name", "first site"))
     for i in sorted(by):
         v = by[i]
