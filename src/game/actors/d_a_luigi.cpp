@@ -43,16 +43,13 @@
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx.h"
 
 /* The matrix copies go through the flat Mtx43. Assigning Matrix4x3 itself
    is a different sequence (.text grows by 0xa0 bytes). */
-/* POD twin of Vector3, for the local below. Vector3's declared destructor
-   (see include/types.h) costs this TU a numbered .data local if an object of
-   it is declared here, so the local stays POD and casts at the call. */
-struct Vec3 {
-    int x, y, z;
-};
-
+/* InitResources' local is a VecFx32. Vector3's declared destructor (see
+   include/types.h) costs this TU a numbered .data local if an object of it
+   is declared here, so the local stays POD and casts at the call. */
 #define CurrentPlayer() ((daPly_c *)data_0209f394[data_0209f250])
 
 /* Material bits func_02016acc clears and func_02016b24 sets. The reflected
@@ -128,7 +125,7 @@ extern "C" daLuigi_c *daLuigi_c_classInit() {
 
 // @symbol _ZN9daLuigi_c13InitResourcesEv
 int daLuigi_c::InitResources() {
-    Vec3 t;
+    VecFx32 t;
 
     mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210ebb8), 1, -1);
     func_02016acc(&mAnmModel, kMatClear);

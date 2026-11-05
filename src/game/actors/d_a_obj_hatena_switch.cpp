@@ -43,13 +43,10 @@ enum d_a_obj_hatena_switch_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx.h"
 
-/* Plain stack values avoid pulling unrelated Vector3 special members into
- * this TU while preserving their measured three-word ABI. */
-struct HatenaVector3Words {
-    s32 x, y, z;
-};
-
+/* Plain VecFx32 stack values avoid pulling unrelated Vector3 special
+ * members into this TU while preserving their measured three-word ABI. */
 /* Actor ID 0xbf is PLAYER, 0xc2 is CRATE. dActor_c::mFlags bit 0x08 is
  * written by the framework while the actor is off screen. These
  * int-returning predicates are what make the ROM materialize 0/1 before
@@ -229,7 +226,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
                 mActiveMeshCollider = &mMovingMeshCollider;
                 data_0209caa0[1] |= 0x80000000;
                 {
-                    volatile HatenaVector3Words position;
+                    volatile VecFx32 position;
                     s32 y = mPosY + 0x64000;
                     s32 z = mPosZ;
                     s32 x = mPosX;

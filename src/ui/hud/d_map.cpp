@@ -25,8 +25,7 @@
  *   a plain `playerPos = o->mPos` uses [r8,#0x5c] addressing and shortens
  *   Behavior by 4 bytes. The focus copy already goes through a pointer
  *   local, so `&focus->mPos` needs no launder.
- * - struct Vec3 stays the launder for the two projection helpers.
- *   GetPosFromMinimapPos and GetPosOnMinimap are static Fix12i methods;
+ * - GetPosFromMinimapPos and GetPosOnMinimap are static Fix12i methods;
  *   the third parameter is the scalar, not Fix12<int>.
  * - The OAM, G2x and Vec3 helpers stay on C-linkage or hand-mangled
  *   externs for the same reason.
@@ -69,8 +68,6 @@ struct Event {
 struct Vtbl { s32 (*f[8])(void *); };
 
 struct VtblOwner { Vtbl *vt; };
-
-struct Vec3 { int x, y, z; };
 
 /* An icon is drawn when it lies within 16 pixels of the 256x192 screen. */
 #define ICON_X_VISIBLE(x) ((u16)((x) + 0x10) < 0x120)
@@ -127,9 +124,9 @@ extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
 extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
-int *Vec3_DivScalarInPlace(struct Vec3 *v, int s);
-void Vec3_MulScalarInPlace(struct Vec3* v, int s);
-void Vec3_RotateYAndTranslate(struct Vec3* out, struct Vec3* in, short ang, struct Vec3* t);
+int *Vec3_DivScalarInPlace(Vector3 *v, int s);
+void Vec3_MulScalarInPlace(Vector3 *v, int s);
+void Vec3_RotateYAndTranslate(Vector3 *out, Vector3 *in, short ang, Vector3 *t);
 }
 
 /* The centre of the 256x192 touch screen, (128, 96) in 20.12 fixed point:
@@ -1059,19 +1056,18 @@ int dMap_c::InitResources()
 
 // @symbol _ZN6dMap_c20GetPosFromMinimapPosER7Vector3S1_isS1_
 void dMap_c::GetPosFromMinimapPos(Vector3 &a, Vector3 &b, Fix12i c, short d, Vector3 &e) {
-    struct Vec3 local;
-    Vec3_Sub((Vector3 *)&local, &a, &sMapScreenCenter);
+    Vector3 local;
+    Vec3_Sub(&local, &a, &sMapScreenCenter);
     Vec3_DivScalarInPlace(&local, c);
-    Vec3_RotateYAndTranslate((struct Vec3 *)&e, (struct Vec3 *)&b, d, &local);
+    Vec3_RotateYAndTranslate(&e, &b, d, &local);
 }
 
 // @symbol _ZN6dMap_c15GetPosOnMinimapEP7Vector3S1_isS1_
 void dMap_c::GetPosOnMinimap(Vector3 *out, Vector3 *a, Fix12i s, short ang, Vector3 *res) {
-    struct Vec3 v;
-    Vec3_Sub((Vector3*)&v, out, a);
+    Vector3 v;
+    Vec3_Sub(&v, out, a);
     Vec3_MulScalarInPlace(&v, s);
-    Vec3_RotateYAndTranslate((struct Vec3 *)res, (struct Vec3 *)&sMapScreenCenter, (short)(-ang),
-                             &v);
+    Vec3_RotateYAndTranslate(res, &sMapScreenCenter, (short)(-ang), &v);
 }
 
 /* Reconstructed source-style name: SM64DS proves dMap_c through RTTI,

@@ -287,10 +287,6 @@ struct KpaTexSequenceFilePtr : SharedFilePtr {
 typedef void (daKpaTail_c::*KpaTailState)();
 extern KpaTailState data_ov060_0211ae9c[];
 
-/* Plain three-int vector: the Vec3_Asr bridge and locals in func_ov060_0211577c,
- * and the floor-probe start point in func_ov060_02113740. */
-typedef struct Vec3 { int x, y, z; } Vec3;
-
 /* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_021132a4, NOT applied:
 typedef struct { int x, y, z; } Vector3;
 */
@@ -374,8 +370,7 @@ extern KpaAnimationFileHandle data_ov060_0211ac68;
 extern KpaAnimationFileHandle data_ov060_0211ac70;
 extern s16 data_ov060_0211a4e0[];
 extern s16 func_02010844(void *unused, void *v, s16 angle);
-/* local extern: the Vector3 spelling math/CalcLib.h declares. The locals
-   stay the POD Vec3 above, so the calls cast. */
+/* local extern: the Vector3 spelling math/CalcLib.h declares. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
@@ -1093,9 +1088,9 @@ none), build the shadow matrix there and call DropShadowRadHeight with radius
 void daKpa_c::func_ov060_0211577c(){
     char pad[8];
     Matrix4x3 saved;
-    Vec3 pos;
-    Vec3 v;
-    Vec3 v2;
+    Vector3 pos;
+    Vector3 v;
+    Vector3 v2;
     int zero;
 
     if (this->mWithMeshClsn.IsOnGround() == 0)
@@ -1105,7 +1100,7 @@ void daKpa_c::func_ov060_0211577c(){
     this->mAngleX = func_02010844(this, &this->mGroundNormalX, this->mAngleY);
     this->mAngleZ = func_02010844(this, &this->mGroundNormalX, (s16)(this->mAngleY - 0x4000));
 skip_angles:
-    Vec3_Asr((Vector3 *)&v, (Vector3 *)&this->mPosX, 3);
+    Vec3_Asr(&v, (Vector3 *)&this->mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);
@@ -1141,12 +1136,12 @@ skip_angles:
         pos.y = this->mPosY;
         pos.z = this->mPosZ;
         pos.y = pos.y + 0x32000;
-        rc.SetObjAndPos(*(Vector3 *)&pos, 0);
+        rc.SetObjAndPos(pos, 0);
         if (rc.DetectClsn())
             pos.y = rc.clsnY;
         else
             pos.y = this->mPosY;
-        Vec3_Asr((Vector3 *)&v2, (Vector3 *)&pos, 3);
+        Vec3_Asr(&v2, &pos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);
         *(Matrix4x3 *)(&this->mShadowMtx) = data_020a0e68;
         DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)&this->mShadowMtx, 0x140000, 0x64000,
@@ -2460,7 +2455,7 @@ when it did, and send variant 1 into BOWSER_STATE_ARENA_TILT (recording the
 KOOPA2BG actor); func_ov060_02115018 runs every frame of the step. Step 3: at the
 last frame, BOWSER_STATE_IDLE, BOWSER_COND_RECOVERING cleared, gravity -0x2000. */
 void daKpa_c::func_ov060_02113740(){
-    Vec3 pos;
+    Vector3 pos;
     int hit;
     int ground;
 
@@ -2476,7 +2471,7 @@ void daKpa_c::func_ov060_02113740(){
             pos.y = py;
             pos.z = pz;
         }
-        rc.SetObjAndPos(*(Vector3 *)&pos, (dActor_c *)this);
+        rc.SetObjAndPos(pos, (dActor_c *)this);
         if (rc.DetectClsn()) {
             ground = rc.clsnY;
             /* GetClsnID reads the hit record, dBgCh_Gnd's dBgPi base at +0x10. */
