@@ -61,14 +61,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov102_0214aa18",
+      "symbol": "_ZN7daBmb_c19func_ov102_0214aa18Ev",
       "address": "0x0214aa18",
       "size": "0x00000104",
       "legacy_source": "src/func_ov102_0214aa18.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov102_0214ab1c",
+      "symbol": "_ZN7daBmb_c19func_ov102_0214ab1cEv",
       "address": "0x0214ab1c",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov102_0214ab1c.c",
@@ -82,7 +82,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_ov102_0214ad40",
+      "symbol": "_ZN7daBmb_c19func_ov102_0214ad40Ev",
       "address": "0x0214ad40",
       "size": "0x00000088",
       "legacy_source": "src/func_ov102_0214ad40.c",
@@ -110,14 +110,14 @@
       "ordinal": 9
     },
     {
-      "symbol": "func_ov102_0214b128",
+      "symbol": "_ZN7daBmb_c19func_ov102_0214b128Ev",
       "address": "0x0214b128",
       "size": "0x00000120",
       "legacy_source": "src/func_ov102_0214b128.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov102_0214b248",
+      "symbol": "_ZN7daBmb_c10UpdateFuseEv",
       "address": "0x0214b248",
       "size": "0x0000013c",
       "legacy_source": "src/func_ov102_0214b248.cpp",
@@ -145,14 +145,14 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_ov102_0214b444",
+      "symbol": "_ZN7daBmb_c12UpdateShadowEv",
       "address": "0x0214b444",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov102_0214b444.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov102_0214b53c",
+      "symbol": "_ZN7daBmb_c19func_ov102_0214b53cEv",
       "address": "0x0214b53c",
       "size": "0x0000044c",
       "legacy_source": "src/func_ov102_0214b53c.c",
@@ -229,14 +229,14 @@
       "ordinal": 26
     },
     {
-      "symbol": "func_ov102_0214bf64",
+      "symbol": "_ZN7daBmb_c6State0Ev",
       "address": "0x0214bf64",
       "size": "0x00000154",
       "legacy_source": "src/func_ov102_0214bf64.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "func_ov102_0214c0b8",
+      "symbol": "_ZN7daBmb_c19func_ov102_0214c0b8Ev",
       "address": "0x0214c0b8",
       "size": "0x00000074",
       "legacy_source": "src/func_ov102_0214c0b8.c",
@@ -1040,7 +1040,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov102-daBmb_c/daBmb_c.o (gitignored)",
+    "object": "build/tu/ov102-daBmb_c/d_a_bmb.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 35,
     "functions_declared": 35,
@@ -1054,17 +1054,17 @@
       "droppedSections": [
         5,
         6,
-        7,
-        8,
-        10,
+        9,
         11,
         12,
         13,
         14,
-        15,
         16,
-        19,
-        33
+        17,
+        22,
+        23,
+        27,
+        42
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -1085,12 +1085,13 @@
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS",
       "no_unexpected_vtable_rtti_or_data_emission": "PASS -- after the 2026-10-02 profile fold the TU is intact-object. The vtable and RTTI chain are licensed data in .data (0x0214e4fc..0x0214e5d4). The class's own _ZTS/_ZTV are in the data claim; base-class RTTI is deadstrip-data.",

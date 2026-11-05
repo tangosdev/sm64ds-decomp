@@ -190,7 +190,6 @@ extern int func_01ff98f4(int a, int b);
 extern int func_01ff99a4(int a, int b);
 extern int func_01ffa4bc(int a);
 extern void func_0200ca14(void *, unsigned char b, int c);
-extern void func_0200cf40(void *);
 extern int func_0200d0ac(int a, unsigned int b);
 extern void func_0200d1e4(void *);
 extern void func_0200d858(void *, const Vector3 *);
@@ -381,7 +380,6 @@ extern void PlayerNewSimpleHold8(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int AngleDiff(int a, int b);
 extern struct S18a data_0209f4a4[];
-extern void func_0200d89c(char *p);
 extern u32 func_02022a4c(Fix12i x, Fix12i y, Fix12i z);
 extern void func_02022b04(Fix12i x, Fix12i y, Fix12i z);
 extern u32 func_02022cbc(int uniqueID, int effectID, s32 x, s32 y, s32 z, int dir);
@@ -4631,7 +4629,7 @@ int daPly_c::St_Respawn_Init() {
     mIsBodyClsnEnabled = 1;
     mSkipGroundUpdate = 0;
     if (mPlayerNo == data_0209f250) {
-        func_0200cf40(*(char**)((int)&data_0209f318));
+        ((dCamera_c *)data_0209f318)->func_0200cf40();
     }
     this->SetAnim(0x54, 0x40000000, 0x1000, 0);
     mStateStep = 0;
@@ -5726,7 +5724,7 @@ int daPly_c::St_DeadHit_Init() {
     this->SetAnim(data_ov002_0210a424[idx], 0x40000000, 0x1000, 0);
     mStateArg = 0;
     mStateWork = 0;
-    func_0200d89c(data_0209f318);
+    ((dCamera_c *)data_0209f318)->func_0200d89c();
     return 1;
 }
 }
@@ -9344,7 +9342,7 @@ int daPly_c::St_HurtWater_Init() {
       func_ov002_020d94cc();
     }
   }
-  func_0200d89c(*(char**)data_0209f318);
+  (*(dCamera_c **)data_0209f318)->func_0200d89c();
   return 1;
 }
 }
@@ -16568,7 +16566,7 @@ int daPly_c::St_Hurt_Init() {
     }
     mIsTakingDamage = 1;
     mPrevVertSpeed = mVertSpeed;
-    func_0200d89c(data_0209f318);
+    ((dCamera_c *)data_0209f318)->func_0200d89c();
     mJumpComboTimer = 5;
     return 1;
 }

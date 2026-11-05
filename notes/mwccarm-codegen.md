@@ -6381,6 +6381,12 @@ inversion. So the residue is not a spelling problem. It is what this GX texture-
 pack (`addr >> 3` ORed with a shifted masked field) compiles to when copy propagation is on,
 and the ROM's build of both bodies had it off across that window.
 
+**Superseded by 6di (2026-11-05).** It was a spelling problem after all: the helper's
+parameters. NitroSDK's `G3_TexImageParam(GXTexFmt, GXTexGen, GXTexSizeS, GXTexSizeT,
+GXTexRepeat, GXTexFlip, GXTexPlttColor0, u32 addr)`, with every parameter enum-typed, gives
+both bodies (and three more instances) the ROM's schedule with propagation on, and the
+pragmas are gone.
+
 **Carry the method, not just the case.** When a near-miss sits next to a function that
 already matches and does the same work, diff the two SOURCES first and turn off whatever the
 matched one turns on. One compile decides whether the residue is a mode-level difference
@@ -8311,7 +8317,8 @@ named extract; receivers of WALL-B's shape (manufactured `rows`/`cols` guard loc
 ternary-tested k and v, row with an entry-block dead def) because the pack sits in the entry region with no loop
 to cross. `opt_propagation off` plus inlined f-terms reaches b as a variable but keeps the left-first order
 (87). Verdict for this row: mechanism named and controlled, no b56 spelling; the four matched instances of this
-pack in the tree all carry `opt_propagation off`, which is the per-function form of the same fact.
+pack in the tree all carry `opt_propagation off`, which is the per-function form of the same fact. (Superseded by
+6di: the SDK's all-enum `G3_TexImageParam` parameters are the b56 spelling, and the pragmas are gone.)
 
 **3. The dx/dy "same knob" on func_ov006_020e5450 was two knobs with a sink between them.** Under 2004/b56
 (a) the literal pool is minted in the order of the first LOAD through each loop-hoisted address, (b) the
@@ -9003,3 +9010,33 @@ named local that survives propagation can take this shape instead of a pragma.
 That holds on current main and on the shard as it stood before c2ca658710. The pragma was
 inert, so it no longer blocks folding the camera handlers below 0x0200bec4 into a unit
 that keeps CSE on for `dCamera_c::Behavior`. That fold is still to do.
+
+## 6di. The TEXIMAGE_PARAM pragmas were the helper's parameter types: NitroSDK's all-enum `G3_TexImageParam` retires five `opt_propagation off` (func_0204af3c, func_ov007_020c1448, func_ov080_02125460, func_ov080_021261f4, EntryMesh::SendMaterial; 2026-11-05)
+
+Each of these five carried `opt_propagation off` around a local `G3_TexImageParam(u32 addr,
+u32 texFmt, ...)`. Without the pragma, func_0204af3c differs in 18 of 59 words: b56 hoists the
+palette base's `cmp fmt,#2` above the TEXIMAGE_PARAM store and recolours the pack around it
+(the ROM keeps `fmt` in lr and tests it after the store). The others show the 6cf/6cz
+`and`/`lsr` tie.
+
+**The spelling.** `include/nitro/gx/g3imm.h` has the SDK's shape: the `GXTexFmt`, `GXTexGen`,
+`GXTexSizeS`, `GXTexSizeT`, `GXTexRepeat`, `GXTexFlip` and `GXTexPlttColor0` enums,
+`GX_PACK_TEXIMAGE_PARAM(texFmt, texGen, s, t, repeat, flip, pltt0, addr)` and
+`GX_PACK_TEXPLTTBASE_PARAM(addr, texFmt)`, and `G3_TexImageParam` / `G3_TexPlttBase` as
+`static inline` wrappers that store the packed word to the register. With it, all five match
+with propagation on. Every function's text is byte-identical, and three of the four objects are
+identical. d_s_entry_entry.cpp's four PMF and registration temps move from @714..@720 to
+@725..@731 (the header's enums and inlines take the numbers in between), and its manifest is
+re-keyed by address.
+
+**What carries it, measured on func_0204af3c.** Parameter ORDER does not matter: the old
+`(u32 addr, GXTexFmt, ...)` order matches as well. Enum TYPES do matter, and no single one of
+them is enough. All u32, all `int`, `GXTexFmt` alone, or any one of the other six enums alone
+leaves 18 to 25 words off. Six enums with a u32 `texFmt` matches, and so does the full SDK
+signature. The macro spelled out at the call site, with or without enum casts, stays at 18.
+So it is the inline's enum-typed parameter set, not a cast at the call and not a tweak on one
+operand. 6cf had found `GXTexFmt`-style enum parameters inert on the unmatched
+`func_ov080_021261f4` draft. That was one enum, not the set.
+
+The same header also lets `G3_TexPlttBase` replace three hand-written palette-base
+expressions (func_ov007_020c1404, DrawWave, SendMaterial), byte-identical.

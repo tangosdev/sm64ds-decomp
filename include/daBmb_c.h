@@ -126,15 +126,15 @@ struct daBmb_c : dEnemyBase_c {
     int InitResources();
     int Render();
 
-    /* Four of the six arms of the mState state machine.  The NUMBER is what the
+    /* Five of the six arms of the mState state machine.  The NUMBER is what the
        cartridge proves: func_ov102_0214b03c switches on mState (+0x3dc) and
        dispatches exactly six bodies for 0..5, one each, and nothing else reads the
-       field to choose between them.  State1/3/4/5 are coined -- ov102 carries these
-       addresses and no identifier -- so they claim the index and nothing more; what
-       each arm does is written at its body.  Arm 0 stays a free function
-       (func_ov102_0214bf64), with this Bob-omb as its typed receiver.
-       func_ov102_0214bd90 and func_ov102_0214b03c are methods; the address is the
-       method name. */
+       field to choose between them.  State0/1/3/4/5 are coined -- ov102 carries
+       these addresses and no identifier -- so they claim the index and nothing
+       more; what each arm does is written at its body.  Arm 2 is
+       func_ov102_0214bd90.  Where nothing in the cartridge says what a method is
+       for, the address is the method name. */
+    void State0();
     void State1();
     void State3();
     int  State4();
@@ -142,6 +142,21 @@ struct daBmb_c : dEnemyBase_c {
     void func_ov102_0214bd90();
     void func_ov102_0214b03c();
     void func_ov102_0214b988();
+
+    /* Returns to arm 0: walk animation, mTurnTimer 0x200, gravity back on. */
+    void func_ov102_0214c0b8();
+    /* Counts mFuse down with the fuse-tick sound, swells the body over the
+       last four frames, and detonates at 1 (returns 0 then, else 1). */
+    int UpdateFuse();
+    /* Drops the shadow from the floor height below the body, or from the
+       carrier's height while it is held. */
+    void UpdateShadow();
+    /* Behavior's per-frame helpers; called from Behavior and from each other. */
+    int func_ov102_0214aa18();
+    int func_ov102_0214ab1c();
+    void func_ov102_0214ad40();
+    void func_ov102_0214b128();
+    void func_ov102_0214b53c();
 };
 
 #ifndef SM64DS_PLATFORM_PC

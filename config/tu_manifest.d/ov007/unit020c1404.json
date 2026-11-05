@@ -116,7 +116,7 @@
   "notes": [
     "Text only: the four bss words stay ROM-owned and are reached by extern, as the one-function sources did.",
     "Folded from 8 sources. Two each declared their own partial texture struct (Tex) over the record; the unit has one Ov007Texture (size-asserted 0x2c).",
-    "func_ov007_020c1448's one-function source needed #pragma opt_propagation off. In a unit that pragma covers every function; under it func_ov007_020c1560 and 020c14d4 match once their slot / end locals are dropped and the comparison reads the allocator words directly.",
+    "func_ov007_020c1448's one-function source needed #pragma opt_propagation off, and the folded unit carried it file-wide. It went when G3_TexImageParam took NitroSDK's enum-typed parameters from nitro/gx/g3imm.h (#821); the unit is byte-identical without it. func_ov007_020c1560 and 020c14d4 match once their slot / end locals are dropped and the comparison reads the allocator words directly.",
     "func_ov007_020c1620 is spelled as what it does, freeing a record through func_ov007_020c3d1c (void (void *), as unit020c3ce4 defines it); the source spelled it int (void). Its long_calls bracket is kept."
   ],
   "verification": {

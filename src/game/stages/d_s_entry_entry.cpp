@@ -9,6 +9,7 @@
 #include "math/CalcLib.h"
 #include "cstd.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/g3imm.h"
 
 /* ROM order: the ENTRY factory, then EntryMesh (0x0211a948..0x0211b524). */
 #pragma defer_codegen off
@@ -59,42 +60,26 @@ struct EntryMeshTexture : SharedFilePtr {
 extern EntryMeshTexture EntryMeshTextureFile;
 extern EntryMeshHandler EntryMeshHandlers[3];
 
-#define reg_G3_TEXIMAGE_PARAM (*(volatile u32 *)0x040004a8)
-#define reg_G3_TEXPLTT_BASE   (*(volatile u32 *)0x040004ac)
 #define reg_G3_DIF_AMB        (*(volatile u32 *)0x040004c0)
 #define reg_G3_SPE_EMI        (*(volatile u32 *)0x040004c4)
 #define reg_G3_POLYGON_ATTR   (*(volatile u32 *)0x040004a4)
 
-static inline void G3_TexImageParam(u32 addr, u32 texFmt, u32 texGen, u32 sizeS, u32 sizeT,
-                                    u32 repeat, u32 flip, u32 pltt0) {
-    reg_G3_TEXIMAGE_PARAM = (u32)((addr >> 3) | (texFmt << 26) | (texGen << 30) | (sizeS << 20) |
-                                  (sizeT << 23) | (repeat << 16) | (flip << 18) | (pltt0 << 29));
-}
-
-#pragma push
-/* 6f: keeps the format constant live so the palette shift colours as in ROM. */
-#pragma opt_propagation off
 // @symbol _ZN9EntryMesh12SendMaterialEv
 /* Push the cached material to the geometry engine: diffuse/ambient,
  * specular/emission, the texture image param and the palette base, then a
- * fixed polygon attribute. The palette shift is 3 for GX_TEXFMT_PLTT4 (2)
- * and 4 otherwise; the format test has to complete before the palette
- * address is loaded, so it is its own statement. Same Nitro G3 inline shape
- * as func_ov080_02125460. */
+ * fixed polygon attribute, through NitroSDK's G3 immediate inlines. Same
+ * shape as func_ov080_02125460. */
 void EntryMesh::SendMaterial() {
     reg_G3_DIF_AMB = mMaterial.difAmb;
     reg_G3_SPE_EMI = mMaterial.speEmi;
-    G3_TexImageParam(mMaterial.texAddr, (mMaterial.param >> 0x1a) & 7, 0,
-                     (mMaterial.param >> 0x14) & 7, (mMaterial.param >> 0x17) & 7, 0, 0,
-                     (mMaterial.param >> 0x1d) & 1);
-    {
-        u32 fmt = (mMaterial.param >> 0x1a) & 7;
-        u32 sub = (fmt == 2) ? 1 : 0;
-        reg_G3_TEXPLTT_BASE = mMaterial.pltAddr >> (4 - sub);
-    }
+    G3_TexImageParam((GXTexFmt)((mMaterial.param >> 0x1a) & 7), GX_TEXGEN_NONE,
+                     (GXTexSizeS)((mMaterial.param >> 0x14) & 7),
+                     (GXTexSizeT)((mMaterial.param >> 0x17) & 7), GX_TEXREPEAT_NONE,
+                     GX_TEXFLIP_NONE, (GXTexPlttColor0)((mMaterial.param >> 0x1d) & 1),
+                     mMaterial.texAddr);
+    G3_TexPlttBase(mMaterial.pltAddr, (GXTexFmt)((mMaterial.param >> 0x1a) & 7));
     reg_G3_POLYGON_ATTR = 0x11f0088;
 }
-#pragma pop
 
 // @symbol _ZN9EntryMesh10CalcMatrixEv
 /* Build mMtx from mPos (recentred on the 0xfa000 grid middle, in 1/8

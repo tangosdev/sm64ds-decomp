@@ -52,6 +52,8 @@ typedef char dView_c_size_must_be_0x80[sizeof(dView_c) == 0x80 ? 1 : -1];
 
 struct dActor_c;
 struct CamMode;
+struct CamViewObj;
+struct dBgCh;
 
 struct dCamera_c : dView_c {
     /* Nested, and only ever needed as a pointer -- dCamera_c::ChangeState is
@@ -309,6 +311,38 @@ struct dCamera_c : dView_c {
     void func_0200d3f8(unsigned char, void *);
     void func_0200d148(unsigned char);
     void func_0200d10c(unsigned char);
+    /* Follow, placement and state helpers. Their names are not recovered, so
+       each keeps its address. */
+    void func_0200897c(dBgCh &);
+    void func_020089d8();
+    void func_020089f8();
+    int func_02008cb4();
+    int func_02009138(int);
+    int func_020091f8(Vector3 *, int, int);
+    void func_0200928c();
+    unsigned int func_020093d4(int);
+    unsigned int func_020093f4(int);
+    int func_020098e0();
+    int func_02009a8c();
+    int func_02009d30();
+    int func_02009e50();
+    s32 func_02009e70();
+    int func_0200af0c();
+    void func_0200af20(Vector3 *, Vector3 *, short *);
+    void func_0200b798(CamViewObj *, int);
+    void func_0200b990(CamViewObj *, int);
+    int func_0200bec4(int *, int, char *, int);
+    int func_0200c394(int, void *, void *, void **, int *);
+    int func_0200c66c(void *, int *, int *, int *);
+    void func_0200c9e0(s32 *, s32 *);
+    int func_0200ca50();
+    int func_0200cae4();
+    void func_0200cb58(int);
+    void func_0200cbe0();
+    void func_0200cce4();
+    void func_0200cf40();
+    void func_0200d89c();
+    void func_0200d954(short);
 };
 
 #ifndef SM64DS_PLATFORM_PC
