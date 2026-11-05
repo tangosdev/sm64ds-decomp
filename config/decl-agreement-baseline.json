@@ -2594,7 +2594,7 @@
     },
     "Vec3_DivScalarInPlace": {
       "src/ui/hud/d_map.cpp": [
-        "param:#1 Vec3 *",
+        "param:#1 Vector3 *",
         "return:void"
       ]
     },
@@ -2812,7 +2812,7 @@
         "param:#1 Vector3 *"
       ],
       "src/ui/hud/d_map.cpp": [
-        "param:#1 Vec3 *"
+        "param:#1 Vector3 *"
       ],
       "src/engine/view/d_camera.cpp": [
         "param:#1 Vector3 *"
@@ -2830,9 +2830,9 @@
         "param:#4 Vector3 *"
       ],
       "src/ui/hud/d_map.cpp": [
-        "param:#1 Vec3 *",
-        "param:#2 Vec3 *",
-        "param:#4 Vec3 *"
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *",
+        "param:#4 Vector3 *"
       ],
       "src/game/actors/d_a_ch_room.cpp": [
         "param:#1 Vector3 *",

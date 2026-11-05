@@ -74,6 +74,7 @@ enum daObjKey_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx.h"
 
 #pragma defer_codegen off
 
@@ -100,13 +101,9 @@ struct ObjKeyAnimationFilePtr : ObjKeyFile {
     ~ObjKeyAnimationFilePtr();
 };
 
-/* Plain three-word offset (data_ov089_02132ca4). A Vector3 static would
+/* data_ov089_02132ca4 is a plain VecFx32 offset. A Vector3 static would
  * register a destructor and grow __sinit, which the retail initializer
  * does not do; the zero-init here emits plain BSS. */
-struct ObjKeyVec3 {
-    int x, y, z;
-};
-
 enum {
     ACTOR_OBJ_KEY = 0x11a,
     KEY_KIND_STAR = 7,
@@ -212,7 +209,7 @@ extern ObjKeyModelFile gLuigiKeyModelFile;
 extern ObjKeyModelFile gMarioKeyModelFile;
 extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
-extern ObjKeyVec3 data_ov089_02132ca4;
+extern VecFx32 data_ov089_02132ca4;
 extern Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, int ang);
@@ -982,6 +979,6 @@ ObjKeyAnimationFilePtr data_ov089_02132c40(ASSET_KOOPA_KEY_GET_DEMO_BCA);
 ObjKeyAnimationFilePtr data_ov089_02132c70(ASSET_KOOPA_KEY_OPEN_BCA);
 ObjKeyAnimationFilePtr data_ov089_02132c48(ASSET_KOOPA_KEY_W_GET_BCA);
 
-ObjKeyVec3 data_ov089_02132ca4;
+VecFx32 data_ov089_02132ca4;
 
 ObjKeyStateTable data_ov089_02132cec;

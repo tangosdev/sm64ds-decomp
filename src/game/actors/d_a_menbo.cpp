@@ -41,6 +41,7 @@
 #include "dExtFrameCtrl_c.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx.h"
 
 #pragma opt_strength_reduction off
 
@@ -66,8 +67,6 @@ struct MenboAnimationFilePtr : SharedFilePtr {
     MenboAnimationFilePtr(u32 fileID);
     ~MenboAnimationFilePtr();
 };
-
-struct CoinVec3 { s32 x, y, z; };
 
 /* By-value Fix12<int> in a mangled name; the calls pass a bare word. */
 typedef int LocFix12;
@@ -728,7 +727,7 @@ int daMenbo_c::Behavior()
             }
         }
         if (mDeathState != 1 && mPosY <= mSurfaceY) {
-            CoinVec3 v;
+            VecFx32 v;
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;

@@ -110,12 +110,9 @@ enum daDoor_c_AssetId {
 #include "dActor_c.h"
 #include "Sound.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx.h"
 
-/* Three plain words. A stack Vector3 would run its destructor; these temps do not. */
-struct Vec3i {
-    s32 x, y, z;
-};
-
+/* The vector temps below are VecFx32: a stack Vector3 would run its destructor. */
 /* The door's matrix copies go through the flat Mtx43: a copy through the
    C++ Matrix4x3 is the struct-copy DIFF of notes/cpp-class-form.md (.text
    grows by 0x3c bytes). */
@@ -584,7 +581,7 @@ int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
    func_ov089_0213115c. A nonzero mKeyModelIdx sets the
    data_ov100_02148704 latch. Was a C source. */
 int daDoor_c::func_ov100_02144a38(daPly_c *p) {
-    Vec3i pos;
+    VecFx32 pos;
     DoorEntry *e;
 
     p->OpenBigDoor();
@@ -950,7 +947,7 @@ fail:
    mScaleX/Y/Z, which a door does not use as a scale; returns the player
    (data_0209f394[data_0209f250], the current one). Was a C source. */
 daPly_c *daDoor_c::func_ov100_02145370() {
-    Vec3i v;
+    VecFx32 v;
     daPly_c *r5 = (daPly_c *)data_0209f394[data_0209f250];
     Vec3_Sub((Vector3 *)&v, (const Vector3 *)&r5->mPosX, (const Vector3 *)&mPosX);
     Vec3_RotateYAndTranslate(&mScaleX, &data_020a0ebc, (short)(-mAngleY), &v);
@@ -1086,7 +1083,7 @@ s32 daDoor_c::InitResources() {
     DoorEntry *e;
     void *f;
     void *an;
-    Vec3i tmp;
+    VecFx32 tmp;
     int r4;
     int v;
     int b;

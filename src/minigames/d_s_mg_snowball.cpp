@@ -72,9 +72,6 @@ enum dScMgSnowball_c_AssetId {
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
-typedef struct Vec3 {
-    int x, y, z;
-} Vec3;
 
 typedef struct Pair {
     s32 x;

@@ -53,11 +53,6 @@ enum dScMgRoulette_c_AssetId {
 
 /* Local views of the records the helpers walk. */
 
-/* Three consecutive Fix12 words, written a component at a time. */
-struct Vec3 {
-    int x, y, z;
-};
-
 /* One row of the 12-entry angle table at sRouletteSlowStops, copied whole. */
 typedef struct {
     short v[12];
@@ -1305,7 +1300,7 @@ void RouletteBoard_StateSpin(RouletteBoard *board) {
     s16 val0 = data_02082214[idx * 2];
 
     int x, y, z;
-    struct Vec3 t;
+    VecFx32 t;
     x = FX_MUL(dist, val1);
     y = FX_MUL(dist, 0x400) + 0x780;
     z = FX_MUL(dist, val0);
@@ -1341,7 +1336,7 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     int angidx, idx2;
     short t0, t1;
     int x, y, z;
-    Vec3 t;
+    VecFx32 t;
 
     spinAbs = board->mSpinSpeed - 0x140;
     if (spinAbs < 0)
