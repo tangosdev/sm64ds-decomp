@@ -7843,3 +7843,4 @@ ov095	0x02136764	_ZN10daUdlift_c10LatchRiderEP6Player	_ZN10daUdlift_c10LatchRide
 ov002	0x020caf98	_ZN6Player10StartClimbEP5dCc_c	_ZN7daPly_c10StartClimbEP5dCc_c	class renamed from the coined Player to daPly_c; earlier rows left untouched
 arm9	0x0200fe70	UnloadBlueCoinModel	_ZN8dActor_c19UnloadBlueCoinModelEv	coined free function -> dActor_c member: every caller passes this in r0 and the function sits among dActor_c methods; name still coined
 arm9	0x0200fe9c	LoadBlueCoinModel	_ZN8dActor_c17LoadBlueCoinModelEv	coined free function -> dActor_c member: every caller passes this in r0 and the function sits among dActor_c methods; name still coined
+ov002	0x020bccfc	_ZN7daPly_c19func_ov002_020bccfcEPhii	daPly_func_ov002_020bccfc	script command handler exposed as a C-linkage free function; the flat descriptor target has no member spelling
