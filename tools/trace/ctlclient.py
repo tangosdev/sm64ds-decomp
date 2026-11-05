@@ -8,7 +8,7 @@ backend") serves JSON lines on 127.0.0.1, by default port 45987:
 
 Every emulator-state command runs on the emulator thread between frames, or
 while the ARM9 is halted at a breakpoint, so results are frame-exact. This is
-the subset of the fork's tools/control_client.py that emusession needs; the fork's
+the subset of the fork's control_client.py that emusession needs; the fork's
 CONTROL_API.md documents every command.
 """
 import base64
