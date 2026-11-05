@@ -12,10 +12,6 @@ extern int *Vec3_AsrInPlace(int *v, int sh);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalarInPlace(int *v, int s);
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern int func_020091f8(dCamera_c *cam, Vector3 *lookAt, int angleY, int angleX);
-extern u32 func_020093f4(void *cam, int dist);
-extern int func_02009138(dCamera_c *cam, int dist);
-extern void func_020089d8(dCamera_c *cam);
 
 /* Camera state main for following the player. The eye target is the
  * player's position raised by 0x64000. With no mLookTarget the camera looks
@@ -96,12 +92,12 @@ int func_02005110(dCamera_c *cam) {
         } else if (vert > 0x2800) {
             vert = 0x2800;
         }
-        func_020091f8(cam, &aim, horzAngle, vert);
+        cam->func_020091f8(&aim, horzAngle, vert);
     }
     {
-        u32 r = func_020093f4(cam, eyeDist);
-        if (func_02009138(cam, r) == 0) {
-            func_020089d8(cam);
+        u32 r = cam->func_020093f4(eyeDist);
+        if (cam->func_02009138(r) == 0) {
+            cam->func_020089d8();
         }
     }
     return 1;

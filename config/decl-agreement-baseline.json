@@ -14072,26 +14072,6 @@
         "arity:4"
       ]
     },
-    "func_0200897c": {
-      "src/engine/view/d_camera.cpp": [
-        "param:#1 char *"
-      ]
-    },
-    "func_02009138": {
-      "src/unnamed/arm9/0200/func_02005098.cpp": [
-        "param:#1 int"
-      ],
-      "src/engine/view/d_camera.cpp": [
-        "param:#1 dCamera_c *",
-        "return:void"
-      ]
-    },
-    "func_020091f8": {
-      "src/engine/view/d_camera.cpp": [
-        "param:#2 void *",
-        "param:#2 dCamera_c *"
-      ]
-    },
     "func_020092c4": {
       "src/engine/view/d_camera.cpp": [
         "param:#1 void *",
@@ -14120,39 +14100,9 @@
         "return:void"
       ]
     },
-    "func_02009d30": {
-      "src/engine/view/d_camera.cpp": [
-        "param:#1 int"
-      ]
-    },
-    "func_02009e70": {
-      "src/unnamed/arm9/0200/func_02005000.cpp": [
-        "return:void"
-      ],
-      "src/engine/view/d_camera.cpp": [
-        "return:void"
-      ]
-    },
-    "func_0200af20": {
-      "src/engine/view/d_camera.cpp": [
-        "param:#2 Vec3 *",
-        "param:#3 Vec3 *"
-      ]
-    },
     "func_0200b0fc": {
       "src/engine/view/d_camera.cpp": [
         "arity:3"
-      ]
-    },
-    "func_0200bec4": {
-      "src/unnamed/arm9/0200/func_02005098.cpp": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#4 int"
-      ],
-      "src/engine/view/d_camera.cpp": [
-        "param:#2 Vector3 *",
-        "param:#4 CamMode *"
       ]
     },
     "func_0200d438": {
