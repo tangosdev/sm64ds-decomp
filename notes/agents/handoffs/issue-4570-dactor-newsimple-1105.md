@@ -5,7 +5,7 @@ This document describes this commit. The queue records its immutable output SHA.
 ## Identity and resumption
 
 - Issue: https://github.com/tangosdev/sm64ds-decomp/issues/4570; task `issue-4570-dactor-newsimple-1105`; producer session `codex-dactor-newsimple-1105` (Codex).
-- Branch: `audit/source-audit-current1105`; queue input/original source base: `fe190dc93a4125144024138d3b8f6ba4d193c7d2`. After #4848 merged, this candidate was rebased onto current `main` at `682321c64de078383e3c66cea08b0a3cd451a5ef`; the final gates below were rerun on that base.
+- Queue input/original source base: `fe190dc93a4125144024138d3b8f6ba4d193c7d2`. After #4848 merged, this candidate was rebased onto current `main` at `682321c64de078383e3c66cea08b0a3cd451a5ef`; the final gates below were rerun on that base.
 - Workflow/tool pin: `18af52b49b9fb5663d417bdfa86109b7b157aaa3`; predecessor task: `particle-actors-cont1101`.
 - This commit contains the source, Actor TU manifest and this handoff. Build logs are local under ignored `build/`.
 - Next action: independent verifier reviews source plausibility and reruns exact TU, relocation and full-ROM proof on this commit; independent source review and integration remain pending.
