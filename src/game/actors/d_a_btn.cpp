@@ -139,7 +139,7 @@ extern u8 data_0209f220;
 extern signed char gCurrentSublevel;
 extern int data_0209f318;
 extern daPly_c *data_0209f394[];
-extern Mtx43 data_020a0e68;
+extern Matrix4x3 data_020a0e68;
 /* The king's collision mesh takes Whomp's Fortress's own CLPS block. The
    relocation's target address is shared by 15 level overlays; residency
    leaves ov015 and ov026, and only ov015 holds a CLPS block there (ov026's
@@ -1463,7 +1463,7 @@ void daBtn_c::func_ov079_02124188()
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68,
         (short)(mAngleY + mBodyYaw));
 
-    *(Mtx43 *)mShadowMatrix = data_020a0e68;
+    *(Mtx43 *)mShadowMatrix = *(Mtx43 *)&data_020a0e68;
 
     if (mShouldRender == 0)
         return;
