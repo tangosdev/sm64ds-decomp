@@ -152,7 +152,6 @@ dScMg3DEsp_c::~dScMg3DEsp_c()
 
 /* ---- dMg3DEspAnimSet_c ------------------------------------------------- */
 
-#pragma push
 
 struct Obj_777c {
     void* vt;
@@ -298,7 +297,6 @@ dMg3DEspAnimSet_c::~dMg3DEspAnimSet_c()
 // @symbol _ZN17dMg3DEspAnimSet_cC1Ev
 dMg3DEspAnimSet_c::dMg3DEspAnimSet_c() {}
 
-#pragma pop
 
 /* ---- dMg3DEspModel_c --------------------------------------------------- */
 
@@ -802,7 +800,6 @@ void dScMg3DEsp_c::UpdateSlots() {
     }
 }
 
-#pragma push
 // @symbol _ZN12dScMg3DEsp_c10ResetSlotsEv
 void dScMg3DEsp_c::ResetSlots() {
     int i;
@@ -819,7 +816,6 @@ void dScMg3DEsp_c::ResetSlots() {
         mSlots[i].mWait = ((i & 0xf) << 3) << 2;
     }
 }
-#pragma pop
 
 /* RenderCards reads its element through a this+0x5000 base: the ROM adds
    0x5000 to the stepping pointer and loads mCard's fields off it. Spelling

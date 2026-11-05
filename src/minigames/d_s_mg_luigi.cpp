@@ -840,8 +840,6 @@ void dScMgLuigi_c::DrawWantedIcon() {
 // @symbol _ZN12dScMgLuigi_c16TickPictureFlashEi
 #pragma push
 #pragma opt_common_subs off
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgLuigi_c::TickPictureFlash(int pictureIndex) {
     char *raw = (char *)this; /* unread; deleting it renumbers the pinned @NNN */
     char *blinkBase = (char *)mBlink;
@@ -872,7 +870,6 @@ after_flag:
     mKind[pictureIndex] = 0;
     *shown = 1;
 }
-#pragma pop
 #pragma pop
 
 // @symbol _ZN12dScMgLuigi_c17MovePictureBounceEi
@@ -1397,11 +1394,9 @@ void dScMgLuigi_c::PlaceBoardLayout() {
     mFilled++;
 }
 
-#pragma push
 // @symbol _ZN12dScMgLuigi_c16PlaceNextPictureEv
 /* One picture per call, or a whole fixed board. character and targetFirst
-   stay as pointers: character selection and the final capacity test reload them.
-   opt_propagation off keeps this in the right registers. */
+   stay as pointers: character selection and the final capacity test reload them. */
 void dScMgLuigi_c::PlaceNextPicture() {
     extern int data_0209d4b8;
     extern u8 sLuigiBoardFlags[];
@@ -1527,7 +1522,6 @@ void dScMgLuigi_c::PlaceNextPicture() {
     mLevelPhase[2] = ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 16 >> 15) << 12;
     mLevelPhase[3] = ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 16 >> 15) << 12;
 }
-#pragma pop
 
 // @symbol _ZN12dScMgLuigi_c12ChooseTargetEv
 #pragma push
@@ -1669,8 +1663,6 @@ void dScMgLuigi_c::ResetBoard() {
 }
 
 // @symbol _ZN12dScMgLuigi_c10StateCatchEv
-#pragma push
-#pragma opt_strength_reduction off
 
 void dScMgLuigi_c::StateCatch() {
     extern LuigiSlotHandler sLuigiSlotHandlers[];
@@ -1721,7 +1713,6 @@ void dScMgLuigi_c::StateCatch() {
     }
     mPromptEnabled = 0;
 }
-#pragma pop
 
 // @symbol _ZN12dScMgLuigi_c9StatePlayEv
 void dScMgLuigi_c::StatePlay() {

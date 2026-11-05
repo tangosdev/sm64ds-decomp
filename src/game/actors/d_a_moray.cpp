@@ -656,7 +656,6 @@ void daMoray_c::OnPendingDestroy()
 {
 }
 
-#pragma push
 // @symbol _ZN9daMoray_c6RenderEv
 s32 daMoray_c::Render()
 {
@@ -678,7 +677,6 @@ s32 daMoray_c::Render()
     mBlendAnmModel.dExtSimpleModel_c::Render(0);
     return 1;
 }
-#pragma pop
 
 // @symbol _ZN9daMoray_c8BehaviorEv
 s32 daMoray_c::Behavior()

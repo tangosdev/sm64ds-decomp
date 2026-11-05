@@ -142,8 +142,6 @@ void dScMgPanel_c::Particle_DrawAll() {
 // @symbol _ZN12dScMgPanel_c18Particle_UpdateAllEv
 /* Advance the 64 particles one frame: gravity on the free ones, a spin/fade
    counter on all of them, and retire a slot once its counter runs out. */
-#pragma push
-#pragma opt_common_subs off
 void dScMgPanel_c::Particle_UpdateAll() {
     char *scene = (char *)this;
     dScMgPanel_c *self = (dScMgPanel_c *)scene;
@@ -170,7 +168,6 @@ void dScMgPanel_c::Particle_UpdateAll() {
         }
     }
 }
-#pragma pop
 
 // @symbol _ZN12dScMgPanel_c14Particle_SpawnEiii
 /* Spawn one particle in the first free slot, at (x, y).  `mode` picks the
@@ -231,8 +228,6 @@ void dScMgPanel_c::Particle_ClearAll() {
 }
 
 // @symbol _ZN12dScMgPanel_c13Scroll_UpdateEv
-#pragma push
-#pragma opt_common_subs off
 void dScMgPanel_c::Scroll_Update() {
     char *scene = (char *)this;
     extern int data_0209d4b8;
@@ -302,7 +297,6 @@ void dScMgPanel_c::Scroll_Update() {
         y = 0x100;
     SetSubBg2Offset(x, y);
 }
-#pragma pop
 
 // @symbol _ZN12dScMgPanel_c12Scroll_StartEv
 void dScMgPanel_c::Scroll_Start() {

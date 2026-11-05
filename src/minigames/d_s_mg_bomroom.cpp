@@ -202,7 +202,6 @@ void dScMgBomroom_c::Marker_DrawAll() {
 
 
 // @symbol _ZN14dScMgBomroom_c16Marker_UpdateAllEv
-#pragma push
 
 void dScMgBomroom_c::Marker_UpdateAll() {
     int i;
@@ -218,7 +217,6 @@ void dScMgBomroom_c::Marker_UpdateAll() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c11Marker_ShowEi
 
@@ -232,10 +230,8 @@ void dScMgBomroom_c::Marker_Show(int idx) {
 }
 
 /* The scene keeps its per-slot UI state in the two-entry Slot arrays
- * mHatchPanels, mPenGates and mMarkers. The loops over them match only
- * with strength reduction off, so each carries its own bracket. */
+ * mHatchPanels, mPenGates and mMarkers. */
 // @symbol _ZN14dScMgBomroom_c14Marker_HideAllEv
-#pragma push
 
 void dScMgBomroom_c::Marker_HideAll() {
     int slot;
@@ -245,7 +241,6 @@ void dScMgBomroom_c::Marker_HideAll() {
     }
 }
 
-#pragma pop
 
 // @symbol Bomroom_DrawScore
 extern "C" {
@@ -416,7 +411,6 @@ void dScMgBomroom_c::PenGate_StateShut(int index) {
 }
 
 // @symbol _ZN14dScMgBomroom_c17PenGate_UpdateAllEv
-#pragma push
 
 typedef void (dScMgBomroom_c::*PMF)(int);
 extern "C" PMF sBomroomPenGateStateTable[];
@@ -429,10 +423,8 @@ void dScMgBomroom_c::PenGate_UpdateAll() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c15PenGate_ShowAllEv
-#pragma push
 
 void dScMgBomroom_c::PenGate_ShowAll() {
     void * p = (void *)this;
@@ -448,7 +440,6 @@ void dScMgBomroom_c::PenGate_ShowAll() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c12PenGate_OpenEi
 
@@ -467,7 +458,6 @@ void dScMgBomroom_c::PenGate_Open(int index) {
 }
 
 // @symbol _ZN14dScMgBomroom_c15PenGate_HideAllEv
-#pragma push
 
 void dScMgBomroom_c::PenGate_HideAll() {
     int slot;
@@ -477,7 +467,6 @@ void dScMgBomroom_c::PenGate_HideAll() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c18HatchPanel_DrawAllEv
 
@@ -513,8 +502,6 @@ void dScMgBomroom_c::HatchPanel_StateRevert(int index) {
 void dScMgBomroom_c::HatchPanel_StateHeld() {}
 
 // @symbol _ZN14dScMgBomroom_c23HatchPanel_StateAnimateEi
-#pragma push
-#pragma opt_common_subs off
 
 void dScMgBomroom_c::HatchPanel_StateAnimate(int index) {
     mHatchPanels[index].timer += 1;
@@ -535,7 +522,6 @@ void dScMgBomroom_c::HatchPanel_StateAnimate(int index) {
         mHatchPanels[index].state = 2;
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c20HatchPanel_StateIdleEi
 
@@ -544,7 +530,6 @@ void dScMgBomroom_c::HatchPanel_StateIdle(int index) {
 }
 
 // @symbol _ZN14dScMgBomroom_c20HatchPanel_UpdateAllEv
-#pragma push
 
 typedef void (dScMgBomroom_c::*PMF)(int);
 extern "C" PMF sBomroomHatchPanelStateTable[];
@@ -557,10 +542,8 @@ void dScMgBomroom_c::HatchPanel_UpdateAll() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c18HatchPanel_ShowAllEv
-#pragma push
 
 void dScMgBomroom_c::HatchPanel_ShowAll() {
     void * p = (void *)this;
@@ -576,10 +559,8 @@ void dScMgBomroom_c::HatchPanel_ShowAll() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c18HatchPanel_HideAllEv
-#pragma push
 
 void dScMgBomroom_c::HatchPanel_HideAll() {
     int slot;
@@ -589,7 +570,6 @@ void dScMgBomroom_c::HatchPanel_HideAll() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c19HatchPanel_ActivateEi
 
@@ -612,7 +592,6 @@ void dScMgBomroom_c::DrawRemaining() {
 
 
 // @symbol _ZN14dScMgBomroom_c16CountSortedBombsEv
-#pragma push
 
 void dScMgBomroom_c::CountSortedBombs() {
     int plain, colored, i;
@@ -647,7 +626,6 @@ void dScMgBomroom_c::CountSortedBombs() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c14OnBombExplodedEi
 /* Bomb `picked` has gone off. Its pen byte is 0 when it
@@ -657,7 +635,6 @@ void dScMgBomroom_c::CountSortedBombs() {
  * sets mSceneState to 3. */
 #pragma push
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 
 void dScMgBomroom_c::OnBombExploded(int picked) {
     char * raw = (char *)this;
@@ -861,7 +838,6 @@ void dScMgBomroom_c::Bomb_CheckGrab(int index) {
 #pragma pop
 
 // @symbol _ZN14dScMgBomroom_c14Bomb_PushApartEi
-#pragma push
 
 void dScMgBomroom_c::Bomb_PushApart(int index) {
     char* raw = (char*)this;
@@ -1008,7 +984,6 @@ void dScMgBomroom_c::Bomb_PushApart(int index) {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c9DrawBombsEv
 
@@ -1112,7 +1087,6 @@ void dScMgBomroom_c::CheckColorComplete() {
 void dScMgBomroom_c::BombMarch_LinedUp() {}
 
 // @symbol _ZN14dScMgBomroom_c16BombMarch_ToLineEi
-#pragma push
 
 void dScMgBomroom_c::BombMarch_ToLine(int index) {
     int off = index << 6;
@@ -1158,15 +1132,12 @@ void dScMgBomroom_c::BombMarch_ToLine(int index) {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c19BombMarch_OffscreenEv
 
 void dScMgBomroom_c::BombMarch_Offscreen() {}
 
 // @symbol _ZN14dScMgBomroom_c14BombMarch_ExitEi
-#pragma push
-#pragma opt_common_subs off
 void dScMgBomroom_c::BombMarch_Exit(int index) {
     int color, x;
     {
@@ -1195,10 +1166,8 @@ void dScMgBomroom_c::BombMarch_Exit(int index) {
     PenGate_Open(mBombs[index].color);
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c16BombMarch_ToGateEi
-#pragma push
 
 void dScMgBomroom_c::BombMarch_ToGate(int index) {
     int color, x, z, tx, ty;
@@ -1252,7 +1221,6 @@ done:
     PenGate_Open(mBombs[index].color);
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c15Bomb_StateMarchEi
 /* Runs the bomb's current handler: its substate indexes the
@@ -1347,7 +1315,6 @@ void dScMgBomroom_c::Bomb_StateChainDelay(int idx) {
 /* A held bomb follows the stylus less its grab offset, and overPen records
  * whether it is over its own pen. With nothing held (mHeldColor is 0xff) the
  * bomb goes back to state 1 instead. */
-#pragma push
 
 void dScMgBomroom_c::Bomb_StateHeld(int idx) {
     if (mHeldColor == 0xff) {
@@ -1401,7 +1368,6 @@ void dScMgBomroom_c::Bomb_StateHeld(int idx) {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c14Bomb_StateWalkEi
 /* While the bomb's fuse runs it counts down (unless mFusesFrozen is
@@ -1464,8 +1430,6 @@ void dScMgBomroom_c::Bomb_StateWaiting(int i) {
 /* Per-frame bomb pass: with no touch, nothing is held (mHeldColor = 0xff);
  * then every live bomb runs its state handler from the pointer-to-member
  * table sBomroomBombStateTable, indexed by its state, and Bomb_Animate. */
-#pragma push
-#pragma opt_strength_reduction off
 
 typedef void (dScMgBomroom_c::*PMF)(int);
 extern PMF sBomroomBombStateTable[];
@@ -1483,7 +1447,6 @@ void dScMgBomroom_c::UpdateBombs() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c10SpawnBombsEv
 /* Spawner: once mSpawnDelay runs out, picks a step from the spawn
@@ -1784,7 +1747,6 @@ void dScMgBomroom_c::ClearBombs() {
 }
 
 // @symbol _ZN14dScMgBomroom_c15RoundEnd_FinishEv
-#pragma push
 
 void dScMgBomroom_c::RoundEnd_Finish() {
     int j;
@@ -1825,7 +1787,6 @@ void dScMgBomroom_c::RoundEnd_Finish() {
     SetBg0Offset(0, 0);
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c14RoundEnd_TallyEv
 
@@ -1896,7 +1857,6 @@ int dScMgBomroom_c::AnyBombMarching() {
 }
 
 // @symbol _ZN14dScMgBomroom_c20RoundEnd_WaitLinedUpEv
-#pragma push
 
 void dScMgBomroom_c::RoundEnd_WaitLinedUp() {
     UpdateBombs();
@@ -1921,7 +1881,6 @@ void dScMgBomroom_c::RoundEnd_WaitLinedUp() {
     mShowTally = 1;
 }
 
-#pragma pop
 
 // @symbol _ZN14dScMgBomroom_c19RoundEnd_StartMarchEv
 

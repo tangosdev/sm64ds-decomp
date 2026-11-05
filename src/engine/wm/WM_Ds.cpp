@@ -94,7 +94,6 @@ u16 *WmGetSharedDataAddress(WMDataSharingInfo *dsInfo, unsigned aidBitmap, u16 *
  * (aid 0) primes the four sets, registers its port receive callback and
  * sends the first set (two in double mode); a child registers its own
  * receive callback and waits. */
-#pragma opt_common_subs off
 // @symbol WM_StartDataSharing
 int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int dataLength,
                         int doubleMode) {
@@ -331,7 +330,6 @@ int WM_StepDataSharing(u8 *self, u8 *sendData, u8 *receiveData) {
 
     return result;
 }
-#pragma opt_common_subs on
 
 /* The port send callback WM_StartDataSharing, WM_StepDataSharing and
  * WmDataSharingSendDataSet pass to WM_SetMPDataToPort. The sharing it

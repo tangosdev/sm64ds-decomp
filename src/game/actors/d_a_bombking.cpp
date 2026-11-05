@@ -1176,7 +1176,6 @@ int daBombking_c::func_ov078_02125350()
 }
 
 
-#pragma push
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c19func_ov078_02125448Ev
 
@@ -1280,7 +1279,6 @@ int daBombking_c::func_ov078_02125448()
 }
 
 
-#pragma pop
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c19func_ov078_02125734Ev
@@ -1694,8 +1692,6 @@ int daBombking_c::Behavior()
     return 1;
 }
 
-#pragma push
-#pragma opt_strength_reduction off
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c13InitResourcesEv
 /* SharedFilePtr's complete declaration is included above. The file handles
@@ -1758,7 +1754,6 @@ int daBombking_c::InitResources()
     return 1;
 }
 
-#pragma pop
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c16OnAimedAtWithEggEv

@@ -754,7 +754,6 @@ int daHanachan_c::IsStompedBy(dCcAcPos_c *cyl, dActor_c *actor)
     return 0;
 }
 
-#pragma opt_strength_reduction off
 /* Players stomping a segment bounce off it; the head also hurts on contact. The second cylinder set only hurts. */
 // @symbol _ZN12daHanachan_c16HandlePlayerHitsEv
 void daHanachan_c::HandlePlayerHits()

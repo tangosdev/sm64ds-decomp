@@ -1163,7 +1163,6 @@ void cMgSmartball_board_c::ClaimCell(int i) {
 }
 
 // @symbol _ZN20cMgSmartball_board_c12SaveSnapshotEv
-#pragma push
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same pattern as every sibling in this family (the
  * base's copy is out-of-line and there is no bl here).
@@ -1284,7 +1283,6 @@ void cMgSmartball_board_c::SaveSnapshot() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN20cMgSmartball_board_c14RestoreInitialEv
 /* Slot 2. Unlike most of this family's slot 2s this is a real body, not a
@@ -1395,8 +1393,6 @@ void cMgSmartball_slot_c::StartSpin() {
 }
 
 // @symbol _ZN19cMgSmartball_slot_c10UpdateSpinEv
-#pragma push
-#pragma opt_common_subs off
 void cMgSmartball_slot_c::UpdateSpin() {
     int ib, ic;
 
@@ -1515,7 +1511,6 @@ void cMgSmartball_slot_c::UpdateSpin() {
     mSpinCooldown = 0x3c;
 }
 
-#pragma pop
 
 // @symbol _ZN19cMgSmartball_slot_c6UpdateEv
 /* Slot 1. First loop draws three copies of one sprite in a row (index i is
@@ -1765,7 +1760,6 @@ void cMgSmartball_pakkun_c::Update() {
 }
 
 // @symbol _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv
-#pragma push
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same idiom as every sibling. Then, while
  * mActionTimer is still counting down from a previous trigger, it just
@@ -1817,7 +1811,6 @@ void cMgSmartball_pakkun_c::SaveSnapshot() {
         mTriggered = 0;
 }
 
-#pragma pop
 
 // @symbol _ZN21cMgSmartball_pakkun_c14RestoreInitialEv
 /* Slot 2. A real override, not a tail-call veneer: it calls the base's
@@ -1882,7 +1875,6 @@ void cMgSmartball_dokan_c::Update() {
 }
 
 // @symbol _ZN20cMgSmartball_dokan_c12SaveSnapshotEv
-#pragma push
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- the base's is out-of-line at 0x02114724 and there is
  * no bl here, so the original repeated the two statements. Every sibling's
@@ -1923,7 +1915,6 @@ void cMgSmartball_dokan_c::SaveSnapshot() {
     }
 }
 
-#pragma pop
 
 // @symbol _ZN20cMgSmartball_dokan_c14RestoreInitialEv
 /* Slot 2. The ROM is three words -- ldr ip, [pc]; bx ip; .word target -- which
@@ -2419,7 +2410,6 @@ void cMgSmartball_kinoko_c::Update() {
 }
 
 // @symbol _ZN21cMgSmartball_kinoko_c12SaveSnapshotEv
-#pragma push
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same idiom as every sibling. While mWasHit is set,
  * runs a one-shot transition (an effect/sound trigger, gated on mHitTimer
@@ -2492,7 +2482,6 @@ done:
     }
 }
 
-#pragma pop
 
 // @symbol _ZN21cMgSmartball_kinoko_c14RestoreInitialEv
 /* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial, qualified --
@@ -2747,7 +2736,6 @@ int cMgSmartball_ball_c::HitPropellers(int *pos) {
 }
 
 // @symbol _ZN19cMgSmartball_ball_c10HitKinokosEPi
-#pragma push
 int cMgSmartball_ball_c::HitKinokos(int *pos) {
     int i;
     dScMgSmartball_c *base;
@@ -2791,7 +2779,6 @@ int cMgSmartball_ball_c::HitKinokos(int *pos) {
     return 0;
 }
 
-#pragma pop
 
 // @symbol _ZN19cMgSmartball_ball_c10CheckExitsEPi
 int cMgSmartball_ball_c::CheckExits(int *pos) {
@@ -4421,7 +4408,6 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
 // @symbol _ZN16dScMgSmartball_c12UpdateScoresEv
 #pragma push
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
     dScMgSmartball_c *self = (dScMgSmartball_c *)o;
@@ -4632,7 +4618,6 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
 // @symbol _ZN16dScMgSmartball_c12CollideBallsEv
 #pragma push
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 void dScMgSmartball_c::CollideBalls() {
     char *p = (char *)this;
     int ballCount = mBallCount;
