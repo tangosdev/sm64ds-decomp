@@ -4,10 +4,8 @@
  * (actor 0x114) in State6. Behavior dispatches State0..State7 through
  * data_ov100_02148628, a pointer-to-member table.
  *
- * `#pragma defer_codegen off` is load-bearing. It makes the
- * `#pragma opt_common_subs` bracket around State2 bind (without the pair
- * State2 is 8 bytes short of 0x244) and it emits .text in source order, so
- * this file is ROM-ascending: D1, D0, State7..State0, CleanupResources,
+ * `#pragma defer_codegen off` is load-bearing: it emits .text in source
+ * order, so this file is ROM-ascending: D1, D0, State7..State0, CleanupResources,
  * OnPendingDestroy, Render, Behavior, InitResources, classInit
  * (0x02140d80..0x02141f04). Do not reorder the functions without the pragma.
  *
@@ -61,8 +59,7 @@ enum daBtfly_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 
-/* Makes the per-member `#pragma opt_common_subs` bracket around State2 bind.
- * Without it mwccarm defers codegen and the last file-global state wins. */
+/* Lays .text down in source order (see the note at the top). */
 #pragma defer_codegen off
 
 /* Flat 12-word copy. Assigning Matrix4x3 would run ~Vector3 on its translation. */
@@ -355,14 +352,8 @@ void daBtfly_c::State2()
     player = ClosestPlayer();
     if (player != 0) {
         int *pp;
-        int k = 0x5000;
-        int py;
-        int t;
-        int five = 5;
         Vec3_Sub(&d, &mPos, &player->mPos);
-        v.x = d.x;
-        v.y = d.y;
-        v.z = d.z;
+        v = d;
         if (Vec3_HorzLen(&v) > 0x4b0000)
             mState = 3;
 
@@ -374,33 +365,25 @@ void daBtfly_c::State2()
         v.x = pp[0];
         v.y = pp[1];
         v.z = pp[2];
-        t = mStateTimer * k;
-        v.x = v.x + t / 4;
-        t = mStateTimer * k;
-        v.z = v.z + t / 4;
+        v.x += mStateTimer * 0x5000 / 4;
+        v.z += mStateTimer * 0x5000 / 4;
         ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &v), 0x300);
 
         pp = &player->mPosX;
         v.x = pp[0];
-        py = pp[1];
-        v.y = py;
+        v.y = pp[1];
         v.z = pp[2];
-        v.y = py + ((mStateTimer * five + 0x100) << 12) / 4;
+        v.y += ((mStateTimer * 5 + 0x100) << 12) / 4;
         ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &v), 0x500);
 
         UpdatePos(0);
 
-        {
-            int *p = &mPosY;
-            *p = *p - (FX_MUL(mHorzSpeed, data_02082214[((unsigned short)mPrevAngleX >> 4) * 2]) +
-                       (short)data_02082214
-                               [((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 2 + 1] *
-                           (short)20 / 4);
-            int *cnt = &mStateTimer;
-            *cnt = *cnt + 1;
-            if (mStateTimer > 100)
-                mStateTimer = 0;
-        }
+        mPosY -= (FX_MUL(mHorzSpeed, data_02082214[((unsigned short)mPrevAngleX >> 4) * 2]) +
+                  data_02082214[((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 2 + 1] *
+                      20 / 4);
+        mStateTimer++;
+        if (mStateTimer > 100)
+            mStateTimer = 0;
         return;
     }
     mPosX = mPrevPosX;
