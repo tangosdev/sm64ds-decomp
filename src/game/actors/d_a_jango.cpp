@@ -185,7 +185,8 @@ extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 extern int data_0209e650;
 extern int RandomIntInternal(int *seed);
-extern int Vec3_Dist(const void *a, const void *b);
+/* local extern: CalcLib conflicts with this TU's LenVec3 declaration. */
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern int ApproachAngle(s16 *cur, s16 target, int div, int band, int maxStep);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(Vector3 *v);
@@ -821,7 +822,7 @@ int daJango_c::func_ov062_0211bd10()
         ApproachLinear(mPrevAngleY, mTargetAngleY, 0x1000);
         ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, (const Vector3 *)&mSpawnPosX), 0x500);
         ApproachLinear(mPrevAngleZ, 0, 0x500);
-        if (Vec3_Dist(&mPosX, &mSpawnPosX) < 0x1f4000) {
+        if (Vec3_Dist(&mPos, (const Vector3 *)&mSpawnPosX) < 0x1f4000) {
             mTimer = 0;
         } else {
             mTimer = 0x1e;
@@ -876,7 +877,7 @@ int daJango_c::func_ov062_0211bd10()
                 if (stage != 0x10) {
                     thr = 0x2bc000;
                 }
-                if (Vec3_Dist(&mPosX, ppos) < thr) {
+                if (Vec3_Dist(&mPos, (const Vector3 *)ppos) < thr) {
                     if (!IsNoControl(player) && player->mIsVanish == 0)
                         func_ov062_0211c658(JANGO_STATE_SWOOP);
                 }
