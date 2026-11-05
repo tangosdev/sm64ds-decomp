@@ -36,8 +36,7 @@ void func_ov007_020c24d0(Ov007StrokePath *path, int idx) {
             angles[i] = angles[i + 1];
             break;
         case 1:
-            ((Vector3 *)path->pointStorage)[i] =
-                ((Vector3 *)path->pointStorage)[i + 1];
+            ((Vector3 *)path->pointStorage)[i] = ((Vector3 *)path->pointStorage)[i + 1];
             break;
         }
         lengths = path->segmentLengths;
