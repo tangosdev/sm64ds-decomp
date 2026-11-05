@@ -49,6 +49,7 @@
 #include "SharedFilePtr.h"
 #include "private/Ov080Mat.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/g3imm.h"
 
 #pragma defer_codegen off
 
@@ -68,8 +69,6 @@
 
 /* The material block's ports keep the volatile spelling LoadMaterial was
  * matched under; see notes/mwccarm-codegen.md 6ba/6bb. */
-#define reg_G3_TEXIMAGE_PARAM (*(volatile u32 *)0x040004a8)
-#define reg_G3_TEXPLTT_BASE   (*(volatile u32 *)0x040004ac)
 #define reg_G3_DIF_AMB        (*(volatile u32 *)0x040004c0)
 #define reg_G3_SPE_EMI        (*(volatile u32 *)0x040004c4)
 #define reg_G3_POLYGON_ATTR   (*(volatile u32 *)0x040004a4)
@@ -114,18 +113,6 @@ extern SharedFilePtr *data_ov080_0212775c[];
 extern unsigned char data_ov080_02128688[];
 extern unsigned char data_ov080_0212869c[];
 
-static inline void G3_TexImageParam(u32 addr, u32 texFmt, u32 texGen, u32 sizeS, u32 sizeT,
-                                    u32 repeat, u32 flip, u32 pltt0)
-{
-    reg_G3_TEXIMAGE_PARAM = (u32)((addr >> 3) | (texFmt << 26) | (texGen << 30)
-        | (sizeS << 20) | (sizeT << 23) | (repeat << 16) | (flip << 18) | (pltt0 << 29));
-}
-
-static inline void G3_TexPlttBase(u32 addr, u32 texFmt)
-{
-    reg_G3_TEXPLTT_BASE = addr >> (4 - (texFmt == 2 ? 1 : 0));
-}
-
 // @symbol _ZN11daPicGate_cD1Ev
 // @symbol _ZN11daPicGate_cD0Ev
 /* Members in reverse, then ~dActor_c. Written first: with codegen not
@@ -135,7 +122,6 @@ daPicGate_c::~daPicGate_c()
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125460Ev
-#pragma opt_propagation off
 void daPicGate_c::func_ov080_02125460()
 {
     Ov080Mat *mat = (Ov080Mat *)mTexRecord;
@@ -147,16 +133,17 @@ void daPicGate_c::func_ov080_02125460()
     reg_G3_SPE_EMI = ((Ov080Mat *)mTexRecord)->speEmi;
     {
         Ov080Mat *m2 = (Ov080Mat *)mTexRecord;
-        G3_TexImageParam(m2->texAddr, (m2->param >> 0x1a) & 7, 0, (m2->param >> 0x14) & 7,
-                         (m2->param >> 0x17) & 7, 0, 0, (m2->param >> 0x1d) & 1);
+        G3_TexImageParam((GXTexFmt)((m2->param >> 0x1a) & 7), GX_TEXGEN_NONE,
+                         (GXTexSizeS)((m2->param >> 0x14) & 7),
+                         (GXTexSizeT)((m2->param >> 0x17) & 7), GX_TEXREPEAT_NONE, GX_TEXFLIP_NONE,
+                         (GXTexPlttColor0)((m2->param >> 0x1d) & 1), m2->texAddr);
     }
     {
         Ov080Mat *m3 = (Ov080Mat *)mTexRecord;
-        G3_TexPlttBase(m3->pltAddr, (m3->param >> 0x1a) & 7);
+        G3_TexPlttBase(m3->pltAddr, (GXTexFmt)((m3->param >> 0x1a) & 7));
     }
     reg_G3_POLYGON_ATTR = 0x11f0088;
 }
-#pragma opt_propagation on
 
 // @symbol _ZN11daPicGate_c19func_ov080_0212555cEv
 /* mMtx = translate(pos) * rotate(mAngle) * translate(-width/2): the gate's
@@ -575,8 +562,6 @@ void daPicGate_c::func_ov080_02126124()
 }
 
 #define G3_POLYGON_ATTR    (*(int *)0x040004a4)
-#define G3_TEXIMAGE_PARAM  (*(int *)0x040004a8)
-#define G3_TEXPLTT_BASE    (*(int *)0x040004ac)
 #define G3_DIF_AMB         (*(int *)0x040004c0)
 #define G3_SPE_EMI         (*(int *)0x040004c4)
 enum { kMtxPosVec = 2, kMtxPos = 1, kScale = 0x20000, kTriStrip = 2 };
@@ -598,16 +583,10 @@ extern int data_ov080_0212771c[];
     G3_VTX_16 = vx | ((u16)s1 << 16); \
     G3_VTX_16 = (u16)s2
 
-static inline void G3_TexImageParam(u32 addr, u32 texFmt, u32 sizeS, u32 sizeT, u32 pltt0) {
-    G3_TEXIMAGE_PARAM =
-        (addr >> 3) | (texFmt << 26) | 0x80000000 | (sizeS << 20) | (sizeT << 23) | (pltt0 << 29);
-}
-
 // @symbol _ZN11daPicGate_c19func_ov080_021261f4Ev
 /* DrawWave. The ports this one needs beyond the file's set are spelled
- * the same plain way, and its texture-parameter helper takes the five
- * fields it varies. */
-#pragma opt_propagation off
+ * the same plain way. The texture binds with normal-based texture
+ * coordinates (GX_TEXGEN_NORMAL) and no repeat or flip. */
 void daPicGate_c::func_ov080_021261f4() {
     int tmp[12];
     int i, j, n;
@@ -628,12 +607,14 @@ void daPicGate_c::func_ov080_021261f4() {
     G3_SPE_EMI = ((struct Ov080Mat *)mTexRecord)->speEmi;
     {
         Ov080Mat *m2 = (Ov080Mat *)mTexRecord;
-        G3_TexImageParam(m2->texAddr, (m2->param >> 26) & 7, (m2->param >> 20) & 7,
-                         (m2->param >> 23) & 7, (m2->param >> 29) & 1);
+        G3_TexImageParam((GXTexFmt)((m2->param >> 26) & 7), GX_TEXGEN_NORMAL,
+                         (GXTexSizeS)((m2->param >> 20) & 7), (GXTexSizeT)((m2->param >> 23) & 7),
+                         GX_TEXREPEAT_NONE, GX_TEXFLIP_NONE,
+                         (GXTexPlttColor0)((m2->param >> 29) & 1), m2->texAddr);
     }
     {
         struct Ov080Mat *m3 = (struct Ov080Mat *)mTexRecord;
-        G3_TEXPLTT_BASE = m3->pltAddr >> (4 - (((m3->param >> 0x1a) & 7) == 2 ? 1 : 0));
+        G3_TexPlttBase(m3->pltAddr, (GXTexFmt)((m3->param >> 0x1a) & 7));
     }
     G3_POLYGON_ATTR = 0x01000088 | ((((u8)((param1 >> 8) & 0x1f)) == 7) ? 0x14 : 0x1f) << 16;
     G3_MTX_SCALE = 0x10000;
@@ -668,5 +649,3 @@ void daPicGate_c::func_ov080_021261f4() {
     }
     G3_MTX_POP = 1;
 }
-
-#pragma opt_propagation on
