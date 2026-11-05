@@ -4296,16 +4296,17 @@ unsigned short dScMgSmartball_c::GetTile(int *pos) {
 // @symbol _ZN16dScMgSmartball_c10UpdateDustEv
 #pragma push
 #pragma opt_strength_reduction off
+/* opt_strength_reduction stays off: the ROM re-adds i * 8 and each field offset per access; indexed mDust* spellings are 0xf4-0x110 of 0xf8. */
 void dScMgSmartball_c::UpdateDust() {
     char *self = (char *)this;
     int i;
     char *obj = (char *)mDustVel;
     for (i = 0; i < 0x10; i++) {
-        unsigned char *flag = (unsigned char *)(int)((dScMgSmartball_c *)(self + i))->mDustActive;
+        unsigned char *flag = (unsigned char *)((dScMgSmartball_c *)(self + i))->mDustActive;
         if (*flag != 0) {
-            *(int *)((dScMgSmartball_c *)(int)(self + i * 8))->mDustPos +=
+            *(int *)((dScMgSmartball_c *)(self + i * 8))->mDustPos +=
                 *(int *)((dScMgSmartball_c *)(self + i * 8))->mDustVel;
-            *(int *)&((dScMgSmartball_c *)(int)(self + i * 8))->mDustPos[4] +=
+            *(int *)&((dScMgSmartball_c *)(self + i * 8))->mDustPos[4] +=
                 *(int *)&((dScMgSmartball_c *)(self + i * 8))->mDustVel[4];
             {
                 int m = Vec2_Len((Vec2 *)obj) * 6 / 8;
@@ -4314,7 +4315,7 @@ void dScMgSmartball_c::UpdateDust() {
                 }
             }
             {
-                int *counter = (int *)(int)((dScMgSmartball_c *)(self + i * 4))->mDustAge;
+                int *counter = (int *)((dScMgSmartball_c *)(self + i * 4))->mDustAge;
                 *counter += 1;
                 if (*counter >= 0xf) {
                     *flag = 0;
@@ -4404,17 +4405,17 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
 // @symbol _ZN16dScMgSmartball_c12UpdateScoresEv
 #pragma push
 #pragma opt_strength_reduction off
+/* opt_strength_reduction stays off: the ROM re-derives each popup field from i per pass; indexed mPopup* spellings are 0x110-0x130 of 0x118. */
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
-    dScMgSmartball_c *self = (dScMgSmartball_c *)o;
     int i;
     for (i = 0; i < 5; i++) {
-        int *A = ((dScMgSmartball_c *)(int)(o + i * 4))->mPopupScore;
-        int *E = ((dScMgSmartball_c *)(int)(o + i * 4))->mPopupDelay;
-        int *D0 = (int *)((dScMgSmartball_c *)(int)(o + i * 8))->mPopupPos;
-        int *D1 = (int *)&((dScMgSmartball_c *)(int)(o + i * 8))->mPopupPos[4];
-        int *B = ((dScMgSmartball_c *)(int)(o + i * 4))->mPopupMultiplier;
-        int *C = ((dScMgSmartball_c *)(int)(o + i * 4))->mPopupAge;
+        int *A = ((dScMgSmartball_c *)(o + i * 4))->mPopupScore;
+        int *E = ((dScMgSmartball_c *)(o + i * 4))->mPopupDelay;
+        int *D0 = (int *)((dScMgSmartball_c *)(o + i * 8))->mPopupPos;
+        int *D1 = (int *)&((dScMgSmartball_c *)(o + i * 8))->mPopupPos[4];
+        int *B = ((dScMgSmartball_c *)(o + i * 4))->mPopupMultiplier;
+        int *C = ((dScMgSmartball_c *)(o + i * 4))->mPopupAge;
         if (*A > 0) {
             if (*E > 0) {
                 *E -= 1;
@@ -4427,7 +4428,7 @@ void dScMgSmartball_c::UpdateScores() {
                 }
             }
             *C += 1;
-            if (((int)self->param1 & 0xff) == 0)
+            if ((param1 & 0xff) == 0)
                 *D1 -= 0x1000;
             else
                 *D1 -= 0x800;
@@ -4522,6 +4523,7 @@ int dScMgSmartball_c::IsTableAtRest() {
 // @symbol _ZN16dScMgSmartball_c15ResolveBallPairEiiPhS0_
 #pragma push
 #pragma opt_common_subs off
+/* opt_common_subs stays off: the ROM narrows inverseAngle to s16 again for the second rotate, a CSE-off recompute. */
 void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firstObject,
                                        u8 *secondObject) {
     // Keep the intermediate pair materialized across the angle calculation.
@@ -4611,28 +4613,20 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
 }
 
 #pragma pop
+
 // @symbol _ZN16dScMgSmartball_c12CollideBallsEv
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgSmartball_c::CollideBalls() {
-    char *p = (char *)this;
     int ballCount = mBallCount;
     int firstIndex, secondIndex;
     for (firstIndex = 0; firstIndex < ballCount; firstIndex++) {
         for (secondIndex = 0; secondIndex < ballCount; secondIndex++) {
-            /* Stepped base, element 0: mpBalls[firstIndex] moves bytes. */
-            int firstBall =
-                (firstIndex >= 13)
-                    ? 0
-                    : *(int *)(int)&((dScMgSmartball_c *)(p + firstIndex * 4))->mpBalls[0];
-            int secondBall = (secondIndex >= 13) ? 0 : (int)mpBalls[secondIndex];
+            cMgSmartball_ball_c *firstBall = (firstIndex >= 13) ? 0 : mpBalls[firstIndex];
+            cMgSmartball_ball_c *secondBall = (secondIndex >= 13) ? 0 : mpBalls[secondIndex];
             ResolveBallPair(firstIndex, secondIndex, (u8 *)firstBall, (u8 *)secondBall);
             ballCount = mBallCount;
         }
     }
 }
-
-#pragma pop
 
 // @symbol _ZN16dScMgSmartball_c12SpawnObjectsEv
 #pragma push

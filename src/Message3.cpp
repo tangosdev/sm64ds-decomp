@@ -314,44 +314,32 @@ void Message::AddCharPairVS() {
 }
 
 // @symbol func_02031428
+/* opt_common_subs stays off: the ROM re-reads every mask and row word per use
+ * and spills the scaled row indices, a CSE-off recompute no spelling reaches. */
 #pragma push
 #pragma opt_common_subs off
 extern "C" void func_02031428(void) {
     int cnt;
     int i;
-    int rows;
     int j;
-    int base;
+    u32 *base;
 
-    base = func_02054d88() + 0x4000;
+    base = (u32 *)(func_02054d88() + 0x4000);
 
-    cnt = (int)((MessageEntry *)data_0209fd00)->lineCount << 1;
-    i = 0;
-    if (cnt > 0) {
-        do {
-            rows = data_0209fc78;
-            j = 0;
-            if (rows > 0) {
-                do {
-                    /* scroll the tile up four pixel rows (4 bytes per 4bpp row) */
-                    MultiCopy_Int(&((int *)base)[4], (int *)base, 0x10);
-                    if (i == (((int)((MessageEntry *)data_0209fd00)->lineCount << 1) - 1)) {
-                        ((int *)base)[4] = 0;
-                        ((int *)base)[5] = 0;
-                        ((int *)base)[6] = 0;
-                        ((int *)base)[7] = 0;
-                    } else {
-                        int rc2 = data_0209fc78;
-                        MultiCopy_Int((int *)(base + rc2 * 0x20), &((int *)base)[4], 0x10);
-                    }
-                    rows = data_0209fc78;
-                    j++;
-                    base += 0x20;
-                } while (j < rows);
+    for (i = 0; i < (cnt = ((MessageEntry *)data_0209fd00)->lineCount * 2); i++) {
+        for (j = 0; j < data_0209fc78; j++) {
+            /* scroll the tile up four pixel rows (4 bytes per 4bpp row) */
+            MultiCopy_Int((int *)(base + 4), (int *)base, 0x10);
+            if (i == ((MessageEntry *)data_0209fd00)->lineCount * 2 - 1) {
+                base[4] = 0;
+                base[5] = 0;
+                base[6] = 0;
+                base[7] = 0;
+            } else {
+                MultiCopy_Int((int *)(base + data_0209fc78 * 8), (int *)(base + 4), 0x10);
             }
-            cnt = (int)((MessageEntry *)data_0209fd00)->lineCount << 1;
-            i++;
-        } while (i < cnt);
+            base += 8;
+        }
     }
 
     {
@@ -367,7 +355,7 @@ extern "C" void func_02031428(void) {
         int i2;
         int i3;
 
-        dst = (u32 *)(func_02054d88() + (((data_0209fc78 * (cnt - 1)) + 0x200) << 5) + 0x10);
+        dst = (u32 *)(func_02054d88() + ((data_0209fc78 * (cnt - 1) + 0x200) << 5) + 0x10);
         col = data_0209fc7c;
         count = data_0209fcd8;
 
@@ -376,27 +364,23 @@ extern "C" void func_02031428(void) {
             rowIdx = data_0209fc70;
             inc = data_0209fd20;
             do {
+                u32 *q;
                 rem = col & 7;
                 blk = col >> 3;
                 wordIdx = blk << 3;
-                dst[wordIdx] = (data_0209287c[rem] & data_0209fd5c[rowIdx + 0]) | dst[wordIdx];
-                *(u32 *)(((u64)(int)((char *)&dst[wordIdx] + 4) & ~0ULL)) =
-                    (data_0209287c[rem] & data_0209fd5c[rowIdx + 1]) |
-                    *(u32 *)(((u64)(int)((char *)&dst[wordIdx] + 4) & ~0ULL));
+                q = &dst[wordIdx];
+                q[0] |= data_0209287c[rem] & data_0209fd5c[rowIdx + 0];
+                q[1] |= data_0209287c[rem] & data_0209fd5c[rowIdx + 1];
                 i2 = rowIdx + 2;
-                *(u32 *)(((u64)(int)((char *)&dst[wordIdx] + 8) & ~0ULL)) =
-                    (data_0209287c[rem] & data_0209fd5c[i2]) |
-                    *(u32 *)(((u64)(int)((char *)&dst[wordIdx] + 8) & ~0ULL));
+                q[2] |= data_0209287c[rem] & data_0209fd5c[i2];
                 i3 = rowIdx + 3;
-                *(u32 *)(((u64)(int)((char *)&dst[wordIdx] + 12) & ~0ULL)) =
-                    (data_0209287c[rem] & data_0209fd5c[i3]) |
-                    *(u32 *)(((u64)(int)((char *)&dst[wordIdx] + 12) & ~0ULL));
+                q[3] |= data_0209287c[rem] & data_0209fd5c[i3];
                 if (rem != 0) {
                     /* the next tile's first four rows (8 words on) */
-                    (&dst[wordIdx])[8] = data_0209283c[rem] & data_0209fd5c[rowIdx + 0];
-                    (&dst[wordIdx])[9] = data_0209283c[rem] & data_0209fd5c[rowIdx + 1];
-                    (&dst[wordIdx])[10] = data_0209283c[rem] & data_0209fd5c[i2];
-                    (&dst[wordIdx])[11] = data_0209283c[rem] & data_0209fd5c[i3];
+                    q[8] = data_0209283c[rem] & data_0209fd5c[rowIdx + 0];
+                    q[9] = data_0209283c[rem] & data_0209fd5c[rowIdx + 1];
+                    q[10] = data_0209283c[rem] & data_0209fd5c[i2];
+                    q[11] = data_0209283c[rem] & data_0209fd5c[i3];
                 }
                 col = (col + *inc) & 0xff;
                 rowIdx += 0x10;
@@ -406,7 +390,7 @@ extern "C" void func_02031428(void) {
         }
     }
 
-    data_0209fc70 = data_0209fc70 + 3;
+    data_0209fc70 += 3;
 }
 #pragma pop
 
@@ -875,6 +859,8 @@ extern "C" int func_020321fc(void) {
 }
 
 // @symbol func_020326ac
+/* opt_common_subs stays off for register colour only: without it case 6
+ * swaps the slot index and the held byte (r3/r2), 8 words, same size. */
 #pragma push
 #pragma opt_common_subs off
 extern "C" void func_020326ac(void) {
@@ -917,7 +903,7 @@ extern "C" void func_020326ac(void) {
         } else if (t < -0x80) {
             data_0209fcd0 = 0;
         } else if (*((u8 *)data_0209caa0 + 0x42) == 0 &&
-                   (*(u16 *)((u8 *)data_020a0e5a + gActivePlayerSlot * 4) & 0x30)) {
+                   (data_020a0e5a[gActivePlayerSlot * 2] & 0x30)) {
             data_0209fcd0 ^= 1;
         }
         {
@@ -946,7 +932,7 @@ extern "C" void func_020326ac(void) {
         } else if (t < -0x80) {
             data_0209fcd0 = 0;
         } else if (*((u8 *)data_0209caa0 + 0x42) == 0 &&
-                   (*(u16 *)((u8 *)data_020a0e5a + gActivePlayerSlot * 4) & 0xC0)) {
+                   (data_020a0e5a[gActivePlayerSlot * 2] & 0xC0)) {
             data_0209fcd0 ^= 1;
         }
         {
@@ -1014,7 +1000,7 @@ extern "C" void func_020326ac(void) {
                 break;
             }
         } else if (*((u8 *)data_0209caa0 + 0x42) == 0) {
-            u16 mask = *(u16 *)((u8 *)data_020a0e5a + idx * 4);
+            u16 mask = data_020a0e5a[idx * 2];
             if (mask & 0xC0) {
                 u8 target = (mask & 0x40) ? 0 : 2;
                 if (data_0209fcd0 != target) {
@@ -1504,6 +1490,8 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
 }
 
 // @symbol func_02033bb8
+/* opt_common_subs stays off: CSE recompute. The ROM re-reads and recomputes
+ * what CSE would share (0x298 bytes; 0x278 with CSE on). */
 #pragma push
 #pragma opt_common_subs off
 extern "C" void func_02033bb8(int param0) {
@@ -1521,15 +1509,15 @@ extern "C" void func_02033bb8(int param0) {
     data_0209fcdc = 0;
 
     {
-        int cp = (u32)G2S::GetBG0CharPtr() + 0x4000;
+        int *chr = (int *)((char *)G2S::GetBG0CharPtr() + 0x4000);
         li = 0;
-        MultiStore_Int(li, (int *)cp, 0x2000);
+        MultiStore_Int(li, chr, 0x2000);
     }
 
     {
-        int sp2 = (u32)G2S::GetBG0ScrPtr();
+        char *scr0 = (char *)G2S::GetBG0ScrPtr();
         sv = 0x2ff;
-        MultiStore16(sv, (char *)sp2, 0x800);
+        MultiStore16(sv, scr0, 0x800);
     }
 
     Message_DrawLineBG2VS();
@@ -1552,10 +1540,7 @@ extern "C" void func_02033bb8(int param0) {
     Message_DrawLineBG2VS();
     n = data_0209fc88;
     m = (n + 7) / 8;
-    {
-        int base = (int)G2::GetBG2ScrPtr();
-        scr = (short *)(base + 0x840 + (16 - m / 2) * 2);
-    }
+    scr = (short *)((char *)G2::GetBG2ScrPtr() + 0x840 + (16 - m / 2) * 2);
     i = 0;
     if (m > 0) {
         int mm = (n + 7) / 8;
@@ -1576,10 +1561,7 @@ extern "C" void func_02033bb8(int param0) {
     Message_DrawLineBG2VS();
     n = data_0209fc88;
     m = (n + 7) / 8;
-    {
-        int base = (int)G2::GetBG2ScrPtr();
-        scr = (short *)(base + 0x1040 + (16 - m / 2) * 2);
-    }
+    scr = (short *)((char *)G2::GetBG2ScrPtr() + 0x1040 + (16 - m / 2) * 2);
     i = 0;
     if (m > 0) {
         int mm = (n + 7) / 8;
