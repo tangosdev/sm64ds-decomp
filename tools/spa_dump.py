@@ -40,10 +40,14 @@ MAGIC = b" APS"
 
 # (flag bit, record size, name): the optional records, in func_0204a17c order.
 OPTIONAL = [
-    (8, 0xC, "optionalA"),
-    (9, 0xC, "optionalB"),
-    (10, 0x8, "optionalC"),
-    (11, 0xC, "optionalD"),
+    # Names PROVEN by func_0204a730, which calls one per-particle function for each:
+    #   A 0x0204d440 writes particle+0x34 (scale), B 0x0204d294 writes +0x3a (color),
+    #   C 0x0204d1b4 writes +0x40 (alpha), D 0x0204d150 writes +0x42 (texture index,
+    #   the same byte func_0204a5c8 binds per particle).
+    (8, 0xC, "scaleAnim"),
+    (9, 0xC, "colorAnim"),
+    (10, 0x8, "alphaAnim"),
+    (11, 0xC, "textureAnim"),
     (16, 0x14, "child"),
 ]
 # Behavior records, bit 24..29, sizes from include/Particle__Behavior.h.
@@ -103,7 +107,38 @@ def decode_base(b, start):
         "emitInterval": b[start + 0x30],      # System::emitInterval
         "baseAlpha": b[start + 0x31],         # System::baseAlpha
         "texture": b[start + 0x33],
+        # func_0204c584 accumulates +0x04 per emit and spawns accum>>12 particles; the
+        # ring shape divides the circle by that count.
+        "emissionCount": struct.unpack_from("<i", b, start + 0x04)[0] / 4096.0,
+        # func_0204a730: emit while system age < this (0 = forever)
+        "emitterLifetime": struct.unpack_from("<H", b, start + 0x28)[0],
+        # func_0204a730: velocity *= (0x180 + byte) >> 9 every frame
+        "drag": (0x180 + b[start + 0x32]) / 512.0,
+        # func_0204d294 blends the color animation toward this RGB555 base color
+        "baseColor": rgb(struct.unpack_from("<H", b, start + 0x12)[0]),
     }
+
+
+def rgb(v):
+    return "#%02x%02x%02x" % ((v & 31) * 255 // 31, (v >> 5 & 31) * 255 // 31, (v >> 10 & 31) * 255 // 31)
+
+
+def decode_record(b, name, o):
+    """Fields of an optional record at absolute offset o, as the update code reads them."""
+    if name == "scaleAnim":     # func_0204d440
+        a, m = struct.unpack_from("<2h", b, o)
+        return {"start": a / 4096.0, "mid": m / 4096.0, "t1": b[o + 6], "t2": b[o + 7]}
+    if name == "colorAnim":     # func_0204d294 (blends toward base color at base+0x12)
+        c = struct.unpack_from("<H", b, o)[0]
+        return {"color": rgb(c), "tFrom": b[o + 4], "tTo": b[o + 5]}
+    if name == "alphaAnim":     # func_0204d1b4: three 5-bit alphas, times, random spread
+        w = struct.unpack_from("<H", b, o)[0]
+        return {"alpha": [w & 31, w >> 5 & 31, w >> 10 & 31], "t1": b[o + 4], "t2": b[o + 5],
+                "random": b[o + 2]}
+    if name == "textureAnim":   # func_0204d150: up to 8 texture indices, count, frames each
+        n = b[o + 8]
+        return {"textures": list(b[o:o + n]), "framesEach": b[o + 9]}
+    return None
 
 
 def find_resource(data):
@@ -153,7 +188,8 @@ def parse(data):
             "decoded": decode_base(b, start),
             "optional": [n for _, _, n in OPTIONAL if n in records],
             "behaviors": behaviors,
-            "records": {k: {"offset": o, "size": s} for k, (o, s) in records.items()},
+            "records": {k: dict({"offset": o, "size": s}, decoded=decode_record(b, k, start + o))
+                        for k, (o, s) in records.items()},
         })
     if off != resident:
         sys.exit("definition walk ended at 0x%x, header residentSize is 0x%x: "
@@ -221,8 +257,14 @@ def main():
         x = d["decoded"]
         print("shape %d (%s)  planeMode %d  drawMode %d  radius %.3f  axis (%.3f, %.3f, %.3f)" % (
             x["shape"], x["shapeName"], x["planeMode"], x["drawMode"], x["radius"], *x["axis"]))
-        print("lifetime %d  emitInterval %d  baseAlpha %d" % (
-            x["lifetime"], x["emitInterval"], x["baseAlpha"]))
+        print("lifetime %d  emitInterval %d  baseAlpha %d  baseColor %s" % (
+            x["lifetime"], x["emitInterval"], x["baseAlpha"], x["baseColor"]))
+        print("emissionCount %.1f  emitterLifetime %d%s  drag %.3f" % (
+            x["emissionCount"], x["emitterLifetime"],
+            " (forever)" if x["emitterLifetime"] == 0 else "", x["drag"]))
+        for k, r in d["records"].items():
+            if r["decoded"]:
+                print("  %-11s %s" % (k, r["decoded"]))
         for i, w in enumerate(d["words"]):
             print("  +0x%02x  %08x" % (i * 4, w))
         return
