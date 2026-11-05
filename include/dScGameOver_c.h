@@ -23,7 +23,7 @@
 struct dScGameOver_c : dScene_c {
     s16 mGlyphX[8];               /* 0x050 -- per-glyph x; 060c slides it to the 020b1774 target */
     s16 mGlyphY[8];               /* 0x060 -- per-glyph y; fixed 0x60, read by Render */
-    s16 mGlyphDelay[8];           /* 0x070 -- per-glyph drop-in delay; counted down by 060c */
+    u16 mGlyphDelay[8];           /* 0x070 -- per-glyph drop-in delay; counted down by 060c */
     s16 mGlyphUnused[8];          /* 0x080 -- the fourth per-glyph array, zeroed by
                                      InitResources beside the three above; nothing in
                                      the recovered ROM reads it back. Name coined. */
