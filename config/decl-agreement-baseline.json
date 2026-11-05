@@ -8474,11 +8474,6 @@
         "return:unsigned char []"
       ]
     },
-    "data_0209f1e4": {
-      "src/unnamed/arm9/0202/func_0202345c.cpp": [
-        "return:dFader_c *"
-      ]
-    },
     "data_0209f208": {
       "src/game/actors/d_a_krb.cpp": [
         "return:unsigned char []"

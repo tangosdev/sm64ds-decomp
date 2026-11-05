@@ -11,7 +11,7 @@ extern void func_02019dfc(void);
 extern void func_02011dc0(void);
 extern void func_02019ed0(void);
 extern void func_02011db4(void);
-extern unsigned char data_0209f1d8;
+extern unsigned char gSoftResetDisabled;
 extern int data_0209fc68;
 extern int data_0208ee44;
 extern unsigned char data_0208ee48;
@@ -31,7 +31,7 @@ extern int data_0209d514;
 extern u8 data_0209f2d8;
 
 static inline int IsSkipRequested(void) {
-    return (func_0203da3c() != 0 || data_0209f1d8 != 0) ? 1 : 0;
+    return (func_0203da3c() != 0 || gSoftResetDisabled != 0) ? 1 : 0;
 }
 
 void func_02019ac4(void) {

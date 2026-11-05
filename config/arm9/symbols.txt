@@ -4719,10 +4719,10 @@ data_0209ee84 kind:bss addr:0x0209ee84
 data_0209ee88 kind:bss addr:0x0209ee88
 data_0209ee8c kind:bss addr:0x0209ee8c
 data_0209ee90 kind:bss addr:0x0209ee90
-data_0209f1d8 kind:bss addr:0x0209f1d8
-data_0209f1dc kind:bss addr:0x0209f1dc
-data_0209f1e0 kind:bss addr:0x0209f1e0
-data_0209f1e4 kind:bss addr:0x0209f1e4
+gSoftResetDisabled kind:bss addr:0x0209f1d8
+sSoftResetComboHeld kind:bss addr:0x0209f1dc
+gSoftResetPending kind:bss addr:0x0209f1e0
+gSoftResetFader kind:bss addr:0x0209f1e4
 data_0209f1e8 kind:bss addr:0x0209f1e8
 data_0209f1ec kind:bss addr:0x0209f1ec
 data_0209f1f0 kind:bss addr:0x0209f1f0
