@@ -10,7 +10,7 @@ and joins the result with the SPA table from tools/spa_dump.py.
 
 For every ID it reports the call count, where it is called (file:line and the
 nearest preceding `// @symbol`), any source name already given to it, and the
-definition's flags / inferred texture / records.  IDs in the table that no
+definition's flags / texture / records.  IDs in the table that no
 `NewSimple` literal reaches are listed separately.
 
 Static only: a literal in source does not prove the call is reachable, and
@@ -155,7 +155,7 @@ def main():
     if a.id is not None:
         d = defs.get(a.id)
         print("effect 0x%x (%d): %s" % (a.id, a.id, "no definition (out of table)" if not d else
-              "flags 0x%08x texture %d(inferred) %s %s" % (
+              "flags 0x%08x texture %d %s %s" % (
                   d["flags"], d["texture"], ",".join(d["optional"]) or "-", ",".join(d["behaviors"]) or "-")))
         for s in by.get(a.id, []):
             print("  %s:%d  [%s] %s%s%s" % (s["file"], s["line"], s["via"], s["symbol"] or "?",
@@ -179,7 +179,7 @@ def main():
     print("%d distinct IDs from %d call sites (%s); %d carry a source name; table has %d" % (
         len(by), sum(len(v) for v in by.values()),
         ", ".join("%s %d" % kv for kv in sorted(via.items())), named, len(defs)))
-    print("%-6s %-5s %-4s %-26s %s" % ("id", "calls", "tex?", "name", "first site"))
+    print("%-6s %-5s %-4s %-26s %s" % ("id", "calls", "tex", "name", "first site"))
     for i in sorted(by):
         v = by[i]
         names = sorted({s["name"] for s in v if s["name"]})

@@ -14,10 +14,13 @@ record per set bit 24-29.  The walk must end exactly at the header's
 residentSize word (0x18); the tool refuses to print a table that does not.
 
 The ROM stores NO effect names, only indices.  Fields are raw except where
-src/engine/particle names them.  `texture` (base byte 0x33) is INFERRED, not
-proven: it is the only base byte whose range is 0..numTextures-1 across all
-definitions, but no decompiled reader names it.  Treat it as a candidate until
-a runtime check confirms it.
+src/engine/particle names them or the disassembly proves them:
+
+  base byte 0x33  texture index.  PROVEN: func_0204a5c8 (0x0204a5c8) does
+                  `ldrb r1,[data,#0x33]; mla r0,r1,#0x14,mTextures` to bind it.
+  child record +0x0f  the child effect's texture index, same code.
+  flags bits 0-3  emitter shape (func_0204c584 jump-tables on flags & 0xf, 0..5).
+  flags bits 4-5  draw/blend selector (0..2) read by func_0204a5c8.
 
 Usage:
   python tools/spa_dump.py                      # table of every effect
@@ -57,7 +60,7 @@ TEXTURE_FORMATS = {
     5: "4x4-texel", 6: "A5I3", 7: "direct",
 }
 BASE_SIZE = 0x38
-TEXTURE_FIELD = 0x33  # inferred, see module docstring
+TEXTURE_FIELD = 0x33  # proven: func_0204a5c8 reads it as the texture index
 
 
 def find_resource(data):
@@ -169,7 +172,7 @@ def main():
         print("optional:  %s" % (", ".join(d["optional"]) or "-"))
         print("behaviors: %s" % (", ".join(d["behaviors"]) or "-"))
         tx = t["textures"][d["texture"]] if d["texture"] < t["numTextures"] else None
-        print("texture (inferred byte 0x33): %d%s" % (d["texture"], "" if not tx else
+        print("texture (byte 0x33): %d%s" % (d["texture"], "" if not tx else
               "  %s %dx%d" % (tx["format_name"], tx["width"], tx["height"])))
         for i, w in enumerate(d["words"]):
             print("  +0x%02x  %08x" % (i * 4, w))
@@ -178,7 +181,7 @@ def main():
     print("SPA @ arm9_dec 0x%x (ROM 0x%08x): %d effects, %d textures, resident 0x%x" % (
         t["arm9_file_offset"], t["rom_address"], t["numDefinitions"],
         t["numTextures"], t["residentSize"]))
-    print("%-6s %-10s %-4s %-4s %s" % ("id", "flags", "tex?", "size", "optional / behaviors"))
+    print("%-6s %-10s %-4s %-4s %s" % ("id", "flags", "tex", "size", "optional / behaviors"))
     for d in t["definitions"]:
         extra = ",".join(d["optional"] + d["behaviors"]) or "-"
         print("0x%03x  0x%08x %4d 0x%02x %s" % (d["id"], d["flags"], d["texture"], d["size"], extra))
