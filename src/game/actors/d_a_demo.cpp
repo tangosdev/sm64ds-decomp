@@ -108,6 +108,7 @@ enum daDemo_c_AssetId {
 #include "GX.h"
 #include "Memory.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "common.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmModel_c.h"
@@ -1122,32 +1123,30 @@ void func_ov002_020f2a88(char *c, int i) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f2aec
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-#pragma opt_common_subs off
 void func_ov002_020f2aec(char *c, int idx)
 {
-    unsigned char cnt;
+    StaffRoll *s = (StaffRoll *)c;
 
-    if (*(unsigned short *)(c + idx * 8 + CREDIT_OFF(timer)) == 0) {
+    if (s->credit[idx].timer == 0) {
         gSubScreenLayers |= 1;
     }
-    *(unsigned short *)(c + CREDIT_OFF(timer) + idx * 8) += 1;
-    *(unsigned short *)(c + CREDIT_OFF(blendTimer) + idx * 8) += 1;
+    s->credit[idx].timer++;
+    s->credit[idx].blendTimer++;
 
-    if (*(unsigned short *)(c + idx * 8 + CREDIT_OFF(blendTimer)) >= 2) {
-        *(unsigned short *)(c + idx * 8 + CREDIT_OFF(blendTimer)) = 0;
-        *(unsigned char *)(c + CREDIT_OFF(blend) + idx * 8) += 1;
-        cnt = *(unsigned char *)(c + idx * 8 + CREDIT_OFF(blend));
+    if (s->credit[idx].blendTimer >= 2) {
+        s->credit[idx].blendTimer = 0;
+        s->credit[idx].blend++;
+        unsigned char cnt = s->credit[idx].blend;
         G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x36, cnt, 0x10 - cnt);
     }
 
-    if (*(unsigned short *)(c + idx * 8 + CREDIT_OFF(timer)) < 30) {
+    if (s->credit[idx].timer < 30) {
         return;
     }
-    *(unsigned short *)(c + idx * 8 + CREDIT_OFF(timer)) = 0;
-    *(unsigned char *)(c + CREDIT_OFF(step) + idx * 8) += 1;
+    s->credit[idx].timer = 0;
+    s->credit[idx].step++;
     *(volatile unsigned short *)0x4001050 = 0;
 }
-#pragma opt_common_subs on
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1155,33 +1154,31 @@ void func_ov002_020f2aec(char *c, int idx)
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f2bf4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-#pragma opt_common_subs off
 void func_ov002_020f2bf4(char *c, int idx)
 {
-    unsigned char cnt;
+    StaffRoll *s = (StaffRoll *)c;
 
-    *(unsigned short *)(c + CREDIT_OFF(timer) + idx * 8) += 1;
-    *(unsigned short *)(c + CREDIT_OFF(blendTimer) + idx * 8) += 1;
+    s->credit[idx].timer++;
+    s->credit[idx].blendTimer++;
 
-    if (*(unsigned short *)(c + idx * 8 + CREDIT_OFF(blendTimer)) >= 2) {
-        *(unsigned short *)(c + idx * 8 + CREDIT_OFF(blendTimer)) = 0;
-        *(unsigned char *)(c + CREDIT_OFF(blend) + idx * 8) += 1;
-        cnt = *(unsigned char *)(c + idx * 8 + CREDIT_OFF(blend));
+    if (s->credit[idx].blendTimer >= 2) {
+        s->credit[idx].blendTimer = 0;
+        s->credit[idx].blend++;
+        unsigned char cnt = s->credit[idx].blend;
         G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x36, 0x10 - cnt, cnt);
     }
 
-    if (*(unsigned short *)(c + idx * 8 + CREDIT_OFF(timer)) < 30) {
+    if (s->credit[idx].timer < 30) {
         return;
     }
-    *(unsigned short *)(c + idx * 8 + CREDIT_OFF(timer)) = 0;
-    *(unsigned char *)(c + CREDIT_OFF(step) + idx * 8) += 1;
-    *(unsigned char *)(c + CREDIT_OFF(message) + idx * 8) += 1;
-    *(unsigned char *)(c + idx * 8 + CREDIT_OFF(blend)) = 0;
-    *(unsigned short *)(c + idx * 8 + CREDIT_OFF(blendTimer)) = 0;
+    s->credit[idx].timer = 0;
+    s->credit[idx].step++;
+    s->credit[idx].message++;
+    s->credit[idx].blend = 0;
+    s->credit[idx].blendTimer = 0;
     gSubScreenLayers &= ~1;
-    func_0201ef50(*(unsigned char *)(c + idx * 8 + CREDIT_OFF(message)));
+    func_0201ef50(s->credit[idx].message);
 }
-#pragma opt_common_subs on
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1464,25 +1461,23 @@ extern "C" void func_ov002_020f3310(C* self, int idx) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f335c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-#pragma opt_common_subs off
 void func_ov002_020f335c(char *o, int i) {
-    int idx = i * 0x30;
-    int *fld = (int *)(o + WINDOW_OFF(top) + idx);
-    *fld = *fld + 0x1800;
-    if (*fld >= 0x66000) {
-        *fld = 0x66000;
-        ((StaffRoll *)o)->window[i].active = 0;
-        ((StaffRoll *)o)->window[i].step = 0;
+    StaffRoll *s = (StaffRoll *)o;
+    s->window[i].top += 0x1800;
+    if (s->window[i].top >= 0x66000) {
+        s->window[i].top = 0x66000;
+        s->window[i].active = 0;
+        s->window[i].step = 0;
     }
-    char *b = o + idx;
-    int f140 = ((StaffRoll *)b)->window[0].left >> 0xc;
-    int f148 = ((StaffRoll *)b)->window[0].right >> 0xc;
-    int f14c = ((StaffRoll *)b)->window[0].bottom >> 0xc;
-    int fv   = *fld >> 0xc;
-    *(volatile unsigned short *)0x4001042 = (unsigned short)(((f140 << 8) & 0xff00) | (f148 & 0xff));
-    *(volatile unsigned short *)0x4001046 = (unsigned short)(((fv   << 8) & 0xff00) | (f14c & 0xff));
+    int left = s->window[i].left >> 0xc;
+    int right = s->window[i].right >> 0xc;
+    int bottom = s->window[i].bottom >> 0xc;
+    int top = s->window[i].top >> 0xc;
+    *(volatile unsigned short *)0x4001042 =
+        (unsigned short)(((left << 8) & 0xff00) | (right & 0xff));
+    *(volatile unsigned short *)0x4001046 =
+        (unsigned short)(((top << 8) & 0xff00) | (bottom & 0xff));
 }
-#pragma opt_common_subs on
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1490,25 +1485,23 @@ void func_ov002_020f335c(char *o, int i) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f340c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-#pragma opt_common_subs off
 void func_ov002_020f340c(char *o, int i) {
-    int idx = i * 0x30;
-    int *fld = (int *)(o + WINDOW_OFF(top) + idx);
-    *fld = *fld + 0x1800;
-    if (*fld >= 0x66000) {
-        *fld = 0x66000;
-        ((StaffRoll *)o)->window[i].active = 0;
-        ((StaffRoll *)o)->window[i].step = 0;
+    StaffRoll *s = (StaffRoll *)o;
+    s->window[i].top += 0x1800;
+    if (s->window[i].top >= 0x66000) {
+        s->window[i].top = 0x66000;
+        s->window[i].active = 0;
+        s->window[i].step = 0;
     }
-    char *b = o + idx;
-    int f140 = ((StaffRoll *)b)->window[0].left >> 0xc;
-    int f148 = ((StaffRoll *)b)->window[0].right >> 0xc;
-    int f14c = ((StaffRoll *)b)->window[0].bottom >> 0xc;
-    int fv   = *fld >> 0xc;
-    *(volatile unsigned short *)0x4001042 = (unsigned short)(((f140 << 8) & 0xff00) | (f148 & 0xff));
-    *(volatile unsigned short *)0x4001046 = (unsigned short)(((fv   << 8) & 0xff00) | (f14c & 0xff));
+    int left = s->window[i].left >> 0xc;
+    int right = s->window[i].right >> 0xc;
+    int bottom = s->window[i].bottom >> 0xc;
+    int top = s->window[i].top >> 0xc;
+    *(volatile unsigned short *)0x4001042 =
+        (unsigned short)(((left << 8) & 0xff00) | (right & 0xff));
+    *(volatile unsigned short *)0x4001046 =
+        (unsigned short)(((top << 8) & 0xff00) | (bottom & 0xff));
 }
-#pragma opt_common_subs on
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1718,51 +1711,29 @@ void func_ov002_020f3978(char *c) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f39ec
 extern "C" { /* .c-derived member: C linkage for the whole block */
-#pragma opt_common_subs off
 void func_ov002_020f39ec(char *self, int idx) {
-    char pad[4];
-    (void)pad[0];
-    int off = idx * 0x4c;
-    unsigned short *timerBase = &((StaffRoll *)self)->stars[0].frameTimer;
-    unsigned short *ctr = (unsigned short *)((char *)timerBase + off);
-    *ctr = (unsigned short)(*ctr + 1);
-    if (*ctr < 4)
+    StaffRoll *s = (StaffRoll *)self;
+    s->stars[idx].frameTimer++;
+    if (s->stars[idx].frameTimer < 4)
         return;
-    int zero = 0;
-    *ctr = (unsigned short)zero;
-    {
-        unsigned short *frameBase = &((StaffRoll *)self)->stars[0].frame;
-        unsigned short *ctr2 = (unsigned short *)((char *)frameBase + off);
-        *ctr2 = (unsigned short)(*ctr2 + 1);
-        char *row = self + off;
-        if (((StaffRoll *)row)->stars[0].holdFrame != 0) {
-            if (*ctr2 >= 0x10)
-                *ctr2 = 0x10;
-        } else if (*ctr2 >= 0x20) {
-            *ctr2 = (unsigned short)zero;
-        }
+    s->stars[idx].frameTimer = 0;
+    s->stars[idx].frame++;
+    if (s->stars[idx].holdFrame != 0) {
+        if (s->stars[idx].frame >= 0x10)
+            s->stars[idx].frame = 0x10;
+    } else if (s->stars[idx].frame >= 0x20) {
+        s->stars[idx].frame = 0;
     }
 
-    int i = 0;
-    int acc = i;
-    int dst_off = i;
-    char *row = self + off;
-    unsigned base = 0x6600000u;
-    base += 0x2000u;
-    base += (unsigned)(idx << 8);
-    int n100 = 0x100;
-    for (; i < 4; i++) {
-        int v = data_ov002_021002a0[((StaffRoll *)row)->stars[0].frame];
-        int src_off = acc + ((v & 7) << 8);
+    for (int i = 0; i < 4; i++) {
+        int v = data_ov002_021002a0[s->stars[idx].frame];
+        int src = i * 0x800 + ((v & 7) << 8);
         if (v & 8)
-            src_off += 0x2000;
-        MultiCopyHalf((void *)(((StaffRoll *)self)->starChars + src_off),
-                      (void *)(base + (unsigned)dst_off), (unsigned)n100);
-        acc += 0x800;
-        dst_off += 0x400;
+            src += 0x2000;
+        MultiCopyHalf(s->starChars + src,
+                      (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
     }
 }
-#pragma opt_common_subs on
 }
 
 /* -------------------------------------------------------------------------- */

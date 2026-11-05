@@ -7475,234 +7475,234 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLookTarget$3584",
+      "from": "_ZGVsLookTarget$3663",
       "to": "_ZGVsLookTarget$3570",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsLookTarget$3586 to _ZGVsLookTarget$3584 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsLookTarget$3586 to _ZGVsLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from _ZGVsLookTarget$3584 to _ZGVsLookTarget$3663 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@3587",
+      "from": "@3666",
       "to": "@3573",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3589 to @3587 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3589 to @3587 when the opt pragma was removed (#821). Re-keyed from @3587 to @3666 when the opt pragma was removed (#821)."
     },
     {
-      "from": "sLookTarget$3584",
+      "from": "sLookTarget$3663",
       "to": "sLookTarget$3570",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sLookTarget$3586 to sLookTarget$3584 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sLookTarget$3586 to sLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from sLookTarget$3584 to sLookTarget$3663 when the opt pragma was removed (#821)."
     },
     {
-      "from": "_ZGVsViewStart$3760",
+      "from": "_ZGVsViewStart$3839",
       "to": "_ZGVsViewStart$3746",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewStart$3762 to _ZGVsViewStart$3760 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewStart$3762 to _ZGVsViewStart$3760 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewStart$3760 to _ZGVsViewStart$3839 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@3763",
+      "from": "@3842",
       "to": "@3749",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3765 to @3763 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3765 to @3763 when the opt pragma was removed (#821). Re-keyed from @3763 to @3842 when the opt pragma was removed (#821)."
     },
     {
-      "from": "sViewStart$3760",
+      "from": "sViewStart$3839",
       "to": "sViewStart$3746",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewStart$3762 to sViewStart$3760 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewStart$3762 to sViewStart$3760 when the opt pragma was removed (#821). Re-keyed from sViewStart$3760 to sViewStart$3839 when the opt pragma was removed (#821)."
     },
     {
-      "from": "_ZGVsViewEnd$3764",
+      "from": "_ZGVsViewEnd$3843",
       "to": "_ZGVsViewEnd$3750",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewEnd$3766 to _ZGVsViewEnd$3764 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewEnd$3766 to _ZGVsViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewEnd$3764 to _ZGVsViewEnd$3843 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@3767",
+      "from": "@3846",
       "to": "@3753",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3769 to @3767 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3769 to @3767 when the opt pragma was removed (#821). Re-keyed from @3767 to @3846 when the opt pragma was removed (#821)."
     },
     {
-      "from": "sViewEnd$3764",
+      "from": "sViewEnd$3843",
       "to": "sViewEnd$3750",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewEnd$3766 to sViewEnd$3764 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewEnd$3766 to sViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from sViewEnd$3764 to sViewEnd$3843 when the opt pragma was removed (#821)."
     },
     {
-      "from": "_ZGVsViewIdle$3768",
+      "from": "_ZGVsViewIdle$3847",
       "to": "_ZGVsViewIdle$3754",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewIdle$3770 to _ZGVsViewIdle$3768 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewIdle$3770 to _ZGVsViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewIdle$3768 to _ZGVsViewIdle$3847 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@3771",
+      "from": "@3850",
       "to": "@3757",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3773 to @3771 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3773 to @3771 when the opt pragma was removed (#821). Re-keyed from @3771 to @3850 when the opt pragma was removed (#821)."
     },
     {
-      "from": "sViewIdle$3768",
+      "from": "sViewIdle$3847",
       "to": "sViewIdle$3754",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewIdle$3770 to sViewIdle$3768 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewIdle$3770 to sViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from sViewIdle$3768 to sViewIdle$3847 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4371",
+      "from": "@4450",
       "to": "@4355",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4373 to @4371 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4373 to @4371 when the opt pragma was removed (#821). Re-keyed from @4371 to @4450 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4372",
+      "from": "@4451",
       "to": "@4356",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4374 to @4372 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4374 to @4372 when the opt pragma was removed (#821). Re-keyed from @4372 to @4451 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4373",
+      "from": "@4452",
       "to": "@4357",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4375 to @4373 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4375 to @4373 when the opt pragma was removed (#821). Re-keyed from @4373 to @4452 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4374",
+      "from": "@4453",
       "to": "@4358",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4376 to @4374 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4376 to @4374 when the opt pragma was removed (#821). Re-keyed from @4374 to @4453 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4375",
+      "from": "@4454",
       "to": "@4359",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4377 to @4375 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4377 to @4375 when the opt pragma was removed (#821). Re-keyed from @4375 to @4454 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4376",
+      "from": "@4455",
       "to": "@4360",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4378 to @4376 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4378 to @4376 when the opt pragma was removed (#821). Re-keyed from @4376 to @4455 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4377",
+      "from": "@4456",
       "to": "@4361",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4379 to @4377 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4379 to @4377 when the opt pragma was removed (#821). Re-keyed from @4377 to @4456 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4378",
+      "from": "@4457",
       "to": "@4362",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4380 to @4378 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4380 to @4378 when the opt pragma was removed (#821). Re-keyed from @4378 to @4457 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4379",
+      "from": "@4458",
       "to": "@4363",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4381 to @4379 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4381 to @4379 when the opt pragma was removed (#821). Re-keyed from @4379 to @4458 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4380",
+      "from": "@4459",
       "to": "@4364",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4382 to @4380 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4382 to @4380 when the opt pragma was removed (#821). Re-keyed from @4380 to @4459 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4381",
+      "from": "@4460",
       "to": "@4365",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4383 to @4381 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4383 to @4381 when the opt pragma was removed (#821). Re-keyed from @4381 to @4460 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4382",
+      "from": "@4461",
       "to": "@4366",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4384 to @4382 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4384 to @4382 when the opt pragma was removed (#821). Re-keyed from @4382 to @4461 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4383",
+      "from": "@4462",
       "to": "@4367",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4385 to @4383 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4385 to @4383 when the opt pragma was removed (#821). Re-keyed from @4383 to @4462 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4384",
+      "from": "@4463",
       "to": "@4368",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4386 to @4384 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4386 to @4384 when the opt pragma was removed (#821). Re-keyed from @4384 to @4463 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4385",
+      "from": "@4464",
       "to": "@4369",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4387 to @4385 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4387 to @4385 when the opt pragma was removed (#821). Re-keyed from @4385 to @4464 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4386",
+      "from": "@4465",
       "to": "@4370",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4388 to @4386 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4388 to @4386 when the opt pragma was removed (#821). Re-keyed from @4386 to @4465 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4387",
+      "from": "@4466",
       "to": "@4371",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4389 to @4387 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4389 to @4387 when the opt pragma was removed (#821). Re-keyed from @4387 to @4466 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4388",
+      "from": "@4467",
       "to": "@4372",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4390 to @4388 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4390 to @4388 when the opt pragma was removed (#821). Re-keyed from @4388 to @4467 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4389",
+      "from": "@4468",
       "to": "@4373",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4391 to @4389 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4391 to @4389 when the opt pragma was removed (#821). Re-keyed from @4389 to @4468 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4390",
+      "from": "@4469",
       "to": "@4374",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4392 to @4390 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4392 to @4390 when the opt pragma was removed (#821). Re-keyed from @4390 to @4469 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4391",
+      "from": "@4470",
       "to": "@4375",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4393 to @4391 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4393 to @4391 when the opt pragma was removed (#821). Re-keyed from @4391 to @4470 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4392",
+      "from": "@4471",
       "to": "@4376",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4394 to @4392 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4394 to @4392 when the opt pragma was removed (#821). Re-keyed from @4392 to @4471 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4393",
+      "from": "@4472",
       "to": "@4377",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4395 to @4393 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4395 to @4393 when the opt pragma was removed (#821). Re-keyed from @4393 to @4472 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4394",
+      "from": "@4473",
       "to": "@4378",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4396 to @4394 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4396 to @4394 when the opt pragma was removed (#821). Re-keyed from @4394 to @4473 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4395",
+      "from": "@4474",
       "to": "@4379",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4397 to @4395 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4397 to @4395 when the opt pragma was removed (#821). Re-keyed from @4395 to @4474 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4396",
+      "from": "@4475",
       "to": "@4380",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4398 to @4396 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4398 to @4396 when the opt pragma was removed (#821). Re-keyed from @4396 to @4475 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4397",
+      "from": "@4476",
       "to": "@4381",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4399 to @4397 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4399 to @4397 when the opt pragma was removed (#821). Re-keyed from @4397 to @4476 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4398",
+      "from": "@4477",
       "to": "@4382",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4400 to @4398 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4400 to @4398 when the opt pragma was removed (#821). Re-keyed from @4398 to @4477 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4399",
+      "from": "@4478",
       "to": "@4383",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4401 to @4399 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4401 to @4399 when the opt pragma was removed (#821). Re-keyed from @4399 to @4478 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4400",
+      "from": "@4479",
       "to": "@4384",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4402 to @4400 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4402 to @4400 when the opt pragma was removed (#821). Re-keyed from @4400 to @4479 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4401",
+      "from": "@4480",
       "to": "@4385",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4403 to @4401 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4403 to @4401 when the opt pragma was removed (#821). Re-keyed from @4401 to @4480 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4402",
+      "from": "@4481",
       "to": "@4386",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4404 to @4402 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4404 to @4402 when the opt pragma was removed (#821). Re-keyed from @4402 to @4481 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4403",
+      "from": "@4482",
       "to": "@4387",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4405 to @4403 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4405 to @4403 when the opt pragma was removed (#821). Re-keyed from @4403 to @4482 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@4404",
+      "from": "@4483",
       "to": "@4388",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4406 to @4404 when the opt pragma was removed (#821)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4406 to @4404 when the opt pragma was removed (#821). Re-keyed from @4404 to @4483 when the opt pragma was removed (#821)."
     }
   ],
   "init": [
