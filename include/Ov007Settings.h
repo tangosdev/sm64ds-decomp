@@ -13,7 +13,7 @@ typedef struct Ov007BootArgs {
     /* 0x00: bit 0 picks the first figure, bits 1-2 and 3-4 the two stroke
      * stages (func_ov007_020b7138); func_ov007_020b6f4c's on the way out */
     int bootFlags;
-    /* 0x04: dScDSMT_c::InitResources stores 1 here (when data_0209f1e0 is
+    /* 0x04: dScDSMT_c::InitResources stores 1 here (when gSoftResetPending is
      * set), CleanupResources 2 */
     int status;
     /* 0x08: the sound-mode option, 0..2; func_ov007_020cc168 maps

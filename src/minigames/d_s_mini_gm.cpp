@@ -358,7 +358,7 @@ s32 dScMiniGm_c::InitResources()
     mExiting = 0;
 
     if (gMgSaveDirty == 1) {
-        data_0209f1d8 = 1;
+        gSoftResetDisabled = 1;
     }
     data_0208ee44 = 1;
     if (data_0209b2fc != 0) {
@@ -1182,7 +1182,7 @@ extern "C" void MiniGm_SaveIfDirty(char *self)
         return;
     SaveData::SaveMinigames(&data_0209cae4);
     gMgSaveDirty = 0;
-    data_0209f1d8 = 0;
+    gSoftResetDisabled = 0;
 }
 
 

@@ -57,7 +57,7 @@ extern u8 data_0209b3d8[];
 extern u8 data_0208ee3c[];
 extern int data_0209caa0[];
 extern u8 data_0209cae4[];
-extern u8 data_0209f1e0;
+extern u8 gSoftResetPending;
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
    the frame start (func_02019390), GraphCallback1 before the frame wait
@@ -215,7 +215,7 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
 /* InitResources (key function): engines on, graph callback registered, session seeded. */
 // @symbol _ZN9dScDSMT_c13InitResourcesEv
 s32 dScDSMT_c::InitResources() {
-    if (data_0209f1e0 != 0)
+    if (gSoftResetPending != 0)
         sBootArgs.status = 1;
 
     func_02023544();
