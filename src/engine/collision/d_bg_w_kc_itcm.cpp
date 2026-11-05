@@ -684,7 +684,8 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             nrm[0] = fn[0] << 2;
                             nrm[1] = fn[1] << 2;
                             nrm[2] = fn[2] << 2;
-                            if (DotVec3((const Vector3 *)nrm, (const Vector3 *)&depthDir) > depthDirMinDot) {
+                            if (DotVec3((const Vector3 *)nrm, (const Vector3 *)&depthDir) >
+                                depthDirMinDot) {
                                 if (faceDot < -f->prismThickness)
                                     continue;
                             } else {
