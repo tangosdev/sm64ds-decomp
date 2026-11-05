@@ -36,7 +36,7 @@
  * - Behavior DropShadowRadHeight: method form is 0x24c vs 0x22c (+0x20,
  *   both calls). Fix12<int> by value.
  * - Behavior scratch matrix: Matrix4x3 assignment is 0x264 vs 0x22c.
- *   Flat Mtx copy is the ROM ldm/stm; the real type's translation is a
+ *   The flat Mtx43 copy is the ROM ldm/stm; the real type's translation is a
  *   Vector3 and runs ~Vector3.
  * - State0: building the angle triple before reading param1 differs by
  *   10 words.
@@ -58,12 +58,13 @@ enum daBtfly_c_AssetId {
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
 
 /* Lays .text down in source order (see the note at the top). */
 #pragma defer_codegen off
 
-/* Flat 12-word copy. Assigning Matrix4x3 would run ~Vector3 on its translation. */
-struct Mtx { int w[12]; };
+/* The model-matrix copies go through Mtx43, a flat 12-word copy. Assigning
+ * Matrix4x3 would run ~Vector3 on its translation. */
 
 /* No destructor. dCcAcPos_c::Init's offset argument is passed as a pointer;
  * a stack Vector3 here would emit ~Vector3. */
@@ -493,11 +494,11 @@ int daBtfly_c::Behavior()
         mAngleY = mPrevAngleY;
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
         if (mUseAnimModel != 0) {
-            *(Mtx *)&mAnmModel.mat4x3 = *(Mtx *)&data_020a0e68;
+            *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
             DropShadowRadHeight(mShadowModel1, mAnmModel.mat4x3, 0x14000, 0x12c000, 0xf);
             mAnmModel.Advance();
         } else {
-            *(Mtx *)&mModel.mat4x3 = *(Mtx *)&data_020a0e68;
+            *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
             DropShadowRadHeight(mShadowModel2, mModel.mat4x3, 0x64000, 0x12c000, 0xf);
         }
     }
