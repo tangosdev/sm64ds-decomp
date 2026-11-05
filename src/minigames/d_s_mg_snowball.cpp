@@ -49,8 +49,9 @@ enum dScMgSnowball_c_AssetId {
    which defines Matrix4x3 as {Matrix3x3 r; Vector3 t;}; common.h carries a
    second, flat `s32 m[12]` spelling of the same 0x30-byte type behind the
    same guard, and whichever a TU sees first stands. The nested spelling wins
-   here, so the one copy that has to be a block move goes through M4x3Flat,
-   below, rather than member-wise through Vector3's destructor. */
+   here, so the one copy that has to be a block move goes through the flat
+   Mtx43 rather than member-wise through Vector3's destructor, which is
+   0x20 bytes more than the ROM has. */
 #include "dScMgSnowball_c.h"
 #include "nitro/hw/registers.h"
 #include "G2.h"
@@ -67,23 +68,13 @@ enum dScMgSnowball_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
 typedef struct Vec3 {
     int x, y, z;
 } Vec3;
-
-/* The FLAT 12-word view of Matrix4x3. include/common.h and include/math/Matrix.h
-   carry two spellings of this 0x30-byte type and whichever a TU sees first
-   stands; as one-function files these members saw common.h's flat `s32 m[12]`,
-   but this TU reaches math/Matrix.h first through dScMgSnowball_c.h -> dExtSimpleModel_c.h,
-   and the nested {Matrix3x3 r; Vector3 t;} spelling copies member-wise because
-   Vector3 has a user-declared destructor -- 0x20 bytes more than the ROM has.
-   Copying through this view restores the cartridge's block copy. */
-struct M4x3Flat {
-    s32 m[12];
-};
 
 typedef struct Pair {
     s32 x;
@@ -716,7 +707,7 @@ void Snowball_UpdateCamera(char *scene) {
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, self->mHeadingAngle);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mRollAngle);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
-    *(struct M4x3Flat *)&self->mModel.mat4x3 = *(struct M4x3Flat *)&data_020a0e68;
+    *(Mtx43 *)&self->mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 }
 
