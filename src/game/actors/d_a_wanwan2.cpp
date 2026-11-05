@@ -82,6 +82,7 @@
 #include "daStar_c.h"
 #include "dActor_c.h"
 #include "dCc_c.h"
+#include "private/mtx43.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -116,9 +117,8 @@ enum {
    arithmetic below; the collision offset uses the real Vector3 interface. */
 struct Vec3i { s32 x, y, z; };
 
-/* func_ov100_02143b68's identity matrix, as twelve words: a copy through the
-   C++ Matrix4x3 splits into two block moves here. */
-struct M48 { int w[12]; };
+/* func_ov100_02143b68 copies its identity matrix through the flat Mtx43: a
+   copy through the C++ Matrix4x3 splits into two block moves here. */
 
 /* The state machine's pointer-to-member pair. The `self` type is a stand-in,
    NOT the real dActor_c: a pointer-to-member on a non-polymorphic,
@@ -516,7 +516,7 @@ extern "C" int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p)
 extern "C" void func_ov100_02143b68(char *self)
 {
     daWanwan2_c *c = (daWanwan2_c *)self;
-    M48 tmp;
+    Mtx43 tmp;
     int i;
     dExtSimpleModel_c *mdst;
     char *rd;
@@ -527,7 +527,7 @@ extern "C" void func_ov100_02143b68(char *self)
     c->mAnmModel.mat4x3.t.y = c->mPosY >> 3;
     c->mAnmModel.mat4x3.t.z = c->mPosZ >> 3;
     c->DropShadowRadHeight(c->mShadowModel, c->mAnmModel.mat4x3, 0x15e000, 0x1f4000, 0xf);
-    tmp = *(M48 *)&IDENTITY_MATRIX4X3;
+    tmp = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     i = 0;
     mdst = c->mModels;
     /* rd and st both start at the chomp itself and are stepped by one link
@@ -537,7 +537,7 @@ extern "C" void func_ov100_02143b68(char *self)
     st = (char *)c;
     sm = c->mShadowModels;
     for (; i < daWanwan2_NUM_LINKS; i++) {
-        *(M48 *)&mdst->mat4x3 = tmp;
+        *(Mtx43 *)&mdst->mat4x3 = tmp;
         *(int *)(st + 0x3b0) = *(int *)(rd + 0x6d8) >> 3;
         *(int *)(st + 0x3b4) = *(int *)(rd + 0x6dc) >> 3;
         *(int *)(st + 0x3b8) = *(int *)(rd + 0x6e0) >> 3;
