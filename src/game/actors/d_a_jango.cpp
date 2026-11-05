@@ -20,8 +20,8 @@
  *
  * Source runs REVERSE of ROM (highest address first). Do not reorder; the
  * classInit factory, now the highest address in the TU, is written first.
- * decl_common.h is deliberately NOT included; the three needed names
- * are declared locally. SWOOP uses an array-backed position copy to retain
+ * decl_common.h is deliberately NOT included; its remaining needed names
+ * are declared locally, and shared vector functions come from CalcLib.h. SWOOP uses an array-backed position copy to retain
  * the ROM block move in C++; see its site.
  *
  * deslop leftovers:
@@ -60,10 +60,10 @@ enum daJango_c_AssetId {
 #include "types.h"
 #include "common.h"
 #include "cstd.h"
+#include "math/CalcLib.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
-/* decl_common.h deliberately NOT included; the three names this TU needs
-   from it are declared locally instead. */
+/* decl_common.h deliberately NOT included; AngleDiff is declared locally. */
 extern "C" int AngleDiff(int a, int b);
 #include "PathPtr.h"
 #include "SharedFilePtr.h"
@@ -178,21 +178,13 @@ extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
 extern int data_020a0e68[];
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
-extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 extern int data_0209e650;
-extern int RandomIntInternal(int *seed);
-extern int Vec3_Dist(const void *a, const void *b);
-extern int ApproachAngle(s16 *cur, s16 target, int div, int band, int maxStep);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
-/* local extern: CalcLib conflicts with this TU's LenVec3 declaration. */
-extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void Vec3_Asr(void* d, void* s, int sh);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
@@ -369,7 +361,7 @@ int daJango_c::InitResources()
 
     PathPtr path2;
     path2.FromID(mPathId);
-    path2.GetNode(*(Vector3 *)&mPathNodePosX, mPathNodeIndex);
+    path2.GetNode(mPathNodePos, mPathNodeIndex);
     mBlendAnmModel.speed = 0x1000; /* 1.0x */
     mHeldActorID = 0;
 
@@ -410,7 +402,7 @@ int daJango_c::InitResources()
             }
         }
         /* Taken while mPos still equals mSpawnPos, so the two vectors are equal. */
-        mTargetAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mSpawnPosX);
+        mTargetAngleY = Vec3_HorzAngle(&mPos, &mSpawnPos);
         func_ov062_0211c658(JANGO_STATE_CIRCLE);
     }
     return 1;
@@ -572,11 +564,11 @@ int daJango_c::CleanupResources()
    3. Shadow matrix: mPos >> 3 with Y lowered by 0x18000 (24 units). */
 void daJango_c::func_ov062_0211c6a8()
 {
-    int v[3];
+    Vector3 v;
     dActor_c* actor;
 
-    Vec3_Asr(v, &mPosX, 3);
-    Matrix4x3_FromTranslation(data_020a0e68, v[0], v[1], v[2]);
+    Vec3_Asr(&v, &mPos, 3);
+    Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(M48 *)&mBlendAnmModel.mat4x3 = *(M48 *)data_020a0e68;
 
@@ -730,7 +722,7 @@ int daJango_c::func_ov062_0211c2f4() {
         zero[1] = mPosY;
         s = cstd::fdiv(0x14000, len);
         Vec3_MulScalar(&scaled, &diff, s);
-        SubVec3((Vector3 *)&mPosX, &scaled, (Vector3 *)&mPosX);
+        SubVec3(&mPos, &scaled, &mPos);
         if (mRiseToFarNode == 1) {
             mPosY = zero[1];
             if (*(u16 *)&mStateTimer == 0) {
@@ -803,7 +795,7 @@ int daJango_c::func_ov062_0211bd10()
     s16 angV;
     s16 angD;
     daPly_c *player;
-    int ppos[3];
+    Vector3 ppos;
     Vector3 node;
     int thr;
     s8 stage;
@@ -816,12 +808,12 @@ int daJango_c::func_ov062_0211bd10()
         if (mWithMeshClsn.IsOnWall() != 0) {
             mTargetAngleY = (s16)(mPrevAngleY + 0x4000);
         } else {
-            mTargetAngleY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mSpawnPosX);
+            mTargetAngleY = Vec3_HorzAngle(&mPos, &mSpawnPos);
         }
         ApproachLinear(mPrevAngleY, mTargetAngleY, 0x1000);
-        ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, (const Vector3 *)&mSpawnPosX), 0x500);
+        ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &mSpawnPos), 0x500);
         ApproachLinear(mPrevAngleZ, 0, 0x500);
-        if (Vec3_Dist(&mPosX, &mSpawnPosX) < 0x1f4000) {
+        if (Vec3_Dist(&mPos, &mSpawnPos) < 0x1f4000) {
             mTimer = 0;
         } else {
             mTimer = 0x1e;
@@ -831,10 +823,10 @@ int daJango_c::func_ov062_0211bd10()
     }
 
     if (mCarriedItem == CARRIES_NO_STAR && mHeldActorID == 0) {
-        angV = Vec3_VertAngle(&mPos, (const Vector3 *)&mSpawnPosX);
+        angV = Vec3_VertAngle(&mPos, &mSpawnPos);
         angD = (s16)(AngleDiff(mTargetAngleY, mPrevAngleY) / 3);
     } else {
-        angV = Vec3_VertAngle(&mPos, (const Vector3 *)&mPathNodePosX);
+        angV = Vec3_VertAngle(&mPos, &mPathNodePos);
         angD = (s16)(AngleDiff(mTargetAngleY, mPrevAngleY) / 3);
     }
 
@@ -859,24 +851,22 @@ int daJango_c::func_ov062_0211bd10()
             if (player != 0) {
                 pp = &player->mPosX;
                 tmp = pp[0];
-                ppos[0] = tmp;
+                ppos.x = tmp;
                 tmp = pp[1];
                 stage = gCurrentSublevel;
-                ppos[1] = tmp;
+                ppos.y = tmp;
                 tmp = pp[2];
-                ppos[2] = tmp;
-                if (stage != 0x10 &&
-                    (mPosY + 0x28000 < ppos[1] ||
-                     player->mIsUnderwater != 0)) {
+                ppos.z = tmp;
+                if (stage != 0x10 && (mPosY + 0x28000 < ppos.y || player->mIsUnderwater != 0)) {
                     func_ov062_0211b2fc();
                     return 1;
                 }
                 thr = 0x3e8000;
-                ppos[1] = mPosY;
+                ppos.y = mPosY;
                 if (stage != 0x10) {
                     thr = 0x2bc000;
                 }
-                if (Vec3_Dist(&mPosX, ppos) < thr) {
+                if (Vec3_Dist(&mPos, &ppos) < thr) {
                     if (!IsNoControl(player) && player->mIsVanish == 0)
                         func_ov062_0211c658(JANGO_STATE_SWOOP);
                 }
@@ -1317,7 +1307,7 @@ int daJango_c::func_ov062_0211b3ac()
         }
     }
 
-    if (Vec3_HorzDist(&best, (Vector3*)&mPathNodePosX) == 0)
+    if (Vec3_HorzDist(&best, &mPathNodePos) == 0)
         return 0;
 
     if (gCurrentSublevel == 0x10) {

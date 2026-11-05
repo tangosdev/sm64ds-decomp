@@ -72,9 +72,12 @@ struct daJango_c : dEnemyBase_c {
        node at mPathNodeIndex here (the carrying-a-star branch then teleports the
        actor onto it: `mPosX = mPathNodePosX;` ...), and func_ov062_0211c2f4 sets
        it to the actor's own position each time it snaps onto a node. */
-    s32                          mPathNodePosX;         /* 0x430 */
-    s32                          mPathNodePosY;         /* 0x434 */
-    s32                          mPathNodePosZ;         /* 0x438 */
+    union {
+        struct {
+            s32 mPathNodePosX, mPathNodePosY, mPathNodePosZ;
+        };
+        Vector3 mPathNodePos; /* 0x430 */
+    };
     /* Two uses on the one word. In func_ov062_0211bd10 (circling) it is a phase
        counter for the animation switch: 0, then 1 when jango_attack.bca is
        started, then 2..0x18 counting up, then back to 0. In the swoop it is the
@@ -153,10 +156,14 @@ struct daJango_c : dEnemyBase_c {
     s32                          mPathNodeCount;        /* 0x470 */
     s32                          mPathNodeIndex;        /* 0x474 -- the index handed to PathPtr::GetNode */
     u8  pad_478[0xc];
-    /* InitResources copies mPosX/mPosY/mPosZ here once, before any movement. */
-    s32                          mSpawnPosX;            /* 0x484 */
-    s32                          mSpawnPosY;            /* 0x488 */
-    s32                          mSpawnPosZ;            /* 0x48c */
+    /* InitResources snapshots mPos before movement. Keep the component names
+       and vector view over this same 0x484-0x490 storage. */
+    union {
+        struct {
+            s32 mSpawnPosX, mSpawnPosY, mSpawnPosZ;
+        };
+        Vector3 mSpawnPos; /* 0x484 */
+    };
 
     /* --- vtable --- */
     virtual ~daJango_c() {}
