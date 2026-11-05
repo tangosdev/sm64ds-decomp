@@ -8,6 +8,8 @@ typedef struct FSFile FSFile;
 
 extern "C" {
 
+/* Measured: without loop_invariants 7 of 106 words differ (&file and -1 swap
+ * r4/r5); without propagation 22; without both 29. for-loop forms are 0x1b0. */
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 /* data_020a1fc0, the file-sharing work block, under FileShareWork's names

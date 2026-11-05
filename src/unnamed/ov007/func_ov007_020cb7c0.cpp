@@ -12,6 +12,8 @@ static inline int subz(int a, int b) {
     return a - b;
 }
 
+/* Kept: indexed-for rewrites over int* or Vector3* points, with or without
+ * these, are 0x278..0x2ac against the cartridge's 0x2b8. */
 #pragma opt_strength_reduction off
 #pragma opt_loop_invariants off
 
