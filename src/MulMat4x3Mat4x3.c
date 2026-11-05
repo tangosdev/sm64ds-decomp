@@ -1,5 +1,6 @@
+#include "private/mtx43.h"
+
 typedef long long s64;
-typedef struct { int m[12]; } Mat12;
 
 void MulMat4x3Mat4x3(const int *A, const int *B, int *dst)
 {
@@ -34,6 +35,6 @@ void MulMat4x3Mat4x3(const int *A, const int *B, int *dst)
     d[9] = (int)((s64)B[9] + (((s64)a0 * B[0] + (s64)a1 * B[3] + (s64)a2 * B[6]) >> 12));
 
     if (d == tmp) {
-        *(Mat12 *)dst = *(Mat12 *)tmp;
+        *(Mtx43 *)dst = *(Mtx43 *)tmp;
     }
 }
