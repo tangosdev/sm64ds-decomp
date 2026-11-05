@@ -2,10 +2,7 @@
 
 extern void func_ov007_020c2d44(Ov007StrokePath *path, int n);
 
-/* One 12-byte point of the alternate representation's pointStorage. */
-typedef struct Ov007PathPoint {
-    int x, y, z;
-} Ov007PathPoint;
+/* The alternate representation stores one Vector3 per point. */
 
 /* Removes point idx from the path, shifting every later point (and its
  * segment length and progress threshold) down one; a planar path then
@@ -39,8 +36,8 @@ void func_ov007_020c24d0(Ov007StrokePath *path, int idx) {
             angles[i] = angles[i + 1];
             break;
         case 1:
-            ((Ov007PathPoint *)path->pointStorage)[i] =
-                ((Ov007PathPoint *)path->pointStorage)[i + 1];
+            ((Vector3 *)path->pointStorage)[i] =
+                ((Vector3 *)path->pointStorage)[i + 1];
             break;
         }
         lengths = path->segmentLengths;
