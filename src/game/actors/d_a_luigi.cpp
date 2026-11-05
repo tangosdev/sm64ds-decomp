@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /* daLuigi_c -- mirror-room Luigi (ov055, actor LUIGI).
  *
  * Stands where the current player stands, with X and facing negated, and
@@ -44,6 +43,7 @@
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx.h"
 
 /* The matrix copies go through the flat Mtx43. Assigning Matrix4x3 itself
    is a different sequence (.text grows by 0xa0 bytes). */

@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /**
  * daBakubaku_c -- Bubba, the fish that patrols Jolly Roger Bay.
  *
@@ -45,6 +44,7 @@ enum daBakubaku_c_AssetId {
 #include "SharedFilePtr.h"
 #include "LevelRng.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx.h"
 
 /* dCc_c bit table: flags/vulnFlags/hitFlags share it. */
 enum {
@@ -89,7 +89,6 @@ extern Matrix4x3 data_020a0e68;
 
 extern VecFx32 data_ov032_021137cc; /* body cylinder */
 extern VecFx32 data_ov032_021137d8; /* head cylinder */
-
 
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
@@ -728,5 +727,5 @@ daBakubaku_c::State data_ov032_02113abc = {
 daBakubaku_c::State data_ov032_02113a7c = {
     &daBakubaku_c::func_ov032_02111814, &daBakubaku_c::func_ov032_02111620
 };
-VecFx32 data_ov032_021137cc = { 0, -0x28000, 0x58000 };   /* body cylinder */
-VecFx32 data_ov032_021137d8 = { 0, -0x30000, -0x20000 };  /* head cylinder */
+VecFx32 data_ov032_021137cc = {0, -0x28000, 0x58000};  /* body cylinder */
+VecFx32 data_ov032_021137d8 = {0, -0x30000, -0x20000}; /* head cylinder */

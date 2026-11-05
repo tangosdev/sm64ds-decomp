@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /* daDoor_c -- the plain warp door (registry profile DOOR).
  *
  * param1's high halfword picks the door's entry in the 16-byte table at
@@ -111,6 +110,7 @@ enum daDoor_c_AssetId {
 #include "dActor_c.h"
 #include "Sound.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx.h"
 
 /* The vector temps below are VecFx32: a stack Vector3 would run its destructor. */
 /* The door's matrix copies go through the flat Mtx43: a copy through the

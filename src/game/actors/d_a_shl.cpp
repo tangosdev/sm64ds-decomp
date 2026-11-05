@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /**
  * Koopa shell (profile SHELL) -- ov102/daShl_c.
  *
@@ -64,6 +63,7 @@
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
+#include "nitro/fx/fx.h"
 
 /* Two 8-byte pointers-to-member. The second word is the this-adjustment;
    retail stores 0 for every entry. */
@@ -535,7 +535,10 @@ void daShl_c::func_ov102_0214c84c()
 {
     /* One object: as two separate locals the function is 64 bytes
        shorter (measured). */
-    struct { VecFx32 trail; VecFx32 probe; } pos;
+    struct {
+        VecFx32 trail;
+        VecFx32 probe;
+    } pos;
 
     pos.trail.x = mPosX;
     pos.trail.y = mPosY;

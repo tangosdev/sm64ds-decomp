@@ -6,8 +6,8 @@
 // destruction, changing these copies (280 bytes instead of the required 320).
 
 extern "C" {
-void func_ov007_020c2f14(VecFx32 *points, int pointCount, int *outMinX, int *outMaxX,
-                         int *outMinY, int *outMaxY, int *outMinZ, int *outMaxZ) {
+void func_ov007_020c2f14(VecFx32 *points, int pointCount, int *outMinX, int *outMaxX, int *outMinY,
+                         int *outMaxY, int *outMinZ, int *outMaxZ) {
     VecFx32 maximum = points[0];
     VecFx32 minimum = points[0];
     int i;

@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /**
  * dPathLiftActor_c -- the path-following lift base.
  *
@@ -41,6 +40,7 @@
 #include "common.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx.h"
 
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 

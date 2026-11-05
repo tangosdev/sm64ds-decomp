@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /* daMoray_c -- Jolly Roger Bay eel (MORAY).
  *
  * Five states installed by func_ov016_02111bf0 (retreat init is the
@@ -49,6 +48,7 @@ enum daMoray_c_AssetId {
 #include "dExtSimpleModel_c.h"
 #include "daPly_c.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx.h"
 
 #pragma defer_codegen off
 
@@ -89,7 +89,7 @@ extern daMoray_c::State data_ov016_02114dbc;
  * lifetime work in the retail initializer: a VecFx32, not a Vector3. Its
  * components are copied into the collision API's Vector3 locals below. */
 extern "C" {
-extern VecFx32 data_ov016_02114d4c;         /* cylinder offset, bss */
+extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
 extern unsigned char data_0209f220; /* entrance filter */
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */

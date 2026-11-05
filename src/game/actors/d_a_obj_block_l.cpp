@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /* Big brick blocks: one class, six actor IDs (0xf, 0x10, 0x11, 0x12,
  * 0x13, 0x2e) -- item blocks, the star block, the switch-activated
  * block. Kill is a switchboard on actorID: coins, stars, particles,
@@ -34,6 +33,7 @@
 #include "daObjBlockItemTag_c.h"
 #include "Particle__System.h"
 #include "private/clps_row.h"
+#include "nitro/fx/fx.h"
 
 /* File-local resource rows (see the header note above). */
 struct BigBrickBlockFileRow {

@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /* d_a_obj_number.cpp
  * Object - floating score popup (NUMBER / 330)
  *
@@ -32,6 +31,7 @@
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx.h"
 
 /* Behavior's position is a VecFx32, preserving the three-word position ABI
  * without emitting Vector3's vague-linkage destructor. */

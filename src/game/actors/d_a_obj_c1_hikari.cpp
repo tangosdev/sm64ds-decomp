@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /**
  * d_a_obj_c1_hikari.cpp
  * Object - Castle light beam
@@ -37,6 +36,7 @@ enum d_a_obj_c1_hikari_AssetId { ASSET_C1_HIKARI_BMD = 0x05ad };
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx.h"
 
 /* Behavior's copies of the two world-space offsets it rotates through
  * data_020a0e68 are VecFx32. The shared Vector3 has an empty destructor,

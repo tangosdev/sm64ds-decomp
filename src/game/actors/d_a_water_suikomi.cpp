@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /* Production translation unit for ov026/daWater_Suikomi_c.
  * 13 function(s), .text 0x021121fc..0x02112490. The WATER_SUIKOMI actor, the
  * water suction in Wet-Dry World.
@@ -39,6 +38,7 @@
  */
 #include "daWater_Suikomi_c.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx.h"
 
 /* The ROM member-function-pointer constants the state table copies from
  * (unlicensed .data). */

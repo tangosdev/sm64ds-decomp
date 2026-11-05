@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /**
  * Question Switch (profile HATENA_SWITCH / QUESTION_SWITCH 26).
  *
@@ -44,6 +43,7 @@ enum d_a_obj_hatena_switch_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx.h"
 
 /* Plain VecFx32 stack values avoid pulling unrelated Vector3 special
  * members into this TU while preserving their measured three-word ABI. */

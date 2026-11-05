@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /* daMenbo_c -- Skeeter, the water strider on the lake.
  *
  * ov090 0x02130f00..0x0213269c, twenty-five functions, the last being the
@@ -42,6 +41,7 @@
 #include "dExtFrameCtrl_c.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx.h"
 
 #pragma opt_strength_reduction off
 

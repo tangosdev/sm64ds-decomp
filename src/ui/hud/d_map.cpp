@@ -125,8 +125,8 @@ extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
 extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
 int *Vec3_DivScalarInPlace(Vector3 *v, int s);
-void Vec3_MulScalarInPlace(Vector3* v, int s);
-void Vec3_RotateYAndTranslate(Vector3* out, Vector3* in, short ang, Vector3* t);
+void Vec3_MulScalarInPlace(Vector3 *v, int s);
+void Vec3_RotateYAndTranslate(Vector3 *out, Vector3 *in, short ang, Vector3 *t);
 }
 
 /* The centre of the 256x192 touch screen, (128, 96) in 20.12 fixed point:

@@ -1,5 +1,4 @@
 //cpp
-#include "nitro/fx/fx.h"
 /**
  * daObjCloset_c -- the rec-room cupboard (PL_CLOSET, actor 182), ov058.
  *
@@ -43,6 +42,7 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx.h"
 
 /* include/types.h's Vector3 declares a destructor. Under that type the
    five locals below grow the frame by 0x10. The ROM copies are a plain
