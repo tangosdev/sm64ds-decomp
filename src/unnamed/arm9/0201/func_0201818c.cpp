@@ -1,18 +1,9 @@
 //cpp
 #include "CP15.h"
 #include "Memory.h"
+#include "private/fs_views.h"
 
 extern "C" {
-
-/* FSFile, the two words this reads: top and bottom of prop.file (at 0x1c),
-   the file's extent in its archive. bottom - top is its length
-   (FS_GetLength). */
-struct FSFileView {
-    char pad[0x20];
-    unsigned int top;    /* 0x20 */
-    unsigned int bottom; /* 0x24 */
-    char pad2[0x1c];
-};
 
 extern int func_020186c0(unsigned int val);
 extern int func_02018568(int a);
@@ -30,8 +21,8 @@ extern unsigned int func_0201834c(void *buf, int x);
    is decompressed or copied out of it, anything else read through
    func_0201834c. flush nonzero flushes the result from the data cache. */
 int func_0201818c(unsigned int id, int flush) {
-    struct FSFileView obj;
-    char buf[0x44];
+    FSFile obj;
+    FSFile file;
     int p = func_020186c0(id);
     if (p != 0) {
         unsigned int size;
@@ -43,7 +34,7 @@ int func_0201818c(unsigned int id, int flush) {
             DecompressLZ16(q, (void *)mem);
         } else {
             func_020185c0(&obj, id);
-            size = obj.bottom - obj.top;
+            size = obj.prop.file.bottom - obj.prop.file.top; /* FS_GetLength */
             FS_CloseFile(&obj);
             mem = (int)Memory::Allocate(size, 0x20);
             CpuCopy8((const void *)p, (void *)mem, size);
@@ -53,7 +44,7 @@ int func_0201818c(unsigned int id, int flush) {
             CP15::FlushDataCache(mem, size);
         return mem;
     }
-    func_020185c0(buf, func_02018a24(id));
-    return func_0201834c(buf, flush);
+    func_020185c0(&file, func_02018a24(id));
+    return func_0201834c(&file, flush);
 }
 }
