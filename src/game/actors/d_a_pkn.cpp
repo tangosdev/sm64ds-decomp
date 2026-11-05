@@ -110,8 +110,8 @@ short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int *Vec3_LslInPlace(PknVec3 *v, int sh);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-void  Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 ang);
+void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
+void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 ang);
 void  MulMat4x3Mat4x3(void *a, void *b, void *c);
 
 void *d_a_pknNewHold(u32 handle, u32 id, int x, int y, int z, const void *f, void *cb);
@@ -740,7 +740,11 @@ int daPkn_c::CheckHits()
 void daPkn_c::UpdatePose()
 {
     volatile s16 ang[3];
-    struct { Matrix4x3 saved; PknVec3 tv; PknVec3 v; } L;
+    struct {
+        Matrix4x3 saved;
+        PknVec3 tv;
+        PknVec3 v;
+    } L;
     int lr;
     int scale;
 
