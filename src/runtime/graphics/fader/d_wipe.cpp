@@ -12,11 +12,8 @@
  * the vtable/RTTI records land in .data at 0x020926d0..0x02092718.
  *
  * leftovers:
- * - opt_strength_reduction off runs to end of file: its reset reaches
- *   backward, so it cannot be restored between the two table builders
- *   (measured). func_0202f2c4, func_0202f3a4, func_02053c10, the
- *   data_023c0000 wake word and the 0x400xxxx registers stay
- *   address-named.
+ * - func_0202f2c4, func_0202f3a4, func_02053c10, the data_023c0000 wake
+ *   word and the 0x400xxxx registers stay address-named.
  */
 #include "types.h"
 #include "dWipe_c.h"
@@ -351,13 +348,9 @@ void dWipe_c::func_0202f290()
 /* Build a 192-entry (one per scanline) 4-byte blend gradient into whichever
    0x300 slot the IRQ is not reading. After the neutral 0x80807F7F fill, four
    fixed-point ramp segments write clamped 0..0x7F coefficients and their
-   0x100-complements, stepped by 2^32/wipeInterp; then flush the pair. */
-/* opt_strength_reduction off for the rest of the file -- the two table
-   builders keep their per-line index arithmetic un-factored, and a later
-   `reset` undoes the option for functions defined BEFORE it, so it cannot
-   be restored between them (measured). The remaining functions emit
-   identically either way. */
-#pragma opt_strength_reduction off
+   0x100-complements, stepped by 2^32/wipeInterp; then flush the pair. The
+   fill value goes through a stack slot in the ROM (as MI_CpuFill32's does in
+   OS_CreateThread), hence the volatile. */
 // @symbol _ZN7dWipe_c13func_0202efa0Ev
 void dWipe_c::func_0202efa0()
 {
@@ -366,15 +359,16 @@ void dWipe_c::func_0202efa0()
     int i;
     int pos;
     int step;
-    u8 *buf;
+    struct Px {
+        u8 a, b, c, d;
+    } *buf;
     int dur;
     int v, w;
     int a, b;
-    u8 *p;
     s64 d64;
 
     idx = (data_0209f608 == 0) ? 1 : 0;
-    buf = data_0209f648 + idx * 0x300;
+    buf = (struct Px *)(data_0209f648 + idx * 0x300);
     fill = 0x80807F7F;
     i = 0;
     MultiStore_Int(fill, (int *)buf, 0x300);
@@ -397,9 +391,8 @@ void dWipe_c::func_0202efa0()
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
             if (a > 0x7F) a = 0x7F;
-            p = buf + i * 4;
-            p[3] = a;
-            buf[i * 4] = 0x100 - p[3];
+            buf[i].d = a;
+            buf[i].a = 0x100 - buf[i].d;
             pos += step;
             i++;
         }
@@ -411,9 +404,8 @@ void dWipe_c::func_0202efa0()
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
             if (a > 0x7F) a = 0x7F;
-            p = buf + i * 4;
-            p[3] = a;
-            buf[i * 4] = 0x100 - p[3];
+            buf[i].d = a;
+            buf[i].a = 0x100 - buf[i].d;
             pos += step;
             i++;
         }
@@ -424,9 +416,8 @@ void dWipe_c::func_0202efa0()
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
             if (a > 0x7F) a = 0x7F;
-            p = buf + i * 4;
-            p[3] = a;
-            buf[i * 4] = 0x100 - p[3];
+            buf[i].d = a;
+            buf[i].a = 0x100 - buf[i].d;
             pos += step;
             i++;
         }
@@ -442,11 +433,10 @@ void dWipe_c::func_0202efa0()
             if (a > 0x7F) a = 0x7F;
             if (b < a) b = a;
             if (b > 0x7F) b = 0x7F;
-            p = buf + i * 4;
-            p[3] = a;
-            p[2] = b;
-            p[1] = 0x100 - p[2];
-            buf[i * 4] = 0x100 - p[3];
+            buf[i].d = a;
+            buf[i].c = b;
+            buf[i].b = 0x100 - buf[i].c;
+            buf[i].a = 0x100 - buf[i].d;
             pos += step;
             i++;
         }
@@ -461,48 +451,48 @@ void dWipe_c::func_0202efa0()
 // @symbol _ZN7dWipe_c13func_0202ee94Ev
 void dWipe_c::func_0202ee94()
 {
-    int fp;
-    int sl;
+    int idx;
+    int radius;
     int i;
-    int r8, r7;
+    int start, diameter;
     struct Px { u8 a, b, c, d; } *buf;
-    int r5, r4;
+    int src;
     int j;
-    volatile int val;
+    volatile int fill;
 
-    fp = (data_0209f608 == 0) ? 1 : 0;
-    val = 0x80807f7f;
-    buf = (struct Px *)(data_0209f648 + fp * 0x300);
+    idx = (data_0209f608 == 0) ? 1 : 0;
+    fill = 0x80807f7f;
+    buf = (struct Px *)(data_0209f648 + idx * 0x300);
 
-    MultiStore_Int(val, (int *)buf, 0x300);
+    MultiStore_Int(fill, (int *)buf, 0x300);
 
-    sl = wipeInterp >> 0xc;
-    r8 = 0x60 - sl;
-    r7 = sl << 1;
-    r5 = 0;
-    r4 = 0;
+    radius = wipeInterp >> 0xc;
+    start = 0x60 - radius;
+    diameter = radius << 1;
     for (i = 0; i < 0x60; i++) {
-        if (r8 <= i) {
-            int a = i - 0x60 + sl;
-            int s = cstd::sqrt((u64)(long long)(a * (r7 - a)));
+        if (start <= i) {
+            int a = i - 0x60 + radius;
+            int s = cstd::sqrt((u64)(a * (diameter - a)));
             int lo = 0x80 - s;
             int hi = s + 0x80;
-            if (lo < 0) lo = r5;
-            if (hi > 0xff) hi = r4;
+            if (lo < 0)
+                lo = 0;
+            if (hi > 0xff)
+                hi = 0;
             buf[i].d = (u8)lo;
             buf[i].a = (u8)hi;
         }
     }
 
-    r4 = 0x5f;
+    src = 0x5f;
     for (j = 0; j < 0x60; j++) {
-        buf[j + 0x60].a = buf[r4].a;
-        buf[j + 0x60].d = buf[r4].d;
-        r4--;
+        buf[j + 0x60].a = buf[src].a;
+        buf[j + 0x60].d = buf[src].d;
+        src--;
     }
 
     CP15::FlushAndInvalidateDataCache((u32)data_0209f648, 0x600);
-    data_0209f60c = fp;
+    data_0209f60c = idx;
 }
 
 /* Vtable slot 5. Type 1 is the plain brightness fade, which the base answers.

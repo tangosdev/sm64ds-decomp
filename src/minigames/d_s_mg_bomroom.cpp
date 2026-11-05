@@ -1419,250 +1419,176 @@ void dScMgBomroom_c::UpdateBombs() {
 /* Spawner: once mSpawnDelay runs out, picks a step from the spawn
  * count mSpawnCount, drops that many new bombs into free records with a
  * random color and angle, and reloads the delay from
- * sBomroomSpawnDelays. */
+ * sBomroomSpawnDelays.
+ * Both pragmas bind: with common subexpressions on, the constants hoisted
+ * ahead of the bomb loop take a different set of stack slots, and with
+ * strength reduction on, j * 0x40 becomes a stepped pointer. */
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 
-void dScMgBomroom_c::SpawnBombs()
-{
-    char * c = (char *)this;
-  s32 sb;
-  s32 step;
-  s32 ang;
-  s32 i;
-  s32 one;
-  s32 off;
-  s32 t0;
-  u32 rnd;
-  s32 cnt;
-  s32 flag;
-  s32 j;
-  s32 z0;
-  s32 z1;
-  s32 z2;
-  s32 z3;
-  s32 v80000;
-  s32 new_var;
-  s32 v4;
-  s32 v200;
-  s32 vB8000;
-  s32 j0;
-  if (mSpawnDelay != 0)
-  {
-      mSpawnDelay--;
-      if ((s16)mSpawnDelay < 0) {
-          mSpawnDelay = 0;
-      }
-    return;
-  }
-  t0 = mSpawnCount;
-  sb = 0;
-  if (t0 >= 0x12c)
-  {
-    sb = 0xc;
-  }
-  else
-    if (t0 >= 0xc6)
-  {
-    sb = 0xb;
-  }
-  else
-    if (t0 >= 0x9f)
-  {
-    sb = 0xa;
-  }
-  else
-    if (t0 >= 0x84)
-  {
-    sb = 9;
-  }
-  else
-    if (t0 >= 0x5c)
-  {
-    sb = 8;
-  }
-  else
-    if (t0 >= 0x39)
-  {
-    sb = 7;
-  }
-  else
-    if (t0 >= 0x21)
-  {
-    sb = 6;
-  }
-  else
-    if (t0 >= 0x1b)
-  {
-    sb = 5;
-  }
-  else
-    if (t0 >= 0x15)
-  {
-    sb = 4;
-  }
-  else
-    if (t0 >= 0xf)
-  {
-    sb = 3;
-  }
-  else
-    if (t0 >= 9)
-  {
-    sb = 2;
-  }
-  else
-    if (t0 >= 3)
-  {
-    sb = 1;
-  }
-  cnt = 1;
-  step = 0;
-  if (sb >= 5)
-  {
-    cnt = 2;
-  }
-  if (sb == 9)
-  {
-    cnt = 1;
-  }
-  flag = 0;
-  if (sb == 7)
-  {
-      unsigned char *pf = &mSpawnHatchFlip;
-      s32 bit = mSpawnHatchFlip;
-      cnt = 2;
-      flag = (bit & 1) + 1;
-      *pf ^= 1;
-      step = 0x3000;
-  }
-  new_var = sb;
-  if (new_var == 8)
-  {
-      s32 bit = mSpawnHatchFlip & 1;
-      unsigned char *pf = &mSpawnHatchFlip;
-      s32 x = *pf;
-      cnt = bit + 2;
-      *pf = x ^ 1;
-      flag = bit + 1;
-      if (cnt == 2) {
-          step = 0x3000;
-      } else {
-          step = 0x1800;
-      }
-  }
-  if (new_var == 10)
-  {
-    cnt = 4;
-    step = 0x3000;
-  }
-  if (sb == 11)
-  {
-      unsigned char *pf = &mSpawnHatchFlip;
-      s32 bit = mSpawnHatchFlip;
-      cnt = 3;
-      flag = (bit & 1) + 1;
-      *pf ^= 1;
-      step = 0x1800;
-  }
-  if (sb >= 12)
-  {
-    cnt = 6;
-    step = 0x1800;
-  }
-  i = 0;
-  if (cnt > 0)
-  {
-    v80000 = 0x80000;
-    v4 = 4;
-    v200 = 0x200;
-    vB8000 = 0xb8000;
-    /* Offset of mBombs[0].active, kept in a register and added to
-       this + j*0x40 below: &mBombs[j].active shrinks the function by 0xc. */
-    off = (int)&((dScMgBomroom_c *)0)->mBombs[0].active;
-    ang = 0;
-    z0 = 0;
-    z1 = 0;
-    z2 = 0;
-    z3 = 0;
-    one = 1;
-    j0 = 0;
-    do
-    {
-      s32 z = z0;
-      j = j0;
-      while (1) {
-          unsigned char *slot = (unsigned char *)((c + (j << 6)) + off);
-          if ((*slot) == 0) {
-              unsigned char *ptype;
-              *slot = (unsigned char)one;
-              mBombs[j].state = (char)z;
-              mBombs[j].substate = (char)z;
-              mBombs[j].lineSlot = (char)z;
-              mBombs[j].exploded = (char)z;
-              mBombs[j].x = v80000;
-              mBombs[j].marchDelay = (s16)v4;
-              mBombs[j].fuse = (s16)v200;
-              rnd = (u32)RandomIntInternal(&data_0209d4b8);
-              ptype = &((dScMgBomroom_c *)(c + (j << 6)))->mBombs[0].color;
-              *ptype = (((rnd >> 16) & 0x7fff) << 1) >> 15;
-              mBombs[j].speed = 0x999;
-              mBombs[j].dragSound = z1;
-              if (sb == 0) {
-                  *ptype = (unsigned char)one;
-                  HatchPanel_Activate(z1);
-              }
-              if (sb <= 1) {
-                  rnd = (u32)RandomIntInternal(&data_0209d4b8);
-                  *(s16 *)&mBombs[j].angle = (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
-                  mBombs[j].y = z2;
-              } else if (flag != 0) {
-                  if (flag == 1) {
-                      *(s16 *)&mBombs[j].angle = ang + 0x2000;
-                      mBombs[j].y = z2;
-                      HatchPanel_Activate(z2);
-                  } else {
-                      *(s16 *)&mBombs[j].angle = ang + 0xa000;
-                      mBombs[j].y = vB8000;
-                      HatchPanel_Activate(one);
-                  }
-              } else if ((mSpawnCount & 1) != 0) {
-                  if (step != 0) {
-                      *(s16 *)&mBombs[j].angle = (step * (i >> 1)) + 0x2800;
-                  } else {
-                      rnd = (u32)RandomIntInternal(&data_0209d4b8);
-                      *(s16 *)&mBombs[j].angle =
-                          (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
-                  }
-                  mBombs[j].y = z3;
-                  HatchPanel_Activate(z3);
-              } else {
-                  if (step != 0) {
-                      *(s16 *)&mBombs[j].angle = (step * (i >> 1)) + 0xa800;
-                  } else {
-                      rnd = (u32)RandomIntInternal(&data_0209d4b8);
-                      *(s16 *)&mBombs[j].angle =
-                          (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0xa000;
-                  }
-                  mBombs[j].y = vB8000;
-                  HatchPanel_Activate(one);
-              }
-              mSpawnCount++;
-              break;
-          }
-          j++;
-          if (j >= 0x70) {
-              break;
-          }
-      }
-
-      ang += step;
-      i++;
+void dScMgBomroom_c::SpawnBombs() {
+    char *c = (char *)this;
+    s32 sb;
+    s32 step;
+    s32 ang;
+    s32 i;
+    s32 off;
+    u32 rnd;
+    s32 cnt;
+    s32 flag;
+    s32 j;
+    if (mSpawnDelay != 0) {
+        mSpawnDelay--;
+        if ((s16)mSpawnDelay < 0) {
+            mSpawnDelay = 0;
+        }
+        return;
     }
-    while (i < cnt);
-  }
-  mSpawnDelay = sBomroomSpawnDelays[sb];
+    sb = 0;
+    if (mSpawnCount >= 0x12c) {
+        sb = 0xc;
+    } else if (mSpawnCount >= 0xc6) {
+        sb = 0xb;
+    } else if (mSpawnCount >= 0x9f) {
+        sb = 0xa;
+    } else if (mSpawnCount >= 0x84) {
+        sb = 9;
+    } else if (mSpawnCount >= 0x5c) {
+        sb = 8;
+    } else if (mSpawnCount >= 0x39) {
+        sb = 7;
+    } else if (mSpawnCount >= 0x21) {
+        sb = 6;
+    } else if (mSpawnCount >= 0x1b) {
+        sb = 5;
+    } else if (mSpawnCount >= 0x15) {
+        sb = 4;
+    } else if (mSpawnCount >= 0xf) {
+        sb = 3;
+    } else if (mSpawnCount >= 9) {
+        sb = 2;
+    } else if (mSpawnCount >= 3) {
+        sb = 1;
+    }
+    cnt = 1;
+    step = 0;
+    if (sb >= 5) {
+        cnt = 2;
+    }
+    if (sb == 9) {
+        cnt = 1;
+    }
+    flag = 0;
+    if (sb == 7) {
+        cnt = 2;
+        flag = (mSpawnHatchFlip & 1) + 1;
+        mSpawnHatchFlip ^= 1;
+        step = 0x3000;
+    }
+    if (sb == 8) {
+        s32 bit = mSpawnHatchFlip & 1;
+        cnt = bit + 2;
+        mSpawnHatchFlip ^= 1;
+        flag = bit + 1;
+        if (cnt == 2) {
+            step = 0x3000;
+        } else {
+            step = 0x1800;
+        }
+    }
+    if (sb == 10) {
+        cnt = 4;
+        step = 0x3000;
+    }
+    if (sb == 11) {
+        cnt = 3;
+        flag = (mSpawnHatchFlip & 1) + 1;
+        mSpawnHatchFlip ^= 1;
+        step = 0x1800;
+    }
+    if (sb >= 12) {
+        cnt = 6;
+        step = 0x1800;
+    }
+    i = 0;
+    if (cnt > 0) {
+        /* Offset of mBombs[0].active, kept in a register and added to
+       this + j*0x40 below: &mBombs[j].active shrinks the function by 0xc. */
+        off = (int)&((dScMgBomroom_c *)0)->mBombs[0].active;
+        ang = 0;
+        do {
+            j = 0;
+            while (1) {
+                unsigned char *slot = (unsigned char *)((c + (j << 6)) + off);
+                if ((*slot) == 0) {
+                    unsigned char *ptype;
+                    *slot = 1;
+                    mBombs[j].state = 0;
+                    mBombs[j].substate = 0;
+                    mBombs[j].lineSlot = 0;
+                    mBombs[j].exploded = 0;
+                    mBombs[j].x = 0x80000;
+                    mBombs[j].marchDelay = 4;
+                    mBombs[j].fuse = 0x200;
+                    rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                    ptype = &((dScMgBomroom_c *)(c + (j << 6)))->mBombs[0].color;
+                    *ptype = (((rnd >> 16) & 0x7fff) << 1) >> 15;
+                    mBombs[j].speed = 0x999;
+                    mBombs[j].dragSound = 0;
+                    if (sb == 0) {
+                        *ptype = 1;
+                        HatchPanel_Activate(0);
+                    }
+                    if (sb <= 1) {
+                        rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                        mBombs[j].angle = (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
+                        mBombs[j].y = 0;
+                    } else if (flag != 0) {
+                        if (flag == 1) {
+                            mBombs[j].angle = ang + 0x2000;
+                            mBombs[j].y = 0;
+                            HatchPanel_Activate(0);
+                        } else {
+                            mBombs[j].angle = ang + 0xa000;
+                            mBombs[j].y = 0xb8000;
+                            HatchPanel_Activate(1);
+                        }
+                    } else if ((mSpawnCount & 1) != 0) {
+                        if (step != 0) {
+                            mBombs[j].angle = (step * (i >> 1)) + 0x2800;
+                        } else {
+                            rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                            mBombs[j].angle =
+                                (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
+                        }
+                        mBombs[j].y = 0;
+                        HatchPanel_Activate(0);
+                    } else {
+                        if (step != 0) {
+                            mBombs[j].angle = (step * (i >> 1)) + 0xa800;
+                        } else {
+                            rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                            mBombs[j].angle =
+                                (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0xa000;
+                        }
+                        mBombs[j].y = 0xb8000;
+                        HatchPanel_Activate(1);
+                    }
+                    mSpawnCount++;
+                    break;
+                }
+                j++;
+                if (j >= 0x70) {
+                    break;
+                }
+            }
+
+            ang += step;
+            i++;
+        } while (i < cnt);
+    }
+    mSpawnDelay = sBomroomSpawnDelays[sb];
 }
 
 #pragma pop
