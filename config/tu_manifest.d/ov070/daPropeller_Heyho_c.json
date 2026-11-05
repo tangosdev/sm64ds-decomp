@@ -470,39 +470,39 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@991",
+      "from": "@998",
       "to": "@140",
-      "evidence": "mwcc numbers this registration node @992 per TU and the fleet already defines a global @992, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @998 in the current object. Preserve the established fleet-unique @140 alias for the first registration node."
     },
     {
-      "from": "@992",
+      "from": "@999",
       "to": "@141",
-      "evidence": "mwcc numbers this registration node @993 per TU and the fleet already defines a global @993, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @999 in the current object. Preserve the established fleet-unique @141 alias for the second registration node."
     },
     {
-      "from": "@993",
+      "from": "@1000",
       "to": "@142",
-      "evidence": "mwcc numbers this registration node @994 per TU and the fleet already defines a global @994, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1000 in the current object. Preserve the established fleet-unique @142 alias for the third registration node."
     },
     {
-      "from": "@994",
+      "from": "@1001",
       "to": "@143",
-      "evidence": "mwcc numbers this registration node @995 per TU and the fleet already defines a global @995, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1001 in the current object. Preserve the established fleet-unique @143 alias for the fourth registration node."
     },
     {
-      "from": "@995",
+      "from": "@1002",
       "to": "@144",
-      "evidence": "mwcc numbers this registration node @996 per TU and the fleet already defines a global @996, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1002 in the current object. Preserve the established fleet-unique @144 alias for the fifth registration node."
     },
     {
-      "from": "@996",
+      "from": "@1003",
       "to": "@145",
-      "evidence": "mwcc numbers this registration node @997 per TU and the fleet already defines a global @997, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1003 in the current object. Preserve the established fleet-unique @145 alias for the sixth registration node."
     },
     {
-      "from": "@997",
+      "from": "@1004",
       "to": "@146",
-      "evidence": "mwcc numbers this registration node @998 per TU and the fleet already defines a global @998, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1004 in the current object. Preserve the established fleet-unique @146 alias for the seventh registration node."
     }
   ],
   "symbol_binding_rewrites": [
@@ -1735,6 +1735,11 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "The genuine Vector3 locals make mwcc emit the deliberately empty inline destructor as vague linkage. This object's copy is the exact four-byte `bx lr` body at its canonical arm9 home, and no surviving section references the discarded duplicate."
+    },
+    {
+      "symbol": "_ZN19daPropeller_Heyho_c33@class$414d_a_propeller_heyho_cppD1Ev",
+      "disposition": "deadstrip",
+      "reason": "The mHomePos union overlays the existing three scalar coordinates with a Vector3 view. mwcc emits this four-byte empty destructor for the union's nontrivial Vector3 member; it is compiler-only output with no retail function home."
     }
   ],
   "externalized_output": [
