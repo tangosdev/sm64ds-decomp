@@ -2798,7 +2798,10 @@ follow-on batch). Each was load-bearing in at least one match; function addresse
   escape the volatile-object canonical schedule - giving the ROM's naive uncoalesced
   store group that ~30 volatile-object/launder/pragma variants could not reach. Paired
   with `#pragma opt_lifetimes off` to collapse the frame. Rule: volatility per MEMBER is
-  a scheduling dial, not just an access pin.
+  a scheduling dial, not just an access pin. *Superseded for this function (#821):
+  a plain `Vector3 v` (its user-declared destructor keeps the object in memory)
+  passed member-wise as `v.x, v.y, v.z` gives the same stores and frame with no
+  volatile member and no pragma.*
 - **Callee-saved coloring follows the LOOP DEPTH of a definition, not decl order**
   (func_ov006_021027e4): all 720 decl-order permutations were inert while moving a
   definition between nesting depths rotated {r4,r5,r6} cyclically. Companion trick: a
