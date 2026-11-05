@@ -50,6 +50,7 @@
 #include "private/Ov080Mat.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/g3imm.h"
+#include "math/MtxStack.h"
 
 #pragma defer_codegen off
 
@@ -87,16 +88,12 @@ Fix12i fdiv(s32, s32);
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void  Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
 int   InvMat4x3(int *src, int *dst);
 void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 void  CrossVec3(const Vec3_Fix12 *a, const Vec3_Fix12 *b, Vec3_Fix12 *out);
 void NormalizeVec3(const Vector3 *v, Vector3 *out);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-void  MulMat4x3Mat4x3(const int *m1, const int *m0, int *mF);
 void  func_020553a4(void *m);
 void  func_02012694(u32 id, void *pos);
 int   __aeabi_idiv(int a, int b);
@@ -105,7 +102,6 @@ u32   func_02045ad8(const void *src, u32 size);
 unsigned int func_02045a50(const void *src, unsigned int size);
 }
 
-extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b3ec;
 extern short data_02082214[];
 extern char data_ov080_021277a8[];

@@ -56,6 +56,7 @@
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 /* The shadow update copies its matrix through Mtx43: the plain word union
  * keeps the block copy in C++ with Vector3's user-declared constructor in
@@ -123,11 +124,9 @@ extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
 
 extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern int RandomIntInternal(int* seed);
 extern int data_0209e650[];          /* RNG_STATE (symbols/verified.tsv) */
 extern short data_02082214[];        /* SINE_TABLE: a sin/cos pair per angle >> 4 */
-extern Matrix4x3 data_020a0e68;      /* MATRIX_SCRATCH_PAPER */
 
 /* ov060 tables indexed by mSubVariant (02119358, 0211934c) and the mouth-pose
  * rows variant 0 reads (02119364); see the handlers below. */

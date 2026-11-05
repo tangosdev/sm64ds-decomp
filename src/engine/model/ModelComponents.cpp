@@ -51,6 +51,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 namespace CP15 {
 void FlushDataCache(void);
@@ -95,7 +96,6 @@ void Matrix4x3_LoadIdentity(Matrix4x3 *mat);
 int InvMat4x3(int *a, int *b);
 
 void func_02048234(int *out, int sa, int sb, int sc, int ax, int ay, int az, int tx, int ty, int tz);
-void MulMat4x3Mat4x3(const int *A, const int *B, int *dst);
 void func_02047218(void *a, void *b, void *out, fx32 c);
 void func_02047910(int *m0, int *m1, int *dst, int t);
 void func_0204547c(int *a, int b, int c, void *elem);
