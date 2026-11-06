@@ -15,7 +15,7 @@ extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern u8 *func_02071a50(u8 *p, int *out);
 #include "private/arm9_action_walk.h"
 
-int func_020729f4(ActionWalk *c) {
+u8 func_020729f4(ActionWalk *c) {
     char *frame = &c->mThrow;
     u8 *ip;
     u8 op;

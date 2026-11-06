@@ -9,7 +9,7 @@ extern "C" {
  * child (states 7, 8) that has not started MP yet; otherwise mp_maxSendSize
  * rounded up to 32 bytes. WMArm9Buf / WMStatus are in
  * include/private/wm_views.h. */
-u32 WM_GetMPSendBufferSize(void) {
+int WM_GetMPSendBufferSize(void) {
     WMArm9Buf *r4;
     WMStatus *p;
 

@@ -103,10 +103,6 @@ s16 atan2(s32, s32);
 int fdiv(int a, int b);
 }
 
-namespace call3_267c {
-extern "C" void func_0201267c(int id, void *pos, int unused);
-}
-
 #define SetChompAnim(self, bca) \
     (self)->mAnmModel.SetAnim((BCA_File *)(bca).filePtr, 0, 0x1000, 0)
 
@@ -761,7 +757,7 @@ extern "C" void func_ov014_02111b70(daWanwan_c *c) {
     int v;
 
     c->mVertAccel = 0;
-    call3_267c::func_0201267c(0x3a, &c->mCamSpacePosX, 0);
+    func_0201267c(0x3a, &c->mCamSpacePos);
     SetChompAnim(c, data_ov014_02114970);
     player = c->ClosestPlayer();
 
