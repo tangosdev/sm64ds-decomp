@@ -19,6 +19,7 @@
  */
 
 #include "daChRoom_c.h"
+#include "daPly_c.h"
 #include "SpawnInfo.h"
 
 /* arm9 C helpers with no shared header. */
@@ -29,7 +30,7 @@ void ChangeArea(int);
 }
 
 extern u8 data_0209f250;
-extern dActor_c *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern Vector3 data_020a0ebc;
 
 // @symbol daChRoom_c_classInit

@@ -39,7 +39,7 @@ extern signed char data_02092114;
 extern int data_0209f3e8[];
 /* The daPly_c*[] array. The shards disagreed scalar-vs-array; the array
  * spelling gives the same ldr for both uses ([0] = first element). */
-extern void *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern unsigned char gShowTouchScreenArrows;
 extern unsigned char data_0209f2d8;
 extern signed char gCurrentSublevel;
@@ -103,7 +103,7 @@ void func_ov001_020aaf40(void)
     }
 
     {
-        daPly_c *pl = (daPly_c *)data_0209f394[0];
+        daPly_c *pl = data_0209f394[0];
         if (pl->HasNoCap() && !pl->IsCollectingCap()) {
             func_ov001_020aadac();
             gCapIconDispatchLocked = 1;
@@ -176,7 +176,7 @@ void func_ov001_020aaa54(void)
     unsigned sp4;
     int typ;
     int spc;
-    daPly_c *player = (daPly_c *)data_0209f394[0];
+    daPly_c *player = data_0209f394[0];
     int zero = 0;
     int three = 3;
     void* z1 = 0;
@@ -499,7 +499,7 @@ void func_ov001_020aa420(void) {
 
         cnt = data_0208a0e0;
         for (idx = spC; idx < cnt; idx++) {
-            player = (daPly_c *)data_0209f394[idx];
+            player = data_0209f394[idx];
             if (i == player->param1)
                 break;
             player = 0;

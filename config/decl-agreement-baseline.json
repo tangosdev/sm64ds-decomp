@@ -8214,21 +8214,6 @@
       "src/game/actors/d_a_demo.cpp": [
         "return:char *"
       ],
-      "src/game/actors/d_a_obj_mip_key.cpp": [
-        "return:dCamera_c *"
-      ],
-      "src/game/actors/d_a_red_bombhei.cpp": [
-        "return:dCamera_c *"
-      ],
-      "src/game/actors/d_a_set_se.cpp": [
-        "return:dCamera_c *"
-      ],
-      "src/game/actors/d_a_star_gate.cpp": [
-        "return:dCamera_c *"
-      ],
-      "src/game/actors/d_a_tree.cpp": [
-        "return:dCamera_c *"
-      ],
       "src/ui/hud/d_map.cpp": [
         "return:Obj *"
       ],
@@ -8240,24 +8225,9 @@
       ],
       "src/unnamed/ov002/func_ov002_020df34c.cpp": [
         "return:dCamera_c *"
-      ],
-      "src/KuppaScript.cpp": [
-        "return:dCamera_c *"
       ]
     },
     "data_0209f394": {
-      "src/game/actors/d_a_btn.cpp": [
-        "return:daPly_c * []"
-      ],
-      "src/game/actors/d_a_ch_room.cpp": [
-        "return:dActor_c * []"
-      ],
-      "src/game/actors/d_a_ch_scene.cpp": [
-        "return:dActor_c * []"
-      ],
-      "src/game/actors/d_a_star_gate.cpp": [
-        "return:daPly_c * []"
-      ],
       "src/ui/hud/d_map.cpp": [
         "return:daPly_c * []"
       ],
@@ -8269,6 +8239,12 @@
       ],
       "src/KuppaScript.cpp": [
         "return:dActor_c * []"
+      ],
+      "src/engine/sound/Sound.cpp": [
+        "return:void * []"
+      ],
+      "src/game/actors/d_a_demo.cpp": [
+        "return:void * []"
       ]
     },
     "data_0209f3a4": {

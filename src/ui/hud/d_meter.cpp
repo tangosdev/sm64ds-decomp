@@ -111,9 +111,9 @@ extern unsigned char data_0209f250;
 extern unsigned char gMeterCounterSlideState;
 extern signed char gNumLives;
 struct OamAttr;
-extern void *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern u8 gZoomButtonActiveTimer;
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern ControllerInput data_0209f498[];
 extern int data_0208ee44;
 extern u32 gNextActorUpdateMask;
@@ -548,7 +548,7 @@ s32 dMeter_c::CleanupResources() {
 // @symbol _ZN8dMeter_c17UpdateHealthMeterEv
 void dMeter_c::UpdateHealthMeter() {
     int chr = data_0209f250;
-    daPly_c *player = (daPly_c *)data_0209f394[chr];
+    daPly_c *player = data_0209f394[chr];
     unsigned int health = (gPlayerHealth[chr] >> 8) & 0xff;
     if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) != 0)
         return;
@@ -670,7 +670,7 @@ void dMeter_c::UpdateHealthMeter() {
 /* ROM ordinal 12 -- dMeter_c::RenderHealthMeter(), 0x020fcfec, size 0x22c */
 // @symbol _ZN8dMeter_c17RenderHealthMeterEv
 void dMeter_c::RenderHealthMeter() {
-    if (((daPly_c *)data_0209f394[data_0209f250])->IsInsideOfCannon())
+    if (data_0209f394[data_0209f250]->IsInsideOfCannon())
         return;
 
     if (GetOwnerLanguage() == 5) {
@@ -963,7 +963,7 @@ void dMeter_c::RenderSilverStars() {
 void dMeter_c::RenderCameraButtons() {
     int idx = gActivePlayerSlot;
     u8 mode = data_0209f498[idx].mode;
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = data_0209f318;
     u8 t = gZoomButtonActiveTimer;
 
     if (t != 0)
@@ -1027,7 +1027,7 @@ void dMeter_c::RenderCameraButtons() {
 // @symbol _ZN8dMeter_c15RenderLifeCountEv
 void dMeter_c::RenderLifeCount() {
     unsigned char idx = data_0209f250;
-    daPly_c *player = (daPly_c *)data_0209f394[idx];
+    daPly_c *player = data_0209f394[idx];
     unsigned char state = gMeterCounterSlideState;
 
     if (state >= 3 && state < 6) {

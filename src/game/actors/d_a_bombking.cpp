@@ -166,7 +166,7 @@ extern "C" {
 /* Canonical single declaration per ROM data symbol -- the generated
      * preamble carried up to three contradictory spellings of each. */
 extern unsigned char data_0209f220;
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 /* local extern: math/MtxStack.h's spellings of the matrix calls below
    clash with these (illegal function overloading). */
 extern Matrix4x3 data_020a0e68;
@@ -236,7 +236,7 @@ void daBombking_c::func_ov078_02123864() {
 
 int daBombking_c::func_ov078_021238ac()
 {
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = data_0209f318;
     VecFx32 v;
     VecFx32 t;
     VecFx32 u;
@@ -650,7 +650,7 @@ int daBombking_c::func_ov078_02124520()
     int *pp;
     s16 ang;
 
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     if (((dExtFrameCtrl_c *)&this->mBlendAnmModel)->WillHitFrame(0x46)) {
         func_ov078_02125c24(0x7d0000);
         func_02012694(0x12c, &this->mCamSpacePosX);
@@ -814,7 +814,7 @@ int daBombking_c::func_ov078_021247bc()
             m = pl2->mStateFlags & 0x800;
             if (m == 0) {
                 if (pl2->ShowMessage(*(fBase_c *)this, 0x94, (Vector3 *)(&E), 0, 0) != 0) {
-                    ((dCamera_c *)data_0209f318)->SetFlag_3();
+                    data_0209f318->SetFlag_3();
                     func_02012694(0x12a, &this->mCamSpacePosX);
                     KingBobOmb_SetState(&data_ov078_021270dc);
                 }
@@ -1590,7 +1590,7 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 int daBombking_c::Behavior()
 {
     if (DistToCPlayer() < 0x1770000) {
-        ((dCamera_c *)data_0209f318)->mFramedActor = this;
+        data_0209f318->mFramedActor = this;
     }
 
     if (mState[1] != 0) {
