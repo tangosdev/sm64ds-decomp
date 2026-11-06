@@ -84,7 +84,7 @@ Fix12i fdiv(s32, s32);
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-int   InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
+int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);

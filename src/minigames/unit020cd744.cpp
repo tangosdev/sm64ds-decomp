@@ -1167,7 +1167,8 @@ extern "C" int LenVec3(const Vector3 *v);
 extern "C" {
 extern int data_ov006_0212e0f0[];
 }
-extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, const Vector3 *offsetVector) {
+extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint,
+                                       const Vector3 *offsetVector) {
     int row;
     int negatedProjection = -DotVec3(offsetVector, &TRMPLINE(sl)->mNormal);
     int *amplitude = TRMPLINE(sl)->mFlexAmplitude;

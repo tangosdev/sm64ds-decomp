@@ -7,8 +7,7 @@ extern "C" {
 
 extern void Copy48Bytes(const void *src, void *dst);
 
-int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst)
-{
+int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst) {
     Matrix4x3 buf;
     Matrix4x3 *out;
     int p, q, r;
@@ -54,9 +53,15 @@ int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst)
         out->m[8] = (int)(((s64)recip * x6) >> 12);
     }
 
-    out->m[9]  = -(int)((((s64)out->m[0] * src->m[9]) + ((s64)out->m[3] * src->m[10]) + ((s64)out->m[6] * src->m[11])) >> 12);
-    out->m[10] = -(int)((((s64)out->m[1] * src->m[9]) + ((s64)out->m[4] * src->m[10]) + ((s64)out->m[7] * src->m[11])) >> 12);
-    out->m[11] = -(int)((((s64)out->m[2] * src->m[9]) + ((s64)out->m[5] * src->m[10]) + ((s64)out->m[8] * src->m[11])) >> 12);
+    out->m[9] = -(int)((((s64)out->m[0] * src->m[9]) + ((s64)out->m[3] * src->m[10]) +
+                        ((s64)out->m[6] * src->m[11])) >>
+                       12);
+    out->m[10] = -(int)((((s64)out->m[1] * src->m[9]) + ((s64)out->m[4] * src->m[10]) +
+                         ((s64)out->m[7] * src->m[11])) >>
+                        12);
+    out->m[11] = -(int)((((s64)out->m[2] * src->m[9]) + ((s64)out->m[5] * src->m[10]) +
+                         ((s64)out->m[8] * src->m[11])) >>
+                        12);
 
     if (out == &buf) {
         Copy48Bytes(&buf, dst);
