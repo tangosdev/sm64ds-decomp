@@ -287,9 +287,12 @@ void pp_hms(uint32_t sec, char *out, int cap)
     snprintf(out, (size_t)cap, "%u:%02u:%02u", sec / 3600, sec / 60 % 60, sec % 60);
 }
 
-void pp_career(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
+void pp_career(const Surf &sf, const PauseGeo &g, const PauseFacts *f, int pin_top = 0)
 {
-    const PauseRect r = pause_career_rect(g, f);
+    PauseRect r = pause_career_rect(g, f);
+    /* PLAINSKIN1: pin_top puts the title plank's top on the picture's top edge (the two-screen pause's upper screen, whose own course
+       label runs along that edge: the plank covers the label whole instead of cutting it in half) */
+    if (pin_top) r.y = pause_round(pause_title_over() * g.tsc);
     if (r.x >= sf.w || r.x + r.w <= 0) return;
     const double sc = g.tsc;
     const int x = r.x, y = r.y, w = r.w;
@@ -482,7 +485,7 @@ extern "C" void pause_page_rom_draw(const PauseFacts *f, uint32_t *px, int strid
     if (!f || f->magic != PAUSE_FACTS_MAGIC || !px || w < 64 || h < 64) return;
     const Surf sf = { px, stride, w, h };
     const PauseGeo g = pause_geo(w, h, f, 3);
-    if (pause_page_visible(f, PAUSE_PG_CAREER)) pp_career(sf, g, f);
+    if (pause_page_visible(f, PAUSE_PG_CAREER)) pp_career(sf, g, f, !g.wide && !f->rom_fit);
     if (!f->rom_fit) { pp_tabs(sf, g, f); return; }
     /* PAUSESCALE2: the fit ring's tabs (pause_rom_tab_rect: on the plates view only as far into the picture as the room, top corners on the page view) */
     for (int side = 0; side < 2; ++side) {
