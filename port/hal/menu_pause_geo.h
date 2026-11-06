@@ -98,6 +98,19 @@ inline int pause_tracker_units_h(int rows, int stats) { return 110 + 70 + rows *
 
 inline int pause_round(double v) { return (int)(v + 0.5); }
 
+/* PAUSEPOLISH1: how far the tracker's / Career's title plank stands above the sheet's top edge, in tracker units (pause_page.inc pp_tracker:
+   the plank is 640 units wide at 256:960, centred 8 units under the edge) */
+inline double pause_title_over() { return 640.0 * 256.0 / 960.0 / 2.0 - 8.0; }
+
+/* the top of a tracker-shaped sheet `thu` units tall. Wide: the sheet's own middle, 10 u down. 4:3 (PAUSEPOLISH1): the sheet WITH its title
+   plank is centred, so a sheet as tall as the tallest page keeps its plank on the picture (it used to be the sheet alone, 14 u down) */
+inline int pause_sheet_y(const PauseGeo &g, int thu)
+{
+    if (g.wide) return (g.h - pause_round(thu * g.tsc)) / 2 + pause_round(10 * g.u);
+    const double over = pause_title_over();
+    return (g.h - pause_round((thu + over) * g.tsc)) / 2 + pause_round(over * g.tsc);
+}
+
 /* rows / stats of the tracker page for these facts */
 inline void pause_tracker_shape(const PauseFacts *f, int *rows, int *stats)
 {
@@ -150,14 +163,17 @@ inline PauseGeo pause_geo(int w, int h, const PauseFacts *f, int nplanks)
         g.pcx = w / 2;
         g.pcy = h / 2 + pause_round(8 * g.u);
         double sc = 0.80 * w / 840.0;
-        const double sh = 0.90 * h / pause_tracker_units_h(8, 3);      /* the tallest page sets the scale, so the art keeps one size across pages */
+        /* the tallest page sets the scale, so the art keeps one size across pages. PAUSEPOLISH1: its title plank, which stands
+           pause_title_over() units above the sheet, counts too: with the sheet alone at 0.90 of the height the Career page's plank
+           ran past the picture's top edge */
+        const double sh = 0.96 * h / (pause_tracker_units_h(8, 3) + pause_title_over());
         if (sh < sc) sc = sh;
         g.tsc = sc;
         g.tw = pause_round(840 * g.tsc);
         g.tx = (w - g.tw) / 2;
     }
     g.ph = pause_round(g.pw * 129.0 / 606.0);
-    g.ty = (h - pause_round(thu * g.tsc)) / 2 + pause_round(g.wide ? 10 * g.u : 14 * g.u);
+    g.ty = pause_sheet_y(g, thu);
     g.tabw = pause_round(96 * g.u);
     g.tabh = pause_round(170 * g.u);
     g.tabcy = h / 2 + pause_round(8 * g.u);
@@ -374,7 +390,7 @@ inline PauseRect pause_career_rect(const PauseGeo &g, const PauseFacts *f)
     const int o = pause_page_off(f, PAUSE_PG_CAREER, &vis);
     const double away = r.w + x0 + g.w * 0.05;
     r.x = x0 + (int)((double)o / 1000.0 * away);
-    r.y = (g.h - r.h) / 2 + pause_round(g.wide ? 10 * g.u : 14 * g.u);
+    r.y = pause_sheet_y(g, pause_tracker_units_h(8, 3));
     return r;
 }
 
