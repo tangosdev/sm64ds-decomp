@@ -195,4 +195,9 @@ typedef char dScMgFlower_c_petal_size_must_be_0x20[sizeof(dScMgFlower_c::Petal) 
 typedef char dScMgFlower_c_size_must_be_0x5ff8[sizeof(dScMgFlower_c) == 0x5ff8 ? 1 : -1];
 #endif
 
+/* Transitional: src/minigames/d_s_mg_flower.cpp still names the base's camera
+   by its old padding name, pad_4660, and is held by an open change. Delete
+   this once it passes &mCamera. */
+#define pad_4660 (&mCamera)
+
 #endif

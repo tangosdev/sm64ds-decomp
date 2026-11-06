@@ -14,7 +14,7 @@
  *   the plain reads renumber @NNN. unk_5407 is only cleared.
  * - ResultWait decrements mResultTimer as (int)this + its offset.
  * - MEMORY2_OFF/MEMORY2_HI name the offsets the char* loops add.
- * - Camera_InitDealerView sets the camera at this+0x4660 and tail-calls
+ * - Camera_InitDealerView sets mCamera and tail-calls
  *   Camera_UpdateMatrices. Render and InitResources call that wrapper.
  * - Mg_DrawScoreTally, Mg_SaveRecordPair and Dealer_Load
  *   stay the linker names. Their bodies are not in this file.
@@ -135,7 +135,6 @@ extern void FreeGfxSlotsById(int x);
 extern void Dealer_PlayIdle(char *p);
 extern int Dealer_IsIdle(Dealer *dealer);
 extern void MgCoins_Reset(void);
-void Camera_InitDealerView(char *);
 void Mg_DrawCredits(char *, int, int, int);
 void Dealer_Draw(char *);
 extern void MgCoins_Update(void);
@@ -1216,8 +1215,7 @@ void dScMgMemory2_c::StartRound(int /* arg */) {
 /* Vtable slot 9: set the camera, then draw credits, coins, the message,
  * cursor, cards and dealer. */
 s32 dScMgMemory2_c::Render() {
-    /* pad_4660 is the minigame camera, in dScMgSingle3DBase_c's padding. */
-    Camera_InitDealerView((char *)pad_4660);
+    Camera_InitDealerView(&mCamera);
     Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
@@ -1260,7 +1258,7 @@ s32 dScMgMemory2_c::InitResources() {
     gSubScreenLayers = 0x18;
     ResetGame();
     /* 0x4660..0x471c is dScMgSingle3DBase_c's minigame camera. */
-    Camera_InitDealerView((char *)pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (Dealer_Load(&mDealer) == 0)
         return 0;
     mCredits = Mg_GetSavedRecord0();
