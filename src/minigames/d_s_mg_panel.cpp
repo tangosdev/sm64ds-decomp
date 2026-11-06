@@ -64,6 +64,7 @@ enum dScMgPanel_c_AssetId {
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "dScMgPanel_c.h"
+#include "LevelRng.h"
 #include "SpawnInfo.h"
 
 #include "Sound.h"
@@ -172,7 +173,6 @@ void dScMgPanel_c::Particle_UpdateAll() {
 /* Spawn one particle in the first free slot, at (x, y).  `mode` picks the
    fixed-drift variant over the random one. */
 void dScMgPanel_c::Particle_Spawn(int x, int y, int mode) {
-    extern int data_0209d4b8;
     int i;
     for (i = 0; i < 0x40; i++) {
         if (mParticles[i].active == 0) {
@@ -190,7 +190,7 @@ void dScMgPanel_c::Particle_Spawn(int x, int y, int mode) {
                 mParticles[i].drift = 0;
             } else {
                 mParticles[i].drift =
-                    ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1) >> 15;
+                    ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 1) >> 15;
             }
             if (x >= 0x80000)
                 mParticles[i].vx = -0x100;
@@ -216,7 +216,6 @@ void dScMgPanel_c::Particle_ClearAll() {
 // @symbol _ZN12dScMgPanel_c13Scroll_UpdateEv
 void dScMgPanel_c::Scroll_Update() {
     char *scene = (char *)this;
-    extern int data_0209d4b8;
     int x;
     int y;
     u32 r;
@@ -232,14 +231,14 @@ void dScMgPanel_c::Scroll_Update() {
         if (mScroll.spawnDelay != 0) {
             mScroll.spawnDelay -= 1;
         } else {
-            r = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            r = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             x = ((r * 7) >> 15) * 5;
-            r = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            r = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             y = ((r << 4) >> 15) + 0xb0;
             Particle_Spawn(x << 12, y << 12, 0);
 
-            r = (u32)RandomIntInternal(&data_0209d4b8);
-            r2 = (u32)RandomIntInternal(&data_0209d4b8);
+            r = (u32)RandomIntInternal(&data_0209d4b8.value);
+            r2 = (u32)RandomIntInternal(&data_0209d4b8.value);
             x = (((r >> 16 & 0x7fff) * 7) >> 15) * 5;
             y = ((((r2 >> 16) & 0x7fff) << 4) >> 15) + 0xb0;
             Particle_Spawn((0x100 - x) << 12, y << 12, 0);
@@ -268,9 +267,9 @@ void dScMgPanel_c::Scroll_Update() {
             else if (y >= 0x100)
                 y = (-0x20 - (y - 0x100)) << 12;
 
-            x = (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 7) >> 15) * 5;
+            x = (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 7) >> 15) * 5;
             Particle_Spawn(x << 12, y, 1);
-            x = (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 7) >> 15) * 5;
+            x = (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 7) >> 15) * 5;
             Particle_Spawn((0x100 - x) << 12, y, 1);
             mScroll.spawnDelay = 2;
         }
@@ -1292,7 +1291,6 @@ void dScMgPanel_c::FlipAt(int index) {
    rotates loop 2 or loop 1. The pd/pe pointer locals keep the byte tables
    hoisted above the do-loop and the [idx4] reload inside it. */
 void dScMgPanel_c::DealPuzzle() {
-    extern int data_0209d4b8;
     extern u16 *sPanelPuzzleXPerMode[];
     extern u16 *sPanelPuzzleYPerMode[];
     extern u8 *sPanelPuzzlesAlt[];
@@ -1324,7 +1322,7 @@ void dScMgPanel_c::DealPuzzle() {
         }
         cnt2 = mFlips;
         for (j = 0; j < cnt2; j++) {
-            u32 rnd = (u32)RandomIntInternal(&data_0209d4b8);
+            u32 rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
             u32 s = (rnd >> 16) & 0x7fff;
             v = (cnt1 * s) >> 15;
             FlipAt(v);
@@ -1354,10 +1352,9 @@ void dScMgPanel_c::DealPuzzle() {
 
 // @symbol _ZN12dScMgPanel_c14ScramblePanelsEv
 /* The 15-bit random draw, used a dozen times below. */
-#define PANEL_RAND ((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff)
+#define PANEL_RAND ((((u32)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff)
 
 void dScMgPanel_c::ScramblePanels() {
-    extern int data_0209d4b8;
     extern u8 sPanelScrambleFlipEnabled[];
     extern u8 sPanelScrambleFlips[];
     extern u8 sPanelScrambleWidths[];

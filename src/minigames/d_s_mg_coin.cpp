@@ -53,6 +53,7 @@ enum dScMgCoin_c_AssetId {
 #include "nitro/hw/registers.h"
 #include "G2.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "Sound.h"
 #include "dScMgCoin_c.h"
 #include "PlayerInput.h"
@@ -115,7 +116,6 @@ enum {
 
 extern "C" {
 extern int RandomIntInternal(int *seed);
-extern int data_0209d4b8;
 extern const int sCoinBagRowTopY[];
 extern const int sCoinBagRowHeight[];
 extern const int sCoinBagHopVX[];
@@ -289,7 +289,7 @@ void dScMgCoin_c::Bag_StateBounceDown(int i) {
         unsigned int roll;
         if (height < (sCoinBagRowTopY[stageIndex] - sCoinBagRowHeight[stageIndex]))
             return;
-        roll = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         scene->bag[i].vx = sCoinBagHopVX[((roll >> 16 & 0x7fff) << 1) >> 15];
         scene->bag[i].vy = kHopVy;
         scene->bag[i].bouncesLeft--;
@@ -901,12 +901,14 @@ void dScMgCoin_c::LayOutCoins() {
     int i;
 
     for (k = 0; k < 3; k++) {
-        a[k] = (int)((((((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff) << 3) >>
+        a[k] = (int)((((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff)
+                      << 3) >>
                      15);
     }
 
     for (k = 0; k < 3; k++) {
-        unsigned int w = ((((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff) * 6;
+        unsigned int w =
+            ((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff) * 6;
         b[k] = (a[k] + (int)(w >> 15) + 1) & 7;
     }
 
@@ -1104,7 +1106,7 @@ void dScMgCoin_c::Block_StateWander(int i) {
         mBlocks[i].y = diff * 0x1000;
         *pD = 0;
         if (mBlocks[i].vx == 0) {
-            unsigned int rv = (unsigned int)RandomIntInternal(&data_0209d4b8);
+            unsigned int rv = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
             if (((((rv >> 16) & 0x7fff) << 1) >> 15))
                 mBlocks[i].vx = 0xc00;
             else
@@ -1171,7 +1173,7 @@ void dScMgCoin_c::Block_StateHopDown(int i) {
             if (y < (int)fp)
                 return;
 
-            rnd = RandomIntInternal(&data_0209d4b8);
+            rnd = RandomIntInternal(&data_0209d4b8.value);
             idx = ((((unsigned)rnd >> 16) & 0x7fff) * 3) >> 15;
             mBlocks[i].vx = sCoinBlockHopVX[idx];
             mBlocks[i].vy = -0x2e00;
@@ -1199,7 +1201,7 @@ void dScMgCoin_c::Block_StateHopDown(int i) {
         } else {
             unsigned r;
             mBlocks[i].hops = 1;
-            r = (unsigned)RandomIntInternal(&data_0209d4b8);
+            r = (unsigned)RandomIntInternal(&data_0209d4b8.value);
             r = (((r >> 16) & 0x7fff) << 3) >> 15;
             if (r == 2 || r == 5) {
                 mBlocks[i].hops += 1;
@@ -1286,13 +1288,13 @@ void dScMgCoin_c::SpawnBlocks() {
     int i;
     n = this->IsAltVariant() != 0 ? 0x10 : 0x28;
     for (i = 0; i < n; i++) {
-        unsigned int v = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        unsigned int v = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         mBlocks[i].x = ((((v << 3) >> 0xf) << 5) + 0x10) << 0xc;
         mBlocks[i].y = -0xf0000;
         mBlocks[i].active = 1;
         mBlocks[i].visible = 1;
         {
-            unsigned int w = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            unsigned int w = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mBlocks[i].delay = (short)(((i & 0xf) << 3) + (((w << 4) >> 0xf) << 4));
         }
         mBlocks[i].row = (unsigned char)(row + 3);

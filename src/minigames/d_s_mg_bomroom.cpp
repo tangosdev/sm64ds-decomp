@@ -35,6 +35,7 @@
 #include "GX.h"
 #include "cstd.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "Sound.h"
 #include "G2x.h"
 #include "nitro/fx/fx.h"
@@ -1531,7 +1532,7 @@ void dScMgBomroom_c::SpawnBombs() {
                     mBombs[j].x = 0x80000;
                     mBombs[j].marchDelay = 4;
                     mBombs[j].fuse = 0x200;
-                    rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                    rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
                     ptype = &((dScMgBomroom_c *)(c + (j << 6)))->mBombs[0].color;
                     *ptype = (((rnd >> 16) & 0x7fff) << 1) >> 15;
                     mBombs[j].speed = 0x999;
@@ -1541,7 +1542,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         HatchPanel_Activate(0);
                     }
                     if (sb <= 1) {
-                        rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                        rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
                         mBombs[j].angle = (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
                         mBombs[j].y = 0;
                     } else if (flag != 0) {
@@ -1558,7 +1559,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         if (step != 0) {
                             mBombs[j].angle = (step * (i >> 1)) + 0x2800;
                         } else {
-                            rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                            rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
                             mBombs[j].angle =
                                 (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
                         }
@@ -1568,7 +1569,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         if (step != 0) {
                             mBombs[j].angle = (step * (i >> 1)) + 0xa800;
                         } else {
-                            rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                            rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
                             mBombs[j].angle =
                                 (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0xa000;
                         }

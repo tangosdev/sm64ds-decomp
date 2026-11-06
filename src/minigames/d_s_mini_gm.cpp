@@ -554,7 +554,7 @@ s32 dScMiniGm_c::Behavior()
         MiniGm_SaveIfDirty((char *)this);
         return 1;
     }
-    RandomIntInternal(&data_0209d4b8);
+    RandomIntInternal(&data_0209d4b8.value);
     RandomIntInternal(&data_0209e650.value);
 
     if (mPrevPageTimer > 0) {

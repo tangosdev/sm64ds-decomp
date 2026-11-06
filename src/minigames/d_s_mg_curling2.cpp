@@ -44,6 +44,7 @@ enum dScMgCurling2_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "G2x.h"
+#include "LevelRng.h"
 
 namespace G2 {
 void *GetBG0ScrPtr(void);
@@ -112,7 +113,6 @@ extern void func_020563d4(const void *a, u32 b, u32 c);
 extern void func_02056374(const void *a, u32 b, u32 c);
 extern int func_02054d88(void);
 
-extern int data_0209d4b8;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s16 data_02082214[];
@@ -331,7 +331,8 @@ void dScMgCurling2_c::StepYRampUp(int entry) {
         mPiece[entry].yIndex = 2;
         *(short *)&mPiece[entry].countdown3 =
             (short)(unsigned char)((((0x20 *
-                                      (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
+                                      (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >>
+                                        16) &
                                        0x7fff)) >>
                                      0xf)) +
                                    0x20);
@@ -344,10 +345,10 @@ void dScMgCurling2_c::StepYRestart(int entry) {
     unsigned int rnd;
 
     mPiece[entry].yInc = 0;
-    rnd = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    rnd = ((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mPiece[entry].yTarget = (((rnd << 4) >> 15) << 4) + 0x300;
     mPiece[entry].yIndex = 1;
-    rnd = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    rnd = ((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     rnd = ((rnd << 5) >> 15) + 0x20;
     *(short *)&mPiece[entry].countdown3 = (unsigned char)rnd;
 }
@@ -417,7 +418,8 @@ void dScMgCurling2_c::StepXPushNeg(int entry) {
 
     mPiece[entry].xIndex = 3;
     mPiece[entry].countdown2 =
-        (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >>
+        (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
+                             << 5 >>
                          0xf) +
                         0x20);
 }
@@ -455,7 +457,8 @@ void dScMgCurling2_c::StepXPushPos(int entry) {
 
     *(char *)&mPiece[entry].xIndex = 3;
     *(short *)&mPiece[entry].countdown2 =
-        (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) + 0x20 &
+        (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5) >> 0xf) +
+            0x20 &
         0xff;
 }
 
@@ -471,16 +474,18 @@ void dScMgCurling2_c::StepXPick(int entry) {
     }
     mPiece[entry].xInc = 0;
     mPiece[entry].xIndex =
-        sCurling2StepXPicks[(((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+        sCurling2StepXPicks[(((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
                                 << 1 >>
                             15];
     mPiece[entry].countdown =
-        (short)(unsigned char)((0x10 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
-                                        0x7fff)) >>
+        (short)(unsigned char)((0x10 *
+                                (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                                 0x7fff)) >>
                                0xf);
     mPiece[entry].countdown2 =
-        (short)(unsigned char)(((0x40 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
-                                         0x7fff)) >>
+        (short)(unsigned char)(((0x40 *
+                                 (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                                  0x7fff)) >>
                                 0xf) +
                                0x60);
 }
@@ -599,19 +604,19 @@ void dScMgCurling2_c::StepXPickFast(int entry) {
     }
     mPiece[entry].xInc = 0;
     mPiece[entry].yInc =
-        ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) << 4) +
+        ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5) >> 0xf)
+         << 4) +
         0x600;
-    mPiece[entry].xIndex =
-        sCurling2StepXFastPicks[(((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
-                                    << 1 >>
-                                15];
+    mPiece[entry].xIndex = sCurling2StepXFastPicks
+        [(((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 1 >> 15];
     mPiece[entry].countdown =
-        (unsigned short)((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+        (unsigned short)((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
                            << 4) >>
                           0xf) &
                          0xff);
     mPiece[entry].countdown2 =
-        (unsigned short)(((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) *
+        (unsigned short)(((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                             0x7fff) *
                             0x30) >>
                            0xf) +
                           0x30) &
@@ -629,7 +634,7 @@ void dScMgCurling2_c::StepXOnly(int entry) {
 /* Pick modeIndex from sCurling2StepModes (1 on one roll in eight)
  * and clear xIndex. */
 void dScMgCurling2_c::PickStepMode(int entry) {
-    unsigned rnd = (unsigned)RandomIntInternal(&data_0209d4b8);
+    unsigned rnd = (unsigned)RandomIntInternal(&data_0209d4b8.value);
     int pick = 0;
     unsigned roll = ((rnd >> 16) & 0x7fff) << 3 >> 0xf;
     if (roll == 5)
@@ -648,9 +653,9 @@ void dScMgCurling2_c::StepPieces() {
             unsigned char idx = mPiece[i].modeIndex;
             (((C *)this)->*sCurling2StepModeTable[idx])(i);
             if ((mPiece[i].y >> 0xc) >= 0xc8) {
-                mPiece[i].x = (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
-                                  << 5 >>
-                              0xf << 0xf;
+                mPiece[i].x =
+                    (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5 >>
+                    0xf << 0xf;
                 mPiece[i].y = -0x8000;
                 mPiece[i].xIndex = 0;
                 mPiece[i].modeIndex = 0;
@@ -693,7 +698,7 @@ void dScMgCurling2_c::SeedPieces() {
 
     i = 0;
     for (; i < 0x32; i++) {
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         m = ((rnd >> 16) & 0x7fff) << 5;
         mPiece[i].x = (int)((m >> 0xf)) << 0xf;
         mPiece[i].y = -0x8000;
@@ -702,10 +707,10 @@ void dScMgCurling2_c::SeedPieces() {
         mPiece[i].modeIndex = 0;
         mPiece[i].xIndex = 0;
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         mPiece[i].sprite0 = (char)(((rnd >> 16) & 0x7fff) * 5 >> 0xf);
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         /* Own local: `mPiece[i].sprite0 + shift` puts the byte in r0. */
         unsigned char spr = mPiece[i].sprite0;
         v = spr + ((((rnd >> 16) & 0x7fff) << 2) >> 0xf) + 1;
@@ -714,14 +719,14 @@ void dScMgCurling2_c::SeedPieces() {
             v = (v - 5) & 0xff;
         mPiece[i].sprite1 = (char)v;
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         mPiece[i].countdown = (short)(((i & 7) << 6) + (((rnd >> 16) & 0x7fff) * 0x30 >> 0xf));
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         m = ((rnd >> 16) & 0x7fff) << 5;
         mPiece[i].x = (int)((m >> 0xf)) << 0xf;
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         q = (((rnd >> 16) & 0x7fff) * 0x1a) >> 0xf;
         mPiece[i].y = (((q << 3) - 8)) << 0xc;
         mPiece[i].countdown = 0;
@@ -1597,9 +1602,9 @@ void dScMgCurling2_c::Scroll() {
     if (scrollIdx == 0xff) {
         scrollIdx = 0;
     } else {
-        idx = ((u32)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) * 4 >> 15;
+        idx = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16 & 0x7fff) * 4 >> 15;
         if (scrollIdx == idx) {
-            int t = ((u32)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) * 3 >> 15;
+            int t = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16 & 0x7fff) * 3 >> 15;
             t += 1;
             idx += t;
             if (idx >= 4)
