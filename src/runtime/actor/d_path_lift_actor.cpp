@@ -81,11 +81,11 @@ extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 /* Sound.cpp: plays sound `id' at a camera-space position. */
 void func_02012694(unsigned int id, const Vector3 *camSpacePos);
 /* dBgW.cpp: sets a collider's stoodOnCallback. */
-void func_020393c4(int *collider, int callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 
 /* Defined last: the ROM-ascending order puts the collider callback after
    BaseInitResources, which stores its address. */
-void func_ov002_020eff90(dBgW *collider, dPathLiftActor_c *lift, int rider);
+void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider);
 }
 
 extern PathLiftState data_ov002_0210af2c[];
@@ -364,7 +364,7 @@ void dPathLiftActor_c::BaseInitResources()
     mInitialAngle.x = mAngleX;
     mInitialAngle.y = mAngleY;
     mInitialAngle.z = mAngleZ;
-    func_020393c4((int *)&mMeshCollider, (int)&func_ov002_020eff90);
+    func_020393c4(&mMeshCollider, &func_ov002_020eff90);
 }
 
 // 0x020efbdc (0x98)
@@ -522,8 +522,8 @@ void dPathLiftActor_c::AfterClsn(int)
 // @symbol func_ov002_020eff90
 /* The mesh collider's stoodOnCallback: the actor that landed on the lift
    arrives as AfterClsn's word argument. */
-extern "C" void func_ov002_020eff90(dBgW *collider, dPathLiftActor_c *lift, int rider) {
-    lift->AfterClsn(rider);
+extern "C" void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider) {
+    static_cast<dPathLiftActor_c *>(lift)->AfterClsn((int)rider);
 }
 
 /* The path-follow scale applied to the path models. Spelled as three s32s:

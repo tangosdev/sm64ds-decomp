@@ -54,7 +54,7 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(void *v);
 
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(int *p, int v);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 
 int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
@@ -257,7 +257,8 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*arg->collision), *(&self->mClsnMat),
                               0x1000, self->mAngleY, *(arg->clps));
     func_020393d4(&self->mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4((int *)&self->mMeshCollider, (int)&daObjMaruta_c::BeforeClsnCallback);
+    /* The callback's symbol records its own signature; the store converts it to the slot's type. */
+    func_020393c4(&self->mMeshCollider, (StoodOnCallback)&daObjMaruta_c::BeforeClsnCallback);
     self->mRestPosX = self->mPosX;
     self->mRestPosY = self->mPosY;
     self->mRestPosZ = self->mPosZ;

@@ -103,13 +103,13 @@ extern CLPS_Block data_ov064_0211baac;
 /* Per-type step scripts, indexed by mType (ov064 .data). */
 extern int data_ov064_0211c198[];
 
-/* local extern: func_020393c4 stores the before-collision callback and has
+/* local extern: func_020393c4 stores the stood-on callback and has
  * no shared header; the two piece callbacks are defined just below. */
 extern "C" {
-void func_020393c4(int *p, int v);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 /* The collision callback piece InitResources installs, and the touch helper
  * it forwards to; both are defined just below. */
-void func_ov064_021192bc(void *collider, daObjFl_Puzzle_c *self, dActor_c *other);
+void func_ov064_021192bc(dBgW *collider, dActor_c *owner, dActor_c *other);
 }
 
 // @symbol daObjFl_Puzzle_c_classInit
@@ -146,8 +146,8 @@ extern "C" daObjFl_Coin_c *daObjFl_Coin_c_classInit(void) {
 #pragma push
 #pragma long_calls on
 // @symbol func_ov064_021192bc
-extern "C" void func_ov064_021192bc(void *collider, daObjFl_Puzzle_c *self, dActor_c *other) {
-    self->MarkTouchedByPlayer(other);
+extern "C" void func_ov064_021192bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daObjFl_Puzzle_c *>(owner)->MarkTouchedByPlayer(other);
 }
 #pragma pop
 
@@ -182,7 +182,7 @@ int daObjFl_Puzzle_c::InitResources() {
     UpdateClsnMatrix();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000,
                           mAngleY, data_ov064_0211baac);
-    func_020393c4((int *)((char *)&mMeshCollider), (int)&func_ov064_021192bc);
+    func_020393c4(&mMeshCollider, &func_ov064_021192bc);
     mStepScript = data_ov064_0211c198[mType];
     mStepIndex = 0;
     unk_32c = 0;

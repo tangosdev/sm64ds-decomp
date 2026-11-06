@@ -46,7 +46,7 @@ CLPS_Block data_ov045_021125d0 = {
 /* local extern: no shared header declares these. */
 extern "C" {
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(int *collider, int callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 enum {
@@ -83,7 +83,8 @@ s32 daObjKm2_Agaru_c::InitResources() {
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov045_02113180);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov045_021125d0);
     func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
+    /* The callback's symbol records its own signature; the store converts it to the slot's type. */
+    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
 
     mWaitTimer = 0;
     mState = 0;

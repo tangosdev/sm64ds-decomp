@@ -62,7 +62,7 @@ extern "C" {
 /* local extern: stores the callbacks at dBgW+0x18 and +0x1c. d_bg_w.cpp
  * defines them and no header declares them. */
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(int *mesh, int callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 // @symbol daObjFl_Block_c_classInit
@@ -110,7 +110,8 @@ s32 daObjFl_Block_c::InitResources() {
                               *(CLPS_Block *)(data_ov064_0211bb0c));
 
     func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
+    /* The callback's symbol records its own signature; the store converts it to the slot's type. */
+    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
 
     mMaxPosY = mPosY;
     return 1;

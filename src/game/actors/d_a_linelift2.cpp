@@ -76,7 +76,7 @@ void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 void func_02010da4(dActor_c *actor);
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(int *collider, int callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 enum {
@@ -127,7 +127,7 @@ int daLinelift2_c::InitResources() {
 
     UpdateClsnPosAndRot();
     func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
 
     mPathPtr.FromID(param1 & 0xf);
     mNodeCount = mPathPtr.NumNodes();

@@ -81,7 +81,7 @@ extern s16 data_02082214[];       /* sin/cos pair per (angle >> 4) index */
 /* local extern: the dBgW+0x1c callback store/load; no shared
  * header. */
 extern "C" {
-extern void func_020393c4(dBgW *collider, void *callback);
+extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 /* mFlags 0x08 is the framework's off-screen bit (dActor_c.h bit table). */
@@ -174,7 +174,7 @@ int daObjCtMecha04_c::InitResources() {
     mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngleY,
                           *data_ov065_0211d19c[variant][0]);
 
-    func_020393c4(&mMeshCollider, (void *)&daObjCtMecha04_c::AfterClsnCallback);
+    func_020393c4(&mMeshCollider, &daObjCtMecha04_c::AfterClsnCallback);
 
     mTargetBeltSpeed = data_ov065_0211c0b8[data_0209f2c0];
     mBeltSpeed = mTargetBeltSpeed;
@@ -206,7 +206,7 @@ int daObjCtMecha04_c::Behavior() {
     } else {
         if (!IsOffScreen(this)) {
             if (!mMeshCollider.GetStoodOnCallback()) {
-                func_020393c4(&mMeshCollider, (void *)&daObjCtMecha04_c::AfterClsnCallback);
+                func_020393c4(&mMeshCollider, &daObjCtMecha04_c::AfterClsnCallback);
             }
 
             if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {

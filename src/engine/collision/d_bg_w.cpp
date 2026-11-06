@@ -196,9 +196,8 @@ BeforeClsnCallback dBgW::GetBeforeClsnCallback() const {
 // @symbol func_020393c4
 
 /* Sets stoodOnCallback (+0x1c). */
-extern "C" void func_020393c4(int *collider, int callbackAddress) {
-    reinterpret_cast<dBgW *>(collider)->stoodOnCallback =
-        reinterpret_cast<StoodOnCallback>(callbackAddress);
+extern "C" void func_020393c4(dBgW *collider, StoodOnCallback callback) {
+    collider->stoodOnCallback = callback;
 }
 
 // @symbol _ZNK4dBgW18GetStoodOnCallbackEv
