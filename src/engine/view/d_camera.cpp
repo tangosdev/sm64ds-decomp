@@ -31,6 +31,7 @@
  *   data_0209f49c..data_0209f4ae symbols with (char *) stride arithmetic.
  */
 #include "dCamera_c.h"
+#include "CutsceneSpline.h"
 #include "daPly_c.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Gnd.h"
@@ -3013,20 +3014,20 @@ int func_020094a8(dCamera_c *cam) {
 }
 
 // @symbol func_02009414
-/* Walk pos along mPosPath and lookAt along mLookAtPath (func_02008b4c,
+/* Walk pos along mPosPath and lookAt along mLookAtPath (MovePointAlongSpline,
    sharing one segment index and progress), then re-aim. Returns 0 once
    either path has run out. */
 int func_02009414(dCamera_c *cam) {
     int r4 = 1;
-    void *tbl1 = cam->mPosPath;
+    CutsceneSpline *tbl1 = cam->mPosPath;
 
     if (tbl1 != 0) {
-        r4 = func_02008b4c(&cam->pos, &cam->mPathIndex, &cam->mPathProgress, tbl1);
+        r4 = MovePointAlongSpline(&cam->pos, &cam->mPathIndex, &cam->mPathProgress, tbl1);
     }
 
-    void *tbl2 = cam->mLookAtPath;
+    CutsceneSpline *tbl2 = cam->mLookAtPath;
     if (tbl2 != 0) {
-        if (func_02008b4c(&cam->lookAt, &cam->mPathIndex, &cam->mPathProgress, tbl2) == 0) {
+        if (MovePointAlongSpline(&cam->lookAt, &cam->mPathIndex, &cam->mPathProgress, tbl2) == 0) {
             r4 = 0;
         }
     }
@@ -3282,32 +3283,14 @@ int dCamera_c::func_02008cb4() {
     return 1;
 }
 
-/* A path point: a negative flag ends the path; amt (whole units) feeds the
-   fixed-point reciprocal that scales progress through the segment. */
-typedef struct {
-    signed char flag;
-    unsigned char amt;
-    short x, y, z;
-} CamPathPoint;
-
-/* The path table the script ops hand in (camera and demo paths): a point
-   count, then the point array. */
-typedef struct {
-    unsigned char numPoints; /* 0x00 */
-    unsigned char pad_01[3];
-    CamPathPoint *points; /* 0x04 */
-} CamPathTable;
-
-// @symbol func_02008b4c
-/* Move out along a path: a spline through the four points from
-   *segIndex, at *segProgress, which advances by the points' rates and
-   carries into the next segment. Returns 1 once the path has run out. */
-int func_02008b4c(void *out, void *segIndex, void *segProgress, void *table) {
-    short *p1 = (short *)segIndex;
-    int *p2 = (int *)segProgress;
+// @symbol MovePointAlongSpline
+/* SM64's move_point_along_spline, in fixed point (CutsceneSpline.h). */
+int MovePointAlongSpline(Vector3 *pos, s16 *segment, s32 *progress, CutsceneSpline *spline) {
+    short *p1 = segment;
+    int *p2 = progress;
     int idx;
-    CamPathPoint *elem;
-    CamPathTable *path = (CamPathTable *)table;
+    CutsceneSplinePoint *elem;
+    CutsceneSpline *path = spline;
     int i;
     VecFx32 v[4];
     int lo, hi;
@@ -3320,7 +3303,7 @@ int func_02008b4c(void *out, void *segIndex, void *segProgress, void *table) {
 
     elem = path->points + idx;
 
-    if (elem[0].flag < 0 || elem[1].flag < 0 || elem[2].flag < 0) {
+    if (elem[0].index < 0 || elem[1].index < 0 || elem[2].index < 0) {
         return 1;
     }
 
@@ -3333,16 +3316,16 @@ int func_02008b4c(void *out, void *segIndex, void *segProgress, void *table) {
         v[i].z = z;
     }
 
-    func_ov002_020effb8((Vector3 *)out, *p2, (Vector3 *)&v[0], (Vector3 *)&v[1], (Vector3 *)&v[2],
+    func_ov002_020effb8(pos, *p2, (Vector3 *)&v[0], (Vector3 *)&v[1], (Vector3 *)&v[2],
                         (Vector3 *)&v[3]);
 
     lo = 0;
     hi = 0;
-    if (elem[1].amt != 0) {
-        lo = func_02053200(elem[1].amt << 12);
+    if (elem[1].speed != 0) {
+        lo = func_02053200(elem[1].speed << 12);
     }
-    if (elem[2].amt != 0) {
-        hi = func_02053200(elem[2].amt << 12);
+    if (elem[2].speed != 0) {
+        hi = func_02053200(elem[2].speed << 12);
     }
 
     {
@@ -3545,8 +3528,8 @@ int func_020082f8(dCamera_c *cam, u8 *src, int lo, int hi) {
 int func_020082a0(dCamera_c *cam, u8 *src, int id) {
     if (id == gKuppaScriptFrame) {
         func_020094a8(cam);
-        cam->mLookAtPath = (void *)ReadUnalignedInt(src);
-        cam->mPosPath = (void *)ReadUnalignedInt(src + 4);
+        cam->mLookAtPath = (CutsceneSpline *)ReadUnalignedInt(src);
+        cam->mPosPath = (CutsceneSpline *)ReadUnalignedInt(src + 4);
     }
     func_02009414(cam);
     return 1;

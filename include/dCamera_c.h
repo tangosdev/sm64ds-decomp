@@ -9,6 +9,7 @@ struct dActor_c;
 struct CamMode;
 struct CamViewObj;
 struct dBgCh;
+struct CutsceneSpline;
 
 struct dCamera_c : dView_c {
     /* Nested, and only ever needed as a pointer -- dCamera_c::ChangeState is
@@ -116,11 +117,11 @@ struct dCamera_c : dView_c {
     void *mViewObj; /* 0x144 */
     /* Owned; CleanupResources deletes it. */
     void* mFixedViewPos;            /* 0x148 */
-    /* The paths func_02009414 walks with func_02008b4c: lookAt along
+    /* The paths func_02009414 walks with MovePointAlongSpline: lookAt along
        mLookAtPath, pos along mPosPath. The func_020082a0 script op sets
        both. */
-    void *mLookAtPath; /* 0x14c */
-    void *mPosPath;    /* 0x150 */
+    CutsceneSpline *mLookAtPath; /* 0x14c */
+    CutsceneSpline *mPosPath;    /* 0x150 */
     /* Flag word. Bit 0 is under-water (dCamera_c::IsUnderwater returns it
        masked, not normalised); 0x10 vetoes a state change; 0x4000 records
        that the pre-talk save has been taken. */
@@ -138,7 +139,7 @@ struct dCamera_c : dView_c {
     /* Behavior eases it toward 0x1000 while flag 0x2000 is set and toward 0
        otherwise; Render blends the field of view toward 0xaaa by it. */
     s32 mFovBlend; /* 0x168 */
-    /* Progress within the current path segment (func_02008b4c);
+    /* Progress within the current path segment (MovePointAlongSpline);
        func_020094a8 clears it with mPathIndex. */
     s32 mPathProgress; /* 0x16c */
     /* Set (func_02008008) and eased (func_02007fcc) by script ops. The
@@ -197,7 +198,7 @@ struct dCamera_c : dView_c {
        state 0x14 when it runs out; func_0200bb28 reuses it as the repeat
        delay (0x14) between turn-button steps. */
     u16 mStateTimer; /* 0x196 */
-    /* The path segment func_02008b4c is in; func_020094a8 clears it. */
+    /* The path segment MovePointAlongSpline is in; func_020094a8 clears it. */
     s16 mPathIndex; /* 0x198 */
     /* The yaw func_020070e8 orbits pos toward: func_02007758 always passes
        it, and func_02007a8c passes it when the script's yaw is -1. Seeded from

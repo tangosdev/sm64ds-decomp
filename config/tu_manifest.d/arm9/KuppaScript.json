@@ -177,389 +177,389 @@
   ],
   "data": [
     {
-      "symbol": "data_0208751c",
+      "symbol": "sSACreditsSplineFocus",
       "address": "0x0208751c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02088140}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sSACreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087524",
+      "symbol": "gIntroLakituStartToPipeFocus",
       "address": "0x02087524",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {35, data_020894f0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {35, gIntroLakituStartToPipeFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208752c",
+      "symbol": "sHMCCreditsSplineFocus",
       "address": "0x0208752c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {10, data_02088660}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {10, sHMCCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087534",
+      "symbol": "sRRCreditsSplineFocus",
       "address": "0x02087534",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087e60}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sRRCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208753c",
+      "symbol": "gIntroLakituStartToPipeOffsetFromCamera",
       "address": "0x0208753c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {35, data_020893d8}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {35, gIntroLakituStartToPipeOffsetFromCameraPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087544",
+      "symbol": "sVolcanoCreditsSplineFocus",
       "address": "0x02087544",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {9, data_020883d0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {9, sVolcanoCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208754c",
+      "symbol": "sTHIWigglerCreditsSplinePositions",
       "address": "0x0208754c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {6, data_02087828}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {6, sTHIWigglerCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087554",
+      "symbol": "sBBHCreditsSplineFocus",
       "address": "0x02087554",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087f08}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sBBHCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208755c",
+      "symbol": "sCCMSlideCreditsSplinePositions",
       "address": "0x0208755c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02088080}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sCCMSlideCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087564",
+      "symbol": "sJRBCreditsSplineFocus",
       "address": "0x02087564",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_020880c0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sJRBCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208756c",
+      "symbol": "sTTMCreditsSplinePositions",
       "address": "0x0208756c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {9, data_02088538}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {9, sTTMCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087574",
+      "symbol": "sSSLCreditsSplineFocus",
       "address": "0x02087574",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {9, data_02088460}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {9, sSSLCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208757c",
+      "symbol": "sSSLCreditsSplinePositions",
       "address": "0x0208757c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {9, data_020884a8}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {9, sSSLCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087584",
+      "symbol": "sWDWCreditsSplineFocus",
       "address": "0x02087584",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087d80}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sWDWCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208758c",
+      "symbol": "sEndingFlyToWindowPos",
       "address": "0x0208758c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {11, data_02088898}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {11, sEndingFlyToWindowPosPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087594",
+      "symbol": "sTTMCreditsSplineFocus",
       "address": "0x02087594",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {9, data_020884f0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {9, sTTMCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208759c",
+      "symbol": "sTHIWigglerCreditsSplineFocus",
       "address": "0x0208759c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {6, data_020877c8}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {6, sTHIWigglerCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875a4",
+      "symbol": "sTHIHugeCreditsSplineFocus",
       "address": "0x020875a4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {10, data_020887a0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {10, sTHIHugeCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875ac",
+      "symbol": "sSACreditsSplinePositions",
       "address": "0x020875ac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02088180}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sSACreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875b4",
+      "symbol": "sTTCCreditsSplinePositions",
       "address": "0x020875b4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087e28}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sTTCCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875bc",
+      "symbol": "sIntroPipeToRoofFocus",
       "address": "0x020875bc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {35, data_020891a8}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {35, sIntroPipeToRoofFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875c4",
+      "symbol": "sEndingFlyToWindowFocus",
       "address": "0x020875c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {11, data_02088840}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {11, sEndingFlyToWindowFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875cc",
+      "symbol": "sWFCreditsSplinePositions",
       "address": "0x020875cc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02088300}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sWFCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875d4",
+      "symbol": "sHMCCreditsSplinePositions",
       "address": "0x020875d4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {10, data_020886b0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {10, sHMCCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875dc",
+      "symbol": "sDDDSubCreditsSplinePositions",
       "address": "0x020875dc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02088040}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sDDDSubCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875e4",
+      "symbol": "sCCMOutsideCreditsSplineFocus",
       "address": "0x020875e4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087c68}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sCCMOutsideCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875ec",
+      "symbol": "sEndingLookAtSkyFocus",
       "address": "0x020875ec",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087ed0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sEndingLookAtSkyFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875f4",
+      "symbol": "sVolcanoCreditsSplinePositions",
       "address": "0x020875f4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {9, data_02088418}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {9, sVolcanoCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020875fc",
+      "symbol": "gEndWavingPos",
       "address": "0x020875fc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {9, data_020885c8}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {9, gEndWavingPosPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087604",
+      "symbol": "sEndingPeachDescentCamPos",
       "address": "0x02087604",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {20, data_02088c2c}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {20, sEndingPeachDescentCamPosPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208760c",
+      "symbol": "sSLCreditsSplineFocus",
       "address": "0x0208760c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087d10}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sSLCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087614",
+      "symbol": "sTHIHugeCreditsSplinePositions",
       "address": "0x02087614",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {10, data_020887f0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {10, sTHIHugeCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208761c",
+      "symbol": "sRRCreditsSplinePositions",
       "address": "0x0208761c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087e98}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sRRCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087624",
+      "symbol": "sBoBCreditsSplineFocus",
       "address": "0x02087624",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02088100}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sBoBCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208762c",
+      "symbol": "sCotMCCreditsSplineFocus",
       "address": "0x0208762c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_020881c0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sCotMCCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087634",
+      "symbol": "sSLCreditsSplinePositions",
       "address": "0x02087634",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087d48}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sSLCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208763c",
+      "symbol": "sBBHCreditsSplinePositions",
       "address": "0x0208763c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087ca0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sBBHCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087644",
+      "symbol": "sIntroStartToPipeFocus",
       "address": "0x02087644",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {23, data_02088d80}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {23, sIntroStartToPipeFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208764c",
+      "symbol": "sJRBCreditsSplinePositions",
       "address": "0x0208764c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02087fc0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sJRBCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087654",
+      "symbol": "sWDWCreditsSplinePositions",
       "address": "0x02087654",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087db8}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sWDWCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208765c",
+      "symbol": "sEndingLookUpAtCastle",
       "address": "0x0208765c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02088240}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sEndingLookUpAtCastlePoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087664",
+      "symbol": "sIntroStartToPipePosition",
       "address": "0x02087664",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {23, data_02088e38}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {23, sIntroStartToPipePositionPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208766c",
+      "symbol": "sIntroPipeToRoofPosition",
       "address": "0x0208766c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {35, data_020892c0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {35, sIntroPipeToRoofPositionPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087674",
+      "symbol": "sDDDCreditsSplinePositions",
       "address": "0x02087674",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {10, data_02088750}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {10, sDDDCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208767c",
+      "symbol": "sDDDSubCreditsSplineFocus",
       "address": "0x0208767c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02087f80}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sDDDSubCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087684",
+      "symbol": "sCotMCCreditsSplinePositions",
       "address": "0x02087684",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_020882c0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sCotMCCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208768c",
+      "symbol": "sBoBCreditsSplinePositions",
       "address": "0x0208768c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02088200}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sBoBCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_02087694",
+      "symbol": "sTTCCreditsSplineFocus",
       "address": "0x02087694",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087df0}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sTTCCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_0208769c",
+      "symbol": "sEndingMarioToPeachPos",
       "address": "0x0208769c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {6, data_020877f8}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {6, sEndingMarioToPeachPosPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020876a4",
+      "symbol": "gEndWavingFocus",
       "address": "0x020876a4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {9, data_02088580}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {9, gEndWavingFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020876ac",
+      "symbol": "sWFCreditsSplineFocus",
       "address": "0x020876ac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02088280}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sWFCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020876b4",
+      "symbol": "sDDDCreditsSplineFocus",
       "address": "0x020876b4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {10, data_02088700}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {10, sDDDCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020876bc",
+      "symbol": "sEndingMarioToPeachFocus",
       "address": "0x020876bc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {6, data_02087798}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {6, sEndingMarioToPeachFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020876c4",
+      "symbol": "sCCMSlideCreditsSplineFocus",
       "address": "0x020876c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {8, data_02088000}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {8, sCCMSlideCreditsSplineFocusPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020876cc",
+      "symbol": "sCCMOutsideCreditsSplinePositions",
       "address": "0x020876cc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "KuppaScriptPath {7, data_02087cd8}: a camera path a camera record names; retail second word relocates to the points"
+      "evidence": "CutsceneSpline {7, sCCMOutsideCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
       "symbol": "data_020876d4",
@@ -604,32 +604,32 @@
       "evidence": "Kuppa script, size-0 terminated"
     },
     {
-      "symbol": "data_02087798",
+      "symbol": "sEndingMarioToPeachFocusPoints",
       "address": "0x02087798",
       "size": "0x30",
       "binding": "STB_GLOBAL",
-      "evidence": "6 KuppaScriptPathPoint records of path data_020876bc; the last point has index -1"
+      "evidence": "6 CutsceneSplinePoint records of path sEndingMarioToPeachFocus; the last point has index -1"
     },
     {
-      "symbol": "data_020877c8",
+      "symbol": "sTHIWigglerCreditsSplineFocusPoints",
       "address": "0x020877c8",
       "size": "0x30",
       "binding": "STB_GLOBAL",
-      "evidence": "6 KuppaScriptPathPoint records of path data_0208759c; the last point has index -1"
+      "evidence": "6 CutsceneSplinePoint records of path sTHIWigglerCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_020877f8",
+      "symbol": "sEndingMarioToPeachPosPoints",
       "address": "0x020877f8",
       "size": "0x30",
       "binding": "STB_GLOBAL",
-      "evidence": "6 KuppaScriptPathPoint records of path data_0208769c; the last point has index -1"
+      "evidence": "6 CutsceneSplinePoint records of path sEndingMarioToPeachPos; the last point has index -1"
     },
     {
-      "symbol": "data_02087828",
+      "symbol": "sTHIWigglerCreditsSplinePositionsPoints",
       "address": "0x02087828",
       "size": "0x30",
       "binding": "STB_GLOBAL",
-      "evidence": "6 KuppaScriptPathPoint records of path data_0208754c; the last point has index -1"
+      "evidence": "6 CutsceneSplinePoint records of path sTHIWigglerCreditsSplinePositions; the last point has index -1"
     },
     {
       "symbol": "data_02087858",
@@ -772,95 +772,95 @@
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087c68",
+      "symbol": "sCCMOutsideCreditsSplineFocusPoints",
       "address": "0x02087c68",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_020875e4; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sCCMOutsideCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02087ca0",
+      "symbol": "sBBHCreditsSplinePositionsPoints",
       "address": "0x02087ca0",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_0208763c; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sBBHCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02087cd8",
+      "symbol": "sCCMOutsideCreditsSplinePositionsPoints",
       "address": "0x02087cd8",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_020876cc; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sCCMOutsideCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02087d10",
+      "symbol": "sSLCreditsSplineFocusPoints",
       "address": "0x02087d10",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_0208760c; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sSLCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02087d48",
+      "symbol": "sSLCreditsSplinePositionsPoints",
       "address": "0x02087d48",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_02087634; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sSLCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02087d80",
+      "symbol": "sWDWCreditsSplineFocusPoints",
       "address": "0x02087d80",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_02087584; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sWDWCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02087db8",
+      "symbol": "sWDWCreditsSplinePositionsPoints",
       "address": "0x02087db8",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_02087654; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sWDWCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02087df0",
+      "symbol": "sTTCCreditsSplineFocusPoints",
       "address": "0x02087df0",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_02087694; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sTTCCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02087e28",
+      "symbol": "sTTCCreditsSplinePositionsPoints",
       "address": "0x02087e28",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_020875b4; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sTTCCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02087e60",
+      "symbol": "sRRCreditsSplineFocusPoints",
       "address": "0x02087e60",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_02087534; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sRRCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02087e98",
+      "symbol": "sRRCreditsSplinePositionsPoints",
       "address": "0x02087e98",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_0208761c; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sRRCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02087ed0",
+      "symbol": "sEndingLookAtSkyFocusPoints",
       "address": "0x02087ed0",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_020875ec; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sEndingLookAtSkyFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02087f08",
+      "symbol": "sBBHCreditsSplineFocusPoints",
       "address": "0x02087f08",
       "size": "0x38",
       "binding": "STB_GLOBAL",
-      "evidence": "7 KuppaScriptPathPoint records of path data_02087554; the last point has index -1"
+      "evidence": "7 CutsceneSplinePoint records of path sBBHCreditsSplineFocus; the last point has index -1"
     },
     {
       "symbol": "data_02087f40",
@@ -870,109 +870,109 @@
       "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087f80",
+      "symbol": "sDDDSubCreditsSplineFocusPoints",
       "address": "0x02087f80",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_0208767c; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sDDDSubCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02087fc0",
+      "symbol": "sJRBCreditsSplinePositionsPoints",
       "address": "0x02087fc0",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_0208764c; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sJRBCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02088000",
+      "symbol": "sCCMSlideCreditsSplineFocusPoints",
       "address": "0x02088000",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_020876c4; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sCCMSlideCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02088040",
+      "symbol": "sDDDSubCreditsSplinePositionsPoints",
       "address": "0x02088040",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_020875dc; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sDDDSubCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02088080",
+      "symbol": "sCCMSlideCreditsSplinePositionsPoints",
       "address": "0x02088080",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_0208755c; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sCCMSlideCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_020880c0",
+      "symbol": "sJRBCreditsSplineFocusPoints",
       "address": "0x020880c0",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_02087564; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sJRBCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02088100",
+      "symbol": "sBoBCreditsSplineFocusPoints",
       "address": "0x02088100",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_02087624; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sBoBCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02088140",
+      "symbol": "sSACreditsSplineFocusPoints",
       "address": "0x02088140",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_0208751c; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sSACreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02088180",
+      "symbol": "sSACreditsSplinePositionsPoints",
       "address": "0x02088180",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_020875ac; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sSACreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_020881c0",
+      "symbol": "sCotMCCreditsSplineFocusPoints",
       "address": "0x020881c0",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_0208762c; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sCotMCCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02088200",
+      "symbol": "sBoBCreditsSplinePositionsPoints",
       "address": "0x02088200",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_0208768c; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sBoBCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02088240",
+      "symbol": "sEndingLookUpAtCastlePoints",
       "address": "0x02088240",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_0208765c; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sEndingLookUpAtCastle; the last point has index -1"
     },
     {
-      "symbol": "data_02088280",
+      "symbol": "sWFCreditsSplineFocusPoints",
       "address": "0x02088280",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_020876ac; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sWFCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_020882c0",
+      "symbol": "sCotMCCreditsSplinePositionsPoints",
       "address": "0x020882c0",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_02087684; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sCotMCCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02088300",
+      "symbol": "sWFCreditsSplinePositionsPoints",
       "address": "0x02088300",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "8 KuppaScriptPathPoint records of path data_020875cc; the last point has index -1"
+      "evidence": "8 CutsceneSplinePoint records of path sWFCreditsSplinePositions; the last point has index -1"
     },
     {
       "symbol": "data_02088340",
@@ -989,60 +989,60 @@
       "evidence": "Kuppa script, size-0 terminated"
     },
     {
-      "symbol": "data_020883d0",
+      "symbol": "sVolcanoCreditsSplineFocusPoints",
       "address": "0x020883d0",
       "size": "0x48",
       "binding": "STB_GLOBAL",
-      "evidence": "9 KuppaScriptPathPoint records of path data_02087544; the last point has index -1"
+      "evidence": "9 CutsceneSplinePoint records of path sVolcanoCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02088418",
+      "symbol": "sVolcanoCreditsSplinePositionsPoints",
       "address": "0x02088418",
       "size": "0x48",
       "binding": "STB_GLOBAL",
-      "evidence": "9 KuppaScriptPathPoint records of path data_020875f4; the last point has index -1"
+      "evidence": "9 CutsceneSplinePoint records of path sVolcanoCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02088460",
+      "symbol": "sSSLCreditsSplineFocusPoints",
       "address": "0x02088460",
       "size": "0x48",
       "binding": "STB_GLOBAL",
-      "evidence": "9 KuppaScriptPathPoint records of path data_02087574; the last point has index -1"
+      "evidence": "9 CutsceneSplinePoint records of path sSSLCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_020884a8",
+      "symbol": "sSSLCreditsSplinePositionsPoints",
       "address": "0x020884a8",
       "size": "0x48",
       "binding": "STB_GLOBAL",
-      "evidence": "9 KuppaScriptPathPoint records of path data_0208757c; the last point has index -1"
+      "evidence": "9 CutsceneSplinePoint records of path sSSLCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_020884f0",
+      "symbol": "sTTMCreditsSplineFocusPoints",
       "address": "0x020884f0",
       "size": "0x48",
       "binding": "STB_GLOBAL",
-      "evidence": "9 KuppaScriptPathPoint records of path data_02087594; the last point has index -1"
+      "evidence": "9 CutsceneSplinePoint records of path sTTMCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02088538",
+      "symbol": "sTTMCreditsSplinePositionsPoints",
       "address": "0x02088538",
       "size": "0x48",
       "binding": "STB_GLOBAL",
-      "evidence": "9 KuppaScriptPathPoint records of path data_0208756c; the last point has index -1"
+      "evidence": "9 CutsceneSplinePoint records of path sTTMCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02088580",
+      "symbol": "gEndWavingFocusPoints",
       "address": "0x02088580",
       "size": "0x48",
       "binding": "STB_GLOBAL",
-      "evidence": "9 KuppaScriptPathPoint records of path data_020876a4; the list is bounded by its path count (last index 0)"
+      "evidence": "9 CutsceneSplinePoint records of path gEndWavingFocus; the list is bounded by its path count (last index 0)"
     },
     {
-      "symbol": "data_020885c8",
+      "symbol": "gEndWavingPosPoints",
       "address": "0x020885c8",
       "size": "0x48",
       "binding": "STB_GLOBAL",
-      "evidence": "9 KuppaScriptPathPoint records of path data_020875fc; the list is bounded by its path count (last index 0)"
+      "evidence": "9 CutsceneSplinePoint records of path gEndWavingPos; the list is bounded by its path count (last index 0)"
     },
     {
       "symbol": "data_02088610",
@@ -1052,60 +1052,60 @@
       "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02088660",
+      "symbol": "sHMCCreditsSplineFocusPoints",
       "address": "0x02088660",
       "size": "0x50",
       "binding": "STB_GLOBAL",
-      "evidence": "10 KuppaScriptPathPoint records of path data_0208752c; the last point has index -1"
+      "evidence": "10 CutsceneSplinePoint records of path sHMCCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_020886b0",
+      "symbol": "sHMCCreditsSplinePositionsPoints",
       "address": "0x020886b0",
       "size": "0x50",
       "binding": "STB_GLOBAL",
-      "evidence": "10 KuppaScriptPathPoint records of path data_020875d4; the last point has index -1"
+      "evidence": "10 CutsceneSplinePoint records of path sHMCCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02088700",
+      "symbol": "sDDDCreditsSplineFocusPoints",
       "address": "0x02088700",
       "size": "0x50",
       "binding": "STB_GLOBAL",
-      "evidence": "10 KuppaScriptPathPoint records of path data_020876b4; the last point has index -1"
+      "evidence": "10 CutsceneSplinePoint records of path sDDDCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02088750",
+      "symbol": "sDDDCreditsSplinePositionsPoints",
       "address": "0x02088750",
       "size": "0x50",
       "binding": "STB_GLOBAL",
-      "evidence": "10 KuppaScriptPathPoint records of path data_02087674; the last point has index -1"
+      "evidence": "10 CutsceneSplinePoint records of path sDDDCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_020887a0",
+      "symbol": "sTHIHugeCreditsSplineFocusPoints",
       "address": "0x020887a0",
       "size": "0x50",
       "binding": "STB_GLOBAL",
-      "evidence": "10 KuppaScriptPathPoint records of path data_020875a4; the last point has index -1"
+      "evidence": "10 CutsceneSplinePoint records of path sTHIHugeCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_020887f0",
+      "symbol": "sTHIHugeCreditsSplinePositionsPoints",
       "address": "0x020887f0",
       "size": "0x50",
       "binding": "STB_GLOBAL",
-      "evidence": "10 KuppaScriptPathPoint records of path data_02087614; the last point has index -1"
+      "evidence": "10 CutsceneSplinePoint records of path sTHIHugeCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02088840",
+      "symbol": "sEndingFlyToWindowFocusPoints",
       "address": "0x02088840",
       "size": "0x58",
       "binding": "STB_GLOBAL",
-      "evidence": "11 KuppaScriptPathPoint records of path data_020875c4; the last point has index -1"
+      "evidence": "11 CutsceneSplinePoint records of path sEndingFlyToWindowFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02088898",
+      "symbol": "sEndingFlyToWindowPosPoints",
       "address": "0x02088898",
       "size": "0x58",
       "binding": "STB_GLOBAL",
-      "evidence": "11 KuppaScriptPathPoint records of path data_0208758c; the last point has index -1"
+      "evidence": "11 CutsceneSplinePoint records of path sEndingFlyToWindowPos; the last point has index -1"
     },
     {
       "symbol": "data_020888f0",
@@ -1157,11 +1157,11 @@
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02088c2c",
+      "symbol": "sEndingPeachDescentCamPosPoints",
       "address": "0x02088c2c",
       "size": "0xa0",
       "binding": "STB_GLOBAL",
-      "evidence": "20 KuppaScriptPathPoint records of path data_02087604; the last point has index -1"
+      "evidence": "20 CutsceneSplinePoint records of path sEndingPeachDescentCamPos; the last point has index -1"
     },
     {
       "symbol": "data_02088ccc",
@@ -1171,18 +1171,18 @@
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02088d80",
+      "symbol": "sIntroStartToPipeFocusPoints",
       "address": "0x02088d80",
       "size": "0xb8",
       "binding": "STB_GLOBAL",
-      "evidence": "23 KuppaScriptPathPoint records of path data_02087644; the last point has index -1"
+      "evidence": "23 CutsceneSplinePoint records of path sIntroStartToPipeFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02088e38",
+      "symbol": "sIntroStartToPipePositionPoints",
       "address": "0x02088e38",
       "size": "0xb8",
       "binding": "STB_GLOBAL",
-      "evidence": "23 KuppaScriptPathPoint records of path data_02087664; the last point has index -1"
+      "evidence": "23 CutsceneSplinePoint records of path sIntroStartToPipePosition; the last point has index -1"
     },
     {
       "symbol": "data_02088ef0",
@@ -1206,32 +1206,32 @@
       "evidence": "Kuppa script, size-0 terminated; 5 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_020891a8",
+      "symbol": "sIntroPipeToRoofFocusPoints",
       "address": "0x020891a8",
       "size": "0x118",
       "binding": "STB_GLOBAL",
-      "evidence": "35 KuppaScriptPathPoint records of path data_020875bc; the last point has index -1"
+      "evidence": "35 CutsceneSplinePoint records of path sIntroPipeToRoofFocus; the last point has index -1"
     },
     {
-      "symbol": "data_020892c0",
+      "symbol": "sIntroPipeToRoofPositionPoints",
       "address": "0x020892c0",
       "size": "0x118",
       "binding": "STB_GLOBAL",
-      "evidence": "35 KuppaScriptPathPoint records of path data_0208766c; the last point has index -1"
+      "evidence": "35 CutsceneSplinePoint records of path sIntroPipeToRoofPosition; the last point has index -1"
     },
     {
-      "symbol": "data_020893d8",
+      "symbol": "gIntroLakituStartToPipeOffsetFromCameraPoints",
       "address": "0x020893d8",
       "size": "0x118",
       "binding": "STB_GLOBAL",
-      "evidence": "35 KuppaScriptPathPoint records of path data_0208753c; the last point has index -1"
+      "evidence": "35 CutsceneSplinePoint records of path gIntroLakituStartToPipeOffsetFromCamera; the last point has index -1"
     },
     {
-      "symbol": "data_020894f0",
+      "symbol": "gIntroLakituStartToPipeFocusPoints",
       "address": "0x020894f0",
       "size": "0x118",
       "binding": "STB_GLOBAL",
-      "evidence": "35 KuppaScriptPathPoint records of path data_02087524; the last point has index -1"
+      "evidence": "35 CutsceneSplinePoint records of path gIntroLakituStartToPipeFocus; the last point has index -1"
     },
     {
       "symbol": "data_02089608",
@@ -2326,7 +2326,7 @@
       "source": "0x02074c04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020876a4",
+      "symbol": "gEndWavingFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020876a4"
@@ -2336,7 +2336,7 @@
       "source": "0x02074c08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875bc",
+      "symbol": "sIntroPipeToRoofFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875bc"
@@ -2346,7 +2346,7 @@
       "source": "0x02074c0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875fc",
+      "symbol": "gEndWavingPos",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875fc"
@@ -2366,7 +2366,7 @@
       "source": "0x02074c14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208766c",
+      "symbol": "sIntroPipeToRoofPosition",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208766c"
@@ -2396,7 +2396,7 @@
       "source": "0x02074c20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875e4",
+      "symbol": "sCCMOutsideCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875e4"
@@ -2416,7 +2416,7 @@
       "source": "0x02074c28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087644",
+      "symbol": "sIntroStartToPipeFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087644"
@@ -2426,7 +2426,7 @@
       "source": "0x02074c2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020876cc",
+      "symbol": "sCCMOutsideCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020876cc"
@@ -2436,7 +2436,7 @@
       "source": "0x02074c30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087664",
+      "symbol": "sIntroStartToPipePosition",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087664"
@@ -2446,7 +2446,7 @@
       "source": "0x02074c34",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208753c",
+      "symbol": "gIntroLakituStartToPipeOffsetFromCamera",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208753c"
@@ -2456,7 +2456,7 @@
       "source": "0x02074c38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087524",
+      "symbol": "gIntroLakituStartToPipeFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087524"
@@ -2496,7 +2496,7 @@
       "source": "0x02074c48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208767c",
+      "symbol": "sDDDSubCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208767c"
@@ -2506,7 +2506,7 @@
       "source": "0x02074c4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087684",
+      "symbol": "sCotMCCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087684"
@@ -2516,7 +2516,7 @@
       "source": "0x02074c50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208762c",
+      "symbol": "sCotMCCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208762c"
@@ -2526,7 +2526,7 @@
       "source": "0x02074c54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875dc",
+      "symbol": "sDDDSubCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875dc"
@@ -2546,7 +2546,7 @@
       "source": "0x02074c5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208751c",
+      "symbol": "sSACreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208751c"
@@ -2556,7 +2556,7 @@
       "source": "0x02074c60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875ac",
+      "symbol": "sSACreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875ac"
@@ -2576,7 +2576,7 @@
       "source": "0x02074c68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087534",
+      "symbol": "sRRCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087534"
@@ -2586,7 +2586,7 @@
       "source": "0x02074c6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208761c",
+      "symbol": "sRRCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208761c"
@@ -2606,7 +2606,7 @@
       "source": "0x02074c74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087694",
+      "symbol": "sTTCCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087694"
@@ -2616,7 +2616,7 @@
       "source": "0x02074c78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875b4",
+      "symbol": "sTTCCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875b4"
@@ -2636,7 +2636,7 @@
       "source": "0x02074c80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087614",
+      "symbol": "sTHIHugeCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087614"
@@ -2656,7 +2656,7 @@
       "source": "0x02074c88",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087594",
+      "symbol": "sTTMCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087594"
@@ -2666,7 +2666,7 @@
       "source": "0x02074c8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875a4",
+      "symbol": "sTHIHugeCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875a4"
@@ -2676,7 +2676,7 @@
       "source": "0x02074c90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208756c",
+      "symbol": "sTTMCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208756c"
@@ -2696,7 +2696,7 @@
       "source": "0x02074c98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087584",
+      "symbol": "sWDWCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087584"
@@ -2706,7 +2706,7 @@
       "source": "0x02074c9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087654",
+      "symbol": "sWDWCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087654"
@@ -2726,7 +2726,7 @@
       "source": "0x02074ca4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208760c",
+      "symbol": "sSLCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208760c"
@@ -2736,7 +2736,7 @@
       "source": "0x02074ca8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087634",
+      "symbol": "sSLCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087634"
@@ -2756,7 +2756,7 @@
       "source": "0x02074cb0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020876b4",
+      "symbol": "sDDDCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020876b4"
@@ -2766,7 +2766,7 @@
       "source": "0x02074cb4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087674",
+      "symbol": "sDDDCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087674"
@@ -2786,7 +2786,7 @@
       "source": "0x02074cbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087574",
+      "symbol": "sSSLCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087574"
@@ -2796,7 +2796,7 @@
       "source": "0x02074cc0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208757c",
+      "symbol": "sSSLCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208757c"
@@ -2816,7 +2816,7 @@
       "source": "0x02074cc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087544",
+      "symbol": "sVolcanoCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087544"
@@ -2826,7 +2826,7 @@
       "source": "0x02074ccc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875f4",
+      "symbol": "sVolcanoCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875f4"
@@ -2846,7 +2846,7 @@
       "source": "0x02074cd4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208759c",
+      "symbol": "sTHIWigglerCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208759c"
@@ -2856,7 +2856,7 @@
       "source": "0x02074cd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208754c",
+      "symbol": "sTHIWigglerCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208754c"
@@ -2876,7 +2876,7 @@
       "source": "0x02074ce0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208752c",
+      "symbol": "sHMCCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208752c"
@@ -2886,7 +2886,7 @@
       "source": "0x02074ce4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875d4",
+      "symbol": "sHMCCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875d4"
@@ -2906,7 +2906,7 @@
       "source": "0x02074cec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087554",
+      "symbol": "sBBHCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087554"
@@ -2916,7 +2916,7 @@
       "source": "0x02074cf0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208763c",
+      "symbol": "sBBHCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208763c"
@@ -2936,7 +2936,7 @@
       "source": "0x02074cf8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020876c4",
+      "symbol": "sCCMSlideCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020876c4"
@@ -2946,7 +2946,7 @@
       "source": "0x02074cfc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208755c",
+      "symbol": "sCCMSlideCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208755c"
@@ -2966,7 +2966,7 @@
       "source": "0x02074d04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087564",
+      "symbol": "sJRBCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087564"
@@ -2976,7 +2976,7 @@
       "source": "0x02074d08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208764c",
+      "symbol": "sJRBCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208764c"
@@ -2996,7 +2996,7 @@
       "source": "0x02074d10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020876ac",
+      "symbol": "sWFCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020876ac"
@@ -3006,7 +3006,7 @@
       "source": "0x02074d14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875cc",
+      "symbol": "sWFCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875cc"
@@ -3026,7 +3026,7 @@
       "source": "0x02074d1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087624",
+      "symbol": "sBoBCreditsSplineFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087624"
@@ -3036,7 +3036,7 @@
       "source": "0x02074d20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208768c",
+      "symbol": "sBoBCreditsSplinePositions",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208768c"
@@ -3056,7 +3056,7 @@
       "source": "0x02074d28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875ec",
+      "symbol": "sEndingLookAtSkyFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875ec"
@@ -3096,7 +3096,7 @@
       "source": "0x02074d38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208765c",
+      "symbol": "sEndingLookUpAtCastle",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208765c"
@@ -3116,7 +3116,7 @@
       "source": "0x02074d40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020876bc",
+      "symbol": "sEndingMarioToPeachFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020876bc"
@@ -3126,7 +3126,7 @@
       "source": "0x02074d44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208769c",
+      "symbol": "sEndingMarioToPeachPos",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208769c"
@@ -3156,7 +3156,7 @@
       "source": "0x02074d50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208758c",
+      "symbol": "sEndingFlyToWindowPos",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208758c"
@@ -3166,7 +3166,7 @@
       "source": "0x02074d54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020875c4",
+      "symbol": "sEndingFlyToWindowFocus",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020875c4"
@@ -3176,7 +3176,7 @@
       "source": "0x02074d58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087604",
+      "symbol": "sEndingPeachDescentCamPos",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087604"
@@ -3326,7 +3326,7 @@
       "source": "0x02087520",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088140",
+      "symbol": "sSACreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088140"
@@ -3336,7 +3336,7 @@
       "source": "0x02087528",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020894f0",
+      "symbol": "gIntroLakituStartToPipeFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020894f0"
@@ -3346,7 +3346,7 @@
       "source": "0x02087530",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088660",
+      "symbol": "sHMCCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088660"
@@ -3356,7 +3356,7 @@
       "source": "0x02087538",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087e60",
+      "symbol": "sRRCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087e60"
@@ -3366,7 +3366,7 @@
       "source": "0x02087540",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020893d8",
+      "symbol": "gIntroLakituStartToPipeOffsetFromCameraPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020893d8"
@@ -3376,7 +3376,7 @@
       "source": "0x02087548",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020883d0",
+      "symbol": "sVolcanoCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020883d0"
@@ -3386,7 +3386,7 @@
       "source": "0x02087550",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087828",
+      "symbol": "sTHIWigglerCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087828"
@@ -3396,7 +3396,7 @@
       "source": "0x02087558",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087f08",
+      "symbol": "sBBHCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087f08"
@@ -3406,7 +3406,7 @@
       "source": "0x02087560",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088080",
+      "symbol": "sCCMSlideCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088080"
@@ -3416,7 +3416,7 @@
       "source": "0x02087568",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020880c0",
+      "symbol": "sJRBCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020880c0"
@@ -3426,7 +3426,7 @@
       "source": "0x02087570",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088538",
+      "symbol": "sTTMCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088538"
@@ -3436,7 +3436,7 @@
       "source": "0x02087578",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088460",
+      "symbol": "sSSLCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088460"
@@ -3446,7 +3446,7 @@
       "source": "0x02087580",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020884a8",
+      "symbol": "sSSLCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020884a8"
@@ -3456,7 +3456,7 @@
       "source": "0x02087588",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087d80",
+      "symbol": "sWDWCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087d80"
@@ -3466,7 +3466,7 @@
       "source": "0x02087590",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088898",
+      "symbol": "sEndingFlyToWindowPosPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088898"
@@ -3476,7 +3476,7 @@
       "source": "0x02087598",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020884f0",
+      "symbol": "sTTMCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020884f0"
@@ -3486,7 +3486,7 @@
       "source": "0x020875a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020877c8",
+      "symbol": "sTHIWigglerCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020877c8"
@@ -3496,7 +3496,7 @@
       "source": "0x020875a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020887a0",
+      "symbol": "sTHIHugeCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020887a0"
@@ -3506,7 +3506,7 @@
       "source": "0x020875b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088180",
+      "symbol": "sSACreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088180"
@@ -3516,7 +3516,7 @@
       "source": "0x020875b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087e28",
+      "symbol": "sTTCCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087e28"
@@ -3526,7 +3526,7 @@
       "source": "0x020875c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020891a8",
+      "symbol": "sIntroPipeToRoofFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020891a8"
@@ -3536,7 +3536,7 @@
       "source": "0x020875c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088840",
+      "symbol": "sEndingFlyToWindowFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088840"
@@ -3546,7 +3546,7 @@
       "source": "0x020875d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088300",
+      "symbol": "sWFCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088300"
@@ -3556,7 +3556,7 @@
       "source": "0x020875d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020886b0",
+      "symbol": "sHMCCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020886b0"
@@ -3566,7 +3566,7 @@
       "source": "0x020875e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088040",
+      "symbol": "sDDDSubCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088040"
@@ -3576,7 +3576,7 @@
       "source": "0x020875e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087c68",
+      "symbol": "sCCMOutsideCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087c68"
@@ -3586,7 +3586,7 @@
       "source": "0x020875f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087ed0",
+      "symbol": "sEndingLookAtSkyFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087ed0"
@@ -3596,7 +3596,7 @@
       "source": "0x020875f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088418",
+      "symbol": "sVolcanoCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088418"
@@ -3606,7 +3606,7 @@
       "source": "0x02087600",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020885c8",
+      "symbol": "gEndWavingPosPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020885c8"
@@ -3616,7 +3616,7 @@
       "source": "0x02087608",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088c2c",
+      "symbol": "sEndingPeachDescentCamPosPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088c2c"
@@ -3626,7 +3626,7 @@
       "source": "0x02087610",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087d10",
+      "symbol": "sSLCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087d10"
@@ -3636,7 +3636,7 @@
       "source": "0x02087618",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020887f0",
+      "symbol": "sTHIHugeCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020887f0"
@@ -3646,7 +3646,7 @@
       "source": "0x02087620",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087e98",
+      "symbol": "sRRCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087e98"
@@ -3656,7 +3656,7 @@
       "source": "0x02087628",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088100",
+      "symbol": "sBoBCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088100"
@@ -3666,7 +3666,7 @@
       "source": "0x02087630",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020881c0",
+      "symbol": "sCotMCCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020881c0"
@@ -3676,7 +3676,7 @@
       "source": "0x02087638",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087d48",
+      "symbol": "sSLCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087d48"
@@ -3686,7 +3686,7 @@
       "source": "0x02087640",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087ca0",
+      "symbol": "sBBHCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087ca0"
@@ -3696,7 +3696,7 @@
       "source": "0x02087648",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088d80",
+      "symbol": "sIntroStartToPipeFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088d80"
@@ -3706,7 +3706,7 @@
       "source": "0x02087650",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087fc0",
+      "symbol": "sJRBCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087fc0"
@@ -3716,7 +3716,7 @@
       "source": "0x02087658",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087db8",
+      "symbol": "sWDWCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087db8"
@@ -3726,7 +3726,7 @@
       "source": "0x02087660",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088240",
+      "symbol": "sEndingLookUpAtCastlePoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088240"
@@ -3736,7 +3736,7 @@
       "source": "0x02087668",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088e38",
+      "symbol": "sIntroStartToPipePositionPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088e38"
@@ -3746,7 +3746,7 @@
       "source": "0x02087670",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020892c0",
+      "symbol": "sIntroPipeToRoofPositionPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020892c0"
@@ -3756,7 +3756,7 @@
       "source": "0x02087678",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088750",
+      "symbol": "sDDDCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088750"
@@ -3766,7 +3766,7 @@
       "source": "0x02087680",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087f80",
+      "symbol": "sDDDSubCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087f80"
@@ -3776,7 +3776,7 @@
       "source": "0x02087688",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020882c0",
+      "symbol": "sCotMCCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020882c0"
@@ -3786,7 +3786,7 @@
       "source": "0x02087690",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088200",
+      "symbol": "sBoBCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088200"
@@ -3796,7 +3796,7 @@
       "source": "0x02087698",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087df0",
+      "symbol": "sTTCCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087df0"
@@ -3806,7 +3806,7 @@
       "source": "0x020876a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020877f8",
+      "symbol": "sEndingMarioToPeachPosPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020877f8"
@@ -3816,7 +3816,7 @@
       "source": "0x020876a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088580",
+      "symbol": "gEndWavingFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088580"
@@ -3826,7 +3826,7 @@
       "source": "0x020876b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088280",
+      "symbol": "sWFCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088280"
@@ -3836,7 +3836,7 @@
       "source": "0x020876b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088700",
+      "symbol": "sDDDCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088700"
@@ -3846,7 +3846,7 @@
       "source": "0x020876c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087798",
+      "symbol": "sEndingMarioToPeachFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087798"
@@ -3856,7 +3856,7 @@
       "source": "0x020876c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088000",
+      "symbol": "sCCMSlideCreditsSplineFocusPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088000"
@@ -3866,7 +3866,7 @@
       "source": "0x020876d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087cd8",
+      "symbol": "sCCMOutsideCreditsSplinePositionsPoints",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087cd8"
