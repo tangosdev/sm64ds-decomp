@@ -103,24 +103,20 @@ int func_0202043c(int thiz);
 extern "C" {
 
 /* @symbol func_02020820 */
-void func_02020820(char *self, int *src, int arg2, int arg3, u8 arg5, u8 arg6)
-{
-    OamAnimation *anim = (OamAnimation *)self;
+void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabled, u8 affine) {
     anim->frames = (const OamAnimFrame *)src[0];
     anim->frameCount = src[1];
-    func_0202043c((int)self);
+    func_0202043c((int)anim);
     anim->palette = -1;
     anim->priority = -1;
     anim->scaleX = 0x1000;
     anim->scaleY = 0x1000;
     anim->rotation = 0;
-    anim->loops = (u8)arg3;
-    anim->enabled = (u8)arg5;
-    anim->affine = (u8)arg6;
-    /* 0x28: no reader in the tree yet, so its role is unproven. */
-    *(int *)(self + 0x28) = arg2;
+    anim->loops = (u8)loops;
+    anim->enabled = enabled;
+    anim->affine = affine;
+    anim->screen = screen;
 }
-
 }
 
 /* -------------------------------------------------------------------------- */
