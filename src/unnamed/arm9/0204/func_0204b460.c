@@ -6,12 +6,8 @@
 #define reg_G3_IDENTITY     (*(volatile u32 *)0x04000454)
 #define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
 
-/* No header declares these. CrossVec3 uses its Vec3_Fix12 view,
-   NormalizeVec3 uses Vector3, and MulVec3Mat3x3 uses raw component words. */
-typedef struct {
-    Fix12i x, y, z;
-} Vec3_Fix12;
-extern void CrossVec3(const Vec3_Fix12 *a, const Vec3_Fix12 *b, Vec3_Fix12 *out);
+/* No header declares these. MulVec3Mat3x3 uses raw component words. */
+extern void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 struct Vector3;
 extern void NormalizeVec3(const struct Vector3 *v, struct Vector3 *out);
 extern void Copy36Bytes(int *src, int *dst);
@@ -69,7 +65,7 @@ void func_0204b460(ManagerView *mgr, ParticleElement *ptcl) {
     look.x = view[2];
     look.y = view[5];
     look.z = view[8];
-    CrossVec3((Vec3_Fix12 *)&dir, (Vec3_Fix12 *)&look, (Vec3_Fix12 *)&dir);
+    CrossVec3(&dir, &look, &dir);
 
     if (dir.x == 0 && dir.y == 0 && dir.z == 0)
         return;

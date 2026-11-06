@@ -515,7 +515,7 @@ extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int LenVec3(Vector3 *v);
+extern int LenVec3(const Vector3 *v);
 extern int DotVec3(const Vector3 *a, const Vector3 *b);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
@@ -1168,7 +1168,7 @@ struct Vec3 {
 };
 extern "C" int DotVec3(struct Vec3 *a, struct Vec3 *b);
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern "C" int LenVec3(struct Vec3 *v);
+extern "C" int LenVec3(const Vector3 *v);
 extern "C" {
 extern int data_ov006_0212e0f0[];
 }
@@ -1182,8 +1182,8 @@ extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, struct Ve
     for (row = 0; row < 4; row++) {
         int column;
         for (column = 0; column < 4; column++) {
-            struct Vec3 delta;
-            SubVec3((Vector3 *)restVertex, (Vector3 *)referencePoint, (Vector3 *)&delta);
+            Vector3 delta;
+            SubVec3((Vector3 *)restVertex, (Vector3 *)referencePoint, &delta);
             int halfLength = (long long)(TRMPLINE(sl)->mHalfWidth);
             int distance = LenVec3(&delta);
             int distanceWeight = cstd::fdiv(halfLength, halfLength + distance);
@@ -1199,26 +1199,22 @@ extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, struct Ve
 }
 
 namespace s020cf124 {
-typedef struct {
-    int x, y, z;
-} Vec3;
-
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern "C" void CrossVec3(const Vec3 *a, const Vec3 *b, Vec3 *out);
+extern "C" void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 extern "C" void NormalizeVec3(const Vector3 *v, Vector3 *out);
 
 extern "C" void TrmpLine_ComputeNormals(char *self) {
-    Vec3 columnEdge;
-    Vec3 rowEdge;
+    Vector3 columnEdge;
+    Vector3 rowEdge;
     char *p;
-    Vec3 *normal;
+    Vector3 *normal;
     int *packedNormal;
     int row;
     int column;
     int componentMask = 0x3ff;
 
     p = (char *)TRMPLINE(self)->mVerts;
-    normal = (Vec3 *)TRMPLINE(self)->mNormals;
+    normal = (Vector3 *)TRMPLINE(self)->mNormals;
     packedNormal = TRMPLINE(self)->mPackedNormals;
 
     for (row = 0; row < 4; row++) {
@@ -1236,21 +1232,21 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
             components[2] = zero;
 
             if (column == 0)
-                SubVec3((Vector3 *)p, (Vector3 *)p + 1, (Vector3 *)&columnEdge);
+                SubVec3((Vector3 *)p, (Vector3 *)p + 1, &columnEdge);
             else if (column == 3)
-                SubVec3((Vector3 *)p - 1, (Vector3 *)p, (Vector3 *)&columnEdge);
+                SubVec3((Vector3 *)p - 1, (Vector3 *)p, &columnEdge);
             else
-                SubVec3((Vector3 *)p - 1, (Vector3 *)p + 1, (Vector3 *)&columnEdge);
+                SubVec3((Vector3 *)p - 1, (Vector3 *)p + 1, &columnEdge);
 
             if (row == 0)
-                SubVec3((Vector3 *)p, (Vector3 *)p + 4, (Vector3 *)&rowEdge);
+                SubVec3((Vector3 *)p, (Vector3 *)p + 4, &rowEdge);
             else if (row == 3)
-                SubVec3((Vector3 *)p - 4, (Vector3 *)p, (Vector3 *)&rowEdge);
+                SubVec3((Vector3 *)p - 4, (Vector3 *)p, &rowEdge);
             else
-                SubVec3((Vector3 *)p - 4, (Vector3 *)p + 4, (Vector3 *)&rowEdge);
+                SubVec3((Vector3 *)p - 4, (Vector3 *)p + 4, &rowEdge);
 
             CrossVec3(&columnEdge, &rowEdge, normal);
-            NormalizeVec3((const Vector3 *)normal, (Vector3 *)normal);
+            NormalizeVec3(normal, normal);
 
             normal->x = FX_MUL(normal->x, 0xff8);
             normal->y = FX_MUL(normal->y, 0xff8);
