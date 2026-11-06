@@ -88,7 +88,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_ZN16daObjKm2_Agaru_c15StoodOnCallbackEPvPS_P8dActor_c",
+      "symbol": "_ZN16daObjKm2_Agaru_c15StoodOnCallbackEP4dBgWP8dActor_cS3_",
       "address": "0x021114c8",
       "size": "0x00000014",
       "legacy_source": "src/func_ov045_021114c8.c",

@@ -238,8 +238,7 @@ int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
     UpdateClsnPosAndRot();
     kcl = (KCL_File *)dBgW_Kc::LoadFile(*fp->collision);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *fp->clps);
-    /* The callback's symbol records its own signature; the store converts it to the slot's type. */
-    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
     func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
 
     mSinkOffset = 0;
@@ -291,7 +290,7 @@ void daObjFloatBoard_c::OnStoodOn(dActor_c *rider) {
  * argument, which the real callback does not take. A static member: its
  * address is stored as a raw callback word, which a static member's address
  * is. */
-// @symbol _ZN17daObjFloatBoard_c15StoodOnCallbackEPvPS_P8dActor_c
-void daObjFloatBoard_c::StoodOnCallback(void *collider, daObjFloatBoard_c *board, dActor_c *other) {
-    board->OnStoodOn(other);
+// @symbol _ZN17daObjFloatBoard_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
+void daObjFloatBoard_c::StoodOnCallback(dBgW *collider, dActor_c *board, dActor_c *other) {
+    static_cast<daObjFloatBoard_c *>(board)->OnStoodOn(other);
 }

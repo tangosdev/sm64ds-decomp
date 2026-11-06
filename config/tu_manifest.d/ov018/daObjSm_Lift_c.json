@@ -104,7 +104,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZN14daObjSm_Lift_c18BeforeClsnCallbackEPvPS_P8dActor_c",
+      "symbol": "_ZN14daObjSm_Lift_c15StoodOnCallbackEP4dBgWP8dActor_cS3_",
       "address": "0x02111804",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/ov018/func_ov018_02111804.c",

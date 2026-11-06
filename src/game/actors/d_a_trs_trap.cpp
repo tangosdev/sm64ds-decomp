@@ -545,8 +545,7 @@ int daTrsTrap_c::InitResources()
     }
 
     func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
-    /* The callback's symbol records its own signature; the store converts it to the slot's type. */
-    func_020393c4(&mMovingMeshCollider, (StoodOnCallback)&daTrsTrap_c::OnMeshClsnTouch);
+    func_020393c4(&mMovingMeshCollider, &daTrsTrap_c::OnMeshClsnTouch);
     mMovingMeshCollider.Enable(this);
 
     if (mIndex == 2) {

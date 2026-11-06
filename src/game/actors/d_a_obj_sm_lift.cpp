@@ -19,7 +19,7 @@
  * - Vec3_Asr, AngleDiff, Vec3_Sub, LenVec3, Vec3_MulScalar, SubVec3 and
  *   Math_Function_0203b14c are arm9 C helpers no header declares yet.
  * The file ends with the mesh-collider hook HandlePlayerContact, the
- * veneer BeforeClsnCallback that InitResources installs, and the registry
+ * veneer StoodOnCallback that InitResources installs, and the registry
  * factory daObjSm_Lift_c_classInit (0x02111818).
  */
 
@@ -241,8 +241,7 @@ s32 daObjSm_Lift_c::InitResources() {
     mMeshCollider.SetFile((KCL_File *)kf, mClsnMat, 0x1000, mAngleY,
                           *(CLPS_Block *)data_ov018_02112f48);
     func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    /* The callback's symbol records its own signature; the store converts it to the slot's type. */
-    func_020393c4(&mMeshCollider, (StoodOnCallback)&daObjSm_Lift_c::BeforeClsnCallback);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
     mPauseTimer = 0x3c;
     mBasePosX = mPosX;
     mBasePosY = mPosY;
@@ -273,11 +272,11 @@ void daObjSm_Lift_c::HandlePlayerContact(dActor_c *other) {
         mTouchingPlayer = other;
 }
 
-// @symbol _ZN14daObjSm_Lift_c18BeforeClsnCallbackEPvPS_P8dActor_c
+// @symbol _ZN14daObjSm_Lift_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
    collider and forwards the touching actor to HandlePlayerContact. */
-void daObjSm_Lift_c::BeforeClsnCallback(void *collider, daObjSm_Lift_c *self, dActor_c *other) {
-    self->HandlePlayerContact(other);
+void daObjSm_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c *other) {
+    static_cast<daObjSm_Lift_c *>(self)->HandlePlayerContact(other);
 }
 
 /* Reconstructed source-style name: SM64DS proves daObjSm_Lift_c through RTTI,
