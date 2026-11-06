@@ -65,6 +65,7 @@ enum d_a_btn_AssetId {
 };
 
 #include "daBtn_c.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
@@ -93,7 +94,7 @@ struct CLPS_Block;
 extern "C" {
 /* ---- this TU ---- */
 void func_ov079_02123d4c(int *out, daBtn_c *self);
-void func_ov079_0212522c(void *a, void *b, void *c);
+void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
@@ -121,8 +122,8 @@ int func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, void *p);
-void func_020393c4(void *p, int v);
-void func_020393d4(void *p, void *v);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 int func_ov002_020dd8b8(void *c);
 
 /* Parameter names keep this TU's @NNN. */
@@ -322,7 +323,7 @@ int daBtn_c::InitResources()
     }
 
     func_01ffb0bc(&mMovingMeshCollider);
-    func_020393d4(&mMovingMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
 
     {
         s32 sp[3];
@@ -838,7 +839,7 @@ void daBtn_c::func_ov079_02125504()
             v[0].x = px + sn * 0xaa;
             v[0].z = pz + cs * 0xaa;
         }
-        Particle::System::NewSimple(0xb2, v[0].x, v[0].y, v[0].z);
+        Particle::System::NewSimple(kPtclLandingDust, v[0].x, v[0].y, v[0].z);
     } else {
         mStepPlayed = 0;
     }
@@ -919,7 +920,7 @@ void daBtn_c::func_ov079_02125240(){
     v.z = mPosZ;
     Earthquake(v, 0x7d0000);
     mState = 6;
-    func_020393c4(&mMovingMeshCollider, (int)func_ov079_0212522c);
+    func_020393c4(&mMovingMeshCollider, func_ov079_0212522c);
     if (mIsKing != 0) {
         func_ov079_02123d4c((int *)&a, this);
         func_0200fa04(this, &a, 0);
@@ -935,9 +936,8 @@ void daBtn_c::func_ov079_02125240(){
    `ldr ip,[pc,#8]; bx ip` absolute tail-call; bracketed closed immediately
    because it is positional. */
 #pragma long_calls on
-extern "C" void func_ov079_0212522c(void *a, void *b, void *c)
-{
-    ((daBtn_c *)b)->func_ov079_02125058((dActor_c *)c);
+extern "C" void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daBtn_c *>(owner)->func_ov079_02125058(other);
 }
 #pragma long_calls off
 

@@ -94,11 +94,12 @@ extern u8 data_0209d6b4;
 extern u8 data_0209d6b8;
 extern u8 data_0209d6bc;
 extern u8 data_0209d6c0;
-/* Not named yet. Picks the message box's style: the text colour mask
-   (data_0208eecc[it]), which next-page arrow sprite is drawn (at runtime it
-   changes the arrow's colour/style), and the closing sound (0x21 or 5). The
-   Display* entry points set it to 0 or 1. */
-extern u8 data_0209d6c4;
+/* The message box's style: the text colour mask (data_0208eecc[it]), which
+   next-page arrow sprite is drawn, and the closing sound (0x21 or 5). The
+   Display* entry points set it: 1 for a sign (black arrow), 0 for a character
+   talking (white arrow). Under melonDS, flipping it on an open sign box turns
+   the arrow white, and on a Toad's box turns it black. */
+extern u8 gMsgBoxStyle;
 extern u8 gMsgBoxCenterY;
 extern u8 gMsgBoxTop;
 extern u8 gMsgBoxCenterX;
@@ -120,7 +121,7 @@ extern u8 data_0209f20c;
 extern u8 data_0209f220;
 extern u8 gCollectedStarId;
 extern u8 data_0209f2d8;
-extern int data_0209caa0[3];
+extern SaveBlock data_0209caa0;
 extern s32 gRunningKuppaScript;
 extern s8 data_02092110;
 extern u32 gNextActorUpdateMask;
@@ -881,7 +882,7 @@ void Message::DisplayText(int t) {
 
     base = data_0209d6fc;
     idx = data_0209d6d4;
-    data_0209d6c4 = 1;
+    gMsgBoxStyle = 1;
     data_0209d6c0 = 0;
     data_0209d668 = 0;
     data_0209d6a8 = 0;
@@ -941,7 +942,7 @@ void Message::Display(unsigned int msg)
     MultiStore16(ls, (char*)s, 0x800);
     DisplayText(msg);
     data_0209d6d4 = 0x276;
-    data_0209d6c4 = 0;
+    gMsgBoxStyle = 0;
     data_0209d668 = 1;
     data_0209d6a8 = 0;
     p = G2S::GetBG0CharPtr() + 0x4000;
@@ -974,7 +975,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
 
     idx = data_0209d6d4;
     data_0209d6c0 = 2;
-    data_0209d6c4 = 1;
+    gMsgBoxStyle = 1;
     data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
     data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
                     ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
@@ -1036,10 +1037,10 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     }
 
     if (data_0209d6d4 >= 0x1a5) {
-        data_0209d6c4 = 0;
+        gMsgBoxStyle = 0;
         q = (u16 *)((char *)G2::GetBG3ScrPtr() + 0x400);
     } else {
-        data_0209d6c4 = 1;
+        gMsgBoxStyle = 1;
         q = (u16 *)((char *)G2::GetBG3ScrPtr() + 0x4c0);
     }
     div = 0;
@@ -1098,7 +1099,7 @@ extern "C" void func_0201eaac(void)
     gMsgChoiceIndex = 0;
     data_0209d684 = 0;
     data_0209d6b8 = 0;
-    data_0209d6c4 = 0;
+    gMsgBoxStyle = 0;
     data_0209d668 = 0;
     data_0209d654 = 0;
     data_0209d67c = 0;
@@ -1140,7 +1141,7 @@ void Message::DisplaySaving(unsigned short n)
     data_0209d654 = (u8)one;
     gMsgBoxWinLeft = (u8)v7f;
     gMsgBoxWinTop = (u8)v87;
-    data_0209d6c4 = 0;
+    gMsgBoxStyle = 0;
     func_02012790(4);
 
     idx = data_0209d6d4;
@@ -1235,7 +1236,7 @@ extern "C" void func_0201ef50(int arg)
     int cp;
     func_0201eaac();
     data_0209d660 = 0;
-    data_0209d6c4 = 0;
+    gMsgBoxStyle = 0;
     data_0209d690 = 1;
     cp = G2S::GetBG0CharPtr();
     li = 0;
@@ -1300,7 +1301,7 @@ extern "C" void func_0201f138(void)
     gMsgBoxWinLeft = 0x7f;
     gMsgBoxWinTop = 0x87;
     data_0209d660 = 0;
-    data_0209d6c4 = 1;
+    gMsgBoxStyle = 1;
     data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
     data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
                     ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
@@ -1368,11 +1369,11 @@ extern "C" void func_0201f32c(int arg0)
     gMsgBoxWinLeft = 0x7f;
     gMsgBoxWinTop = 0x87;
     if (data_0209d6d4 >= 0x2a && data_0209d6d4 < 0x83) {
-        data_0209d6c4 = 1;
+        gMsgBoxStyle = 1;
         func_02012790(0x20);
     } else {
         u32 b0;
-        data_0209d6c4 = 0;
+        gMsgBoxStyle = 0;
         b0 = (data_0209f2d8 == 2);
         if (b0 == 0) {
             func_02012790(4);
@@ -1391,7 +1392,7 @@ extern "C" void func_0201f32c(int arg0)
     f2d8_val = data_0209f2d8;
     {
         u32 b1 = (f2d8_val == 0);
-        if (b1 != 0 && !(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
+        if (b1 != 0 && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
             u32 b2 = (gRunningKuppaScript != 0);
             if (b2 == 0) {
                 gMsgBoxLeft = 0x10;

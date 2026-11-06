@@ -40,6 +40,7 @@ enum dScMgLuigi_c_AssetId {
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "dScMgLuigi_c.h"
+#include "LevelRng.h"
 #include "Sound.h"
 #include "IRQ.h"
 #include "nitro/fx/fx.h"
@@ -72,8 +73,9 @@ extern s32 GetGameLanguage(void);
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
 extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                        unsigned short a6);
-extern void DrawOamSprite(int p, int a, int b, int c);
-extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, int g);
+struct Matrix2x2;
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern void func_020127a4(int a0, int a1, int a2, int a3);
 extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
@@ -310,7 +312,7 @@ void dScMgLuigi_c::StartIris() {
 
 // @symbol _ZN12dScMgLuigi_c10DrawRewardEv
 void dScMgLuigi_c::DrawReward() {
-    extern void *sLuigiTextSpritesByLanguage[];
+    extern OamAttr **sLuigiTextSpritesByLanguage[];
     extern char sMgDigitSprites[];
     if (mReward.shown == 0)
         return;
@@ -325,7 +327,7 @@ void dScMgLuigi_c::DrawReward() {
     if (y >= 0xb8)
         y = 0xb8;
     s32 language = GetGameLanguage();
-    Mg_RenderSubSpriteMtx(((void **)sLuigiTextSpritesByLanguage[language])[13], x - 8, y, 0);
+    Mg_RenderSubSpriteMtx(sLuigiTextSpritesByLanguage[language][13], x - 8, y, 0);
     Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[25], x + 8, y, 0);
 }
 
@@ -683,7 +685,7 @@ void dScMgLuigi_c::ResetCurtains() {
 
 // @symbol _ZN12dScMgLuigi_c9DrawTimerEv
 void dScMgLuigi_c::DrawTimer() {
-    extern int *sLuigiTextSpritesByLanguage[];
+    extern OamAttr **sLuigiTextSpritesByLanguage[];
     int language;
     if (mState < STATE_PLAY)
         return;
@@ -736,7 +738,7 @@ void dScMgLuigi_c::DrawPictures() {
 
 // @symbol _ZN12dScMgLuigi_c13DrawPenaltiesEv
 void dScMgLuigi_c::DrawPenalties() {
-    extern void *sLuigiTextSpritesByLanguage[];
+    extern OamAttr **sLuigiTextSpritesByLanguage[];
     extern char sMgDigitSprites[];
     int penaltyIndex;
     for (penaltyIndex = 0; penaltyIndex < 0x10; penaltyIndex++) {
@@ -753,8 +755,7 @@ void dScMgLuigi_c::DrawPenalties() {
             if (y >= 0xb8)
                 y = 0xb8;
             language = GetGameLanguage();
-            Mg_RenderSubSpriteMtx(((void **)sLuigiTextSpritesByLanguage[language])[14], x - 0x10, y,
-                                  0);
+            Mg_RenderSubSpriteMtx(sLuigiTextSpritesByLanguage[language][14], x - 0x10, y, 0);
             Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[41], x, y, 0);
             Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[40], x + 0x10, y, 0);
         }
@@ -854,13 +855,12 @@ after_flag:
 
 // @symbol _ZN12dScMgLuigi_c17MovePictureBounceEi
 void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
-    extern int data_0209d4b8;
     extern int sLuigiBounceSpeeds[];
     extern s16 data_02082214[];
     u8 *started = &mStarted[pictureIndex];
 
     if (*started == 0) {
-        u32 randomValue = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        u32 randomValue = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         u16 initialAngle = (u16)((((randomValue << 4) >> 15) << 12));
 
         mMovePhase[pictureIndex] = initialAngle;
@@ -973,11 +973,11 @@ void dScMgLuigi_c::MovePictureSway(int idx) {
 // @symbol _ZN12dScMgLuigi_c22MovePictureDriftRandomEi
 /* Drift on a random angle, one of sixteen steps of 0x1000. */
 void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
-    extern int data_0209d4b8;
     extern int sLuigiDriftRandomSpeed[];
     extern s16 data_02082214[];
     if (mStarted[pictureIndex] == 0) {
-        unsigned int randomValue = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        unsigned int randomValue =
+            ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         unsigned short initialAngle = (unsigned short)(((randomValue << 4) >> 15) << 12);
         mMovePhase[pictureIndex] = initialAngle;
         mStarted[pictureIndex]++;
@@ -1254,7 +1254,6 @@ void dScMgLuigi_c::CheckTouch() {
    the per-arm loop locals are the spelling that matches; the tail loops
    keep the random call inline. */
 void dScMgLuigi_c::PlaceBoardLayout() {
-    extern int data_0209d4b8;
     extern u8 sLuigiBoardModes[];
     int layout;
     int randomValue;
@@ -1267,9 +1266,9 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int column;
         int firstCharacter;
         pictureIndex = 0;
-        randomValue = RandomIntInternal(&data_0209d4b8);
+        randomValue = RandomIntInternal(&data_0209d4b8.value);
         firstCharacter = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
-        randomValue = RandomIntInternal(&data_0209d4b8);
+        randomValue = RandomIntInternal(&data_0209d4b8.value);
         mTarget = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
         for (i = 0; i < 2; i++) {
             for (column = 0; column < 2; column++) {
@@ -1288,7 +1287,7 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int pictureIndex;
         int column;
         pictureIndex = 0;
-        randomValue = RandomIntInternal(&data_0209d4b8);
+        randomValue = RandomIntInternal(&data_0209d4b8.value);
         mTarget = ((((u32)randomValue >> 16) & 0x7fff) * 16 >> 15) + 1;
         for (i = 0; i < 4; i++) {
             for (column = 0; column < 4; column++) {
@@ -1297,10 +1296,10 @@ void dScMgLuigi_c::PlaceBoardLayout() {
                 mPosY[pictureIndex] = (0x30 + i * 0x20) << 12;
                 mActive[pictureIndex] = 1;
                 mKind[pictureIndex] = PICTURE_RESTART;
-                randomValue = RandomIntInternal(&data_0209d4b8);
+                randomValue = RandomIntInternal(&data_0209d4b8.value);
                 mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
                 if (mWanted == mCharacter[pictureIndex]) {
-                    randomValue = RandomIntInternal(&data_0209d4b8);
+                    randomValue = RandomIntInternal(&data_0209d4b8.value);
                     characterOffset = (((u32)randomValue >> 16) & 0x7fff) * 3 >> 15;
                     mCharacter[pictureIndex] += characterOffset + 1;
                     mCharacter[pictureIndex] &= 3;
@@ -1315,7 +1314,7 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int pictureIndex;
         int column;
         pictureIndex = 0;
-        randomValue = RandomIntInternal(&data_0209d4b8);
+        randomValue = RandomIntInternal(&data_0209d4b8.value);
         mTarget = ((((u32)randomValue >> 16) & 0x7fff) * 0x30 >> 15) + 1;
         for (i = 0; i < 6; i++) {
             for (column = 0; column < 8; column++) {
@@ -1324,10 +1323,10 @@ void dScMgLuigi_c::PlaceBoardLayout() {
                 mPosY[pictureIndex] = (0x10 + i * 0x20) << 12;
                 mActive[pictureIndex] = 1;
                 mKind[pictureIndex] = PICTURE_RESTART;
-                randomValue = RandomIntInternal(&data_0209d4b8);
+                randomValue = RandomIntInternal(&data_0209d4b8.value);
                 mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
                 if (mWanted == mCharacter[pictureIndex]) {
-                    randomValue = RandomIntInternal(&data_0209d4b8);
+                    randomValue = RandomIntInternal(&data_0209d4b8.value);
                     characterOffset = (((u32)randomValue >> 16) & 0x7fff) * 3 >> 15;
                     mCharacter[pictureIndex] += characterOffset + 1;
                     mCharacter[pictureIndex] &= 3;
@@ -1341,7 +1340,7 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int pictureIndex;
         int i;
         pictureIndex = 0;
-        randomValue = RandomIntInternal(&data_0209d4b8);
+        randomValue = RandomIntInternal(&data_0209d4b8.value);
         mTarget = ((((u32)randomValue >> 16) & 0x7fff) * 8 >> 15) + 1;
         for (i = 0; i < 8; i++) {
             u8 characterOffset;
@@ -1349,10 +1348,10 @@ void dScMgLuigi_c::PlaceBoardLayout() {
             mPosY[pictureIndex] = -(5 << 12);
             mActive[pictureIndex] = 1;
             mKind[pictureIndex] = PICTURE_RESTART;
-            randomValue = RandomIntInternal(&data_0209d4b8);
+            randomValue = RandomIntInternal(&data_0209d4b8.value);
             mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 3 >> 15;
             if (mWanted == mCharacter[pictureIndex]) {
-                randomValue = RandomIntInternal(&data_0209d4b8);
+                randomValue = RandomIntInternal(&data_0209d4b8.value);
                 characterOffset = ((((u32)randomValue >> 16) & 0x7fff) * 2 >> 15) + 1;
                 mCharacter[pictureIndex] += characterOffset;
                 if (mCharacter[pictureIndex] >= 3)
@@ -1365,9 +1364,9 @@ void dScMgLuigi_c::PlaceBoardLayout() {
     }
 
     for (i = 0; i < 8; i++)
-        mColDir[i] = (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 2 >> 15;
+        mColDir[i] = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 2 >> 15;
     for (i = 0; i < 6; i++)
-        mRowDir[i] = (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 2 >> 15;
+        mRowDir[i] = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 2 >> 15;
     mFilled++;
 }
 
@@ -1375,7 +1374,6 @@ void dScMgLuigi_c::PlaceBoardLayout() {
 /* One picture per call, or a whole fixed board. character and targetFirst
    stay as pointers: character selection and the final capacity test reload them. */
 void dScMgLuigi_c::PlaceNextPicture() {
-    extern int data_0209d4b8;
     extern u8 sLuigiBoardFlags[];
     extern u8 sLuigiBoardModes[];
     extern u16 sLuigiPlaceLimits[];
@@ -1399,12 +1397,12 @@ void dScMgLuigi_c::PlaceNextPicture() {
     capacity = sLuigiPlaceLimits[boardIndex];
     pictureIndex = mTarget;
 
-    randomValue = RandomIntInternal(&data_0209d4b8);
+    randomValue = RandomIntInternal(&data_0209d4b8.value);
     mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
     {
         u8 *character = &mCharacter[pictureIndex];
         if (mWanted == mCharacter[pictureIndex]) {
-            randomValue = RandomIntInternal(&data_0209d4b8);
+            randomValue = RandomIntInternal(&data_0209d4b8.value);
             *character += ((((u32)randomValue >> 16) & 0x7fff) * 3 >> 15) + 1;
             *character &= 3;
         }
@@ -1414,14 +1412,14 @@ void dScMgLuigi_c::PlaceNextPicture() {
         int jitterX;
         int jitterY;
         do {
-            col = (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 13 >> 15;
-            row = (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 9 >> 15;
+            col = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 13 >> 15;
+            row = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9 >> 15;
         } while (col >= 6 && col <= 10 && row >= 4 && row <= 8);
 
         jitterY = -2;
         jitterX = jitterY;
-        jitterX += (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5 >> 15;
-        jitterY += (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5 >> 15;
+        jitterX += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
+        jitterY += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
 
         if (sLuigiBoardFlags[boardIndex] != 0) {
             mPosX[0] = (col * 20 + (jitterX + 8)) << 12;
@@ -1455,8 +1453,8 @@ void dScMgLuigi_c::PlaceNextPicture() {
                     row = 0;
             }
         } else {
-            col = (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 13 >> 15;
-            row = (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 9 >> 15;
+            col = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 13 >> 15;
+            row = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9 >> 15;
         }
         cell = ((dScMgLuigi_c *)((char *)this + col * 9 + row))->mGrid[0];
         if (*cell == 0) {
@@ -1464,8 +1462,8 @@ void dScMgLuigi_c::PlaceNextPicture() {
             int jitterY;
             jitterY = -2;
             jitterX = jitterY;
-            jitterX += (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5 >> 15;
-            jitterY += (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5 >> 15;
+            jitterX += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
+            jitterY += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
             mPosX[pictureIndex] = (col * 20 + (jitterX + 8)) << 12;
             mPosY[pictureIndex] = (row * 20 + (jitterY + 16)) << 12;
             *cell = 1;
@@ -1494,15 +1492,18 @@ void dScMgLuigi_c::PlaceNextPicture() {
     if (mFilled == 0)
         return;
 
-    mLevelPhase[0] = ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 16 >> 15) << 12;
-    mLevelPhase[1] = ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 16 >> 15) << 12;
-    mLevelPhase[2] = ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 16 >> 15) << 12;
-    mLevelPhase[3] = ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 16 >> 15) << 12;
+    mLevelPhase[0] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
+                     << 12;
+    mLevelPhase[1] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
+                     << 12;
+    mLevelPhase[2] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
+                     << 12;
+    mLevelPhase[3] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
+                     << 12;
 }
 
 // @symbol _ZN12dScMgLuigi_c12ChooseTargetEv
 void dScMgLuigi_c::ChooseTarget() {
-    extern int data_0209d4b8;
     extern u8 sLuigiWantedPicks[];
     extern u16 sLuigiWantedPosterTiles[];
     s32 tileRow;
@@ -1522,10 +1523,8 @@ void dScMgLuigi_c::ChooseTarget() {
         choiceOffset = 0xa;
     }
 
-    mWanted =
-        (sLuigiWantedPicks +
-         choiceOffset)[((u32)(((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0xa) >>
-                       15];
+    mWanted = (sLuigiWantedPicks + choiceOffset)
+        [((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xa) >> 15];
 
     t = mBoard;
     if (t == 9) {
@@ -1534,7 +1533,8 @@ void dScMgLuigi_c::ChooseTarget() {
     if (t == 0xe || t == 0x10 || t == 0x11 || t == 0x13) {
         if (mWanted == 3) {
             mWanted =
-                (u8)((((u32)(((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3)) >> 15);
+                (u8)((((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3)) >>
+                     15);
         }
     }
 
@@ -1552,16 +1552,16 @@ void dScMgLuigi_c::ChooseTarget() {
 
 // @symbol _ZN12dScMgLuigi_c11ChooseBoardEv
 void dScMgLuigi_c::ChooseBoard() {
-    extern int data_0209d4b8;
     int boardIndex;
     mPrevBoard = mBoard;
     boardIndex = mLevel;
     if (boardIndex >= 0x14) {
         int pick =
-            (int)(((((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0xa) >> 0xf);
+            (int)(((((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xa) >>
+                  0xf);
         if (pick + 0xa == mPrevBoard) {
             int step =
-                (int)((((((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 9) >>
+                (int)((((((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9) >>
                        0xf)) +
                 1;
             pick += step;
@@ -1734,7 +1734,7 @@ extern LuigiStateHandler sLuigiStateTable[];
 extern void *sLuigiBg1NcgPath;
 extern void *Ov004_LoadFileByPath(const char *path);
 extern void DecompressLZ16(void *src, void *dst);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void Ov004_Deallocate(void *ptr);
 extern int func_02054d88(void);
@@ -1812,8 +1812,8 @@ s32 dScMgLuigi_c::InitResources() {
     volatile u16 fillMain;
     volatile u16 fillSub;
     void *arc;
-    int fileData;
-    int objectTiles;
+    void *fileData;
+    void *objectTiles;
 
     arc = Ov004_LoadFileByPath((const char *)&sLuigiBg1NcgPath);
     if (arc == 0)
@@ -1826,12 +1826,12 @@ s32 dScMgLuigi_c::InitResources() {
     DecompressLZ16(arc, (void *)func_02054d88());
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI1_NCL_BIN);
-    GX::LoadBGPltt((const void *)fileData, 0x60, 0x1a0);
-    Deallocate((void *)fileData);
+    GX::LoadBGPltt(fileData, 0x60, 0x1a0);
+    Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI1_NSC_BIN);
-    func_02056314((void *)fileData, 0, 0x800);
-    Deallocate((void *)fileData);
+    func_02056314(fileData, 0, 0x800);
+    Deallocate(fileData);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x0400000c &= ~3;
@@ -1840,12 +1840,12 @@ s32 dScMgLuigi_c::InitResources() {
     *(volatile u16 *)0x0400000c = (*(volatile u16 *)0x0400000c & 0x43) | 0x1410;
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
-    DecompressLZ16((void *)fileData, (void *)(G2::GetBG2CharPtr() + 0x4000));
-    Deallocate((void *)fileData);
+    DecompressLZ16(fileData, (void *)(G2::GetBG2CharPtr() + 0x4000));
+    Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);
-    GX::LoadBGPltt((const void *)fileData, 0x40, 0x20);
-    Deallocate((void *)fileData);
+    GX::LoadBGPltt(fileData, 0x40, 0x20);
+    Deallocate(fileData);
 
     screenMap = G2::GetBG2ScrPtr();
     fillMain = 0x23e1;
@@ -1853,8 +1853,8 @@ s32 dScMgLuigi_c::InitResources() {
 
     objectTiles = LoadFile(ASSET_D_2D_MG_LUIGI_NCG_BIN);
     fileData = LoadFile(ASSET_D_2D_MG_LUIGI_NCL_BIN);
-    DecompressLZ16((void *)objectTiles, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)fileData, 0, 0x100);
+    DecompressLZ16(objectTiles, (void *)0x6400000);
+    GX::LoadOBJPltt(fileData, 0, 0x100);
 
     *(volatile u16 *)0x0400100c &= ~3;
     *(volatile u16 *)0x0400100c &= ~0x40;
@@ -1862,18 +1862,18 @@ s32 dScMgLuigi_c::InitResources() {
     *(volatile u16 *)0x0400100c = (*(volatile u16 *)0x0400100c & 0x43) | 0x1210;
 
     {
-        int subFileData;
+        void *subFileData;
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
-        DecompressLZ16((void *)subFileData, (void *)(G2S::GetBG2CharPtr() + 0x4000));
-        Deallocate((void *)subFileData);
+        DecompressLZ16(subFileData, (void *)(G2S::GetBG2CharPtr() + 0x4000));
+        Deallocate(subFileData);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);
-        GXS::LoadBGPltt((const void *)subFileData, 0x1e0, 0x20);
-        Deallocate((void *)subFileData);
+        GXS::LoadBGPltt(subFileData, 0x1e0, 0x20);
+        Deallocate(subFileData);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NSC_BIN);
-        func_02056374((const void *)subFileData, 0, 0x800);
-        Deallocate((void *)subFileData);
+        func_02056374(subFileData, 0, 0x800);
+        Deallocate(subFileData);
 
         gSubScreenLayers |= 8;
         *(volatile u16 *)0x0400100e &= ~3;
@@ -1883,13 +1883,13 @@ s32 dScMgLuigi_c::InitResources() {
         screenMap = G2S::GetBG3ScrPtr();
         fillSub = 0xf3e1;
         MultiStore16(fillSub, screenMap, 0x800);
-        Deallocate((void *)subFileData);
+        Deallocate(subFileData);
     }
 
-    DecompressLZ16((void *)objectTiles, (void *)0x6600000);
-    GXS::LoadOBJPltt((const void *)fileData, 0, 0x100);
-    Deallocate((void *)objectTiles);
-    Deallocate((void *)fileData);
+    DecompressLZ16(objectTiles, (void *)0x6600000);
+    GXS::LoadOBJPltt(fileData, 0, 0x100);
+    Deallocate(objectTiles);
+    Deallocate(fileData);
 
     mClears = 0;
     ResetBoard();

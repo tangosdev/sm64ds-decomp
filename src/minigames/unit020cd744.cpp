@@ -515,7 +515,7 @@ extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int LenVec3(Vector3 *v);
+extern int LenVec3(const Vector3 *v);
 extern int DotVec3(const Vector3 *a, const Vector3 *b);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
@@ -812,7 +812,7 @@ namespace s020ce8a0 {
 // @symbol TrmpItem_ProjectOnLine
 
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" int DotVec3(struct Vector3 *a, struct Vector3 *b);
+extern "C" int DotVec3(const struct Vector3 *a, const struct Vector3 *b);
 
 typedef TrampolineObjectCallbacks Obj;
 
@@ -849,7 +849,7 @@ namespace s020ce988 {
 extern "C" {
 void Matrix4x3_FromQuaternion(const void *q, struct Matrix4x3 *mF);
 void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
-void MulMat4x3Mat4x3(struct Matrix4x3 *a, struct Matrix4x3 *b, struct Matrix4x3 *out);
+void MulMat4x3Mat4x3(const struct Matrix4x3 *a, const struct Matrix4x3 *b, struct Matrix4x3 *out);
 }
 extern "C" {
 extern struct Matrix4x3 data_020a0e68;
@@ -1070,7 +1070,7 @@ extern "C" {
 extern int sTrmp2Score;
 }
 extern "C" void TrmpItem_Hide(int *p);
-extern "C" void TrmpItem_HideAll(void) {
+extern "C" void TrmpItem_HideAll(u32) {
     int itemIndex = 0;
     int itemOffset;
     if (sTrmpItemCount > 0) {
@@ -1161,20 +1161,16 @@ extern "C" char *TrmpItem_Spawn(int position, int *normal, int itemType, int mot
 }
 
 namespace s020cf040 {
-struct Vec3 {
-    int x;
-    int y;
-    int z;
-};
-extern "C" int DotVec3(struct Vec3 *a, struct Vec3 *b);
+extern "C" int DotVec3(const Vector3 *a, const Vector3 *b);
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern "C" int LenVec3(struct Vec3 *v);
+extern "C" int LenVec3(const Vector3 *v);
 extern "C" {
 extern int data_ov006_0212e0f0[];
 }
-extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, struct Vec3 *offsetVector) {
+extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint,
+                                       const Vector3 *offsetVector) {
     int row;
-    int negatedProjection = -DotVec3(offsetVector, (struct Vec3 *)&TRMPLINE(sl)->mNormal);
+    int negatedProjection = -DotVec3(offsetVector, &TRMPLINE(sl)->mNormal);
     int *amplitude = TRMPLINE(sl)->mFlexAmplitude;
     char *restVertex = (char *)TRMPLINE(sl)->mRestVerts;
     int weightedAmplitude;
@@ -1182,8 +1178,8 @@ extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, struct Ve
     for (row = 0; row < 4; row++) {
         int column;
         for (column = 0; column < 4; column++) {
-            struct Vec3 delta;
-            SubVec3((Vector3 *)restVertex, (Vector3 *)referencePoint, (Vector3 *)&delta);
+            Vector3 delta;
+            SubVec3((Vector3 *)restVertex, (Vector3 *)referencePoint, &delta);
             int halfLength = (long long)(TRMPLINE(sl)->mHalfWidth);
             int distance = LenVec3(&delta);
             int distanceWeight = cstd::fdiv(halfLength, halfLength + distance);
@@ -1199,26 +1195,22 @@ extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, struct Ve
 }
 
 namespace s020cf124 {
-typedef struct {
-    int x, y, z;
-} Vec3;
-
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern "C" void CrossVec3(const Vec3 *a, const Vec3 *b, Vec3 *out);
+extern "C" void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 extern "C" void NormalizeVec3(const Vector3 *v, Vector3 *out);
 
 extern "C" void TrmpLine_ComputeNormals(char *self) {
-    Vec3 columnEdge;
-    Vec3 rowEdge;
+    Vector3 columnEdge;
+    Vector3 rowEdge;
     char *p;
-    Vec3 *normal;
+    Vector3 *normal;
     int *packedNormal;
     int row;
     int column;
     int componentMask = 0x3ff;
 
     p = (char *)TRMPLINE(self)->mVerts;
-    normal = (Vec3 *)TRMPLINE(self)->mNormals;
+    normal = (Vector3 *)TRMPLINE(self)->mNormals;
     packedNormal = TRMPLINE(self)->mPackedNormals;
 
     for (row = 0; row < 4; row++) {
@@ -1236,21 +1228,21 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
             components[2] = zero;
 
             if (column == 0)
-                SubVec3((Vector3 *)p, (Vector3 *)p + 1, (Vector3 *)&columnEdge);
+                SubVec3((Vector3 *)p, (Vector3 *)p + 1, &columnEdge);
             else if (column == 3)
-                SubVec3((Vector3 *)p - 1, (Vector3 *)p, (Vector3 *)&columnEdge);
+                SubVec3((Vector3 *)p - 1, (Vector3 *)p, &columnEdge);
             else
-                SubVec3((Vector3 *)p - 1, (Vector3 *)p + 1, (Vector3 *)&columnEdge);
+                SubVec3((Vector3 *)p - 1, (Vector3 *)p + 1, &columnEdge);
 
             if (row == 0)
-                SubVec3((Vector3 *)p, (Vector3 *)p + 4, (Vector3 *)&rowEdge);
+                SubVec3((Vector3 *)p, (Vector3 *)p + 4, &rowEdge);
             else if (row == 3)
-                SubVec3((Vector3 *)p - 4, (Vector3 *)p, (Vector3 *)&rowEdge);
+                SubVec3((Vector3 *)p - 4, (Vector3 *)p, &rowEdge);
             else
-                SubVec3((Vector3 *)p - 4, (Vector3 *)p + 4, (Vector3 *)&rowEdge);
+                SubVec3((Vector3 *)p - 4, (Vector3 *)p + 4, &rowEdge);
 
             CrossVec3(&columnEdge, &rowEdge, normal);
-            NormalizeVec3((const Vector3 *)normal, (Vector3 *)normal);
+            NormalizeVec3(normal, normal);
 
             normal->x = FX_MUL(normal->x, 0xff8);
             normal->y = FX_MUL(normal->y, 0xff8);
@@ -1277,7 +1269,6 @@ typedef struct {
     s32 z;
 } Vec3;
 
-struct Matrix4x3;
 extern "C" struct Matrix4x3 data_020a0e68;
 extern "C" struct Matrix4x3 data_0209b3ec;
 extern "C" unsigned short sTrmpLineDiffuse[];
@@ -1286,7 +1277,8 @@ extern "C" int sTrmpLineTexCoords[];
 extern "C" void *sTrmpLineTexAddr;
 extern "C" void *sTrmpLinePlttAddr;
 extern "C" void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
-extern "C" void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
+extern "C" void MulMat4x3Mat4x3(const struct Matrix4x3 *a, const struct Matrix4x3 *b,
+                                struct Matrix4x3 *out);
 extern "C" void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *m, int x, int y, int z);
 extern "C" void func_020553a4(int *m);
 
@@ -1322,18 +1314,18 @@ static inline void G3_Vtx(s16 x, s16 y, s16 z) {
  * inside the write reorders the vertex loads. */
 extern "C" void TrmpLine_Draw(char *obj) {
     int i;
-    int m2[12];
-    int m1[12];
+    Matrix4x3 m2;
+    Matrix4x3 m1;
     Matrix4x3_FromTranslation(&data_020a0e68, TRMPLINE(obj)->mCenter.x, TRMPLINE(obj)->mCenter.y,
                               TRMPLINE(obj)->mCenter.z);
-    MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)&data_0209b3ec, m1);
+    MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &m1);
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, TRMPLINE(obj)->mScale.x, TRMPLINE(obj)->mScale.y,
                                   TRMPLINE(obj)->mScale.z);
-    MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)&data_0209b3ec, m2);
+    MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &m2);
     REG_MTX_MODE = 2;
-    func_020553a4(m1);
+    func_020553a4(m1.m);
     REG_MTX_MODE = 1;
-    func_020553a4(m2);
+    func_020553a4(m2.m);
     REG_MTX_SCALE = 0x100000;
     REG_MTX_SCALE = 0x100000;
     REG_MTX_SCALE = 0x100000;
@@ -1649,11 +1641,11 @@ struct TrampolineContactView : TrampolineObjectCallbacks {
 
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern "C" int DotVec3(Vector3 *a, Vector3 *b);
+extern "C" int DotVec3(const Vector3 *a, const Vector3 *b);
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
 extern "C" int func_0203d524(int *a, int *b);
 extern "C" void D3D_PlaySePannedLoop(int a0, int a1, int a2);
-extern "C" void TrmpLine_PointDistance(char *sl, void *arg1, Vector3 *r2);
+extern "C" void TrmpLine_PointDistance(char *sl, void *arg1, const Vector3 *r2);
 extern "C" void TrmpLine_SetStateSettle(char *p);
 extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -1865,7 +1857,7 @@ extern "C" {
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalarInPlace(int *v, int s);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
@@ -1978,7 +1970,7 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
     TRMPLINE(c)->mContactMotion.x = 0 - TRMPLINE(c)->mNormal.x;
     TRMPLINE(c)->mContactMotion.y = 0 - TRMPLINE(c)->mNormal.y;
     TRMPLINE(c)->mContactMotion.z = 0 - TRMPLINE(c)->mNormal.z;
-    Vec3_MulScalarInPlace((s32 *)&TRMPLINE(c)->mContactMotion, 0x800);
+    Vec3_MulScalarInPlace(&TRMPLINE(c)->mContactMotion, 0x800);
 
     SubVec3(&startPosition, &TRMPLINE(c)->mCenter, &startPosition);
     SubVec3(&endPosition, &TRMPLINE(c)->mCenter, &endPosition);
@@ -2191,7 +2183,7 @@ extern "C" void TrmpLine_UpdateAll(void) {
 namespace s020d0b04 {
 
 // @symbol TrmpLine_ClearAll
-extern "C" void TrmpLine_ClearAll(void) {
+extern "C" void TrmpLine_ClearAll(u32) {
     int i = 0;
     unsigned char *p = (unsigned char *)sTrmpLines;
     int r0 = i;

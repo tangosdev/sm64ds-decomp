@@ -3364,132 +3364,132 @@
     {
       "from": "@2197",
       "to": "@2141",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2197 to @2196 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2196) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2198",
       "to": "@2142",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2198 to @2197 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2197) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2199",
       "to": "@2143",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2199 to @2198 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2198) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2200",
       "to": "@2144",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2200 to @2199 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2199) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2201",
       "to": "@2145",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2201 to @2200 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2200) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2202",
       "to": "@2146",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2202 to @2201 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2201) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2203",
       "to": "@2147",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2203 to @2202 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2202) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2204",
       "to": "@2148",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2204 to @2203 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2203) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2205",
       "to": "@2149",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2205 to @2204 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2204) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2206",
       "to": "@2150",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2206 to @2205 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2205) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2207",
       "to": "@2151",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2207 to @2206 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2206) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2208",
       "to": "@2152",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2208 to @2207 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2207) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2209",
       "to": "@2153",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2209 to @2208 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2208) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2210",
       "to": "@2154",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2210 to @2209 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2209) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2211",
       "to": "@1094",
-      "evidence": "mwcc emits @2211; that name is already used in ov002, so it is renamed to the unused same-length @1094"
+      "evidence": "mwcc emits @2211; that name is already used in ov002, so it is renamed to the unused same-length @1094. Re-keyed from @2211 to @2210 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2210) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2212",
       "to": "@1096",
-      "evidence": "mwcc emits @2212; that name is already used in ov002, so it is renamed to the unused same-length @1096"
+      "evidence": "mwcc emits @2212; that name is already used in ov002, so it is renamed to the unused same-length @1096. Re-keyed from @2212 to @2211 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2211) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2213",
       "to": "@1106",
-      "evidence": "mwcc emits @2213; that name is already used in ov002, so it is renamed to the unused same-length @1106"
+      "evidence": "mwcc emits @2213; that name is already used in ov002, so it is renamed to the unused same-length @1106. Re-keyed from @2213 to @2212 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2212) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2214",
       "to": "@1108",
-      "evidence": "mwcc emits @2214; that name is already used in ov002, so it is renamed to the unused same-length @1108"
+      "evidence": "mwcc emits @2214; that name is already used in ov002, so it is renamed to the unused same-length @1108. Re-keyed from @2214 to @2213 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2213) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2215",
       "to": "@1112",
-      "evidence": "mwcc emits @2215; that name is already used in ov002, so it is renamed to the unused same-length @1112"
+      "evidence": "mwcc emits @2215; that name is already used in ov002, so it is renamed to the unused same-length @1112. Re-keyed from @2215 to @2214 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2214) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2216",
       "to": "@1114",
-      "evidence": "mwcc emits @2216; that name is already used in ov002, so it is renamed to the unused same-length @1114"
+      "evidence": "mwcc emits @2216; that name is already used in ov002, so it is renamed to the unused same-length @1114. Re-keyed from @2216 to @2215 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2215) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2217",
       "to": "@1130",
-      "evidence": "mwcc emits @2217; that name is already used in ov002, so it is renamed to the unused same-length @1130"
+      "evidence": "mwcc emits @2217; that name is already used in ov002, so it is renamed to the unused same-length @1130. Re-keyed from @2217 to @2216 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2216) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2218",
       "to": "@1132",
-      "evidence": "mwcc emits @2218; that name is already used in ov002, so it is renamed to the unused same-length @1132"
+      "evidence": "mwcc emits @2218; that name is already used in ov002, so it is renamed to the unused same-length @1132. Re-keyed from @2218 to @2217 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2217) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2219",
       "to": "@1134",
-      "evidence": "mwcc emits @2219; that name is already used in ov002, so it is renamed to the unused same-length @1134"
+      "evidence": "mwcc emits @2219; that name is already used in ov002, so it is renamed to the unused same-length @1134. Re-keyed from @2219 to @2218 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2218) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2220",
       "to": "@1135",
-      "evidence": "mwcc emits @2220; that name is already used in ov002, so it is renamed to the unused same-length @1135"
+      "evidence": "mwcc emits @2220; that name is already used in ov002, so it is renamed to the unused same-length @1135. Re-keyed from @2220 to @2219 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2219) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2221",
       "to": "@1136",
-      "evidence": "mwcc emits @2221; that name is already used in ov002, so it is renamed to the unused same-length @1136"
+      "evidence": "mwcc emits @2221; that name is already used in ov002, so it is renamed to the unused same-length @1136. Re-keyed from @2221 to @2220 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2220) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     },
     {
       "from": "@2222",
       "to": "@1142",
-      "evidence": "mwcc emits @2222; that name is already used in ov002, so it is renamed to the unused same-length @1142"
+      "evidence": "mwcc emits @2222; that name is already used in ov002, so it is renamed to the unused same-length @1142. Re-keyed from @2222 to @2221 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2221) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0)."
     }
   ],
   "symbol_binding_rewrites": [

@@ -977,79 +977,79 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@785",
+      "from": "@784",
       "to": "@1",
-      "evidence": "emitted destructor-registration node name collides with the configured @700 on ov089 on main; @1 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "evidence": "emitted destructor-registration node name collides with the configured @700 on ov089 on main; @1 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @785 to @784 when the function-local anonymous POD vector typedef was retired (#4570)."
+    },
+    {
+      "from": "@785",
+      "to": "@2",
+      "evidence": "emitted destructor-registration node name collides with the configured @701 on ov081 on main; @2 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @786 to @785 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@786",
-      "to": "@2",
-      "evidence": "emitted destructor-registration node name collides with the configured @701 on ov081 on main; @2 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@3",
+      "evidence": "emitted destructor-registration node name collides with the configured @702 on ov089 on main; @3 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @787 to @786 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@787",
-      "to": "@3",
-      "evidence": "emitted destructor-registration node name collides with the configured @702 on ov089 on main; @3 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@4",
+      "evidence": "emitted destructor-registration node name collides with the configured @703 on ov081 on main; @4 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @788 to @787 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@788",
-      "to": "@4",
-      "evidence": "emitted destructor-registration node name collides with the configured @703 on ov081 on main; @4 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@5",
+      "evidence": "emitted destructor-registration node name collides with the configured @704 on ov089 on main; @5 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @789 to @788 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@789",
-      "to": "@5",
-      "evidence": "emitted destructor-registration node name collides with the configured @704 on ov089 on main; @5 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@6",
+      "evidence": "emitted destructor-registration node name collides with the configured @705 on ov060 on main; @6 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @790 to @789 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@790",
-      "to": "@6",
-      "evidence": "emitted destructor-registration node name collides with the configured @705 on ov060 on main; @6 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@7",
+      "evidence": "emitted destructor-registration node name collides with the configured @706 on ov089 on main; @7 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @791 to @790 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@791",
-      "to": "@7",
-      "evidence": "emitted destructor-registration node name collides with the configured @706 on ov089 on main; @7 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@8",
+      "evidence": "emitted destructor-registration node name collides with the configured @707 on ov060 on main; @8 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @792 to @791 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@792",
-      "to": "@8",
-      "evidence": "emitted destructor-registration node name collides with the configured @707 on ov060 on main; @8 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@9",
+      "evidence": "emitted destructor-registration node name collides with the configured @708 on ov089 on main; @9 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @793 to @792 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@793",
-      "to": "@9",
-      "evidence": "emitted destructor-registration node name collides with the configured @708 on ov089 on main; @9 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@10",
+      "evidence": "emitted destructor-registration node name collides with the configured @709 on ov060 on main; @10 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @794 to @793 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@794",
-      "to": "@10",
-      "evidence": "emitted destructor-registration node name collides with the configured @709 on ov060 on main; @10 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@11",
+      "evidence": "emitted destructor-registration node name collides with the configured @710 on ov089 on main; @11 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @795 to @794 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@795",
-      "to": "@11",
-      "evidence": "emitted destructor-registration node name collides with the configured @710 on ov089 on main; @11 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@12",
+      "evidence": "emitted destructor-registration node name collides with the configured @711 on ov060 on main; @12 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @796 to @795 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@796",
-      "to": "@12",
-      "evidence": "emitted destructor-registration node name collides with the configured @711 on ov060 on main; @12 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@13",
+      "evidence": "emitted destructor-registration node name collides with the configured @712 on ov063 on main; @13 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @797 to @796 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@797",
-      "to": "@13",
-      "evidence": "emitted destructor-registration node name collides with the configured @712 on ov063 on main; @13 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "to": "@14",
+      "evidence": "emitted destructor-registration node name collides with the configured @713 on ov060 on main; @14 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @798 to @797 when the function-local anonymous POD vector typedef was retired (#4570)."
     },
     {
       "from": "@798",
-      "to": "@14",
-      "evidence": "emitted destructor-registration node name collides with the configured @713 on ov060 on main; @14 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
-    },
-    {
-      "from": "@799",
       "to": "@15",
-      "evidence": "emitted destructor-registration node name collides with the configured @714 on ov063 on main; @15 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post)."
+      "evidence": "emitted destructor-registration node name collides with the configured @714 on ov063 on main; @15 is unused everywhere and shorter than the original 2026-10-23: #include Sound.h shifted file-local numbering +13; from-names re-pointed by symbol-index order (indices identical pre/post). Re-keyed from @799 to @798 when the function-local anonymous POD vector typedef was retired (#4570)."
     }
   ],
   "symbol_binding_rewrites": [

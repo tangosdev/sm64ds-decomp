@@ -139,7 +139,7 @@ extern int WM_SetBeaconIndication(void *callback, int flag);
 extern int WM_StartScan(void *callback, char *scanParam);
 extern int WM_StartConnect(void *callback, int bssDesc, void *ssid);
 extern int WM_StartMPEx(void *callback, int recvBuf, u16 recvBufSize, int sendBuf, u16 sendBufSize,
-                        u16 mpFreq, int defaultRetryCount, int minPollBmpMode, int singlePacketMode,
+                        u16 mpFreq, u16 defaultRetryCount, int minPollBmpMode, int singlePacketMode,
                         int fixFreqMode, int ignoreFatalError);
 /* It returns WM_SetMPDataToPortEx's WM result. */
 extern int WM_SetMPDataToPort(int callback, int data, int size, int aidBitmap, u16 port, u16 prio);

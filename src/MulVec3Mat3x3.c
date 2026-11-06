@@ -1,12 +1,12 @@
-typedef long long s64;
+#include "types.h"
+#include "math/Matrix.h"
 
-void MulVec3Mat3x3(const int *in, const int *m, int *out)
-{
-    int x = in[0];
-    int y = in[1];
-    int z = in[2];
+void MulVec3Mat3x3(const Vector3 *in, const Matrix3x3 *m, Vector3 *out) {
+    int x = in->x;
+    int y = in->y;
+    int z = in->z;
 
-    out[0] = (int)(((s64)x * m[0] + (s64)y * m[3] + (s64)z * m[6]) >> 12);
-    out[1] = (int)(((s64)x * m[1] + (s64)y * m[4] + (s64)z * m[7]) >> 12);
-    out[2] = (int)(((s64)x * m[2] + (s64)y * m[5] + (s64)z * m[8]) >> 12);
+    out->x = (int)(((s64)x * m->m[0] + (s64)y * m->m[3] + (s64)z * m->m[6]) >> 12);
+    out->y = (int)(((s64)x * m->m[1] + (s64)y * m->m[4] + (s64)z * m->m[7]) >> 12);
+    out->z = (int)(((s64)x * m->m[2] + (s64)y * m->m[5] + (s64)z * m->m[8]) >> 12);
 }

@@ -116,7 +116,7 @@ struct daObjFloatBoard_c : dBgActor_c {
        (ov002 0x020b5fc4). */
     int InitResourcesFrom(daObjFloatBoard_c_Resources *resources);
     void OnStoodOn(dActor_c *rider);
-    static void StoodOnCallback(void *, daObjFloatBoard_c *, dActor_c *);
+    static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero

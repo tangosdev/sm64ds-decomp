@@ -62,10 +62,10 @@ struct daObjSm_Lift_c : dBgActor_c {
     /* Place the model at mPos, turned by mAngleY and mAngleX plus a quarter
        turn of yaw. */
     void UpdateModelTransform();
-    /* The collider's before-collision hook: remember a touching player.
-       BeforeClsnCallback is the address the dBgW stores. */
+    /* The collider's stood-on hook: remember a touching player.
+       StoodOnCallback is the address the dBgW stores. */
     void HandlePlayerContact(dActor_c *);
-    static void BeforeClsnCallback(void *, daObjSm_Lift_c *, dActor_c *);
+    static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

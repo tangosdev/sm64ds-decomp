@@ -30,8 +30,8 @@
 // func_ov007_020cc600, 020cc168, 020cc118, 020cc0e4, 020cc0cc). data_0209b340
 // is decl_common.h's int[], but it is the Ov007BootArgs table
 // (Ov007Settings.h), so every access goes through the sBootArgs view. The
-// dispatcher's byte 0x328 of data_0209caa0 is the save block's active-file
-// byte; SaveBlock is still local to SaveData.cpp. The overlay operands
+// dispatcher reads the save block's active-file byte
+// (SaveBlock::activeFile). The overlay operands
 // pool-load the absolute linker constants ((int)&OVERLAY_100_ID/102_ID);
 // plain literals would compile to mov, and decl_common.h's overlay_N names
 // do not link.
@@ -55,7 +55,7 @@ extern u8 data_0209b34b[];
 extern u8 data_0209b34e[];
 extern u8 data_0209b3d8[];
 extern u8 data_0208ee3c[];
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern u8 data_0209cae4[];
 extern u8 gSoftResetPending;
 /* The scene's graph callback: the scene registers its own object here and
@@ -114,9 +114,9 @@ extern "C" void func_ov007_020cca80(void) {
 
 /* File-op veneers: `#pragma long_calls` emits the pooled absolute tail call. */
 #pragma long_calls on
-extern "C" int LoadFile(int);
+extern "C" void *LoadFile(int);
 // @symbol func_ov007_020cca74
-extern "C" int func_ov007_020cca74(int a) {
+extern "C" void *func_ov007_020cca74(int a) {
     return LoadFile(a);
 }
 // @symbol func_ov007_020cca68
@@ -142,43 +142,43 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
         TurnBacklightOff();
     } else if (command == 8) {
         SaveData::EraseSaveFile(0, (char *)func_ov007_020cc0cc(0));
-        func_02013c84(0, func_ov007_020cc0cc(0), -1, data_0209caa0);
+        func_02013c84(0, func_ov007_020cc0cc(0), -1, &data_0209caa0.file);
     } else if (command == 9) {
         SaveData::EraseSaveFile(1, (char *)func_ov007_020cc0cc(1));
-        func_02013c84(1, func_ov007_020cc0cc(1), -1, data_0209caa0);
+        func_02013c84(1, func_ov007_020cc0cc(1), -1, &data_0209caa0.file);
     } else if (command == 10) {
         SaveData::EraseSaveFile(2, (char *)func_ov007_020cc0cc(2));
-        func_02013c84(2, func_ov007_020cc0cc(2), -1, data_0209caa0);
+        func_02013c84(2, func_ov007_020cc0cc(2), -1, &data_0209caa0.file);
     } else if (command == 11) {
         FileSaveData *fileBuffer = func_ov007_020cc0cc(0);
         if (func_02013c84(0, fileBuffer, 1, func_ov007_020cc0cc(1)) == 0)
             failed = 1;
-        func_02013c84(1, func_ov007_020cc0cc(1), -1, data_0209caa0);
+        func_02013c84(1, func_ov007_020cc0cc(1), -1, &data_0209caa0.file);
     } else if (command == 12) {
         FileSaveData *fileBuffer = func_ov007_020cc0cc(0);
         if (func_02013c84(0, fileBuffer, 2, func_ov007_020cc0cc(2)) == 0)
             failed = 1;
-        func_02013c84(2, func_ov007_020cc0cc(2), -1, data_0209caa0);
+        func_02013c84(2, func_ov007_020cc0cc(2), -1, &data_0209caa0.file);
     } else if (command == 13) {
         FileSaveData *fileBuffer = func_ov007_020cc0cc(1);
         if (func_02013c84(1, fileBuffer, 0, func_ov007_020cc0cc(0)) == 0)
             failed = 1;
-        func_02013c84(0, func_ov007_020cc0cc(0), -1, data_0209caa0);
+        func_02013c84(0, func_ov007_020cc0cc(0), -1, &data_0209caa0.file);
     } else if (command == 14) {
         FileSaveData *fileBuffer = func_ov007_020cc0cc(1);
         if (func_02013c84(1, fileBuffer, 2, func_ov007_020cc0cc(2)) == 0)
             failed = 1;
-        func_02013c84(2, func_ov007_020cc0cc(2), -1, data_0209caa0);
+        func_02013c84(2, func_ov007_020cc0cc(2), -1, &data_0209caa0.file);
     } else if (command == 15) {
         FileSaveData *fileBuffer = func_ov007_020cc0cc(2);
         if (func_02013c84(2, fileBuffer, 0, func_ov007_020cc0cc(0)) == 0)
             failed = 1;
-        func_02013c84(0, func_ov007_020cc0cc(0), -1, data_0209caa0);
+        func_02013c84(0, func_ov007_020cc0cc(0), -1, &data_0209caa0.file);
     } else if (command == 16) {
         FileSaveData *fileBuffer = func_ov007_020cc0cc(2);
         if (func_02013c84(2, fileBuffer, 1, func_ov007_020cc0cc(1)) == 0)
             failed = 1;
-        func_02013c84(1, func_ov007_020cc0cc(1), -1, data_0209caa0);
+        func_02013c84(1, func_ov007_020cc0cc(1), -1, &data_0209caa0.file);
     } else if (command == 17) {
         func_ov007_020cc118(0x37, 8);
     } else if (command == 18) {
@@ -190,7 +190,7 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
         for (saveSlot = 0; (s32)saveSlot < 3; saveSlot++, fileBytes += 0x44) {
             if (SaveData::ReadFileData(saveSlot, (FileSaveData *)fileBytes) == 0)
                 failed = 1;
-            func_02013c84(saveSlot, fileBytes, -1, data_0209caa0);
+            func_02013c84(saveSlot, fileBytes, -1, &data_0209caa0.file);
             func_ov007_020cc168(saveSlot);
         }
     } else if (command == 21) {
@@ -208,7 +208,7 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
     } else if (command == 19) {
         Sound::StopLoadedMusic_Layer1(0x3c);
     }
-    func_ov007_020cc168(((u8 *)data_0209caa0)[0x328]);
+    func_ov007_020cc168(data_0209caa0.activeFile);
     return failed;
 }
 
@@ -279,7 +279,7 @@ s32 dScDSMT_c::Behavior() {
         } else if (result == 5) {
             saveSlot = 2;
         }
-        func_02013c84(saveSlot, data_0209b33c + saveSlot, -1, data_0209caa0);
+        func_02013c84(saveSlot, data_0209b33c + saveSlot, -1, &data_0209caa0.file);
         StartFile(1, 0);
     } else if (result == 6) {
         if (data_0209d524 == 0) {
@@ -330,7 +330,7 @@ extern "C" void func_ov007_020cc168(u32 saveSlot) {
     }
 
     sBootArgs.backlightOn = data_0208ee3c[0];
-    data_0209b34b[saveSlot] = (data_0209caa0[1] & 1) != 0;
+    data_0209b34b[saveSlot] = (data_0209caa0.file.flags1 & 1) != 0;
 
     highestUnlockedPlusOne = 3;
     character = 2;

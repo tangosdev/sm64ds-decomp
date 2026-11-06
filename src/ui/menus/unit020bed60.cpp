@@ -57,13 +57,6 @@ typedef struct Ov007MeshScene {
 
 typedef char Ov007MeshScene_size_must_be_0x30[sizeof(Ov007MeshScene) == 0x30 ? 1 : -1];
 
-/* Vector3's layout as a POD, for func_ov007_020bee14's copy of the template
- * point: the ROM copies it as one block, and a Vector3 assignment copies
- * member by member. */
-typedef struct Ov007Point {
-    Fix12i x, y, z;
-} Ov007Point;
-
 extern Ov007MeshScene *data_ov007_02104bd4;
 extern struct Vector3 data_ov007_020d7d60;
 extern Ov007MeshParams data_ov007_020d7cb0;
@@ -73,8 +66,8 @@ extern Ov007SwingParams data_ov007_020d7cc8;
 extern Ov007MeshMaterial data_ov007_020d7cf8[2];
 
 extern int func_020531a4(int a);
-extern char *func_ov007_020b2cdc(void);
-extern int func_ov007_020b42d8(int index);
+extern Ov007MenuState *func_ov007_020b2cdc(void);
+extern Ov007Sprite *func_ov007_020b42d8(int index);
 extern void func_ov007_020bce70(int n, int m);
 extern void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, void *out);
 extern int func_ov007_020c1da0(int i);
@@ -118,7 +111,7 @@ typedef struct Ov007SpriteBits {
 typedef struct Ov007SpriteView {
     char pad_00[0x10];
     s32 depth;       /* 0x10 */
-    Ov007Point pos;  /* 0x14 */
+    VecFx32 pos;     /* 0x14 */
     s32 worldWidth;  /* 0x20 */
     s32 worldHeight; /* 0x24 */
     char pad_28[0x60];
@@ -199,7 +192,7 @@ void func_ov007_020bf428(void) {
     }
 
     for (i = 0; i <= 2; i++) {
-        WORK->numberSprites[i] = (Ov007Sprite *)func_ov007_020b42d8(i);
+        WORK->numberSprites[i] = func_ov007_020b42d8(i);
     }
 
     for (i = 0; i < 0x14; i++) {
@@ -299,7 +292,7 @@ void func_ov007_020beeb0(void) {
     } else {
         /* the menu cursor's state (func_ov007_020b2cdc returns
          * Ov007Cursor::state) */
-        Ov007MenuState *cursor = (Ov007MenuState *)func_ov007_020b2cdc();
+        Ov007MenuState *cursor = func_ov007_020b2cdc();
         int state;
         if (cursor->stateTicks == 0) {
             state = cursor->currentState;
@@ -400,9 +393,11 @@ void func_ov007_020beeb0(void) {
 
 // @symbol func_ov007_020bee14
 /* Draws the mesh twice, once with each material, 0x200 and 0x400 in front
- * of the template point data_ov007_020d7d60. */
+ * of the template point data_ov007_020d7d60. The point is copied as a VecFx32:
+ * the ROM copies it as one block, and a Vector3 assignment copies member by
+ * member. */
 void func_ov007_020bee14(void) {
-    Ov007Point v = *(Ov007Point *)&data_ov007_020d7d60;
+    VecFx32 v = *(VecFx32 *)&data_ov007_020d7d60;
     v.z += 0x200;
     func_ov007_020ca5f0(SCENE->mesh, SCENE->materials[0], (int *)&v, 0x3e8, 1);
     func_ov007_020cb3dc(SCENE->mesh);

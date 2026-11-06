@@ -29,13 +29,13 @@ extern "C" {
 /* local extern: no header declares these arm9 vector and matrix helpers.
    EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
-int InvMat4x3(Matrix4x3 *, Matrix4x3 *);
+int InvMat4x3(const Matrix4x3 *, Matrix4x3 *);
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 void CrossVec3(const EntryMeshVec *, const EntryMeshVec *, EntryMeshVec *);
 void NormalizeVec3(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
-unsigned int func_02045ad8(const void *);
+unsigned int func_02045ad8(const void *, unsigned int);
 unsigned int func_02045a50(const void *, unsigned int);
 /* local extern: the RTL divide, the geometry-engine matrix load and the
    BMD load through a file handle, declared only in decl_common.h, which
@@ -121,7 +121,7 @@ int EntryMesh::LoadTexture(BMD_File *file) {
         dExtSimpleModel_c::LoadCompressedTextureToVram(tex->data, tex->size, tex->data + tex->size);
     sz = pal->size;
     if (sz <= 8)
-        mMaterial.pltAddr = func_02045ad8(pal->data);
+        mMaterial.pltAddr = func_02045ad8(pal->data, sz);
     else
         mMaterial.pltAddr = func_02045a50(pal->data, (unsigned int)sz);
     /* d is the first BMD_Material. */
@@ -301,7 +301,7 @@ void EntryMesh::StartRipple(int x, int y) {
 void EntryMesh::DrawGrid() {
     int z0;
     int z1;
-    int tmp[13];
+    Matrix4x3 tmp;
     int i;
     int j;
     int cols;
@@ -313,11 +313,11 @@ void EntryMesh::DrawGrid() {
     int sz;
 
     *(int *)0x4000444 = 0;
-    MulMat4x3Mat4x3((const int *)&mMtx, (const int *)&data_0209b3ec, tmp);
+    MulMat4x3Mat4x3((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
     *(int *)0x4000440 = 2;
-    func_020553a4(tmp);
+    func_020553a4(&tmp);
     *(int *)0x4000440 = 1;
-    func_020553a4(tmp);
+    func_020553a4(&tmp);
     *(int *)0x40004c8 = 0xe0000000;
     *(int *)0x40004cc = 0xc0007fff;
     SendMaterial();

@@ -70,6 +70,7 @@
  * came later, for the classes SpawnFireball, SpawnNumber and
  * GivePlayerCoins spawn. */
 #include "types.h"
+#include "ParticleIds.h"
 #include "SpawnInfo.h"
 #include "decl_common.h"
 #include "dActor_c.h"
@@ -90,6 +91,7 @@
 #include "daObjNumber_c.h"
 #include "daCoin_c.h"
 #include "daFPknBall_c.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -1017,13 +1019,8 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
  * 0x02010180  size 0x130 */
 extern "C" {
 void *func_ov002_020e496c(daPly_c *p); /* the player's current mBodyModels entry */
-void MulMat4x3Mat4x3(Matrix4x3 *m1, Matrix4x3 *m0, Matrix4x3 *mF);
-void Matrix4x3_FromTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *mF, short x, short y, short z);
 void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
 void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-extern Matrix4x3 data_020a0e68;
 }
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
@@ -1358,9 +1355,9 @@ void dActor_c::TriplePoofDust()
  * 0x0200fd74  size 0x54 */
 void dActor_c::TriplePoofDustAt(const Vector3 &pos)
 {
-    Particle::System::NewSimple(0x124, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x125, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x126, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofB, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofC, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1419,7 +1416,7 @@ extern "C" int func_0200fc44(int actor, Vector3 *pos, int doRaycast) {
             pos->y = rc.clsnY;
     }
     pos->y += 0x19000;
-    return Particle::System::NewSimple(0xb3, pos->x, pos->y, pos->z);
+    return Particle::System::NewSimple(kPtclGroundPuff, pos->x, pos->y, pos->z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1450,7 +1447,7 @@ void dActor_c::HugeLandingDustAt(Vector3 &pos, bool doRaycast) {
             pos.y = rc.clsnY;
     }
     pos.y += 0x28000;
-    Particle::System::NewSimple(0xb2, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclLandingDust, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */

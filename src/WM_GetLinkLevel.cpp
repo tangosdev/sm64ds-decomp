@@ -5,7 +5,6 @@
 
 extern "C" {
 
-extern void *WM_GetSystemWork(void);
 extern int WMi_CheckInitialized(void);
 
 /* NitroSDK wm_sync.c WM_GetLinkLevel, by body against pret's pokediamond
@@ -13,7 +12,7 @@ extern int WMi_CheckInitialized(void);
  * parent with at least one child or as a child. Each status field is
  * invalidated from the data cache before it is read. */
 int WM_GetLinkLevel(void) {
-    WMArm9Buf *sys = (WMArm9Buf *)WM_GetSystemWork();
+    WMArm9Buf *sys = WM_GetSystemWork();
     WMStatus *status;
     if (WMi_CheckInitialized())
         return 0;

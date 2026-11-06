@@ -130,7 +130,7 @@ extern BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile;
 extern "C" {
 extern u8 IsAreaShowing(s32 idx);
 extern u16 DecIfAbove0_Short(u16 *p);
-extern void func_020393c4(void *p, void *v);
+extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
 extern int func_ov002_020dd8b8(void *c);
 }
 
@@ -226,7 +226,7 @@ int daObjBC_Switch_c::InitResources() {
         ->dBgW_KcMbg::SetFile((KCL_File *)kcl, *(&mClsnMat), 0x199, mAngleY,
                               *(CLPS_Block *)(&data_ov002_0210d6f4));
 
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
 
     mPressed = 0;
 

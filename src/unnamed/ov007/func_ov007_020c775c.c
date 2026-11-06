@@ -2,7 +2,7 @@
 #include "Ov007Spring.h"
 
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int LenVec3(Vector3 *v);
+extern int LenVec3(const Vector3 *v);
 
 /* Re-measures each link of the list between its followers' targets. */
 void func_ov007_020c775c(Ov007PointList *list) {

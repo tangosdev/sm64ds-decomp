@@ -1614,74 +1614,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@985",
+      "from": "@1044",
       "to": "@300",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1013 to @1017; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @300 ROM pin. Re-keyed from @998 to @985 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1013 to @1017; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @300 ROM pin. Re-keyed from @998 to @985 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@986",
+      "from": "@1045",
       "to": "@1000",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1014 to @1018; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1000 ROM pin. Re-keyed from @999 to @986 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1014 to @1018; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1000 ROM pin. Re-keyed from @999 to @986 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@987",
+      "from": "@1046",
       "to": "@1001",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1015 to @1019; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1001 ROM pin. Re-keyed from @1000 to @987 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1015 to @1019; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1001 ROM pin. Re-keyed from @1000 to @987 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@988",
+      "from": "@1047",
       "to": "@1002",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1016 to @1020; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1002 ROM pin. Re-keyed from @1001 to @988 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1016 to @1020; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1002 ROM pin. Re-keyed from @1001 to @988 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@989",
+      "from": "@1048",
       "to": "@1003",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1017 to @1021; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1003 ROM pin. Re-keyed from @1002 to @989 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1017 to @1021; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1003 ROM pin. Re-keyed from @1002 to @989 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@990",
+      "from": "@1049",
       "to": "@1004",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1018 to @1022; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1004 ROM pin. Re-keyed from @1003 to @990 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1018 to @1022; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1004 ROM pin. Re-keyed from @1003 to @990 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@991",
+      "from": "@1050",
       "to": "@1005",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1019 to @1023; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1005 ROM pin. Re-keyed from @1004 to @991 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1019 to @1023; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1005 ROM pin. Re-keyed from @1004 to @991 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@992",
+      "from": "@1051",
       "to": "@1006",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1020 to @1024; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1006 ROM pin. Re-keyed from @1005 to @992 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1020 to @1024; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1006 ROM pin. Re-keyed from @1005 to @992 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@993",
+      "from": "@1052",
       "to": "@1007",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1021 to @1025; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1007 ROM pin. Re-keyed from @1006 to @993 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1021 to @1025; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1007 ROM pin. Re-keyed from @1006 to @993 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@994",
+      "from": "@1053",
       "to": "@1008",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1022 to @1026; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1008 ROM pin. Re-keyed from @1007 to @994 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1022 to @1026; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1008 ROM pin. Re-keyed from @1007 to @994 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@995",
+      "from": "@1054",
       "to": "@1009",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1023 to @1027; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1009 ROM pin. Re-keyed from @1008 to @995 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1023 to @1027; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1009 ROM pin. Re-keyed from @1008 to @995 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@997",
+      "from": "@1056",
       "to": "@2700",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1025 to @1029; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2700 ROM pin. Re-keyed from @1010 to @997 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1025 to @1029; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2700 ROM pin. Re-keyed from @1010 to @997 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@999",
+      "from": "@1058",
       "to": "@2701",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1027 to @1031; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2701 ROM pin. Re-keyed from @1012 to @999 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1027 to @1031; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2701 ROM pin. Re-keyed from @1012 to @999 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1001",
+      "from": "@1060",
       "to": "@2702",
-      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1029 to @1033; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2702 ROM pin. Re-keyed from @1014 to @1001 when func_ov065_02118838's constant locals and pointer aliases were removed (#821)."
+      "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1029 to @1033; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2702 ROM pin. Re-keyed from @1014 to @1001 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ]
 }

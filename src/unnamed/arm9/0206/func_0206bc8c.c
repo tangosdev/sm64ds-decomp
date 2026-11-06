@@ -18,8 +18,7 @@ inline int imin(int a, int b)
     return b;
 }
 
-int func_0206bc8c(u64 d, int flag)
-{
+int func_0206bc8c(u64 d) {
     int zero;
     unsigned digit;
     int max;

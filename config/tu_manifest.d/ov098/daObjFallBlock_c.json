@@ -121,7 +121,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "_ZN16daObjFallBlock_c15StoodOnCallbackEP4dBgWPS_P8dActor_c",
+      "symbol": "_ZN16daObjFallBlock_c15StoodOnCallbackEP4dBgWP8dActor_cS3_",
       "address": "0x0213a8ec",
       "size": "0x00000014",
       "legacy_source": "src/func_ov098_0213a8ec.c",

@@ -758,6 +758,14 @@
    "ref": "src/dst"
   },
   {
+   "file": "notes/archive/mwccarm-codegen-log.md",
+   "ref": "docs/_private/CodeWarrior/mwccarm.help.txt"
+  },
+  {
+   "file": "notes/archive/mwccarm-codegen-log.md",
+   "ref": "src/dst"
+  },
+  {
    "file": "notes/archive/n64-decomp-cross-reference.md",
    "ref": "include/trig_tables.inc.c"
   },
@@ -1268,14 +1276,6 @@
   {
    "file": "notes/matching-style.md",
    "ref": "src/func_ov006_02110a20.c"
-  },
-  {
-   "file": "notes/mwccarm-codegen.md",
-   "ref": "docs/_private/CodeWarrior/mwccarm.help.txt"
-  },
-  {
-   "file": "notes/mwccarm-codegen.md",
-   "ref": "src/dst"
   },
   {
    "file": "notes/overlay-residency.md",

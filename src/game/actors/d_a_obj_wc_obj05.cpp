@@ -46,7 +46,7 @@ struct WcObj05CollisionFilePtr : SharedFilePtr {
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void func_020393d4(void *p, void *v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 void func_020393c4(void *p, void *v);
 }
 
@@ -97,7 +97,7 @@ s32 daObjWc_Obj05_c::InitResources() {
     UpdateClsnPosAndRot();
     KCL_File *mc = (KCL_File *)dBgW_Kc::LoadFile(gWcObj05CollisionFile);
     mMeshCollider.SetFile(mc, mClsnMat, 0x1000, mAngleY, data_ov029_0211306c);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
     mPrevPlayerOnTop = 0;
     mPlayerOnTop = mPrevPlayerOnTop;

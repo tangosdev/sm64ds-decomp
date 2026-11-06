@@ -28,7 +28,7 @@ extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern int __throw_catch_compare(int a, int b, int c);
 extern int func_02071f88(void *a, void *list);
 extern void func_02071f1c(char *a, void *b, char *c, int d);
-extern int func_020729f4(struct ActionWalk *c);
+extern unsigned char func_020729f4(struct ActionWalk *c);
 
 struct Tmp {
     int val;

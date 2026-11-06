@@ -1371,34 +1371,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@562",
+      "from": "@638",
       "to": "data_ov102_0214e9d0",
-      "evidence": "compiler temp mapped to 0x0214e9d0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0214e9d0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@563",
+      "from": "@639",
       "to": "data_ov102_0214e9dc",
-      "evidence": "compiler temp mapped to 0x0214e9dc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0214e9dc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@565",
+      "from": "@641",
       "to": "data_ov102_0214ea0c",
-      "evidence": "compiler temp mapped to 0x0214ea0c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0214ea0c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@568",
+      "from": "@644",
       "to": "data_ov102_0214e9f4",
-      "evidence": "compiler temp mapped to 0x0214e9f4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0214e9f4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@571",
+      "from": "@647",
       "to": "data_ov102_0214ea00",
-      "evidence": "compiler temp mapped to 0x0214ea00 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0214ea00 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@574",
+      "from": "@650",
       "to": "data_ov102_0214e9e8",
-      "evidence": "compiler temp mapped to 0x0214e9e8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0214e9e8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ],
   "symbol_binding_rewrites": [

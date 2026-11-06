@@ -52,6 +52,7 @@
 #include "daKpa3Bg_c.h"
 #include "daKpa_c.h"
 #include "SharedFilePtr.h"
+#include "nitro/fx/fx.h"
 
 struct BMD_File;
 struct KCL_File;
@@ -59,11 +60,9 @@ struct CLPS_Block;
 
 extern "C" {
 
-typedef struct Vec3 { int x, y, z; } Vec3;
-
-int *Vec3_AsrInPlace(Vec3 *v, int n);
+int *Vec3_AsrInPlace(VecFx32 *v, int n);
 /* Unnamed on purpose: see the @NNN note in the banner. */
-void MulVec3Mat4x3(Vec3 *, void *, void *);
+void MulVec3Mat4x3(VecFx32 *, void *, void *);
 void func_02012694(unsigned int, void *);
 int CopyTexPalFromLevelModel(void *);
 
@@ -87,9 +86,9 @@ extern int data_0208e738;
 /* Three parameter names dropped: kpaCallDestroy took those @NNN slots. */
 extern void hold_d_a_kpa3_bg(void *, KCL_File *, const Matrix4x3 &, int fix, short sh,
                              CLPS_Block &b);
-void func_020393d4(void *p, void *v);
-void func_020393c4(void *p, void *v);
-void func_ov060_021183f4(void *collider, daKpa3Bg_c *self, dActor_c *other);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
+void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other);
 
 // local extern: defined below as a free function (cplusplus off has no member syntax); the header declares the member spelling for the PMF table.
@@ -126,9 +125,8 @@ extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
 /* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
    collider and forwards the platform and the touching actor into
    func_ov060_021183cc. */
-extern "C" void func_ov060_021183f4(void *collider, daKpa3Bg_c *self, dActor_c *other)
-{
-    func_ov060_021183cc(self, other);
+extern "C" void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    func_ov060_021183cc(static_cast<daKpa3Bg_c *>(owner), other);
 }
 
 // @symbol func_ov060_021183cc
@@ -156,9 +154,8 @@ s32 daKpa3Bg_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]),
                               mClsnMat, 0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
-    func_020393d4(&mMeshCollider,
-                  (void *)&dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (void *)&func_ov060_021183f4);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    func_020393c4(&mMeshCollider, &func_ov060_021183f4);
     mMeshCollider.Enable(this);
     mKoopaUniqueId = 0;
     mTouchedKoopa = 0;
@@ -244,10 +241,10 @@ void daKpa3Bg_c::func_ov060_021180e0()
 
 /* The C body cannot spell a member call. These inline to the direct calls.
    They sit above the @symbol so that marker stays on the C function. */
-static inline void kpaCallEarthquake(daKpa3Bg_c *self, Vec3 *v, int fix) {
+static inline void kpaCallEarthquake(daKpa3Bg_c *self, VecFx32 *v, int fix) {
     self->Earthquake(*(const Vector3 *)v, fix);
 }
-static inline void kpaCallPoof(daKpa3Bg_c *self, Vec3 *v) {
+static inline void kpaCallPoof(daKpa3Bg_c *self, VecFx32 *v) {
     self->PoofDustAt(*(const Vector3 *)v);
 }
 static inline void kpaCallDestroy(daKpa3Bg_c *self) {
@@ -271,9 +268,9 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
     volatile int saved[3];
     int yimm;
     int v[6];
-    Vec3 eq;
-    Vec3 dust1;
-    Vec3 dust2;
+    VecFx32 eq;
+    VecFx32 dust1;
+    VecFx32 dust2;
     u16 state;
     int row;
     int ang;
@@ -297,8 +294,8 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         v[0] = (s16)data_02082214[(ang >> 4) * 2] * (s16)0x366 + (data_ov060_02119564[row].x << 12);
         v[2] = (s16)data_02082214[(ang >> 4) * 2 + 1] * (s16)0x366 +
                (data_ov060_02119564[self->mVariant].z << 12);
-        Vec3_AsrInPlace((Vec3 *)v, 3);
-        MulVec3Mat4x3((Vec3 *)v, &data_0209b3ec, &self->mCamSpacePosX);
+        Vec3_AsrInPlace((VecFx32 *)v, 3);
+        MulVec3Mat4x3((VecFx32 *)v, &data_0209b3ec, &self->mCamSpacePosX);
         func_02012694(0xbc, &self->mCamSpacePosX);
         self->mCamSpacePosX = saved[0];
         self->mCamSpacePosY = saved[1];

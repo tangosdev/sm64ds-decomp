@@ -27,7 +27,7 @@ enum daObjSlIceBlock_c_AssetId { ASSET_SL_ICE_BROCK_BMD = 0x06b1, ASSET_SL_ICE_B
 #include "math/CalcLib.h"
 
 extern "C" {
-void func_020393d4(int *p, int v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 extern char data_ov027_02113108[];
 
@@ -137,7 +137,7 @@ int daObjSlIceBlock_c::InitResources() {
         UpdateClsnPosAndRot();
         mMeshCollider.SetFile((KCL_File *)data_ov027_02113be0.filePtr, mClsnMat, 0x1000, mAngleY,
                               *(CLPS_Block *)data_ov027_02113108);
-        func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
+        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
         mMeshCollider.edgeContacts = false;
         mMeshCollider.Enable(this);
         mHorzSpeed = 0x2d000;

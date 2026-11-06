@@ -21,6 +21,7 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
+#include "SaveBlock.h"
 
 extern "C" {
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
@@ -31,7 +32,7 @@ void StartMinigameMenu(u8 a);
 }
 
 extern dCamera_c *data_0209f318;
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern u8 data_0209d660;
 extern u8 data_0209d684;
 /* MIPS's model-file handle, owned and constructed by d_a_mip.cpp's static
@@ -181,12 +182,12 @@ int daObj_Mip_Key_c::StateCarriedEnter() {
             c->mPlayer->SetNoControlState(2, 0x189, 1);
             c->mTalkState = 0;
         } else {
-            data_0209caa0[1] |= 0x40;
+            data_0209caa0.file.flags1 |= 0x40;
             c->mPlayer->SetNoControlState(2, 0x18c, 1);
             c->mTalkState = 6;
         }
     } else {
-        data_0209caa0[1] |= 0x80;
+        data_0209caa0.file.flags1 |= 0x80;
         c->mPlayer->SetNoControlState(2, 0x149, 1);
         c->mTalkState = 6;
     }

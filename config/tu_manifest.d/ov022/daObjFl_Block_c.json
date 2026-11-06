@@ -90,7 +90,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_ZN15daObjFl_Block_c15StoodOnCallbackEP4dBgWPS_P8dActor_c",
+      "symbol": "_ZN15daObjFl_Block_c15StoodOnCallbackEP4dBgWP8dActor_cS3_",
       "address": "0x0211193c",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/ov022/func_ov022_0211193c.c",

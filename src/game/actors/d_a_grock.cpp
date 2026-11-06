@@ -52,6 +52,8 @@ enum daGrock_c_AssetId { ASSET_CV_GORO_ROCK_BMD = 0x05d4 };
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "cstd.h"
+#include "nitro/fx/fx.h"
+#include "LevelRng.h"
 
 /* Kind in param1's low nibble. */
 enum {
@@ -73,7 +75,7 @@ struct GrockModelFilePtr : SharedFilePtr {
 
 /* 02112544 copies three words as a value. The empty constructor and
  * destructor are why that copy matches; a POD Vec3 changes the function.
- * InitResources keeps its own POD Vec3 inside the function. */
+ * InitResources builds its offsets in the POD VecFx32. */
 struct Vec3 {
     int x, y, z;
     Vec3() {}
@@ -96,10 +98,7 @@ extern void func_02012694(unsigned int id, void *pos);
 extern void func_0200f760(void *self, void *cyl);
 }
 
-struct LevelRng;
-
 extern s16 data_02082214[];
-extern LevelRng data_0209e650;
 extern GrockModelFilePtr data_ov021_02114a50;
 
 /* D1 stores this vtable, destroys the members in reverse declaration order,
@@ -343,7 +342,7 @@ int daGrock_c::Behavior() {
                 *spawned = (u8)(*spawned + 1);
                 *(u16 *)&mStateTimer = 0;
                 *(AngleWords *)&rot = *(AngleWords *)&mPrevAngleX;
-                rnd = (u32)RandomIntInternal((int *)&data_0209e650);
+                rnd = (u32)RandomIntInternal(&data_0209e650.value);
                 rot.y = rot.y + (rnd >> 16) % 0xc00;
                 if (mType == kGrockStarSpawner && mSpawnCount >= 5 && mStarRockOut == 0) {
                     daGrock_c *child;
@@ -369,9 +368,6 @@ int daGrock_c::Behavior() {
 
 // @symbol _ZN9daGrock_c13InitResourcesEv
 int daGrock_c::InitResources() {
-    struct Vec3 {
-        s32 x, y, z;
-    };
 
     mType = (u8)(param1 & 0xf);
     mStarID = 0xff;
@@ -391,14 +387,14 @@ int daGrock_c::InitResources() {
         mRollSoundID = 0;
 
         if (mType == kGrockStill) {
-            Vec3 offset;
+            VecFx32 offset;
             mStarID = (u8)((param1 >> 8) & 0xf);
             offset.x = 0;
             offset.y = 0;
             offset.z = 0;
             mdCcAcPos_c.Init(this, *(Vector3 *)&offset, 0x10e000, 0x226000, 0x200004, 0x3c0);
         } else {
-            Vec3 offset;
+            VecFx32 offset;
             offset.x = 0;
             offset.y = 0;
             offset.z = 0;

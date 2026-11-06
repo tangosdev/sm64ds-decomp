@@ -12,7 +12,7 @@
 // 0x02004ad8 is _start_ModuleParams (BuildInfo, the name dsd needs); +0x14 is the end of
 // the compressed static image.
 extern void init_cp15(void);
-extern void MIi_UncompressBackward(void);
+extern void MIi_UncompressBackward(void *bottom);
 extern void do_autoload(void);
 extern void MultiStore_Int(int val, int *dst, int len);
 extern void _fp_init(void);

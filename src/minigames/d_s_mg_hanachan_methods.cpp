@@ -90,6 +90,7 @@ enum dScMgHanachan_c_AssetId {
 #include "SpawnInfo.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 extern "C" void *dScMgHanachan_c_classInit();
 extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
@@ -214,11 +215,11 @@ extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
 extern unsigned short sHanaUsedIds[];
 extern s16 atan2_hold_d_s_mg_hanachan_methods_1(int y, int x);
-extern void Mg_CommitRecords(void *);
+extern void Mg_CommitRecords(void);
 extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern int GetGameLanguage(void);
-extern void DrawOamSprite(void *a, int b, int c, int d);
-extern void Mg_DrawNumberRotated(int a, int b, void *c, int d, int e, int f, int g);
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern void StarPopup_Start(int x, int y);
 extern void HanaPopup_Spawn(int x, int y);
 extern s16 sHanaRoundPatterns[];
@@ -234,9 +235,6 @@ extern void func_0203d704(int *o, int *a, int *b);
 extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d680(Vec2 *out, const Vec2 *in, int scale);
 extern int RandomIntInternal(int *seed);
-/* data_0209e650 is the RNG state: one file spelled it int[] and passed it bare,
-   the rest spelled it int and passed &.  Scalar wins; the address is the same. */
-extern int data_0209e650;
 /* sHanaPickedLow is only read where it is unsigned and only written as a
    halfword, so the unsigned spelling costs the writer nothing. */
 extern unsigned short sHanaPickedLow;
@@ -1046,7 +1044,7 @@ void Wiggler_Retarget(Wiggler *c, int v) {
     (*h)++;
     if (c->saved == &Wiggler::TurnTowardAim && c->tries < 3) {
         c->busy = 0;
-        c->timer = (RandomIntInternal(&data_0209e650) & 0x20) + 0x60;
+        c->timer = (RandomIntInternal(&data_0209e650.value) & 0x20) + 0x60;
         if (c->tries == 1) {
             c->sub = &Wiggler::TurnTowardAim;
             c->saved = c->sub;
@@ -1146,13 +1144,13 @@ int Hana_PickUnused(int n, int mask) {
         }
     }
 
-    v = (unsigned short)(mask & RandomIntInternal(&data_0209e650));
+    v = (unsigned short)(mask & RandomIntInternal(&data_0209e650.value));
     if (found)
         v = sHanaPickedLow | (unsigned short)(v & 0xf0);
 
     for (i = 0; i < n; i++) {
         if (v == sHanaUsedIds[i]) {
-            v = (unsigned short)(mask & RandomIntInternal(&data_0209e650));
+            v = (unsigned short)(mask & RandomIntInternal(&data_0209e650.value));
             if (found)
                 v = sHanaPickedLow | (unsigned short)(v & 0xf0);
             i = -1;
@@ -1168,17 +1166,17 @@ int Hana_PickUnused(int n, int mask) {
 extern "C" {
 void Hana_ChooseStarWiggler(int count) {
     int i, j;
-    sHanaPickedLow = (short)(RandomIntInternal(&data_0209e650) & 0xf);
+    sHanaPickedLow = (short)(RandomIntInternal(&data_0209e650.value) & 0xf);
     sHanaPickedCount = (short)count;
     for (i = 0; i < count; i++) {
-        int r = RandomIntInternal(&data_0209e650);
+        int r = RandomIntInternal(&data_0209e650.value);
         sHanaPickedIds[i] = (unsigned short)((int)((int)((unsigned int)(r & 0x7fffffff) >> 0x13) *
                                                    sHanaFieldWigglerCount) >>
                                              0xc);
         j = 0;
         while (j < i) {
             if (sHanaPickedIds[j] == sHanaPickedIds[i]) {
-                r = RandomIntInternal(&data_0209e650);
+                r = RandomIntInternal(&data_0209e650.value);
                 sHanaPickedIds[i] =
                     (unsigned short)((int)((int)((unsigned int)(r & 0x7fffffff) >> 0x13) *
                                            sHanaFieldWigglerCount) >>
@@ -1196,7 +1194,7 @@ void Hana_ChooseStarWiggler(int count) {
 extern "C" {
 int Hana_PickMoveKind(void) {
     int v = 3;
-    int r = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
+    int r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     if (r < 0x400)
         v = 0;
     else if (r < 0x800)
@@ -1530,12 +1528,13 @@ void dScMgHanachan_c::Wiggler::MoveBounce() {
         if (timer >= 0)
             return;
         timer =
-            (s16)((((int)((unsigned int)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 19) *
+            (s16)((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >>
+                          19) *
                     0x1e) >>
                    12) +
                   0x3c);
-        randomX = RandomIntInternal(&data_0209e650);
-        randomY = RandomIntInternal(&data_0209e650);
+        randomX = RandomIntInternal(&data_0209e650.value);
+        randomY = RandomIntInternal(&data_0209e650.value);
         targetAngle =
             cstd::atan2(((int)((unsigned int)(randomX & 0x7fffffff) >> 19) * 0x100) - seg[1].x,
                         -(((int)((unsigned int)(randomY & 0x7fffffff) >> 19) * 0xc0) - seg[1].y));
@@ -1556,10 +1555,13 @@ void Wiggler_StartBounce(char *raw, int) {
     ((Wiggler *)raw)->speedTarget = 0xa00;
     for (i = 0; i < 5; i++) {
         ((Wiggler *)raw)->seg[i].x =
-            (int)(((unsigned int)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13) << 8);
+            (int)(((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13)
+                  << 8);
         ((Wiggler *)raw)->seg[i].y =
-            (int)(((unsigned int)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13) * 0xc0);
-        ((Wiggler *)raw)->ang[i] = (short)((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10);
+            (int)(((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
+                  0xc0);
+        ((Wiggler *)raw)->ang[i] =
+            (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
     }
     ((Wiggler *)raw)->aim = (short)((((Wiggler *)raw)->ang[0] + ((Wiggler *)raw)->ang[1]) >> 1);
     Wiggler_ClampToScreen(raw);
@@ -1613,14 +1615,14 @@ void Wiggler_StartPathB(char *raw, int idx) {
     *(int *)((char *)pos + 0) = 0;
     *(int *)((char *)pos + 4) = valY;
 
-    if (RandomIntInternal(&data_0209e650) & 0x8000000) {
+    if (RandomIntInternal(&data_0209e650.value) & 0x8000000) {
         ((Wiggler *)raw)->aim = -0x4000;
         pos[0] = 0x80000;
-        pos[0] += ((unsigned int)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 19) << 7;
+        pos[0] += ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
     } else {
         ((Wiggler *)raw)->aim = 0x4000;
         pos[0] = 0x80000;
-        pos[0] -= ((unsigned int)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 19) << 7;
+        pos[0] -= ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
     }
 
     for (i = 0, off = 0; i < 5; i++) {
@@ -1723,7 +1725,7 @@ void Hana_SpawnWigglers(char *raw, int arg1, int arg2) {
     o->decoy = 1;
     o->index = arg1;
     o->tries = 0;
-    o->bob = (short)(RandomIntInternal(&data_0209e650) & 0xfff0);
+    o->bob = (short)(RandomIntInternal(&data_0209e650.value) & 0xfff0);
     o->bobRate = 0x600;
     o->busy = 0;
     o->bloom = 0;
@@ -1756,7 +1758,7 @@ void Hana_SpawnWigglers(char *raw, int arg1, int arg2) {
 
 // @symbol _ZN15dScMgHanachan_c16CleanupResourcesEv
 s32 dScMgHanachan_c::CleanupResources() {
-    Mg_CommitRecords(this);
+    Mg_CommitRecords();
     return 1;
 }
 
@@ -1832,9 +1834,9 @@ tail:
         if (mPhase != &dScMgHanachan_c::Phase_WaitIntro) {
             int idx = GetGameLanguage();
             void *e = sHanaTextSpritesByLanguage[idx];
-            void *f = ((void **)e)[3];
+            OamAttr *f = ((OamAttr **)e)[3];
             DrawOamSprite(f, 0x80, 0x10, 0);
-            Mg_DrawNumberRotated(0x80, 0x28, (void *)mTimeLeft, 1, -1, 0x800, 0);
+            Mg_DrawNumberRotated(0x80, 0x28, mTimeLeft, 1, -1, 0x800, 0);
         }
     }
 
@@ -2109,7 +2111,7 @@ void dScMgHanachan_c::Phase_SetupRound() {
         if (ret == 3) {
             sHanaFieldWigglerCount = 0xf;
         } else {
-            unsigned int rnd = RandomIntInternal(&data_0209e650) & 0x7fffffff;
+            unsigned int rnd = RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
             sHanaFieldWigglerCount = ((int)(rnd >> 19) * 3 >> 12) + 3;
         }
     }
@@ -2132,7 +2134,7 @@ void dScMgHanachan_c::Phase_SetupRound() {
     }
 
     {
-        unsigned int rnd = RandomIntInternal(&data_0209e650) & 0x7fffffff;
+        unsigned int rnd = RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
         int k = (int)(rnd >> 19) * sHanaFieldWigglerCount >> 12;
         dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
         s->mTarget = (Wiggler *)((Thing *)s->mWiggler + k);

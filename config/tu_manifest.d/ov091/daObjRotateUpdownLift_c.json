@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x02135440",
       "end": "0x02135490"
+    },
+    {
+      "name": ".data",
+      "start": "0x02134ba0",
+      "end": "0x02134bc4"
     }
   ],
   "functions": [
@@ -127,7 +132,29 @@
       "ordinal": 12
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov091_02134ba0",
+      "address": "0x02134ba0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-variant clip cap {0x200000, 0x200000, 0x500000}, copied to the stack by InitResources"
+    },
+    {
+      "symbol": "data_ov091_02134bac",
+      "address": "0x02134bac",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-variant shadow base Y {0x3c000, 0x3c000, 0x78000}, copied to the stack by InitResources"
+    },
+    {
+      "symbol": "data_ov091_02134bb8",
+      "address": "0x02134bb8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-variant shadow size Z {0x32000, 0x32000, 0x78000}, copied to the stack by InitResources"
+    }
+  ],
   "bss": [
     {
       "symbol": "gHsUpdownLiftModelFile",
@@ -383,7 +410,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -419,11 +446,18 @@
           "start": "0x02135440",
           "end": "0x02135490",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02134ba0",
+          "end": "0x02134bc4",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 23
+          "LICENSED": 26
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -434,42 +468,55 @@
           {
             "section": ".init",
             "original": [
-              62
+              65
             ],
             "desired": [
-              62
+              65
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              60
+              63
             ],
             "desired": [
-              60
+              63
             ]
           },
           {
             "section": ".bss",
             "original": [
-              35,
-              36,
-              37,
               38,
               39,
               40,
               41,
-              42
+              42,
+              43,
+              44,
+              45
             ],
             "desired": [
-              40,
-              36,
-              38,
-              42,
-              37,
-              35,
+              43,
+              39,
               41,
-              39
+              45,
+              40,
+              38,
+              44,
+              42
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6,
+              7
+            ],
+            "desired": [
+              6,
+              5,
+              7
             ]
           }
         ],
@@ -478,38 +525,56 @@
             {
               "section": ".bss",
               "original": [
-                35,
-                36,
-                37,
                 38,
                 39,
                 40,
                 41,
-                42
+                42,
+                43,
+                44,
+                45
               ],
               "desired": [
-                40,
-                36,
-                38,
-                42,
-                37,
-                35,
+                43,
+                39,
                 41,
-                39
+                45,
+                40,
+                38,
+                44,
+                42
               ],
               "slots": [
-                35,
-                36,
-                37,
                 38,
                 39,
                 40,
                 41,
-                42
+                42,
+                43,
+                44,
+                45
+              ]
+            },
+            {
+              "section": ".data",
+              "original": [
+                5,
+                6,
+                7
+              ],
+              "desired": [
+                6,
+                5,
+                7
+              ],
+              "slots": [
+                5,
+                6,
+                7
               ]
             }
           ],
-          "symbolIndices": 8,
+          "symbolIndices": 11,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
@@ -526,7 +591,8 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "localWorkerNote": "Verified on this machine's stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
     }
   },
   "init": [

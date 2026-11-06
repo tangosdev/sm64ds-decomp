@@ -124,7 +124,7 @@ typedef struct WMMpRecvData {
 } WMMpRecvData;
 
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern void MultiStore32Bytes(unsigned val, int *dst, int len);
+extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 extern void CpuCopy8(const void *src, void *dst, u32 size);
 extern void func_0205a588(void *dst, u8 val, u32 size);
 extern char *WM_ReadMPData(char *buf, unsigned int aid);
@@ -410,7 +410,7 @@ void MBi_CommParentCallback(int type, char *arg) {
     }
     {
         volatile int sp0 = 0;
-        MultiStore32Bytes(sp0, (int *)data_020a9db8, 0x73e0);
+        MultiStore32Bytes(sp0, data_020a9db8, 0x73e0);
     }
     data_020a9db8 = 0;
 }

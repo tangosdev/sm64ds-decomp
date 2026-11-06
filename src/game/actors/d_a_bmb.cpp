@@ -41,6 +41,7 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
+#include "math/MtxStack.h"
 
 /* The three shared files this actor claims: ov002's model handle here and the
    two animation handles below.  InitResources loads them and
@@ -108,13 +109,6 @@ int func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
 void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 int *Vec3_LslInPlace(int *v, int sh);
-/* local extern: math/MtxStack.h declares the next two, but spells
-   MulMat4x3Mat4x3 with const int *, as its definition does, and this file
-   passes it Matrix4x3 pointers. Including the header also renumbers this TU's
-   @NNN compiler temps, which the manifest maps to retail addresses. */
-void Matrix4x3_FromRotationY(void *m, int angle);
-void MulMat4x3Mat4x3(void *a, void *b, void *out); /* local extern: as above */
-
 /* Hoisted out of four member bodies.  A class member function may not sit in a
    block-scope linkage specification, so daBmb_c::State1/3/4/5 cannot carry their
    own extern "C" declarations the way the free members below do -- these have to
@@ -1132,11 +1126,10 @@ extern "C" {
 
 // @symbol func_ov102_0214ae1c
 void func_ov102_0214ae1c(void *cv) {
-    typedef struct Bmb_Ae1cVec3 { int x, y, z; } Vec3;
     extern void d_a_bmbNewSimpleHold(unsigned int id, int x, int y, int z);
 
     daBmb_c *self = (daBmb_c *)cv;
-    Vec3 v;
+    Vector3 v;
     int y, z, w;
     self->mdCc_c.flags &= ~0x8000;
     y = self->mPosY;
@@ -1146,7 +1139,7 @@ void func_ov102_0214ae1c(void *cv) {
     v.y = w;
     v.z = z;
     if (self->mCoinType) {
-        dActor_c::Spawn(0x120, 2, *(Vector3 *)&v, 0, self->mAreaId, -1);
+        dActor_c::Spawn(0x120, 2, v, 0, self->mAreaId, -1);
         self->mCoinType = 0;
     }
     func_0201267c(0x10c, &self->mCamSpacePos);
@@ -1158,31 +1151,31 @@ void func_ov102_0214ae1c(void *cv) {
     Particle::System::NewSimple(0x18, v.x, v.y, v.z);
     func_ov002_020ef228(&self->mWithMeshClsn, (int)self);
     if (self->mCarrier) {
-        Vec3 w;
+        Vector3 w;
         self->mCarrier->DropActor();
         w.x = self->mPosX;
         w.y = self->mPosY;
         w.z = self->mPosZ;
-        self->mCarrier->Hurt(*(Vector3 *)&w, 2, 0xc000, 1, 0, 1);
+        self->mCarrier->Hurt(w, 2, 0xc000, 1, 0, 1);
         self->mCarrier = 0;
     } else if (self->mdCc_c.otherOwner) {
         dActor_c *a = dActor_c::FindWithID(self->mdCc_c.otherOwner);
         if (a) {
             if (self->mdCc_c.hitFlags & 0x400000) {
-                Vec3 w;
+                Vector3 w;
                 w.x = self->mPosX;
                 w.y = self->mPosY;
                 w.z = self->mPosZ;
-                ((daPly_c *)a)->Hurt(*(Vector3 *)&w, self->mHurtDamage, 0xc000, 1, 0, 1);
+                ((daPly_c *)a)->Hurt(w, self->mHurtDamage, 0xc000, 1, 0, 1);
             }
         }
     }
     if (self->mEatingPlayer) {
-        Vec3 w;
+        Vector3 w;
         w.x = self->mPosX;
         w.y = self->mPosY;
         w.z = self->mPosZ;
-        self->mEatingPlayer->Hurt(*(Vector3 *)&w, self->mHurtDamage, 0xc000, 1, 0, 1);
+        self->mEatingPlayer->Hurt(w, self->mHurtDamage, 0xc000, 1, 0, 1);
         self->mEatingPlayer->func_ov002_020d718c();
         self->mEatingPlayer = 0;
     }

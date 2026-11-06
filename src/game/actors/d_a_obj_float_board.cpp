@@ -32,6 +32,7 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "cstd.h"
+#include "math/MtxStack.h"
 
 /* local extern: no shared header declares these. */
 extern "C" {
@@ -40,12 +41,11 @@ extern int data_0209f32c;     /* the stage water's global height (written by d_a
 extern short data_02082214[]; /* sin/cos table */
 
 int SurfaceInfo_TestFlag0x20(int *p);
-void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 
 /* Stores into the mesh collider's two callback slots (+0x1c / +0x18 of the
    embedded dBgW; the +0x0c store is dBgW::SetClipRadius). */
-void func_020393c4(int *collider, int callback);
-void func_020393d4(int *collider, int callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol _ZN17daObjFloatBoard_cD0Ev
@@ -238,8 +238,8 @@ int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
     UpdateClsnPosAndRot();
     kcl = (KCL_File *)dBgW_Kc::LoadFile(*fp->collision);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *fp->clps);
-    func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
 
     mSinkOffset = 0;
     mBobOffset = 0;
@@ -290,7 +290,7 @@ void daObjFloatBoard_c::OnStoodOn(dActor_c *rider) {
  * argument, which the real callback does not take. A static member: its
  * address is stored as a raw callback word, which a static member's address
  * is. */
-// @symbol _ZN17daObjFloatBoard_c15StoodOnCallbackEPvPS_P8dActor_c
-void daObjFloatBoard_c::StoodOnCallback(void *collider, daObjFloatBoard_c *board, dActor_c *other) {
-    board->OnStoodOn(other);
+// @symbol _ZN17daObjFloatBoard_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
+void daObjFloatBoard_c::StoodOnCallback(dBgW *collider, dActor_c *board, dActor_c *other) {
+    static_cast<daObjFloatBoard_c *>(board)->OnStoodOn(other);
 }

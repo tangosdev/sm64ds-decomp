@@ -71,6 +71,7 @@ enum daDossy_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -124,7 +125,6 @@ extern DossyCollisionFileHandle gDossyHeadCollisionFile;
 
 extern "C" {
 extern s16 data_02082214[];
-extern Matrix4x3 data_020a0e68;
 extern u8 data_ov065_0211c078[];
 extern void *data_ov065_0211cd68[];
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -132,11 +132,6 @@ extern SharedFilePtr *data_ov065_0211c080[];
 extern SharedFilePtr *data_ov065_0211c08c[];
 
 extern int atan2_hold_d_a_dossy_1(int a, int b);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 a);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 a);
-void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 a);
-void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *o);
 /* The named local declarations below keep this TU's @NNN compiler-temp
    identities stable. Their signatures now match CalcLib.h exactly. */
 void SubVec3(Vector3 *a, Vector3 *b,
@@ -153,10 +148,9 @@ short Vec3_HorzAngle(
 unsigned short DecIfAbove0_Short(
     unsigned short *counter); /* local extern: named parameters preserve @NNN identities */
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void hold_d_a_dossy(void *self, void *kcl, void *mtx, Fix12i r, short s, void *clps);
-extern void func_020393d4(void* p, void* v);
-extern void func_020393c4(void* p, void* v);
+extern void func_020393d4(void *collider, BeforeClsnCallback callback);
+extern void func_020393c4(void *collider, StoodOnCallback callback);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i r, Fix12i h, void *p, void *q);
 extern int AngleDiff(int a, int b);
@@ -164,8 +158,8 @@ extern int AngleDiff(int a, int b);
 int func_ov065_021180d4(char* self);
 void func_ov065_02118c4c(char* c);
 int func_ov065_02119210(unsigned char* c);
-void func_ov065_021195bc(void *a, void *b, void *c);
-void func_ov065_021195d0(void *a, void *b, void *c);
+void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
+void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
 }
 
 
@@ -197,15 +191,15 @@ int daDossyCap_c::OnYoshiTryEat()
 
 #pragma long_calls on
 // @symbol func_ov065_021195d0
-extern "C" void func_ov065_021195d0(void *a, void *b, void *c) {
-    static_cast<daDossy_c *>(b)->func_ov065_02119594(static_cast<dActor_c *>(c));
+extern "C" void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daDossy_c *>(owner)->func_ov065_02119594(other);
 }
 #pragma long_calls off
 
 #pragma long_calls on
 // @symbol func_ov065_021195bc
-extern "C" void func_ov065_021195bc(void *a, void *b, void *c) {
-    static_cast<daDossy_c *>(b)->func_ov065_0211956c(static_cast<dActor_c *>(c));
+extern "C" void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daDossy_c *>(owner)->func_ov065_0211956c(other);
 }
 #pragma long_calls off
 
@@ -262,11 +256,11 @@ int daDossy_c::InitResources()
                 ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), *(const Matrix4x3 *)(mtx), 0x1000, mAngleY,
                                       *(CLPS_Block *)(data_ov065_0211cd68[j]));
             if ((unsigned)j <= 2) {
-                func_020393d4(mmc, (void *)&dBgW::UpdatePosAndAngs);
+                func_020393d4(mmc, &dBgW::UpdatePosAndAngs);
                 if (j == 2)
-                    func_020393c4(mmc, (void *)func_ov065_021195bc);
+                    func_020393c4(mmc, func_ov065_021195bc);
                 else
-                    func_020393c4(mmc, (void *)func_ov065_021195d0);
+                    func_020393c4(mmc, func_ov065_021195d0);
             }
             ((dBgW_KcMbg *)mmc)->Enable(this);
             mtx += sizeof(DorriePlatform);

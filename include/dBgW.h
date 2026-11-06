@@ -76,9 +76,11 @@ struct Vector3_16 { s16 x, y, z; };
 #include "Memory.h"
 
 struct dBgW;
-/* dBgW::BeforeClsn's hook. Its parameters stay named: each name is one of every
-   consumer TU's @NNN numbers, as they were when the member spelled the type inline. */
-typedef void (*BeforeClsnCallback)(dBgW *self, dActor_c *actor, dBgPi *res, Vector3 *pos,
+/* dBgW::BeforeClsn's hook, spelt as the stock callbacks below take it and as
+   BeforeClsn forwards its own reference parameters. Its parameters stay named:
+   each name is one of every consumer TU's @NNN numbers, as they were when the
+   member spelled the type inline. */
+typedef void (*BeforeClsnCallback)(dBgW &self, dActor_c *actor, dBgPi &res, Vector3 &pos,
                                    Vector3_16 *motionAng, Vector3_16 *ang);
 
 typedef void (*StoodOnCallback)(dBgW *, dActor_c *, dActor_c *);

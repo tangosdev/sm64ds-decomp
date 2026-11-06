@@ -27,8 +27,8 @@
 extern "C" {
 
 s32 GetLanguageIndex(void);
-u32 LoadCompressedFileAt(u32 fileID, void *target);
-void *LoadFile(u16 fileID);
+u32 LoadCompressedFileAt(int fileID, void *target);
+void *LoadFile(int fileID);
 void Deallocate(void *ptr);
 
 /* Per-language file IDs, indexed by GetLanguageIndex(). */

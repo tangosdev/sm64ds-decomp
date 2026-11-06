@@ -64,7 +64,7 @@ extern HeyhoStateTable data_ov002_02111190;
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void func_02012694(unsigned int a, Vector3 const &v);
+void func_02012694(unsigned int a, const Vector3 *v);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 }
 
@@ -117,7 +117,7 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
     }
     flags = mdCcAc_c.hitFlags;
     SmallPoofDust();
-    func_02012694(0x166, mCamSpacePos);
+    func_02012694(0x166, &mCamSpacePos);
     MarkForDestruction();
     if ((flags & 0x10) != 0) {
         return;
@@ -134,7 +134,7 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
 int daPropeller_Heyho_Fire_c::State0() {
     if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnGround() || mWithMeshClsn.IsOnWall()) {
         SmallPoofDust();
-        func_02012694(0x166, mCamSpacePos);
+        func_02012694(0x166, &mCamSpacePos);
         MarkForDestruction();
         return 1;
     }

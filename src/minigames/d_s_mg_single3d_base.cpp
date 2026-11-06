@@ -14,10 +14,6 @@
  *   is still declared without the argument and result.
  * - The ov004 registry words stay raw: sMgTopScreenYOffset and the
  *   file-id table sSingle3DCommonNcgByLanguage name no struct this TU can see.
- *   sMgGraphCallback keeps the int[] spelling: the typed
- *   dScMgBase_c::graphCallback_c form matches (9/9 still MATCH) but trips
- *   the decl ratchet against src/minigames/d_s_mg_d3d_base.cpp's banked int[],
- *   and that file is outside this job's area.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -49,7 +45,7 @@ void SetFog(int enable, int, int, int);
 }
 
 extern "C" {
-int LoadFile(int fileId);
+void *LoadFile(int fileId);
 void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
 void Mg_ResetBgOffsets(void);
@@ -64,10 +60,10 @@ extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern u32 data_020a0db0;
 extern int sMgTopScreenYOffset;
-extern int sMgGraphCallback[];
+extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 extern int sSingle3DCommonNcgByLanguage[];
 extern int data_0208ee44;
-extern void **data_0209d4a8;
+extern dGraph_c::callback_c *data_0209d4a8;
 }
 
 // @symbol _ZN19dScMgSingle3DBase_c11InitEnginesEv
@@ -117,8 +113,8 @@ void dScMgSingle3DBase_c::InitEngines()
     G3X::SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     FreeGfxSlotsById(0x1d);
-    sMgGraphCallback[1] = (int)this;
-    data_0209d4a8 = (void **)sMgGraphCallback;
+    sMgGraphCallback.mScene = this;
+    data_0209d4a8 = &sMgGraphCallback;
     *(vu32 *)0x40004ccu = 0x7fff;
     *(vu32 *)0x40004ccu = 0x40007fff;
 }
@@ -178,15 +174,15 @@ int dScMgSingle3DBase_c::GetDisplayMode()
  * buffer. */
 extern "C" void LoadCard2SubBg3(void)
 {
-    void *fileData = (void *)LoadFile(ASSET_D_2D_MG_BG_CARD2_NCG_BIN);
+    void *fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCG_BIN);
     gSubScreenLayers |= 8;
     *(vu16 *)0x400100eu = (*(vu16 *)0x400100eu & 0x43) | 0x214;
     DecompressLZ16(fileData, (void *)G2S::GetBG3CharPtr());
     Ov004_Deallocate(fileData);
-    fileData = (void *)LoadFile(ASSET_D_2D_MG_BG_CARD2_NCL_BIN);
+    fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCL_BIN);
     GXS::LoadBGPltt(fileData, 0xa0, 0x160);
     Deallocate(fileData);
-    fileData = (void *)LoadFile(ASSET_D_2D_MG_BG_CARD2_NSC_BIN);
+    fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NSC_BIN);
     func_020562b4(fileData, 0, 0x800);
     Deallocate(fileData);
     *(vu16 *)0x400100eu &= ~0x40;

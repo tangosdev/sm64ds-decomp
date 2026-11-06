@@ -24,8 +24,8 @@
  * - data_ov071_02122ecc, data_ov071_021230d0 and data_ov071_021230d8 are
  *   defined at the end of this file so their dynamic init stays out of
  *   .text.
- * - Matrix4x3_FromRotationXYZExt, MulVec3Mat4x3, Vec3_Add, AddVec3,
- *   Vec3_HorzDist, DecIfAbove0_Short and func_020393d4 stay local externs;
+ * - MulVec3Mat4x3, Vec3_Add, AddVec3, Vec3_HorzDist, DecIfAbove0_Short and
+ *   func_020393d4 stay local externs;
  *   no shared header declares them.
  */
 
@@ -77,14 +77,13 @@ extern CasketCollisionFilePtr data_ov071_021230d8;
 extern CLPS_Block data_ov063_0211ebd8;
 
 extern "C" {
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 /* local extern: d_bg_w.cpp defines it; no header declares it. */
-void func_020393d4(int *p, int v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjCasket_c_classInit
@@ -126,7 +125,7 @@ int daObjCasket_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov071_021230d8), mClsnMat, 0x199,
                               mAngleY, data_ov063_0211ebd8);
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     return 1;
 }
 

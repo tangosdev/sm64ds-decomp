@@ -1,4 +1,4 @@
-extern void Copy48BytesFixed(int *src, int *dst);
+extern void Copy48BytesFixed(const void *src, void *dst);
 
 void func_020553a4(int *m)
 {

@@ -30,23 +30,20 @@
 #include "math/CalcLib.h"
 
 #include "ResourceDescriptor.h"
+#include "math/MtxStack.h"
 
-extern Matrix4x3 data_020a0e68;
 extern int data_02092768[4];
 
 /* local extern: arm9 matrix, quaternion and dBgW helpers with no shared
  * header that agrees with these spellings. */
 extern "C" {
-int InvMat4x3(Matrix4x3 *d, Matrix4x3 *s);
+int InvMat4x3(const Matrix4x3 *s, Matrix4x3 *d);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Quaternion_FromVector3(int *q, Vector3 *from, Vector3 *to);
 void Quaternion_Normalize(int *q);
 void Quaternion_SLerp(char *out, char *a, int t, char *b);
 void Matrix4x3_FromQuaternion(void *q, Matrix4x3 *m);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void MulMat4x3Mat4x3(Matrix4x3 *a, void *b, void *c);
-void Matrix4x3_ApplyInPlaceToRotationY(void *m, short a);
 void func_020393c4(dBgW_KcMbg *clsn, void *fn);
 }
 

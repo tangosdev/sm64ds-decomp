@@ -94,7 +94,7 @@ extern "C" {
 void func_020566dc(const void *src, unsigned int offset, unsigned int count);
 void func_02056674(const void *src, unsigned int offset, unsigned int count);
 void MultiCopy_Int(int *dst, int *src, int len);
-void MultiCopy32Bytes(int *src, int *dst, int len);
+void MultiCopy32Bytes(const void *src, void *dst, int len);
 
 int func_0202043c(int thiz);
 }
@@ -727,8 +727,8 @@ void OAM::Reset()
         ((OAMEntry *)data_0209e674)[0].a = 0xc0;
         ((OAMEntry *)data_0209e674)[0].b = 0;
         MultiCopy_Int((int*)data_0209e674, data_0209e67c, 0x18);
-        MultiCopy32Bytes((int*)data_0209e674, data_0209e694, 0x3e0);
-        MultiCopy32Bytes((int*)data_0209e674, (int*)data_0209ea74, 0x400);
+        MultiCopy32Bytes(data_0209e674, data_0209e694, 0x3e0);
+        MultiCopy32Bytes(data_0209e674, data_0209ea74, 0x400);
         data_0209e670 = 0;
         data_0209e66c = 0;
     }

@@ -970,14 +970,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@411",
+      "from": "@483",
       "to": "@418",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @432 now; licensed under the existing pin @418"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @432 now; licensed under the existing pin @418; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@410",
+      "from": "@482",
       "to": "@417",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @431 now; licensed under the existing pin @417"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @431 now; licensed under the existing pin @417; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ]
 }

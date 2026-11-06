@@ -52,7 +52,6 @@
 #include "math/Approach.h"
 #include "Particle__System.h"
 
-typedef struct { int x, y, z; } V3;
 
 /* One row of the state table: enter action (pmf[0]), per-frame update
  * (pmf[1]) and a name literal. */
@@ -123,7 +122,7 @@ daObjPowerUpItem_c::~daObjPowerUpItem_c()
 void daObjPowerUpItem_c::StateResting()
 {
     int flags;
-    V3 pos;
+    VecFx32 pos;
 
     do {
         if (param1 == FLOWER_PARAM_PERSISTENT) break;

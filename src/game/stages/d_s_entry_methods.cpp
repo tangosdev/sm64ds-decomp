@@ -186,7 +186,7 @@ extern struct OamAttr data_ov075_0211cba4[];
  * rematch and results steps, in ROM order ahead of the course-select
  * steps. */
 extern "C" {
-extern s8 data_0209f310[];
+extern s8 gNumStageStars[];
 extern s16 gNumCoins[];
 extern u8 data_0209b2f0[];
 extern u8 data_0209b2ec[];
@@ -293,12 +293,12 @@ void dScEntry_c::TallyRoundWinners() {
         pc = pc + 1;
     } while (i < 4);
 
-    if (data_0209f310[0] != 0 || data_0209f310[1] != 0 || data_0209f310[2] != 0 ||
-        data_0209f310[3] != 0 || gNumCoins[0] != 0 || gNumCoins[1] != 0 || gNumCoins[2] != 0 ||
+    if (gNumStageStars[0] != 0 || gNumStageStars[1] != 0 || gNumStageStars[2] != 0 ||
+        gNumStageStars[3] != 0 || gNumCoins[0] != 0 || gNumCoins[1] != 0 || gNumCoins[2] != 0 ||
         gNumCoins[3] != 0) {
         max = 0;
         i = max;
-        pc = (u8 *)data_0209f310;
+        pc = (u8 *)gNumStageStars;
         do {
             t = (s8)*pc;
             i = i + 1;
@@ -309,7 +309,7 @@ void dScEntry_c::TallyRoundWinners() {
         } while (i < 4);
 
         n = 0;
-        pb = (u8 *)data_0209f310;
+        pb = (u8 *)gNumStageStars;
         pc = data_0209b2f0;
         i = n;
         do {

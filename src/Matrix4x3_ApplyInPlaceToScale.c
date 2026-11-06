@@ -11,5 +11,5 @@ void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix
 {
     struct Matrix4x3 tmp;
     func_020527e8(&tmp, x, y, z);
-    MulMat4x3Mat4x3((const int *)&tmp, (const int *)mF, (int *)mF);
+    MulMat4x3Mat4x3(&tmp, mF, mF);
 }

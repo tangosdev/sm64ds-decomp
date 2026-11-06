@@ -3,7 +3,7 @@
 extern void PXI_Init(void);
 extern int PXI_IsCallbackReady(int tag, int proc);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
-extern void TPi_TpCallback(void);
+extern void TPi_TpCallback(int tag, unsigned int data, int err);
 
 extern char data_020a80c8[];
 

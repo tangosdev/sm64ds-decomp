@@ -36,6 +36,7 @@
 #include "daObjMcWater_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "SaveBlock.h"
 
 struct BMD_File;
 struct BTA_File;
@@ -44,8 +45,8 @@ struct CLPS_Block;
 
 extern BTA_File data_ov009_02112bc4;
 extern CLPS_Block data_ov009_02112c38;
-extern unsigned char data_0209f2d8[];
-extern int data_0209caa0[];
+extern unsigned char data_0209f2d8;
+extern SaveBlock data_0209caa0;
 extern int data_0209f32c;
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
@@ -78,7 +79,7 @@ Vector3 data_ov009_02113d8c[7] = {
     Vector3(-0x141e000, -0x5a000, -0x100e000),
 };
 
-/* ... when bit 0x80000 of data_0209caa0[2] is set: */
+/* ... when bit 0x80000 of data_0209caa0.file.flags2 is set: */
 Vector3 data_ov009_02113e34[7] = {
     Vector3(-0x152c000, -0x320000, -0x97e000), Vector3(-0x1450000, -0x320000, -0xa46000),
     Vector3(-0x13a6000, -0x320000, -0xb2c000), Vector3(-0x1324000, -0x320000, -0xc30000),
@@ -86,7 +87,7 @@ Vector3 data_ov009_02113e34[7] = {
     Vector3(-0x1298000, -0x320000, -0xe56000),
 };
 
-/* ... and when data_0209f2d8[0] is 1: */
+/* ... and when data_0209f2d8 is 1: */
 Vector3 data_ov009_02113de0[7] = {
     Vector3(-0x14d2000, -0x42e000, -0x960000), Vector3(-0x140a000, -0x42e000, -0xa32000),
     Vector3(-0x136a000, -0x42e000, -0xb18000), Vector3(-0x12f2000, -0x42e000, -0xc12000),
@@ -107,9 +108,9 @@ extern "C" daObjMcWater_c *daObjMcWater_c_classInit() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjMcWater_c13InitResourcesEv
 int daObjMcWater_c::InitResources() {
-    int b = (int)(data_0209f2d8[0] == 1);
+    int b = (int)(data_0209f2d8 == 1);
     if (b == 0) {
-        if (data_0209caa0[2] & 0x80000) {
+        if (data_0209caa0.file.flags2 & 0x80000) {
             mPosY = -0x2bc000;
         }
     }
@@ -170,13 +171,13 @@ int daObjMcWater_c::CleanupResources() {
 void daObjMcWater_c::SpawnWaterfalls() {
     Vector3 *vec;
     int i;
-    int b = (int)(data_0209f2d8[0] == 1);
+    int b = (int)(data_0209f2d8 == 1);
     if (b != 0) {
         if (mPosX > 0)
             return;
         vec = data_ov009_02113de0;
     } else {
-        vec = (data_0209caa0[2] & 0x80000) ? data_ov009_02113e34 : data_ov009_02113d8c;
+        vec = (data_0209caa0.file.flags2 & 0x80000) ? data_ov009_02113e34 : data_ov009_02113d8c;
     }
     for (i = 0; i < 7; i++) {
         dActor_c::Spawn(0xc5, 0, vec[i], 0, mAreaId, -1);
