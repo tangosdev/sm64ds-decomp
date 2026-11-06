@@ -49,7 +49,7 @@ extern dCamera_c *data_0209f318;
 extern void *data_0209f338;
 extern daPly_c *data_0209f394[];
 extern u8 data_0209fc5c[];
-extern int data_02092134;
+extern unsigned int data_02092134;
 extern u8 data_02092128[];
 
 extern s8 data_ov002_0210cb5c[];
@@ -391,7 +391,7 @@ void LoadUnusedType13Objects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
  * unlike most of this family: it wants one value, not a list. */
 // @symbol _Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEaj
 void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    data_02092134 = *(int *)table.entries;
+    data_02092134 = *(unsigned int *)table.entries;
 }
 
 /* Walk the outer object table and dispatch each sub-table to the category

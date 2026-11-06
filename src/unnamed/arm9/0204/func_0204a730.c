@@ -3,8 +3,9 @@
 /* func_0204a730 @ 0x0204a730 (arm9, size 0x6fc)   [mwccarm 2004/b56]
  * Particle system update: emit, run the per-particle animation and behavior
  * tables, integrate, spawn children and retire expired particles, then the
- * same for the child particles. The child loop's time byte is staged in a u32
- * local ahead of the call loop, as the ROM keeps it in a register across it.
+ * same for the child particles. The child loop's time byte is staged in an int
+ * local (the animation callbacks' lifeRate type) ahead of the call loop, as
+ * the ROM keeps it in a register across it.
  */
 
 extern void func_0204c584(void *self, void *arg);
@@ -12,7 +13,7 @@ extern void func_0204c304(void *node, void *self, void *arg);
 extern void *func_0204d8e8(void *listHead, void *node);
 extern void func_0204d9a0(void *list, void *node);
 
-typedef void (*Cb1)(void *, void *, u32);
+typedef void (*Cb1)(void *, void *, int);
 typedef void (*Cb2)(u32, void *, void *);
 
 typedef struct {
@@ -163,12 +164,12 @@ typedef struct {
     PtclList freeParticles; /* 0x14 -- expired particles go back here */
 } PtclManager;
 
-extern void func_0204d440(void *, void *, u32);
-extern void func_0204d294(void *, void *, u32);
-extern void func_0204d1b4(void *, void *, u32);
-extern void func_0204d150(void *, void *, u32);
-extern void func_0204d104(void *, void *, u32);
-extern void func_0204d0b8(void *, void *, u32);
+extern void func_0204d440(void *, void *, int);
+extern void func_0204d294(void *, void *, int);
+extern void func_0204d1b4(void *, void *, int);
+extern void func_0204d150(void *, void *, int);
+extern void func_0204d104(void *, void *, int);
+extern void func_0204d0b8(void *, void *, int);
 
 void func_0204a730(void *arg0, void *self) {
     UpdateDef *sb;
@@ -187,7 +188,7 @@ void func_0204a730(void *arg0, void *self) {
     Ent1 tableB[4];
     s32 acc[3];
     UpdateData *data;
-    u32 childTime;
+    int childTime;
     s32 i;
     s32 n;
     PtclSystem *sys = (PtclSystem *)self;
