@@ -2,8 +2,7 @@
 
 typedef struct FSFile FSFile;
 
-void FS_InitFile(FSFile *p_file)
-{
+void FS_InitFile(FSFile *p_file) {
     p_file->link.prev = 0;
     p_file->link.next = p_file->link.prev;
     p_file->queue = 0;
