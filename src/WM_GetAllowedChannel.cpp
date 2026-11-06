@@ -8,11 +8,10 @@
 
 extern "C" {
 
-extern void *WM_GetSystemWork(void);
 extern int WMi_CheckIdle(void);
 
 unsigned short WM_GetAllowedChannel(void) {
-    WMArm9Buf *sys = (WMArm9Buf *)WM_GetSystemWork();
+    WMArm9Buf *sys = WM_GetSystemWork();
     if (WMi_CheckIdle() != 0)
         return 0;
     CP15::InvalidateDataCache((unsigned)&sys->status->allowedChannel, 2);

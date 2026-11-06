@@ -5,7 +5,6 @@
 extern "C" {
 
 extern int WMi_CheckInitialized(void);
-extern char *WM_GetSystemWork(void);
 
 /* NitroSDK wm_sync.c WM_SetPortCallback: store port's receive callback
  * and its argument, with interrupts off. ILLEGAL_STATE (3) before WM_Init
@@ -18,7 +17,7 @@ int WM_SetPortCallback(int port, int callback, int arg) {
         return r;
     }
     {
-        WMArm9Buf *sys = (WMArm9Buf *)WM_GetSystemWork();
+        WMArm9Buf *sys = WM_GetSystemWork();
         sys->portCallbackTable[port] = (void *)callback;
         sys->portCallbackArgument[port] = (void *)arg;
     }
