@@ -7,9 +7,9 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "NOT FROM tu_map. tools/tu_map.py reports arm9 main as under-segmented, so this boundary is hand-derived.",
-    "Contiguous run 0x0200705c..0x020072c4, six functions, gapless in config/arm9/delinks.txt: _ZN9dCamera_cD1Ev, _ZN9dCamera_cD0Ev, func_020070e8, func_020071a8, func_020071e0, _ZN7Vector3D1Ev. Neighbour below is main (src/main.c, 0x02007000..0x0200705c).",
-    "TOP EDGE: _ZN7Vector3D1Ev at 0x020072c0 is the inline Vector3 destructor that func_020071e0's Vector3 locals make the compiler emit at the end of its object. An emitted inline body sits after the last function of the TU that emits it, so the object ends at 0x020072c4 and func_020072c4 starts the next one.",
-    "The three helpers are dCamera_c code: each takes the camera and touches only dCamera_c fields (pos, lookAt, mTargetPos, savedLookAt, savedPos, mTargetPlayer, mScriptParam, mOrbitTargetYaw). The other camera states (func_020075b4, func_02007758, ...) call them.",
+    "Contiguous run 0x0200705c..0x020072c4, six functions, gapless in config/arm9/delinks.txt: _ZN9dCamera_cD1Ev, _ZN9dCamera_cD0Ev, func_020070e8, StarDanceBoundYaw, CutsceneGrandStarFlyAppCvars, _ZN7Vector3D1Ev. Neighbour below is main (src/main.c, 0x02007000..0x0200705c).",
+    "TOP EDGE: _ZN7Vector3D1Ev at 0x020072c0 is the inline Vector3 destructor that CutsceneGrandStarFlyAppCvars's Vector3 locals make the compiler emit at the end of its object. An emitted inline body sits after the last function of the TU that emits it, so the object ends at 0x020072c4 and CutsceneGrandStarFlyMarioOffscreen starts the next one.",
+    "The three helpers are dCamera_c code: each takes the camera and touches only dCamera_c fields (pos, lookAt, mTargetPos, savedLookAt, savedPos, mTargetPlayer, mScriptParam, mOrbitTargetYaw). The other camera states (CutsceneGrandStarFrontOfMario, CutsceneDanceCloseupFlyAbove, ...) call them.",
     "The run is not src/engine/view/d_camera.cpp. That TU is 0x0200bec4..0x0200e494, and the functions 0x020072c4..0x0200bec4 lie between. func_0200bb28 needs opt_common_subs off while dCamera_c::Behavior needs it on; under deferred codegen that pragma is TU-global.",
     "ROM RTTI is this class: _ZTS9dCamera_c at 0x02086e6c, _ZTI9dCamera_c at 0x02086ee4, _ZTV9dCamera_c at 0x02086f84. Vtable slots 16 and 17 are D1 0x0200705c and D0 0x02007098. The retail table stays the linked copy."
   ],
@@ -43,14 +43,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_020071a8",
+      "symbol": "StarDanceBoundYaw",
       "address": "0x020071a8",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0200/func_020071a8.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_020071e0",
+      "symbol": "CutsceneGrandStarFlyAppCvars",
       "address": "0x020071e0",
       "size": "0x000000e0",
       "legacy_source": "src/unnamed/arm9/0200/func_020071e0.cpp",
@@ -137,9 +137,9 @@
     }
   ],
   "notes": [
-    "Two destructor shards first, then (2026-10-28) the three camera helpers func_020070e8, func_020071a8 and func_020071e0 and the Vector3 destructor func_020071e0 emits. #pragma defer_codegen off puts the functions in source order: D1, D0, D2, then the helpers. D2 is deadstripped. RTTI stays on because the cartridge spells this class dCamera_c, so the emitted _ZTV/_ZTI/_ZTS records have retail homes and are deadstrip-data rather than homeless. The retail vtable at 0x02086f84 remains the linked copy.",
+    "Two destructor shards first, then (2026-10-28) the three camera helpers func_020070e8, StarDanceBoundYaw and CutsceneGrandStarFlyAppCvars and the Vector3 destructor CutsceneGrandStarFlyAppCvars emits. #pragma defer_codegen off puts the functions in source order: D1, D0, D2, then the helpers. D2 is deadstripped. RTTI stays on because the cartridge spells this class dCamera_c, so the emitted _ZTV/_ZTI/_ZTS records have retail homes and are deadstrip-data rather than homeless. The retail vtable at 0x02086f84 remains the linked copy.",
     "The helpers keep their ROM names under C linkage because the other camera shards call them by those names. They read the real dCamera_c fields; mTargetPlayer is an s32 in the header and is cast to dActor_c * for the player's position and facing.",
-    "AngleDiff is declared short locally: func_020071a8 compares its result without sign-extending it, and the definition returns int. Banked in config/decl-agreement-baseline.json.",
+    "AngleDiff is declared short locally: StarDanceBoundYaw compares its result without sign-extending it, and the definition returns int. Banked in config/decl-agreement-baseline.json.",
     "Not folded into d_camera.cpp: the runs are not adjacent. The opt_common_subs split that keeps 0x0200af0c..0x0200bec4 out of d_camera.cpp is unchanged."
   ],
   "relocations": [],

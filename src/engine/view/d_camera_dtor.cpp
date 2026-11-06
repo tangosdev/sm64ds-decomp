@@ -5,15 +5,15 @@
  *   ~dCamera_c     D1 then D0 (0x0200705c, 0x02007098)
  *   func_020070e8  orbit pos around the target player: ease the distance and
  *                  the two angles from the player to pos, then rebuild pos
- *   func_020071a8  set mOrbitTargetYaw to ang once the yaw from mTargetPos
+ *   StarDanceBoundYaw  set mOrbitTargetYaw to ang once the yaw from mTargetPos
  *                  to pos is more than threshold past it
- *   func_020071e0  scripted state: rotate savedLookAt / savedPos by the target
+ *   CutsceneGrandStarFlyAppCvars  scripted state: rotate savedLookAt / savedPos by the target
  *                  player's facing and ease pos and lookAt onto them
  *   Vector3::~Vector3
  *                  the cartridge's copy (0x020072c0), emitted at the end of
- *                  the object for func_020071e0's Vector3 locals
+ *                  the object for CutsceneGrandStarFlyAppCvars's Vector3 locals
  *
- * The emitted Vector3 destructor ends the object, so func_020072c4 starts
+ * The emitted Vector3 destructor ends the object, so CutsceneGrandStarFlyMarioOffscreen starts
  * the next one, src/engine/view/d_camera.cpp (0x020072c4..0x0200e494).
  * This object is built with defer_codegen off and that one is not.
  *
@@ -72,14 +72,20 @@ void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarge
     func_02007c14(&cam->pos, trans, dist, vertAng, horzAng);
 }
 
-// @symbol func_020071a8
-void func_020071a8(dCamera_c *cam, short ang, int threshold) {
+// @symbol StarDanceBoundYaw
+/* Super Mario 64's star_dance_bound_yaw, called for the same stars. Where
+   the N64 clamps the camera's yaw to within yawMax of absYaw, this aims
+   the orbit at absYaw once the camera strays further than that. */
+void StarDanceBoundYaw(dCamera_c *cam, short ang, int threshold) {
     if (AngleDiff(Vec3_HorzAngle(&cam->mTargetPos, &cam->pos), ang) > threshold)
         cam->mOrbitTargetYaw = ang;
 }
 
-// @symbol func_020071e0
-int func_020071e0(dCamera_c *cam) {
+// @symbol CutsceneGrandStarFlyAppCvars
+/* Script op, Super Mario 64's cutscene_grand_star_fly_app_cvars: turn
+   savedLookAt and savedPos by the target player's yaw, close pos in on the
+   first at a rising speed, and ease lookAt toward the second. */
+int CutsceneGrandStarFlyAppCvars(dCamera_c *cam) {
     Vector3 va, vb;
     int dist;
     short ang, angY;

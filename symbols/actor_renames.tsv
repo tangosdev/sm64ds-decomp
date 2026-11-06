@@ -7990,6 +7990,23 @@ ov021	0x02111f34	_ZN17daObjCvNewsLift_c17Platform2CallbackEP4dBgWPS_P8dActor_c	_
 ov021	0x02111f8c	_ZN17daObjCvNewsLift_c17Platform1CallbackEP4dBgWPS_P8dActor_c	_ZN17daObjCvNewsLift_c17Platform1CallbackEP4dBgWP8dActor_cS3_	the dBgW stood-on callback typed as the slot it fills, (collider, owner, other) with the owner cast back inside, so func_020393c4 takes its address uncast; same address, same bytes
 ov021	0x02111fe4	_ZN17daObjCvNewsLift_c17Platform0CallbackEP4dBgWPS_P8dActor_c	_ZN17daObjCvNewsLift_c17Platform0CallbackEP4dBgWP8dActor_cS3_	the dBgW stood-on callback typed as the slot it fills, (collider, owner, other) with the owner cast back inside, so func_020393c4 takes its address uncast; same address, same bytes
 ov021	0x02112128	_ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWPS_P8dActor_c	_ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWP8dActor_cS3_	the dBgW stood-on callback typed as the slot it fills, (collider, owner, other) with the owner cast back inside, so func_020393c4 takes its address uncast; same address, same bytes
+arm9	0x020071a8	func_020071a8	StarDanceBoundYaw	dCamera_c helper: Super Mario 64's star_dance_bound_yaw, called with the same star/course yaw bounds by the fly-away and closeup dance starts
+arm9	0x020071e0	func_020071e0	CutsceneGrandStarFlyAppCvars	dCamera_c script op 0x26: Super Mario 64's cutscene_grand_star_fly_app_cvars (speed toward 90 by 2.5, pos onto the rotated offset, lookAt eased)
+arm9	0x020072c4	func_020072c4	CutsceneGrandStarFlyMarioOffscreen	dCamera_c script op 0x25: Super Mario 64's cutscene_grand_star_fly_mario_offscreen (speed to 15 by 0.1; targets 2000/1200/1000)
+arm9	0x020073a0	func_020073a0	CutsceneGrandStarFlyMoveToMario	dCamera_c script op 0x24: Super Mario 64's cutscene_grand_star_fly_move_to_mario
+arm9	0x02007414	func_02007414	CutsceneGrandStarFlyStart	dCamera_c script op 0x23: Super Mario 64's cutscene_grand_star_fly_start
+arm9	0x02007450	func_02007450	CutsceneGrandStarMoveCvar2	dCamera_c script op 0x22: Super Mario 64's cutscene_grand_star_move_cvar2
+arm9	0x02007484	func_02007484	CutsceneGrandStarApproachMario	dCamera_c script op 0x21: Super Mario 64's cutscene_grand_star_approach_mario
+arm9	0x020074e8	func_020074e8	CutsceneGrandStarAccelCvar2	dCamera_c script op 0x20: Super Mario 64's cutscene_grand_star_accel_cvar2 (z toward -40 by 2, x = 5 mirrored)
+arm9	0x0200751c	func_0200751c	CutsceneGrandStarMarioJump	dCamera_c script op 0x1f: Super Mario 64's cutscene_grand_star_mario_jump
+arm9	0x02007548	func_02007548	CutsceneGrandStarFocusMario	dCamera_c script op 0x1e: Super Mario 64's cutscene_grand_star_focus_mario ((y - 307) / 2 + 407)
+arm9	0x020075b4	func_020075b4	CutsceneGrandStarFrontOfMario	dCamera_c script op 0x1d: Super Mario 64's cutscene_grand_star_front_of_mario (yaw + 0x1200)
+arm9	0x0200762c	func_0200762c	CutsceneGrandStarStart	dCamera_c script op 0x1c: Super Mario 64's cutscene_grand_star_start (in front of Mario at height 457)
+arm9	0x02007758	func_02007758	CutsceneDanceCloseupFlyAbove	dCamera_c script op 0x1a: Super Mario 64's cutscene_dance_closeup_fly_above (dist 800, pitch 0x1800 or 0x800 for the same two stars)
+arm9	0x020077f0	func_020077f0	CutsceneDanceCloseupStart	dCamera_c script op 0x19: Super Mario 64's cutscene_dance_closeup_start (same star_dance_bound_yaw cases, less WDW)
+arm9	0x020079ac	func_020079ac	CutscenePanCvar9	dCamera_c script op 0x15: Super Mario 64's cutscene_pan_cvar9 with its -29/+29 steps as operands
+arm9	0x02007b0c	func_02007b0c	FocusInFrontOfMario	dCamera_c script op 0x13: Super Mario 64's focus_in_front_of_mario with the whole offset as operands
+arm9	0x02007d58	func_02007d58	CutsceneDanceFlyAwayStart	dCamera_c script op 0x11: Super Mario 64's cutscene_dance_fly_away_start (the same four star_dance_bound_yaw cases)
 arm9	0x0200f760	func_0200f760	_ZN8dActor_c13func_0200f760EP5dCc_c	free actor helper -> dActor_c member: every caller passes the actor in r0, the body uses r0 as the actor, and the function sits in the dActor_c TU (d_actor.cpp); name still the address
 arm9	0x0200fccc	func_0200fccc	_ZN8dActor_c13func_0200fcccEi	free actor helper -> dActor_c member: every caller passes the actor in r0, the body uses r0 as the actor, and the function sits in the dActor_c TU (d_actor.cpp); name still the address
 arm9	0x02010304	func_02010304	_ZN8dActor_c13func_02010304EP5dCc_c	free actor helper -> dActor_c member: every caller passes the actor in r0, the body uses r0 as the actor, and the function sits in the dActor_c TU (d_actor.cpp); name still the address
