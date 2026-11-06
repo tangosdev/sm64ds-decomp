@@ -125,8 +125,7 @@ extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
 /* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
    collider and forwards the platform and the touching actor into
    func_ov060_021183cc. */
-extern "C" void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other)
-{
+extern "C" void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other) {
     func_ov060_021183cc(static_cast<daKpa3Bg_c *>(owner), other);
 }
 

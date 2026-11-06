@@ -2702,8 +2702,7 @@ extern "C" void func_ov066_0211a2e4(void *a, int b)
    itself. */
 // @symbol func_ov066_0211a35c
 #pragma long_calls on
-extern "C" void func_ov066_0211a35c(dBgW *collider, dActor_c *owner, dActor_c *other)
-{
+extern "C" void func_ov066_0211a35c(dBgW *collider, dActor_c *owner, dActor_c *other) {
     func_ov066_0211a2e4(owner, (int)other);
 }
 #pragma long_calls off

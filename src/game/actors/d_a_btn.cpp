@@ -936,8 +936,7 @@ void daBtn_c::func_ov079_02125240(){
    `ldr ip,[pc,#8]; bx ip` absolute tail-call; bracketed closed immediately
    because it is positional. */
 #pragma long_calls on
-extern "C" void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other)
-{
+extern "C" void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daBtn_c *>(owner)->func_ov079_02125058(other);
 }
 #pragma long_calls off

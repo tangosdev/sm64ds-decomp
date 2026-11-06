@@ -116,8 +116,7 @@ extern "C" daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void)
 #pragma push
 #pragma long_calls on
 // @symbol func_ov002_020baa98
-extern "C" void func_ov002_020baa98(dBgW *collider, dActor_c *owner, dActor_c *other)
-{
+extern "C" void func_ov002_020baa98(dBgW *collider, dActor_c *owner, dActor_c *other) {
     func_ov002_020baa2c(static_cast<daObjSwitch_c *>(owner), other);
 }
 #pragma pop
