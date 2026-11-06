@@ -18090,11 +18090,6 @@
         "return:void"
       ]
     },
-    "func_ov002_020c18b0": {
-      "src/_ZN7daPly_c20St_StomachSlide_MainEv.cpp": [
-        "param:#2 unsigned int"
-      ]
-    },
     "func_ov002_020c43c4": {
       "src/_ZN7daPly_c16InitBalloonMarioEv.cpp": [
         "param:#2 int"
@@ -18134,34 +18129,11 @@
         "arity:2"
       ]
     },
-    "func_ov002_020d413c": {
-      "include/decl_common.h": [
-        "param:#2 short"
-      ]
-    },
-    "func_ov002_020d4d88": {
-      "src/unnamed/ov002/func_ov002_020d3b9c.c": [
-        "arity:3"
-      ]
-    },
     "func_ov002_020d5cec": {
       "src/_ZN7daPly_c18St_YoshiPower_MainEv.cpp": [
         "return:void"
       ],
       "src/_ZN7daPly_c4HurtERK7Vector3j5Fix12IiEjjj.cpp": [
-        "return:void"
-      ]
-    },
-    "func_ov002_020d6790": {
-      "src/_ZN7daPly_c21St_YoshiPower_CleanupEv.cpp": [
-        "return:void"
-      ],
-      "src/_ZN7daPly_c8BehaviorEv.cpp": [
-        "return:void"
-      ]
-    },
-    "func_ov002_020d7030": {
-      "src/unnamed/ov002/func_ov002_020d6c60.cpp": [
         "return:void"
       ]
     },
@@ -18179,16 +18151,6 @@
       ],
       "src/unnamed/ov002/func_ov002_020d8854.cpp": [
         "param:#1 char *"
-      ]
-    },
-    "func_ov002_020d91b8": {
-      "include/decl_common.h": [
-        "param:#1 char *"
-      ]
-    },
-    "func_ov002_020d91e0": {
-      "src/_ZN7daPly_c5ShockEj.cpp": [
-        "arity:4"
       ]
     },
     "func_ov002_020d93ac": {
@@ -18265,57 +18227,6 @@
     "func_ov002_020e0f38": {
       "include/decl_common.h": [
         "param:#2 unsigned char"
-      ]
-    },
-    "func_ov002_020e25f0": {
-      "src/_ZN7daPly_c16St_BackFlip_InitEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN7daPly_c16St_SideFlip_InitEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN7daPly_c17St_SlopeJump_InitEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN7daPly_c17St_WaterJump_InitEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN7daPly_c24St_SlideKickRecover_InitEv.cpp": [
-        "return:int"
-      ]
-    },
-    "func_ov002_020e28d4": {
-      "src/_ZN7daPly_c12St_Fall_MainEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN7daPly_c12St_Jump_MainEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN7daPly_c16St_LongJump_MainEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN7daPly_c16St_SideFlip_MainEv.cpp": [
-        "param:#2 unsigned int",
-        "param:#3 unsigned int"
-      ],
-      "src/_ZN7daPly_c16St_WallJump_MainEv.cpp": [
-        "return:int"
-      ]
-    },
-    "func_ov002_020e2ad0": {
-      "src/_ZN7daPly_c16St_BackFlip_InitEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN7daPly_c16St_SideFlip_InitEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN7daPly_c17St_SlopeJump_InitEv.cpp": [
-        "return:int"
-      ]
-    },
-    "func_ov002_020e3078": {
-      "src/unnamed/ov002/func_ov002_020e2c84.c": [
-        "param:#1 char *"
       ]
     },
     "func_ov002_020e496c": {
