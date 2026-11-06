@@ -668,8 +668,13 @@ static int port_test_noconverge(void)
 static int port_test_noconverge(void) { return 0; }
 #endif
 
+/* POLELOG1: hal/polelog_watch.cpp (walk_window only) sets this on its first tick;
+   it drops the level 43 pole watch before any cleanup runs. Null elsewhere. */
+extern "C" void (*port_polelog_disarm_hook)(void) = 0;
+
 extern "C" int port_level_teardown(void)
 {
+    if (port_polelog_disarm_hook) port_polelog_disarm_hook();
     const int trace = std::getenv("SM64DS_TRACE_LEVEL") != 0;
     int rounds = 0;
     if (trace) {
