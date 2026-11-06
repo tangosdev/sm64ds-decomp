@@ -215,30 +215,16 @@
       ]
     },
     "Copy36Bytes": {
-      "src/Geometry_MatrixMultiply3x3.c": [
-        "param:#1 int *"
-      ],
       "src/unnamed/arm9/0204/func_0204b460.c": [
         "param:#1 int *"
       ],
       "src/unnamed/arm9/0204/func_0204b81c.c": [
-        "param:#1 int *"
-      ],
-      "src/unnamed/arm9/0205/func_0205532c.c": [
         "param:#1 int *"
       ]
     },
     "Copy48Bytes": {
       "src/InvMat4x3.cpp": [
         "param:#1 int *"
-      ]
-    },
-    "Copy48BytesFixed": {
-      "src/unnamed/arm9/0205/func_02055388.c": [
-        "arity:2"
-      ],
-      "src/unnamed/arm9/0205/func_020553a4.c": [
-        "arity:2"
       ]
     },
     "CopyTexPalFromLevelModel": {
@@ -591,17 +577,6 @@
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
         "return:void"
-      ]
-    },
-    "IsAreaShowing": {
-      "src/game/actors/d_a_obj_clock.cpp": [
-        "return:int"
-      ],
-      "src/game/actors/d_a_obj_wc_mizu.cpp": [
-        "return:int"
-      ],
-      "src/game/actors/d_a_trs.cpp": [
-        "param:#1 signed char"
       ]
     },
     "IsCannonOpenInCurLevel": {
@@ -7673,17 +7648,6 @@
         "return:char []"
       ]
     },
-    "gNextActorUpdateMask": {
-      "src/game/actors/d_a_obj_key.cpp": [
-        "return:int"
-      ],
-      "src/game/actors/d_a_obj_number.cpp": [
-        "return:int"
-      ],
-      "src/game/actors/d_a_obj_switch.cpp": [
-        "return:int"
-      ]
-    },
     "data_0209b45c": {
       "src/_ZN8dActor_cC1Ev.cpp": [
         "return:void *"
@@ -10529,16 +10493,6 @@
         "return:int"
       ]
     },
-    "sTrmp3DLives": {
-      "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "return:int []"
-      ]
-    },
-    "sTrmp2Lives": {
-      "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "return:int []"
-      ]
-    },
     "sTrmp3DMarioOps": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int []"
@@ -10638,15 +10592,9 @@
         "return:int []"
       ]
     },
-    "sTrmp3DGravityStep": {
-      "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "return:int []"
-      ]
-    },
     "sTrmp3DFallSpeed": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "return:int",
-        "return:int []"
+        "return:int"
       ]
     },
     "sTrmpAnimRollJumpEnd": {
@@ -10656,7 +10604,6 @@
     },
     "sTrmp3DMarios": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "return:char * []",
         "return:unsigned char *"
       ]
     },
@@ -10664,11 +10611,6 @@
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:Ent *",
         "return:int"
-      ]
-    },
-    "sTrmpMariosOnLedges": {
-      "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "return:int []"
       ]
     },
     "sTrmpAnimDoubleJump1": {
@@ -10707,11 +10649,6 @@
         "return:int"
       ]
     },
-    "sTrmp3DMarioCount": {
-      "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "return:int []"
-      ]
-    },
     "sTrmpAnimBounce": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:BCA_File *",
@@ -10743,13 +10680,6 @@
     "sTrmpAnimSdown": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "return:int"
-      ]
-    },
-    "sTrmpRowHeights": {
-      "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "return:int",
-        "return:void *",
-        "return:void * []"
       ]
     },
     "sTrmpItems": {
@@ -16759,15 +16689,7 @@
     },
     "func_020497a0": {
       "src/unnamed/arm9/0204/func_02049ba8.c": [
-        "param:#1 int",
-        "param:#2 int",
         "param:#4 Ctx *"
-      ]
-    },
-    "func_020499bc": {
-      "src/unnamed/arm9/0204/func_02049ba8.c": [
-        "param:#1 int",
-        "param:#2 int"
       ]
     },
     "func_02049cd8": {
@@ -17625,71 +17547,56 @@
     },
     "func_0206dc7c": {
       "src/unnamed/arm9/01ff/func_01ff97d8.c": [
-        "arity:0",
         "return:void"
       ]
     },
     "func_0206dcd4": {
       "src/_dadd.c": [
-        "arity:0",
         "return:void"
       ],
       "src/_dmul.c": [
-        "arity:0",
         "return:void"
       ],
       "src/_dsub.c": [
-        "arity:0",
         "return:void"
       ]
     },
     "func_0206dd30": {
       "src/_fadd.c": [
-        "arity:0",
         "return:void"
       ],
       "src/unnamed/arm9/01ff/func_01ff97d8.c": [
-        "arity:0",
         "return:void"
       ],
       "src/_fsub.c": [
-        "arity:0",
         "return:void"
       ]
     },
     "func_0206dd7c": {
       "src/_dadd.c": [
-        "arity:0",
         "return:void"
       ],
       "src/_dmul.c": [
-        "arity:0",
         "return:void"
       ],
       "src/_ll_ufrom_d.c": [
-        "arity:0",
         "return:void"
       ],
       "src/_dsub.c": [
-        "arity:0",
         "return:void"
       ]
     },
     "func_0206ddcc": {
       "src/_fadd.c": [
-        "arity:0",
         "return:void"
       ],
       "src/_ffix.c": [
-        "arity:0",
         "return:void"
       ],
       "src/_fflt.c": [
-        "arity:0",
         "return:void"
       ],
       "src/_fsub.c": [
-        "arity:0",
         "return:void"
       ]
     },
@@ -18552,11 +18459,6 @@
     "Trmp2Mario_InitPool": {
       "include/decl_common.h": [
         "param:#1 void *"
-      ]
-    },
-    "Trmp3DMario_JumpOff": {
-      "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "param:#1 int *"
       ]
     },
     "Trmp3DMario_EnterOffstage": {
