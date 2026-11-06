@@ -88,7 +88,6 @@ void *_ZTV17ExclamationSwitch[20];
 extern "C" {
 void _ZN7fBase_c9SceneNodeC1Ev(void *node);
 int func_0203b438(void *a, void *b, void *c);
-int func_02043810(void *p);
 
 int data_02099edc[8];           /* the transient fBase_c vtable install */
 int data_02099e70[1];           /* next unique actor id */
@@ -128,7 +127,7 @@ void *_ZN7fBase_cC2Ev(char *self)
         *(unsigned short *)(self + 0x38 + 0xe) = info[3];
     }
     {
-        char *parent = (char *)(size_t)func_02043810(data_020a4b6c);
+        char *parent = (char *)((fBase_c *)data_020a4b6c)->func_02043810();
         if (parent) {
             unsigned char pf = *(unsigned char *)(parent + 0x13);
             if (pf & 3)

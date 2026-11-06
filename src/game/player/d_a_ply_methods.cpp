@@ -198,7 +198,6 @@ extern void FUN_020299f4(void);
 extern int func_01ff98f4(int a, int b);
 extern int func_01ff99a4(int a, int b);
 extern int func_01ffa4bc(int a);
-extern int func_0200fccc(void *, int r1);
 extern void func_020105cc(void *thiz, unsigned int flags);
 extern void func_0201628c(int a, int b);
 extern void func_020162a4(int a, int b);
@@ -2294,8 +2293,8 @@ void daPly_c::func_ov002_020bf9d4() {
   if (gSubSoundID == 0x2e)
       return;
   if (mIsMega == 0){
-    func_0200fccc(this, 0);
-    return;
+      func_0200fccc(0);
+      return;
   }
   ((int*)&v)[0] = this->mPosX;
   ((int*)&v)[1] = this->mPosY;

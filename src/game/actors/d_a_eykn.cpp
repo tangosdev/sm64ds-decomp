@@ -11,8 +11,8 @@
  *   id, Vector3 &) is +4 a call: St_Die_Init 0xd4->0xd8, St_Attack_Main
  *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePosX
  *   does not bind to Vector3 &.
- * - func_0200f760 clears cylinder +0x18 bit 2 unless the closest player's
- *   byte at +0x6fb is set. No recovered name.
+ * - dActor_c::func_0200f760 clears cylinder +0x18 bit 2 unless the closest
+ *   player's byte at +0x6fb is set. No recovered name.
  * - UpdateCircling `if (actorID == kBigMrI)` is 0x154->0x148. The (int)
  *   flag stays. CheckAttacks' egg test and its player test are each
  *   0x17c->0x170; both at once 0x17c->0x164.
@@ -112,7 +112,6 @@ u8 DecIfAbove0_Byte(u8 *counter);
 s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-void func_0200f760(void *actor, void *clsn);
 
 /* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
    See the leftover list. */
@@ -741,7 +740,7 @@ int daEykn_c::Render()
 int daEykn_c::Behavior()
 {
     RunState();
-    func_0200f760(this, &mdCcAcPos_c);
+    func_0200f760(&mdCcAcPos_c);
     mTurnRefAngleY = mAngleY;
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
