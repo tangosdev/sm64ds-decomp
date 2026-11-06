@@ -462,9 +462,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@242",
+      "from": "@320",
       "to": "@260",
-      "evidence": "the node's emitted number moves with this TU's named declarations (@253 when it was pinned, @242 now); ov015 daObjBkBillboard_c defines @253 as a global, so the pin is the unused @260"
+      "evidence": "the node's emitted number moves with this TU's named declarations (@253 when it was pinned, @242 now); ov015 daObjBkBillboard_c defines @253 as a global, so the pin is the unused @260; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ],
   "relocations": [

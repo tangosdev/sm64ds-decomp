@@ -49,6 +49,7 @@ enum daObjCtRotateBlock_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* One record per mVariant: the base model's and the collision mesh's file
  * handles, and the CLPS block SetFile gets with that mesh. */
@@ -77,16 +78,14 @@ struct RotateBlockCollisionFilePtr : SharedFilePtr {
 };
 
 extern "C" {
-extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
-extern void func_020393d4(void *p, void *v);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern short data_02082214[];
 extern u8 data_0209f2c0;
-extern int data_0209e650;
 
 #pragma defer_codegen off
 
@@ -197,7 +196,7 @@ int daObjCtRotateBlock_c::Behavior() {
             mState = 0;
             mWaitTimer = data_ov065_0211cfa4[data_0209f2c0];
             if (data_0209f2c0 == 2)
-                mWaitTimer = (unsigned int)RandomIntInternal(&data_0209e650) % 7 * 0x14 + 5;
+                mWaitTimer = (unsigned int)RandomIntInternal(&data_0209e650.value) % 7 * 0x14 + 5;
             mTargetAngleZ += data_ov065_0211cfa8[mVariant];
             break;
         }
@@ -252,7 +251,7 @@ int daObjCtRotateBlock_c::InitResources() {
                                   *data_ov065_0211cfd0[idx].clps);
     }
 
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
 
     {
         Vector3 va;

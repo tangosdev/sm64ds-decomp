@@ -20,7 +20,7 @@
 
 /* local extern: no shared header declares it. */
 extern "C" {
-void func_020393d4(dBgW_KcMbg *clsn, void *fn);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol _ZN13daObjKuruma_cD0Ev
@@ -86,6 +86,6 @@ int daObjKuruma_c::InitResourcesFrom(Resources *resources) {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x199,
                           mAngleY, *resources->clps);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithVelocity);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
     return 1;
 }

@@ -6,7 +6,7 @@
 
 /* daObjC0Water_c -- Castle basement water (profile C0_WATER / BASEMENT_WATER,
  * actor 35, ov012). It sits still until the switch pillars set the shared
- * group flag in data_0209caa0[2], then sinks (mPosY -= 0x5000) to mLoweredY
+ * group flag in data_0209caa0.file.flags2, then sinks (mPosY -= 0x5000) to mLoweredY
  * and publishes that height through data_0209f32c.
  *
  * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:

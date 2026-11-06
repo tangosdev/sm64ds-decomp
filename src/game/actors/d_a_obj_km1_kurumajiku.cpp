@@ -46,6 +46,7 @@ struct Km1KurumajikuCollisionFilePtr : SharedFilePtr {
 };
 
 extern daObjKurumajiku_c::Resources data_ov043_02112344;
+extern struct CLPS_Block data_ov043_02111bc0;
 
 /* KM1_KURUMA: the cart this axle drives. InitResourcesFrom spawns four. */
 enum { kCartActorId = 0x88 };
@@ -80,3 +81,9 @@ s32 daObjKm1_Kurumajiku_c::CleanupResources() {
  * and .kcl point at them. */
 Km1KurumajikuModelFilePtr gKm1KurumajikuModelFile(ASSET_KM1_KURUMAJIKU_BMD);
 Km1KurumajikuCollisionFilePtr gKm1KurumajikuCollisionFile(ASSET_KM1_KURUMAJIKU_KCL);
+
+daObjKurumajiku_c::Resources data_ov043_02112344 = {
+    &gKm1KurumajikuModelFile,
+    &gKm1KurumajikuCollisionFile,
+    &data_ov043_02111bc0,
+};

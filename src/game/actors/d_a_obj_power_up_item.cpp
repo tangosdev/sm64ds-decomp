@@ -29,9 +29,6 @@
  *  - StateOpening still writes mWobbleAngle through a `short*` pun:
  *    `mWobbleAngle += 0x2000` loads it zero-extended (u16) where the ROM
  *    sign-extends (s16) -- one word different.
- *  - BeginOpening reads the camera facing angle as
- *    `*(short *)((char *)data_0209f318 + 0x17c)`; the Camera header owns the
- *    0x17c offset but data_0209f318 is typed `void *` here.
  *  - Several bodies keep `(long long)` intermediate spellings and the
  *    `(int)((x & flag) != 0)` bool-widening idiom from byte matching.
  */
@@ -48,11 +45,11 @@
 #include "decl_common.h"
 #include "dBgCh_Gnd.h"
 #include "daPly_c.h"
+#include "dCamera_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
 
-typedef struct { int x, y, z; } V3;
 
 /* One row of the state table: enter action (pmf[0]), per-frame update
  * (pmf[1]) and a name literal. */
@@ -97,7 +94,7 @@ extern "C" {
 extern u8 DecIfAbove0_Byte(u8* p);
 extern signed short data_02082214[];
 extern void func_02012694(unsigned int id, const Vector3 *v);
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern void func_0203568c(int *p, int v);
 extern void func_02035684(int *p, int v);
 extern int func_0200fccc(char* s, int r1);
@@ -123,7 +120,7 @@ daObjPowerUpItem_c::~daObjPowerUpItem_c()
 void daObjPowerUpItem_c::StateResting()
 {
     int flags;
-    V3 pos;
+    VecFx32 pos;
 
     do {
         if (param1 == FLOWER_PARAM_PERSISTENT) break;
@@ -190,8 +187,8 @@ void daObjPowerUpItem_c::StateOpening()
 }
 
 /* Enter action that starts the pop: puffs particle 0x102 above the flower,
- * plays sound 0x7d, drops the effect handle, takes mAngleY from the halfword at
- * data_0209f318 + 0x17c and starts mWobbleTimer at 0x1b. */
+ * plays sound 0x7d, drops the effect handle, takes mAngleY from the camera's
+ * mAngleY and starts mWobbleTimer at 0x1b. */
 // @symbol _ZN18daObjPowerUpItem_c12BeginOpeningEv
 void daObjPowerUpItem_c::BeginOpening()
 {
@@ -205,7 +202,7 @@ void daObjPowerUpItem_c::BeginOpening()
     Particle::System::NewSimple(0x102, ((int *)&pos)[0], ((int *)&pos)[1], ((int *)&pos)[2]);
     func_02012694(0x7d, &mCamSpacePos);
     mEffectHandle = 0;
-    mAngleY = *(short *)((char *)data_0209f318 + 0x17c);
+    mAngleY = data_0209f318->mAngleY;
     mWobbleTimer = 0x1b;
 }
 

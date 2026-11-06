@@ -18,7 +18,11 @@ enum d_a_obj_km2_agaru_AssetId { ASSET_KM2_AGARU_BMD = 0x065b, ASSET_KM2_AGARU_K
 #include "SharedFilePtr.h"
 
 struct KCL_File;
-struct CLPS_Block;
+/* CLPS.h keeps the block opaque: an 8-byte header whose halfword at +4 is
+   the entry stride, then N entries. This TU's block is 0x20 bytes. */
+struct CLPS_Block {
+    u32 words[8];
+};
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -35,12 +39,14 @@ struct AgaruCollisionFilePtr : SharedFilePtr {
 
 extern AgaruCollisionFilePtr data_ov045_02113180; /* the KCL */
 extern AgaruModelFilePtr data_ov045_02113188;     /* the BMD */
-extern CLPS_Block data_ov045_021125d0;
+CLPS_Block data_ov045_021125d0 = {
+    0x53504c43, 0x00020008, 0x00000fc0, 0x000000ff, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff,
+};
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void func_020393d4(int *collider, int callback);
-void func_020393c4(int *collider, int callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 enum {
@@ -55,10 +61,10 @@ extern "C" daObjKm2_Agaru_c *daObjKm2_Agaru_c_classInit() {
     return new daObjKm2_Agaru_c();
 }
 
-// @symbol _ZN16daObjKm2_Agaru_c15StoodOnCallbackEPvPS_P8dActor_c
+// @symbol _ZN16daObjKm2_Agaru_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* The collider's second callback word: drop the collider, forward the pair. */
-void daObjKm2_Agaru_c::StoodOnCallback(void *collider, daObjKm2_Agaru_c *self, dActor_c *other) {
-    self->OnStoodOn(other);
+void daObjKm2_Agaru_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c *other) {
+    static_cast<daObjKm2_Agaru_c *>(self)->OnStoodOn(other);
 }
 
 // @symbol _ZN16daObjKm2_Agaru_c9OnStoodOnEP8dActor_c
@@ -76,8 +82,8 @@ s32 daObjKm2_Agaru_c::InitResources() {
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov045_02113180);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov045_021125d0);
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
-    func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
 
     mWaitTimer = 0;
     mState = 0;

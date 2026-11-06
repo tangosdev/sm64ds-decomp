@@ -60,7 +60,7 @@ extern CLPS_Block data_ov025_02112ce8;
 
 /* local extern: stores the before-collision callback; the definition is C
    and has no shared header. */
-extern "C" void func_020393d4(int *p, int v);
+extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 /* mState values, how long each lasts, and the 20.12 step.
  * kVertStep is 5.0 per frame. A full drop is that times
@@ -95,7 +95,7 @@ int daObjDpBrock_c::InitResources() {
     UpdateStepClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113ab0), mClsnMat2, 0x1000,
                           mAngleY, data_ov025_02112ce8);
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
 
     int phase = param1 & 3;
     mVertSpeed = -kVertStep;

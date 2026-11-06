@@ -1,7 +1,7 @@
 #include "Ov007StrokePath.h"
 
 extern void MultiCopy_Int(int *src, int *dst, int len);
-extern int func_ov007_020c2c68(int a, int b, int cc);
+extern Ov007StrokePath *func_ov007_020c2c68(int a, int b, int cc);
 extern void func_ov007_020c27b4(Ov007StrokePath *path);
 extern void func_ov007_020c26fc(Ov007StrokePath *path);
 
@@ -12,7 +12,7 @@ Ov007StrokePath *func_ov007_020c2a04(Ov007StrokePath *src, int start, int end) {
     Ov007StrokePath *d;
     int n;
     n = end - start + 1;
-    d = (Ov007StrokePath *)func_ov007_020c2c68(src->representation, n, src->flags);
+    d = func_ov007_020c2c68(src->representation, n, src->flags);
     d->pointCount = n;
     switch (src->representation) {
     case OV007_PATH_PLANAR:

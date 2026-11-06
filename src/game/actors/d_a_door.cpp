@@ -109,18 +109,13 @@ enum daDoor_c_AssetId {
 #include "dExtFrameCtrl_c.h"
 #include "dActor_c.h"
 #include "Sound.h"
+#include "private/mtx43.h"
+#include "nitro/fx/fx.h"
 
-/* Three plain words. A stack Vector3 would run its destructor; these temps do not. */
-struct Vec3i {
-    s32 x, y, z;
-};
-
-/* The door's matrix, as twelve words: a copy through the C++ Matrix4x3 is
-   the struct-copy DIFF of notes/cpp-class-form.md. */
-struct M48 {
-    int w[12];
-};
-
+/* The vector temps below are VecFx32: a stack Vector3 would run its destructor. */
+/* The door's matrix copies go through the flat Mtx43: a copy through the
+   C++ Matrix4x3 is the struct-copy DIFF of notes/cpp-class-form.md (.text
+   grows by 0x3c bytes). */
 /* One entry of data_ov100_02148204, indexed by param1 (the variant). */
 struct DoorEntry {
     SharedFilePtr *file;    /* 0x0: the door model */
@@ -158,7 +153,7 @@ enum DoorSound {
     SND_SWING_END_ALT = 7
 };
 
-/* Bits of the save flags (data_0209caa0.flags1) the door uses. The shift is
+/* Bits of the save flags (data_0209caa0.file.flags1) the door uses. The shift is
    DoorEntry::flagShift, except for the key bit, which is shifted by
    DoorEntry::keyIndex. */
 enum DoorSaveFlag {
@@ -205,7 +200,7 @@ extern "C" {
    does (Sound.h); func_02012694(id, pos) plays it at a position. */
 unsigned int func_0201277c(unsigned int a);
 void func_02012694(unsigned int a, void *b);
-unsigned char DecIfAbove0_Byte(void *p);
+unsigned char DecIfAbove0_Byte(unsigned char *p);
 int DecIfAbove0_Short(void *p);
 int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(void *res, void *translation, short angY, void *v);
@@ -253,20 +248,22 @@ extern daDoor_StatePmf data_ov100_02148134;
 extern daDoor_StatePmf data_ov100_0214813c;
 extern daDoor_StatePmf data_ov100_02148144;
 
-extern FileSaveData data_0209caa0; /* the live save file (include/SaveData.h) */
+extern SaveBlock data_0209caa0; /* the live save block (include/SaveBlock.h) */
 /* The camera, and the player array indexed by the current player id. */
-extern char *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern unsigned char data_0209f250;
-extern char *data_0209f394[];
+extern daPly_c *data_0209f394[];
 /* The current game mode. */
 extern unsigned char data_0209f2d8;
 /* The next-level id (signed byte). */
-extern char data_02092110;
+extern signed char data_02092110;
 /* The music and sub-channel volumes, both in Fix12 (0x7f000 = 127.0). */
 extern int gMusicVolume;
 extern int gSubVolume;
-extern int data_020a0ebc;
-extern M48 data_020a0e68;
+extern Vector3 data_020a0ebc;
+/* local extern: including math/MtxStack.h instead renumbers every @NNN and
+   $NNN in this TU (+72, measured). */
+extern Matrix4x3 data_020a0e68;
 extern int data_ov002_0211094c;
 extern int data_ov089_02132c50;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
@@ -402,7 +399,7 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
         if (mTimer == 0) {
             if (param1 != DOOR_LAST_KEY_MODEL) {
                 unsigned int ch = data_ov100_021480d0[mKeyModelIdx - 1];
-                if (ch == data_0209caa0.mCharacter)
+                if (ch == data_0209caa0.file.mCharacter)
                     ch = 3;
                 pl->SetRealCharacter(ch);
                 if (data_ov100_02148704 != 0) {
@@ -493,25 +490,25 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
         arg1->mAreaId = t;
         ChangeArea(t);
         {
-            u32 *p = &((dCamera_c *)data_0209f318)->mFlags;
+            u32 *p = &data_0209f318->mFlags;
             *p &= ~DOOR_CAMERA_FLAGS;
         }
         func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END, &mCamSpacePosX);
     } else if (mKeyModelIdx != 0) {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x1c)) != 0) {
-            u32 *p = &((dCamera_c *)data_0209f318)->mFlags;
+            u32 *p = &data_0209f318->mFlags;
             *p &= ~DOOR_CAMERA_FLAGS;
             if (param1 != DOOR_LAST_KEY_MODEL) {
-                Sound::PlayCharVoice(data_0209caa0.mCharacter, 0x21, mCamSpacePos);
+                Sound::PlayCharVoice(data_0209caa0.file.mCharacter, 0x21, mCamSpacePos);
             } else if (data_ov100_02148704 == 0) {
                 arg1->PlayMammaMiaSound();
             }
         }
     } else {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x18)) != 0) {
-            if (*(s8 *)&data_02092110 >= 0)
+            if (data_02092110 >= 0)
                 mModel.speed = 0;
-            ((dCamera_c *)data_0209f318)->GoBehindPlayer(data_0209f250);
+            data_0209f318->GoBehindPlayer(data_0209f250);
         }
     }
     return 1;
@@ -546,7 +543,7 @@ int daDoor_c::func_ov100_02144950(daPly_c *pl, int unused) {
     mModel.currFrame = 0;
     ShowArea((signed char)mAngleX);
     ShowArea((signed char)mAngleZ);
-    ((dCamera_c *)data_0209f318)->mFlags |= DOOR_CAMERA_FLAGS;
+    data_0209f318->mFlags |= DOOR_CAMERA_FLAGS;
     func_02012694((param1 == DOOR_ALT_SOUND) ? SND_SWING_START_ALT : SND_SWING_START,
                   &mCamSpacePosX);
     mTimer = 0;
@@ -566,7 +563,7 @@ int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
             (((signed char *)data_ov100_02148204) +
              (param1
               << 4))[0xa]; /* flagShift; the array-indexed spelling compiles to a different load */
-        data_0209caa0.flags1 |= DOOR_SAVE_KEY_UNLOCKED << sh;
+        data_0209caa0.file.flags1 |= DOOR_SAVE_KEY_UNLOCKED << sh;
         func_ov100_021453d8(&data_ov100_021488b4, (int)a2);
     }
     return 1;
@@ -584,7 +581,7 @@ int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
    func_ov089_0213115c. A nonzero mKeyModelIdx sets the
    data_ov100_02148704 latch. Was a C source. */
 int daDoor_c::func_ov100_02144a38(daPly_c *p) {
-    Vec3i pos;
+    VecFx32 pos;
     DoorEntry *e;
 
     p->OpenBigDoor();
@@ -630,7 +627,7 @@ int daDoor_c::func_ov100_02144bf4(daPly_c *a2) {
             (((signed char *)data_ov100_02148204) +
              (param1
               << 4))[0xa]; /* flagShift; the array-indexed spelling compiles to a different load */
-        data_0209caa0.flags1 |= DOOR_SAVE_STAR_UNLOCKED << sh;
+        data_0209caa0.file.flags1 |= DOOR_SAVE_STAR_UNLOCKED << sh;
         func_ov100_021451c4(&data_ov100_021488f4, a2);
     }
     return 1;
@@ -704,7 +701,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
     if (func_ov100_021452e4(b)) {
         entry = &data_ov100_02148204[param1];
         if (entry->starsNeeded >= 0) {
-            if (data_0209caa0.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift))
+            if (data_0209caa0.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift))
                 goto L240;
             if (NumStars() < entry->starsNeeded) {
                 if (func_ov100_02144f84() == 0)
@@ -724,7 +721,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
             int val;
             if (e9 < 0)
                 goto L240;
-            val = data_0209caa0.flags1;
+            val = data_0209caa0.file.flags1;
             if (val & (DOOR_SAVE_KEY_UNLOCKED << entry->flagShift))
                 goto L240;
             if (val & (DOOR_SAVE_HAVE_KEY << e9))
@@ -740,7 +737,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                     int sel = 1;
                     int inRange = (unsigned)idx2 >= DOOR_FIRST_KEY_MODEL && (unsigned)idx2 <= 0xb;
                     if (!inRange) {
-                        if (!(data_0209caa0.flags1 & 0xbe))
+                        if (!(data_0209caa0.file.flags1 & 0xbe))
                             sel = 0;
                     }
                     msg = sel ? entry->msg : 0x17;
@@ -750,7 +747,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
             }
             func_ov100_021453d8(&data_ov100_021488c4, (int)b);
             if (entry->keyIndex == 5)
-                data_0209caa0.flags2 |= 0x10000;
+                data_0209caa0.file.flags2 |= 0x10000;
             return 1;
         L210:
             if (b->TryTalkToKeyDoor() == 0)
@@ -950,8 +947,8 @@ fail:
    mScaleX/Y/Z, which a door does not use as a scale; returns the player
    (data_0209f394[data_0209f250], the current one). Was a C source. */
 daPly_c *daDoor_c::func_ov100_02145370() {
-    Vec3i v;
-    daPly_c *r5 = (daPly_c *)data_0209f394[data_0209f250];
+    VecFx32 v;
+    daPly_c *r5 = data_0209f394[data_0209f250];
     Vec3_Sub((Vector3 *)&v, (const Vector3 *)&r5->mPosX, (const Vector3 *)&mPosX);
     Vec3_RotateYAndTranslate(&mScaleX, &data_020a0ebc, (short)(-mAngleY), &v);
     return r5;
@@ -1086,7 +1083,7 @@ s32 daDoor_c::InitResources() {
     DoorEntry *e;
     void *f;
     void *an;
-    Vec3i tmp;
+    VecFx32 tmp;
     int r4;
     int v;
     int b;
@@ -1142,13 +1139,13 @@ s32 daDoor_c::InitResources() {
     Vec3_Asr(&tmp, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    *(M48 *)&mModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     if (e->keyFile != 0) {
         mKeyModel = new dExtSimpleModel_c;
         f = dExtSimpleModel_c::LoadFile(*e->keyFile);
         mKeyModel->SetFile((BMD_File *)f, 1, -1);
-        *(M48 *)&mKeyModel->mat4x3 = data_020a0e68;
+        *(Mtx43 *)&mKeyModel->mat4x3 = *(Mtx43 *)&data_020a0e68;
     }
 
     {

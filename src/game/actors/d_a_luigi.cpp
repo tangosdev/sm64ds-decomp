@@ -18,7 +18,7 @@
  * - InitResources: dExtAnmModel_c::SetAnim with a Fix12<int> local differs
  *   (size stays 0x1ec, 10 relocation destinations wrong).
  * - InitResources: assigning Matrix4x3 onto both models differs (size stays
- *   0x1ec, 5 relocation destinations wrong). The twelve-word Mtx copy stays.
+ *   0x1ec, 5 relocation destinations wrong). The twelve-word Mtx43 copy stays.
  * - Behavior: DropShadowRadHeight with Fix12<int> locals differs (size stays
  *   0x16c, 5 relocation destinations wrong).
  * - Behavior: or-ing the fade into data_ov055_02111b64 differs by 1 word.
@@ -42,20 +42,16 @@
 #include "dCamera_c.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "private/mtx43.h"
+#include "nitro/fx/fx.h"
+#include "SaveBlock.h"
 
-/* Twelve-word copy. Assigning Matrix4x3 itself is a different sequence. */
-struct Mtx {
-    int m[12];
-};
-
-/* POD twin of Vector3, for the local below. Vector3's declared destructor
-   (see include/types.h) costs this TU a numbered .data local if an object of
-   it is declared here, so the local stays POD and casts at the call. */
-struct Vec3 {
-    int x, y, z;
-};
-
-#define CurrentPlayer() ((daPly_c *)data_0209f394[data_0209f250])
+/* The matrix copies go through the flat Mtx43. Assigning Matrix4x3 itself
+   is a different sequence (.text grows by 0xa0 bytes). */
+/* InitResources' local is a VecFx32. Vector3's declared destructor (see
+   include/types.h) costs this TU a numbered .data local if an object of it
+   is declared here, so the local stays POD and casts at the call. */
+#define CurrentPlayer() data_0209f394[data_0209f250]
 
 /* Material bits func_02016acc clears and func_02016b24 sets. The reflected
  * player render applies the same pair around its draw. */
@@ -67,7 +63,7 @@ struct Vec3 {
 #define kHideBit 0x20000
 #define kReqReset 1
 #define kReqFade 2
-/* data_0209caa0[1] is SaveData::flags1. Bit 0x10 is unnamed there. */
+/* Bit 0x10 of FileSaveData::flags1 is unnamed. */
 #define kSysHold 0x10
 #define kShadowOpacity 0xf
 #define kAppearSound 0x179
@@ -95,9 +91,9 @@ extern SharedFilePtr data_ov002_0210e8d0;
 extern SharedFilePtr data_ov002_0210ebd8;
 
 extern unsigned char data_0209f250;
-extern void *data_0209f394[];
-extern int data_0209caa0[];
-extern void *data_0209f318;
+extern daPly_c *data_0209f394[];
+extern SaveBlock data_0209caa0;
+extern dCamera_c *data_0209f318;
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. */
 extern "C" {
@@ -130,7 +126,7 @@ extern "C" daLuigi_c *daLuigi_c_classInit() {
 
 // @symbol _ZN9daLuigi_c13InitResourcesEv
 int daLuigi_c::InitResources() {
-    Vec3 t;
+    VecFx32 t;
 
     mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210ebb8), 1, -1);
     func_02016acc(&mAnmModel, kMatClear);
@@ -155,8 +151,8 @@ int daLuigi_c::InitResources() {
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
 
-    *(Mtx *)&mAnmModel.mat4x3 = *(Mtx *)&data_020a0e68;
-    *(Mtx *)&mModel.mat4x3 = *(Mtx *)&data_020a0e68;
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     SetState(&data_ov055_02111b70, CurrentPlayer());
 
@@ -175,7 +171,7 @@ int daLuigi_c::Behavior() {
         data_ov055_02111b6c = 0;
         data_ov055_02111a90 = kFadeFull;
         data_ov055_02111b60 = 0;
-    } else if ((data_ov055_02111b68 & kReqFade) && !(data_0209caa0[1] & kSysHold)) {
+    } else if ((data_ov055_02111b68 & kReqFade) && !(data_0209caa0.file.flags1 & kSysHold)) {
         ApproachLinear(data_ov055_02111b6c, kFadeFull, kFadeStep);
         data_ov055_02111b64 = (data_ov055_02111b64 & ~kHideBit) + (kFadeFull - data_ov055_02111b6c);
     }
@@ -186,7 +182,7 @@ int daLuigi_c::Behavior() {
     func_ov002_020e4374((char *)player, &depth, &radius);
     DropShadowRadHeight(mShadowModel, mShadowMatrix, radius, depth, kShadowOpacity);
     /* dCamera_c::mFramedActor; this file does not include dCamera_c.h. */
-    ((dCamera_c *)data_0209f318)->mFramedActor = this;
+    data_0209f318->mFramedActor = this;
     return 1;
 }
 
@@ -198,8 +194,8 @@ int daLuigi_c::Render() {
     BMD_File *file;
     Matrix4x3 *mat;
     unsigned int bone;
-    Mtx *dst;
-    Mtx *src;
+    Mtx43 *dst;
+    Mtx43 *src;
 
     if (data_ov055_02111b6c == 0)
         return 1;
@@ -209,28 +205,28 @@ int daLuigi_c::Render() {
 
     comps = &mAnmModel.data;
     file = comps->modelFile;
-    dst = (Mtx *)comps->transforms;
-    src = (Mtx *)body->data.transforms;
+    dst = (Mtx43 *)comps->transforms;
+    src = (Mtx43 *)body->data.transforms;
     for (bone = 0; bone < file->numBones; bone++) {
         /* u64 round trip on the destination. A plain store swaps the copy
          * registers (8 words). */
-        *(Mtx *)(int)((long long)(int)dst) = *src;
+        *(Mtx43 *)(int)((long long)(int)dst) = *src;
         src++;
         dst++;
     }
 
     mat = &mAnmModel.mat4x3;
-    *(Mtx *)mat = *(Mtx *)&body->mat4x3;
+    *(Mtx43 *)mat = *(Mtx43 *)&body->mat4x3;
     mat->t.x = -mat->t.x;
     func_0203c178(&data_020a0e68, kMirrorSx, kFxOne, kFxOne);
     MulMat3x3Mat3x3((const int *)mat, (const int *)&data_020a0e68, (int *)mat);
-    *(Mtx *)&mModel.mat4x3 = *(Mtx *)mat;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)mat;
 
     if (data_ov055_02111b64 & kHideBit)
         return 1;
 
     mAnmModel.dExtSimpleModel_c::Render(0);
-    *(Mtx *)&mModel.data.transforms[0] = *(Mtx *)&mAnmModel.data.transforms[15];
+    *(Mtx43 *)&mModel.data.transforms[0] = *(Mtx43 *)&mAnmModel.data.transforms[15];
     mTextureSequences[0].Update(mAnmModel.data);
     mTextureSequences[0].currFrame = player->mIsVanish << 12;
     mTextureSequences[1].Update(mModel.data);

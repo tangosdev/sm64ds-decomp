@@ -34,6 +34,7 @@ enum daObjCtMecha08_c_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "math/CalcLib.h"
+#include "LevelRng.h"
 
 struct CLPS_Block;
 
@@ -67,7 +68,6 @@ extern CLPS_Block data_ov035_021121b8;
 extern s32 data_ov065_0211c0d0[][2][2]; /* vertical speed, by setting, by direction */
 extern u16 data_ov065_0211c0d4[][2][4]; /* travel timer, by setting, by direction */
 extern u8 data_0209f2c0;                /* arm9 clock setting */
-extern int data_0209e650;               /* arm9 RNG state */
 
 /* int-returning, so the ROM materializes the 0/1 before testing it. */
 static inline int IsInRange(s32 v, s32 lo, s32 hi) {
@@ -142,7 +142,7 @@ int daObjCtMecha08_c::Behavior() {
                 d = mMoveDir;
                 mVertSpeed = data_ov065_0211c0d0[setting][d][0];
                 if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {
-                    u32 rnd = (u32)RandomIntInternal(&data_0209e650);
+                    u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
                     mMoveTimer = (u16)((rnd % 6) * 0x14 + 0xa);
                 }
             }

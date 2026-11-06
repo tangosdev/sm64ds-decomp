@@ -63,6 +63,7 @@
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
+#include "nitro/fx/fx.h"
 
 /* Two 8-byte pointers-to-member. The second word is the this-adjustment;
    retail stores 0 for every entry. */
@@ -113,12 +114,8 @@ typedef void BgchInitAt_(void *self, dActor_c *owner, Fix12i radius, Fix12i heig
                          int e);
 }
 
-/* Plain three-word position: Vector3 members here emit an extra
-   destructor function into this TU (measured). */
-struct ShlPos {
-    int x, y, z;
-};
-
+/* func_ov102_0214c84c's positions are VecFx32: Vector3 members here emit
+   an extra destructor function into this TU (measured). */
 // @symbol daShl_c_classInit
 extern "C" daShl_c *daShl_c_classInit()
 {
@@ -538,7 +535,10 @@ void daShl_c::func_ov102_0214c84c()
 {
     /* One object: as two separate locals the function is 64 bytes
        shorter (measured). */
-    struct { ShlPos trail; ShlPos probe; } pos;
+    struct {
+        VecFx32 trail;
+        VecFx32 probe;
+    } pos;
 
     pos.trail.x = mPosX;
     pos.trail.y = mPosY;

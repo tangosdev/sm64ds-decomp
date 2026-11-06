@@ -47,9 +47,9 @@
  *  - One prototype per function, taken from whichever file had recovered the
  *    most: func_02010e78's caller knew (const Vector3*, const Vector3_16*, s8,
  *    s16) where its own file only knew (int, int, uchar, short);
- *    Particle::System::NewSimple returns int, because the two callers that USE
- *    the result cannot both be wrong about it while six that discard it are
- *    right. dActor_c::ClosestPlayer is DEFINED here, so the three disagreeing
+ *    Particle::System::NewSimple uses the shared `void *` return type from its
+ *    definition; the two int-returning C helpers cast that value explicitly.
+ *    dActor_c::ClosestPlayer is DEFINED here, so the three disagreeing
  *    extern "C" guesses at its prototype are simply gone.
  *  - Ordinals 12, 14, 16 and 18 use the real dBgCh_Gnd header and its
  *    collision-height field; their automatic query objects own the normal
@@ -70,6 +70,8 @@
  * came later, for the classes SpawnFireball, SpawnNumber and
  * GivePlayerCoins spawn. */
 #include "types.h"
+#include "Particle__System.h"
+#include "ParticleIds.h"
 #include "SpawnInfo.h"
 #include "decl_common.h"
 #include "dActor_c.h"
@@ -90,6 +92,7 @@
 #include "daObjNumber_c.h"
 #include "daCoin_c.h"
 #include "daFPknBall_c.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -576,7 +579,7 @@ extern "C" {
 extern int data_0208e380;           /* distance to the cached closest player */
 extern int data_0208e37c;           /* distance to the cached farthest player */
 extern unsigned char data_0209f21c; /* number of players */
-extern void *data_0209f394[];       /* the player table */
+extern daPly_c *data_0209f394[];    /* the player table */
 }
 daPly_c *dActor_c::ClosestPlayer() {
     if (!data_0209b458) {
@@ -584,7 +587,7 @@ daPly_c *dActor_c::ClosestPlayer() {
         data_0208e37c = 0x80000000;
         int i;
         for (i = 0; i < data_0209f21c; i++) {
-            daPly_c *player = (daPly_c *)data_0209f394[i];
+            daPly_c *player = data_0209f394[i];
             if (!player)
                 continue;
             int dist = Vec3_Dist(&mPos, &player->mPos);
@@ -611,7 +614,7 @@ daPly_c *dActor_c::ClosestNonVanishPlayer() {
         data_0208e37c = 0x80000000;
         int i;
         for (i = 0; i < data_0209f21c; i++) {
-            daPly_c *player = (daPly_c *)data_0209f394[i];
+            daPly_c *player = data_0209f394[i];
             if (!player)
                 continue;
             if (player->mIsVanish)
@@ -1017,13 +1020,8 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
  * 0x02010180  size 0x130 */
 extern "C" {
 void *func_ov002_020e496c(daPly_c *p); /* the player's current mBodyModels entry */
-void MulMat4x3Mat4x3(Matrix4x3 *m1, Matrix4x3 *m0, Matrix4x3 *mF);
-void Matrix4x3_FromTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *mF, short x, short y, short z);
 void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
 void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-extern Matrix4x3 data_020a0e68;
 }
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
@@ -1060,9 +1058,10 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
 // @symbol _ZN8dActor_c10EarthquakeERK7Vector3i
 /* ROM ordinal 46 -- dActor_c::Earthquake(Vector3 const &, int)
  * 0x02010168  size 0x18 */
+struct dCamera_c;
 extern "C" {
 extern void func_0200d8c8(void *, const Vector3 *, int);
-extern void *data_0209f318; /* the camera */
+extern dCamera_c *data_0209f318; /* the camera */
 }
 /* r1 is the position and r2 the intensity; both are forwarded untouched. */
 void dActor_c::Earthquake(const Vector3 &pos, Fix12i magnitude) {
@@ -1324,15 +1323,6 @@ void dActor_c::PoofDust()
 // @symbol _ZN8dActor_c10PoofDustAtERK7Vector3
 /* ROM ordinal 24 -- dActor_c::PoofDustAt(Vector3 const &)
  * 0x0200fdfc  size 0x40 */
-extern "C" {
-/* local extern: Particle::System::NewSimple takes Fix12<int> by value, so it
-   is called by its symbol (the Fix12 wall). */
-namespace Particle {
-struct System {
-    static int NewSimple(unsigned int id, int x, int y, int z);
-};
-}
-}
 void dActor_c::PoofDustAt(const Vector3 &pos)
 {
     Particle::System::NewSimple(0x122, pos.x, pos.y, pos.z);
@@ -1358,9 +1348,9 @@ void dActor_c::TriplePoofDust()
  * 0x0200fd74  size 0x54 */
 void dActor_c::TriplePoofDustAt(const Vector3 &pos)
 {
-    Particle::System::NewSimple(0x124, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x125, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x126, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofB, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofC, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1419,7 +1409,7 @@ extern "C" int func_0200fc44(int actor, Vector3 *pos, int doRaycast) {
             pos->y = rc.clsnY;
     }
     pos->y += 0x19000;
-    return Particle::System::NewSimple(0xb3, pos->x, pos->y, pos->z);
+    return (int)Particle::System::NewSimple(kPtclGroundPuff, pos->x, pos->y, pos->z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1450,7 +1440,7 @@ void dActor_c::HugeLandingDustAt(Vector3 &pos, bool doRaycast) {
             pos.y = rc.clsnY;
     }
     pos.y += 0x28000;
-    Particle::System::NewSimple(0xb2, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclLandingDust, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1488,7 +1478,7 @@ void dActor_c::LandingDustAt(Vector3 &pos, bool doRaycast) {
 /* ROM ordinal 13 -- func_0200fa8c
  * 0x0200fa8c  size 0x38 */
 extern "C" {
-extern int func_0200fa04(int actor, Vector3 *pos, int doRaycast);
+extern void *func_0200fa04(int actor, Vector3 *pos, int doRaycast);
 }
 /* func_0200fa04 at this actor's position; void * as decl_common.h spells it. */
 extern "C" void func_0200fa8c(void *actorp, int doRaycast) {
@@ -1505,7 +1495,7 @@ extern "C" void func_0200fa8c(void *actorp, int doRaycast) {
 /* ROM ordinal 12 -- func_0200fa04
  * 0x0200fa04  size 0x88 */
 /* As func_0200fc44, with particle 0x1b raised 120.0 instead of 25.0. */
-extern "C" int func_0200fa04(int actor, Vector3 *pos, int doRaycast) {
+extern "C" void *func_0200fa04(int actor, Vector3 *pos, int doRaycast) {
     if (doRaycast) {
         dBgCh_Gnd rc;
         pos->y += 0x32000;

@@ -58,7 +58,7 @@ void func_02049ee8(void* manager, void* renderState);
 void DecompressLZ16(const void* src, void* dst);
 }
 
-extern int data_0209b3ec;
+extern Matrix4x3 data_0209b3ec;
 extern u32 data_0209ee84;
 extern u32 data_0209ee8c;
 extern signed char gCurrentSublevel;

@@ -8,7 +8,7 @@
  * (src/engine/view/d_camera_dtor.cpp), outside this run.
  *
  * Below 0x0200bec4 sit the follow modes, states and script ops
- * (func_020072c4..func_0200bb28). They share this file's .data block
+ * (CutsceneGrandStarFlyMarioOffscreen..func_0200bb28). They share this file's .data block
  * (0x02086bc0..0x0208747c: the script-op member-function constants, the
  * mode records and the offset triples) and the controller records at
  * 0x0209f498 with func_0200bec4 and up.
@@ -31,6 +31,7 @@
  *   data_0209f49c..data_0209f4ae symbols with (char *) stride arithmetic.
  */
 #include "dCamera_c.h"
+#include "CutsceneSpline.h"
 #include "daPly_c.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Gnd.h"
@@ -45,8 +46,9 @@
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
-
-typedef struct { int x, y, z; } Vec3;	/* POD triple for the C bodies */
+#include "OAM.h"
+#include "G2x.h"
+#include "G3i.h"
 
 /* Defined at the bottom of this file; every use here only takes the address. */
 extern dCamera_c::State data_0209b008;
@@ -101,7 +103,7 @@ extern u8 gVsExitScreenActive;
 extern u8 gGamePaused;
 extern s8 gCurrentSublevel;
 extern s32 data_0209f32c;
-extern void *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern dClipper data_0209f43c;
 extern s32 gRunningKuppaScript;
 extern Matrix4x3 data_020a0e68;
@@ -111,13 +113,13 @@ extern void *data_ov002_0210c3e0[2];
 extern "C" {
 /* Siblings below 0x0200bec4 (defined at the end of the file). */
 extern int func_020092c4(void *cam, Vector3 *out, const Vector3 *target);
-extern void RunStarCameraScript(int arg0);
+extern void StartDanceCutscene(int arg0);
 extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
 extern int StartWithFarCamera();
 extern void *GetViewObj(int idx);
 
 extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
-extern s16 Vec3_VertAngle(const void *v1, const void *v0);
+extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(const void *v);
 extern int LenVec3(void *v);
@@ -129,10 +131,13 @@ extern void Vec3_MulScalar(void *out, const void *in, int scale);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(int *v, int sh);
 extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
-extern void MulVec3Mat4x3(void *dst, const void *src, void *out);
+extern void MulVec3Mat4x3(void *dst, Matrix4x3 *src, void *out);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
+/* local extern: including math/MtxStack.h renumbers this TU's function-local
+   statics (sScriptOps, sPrevTurnInput), whose numbered names symbols.txt
+   records, so its matrix routines stay declared here. */
 extern void Matrix4x3_FromRotationZ(void *m, int angle);
-extern void MulMat4x3Mat4x3(void *dst, const void *a, void *b);
+extern void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 extern void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
 
 /* A sibling inside this TU whose file-local decl spelling decl_common.h does
@@ -209,21 +214,6 @@ struct CamPmfHost {
 
 enum Bool { FALSE, TRUE };
 
-/* The G3x/OAM records below exist only so the Render body's member-call
-   spellings mangle to the ROM's symbols; the by-value Fix12<int> parameters on
-   the real signatures cannot be written (the Fix12 wall), so the actual calls
-   go through the extern "C" spellings in the pool. */
-struct OamAttr;
-struct OAM {
-    static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
-};
-struct G2x {
-    static void SetBlendAlpha(volatile unsigned short *, int, int, int, int);
-};
-struct G3i {
-    static void PerspectiveW_(Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, int, Matrix4x3 *);
-    static void LookAt_(const Vector3 *, const Vector3 *, const Vector3 *, bool, Matrix4x3 *);
-};
 
 /* @symbol dCamera_c_classInit
  * Allocation factory. new dCamera_c is the fBase constructor, the dBase and
@@ -250,7 +240,7 @@ int dCamera_c::InitResources()
         }
     }
     this->mFovBlend = 0;
-    this->mTargetPlayer = (dActor_c *)data_0209f394[data_0209f250];
+    this->mTargetPlayer = data_0209f394[data_0209f250];
     ChangeArea(this->mTargetPlayer->mAreaId);
     this->mFramedActor = 0;
     this->mFocusActor = 0;
@@ -711,7 +701,7 @@ void func_0200d4b0(char* self, unsigned int playerID, int arg2)
         ((struct dCamera_c *)self)->mOrbitTargetYaw = ((struct dCamera_c *)self)->mAngleY;
         other = ((struct dCamera_c *)self)->mTargetPlayer;
         other->mFlags |= 0x20000000;
-        RunStarCameraScript(arg2);
+        StartDanceCutscene(arg2);
     }
 }
 }
@@ -926,13 +916,13 @@ void dCamera_c::func_0200cf40() {
 
 // @symbol _ZN9dCamera_c13func_0200cce4Ev
 void dCamera_c::func_0200cce4() {
-    Vec3 vec;
-    Vec3 tmp1;
-    Vec3 tmp2;
+    VecFx32 vec;
+    VecFx32 tmp1;
+    VecFx32 tmp2;
     u32 d;
 
     if (mTargetPlayer != 0) {
-        Vec3 *p = (Vec3 *)&mTargetPlayer->mPos;
+        VecFx32 *p = (VecFx32 *)&mTargetPlayer->mPos;
         mTargetPos.x = p->x;
         mTargetPos.y = p->y;
         mTargetPos.z = p->z;
@@ -944,7 +934,7 @@ void dCamera_c::func_0200cce4() {
             tmp1.y = data_02086f2c.y;
             data_02086f2c.z = d1;
         }
-        Vec3_RotateYAndTranslate((Vec3 *)&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &tmp1);
+        Vec3_RotateYAndTranslate((VecFx32 *)&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &tmp1);
 
         d = func_020093d4(mMode->lookAtHeight);
         lookAt.y += d;
@@ -956,7 +946,8 @@ void dCamera_c::func_0200cce4() {
             tmp2.x = data_02086f20.x;
             tmp2.y = data_02086f20.y;
         }
-        Vec3_RotateYAndTranslate((Vec3 *)&pos, (Vec3 *)&lookAt, mTargetPlayer->mAngleY, &tmp2);
+        Vec3_RotateYAndTranslate((VecFx32 *)&pos, (VecFx32 *)&lookAt, mTargetPlayer->mAngleY,
+                                 &tmp2);
 
         dBgCh_Lin line;
         func_0200897c(line);
@@ -1158,10 +1149,10 @@ void dCamera_c::func_0200c9e0(s32 *r1, s32 *r2) {
 
 // @symbol _ZN9dCamera_c13func_0200c66cEPvPiS1_S1_
 int dCamera_c::func_0200c66c(void *pos_, int *out2_, int *out1_, int *arg5_) {
-    Vec3 *pos = (Vec3 *)pos_;
+    VecFx32 *pos = (VecFx32 *)pos_;
     void **out2 = (void **)out2_;
     void **out1 = (void **)out1_;
-    Vec3 tmp;
+    VecFx32 tmp;
     int hval;
     int col1;
     int col2;
@@ -1282,7 +1273,7 @@ extern "C" {
 int dCamera_c::func_0200c394(int a1, void *a2_, void *a3, void **a5, int *a6) {
     unsigned char *a2 = (unsigned char *)a2_;
     CamMode *p = mMode;
-    Vec3 local, local2;
+    VecFx32 local, local2;
     signed char g;
     int flags = p->flags;
     int v;
@@ -1309,7 +1300,7 @@ body:
                     mLookTargetPos.y = q->y;
                     mLookTargetPos.z = q->z;
                 } else {
-                    Vec3 t;
+                    VecFx32 t;
                     sx = *(short *)(a2 + 2);
                     sz = *(short *)(a2 + 6);
                     sy = *(short *)(a2 + 4);
@@ -1343,8 +1334,8 @@ body:
                     mLookTargetPos.z = local2.z;
                     mFocusDist = 0xc0000;
                 } else {
-                    AddVec3((Vec3 *)&mLookTargetPos, a3, (Vec3 *)&mLookTargetPos);
-                    Vec3_AsrInPlace((Vec3 *)&mLookTargetPos, 1);
+                    AddVec3((VecFx32 *)&mLookTargetPos, a3, (VecFx32 *)&mLookTargetPos);
+                    Vec3_AsrInPlace((VecFx32 *)&mLookTargetPos, 1);
                 }
                 *a5 = &data_02087274;
                 return v;
@@ -1371,12 +1362,12 @@ body:
 }
 int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
     int r5 = arg4;
-    Vec3 sp8;
-    Vec3 sp14;
-    Vec3 sp20;
-    Vec3 sp2C;
-    Vec3 sp38;
-    Vec3 sp44;
+    VecFx32 sp8;
+    VecFx32 sp14;
+    VecFx32 sp20;
+    VecFx32 sp2C;
+    VecFx32 sp38;
+    VecFx32 sp44;
     int r4;
     int t;
     int sl;
@@ -1438,7 +1429,7 @@ int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
     }
     sp8.y += func_020093d4(t);
     sl = Vec3_HorzLen(&sp8);
-    Vec3 sp68;
+    VecFx32 sp68;
     Vec3_MulScalar(&sp68, &mLookTargetPos, mFocusBlend);
     AddVec3(&sp8, &sp68, &sp8);
     if (mFlags & 4) {
@@ -1521,12 +1512,11 @@ extern "C" dActor_c *FindDemoActor(u32 param1);
 
 extern "C" {
 /* local extern: math/CalcLib.h spells the Vec3 helpers with const Vector3 *,
-   which this file's POD Vec3 callers cannot pass; only these two are taken
+   which this file's VecFx32 callers cannot pass; only these two are taken
    from it. */
 extern s32 ApproachAngle(s16 *cur, s32 target, s32 div, s32 band, s32 step);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-/* local extern: math/MtxStack.h's MulMat4x3Mat4x3 spelling conflicts with the
-   one Render calls. */
+/* local extern: math/MtxStack.h declares these; see the matrix helpers above. */
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short angle);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angle);
@@ -1542,7 +1532,7 @@ extern void FUN_02029ab0(void);
 extern int Sound_PlayIfNotActive(int handle, int bank, int id, int arg);
 extern void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget,
                           short vertDiv, short horzTarget, short horzDiv);
-extern void func_020071a8(dCamera_c *cam, short ang, int threshold);
+extern void StarDanceBoundYaw(dCamera_c *cam, short ang, int threshold);
 
 extern dActor_c *STAR_MARKERS[12];
 extern Matrix4x3 data_020a0e68;
@@ -3024,20 +3014,20 @@ int func_020094a8(dCamera_c *cam) {
 }
 
 // @symbol func_02009414
-/* Walk pos along mPosPath and lookAt along mLookAtPath (func_02008b4c,
+/* Walk pos along mPosPath and lookAt along mLookAtPath (MovePointAlongSpline,
    sharing one segment index and progress), then re-aim. Returns 0 once
    either path has run out. */
 int func_02009414(dCamera_c *cam) {
     int r4 = 1;
-    void *tbl1 = cam->mPosPath;
+    CutsceneSpline *tbl1 = cam->mPosPath;
 
     if (tbl1 != 0) {
-        r4 = func_02008b4c(&cam->pos, &cam->mPathIndex, &cam->mPathProgress, tbl1);
+        r4 = MovePointAlongSpline(&cam->pos, &cam->mPathIndex, &cam->mPathProgress, tbl1);
     }
 
-    void *tbl2 = cam->mLookAtPath;
+    CutsceneSpline *tbl2 = cam->mLookAtPath;
     if (tbl2 != 0) {
-        if (func_02008b4c(&cam->lookAt, &cam->mPathIndex, &cam->mPathProgress, tbl2) == 0) {
+        if (MovePointAlongSpline(&cam->lookAt, &cam->mPathIndex, &cam->mPathProgress, tbl2) == 0) {
             r4 = 0;
         }
     }
@@ -3293,34 +3283,16 @@ int dCamera_c::func_02008cb4() {
     return 1;
 }
 
-/* A path point: a negative flag ends the path; amt (whole units) feeds the
-   fixed-point reciprocal that scales progress through the segment. */
-typedef struct {
-    signed char flag;
-    unsigned char amt;
-    short x, y, z;
-} CamPathPoint;
-
-/* The path table the script ops hand in (camera and demo paths): a point
-   count, then the point array. */
-typedef struct {
-    unsigned char numPoints; /* 0x00 */
-    unsigned char pad_01[3];
-    CamPathPoint *points; /* 0x04 */
-} CamPathTable;
-
-// @symbol func_02008b4c
-/* Move out along a path: a spline through the four points from
-   *segIndex, at *segProgress, which advances by the points' rates and
-   carries into the next segment. Returns 1 once the path has run out. */
-int func_02008b4c(void *out, void *segIndex, void *segProgress, void *table) {
-    short *p1 = (short *)segIndex;
-    int *p2 = (int *)segProgress;
+// @symbol MovePointAlongSpline
+/* SM64's move_point_along_spline, in fixed point (CutsceneSpline.h). */
+int MovePointAlongSpline(Vector3 *pos, s16 *segment, s32 *progress, CutsceneSpline *spline) {
+    short *p1 = segment;
+    int *p2 = progress;
     int idx;
-    CamPathPoint *elem;
-    CamPathTable *path = (CamPathTable *)table;
+    CutsceneSplinePoint *elem;
+    CutsceneSpline *path = spline;
     int i;
-    Vec3 v[4];
+    VecFx32 v[4];
     int lo, hi;
     int m;
 
@@ -3331,7 +3303,7 @@ int func_02008b4c(void *out, void *segIndex, void *segProgress, void *table) {
 
     elem = path->points + idx;
 
-    if (elem[0].flag < 0 || elem[1].flag < 0 || elem[2].flag < 0) {
+    if (elem[0].index < 0 || elem[1].index < 0 || elem[2].index < 0) {
         return 1;
     }
 
@@ -3344,16 +3316,16 @@ int func_02008b4c(void *out, void *segIndex, void *segProgress, void *table) {
         v[i].z = z;
     }
 
-    func_ov002_020effb8((Vector3 *)out, *p2, (Vector3 *)&v[0], (Vector3 *)&v[1], (Vector3 *)&v[2],
+    func_ov002_020effb8(pos, *p2, (Vector3 *)&v[0], (Vector3 *)&v[1], (Vector3 *)&v[2],
                         (Vector3 *)&v[3]);
 
     lo = 0;
     hi = 0;
-    if (elem[1].amt != 0) {
-        lo = func_02053200(elem[1].amt << 12);
+    if (elem[1].speed != 0) {
+        lo = func_02053200(elem[1].speed << 12);
     }
-    if (elem[2].amt != 0) {
-        hi = func_02053200(elem[2].amt << 12);
+    if (elem[2].speed != 0) {
+        hi = func_02053200(elem[2].speed << 12);
     }
 
     {
@@ -3556,8 +3528,8 @@ int func_020082f8(dCamera_c *cam, u8 *src, int lo, int hi) {
 int func_020082a0(dCamera_c *cam, u8 *src, int id) {
     if (id == gKuppaScriptFrame) {
         func_020094a8(cam);
-        cam->mLookAtPath = (void *)ReadUnalignedInt(src);
-        cam->mPosPath = (void *)ReadUnalignedInt(src + 4);
+        cam->mLookAtPath = (CutsceneSpline *)ReadUnalignedInt(src);
+        cam->mPosPath = (CutsceneSpline *)ReadUnalignedInt(src + 4);
     }
     func_02009414(cam);
     return 1;
@@ -3741,10 +3713,11 @@ int func_02007e5c(dCamera_c *cam, u8 *data) {
     return 1;
 }
 
-// @symbol func_02007d58
-/* Script op: clear the orbit offsets and seed mOrbitTargetYaw from
-   mFixedViewPos, or per level and area. */
-int func_02007d58(dCamera_c *cam) {
+// @symbol CutsceneDanceFlyAwayStart
+/* Script op, Super Mario 64's cutscene_dance_fly_away_start: clear the orbit
+   offsets and seed mOrbitTargetYaw from mFixedViewPos, or per level and area
+   (the N64's four star_dance_bound_yaw cases). */
+int CutsceneDanceFlyAwayStart(dCamera_c *cam) {
     int lvl;
     void *p;
     cam->mOrbitTargetYaw = 0;
@@ -3756,13 +3729,13 @@ int func_02007d58(dCamera_c *cam) {
     }
     lvl = SublevelToLevel(gCurrentSublevel);
     if (lvl == 3 && data_0209f224 == 4) {
-        func_020071a8(cam, 0x5600, 0x800);
+        StarDanceBoundYaw(cam, 0x5600, 0x800);
     } else if (lvl == 0xb && data_0209f224 == 2) {
-        func_020071a8(cam, 0, 0x800);
+        StarDanceBoundYaw(cam, 0, 0x800);
     } else if (lvl == 9 && data_0209f224 == 1) {
-        func_020071a8(cam, 0x2000, 0x800);
+        StarDanceBoundYaw(cam, 0x2000, 0x800);
     } else if (lvl == 0xe && data_0209f224 == 3) {
-        func_020071a8(cam, 0, 0x800);
+        StarDanceBoundYaw(cam, 0, 0x800);
     }
     return 1;
 }
@@ -3824,10 +3797,11 @@ int func_02007b98(dCamera_c *cam, u8 *data) {
     return 1;
 }
 
-// @symbol func_02007b0c
-/* Script op: step lookAt toward a whole-unit offset turned to face the
-   target player (yaw + 0x8000). */
-int func_02007b0c(dCamera_c *cam, u8 *rec) {
+// @symbol FocusInFrontOfMario
+/* Script op, Super Mario 64's focus_in_front_of_mario with the whole offset
+   as operands (the N64 fixes x at 0 and y at 100): step lookAt toward a
+   whole-unit offset turned to face the target player (yaw + 0x8000). */
+int FocusInFrontOfMario(dCamera_c *cam, u8 *rec) {
     Vector3 v;
     Vector3 res;
     dActor_c *owner;
@@ -3861,11 +3835,13 @@ int func_02007a8c(dCamera_c *cam, u8 *data) {
     return 1;
 }
 
-// @symbol func_020079ac
-/* Script op: orbit lookAt around pos. On the first frame savedLookAt takes
-   lookAt; every frame the two offsets accumulate and are added to the
-   angles of the pos -> savedLookAt line before lookAt is rebuilt from it. */
-int func_020079ac(dCamera_c *cam, u8 *p, int tag) {
+// @symbol CutscenePanCvar9
+/* Script op, Super Mario 64's cutscene_pan_cvar9 with the pitch and yaw steps
+   (-29 and 29 there) as operands: orbit lookAt around pos. On the first frame
+   savedLookAt takes lookAt; every frame the two offsets accumulate and are
+   added to the angles of the pos -> savedLookAt line before lookAt is rebuilt
+   from it. */
+int CutscenePanCvar9(dCamera_c *cam, u8 *p, int tag) {
     int dist;
     short vert, horz;
     if (tag == gKuppaScriptFrame) {
@@ -3918,24 +3894,26 @@ int func_02007870(dCamera_c *cam, u8 *data) {
     return 1;
 }
 
-// @symbol func_020077f0
-/* Script op: the per-level orbit yaws (func_020071a8). */
-int func_020077f0(dCamera_c *cam) {
+// @symbol CutsceneDanceCloseupStart
+/* Script op, Super Mario 64's cutscene_dance_closeup_start: the per-level orbit
+   yaws (StarDanceBoundYaw). */
+int CutsceneDanceCloseupStart(dCamera_c *cam) {
     dCamera_c *r4 = cam;
     int lvl = SublevelToLevel(gCurrentSublevel);
 
     if (lvl == 2 && data_0209f224 == 5) {
-        func_020071a8(r4, 0, 0x4000);
+        StarDanceBoundYaw(r4, 0, 0x4000);
     } else if (lvl == 8 && data_0209f224 == 1) {
-        func_020071a8(r4, (short)0x8000, 0x5000);
+        StarDanceBoundYaw(r4, (short)0x8000, 0x5000);
     }
 
     return 1;
 }
 
-// @symbol func_02007758
-/* Script op: orbit pos toward mOrbitTargetYaw, slower in two areas. */
-int func_02007758(dCamera_c *cam) {
+// @symbol CutsceneDanceCloseupFlyAbove
+/* Script op, Super Mario 64's cutscene_dance_closeup_fly_above: orbit pos
+   toward mOrbitTargetYaw, slower in two areas. */
+int CutsceneDanceCloseupFlyAbove(dCamera_c *cam) {
     short amt = 0x1800;
     int level = SublevelToLevel(gCurrentSublevel);
     if ((level == 9 && data_0209f224 == 6) || (level == 0xd && data_0209f224 == 4))
@@ -3978,10 +3956,10 @@ int func_02007698(dCamera_c *cam, u8 *rec) {
     return 1;
 }
 
-// @symbol func_0200762c
-/* Script op: savedLookAt at data_02086ec0 in front of the target player, at
-   height 0x1c9000. */
-int func_0200762c(dCamera_c *cam) {
+// @symbol CutsceneGrandStarStart
+/* Script op, Super Mario 64's cutscene_grand_star_start: savedLookAt at
+   data_02086ec0 in front of the target player, at height 0x1c9000. */
+int CutsceneGrandStarStart(dCamera_c *cam) {
     int stack[3];
     stack[0] = data_02086ec0[0];
     stack[1] = data_02086ec0[1];
@@ -3996,10 +3974,11 @@ int func_0200762c(dCamera_c *cam) {
     return 1;
 }
 
-// @symbol func_020075b4
-/* Script op: orbit pos (func_020070e8) from the target player toward
-   savedLookAt's distance and angles, swung 0x1200 to the side. */
-int func_020075b4(dCamera_c *cam) {
+// @symbol CutsceneGrandStarFrontOfMario
+/* Script op, Super Mario 64's cutscene_grand_star_front_of_mario: orbit pos
+   (func_020070e8) from the target player toward savedLookAt's distance and
+   angles, swung 0x1200 to the side. */
+int CutsceneGrandStarFrontOfMario(dCamera_c *cam) {
     int dist;
     short vertAng;
     short horzAng;
@@ -4009,9 +3988,10 @@ int func_020075b4(dCamera_c *cam) {
     return 1;
 }
 
-// @symbol func_02007548
-/* Script op: step lookAt toward a point above the target player. */
-int func_02007548(dCamera_c *cam) {
+// @symbol CutsceneGrandStarFocusMario
+/* Script op, Super Mario 64's cutscene_grand_star_focus_mario: step lookAt
+   toward a point above the target player. */
+int CutsceneGrandStarFocusMario(dCamera_c *cam) {
     Vector3 *base = &cam->mTargetPlayer->mPos;
     int y0 = base->y + 0xffecd000;
     int tz = base->z;
@@ -4024,10 +4004,10 @@ int func_02007548(dCamera_c *cam) {
     return 1;
 }
 
-// @symbol func_0200751c
-/* Script op: turn to the yaw behind the target player and clear
-   savedLookAt. */
-int func_0200751c(dCamera_c *cam) {
+// @symbol CutsceneGrandStarMarioJump
+/* Script op, Super Mario 64's cutscene_grand_star_mario_jump: turn to the yaw
+   behind the target player and clear savedLookAt. */
+int CutsceneGrandStarMarioJump(dCamera_c *cam) {
     int tmp = cam->mTargetPlayer->mAngleY;
     tmp += 0x8000;
     cam->mTargetAngleY = (short)tmp;
@@ -4037,17 +4017,20 @@ int func_0200751c(dCamera_c *cam) {
     return 1;
 }
 
-// @symbol func_020074e8
-int func_020074e8(dCamera_c *cam) {
+// @symbol CutsceneGrandStarAccelCvar2
+/* Script op, Super Mario 64's cutscene_grand_star_accel_cvar2: speed
+   savedLookAt.z up toward -40 and set its x to -5 (the N64's 5, mirrored
+   by the DS camera's yaw + 0x8000). */
+int CutsceneGrandStarAccelCvar2(dCamera_c *cam) {
     ApproachLinear(cam->savedLookAt.z, -0x28000, 0x2000);
     cam->savedLookAt.x = -0x5000;
     return 1;
 }
 
-// @symbol func_02007484
-/* Script op: ease savedLookAt.z to 0 and pos's x and z toward the target
-   player. */
-int func_02007484(dCamera_c *cam) {
+// @symbol CutsceneGrandStarApproachMario
+/* Script op, Super Mario 64's cutscene_grand_star_approach_mario: ease
+   savedLookAt.z to 0 and pos's x and z toward the target player. */
+int CutsceneGrandStarApproachMario(dCamera_c *cam) {
     ApproachLinear(cam->savedLookAt.z, 0, 0x2000);
 
     cam->savedLookAt.x = 0;
@@ -4060,18 +4043,20 @@ int func_02007484(dCamera_c *cam) {
     return 1;
 }
 
-// @symbol func_02007450
-/* Script op: pos = savedLookAt turned by mTargetAngleY, added to pos. */
-int func_02007450(dCamera_c *cam) {
+// @symbol CutsceneGrandStarMoveCvar2
+/* Script op, Super Mario 64's cutscene_grand_star_move_cvar2: pos = savedLookAt
+   turned by mTargetAngleY, added to pos. */
+int CutsceneGrandStarMoveCvar2(dCamera_c *cam) {
     short angle = cam->mTargetAngleY;
     Vec3_RotateYAndTranslate(&cam->pos, &cam->pos, angle, &cam->savedLookAt);
     return 1;
 }
 
-// @symbol func_02007414
-/* Script op: clears savedLookAt, sets savedPos to (0, lookAt's height above
-   the target player, 0), and clears mScriptParam and mRampSpeed. */
-int func_02007414(dCamera_c *cam) {
+// @symbol CutsceneGrandStarFlyStart
+/* Script op, Super Mario 64's cutscene_grand_star_fly_start: clears
+   savedLookAt, sets savedPos to (0, lookAt's height above the target player,
+   0), and clears mScriptParam and mRampSpeed. */
+int CutsceneGrandStarFlyStart(dCamera_c *cam) {
     cam->savedLookAt.x = 0;
     cam->savedLookAt.y = 0;
     cam->savedLookAt.z = 0;
@@ -4089,10 +4074,11 @@ int func_02007414(dCamera_c *cam) {
     return 1;
 }
 
-// @symbol func_020073a0
-/* Script op: step savedLookAt toward data_02086ed8 and ease savedPos's y to
-   0 and its z to -0xc8000. Its member-function constant is data_02086cb0. */
-int func_020073a0(dCamera_c *cam) {
+// @symbol CutsceneGrandStarFlyMoveToMario
+/* Script op, Super Mario 64's cutscene_grand_star_fly_move_to_mario: step
+   savedLookAt toward data_02086ed8 and ease savedPos's y to 0 and its z to
+   -0xc8000. Its member-function constant is data_02086cb0. */
+int CutsceneGrandStarFlyMoveToMario(dCamera_c *cam) {
     int stackbuf[3];
     stackbuf[0] = data_02086ed8[0];
     stackbuf[1] = data_02086ed8[1];
@@ -4104,11 +4090,12 @@ int func_020073a0(dCamera_c *cam) {
     return 1;
 }
 
-// @symbol func_020072c4
-/* Script op: ramp mRampSpeed up to 0xf000 and ease savedLookAt and savedPos
-   onto fixed targets, paced by it. Its member-function constant is
-   data_02086ca8. Defined last, so it lands at the run's low edge. */
-int func_020072c4(dCamera_c *cam) {
+// @symbol CutsceneGrandStarFlyMarioOffscreen
+/* Script op, Super Mario 64's cutscene_grand_star_fly_mario_offscreen: ramp
+   mRampSpeed up to 0xf000 and ease savedLookAt and savedPos onto fixed targets,
+   paced by it. Its member-function constant is data_02086ca8. Defined last, so
+   it lands at the run's low edge. */
+int CutsceneGrandStarFlyMarioOffscreen(dCamera_c *cam) {
     ApproachLinear(cam->mRampSpeed, 0xf000, 0x199);
     ApproachLinear(cam->savedLookAt.x, 0x7d0000, cam->mRampSpeed);
     ApproachLinear(cam->savedLookAt.y, 0x4b0000, cam->mRampSpeed / 10);

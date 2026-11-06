@@ -5,8 +5,8 @@
 extern int func_02065a74(void);
 extern struct WBTBlockInfoList *func_02065a94(int key);
 extern int func_0206491c(unsigned int key, int val);
-extern int func_02064888(unsigned int a, int b);
-extern int func_02064d6c(int a, int b, int c, int d, int e, int f, int g);
+extern char *func_02064888(unsigned int id, int idx);
+extern int func_02064d6c(int dest, int a, int b, int c, int d, const void *p, int n);
 extern int func_02065bc0(void);
 extern void func_02064554(void *base, int a, int b, int c);
 
@@ -28,11 +28,11 @@ int func_02063bc4(void *base, int idx, int r8) {
             if (node != 0) {
                 int v = func_0206491c(e->block_id, e->seq_no);
                 if (node->block_type == 0) {
-                    int r = func_02064888(e->block_id, v);
-                    if (r == 0) {
+                    char *data = func_02064888(e->block_id, v);
+                    if (data == 0) {
                         r6 = func_02064d6c(r8, r7, e->cmd_counter, e->block_id, e->seq_no, 0, 0);
                     } else {
-                        r6 = func_02064d6c(r8, r7, e->cmd_counter, e->block_id, v, r,
+                        r6 = func_02064d6c(r8, r7, e->cmd_counter, e->block_id, v, data,
                                            func_02065bc0());
                     }
                 } else if (node->block_type == 1) {
@@ -45,7 +45,7 @@ int func_02063bc4(void *base, int idx, int r8) {
                         r6 =
                             func_02064d6c(r8, r7, e->cmd_counter, sys->u.prepare_send_data.block_id,
                                           sys->u.prepare_send_data.block_seq_no,
-                                          (int)sys->u.prepare_send_data.data_ptr,
+                                          sys->u.prepare_send_data.data_ptr,
                                           sys->u.prepare_send_data.own_packet_size);
                     }
                 }

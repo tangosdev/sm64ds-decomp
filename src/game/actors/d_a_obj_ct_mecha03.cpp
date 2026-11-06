@@ -53,6 +53,7 @@ enum daObjCtMecha03_c_AssetId {
 #include "Sound.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 struct CLPS_Block;
 
@@ -73,7 +74,6 @@ struct Mecha03ClsnFilePtr : SharedFilePtr {
 };
 
 extern u8 data_0209f2c0;
-extern int data_0209e650;
 extern s16 data_ov065_0211c0b0[];
 extern Mecha03ModelFilePtr data_ov065_0211d88c;
 extern Mecha03ClsnFilePtr data_ov065_0211d894;
@@ -82,10 +82,9 @@ extern CLPS_Block data_ov035_02112198;
 /* local extern: arm9 matrix/vector helpers and dBgW stores with no shared
  * header. */
 extern "C" {
-extern void Matrix4x3_FromRotationZXYExt(Matrix4x3 *m, int x, int y, int z);
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void func_020393d4(void *p, void *v);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjCtMecha03_c_classInit
@@ -147,7 +146,7 @@ int daObjCtMecha03_c::Behavior() {
                 }
             }
             if (data_0209f2c0 == 2 && mSwingSpeed == 0) {
-                int roll = RandomIntInternal(&data_0209e650);
+                int roll = RandomIntInternal(&data_0209e650.value);
                 if ((unsigned)roll % 3 != 0)
                     mSwingAccel = 0xd;
                 else

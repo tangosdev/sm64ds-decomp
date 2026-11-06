@@ -136,12 +136,9 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
     Vector3 localCentre;
     /* The local query's push-out bounds, and the same bounds scaled back out.
        Plain words: Vector3 declares a destructor. */
-    struct BoxCorner {
-        s32 x, y, z;
-    };
     struct {
-        BoxCorner localMin, localMax;
-        BoxCorner scaledMin, scaledMax;
+        VecFx32 localMin, localMax;
+        VecFx32 scaledMin, scaledMax;
     } bounds;
     int inverseScale;
     int localRadius;

@@ -31,7 +31,7 @@ extern "C" {
 extern Matrix4x3 data_0209b3ec; /* the view matrix */
 extern Matrix4x3 data_0209b41c; /* its inverse */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-int InvMat4x3(Matrix4x3 *dst, Matrix4x3 *inv);
+int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 void func_0205583c(void);
 void func_020554bc(void);
 void func_020556d0(void);

@@ -16,9 +16,9 @@
  *
  * What stays: func_020393c4 is a 4-byte store into dBgW+0x1c
  *   (stoodOnCallback). This TU calls it; naming belongs with dBgW in arm9.
- * What stays: HatenaMatrixWords 12-word copies -- structured Matrix4x3
- *   assignment scalarizes; common.h-first would drop mClsnMat.t used in
- *   UpdateClsnTransform.
+ * What stays: the 12-word matrix copies go through Mtx43 -- structured
+ *   Matrix4x3 assignment scalarizes; common.h-first would drop mClsnMat.t
+ *   used in UpdateClsnTransform.
  * What stays: data_ov002_0210d8b4 / 0210d774 are CLPS blocks this TU does
  *   not own.
  * What stays: data_0209caa0 / data_0209d684 / data_0209d660 are arm9
@@ -42,16 +42,12 @@ enum d_a_obj_hatena_switch_AssetId {
 #include "Particle__System.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "private/mtx43.h"
+#include "nitro/fx/fx.h"
+#include "SaveBlock.h"
 
-/* Plain stack values avoid pulling unrelated Vector3 and Matrix4x3 special
- * members into this TU while preserving their measured three/twelve-word ABI. */
-struct HatenaVector3Words {
-    s32 x, y, z;
-};
-struct HatenaMatrixWords {
-    s32 words[12];
-};
-
+/* Plain VecFx32 stack values avoid pulling unrelated Vector3 special
+ * members into this TU while preserving their measured three-word ABI. */
 /* Actor ID 0xbf is PLAYER, 0xc2 is CRATE. dActor_c::mFlags bit 0x08 is
  * written by the framework while the actor is off screen. These
  * int-returning predicates are what make the ROM materialize 0/1 before
@@ -71,7 +67,7 @@ static inline int IsOffScreen(dActor_c *actor) {
 /* local extern: no shared header declares these. func_020393c4 is the
  * dBgW+0x1c store; naming belongs with dBgW. */
 extern "C" {
-extern void func_020393c4(dBgW *collider, void *callback);
+extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
 extern void Vec3_Asr(Vector3 *destination, Vector3 *source, s32 shift);
 }
 
@@ -101,7 +97,7 @@ extern CLPS_Block data_ov002_0210d8b4;
 extern CLPS_Block data_ov002_0210d774;
 extern u8 data_0209d684;
 extern u8 data_0209d660;
-extern u32 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 
 /*
  * Every instruction the cartridge has here falls out of the one `new`.
@@ -157,9 +153,9 @@ s32 daObjHatenaSwitch_c::InitResources() {
     file = dBgW_Kc::LoadFile(data_ov002_0210dd50);
     mMovingMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngleY, data_ov002_0210d774);
 
-    func_020393c4(&mStaticMeshCollider, (void *)&daObjHatenaSwitch_c::AfterClsnCallback);
+    func_020393c4(&mStaticMeshCollider, &daObjHatenaSwitch_c::AfterClsnCallback);
 
-    if (data_0209caa0[1] & 0x80000000) {
+    if (data_0209caa0.file.flags1 & 0x80000000) {
         mActiveMeshCollider = &mMovingMeshCollider;
         mAnmModel.currFrame = mAnmModel.GetFrameCount() << 12;
         mAnmModel.Advance();
@@ -229,9 +225,9 @@ s32 daObjHatenaSwitch_c::Behavior() {
                 if (mActiveMeshCollider->IsEnabled() != 0)
                     mActiveMeshCollider->Disable();
                 mActiveMeshCollider = &mMovingMeshCollider;
-                data_0209caa0[1] |= 0x80000000;
+                data_0209caa0.file.flags1 |= 0x80000000;
                 {
-                    volatile HatenaVector3Words position;
+                    volatile VecFx32 position;
                     s32 y = mPosY + 0x64000;
                     s32 z = mPosZ;
                     s32 x = mPosX;
@@ -250,7 +246,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
         }
     }
 
-    if ((data_0209caa0[1] & 0x80000000) == 0)
+    if ((data_0209caa0.file.flags1 & 0x80000000) == 0)
         mActiveMeshCollider = &mStaticMeshCollider;
 
     if (UpdateClsnState() == 0) {
@@ -294,13 +290,13 @@ void daObjHatenaSwitch_c::UpdateModelTransform() {
     Vec3_Asr((Vector3 *)&shifted, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted[0], shifted[1], shifted[2]);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    *(HatenaMatrixWords *)&mAnmModel.mat4x3 = *(HatenaMatrixWords *)&data_020a0e68;
-    *(HatenaMatrixWords *)&mModel.mat4x3 = *(HatenaMatrixWords *)&mAnmModel.mat4x3;
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&mAnmModel.mat4x3;
 }
 
 // @symbol _ZN19daObjHatenaSwitch_c19UpdateClsnTransformEv
 void daObjHatenaSwitch_c::UpdateClsnTransform() {
-    *(HatenaMatrixWords *)&mClsnMat = *(HatenaMatrixWords *)&mAnmModel.mat4x3;
+    *(Mtx43 *)&mClsnMat = *(Mtx43 *)&mAnmModel.mat4x3;
     mClsnMat.t.x = mPosX;
     mClsnMat.t.y = mPosY;
     mClsnMat.t.z = mPosZ;

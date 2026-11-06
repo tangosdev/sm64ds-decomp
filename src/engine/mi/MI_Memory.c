@@ -62,8 +62,7 @@ loop:
 }
 
 /* MIi_CpuClearFast: 32 bytes per stm, then a word tail. */
-asm void MultiStore32Bytes(unsigned val, int *dst, int len)
-{
+asm void MultiStore32Bytes(unsigned val, void *dst, int len) {
     stmdb sp!, {r4, r5, r6, r7, r8, r9}
     add r9, r1, r2
     mov ip, r2, lsr #5
@@ -88,8 +87,7 @@ loop4:
 }
 
 /* MIi_CpuCopyFast: 32 bytes per ldm/stm, then a word tail. */
-asm void MultiCopy32Bytes(int *src, int *dst, int len)
-{
+asm void MultiCopy32Bytes(const void *src, void *dst, int len) {
     stmdb sp!, {r4, r5, r6, r7, r8, r9, r10}
     add r10, r1, r2
     mov ip, r2, lsr #5

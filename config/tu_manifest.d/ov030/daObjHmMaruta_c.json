@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x02115ca8",
       "end": "0x02115cd0"
+    },
+    {
+      "name": ".data",
+      "start": "0x02115a04",
+      "end": "0x02115a10"
     }
   ],
   "functions": [
@@ -78,7 +83,15 @@
       "ordinal": 5
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov030_02115a04",
+      "address": "0x02115a04",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor {model, collision, CLPS} that func_ov080_021274ac and func_ov080_021270dc take; the words relocate to 0x02115ca8, 0x02115cb0 and the CLPS block at 0x02114f24"
+    }
+  ],
   "bss": [
     {
       "symbol": "gHmMarutaModelFile",
@@ -209,7 +222,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -245,11 +258,18 @@
           "start": "0x02115ca8",
           "end": "0x02115cd0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02115a04",
+          "end": "0x02115a10",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 12
+          "LICENSED": 13
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -260,38 +280,75 @@
           {
             "section": ".init",
             "original": [
-              47
+              49
             ],
             "desired": [
-              47
+              49
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              47
             ],
             "desired": [
-              45
+              47
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              22,
+              7,
+              8,
+              16,
+              25
+            ],
+            "desired": [
+              8,
+              7,
+              16,
+              25
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
               23
             ],
             "desired": [
-              5,
-              6,
-              22,
               23
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                7,
+                8,
+                16,
+                25
+              ],
+              "desired": [
+                8,
+                7,
+                16,
+                25
+              ],
+              "slots": [
+                7,
+                8,
+                16,
+                25
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -304,7 +361,8 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "localWorkerNote": "Verified on this machine's stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
     }
   },
   "compiler_only_output": [
@@ -606,6 +664,36 @@
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x021148b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02115a04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHmMarutaModelFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115ca8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02115a08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHmMarutaCollisionFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115cb0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02115a0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov030_02114f24",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02114f24"
     }
   ]
 }

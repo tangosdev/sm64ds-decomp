@@ -51,7 +51,7 @@ struct daObjFl_Block_c : dBgActor_c {
     virtual s32 Render();           /* slot  9 */
 
     void OnStoodOn(dActor_c *);
-    static void StoodOnCallback(dBgW *, daObjFl_Block_c *, dActor_c *);
+    static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

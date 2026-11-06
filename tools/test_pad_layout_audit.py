@@ -91,6 +91,14 @@ class Scope(unittest.TestCase):
         self.assertFalse(got["Inner"]["file_scope"])
         self.assertFalse(got["Local"]["file_scope"])
 
+    def test_qualified_head_names_the_nested_class_and_base_clause_still_parses(self):
+        text = ("struct dCamera_c::State {\n    u8 pad[4];\n};\n"
+                "struct Outer :: Inner : public Base {\n    int a;\n};\n"
+                "struct Derived : Base::Mixin {\n    int a;\n};\n")
+        got = structs(text)
+        self.assertEqual(sorted(got), ["Derived", "Outer::Inner", "dCamera_c::State"])
+        self.assertEqual(len(got["dCamera_c::State"]["pads"]), 1)
+
     def test_anonymous_typedef_takes_its_typedef_name(self):
         got = structs("typedef struct {\n    u8 pad[4];\n} Thing;\n")
         self.assertIn("Thing", got)
@@ -123,6 +131,20 @@ class Shadows(unittest.TestCase):
             "src/b.cpp": "namespace Particle { struct System { u8 pad[4]; }; }\n",
         })
         self.assertEqual([s["file"] for s in r["_shadows"]], ["src/b.cpp"])
+
+    def test_out_of_line_nested_class_is_not_a_shadow_of_its_outer_class(self):
+        r = self.audit({
+            "include/Cam.h": "struct Cam { struct State; State *mState; };\n",
+            "src/a.cpp": "struct Cam::State { int a; };\n",
+        })
+        self.assertEqual(r["_shadows"], [])
+
+    def test_out_of_line_nested_class_shadows_the_same_qualified_name(self):
+        r = self.audit({
+            "include/Cam.h": "struct Cam { struct State; };\nstruct Cam::State { int a; };\n",
+            "src/a.cpp": "struct Cam::State { u8 pad[4]; };\n",
+        })
+        self.assertEqual([s["name"] for s in r["_shadows"]], ["Cam::State"])
 
     def test_nested_and_anonymous_structs_are_never_shadows(self):
         r = self.audit({

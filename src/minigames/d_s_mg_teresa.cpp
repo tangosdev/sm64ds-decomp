@@ -54,6 +54,7 @@
 #include "OamAttr.h"
 #include "dScMgTeresa_c.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "G2x.h"
 #include "PlayerInput.h"
 #include "G2.h"
@@ -74,9 +75,10 @@ extern void  DecompressLZ16(const void *src, void *dst);
 extern int   RandomIntInternal(int *seed);
 extern void  FreeGfxSlotsById(int arg);
 extern int   GetGameLanguage(void);
-extern void  DrawOamSprite(int, int, int, int);
+struct Matrix2x2;
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void  Hud_RenderSprite(void *fn, int a, int b, int c, int d);
-extern void  Mg_DrawNumberRotated(int, int, int, int, int, int, int);
+extern void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 extern void  Mg_DrawScoreTally(void *, int, int, int);
 extern int   Mg_IsNewRecord(void);
 extern int   func_020126e8(int a);
@@ -97,10 +99,10 @@ extern unsigned short sTeresaBg3FlashTimes[];
 extern void *sTeresaExclaimSprites;
 extern void *sTeresaVanishPuffSprites[];
 extern int sTeresaBigBooHoverSprites[];
-extern int sMgDigitSprites[];
+extern OamAttr *sMgDigitSprites[];
 extern void *sTeresaMarkerSprites;
 extern struct OamAttr *sTeresaRevealSprites[];
-extern int *sTeresaCountdownSprites[];
+extern OamAttr **sTeresaCountdownSprites[];
 extern void *sTeresaBooFrameSprites[];
 extern int sTeresaBooTouchOffsets[];
 extern int sTeresaSpawnCounts[];
@@ -398,9 +400,9 @@ void dScMgTeresa_c::BigBoo_StateHover(int i) {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     SetBg3Offset(0, 0x100);
     {
-    int rnd = RandomIntInternal(&data_0209d4b8);
-    mBigBoo[i].state =
-        sTeresaBigBooHoverPicks[((unsigned int)(((unsigned int)rnd >> 16) & 0x7fff) * 2) >> 15];
+        int rnd = RandomIntInternal(&data_0209d4b8.value);
+        mBigBoo[i].state =
+            sTeresaBigBooHoverPicks[((unsigned int)(((unsigned int)rnd >> 16) & 0x7fff) * 2) >> 15];
     }
     mBigBoo[i].frameTimer = 0;
     mBigBoo[i].frame = 0;
@@ -683,8 +685,7 @@ void dScMgTeresa_c::FoundNumber_DrawAll() {
             int a = mFoundNumbers[i].x >> 12;
             if (b <= 8) b = 8;
             if (b >= 0xb8) b = 0xb8;
-            Mg_RenderSubSpriteMtx((void *)sMgDigitSprites[mFoundNumbers[i].sprite + 1], a, b,
-                                  (void *)0);
+            Mg_RenderSubSpriteMtx(sMgDigitSprites[mFoundNumbers[i].sprite + 1], a, b, (void *)0);
         }
     }
 }
@@ -1465,10 +1466,12 @@ void dScMgTeresa_c::SpawnBoos() {
     sel = mLevel;
     if (sel >= 0xf) {
         int k;
-        r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         k = (r << 2) >> 15;
         if (k + 0xa == mBooPattern) {
-            k += (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3) >> 15) + 1;
+            k += (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >>
+                  15) +
+                 1;
             if (k >= 4) k -= 4;
         }
         sel = k + 0xa;
@@ -1477,11 +1480,11 @@ void dScMgTeresa_c::SpawnBoos() {
     count = sTeresaSpawnCounts[sel];
     mBooCount = count;
 
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     phase = ((r << 4) >> 15) << 12;
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     valA = ((((r << 3) >> 15) << 3) + 0x60) << 12;
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     valB = ((((r << 3) >> 15) << 3) + 0x60) << 12;
 
     i = 0;
@@ -1493,11 +1496,11 @@ void dScMgTeresa_c::SpawnBoos() {
     full = 0x10000;
     do {
         if (flagA == 0) {
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mBoos[i].mX = ((((r * 0xf) >> 15) << 4) + 0x10) << 12;
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mBoos[i].mY = ((((r * 0xb) >> 15) << 4) + 0x10) << 12;
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mBoos[i].mHeading = ((r << 5) >> 15) << 11;
         } else {
             mBoos[i].mX = valA;
@@ -1542,7 +1545,7 @@ void dScMgTeresa_c::UpdateRubbing() {
 
     if (mRubTouching != 0) {
         /* Not Vector3: its C++ destructor changes this frame. */
-        struct { Fix12i x, y, z; } d;
+        VecFx32 d;
         int dist;
         d.x = mRubX - mRubPrevX;
         d.y = mRubY - mRubPrevY;

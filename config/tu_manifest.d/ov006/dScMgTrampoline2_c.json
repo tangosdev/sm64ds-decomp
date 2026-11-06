@@ -2593,9 +2593,9 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@1147",
+      "from": "@1212",
       "to": "@1086",
-      "evidence": "data-trampoline2-wave-tables1017: named local wave-record type shifts compiler-local destructor registration node from@1111 to@1110. Both are unique12-byte local NOBITS objects; identical64-byte initializer references the node at the same relocation offset/type/addend. Its configured canonicalidentity remains@1086. Complete71-definition proof permits only this exactsite-derived bijection and the random-position semanticrename. Re-keyed -1 (from @1156) when this TU's extern Mg_DrawLine was removed and dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @1148) when the unread TU-local vtable-slot scaffold struct C was deleted."
+      "evidence": "data-trampoline2-wave-tables1017: named local wave-record type shifts compiler-local destructor registration node from@1111 to@1110. Both are unique12-byte local NOBITS objects; identical64-byte initializer references the node at the same relocation offset/type/addend. Its configured canonicalidentity remains@1086. Complete71-definition proof permits only this exactsite-derived bijection and the random-position semanticrename. Re-keyed -1 (from @1156) when this TU's extern Mg_DrawLine was removed and dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @1148) when the unread TU-local vtable-slot scaffold struct C was deleted.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed -2 (from @1215) when the unread pointer parameters of Trmp2Mario_EnterAll and Trmp2Mario_PlaceAtStart were dropped from this TU's externs. Re-keyed -1 (from @1213) when Trmp2Spinner_Init took its hit count as an int parameter instead of re-reading a void * into a local (decl agreement with Trmp2Spinner_InitAll's caller); paired by symtab index 92, every non-strtab section byte-identical."
     }
   ],
   "rodata": [

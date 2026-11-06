@@ -25,7 +25,7 @@
 // confirms the name, and its body does not follow GCC's __cxa_vec_dtor
 // statement for statement.
 
-typedef void (*dtor_t)(void *);
+#include "MWCPlusLib.h"
 
 namespace std {
 void terminate();

@@ -37,12 +37,6 @@ struct PeachAnimSlots {
     virtual int g3();
 };
 
-/* The twelve-word body of a Matrix4x3, copied whole in and out of the
- * scratch matrix. */
-typedef struct {
-    int w[12];
-} PeachM48;
-
 /* local extern: no header declares these two. */
 extern "C" {
 int AngleDiff(int, int);
@@ -204,20 +198,18 @@ done:
 }
 
 // @symbol _ZN9daPeach_c11UpdateModelEv
-/* The model matrix at +0xf0 is rebuilt from the body angle and the position,
- * then the head joint's own matrix (+0x360 inside the animated model) is
- * rotated by the two look angles through the scratch matrix at
- * data_020a0e68. */
+/* The model matrix is rebuilt from the body angle and the position, then
+ * the head joint's own matrix (bone 18 of the animated model) is rotated by
+ * the two look angles through the scratch matrix at data_020a0e68. */
 void daPeach_c::UpdateModel() {
-    char *c = (char *)this;
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     mAnmModel.mat4x3.m[9] = mPosX >> 3;
     mAnmModel.mat4x3.m[10] = mPosY >> 3;
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
-    *(PeachM48 *)&data_020a0e68 = *(PeachM48 *)(*(char **)(c + 0xe8) + 0x360);
+    data_020a0e68 = mAnmModel.data.transforms[18];
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookHorzAngle);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mLookVertAngle);
-    *(PeachM48 *)(*(char **)(c + 0xe8) + 0x360) = *(PeachM48 *)&data_020a0e68;
+    mAnmModel.data.transforms[18] = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x8c000, 0x32000, 0xf);
 }
 

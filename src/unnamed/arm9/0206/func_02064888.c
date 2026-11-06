@@ -1,10 +1,10 @@
 #include "private/wbt_block_info_list.h"
 
-extern int func_02065ae0(void);
+extern struct WBTBlockInfoList *func_02065ae0(void);
 extern int func_02065bc0(void);
 
 char *func_02064888(unsigned int id, int idx) {
-    struct WBTBlockInfoList *node = (struct WBTBlockInfoList *)func_02065ae0();
+    struct WBTBlockInfoList *node = func_02065ae0();
 
     if (id < 0x3e8) {
         unsigned int i = 0;

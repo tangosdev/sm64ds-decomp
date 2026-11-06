@@ -14,10 +14,9 @@
  * SNDi_CallAlarmHandler at 0x0205b470 up to SND_AlarmInit at 0x0205b524.
  */
 #include "types.h"
+#include "nitro/snd/alarm.h"
 
 #define SND_ALARM_COUNT 8
-
-typedef void (*SNDAlarmCallback)(void *userData);
 
 typedef struct AlarmCallback {
     SNDAlarmCallback cb; /* 0x0 */

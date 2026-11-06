@@ -280,7 +280,7 @@
       "ordinal": 33
     },
     {
-      "symbol": "func_ov002_020be008",
+      "symbol": "_ZN7daPly_c19func_ov002_020be008Ev",
       "address": "0x020be008",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov002_020be008.cpp",
@@ -427,7 +427,7 @@
       "ordinal": 54
     },
     {
-      "symbol": "func_ov002_020bf27c",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf27cEi",
       "address": "0x020bf27c",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov002_020bf27c.c",
@@ -483,7 +483,7 @@
       "ordinal": 62
     },
     {
-      "symbol": "func_ov002_020bf56c",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf56cEi",
       "address": "0x020bf56c",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020bf56c.cpp",
@@ -644,14 +644,14 @@
       "ordinal": 85
     },
     {
-      "symbol": "func_ov002_020c179c",
+      "symbol": "_ZN7daPly_c19func_ov002_020c179cEi",
       "address": "0x020c179c",
       "size": "0x00000114",
       "legacy_source": "src/func_ov002_020c179c.cpp",
       "ordinal": 86
     },
     {
-      "symbol": "func_ov002_020c18b0",
+      "symbol": "_ZN7daPly_c19func_ov002_020c18b0Ei",
       "address": "0x020c18b0",
       "size": "0x00000120",
       "legacy_source": "src/func_ov002_020c18b0.c",
@@ -777,21 +777,21 @@
       "ordinal": 104
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c2fecEPi",
+      "symbol": "_ZN7daPly_c14AnimSplinePollEPi",
       "address": "0x020c2fec",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov002_020c2fec.c",
       "ordinal": 105
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c3148Ev",
+      "symbol": "_ZN7daPly_c14AnimSplineInitEv",
       "address": "0x020c3148",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020c3148.c",
       "ordinal": 106
     },
     {
-      "symbol": "_ZN7daPly_c20ComputeSplineWeightsEPi",
+      "symbol": "_ZN7daPly_c16SplineGetWeightsEPi",
       "address": "0x020c3160",
       "size": "0x00000644",
       "legacy_source": "src/func_ov002_020c3160.c",
@@ -805,28 +805,28 @@
       "ordinal": 108
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c38a0Ev",
+      "symbol": "_ZN7daPly_c23JumboStarCutsceneFlyingEv",
       "address": "0x020c38a0",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov002_020c38a0.c",
       "ordinal": 109
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c3a48Ev",
+      "symbol": "_ZN7daPly_c26JumboStarCutsceneTakingOffEv",
       "address": "0x020c3a48",
       "size": "0x00000194",
       "legacy_source": "src/func_ov002_020c3a48.c",
       "ordinal": 110
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c3bdcEv",
+      "symbol": "_ZN7daPly_c24JumboStarCutsceneFallingEv",
       "address": "0x020c3bdc",
       "size": "0x00000114",
       "legacy_source": "src/func_ov002_020c3bdc.c",
       "ordinal": 111
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c3cf0Ev",
+      "symbol": "_ZN7daPly_c19AdvanceCutsceneStepEv",
       "address": "0x020c3cf0",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020c3cf0.c",
@@ -1757,14 +1757,14 @@
       "ordinal": 244
     },
     {
-      "symbol": "func_ov002_020ca940",
+      "symbol": "_ZN7daPly_c19func_ov002_020ca940Ev",
       "address": "0x020ca940",
       "size": "0x000002a0",
       "legacy_source": "src/func_ov002_020ca940.c",
       "ordinal": 245
     },
     {
-      "symbol": "func_ov002_020cabe0",
+      "symbol": "_ZN7daPly_c19func_ov002_020cabe0Ev",
       "address": "0x020cabe0",
       "size": "0x00000040",
       "legacy_source": "src/func_ov002_020cabe0.cpp",
@@ -2023,7 +2023,7 @@
       "ordinal": 282
     },
     {
-      "symbol": "func_ov002_020cd218",
+      "symbol": "_ZN7daPly_c19func_ov002_020cd218EiPiS0_",
       "address": "0x020cd218",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020cd218.cpp",
@@ -2051,7 +2051,7 @@
       "ordinal": 286
     },
     {
-      "symbol": "func_ov002_020cd364",
+      "symbol": "_ZN7daPly_c19func_ov002_020cd364Ev",
       "address": "0x020cd364",
       "size": "0x00000038",
       "legacy_source": "src/func_ov002_020cd364.c",
@@ -2072,21 +2072,21 @@
       "ordinal": 289
     },
     {
-      "symbol": "func_ov002_020cd448",
+      "symbol": "_ZN7daPly_c19func_ov002_020cd448Ev",
       "address": "0x020cd448",
       "size": "0x00000108",
       "legacy_source": "src/func_ov002_020cd448.cpp",
       "ordinal": 290
     },
     {
-      "symbol": "func_ov002_020cd550",
+      "symbol": "_ZN7daPly_c19func_ov002_020cd550Ev",
       "address": "0x020cd550",
       "size": "0x000001cc",
       "legacy_source": "src/func_ov002_020cd550.c",
       "ordinal": 291
     },
     {
-      "symbol": "func_ov002_020cd71c",
+      "symbol": "_ZN7daPly_c19func_ov002_020cd71cEv",
       "address": "0x020cd71c",
       "size": "0x00000230",
       "legacy_source": "src/func_ov002_020cd71c.c",
@@ -2100,7 +2100,7 @@
       "ordinal": 293
     },
     {
-      "symbol": "func_ov002_020ce324",
+      "symbol": "_ZN7daPly_c19func_ov002_020ce324Ev",
       "address": "0x020ce324",
       "size": "0x0000022c",
       "legacy_source": "src/func_ov002_020ce324.c",
@@ -2114,63 +2114,63 @@
       "ordinal": 295
     },
     {
-      "symbol": "func_ov002_020ce5f8",
+      "symbol": "_ZN7daPly_c19func_ov002_020ce5f8Ev",
       "address": "0x020ce5f8",
       "size": "0x000001a0",
       "legacy_source": "src/func_ov002_020ce5f8.c",
       "ordinal": 296
     },
     {
-      "symbol": "func_ov002_020ce798",
+      "symbol": "_ZN7daPly_c19func_ov002_020ce798Ev",
       "address": "0x020ce798",
       "size": "0x00000124",
       "legacy_source": "src/func_ov002_020ce798.c",
       "ordinal": 297
     },
     {
-      "symbol": "func_ov002_020ce8bc",
+      "symbol": "_ZN7daPly_c19func_ov002_020ce8bcEi",
       "address": "0x020ce8bc",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov002_020ce8bc.c",
       "ordinal": 298
     },
     {
-      "symbol": "func_ov002_020ce9c8",
+      "symbol": "_ZN7daPly_c19func_ov002_020ce9c8Ev",
       "address": "0x020ce9c8",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov002_020ce9c8.c",
       "ordinal": 299
     },
     {
-      "symbol": "func_ov002_020ceaf4",
+      "symbol": "_ZN7daPly_c19func_ov002_020ceaf4Ev",
       "address": "0x020ceaf4",
       "size": "0x00000060",
       "legacy_source": "src/func_ov002_020ceaf4.c",
       "ordinal": 300
     },
     {
-      "symbol": "func_ov002_020ceb54",
+      "symbol": "_ZN7daPly_c19func_ov002_020ceb54Ev",
       "address": "0x020ceb54",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020ceb54.c",
       "ordinal": 301
     },
     {
-      "symbol": "func_ov002_020ceb7c",
+      "symbol": "_ZN7daPly_c19func_ov002_020ceb7cEv",
       "address": "0x020ceb7c",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov002_020ceb7c.c",
       "ordinal": 302
     },
     {
-      "symbol": "func_ov002_020cec2c",
+      "symbol": "_ZN7daPly_c19func_ov002_020cec2cEv",
       "address": "0x020cec2c",
       "size": "0x00000184",
       "legacy_source": "src/func_ov002_020cec2c.c",
       "ordinal": 303
     },
     {
-      "symbol": "func_ov002_020cedb0",
+      "symbol": "_ZN7daPly_c19func_ov002_020cedb0Ei",
       "address": "0x020cedb0",
       "size": "0x00000030",
       "legacy_source": "src/func_ov002_020cedb0.c",
@@ -2184,7 +2184,7 @@
       "ordinal": 305
     },
     {
-      "symbol": "func_ov002_020cef84",
+      "symbol": "_ZN7daPly_c19func_ov002_020cef84Ev",
       "address": "0x020cef84",
       "size": "0x00000288",
       "legacy_source": "src/func_ov002_020cef84.cpp",
@@ -2247,49 +2247,49 @@
       "ordinal": 314
     },
     {
-      "symbol": "func_ov002_020cfaf0",
+      "symbol": "_ZN7daPly_c19func_ov002_020cfaf0Ev",
       "address": "0x020cfaf0",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov002_020cfaf0.cpp",
       "ordinal": 315
     },
     {
-      "symbol": "func_ov002_020cfbdc",
+      "symbol": "_ZN7daPly_c19func_ov002_020cfbdcEv",
       "address": "0x020cfbdc",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov002_020cfbdc.cpp",
       "ordinal": 316
     },
     {
-      "symbol": "func_ov002_020cfd84",
+      "symbol": "_ZN7daPly_c19func_ov002_020cfd84EPvS0_",
       "address": "0x020cfd84",
       "size": "0x00000120",
       "legacy_source": "src/func_ov002_020cfd84.cpp",
       "ordinal": 317
     },
     {
-      "symbol": "func_ov002_020cfea4",
+      "symbol": "_ZN7daPly_c19func_ov002_020cfea4Ev",
       "address": "0x020cfea4",
       "size": "0x000002d4",
       "legacy_source": "src/func_ov002_020cfea4.cpp",
       "ordinal": 318
     },
     {
-      "symbol": "func_ov002_020d0178",
+      "symbol": "_ZN7daPly_c19func_ov002_020d0178Eii",
       "address": "0x020d0178",
       "size": "0x00000408",
       "legacy_source": "src/func_ov002_020d0178.c",
       "ordinal": 319
     },
     {
-      "symbol": "func_ov002_020d0580",
+      "symbol": "_ZN7daPly_c19func_ov002_020d0580Ev",
       "address": "0x020d0580",
       "size": "0x00000140",
       "legacy_source": "src/func_ov002_020d0580.cpp",
       "ordinal": 320
     },
     {
-      "symbol": "func_ov002_020d06c0",
+      "symbol": "_ZN7daPly_c19func_ov002_020d06c0Ev",
       "address": "0x020d06c0",
       "size": "0x00000164",
       "legacy_source": "src/func_ov002_020d06c0.cpp",
@@ -2317,7 +2317,7 @@
       "ordinal": 324
     },
     {
-      "symbol": "func_ov002_020d0948",
+      "symbol": "_ZN7daPly_c19func_ov002_020d0948Ev",
       "address": "0x020d0948",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov002_020d0948.c",
@@ -2464,7 +2464,7 @@
       "ordinal": 345
     },
     {
-      "symbol": "func_ov002_020d225c",
+      "symbol": "_ZN7daPly_c19func_ov002_020d225cEv",
       "address": "0x020d225c",
       "size": "0x00000030",
       "legacy_source": "src/func_ov002_020d225c.c",
@@ -2478,7 +2478,7 @@
       "ordinal": 347
     },
     {
-      "symbol": "func_ov002_020d22ec",
+      "symbol": "_ZN7daPly_c19func_ov002_020d22ecEi",
       "address": "0x020d22ec",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020d22ec.c",
@@ -2499,7 +2499,7 @@
       "ordinal": 350
     },
     {
-      "symbol": "func_ov002_020d2da0",
+      "symbol": "_ZN7daPly_c19func_ov002_020d2da0Ev",
       "address": "0x020d2da0",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov002_020d2da0.c",
@@ -2520,7 +2520,7 @@
       "ordinal": 353
     },
     {
-      "symbol": "func_ov002_020d2fdc",
+      "symbol": "_ZN7daPly_c19func_ov002_020d2fdcEv",
       "address": "0x020d2fdc",
       "size": "0x000002e0",
       "legacy_source": "src/func_ov002_020d2fdc.c",
@@ -2555,7 +2555,7 @@
       "ordinal": 358
     },
     {
-      "symbol": "func_ov002_020d36d8",
+      "symbol": "_ZN7daPly_c19func_ov002_020d36d8Ei",
       "address": "0x020d36d8",
       "size": "0x000001e8",
       "legacy_source": "src/func_ov002_020d36d8.c",
@@ -2569,14 +2569,14 @@
       "ordinal": 360
     },
     {
-      "symbol": "func_ov002_020d3b9c",
+      "symbol": "_ZN7daPly_c19func_ov002_020d3b9cEv",
       "address": "0x020d3b9c",
       "size": "0x000005a0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d3b9c.c",
       "ordinal": 361
     },
     {
-      "symbol": "func_ov002_020d413c",
+      "symbol": "_ZN7daPly_c19func_ov002_020d413cEi",
       "address": "0x020d413c",
       "size": "0x00000134",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d413c.c",
@@ -2590,21 +2590,21 @@
       "ordinal": 363
     },
     {
-      "symbol": "func_ov002_020d4540",
+      "symbol": "_ZN7daPly_c19func_ov002_020d4540Ev",
       "address": "0x020d4540",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d4540.c",
       "ordinal": 364
     },
     {
-      "symbol": "func_ov002_020d454c",
+      "symbol": "_ZN7daPly_c19func_ov002_020d454cEv",
       "address": "0x020d454c",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d454c.cpp",
       "ordinal": 365
     },
     {
-      "symbol": "func_ov002_020d45c0",
+      "symbol": "_ZN7daPly_c19func_ov002_020d45c0Ev",
       "address": "0x020d45c0",
       "size": "0x00000188",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d45c0.c",
@@ -2625,7 +2625,7 @@
       "ordinal": 368
     },
     {
-      "symbol": "func_ov002_020d4d88",
+      "symbol": "_ZN7daPly_c19func_ov002_020d4d88Eii",
       "address": "0x020d4d88",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d4d88.c",
@@ -2723,7 +2723,7 @@
       "ordinal": 382
     },
     {
-      "symbol": "func_ov002_020d5c6c",
+      "symbol": "_ZN7daPly_c19func_ov002_020d5c6cEv",
       "address": "0x020d5c6c",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d5c6c.c",
@@ -2793,14 +2793,14 @@
       "ordinal": 392
     },
     {
-      "symbol": "func_ov002_020d6334",
+      "symbol": "_ZN7daPly_c19func_ov002_020d6334Ei",
       "address": "0x020d6334",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d6334.c",
       "ordinal": 393
     },
     {
-      "symbol": "func_ov002_020d6368",
+      "symbol": "_ZN7daPly_c19func_ov002_020d6368Ev",
       "address": "0x020d6368",
       "size": "0x0000010c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d6368.c",
@@ -2835,7 +2835,7 @@
       "ordinal": 398
     },
     {
-      "symbol": "func_ov002_020d6790",
+      "symbol": "_ZN7daPly_c19func_ov002_020d6790Ev",
       "address": "0x020d6790",
       "size": "0x00000208",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d6790.cpp",
@@ -2863,7 +2863,7 @@
       "ordinal": 402
     },
     {
-      "symbol": "func_ov002_020d7030",
+      "symbol": "_ZN7daPly_c19func_ov002_020d7030EPv",
       "address": "0x020d7030",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d7030.cpp",
@@ -2891,7 +2891,7 @@
       "ordinal": 406
     },
     {
-      "symbol": "func_ov002_020d71ec",
+      "symbol": "_ZN7daPly_c19func_ov002_020d71ecEi",
       "address": "0x020d71ec",
       "size": "0x00000180",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d71ec.c",
@@ -2926,7 +2926,7 @@
       "ordinal": 411
     },
     {
-      "symbol": "func_ov002_020d80d0",
+      "symbol": "_ZN7daPly_c19func_ov002_020d80d0Ev",
       "address": "0x020d80d0",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d80d0.c",
@@ -2940,7 +2940,7 @@
       "ordinal": 413
     },
     {
-      "symbol": "func_ov002_020d8158",
+      "symbol": "_ZN7daPly_c19func_ov002_020d8158Ev",
       "address": "0x020d8158",
       "size": "0x000000d0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d8158.c",
@@ -2975,7 +2975,7 @@
       "ordinal": 418
     },
     {
-      "symbol": "func_ov002_020d82f0",
+      "symbol": "_ZN7daPly_c19func_ov002_020d82f0Ev",
       "address": "0x020d82f0",
       "size": "0x00000070",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d82f0.c",
@@ -3003,7 +3003,7 @@
       "ordinal": 422
     },
     {
-      "symbol": "func_ov002_020d869c",
+      "symbol": "_ZN7daPly_c19func_ov002_020d869cEv",
       "address": "0x020d869c",
       "size": "0x0000019c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d869c.cpp",
@@ -3052,14 +3052,14 @@
       "ordinal": 429
     },
     {
-      "symbol": "func_ov002_020d91b8",
+      "symbol": "_ZN7daPly_c19func_ov002_020d91b8Ei",
       "address": "0x020d91b8",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d91b8.c",
       "ordinal": 430
     },
     {
-      "symbol": "func_ov002_020d91e0",
+      "symbol": "_ZN7daPly_c19func_ov002_020d91e0Eii",
       "address": "0x020d91e0",
       "size": "0x000000b8",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d91e0.c",
@@ -3122,14 +3122,14 @@
       "ordinal": 439
     },
     {
-      "symbol": "func_ov002_020d9a4c",
+      "symbol": "_ZN7daPly_c19func_ov002_020d9a4cEv",
       "address": "0x020d9a4c",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d9a4c.c",
       "ordinal": 440
     },
     {
-      "symbol": "func_ov002_020d9aac",
+      "symbol": "_ZN7daPly_c19func_ov002_020d9aacEv",
       "address": "0x020d9aac",
       "size": "0x000000bc",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d9aac.c",
@@ -3339,7 +3339,7 @@
       "ordinal": 470
     },
     {
-      "symbol": "func_ov002_020db8bc",
+      "symbol": "_ZN7daPly_c19func_ov002_020db8bcEh",
       "address": "0x020db8bc",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020db8bc.c",
@@ -3353,7 +3353,7 @@
       "ordinal": 472
     },
     {
-      "symbol": "func_ov002_020dba0c",
+      "symbol": "_ZN7daPly_c19func_ov002_020dba0cEv",
       "address": "0x020dba0c",
       "size": "0x000000e0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dba0c.c",
@@ -3395,14 +3395,14 @@
       "ordinal": 478
     },
     {
-      "symbol": "func_ov002_020dbf4c",
+      "symbol": "_ZN7daPly_c19func_ov002_020dbf4cEv",
       "address": "0x020dbf4c",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dbf4c.c",
       "ordinal": 479
     },
     {
-      "symbol": "func_ov002_020dc020",
+      "symbol": "_ZN7daPly_c19func_ov002_020dc020Ev",
       "address": "0x020dc020",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dc020.c",
@@ -3416,7 +3416,7 @@
       "ordinal": 481
     },
     {
-      "symbol": "func_ov002_020dc174",
+      "symbol": "_ZN7daPly_c19func_ov002_020dc174EPK7Vector3iijj",
       "address": "0x020dc174",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dc174.c",
@@ -3521,7 +3521,7 @@
       "ordinal": 496
     },
     {
-      "symbol": "func_ov002_020dd2f4",
+      "symbol": "_ZN7daPly_c19func_ov002_020dd2f4Ev",
       "address": "0x020dd2f4",
       "size": "0x000000d0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dd2f4.c",
@@ -3549,7 +3549,7 @@
       "ordinal": 500
     },
     {
-      "symbol": "func_ov002_020dd824",
+      "symbol": "_ZN7daPly_c19func_ov002_020dd824Ev",
       "address": "0x020dd824",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dd824.cpp",
@@ -3598,7 +3598,7 @@
       "ordinal": 507
     },
     {
-      "symbol": "func_ov002_020dde74",
+      "symbol": "_ZN7daPly_c19func_ov002_020dde74Ev",
       "address": "0x020dde74",
       "size": "0x00000168",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dde74.cpp",
@@ -3829,7 +3829,7 @@
       "ordinal": 540
     },
     {
-      "symbol": "func_ov002_020e032c",
+      "symbol": "_ZN7daPly_c19func_ov002_020e032cEv",
       "address": "0x020e032c",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e032c.c",
@@ -3850,7 +3850,7 @@
       "ordinal": 543
     },
     {
-      "symbol": "func_ov002_020e04a4",
+      "symbol": "_ZN7daPly_c19func_ov002_020e04a4Ev",
       "address": "0x020e04a4",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e04a4.c",
@@ -3871,7 +3871,7 @@
       "ordinal": 546
     },
     {
-      "symbol": "func_ov002_020e0a64",
+      "symbol": "_ZN7daPly_c19func_ov002_020e0a64Ev",
       "address": "0x020e0a64",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e0a64.c",
@@ -3906,7 +3906,7 @@
       "ordinal": 551
     },
     {
-      "symbol": "func_ov002_020e0ccc",
+      "symbol": "_ZN7daPly_c19func_ov002_020e0cccEPv",
       "address": "0x020e0ccc",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e0ccc.cpp",
@@ -4060,7 +4060,7 @@
       "ordinal": 573
     },
     {
-      "symbol": "func_ov002_020e1c20",
+      "symbol": "_ZN7daPly_c19func_ov002_020e1c20Ev",
       "address": "0x020e1c20",
       "size": "0x00000250",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e1c20.c",
@@ -4102,35 +4102,35 @@
       "ordinal": 579
     },
     {
-      "symbol": "func_ov002_020e25f0",
+      "symbol": "_ZN7daPly_c19func_ov002_020e25f0Ei",
       "address": "0x020e25f0",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e25f0.c",
       "ordinal": 580
     },
     {
-      "symbol": "func_ov002_020e2664",
+      "symbol": "_ZN7daPly_c19func_ov002_020e2664Ev",
       "address": "0x020e2664",
       "size": "0x00000270",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e2664.c",
       "ordinal": 581
     },
     {
-      "symbol": "func_ov002_020e28d4",
+      "symbol": "_ZN7daPly_c19func_ov002_020e28d4Eii",
       "address": "0x020e28d4",
       "size": "0x000001fc",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e28d4.c",
       "ordinal": 582
     },
     {
-      "symbol": "func_ov002_020e2ad0",
+      "symbol": "_ZN7daPly_c19func_ov002_020e2ad0Ev",
       "address": "0x020e2ad0",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e2ad0.c",
       "ordinal": 583
     },
     {
-      "symbol": "func_ov002_020e2b6c",
+      "symbol": "_ZN7daPly_c19func_ov002_020e2b6cEv",
       "address": "0x020e2b6c",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e2b6c.cpp",
@@ -4144,14 +4144,14 @@
       "ordinal": 585
     },
     {
-      "symbol": "func_ov002_020e2be4",
+      "symbol": "_ZN7daPly_c19func_ov002_020e2be4Ev",
       "address": "0x020e2be4",
       "size": "0x000000a0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e2be4.cpp",
       "ordinal": 586
     },
     {
-      "symbol": "func_ov002_020e2c84",
+      "symbol": "_ZN7daPly_c19func_ov002_020e2c84Ev",
       "address": "0x020e2c84",
       "size": "0x0000021c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e2c84.c",
@@ -4165,14 +4165,14 @@
       "ordinal": 588
     },
     {
-      "symbol": "func_ov002_020e301c",
+      "symbol": "_ZN7daPly_c19func_ov002_020e301cEv",
       "address": "0x020e301c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e301c.c",
       "ordinal": 589
     },
     {
-      "symbol": "func_ov002_020e3078",
+      "symbol": "_ZN7daPly_c19func_ov002_020e3078EPv",
       "address": "0x020e3078",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e3078.c",
@@ -4221,7 +4221,7 @@
       "ordinal": 596
     },
     {
-      "symbol": "func_ov002_020e3f90",
+      "symbol": "_ZN7daPly_c19func_ov002_020e3f90Ev",
       "address": "0x020e3f90",
       "size": "0x000003e4",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e3f90.c",
@@ -4235,14 +4235,14 @@
       "ordinal": 598
     },
     {
-      "symbol": "func_ov002_020e444c",
+      "symbol": "_ZN7daPly_c19func_ov002_020e444cEv",
       "address": "0x020e444c",
       "size": "0x0000031c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e444c.c",
       "ordinal": 599
     },
     {
-      "symbol": "func_ov002_020e4768",
+      "symbol": "_ZN7daPly_c19func_ov002_020e4768Ev",
       "address": "0x020e4768",
       "size": "0x00000204",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e4768.cpp",
@@ -4256,14 +4256,14 @@
       "ordinal": 601
     },
     {
-      "symbol": "func_ov002_020e4990",
+      "symbol": "_ZN7daPly_c19func_ov002_020e4990Ev",
       "address": "0x020e4990",
       "size": "0x00000228",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e4990.c",
       "ordinal": 602
     },
     {
-      "symbol": "func_ov002_020e4bb8",
+      "symbol": "_ZN7daPly_c19func_ov002_020e4bb8Ev",
       "address": "0x020e4bb8",
       "size": "0x0000016c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e4bb8.c",
@@ -4284,7 +4284,7 @@
       "ordinal": 605
     },
     {
-      "symbol": "func_ov002_020e5948",
+      "symbol": "_ZN7daPly_c19func_ov002_020e5948Ev",
       "address": "0x020e5948",
       "size": "0x000009e8",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e5948.c",
@@ -4298,28 +4298,28 @@
       "ordinal": 607
     },
     {
-      "symbol": "func_ov002_020e6350",
+      "symbol": "_ZN7daPly_c19func_ov002_020e6350Ev",
       "address": "0x020e6350",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e6350.c",
       "ordinal": 608
     },
     {
-      "symbol": "func_ov002_020e63a4",
+      "symbol": "_ZN7daPly_c19func_ov002_020e63a4Ev",
       "address": "0x020e63a4",
       "size": "0x00000068",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e63a4.c",
       "ordinal": 609
     },
     {
-      "symbol": "func_ov002_020e640c",
+      "symbol": "_ZN7daPly_c19func_ov002_020e640cEv",
       "address": "0x020e640c",
       "size": "0x00000374",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e640c.c",
       "ordinal": 610
     },
     {
-      "symbol": "func_ov002_020e6780",
+      "symbol": "_ZN7daPly_c19func_ov002_020e6780Ev",
       "address": "0x020e6780",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e6780.c",
@@ -12771,79 +12771,79 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLevelIntroOff$4575",
+      "from": "_ZGVsLevelIntroOff$4537",
       "to": "_ZGVsLevelIntroOff$4424",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from _ZGVsLevelIntroOff$4575 to _ZGVsLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "@4578",
+      "from": "@4540",
       "to": "@4427",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from @4578 to @4576 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "sLevelIntroOff$4575",
+      "from": "sLevelIntroOff$4537",
       "to": "sLevelIntroOff$4424",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU)"
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from sLevelIntroOff$4575 to sLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "_ZGVsTalkOff$4793",
+      "from": "_ZGVsTalkOff$4755",
       "to": "_ZGVsTalkOff$4648",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from _ZGVsTalkOff$4793 to _ZGVsTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "@4796",
+      "from": "@4758",
       "to": "@4651",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from @4796 to @4794 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "sTalkOff$4793",
+      "from": "sTalkOff$4755",
       "to": "sTalkOff$4648",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from sTalkOff$4793 to sTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "_ZGVsAnchorOff$6356",
+      "from": "_ZGVsAnchorOff$6311",
       "to": "_ZGVsAnchorOff$6223",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsAnchorOff$6356 to _ZGVsAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "@6359",
+      "from": "@6314",
       "to": "@6226",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6359 to @6357 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "sAnchorOff$6356",
+      "from": "sAnchorOff$6311",
       "to": "sAnchorOff$6223",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sAnchorOff$6356 to sAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "_ZGVsDoorMsgOff$6384",
+      "from": "_ZGVsDoorMsgOff$6339",
       "to": "_ZGVsDoorMsgOff$6251",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsDoorMsgOff$6384 to _ZGVsDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "@6387",
+      "from": "@6342",
       "to": "@6254",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6387 to @6385 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "sDoorMsgOff$6384",
+      "from": "sDoorMsgOff$6339",
       "to": "sDoorMsgOff$6251",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sDoorMsgOff$6384 to sDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "_ZGVsStarDoorOff$7035",
+      "from": "_ZGVsStarDoorOff$6990",
       "to": "_ZGVsStarDoorOff$6917",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsStarDoorOff$7035 to _ZGVsStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "@7038",
+      "from": "@6993",
       "to": "@6920",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @7038 to @7036 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "sStarDoorOff$7035",
+      "from": "sStarDoorOff$6990",
       "to": "sStarDoorOff$6917",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sStarDoorOff$7035 to sStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     }
   ],
   "relocations": [

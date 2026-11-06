@@ -30,8 +30,8 @@
  *   func_02013e64 -- zero the save block.
  *
  * Every method is static: the ROM bodies take no `this` and reach the single
- * save block at 0x0209caa0 directly. The TU declares it once as a SaveBlock
- * object: the current file (FileSaveData, 0x44 bytes), the minigame block
+ * save block at 0x0209caa0 directly, declared here as a SaveBlock object
+ * (include/SaveBlock.h): the current file (FileSaveData, 0x44 bytes), the minigame block
  * (MinigameSaveData, 0x2e4 bytes, cart slot 3) and the active-file byte at
  * 0x328. The declaration form matters to the bytes: on an `int[]` view
  * mwccarm keeps the block address in one register across func_02013598's
@@ -43,30 +43,10 @@
 
 #include "SaveData.h"
 
-/* The minigame block: 0x2e4 bytes at block + 0x44, saved to cart slot 3. */
-struct MinigameSaveData {
-    u32 magic5000; /* 0x00 (block 0x44) -- "5000", written by SetDefaultValuesMg */
-    /* 0x04 (block 0x48) -- unlocked minigames, one bit each in bits 0..0x1b
-       (func_0201361c). Bit 31 is not a minigame: dScMiniGm_c's init
-       (d_s_mini_gm.cpp) sets it once it has written the default records. */
-    u32 unlocked;
-    u32 seenLo; /* 0x08 (block 0x4c) -- menu "seen" bits for minigames 0..0x1b */
-    u8 seenHi;  /* 0x0c (block 0x50) -- the same for minigames 0x1c.. */
-    u8 pad_00d[0x2e4 - 0xd];
-};
-
-/* The live save block at 0x0209caa0: the current file, the minigame block and
-   the active-file byte; func_02013e64 clears all 0x32c bytes. */
-struct SaveBlock {
-    FileSaveData file;   /* 0x000 */
-    MinigameSaveData mg; /* 0x044 */
-    u8 activeFile;       /* 0x328 */
-};
-
 extern "C" {
-extern SaveBlock data_0209caa0;       /* the live save block */
+extern SaveBlock data_0209caa0;       /* the live save block; local extern: see SaveBlock.h */
 extern int data_0209caf4[][5];        /* the minigame record tables, at block + 0x54 */
-extern u8 data_0209f2d8[];            /* gate byte read by CanPlayerHaveCap */
+extern u8 data_0209f2d8;              /* gate byte read by CanPlayerHaveCap */
 extern u8 data_0209cad2[];            /* coin records; local extern: no field on the byte array */
 extern unsigned char data_0209cab4[]; /* star bits per course */
 extern unsigned char data_0209f224;   /* last collected star id */
@@ -177,7 +157,7 @@ int SaveData::SaveCurrentFile() {
 // @symbol _ZN8SaveData16CanPlayerHaveCapEv
 int SaveData::CanPlayerHaveCap() {
     if (data_0209caa0.file.mCharacter != 3) {
-        int b = (int)(data_0209f2d8[0] == 1);
+        int b = (int)(data_0209f2d8 == 1);
         if (b == 0)
             return 1;
     }

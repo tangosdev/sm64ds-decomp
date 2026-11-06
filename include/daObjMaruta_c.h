@@ -85,11 +85,11 @@ struct daObjMaruta_c : dBgActor_c {
 
     /* Rotate the model by mAngleX/Y/Z and set its translation to mPos >> 3. */
     void UpdateModelTransform();
-    /* The collider's before-collision hook: record a touching player and
-       shove it along mAngleY. BeforeClsnCallback is the address the dBgW
-       stores; it drops its first argument and forwards to this. */
+    /* The collider's stood-on hook: record a touching player and shove it
+       along mAngleY. StoodOnCallback is the address the dBgW stores; it
+       drops its first argument and forwards to this. */
     void HandlePlayerContact(dActor_c *);
-    static void BeforeClsnCallback(void *, void *, void *);
+    static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero

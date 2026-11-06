@@ -88,7 +88,7 @@ extern unsigned char data_0209f2d8;
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(Vector3 *v);
+int LenVec3(const Vector3 *v);
 short Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 }
@@ -241,7 +241,7 @@ void daManta_c::UpdateModelAndRingPos() {
     mRingPos.y = 0;
     mRingPos.z = 0;
     data_020a0e68 = mAnmModel.mat4x3;
-    MulMat4x3Mat4x3((const int *)(mAnmModel.data.transforms + 3), data_020a0e68.m, data_020a0e68.m);
+    MulMat4x3Mat4x3(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
     mRingPos.x = data_020a0e68.m[9];
     mRingPos.y = data_020a0e68.m[10];
     mRingPos.z = data_020a0e68.m[11];

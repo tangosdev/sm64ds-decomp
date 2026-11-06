@@ -1,18 +1,4 @@
-/* An exception index entry: start address, size with the inline flag in
-   bit 0, then the action table, or the table itself when inline. */
-struct EHIndexEntry {
-    unsigned int start;
-    unsigned int sizeFlags;
-    int table;
-};
-
-struct EHTableInfo {
-    int start;
-    unsigned char *table;
-    int action;
-    struct EHIndexEntry *indexBegin;
-    struct EHIndexEntry *indexEnd;
-};
+#include "MWCPlusLib.h"
 
 extern int func_02071844(struct EHTableInfo *info, int pc);
 extern struct EHIndexEntry *func_02072ed0(struct EHIndexEntry *base, int count, unsigned int key);

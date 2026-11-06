@@ -78,20 +78,15 @@ enum daObjTatefuda_c_AssetId {
 #include "dCc_c.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
  * each of these before compiling; a real header should usually win. */
-/* shadow struct 'Vec3' */
-struct Vec3 { int x, y, z; };
-
-/* Array-backed view of Matrix4x3's 0x30 bytes. Copying this aggregate retains
- * the ROM block moves in C++ under 2004/b56. */
-struct RawMatrix4x3 { int m[12]; };
-
-/* Bare Vec3 is used for the locals and casts below; the struct form above
- * feeds the elaborated-type uses. */
-typedef struct Vec3 Vec3;
+/* The model-matrix copies go through Mtx43: copying that word union retains
+ * the ROM block moves in C++ under 2004/b56, where Matrix4x3's own assignment
+ * goes member by member. */
 
 /* shadow typedef 's32' */
 typedef int s32;
@@ -140,16 +135,9 @@ enum {
 };
 
 extern "C" {
-extern void Matrix4x3_FromRotationY(void *, int);
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
-extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
-extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(struct Matrix4x3* m, int x, int y, int z);
-extern struct Matrix4x3 data_020a0e68;
 extern char *func_ov002_020e496c(daPly_c *p);
-extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern void Vec3_Lsl(struct Vec3 *d, struct Vec3 *s, int sh);
+extern void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 extern short data_ov002_020ff0d0[];
 extern int data_ov002_020ff0d4[];
 extern int data_ov002_020ff0d8[];
@@ -236,7 +224,7 @@ int daObjTatefuda_c::InitResources()
     int pz = mPosZ;
     int px = mPosX;
     int py2 = py + 0x64000;
-    Vec3 v = { px, py2, pz };
+    VecFx32 v = {px, py2, pz};
     dBgCh_Gnd rg;
     rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     if (rg.DetectClsn() != 0)
@@ -584,12 +572,12 @@ void daObjTatefuda_c::InitDropped()
 {
     daPly_c *other;
     int* py;
-    Vec3* src;
+    VecFx32 *src;
     mHorzSpeed = 0;
     mVertSpeed = 0;
     other = mHoldingPlayer;
     py = &mPosY;
-    src = (Vec3*)&other->mPosX;
+    src = (VecFx32 *)&other->mPosX;
     mPosX = src->x;
     mPosY = src->y;
     mPosZ = src->z;
@@ -1040,8 +1028,8 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
  * the matrix itself is stored into mModel at 0xf0. */
 void AttachToHolder(struct daObjTatefuda_c *self)
 {
-    struct Vec3 v;
-    struct Vec3 lo;
+    Vector3 v;
+    Vector3 lo;
     dExtAnmModel_c *body = (dExtAnmModel_c *)func_ov002_020e496c(self->mHoldingPlayer);
     Matrix4x3 *bones = body->data.transforms;
     int r4 = 0;
@@ -1058,7 +1046,7 @@ void AttachToHolder(struct daObjTatefuda_c *self)
     ((int *)&v)[0] = 0;
     ((int *)&v)[1] = 0;
     ((int *)&v)[2] = 0;
-    *(struct RawMatrix4x3 *)&data_020a0e68 = *(struct RawMatrix4x3 *)&body->mat4x3;
+    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&body->mat4x3;
     MulMat4x3Mat4x3(&bones[14], &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.t.x;
     v.y = data_020a0e68.t.y;
@@ -1076,11 +1064,11 @@ void AttachToHolder(struct daObjTatefuda_c *self)
     self->mPosX = data_020a0e68.t.x;
     self->mPosY = data_020a0e68.t.y;
     self->mPosZ = data_020a0e68.t.z;
-    Vec3_Lsl(&lo, (struct Vec3 *)&self->mPosX, 3);
+    Vec3_Lsl(&lo, &self->mPos, 3);
     self->mPosX = lo.x;
     self->mPosY = lo.y;
     self->mPosZ = lo.z;
-    *(struct RawMatrix4x3 *)&self->mModel.mat4x3 = *(struct RawMatrix4x3 *)&data_020a0e68;
+    *(Mtx43 *)&self->mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1101,7 +1089,7 @@ void RebuildModelMatrix(struct daObjTatefuda_c* self){
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
         self->mAngleX, self->mAngleY, self->mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    *(struct RawMatrix4x3 *)&self->mModel.mat4x3 = *(struct RawMatrix4x3 *)&data_020a0e68;
+    *(Mtx43 *)&self->mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 // @symbol _ZN15daObjTatefuda_c18UpdateShadowMatrixEv

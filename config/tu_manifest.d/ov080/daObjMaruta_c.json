@@ -89,7 +89,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZN13daObjMaruta_c18BeforeClsnCallbackEPvS0_S0_",
+      "symbol": "_ZN13daObjMaruta_c15StoodOnCallbackEP4dBgWP8dActor_cS3_",
       "address": "0x02127658",
       "size": "0x00000014",
       "legacy_source": "src/func_ov080_02127658.c",

@@ -5,11 +5,6 @@ namespace CP15 {
 void FlushDataCache(unsigned int a, unsigned int b);
 }
 extern "C" {
-extern int WM_CheckStateEx(int count, ...);
-
-extern void WM_SetCallbackTable(int i, int val);
-extern char *WM_GetSystemWork(void);
-extern int WM_SendCommand(short a0, unsigned short count);
 
 /* NitroSDK WMScanParam, WM_StartScan's argument (same names as
  * func_020690b0's WmScanParam, which passes data_020a9dc0 here). */
@@ -33,7 +28,7 @@ struct WMStartScanReq {
  * (2, 3, 5), check the scan parameter (a buffer and channel 1..14), flush
  * it, register the callback and send the START_SCAN request. Returns 2
  * (WM_ERRCODE_OPERATING) once the request is queued. */
-int WM_StartScan(int a, char *b) {
+int WM_StartScan(void *callback, char *b) {
     WmScanParam *param = (WmScanParam *)b;
     int rc;
     WMStartScanReq *req;
@@ -46,8 +41,8 @@ int WM_StartScan(int a, char *b) {
     h = param->channel;
     if (h < 1 || h > 0xe) return 6;
     CP15::FlushDataCache((unsigned int)b, 0x20);
-    WM_SetCallbackTable(0xa, a);
-    req = (WMStartScanReq *)((WMArm9Buf *)WM_GetSystemWork())->fifo9to7;
+    WM_SetCallbackTable(0xa, callback);
+    req = (WMStartScanReq *)WM_GetSystemWork()->fifo9to7;
     req->apiid = 0xa;
     req->channel = param->channel;
     req->scanBuf = param->scanBuf;

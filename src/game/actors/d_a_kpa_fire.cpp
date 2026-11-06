@@ -54,13 +54,15 @@
 #include "daPly_c.h"
 #include "SaveData.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "nitro/fx/fx.h"
+#include "private/mtx43.h"
+#include "math/MtxStack.h"
+#include "LevelRng.h"
 
-/* POD view of the 0x30-byte matrix. The single integer array preserves
- * the shadow update's block copy in C++ with Vector3's user-declared
- * constructor in scope. */
-struct RawMatrix4x3 { int m[12]; };
-typedef struct RawMatrix4x3 RawMatrix4x3;
+/* The shadow update copies its matrix through Mtx43: the plain word union
+ * keeps the block copy in C++ with Vector3's user-declared constructor in
+ * scope. */
 
 /* The variant tables. Behavior calls data_ov060_0211afb4[mVariant].pmf and
  * InitResources calls data_ov060_0211af74[mVariant]. Both hold
@@ -93,13 +95,12 @@ enum {
 /* Particle ids, named by where they are used, not recovered names. 0x9a, 0x9c
    and 0xa6 are passed to func_ov060_02116518, which also starts id + 1 in the
    second handle. 0x9e goes straight to NewUnkCallback818 (one handle only);
-   0x9f is a one-shot NewSimple. */
+   0x9c, 0x9e, 0xa4 and 0x9f are kPtclFlame, kPtclFlameSmall, kPtclFlameBlue and
+   kPtclFlameOutPuff (ParticleIds.h); 0x9f is a one-shot NewSimple. */
 enum {
-    PARTICLE_LANDED_BURN = 0x9c,   /* variants 6/7 once mLanded is set */
-    PARTICLE_FALLING = 0x9e,       /* variants 6/7 while airborne */
-    PARTICLE_SCALED_9A = 0x9a,     /* variants 1 and 5; the one id that also gets the extra +0x44 / +0x4c sizing */
-    PARTICLE_VARIANT_4 = 0xa6,     /* variant 4 */
-    PARTICLE_END_PUFF = 0x9f       /* one-shot at the end of variant 6/7 (NewSimple, not a handle) */
+    /* variants 1 and 5; the one id that also gets the extra +0x44 / +0x4c sizing */
+    PARTICLE_SCALED_9A = 0x9a,
+    PARTICLE_VARIANT_4 = 0xa6 /* variant 4 */
 };
 
 /* Sound id variant 0 plays through its mSoundHandle; named by use site, not decoded. */
@@ -124,11 +125,8 @@ extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
 
 extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern int RandomIntInternal(int* seed);
-extern int data_0209e650[];          /* RNG_STATE (symbols/verified.tsv) */
 extern short data_02082214[];        /* SINE_TABLE: a sin/cos pair per angle >> 4 */
-extern Matrix4x3 data_020a0e68;      /* MATRIX_SCRATCH_PAPER */
 
 /* ov060 tables indexed by mSubVariant (02119358, 0211934c) and the mouth-pose
  * rows variant 0 reads (02119364); see the handlers below. */
@@ -260,12 +258,12 @@ int daKpaFire_c::CleanupResources()
  * calls it `depth`) 30 units (0x1e000), and the `opacity` argument 0xf (what
  * that value means is not decoded; every caller passes 0xf).
  * The Matrix4x3 at 0x32c remains the header's `mShadowMat` storage; copying it
- * through the RawMatrix4x3 view keeps the block copy intact in C++. */
+ * through the Mtx43 view keeps the block copy intact in C++. */
 void daKpaFire_c::func_ov060_02117624() {
     if (mDropsShadow == 0)
         return;
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, mGroundY >> 3, mPosZ >> 3);
-    *(RawMatrix4x3 *)mShadowMat = *(RawMatrix4x3 *)&data_020a0e68;
+    *(Mtx43 *)mShadowMat = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, mShadowRadiusMul * mFireScale,
                         0x1e000, 0xf);
 }
@@ -358,7 +356,7 @@ void daKpaFire_c::func_ov060_0211747c() {
 
 // @symbol _ZN11daKpaFire_c19func_ov060_021172e0Ev
 /* End of a variant 6/7 fire, called once its mFireScale has burnt down to 0 or
- * below: plays the one-shot particle PARTICLE_END_PUFF at the fire's position
+ * below: plays the one-shot particle kPtclFlameOutPuff at the fire's position
  * and destroys the fire. Then, with a 2 in 10 chance (random >> 16, % 10 < 2),
  * it leaves something behind:
  *   - if the nearest player's param1 is 3 (not decoded; daFPknBall_c and
@@ -369,11 +367,11 @@ void daKpaFire_c::func_ov060_0211747c() {
  *     and stops -- this branch returns whether or not the spawn worked;
  *   - otherwise it spawns a coin and zeroes the coin's three velocity words. */
 void daKpaFire_c::func_ov060_021172e0() {
-    Particle::System::NewSimple(PARTICLE_END_PUFF, *(Fix12i *)&this->mPosX, *(Fix12i *)&this->mPosY,
+    Particle::System::NewSimple(kPtclFlameOutPuff, *(Fix12i *)&this->mPosX, *(Fix12i *)&this->mPosY,
                                 *(Fix12i *)&this->mPosZ);
     this->MarkForDestruction();
 
-    if ((((u32)RandomIntInternal(&data_0209e650[0]) >> 0x10) % 10) >= 2) {
+    if ((((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10) >= 2) {
         return;
     }
 
@@ -392,7 +390,7 @@ void daKpaFire_c::func_ov060_021172e0() {
                 }
             }
             do {
-                idx = ((u32)RandomIntInternal(&data_0209e650[0]) >> 0x10) % 3;
+                idx = ((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 3;
             } while ((mask & (1 << idx)) == 0);
             {
                 dActor_c *spawned = dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, (idx << 8) | 0xb,
@@ -428,8 +426,8 @@ int daKpaFire_c::func_ov060_021172c8(unsigned int n) {
  * (so from 1.0 to just under 2.0); shadow multiplier 0x10. */
 void daKpaFire_c::func_ov060_0211722c() {
     unsigned int r;
-    this->mPrevAngleY = (short)((unsigned int)RandomIntInternal(&data_0209e650[0]) >> 0x10);
-    r = (unsigned int)RandomIntInternal(&data_0209e650[0]) >> 0x10;
+    this->mPrevAngleY = (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
+    r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10;
     if (r % 10 < 2)
         this->mVertSpeed = 0x1e000;
     else
@@ -437,7 +435,7 @@ void daKpaFire_c::func_ov060_0211722c() {
     this->mHorzSpeed = 0x5000;
     this->mVertAccel = -0x1000;
     this->mFireScale =
-        (int)(((unsigned int)RandomIntInternal(&data_0209e650[0]) >> 16) & 0xfff) + 0x1000;
+        (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0xfff) + 0x1000;
     this->mShadowRadiusMul = 0x10;
 }
 
@@ -446,7 +444,7 @@ void daKpaFire_c::func_ov060_0211722c() {
  * horizontal speed, mFireScale 6.0 (0x6000), shadow multiplier 0x10. Gravity
  * is left at the InitResources default. */
 void daKpaFire_c::func_ov060_021171e8() {
-    unsigned int r = RandomIntInternal(data_0209e650);
+    unsigned int r = RandomIntInternal(&data_0209e650.value);
     this->mPrevAngleY = r >> 0x10;
     this->mVertSpeed = 0xa000;
     this->mHorzSpeed = 0;
@@ -484,7 +482,7 @@ void daKpaFire_c::func_ov060_0211712c() {
  * Every frame it moves (UpdatePos), clamps its vertical speed to at least
  * -4.0 (-0x4000), and destroys itself once its y is below 0.
  *
- * While mLanded is 0 (airborne): keeps the PARTICLE_FALLING particle at the
+ * While mLanded is 0 (airborne): keeps the kPtclFlameSmall particle at the
  * fire's position, 55 units up (0x37000); sets cylinder flags bit 0 (cylinder
  * disabled); runs the wobble. On the first frame the mesh collision reports the
  * ground it sets mLanded, picks mFireScale (6.0 for variant 7, else 6.0 plus
@@ -492,7 +490,7 @@ void daKpaFire_c::func_ov060_0211712c() {
  * horizontal speed, vertical speed and gravity, and forgets both particle
  * handles.
  *
- * Once mLanded is set: shows PARTICLE_LANDED_BURN scaled by mFireScale (y
+ * Once mLanded is set: shows kPtclFlame scaled by mFireScale (y
  * offset 12 * scale), clears flags bit 0 (cylinder enabled), and once
  * mFrameCount exceeds mFireScale * 10 / 0x1000 + 5 it shrinks mFireScale by
  * 0x266 (about 0.15) per frame; at 0 or below it ends in func_ov060_021172e0. */
@@ -503,8 +501,8 @@ void daKpaFire_c::func_ov060_02116f90() {
 
     if (this->mLanded == 0) {
         this->mParticleHandle =
-            Particle::System::NewUnkCallback818(this->mParticleHandle, PARTICLE_FALLING,
-                                                this->mPosX, this->mPosY + 0x37000, this->mPosZ, 0);
+            Particle::System::NewUnkCallback818(this->mParticleHandle, kPtclFlameSmall, this->mPosX,
+                                                this->mPosY + 0x37000, this->mPosZ, 0);
         this->mdCcAc_c.flags |= 1;
         func_ov060_0211712c();
         if (this->mWithMeshClsn.IsOnGround()) {
@@ -513,7 +511,7 @@ void daKpaFire_c::func_ov060_02116f90() {
                 this->mFireScale = 0x6000;
             } else {
                 this->mFireScale =
-                    ((u32)RandomIntInternal(&data_0209e650[0]) >> 16 & 0xfff) * 2 + 0x6000;
+                    ((u32)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) * 2 + 0x6000;
             }
             this->mHorzSpeed = 0;
             this->mVertSpeed = 0;
@@ -522,7 +520,7 @@ void daKpaFire_c::func_ov060_02116f90() {
             this->mParticleHandle = this->mParticleHandle2;
         }
     } else {
-        func_ov060_02116518(PARTICLE_LANDED_BURN, 1, this->mFireScale * 0xc);
+        func_ov060_02116518(kPtclFlame, 1, this->mFireScale * 0xc);
         this->mdCcAc_c.flags &= ~1;
         if (this->mFrameCount > this->mFireScale * 0xa / 0x1000 + 5) {
             this->mFireScale -= 0x266;
@@ -593,7 +591,7 @@ void daKpaFire_c::func_ov060_02116d78() {
 
     func_ov060_02116518(PARTICLE_SCALED_9A, 1, this->mFireScale * 0xc);
     if (this->mWithMeshClsn.IsOnGround() != 0) {
-        int rnd = RandomIntInternal(&data_0209e650[0]);
+        int rnd = RandomIntInternal(&data_0209e650.value);
         unsigned int roll = (unsigned int)rnd >> 16;
         if (roll % 17 != 0)
             dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(6, 0), this->mPos, 0, this->mAreaId, -1);
@@ -613,20 +611,20 @@ void daKpaFire_c::func_ov060_02116d78() {
  * mFireScale 2.0 (0x2000); shadow multiplier 0x10. */
 void daKpaFire_c::func_ov060_02116c68() {
     unsigned int r;
-    this->mPrevAngleY = (short)(((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10);
+    this->mPrevAngleY = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10);
     if (this->mSubVariant != 0) {
-        r = ((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10;
+        r = ((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10;
         this->mHorzSpeed = (int)((r % 10) << 0xc) >> 1;
     } else {
-        r = ((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10;
+        r = ((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10;
         this->mHorzSpeed = (int)((r % 10) * 0x7000) >> 1;
     }
 
-    r = ((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10;
+    r = ((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10;
     this->mVertSpeed = (r % 10) << 0xc;
     this->mVertAccel = -0x1000;
 
-    this->mPhaseOffset = (short)(((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10);
+    this->mPhaseOffset = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10);
     this->mTerminalVelocity = data_ov060_0211934c[this->mSubVariant];
     this->mFireScale = 0x2000;
     this->mShadowRadiusMul = 0x10;
@@ -668,7 +666,7 @@ void daKpaFire_c::func_ov060_02116b18() {
     this->mHorzSpeed = 0x11800;
     this->mFireScale = 0x2000;
     this->mVertAccel = 0x1000;
-    this->mPhaseOffset = (unsigned int)RandomIntInternal(data_0209e650) >> 0x10;
+    this->mPhaseOffset = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10;
     this->mShadowRadiusMul = 0x10;
 }
 
@@ -715,7 +713,7 @@ void daKpaFire_c::func_ov060_021169f8() {
 void daKpaFire_c::func_ov060_021169b0() {
     this->mVertSpeed = 0x1e000;
     this->mHorzSpeed = 0xf000;
-    this->mPhaseOffset = (unsigned int)RandomIntInternal(&data_0209e650[0]) >> 16;
+    this->mPhaseOffset = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 16;
     this->mWithMeshClsn.SetLimMovFlag();
     this->mShadowRadiusMul = 0x10;
 }
@@ -836,7 +834,7 @@ void daKpaFire_c::func_ov060_02116740() {
 void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
     Particle::System *sys;
 
-    if (kind == 0xa2 || kind == 0xa4) {
+    if (kind == 0xa2 || kind == kPtclFlameBlue) {
         this->mParticleHandle = Particle::System::NewUnkCallback818(
             this->mParticleHandle, kind, this->mPosX, this->mPosY + yOffset, this->mPosZ, 0);
     } else {

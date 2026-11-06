@@ -37,6 +37,7 @@ enum daObjC1Peach_c_AssetId {
 #include "daObjC1Peach_c.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "math/MtxStack.h"
 
 namespace cstd {
 int fdiv(int a, int b);
@@ -50,7 +51,6 @@ struct C1PeachModelFilePtr : SharedFilePtr {
 };
 
 extern "C" {
-extern void Matrix4x3_FromRotationY(Matrix4x3 *m, s32 angle);
 /* Defined at the end of this file so its constructor does not enter .text. */
 extern C1PeachModelFilePtr gC1PeachModelFile;
 }

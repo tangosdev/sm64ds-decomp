@@ -15,18 +15,17 @@ extern void func_020421b4(void);
 extern void func_02065170(void);
 
 extern int data_020a0f84;
-extern char data_020a1fc0[];
 
 /* mAllocFunc: (arg, size, 0) allocates, (arg, 0, ptr) frees. */
 typedef void (*CallbackFn)(void *ctx, int zero, int val);
 
 /* Shut the file share down: free the card tables (mTable), and as a child
  * cancel the read in flight and free the receive work (mRecvWork). The
- * mAllocFunc/mAllocArg and mIsParent reads go through FILE_SHARE_WORK, not
+ * mAllocFunc/mAllocArg and mIsParent reads go through data_020a1fc0, not
  * work: the ROM reloads the block's address for them (through work the
  * function is 12 bytes shorter). */
 void func_02040aa4(void) {
-    FileShareWork *work = FILE_SHARE_WORK;
+    FileShareWork *work = &data_020a1fc0;
     u32 saved0 = IRQ::Disable();
 
     if (data_020a0f84 != 0) {
@@ -35,8 +34,8 @@ void func_02040aa4(void) {
         if (table != 0) {
             if (table != 0) {
                 u32 saved1 = IRQ::Disable();
-                void *ctxArg = (void *)FILE_SHARE_WORK->mAllocArg;
-                CallbackFn fn = (CallbackFn)FILE_SHARE_WORK->mAllocFunc;
+                void *ctxArg = (void *)data_020a1fc0.mAllocArg;
+                CallbackFn fn = (CallbackFn)data_020a1fc0.mAllocFunc;
                 fn(ctxArg, 0, table);
                 IRQ::Restore(saved1);
             }
@@ -46,7 +45,7 @@ void func_02040aa4(void) {
 
         work->mState = 0;
 
-        if (FILE_SHARE_WORK->mIsParent == 0) {
+        if (data_020a1fc0.mIsParent == 0) {
             FSFile *p = (FSFile *)work->mReadRequest;
             FileShareChildArea *child = (FileShareChildArea *)work->mArea;
             if (p != 0) {
@@ -59,8 +58,8 @@ void func_02040aa4(void) {
                 int recvWork = child->mRecvWork;
                 if (recvWork != 0) {
                     u32 saved2 = IRQ::Disable();
-                    void *ctxArg2 = (void *)FILE_SHARE_WORK->mAllocArg;
-                    CallbackFn fn2 = (CallbackFn)FILE_SHARE_WORK->mAllocFunc;
+                    void *ctxArg2 = (void *)data_020a1fc0.mAllocArg;
+                    CallbackFn fn2 = (CallbackFn)data_020a1fc0.mAllocFunc;
                     fn2(ctxArg2, 0, recvWork);
                     IRQ::Restore(saved2);
                 }

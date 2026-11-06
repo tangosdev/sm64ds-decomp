@@ -3,14 +3,14 @@
 extern void FS_InitFile(int *s);
 extern int myFS_OpenFileFast(int buf, FSFileID ab);
 extern void Crash(void);
-extern unsigned int func_0201834c(int *buf, int x);
+extern void *func_0201834c(int *buf, int x);
 extern int myFS_ConvertPathToFileID(void *out_file_id, const char *path);
 
 /* Load the file an FSFileID names (see func_0201834c); flush nonzero
    flushes the result from the data cache. */
-int func_020182ec(FSFileID fileId, int flush) {
+void *func_020182ec(FSFileID fileId, int flush) {
     int file[0x11];
-    int result = 0;
+    void *result = 0;
     FS_InitFile(file);
     if (myFS_OpenFileFast((int)file, fileId) == 0)
         Crash();
@@ -24,5 +24,5 @@ int func_020182ec(FSFileID fileId, int flush) {
 void *func_020182bc(const char *path) {
     FSFileID fileId;
     myFS_ConvertPathToFileID(&fileId, path);
-    return (void *)func_020182ec(fileId, 1);
+    return func_020182ec(fileId, 1);
 }

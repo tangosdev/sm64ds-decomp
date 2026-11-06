@@ -20,12 +20,10 @@
 #include "Sound.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
 
-/* A plain twelve-word copy of the carry matrix. */
-struct PgBbyMtx {
-    s32 m[12];
-};
-
+/* The carry matrix is copied through the flat Mtx43: assigning Matrix4x3
+   grows .text by 0x1c bytes. */
 /* Descriptive local types and object names, not recovered source spellings.
  * dExtSimpleModel_c and animation handles use different veneers. */
 struct PgBbyModelFile : SharedFilePtr {
@@ -566,7 +564,7 @@ void daPgBby_c::func_ov072_021210c4()
             idx = (idx + 2) & 0xff;
         }
         carry = UpdateCarry(*mCarrier, gPenguinBabyCarryOffsets[idx]);
-        *(PgBbyMtx *)&mAnmModel.mat4x3 = *(PgBbyMtx *)carry;
+        *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)carry;
     } else {
         Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
         mAnmModel.mat4x3.t.x = mPosX >> 3;

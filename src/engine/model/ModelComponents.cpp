@@ -32,9 +32,12 @@
  * - MeshPart/MeshEntry are func_02044534's Part/Entry renamed: func_0204488c's
  *   same-named records differ. Vec3w is the array view for the ROM's ldm-shaped
  *   3-word copy (the daPly_c P2w precedent); the scalar spelling scalarizes.
- * - func_02044534/0204488c keep their local Mtx43/Vec3 spellings (common.h's
- *   Matrix4x3 is a flat m[12] with no r0..r3 rows), so Render's calls and the
- *   three MulMat4x3Mat4x3 sites carry reinterpret casts that emit no code.
+ * - func_02044534 takes include/private/mtx43.h's Mtx43 and walks its r[]
+ *   rows. The Matrix4x3 this file sees through dExtModel_c.h is math/Matrix.h's
+ *   rotation-plus-translation pair, with no per-axis rows, so Render's call and
+ *   the MulMat4x3Mat4x3 sites that pass an Mtx43 or a bone builder's int[12]
+ *   carry reinterpret casts that emit no code.
+ *   Vec3 stays local: it is the light direction, not a matrix row.
  * - func_02044b30's buf[] is block-copied from data_02099f94 (the ROM's
  *   +0x284 load relocates against the table, so an init-list's anonymous
  *   .rodata would be a WRONG-DEST); the void*+int site takes the char* cast
@@ -48,6 +51,8 @@
 #include "dExtModel_c.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 namespace CP15 {
 void FlushDataCache(void);
@@ -72,8 +77,6 @@ struct Node {
 };
 
 
-typedef struct Vec3 { int x, y, z; } Vec3;
-typedef struct Mtx43 { Vec3 r0, r1, r2, r3; } Mtx43;
 typedef struct Vec3w { int w[3]; } Vec3w;
 struct Buf8 { s16 v[8]; };
 struct MeshPart {
@@ -90,10 +93,9 @@ struct Matrix3x3_Vecs { struct Vector3 v0, v1, v2; };
 
 extern "C" {
 void Matrix4x3_LoadIdentity(Matrix4x3 *mat);
-int InvMat4x3(int *a, int *b);
+int InvMat4x3(const Matrix4x3 *a, Matrix4x3 *b);
 
 void func_02048234(int *out, int sa, int sb, int sc, int ax, int ay, int az, int tx, int ty, int tz);
-void MulMat4x3Mat4x3(const int *A, const int *B, int *dst);
 void func_02047218(void *a, void *b, void *out, fx32 c);
 void func_02047910(int *m0, int *m1, int *dst, int t);
 void func_0204547c(int *a, int b, int c, void *elem);
@@ -105,7 +107,7 @@ void Geometry_MatrixMultiply3x3(void *m);
 void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, void (*callback)(void *),
                            void *arg);
 void MI_WaitDma(u32 dmaNo);
-extern Vec3 data_02099f88;
+extern VecFx32 data_02099f88;
 extern u32 data_020a4bd4;
 extern int data_02082190;
 extern void *data_020a4bd0;
@@ -120,7 +122,7 @@ void func_02052514(void *a, void *b);
 void func_02055998(int *n);
 void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength);
 void func_02044b30(char *obj, int idx);
-void func_02044534(char *self, int index, Mtx43 *mtx, Vec3 *light);
+void func_02044534(char *self, int index, Mtx43 *mtx, VecFx32 *light);
 void func_0204488c(char *self, int index, int *color);
 }
 
@@ -232,10 +234,7 @@ void func_02045074(ModelComponents *components, struct Node *n) {
         func_02048234(m, bone->scaleX, bone->scaleY, bone->scaleZ, bone->rotX, bone->rotY,
                       bone->rotZ, bone->transX, bone->transY, bone->transZ);
     }
-    {
-        int t = (int)components->transforms;
-        MulMat4x3Mat4x3(&m[0], (const int *)((a + n->f8) * 0x30 + t), (int *)(a * 0x30 + t));
-    }
+    MulMat4x3Mat4x3((Matrix4x3 *)m, &components->transforms[a + n->f8], &components->transforms[a]);
     if (n->fa != 0)
         func_02045074(components, (struct Node *)((char *)n + n->fa * 0x40));
     if (n->fc != 0)
@@ -269,7 +268,8 @@ void func_02044f74(void *g, struct Node *n)
     {
         int *base = *(int **)((char *)g + 0x34);
         int t = base[3];
-        MulMat4x3Mat4x3(&m[0], (const int *)((a + n->f8) * 0x30 + t), (int *)((s16)a * 0x30 + t));
+        MulMat4x3Mat4x3((Matrix4x3 *)m, (const Matrix4x3 *)((a + n->f8) * 0x30 + t),
+                        (Matrix4x3 *)((s16)a * 0x30 + t));
     }
     if (n->fa != 0) func_02044f74(g, (struct Node *)((char *)n + n->fa * 0x40));
     if (n->fc != 0) func_02044f74(g, (struct Node *)((char *)n + n->fc * 0x40));
@@ -291,7 +291,7 @@ void func_02044efc(BMD_File *self) {
         do {
             Matrix4x3 *mat =
                 (Matrix4x3 *)((char *)((Matrix4x3 *)((struct Sub *)self->skin)->blk) + byteOff);
-            InvMat4x3((int *)mat, (int *)mat);
+            InvMat4x3(mat, mat);
             count = self->numBones;
             i++;
             byteOff += 0x30;
@@ -532,8 +532,7 @@ void func_0204488c(char* self, int index, int* color)
 
 // @symbol func_02044534
 extern "C" {
-void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
-{
+void func_02044534(char *self, int index, Mtx43 *mtx, VecFx32 *light) {
     int i;
     struct MeshEntry* e;
     int off;
@@ -546,11 +545,11 @@ void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
     int two;
     int z2c;
     int three;
-    Vec3 dirv;
+    VecFx32 dirv;
     Mtx43 mw;
     Mtx43 m;
     int out[9];
-    Vec3* dir;
+    VecFx32 *dir;
     struct MeshPart* part;
     int j;
     Mtx43* mp;
@@ -595,46 +594,55 @@ void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
                 off = ix * 0x30;
                 if (mtx) {
                     func_020527e8(&mw, dir->x, dir->y, dir->z);
-                    MulMat4x3Mat4x3((const int *)&mw, (const int *)mtx, (int *)&mw);
-                    MulMat4x3Mat4x3((const int *)mp, (const int *)&mw, (int *)&mw);
+                    MulMat4x3Mat4x3((const Matrix4x3 *)&mw, (const Matrix4x3 *)mtx,
+                                    (Matrix4x3 *)&mw);
+                    MulMat4x3Mat4x3((const Matrix4x3 *)mp, (const Matrix4x3 *)&mw,
+                                    (Matrix4x3 *)&mw);
                     mp = &mw;
                 }
-                m.r2.y = m.r2.x = z14;
-                m.r2.z = dir->z;
-                m.r3.x = mp->r3.x;
-                m.r3.y = mp->r3.y;
-                m.r3.z = mp->r3.z;
+                m.r[2].y = m.r[2].x = z14;
+                m.r[2].z = dir->z;
+                m.r[3].x = mp->r[3].x;
+                m.r[3].y = mp->r[3].y;
+                m.r[3].z = mp->r[3].z;
                 if (mtx) {
-                    MulMat4x3Mat4x3((const int *)((*(char **)(self + 0xc)) + off), (const int *)mtx, (int *)&mw);
+                    MulMat4x3Mat4x3((const Matrix4x3 *)((*(char **)(self + 0xc)) + off),
+                                    (const Matrix4x3 *)mtx, (Matrix4x3 *)&mw);
                     mp = &mw;
                 }
-                if (mp->r1.x * mp->r1.x + mp->r1.y * mp->r1.y > 0x4000) {
-                    m.r1.x = mp->r1.x;
-                    m.r1.y = mp->r1.y;
-                    m.r1.z = z18;
-                    NormalizeVec3((const Vector3 *)&m.r1, (Vector3 *)&m.r1);
-                    t = FX_MUL(m.r1.x, dir->x);
-                    m.r1.x = t;
-                    { int dy = dir->y; int ry = m.r1.y;
-                    m.r0.y = -t;
-                    t = FX_MUL(ry, dy);
+                if (mp->r[1].x * mp->r[1].x + mp->r[1].y * mp->r[1].y > 0x4000) {
+                    m.r[1].x = mp->r[1].x;
+                    m.r[1].y = mp->r[1].y;
+                    m.r[1].z = z18;
+                    NormalizeVec3((const Vector3 *)&m.r[1], (Vector3 *)&m.r[1]);
+                    t = FX_MUL(m.r[1].x, dir->x);
+                    m.r[1].x = t;
+                    {
+                        int dy = dir->y;
+                        int ry = m.r[1].y;
+                        m.r[0].y = -t;
+                        t = FX_MUL(ry, dy);
                     }
-                    { int zz = z1c;
-                    m.r1.y = t;
-                    m.r0.x = t;
-                    m.r0.z = zz; }
+                    {
+                        int zz = z1c;
+                        m.r[1].y = t;
+                        m.r[0].x = t;
+                        m.r[0].z = zz;
+                    }
                 } else {
-                    m.r0.x = mp->r0.x;
-                    m.r0.y = mp->r0.y;
-                    m.r0.z = z20;
-                    NormalizeVec3((const Vector3 *)&m.r0, (Vector3 *)&m.r0);
-                    m.r0.x = FX_MUL(m.r0.x, dir->x);
-                    t = FX_MUL(m.r0.y, dir->y);
-                    m.r1.y = m.r0.x;
-                    m.r1.x = -t;
-                    { int zz = z24;
-                    m.r0.y = t;
-                    m.r1.z = zz; }
+                    m.r[0].x = mp->r[0].x;
+                    m.r[0].y = mp->r[0].y;
+                    m.r[0].z = z20;
+                    NormalizeVec3((const Vector3 *)&m.r[0], (Vector3 *)&m.r[0]);
+                    m.r[0].x = FX_MUL(m.r[0].x, dir->x);
+                    t = FX_MUL(m.r[0].y, dir->y);
+                    m.r[1].y = m.r[0].x;
+                    m.r[1].x = -t;
+                    {
+                        int zz = z24;
+                        m.r[0].y = t;
+                        m.r[1].z = zz;
+                    }
                 }
                 func_020458a8(&m, out);
                 *(int*)0x4000440 = two;
@@ -680,7 +688,7 @@ void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec) {
                     if (!hidden) {
                         ((void (*)(void *))func_02044b30)(this);
                         func_02044534((char *)this, node->displayListIds[j], (Mtx43 *)mat,
-                                      (Vec3 *)vec);
+                                      (VecFx32 *)vec);
                     }
                 }
             } else {

@@ -23,6 +23,7 @@
 #include "SpawnInfo.h"
 #include "daPly_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 extern "C" {
 u8 DecIfAbove0_Byte(u8 *value);
@@ -135,7 +136,7 @@ int daObjFire_c::Behavior() {
         particlePos.y = mFlamePos.y;
         particlePos.z = mFlamePos.z;
         particlePos.y -= 0x1b000;
-        Particle::System::NewSimple(0x9f, particlePos.x, particlePos.y, particlePos.z);
+        Particle::System::NewSimple(kPtclFlameOutPuff, particlePos.x, particlePos.y, particlePos.z);
     }
 
     {

@@ -78,6 +78,7 @@ void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
 
 struct OamAttr;
 #include "OAM.h"
+#include "LevelRng.h"
 
 extern "C" {
 extern void CupFx_Move(char *p, int a, int b);
@@ -95,7 +96,6 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *counter);
 extern int func_02053200(int x);
 extern int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
-extern int data_0209e650;
 extern RoundRow sCupRoundTable[];
 extern s16 sCupShuffleSpeeds[];
 extern IdxPair sCupSwapFirst[];
@@ -374,7 +374,7 @@ epilogue: {
 
 extern "C" void Cup_PickShuffleSpeed(char *raw) {
     dScMgCup_c *self = (dScMgCup_c *)raw;
-    u32 rnd = (u32)RandomIntInternal(&data_0209e650);
+    u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
     u32 bits = rnd >> 0x10;
     int speedIndex;
     int swapPair;
@@ -413,7 +413,7 @@ extern "C" void Cup_PickShuffleSpeed(char *raw) {
             goto set0;
         }
         {
-            u32 fakeOutRoll = (u32)RandomIntInternal(&data_0209e650);
+            u32 fakeOutRoll = (u32)RandomIntInternal(&data_0209e650.value);
             if (((fakeOutRoll >> 0x10) & 7) != 0) {
                 goto set0;
             }
@@ -625,7 +625,7 @@ void dScMgCup_c::StateShuffle() {
                 mTimer = 0x1e;
                 mState = 3;
             } else {
-                u32 delayRoll = RandomIntInternal(&data_0209e650);
+                u32 delayRoll = RandomIntInternal(&data_0209e650.value);
                 mTimer = (delayRoll >> 8) % 0x18 + 1;
                 mState = 1;
             }
@@ -737,7 +737,7 @@ void dScMgCup_c::StateSetup() {
     if (score < 0xa) {
         mRoundRow = (unsigned char)score;
     } else {
-        rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+        rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
         randomUpper = rnd >> 16;
         roundRow = (randomUpper % 5) + 5;
         mRoundRow = (unsigned char)roundRow;
@@ -746,7 +746,7 @@ void dScMgCup_c::StateSetup() {
     mSwapsRemaining = ((unsigned char *)sCupRoundTable)[mRoundRow * 2];
 
     if (score > 3) {
-        rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+        rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
         if (rnd & 1) {
             mTargetContent = 1;
         } else {
@@ -764,7 +764,7 @@ void dScMgCup_c::StateSetup() {
     mShuffleSound = 0;
     FreeGfxSlotsById(0x1d);
 
-    rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+    rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
     fakeOutSwap = (rnd % 10) + 1;
     mFakeOutAt = (unsigned char)fakeOutSwap;
 

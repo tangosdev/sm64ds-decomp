@@ -79,12 +79,12 @@ extern FileRow data_ov102_0214e188[];
 extern FileRow data_ov102_0214e18c[];
 extern s8 gCurrentSublevel;
 extern u8 data_0209f220;
-extern u8 data_0209f2d8[];
+extern u8 data_0209f2d8;
 
 /* local extern: no shared header declares it. */
 extern "C" int IsStarCollectedInCurLevel(int starID);
 
-/* Actor ID 0x31 is BK_TOWER; data_0209f2d8[0] is CURRENT_GAMEMODE
+/* Actor ID 0x31 is BK_TOWER; data_0209f2d8 is CURRENT_GAMEMODE
  * (symbols/verified.tsv). These int-returning predicates are what make the
  * ROM materialize 0/1 before testing it. */
 static inline int IsBkTower(dActor_c *actor) {
@@ -92,7 +92,7 @@ static inline int IsBkTower(dActor_c *actor) {
 }
 
 static inline int IsGameMode(int mode) {
-    return data_0209f2d8[0] == mode;
+    return data_0209f2d8 == mode;
 }
 
 /* ROM order. Do not reorder. */

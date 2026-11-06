@@ -63,6 +63,7 @@ enum daSanbo_c_AssetId {
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
@@ -77,7 +78,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z)
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern struct Matrix4x3 data_020a0e68;
 extern void d_a_sanboNewSimpleHold(unsigned int, int, int, int);
-extern int data_0209e650[];
 extern s16 data_02082214[];
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_02038414(void *p);
@@ -534,7 +534,7 @@ int daSanbo_c::func_ov096_02136134()
     Sound::PlayBank0(9, mCamSpacePos);
     func_ov096_02135800();
     mPrevAngleY = Vec3_HorzAngle((const Vector3 *)&mHitActor->mPosX, (const Vector3 *)&mPosX);
-    rnd = RandomIntInternal(data_0209e650);
+    rnd = RandomIntInternal(&data_0209e650.value);
     mPrevAngleY = (s16)(mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
     mAngleY = (s16)(mPrevAngleY + 0x8000);
     mVertSpeed = 0x28000;

@@ -4,7 +4,7 @@ extern int func_020507e0(void *buffer, unsigned int size, int format, int rate, 
                          void *callback, void *arg);
 extern char data_020a4c70[];
 extern int data_020a4c64;
-extern void func_02049ba8(int left, int right, int len, int format, void *ctx);
+extern void func_02049ba8(void *left, void *right, unsigned int len, int format, void *ctx);
 
 /* Start the sound-capture effect: clear its state (0xc0 bytes at
    data_020a4c70), set the effect kind data_020a4c64 to mode, and for kind

@@ -42,13 +42,13 @@
 #include "cstd.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
+#include "private/mtx43.h"
 
 struct BCA_File;
 
-/* A flat view of Matrix4x3 for the one whole-matrix copy below. The
-   translation-vector spelling in math/Matrix.h lowers the same assignment to
-   two ldm/stm pairs plus three word copies; the cartridge has three pairs. */
-struct RedBombheiMtx { s32 m[12]; };
+/* The one whole-matrix copy below goes through Mtx43. The translation-vector
+   spelling in math/Matrix.h lowers the same assignment to two ldm/stm pairs
+   plus three word copies; the cartridge has three pairs. */
 
 enum {
     kPlayerActorID        = 0xbf,
@@ -118,7 +118,7 @@ extern s8 gCurrentSublevel;                /* current level */
 extern u8  data_0209f220;
 extern u8 gShowTouchScreenArrows;
 extern u8 gShowRedCoinMarkers;
-extern int data_0209caa0[];             /* save data; word 2 holds the progress flags */
+extern SaveBlock data_0209caa0;         /* the live save block */
 extern u8  data_0209d660;               /* nonzero while a message box is open */
 extern u8  data_0209d6bc;               /* message box page state */
 extern u16 data_0209d6d4;               /* message on screen */
@@ -261,7 +261,7 @@ void daRedBombhei_c::func_ov084_0212ce50()
     this->mAnmModel.mat4x3.t.x = this->mPosX >> 3;
     this->mAnmModel.mat4x3.t.y = (this->mPosY + 0x4000) >> 3;
     this->mAnmModel.mat4x3.t.z = this->mPosZ >> 3;
-    *(RedBombheiMtx *)&this->mShadowMat = *(RedBombheiMtx *)&IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&this->mShadowMat = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     this->mShadowMat.t.x = this->mPosX >> 3;
     this->mShadowMat.t.y = (this->mPosY - 0x8000) >> 3;
     this->mShadowMat.t.z = this->mPosZ >> 3;
@@ -541,8 +541,8 @@ void daRedBombhei_c::func_ov084_0212c508()
     case 0:
         if (ApproachLinear(this->mAngleY, angle, 0x800) != 0) {
             if (func_ov084_0212caa8() != 0) {
-                if ((data_0209caa0[2] & 0x8000) == 0) {
-                    data_0209caa0[2] |= 0x8000;
+                if ((data_0209caa0.file.flags2 & 0x8000) == 0) {
+                    data_0209caa0.file.flags2 |= 0x8000;
                     msg = 0x15b;
                 } else if (NumRedCoins() <= 3) {
                     msg = 0x15c;

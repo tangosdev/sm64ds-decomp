@@ -33,7 +33,7 @@ struct daObjKm2_Agaru_c : dBgActor_c {
        func_020393c4) and the test it forwards to (0x021114a8): a daPly_c
        aboard sets mStoodOn. */
     void OnStoodOn(dActor_c *);
-    static void StoodOnCallback(void *, daObjKm2_Agaru_c *, dActor_c *);
+    static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

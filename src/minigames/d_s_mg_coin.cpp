@@ -53,6 +53,7 @@ enum dScMgCoin_c_AssetId {
 #include "nitro/hw/registers.h"
 #include "G2.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "Sound.h"
 #include "dScMgCoin_c.h"
 #include "PlayerInput.h"
@@ -115,11 +116,10 @@ enum {
 
 extern "C" {
 extern int RandomIntInternal(int *seed);
-extern int data_0209d4b8;
 extern const int sCoinBagRowTopY[];
 extern const int sCoinBagRowHeight[];
 extern const int sCoinBagHopVX[];
-extern int sCoinCaptionSprites[];
+extern OamAttr *sCoinCaptionSprites[];
 extern const unsigned char sCoinCaptionLoopTimes[];
 extern const unsigned char sCoinCaptionLoopSprites[];
 extern const unsigned char sCoinCaptionBlinkTimes[];
@@ -133,10 +133,12 @@ extern const u16 sCoinSparkleAngles[];
 extern s16 data_02082214[];
 extern int sCoinPopupSprites;
 extern const int sCoinPopupY[];
-extern int *sCoinScorePlayerSprites[];
+extern OamAttr **sCoinScorePlayerSprites[];
 extern int GetGameLanguage(void);
 extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
-extern void DrawOamSprite(void *arg0, void *arg1, int arg2, void *arg3);
+struct OamAttr;
+struct Matrix2x2;
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern void *sCoinValuesSprites[];
 extern void *sCoinSparkleSprites[];
@@ -145,7 +147,7 @@ extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
 extern void func_020127a4(int a, int b, int c, int d);
 extern const int sCoinRowY[];
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
-extern void RenderOamMainScreen(int a, int b, int c, int d, int e);
+extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 extern const u16 sCoinBlockFrameSprites[];
 extern void *sCoinBlocksSprites[];
 extern const int sCoinBlockFallRowY[];
@@ -159,8 +161,8 @@ extern const u16 sCoinBlockFrameTimes[];
 extern void FreeGfxSlotsById(int n);
 extern void Mg_PlayJingle(void *c);
 extern int Mg_GetTopRecord(void);
-extern int LoadFile(int handle);
-extern void DecompressLZ16(int src, void *dst);
+extern void *LoadFile(int handle);
+extern void DecompressLZ16(void *src, void *dst);
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
@@ -289,7 +291,7 @@ void dScMgCoin_c::Bag_StateBounceDown(int i) {
         unsigned int roll;
         if (height < (sCoinBagRowTopY[stageIndex] - sCoinBagRowHeight[stageIndex]))
             return;
-        roll = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         scene->bag[i].vx = sCoinBagHopVX[((roll >> 16 & 0x7fff) << 1) >> 15];
         scene->bag[i].vy = kHopVy;
         scene->bag[i].bouncesLeft--;
@@ -688,7 +690,7 @@ void dScMgCoin_c::DrawScorePlayer() {
     RenderOamMainScreen(sCoinScorePlayerSprites[lang][8], 0x80, 0x18, -1, -1);
     Mg_DrawCreditsIcon(0x68, 0x28, 1, -1);
     lang = GetGameLanguage();
-    DrawOamSprite((void *)sCoinScorePlayerSprites[lang][1], (void *)0x7a, 0x28, (void *)0);
+    DrawOamSprite(sCoinScorePlayerSprites[lang][1], 0x7a, 0x28, 0);
     Mg_DrawBigNumber(0x8c, 0x28, scene->mPlayerScore, 1, -1, 2, 0);
 }
 
@@ -705,7 +707,7 @@ void dScMgCoin_c::DrawScoreRival() {
     RenderOamMainScreen(sCoinScorePlayerSprites[lang][4], 0x80, 0x50, -1, -1);
     Mg_DrawCreditsIcon(0x6c, 0x60, 1, -1);
     lang = GetGameLanguage();
-    DrawOamSprite((void *)sCoinScorePlayerSprites[lang][1], (void *)0x7e, 0x60, (void *)0);
+    DrawOamSprite(sCoinScorePlayerSprites[lang][1], 0x7e, 0x60, 0);
     if (gMgScene != 0)
         count = gMgScene->mCreditsShown;
     else
@@ -901,12 +903,14 @@ void dScMgCoin_c::LayOutCoins() {
     int i;
 
     for (k = 0; k < 3; k++) {
-        a[k] = (int)((((((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff) << 3) >>
+        a[k] = (int)((((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff)
+                      << 3) >>
                      15);
     }
 
     for (k = 0; k < 3; k++) {
-        unsigned int w = ((((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff) * 6;
+        unsigned int w =
+            ((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff) * 6;
         b[k] = (a[k] + (int)(w >> 15) + 1) & 7;
     }
 
@@ -1104,7 +1108,7 @@ void dScMgCoin_c::Block_StateWander(int i) {
         mBlocks[i].y = diff * 0x1000;
         *pD = 0;
         if (mBlocks[i].vx == 0) {
-            unsigned int rv = (unsigned int)RandomIntInternal(&data_0209d4b8);
+            unsigned int rv = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
             if (((((rv >> 16) & 0x7fff) << 1) >> 15))
                 mBlocks[i].vx = 0xc00;
             else
@@ -1171,7 +1175,7 @@ void dScMgCoin_c::Block_StateHopDown(int i) {
             if (y < (int)fp)
                 return;
 
-            rnd = RandomIntInternal(&data_0209d4b8);
+            rnd = RandomIntInternal(&data_0209d4b8.value);
             idx = ((((unsigned)rnd >> 16) & 0x7fff) * 3) >> 15;
             mBlocks[i].vx = sCoinBlockHopVX[idx];
             mBlocks[i].vy = -0x2e00;
@@ -1199,7 +1203,7 @@ void dScMgCoin_c::Block_StateHopDown(int i) {
         } else {
             unsigned r;
             mBlocks[i].hops = 1;
-            r = (unsigned)RandomIntInternal(&data_0209d4b8);
+            r = (unsigned)RandomIntInternal(&data_0209d4b8.value);
             r = (((r >> 16) & 0x7fff) << 3) >> 15;
             if (r == 2 || r == 5) {
                 mBlocks[i].hops += 1;
@@ -1286,13 +1290,13 @@ void dScMgCoin_c::SpawnBlocks() {
     int i;
     n = this->IsAltVariant() != 0 ? 0x10 : 0x28;
     for (i = 0; i < n; i++) {
-        unsigned int v = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        unsigned int v = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         mBlocks[i].x = ((((v << 3) >> 0xf) << 5) + 0x10) << 0xc;
         mBlocks[i].y = -0xf0000;
         mBlocks[i].active = 1;
         mBlocks[i].visible = 1;
         {
-            unsigned int w = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            unsigned int w = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mBlocks[i].delay = (short)(((i & 0xf) << 3) + (((w << 4) >> 0xf) << 4));
         }
         mBlocks[i].row = (unsigned char)(row + 3);
@@ -1602,7 +1606,7 @@ int dScMgCoin_c::Behavior() {
 int dScMgCoin_c::InitResources() {
     dScMgCoin_c *self = this;
     char *c = (char *)self;
-    int a, b, d;
+    void *a, *b, *d;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *(volatile u16 *)0x400000e &= ~3;
@@ -1610,20 +1614,20 @@ int dScMgCoin_c::InitResources() {
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
     DecompressLZ16(a, (void *)(func_02054d88() + 0x4000));
-    Deallocate((void *)a);
+    Deallocate(a);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);
-    GX::LoadBGPltt((const void *)a, 0x1e0, 0x20);
-    Deallocate((void *)a);
+    GX::LoadBGPltt(a, 0x1e0, 0x20);
+    Deallocate(a);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_UP_NSC_BIN);
-    func_02056314((void *)a, 0, 0x800);
-    Deallocate((void *)a);
+    func_02056314(a, 0, 0x800);
+    Deallocate(a);
 
     b = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCG_BIN);
     a = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCL_BIN);
     DecompressLZ16(b, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)a, 0, 0x100);
+    GX::LoadOBJPltt(a, 0, 0x100);
 
     gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
@@ -1631,20 +1635,20 @@ int dScMgCoin_c::InitResources() {
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
     DecompressLZ16(d, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
-    Deallocate((void *)d);
+    Deallocate(d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);
-    GXS::LoadBGPltt((const void *)d, 0x1e0, 0x20);
-    Deallocate((void *)d);
+    GXS::LoadBGPltt(d, 0x1e0, 0x20);
+    Deallocate(d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_DOWN_NSC_BIN);
-    func_020562b4((const void *)d, 0, 0x800);
-    Deallocate((void *)d);
+    func_020562b4(d, 0, 0x800);
+    Deallocate(d);
 
     DecompressLZ16(b, (void *)0x6600000);
-    GXS::LoadOBJPltt((const void *)a, 0, 0x100);
-    Deallocate((void *)b);
-    Deallocate((void *)a);
+    GXS::LoadOBJPltt(a, 0, 0x100);
+    Deallocate(b);
+    Deallocate(a);
 
     self->mCredits = 0;
     self->mCreditsShown = self->mCredits;

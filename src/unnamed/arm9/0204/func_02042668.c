@@ -3,7 +3,6 @@
 
 typedef struct FSFile FSFile;
 
-extern char data_020a1fc0[];
 extern void func_02041a00(FSFile *self);
 
 /* The child's archive proc. func_020423dc installs it for every command with
@@ -16,7 +15,7 @@ extern void func_02041a00(FSFile *self);
 int func_02042668(FSFile *self, int sel) {
     switch (sel) {
     case 0:
-        if (FILE_SHARE_WORK->mState != 2)
+        if (data_020a1fc0.mState != 2)
             return 5;
         if (self->arg.readfile.len == 0)
             return 0;
