@@ -393,9 +393,6 @@
       "src/game/stages/d_s_mb.cpp": [
         "param:#1 int"
       ],
-      "src/minigames/d_s_mg_flower.cpp": [
-        "param:#1 int"
-      ],
       "src/ui/hud/d_meter.cpp": [
         "param:#2 int"
       ],
@@ -730,9 +727,6 @@
     },
     "Matrix4x3_ApplyInPlaceToRotationX": {
       "src/game/actors/d_a_bombking.cpp": [
-        "param:#2 int"
-      ],
-      "src/game/actors/d_a_king_donketu.cpp": [
         "param:#2 int"
       ],
       "src/game/actors/d_a_popoi.cpp": [
@@ -2368,7 +2362,6 @@
     },
     "Vec3_DivScalarInPlace": {
       "src/ui/hud/d_map.cpp": [
-        "param:#1 Vector3 *",
         "return:void"
       ]
     },
@@ -2548,9 +2541,6 @@
       "src/Vec3_ApproachHorz.cpp": [
         "param:#1 Vec3_Fix12 *",
         "param:#2 const Vec3_Fix12 *"
-      ],
-      "src/engine/view/d_camera.cpp": [
-        "param:#2 const void *"
       ],
       "src/game/actors/d_a_demo.cpp": [
         "param:#1 VecFx32 *",
@@ -7414,11 +7404,6 @@
         "return:unsigned char"
       ]
     },
-    "data_02092134": {
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:unsigned int"
-      ]
-    },
     "data_02092768": {
       "src/minigames/unit020bfec0.cpp": [
         "return:Quat"
@@ -8014,11 +7999,6 @@
         "return:unsigned char []"
       ]
     },
-    "data_0209f21c": {
-      "src/game/actors/d_a_snowman.cpp": [
-        "return:unsigned char []"
-      ]
-    },
     "data_0209f220": {
       "src/runtime/actor/d_actor.cpp": [
         "return:unsigned char []"
@@ -8132,7 +8112,6 @@
     },
     "data_0209f3a4": {
       "src/ui/hud/d_map.cpp": [
-        "return:int []",
         "return:Obj * []"
       ]
     },
@@ -8297,17 +8276,11 @@
       ],
       "src/minigames/unit020bfec0.cpp": [
         "return:void *"
-      ],
-      "src/ui/hud/d_map.cpp": [
-        "return:VtblOwner *"
       ]
     },
     "data_0209f5c0": {
       "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
         "return:GObj *"
-      ],
-      "src/game/stages/d_s_entry_methods.cpp": [
-        "return:void *"
       ]
     },
     "data_0209f5d0": {
@@ -15250,36 +15223,6 @@
         "param:#6 const void *"
       ]
     },
-    "func_0202af80": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0202b044": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0202b060": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0202b090": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0202b0c4": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0202b0e0": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 LVL_Overlay::StandardEntry *"
-      ]
-    },
     "func_02033464": {
       "src/unnamed/ov075/func_ov075_02119b34.c": [
         "param:#1 unsigned char",
@@ -16020,36 +15963,6 @@
         "param:#2 unsigned char"
       ]
     },
-    "func_0204d0b8": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
-    "func_0204d104": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
-    "func_0204d150": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
-    "func_0204d1b4": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
-    "func_0204d294": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
-    "func_0204d440": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
     "func_0204d8e8": {
       "src/engine/particle/Particle_Manager.cpp": [
         "return:void *"
@@ -16372,12 +16285,6 @@
     "CARD_GetBackupTotalSize": {
       "src/engine/save/SaveData2.cpp": [
         "return:unsigned int"
-      ]
-    },
-    "func_02060558": {
-      "src/engine/save/SaveData2.cpp": [
-        "param:#4 int",
-        "param:#5 int"
       ]
     },
     "func_0206071c": {
@@ -18070,20 +17977,9 @@
         "return:CLPS_Block"
       ]
     },
-    "func_02020028": {
-      "src/game/stages/d_s_entry_methods.cpp": [
-        "param:#2 unsigned char"
-      ]
-    },
     "func_020201f0": {
       "src/game/stages/d_s_entry_methods.cpp": [
         "return:int"
-      ]
-    },
-    "func_02020820": {
-      "src/game/stages/d_s_entry_methods.cpp": [
-        "param:#5 int",
-        "param:#6 int"
       ]
     },
     "FindDemoActor": {
@@ -18128,13 +18024,6 @@
       ],
       "src/CARDi_ReadEnd.cpp": [
         "param:#1 Obj *"
-      ]
-    },
-    "func_02060484": {
-      "src/engine/save/SaveData2.cpp": [
-        "param:#1 int",
-        "param:#4 int",
-        "param:#5 int"
       ]
     },
     "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev": {
