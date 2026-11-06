@@ -77,10 +77,6 @@ enum {
 /* How fast a launched book travels: 50 units a frame. */
 enum { kFlightSpeed = 0x32000 };
 
-/* A destructor-free xyz view; func_ov020_021115ac's copy through a Vector3
- * local does not match. */
-typedef struct { int x, y, z; } Vec3;
-
 /* dEnemyBase_c declares mStateTimer as an s16, but every use here reads it as
  * an unsigned halfword (ldrh); a signed read is ldrsh and misses by a word.
  * Member-context pun, valid inside the daBook_c methods only. */
@@ -301,9 +297,10 @@ int daBook_c::func_ov020_021115ac()
         return HIT_ATTACKED;
 
     if (BumpedUnderneathByPlayer(*found) != 0) {
-        /* the bump also cancels the player's vertical speed */
-        Vec3 *p = (Vec3 *)&found->mSpeedX;
-        Vec3 v;
+        /* the bump also cancels the player's vertical speed. A VecFx32, not a
+           Vector3: the copy through a Vector3 local does not match. */
+        VecFx32 *p = (VecFx32 *)&found->mSpeedX;
+        VecFx32 v;
         v.z = p->z;
         v.x = p->x;
         v.y = 0;
