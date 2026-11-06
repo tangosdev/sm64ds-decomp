@@ -329,7 +329,7 @@ void da1up_c::func_ov002_020af0c0() {
         ppos.y = s[1];
         ppos.z = s[2];
         diff.x = ppos.x - mPosX;
-        if(p->func_ov002_020d0d2c() != 0)
+        if (p->func_ov002_020d0d2c() != 0)
             diff.y = ppos.y - mPosY - 0x50000;
         else
             diff.y = ppos.y - mPosY + 0x78000;
