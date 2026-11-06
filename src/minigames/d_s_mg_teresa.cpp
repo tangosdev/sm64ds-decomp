@@ -54,6 +54,7 @@
 #include "OamAttr.h"
 #include "dScMgTeresa_c.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "G2x.h"
 #include "PlayerInput.h"
 #include "G2.h"
@@ -398,9 +399,9 @@ void dScMgTeresa_c::BigBoo_StateHover(int i) {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     SetBg3Offset(0, 0x100);
     {
-    int rnd = RandomIntInternal(&data_0209d4b8);
-    mBigBoo[i].state =
-        sTeresaBigBooHoverPicks[((unsigned int)(((unsigned int)rnd >> 16) & 0x7fff) * 2) >> 15];
+        int rnd = RandomIntInternal(&data_0209d4b8.value);
+        mBigBoo[i].state =
+            sTeresaBigBooHoverPicks[((unsigned int)(((unsigned int)rnd >> 16) & 0x7fff) * 2) >> 15];
     }
     mBigBoo[i].frameTimer = 0;
     mBigBoo[i].frame = 0;
@@ -1465,10 +1466,12 @@ void dScMgTeresa_c::SpawnBoos() {
     sel = mLevel;
     if (sel >= 0xf) {
         int k;
-        r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         k = (r << 2) >> 15;
         if (k + 0xa == mBooPattern) {
-            k += (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3) >> 15) + 1;
+            k += (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >>
+                  15) +
+                 1;
             if (k >= 4) k -= 4;
         }
         sel = k + 0xa;
@@ -1477,11 +1480,11 @@ void dScMgTeresa_c::SpawnBoos() {
     count = sTeresaSpawnCounts[sel];
     mBooCount = count;
 
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     phase = ((r << 4) >> 15) << 12;
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     valA = ((((r << 3) >> 15) << 3) + 0x60) << 12;
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     valB = ((((r << 3) >> 15) << 3) + 0x60) << 12;
 
     i = 0;
@@ -1493,11 +1496,11 @@ void dScMgTeresa_c::SpawnBoos() {
     full = 0x10000;
     do {
         if (flagA == 0) {
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mBoos[i].mX = ((((r * 0xf) >> 15) << 4) + 0x10) << 12;
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mBoos[i].mY = ((((r * 0xb) >> 15) << 4) + 0x10) << 12;
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mBoos[i].mHeading = ((r << 5) >> 15) << 11;
         } else {
             mBoos[i].mX = valA;

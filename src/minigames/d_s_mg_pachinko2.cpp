@@ -51,6 +51,7 @@ enum dScMgPachinko2_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "GX.h"
 #include "G2.h"
+#include "LevelRng.h"
 
 namespace Sound {
 void PlayBank2_2D(unsigned int id);
@@ -96,7 +97,6 @@ extern void func_020562b4(const void *, u32, u32);
 extern void func_020564f4(const void *, int, int);
 
 /* --- ROM data this TU reads --- */
-extern int data_0209d4b8;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s16 data_02082214[];
@@ -221,7 +221,7 @@ void dScMgPachinko2_c::Cup_PickTarget(int k) {
     }
     if (found == 0)
         return;
-    if ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) * 2) >> 15) {
+    if ((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16 & 0x7fff) * 2) >> 15) {
         mCups[k].state = 3;
         mCups[k].phase = 0;
         mCups[k].vx = 0x1800;
@@ -245,10 +245,10 @@ void dScMgPachinko2_c ::Cup_StateDecide(int n) {
     unsigned int random;
     int moveSideways;
     moveSideways = 0;
-    random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+    random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
     if ((((random >> 16) & 0x7fff) << 1) >> 0xf) {
         moveSideways = 1;
-        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         if ((((random >> 16) & 0x7fff) << 2) >> 0xf) {
             mCups[n].state = 3;
             mCups[n].vx = 0x1800;
@@ -256,11 +256,11 @@ void dScMgPachinko2_c ::Cup_StateDecide(int n) {
             mCups[n].state = 2;
             mCups[n].vx = -0x1800;
         }
-        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         mCups[n].hops = (char)((((random >> 16) & 0x7fff) * 6 >> 0xf) + 1);
     } else {
         mCups[n].state = 1;
-        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         mCups[n].hops = (char)((((random >> 16) & 0x7fff) << 1) >> 0xf);
     }
 
@@ -272,11 +272,11 @@ void dScMgPachinko2_c ::Cup_StateDecide(int n) {
                 if (mCups[n].repeats >= 2) {
                     if (moveSideways != 0) {
                         mCups[n].state = 1;
-                        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+                        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
                         mCups[n].hops = (char)((((random >> 16) & 0x7fff) << 1) >> 0xf);
                         moveSideways = 0;
                     } else {
-                        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+                        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
                         if ((((random >> 16) & 0x7fff) << 1) >> 0xf) {
                             mCups[n].state = 3;
                             mCups[n].vx = 0x1800;
@@ -284,7 +284,7 @@ void dScMgPachinko2_c ::Cup_StateDecide(int n) {
                             mCups[n].state = 2;
                             mCups[n].vx = -0x1800;
                         }
-                        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+                        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
                         mCups[n].hops = (char)((((random >> 16) & 0x7fff) * 6 >> 0xf) + 1);
                         moveSideways = 1;
                     }
@@ -519,10 +519,11 @@ void dScMgPachinko2_c::ChooseLaneConfig() {
     unsigned int nextConfig, configOffset;
     if ((int)mLevel != 0) {
         nextConfig =
-            ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 6) >> 0xf;
+            ((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 6) >> 0xf;
         if ((unsigned int)mLaneConfig == nextConfig) {
             configOffset =
-                (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5) >> 0xf) +
+                (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5) >>
+                 0xf) +
                 1;
             nextConfig = nextConfig + configOffset;
             if ((int)nextConfig >= 6)
@@ -531,7 +532,8 @@ void dScMgPachinko2_c::ChooseLaneConfig() {
         mLaneConfig = nextConfig;
         return;
     }
-    mLaneConfig = ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 6) >> 0xf;
+    mLaneConfig =
+        ((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 6) >> 0xf;
 }
 
 // @symbol _ZN16dScMgPachinko2_c13Popup_DrawAllEv
@@ -949,7 +951,7 @@ void dScMgPachinko2_c ::Paddle_StateFallToGround(int i) {
     mPaddles[i].state = 0xa;
     mPaddles[i].vy = 0;
     mPaddles[i].timer = 0x40;
-    if ((((((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff) << 1) >> 15) {
+    if ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff) << 1) >> 15) {
         mPaddles[i].vx = 0x1000;
         mPaddles[i].swing = 0;
     } else {
@@ -1317,7 +1319,7 @@ void dScMgPachinko2_c::Paddle_StateSweep(int i) {
             mPaddles[i].x = 0xe0000;
             mPaddles[i].vx = 0;
             mPaddles[i].dir ^= 1;
-            a = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            a = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mPaddles[i].timer = (u16)(((a << 3) >> 15) * 3 + 0x40);
             mPaddles[i].state = 7;
         }
@@ -1335,7 +1337,7 @@ void dScMgPachinko2_c::Paddle_StateSweep(int i) {
             mPaddles[i].x = 0x20000;
             mPaddles[i].vx = 0;
             mPaddles[i].dir ^= 1;
-            a = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            a = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mPaddles[i].timer = (u16)(((a << 3) >> 15) * 3 + 0x40);
             mPaddles[i].state = 7;
         }
@@ -1429,7 +1431,7 @@ void dScMgPachinko2_c::Paddle_StateSpawn(int idx) {
 
     mPaddles[idx].state = 1;
 
-    r = RandomIntInternal(&data_0209d4b8);
+    r = RandomIntInternal(&data_0209d4b8.value);
     bit = (int)(((unsigned int)r >> 16 & 0x7fffu) * 2u >> 15);
 
     if (idx & 1)
@@ -1448,7 +1450,7 @@ void dScMgPachinko2_c::Paddle_StateSpawn(int idx) {
             if (idx) {
                 mPaddles[idx].step = mPaddles[0].step;
             } else {
-                r = RandomIntInternal(&data_0209d4b8);
+                r = RandomIntInternal(&data_0209d4b8.value);
                 bit = (int)(((unsigned int)r >> 16 & 0x7fffu) * 2u >> 15);
                 mPaddles[idx].step = bit;
             }
@@ -1464,7 +1466,7 @@ void dScMgPachinko2_c::Paddle_StateSpawn(int idx) {
             if (idx) {
                 mPaddles[idx].step = mPaddles[0].step;
             } else {
-                r = RandomIntInternal(&data_0209d4b8);
+                r = RandomIntInternal(&data_0209d4b8.value);
                 bit = (int)(((unsigned int)r >> 16 & 0x7fffu) * 2u >> 15);
                 mPaddles[idx].step = bit;
             }
@@ -2114,7 +2116,7 @@ void dScMgPachinko2_c::Ball_StateHop(int i) {
             mBalls[i].sprite = 1;
             mBalls[i].vx = -0x1000;
         } else {
-            unsigned int r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            unsigned int r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             if (((r << 1) >> 15) != 0) {
                 mBalls[i].facingRight = 1;
                 mBalls[i].sprite = 5;

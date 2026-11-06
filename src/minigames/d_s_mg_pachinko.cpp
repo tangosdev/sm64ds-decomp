@@ -55,6 +55,7 @@
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx.h"
 #include "dScMgPachinko_c.h"
+#include "LevelRng.h"
 
 namespace GX {
 void LoadBGPltt(const void *p, u32 a, u32 b);
@@ -197,7 +198,6 @@ extern void func_020562b4(const void *src, u32 offset, u32 count);
 extern void func_020564f4(const void *src, int offset, int count);
 
 /* --- ROM data this TU reads --- */
-extern int   data_0209d4b8;
 extern unsigned char gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s16   data_02082214[];
@@ -716,7 +716,7 @@ void PachinkoFlyer_StateCross(char *raw, int i) {
             *((int *)((raw + REC_OFF(mFlyer, x)) + n)) = 0xf0000;
             *((int *)((raw + REC_OFF(mFlyer, vx)) + n)) = 0;
             *((u8 *)((raw + REC_OFF(mFlyer, facing)) + n)) ^= 1;
-            a = (((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
+            a = (((u32)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff;
             *((u16 *)((raw + REC_OFF(mFlyer, delay)) + n)) = (u16)((((a << 3) >> 15) * 2) + 0x10);
             *((u8 *)((raw + REC_OFF(mFlyer, state)) + n)) = 3;
             return;
@@ -735,7 +735,7 @@ void PachinkoFlyer_StateCross(char *raw, int i) {
             *((int *)((raw + REC_OFF(mFlyer, x)) + n)) = 0x10000;
             *((int *)((raw + REC_OFF(mFlyer, vx)) + n)) = 0;
             *((u8 *)((raw + REC_OFF(mFlyer, facing)) + n)) ^= 1;
-            a = (((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
+            a = (((u32)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff;
             *((u16 *)((raw + REC_OFF(mFlyer, delay)) + n)) = (u16)((((a << 3) >> 15) * 2) + 0x10);
             *((u8 *)((raw + REC_OFF(mFlyer, state)) + n)) = 3;
             return;
@@ -770,7 +770,7 @@ void PachinkoFlyer_StateWaiting(char *raw, int idx) {
     }
     Sound::PlayBank2_2D(0x188);
     self->mFlyer[idx].state = 1;
-    side = ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 2) >> 15;
+    side = ((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 2) >> 15;
     self->mFlyer[idx].facing = side;
     if (side != 0) {
         self->mFlyer[idx].visible = 1;
@@ -783,7 +783,7 @@ void PachinkoFlyer_StateWaiting(char *raw, int idx) {
     }
     self->mFlyer[idx].y = -0xf8000;
     self->mFlyer[idx].passes =
-        ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3 >> 0xf) + 2;
+        ((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3 >> 0xf) + 2;
     self->mFlyer[idx].vy = 0x2000;
 }
 
@@ -809,7 +809,7 @@ void PachinkoTarget_Choose(char *raw) {
     self->mFlyer[0].active = 1;
     self->mFlyer[0].state = 0;
     self->mFlyer[0].sound = 0;
-    rand = (((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
+    rand = (((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff;
     self->mFlyer[0].delay = (short)((((rand << 5) >> 15) << 3) + 0x200);
     targets = 0;
     for (i = 0; i < 4; i++) {
@@ -819,7 +819,7 @@ void PachinkoTarget_Choose(char *raw) {
     }
 
     if (targets == 1) {
-        rand = (((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
+        rand = (((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff;
         self->mFlyer[0].delay = (short)((((rand << 5) >> 15) << 2) + 0x200);
     }
     self->mFlyerOut++;
@@ -1348,7 +1348,7 @@ void PachinkoPipe_StateRise(char *raw, int i) {
    rise (or, for kind 2, sink). */
 void PachinkoPipe_StatePick(char *raw, int n) {
     dScMgPachinko_c *self = PACHINKO(raw);
-    int rnd = RandomIntInternal(&data_0209d4b8);
+    int rnd = RandomIntInternal(&data_0209d4b8.value);
     int kind = sPachinkoPipeKinds[((((unsigned)rnd >> 16) & 0x7fff) * 2) >> 15];
     self->mPipe[n].state = kind;
     self->mPipe[n].phase = 0;
@@ -1551,13 +1551,13 @@ void PachinkoBall_AimAtTarget(char *base, int i) {
         dist = (int)cstd::sqrt((u64)distSq);
     }
     factor = dist * 9 / 10;
-    idx = ((u32)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) * 4 >> 15;
+    idx = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16 & 0x7fff) * 4 >> 15;
     for (;;) {
         int t = idx * 0xc;
         p = base + t;
         if (PACHINKO(p)->mTarget[0].active != 0)
             break;
-        idx = ((u32)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) * 4 >> 15;
+        idx = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16 & 0x7fff) * 4 >> 15;
     }
     {
         char *xBase = base + BALL_OFF(x);
@@ -1741,28 +1741,30 @@ void PachinkoBall_StateDrift(char *o, int i) {
         *(unsigned char *)(o + BALL_OFF(started) + idx) += 1;
         if (self->mWaveLevel > 0xc) {
             *(int *)(ATI(o, idx) + BALL_OFF(velY)) =
-                ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 3) >> 0xf)
+                ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 3) >>
+                  0xf)
                  << 7) +
                 0xb80 + ((self->mWaveLevel - 0xc) << 7);
         } else {
             *(int *)(ATU(o, idx) + BALL_OFF(velY)) =
                 self->mWaveLevel * 0xa0 +
-                (((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 3) >> 0xf)
+                (((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
+                    << 3) >>
+                   0xf)
                   << 7) +
                  0x400);
         }
-        if ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1) >> 0xf) != 0)
-        {
+        if ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 1) >>
+             0xf) != 0) {
             *(int *)(o + idx + BALL_OFF(velX)) = (self->mWaveLevel << 7) + 0x600;
             *(unsigned char *)(o + idx + BALL_OFF(driftDir)) = 0;
-        }
-        else
-        {
+        } else {
             *(int *)(o + idx + BALL_OFF(velX)) = -((self->mWaveLevel << 7) + 0x600);
             *(unsigned char *)(o + idx + BALL_OFF(driftDir)) = 0;
         }
         *(unsigned short *)((ATI(o, 0) + idx) + BALL_OFF(timer)) =
-            ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf)
+            ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5) >>
+              0xf)
              << 3) +
             0x20;
     } else {
@@ -1838,12 +1840,13 @@ void PachinkoBall_StateDrift(char *o, int i) {
                         if (*vel <= 0)
                         {
                             *(unsigned char *)(o + BALL_OFF(driftDir) + idx) =
-                                (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+                                (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                                   0x7fff)
                                   << 1) >>
                                  0xf) +
                                 1;
                             *(unsigned short *)(o + BALL_OFF(timer) + idx) =
-                                ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
+                                ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
                                     0x7fff)
                                    << 4) >>
                                   0xf)
@@ -1860,12 +1863,13 @@ void PachinkoBall_StateDrift(char *o, int i) {
                         if (*vel >= 0)
                         {
                             *(unsigned char *)(o + BALL_OFF(driftDir) + idx) =
-                                (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+                                (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                                   0x7fff)
                                   << 1) >>
                                  0xf) +
                                 1;
                             *(unsigned short *)(o + BALL_OFF(timer) + idx) =
-                                ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
+                                ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
                                     0x7fff)
                                    << 4) >>
                                   0xf)
@@ -1884,7 +1888,8 @@ void PachinkoBall_StateDrift(char *o, int i) {
                         *(unsigned char *)(o + BALL_OFF(driftDir) + idx) = 0;
                         *vel = (self->mWaveLevel << 7) + 0x600;
                         *(unsigned short *)(o + BALL_OFF(timer) + idx) =
-                            ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+                            ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                                0x7fff)
                                << 5) >>
                               0xf)
                              << 3) +
@@ -1901,7 +1906,8 @@ void PachinkoBall_StateDrift(char *o, int i) {
                         *(unsigned char *)(o + BALL_OFF(driftDir) + idx) = 0;
                         *vel = -((self->mWaveLevel << 7) + 0x600);
                         *(unsigned short *)(o + BALL_OFF(timer) + idx) =
-                            ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+                            ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                                0x7fff)
                                << 5) >>
                               0xf)
                              << 3) +
@@ -1921,13 +1927,16 @@ void PachinkoBall_StateFall(char *o, int i) {
         self->mBall[i].started += 1;
         if (self->mWaveLevel > 0xc) {
             self->mBall[i].velY =
-                ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 3) >> 0xf)
+                ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 3) >>
+                  0xf)
                  << 7) +
                 0xb80 + ((self->mWaveLevel - 0xc) << 7);
         } else {
             self->mBall[i].velY =
                 self->mWaveLevel * 0xa0 +
-                (((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 3) >> 0xf)
+                (((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
+                    << 3) >>
+                   0xf)
                   << 7) +
                  0x400);
         }
@@ -1951,7 +1960,7 @@ void PachinkoBall_StateWaiting(char *base, int idx) {
         *timer = *timer - 1;
         return;
     }
-    r = RandomIntInternal(&data_0209d4b8);
+    r = RandomIntInternal(&data_0209d4b8.value);
     o = base + off;
     BALL(o)->state = ((((r >> 16) & 0x7fff) << 1) >> 0xf) + 1;
     BALL(o)->started = 0;
@@ -2129,8 +2138,8 @@ void Pachinko_SpawnWave(dScMgPachinko_c *self)
         int rb;
         if (self->mBall[i].active != 0) continue;
         self->mBall[i].active = 1;
-        ra = RandomIntInternal(&data_0209d4b8);
-        rb = RandomIntInternal(&data_0209d4b8);
+        ra = RandomIntInternal(&data_0209d4b8.value);
+        rb = RandomIntInternal(&data_0209d4b8.value);
         self->mBall[i].x = (sPachinkoWaveColumnX[(((u32)rb >> 16) & 0x7fff) * 5 >> 15] +
                             ((((u32)ra >> 16) & 0x7fff) * 4 >> 15) * 8)
                            << 12;
@@ -2139,7 +2148,7 @@ void Pachinko_SpawnWave(dScMgPachinko_c *self)
         self->mBall[i].velY = 0;
         self->mBall[i].state = 0;
         self->mBall[i].started = 0;
-        ra = RandomIntInternal(&data_0209d4b8);
+        ra = RandomIntInternal(&data_0209d4b8.value);
         self->mBall[i].timer = ((((u32)ra >> 16) & 0x7fff) * 8 >> 15) << 4;
         self->mBall[i].rotation = 0;
         self->mBall[i].sound = 0;
@@ -2148,18 +2157,24 @@ void Pachinko_SpawnWave(dScMgPachinko_c *self)
         if (self->mWaveLevel == 0)
             break;
         {
-            int r = (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 16 >> 15;
+            int r = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15;
             int lvl = self->mWaveLevel >> 1;
             if (lvl >= 4) lvl = 4;
             if (sPachinkoWaveSlots[r + lvl * 4] == 0)
                 break;
         }
-        if ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 2 >> 15) {
+        if ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 2 >> 15) {
             self->mBall[i].x = 0x100000;
-            self->mBall[i].angle = 0xc000 - (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0xc >> 15) + 1 << 9);
+            self->mBall[i].angle =
+                0xc000 -
+                (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xc >> 15) + 1
+                 << 9);
         } else {
             self->mBall[i].x = 0;
-            self->mBall[i].angle = (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0xc >> 15) + 1 << 9) + 0xc000;
+            self->mBall[i].angle =
+                (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xc >> 15) + 1
+                 << 9) +
+                0xc000;
         }
         self->mBall[i].spinRadius = 0;
         self->mBall[i].offX = 0;

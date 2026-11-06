@@ -26,6 +26,7 @@ enum dScMgSound_c_AssetId {
 #include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
@@ -62,7 +63,7 @@ void LoadBGPltt(const void *data, u32 offset, u32 size);
 void LoadOBJPltt(const void *data, u32 offset, u32 size);
 }
 
-#define RND (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+#define RND (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
 #define LAUNDER(p) ((int)(p))
 
 /* ROM PMF descriptor constants; the runtime tables below use native C++ PMFs. */
@@ -183,7 +184,6 @@ u16 sSoundNoteSfx[42] = {70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  56,  
                          169, 170, 171, 172, 173, 174, 176, 177, 178, 266, 267, 268, 56,  120,
                          184, 248, 57,  121, 185, 249, 58,  122, 186, 250, 59,  123, 187, 251};
 extern int RandomIntInternal(int *seed);
-extern int data_0209d4b8;
 extern const u8 sSoundPitchCounts[5] = {10, 4, 10, 4, 14};
 extern const u8 sSoundDealCounts[5] = {6, 6, 8, 6, 8};
 extern const u8 sSoundNoteLayoutByPattern[5] = {0, 0, 1, 0, 1};

@@ -197,7 +197,6 @@ extern int gCurrentMusicID;
 extern int data_0209cef8[];
 extern int data_0209cefc[];
 extern int data_0209d4b0;
-extern int data_0209d4b8;
 extern int data_0209d524;
 extern int data_0209d6fc;
 extern int data_0209e664;
