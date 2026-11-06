@@ -139,6 +139,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "daShl_c.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -187,7 +188,6 @@ extern "C" {
 
 extern signed char gCurrentSublevel;
 extern int data_0209f32c;
-extern int data_0209e650;
 extern unsigned char data_0209f2d8;
 extern char data_0209f318[];
 extern char data_020a0edc[];
@@ -1037,7 +1037,7 @@ void daObjHatenaBlock_c::func_ov102_0214953c(int p1, int p2)
     f.vel[0] = 0;
     f.vel[1] = 0x11000;
     f.vel[2] = 0;
-    rnd = RandomIntInternal(&data_0209e650);
+    rnd = RandomIntInternal(&data_0209e650.value);
     {
         int vsum = rnd + (g->mAngleY + 0x8000);
         o->mPrevAngleX = 0;
@@ -1172,10 +1172,10 @@ void daObjHatenaBlock_c::func_ov102_02149100(Vector3 *pos, int n, unsigned int s
         a = dActor_c::Spawn(ACTOR_COIN, 2, *pos, 0, mAreaId, -1);
         if (a != 0) {
             do {
-                rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+                rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
                 dir = (int)((rnd >> 0x10) << 0x1b) >> 0x10;
             } while (dir == prevDir);
-            rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+            rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
             a->mPrevAngleX = 0;
             q = rnd >> 0x10;
             speed = (speed * (q % 50 + 100)) / 100;

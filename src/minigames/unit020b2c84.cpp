@@ -106,6 +106,7 @@
 #include "nitro/gx/gxcommon.h"
 #include "MWCPlusLib.h"
 #include "dScMgBase_c.h"
+#include "LevelRng.h"
 
 struct M { int _00, _01, _10, _11; };
 struct Pair { int a, b; };
@@ -173,7 +174,6 @@ void Banner_StartWaveBurst(MgBanner *e);
 }
 
 extern s16 data_02082214[];
-extern int data_0209e650;
 extern S3 data_ov004_020bc27c;
 extern int sMgMsgGiveUpSprites;
 static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, (int)&sMgMsgGiveUpSprites}}};
@@ -664,7 +664,7 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
         func_0203d388(boxC, 0x800);
         func_0203d704(outB, boxB, boxA);
 
-        r = RandomIntInternal(&data_0209e650);
+        r = RandomIntInternal(&data_0209e650.value);
         r &= 0x7fffffff;
         ang = (int)((u32)r >> 0x13) * 0x3c >> 0xc;
         ang = ang + 0x5a;
@@ -1076,7 +1076,7 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
         func_0203d388(boxC, 0x800);
         func_0203d704(outB, boxB, boxA);
 
-        r = RandomIntInternal(&data_0209e650);
+        r = RandomIntInternal(&data_0209e650.value);
         r &= 0x7fffffff;
         ang = (int)((u32)r >> 0x13) * 0x3c >> 0xc;
         ang = ang + 0x5a;

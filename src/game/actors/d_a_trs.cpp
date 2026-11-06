@@ -68,6 +68,7 @@ enum daTrs_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "LevelRng.h"
 
 /* Views of three classes this Boo reaches through other actors' pointers.
    Their headers are not included because each one renumbers this file's
@@ -176,7 +177,6 @@ int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern void func_020167a4(dExtAnmModel_c *model);
 void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
-extern int data_0209e650;
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
@@ -910,8 +910,8 @@ void daTrs_c::func_ov063_02117364() {
         return;
     this->mState = 1;
     this->mdCcAcPos_c.flags &= ~1u;
-    this->mAttackTimer = ((u32)RandomIntInternal(&data_0209e650) >> 16 & 0x3f) + 0x3c;
-    this->mNextRelocateTimer = ((u32)RandomIntInternal(&data_0209e650) >> 16) % 150 + 0x12c;
+    this->mAttackTimer = ((u32)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3f) + 0x3c;
+    this->mNextRelocateTimer = ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 150 + 0x12c;
     this->mParticle1 = 0;
     this->mParticle0 = this->mParticle1;
 }
@@ -940,8 +940,13 @@ void daTrs_c::func_ov063_02117650() {
     npos.y = this->mPosY;
 
     do {
-        npos.x = ((int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 0x578) * neg1 - 0x190) << 0xc;
-        npos.z = ((int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 0xa28) - 0x514) << 0xc;
+        npos.x =
+            ((int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 0x578) * neg1 -
+             0x190)
+            << 0xc;
+        npos.z =
+            ((int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 0xa28) - 0x514)
+            << 0xc;
     } while (Vec3_HorzDist(&ppos, &npos) < 0x320000);
 
     this->mPosX = npos.x;
@@ -1380,9 +1385,9 @@ void daTrs_c::func_ov063_02117cdc() {
         }
         this->mState = 1;
         this->mdCcAcPos_c.flags &= ~1;
-        this->mAttackTimer = (((u32)RandomIntInternal(&data_0209e650) >> 0x10) & 0x3f) + 0xb4;
+        this->mAttackTimer = (((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) & 0x3f) + 0xb4;
         cam->mFlags &= ~8;
-        rr = RandomIntInternal(&data_0209e650);
+        rr = RandomIntInternal(&data_0209e650.value);
         this->mNextRelocateTimer = ((rr >> 0x10) % 0x96) + 0x12c;
         Sound::LoadAndSetMusic_Layer3(0x2d);
         func_02011d14();
@@ -1414,7 +1419,7 @@ void daTrs_c::func_ov063_02118458() {
                 int rnd;
                 this->mState = 1;
                 this->mdCcAcPos_c.flags &= ~1;
-                rnd = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x3f;
+                rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x3f;
                 this->mAttackTimer = rnd + 0xb4;
                 this->mAnmModel.SetAnim((BCA_File *)data_ov063_0211ede4.filePtr, 0, 0x1000, 0);
             }
@@ -1422,7 +1427,7 @@ void daTrs_c::func_ov063_02118458() {
             int rnd;
             this->mState = 1;
             this->mdCcAcPos_c.flags &= ~1;
-            rnd = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x3f;
+            rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x3f;
             this->mAttackTimer = rnd + 0xb4;
             this->mAnmModel.SetAnim((BCA_File *)data_ov063_0211ede4.filePtr, 0, 0x1000, 0);
         }
@@ -1515,7 +1520,7 @@ void daTrs_c::func_ov063_0211873c() {
     func_02012694(0x159, &this->mCamSpacePos);
     this->mAnmModel.SetAnim((BCA_File *)data_ov063_0211edcc.filePtr, 0x40000000, 0x1000, 0);
     {
-        unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+        unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
         this->mAttackRepeats = (u8)((rnd >> 0x10) % 3);
     }
     this->mHorzSpeed = 0;
@@ -2136,9 +2141,9 @@ void daTrs_c::func_ov063_02119894() {
 
     this->mBooFlags.hitByParam3Player = 0;
     if (*(u16 *)&this->mStateTimer == 0) {
-        unsigned r0 = (unsigned)RandomIntInternal(&data_0209e650);
+        unsigned r0 = (unsigned)RandomIntInternal(&data_0209e650.value);
         this->mSpeedJitter = (int)(((r0 >> 16) & 0xfff) * 5);
-        r0 = (unsigned)RandomIntInternal(&data_0209e650);
+        r0 = (unsigned)RandomIntInternal(&data_0209e650.value);
         {
             int x = (int)((r0 >> 16) & 0xfff);
             this->mTurnJitter = (int)(((s64)x << 7) + 0x800 >> 12);
@@ -2158,9 +2163,9 @@ void daTrs_c::func_ov063_02119960() {
     unsigned short *p = (unsigned short *)(int)M(&this->mBooFlags);
     *p &= ~TRS_FLAG_HIT_BY_PARAM3_PLAYER;
     if (*(u16 *)&this->mStateTimer == 0) {
-        int r0 = RandomIntInternal(&data_0209e650);
+        int r0 = RandomIntInternal(&data_0209e650.value);
         this->mSpeedJitter = (((unsigned)r0 >> 16) & 0xfff) * 5;
-        int ri = RandomIntInternal(&data_0209e650);
+        int ri = RandomIntInternal(&data_0209e650.value);
         int x = 0xfff & ((unsigned)ri >> 16);
         this->mTurnJitter = (int)((((long long)x << 7) + 0x800) >> 12);
     }
@@ -2297,9 +2302,10 @@ void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
         this->mTargetAngleY = this->mAngleToPlayer;
         this->mStateTimer = 0;
     } else {
-        unsigned rnd = (unsigned)RandomIntInternal(&data_0209e650) >> 16 & 0x3f;
+        unsigned rnd = (unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3f;
         if (*(u16 *)&this->mStateTimer >= rnd + 0x5a) {
-            int rnd2 = (int)((unsigned)RandomIntInternal(&data_0209e650) >> 16 & 0x3fff) - 0x2000;
+            int rnd2 =
+                (int)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3fff) - 0x2000;
             this->mTargetAngleY = this->mPrevAngleY + rnd2;
             this->mStateTimer = 0;
         }
@@ -2846,7 +2852,7 @@ void daTrs_c::func_ov063_0211ab68() {
         rot.x = this->mPrevAngleX;
         rot.y = this->mPrevAngleY;
         rot.z = this->mPrevAngleZ;
-        rot.y = (u32)RandomIntInternal(&data_0209e650) >> 16;
+        rot.y = (u32)RandomIntInternal(&data_0209e650.value) >> 16;
         dActor_c::Spawn(TRS_ID_TERESA, 0xfff6, *(const Vector3 *)(&pos), (const Vector3_16 *)(&rot), this->mAreaIdx, -1);
     }
     this->MarkForDestruction();

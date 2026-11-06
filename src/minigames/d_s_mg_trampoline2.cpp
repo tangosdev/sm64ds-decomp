@@ -48,6 +48,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
@@ -131,7 +132,6 @@ unsigned int d_s_mg_trampoline2NewUnkCallback818Hold(unsigned int a, unsigned in
                                                      int e, const Vector3_16f *f);
 void Jump2Popup_UpdateAll(void);
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern const VecFx32 sTrmp2RandomSpawnPositions[];
 extern int Trmp2_ColumnForKind(int kind);
 extern unsigned short Trmp2_OccupancyBits(int column, int side);
@@ -454,7 +454,8 @@ void dScMgTrampoline2_c::StateIntro() {
         mTouchY = sTrmpStartTouchY;
 
         mTouchY +=
-            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) - 0x800)
+            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
+               0x800)
               << 2) >>
              12);
 
@@ -534,7 +535,7 @@ void dScMgTrampoline2_c::StatePlay() {
         }
     } else {
         if (ApproachLinear(mWaveStep, 4, 1)) {
-            unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff;
+            unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
             const Trampoline2WaveDef *d = &sTrmp2SpawnDefs[(int)((rnd >> 19) * 6) >> 12];
             int i;
             VecFx32 vecB;
@@ -711,10 +712,10 @@ extern "C" {
 int Trmp2_PickFaceA(int x) {
     int r;
     if (x < 5) {
-        r = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
+        r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
         return r < 0xc00 ? 4 : 5;
     }
-    r = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
+    r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     return r < 0xc00 ? 6 : 7;
 }
 }
@@ -724,14 +725,14 @@ extern "C" {
 int Trmp2_PickFaceB(int a) {
     int r;
     if (a < 5) {
-        r = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
+        r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
         if (r < 0xc00)
             return 4;
         if (r < 0xe00)
             return 5;
         return 8;
     }
-    r = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
+    r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     if (r < 0xc00)
         return 6;
     if (r < 0xe00)
@@ -755,17 +756,19 @@ void dScMgTrampoline2_c::SpawnWave() {
     occupancy = 0;
     for (i = 0; i < 5; i++) {
         do {
-            kind = (int)((((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13) *
+            kind = (int)((((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >>
+                          0x13) *
                          11) >>
                    12;
         } while ((kind == 7 || kind == 10) &&
-                 (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13) >
-                     0x400);
+                 (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >>
+                       0x13) > 0x400);
 
         for (;;) {
             for (j = 0; j < i; j++) {
                 if (kind == kinds[j]) {
-                    kind = (int)((((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >>
+                    kind = (int)((((unsigned int)RandomIntInternal(&data_0209e650.value) &
+                                   0x7fffffff) >>
                                   0x13) *
                                  11) >>
                            12;
@@ -785,7 +788,8 @@ void dScMgTrampoline2_c::SpawnWave() {
                         if (ApproachLinear(kind, 11, 1) != 0)
                             kind = 0;
                     } while ((kind == 7 || kind == 10) &&
-                             (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >>
+                             (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) &
+                                    0x7fffffff) >>
                                    0x13) > 0x800);
                     continue;
                 }
@@ -1204,7 +1208,7 @@ void Trmp2Spinner_Init(void *r0, void *r1) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
     int value = (int)r1;
     struct Tbl t = sTrmp2SpinnerSpeeds;
-    unsigned int rnd = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+    unsigned int rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
     int idx;
     if ((int)rnd < t.a) {
         idx = 0;
@@ -1232,15 +1236,15 @@ void Trmp2Spinner_Init(void *r0, void *r1) {
     spinner->mVel.x = drop;
     spinner->mVel.y = drop;
     spinner->mVel.z = 0;
-    unsigned int rnd2 = (unsigned int)RandomIntInternal(&data_0209e650);
+    unsigned int rnd2 = (unsigned int)RandomIntInternal(&data_0209e650.value);
     int *p1 = &spinner->mPos.x;
     int v1 = *p1 + ((((rnd2 & 0x7fffffff) >> 0x13) - 0x800) * 0x40);
     *p1 = v1;
-    int rnd3 = RandomIntInternal(&data_0209e650);
+    int rnd3 = RandomIntInternal(&data_0209e650.value);
     int *p2 = &spinner->mVel.x;
     int adj3 = (int)(((unsigned int)rnd3 & 0x7fffffff) >> 0x13);
     *p2 -= adj3 >> 1;
-    int rnd4 = RandomIntInternal(&data_0209e650);
+    int rnd4 = RandomIntInternal(&data_0209e650.value);
     int *p3 = &spinner->mVel.y;
     int adj4 = (int)(((unsigned int)rnd4 & 0x7fffffff) >> 0x13);
     *p3 -= adj4 >> 1;

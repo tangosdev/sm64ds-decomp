@@ -49,6 +49,7 @@
 #include "Sound.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 static const int kWallX = 0x6c000;   /* mPos.x clamp: the arena walls */
 static const int kScreenYMax = 0xbc; /* past this mScreenY the Mario damps out */
@@ -171,7 +172,6 @@ extern u8 gTouchX[][4];
 extern u8 gTouchY[][4];
 extern Matrix4x3 data_020a0e68;
 extern short data_02082214[];
-extern int data_0209e650;
 extern fBase_c *data_0209f5c0;
 
 }  /* extern "C" */
@@ -875,11 +875,11 @@ void dMgJump3DMario_c::StateRespawn()
     mTimer -= 1;
     if (mTimer == 0) {
         mPos.y = 0x100000;
-        rnd = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+        rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
         mPos.x = ((int)rnd - 0x800) * 0xc0;
         mVel.y = 0;
         speed = sJump3DMoveSpeed;
-        rnd = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+        rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
         mVel.x = FX_MUL((((int)rnd - 0x800) << 1), speed);
         mAnmModel.SetAnim((BCA_File *)sJump3DAnimWallJump, 0x40000000, kAnimSpeed, 0);
         EnterMove();

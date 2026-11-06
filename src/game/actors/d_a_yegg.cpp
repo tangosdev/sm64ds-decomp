@@ -93,6 +93,7 @@
 #include "daBtn_c.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "LevelRng.h"
 
 struct dBgPi;
 
@@ -142,7 +143,6 @@ extern SharedFilePtr data_ov002_0210e6b0;
 extern SharedFilePtr data_ov002_0210eb78;
 extern s16 data_ov002_021000a8[];
 extern s16 data_02082214[];
-extern int data_0209e650;
 /* local extern: math/MtxStack.h's spellings of the Matrix4x3_ calls below
    clash with these. The copies go through the flat Mtx43: assigning this
    TU's nested Matrix4x3 grows the object by 0x30 bytes. */
@@ -370,9 +370,11 @@ void daYegg_c::func_ov002_020ec80c(void* b, int count, int sl, short arg5)
             coin = dActor_c::Spawn(ACTOR_BLUE_COIN, 2, *(const Vector3 *)b, 0, mAreaId, -1);
             if (coin != 0) {
                 do {
-                    rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 16) << 27) >> 16;
+                    rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16)
+                               << 27) >>
+                         16;
                 } while (rv == prev);
-                r = (unsigned int)RandomIntInternal(&data_0209e650);
+                r = (unsigned int)RandomIntInternal(&data_0209e650.value);
                 r = r >> 16;
                 coin->mPrevAngleX = zero;
                 sl = sl * ((r % 50) + 100) / 100;

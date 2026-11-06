@@ -38,6 +38,7 @@ enum d_s_mg_trampoline_AssetId {
 #include "Sound.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "LevelRng.h"
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
@@ -174,7 +175,6 @@ extern int sTrmpComboCount;
 extern int sTrmp3DLives;
 extern int sTrmpMariosInPlay;
 extern int sTrmpAnyOnLedge;
-extern int data_0209e650;
 extern void TrmpLine_UpdateAll(void);
 extern int Trmp3DMario_IsOffstage(int *r0);
 extern void Trmp3DMario_EnterWalkIn(char *c);
@@ -420,7 +420,8 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
     self->mInputEnabled = 0;
     self->mRoundOver = 0;
     self->mDoorSwitchTimer =
-        (((int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13) * 0x2d0) >>
+        (((int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
+          0x2d0) >>
          12) +
         0x2d0;
     self->mDoorBlinkTimer = 0;
@@ -499,7 +500,8 @@ void dScMgTrampoline_c::StateIntro() {
         mTouchY = sTrmpStartTouchY;
 
         mTouchY +=
-            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) - 0x800)
+            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
+               0x800)
               << 2) >>
              12);
 
@@ -599,7 +601,8 @@ void dScMgTrampoline_c::StatePlay() {
             }
             Sound::PlayBank2_2D(0x1b6);
             {
-                unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff;
+                unsigned int rnd =
+                    (unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
                 int prod = (rnd >> 19) * 0x2d0;
                 mDoorSwitchTimer = (s16)((prod >> 12) + 0x2d0);
                 mDoorBlinkTimer = 0;

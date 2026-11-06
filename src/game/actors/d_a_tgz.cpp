@@ -56,6 +56,7 @@
 #include "math/CalcLib.h"
 #include "SpawnInfo.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 #pragma defer_codegen off
 
@@ -121,7 +122,6 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern s16 data_02082214[];
 void func_02035684(int *p, int v);
 int RandomIntInternal(int *seed);
-extern int data_0209e650;
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
 extern int data_0209f32c;
@@ -669,8 +669,8 @@ void daTgz_c::func_ov077_02125b1c() {
     mAnmModel.speed = 0x1000;
     func_02035684((int *)&mWithMeshClsn, 0x28000);
     mHorzSpeed = 0x1b33;
-    mTurnTarget = RandomIntInternal(&data_0209e650);
-    mActionTimer = RandomIntInternal(&data_0209e650);
+    mTurnTarget = RandomIntInternal(&data_0209e650.value);
+    mActionTimer = RandomIntInternal(&data_0209e650.value);
     mState = 1;
 }
 

@@ -56,6 +56,7 @@ enum daSnowman_c_AssetId {
 #include "daPly_c.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -79,7 +80,6 @@ enum {
 extern "C" {
 extern int RandomIntInternal(int *seed);
 /* Sound::Play2D(2, id). This TU calls the wrapper, not Play2D. */
-extern int data_0209e650;
 extern s16 data_ov081_021289a4;
 extern s16 data_ov081_021289a6;
 extern s16 data_ov081_021289a8;
@@ -183,7 +183,7 @@ void daSnowman_c::func_ov081_02124134()
         a = dActor_c::FindWithID(id);
         if (a) {
             a->mVertAccel = -0x2000;
-            unsigned int rv = ((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 0xf;
+            unsigned int rv = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf;
             a->mPrevAngleX = 0;
             a->mPrevAngleY = rv << 0xc;
             a->mPrevAngleZ = 0;
@@ -399,7 +399,7 @@ int daSnowman_c::func_ov081_0212479c()
         dActor_c *a = dActor_c::FindWithID(this->mCapUniqueID);
         if (a != 0) {
             a->mVertAccel = -0x2000;
-            int rv = ((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 0xf;
+            int rv = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf;
             a->mPrevAngleX = 0;
             a->mPrevAngleY = rv << 0xc;
             a->mPrevAngleZ = 0;

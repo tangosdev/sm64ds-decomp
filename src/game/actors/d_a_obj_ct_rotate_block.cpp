@@ -49,6 +49,7 @@ enum daObjCtRotateBlock_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* One record per mVariant: the base model's and the collision mesh's file
  * handles, and the CLPS block SetFile gets with that mesh. */
@@ -85,7 +86,6 @@ extern void func_020393d4(void *p, void *v);
 
 extern short data_02082214[];
 extern u8 data_0209f2c0;
-extern int data_0209e650;
 
 #pragma defer_codegen off
 
@@ -196,7 +196,7 @@ int daObjCtRotateBlock_c::Behavior() {
             mState = 0;
             mWaitTimer = data_ov065_0211cfa4[data_0209f2c0];
             if (data_0209f2c0 == 2)
-                mWaitTimer = (unsigned int)RandomIntInternal(&data_0209e650) % 7 * 0x14 + 5;
+                mWaitTimer = (unsigned int)RandomIntInternal(&data_0209e650.value) % 7 * 0x14 + 5;
             mTargetAngleZ += data_ov065_0211cfa8[mVariant];
             break;
         }

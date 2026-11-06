@@ -43,6 +43,7 @@
 #include "dMgJump3DMario_c.h"
 #include "Heyho.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 /* Typed access to a Heyho record from the char* helpers below. */
 #define HEYHO(p) ((Heyho *)(p))
 
@@ -1189,7 +1190,6 @@ void Heyho_MotionCircleLower(char *c) {
 namespace n020c5370 {
 extern "C" {
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern int pmf_Heyho_MotionChase[];
 
 struct W2 { int w[2]; };
@@ -1197,7 +1197,7 @@ struct W2 { int w[2]; };
 void Heyho_StartMotionChase(char *c) {
     unsigned int r;
     HEYHO(c)->mLean = 0;
-    r = (unsigned int)RandomIntInternal(&data_0209e650);
+    r = (unsigned int)RandomIntInternal(&data_0209e650.value);
     r &= 0x7fffffff;
     HEYHO(c)->mDelay = (short)(((int)((r >> 0x13) * 0x2d) >> 0xc) + 0xf);
     HEYHO(c)->mWaypoint.x = HEYHO(c)->mPos.x;
@@ -1232,7 +1232,6 @@ extern void Vec3_Add(Vec3 *d, Vec3 *a, Vec3 *b);
 extern int LenVec3(const Vector3 *v);
 extern int DotVec3(Vec3 *a, Vec3 *b);
 extern void Heyho_CheckHitB(char *c);
-extern int data_0209e650;
 extern char *sJumpAdapters[];
 }
 
@@ -1341,7 +1340,7 @@ extern "C" void Heyho_MotionChase(char *c) {
                 }
             }
             {
-                int rr = RandomIntInternal(&data_0209e650) & 0x7fffffff;
+                int rr = RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
                 HEYHO(c)->mDelay = (short)(((int)((unsigned int)rr >> 0x13) * 0x2d >> 12) + 0xf);
             }
         }
@@ -1785,7 +1784,6 @@ extern int sHeyhoLayout;
 extern char *sHeyhos;
 extern int sHeyhoCount;
 extern int data_ov006_021403b8[];
-extern int data_0209e650;
 extern char sHeyhoLayoutFlyInPaths[];
 extern char sHeyhoFlyInPaths[];
 
@@ -1819,7 +1817,7 @@ void Heyho_SpawnAll(void *arg0, int arg1)
     if (count <= 0)
         return;
 
-    seed = &data_0209e650;
+    seed = &data_0209e650.value;
     sl = 0;
     r8 = sl;
     sp4 = sl;
@@ -1959,7 +1957,6 @@ extern char *sHeyhos;
 extern int data_ov006_0213afc8[2];
 extern char sHeyhoSettlePaths;
 extern int sHeyhoUnsettledCount;
-extern int data_0209e650;
 
 extern int RandomIntInternal(int *seed);
 extern void Heyho_StartMotionRegroup(char *a, char *b);
@@ -1974,8 +1971,8 @@ void Heyho_SettleAll(void)
             (v[1] != q[1] && ((Heyho *)sHeyhos)[i].mMotion[0] != 0))
             continue;
         {
-            int r1 = RandomIntInternal(&data_0209e650);
-            int r2 = RandomIntInternal(&data_0209e650);
+            int r1 = RandomIntInternal(&data_0209e650.value);
+            int r2 = RandomIntInternal(&data_0209e650.value);
             unsigned v0 = (unsigned)(r1 & 0x7fffffff) >> 0x13;
             unsigned u0 = (unsigned)(r2 & 0x7fffffff) >> 0x13;
             Heyho_StartMotionRegroup((char *)sHeyhos + i * 0xf0,

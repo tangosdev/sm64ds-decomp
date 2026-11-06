@@ -69,6 +69,7 @@ enum daHanachan_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 /* The file-scope resource handles. The model five use the plain SharedFilePtr
  * pair (func_02017acc / func_02017ab4), the animation twenty-five use
@@ -103,7 +104,6 @@ extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(void *v);
 extern int Vec3_HorzDist(void *a, void *b);
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern int data_ov034_02114488[];
 extern Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
@@ -428,7 +428,7 @@ void daHanachan_c::StateMoveMain()
     }
 
     if (DecIfAbove0_Byte(&mStateTimer) == 0) {
-        rnd = RandomIntInternal(&data_0209e650);
+        rnd = RandomIntInternal(&data_0209e650.value);
         {
             unsigned char health = mHealth;
             unsigned int bits;
@@ -445,7 +445,7 @@ void daHanachan_c::StateMoveMain()
     }
 
     if (mWithMeshClsn.IsOnWall() != 0 || len > 0x5dc000) {
-        rnd = RandomIntInternal(&data_0209e650);
+        rnd = RandomIntInternal(&data_0209e650.value);
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
         mStateTimer = (unsigned char)((unsigned int)(rnd + 0x1e) >> 0x1b);
         mStateTimer = (unsigned char)(mStateTimer - (4 - mHealth) * 0x1e);
@@ -655,7 +655,7 @@ void daHanachan_c::StateDemoWaitMain()
     }
 
     if (DecIfAbove0_Byte(&mStateTimer) == 0) {
-        int r = (unsigned)RandomIntInternal(&data_0209e650) >> 0x1b;
+        int r = (unsigned)RandomIntInternal(&data_0209e650.value) >> 0x1b;
         if (r & 1) {
             mTargetAngleY = (short)((r & 0xf) << 0xc);
         } else {
