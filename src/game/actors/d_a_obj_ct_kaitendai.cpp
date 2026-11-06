@@ -101,7 +101,7 @@ extern KaitendaiResources data_ov065_0211d35c[];
  * and has no shared header. RandomIntInternal's named parameter preserves
  * this TU's @NNN static-initializer aliases. */
 extern "C" {
-extern void func_020393d4(void *p, void *v);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 extern int RandomIntInternal(int *seed);
 }
 
@@ -137,7 +137,7 @@ int daObjCtKaitendai_c::InitResources() {
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov065_0211d35c[mVariant].collision),
                           mClsnMat, 0x199, mAngleY, *data_ov065_0211d35c[mVariant].clps);
 
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
 
     pos.x = mPosX;
     pos.y = mPosY;

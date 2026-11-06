@@ -85,7 +85,7 @@ u8 DecIfAbove0_Byte(u8 *p);
 int IsStarCollectedInCurLevel(int starID);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void func_020393c4(dBgW *collider, StoodOnCallback callback);
-void func_020393d4(dBgW *collider, void *callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjBk_Lift_c_classInit
@@ -128,7 +128,7 @@ int daObjBk_Lift_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a5c), *(&mClsnMat),
                               0x199, mAngleY, *(&data_ov015_02113594));
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithVelocity);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
     func_020393c4(&mMeshCollider, &StoodOnCallback);
 
     Vector3 probePos;

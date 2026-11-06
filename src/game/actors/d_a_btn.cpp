@@ -123,7 +123,7 @@ void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, void *p);
 void func_020393c4(dBgW *collider, StoodOnCallback callback);
-void func_020393d4(void *p, void *v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 int func_ov002_020dd8b8(void *c);
 
 /* Parameter names keep this TU's @NNN. */
@@ -323,7 +323,7 @@ int daBtn_c::InitResources()
     }
 
     func_01ffb0bc(&mMovingMeshCollider);
-    func_020393d4(&mMovingMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
 
     {
         s32 sp[3];

@@ -84,7 +84,7 @@ extern CLPS_Block data_ov035_02112198;
 extern "C" {
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void func_020393d4(void *p, void *v);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjCtMecha03_c_classInit

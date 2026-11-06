@@ -60,7 +60,7 @@ extern "C" {
  * renumbering this TU's compiler-generated static-initializer aliases. */
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern int RandomIntInternal(int *p);
-extern void func_020393d4(void *p, void *v);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern short data_02082214[];
@@ -166,7 +166,7 @@ int daObjCtMecha11_c::InitResources() {
     KCL_File *kf = (KCL_File *)dBgW_Kc::LoadFile(RotatingClockHand_ClsnFile);
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kf, mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     mMeshCollider.SetEdgeToleranceShift(0);
     Vector3 v;
     v.x = mPosX;

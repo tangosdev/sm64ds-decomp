@@ -72,7 +72,7 @@ extern CLPS_Block data_ov035_02112258;
 extern "C" {
 extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *matrix, Vector3 *dst);
 extern void AddVec3(Vector3 *left, Vector3 *right, Vector3 *dst);
-extern void func_020393d4(dBgW *collider, void *callback);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* CT_MECHA05 is the literal ROM registry ID. The g_profile spelling is a
@@ -99,7 +99,7 @@ int daObjCtMecha05_c::InitResources() {
     UpdateClsnPosAndRot();
     void *collisionFile = dBgW_Kc::LoadFile(TTC_MovingBar_ClsnFile);
     mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngleY, data_ov035_02112258);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     mMeshCollider.SetClipRadius(0x1c0000);
     mMeshCollider.SetClipOffsetY(0x1000);
     mPrevAngleY = mAngleY;

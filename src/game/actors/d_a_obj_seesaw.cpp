@@ -103,7 +103,7 @@ extern s16 data_02082214[];
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void func_020393d4(void *clsn, void *callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 void func_020393c4(void *clsn, void *callback);
 }
 
@@ -279,7 +279,7 @@ int daObjSeesaw_c::InitResources() {
      * stores dBgW+0x1c, the stood-on callback: StoodOnCallback, the
      * veneer into OnStoodOn below. Both are calls in the ROM; the
      * bodies are a single word store. */
-    func_020393d4(&mMeshCollider, (int *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
     return 1;
 }
