@@ -185,7 +185,7 @@ void *Ov004_LoadFile(int id);
 void Mg_LoseCredits(int c);
 void Mg_GainCredits(int c);
 void Mg_DrawCredits(char *, int, int, int);
-void Mg_DrawNumberRotated(int, int, int, int, int, int, int);
+void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 void MgCoins_StartPayout(void);
 void MgCoins_Update(void);
 void MgCoins_Reset(void);

@@ -100,7 +100,7 @@ s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
 
-void func_020393d4(dBgW *collider, void *callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
@@ -222,7 +222,7 @@ s32 daObjCvNewsLift_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)gCvNewsLiftCollisionFile.filePtr, mClsnMat, 0x199,
                               mAngleY, data_ov021_02113a60);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     func_020393c4(&mMeshCollider, &MainMeshCallback);
     mMeshCollider.Enable(this);
 
@@ -230,7 +230,7 @@ s32 daObjCvNewsLift_c::InitResources() {
         ((dBgW_KcMbg *)(&mPlatformColliders[i]))
             ->dBgW_KcMbg::SetFile((KCL_File *)gCvLiftButtonCollisionFile.filePtr, mPlatformMats[i],
                                   0x199, mAngleY, data_ov021_02113a80);
-        func_020393d4(&mPlatformColliders[i], (void *)&dBgW::UpdatePosWithTransform);
+        func_020393d4(&mPlatformColliders[i], &dBgW::UpdatePosWithTransform);
     }
 
     func_020393c4(&mPlatformColliders[0], &Platform0Callback);

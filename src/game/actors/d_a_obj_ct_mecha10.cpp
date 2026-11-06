@@ -94,7 +94,7 @@ extern u8 data_0209f2c0;             /* arm9 clock setting */
 extern "C" {
 u16 DecIfAbove0_Short(u16 *p);
 int RandomIntInternal(int *state);
-void func_020393d4(dBgW *collider, void *callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjCtMecha10_c_classInit_CT_MECHA10
@@ -130,7 +130,7 @@ int daObjCtMecha10_c::InitResources() {
             ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(gCtMechaObj10CollisionFile),
                                   mClsnMat, 0x1000, mAngleY, data_ov035_021121d8);
         mMeshCollider.SetEdgeToleranceShift(0);
-        func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+        func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
         mRotationState = 0;
     } else {
         idMatch = (actorID == ACTOR_CT_MECHA12L);

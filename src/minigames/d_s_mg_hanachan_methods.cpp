@@ -219,7 +219,7 @@ extern void Mg_CommitRecords(void *);
 extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern int GetGameLanguage(void);
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void Mg_DrawNumberRotated(int a, int b, void *c, int d, int e, int f, int g);
+extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern void StarPopup_Start(int x, int y);
 extern void HanaPopup_Spawn(int x, int y);
 extern s16 sHanaRoundPatterns[];
@@ -1836,7 +1836,7 @@ tail:
             void *e = sHanaTextSpritesByLanguage[idx];
             OamAttr *f = ((OamAttr **)e)[3];
             DrawOamSprite(f, 0x80, 0x10, 0);
-            Mg_DrawNumberRotated(0x80, 0x28, (void *)mTimeLeft, 1, -1, 0x800, 0);
+            Mg_DrawNumberRotated(0x80, 0x28, mTimeLeft, 1, -1, 0x800, 0);
         }
     }
 

@@ -132,7 +132,7 @@ extern void Quaternion_Normalize(s32 *);
 extern s32 data_02092768[4];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 void func_0203cd80(int *m, short angle);
-void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, int a7);
+void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 s32 GetGameLanguage(void);
 void FreeGfxSlotsById(int arg);
 void Vec2_Sub(int *o, int *a, int *b);

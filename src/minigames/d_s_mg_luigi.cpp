@@ -75,7 +75,7 @@ extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, i
                                        unsigned short a6);
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, int g);
+extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern void func_020127a4(int a0, int a1, int a2, int a3);
 extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
 extern void MultiStore16(u16 val, char *dst, int nbytes);

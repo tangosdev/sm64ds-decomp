@@ -81,7 +81,7 @@ extern "C" {
 extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
-extern void func_020393d4(void *p, void *v);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern short data_02082214[];
@@ -251,7 +251,7 @@ int daObjCtRotateBlock_c::InitResources() {
                                   *data_ov065_0211cfd0[idx].clps);
     }
 
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
 
     {
         Vector3 va;

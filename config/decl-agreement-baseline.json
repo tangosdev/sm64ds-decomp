@@ -16071,65 +16071,31 @@
       ]
     },
     "func_020393d4": {
-      "src/game/actors/d_a_btn.cpp": [
-        "param:#2 void *"
-      ],
-      "src/game/actors/d_a_dossy.cpp": [
-        "param:#2 void *"
-      ],
-      "src/game/actors/d_a_iwante.cpp": [
-        "param:#2 void *"
-      ],
       "src/game/actors/d_a_kpa2_bg.cpp": [
         "param:#2 void *",
         "return:int"
-      ],
-      "src/game/actors/d_a_kpa3_bg.cpp": [
-        "param:#2 void *"
       ],
       "src/game/actors/d_a_obj_bk_dossunbar.cpp": [
         "param:#1 dBgW *",
         "param:#2 void *"
       ],
       "src/game/actors/d_a_obj_bk_lift.cpp": [
-        "param:#1 dBgW *",
-        "param:#2 void *"
+        "param:#1 dBgW *"
       ],
       "src/game/actors/d_a_obj_bk_rotebar.cpp": [
         "param:#1 dBgW *",
         "param:#2 void *"
       ],
-      "src/game/actors/d_a_obj_ct_kaitendai.cpp": [
-        "param:#2 void *"
-      ],
-      "src/game/actors/d_a_obj_ct_mecha03.cpp": [
-        "param:#2 void *"
-      ],
       "src/game/actors/d_a_obj_ct_mecha05.cpp": [
-        "param:#1 dBgW *",
-        "param:#2 void *"
+        "param:#1 dBgW *"
       ],
       "src/game/actors/d_a_obj_ct_mecha10.cpp": [
-        "param:#1 dBgW *",
-        "param:#2 void *"
-      ],
-      "src/game/actors/d_a_obj_ct_mecha11.cpp": [
-        "param:#2 void *"
-      ],
-      "src/game/actors/d_a_obj_ct_rotate_block.cpp": [
-        "param:#2 void *"
+        "param:#1 dBgW *"
       ],
       "src/game/actors/d_a_obj_cv_news_lift.cpp": [
-        "param:#1 dBgW *",
-        "param:#2 void *"
-      ],
-      "src/game/actors/d_a_obj_ewb_ice.cpp": [
-        "param:#2 void *"
+        "param:#1 dBgW *"
       ],
       "src/game/actors/d_a_obj_ewm_ice_block.cpp": [
-        "param:#2 void *"
-      ],
-      "src/game/actors/d_a_obj_fl_amilift.cpp": [
         "param:#2 void *"
       ],
       "src/game/actors/d_a_obj_fl_koma_u.cpp": [
@@ -16137,9 +16103,6 @@
         "param:#2 void *"
       ],
       "src/game/actors/d_a_obj_fl_london.cpp": [
-        "param:#2 void *"
-      ],
-      "src/game/actors/d_a_obj_fl_ring.cpp": [
         "param:#2 void *"
       ],
       "src/game/actors/d_a_obj_fl_uki_ki.cpp": [
@@ -16174,13 +16137,9 @@
         "param:#2 void *"
       ],
       "src/game/actors/d_a_obj_rc_tikuwa.cpp": [
-        "param:#1 dBgW *",
-        "param:#2 void *"
+        "param:#1 dBgW *"
       ],
       "src/game/actors/d_a_obj_rotate_updown_lift.cpp": [
-        "param:#2 void *"
-      ],
-      "src/game/actors/d_a_obj_seesaw.cpp": [
         "param:#2 void *"
       ],
       "src/game/actors/d_a_obj_simple_lift.cpp": [
@@ -16190,13 +16149,7 @@
         "param:#1 dBgW_KcMbg *",
         "param:#2 void *"
       ],
-      "src/game/actors/d_a_obj_wc_obj05.cpp": [
-        "param:#2 void *"
-      ],
       "src/game/actors/d_a_slide_box.cpp": [
-        "param:#2 void *"
-      ],
-      "src/game/actors/d_a_udlift.cpp": [
         "param:#2 void *"
       ],
       "src/game/actors/d_a_obj_wc_obj04.cpp": [
@@ -16204,8 +16157,7 @@
         "param:#2 void *"
       ],
       "src/game/actors/d_a_obj_wc_obj02.cpp": [
-        "param:#1 dBgW *",
-        "param:#2 void *"
+        "param:#1 dBgW *"
       ],
       "src/game/actors/d_a_pg_dfdr.cpp": [
         "param:#1 dBgW *",
@@ -16878,42 +16830,6 @@
       ],
       "src/engine/model/ModelComponents.cpp": [
         "param:#1 Mtx43 *"
-      ]
-    },
-    "func_02052800": {
-      "include/decl_common.h": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 short",
-        "param:#3 short"
-      ],
-      "src/unnamed/ov007/func_ov007_020c39f8.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 short",
-        "param:#3 short"
-      ]
-    },
-    "func_02052820": {
-      "include/decl_common.h": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 short",
-        "param:#3 short"
-      ],
-      "src/unnamed/ov007/func_ov007_020c39f8.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 short",
-        "param:#3 short"
-      ]
-    },
-    "func_0205283c": {
-      "include/decl_common.h": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 short",
-        "param:#3 short"
-      ],
-      "src/unnamed/ov007/func_ov007_020c39f8.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 short",
-        "param:#3 short"
       ]
     },
     "func_02052ec8": {
@@ -18172,27 +18088,6 @@
       "src/minigames/d_s_mg_base.cpp": [
         "param:#3 void *",
         "return:int"
-      ]
-    },
-    "Mg_DrawNumberRotated": {
-      "src/minigames/d_s_mg_curling.cpp": [
-        "param:#7 int"
-      ],
-      "src/minigames/d_s_mg_hanachan_methods.cpp": [
-        "param:#3 void *",
-        "param:#7 int"
-      ],
-      "src/minigames/d_s_mg_luigi.cpp": [
-        "param:#7 int"
-      ],
-      "src/minigames/d_s_mg_roulette_methods.cpp": [
-        "param:#7 int"
-      ],
-      "src/minigames/d_s_mg_snowball.cpp": [
-        "param:#7 int"
-      ],
-      "src/minigames/d_s_mg_teresa.cpp": [
-        "param:#7 int"
       ]
     },
     "func_ov004_020b2c58": {

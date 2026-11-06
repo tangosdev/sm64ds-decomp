@@ -78,7 +78,7 @@ extern int   GetGameLanguage(void);
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void  Hud_RenderSprite(void *fn, int a, int b, int c, int d);
-extern void  Mg_DrawNumberRotated(int, int, int, int, int, int, int);
+extern void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 extern void  Mg_DrawScoreTally(void *, int, int, int);
 extern int   Mg_IsNewRecord(void);
 extern int   func_020126e8(int a);
