@@ -75,7 +75,6 @@ extern dFdBrightness_c *data_0209f5bc;
 extern u16  data_02092664;
 
 extern void func_02023544(void);
-extern int  func_020431c4(fBase_c *self);
 
 extern u32 data_0209f5b8;
 
@@ -322,7 +321,7 @@ int dScene_c::BeforeBehavior()
     }
 
     if ((pauseFlags & 1) != 0) {
-        if (func_020431c4(this) == 0) {
+        if (func_020431c4() == 0) {
             pauseFlags &= ~1;
             pauseFlags &= ~4;
         }

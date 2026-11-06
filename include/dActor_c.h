@@ -175,12 +175,14 @@ struct dActor_c : dBase_c {
        function, so no TU gains a vtable from this. */
     dActor_c();
 
-    /* The 24 unnamed parameters in this class, each left off because a name
+    /* The 27 unnamed parameters in this class, each left off because a name
        would cost an @NNN number that the vector overlays above spend instead:
          daPly_c & / dActor_c &: slots 19 and 21-28, BumpedUnderneathByPlayer,
            JumpedOnByPlayer's daPly_c, GivePlayerCoins;
          dCc_c & / dCc_c *: FindEgg, FindExplosionActor, MakeVanishLuigiWork,
-           JumpedOnByPlayer, UpdatePos, UpdatePosWithOnlySpeed;
+           JumpedOnByPlayer, UpdatePos, UpdatePosWithOnlySpeed, func_0200f760,
+           func_02010304;
+         func_0200fccc's doRaycast flag;
          dExtShadowModel_c &: DropShadowScaleXYZ, DropShadowRadHeight;
          dust position: PoofDustAt, DisappearPoofDustAt, TriplePoofDustAt,
            HugeLandingDustAt (LandingDustAt's `pos` was already named).
@@ -276,6 +278,14 @@ struct dActor_c : dBase_c {
     int JumpedOnByPlayer(dCc_c &, daPly_c &);
     void UpdatePos(dCc_c *);
     void UpdatePosWithOnlySpeed(dCc_c *);
+    /* MakeVanishLuigiWork again, taking the cylinder by pointer; the ROM keeps
+       both copies. */
+    void func_0200f760(dCc_c *);
+    /* The player behind the cylinder's last hit, if that hit carried hitFlags
+       0x1000 and the player then grabbed this actor; otherwise null. */
+    daPly_c *func_02010304(dCc_c *);
+    /* Clamps each axis of mPos to the world bounds, +-32000.0. */
+    void func_02010da4();
 
     /* The dust group: an `...At` worker taking a position, and a no-argument
        wrapper that copies this actor's own position into a stack Vector3 and
@@ -296,6 +306,9 @@ struct dActor_c : dBase_c {
     void HugeLandingDust(bool doRaycast);
     void HugeLandingDustAt(Vector3 &, bool doRaycast);     /* particle 0xb2 */
     void LandingDustAt(Vector3 &pos, bool doRaycast);      /* particle 0xb1 */
+    /* func_0200fc44 (particle 0xb3) at this actor's position. The flag stays
+       int: every caller passes a constant and the body forwards it unmasked. */
+    int func_0200fccc(int);
 
     /* The death table: actors already killed, so they do not respawn. All three
        key off mDeathTableID. */
